@@ -264,8 +264,7 @@ public class DuplocatorHashCallback implements FragmentsCollector {
       }
 
       @Override
-      @Nullable
-      public String getTitle(int pattern) {
+      public @Nullable String getTitle(int pattern) {
         if (getFileCount(pattern) == 1) {
           if (myPattern2Description.containsKey(pattern)) {
             return myPattern2Description.get(pattern).getTitle();
@@ -277,8 +276,7 @@ public class DuplocatorHashCallback implements FragmentsCollector {
 
 
       @Override
-      @Nullable
-      public String getComment(int pattern) {
+      public @Nullable String getComment(int pattern) {
         if (getFileCount(pattern) == 1) {
           if (myPattern2Description.containsKey(pattern)) {
             return myPattern2Description.get(pattern).getComment();

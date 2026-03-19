@@ -12,10 +12,8 @@ import org.jspecify.annotations.Nullable;
 public class PlatformOrPluginNode {
     
     private final PluginId myPluginId;
-    @Nullable
-    private final PluginDescriptor myCurrentDescriptor;
-    @Nullable
-    private final PluginDescriptor myFutureDescriptor;
+    private final @Nullable PluginDescriptor myCurrentDescriptor;
+    private final @Nullable PluginDescriptor myFutureDescriptor;
 
     public PlatformOrPluginNode(
         PluginId pluginId,
@@ -36,13 +34,11 @@ public class PlatformOrPluginNode {
         return myPluginId;
     }
 
-    @Nullable
-    public PluginDescriptor getCurrentDescriptor() {
+    public @Nullable PluginDescriptor getCurrentDescriptor() {
         return myCurrentDescriptor;
     }
 
-    @Nullable
-    public PluginDescriptor getFutureDescriptor() {
+    public @Nullable PluginDescriptor getFutureDescriptor() {
         return myFutureDescriptor;
     }
 }

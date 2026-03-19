@@ -48,12 +48,9 @@ public class NewExtensionPointImpl<T> implements ExtensionPoint<T> {
     private static final Logger LOG = Logger.getInstance(NewExtensionPointImpl.class);
 
     private static class CacheValue<K> {
-        @Nullable
-        final List<ExtensionValue<K>> myExtensionCache;
-        @Nullable
-        final List<K> myUnwrapExtensionCache;
-        @Nullable
-        final List<InjectingBinding> myInjectingBindings;
+        final @Nullable List<ExtensionValue<K>> myExtensionCache;
+        final @Nullable List<K> myUnwrapExtensionCache;
+        final @Nullable List<InjectingBinding> myInjectingBindings;
 
         private CacheValue(@Nullable List<ExtensionValue<K>> extensionCache, @Nullable List<InjectingBinding> injectingBindings) {
             myExtensionCache = extensionCache;
@@ -81,22 +78,18 @@ public class NewExtensionPointImpl<T> implements ExtensionPoint<T> {
     }
 
     private final String myApiClassName;
-    @Nullable
-    private Class<T> myApiClass = null;
+    private @Nullable Class<T> myApiClass = null;
 
     private final ComponentManager myComponentManager;
     private final Runnable myCheckCanceled;
     private final ComponentScope myComponentScope;
     private final Supplier<ComponentManager> myApplicationGetter;
 
-    @Nullable
-    private Map<Class, Object> myInstanceOfCacheValue = null;
-    @Nullable
-    private Map<ExtensionPointCacheKey, Object> myCaches = null;
+    private @Nullable Map<Class, Object> myInstanceOfCacheValue = null;
+    private @Nullable Map<ExtensionPointCacheKey, Object> myCaches = null;
     private long myModificationCount;
     private volatile CacheValue<T> myCacheValue;
-    @Nullable
-    private volatile Boolean myHasAnyExtension = null;
+    private volatile @Nullable Boolean myHasAnyExtension = null;
 
     @SuppressWarnings("unchecked")
     public NewExtensionPointImpl(

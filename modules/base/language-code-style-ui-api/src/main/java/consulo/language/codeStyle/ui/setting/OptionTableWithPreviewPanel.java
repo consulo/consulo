@@ -392,8 +392,7 @@ public abstract class OptionTableWithPreviewPanel extends CustomizableLanguageCo
     protected abstract static class Option extends OrderedOption {
         
         final String title;
-        @Nullable
-        final String groupName;
+        final @Nullable String groupName;
         private boolean myEnabled = false;
 
         protected Option(
@@ -422,8 +421,7 @@ public abstract class OptionTableWithPreviewPanel extends CustomizableLanguageCo
     }
 
     private abstract class FieldOption extends Option {
-        @Nullable
-        final Class<? extends CustomCodeStyleSettings> clazz;
+        final @Nullable Class<? extends CustomCodeStyleSettings> clazz;
         Field field;
 
         public FieldOption(
@@ -545,8 +543,7 @@ public abstract class OptionTableWithPreviewPanel extends CustomizableLanguageCo
         private final int myMinValue;
         private final int myMaxValue;
         private final int myDefaultValue;
-        @Nullable
-        private final Function<Integer, String> myDefaultValueRenderer;
+        private final @Nullable Function<Integer, String> myDefaultValueRenderer;
 
         public IntOption(
             Class<? extends CustomCodeStyleSettings> clazz,
@@ -608,8 +605,7 @@ public abstract class OptionTableWithPreviewPanel extends CustomizableLanguageCo
             return value instanceof Integer intValue && intValue == myDefaultValue;
         }
 
-        @Nullable
-        public String getDefaultValueText() {
+        public @Nullable String getDefaultValueText() {
             return myDefaultValueRenderer != null ? myDefaultValueRenderer.apply(myDefaultValue) : null;
         }
     }
@@ -870,8 +866,7 @@ public abstract class OptionTableWithPreviewPanel extends CustomizableLanguageCo
     }
 
 
-    @Nullable
-    protected JComponent getCustomValueRenderer(String optionName, Object value) {
+    protected @Nullable JComponent getCustomValueRenderer(String optionName, Object value) {
         return null;
     }
 
@@ -974,13 +969,11 @@ public abstract class OptionTableWithPreviewPanel extends CustomizableLanguageCo
         }
     }
 
-    @Nullable
-    protected JComponent getCustomNodeEditor(MyTreeNode node) {
+    protected @Nullable JComponent getCustomNodeEditor(MyTreeNode node) {
         return null;
     }
 
-    @Nullable
-    protected Object getCustomNodeEditorValue(JComponent customEditor) {
+    protected @Nullable Object getCustomNodeEditorValue(JComponent customEditor) {
         return null;
     }
 

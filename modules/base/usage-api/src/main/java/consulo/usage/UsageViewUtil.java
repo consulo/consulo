@@ -46,8 +46,7 @@ public class UsageViewUtil {
     private UsageViewUtil() {
     }
 
-    @Nullable
-    public static KeyboardShortcut getShowUsagesWithSettingsShortcut() {
+    public static @Nullable KeyboardShortcut getShowUsagesWithSettingsShortcut() {
         return ActionManager.getInstance().getKeyboardShortcut("ShowSettingsAndFindUsages");
     }
 

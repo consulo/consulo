@@ -82,7 +82,7 @@ public class NameSuggestionsField extends JPanel {
     myComboBoxModel = null;
   }
 
-  public NameSuggestionsField(String[] suggestedNames, Project project, FileType fileType, @Nullable final Editor editor) {
+  public NameSuggestionsField(String[] suggestedNames, Project project, FileType fileType, final @Nullable Editor editor) {
     this(suggestedNames, project, fileType);
     if (editor == null) return;
     // later here because EditorTextField creates Editor during addNotify()

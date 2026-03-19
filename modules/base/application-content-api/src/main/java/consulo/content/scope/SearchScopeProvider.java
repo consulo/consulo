@@ -12,8 +12,7 @@ import java.util.List;
 
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface SearchScopeProvider {
-    @Nullable
-    default String getDisplayName() {
+    default @Nullable String getDisplayName() {
         return null;
     }
 

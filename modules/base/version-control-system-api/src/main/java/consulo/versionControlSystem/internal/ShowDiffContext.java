@@ -27,11 +27,9 @@ public class ShowDiffContext {
   
   private final DiffDialogHints myDialogHints;
 
-  @Nullable private List<AnAction> myActions;
-  @Nullable
-  private Map<Key, Object> myChainContext;
-  @Nullable
-  private Map<Change, Map<Key, Object>> myRequestContext;
+  private @Nullable List<AnAction> myActions;
+  private @Nullable Map<Key, Object> myChainContext;
+  private @Nullable Map<Change, Map<Key, Object>> myRequestContext;
 
   public ShowDiffContext() {
     this(DiffDialogHints.DEFAULT);

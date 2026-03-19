@@ -156,8 +156,7 @@ public class FocusModeModelImpl implements FocusModeModel, Disposable {
   }
 
   @SuppressWarnings("Duplicates")
-  @Nullable
-  public FocusRegion findFocusRegion(int start, int end) {
+  public @Nullable FocusRegion findFocusRegion(int start, int end) {
     FocusRegion[] found = new FocusRegion[1];
     myFocusMarkerTree.processOverlappingWith(start, end, range -> {
       if (range.getStartOffset() == start && range.getEndOffset() == end) {

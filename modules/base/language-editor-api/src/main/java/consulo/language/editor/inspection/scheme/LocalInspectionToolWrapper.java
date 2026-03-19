@@ -55,8 +55,7 @@ public class LocalInspectionToolWrapper extends InspectionToolWrapper<LocalInspe
     return getTool().getID();
   }
 
-  @Nullable
-  public String getAlternativeID() {
+  public @Nullable String getAlternativeID() {
     return getTool().getAlternativeID();
   }
 

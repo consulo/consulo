@@ -409,8 +409,7 @@ public final class DesktopToolWindowPanelImpl extends JBLayeredPane implements U
         return myLayeredPane;
     }
 
-    @Nullable
-    private DesktopStripeButton getButtonById(String id) {
+    private @Nullable DesktopStripeButton getButtonById(String id) {
         return myId2Button.get(id);
     }
 
@@ -605,8 +604,7 @@ public final class DesktopToolWindowPanelImpl extends JBLayeredPane implements U
         pair.first.setSize(Math.max(minValue, Math.min(maxValue, actualSize)));
     }
 
-    @Nullable
-    private Pair<Resizer, Component> findResizerAndComponent(ToolWindow wnd) {
+    private @Nullable Pair<Resizer, Component> findResizerAndComponent(ToolWindow wnd) {
         if (!wnd.isVisible()) {
             return null;
         }

@@ -72,11 +72,9 @@ public class GotoActionModel implements ChooseByNameModel, Comparator<Object>, D
     private static final Logger LOG = Logger.getInstance(GotoActionModel.class);
     private static final Pattern INNER_GROUP_WITH_IDS = Pattern.compile("(.*) \\(\\d+\\)");
 
-    @Nullable
-    private final Project myProject;
+    private final @Nullable Project myProject;
     private final Component myContextComponent;
-    @Nullable
-    private final Editor myEditor;
+    private final @Nullable Editor myEditor;
 
     protected final ActionManager myActionManager = ActionManager.getInstance();
 
@@ -417,8 +415,7 @@ public class GotoActionModel implements ChooseByNameModel, Comparator<Object>, D
     }
 
     @Override
-    @Nullable
-    public String getFullName(Object element) {
+    public @Nullable String getFullName(Object element) {
         return getElementName(element);
     }
 
@@ -476,8 +473,7 @@ public class GotoActionModel implements ChooseByNameModel, Comparator<Object>, D
         return MatchMode.NONE;
     }
 
-    @Nullable
-    protected Project getProject() {
+    protected @Nullable Project getProject() {
         return myProject;
     }
 
@@ -539,8 +535,7 @@ public class GotoActionModel implements ChooseByNameModel, Comparator<Object>, D
         private final boolean myShowNonPopupGroups;
         private final List<List<ActionGroup>> myPaths = new ArrayList<>();
 
-        @Nullable
-        private String myBestGroupName;
+        private @Nullable String myBestGroupName;
         private boolean myBestNameComputed;
 
         public GroupMapping() {
@@ -568,16 +563,14 @@ public class GotoActionModel implements ChooseByNameModel, Comparator<Object>, D
             return Comparing.compare(getFirstGroupName(), o.getFirstGroupName());
         }
 
-        @Nullable
-        public String getBestGroupName() {
+        public @Nullable String getBestGroupName() {
             if (myBestNameComputed) {
                 return myBestGroupName;
             }
             return getFirstGroupName();
         }
 
-        @Nullable
-        private String getFirstGroupName() {
+        private @Nullable String getFirstGroupName() {
             List<ActionGroup> path = ContainerUtil.getFirstItem(myPaths);
             return path != null ? getPathName(path) : null;
         }
@@ -602,8 +595,7 @@ public class GotoActionModel implements ChooseByNameModel, Comparator<Object>, D
             return ContainerUtil.map(myPaths, this::getPathName);
         }
 
-        @Nullable
-        private String getPathName(List<? extends ActionGroup> path) {
+        private @Nullable String getPathName(List<? extends ActionGroup> path) {
             String name = "";
             for (ActionGroup group : path) {
                 name = appendGroupName(name, group, group.getTemplatePresentation());
@@ -611,8 +603,7 @@ public class GotoActionModel implements ChooseByNameModel, Comparator<Object>, D
             return StringUtil.nullize(name);
         }
 
-        @Nullable
-        private String getActualPathName(List<? extends ActionGroup> path, DataContext context) {
+        private @Nullable String getActualPathName(List<? extends ActionGroup> path, DataContext context) {
             String name = "";
             for (ActionGroup group : path) {
                 Presentation presentation = updateActionBeforeShow(group, context).getPresentation();
@@ -635,8 +626,7 @@ public class GotoActionModel implements ChooseByNameModel, Comparator<Object>, D
             return prefix;
         }
 
-        @Nullable
-        private static String getActionGroupName(Presentation presentation) {
+        private static @Nullable String getActionGroupName(Presentation presentation) {
             String text = presentation.getText();
             if (text == null) {
                 return null;
@@ -656,8 +646,7 @@ public class GotoActionModel implements ChooseByNameModel, Comparator<Object>, D
         private final AnAction myAction;
         
         private final MatchMode myMode;
-        @Nullable
-        private final GroupMapping myGroupMapping;
+        private final @Nullable GroupMapping myGroupMapping;
         private final DataContext myDataContext;
         private final GotoActionModel myModel;
         private volatile Presentation myPresentation;
@@ -751,8 +740,7 @@ public class GotoActionModel implements ChooseByNameModel, Comparator<Object>, D
             return myPresentation != null;
         }
 
-        @Nullable
-        public String getGroupName() {
+        public @Nullable String getGroupName() {
             if (myGroupMapping == null) {
                 return null;
             }

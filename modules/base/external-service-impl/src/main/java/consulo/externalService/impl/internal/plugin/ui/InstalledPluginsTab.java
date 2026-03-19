@@ -77,8 +77,7 @@ public class InstalledPluginsTab extends PluginTab {
         return List.of(PluginSorter.NAME, PluginSorter.STATUS);
     }
 
-    @Nullable
-    public static PluginDescriptor loadDescriptorFromArchive(File file) throws IOException {
+    public static @Nullable PluginDescriptor loadDescriptorFromArchive(File file) throws IOException {
         PluginDescriptor descriptor = null;
 
         TempFileService tempFileService = Application.get().getInstance(TempFileService.class);

@@ -83,8 +83,7 @@ public abstract class DebuggerSessionTabBase extends RunTab {
     }
   }
 
-  @Nullable
-  protected RunProfile getRunProfile() {
+  protected @Nullable RunProfile getRunProfile() {
     return myEnvironment != null ? myEnvironment.getRunProfile() : null;
   }
 

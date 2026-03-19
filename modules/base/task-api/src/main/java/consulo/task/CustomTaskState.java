@@ -113,8 +113,7 @@ public class CustomTaskState
 	 * @return predefined task state as described or {@code null} if such state doesn't exists or {@link #isPredefined()} returns false
 	 * @see #isPredefined()
 	 */
-	@Nullable
-	public TaskState asPredefined()
+	public @Nullable TaskState asPredefined()
 	{
 		if(isPredefined())
 		{

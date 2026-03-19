@@ -49,18 +49,15 @@ import java.io.File;
 import java.util.StringTokenizer;
 
 public class CreateDirectoryOrPackageHandler implements InputValidatorEx {
-    @Nullable
-    private final Project myProject;
+    private final @Nullable Project myProject;
     
     private final PsiDirectory myDirectory;
     
     private final CreateDirectoryOrPackageType myType;
-    @Nullable
-    private PsiFileSystemItem myCreatedElement = null;
+    private @Nullable PsiFileSystemItem myCreatedElement = null;
     
     private final String myDelimiters;
-    @Nullable
-    private final Component myDialogParent;
+    private final @Nullable Component myDialogParent;
     private String myErrorText;
 
     public CreateDirectoryOrPackageHandler(
@@ -212,8 +209,7 @@ public class CreateDirectoryOrPackageHandler implements InputValidatorEx {
         return createFile;
     }
 
-    @Nullable
-    public static FileType findFileTypeBoundToName(String name) {
+    public static @Nullable FileType findFileTypeBoundToName(String name) {
         FileType fileType = FileTypeManager.getInstance().getFileTypeByFileName(name);
         return fileType instanceof UnknownFileType ? null : fileType;
     }
@@ -273,8 +269,7 @@ public class CreateDirectoryOrPackageHandler implements InputValidatorEx {
         myCreatedElement = myType.createDirectory(myDirectory, subDirName);
     }
 
-    @Nullable
-    public PsiFileSystemItem getCreatedElement() {
+    public @Nullable PsiFileSystemItem getCreatedElement() {
         return myCreatedElement;
     }
 }

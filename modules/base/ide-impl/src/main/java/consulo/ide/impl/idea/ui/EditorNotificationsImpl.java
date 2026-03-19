@@ -131,8 +131,7 @@ public class EditorNotificationsImpl extends EditorNotifications implements Disp
         });
     }
 
-    @Nullable
-    private ReadTask createTask(ProgressIndicator indicator, VirtualFile file) {
+    private @Nullable ReadTask createTask(ProgressIndicator indicator, VirtualFile file) {
         List<FileEditor> editors = ContainerUtil.filter(
             myFileEditorManager.getAllEditors(file),
             editor -> !(editor instanceof TextEditor textEditor && !AsyncEditorLoader.isEditorLoaded(textEditor.getEditor()))

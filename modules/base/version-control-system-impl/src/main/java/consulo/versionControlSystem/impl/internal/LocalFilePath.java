@@ -88,21 +88,18 @@ public class LocalFilePath implements FilePath {
   }
 
   @Override
-  @Nullable
-  public FilePath getParentPath() {
+  public @Nullable FilePath getParentPath() {
     String parent = PathUtil.getParentPath(myPath);
     return parent.isEmpty() ? null : new LocalFilePath(parent, true);
   }
 
   @Override
-  @Nullable
-  public VirtualFile getVirtualFile() {
+  public @Nullable VirtualFile getVirtualFile() {
     return LocalFileSystem.getInstance().findFileByPath(myPath);
   }
 
   @Override
-  @Nullable
-  public VirtualFile getVirtualFileParent() {
+  public @Nullable VirtualFile getVirtualFileParent() {
     FilePath parent = getParentPath();
     return parent != null ? parent.getVirtualFile() : null;
   }
@@ -126,8 +123,7 @@ public class LocalFilePath implements FilePath {
   }
 
   @Override
-  @Nullable
-  public Document getDocument() {
+  public @Nullable Document getDocument() {
     VirtualFile file = getVirtualFile();
     if (file == null || file.getFileType().isBinary()) {
       return null;

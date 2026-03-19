@@ -33,8 +33,7 @@ import javax.swing.*;
 import java.awt.*;
 
 public abstract class DiffWindowBase {
-    @Nullable
-    protected final Project myProject;
+    protected final @Nullable Project myProject;
     
     protected final DiffDialogHints myHints;
 

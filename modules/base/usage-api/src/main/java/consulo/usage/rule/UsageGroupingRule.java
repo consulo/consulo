@@ -55,8 +55,7 @@ public interface UsageGroupingRule {
     /**
      * @deprecated extend {@link SingleParentUsageGroupingRule} and override {@link SingleParentUsageGroupingRule#getParentGroupFor getParentGroupFor} instead
      */
-    @Nullable
-    default UsageGroup groupUsage(Usage usage) {
+    default @Nullable UsageGroup groupUsage(Usage usage) {
         throw new UnsupportedOperationException();
     }
 }

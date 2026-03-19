@@ -26,8 +26,7 @@ import java.util.function.Consumer;
 public class ExtensionInstanceRef {
   public static ThreadLocal<ExtensionInstanceRef> CURRENT_CREATION = new ThreadLocal<>();
 
-  @Nullable
-  public Consumer<Object> setter = null;
+  public @Nullable Consumer<Object> setter = null;
 
   public ExtensionInstanceRef() {
   }

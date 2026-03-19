@@ -166,8 +166,7 @@ public class FileTypeChooser extends DialogWrapper {
         return "#com.intellij.fileTypes.FileTypeChooser";
     }
 
-    @Nullable
-    public FileType getSelectedType() {
+    public @Nullable FileType getSelectedType() {
         if (myInstallPluginFromRepository.isSelected()) {
             return null;
         }

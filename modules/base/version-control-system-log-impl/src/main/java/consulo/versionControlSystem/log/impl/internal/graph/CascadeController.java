@@ -23,7 +23,7 @@ import consulo.versionControlSystem.log.graph.LinearGraphUtils;
 import org.jspecify.annotations.Nullable;
 
 public abstract class CascadeController implements LinearGraphController {
-  @Nullable private final CascadeController myDelegateController;
+  private final @Nullable CascadeController myDelegateController;
   
   protected final PermanentGraphInfo myPermanentGraphInfo;
 
@@ -45,16 +45,14 @@ public abstract class CascadeController implements LinearGraphController {
     return LinearGraphUtils.DEFAULT_GRAPH_ANSWER;
   }
 
-  @Nullable
-  private PrintElementWithGraphElement convertToDelegate(@Nullable PrintElementWithGraphElement element) {
+  private @Nullable PrintElementWithGraphElement convertToDelegate(@Nullable PrintElementWithGraphElement element) {
     if (element == null) return null;
     GraphElement convertedGraphElement = convertToDelegate(element.getGraphElement());
     if (convertedGraphElement == null) return null;
     return PrintElementWithGraphElement.converted(element, convertedGraphElement);
   }
 
-  @Nullable
-  protected GraphElement convertToDelegate(GraphElement graphElement) {
+  protected @Nullable GraphElement convertToDelegate(GraphElement graphElement) {
     return graphElement;
   }
 
@@ -73,6 +71,5 @@ public abstract class CascadeController implements LinearGraphController {
   protected abstract LinearGraphAnswer delegateGraphChanged(LinearGraphAnswer delegateAnswer);
 
   // null mean that this action must be performed by delegateGraphController
-  @Nullable
-  protected abstract LinearGraphAnswer performAction(LinearGraphAction action);
+  protected abstract @Nullable LinearGraphAnswer performAction(LinearGraphAction action);
 }

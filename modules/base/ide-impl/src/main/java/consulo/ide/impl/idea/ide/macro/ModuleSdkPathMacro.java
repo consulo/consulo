@@ -41,8 +41,7 @@ public abstract class ModuleSdkPathMacro extends Macro {
     return sdkPath(ModuleUtilCore.getSdk(module, getExtensionClass()));
   }
 
-  @Nullable
-  static String sdkPath(@Nullable Sdk anySdk) {
+  static @Nullable String sdkPath(@Nullable Sdk anySdk) {
     if (anySdk == null) {
       return null;
     }

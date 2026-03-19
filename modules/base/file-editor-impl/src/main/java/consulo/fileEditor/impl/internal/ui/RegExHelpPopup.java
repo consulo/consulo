@@ -341,7 +341,7 @@ public class RegExHelpPopup extends JPanel {
     }
 
     
-    public static LinkLabel createRegExLink(String title, @Nullable final Component owner, @Nullable final Logger logger) {
+    public static LinkLabel createRegExLink(String title, final @Nullable Component owner, final @Nullable Logger logger) {
         return new LinkLabel(title, null, new LinkListener() {
             JBPopup helpPopup;
 

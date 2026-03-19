@@ -40,8 +40,7 @@ import java.util.List;
  * @author Konstantin Bulenkov
  */
 public class PluginHeaderPanel {
-    @Nullable
-    private final PluginsPanel myPluginsPanel;
+    private final @Nullable PluginsPanel myPluginsPanel;
 
     private JTextArea myName;
     private JBLabel myDownloads;

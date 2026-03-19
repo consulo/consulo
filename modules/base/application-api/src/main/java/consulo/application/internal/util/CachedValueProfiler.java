@@ -42,8 +42,7 @@ public final class CachedValueProfiler {
     return ourEventConsumer != null;
   }
 
-  @Nullable
-  public static EventConsumer setEventConsumer(@Nullable EventConsumer eventConsumer) {
+  public static @Nullable EventConsumer setEventConsumer(@Nullable EventConsumer eventConsumer) {
     EventConsumer prev = ourEventConsumer;
     ourEventConsumer = eventConsumer;
     if (prev != null) {
@@ -146,15 +145,13 @@ public final class CachedValueProfiler {
       }
 
       @Override
-      @Nullable
-      public StackTraceElement[] getStackTrace() {
+      public @Nullable StackTraceElement[] getStackTrace() {
         return throwable.getStackTrace();
       }
     };
   }
 
-  @Nullable
-  static StackTraceElement findComputationPlace(Throwable stackTraceHolder) {
+  static @Nullable StackTraceElement findComputationPlace(Throwable stackTraceHolder) {
     StackTraceElement[] stackTrace = stackTraceHolder.getStackTrace();
     int idx, len;
     for (idx = 2, len = stackTrace.length; idx < len; idx++) {

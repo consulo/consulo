@@ -195,14 +195,12 @@ public abstract class LeafElement extends TreeElement {
   }
 
   @Override
-  @Nullable
-  public ASTNode findChildByType(TokenSet typesSet) {
+  public @Nullable ASTNode findChildByType(TokenSet typesSet) {
     return null;
   }
 
   @Override
-  @Nullable
-  public ASTNode findChildByType(TokenSet typesSet, @Nullable ASTNode anchor) {
+  public @Nullable ASTNode findChildByType(TokenSet typesSet, @Nullable ASTNode anchor) {
     return null;
   }
 

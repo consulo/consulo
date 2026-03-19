@@ -37,8 +37,7 @@ import org.jspecify.annotations.Nullable;
 public interface DocCommentFixer extends LanguageExtension {
   ExtensionPointCacheKey<DocCommentFixer, ByLanguageValue<DocCommentFixer>> KEY = ExtensionPointCacheKey.create("DocCommentFixer", LanguageOneToOne.build());
 
-  @Nullable
-  static DocCommentFixer forLanguage(Language language) {
+  static @Nullable DocCommentFixer forLanguage(Language language) {
     return Application.get().getExtensionPoint(DocCommentFixer.class).getOrBuildCache(KEY).get(language);
   }
 

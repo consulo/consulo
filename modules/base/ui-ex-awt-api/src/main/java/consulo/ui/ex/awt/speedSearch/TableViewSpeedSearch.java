@@ -65,8 +65,7 @@ public abstract class TableViewSpeedSearch<Item> extends SpeedSearchBase<TableVi
     return getItemText((Item)element);
   }
 
-  @Nullable
-  protected abstract String getItemText(Item element);
+  protected abstract @Nullable String getItemText(Item element);
 
   @Override
   protected void selectElement(Object element, String selectedText) {

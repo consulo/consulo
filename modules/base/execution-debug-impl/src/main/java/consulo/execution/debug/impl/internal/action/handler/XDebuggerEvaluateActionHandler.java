@@ -114,8 +114,7 @@ public class XDebuggerEvaluateActionHandler extends XDebuggerActionHandler {
         new XDebuggerEvaluationDialog(session, editorsProvider, evaluator, expression, stackFrame == null ? null : stackFrame.getSourcePosition()).show();
     }
 
-    @Nullable
-    public static String getExpressionText(@Nullable XDebuggerEvaluator evaluator, @Nullable Project project, Editor editor) {
+    public static @Nullable String getExpressionText(@Nullable XDebuggerEvaluator evaluator, @Nullable Project project, Editor editor) {
         if (project == null || evaluator == null) {
             return null;
         }
@@ -124,8 +123,7 @@ public class XDebuggerEvaluateActionHandler extends XDebuggerActionHandler {
         return getExpressionText(evaluator.getExpressionInfoAtOffset(project, document, editor.getCaretModel().getOffset(), true), document);
     }
 
-    @Nullable
-    public static String getExpressionText(@Nullable ExpressionInfo expressionInfo, Document document) {
+    public static @Nullable String getExpressionText(@Nullable ExpressionInfo expressionInfo, Document document) {
         if (expressionInfo == null) {
             return null;
         }
@@ -133,8 +131,7 @@ public class XDebuggerEvaluateActionHandler extends XDebuggerActionHandler {
         return text == null ? document.getText(expressionInfo.getTextRange()) : text;
     }
 
-    @Nullable
-    public static String getDisplayText(@Nullable ExpressionInfo expressionInfo, Document document) {
+    public static @Nullable String getDisplayText(@Nullable ExpressionInfo expressionInfo, Document document) {
         if (expressionInfo == null) {
             return null;
         }

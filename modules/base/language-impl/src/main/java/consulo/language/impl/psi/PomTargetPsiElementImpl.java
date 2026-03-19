@@ -154,8 +154,7 @@ public class PomTargetPsiElementImpl extends RenameableFakePsiElement implements
     }
 
     @Override
-    @Nullable
-    public PsiElement getParent() {
+    public @Nullable PsiElement getParent() {
         return null;
     }
 
@@ -177,8 +176,7 @@ public class PomTargetPsiElementImpl extends RenameableFakePsiElement implements
     }
 
     @Override
-    @Nullable
-    public PsiFile getContainingFile() {
+    public @Nullable PsiFile getContainingFile() {
         if (myTarget instanceof PsiTarget target) {
             return target.getNavigationElement().getContainingFile();
         }

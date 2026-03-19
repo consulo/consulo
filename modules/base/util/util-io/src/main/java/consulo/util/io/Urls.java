@@ -44,8 +44,7 @@ public final class Urls {
     return new LocalFileUrl(path);
   }
 
-  @Nullable
-  public static Url newFromEncoded(String url) {
+  public static @Nullable Url newFromEncoded(String url) {
     Url result = parseEncoded(url);
     if (result == null) {
       LOG.error(url, new IllegalAccessException(url));
@@ -53,8 +52,7 @@ public final class Urls {
     return result;
   }
 
-  @Nullable
-  public static Url parseEncoded(String url) {
+  public static @Nullable Url parseEncoded(String url) {
     return parse(url, false);
   }
 
@@ -77,8 +75,7 @@ public final class Urls {
   /**
    * Url will not be normalized (see {@link VfsUtilCore#toIdeaUrl(String)}), parsed as is
    */
-  @Nullable
-  public static Url newFromIdea(String url) {
+  public static @Nullable Url newFromIdea(String url) {
     Url result = parseFromIdea(url);
     if (result == null) {
       LOG.error(url, new IllegalAccessException(url));
@@ -87,13 +84,11 @@ public final class Urls {
   }
 
   // java.net.URI.create cannot parse "file:///Test Stuff" - but you don't need to worry about it - this method is aware
-  @Nullable
-  public static Url parseFromIdea(String url) {
+  public static @Nullable Url parseFromIdea(String url) {
     return URLUtil.containsScheme(url) ? parseUrl(url) : newLocalFileUrl(url);
   }
 
-  @Nullable
-  public static Url parse(String url, boolean asLocalIfNoScheme) {
+  public static @Nullable Url parse(String url, boolean asLocalIfNoScheme) {
     if (url.isEmpty()) {
       return null;
     }
@@ -105,8 +100,7 @@ public final class Urls {
     return parseUrl(URLUtil.toIdeaUrl(url));
   }
 
-  @Nullable
-  public static URI parseAsJavaUriWithoutParameters(String url) {
+  public static @Nullable URI parseAsJavaUriWithoutParameters(String url) {
     Url asUrl = parseUrl(url);
     if (asUrl == null) {
       return null;
@@ -121,13 +115,11 @@ public final class Urls {
     }
   }
 
-  @Nullable
-  public static Url parseUrlUnsafe(String url) {
+  public static @Nullable Url parseUrlUnsafe(String url) {
     return parseUrl(url);
   }
 
-  @Nullable
-  private static Url parseUrl(String url) {
+  private static @Nullable Url parseUrl(String url) {
     String urlToParse;
     if (url.startsWith("jar:file://")) {
       urlToParse = url.substring("jar:".length());

@@ -54,8 +54,7 @@ public interface IdeFocusManager extends FocusRequestor {
      *
      * @return suitable component to focus
      */
-    @Nullable
-    public abstract JComponent getFocusTargetFor(JComponent comp);
+    public abstract @Nullable JComponent getFocusTargetFor(JComponent comp);
 
 
     /**
@@ -85,8 +84,7 @@ public interface IdeFocusManager extends FocusRequestor {
     /**
      * Finds focused component among descendants of the given component. Descendants may be in child popups and windows
      */
-    @Nullable
-    public abstract Component getFocusedDescendantFor(Component comp);
+    public abstract @Nullable Component getFocusedDescendantFor(Component comp);
 
     /**
      * Requests default focus. The method should not be called by the user code.
@@ -114,14 +112,12 @@ public interface IdeFocusManager extends FocusRequestor {
     /**
      * Returns last focused component for the given <code>IdeFrame</code>
      */
-    @Nullable
-    public abstract Component getLastFocusedFor(@Nullable FocusableFrame frame);
+    public abstract @Nullable Component getLastFocusedFor(@Nullable FocusableFrame frame);
 
     /**
      * Returns last focused <code>IdeFrame</code>
      */
-    @Nullable
-    public abstract FocusableFrame getLastFocusedFrame();
+    public abstract @Nullable FocusableFrame getLastFocusedFrame();
 
     /**
      * Put the container window to front. May not execute of the app is inactive or under some other conditions. This
@@ -140,8 +136,7 @@ public interface IdeFocusManager extends FocusRequestor {
         return instance != null ? instance : findInstanceByContext(null);
     }
 
-    @Nullable
-    static IdeFocusManager findByComponent(Component c) {
+    static @Nullable IdeFocusManager findByComponent(Component c) {
         return ApplicationIdeFocusManager.getInstance().findInstanceByComponent(c);
     }
 

@@ -244,8 +244,7 @@ public abstract class InplaceRefactoring {
             : new LocalSearchScope(myElementToRename.getContainingFile());
     }
 
-    @Nullable
-    protected PsiElement checkLocalScope() {
+    protected @Nullable PsiElement checkLocalScope() {
         SearchScope searchScope = PsiSearchScopeUtil.getUseScope(myElementToRename);
         if (searchScope instanceof LocalSearchScope localSearchScope) {
             PsiElement[] elements = localSearchScope.getScope();
@@ -889,8 +888,7 @@ public abstract class InplaceRefactoring {
     protected void releaseResources() {
     }
 
-    @Nullable
-    protected JComponent getComponent() {
+    protected @Nullable JComponent getComponent() {
         return null;
     }
 

@@ -64,8 +64,7 @@ public class InspectionsOptionsToolbarAction extends AnAction {
         InspectionResultsView.showPopup(e, popup);
     }
 
-    @Nullable
-    private InspectionToolWrapper getSelectedToolWrapper() {
+    private @Nullable InspectionToolWrapper getSelectedToolWrapper() {
         return myView.getTree().getSelectedToolWrapper();
     }
 
@@ -120,8 +119,7 @@ public class InspectionsOptionsToolbarAction extends AnAction {
                 e.getPresentation().setEnabled(getPsiElement(tree) != null);
             }
 
-            @Nullable
-            private PsiElement getPsiElement(InspectionTree tree) {
+            private @Nullable PsiElement getPsiElement(InspectionTree tree) {
                 RefEntity[] selectedElements = tree.getSelectedElements();
 
                 PsiElement psiElement;

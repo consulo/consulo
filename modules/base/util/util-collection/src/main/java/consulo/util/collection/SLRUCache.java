@@ -44,8 +44,7 @@ public abstract class SLRUCache<K, V> extends SLRUMap<K,V> {
     return value;
   }
 
-  @Nullable
-  public V getIfCached(K key) {
+  public @Nullable V getIfCached(K key) {
     return super.get(key);
   }
 }

@@ -36,8 +36,7 @@ public class JBViewportHacking {
    * <p>
    * Generally, this requires that viewport must not be obscured by its ancestors and must be showing.
    */
-  @Nullable
-  public static Boolean isWindowBlitterAvailableFor(JViewport viewport) {
+  public static @Nullable Boolean isWindowBlitterAvailableFor(JViewport viewport) {
     if (ourCanUseWindowBlitterMethod.isAvailable()) {
       return (Boolean)ourCanUseWindowBlitterMethod.invoke(viewport);
     }
@@ -56,8 +55,7 @@ public class JBViewportHacking {
    * <p>
    * See GraphicsUtil.safelyGetGraphics() for more info.
    */
-  @Nullable
-  public static Boolean isTrueDoubleBufferingAvailableFor(JComponent component) {
+  public static @Nullable Boolean isTrueDoubleBufferingAvailableFor(JComponent component) {
     if (ourGetPaintManagerMethod.isAvailable()) {
       Object paintManager = ourGetPaintManagerMethod.invoke(RepaintManager.currentManager(component));
 

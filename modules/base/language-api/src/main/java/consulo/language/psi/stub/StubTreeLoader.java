@@ -43,11 +43,9 @@ public abstract class StubTreeLoader {
     return ourInstance.get();
   }
 
-  @Nullable
-  public abstract ObjectStubTree readOrBuild(Project project, VirtualFile vFile, @Nullable PsiFile psiFile);
+  public abstract @Nullable ObjectStubTree readOrBuild(Project project, VirtualFile vFile, @Nullable PsiFile psiFile);
 
-  @Nullable
-  public abstract ObjectStubTree readFromVFile(Project project, VirtualFile vFile);
+  public abstract @Nullable ObjectStubTree readFromVFile(Project project, VirtualFile vFile);
 
   public abstract void rebuildStubTree(VirtualFile virtualFile);
 
@@ -57,8 +55,7 @@ public abstract class StubTreeLoader {
     return false;
   }
 
-  @Nullable
-  protected IndexingStampInfo getIndexingStampInfo(VirtualFile file) {
+  protected @Nullable IndexingStampInfo getIndexingStampInfo(VirtualFile file) {
     return null;
   }
 

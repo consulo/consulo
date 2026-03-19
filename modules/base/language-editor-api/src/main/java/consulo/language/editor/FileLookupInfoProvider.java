@@ -34,6 +34,5 @@ public abstract class FileLookupInfoProvider {
     
     public abstract FileType[] getFileTypes();
 
-    @Nullable
-    public abstract Pair<String, String> getLookupInfo(VirtualFile file, Project project);
+    public abstract @Nullable Pair<String, String> getLookupInfo(VirtualFile file, Project project);
 }

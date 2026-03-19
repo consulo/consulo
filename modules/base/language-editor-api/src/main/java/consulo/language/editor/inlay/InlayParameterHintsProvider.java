@@ -30,8 +30,7 @@ public interface InlayParameterHintsProvider extends LanguageExtension {
     ExtensionPointCacheKey<InlayParameterHintsProvider, ByLanguageValue<InlayParameterHintsProvider>> KEY =
         ExtensionPointCacheKey.create("InlayParameterHintsProvider", LanguageOneToOne.build());
 
-    @Nullable
-    static InlayParameterHintsProvider forLanguage(Language language) {
+    static @Nullable InlayParameterHintsProvider forLanguage(Language language) {
         return Application.get().getExtensionPoint(InlayParameterHintsProvider.class).getOrBuildCache(KEY).get(language);
     }
 
@@ -88,8 +87,7 @@ public interface InlayParameterHintsProvider extends LanguageExtension {
      * Returns language which exclude list will be appended to the resulting one.
      * E.g. to prevent possible Groovy and Kotlin extensions from showing hints for excluded Java methods.
      */
-    @Nullable
-    default Language getBlackListDependencyLanguage() {
+    default @Nullable Language getBlackListDependencyLanguage() {
         return null;
     }
 
@@ -157,8 +155,7 @@ public interface InlayParameterHintsProvider extends LanguageExtension {
      * @param key bundle key of the option.
      * @return description of the given option or null (in this case it won't be shown).
      */
-    @Nullable
-    default String getProperty(String key) {
+    default @Nullable String getProperty(String key) {
         return null;
     }
 }

@@ -70,8 +70,7 @@ import static consulo.language.codeStyle.arrangement.std.StdArrangementTokens.Se
 public class ArrangementEngine {
   private boolean myCodeChanged;
 
-  @Nullable
-  public String getUserNotificationInfo() {
+  public @Nullable String getUserNotificationInfo() {
     if (myCodeChanged) {
       return "rearranged code";
     }
@@ -336,8 +335,7 @@ public class ArrangementEngine {
     return arranged;
   }
 
-  @Nullable
-  private static <E extends ArrangementEntry> Collection<E> arrangeByRule(List<E> arranged, MultiMap<ArrangementMatchRule, E> elementsByRule, ArrangementMatchRule rule) {
+  private static @Nullable <E extends ArrangementEntry> Collection<E> arrangeByRule(List<E> arranged, MultiMap<ArrangementMatchRule, E> elementsByRule, ArrangementMatchRule rule) {
     if (elementsByRule.containsKey(rule)) {
       Collection<E> arrangedEntries = elementsByRule.remove(rule);
 
@@ -502,13 +500,11 @@ public class ArrangementEngine {
       mySectionEnds.put(entry, comment);
     }
 
-    @Nullable
-    public String getStartComment(E entry) {
+    public @Nullable String getStartComment(E entry) {
       return mySectionStarts.get(entry);
     }
 
-    @Nullable
-    public String getEndComment(E entry) {
+    public @Nullable String getEndComment(E entry) {
       return mySectionEnds.get(entry);
     }
   }

@@ -112,8 +112,7 @@ public class JarIndex {
    * @param jar the JAR file to get the index from.
    * @throws IOException if an I/O error has occurred.
    */
-  @Nullable
-  public static JarIndex getJarIndex(JarFile jar) throws IOException {
+  public static @Nullable JarIndex getJarIndex(JarFile jar) throws IOException {
     JarEntry e = jar.getJarEntry(INDEX_NAME);
     // if found, then load the index
     if (e != null) {
@@ -143,8 +142,7 @@ public class JarIndex {
    *
    * @param fileName the key of the mapping
    */
-  @Nullable
-  public List<String> get(String fileName) {
+  public @Nullable List<String> get(String fileName) {
     List<String> jarFiles;
     if ((jarFiles = indexMap.get(fileName)) == null) {
       /* try the package name again */

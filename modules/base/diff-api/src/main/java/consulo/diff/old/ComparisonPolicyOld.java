@@ -244,8 +244,7 @@ public abstract class ComparisonPolicyOld {
     }
   }
 
-  @Nullable
-  private static DiffString toNull(@Nullable DiffString text1) {
+  private static @Nullable DiffString toNull(@Nullable DiffString text1) {
     return text1 == null || text1.isEmpty() ? null : text1;
   }
 

@@ -109,8 +109,7 @@ public class DesktopDockableEditorTabbedContainer implements DockableEditorTabbe
     return getTabsAt(content, point) != null ? ContentResponse.ACCEPT_MOVE : ContentResponse.DENY;
   }
 
-  @Nullable
-  private JBTabs getTabsAt(DockableContent content, RelativePoint point) {
+  private @Nullable JBTabs getTabsAt(DockableContent content, RelativePoint point) {
     if (content instanceof DesktopAWTEditorTabbedContainer.DockableEditor) {
       JBTabs targetTabs = mySplitters.getTabsAt(point);
       if (targetTabs != null) {
@@ -207,8 +206,7 @@ public class DesktopDockableEditorTabbedContainer implements DockableEditorTabbe
   }
 
   @Override
-  @Nullable
-  public DesktopFileEditorsSplitters getSplitters() {
+  public @Nullable DesktopFileEditorsSplitters getSplitters() {
     return mySplitters;
   }
 

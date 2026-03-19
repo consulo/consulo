@@ -63,8 +63,7 @@ public abstract class UnwrapDescriptorBase implements UnwrapDescriptor {
 
   protected abstract Unwrapper[] createUnwrappers();
 
-  @Nullable
-  protected PsiElement findTargetElement(Editor editor, PsiFile file) {
+  protected @Nullable PsiElement findTargetElement(Editor editor, PsiFile file) {
     int offset = editor.getCaretModel().getOffset();
     PsiElement endElement = file.findElementAt(offset);
     SelectionModel selectionModel = editor.getSelectionModel();

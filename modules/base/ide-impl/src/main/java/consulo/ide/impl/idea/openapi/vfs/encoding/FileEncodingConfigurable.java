@@ -185,14 +185,12 @@ public class FileEncodingConfigurable extends PerFileConfigurableBase<Charset> i
     }
 
     @Override
-    @Nullable
-    protected String getClearValueText(@Nullable Object target) {
+    protected @Nullable String getClearValueText(@Nullable Object target) {
         return target != null ? super.getClearValueText(target) : LanguageLocalize.actionSetSystemDefaultEncodingText().get();
     }
 
     @Override
-    @Nullable
-    protected String getNullValueText(@Nullable Object target) {
+    protected @Nullable String getNullValueText(@Nullable Object target) {
         return target != null
             ? super.getNullValueText(target)
             : IdeLocalize.encodingNameSystemDefault(CharsetToolkit.getDefaultSystemCharset().displayName()).get();

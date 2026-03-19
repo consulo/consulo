@@ -126,13 +126,11 @@ public class Change {
     return myType;
   }
 
-  @Nullable
-  public ContentRevision getBeforeRevision() {
+  public @Nullable ContentRevision getBeforeRevision() {
     return myBeforeRevision;
   }
 
-  @Nullable
-  public ContentRevision getAfterRevision() {
+  public @Nullable ContentRevision getAfterRevision() {
     return myAfterRevision;
   }
 
@@ -140,8 +138,7 @@ public class Change {
     return myFileStatus;
   }
 
-  @Nullable
-  public VirtualFile getVirtualFile() {
+  public @Nullable VirtualFile getVirtualFile() {
     return myAfterRevision == null ? null : myAfterRevision.getFile().getVirtualFile();
   }
 
@@ -236,8 +233,7 @@ public class Change {
     }
   }
 
-  @Nullable
-  public String getOriginText(Project project) {
+  public @Nullable String getOriginText(Project project) {
     cacheRenameOrMove(project);
     if (isMoved()) {
       return getMovedText(project);
@@ -247,13 +243,11 @@ public class Change {
     return myIsReplaced ? VcsLocalize.changeFileReplacedText().get() : null;
   }
 
-  @Nullable
-  protected String getRenamedText() {
+  protected @Nullable String getRenamedText() {
     return VcsLocalize.changeFileRenamedFromText(myBeforeRevision.getFile().getName()).get();
   }
 
-  @Nullable
-  protected String getMovedText(Project project) {
+  protected @Nullable String getMovedText(Project project) {
     return VcsLocalize.changeFileMovedFromText(getMoveRelativePath(project)).get();
   }
 
@@ -265,13 +259,11 @@ public class Change {
     myIsReplaced = isReplaced;
   }
 
-  @Nullable
-  public Image getAdditionalIcon() {
+  public @Nullable Image getAdditionalIcon() {
     return null;
   }
 
-  @Nullable
-  public String getDescription() {
+  public @Nullable String getDescription() {
     return null;
   }
 }

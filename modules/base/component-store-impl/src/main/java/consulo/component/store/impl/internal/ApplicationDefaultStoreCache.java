@@ -43,8 +43,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class ApplicationDefaultStoreCache implements Disposable {
   private final Map<Pair<ClassLoader, String>, Object> myUrlCache = new ConcurrentHashMap<>();
 
-  @Nullable
-  public Element findDefaultStoreElement(Class<?> clazz, String path) {
+  public @Nullable Element findDefaultStoreElement(Class<?> clazz, String path) {
     Object result = myUrlCache.computeIfAbsent(Pair.create(clazz.getClassLoader(), path), pair -> {
       URL resource = pair.getFirst().getResource(pair.getSecond());
 

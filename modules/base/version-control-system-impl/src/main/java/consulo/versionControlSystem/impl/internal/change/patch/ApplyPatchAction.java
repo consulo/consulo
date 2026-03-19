@@ -364,8 +364,7 @@ public class ApplyPatchAction extends DumbAwareAction {
         });
     }
 
-    @Nullable
-    private static String toString(@Nullable CharSequence charSequence) {
+    private static @Nullable String toString(@Nullable CharSequence charSequence) {
         return charSequence != null ? StringUtil.convertLineSeparators(charSequence.toString()) : null;
     }
 

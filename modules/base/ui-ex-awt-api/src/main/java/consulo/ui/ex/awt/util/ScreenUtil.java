@@ -13,8 +13,7 @@ import java.util.Map;
 public final class ScreenUtil {
     public static final String DISPOSE_TEMPORARY = "dispose.temporary";
 
-    @Nullable
-    private static final Map<GraphicsConfiguration, Pair<Insets, Long>> ourInsetsCache = /*Patches.isJdkBugId8004103() ? ContainerUtil.createWeakMap() : */null;
+    private static final @Nullable Map<GraphicsConfiguration, Pair<Insets, Long>> ourInsetsCache = /*Patches.isJdkBugId8004103() ? ContainerUtil.createWeakMap() : */null;
     private static final int ourInsetsTimeout = 5000;  // shouldn't be too long
 
     private ScreenUtil() {

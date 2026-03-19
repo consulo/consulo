@@ -52,8 +52,7 @@ public class SharedImplUtil {
     return SourceTreeToPsiMap.treeElementToPsi(element.getFirstChildNode());
   }
 
-  @Nullable
-  public static PsiElement getLastChild(ASTNode element) {
+  public static @Nullable PsiElement getLastChild(ASTNode element) {
     return SourceTreeToPsiMap.treeElementToPsi(element.getLastChildNode());
   }
 

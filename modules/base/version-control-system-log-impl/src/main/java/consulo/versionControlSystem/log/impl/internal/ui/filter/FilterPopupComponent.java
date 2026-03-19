@@ -52,8 +52,7 @@ abstract class FilterPopupComponent<Filter extends VcsLogFilter> extends VcsLogP
     
     protected abstract String getText(Filter filter);
 
-    @Nullable
-    protected abstract String getToolTip(Filter filter);
+    protected abstract @Nullable String getToolTip(Filter filter);
 
     @Override
     public String getToolTipText() {

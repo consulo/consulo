@@ -68,8 +68,7 @@ public class SingleEntryIndexForwardIndexAccessor<V> implements ForwardIndexAcce
   public static class SingleValueDiffBuilder<V> extends InputDataDiffBuilder<Integer, V> {
     private final int myInputId;
     private final boolean myContainsValue;
-    @Nullable
-    private final V myCurrentValue;
+    private final @Nullable V myCurrentValue;
 
     public SingleValueDiffBuilder(int inputId, Map<Integer, V> currentData) {
       this(inputId, !currentData.isEmpty(), ContainerUtil.getFirstItem(currentData.values()));

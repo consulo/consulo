@@ -52,8 +52,7 @@ public abstract class PanelWithButtons extends JPanel {
 
   }
 
-  @Nullable
-  protected abstract String getLabelText();
+  protected abstract @Nullable String getLabelText();
 
   protected abstract JButton[] createButtons();
 

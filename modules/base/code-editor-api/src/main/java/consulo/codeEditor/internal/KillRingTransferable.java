@@ -88,8 +88,7 @@ public class KillRingTransferable implements Transferable {
         return isDataFlavorSupported(flavor) ? myData : null;
     }
 
-    @Nullable
-    public Document getDocument() {
+    public @Nullable Document getDocument() {
         return myDocument.get();
     }
 

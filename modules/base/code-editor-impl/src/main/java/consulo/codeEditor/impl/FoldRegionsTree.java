@@ -201,8 +201,7 @@ public abstract class FoldRegionsTree {
         return cachedData;
     }
 
-    @Nullable
-    public FoldRegion fetchOutermost(int offset) {
+    public @Nullable FoldRegion fetchOutermost(int offset) {
         if (!isFoldingEnabled()) {
             return null;
         }
@@ -218,8 +217,7 @@ public abstract class FoldRegionsTree {
         return i < 0 ? null : cachedData.topLevelRegions[i];
     }
 
-    @Nullable
-    public FoldRegion[] fetchVisible() {
+    public @Nullable FoldRegion[] fetchVisible() {
         if (!isFoldingEnabled()) {
             return null;
         }
@@ -228,8 +226,7 @@ public abstract class FoldRegionsTree {
         return cachedData.visibleRegions;
     }
 
-    @Nullable
-    public FoldRegion[] fetchTopLevel() {
+    public @Nullable FoldRegion[] fetchTopLevel() {
         if (!isFoldingEnabled()) {
             return null;
         }
@@ -369,8 +366,7 @@ public abstract class FoldRegionsTree {
         return new IntPair(prevAdjustment, curAdjustment);
     }
 
-    @Nullable
-    public FoldRegion getRegionAt(int startOffset, int endOffset) {
+    public @Nullable FoldRegion getRegionAt(int startOffset, int endOffset) {
         FoldRegionImpl[] found = {null};
         myMarkerTree.processOverlappingWith(startOffset, endOffset, region -> {
             if (region.getStartOffset() == startOffset && region.getEndOffset() == endOffset) {

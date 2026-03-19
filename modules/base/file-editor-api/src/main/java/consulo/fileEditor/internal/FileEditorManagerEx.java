@@ -37,8 +37,7 @@ public abstract class FileEditorManagerEx extends FileEditorManager implements B
   }
 
   @Override
-  @Nullable
-  public final Object getData(Key dataId, Editor editor, Caret caret) {
+  public final @Nullable Object getData(Key dataId, Editor editor, Caret caret) {
     for (EditorDataProvider dataProvider : myDataProviders) {
       Object o = dataProvider.getData(dataId, editor, caret);
       if (o != null) return o;

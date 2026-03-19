@@ -64,8 +64,7 @@ public abstract class ApplyFilePatchBase<T extends FilePatch> implements ApplyFi
 
   protected abstract Result applyChange(Project project, VirtualFile fileToPatch, FilePath pathBeforeRename, Supplier<CharSequence> baseContents) throws IOException;
 
-  @Nullable
-  public static VirtualFile findPatchTarget(ApplyPatchContext context, String beforeName, String afterName,
+  public static @Nullable VirtualFile findPatchTarget(ApplyPatchContext context, String beforeName, String afterName,
                                             boolean isNewFile) throws IOException {
     VirtualFile file = null;
     if (beforeName != null) {
@@ -118,16 +117,14 @@ public abstract class ApplyFilePatchBase<T extends FilePatch> implements ApplyFi
     return true;
   }
 
-  @Nullable
-  private static VirtualFile findFileToPatchByName(ApplyPatchContext context, String fileName,
+  private static @Nullable VirtualFile findFileToPatchByName(ApplyPatchContext context, String fileName,
                                                    boolean isNewFile) {
     String[] pathNameComponents = fileName.split("/");
     int lastComponentToFind = isNewFile ? pathNameComponents.length-1 : pathNameComponents.length;
     return findFileToPatchByComponents(context, pathNameComponents, lastComponentToFind);
   }
 
-  @Nullable
-  private static VirtualFile findFileToPatchByComponents(ApplyPatchContext context,
+  private static @Nullable VirtualFile findFileToPatchByComponents(ApplyPatchContext context,
                                                          String[] pathNameComponents,
                                                          int lastComponentToFind) {
     VirtualFile patchedDir = context.getBaseDir();
@@ -157,8 +154,7 @@ public abstract class ApplyFilePatchBase<T extends FilePatch> implements ApplyFi
     return patchedDir;
   }
 
-  /*@Nullable
-  public static ApplyPatchStatus applyModifications(final TextFilePatch patch, final CharSequence text, final StringBuilder newText) throws
+  /*public static @Nullable ApplyPatchStatus applyModifications(final TextFilePatch patch, final CharSequence text, final StringBuilder newText) throws
                                                                                                                                      ApplyPatchException {
     final List<PatchHunk> hunks = patch.getHunks();
     if (hunks.isEmpty()) {

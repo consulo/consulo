@@ -63,8 +63,7 @@ public final class GridBag extends GridBagConstraints {
   
   private final Map<Integer, Integer> myDefaultColumnPaddingsY = new HashMap<>();
 
-  @Nullable
-  private Insets myDefaultInsets = insets;
+  private @Nullable Insets myDefaultInsets = insets;
   
   private final IntObjectMap<Insets> myDefaultColumnInsets = IntMaps.newIntObjectHashMap();
 
@@ -398,8 +397,7 @@ public final class GridBag extends GridBagConstraints {
     return this;
   }
 
-  @Nullable
-  public Insets getDefaultInsets() {
+  public @Nullable Insets getDefaultInsets() {
     return myDefaultInsets;
   }
 
@@ -413,8 +411,7 @@ public final class GridBag extends GridBagConstraints {
     return this;
   }
 
-  @Nullable
-  public Insets getDefaultInsets(int column) {
+  public @Nullable Insets getDefaultInsets(int column) {
     return myDefaultColumnInsets.containsKey(column) ? myDefaultColumnInsets.get(column) : getDefaultInsets();
   }
 

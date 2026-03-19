@@ -51,8 +51,7 @@ public interface VirtualFileSystem {
    * @param path the path to find file by
    * @return a virtual file if found, {@code null} otherwise
    */
-  @Nullable
-  public abstract VirtualFile findFileByPath(String path);
+  public abstract @Nullable VirtualFile findFileByPath(String path);
 
   /**
    * Fetches presentable URL of file with the given path in this file system.
@@ -177,8 +176,7 @@ public interface VirtualFileSystem {
    * <br />
    * The returned {@link Path} may not have a default filesystem behind.
    */
-  @Nullable
-  default Path getNioPath(VirtualFile file) {
+  default @Nullable Path getNioPath(VirtualFile file) {
     return null;
   }
 }

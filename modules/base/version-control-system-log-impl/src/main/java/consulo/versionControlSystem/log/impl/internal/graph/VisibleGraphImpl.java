@@ -63,8 +63,7 @@ public class VisibleGraphImpl<CommitId> implements VisibleGraph<CommitId> {
   }
 
   @Override
-  @Nullable
-  public Integer getVisibleRowIndex(CommitId commitId) {
+  public @Nullable Integer getVisibleRowIndex(CommitId commitId) {
     int nodeId = myPermanentGraph.getPermanentCommitsInfo().getNodeId(commitId);
     return myGraphController.getCompiledGraph().getNodeIndex(nodeId);
   }
@@ -94,14 +93,12 @@ public class VisibleGraphImpl<CommitId> implements VisibleGraph<CommitId> {
 
   private class ActionControllerImpl implements ActionController<CommitId> {
 
-    @Nullable
-    private Integer convertToNodeId(@Nullable Integer nodeIndex) {
+    private @Nullable Integer convertToNodeId(@Nullable Integer nodeIndex) {
       if (nodeIndex == null) return null;
       return myGraphController.getCompiledGraph().getNodeId(nodeIndex);
     }
 
-    @Nullable
-    private GraphAnswer<CommitId> performArrowAction(LinearGraphAction action) {
+    private @Nullable GraphAnswer<CommitId> performArrowAction(LinearGraphAction action) {
       PrintElementWithGraphElement affectedElement = action.getAffectedElement();
       if (!(affectedElement instanceof EdgePrintElement)) return null;
       EdgePrintElement edgePrintElement = (EdgePrintElement)affectedElement;
@@ -188,11 +185,9 @@ public class VisibleGraphImpl<CommitId> implements VisibleGraph<CommitId> {
   }
 
   private static class GraphAnswerImpl<CommitId> implements GraphAnswer<CommitId> {
-    @Nullable
-    private final Cursor myCursor;
-    @Nullable private final CommitId myCommitToJump;
-    @Nullable
-    private final Runnable myUpdater;
+    private final @Nullable Cursor myCursor;
+    private final @Nullable CommitId myCommitToJump;
+    private final @Nullable Runnable myUpdater;
     private final boolean myDoJump;
 
     private GraphAnswerImpl(@Nullable Cursor cursor, @Nullable CommitId commitToJump, @Nullable Runnable updater, boolean doJump) {
@@ -227,8 +222,7 @@ public class VisibleGraphImpl<CommitId> implements VisibleGraph<CommitId> {
   }
 
   public static class LinearGraphActionImpl implements LinearGraphAction {
-    @Nullable
-    private final PrintElementWithGraphElement myAffectedElement;
+    private final @Nullable PrintElementWithGraphElement myAffectedElement;
     
     private final Type myType;
 

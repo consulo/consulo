@@ -32,38 +32,31 @@ public class PathMerger {
   private PathMerger() {
   }
 
-  @Nullable
-  public static VirtualFile getFile(VirtualFile base, String path) {
+  public static @Nullable VirtualFile getFile(VirtualFile base, String path) {
     return getFile(new VirtualFilePathMerger(base), path);
   }
 
-  @Nullable
-  public static VirtualFile getFile(VirtualFile base, String path, List<String> tail) {
+  public static @Nullable VirtualFile getFile(VirtualFile base, String path, List<String> tail) {
     return getFile(new VirtualFilePathMerger(base), path, tail);
   }
 
-  @Nullable
-  public static File getFile(File base, String path) {
+  public static @Nullable File getFile(File base, String path) {
     return getFile(new IoFilePathMerger(base), path);
   }
 
-  @Nullable
-  public static File getFile(File base, String path, List<String> tail) {
+  public static @Nullable File getFile(File base, String path, List<String> tail) {
     return getFile(new IoFilePathMerger(base), path, tail);
   }
   
-  @Nullable
-  public static FilePath getFile(FilePath base, String path) {
+  public static @Nullable FilePath getFile(FilePath base, String path) {
     return getFile(new FilePathPathMerger(base), path);
   }
 
-  @Nullable
-  public static FilePath getFile(FilePath base, String path, List<String> tail) {
+  public static @Nullable FilePath getFile(FilePath base, String path, List<String> tail) {
     return getFile(new FilePathPathMerger(base), path, tail);
   }
 
-  @Nullable
-  public static <T> T getFile(FilePathMerger<T> merger, String path) {
+  public static @Nullable <T> T getFile(FilePathMerger<T> merger, String path) {
     if (path == null) {
       return null;
     }
@@ -75,8 +68,7 @@ public class PathMerger {
     return null;
   }
 
-  @Nullable
-  public static <T> T getFile(FilePathMerger<T> merger, String path, List<String> tail) {
+  public static @Nullable <T> T getFile(FilePathMerger<T> merger, String path, List<String> tail) {
     String[] pieces = RelativePathCalculator.split(path);
 
     for (int i = 0; i < pieces.length; i++) {
@@ -105,13 +97,11 @@ public class PathMerger {
     return merger.getResult();
   }
 
-  @Nullable
-  public static VirtualFile getBase(VirtualFile base, String path) {
+  public static @Nullable VirtualFile getBase(VirtualFile base, String path) {
     return getBase(new VirtualFilePathMerger(base), path);
   }
 
-  @Nullable
-  public static <T> T getBase(FilePathMerger<T> merger, String path) {
+  public static @Nullable <T> T getBase(FilePathMerger<T> merger, String path) {
     boolean caseSensitive = Platform.current().fs().isCaseSensitive();
     String[] parts = path.replace("\\", "/").split("/");
     for (int i = parts.length - 1; i >=0; --i) {
@@ -203,8 +193,7 @@ public class PathMerger {
       return new File(myBase, sb.toString());
     }
 
-    @Nullable
-    public String getCurrentName() {
+    public @Nullable String getCurrentName() {
       if (! myChildPathElements.isEmpty()) {
         return myChildPathElements.get(myChildPathElements.size() - 1);
       }

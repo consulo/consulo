@@ -36,8 +36,7 @@ public class CodeStyleCachingServiceImpl implements CodeStyleCachingService, Dis
   }
 
   @Override
-  @Nullable
-  public CodeStyleSettings tryGetSettings(PsiFile file) {
+  public @Nullable CodeStyleSettings tryGetSettings(PsiFile file) {
     CodeStyleCachedValueProvider provider = getOrCreateCachedValueProvider(file);
     return provider != null ? provider.tryGetSettings() : null;
   }
@@ -53,8 +52,7 @@ public class CodeStyleCachingServiceImpl implements CodeStyleCachingService, Dis
     }
   }
 
-  @Nullable
-  private CodeStyleCachedValueProvider getOrCreateCachedValueProvider(PsiFile file) {
+  private @Nullable CodeStyleCachedValueProvider getOrCreateCachedValueProvider(PsiFile file) {
     synchronized (CACHE_LOCK) {
       VirtualFile virtualFile = file.getVirtualFile();
       if (virtualFile != null) {
@@ -82,8 +80,7 @@ public class CodeStyleCachingServiceImpl implements CodeStyleCachingService, Dis
 
 
   @Override
-  @Nullable
-  public UserDataHolder getDataHolder(VirtualFile virtualFile) {
+  public @Nullable UserDataHolder getDataHolder(VirtualFile virtualFile) {
     return getOrCreateFileData(getFileKey(virtualFile));
   }
 

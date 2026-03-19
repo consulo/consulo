@@ -92,8 +92,7 @@ public class ChangesBrowserFilePathNode extends ChangesBrowserNode<FilePath> {
     return FileUtil.toSystemDependentName(getUserObject().getPath());
   }
 
-  @Nullable
-  public static FilePath safeCastToFilePath(Object o) {
+  public static @Nullable FilePath safeCastToFilePath(Object o) {
     return o instanceof FilePath filePath ? filePath : o instanceof Change change ? ChangesUtil.getAfterPath(change) : null;
   }
 

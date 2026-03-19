@@ -27,8 +27,7 @@ public final class DefaultLocalizeKey implements LocalizeKey {
     private final String myLocalizeId;
     private final String myKey;
 
-    @Nullable
-    private LocalizeValue myDefaultValue = null;
+    private @Nullable LocalizeValue myDefaultValue = null;
 
     public DefaultLocalizeKey(String localizeId, String key) {
         myLocalizeId = localizeId;

@@ -142,8 +142,7 @@ public class ListChooseByNameModel<T extends ChooseByNameItem> extends SimpleCho
         return compiledPattern != null && compiledPattern.matcher(name).find();
     }
 
-    @Nullable
-    private Pattern getTaskPattern(String pattern) {
+    private @Nullable Pattern getTaskPattern(String pattern) {
         if (!Comparing.strEqual(pattern, myPattern)) {
             myCompiledPattern = null;
             myPattern = pattern;

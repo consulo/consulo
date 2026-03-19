@@ -148,8 +148,7 @@ public class LocalSearchScope extends BaseSearchScope {
     return ((GlobalSearchScope)scope2).intersectWith(this);
   }
 
-  @Nullable
-  private static PsiElement intersectScopeElements(PsiElement element1, PsiElement element2) {
+  private static @Nullable PsiElement intersectScopeElements(PsiElement element1, PsiElement element2) {
     if (PsiTreeUtil.isContextAncestor(element1, element2, false)) return element2;
     if (PsiTreeUtil.isContextAncestor(element2, element1, false)) return element1;
     if (PsiTreeUtil.isAncestor(element1, element2, false)) return element2;

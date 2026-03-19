@@ -35,8 +35,7 @@ public abstract class RefHashMap<K, V> extends AbstractMap<K, V> implements Map<
   private final ReferenceQueue<K> myReferenceQueue = new ReferenceQueue<>();
   private final HardKey myHardKeyInstance = new HardKey(); // "singleton"
   private final HashingStrategy<? super K> myStrategy;
-  @Nullable
-  private transient Set<Entry<K, V>> entrySet = null;
+  private transient @Nullable Set<Entry<K, V>> entrySet = null;
   private boolean processingQueue;
 
   public RefHashMap(int initialCapacity, float loadFactor, HashingStrategy<? super K> strategy) {
@@ -83,8 +82,7 @@ public abstract class RefHashMap<K, V> extends AbstractMap<K, V> implements Map<
   protected abstract <T> Key<T> createKey(T k, HashingStrategy<? super T> strategy, ReferenceQueue<? super T> q);
 
   private class HardKey implements Key<K> {
-    @Nullable
-    private K myObject = null;
+    private @Nullable K myObject = null;
     private int myHash;
 
     @Nullable
@@ -263,8 +261,7 @@ public abstract class RefHashMap<K, V> extends AbstractMap<K, V> implements Map<
     public Iterator<Entry<K, V>> iterator() {
       return new Iterator<Entry<K, V>>() {
         private final Iterator<Entry<Key<K>, V>> hashIterator = hashEntrySet.iterator();
-        @Nullable
-        private MyEntry<K, V> next = null;
+        private @Nullable MyEntry<K, V> next = null;
 
         @Override
         public boolean hasNext() {

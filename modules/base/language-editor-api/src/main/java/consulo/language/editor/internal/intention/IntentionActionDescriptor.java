@@ -114,8 +114,7 @@ public class IntentionActionDescriptor {
         return myCanCleanup;
     }
 
-    @Nullable
-    public List<IntentionAction> getOptions(PsiElement element, @Nullable Editor editor) {
+    public @Nullable List<IntentionAction> getOptions(PsiElement element, @Nullable Editor editor) {
         if (editor != null && Boolean.FALSE.equals(editor.getUserData(IntentionManager.SHOW_INTENTION_OPTIONS_KEY))) {
             return null;
         }
@@ -204,8 +203,7 @@ public class IntentionActionDescriptor {
         return options;
     }
 
-    @Nullable
-    public LocalizeValue getDisplayName() {
+    public @Nullable LocalizeValue getDisplayName() {
         return myDisplayName;
     }
 
@@ -215,8 +213,7 @@ public class IntentionActionDescriptor {
         return "descriptor: " + (text.isEmpty() ? getAction().getClass() : text);
     }
 
-    @Nullable
-    public Image getIcon() {
+    public @Nullable Image getIcon() {
         return myIcon;
     }
 

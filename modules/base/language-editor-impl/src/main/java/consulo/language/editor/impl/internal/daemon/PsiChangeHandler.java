@@ -289,8 +289,7 @@ final class PsiChangeHandler extends PsiTreeChangeAdapter implements Disposable 
             .isExcluded(virtualFile);
     }
 
-    @Nullable
-    private static PsiElement getChangeHighlightingScope(PsiElement element) {
+    private static @Nullable PsiElement getChangeHighlightingScope(PsiElement element) {
         for (ChangeLocalityDetector detector : element.getProject()
             .getApplication()
             .getExtensionPoint(ChangeLocalityDetector.class)

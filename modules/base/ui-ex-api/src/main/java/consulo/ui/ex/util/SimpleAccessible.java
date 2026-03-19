@@ -42,8 +42,7 @@ public interface SimpleAccessible {
      */
     @Deprecated
     @DeprecationInfo("Use getToolTipValue(int)")
-    @Nullable
-    default String getAccessibleTooltipText() {
+    default @Nullable String getAccessibleTooltipText() {
         return getAccessibleTooltipValue().getNullIfEmpty();
     }
 }

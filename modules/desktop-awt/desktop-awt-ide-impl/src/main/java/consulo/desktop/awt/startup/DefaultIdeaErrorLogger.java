@@ -64,8 +64,7 @@ public class DefaultIdeaErrorLogger extends FatalErrorReporter {
     }
   }
 
-  @Nullable
-  private static MemoryKind getOOMErrorKind(Throwable t) {
+  private static @Nullable MemoryKind getOOMErrorKind(Throwable t) {
     String message = t.getMessage();
 
     if (t instanceof OutOfMemoryError) {

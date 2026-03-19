@@ -85,14 +85,10 @@ public class IdeMenuBar extends JMenuBar implements Predicate<AWTEvent> {
   private final Disposable myDisposable = Disposable.newDisposable();
   private boolean myDisabled = false;
 
-  @Nullable
-  private final ClockPanel myClockPanel;
-  @Nullable
-  private final MyExitFullScreenButton myButton;
-  @Nullable
-  private final Animator myAnimator;
-  @Nullable
-  private final Timer myActivationWatcher;
+  private final @Nullable ClockPanel myClockPanel;
+  private final @Nullable MyExitFullScreenButton myButton;
+  private final @Nullable Animator myAnimator;
+  private final @Nullable Timer myActivationWatcher;
   
   private State myState = State.EXPANDED;
   private double myProgress = 0;
@@ -316,8 +312,7 @@ public class IdeMenuBar extends JMenuBar implements Predicate<AWTEvent> {
     return false;
   }
 
-  @Nullable
-  private Component findActualComponent(MouseEvent mouseEvent) {
+  private @Nullable Component findActualComponent(MouseEvent mouseEvent) {
     Component component = mouseEvent.getComponent();
     if (component == null) {
       return null;

@@ -64,8 +64,7 @@ public class StaticPathReferenceProvider extends PathReferenceProviderBase {
   }
 
   @Override
-  @Nullable
-  public PathReference getPathReference(final String path, PsiElement element) {
+  public @Nullable PathReference getPathReference(final String path, PsiElement element) {
     List<PsiReference> list = new SmartList<PsiReference>();
     createReferences(element, list, true);
     if (list.isEmpty()) return null;

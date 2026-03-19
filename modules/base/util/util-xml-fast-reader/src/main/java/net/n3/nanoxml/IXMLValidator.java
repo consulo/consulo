@@ -56,8 +56,7 @@ public interface IXMLValidator
     *
     * @return the entity resolver.
     */
-   @Nullable
-   public IXMLEntityResolver getParameterEntityResolver();
+   public @Nullable IXMLEntityResolver getParameterEntityResolver();
 
 
    /**

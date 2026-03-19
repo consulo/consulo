@@ -226,8 +226,7 @@ public class RequestsMerger {
       myMap.put(Couple.of(from, to), action);
     }
 
-    @Nullable
-    public static MyExitAction[] getExit(MyState from, MyState to) {
+    public static @Nullable MyExitAction[] getExit(MyState from, MyState to) {
       return myMap.get(Couple.of(from, to));
     }
   }

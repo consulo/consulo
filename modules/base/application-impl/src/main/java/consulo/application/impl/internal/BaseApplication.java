@@ -145,8 +145,7 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
             }
         }
 
-        @Nullable
-        private String id() {
+        private @Nullable String id() {
             Class<?> aClass = getClass();
             String name = aClass.getName();
             name = name.substring(name.lastIndexOf('.') + 1);

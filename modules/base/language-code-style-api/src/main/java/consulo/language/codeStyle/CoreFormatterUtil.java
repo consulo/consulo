@@ -62,8 +62,7 @@ public class CoreFormatterUtil {
      * @param block target block
      * @return alignment object to use during adjusting white space of the given block if any; {@code null} otherwise
      */
-    @Nullable
-    public static AlignmentImpl getAlignment(AbstractBlockWrapper block) {
+    public static @Nullable AlignmentImpl getAlignment(AbstractBlockWrapper block) {
         AbstractBlockWrapper current = block;
         while (true) {
             AlignmentImpl alignment = current.getAlignment();
@@ -124,8 +123,7 @@ public class CoreFormatterUtil {
      *
      * @return closest block to the given block that contains line feeds if any; {@code null} otherwise
      */
-    @Nullable
-    public static AbstractBlockWrapper getIndentedParentBlock(AbstractBlockWrapper block) {
+    public static @Nullable AbstractBlockWrapper getIndentedParentBlock(AbstractBlockWrapper block) {
         AbstractBlockWrapper current = block.getParent();
         while (current != null) {
             if (current.getStartOffset() != block.getStartOffset() && current.getWhiteSpace().containsLineFeeds()) {

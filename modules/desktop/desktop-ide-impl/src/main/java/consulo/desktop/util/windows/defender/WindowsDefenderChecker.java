@@ -207,8 +207,7 @@ public class WindowsDefenderChecker {
      * match foo\baz\bar but not foo\baz\quux\bar)). The behavior of wildcards with respect to case-sensitivity is undocumented.
      * Returns a list of patterns, one for each exclusion path, that emulate how Windows Defender would interpret that path.
      */
-    @Nullable
-    private static List<Pattern> getExcludedPatterns() {
+    private static @Nullable List<Pattern> getExcludedPatterns() {
         Collection<String> paths = getWindowsDefenderProperty("ExclusionPath");
         if (paths == null) {
             return null;
@@ -216,8 +215,7 @@ public class WindowsDefenderChecker {
         return ContainerUtil.map(paths, path -> wildcardsToRegex(expandEnvVars(path)));
     }
 
-    @Nullable
-    private static Collection<String> getExcludedProcesses() {
+    private static @Nullable Collection<String> getExcludedProcesses() {
         Collection<String> processes = getWindowsDefenderProperty("ExclusionProcess");
         if (processes == null) {
             return null;
@@ -240,8 +238,7 @@ public class WindowsDefenderChecker {
         return RealtimeScanningStatus.SCANNING_DISABLED;
     }
 
-    @Nullable
-    private static Collection<String> getWindowsDefenderProperty(String propertyName) {
+    private static @Nullable Collection<String> getWindowsDefenderProperty(String propertyName) {
         try {
             GeneralCommandLine cmd = new GeneralCommandLine();
             cmd.setExePath("powershell");

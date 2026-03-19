@@ -40,13 +40,11 @@ public class GenericCompilerProcessingItem<Item extends CompileItem<?, SourceSta
         return myItem;
     }
 
-    @Nullable
-    public SourceState getCachedSourceState() {
+    public @Nullable SourceState getCachedSourceState() {
         return myCachedSourceState;
     }
 
-    @Nullable
-    public OutputState getCachedOutputState() {
+    public @Nullable OutputState getCachedOutputState() {
         return myCachedOutputState;
     }
 }

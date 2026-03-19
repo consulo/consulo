@@ -39,8 +39,7 @@ public abstract class ChangeListManagerEx extends ChangeListManager {
   
   public abstract Collection<LocalChangeList> getAffectedLists(Collection<? extends Change> changes);
 
-  @Nullable
-  public abstract LocalChangeList getIdentityChangeList(Change change);
+  public abstract @Nullable LocalChangeList getIdentityChangeList(Change change);
 
   
   public abstract Collection<LocalChangeList> getInvolvedListsFilterChanges(Collection<Change> changes,

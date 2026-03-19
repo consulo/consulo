@@ -105,8 +105,7 @@ public class SdkUtil {
    * @param predefined
    * @return newly created SDK, or null.
    */
-  @Nullable
-  public static Sdk createAndAddSDK(String path, SdkType sdkType, UIAccess uiAccess) {
+  public static @Nullable Sdk createAndAddSDK(String path, SdkType sdkType, UIAccess uiAccess) {
     VirtualFile sdkHome = ApplicationManager.getApplication()
       .runWriteAction((Supplier<VirtualFile>)() -> LocalFileSystem.getInstance().refreshAndFindFileByPath(path));
     if (sdkHome != null) {
@@ -119,8 +118,7 @@ public class SdkUtil {
     return null;
   }
 
-  @Nullable
-  public static Sdk setupSdk(Sdk[] allSdks,
+  public static @Nullable Sdk setupSdk(Sdk[] allSdks,
                              VirtualFile homeDir,
                              SdkType sdkType,
                              boolean silent,
@@ -134,8 +132,7 @@ public class SdkUtil {
     return setupLegacySdk(allSdks, homeDir, sdkType, silent, additionalData, customSdkSuggestedName, uiAccess);
   }
 
-  @Nullable
-  public static Sdk setupBundle(Platform platform,
+  public static @Nullable Sdk setupBundle(Platform platform,
                                 Sdk[] allSdks,
                                 VirtualFile homeDir,
                                 BundleType bundleType,
@@ -180,8 +177,7 @@ public class SdkUtil {
     return sdk;
   }
 
-  @Nullable
-  public static Sdk setupLegacySdk(
+  public static @Nullable Sdk setupLegacySdk(
     Sdk[] allSdks,
     VirtualFile homeDir,
     SdkType sdkType,
@@ -273,8 +269,7 @@ public class SdkUtil {
     });
   }
 
-  @Nullable
-  public static VirtualFile getSuggestedSdkPath(SdkType sdkType) {
+  public static @Nullable VirtualFile getSuggestedSdkPath(SdkType sdkType) {
     List<Path> paths = new ArrayList<>();
     if (sdkType instanceof BundleType bundleType) {
       bundleType.collectHomePaths(Platform.current(), paths::add);

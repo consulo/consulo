@@ -543,8 +543,7 @@ public class DnDManagerImpl extends DnDManager implements Disposable {
     LOG.debug("Reset events: " + s);
   }
 
-  @Nullable
-  private static DnDEventImpl resetEvent(DnDEvent event) {
+  private static @Nullable DnDEventImpl resetEvent(DnDEvent event) {
     if (event == null) return null;
     event.cleanUp();
     return null;
@@ -767,8 +766,7 @@ public class DnDManagerImpl extends DnDManager implements Disposable {
   }
 
   @Override
-  @Nullable
-  public Component getLastDropHandler() {
+  public @Nullable Component getLastDropHandler() {
     return SoftReference.dereference(myLastDropHandler);
   }
 }

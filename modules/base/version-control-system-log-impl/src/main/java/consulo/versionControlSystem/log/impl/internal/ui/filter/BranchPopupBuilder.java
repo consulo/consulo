@@ -30,10 +30,8 @@ import java.util.*;
 public abstract class BranchPopupBuilder {
   
   private final VcsLogDataPack myDataPack;
-  @Nullable
-  private final Collection<VirtualFile> myVisibleRoots;
-  @Nullable
-  private final List<List<String>> myRecentItems;
+  private final @Nullable Collection<VirtualFile> myVisibleRoots;
+  private final @Nullable List<List<String>> myRecentItems;
 
   protected BranchPopupBuilder(VcsLogDataPack dataPack,
                                @Nullable Collection<VirtualFile> visibleRoots,

@@ -321,8 +321,7 @@ public interface Document extends UserDataHolder {
      * @param offset the offset for which the marker is requested.
      * @return the marker instance, or {@code null} if the specified offset is not covered by a read-only marker.
      */
-    @Nullable
-    default RangeMarker getOffsetGuard(int offset) {
+    default @Nullable RangeMarker getOffsetGuard(int offset) {
         return getRangeGuard(offset, offset);
     }
 
@@ -333,8 +332,7 @@ public interface Document extends UserDataHolder {
      * @param end   the end offset of the range for which the marker is requested.
      * @return the marker instance, or {@code null} if the specified range is not covered by a read-only marker.
      */
-    @Nullable
-    default RangeMarker getRangeGuard(int start, int end) {
+    default @Nullable RangeMarker getRangeGuard(int start, int end) {
         return null;
     }
 

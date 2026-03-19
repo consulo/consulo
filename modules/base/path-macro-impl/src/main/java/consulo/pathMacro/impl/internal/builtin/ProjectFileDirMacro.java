@@ -37,8 +37,7 @@ public final class ProjectFileDirMacro extends Macro {
   }
 
   @Override
-  @Nullable
-  public String expand(DataContext dataContext) {
+  public @Nullable String expand(DataContext dataContext) {
     VirtualFile baseDir = dataContext.getData(Project.PROJECT_FILE_DIRECTORY);
     if (baseDir == null) {
       return null;

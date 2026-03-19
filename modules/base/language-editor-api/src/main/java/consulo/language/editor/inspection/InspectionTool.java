@@ -43,13 +43,11 @@ public abstract class InspectionTool implements BatchSuppressableTool {
         return DummyInspectionToolState.INSTANCE;
     }
 
-    @Nullable
-    public Language getLanguage() {
+    public @Nullable Language getLanguage() {
         return null;
     }
 
-    @Nullable
-    public String getAlternativeID() {
+    public @Nullable String getAlternativeID() {
         return null;
     }
 
@@ -132,8 +130,7 @@ public abstract class InspectionTool implements BatchSuppressableTool {
     /**
      * @return short name of tool whose results will be used
      */
-    @Nullable
-    public String getMainToolId() {
+    public @Nullable String getMainToolId() {
         return null;
     }
 
@@ -159,8 +156,7 @@ public abstract class InspectionTool implements BatchSuppressableTool {
     }
 
     @Deprecated
-    @Nullable
-    public String getDescriptionFileName() {
+    public @Nullable String getDescriptionFileName() {
         return null;
     }
 

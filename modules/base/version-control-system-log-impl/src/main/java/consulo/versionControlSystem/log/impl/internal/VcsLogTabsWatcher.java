@@ -44,8 +44,7 @@ public class VcsLogTabsWatcher implements Disposable {
     private final ToolWindowManagerEx myToolWindowManager;
     
     private final MyRefreshPostponedEventsListener myPostponedEventsListener;
-    @Nullable
-    private ToolWindow myToolWindow;
+    private @Nullable ToolWindow myToolWindow;
 
     public VcsLogTabsWatcher(Project project, PostponableLogRefresher refresher, Disposable parentDisposable) {
         myRefresher = refresher;
@@ -59,8 +58,7 @@ public class VcsLogTabsWatcher implements Disposable {
         Disposer.register(parentDisposable, this);
     }
 
-    @Nullable
-    private String getSelectedTabName() {
+    private @Nullable String getSelectedTabName() {
         if (myToolWindow != null && myToolWindow.isVisible()) {
             Content content = myToolWindow.getContentManager().getSelectedContent();
             if (content != null) {

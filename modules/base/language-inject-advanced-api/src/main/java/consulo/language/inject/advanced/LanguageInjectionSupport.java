@@ -58,8 +58,7 @@ public abstract class LanguageInjectionSupport {
 
     public abstract boolean useDefaultInjector(PsiLanguageInjectionHost host);
 
-    @Nullable
-    public abstract BaseInjection findCommentInjection(PsiElement host, @Nullable Ref<PsiElement> commentRef);
+    public abstract @Nullable BaseInjection findCommentInjection(PsiElement host, @Nullable Ref<PsiElement> commentRef);
 
     /**
      * @see #FIX_KEY

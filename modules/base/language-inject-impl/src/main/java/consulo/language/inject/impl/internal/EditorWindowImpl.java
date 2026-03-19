@@ -241,8 +241,7 @@ class EditorWindowImpl extends UserDataHolderBase implements EditorWindow, Edito
   }
 
   @Override
-  @Nullable
-  public JComponent getHeaderComponent() {
+  public @Nullable JComponent getHeaderComponent() {
     return null;
   }
 

@@ -95,8 +95,7 @@ public class TestDiffRequestProcessor {
     }
   }
 
-  @Nullable
-  private static VirtualFile findFile(@Nullable String path) {
+  private static @Nullable VirtualFile findFile(@Nullable String path) {
     if (path == null) return null;
     VirtualFileSystem fs = path.contains(URLUtil.JAR_SEPARATOR) ? StandardFileSystems.zip() : LocalFileSystem.getInstance();
     return fs.refreshAndFindFileByPath(path);

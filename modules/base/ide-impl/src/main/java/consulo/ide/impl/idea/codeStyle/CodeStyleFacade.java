@@ -73,8 +73,7 @@ public interface CodeStyleFacade {
      * @return the indent string (containing of tabs and/or white spaces), or null if it
      * was not possible to calculate the indent.
      */
-    @Nullable
-    default String getLineIndent(Editor editor, @Nullable Language language, int offset, boolean allowDocCommit) {
+    default @Nullable String getLineIndent(Editor editor, @Nullable Language language, int offset, boolean allowDocCommit) {
         //noinspection deprecation
         return getLineIndent(editor.getDocument(), offset);
     }

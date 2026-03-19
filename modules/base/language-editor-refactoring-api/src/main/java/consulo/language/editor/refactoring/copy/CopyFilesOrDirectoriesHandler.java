@@ -207,8 +207,7 @@ public class CopyFilesOrDirectoriesHandler extends CopyHandlerDelegateBase {
         }
     }
 
-    @Nullable
-    private static PsiDirectory getCommonParentDirectory(PsiElement[] elements) {
+    private static @Nullable PsiDirectory getCommonParentDirectory(PsiElement[] elements) {
         PsiDirectory result = null;
 
         for (PsiElement element : elements) {
@@ -397,8 +396,7 @@ public class CopyFilesOrDirectoriesHandler extends CopyHandlerDelegateBase {
         }
     }
 
-    @Nullable
-    public static PsiDirectory resolveDirectory(PsiDirectory defaultTargetDirectory) {
+    public static @Nullable PsiDirectory resolveDirectory(PsiDirectory defaultTargetDirectory) {
         Project project = defaultTargetDirectory.getProject();
         Boolean showDirsChooser =
             defaultTargetDirectory.getCopyableUserData(RefactoringInternalHelper.COPY_PASTE_DELEGATE_SHOW_CHOOSER_KEY);

@@ -22,8 +22,7 @@ import org.jspecify.annotations.Nullable;
  * @since 2013-06-15
  */
 public class NamedPointerImpl<T extends Named> implements NamedPointer<T> {
-  @Nullable
-  private T myValue;
+  private @Nullable T myValue;
 
   private final String myName;
 

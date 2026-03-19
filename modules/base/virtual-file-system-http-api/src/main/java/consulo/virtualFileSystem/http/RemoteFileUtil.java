@@ -26,8 +26,7 @@ public class RemoteFileUtil {
     private RemoteFileUtil() {
     }
 
-    @Nullable
-    public static FileType getFileType(@Nullable String contentType) {
+    public static @Nullable FileType getFileType(@Nullable String contentType) {
         if (contentType == null) {
             return null;
         }

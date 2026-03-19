@@ -59,10 +59,8 @@ public abstract class AmendComponent {
     
     private final String myPreviousMessage;
 
-    @Nullable
-    private Map<VirtualFile, String> myMessagesForRoots;
-    @Nullable
-    private String myAmendedMessage;
+    private @Nullable Map<VirtualFile, String> myMessagesForRoots;
+    private @Nullable String myAmendedMessage;
 
     public AmendComponent(
         Project project,
@@ -105,8 +103,7 @@ public abstract class AmendComponent {
         });
     }
 
-    @Nullable
-    private String constructAmendedMessage() {
+    private @Nullable String constructAmendedMessage() {
         Set<VirtualFile> selectedRoots = getVcsRoots(getSelectedFilePaths()); // get only selected files
         SequencedSet<String> messages = new LinkedHashSet<>();
         if (myMessagesForRoots != null) {
@@ -189,8 +186,7 @@ public abstract class AmendComponent {
     
     protected abstract Set<VirtualFile> getVcsRoots(Collection<FilePath> files);
 
-    @Nullable
-    protected abstract String getLastCommitMessage(VirtualFile repo) throws VcsException;
+    protected abstract @Nullable String getLastCommitMessage(VirtualFile repo) throws VcsException;
 
     public boolean isAmend() {
         return myAmend.isSelected();

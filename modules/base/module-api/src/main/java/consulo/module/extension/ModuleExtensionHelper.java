@@ -42,6 +42,5 @@ public interface ModuleExtensionHelper {
   
   public String getModuleExtensionName(ModuleExtension<?> moduleExtension);
 
-  @Nullable
-  public Image getModuleExtensionIcon(String extensionId);
+  public @Nullable Image getModuleExtensionIcon(String extensionId);
 }

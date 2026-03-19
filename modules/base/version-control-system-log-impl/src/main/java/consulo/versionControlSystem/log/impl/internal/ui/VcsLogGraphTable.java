@@ -94,7 +94,7 @@ public class VcsLogGraphTable extends TableWithProgress implements DataProvider,
   private final StringCellRenderer myStringCellRenderer;
   private boolean myColumnsSizeInitialized = false;
 
-  @Nullable private Selection mySelection = null;
+  private @Nullable Selection mySelection = null;
 
   
   private final Collection<VcsLogHighlighter> myHighlighters = new ArrayList<>();
@@ -446,8 +446,8 @@ public class VcsLogGraphTable extends TableWithProgress implements DataProvider,
     private final VcsLogGraphTable myTable;
     
     private final TIntHashSet mySelectedCommits;
-    @Nullable private final Integer myVisibleSelectedCommit;
-    @Nullable private final Integer myDelta;
+    private final @Nullable Integer myVisibleSelectedCommit;
+    private final @Nullable Integer myDelta;
     private final boolean myIsOnTop;
 
 
@@ -727,7 +727,7 @@ public class VcsLogGraphTable extends TableWithProgress implements DataProvider,
   private class InvisibleResizableHeader extends JBTable.JBTableHeader {
     
     private final MyBasicTableHeaderUI myHeaderUI;
-    @Nullable private Cursor myCursor = null;
+    private @Nullable Cursor myCursor = null;
 
     public InvisibleResizableHeader() {
       myHeaderUI = new MyBasicTableHeaderUI(this);

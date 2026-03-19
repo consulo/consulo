@@ -135,8 +135,7 @@ public class GroupNode extends Node implements Navigatable, Comparable<GroupNode
         myRecursiveUsageCount = 0;
     }
 
-    @Nullable
-    private UsageNode tryMerge(Usage usage) {
+    private @Nullable UsageNode tryMerge(Usage usage) {
         if (!(usage instanceof MergeableUsage mergeableUsage)) {
             return null;
         }

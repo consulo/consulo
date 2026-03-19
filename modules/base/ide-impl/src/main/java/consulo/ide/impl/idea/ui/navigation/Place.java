@@ -51,9 +51,8 @@ public class Place implements ComparableObject {
     return this;
   }
 
-  @Nullable
   public
-  Object getPath(String name) {
+  @Nullable Object getPath(String name) {
     return myPath.get(name);
   }
 

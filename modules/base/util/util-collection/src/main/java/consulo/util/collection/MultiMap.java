@@ -21,8 +21,7 @@ public class MultiMap<K, V> implements Serializable {
 
   protected final Map<K, Collection<V>> myMap;
 
-  @Nullable
-  private Collection<V> values = null;
+  private @Nullable Collection<V> values = null;
 
   public MultiMap() {
     myMap = new HashMap<>();

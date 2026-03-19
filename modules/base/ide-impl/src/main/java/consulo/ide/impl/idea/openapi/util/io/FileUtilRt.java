@@ -318,8 +318,7 @@ public class FileUtilRt {
      * @param file the file
      * @return the relative path from the {@code base} to the {@code file}, or {@code null}
      */
-    @Nullable
-    public static String getRelativePath(File base, File file) {
+    public static @Nullable String getRelativePath(File base, File file) {
         if (base == null || file == null) {
             return null;
         }
@@ -333,13 +332,11 @@ public class FileUtilRt {
         return getRelativePath(basePath, filePath, File.separatorChar);
     }
 
-    @Nullable
-    public static String getRelativePath(String basePath, String filePath, char separator) {
+    public static @Nullable String getRelativePath(String basePath, String filePath, char separator) {
         return getRelativePath(basePath, filePath, separator, SystemInfoRt.isFileSystemCaseSensitive);
     }
 
-    @Nullable
-    public static String getRelativePath(String basePath, String filePath, char separator, boolean caseSensitive) {
+    public static @Nullable String getRelativePath(String basePath, String filePath, char separator, boolean caseSensitive) {
         basePath = ensureEnds(basePath, separator);
 
         if (caseSensitive ? basePath.equals(ensureEnds(filePath, separator)) : basePath.equalsIgnoreCase(ensureEnds(filePath, separator))) {
@@ -747,8 +744,7 @@ public class FileUtilRt {
      * @param file a file to analyze
      * @return files's parent, or {@code null} if the file has no parent.
      */
-    @Nullable
-    public static File getParentFile(File file) {
+    public static @Nullable File getParentFile(File file) {
         int skipCount = 0;
         File parentFile = file;
         while (true) {
@@ -878,8 +874,7 @@ public class FileUtilRt {
         T execute(boolean lastAttempt) throws E;
     }
 
-    @Nullable
-    public static <T, E extends Throwable> T doIOOperation(RepeatableIOOperation<T, E> ioTask) throws E {
+    public static @Nullable <T, E extends Throwable> T doIOOperation(RepeatableIOOperation<T, E> ioTask) throws E {
         for (int i = MAX_FILE_IO_ATTEMPTS; i > 0; i--) {
             T result = ioTask.execute(i == 1);
             if (result != null) {

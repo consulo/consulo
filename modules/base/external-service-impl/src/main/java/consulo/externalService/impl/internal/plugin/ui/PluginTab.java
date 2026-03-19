@@ -140,8 +140,7 @@ public abstract class PluginTab implements Disposable {
 
     public abstract List<PluginSorter> getSorters();
 
-    @Nullable
-    public PluginDescriptor getSelectedPlugin() {
+    public @Nullable PluginDescriptor getSelectedPlugin() {
         return myPluginList.getComponent().getSelectedValue();
     }
 
@@ -265,8 +264,7 @@ public abstract class PluginTab implements Disposable {
         return null;
     }
 
-    @Nullable
-    protected String canApply() {
+    protected @Nullable String canApply() {
         return null;
     }
 

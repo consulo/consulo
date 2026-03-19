@@ -65,8 +65,7 @@ public class Continuation<T> extends UserDataHolderBase implements Executor {
     @Nullable
     BiConsumer<CoroutineStep<?, ?>, Continuation<?>> fStepListener = null;
 
-    @Nullable
-    private T result = null;
+    private @Nullable T result = null;
 
     private boolean callChainComplete = false;
 
@@ -74,23 +73,17 @@ public class Continuation<T> extends UserDataHolderBase implements Executor {
 
     private boolean finished = false;
 
-    @Nullable
-    private Throwable error = null;
+    private @Nullable Throwable error = null;
 
-    @Nullable
-    private CompletableFuture<?> currentExecution = null;
+    private @Nullable CompletableFuture<?> currentExecution = null;
 
-    @Nullable
-    private Suspension<?> currentSuspension = null;
+    private @Nullable Suspension<?> currentSuspension = null;
 
-    @Nullable
-    private Consumer<Continuation<T>> runWhenDone = null;
+    private @Nullable Consumer<Continuation<T>> runWhenDone = null;
 
-    @Nullable
-    private Consumer<Continuation<T>> runOnCancel = null;
+    private @Nullable Consumer<Continuation<T>> runOnCancel = null;
 
-    @Nullable
-    private Consumer<Continuation<T>> runOnError = null;
+    private @Nullable Consumer<Continuation<T>> runOnError = null;
 
     /**
      * Creates a new instance for the execution of the given {@link Coroutine}
@@ -284,8 +277,7 @@ public class Continuation<T> extends UserDataHolderBase implements Executor {
      * used directly as a functional argument to
      * {@link CompletableFuture#exceptionally(Function)}
      */
-    @Nullable
-    public <O> O fail(Throwable error) {
+    public @Nullable <O> O fail(Throwable error) {
         if (!finished) {
             this.error = error;
             scope.fail(this);
@@ -314,8 +306,7 @@ public class Continuation<T> extends UserDataHolderBase implements Executor {
      *
      * @see #getConfiguration(RelationType, Object)
      */
-    @Nullable
-    public <V> V getConfiguration(Key<V> configType) {
+    public @Nullable <V> V getConfiguration(Key<V> configType) {
         return getConfiguration(configType, null);
     }
 
@@ -338,8 +329,7 @@ public class Continuation<T> extends UserDataHolderBase implements Executor {
      * @param defaultValue The default value if no state relation exists
      * @return The configuration value (may be NULL)
      */
-    @Nullable
-    public <V> V getConfiguration(Key<V> configType, @Nullable V defaultValue) {
+    public @Nullable <V> V getConfiguration(Key<V> configType, @Nullable V defaultValue) {
         V data = getCopyableUserData(configType);
         if (data != null) {
             return data;
@@ -383,8 +373,7 @@ public class Continuation<T> extends UserDataHolderBase implements Executor {
      *
      * @return The current suspension or NULL for none
      */
-    @Nullable
-    public final Suspension<?> getCurrentSuspension() {
+    public final @Nullable Suspension<?> getCurrentSuspension() {
         return currentSuspension;
     }
 
@@ -393,8 +382,7 @@ public class Continuation<T> extends UserDataHolderBase implements Executor {
      *
      * @return The error or NULL for none
      */
-    @Nullable
-    public Throwable getError() {
+    public @Nullable Throwable getError() {
         return error;
     }
 
@@ -405,8 +393,7 @@ public class Continuation<T> extends UserDataHolderBase implements Executor {
      *
      * @return The result
      */
-    @Nullable
-    public T getResult() {
+    public @Nullable T getResult() {
         try {
             finishSignal.await();
         }
@@ -429,8 +416,7 @@ public class Continuation<T> extends UserDataHolderBase implements Executor {
      *                               or an error occurred
      * @throws CancellationException If the coroutine had been cancelled
      */
-    @Nullable
-    public T getResult(long timeout, TimeUnit unit) {
+    public @Nullable T getResult(long timeout, TimeUnit unit) {
         try {
             if (!finishSignal.await(timeout, unit)) {
                 throw new CoroutineException("Timeout reached");
@@ -447,8 +433,7 @@ public class Continuation<T> extends UserDataHolderBase implements Executor {
      *
      * @see #getState(Key, Object)
      */
-    @Nullable
-    public <V> V getState(Key<V> stateType) {
+    public @Nullable <V> V getState(Key<V> stateType) {
         return getState(stateType, null);
     }
 
@@ -464,8 +449,7 @@ public class Continuation<T> extends UserDataHolderBase implements Executor {
      * @param defaultValue The default value if no state relation exists
      * @return The runtime state value (may be null)
      */
-    @Nullable
-    public <V> V getState(Key<V> stateType, @Nullable V defaultValue) {
+    public @Nullable <V> V getState(Key<V> stateType, @Nullable V defaultValue) {
         Coroutine<?, ?> coroutine = getCurrentCoroutine();
 
         V data = coroutine.getUserData(stateType);
@@ -750,8 +734,7 @@ public class Continuation<T> extends UserDataHolderBase implements Executor {
      *
      * @return The result
      */
-    @Nullable
-    private T getResultImpl() {
+    private @Nullable T getResultImpl() {
         if (cancelled) {
             if (error != null) {
                 if (error instanceof CoroutineException) {

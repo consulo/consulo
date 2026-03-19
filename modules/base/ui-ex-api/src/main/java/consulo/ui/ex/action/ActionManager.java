@@ -171,6 +171,5 @@ public abstract class ActionManager {
         Application.get().getMessageBus().connect(parentDisposable).subscribe(AnActionListener.class, listener);
     }
 
-    @Nullable
-    public abstract KeyboardShortcut getKeyboardShortcut(String actionId);
+    public abstract @Nullable KeyboardShortcut getKeyboardShortcut(String actionId);
 }

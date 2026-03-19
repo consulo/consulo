@@ -46,8 +46,7 @@ public class UpdateRootNode extends GroupTreeNode {
     }
   }
 
-  @Nullable
-  private GroupTreeNode addFileGroup(FileGroup fileGroup, AbstractTreeNode parent, ActionInfo actionInfo) {
+  private @Nullable GroupTreeNode addFileGroup(FileGroup fileGroup, AbstractTreeNode parent, ActionInfo actionInfo) {
     if (fileGroup.isEmpty()) {
       return null;
     }

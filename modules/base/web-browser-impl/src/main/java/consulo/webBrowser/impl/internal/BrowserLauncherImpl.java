@@ -40,8 +40,7 @@ import java.util.concurrent.TimeUnit;
 @ServiceImpl
 public final class BrowserLauncherImpl extends BrowserLauncherAppless {
     @Override
-    @Nullable
-    protected WebBrowser getEffectiveBrowser(@Nullable WebBrowser browser) {
+    protected @Nullable WebBrowser getEffectiveBrowser(@Nullable WebBrowser browser) {
         WebBrowser effectiveBrowser = browser;
 
         if (browser == null) {
@@ -71,11 +70,11 @@ public final class BrowserLauncherImpl extends BrowserLauncherAppless {
     }
 
     @Override
-    protected void checkCreatedProcess(@Nullable final WebBrowser browser,
-                                       @Nullable final Project project,
+    protected void checkCreatedProcess(final @Nullable WebBrowser browser,
+                                       final @Nullable Project project,
                                        GeneralCommandLine commandLine,
                                        final Process process,
-                                       @Nullable final Runnable launchTask) {
+                                       final @Nullable Runnable launchTask) {
         if (isOpenCommandUsed(commandLine)) {
             Future<?> future = Application.get().executeOnPooledThread(new Runnable() {
                 @Override

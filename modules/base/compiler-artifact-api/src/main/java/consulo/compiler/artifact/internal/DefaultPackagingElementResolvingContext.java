@@ -29,8 +29,7 @@ import org.jspecify.annotations.Nullable;
  * @author nik
  */
 public class DefaultPackagingElementResolvingContext implements PackagingElementResolvingContext {
-  @Nullable
-  public static Library findLibrary(Project project, String level, String libraryName) {
+  public static @Nullable Library findLibrary(Project project, String level, String libraryName) {
     LibraryTable table = LibraryTablesRegistrar.getInstance().getLibraryTableByLevel(level, project);
     return table != null ? table.getLibraryByName(libraryName) : null;
   }

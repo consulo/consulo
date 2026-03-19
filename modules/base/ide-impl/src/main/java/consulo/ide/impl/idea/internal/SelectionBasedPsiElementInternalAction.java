@@ -80,8 +80,7 @@ public abstract class SelectionBasedPsiElementInternalAction<T extends PsiElemen
         }
     }
 
-    @Nullable
-    protected abstract String getInformationHint(T element);
+    protected abstract @Nullable String getInformationHint(T element);
 
     
     protected abstract String getErrorHint();

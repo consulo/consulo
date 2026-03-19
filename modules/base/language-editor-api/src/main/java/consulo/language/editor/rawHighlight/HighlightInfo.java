@@ -225,8 +225,7 @@ public interface HighlightInfo extends Segment {
         return HighlightInfoFactory.getInstance().createBuilder(type);
     }
 
-    @Nullable
-    static HighlightInfo fromRangeHighlighter(RangeHighlighter highlighter) {
+    static @Nullable HighlightInfo fromRangeHighlighter(RangeHighlighter highlighter) {
         return highlighter.getErrorStripeTooltip() instanceof HighlightInfo highlightInfo ? highlightInfo : null;
     }
 

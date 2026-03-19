@@ -955,7 +955,6 @@ public class LocalInspectionsPass extends ProgressableTextEditorHighlightingPass
         private final int problemsSize;
         
         private final PsiElementVisitor visitor;
-        @Nullable
-        private final Set<String> dialectIdsSpecifiedForTool;
+        private final @Nullable Set<String> dialectIdsSpecifiedForTool;
     }
 }

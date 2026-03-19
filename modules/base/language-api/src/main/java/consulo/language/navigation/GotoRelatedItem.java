@@ -52,23 +52,19 @@ public class GotoRelatedItem {
     PsiNavigateUtil.navigate(myElement);
   }
 
-  @Nullable
-  public String getCustomName() {
+  public @Nullable String getCustomName() {
     return null;
   }
 
-  @Nullable
-  public String getCustomContainerName() {
+  public @Nullable String getCustomContainerName() {
     return null;
   }
 
-  @Nullable
-  public Image getCustomIcon() {
+  public @Nullable Image getCustomIcon() {
     return null;
   }
 
-  @Nullable
-  public PsiElement getElement() {
+  public @Nullable PsiElement getElement() {
     return myElement;
   }
 

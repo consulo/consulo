@@ -51,8 +51,7 @@ public abstract class RecentProjectsWelcomeScreenActionBase extends DumbAwareAct
         super(text, description, icon);
     }
 
-    @Nullable
-    public static DefaultListModel getDataModel(AnActionEvent e) {
+    public static @Nullable DefaultListModel getDataModel(AnActionEvent e) {
         JList list = getList(e);
         return list != null && list.getModel() instanceof NameFilteringListModel nameFilteringListModel
             && nameFilteringListModel.getOriginalModel() instanceof DefaultListModel defaultListModel ? defaultListModel : null;
@@ -72,8 +71,7 @@ public abstract class RecentProjectsWelcomeScreenActionBase extends DumbAwareAct
         return actions;
     }
 
-    @Nullable
-    public static JList getList(AnActionEvent e) {
+    public static @Nullable JList getList(AnActionEvent e) {
         Component component = e.getData(UIExAWTDataKey.CONTEXT_COMPONENT);
         return component instanceof JList jList ? jList : null;
     }

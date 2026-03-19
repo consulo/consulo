@@ -28,12 +28,10 @@ import java.lang.reflect.Type;
 import java.util.*;
 
 abstract class AbstractCollectionBinding extends NullableAccessorBinding implements MultiNodeBinding {
-  @Nullable
-  private Map<Class<?>, Binding> itemBindings;
+  private @Nullable Map<Class<?>, Binding> itemBindings;
 
   protected final Class<?> itemType;
-  @Nullable
-  private final AbstractCollection annotation;
+  private final @Nullable AbstractCollection annotation;
 
   public AbstractCollectionBinding(Class elementType, @Nullable MutableAccessor accessor) {
     super(accessor);
@@ -84,8 +82,7 @@ abstract class AbstractCollectionBinding extends NullableAccessorBinding impleme
     return itemBindings;
   }
 
-  @Nullable
-  private Binding getElementBinding(Element element) {
+  private @Nullable Binding getElementBinding(Element element) {
     for (Binding binding : getElementBindings().values()) {
       if (binding.isBoundTo(element)) {
         return binding;
@@ -156,8 +153,7 @@ abstract class AbstractCollectionBinding extends NullableAccessorBinding impleme
   }
 
 
-  @Nullable
-  private Object serializeItem(@Nullable Object value, Object context, SerializationFilter filter) {
+  private @Nullable Object serializeItem(@Nullable Object value, Object context, SerializationFilter filter) {
     if (value == null) {
       LOG.warn("Collection " + myAccessor + " contains 'null' object");
       return null;
@@ -183,8 +179,7 @@ abstract class AbstractCollectionBinding extends NullableAccessorBinding impleme
     }
   }
 
-  @Nullable
-  private Object deserializeItem(Element node, @Nullable Object context) {
+  private @Nullable Object deserializeItem(Element node, @Nullable Object context) {
     Binding binding = getElementBinding(node);
     if (binding == null) {
       String attributeName = annotation == null ? Constants.VALUE : annotation.elementValueAttribute();
@@ -256,8 +251,7 @@ abstract class AbstractCollectionBinding extends NullableAccessorBinding impleme
     return element.getName().equals(tagName);
   }
 
-  @Nullable
-  private String getTagName(@Nullable Object target) {
+  private @Nullable String getTagName(@Nullable Object target) {
     return annotation == null || annotation.surroundWithTag() ? getCollectionTagName(target) : null;
   }
 

@@ -32,8 +32,7 @@ public class CurrentBinaryContentRevision extends CurrentContentRevision impleme
   }
 
   @Override
-  @Nullable
-  public byte[] getBinaryContent() throws VcsException {
+  public @Nullable byte[] getBinaryContent() throws VcsException {
     VirtualFile vFile = getVirtualFile();
     if (vFile == null) return null;
     try {

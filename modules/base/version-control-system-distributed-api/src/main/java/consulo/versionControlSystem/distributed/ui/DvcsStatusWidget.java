@@ -33,12 +33,10 @@ public abstract class DvcsStatusWidget<T extends Repository> extends EditorBased
     
     private final String myVcsName;
 
-    @Nullable
-    private String myText;
+    private @Nullable String myText;
     
     private LocalizeValue myTooltip = LocalizeValue.empty();
-    @Nullable
-    private Image myIcon;
+    private @Nullable Image myIcon;
 
     protected DvcsStatusWidget(Project project, StatusBarWidgetFactory factory, String vcsName) {
         super(project, factory);
@@ -50,14 +48,12 @@ public abstract class DvcsStatusWidget<T extends Repository> extends EditorBased
         });
     }
 
-    @Nullable
-    protected abstract T guessCurrentRepository(Project project);
+    protected abstract @Nullable T guessCurrentRepository(Project project);
 
     
     protected abstract String getFullBranchName(T repository);
 
-    @Nullable
-    protected Image getIcon(T repository) {
+    protected @Nullable Image getIcon(T repository) {
         if (repository.getState() != Repository.State.NORMAL) {
             return PlatformIconGroup.generalWarning();
         }

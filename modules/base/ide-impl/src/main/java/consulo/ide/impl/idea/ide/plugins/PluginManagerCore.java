@@ -55,8 +55,7 @@ public class PluginManagerCore {
         return array;
     }
 
-    @Nullable
-    public static PluginId getPluginId(Class<?> clazz) {
+    public static @Nullable PluginId getPluginId(Class<?> clazz) {
         ClassLoader loader = clazz.getClassLoader();
         if (!(loader instanceof PluginClassLoader)) {
             return null;

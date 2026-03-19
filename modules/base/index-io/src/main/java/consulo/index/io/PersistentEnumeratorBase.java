@@ -359,7 +359,7 @@ public abstract class PersistentEnumeratorBase<Data> implements DataEnumeratorEx
     }
   }
 
-  public boolean processAllDataObject(final Predicate<? super Data> processor, @Nullable final DataFilter filter) throws IOException {
+  public boolean processAllDataObject(final Predicate<? super Data> processor, final @Nullable DataFilter filter) throws IOException {
     return traverseAllRecords(new RecordsProcessor() {
       @Override
       public boolean process(int record) throws IOException {

@@ -33,10 +33,8 @@ public class FilteringIterator<Dom, E extends Dom> implements PeekableIterator<E
     private final Predicate<? super Dom> myCondition;
     private boolean myNextObtained;
     private boolean myCurrentIsValid;
-    @Nullable
-    private Dom myCurrent = null;
-    @Nullable
-    private Boolean myCurrentPassedFilter;
+    private @Nullable Dom myCurrent = null;
+    private @Nullable Boolean myCurrentPassedFilter;
     @Deprecated
     public static final Predicate NOT_NULL = Predicates.notNull();
 

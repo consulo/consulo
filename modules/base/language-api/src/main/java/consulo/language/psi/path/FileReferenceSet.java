@@ -63,8 +63,7 @@ public class FileReferenceSet {
     private final boolean myEndingSlashNotAllowed;
     private boolean myEmptyPathAllowed;
     private Map<CustomizableReferenceProvider.@Nullable CustomizationKey, Object> myOptions;
-    @Nullable
-    private FileType[] mySuitableFileTypes;
+    private @Nullable FileType[] mySuitableFileTypes;
 
     public FileReferenceSet(
         String str,
@@ -341,8 +340,7 @@ public class FileReferenceSet {
         return getContextByFile(file);
     }
 
-    @Nullable
-    protected PsiFile getContainingFile() {
+    protected @Nullable PsiFile getContainingFile() {
         PsiFile cf = myElement.getContainingFile();
         PsiFile file = InjectedLanguageManager.getInstance(cf.getProject()).getTopLevelFile(cf);
         if (file != null) {
@@ -420,14 +418,12 @@ public class FileReferenceSet {
         return true;
     }
 
-    @Nullable
-    public PsiFileSystemItem resolve() {
+    public @Nullable PsiFileSystemItem resolve() {
         FileReference lastReference = getLastReference();
         return lastReference == null ? null : lastReference.resolve();
     }
 
-    @Nullable
-    public FileReference getLastReference() {
+    public @Nullable FileReference getLastReference() {
         return myReferences == null || myReferences.length == 0 ? null : myReferences[myReferences.length - 1];
     }
 

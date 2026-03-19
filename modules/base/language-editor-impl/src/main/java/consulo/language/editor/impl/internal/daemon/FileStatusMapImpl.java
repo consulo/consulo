@@ -205,8 +205,7 @@ public final class FileStatusMapImpl implements Disposable, FileStatusMap {
      * @return null for processed file, whole file for untouched or entirely dirty file, range(usually code block) for dirty region (optimization)
      */
     @Override
-    @Nullable
-    public TextRange getFileDirtyScope(Document document, int passId) {
+    public @Nullable TextRange getFileDirtyScope(Document document, int passId) {
         synchronized (myDocumentToStatusMap) {
             PsiFile file = PsiDocumentManager.getInstance(myProject).getPsiFile(document);
             if (!ProblemHighlightFilter.shouldHighlightFile(file)) {

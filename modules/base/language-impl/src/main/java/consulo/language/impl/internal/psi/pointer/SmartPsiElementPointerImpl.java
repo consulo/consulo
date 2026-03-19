@@ -80,8 +80,7 @@ class SmartPsiElementPointerImpl<E extends PsiElement> implements SmartPointerEx
   }
 
   @Override
-  @Nullable
-  public E getElement() {
+  public @Nullable E getElement() {
     if (getProject().isDisposed()) return null;
 
     E element = getCachedElement();
@@ -212,8 +211,7 @@ class SmartPsiElementPointerImpl<E extends PsiElement> implements SmartPointerEx
     return new SelfElementInfo(proper, identikit, containingFile, forInjected);
   }
 
-  @Nullable
-  private static SmartPointerElementInfo createAnchorInfo(PsiElement element, PsiFile containingFile) {
+  private static @Nullable SmartPointerElementInfo createAnchorInfo(PsiElement element, PsiFile containingFile) {
     if (element instanceof StubBasedPsiElement && containingFile instanceof PsiFileImpl) {
       IStubFileElementType stubType = ((PsiFileImpl)containingFile).getElementTypeForStubBuilder();
       if (stubType != null && stubType.shouldBuildStubFor(containingFile.getViewProvider().getVirtualFile())) {

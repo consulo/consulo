@@ -70,8 +70,7 @@ public interface ExternalFormatProcessor {
         return EP_NAME.getExtensionList().stream().filter(efp -> externalFormatterId.equals(efp.getId())).findFirst();
     }
 
-    @Nullable
-    static ExternalFormatProcessor activeExternalFormatProcessor(PsiFile source) {
+    static @Nullable ExternalFormatProcessor activeExternalFormatProcessor(PsiFile source) {
         for (ExternalFormatProcessor efp : EP_NAME.getExtensionList()) {
             if (efp.activeForFile(source)) {
                 return efp;
@@ -87,8 +86,7 @@ public interface ExternalFormatProcessor {
      * @param lineStartOffset the offset of the indented line
      * @return the range after indentation or null if nothing to be changed
      */
-    @Nullable
-    static String indentLine(PsiFile source, int lineStartOffset) {
+    static @Nullable String indentLine(PsiFile source, int lineStartOffset) {
         ExternalFormatProcessor efp = activeExternalFormatProcessor(source);
         return efp != null ? efp.indent(source, lineStartOffset) : null;
     }
@@ -99,8 +97,7 @@ public interface ExternalFormatProcessor {
      * @param canChangeWhiteSpacesOnly procedure can change only whitespaces
      * @return the range after formatting or null, if external format procedure was not found or inactive (disabled)
      */
-    @Nullable
-    static TextRange formatRangeInFile(PsiFile source, TextRange range, boolean canChangeWhiteSpacesOnly) {
+    static @Nullable TextRange formatRangeInFile(PsiFile source, TextRange range, boolean canChangeWhiteSpacesOnly) {
         ExternalFormatProcessor efp = activeExternalFormatProcessor(source);
         return efp != null ? efp.format(source, range, canChangeWhiteSpacesOnly) : null;
     }

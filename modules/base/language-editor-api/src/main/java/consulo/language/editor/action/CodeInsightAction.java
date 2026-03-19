@@ -61,8 +61,7 @@ public abstract class CodeInsightAction extends AnAction {
         return ActionUpdateThread.BGT;
     }
 
-    @Nullable
-    protected Editor getEditor(DataContext dataContext, Project project, boolean forUpdate) {
+    protected @Nullable Editor getEditor(DataContext dataContext, Project project, boolean forUpdate) {
         return dataContext.getData(Editor.KEY);
     }
 

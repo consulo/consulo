@@ -365,7 +365,7 @@ public class ShelveChangesManagerImpl implements ShelveChangesManager, JDOMExter
         final List<ShelvedChangeListImpl> selectedChangeLists,
         final List<ShelvedChangeImpl> selectedChanges,
         final List<ShelvedBinaryFileImpl> selectedBinaryChanges,
-        @Nullable final LocalChangeList forcePredefinedOneChangelist
+        final @Nullable LocalChangeList forcePredefinedOneChangelist
     ) {
         ProgressManager.getInstance().run(new Task.Backgroundable(
             project,
@@ -833,8 +833,7 @@ public class ShelveChangesManagerImpl implements ShelveChangesManager, JDOMExter
         notifyStateChanged();
     }
 
-    @Nullable
-    private ShelvedChangeList createRecycledChangelist(ShelvedChangeList changeList) throws IOException {
+    private @Nullable ShelvedChangeList createRecycledChangelist(ShelvedChangeList changeList) throws IOException {
         File newPatchDir = generateUniqueSchemePatchDir(changeList.getDescription(), true);
         File newPath = getPatchFileInConfigDir(newPatchDir);
         FileUtil.copy(new File(changeList.getPath()), newPath, FilePermissionCopier.BY_NIO2);

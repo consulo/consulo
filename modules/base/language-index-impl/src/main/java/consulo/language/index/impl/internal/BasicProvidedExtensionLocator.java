@@ -29,8 +29,7 @@ public class BasicProvidedExtensionLocator implements ProvidedIndexExtensionLoca
            : new ProvidedIndexExtensionImpl<>(root, originalExtension);
   }
 
-  @Nullable
-  private static File getPrebuiltIndexPath() {
+  private static @Nullable File getPrebuiltIndexPath() {
     String path = System.getProperty(PREBUILT_INDEX_PATH_PROP);
     if (path == null) return null;
     File file = new File(path);

@@ -35,13 +35,10 @@ public class ActionCallback {
     private final ExecutionCallback myDone;
     private final ExecutionCallback myRejected;
 
-    @Nullable
-    protected String myError = null;
-    @Nullable
-    protected Throwable myThrowable = null;
+    protected @Nullable String myError = null;
+    protected @Nullable Throwable myThrowable = null;
 
-    @Nullable
-    private final String myName;
+    private final @Nullable String myName;
 
     public ActionCallback() {
         this(null);
@@ -117,8 +114,7 @@ public class ActionCallback {
         return this;
     }
 
-    @Nullable
-    public String getError() {
+    public @Nullable String getError() {
         return myError;
     }
 

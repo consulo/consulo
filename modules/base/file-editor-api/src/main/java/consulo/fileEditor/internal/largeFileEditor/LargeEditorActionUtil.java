@@ -8,8 +8,7 @@ import consulo.ui.ex.action.AnActionEvent;
 import org.jspecify.annotations.Nullable;
 
 public class LargeEditorActionUtil {
-    @Nullable
-    public static LargeFileEditor tryGetLargeFileEditorManager(AnActionEvent e) {
+    public static @Nullable LargeFileEditor tryGetLargeFileEditorManager(AnActionEvent e) {
         FileEditor fileEditor = getFileEditor(e);
         if (fileEditor instanceof LargeFileEditor) {
             return (LargeFileEditor) fileEditor;
@@ -19,8 +18,7 @@ public class LargeEditorActionUtil {
         return editor == null ? null : tryGetLargeFileEditorManagerFromEditor(editor);
     }
 
-    @Nullable
-    public static LargeFileEditor tryGetLargeFileEditorManagerFromEditor(Editor editor) {
+    public static @Nullable LargeFileEditor tryGetLargeFileEditorManagerFromEditor(Editor editor) {
         return editor.getUserData(LargeFileEditor.LARGE_FILE_EDITOR_KEY);
     }
 

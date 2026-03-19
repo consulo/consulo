@@ -175,8 +175,7 @@ public abstract class BaseRepository extends TaskRepository {
     return myPreferredCloseTaskState;
   }
 
-  @Nullable
-  public String extractId(String taskName) {
+  public @Nullable String extractId(String taskName) {
     Matcher matcher = PATTERN.matcher(taskName);
     return matcher.find() ? matcher.group() : null;
   }
@@ -186,8 +185,7 @@ public abstract class BaseRepository extends TaskRepository {
     super.setUrl(addSchemeIfNoneSpecified(url));
   }
 
-  @Nullable
-  private static String addSchemeIfNoneSpecified(@Nullable String url) {
+  private static @Nullable String addSchemeIfNoneSpecified(@Nullable String url) {
     if (StringUtil.isNotEmpty(url)) {
       try {
         String scheme = new URI(url).getScheme();

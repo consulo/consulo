@@ -122,8 +122,7 @@ public class ApplyChangesState extends State {
         blocks.clear();
     }
 
-    @Nullable
-    private static DocumentEx getAffectedDocument(FormattingModel model) {
+    private static @Nullable DocumentEx getAffectedDocument(FormattingModel model) {
         return model.getDocumentModel().getDocument() instanceof DocumentEx documentEx ? documentEx : null;
     }
 

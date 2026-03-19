@@ -36,8 +36,7 @@ public interface CustomStatusBarWidget extends StatusBarWidget {
         throw new AbstractMethodError();
     }
 
-    @Nullable
-    default Component getUIComponent() {
+    default @Nullable Component getUIComponent() {
         // override isUnified() too
         return null;
     }

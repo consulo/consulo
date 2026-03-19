@@ -15,7 +15,12 @@
  */
 package consulo.externalService.statistic;
 
-import java.util.*;
+import org.jspecify.annotations.Nullable;
+
+import java.util.HashMap;
+import java.util.LinkedHashSet;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * ATTENTION! DO NOT IMPORT @NotNull AND @Nullable ANNOTATIONS
@@ -72,8 +77,7 @@ public class ConvertUsagesUtil {
     return descriptors;
   }
 
-  //@Nullable
-  public static StringPair getPair(String str, String separator) {
+  public static @Nullable StringPair getPair(String str, String separator) {
     assert str != null;
     assert separator != null;
     int i = str.indexOf(separator);

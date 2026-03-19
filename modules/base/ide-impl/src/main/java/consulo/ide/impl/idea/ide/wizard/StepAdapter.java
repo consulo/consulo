@@ -42,8 +42,7 @@ public class StepAdapter implements Step {
   }
 
   @Override
-  @Nullable
-  public Icon getIcon() {
+  public @Nullable Icon getIcon() {
     return null;
   }
 

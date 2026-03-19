@@ -81,8 +81,7 @@ public class ModulesComboBox extends ComboBox<Module> {
     myModel.setSelectedItem(module);
   }
 
-  @Nullable
-  public Module getSelectedModule() {
+  public @Nullable Module getSelectedModule() {
     return myModel.getSelectedItem();
   }
 }

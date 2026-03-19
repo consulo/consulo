@@ -25,8 +25,7 @@ import java.util.function.Supplier;
  * @since 2023-01-27
  */
 public class StableExtensionInstance<Impl> implements Supplier<Impl> {
-  @Nullable
-  private Impl myValue = null;
+  private @Nullable Impl myValue = null;
 
   public StableExtensionInstance() {
   }

@@ -31,8 +31,7 @@ import java.util.function.Predicate;
 public class ReflectionUtil {
   private static final Logger LOG = LoggerFactory.getLogger(ReflectionUtil.class);
 
-  @Nullable
-  public static Class<?> substituteGenericType(Type genericType, Type classType) {
+  public static @Nullable Class<?> substituteGenericType(Type genericType, Type classType) {
     if (genericType instanceof TypeVariable) {
       Class<?> aClass = getRawType(classType);
       Type type = resolveVariable((TypeVariable)genericType, aClass);
@@ -87,8 +86,7 @@ public class ReflectionUtil {
     return new ArrayList<>(result);
   }
 
-  @Nullable
-  public static Type resolveVariableInHierarchy(TypeVariable variable, Class aClass) {
+  public static @Nullable Type resolveVariableInHierarchy(TypeVariable variable, Class aClass) {
     Type type;
     Class current = aClass;
     while ((type = resolveVariable(variable, current, false)) == null) {
@@ -103,13 +101,11 @@ public class ReflectionUtil {
     return type;
   }
 
-  @Nullable
-  public static Type resolveVariable(TypeVariable variable, Class classType) {
+  public static @Nullable Type resolveVariable(TypeVariable variable, Class classType) {
     return resolveVariable(variable, classType, true);
   }
 
-  @Nullable
-  public static Type resolveVariable(TypeVariable variable, Class classType, boolean resolveInInterfacesOnly) {
+  public static @Nullable Type resolveVariable(TypeVariable variable, Class classType, boolean resolveInInterfacesOnly) {
     Class aClass = getRawType(classType);
     int index = indexOf(aClass.getTypeParameters(), variable);
     if (index >= 0) {
@@ -252,8 +248,7 @@ public class ReflectionUtil {
     }
   }
 
-  @Nullable
-  public static Class getGrandCallerClass() {
+  public static @Nullable Class getGrandCallerClass() {
     int stackFrameCount = 3;
     Class callerClass = findCallerClass(stackFrameCount);
     while (callerClass != null && callerClass.getClassLoader() == null) { // looks like a system class
@@ -265,18 +260,15 @@ public class ReflectionUtil {
     return callerClass;
   }
 
-  @Nullable
-  public static Field getDeclaredField(Class aClass, String name) {
+  public static @Nullable Field getDeclaredField(Class aClass, String name) {
     return processFields(aClass, field -> name.equals(field.getName()));
   }
 
-  @Nullable
-  public static Method getDeclaredMethod(Class aClass, String name, Class... parameters) {
+  public static @Nullable Method getDeclaredMethod(Class aClass, String name, Class... parameters) {
     return findMethod(getClassDeclaredMethods(aClass, false), name, parameters);
   }
 
-  @Nullable
-  public static <T> T getField(Class objectClass, @Nullable Object object, @Nullable Class<T> fieldType, String fieldName) {
+  public static @Nullable <T> T getField(Class objectClass, @Nullable Object object, @Nullable Class<T> fieldType, String fieldName) {
     try {
       Field field = findAssignableField(objectClass, fieldType, fieldName);
       return (T)field.get(object);
@@ -291,8 +283,7 @@ public class ReflectionUtil {
     }
   }
 
-  @Nullable
-  public static <T> T getStaticFieldValue(Class objectClass, @Nullable Class<T> fieldType, String fieldName) {
+  public static @Nullable <T> T getStaticFieldValue(Class objectClass, @Nullable Class<T> fieldType, String fieldName) {
     try {
       Field field = findAssignableField(objectClass, fieldType, fieldName);
       if (!Modifier.isStatic(field.getModifiers())) {
@@ -323,8 +314,7 @@ public class ReflectionUtil {
     throw new NoSuchFieldException("Class: " + clazz + " fieldName: " + fieldName + " fieldType: " + fieldType);
   }
 
-  @Nullable
-  public static Field processFields(Class clazz, Predicate<Field> checker) {
+  public static @Nullable Field processFields(Class clazz, Predicate<Field> checker) {
     SimpleReference<Field> fieldRef = SimpleReference.create();
 
     processClasses(clazz, it -> {
@@ -362,19 +352,16 @@ public class ReflectionUtil {
     }
   }
 
-  @Nullable
-  public static Class getMethodDeclaringClass(Class<?> instanceClass, String methodName, Class... parameters) {
+  public static @Nullable Class getMethodDeclaringClass(Class<?> instanceClass, String methodName, Class... parameters) {
     Method method = getMethod(instanceClass, methodName, parameters);
     return method == null ? null : method.getDeclaringClass();
   }
 
-  @Nullable
-  public static Method getMethod(Class aClass, String name, Class... parameters) {
+  public static @Nullable Method getMethod(Class aClass, String name, Class... parameters) {
     return findMethod(getClassPublicMethods(aClass, false), name, parameters);
   }
 
-  @Nullable
-  public static Method findMethod(Collection<Method> methods, String name, Class... parameters) {
+  public static @Nullable Method findMethod(Collection<Method> methods, String name, Class... parameters) {
     for (Method method : methods) {
       if (name.equals(method.getName()) && Arrays.equals(parameters, method.getParameterTypes())) {
         method.setAccessible(true);
@@ -393,8 +380,7 @@ public class ReflectionUtil {
     }
   }
 
-  @Nullable
-  public static Class findClassOrNull(String fqn, ClassLoader classLoader) {
+  public static @Nullable Class findClassOrNull(String fqn, ClassLoader classLoader) {
     try {
       return Class.forName(fqn, true, classLoader);
     }
@@ -411,8 +397,7 @@ public class ReflectionUtil {
    * Please consider not using it.
    * These aren't the droids you're looking for!</b>
    */
-  @Nullable
-  public static Class findCallerClass(int framesToSkip) {
+  public static @Nullable Class findCallerClass(int framesToSkip) {
     StackWalker walker = StackWalker.getInstance(StackWalker.Option.RETAIN_CLASS_REFERENCE);
 
     StackWalker.StackFrame frame = walker.walk(it -> {

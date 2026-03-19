@@ -346,20 +346,17 @@ public class NewErrorTreeViewPanelImpl extends JPanel implements DataProvider, N
         return this;
     }
 
-    @Nullable
-    private NavigatableMessageElement getSelectedMessageElement() {
+    private @Nullable NavigatableMessageElement getSelectedMessageElement() {
         ErrorTreeElement selectedElement = getSelectedErrorTreeElement();
         return selectedElement instanceof NavigatableMessageElement ? (NavigatableMessageElement) selectedElement : null;
     }
 
-    @Nullable
-    public ErrorTreeElement getSelectedErrorTreeElement() {
+    public @Nullable ErrorTreeElement getSelectedErrorTreeElement() {
         ErrorTreeNodeDescriptor treeNodeDescriptor = getSelectedNodeDescriptor();
         return treeNodeDescriptor == null ? null : treeNodeDescriptor.getElement();
     }
 
-    @Nullable
-    public ErrorTreeNodeDescriptor getSelectedNodeDescriptor() {
+    public @Nullable ErrorTreeNodeDescriptor getSelectedNodeDescriptor() {
         TreePath path = myTree.getSelectionPath();
         if (path == null) {
             return null;

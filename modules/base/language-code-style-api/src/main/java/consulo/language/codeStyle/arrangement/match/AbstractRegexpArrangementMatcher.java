@@ -30,7 +30,7 @@ public abstract class AbstractRegexpArrangementMatcher implements ArrangementEnt
   
   private final String myPattern;
 
-  @Nullable private final Pattern myCompiledPattern;
+  private final @Nullable Pattern myCompiledPattern;
 
   public AbstractRegexpArrangementMatcher(String pattern) {
     myPattern = pattern;
@@ -53,8 +53,7 @@ public abstract class AbstractRegexpArrangementMatcher implements ArrangementEnt
     return text != null && myCompiledPattern.matcher(text).matches();
   }
   
-  @Nullable
-  protected abstract String getTextToMatch(ArrangementEntry entry);
+  protected abstract @Nullable String getTextToMatch(ArrangementEntry entry);
 
   
   public String getPattern() {

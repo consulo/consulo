@@ -35,8 +35,7 @@ public class UrlConnectionUtil {
   private UrlConnectionUtil() {
   }
 
-  @Nullable
-  public static InputStream getConnectionInputStream(URLConnection connection, ProgressIndicator pi) {
+  public static @Nullable InputStream getConnectionInputStream(URLConnection connection, ProgressIndicator pi) {
     try {
       return getConnectionInputStreamWithException(connection, pi);
     }

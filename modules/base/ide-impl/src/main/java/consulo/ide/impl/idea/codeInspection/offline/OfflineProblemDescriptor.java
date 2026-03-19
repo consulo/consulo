@@ -120,8 +120,7 @@ public class OfflineProblemDescriptor {
         return refEntity;
     }
 
-    @Nullable
-    public OfflineProblemDescriptor getOwner() {
+    public @Nullable OfflineProblemDescriptor getOwner() {
         if (myParentType != null && myParentFQName != null) {
             OfflineProblemDescriptor descriptor = new OfflineProblemDescriptor();
             descriptor.setLine(myLine);

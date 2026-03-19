@@ -53,7 +53,7 @@ public final class SingleConfigurationConfigurable<Config extends RunConfigurati
   extends SettingsEditorConfigurable<RunnerAndConfigurationSettings> {
   private static final Logger LOG = Logger.getInstance(SingleConfigurationConfigurable.class);
   private final PlainDocument myNameDocument = new PlainDocument();
-  @Nullable private Executor myExecutor;
+  private @Nullable Executor myExecutor;
 
   private ValidationResult myLastValidationResult = null;
   private boolean myValidationResultValid = false;
@@ -146,8 +146,7 @@ public final class SingleConfigurationConfigurable<Config extends RunConfigurati
     return mySingleton;
   }
 
-  @Nullable
-  private ValidationResult getValidationResult() {
+  private @Nullable ValidationResult getValidationResult() {
     if (!myValidationResultValid) {
       myLastValidationResult = null;
       try {
@@ -275,8 +274,7 @@ public final class SingleConfigurationConfigurable<Config extends RunConfigurati
     }
   }
 
-  @Nullable
-  public String getFolderName() {
+  public @Nullable String getFolderName() {
     return myFolderName;
   }
 
@@ -350,8 +348,7 @@ public final class SingleConfigurationConfigurable<Config extends RunConfigurati
       return getEditor().getComponent();
     }
 
-    @Nullable
-    public ValidationResult getValidationResult() {
+    public @Nullable ValidationResult getValidationResult() {
       return SingleConfigurationConfigurable.this.getValidationResult();
     }
 

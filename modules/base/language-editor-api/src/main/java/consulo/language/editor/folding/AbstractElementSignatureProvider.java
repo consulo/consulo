@@ -34,8 +34,7 @@ public abstract class AbstractElementSignatureProvider implements ElementSignatu
   protected static final String ELEMENT_TOKENS_SEPARATOR = "#";
 
   @Override
-  @Nullable
-  public PsiElement restoreBySignature(PsiFile file, String signature, @Nullable StringBuilder processingInfoStorage) {
+  public @Nullable PsiElement restoreBySignature(PsiFile file, String signature, @Nullable StringBuilder processingInfoStorage) {
     int semicolonIndex = signature.indexOf(ELEMENTS_SEPARATOR);
     PsiElement parent;
 
@@ -68,8 +67,7 @@ public abstract class AbstractElementSignatureProvider implements ElementSignatu
     return restoreBySignatureTokens(file, parent, type, tokenizer, processingInfoStorage);
   }
 
-  @Nullable
-  protected abstract PsiElement restoreBySignatureTokens(PsiFile file,
+  protected abstract @Nullable PsiElement restoreBySignatureTokens(PsiFile file,
                                                          PsiElement parent,
                                                          String type,
                                                          StringTokenizer tokenizer,
@@ -96,8 +94,7 @@ public abstract class AbstractElementSignatureProvider implements ElementSignatu
     return index;
   }
 
-  @Nullable
-  protected static <T extends PsiNamedElement> T restoreElementInternal(PsiElement parent,
+  protected static @Nullable <T extends PsiNamedElement> T restoreElementInternal(PsiElement parent,
                                                                         String name,
                                                                         int index,
                                                                         Class<T> hisClass)

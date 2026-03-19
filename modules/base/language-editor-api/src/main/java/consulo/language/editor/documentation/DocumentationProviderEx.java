@@ -54,13 +54,11 @@ public abstract class DocumentationProviderEx implements DocumentationProvider {
     return null;
   }
 
-  @Nullable
-  public PsiElement getCustomDocumentationElement(Editor editor, PsiFile file, @Nullable PsiElement contextElement) {
+  public @Nullable PsiElement getCustomDocumentationElement(Editor editor, PsiFile file, @Nullable PsiElement contextElement) {
     return null;
   }
 
-  @Nullable
-  public Image getLocalImageForElement(PsiElement element, String imageSpec) {
+  public @Nullable Image getLocalImageForElement(PsiElement element, String imageSpec) {
     return null;
   }
 }

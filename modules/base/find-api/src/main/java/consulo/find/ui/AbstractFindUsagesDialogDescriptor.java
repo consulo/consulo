@@ -192,8 +192,7 @@ public abstract class AbstractFindUsagesDialogDescriptor extends DialogDescripto
         return new DialogOkAction(FindLocalize.findDialogFindButton());
     }
 
-    @Nullable
-    protected Component getPreferredFocusedControl() {
+    protected @Nullable Component getPreferredFocusedControl() {
         return null;
     }
 

@@ -41,8 +41,7 @@ public class TestsLocationProviderUtil {
     private TestsLocationProviderUtil() {
     }
 
-    @Nullable
-    public static String extractPath(String locationUrl) {
+    public static @Nullable String extractPath(String locationUrl) {
         int index = locationUrl.indexOf(PROTOCOL_SEPARATOR);
         if (index >= 0) {
             return locationUrl.substring(index + PROTOCOL_SEPARATOR.length());
@@ -138,8 +137,7 @@ public class TestsLocationProviderUtil {
         return project.getInstance(SMTestHelper.class).collectCandidates(project, fileName, includeNonProjectItems);
     }
 
-    @Nullable
-    private static VirtualFile getByFullPath(String filePath) {
+    private static @Nullable VirtualFile getByFullPath(String filePath) {
         VirtualFile fileByPath = LocalFileSystem.getInstance().findFileByPath(filePath);
         if (fileByPath != null) {
             return fileByPath;

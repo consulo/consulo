@@ -190,8 +190,7 @@ public class FilePatternPackageSet extends PatternBasedPackageSet {
     return Comparing.strEqual(myPathPattern, oldQName);
   }
 
-  @Nullable
-  public static String getRelativePath(VirtualFile virtualFile,
+  public static @Nullable String getRelativePath(VirtualFile virtualFile,
                                        ProjectFileIndex index,
                                        boolean useFQName,
                                        VirtualFile projectBaseDir) {

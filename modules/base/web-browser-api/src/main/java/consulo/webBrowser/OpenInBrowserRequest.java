@@ -21,8 +21,7 @@ public abstract class OpenInBrowserRequest {
     public OpenInBrowserRequest() {
     }
 
-    @Nullable
-    public static OpenInBrowserRequest create(final PsiElement element) {
+    public static @Nullable OpenInBrowserRequest create(final PsiElement element) {
         PsiFile psiFile = element.isValid() ? element.getContainingFile() : null;
         if (psiFile == null || psiFile.getVirtualFile() == null) {
             return null;
@@ -59,8 +58,7 @@ public abstract class OpenInBrowserRequest {
         this.result = result;
     }
 
-    @Nullable
-    public Collection<Url> getResult() {
+    public @Nullable Collection<Url> getResult() {
         return result;
     }
 }

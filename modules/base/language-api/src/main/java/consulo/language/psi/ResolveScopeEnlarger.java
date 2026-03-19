@@ -30,13 +30,11 @@ import org.jspecify.annotations.Nullable;
 public abstract class ResolveScopeEnlarger {
   public static final ExtensionPointName<ResolveScopeEnlarger> EP_NAME = ExtensionPointName.create(ResolveScopeEnlarger.class);
 
-  @Nullable
-  public SearchScope getAdditionalResolveScope(VirtualFile file, Project project) {
+  public @Nullable SearchScope getAdditionalResolveScope(VirtualFile file, Project project) {
     return null;
   }
 
-  @Nullable
-  public SearchScope getAdditionalUseScope(VirtualFile file, Project project) {
+  public @Nullable SearchScope getAdditionalUseScope(VirtualFile file, Project project) {
     return null;
   }
 }

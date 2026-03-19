@@ -21,21 +21,19 @@ import consulo.versionControlSystem.log.VcsLogStructureFilter;
 import org.jspecify.annotations.Nullable;
 
 /*package private*/ class VcsLogFileFilter implements VcsLogFilter {
-  @Nullable private final VcsLogStructureFilter myStructureFilter;
-  @Nullable private final VcsLogRootFilter myRootFilter;
+  private final @Nullable VcsLogStructureFilter myStructureFilter;
+  private final @Nullable VcsLogRootFilter myRootFilter;
 
   public VcsLogFileFilter(@Nullable VcsLogStructureFilter structureFilter, @Nullable VcsLogRootFilter rootFilter) {
     myStructureFilter = structureFilter;
     myRootFilter = rootFilter;
   }
 
-  @Nullable
-  public VcsLogStructureFilter getStructureFilter() {
+  public @Nullable VcsLogStructureFilter getStructureFilter() {
     return myStructureFilter;
   }
 
-  @Nullable
-  public VcsLogRootFilter getRootFilter() {
+  public @Nullable VcsLogRootFilter getRootFilter() {
     return myRootFilter;
   }
 }

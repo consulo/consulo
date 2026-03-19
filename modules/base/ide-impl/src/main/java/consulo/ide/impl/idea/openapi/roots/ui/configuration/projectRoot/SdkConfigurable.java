@@ -86,8 +86,7 @@ public class SdkConfigurable extends ProjectStructureElementConfigurable<Sdk> {
   }
 
   @Override
-  @Nullable
-  public String getHelpTopic() {
+  public @Nullable String getHelpTopic() {
     return ((SdkType)mySdk.getSdkType()).getHelpTopic();
   }
 

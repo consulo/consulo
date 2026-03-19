@@ -30,8 +30,7 @@ import java.util.function.Predicate;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class AdditionalCompileScopeProvider {
-    @Nullable
-    public abstract CompileScope getAdditionalScope(
+    public abstract @Nullable CompileScope getAdditionalScope(
         CompileScope baseScope,
         Predicate<Compiler> filter,
         Project project

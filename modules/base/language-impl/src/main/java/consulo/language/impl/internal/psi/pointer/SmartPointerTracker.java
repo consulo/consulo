@@ -152,13 +152,11 @@ class SmartPointerTracker {
     }
   }
 
-  @Nullable
-  synchronized Segment getUpdatedRange(SelfElementInfo info, FrozenDocument document, List<? extends DocumentEvent> events) {
+  synchronized @Nullable Segment getUpdatedRange(SelfElementInfo info, FrozenDocument document, List<? extends DocumentEvent> events) {
     return markerCache.getUpdatedRange(info, document, events);
   }
 
-  @Nullable
-  synchronized Segment getUpdatedRange(PsiFile containingFile, Segment segment, boolean isSegmentGreedy, FrozenDocument frozen, List<? extends DocumentEvent> events) {
+  synchronized @Nullable Segment getUpdatedRange(PsiFile containingFile, Segment segment, boolean isSegmentGreedy, FrozenDocument frozen, List<? extends DocumentEvent> events) {
     return MarkerCache.getUpdatedRange(containingFile, segment, isSegmentGreedy, frozen, events);
   }
 

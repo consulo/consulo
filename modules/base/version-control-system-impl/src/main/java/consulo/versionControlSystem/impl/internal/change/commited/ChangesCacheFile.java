@@ -413,8 +413,7 @@ public class ChangesCacheFile {
     }
 
     @Override
-    @Nullable
-    public ChangesBunch next() {
+    public @Nullable ChangesBunch next() {
       try {
         int size;
         if (myOffset < bunchSize) {

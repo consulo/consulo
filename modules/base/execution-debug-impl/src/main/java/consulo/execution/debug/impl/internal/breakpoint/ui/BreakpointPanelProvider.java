@@ -41,11 +41,9 @@ public abstract class BreakpointPanelProvider<B> {
 
   public abstract int getPriority();
 
-  @Nullable
-  public abstract B findBreakpoint(Project project, Document document, int offset);
+  public abstract @Nullable B findBreakpoint(Project project, Document document, int offset);
 
-  @Nullable
-  public abstract GutterIconRenderer getBreakpointGutterIconRenderer(Object breakpoint);
+  public abstract @Nullable GutterIconRenderer getBreakpointGutterIconRenderer(Object breakpoint);
 
   public abstract void onDialogClosed(Project project);
 

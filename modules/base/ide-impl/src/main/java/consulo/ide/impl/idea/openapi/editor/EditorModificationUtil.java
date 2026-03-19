@@ -89,8 +89,7 @@ public class EditorModificationUtil {
     zeroWidthBlockSelectionAtCaretColumn(editor, caretLine, caretLine);
   }
 
-  @Nullable
-  public static String getStringContent(Transferable content) {
+  public static @Nullable String getStringContent(Transferable content) {
     RawText raw = RawText.fromTransferable(content);
     if (raw != null) return raw.rawText;
 

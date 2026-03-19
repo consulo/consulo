@@ -96,8 +96,7 @@ public abstract class BaseDataManager implements DataManagerEx, DataRuleHoler {
             }
         }
 
-        @Nullable
-        protected C getComponent() {
+        protected @Nullable C getComponent() {
             return SoftReference.dereference(myRef);
         }
 
@@ -179,8 +178,7 @@ public abstract class BaseDataManager implements DataManagerEx, DataRuleHoler {
     }
 
     @Override
-    @Nullable
-    public <T> GetDataRule<T> getDataRule(Key<T> dataId) {
+    public @Nullable <T> GetDataRule<T> getDataRule(Key<T> dataId) {
         GetDataRule<T> rule = getRuleFromMap(dataId);
         if (rule != null) {
             return rule;
@@ -229,8 +227,7 @@ public abstract class BaseDataManager implements DataManagerEx, DataRuleHoler {
         return map.get(dataId);
     }
 
-    @Nullable
-    public <T> T getDataFromProvider(DataProvider provider, Key<T> dataId, @Nullable Set<Key> alreadyComputedIds) {
+    public @Nullable <T> T getDataFromProvider(DataProvider provider, Key<T> dataId, @Nullable Set<Key> alreadyComputedIds) {
         if (alreadyComputedIds != null && alreadyComputedIds.contains(dataId)) {
             return null;
         }
@@ -260,8 +257,7 @@ public abstract class BaseDataManager implements DataManagerEx, DataRuleHoler {
         }
     }
 
-    @Nullable
-    protected static <T> T validated(T data, Key<T> dataId, Object dataSource) {
+    protected static @Nullable <T> T validated(T data, Key<T> dataId, Object dataSource) {
         T invalidData = DataValidators.findInvalidData(dataId, data, dataSource);
         if (invalidData != null) {
             return null;
@@ -288,8 +284,7 @@ public abstract class BaseDataManager implements DataManagerEx, DataRuleHoler {
     }
 
     @Override
-    @Nullable
-    public <T> T loadFromDataContext(DataContext dataContext, Key<T> dataKey) {
+    public @Nullable <T> T loadFromDataContext(DataContext dataContext, Key<T> dataKey) {
         return dataContext instanceof UserDataHolder ? ((UserDataHolder) dataContext).getUserData(dataKey) : null;
     }
 

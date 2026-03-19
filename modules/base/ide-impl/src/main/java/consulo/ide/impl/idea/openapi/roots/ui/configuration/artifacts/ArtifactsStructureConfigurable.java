@@ -79,8 +79,7 @@ public class ArtifactsStructureConfigurable extends BaseStructureConfigurable
     private final ArtifactPointerManager myArtifactPointerManager;
     
     private final ShowSettingsUtil myShowSettingsUtil;
-    @Nullable
-    private ArtifactsStructureConfigurableContextImpl myPackagingEditorContext;
+    private @Nullable ArtifactsStructureConfigurableContextImpl myPackagingEditorContext;
     
     private final ArtifactEditorSettings myDefaultSettings;
 

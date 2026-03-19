@@ -50,8 +50,7 @@ public abstract class PsiPolyVariantCachingReference implements PsiPolyVariantRe
     return false;
   }
 
-  @Nullable
-  public static <T extends PsiElement> ElementManipulator<T> getManipulator(T currentElement){
+  public static @Nullable <T extends PsiElement> ElementManipulator<T> getManipulator(T currentElement){
     return ElementManipulators.getManipulator(currentElement);
   }
 

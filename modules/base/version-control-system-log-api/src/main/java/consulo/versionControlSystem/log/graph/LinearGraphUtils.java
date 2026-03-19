@@ -48,8 +48,7 @@ public class LinearGraphUtils {
     return false;
   }
 
-  @Nullable
-  public static NormalEdge asNormalEdge(@Nullable GraphEdge edge) {
+  public static @Nullable NormalEdge asNormalEdge(@Nullable GraphEdge edge) {
     if (isNormalEdge(edge)) {
       assert edge.getUpNodeIndex() != null && edge.getDownNodeIndex() != null;
       return NormalEdge.create(edge.getUpNodeIndex(), edge.getDownNodeIndex());
@@ -127,8 +126,7 @@ public class LinearGraphUtils {
     return new LinearGraphController.LinearGraphAnswer(getCursor(true), selectedIds);
   }
 
-  @Nullable
-  public static GraphEdge getEdge(LinearGraph graph, int up, int down) {
+  public static @Nullable GraphEdge getEdge(LinearGraph graph, int up, int down) {
     List<GraphEdge> edges = graph.getAdjacentEdges(up, EdgeFilter.NORMAL_DOWN);
     for (GraphEdge edge : edges) {
       if (intEqual(edge.getDownNodeIndex(), down)) {

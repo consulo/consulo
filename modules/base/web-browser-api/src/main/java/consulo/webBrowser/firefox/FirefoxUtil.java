@@ -38,8 +38,7 @@ public class FirefoxUtil {
     private FirefoxUtil() {
     }
 
-    @Nullable
-    public static File getDefaultProfileIniPath() {
+    public static @Nullable File getDefaultProfileIniPath() {
         File[] roots = getProfilesDirs();
         for (File profilesDir : roots) {
             File profilesFile = new File(profilesDir, PROFILES_INI_FILE);
@@ -50,8 +49,7 @@ public class FirefoxUtil {
         return null;
     }
 
-    @Nullable
-    public static File getFirefoxExtensionsDir(FirefoxSettings settings) {
+    public static @Nullable File getFirefoxExtensionsDir(FirefoxSettings settings) {
         File profilesFile = settings.getProfilesIniFile();
         if (profilesFile != null && profilesFile.exists()) {
             List<FirefoxProfile> profiles = computeProfiles(profilesFile);
@@ -66,8 +64,7 @@ public class FirefoxUtil {
         return null;
     }
 
-    @Nullable
-    public static FirefoxProfile findProfileByNameOrDefault(@Nullable String name, List<FirefoxProfile> profiles) {
+    public static @Nullable FirefoxProfile findProfileByNameOrDefault(@Nullable String name, List<FirefoxProfile> profiles) {
         for (FirefoxProfile profile : profiles) {
             if (profile.getName().equals(name)) {
                 return profile;
@@ -76,8 +73,7 @@ public class FirefoxUtil {
         return getDefaultProfile(profiles);
     }
 
-    @Nullable
-    public static FirefoxProfile getDefaultProfile(List<FirefoxProfile> profiles) {
+    public static @Nullable FirefoxProfile getDefaultProfile(List<FirefoxProfile> profiles) {
         if (profiles.isEmpty()) {
             return null;
         }

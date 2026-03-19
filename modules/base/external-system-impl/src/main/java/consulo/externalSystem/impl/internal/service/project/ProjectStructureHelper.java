@@ -25,18 +25,15 @@ import org.jspecify.annotations.Nullable;
  * @since 2/6/12 3:28 PM
  */
 public class ProjectStructureHelper {
-  @Nullable
-  public static Module findIdeModule(ModuleData module, Project ideProject) {
+  public static @Nullable Module findIdeModule(ModuleData module, Project ideProject) {
     return findIdeModule(module.getInternalName(), ideProject);
   }
 
-  @Nullable
-  public static Module findIdeModule(String ideModuleName, Project ideProject) {
+  public static @Nullable Module findIdeModule(String ideModuleName, Project ideProject) {
     return ModuleManager.getInstance(ideProject).findModuleByName(ideModuleName);
   }
 
-  @Nullable
-  public static Library findIdeLibrary(LibraryData libraryData, Project ideProject) {
+  public static @Nullable Library findIdeLibrary(LibraryData libraryData, Project ideProject) {
     LibraryTable libraryTable = ProjectLibraryTable.getInstance(ideProject);
     for (Library ideLibrary : libraryTable.getLibraries()) {
       if (ExternalSystemApiUtil.isRelated(ideLibrary, libraryData)) return ideLibrary;
@@ -60,8 +57,7 @@ public class ProjectStructureHelper {
     return true;
   }
 
-  @Nullable
-  public static ModuleOrderEntry findIdeModuleDependency(ModuleDependencyData dependency, ModifiableRootModel model) {
+  public static @Nullable ModuleOrderEntry findIdeModuleDependency(ModuleDependencyData dependency, ModifiableRootModel model) {
     for (OrderEntry entry : model.getOrderEntries()) {
       if (entry instanceof ModuleOrderEntry) {
         ModuleOrderEntry candidate = (ModuleOrderEntry)entry;

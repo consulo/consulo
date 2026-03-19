@@ -51,8 +51,7 @@ public class TempFileSystemImpl extends TempFileSystem implements RefreshableFil
     return 1;
   }
 
-  @Nullable
-  private FSItem convert(VirtualFile file) {
+  private @Nullable FSItem convert(VirtualFile file) {
     VirtualFile parentFile = file.getParent();
     if (parentFile == null) return myRoot;
     FSItem parentItem = convert(parentFile);
@@ -274,8 +273,7 @@ public class TempFileSystemImpl extends TempFileSystem implements RefreshableFil
 
     public abstract boolean isDirectory();
 
-    @Nullable
-    public FSItem findChild(String name) {
+    public @Nullable FSItem findChild(String name) {
       return null;
     }
 
@@ -305,8 +303,7 @@ public class TempFileSystemImpl extends TempFileSystem implements RefreshableFil
     }
 
     @Override
-    @Nullable
-    public FSItem findChild(String name) {
+    public @Nullable FSItem findChild(String name) {
       for (FSItem child : myChildren) {
         if (name.equals(child.myName)) {
           return child;

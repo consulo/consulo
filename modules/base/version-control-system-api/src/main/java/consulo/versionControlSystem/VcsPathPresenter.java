@@ -42,6 +42,5 @@ public abstract class VcsPathPresenter {
   
   public abstract String getPresentableRelativePathFor(VirtualFile file);
 
-  @Nullable
-  public abstract String getPresentableRelativePath(ContentRevision fromRevision, ContentRevision toRevision);
+  public abstract @Nullable String getPresentableRelativePath(ContentRevision fromRevision, ContentRevision toRevision);
 }

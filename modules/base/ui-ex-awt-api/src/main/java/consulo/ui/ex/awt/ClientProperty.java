@@ -49,8 +49,7 @@ public final class ClientProperty {
     return holder != null;
   }
 
-  @Nullable
-  private static JComponent getPropertiesHolder(@Nullable Component component) {
+  private static @Nullable JComponent getPropertiesHolder(@Nullable Component component) {
     if (component instanceof JComponent) return (JComponent)component;
     if (component instanceof Window && component instanceof RootPaneContainer) {
       RootPaneContainer container = (RootPaneContainer)component;
@@ -65,8 +64,7 @@ public final class ClientProperty {
    * @param key       a key corresponding to a client property
    * @return the property value from the specified component or {@code null}
    */
-  @Nullable
-  public static Object get(@Nullable Component component, Object key) {
+  public static @Nullable Object get(@Nullable Component component, Object key) {
     JComponent holder = getPropertiesHolder(component);
     return holder == null ? null : holder.getClientProperty(key);
   }
@@ -76,8 +74,7 @@ public final class ClientProperty {
    * @param key       a key corresponding to a client property
    * @return the property value from the specified component or {@code null}
    */
-  @Nullable
-  public static Object findInHierarchy(@Nullable Component component, Object key) {
+  public static @Nullable Object findInHierarchy(@Nullable Component component, Object key) {
     while (component != null) {
       Object value = get(component, key);
       if (value != null) return value;
@@ -94,8 +91,7 @@ public final class ClientProperty {
    * @return the property value from the specified component or {@code null}
    */
   @SuppressWarnings("unchecked")
-  @Nullable
-  public static <T> T get(@Nullable Component component, Key<T> key) {
+  public static @Nullable <T> T get(@Nullable Component component, Key<T> key) {
     Object value = get(component, (Object)key);
     return value != null ? (T)value : null;
   }
@@ -106,8 +102,7 @@ public final class ClientProperty {
    * @return the property value from the specified component or {@code null}
    */
   @SuppressWarnings("unchecked")
-  @Nullable
-  public static <T> T findInHierarchy(@Nullable Component component, Key<T> key) {
+  public static @Nullable <T> T findInHierarchy(@Nullable Component component, Key<T> key) {
     Object value = findInHierarchy(component, (Object)key);
     return value != null ? (T)value : null;
   }

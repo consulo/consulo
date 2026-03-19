@@ -54,8 +54,7 @@ public abstract class GutterIconRenderer implements GutterMark, PossiblyDumbAwar
      *
      * @return the group of actions for the context menu, or null if no context menu is required.
      */
-    @Nullable
-    public ActionGroup getPopupMenuActions() {
+    public @Nullable ActionGroup getPopupMenuActions() {
         return null;
     }
 
@@ -75,8 +74,7 @@ public abstract class GutterIconRenderer implements GutterMark, PossiblyDumbAwar
      *
      * @return the action instance, or null if no action is required.
      */
-    @Nullable
-    public AnAction getClickAction() {
+    public @Nullable AnAction getClickAction() {
         return null;
     }
 
@@ -85,13 +83,11 @@ public abstract class GutterIconRenderer implements GutterMark, PossiblyDumbAwar
      *
      * @return the action instance, or null if no action is required.
      */
-    @Nullable
-    public AnAction getMiddleButtonClickAction() {
+    public @Nullable AnAction getMiddleButtonClickAction() {
         return null;
     }
 
-    @Nullable
-    public AnAction getRightButtonClickAction() {
+    public @Nullable AnAction getRightButtonClickAction() {
         return null;
     }
 
@@ -121,8 +117,7 @@ public abstract class GutterIconRenderer implements GutterMark, PossiblyDumbAwar
      *
      * @return the drag handler callback, or null if no drag and drop of the icon is required.
      */
-    @Nullable
-    public GutterDraggableObject getDraggableObject() {
+    public @Nullable GutterDraggableObject getDraggableObject() {
         return null;
     }
 

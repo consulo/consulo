@@ -70,8 +70,7 @@ public class TopCommitsCache {
     mySortedDetails = result;
   }
 
-  @Nullable
-  public VcsCommitMetadata get(int index) {
+  public @Nullable VcsCommitMetadata get(int index) {
     return myCache.get(index);
   }
 

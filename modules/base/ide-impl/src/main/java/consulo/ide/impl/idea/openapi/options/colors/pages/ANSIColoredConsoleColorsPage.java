@@ -92,8 +92,7 @@ public class ANSIColoredConsoleColorsPage implements ColorSettingsPage, Configur
   };
 
   @Override
-  @Nullable
-  public Map<String, TextAttributesKey> getAdditionalHighlightingTagToDescriptorMap() {
+  public @Nullable Map<String, TextAttributesKey> getAdditionalHighlightingTagToDescriptorMap() {
     return ADDITIONAL_HIGHLIGHT_DESCRIPTORS;
   }
 

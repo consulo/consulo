@@ -401,8 +401,7 @@ public abstract class AnAction implements PossiblyDumbAware {
      *
      * @return action presentable text without private user data
      */
-    @Nullable
-    public String getTemplateText() {
+    public @Nullable String getTemplateText() {
         return getTemplatePresentation().getText();
     }
 

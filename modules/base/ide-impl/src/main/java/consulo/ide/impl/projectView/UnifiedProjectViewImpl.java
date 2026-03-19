@@ -82,8 +82,7 @@ import java.util.function.Function;
 @ServiceImpl(profiles = ComponentProfiles.UNIFIED)
 public class UnifiedProjectViewImpl implements ProjectViewEx, Disposable {
     private final class MyDataProvider implements Function<Key<?>, Object> {
-        @Nullable
-        private Object getSelectedNodeElement() {
+        private @Nullable Object getSelectedNodeElement() {
             AbstractProjectViewPane currentProjectViewPane = getCurrentProjectViewPane();
             if (currentProjectViewPane == null) { // can happen if not initialized yet
                 return null;
@@ -225,8 +224,7 @@ public class UnifiedProjectViewImpl implements ProjectViewEx, Disposable {
             return null;
         }
 
-        @Nullable
-        private LibraryOrderEntry getSelectedLibrary() {
+        private @Nullable LibraryOrderEntry getSelectedLibrary() {
             AbstractProjectViewPane viewPane = getCurrentProjectViewPane();
             DefaultMutableTreeNode node = viewPane != null ? viewPane.getSelectedNode() : null;
             if (node == null) {
@@ -351,8 +349,7 @@ public class UnifiedProjectViewImpl implements ProjectViewEx, Disposable {
      * => MODULE_CONTEXT should be only available for the module node
      * otherwise VirtualFileArrayRule will return all module's content roots when just one of them is selected
      */
-    @Nullable
-    private Module moduleBySingleContentRoot(VirtualFile file) {
+    private @Nullable Module moduleBySingleContentRoot(VirtualFile file) {
         if (ProjectRootsUtil.isModuleContentRoot(file, myProject)) {
             Module module = ProjectRootManager.getInstance(myProject).getFileIndex().getModuleForFile(file);
             if (module != null && !module.isDisposed() && ModuleRootManager.getInstance(module).getContentRoots().length == 1) {

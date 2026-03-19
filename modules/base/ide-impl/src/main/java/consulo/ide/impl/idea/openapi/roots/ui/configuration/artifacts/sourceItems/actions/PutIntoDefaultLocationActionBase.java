@@ -36,8 +36,7 @@ public abstract class PutIntoDefaultLocationActionBase extends AnAction {
     myArtifactEditor = artifactEditor;
   }
 
-  @Nullable
-  protected String getDefaultPath(PackagingSourceItem item) {
+  protected @Nullable String getDefaultPath(PackagingSourceItem item) {
     return myArtifactEditor.getArtifact().getArtifactType().getDefaultPathFor(item);
   }
 

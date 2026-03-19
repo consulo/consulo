@@ -36,8 +36,7 @@ public class FileReferenceUtil {
    * @see FileReference
    * @see FileReferenceSet
    */
-  @Nullable
-  public static PsiFile findFile(@Nullable PsiElement element) {
+  public static @Nullable PsiFile findFile(@Nullable PsiElement element) {
     return element == null ? null : findFile(element.getReferences());
   }
 
@@ -50,8 +49,7 @@ public class FileReferenceUtil {
    * @see FileReference
    * @see PsiElement#getReferences()
    */
-  @Nullable
-  public static PsiFile findFile(PsiReference...references) {
+  public static @Nullable PsiFile findFile(PsiReference...references) {
     for (int i = references.length - 1; i >= 0; i--) {
       PsiReference ref = references[i];
       if (ref instanceof FileReferenceOwner && !(ref instanceof PsiFileReference)) {
@@ -65,8 +63,7 @@ public class FileReferenceUtil {
     return null;
   }
 
-  @Nullable
-  public static PsiFileReference findFileReference(PsiElement element) {
+  public static @Nullable PsiFileReference findFileReference(PsiElement element) {
     PsiReference[] references = element.getReferences();
     for (int i = references.length - 1; i >= 0; i--) {
       PsiReference ref = references[i];

@@ -100,8 +100,8 @@ public class LogMessageEx extends LogMessage {
      */
     public static IdeaLoggingEvent createEvent(final String userMessage,
                                                final String details,
-                                               @Nullable final String title,
-                                               @Nullable final String notificationText,
+                                               final @Nullable String title,
+                                               final @Nullable String notificationText,
                                                final Collection<Attachment> attachments) {
         final Throwable throwable = new Throwable() {
             @Override

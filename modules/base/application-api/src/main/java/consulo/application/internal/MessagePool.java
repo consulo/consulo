@@ -60,8 +60,7 @@ public class MessagePool {
         return MessagePoolHolder.ourInstance;
     }
 
-    @Nullable
-    public LogMessage addIdeFatalMessage(IdeaLoggingEvent aEvent) {
+    public @Nullable LogMessage addIdeFatalMessage(IdeaLoggingEvent aEvent) {
         Object data = aEvent.getData();
         LogMessage message = data instanceof LogMessage ? (LogMessage) data : new LogMessage(aEvent);
         if (myIdeFatals.size() < MAX_POOL_SIZE_FOR_FATALS) {

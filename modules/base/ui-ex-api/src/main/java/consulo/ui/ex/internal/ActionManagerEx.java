@@ -63,8 +63,7 @@ public abstract class ActionManagerEx extends ActionManager {
      * @return null if string cannot be parsed.
      */
 
-    @Nullable
-    public static KeyStroke getKeyStroke(String s) {
+    public static @Nullable KeyStroke getKeyStroke(String s) {
         KeyStroke result = null;
         try {
             result = KeyStroke.getKeyStroke(s);

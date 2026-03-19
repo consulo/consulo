@@ -122,8 +122,7 @@ public class SelfElementInfo extends SmartPointerElementInfo {
     return myForInjected;
   }
 
-  @Nullable
-  private TextRange calcPsiRange() {
+  private @Nullable TextRange calcPsiRange() {
     return hasRange() ? new UnfairTextRange(myStartOffset, myEndOffset) : null;
   }
 
@@ -140,8 +139,7 @@ public class SelfElementInfo extends SmartPointerElementInfo {
     setRange(null);
   }
 
-  @Nullable
-  public static PsiFile restoreFileFromVirtual(VirtualFile virtualFile, Project project, Language language) {
+  public static @Nullable PsiFile restoreFileFromVirtual(VirtualFile virtualFile, Project project, Language language) {
     return ReadAction.compute(() -> {
       if (project.isDisposed()) return null;
       VirtualFile child = restoreVFile(virtualFile);
@@ -155,8 +153,7 @@ public class SelfElementInfo extends SmartPointerElementInfo {
     });
   }
 
-  @Nullable
-  public static PsiDirectory restoreDirectoryFromVirtual(VirtualFile virtualFile, Project project) {
+  public static @Nullable PsiDirectory restoreDirectoryFromVirtual(VirtualFile virtualFile, Project project) {
     return ReadAction.compute(() -> {
       if (project.isDisposed()) return null;
       VirtualFile child = restoreVFile(virtualFile);
@@ -167,8 +164,7 @@ public class SelfElementInfo extends SmartPointerElementInfo {
     });
   }
 
-  @Nullable
-  private static VirtualFile restoreVFile(VirtualFile virtualFile) {
+  private static @Nullable VirtualFile restoreVFile(VirtualFile virtualFile) {
     VirtualFile child;
     if (virtualFile.isValid()) {
       child = virtualFile;

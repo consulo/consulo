@@ -120,8 +120,7 @@ class BeforeRunStepsPanel {
         myPanel.add(myShowSettingsBeforeRunCheckBox, BorderLayout.SOUTH);
     }
 
-    @Nullable
-    private Pair<BeforeRunTask, BeforeRunTaskProvider<BeforeRunTask>> getSelection() {
+    private @Nullable Pair<BeforeRunTask, BeforeRunTaskProvider<BeforeRunTask>> getSelection() {
         int index = myList.getSelectedIndex();
         if (index == -1) {
             return null;

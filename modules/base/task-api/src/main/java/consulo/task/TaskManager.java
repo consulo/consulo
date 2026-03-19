@@ -85,8 +85,7 @@ public abstract class TaskManager {
 
   public abstract List<Task> getCachedIssues(boolean withClosed);
 
-  @Nullable
-  public abstract Task updateIssue(String id);
+  public abstract @Nullable Task updateIssue(String id);
 
   public abstract List<LocalTask> getLocalTasks();
 
@@ -101,8 +100,7 @@ public abstract class TaskManager {
   
   public abstract LocalTask getActiveTask();
 
-  @Nullable
-  public abstract LocalTask findTask(String id);
+  public abstract @Nullable LocalTask findTask(String id);
 
   /**
    * Update issue cache asynchronously
@@ -117,8 +115,7 @@ public abstract class TaskManager {
 
   public abstract boolean isLocallyClosed(LocalTask localTask);
 
-  @Nullable
-  public abstract LocalTask getAssociatedTask(LocalChangeList list);
+  public abstract @Nullable LocalTask getAssociatedTask(LocalChangeList list);
 
   public abstract void trackContext(LocalChangeList changeList);
 

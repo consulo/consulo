@@ -77,8 +77,7 @@ public class JetBrainsProtocolHandler {
         initialized = true;
     }
 
-    @Nullable
-    public static String getCommand() {
+    public static @Nullable String getCommand() {
         init();
         return ourCommand;
     }

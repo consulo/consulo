@@ -79,8 +79,7 @@ public abstract class ChangeListManager {
 
   public abstract boolean editName(String fromName, String toName);
 
-  @Nullable
-  public abstract String editComment(String fromName, String newComment);
+  public abstract @Nullable String editComment(String fromName, String newComment);
 
   @TestOnly
   public abstract boolean ensureUpToDate(boolean canBeCanceled);
@@ -111,11 +110,9 @@ public abstract class ChangeListManager {
   
   public abstract Collection<Change> getAllChanges();
 
-  @Nullable
-  public abstract LocalChangeList findChangeList(String name);
+  public abstract @Nullable LocalChangeList findChangeList(String name);
 
-  @Nullable
-  public abstract LocalChangeList getChangeList(String id);
+  public abstract @Nullable LocalChangeList getChangeList(String id);
 
   /**
    * Returns currently active changelist
@@ -126,23 +123,18 @@ public abstract class ChangeListManager {
 
   public abstract boolean isDefaultChangeList(ChangeList list);
 
-  @Nullable
-  public abstract LocalChangeList getChangeList(Change change);
+  public abstract @Nullable LocalChangeList getChangeList(Change change);
 
-  @Nullable
-  public abstract String getChangeListNameIfOnlyOne(Change[] changes);
+  public abstract @Nullable String getChangeListNameIfOnlyOne(Change[] changes);
 
   
   public abstract Runnable prepareForChangeDeletion(Collection<Change> changes);
 
-  @Nullable
-  public abstract Change getChange(VirtualFile file);
+  public abstract @Nullable Change getChange(VirtualFile file);
 
-  @Nullable
-  public abstract LocalChangeList getChangeList(VirtualFile file);
+  public abstract @Nullable LocalChangeList getChangeList(VirtualFile file);
 
-  @Nullable
-  public abstract Change getChange(FilePath file);
+  public abstract @Nullable Change getChange(FilePath file);
 
   public abstract boolean isUnversioned(VirtualFile file);
 
@@ -155,8 +147,7 @@ public abstract class ChangeListManager {
   
   public abstract Collection<Change> getChangesIn(FilePath path);
 
-  @Nullable
-  public abstract AbstractVcs getVcsFor(Change change);
+  public abstract @Nullable AbstractVcs getVcsFor(Change change);
 
 //  public abstract void removeChangeList(final LocalChangeList list);
 
@@ -199,8 +190,7 @@ public abstract class ChangeListManager {
 
   public abstract boolean isContainedInLocallyDeleted(FilePath filePath);
 
-  @Nullable
-  public abstract String getSwitchedBranch(VirtualFile file);
+  public abstract @Nullable String getSwitchedBranch(VirtualFile file);
 
   public abstract String getDefaultListName();
 

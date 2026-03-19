@@ -49,8 +49,7 @@ public class BasePsiNode<T extends PsiElement> extends PackageDependenciesNode {
   }
 
   @Override
-  @Nullable
-  public PsiElement getPsiElement() {
+  public @Nullable PsiElement getPsiElement() {
     if (myPsiElementPointer == null) return null;
     PsiElement element = myPsiElementPointer.getElement();
     return element != null && element.isValid() ? element : null;
@@ -66,8 +65,7 @@ public class BasePsiNode<T extends PsiElement> extends PackageDependenciesNode {
   }
 
   @Override
-  @Nullable
-  public ColorValue getColor() {
+  public @Nullable ColorValue getColor() {
     if (myColor == null && getContainingFile() != null) {
       myColor = FileStatusManager.getInstance(myProject).getStatus(myPsiElementPointer.getVirtualFile()).getColor();
       if (myColor == null) {

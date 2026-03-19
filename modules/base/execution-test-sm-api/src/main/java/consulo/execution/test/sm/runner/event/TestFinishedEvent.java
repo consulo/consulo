@@ -20,8 +20,7 @@ import jetbrains.buildServer.messages.serviceMessages.TestFinished;
 import org.jspecify.annotations.Nullable;
 
 public class TestFinishedEvent extends TreeNodeEvent {
-    @Nullable
-    private final Long myDuration;
+    private final @Nullable Long myDuration;
     private final String myOutputFile;
 
     public TestFinishedEvent(TestFinished testFinished, @Nullable Long duration) {
@@ -55,8 +54,7 @@ public class TestFinishedEvent extends TreeNodeEvent {
     /**
      * @return duration in ms if reported
      */
-    @Nullable
-    public Long getDuration() {
+    public @Nullable Long getDuration() {
         return myDuration;
     }
 

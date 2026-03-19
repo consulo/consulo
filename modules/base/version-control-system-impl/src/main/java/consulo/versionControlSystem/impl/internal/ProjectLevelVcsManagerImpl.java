@@ -294,8 +294,7 @@ public class ProjectLevelVcsManagerImpl extends ProjectLevelVcsManagerEx impleme
     }
 
     @Override
-    @Nullable
-    public VirtualFile getVcsRootFor(FilePath file) {
+    public @Nullable VirtualFile getVcsRootFor(FilePath file) {
         if (myProject.isDisposed()) {
             return null;
         }
@@ -350,8 +349,7 @@ public class ProjectLevelVcsManagerImpl extends ProjectLevelVcsManagerEx impleme
     }
 
     @Override
-    @Nullable
-    public AbstractVcs getSingleVCS() {
+    public @Nullable AbstractVcs getSingleVCS() {
         AbstractVcs[] vcses = getAllActiveVcss();
         return vcses.length == 1 ? vcses[0] : null;
     }
@@ -500,8 +498,7 @@ public class ProjectLevelVcsManagerImpl extends ProjectLevelVcsManagerEx impleme
     }
 
     @Override
-    @Nullable
-    public VcsDirectoryMapping getDirectoryMappingFor(FilePath path) {
+    public @Nullable VcsDirectoryMapping getDirectoryMappingFor(FilePath path) {
         VirtualFile vFile = ChangesUtil.findValidParentAccurately(path);
         if (vFile != null) {
             return myMappings.getMappingFor(vFile);
@@ -761,8 +758,7 @@ public class ProjectLevelVcsManagerImpl extends ProjectLevelVcsManagerEx impleme
      * Used to guess VCS for automatic mapping through a look into a working copy
      */
     @Override
-    @Nullable
-    public AbstractVcs findVersioningVcs(VirtualFile file) {
+    public @Nullable AbstractVcs findVersioningVcs(VirtualFile file) {
         VcsDescriptor[] vcsDescriptors = getAllVcss();
         VcsDescriptor probableVcs = null;
         for (VcsDescriptor vcsDescriptor : vcsDescriptors) {

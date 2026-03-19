@@ -92,8 +92,7 @@ public class URLUtil {
      * <p/>
      * Please note that the first part is platform-dependent - see UrlUtilTest.testJarUrlSplitter() for examples.
      */
-    @Nullable
-    public static Couple<String> splitJarUrl(String url) {
+    public static @Nullable Couple<String> splitJarUrl(String url) {
         int pivot = url.indexOf(JAR_SEPARATOR);
         if (pivot < 0) {
             return null;
@@ -233,8 +232,7 @@ public class URLUtil {
         return decoded.toString();
     }
 
-    @Nullable
-    public static URL internProtocol(URL url) {
+    public static @Nullable URL internProtocol(URL url) {
         try {
             String protocol = url.getProtocol();
             if ("file".equals(protocol) || "jar".equals(protocol)) {

@@ -49,8 +49,7 @@ import java.util.stream.Collectors;
 class DirectoryPathMatcher {
     
     private final GotoFileModel myModel;
-    @Nullable
-    private final List<Pair<VirtualFile, String>> myFiles;
+    private final @Nullable List<Pair<VirtualFile, String>> myFiles;
     
     final String dirPattern;
 

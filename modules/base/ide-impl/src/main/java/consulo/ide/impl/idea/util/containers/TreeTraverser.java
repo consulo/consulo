@@ -69,8 +69,7 @@ public class TreeTraverser<T> {
     }
 
     public static abstract class TracingIt<T> extends JBIterator<T> {
-        @Nullable
-        public abstract T parent();
+        public abstract @Nullable T parent();
 
         
         public abstract JBIterable<T> backtrace();

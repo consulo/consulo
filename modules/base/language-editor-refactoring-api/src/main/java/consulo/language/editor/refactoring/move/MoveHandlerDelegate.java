@@ -60,8 +60,7 @@ public abstract class MoveHandlerDelegate {
         return targetContainer;
     }
 
-    @Nullable
-    public PsiElement[] adjustForMove(Project project, PsiElement[] sourceElements, PsiElement targetElement) {
+    public @Nullable PsiElement[] adjustForMove(Project project, PsiElement[] sourceElements, PsiElement targetElement) {
         return sourceElements;
     }
 

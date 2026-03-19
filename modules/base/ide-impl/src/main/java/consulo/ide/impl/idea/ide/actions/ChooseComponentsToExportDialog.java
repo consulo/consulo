@@ -258,14 +258,12 @@ public class ChooseComponentsToExportDialog extends DialogWrapper {
         }
 
         @Override
-        @Nullable
-        public Image getIcon() {
+        public @Nullable Image getIcon() {
             return null;
         }
 
         @Override
-        @Nullable
-        public Color getColor() {
+        public @Nullable Color getColor() {
             return null;
         }
 

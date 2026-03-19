@@ -278,8 +278,7 @@ public abstract class AbstractValueHint {
         }
     }
 
-    @Nullable
-    protected TextRange getCurrentRange() {
+    protected @Nullable TextRange getCurrentRange() {
         return myCurrentRange;
     }
 
@@ -289,8 +288,7 @@ public abstract class AbstractValueHint {
             XDebuggerActions.QUICK_EVALUATE_EXPRESSION);
     }
 
-    @Nullable
-    public static ValueHintType getHintType(EditorMouseEvent e) {
+    public static @Nullable ValueHintType getHintType(EditorMouseEvent e) {
         int modifiers = e.getMouseEvent().getModifiers();
         if (modifiers == 0) {
             return ValueHintType.MOUSE_OVER_HINT;

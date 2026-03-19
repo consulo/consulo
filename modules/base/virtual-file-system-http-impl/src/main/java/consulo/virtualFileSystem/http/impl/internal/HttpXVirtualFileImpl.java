@@ -96,8 +96,7 @@ class HttpXVirtualFileImpl extends HttpVirtualFile {
     }
 
     @Override
-    @Nullable
-    public RemoteFileInfoImpl getFileInfo() {
+    public @Nullable RemoteFileInfoImpl getFileInfo() {
         return myFileInfo;
     }
 

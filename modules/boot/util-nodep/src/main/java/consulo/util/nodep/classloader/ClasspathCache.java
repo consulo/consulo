@@ -115,8 +115,7 @@ public class ClasspathCache {
   }
 
   abstract static class LoaderIterator<ResultType, ParameterType, ParameterType2> {
-    @Nullable
-    abstract ResultType process(Loader loader, ParameterType parameter, ParameterType2 parameter2, String shortName);
+    abstract @Nullable ResultType process(Loader loader, ParameterType parameter, ParameterType2 parameter2, String shortName);
   }
 
   @Nullable

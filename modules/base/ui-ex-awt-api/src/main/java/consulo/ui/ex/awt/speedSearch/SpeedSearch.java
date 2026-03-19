@@ -146,8 +146,7 @@ public class SpeedSearch extends SpeedSearchSupply implements KeyListener {
     fireStateChanged(prevString);
   }
 
-  @Nullable
-  public Matcher getMatcher() {
+  public @Nullable Matcher getMatcher() {
     return myMatcher;
   }
 

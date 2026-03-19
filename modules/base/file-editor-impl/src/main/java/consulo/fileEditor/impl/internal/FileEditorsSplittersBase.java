@@ -166,8 +166,7 @@ public abstract class FileEditorsSplittersBase<W extends FileEditorWindowBase> i
         }
     }
 
-    @Nullable
-    private VirtualFile findNextFile(VirtualFile file) {
+    private @Nullable VirtualFile findNextFile(VirtualFile file) {
         W[] windows = getWindows(); // TODO: use current file as base
         for (int i = 0; i != windows.length; ++i) {
             VirtualFile[] files = windows[i].getFiles();
@@ -245,8 +244,7 @@ public abstract class FileEditorsSplittersBase<W extends FileEditorWindowBase> i
     }
 
     @Override
-    @Nullable
-    public VirtualFile getCurrentFile() {
+    public @Nullable VirtualFile getCurrentFile() {
         if (myCurrentWindow != null) {
             return myCurrentWindow.getSelectedFile();
         }
@@ -338,8 +336,7 @@ public abstract class FileEditorsSplittersBase<W extends FileEditorWindowBase> i
     }
 
     @Override
-    @Nullable
-    public W getCurrentWindow() {
+    public @Nullable W getCurrentWindow() {
         return myCurrentWindow;
     }
 

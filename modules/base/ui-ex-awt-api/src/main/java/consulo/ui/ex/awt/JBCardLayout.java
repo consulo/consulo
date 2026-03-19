@@ -157,8 +157,7 @@ public class JBCardLayout extends CardLayout {
     }
   }
 
-  @Nullable
-  private static Component findVisible(Container parent) {
+  private static @Nullable Component findVisible(Container parent) {
     for (int i = 0; i < parent.getComponentCount(); i++) {
       Component component = parent.getComponent(i);
       if (component.isVisible()) return component;

@@ -33,8 +33,7 @@ public final class ValidationInfo {
     
     public final LocalizeValue message;
 
-    @Nullable
-    public final JComponent component;
+    public final @Nullable JComponent component;
 
     public boolean okEnabled;
     public boolean warning;

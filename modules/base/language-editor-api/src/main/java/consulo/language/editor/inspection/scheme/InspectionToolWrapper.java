@@ -138,8 +138,7 @@ public abstract class InspectionToolWrapper<T extends InspectionTool> {
         return true;
     }
 
-    @Nullable
-    public Language getLanguage() {
+    public @Nullable Language getLanguage() {
         return getTool().getLanguage();
     }
 
@@ -214,8 +213,7 @@ public abstract class InspectionToolWrapper<T extends InspectionTool> {
         return superGetDescriptionUrl();
     }
 
-    @Nullable
-    protected URL superGetDescriptionUrl() {
+    protected @Nullable URL superGetDescriptionUrl() {
         String fileName = getDescriptionFileName();
         return ResourceUtil.getResource(getDescriptionContextClass(), "/inspectionDescriptions", fileName);
     }

@@ -133,8 +133,7 @@ public class BookmarksAction extends AnAction implements DumbAware, MasterDetail
     }
 
     @Override
-    @Nullable
-    public JComponent createAccessoryView(Project project) {
+    public @Nullable JComponent createAccessoryView(Project project) {
         if (!BookmarkManager.getInstance(project).hasBookmarksWithMnemonics()) {
             return null;
         }

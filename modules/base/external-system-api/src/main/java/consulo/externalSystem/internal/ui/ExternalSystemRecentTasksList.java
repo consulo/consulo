@@ -135,8 +135,7 @@ public class ExternalSystemRecentTasksList extends JBList implements Supplier<Ex
     private final consulo.ui.image.Image myGenericTaskIcon;
     
     private final Project myProject;
-    @Nullable
-    private ConfigurationType myConfigurationType;
+    private @Nullable ConfigurationType myConfigurationType;
 
     MyRenderer(Project project, consulo.ui.image.Image genericTaskIcon, @Nullable ConfigurationType configurationType) {
       myProject = project;

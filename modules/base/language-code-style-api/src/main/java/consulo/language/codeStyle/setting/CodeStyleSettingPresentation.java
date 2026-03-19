@@ -32,8 +32,7 @@ import static consulo.language.codeStyle.setting.CodeStyleSettingsCustomizable.*
 public class CodeStyleSettingPresentation {
 
   public static class SettingsGroup {
-    @Nullable
-    public final String name;
+    public final @Nullable String name;
 
     public SettingsGroup(@Nullable String name) {
       this.name = name;

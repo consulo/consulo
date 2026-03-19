@@ -43,8 +43,7 @@ public class FormBuilder {
   private int myLineCount;
   private TableLayout myLayout = TableLayout.create(StaticPosition.TOP);
 
-  @Nullable
-  private Component myBottomComponent = null;
+  private @Nullable Component myBottomComponent = null;
   private List<Component> myBottomComponents = new ArrayList<>();
 
   private FormBuilder() {

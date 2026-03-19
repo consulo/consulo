@@ -29,8 +29,7 @@ import java.util.List;
 import java.util.function.Consumer;
 
 public class TextMergeRequestImpl extends TextMergeRequest {
-    @Nullable
-    private final Project myProject;
+    private final @Nullable Project myProject;
     
     private final DocumentContent myOutput;
     
@@ -39,13 +38,11 @@ public class TextMergeRequestImpl extends TextMergeRequest {
     
     private final CharSequence myOriginalContent;
 
-    @Nullable
-    private final String myTitle;
+    private final @Nullable String myTitle;
     
     private final List<String> myTitles;
 
-    @Nullable
-    private final Consumer<MergeResult> myApplyCallback;
+    private final @Nullable Consumer<MergeResult> myApplyCallback;
 
     public TextMergeRequestImpl(
         @Nullable Project project,

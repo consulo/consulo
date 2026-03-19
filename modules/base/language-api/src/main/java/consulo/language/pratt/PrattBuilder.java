@@ -41,8 +41,7 @@ public abstract class PrattBuilder {
     return createChildBuilder().withLowestPriority(priority);
   }
 
-  @Nullable
-  public IElementType parseChildren(int priority, @Nullable String expectedMessage) {
+  public @Nullable IElementType parseChildren(int priority, @Nullable String expectedMessage) {
     return createChildBuilder(priority, expectedMessage).parse();
   }
 
@@ -84,11 +83,9 @@ public abstract class PrattBuilder {
     return getTokenType() == type;
   }
 
-  @Nullable
-  public abstract IElementType getTokenType();
+  public abstract @Nullable IElementType getTokenType();
 
-  @Nullable
-  public abstract String getTokenText();
+  public abstract @Nullable String getTokenText();
 
   public abstract void reduce(IElementType type);
 
@@ -109,6 +106,5 @@ public abstract class PrattBuilder {
 
   public abstract PrattBuilder withLowestPriority(int priority);
 
-  @Nullable
-  public abstract IElementType parse();
+  public abstract @Nullable IElementType parse();
 }

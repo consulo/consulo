@@ -86,8 +86,7 @@ public class XDebuggerTreeState {
     }
   }
 
-  @Nullable
-  private static NodeInfo createNode(XDebuggerTreeNode node, boolean selected) {
+  private static @Nullable NodeInfo createNode(XDebuggerTreeNode node, boolean selected) {
     if (node instanceof RestorableStateNode) {
       RestorableStateNode valueNode = (RestorableStateNode)node;
       if (valueNode.isComputed()) {
@@ -129,8 +128,7 @@ public class XDebuggerTreeState {
       return myValue;
     }
 
-    @Nullable
-    public NodeInfo getChild(XNamedTreeNode node) {
+    public @Nullable NodeInfo getChild(XNamedTreeNode node) {
       String name = node.getName();
       if (myChildren == null) {
         return null;

@@ -103,8 +103,7 @@ public final class DesktopImportantFolderLocker implements ImportantFolderLocker
     }
 
     @Override
-    @Nullable
-    public BuiltInServer getServer() {
+    public @Nullable BuiltInServer getServer() {
         return myServer;
     }
 

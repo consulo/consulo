@@ -61,8 +61,7 @@ public class CodeAnalysisBeforeCheckinHandler extends CheckinHandler {
 
     @RequiredUIAccess
     @Override
-    @Nullable
-    public RefreshableOnComponent getBeforeCheckinConfigurationPanel() {
+    public @Nullable RefreshableOnComponent getBeforeCheckinConfigurationPanel() {
         return new CheckBoxRefreshableOnComponent(
             VcsLocalize.beforeCheckinStandardOptionsCheckSmells(),
             myProject,

@@ -150,8 +150,7 @@ public class ConsoleViewImpl extends JPanel implements ConsoleView, ObservableCo
     
     private final InputFilter myInputMessageFilter;
 
-    @Nullable
-    private BiPredicate<ProcessEvent, Key> myProcessTextFilter;
+    private @Nullable BiPredicate<ProcessEvent, Key> myProcessTextFilter;
 
     public ConsoleViewImpl(Project project, boolean viewer) {
         this(project, GlobalSearchScope.allScope(project), viewer, true);
@@ -307,8 +306,7 @@ public class ConsoleViewImpl extends JPanel implements ConsoleView, ObservableCo
     }
 
     @Override
-    @Nullable
-    public BiPredicate<ProcessEvent, Key> getProcessTextFilter() {
+    public @Nullable BiPredicate<ProcessEvent, Key> getProcessTextFilter() {
         return myProcessTextFilter;
     }
 
@@ -1212,8 +1210,7 @@ public class ConsoleViewImpl extends JPanel implements ConsoleView, ObservableCo
         }
     }
 
-    @Nullable
-    private ConsoleFolding foldingForLine(int line, Document document) {
+    private @Nullable ConsoleFolding foldingForLine(int line, Document document) {
         String lineText = EditorHyperlinkSupport.getLineText(document, line, false);
         if (line == 0 && myCommandLineFolding.shouldFoldLine(myProject, lineText)) {
             return myCommandLineFolding;
@@ -1340,8 +1337,7 @@ public class ConsoleViewImpl extends JPanel implements ConsoleView, ObservableCo
             e.getPresentation().setEnabled(console != null);
         }
 
-        @Nullable
-        private static ConsoleViewImpl getRunningConsole(DataContext context) {
+        private static @Nullable ConsoleViewImpl getRunningConsole(DataContext context) {
             Editor editor = context.getData(Editor.KEY);
             if (editor != null) {
                 ConsoleViewImpl console = (ConsoleViewImpl)editor.getUserData(CONSOLE_VIEW_IN_EDITOR_VIEW);

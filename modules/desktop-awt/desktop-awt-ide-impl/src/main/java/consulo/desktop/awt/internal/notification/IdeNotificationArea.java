@@ -78,8 +78,7 @@ public class IdeNotificationArea implements CustomStatusBarWidget, IconLikeCusto
         updateStatus();
     }
 
-    @Nullable
-    private Project getProject() {
+    private @Nullable Project getProject() {
         return myStatusBar == null ? null : myStatusBar.getProject();
     }
 

@@ -41,8 +41,7 @@ public interface LanguageDocumentationProvider extends DocumentationProvider, La
     return Application.get().getExtensionPoint(LanguageDocumentationProvider.class).getOrBuildCache(KEY).requiredGet(language);
   }
 
-  @Nullable
-  static DocumentationProvider forLanguageComposite(Language language) {
+  static @Nullable DocumentationProvider forLanguageComposite(Language language) {
     List<LanguageDocumentationProvider> providers = forLanguage(language);
     if (providers.isEmpty()) {
       return null;

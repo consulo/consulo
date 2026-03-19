@@ -130,8 +130,7 @@ public class CoverageSuiteChooserDialog extends DialogWrapper {
         return ExecutionCoverageLocalize.coverageDataRunnerName(coverageRunner.getPresentableName());
     }
 
-    @Nullable
-    private static CoverageRunner getCoverageRunner(VirtualFile file) {
+    private static @Nullable CoverageRunner getCoverageRunner(VirtualFile file) {
         String fileExtension = file.getExtension();
         return Application.get().getExtensionPoint(CoverageRunner.class)
             .findFirstSafe(runner -> Objects.equals(fileExtension, runner.getDataFileExtension()));

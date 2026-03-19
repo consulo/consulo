@@ -16,8 +16,7 @@ import org.jspecify.annotations.Nullable;
 public abstract class BaseCoverageAnnotator implements CoverageAnnotator {
     private final Project myProject;
 
-    @Nullable
-    protected abstract Runnable createRenewRequest(CoverageSuitesBundle suite, CoverageDataManager dataManager);
+    protected abstract @Nullable Runnable createRenewRequest(CoverageSuitesBundle suite, CoverageDataManager dataManager);
 
     public BaseCoverageAnnotator(Project project) {
         myProject = project;

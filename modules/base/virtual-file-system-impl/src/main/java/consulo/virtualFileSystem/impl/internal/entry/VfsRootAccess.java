@@ -150,8 +150,7 @@ public class VfsRootAccess {
     return allowed;
   }
 
-  @Nullable
-  private static String findInUserHome(String path) {
+  private static @Nullable String findInUserHome(String path) {
     try {
       // in case if we have a symlink like ~/.m2 -> /opt/.m2
       return FileUtil.toSystemIndependentName(

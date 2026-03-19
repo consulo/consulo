@@ -27,8 +27,7 @@ public class PluginClassLoaderImpl extends UrlClassLoader implements PluginClass
         }
     }
 
-    @Nullable
-    private final Map<URL, Set<String>> myUrlsIndex;
+    private final @Nullable Map<URL, Set<String>> myUrlsIndex;
     private final ClassLoader[] myParents;
     private final PluginDescriptor myPluginDescriptor;
     private final File myLibDirectory;
@@ -74,8 +73,7 @@ public class PluginClassLoaderImpl extends UrlClassLoader implements PluginClass
     }
 
     public interface ActionWithPluginClassLoader<Result, ParameterType> {
-        @Nullable
-        default Result execute(
+        default @Nullable Result execute(
             String name,
             PluginClassLoaderImpl classloader,
             Set<ClassLoader> visited,
@@ -94,8 +92,7 @@ public class PluginClassLoaderImpl extends UrlClassLoader implements PluginClass
         Result doExecute(String name, PluginClassLoaderImpl classloader, @Nullable ParameterType parameter);
     }
 
-    @Nullable
-    public <Result, ParameterType> Result processResourcesInParents(
+    public @Nullable <Result, ParameterType> Result processResourcesInParents(
         String name,
         ActionWithPluginClassLoader<Result, ParameterType> actionWithPluginClassLoader,
         ActionWithClassloader<Result, ParameterType> actionWithClassloader,
@@ -168,8 +165,7 @@ public class PluginClassLoaderImpl extends UrlClassLoader implements PluginClass
 
     // Changed sequence in which classes are searched, this is essential if plugin uses library,
     // a different version of which is used in IDEA.
-    @Nullable
-    private Class tryLoadingClass(String name, boolean resolve, @Nullable Set<ClassLoader> visited) {
+    private @Nullable Class tryLoadingClass(String name, boolean resolve, @Nullable Set<ClassLoader> visited) {
         Class c = null;
         if (!mustBeLoadedByPlatform(name)) {
             c = loadClassInsideSelf(name);
@@ -197,8 +193,7 @@ public class PluginClassLoaderImpl extends UrlClassLoader implements PluginClass
         return false;
     }
 
-    @Nullable
-    private Class loadClassInsideSelf(String name) {
+    private @Nullable Class loadClassInsideSelf(String name) {
         synchronized (getClassLoadingLock(name)) {
             Class c = findLoadedClass(name);
             if (c != null) {
@@ -232,8 +227,7 @@ public class PluginClassLoaderImpl extends UrlClassLoader implements PluginClass
         return processResourcesInParents(name, FIND_RESOURCE_IN_PLUGIN_CL, FIND_RESOURCE_IN_CL, null, null);
     }
 
-    @Nullable
-    private URL findOwnResource(String name) {
+    private @Nullable URL findOwnResource(String name) {
         URL resource = super.findResource(name);
         if (resource != null) {
             return resource;
@@ -258,8 +252,7 @@ public class PluginClassLoaderImpl extends UrlClassLoader implements PluginClass
         return processResourcesInParents(name, GET_RESOURCE_AS_STREAM_IN_PLUGIN_CL, GET_RESOURCE_AS_STREAM_IN_CL, null, null);
     }
 
-    @Nullable
-    public InputStream getOwnResourceAsStream(String name) {
+    public @Nullable InputStream getOwnResourceAsStream(String name) {
         InputStream stream = super.getResourceAsStream(name);
         if (stream != null) {
             return stream;
@@ -316,8 +309,7 @@ public class PluginClassLoaderImpl extends UrlClassLoader implements PluginClass
         return null;
     }
 
-    @Nullable
-    private String findLibraryInPath(File path, String libName) {
+    private @Nullable String findLibraryInPath(File path, String libName) {
         if (!path.exists()) {
             return null;
         }

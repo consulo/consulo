@@ -69,8 +69,7 @@ public class SLRUMap<K,V> {
     };
   }
 
-  @Nullable
-  public V get(K key) {
+  public @Nullable V get(K key) {
     V value = myProtectedQueue.get(key);
     if (value != null) {
       protectedHits++;

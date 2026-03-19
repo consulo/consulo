@@ -68,8 +68,7 @@ public class StructureViewComposite implements StructureView {
     return false;
   }
 
-  @Nullable
-  public StructureView getSelectedStructureView() {
+  public @Nullable StructureView getSelectedStructureView() {
     StructureViewDescriptor descriptor = ArrayUtil.getFirstElement(myStructureViews);
     return descriptor == null ? null : descriptor.structureView;
   }

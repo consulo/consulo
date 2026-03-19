@@ -177,8 +177,7 @@ public abstract class ExtractIncludeFileBase<T extends PsiElement> implements Re
         return firstExtracted.getLanguage();
     }
 
-    @Nullable
-    private static FileType getFileType(Language language) {
+    private static @Nullable FileType getFileType(Language language) {
         FileType[] fileTypes = FileTypeManager.getInstance().getRegisteredFileTypes();
         for (FileType fileType : fileTypes) {
             if (fileType instanceof LanguageFileType languageFileType && language.equals(languageFileType.getLanguage())) {
@@ -272,8 +271,7 @@ public abstract class ExtractIncludeFileBase<T extends PsiElement> implements Re
         return new ExtractIncludeDialog(containingDirectory, extractExtension);
     }
 
-    @Nullable
-    protected abstract Pair<T, T> findPairToExtract(int start, int end);
+    protected abstract @Nullable Pair<T, T> findPairToExtract(int start, int end);
 
     protected String getExtractExtension(FileType extractFileType, T first) {
         return extractFileType.getDefaultExtension();

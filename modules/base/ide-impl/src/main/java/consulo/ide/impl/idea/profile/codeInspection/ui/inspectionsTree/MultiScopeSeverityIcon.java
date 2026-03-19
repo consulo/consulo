@@ -30,8 +30,7 @@ import java.util.*;
  * @author Dmitry Batkovich
  */
 public class MultiScopeSeverityIcon {
-    @Nullable
-    public static Image create(
+    public static @Nullable Image create(
         Map<String, HighlightSeverity> scopeToAverageSeverityMap,
         String defaultScopeName,
         InspectionProfileImpl inspectionProfile

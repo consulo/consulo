@@ -239,8 +239,7 @@ public final class FileManagerImpl implements FileManager {
         return viewProvider;
     }
 
-    @Nullable
-    private FileViewProvider getRawCachedViewProvider(VirtualFile file) {
+    private @Nullable FileViewProvider getRawCachedViewProvider(VirtualFile file) {
         ConcurrentMap<VirtualFile, FileViewProvider> map = myVFileToViewProviderMap.get();
         FileViewProvider viewProvider = map == null ? null : map.get(file);
         return viewProvider == null ? file.getUserData(myPsiHardRefKey) : viewProvider;
@@ -379,8 +378,7 @@ public final class FileManagerImpl implements FileManager {
 
     @RequiredReadAction
     @Override
-    @Nullable
-    public PsiFile findFile(VirtualFile vFile) {
+    public @Nullable PsiFile findFile(VirtualFile vFile) {
         if (vFile.isDirectory()) {
             return null;
         }
@@ -398,8 +396,7 @@ public final class FileManagerImpl implements FileManager {
 
     @RequiredReadAction
     @Override
-    @Nullable
-    public PsiFile getCachedPsiFile(VirtualFile vFile) {
+    public @Nullable PsiFile getCachedPsiFile(VirtualFile vFile) {
         myApplication.assertReadAccessAllowed();
         if (!vFile.isValid()) {
             throw new InvalidVirtualFileAccessException(vFile);
@@ -415,8 +412,7 @@ public final class FileManagerImpl implements FileManager {
 
     @RequiredReadAction
     @Override
-    @Nullable
-    public PsiDirectory findDirectory(VirtualFile vFile) {
+    public @Nullable PsiDirectory findDirectory(VirtualFile vFile) {
         if (myDisposed) {
             LOG.error("Access to psi files should not be performed after project disposal: " + myManager.getProject());
         }
@@ -435,8 +431,7 @@ public final class FileManagerImpl implements FileManager {
         return findDirectoryImpl(vFile, getVFileToPsiDirMap());
     }
 
-    @Nullable
-    private PsiDirectory findDirectoryImpl(VirtualFile vFile, ConcurrentMap<VirtualFile, PsiDirectory> psiDirMap) {
+    private @Nullable PsiDirectory findDirectoryImpl(VirtualFile vFile, ConcurrentMap<VirtualFile, PsiDirectory> psiDirMap) {
         PsiDirectory psiDir = psiDirMap.get(vFile);
         if (psiDir != null) {
             return psiDir;
@@ -504,8 +499,7 @@ public final class FileManagerImpl implements FileManager {
 
     @RequiredReadAction
     @Override
-    @Nullable
-    public PsiFile getCachedPsiFileInner(VirtualFile file) {
+    public @Nullable PsiFile getCachedPsiFileInner(VirtualFile file) {
         FileViewProvider fileViewProvider = findCachedViewProvider(file);
         return fileViewProvider != null ? ((AbstractFileViewProvider) fileViewProvider).getCachedPsi(fileViewProvider.getBaseLanguage()) : null;
     }

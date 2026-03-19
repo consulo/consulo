@@ -23,8 +23,7 @@ public interface InlayModel {
     /**
      * Same as {@link #addInlineElement(int, boolean, EditorCustomElementRenderer)}, making created element associated with following text.
      */
-    @Nullable
-    default <T extends EditorCustomElementRenderer> Inlay<T> addInlineElement(int offset, T renderer) {
+    default @Nullable <T extends EditorCustomElementRenderer> Inlay<T> addInlineElement(int offset, T renderer) {
         return addInlineElement(offset, false, renderer);
     }
 
@@ -208,8 +207,7 @@ public interface InlayModel {
      * Return a custom visual element with renderer of given type at given coordinates in editor's coordinate space,
      * or {@code null} if there's no such element at given point.
      */
-    @Nullable
-    default <T> Inlay<? extends T> getElementAt(Point point, Class<T> type) {
+    default @Nullable <T> Inlay<? extends T> getElementAt(Point point, Class<T> type) {
         Inlay inlay = getElementAt(point);
         //noinspection unchecked
         return inlay != null && type.isInstance(inlay.getRenderer()) ? inlay : null;

@@ -28,15 +28,13 @@ import java.util.Objects;
  * This is holder of Application instance for ExtensionPointName (deprecated methods without ComponentManager)
  */
 public class RootComponentHolder {
-  @Nullable
-  private static ComponentManager ourRootComponent;
+  private static @Nullable ComponentManager ourRootComponent;
 
   public static void setRootComponent(@Nullable ComponentManager rootComponent) {
     ourRootComponent = rootComponent;
   }
 
-  @Nullable
-  public static ComponentManager getRootComponent() {
+  public static @Nullable ComponentManager getRootComponent() {
     return ourRootComponent;
   }
 

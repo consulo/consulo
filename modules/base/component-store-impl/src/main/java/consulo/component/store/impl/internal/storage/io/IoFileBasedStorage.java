@@ -132,8 +132,7 @@ public final class IoFileBasedStorage extends XmlElementStorage implements FileB
   }
 
   @Override
-  @Nullable
-  protected Element loadLocalData() {
+  protected @Nullable Element loadLocalData() {
     myBlockSavingTheContent = false;
     try {
       if (!myFile.exists()) {
@@ -158,8 +157,7 @@ public final class IoFileBasedStorage extends XmlElementStorage implements FileB
     }
   }
 
-  @Nullable
-  private Element processReadException(@Nullable Exception e) {
+  private @Nullable Element processReadException(@Nullable Exception e) {
     boolean contentTruncated = e == null;
     myBlockSavingTheContent = !contentTruncated
       && (StorageUtil.isProjectOrModuleFile(myFileSpec) || myFileSpec.equals(StoragePathMacros.WORKSPACE_FILE));

@@ -145,8 +145,7 @@ public class AlignmentInColumnsHelper {
      * <code>null</code> otherwise
      */
     @SuppressWarnings({"StatementWithEmptyBody"})
-    @Nullable
-    private static ASTNode getPreviousAdjacentNodeOfTargetType(ASTNode baseNode,
+    private static @Nullable ASTNode getPreviousAdjacentNodeOfTargetType(ASTNode baseNode,
                                                                AlignmentInColumnsConfig config,
                                                                final double blankLinesToBeKeptOnReformat) {
         ASTNode nodeOfTargetType = deriveNodeOfTargetType(baseNode, config.getTargetDeclarationTypes());
@@ -223,8 +222,7 @@ public class AlignmentInColumnsHelper {
      * {@link AlignmentInColumnsConfig#getTargetDeclarationTypes() target type} target type if the one if found;
      * <code>null</code> otherwise
      */
-    @Nullable
-    private static ASTNode deriveNodeOfTargetType(ASTNode baseNode, TokenSet targetTypes) {
+    private static @Nullable ASTNode deriveNodeOfTargetType(ASTNode baseNode, TokenSet targetTypes) {
         if (targetTypes.contains(baseNode.getElementType())) {
             return baseNode;
         }
@@ -316,8 +314,7 @@ public class AlignmentInColumnsHelper {
     }
 
     @SuppressWarnings({"StatementWithEmptyBody"})
-    @Nullable
-    private static ASTNode getSubNodeThatStartsNewLine(@Nullable ASTNode startNode, AlignmentInColumnsConfig config) {
+    private static @Nullable ASTNode getSubNodeThatStartsNewLine(@Nullable ASTNode startNode, AlignmentInColumnsConfig config) {
         if (startNode == null) {
             return null;
         }

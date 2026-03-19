@@ -160,8 +160,7 @@ public class LibraryRuntimeClasspathScope extends GlobalSearchScope {
     return myEntries.contains(getFileRoot(file));
   }
 
-  @Nullable
-  private VirtualFile getFileRoot(VirtualFile file) {
+  private @Nullable VirtualFile getFileRoot(VirtualFile file) {
     if (myIndex.isLibraryClassFile(file)) {
       return myIndex.getClassRootForFile(file);
     }

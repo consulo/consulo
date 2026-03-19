@@ -40,8 +40,7 @@ abstract class FileTemplateTab {
 
   public abstract JComponent getComponent();
 
-  @Nullable
-  public abstract FileTemplate getSelectedTemplate();
+  public abstract @Nullable FileTemplate getSelectedTemplate();
 
   public abstract void selectTemplate(FileTemplate template);
 

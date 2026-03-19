@@ -61,7 +61,7 @@ public class ExternalDiffTool {
 
     @RequiredUIAccess
     public static void show(
-        @Nullable final Project project,
+        final @Nullable Project project,
         final DiffRequestChain chain,
         DiffDialogHints hints
     ) {

@@ -26,8 +26,7 @@ import org.jspecify.annotations.Nullable;
 public abstract class MergeContext implements UserDataHolder {
   protected final UserDataHolderBase myUserDataHolder = new UserDataHolderBase();
 
-  @Nullable
-  public abstract Project getProject();
+  public abstract @Nullable Project getProject();
 
   public abstract boolean isFocused();
 

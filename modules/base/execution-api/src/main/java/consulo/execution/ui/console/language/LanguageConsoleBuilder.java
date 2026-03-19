@@ -41,17 +41,12 @@ public abstract class LanguageConsoleBuilder {
     }
   }
 
-  @Nullable
-  protected Predicate<LanguageConsoleView> executionEnabled = languageConsoleView -> true;
-  @Nullable
-  protected BiFunction<VirtualFile, Project, PsiFile> psiFileFactory;
-  @Nullable
-  protected BaseConsoleExecuteActionHandler executeActionHandler;
-  @Nullable
-  protected String historyType;
+  protected @Nullable Predicate<LanguageConsoleView> executionEnabled = languageConsoleView -> true;
+  protected @Nullable BiFunction<VirtualFile, Project, PsiFile> psiFileFactory;
+  protected @Nullable BaseConsoleExecuteActionHandler executeActionHandler;
+  protected @Nullable String historyType;
 
-  @Nullable
-  protected GutterContentProvider gutterContentProvider;
+  protected @Nullable GutterContentProvider gutterContentProvider;
 
   protected boolean oneLineInput;
 

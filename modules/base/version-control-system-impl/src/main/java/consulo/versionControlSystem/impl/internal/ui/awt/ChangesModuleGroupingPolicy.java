@@ -50,8 +50,7 @@ public class ChangesModuleGroupingPolicy implements ChangesGroupingPolicy {
   }
 
   @Override
-  @Nullable
-  public ChangesBrowserNode getParentNodeFor(StaticFilePath node, ChangesBrowserNode rootNode) {
+  public @Nullable ChangesBrowserNode getParentNodeFor(StaticFilePath node, ChangesBrowserNode rootNode) {
     if (myProject.isDefault()) return null;
 
     ProjectFileIndex index = ProjectRootManager.getInstance(myProject).getFileIndex();

@@ -41,8 +41,7 @@ public class SelectedState<T> {
     myCache = new SLRUMap<>(queueSize, queueSize);
   }
 
-  @Nullable
-  public TreeNodeState get(T node) {
+  public @Nullable TreeNodeState get(T node) {
     if (mySelected.contains(node)) return TreeNodeState.SELECTED;
     return myCache.get(node);
   }

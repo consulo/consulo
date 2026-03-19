@@ -48,8 +48,7 @@ public class DataNode<T> implements Serializable {
   private transient T myData;
   private byte[] myRawData;
 
-  @Nullable
-  private final DataNode<?> myParent;
+  private final @Nullable DataNode<?> myParent;
 
   public DataNode(Key<T> key, T data, @Nullable DataNode<?> parent) {
     myKey = key;
@@ -57,8 +56,7 @@ public class DataNode<T> implements Serializable {
     myParent = parent;
   }
 
-  @Nullable
-  public DataNode<?> getParent() {
+  public @Nullable DataNode<?> getParent() {
     return myParent;
   }
 
@@ -198,8 +196,7 @@ public class DataNode<T> implements Serializable {
    * @return data stored for the current key and available via the current node (if any)
    */
   @SuppressWarnings("unchecked")
-  @Nullable
-  public <T> T getData(Key<T> key) {
+  public @Nullable <T> T getData(Key<T> key) {
     if (myKey.equals(key)) {
       return (T)myData;
     }
@@ -212,8 +209,7 @@ public class DataNode<T> implements Serializable {
   }
 
   @SuppressWarnings("unchecked")
-  @Nullable
-  public <T> DataNode<T> getDataNode(Key<T> key) {
+  public @Nullable <T> DataNode<T> getDataNode(Key<T> key) {
     if (myKey.equals(key)) {
       return (DataNode<T>)this;
     }

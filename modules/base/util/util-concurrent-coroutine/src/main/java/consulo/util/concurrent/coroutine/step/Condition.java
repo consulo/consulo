@@ -39,8 +39,7 @@ public class Condition<I, O> extends CoroutineStep<I, O> {
 
 	private final CoroutineStep<I, O> rRunIfTrue;
 
-	@Nullable
-	private final CoroutineStep<I, O> rRunIfFalse;
+	private final @Nullable CoroutineStep<I, O> rRunIfFalse;
 
 	//~ Constructors -----------------------------------------------------------
 

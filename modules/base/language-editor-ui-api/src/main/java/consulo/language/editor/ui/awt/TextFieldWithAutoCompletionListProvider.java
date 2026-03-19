@@ -32,20 +32,16 @@ import java.util.*;
 public abstract class TextFieldWithAutoCompletionListProvider<T> implements Comparator<T> {
   
   private Collection<T> myVariants;
-  @Nullable
-  private String myCompletionAdvertisement;
+  private @Nullable String myCompletionAdvertisement;
 
-  @Nullable
-  protected abstract Image getIcon(T item);
+  protected abstract @Nullable Image getIcon(T item);
 
   
   protected abstract String getLookupString(T item);
 
-  @Nullable
-  protected abstract String getTailText(T item);
+  protected abstract @Nullable String getTailText(T item);
 
-  @Nullable
-  protected abstract String getTypeText(T item);
+  protected abstract @Nullable String getTypeText(T item);
 
   @Override
   public abstract int compare(T item1, T item2);
@@ -77,8 +73,7 @@ public abstract class TextFieldWithAutoCompletionListProvider<T> implements Comp
    * @param shortcut
    * @return text
    */
-  @Nullable
-  public String getQuickDocHotKeyAdvertisement(String shortcut) {
+  public @Nullable String getQuickDocHotKeyAdvertisement(String shortcut) {
     String advertisementTail = getQuickDocHotKeyAdvertisementTail(shortcut);
     if (advertisementTail == null) {
       return null;
@@ -92,8 +87,7 @@ public abstract class TextFieldWithAutoCompletionListProvider<T> implements Comp
    *
    * @return text
    */
-  @Nullable
-  public String getAdvertisement() {
+  public @Nullable String getAdvertisement() {
     return myCompletionAdvertisement;
   }
 
@@ -101,8 +95,7 @@ public abstract class TextFieldWithAutoCompletionListProvider<T> implements Comp
     myCompletionAdvertisement = completionAdvertisement;
   }
 
-  @Nullable
-  public PrefixMatcher createPrefixMatcher(String prefix) {
+  public @Nullable PrefixMatcher createPrefixMatcher(String prefix) {
     return new PlainPrefixMatcher(prefix);
   }
 
@@ -127,8 +120,7 @@ public abstract class TextFieldWithAutoCompletionListProvider<T> implements Comp
     return builder;
   }
 
-  @Nullable
-  public String getPrefix(CompletionParameters parameters) {
+  public @Nullable String getPrefix(CompletionParameters parameters) {
     return getCompletionPrefix(parameters);
   }
 
@@ -138,13 +130,11 @@ public abstract class TextFieldWithAutoCompletionListProvider<T> implements Comp
     return text.substring(i, parameters.getOffset());
   }
 
-  @Nullable
-  protected String getQuickDocHotKeyAdvertisementTail(String shortcut) {
+  protected @Nullable String getQuickDocHotKeyAdvertisementTail(String shortcut) {
     return null;
   }
 
-  @Nullable
-  protected InsertHandler<LookupElement> createInsertHandler(T item) {
+  protected @Nullable InsertHandler<LookupElement> createInsertHandler(T item) {
     return null;
   }
 }

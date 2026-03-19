@@ -33,8 +33,7 @@ public class CoreLocalFileSystem extends BaseVirtualFileSystem {
     return StandardFileSystems.FILE_PROTOCOL;
   }
 
-  @Nullable
-  public VirtualFile findFileByIoFile(File ioFile) {
+  public @Nullable VirtualFile findFileByIoFile(File ioFile) {
     return ioFile.exists() ? new CoreLocalVirtualFile(this, ioFile) : null;
   }
 

@@ -51,8 +51,7 @@ public interface SearchEverywhereContributor<Item> extends PossiblyDumbAware {
         return Collections.emptyList();
     }
 
-    @Nullable
-    default String getAdvertisement() {
+    default @Nullable String getAdvertisement() {
         return null;
     }
 

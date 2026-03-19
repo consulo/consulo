@@ -81,8 +81,7 @@ public class XMarkObjectActionHandler extends MarkObjectActionHandler {
     return getValueMarkers(project) == null;
   }
 
-  @Nullable
-  private static XValueMarkers<?, ?> getValueMarkers(Project project) {
+  private static @Nullable XValueMarkers<?, ?> getValueMarkers(Project project) {
     XDebugSession session = XDebuggerManager.getInstance(project).getCurrentSession();
     return session != null ? ((XDebugSessionImpl)session).getValueMarkers() : null;
   }

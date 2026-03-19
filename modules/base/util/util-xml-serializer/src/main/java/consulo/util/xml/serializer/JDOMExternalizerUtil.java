@@ -41,8 +41,7 @@ public class JDOMExternalizerUtil {
     return val == null ? defaultValue : val;
   }
 
-  @Nullable
-  public static String readField(Element parent, String fieldName) {
+  public static @Nullable String readField(Element parent, String fieldName) {
     for (Element element : JDOMUtil.getChildren(parent, "option")) {
       String childName = element.getAttributeValue("name");
       if (Comparing.strEqual(childName, fieldName)) {
@@ -52,8 +51,7 @@ public class JDOMExternalizerUtil {
     return null;
   }
 
-  @Nullable
-  public static Element getOption(Element parent, String fieldName) {
+  public static @Nullable Element getOption(Element parent, String fieldName) {
     for (Element element : JDOMUtil.getChildren(parent, "option")) {
       String childName = element.getAttributeValue("name");
       if (Comparing.strEqual(childName, fieldName)) {
@@ -79,8 +77,7 @@ public class JDOMExternalizerUtil {
     return element;
   }
 
-  @Nullable
-  public static String getFirstChildValueAttribute(Element parent, String childTagName) {
+  public static @Nullable String getFirstChildValueAttribute(Element parent, String childTagName) {
     Element first = parent.getChild(childTagName);
     if (first != null) {
       return first.getAttributeValue(VALUE_ATTR_NAME);

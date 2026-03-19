@@ -230,15 +230,13 @@ public class CodeStyleSchemesConfigurable extends SearchableConfigurable.Parent.
         }
     }
 
-    @Nullable
-    public SearchableConfigurable findSubConfigurable(LocalizeValue name) {
+    public @Nullable SearchableConfigurable findSubConfigurable(LocalizeValue name) {
         return findSubConfigurable(this, name);
     }
 
     @Deprecated
     @DeprecationInfo("Use variant with LocalizeValue")
-    @Nullable
-    public SearchableConfigurable findSubConfigurable(String name) {
+    public @Nullable SearchableConfigurable findSubConfigurable(String name) {
         return findSubConfigurable(this, LocalizeValue.of(name));
     }
 

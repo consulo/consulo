@@ -135,8 +135,7 @@ public abstract class JBTabsImpl extends JComponent
     private boolean myPaintFocus;
 
     private boolean myHideTabs = false;
-    @Nullable
-    private Project myProject;
+    private @Nullable Project myProject;
 
     private boolean myRequestFocusOnLastFocusedComponent = false;
     private boolean myListenerAdded;
@@ -628,8 +627,7 @@ public abstract class JBTabsImpl extends JComponent
     }
 
 
-    @Nullable
-    private JComponent getToFocus() {
+    private @Nullable JComponent getToFocus() {
         TabInfo info = getSelectedInfo();
 
         if (info == null) {
@@ -749,8 +747,7 @@ public abstract class JBTabsImpl extends JComponent
         return addTab(info, -1);
     }
 
-    @Nullable
-    public ActionGroup getPopupGroup() {
+    public @Nullable ActionGroup getPopupGroup() {
         return myPopupGroup != null ? myPopupGroup.get() : null;
     }
 
@@ -796,8 +793,7 @@ public abstract class JBTabsImpl extends JComponent
         return SwingUtilities.isDescendingFrom(owner, this);
     }
 
-    @Nullable
-    private static JComponent getFocusOwner() {
+    private static @Nullable JComponent getFocusOwner() {
         Component owner = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
         return (JComponent) (owner instanceof JComponent ? owner : null);
     }
@@ -1194,8 +1190,7 @@ public abstract class JBTabsImpl extends JComponent
     }
 
     @Override
-    @Nullable
-    public TabInfo getSelectedInfo() {
+    public @Nullable TabInfo getSelectedInfo() {
         if (myOldSelection != null) {
             return myOldSelection;
         }
@@ -1206,8 +1201,7 @@ public abstract class JBTabsImpl extends JComponent
         return mySelectedInfo != null ? mySelectedInfo : !myVisibleInfos.isEmpty() ? myVisibleInfos.get(0) : null;
     }
 
-    @Nullable
-    public TabInfo getSelectedInfoInternal() {
+    public @Nullable TabInfo getSelectedInfoInternal() {
         return mySelectedInfo;
     }
 
@@ -1215,8 +1209,7 @@ public abstract class JBTabsImpl extends JComponent
         return mySingleRowLayout;
     }
 
-    @Nullable
-    private TabInfo getToSelectOnRemoveOf(TabInfo info) {
+    private @Nullable TabInfo getToSelectOnRemoveOf(TabInfo info) {
         if (!myVisibleInfos.contains(info)) {
             return null;
         }
@@ -1246,8 +1239,7 @@ public abstract class JBTabsImpl extends JComponent
         return false;
     }
 
-    @Nullable
-    private TabInfo findEnabledForward(int from, boolean cycle) {
+    private @Nullable TabInfo findEnabledForward(int from, boolean cycle) {
         if (from < 0) {
             return null;
         }
@@ -1272,8 +1264,7 @@ public abstract class JBTabsImpl extends JComponent
         return null;
     }
 
-    @Nullable
-    private TabInfo findEnabledBackward(int from, boolean cycle) {
+    private @Nullable TabInfo findEnabledBackward(int from, boolean cycle) {
         if (from < 0) {
             return null;
         }
@@ -1754,8 +1745,7 @@ public abstract class JBTabsImpl extends JComponent
         return (JBEditorTabsUI) ui;
     }
 
-    @Nullable
-    public TabInfo findInfo(Component component) {
+    public @Nullable TabInfo findInfo(Component component) {
         for (TabInfo each : getTabs()) {
             if (each.getComponent() == component) {
                 return each;
@@ -1770,8 +1760,7 @@ public abstract class JBTabsImpl extends JComponent
         return findInfo(event, false);
     }
 
-    @Nullable
-    private TabInfo findInfo(MouseEvent event, boolean labelsOnly) {
+    private @Nullable TabInfo findInfo(MouseEvent event, boolean labelsOnly) {
         Point point = SwingUtilities.convertPoint(event.getComponent(), event.getPoint(), this);
         return _findInfo(point, labelsOnly);
     }
@@ -1788,8 +1777,7 @@ public abstract class JBTabsImpl extends JComponent
         return null;
     }
 
-    @Nullable
-    private TabInfo _findInfo(Point point, boolean labelsOnly) {
+    private @Nullable TabInfo _findInfo(Point point, boolean labelsOnly) {
         Component component = findComponentAt(point);
         if (component == null) {
             return null;
@@ -2007,8 +1995,7 @@ public abstract class JBTabsImpl extends JComponent
         return oldObject != null && !oldObject.equals(newObject) || newObject != null && !newObject.equals(oldObject);
     }
 
-    @Nullable
-    protected Color getActiveTabFillIn() {
+    protected @Nullable Color getActiveTabFillIn() {
         return myActiveTabFillIn;
     }
 
@@ -2054,8 +2041,7 @@ public abstract class JBTabsImpl extends JComponent
             }
         }
 
-        @Nullable
-        protected JBTabsImpl findNavigatableTabs(JBTabsImpl tabs) {
+        protected @Nullable JBTabsImpl findNavigatableTabs(JBTabsImpl tabs) {
             // The debugger UI contains multiple nested JBTabsImpl, where the innermost JBTabsImpl has only one tab. In this case,
             // the action should target the outer JBTabsImpl.
             if (tabs == null || tabs != myTabs) {
@@ -2291,8 +2277,7 @@ public abstract class JBTabsImpl extends JComponent
 
 
     @Override
-    @Nullable
-    public Object getData(Key<?> dataId) {
+    public @Nullable Object getData(Key<?> dataId) {
         if (myDataProvider != null) {
             Object value = myDataProvider.getData(dataId);
             if (value != null) {

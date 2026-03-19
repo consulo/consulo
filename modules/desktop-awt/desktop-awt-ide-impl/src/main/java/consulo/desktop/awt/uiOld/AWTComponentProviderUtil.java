@@ -39,8 +39,7 @@ public class AWTComponentProviderUtil {
     component.putClientProperty(KEY, componentProvider);
   }
 
-  @Nullable
-  public static AWTComponentProvider getMark(@Nullable Component component) {
+  public static @Nullable AWTComponentProvider getMark(@Nullable Component component) {
     return component instanceof JComponent ? (AWTComponentProvider)((JComponent)component).getClientProperty(KEY) : null;
   }
 

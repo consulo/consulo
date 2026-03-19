@@ -132,16 +132,14 @@ public class RunContentManagerImpl implements RunContentManager, Disposable {
     }
 
     @Override
-    @Nullable
-    public RunContentDescriptor getSelectedContent(Executor executor) {
+    public @Nullable RunContentDescriptor getSelectedContent(Executor executor) {
         ContentManager contentManagerForRunner = getContentManagerForRunner(executor, null, false);
         Content selectedContent = contentManagerForRunner == null ? null : contentManagerForRunner.getSelectedContent();
         return selectedContent != null ? getRunContentDescriptorByContent(selectedContent) : null;
     }
 
     @Override
-    @Nullable
-    public RunContentDescriptor getSelectedContent() {
+    public @Nullable RunContentDescriptor getSelectedContent() {
         for (String activeWindow : myRunToolWindowManager.getToolwindowIdZBuffer()) {
             ContentManager contentManager = myRunToolWindowManager.get(activeWindow, false);
             if (contentManager == null) {
@@ -321,8 +319,7 @@ public class RunContentManagerImpl implements RunContentManager, Disposable {
         showRunContent(info, descriptor, descriptor.getExecutionId());
     }
 
-    @Nullable
-    private static RunContentDescriptor chooseReuseContentForDescriptor(ContentManager contentManager,
+    private static @Nullable RunContentDescriptor chooseReuseContentForDescriptor(ContentManager contentManager,
                                                                         @Nullable RunContentDescriptor descriptor,
                                                                         long executionId,
                                                                         @Nullable String preferredName) {
@@ -358,8 +355,7 @@ public class RunContentManagerImpl implements RunContentManager, Disposable {
         return null;
     }
 
-    @Nullable
-    private static Content getContentFromManager(ContentManager contentManager, @Nullable String preferredName, long executionId) {
+    private static @Nullable Content getContentFromManager(ContentManager contentManager, @Nullable String preferredName, long executionId) {
         ArrayList<Content> contents = new ArrayList<>(Arrays.asList(contentManager.getContents()));
         Content first = contentManager.getSelectedContent();
         if (first != null && contents.remove(first)) {//selected content should be checked first
@@ -384,8 +380,7 @@ public class RunContentManagerImpl implements RunContentManager, Disposable {
         return c != null && !c.isPinned() && isTerminated(c) && !(c.getExecutionId() == executionId && executionId != 0);
     }
 
-    @Nullable
-    private ContentManager getContentManagerForRunner(Executor executor, RunContentDescriptor descriptor, boolean createIfNeed) {
+    private @Nullable ContentManager getContentManagerForRunner(Executor executor, RunContentDescriptor descriptor, boolean createIfNeed) {
         String toolWindowIdForRunner = getToolWindowIdForRunner(executor, descriptor);
 
         if (Objects.equals(toolWindowIdForRunner, myRunDashboardManager.getToolWindowId())) {
@@ -417,19 +412,16 @@ public class RunContentManagerImpl implements RunContentManager, Disposable {
         return processHandler == null || processHandler.isProcessTerminated();
     }
 
-    @Nullable
-    public static RunContentDescriptor getRunContentDescriptorByContent(Content content) {
+    public static @Nullable RunContentDescriptor getRunContentDescriptorByContent(Content content) {
         return content.getUserData(RunContentDescriptor.KEY);
     }
 
-    @Nullable
-    public static Executor getExecutorByContent(Content content) {
+    public static @Nullable Executor getExecutorByContent(Content content) {
         return content.getUserData(EXECUTOR_KEY);
     }
 
     @Override
-    @Nullable
-    public ToolWindow getToolWindowByDescriptor(RunContentDescriptor descriptor) {
+    public @Nullable ToolWindow getToolWindowByDescriptor(RunContentDescriptor descriptor) {
         for (Map.Entry<String, ContentManager> entry : myRunToolWindowManager.entrySet()) {
             if (getRunContentByDescriptor(entry.getValue(), descriptor) != null) {
                 return ToolWindowManager.getInstance(myProject).getToolWindow(entry.getKey());
@@ -438,8 +430,7 @@ public class RunContentManagerImpl implements RunContentManager, Disposable {
         return null;
     }
 
-    @Nullable
-    private static Content getRunContentByDescriptor(@Nullable ContentManager contentManager, RunContentDescriptor descriptor) {
+    private static @Nullable Content getRunContentByDescriptor(@Nullable ContentManager contentManager, RunContentDescriptor descriptor) {
         if (contentManager == null) {
             return null;
         }
@@ -474,8 +465,7 @@ public class RunContentManagerImpl implements RunContentManager, Disposable {
         return descriptors;
     }
 
-    @Nullable
-    private ContentManager getContentManagerByToolWindowId(String toolWindowId) {
+    private @Nullable ContentManager getContentManagerByToolWindowId(String toolWindowId) {
         if (Objects.equals(myRunDashboardManager.getToolWindowId(), toolWindowId)) {
             return myRunDashboardManager.getDashboardContentManager();
         }
@@ -494,8 +484,7 @@ public class RunContentManagerImpl implements RunContentManager, Disposable {
     }
 
     @Override
-    @Nullable
-    public String getContentDescriptorToolWindowId(@Nullable RunConfiguration configuration) {
+    public @Nullable String getContentDescriptorToolWindowId(@Nullable RunConfiguration configuration) {
         if (configuration != null) {
             if (myRunDashboardManager.isShowInDashboard(configuration)) {
                 return myRunDashboardManager.getToolWindowId();
@@ -552,8 +541,7 @@ public class RunContentManagerImpl implements RunContentManager, Disposable {
         return handler != null && !handler.isProcessTerminated();
     }
 
-    @Nullable
-    private RunContentDescriptor getDescriptorBy(ProcessHandler handler, Executor runnerInfo) {
+    private @Nullable RunContentDescriptor getDescriptorBy(ProcessHandler handler, Executor runnerInfo) {
         List<Content> contents = new ArrayList<>();
         ContentManager contentManagerForRunner = getContentManagerForRunner(runnerInfo, null, false);
         if (contentManagerForRunner != null) {

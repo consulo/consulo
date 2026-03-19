@@ -32,8 +32,7 @@ public class LayoutTreeNavigateAction extends ArtifactEditorNavigateActionBase {
   }
 
   @Override
-  @Nullable
-  protected TreeNodePresentation getPresentation() {
+  protected @Nullable TreeNodePresentation getPresentation() {
     PackagingElementNode<?> node = myLayoutTreeComponent.getSelection().getNodeIfSingle();
     return node != null ? node.getElementPresentation() : null;
   }

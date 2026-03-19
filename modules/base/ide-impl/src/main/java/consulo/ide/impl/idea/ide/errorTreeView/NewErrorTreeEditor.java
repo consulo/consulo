@@ -113,8 +113,7 @@ public class NewErrorTreeEditor extends AbstractCellEditor implements TreeCellEd
         }
     }
 
-    @Nullable
-    private static ErrorTreeElement getElement(@Nullable Object value) {
+    private static @Nullable ErrorTreeElement getElement(@Nullable Object value) {
         if (!(value instanceof DefaultMutableTreeNode)) {
             return null;
         }

@@ -69,8 +69,7 @@ public class DelegatingMemberInfoModel<T extends PsiElement, M extends MemberInf
   }
 
   @Override
-  @Nullable
-  public Boolean isFixedAbstract(M member) {
+  public @Nullable Boolean isFixedAbstract(M member) {
     return myDelegatingTarget.isFixedAbstract(member);
   }
 

@@ -82,8 +82,7 @@ public interface LocalizeValue extends Supplier<String>, Comparable<LocalizeValu
         return getValue();
     }
 
-    @Nullable
-    default String getNullIfEmpty() {
+    default @Nullable String getNullIfEmpty() {
         return getValue();
     }
     default LocalizeValue orIfEmpty(LocalizeValue defaultValue) {

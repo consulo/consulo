@@ -41,18 +41,15 @@ public class ProximityLocation implements UserDataHolder {
     myContext = context;
   }
 
-  @Nullable
-  public Module getPositionModule() {
+  public @Nullable Module getPositionModule() {
     return myPositionModule;
   }
 
-  @Nullable
-  public PsiElement getPosition() {
+  public @Nullable PsiElement getPosition() {
     return myPosition;
   }
 
-  @Nullable
-  public Project getProject() {
+  public @Nullable Project getProject() {
     return myPosition != null ? myPosition.getProject() : null;
   }
 

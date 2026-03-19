@@ -29,8 +29,7 @@ public abstract class CachingReference implements PsiReference {
     return ResolveCache.getInstance(getElement().getProject()).resolveWithCaching(this, MyResolver.INSTANCE, false, false);
   }
 
-  @Nullable
-  public abstract PsiElement resolveInner();
+  public abstract @Nullable PsiElement resolveInner();
 
   @Override
   public boolean isReferenceTo(PsiElement element) {
@@ -54,8 +53,7 @@ public abstract class CachingReference implements PsiReference {
   private static class MyResolver implements ResolveCache.Resolver {
     private static final MyResolver INSTANCE = new MyResolver();
     @Override
-    @Nullable
-    public PsiElement resolve(PsiReference ref, boolean incompleteCode) {
+    public @Nullable PsiElement resolve(PsiReference ref, boolean incompleteCode) {
       return ((CachingReference)ref).resolveInner();
     }
   }

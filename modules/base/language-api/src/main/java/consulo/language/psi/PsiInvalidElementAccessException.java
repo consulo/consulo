@@ -100,8 +100,7 @@ public class PsiInvalidElementAccessException extends RuntimeException implement
                                                          : AttachmentFactory.get().create("diagnostic.txt", trace.toString())};
   }
 
-  @Nullable
-  private static Object getPsiInvalidationTrace(PsiElement element) {
+  private static @Nullable Object getPsiInvalidationTrace(PsiElement element) {
     Object trace = getInvalidationTrace(element);
     return trace != null || element instanceof PsiFile ? trace : findInvalidationTrace(element.getNode());
   }
@@ -219,8 +218,7 @@ public class PsiInvalidElementAccessException extends RuntimeException implement
     return Registry.is("psi.track.invalidation");
   }
 
-  @Nullable
-  public PsiElement getPsiElement() {
+  public @Nullable PsiElement getPsiElement() {
     return myElementReference.get();
   }
 }

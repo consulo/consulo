@@ -99,8 +99,7 @@ class FoldingModelWindow implements FoldingModelEx, ModificationTracker {
         return hostRegion == null ? null : getWindowRegion(hostRegion);
     }
 
-    @Nullable
-    private FoldingRegionWindow getWindowRegion(FoldRegion hostRegion) {
+    private @Nullable FoldingRegionWindow getWindowRegion(FoldRegion hostRegion) {
         FoldingRegionWindow window = hostRegion.getUserData(FOLD_REGION_WINDOW);
         return window != null && window.getEditor() == myEditorWindow ? window : null;
     }

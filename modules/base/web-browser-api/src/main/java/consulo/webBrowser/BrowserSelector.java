@@ -93,13 +93,11 @@ public class BrowserSelector {
         return new MutableCollectionComboBoxModel<>(list);
     }
 
-    @Nullable
-    public WebBrowser getSelected() {
+    public @Nullable WebBrowser getSelected() {
         return myModel.getSelected();
     }
 
-    @Nullable
-    public String getSelectedBrowserId() {
+    public @Nullable String getSelectedBrowserId() {
         WebBrowser browser = getSelected();
         return browser != null ? browser.getId().toString() : null;
     }

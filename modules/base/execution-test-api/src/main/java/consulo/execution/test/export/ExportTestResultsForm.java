@@ -174,8 +174,7 @@ public class ExportTestResultsForm {
     myEventDispatcher.addListener(changeListener);
   }
 
-  @Nullable
-  public String validate() {
+  public @Nullable String validate() {
     if (getExportFormat() == ExportTestResultsConfiguration.ExportFormat.UserTemplate) {
       if (StringUtil.isEmpty(myCustomTemplateField.getText())) {
         return ExecutionLocalize.exportTestResultsCustomTemplatePathEmpty().get();

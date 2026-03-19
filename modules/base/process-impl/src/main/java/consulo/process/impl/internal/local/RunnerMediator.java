@@ -81,8 +81,7 @@ public class RunnerMediator {
     return new CustomDestroyProcessHandlerImpl(commandLine, useSoftKill);
   }
 
-  @Nullable
-  public static String getRunnerPath() {
+  public static @Nullable String getRunnerPath() {
     Platform platform = Platform.current();
     if (!platform.os().isWindows()) {
       throw new IllegalStateException("There is no need of runner under unix based OS");

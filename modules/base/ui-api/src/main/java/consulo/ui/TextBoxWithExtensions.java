@@ -35,8 +35,7 @@ public interface TextBoxWithExtensions extends TextBox {
         private final Image myIcon;
         private final Image myHoveredIcon;
 
-        @Nullable
-        private ComponentEventListener<Component, ClickEvent> myClickListener;
+        private @Nullable ComponentEventListener<Component, ClickEvent> myClickListener;
 
         public Extension(boolean left, Image icon, @Nullable Image hoveredIcon) {
             this(left, icon, hoveredIcon, null);
@@ -52,8 +51,7 @@ public interface TextBoxWithExtensions extends TextBox {
             myClickListener = clickListener;
         }
 
-        @Nullable
-        public ComponentEventListener<Component, ClickEvent> getClickListener() {
+        public @Nullable ComponentEventListener<Component, ClickEvent> getClickListener() {
             return myClickListener;
         }
 

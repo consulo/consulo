@@ -53,8 +53,7 @@ public class RunnerLayoutImpl implements RunnerLayout {
         myID = ID;
     }
 
-    @Nullable
-    public String getDefaultDisplayName(int defaultIndex) {
+    public @Nullable String getDefaultDisplayName(int defaultIndex) {
         TabImpl.Default tab = myDefaultTabs.get(defaultIndex);
         return tab != null ? tab.myDisplayName : null;
     }
@@ -106,8 +105,7 @@ public class RunnerLayoutImpl implements RunnerLayout {
         return false;
     }
 
-    @Nullable
-    protected TabImpl findTab(int index) {
+    protected @Nullable TabImpl findTab(int index) {
         for (TabImpl each : myTabs) {
             if (index == each.getIndex()) {
                 return each;
@@ -258,8 +256,7 @@ public class RunnerLayoutImpl implements RunnerLayout {
         myDefaultFocus.put(condition, Pair.create(id, policy));
     }
 
-    @Nullable
-    public String getToFocus(String condition) {
+    public @Nullable String getToFocus(String condition) {
         return myGeneral.focusOnCondition.containsKey(condition) ? myGeneral.focusOnCondition.get(condition) :
             myDefaultFocus.containsKey(condition) ? myDefaultFocus.get(condition).getFirst() : null;
     }

@@ -105,8 +105,7 @@ public interface DocumentationManager {
 
   Editor getEditor();
 
-  @Nullable
-  default PsiElement findTargetElement(Editor editor, @Nullable PsiFile file, PsiElement contextElement) {
+  default @Nullable PsiElement findTargetElement(Editor editor, @Nullable PsiFile file, PsiElement contextElement) {
     return findTargetElement(editor, editor.getCaretModel().getOffset(), file, contextElement);
   }
 

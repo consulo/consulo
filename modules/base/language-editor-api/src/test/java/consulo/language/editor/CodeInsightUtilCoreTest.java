@@ -94,8 +94,7 @@ public class CodeInsightUtilCoreTest {
     }
 
     private abstract class AbstractParseStringCharsTester implements ParseStringCharsTester {
-        @Nullable
-        protected CharSequence myNoOffsets, myWithOffsets;
+        protected @Nullable CharSequence myNoOffsets, myWithOffsets;
         
         protected final int[] mySourceOffsets;
 

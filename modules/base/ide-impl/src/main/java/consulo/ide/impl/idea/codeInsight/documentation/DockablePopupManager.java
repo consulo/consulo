@@ -259,8 +259,7 @@ public abstract class DockablePopupManager<T extends JComponent & Disposable> {
         return myToolWindow != null && myToolWindow.isVisible();
     }
 
-    @Nullable
-    public ToolWindow getToolWindow() {
+    public @Nullable ToolWindow getToolWindow() {
         return myToolWindow;
     }
 

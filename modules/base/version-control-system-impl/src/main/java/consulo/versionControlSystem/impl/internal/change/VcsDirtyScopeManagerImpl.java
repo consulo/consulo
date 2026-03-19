@@ -47,10 +47,8 @@ public final class VcsDirtyScopeManagerImpl extends VcsDirtyScopeManager impleme
 
     
     private DirtBuilder myDirtBuilder = new DirtBuilder();
-    @Nullable
-    private DirtBuilder myDirtInProgress;
-    @Nullable
-    private ActionCallback myRefreshInProgress;
+    private @Nullable DirtBuilder myDirtInProgress;
+    private @Nullable ActionCallback myRefreshInProgress;
 
     private boolean myReady;
     private final Object LOCK = new Object();
@@ -249,8 +247,7 @@ public final class VcsDirtyScopeManagerImpl extends VcsDirtyScopeManager impleme
      * Take current dirty scope into processing.
      * Should call {@link #changesProcessed} when done to notify {@link #whatFilesDirty} that scope is no longer dirty.
      */
-    @Nullable
-    public VcsInvalidated retrieveScopes() {
+    public @Nullable VcsInvalidated retrieveScopes() {
         ActionCallback callback = new ActionCallback();
         DirtBuilder dirtBuilder;
         synchronized (LOCK) {
@@ -319,8 +316,7 @@ public final class VcsDirtyScopeManagerImpl extends VcsDirtyScopeManager impleme
             -> vcs.getVcs() + ": " + StringUtil.join(filesByVcs.get(vcs), path -> path.getPath(), "\n"), "\n");
     }
 
-    @Nullable
-    private static Class<?> findFirstInterestingCallerClass() {
+    private static @Nullable Class<?> findFirstInterestingCallerClass() {
         for (int i = 1; i <= 7; i++) {
             Class<?> clazz = ReflectionUtil.findCallerClass(i);
           if (clazz == null || !clazz.getName().contains(VcsDirtyScopeManagerImpl.class.getName())) {

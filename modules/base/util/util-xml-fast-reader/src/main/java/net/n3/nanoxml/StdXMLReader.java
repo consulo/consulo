@@ -197,8 +197,7 @@ public class StdXMLReader
     *
     * @return the encoding, or null if no encoding has been specified.
     */
-   @Nullable
-   protected String getEncoding(String str)
+   protected @Nullable String getEncoding(String str)
    {
       if (! str.startsWith("<?xml")) {
          return null;

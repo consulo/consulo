@@ -35,7 +35,7 @@ public class TaskData extends AbstractExternalEntityData implements ExternalConf
   
   private final String myLinkedExternalProjectPath;
 
-  @Nullable private final String myDescription;
+  private final @Nullable String myDescription;
 
   public TaskData(ProjectSystemId owner, String name, String path, @Nullable String description) {
     super(owner);
@@ -55,8 +55,7 @@ public class TaskData extends AbstractExternalEntityData implements ExternalConf
     return myLinkedExternalProjectPath;
   }
 
-  @Nullable
-  public String getDescription() {
+  public @Nullable String getDescription() {
     return myDescription;
   }
 

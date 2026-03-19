@@ -41,8 +41,7 @@ public class DesktopSwtImageKeyImpl implements ImageKey, DesktopSwtImage {
     myHeight = height;
   }
 
-  @Nullable
-  private ImageReference resolveImage() {
+  private @Nullable ImageReference resolveImage() {
     return ourLibraryManager.resolveImage(null, this);
   }
 

@@ -41,8 +41,7 @@ public abstract class BaseProgramRunner<Settings extends RunnerSettings> impleme
     @RequiredUIAccess
     protected abstract void execute(ExecutionEnvironment environment, RunProfileState state) throws ExecutionException;
 
-    @Nullable
-    static RunContentDescriptor postProcess(ExecutionEnvironment environment, @Nullable RunContentDescriptor descriptor) {
+    static @Nullable RunContentDescriptor postProcess(ExecutionEnvironment environment, @Nullable RunContentDescriptor descriptor) {
         if (descriptor != null) {
             descriptor.setExecutionId(environment.getExecutionId());
         }

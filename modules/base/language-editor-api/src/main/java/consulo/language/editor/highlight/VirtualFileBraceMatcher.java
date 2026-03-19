@@ -35,8 +35,7 @@ public interface VirtualFileBraceMatcher extends BraceMatcher {
     ExtensionPointCacheKey<VirtualFileBraceMatcher, Map<FileType, VirtualFileBraceMatcher>> KEY =
         ExtensionPointCacheKey.groupBy("VirtualFileBraceMatcher", VirtualFileBraceMatcher::getFileType);
 
-    @Nullable
-    static VirtualFileBraceMatcher forFileType(FileType fileType) {
+    static @Nullable VirtualFileBraceMatcher forFileType(FileType fileType) {
         ExtensionPoint<VirtualFileBraceMatcher> extensionPoint = Application.get().getExtensionPoint(VirtualFileBraceMatcher.class);
         Map<FileType, VirtualFileBraceMatcher> map = extensionPoint.getOrBuildCache(KEY);
         return map.get(fileType);

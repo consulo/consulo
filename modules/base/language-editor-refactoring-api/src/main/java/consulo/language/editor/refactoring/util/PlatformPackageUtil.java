@@ -32,8 +32,7 @@ public class PlatformPackageUtil {
 
   private static final Logger LOG = Logger.getInstance(PlatformPackageUtil.class);
 
-  @Nullable
-  private static PsiDirectory getWritableModuleDirectory(Query<VirtualFile> vFiles,
+  private static @Nullable PsiDirectory getWritableModuleDirectory(Query<VirtualFile> vFiles,
                                                          GlobalSearchScope scope,
                                                          PsiManager manager) {
     for (VirtualFile vFile : vFiles) {
@@ -67,8 +66,7 @@ public class PlatformPackageUtil {
     return index > -1 ? packageName.substring(index + 1) : "";
   }
 
-  @Nullable
-  public static PsiDirectory getDirectory(@Nullable PsiElement element) {
+  public static @Nullable PsiDirectory getDirectory(@Nullable PsiElement element) {
     if (element == null) return null;
     // handle injection and fragment editor
     PsiFile file = FileContextUtil.getContextFile(element);

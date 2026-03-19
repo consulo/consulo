@@ -146,18 +146,15 @@ class DiffColorDescriptionPanel implements ColorDescriptionPanel {
     myDispatcher.addListener(listener);
   }
 
-  @Nullable
-  private static ColorValue getBackgroundColor(TextAttributes attributes) {
+  private static @Nullable ColorValue getBackgroundColor(TextAttributes attributes) {
     return attributes.getBackgroundColor();
   }
 
-  @Nullable
-  private static ColorValue getIgnoredColor(TextAttributes attributes) {
+  private static @Nullable ColorValue getIgnoredColor(TextAttributes attributes) {
     return attributes.getForegroundColor();
   }
 
-  @Nullable
-  private static ColorValue getStripeMarkColor(TextAttributes attributes) {
+  private static @Nullable ColorValue getStripeMarkColor(TextAttributes attributes) {
     return attributes.getErrorStripeColor();
   }
 

@@ -45,8 +45,7 @@ public class ParametersList implements Cloneable {
     return getPropertyValue(name) != null;
   }
 
-  @Nullable
-  public String getPropertyValue(String name) {
+  public @Nullable String getPropertyValue(String name) {
     String prefix = "-D" + name + "=";
     for (String parameter : myParameters) {
 
@@ -156,8 +155,7 @@ public class ParametersList implements Cloneable {
     return myGroups.get(index);
   }
 
-  @Nullable
-  public ParamsGroup getParamsGroup(String name) {
+  public @Nullable ParamsGroup getParamsGroup(String name) {
     for (ParamsGroup group : myGroups) {
       if (name.equals(group.getId())) return group;
     }

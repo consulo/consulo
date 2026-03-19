@@ -150,8 +150,7 @@ public final class PushedFilePropertiesUpdaterImpl implements PushedFileProperti
         doPushAll(FilePropertyPusher.EP_NAME.getExtensionList());
     }
 
-    @Nullable
-    private Runnable createRecursivePushTask(VFileEvent event, List<? extends FilePropertyPusher> pushers) {
+    private @Nullable Runnable createRecursivePushTask(VFileEvent event, List<? extends FilePropertyPusher> pushers) {
         if (pushers.isEmpty()) {
             return null;
         }

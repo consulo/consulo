@@ -176,8 +176,7 @@ public class PsiNamesElementSignatureProvider extends AbstractElementSignaturePr
    *                 <code>null</code> as an indication that signature for the given element was not produced
    */
   @SuppressWarnings("unchecked")
-  @Nullable
-  private static StringBuilder getSignature(PsiElement element, @Nullable StringBuilder buffer) {
+  private static @Nullable StringBuilder getSignature(PsiElement element, @Nullable StringBuilder buffer) {
     if (element instanceof PsiNamedElement) {
       PsiNamedElement named = (PsiNamedElement)element;
       String name = named.getName();

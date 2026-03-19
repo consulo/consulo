@@ -31,8 +31,7 @@ import java.util.List;
 public class ExternalOptionHelper {
 
 
-  @Nullable
-  public static List<CopyrightProfile> loadOptions(File file) {
+  public static @Nullable List<CopyrightProfile> loadOptions(File file) {
     try {
       List<CopyrightProfile> profiles = new ArrayList<CopyrightProfile>();
       Document doc = JDOMUtil.loadDocument(file);

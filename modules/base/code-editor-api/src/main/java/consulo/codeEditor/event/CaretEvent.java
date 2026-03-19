@@ -58,8 +58,7 @@ public class CaretEvent extends EventObject {
     return (Editor)getSource();
   }
 
-  @Nullable
-  public Caret getCaret() {
+  public @Nullable Caret getCaret() {
     return myCaret;
   }
 

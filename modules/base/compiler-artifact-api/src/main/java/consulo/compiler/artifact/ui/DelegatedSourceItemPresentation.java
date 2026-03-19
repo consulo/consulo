@@ -45,8 +45,7 @@ public class DelegatedSourceItemPresentation extends SourceItemPresentation {
   }
 
   @Override
-  @Nullable
-  public String getTooltipText() {
+  public @Nullable String getTooltipText() {
     return myPresentation.getTooltipText();
   }
 

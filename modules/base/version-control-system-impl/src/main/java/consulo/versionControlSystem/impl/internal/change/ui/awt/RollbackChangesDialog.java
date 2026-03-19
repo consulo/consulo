@@ -194,8 +194,7 @@ public class RollbackChangesDialog extends DialogWrapper {
     }
 
     @Override
-    @Nullable
-    protected JComponent createCenterPanel() {
+    protected @Nullable JComponent createCenterPanel() {
         JPanel panel = new JPanel(new GridBagLayout());
         GridBagConstraints gb = new GridBagConstraints(
             0, 0, 1, 1, 0, 0, GridBagConstraints.NORTHWEST, GridBagConstraints.NONE,

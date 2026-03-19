@@ -171,8 +171,7 @@ public class WatchNodeImpl extends XValueNodeImpl implements WatchNode {
         };
 
         @Override
-        @Nullable
-        public String getEvaluationExpression() {
+        public @Nullable String getEvaluationExpression() {
             return myValue != null ? myValue.getEvaluationExpression() : null;
         }
 
@@ -183,14 +182,12 @@ public class WatchNodeImpl extends XValueNodeImpl implements WatchNode {
         }
 
         @Override
-        @Nullable
-        public XInstanceEvaluator getInstanceEvaluator() {
+        public @Nullable XInstanceEvaluator getInstanceEvaluator() {
             return myValue != null ? myValue.getInstanceEvaluator() : null;
         }
 
         @Override
-        @Nullable
-        public XValueModifier getModifier() {
+        public @Nullable XValueModifier getModifier() {
             return myValue != null ? myValue.getModifier() : null;
         }
 
@@ -225,8 +222,7 @@ public class WatchNodeImpl extends XValueNodeImpl implements WatchNode {
         }
 
         @Override
-        @Nullable
-        public XReferrersProvider getReferrersProvider() {
+        public @Nullable XReferrersProvider getReferrersProvider() {
             return myValue != null ? myValue.getReferrersProvider() : null;
         }
     }

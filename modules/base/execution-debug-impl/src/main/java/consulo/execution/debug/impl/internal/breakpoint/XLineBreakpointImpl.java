@@ -52,8 +52,7 @@ import java.util.List;
  * @author nik
  */
 public class XLineBreakpointImpl<P extends XBreakpointProperties> extends XBreakpointBase<XLineBreakpoint<P>, P, LineBreakpointState<P>> implements XLineBreakpoint<P> {
-  @Nullable
-  private RangeMarker myHighlighter;
+  private @Nullable RangeMarker myHighlighter;
   private final XLineBreakpointType<P> myType;
   private XSourcePosition mySourcePosition;
 
@@ -155,16 +154,14 @@ public class XLineBreakpointImpl<P extends XBreakpointProperties> extends XBreak
     }
   }
 
-  @Nullable
-  public Document getDocument() {
+  public @Nullable Document getDocument() {
     VirtualFile file = getFile();
     if (file == null) return null;
     return FileDocumentManager.getInstance().getDocument(file);
   }
 
   @Override
-  @Nullable
-  public VirtualFile getFile() {
+  public @Nullable VirtualFile getFile() {
     return VirtualFileManager.getInstance().findFileByUrl(getFileUrl());
   }
 
@@ -201,8 +198,7 @@ public class XLineBreakpointImpl<P extends XBreakpointProperties> extends XBreak
   }
 
   @Override
-  @Nullable
-  public RangeHighlighter getHighlighter() {
+  public @Nullable RangeHighlighter getHighlighter() {
     return myHighlighter instanceof RangeHighlighter rangeHighlighter ? rangeHighlighter : null;
   }
 

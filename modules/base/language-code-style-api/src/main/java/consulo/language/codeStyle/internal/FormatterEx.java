@@ -18,8 +18,7 @@ public abstract class FormatterEx implements Formatter {
                                        int offset,
                                        TextRange affectedRange) throws IncorrectOperationException;
 
-  @Nullable
-  public abstract String getLineIndent(FormattingModel psiBasedFormattingModel,
+  public abstract @Nullable String getLineIndent(FormattingModel psiBasedFormattingModel,
                                        CodeStyleSettings settings,
                                        CommonCodeStyleSettings.IndentOptions indentOptions,
                                        int offset,

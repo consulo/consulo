@@ -26,8 +26,7 @@ public enum Syntax {
 
     private static final String KEY = "syntax:";
 
-    @Nullable
-    public static Syntax find(@Nullable String name) {
+    public static @Nullable Syntax find(@Nullable String name) {
         if (name == null) {
             return null;
         }

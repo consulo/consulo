@@ -121,7 +121,7 @@ public class RunDialog extends DialogWrapper implements RunConfigurable.RunDialo
         return editConfiguration(environment.getProject(), environment.getRunnerAndConfigurationSettings(), title, environment.getExecutor());
     }
 
-    public static boolean editConfiguration(final Project project, RunnerAndConfigurationSettings configuration, String title, @Nullable final Executor executor) {
+    public static boolean editConfiguration(final Project project, RunnerAndConfigurationSettings configuration, String title, final @Nullable Executor executor) {
         final SingleConfigurationConfigurable<RunConfiguration> configurable = SingleConfigurationConfigurable.editSettings(configuration, executor);
         SingleConfigurableEditor dialog = new SingleConfigurableEditor(project, configurable, IdeModalityType.PROJECT) {
             {

@@ -302,8 +302,7 @@ public class HectorComponent extends JPanel {
         }
     }
 
-    @Nullable
-    private JBPopup getOldHector() {
+    private @Nullable JBPopup getOldHector() {
         if (myHectorRef == null) {
             return null;
         }

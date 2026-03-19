@@ -371,8 +371,7 @@ final public class Verifier {
   private Verifier() {
   }
 
-  @Nullable
-  private static String checkJDOMName(String name) {
+  private static @Nullable String checkJDOMName(String name) {
     // Check basic XML name rules first
     // Cannot be empty or null
     if (name == null) {
@@ -408,8 +407,7 @@ final public class Verifier {
    * @return <code>String</code> reason name is illegal, or
    * <code>null</code> if name is OK.
    */
-  @Nullable
-  public static String checkElementName(String name) {
+  public static @Nullable String checkElementName(String name) {
     return checkJDOMName(name);
   }
 
@@ -421,8 +419,7 @@ final public class Verifier {
    * @return <code>String</code> reason name is illegal, or
    * <code>null</code> if name is OK.
    */
-  @Nullable
-  public static String checkAttributeName(String name) {
+  public static @Nullable String checkAttributeName(String name) {
     // Attribute names may not be xmlns since we do this internally too
     if ("xmlns".equals(name)) {
       return "An Attribute name may not be \"xmlns\"; " +
@@ -450,8 +447,7 @@ final public class Verifier {
    * @return <code>String</code> reason name is illegal, or
    * <code>null</code> if name is OK.
    */
-  @Nullable
-  public static String checkCharacterData(String text) {
+  public static @Nullable String checkCharacterData(String text) {
     if (text == null) {
       return "A null is not a legal XML value";
     }
@@ -521,8 +517,7 @@ final public class Verifier {
    * @return <code>String</code> reason data is illegal, or
    * <code>null</code> is name is OK.
    */
-  @Nullable
-  public static String checkCDATASection(String data) {
+  public static @Nullable String checkCDATASection(String data) {
     String reason = checkCharacterData(data);
     if (reason != null) {
       return reason;
@@ -544,8 +539,7 @@ final public class Verifier {
    * @return <code>String</code> reason name is illegal, or
    * <code>null</code> if name is OK.
    */
-  @Nullable
-  public static String checkNamespacePrefix(String prefix) {
+  public static @Nullable String checkNamespacePrefix(String prefix) {
     // Manually do rules, since URIs can be null or empty
     if (StringUtil.isEmpty(prefix)) {
       return null;
@@ -587,8 +581,7 @@ final public class Verifier {
    * @return <code>String</code> reason name is illegal, or
    * <code>null</code> if name is OK.
    */
-  @Nullable
-  public static String checkNamespaceURI(@Nullable String uri) {
+  public static @Nullable String checkNamespaceURI(@Nullable String uri) {
     // Manually do rules, since URIs can be null or empty
     if (StringUtil.isEmpty(uri)) {
       return null;
@@ -625,8 +618,7 @@ final public class Verifier {
    * @return <code>String</code> reason target is illegal, or
    * <code>null</code> if target is OK.
    */
-  @Nullable
-  public static String checkProcessingInstructionTarget(String target) {
+  public static @Nullable String checkProcessingInstructionTarget(String target) {
     // Check basic XML name rules first
     String reason = checkXMLName(target);
     if (reason != null) {
@@ -662,8 +654,7 @@ final public class Verifier {
    * @return <code>String</code> reason data is illegal, or
    * <code>null</code> if data is OK.
    */
-  @Nullable
-  public static String checkProcessingInstructionData(String data) {
+  public static @Nullable String checkProcessingInstructionData(String data) {
     // Check basic XML name rules first
     String reason = checkCharacterData(data);
 
@@ -682,8 +673,7 @@ final public class Verifier {
    * @return <code>String</code> reason data is illegal, or
    * <code>null</code> if data is OK.
    */
-  @Nullable
-  public static String checkCommentData(String data) {
+  public static @Nullable String checkCommentData(String data) {
     String reason = checkCharacterData(data);
     if (reason != null) {
       return reason;
@@ -750,8 +740,7 @@ final public class Verifier {
    * @return <code>String</code> reason public ID is illegal, or
    * <code>null</code> if public ID is OK.
    */
-  @Nullable
-  public static String checkPublicID(String publicID) {
+  public static @Nullable String checkPublicID(String publicID) {
     if (publicID == null) return null;
     // This indicates there is no public ID
 
@@ -774,8 +763,7 @@ final public class Verifier {
    * @return <code>String</code> reason system literal is illegal, or
    * <code>null</code> if system literal is OK.
    */
-  @Nullable
-  public static String checkSystemLiteral(String systemLiteral) {
+  public static @Nullable String checkSystemLiteral(String systemLiteral) {
     if (systemLiteral == null) return null;
     // This indicates there is no system ID
 
@@ -797,8 +785,7 @@ final public class Verifier {
    * @return <code>String</code> reason the name is illegal, or
    * <code>null</code> if OK.
    */
-  @Nullable
-  public static String checkXMLName(String name) {
+  public static @Nullable String checkXMLName(String name) {
     // Cannot be empty or null
     if ((name == null)) {
       return "XML names cannot be null";
@@ -836,8 +823,7 @@ final public class Verifier {
    * @return <code>String</code> reason the URI is illegal, or
    * <code>null</code> if OK.
    */
-  @Nullable
-  public static String checkURI(String uri) {
+  public static @Nullable String checkURI(String uri) {
     // URIs can be null or empty
     if ((uri == null) || (uri.equals(""))) {
       return null;

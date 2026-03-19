@@ -44,8 +44,7 @@ public class VfsImplUtil {
     private VfsImplUtil() {
     }
 
-    @Nullable
-    public static NewVirtualFile findFileByPath(NewVirtualFileSystem vfs, String path) {
+    public static @Nullable NewVirtualFile findFileByPath(NewVirtualFileSystem vfs, String path) {
         Pair<NewVirtualFile, Iterable<String>> data = prepare(vfs, path);
         if (data == null) {
             return null;
@@ -77,8 +76,7 @@ public class VfsImplUtil {
         return file;
     }
 
-    @Nullable
-    public static NewVirtualFile findFileByPathIfCached(NewVirtualFileSystem vfs, String path) {
+    public static @Nullable NewVirtualFile findFileByPathIfCached(NewVirtualFileSystem vfs, String path) {
         return findCachedFileByPath(vfs, path).first;
     }
 
@@ -118,8 +116,7 @@ public class VfsImplUtil {
         return Couple.of(file, null);
     }
 
-    @Nullable
-    public static NewVirtualFile refreshAndFindFileByPath(NewVirtualFileSystem vfs, String path) {
+    public static @Nullable NewVirtualFile refreshAndFindFileByPath(NewVirtualFileSystem vfs, String path) {
         Pair<NewVirtualFile, Iterable<String>> data = prepare(vfs, path);
         if (data == null) {
             return null;
@@ -152,8 +149,7 @@ public class VfsImplUtil {
         return file;
     }
 
-    @Nullable
-    private static Pair<NewVirtualFile, Iterable<String>> prepare(NewVirtualFileSystem vfs, String path) {
+    private static @Nullable Pair<NewVirtualFile, Iterable<String>> prepare(NewVirtualFileSystem vfs, String path) {
         String normalizedPath = normalize(vfs, path);
         if (StringUtil.isEmptyOrSpaces(normalizedPath)) {
             return null;
@@ -181,8 +177,7 @@ public class VfsImplUtil {
         }
     }
 
-    @Nullable
-    public static String normalize(NewVirtualFileSystem vfs, String path) {
+    public static @Nullable String normalize(NewVirtualFileSystem vfs, String path) {
         return vfs.normalize(path);
     }
 
@@ -296,8 +291,7 @@ public class VfsImplUtil {
     private static class InvalidationState {
         private Set<NewVirtualFile> myRootsToRefresh;
 
-        @Nullable
-        static InvalidationState invalidate(@Nullable InvalidationState state, String path) {
+        static @Nullable InvalidationState invalidate(@Nullable InvalidationState state, String path) {
             Pair<BaseArchiveFileSystem, ArchiveHandler> handlerPair = ourHandlers.remove(path);
             if (handlerPair != null) {
                 handlerPair.second.dispose();

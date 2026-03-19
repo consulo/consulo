@@ -341,8 +341,7 @@ public class HighlightableComponent extends JComponent implements Accessible {
     return myIcon.getWidth() + myIconTextGap;
   }
 
-  @Nullable
-  public HighlightedRegion findRegionByX(int x) {
+  public @Nullable HighlightedRegion findRegionByX(int x) {
     FontMetrics defFontMetrics = getFontMetrics(getFont());
 
     int width = getTextOffset();

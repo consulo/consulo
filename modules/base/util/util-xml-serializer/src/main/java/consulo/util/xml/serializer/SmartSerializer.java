@@ -26,10 +26,8 @@ import java.util.Map;
 import java.util.Objects;
 
 public final class SmartSerializer {
-  @Nullable
-  private LinkedHashSet<String> mySerializedAccessorNameTracker;
-  @Nullable
-  private Map<String, Float> myOrderedBindings;
+  private @Nullable LinkedHashSet<String> mySerializedAccessorNameTracker;
+  private @Nullable Map<String, Float> myOrderedBindings;
   private final SerializationFilter mySerializationFilter;
 
   public SmartSerializer(boolean trackSerializedNames, boolean useSkipEmptySerializationFilter) {
@@ -100,8 +98,7 @@ public final class SmartSerializer {
     }
   }
 
-  @Nullable
-  private static BeanBinding getBinding(Object bean) {
+  private static @Nullable BeanBinding getBinding(Object bean) {
     return (BeanBinding)XmlSerializerImpl.getBinding(bean.getClass());
   }
 }

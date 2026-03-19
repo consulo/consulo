@@ -43,8 +43,7 @@ public class TabbedModuleEditor extends ModuleEditor {
     myTabbedPane.setSelectedIndex(0);
   }
 
-  @Nullable
-  private String getSelectedTabName() {
+  private @Nullable String getSelectedTabName() {
     return myTabbedPane == null || myTabbedPane.getSelectedIndex() == -1 ? null : myTabbedPane.getTitleAt(myTabbedPane.getSelectedIndex());
   }
 
@@ -72,8 +71,7 @@ public class TabbedModuleEditor extends ModuleEditor {
   }
 
   @Override
-  @Nullable
-  public ModuleConfigurationEditor getEditor(String displayName) {
+  public @Nullable ModuleConfigurationEditor getEditor(String displayName) {
     int index = getEditorTabIndex(displayName);
     if (0 <= index && index < myEditors.size()) {
       return myEditors.get(index);

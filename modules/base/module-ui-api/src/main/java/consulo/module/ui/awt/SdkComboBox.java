@@ -53,10 +53,8 @@ import java.util.function.Predicate;
  * @since 2005-05-18
  */
 public class SdkComboBox extends ComboBoxWithWidePopup {
-    @Nullable
-    private final Predicate<SdkTypeId> myFilter;
-    @Nullable
-    private final Predicate<SdkTypeId> myCreationFilter;
+    private final @Nullable Predicate<SdkTypeId> myFilter;
+    private final @Nullable Predicate<SdkTypeId> myCreationFilter;
 
     public SdkComboBox(BundleHolder sdksModel) {
         this(sdksModel, null, false);
@@ -306,14 +304,12 @@ public class SdkComboBox extends ComboBoxWithWidePopup {
         }
     }
 
-    @Nullable
-    public Sdk getSelectedSdk() {
+    public @Nullable Sdk getSelectedSdk() {
         SdkComboBoxItem selectedItem = (SdkComboBoxItem)super.getSelectedItem();
         return selectedItem != null ? selectedItem.getSdk() : null;
     }
 
-    @Nullable
-    public String getSelectedSdkName() {
+    public @Nullable String getSelectedSdkName() {
         SdkComboBoxItem selectedItem = (SdkComboBoxItem)super.getSelectedItem();
         if (selectedItem != null) {
             return selectedItem.getSdkName();
@@ -321,8 +317,7 @@ public class SdkComboBox extends ComboBoxWithWidePopup {
         return null;
     }
 
-    @Nullable
-    public String getSelectedModuleName() {
+    public @Nullable String getSelectedModuleName() {
         SdkComboBoxItem selectedItem = (SdkComboBoxItem)super.getSelectedItem();
         if (selectedItem instanceof ModuleExtensionSdkComboBoxItem moduleExtensionSdkComboBoxItem) {
             return moduleExtensionSdkComboBoxItem.getModule().getName();
@@ -506,8 +501,7 @@ public class SdkComboBox extends ComboBoxWithWidePopup {
             return mySdk;
         }
 
-        @Nullable
-        public String getSdkName() {
+        public @Nullable String getSdkName() {
             return mySdk != null ? mySdk.getName() : null;
         }
     }

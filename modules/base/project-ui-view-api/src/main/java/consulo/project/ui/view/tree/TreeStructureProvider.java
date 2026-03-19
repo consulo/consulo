@@ -55,8 +55,7 @@ public interface TreeStructureProvider {
      * @return the data object, or null if no data object can be returned by this provider.
      * @see DataProvider
      */
-    @Nullable
-    default Object getData(Collection<AbstractTreeNode> selected, Key<?> dataKey) {
+    default @Nullable Object getData(Collection<AbstractTreeNode> selected, Key<?> dataKey) {
         return null;
     }
 }

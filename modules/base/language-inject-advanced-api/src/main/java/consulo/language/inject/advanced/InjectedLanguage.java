@@ -43,8 +43,7 @@ public final class InjectedLanguage {
     return myID;
   }
 
-  @Nullable
-  public Language getLanguage() {
+  public @Nullable Language getLanguage() {
     return findLanguageById(myID);
   }
 
@@ -65,8 +64,7 @@ public final class InjectedLanguage {
     return myDynamic;
   }
 
-  @Nullable
-  public static Language findLanguageById(@Nullable String langID) {
+  public static @Nullable Language findLanguageById(@Nullable String langID) {
     if (langID == null || langID.length() == 0) {
       return null;
     }
@@ -129,13 +127,11 @@ public final class InjectedLanguage {
     return (myID != null ? myID.hashCode() : 0);
   }
 
-  @Nullable
-  public static InjectedLanguage create(String id) {
+  public static @Nullable InjectedLanguage create(String id) {
     return create(id, "", "", false);
   }
 
-  @Nullable
-  public static InjectedLanguage create(@Nullable String id, String prefix, String suffix, boolean isDynamic) {
+  public static @Nullable InjectedLanguage create(@Nullable String id, String prefix, String suffix, boolean isDynamic) {
     return id == null ? null : new InjectedLanguage(id, prefix == null ? "" : prefix, suffix == null ? "" : suffix, isDynamic);
   }
 }

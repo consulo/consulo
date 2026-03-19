@@ -64,8 +64,7 @@ public interface TemplateContextType {
      * @return syntax highlighter that going to be used in live template editor for template with context type enabled. If several context
      * types are enabled - first registered wins.
      */
-    @Nullable
-    default SyntaxHighlighter createHighlighter() {
+    default @Nullable SyntaxHighlighter createHighlighter() {
         return null;
     }
 
@@ -78,8 +77,7 @@ public interface TemplateContextType {
      * enabled for the template.</li>
      * </ol>
      */
-    @Nullable
-    default TemplateContextType getBaseContextType() {
+    default @Nullable TemplateContextType getBaseContextType() {
         return null;
     }
 

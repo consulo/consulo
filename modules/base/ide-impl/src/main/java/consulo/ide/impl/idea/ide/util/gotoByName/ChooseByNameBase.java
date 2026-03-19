@@ -101,8 +101,7 @@ public abstract class ChooseByNameBase implements ChooseByNameViewModel {
 
     private static final Logger LOG = Logger.getInstance(ChooseByNameBase.class);
 
-    @Nullable
-    protected final Project myProject;
+    protected final @Nullable Project myProject;
     protected final ChooseByNameModel myModel;
     
     protected ChooseByNameItemProvider myProvider;
@@ -349,8 +348,7 @@ public abstract class ChooseByNameBase implements ChooseByNameViewModel {
             }
         }
 
-        @Nullable
-        public JBPopup getHint() {
+        public @Nullable JBPopup getHint() {
             return myHint;
         }
 
@@ -1134,8 +1132,7 @@ public abstract class ChooseByNameBase implements ChooseByNameViewModel {
 
     protected abstract void close(boolean isOk);
 
-    @Nullable
-    public Object getChosenElement() {
+    public @Nullable Object getChosenElement() {
         List<Object> elements = getChosenElements();
         return elements.size() == 1 ? elements.get(0) : null;
     }
@@ -1174,8 +1171,7 @@ public abstract class ChooseByNameBase implements ChooseByNameViewModel {
             });
         }
 
-        @Nullable
-        private KeyStroke getShortcut(String actionCodeCompletion) {
+        private @Nullable KeyStroke getShortcut(String actionCodeCompletion) {
             Shortcut[] shortcuts = KeymapUtil.getActiveKeymapShortcuts(actionCodeCompletion).getShortcuts();
             for (Shortcut shortcut : shortcuts) {
                 if (shortcut instanceof KeyboardShortcut) {

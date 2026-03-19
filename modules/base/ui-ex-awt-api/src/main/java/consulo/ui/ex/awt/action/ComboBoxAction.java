@@ -105,8 +105,7 @@ public abstract class ComboBoxAction extends AnAction implements CustomComponent
         return new ComboBoxButtonImpl(this, presentation);
     }
 
-    @Nullable
-    public String getTooltipText(ComboBoxButton button) {
+    public @Nullable String getTooltipText(ComboBoxButton button) {
         return null;
     }
 

@@ -63,8 +63,7 @@ public class CopyToDirectoryInstructionCreator extends IncrementalCompilerInstru
         return new PackIntoArchiveInstructionCreator(myContext, archivePackageInfo, "", destination);
     }
 
-    @Nullable
-    private VirtualFile outputChild(String name) {
+    private @Nullable VirtualFile outputChild(String name) {
         return myOutputFile != null ? myOutputFile.findChild(name) : null;
     }
 }

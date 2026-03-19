@@ -30,8 +30,7 @@ public abstract class PathMacroMap {
   private static final Logger LOG = Logger.getInstance(PathMacroMap.class);
 
   @Contract("null,_ -> null; !null,_ -> !null")
-  @Nullable
-  public abstract String substitute(@Nullable String text, boolean caseSensitive);
+  public abstract @Nullable String substitute(@Nullable String text, boolean caseSensitive);
 
   public final void substitute(Element e, boolean caseSensitive) {
     substitute(e, caseSensitive, false);

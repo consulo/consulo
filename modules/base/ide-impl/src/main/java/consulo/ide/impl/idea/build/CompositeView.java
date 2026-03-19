@@ -128,8 +128,7 @@ public class CompositeView<T extends ComponentContainer> extends JPanel implemen
   }
 
   @Override
-  @Nullable
-  public Object getData(Key dataId) {
+  public @Nullable Object getData(Key dataId) {
     String visibleViewName = myVisibleViewRef.get();
     if (visibleViewName != null) {
       T visibleView = getView(visibleViewName);

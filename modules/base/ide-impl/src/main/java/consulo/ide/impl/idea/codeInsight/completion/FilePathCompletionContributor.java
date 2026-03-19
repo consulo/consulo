@@ -250,8 +250,7 @@ public class FilePathCompletionContributor extends CompletionContributor {
         return ArrayUtil.toStringArray(names);
     }
 
-    @Nullable
-    private static Pair<FileReference, Boolean> getReference(PsiReference original) {
+    private static @Nullable Pair<FileReference, Boolean> getReference(PsiReference original) {
         if (original == null) {
             return null;
         }

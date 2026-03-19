@@ -54,8 +54,7 @@ public class PsiCacheKey<T, H extends PsiElement> extends Key<SoftReference<Pair
     return result;
   }
 
-  @Nullable
-  public final T getCachedValueOrNull(H h) {
+  public final @Nullable T getCachedValueOrNull(H h) {
     SoftReference<Pair<Long, T>> ref = h.getUserData(this);
     Pair<Long, T> data = SoftReference.dereference(ref);
     if (data == null || data.getFirst() != getModificationCount(h)) {

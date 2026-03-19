@@ -25,28 +25,22 @@ import java.util.Set;
 
 public class PluginBean {
   //@Tag("name")
-  @Nullable
-  public String name;
+  public @Nullable String name;
 
   //@Tag("id")
-  @Nullable
-  public String id;
+  public @Nullable String id;
 
   //@Tag("description")
-  @Nullable
-  public String description;
+  public @Nullable String description;
 
   //@Tag("version")
-  @Nullable
-  public String pluginVersion;
+  public @Nullable String pluginVersion;
 
   //@Tag("platformVersion")
-  @Nullable
-  public String platformVersion;
+  public @Nullable String platformVersion;
 
   //@Property(surroundWithTag = false)
-  @Nullable
-  public PluginVendor vendor;
+  public @Nullable PluginVendor vendor;
 
   //@Tag("actions")
   public List<SimpleXmlElement> actions = Collections.emptyList();
@@ -58,19 +52,15 @@ public class PluginBean {
   public List<String> incompatibleWith = Collections.emptyList();
 
   //@Tag("resource-bundle")
-  @Nullable
-  public String resourceBundle;
+  public @Nullable String resourceBundle;
 
-  @Nullable
-  public String localize;
+  public @Nullable String localize;
 
   //@Tag("change-notes")
-  @Nullable
-  public String changeNotes;
+  public @Nullable String changeNotes;
 
   //@Attribute("url")
-  @Nullable
-  public String url;
+  public @Nullable String url;
 
   public boolean experimental;
 

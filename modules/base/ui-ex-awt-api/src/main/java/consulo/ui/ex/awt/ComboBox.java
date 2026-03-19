@@ -123,8 +123,7 @@ public class ComboBox<E> extends ComboBoxWithWidePopup<E> implements AWTEventLis
   }
 
 
-  @Nullable
-  public ComboPopup getPopup() {
+  public @Nullable ComboPopup getPopup() {
     ComboBoxUI ui = getUI();
     if (ui instanceof BasicComboBoxUI bui) {
       return BasicComboBoxUIHacking.getPopup(bui);

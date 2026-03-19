@@ -121,16 +121,14 @@ public class HintUtil {
         return createLabel(text, icon, bg, hintHint);
     }
 
-    @Nullable
-    public static String getHintLabel(JComponent hintComponent) {
+    public static @Nullable String getHintLabel(JComponent hintComponent) {
         if (hintComponent instanceof HintLabel) {
             return ((HintLabel) hintComponent).getText();
         }
         return null;
     }
 
-    @Nullable
-    public static Icon getHintIcon(JComponent hintComponent) {
+    public static @Nullable Icon getHintIcon(JComponent hintComponent) {
         if (hintComponent instanceof HintLabel) {
             return ((HintLabel) hintComponent).getIcon();
         }
@@ -342,8 +340,7 @@ public class HintUtil {
             return myPane != null ? myPane.getText() : "";
         }
 
-        @Nullable
-        public Icon getIcon() {
+        public @Nullable Icon getIcon() {
             return myIcon != null ? myIcon.getIcon() : null;
         }
     }

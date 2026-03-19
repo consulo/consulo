@@ -32,11 +32,10 @@ import org.jspecify.annotations.Nullable;
 public class FileContentImpl extends DiffContentBase implements FileContent {
   
   private final VirtualFile myFile;
-  @Nullable
-  private final Project myProject;
+  private final @Nullable Project myProject;
   
   private final FileType myType;
-  @Nullable private final VirtualFile myHighlightFile;
+  private final @Nullable VirtualFile myHighlightFile;
 
   public FileContentImpl(@Nullable Project project, VirtualFile file) {
     this(project, file, getHighlightFile(file));
@@ -60,8 +59,7 @@ public class FileContentImpl extends DiffContentBase implements FileContent {
     return OpenFileDescriptorFactory.getInstance(myProject).newBuilder(myHighlightFile).build();
   }
 
-  @Nullable
-  private static VirtualFile getHighlightFile(VirtualFile file) {
+  private static @Nullable VirtualFile getHighlightFile(VirtualFile file) {
     if (file.isInLocalFileSystem()) return file;
     return null;
   }

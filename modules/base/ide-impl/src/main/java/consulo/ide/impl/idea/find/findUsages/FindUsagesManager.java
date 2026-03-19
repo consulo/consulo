@@ -203,8 +203,7 @@ public class FindUsagesManager {
         myLastSearchInFileData = new PsiElement2UsageTargetComposite(primaryElements, secondaryElements, findUsagesOptions);
     }
 
-    @Nullable
-    public FindUsagesHandler getFindUsagesHandler(PsiElement element, boolean forHighlightUsages) {
+    public @Nullable FindUsagesHandler getFindUsagesHandler(PsiElement element, boolean forHighlightUsages) {
         for (FindUsagesHandlerFactory factory : FindUsagesHandlerFactory.EP_NAME.getExtensionList(myProject)) {
             if (factory.canFindUsages(element)) {
                 FindUsagesHandler handler = factory.createFindUsagesHandler(element, forHighlightUsages);
@@ -219,8 +218,7 @@ public class FindUsagesManager {
         return null;
     }
 
-    @Nullable
-    public FindUsagesHandler getNewFindUsagesHandler(PsiElement element, boolean forHighlightUsages) {
+    public @Nullable FindUsagesHandler getNewFindUsagesHandler(PsiElement element, boolean forHighlightUsages) {
         for (FindUsagesHandlerFactory factory : FindUsagesHandlerFactory.EP_NAME.getExtensionList(myProject)) {
             if (factory.canFindUsages(element)) {
                 Class<? extends FindUsagesHandlerFactory> aClass = factory.getClass();

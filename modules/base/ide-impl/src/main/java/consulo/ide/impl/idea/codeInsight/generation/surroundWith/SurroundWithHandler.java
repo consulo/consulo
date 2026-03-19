@@ -226,8 +226,7 @@ public class SurroundWithHandler implements CodeInsightActionHandler {
         }
     }
 
-    @Nullable
-    private static List<AnAction> doBuildSurroundActions(
+    private static @Nullable List<AnAction> doBuildSurroundActions(
         Project project,
         Editor editor,
         PsiFile file,

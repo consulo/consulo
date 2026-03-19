@@ -948,8 +948,7 @@ public class ShowUsagesAction extends AnAction implements PopupAction {
         return XmlStringUtil.wrapInHtml(UIUtil.convertSpace2Nbsp(text2));
     }
 
-    @Nullable
-    private static String getSecondInvocationTitle(FindUsagesOptions options, FindUsagesHandler handler) {
+    private static @Nullable String getSecondInvocationTitle(FindUsagesOptions options, FindUsagesHandler handler) {
         if (getShowUsagesShortcut() != null) {
             GlobalSearchScope maximalScope = FindUsagesManager.getMaximalScope(handler);
             if (!options.searchScope.equals(maximalScope)) {
@@ -972,8 +971,7 @@ public class ShowUsagesAction extends AnAction implements PopupAction {
         showElementUsages(editor, popupPosition, handler, maxUsages, cloned);
     }
 
-    @Nullable
-    private static KeyboardShortcut getShowUsagesShortcut() {
+    private static @Nullable KeyboardShortcut getShowUsagesShortcut() {
         return ActionManager.getInstance().getKeyboardShortcut(ID);
     }
 
@@ -1362,8 +1360,7 @@ public class ShowUsagesAction extends AnAction implements PopupAction {
         });
     }
 
-    @Nullable
-    private static Editor getEditorFor(Usage usage) {
+    private static @Nullable Editor getEditorFor(Usage usage) {
         FileEditorLocation location = usage.getLocation();
         FileEditor newFileEditor = location == null ? null : location.getEditor();
         return newFileEditor instanceof TextEditor textEditor ? textEditor.getEditor() : null;

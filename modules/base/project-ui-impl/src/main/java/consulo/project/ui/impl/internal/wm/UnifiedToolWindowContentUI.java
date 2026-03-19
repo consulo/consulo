@@ -390,8 +390,7 @@ public class UnifiedToolWindowContentUI implements ToolWindowContentUI, Property
     }
 
     @Override
-    @Nullable
-    public Object getData(Key<?> dataId) {
+    public @Nullable Object getData(Key<?> dataId) {
         if (ToolWindow.KEY == dataId) {
             return myWindow;
         }

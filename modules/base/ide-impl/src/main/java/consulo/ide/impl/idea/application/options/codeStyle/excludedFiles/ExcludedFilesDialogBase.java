@@ -16,6 +16,5 @@ public abstract class ExcludedFilesDialogBase extends DialogWrapper {
     super(canBeParent);
   }
 
-  @Nullable
-  public abstract FileSetDescriptor getDescriptor();
+  public abstract @Nullable FileSetDescriptor getDescriptor();
 }

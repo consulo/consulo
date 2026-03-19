@@ -44,6 +44,5 @@ public abstract class FileIncludeManager {
 
   public abstract void processIncludingFiles(PsiFile context, Predicate<? super Pair<VirtualFile, FileIncludeInfo>> processor);
 
-  @Nullable
-  public abstract PsiFileSystemItem resolveFileInclude(FileIncludeInfo info, PsiFile context);
+  public abstract @Nullable PsiFileSystemItem resolveFileInclude(FileIncludeInfo info, PsiFile context);
 }

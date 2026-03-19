@@ -89,8 +89,7 @@ public abstract class GotoTargetHandler implements CodeInsightActionHandler {
 
     protected abstract String getFeatureUsedKey();
 
-    @Nullable
-    protected abstract GotoData getSourceAndTargetElements(Editor editor, PsiFile file);
+    protected abstract @Nullable GotoData getSourceAndTargetElements(Editor editor, PsiFile file);
 
     @RequiredUIAccess
     private void show(
@@ -301,8 +300,7 @@ public abstract class GotoTargetHandler implements CodeInsightActionHandler {
     
     protected abstract String getNotFoundMessage(Project project, Editor editor, PsiFile file);
 
-    @Nullable
-    protected String getAdText(PsiElement source, int length) {
+    protected @Nullable String getAdText(PsiElement source, int length) {
         return null;
     }
 

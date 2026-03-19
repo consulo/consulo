@@ -218,8 +218,7 @@ public class MoveChangesToAnotherListAction extends AnAction implements DumbAwar
         return chooser.getSelectedList();
     }
 
-    @Nullable
-    private static ChangeList guessPreferredList(List<LocalChangeList> lists) {
+    private static @Nullable ChangeList guessPreferredList(List<LocalChangeList> lists) {
         LocalChangeList activeChangeList = ContainerUtil.find(lists, LocalChangeList::isDefault);
         if (activeChangeList != null) {
             return activeChangeList;

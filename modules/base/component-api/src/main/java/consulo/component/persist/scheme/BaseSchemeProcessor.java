@@ -43,8 +43,7 @@ public abstract class BaseSchemeProcessor<T, E extends ExternalizableScheme> imp
   public void onCurrentSchemeChanged(E newCurrentScheme) {
   }
 
-  @Nullable
-  public E readScheme(Element element) throws InvalidDataException, IOException, JDOMException {
+  public @Nullable E readScheme(Element element) throws InvalidDataException, IOException, JDOMException {
     return readScheme(new Document((Element)element.detach()));
   }
 

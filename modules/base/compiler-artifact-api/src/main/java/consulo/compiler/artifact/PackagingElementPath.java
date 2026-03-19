@@ -91,8 +91,7 @@ public class PackagingElementPath {
     return result;
   }
 
-  @Nullable
-  public CompositePackagingElement<?> getLastParent() {
+  public @Nullable CompositePackagingElement<?> getLastParent() {
     PackagingElementPath path = this;
     while (path != EMPTY) {
       if (path.myLastElement instanceof CompositePackagingElement<?>) {
@@ -103,8 +102,7 @@ public class PackagingElementPath {
     return null;
   }
 
-  @Nullable
-  public Artifact findLastArtifact(PackagingElementResolvingContext context) {
+  public @Nullable Artifact findLastArtifact(PackagingElementResolvingContext context) {
     PackagingElementPath path = this;
     while (path != EMPTY) {
       PackagingElement<?> element = path.myLastElement;

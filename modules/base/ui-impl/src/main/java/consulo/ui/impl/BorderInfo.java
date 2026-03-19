@@ -46,8 +46,7 @@ public class BorderInfo {
     return myBorderStyle;
   }
 
-  @Nullable
-  public ColorValue getColorValue() {
+  public @Nullable ColorValue getColorValue() {
     return myColorValue;
   }
 

@@ -167,8 +167,7 @@ public class GotoFileItemProvider extends DefaultChooseByNameItemProvider {
         return StringUtil.trimLeading(StringUtil.trimTrailing(s, '/'), '/');
     }
 
-    @Nullable
-    private PsiFileSystemItem getFileByAbsolutePath(String pattern) {
+    private @Nullable PsiFileSystemItem getFileByAbsolutePath(String pattern) {
         if (pattern.contains("/") || pattern.contains("\\")) {
             String path = FileUtil.toSystemIndependentName(ChooseByNamePopup.getTransformedPattern(pattern, myModel));
             VirtualFile vFile = LocalFileSystem.getInstance().findFileByPathIfCached(path);
@@ -205,8 +204,7 @@ public class GotoFileItemProvider extends DefaultChooseByNameItemProvider {
         return matching;
     }
 
-    @Nullable
-    private String getParentPath(PsiFileSystemItem item) {
+    private @Nullable String getParentPath(PsiFileSystemItem item) {
         String fullName = myModel.getFullName(item);
         return fullName == null ? null : StringUtil.getPackageName(FileUtil.toSystemIndependentName(fullName), '/') + '/';
     }

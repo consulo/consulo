@@ -47,8 +47,7 @@ public final class EnvironmentVariablesData {
     return myEnvs;
   }
 
-  @Nullable
-  public String getEnvironmentFile() {
+  public @Nullable String getEnvironmentFile() {
     return myEnvironmentFile;
   }
 

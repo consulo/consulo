@@ -26,8 +26,7 @@ public class InternalPromiseUtil {
 
   public static class LazyValue<T> implements Supplier<T> {
     private final Supplier<T> myFactory;
-    @Nullable
-    private T myValue = null;
+    private @Nullable T myValue = null;
 
     public LazyValue(Supplier<T> factory) {
       myFactory = factory;
@@ -73,10 +72,8 @@ public class InternalPromiseUtil {
   }
 
   public static class PromiseValue<T> {
-    @Nullable
-    public final T result;
-    @Nullable
-    public final Throwable error;
+    public final @Nullable T result;
+    public final @Nullable Throwable error;
 
     public static <T> PromiseValue<T> createFulfilled(@Nullable T result) {
       return new PromiseValue<>(result, null);
@@ -99,8 +96,7 @@ public class InternalPromiseUtil {
       return error == OBSOLETE_ERROR;
     }
 
-    @Nullable
-    public T getResultOrThrowError() throws ExecutionException, TimeoutException {
+    public @Nullable T getResultOrThrowError() throws ExecutionException, TimeoutException {
       if (error == null) {
         return result;
       }
@@ -137,8 +133,7 @@ public class InternalPromiseUtil {
   }
 
   public abstract static class BasePromise<T> implements Promise<T>, Future<T>, InternalPromiseUtil.PromiseImpl<T>, CancellablePromise<T> {
-    @Nullable
-    protected abstract PromiseValue<T> getValue();
+    protected abstract @Nullable PromiseValue<T> getValue();
 
     /**
      * The same as @{link Future{@link Future#isDone()}}.

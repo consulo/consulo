@@ -111,8 +111,7 @@ public final class Presentation implements Cloneable {
 
     private SmartFMap<String, Object> myUserMap = SmartFMap.emptyMap();
 
-    @Nullable
-    private PropertyChangeSupport myChangeSupport;
+    private @Nullable PropertyChangeSupport myChangeSupport;
 
     private LocalizeValue myTextValue = LocalizeValue.empty();
     private LocalizeValue myDescriptionValue = LocalizeValue.empty();
@@ -178,8 +177,7 @@ public final class Presentation implements Cloneable {
         return StringUtil.nullize(myTextValue.map(NO_MNEMONIC).getValue());
     }
 
-    @Nullable
-    public String getTextWithMnemonic() {
+    public @Nullable String getTextWithMnemonic() {
         return StringUtil.nullize(myTextValue.getValue());
     }
 
@@ -251,8 +249,7 @@ public final class Presentation implements Cloneable {
         }
     }
 
-    @Nullable
-    public Image getIcon() {
+    public @Nullable Image getIcon() {
         return myIcon;
     }
 
@@ -265,8 +262,7 @@ public final class Presentation implements Cloneable {
         fireObjectPropertyChange(PROP_ICON, oldIcon, myIcon);
     }
 
-    @Nullable
-    public Image getDisabledIcon() {
+    public @Nullable Image getDisabledIcon() {
         return myDisabledIcon;
     }
 
@@ -276,8 +272,7 @@ public final class Presentation implements Cloneable {
         fireObjectPropertyChange(PROP_DISABLED_ICON, oldDisabledIcon, myDisabledIcon);
     }
 
-    @Nullable
-    public Image getHoveredIcon() {
+    public @Nullable Image getHoveredIcon() {
         return myHoveredIcon;
     }
 
@@ -287,8 +282,7 @@ public final class Presentation implements Cloneable {
         fireObjectPropertyChange(PROP_HOVERED_ICON, old, myHoveredIcon);
     }
 
-    @Nullable
-    public Image getSelectedIcon() {
+    public @Nullable Image getSelectedIcon() {
         return mySelectedIcon;
     }
 
@@ -448,8 +442,7 @@ public final class Presentation implements Cloneable {
         putClientProperty(key.toString(), value);
     }
 
-    @Nullable
-    public Object getClientProperty(String key) {
+    public @Nullable Object getClientProperty(String key) {
         return myUserMap.get(key);
     }
 

@@ -22,8 +22,7 @@ import java.util.*;
  * @since 2019-11-19
  */
 public class Java9ModuleInitializer {
-    @Nullable
-    private static Method ourAddExportsImpl = null;
+    private static @Nullable Method ourAddExportsImpl = null;
 
     static {
         try {

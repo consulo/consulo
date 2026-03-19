@@ -62,13 +62,11 @@ public class PackagingElementNode<E extends PackagingElement<?>> extends Artifac
         myPackagingElements.add(packagingElement);
     }
 
-    @Nullable
-    public CompositePackagingElement<?> getParentElement(PackagingElement<?> element) {
+    public @Nullable CompositePackagingElement<?> getParentElement(PackagingElement<?> element) {
         return myParentElements.get(element);
     }
 
-    @Nullable
-    public CompositePackagingElementNode getParentNode() {
+    public @Nullable CompositePackagingElementNode getParentNode() {
         return myParentNode;
     }
 
@@ -76,8 +74,7 @@ public class PackagingElementNode<E extends PackagingElement<?>> extends Artifac
         return myPackagingElements;
     }
 
-    @Nullable
-    public E getElementIfSingle() {
+    public @Nullable E getElementIfSingle() {
         return myPackagingElements.size() == 1 ? myPackagingElements.get(0) : null;
     }
 
@@ -148,8 +145,7 @@ public class PackagingElementNode<E extends PackagingElement<?>> extends Artifac
         return myContext;
     }
 
-    @Nullable
-    public CompositePackagingElementNode findCompositeChild(String name) {
+    public @Nullable CompositePackagingElementNode findCompositeChild(String name) {
         SimpleNode[] children = getChildren();
         for (SimpleNode child : children) {
             if (child instanceof CompositePackagingElementNode) {

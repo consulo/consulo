@@ -182,8 +182,7 @@ class RecentLocationsRenderer extends ColoredListCellRenderer<RecentLocationItem
         return titleTextComponent;
     }
 
-    @Nullable
-    private static Image fetchIcon(Project project, PlaceInfo placeInfo) {
+    private static @Nullable Image fetchIcon(Project project, PlaceInfo placeInfo) {
         return VfsIconUtil.getIcon(placeInfo.getFile(), Iconable.ICON_FLAG_READ_STATUS, project);
     }
 

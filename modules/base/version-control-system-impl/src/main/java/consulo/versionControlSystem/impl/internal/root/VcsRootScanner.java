@@ -189,8 +189,7 @@ public final class VcsRootScanner implements Disposable {
         return false;
     }
 
-    @Nullable
-    static Pattern parseDirIgnorePattern() {
+    static @Nullable Pattern parseDirIgnorePattern() {
         try {
             return Pattern.compile(Registry.stringValue("vcs.root.detector.ignore.pattern"));
         }

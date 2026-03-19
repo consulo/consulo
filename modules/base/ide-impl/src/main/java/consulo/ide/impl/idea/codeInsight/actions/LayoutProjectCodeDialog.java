@@ -211,8 +211,7 @@ public class LayoutProjectCodeDialog extends DialogWrapper implements ReformatFi
     }
 
     @Override
-    @Nullable
-    public String getFileTypeMask() {
+    public @Nullable String getFileTypeMask() {
         if (myEnableFileNameFilterCb.isSelected()) {
             return (String) myFileFilter.getSelectedItem();
         }

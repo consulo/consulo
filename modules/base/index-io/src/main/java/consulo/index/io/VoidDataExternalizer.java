@@ -31,8 +31,7 @@ public class VoidDataExternalizer implements DataExternalizer<Void> {
   }
 
   @Override
-  @Nullable
-  public Void read(DataInput in) throws IOException {
+  public @Nullable Void read(DataInput in) throws IOException {
     return null;
   }
 }

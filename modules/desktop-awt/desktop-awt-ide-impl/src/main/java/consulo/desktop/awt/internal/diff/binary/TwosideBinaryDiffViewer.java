@@ -234,8 +234,7 @@ public class TwosideBinaryDiffViewer extends TwosideDiffViewer<BinaryEditorHolde
             }
         }
 
-        @Nullable
-        private VirtualFile getContentFile(Side side) {
+        private @Nullable VirtualFile getContentFile(Side side) {
             DiffContent content = side.select(myRequest.getContents());
             VirtualFile file = content instanceof FileContent ? ((FileContent)content).getFile() : null;
             return file != null && file.isValid() ? file : null;

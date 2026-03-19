@@ -538,16 +538,14 @@ public class AbstractTreeUi {
         return myTree;
     }
 
-    @Nullable
-    private static NodeDescriptor getDescriptorFrom(Object node) {
+    private static @Nullable NodeDescriptor getDescriptorFrom(Object node) {
         return node instanceof DefaultMutableTreeNode defaultMutableTreeNode
             && defaultMutableTreeNode.getUserObject() instanceof NodeDescriptor nodeDescriptor
             ? nodeDescriptor
             : null;
     }
 
-    @Nullable
-    public final DefaultMutableTreeNode getNodeForElement(Object element, boolean validateAgainstStructure) {
+    public final @Nullable DefaultMutableTreeNode getNodeForElement(Object element, boolean validateAgainstStructure) {
         DefaultMutableTreeNode result = null;
         if (validateAgainstStructure) {
             int index = 0;
@@ -628,8 +626,7 @@ public class AbstractTreeUi {
         return valid;
     }
 
-    @Nullable
-    public final DefaultMutableTreeNode getNodeForPath(Object[] path) {
+    public final @Nullable DefaultMutableTreeNode getNodeForPath(Object[] path) {
         DefaultMutableTreeNode node = null;
         for (Object pathElement : path) {
             node = node == null ? getFirstNode(pathElement) : findNodeForChildElement(node, pathElement);
@@ -2111,8 +2108,7 @@ public class AbstractTreeUi {
         return ready != null && ready;
     }
 
-    @Nullable
-    private Boolean checkValue(Supplier<Boolean> computable, boolean attempt) {
+    private @Nullable Boolean checkValue(Supplier<Boolean> computable, boolean attempt) {
         try (LockToken ignored = attempt ? attemptLock() : acquireLock()) {
             return computable.get();
         }
@@ -2548,8 +2544,7 @@ public class AbstractTreeUi {
         }
     }
 
-    @Nullable
-    private LockToken attemptLock() throws InterruptedException {
+    private @Nullable LockToken attemptLock() throws InterruptedException {
         return LockToken.attemptLock(myStateLock, Registry.intValue("ide.tree.uiLockAttempt"));
     }
 
@@ -2677,8 +2672,7 @@ public class AbstractTreeUi {
         return getUpdatingParent(kid) != null;
     }
 
-    @Nullable
-    private DefaultMutableTreeNode getUpdatingParent(DefaultMutableTreeNode kid) {
+    private @Nullable DefaultMutableTreeNode getUpdatingParent(DefaultMutableTreeNode kid) {
         DefaultMutableTreeNode eachParent = kid;
         while (eachParent != null) {
             if (isUpdatingChildrenNow(eachParent)) {
@@ -3041,8 +3035,7 @@ public class AbstractTreeUi {
         }
     }
 
-    @Nullable
-    private static TreeNode getChildForSmartExpand(DefaultMutableTreeNode node) {
+    private static @Nullable TreeNode getChildForSmartExpand(DefaultMutableTreeNode node) {
         int realChildCount = 0;
         TreeNode nodeToExpand = null;
 
@@ -3084,8 +3077,7 @@ public class AbstractTreeUi {
         return getParentLoadingInBackground(nodeObject) != null;
     }
 
-    @Nullable
-    private DefaultMutableTreeNode getParentLoadingInBackground(Object nodeObject) {
+    private @Nullable DefaultMutableTreeNode getParentLoadingInBackground(Object nodeObject) {
         if (!(nodeObject instanceof DefaultMutableTreeNode node)) {
             return null;
         }
@@ -4669,8 +4661,7 @@ public class AbstractTreeUi {
         return getUpdater().isEnqueuedToUpdate(node) || isUpdatingParent(node) || myCancelledBuild.containsKey(node);
     }
 
-    @Nullable
-    public Object getElementFor(Object node) {
+    public @Nullable Object getElementFor(Object node) {
         NodeDescriptor descriptor = getDescriptorFrom(node);
         return descriptor == null ? null : getElementFromDescriptor(descriptor);
     }
@@ -4683,8 +4674,7 @@ public class AbstractTreeUi {
         return getParentBuiltNode(node) != null || myRootNode == node && !wasRootNodeInitialized();
     }
 
-    @Nullable
-    private DefaultMutableTreeNode getParentBuiltNode(Object node) {
+    private @Nullable DefaultMutableTreeNode getParentBuiltNode(Object node) {
         DefaultMutableTreeNode parent = getParentLoadingInBackground(node);
         if (parent != null) {
             return parent;
@@ -4818,13 +4808,11 @@ public class AbstractTreeUi {
         }
     }
 
-    @Nullable
-    private DefaultMutableTreeNode getFirstNode(Object element) {
+    private @Nullable DefaultMutableTreeNode getFirstNode(Object element) {
         return findNode(element, 0);
     }
 
-    @Nullable
-    private DefaultMutableTreeNode findNode(Object element, int startIndex) {
+    private @Nullable DefaultMutableTreeNode findNode(Object element, int startIndex) {
         Object value = getBuilder().findNodeByElement(element);
         if (value == null) {
             return null;
@@ -4855,8 +4843,7 @@ public class AbstractTreeUi {
         }
     }
 
-    @Nullable
-    private DefaultMutableTreeNode findNodeForChildElement(DefaultMutableTreeNode parentNode, Object element) {
+    private @Nullable DefaultMutableTreeNode findNodeForChildElement(DefaultMutableTreeNode parentNode, Object element) {
         Object anchor = myTreeAnchorizer.createAnchor(element);
         Object value = isNodeNull(anchor) ? null : myElementToNodeMap.get(anchor);
         myTreeAnchorizer.freeAnchor(anchor);

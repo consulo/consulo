@@ -23,7 +23,7 @@ import org.jspecify.annotations.Nullable;
 public class RollbackLineStatusRangeAction extends RollbackLineStatusAction {
   
   private final LineStatusTracker myTracker;
-  @Nullable private final Editor myEditor;
+  private final @Nullable Editor myEditor;
   
   private final VcsRange myRange;
 

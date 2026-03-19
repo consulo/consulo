@@ -39,8 +39,7 @@ public class VcsLogMessagesTrigramIndex extends VcsLogFullDetailsIndex<Void> {
           fatalErrorHandler, disposableParent);
   }
 
-  @Nullable
-  public IntSet getCommitsForSubstring(String string) throws StorageException {
+  public @Nullable IntSet getCommitsForSubstring(String string) throws StorageException {
     MyTrigramProcessor trigramProcessor = new MyTrigramProcessor();
     TrigramBuilder.processTrigrams(string, trigramProcessor);
 

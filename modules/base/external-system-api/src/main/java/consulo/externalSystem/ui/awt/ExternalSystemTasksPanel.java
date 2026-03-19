@@ -70,8 +70,7 @@ public class ExternalSystemTasksPanel extends SimpleToolWindowPanel implements D
   
   private final Project                       myProject;
 
-  @Nullable
-  private Supplier<ExternalTaskExecutionInfo> mySelectedTaskProvider;
+  private @Nullable Supplier<ExternalTaskExecutionInfo> mySelectedTaskProvider;
 
   public ExternalSystemTasksPanel(Project project,
                                   ProjectSystemId externalSystemId,
@@ -185,8 +184,7 @@ public class ExternalSystemTasksPanel extends SimpleToolWindowPanel implements D
     return null;
   }
 
-  @Nullable
-  private Location buildLocation() {
+  private @Nullable Location buildLocation() {
     if (mySelectedTaskProvider == null) {
       return null;
     }

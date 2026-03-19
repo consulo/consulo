@@ -34,8 +34,7 @@ public class TreeStructureWrappenModel<T> implements TreeModel<T> {
         myStructure = structure;
     }
 
-    @Nullable
-    public T getRootElement() {
+    public @Nullable T getRootElement() {
         return (T) myStructure.getRootElement();
     }
 

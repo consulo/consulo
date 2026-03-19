@@ -66,8 +66,7 @@ public abstract class AbstractRemoteExternalSystemService<S extends ExternalSyst
     mySettings.set(settings);
   }
 
-  @Nullable
-  public S getSettings() {
+  public @Nullable S getSettings() {
     return mySettings.get();
   }
   

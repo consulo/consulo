@@ -35,8 +35,7 @@ import javax.swing.*;
 import java.io.File;
 
 public class ImportedTestConsoleProperties extends SMTRunnerConsoleProperties implements SMCustomMessagesParsing {
-    @Nullable
-    private final SMTRunnerConsoleProperties myProperties;
+    private final @Nullable SMTRunnerConsoleProperties myProperties;
     private final File myFile;
     private final ProcessHandler myHandler;
 
@@ -98,20 +97,17 @@ public class ImportedTestConsoleProperties extends SMTRunnerConsoleProperties im
     }
 
     @Override
-    @Nullable
-    public SMTestLocator getTestLocator() {
+    public @Nullable SMTestLocator getTestLocator() {
         return myProperties == null ? null : myProperties.getTestLocator();
     }
 
     @Override
-    @Nullable
-    public TestProxyFilterProvider getFilterProvider() {
+    public @Nullable TestProxyFilterProvider getFilterProvider() {
         return myProperties == null ? null : myProperties.getFilterProvider();
     }
 
     @Override
-    @Nullable
-    public AbstractRerunFailedTestsAction createRerunFailedTestsAction(ConsoleView consoleView) {
+    public @Nullable AbstractRerunFailedTestsAction createRerunFailedTestsAction(ConsoleView consoleView) {
         return myProperties == null ? null : myProperties.createRerunFailedTestsAction(consoleView);
     }
 

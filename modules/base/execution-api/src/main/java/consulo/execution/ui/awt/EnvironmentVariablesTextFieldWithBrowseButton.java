@@ -201,8 +201,7 @@ public class EnvironmentVariablesTextFieldWithBrowseButton implements UserActivi
     }
 
     @Override
-    @Nullable
-    protected JComponent createCenterPanel() {
+    protected @Nullable JComponent createCenterPanel() {
       return myWholePanel;
     }
 

@@ -64,8 +64,7 @@ public class MethodSignatureComponent extends EditorTextField {
     return editor;
   }
 
-  @Nullable
-  protected String getFileName() {
+  protected @Nullable String getFileName() {
     return null;
   }
 }

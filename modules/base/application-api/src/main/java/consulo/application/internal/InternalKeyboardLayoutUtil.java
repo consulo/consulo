@@ -29,8 +29,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class InternalKeyboardLayoutUtil {
   public static final Map<Character, Character> ourLLtoASCII = new ConcurrentHashMap<>();
 
-  @Nullable
-  public static Character getAsciiForChar(char a) {
+  public static @Nullable Character getAsciiForChar(char a) {
     char lc = Character.toLowerCase(a);
     Character c = ourLLtoASCII.get(lc);
     if (c == null && (ourLLtoASCII.isEmpty() || Platform.current().os().isLinux())) {

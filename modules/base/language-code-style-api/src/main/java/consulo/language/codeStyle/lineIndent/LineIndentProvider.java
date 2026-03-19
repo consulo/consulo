@@ -33,8 +33,7 @@ import org.jspecify.annotations.Nullable;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface LineIndentProvider {
-    @Nullable
-    public static LineIndentProvider findLineIndentProvider(@Nullable Language language) {
+    public static @Nullable LineIndentProvider findLineIndentProvider(@Nullable Language language) {
         ExtensionPoint<LineIndentProvider> point = Application.get().getExtensionPoint(LineIndentProvider.class);
         return point.findFirstSafe(it -> it.isSuitableFor(language));
     }

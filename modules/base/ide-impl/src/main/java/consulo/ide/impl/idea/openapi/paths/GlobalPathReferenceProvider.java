@@ -73,8 +73,7 @@ public class GlobalPathReferenceProvider implements PathReferenceProvider {
   }
 
   @Override
-  @Nullable
-  public PathReference getPathReference(String path, PsiElement element) {
+  public @Nullable PathReference getPathReference(String path, PsiElement element) {
     return URLUtil.containsScheme(path) ? new PathReference(path, PathReference.NULL_ICON) : null;
   }
 }

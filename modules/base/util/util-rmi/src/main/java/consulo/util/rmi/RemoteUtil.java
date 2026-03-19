@@ -64,8 +64,7 @@ public class RemoteUtil {
     return map;
   }
 
-  @Nullable
-  public static <T> T castToRemote(Object object, Class<T> clazz) {
+  public static @Nullable <T> T castToRemote(Object object, Class<T> clazz) {
     if (!Proxy.isProxyClass(object.getClass())) return null;
     InvocationHandler handler = Proxy.getInvocationHandler(object);
     if (handler instanceof RemoteInvocationHandler) {

@@ -33,8 +33,7 @@ public abstract class Injectable implements Comparable<Injectable> {
   
   public abstract LocalizeValue getDisplayName();
 
-  @Nullable
-  public String getAdditionalDescription() {
+  public @Nullable String getAdditionalDescription() {
     return null;
   }
 
@@ -51,8 +50,7 @@ public abstract class Injectable implements Comparable<Injectable> {
   /**
    * @return null for reference injections
    */
-  @Nullable
-  public abstract Language getLanguage();
+  public abstract @Nullable Language getLanguage();
 
   public Language toLanguage() {
     return getLanguage() == null ? new Language(getId(), false) {

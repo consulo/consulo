@@ -66,8 +66,7 @@ public abstract class BaseOpenInBrowserAction extends DumbAwareAction {
         super(text, description, icon);
     }
 
-    @Nullable
-    protected abstract WebBrowser getBrowser(AnActionEvent event);
+    protected abstract @Nullable WebBrowser getBrowser(AnActionEvent event);
 
     @Override
     public final void update(AnActionEvent e) {
@@ -110,8 +109,7 @@ public abstract class BaseOpenInBrowserAction extends DumbAwareAction {
         }
     }
 
-    @Nullable
-    public static OpenInBrowserRequest createRequest(DataContext context) {
+    public static @Nullable OpenInBrowserRequest createRequest(DataContext context) {
         final Editor editor = context.getData(Editor.KEY);
         if (editor != null) {
             Project project = editor.getProject();

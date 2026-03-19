@@ -65,8 +65,7 @@ public class ShelveChangesCommitExecutor extends LocalCommitExecutor {
     private class ShelveChangesCommitSession implements CommitSession, CommitSessionContextAware {
 
         @Override
-        @Nullable
-        public JComponent getAdditionalConfigurationUI() {
+        public @Nullable JComponent getAdditionalConfigurationUI() {
             return null;
         }
 
@@ -75,8 +74,7 @@ public class ShelveChangesCommitExecutor extends LocalCommitExecutor {
         }
 
         @Override
-        @Nullable
-        public JComponent getAdditionalConfigurationUI(Collection<Change> changes, String commitMessage) {
+        public @Nullable JComponent getAdditionalConfigurationUI(Collection<Change> changes, String commitMessage) {
             return null;
         }
 

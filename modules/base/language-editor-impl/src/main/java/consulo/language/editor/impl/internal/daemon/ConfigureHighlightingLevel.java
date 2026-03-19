@@ -108,8 +108,7 @@ public class ConfigureHighlightingLevel {
         }
     }
 
-    @Nullable
-    public static JBPopup getConfigureHighlightingLevelPopup(DataContext context) {
+    public static @Nullable JBPopup getConfigureHighlightingLevelPopup(DataContext context) {
         PsiFile psi = context.getData(PsiFile.KEY);
         if (psi == null) {
             return null;

@@ -46,8 +46,7 @@ public abstract class AbstractSuppressByNoInspectionCommentFix extends SuppressI
   protected final String myID;
   private final boolean myReplaceOtherSuppressionIds;
 
-  @Nullable
-  protected abstract PsiElement getContainer(PsiElement context);
+  protected abstract @Nullable PsiElement getContainer(PsiElement context);
 
   /**
    * @param ID                         Inspection ID
@@ -118,8 +117,7 @@ public abstract class AbstractSuppressByNoInspectionCommentFix extends SuppressI
     LanguageUndoUtil.markPsiFileForUndo(element.getContainingFile());
   }
 
-  @Nullable
-  protected List<? extends PsiElement> getCommentsFor(PsiElement container) {
+  protected @Nullable List<? extends PsiElement> getCommentsFor(PsiElement container) {
     PsiElement prev = PsiTreeUtil.skipSiblingsBackward(container, PsiWhiteSpace.class);
     if (prev == null) {
       return null;

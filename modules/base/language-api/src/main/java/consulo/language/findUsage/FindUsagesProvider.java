@@ -52,8 +52,7 @@ public interface FindUsagesProvider extends LanguageExtension {
    *
    * @return the word scanner implementation, or null if {@link SimpleWordsScanner} is OK.
    */
-  @Nullable
-  default WordsScanner getWordsScanner() {
+  default @Nullable WordsScanner getWordsScanner() {
     return new SimpleWordsScanner();
   }
 
@@ -73,8 +72,7 @@ public interface FindUsagesProvider extends LanguageExtension {
    * @param psiElement the element for which the help topic is requested.
    * @return the help topic ID, or null if no help is available.
    */
-  @Nullable
-  default String getHelpId(PsiElement psiElement) {
+  default @Nullable String getHelpId(PsiElement psiElement) {
     return "reference.dialogs.findUsages.other";
   }
 

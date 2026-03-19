@@ -92,8 +92,7 @@ public abstract class MultiplePsiFilesPerDocumentFileViewProvider extends Abstra
     return file;
   }
 
-  @Nullable
-  protected PsiFileImpl createPsiFileImpl(Language target) {
+  protected @Nullable PsiFileImpl createPsiFileImpl(Language target) {
     return (PsiFileImpl)createFile(target);
   }
 
@@ -147,8 +146,7 @@ public abstract class MultiplePsiFilesPerDocumentFileViewProvider extends Abstra
   protected abstract MultiplePsiFilesPerDocumentFileViewProvider cloneInner(VirtualFile fileCopy);
 
   @Override
-  @Nullable
-  public PsiElement findElementAt(int offset, Class<? extends Language> lang) {
+  public @Nullable PsiElement findElementAt(int offset, Class<? extends Language> lang) {
     PsiFile mainRoot = getPsi(getBaseLanguage());
     PsiElement ret = null;
     for (Language language : getLanguages()) {
@@ -166,14 +164,12 @@ public abstract class MultiplePsiFilesPerDocumentFileViewProvider extends Abstra
   }
 
   @Override
-  @Nullable
-  public PsiElement findElementAt(int offset) {
+  public @Nullable PsiElement findElementAt(int offset) {
     return findElementAt(offset, Language.class);
   }
 
   @Override
-  @Nullable
-  public PsiReference findReferenceAt(int offset) {
+  public @Nullable PsiReference findReferenceAt(int offset) {
     TextRange minRange = new TextRange(0, getContents().length());
     PsiReference ret = null;
     for (Language language : getLanguages()) {

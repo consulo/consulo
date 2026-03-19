@@ -42,14 +42,12 @@ public class TablePassInfo extends LayoutPassInfo {
     myTabs = tabs;
   }
 
-  @Nullable
-  public TabInfo getPreviousFor(TabInfo info) {
+  public @Nullable TabInfo getPreviousFor(TabInfo info) {
     TableRow row = myInfo2Row.get(info);
     return row != null ? getPrevious(row.myColumns, row.myColumns.indexOf(info)) : null;
   }
 
-  @Nullable
-  public TabInfo getNextFor(TabInfo info) {
+  public @Nullable TabInfo getNextFor(TabInfo info) {
     TableRow row = myInfo2Row.get(info);
     return row != null ? getNext(row.myColumns, row.myColumns.indexOf(info)) : null;
   }

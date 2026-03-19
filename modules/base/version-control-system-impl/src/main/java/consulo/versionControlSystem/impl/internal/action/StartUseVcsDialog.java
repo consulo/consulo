@@ -51,8 +51,7 @@ class StartUseVcsDialog extends DialogWrapper {
         return myVcsComboBox;
     }
 
-    @Nullable
-    public AbstractVcs getSelectedVcs() {
+    public @Nullable AbstractVcs getSelectedVcs() {
         return (AbstractVcs) myVcsComboBox.getSelectedItem();
     }
 

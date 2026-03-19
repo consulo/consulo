@@ -71,8 +71,7 @@ public class FileReference implements PsiFileReference, FileReferenceOwner, PsiP
     this(original.myFileReferenceSet, original.myRange, original.myIndex, original.myText);
   }
 
-  @Nullable
-  public static FileReference findFileReference(PsiReference original) {
+  public static @Nullable FileReference findFileReference(PsiReference original) {
     if (original instanceof PsiMultiReference) {
       PsiMultiReference multiReference = (PsiMultiReference)original;
       for (PsiReference reference : multiReference.getReferences()) {
@@ -222,8 +221,7 @@ public class FileReference implements PsiFileReference, FileReferenceOwner, PsiP
     return decode(getCanonicalText());
   }
 
-  @Nullable
-  public String getNewFileTemplateName() {
+  public @Nullable String getNewFileTemplateName() {
     FileType fileType = FileTypeRegistry.getInstance().getFileTypeByFileName(myText);
     if (fileType != UnknownFileType.INSTANCE) {
       return fileType.getId() + " File." + fileType.getDefaultExtension();
@@ -305,8 +303,7 @@ public class FileReference implements PsiFileReference, FileReferenceOwner, PsiP
     return fileSystemItem;
   }
 
-  @Nullable
-  public String encode(String name, PsiElement psiElement) {
+  public @Nullable String encode(String name, PsiElement psiElement) {
     try {
       return new URI(null, null, name, null).toString();
     }
@@ -319,8 +316,7 @@ public class FileReference implements PsiFileReference, FileReferenceOwner, PsiP
     context.processChildren(processor);
   }
 
-  @Nullable
-  private FileReference getContextReference() {
+  private @Nullable FileReference getContextReference() {
     return myIndex > 0 ? myFileReferenceSet.getReference(myIndex - 1) : null;
   }
 
@@ -335,8 +331,7 @@ public class FileReference implements PsiFileReference, FileReferenceOwner, PsiP
     return resolveResults.length == 1 ? (PsiFileSystemItem)resolveResults[0].getElement() : null;
   }
 
-  @Nullable
-  public PsiFileSystemItem innerSingleResolve(boolean caseSensitive, PsiFile containingFile) {
+  public @Nullable PsiFileSystemItem innerSingleResolve(boolean caseSensitive, PsiFile containingFile) {
     ResolveResult[] resolveResults = innerResolve(caseSensitive, containingFile);
     return resolveResults.length == 1 ? (PsiFileSystemItem)resolveResults[0].getElement() : null;
   }

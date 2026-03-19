@@ -211,8 +211,7 @@ public abstract class SourceScope {
       return true;
     }
 
-    @Nullable
-    private GlobalSearchScope findScopeFor(VirtualFile file) {
+    private @Nullable GlobalSearchScope findScopeFor(VirtualFile file) {
       if (myMainScope.contains(file)) return myMainScope;
       //noinspection ForLoopReplaceableByForEach
       for (int i = 0, size = myScopes.size(); i < size; i++) {

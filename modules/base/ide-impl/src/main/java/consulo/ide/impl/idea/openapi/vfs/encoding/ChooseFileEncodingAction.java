@@ -43,7 +43,7 @@ public abstract class ChooseFileEncodingAction extends ComboBoxAction {
 
     private void fillCharsetActions(
         DefaultActionGroup group,
-        @Nullable final VirtualFile virtualFile,
+        final @Nullable VirtualFile virtualFile,
         List<? extends Charset> charsets,
         final Function<? super Charset, String> charsetFilter
     ) {

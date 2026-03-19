@@ -47,8 +47,7 @@ public abstract class LibraryScopeBase extends GlobalSearchScope {
     return myEntries.contains(getFileRoot(file));
   }
 
-  @Nullable
-  protected VirtualFile getFileRoot(VirtualFile file) {
+  protected @Nullable VirtualFile getFileRoot(VirtualFile file) {
     if (myIndex.isInLibraryClasses(file)) {
       return myIndex.getClassRootForFile(file);
     }

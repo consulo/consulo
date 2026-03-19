@@ -117,10 +117,8 @@ public class BackgroundTaskQueue {
   protected class BackgroundableTaskData implements TaskData {
     
     private final Task.Backgroundable myTask;
-    @Nullable
-    private final ModalityState myModalityState;
-    @Nullable
-    private final ProgressIndicator myIndicator;
+    private final @Nullable ModalityState myModalityState;
+    private final @Nullable ProgressIndicator myIndicator;
 
     public BackgroundableTaskData(Task.Backgroundable task,
                                   @Nullable ModalityState modalityState,

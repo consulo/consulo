@@ -39,7 +39,7 @@ public class PathsChooserComponent implements ComponentWithEmptyText {
 
   private List<String> myWorkingCollection;
   private final List<String> myInitialCollection;
-  @Nullable private final Project myProject;
+  private final @Nullable Project myProject;
 
   public PathsChooserComponent(List<String> collection, PathProcessor processor) {
     this(collection, processor, null);

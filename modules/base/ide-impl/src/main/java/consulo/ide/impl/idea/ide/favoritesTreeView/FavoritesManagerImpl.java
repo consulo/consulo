@@ -77,8 +77,7 @@ public class FavoritesManagerImpl implements FavoritesManager, PersistentStateCo
     private final EventDispatcher<FavoritesListener> myListeners = EventDispatcher.create(FavoritesListener.class);
     private final FavoritesViewSettingsImpl myViewSettings = new FavoritesViewSettingsImpl();
 
-    @Nullable
-    private Map<String, FavoritesListProvider> myProviders;
+    private @Nullable Map<String, FavoritesListProvider> myProviders;
 
     private void rootsChanged() {
         myListeners.getMulticaster().rootsChanged();
@@ -437,8 +436,7 @@ public class FavoritesManagerImpl implements FavoritesManager, PersistentStateCo
         return false;
     }
 
-    @Nullable
-    public FavoritesListProvider getListProvider(@Nullable String name) {
+    public @Nullable FavoritesListProvider getListProvider(@Nullable String name) {
         return getProviders().get(name);
     }
 
@@ -500,8 +498,7 @@ public class FavoritesManagerImpl implements FavoritesManager, PersistentStateCo
     private static final String ATTRIBUTE_URL = "url";
     private static final String ATTRIBUTE_MODULE = "module";
 
-    @Nullable
-    private static AbstractUrl readUrlFromElement(Element element, Project project) {
+    private static @Nullable AbstractUrl readUrlFromElement(Element element, Project project) {
         String type = element.getAttributeValue(ATTRIBUTE_TYPE);
         String urlValue = element.getAttributeValue(ATTRIBUTE_URL);
         String moduleName = element.getAttributeValue(ATTRIBUTE_MODULE);

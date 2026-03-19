@@ -9,8 +9,7 @@ class MatcherWithFallback extends MinusculeMatcher {
   
   private final MinusculeMatcher myMainMatcher;
 
-  @Nullable
-  private final MinusculeMatcher myFallbackMatcher;
+  private final @Nullable MinusculeMatcher myFallbackMatcher;
 
   MatcherWithFallback(MinusculeMatcher mainMatcher, @Nullable MinusculeMatcher fallbackMatcher) {
     myMainMatcher = mainMatcher;

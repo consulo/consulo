@@ -45,10 +45,8 @@ public final class TextAttribute {
   public static final TextAttribute GRAY = new TextAttribute(STYLE_PLAIN, StandardColors.GRAY);
 
   private final int myStyle;
-  @Nullable
-  private final ColorValue myBackgroundColor;
-  @Nullable
-  private final ColorValue myForegroundColor;
+  private final @Nullable ColorValue myBackgroundColor;
+  private final @Nullable ColorValue myForegroundColor;
 
   public TextAttribute(int style, @Nullable ColorValue foregroundColor) {
     this(style, foregroundColor, null);
@@ -64,13 +62,11 @@ public final class TextAttribute {
     return myStyle;
   }
 
-  @Nullable
-  public ColorValue getForegroundColor() {
+  public @Nullable ColorValue getForegroundColor() {
     return myForegroundColor;
   }
 
-  @Nullable
-  public ColorValue getBackgroundColor() {
+  public @Nullable ColorValue getBackgroundColor() {
     return myBackgroundColor;
   }
 }

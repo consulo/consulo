@@ -42,8 +42,7 @@ public interface HttpRequest {
     
     HttpVersion version();
 
-    @Nullable
-    default String headerValue(String header) throws IOException {
+    default @Nullable String headerValue(String header) throws IOException {
         Map<String, List<String>> map = responseHeaders();
         List<String> headers = map.get(header);
         return headers == null || headers.isEmpty() ? null : headers.getFirst();

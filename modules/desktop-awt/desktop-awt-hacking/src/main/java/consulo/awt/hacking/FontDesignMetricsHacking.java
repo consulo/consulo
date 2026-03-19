@@ -44,8 +44,7 @@ public class FontDesignMetricsHacking {
     return fontMetrics instanceof FontDesignMetrics;
   }
 
-  @Nullable
-  public static BiFunction<FontMetrics, Integer, Float> handleCharWidth() {
+  public static @Nullable BiFunction<FontMetrics, Integer, Float> handleCharWidth() {
     try {
       Method method = FontDesignMetrics.class.getDeclaredMethod("handleCharWidth", int.class);
       method.setAccessible(true);
@@ -66,8 +65,7 @@ public class FontDesignMetricsHacking {
     return null;
   }
 
-  @Nullable
-  public static BiFunction<FontMetrics, Character, Float> getLatinCharWidth() {
+  public static @Nullable BiFunction<FontMetrics, Character, Float> getLatinCharWidth() {
     try {
       Method method = FontDesignMetrics.class.getDeclaredMethod("getLatinCharWidth", char.class);
       method.setAccessible(true);

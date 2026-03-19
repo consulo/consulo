@@ -26,8 +26,7 @@ import consulo.dataContext.DataContext;
 import org.jspecify.annotations.Nullable;
 
 public abstract class TypedActionHandlerBase implements TypedActionHandlerEx, OverrideTypedActionHandler {
-  @Nullable
-  protected TypedActionHandler myOriginalHandler;
+  protected @Nullable TypedActionHandler myOriginalHandler;
 
   @Override
   public void init(TypedActionHandler delegate) {

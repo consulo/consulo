@@ -774,8 +774,7 @@ public abstract class PsiFileImpl extends UserDataHolderBase
         return stubTree;
     }
 
-    @Nullable
-    public StubTree derefStub() {
+    public @Nullable StubTree derefStub() {
         return myTrees.derefStub();
     }
 

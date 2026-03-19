@@ -370,8 +370,7 @@ public class ProjectSettingsPanel {
                 private ReadOnlyPackageSetChooserCombo myScopeChooser;
 
                 @Override
-                @Nullable
-                public Object getCellEditorValue() {
+                public @Nullable Object getCellEditorValue() {
                     return myScopeChooser.getSelectedScope();
                 }
 

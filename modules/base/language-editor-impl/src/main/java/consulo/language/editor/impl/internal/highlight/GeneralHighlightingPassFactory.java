@@ -43,8 +43,7 @@ public class GeneralHighlightingPassFactory implements MainHighlightingPassFacto
   }
 
   @Override
-  @Nullable
-  public TextEditorHighlightingPass createHighlightingPass(PsiFile file, Editor editor) {
+  public @Nullable TextEditorHighlightingPass createHighlightingPass(PsiFile file, Editor editor) {
     TextRange textRange = FileStatusMapImpl.getDirtyTextRange(editor, Pass.UPDATE_ALL);
     if (textRange == null) return new EmptyPass(file.getProject(), editor.getDocument());
     ProperTextRange visibleRange = VisibleHighlightingPassFactory.calculateVisibleRange(editor);

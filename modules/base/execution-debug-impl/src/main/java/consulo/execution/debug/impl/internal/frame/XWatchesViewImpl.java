@@ -190,8 +190,7 @@ public class XWatchesViewImpl extends XVariablesView implements DnDNativeTarget,
     }
 
     @Override
-    @Nullable
-    protected JComponent createTopPanel() {
+    protected @Nullable JComponent createTopPanel() {
         XDebuggerTree tree = getTree();
         Ref<AnAction> addToWatchesActionRef = new Ref<>();
         XDebuggerEditorsProvider provider = tree.getEditorsProvider();

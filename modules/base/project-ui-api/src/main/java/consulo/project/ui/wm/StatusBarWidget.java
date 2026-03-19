@@ -55,8 +55,7 @@ public interface StatusBarWidget extends Disposable {
         
         LocalizeValue getTooltipText();
 
-        @Nullable
-        default String getShortcutText() {
+        default @Nullable String getShortcutText() {
             return null;
         }
 
@@ -93,8 +92,7 @@ public interface StatusBarWidget extends Disposable {
             return "";
         }
 
-        @Nullable
-        default Image getIcon() {
+        default @Nullable Image getIcon() {
             return null;
         }
     }

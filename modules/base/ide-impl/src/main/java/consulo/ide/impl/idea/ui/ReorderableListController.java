@@ -316,8 +316,7 @@ public abstract class ReorderableListController<T> {
             return action;
         }
 
-        @Nullable
-        protected abstract V addInternal(V v);
+        protected abstract @Nullable V addInternal(V v);
 
         @Override
         public Image getActionIcon() {

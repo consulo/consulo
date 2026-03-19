@@ -225,8 +225,7 @@ public abstract class LibraryTableBase implements PersistentStateComponent<Eleme
     }
 
     @Override
-    @Nullable
-    public Library getLibraryByName(String name) {
+    public @Nullable Library getLibraryByName(String name) {
       for (Library myLibrary : myLibraries) {
         LibraryImpl library = (LibraryImpl)myLibrary;
         if (Comparing.equal(name, library.getName())) return library;

@@ -41,8 +41,7 @@ public class RemoteObject implements Remote, Unreferenced {
     return myWeakRef;
   }
 
-  @Nullable
-  public synchronized <T extends Remote> T export(@Nullable T child) throws RemoteException {
+  public synchronized @Nullable <T extends Remote> T export(@Nullable T child) throws RemoteException {
     if (child == null) return null;
     @SuppressWarnings("unchecked") T result = (T)UnicastRemoteObject.exportObject(child, 0);
     myChildren.put((RemoteObject)child, result);
@@ -50,8 +49,7 @@ public class RemoteObject implements Remote, Unreferenced {
     return result;
   }
 
-  @Nullable
-  public <T extends Remote> T export2(@Nullable T child) throws RemoteException {
+  public @Nullable <T extends Remote> T export2(@Nullable T child) throws RemoteException {
     return export(child);
   }
 

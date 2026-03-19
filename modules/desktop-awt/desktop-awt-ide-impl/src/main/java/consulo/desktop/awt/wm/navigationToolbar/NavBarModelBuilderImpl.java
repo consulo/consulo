@@ -52,8 +52,7 @@ public class NavBarModelBuilderImpl extends NavBarModelBuilder {
         return NavBarModelExtensions.normalize(getOriginalElement(e));
     }
 
-    @Nullable
-    protected static PsiElement normalize(@Nullable PsiElement e, NavBarModelExtension ownerExtension) {
+    protected static @Nullable PsiElement normalize(@Nullable PsiElement e, NavBarModelExtension ownerExtension) {
         PsiElement originalElement = getOriginalElement(e);
         if (ownerExtension != null) {
             return originalElement != null ? ownerExtension.adjustElement(originalElement) : null;
@@ -61,8 +60,7 @@ public class NavBarModelBuilderImpl extends NavBarModelBuilder {
         return NavBarModelExtensions.normalize(originalElement);
     }
 
-    @Nullable
-    private static PsiElement getOriginalElement(@Nullable PsiElement e) {
+    private static @Nullable PsiElement getOriginalElement(@Nullable PsiElement e) {
         if (e == null || !e.isValid()) {
             return null;
         }

@@ -98,8 +98,7 @@ public class SimpleToolWindowPanel extends JBPanelWithEmptyText implements Quick
   }
 
   @Override
-  @Nullable
-  public Object getData(Key<?> dataId) {
+  public @Nullable Object getData(Key<?> dataId) {
     return QuickActionProvider.KEY == dataId && myProvideQuickActions ? this : null;
   }
 

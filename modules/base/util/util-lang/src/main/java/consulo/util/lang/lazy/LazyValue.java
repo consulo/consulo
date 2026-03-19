@@ -48,8 +48,7 @@ public interface LazyValue<T> extends Supplier<T> {
   /**
    * @return value which was already stored, and do not try init it
    */
-  @Nullable
-  default T getStoredValue() {
+  default @Nullable T getStoredValue() {
     return get();
   }
 }

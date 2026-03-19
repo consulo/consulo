@@ -44,8 +44,7 @@ public class PsiCachedValueImpl<T> extends PsiCachedValue<T> implements CachedVa
     }
 
     @Override
-    @Nullable
-    public T getValue() {
+    public @Nullable T getValue() {
         return getValueWithLock(null);
     }
 

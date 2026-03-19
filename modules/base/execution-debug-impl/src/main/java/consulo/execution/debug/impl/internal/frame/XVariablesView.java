@@ -74,8 +74,7 @@ public class XVariablesView extends XVariablesViewBase implements DataProvider {
     protected void beforeTreeBuild(SessionEvent event) {
     }
 
-    @Nullable
-    protected JComponent createTopPanel() {
+    protected @Nullable JComponent createTopPanel() {
         return null;
     }
 
@@ -160,8 +159,7 @@ public class XVariablesView extends XVariablesViewBase implements DataProvider {
         private final Map<Pair<VirtualFile, Integer>, Set<Entry>> myData = new HashMap<>();
         private final Object2LongMap<VirtualFile> myTimestamps = new Object2LongOpenHashMap<>();
 
-        @Nullable
-        public synchronized List<XValueNodeImpl> get(VirtualFile file, int line, long currentTimestamp) {
+        public synchronized @Nullable List<XValueNodeImpl> get(VirtualFile file, int line, long currentTimestamp) {
             long timestamp = myTimestamps.getOrDefault(file, -1);
             if (timestamp == -1 || timestamp < currentTimestamp) {
                 return null;

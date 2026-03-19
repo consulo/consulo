@@ -75,13 +75,11 @@ public abstract class RenamePsiElementProcessor {
         return ReferencesSearch.search(element).findAll();
     }
 
-    @Nullable
-    public Pair<String, String> getTextOccurrenceSearchStrings(PsiElement element, String newName) {
+    public @Nullable Pair<String, String> getTextOccurrenceSearchStrings(PsiElement element, String newName) {
         return null;
     }
 
-    @Nullable
-    public String getQualifiedNameAfterRename(PsiElement element, String newName, boolean nonJava) {
+    public @Nullable String getQualifiedNameAfterRename(PsiElement element, String newName, boolean nonJava) {
         return null;
     }
 
@@ -139,13 +137,11 @@ public abstract class RenamePsiElementProcessor {
         return DEFAULT;
     }
 
-    @Nullable
-    public Runnable getPostRenameCallback(PsiElement element, String newName, RefactoringElementListener elementListener) {
+    public @Nullable Runnable getPostRenameCallback(PsiElement element, String newName, RefactoringElementListener elementListener) {
         return null;
     }
 
-    @Nullable
-    public String getHelpID(PsiElement element) {
+    public @Nullable String getHelpID(PsiElement element) {
         return element instanceof PsiFile ? "refactoring.renameFile" : "refactoring.renameDialogs";
     }
 
@@ -181,8 +177,7 @@ public abstract class RenamePsiElementProcessor {
      * @param editor  the editor in which the refactoring was invoked.
      * @return the element to rename, or null if the rename refactoring should be canceled.
      */
-    @Nullable
-    public PsiElement substituteElementToRename(PsiElement element, @Nullable Editor editor) {
+    public @Nullable PsiElement substituteElementToRename(PsiElement element, @Nullable Editor editor) {
         return element;
     }
 
@@ -234,8 +229,7 @@ public abstract class RenamePsiElementProcessor {
         return false;
     }
 
-    @Nullable
-    public PsiElement getElementToSearchInStringsAndComments(PsiElement element) {
+    public @Nullable PsiElement getElementToSearchInStringsAndComments(PsiElement element) {
         return element;
     }
 }

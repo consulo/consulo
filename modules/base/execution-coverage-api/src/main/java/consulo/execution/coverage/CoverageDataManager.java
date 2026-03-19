@@ -99,8 +99,7 @@ public abstract class CoverageDataManager {
     public abstract CoverageSuitesBundle getCurrentSuitesBundle();
 
     @Deprecated
-    @Nullable
-    public CoverageSuite getCurrentSuite() {
+    public @Nullable CoverageSuite getCurrentSuite() {
         CoverageSuitesBundle bundle = getCurrentSuitesBundle();
         return bundle != null ? bundle.getSuites()[0] : null;
     }
@@ -134,8 +133,7 @@ public abstract class CoverageDataManager {
      * @param computation {@link Supplier to be run}
      * @return result of the computation or null if the project is already closing.
      */
-    @Nullable
-    public abstract <T> T doInReadActionIfProjectOpen(Supplier<T> computation);
+    public abstract @Nullable <T> T doInReadActionIfProjectOpen(Supplier<T> computation);
 
     public abstract boolean isSubCoverageActive();
 

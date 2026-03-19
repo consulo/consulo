@@ -28,8 +28,7 @@ public class InvokeTemplateAction extends AnAction {
     private final Template myTemplate;
     private final Editor myEditor;
     private final Project myProject;
-    @Nullable
-    private final Runnable myCallback;
+    private final @Nullable Runnable myCallback;
 
     public InvokeTemplateAction(Template template, Editor editor, Project project, Set<Character> usedMnemonicsSet) {
         this(template, editor, project, usedMnemonicsSet, null);

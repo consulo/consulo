@@ -76,8 +76,7 @@ public class PackagingTreeNodeFactory {
     }
   }
 
-  @Nullable
-  private static PackagingElementNode<?> findEqual(List<PackagingElementNode<?>> children, PackagingElement<?> element) {
+  private static @Nullable PackagingElementNode<?> findEqual(List<PackagingElementNode<?>> children, PackagingElement<?> element) {
     for (PackagingElementNode<?> node : children) {
       if (node.getFirstElement().isEqualTo(element)) {
         return node;

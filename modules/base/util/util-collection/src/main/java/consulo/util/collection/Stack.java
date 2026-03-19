@@ -58,8 +58,7 @@ public class Stack<T> extends ArrayList<T> {
     return remove(size - 1);
   }
 
-  @Nullable
-  public T tryPop() {
+  public @Nullable T tryPop() {
     return isEmpty() ? null : pop();
   }
 

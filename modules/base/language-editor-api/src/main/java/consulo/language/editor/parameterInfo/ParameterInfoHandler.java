@@ -107,8 +107,7 @@ public interface ParameterInfoHandler<ParameterOwner, ParameterType> extends Lan
    * @deprecated not used
    */
   @Deprecated
-  @Nullable
-  default Object[] getParametersForDocumentation(ParameterType p, ParameterInfoContext context) {
+  default @Nullable Object[] getParametersForDocumentation(ParameterType p, ParameterInfoContext context) {
     return null;
   }
 
@@ -116,8 +115,7 @@ public interface ParameterInfoHandler<ParameterOwner, ParameterType> extends Lan
    * @deprecated not used
    */
   @Deprecated
-  @Nullable
-  default String getParameterCloseChars() {
+  default @Nullable String getParameterCloseChars() {
     return null;
   }
 

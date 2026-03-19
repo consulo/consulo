@@ -66,8 +66,7 @@ public enum LineSeparator {
     return separator1 != null && separator2 != null && !separator1.equals(separator2);
   }
 
-  @Nullable
-  public static LineSeparator detectSeparators(CharSequence text) {
+  public static @Nullable LineSeparator detectSeparators(CharSequence text) {
     int index = StringUtil.indexOfAny(text, "\n\r");
     if (index == -1) return null;
     if (StringUtil.startsWith(text, index, "\r\n")) return LineSeparator.CRLF;
@@ -76,8 +75,7 @@ public enum LineSeparator {
     throw new IllegalStateException();
   }
 
-  @Nullable
-  public static LineSeparator getLineSeparatorAt(CharSequence text, int index) {
+  public static @Nullable LineSeparator getLineSeparatorAt(CharSequence text, int index) {
     if (index < 0 || index >= text.length()) {
       return null;
     }

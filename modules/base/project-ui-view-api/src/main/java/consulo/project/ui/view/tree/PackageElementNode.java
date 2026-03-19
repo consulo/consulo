@@ -201,8 +201,7 @@ public class PackageElementNode extends ProjectViewNode<PackageElement> {
     }
 
     @Override
-    @Nullable
-    public String getQualifiedNameSortKey() {
+    public @Nullable String getQualifiedNameSortKey() {
         PackageElement packageElement = getValue();
         if (packageElement != null) {
             return packageElement.getPackage().getQualifiedName();

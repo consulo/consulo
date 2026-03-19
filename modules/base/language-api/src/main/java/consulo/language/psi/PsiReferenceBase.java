@@ -175,8 +175,7 @@ public abstract class PsiReferenceBase<T extends PsiElement> implements PsiRefer
     }
 
     @Override
-    @Nullable
-    public PsiElement resolve() {
+    public @Nullable PsiElement resolve() {
       ResolveResult[] resolveResults = multiResolve(false);
       return resolveResults.length == 1 ? resolveResults[0].getElement() : null;
     }
@@ -212,8 +211,7 @@ public abstract class PsiReferenceBase<T extends PsiElement> implements PsiRefer
     }
 
     @Override
-    @Nullable
-    public PsiElement resolve() {
+    public @Nullable PsiElement resolve() {
       return myResolveTo;
     }
 

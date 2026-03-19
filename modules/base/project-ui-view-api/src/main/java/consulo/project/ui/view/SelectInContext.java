@@ -38,8 +38,7 @@ public interface SelectInContext {
   @Nullable
   Object getSelectorInFile();
 
-  @Nullable
-  default Supplier<FileEditor> getFileEditorProvider() {
+  default @Nullable Supplier<FileEditor> getFileEditorProvider() {
     return null;
   }
 

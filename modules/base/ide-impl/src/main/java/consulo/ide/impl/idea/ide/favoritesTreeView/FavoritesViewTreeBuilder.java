@@ -134,8 +134,7 @@ public class FavoritesViewTreeBuilder extends BaseProjectTreeBuilder {
     return super.selectAsync(element, file, requestFocus);
   }
 
-  @Nullable
-  private static DefaultMutableTreeNode findFirstLevelNodeWithObject(DefaultMutableTreeNode aRoot, Object aObject) {
+  private static @Nullable DefaultMutableTreeNode findFirstLevelNodeWithObject(DefaultMutableTreeNode aRoot, Object aObject) {
     for (int i = 0; i < aRoot.getChildCount(); i++) {
       DefaultMutableTreeNode child = (DefaultMutableTreeNode)aRoot.getChildAt(i);
       Object userObject = child.getUserObject();

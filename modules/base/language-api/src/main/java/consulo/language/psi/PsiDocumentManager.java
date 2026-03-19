@@ -57,8 +57,7 @@ public abstract class PsiDocumentManager {
    * @param document the document for which the PSI file is requested.
    * @return the PSI file instance.
    */
-  @Nullable
-  public abstract PsiFile getPsiFile(Document document);
+  public abstract @Nullable PsiFile getPsiFile(Document document);
 
   /**
    * Returns the cached PSI file for the specified document.
@@ -66,8 +65,7 @@ public abstract class PsiDocumentManager {
    * @param document the document for which the PSI file is requested.
    * @return the PSI file instance, or {@code null} if there is currently no cached PSI tree for the file.
    */
-  @Nullable
-  public abstract PsiFile getCachedPsiFile(Document document);
+  public abstract @Nullable PsiFile getCachedPsiFile(Document document);
 
   /**
    * Returns the document for the specified PSI file.
@@ -75,8 +73,7 @@ public abstract class PsiDocumentManager {
    * @param file the file for which the document is requested.
    * @return the document instance, or {@code null} if the file is binary or has no associated document.
    */
-  @Nullable
-  public abstract Document getDocument(PsiFile file);
+  public abstract @Nullable Document getDocument(PsiFile file);
 
   /**
    * Returns the cached document for the specified PSI file.
@@ -84,8 +81,7 @@ public abstract class PsiDocumentManager {
    * @param file the file for which the document is requested.
    * @return the document instance, or {@code null} if there is currently no cached document for the file.
    */
-  @Nullable
-  public abstract Document getCachedDocument(PsiFile file);
+  public abstract @Nullable Document getCachedDocument(PsiFile file);
 
   /**
    * Commits (updates the PSI tree for) all modified but not committed documents.
@@ -144,8 +140,7 @@ public abstract class PsiDocumentManager {
    * the ones of {@link #getDocument(PsiFile)}. For uncommitted documents, the text is {@link #getLastCommittedText(Document)} and
    * the modification stamp is {@link #getLastCommittedStamp(Document)}.
    */
-  @Nullable
-  public abstract Document getLastCommittedDocument(PsiFile file);
+  public abstract @Nullable Document getLastCommittedDocument(PsiFile file);
 
   /**
    * Returns the list of documents which have been modified but not committed.

@@ -56,8 +56,7 @@ public abstract class BaseArchiveFileSystem extends NewVirtualFileSystem impleme
      * (i.e.: file:///path/to/jar.jar => jar:///path/to/jar.jar!/),
      * or null if the file does not host this file system.
      */
-    @Nullable
-    public VirtualFile getRootByLocal(VirtualFile file) {
+    public @Nullable VirtualFile getRootByLocal(VirtualFile file) {
         return findFileByPath(composeRootPath(file.getPath()));
     }
 
@@ -66,8 +65,7 @@ public abstract class BaseArchiveFileSystem extends NewVirtualFileSystem impleme
      * (i.e.: jar:///path/to/jar.jar!/resource.xml => jar:///path/to/jar.jar!/),
      * or null if the file does not belong to this file system.
      */
-    @Nullable
-    public VirtualFile getRootByEntry(VirtualFile entry) {
+    public @Nullable VirtualFile getRootByEntry(VirtualFile entry) {
         return entry.getFileSystem() != this ? null : VirtualFileUtil.getRootFile(entry);
     }
 
@@ -81,8 +79,7 @@ public abstract class BaseArchiveFileSystem extends NewVirtualFileSystem impleme
      * (i.e.: jar:///path/to/jar.jar!/resource.xml => file:///path/to/jar.jar),
      * or null if the file does not belong to this file system.
      */
-    @Nullable
-    public VirtualFile getLocalByEntry(VirtualFile entry) {
+    public @Nullable VirtualFile getLocalByEntry(VirtualFile entry) {
         if (entry.getFileSystem() != this) {
             return null;
         }
@@ -118,27 +115,23 @@ public abstract class BaseArchiveFileSystem extends NewVirtualFileSystem impleme
     }
 
     @Override
-    @Nullable
-    public VirtualFile getLocalVirtualFileFor(@Nullable VirtualFile entryVFile) {
+    public @Nullable VirtualFile getLocalVirtualFileFor(@Nullable VirtualFile entryVFile) {
         return getVirtualFileForJar(entryVFile);
     }
 
     @Override
-    @Nullable
-    public VirtualFile findLocalVirtualFileByPath(String path) {
+    public @Nullable VirtualFile findLocalVirtualFileByPath(String path) {
         if (!path.contains(URLUtil.ARCHIVE_SEPARATOR)) {
             path += URLUtil.ARCHIVE_SEPARATOR;
         }
         return findFileByPath(path);
     }
 
-    @Nullable
-    public VirtualFile getVirtualFileForJar(@Nullable VirtualFile entryFile) {
+    public @Nullable VirtualFile getVirtualFileForJar(@Nullable VirtualFile entryFile) {
         return entryFile == null ? null : getLocalByEntry(entryFile);
     }
 
-    @Nullable
-    public VirtualFile getJarRootForLocalFile(VirtualFile file) {
+    public @Nullable VirtualFile getJarRootForLocalFile(VirtualFile file) {
         return getRootByLocal(file);
     }
 
@@ -321,8 +314,7 @@ public abstract class BaseArchiveFileSystem extends NewVirtualFileSystem impleme
      * (i.e.: "jar:///path/to/jar.jar!/" => file:///path/to/jar.jar),
      * or {@code null} if the local file is of incorrect type.
      */
-    @Nullable
-    public VirtualFile findLocalByRootPath(String rootPath) {
+    public @Nullable VirtualFile findLocalByRootPath(String rootPath) {
         String localPath = extractLocalPath(rootPath);
         VirtualFile local = StandardFileSystems.local().findFileByPath(localPath);
         return local != null && isCorrectFileType(local) ? local : null;

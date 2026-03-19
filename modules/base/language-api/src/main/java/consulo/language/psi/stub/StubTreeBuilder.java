@@ -38,8 +38,7 @@ public class StubTreeBuilder {
   private StubTreeBuilder() {
   }
 
-  @Nullable
-  public static Stub buildStubTree(FileContent inputData) {
+  public static @Nullable Stub buildStubTree(FileContent inputData) {
     Stub data = inputData.getUserData(stubElementKey);
     if (data != null) return data;
 

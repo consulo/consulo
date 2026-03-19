@@ -54,8 +54,7 @@ public class FindSymbolParameters {
     return mySearchScope;
   }
 
-  @Nullable
-  public IdFilter getIdFilter() {
+  public @Nullable IdFilter getIdFilter() {
     return myIdFilter;
   }
 

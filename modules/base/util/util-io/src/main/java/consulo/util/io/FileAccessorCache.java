@@ -111,8 +111,7 @@ public abstract class FileAccessorCache<K, T> implements HashingStrategy<K> {
     //}
   }
 
-  @Nullable
-  public Handle<T> getIfCached(K key) {
+  public @Nullable Handle<T> getIfCached(K key) {
     synchronized (myCacheLock) {
       Handle<T> value = myCache.get(key);
       if (value != null) {

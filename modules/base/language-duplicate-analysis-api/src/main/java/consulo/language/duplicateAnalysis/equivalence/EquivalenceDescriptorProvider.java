@@ -20,16 +20,14 @@ public abstract class EquivalenceDescriptorProvider {
 
     public abstract boolean isMyContext(PsiElement context);
 
-    @Nullable
-    public abstract EquivalenceDescriptor buildDescriptor(PsiElement element);
+    public abstract @Nullable EquivalenceDescriptor buildDescriptor(PsiElement element);
 
     // by default only PsiWhitespace ignored
     public TokenSet getIgnoredTokens() {
         return TokenSet.EMPTY;
     }
 
-    @Nullable
-    public static EquivalenceDescriptorProvider getInstance(PsiElement context) {
+    public static @Nullable EquivalenceDescriptorProvider getInstance(PsiElement context) {
         if (ourUseDefaultEquivalence) {
             return null;
         }

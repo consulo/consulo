@@ -33,8 +33,7 @@ public class EditorGutterLayout {
     return getLayout().stream().map(GutterArea::width).reduce(0, Integer::sum);
   }
 
-  @Nullable
-  public EditorMouseEventArea getEditorMouseAreaByOffset(int offset) {
+  public @Nullable EditorMouseEventArea getEditorMouseAreaByOffset(int offset) {
     int off = 0;
     for (GutterArea area : getLayout()) {
       off += area.width();

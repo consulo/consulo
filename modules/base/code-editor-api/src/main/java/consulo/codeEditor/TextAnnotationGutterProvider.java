@@ -53,8 +53,7 @@ public interface TextAnnotationGutterProvider {
 
     @Deprecated
     @DeprecationInfo("Use getToolTipValue(int)")
-    @Nullable
-    default String getToolTip(int line, Editor editor) {
+    default @Nullable String getToolTip(int line, Editor editor) {
         return getToolTipValue(line, editor).getNullIfEmpty();
     }
 

@@ -198,8 +198,7 @@ public class BlockSupportImpl extends BlockSupport {
         return null;
     }
 
-    @Nullable
-    protected static ASTNode tryReparseNode(IReparseableElementTypeBase reparseable,
+    protected static @Nullable ASTNode tryReparseNode(IReparseableElementTypeBase reparseable,
                                             ASTNode node,
                                             CharSequence newTextStr,
                                             PsiManager manager,

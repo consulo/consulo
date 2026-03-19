@@ -11,8 +11,7 @@ import java.util.List;
 
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface ServiceViewContributor<T> {
-    @Nullable
-    static <V extends ServiceViewContributor<?>> V findRootContributor(Class<V> contributorClass) {
+    static @Nullable <V extends ServiceViewContributor<?>> V findRootContributor(Class<V> contributorClass) {
         return Application.get().getExtensionPoint(ServiceViewContributor.class).findExtension(contributorClass);
     }
 

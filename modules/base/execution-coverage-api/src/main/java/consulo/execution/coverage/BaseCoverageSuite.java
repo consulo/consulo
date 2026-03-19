@@ -78,8 +78,7 @@ public abstract class BaseCoverageSuite implements CoverageSuite, JDOMExternaliz
         myProject = project;
     }
 
-    @Nullable
-    public static CoverageRunner readRunnerAttribute(Element element) {
+    public static @Nullable CoverageRunner readRunnerAttribute(Element element) {
         String runner = element.getAttributeValue(COVERAGE_RUNNER);
         if (runner != null) {
             return Application.get().getExtensionPoint(CoverageRunner.class)
@@ -216,8 +215,7 @@ public abstract class BaseCoverageSuite implements CoverageSuite, JDOMExternaliz
     }
 
     @Override
-    @Nullable
-    public ProjectData getCoverageData(CoverageDataManager coverageDataManager) {
+    public @Nullable ProjectData getCoverageData(CoverageDataManager coverageDataManager) {
         ProjectData data = getCoverageData();
         if (data != null) {
             return data;
@@ -246,8 +244,7 @@ public abstract class BaseCoverageSuite implements CoverageSuite, JDOMExternaliz
         return myCoverageDataFileProvider.getCoverageDataFilePath().hashCode();
     }
 
-    @Nullable
-    protected ProjectData loadProjectInfo() {
+    protected @Nullable ProjectData loadProjectInfo() {
         String sessionDataFileName = getCoverageDataFileName();
         File sessionDataFile = new File(sessionDataFileName);
         if (!sessionDataFile.exists()) {
@@ -290,8 +287,7 @@ public abstract class BaseCoverageSuite implements CoverageSuite, JDOMExternaliz
         myConfiguration = configuration;
     }
 
-    @Nullable
-    public RunConfigurationBase getConfiguration() {
+    public @Nullable RunConfigurationBase getConfiguration() {
         return myConfiguration;
     }
 }

@@ -252,8 +252,7 @@ class LazyEditor extends UserDataHolderBase implements Editor {
   }
 
   @Override
-  @Nullable
-  public Project getProject() {
+  public @Nullable Project getProject() {
     return getEditor().getProject();
   }
 
@@ -279,8 +278,7 @@ class LazyEditor extends UserDataHolderBase implements Editor {
   }
 
   @Override
-  @Nullable
-  public EditorMouseEventArea getMouseEventArea(MouseEvent e) {
+  public @Nullable EditorMouseEventArea getMouseEventArea(MouseEvent e) {
     return getEditor().getMouseEventArea(e);
   }
 
@@ -295,8 +293,7 @@ class LazyEditor extends UserDataHolderBase implements Editor {
   }
 
   @Override
-  @Nullable
-  public JComponent getHeaderComponent() {
+  public @Nullable JComponent getHeaderComponent() {
     return getEditor().getHeaderComponent();
   }
 

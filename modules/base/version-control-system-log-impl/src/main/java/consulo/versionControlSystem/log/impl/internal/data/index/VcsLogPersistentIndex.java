@@ -76,8 +76,7 @@ public class VcsLogPersistentIndex implements VcsLogIndex, Disposable {
     
     private final Set<VirtualFile> myRoots;
 
-    @Nullable
-    private final MyIndexStorage myIndexStorage;
+    private final @Nullable MyIndexStorage myIndexStorage;
 
     
     private final SingleTaskController<IndexingRequest, Void> mySingleTaskController = new MySingleTaskController();

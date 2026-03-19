@@ -45,8 +45,7 @@ public class SmartElementDescriptor extends NodeDescriptor {
     mySmartPointer = SmartPointerManager.getInstance(project).createSmartPsiElementPointer(element);
   }
 
-  @Nullable
-  public final PsiElement getPsiElement() {
+  public final @Nullable PsiElement getPsiElement() {
     return mySmartPointer.getElement();
   }
 

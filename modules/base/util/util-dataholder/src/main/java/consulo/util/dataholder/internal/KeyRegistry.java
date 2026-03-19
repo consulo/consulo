@@ -44,8 +44,7 @@ public class KeyRegistry {
         return index;
     }
 
-    @Nullable
-    public Key<?> findKeyByName(String name, Function<Key<?>, String> nameFunc) {
+    public @Nullable Key<?> findKeyByName(String name, Function<Key<?>, String> nameFunc) {
         for (IntObjectMap.IntObjectEntry<Key> key : myAllKeys.entrySet()) {
             if (name.equals(nameFunc.apply(key.getValue()))) {
                 return key.getValue();

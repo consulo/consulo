@@ -35,8 +35,7 @@ import java.util.ResourceBundle;
 public class CommonBundle extends BundleBase {
   private static final String BUNDLE = "consulo.application.CommonBundle";
 
-  @Nullable
-  private static Reference<ResourceBundle> ourBundle;
+  private static @Nullable Reference<ResourceBundle> ourBundle;
 
   private CommonBundle() {}
 

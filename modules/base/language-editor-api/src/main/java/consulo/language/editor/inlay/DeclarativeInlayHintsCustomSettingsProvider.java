@@ -16,8 +16,7 @@ import javax.swing.*;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface DeclarativeInlayHintsCustomSettingsProvider<T> extends LanguageExtension {
-    @Nullable
-    static DeclarativeInlayHintsCustomSettingsProvider<?> getCustomSettingsProvider(String providerId, Language language) {
+    static @Nullable DeclarativeInlayHintsCustomSettingsProvider<?> getCustomSettingsProvider(String providerId, Language language) {
         for (DeclarativeInlayHintsCustomSettingsProvider extension : Application.get().getExtensionPoint(DeclarativeInlayHintsCustomSettingsProvider.class)) {
             Language extLang = extension.getLanguage();
             if (providerId.equals(extension.getProviderId())

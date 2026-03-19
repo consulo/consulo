@@ -133,8 +133,7 @@ public class AbstractProgressIndicatorBase extends UserDataHolderBase implements
     }
   }
 
-  @Nullable
-  protected Throwable getCancellationTrace() {
+  protected @Nullable Throwable getCancellationTrace() {
     if (this instanceof Disposable disposable) {
       return Disposer.getDisposalTrace(disposable);
     }

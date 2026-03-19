@@ -27,8 +27,7 @@ import java.util.Objects;
 public class EncodingReference {
   public static final EncodingReference DEFAULT = new EncodingReference((Charset)null);
 
-  @Nullable
-  private final Charset charset;
+  private final @Nullable Charset charset;
 
   public EncodingReference(@Nullable String charsetName) {
     charset = CharsetToolkit.forName(charsetName);
@@ -43,8 +42,7 @@ public class EncodingReference {
     return charset == null ? CharsetToolkit.getDefaultSystemCharset() : charset;
   }
 
-  @Nullable
-  public Charset getCharset() {
+  public @Nullable Charset getCharset() {
     return charset;
   }
 

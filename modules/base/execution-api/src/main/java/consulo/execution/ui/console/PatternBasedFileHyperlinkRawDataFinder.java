@@ -103,8 +103,7 @@ public class PatternBasedFileHyperlinkRawDataFinder implements FileHyperlinkRawD
     return hyperlinkEndInd;
   }
 
-  @Nullable
-  private Pair<Matcher, PatternHyperlinkFormat> findMatcher(String line) {
+  private @Nullable Pair<Matcher, PatternHyperlinkFormat> findMatcher(String line) {
     for (PatternHyperlinkFormat linkFormat : myLinkFormats) {
       Matcher matcher = linkFormat.getPattern().matcher(line);
       if (matcher.find()) {

@@ -20,8 +20,7 @@ import java.util.Map;
 public interface IdIndexer extends DataIndexer<IdIndexEntry, Integer, FileContent> {
     ExtensionPointCacheKey<IdIndexer, Map<FileType, IdIndexer>> KEY = ExtensionPointCacheKey.groupBy("IdIndexer", IdIndexer::getFileType);
 
-    @Nullable
-    static IdIndexer forFileType(FileType fileType) {
+    static @Nullable IdIndexer forFileType(FileType fileType) {
         ExtensionPoint<IdIndexer> extensionPoint = Application.get().getExtensionPoint(IdIndexer.class);
         Map<FileType, IdIndexer> map = extensionPoint.getOrBuildCache(KEY);
         return map.get(fileType);

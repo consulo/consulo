@@ -25,8 +25,7 @@ import org.jspecify.annotations.Nullable;
 public abstract class AppendTokenParser extends TokenParser {
   public static final AppendTokenParser JUST_APPEND = new AppendTokenParser() {
     @Override
-    @Nullable
-    protected IElementType parseAppend(PrattBuilder builder) {
+    protected @Nullable IElementType parseAppend(PrattBuilder builder) {
       return null;
     }
   };
@@ -39,7 +38,6 @@ public abstract class AppendTokenParser extends TokenParser {
     return true;
   }
 
-  @Nullable
-  protected abstract IElementType parseAppend(PrattBuilder builder);
+  protected abstract @Nullable IElementType parseAppend(PrattBuilder builder);
 
 }

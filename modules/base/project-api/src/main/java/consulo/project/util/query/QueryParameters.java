@@ -12,8 +12,7 @@ import org.jspecify.annotations.Nullable;
  * @author peter
  */
 public interface QueryParameters {
-  @Nullable
-  default Project getProject() {
+  default @Nullable Project getProject() {
     return null;
   }
 

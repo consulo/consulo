@@ -42,8 +42,7 @@ public class PackageVersionComparator implements Comparator<String> {
     return vs1.size() - vs2.size();
   }
 
-  @Nullable
-  private static String replace(String s) {
+  private static @Nullable String replace(String s) {
     Map<String, String> sub = Map.of("pre", "c", "preview", "c", "rc", "c", "dev", "@");
     String tmp = sub.get(s);
     if (tmp != null) {

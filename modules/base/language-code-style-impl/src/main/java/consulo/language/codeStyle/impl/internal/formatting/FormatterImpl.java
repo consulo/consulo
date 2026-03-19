@@ -121,8 +121,7 @@ public class FormatterImpl extends FormatterEx implements IndentFactory, WrapFac
         return null;
     }
 
-    @Nullable
-    private static Couple<Block> getBlockAtOffset(@Nullable Block parent, Block block, int offset) {
+    private static @Nullable Couple<Block> getBlockAtOffset(@Nullable Block parent, Block block, int offset) {
         TextRange textRange = block.getTextRange();
         int startOffset = textRange.getStartOffset();
         int endOffset = textRange.getEndOffset();
@@ -141,8 +140,7 @@ public class FormatterImpl extends FormatterEx implements IndentFactory, WrapFac
         return null;
     }
 
-    @Nullable
-    private static Block findPreviousSibling(Block parent, Block block) {
+    private static @Nullable Block findPreviousSibling(Block parent, Block block) {
         Block result = null;
         for (Block subBlock : parent.getSubBlocks()) {
             if (subBlock == block) {
@@ -446,8 +444,7 @@ public class FormatterImpl extends FormatterEx implements IndentFactory, WrapFac
         return null;
     }
 
-    @Nullable
-    private static WhiteSpace getWhiteSpaceAtOffset(int offset, FormatProcessor formatProcessor) {
+    private static @Nullable WhiteSpace getWhiteSpaceAtOffset(int offset, FormatProcessor formatProcessor) {
         LeafBlockWrapper blockAfterOffset = formatProcessor.getBlockRangesMap().getBlockAtOrAfter(offset);
         if (blockAfterOffset != null) {
             if (!blockAfterOffset.contains(offset)) {
@@ -627,8 +624,7 @@ public class FormatterImpl extends FormatterEx implements IndentFactory, WrapFac
         }
     }
 
-    @Nullable
-    public <T> T runWithFormattingDisabled(Supplier<T> runnable) {
+    public @Nullable <T> T runWithFormattingDisabled(Supplier<T> runnable) {
         disableFormatting();
         try {
             return runnable.get();

@@ -47,8 +47,7 @@ public abstract class LookupElement extends UserDataHolderBase implements Compos
    * @return a PSI element associated with this lookup element. It's used for navigation, showing quick documentation and sorting by proximity to the current location.
    * The default implementation tries to extract PSI element from {@link #getObject()} result.
    */
-  @Nullable
-  public PsiElement getPsiElement() {
+  public @Nullable PsiElement getPsiElement() {
     Object o = getObject();
     if (o instanceof PsiElement) {
       return (PsiElement)o;
@@ -100,8 +99,7 @@ public abstract class LookupElement extends UserDataHolderBase implements Compos
   /**
    * Prefer to use {@link #as(Class)}
    */
-  @Nullable
-  public <T> T as(ClassConditionKey<T> conditionKey) {
+  public @Nullable <T> T as(ClassConditionKey<T> conditionKey) {
     //noinspection unchecked
     return conditionKey.isInstance(this) ? (T)this : null;
   }
@@ -112,8 +110,7 @@ public abstract class LookupElement extends UserDataHolderBase implements Compos
    * It may return this lookup element's presentation appended with more details than {@link #renderElement} has given.
    * If the {@link Lookup} is already shown, it will be repainted/resized to accommodate the changes.
    */
-  @Nullable
-  public LookupElementRenderer<? extends LookupElement> getExpensiveRenderer() {
+  public @Nullable LookupElementRenderer<? extends LookupElement> getExpensiveRenderer() {
     return null;
   }
 
@@ -121,8 +118,7 @@ public abstract class LookupElement extends UserDataHolderBase implements Compos
    * Return the first element of the given class in a {@link LookupElementDecorator} wrapper chain.
    * If this object is not a decorator, return it if it's instance of the given class, otherwise null.
    */
-  @Nullable
-  public <T> T as(Class<T> clazz) {
+  public @Nullable <T> T as(Class<T> clazz) {
     //noinspection unchecked
     return clazz.isInstance(this) ? (T)this : null;
   }

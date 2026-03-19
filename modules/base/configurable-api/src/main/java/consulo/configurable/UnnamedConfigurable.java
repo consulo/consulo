@@ -84,8 +84,7 @@ public interface UnnamedConfigurable {
   }
 
   @RequiredUIAccess
-  @Nullable
-  default Component getPreferredFocusedUIComponent() {
+  default @Nullable Component getPreferredFocusedUIComponent() {
     return null;
   }
 
@@ -130,8 +129,7 @@ public interface UnnamedConfigurable {
    *
    * @return the help id
    */
-  @Nullable
-  default String getHelpTopic() {
+  default @Nullable String getHelpTopic() {
     return null;
   }
 }

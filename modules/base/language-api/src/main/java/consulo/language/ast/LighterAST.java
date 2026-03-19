@@ -38,8 +38,7 @@ public abstract class LighterAST {
   
   public abstract LighterASTNode getRoot();
 
-  @Nullable
-  public abstract LighterASTNode getParent(LighterASTNode node);
+  public abstract @Nullable LighterASTNode getParent(LighterASTNode node);
 
   
   public abstract List<LighterASTNode> getChildren(LighterASTNode parent);

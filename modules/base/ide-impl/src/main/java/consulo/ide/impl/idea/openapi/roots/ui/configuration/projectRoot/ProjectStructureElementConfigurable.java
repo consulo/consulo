@@ -32,8 +32,7 @@ public abstract class ProjectStructureElementConfigurable<T> extends NamedConfig
         super(isNameEditable, updateTree);
     }
 
-    @Nullable
-    public abstract ProjectStructureElement getProjectStructureElement();
+    public abstract @Nullable ProjectStructureElement getProjectStructureElement();
 
     @Override
     protected void setBorder() {
@@ -41,8 +40,7 @@ public abstract class ProjectStructureElementConfigurable<T> extends NamedConfig
     }
 
     @Override
-    @Nullable
-    public Image getIcon(boolean open) {
+    public @Nullable Image getIcon(boolean open) {
         return null;
     }
 }

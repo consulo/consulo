@@ -42,8 +42,7 @@ public class KeyProcessorContext {
     return myActions;
   }
 
-  @Nullable
-  public JComponent getFoundComponent() {
+  public @Nullable JComponent getFoundComponent() {
     return SoftReference.dereference(myFoundComponent);
   }
 
@@ -75,8 +74,7 @@ public class KeyProcessorContext {
     isModalContext = modalContext;
   }
 
-  @Nullable
-  public Component getFocusOwner() {
+  public @Nullable Component getFocusOwner() {
     return SoftReference.dereference(myFocusOwner);
   }
 

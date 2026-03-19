@@ -1077,8 +1077,7 @@ public class ListPopupImpl extends WizardPopup implements AWTListPopup, NextStep
         return value != null && getListStep().isSelectable(value);
     }
 
-    @Nullable
-    private Object getSelectableAt(int index) {
+    private @Nullable Object getSelectableAt(int index) {
         if (0 <= index && index < myListModel.getSize()) {
             Object value = myListModel.getElementAt(index);
             if (isSelectable(value)) {

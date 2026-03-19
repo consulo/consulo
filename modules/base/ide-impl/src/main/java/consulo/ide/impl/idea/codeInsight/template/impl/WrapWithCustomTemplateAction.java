@@ -20,8 +20,7 @@ import java.util.Set;
 public class WrapWithCustomTemplateAction extends AnAction {
   private final CustomLiveTemplate myTemplate;
   private final Editor myEditor;
-  @Nullable
-  private final Runnable myAfterExecutionCallback;
+  private final @Nullable Runnable myAfterExecutionCallback;
   private final PsiFile myFile;
 
   public WrapWithCustomTemplateAction(CustomLiveTemplate template, Editor editor, PsiFile file, Set<Character> usedMnemonicsSet) {

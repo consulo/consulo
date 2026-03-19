@@ -70,13 +70,11 @@ public class FileInfoManager implements Disposable {
         return getFileInfoManager()._getLookupItem(file, file.getName(), IconDescriptorUpdaters.getIcon(file, 0));
     }
 
-    @Nullable
-    public static String getFileAdditionalInfo(PsiElement psiElement) {
+    public static @Nullable String getFileAdditionalInfo(PsiElement psiElement) {
         return getFileInfoManager()._getInfo(psiElement);
     }
 
-    @Nullable
-    private String _getInfo(PsiElement psiElement) {
+    private @Nullable String _getInfo(PsiElement psiElement) {
         if (!(psiElement instanceof PsiFile) || !(psiElement.isPhysical())) {
             return null;
         }

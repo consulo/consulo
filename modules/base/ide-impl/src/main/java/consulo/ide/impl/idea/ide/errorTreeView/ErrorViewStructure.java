@@ -316,8 +316,7 @@ public class ErrorViewStructure extends AbstractTreeStructure {
         }
     }
 
-    @Nullable
-    public GroupingElement lookupGroupingElement(String groupName) {
+    public @Nullable GroupingElement lookupGroupingElement(String groupName) {
         synchronized (myLock) {
             return myGroupNameToElementMap.get(groupName);
         }
@@ -352,8 +351,7 @@ public class ErrorViewStructure extends AbstractTreeStructure {
         }
     }
 
-    @Nullable
-    public ErrorTreeElement getFirstMessage(ErrorTreeElementKind kind) {
+    public @Nullable ErrorTreeElement getFirstMessage(ErrorTreeElementKind kind) {
         if (!canShowKind(kind)) {
             return null; // no warnings are available
         }

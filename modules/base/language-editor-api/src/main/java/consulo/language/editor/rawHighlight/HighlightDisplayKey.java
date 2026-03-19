@@ -20,14 +20,12 @@ import consulo.language.editor.internal.InspectionCacheService;
 import org.jspecify.annotations.Nullable;
 
 public class HighlightDisplayKey {
-    @Nullable
-    public static HighlightDisplayKey findById(String id) {
+    public static @Nullable HighlightDisplayKey findById(String id) {
         InspectionCache cache = InspectionCacheService.getInstance().get();
         return cache.findById(id);
     }
 
-    @Nullable
-    public static HighlightDisplayKey find(String name) {
+    public static @Nullable HighlightDisplayKey find(String name) {
         InspectionCache cache = InspectionCacheService.getInstance().get();
         return cache.find(name);
     }

@@ -37,8 +37,7 @@ public abstract class ResolveSnapshotProvider implements LanguageExtension {
   private static final ExtensionPointCacheKey<ResolveSnapshotProvider, ByLanguageValue<ResolveSnapshotProvider>> KEY =
           ExtensionPointCacheKey.create("ResolveSnapshotProvider", LanguageOneToOne.build());
 
-  @Nullable
-  public static ResolveSnapshotProvider forLanguage(Language language) {
+  public static @Nullable ResolveSnapshotProvider forLanguage(Language language) {
     return Application.get().getExtensionPoint(ResolveSnapshotProvider.class).getOrBuildCache(KEY).get(language);
   }
 

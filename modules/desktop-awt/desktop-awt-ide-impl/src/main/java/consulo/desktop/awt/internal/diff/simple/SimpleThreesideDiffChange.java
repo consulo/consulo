@@ -31,8 +31,7 @@ import java.util.List;
 public class SimpleThreesideDiffChange extends ThreesideDiffChangeBase {
     
     private final List<? extends EditorEx> myEditors;
-    @Nullable
-    private final MergeInnerDifferences myInnerFragments;
+    private final @Nullable MergeInnerDifferences myInnerFragments;
 
     private int[] myLineStarts = new int[3];
     private int[] myLineEnds = new int[3];

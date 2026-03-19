@@ -66,8 +66,7 @@ public class RecursionManager {
      * This is same as {@link RecursionGuard#doPreventingRecursion(Object, boolean, Supplier)},
      * without a need to bother to create {@link RecursionGuard}.
      */
-    @Nullable
-    public static <T> T doPreventingRecursion(Object key, boolean memoize, Supplier<T> computation) {
+    public static @Nullable <T> T doPreventingRecursion(Object key, boolean memoize, Supplier<T> computation) {
         return createGuard(computation.getClass().getName()).doPreventingRecursion(key, memoize, computation);
     }
 

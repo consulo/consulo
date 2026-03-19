@@ -655,8 +655,7 @@ public class RunnerContentUiImpl implements RunnerContentUi, ViewContextEx, Prop
         return PlaceInGrid.center;
     }
 
-    @Nullable
-    private JBTabs getTabsAt(DockableContent content, RelativePoint point) {
+    private @Nullable JBTabs getTabsAt(DockableContent content, RelativePoint point) {
         if (content instanceof DockableGrid) {
             Point p = point.getPoint(getComponent());
             Component c = SwingUtilities.getDeepestComponentAt(getComponent(), p.x, p.y);
@@ -796,8 +795,7 @@ public class RunnerContentUiImpl implements RunnerContentUi, ViewContextEx, Prop
         });
     }
 
-    @Nullable
-    private GridImpl getSelectedGrid() {
+    private @Nullable GridImpl getSelectedGrid() {
         TabInfo selection = myTabs.getSelectedInfo();
         return selection != null ? getGridFor(selection) : null;
     }
@@ -811,8 +809,7 @@ public class RunnerContentUiImpl implements RunnerContentUi, ViewContextEx, Prop
         }
     }
 
-    @Nullable
-    private GridImpl getGridFor(Content content, boolean createIfMissing) {
+    private @Nullable GridImpl getGridFor(Content content, boolean createIfMissing) {
         GridImpl grid = (GridImpl) findGridFor(content);
         if (grid != null || !createIfMissing) {
             return grid;
@@ -927,8 +924,7 @@ public class RunnerContentUiImpl implements RunnerContentUi, ViewContextEx, Prop
     }
 
     @Override
-    @Nullable
-    public GridCell findCellFor(Content content) {
+    public @Nullable GridCell findCellFor(Content content) {
         GridImpl cell = getGridFor(content, false);
         return cell != null ? cell.getCellFor(content) : null;
     }
@@ -1143,8 +1139,7 @@ public class RunnerContentUiImpl implements RunnerContentUi, ViewContextEx, Prop
     }
 
     @Override
-    @Nullable
-    public Tab getTabFor(Grid grid) {
+    public @Nullable Tab getTabFor(Grid grid) {
         TabInfo info = myTabs.findInfo((Component) grid);
         return getTabFor(info);
     }
@@ -1164,8 +1159,7 @@ public class RunnerContentUiImpl implements RunnerContentUi, ViewContextEx, Prop
     public void hideNotify() {
     }
 
-    @Nullable
-    private static TabImpl getTabFor(@Nullable TabInfo tab) {
+    private static @Nullable TabImpl getTabFor(@Nullable TabInfo tab) {
         if (tab == null) {
             return null;
         }
@@ -1177,8 +1171,7 @@ public class RunnerContentUiImpl implements RunnerContentUi, ViewContextEx, Prop
     }
 
     @Override
-    @Nullable
-    public Grid findGridFor(Content content) {
+    public @Nullable Grid findGridFor(Content content) {
         TabImpl tab = (TabImpl) getStateFor(content).getTab();
         for (TabInfo each : myTabs.getTabs()) {
             TabImpl t = getTabFor(each);
@@ -1411,8 +1404,7 @@ public class RunnerContentUiImpl implements RunnerContentUi, ViewContextEx, Prop
     }
 
     @Override
-    @Nullable
-    public Content findContent(String key) {
+    public @Nullable Content findContent(String key) {
         ContentManager manager = getContentManager();
         if (manager == null || key == null) {
             return null;
@@ -1455,8 +1447,7 @@ public class RunnerContentUiImpl implements RunnerContentUi, ViewContextEx, Prop
         return content;
     }
 
-    @Nullable
-    private Content findMinimizedContent(String key) {
+    private @Nullable Content findMinimizedContent(String key) {
         for (AnAction action : myViewActions.getChildren(null, ActionManager.getInstance())) {
             if (!(action instanceof ViewLayoutModificationAction)) {
                 continue;
@@ -1582,8 +1573,7 @@ public class RunnerContentUiImpl implements RunnerContentUi, ViewContextEx, Prop
         }
 
         @Override
-        @Nullable
-        public Object getData(Key<?> dataId) {
+        public @Nullable Object getData(Key<?> dataId) {
             if (KEY == dataId) {
                 return RunnerContentUiImpl.this;
             }

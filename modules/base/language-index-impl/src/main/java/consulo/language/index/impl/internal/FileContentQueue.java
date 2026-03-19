@@ -167,8 +167,7 @@ public class FileContentQueue {
         }
     }
 
-    @Nullable
-    public IndexFileContent take(ProgressIndicator indicator) throws ProcessCanceledException {
+    public @Nullable IndexFileContent take(ProgressIndicator indicator) throws ProcessCanceledException {
         IndexFileContent content = doTake(indicator);
         if (content == null) {
             return null;
@@ -206,8 +205,7 @@ public class FileContentQueue {
         }
     }
 
-    @Nullable
-    private IndexFileContent doTake(ProgressIndicator indicator) {
+    private @Nullable IndexFileContent doTake(ProgressIndicator indicator) {
         IndexFileContent result = null;
         boolean waitForContentsToBeLoaded = false;
 
@@ -241,8 +239,7 @@ public class FileContentQueue {
         return result;
     }
 
-    @Nullable
-    private IndexFileContent pollLoadedContent(boolean waitForContentsToBeLoaded) {
+    private @Nullable IndexFileContent pollLoadedContent(boolean waitForContentsToBeLoaded) {
         if (waitForContentsToBeLoaded) {
             try {
                 return myLoadedContents.poll(50, TimeUnit.MILLISECONDS);

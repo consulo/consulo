@@ -173,8 +173,7 @@ public class SingleRemoteServerConfigurable extends NamedConfigurable<RemoteServ
     }
 
     @Override
-    @Nullable
-    public Image getIcon(boolean expanded) {
+    public @Nullable Image getIcon(boolean expanded) {
         return myServer.getType().getIcon();
     }
 

@@ -53,8 +53,7 @@ public class ListFocusTraversalPolicy extends LayoutFocusTraversalPolicy {
     return getPreviousComponent(myComponentToIndex.getInt(aComponent) - 1);
   }
 
-  @Nullable
-  private Component getNextComponent(int startIndex) {
+  private @Nullable Component getNextComponent(int startIndex) {
     for (int index = startIndex; index < myComponents.length; index++) {
       Component result = myComponents[index];
       if (accept(result)) {
@@ -70,8 +69,7 @@ public class ListFocusTraversalPolicy extends LayoutFocusTraversalPolicy {
     return null;
   }
 
-  @Nullable
-  private Component getPreviousComponent(int startIndex) {
+  private @Nullable Component getPreviousComponent(int startIndex) {
     for (int index = startIndex; index >= 0; index--) {
       Component result = myComponents[index];
       if (accept(result)) {

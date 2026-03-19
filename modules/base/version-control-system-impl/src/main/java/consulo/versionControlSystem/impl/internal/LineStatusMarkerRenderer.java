@@ -331,8 +331,7 @@ public abstract class LineStatusMarkerRenderer implements ActiveGutterRenderer {
         };
     }
 
-    @Nullable
-    private static ColorValue getErrorStripeColor(VcsRange range, @Nullable Editor editor) {
+    private static @Nullable ColorValue getErrorStripeColor(VcsRange range, @Nullable Editor editor) {
         EditorColorsScheme scheme = getColorScheme(editor);
         return switch (range.getType()) {
             case VcsRange.INSERTED -> scheme.getAttributes(DiffColors.DIFF_INSERTED).getErrorStripeColor();
@@ -342,8 +341,7 @@ public abstract class LineStatusMarkerRenderer implements ActiveGutterRenderer {
         };
     }
 
-    @Nullable
-    private static ColorValue getGutterColor(VcsRange range, @Nullable Editor editor) {
+    private static @Nullable ColorValue getGutterColor(VcsRange range, @Nullable Editor editor) {
         EditorColorsScheme scheme = getColorScheme(editor);
         return switch (range.getType()) {
             case VcsRange.INSERTED -> scheme.getColor(EditorColors.ADDED_LINES_COLOR);
@@ -353,8 +351,7 @@ public abstract class LineStatusMarkerRenderer implements ActiveGutterRenderer {
         };
     }
 
-    @Nullable
-    private static ColorValue getGutterBorderColor(@Nullable Editor editor) {
+    private static @Nullable ColorValue getGutterBorderColor(@Nullable Editor editor) {
         return getColorScheme(editor).getColor(EditorColors.BORDER_LINES_COLOR);
     }
 

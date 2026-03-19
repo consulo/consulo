@@ -92,8 +92,7 @@ public class ShelvedChangeImpl implements ShelvedChange {
     return myBeforePath;
   }
 
-  @Nullable
-  public VirtualFile getBeforeVFUnderProject(Project project) {
+  public @Nullable VirtualFile getBeforeVFUnderProject(Project project) {
     if (myBeforePath == null || project.getBaseDir() == null) return null;
     File baseDir = new File(project.getBaseDir().getPath());
     File file = new File(baseDir, myBeforePath);
@@ -105,8 +104,7 @@ public class ShelvedChangeImpl implements ShelvedChange {
     return myAfterPath;
   }
 
-  @Nullable
-  public String getAfterFileName() {
+  public @Nullable String getAfterFileName() {
     if (myAfterPath == null) return null;
     int pos = myAfterPath.lastIndexOf('/');
     if (pos >= 0) return myAfterPath.substring(pos+1);
@@ -168,8 +166,7 @@ public class ShelvedChangeImpl implements ShelvedChange {
     return file;
   }
 
-  @Nullable
-  public TextFilePatch loadFilePatch(Project project, CommitContext commitContext) throws IOException, PatchSyntaxException {
+  public @Nullable TextFilePatch loadFilePatch(Project project, CommitContext commitContext) throws IOException, PatchSyntaxException {
     List<TextFilePatch> filePatches = ShelveChangesManagerImpl.loadPatches(project, myPatchPath, commitContext);
     for(TextFilePatch patch: filePatches) {
       if (myBeforePath.equals(patch.getBeforeName())) {
@@ -216,8 +213,7 @@ public class ShelvedChangeImpl implements ShelvedChange {
     }
 
     @Override
-    @Nullable
-    public String getContent() throws VcsException {
+    public @Nullable String getContent() throws VcsException {
       if (myContent == null) {
         try {
           myContent = loadContent();
@@ -230,8 +226,7 @@ public class ShelvedChangeImpl implements ShelvedChange {
       return myContent;
     }
 
-    @Nullable
-    private String loadContent() throws IOException, PatchSyntaxException, ApplyPatchException {
+    private @Nullable String loadContent() throws IOException, PatchSyntaxException, ApplyPatchException {
       TextFilePatch patch = loadFilePatch(myProject, null);
       if (patch != null) {
         return loadContent(patch);

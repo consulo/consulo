@@ -170,8 +170,7 @@ public class TestFailedEvent extends TreeNodeEvent {
         return myLocalizedFailureMessage;
     }
 
-    @Nullable
-    public String getStacktrace() {
+    public @Nullable String getStacktrace() {
         return myStacktrace;
     }
 
@@ -179,13 +178,11 @@ public class TestFailedEvent extends TreeNodeEvent {
         return myTestError;
     }
 
-    @Nullable
-    public String getComparisonFailureActualText() {
+    public @Nullable String getComparisonFailureActualText() {
         return myComparisonFailureActualText;
     }
 
-    @Nullable
-    public String getComparisonFailureExpectedText() {
+    public @Nullable String getComparisonFailureExpectedText() {
         return myComparisonFailureExpectedText;
     }
 
@@ -205,13 +202,11 @@ public class TestFailedEvent extends TreeNodeEvent {
         return myExpectedFilePath;
     }
 
-    @Nullable
-    public String getExpectedFilePath() {
+    public @Nullable String getExpectedFilePath() {
         return myExpectedFilePath;
     }
 
-    @Nullable
-    public String getActualFilePath() {
+    public @Nullable String getActualFilePath() {
         return myActualFilePath;
     }
 

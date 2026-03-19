@@ -57,8 +57,7 @@ public class ProgramParametersConfigurator {
     parameters.setPassParentEnvs(configuration.isPassParentEnvs());
   }
 
-  @Nullable
-  public String getWorkingDir(CommonProgramRunConfigurationParameters configuration, Project project, Module module) {
+  public @Nullable String getWorkingDir(CommonProgramRunConfigurationParameters configuration, Project project, Module module) {
     String workingDirectory = configuration.getWorkingDirectory();
     String defaultWorkingDir = getDefaultWorkingDir(project);
     if (StringUtil.isEmptyOrSpaces(workingDirectory)) {
@@ -90,13 +89,11 @@ public class ProgramParametersConfigurator {
     return workingDirectory;
   }
 
-  @Nullable
-  protected String getDefaultWorkingDir(Project project) {
+  protected @Nullable String getDefaultWorkingDir(Project project) {
     return VirtualFilePathUtil.getLocalPath(project.getBaseDir());
   }
 
-  @Nullable
-  protected String getDefaultWorkingDir(Module module) {
+  protected @Nullable String getDefaultWorkingDir(Module module) {
     for (WorkingDirectoryProvider provider : module.getApplication().getExtensionList(WorkingDirectoryProvider.class)) {
       @SystemIndependent String path = provider.getWorkingDirectoryPath(module);
       if (path != null) return path;
@@ -133,8 +130,7 @@ public class ProgramParametersConfigurator {
     return path;
   }
 
-  @Nullable
-  protected Module getModule(CommonProgramRunConfigurationParameters configuration) {
+  protected @Nullable Module getModule(CommonProgramRunConfigurationParameters configuration) {
     if (configuration instanceof ModuleBasedConfiguration) {
       return ((ModuleBasedConfiguration)configuration).getConfigurationModule().getModule();
     }

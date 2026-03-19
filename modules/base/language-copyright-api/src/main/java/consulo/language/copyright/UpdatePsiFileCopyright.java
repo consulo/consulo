@@ -302,8 +302,7 @@ public abstract class UpdatePsiFileCopyright<T extends CopyrightFileConfig> {
     return myFileType;
   }
 
-  @Nullable
-  public Module getModule() {
+  public @Nullable Module getModule() {
     return ModuleUtilCore.findModuleForPsiElement(myPsiFile);
   }
 

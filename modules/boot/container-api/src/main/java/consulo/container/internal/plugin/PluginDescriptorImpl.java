@@ -38,28 +38,17 @@ public class PluginDescriptorImpl extends PluginDescriptorStub {
 
     public static final PluginDescriptorImpl[] EMPTY_ARRAY = new PluginDescriptorImpl[0];
 
-    @Nullable
-    private String myName;
-    @Nullable
-    private PluginId myId;
-    @Nullable
-    private String myResourceBundleBaseName;
-    @Nullable
-    private String myLocalization;
-    @Nullable
-    private String myChangeNotes;
-    @Nullable
-    private String myVersion;
-    @Nullable
-    private String myPlatformVersion;
-    @Nullable
-    private String myVendor;
-    @Nullable
-    private String myVendorEmail;
-    @Nullable
-    private String myVendorUrl;
-    @Nullable
-    private String url;
+    private @Nullable String myName;
+    private @Nullable PluginId myId;
+    private @Nullable String myResourceBundleBaseName;
+    private @Nullable String myLocalization;
+    private @Nullable String myChangeNotes;
+    private @Nullable String myVersion;
+    private @Nullable String myPlatformVersion;
+    private @Nullable String myVendor;
+    private @Nullable String myVendorEmail;
+    private @Nullable String myVendorUrl;
+    private @Nullable String url;
     private final File myPath;
     private final byte[] myIconBytes;
     private final byte[] myDarkIconBytes;
@@ -73,20 +62,16 @@ public class PluginDescriptorImpl extends PluginDescriptorStub {
     private Map<PluginPermissionType, PluginPermissionDescriptor> myPermissionDescriptors = Collections.emptyMap();
 
     private boolean myDeleted = false;
-    @Nullable
-    private ClassLoader myLoader;
-    @Nullable
-    private ModuleLayer myModuleLayer;
+    private @Nullable ClassLoader myLoader;
+    private @Nullable ModuleLayer myModuleLayer;
 
     private Set<String> myTags = Collections.emptySet();
 
-    @Nullable
-    private String myDescriptionChildText;
+    private @Nullable String myDescriptionChildText;
     private PluginDescriptorStatus myStatus = PluginDescriptorStatus.OK;
     private boolean myExperimental;
 
-    @Nullable
-    private List<ClassPathItem> myClassPathItems;
+    private @Nullable List<ClassPathItem> myClassPathItems;
     private boolean myEnabledIndex;
 
     public PluginDescriptorImpl(File pluginPath, byte[] iconBytes, byte[] darkIconBytes, boolean isPreInstalled) {

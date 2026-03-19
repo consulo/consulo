@@ -108,8 +108,7 @@ public final class StatusBarWidgetsManagerImpl extends SimpleModificationTracker
         }
     }
 
-    @Nullable
-    public StatusBarWidgetFactory findWidgetFactory(String widgetId) {
+    public @Nullable StatusBarWidgetFactory findWidgetFactory(String widgetId) {
         return getCache().keyMap().get(widgetId);
     }
 

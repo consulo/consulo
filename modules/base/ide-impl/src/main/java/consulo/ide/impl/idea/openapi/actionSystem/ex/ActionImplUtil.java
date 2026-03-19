@@ -385,8 +385,7 @@ public class ActionImplUtil {
         }
     }
 
-    @Nullable
-    public static ShortcutSet getMnemonicAsShortcut(AnAction action) {
+    public static @Nullable ShortcutSet getMnemonicAsShortcut(AnAction action) {
         int mnemonic = KeyEvent.getExtendedKeyCodeForChar(
             TextWithMnemonic.parse(action.getTemplatePresentation().getTextValue().get()).getMnemonic()
         );

@@ -73,8 +73,7 @@ public class BaseAnalysisActionDialog extends DialogWrapper {
 
   private static final String ALL = AnalysisScopeLocalize.scopeOptionUncommitedFilesAllChangelistsChoice().get();
   private final AnalysisUIOptions myAnalysisOptions;
-  @Nullable
-  private final PsiElement myContext;
+  private final @Nullable PsiElement myContext;
 
   public BaseAnalysisActionDialog(
     String title,
@@ -245,8 +244,7 @@ public class BaseAnalysisActionDialog extends DialogWrapper {
     return myPanel;
   }
 
-  @Nullable
-  protected JComponent getAdditionalActionSettings(Project project) {
+  protected @Nullable JComponent getAdditionalActionSettings(Project project) {
     return null;
   }
 
@@ -262,8 +260,7 @@ public class BaseAnalysisActionDialog extends DialogWrapper {
     return myUncommitedFilesButton != null && myUncommitedFilesButton.isSelected();
   }
 
-  @Nullable
-  public SearchScope getCustomScope(){
+  public @Nullable SearchScope getCustomScope(){
     if (myCustomScopeButton.isSelected()){
       return myScopeCombo.getSelectedScope();
     }

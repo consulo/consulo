@@ -81,8 +81,7 @@ public class SelectContentStep extends BaseListPopupStep<Content> {
     return asMultiTabbed(selectedValue) != null;
   }
 
-  @Nullable
-  private static TabbedContent asMultiTabbed(Content content) {
+  private static @Nullable TabbedContent asMultiTabbed(Content content) {
     if(content instanceof TabbedContent && ((TabbedContent)content).hasMultipleTabs()) {
       return (TabbedContent)content;
     }

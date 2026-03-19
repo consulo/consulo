@@ -35,8 +35,7 @@ import org.jspecify.annotations.Nullable;
 public interface LanguageExtractIncludeHandler extends RefactoringActionHandler, LanguageExtension {
   ExtensionPointCacheKey<LanguageExtractIncludeHandler, ByLanguageValue<LanguageExtractIncludeHandler>> KEY = ExtensionPointCacheKey.create("LanguageExtractIncludeHandler", LanguageOneToOne.build());
 
-  @Nullable
-  static LanguageExtractIncludeHandler forLanguage(Language language) {
+  static @Nullable LanguageExtractIncludeHandler forLanguage(Language language) {
     return Application.get().getExtensionPoint(LanguageExtractIncludeHandler.class).getOrBuildCache(KEY).get(language);
   }
 }

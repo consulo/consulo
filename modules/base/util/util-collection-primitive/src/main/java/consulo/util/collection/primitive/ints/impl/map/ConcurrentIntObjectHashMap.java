@@ -138,10 +138,8 @@ public class ConcurrentIntObjectHashMap<V> implements ConcurrentIntObjectMap<V> 
   static class Node<V> implements IntObjectEntry<V> {
     final int hash;
     final int key;
-    @Nullable
-    volatile V val;
-    @Nullable
-    volatile Node<V> next;
+    volatile @Nullable V val;
+    volatile @Nullable Node<V> next;
 
     Node(int hash, int key, @Nullable V val, @Nullable Node<V> next) {
       this.hash = hash;
@@ -335,10 +333,8 @@ public class ConcurrentIntObjectHashMap<V> implements ConcurrentIntObjectMap<V> 
   private transient volatile CounterCell @Nullable [] counterCells = null;
 
   // views
-  @Nullable
-  private transient ValuesView<V> values = null;
-  @Nullable
-  private transient EntrySetView<V> entrySet = null;
+  private transient @Nullable ValuesView<V> values = null;
+  private transient @Nullable EntrySetView<V> entrySet = null;
 
 
   /* ---------------- Public operations -------------- */
@@ -528,8 +524,7 @@ public class ConcurrentIntObjectHashMap<V> implements ConcurrentIntObjectMap<V> 
   /**
    * Implementation for put and putIfAbsent
    */
-  @Nullable
-  final V putVal(int key, @Nullable V value, boolean onlyIfAbsent) {
+  final @Nullable V putVal(int key, @Nullable V value, boolean onlyIfAbsent) {
     int hash = spread(key);
     int binCount = 0;
     for (Node<V>[] tab = table; ; ) {
@@ -613,8 +608,7 @@ public class ConcurrentIntObjectHashMap<V> implements ConcurrentIntObjectMap<V> 
    * Replaces node value with v, conditional upon match of cv if
    * non-null.  If resulting value is null, delete.
    */
-  @Nullable
-  final V replaceNode(int key, @Nullable V value, @Nullable Object cv) {
+  final @Nullable V replaceNode(int key, @Nullable V value, @Nullable Object cv) {
     int hash = spread(key);
     for (Node<V>[] tab = table; ; ) {
       Node<V> f;
@@ -899,8 +893,7 @@ public class ConcurrentIntObjectHashMap<V> implements ConcurrentIntObjectMap<V> 
    * @return the previous value associated with the specified key,
    * or {@code null} if there was no mapping for the key
    */
-  @Nullable
-  public V replace(int key, V value) {
+  public @Nullable V replace(int key, V value) {
     return replaceNode(key, value, null);
   }
 
@@ -1477,8 +1470,7 @@ public class ConcurrentIntObjectHashMap<V> implements ConcurrentIntObjectMap<V> 
   /**
    * Returns a list of non-TreeNodes replacing those in given list.
    */
-  @Nullable
-  static <V> Node<V> untreeify(@Nullable Node<V> b) {
+  static @Nullable <V> Node<V> untreeify(@Nullable Node<V> b) {
     Node<V> hd = null, tl = null;
     for (Node<V> q = b; q != null; q = q.next) {
       Node<V> p = new Node<>(q.hash, q.key, q.val, null);
@@ -1524,8 +1516,7 @@ public class ConcurrentIntObjectHashMap<V> implements ConcurrentIntObjectMap<V> 
      * Returns the TreeNode (or null if not found) for the given key
      * starting at given root.
      */
-    @Nullable
-    final TreeNode<V> findTreeNode(int h, int k) {
+    final @Nullable TreeNode<V> findTreeNode(int h, int k) {
       TreeNode<V> p = this;
       do {
         int ph;
@@ -1571,10 +1562,8 @@ public class ConcurrentIntObjectHashMap<V> implements ConcurrentIntObjectMap<V> 
   static final class TreeBin<V> extends Node<V> {
     @Nullable
     TreeNode<V> root = null;
-    @Nullable
-    volatile TreeNode<V> first = null;
-    @Nullable
-    volatile Thread waiter = null;
+    volatile @Nullable TreeNode<V> first = null;
+    volatile @Nullable Thread waiter = null;
     volatile int lockState;
     // values for lockState
     static final int WRITER = 1; // set while holding write lock
@@ -1719,8 +1708,7 @@ public class ConcurrentIntObjectHashMap<V> implements ConcurrentIntObjectMap<V> 
      *
      * @return null if added
      */
-    @Nullable
-    final TreeNode<V> putTreeVal(int h, int k, @Nullable V v) {
+    final @Nullable TreeNode<V> putTreeVal(int h, int k, @Nullable V v) {
       boolean searched = false;
       for (TreeNode<V> p = root; ; ) {
         int dir, ph;
@@ -2218,8 +2206,7 @@ public class ConcurrentIntObjectHashMap<V> implements ConcurrentIntObjectMap<V> 
     /**
      * Advances if possible, returning next valid node, or null if none.
      */
-    @Nullable
-    final Node<V> advance() {
+    final @Nullable Node<V> advance() {
       Node<V> e = next;
       if (e != null) {
         e = e.next;

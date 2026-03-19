@@ -41,13 +41,11 @@ public abstract class SubstrateRef {
   
   public abstract ASTNode getNode();
 
-  @Nullable
-  public Stub getStub() {
+  public @Nullable Stub getStub() {
     return null;
   }
 
-  @Nullable
-  public Stub getGreenStub() {
+  public @Nullable Stub getGreenStub() {
     return getStub();
   }
 

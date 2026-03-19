@@ -35,8 +35,7 @@ import java.util.Map;
  */
 public class DataLanguageBlockWrapper implements ASTBlock, BlockEx, BlockWithParent {
   private final Block myOriginal;
-  @Nullable
-  private final Language myLanguage;
+  private final @Nullable Language myLanguage;
   private List<Block> myBlocks;
   private List<TemplateLanguageBlock> myTlBlocks;
   private BlockWithParent myParent;
@@ -145,8 +144,7 @@ public class DataLanguageBlockWrapper implements ASTBlock, BlockEx, BlockWithPar
   }
 
   @Override
-  @Nullable
-  public Spacing getSpacing(Block child1, Block child2) {
+  public @Nullable Spacing getSpacing(Block child1, Block child2) {
     if (child1 instanceof DataLanguageBlockWrapper && child2 instanceof DataLanguageBlockWrapper) {
       return myOriginal.getSpacing(((DataLanguageBlockWrapper)child1).myOriginal, ((DataLanguageBlockWrapper)child2).myOriginal);
     }
@@ -185,15 +183,13 @@ public class DataLanguageBlockWrapper implements ASTBlock, BlockEx, BlockWithPar
     return tlBlocksInfo + myOriginal.toString();
   }
 
-  @Nullable
-  public static DataLanguageBlockWrapper create(Block original, @Nullable Indent indent) {
+  public static @Nullable DataLanguageBlockWrapper create(Block original, @Nullable Indent indent) {
     boolean doesntNeedWrapper = original instanceof ASTBlock && ((ASTBlock)original).getNode() instanceof OuterLanguageElement;
     return doesntNeedWrapper ? null : new DataLanguageBlockWrapper(original);
   }
 
   @Override
-  @Nullable
-  public ASTNode getNode() {
+  public @Nullable ASTNode getNode() {
     return myOriginal instanceof ASTBlock ? ((ASTBlock)myOriginal).getNode() : null;
   }
 
@@ -212,8 +208,7 @@ public class DataLanguageBlockWrapper implements ASTBlock, BlockEx, BlockWithPar
     mySpacing = spacing;
   }
 
-  @Nullable
-  public Spacing getRightHandSpacing(DataLanguageBlockWrapper rightHandWrapper) {
+  public @Nullable Spacing getRightHandSpacing(DataLanguageBlockWrapper rightHandWrapper) {
     return myRightHandWrapper == rightHandWrapper ? mySpacing : null;
   }
 }

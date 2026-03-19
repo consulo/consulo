@@ -167,8 +167,7 @@ public class PsiFileFactoryImpl implements PsiFileFactory {
     return plainTextFile;
   }
 
-  @Nullable
-  public PsiFile trySetupPsiForFile(LightVirtualFile virtualFile,
+  public @Nullable PsiFile trySetupPsiForFile(LightVirtualFile virtualFile,
                                     Language language,
                                     LanguageVersion languageVersion,
                                     boolean physical,
@@ -260,8 +259,7 @@ public class PsiFileFactoryImpl implements PsiFileFactory {
   }
 
   @Override
-  @Nullable
-  public PsiElement createElementFromText(@Nullable String text,
+  public @Nullable PsiElement createElementFromText(@Nullable String text,
                                           Language language,
                                           LanguageVersion languageVersion,
                                           IElementType type,

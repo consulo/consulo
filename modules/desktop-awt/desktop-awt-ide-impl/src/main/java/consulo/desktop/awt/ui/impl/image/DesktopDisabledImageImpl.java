@@ -58,8 +58,7 @@ public class DesktopDisabledImageImpl implements ToSwingIconWrapper, Image, Desk
      *
      * @return <code>ImageIcon</code> constructed from disabled image of passed icon.
      */
-    @Nullable
-    public Icon getDisabledIcon(@Nullable Icon icon) {
+    public @Nullable Icon getDisabledIcon(@Nullable Icon icon) {
         if (icon instanceof DesktopLazyImageImpl) {
             icon = ((DesktopLazyImageImpl) icon).getOrComputeIcon();
         }

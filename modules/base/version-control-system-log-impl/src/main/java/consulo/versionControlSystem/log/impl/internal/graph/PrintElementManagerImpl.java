@@ -32,8 +32,7 @@ class PrintElementManagerImpl implements PrintElementManager {
   private final LinearGraph myLinearGraph;
   
   private Set<Integer> mySelectedNodeIds = Collections.emptySet();
-  @Nullable
-  private PrintElementWithGraphElement mySelectedPrintElement = null;
+  private @Nullable PrintElementWithGraphElement mySelectedPrintElement = null;
 
   @SuppressWarnings("unchecked")
   PrintElementManagerImpl(final LinearGraph linearGraph,

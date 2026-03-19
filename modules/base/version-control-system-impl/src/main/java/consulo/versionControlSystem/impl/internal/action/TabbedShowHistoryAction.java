@@ -118,8 +118,7 @@ public class TabbedShowHistoryAction extends AbstractVcsAction {
         return Pair.empty();
     }
 
-    @Nullable
-    private static VirtualFile getParentVirtualFile(File ioFile) {
+    private static @Nullable VirtualFile getParentVirtualFile(File ioFile) {
         File parentIoFile = ioFile.getParentFile();
         return parentIoFile != null ? LocalFileSystem.getInstance().findFileByIoFile(parentIoFile) : null;
     }

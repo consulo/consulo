@@ -90,28 +90,24 @@ public abstract class CreateFromTemplateActionBase extends AnAction {
         EditorFileTemplateUtil.startLiveTemplate(file, defaultValues);
     }
 
-    @Nullable
-    protected PsiDirectory getTargetDirectory(DataContext dataContext, IdeView view) {
+    protected @Nullable PsiDirectory getTargetDirectory(DataContext dataContext, IdeView view) {
         return DirectoryChooserUtil.getOrChooseDirectory(view);
     }
 
     protected abstract FileTemplate getTemplate(Project project, PsiDirectory dir);
 
-    @Nullable
-    protected AnAction getReplacedAction(FileTemplate selectedTemplate) {
+    protected @Nullable AnAction getReplacedAction(FileTemplate selectedTemplate) {
         return null;
     }
 
-    @Nullable
-    protected AttributesDefaults getAttributesDefaults(DataContext dataContext) {
+    protected @Nullable AttributesDefaults getAttributesDefaults(DataContext dataContext) {
         return null;
     }
 
     protected void elementCreated(CreateFromTemplateDialog dialog, PsiElement createdElement) {
     }
 
-    @Nullable
-    protected Map<String, String> getLiveTemplateDefaults(DataContext dataContext, PsiFile file) {
+    protected @Nullable Map<String, String> getLiveTemplateDefaults(DataContext dataContext, PsiFile file) {
         return null;
     }
 }

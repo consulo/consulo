@@ -24,8 +24,7 @@ import org.jspecify.annotations.Nullable;
 public abstract class DiffContext implements UserDataHolder {
   protected final UserDataHolderBase myUserDataHolder = new UserDataHolderBase();
 
-  @Nullable
-  public abstract Project getProject();
+  public abstract @Nullable Project getProject();
 
   public abstract boolean isWindowFocused();
 

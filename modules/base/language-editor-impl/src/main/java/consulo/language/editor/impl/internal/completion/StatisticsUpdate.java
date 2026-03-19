@@ -45,8 +45,7 @@ public class StatisticsUpdate implements Disposable {
         Disposer.register(ApplicationManager.getApplication(), StatisticsUpdate::cancelLastCompletionStatisticsUpdate);
     }
 
-    @Nullable
-    private static StatisticsUpdate ourPendingUpdate;
+    private static @Nullable StatisticsUpdate ourPendingUpdate;
     private static final Alarm ourStatsAlarm = new Alarm(ApplicationManager.getApplication());
 
     public static StatisticsUpdate collectStatisticChanges(LookupElement item) {

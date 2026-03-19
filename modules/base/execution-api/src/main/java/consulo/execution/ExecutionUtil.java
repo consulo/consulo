@@ -173,8 +173,7 @@ public class ExecutionUtil {
         }
     }
 
-    @Nullable
-    public static ExecutionEnvironmentBuilder createEnvironment(
+    public static @Nullable ExecutionEnvironmentBuilder createEnvironment(
         Executor executor,
         RunnerAndConfigurationSettings settings
     ) {

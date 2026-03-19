@@ -53,21 +53,17 @@ public abstract class CoverageViewExtension {
         return myCoverageViewManager;
     }
 
-    @Nullable
-    public abstract String getSummaryForNode(AbstractTreeNode node);
+    public abstract @Nullable String getSummaryForNode(AbstractTreeNode node);
 
-    @Nullable
-    public abstract String getSummaryForRootNode(AbstractTreeNode childNode);
+    public abstract @Nullable String getSummaryForRootNode(AbstractTreeNode childNode);
 
-    @Nullable
-    public abstract String getPercentage(int columnIdx, AbstractTreeNode node);
+    public abstract @Nullable String getPercentage(int columnIdx, AbstractTreeNode node);
 
     public abstract List<AbstractTreeNode> getChildrenNodes(AbstractTreeNode node);
 
     public abstract ColumnInfo[] createColumnInfos();
 
-    @Nullable
-    public abstract PsiElement getParentElement(PsiElement element);
+    public abstract @Nullable PsiElement getParentElement(PsiElement element);
 
     public abstract AbstractTreeNode createRootNode();
 
@@ -85,8 +81,7 @@ public abstract class CoverageViewExtension {
         return object instanceof VirtualFile virtualFile ? PsiManager.getInstance(myProject).findFile(virtualFile) : null;
     }
 
-    @Nullable
-    public VirtualFile getVirtualFile(Object object) {
+    public @Nullable VirtualFile getVirtualFile(Object object) {
         return switch (object) {
             case PsiDirectory directory -> directory.getVirtualFile();
             case PsiElement element -> {

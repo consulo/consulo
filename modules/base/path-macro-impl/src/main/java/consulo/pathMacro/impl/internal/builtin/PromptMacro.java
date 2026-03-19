@@ -35,8 +35,7 @@ public final class PromptMacro extends PromptingMacro implements SecondQueueExpa
   }
 
   @Override
-  @Nullable
-  protected String promptUser(DataContext dataContext) {
+  protected @Nullable String promptUser(DataContext dataContext) {
     return Messages.showInputDialog(PathMacroBundle.message("prompt.enter.parameters"), PathMacroBundle.message("title.input"), Messages.getQuestionIcon());
   }
 

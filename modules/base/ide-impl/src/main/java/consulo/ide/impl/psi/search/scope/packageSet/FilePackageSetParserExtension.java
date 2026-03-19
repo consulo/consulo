@@ -32,8 +32,7 @@ import org.jspecify.annotations.Nullable;
 public class FilePackageSetParserExtension implements PackageSetParserExtension {
 
   @Override
-  @Nullable
-  public String parseScope(Lexer lexer) {
+  public @Nullable String parseScope(Lexer lexer) {
     if (lexer.getTokenType() != ScopeTokenTypes.IDENTIFIER) return null;
     String id = getTokenText(lexer);
     if (FilePatternPackageSet.SCOPE_FILE.equals(id)) {
@@ -54,8 +53,7 @@ public class FilePackageSetParserExtension implements PackageSetParserExtension 
   }
 
   @Override
-  @Nullable
-  public PackageSet parsePackageSet(Lexer lexer, String scope, String modulePattern) throws ParsingException {
+  public @Nullable PackageSet parsePackageSet(Lexer lexer, String scope, String modulePattern) throws ParsingException {
     if (scope != FilePatternPackageSet.SCOPE_FILE) return null;
     return new FilePatternPackageSet(modulePattern, parseFilePattern(lexer));
   }

@@ -31,8 +31,7 @@ import java.util.*;
 public class SmartList<E> extends AbstractList<E> implements RandomAccess {
     private int mySize;
 
-    @Nullable
-    private Object myElem; // null if mySize==0, (E)elem if mySize==1, Object[] if mySize>=2
+    private @Nullable Object myElem; // null if mySize==0, (E)elem if mySize==1, Object[] if mySize>=2
 
     public SmartList() {
     }

@@ -52,7 +52,7 @@ public class CreatePatchConfigurationPanel {
   private ComboBox<Charset> myEncoding;
   private JLabel myWarningLabel;
   private final Project myProject;
-  @Nullable private File myCommonParentDir;
+  private @Nullable File myCommonParentDir;
 
   public CreatePatchConfigurationPanel(Project project) {
     myProject = project;
@@ -150,8 +150,7 @@ public class CreatePatchConfigurationPanel {
     return validateFields() == null;
   }
 
-  @Nullable
-  private ValidationInfo verifyBaseDirPath() {
+  private @Nullable ValidationInfo verifyBaseDirPath() {
     String baseDirName = getBaseDirName();
     if (StringUtil.isEmptyOrSpaces(baseDirName)) return new ValidationInfo("Base path can't be empty!", myBasePathField);
     File baseFile = new File(baseDirName);
@@ -163,8 +162,7 @@ public class CreatePatchConfigurationPanel {
     return null;
   }
 
-  @Nullable
-  public ValidationInfo validateFields() {
+  public @Nullable ValidationInfo validateFields() {
     checkExist();
     String validateNameError = PatchNameChecker.validateName(getFileName());
     if (validateNameError != null) return new ValidationInfo(validateNameError, myFileNameField);

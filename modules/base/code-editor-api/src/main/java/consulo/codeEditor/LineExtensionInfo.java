@@ -14,14 +14,10 @@ import org.jspecify.annotations.Nullable;
 public class LineExtensionInfo {
   
   private final String myText;
-  @Nullable
-  private final ColorValue myColor;
-  @Nullable
-  private final EffectType myEffectType;
-  @Nullable
-  private final ColorValue myEffectColor;
-  @Nullable
-  private final ColorValue myBgColor;
+  private final @Nullable ColorValue myColor;
+  private final @Nullable EffectType myEffectType;
+  private final @Nullable ColorValue myEffectColor;
+  private final @Nullable ColorValue myBgColor;
   @JdkConstants.FontStyle
   private final int myFontType;
 
@@ -48,23 +44,19 @@ public class LineExtensionInfo {
     return myText;
   }
 
-  @Nullable
-  public ColorValue getColor() {
+  public @Nullable ColorValue getColor() {
     return myColor;
   }
 
-  @Nullable
-  public ColorValue getBgColor() {
+  public @Nullable ColorValue getBgColor() {
     return myBgColor;
   }
 
-  @Nullable
-  public EffectType getEffectType() {
+  public @Nullable EffectType getEffectType() {
     return myEffectType;
   }
 
-  @Nullable
-  public ColorValue getEffectColor() {
+  public @Nullable ColorValue getEffectColor() {
     return myEffectColor;
   }
 

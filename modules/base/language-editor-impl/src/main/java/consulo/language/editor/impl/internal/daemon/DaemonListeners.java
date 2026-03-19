@@ -458,8 +458,7 @@ public final class DaemonListeners implements Disposable {
             stopDaemon(false, "Command start");
         }
 
-        @Nullable
-        private Document extractDocumentFromCommand(CommandEvent event) {
+        private @Nullable Document extractDocumentFromCommand(CommandEvent event) {
             Document affectedDocument = event.getDocument();
             if (affectedDocument != null) {
                 return affectedDocument;

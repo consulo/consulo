@@ -55,8 +55,7 @@ public abstract class TaskRepositoryType<T extends TaskRepository> implements Ta
     
     public abstract Image getIcon();
 
-    @Nullable
-    public String getAdvertiser() {
+    public @Nullable String getAdvertiser() {
         return null;
     }
 

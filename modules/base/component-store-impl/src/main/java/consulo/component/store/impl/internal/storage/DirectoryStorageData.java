@@ -54,8 +54,7 @@ public class DirectoryStorageData extends StorageDataBase {
     return myStates.isEmpty();
   }
 
-  @Nullable
-  public static DirectoryStorageData setStateAndCloneIfNeed(String componentName,
+  public static @Nullable DirectoryStorageData setStateAndCloneIfNeed(String componentName,
                                                             @Nullable String fileName,
                                                             @Nullable Element newState,
                                                             DirectoryStorageData storageData) {
@@ -108,8 +107,7 @@ public class DirectoryStorageData extends StorageDataBase {
     return newStorageData;
   }
 
-  @Nullable
-  public Object setState(String componentName, @Nullable String fileName, @Nullable Element newState) {
+  public @Nullable Object setState(String componentName, @Nullable String fileName, @Nullable Element newState) {
     StateMap fileToState = myStates.get(componentName);
     if (fileName == null || newState == null || JDOMUtil.isEmpty(newState)) {
       if (fileToState == null) {
@@ -184,8 +182,7 @@ public class DirectoryStorageData extends StorageDataBase {
     return fileToState != null && fileToState.hasStates();
   }
 
-  @Nullable
-  public Element getCompositeStateAndArchive(String componentName, StateSplitterEx splitter) {
+  public @Nullable Element getCompositeStateAndArchive(String componentName, StateSplitterEx splitter) {
     StateMap fileToState = myStates.get(componentName);
     Element state = new Element(StorageData.COMPONENT);
     if (fileToState == null || fileToState.isEmpty()) {

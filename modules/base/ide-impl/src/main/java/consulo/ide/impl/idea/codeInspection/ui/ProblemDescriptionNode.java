@@ -72,13 +72,11 @@ public class ProblemDescriptionNode extends InspectionTreeNode {
         myPresentation = presentation;
     }
 
-    @Nullable
-    public RefEntity getElement() {
+    public @Nullable RefEntity getElement() {
         return myElement;
     }
 
-    @Nullable
-    public CommonProblemDescriptor getDescriptor() {
+    public @Nullable CommonProblemDescriptor getDescriptor() {
         return myDescriptor;
     }
 

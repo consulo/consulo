@@ -62,8 +62,7 @@ public class TogglePopupHintsPanel extends EditorBasedWidget implements StatusBa
     }
 
     @Override
-    @Nullable
-    public Image getIcon() {
+    public @Nullable Image getIcon() {
         return myCurrentIcon;
     }
 

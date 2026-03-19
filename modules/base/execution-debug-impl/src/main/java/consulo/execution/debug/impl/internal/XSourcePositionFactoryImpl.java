@@ -58,26 +58,22 @@ public class XSourcePositionFactoryImpl implements XSourcePositionFactory {
     }
 
     @Override
-    @Nullable
-    public XSourcePosition createPosition(@Nullable VirtualFile file, int line) {
+    public @Nullable XSourcePosition createPosition(@Nullable VirtualFile file, int line) {
         return file == null ? null : XSourcePositionImpl.create(file, line);
     }
 
     @Override
-    @Nullable
-    public XSourcePosition createPosition(@Nullable VirtualFile file, int line, int column) {
+    public @Nullable XSourcePosition createPosition(@Nullable VirtualFile file, int line, int column) {
         return file == null ? null : XSourcePositionImpl.create(file, line, column);
     }
 
     @Override
-    @Nullable
-    public XSourcePosition createPositionByOffset(VirtualFile file, int offset) {
+    public @Nullable XSourcePosition createPositionByOffset(VirtualFile file, int offset) {
         return XSourcePositionImpl.createByOffset(file, offset);
     }
 
     @Override
-    @Nullable
-    public XSourcePosition createPositionByElement(PsiElement element) {
+    public @Nullable XSourcePosition createPositionByElement(PsiElement element) {
         return XSourcePositionImpl.createByElement(element);
     }
 

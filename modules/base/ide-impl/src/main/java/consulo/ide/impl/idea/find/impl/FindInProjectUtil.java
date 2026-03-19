@@ -150,8 +150,7 @@ public class FindInProjectUtil {
         return directory == null ? null : PsiManager.getInstance(project).findDirectory(directory);
     }
 
-    @Nullable
-    public static VirtualFile getDirectory(FindModel findModel) {
+    public static @Nullable VirtualFile getDirectory(FindModel findModel) {
         String directoryName = findModel.getDirectoryName();
         if (findModel.isProjectScope() || StringUtil.isEmptyOrSpaces(directoryName)) {
             return null;
@@ -563,8 +562,7 @@ public class FindInProjectUtil {
         }
 
         @Override
-        @Nullable
-        public VirtualFile[] getFiles() {
+        public @Nullable VirtualFile[] getFiles() {
             return null;
         }
 

@@ -69,8 +69,7 @@ public abstract class AsynchronousChannelStep<I, O> extends CoroutineStep<I, O> 
      * @param continuation The channel group
      * @return The channel group
      */
-    @Nullable
-    protected AsynchronousChannelGroup getChannelGroup(
+    protected @Nullable AsynchronousChannelGroup getChannelGroup(
         Continuation<?> continuation) {
         AsynchronousChannelGroup channelGroup = continuation.getUserData(CHANNEL_GROUP);
 

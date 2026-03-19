@@ -100,14 +100,12 @@ public class ModuleDefaultVcsRootPolicy extends DefaultVcsRootPolicy {
     }
 
     @Override
-    @Nullable
-    public Object getMatchContext(VirtualFile file) {
+    public @Nullable Object getMatchContext(VirtualFile file) {
         return ModuleUtilCore.findModuleForFile(file, myProject);
     }
 
     @Override
-    @Nullable
-    public VirtualFile getVcsRootFor(VirtualFile file) {
+    public @Nullable VirtualFile getVcsRootFor(VirtualFile file) {
         if (myBaseDir != null && VirtualFileUtil.isAncestor(myBaseDir, file, false)) {
             return myBaseDir;
         }

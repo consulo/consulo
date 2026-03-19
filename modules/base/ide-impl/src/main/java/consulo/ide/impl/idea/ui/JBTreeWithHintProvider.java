@@ -50,8 +50,7 @@ public class JBTreeWithHintProvider extends DnDAwareTree {
     super(root);
   }
 
-  @Nullable
-  protected PsiElement getPsiElementForHint(Object selectedValue) {
+  protected @Nullable PsiElement getPsiElementForHint(Object selectedValue) {
     return DataManager.getInstance().getDataContext(this).getData(PsiElement.KEY);
   }
 }

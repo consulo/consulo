@@ -59,9 +59,7 @@ public class DummyProject extends UserDataHolderBase implements Project {
     }
 
     @Override
-    @Nullable
-    
-    public String getPresentableUrl() {
+    public @Nullable String getPresentableUrl() {
         return null;
     }
 
@@ -84,8 +82,7 @@ public class DummyProject extends UserDataHolderBase implements Project {
     }
 
     @Override
-    @Nullable
-    public VirtualFile getBaseDir() {
+    public @Nullable VirtualFile getBaseDir() {
         return null;
     }
 

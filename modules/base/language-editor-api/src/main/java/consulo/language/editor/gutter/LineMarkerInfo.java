@@ -71,13 +71,11 @@ public class LineMarkerInfo<T extends PsiElement> {
     public RangeHighlighter highlighter;
 
     public final int updatePass;
-    @Nullable
-    private final Function<? super T, String> myTooltipProvider;
+    private final @Nullable Function<? super T, String> myTooltipProvider;
     private AnAction myNavigateAction = new NavigateAction<>(this);
     
     private final GutterIconRenderer.Alignment myIconAlignment;
-    @Nullable
-    private final GutterIconNavigationHandler<T> myNavigationHandler;
+    private final @Nullable GutterIconNavigationHandler<T> myNavigationHandler;
 
     /**
      * Creates a line marker info for the element.
@@ -137,8 +135,7 @@ public class LineMarkerInfo<T extends PsiElement> {
         this(element, startOffset, icon, updatePass, tooltipProvider, navHandler, GutterIconRenderer.Alignment.RIGHT);
     }
 
-    @Nullable
-    public GutterIconRenderer createGutterRenderer() {
+    public @Nullable GutterIconRenderer createGutterRenderer() {
         if (myIcon == null) {
             return null;
         }
@@ -154,8 +151,7 @@ public class LineMarkerInfo<T extends PsiElement> {
         return element == null || !element.isValid() ? LocalizeValue.empty() : LocalizeValue.ofNullable(myTooltipProvider.apply(element));
     }
 
-    @Nullable
-    public String getLineMarkerTooltip() {
+    public @Nullable String getLineMarkerTooltip() {
         if (myTooltipProvider == null) {
             return null;
         }
@@ -163,8 +159,7 @@ public class LineMarkerInfo<T extends PsiElement> {
         return element == null || !element.isValid() ? null : myTooltipProvider.apply(element);
     }
 
-    @Nullable
-    public T getElement() {
+    public @Nullable T getElement() {
         return elementRef.getElement();
     }
 
@@ -172,8 +167,7 @@ public class LineMarkerInfo<T extends PsiElement> {
         myNavigateAction = navigateAction;
     }
 
-    @Nullable
-    public GutterIconNavigationHandler<T> getNavigationHandler() {
+    public @Nullable GutterIconNavigationHandler<T> getNavigationHandler() {
         return myNavigationHandler;
     }
 

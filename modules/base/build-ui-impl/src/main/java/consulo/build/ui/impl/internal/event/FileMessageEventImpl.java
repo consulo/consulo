@@ -43,8 +43,7 @@ public class FileMessageEventImpl extends MessageEventImpl implements FileMessag
       }
 
       @Override
-      @Nullable
-      public String getDetails() {
+      public @Nullable String getDetails() {
         return getDescription();
       }
     };

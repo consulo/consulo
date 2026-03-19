@@ -84,8 +84,7 @@ public class GraphTableController {
         return null;
     }
 
-    @Nullable
-    private PrintElement findPrintElement(int row, MouseEvent e) {
+    private @Nullable PrintElement findPrintElement(int row, MouseEvent e) {
         Point point = calcPoint4Graph(e.getPoint());
         Collection<? extends PrintElement> printElements = myTable.getVisibleGraph().getRowInfo(row).getPrintElements();
         return myGraphCellPainter.getElementUnderCursor(printElements, point.x, point.y);

@@ -141,8 +141,7 @@ public class EditorFilteringMarkupModelEx implements MarkupModelEx {
     }
 
     @Override
-    @Nullable
-    public RangeHighlighterEx addPersistentLineHighlighter(int lineNumber, int layer, TextAttributes textAttributes) {
+    public @Nullable RangeHighlighterEx addPersistentLineHighlighter(int lineNumber, int layer, TextAttributes textAttributes) {
         return myDelegate.addPersistentLineHighlighter(lineNumber, layer, textAttributes);
     }
 
@@ -226,8 +225,7 @@ public class EditorFilteringMarkupModelEx implements MarkupModelEx {
     }
 
     @Override
-    @Nullable
-    public <T> T getUserData(Key<T> key) {
+    public @Nullable <T> T getUserData(Key<T> key) {
         return myDelegate.getUserData(key);
     }
 

@@ -321,8 +321,7 @@ public class ActionGroupPopup extends ListPopupImpl {
         getList().repaint();
     }
 
-    @Nullable
-    private static <T> T getActionByClass(
+    private static @Nullable <T> T getActionByClass(
         @Nullable Object value,
         ActionPopupStep actionPopupStep,
         Class<T> actionClass

@@ -31,7 +31,7 @@ import java.util.function.Supplier;
 
 public class ChangeSet {
   private final long myId;
-  @Nullable private String myName;
+  private @Nullable String myName;
   private final long myTimestamp;
   private final List<Change> myChanges;
 
@@ -72,8 +72,7 @@ public class ChangeSet {
     myName = name;
   }
 
-  @Nullable
-  public String getName() {
+  public @Nullable String getName() {
     return myName;
   }
 
@@ -85,8 +84,7 @@ public class ChangeSet {
     isLocked = true;
   }
 
-  @Nullable
-  public String getLabel() {
+  public @Nullable String getLabel() {
     return accessChanges(() -> {
       for (Change each : myChanges) {
         if (each instanceof PutLabelChange) {

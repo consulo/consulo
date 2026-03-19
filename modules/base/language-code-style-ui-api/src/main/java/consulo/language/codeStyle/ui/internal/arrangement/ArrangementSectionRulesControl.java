@@ -49,10 +49,8 @@ public class ArrangementSectionRulesControl extends ArrangementMatchingRulesCont
   
   private final ArrangementStandardSettingsManager mySettingsManager;
 
-  @Nullable
-  private final ArrangementSectionRuleManager mySectionRuleManager;
-  @Nullable
-  private ArrangementStandardSettingsManager myExtendedSettingsManager;
+  private final @Nullable ArrangementSectionRuleManager mySectionRuleManager;
+  private @Nullable ArrangementStandardSettingsManager myExtendedSettingsManager;
 
   public ArrangementSectionRulesControl(Language language,
                                         ArrangementStandardSettingsManager settingsManager,
@@ -94,8 +92,7 @@ public class ArrangementSectionRulesControl extends ArrangementMatchingRulesCont
     return new ArrangementSectionRulesValidator(getModel(), mySectionRuleManager);
   }
 
-  @Nullable
-  public ArrangementSectionRuleManager getSectionRuleManager() {
+  public @Nullable ArrangementSectionRuleManager getSectionRuleManager() {
     return mySectionRuleManager;
   }
 
@@ -159,8 +156,7 @@ public class ArrangementSectionRulesControl extends ArrangementMatchingRulesCont
     }
   }
 
-  @Nullable
-  public Collection<StdArrangementRuleAliasToken> getRulesAliases() {
+  public @Nullable Collection<StdArrangementRuleAliasToken> getRulesAliases() {
     return myExtendedSettingsManager == null ? null : myExtendedSettingsManager.getRuleAliases();
   }
 

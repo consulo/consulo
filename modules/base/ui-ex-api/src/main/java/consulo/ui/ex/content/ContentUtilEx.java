@@ -106,8 +106,7 @@ public class ContentUtilEx extends ContentsUtil {
     }
   }
 
-  @Nullable
-  public static TabbedContent findTabbedContent(ContentManager manager, String groupPrefix) {
+  public static @Nullable TabbedContent findTabbedContent(ContentManager manager, String groupPrefix) {
     TabbedContent tabbedContent = null;
     for (Content content : manager.getContents()) {
       if (content instanceof TabbedContent && content.getTabName().startsWith(getFullPrefix(groupPrefix))) {
@@ -160,8 +159,7 @@ public class ContentUtilEx extends ContentsUtil {
    * Searches through all {@link Content simple} and {@link TabbedContent tabbed} contents of the given ContentManager,
    * trying to find the first one which matches the given condition.
    */
-  @Nullable
-  public static JComponent findContentComponent(ContentManager manager, Predicate<JComponent> condition) {
+  public static @Nullable JComponent findContentComponent(ContentManager manager, Predicate<JComponent> condition) {
     for (Content content : manager.getContents()) {
       if (content instanceof TabbedContent tabbedContent) {
         List<Pair<String, JComponent>> tabs = tabbedContent.getTabs();
@@ -190,8 +188,7 @@ public class ContentUtilEx extends ContentsUtil {
     return -1;
   }
 
-  @Nullable
-  public static String getTabNameWithoutPrefix(TabbedContent content, String fullTabName) {
+  public static @Nullable String getTabNameWithoutPrefix(TabbedContent content, String fullTabName) {
     int fullPrefixLength = getFullPrefix(content.getTitlePrefix()).length();
     if (fullTabName.startsWith(content.getTitlePrefix())) {
       return fullTabName.substring(fullPrefixLength);

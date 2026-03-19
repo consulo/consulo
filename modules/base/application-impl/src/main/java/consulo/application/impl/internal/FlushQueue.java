@@ -200,10 +200,8 @@ public final class FlushQueue {
     private final ModalityState modalityState;
     
     private final BooleanSupplier expired;
-    @Nullable
-    private final ActionCallback callback;
-    @Nullable
-    private final ClientId clientId;
+    private final @Nullable ActionCallback callback;
+    private final @Nullable ClientId clientId;
 
     //@Async.Schedule
     RunnableInfo(Runnable runnable, ModalityState modalityState, BooleanSupplier expired, @Nullable ActionCallback callback) {

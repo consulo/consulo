@@ -38,8 +38,7 @@ public class DefaultProjectImpl extends ProjectImpl {
     super(application, manager, filePath, TEMPLATE_PROJECT_NAME, true, componentBinding);
   }
 
-  @Nullable
-  public Element getStateElement() {
+  public @Nullable Element getStateElement() {
     return myStateElement;
   }
 

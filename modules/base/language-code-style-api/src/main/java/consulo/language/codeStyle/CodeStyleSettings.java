@@ -815,8 +815,7 @@ public class CodeStyleSettings extends LegacyCodeStyleSettings implements Clonea
     private volatile Pattern myFormatterOffPattern;
     private volatile Pattern myFormatterOnPattern;
 
-    @Nullable
-    public Pattern getFormatterOffPattern() {
+    public @Nullable Pattern getFormatterOffPattern() {
         if (myFormatterOffPattern == null && FORMATTER_TAGS_ENABLED && FORMATTER_TAGS_ACCEPT_REGEXP) {
             myFormatterOffPattern = getPatternOrDisableRegexp(FORMATTER_OFF_TAG);
         }
@@ -827,8 +826,7 @@ public class CodeStyleSettings extends LegacyCodeStyleSettings implements Clonea
         myFormatterOffPattern = formatterOffPattern;
     }
 
-    @Nullable
-    public Pattern getFormatterOnPattern() {
+    public @Nullable Pattern getFormatterOnPattern() {
         if (myFormatterOffPattern == null && FORMATTER_TAGS_ENABLED && FORMATTER_TAGS_ACCEPT_REGEXP) {
             myFormatterOnPattern = getPatternOrDisableRegexp(FORMATTER_ON_TAG);
         }
@@ -839,8 +837,7 @@ public class CodeStyleSettings extends LegacyCodeStyleSettings implements Clonea
         myFormatterOnPattern = formatterOnPattern;
     }
 
-    @Nullable
-    private Pattern getPatternOrDisableRegexp(String markerText) {
+    private @Nullable Pattern getPatternOrDisableRegexp(String markerText) {
         try {
             return Pattern.compile(markerText);
         }

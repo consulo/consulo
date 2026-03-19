@@ -59,8 +59,7 @@ public class CustomizingReferenceProvider extends PsiReferenceProvider implement
   }
 
   @Override
-  @Nullable
-  public Map<CustomizationKey, Object> getOptions() {
+  public @Nullable Map<CustomizationKey, Object> getOptions() {
     return myOptions;
   }
 }

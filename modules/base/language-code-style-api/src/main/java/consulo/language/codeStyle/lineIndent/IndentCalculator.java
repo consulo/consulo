@@ -60,8 +60,7 @@ public class IndentCalculator {
     myIndent = indent;
   }
 
-  @Nullable
-  public String getIndentString(@Nullable Language language, SemanticEditorPosition currPosition) {
+  public @Nullable String getIndentString(@Nullable Language language, SemanticEditorPosition currPosition) {
     String baseIndent = getBaseIndent(currPosition);
     PsiFile file = PsiDocumentManager.getInstance(myProject).getPsiFile(myDocument);
     if (file != null) {

@@ -35,8 +35,7 @@ public interface ClassMembersRefactoringSupport extends LanguageExtension {
   ExtensionPointCacheKey<ClassMembersRefactoringSupport, ByLanguageValue<ClassMembersRefactoringSupport>> KEY =
           ExtensionPointCacheKey.create("ClassMembersRefactoringSupport", LanguageOneToOne.build());
 
-  @Nullable
-  static ClassMembersRefactoringSupport forLanguage(Language language) {
+  static @Nullable ClassMembersRefactoringSupport forLanguage(Language language) {
     return Application.get().getExtensionPoint(ClassMembersRefactoringSupport.class).getOrBuildCache(KEY).get(language);
   }
 

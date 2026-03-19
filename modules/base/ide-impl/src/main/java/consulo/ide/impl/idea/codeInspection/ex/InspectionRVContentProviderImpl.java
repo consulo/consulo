@@ -49,8 +49,7 @@ public class InspectionRVContentProviderImpl extends InspectionRVContentProvider
   }
 
   @Override
-  @Nullable
-  public QuickFixAction[] getQuickFixes(InspectionToolWrapper toolWrapper, InspectionTree tree) {
+  public @Nullable QuickFixAction[] getQuickFixes(InspectionToolWrapper toolWrapper, InspectionTree tree) {
     RefEntity[] refEntities = tree.getSelectedElements();
     InspectionToolPresentation presentation = tree.getContext().getPresentation(toolWrapper);
     return refEntities.length == 0 ? null : presentation.getQuickFixes(refEntities);
@@ -144,8 +143,7 @@ public class InspectionRVContentProviderImpl extends InspectionRVContentProvider
     }
 
     @Override
-    @Nullable
-    public RefElementContainer getOwner() {
+    public @Nullable RefElementContainer getOwner() {
       RefEntity entity = myElement.getOwner();
       if (entity instanceof RefElement) {
         return new RefElementContainer(entity, myDescriptors);
@@ -166,8 +164,7 @@ public class InspectionRVContentProviderImpl extends InspectionRVContentProvider
     }
 
     @Override
-    @Nullable
-    public String getModule() {
+    public @Nullable String getModule() {
       RefModule refModule = myElement instanceof RefElement
                                   ? ((RefElement)myElement).getModule()
                                   : myElement instanceof RefModule ? (RefModule)myElement : null;

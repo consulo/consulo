@@ -54,8 +54,7 @@ public abstract class Decoder extends ChannelInboundHandlerAdapter {
     T contentReceived(ByteBuf input, ChannelHandlerContext context, boolean isCumulateBuffer) throws IOException;
   }
 
-  @Nullable
-  protected final <T> T readContent(ByteBuf input, ChannelHandlerContext context, int contentLength, FullMessageConsumer<T> fullMessageConsumer) throws IOException {
+  protected final @Nullable <T> T readContent(ByteBuf input, ChannelHandlerContext context, int contentLength, FullMessageConsumer<T> fullMessageConsumer) throws IOException {
     ByteBuf buffer = getBufferIfSufficient(input, contentLength, context);
     if (buffer == null) {
       return null;
@@ -77,8 +76,7 @@ public abstract class Decoder extends ChannelInboundHandlerAdapter {
     }
   }
 
-  @Nullable
-  protected final ByteBuf getBufferIfSufficient(ByteBuf input, int requiredLength, ChannelHandlerContext context) {
+  protected final @Nullable ByteBuf getBufferIfSufficient(ByteBuf input, int requiredLength, ChannelHandlerContext context) {
     if (!input.isReadable()) {
       return null;
     }

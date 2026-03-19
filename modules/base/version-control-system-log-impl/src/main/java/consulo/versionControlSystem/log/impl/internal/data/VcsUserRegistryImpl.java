@@ -50,7 +50,7 @@ public class VcsUserRegistryImpl implements Disposable, VcsUserRegistry {
   private static final int STORAGE_VERSION = 2;
   private static final PersistentEnumeratorBase.DataFilter ACCEPT_ALL_DATA_FILTER = id -> true;
 
-  @Nullable private final PersistentEnumeratorBase<VcsUser> myPersistentEnumerator;
+  private final @Nullable PersistentEnumeratorBase<VcsUser> myPersistentEnumerator;
   
   private final Interner<VcsUser> myInterner;
 
@@ -61,8 +61,7 @@ public class VcsUserRegistryImpl implements Disposable, VcsUserRegistry {
     myInterner = Interner.createConcurrentHashInterner();
   }
 
-  @Nullable
-  private PersistentEnumeratorBase<VcsUser> initEnumerator(File mapFile) {
+  private @Nullable PersistentEnumeratorBase<VcsUser> initEnumerator(File mapFile) {
     try {
       return IOUtil.openCleanOrResetBroken(() -> new PersistentBTreeEnumerator<>(mapFile, new MyDescriptor(), Page.PAGE_SIZE, null,
                                                                                  STORAGE_VERSION), mapFile);
@@ -135,8 +134,7 @@ public class VcsUserRegistryImpl implements Disposable, VcsUserRegistry {
     return myPersistentEnumerator.enumerate(user);
   }
 
-  @Nullable
-  public VcsUser getUserById(Integer userId) throws IOException {
+  public @Nullable VcsUser getUserById(Integer userId) throws IOException {
     return myPersistentEnumerator.valueOf(userId);
   }
 

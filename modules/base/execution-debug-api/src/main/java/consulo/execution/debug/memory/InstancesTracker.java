@@ -40,8 +40,7 @@ public class InstancesTracker implements PersistentStateComponent<InstancesTrack
         return myState.isBackgroundTrackingEnabled;
     }
 
-    @Nullable
-    public TrackingType getTrackingType(String className) {
+    public @Nullable TrackingType getTrackingType(String className) {
         return myState.classes.getOrDefault(className, null);
     }
 

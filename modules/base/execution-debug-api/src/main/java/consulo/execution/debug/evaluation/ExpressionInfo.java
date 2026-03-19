@@ -49,13 +49,11 @@ public class ExpressionInfo {
   /**
    * Expression to evaluate
    */
-  @Nullable
-  public String getExpressionText() {
+  public @Nullable String getExpressionText() {
     return expressionText;
   }
 
-  @Nullable
-  public String getDisplayText() {
+  public @Nullable String getDisplayText() {
     return displayText;
   }
 }

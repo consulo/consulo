@@ -39,11 +39,9 @@ public abstract class DefaultVcsRootPolicy {
 
   public abstract boolean matchesDefaultMapping(VirtualFile file, Object matchContext);
 
-  @Nullable
-  public abstract Object getMatchContext(VirtualFile file);
+  public abstract @Nullable Object getMatchContext(VirtualFile file);
 
-  @Nullable
-  public abstract VirtualFile getVcsRootFor(VirtualFile file);
+  public abstract @Nullable VirtualFile getVcsRootFor(VirtualFile file);
 
   public String getProjectConfigurationMessage(Project project) {
     boolean isDirectoryBased = ProjectCoreUtil.isDirectoryBased(project);

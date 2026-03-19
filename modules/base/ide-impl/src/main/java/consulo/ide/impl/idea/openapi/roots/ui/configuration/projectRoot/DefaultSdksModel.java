@@ -98,8 +98,7 @@ public class DefaultSdksModel implements SdkModel, SettingsSdksModel {
     }
 
     @Override
-    @Nullable
-    public Sdk findSdk(String sdkName) {
+    public @Nullable Sdk findSdk(String sdkName) {
         for (Sdk sdk : mySdks.values()) {
             if (Comparing.strEqual(sdk.getName(), sdkName)) {
                 return sdk;
@@ -376,8 +375,7 @@ public class DefaultSdksModel implements SdkModel, SettingsSdksModel {
         mySdkEventsDispatcher.getMulticaster().sdkAdded(newSdk);
     }
 
-    @Nullable
-    public Sdk findSdk(@Nullable Sdk modelJdk) {
+    public @Nullable Sdk findSdk(@Nullable Sdk modelJdk) {
         for (Sdk sdk : mySdks.keySet()) {
             if (Comparing.equal(mySdks.get(sdk), modelJdk)) {
                 return sdk;

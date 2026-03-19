@@ -116,8 +116,7 @@ public class ReadOnlyPackageSetChooserCombo extends ComponentWithBrowseButton<JC
         return model.toArray(new NamedScope[model.size()]);
     }
 
-    @Nullable
-    public NamedScope getSelectedScope() {
+    public @Nullable NamedScope getSelectedScope() {
         JComponent component = getChildComponent();
         if (component instanceof JComboBox) {
             int idx = ((JComboBox) component).getSelectedIndex();

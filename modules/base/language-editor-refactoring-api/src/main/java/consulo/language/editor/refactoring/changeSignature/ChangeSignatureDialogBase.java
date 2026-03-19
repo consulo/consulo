@@ -97,8 +97,7 @@ public abstract class ChangeSignatureDialogBase<
 
     protected VisibilityPanelBase<Visibility> myVisibilityPanel;
 
-    @Nullable
-    protected PsiCodeFragment myReturnTypeCodeFragment;
+    protected @Nullable PsiCodeFragment myReturnTypeCodeFragment;
     private DelegationPanel myDelegationPanel;
     protected AnActionButton myPropagateParamChangesButton;
     protected Set<Method> myMethodsToPropagateParameters = null;
@@ -116,11 +115,9 @@ public abstract class ChangeSignatureDialogBase<
 
     protected abstract PsiCodeFragment createReturnTypeCodeFragment();
 
-    @Nullable
-    protected abstract CallerChooserBase<Method> createCallerChooser(String title, Tree treeToReuse, Consumer<Set<Method>> callback);
+    protected abstract @Nullable CallerChooserBase<Method> createCallerChooser(String title, Tree treeToReuse, Consumer<Set<Method>> callback);
 
-    @Nullable
-    protected abstract String validateAndCommitData();
+    protected abstract @Nullable String validateAndCommitData();
 
     protected abstract String calculateSignature();
 
@@ -158,8 +155,7 @@ public abstract class ChangeSignatureDialogBase<
         }
     }
 
-    @Nullable
-    protected Visibility getVisibility() {
+    protected @Nullable Visibility getVisibility() {
         if (myVisibilityPanel != null) {
             return myVisibilityPanel.getVisibility();
         }
@@ -501,8 +497,7 @@ public abstract class ChangeSignatureDialogBase<
         }
     }
 
-    @Nullable
-    protected JBTableRowEditor getTableEditor(JTable table, ParameterTableModelItemBase<ParamInfo> item) {
+    protected @Nullable JBTableRowEditor getTableEditor(JTable table, ParameterTableModelItemBase<ParamInfo> item) {
         return null;
     }
 
@@ -510,8 +505,7 @@ public abstract class ChangeSignatureDialogBase<
         return false;
     }
 
-    @Nullable
-    protected JComponent getRowPresentation(ParameterTableModelItemBase<ParamInfo> item, boolean selected, boolean focused) {
+    protected @Nullable JComponent getRowPresentation(ParameterTableModelItemBase<ParamInfo> item, boolean selected, boolean focused) {
         return null;
     }
 

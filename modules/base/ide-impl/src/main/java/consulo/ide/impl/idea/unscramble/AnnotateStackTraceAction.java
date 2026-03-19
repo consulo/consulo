@@ -159,8 +159,7 @@ public class AnnotateStackTraceAction extends DumbAwareAction {
                 ((EditorGutterComponentEx) myEditor.getGutter()).revalidateMarkup();
             }
 
-            @Nullable
-            private LastRevision getLastRevision(VirtualFile file) {
+            private @Nullable LastRevision getLastRevision(VirtualFile file) {
                 try {
                     AbstractVcs vcs = VcsUtil.getVcsFor(myEditor.getProject(), file);
                     if (vcs == null) {

@@ -86,7 +86,7 @@ public abstract class BaseDiffFromHistoryHandler<T extends VcsFileRevision> impl
         }
     }
 
-    protected void showChangesBetweenRevisions(final FilePath path, final T older, @Nullable final T newer) {
+    protected void showChangesBetweenRevisions(final FilePath path, final T older, final @Nullable T newer) {
         new CollectChangesTask("Comparing revisions...") {
 
             

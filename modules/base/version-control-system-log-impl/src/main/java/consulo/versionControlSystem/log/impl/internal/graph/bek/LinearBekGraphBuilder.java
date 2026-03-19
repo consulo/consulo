@@ -48,8 +48,7 @@ class LinearBekGraphBuilder {
     }
   }
 
-  @Nullable
-  public MergeFragment collapseFragment(int mergeCommit) {
+  public @Nullable MergeFragment collapseFragment(int mergeCommit) {
     MergeFragment fragment = getFragment(mergeCommit);
     if (fragment != null) {
       fragment.collapse(myLinearBekGraph);
@@ -58,16 +57,14 @@ class LinearBekGraphBuilder {
     return null;
   }
 
-  @Nullable
-  public MergeFragment getFragment(int mergeCommit) {
+  public @Nullable MergeFragment getFragment(int mergeCommit) {
     List<Integer> downNodes = ContainerUtil.sorted(LinearGraphUtils.getDownNodes(myLinearBekGraph, mergeCommit));
     if (downNodes.size() != 2) return null;
 
     return getFragment(downNodes.get(1), downNodes.get(0), mergeCommit);
   }
 
-  @Nullable
-  private MergeFragment getFragment(int leftChild, int rightChild, int parent) {
+  private @Nullable MergeFragment getFragment(int leftChild, int rightChild, int parent) {
     MergeFragment fragment = new MergeFragment(parent, leftChild, rightChild);
 
     int leftLi = myGraphLayout.getLayoutIndex(leftChild);

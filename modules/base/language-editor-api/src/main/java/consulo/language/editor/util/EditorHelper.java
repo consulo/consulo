@@ -42,8 +42,7 @@ public class EditorHelper {
     return editor instanceof TextEditor ? ((TextEditor)editor).getEditor() : null;
   }
 
-  @Nullable
-  public static FileEditor openInEditor(PsiElement element, boolean switchToText) {
+  public static @Nullable FileEditor openInEditor(PsiElement element, boolean switchToText) {
     PsiFile file;
     int offset;
     if (element instanceof PsiFile) {

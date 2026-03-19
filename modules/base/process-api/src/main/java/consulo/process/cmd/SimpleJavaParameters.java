@@ -50,8 +50,7 @@ public final class SimpleJavaParameters extends SimpleProgramParameters {
    * If the instance of the JavaParameters is used to configure app server startup script,
    * then null is returned.
    */
-  @Nullable
-  public String getJdkHome() {
+  public @Nullable String getJdkHome() {
     return myJdkHome;
   }
 
@@ -71,8 +70,7 @@ public final class SimpleJavaParameters extends SimpleProgramParameters {
     return myVmParameters;
   }
 
-  @Nullable
-  public Charset getCharset() {
+  public @Nullable Charset getCharset() {
     return myCharset;
   }
 

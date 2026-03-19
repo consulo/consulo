@@ -160,8 +160,7 @@ public class SelectInEditorManagerImpl implements SelectInEditorManager, Disposa
     }
   }
 
-  @Nullable
-  private Editor openEditor(VirtualFile file, int textOffset) {
+  private @Nullable Editor openEditor(VirtualFile file, int textOffset) {
     if (file == null || !file.isValid()) {
       return null;
     }

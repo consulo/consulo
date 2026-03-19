@@ -439,8 +439,7 @@ public class DefaultInspectionToolPresentation implements ProblemDescriptionsPro
     }
 
     @Override
-    @Nullable
-    public CommonProblemDescriptor[] getDescriptions(RefEntity refEntity) {
+    public @Nullable CommonProblemDescriptor[] getDescriptions(RefEntity refEntity) {
         CommonProblemDescriptor[] problems = getProblemElements().get(refEntity);
         if (problems == null) {
             return null;
@@ -630,14 +629,12 @@ public class DefaultInspectionToolPresentation implements ProblemDescriptionsPro
     }
 
     @Override
-    @Nullable
-    public QuickFixAction[] getQuickFixes(RefEntity[] refElements) {
+    public @Nullable QuickFixAction[] getQuickFixes(RefEntity[] refElements) {
         return extractActiveFixes(refElements, getQuickFixActions());
     }
 
     @Override
-    @Nullable
-    public QuickFixAction[] extractActiveFixes(RefEntity[] refElements, Map<RefEntity, Set<QuickFix>> actions) {
+    public @Nullable QuickFixAction[] extractActiveFixes(RefEntity[] refElements, Map<RefEntity, Set<QuickFix>> actions) {
         Map<Class, QuickFixAction> result = new HashMap<>();
         for (RefEntity refElement : refElements) {
             Set<QuickFix> localQuickFixes = actions.get(refElement);
@@ -780,8 +777,7 @@ public class DefaultInspectionToolPresentation implements ProblemDescriptionsPro
     }
 
     @Override
-    @Nullable
-    public Map<RefEntity, CommonProblemDescriptor[]> getOldProblemElements() {
+    public @Nullable Map<RefEntity, CommonProblemDescriptor[]> getOldProblemElements() {
         return myOldProblemElements;
     }
 

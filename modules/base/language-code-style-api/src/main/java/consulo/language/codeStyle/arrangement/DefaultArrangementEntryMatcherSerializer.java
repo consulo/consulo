@@ -76,8 +76,7 @@ public class DefaultArrangementEntryMatcherSerializer {
   }
 
   @SuppressWarnings("MethodMayBeStatic")
-  @Nullable
-  public <T extends ArrangementEntryMatcher> Element serialize(T matcher) {
+  public @Nullable <T extends ArrangementEntryMatcher> Element serialize(T matcher) {
     if (matcher instanceof StdArrangementEntryMatcher) {
       return serialize(((StdArrangementEntryMatcher)matcher).getCondition());
     }
@@ -96,14 +95,12 @@ public class DefaultArrangementEntryMatcherSerializer {
   }
 
   @SuppressWarnings("MethodMayBeStatic")
-  @Nullable
-  public StdArrangementEntryMatcher deserialize(Element matcherElement) {
+  public @Nullable StdArrangementEntryMatcher deserialize(Element matcherElement) {
     ArrangementMatchCondition condition = deserializeCondition(matcherElement);
     return condition == null ? null : new StdArrangementEntryMatcher(condition);
   }
 
-  @Nullable
-  private ArrangementMatchCondition deserializeCondition(Element matcherElement) {
+  private @Nullable ArrangementMatchCondition deserializeCondition(Element matcherElement) {
     String name = matcherElement.getName();
     if (COMPOSITE_CONDITION_NAME.equals(name)) {
       ArrangementCompositeMatchCondition composite = new ArrangementCompositeMatchCondition();
@@ -120,8 +117,7 @@ public class DefaultArrangementEntryMatcherSerializer {
     }
   }
 
-  @Nullable
-  private ArrangementMatchCondition deserializeAtomCondition(Element matcherElement) {
+  private @Nullable ArrangementMatchCondition deserializeAtomCondition(Element matcherElement) {
     String id = matcherElement.getName();
     ArrangementSettingsToken token = StdArrangementTokens.byId(id);
     boolean processInnerText = true;

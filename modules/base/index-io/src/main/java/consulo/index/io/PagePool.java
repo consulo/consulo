@@ -269,8 +269,7 @@ public class PagePool {
     }
   }
 
-  @Nullable
-  private FinalizationRequest retrieveFinalizationRequest() {
+  private @Nullable FinalizationRequest retrieveFinalizationRequest() {
     FinalizationRequest request = null;
     synchronized (lock) {
       if (!myFinalizationQueue.isEmpty()) {

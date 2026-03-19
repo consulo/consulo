@@ -133,8 +133,7 @@ public class ConfigurationContext {
      *
      * @return the configuration, or null if none of the producers were able to create a configuration from this context.
      */
-    @Nullable
-    public synchronized RunnerAndConfigurationSettings getConfiguration() {
+    public synchronized @Nullable RunnerAndConfigurationSettings getConfiguration() {
         if (myConfiguration == null && !myInitialized) {
             createConfiguration();
         }
@@ -158,8 +157,7 @@ public class ConfigurationContext {
      *
      * @return the source code location, or null if no source code fragment is currently selected.
      */
-    @Nullable
-    public Location getLocation() {
+    public @Nullable Location getLocation() {
         return myLocation;
     }
 
@@ -168,8 +166,7 @@ public class ConfigurationContext {
      *
      * @return the PSI element, or null if no source code fragment is currently selected.
      */
-    @Nullable
-    public PsiElement getPsiLocation() {
+    public @Nullable PsiElement getPsiLocation() {
         return myLocation != null ? myLocation.getPsiElement() : null;
     }
 
@@ -280,8 +277,7 @@ public class ConfigurationContext {
      * @param type {@link ConfigurationType} instance to filter original runtime configuration by its type
      * @return {@link RunConfiguration} instance, it could be null
      */
-    @Nullable
-    public RunConfiguration getOriginalConfiguration(@Nullable ConfigurationType type) {
+    public @Nullable RunConfiguration getOriginalConfiguration(@Nullable ConfigurationType type) {
         if (type == null) {
             return myRuntimeConfiguration;
         }
@@ -305,8 +301,7 @@ public class ConfigurationContext {
         return myRuntimeConfiguration == null || ConfigurationTypeUtil.equals(myRuntimeConfiguration.getType(), type);
     }
 
-    @Nullable
-    public List<ConfigurationFromContext> getConfigurationsFromContext() {
+    public @Nullable List<ConfigurationFromContext> getConfigurationsFromContext() {
         if (myConfigurationsFromContext == null) {
             myConfigurationsFromContext = PreferredProducerFind.getConfigurationsFromContext(myLocation, this, true);
         }

@@ -401,7 +401,7 @@ public class ExecutionHelper {
     }
 
     public static void executeExternalProcess(
-        @Nullable final Project myProject,
+        final @Nullable Project myProject,
         ProcessHandler processHandler,
         final ExecutionMode mode,
         String presentableCmdline

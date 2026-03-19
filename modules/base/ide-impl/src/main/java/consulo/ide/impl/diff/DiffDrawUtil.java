@@ -221,7 +221,7 @@ public class DiffDrawUtil {
     }
 
     
-    public static TextAttributes getTextAttributes(final TextDiffType type, @Nullable final Editor editor, final boolean ignored) {
+    public static TextAttributes getTextAttributes(final TextDiffType type, final @Nullable Editor editor, final boolean ignored) {
         return new TextAttributes() {
             @Override
             public ColorValue getBackgroundColor() {
@@ -531,12 +531,9 @@ public class DiffDrawUtil {
         private final int line;
 
         private boolean resolved = false;
-        @Nullable
-        private TextDiffType type;
-        @Nullable
-        private LineSeparatorRenderer renderer;
-        @Nullable
-        private LineMarkerRenderer gutterRenderer;
+        private @Nullable TextDiffType type;
+        private @Nullable LineSeparatorRenderer renderer;
+        private @Nullable LineMarkerRenderer gutterRenderer;
 
         private LineMarkerBuilder(Editor editor, int line, SeparatorPlacement placement) {
             this.editor = editor;

@@ -244,14 +244,12 @@ public class ScopeChooserCombo extends ComboboxWithBrowseButton implements Dispo
         myOptions = BitUtil.set(myOptions, OPT_EMPTY_SCOPES, showEmptyScopes);
     }
 
-    @Nullable
-    public SearchScope getSelectedScope() {
+    public @Nullable SearchScope getSelectedScope() {
         ScopeDescriptor item = (ScopeDescriptor)getComboBox().getSelectedItem();
         return item == null ? null : item.getScope();
     }
 
-    @Nullable
-    public String getSelectedScopeName() {
+    public @Nullable String getSelectedScopeName() {
         ScopeDescriptor item = (ScopeDescriptor)getComboBox().getSelectedItem();
         return item == null ? null : item.getDisplayName();
     }

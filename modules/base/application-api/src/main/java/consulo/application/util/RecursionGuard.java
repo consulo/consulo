@@ -38,8 +38,7 @@ public abstract class RecursionGuard<Key> {
    * @param computation a piece of code to compute.
    * @return the result of the computation or {@code null} if we're entering a computation with this key on this thread recursively,
    */
-  @Nullable
-  public abstract <T> T doPreventingRecursion(Key key, boolean memoize, Supplier<T> computation);
+  public abstract @Nullable <T> T doPreventingRecursion(Key key, boolean memoize, Supplier<T> computation);
 
   /**
    * @deprecated Use {@link RecursionManager#markStack()} instead

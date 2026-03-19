@@ -57,8 +57,7 @@ public abstract class TwosideTextDiffViewer extends TwosideDiffViewer<TextEditor
 
    
     private final List<? extends EditorEx> myEditableEditors;
-    @Nullable
-    private List<? extends EditorEx> myEditors;
+    private @Nullable List<? extends EditorEx> myEditors;
 
    
     protected final SetEditorSettingsAction myEditorSettingsAction;

@@ -109,8 +109,7 @@ public class PresentationData implements ColoredItemPresentation, ComparableObje
         return myIcon;
     }
 
-    @Nullable
-    public ColorValue getForcedTextForeground() {
+    public @Nullable ColorValue getForcedTextForeground() {
         return myForcedTextForeground;
     }
 

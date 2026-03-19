@@ -467,8 +467,7 @@ class EventLogConsole {
         }
     }
 
-    @Nullable
-    private RangeHighlighterEx findHighlighter(String id) {
+    private @Nullable RangeHighlighterEx findHighlighter(String id) {
         EditorEx editor = (EditorEx) getConsoleEditor();
         SimpleReference<RangeHighlighterEx> highlighter = new SimpleReference<>();
 

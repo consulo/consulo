@@ -23,13 +23,11 @@ import org.jspecify.annotations.Nullable;
 import javax.swing.*;
 
 public interface ComponentContainer extends Disposable {
-  @Nullable
-  default Component getUIComponent() {
+  default @Nullable Component getUIComponent() {
     throw new AbstractMethodError();
   }
 
-  @Nullable
-  default Component getUIPreferredFocusableComponent() {
+  default @Nullable Component getUIPreferredFocusableComponent() {
     throw new AbstractMethodError();
   }
 

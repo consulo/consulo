@@ -58,8 +58,7 @@ public class TokenSequence implements TokenList {
     }
 
     @Override
-    @Nullable
-    public IElementType getTokenType(int index) {
+    public @Nullable IElementType getTokenType(int index) {
         if (index < 0 || index >= getTokenCount()) {
             return null;
         }

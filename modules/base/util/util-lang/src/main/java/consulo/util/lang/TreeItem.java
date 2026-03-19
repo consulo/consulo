@@ -22,8 +22,7 @@ import java.util.List;
 
 public class TreeItem <Data> {
   private Data myData;
-  @Nullable
-  private TreeItem<Data> myParent = null;
+  private @Nullable TreeItem<Data> myParent = null;
   private final List<TreeItem<Data>> myChildren = new ArrayList<TreeItem<Data>>();
 
   public TreeItem(Data data) {
@@ -38,8 +37,7 @@ public class TreeItem <Data> {
     myData = data;
   }
 
-  @Nullable
-  public TreeItem<Data> getParent() {
+  public @Nullable TreeItem<Data> getParent() {
     return myParent;
   }
 

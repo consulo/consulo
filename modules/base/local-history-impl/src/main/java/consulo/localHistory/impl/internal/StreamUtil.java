@@ -105,8 +105,7 @@ public class StreamUtil {
     out.writeUTF(s);
   }
 
-  @Nullable
-  public static String readStringOrNull(DataInput in) throws IOException {
+  public static @Nullable String readStringOrNull(DataInput in) throws IOException {
     if (!in.readBoolean()) return null;
     return readString(in);
   }

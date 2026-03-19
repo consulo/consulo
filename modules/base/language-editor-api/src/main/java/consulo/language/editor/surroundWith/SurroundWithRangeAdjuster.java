@@ -33,8 +33,7 @@ public interface SurroundWithRangeAdjuster {
   @Nullable
   TextRange adjustSurroundWithRange(PsiFile file, TextRange selectedRange);
 
-  @Nullable
-  default TextRange adjustSurroundWithRange(PsiFile file, TextRange selectedRange, boolean hasSelection) {
+  default @Nullable TextRange adjustSurroundWithRange(PsiFile file, TextRange selectedRange, boolean hasSelection) {
     return adjustSurroundWithRange(file, selectedRange);
   }
 }

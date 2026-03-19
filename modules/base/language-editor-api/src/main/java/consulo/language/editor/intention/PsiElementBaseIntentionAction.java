@@ -76,8 +76,7 @@ public abstract class PsiElementBaseIntentionAction extends BaseIntentionAction 
    */
   public abstract boolean isAvailable(Project project, Editor editor, PsiElement element);
 
-  @Nullable
-  private static PsiElement getElement(Editor editor, PsiFile file) {
+  private static @Nullable PsiElement getElement(Editor editor, PsiFile file) {
     CaretModel caretModel = editor.getCaretModel();
     int position = caretModel.getOffset();
     return file.findElementAt(position);

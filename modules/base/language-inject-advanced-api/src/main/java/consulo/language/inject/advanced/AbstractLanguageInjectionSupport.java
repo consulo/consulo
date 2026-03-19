@@ -130,8 +130,7 @@ public abstract class AbstractLanguageInjectionSupport extends LanguageInjection
         };
     }
 
-    @Nullable
-    protected static BaseInjection showDefaultInjectionUI(final Project project, BaseInjection injection) {
+    protected static @Nullable BaseInjection showDefaultInjectionUI(final Project project, BaseInjection injection) {
         final BaseInjectionPanel panel = new BaseInjectionPanel(injection, project);
         panel.reset();
         final DialogBuilder builder = new DialogBuilder(project);
@@ -174,8 +173,7 @@ public abstract class AbstractLanguageInjectionSupport extends LanguageInjection
         return obj instanceof LanguageInjectionSupport && getId().equals(((LanguageInjectionSupport) obj).getId());
     }
 
-    @Nullable
-    public String getHelpId() {
+    public @Nullable String getHelpId() {
         return null;
     }
 }

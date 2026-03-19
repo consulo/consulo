@@ -44,8 +44,7 @@ public class Iteration<T, R, I extends Iterable<T>, C extends Collection<R>>
 
 	private final CoroutineStep<T, R> rProcessingStep;
 
-	@Nullable
-	private final Supplier<C> fCollectionFactory;
+	private final @Nullable Supplier<C> fCollectionFactory;
 
 	//~ Constructors -----------------------------------------------------------
 

@@ -86,8 +86,7 @@ public abstract class ASTDelegatePsiElement extends PsiElementBase implements Ps
 
     @Override
     @RequiredReadAction
-    @Nullable
-    public PsiElement getFirstChild() {
+    public @Nullable PsiElement getFirstChild() {
         return SharedImplUtil.getFirstChild(getNode());
     }
 

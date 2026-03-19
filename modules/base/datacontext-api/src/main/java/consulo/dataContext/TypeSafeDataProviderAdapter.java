@@ -32,8 +32,7 @@ public class TypeSafeDataProviderAdapter implements DataProvider, DataSink {
   }
 
   @Override
-  @Nullable
-  public synchronized Object getData(Key<?> dataId) {
+  public synchronized @Nullable Object getData(Key<?> dataId) {
     myValue = null;
     myLastKey = dataId;
     myProvider.calcData(myLastKey, this);

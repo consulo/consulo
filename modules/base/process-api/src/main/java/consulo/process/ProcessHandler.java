@@ -63,8 +63,7 @@ public interface ProcessHandler extends UserDataHolder, TaskExecutor {
 
   void notifyTextAvailable(String text, Key outputType);
 
-  @Nullable
-  abstract OutputStream getProcessInput();
+  abstract @Nullable OutputStream getProcessInput();
 
   boolean isStartNotified();
 
@@ -73,13 +72,11 @@ public interface ProcessHandler extends UserDataHolder, TaskExecutor {
   @Nullable
   <F extends ProcessHandlerFeature> F getFeature(Class<F> featureClass);
 
-  @Nullable
-  default Charset getCharset() {
+  default @Nullable Charset getCharset() {
     return null;
   }
 
-  @Nullable
-  default String getCommandLine() {
+  default @Nullable String getCommandLine() {
     return null;
   }
 

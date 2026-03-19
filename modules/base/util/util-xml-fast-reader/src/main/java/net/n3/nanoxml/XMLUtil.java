@@ -132,8 +132,7 @@ class XMLUtil
     * @throws java.io.IOException
     *		if an error occurred reading the data
     */
-   @Nullable
-   static String scanPublicID(StringBuffer publicID,
+   static @Nullable String scanPublicID(StringBuffer publicID,
                               IXMLReader   reader)
       throws IOException,
              XMLParseException
@@ -159,8 +158,7 @@ class XMLUtil
     * @throws java.io.IOException
     *		if an error occurred reading the data
     */
-   @Nullable
-   static String scanSystemID(IXMLReader reader)
+   static @Nullable String scanSystemID(IXMLReader reader)
       throws IOException,
             XMLParseException
    {

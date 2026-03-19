@@ -41,8 +41,7 @@ public class FilePathChangesTreeListImpl extends ChangesTreeListImpl<FilePath> {
   }
 
   @Override
-  @Nullable
-  protected FilePath getLeadSelectedObject(ChangesBrowserNode node) {
+  protected @Nullable FilePath getLeadSelectedObject(ChangesBrowserNode node) {
     Object userObject = node.getUserObject();
     return userObject instanceof FilePath ? (FilePath)userObject : null;
   }

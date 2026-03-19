@@ -27,8 +27,7 @@ public final class LocalFileFinder {
    * 2) even if drive exists, it could be not used due to 10 ms threshold.
    * Method is not generic and is not suitable for all.
    */
-  @Nullable
-  public static VirtualFile findFile(String path) {
+  public static @Nullable VirtualFile findFile(String path) {
     if (windowsDriveExists(path)) {
       return LocalFileSystem.getInstance().findFileByPath(path);
     }

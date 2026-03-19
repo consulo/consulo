@@ -62,8 +62,7 @@ public class ChangeDiffRequestProducer implements DiffRequestProducer {
 
     public static Key<Change> CHANGE_KEY = Key.create("DiffRequestPresentable.Change");
 
-    @Nullable
-    private final Project myProject;
+    private final @Nullable Project myProject;
     
     private final Change myChange;
     
@@ -80,8 +79,7 @@ public class ChangeDiffRequestProducer implements DiffRequestProducer {
         return myChange;
     }
 
-    @Nullable
-    public Project getProject() {
+    public @Nullable Project getProject() {
         return myProject;
     }
 
@@ -120,13 +118,11 @@ public class ChangeDiffRequestProducer implements DiffRequestProducer {
             && Objects.equals(contentRevision1.getVirtualFile(), contentRevision2.getVirtualFile());
     }
 
-    @Nullable
-    public static ChangeDiffRequestProducer create(@Nullable Project project, Change change) {
+    public static @Nullable ChangeDiffRequestProducer create(@Nullable Project project, Change change) {
         return create(project, change, Collections.<Key, Object>emptyMap());
     }
 
-    @Nullable
-    public static ChangeDiffRequestProducer create(
+    public static @Nullable ChangeDiffRequestProducer create(
         @Nullable Project project,
         Change change,
         Map<Key, Object> changeContext

@@ -33,8 +33,7 @@ public interface WizardStep<CONTEXT> {
   @RequiredUIAccess
   Component getComponent(CONTEXT context, Disposable uiDisposable);
 
-  @Nullable
-  default Component getPreferredFocusedComponent() {
+  default @Nullable Component getPreferredFocusedComponent() {
     return null;
   }
 

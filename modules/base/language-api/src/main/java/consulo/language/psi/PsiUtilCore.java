@@ -304,8 +304,7 @@ public class PsiUtilCore {
         }
 
         @Override
-        @Nullable
-        public PsiReference getReference() {
+        public @Nullable PsiReference getReference() {
             throw createException();
         }
 
@@ -580,8 +579,7 @@ public class PsiUtilCore {
         return elt;
     }
 
-    @Nullable
-    public static PsiFile getTemplateLanguageFile(PsiElement element) {
+    public static @Nullable PsiFile getTemplateLanguageFile(PsiElement element) {
         if (element == null) {
             return null;
         }

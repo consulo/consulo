@@ -19,8 +19,7 @@ public final class AnimationContext<T> implements Consumer<T> {
     this.value = t;
   }
 
-  @Nullable
-  public T getValue() {
+  public @Nullable T getValue() {
     return value;
   }
 }

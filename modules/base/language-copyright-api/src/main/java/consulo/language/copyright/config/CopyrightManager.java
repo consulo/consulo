@@ -51,8 +51,7 @@ public class CopyrightManager implements PersistentStateComponent<Element> {
   private final LinkedHashMap<String, String> myModule2Copyrights = new LinkedHashMap<>();
   private final Map<String, CopyrightProfile> myCopyrights = new HashMap<>();
   private final CopyrightFileConfigManager myCopyrightFileConfigManager = new CopyrightFileConfigManager();
-  @Nullable
-  private CopyrightProfile myDefaultCopyright = null;
+  private @Nullable CopyrightProfile myDefaultCopyright = null;
 
   private Project myProject;
 
@@ -118,8 +117,7 @@ public class CopyrightManager implements PersistentStateComponent<Element> {
     return myModule2Copyrights;
   }
 
-  @Nullable
-  public CopyrightProfile getDefaultCopyright() {
+  public @Nullable CopyrightProfile getDefaultCopyright() {
     return myDefaultCopyright;
   }
 
@@ -163,8 +161,7 @@ public class CopyrightManager implements PersistentStateComponent<Element> {
     return myDefaultCopyright != null || !myModule2Copyrights.isEmpty();
   }
 
-  @Nullable
-  public CopyrightProfile getCopyrightOptions(PsiFile file) {
+  public @Nullable CopyrightProfile getCopyrightOptions(PsiFile file) {
     VirtualFile virtualFile = file.getVirtualFile();
     if (virtualFile == null || myCopyrightFileConfigManager.getOptions(virtualFile.getFileType()).getFileTypeOverride() == CopyrightFileConfig.NO_COPYRIGHT) {
       return null;

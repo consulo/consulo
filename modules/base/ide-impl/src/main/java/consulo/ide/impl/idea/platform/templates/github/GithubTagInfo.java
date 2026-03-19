@@ -158,8 +158,7 @@ public class GithubTagInfo {
     }
   }
 
-  @Nullable
-  public static GithubTagInfo tryCast(@Nullable Object o) {
+  public static @Nullable GithubTagInfo tryCast(@Nullable Object o) {
     return ObjectUtil.tryCast(o, GithubTagInfo.class);
   }
 

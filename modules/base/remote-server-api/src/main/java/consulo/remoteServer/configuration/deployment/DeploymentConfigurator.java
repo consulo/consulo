@@ -29,8 +29,7 @@ public abstract class DeploymentConfigurator<D extends DeploymentConfiguration, 
     
     public abstract D createDefaultConfiguration(DeploymentSource source);
 
-    @Nullable
-    public abstract SettingsEditor<D> createEditor(DeploymentSource source, @Nullable RemoteServer<S> server);
+    public abstract @Nullable SettingsEditor<D> createEditor(DeploymentSource source, @Nullable RemoteServer<S> server);
 
     /**
      * @see LocatableConfiguration#isGeneratedName()
@@ -44,8 +43,7 @@ public abstract class DeploymentConfigurator<D extends DeploymentConfiguration, 
     /**
      * @see LocatableConfiguration#suggestedName()
      */
-    @Nullable
-    public String suggestConfigurationName(DeploymentSource deploymentSource, D deploymentConfiguration) {
+    public @Nullable String suggestConfigurationName(DeploymentSource deploymentSource, D deploymentConfiguration) {
         return null;
     }
 }

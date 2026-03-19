@@ -36,8 +36,7 @@ import org.jspecify.annotations.Nullable;
 public interface NamesValidator extends LanguageExtension {
   ExtensionPointCacheKey<NamesValidator, ByLanguageValue<NamesValidator>> KEY = ExtensionPointCacheKey.create("NamesValidator", LanguageOneToOne.build(new DefaultNamesValidator()));
 
-  @Nullable
-  static NamesValidator forLanguage(Language language) {
+  static @Nullable NamesValidator forLanguage(Language language) {
     return Application.get().getExtensionPoint(NamesValidator.class).getOrBuildCache(KEY).get(language);
   }
 

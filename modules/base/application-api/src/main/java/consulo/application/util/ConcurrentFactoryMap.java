@@ -24,8 +24,7 @@ public abstract class ConcurrentFactoryMap<K, V> implements ConcurrentMap<K, V> 
 
   }
 
-  @Nullable
-  protected abstract V create(K key);
+  protected abstract @Nullable V create(K key);
 
   @Override
   public V get(Object key) {
@@ -44,8 +43,7 @@ public abstract class ConcurrentFactoryMap<K, V> implements ConcurrentMap<K, V> 
     return nullize(value);
   }
 
-  @Nullable
-  private static <T> T nullize(T value) {
+  private static @Nullable <T> T nullize(T value) {
     return value == FAKE_NULL() ? null : value;
   }
 

@@ -109,8 +109,7 @@ public class ObjectStubTree<T extends Stub> {
     myDebugInfo = info;
   }
 
-  @Nullable
-  public static ObjectStubTree getStubTree(ObjectStubBase root) {
+  public static @Nullable ObjectStubTree getStubTree(ObjectStubBase root) {
     return root.getUserData(STUB_TO_TREE_REFERENCE);
   }
 

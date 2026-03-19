@@ -267,8 +267,7 @@ public abstract class TreeInplaceEditor implements AWTEventListener {
     cancelEditing();
   }
 
-  @Nullable
-  protected Rectangle getEditorBounds() {
+  protected @Nullable Rectangle getEditorBounds() {
     JTree tree = getTree();
     Rectangle bounds = tree.getVisibleRect();
     Rectangle nodeBounds = tree.getPathBounds(getNodePath());

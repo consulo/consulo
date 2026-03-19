@@ -38,8 +38,7 @@ public interface ModuleExtensionProvider<T extends ModuleExtension<T>> {
     ExtensionPointCacheKey<ModuleExtensionProvider, Map<String, ModuleExtensionProvider>> BY_ID =
         ExtensionPointCacheKey.groupBy("ByKeyModuleExtensionProvider", ModuleExtensionProvider::getId);
 
-    @Nullable
-    static ModuleExtensionProvider findProvider(String id) {
+    static @Nullable ModuleExtensionProvider findProvider(String id) {
         ExtensionPoint<ModuleExtensionProvider> point = Application.get().getExtensionPoint(ModuleExtensionProvider.class);
         Map<String, ModuleExtensionProvider> map = point.getOrBuildCache(BY_ID);
         return map.get(id);
@@ -48,8 +47,7 @@ public interface ModuleExtensionProvider<T extends ModuleExtension<T>> {
     
     String getId();
 
-    @Nullable
-    default String getParentId() {
+    default @Nullable String getParentId() {
         return null;
     }
 

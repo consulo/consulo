@@ -31,8 +31,7 @@ public class RestoreFoldArrangementCallback implements ArrangementCallback {
 
   
   private final  Editor           myEditor;
-  @Nullable
-  private final CodeFoldingState myCodeFoldingState;
+  private final @Nullable CodeFoldingState myCodeFoldingState;
 
   public RestoreFoldArrangementCallback(Editor editor) {
     myEditor = editor;

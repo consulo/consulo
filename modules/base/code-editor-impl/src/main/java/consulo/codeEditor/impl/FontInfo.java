@@ -76,16 +76,14 @@ public class FontInfo {
 
   private static final Comparator<File> BY_NAME = Comparator.comparing(File::getName);
 
-  @Nullable
-  private static File findFileForFont(String familyName, int style) {
+  private static @Nullable File findFileForFont(String familyName, int style) {
     File fontFile = doFindFileForFont(familyName, style);
     if (fontFile == null && style != Font.PLAIN) fontFile = doFindFileForFont(familyName, Font.PLAIN);
     if (fontFile == null) fontFile = doFindFileForFont(familyName, -1);
     return fontFile;
   }
 
-  @Nullable
-  private static File doFindFileForFont(String familyName, int style) {
+  private static @Nullable File doFindFileForFont(String familyName, int style) {
     String normalizedFamilyName = familyName.toLowerCase(Locale.getDefault()).replace(" ", "");
     FilenameFilter filter = (file, name) -> {
       String normalizedName = name.toLowerCase(Locale.getDefault());

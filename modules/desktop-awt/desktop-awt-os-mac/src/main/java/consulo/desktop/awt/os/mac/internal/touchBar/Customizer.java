@@ -16,8 +16,7 @@ class Customizer {
     private final Map<AnAction, Object> myAct2Descriptor = new HashMap<>();
 
     private final TBPanel.@Nullable CrossEscInfo myCrossEscInfo;
-    @Nullable
-    private final String[] myAutoCloseActionIds;
+    private final @Nullable String[] myAutoCloseActionIds;
 
     Customizer(TBPanel.@Nullable CrossEscInfo crossEscInfo, String[] autoCloseActionIds, ItemCustomizer itemCustomizer) {
         this(crossEscInfo, autoCloseActionIds);

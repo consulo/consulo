@@ -174,8 +174,7 @@ public abstract class PostfixTemplate implements PossiblyDumbAware {
   /**
    * @return the {@link PostfixTemplateProvider} that provided this template
    */
-  @Nullable
-  public PostfixTemplateProvider getProvider() {
+  public @Nullable PostfixTemplateProvider getProvider() {
     return myProvider;
   }
 

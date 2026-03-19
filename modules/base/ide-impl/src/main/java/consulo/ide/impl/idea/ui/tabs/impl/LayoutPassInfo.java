@@ -29,19 +29,15 @@ public abstract class LayoutPassInfo {
     myVisibleInfos = visibleInfos;
   }
 
-  @Nullable
-  public abstract TabInfo getPreviousFor(TabInfo info);
+  public abstract @Nullable TabInfo getPreviousFor(TabInfo info);
 
-  @Nullable
-  public abstract TabInfo getNextFor(TabInfo info);
+  public abstract @Nullable TabInfo getNextFor(TabInfo info);
 
-  @Nullable
-  public static TabInfo getPrevious(List<TabInfo> list, int i) {
+  public static @Nullable TabInfo getPrevious(List<TabInfo> list, int i) {
     return i > 0 ? list.get(i - 1) : null;
   }
 
-  @Nullable
-  public static TabInfo getNext(List<TabInfo> list, int i) {
+  public static @Nullable TabInfo getNext(List<TabInfo> list, int i) {
     return i < list.size() - 1 ? list.get(i + 1) : null;
   }
 

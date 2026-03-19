@@ -140,7 +140,7 @@ public class FileTreeModelBuilder {
         return build(project, showProgress, null);
     }
 
-    public TreeModel build(final Project project, boolean showProgress, @Nullable final Runnable successRunnable) {
+    public TreeModel build(final Project project, boolean showProgress, final @Nullable Runnable successRunnable) {
         final Runnable buildingRunnable = () -> {
             ProgressIndicator indicator = ProgressManager.getInstance().getProgressIndicator();
             if (indicator != null) {
@@ -277,8 +277,7 @@ public class FileTreeModelBuilder {
         return myModuleDirNodes.containsKey(file);
     }
 
-    @Nullable
-    public DefaultMutableTreeNode removeNode(PsiElement element, PsiDirectory parent) {
+    public @Nullable DefaultMutableTreeNode removeNode(PsiElement element, PsiDirectory parent) {
         LOG.assertTrue(
             parent != null,
             element instanceof PsiFile file && file.getVirtualFile() != null ? file.getVirtualFile().getPath() : element
@@ -350,8 +349,7 @@ public class FileTreeModelBuilder {
         return parentNode != null ? parentNode : myRoot;
     }
 
-    @Nullable
-    public PackageDependenciesNode addFileNode(PsiFile file) {
+    public @Nullable PackageDependenciesNode addFileNode(PsiFile file) {
         boolean isMarked = myMarker != null && myMarker.isMarked(file.getVirtualFile());
         if (!isMarked) {
             return null;
@@ -384,8 +382,7 @@ public class FileTreeModelBuilder {
         return rootToReload;
     }
 
-    @Nullable
-    public PackageDependenciesNode addDirNode(PsiDirectory dir) {
+    public @Nullable PackageDependenciesNode addDirNode(PsiDirectory dir) {
         VirtualFile vFile = dir.getVirtualFile();
         if (myMarker == null) {
             return null;
@@ -422,8 +419,7 @@ public class FileTreeModelBuilder {
         return rootToReload != null ? rootToReload : myRoot;
     }
 
-    @Nullable
-    public PackageDependenciesNode findNode(PsiFileSystemItem file, PsiElement psiElement) {
+    public @Nullable PackageDependenciesNode findNode(PsiFileSystemItem file, PsiElement psiElement) {
         if (file instanceof PsiDirectory) {
             return getModuleDirNode(file.getVirtualFile(), myFileIndex.getModuleForFile(file.getVirtualFile()), null);
         }
@@ -442,8 +438,7 @@ public class FileTreeModelBuilder {
         }
     }
 
-    @Nullable
-    public static PackageDependenciesNode[] findNodeForPsiElement(PackageDependenciesNode parent, PsiElement element) {
+    public static @Nullable PackageDependenciesNode[] findNodeForPsiElement(PackageDependenciesNode parent, PsiElement element) {
         Set<PackageDependenciesNode> result = new HashSet<>();
         for (int i = 0; i < parent.getChildCount(); i++) {
             if (parent.getChildAt(i) instanceof PackageDependenciesNode node) {
@@ -570,8 +565,7 @@ public class FileTreeModelBuilder {
     }
 
 
-    @Nullable
-    private PackageDependenciesNode getModuleNode(Module module) {
+    private @Nullable PackageDependenciesNode getModuleNode(Module module) {
         if (module == null || !myShowModules) {
             return myRoot;
         }

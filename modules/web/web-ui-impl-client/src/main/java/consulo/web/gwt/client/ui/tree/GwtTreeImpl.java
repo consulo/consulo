@@ -89,8 +89,7 @@ public class GwtTreeImpl extends CellTree {
     node.getParent().setChildOpen(index, !node.getParent().isChildOpen(index));
   }
 
-  @Nullable
-  private TreeNode findNode(TreeNode node, String nodeId) {
+  private @Nullable TreeNode findNode(TreeNode node, String nodeId) {
     int childCount = node.getChildCount();
     for (int i = 0; i < childCount; i++) {
       TreeNode child = node.getChild(i);

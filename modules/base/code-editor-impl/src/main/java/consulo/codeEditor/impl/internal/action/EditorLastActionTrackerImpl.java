@@ -63,8 +63,7 @@ public class EditorLastActionTrackerImpl implements EditorLastActionTracker, Dis
     }
 
     @Override
-    @Nullable
-    public String getLastActionId() {
+    public @Nullable String getLastActionId() {
         return myLastActionId;
     }
 

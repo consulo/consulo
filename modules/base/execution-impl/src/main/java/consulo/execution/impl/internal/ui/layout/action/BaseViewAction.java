@@ -64,18 +64,15 @@ public abstract class BaseViewAction extends DumbAwareAction {
 
     protected abstract void actionPerformed(AnActionEvent e, ViewContext context, Content[] content);
 
-    @Nullable
-    private ViewContext getViewFacade(AnActionEvent e) {
+    private @Nullable ViewContext getViewFacade(AnActionEvent e) {
         return e.getData(ViewContext.CONTEXT_KEY);
     }
 
-    @Nullable
-    private Content[] getContent(AnActionEvent e) {
+    private @Nullable Content[] getContent(AnActionEvent e) {
         return e.getData(Content.KEY_OF_ARRAY);
     }
 
-    @Nullable
-    protected static Tab getTabFor(ViewContext context, Content[] content) {
+    protected static @Nullable Tab getTabFor(ViewContext context, Content[] content) {
         Grid grid = context.findGridFor(content[0]);
         return context.getTabFor(grid);
     }

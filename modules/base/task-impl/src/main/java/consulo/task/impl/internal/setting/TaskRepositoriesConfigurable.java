@@ -189,8 +189,7 @@ public class TaskRepositoriesConfigurable implements Configurable.NoScroll, Proj
         }
     }
 
-    @Nullable
-    private TaskRepository getSelectedRepository() {
+    private @Nullable TaskRepository getSelectedRepository() {
         return (TaskRepository) myRepositoriesList.getSelectedValue();
     }
 

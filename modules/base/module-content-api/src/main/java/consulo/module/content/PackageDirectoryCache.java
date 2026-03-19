@@ -49,8 +49,7 @@ public class PackageDirectoryCache {
     return info == null ? Collections.emptyList() : info.myPackageDirectories;
   }
 
-  @Nullable
-  private PackageInfo getPackageInfo(String packageName) {
+  private @Nullable PackageInfo getPackageInfo(String packageName) {
     PackageInfo info = myDirectoriesByPackageNameCache.get(packageName);
     if (info == null) {
       if (myNonExistentPackages.contains(packageName)) return null;

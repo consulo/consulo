@@ -25,8 +25,7 @@ import org.jspecify.annotations.Nullable;
 import java.util.Collection;
 
 public class DvcsBranchUtil {
-    @Nullable
-    public static <T extends DvcsBranchInfo> T find(
+    public static @Nullable <T extends DvcsBranchInfo> T find(
         @Nullable Collection<T> branches,
         @Nullable Repository repository,
         String sourceBranch

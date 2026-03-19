@@ -37,16 +37,14 @@ public abstract class ScratchFileService {
   
   public abstract String getRootPath(RootType rootId);
 
-  @Nullable
-  public abstract RootType getRootType(@Nullable VirtualFile file);
+  public abstract @Nullable RootType getRootType(@Nullable VirtualFile file);
 
   public abstract VirtualFile findFile(RootType rootType, String pathName, Option option) throws IOException;
 
   
   public abstract PerFileMappings<Language> getScratchesMapping();
 
-  @Nullable
-  public static RootType findRootType(@Nullable VirtualFile file) {
+  public static @Nullable RootType findRootType(@Nullable VirtualFile file) {
     if (file == null || !file.isInLocalFileSystem()) return null;
     VirtualFile parent = file.isDirectory() ? file : file.getParent();
     return getInstance().getRootType(parent);

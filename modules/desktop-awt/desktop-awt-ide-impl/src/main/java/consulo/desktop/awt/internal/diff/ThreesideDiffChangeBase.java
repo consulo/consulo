@@ -91,8 +91,7 @@ public abstract class ThreesideDiffChangeBase {
   
   protected abstract Editor getEditor(ThreeSide side);
 
-  @Nullable
-  protected abstract MergeInnerDifferences getInnerFragments();
+  protected abstract @Nullable MergeInnerDifferences getInnerFragments();
 
   
   public TextDiffType getDiffType() {

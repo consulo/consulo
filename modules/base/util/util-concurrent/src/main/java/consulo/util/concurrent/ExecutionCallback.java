@@ -24,8 +24,7 @@ import java.util.List;
 class ExecutionCallback {
   private int myCurrentCount;
   private final int myCountToExecution;
-  @Nullable
-  private List<Runnable> myRunnables = null;
+  private @Nullable List<Runnable> myRunnables = null;
 
   ExecutionCallback() {
     this(1);

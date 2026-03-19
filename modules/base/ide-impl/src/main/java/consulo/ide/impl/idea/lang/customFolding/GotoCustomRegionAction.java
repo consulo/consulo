@@ -116,8 +116,7 @@ public class GotoCustomRegionAction extends AnAction implements DumbAware, Popup
         return foldingDescriptors;
     }
 
-    @Nullable
-    private static CustomFoldingBuilder getCustomFoldingBuilder(FoldingBuilder builder, FoldingDescriptor descriptor) {
+    private static @Nullable CustomFoldingBuilder getCustomFoldingBuilder(FoldingBuilder builder, FoldingDescriptor descriptor) {
         if (builder instanceof CustomFoldingBuilder customFoldingBuilder) {
             return customFoldingBuilder;
         }

@@ -80,8 +80,7 @@ public class DependencyRule {
 
   }
 
-  @Nullable
-  private static String getPackageSetPresentation(NamedScope scope) {
+  private static @Nullable String getPackageSetPresentation(NamedScope scope) {
     if (scope != null) {
       PackageSet packageSet = scope.getValue();
       if (packageSet != null) {

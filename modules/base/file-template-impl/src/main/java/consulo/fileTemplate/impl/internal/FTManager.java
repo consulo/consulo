@@ -43,8 +43,7 @@ public class FTManager {
   private final String myName;
   private final boolean myInternal;
   private final File myTemplatesDir;
-  @Nullable
-  private final FTManager myOriginal;
+  private final @Nullable FTManager myOriginal;
   private final Map<String, FileTemplateBase> myTemplates = new HashMap<>();
   private volatile List<FileTemplateBase> mySortedTemplates;
   private final List<DefaultTemplate> myDefaultTemplates = new ArrayList<>();
@@ -100,8 +99,7 @@ public class FTManager {
    * @param templateQname
    * @return template no matter enabled or disabled it is
    */
-  @Nullable
-  public FileTemplateBase getTemplate(String templateQname) {
+  public @Nullable FileTemplateBase getTemplate(String templateQname) {
     return getTemplates().get(templateQname);
   }
 
@@ -110,8 +108,7 @@ public class FTManager {
    * @param templateName
    * @return
    */
-  @Nullable
-  public FileTemplateBase findTemplateByName(String templateName) {
+  public @Nullable FileTemplateBase findTemplateByName(String templateName) {
     FileTemplateBase template = getTemplates().get(templateName);
     if (template != null) {
       boolean isEnabled = !(template instanceof BundledFileTemplate) || ((BundledFileTemplate)template).isEnabled();

@@ -73,8 +73,7 @@ public class LastUnchangedContentTracker {
     file.putUserData(VCS_INVALID_FILE_STATUS, null);
   }
 
-  @Nullable
-  public static byte[] getLastUnchangedContent(VirtualFile file) {
+  public static @Nullable byte[] getLastUnchangedContent(VirtualFile file) {
     Integer id = getSavedContentId(file);
     try {
       return id == null ? null : getFS().contentsToByteArray(id);
@@ -136,8 +135,7 @@ public class LastUnchangedContentTracker {
     saveContentReference(file, getFS().storeUnlinkedContent(content.getBytes(file.getCharset())));
   }
 
-  @Nullable
-  private static Integer getSavedContentId(VirtualFile file) {
+  private static @Nullable Integer getSavedContentId(VirtualFile file) {
     if (!file.isValid()) {
       return null;
     }
@@ -167,8 +165,7 @@ public class LastUnchangedContentTracker {
     return oldContentId;
   }
 
-  @Nullable
-  private static Long getLastSavedStamp(VirtualFile file) {
+  private static @Nullable Long getLastSavedStamp(VirtualFile file) {
     Long l = file.getUserData(LAST_TS_KEY);
     if (l == null) {
       try {

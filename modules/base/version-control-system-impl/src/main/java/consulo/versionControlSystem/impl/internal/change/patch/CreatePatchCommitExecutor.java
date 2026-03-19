@@ -102,8 +102,7 @@ public class CreatePatchCommitExecutor extends LocalCommitExecutor {
         }
 
         @Override
-        @Nullable
-        public JComponent getAdditionalConfigurationUI() {
+        public @Nullable JComponent getAdditionalConfigurationUI() {
             return myPanel.getPanel();
         }
 
@@ -244,8 +243,7 @@ public class CreatePatchCommitExecutor extends LocalCommitExecutor {
 
         @RequiredUIAccess
         @Override
-        @Nullable
-        public ValidationInfo validateFields() {
+        public @Nullable ValidationInfo validateFields() {
             return myPanel.validateFields();
         }
 

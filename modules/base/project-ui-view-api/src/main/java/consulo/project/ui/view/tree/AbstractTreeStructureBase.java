@@ -78,11 +78,9 @@ public abstract class AbstractTreeStructureBase extends AbstractTreeStructure {
     return (NodeDescriptor)element;
   }
 
-  @Nullable
-  public abstract List<TreeStructureProvider> getProviders();
+  public abstract @Nullable List<TreeStructureProvider> getProviders();
 
-  @Nullable
-  public Object getDataFromProviders(List<AbstractTreeNode> selectedNodes, Key dataId) {
+  public @Nullable Object getDataFromProviders(List<AbstractTreeNode> selectedNodes, Key dataId) {
     List<TreeStructureProvider> providers = getProvidersDumbAware();
     if (!providers.isEmpty()) {
       for (TreeStructureProvider treeStructureProvider : providers) {

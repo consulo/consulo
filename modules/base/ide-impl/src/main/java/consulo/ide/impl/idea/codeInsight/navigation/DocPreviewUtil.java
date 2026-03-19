@@ -150,8 +150,7 @@ public class DocPreviewUtil {
    * @param name  name to process
    * @return      short name derived from the given full name if possible; <code>null</code> otherwise
    */
-  @Nullable
-  private static String parseShortName(String name) {
+  private static @Nullable String parseShortName(String name) {
     int i = name.lastIndexOf('.');
     return i > 0 && i < name.length() - 1 ? name.substring(i + 1) : null;
   }
@@ -165,8 +164,7 @@ public class DocPreviewUtil {
    * @param address     address to process
    * @return            long name derived from the given arguments (if any); <code>null</code> otherwise
    */
-  @Nullable
-  private static String parseLongName(String shortName, String address) {
+  private static @Nullable String parseLongName(String shortName, String address) {
     String pureAddress = address;
     int i = pureAddress.lastIndexOf("//");
     if (i > 0 && i < pureAddress.length() - 2) {

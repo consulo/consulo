@@ -40,8 +40,7 @@ public class VcsCurrentRevisionProxy implements ContentRevision {
   
   private final VcsKey myVcsKey;
 
-  @Nullable
-  public static VcsCurrentRevisionProxy create(VirtualFile file, Project project) {
+  public static @Nullable VcsCurrentRevisionProxy create(VirtualFile file, Project project) {
     AbstractVcs vcs = ProjectLevelVcsManager.getInstance(project).getVcsFor(file);
     if (vcs != null) {
       DiffProvider diffProvider = vcs.getDiffProvider();
@@ -59,8 +58,7 @@ public class VcsCurrentRevisionProxy implements ContentRevision {
     myVcsKey = vcsKey;
   }
 
-  @Nullable
-  public String getContent() throws VcsException {
+  public @Nullable String getContent() throws VcsException {
     return getVcsRevision().getContent();
   }
 

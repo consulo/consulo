@@ -779,8 +779,7 @@ public class GeneratedParserUtilBase {
       offset = offset_;
     }
 
-    @Nullable
-    public String convertItem(Object o) {
+    public @Nullable String convertItem(Object o) {
       return o instanceof Object[] ? StringUtil.join((Object[])o, this, " ") : o.toString();
     }
 

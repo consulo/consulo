@@ -129,8 +129,7 @@ public abstract class XDebuggerUtil {
 
     public abstract <T extends XDebuggerSettings<?>> T getDebuggerSettings(Class<T> aClass);
 
-    @Nullable
-    public abstract XValueContainer getValueContainer(DataContext dataContext);
+    public abstract @Nullable XValueContainer getValueContainer(DataContext dataContext);
 
     /**
      * Process all {@link PsiElement}s on the specified line

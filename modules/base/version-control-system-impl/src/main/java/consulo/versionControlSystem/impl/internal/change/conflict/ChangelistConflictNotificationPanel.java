@@ -35,8 +35,7 @@ import java.util.function.Supplier;
  * @author Dmitry Avdeev
  */
 public class ChangelistConflictNotificationPanel {
-    @Nullable
-    public static EditorNotificationBuilder create(ChangelistConflictTracker tracker, VirtualFile file, Supplier<EditorNotificationBuilder> builderFactory) {
+    public static @Nullable EditorNotificationBuilder create(ChangelistConflictTracker tracker, VirtualFile file, Supplier<EditorNotificationBuilder> builderFactory) {
         ChangeListManager manager = tracker.getChangeListManager();
         Change change = manager.getChange(file);
         if (change == null) {

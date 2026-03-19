@@ -95,8 +95,7 @@ public class AlignmentImpl extends Alignment {
    * @return block {@link #setOffsetRespBlock(LeafBlockWrapper) registered} for the current alignment object or
    * {@link #setParent(Alignment) its parent} using the algorithm above if any; {@code null} otherwise
    */
-  @Nullable
-  public LeafBlockWrapper getOffsetRespBlockBefore(@Nullable AbstractBlockWrapper block) {
+  public @Nullable LeafBlockWrapper getOffsetRespBlockBefore(@Nullable AbstractBlockWrapper block) {
     if (!continueOffsetResponsibleBlockRetrieval(block)) {
       return null;
     }

@@ -115,8 +115,7 @@ public class StatusBarWidgetsActionGroup extends ActionGroup {
             }
         }
 
-        @Nullable
-        private static StatusBarWidgetFactory getFactory(AnActionEvent e) {
+        private static @Nullable StatusBarWidgetFactory getFactory(AnActionEvent e) {
             Project project = e.getData(Project.KEY);
             String hoveredWidgetId = e.getData(StatusBarEx.HOVERED_WIDGET_ID);
             if (project != null && hoveredWidgetId != null && e.hasData(StatusBar.KEY)) {

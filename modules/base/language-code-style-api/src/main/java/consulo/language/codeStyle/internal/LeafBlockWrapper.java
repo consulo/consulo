@@ -197,8 +197,7 @@ public class LeafBlockWrapper extends AbstractBlockWrapper {
     mySpaceProperty = currentSpaceProperty;
   }
 
-  @Nullable
-  public IndentInfo calcIndentFromParent() {
+  public @Nullable IndentInfo calcIndentFromParent() {
     AbstractBlockWrapper firstIndentedParent = findFirstIndentedParent();
     WhiteSpace mySpace = getWhiteSpace();
     if (firstIndentedParent != null) {

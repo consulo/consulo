@@ -33,8 +33,7 @@ public class NonCodeUsageInfoFactory implements UsageInfoFactory {
   }
 
   @Override
-  @Nullable
-  public UsageInfo createUsageInfo(PsiElement usage, int startOffset, int endOffset) {
+  public @Nullable UsageInfo createUsageInfo(PsiElement usage, int startOffset, int endOffset) {
     PsiElement namedElement = TargetElementUtil.getNamedElement(usage, startOffset);
     if (namedElement != null) {
       return null;

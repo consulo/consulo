@@ -77,8 +77,7 @@ public class SessionDialog extends DialogWrapper {
         this(title, project, session, changes, commitMessage, null);
     }
 
-    @Nullable
-    public static JComponent createConfigurationUI(CommitSession session, List<Change> changes, String commitMessage) {
+    public static @Nullable JComponent createConfigurationUI(CommitSession session, List<Change> changes, String commitMessage) {
         try {
             return session.getAdditionalConfigurationUI(changes, commitMessage);
         }

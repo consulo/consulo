@@ -52,8 +52,7 @@ public final class ByClassGrouper<E> implements Function<ExtensionWalker<E>, Fun
       return null;
     }
 
-    @Nullable
-    protected <S> S processUntil(Class baseClass, Set<Class> processed, Function<Class, S> getter) {
+    protected @Nullable <S> S processUntil(Class baseClass, Set<Class> processed, Function<Class, S> getter) {
       if (!processed.add(baseClass)) {
         return null;
       }

@@ -66,8 +66,7 @@ public abstract class Lexer {
      *
      * @return the current token.
      */
-    @Nullable
-    public abstract IElementType getTokenType();
+    public abstract @Nullable IElementType getTokenType();
 
     /**
      * Returns the start offset of the current token.

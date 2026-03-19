@@ -100,8 +100,7 @@ public abstract class AbstractBlockAlignmentProcessor implements BlockAlignmentP
    * @param context     current processing context
    * @return            indent to use for the white space of the given block
    */
-  @Nullable
-  protected abstract IndentData calculateAlignmentAnchorIndent(Context context);
+  protected abstract @Nullable IndentData calculateAlignmentAnchorIndent(Context context);
 
   /**
    * Encapsulates logic of applying alignment anchor indent to the target block that starts new line.

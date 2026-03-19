@@ -303,8 +303,7 @@ public class OptionsTree implements Disposable, OptionsEditorColleague {
         return myConfigurable2Node.get(toSelect);
     }
 
-    @Nullable
-    public <T extends UnnamedConfigurable> Pair<Configurable, T> findConfigurableInfo(Class<T> configurableClass) {
+    public @Nullable <T extends UnnamedConfigurable> Pair<Configurable, T> findConfigurableInfo(Class<T> configurableClass) {
         for (Configurable configurable : myConfigurable2Node.keySet()) {
             T cast = ConfigurableWrapper.cast(configurable, configurableClass);
             if (cast != null) {
@@ -314,8 +313,7 @@ public class OptionsTree implements Disposable, OptionsEditorColleague {
         return null;
     }
 
-    @Nullable
-    public <T extends Configurable> T findConfigurable(Class<T> configurableClass) {
+    public @Nullable <T extends Configurable> T findConfigurable(Class<T> configurableClass) {
         for (Configurable configurable : myConfigurable2Node.keySet()) {
             T cast = ConfigurableWrapper.cast(configurable, configurableClass);
             if (cast != null) {
@@ -325,8 +323,7 @@ public class OptionsTree implements Disposable, OptionsEditorColleague {
         return null;
     }
 
-    @Nullable
-    public SearchableConfigurable findConfigurableById(String configurableId) {
+    public @Nullable SearchableConfigurable findConfigurableById(String configurableId) {
         for (Configurable configurable : myConfigurable2Node.keySet()) {
             if (configurable instanceof SearchableConfigurable) {
                 SearchableConfigurable searchableConfigurable = (SearchableConfigurable) configurable;
@@ -338,8 +335,7 @@ public class OptionsTree implements Disposable, OptionsEditorColleague {
         return null;
     }
 
-    @Nullable
-    private Base extractNode(Object object) {
+    private @Nullable Base extractNode(Object object) {
         if (object instanceof TreePath) {
             TreePath path = (TreePath) object;
             object = path.getLastPathComponent();

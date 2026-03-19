@@ -74,7 +74,7 @@ public class CacheDiffRequestChainProcessor extends DiffRequestProcessor {
     }
 
     @RequiredUIAccess
-    public void updateRequest(final boolean force, boolean useCache, @Nullable final ScrollToPolicy scrollToChangePolicy) {
+    public void updateRequest(final boolean force, boolean useCache, final @Nullable ScrollToPolicy scrollToChangePolicy) {
         if (isDisposed()) {
             return;
         }
@@ -111,8 +111,7 @@ public class CacheDiffRequestChainProcessor extends DiffRequestProcessor {
         );
     }
 
-    @Nullable
-    protected DiffRequest loadRequestFast(DiffRequestProducer producer, boolean useCache) {
+    protected @Nullable DiffRequest loadRequestFast(DiffRequestProducer producer, boolean useCache) {
         if (!useCache) {
             return null;
         }

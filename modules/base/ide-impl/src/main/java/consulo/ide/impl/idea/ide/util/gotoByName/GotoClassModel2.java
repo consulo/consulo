@@ -59,8 +59,7 @@ public class GotoClassModel2 extends FilteringGotoByModel<Language> {
     }
 
     @Override
-    @Nullable
-    public String getPromptText() {
+    public @Nullable String getPromptText() {
         return IdeLocalize.promptGotoclassEnterClassName().get();
     }
 

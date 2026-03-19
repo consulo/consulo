@@ -37,8 +37,7 @@ public class OrderEntryUtil {
   private OrderEntryUtil() {
   }
 
-  @Nullable
-  public static LibraryOrderEntry findLibraryOrderEntry(ModuleRootModel model, @Nullable Library library) {
+  public static @Nullable LibraryOrderEntry findLibraryOrderEntry(ModuleRootModel model, @Nullable Library library) {
     if (library == null) return null;
     for (OrderEntry orderEntry : model.getOrderEntries()) {
       if (orderEntry instanceof LibraryOrderEntry && library.equals(((LibraryOrderEntry)orderEntry).getLibrary())) {
@@ -49,8 +48,7 @@ public class OrderEntryUtil {
     return null;
   }
 
-  @Nullable
-  public static LibraryOrderEntry findLibraryOrderEntry(ModuleRootModel model, String libraryName) {
+  public static @Nullable LibraryOrderEntry findLibraryOrderEntry(ModuleRootModel model, String libraryName) {
     for (OrderEntry orderEntry : model.getOrderEntries()) {
       if (orderEntry instanceof LibraryOrderEntry) {
         String libName = ((LibraryOrderEntry)orderEntry).getLibraryName();
@@ -62,8 +60,7 @@ public class OrderEntryUtil {
     return null;
   }
 
-  @Nullable
-  public static ModuleOrderEntry findModuleOrderEntry(ModuleRootModel model, @Nullable Module module) {
+  public static @Nullable ModuleOrderEntry findModuleOrderEntry(ModuleRootModel model, @Nullable Module module) {
     if (module == null) return null;
 
     for (OrderEntry orderEntry : model.getOrderEntries()) {
@@ -80,8 +77,7 @@ public class OrderEntryUtil {
     return findModuleExtensionWithSdkOrderEntry(model, sdk);
   }
 
-  @Nullable
-  public static ModuleExtensionWithSdkOrderEntry findModuleExtensionWithSdkOrderEntry(ModuleRootModel model, @Nullable Sdk sdk) {
+  public static @Nullable ModuleExtensionWithSdkOrderEntry findModuleExtensionWithSdkOrderEntry(ModuleRootModel model, @Nullable Sdk sdk) {
     if (sdk == null) return null;
 
     for (OrderEntry orderEntry : model.getOrderEntries()) {

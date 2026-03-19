@@ -263,7 +263,6 @@ public abstract class ListTableWithButtons<T> extends Observable {
       return myRenderer;
     }
 
-    @Nullable
-    protected abstract String getDescription(T element);
+    protected abstract @Nullable String getDescription(T element);
   }
 }

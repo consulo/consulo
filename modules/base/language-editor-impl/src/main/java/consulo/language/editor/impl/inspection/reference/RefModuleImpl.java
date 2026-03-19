@@ -77,8 +77,7 @@ public class RefModuleImpl extends RefEntityImpl implements RefModule {
     return AllIcons.Nodes.Module;
   }
 
-  @Nullable
-  static RefEntity moduleFromName(RefManager manager, String name) {
+  static @Nullable RefEntity moduleFromName(RefManager manager, String name) {
     return manager.getRefModule(ModuleManager.getInstance(manager.getProject()).findModuleByName(name));
   }
 }

@@ -85,8 +85,7 @@ public class FindUtil {
     private FindUtil() {
     }
 
-    @Nullable
-    private static VirtualFile getVirtualFile(Editor myEditor) {
+    private static @Nullable VirtualFile getVirtualFile(Editor myEditor) {
         Project project = myEditor.getProject();
         PsiFile file = project != null ? PsiDocumentManager.getInstance(project).getPsiFile(myEditor.getDocument()) : null;
         return file != null ? file.getVirtualFile() : null;
@@ -310,8 +309,7 @@ public class FindUtil {
         );
     }
 
-    @Nullable
-    static List<Usage> findAll(Project project, PsiFile psiFile, FindModel findModel) {
+    static @Nullable List<Usage> findAll(Project project, PsiFile psiFile, FindModel findModel) {
         if (project.isDisposed()) {
             return null;
         }

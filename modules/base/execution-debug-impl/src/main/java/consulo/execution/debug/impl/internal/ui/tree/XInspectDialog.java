@@ -53,14 +53,12 @@ public class XInspectDialog extends DialogWrapper {
   }
 
   @Override
-  @Nullable
-  protected JComponent createCenterPanel() {
+  protected @Nullable JComponent createCenterPanel() {
     return myDebuggerTreePanel.getMainPanel();
   }
 
   @Override
-  @Nullable
-  protected JComponent createSouthPanel() {
+  protected @Nullable JComponent createSouthPanel() {
     return null;
   }
 

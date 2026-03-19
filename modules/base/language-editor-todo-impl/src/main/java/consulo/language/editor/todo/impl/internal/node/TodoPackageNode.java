@@ -53,7 +53,7 @@ public final class TodoPackageNode extends PackageElementNode implements Highlig
 
   private final ArrayList<HighlightedRegion> myHighlightedRegions;
   private final TodoTreeBuilder myBuilder;
-  @Nullable private final String myPresentationName;
+  private final @Nullable String myPresentationName;
 
   public TodoPackageNode(Project project,
                          PackageElement element,

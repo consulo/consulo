@@ -18,11 +18,9 @@ abstract class SmartPointerElementInfo {
   void fastenBelt(SmartPointerManagerImpl manager) {
   }
 
-  @Nullable
-  abstract PsiElement restoreElement(SmartPointerManagerImpl manager);
+  abstract @Nullable PsiElement restoreElement(SmartPointerManagerImpl manager);
 
-  @Nullable
-  abstract PsiFile restoreFile(SmartPointerManagerImpl manager);
+  abstract @Nullable PsiFile restoreFile(SmartPointerManagerImpl manager);
 
   abstract int elementHashCode(); // must be immutable
 
@@ -30,12 +28,10 @@ abstract class SmartPointerElementInfo {
 
   abstract VirtualFile getVirtualFile();
 
-  @Nullable
-  abstract Segment getRange(SmartPointerManagerImpl manager);
+  abstract @Nullable Segment getRange(SmartPointerManagerImpl manager);
 
   void cleanup() {
   }
 
-  @Nullable
-  abstract Segment getPsiRange(SmartPointerManagerImpl manager);
+  abstract @Nullable Segment getPsiRange(SmartPointerManagerImpl manager);
 }

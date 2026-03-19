@@ -539,8 +539,7 @@ public class DirDiffPanel implements Disposable, DataProvider {
         return null;
     }
 
-    @Nullable
-    private Navigatable[] getNavigatableArray() {
+    private @Nullable Navigatable[] getNavigatableArray() {
         Project project = myModel.getProject();
         List<DirDiffElementImpl> elements = myModel.getSelectedElements();
         List<Navigatable> navigatables = new ArrayList<>();
@@ -647,10 +646,8 @@ public class DirDiffPanel implements Disposable, DataProvider {
     }
 
     private static class ElementWrapper {
-        @Nullable
-        public final DiffElement sourceElement;
-        @Nullable
-        public final DiffElement targetElement;
+        public final @Nullable DiffElement sourceElement;
+        public final @Nullable DiffElement targetElement;
 
         public ElementWrapper(DirDiffElementImpl element) {
             sourceElement = element.getSource();

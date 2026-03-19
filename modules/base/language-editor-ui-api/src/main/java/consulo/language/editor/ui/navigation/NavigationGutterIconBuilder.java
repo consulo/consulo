@@ -196,8 +196,7 @@ public class NavigationGutterIconBuilder<T> {
         return DEFAULT_NAMER;
     }
 
-    @Nullable
-    public Annotation install(AnnotationHolder holder, @Nullable PsiElement element) {
+    public @Nullable Annotation install(AnnotationHolder holder, @Nullable PsiElement element) {
         if (!myLazy && myTargets.get().isEmpty() || element == null) {
             return null;
         }

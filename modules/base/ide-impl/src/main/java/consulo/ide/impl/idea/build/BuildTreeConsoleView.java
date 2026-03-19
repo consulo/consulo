@@ -561,8 +561,7 @@ public class BuildTreeConsoleView implements ConsoleView, DataProvider, BuildCon
         }
     }
 
-    @Nullable
-    private Runnable showErrorIfFirst(ExecutionNodeImpl node, @Nullable Navigatable navigatable) {
+    private @Nullable Runnable showErrorIfFirst(ExecutionNodeImpl node, @Nullable Navigatable navigatable) {
         if (myShownFirstError.compareAndSet(false, true)) {
             return () -> {
                 TreeUtil.promiseSelect(myTree, visitor(node));
@@ -617,8 +616,7 @@ public class BuildTreeConsoleView implements ConsoleView, DataProvider, BuildCon
         return new TreeVisitor.ByTreePath<>(treePath, o -> (ExecutionNodeImpl)TreeUtil.getUserObject(o));
     }
 
-    @Nullable
-    private Runnable addChildFailureNode(
+    private @Nullable Runnable addChildFailureNode(
         ExecutionNodeImpl parentNode,
         Failure failure,
         String defaultFailureMessage,
@@ -885,8 +883,7 @@ public class BuildTreeConsoleView implements ConsoleView, DataProvider, BuildCon
     }
 
     @Override
-    @Nullable
-    public Object getData(Key dataId) {
+    public @Nullable Object getData(Key dataId) {
         if (HelpManager.HELP_ID == dataId) {
             return "reference.build.tool.window";
         }
@@ -1011,8 +1008,7 @@ public class BuildTreeConsoleView implements ConsoleView, DataProvider, BuildCon
         private final Map<String, List<Consumer<? super BuildTextConsoleView>>> deferredNodeOutput = new ConcurrentHashMap<>();
         
         private final BuildViewSettingsProvider myViewSettingsProvider;
-        @Nullable
-        private ExecutionNodeImpl myExecutionNode;
+        private @Nullable ExecutionNodeImpl myExecutionNode;
         
         private final List<Filter> myExecutionConsoleFilters;
         private final BuildProgressStripe myPanelWithProgress;
@@ -1255,8 +1251,7 @@ public class BuildTreeConsoleView implements ConsoleView, DataProvider, BuildCon
 
         private static class PresentableBuildEventExecutionConsole implements ExecutionConsole {
             private final ExecutionConsole myExecutionConsole;
-            @Nullable
-            private final ActionGroup myActions;
+            private final @Nullable ActionGroup myActions;
 
             private PresentableBuildEventExecutionConsole(
                 ExecutionConsole executionConsole,

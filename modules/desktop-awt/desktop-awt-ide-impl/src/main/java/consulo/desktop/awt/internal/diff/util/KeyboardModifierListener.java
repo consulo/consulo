@@ -32,7 +32,7 @@ public class KeyboardModifierListener {
   private boolean myCtrlPressed;
   private boolean myAltPressed;
 
-  @Nullable private Window myWindow;
+  private @Nullable Window myWindow;
 
   private final WindowFocusListener myWindowFocusListener = new WindowFocusListener() {
     @Override

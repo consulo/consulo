@@ -55,12 +55,10 @@ public class DuplexConsoleView<S extends ConsoleView, T extends ConsoleView> ext
     private final S myPrimaryConsoleView;
     
     private final T mySecondaryConsoleView;
-    @Nullable
-    private final String myStateStorageKey;
+    private final @Nullable String myStateStorageKey;
 
     private boolean myPrimary;
-    @Nullable
-    private ProcessHandler myProcessHandler;
+    private @Nullable ProcessHandler myProcessHandler;
     
     private final SwitchDuplexConsoleViewAction mySwitchConsoleAction;
     private boolean myDisableSwitchConsoleActionOnProcessEnd = true;

@@ -247,8 +247,7 @@ public abstract class PropertyTable extends JBTable {
 
   protected abstract boolean doRestoreDefault(ThrowableRunnable<Exception> runnable);
 
-  @Nullable
-  public ErrorInfo getErrorInfoForRow(int row) {
+  public @Nullable ErrorInfo getErrorInfoForRow(int row) {
     if (myContainers.size() != 1) {
       return null;
     }
@@ -292,8 +291,7 @@ public abstract class PropertyTable extends JBTable {
   //
   //////////////////////////////////////////////////////////////////////////////////////////
 
-  @Nullable
-  protected PropertyContext getPropertyContext() {
+  protected @Nullable PropertyContext getPropertyContext() {
     return null;
   }
 
@@ -511,8 +509,7 @@ public abstract class PropertyTable extends JBTable {
     return true;
   }
 
-  @Nullable
-  public static Property findProperty(List<Property> properties, String name) {
+  public static @Nullable Property findProperty(List<Property> properties, String name) {
     for (Property property : properties) {
       if (name.equals(property.getName())) {
         return property;
@@ -573,8 +570,7 @@ public abstract class PropertyTable extends JBTable {
     }
   }
 
-  @Nullable
-  public static Property extractProperty(List<Property> properties, String name) {
+  public static @Nullable Property extractProperty(List<Property> properties, String name) {
     int size = properties.size();
     for (int i = 0; i < size; i++) {
       if (name.equals(properties.get(i).getName())) {
@@ -584,8 +580,7 @@ public abstract class PropertyTable extends JBTable {
     return null;
   }
 
-  @Nullable
-  public Property getSelectionProperty() {
+  public @Nullable Property getSelectionProperty() {
     int selectedRow = getSelectedRow();
     if (selectedRow >= 0 && selectedRow < myProperties.size()) {
       return myProperties.get(selectedRow);
@@ -593,8 +588,7 @@ public abstract class PropertyTable extends JBTable {
     return null;
   }
 
-  @Nullable
-  private PropertiesContainer getCurrentComponent() {
+  private @Nullable PropertiesContainer getCurrentComponent() {
     return myContainers.size() == 1 ? myContainers.get(0) : null;
   }
 
@@ -622,8 +616,7 @@ public abstract class PropertyTable extends JBTable {
     return true;
   }
 
-  @Nullable
-  private Object getValue(Property property) throws Exception {
+  private @Nullable Object getValue(Property property) throws Exception {
     int size = myContainers.size();
     if (size == 0) {
       return null;

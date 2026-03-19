@@ -154,8 +154,7 @@ public class Configuration implements PersistentStateComponent<Element>, Modific
         importPlaces(getDefaultInjections());
     }
 
-    @Nullable
-    private static InjectionPlace[] dropKnownInvalidPlaces(InjectionPlace[] places) {
+    private static @Nullable InjectionPlace[] dropKnownInvalidPlaces(InjectionPlace[] places) {
         InjectionPlace[] result = places;
         for (InjectionPlace place : places) {
             if (place.getText().contains("matches(\"[^${}/\\\\]+\")")) {
@@ -228,8 +227,7 @@ public class Configuration implements PersistentStateComponent<Element>, Modific
         return myInjectionsById.get().get(languageId);
     }
 
-    @Nullable
-    public static Configuration load(InputStream is) throws IOException, JDOMException {
+    public static @Nullable Configuration load(InputStream is) throws IOException, JDOMException {
         try {
             Document document = JDOMUtil.loadDocument(is);
             ArrayList<Element> elements = new ArrayList<>();
@@ -334,8 +332,7 @@ public class Configuration implements PersistentStateComponent<Element>, Modific
         return myModificationCount;
     }
 
-    @Nullable
-    public BaseInjection findExistingInjection(BaseInjection injection) {
+    public @Nullable BaseInjection findExistingInjection(BaseInjection injection) {
         List<BaseInjection> list = getInjections(injection.getSupportId());
         for (BaseInjection cur : list) {
             if (cur.intersectsWith(injection)) {

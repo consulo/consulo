@@ -101,8 +101,7 @@ public abstract class TemplateLanguageBlock extends AbstractBlock implements Blo
   }
 
   @Override
-  @Nullable
-  public Spacing getSpacing(@Nullable Block child1, Block child2) {
+  public @Nullable Spacing getSpacing(@Nullable Block child1, Block child2) {
     if (child1 instanceof DataLanguageBlockWrapper && child2 instanceof DataLanguageBlockWrapper) {
       return ((DataLanguageBlockWrapper)child1).getRightHandSpacing((DataLanguageBlockWrapper)child2);
     }
@@ -116,8 +115,7 @@ public abstract class TemplateLanguageBlock extends AbstractBlock implements Blo
    * @param thisBlockIndex the index of the current block in the parent block subblocks
    * @return the spacing between the current block and its right neighbor
    */
-  @Nullable
-  public Spacing getRightNeighborSpacing(Block rightNeighbor, DataLanguageBlockWrapper parent, int thisBlockIndex) {
+  public @Nullable Spacing getRightNeighborSpacing(Block rightNeighbor, DataLanguageBlockWrapper parent, int thisBlockIndex) {
     return null;
   }
 
@@ -163,8 +161,7 @@ public abstract class TemplateLanguageBlock extends AbstractBlock implements Blo
     return myForeignChildren;
   }
 
-  @Nullable
-  public Wrap substituteTemplateChildWrap(DataLanguageBlockWrapper child, @Nullable Wrap childWrap) {
+  public @Nullable Wrap substituteTemplateChildWrap(DataLanguageBlockWrapper child, @Nullable Wrap childWrap) {
     return childWrap;
   }
 }

@@ -14,8 +14,7 @@ import java.util.stream.Stream;
  * Null keys are NOT PERMITTED.
  */
 public final class SmartHashSet<T> extends HashSet<T> {
-  @Nullable
-  private T theElement; // contains the only element if size() == 1
+  private @Nullable T theElement; // contains the only element if size() == 1
 
   public SmartHashSet() {
   }

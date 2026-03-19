@@ -68,8 +68,7 @@ public class MacOSApplicationProvider {
     }
   }
 
-  @Nullable
-  public ColorSpace getGenericRgbColorSpace() {
+  public @Nullable ColorSpace getGenericRgbColorSpace() {
     return genericRgbColorSpace;
   }
 }

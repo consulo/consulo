@@ -25,8 +25,7 @@ public abstract class LoggerRt {
     LoggerRt getInstance(String category);
   }
 
-  @Nullable
-  private static Factory ourFactory = null;
+  private static @Nullable Factory ourFactory = null;
 
   private synchronized static Factory getFactory() {
     if (ourFactory == null) {

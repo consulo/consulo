@@ -113,7 +113,7 @@ public class FilteringTreeBuilder extends AbstractTreeBuilder {
   }
 
   
-  public Promise<?> refilter(@Nullable final Object preferredSelection, final boolean adjustSelection, final boolean now) {
+  public Promise<?> refilter(final @Nullable Object preferredSelection, final boolean adjustSelection, final boolean now) {
     if (myRefilterQueue != null) {
       myRefilterQueue.cancelAllUpdates();
     }
@@ -231,8 +231,7 @@ public class FilteringTreeBuilder extends AbstractTreeBuilder {
     return myTree instanceof SimpleTree;
   }
 
-  @Nullable
-  private Object getSelected() {
+  private @Nullable Object getSelected() {
     if (isSimpleTree()) {
       FilteringTreeStructure.FilteringNode selected = (FilteringTreeStructure.FilteringNode)((SimpleTree)myTree).getSelectedNode();
       return selected != null ? selected.getDelegate() : null;
@@ -257,8 +256,7 @@ public class FilteringTreeBuilder extends AbstractTreeBuilder {
     return getOriginalNode(object);
   }
 
-  @Nullable
-  public Object getElementFor(Object node) {
+  public @Nullable Object getElementFor(Object node) {
     return getUi().getElementFor(node);
   }
 }

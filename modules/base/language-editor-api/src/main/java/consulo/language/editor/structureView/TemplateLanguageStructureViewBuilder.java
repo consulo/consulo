@@ -127,8 +127,7 @@ public abstract class TemplateLanguageStructureViewBuilder extends TreeBasedStru
     return JBIterable.of(baseLanguage).append(dataLanguage).append(JBIterable.from(provider.getLanguages()).filter(o -> o != baseLanguage && o != dataLanguage));
   }
 
-  @Nullable
-  private StructureViewBuilder getBuilder(PsiFile psiFile, Language language) {
+  private @Nullable StructureViewBuilder getBuilder(PsiFile psiFile, Language language) {
     FileViewProvider viewProvider = psiFile.getViewProvider();
     Language baseLanguage = viewProvider.getBaseLanguage();
     PsiFile psi = viewProvider.getPsi(language);
@@ -142,6 +141,5 @@ public abstract class TemplateLanguageStructureViewBuilder extends TreeBasedStru
     return true;
   }
 
-  @Nullable
-  protected abstract TreeBasedStructureViewBuilder createMainBuilder(PsiFile psi);
+  protected abstract @Nullable TreeBasedStructureViewBuilder createMainBuilder(PsiFile psi);
 }

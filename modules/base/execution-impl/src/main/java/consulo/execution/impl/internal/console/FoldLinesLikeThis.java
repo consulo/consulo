@@ -26,8 +26,7 @@ public class FoldLinesLikeThis extends DumbAwareAction {
         myShowConfigurableService = showConfigurableService;
     }
 
-    @Nullable
-    private static String getSingleLineSelection(Editor editor) {
+    private static @Nullable String getSingleLineSelection(Editor editor) {
         SelectionModel model = editor.getSelectionModel();
         Document document = editor.getDocument();
         if (!model.hasSelection()) {

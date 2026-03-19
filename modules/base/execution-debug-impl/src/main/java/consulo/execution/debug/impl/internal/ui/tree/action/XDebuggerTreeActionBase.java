@@ -94,8 +94,7 @@ public abstract class XDebuggerTreeActionBase extends AnAction {
         return result;
     }
 
-    @Nullable
-    public static XValueNodeImpl getSelectedNode(DataContext dataContext) {
+    public static @Nullable XValueNodeImpl getSelectedNode(DataContext dataContext) {
         XDebuggerTree tree = XDebuggerTree.getTree(dataContext);
         if (tree == null) {
             return null;
@@ -110,8 +109,7 @@ public abstract class XDebuggerTreeActionBase extends AnAction {
         return node instanceof XValueNodeImpl xValueNode ? xValueNode : null;
     }
 
-    @Nullable
-    public static XValue getSelectedValue(DataContext dataContext) {
+    public static @Nullable XValue getSelectedValue(DataContext dataContext) {
         XValueNodeImpl node = getSelectedNode(dataContext);
         return node != null ? node.getValueContainer() : null;
     }

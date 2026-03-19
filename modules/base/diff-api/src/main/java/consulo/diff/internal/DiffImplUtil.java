@@ -270,8 +270,7 @@ public class DiffImplUtil {
             .processBlocks(fragments, text1, text2, config.policy, config.squashFragments, config.trimFragments);
     }
 
-    @Nullable
-    public static MergeInnerDifferences compareThreesideInner(
+    public static @Nullable MergeInnerDifferences compareThreesideInner(
         List<CharSequence> chunks,
         ComparisonPolicy comparisonPolicy,
         ProgressIndicator indicator
@@ -914,8 +913,7 @@ public class DiffImplUtil {
         return null;
     }
 
-    @Nullable
-    public static VirtualFile getVirtualFile(ContentDiffRequest request, Side currentSide) {
+    public static @Nullable VirtualFile getVirtualFile(ContentDiffRequest request, Side currentSide) {
         List<DiffContent> contents = request.getContents();
         if (currentSide.select(contents) instanceof FileContent content1) {
             return content1.getFile();
@@ -926,8 +924,7 @@ public class DiffImplUtil {
         return null;
     }
 
-    @Nullable
-    public static VirtualFile getVirtualFile(ContentDiffRequest request, ThreeSide currentSide) {
+    public static @Nullable VirtualFile getVirtualFile(ContentDiffRequest request, ThreeSide currentSide) {
         List<DiffContent> contents = request.getContents();
         if (currentSide.select(contents) instanceof FileContent content1) {
             return content1.getFile();
@@ -938,8 +935,7 @@ public class DiffImplUtil {
         return null;
     }
 
-    @Nullable
-    public static Object getData(@Nullable DataProvider provider, @Nullable DataProvider fallbackProvider, Key<?> dataId) {
+    public static @Nullable Object getData(@Nullable DataProvider provider, @Nullable DataProvider fallbackProvider, Key<?> dataId) {
         if (provider != null) {
             Object data = provider.getData(dataId);
             if (data != null) {

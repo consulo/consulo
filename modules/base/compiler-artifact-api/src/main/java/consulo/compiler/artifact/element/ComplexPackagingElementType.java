@@ -32,8 +32,7 @@ public abstract class ComplexPackagingElementType<E extends ComplexPackagingElem
 
   public abstract String getShowContentActionText();
 
-  @Nullable
-  public ModificationTracker getAllSubstitutionsModificationTracker(Project project) {
+  public @Nullable ModificationTracker getAllSubstitutionsModificationTracker(Project project) {
     return null;
   }
 }

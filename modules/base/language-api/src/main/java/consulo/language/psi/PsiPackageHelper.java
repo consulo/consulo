@@ -34,8 +34,7 @@ public abstract class PsiPackageHelper {
   
   public abstract String getQualifiedName(PsiDirectory directory, boolean presentable);
 
-  @Nullable
-  public abstract PsiDirectoryContainer getDirectoryContainer(PsiDirectory directory);
+  public abstract @Nullable PsiDirectoryContainer getDirectoryContainer(PsiDirectory directory);
 
   public abstract boolean isPackage(PsiDirectory directory);
 }

@@ -45,6 +45,5 @@ public abstract class IconTableCellRenderer<T> extends DefaultTableCellRenderer 
     return false;
   }
 
-  @Nullable
-  protected abstract Image getIcon(T value, JTable table, int row);
+  protected abstract @Nullable Image getIcon(T value, JTable table, int row);
 }

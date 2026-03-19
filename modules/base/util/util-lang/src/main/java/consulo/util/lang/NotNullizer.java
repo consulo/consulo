@@ -53,8 +53,7 @@ public final class NotNullizer {
    * @see #notNullize(Object)
    */
   @Contract(pure = true)
-  @Nullable
-  public <T> T nullize(T value) {
+  public @Nullable <T> T nullize(T value) {
     return value == myNull ? null : value;
   }
 }

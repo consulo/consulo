@@ -86,8 +86,7 @@ public class CoverageSuitesBundle {
         return false;
     }
 
-    @Nullable
-    public ProjectData getCoverageData() {
+    public @Nullable ProjectData getCoverageData() {
         ProjectData projectData = myData.get();
         if (projectData != null) {
             return projectData;
@@ -161,8 +160,7 @@ public class CoverageSuitesBundle {
         myProcessedModules.add(module);
     }
 
-    @Nullable
-    public RunConfigurationBase getRunConfiguration() {
+    public @Nullable RunConfigurationBase getRunConfiguration() {
         for (CoverageSuite suite : mySuites) {
             if (suite instanceof BaseCoverageSuite baseCoverageSuite) {
                 RunConfigurationBase configuration = baseCoverageSuite.getConfiguration();

@@ -159,8 +159,7 @@ public class ExternalSystemApiUtil {
     private ExternalSystemApiUtil() {
     }
 
-    @Nullable
-    public static String getRunnerId(String executorId) {
+    public static @Nullable String getRunnerId(String executorId) {
         return RUNNER_IDS.get(executorId);
     }
 
@@ -294,16 +293,14 @@ public class ExternalSystemApiUtil {
         });
     }
 
-    @Nullable
-    public static AbstractExternalSystemTaskConfigurationType findConfigurationType(ProjectSystemId externalSystemId) {
+    public static @Nullable AbstractExternalSystemTaskConfigurationType findConfigurationType(ProjectSystemId externalSystemId) {
         return Application.get().getExtensionPoint(ConfigurationType.class).computeSafeIfAny(
             type -> type instanceof AbstractExternalSystemTaskConfigurationType candidate
                 && externalSystemId.equals(candidate.getExternalSystemId()) ? candidate : null
         );
     }
 
-    @Nullable
-    public static Pair<ProgramRunner, ExecutionEnvironment> createRunner(
+    public static @Nullable Pair<ProgramRunner, ExecutionEnvironment> createRunner(
         ExternalSystemTaskExecutionSettings taskSettings,
         String executorId,
         Project project,
@@ -371,8 +368,7 @@ public class ExternalSystemApiUtil {
 
 
     @SuppressWarnings("unchecked")
-    @Nullable
-    public static <T> T getToolWindowElement(
+    public static @Nullable <T> T getToolWindowElement(
         Class<T> clazz,
         Project project,
         consulo.util.dataholder.Key<T> key,
@@ -404,8 +400,7 @@ public class ExternalSystemApiUtil {
     }
 
 
-    @Nullable
-    public static ToolWindow ensureToolWindowContentInitialized(Project project, ProjectSystemId externalSystemId) {
+    public static @Nullable ToolWindow ensureToolWindowContentInitialized(Project project, ProjectSystemId externalSystemId) {
         ToolWindowManager toolWindowManager = ToolWindowManager.getInstance(project);
         if (toolWindowManager == null) {
             return null;
@@ -473,8 +468,7 @@ public class ExternalSystemApiUtil {
         return library.getName() != null && StringUtil.startsWith(library.getName(), externalSystemId.getLibraryPrefix() + ": ");
     }
 
-    @Nullable
-    public static ArtifactInfo parseArtifactInfo(String fileName) {
+    public static @Nullable ArtifactInfo parseArtifactInfo(String fileName) {
         Matcher matcher = ARTIFACT_PATTERN.matcher(fileName);
         if (!matcher.matches()) {
             return null;
@@ -517,14 +511,12 @@ public class ExternalSystemApiUtil {
         throw new IllegalArgumentException("There no " + ExternalSystemManager.class.getName() + " for id: " + externalSystemId);
     }
 
-    @Nullable
-    public static ExternalSystemManager<?, ?, ?, ?, ?> getManager(String externalSystemId) {
+    public static @Nullable ExternalSystemManager<?, ?, ?, ?, ?> getManager(String externalSystemId) {
         return Application.get().getExtensionPoint(ExternalSystemManager.class)
             .findFirstSafe(manager -> Objects.equals(externalSystemId, manager.getSystemId().getId()));
     }
 
-    @Nullable
-    public static ExternalSystemManager<?, ?, ?, ?, ?> getManager(ProjectSystemId externalSystemId) {
+    public static @Nullable ExternalSystemManager<?, ?, ?, ?, ?> getManager(ProjectSystemId externalSystemId) {
         return getManager(externalSystemId.getId());
     }
 
@@ -594,8 +586,7 @@ public class ExternalSystemApiUtil {
     }
 
     @SuppressWarnings("unchecked")
-    @Nullable
-    public static <T> DataNode<T> find(DataNode<?> node, Key<T> key) {
+    public static @Nullable <T> DataNode<T> find(DataNode<?> node, Key<T> key) {
         for (DataNode<?> child : node.getChildren()) {
             if (key.equals(child.getKey())) {
                 return (DataNode<T>)child;
@@ -605,8 +596,7 @@ public class ExternalSystemApiUtil {
     }
 
     @SuppressWarnings("unchecked")
-    @Nullable
-    public static <T> DataNode<T> find(DataNode<?> node, Key<T> key, Predicate<DataNode<T>> predicate) {
+    public static @Nullable <T> DataNode<T> find(DataNode<?> node, Key<T> key, Predicate<DataNode<T>> predicate) {
         for (DataNode<?> child : node.getChildren()) {
             if (key.equals(child.getKey()) && predicate.test((DataNode<T>)child)) {
                 return (DataNode<T>)child;
@@ -616,15 +606,13 @@ public class ExternalSystemApiUtil {
     }
 
     @SuppressWarnings("unchecked")
-    @Nullable
-    public static <T> DataNode<T> findParent(DataNode<?> node, Key<T> key) {
+    public static @Nullable <T> DataNode<T> findParent(DataNode<?> node, Key<T> key) {
         return findParent(node, key, null);
     }
 
 
     @SuppressWarnings("unchecked")
-    @Nullable
-    public static <T> DataNode<T> findParent(DataNode<?> node, Key<T> key, @Nullable Predicate<DataNode<T>> predicate) {
+    public static @Nullable <T> DataNode<T> findParent(DataNode<?> node, Key<T> key, @Nullable Predicate<DataNode<T>> predicate) {
         DataNode<?> parent = node.getParent();
         if (parent == null) {
             return null;
@@ -731,8 +719,7 @@ public class ExternalSystemApiUtil {
     }
 
     @SuppressWarnings("ConstantConditions")
-    @Nullable
-    public static String normalizePath(@Nullable String s) {
+    public static @Nullable String normalizePath(@Nullable String s) {
         return StringUtil.isEmpty(s) ? null : s.replace('\\', ExternalSystemConstants.PATH_SEPARATOR);
     }
 
@@ -802,8 +789,7 @@ public class ExternalSystemApiUtil {
      * <code>null</code> if it's not possible to find a root project's config path on the basis of the
      * given path
      */
-    @Nullable
-    public static String getRootProjectPath(
+    public static @Nullable String getRootProjectPath(
         String externalProjectPath,
         ProjectSystemId externalSystemId,
         Project project
@@ -916,13 +902,11 @@ public class ExternalSystemApiUtil {
         return module != null && systemId.equals(getExtensionSystemOption(module, ExternalSystemConstants.EXTERNAL_SYSTEM_ID_KEY));
     }
 
-    @Nullable
-    public static String getExternalProjectPath(@Nullable Module module) {
+    public static @Nullable String getExternalProjectPath(@Nullable Module module) {
         return getExtensionSystemOption(module, ExternalSystemConstants.LINKED_PROJECT_PATH_KEY);
     }
 
-    @Nullable
-    public static String getExternalProjectId(@Nullable Module module) {
+    public static @Nullable String getExternalProjectId(@Nullable Module module) {
         return getExtensionSystemOption(module, ExternalSystemConstants.LINKED_PROJECT_ID_KEY);
     }
 
@@ -945,8 +929,7 @@ public class ExternalSystemApiUtil {
         return ExternalSystemApiUtil.doWriteAction(() -> StandardFileSystems.local().refreshAndFindFileByPath(path));
     }
 
-    @Nullable
-    private static VirtualFile findLocalFileByPathUnderReadAction(String path) {
+    private static @Nullable VirtualFile findLocalFileByPathUnderReadAction(String path) {
         return AccessRule.read(() -> StandardFileSystems.local().findFileByPath(path));
     }
 }

@@ -47,8 +47,7 @@ public final class CompletionServiceImpl extends CompletionService {
     private static volatile CompletionPhase ourPhase = CompletionPhase.NoCompletion;
     private static Throwable ourPhaseTrace;
 
-    @Nullable
-    private CompletionProcess myApiCompletionProcess;
+    private @Nullable CompletionProcess myApiCompletionProcess;
 
     @Inject
     public CompletionServiceImpl(Application application) {
@@ -151,8 +150,7 @@ public final class CompletionServiceImpl extends CompletionService {
     private static class CompletionResultSetImpl extends CompletionResultSet {
         private final CompletionParameters myParameters;
         private final CompletionSorterImpl mySorter;
-        @Nullable
-        private final CompletionResultSetImpl myOriginal;
+        private final @Nullable CompletionResultSetImpl myOriginal;
 
         CompletionResultSetImpl(
             Consumer<? super CompletionResult> consumer, PrefixMatcher prefixMatcher,

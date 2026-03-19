@@ -49,8 +49,7 @@ class LocalizationFileState extends LocalizationLoader<Map<String, LocalizationK
         myTextFromFiles.putIfAbsent(localizeId, textFromFile);
     }
 
-    @Nullable
-    public String getValue(LocalizationKey key) {
+    public @Nullable String getValue(LocalizationKey key) {
         if (myTextFromFiles != null) {
             LocalizationTextFromFile text = myTextFromFiles.get(key.getKey());
             if (text != null) {

@@ -223,8 +223,7 @@ public class CompareWithSelectedRevisionAction extends AbstractVcsAction {
             .showCenteredInCurrentWindow(project);
     }
 
-    @Nullable
-    private static VcsFileRevision getRevisionAt(TreeTableView treeTable, int index) {
+    private static @Nullable VcsFileRevision getRevisionAt(TreeTableView treeTable, int index) {
         List items = treeTable.getItems();
         if (items.size() <= index) {
             return null;

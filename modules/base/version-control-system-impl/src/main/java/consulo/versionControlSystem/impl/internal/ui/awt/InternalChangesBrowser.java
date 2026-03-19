@@ -59,8 +59,7 @@ public class InternalChangesBrowser extends InternalChangesBrowserBase<Change> {
     }
 
     @Override
-    @Nullable
-    protected Change getLeadSelectedObject(ChangesBrowserNode node) {
+    protected @Nullable Change getLeadSelectedObject(ChangesBrowserNode node) {
         Object o = node.getUserObject();
         if (o instanceof Change) {
             return (Change) o;

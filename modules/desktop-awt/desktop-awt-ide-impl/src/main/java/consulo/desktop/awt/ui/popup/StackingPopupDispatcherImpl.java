@@ -159,8 +159,7 @@ public class StackingPopupDispatcherImpl extends StackingPopupDispatcher impleme
     }
   }
 
-  @Nullable
-  private JBPopup findPopup() {
+  private @Nullable JBPopup findPopup() {
     while (true) {
       if (myStack.isEmpty()) break;
       AbstractPopup each = (AbstractPopup)myStack.peek();
@@ -191,8 +190,7 @@ public class StackingPopupDispatcherImpl extends StackingPopupDispatcher impleme
   }
 
   @Override
-  @Nullable
-  public Component getComponent() {
+  public @Nullable Component getComponent() {
     return myStack.isEmpty() || myStack.peek().isDisposed() ? null : myStack.peek().getContent();
   }
 

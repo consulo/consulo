@@ -113,8 +113,7 @@ public class CommonProgramParametersLayout<P extends CommonProgramRunConfigurati
         return myLayout;
     }
 
-    @Nullable
-    protected Project getProject() {
+    protected @Nullable Project getProject() {
         return myModuleContext != null ? myModuleContext.getProject() : null;
     }
 

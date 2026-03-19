@@ -95,8 +95,7 @@ public abstract class RefEntityImpl implements RefEntity, WritableRefEntity {
   }
 
   @Override
-  @Nullable
-  public <T> T getUserData(Key<T> key) {
+  public @Nullable <T> T getUserData(Key<T> key) {
     synchronized (this) {
       if (myUserMap == null) return null;
       //noinspection unchecked

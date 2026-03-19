@@ -40,10 +40,8 @@ public abstract class BaseConstrainedExecution<E extends ConstrainedExecution<E>
       return Stream.iterate(this, it -> it.previousAttempt != null, it -> it.previousAttempt);
     }
 
-    @Nullable
-    private final Object cause;
-    @Nullable
-    private final ReschedulingAttempt previousAttempt;
+    private final @Nullable Object cause;
+    private final @Nullable ReschedulingAttempt previousAttempt;
     private final int attemptNumber;
 
     public ReschedulingAttempt(Object cause, ReschedulingAttempt previousAttempt) {
@@ -103,13 +101,11 @@ public abstract class BaseConstrainedExecution<E extends ConstrainedExecution<E>
     return new ConstrainedTaskExecutor(this, composeCancellationCondition(), composeExpiration());
   }
 
-  @Nullable
-  protected Expiration composeExpiration() {
+  protected @Nullable Expiration composeExpiration() {
     return null;
   }
 
-  @Nullable
-  protected BooleanSupplier composeCancellationCondition() {
+  protected @Nullable BooleanSupplier composeCancellationCondition() {
     return null;
   }
 

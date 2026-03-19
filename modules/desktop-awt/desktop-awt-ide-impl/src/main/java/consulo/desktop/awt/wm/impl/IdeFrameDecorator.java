@@ -58,8 +58,7 @@ public abstract class IdeFrameDecorator implements Disposable {
     myIdeFrame = ideFrame;
   }
 
-  @Nullable
-  protected JFrame getJFrame() {
+  protected @Nullable JFrame getJFrame() {
     if(myIdeFrame == null) {
       return null;
     }

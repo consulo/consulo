@@ -42,8 +42,7 @@ public abstract class AbstractSyntaxAwareReaderTransferableData extends Reader i
   
   private final DataFlavor myDataFlavor;
 
-  @Nullable
-  private transient Reader myDelegate;
+  private transient @Nullable Reader myDelegate;
 
   public AbstractSyntaxAwareReaderTransferableData(SyntaxInfo syntaxInfo, DataFlavor dataFlavor) {
     mySyntaxInfo = syntaxInfo;

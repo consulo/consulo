@@ -52,8 +52,7 @@ public abstract class CleanupIntention implements SyntheticIntentionAction, LowP
     }
   }
 
-  @Nullable
-  protected abstract AnalysisScope getScope(Project project, PsiFile file);
+  protected abstract @Nullable AnalysisScope getScope(Project project, PsiFile file);
 
   @Override
   public boolean isAvailable(Project project, Editor editor, PsiFile file) {

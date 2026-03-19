@@ -94,13 +94,11 @@ public class DefaultStubBuilder implements StubBuilder {
       pushChildren(node, node instanceof FileASTNode || stub != null, stub != null ? stub : parentStub);
     }
 
-    @Nullable
-    protected final ASTNode peekNextElement() {
+    protected final @Nullable ASTNode peekNextElement() {
       return parentNodes.isEmpty() ? null : parentNodes.peek();
     }
 
-    @Nullable
-    private StubElement createStub(StubElement parentStub, ASTNode node) {
+    private @Nullable StubElement createStub(StubElement parentStub, ASTNode node) {
       IElementType nodeType = node.getElementType();
 
       if (nodeType instanceof IStubElementType) {

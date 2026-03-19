@@ -118,8 +118,7 @@ public class DvcsUtil {
     /**
      * Find the VCS root on which a repository-wide AnAction is to be invoked in a given context.
      */
-    @Nullable
-    public static <T extends Repository> T guessRepositoryForOperation(Project project,
+    public static @Nullable <T extends Repository> T guessRepositoryForOperation(Project project,
                                                                        AbstractRepositoryManager<T> manager,
                                                                        DataContext dataContext) {
         VirtualFile file = dataContext.getData(VirtualFile.KEY);
@@ -145,8 +144,7 @@ public class DvcsUtil {
     /**
      * Find relevant VCS root for a given file, if any. Note that this root might not track the file itself.
      */
-    @Nullable
-    public static VirtualFile findVcsRootFor(Project project, @Nullable VirtualFile file) {
+    public static @Nullable VirtualFile findVcsRootFor(Project project, @Nullable VirtualFile file) {
         VirtualFile root = ProjectLevelVcsManager.getInstance(project).getVcsRootFor(file);
         if (root != null) {
             return root;
@@ -186,8 +184,7 @@ public class DvcsUtil {
         return false;
     }
 
-    @Nullable
-    public static String joinMessagesOrNull(Collection<String> messages) {
+    public static @Nullable String joinMessagesOrNull(Collection<String> messages) {
         String joined = StringUtil.join(messages, "\n");
         return StringUtil.isEmptyOrSpaces(joined) ? null : joined;
     }
@@ -200,8 +197,7 @@ public class DvcsUtil {
     /**
      * Returns the currently selected file, based on which VcsBranch or StatusBar components will identify the current repository root.
      */
-    @Nullable
-    public static VirtualFile getSelectedFile(Project project) {
+    public static @Nullable VirtualFile getSelectedFile(Project project) {
         StatusBar statusBar = WindowManager.getInstance().getStatusBar(project);
         FileEditor fileEditor = StatusBarUtil.getCurrentFileEditor(statusBar);
         VirtualFile result = null;
@@ -358,8 +354,7 @@ public class DvcsUtil {
         }
     }
 
-    @Nullable
-    public static <T extends Repository> T guessRepositoryForFile(
+    public static @Nullable <T extends Repository> T guessRepositoryForFile(
         Project project,
         RepositoryManager<T> manager,
         @Nullable VirtualFile file,
@@ -373,8 +368,7 @@ public class DvcsUtil {
         ));
     }
 
-    @Nullable
-    public static <T extends Repository> T guessCurrentRepositoryQuick(
+    public static @Nullable <T extends Repository> T guessCurrentRepositoryQuick(
         Project project,
         AbstractRepositoryManager<T> manager,
         @Nullable String defaultRootPathValue
@@ -385,8 +379,7 @@ public class DvcsUtil {
             : manager.getRepositoryForRootQuick(guessRootForVcs(project, manager.getVcs(), defaultRootPathValue));
     }
 
-    @Nullable
-    private static VirtualFile guessRootForVcs(Project project, @Nullable AbstractVcs vcs, @Nullable String defaultRootPathValue) {
+    private static @Nullable VirtualFile guessRootForVcs(Project project, @Nullable AbstractVcs vcs, @Nullable String defaultRootPathValue) {
         if (project.isDisposed()) {
             return null;
         }
@@ -456,8 +449,7 @@ public class DvcsUtil {
         return repositories.stream().filter(t -> t.getRoot().isValid()).sorted(REPOSITORY_COMPARATOR).toList();
     }
 
-    @Nullable
-    private static VirtualFile getVcsRootForLibraryFile(Project project, VirtualFile file) {
+    private static @Nullable VirtualFile getVcsRootForLibraryFile(Project project, VirtualFile file) {
         ProjectLevelVcsManager vcsManager = ProjectLevelVcsManager.getInstance(project);
         // for a file inside .jar/.zip consider the .jar/.zip file itself
         VirtualFile root = vcsManager.getVcsRootFor(ArchiveVfsUtil.getVirtualFileForJar(file));
@@ -497,8 +489,7 @@ public class DvcsUtil {
         return topLibraryRoot;
     }
 
-    @Nullable
-    public static VirtualFile guessVcsRoot(Project project, @Nullable VirtualFile file) {
+    public static @Nullable VirtualFile guessVcsRoot(Project project, @Nullable VirtualFile file) {
         VirtualFile root = null;
         if (file != null) {
             root = ProjectLevelVcsManager.getInstance(project).getVcsRootFor(file);
@@ -532,8 +523,7 @@ public class DvcsUtil {
         return groupedCommits;
     }
 
-    @Nullable
-    public static PushSupport getPushSupport(AbstractVcs vcs) {
+    public static @Nullable PushSupport getPushSupport(AbstractVcs vcs) {
         return ContainerUtil.find(
             vcs.getProject().getExtensionList(PushSupport.class),
             support -> support.getVcs().equals(vcs)

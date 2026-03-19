@@ -43,8 +43,7 @@ public abstract class BaseSearchScope implements SearchScope {
     }
 
     @Override
-    @Nullable
-    public Image getIcon() {
+    public @Nullable Image getIcon() {
         return null;
     }
 

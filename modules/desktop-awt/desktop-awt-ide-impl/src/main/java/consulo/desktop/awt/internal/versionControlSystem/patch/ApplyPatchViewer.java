@@ -71,8 +71,7 @@ import java.util.*;
 class ApplyPatchViewer implements DataProvider, Disposable {
     public static final Logger LOG = Logger.getInstance(ApplyPatchViewer.class);
 
-    @Nullable
-    private final Project myProject;
+    private final @Nullable Project myProject;
     
     private final DiffContext myContext;
     
@@ -261,8 +260,7 @@ class ApplyPatchViewer implements DataProvider, Disposable {
         return myPanel;
     }
 
-    @Nullable
-    public JComponent getPreferredFocusedComponent() {
+    public @Nullable JComponent getPreferredFocusedComponent() {
         return myResultEditor.getContentComponent();
     }
 

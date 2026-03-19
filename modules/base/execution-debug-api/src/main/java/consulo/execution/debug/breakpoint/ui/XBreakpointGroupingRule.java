@@ -56,11 +56,9 @@ public abstract class XBreakpointGroupingRule<B, G extends XBreakpointGroup> {
     return XBreakpointsGroupingPriorities.DEFAULT;
   }
 
-  @Nullable
-  public abstract G getGroup(B breakpoint, Collection<G> groups);
+  public abstract @Nullable G getGroup(B breakpoint, Collection<G> groups);
 
-  @Nullable
-  public Image getIcon() {
+  public @Nullable Image getIcon() {
     return null;
   }
 }

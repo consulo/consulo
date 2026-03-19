@@ -62,8 +62,7 @@ public abstract class BackgroundUpdaterTaskBase<T> extends Task.Backgroundable {
 
     public abstract String getCaption(int size);
 
-    @Nullable
-    protected abstract Usage createUsage(T element);
+    protected abstract @Nullable Usage createUsage(T element);
 
     protected void replaceModel(List<? extends T> data) {
         myUpdater.replaceModel(data);
@@ -208,8 +207,7 @@ public abstract class BackgroundUpdaterTaskBase<T> extends Task.Backgroundable {
         myFinished = true;
     }
 
-    @Nullable
-    protected T getTheOnlyOneElement() {
+    protected @Nullable T getTheOnlyOneElement() {
         synchronized (lock) {
             if (myData.size() == 1) {
                 return myData.iterator().next();

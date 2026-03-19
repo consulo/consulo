@@ -30,10 +30,8 @@ public class DefaultArrangementEntry implements ArrangementEntry {
   
   private final List<ArrangementEntry> myChildren = new ArrayList<ArrangementEntry>();
 
-  @Nullable
-  private final ArrangementEntry       myParent;
-  @Nullable
-  private       List<ArrangementEntry> myDependencies;
+  private final @Nullable ArrangementEntry       myParent;
+  private       @Nullable List<ArrangementEntry> myDependencies;
 
   private final int     myStartOffset;
   private final int     myEndOffset;

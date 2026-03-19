@@ -99,13 +99,11 @@ public abstract class AbstractCommonCheckinAction extends AbstractVcsAction {
         return getActionName(context);
     }
 
-    @Nullable
-    protected CommitExecutor getExecutor(Project project) {
+    protected @Nullable CommitExecutor getExecutor(Project project) {
         return null;
     }
 
-    @Nullable
-    protected LocalChangeList getInitiallySelectedChangeList(VcsContext context, Project project) {
+    protected @Nullable LocalChangeList getInitiallySelectedChangeList(VcsContext context, Project project) {
         LocalChangeList result;
         ChangeListManager manager = ChangeListManager.getInstance(project);
         ChangeList[] changeLists = context.getSelectedChangeLists();

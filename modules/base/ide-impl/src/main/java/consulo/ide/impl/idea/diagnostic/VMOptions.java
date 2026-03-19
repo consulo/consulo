@@ -153,8 +153,7 @@ public class VMOptions {
         }
     }
 
-    @Nullable
-    public static String read() {
+    public static @Nullable String read() {
         try {
             File newFile = getWriteFile();
             if (newFile != null && newFile.exists()) {
@@ -173,8 +172,7 @@ public class VMOptions {
         return null;
     }
 
-    @Nullable
-    public static File getWriteFile() {
+    public static @Nullable File getWriteFile() {
         String vmOptionsFile = System.getProperty("jb.vmOptionsFile");
         if (vmOptionsFile == null) {
             // launchers should specify a path to an options file used to configure a JVM

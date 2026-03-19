@@ -42,8 +42,7 @@ public class VcsContextWrapper implements VcsContext {
   protected final int myModifiers;
   
   private final String myPlace;
-  @Nullable
-  private final String myActionName;
+  private final @Nullable String myActionName;
 
   public VcsContextWrapper(DataContext context, int modifiers, String place, @Nullable String actionName) {
     myContext = context;

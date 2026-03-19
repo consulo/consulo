@@ -77,8 +77,7 @@ public class CommonProgramParametersPanel extends JPanel implements PanelWithAnc
         myAnchor = UIUtil.mergeComponentsWithAnchor(myProgramParametersComponent, myWorkingDirectoryComponent, myEnvVariablesComponent);
     }
 
-    @Nullable
-    protected Project getProject() {
+    protected @Nullable Project getProject() {
         return myModuleContext != null ? myModuleContext.getProject() : null;
     }
 
@@ -188,8 +187,7 @@ public class CommonProgramParametersPanel extends JPanel implements PanelWithAnc
         configuration.setPassParentEnvs(myEnvVariablesComponent.isPassParentEnvs());
     }
 
-    @Nullable
-    protected String fromTextField(TextAccessor textAccessor, CommonProgramRunConfigurationParameters configuration) {
+    protected @Nullable String fromTextField(TextAccessor textAccessor, CommonProgramRunConfigurationParameters configuration) {
         return textAccessor.getText();
     }
 

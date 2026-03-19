@@ -64,7 +64,7 @@ public class ImportToShelfExecutor implements ApplyPatchExecutor<TextFilePatchIn
     List<FilePatch> remaining,
     final MultiMap<VirtualFile, TextFilePatchInProgress> patchGroupsToApply,
     @Nullable LocalChangeList localList,
-    @Nullable final String fileName,
+    final @Nullable String fileName,
     @Nullable ThrowableComputable<Map<String, Map<String, CharSequence>>, PatchSyntaxException> additionalInfo
   ) {
     if (fileName == null) {

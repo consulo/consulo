@@ -51,8 +51,7 @@ public class CodeInsightSettings implements PersistentStateComponent<Element>, C
   }
 
   @Override
-  @Nullable
-  public CodeInsightSettings clone() {
+  public @Nullable CodeInsightSettings clone() {
     try {
       return (CodeInsightSettings)super.clone();
     }

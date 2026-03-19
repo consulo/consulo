@@ -29,11 +29,9 @@ import org.jspecify.annotations.Nullable;
  */
 public abstract class CompletionAdvertiser {
 
-  @Nullable
-  public abstract String advertise(CompletionParameters parameters, ProcessingContext context);
+  public abstract @Nullable String advertise(CompletionParameters parameters, ProcessingContext context);
 
-  @Nullable
-  public abstract String handleEmptyLookup(CompletionParameters parameters, ProcessingContext context);
+  public abstract @Nullable String handleEmptyLookup(CompletionParameters parameters, ProcessingContext context);
 
   protected static String getShortcut(String id) {
     return KeymapUtil.getFirstKeyboardShortcutText(ActionManager.getInstance().getAction(id));

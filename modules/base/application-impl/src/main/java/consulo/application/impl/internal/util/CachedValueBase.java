@@ -61,8 +61,7 @@ public abstract class CachedValueBase<T> implements ProjectCachedValueEx<T> {
         return new Data<>(value, inferredDependencies, inferredTimeStamps, tracker);
     }
 
-    @Nullable
-    private synchronized Data<T> cacheOrGetData(@Nullable Data<T> expected, @Nullable Data<T> updatedValue) {
+    private synchronized @Nullable Data<T> cacheOrGetData(@Nullable Data<T> expected, @Nullable Data<T> updatedValue) {
         if (expected != getRawData()) {
             return null;
         }
@@ -97,8 +96,7 @@ public abstract class CachedValueBase<T> implements ProjectCachedValueEx<T> {
         return getUpToDateOrNull() != null;
     }
 
-    @Nullable
-    public final Data<T> getUpToDateOrNull() {
+    public final @Nullable Data<T> getUpToDateOrNull() {
         Data<T> data = getRawData();
         return data != null && checkUpToDate(data) ? data : null;
     }
@@ -113,8 +111,7 @@ public abstract class CachedValueBase<T> implements ProjectCachedValueEx<T> {
         return false;
     }
 
-    @Nullable
-    private Data<T> getRawData() {
+    private @Nullable Data<T> getRawData() {
         return SoftReference.dereference(myData);
     }
 
@@ -220,8 +217,7 @@ public abstract class CachedValueBase<T> implements ProjectCachedValueEx<T> {
         }
     }
 
-    @Nullable
-    protected <P> T getValueWithLock(P param) {
+    protected @Nullable <P> T getValueWithLock(P param) {
         Data<T> data = getUpToDateOrNull();
         if (data != null) {
             if (myCachedValuesFactory.areRandomChecksEnabled()) {

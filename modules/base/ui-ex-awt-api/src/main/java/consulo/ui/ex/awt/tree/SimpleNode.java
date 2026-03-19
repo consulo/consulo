@@ -84,8 +84,7 @@ public abstract class SimpleNode extends PresentableNodeDescriptor implements Co
     return new SimpleTextAttributes(Font.PLAIN, TargetAWT.to(getColor()));
   }
 
-  @Nullable
-  protected Object updateElement() {
+  protected @Nullable Object updateElement() {
     return getElement();
   }
 

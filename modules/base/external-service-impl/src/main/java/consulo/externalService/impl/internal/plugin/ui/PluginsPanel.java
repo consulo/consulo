@@ -196,8 +196,7 @@ public class PluginsPanel implements Disposable {
         return ids != null && !ids.isEmpty();
     }
 
-    @Nullable
-    public Set<PluginId> getRequiredPlugins(PluginId pluginId) {
+    public @Nullable Set<PluginId> getRequiredPlugins(PluginId pluginId) {
         return myDependentToRequiredListMap.get(pluginId);
     }
 

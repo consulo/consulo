@@ -43,11 +43,9 @@ public class ExternalSystemExecuteTaskTask extends AbstractExternalSystemTask {
 
   
   private final List<ExternalTaskPojo> myTasksToExecute;
-  @Nullable
-  private final String myVmOptions;
-  @Nullable
-  private String myScriptParameters;
-  @Nullable private final String myDebuggerSetup;
+  private final @Nullable String myVmOptions;
+  private @Nullable String myScriptParameters;
+  private final @Nullable String myDebuggerSetup;
 
   public ExternalSystemExecuteTaskTask(
     ProjectSystemId externalSystemId,

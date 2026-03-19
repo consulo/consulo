@@ -345,8 +345,7 @@ public class AbstractFileType extends UserFileType<AbstractFileType> implements 
         return result;
     }
 
-    @Nullable
-    static Element writeMapping(String typeName, FileNameMatcher matcher, boolean specifyTypeName) {
+    static @Nullable Element writeMapping(String typeName, FileNameMatcher matcher, boolean specifyTypeName) {
         Element mapping = new Element(ELEMENT_MAPPING);
         if (matcher instanceof ExtensionFileNameMatcherImpl extensionFileNameMatcher) {
             mapping.setAttribute(ATTRIBUTE_EXT, extensionFileNameMatcher.getExtension());

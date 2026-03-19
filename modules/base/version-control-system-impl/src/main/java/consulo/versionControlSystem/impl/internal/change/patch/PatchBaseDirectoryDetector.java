@@ -32,8 +32,7 @@ public abstract class PatchBaseDirectoryDetector {
     return project.getService(PatchBaseDirectoryDetector.class);
   }
 
-  @Nullable
-  public abstract Result detectBaseDirectory(String name);
+  public abstract @Nullable Result detectBaseDirectory(String name);
 
   public abstract Collection<VirtualFile> findFiles(String fileName);
 

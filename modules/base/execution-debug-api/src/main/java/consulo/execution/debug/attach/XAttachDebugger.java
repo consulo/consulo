@@ -32,8 +32,7 @@ public interface XAttachDebugger {
   /**
    * @return title for `Attach to process` module window, which will be shown when choosing this debugger
    */
-  @Nullable
-  default String getDebuggerSelectedTitle() {
+  default @Nullable String getDebuggerSelectedTitle() {
     String title = getDebuggerDisplayName();
     title = StringUtil.shortenTextWithEllipsis(title, 50, 0);
     return XDebuggerLocalize.xdebuggerAttachPopupTitle(title).get();

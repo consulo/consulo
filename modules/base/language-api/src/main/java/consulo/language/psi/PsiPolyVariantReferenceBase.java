@@ -42,8 +42,7 @@ public abstract class PsiPolyVariantReferenceBase<T extends PsiElement> extends 
   }
 
   @Override
-  @Nullable
-  public PsiElement resolve() {
+  public @Nullable PsiElement resolve() {
     ResolveResult[] resolveResults = multiResolve(false);
     return resolveResults.length == 1 ? resolveResults[0].getElement() : null;
   }

@@ -109,8 +109,7 @@ class ConsoleHistoryModel extends SimpleModificationTracker {
         }
     }
 
-    @Nullable
-    public String getHistoryNext() {
+    public @Nullable String getHistoryNext() {
         synchronized (myLock) {
             if (myIndex >= 0) {
                 --myIndex;
@@ -119,8 +118,7 @@ class ConsoleHistoryModel extends SimpleModificationTracker {
         }
     }
 
-    @Nullable
-    public String getHistoryPrev() {
+    public @Nullable String getHistoryPrev() {
         synchronized (myLock) {
             if (myIndex <= myEntries.size() - 1) {
                 ++myIndex;

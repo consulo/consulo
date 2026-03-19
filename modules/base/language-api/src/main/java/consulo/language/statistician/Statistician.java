@@ -42,8 +42,7 @@ public abstract class Statistician<T, Loc, Stat extends Statistician<T, Loc, Sta
     return map.get(key);
   }
 
-  @Nullable
-  public abstract StatisticsInfo serialize(T element, Loc location);
+  public abstract @Nullable StatisticsInfo serialize(T element, Loc location);
 
   
   public abstract Key<Stat> getKey();

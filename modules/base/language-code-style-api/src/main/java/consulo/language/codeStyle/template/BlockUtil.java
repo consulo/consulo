@@ -81,8 +81,7 @@ class BlockUtil {
     }
   }
 
-  @Nullable
-  private static DataLanguageBlockWrapper createAndAddBlock(List<DataLanguageBlockWrapper> list, Block block, @Nullable Indent indent) {
+  private static @Nullable DataLanguageBlockWrapper createAndAddBlock(List<DataLanguageBlockWrapper> list, Block block, @Nullable Indent indent) {
     DataLanguageBlockWrapper wrapper = DataLanguageBlockWrapper.create(block, indent);
     if (wrapper != null) {
       list.add(wrapper);

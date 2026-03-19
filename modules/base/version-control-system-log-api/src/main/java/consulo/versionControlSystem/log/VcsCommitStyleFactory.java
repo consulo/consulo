@@ -99,10 +99,8 @@ public class VcsCommitStyleFactory {
    * Default implementation of VcsCommitStyle.
    */
   private static class VcsCommitStyleImpl implements VcsLogHighlighter.VcsCommitStyle {
-    @Nullable
-    private final Color myForeground;
-    @Nullable
-    private final Color myBackground;
+    private final @Nullable Color myForeground;
+    private final @Nullable Color myBackground;
     private final VcsLogHighlighter.@Nullable TextStyle myTextStyle;
 
     /**

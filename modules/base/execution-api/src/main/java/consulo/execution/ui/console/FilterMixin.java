@@ -49,8 +49,7 @@ public interface FilterMixin {
       return getHighlightEndOffset();
     }
 
-    @Nullable
-    public TextAttributes getTextAttributes(@Nullable TextAttributes source) {
+    public @Nullable TextAttributes getTextAttributes(@Nullable TextAttributes source) {
       return null;
     }
   }

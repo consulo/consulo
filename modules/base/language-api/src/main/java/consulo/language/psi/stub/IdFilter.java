@@ -83,8 +83,7 @@ public abstract class IdFilter {
 
   public abstract boolean containsFileId(int id);
 
-  @Nullable
-  public GlobalSearchScope getEffectiveFilteringScope() {
+  public @Nullable GlobalSearchScope getEffectiveFilteringScope() {
     return null;
   }
 }

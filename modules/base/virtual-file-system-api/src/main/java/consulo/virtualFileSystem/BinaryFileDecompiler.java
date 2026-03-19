@@ -34,8 +34,7 @@ public interface BinaryFileDecompiler {
     ExtensionPointCacheKey<BinaryFileDecompiler, Map<FileType, BinaryFileDecompiler>> KEY =
         ExtensionPointCacheKey.groupBy("BinaryFileDecompiler", BinaryFileDecompiler::getFileType);
 
-    @Nullable
-    static BinaryFileDecompiler forFileType(FileType fileType) {
+    static @Nullable BinaryFileDecompiler forFileType(FileType fileType) {
         ExtensionPoint<BinaryFileDecompiler> extensionPoint = Application.get().getExtensionPoint(BinaryFileDecompiler.class);
         Map<FileType, BinaryFileDecompiler> map = extensionPoint.getOrBuildCache(KEY);
         return map.get(fileType);

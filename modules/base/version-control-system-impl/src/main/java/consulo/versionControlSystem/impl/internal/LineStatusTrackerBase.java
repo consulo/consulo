@@ -53,8 +53,7 @@ public abstract class LineStatusTrackerBase implements LineStatusTrackerI {
     // read access allowed from EDT or while holding LOCK
     private final Object LOCK = new Object();
 
-    @Nullable
-    protected final Project myProject;
+    protected final @Nullable Project myProject;
     
     protected final Document myDocument;
     
@@ -83,8 +82,7 @@ public abstract class LineStatusTrackerBase implements LineStatusTrackerI {
     
     private final Set<VcsRange> myToBeInstalledRanges = ContainerUtil.newIdentityTroveSet();
 
-    @Nullable
-    private DirtyRange myDirtyRange;
+    private @Nullable DirtyRange myDirtyRange;
 
     public LineStatusTrackerBase(@Nullable Project project,
                                  Document document) {
@@ -272,8 +270,7 @@ public abstract class LineStatusTrackerBase implements LineStatusTrackerI {
     }
 
     @Override
-    @Nullable
-    public Project getProject() {
+    public @Nullable Project getProject() {
         return myProject;
     }
 
@@ -293,8 +290,7 @@ public abstract class LineStatusTrackerBase implements LineStatusTrackerI {
      * Ranges can be modified without taking the write lock, so calling this method twice not from EDT can produce different results.
      */
     @Override
-    @Nullable
-    public List<VcsRange> getRanges() {
+    public @Nullable List<VcsRange> getRanges() {
         synchronized (LOCK) {
             if (!tryValidate()) {
                 return null;
@@ -684,8 +680,7 @@ public abstract class LineStatusTrackerBase implements LineStatusTrackerI {
     }
 
     @Override
-    @Nullable
-    public VcsRange getNextRange(VcsRange range) {
+    public @Nullable VcsRange getNextRange(VcsRange range) {
         synchronized (LOCK) {
             if (!tryValidate()) {
                 return null;
@@ -699,8 +694,7 @@ public abstract class LineStatusTrackerBase implements LineStatusTrackerI {
     }
 
     @Override
-    @Nullable
-    public VcsRange getPrevRange(VcsRange range) {
+    public @Nullable VcsRange getPrevRange(VcsRange range) {
         synchronized (LOCK) {
             if (!tryValidate()) {
                 return null;
@@ -714,8 +708,7 @@ public abstract class LineStatusTrackerBase implements LineStatusTrackerI {
     }
 
     @Override
-    @Nullable
-    public VcsRange getNextRange(int line) {
+    public @Nullable VcsRange getNextRange(int line) {
         synchronized (LOCK) {
             if (!tryValidate()) {
                 return null;
@@ -730,8 +723,7 @@ public abstract class LineStatusTrackerBase implements LineStatusTrackerI {
     }
 
     @Override
-    @Nullable
-    public VcsRange getPrevRange(int line) {
+    public @Nullable VcsRange getPrevRange(int line) {
         synchronized (LOCK) {
             if (!tryValidate()) {
                 return null;
@@ -746,8 +738,7 @@ public abstract class LineStatusTrackerBase implements LineStatusTrackerI {
         }
     }
 
-    @Nullable
-    public VcsRange getRangeForLine(int line) {
+    public @Nullable VcsRange getRangeForLine(int line) {
         synchronized (LOCK) {
             if (!tryValidate()) {
                 return null;

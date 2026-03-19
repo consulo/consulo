@@ -31,8 +31,7 @@ public abstract class ContentFolderPropertyProvider<T> {
     
     public abstract Key<T> getKey();
 
-    @Nullable
-    public abstract Image getIcon(T value, ContentFolderTypeProvider typeProvider);
+    public abstract @Nullable Image getIcon(T value, ContentFolderTypeProvider typeProvider);
 
     public boolean isUpdateFullIcon() {
         return false;
@@ -45,8 +44,7 @@ public abstract class ContentFolderPropertyProvider<T> {
     
     public abstract T[] getValues();
 
-    @Nullable
-    public static ContentFolderPropertyProvider<?> findProvider(String key) {
+    public static @Nullable ContentFolderPropertyProvider<?> findProvider(String key) {
         return Application.get().getExtensionPoint(ContentFolderPropertyProvider.class)
             .findFirstSafe(provider -> key.equals(provider.getKey().toString()));
     }

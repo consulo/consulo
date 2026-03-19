@@ -24,21 +24,19 @@ public interface UiDecorator {
   UiDecoration getDecoration();
 
   class UiDecoration {
-    private @Nullable final Font myLabelFont;
-    private @Nullable final Insets myLabelInsets;
+    private final @Nullable Font myLabelFont;
+    private final @Nullable Insets myLabelInsets;
 
     public UiDecoration(Font labelFont, Insets labelInsets) {
       myLabelFont = labelFont;
       myLabelInsets = labelInsets;
     }
 
-    @Nullable
-    public Font getLabelFont() {
+    public @Nullable Font getLabelFont() {
       return myLabelFont;
     }
 
-    @Nullable
-    public Insets getLabelInsets() {
+    public @Nullable Insets getLabelInsets() {
       return myLabelInsets;
     }
   }

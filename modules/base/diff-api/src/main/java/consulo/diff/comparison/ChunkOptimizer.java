@@ -252,8 +252,7 @@ abstract class ChunkOptimizer<T> {
      * search for an empty line boundary in unchanged lines
      * ie: we want insertion/deletion to go right before/after of an empty line
      */
-    @Nullable
-    private Integer getUnchangedBoundaryShift(Side touchSide,
+    private @Nullable Integer getUnchangedBoundaryShift(Side touchSide,
                                               int equalForward, int equalBackward,
                                               Range range1, Range range2,
                                               int threshold) {
@@ -270,8 +269,7 @@ abstract class ChunkOptimizer<T> {
      * search for an empty line boundary in changed lines
      * ie: we want insertion/deletion to start/end with an empty line
      */
-    @Nullable
-    private Integer getChangedBoundaryShift(Side touchSide,
+    private @Nullable Integer getChangedBoundaryShift(Side touchSide,
                                             int equalForward, int equalBackward,
                                             Range range1, Range range2,
                                             int threshold) {
@@ -300,8 +298,7 @@ abstract class ChunkOptimizer<T> {
       return -1;
     }
 
-    @Nullable
-    private static Integer getShift(int shiftForward, int shiftBackward) {
+    private static @Nullable Integer getShift(int shiftForward, int shiftBackward) {
       if (shiftForward == -1 && shiftBackward == -1) return null;
       if (shiftForward == 0 || shiftBackward == 0) return 0;
 

@@ -42,8 +42,7 @@ public class TextCompletionUtil {
     psiFile.putUserData(AUTO_POPUP_KEY, autoPopup);
   }
 
-  @Nullable
-  public static TextCompletionProvider getProvider(PsiFile file) {
+  public static @Nullable TextCompletionProvider getProvider(PsiFile file) {
     TextCompletionProvider provider = file.getUserData(COMPLETING_TEXT_FIELD_KEY);
 
     if (provider == null || (DumbService.isDumb(file.getProject()) && !DumbService.isDumbAware(provider))) {

@@ -92,8 +92,7 @@ public class BekBaseController extends CascadeController {
       return myLinearGraph.nodesCount();
     }
 
-    @Nullable
-    private Integer getNodeIndex(@Nullable Integer nodeId) {
+    private @Nullable Integer getNodeIndex(@Nullable Integer nodeId) {
       if (nodeId == null) return null;
 
       return myBekIntMap.getBekIndex(nodeId);

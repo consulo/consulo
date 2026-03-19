@@ -62,8 +62,7 @@ public final class TraceDebuggerStateListener {
         lastChainStatus = ReadAction.compute(() -> TraceStreamRunner.getInstance(project).getChainStatus(session));
     }
 
-    @Nullable
-    public ChainStatus getChainStatus() {
+    public @Nullable ChainStatus getChainStatus() {
         return lastChainStatus;
     }
 }

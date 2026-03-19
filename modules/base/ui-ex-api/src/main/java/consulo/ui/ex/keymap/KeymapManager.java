@@ -50,8 +50,7 @@ public abstract class KeymapManager {
 
   public abstract Keymap getDefaultKeymap();
 
-  @Nullable
-  public abstract Keymap getKeymap(String name);
+  public abstract @Nullable Keymap getKeymap(String name);
 
   public abstract void setActiveKeymap(Keymap activeKeymap);
 

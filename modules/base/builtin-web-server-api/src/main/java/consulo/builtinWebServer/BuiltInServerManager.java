@@ -35,8 +35,7 @@ public abstract class BuiltInServerManager {
 
   public abstract BuiltInServerManager waitForStart();
 
-  @Nullable
-  public abstract Disposable getServerDisposable();
+  public abstract @Nullable Disposable getServerDisposable();
 
   public abstract boolean isOnBuiltInWebServer(@Nullable Url url);
 

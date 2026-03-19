@@ -321,8 +321,7 @@ public class IdeStatusBarImpl extends JPanel implements StatusBarEx, Predicate<A
     }
 
     @Override
-    @Nullable
-    public Object getData(Key dataId) {
+    public @Nullable Object getData(Key dataId) {
         if (Project.KEY == dataId) {
             return getProject();
         }

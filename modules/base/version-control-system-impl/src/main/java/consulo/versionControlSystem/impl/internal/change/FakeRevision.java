@@ -32,8 +32,7 @@ public class FakeRevision implements ContentRevision {
   }
 
   @Override
-  @Nullable
-  public String getContent() { return null; }
+  public @Nullable String getContent() { return null; }
 
   @Override
   

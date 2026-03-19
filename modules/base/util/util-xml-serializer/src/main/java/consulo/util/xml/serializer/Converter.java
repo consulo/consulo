@@ -18,8 +18,7 @@ package consulo.util.xml.serializer;
 import org.jspecify.annotations.Nullable;
 
 public abstract class Converter<T> {
-  @Nullable
-  public abstract T fromString(String value);
+  public abstract @Nullable T fromString(String value);
 
   public abstract String toString(T t);
 }

@@ -23,8 +23,7 @@ import org.jspecify.annotations.Nullable;
  * @author nik
  */
 public abstract class XSmartStepIntoVariant {
-  @Nullable
-  public Image getIcon() {
+  public @Nullable Image getIcon() {
     return null;
   }
 

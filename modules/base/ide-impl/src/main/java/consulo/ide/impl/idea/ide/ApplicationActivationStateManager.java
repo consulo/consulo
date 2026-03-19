@@ -147,8 +147,7 @@ public class ApplicationActivationStateManager {
     }
   }
 
-  @Nullable
-  private static IdeFrame getIdeFrameFromWindow(Window window) {
+  private static @Nullable IdeFrame getIdeFrameFromWindow(Window window) {
     Component frame = UIUtil.findUltimateParent(window);
     if (!(frame instanceof Window)) {
       return null;

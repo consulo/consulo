@@ -26,15 +26,13 @@ import java.util.List;
 
 public class ChangeListUtil {
 
-  @Nullable
-  public static LocalChangeList getPredefinedChangeList(String defaultName, ChangeListManager changeListManager) {
+  public static @Nullable LocalChangeList getPredefinedChangeList(String defaultName, ChangeListManager changeListManager) {
     LocalChangeList sameNamedList = changeListManager.findChangeList(defaultName);
     if (sameNamedList != null) return sameNamedList;
     return tryToMatchWithExistingChangelist(changeListManager, defaultName);
   }
 
-  @Nullable
-  private static LocalChangeList tryToMatchWithExistingChangelist(ChangeListManager changeListManager,
+  private static @Nullable LocalChangeList tryToMatchWithExistingChangelist(ChangeListManager changeListManager,
                                                                   String defaultName) {
     List<LocalChangeList> matched = ContainerUtil.findAll(changeListManager.getChangeListsCopy(),
                                                           list -> defaultName.contains(list.getName().trim()));

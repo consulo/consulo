@@ -266,8 +266,7 @@ public class XDebuggerTree extends DnDAwareTree implements DataProvider, Disposa
         return (XDebuggerTreeNode) myTreeModel.getRoot();
     }
 
-    @Nullable
-    public XSourcePosition getSourcePosition() {
+    public @Nullable XSourcePosition getSourcePosition() {
         return mySourcePosition;
     }
 
@@ -286,8 +285,7 @@ public class XDebuggerTree extends DnDAwareTree implements DataProvider, Disposa
         return myProject;
     }
 
-    @Nullable
-    public XValueMarkers<?, ?> getValueMarkers() {
+    public @Nullable XValueMarkers<?, ?> getValueMarkers() {
         return myValueMarkers;
     }
 
@@ -296,8 +294,7 @@ public class XDebuggerTree extends DnDAwareTree implements DataProvider, Disposa
     }
 
     @Override
-    @Nullable
-    public Object getData(Key dataId) {
+    public @Nullable Object getData(Key dataId) {
         if (XDEBUGGER_TREE_KEY == dataId || XValueTree.KEY == dataId) {
             return this;
         }
@@ -372,13 +369,11 @@ public class XDebuggerTree extends DnDAwareTree implements DataProvider, Disposa
         }
     }
 
-    @Nullable
-    public static XDebuggerTree getTree(AnActionEvent e) {
+    public static @Nullable XDebuggerTree getTree(AnActionEvent e) {
         return e.getData(XDEBUGGER_TREE_KEY);
     }
 
-    @Nullable
-    public static XDebuggerTree getTree(DataContext context) {
+    public static @Nullable XDebuggerTree getTree(DataContext context) {
         return context.getData(XDEBUGGER_TREE_KEY);
     }
 

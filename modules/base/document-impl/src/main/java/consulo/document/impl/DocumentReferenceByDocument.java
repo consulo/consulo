@@ -34,8 +34,7 @@ public class DocumentReferenceByDocument implements DocumentReference {
   }
 
   @Override
-  @Nullable
-  public VirtualFile getFile() {
+  public @Nullable VirtualFile getFile() {
     return null;
   }
 

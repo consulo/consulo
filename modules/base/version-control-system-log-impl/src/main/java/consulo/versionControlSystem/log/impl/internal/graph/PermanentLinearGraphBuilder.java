@@ -79,8 +79,7 @@ public class PermanentLinearGraphBuilder<CommitId> {
     return new PermanentLinearGraphBuilder<>(graphCommits, simpleNodes, longEdgesCount);
   }
 
-  @Nullable
-  private static <CommitId> CommitId nextCommitHashIndex(List<? extends GraphCommit<CommitId>> commits, int nodeIndex) {
+  private static @Nullable <CommitId> CommitId nextCommitHashIndex(List<? extends GraphCommit<CommitId>> commits, int nodeIndex) {
     if (nodeIndex < commits.size() - 1) return commits.get(nodeIndex + 1).getId();
     return null;
   }

@@ -67,8 +67,7 @@ public class UnifiedDimensionServiceImpl extends SimpleModificationTracker imple
   }
 
   @Override
-  @Nullable
-  public synchronized Point2D getLocation(String key, Project project) {
+  public synchronized @Nullable Point2D getLocation(String key, Project project) {
     Point2D point = project == null ? null : ProjectWindowStateService.getInstance(project).getLocation(key);
     if (point != null) return point;
 
@@ -104,8 +103,7 @@ public class UnifiedDimensionServiceImpl extends SimpleModificationTracker imple
   }
 
   @Override
-  @Nullable
-  public synchronized Size2D getSize(String key, Project project) {
+  public synchronized @Nullable Size2D getSize(String key, Project project) {
     Size2D size = project == null ? null : ProjectWindowStateService.getInstance(project).getSize(key);
     if (size != null) return size;
 
@@ -142,8 +140,7 @@ public class UnifiedDimensionServiceImpl extends SimpleModificationTracker imple
    * @throws IllegalArgumentException if {@code key} is {@code null}.
    */
   @Override
-  @Nullable
-  public synchronized Point2D getLocation(String key) {
+  public synchronized @Nullable Point2D getLocation(String key) {
     return getLocation(key, guessProject());
   }
 
@@ -164,8 +161,7 @@ public class UnifiedDimensionServiceImpl extends SimpleModificationTracker imple
    * @throws IllegalArgumentException if {@code key} is {@code null}.
    */
   @Override
-  @Nullable
-  public synchronized Size2D getSize(String key) {
+  public synchronized @Nullable Size2D getSize(String key) {
     return getSize(key, guessProject());
   }
 
@@ -263,8 +259,7 @@ public class UnifiedDimensionServiceImpl extends SimpleModificationTracker imple
     }
   }
 
-  @Nullable
-  protected static Project guessProject() {
+  protected static @Nullable Project guessProject() {
     Project[] openProjects = ProjectManager.getInstance().getOpenProjects();
     return openProjects.length == 1 ? openProjects[0] : null;
   }

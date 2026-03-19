@@ -42,6 +42,5 @@ public abstract class LanguageSubstitutor implements LanguageExtension {
     return Application.get().getExtensionPoint(LanguageSubstitutor.class).getOrBuildCache(KEY).requiredGet(language);
   }
 
-  @Nullable
-  public abstract Language getLanguage(VirtualFile file, Project project);
+  public abstract @Nullable Language getLanguage(VirtualFile file, Project project);
 }

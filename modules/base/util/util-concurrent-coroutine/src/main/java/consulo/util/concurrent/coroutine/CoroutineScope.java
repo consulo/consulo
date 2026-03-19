@@ -476,8 +476,7 @@ public class CoroutineScope extends CoroutineEnvironment {
 
         private final Function<? super CoroutineScope, T> getResult;
 
-        @Nullable
-        private Exception scopeCodeError = null;
+        private @Nullable Exception scopeCodeError = null;
 
         /**
          * Creates a new instance for a certain scope.
@@ -542,8 +541,7 @@ public class CoroutineScope extends CoroutineEnvironment {
          *
          * @return The scope result
          */
-        @Nullable
-        private T getImpl() {
+        private @Nullable T getImpl() {
             if (scopeCodeError != null) {
                 throw new CoroutineScopeException(scopeCodeError,
                     scope.failedContinuations);

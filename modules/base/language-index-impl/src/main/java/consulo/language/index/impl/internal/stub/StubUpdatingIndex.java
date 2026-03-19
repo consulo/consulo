@@ -118,8 +118,7 @@ public class StubUpdatingIndex extends SingleEntryFileBasedIndexExtension<Serial
     public SingleEntryIndexer<SerializedStubTree> getIndexer() {
         return new SingleEntryIndexer<>(false) {
             @Override
-            @Nullable
-            public SerializedStubTree computeValue(FileContent inputData) {
+            public @Nullable SerializedStubTree computeValue(FileContent inputData) {
                 return ReadAction.compute(() -> {
                     SerializedStubTree serializedStubTree = null;
 
@@ -221,8 +220,7 @@ public class StubUpdatingIndex extends SingleEntryFileBasedIndexExtension<Serial
         }
     }
 
-    @Nullable
-    public static IndexingStampInfo getIndexingStampInfo(VirtualFile file) {
+    public static @Nullable IndexingStampInfo getIndexingStampInfo(VirtualFile file) {
         try (DataInputStream stream = INDEXED_STAMP.readAttribute(file)) {
             if (stream == null) {
                 return null;

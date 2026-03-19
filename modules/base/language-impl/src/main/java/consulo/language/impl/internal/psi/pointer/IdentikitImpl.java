@@ -30,8 +30,7 @@ public abstract class IdentikitImpl implements Identikit {
         return fromTypes(element.getClass(), PsiUtilCore.getElementType(element), fileLanguage);
     }
 
-    @Nullable
-    static Pair<ByAnchor, PsiElement> withAnchor(PsiElement element, Language fileLanguage) {
+    static @Nullable Pair<ByAnchor, PsiElement> withAnchor(PsiElement element, Language fileLanguage) {
         PsiUtilCore.ensureValid(element);
         if (element.isPhysical()) {
             for (SmartPointerAnchorProvider provider : SmartPointerAnchorProvider.EP_NAME.getExtensionList()) {
@@ -168,8 +167,7 @@ public abstract class IdentikitImpl implements Identikit {
         }
 
         @Override
-        @Nullable
-        public Language getFileLanguage() {
+        public @Nullable Language getFileLanguage() {
             return Language.findLanguageByID(myFileLanguageId);
         }
 

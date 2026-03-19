@@ -157,8 +157,7 @@ public class ArtifactsStructureConfigurableContextImpl implements ArtifactsStruc
     // todo myContext.getDaemonAnalyzer().queueUpdate(element);
   }
 
-  @Nullable
-  public ArtifactEditorImpl getArtifactEditor(Artifact artifact) {
+  public @Nullable ArtifactEditorImpl getArtifactEditor(Artifact artifact) {
     return myArtifactEditors.get(getOriginalArtifact(artifact));
   }
 
@@ -174,8 +173,7 @@ public class ArtifactsStructureConfigurableContextImpl implements ArtifactsStruc
     return artifactEditor;
   }
 
-  @Nullable
-  public ModifiableArtifactModel getActualModifiableModel() {
+  public @Nullable ModifiableArtifactModel getActualModifiableModel() {
     return myModifiableModel;
   }
 

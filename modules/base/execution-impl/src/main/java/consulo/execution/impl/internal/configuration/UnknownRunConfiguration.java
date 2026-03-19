@@ -59,8 +59,7 @@ public class UnknownRunConfiguration implements RunConfiguration, WithoutOwnBefo
   }
 
   @Override
-  @Nullable
-  public Image getIcon() {
+  public @Nullable Image getIcon() {
     return null;
   }
 

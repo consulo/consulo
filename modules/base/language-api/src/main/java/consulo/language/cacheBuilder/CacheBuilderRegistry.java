@@ -46,6 +46,5 @@ public abstract class CacheBuilderRegistry {
    * @param fileType the file type for which the cache builder is registered.
    * @return the cache builder, or null if none was registered.
    */
-  @Nullable
-  public abstract WordsScanner getCacheBuilder(FileType fileType);
+  public abstract @Nullable WordsScanner getCacheBuilder(FileType fileType);
 }

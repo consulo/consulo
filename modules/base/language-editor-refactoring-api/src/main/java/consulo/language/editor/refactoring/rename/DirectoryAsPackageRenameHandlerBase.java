@@ -51,8 +51,7 @@ public abstract class DirectoryAsPackageRenameHandlerBase<T extends PsiDirectory
 
     protected abstract String getQualifiedName(T aPackage);
 
-    @Nullable
-    protected abstract T getPackage(PsiDirectory psiDirectory);
+    protected abstract @Nullable T getPackage(PsiDirectory psiDirectory);
 
     protected abstract BaseRefactoringProcessor createProcessor(
         String newQName,

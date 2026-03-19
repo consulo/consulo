@@ -132,24 +132,21 @@ public abstract class PlatformComponentManagerImpl extends BaseComponentManager 
     }
   }
 
-  @Nullable
-  protected ProgressIndicatorProvider getProgressIndicatorProvider() {
+  protected @Nullable ProgressIndicatorProvider getProgressIndicatorProvider() {
     if (myParent instanceof PlatformComponentManagerImpl) {
       return ((PlatformComponentManagerImpl)myParent).getProgressIndicatorProvider();
     }
     return null;
   }
 
-  @Nullable
-  public IComponentStore getStateStore() {
+  public @Nullable IComponentStore getStateStore() {
     if (myComponentStore == null) {
       myComponentStore = getStateStoreImpl();
     }
     return myComponentStore;
   }
 
-  @Nullable
-  protected IComponentStore getStateStoreImpl() {
+  protected @Nullable IComponentStore getStateStoreImpl() {
     return null;
   }
 }

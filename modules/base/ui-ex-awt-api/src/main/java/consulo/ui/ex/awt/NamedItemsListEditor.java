@@ -162,8 +162,7 @@ public abstract class NamedItemsListEditor<T> extends MasterDetailsComponent {
         );
     }
 
-    @Nullable
-    private T findByName(String name) {
+    private @Nullable T findByName(String name) {
         for (T item : myItems) {
             if (Comparing.equal(name, myNamer.getName(item))) {
                 return item;
@@ -174,8 +173,7 @@ public abstract class NamedItemsListEditor<T> extends MasterDetailsComponent {
     }
 
     @Override
-    @Nullable
-    protected List<AnAction> createActions(boolean fromPopup) {
+    protected @Nullable List<AnAction> createActions(boolean fromPopup) {
         List<AnAction> result = new ArrayList<>();
         result.add(new AddAction());
         result.add(new MyDeleteAction(forAll(o -> canDelete((T)((MyNode)o).getConfigurable().getEditableObject()))));
@@ -209,8 +207,7 @@ public abstract class NamedItemsListEditor<T> extends MasterDetailsComponent {
         myShowIcons = showIcons;
     }
 
-    @Nullable
-    protected UnnamedConfigurable getItemConfigurable(T item) {
+    protected @Nullable UnnamedConfigurable getItemConfigurable(T item) {
         SimpleReference<UnnamedConfigurable> result = new SimpleReference<>();
         TreeUtil.traverse(
             (TreeNode)myTree.getModel().getRoot(),

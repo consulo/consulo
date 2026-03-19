@@ -634,8 +634,7 @@ public class DumbServiceImpl extends DumbServiceInternal implements Disposable, 
         );
     }
 
-    @Nullable
-    private Pair<DumbModeTask, ProgressIndicatorEx> getNextTask(@Nullable DumbModeTask prevTask) {
+    private @Nullable Pair<DumbModeTask, ProgressIndicatorEx> getNextTask(@Nullable DumbModeTask prevTask) {
         CompletableFuture<Pair<DumbModeTask, ProgressIndicatorEx>> result = new CompletableFuture<>();
         myProject.getUIAccess().giveIfNeed(() -> {
             if (myProject.isDisposed()) {
@@ -652,8 +651,7 @@ public class DumbServiceImpl extends DumbServiceInternal implements Disposable, 
         return waitForFuture(result);
     }
 
-    @Nullable
-    private Pair<DumbModeTask, ProgressIndicatorEx> pollTaskQueue() {
+    private @Nullable Pair<DumbModeTask, ProgressIndicatorEx> pollTaskQueue() {
         while (true) {
             if (myUpdatesQueue.isEmpty()) {
                 queueUpdateFinished();
@@ -672,8 +670,7 @@ public class DumbServiceImpl extends DumbServiceInternal implements Disposable, 
         }
     }
 
-    @Nullable
-    private static <T> T waitForFuture(Future<T> result) {
+    private static @Nullable <T> T waitForFuture(Future<T> result) {
         try {
             return result.get();
         }
@@ -694,8 +691,7 @@ public class DumbServiceImpl extends DumbServiceInternal implements Disposable, 
         return myModificationCount;
     }
 
-    @Nullable
-    public Throwable getDumbModeStartTrace() {
+    public @Nullable Throwable getDumbModeStartTrace() {
         return myDumbStart;
     }
 

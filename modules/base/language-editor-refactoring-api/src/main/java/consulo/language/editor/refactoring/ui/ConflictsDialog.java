@@ -293,8 +293,7 @@ public class ConflictsDialog extends DialogWrapper {
                     }
 
                     @Override
-                    @Nullable
-                    public Image getIcon() {
+                    public @Nullable Image getIcon() {
                         return null;
                     }
 

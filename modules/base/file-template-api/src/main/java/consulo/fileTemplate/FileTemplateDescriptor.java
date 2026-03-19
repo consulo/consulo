@@ -33,8 +33,7 @@ public class FileTemplateDescriptor {
     myFileName = fileName;
   }
 
-  @Nullable
-  public Image getIcon() {
+  public @Nullable Image getIcon() {
     return myIcon;
   }
 

@@ -36,8 +36,7 @@ public abstract class FileOrDirectoryCopyPackagingElement<T extends FileOrDirect
     myFilePath = filePath;
   }
 
-  @Nullable
-  public VirtualFile findFile() {
+  public @Nullable VirtualFile findFile() {
     return LocalFileSystem.getInstance().findFileByPath(myFilePath);
   }
 

@@ -27,8 +27,7 @@ public class SingleProjectHolder {
   /**
    * @return the only open project if there is one, null if no or several projects are open
    */
-  @Nullable
-  public static Project theOnlyOpenProject() {
+  public static @Nullable Project theOnlyOpenProject() {
     return theProject;
   }
 

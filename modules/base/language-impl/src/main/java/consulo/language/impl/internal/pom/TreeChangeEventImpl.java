@@ -117,8 +117,7 @@ public class TreeChangeEventImpl implements TreeChangeEvent {
   /**
    * @return a direct child of {@code ancestor} which contains {@code change}
    */
-  @Nullable
-  private static TreeElement findAncestorChild(CompositeElement ancestor, TreeChangeImpl change) {
+  private static @Nullable TreeElement findAncestorChild(CompositeElement ancestor, TreeChangeImpl change) {
     List<CompositeElement> superParents = change.getSuperParents();
     int index = superParents.indexOf(ancestor);
     return index < 0 ? null : index == 0 ? change.getChangedParent() : superParents.get(index - 1);

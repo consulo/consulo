@@ -110,16 +110,14 @@ public class HighlightInfoImpl implements HighlightInfo {
     /**
      * null means it the same as highlighter
      */
-    @Nullable
-    public RangeMarker myFixMarker;
+    public @Nullable RangeMarker myFixMarker;
     protected volatile RangeHighlighterEx myHighlighter; // modified in EDT only
     private PsiElement myPsiElement;
 
     /**
      * Returns the HighlightInfo instance from which the given range highlighter was created, or null if there isn't any.
      */
-    @Nullable
-    public static HighlightInfoImpl fromRangeHighlighter(RangeHighlighter highlighter) {
+    public static @Nullable HighlightInfoImpl fromRangeHighlighter(RangeHighlighter highlighter) {
         return highlighter.getErrorStripeTooltip() instanceof HighlightInfoImpl highlightInfo ? highlightInfo : null;
     }
 
@@ -159,8 +157,7 @@ public class HighlightInfoImpl implements HighlightInfo {
         return myType;
     }
 
-    @Nullable
-    public String getInspectionToolId() {
+    public @Nullable String getInspectionToolId() {
         return myInspectionToolId;
     }
 
@@ -274,8 +271,7 @@ public class HighlightInfoImpl implements HighlightInfo {
         return customScheme != null ? customScheme : EditorColorsManager.getInstance().getGlobalScheme();
     }
 
-    @Nullable
-    static String htmlEscapeToolTip(@Nullable String unescapedTooltip) {
+    static @Nullable String htmlEscapeToolTip(@Nullable String unescapedTooltip) {
         return unescapedTooltip == null ? null : XmlStringUtil.wrapInHtml(XmlStringUtil.escapeText(unescapedTooltip));
     }
 
@@ -419,8 +415,7 @@ public class HighlightInfoImpl implements HighlightInfo {
         return myGutterIconRenderer;
     }
 
-    @Nullable
-    public ProblemGroup getProblemGroup() {
+    public @Nullable ProblemGroup getProblemGroup() {
         return myProblemGroup;
     }
 

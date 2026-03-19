@@ -216,8 +216,7 @@ public class FileColorConfigurationEditDialog extends DialogWrapper {
         return result;
     }
 
-    @Nullable
-    private String getColorName() {
+    private @Nullable String getColorName() {
         for (String name : myColorToButtonMap.keySet()) {
             AbstractButton button = myColorToButtonMap.get(name);
             if (button.isSelected()) {

@@ -73,8 +73,7 @@ public abstract class ChangeGoToChangePopupAction<Chain extends DiffRequestChain
     
     protected abstract List<Change> getChanges();
 
-    @Nullable
-    protected abstract Change getCurrentSelection();
+    protected abstract @Nullable Change getCurrentSelection();
 
     //
     // Helpers

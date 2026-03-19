@@ -93,20 +93,17 @@ public class ObjectUtil {
   }
 
   @Contract(value = "!null, _ -> !null; _, !null -> !null; null, null -> null", pure = true)
-  @Nullable
-  public static <T> T chooseNotNull(@Nullable T t1, @Nullable T t2) {
+  public static @Nullable <T> T chooseNotNull(@Nullable T t1, @Nullable T t2) {
     return t1 == null ? t2 : t1;
   }
 
   @Contract(value = "!null, _ -> !null; _, !null -> !null; null, null -> null", pure = true)
-  @Nullable
-  public static <T> T coalesce(@Nullable T t1, @Nullable T t2) {
+  public static @Nullable <T> T coalesce(@Nullable T t1, @Nullable T t2) {
     return chooseNotNull(t1, t2);
   }
 
   @Contract(value = "!null, _, _ -> !null; _, !null, _ -> !null; _, _, !null -> !null; null,null,null -> null", pure = true)
-  @Nullable
-  public static <T> T coalesce(@Nullable T t1, @Nullable T t2, @Nullable T t3) {
+  public static @Nullable <T> T coalesce(@Nullable T t1, @Nullable T t2, @Nullable T t3) {
     return t1 != null ? t1 : t2 != null ? t2 : t3;
   }
 
@@ -132,8 +129,7 @@ public class ObjectUtil {
     return -(low + 1);
   }
 
-  @Nullable
-  public static <T> T coalesce(@Nullable Iterable<? extends T> o) {
+  public static @Nullable <T> T coalesce(@Nullable Iterable<? extends T> o) {
     if (o == null) return null;
     for (T t : o) {
       if (t != null) return t;
@@ -156,16 +152,14 @@ public class ObjectUtil {
   }
 
   @Contract(value = "null, _ -> null", pure = true)
-  @Nullable
-  public static <T> T tryCast(@Nullable Object obj, Class<T> clazz) {
+  public static @Nullable <T> T tryCast(@Nullable Object obj, Class<T> clazz) {
     if (clazz.isInstance(obj)) {
       return clazz.cast(obj);
     }
     return null;
   }
 
-  @Nullable
-  public static <T, S> S doIfCast(@Nullable Object obj, Class<T> clazz, Function<? super T, ? extends S> convertor) {
+  public static @Nullable <T, S> S doIfCast(@Nullable Object obj, Class<T> clazz, Function<? super T, ? extends S> convertor) {
     if (clazz.isInstance(obj)) {
       //noinspection unchecked
       return convertor.apply((T)obj);
@@ -174,8 +168,7 @@ public class ObjectUtil {
   }
 
   @Contract("null, _ -> null")
-  @Nullable
-  public static <T, S> S doIfNotNull(@Nullable T obj, Function<? super T, ? extends S> function) {
+  public static @Nullable <T, S> S doIfNotNull(@Nullable T obj, Function<? super T, ? extends S> function) {
     return obj == null ? null : function.apply(obj);
   }
 

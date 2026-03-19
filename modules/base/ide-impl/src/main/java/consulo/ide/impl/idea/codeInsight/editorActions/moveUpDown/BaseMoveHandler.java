@@ -70,11 +70,9 @@ public abstract class BaseMoveHandler extends EditorWriteActionHandler {
     return true;
   }
 
-  @Nullable
-  protected abstract MoverWrapper getSuitableMover(Editor editor, PsiFile file);
+  protected abstract @Nullable MoverWrapper getSuitableMover(Editor editor, PsiFile file);
 
-  @Nullable
-  private static PsiFile getRoot(PsiFile file, Editor editor) {
+  private static @Nullable PsiFile getRoot(PsiFile file, Editor editor) {
     if (file == null) return null;
     int offset = editor.getCaretModel().getOffset();
     if (offset == editor.getDocument().getTextLength()) offset--;

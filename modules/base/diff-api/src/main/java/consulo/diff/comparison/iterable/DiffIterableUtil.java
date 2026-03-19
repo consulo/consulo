@@ -149,8 +149,8 @@ public class DiffIterableUtil {
      
       private final Iterator<Range> myUnchanged = iterable.unchanged();
 
-      @Nullable private Range lastChanged = myChanges.hasNext() ? myChanges.next() : null;
-      @Nullable private Range lastUnchanged = myUnchanged.hasNext() ? myUnchanged.next() : null;
+      private @Nullable Range lastChanged = myChanges.hasNext() ? myChanges.next() : null;
+      private @Nullable Range lastUnchanged = myUnchanged.hasNext() ? myUnchanged.next() : null;
 
       @Override
       public boolean hasNext() {

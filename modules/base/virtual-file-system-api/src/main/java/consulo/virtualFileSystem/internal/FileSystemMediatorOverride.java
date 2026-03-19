@@ -35,8 +35,7 @@ public class FileSystemMediatorOverride {
         FileSystemUtil.setMediatorLock(getMediator());
     }
 
-    @Nullable
-    private static FileSystemMediator getMediator() {
+    private static @Nullable FileSystemMediator getMediator() {
         if (!Boolean.getBoolean(FORCE_USE_NIO2_KEY)) {
             Platform platform = Platform.current();
             PlatformOperatingSystem os = platform.os();

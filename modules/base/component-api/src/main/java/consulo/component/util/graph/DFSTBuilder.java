@@ -45,11 +45,9 @@ public class DFSTBuilder<Node> {
    */
   private final Node[] myInvN;
 
-  @Nullable
-  private GraphEdge<Node> myBackEdge = null;
+  private @Nullable GraphEdge<Node> myBackEdge = null;
 
-  @Nullable
-  private Comparator<Node> myComparator;
+  private @Nullable Comparator<Node> myComparator;
 
   /**
    * strongly connected component sizes
@@ -247,8 +245,7 @@ public class DFSTBuilder<Node> {
     return myComparator;
   }
 
-  @Nullable
-  public GraphEdge<Node> getCircularDependency() {
+  public @Nullable GraphEdge<Node> getCircularDependency() {
     return myBackEdge;
   }
 

@@ -26,8 +26,7 @@ import java.awt.*;
 public class ValueMarkup {
   private final String myText;
   private final Color myColor;
-  @Nullable
-  private final String myToolTipText;
+  private final @Nullable String myToolTipText;
 
   public ValueMarkup(String text, Color color, @Nullable String toolTipText) {
     myText = text;
@@ -44,8 +43,7 @@ public class ValueMarkup {
     return myColor;
   }
 
-  @Nullable
-  public String getToolTipText() {
+  public @Nullable String getToolTipText() {
     return myToolTipText;
   }
 }

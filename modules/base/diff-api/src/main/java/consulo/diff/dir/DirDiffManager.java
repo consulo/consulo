@@ -37,8 +37,7 @@ public abstract class DirDiffManager {
 
   public abstract boolean canShow(DiffElement dir1, DiffElement dir2);
 
-  @Nullable
-  public abstract DiffElement createDiffElement(Object obj);
+  public abstract @Nullable DiffElement createDiffElement(Object obj);
 
   public abstract DirDiffModel createDiffModel(DiffElement e1, DiffElement e2, DirDiffSettings settings);
 }

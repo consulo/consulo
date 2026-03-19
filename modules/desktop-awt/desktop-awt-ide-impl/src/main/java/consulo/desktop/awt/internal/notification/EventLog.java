@@ -478,8 +478,7 @@ public class EventLog {
         }
     }
 
-    @Nullable
-    public static ToolWindow getEventLog(Project project) {
+    public static @Nullable ToolWindow getEventLog(Project project) {
         return project == null ? null : ToolWindowManager.getInstance(project).getToolWindow(NOTIFICATIONS_TOOLWINDOW_ID);
     }
 

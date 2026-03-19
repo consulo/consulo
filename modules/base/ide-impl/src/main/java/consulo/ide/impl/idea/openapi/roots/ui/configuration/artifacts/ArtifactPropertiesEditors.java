@@ -107,8 +107,7 @@ public class ArtifactPropertiesEditors {
     }
   }
 
-  @Nullable
-  public static String getHelpId(String title) {
+  public static @Nullable String getHelpId(String title) {
     if (ArtifactPropertiesEditor.VALIDATION_TAB.equals(title)) {
       return "reference.project.structure.artifacts.validation";
     }

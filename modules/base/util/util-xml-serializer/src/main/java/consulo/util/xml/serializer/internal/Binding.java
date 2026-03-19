@@ -27,14 +27,11 @@ import java.util.List;
 public abstract class Binding {
     protected static final Logger LOG = LoggerFactory.getLogger(Binding.class);
 
-    @Nullable
-    public abstract MutableAccessor getAccessor();
+    public abstract @Nullable MutableAccessor getAccessor();
 
-    @Nullable
-    public abstract Object serialize(Object o, @Nullable Object context, SerializationFilter filter);
+    public abstract @Nullable Object serialize(Object o, @Nullable Object context, SerializationFilter filter);
 
-    @Nullable
-    public Object deserialize(@Nullable Object context, Element element) {
+    public @Nullable Object deserialize(@Nullable Object context, Element element) {
         return context;
     }
 

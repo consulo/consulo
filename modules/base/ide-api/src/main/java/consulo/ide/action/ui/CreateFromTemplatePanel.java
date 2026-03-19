@@ -239,8 +239,7 @@ public class CreateFromTemplatePanel {
         myMainPanel.revalidate();
     }
 
-    @Nullable
-    public String getFileName() {
+    public @Nullable String getFileName() {
         if (myFilenameField != null) {
             String fileName = myFilenameField.getText();
             return fileName == null ? "" : fileName;

@@ -30,8 +30,7 @@ public final class DefaultLocalizationKey implements LocalizationKey {
     private final String myLocalizationId;
     private final String myKey;
 
-    @Nullable
-    private LocalizedValue myDefaultValue = null;
+    private @Nullable LocalizedValue myDefaultValue = null;
 
     public DefaultLocalizationKey(LocalizationManager manager, String localizationId, String key) {
         myLocalizationManager = manager;

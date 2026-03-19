@@ -33,8 +33,7 @@ import org.jspecify.annotations.Nullable;
  */
 @ExtensionAPI(ComponentScope.PROJECT)
 public interface NewFileModuleResolver {
-    @Nullable
-    static Module resolveModule(Project project, VirtualFile parent, FileType newFileType) {
+    static @Nullable Module resolveModule(Project project, VirtualFile parent, FileType newFileType) {
         return project.getExtensionPoint(NewFileModuleResolver.class)
             .computeSafeIfAny(it -> it.resolveModule(parent, newFileType));
     }

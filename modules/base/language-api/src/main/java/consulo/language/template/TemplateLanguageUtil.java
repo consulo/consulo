@@ -17,8 +17,7 @@ public final class TemplateLanguageUtil {
   private TemplateLanguageUtil() {
   }
 
-  @Nullable
-  public static PsiFile getTemplateFile(PsiFile file) {
+  public static @Nullable PsiFile getTemplateFile(PsiFile file) {
     FileViewProvider viewProvider = file.getViewProvider();
     if (viewProvider instanceof TemplateLanguageFileViewProvider) {
       return viewProvider.getPsi(((TemplateLanguageFileViewProvider)viewProvider).getTemplateDataLanguage());
@@ -42,8 +41,7 @@ public final class TemplateLanguageUtil {
     return viewProvider instanceof TemplateLanguageFileViewProvider && file == viewProvider.getPsi(((TemplateLanguageFileViewProvider)viewProvider).getTemplateDataLanguage());
   }
 
-  @Nullable
-  public static ASTNode getSameLanguageTreePrev(ASTNode node) {
+  public static @Nullable ASTNode getSameLanguageTreePrev(ASTNode node) {
     ASTNode current = node.getTreePrev();
     while (current instanceof OuterLanguageElement) {
       current = current.getTreePrev();
@@ -51,8 +49,7 @@ public final class TemplateLanguageUtil {
     return current;
   }
 
-  @Nullable
-  public static ASTNode getSameLanguageTreeNext(ASTNode node) {
+  public static @Nullable ASTNode getSameLanguageTreeNext(ASTNode node) {
     ASTNode current = node.getTreeNext();
     while (current instanceof OuterLanguageElement) {
       current = current.getTreeNext();

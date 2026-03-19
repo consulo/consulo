@@ -31,8 +31,7 @@ public class ShortestPathFinder<Node> {
   }
 
 
-  @Nullable
-  public List<Node> findPath(Node start, Node finish) {
+  public @Nullable List<Node> findPath(Node start, Node finish) {
     Map<Node, Node> nextNodes = new HashMap<Node, Node>();
     Deque<Node> queue = new ArrayDeque<Node>();
     queue.addLast(finish);

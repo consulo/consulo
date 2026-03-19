@@ -43,16 +43,14 @@ public interface FileEditor extends UserDataHolder, Disposable {
      */
     String PROP_VALID = "valid";
 
-    @Nullable
-    default Component getUIComponent() {
+    default @Nullable Component getUIComponent() {
         return null;
     }
 
     /**
      * Returns component to be focused when editor is opened.
      */
-    @Nullable
-    default Component getPreferredFocusedUIComponent() {
+    default @Nullable Component getPreferredFocusedUIComponent() {
         return null;
     }
 
@@ -126,8 +124,7 @@ public interface FileEditor extends UserDataHolder, Disposable {
      * @return highlighter object to perform background analysis and highlighting activities.
      * Return <code>null</code> if no background highlighting activity necessary for this file editor.
      */
-    @Nullable
-    default BackgroundEditorHighlighter getBackgroundHighlighter() {
+    default @Nullable BackgroundEditorHighlighter getBackgroundHighlighter() {
         return null;
     }
 
@@ -136,18 +133,15 @@ public interface FileEditor extends UserDataHolder, Disposable {
      *
      * @return the location of user focus. Typically it's a caret or any other form of selection start.
      */
-    @Nullable
-    default FileEditorLocation getCurrentLocation() {
+    default @Nullable FileEditorLocation getCurrentLocation() {
         return null;
     }
 
-    @Nullable
-    default StructureViewBuilder getStructureViewBuilder() {
+    default @Nullable StructureViewBuilder getStructureViewBuilder() {
         return null;
     }
 
-    @Nullable
-    default VirtualFile getFile() {
+    default @Nullable VirtualFile getFile() {
         return null;
     }
 

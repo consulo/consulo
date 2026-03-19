@@ -217,8 +217,7 @@ public class CustomizationUtil {
         return getTreePath(0, url.getGroupPath(), tree.getModel().getRoot(), tree);
     }
 
-    @Nullable
-    private static TreePath getTreePath(int positionInPath, List<String> path, Object root, JTree tree) {
+    private static @Nullable TreePath getTreePath(int positionInPath, List<String> path, Object root, JTree tree) {
         if (!(root instanceof DefaultMutableTreeNode treeNode)) {
             return null;
         }

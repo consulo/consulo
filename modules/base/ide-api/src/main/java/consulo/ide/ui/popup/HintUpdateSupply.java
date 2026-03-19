@@ -44,11 +44,9 @@ import java.util.function.Function;
 public abstract class HintUpdateSupply {
   private static final Key<HintUpdateSupply> HINT_UPDATE_MARKER = Key.create("HINT_UPDATE_MARKER");
 
-  @Nullable
-  private JBPopup myHint;
+  private @Nullable JBPopup myHint;
 
-  @Nullable
-  public static HintUpdateSupply getSupply(JComponent component) {
+  public static @Nullable HintUpdateSupply getSupply(JComponent component) {
     return (HintUpdateSupply)component.getClientProperty(HINT_UPDATE_MARKER);
   }
 
@@ -151,8 +149,7 @@ public abstract class HintUpdateSupply {
     });
   }
 
-  @Nullable
-  protected abstract PsiElement getPsiElementForHint(@Nullable Object selectedValue);
+  protected abstract @Nullable PsiElement getPsiElementForHint(@Nullable Object selectedValue);
 
   private void installSupply(JComponent component) {
     component.putClientProperty(HINT_UPDATE_MARKER, this);

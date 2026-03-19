@@ -41,8 +41,7 @@ public abstract class PatternDialectProvider {
         ExtensionPointCacheKey.groupBy("PatternDialectProvider", PatternDialectProvider::getId);
     public static final ExtensionPointName<PatternDialectProvider> EP_NAME = ExtensionPointName.create(PatternDialectProvider.class);
 
-    @Nullable
-    public static PatternDialectProvider findById(String id) {
+    public static @Nullable PatternDialectProvider findById(String id) {
         Map<String, PatternDialectProvider> map =
             Application.get().getExtensionPoint(PatternDialectProvider.class).getOrBuildCache(CACHE_KEY);
         return map.get(id);
@@ -64,17 +63,14 @@ public abstract class PatternDialectProvider {
 
     public abstract AnAction[] createActions(Project project, Runnable update);
 
-    @Nullable
-    public abstract PackageSet createPackageSet(PackageDependenciesNode node, boolean recursively);
+    public abstract @Nullable PackageSet createPackageSet(PackageDependenciesNode node, boolean recursively);
 
-    @Nullable
-    protected static String getModulePattern(PackageDependenciesNode node) {
+    protected static @Nullable String getModulePattern(PackageDependenciesNode node) {
         ModuleNode moduleParent = getModuleParent(node);
         return moduleParent != null ? moduleParent.getModuleName() : null;
     }
 
-    @Nullable
-    protected static ModuleNode getModuleParent(PackageDependenciesNode node) {
+    protected static @Nullable ModuleNode getModuleParent(PackageDependenciesNode node) {
         if (node instanceof ModuleNode moduleNode) {
             return moduleNode;
         }

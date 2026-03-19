@@ -92,8 +92,7 @@ public abstract class AbstractExternalSystemSettings<SS extends AbstractExternal
     return myLinkedProjectsSettingsView.values();
   }
 
-  @Nullable
-  public PS getLinkedProjectSettings(String linkedProjectPath) {
+  public @Nullable PS getLinkedProjectSettings(String linkedProjectPath) {
     PS ps = myLinkedProjectsSettings.get(linkedProjectPath);
     if (ps == null) {
       for (PS ps1 : myLinkedProjectsSettings.values()) {

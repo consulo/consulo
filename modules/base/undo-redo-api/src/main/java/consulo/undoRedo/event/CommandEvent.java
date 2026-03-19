@@ -137,8 +137,7 @@ public class CommandEvent extends EventObject {
         return myShouldRecordActionForActiveDocument;
     }
 
-    @Nullable
-    public Document getDocument() {
+    public @Nullable Document getDocument() {
         return myDocument;
     }
 }

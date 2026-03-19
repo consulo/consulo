@@ -222,8 +222,7 @@ public class SchemeManagerImpl<T, E extends ExternalizableScheme> extends Abstra
     return null;
   }
 
-  @Nullable
-  private static Element loadElementOrNull(@Nullable InputStream stream) {
+  private static @Nullable Element loadElementOrNull(@Nullable InputStream stream) {
     try {
       return JDOMUtil.load(stream);
     }
@@ -343,13 +342,11 @@ public class SchemeManagerImpl<T, E extends ExternalizableScheme> extends Abstra
     }
   }
 
-  @Nullable
-  private E readSchemeFromFile(VirtualFile file, boolean forceAdd, boolean duringLoad) {
+  private @Nullable E readSchemeFromFile(VirtualFile file, boolean forceAdd, boolean duringLoad) {
     return readSchemeFromFile(VirtualFileUtil.virtualToIoFile(file), forceAdd, duringLoad);
   }
 
-  @Nullable
-  private E readSchemeFromFile(final File file, boolean forceAdd, boolean duringLoad) {
+  private @Nullable E readSchemeFromFile(final File file, boolean forceAdd, boolean duringLoad) {
     if (!canRead(file)) {
       return null;
     }
@@ -389,8 +386,7 @@ public class SchemeManagerImpl<T, E extends ExternalizableScheme> extends Abstra
     }
   }
 
-  @Nullable
-  private E readScheme(Element element, boolean duringLoad) throws InvalidDataException, IOException, JDOMException {
+  private @Nullable E readScheme(Element element, boolean duringLoad) throws InvalidDataException, IOException, JDOMException {
     E scheme;
     if (myProcessor instanceof BaseSchemeProcessor) {
       scheme = ((BaseSchemeProcessor<T, E>)myProcessor).readScheme(element, duringLoad);
@@ -584,8 +580,7 @@ public class SchemeManagerImpl<T, E extends ExternalizableScheme> extends Abstra
     }
   }
 
-  @Nullable
-  private VirtualFile getVirtualDir() {
+  private @Nullable VirtualFile getVirtualDir() {
     VirtualFile virtualFile = myDir;
     if (virtualFile == null) {
       myDir = virtualFile = LocalFileSystem.getInstance().findFileByIoFile(myIoDir);

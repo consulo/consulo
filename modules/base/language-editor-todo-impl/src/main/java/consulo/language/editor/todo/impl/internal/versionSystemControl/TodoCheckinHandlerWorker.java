@@ -128,8 +128,7 @@ public class TodoCheckinHandlerWorker {
         }
     }
 
-    @Nullable
-    private static VirtualFile getFileWithRefresh(FilePath filePath) {
+    private static @Nullable VirtualFile getFileWithRefresh(FilePath filePath) {
         VirtualFile file = filePath.getVirtualFile();
         if (file == null) {
             file = LocalFileSystem.getInstance().refreshAndFindFileByIoFile(filePath.getIOFile());

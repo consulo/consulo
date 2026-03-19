@@ -235,8 +235,7 @@ public class ArtifactUtil {
     to.loadState((S)from.getState());
   }
 
-  @Nullable
-  public static String getDefaultArtifactOutputPath(String artifactName, Project project) {
+  public static @Nullable String getDefaultArtifactOutputPath(String artifactName, Project project) {
     CompilerConfiguration extension = CompilerConfiguration.getInstance(project);
     String outputUrl = extension.getCompilerOutputUrl();
     if (outputUrl == null || outputUrl.length() == 0) {
@@ -434,8 +433,7 @@ public class ArtifactUtil {
     return result;
   }
 
-  @Nullable
-  private static String getRelativePathInSources(VirtualFile file,
+  private static @Nullable String getRelativePathInSources(VirtualFile file,
                                                  ModuleOutputPackagingElement moduleElement,
                                                  PackagingElementResolvingContext context) {
     for (VirtualFile sourceRoot : moduleElement.getSourceRoots(context)) {
@@ -446,14 +444,12 @@ public class ArtifactUtil {
     return null;
   }
 
-  @Nullable
-  public static VirtualFile findSourceFileByOutputPath(Artifact artifact, String outputPath, PackagingElementResolvingContext context) {
+  public static @Nullable VirtualFile findSourceFileByOutputPath(Artifact artifact, String outputPath, PackagingElementResolvingContext context) {
     List<VirtualFile> files = findSourceFilesByOutputPath(artifact.getRootElement(), outputPath, context, artifact.getArtifactType());
     return files.isEmpty() ? null : files.get(0);
   }
 
-  @Nullable
-  public static VirtualFile findSourceFileByOutputPath(CompositePackagingElement<?> parent,
+  public static @Nullable VirtualFile findSourceFileByOutputPath(CompositePackagingElement<?> parent,
                                                        String outputPath,
                                                        PackagingElementResolvingContext context,
                                                        ArtifactType artifactType) {
@@ -685,8 +681,7 @@ public class ArtifactUtil {
     return PathUtil.suggestFileName(artifactName, true, true);
   }
 
-  @Nullable
-  private static PackagingElement<?> findArchiveOrDirectoryByName(CompositePackagingElement<?> parent, String name) {
+  private static @Nullable PackagingElement<?> findArchiveOrDirectoryByName(CompositePackagingElement<?> parent, String name) {
     for (PackagingElement<?> element : parent.getChildren()) {
       if (element instanceof ArchivePackagingElement && ((ArchivePackagingElement)element).getArchiveFileName().equals(name) ||
         element instanceof DirectoryPackagingElement && ((DirectoryPackagingElement)element).getDirectoryName().equals(name)) {

@@ -24,13 +24,11 @@ abstract class Resource {
 
   public abstract byte[] getBytes() throws IOException;
 
-  @Nullable
-  public String getValue(Attribute key) {
+  public @Nullable String getValue(Attribute key) {
     return null;
   }
 
-  @Nullable
-  public ProtectionDomain getProtectionDomain() {
+  public @Nullable ProtectionDomain getProtectionDomain() {
     return null;
   }
 

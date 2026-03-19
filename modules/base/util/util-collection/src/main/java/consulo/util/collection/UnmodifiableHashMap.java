@@ -24,15 +24,11 @@ public final class UnmodifiableHashMap<K, V> extends AbstractImmutableMap<K, V> 
 
     private final HashingStrategy<K> strategy;
     private final Object[] data;
-    @Nullable
-    private final K k1, k2, k3;
-    @Nullable
-    private final V v1, v2, v3;
+    private final @Nullable K k1, k2, k3;
+    private final @Nullable V v1, v2, v3;
     private final int size;
-    @Nullable
-    private transient Set<K> keySet = null;
-    @Nullable
-    private transient Collection<V> values = null;
+    private transient @Nullable Set<K> keySet = null;
+    private transient @Nullable Collection<V> values = null;
 
     /**
      * Returns an empty {@code UnmodifiableHashMap} with canonical equals/hashCode strategy.
@@ -556,11 +552,9 @@ public final class UnmodifiableHashMap<K, V> extends AbstractImmutableMap<K, V> 
             return tableElement(offset);
         }
 
-        @Nullable
-        abstract E fieldElement(int offset);
+        abstract @Nullable E fieldElement(int offset);
 
-        @Nullable
-        abstract E tableElement(int offset);
+        abstract @Nullable E tableElement(int offset);
     }
 
     @Override

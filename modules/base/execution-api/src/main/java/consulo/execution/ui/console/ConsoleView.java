@@ -78,8 +78,7 @@ public interface ConsoleView extends ExecutionConsole {
     default void requestScrollingToEnd() {
     }
 
-    @Nullable
-    default Editor getEditor() {
+    default @Nullable Editor getEditor() {
         return null;
     }
 

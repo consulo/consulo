@@ -33,8 +33,7 @@ public class Promises {
 
   private static class CountDownConsumer<T> implements Consumer<Object> {
     private final AsyncPromise<T> myPromise;
-    @Nullable
-    private final T myTotalResult;
+    private final @Nullable T myTotalResult;
     private AtomicInteger countDown;
 
     private CountDownConsumer(int countDown, AsyncPromise<T> promise, @Nullable T totalResult) {

@@ -57,8 +57,7 @@ class XMLAttribute
    /**
     * The namespace URI of the attribute.
     */
-   @Nullable
-   private String namespace;
+   private @Nullable String namespace;
 
 
    /**

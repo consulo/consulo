@@ -97,8 +97,7 @@ public class ForceArrangementPanel {
             rearrangeMode = mode;
         }
 
-        @Nullable
-        private static SelectedMode getByMode(int mode) {
+        private static @Nullable SelectedMode getByMode(int mode) {
             for (SelectedMode currentMode : values()) {
                 if (currentMode.rearrangeMode == mode) {
                     return currentMode;

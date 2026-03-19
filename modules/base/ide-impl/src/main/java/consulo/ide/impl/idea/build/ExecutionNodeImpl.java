@@ -49,18 +49,13 @@ public class ExecutionNodeImpl extends ExecutionNode<ExecutionNodeImpl> {
     private final ExecutionNodeImpl myParentNode;
     private volatile long startTime;
     private volatile long endTime;
-    @Nullable
-    private @BuildEventsNls.Title String myTitle;
-    @Nullable
-    private @BuildEventsNls.Hint String myHint;
-    @Nullable
-    private volatile EventResult myResult;
+    private @Nullable @BuildEventsNls.Title String myTitle;
+    private @Nullable @BuildEventsNls.Hint String myHint;
+    private volatile @Nullable EventResult myResult;
     private final boolean myAutoExpandNode;
     private final Supplier<Boolean> myIsCorrectThread;
-    @Nullable
-    private volatile Navigatable myNavigatable;
-    @Nullable
-    private volatile NullableLazyValue<Image> myPreferredIconValue;
+    private volatile @Nullable Navigatable myNavigatable;
+    private volatile @Nullable NullableLazyValue<Image> myPreferredIconValue;
     private Predicate<? super ExecutionNodeImpl> myFilter;
     private boolean myAlwaysLeaf;
     private boolean myAlwaysVisible;
@@ -121,8 +116,7 @@ public class ExecutionNodeImpl extends ExecutionNode<ExecutionNodeImpl> {
         myName = name;
     }
 
-    @Nullable
-    public String getTitle() {
+    public @Nullable String getTitle() {
         assert myIsCorrectThread.get();
         return myTitle;
     }
@@ -162,8 +156,7 @@ public class ExecutionNodeImpl extends ExecutionNode<ExecutionNodeImpl> {
 
     // Note: invoked from the EDT.
     @Nls
-    @Nullable
-    public String getDuration() {
+    public @Nullable String getDuration() {
         if (startTime == endTime) {
             return null;
         }
@@ -232,8 +225,7 @@ public class ExecutionNodeImpl extends ExecutionNode<ExecutionNodeImpl> {
         return Objects.requireNonNullElse(visibleList, myChildrenList);
     }
 
-    @Nullable
-    public ExecutionNodeImpl getParent() {
+    public @Nullable ExecutionNodeImpl getParent() {
         return myParentNode;
     }
 
@@ -289,8 +281,7 @@ public class ExecutionNodeImpl extends ExecutionNode<ExecutionNodeImpl> {
             || (myResult instanceof MessageEventResult mer && mer.getKind() == MessageEvent.Kind.ERROR);
     }
 
-    @Nullable
-    public EventResult getResult() {
+    public @Nullable EventResult getResult() {
         return myResult;
     }
 

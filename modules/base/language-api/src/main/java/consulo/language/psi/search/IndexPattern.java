@@ -52,13 +52,11 @@ public class IndexPattern {
     return myPatternString;
   }
 
-  @Nullable
-  public Pattern getPattern() {
+  public @Nullable Pattern getPattern() {
     return myPattern;
   }
 
-  @Nullable
-  public Pattern getOptimizedIndexingPattern() {
+  public @Nullable Pattern getOptimizedIndexingPattern() {
     return myOptimizedIndexingPattern;
   }
 

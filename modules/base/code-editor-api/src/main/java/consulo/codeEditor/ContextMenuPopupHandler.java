@@ -16,8 +16,7 @@ import java.awt.event.MouseEvent;
  * @since 2019.1
  */
 public abstract class ContextMenuPopupHandler implements EditorPopupHandler {
-  @Nullable
-  public abstract ActionGroup getActionGroup(EditorMouseEvent event);
+  public abstract @Nullable ActionGroup getActionGroup(EditorMouseEvent event);
 
   @Override
   public boolean handlePopup(EditorMouseEvent event) {
@@ -45,8 +44,7 @@ public abstract class ContextMenuPopupHandler implements EditorPopupHandler {
     return true;
   }
 
-  @Nullable
-  private static ActionGroup getGroupForId(@Nullable String groupId) {
+  private static @Nullable ActionGroup getGroupForId(@Nullable String groupId) {
     return groupId == null ? null : ObjectUtil.tryCast(CustomActionsSchema.getInstance().getCorrectedAction(groupId), ActionGroup.class);
   }
 
@@ -60,8 +58,7 @@ public abstract class ContextMenuPopupHandler implements EditorPopupHandler {
       return ContextMenuPopupHandler.getGroupForId(getActionGroupId(event));
     }
 
-    @Nullable
-    public abstract String getActionGroupId(EditorMouseEvent event);
+    public abstract @Nullable String getActionGroupId(EditorMouseEvent event);
   }
 
   /**

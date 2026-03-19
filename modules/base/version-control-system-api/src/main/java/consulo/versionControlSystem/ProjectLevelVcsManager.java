@@ -94,16 +94,13 @@ public abstract class ProjectLevelVcsManager {
      * @param name the name of the VCS to find.
      * @return the VCS instance, or null if none is found.
      */
-    @Nullable
-    public abstract AbstractVcs findVcsByName(String name);
+    public abstract @Nullable AbstractVcs findVcsByName(String name);
 
-    @Nullable
-    public AbstractVcs findVcsByName(VcsKey vcsKey) {
+    public @Nullable AbstractVcs findVcsByName(VcsKey vcsKey) {
         return findVcsByName(vcsKey.getName());
     }
 
-    @Nullable
-    public abstract VcsDescriptor getDescriptor(String name);
+    public abstract @Nullable VcsDescriptor getDescriptor(String name);
 
     /**
      * Checks if all files in the specified array are managed by the specified VCS.
@@ -121,8 +118,7 @@ public abstract class ProjectLevelVcsManager {
      * @return the VCS instance, or null if the file does not belong to any module or the module
      * it belongs to is not under version control.
      */
-    @Nullable
-    public abstract AbstractVcs getVcsFor(VirtualFile file);
+    public abstract @Nullable AbstractVcs getVcsFor(VirtualFile file);
 
     /**
      * Returns the VCS managing the specified file path.
@@ -131,8 +127,7 @@ public abstract class ProjectLevelVcsManager {
      * @return the VCS instance, or null if the file does not belong to any module or the module
      * it belongs to is not under version control.
      */
-    @Nullable
-    public abstract AbstractVcs getVcsFor(FilePath file);
+    public abstract @Nullable AbstractVcs getVcsFor(FilePath file);
 
     /**
      * Return the parent directory of the specified file which is mapped to a VCS.
@@ -140,8 +135,7 @@ public abstract class ProjectLevelVcsManager {
      * @param file the file for which the root is requested.
      * @return the root, or null if the specified file is not in a VCS-managed directory.
      */
-    @Nullable
-    public abstract VirtualFile getVcsRootFor(@Nullable VirtualFile file);
+    public abstract @Nullable VirtualFile getVcsRootFor(@Nullable VirtualFile file);
 
     /**
      * Return the parent directory of the specified file path which is mapped to a VCS.
@@ -149,14 +143,11 @@ public abstract class ProjectLevelVcsManager {
      * @param file the file for which the root is requested.
      * @return the root, or null if the specified file is not in a VCS-managed directory.
      */
-    @Nullable
-    public abstract VirtualFile getVcsRootFor(FilePath file);
+    public abstract @Nullable VirtualFile getVcsRootFor(FilePath file);
 
-    @Nullable
-    public abstract VcsRoot getVcsRootObjectFor(VirtualFile file);
+    public abstract @Nullable VcsRoot getVcsRootObjectFor(VirtualFile file);
 
-    @Nullable
-    public abstract VcsRoot getVcsRootObjectFor(FilePath file);
+    public abstract @Nullable VcsRoot getVcsRootObjectFor(FilePath file);
 
     /**
      * Checks if the specified VCS is used by any of the modules in the project.
@@ -190,8 +181,7 @@ public abstract class ProjectLevelVcsManager {
     /**
      * @return VCS configured for the project, if there's only a single one. Return 'null' otherwise.
      */
-    @Nullable
-    public abstract AbstractVcs getSingleVCS();
+    public abstract @Nullable AbstractVcs getSingleVCS();
 
     public abstract boolean hasActiveVcss();
 
@@ -284,8 +274,7 @@ public abstract class ProjectLevelVcsManager {
 
     public abstract List<VcsDirectoryMapping> getDirectoryMappings(AbstractVcs vcs);
 
-    @Nullable
-    public abstract VcsDirectoryMapping getDirectoryMappingFor(FilePath path);
+    public abstract @Nullable VcsDirectoryMapping getDirectoryMappingFor(FilePath path);
 
     /**
      * This method can be used only when initially loading the project configuration!
@@ -302,8 +291,7 @@ public abstract class ProjectLevelVcsManager {
         @Nullable VirtualFileFilter directoryFilter
     );
 
-    @Nullable
-    public abstract AbstractVcs findVersioningVcs(VirtualFile file);
+    public abstract @Nullable AbstractVcs findVersioningVcs(VirtualFile file);
 
     public abstract CheckoutProvider.Listener getCompositeCheckoutListener();
 
@@ -322,8 +310,7 @@ public abstract class ProjectLevelVcsManager {
     public abstract VcsShowSettingOption getOptions(VcsConfiguration.StandardOption option);
 
     @RequiredUIAccess
-    @Nullable
-    public abstract UpdateInfoTree showUpdateProjectInfo(
+    public abstract @Nullable UpdateInfoTree showUpdateProjectInfo(
         UpdatedFiles updatedFiles,
         String displayActionName,
         ActionInfo actionInfo,

@@ -73,20 +73,17 @@ public abstract class Location<E extends PsiElement> {
     return null;
   }
 
-  @Nullable
-  public <T extends PsiElement> Location<T> getAncestorOrSelf(Class<T> ancestorClass) {
+  public @Nullable <T extends PsiElement> Location<T> getAncestorOrSelf(Class<T> ancestorClass) {
     Iterator<Location<T>> ancestors = getAncestors(ancestorClass, false);
     if (!ancestors.hasNext()) return null;
     return ancestors.next();
   }
 
-  @Nullable
-  public <Ancestor extends PsiElement> Ancestor getParentElement(Class<Ancestor> parentClass) {
+  public @Nullable <Ancestor extends PsiElement> Ancestor getParentElement(Class<Ancestor> parentClass) {
     return safeGetPsiElement(getParent(parentClass));
   }
 
-  @Nullable
-  public static <T extends PsiElement> T safeGetPsiElement(Location<T> location) {
+  public static @Nullable <T extends PsiElement> T safeGetPsiElement(Location<T> location) {
     return location != null ? location.getPsiElement() : null;
   }
 
@@ -103,6 +100,5 @@ public abstract class Location<E extends PsiElement> {
     return new PsiLocation<>(getProject(), getPsiElement());
   }
 
-  @Nullable
-  public abstract Module getModule();
+  public abstract @Nullable Module getModule();
 }

@@ -52,8 +52,7 @@ public class TreeAnchorizer {
         return new SimpleTreeAnchorizerValue(element);
     }
 
-    @Nullable
-    public Object retrieveElement(Object anchor) {
+    public @Nullable Object retrieveElement(Object anchor) {
         if (anchor instanceof TreeAnchorizerValue treeAnchorizerValue) {
             return treeAnchorizerValue.extractValue();
         }

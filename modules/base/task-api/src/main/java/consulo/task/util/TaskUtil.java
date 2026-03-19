@@ -67,8 +67,7 @@ public class TaskUtil {
     return format.replace("{id}", task.getId()).replace("{number}", task.getNumber()).replace("{project}", StringUtil.notNullize(task.getProject())).replace("{summary}", task.getSummary());
   }
 
-  @Nullable
-  public static String getChangeListComment(Task task) {
+  public static @Nullable String getChangeListComment(Task task) {
     TaskRepository repository = task.getRepository();
     if (repository == null || !repository.isShouldFormatCommitMessage()) {
       return null;
@@ -87,8 +86,7 @@ public class TaskUtil {
     return StringUtil.first(text, 60, true);
   }
 
-  @Nullable
-  public static Date parseDate(String s) {
+  public static @Nullable Date parseDate(String s) {
     // SimpleDateFormat prior JDK7 doesn't support 'X' specifier for ISO 8601 timezone format.
     // Because some bug trackers and task servers e.g. send dates ending with 'Z' (that stands for UTC),
     // dates should be preprocessed before parsing.

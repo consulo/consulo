@@ -94,8 +94,7 @@ public class EditorHighlighterFactoryImpl extends EditorHighlighterFactory {
     return createEditorHighlighter(highlighter, settings);
   }
 
-  @Nullable
-  private static LanguageFileType substituteFileType(Language language, VirtualFile vFile, Project project) {
+  private static @Nullable LanguageFileType substituteFileType(Language language, VirtualFile vFile, Project project) {
     LanguageFileType fileType = null;
     if (vFile != null && project != null) {
       Language substLanguage = LanguageSubstitutors.substituteLanguage(language, vFile, project);

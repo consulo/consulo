@@ -17,8 +17,7 @@ import java.awt.*;
 final class JTrayNotificationImpl implements SystemNotificationsImpl.Notifier {
   private static JTrayNotificationImpl ourInstance;
 
-  @Nullable
-  static synchronized JTrayNotificationImpl getWin10Instance() throws AWTException {
+  static synchronized @Nullable JTrayNotificationImpl getWin10Instance() throws AWTException {
     if (ourInstance == null && SystemTray.isSupported()) {
       ourInstance = new JTrayNotificationImpl();
     }

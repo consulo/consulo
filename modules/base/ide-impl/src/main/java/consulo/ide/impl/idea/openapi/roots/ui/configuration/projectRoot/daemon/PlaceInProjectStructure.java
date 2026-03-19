@@ -27,8 +27,7 @@ public abstract class PlaceInProjectStructure {
   
   public abstract ProjectStructureElement getContainingElement();
 
-  @Nullable
-  public abstract String getPlacePath();
+  public abstract @Nullable String getPlacePath();
 
   
   public abstract AsyncResult<Void> navigate(Project project);

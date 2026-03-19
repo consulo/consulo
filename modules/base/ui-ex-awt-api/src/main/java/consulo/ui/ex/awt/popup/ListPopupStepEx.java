@@ -16,8 +16,7 @@ public interface ListPopupStepEx<T> extends ListPopupStep<T> {
 
     void setEmptyText(StatusText emptyText);
 
-    @Nullable
-    default String getValueFor(T t) {
+    default @Nullable String getValueFor(T t) {
         return null;
     }
 }

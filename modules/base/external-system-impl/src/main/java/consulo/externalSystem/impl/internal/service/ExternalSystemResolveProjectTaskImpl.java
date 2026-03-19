@@ -61,8 +61,7 @@ public class ExternalSystemResolveProjectTaskImpl extends AbstractExternalSystem
     return resolver.cancelTask(getId());
   }
 
-  @Nullable
-  public DataNode<ProjectData> getExternalProject() {
+  public @Nullable DataNode<ProjectData> getExternalProject() {
     return myExternalProject.get();
   }
 

@@ -160,8 +160,7 @@ public class PatchChangeBuilder {
     
     private final LineRange myPatchInsertionRange;
 
-    @Nullable
-    private final LineRange myAppliedToLines;
+    private final @Nullable LineRange myAppliedToLines;
     
     private final HunkStatus myStatus;
 

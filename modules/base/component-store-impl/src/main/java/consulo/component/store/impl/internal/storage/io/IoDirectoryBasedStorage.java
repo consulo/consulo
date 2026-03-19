@@ -154,8 +154,7 @@ public class IoDirectoryBasedStorage extends StateStorageBase<DirectoryStorageDa
   }
 
   @Override
-  @Nullable
-  public ExternalizationSession startExternalization() {
+  public @Nullable ExternalizationSession startExternalization() {
     return checkIsSavingDisabled() ? null : new MySaveSession(this, getStorageData());
   }
 
@@ -218,8 +217,7 @@ public class IoDirectoryBasedStorage extends StateStorageBase<DirectoryStorageDa
     }
 
     @Override
-    @Nullable
-    public SaveSession createSaveSession(boolean force) {
+    public @Nullable SaveSession createSaveSession(boolean force) {
       return storage.checkIsSavingDisabled() || copiedStorageData == null ? null : this;
     }
 

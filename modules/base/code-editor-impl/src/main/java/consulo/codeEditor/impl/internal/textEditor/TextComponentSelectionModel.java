@@ -62,8 +62,7 @@ public class TextComponentSelectionModel implements SelectionModel {
   }
 
   @Override
-  @Nullable
-  public String getSelectedText() {
+  public @Nullable String getSelectedText() {
     return myTextComponent.getSelectedText();
   }
 

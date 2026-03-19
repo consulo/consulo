@@ -22,8 +22,7 @@ import org.jspecify.annotations.Nullable;
  * @author yole
  */
 public class ElementDescriptionLocation {
-  @Nullable
-  public ElementDescriptionProvider getDefaultProvider() {
+  public @Nullable ElementDescriptionProvider getDefaultProvider() {
     return null;
   }
 }

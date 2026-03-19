@@ -87,8 +87,7 @@ public abstract class ValueMarkerPresentationDialogBase extends DialogWrapper {
     myColorSample.append(myLabelField.getText().trim(), attributes);
   }
 
-  @Nullable
-  public ValueMarkup getConfiguredMarkup() {
+  public @Nullable ValueMarkup getConfiguredMarkup() {
     String text = myLabelField.getText().trim();
     return text.isEmpty() ? null : new ValueMarkup(text, myColor, null);
   }

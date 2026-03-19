@@ -23,8 +23,7 @@ public enum FragmentSide {
 
   SIDE1(0, 0) {
     @Override
-    @Nullable
-    public DiffString getText(DiffFragmentOld fragment) {
+    public @Nullable DiffString getText(DiffFragmentOld fragment) {
       return fragment.getText1();
     }
 
@@ -42,8 +41,7 @@ public enum FragmentSide {
 
   SIDE2(1, 2) {
     @Override
-    @Nullable
-    public DiffString getText(DiffFragmentOld fragment) {
+    public @Nullable DiffString getText(DiffFragmentOld fragment) {
       return fragment.getText2();
     }
 
@@ -76,8 +74,7 @@ public enum FragmentSide {
     return fragment;
   }
 
-  @Nullable
-  public abstract DiffString getText(DiffFragmentOld fragment);
+  public abstract @Nullable DiffString getText(DiffFragmentOld fragment);
   public abstract FragmentSide otherSide();
   
   protected abstract DiffFragmentOld createDiffFragment(@Nullable DiffString text, @Nullable DiffString otherText);
@@ -90,8 +87,7 @@ public enum FragmentSide {
     return myMergeIndex;
   }
 
-  @Nullable
-  public DiffString getOtherText(DiffFragmentOld fragment) {
+  public @Nullable DiffString getOtherText(DiffFragmentOld fragment) {
     return otherSide().getText(fragment);
   }
 

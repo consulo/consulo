@@ -147,8 +147,7 @@ public class AnnotateVcsVirtualFileAction {
     ProgressManager.getInstance().run(annotateTask);
   }
 
-  @Nullable
-  private static AnnotationData extractData(Project project, VirtualFile file) {
+  private static @Nullable AnnotationData extractData(Project project, VirtualFile file) {
     FilePath filePath = null;
     VcsRevisionNumber revisionNumber = null;
     if (file instanceof VcsVirtualFile) {

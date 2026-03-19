@@ -53,8 +53,7 @@ public class MultiValuesMap<K, V>{
     myBaseMap.get(key).add(value);
   }
 
-  @Nullable
-  public Collection<V> get(K key){
+  public @Nullable Collection<V> get(K key){
     return myBaseMap.get(key);
   }
 
@@ -84,8 +83,7 @@ public class MultiValuesMap<K, V>{
     myBaseMap.clear();
   }
 
-  @Nullable
-  public Collection<V> removeAll(K key) {
+  public @Nullable Collection<V> removeAll(K key) {
     return myBaseMap.remove(key);
   }
 
@@ -110,8 +108,7 @@ public class MultiValuesMap<K, V>{
     return result;
   }
 
-  @Nullable
-  public V getFirst(K key) {
+  public @Nullable V getFirst(K key) {
     Collection<V> values = myBaseMap.get(key);
     return values == null || values.isEmpty() ? null : values.iterator().next();
   }

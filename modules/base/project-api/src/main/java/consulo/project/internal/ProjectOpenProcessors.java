@@ -38,8 +38,7 @@ public interface ProjectOpenProcessors {
   
   List<ProjectOpenProcessor> getProcessors();
 
-  @Nullable
-  default ProjectOpenProcessor findProcessor(File file) {
+  default @Nullable ProjectOpenProcessor findProcessor(File file) {
     for (ProjectOpenProcessor provider : getProcessors()) {
       if (provider.canOpenProject(file)) {
         return provider;

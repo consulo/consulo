@@ -37,8 +37,7 @@ public interface VirtualFileViewProviderFactory extends FileViewProviderFactory 
     ExtensionPointCacheKey<VirtualFileViewProviderFactory, Map<FileType, VirtualFileViewProviderFactory>> KEY =
         ExtensionPointCacheKey.groupBy("VirtualFileViewProviderFactory", VirtualFileViewProviderFactory::getFileType);
 
-    @Nullable
-    static VirtualFileViewProviderFactory forFileType(FileType fileType) {
+    static @Nullable VirtualFileViewProviderFactory forFileType(FileType fileType) {
         ExtensionPoint<VirtualFileViewProviderFactory> extensionPoint =
             Application.get().getExtensionPoint(VirtualFileViewProviderFactory.class);
         Map<FileType, VirtualFileViewProviderFactory> map = extensionPoint.getOrBuildCache(KEY);

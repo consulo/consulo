@@ -117,8 +117,7 @@ public class FileHistoryPanelImpl extends PanelWithActionsAndCloseButton impleme
     private final DiffFromHistoryHandler myDiffHandler;
     
     private final FilePath myFilePath;
-    @Nullable
-    private final VcsRevisionNumber myStartingRevision;
+    private final @Nullable VcsRevisionNumber myStartingRevision;
     
     private final AsynchConsumer<VcsHistorySession> myHistoryPanelRefresh;
     
@@ -134,10 +133,8 @@ public class FileHistoryPanelImpl extends PanelWithActionsAndCloseButton impleme
     private final DetailsPanel myDetails;
     
     private final DualView myDualView;
-    @Nullable
-    private final JComponent myAdditionalDetails;
-    @Nullable
-    private final Consumer<VcsFileRevision> myRevisionSelectionListener;
+    private final @Nullable JComponent myAdditionalDetails;
+    private final @Nullable Consumer<VcsFileRevision> myRevisionSelectionListener;
     private VcsHistorySession myHistorySession;
     private VcsFileRevision myBottomRevisionForShowDiff;
     private volatile boolean myInRefresh;
@@ -333,8 +330,7 @@ public class FileHistoryPanelImpl extends PanelWithActionsAndCloseButton impleme
         refreshUiAndScheduleDataRefresh(canUseLastRevision);
     }
 
-    @Nullable
-    public VcsRevisionNumber getStartingRevision() {
+    public @Nullable VcsRevisionNumber getStartingRevision() {
         return myStartingRevision;
     }
 
@@ -621,8 +617,7 @@ public class FileHistoryPanelImpl extends PanelWithActionsAndCloseButton impleme
         }
     }
 
-    @Nullable
-    private Change[] getChanges() {
+    private @Nullable Change[] getChanges() {
         VcsFileRevision[] revisions = getSelectedRevisions();
 
         if (revisions.length > 0) {
@@ -659,8 +654,7 @@ public class FileHistoryPanelImpl extends PanelWithActionsAndCloseButton impleme
         return myDualView.getSelection();
     }
 
-    @Nullable
-    private VcsFileRevision getFirstSelectedRevision() {
+    private @Nullable VcsFileRevision getFirstSelectedRevision() {
         List<TreeNodeOnVcsRevision> selection = getSelection();
         if (selection.isEmpty()) {
             return null;
@@ -693,8 +687,7 @@ public class FileHistoryPanelImpl extends PanelWithActionsAndCloseButton impleme
         return myFilePath;
     }
 
-    @Nullable
-    public VirtualFile getVirtualFile() {
+    public @Nullable VirtualFile getVirtualFile() {
         return myFilePath.getVirtualFile();
     }
 

@@ -260,8 +260,7 @@ public class SearchEverywhereUI extends BigPopupUI implements DataProvider, Quic
         return mySelectedTab.getID();
     }
 
-    @Nullable
-    public Object getSelectionIdentity() {
+    public @Nullable Object getSelectionIdentity() {
         Object value = myResultsList.getSelectedValue();
         return value == null ? null : Objects.hashCode(value);
     }

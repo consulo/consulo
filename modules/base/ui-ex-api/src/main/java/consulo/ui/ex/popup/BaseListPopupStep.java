@@ -93,13 +93,11 @@ public class BaseListPopupStep<T> extends BaseStep<T> implements ListPopupStep<T
         }
     }
 
-    @Nullable
-    public Color getBackgroundFor(T value) {
+    public @Nullable Color getBackgroundFor(T value) {
         return null;
     }
 
-    @Nullable
-    public Color getForegroundFor(T value) {
+    public @Nullable Color getForegroundFor(T value) {
         return null;
     }
 

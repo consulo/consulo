@@ -38,8 +38,7 @@ import java.util.function.Predicate;
 public abstract class ModuleRootsProcessor {
     public static final ExtensionPointName<ModuleRootsProcessor> EP_NAME = ExtensionPointName.create(ModuleRootsProcessor.class);
 
-    @Nullable
-    public static ModuleRootsProcessor findRootsProcessor(ModuleRootModel moduleRootModel) {
+    public static @Nullable ModuleRootsProcessor findRootsProcessor(ModuleRootModel moduleRootModel) {
         for (ModuleRootsProcessor moduleRootsProcessor : EP_NAME.getExtensionList()) {
             if (moduleRootsProcessor.canHandle(moduleRootModel)) {
                 return moduleRootsProcessor;

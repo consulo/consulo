@@ -35,8 +35,7 @@ class GetInstanceValidator {
     }
   }
 
-  @Nullable
-  static Class<?> insideObjectCreation() {
+  static @Nullable Class<?> insideObjectCreation() {
     return ourProtector.get();
   }
 }

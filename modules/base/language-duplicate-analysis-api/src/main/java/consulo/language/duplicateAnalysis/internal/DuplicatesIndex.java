@@ -158,8 +158,7 @@ public class DuplicatesIndex extends FileBasedIndexExtension<Integer, IntList> {
         }
     };
 
-    @Nullable
-    public static DuplicatesProfile findDuplicatesProfile(FileType fileType) {
+    public static @Nullable DuplicatesProfile findDuplicatesProfile(FileType fileType) {
         if (!(fileType instanceof LanguageFileType)) {
             return null;
         }

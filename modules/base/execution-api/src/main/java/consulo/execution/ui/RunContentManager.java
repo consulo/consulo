@@ -75,8 +75,7 @@ public interface RunContentManager {
   /**
    * @return Tool window id where content should be shown. Null if content tool window is determined by executor.
    */
-  @Nullable
-  default String getContentDescriptorToolWindowId(ExecutionEnvironment environment) {
+  default @Nullable String getContentDescriptorToolWindowId(ExecutionEnvironment environment) {
     RunProfile runProfile = environment.getRunProfile();
     if (runProfile instanceof RunConfiguration) {
       return getContentDescriptorToolWindowId((RunConfiguration)runProfile);

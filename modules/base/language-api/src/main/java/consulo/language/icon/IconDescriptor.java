@@ -34,8 +34,7 @@ public class IconDescriptor {
     myMainIcon = mainIcon;
   }
 
-  @Nullable
-  public Image getMainIcon() {
+  public @Nullable Image getMainIcon() {
     return myMainIcon;
   }
 
@@ -59,8 +58,7 @@ public class IconDescriptor {
     return this;
   }
 
-  @Nullable
-  public Image getRightIcon() {
+  public @Nullable Image getRightIcon() {
     return myRightIcon;
   }
 

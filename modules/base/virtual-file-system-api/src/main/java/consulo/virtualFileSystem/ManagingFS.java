@@ -24,8 +24,7 @@ public abstract class ManagingFS implements FileSystemInterface {
     return ManagingFSHolder.ourInstance;
   }
 
-  @Nullable
-  public abstract DataInputStream readAttribute(VirtualFile file, FileAttribute att);
+  public abstract @Nullable DataInputStream readAttribute(VirtualFile file, FileAttribute att);
 
   
   public abstract DataOutputStream writeAttribute(VirtualFile file, FileAttribute att);
@@ -64,8 +63,7 @@ public abstract class ManagingFS implements FileSystemInterface {
 
   public abstract boolean wereChildrenAccessed(VirtualFile dir);
 
-  @Nullable
-  public abstract NewVirtualFile findRoot(String path, NewVirtualFileSystem fs);
+  public abstract @Nullable NewVirtualFile findRoot(String path, NewVirtualFileSystem fs);
 
   
   public abstract VirtualFile[] getRoots();
@@ -76,8 +74,7 @@ public abstract class ManagingFS implements FileSystemInterface {
   
   public abstract VirtualFile[] getLocalRoots();
 
-  @Nullable
-  public abstract VirtualFile findFileById(int id);
+  public abstract @Nullable VirtualFile findFileById(int id);
 
   
   public abstract <P, R> Function<P, R> accessDiskWithCheckCanceled(Function<? super P, ? extends R> function);

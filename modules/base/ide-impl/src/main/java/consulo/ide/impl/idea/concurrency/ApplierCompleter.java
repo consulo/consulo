@@ -121,8 +121,7 @@ class ApplierCompleter<T> extends CountedCompleter<Void> {
 
   // executes tasks one by one and forks right halves if it takes too much time
   // returns the linked list of forked halves - they all need to be joined; null means all tasks have been executed, nothing was forked
-  @Nullable
-  private ApplierCompleter<T> execAndForkSubTasks() {
+  private @Nullable ApplierCompleter<T> execAndForkSubTasks() {
     int hi = this.hi;
     long start = System.currentTimeMillis();
     ApplierCompleter<T> right = null;

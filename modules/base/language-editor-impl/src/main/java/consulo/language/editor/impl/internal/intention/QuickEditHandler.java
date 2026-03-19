@@ -96,8 +96,7 @@ public class QuickEditHandler extends DocumentAdapter implements Disposable {
     private final PsiFile myInjectedFile;
     private final List<Trinity<RangeMarker, RangeMarker, SmartPsiElementPointer>> myMarkers = new LinkedList<>();
 
-    @Nullable
-    private final RangeMarker myAltFullRange;
+    private final @Nullable RangeMarker myAltFullRange;
     private static final Key<String> REPLACEMENT_KEY = Key.create("REPLACEMENT_KEY");
 
     @RequiredReadAction

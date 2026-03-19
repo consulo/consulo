@@ -33,8 +33,7 @@ public interface StyleManager {
     }
     List<Style> getStyles();
 
-    @Nullable
-    default Style getStyle(String styleId) {
+    default @Nullable Style getStyle(String styleId) {
         for (Style style : getStyles()) {
             if (Objects.equals(style.getId(), styleId)) {
                 return style;

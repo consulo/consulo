@@ -77,8 +77,7 @@ public interface CodeEditorInternalHelper {
         return false;
     }
 
-    @Nullable
-    default String getProperIndent(Project project, Document document, int offset) {
+    default @Nullable String getProperIndent(Project project, Document document, int offset) {
         return null;
     }
 
@@ -135,8 +134,7 @@ public interface CodeEditorInternalHelper {
     default void updateFoldRegions(Project project, Editor editor) {
     }
 
-    @Nullable
-    default StickyLinesModel getStickyLinesModel(Project project, Document document) {
+    default @Nullable StickyLinesModel getStickyLinesModel(Project project, Document document) {
         return null;
     }
 

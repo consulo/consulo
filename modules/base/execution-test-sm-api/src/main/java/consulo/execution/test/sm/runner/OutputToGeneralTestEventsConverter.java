@@ -391,8 +391,7 @@ public class OutputToGeneralTestEventsConverter implements ProcessOutputConsumer
             fireOnSuiteStarted(suiteStartedEvent);
         }
 
-        @Nullable
-        private String fetchTestLocation(TestSuiteStarted suiteStarted) {
+        private @Nullable String fetchTestLocation(TestSuiteStarted suiteStarted) {
             Map<String, String> attrs = suiteStarted.getAttributes();
             String location = attrs.get(ATTR_KEY_LOCATION_URL);
             if (location == null) {

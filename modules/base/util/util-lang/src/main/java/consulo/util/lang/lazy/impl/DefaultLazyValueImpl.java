@@ -27,8 +27,7 @@ import java.util.function.Supplier;
 public class DefaultLazyValueImpl<T> implements LazyValue<T> {
   private final Supplier<T> myFactory;
 
-  @Nullable
-  protected volatile T myValue = null;
+  protected volatile @Nullable T myValue = null;
 
   public DefaultLazyValueImpl(Supplier<T> factory) {
     myFactory = factory;

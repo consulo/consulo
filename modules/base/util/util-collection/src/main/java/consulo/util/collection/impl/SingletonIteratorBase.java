@@ -41,6 +41,5 @@ public abstract class SingletonIteratorBase<T> implements Iterator<T> {
 
   protected abstract void checkCoModification();
 
-  @Nullable
-  protected abstract T getElement();
+  protected abstract @Nullable T getElement();
 }

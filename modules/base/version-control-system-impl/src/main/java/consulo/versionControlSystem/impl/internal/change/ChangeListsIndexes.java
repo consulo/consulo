@@ -84,8 +84,7 @@ public class ChangeListsIndexes {
     }
   }
 
-  @Nullable
-  public VcsKey getVcsFor(Change change) {
+  public @Nullable VcsKey getVcsFor(Change change) {
     VcsKey key = getVcsForRevision(change.getAfterRevision());
     if (key != null) return key;
     return getVcsForRevision(change.getBeforeRevision());

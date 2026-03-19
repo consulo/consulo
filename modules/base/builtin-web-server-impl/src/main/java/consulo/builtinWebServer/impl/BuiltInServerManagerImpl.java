@@ -53,8 +53,7 @@ public class BuiltInServerManagerImpl extends BuiltInServerManager {
     private final Application myApplication;
     private final NotificationService myNotificationService;
 
-    @Nullable
-    private BuiltInServer server;
+    private @Nullable BuiltInServer server;
 
     @Inject
     public BuiltInServerManagerImpl(Application application, NotificationService notificationService) {
@@ -129,8 +128,7 @@ public class BuiltInServerManagerImpl extends BuiltInServerManager {
     }
 
     @Override
-    @Nullable
-    public Disposable getServerDisposable() {
+    public @Nullable Disposable getServerDisposable() {
         return server;
     }
 

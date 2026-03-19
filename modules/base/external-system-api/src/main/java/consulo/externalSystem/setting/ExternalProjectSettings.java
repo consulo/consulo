@@ -33,8 +33,7 @@ public abstract class ExternalProjectSettings implements Comparable<ExternalProj
 
   private String  myExternalProjectPath;
   @AbstractCollection(surroundWithTag = true)
-  @Nullable
-  private Set<String> myModules = new HashSet<String>();
+  private @Nullable Set<String> myModules = new HashSet<String>();
 
   
   public Set<String> getModules() {

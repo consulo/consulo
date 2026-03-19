@@ -328,8 +328,7 @@ public class FileChooserDescriptor extends UserDataHolderBase implements Cloneab
     return true;
   }
 
-  @Nullable
-  public Image getIcon(VirtualFile file) {
+  public @Nullable Image getIcon(VirtualFile file) {
     return VirtualFileManager.getInstance().getFileIcon(file, null, Iconable.ICON_FLAG_READ_STATUS);
   }
 
@@ -342,8 +341,7 @@ public class FileChooserDescriptor extends UserDataHolderBase implements Cloneab
     return file.getPath();
   }
 
-  @Nullable
-  public String getComment(VirtualFile file) {
+  public @Nullable String getComment(VirtualFile file) {
     return null;
   }
 
@@ -362,8 +360,7 @@ public class FileChooserDescriptor extends UserDataHolderBase implements Cloneab
     return !file.isDirectory() && myChooseFiles;
   }
 
-  @Nullable
-  public String getForceOperateDialogProviderId() {
+  public @Nullable String getForceOperateDialogProviderId() {
     return myForceOperateDialogProviderId;
   }
 
@@ -379,8 +376,7 @@ public class FileChooserDescriptor extends UserDataHolderBase implements Cloneab
     return myChooseJars && FileChooserUtil.isArchive(file);
   }
 
-  @Nullable
-  public final VirtualFile getFileToSelect(VirtualFile file) {
+  public final @Nullable VirtualFile getFileToSelect(VirtualFile file) {
     if (file.isDirectory() && (myChooseFolders || isFileSelectable(file))) {
       return file;
     }

@@ -39,8 +39,7 @@ public class IdeFrameUtil {
    * Return focused and root IdeFrame. Consulo can provide some frame which is not project-frame (child frame). It will return child if active
    * In this case it will return parent frame
    */
-  @Nullable
-  public static IdeFrame findFocusedRootIdeFrame() {
+  public static @Nullable IdeFrame findFocusedRootIdeFrame() {
     return findRootIdeFrame(Window.getFocusedWindow());
   }
 
@@ -48,13 +47,11 @@ public class IdeFrameUtil {
    * Return active and root IdeFrame. Consulo can provide some frame which is not project-frame (child frame). It will return child if active
    * In this case it will return parent frame
    */
-  @Nullable
-  public static IdeFrame findActiveRootIdeFrame() {
+  public static @Nullable IdeFrame findActiveRootIdeFrame() {
     return findRootIdeFrame(Window.getActiveWindow());
   }
 
-  @Nullable
-  public static IdeFrame findRootIdeFrame(@Nullable Window activeWindow) {
+  public static @Nullable IdeFrame findRootIdeFrame(@Nullable Window activeWindow) {
     if (activeWindow == null) {
       return null;
     }

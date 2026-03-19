@@ -693,8 +693,7 @@ public class PagedFileStorage implements Forceable {
       }
     }
 
-    @Nullable
-    private Map<Integer, ByteBufferWrapper> getBuffersOrderedForOwner(int index, StorageLockContext storageLockContext) {
+    private @Nullable Map<Integer, ByteBufferWrapper> getBuffersOrderedForOwner(int index, StorageLockContext storageLockContext) {
       mySegmentsAccessLock.lock();
       try {
         checkThreadAccess(storageLockContext);

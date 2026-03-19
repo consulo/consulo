@@ -387,8 +387,7 @@ public class ScopeChooserConfigurable extends MasterDetailsComponent implements 
     }
 
     @Override
-    @Nullable
-    public Runnable enableSearch(String option) {
+    public @Nullable Runnable enableSearch(String option) {
         return null;
     }
 

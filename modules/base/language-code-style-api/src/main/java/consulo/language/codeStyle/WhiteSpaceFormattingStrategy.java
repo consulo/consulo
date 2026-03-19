@@ -43,8 +43,7 @@ public interface WhiteSpaceFormattingStrategy extends LanguageExtension {
     ExtensionPointCacheKey<WhiteSpaceFormattingStrategy, ByLanguageValue<WhiteSpaceFormattingStrategy>> KEY =
         ExtensionPointCacheKey.create("WhiteSpaceFormattingStrategy", LanguageOneToOne.build());
 
-    @Nullable
-    static WhiteSpaceFormattingStrategy forLanguage(Language language) {
+    static @Nullable WhiteSpaceFormattingStrategy forLanguage(Language language) {
         return Application.get().getExtensionPoint(WhiteSpaceFormattingStrategy.class).getOrBuildCache(KEY).get(language);
     }
 

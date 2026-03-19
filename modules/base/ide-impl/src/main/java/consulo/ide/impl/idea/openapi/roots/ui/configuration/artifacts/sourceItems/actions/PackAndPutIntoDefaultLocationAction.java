@@ -48,8 +48,7 @@ public class PackAndPutIntoDefaultLocationAction extends PutIntoDefaultLocationA
     }
   }
 
-  @Nullable
-  private String suggestJarName() {
+  private @Nullable String suggestJarName() {
     List<PackagingSourceItem> items = mySourceItemsTree.getSelectedItems();
     for (PackagingSourceItem item : items) {
       if (item.isProvideElements() && item.getKindOfProducedElements().containsDirectoriesWithClasses()) {

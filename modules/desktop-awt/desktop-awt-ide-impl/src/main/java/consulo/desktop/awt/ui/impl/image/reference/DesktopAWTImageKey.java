@@ -37,8 +37,7 @@ public class DesktopAWTImageKey extends JBUI.RasterJBIcon implements DesktopAWTI
   private static final BaseIconLibraryManager ourLibraryManager = (BaseIconLibraryManager)IconLibraryManager.get();
   private static final UIModificationTracker ourUIModificationTracker = UIModificationTracker.getInstance();
 
-  @Nullable
-  private final String myForceIconLibraryId;
+  private final @Nullable String myForceIconLibraryId;
   private final String myGroupId;
   private final String myImageId;
   private final int myWidth;

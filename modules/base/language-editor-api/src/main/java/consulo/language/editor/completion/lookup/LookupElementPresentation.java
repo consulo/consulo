@@ -40,8 +40,7 @@ public class LookupElementPresentation {
   private boolean myItemTextUnderlined;
   private boolean myItemTextItalic;
   private boolean myTypeGrayed;
-  @Nullable
-  private List<TextFragment> myTail;
+  private @Nullable List<TextFragment> myTail;
   private volatile boolean myFrozen;
 
   public void setIcon(@Nullable Image icon) {
@@ -121,18 +120,15 @@ public class LookupElementPresentation {
     return false;
   }
 
-  @Nullable
-  public Image getIcon() {
+  public @Nullable Image getIcon() {
     return myIcon;
   }
 
-  @Nullable
-  public Image getTypeIcon() {
+  public @Nullable Image getTypeIcon() {
     return myTypeIcon;
   }
 
-  @Nullable
-  public String getItemText() {
+  public @Nullable String getItemText() {
     return myItemText;
   }
 
@@ -141,14 +137,12 @@ public class LookupElementPresentation {
     return myTail == null ? Collections.emptyList() : Collections.unmodifiableList(myTail);
   }
 
-  @Nullable
-  public String getTailText() {
+  public @Nullable String getTailText() {
     if (myTail == null) return null;
     return StringUtil.join(myTail, fragment -> fragment.text, "");
   }
 
-  @Nullable
-  public String getTypeText() {
+  public @Nullable String getTypeText() {
     return myTypeText;
   }
 
@@ -256,8 +250,7 @@ public class LookupElementPresentation {
     public final String text;
     private final boolean myGrayed;
     private final boolean myItalic;
-    @Nullable
-    private final ColorValue myFgColor;
+    private final @Nullable ColorValue myFgColor;
 
     private TextFragment(String text, boolean grayed, boolean italic, @Nullable ColorValue fgColor) {
       this.text = text;
@@ -279,8 +272,7 @@ public class LookupElementPresentation {
       return myItalic;
     }
 
-    @Nullable
-    public ColorValue getForegroundColor() {
+    public @Nullable ColorValue getForegroundColor() {
       return myFgColor;
     }
   }

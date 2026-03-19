@@ -241,13 +241,11 @@ public abstract class ColorAndFontDescription extends TextAttributes implements 
         this.isInherited = isInherited;
     }
 
-    @Nullable
-    public TextAttributes getBaseAttributes() {
+    public @Nullable TextAttributes getBaseAttributes() {
         return null;
     }
 
-    @Nullable
-    public Pair<ColorAndFontDescriptors, AttributesDescriptor> getBaseAttributeDescriptor() {
+    public @Nullable Pair<ColorAndFontDescriptors, AttributesDescriptor> getBaseAttributeDescriptor() {
         return null;
     }
 }

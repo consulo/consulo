@@ -293,8 +293,7 @@ public class RangeCollectorImpl extends TemplateDataElementType.RangeCollector {
     return newElement;
   }
 
-  @Nullable
-  private TreeElement removeElementsForRange(TreeElement startLeaf,
+  private @Nullable TreeElement removeElementsForRange(TreeElement startLeaf,
                                              int startLeafOffset,
                                              TextRange rangeToRemove,
                                              TreePatcher templateTreePatcher,
@@ -323,8 +322,7 @@ public class RangeCollectorImpl extends TemplateDataElementType.RangeCollector {
    *
    * @return new leaf after removing the range or original nextLeaf if nothing changed
    */
-  @Nullable
-  private TreeElement splitOrRemoveRangeInsideLeafIfOverlap(@Nullable TreeElement nextLeaf,
+  private @Nullable TreeElement splitOrRemoveRangeInsideLeafIfOverlap(@Nullable TreeElement nextLeaf,
                                                             int nextLeafStartOffset,
                                                             TextRange rangeToRemove,
                                                             TreePatcher templateTreePatcher,

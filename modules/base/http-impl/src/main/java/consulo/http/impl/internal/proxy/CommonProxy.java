@@ -110,8 +110,7 @@ public class CommonProxy extends ProxySelector {
         }
     }
 
-    @Nullable
-    public static String getMessageFromProps(Map<String, String> props) {
+    public static @Nullable String getMessageFromProps(Map<String, String> props) {
         for (Map.Entry<String, String> entry : props.entrySet()) {
             if (!StringUtil.isEmptyOrSpaces(entry.getValue())) {
                 return CommonLocalize.labelOldWayJvmPropertyUsed(entry.getKey(), entry.getValue()).get();

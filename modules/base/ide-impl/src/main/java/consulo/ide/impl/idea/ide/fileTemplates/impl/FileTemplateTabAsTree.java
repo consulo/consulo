@@ -170,8 +170,7 @@ abstract class FileTemplateTabAsTree extends FileTemplateTab {
     }
 
     @Override
-    @Nullable
-    public FileTemplate getSelectedTemplate() {
+    public @Nullable FileTemplate getSelectedTemplate() {
         TreePath selectionPath = myTree.getSelectionPath();
         if (selectionPath == null) {
             return null;
@@ -180,8 +179,7 @@ abstract class FileTemplateTabAsTree extends FileTemplateTab {
         return getTemplate(node);
     }
 
-    @Nullable
-    private FileTemplate getTemplate(FileTemplateNode node) {
+    private @Nullable FileTemplate getTemplate(FileTemplateNode node) {
         String templateName = node.getTemplateName();
         if (templateName == null || myTemplates.isEmpty()) {
             return null;

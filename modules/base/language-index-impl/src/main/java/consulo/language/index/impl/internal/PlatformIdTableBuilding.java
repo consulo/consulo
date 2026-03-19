@@ -150,8 +150,7 @@ public class PlatformIdTableBuilding {
   private static class TokenSetTodoIndexer implements DataIndexer<TodoIndexEntry, Integer, FileContent> {
     
     private final TokenSet myCommentTokens;
-    @Nullable
-    private final LanguageVersion myLanguageVersion;
+    private final @Nullable LanguageVersion myLanguageVersion;
     private final VirtualFile myFile;
     private final Project myProject;
 

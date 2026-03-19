@@ -370,8 +370,7 @@ public class DefaultChooseByNameItemProvider implements ChooseByNameInScopeItemP
         return pattern.substring(lastSeparatorOccurrence);
     }
 
-    @Nullable
-    private static MatchResult matchQualifiedName(ChooseByNameModel model, MinusculeMatcher fullMatcher, Object element) {
+    private static @Nullable MatchResult matchQualifiedName(ChooseByNameModel model, MinusculeMatcher fullMatcher, Object element) {
         String fullName = model.getFullName(element);
         if (fullName == null) {
             return null;
@@ -445,8 +444,7 @@ public class DefaultChooseByNameItemProvider implements ChooseByNameInScopeItemP
         return pattern;
     }
 
-    @Nullable
-    protected static MatchResult matches(
+    protected static @Nullable MatchResult matches(
         ChooseByNameViewModel base,
         String pattern,
         MinusculeMatcher matcher,
@@ -467,8 +465,7 @@ public class DefaultChooseByNameItemProvider implements ChooseByNameInScopeItemP
         return matchName(matcher, name);
     }
 
-    @Nullable
-    private static MatchResult matchName(MinusculeMatcher matcher, String name) {
+    private static @Nullable MatchResult matchName(MinusculeMatcher matcher, String name) {
         FList<MatcherTextRange> fragments = matcher.matchingFragments(name);
         return fragments != null ? new MatchResult(
             name,

@@ -30,6 +30,5 @@ public abstract class FindUsagesHandlerFactory {
 
     public abstract boolean canFindUsages(PsiElement element);
 
-    @Nullable
-    public abstract FindUsagesHandler createFindUsagesHandler(PsiElement element, boolean forHighlightUsages);
+    public abstract @Nullable FindUsagesHandler createFindUsagesHandler(PsiElement element, boolean forHighlightUsages);
 }

@@ -91,8 +91,7 @@ public class TableExpandableItemsHandler extends AbstractExpandableItemsHandler<
   }
 
   @Override
-  @Nullable
-  public Pair<Component, Rectangle> getCellRendererAndBounds(TableCell key) {
+  public @Nullable Pair<Component, Rectangle> getCellRendererAndBounds(TableCell key) {
     if (key.row < 0 || key.row >= myComponent.getRowCount() ||
         key.column < 0 || key.column >= myComponent.getColumnCount() ||
         key.row == myComponent.getEditingRow() && key.column == myComponent.getEditingColumn() ||

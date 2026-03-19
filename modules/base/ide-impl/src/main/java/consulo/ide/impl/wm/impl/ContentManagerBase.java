@@ -394,8 +394,7 @@ public abstract class ContentManagerBase implements ContentManager, PropertyChan
     }
 
     @Override
-    @Nullable
-    public Content getSelectedContent() {
+    public @Nullable Content getSelectedContent() {
         return mySelection.isEmpty() ? null : mySelection.get(0);
     }
 

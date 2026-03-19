@@ -132,8 +132,7 @@ public class BackgroundTaskUtil {
     return result;
   }
 
-  @Nullable
-  public static <T> T computeInBackgroundAndTryWait(Supplier<T> computable, Consumer<T> asyncCallback, long waitMillis) {
+  public static @Nullable <T> T computeInBackgroundAndTryWait(Supplier<T> computable, Consumer<T> asyncCallback, long waitMillis) {
     Pair<T, ProgressIndicator> pair =
       computeInBackgroundAndTryWait(indicator -> computable.get(),
                                     (result, indicator) -> asyncCallback.accept(result),

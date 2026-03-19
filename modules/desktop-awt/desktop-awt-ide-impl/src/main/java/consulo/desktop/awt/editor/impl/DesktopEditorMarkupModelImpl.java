@@ -275,8 +275,7 @@ public class DesktopEditorMarkupModelImpl extends MarkupModelImpl implements Edi
         });
     }
 
-    @Nullable
-    private RangeHighlighter getNearestRangeHighlighter(MouseEvent e) {
+    private @Nullable RangeHighlighter getNearestRangeHighlighter(MouseEvent e) {
         List<RangeHighlighter> highlighters = new ArrayList<>();
         getNearestHighlighters(this, e.getY(), highlighters);
         getNearestHighlighters(
@@ -388,8 +387,7 @@ public class DesktopEditorMarkupModelImpl extends MarkupModelImpl implements Edi
             );
     }
 
-    @Nullable
-    public DesktopEditorErrorPanel getErrorPanel() {
+    public @Nullable DesktopEditorErrorPanel getErrorPanel() {
         return myErrorPanel;
     }
 

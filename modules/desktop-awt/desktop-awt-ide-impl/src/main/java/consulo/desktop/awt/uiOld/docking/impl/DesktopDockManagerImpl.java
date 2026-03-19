@@ -325,8 +325,7 @@ public class DesktopDockManagerImpl extends BaseDockManager implements FileEdito
         }
     }
 
-    @Nullable
-    private DockContainer findContainerFor(RelativePoint point, DockableContent content) {
+    private @Nullable DockContainer findContainerFor(RelativePoint point, DockableContent content) {
         for (DockContainer each : myContainers) {
             RelativeRectangle rec = ((SwingDockContainer) each).getAcceptArea();
             if (rec.contains(point) && each.getContentResponse(content, point).canAccept()) {

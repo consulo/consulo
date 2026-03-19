@@ -64,8 +64,7 @@ public abstract class PsiManager extends UserDataHolderBase {
   @RequiredReadAction
   public abstract PsiFile findFile(VirtualFile file);
 
-  @Nullable
-  public abstract FileViewProvider findViewProvider(VirtualFile file);
+  public abstract @Nullable FileViewProvider findViewProvider(VirtualFile file);
 
   /**
    * Returns the PSI directory corresponding to the specified virtual file system directory.

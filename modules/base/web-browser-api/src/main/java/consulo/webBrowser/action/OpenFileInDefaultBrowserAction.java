@@ -62,8 +62,7 @@ public class OpenFileInDefaultBrowserAction extends DumbAwareAction {
         }
     }
 
-    @Nullable
-    private static WebBrowser findUsingBrowser() {
+    private static @Nullable WebBrowser findUsingBrowser() {
         WebBrowserManager browserManager = WebBrowserManager.getInstance();
         if (browserManager.getDefaultBrowserPolicy() == DefaultBrowserPolicy.FIRST) {
             return browserManager.getFirstActiveBrowser();

@@ -46,13 +46,11 @@ public class AttributesDefaults {
     this(null, null);
   }
 
-  @Nullable
-  public String getDefaultFileName() {
+  public @Nullable String getDefaultFileName() {
     return myDefaultName;
   }
 
-  @Nullable
-  public TextRange getDefaultFileNameSelection() {
+  public @Nullable TextRange getDefaultFileNameSelection() {
     return myDefaultRange;
   }
 
@@ -71,19 +69,16 @@ public class AttributesDefaults {
     myDefaultProperties.put(key, value);
   }
 
-  @Nullable
-  public Map<String, Object> getDefaultProperties() {
+  public @Nullable Map<String, Object> getDefaultProperties() {
     return myDefaultProperties;
   }
 
-  @Nullable
-  public TextRange getRangeFor(String attributeKey) {
+  public @Nullable TextRange getRangeFor(String attributeKey) {
     Pair<String, TextRange> valueAndRange = myNamesToValueAndRangeMap.get(attributeKey);
     return valueAndRange == null ? null : valueAndRange.second;
   }
 
-  @Nullable
-  public String getDefaultValueFor(String attributeKey) {
+  public @Nullable String getDefaultValueFor(String attributeKey) {
     Pair<String, TextRange> valueAndRange = myNamesToValueAndRangeMap.get(attributeKey);
     return valueAndRange == null ? null : valueAndRange.first;
   }

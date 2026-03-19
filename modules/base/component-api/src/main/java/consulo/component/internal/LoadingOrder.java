@@ -197,8 +197,7 @@ public record LoadingOrder(String name, boolean first, boolean last, Set<String>
 
         LoadingOrder getOrder();
 
-        @Nullable
-        default Object getObjectValue() {
+        default @Nullable Object getObjectValue() {
             return null;
         }
     }

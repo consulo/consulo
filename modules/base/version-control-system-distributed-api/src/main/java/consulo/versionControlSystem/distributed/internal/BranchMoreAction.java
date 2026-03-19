@@ -32,8 +32,7 @@ import java.awt.event.InputEvent;
 public class BranchMoreAction extends DumbAwareAction implements KeepingPopupOpenAction {
     
     private final Project myProject;
-    @Nullable
-    private final String mySettingName;
+    private final @Nullable String mySettingName;
     private final boolean myDefaultExpandValue;
     private boolean myIsExpanded;
     

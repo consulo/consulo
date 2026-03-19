@@ -49,8 +49,7 @@ public abstract class CheckinHandlerFactory implements BaseCheckinHandlerFactory
      * @return the handler instance.
      */
     @Override
-    @Nullable
-    public abstract CheckinHandler createHandler(CheckinProjectPanel panel, CommitContext commitContext);
+    public abstract @Nullable CheckinHandler createHandler(CheckinProjectPanel panel, CommitContext commitContext);
 
     @Override
     public BeforeCheckinDialogHandler createSystemReadyHandler(Project project) {

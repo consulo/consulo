@@ -31,13 +31,11 @@ public interface Window extends Component, Disposable {
         return UIInternal.get()._Window_create(title, options);
     }
 
-    @Nullable
-    static Window getActiveWindow() {
+    static @Nullable Window getActiveWindow() {
         return UIInternal.get()._Window_getActiveWindow();
     }
 
-    @Nullable
-    static Window getFocusedWindow() {
+    static @Nullable Window getFocusedWindow() {
         return UIInternal.get()._Window_getFocusedWindow();
     }
 

@@ -160,8 +160,7 @@ public class ShowIntentionActionsHandler implements CodeInsightActionHandler {
         return true;
     }
 
-    @Nullable
-    public static Pair<PsiFile, Editor> chooseBetweenHostAndInjected(
+    public static @Nullable Pair<PsiFile, Editor> chooseBetweenHostAndInjected(
         PsiFile hostFile,
         Editor hostEditor,
         @Nullable PsiFile injectedFile,
@@ -255,8 +254,7 @@ public class ShowIntentionActionsHandler implements CodeInsightActionHandler {
     }
 
 
-    @Nullable
-    public static Pair<PsiFile, Editor> chooseFileForAction(
+    public static @Nullable Pair<PsiFile, Editor> chooseFileForAction(
         PsiFile hostFile,
         @Nullable Editor hostEditor,
         IntentionAction action

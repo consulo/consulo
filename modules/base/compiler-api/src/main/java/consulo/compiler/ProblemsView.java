@@ -58,8 +58,7 @@ public abstract class ProblemsView {
         window.activate(null, true);
     }
 
-    @Nullable
-    public static ToolWindow getToolWindow(@Nullable Project project) {
+    public static @Nullable ToolWindow getToolWindow(@Nullable Project project) {
         return project == null || project.isDisposed() ? null : ToolWindowManager.getInstance(project)
             .getToolWindow(ToolWindowId.MESSAGES_WINDOW);
     }

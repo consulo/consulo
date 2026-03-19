@@ -152,8 +152,7 @@ public class PopupListAdapter<T> implements PopupChooserBuilder.PopupComponentAd
     }
 
     @Override
-    @Nullable
-    public Object getData(Key dataId) {
+    public @Nullable Object getData(Key dataId) {
       if (PlatformDataKeys.SELECTED_ITEM == dataId) {
         return myList.getSelectedValue();
       }

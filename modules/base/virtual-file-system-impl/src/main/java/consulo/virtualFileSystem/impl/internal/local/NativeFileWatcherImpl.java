@@ -135,8 +135,7 @@ public class NativeFileWatcherImpl extends PluggableFileWatcher {
     return path.toAbsolutePath();
   }
 
-  @Nullable
-  public static Path getExecutablePathImpl() {
+  public static @Nullable Path getExecutablePathImpl() {
     String execPath = System.getProperty(PROPERTY_WATCHER_EXECUTABLE_PATH);
     if (execPath != null) return Path.of(execPath);
 

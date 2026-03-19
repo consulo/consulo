@@ -246,8 +246,7 @@ public class FileTemplateImplUtil {
      * \\$qqq -> qqq
      * ${qqq} -> qqq
      */
-    @Nullable
-    private static String referenceToAttribute(String attrib, boolean includeDummies) {
+    private static @Nullable String referenceToAttribute(String attrib, boolean includeDummies) {
         while (attrib.startsWith("\\\\")) {
             attrib = attrib.substring(2);
         }

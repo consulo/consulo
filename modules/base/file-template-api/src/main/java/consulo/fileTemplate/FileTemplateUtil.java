@@ -174,8 +174,7 @@ public class FileTemplateUtil {
         return methodText.replaceAll("\n", "\n" + StringUtil.repeatSymbol(' ', indent));
     }
 
-    @Nullable
-    public static Image getIcon(FileTemplate fileTemplate) {
+    public static @Nullable Image getIcon(FileTemplate fileTemplate) {
         String extension = fileTemplate.getExtension();
         return FileTypeManager.getInstance().getFileTypeByExtension(extension).getIcon();
     }

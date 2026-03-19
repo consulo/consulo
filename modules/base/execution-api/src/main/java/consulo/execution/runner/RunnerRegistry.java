@@ -30,11 +30,9 @@ public abstract class RunnerRegistry {
 
   public abstract boolean hasRunner(String executorId, RunProfile settings);
 
-  @Nullable
-  public abstract ProgramRunner getRunner(String executorId, RunProfile settings);
+  public abstract @Nullable ProgramRunner getRunner(String executorId, RunProfile settings);
 
   public abstract ProgramRunner[] getRegisteredRunners();
 
-  @Nullable
-  public abstract ProgramRunner findRunnerById(String id);
+  public abstract @Nullable ProgramRunner findRunnerById(String id);
 }

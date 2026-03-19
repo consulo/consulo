@@ -187,8 +187,7 @@ public class SimpleThreesideDiffViewer extends ThreesideTextDiffViewerEx {
         }
     }
 
-    @Nullable
-    private static CharSequence getChunkContent(
+    private static @Nullable CharSequence getChunkContent(
         MergeLineFragment fragment,
         List<Document> documents,
         ThreeSide side

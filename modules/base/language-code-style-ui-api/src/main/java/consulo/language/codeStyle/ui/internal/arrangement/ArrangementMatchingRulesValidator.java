@@ -31,8 +31,7 @@ public class ArrangementMatchingRulesValidator {
     myRulesModel = model;
   }
 
-  @Nullable
-  protected String validate(int index) {
+  protected @Nullable String validate(int index) {
     if (myRulesModel.getSize() < index) {
       return null;
     }

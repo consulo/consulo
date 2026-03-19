@@ -55,8 +55,7 @@ public class SofterReference<T> {
     }
   }
 
-  @Nullable
-  public T get() {
+  public @Nullable T get() {
     Reference<T> ref = myRef;
     T referent = ref.get();
     if (referent != null && ref instanceof WeakReference) {

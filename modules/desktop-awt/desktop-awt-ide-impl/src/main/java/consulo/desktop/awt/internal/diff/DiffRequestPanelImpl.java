@@ -84,13 +84,11 @@ public class DiffRequestPanelImpl implements DiffRequestPanel {
   }
 
   private static class MyDiffRequestProcessor extends DiffRequestProcessor {
-    @Nullable
-    private final Window myWindow;
+    private final @Nullable Window myWindow;
 
    
     private DiffRequest myRequest = NoDiffRequest.INSTANCE;
-    @Nullable
-    private Object myRequestIdentity = null;
+    private @Nullable Object myRequestIdentity = null;
 
     public MyDiffRequestProcessor(@Nullable Project project, @Nullable Window window) {
       super(project);

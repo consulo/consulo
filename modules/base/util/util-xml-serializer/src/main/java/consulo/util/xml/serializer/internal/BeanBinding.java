@@ -63,18 +63,15 @@ public class BeanBinding extends NullableAccessorBinding {
     }
 
     @Override
-    @Nullable
-    public Object serialize(Object o, @Nullable Object context, SerializationFilter filter) {
+    public @Nullable Object serialize(Object o, @Nullable Object context, SerializationFilter filter) {
         return serializeInto(o, context == null ? null : new Element(myTagName), filter);
     }
 
-    @Nullable
-    public Element serialize(Object object, boolean createElementIfEmpty, SerializationFilter filter) {
+    public @Nullable Element serialize(Object object, boolean createElementIfEmpty, SerializationFilter filter) {
         return serializeInto(object, createElementIfEmpty ? new Element(myTagName) : null, filter);
     }
 
-    @Nullable
-    public Element serializeInto(Object o, @Nullable Element element, SerializationFilter filter) {
+    public @Nullable Element serializeInto(Object o, @Nullable Element element, SerializationFilter filter) {
         for (Binding binding : Objects.requireNonNull(myBindings)) {
             Accessor accessor = Objects.requireNonNull(binding.getAccessor());
 
@@ -270,8 +267,7 @@ public class BeanBinding extends NullableAccessorBinding {
         return name.isEmpty() ? aClass.getSuperclass().getSimpleName() : name;
     }
 
-    @Nullable
-    private static String getTagNameFromAnnotation(Class<?> aClass) {
+    private static @Nullable String getTagNameFromAnnotation(Class<?> aClass) {
         Tag tag = aClass.getAnnotation(Tag.class);
         return tag != null && !tag.value().isEmpty() ? tag.value() : null;
     }
@@ -373,8 +369,7 @@ public class BeanBinding extends NullableAccessorBinding {
         while ((currentClass = currentClass.getSuperclass()) != null && currentClass.getAnnotation(Transient.class) == null);
     }
 
-    @Nullable
-    private static Pair<String, Boolean> getPropertyData(String methodName) {
+    private static @Nullable Pair<String, Boolean> getPropertyData(String methodName) {
         String part = "";
         boolean isSetter = false;
         if (methodName.startsWith("get")) {

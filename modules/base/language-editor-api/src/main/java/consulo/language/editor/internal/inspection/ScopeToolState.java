@@ -68,8 +68,7 @@ public class ScopeToolState {
     myLevel = level;
   }
 
-  @Nullable
-  public NamedScope getScope(Project project) {
+  public @Nullable NamedScope getScope(Project project) {
     if (myScope == null) {
       if (project != null) {
         myScope = NamedScopesHolder.getScope(project, myScopeId);

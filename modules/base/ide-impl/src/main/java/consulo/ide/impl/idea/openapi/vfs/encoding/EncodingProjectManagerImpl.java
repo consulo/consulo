@@ -64,8 +64,7 @@ public final class EncodingProjectManagerImpl implements EncodingProjectManager,
     private final EncodingManagerImpl myIdeEncodingManager;
     private boolean myNative2AsciiForPropertiesFiles;
     private Charset myDefaultCharsetForPropertiesFiles;
-    @Nullable
-    private Charset myDefaultConsoleCharset;
+    private @Nullable Charset myDefaultConsoleCharset;
     private final SimpleModificationTracker myModificationTracker = new SimpleModificationTracker();
     private BOMForNewUTF8Files myBomForNewUtf8Files = BOMForNewUTF8Files.NEVER;
     private final Map<VirtualFilePointer, Charset> myMapping = Maps.newConcurrentHashMap(new HashingStrategy<VirtualFilePointer>() {
@@ -181,8 +180,7 @@ public final class EncodingProjectManagerImpl implements EncodingProjectManager,
     }
 
     @Override
-    @Nullable
-    public Charset getEncoding(@Nullable VirtualFile virtualFile, boolean useParentDefaults) {
+    public @Nullable Charset getEncoding(@Nullable VirtualFile virtualFile, boolean useParentDefaults) {
         VirtualFile parent = virtualFile;
         while (parent != null) {
             Charset charset = myMapping.get(new LightFilePointer(parent.getUrl()));
@@ -433,8 +431,7 @@ public final class EncodingProjectManagerImpl implements EncodingProjectManager,
         return charset == null ? myIdeEncodingManager.getDefaultCharset() : charset;
     }
 
-    @Nullable
-    public Charset getConfiguredDefaultCharset() {
+    public @Nullable Charset getConfiguredDefaultCharset() {
         return myProjectCharset;
     }
 
@@ -515,8 +512,7 @@ public final class EncodingProjectManagerImpl implements EncodingProjectManager,
     }
 
     @Override
-    @Nullable
-    public Charset getDefaultCharsetForPropertiesFiles(@Nullable VirtualFile virtualFile) {
+    public @Nullable Charset getDefaultCharsetForPropertiesFiles(@Nullable VirtualFile virtualFile) {
         return myDefaultCharsetForPropertiesFiles;
     }
 
@@ -535,8 +531,7 @@ public final class EncodingProjectManagerImpl implements EncodingProjectManager,
         return myIdeEncodingManager.getDefaultConsoleEncoding();
     }
 
-    @Nullable
-    public Charset getCachedCharsetFromContent(Document document) {
+    public @Nullable Charset getCachedCharsetFromContent(Document document) {
         return myIdeEncodingManager.getCachedCharsetFromContent(document);
     }
 

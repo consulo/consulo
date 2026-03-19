@@ -53,8 +53,7 @@ public abstract class NextPrevParameterAction extends CodeInsightAction {
         return findSuitableTraversalPolicy(editor, file) != null;
     }
 
-    @Nullable
-    private static TemplateParameterTraversalPolicy findSuitableTraversalPolicy(Editor editor, PsiFile file) {
+    private static @Nullable TemplateParameterTraversalPolicy findSuitableTraversalPolicy(Editor editor, PsiFile file) {
         for (TemplateParameterTraversalPolicy policy : TemplateParameterTraversalPolicy.EP_NAME.getExtensionList()) {
             if (policy.isValidForFile(editor, file)) {
                 return policy;

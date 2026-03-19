@@ -32,8 +32,7 @@ public abstract class DvcsMultiRootBranchConfig<Repo extends Repository> {
     return getCurrentBranch() == null;
   }
 
-  @Nullable
-  public String getCurrentBranch() {
+  public @Nullable String getCurrentBranch() {
     String commonBranch = null;
     for (Repo repository : myRepositories) {
       String branchName = repository.getCurrentBranchName();

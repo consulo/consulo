@@ -129,8 +129,7 @@ public class DesktopDataManagerImpl extends BaseDataManager {
     return (WindowManagerEx)myWindowManager.get();
   }
 
-  @Nullable
-  private <T> T getData(Key<T> dataId, Component focusedComponent) {
+  private @Nullable <T> T getData(Key<T> dataId, Component focusedComponent) {
     try (AccessToken ignored = ProhibitAWTEvents.start("getData")) {
       for (Component c = focusedComponent; c != null; c = c.getParent()) {
         DataProvider dataProvider = getDataProviderEx(c);
@@ -205,8 +204,7 @@ public class DesktopDataManagerImpl extends BaseDataManager {
     return getDataContext(getFocusedComponent());
   }
 
-  @Nullable
-  private Component getFocusedComponent() {
+  private @Nullable Component getFocusedComponent() {
     Window activeWindow = TargetAWT.to(windowManager().getMostRecentFocusedWindow());
     if (activeWindow == null) {
       activeWindow = KeyboardFocusManager.getCurrentKeyboardFocusManager().getActiveWindow();
@@ -255,8 +253,7 @@ public class DesktopDataManagerImpl extends BaseDataManager {
     return getData(dataId, TargetAWT.to(focusedComponent));
   }
 
-  @Nullable
-  public static Editor validateEditor(Editor editor) {
+  public static @Nullable Editor validateEditor(Editor editor) {
     Component focusOwner = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
     if (focusOwner instanceof JComponent) {
       JComponent jComponent = (JComponent)focusOwner;

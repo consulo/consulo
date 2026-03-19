@@ -30,8 +30,7 @@ public class ArchiveVfsUtil {
   /**
    * Return mirror virtual file from archive file system if virtual file is archive
    */
-  @Nullable
-  public static VirtualFile getArchiveRootForLocalFile(@Nullable VirtualFile virtualFile) {
+  public static @Nullable VirtualFile getArchiveRootForLocalFile(@Nullable VirtualFile virtualFile) {
     if (virtualFile == null || !virtualFile.isValid()) {
       return null;
     }
@@ -45,8 +44,7 @@ public class ArchiveVfsUtil {
   /**
    * Return original file from local system, when file is mirror in archive file system
    */
-  @Nullable
-  public static VirtualFile getVirtualFileForArchive(@Nullable VirtualFile virtualFile) {
+  public static @Nullable VirtualFile getVirtualFileForArchive(@Nullable VirtualFile virtualFile) {
     if (virtualFile == null || !virtualFile.isValid()) {
       return null;
     }
@@ -59,15 +57,13 @@ public class ArchiveVfsUtil {
 
   @Deprecated(forRemoval = true)
   @DeprecationInfo(value = "Use #getArchiveRootForLocalFile()")
-  @Nullable
-  public static VirtualFile getJarRootForLocalFile(@Nullable VirtualFile virtualFile) {
+  public static @Nullable VirtualFile getJarRootForLocalFile(@Nullable VirtualFile virtualFile) {
     return getArchiveRootForLocalFile(virtualFile);
   }
 
   @Deprecated(forRemoval = true)
   @DeprecationInfo(value = "Use #getVirtualFileForArchive()")
-  @Nullable
-  public static VirtualFile getVirtualFileForJar(@Nullable VirtualFile virtualFile) {
+  public static @Nullable VirtualFile getVirtualFileForJar(@Nullable VirtualFile virtualFile) {
     return getVirtualFileForArchive(virtualFile);
   }
 }

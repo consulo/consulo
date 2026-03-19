@@ -36,13 +36,11 @@ public class ReflectionUtil {
     private ReflectionUtil() {
     }
 
-    @Nullable
-    public static Type resolveVariable(TypeVariable variable, Class classType) {
+    public static @Nullable Type resolveVariable(TypeVariable variable, Class classType) {
         return resolveVariable(variable, classType, true);
     }
 
-    @Nullable
-    public static Type resolveVariable(TypeVariable variable, Class classType, boolean resolveInInterfacesOnly) {
+    public static @Nullable Type resolveVariable(TypeVariable variable, Class classType, boolean resolveInInterfacesOnly) {
         Class aClass = getRawType(classType);
         int index = ArrayUtil.find(aClass.getTypeParameters(), variable);
         if (index >= 0) {
@@ -149,8 +147,7 @@ public class ReflectionUtil {
         return parameterizedType.getActualTypeArguments();
     }
 
-    @Nullable
-    public static Class<?> substituteGenericType(Type genericType, Type classType) {
+    public static @Nullable Class<?> substituteGenericType(Type genericType, Type classType) {
         if (genericType instanceof TypeVariable) {
             Class<?> aClass = getRawType(classType);
             Type type = resolveVariable((TypeVariable)genericType, aClass);
@@ -274,8 +271,7 @@ public class ReflectionUtil {
         resetField(aClass, null, name);
     }
 
-    @Nullable
-    public static Method findMethod(Collection<Method> methods, String name, Class... parameters) {
+    public static @Nullable Method findMethod(Collection<Method> methods, String name, Class... parameters) {
         for (Method method : methods) {
             if (name.equals(method.getName()) && Arrays.equals(parameters, method.getParameterTypes())) {
                 method.setAccessible(true);
@@ -285,18 +281,15 @@ public class ReflectionUtil {
         return null;
     }
 
-    @Nullable
-    public static Method getMethod(Class aClass, String name, Class... parameters) {
+    public static @Nullable Method getMethod(Class aClass, String name, Class... parameters) {
         return findMethod(getClassPublicMethods(aClass, false), name, parameters);
     }
 
-    @Nullable
-    public static Method getDeclaredMethod(Class aClass, String name, Class... parameters) {
+    public static @Nullable Method getDeclaredMethod(Class aClass, String name, Class... parameters) {
         return findMethod(getClassDeclaredMethods(aClass, false), name, parameters);
     }
 
-    @Nullable
-    public static Field getDeclaredField(Class aClass, String name) {
+    public static @Nullable Field getDeclaredField(Class aClass, String name) {
         return processFields(aClass, field -> name.equals(field.getName()));
     }
 
@@ -339,8 +332,7 @@ public class ReflectionUtil {
         return result;
     }
 
-    @Nullable
-    public static Class getMethodDeclaringClass(
+    public static @Nullable Class getMethodDeclaringClass(
         Class<?> instanceClass,
         String methodName,
         Class... parameters
@@ -479,8 +471,7 @@ public class ReflectionUtil {
         resetField(Thread.currentThread(), null, "threadLocals");
     }
 
-    @Nullable
-    public static Class getGrandCallerClass() {
+    public static @Nullable Class getGrandCallerClass() {
         int stackFrameCount = 3;
         Class callerClass = findCallerClass(stackFrameCount);
         while (callerClass != null && callerClass.getClassLoader() == null) { // looks like a system class
@@ -550,8 +541,7 @@ public class ReflectionUtil {
         }
     }
 
-    @Nullable
-    public static Class findClassOrNull(String fqn, ClassLoader classLoader) {
+    public static @Nullable Class findClassOrNull(String fqn, ClassLoader classLoader) {
         try {
             return Class.forName(fqn, true, classLoader);
         }

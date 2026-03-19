@@ -78,8 +78,7 @@ public class PasswordSafePromptDialogImpl extends DialogWrapper {
      * @param resetPassword if true, the old password is removed from database and new password will be asked.
      * @param error         the error to show in the dialog       @return null if dialog was cancelled or password (stored in database or a entered by user)
      */
-    @Nullable
-    public static String askPassword(Project project, String title, String message, Class<?> requestor, String key, boolean resetPassword, String error) {
+    public static @Nullable String askPassword(Project project, String title, String message, Class<?> requestor, String key, boolean resetPassword, String error) {
         return askPassword(project, title, message, requestor, key, resetPassword, error, null, null);
     }
 
@@ -94,8 +93,7 @@ public class PasswordSafePromptDialogImpl extends DialogWrapper {
      * @param resetPassword if true, the old password is removed from database and new password will be asked.
      * @return null if dialog was cancelled or password (stored in database or a entered by user)
      */
-    @Nullable
-    public static String askPassword(String title, String message, Class<?> requestor, String key, boolean resetPassword) {
+    public static @Nullable String askPassword(String title, String message, Class<?> requestor, String key, boolean resetPassword) {
         return askPassword(null, title, message, requestor, key, resetPassword, null);
     }
 
@@ -112,8 +110,7 @@ public class PasswordSafePromptDialogImpl extends DialogWrapper {
      * @param resetPassword if true, the old password is removed from database and new password will be asked.
      * @param error         the error to show in the dialog       @return null if dialog was cancelled or password (stored in database or a entered by user)
      */
-    @Nullable
-    public static String askPassphrase(Project project, String title, String message, Class<?> requestor, String key, boolean resetPassword, String error) {
+    public static @Nullable String askPassphrase(Project project, String title, String message, Class<?> requestor, String key, boolean resetPassword, String error) {
         return askPassword(project, title, message, requestor, key, resetPassword, error, "Passphrase:", "Remember the passphrase");
     }
 

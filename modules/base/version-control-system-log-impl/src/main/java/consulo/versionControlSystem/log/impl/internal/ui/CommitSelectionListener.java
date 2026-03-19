@@ -39,9 +39,8 @@ public abstract class CommitSelectionListener implements ListSelectionListener {
   
   private final JBLoadingPanel myLoadingPanel;
 
-  @Nullable private ListSelectionEvent myLastEvent;
-  @Nullable
-  private ProgressIndicator myLastRequest;
+  private @Nullable ListSelectionEvent myLastEvent;
+  private @Nullable ProgressIndicator myLastRequest;
 
   protected CommitSelectionListener(VcsLogDataImpl data, VcsLogGraphTable table, JBLoadingPanel panel) {
     myLogData = data;

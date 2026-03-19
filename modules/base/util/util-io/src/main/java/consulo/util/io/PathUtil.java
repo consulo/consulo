@@ -29,8 +29,7 @@ import java.util.Set;
  * @author nik
  */
 public class PathUtil {
-  @Nullable
-  public static String getFileExtension(String name) {
+  public static @Nullable String getFileExtension(String name) {
     int index = name.lastIndexOf('.');
     if (index < 0) return null;
     return name.substring(index + 1);
@@ -41,14 +40,12 @@ public class PathUtil {
   }
 
   @Contract("null -> null; !null -> !null")
-  @Nullable
-  public static String toSystemIndependentName(@Nullable String path) {
+  public static @Nullable String toSystemIndependentName(@Nullable String path) {
     return path == null ? null : FileUtil.toSystemIndependentName(path);
   }
 
   @Contract("null -> null; !null -> !null")
-  @Nullable
-  public static String toSystemDependentName(@Nullable String path) {
+  public static @Nullable String toSystemDependentName(@Nullable String path) {
     return path == null ? null : FileUtil.toSystemDependentName(path);
   }
 
@@ -185,11 +182,9 @@ public class PathUtil {
   private static final Set<String> WINDOWS_NAMES =
           Set.of("CON", "PRN", "AUX", "NUL", "COM1", "COM2", "COM3", "COM4", "COM5", "COM6", "COM7", "COM8", "COM9", "LPT1", "LPT2", "LPT3", "LPT4", "LPT5", "LPT6", "LPT7", "LPT8", "LPT9");
 
-  @Nullable
-  private static final Charset FS_CHARSET = fsCharset();
+  private static final @Nullable Charset FS_CHARSET = fsCharset();
 
-  @Nullable
-  private static Charset fsCharset() {
+  private static @Nullable Charset fsCharset() {
     if (!OSInfo.isWindows && !OSInfo.isMac) {
       String property = System.getProperty("sun.jnu.encoding");
       if (property != null) {

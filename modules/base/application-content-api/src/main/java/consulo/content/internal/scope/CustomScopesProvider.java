@@ -35,8 +35,7 @@ public interface CustomScopesProvider {
 
   void acceptScopes(Consumer<NamedScope> consumer);
 
-  @Nullable
-  default NamedScope getCustomScope(String name) {
+  default @Nullable NamedScope getCustomScope(String name) {
     SimpleReference<NamedScope> ref = SimpleReference.create();
     acceptScopes(namedScope -> {
       if (Objects.equals(namedScope.getScopeId(), name)) {

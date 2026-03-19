@@ -34,8 +34,7 @@ public abstract class ProjectStructureElementConfigurable<T> extends NamedConfig
     super(isNameEditable, updateTree);
   }
 
-  @Nullable
-  public abstract ProjectStructureElement getProjectStructureElement();
+  public abstract @Nullable ProjectStructureElement getProjectStructureElement();
 
   @Nullable
   @Override

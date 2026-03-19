@@ -194,8 +194,7 @@ public class BreakpointState<B extends XBreakpoint<P>, P extends XBreakpointProp
       super(disabled, expression);
     }
 
-    @Nullable
-    public static Condition create(boolean disabled, XExpression expression) {
+    public static @Nullable Condition create(boolean disabled, XExpression expression) {
       if (XDebuggerUtil.getInstance().isEmptyExpression(expression)) {
         return null;
       }
@@ -212,8 +211,7 @@ public class BreakpointState<B extends XBreakpoint<P>, P extends XBreakpointProp
       super(disabled, expression);
     }
 
-    @Nullable
-    public static LogExpression create(boolean disabled, XExpression expression) {
+    public static @Nullable LogExpression create(boolean disabled, XExpression expression) {
       if (XDebuggerUtil.getInstance().isEmptyExpression(expression)) {
         return null;
       }

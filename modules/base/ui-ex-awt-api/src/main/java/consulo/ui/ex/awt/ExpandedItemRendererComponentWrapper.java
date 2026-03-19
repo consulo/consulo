@@ -160,8 +160,7 @@ public class ExpandedItemRendererComponentWrapper extends JComponent {
     return super.getToolTipLocation(event);
   }
 
-  @Nullable
-  private Component getDelegate() {
+  private @Nullable Component getDelegate() {
     if (getComponentCount() == 1) {
       return getComponent(0);
     }

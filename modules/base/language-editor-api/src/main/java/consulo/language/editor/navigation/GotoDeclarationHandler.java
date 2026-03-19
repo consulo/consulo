@@ -47,8 +47,7 @@ public interface GotoDeclarationHandler {
    * @return the custom text or null to use the default text
    * @param context the action data context
    */
-  @Nullable
-  default String getActionText(DataContext context) {
+  default @Nullable String getActionText(DataContext context) {
     return null;
   }
 }

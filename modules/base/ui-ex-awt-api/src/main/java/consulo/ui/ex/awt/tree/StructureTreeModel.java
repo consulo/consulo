@@ -189,8 +189,7 @@ public class StructureTreeModel<Structure extends AbstractTreeStructure> extends
     return onValidThread(element, node -> invalidateInternal(node, structure));
   }
 
-  @Nullable
-  private TreePath invalidateInternal(@Nullable Node node, boolean structure) {
+  private @Nullable TreePath invalidateInternal(@Nullable Node node, boolean structure) {
     assert invoker.isValidThread();
     while (node != null && !isValid(node)) {
       LOG.debug("invalid element cannot be updated: ", node);
@@ -349,8 +348,7 @@ public class StructureTreeModel<Structure extends AbstractTreeStructure> extends
     return structure.isValid(element);
   }
 
-  @Nullable
-  private Node getValidRoot() {
+  private @Nullable Node getValidRoot() {
     Object element = structure.getRootElement();
     if (!isValid(structure, element)) return null;
 
@@ -362,8 +360,7 @@ public class StructureTreeModel<Structure extends AbstractTreeStructure> extends
     return newNode;
   }
 
-  @Nullable
-  private List<Node> getValidChildren(Node node) {
+  private @Nullable List<Node> getValidChildren(Node node) {
     NodeDescriptor descriptor = node.getDescriptor();
     if (descriptor == null) return null;
 

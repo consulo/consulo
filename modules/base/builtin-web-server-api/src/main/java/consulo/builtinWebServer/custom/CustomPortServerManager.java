@@ -41,8 +41,7 @@ public abstract class CustomPortServerManager {
     /**
      * This server will accept only XML-RPC requests if this method returns not-null map of XMl-RPC handlers
      */
-    @Nullable
-    public Map<String, Object> createXmlRpcHandlers() {
+    public @Nullable Map<String, Object> createXmlRpcHandlers() {
         return null;
     }
 }

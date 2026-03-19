@@ -108,24 +108,20 @@ public abstract class CreateFromTemplateAction<T extends PsiElement> extends AnA
     protected void postProcess(T createdElement, String templateName, Map<String, String> customProperties) {
     }
 
-    @Nullable
-    protected abstract T createFile(String name, String templateName, PsiDirectory dir);
+    protected abstract @Nullable T createFile(String name, String templateName, PsiDirectory dir);
 
     protected abstract void buildDialog(Project project, PsiDirectory directory, CreateFileFromTemplateDialog.Builder builder);
 
-    @Nullable
-    protected String getDefaultTemplateName(PsiDirectory dir) {
+    protected @Nullable String getDefaultTemplateName(PsiDirectory dir) {
         String property = getDefaultTemplateProperty();
         return property == null ? null : ProjectPropertiesComponent.getInstance(dir.getProject()).getValue(property);
     }
 
-    @Nullable
-    protected Class<? extends ModuleExtension> getModuleExtensionClass() {
+    protected @Nullable Class<? extends ModuleExtension> getModuleExtensionClass() {
         return null;
     }
 
-    @Nullable
-    protected String getDefaultTemplateProperty() {
+    protected @Nullable String getDefaultTemplateProperty() {
         return null;
     }
 

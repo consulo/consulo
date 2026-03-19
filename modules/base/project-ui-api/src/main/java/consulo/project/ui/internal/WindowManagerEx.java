@@ -71,8 +71,7 @@ public abstract class WindowManagerEx extends WindowManager {
    * the method returns focused component in window which has no project.
    * If there is no focused component at all then the method returns <code>null</code>.
    */
-  @Nullable
-  public abstract Component getFocusedComponent(@Nullable Project project);
+  public abstract @Nullable Component getFocusedComponent(@Nullable Project project);
 
   public abstract consulo.ui.@Nullable Window getMostRecentFocusedWindow();
 

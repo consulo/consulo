@@ -88,8 +88,7 @@ public class CopyReferenceUtil {
         return adjustedElement != null ? adjustedElement : element;
     }
 
-    @Nullable
-    public static String getQualifiedNameFromProviders(@Nullable PsiElement element) {
+    public static @Nullable String getQualifiedNameFromProviders(@Nullable PsiElement element) {
         return QualifiedNameProviderUtil.getQualifiedNameDumbAware(element);
     }
 
@@ -111,8 +110,7 @@ public class CopyReferenceUtil {
         return StringUtil.join(fqns, "\n");
     }
 
-    @Nullable
-    public static String elementToFqn(@Nullable PsiElement element, @Nullable Editor editor) {
+    public static @Nullable String elementToFqn(@Nullable PsiElement element, @Nullable Editor editor) {
         return QualifiedNameProviderUtil.elementToFqn(element, editor);
     }
 }

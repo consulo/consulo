@@ -28,8 +28,7 @@ import org.jspecify.annotations.Nullable;
 @Deprecated
 @DeprecationInfo("Use Platform#user()")
 public class SystemProperties {
-  @Nullable
-  private static String ourTestUserName = null;
+  private static @Nullable String ourTestUserName = null;
 
   private SystemProperties() {
   }
@@ -43,8 +42,7 @@ public class SystemProperties {
     return System.getProperty("user.home");
   }
 
-  @Nullable
-  public static String getUserName() {
+  public static @Nullable String getUserName() {
     return ourTestUserName != null ? ourTestUserName : System.getProperty("user.name");
   }
 

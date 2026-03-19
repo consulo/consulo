@@ -54,8 +54,7 @@ public class BlockRangesMap {
     return false;
   }
 
-  @Nullable
-  public LeafBlockWrapper getBlockAtOrAfter(int startOffset) {
+  public @Nullable LeafBlockWrapper getBlockAtOrAfter(int startOffset) {
     int current = startOffset;
     LeafBlockWrapper result = null;
     while (current < myLastBlock.getEndOffset()) {
@@ -77,8 +76,7 @@ public class BlockRangesMap {
     }
   }
 
-  @Nullable
-  private LeafBlockWrapper getPrevBlock(@Nullable LeafBlockWrapper result) {
+  private @Nullable LeafBlockWrapper getPrevBlock(@Nullable LeafBlockWrapper result) {
     if (result != null) {
       return result.getPreviousBlock();
     }

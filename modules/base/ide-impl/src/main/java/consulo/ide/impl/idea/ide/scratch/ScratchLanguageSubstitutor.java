@@ -35,8 +35,7 @@ public class ScratchLanguageSubstitutor extends LanguageSubstitutor {
     return substituteLanguage(project, file);
   }
 
-  @Nullable
-  public static Language substituteLanguage(Project project, VirtualFile file) {
+  public static @Nullable Language substituteLanguage(Project project, VirtualFile file) {
     RootType rootType = ScratchFileService.getInstance().getRootType(file);
     if (rootType == null) return null;
     Language language = rootType.substituteLanguage(project, file);

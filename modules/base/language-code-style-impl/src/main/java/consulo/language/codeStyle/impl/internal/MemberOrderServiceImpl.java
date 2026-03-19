@@ -40,8 +40,7 @@ import java.util.*;
 public class MemberOrderServiceImpl implements MemberOrderService {
   @RequiredReadAction
   @Override
-  @Nullable
-  public PsiElement getAnchor(PsiElement member, CommonCodeStyleSettings settings, PsiElement context) {
+  public @Nullable PsiElement getAnchor(PsiElement member, CommonCodeStyleSettings settings, PsiElement context) {
     Language language = context.getLanguage();
     Rearranger<?> rearranger = Rearranger.forLanguage(language);
     if (rearranger == null) {

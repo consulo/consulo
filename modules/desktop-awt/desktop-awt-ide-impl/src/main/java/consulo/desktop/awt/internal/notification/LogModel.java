@@ -38,8 +38,7 @@ public class LogModel implements Disposable {
     private final Map<Notification, Long> myStamps = Collections.synchronizedMap(new WeakHashMap<Notification, Long>());
     
     private final Application myApplication;
-    @Nullable
-    private final Project myProject;
+    private final @Nullable Project myProject;
     final Map<Notification, Runnable> removeHandlers = new HashMap<>();
 
     LogModel(Application application, @Nullable Project project) {
@@ -88,8 +87,7 @@ public class LogModel implements Disposable {
         }
     }
 
-    @Nullable
-    public Long getNotificationTime(Notification notification) {
+    public @Nullable Long getNotificationTime(Notification notification) {
         return myStamps.get(notification);
     }
 
@@ -105,8 +103,7 @@ public class LogModel implements Disposable {
         fireModelChanged();
     }
 
-    @Nullable
-    public Project getProject() {
+    public @Nullable Project getProject() {
         return myProject;
     }
 

@@ -75,8 +75,7 @@ abstract public class SelectOccurrencesActionHandler extends EditorActionHandler
         return value != null;
     }
 
-    @Nullable
-    protected static TextRange getSelectionRange(Editor editor, Caret caret) {
+    protected static @Nullable TextRange getSelectionRange(Editor editor, Caret caret) {
         return SelectWordUtil.getWordSelectionRange(
             editor.getDocument().getCharsSequence(),
             caret.getOffset(),

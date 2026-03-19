@@ -93,8 +93,7 @@ public abstract class BaseNavigateToSourceAction extends AnAction implements Dum
         return null;
     }
 
-    @Nullable
-    protected Navigatable[] getNavigatables(DataContext dataContext) {
+    protected @Nullable Navigatable[] getNavigatables(DataContext dataContext) {
         return dataContext.getData(Navigatable.KEY_OF_ARRAY);
     }
 }

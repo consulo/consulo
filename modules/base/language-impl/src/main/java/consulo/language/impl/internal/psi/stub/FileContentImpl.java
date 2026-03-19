@@ -248,8 +248,7 @@ public class FileContentImpl extends IndexedFileImpl implements PsiDependentFile
     return myFileName;
   }
 
-  @Nullable
-  public byte[] getHash() {
+  public @Nullable byte[] getHash() {
     return myHash;
   }
 

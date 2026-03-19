@@ -73,8 +73,7 @@ public class CustomisedActionGroup extends ActionGroup {
         return myGroup.isDumbAware();
     }
 
-    @Nullable
-    public AnAction getFirstAction() {
+    public @Nullable AnAction getFirstAction() {
         AnAction[] children = getChildren(null);
         return children.length > 0 ? children[0] : null;
     }

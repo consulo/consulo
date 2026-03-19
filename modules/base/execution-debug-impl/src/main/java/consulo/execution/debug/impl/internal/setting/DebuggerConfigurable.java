@@ -130,8 +130,7 @@ public class DebuggerConfigurable implements SearchableConfigurable.Parent, Appl
         }
     }
 
-    @Nullable
-    private static MergedCompositeConfigurable computeGeneralConfigurables() {
+    private static @Nullable MergedCompositeConfigurable computeGeneralConfigurables() {
         Collection<Configurable> rootConfigurables = XDebuggerConfigurableProvider.getConfigurables(DebuggerSettingsCategory.GENERAL);
         if (rootConfigurables.isEmpty()) {
             return null;

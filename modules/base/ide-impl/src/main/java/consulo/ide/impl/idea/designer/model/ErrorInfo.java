@@ -46,8 +46,7 @@ public final class ErrorInfo {
     return myLevel;
   }
 
-  @Nullable
-  public String getPropertyName() {
+  public @Nullable String getPropertyName() {
     return myPropertyName;
   }
 

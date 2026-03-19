@@ -30,8 +30,7 @@ public class CopyReferenceFQNTransferable implements Transferable {
     }
 
     @Override
-    @Nullable
-    public Object getTransferData(DataFlavor flavor) throws UnsupportedFlavorException, IOException {
+    public @Nullable Object getTransferData(DataFlavor flavor) throws UnsupportedFlavorException, IOException {
         if (isDataFlavorSupported(flavor)) {
             return fqn;
         }

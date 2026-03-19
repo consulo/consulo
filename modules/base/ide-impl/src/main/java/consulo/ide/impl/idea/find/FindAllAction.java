@@ -68,8 +68,7 @@ public final class FindAllAction extends AnAction implements ShortcutProvider, D
     }
 
     @Override
-    @Nullable
-    public ShortcutSet getShortcut() {
+    public @Nullable ShortcutSet getShortcut() {
         AnAction findUsages = ActionManager.getInstance().getAction(IdeActions.ACTION_FIND_USAGES);
         return findUsages != null ? findUsages.getShortcutSet() : null;
     }

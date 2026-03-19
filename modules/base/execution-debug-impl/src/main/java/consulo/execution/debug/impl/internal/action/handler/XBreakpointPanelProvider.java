@@ -97,8 +97,7 @@ public class XBreakpointPanelProvider extends BreakpointPanelProvider<XBreakpoin
     }
 
     @Override
-    @Nullable
-    public XBreakpoint<?> findBreakpoint(Project project, Document document, int offset) {
+    public @Nullable XBreakpoint<?> findBreakpoint(Project project, Document document, int offset) {
         XBreakpointManager breakpointManager = XDebuggerManager.getInstance(project).getBreakpointManager();
         int line = document.getLineNumber(offset);
         VirtualFile file = FileDocumentManager.getInstance().getFile(document);

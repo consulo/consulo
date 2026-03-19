@@ -80,8 +80,7 @@ public class NewCodeStyleSettingsPanel implements TabbedLanguageCodeStylePanel.T
         }
     }
 
-    @Nullable
-    public String getHelpTopic() {
+    public @Nullable String getHelpTopic() {
         return myTab.getHelpTopic();
     }
 
@@ -120,8 +119,7 @@ public class NewCodeStyleSettingsPanel implements TabbedLanguageCodeStylePanel.T
         return Collections.emptySet();
     }
 
-    @Nullable
-    public CodeStyleAbstractPanel getSelectedPanel() {
+    public @Nullable CodeStyleAbstractPanel getSelectedPanel() {
         if (myTab instanceof CodeStyleAbstractConfigurable codeStyleAbstractConfigurable) {
             return codeStyleAbstractConfigurable.getPanel();
         }

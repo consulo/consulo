@@ -31,10 +31,8 @@ public class FList<E> extends AbstractList<E> {
   @SuppressWarnings("unchecked")
   private static final FList<?> EMPTY_LIST = new FList(null, null, 0);
 
-  @Nullable
-  private final E myHead;
-  @Nullable
-  private final FList<E> myTail;
+  private final @Nullable E myHead;
+  private final @Nullable FList<E> myTail;
   private final int mySize;
 
   private FList(@Nullable E head, @Nullable FList<E> tail, int size) {
@@ -58,8 +56,7 @@ public class FList<E> extends AbstractList<E> {
     return Objects.requireNonNull(current).myHead;
   }
 
-  @Nullable
-  public E getHead() {
+  public @Nullable E getHead() {
     return myHead;
   }
 
@@ -116,8 +113,7 @@ public class FList<E> extends AbstractList<E> {
     };
   }
 
-  @Nullable
-  public FList<E> getTail() {
+  public @Nullable FList<E> getTail() {
     return myTail;
   }
 

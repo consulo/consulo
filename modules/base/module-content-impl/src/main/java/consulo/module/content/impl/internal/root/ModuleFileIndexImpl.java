@@ -139,8 +139,7 @@ public class ModuleFileIndexImpl extends FileIndexBase implements ModuleFileInde
         return myModule.isDisposed();
     }
 
-    @Nullable
-    public static OrderEntry findOrderEntryWithOwnerModule(Module ownerModule, List<OrderEntry> orderEntries) {
+    public static @Nullable OrderEntry findOrderEntryWithOwnerModule(Module ownerModule, List<OrderEntry> orderEntries) {
         if (orderEntries.size() < 10) {
             for (OrderEntry orderEntry : orderEntries) {
                 if (orderEntry.getOwnerModule() == ownerModule) {

@@ -49,8 +49,7 @@ public abstract class HierarchyNodeDescriptor extends SmartElementDescriptor {
         return this;
     }
 
-    @Nullable
-    public PsiFile getContainingFile() {
+    public @Nullable PsiFile getContainingFile() {
         PsiElement element = getPsiElement();
         return element != null ? element.getContainingFile() : null;
     }

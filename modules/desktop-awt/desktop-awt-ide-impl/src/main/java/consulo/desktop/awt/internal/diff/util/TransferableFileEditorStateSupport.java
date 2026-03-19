@@ -137,8 +137,7 @@ public class TransferableFileEditorStateSupport {
         map.put(state.getEditorId(), state.getTransferableOptions());
     }
 
-    @Nullable
-    private static TransferableFileEditorState getEditorState(FileEditor editor) {
+    private static @Nullable TransferableFileEditorState getEditorState(FileEditor editor) {
         FileEditorState state = editor.getState(FileEditorStateLevel.FULL);
         return state instanceof TransferableFileEditorState transferableFileEditorState ? transferableFileEditorState : null;
     }

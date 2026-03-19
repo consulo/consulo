@@ -80,8 +80,7 @@ public class DefaultLookupItemRenderer extends LookupElementRenderer<LookupItem>
   }
 
 
-  @Nullable
-  private static String getText3(LookupItem item) {
+  private static @Nullable String getText3(LookupItem item) {
     Object o = item.getObject();
     String text;
     if (o instanceof LookupValueWithUIHint) {

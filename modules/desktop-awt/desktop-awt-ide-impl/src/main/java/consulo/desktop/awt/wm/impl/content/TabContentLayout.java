@@ -37,8 +37,7 @@ class TabContentLayout extends ContentLayout {
 
     private final MoreTabsIcon myMoreIcon = new MoreTabsIcon() {
         @Override
-        @Nullable
-        protected Rectangle getIconRec() {
+        protected @Nullable Rectangle getIconRec() {
             return myLastLayout.moreRect;
         }
     };

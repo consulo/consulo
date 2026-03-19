@@ -312,8 +312,7 @@ public class PathEditor {
     setModified(true);
   }
 
-  @Nullable
-  private static FileType findFileType(VirtualFile file) {
+  private static @Nullable FileType findFileType(VirtualFile file) {
     return Application.get().runReadAction((Supplier<FileType>)() -> {
       VirtualFile tempFile = file;
       if ((file.getFileSystem() instanceof ArchiveFileSystem) && file.getParent() == null) {

@@ -21,8 +21,7 @@ public abstract class XLineBreakpointTypeBase extends XLineBreakpointType<XBreak
   }
 
   @Override
-  @Nullable
-  public XBreakpointProperties createBreakpointProperties(VirtualFile file, int line) {
+  public @Nullable XBreakpointProperties createBreakpointProperties(VirtualFile file, int line) {
     return null;
   }
 }

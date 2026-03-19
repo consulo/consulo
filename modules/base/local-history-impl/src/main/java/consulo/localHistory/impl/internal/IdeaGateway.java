@@ -156,8 +156,7 @@ public class IdeaGateway {
     return !h.ensureFilesWritable(VirtualFileUtil.toVirtualFileArray(ff)).hasReadonlyFiles();
   }
 
-  @Nullable
-  public VirtualFile findVirtualFile(String path) {
+  public @Nullable VirtualFile findVirtualFile(String path) {
     return LocalFileSystem.getInstance().findFileByPath(path);
   }
 
@@ -263,8 +262,7 @@ public class IdeaGateway {
     }
   }
 
-  @Nullable
-  private Entry doCreateEntryForPathOnly(VirtualFile file, String path) {
+  private @Nullable Entry doCreateEntryForPathOnly(VirtualFile file, String path) {
     if (!file.isDirectory()) {
       if (!isVersioned(file)) return null;
 
@@ -276,20 +274,17 @@ public class IdeaGateway {
     return newDir;
   }
 
-  @Nullable
-  public Entry createTransientEntry(VirtualFile file) {
+  public @Nullable Entry createTransientEntry(VirtualFile file) {
     ApplicationManager.getApplication().assertReadAccessAllowed();
     return doCreateEntry(file, false);
   }
 
-  @Nullable
-  public Entry createEntryForDeletion(VirtualFile file) {
+  public @Nullable Entry createEntryForDeletion(VirtualFile file) {
     ApplicationManager.getApplication().assertReadAccessAllowed();
     return doCreateEntry(file, true);
   }
 
-  @Nullable
-  private Entry doCreateEntry(VirtualFile file, boolean forDeletion) {
+  private @Nullable Entry doCreateEntry(VirtualFile file, boolean forDeletion) {
     if (!file.isDirectory()) {
       if (!isVersioned(file)) return null;
 
@@ -360,8 +355,7 @@ public class IdeaGateway {
   }
 
   // returns null is content has not been changes since last time
-  @Nullable
-  public Pair<StoredContent, Long> acquireAndUpdateActualContent(VirtualFile f, @Nullable Document d) {
+  public @Nullable Pair<StoredContent, Long> acquireAndUpdateActualContent(VirtualFile f, @Nullable Document d) {
     ContentAndTimestamps contentAndStamp = f.getUserData(SAVED_DOCUMENT_CONTENT_AND_STAMP_KEY);
     if (contentAndStamp == null) {
       if (d != null) saveDocumentContent(f, d);
@@ -449,13 +443,11 @@ public class IdeaGateway {
     FileDocumentManager.getInstance().saveAllDocuments();
   }
 
-  @Nullable
-  private static VirtualFile getFile(Document d) {
+  private static @Nullable VirtualFile getFile(Document d) {
     return FileDocumentManager.getInstance().getFile(d);
   }
 
-  @Nullable
-  public Document getDocument(String path) {
+  public @Nullable Document getDocument(String path) {
     return FileDocumentManager.getInstance().getDocument(findVirtualFile(path));
   }
 

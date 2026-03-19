@@ -63,8 +63,7 @@ final class ImmutableText extends ImmutableCharSequence implements CharArrayExte
     private static final int BLOCK_MASK = ~(BLOCK_SIZE - 1);
 
     private final Node myNode;
-    @Nullable
-    private volatile InnerLeaf myLastLeaf = null;
+    private volatile @Nullable InnerLeaf myLastLeaf = null;
 
     private ImmutableText(Node node) {
         myNode = node;

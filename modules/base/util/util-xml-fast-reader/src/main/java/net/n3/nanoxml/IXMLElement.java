@@ -109,8 +109,7 @@ public interface IXMLElement
     * Returns the parent element. This method returns null for the root
     * element.
     */
-   @Nullable
-   public IXMLElement getParent();
+   public @Nullable IXMLElement getParent();
 
 
    /**
@@ -119,8 +118,7 @@ public interface IXMLElement
     *
     * @return the name, or null if the element only contains #PCDATA.
     */
-   @Nullable
-   public String getFullName();
+   public @Nullable String getFullName();
 
 
    /**
@@ -128,8 +126,7 @@ public interface IXMLElement
     *
     * @return the name, or null if the element only contains #PCDATA.
     */
-   @Nullable
-   public String getName();
+   public @Nullable String getName();
 
 
    /**
@@ -138,8 +135,7 @@ public interface IXMLElement
     * @return the namespace, or null if no namespace is associated with the
     *         element.
     */
-   @Nullable
-   public String getNamespace();
+   public @Nullable String getNamespace();
 
 
    /**
@@ -246,8 +242,7 @@ public interface IXMLElement
     *
     * @return the child element, or null if no such child was found.
     */
-   @Nullable
-   public IXMLElement getFirstChildNamed(String name);
+   public @Nullable IXMLElement getFirstChildNamed(String name);
 
 
    /**
@@ -258,8 +253,7 @@ public interface IXMLElement
     *
     * @return the child element, or null if no such child was found.
     */
-   @Nullable
-   public IXMLElement getFirstChildNamed(String name,
+   public @Nullable IXMLElement getFirstChildNamed(String name,
                                          @Nullable String namespace);
 
 
@@ -301,8 +295,7 @@ public interface IXMLElement
     *
     * @return the value, or null if the attribute does not exist.
     */
-   @Nullable
-   public String getAttribute(String name);
+   public @Nullable String getAttribute(String name);
 
 
    /**
@@ -313,8 +306,7 @@ public interface IXMLElement
     *
     * @return the value, or defaultValue if the attribute does not exist.
     */
-   @Nullable
-   public String getAttribute(String name,
+   public @Nullable String getAttribute(String name,
                               @Nullable String defaultValue);
 
 
@@ -327,8 +319,7 @@ public interface IXMLElement
     *
     * @return the value, or defaultValue if the attribute does not exist.
     */
-   @Nullable
-   public String getAttribute(String name, @Nullable String namespace, @Nullable String defaultValue);
+   public @Nullable String getAttribute(String name, @Nullable String namespace, @Nullable String defaultValue);
 
 
    /**
@@ -364,8 +355,7 @@ public interface IXMLElement
     *
     * @return the type, or null if the attribute does not exist.
     */
-   @Nullable
-   public String getAttributeType(String name);
+   public @Nullable String getAttributeType(String name);
 
 
    /**
@@ -375,8 +365,7 @@ public interface IXMLElement
     *
     * @return the namespace, or null if there is none associated.
     */
-   @Nullable
-   public String getAttributeNamespace(String name);
+   public @Nullable String getAttributeNamespace(String name);
 
 
    /**
@@ -387,8 +376,7 @@ public interface IXMLElement
     *
     * @return the type, or null if the attribute does not exist.
     */
-   @Nullable
-   public String getAttributeType(String name,
+   public @Nullable String getAttributeType(String name,
                                   @Nullable String namespace);
 
 
@@ -487,8 +475,7 @@ public interface IXMLElement
     *
     * @see #getLineNr
     */
-   @Nullable
-   public String getSystemID();
+   public @Nullable String getSystemID();
 
 
    /**
@@ -510,8 +497,7 @@ public interface IXMLElement
     *
     * @return the content.
     */
-   @Nullable
-   public String getContent();
+   public @Nullable String getContent();
 
 
    /**

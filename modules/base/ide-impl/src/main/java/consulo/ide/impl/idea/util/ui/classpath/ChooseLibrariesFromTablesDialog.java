@@ -33,8 +33,7 @@ import java.util.List;
  * @author nik
  */
 public class ChooseLibrariesFromTablesDialog extends ChooseLibrariesDialogBase {
-    @Nullable
-    private final Project myProject;
+    private final @Nullable Project myProject;
 
     protected ChooseLibrariesFromTablesDialog(LocalizeValue title, Project project) {
         super(project, title);

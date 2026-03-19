@@ -39,8 +39,7 @@ public class ThreadState {
   private final Set<ThreadState> myThreadsWaitingForMyLock = new HashSet<>();
   private final Set<ThreadState> myDeadlockedThreads = new HashSet<>();
 
-  @Nullable
-  private ThreadOperation myOperation;
+  private @Nullable ThreadOperation myOperation;
 
   public ThreadState(String name, String state) {
     myName = name;
@@ -128,8 +127,7 @@ public class ThreadState {
     myDeadlockedThreads.add(thread);
   }
 
-  @Nullable
-  public ThreadOperation getOperation() {
+  public @Nullable ThreadOperation getOperation() {
     return myOperation;
   }
 

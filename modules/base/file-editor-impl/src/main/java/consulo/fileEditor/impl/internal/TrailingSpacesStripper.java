@@ -206,8 +206,7 @@ public final class TrailingSpacesStripper implements FileDocumentManagerListener
         return !markAsNeedsStrippingLater;
     }
 
-    @Nullable
-    private static Project getProject(Document document, @Nullable Editor editor) {
+    private static @Nullable Project getProject(Document document, @Nullable Editor editor) {
         if (editor != null) {
             return editor.getProject();
         }

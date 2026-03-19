@@ -52,8 +52,7 @@ public interface FileColorManager {
     @Deprecated
     Color getFileColor(VirtualFile file);
 
-    @Nullable
-    default ColorValue getFileColorValue(VirtualFile file) {
+    default @Nullable ColorValue getFileColorValue(VirtualFile file) {
         return TargetAWT.from(getFileColor(file));
     }
 

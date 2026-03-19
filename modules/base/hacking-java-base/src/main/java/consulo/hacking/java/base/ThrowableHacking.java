@@ -28,8 +28,7 @@ import java.util.function.Function;
 public final class ThrowableHacking {
   private static final Logger LOG = Logger.getInstance(ThrowableHacking.class);
 
-  @Nullable
-  private static Field ourBacktraceField;
+  private static @Nullable Field ourBacktraceField;
 
   static {
     try {

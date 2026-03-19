@@ -182,8 +182,7 @@ public abstract class UnifiedWindowStateServiceImpl<GC> implements WindowStateSe
     return key;
   }
 
-  @Nullable
-  protected abstract GC getConfiguration(Object key);
+  protected abstract @Nullable GC getConfiguration(Object key);
 
   protected boolean isHeadless() {
     return false;
@@ -284,8 +283,7 @@ public abstract class UnifiedWindowStateServiceImpl<GC> implements WindowStateSe
     return element;
   }
 
-  @Nullable
-  private CachedState<GC> put(String key,
+  private @Nullable CachedState<GC> put(String key,
                               @Nullable Point2D location,
                               boolean locationSet,
                               @Nullable Size2D size,
@@ -330,8 +328,7 @@ public abstract class UnifiedWindowStateServiceImpl<GC> implements WindowStateSe
     return myProject;
   }
 
-  @Nullable
-  protected static <T, R> R apply(Function<T, R> function, @Nullable T value) {
+  protected static @Nullable <T, R> R apply(Function<T, R> function, @Nullable T value) {
     return value == null ? null : function.apply(value);
   }
 }

@@ -38,8 +38,7 @@ import java.util.List;
 class InjectedSelfElementInfo extends SmartPointerElementInfo {
   
   private final SmartPsiFileRange myInjectedFileRangeInHostFile;
-  @Nullable
-  private final AffixOffsets myAffixOffsets;
+  private final @Nullable AffixOffsets myAffixOffsets;
   private final Identikit myType;
   
   private final SmartPsiElementPointer<PsiLanguageInjectionHost> myHostContext;
@@ -176,8 +175,7 @@ class InjectedSelfElementInfo extends SmartPointerElementInfo {
     return getInjectedFileIn(hostContext, hostFile, rangeInHostFile);
   }
 
-  @Nullable
-  private ProperTextRange getInjectedRange(boolean psi) {
+  private @Nullable ProperTextRange getInjectedRange(boolean psi) {
     PsiElement hostContext = myHostContext.getElement();
     if (hostContext == null) return null;
 
@@ -187,8 +185,7 @@ class InjectedSelfElementInfo extends SmartPointerElementInfo {
     return hostToInjected(psi, hostElementRange, restoreFile((SmartPointerManagerImpl)SmartPointerManager.getInstance(getProject())), myAffixOffsets);
   }
 
-  @Nullable
-  private static ProperTextRange hostToInjected(boolean psi, Segment hostRange, @Nullable PsiFile injectedFile, @Nullable AffixOffsets affixOffsets) {
+  private static @Nullable ProperTextRange hostToInjected(boolean psi, Segment hostRange, @Nullable PsiFile injectedFile, @Nullable AffixOffsets affixOffsets) {
     VirtualFile virtualFile = injectedFile == null ? null : injectedFile.getVirtualFile();
     if (virtualFile instanceof VirtualFileWindow) {
       Project project = injectedFile.getProject();

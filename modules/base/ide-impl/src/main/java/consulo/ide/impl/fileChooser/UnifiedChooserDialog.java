@@ -98,8 +98,7 @@ public class UnifiedChooserDialog implements PathChooserDialog, FileChooserDialo
 
     private FileChooserDescriptor myDescriptor;
 
-    @Nullable
-    private Project myProject;
+    private @Nullable Project myProject;
 
     public UnifiedChooserDialog(@Nullable Project project, FileChooserDescriptor descriptor) {
         myDescriptor = descriptor;

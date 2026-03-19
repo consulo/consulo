@@ -47,8 +47,7 @@ public interface FileModifier extends WriteActionAware {
    *
    * @param currentFile the same file where intention would be invoked (for {@link consulo.ide.impl.idea.codeInspection.LocalQuickFix} it would be the containing file of {@link consulo.ide.impl.idea.codeInspection.ProblemDescriptor#getPsiElement})
    */
-  @Nullable
-  default PsiElement getElementToMakeWritable(PsiFile currentFile) {
+  default @Nullable PsiElement getElementToMakeWritable(PsiFile currentFile) {
     return startInWriteAction() ? currentFile : null;
   }
 
@@ -61,8 +60,7 @@ public interface FileModifier extends WriteActionAware {
    * @return the action that could be applied to the non-physical copy of the file.
    * Returns null if operation is not supported.
    */
-  @Nullable
-  default FileModifier getFileModifierForPreview(PsiFile target) {
+  default @Nullable FileModifier getFileModifierForPreview(PsiFile target) {
     if (!startInWriteAction()) return null;
 
     Field targetField = ReflectionUtil.processFields(((Object)this).getClass(), field -> {

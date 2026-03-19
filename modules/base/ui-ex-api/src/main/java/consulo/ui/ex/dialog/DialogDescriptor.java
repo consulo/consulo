@@ -38,13 +38,11 @@ public abstract class DialogDescriptor {
         myTitle = title;
     }
 
-    @Nullable
-    public String getHelpId() {
+    public @Nullable String getHelpId() {
         return null;
     }
 
-    @Nullable
-    public Size2D getInitialSize() {
+    public @Nullable Size2D getInitialSize() {
         return null;
     }
 

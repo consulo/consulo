@@ -14,8 +14,7 @@ public class MacUtil {
   private MacUtil() {
   }
 
-  @Nullable
-  public static ID findWindowForTitle(@Nullable String title) {
+  public static @Nullable ID findWindowForTitle(@Nullable String title) {
     if (title == null || title.isEmpty()) return null;
     ID pool = invoke("NSAutoreleasePool", "new");
 

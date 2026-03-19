@@ -40,8 +40,7 @@ public class TextPatchBuilder {
   private final String myBasePath;
   private final boolean myIsReversePath;
   private final boolean myIsCaseSensitive;
-  @Nullable
-  private final Runnable myCancelChecker;
+  private final @Nullable Runnable myCancelChecker;
   private final boolean myIncludeBaseText;
 
   private TextPatchBuilder(String basePath, boolean isReversePath, boolean isCaseSensitive,

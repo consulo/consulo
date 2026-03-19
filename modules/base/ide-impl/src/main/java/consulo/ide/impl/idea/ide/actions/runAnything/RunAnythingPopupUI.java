@@ -92,8 +92,7 @@ public class RunAnythingPopupUI extends BigPopupUI {
     private int myCalcThreadRestartRequestId = 0;
     private final Object myWorkerRestartRequestLock = new Object();
     private boolean mySkipFocusGain = false;
-    @Nullable
-    private VirtualFile myVirtualFile;
+    private @Nullable VirtualFile myVirtualFile;
     private JLabel myTextFieldTitle;
     private boolean myIsItemSelected;
     private String myLastInputText = null;
@@ -241,8 +240,7 @@ public class RunAnythingPopupUI extends BigPopupUI {
         return myProject;
     }
 
-    @Nullable
-    private Module getModule() {
+    private @Nullable Module getModule() {
         if (myModule != null) {
             return myModule;
         }
@@ -303,8 +301,7 @@ public class RunAnythingPopupUI extends BigPopupUI {
         return firstContentRoot;
     }
 
-    @Nullable
-    public VirtualFile getFirstContentRoot(Module module) {
+    public @Nullable VirtualFile getFirstContentRoot(Module module) {
         if (module.isDisposed()) {
             return null;
         }
@@ -316,8 +313,7 @@ public class RunAnythingPopupUI extends BigPopupUI {
         return model != null && model.isMoreIndex(index);
     }
 
-    @Nullable
-    public static RunAnythingSearchListModel getSearchingModel(JBList list) {
+    public static @Nullable RunAnythingSearchListModel getSearchingModel(JBList list) {
         ListModel model = list.getModel();
         return model instanceof RunAnythingSearchListModel runAnythingSearchListModel ? runAnythingSearchListModel : null;
     }

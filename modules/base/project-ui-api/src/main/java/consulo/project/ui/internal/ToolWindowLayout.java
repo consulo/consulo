@@ -142,8 +142,7 @@ public final class ToolWindowLayout {
     return myUnregisteredId2Info.get(id);
   }
 
-  @Nullable
-  public final String getActiveId() {
+  public final @Nullable String getActiveId() {
     WindowInfoImpl[] infos = getInfos();
     for (WindowInfoImpl info : infos) {
       if (info.isActive()) {
@@ -299,8 +298,7 @@ public final class ToolWindowLayout {
     }
   }
 
-  @Nullable
-  public final Element writeExternal(String tagName) {
+  public final @Nullable Element writeExternal(String tagName) {
     WindowInfoImpl[] infos = getAllInfos();
     if (infos.length == 0) {
       return null;

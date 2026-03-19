@@ -187,8 +187,7 @@ public class DirectoryIndexImpl extends DirectoryIndex implements Disposable {
     }
 
     @Override
-    @Nullable
-    public ContentFolderTypeProvider getContentFolderType(VirtualFile file, DirectoryInfo info) {
+    public @Nullable ContentFolderTypeProvider getContentFolderType(VirtualFile file, DirectoryInfo info) {
         if (info.isInModuleSource(file)) {
             return getRootIndex().getContentFolderType(info);
         }

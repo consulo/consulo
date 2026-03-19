@@ -19,10 +19,8 @@ import consulo.diff.chain.DiffRequestProducer;
 import org.jspecify.annotations.Nullable;
 
 public class ErrorDiffRequest extends MessageDiffRequest {
-  @Nullable
-  private final DiffRequestProducer myProducer;
-  @Nullable
-  private final Throwable myException;
+  private final @Nullable DiffRequestProducer myProducer;
+  private final @Nullable Throwable myException;
 
   public ErrorDiffRequest(String message) {
     this(null, message, null, null);
@@ -57,13 +55,11 @@ public class ErrorDiffRequest extends MessageDiffRequest {
     myException = e;
   }
 
-  @Nullable
-  public DiffRequestProducer getProducer() {
+  public @Nullable DiffRequestProducer getProducer() {
     return myProducer;
   }
 
-  @Nullable
-  public Throwable getException() {
+  public @Nullable Throwable getException() {
     return myException;
   }
 }

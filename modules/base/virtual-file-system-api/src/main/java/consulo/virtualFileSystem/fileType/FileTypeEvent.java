@@ -35,8 +35,7 @@ public class FileTypeEvent extends EventObject {
    * If this event was triggered by a file type being added, returns the file type that has been added. Not available in
    * beforeFileTypeChanged listeners.
    */
-  @Nullable
-  public FileType getAddedFileType() {
+  public @Nullable FileType getAddedFileType() {
     return myAddedFileType;
   }
 
@@ -44,8 +43,7 @@ public class FileTypeEvent extends EventObject {
    * If this event was triggered by a file type being removed, returns the file type that has been removed. Not available in
    * beforeFileTypeChanged listeners.
    */
-  @Nullable
-  public FileType getRemovedFileType() {
+  public @Nullable FileType getRemovedFileType() {
     return myRemovedFileType;
   }
 }

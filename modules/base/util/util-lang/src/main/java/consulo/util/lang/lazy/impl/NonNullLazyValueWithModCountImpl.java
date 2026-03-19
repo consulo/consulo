@@ -30,8 +30,7 @@ public class NonNullLazyValueWithModCountImpl<T> implements LazyValue<T> {
   private final Supplier<T> myFactory;
   private final LongSupplier myModCountSupplier;
 
-  @Nullable
-  private volatile T myValue = null;
+  private volatile @Nullable T myValue = null;
   private volatile long myModificationCount = -1;
 
   public NonNullLazyValueWithModCountImpl(Supplier<T> factory, LongSupplier modCountSupplier) {

@@ -100,8 +100,7 @@ public class CustomFoldingRegionsPopup {
         }
     }
 
-    @Nullable
-    public PsiElement getNavigationElement() {
+    public @Nullable PsiElement getNavigationElement() {
         Object selection = myRegionsList.getSelectedValue();
         if (selection instanceof MyFoldingDescriptorWrapper) {
             return ((MyFoldingDescriptorWrapper) selection).getDescriptor().getElement().getPsi();

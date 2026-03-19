@@ -25,8 +25,7 @@ import consulo.versionControlSystem.ProjectLevelVcsManager;
 import org.jspecify.annotations.Nullable;
 
 public abstract class StandardVcsGroup extends DefaultActionGroup implements DumbAware {
-    @Nullable
-    public abstract AbstractVcs getVcs(Project project);
+    public abstract @Nullable AbstractVcs getVcs(Project project);
 
     @Override
     public void update(AnActionEvent e) {

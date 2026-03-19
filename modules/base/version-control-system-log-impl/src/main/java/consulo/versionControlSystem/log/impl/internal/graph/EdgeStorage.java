@@ -69,8 +69,7 @@ public class EdgeStorage {
     return myEdges.keys();
   }
 
-  @Nullable
-  private static Integer convertToInteger(int value) {
+  private static @Nullable Integer convertToInteger(int value) {
     return value == NULL_ID ? null : value;
   }
 

@@ -20,8 +20,7 @@ public abstract class ServerConnectionManager {
     
     public abstract <C extends ServerConfiguration> ServerConnection<?> getOrCreateConnection(RemoteServer<C> server);
 
-    @Nullable
-    public abstract <C extends ServerConfiguration> ServerConnection<?> getConnection(RemoteServer<C> server);
+    public abstract @Nullable <C extends ServerConfiguration> ServerConnection<?> getConnection(RemoteServer<C> server);
 
     
     public abstract Collection<ServerConnection<?>> getConnections();

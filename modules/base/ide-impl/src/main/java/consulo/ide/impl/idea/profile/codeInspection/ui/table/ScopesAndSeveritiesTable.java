@@ -279,8 +279,7 @@ public class ScopesAndSeveritiesTable extends JBTable {
             return new SeverityState(getSeverity(existedScopesStatesAndNonExistNames.getExistedStates()), !disabled, disabled);
         }
 
-        @Nullable
-        private Boolean isEnabled(int rowIndex) {
+        private @Nullable Boolean isEnabled(int rowIndex) {
             Boolean previousValue = null;
             ExistedScopesStatesAndNonExistNames existedScopesStatesAndNonExistNames = getScopeToolState(rowIndex);
             for (ScopeToolState scopeToolState : existedScopesStatesAndNonExistNames.getExistedStates()) {
@@ -313,8 +312,7 @@ public class ScopesAndSeveritiesTable extends JBTable {
             return new ExistedScopesStatesAndNonExistNames(existedStates, nonExistNames);
         }
 
-        @Nullable
-        private ScopeToolState getScopeToolState(String keyName, int rowIndex) {
+        private @Nullable ScopeToolState getScopeToolState(String keyName, int rowIndex) {
             if (rowIndex == lastRowIndex()) {
                 return myInspectionProfile.getToolDefaultState(keyName, myProject);
             }

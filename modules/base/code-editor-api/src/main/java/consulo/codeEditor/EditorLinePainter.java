@@ -28,6 +28,5 @@ import java.util.Collection;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class EditorLinePainter {
-    @Nullable
-    public abstract Collection<LineExtensionInfo> getLineExtensions(Project project, VirtualFile file, int lineNumber);
+    public abstract @Nullable Collection<LineExtensionInfo> getLineExtensions(Project project, VirtualFile file, int lineNumber);
 }

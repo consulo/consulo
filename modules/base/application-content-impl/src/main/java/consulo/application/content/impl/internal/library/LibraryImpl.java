@@ -45,8 +45,7 @@ public class LibraryImpl implements LibraryEx.ModifiableModelEx, LibraryEx, Root
   private String myName;
   private final LibraryTable myLibraryTable;
   private final Map<OrderRootType, VirtualFilePointerContainer> myRoots = new HashMap<>(3);
-  @Nullable
-  private VirtualFilePointerContainer myExcludedRoots;
+  private @Nullable VirtualFilePointerContainer myExcludedRoots;
   private final LibraryImpl mySource;
   private PersistentLibraryKind<?> myKind;
   private LibraryProperties myProperties;
@@ -105,8 +104,7 @@ public class LibraryImpl implements LibraryEx.ModifiableModelEx, LibraryEx, Root
     Disposer.register(this, myPointersDisposable);
   }
 
-  @Nullable
-  private static PersistentLibraryKind<?> findPersistentLibraryKind(Element element) {
+  private static @Nullable PersistentLibraryKind<?> findPersistentLibraryKind(Element element) {
     String typeString = element.getAttributeValue(LIBRARY_TYPE_ATTR);
     LibraryKind kind = LibraryKindRegistry.getInstance().findKindById(typeString);
     if (kind != null && !(kind instanceof PersistentLibraryKind<?>)) {
@@ -664,8 +662,7 @@ public class LibraryImpl implements LibraryEx.ModifiableModelEx, LibraryEx, Root
   }
 
   @Override
-  @Nullable
-  public ComponentManager getModule() {
+  public @Nullable ComponentManager getModule() {
     return myLibraryOwner.getModule();
   }
 

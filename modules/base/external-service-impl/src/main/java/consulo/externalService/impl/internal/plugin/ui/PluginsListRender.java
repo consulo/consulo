@@ -187,8 +187,7 @@ public class PluginsListRender implements ListCellRenderer<PluginDescriptor> {
         }
     }
 
-    @Nullable
-    private String whyIncompatible(PluginDescriptor descriptor) {
+    private @Nullable String whyIncompatible(PluginDescriptor descriptor) {
         if (descriptor.getStatus() == PluginDescriptorStatus.WRONG_PLATFORM) {
             return ExternalServiceLocalize.pluginManagerWrongPlatformNotLoadedTooltip(descriptor.getName()).get();
         }

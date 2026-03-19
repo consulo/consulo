@@ -141,8 +141,7 @@ public class EditorCopyPasteHelperImpl extends EditorCopyPasteHelper {
     }
   }
 
-  @Nullable
-  private static String getStringContent(Transferable content) {
+  private static @Nullable String getStringContent(Transferable content) {
     RawText raw = RawText.fromTransferable(content);
     if (raw != null) return raw.rawText;
 

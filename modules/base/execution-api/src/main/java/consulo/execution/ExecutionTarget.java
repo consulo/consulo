@@ -34,8 +34,7 @@ public abstract class ExecutionTarget {
   
   public abstract String getDisplayName();
 
-  @Nullable
-  public abstract Image getIcon();
+  public abstract @Nullable Image getIcon();
 
   /**
    * Implementation-specific logic should decide whether to suggest this target for the given configuration.

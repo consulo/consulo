@@ -35,8 +35,7 @@ import java.util.concurrent.ScheduledExecutorService;
  */
 public class ServerSocketConnectionImpl<Request extends AbstractRequest, Response extends AbstractResponse> extends SocketConnectionBase<Request, Response> {
   private static final Logger LOG = LoggerFactory.getLogger(ServerSocketConnectionImpl.class);
-  @Nullable
-  private ServerSocket myServerSocket = null;
+  private @Nullable ServerSocket myServerSocket = null;
   private final int myDefaultPort;
   private final int myConnectionAttempts;
   private final Executor myExecutor;

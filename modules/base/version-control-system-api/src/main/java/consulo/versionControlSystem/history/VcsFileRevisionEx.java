@@ -24,14 +24,11 @@ import org.jspecify.annotations.Nullable;
  */
 public abstract class VcsFileRevisionEx implements VcsFileRevision {
 
-  @Nullable
-  public abstract String getAuthorEmail();
+  public abstract @Nullable String getAuthorEmail();
 
-  @Nullable
-  public abstract String getCommitterName();
+  public abstract @Nullable String getCommitterName();
 
-  @Nullable
-  public abstract String getCommitterEmail();
+  public abstract @Nullable String getCommitterEmail();
 
   /**
    * Returns the path of the file as it were in this revision

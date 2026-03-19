@@ -31,8 +31,7 @@ public class EditorHighlighterUpdater {
   protected final Project myProject;
   
   private final EditorEx myEditor;
-  @Nullable
-  private final VirtualFile myFile;
+  private final @Nullable VirtualFile myFile;
 
   public EditorHighlighterUpdater(Project project, Disposable parentDisposable, EditorEx editor, @Nullable VirtualFile file) {
     myProject = project;

@@ -33,10 +33,8 @@ import java.lang.ref.WeakReference;
  * @since 2012-07-26
  */
 public abstract class AbstractDocumentationTooltipAction extends AnAction {
-    @Nullable
-    private WeakReference<PsiElement> myDocAnchor;
-    @Nullable
-    private WeakReference<PsiElement> myOriginalElement;
+    private @Nullable WeakReference<PsiElement> myDocAnchor;
+    private @Nullable WeakReference<PsiElement> myOriginalElement;
 
     public void setDocInfo(PsiElement docAnchor, PsiElement originalElement) {
         myDocAnchor = new PatchedWeakReference<PsiElement>(docAnchor);
@@ -66,8 +64,7 @@ public abstract class AbstractDocumentationTooltipAction extends AnAction {
         PsiElement originalElement
     );
 
-    @Nullable
-    private Pair<PsiElement/* doc anchor */, PsiElement /* original element */> getDocInfo() {
+    private @Nullable Pair<PsiElement/* doc anchor */, PsiElement /* original element */> getDocInfo() {
         WeakReference<PsiElement> docAnchorRef = myDocAnchor;
         if (docAnchorRef == null) {
             return null;

@@ -38,10 +38,8 @@ public class LibraryOrderEntryImpl extends LibraryOrderEntryBaseImpl implements 
   private static final Logger LOG = Logger.getInstance(LibraryOrderEntryImpl.class);
 
   private Library myLibrary;
-  @Nullable
-  private String myLibraryName; // is non-null if myLibrary == null
-  @Nullable
-  private String myLibraryLevel; // is non-null if myLibraryLevel == null
+  private @Nullable String myLibraryName; // is non-null if myLibrary == null
+  private @Nullable String myLibraryLevel; // is non-null if myLibraryLevel == null
 
   private boolean myExported;
 
@@ -128,8 +126,7 @@ public class LibraryOrderEntryImpl extends LibraryOrderEntryBaseImpl implements 
   }
 
   @Override
-  @Nullable
-  public Library getLibrary() {
+  public @Nullable Library getLibrary() {
     Library library = getRootModel().getConfigurationAccessor().getLibrary(myLibrary, myLibraryName, myLibraryLevel);
     if (library != null) { //library was not deleted
       return library;
@@ -154,8 +151,7 @@ public class LibraryOrderEntryImpl extends LibraryOrderEntryBaseImpl implements 
   }
 
   @Override
-  @Nullable
-  protected RootProvider getRootProvider() {
+  protected @Nullable RootProvider getRootProvider() {
     return myLibrary == null ? null : myLibrary.getRootProvider();
   }
 
@@ -180,8 +176,7 @@ public class LibraryOrderEntryImpl extends LibraryOrderEntryBaseImpl implements 
   }
 
   @Override
-  @Nullable
-  public String getLibraryLevel() {
+  public @Nullable String getLibraryLevel() {
     if (myLibrary != null) {
       LibraryTable table = myLibrary.getTable();
       return table.getTableLevel();

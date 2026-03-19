@@ -82,8 +82,7 @@ public class BrowserLauncherAppless extends BrowserLauncher {
         return WebBrowserManager.getInstance();
     }
 
-    @Nullable
-    private static List<String> getDefaultBrowserCommand() {
+    private static @Nullable List<String> getDefaultBrowserCommand() {
         if (Platform.current().os().isWindows()) {
             return Arrays.asList(ExecUtil.getWindowsShellName(), "/c", "start", GeneralCommandLine.inescapableQuote(""));
         }
@@ -183,8 +182,7 @@ public class BrowserLauncherAppless extends BrowserLauncher {
         }
     }
 
-    @Nullable
-    protected WebBrowser getEffectiveBrowser(@Nullable WebBrowser browser) {
+    protected @Nullable WebBrowser getEffectiveBrowser(@Nullable WebBrowser browser) {
         return browser;
     }
 

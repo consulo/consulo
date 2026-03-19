@@ -165,8 +165,7 @@ public class OfflineProblemDescriptorNode extends ProblemDescriptionNode {
         return descriptor;
     }
 
-    @Nullable
-    private LocalQuickFix[] getFixes(CommonProblemDescriptor descriptor, List<String> hints) {
+    private @Nullable LocalQuickFix[] getFixes(CommonProblemDescriptor descriptor, List<String> hints) {
         List<LocalQuickFix> fixes = new ArrayList<LocalQuickFix>(hints == null ? 1 : hints.size());
         if (hints == null) {
             addFix(descriptor, fixes, null);

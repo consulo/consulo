@@ -235,8 +235,7 @@ public class FileGroup implements JDOMExternalizable {
     return myId + " " + myFiles.size() + " items";
   }
 
-  @Nullable
-  public VcsRevisionNumber getRevision(ProjectLevelVcsManager vcsManager, String path) {
+  public @Nullable VcsRevisionNumber getRevision(ProjectLevelVcsManager vcsManager, String path) {
     for (UpdatedFile file : myFiles) {
       if (file.getPath().equals(path)) {
         return getRevision(vcsManager, file);
@@ -245,8 +244,7 @@ public class FileGroup implements JDOMExternalizable {
     return null;
   }
 
-  @Nullable
-  private static VcsRevisionNumber getRevision(ProjectLevelVcsManager vcsManager, UpdatedFile file) {
+  private static @Nullable VcsRevisionNumber getRevision(ProjectLevelVcsManager vcsManager, UpdatedFile file) {
     String vcsName = file.getVcsName();
     String revision = file.getRevision();
     if (vcsName != null && revision != null) {

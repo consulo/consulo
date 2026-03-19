@@ -40,8 +40,7 @@ public abstract class ArtifactEditorNavigateActionBase extends DumbAwareAction {
         e.getPresentation().setEnabled(presentation != null && presentation.canNavigateToSource());
     }
 
-    @Nullable
-    protected abstract TreeNodePresentation getPresentation();
+    protected abstract @Nullable TreeNodePresentation getPresentation();
 
     @Override
     public void actionPerformed(AnActionEvent e) {

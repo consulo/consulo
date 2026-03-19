@@ -110,8 +110,7 @@ public class IdeEventQueue extends EventQueue {
     final AtomicInteger myKeyboardEventsDispatched = new AtomicInteger();
     private boolean myIsInInputEvent;
     private AWTEvent myCurrentEvent = new InvocationEvent(this, EmptyRunnable.getInstance());
-    @Nullable
-    private AWTEvent myCurrentSequencedEvent;
+    private @Nullable AWTEvent myCurrentSequencedEvent;
 
     private final AWTIdleHolder myIdleHolder = new AWTIdleHolder();
 
@@ -467,8 +466,7 @@ public class IdeEventQueue extends EventQueue {
         return e instanceof InputEvent || e instanceof InputMethodEvent || e instanceof WindowEvent || e instanceof ActionEvent;
     }
 
-    @Nullable
-    private static ProgressManager obtainProgressManager() {
+    private static @Nullable ProgressManager obtainProgressManager() {
         ProgressManager manager = ourProgressManager;
         if (manager == null) {
             Application app = ApplicationManager.getApplication();
@@ -492,8 +490,7 @@ public class IdeEventQueue extends EventQueue {
         return event;
     }
 
-    @Nullable
-    static AccessToken startActivity(AWTEvent e) {
+    static @Nullable AccessToken startActivity(AWTEvent e) {
         return AccessToken.EMPTY_ACCESS_TOKEN;
     }
 
@@ -607,8 +604,7 @@ public class IdeEventQueue extends EventQueue {
      * <p>
      * Note: As side-effect this method tracks special flag for 'Windows' key state that is valuable on itself
      */
-    @Nullable
-    private AWTEvent mapMetaState(AWTEvent e) {
+    private @Nullable AWTEvent mapMetaState(AWTEvent e) {
         if (myWinMetaPressed) {
             Application app = ApplicationManager.getApplication();
 

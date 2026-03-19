@@ -92,10 +92,8 @@ public abstract class ChangesTreeListImpl<T> extends Tree implements TypeSafeDat
 
     private final static String FLATTEN_OPTION_KEY = "ChangesBrowser.SHOW_FLATTEN";
 
-    @Nullable
-    private final Runnable myInclusionListener;
-    @Nullable
-    private ChangeNodeDecorator myChangeDecorator;
+    private final @Nullable Runnable myInclusionListener;
+    private @Nullable ChangeNodeDecorator myChangeDecorator;
     private Runnable myGenericSelectionListener;
     
     private final CopyProvider myTreeCopyProvider;
@@ -416,11 +414,9 @@ public abstract class ChangesTreeListImpl<T> extends Tree implements TypeSafeDat
 
     protected abstract List<T> getSelectedObjects(ChangesBrowserNode<T> node);
 
-    @Nullable
-    protected abstract T getLeadSelectedObject(ChangesBrowserNode node);
+    protected abstract @Nullable T getLeadSelectedObject(ChangesBrowserNode node);
 
-    @Nullable
-    public T getHighestLeadSelection() {
+    public @Nullable T getHighestLeadSelection() {
         TreePath path = getSelectionPath();
         if (path == null) {
             return null;
@@ -429,8 +425,7 @@ public abstract class ChangesTreeListImpl<T> extends Tree implements TypeSafeDat
         return getLeadSelectedObject((ChangesBrowserNode<T>) path.getLastPathComponent());
     }
 
-    @Nullable
-    public T getLeadSelection() {
+    public @Nullable T getLeadSelection() {
         TreePath path = getSelectionPath();
         //noinspection unchecked
         return path == null ? null : ContainerUtil.getFirstItem(getSelectedObjects(((ChangesBrowserNode<T>) path.getLastPathComponent())));

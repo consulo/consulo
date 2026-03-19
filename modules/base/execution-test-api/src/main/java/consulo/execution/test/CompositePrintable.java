@@ -181,8 +181,7 @@ public class CompositePrintable extends UserDataHolderBase implements Printable,
     private final MyFlushToFilePrinter myPrinter = new MyFlushToFilePrinter();
     private final Object myFileLock = new Object();
 
-    @Nullable
-    private synchronized File getFile() {
+    private synchronized @Nullable File getFile() {
       if (myFile == null) {
         try {
           File tempFile = FileUtil.createTempFile("consulo_test_", ".out");

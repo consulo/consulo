@@ -64,8 +64,7 @@ public class ValueContainerImpl<Value> extends CompactableUpdatableValueContaine
     }
   }
 
-  @Nullable
-  private Map<Value, Object> asMapping() {
+  private @Nullable Map<Value, Object> asMapping() {
     //noinspection unchecked
     return myInputIdMapping instanceof Map ? (Map<Value, Object>)myInputIdMapping : null;
   }
@@ -374,8 +373,7 @@ public class ValueContainerImpl<Value> extends CompactableUpdatableValueContaine
     }
   };
 
-  @Nullable
-  private ChangeBufferingList ensureFileSetCapacityForValue(Value value, int count) {
+  private @Nullable ChangeBufferingList ensureFileSetCapacityForValue(Value value, int count) {
     if (count <= 1) return null;
     Object fileSetObject = getFileSetObject(value);
 

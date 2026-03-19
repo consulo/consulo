@@ -38,13 +38,11 @@ public class OptionDescription implements Comparable<OptionDescription> {
     return myOption;
   }
 
-  @Nullable
-  public String getHit() {
+  public @Nullable String getHit() {
     return myHit;
   }
 
-  @Nullable
-  public String getPath() {
+  public @Nullable String getPath() {
     return myPath;
   }
 

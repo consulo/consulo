@@ -133,8 +133,7 @@ public class PsiPackageManagerImpl extends PsiPackageManager implements Disposab
         return newPackage;
     }
 
-    @Nullable
-    private PsiPackage createPackage(String qualifiedName, Class<? extends ModuleExtension> extensionClass) {
+    private @Nullable PsiPackage createPackage(String qualifiedName, Class<? extends ModuleExtension> extensionClass) {
         Query<VirtualFile> dirs = myDirectoryIndex.get().getDirectoriesByPackageName(qualifiedName, true);
         if (dirs.findFirst() == null) {
             return null;
@@ -154,8 +153,7 @@ public class PsiPackageManagerImpl extends PsiPackageManager implements Disposab
         return null;
     }
 
-    @Nullable
-    private PsiPackage createPackageFromProviders(
+    private @Nullable PsiPackage createPackageFromProviders(
         VirtualFile virtualFile,
         Class<? extends ModuleExtension> extensionClass,
         String qualifiedName
@@ -282,8 +280,7 @@ public class PsiPackageManagerImpl extends PsiPackageManager implements Disposab
         return null;
     }
 
-    @Nullable
-    private PsiPackage findAnyPackageFromCache(String packageName) {
+    private @Nullable PsiPackage findAnyPackageFromCache(String packageName) {
         for (ConcurrentMap<String, Object> map : myPackageCache.values()) {
             if (map.get(packageName) instanceof PsiPackage psiPackage) {
                 return psiPackage;

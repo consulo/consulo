@@ -240,8 +240,7 @@ public final class ObjectTree {
     }
   }
 
-  @Nullable
-  public <D extends Disposable> D findRegisteredObject(Disposable parentDisposable, D object) {
+  public @Nullable <D extends Disposable> D findRegisteredObject(Disposable parentDisposable, D object) {
     synchronized (treeLock) {
       ObjectNode parentNode = getNode(parentDisposable);
       if (parentNode == null) return null;

@@ -78,8 +78,7 @@ public class VcsAwareFormatChangedTextUtil extends FormatChangedTextUtil {
             : List.of();
     }
 
-    @Nullable
-    private static String getRevisionedContentFrom(Change change) {
+    private static @Nullable String getRevisionedContentFrom(Change change) {
         ContentRevision revision = change.getBeforeRevision();
         if (revision == null) {
             return null;
@@ -94,8 +93,7 @@ public class VcsAwareFormatChangedTextUtil extends FormatChangedTextUtil {
         }
     }
 
-    @Nullable
-    private static List<TextRange> getCachedChangedLines(Project project, Document document) {
+    private static @Nullable List<TextRange> getCachedChangedLines(Project project, Document document) {
         LineStatusTrackerI tracker = LineStatusTrackerManagerI.getInstance(project).getLineStatusTracker(document);
         if (tracker != null && tracker.isValid()) {
             List<VcsRange> ranges = tracker.getRanges();

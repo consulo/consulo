@@ -42,16 +42,14 @@ public class VcsGuess {
     myVcsManager = (ProjectLevelVcsManagerImpl)ProjectLevelVcsManager.getInstance(myProject);
   }
 
-  @Nullable
-  public AbstractVcs getVcsForDirty(VirtualFile file) {
+  public @Nullable AbstractVcs getVcsForDirty(VirtualFile file) {
     if (file.isInLocalFileSystem() && isFileInIndex(null, file)) {
       return myVcsManager.getVcsFor(file);
     }
     return null;
   }
 
-  @Nullable
-  public AbstractVcs getVcsForDirty(FilePath filePath) {
+  public @Nullable AbstractVcs getVcsForDirty(FilePath filePath) {
     if (filePath.isNonLocal()) {
       return null;
     }
@@ -62,7 +60,7 @@ public class VcsGuess {
     return null;
   }
 
-  private boolean isFileInIndex(@Nullable final FilePath filePath, final VirtualFile validParent) {
+  private boolean isFileInIndex(final @Nullable FilePath filePath, final VirtualFile validParent) {
     return ApplicationManager.getApplication().runReadAction(new Supplier<Boolean>() {
       public Boolean get() {
         if (myProject.isDisposed()) return false;

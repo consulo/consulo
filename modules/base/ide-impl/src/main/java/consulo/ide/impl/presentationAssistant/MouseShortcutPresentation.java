@@ -36,8 +36,7 @@ class MouseShortcutPresentation {
     ourButtonNames.put(MouseEvent.BUTTON3, "Right");
   }
 
-  @Nullable
-  static String getMouseShortcutText(MouseShortcut shortcut) {
+  static @Nullable String getMouseShortcutText(MouseShortcut shortcut) {
     String buttonName = ourButtonNames.get(shortcut.getButton());
     if (buttonName != null) {
       if (shortcut.getClickCount() > 1) {

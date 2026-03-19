@@ -68,8 +68,7 @@ public class LanguageEditorPopupFactoryImpl implements LanguageEditorPopupFactor
         }
 
         @Override
-        @Nullable
-        public final JBPopup build() {
+        public final @Nullable JBPopup build() {
             if (myTargets.length == 0) {
                 if (!allowEmptyTargets()) {
                     return null; // empty initial targets are not allowed

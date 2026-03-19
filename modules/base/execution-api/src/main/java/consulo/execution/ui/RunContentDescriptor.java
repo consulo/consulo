@@ -55,8 +55,7 @@ public class RunContentDescriptor implements Disposable {
   
   private final AnAction[] myRestartActions;
 
-  @Nullable
-  private final Runnable myActivationCallback;
+  private final @Nullable Runnable myActivationCallback;
 
   public RunContentDescriptor(@Nullable ExecutionConsole executionConsole,
                               @Nullable ProcessHandler processHandler,
@@ -142,13 +141,11 @@ public class RunContentDescriptor implements Disposable {
    *
    * @return the icon to show, or null if the executor icon should be used.
    */
-  @Nullable
-  public Image getIcon() {
+  public @Nullable Image getIcon() {
     return myIcon;
   }
 
-  @Nullable
-  public ProcessHandler getProcessHandler() {
+  public @Nullable ProcessHandler getProcessHandler() {
     return myProcessHandler;
   }
 
@@ -172,8 +169,7 @@ public class RunContentDescriptor implements Disposable {
     return myHelpId;
   }
 
-  @Nullable
-  public Content getAttachedContent() {
+  public @Nullable Content getAttachedContent() {
     return myContent;
   }
 
@@ -184,8 +180,7 @@ public class RunContentDescriptor implements Disposable {
   /**
    * @return Tool window id where content should be shown. Null if content tool window is determined by executor.
    */
-  @Nullable
-  public String getContentToolWindowId() {
+  public @Nullable String getContentToolWindowId() {
     return myContentToolWindowId;
   }
 
@@ -246,8 +241,7 @@ public class RunContentDescriptor implements Disposable {
    * @return the RunnerLayoutUi instance or null if this tab does not use RunnerLayoutUi for managing its contents.
    * @since 14.1
    */
-  @Nullable
-  public RunnerLayoutUi getRunnerLayoutUi() {
+  public @Nullable RunnerLayoutUi getRunnerLayoutUi() {
     return myRunnerLayoutUi;
   }
 }

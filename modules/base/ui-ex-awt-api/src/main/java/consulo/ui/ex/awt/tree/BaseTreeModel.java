@@ -18,8 +18,7 @@ public abstract class BaseTreeModel<T> extends AbstractTreeModel implements Chil
   }
 
   @Override
-  @Nullable
-  public Object getChild(Object object, int index) {
+  public @Nullable Object getChild(Object object, int index) {
     if (index < 0) return null;
     List<? extends T> list = getChildren(object);
     return list != null && index < list.size() ? list.get(index) : null;

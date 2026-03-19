@@ -31,12 +31,10 @@ public final class CompilerMessageImpl implements CompilerMessage {
     private final Project myProject;
     
     private final CompilerMessageCategory myCategory;
-    @Nullable
-    private Navigatable myNavigatable;
+    private @Nullable Navigatable myNavigatable;
     
     private final String myMessage;
-    @Nullable
-    private final VirtualFile myFile;
+    private final @Nullable VirtualFile myFile;
     private final int myRow;
     private final int myColumn;
 

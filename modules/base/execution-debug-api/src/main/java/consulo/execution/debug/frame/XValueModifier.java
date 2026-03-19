@@ -32,8 +32,7 @@ public abstract class XValueModifier {
   /**
    * @return return text to show in expression editor when "Set Value" action is invoked
    */
-  @Nullable
-  public String getInitialValueEditorText() {
+  public @Nullable String getInitialValueEditorText() {
     return null;
   }
 

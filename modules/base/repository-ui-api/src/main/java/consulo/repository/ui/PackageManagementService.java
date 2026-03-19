@@ -15,8 +15,7 @@ public abstract class PackageManagementService {
    *
    * @return list of URLs, or null if the repository management is not supported by this package management service.
    */
-  @Nullable
-  public List<String> getAllRepositories() {
+  public @Nullable List<String> getAllRepositories() {
     return null;
   }
 
@@ -163,8 +162,7 @@ public abstract class PackageManagementService {
    * @return identifier of this service for reported usage data (sent for JetBrains implementations only).
    * Return null to avoid reporting any usage data.
    */
-  @Nullable
-  public String getID() {
+  public @Nullable String getID() {
     return null;
   }
 
@@ -190,15 +188,11 @@ public abstract class PackageManagementService {
   public static class ErrorDescription {
     
     private final String myMessage;
-    @Nullable
-    private final String myCommand;
-    @Nullable
-    private final String myOutput;
-    @Nullable
-    private final String mySolution;
+    private final @Nullable String myCommand;
+    private final @Nullable String myOutput;
+    private final @Nullable String mySolution;
 
-    @Nullable
-    public static ErrorDescription fromMessage(@Nullable String message) {
+    public static @Nullable ErrorDescription fromMessage(@Nullable String message) {
       return message != null ? new ErrorDescription(message, null, null, null) : null;
     }
 
@@ -220,24 +214,21 @@ public abstract class PackageManagementService {
     /**
      * The packaging command that has been executed, if it is meaningful to the user.
      */
-    @Nullable
-    public String getCommand() {
+    public @Nullable String getCommand() {
       return myCommand;
     }
 
     /**
      * The output of the packaging command.
      */
-    @Nullable
-    public String getOutput() {
+    public @Nullable String getOutput() {
       return myOutput;
     }
 
     /**
      * A possible solution of this packaging problem for the user.
      */
-    @Nullable
-    public String getSolution() {
+    public @Nullable String getSolution() {
       return mySolution;
     }
   }

@@ -51,8 +51,7 @@ public interface Rearranger<E extends ArrangementEntry> extends LanguageExtensio
     ExtensionPointCacheKey<Rearranger, ByLanguageValue<Rearranger>> KEY =
         ExtensionPointCacheKey.create("Rearranger", LanguageOneToOne.build());
 
-    @Nullable
-    static Rearranger forLanguage(Language language) {
+    static @Nullable Rearranger forLanguage(Language language) {
         ExtensionPoint<Rearranger> extensionPoint = Application.get().getExtensionPoint(Rearranger.class);
         ByLanguageValue<Rearranger> map = extensionPoint.getOrBuildCache(KEY);
         return map.get(language);

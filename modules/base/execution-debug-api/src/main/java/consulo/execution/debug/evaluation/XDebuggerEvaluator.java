@@ -68,8 +68,7 @@ public abstract class XDebuggerEvaluator {
    *                           (such expressions are evaluated in quick popups)
    * @return text range of expression
    */
-  @Nullable
-  public TextRange getExpressionRangeAtOffset(Project project, Document document, int offset, boolean sideEffectsAllowed) {
+  public @Nullable TextRange getExpressionRangeAtOffset(Project project, Document document, int offset, boolean sideEffectsAllowed) {
     return null;
   }
 
@@ -81,8 +80,7 @@ public abstract class XDebuggerEvaluator {
    *                           (such expressions are evaluated in quick popups)
    * @return {@link ExpressionInfo} of expression which can be evaluated
    */
-  @Nullable
-  public ExpressionInfo getExpressionInfoAtOffset(Project project, Document document, int offset, boolean sideEffectsAllowed) {
+  public @Nullable ExpressionInfo getExpressionInfoAtOffset(Project project, Document document, int offset, boolean sideEffectsAllowed) {
     TextRange range = getExpressionRangeAtOffset(project, document, offset, sideEffectsAllowed);
     return range == null ? null : new ExpressionInfo(range);
   }

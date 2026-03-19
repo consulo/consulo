@@ -121,8 +121,7 @@ public class AnnotateDiffViewerAction extends ToggleAction implements DumbAware 
         return null;
     }
 
-    @Nullable
-    private static EventData collectEventData(AnActionEvent e) {
+    private static @Nullable EventData collectEventData(AnActionEvent e) {
         DiffViewerBase viewer = getViewer(e);
         if (viewer == null) {
             return null;
@@ -147,8 +146,7 @@ public class AnnotateDiffViewerAction extends ToggleAction implements DumbAware 
         return new EventData(viewer, annotator);
     }
 
-    @Nullable
-    private static DiffViewerBase getViewer(AnActionEvent e) {
+    private static @Nullable DiffViewerBase getViewer(AnActionEvent e) {
         DiffViewerBase diffViewer = ObjectUtil.tryCast(e.getData(DiffDataKeys.DIFF_VIEWER), DiffViewerBase.class);
         if (diffViewer != null) {
             return diffViewer;
@@ -268,8 +266,7 @@ public class AnnotateDiffViewerAction extends ToggleAction implements DumbAware 
         });
     }
 
-    @Nullable
-    private static FileAnnotationLoader createThreesideAnnotationsLoader(
+    private static @Nullable FileAnnotationLoader createThreesideAnnotationsLoader(
         Project project,
         DiffRequest request,
         ThreeSide side
@@ -285,8 +282,7 @@ public class AnnotateDiffViewerAction extends ToggleAction implements DumbAware 
         return null;
     }
 
-    @Nullable
-    private static FileAnnotationLoader createTwosideAnnotationsLoader(
+    private static @Nullable FileAnnotationLoader createTwosideAnnotationsLoader(
         Project project,
         DiffRequest request,
         Side side
@@ -323,8 +319,7 @@ public class AnnotateDiffViewerAction extends ToggleAction implements DumbAware 
         return null;
     }
 
-    @Nullable
-    private static FileAnnotationLoader createAnnotationsLoader(Project project, DiffContent content) {
+    private static @Nullable FileAnnotationLoader createAnnotationsLoader(Project project, DiffContent content) {
         if (content instanceof FileContent fileContent) {
             VirtualFile file = fileContent.getFile();
             AbstractVcs vcs = VcsUtil.getVcsFor(project, file);
@@ -346,11 +341,10 @@ public class AnnotateDiffViewerAction extends ToggleAction implements DumbAware 
         return null;
     }
 
-    @Nullable
-    private static FileAnnotationLoader doCreateAnnotationsLoader(
+    private static @Nullable FileAnnotationLoader doCreateAnnotationsLoader(
         Project project,
         @Nullable AbstractVcs vcs,
-        @Nullable final VirtualFile file
+        final @Nullable VirtualFile file
     ) {
         if (vcs == null || file == null) {
             return null;
@@ -373,11 +367,10 @@ public class AnnotateDiffViewerAction extends ToggleAction implements DumbAware 
         };
     }
 
-    @Nullable
-    private static FileAnnotationLoader doCreateAnnotationsLoader(
+    private static @Nullable FileAnnotationLoader doCreateAnnotationsLoader(
         @Nullable AbstractVcs vcs,
-        @Nullable final FilePath path,
-        @Nullable final VcsRevisionNumber revisionNumber
+        final @Nullable FilePath path,
+        final @Nullable VcsRevisionNumber revisionNumber
     ) {
         if (vcs == null || path == null || revisionNumber == null) {
             return null;
@@ -638,8 +631,7 @@ public class AnnotateDiffViewerAction extends ToggleAction implements DumbAware 
         }
 
         @Override
-        @Nullable
-        public ThreeSide getCurrentSide(ThreesideTextDiffViewerEx viewer, Editor editor) {
+        public @Nullable ThreeSide getCurrentSide(ThreesideTextDiffViewerEx viewer, Editor editor) {
             ThreeSide side = null; // we can't just use getCurrentSide() here, popup can be called on unfocused editor
             if (viewer.getEditor(ThreeSide.LEFT) == editor) {
                 side = ThreeSide.LEFT;
@@ -689,8 +681,7 @@ public class AnnotateDiffViewerAction extends ToggleAction implements DumbAware 
     }
 
     private static abstract class TwosideViewerAnnotatorFactory<T extends DiffViewerBase> extends ViewerAnnotatorFactory<T> {
-        @Nullable
-        public abstract Side getCurrentSide(T viewer, Editor editor);
+        public abstract @Nullable Side getCurrentSide(T viewer, Editor editor);
 
         public abstract boolean isAnnotationShown(T viewer, Side side);
 
@@ -699,8 +690,7 @@ public class AnnotateDiffViewerAction extends ToggleAction implements DumbAware 
         public abstract void hideAnnotation(T viewer, Side side);
 
         @Override
-        @Nullable
-        public ViewerAnnotator createAnnotator(T viewer, Editor editor) {
+        public @Nullable ViewerAnnotator createAnnotator(T viewer, Editor editor) {
             Side side = getCurrentSide(viewer, editor);
             if (side == null) {
                 return null;
@@ -738,8 +728,7 @@ public class AnnotateDiffViewerAction extends ToggleAction implements DumbAware 
             viewer.getRequest().putUserData(ANNOTATIONS_SHOWN_KEY, annotationsShown);
         }
 
-        @Nullable
-        public ViewerAnnotator createAnnotator(T viewer, Side side) {
+        public @Nullable ViewerAnnotator createAnnotator(T viewer, Side side) {
             TwosideViewerAnnotatorFactory<T> factory = this;
             Project project = viewer.getProject();
             assert project != null;
@@ -782,8 +771,7 @@ public class AnnotateDiffViewerAction extends ToggleAction implements DumbAware 
     }
 
     private static abstract class ThreesideViewerAnnotatorFactory<T extends DiffViewerBase> extends ViewerAnnotatorFactory<T> {
-        @Nullable
-        public abstract ThreeSide getCurrentSide(T viewer, Editor editor);
+        public abstract @Nullable ThreeSide getCurrentSide(T viewer, Editor editor);
 
         public abstract boolean isAnnotationShown(T viewer, ThreeSide side);
 
@@ -838,8 +826,7 @@ public class AnnotateDiffViewerAction extends ToggleAction implements DumbAware 
             viewer.getRequest().putUserData(ANNOTATIONS_SHOWN_KEY, annotationsShown);
         }
 
-        @Nullable
-        public ViewerAnnotator createAnnotator(T viewer, ThreeSide side) {
+        public @Nullable ViewerAnnotator createAnnotator(T viewer, ThreeSide side) {
             ThreesideViewerAnnotatorFactory<T> factory = this;
             Project project = viewer.getProject();
             assert project != null;
@@ -885,8 +872,7 @@ public class AnnotateDiffViewerAction extends ToggleAction implements DumbAware 
         
         public abstract Class<? extends T> getViewerClass();
 
-        @Nullable
-        public abstract ViewerAnnotator createAnnotator(T viewer, Editor editor);
+        public abstract @Nullable ViewerAnnotator createAnnotator(T viewer, Editor editor);
 
         public abstract void showRememberedAnnotations(T viewer);
 
@@ -903,8 +889,7 @@ public class AnnotateDiffViewerAction extends ToggleAction implements DumbAware 
 
         public abstract void hideAnnotation();
 
-        @Nullable
-        public abstract FileAnnotationLoader createAnnotationsLoader();
+        public abstract @Nullable FileAnnotationLoader createAnnotationsLoader();
 
         
         public abstract BackgroundableActionLock getBackgroundableLock();
@@ -914,22 +899,18 @@ public class AnnotateDiffViewerAction extends ToggleAction implements DumbAware 
         
         private final AbstractVcs myVcs;
 
-        @Nullable
-        private VcsException myException;
-        @Nullable
-        private FileAnnotation myResult;
+        private @Nullable VcsException myException;
+        private @Nullable FileAnnotation myResult;
 
         public FileAnnotationLoader(AbstractVcs vcs) {
             myVcs = vcs;
         }
 
-        @Nullable
-        public VcsException getException() {
+        public @Nullable VcsException getException() {
             return myException;
         }
 
-        @Nullable
-        public AnnotationData getResult() {
+        public @Nullable AnnotationData getResult() {
             return myResult != null ? new AnnotationData(myVcs, myResult) : null;
         }
 

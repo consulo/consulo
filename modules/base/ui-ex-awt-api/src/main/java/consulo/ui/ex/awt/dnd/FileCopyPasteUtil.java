@@ -96,8 +96,7 @@ public class FileCopyPasteUtil {
         return false;
     }
 
-    @Nullable
-    public static List<File> getFileList(Transferable transferable) {
+    public static @Nullable List<File> getFileList(Transferable transferable) {
         try {
             if (transferable.isDataFlavorSupported(DataFlavor.javaFileListFlavor)) {
                 @SuppressWarnings({"unchecked"}) List<File> fileList =

@@ -29,8 +29,7 @@ public class LightFilePointer implements VirtualFilePointer {
 
   
   private final String myUrl;
-  @Nullable
-  private volatile VirtualFile myFile;
+  private volatile @Nullable VirtualFile myFile;
   private volatile boolean myRefreshed = false;
 
   public LightFilePointer(String url) {
@@ -43,8 +42,7 @@ public class LightFilePointer implements VirtualFilePointer {
   }
 
   @Override
-  @Nullable
-  public VirtualFile getFile() {
+  public @Nullable VirtualFile getFile() {
     refreshFile();
     return myFile;
   }

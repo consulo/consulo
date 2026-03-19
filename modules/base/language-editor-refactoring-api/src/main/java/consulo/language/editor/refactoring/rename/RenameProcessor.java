@@ -136,8 +136,7 @@ public class RenameProcessor extends BaseRefactoringProcessor {
         }
     }
 
-    @Nullable
-    private String getHelpID() {
+    private @Nullable String getHelpID() {
         return RenamePsiElementProcessor.forElement(myPrimaryElement).getHelpID(myPrimaryElement);
     }
 

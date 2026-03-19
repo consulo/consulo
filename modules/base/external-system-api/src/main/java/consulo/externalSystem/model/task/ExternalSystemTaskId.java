@@ -68,8 +68,7 @@ public class ExternalSystemTaskId implements Serializable {
     return project.isDisposed() ? project.getName() : project.getName() + ":" + project.getLocationHash();
   }
 
-  @Nullable
-  public Project findProject() {
+  public @Nullable Project findProject() {
     ProjectManager projectManager = ProjectManager.getInstance();
     for (Project project : projectManager.getOpenProjects()) {
       if (myProjectId.equals(getProjectId(project))) return project;

@@ -81,8 +81,7 @@ public abstract class SdkType implements SdkTypeId {
     public abstract boolean isValidSdkHome(String path);
 
     @Override
-    @Nullable
-    public final String getVersionString(Sdk sdk) {
+    public final @Nullable String getVersionString(Sdk sdk) {
         SdkTypeId sdkType = sdk.getSdkType();
         if (sdkType instanceof BundleType bundleType) {
             return bundleType.getVersionString(sdk.getPlatform(), sdk.getHomeNioPath());
@@ -90,8 +89,7 @@ public abstract class SdkType implements SdkTypeId {
         return getVersionString(sdk.getHomePath());
     }
 
-    @Nullable
-    public abstract String getVersionString(String sdkHome);
+    public abstract @Nullable String getVersionString(String sdkHome);
 
     
     public String suggestSdkName(String currentSdkName, String sdkHome) {
@@ -110,8 +108,7 @@ public abstract class SdkType implements SdkTypeId {
     /**
      * @return Configurable object for the sdk's additional data or null if not applicable
      */
-    @Nullable
-    public AdditionalDataConfigurable createAdditionalDataConfigurable(SdkModel sdkModel, SdkModificator sdkModificator) {
+    public @Nullable AdditionalDataConfigurable createAdditionalDataConfigurable(SdkModel sdkModel, SdkModificator sdkModificator) {
         return null;
     }
 
@@ -121,8 +118,7 @@ public abstract class SdkType implements SdkTypeId {
     }
 
     @Override
-    @Nullable
-    public SdkAdditionalData loadAdditionalData(Sdk currentSdk, Element additional) {
+    public @Nullable SdkAdditionalData loadAdditionalData(Sdk currentSdk, Element additional) {
         return null;
     }
 
@@ -193,8 +189,7 @@ public abstract class SdkType implements SdkTypeId {
         return descriptor;
     }
 
-    @Nullable
-    public String getDefaultDocumentationUrl(Sdk sdk) {
+    public @Nullable String getDefaultDocumentationUrl(Sdk sdk) {
         return null;
     }
 

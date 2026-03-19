@@ -163,8 +163,7 @@ public class PackageSetChooserCombo extends ComponentWithBrowseButton<JComponent
     return model.toArray(new NamedScope[model.size()]);
   }
 
-  @Nullable
-  public NamedScope getSelectedScope() {
+  public @Nullable NamedScope getSelectedScope() {
     JComponent component = getChildComponent();
     if (component instanceof JComboBox) {
       int idx = ((JComboBox)component).getSelectedIndex();
@@ -189,8 +188,7 @@ public class PackageSetChooserCombo extends ComponentWithBrowseButton<JComponent
     }
 
     @Override
-    @Nullable
-    protected JComponent createCenterPanel() {
+    protected @Nullable JComponent createCenterPanel() {
       return myPanel.getPanel();
     }
 

@@ -19,8 +19,7 @@ import javax.swing.*;
 import java.awt.*;
 
 public class TextPanel extends NonOpaquePanel implements Accessible {
-    @Nullable
-    private String myText;
+    private @Nullable String myText;
 
     private Integer myPrefHeight;
     private Dimension myExplicitSize;
@@ -146,8 +145,7 @@ public class TextPanel extends NonOpaquePanel implements Accessible {
         repaint();
     }
 
-    @Nullable
-    public String getText() {
+    public @Nullable String getText() {
         return myText;
     }
 
@@ -171,8 +169,7 @@ public class TextPanel extends NonOpaquePanel implements Accessible {
     /**
      * @return the text that is used to calculate the preferred size
      */
-    @Nullable
-    protected String getTextForPreferredSize() {
+    protected @Nullable String getTextForPreferredSize() {
         return myText;
     }
 
@@ -182,8 +179,7 @@ public class TextPanel extends NonOpaquePanel implements Accessible {
 
     public static class WithIconAndArrows extends TextPanel {
         private final static int GAP = JBUIScale.scale(2);
-        @Nullable
-        private Image myIcon;
+        private @Nullable Image myIcon;
 
         @Override
         protected void paintComponent(Graphics g) {
@@ -240,8 +236,7 @@ public class TextPanel extends NonOpaquePanel implements Accessible {
             return myIcon != null;
         }
 
-        @Nullable
-        public Image getIcon() {
+        public @Nullable Image getIcon() {
             return myIcon;
         }
     }

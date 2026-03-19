@@ -150,8 +150,7 @@ public class QualifiedName implements Comparable<QualifiedName> {
     }
   }
 
-  @Nullable
-  public static QualifiedName deserialize(StubInputStream dataStream) throws IOException {
+  public static @Nullable QualifiedName deserialize(StubInputStream dataStream) throws IOException {
     QualifiedName qName;
     int size = dataStream.readVarInt();
     if (size == 0) {
@@ -167,24 +166,21 @@ public class QualifiedName implements Comparable<QualifiedName> {
     return qName;
   }
 
-  @Nullable
-  public String getFirstComponent() {
+  public @Nullable String getFirstComponent() {
     if (myComponents.isEmpty()) {
       return null;
     }
     return myComponents.get(0);
   }
 
-  @Nullable
-  public String getLastComponent() {
+  public @Nullable String getLastComponent() {
     if (myComponents.isEmpty()) {
       return null;
     }
     return myComponents.get(myComponents.size() - 1);
   }
 
-  @Nullable
-  public QualifiedName getParent() {
+  public @Nullable QualifiedName getParent() {
     if (myComponents.isEmpty()) {
       return null;
     }

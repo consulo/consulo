@@ -113,8 +113,7 @@ public class DisposableWrapperList<E> extends AbstractList<E> implements Disposa
   }
 
   @Override
-  @Nullable
-  public E remove(int index) {
+  public @Nullable E remove(int index) {
     DisposableWrapper removedWrapper = myWrappedList.remove(index);
     return unwrapAndDispose(removedWrapper);
   }
@@ -203,8 +202,7 @@ public class DisposableWrapperList<E> extends AbstractList<E> implements Disposa
   }
 
   @Override
-  @Nullable
-  public E set(int index, E element) {
+  public @Nullable E set(int index, E element) {
     DisposableWrapper replaced = myWrappedList.set(index, new DisposableWrapper(element));
     return unwrapAndDispose(replaced);
   }
@@ -262,8 +260,7 @@ public class DisposableWrapperList<E> extends AbstractList<E> implements Disposa
     return result;
   }
 
-  @Nullable
-  private E unwrapAndDispose(@Nullable DisposableWrapper disposableWrapper) {
+  private @Nullable E unwrapAndDispose(@Nullable DisposableWrapper disposableWrapper) {
     if (disposableWrapper == null) {
       return null;
     }

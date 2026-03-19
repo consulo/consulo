@@ -42,8 +42,7 @@ public class WizardStepValidationException extends Exception {
     myMessage = message;
   }
 
-  @Nullable
-  public Object getComponent() {
+  public @Nullable Object getComponent() {
     return myComponent;
   }
 

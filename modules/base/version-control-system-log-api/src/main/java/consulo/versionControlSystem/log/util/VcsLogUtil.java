@@ -170,8 +170,7 @@ public class VcsLogUtil {
     return getAllVisibleRoots(roots, filters.getRootFilter(), filters.getStructureFilter());
   }
 
-  @Nullable
-  public static String getSingleFilteredBranch(VcsLogBranchFilter filter, VcsLogRefs refs) {
+  public static @Nullable String getSingleFilteredBranch(VcsLogBranchFilter filter, VcsLogRefs refs) {
     String branchName = null;
     Set<VirtualFile> checkedRoots = new HashSet<>();
     for (VcsRef branch : refs.getBranches()) {

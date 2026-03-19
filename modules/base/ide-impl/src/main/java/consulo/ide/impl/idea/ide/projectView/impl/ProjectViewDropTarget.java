@@ -128,8 +128,7 @@ abstract class ProjectViewDropTarget implements DnDNativeTarget {
   public void updateDraggedImage(Image image, Point dropPoint, Point imageOffset) {
   }
 
-  @Nullable
-  private static TreePath[] getSourcePaths(Object transferData) {
+  private static @Nullable TreePath[] getSourcePaths(Object transferData) {
     TransferableWrapper wrapper = transferData instanceof TransferableWrapper ? (TransferableWrapper)transferData : null;
     return wrapper == null ? null : wrapper.getTreePaths();
   }
@@ -142,8 +141,7 @@ abstract class ProjectViewDropTarget implements DnDNativeTarget {
     }
   }
 
-  @Nullable
-  private static TreePath getValidTarget(TreePath[] sources, TreePath target, DropHandler handler) {
+  private static @Nullable TreePath getValidTarget(TreePath[] sources, TreePath target, DropHandler handler) {
     while (target != null) {
       if (handler.isValidTarget(sources, target)) return target;
       if (!handler.shouldDelegateToParent(sources, target)) break;
@@ -181,11 +179,9 @@ abstract class ProjectViewDropTarget implements DnDNativeTarget {
     void doDropFiles(List<? extends File> files, TreePath target);
   }
 
-  @Nullable
-  abstract PsiElement getPsiElement(TreePath path);
+  abstract @Nullable PsiElement getPsiElement(TreePath path);
 
-  @Nullable
-  abstract Module getModule(PsiElement element);
+  abstract @Nullable Module getModule(PsiElement element);
 
   abstract class MoveCopyDropHandler implements DropHandler {
     @Override
@@ -216,8 +212,7 @@ abstract class ProjectViewDropTarget implements DnDNativeTarget {
     }
   }
 
-  @Nullable
-  protected PsiFileSystemItem[] getPsiFiles(@Nullable List<? extends File> fileList) {
+  protected @Nullable PsiFileSystemItem[] getPsiFiles(@Nullable List<? extends File> fileList) {
     if (fileList == null) return null;
     List<PsiFileSystemItem> sourceFiles = new ArrayList<>();
     for (File file : fileList) {

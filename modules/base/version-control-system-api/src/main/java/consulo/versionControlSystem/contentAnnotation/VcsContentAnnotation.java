@@ -40,8 +40,7 @@ public interface VcsContentAnnotation {
     // meaningful enclosing structure
     private final boolean myMethodChanged;
     private final boolean myFileChanged;
-    @Nullable
-    private final List<RichTextItem> myDetails;
+    private final @Nullable List<RichTextItem> myDetails;
 
     public Details(boolean lineChanged, boolean methodChanged, boolean fileChanged, List<RichTextItem> details) {
       myLineChanged = lineChanged;

@@ -97,14 +97,12 @@ public class FirefoxSettingsConfigurable implements Configurable {
             || !Comparing.equal(mySettings.getProfilesIniPath(), getConfiguredProfileIniPath());
     }
 
-    @Nullable
-    private String getConfiguredProfileIniPath() {
+    private @Nullable String getConfiguredProfileIniPath() {
         String path = PathUtil.toSystemIndependentName(StringUtil.nullize(myProfilesIniPathField.getText()));
         return myDefaultProfilesIniPath.equals(path) ? null : path;
     }
 
-    @Nullable
-    private String getConfiguredProfileName() {
+    private @Nullable String getConfiguredProfileName() {
         String selected = (String) myProfileCombobox.getSelectedItem();
         if (Comparing.equal(myDefaultProfile, selected)) {
             return null;

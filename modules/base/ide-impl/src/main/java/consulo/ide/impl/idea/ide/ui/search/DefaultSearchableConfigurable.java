@@ -59,8 +59,7 @@ public class DefaultSearchableConfigurable implements Configurable {
     }
 
     @Override
-    @Nullable
-    public String getHelpTopic() {
+    public @Nullable String getHelpTopic() {
         return myDelegate.getHelpTopic();
     }
 

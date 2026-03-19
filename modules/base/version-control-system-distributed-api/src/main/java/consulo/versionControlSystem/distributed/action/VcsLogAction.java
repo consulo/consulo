@@ -77,11 +77,9 @@ public abstract class VcsLogAction<Repo extends Repository> extends DumbAwareAct
   
   protected abstract AbstractRepositoryManager<Repo> getRepositoryManager(Project project);
 
-  @Nullable
-  protected abstract Repo getRepositoryForRoot(Project project, VirtualFile root);
+  protected abstract @Nullable Repo getRepositoryForRoot(Project project, VirtualFile root);
 
-  @Nullable
-  private MultiMap<Repo, VcsFullCommitDetails> groupByRootWithCheck(Project project, List<VcsFullCommitDetails> commits) {
+  private @Nullable MultiMap<Repo, VcsFullCommitDetails> groupByRootWithCheck(Project project, List<VcsFullCommitDetails> commits) {
     MultiMap<Repo, VcsFullCommitDetails> map = MultiMap.create();
     for (VcsFullCommitDetails commit : commits) {
       Repo root = getRepositoryForRoot(project, commit.getRoot());

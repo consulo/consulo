@@ -79,8 +79,7 @@ public class WeighingComparable<T, Loc> implements Comparable<WeighingComparable
     return 0;
   }
 
-  @Nullable
-  private Comparable getWeight(int index) {
+  private @Nullable Comparable getWeight(int index) {
     Comparable weight = myComputedWeighs[index];
     if (weight == null) {
       T element = myElement.get();

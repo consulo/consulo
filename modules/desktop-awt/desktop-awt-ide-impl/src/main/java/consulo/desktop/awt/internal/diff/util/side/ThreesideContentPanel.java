@@ -86,8 +86,7 @@ public class ThreesideContentPanel extends JPanel {
   }
 
   public static class Holders extends ThreesideContentPanel {
-    @Nullable
-    private final EditorEx myBaseEditor;
+    private final @Nullable EditorEx myBaseEditor;
 
     public Holders(List<? extends EditorHolder> holders) {
       super(ContainerUtil.map(holders, holder -> holder.getComponent()));

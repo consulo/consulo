@@ -68,8 +68,7 @@ public class DefaultProjectStoreImpl extends ProjectStoreImpl {
     final XmlElementStorage storage =
             new XmlElementStorage("", RoamingType.DISABLED, new TrackingPathMacroSubstitutorImpl(myPathMacroManager), ROOT_TAG_NAME, null, Application.get().getInstance(PathMacrosService.class)) {
               @Override
-              @Nullable
-              protected Element loadLocalData() {
+              protected @Nullable Element loadLocalData() {
                 return getStateCopy();
               }
 
@@ -107,14 +106,12 @@ public class DefaultProjectStoreImpl extends ProjectStoreImpl {
       }
 
       @Override
-      @Nullable
-      public TrackingPathMacroSubstitutor getMacroSubstitutor() {
+      public @Nullable TrackingPathMacroSubstitutor getMacroSubstitutor() {
         return null;
       }
 
       @Override
-      @Nullable
-      public StateStorage getStateStorage(Storage storageSpec) throws StateStorageException {
+      public @Nullable StateStorage getStateStorage(Storage storageSpec) throws StateStorageException {
         return storage;
       }
 

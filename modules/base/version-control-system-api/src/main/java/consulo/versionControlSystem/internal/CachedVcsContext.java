@@ -126,14 +126,12 @@ public class CachedVcsContext implements VcsContext {
   }
 
   @Override
-  @Nullable
-  public ChangeList[] getSelectedChangeLists() {
+  public @Nullable ChangeList[] getSelectedChangeLists() {
     return mySelectedChangeLists;
   }
 
   @Override
-  @Nullable
-  public Change[] getSelectedChanges() {
+  public @Nullable Change[] getSelectedChanges() {
     return mySelectedChanges;
   }
 

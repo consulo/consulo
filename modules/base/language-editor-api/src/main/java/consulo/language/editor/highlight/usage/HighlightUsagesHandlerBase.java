@@ -89,8 +89,7 @@ public abstract class HighlightUsagesHandlerBase<T extends PsiElement> {
   @RequiredReadAction
   public abstract List<T> getTargets();
 
-  @Nullable
-  public String getFeatureId() {
+  public @Nullable String getFeatureId() {
     return null;
   }
 
@@ -115,13 +114,11 @@ public abstract class HighlightUsagesHandlerBase<T extends PsiElement> {
     return myWriteUsages;
   }
 
-  @Nullable
-  public String getHintText() {
+  public @Nullable String getHintText() {
     return myHintText;
   }
 
-  @Nullable
-  public String getStatusText() {
+  public @Nullable String getStatusText() {
     return myStatusText;
   }
 

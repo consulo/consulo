@@ -130,8 +130,7 @@ public class CheckBoxList<T> extends JBList {
    * @param index    The list cell index
    * @return A point relative to the checkbox or null, if it's outside of the checkbox.
    */
-  @Nullable
-  protected Point findPointRelativeToCheckBox(int x, int y, JCheckBox checkBox, int index) {
+  protected @Nullable Point findPointRelativeToCheckBox(int x, int y, JCheckBox checkBox, int index) {
     int cx = x - myCellRenderer.getBorderInsets().left;
     int cy = y - myCellRenderer.getBorderInsets().top;
     return cx >= 0 && cy >= 0 ? new Point(cx, cy) : null;
@@ -147,8 +146,7 @@ public class CheckBoxList<T> extends JBList {
    * @param index    The list cell index
    * @return A point relative to the checkbox or null, if it's outside of the checkbox.
    */
-  @Nullable
-  protected Point findPointRelativeToCheckBoxWithAdjustedRendering(int x, int y, JCheckBox checkBox, int index) {
+  protected @Nullable Point findPointRelativeToCheckBoxWithAdjustedRendering(int x, int y, JCheckBox checkBox, int index) {
     boolean selected = isSelectedIndex(index);
     boolean hasFocus = hasFocus();
     Component component = myCellRenderer.getListCellRendererComponent(this, checkBox, index, selected, hasFocus);
@@ -169,8 +167,7 @@ public class CheckBoxList<T> extends JBList {
     return null;
   }
 
-  @Nullable
-  private static Point getChildLocationRelativeToAncestor(Component ancestor, Component child) {
+  private static @Nullable Point getChildLocationRelativeToAncestor(Component ancestor, Component child) {
     int dx = 0, dy = 0;
     Component c = child;
     while (c != null && c != ancestor) {
@@ -235,8 +232,7 @@ public class CheckBoxList<T> extends JBList {
     return ((DefaultListModel) getModel()).indexOf(checkBox);
   }
 
-  @Nullable
-  public T getItemAt(int index) {
+  public @Nullable T getItemAt(int index) {
     JCheckBox checkBox = (JCheckBox)getModel().getElementAt(index);
     List<T> value = myItemMap.getKeysByValue(checkBox);
     return value == null || value.isEmpty() ? null : value.get(0);
@@ -356,8 +352,7 @@ public class CheckBoxList<T> extends JBList {
     }
   }
 
-  @Nullable
-  protected String getSecondaryText(int index) {
+  protected @Nullable String getSecondaryText(int index) {
     return null;
   }
 

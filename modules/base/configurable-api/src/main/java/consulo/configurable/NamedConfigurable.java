@@ -81,8 +81,7 @@ public abstract class NamedConfigurable<T> implements Configurable, MasterDetail
   }
 
   private final boolean myNameEditable;
-  @Nullable
-  private final Runnable myUpdateTree;
+  private final @Nullable Runnable myUpdateTree;
 
   private boolean myNameVisible = true;
 

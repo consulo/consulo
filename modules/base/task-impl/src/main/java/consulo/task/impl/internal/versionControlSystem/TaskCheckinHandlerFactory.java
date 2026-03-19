@@ -66,8 +66,7 @@ public class TaskCheckinHandlerFactory extends CheckinHandlerFactory {
         };
     }
 
-    @Nullable
-    private static Task findTaskInRepositories(String message, TaskManager manager) {
+    private static @Nullable Task findTaskInRepositories(String message, TaskManager manager) {
         TaskRepository[] repositories = manager.getAllRepositories();
         for (TaskRepository repository : repositories) {
             String id = repository.extractId(message);

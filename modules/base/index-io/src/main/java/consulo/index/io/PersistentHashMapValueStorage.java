@@ -22,8 +22,7 @@ import java.util.PriorityQueue;
  * @author max
  */
 public class PersistentHashMapValueStorage {
-  @Nullable
-  private RAReader myCompactionModeReader;
+  private @Nullable RAReader myCompactionModeReader;
   private volatile long mySize;
   private final File myFile;
   private final String myPath;

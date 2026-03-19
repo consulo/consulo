@@ -45,7 +45,7 @@ public abstract class EditorWriteActionHandler extends EditorActionHandler {
 
   @Override
   @RequiredUIAccess
-  public void doExecute(final Editor editor, @Nullable final Caret caret, final DataContext dataContext) {
+  public void doExecute(final Editor editor, final @Nullable Caret caret, final DataContext dataContext) {
     if (editor.isViewer()) return;
 
     if (dataContext != null) {

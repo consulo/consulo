@@ -101,8 +101,7 @@ public class DependencyValidationManagerImpl extends DependencyValidationManager
     }
 
     @Override
-    @Nullable
-    public DependencyRule getViolatorDependencyRule(PsiFile from, PsiFile to) {
+    public @Nullable DependencyRule getViolatorDependencyRule(PsiFile from, PsiFile to) {
         for (DependencyRule dependencyRule : myRules) {
             if (dependencyRule.isForbiddenToUse(from, to)) {
                 return dependencyRule;
@@ -263,8 +262,7 @@ public class DependencyValidationManagerImpl extends DependencyValidationManager
     }
 
     @Override
-    @Nullable
-    public NamedScope getScope(@Nullable String name) {
+    public @Nullable NamedScope getScope(@Nullable String name) {
         NamedScope scope = super.getScope(name);
         if (scope == null) {
             PackageSet packageSet = myUnnamedScopes.get(name);
@@ -279,8 +277,7 @@ public class DependencyValidationManagerImpl extends DependencyValidationManager
         return scope;
     }
 
-    @Nullable
-    private static Element writeRule(DependencyRule rule) {
+    private static @Nullable Element writeRule(DependencyRule rule) {
         NamedScope fromScope = rule.getFromScope();
         NamedScope toScope = rule.getToScope();
         if (fromScope == null || toScope == null) {
@@ -293,8 +290,7 @@ public class DependencyValidationManagerImpl extends DependencyValidationManager
         return ruleElement;
     }
 
-    @Nullable
-    private DependencyRule readRule(Element ruleElement) {
+    private @Nullable DependencyRule readRule(Element ruleElement) {
         String fromScope = ruleElement.getAttributeValue(FROM_SCOPE_KEY);
         String toScope = ruleElement.getAttributeValue(TO_SCOPE_KEY);
         String denyRule = ruleElement.getAttributeValue(IS_DENY_KEY);

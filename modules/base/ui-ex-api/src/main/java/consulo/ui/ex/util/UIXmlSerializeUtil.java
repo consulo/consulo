@@ -31,13 +31,11 @@ public final class UIXmlSerializeUtil {
   private static final String WIDTH = "width";
   private static final String HEIGHT = "height";
   
-  @Nullable
-  public static Point2D getLocation(@Nullable Element element) {
+  public static @Nullable Point2D getLocation(@Nullable Element element) {
     return element == null ? null : getLocation(element, X, Y);
   }
 
-  @Nullable
-  public static Point2D getLocation(Element element, String x, String y) {
+  public static @Nullable Point2D getLocation(Element element, String x, String y) {
     String sX = element.getAttributeValue(x);
     if (sX == null) return null;
     String sY = element.getAttributeValue(y);
@@ -60,13 +58,11 @@ public final class UIXmlSerializeUtil {
     return element.setAttribute(x, Integer.toString(location.x())).setAttribute(y, Integer.toString(location.y()));
   }
 
-  @Nullable
-  public static Size2D getSize(@Nullable Element element) {
+  public static @Nullable Size2D getSize(@Nullable Element element) {
     return element == null ? null : getSize(element, WIDTH, HEIGHT);
   }
 
-  @Nullable
-  public static Size2D getSize(Element element, String width, String height) {
+  public static @Nullable Size2D getSize(Element element, String width, String height) {
     String sWidth = element.getAttributeValue(width);
     if (sWidth == null) return null;
     String sHeight = element.getAttributeValue(height);
@@ -94,13 +90,11 @@ public final class UIXmlSerializeUtil {
   }
 
 
-  @Nullable
-  public static Rectangle2D getBounds(@Nullable Element element) {
+  public static @Nullable Rectangle2D getBounds(@Nullable Element element) {
     return element == null ? null : getBounds(element, X, Y, WIDTH, HEIGHT);
   }
 
-  @Nullable
-  public static Rectangle2D getBounds(Element element, String x, String y, String width, String height) {
+  public static @Nullable Rectangle2D getBounds(Element element, String x, String y, String width, String height) {
     String sX = element.getAttributeValue(x);
     if (sX == null) return null;
     String sY = element.getAttributeValue(y);

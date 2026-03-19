@@ -72,8 +72,7 @@ public abstract class RunLineMarkerContributor implements LanguageExtension {
    * @param element
    * @return null means disabled
    */
-  @Nullable
-  protected static String getText(AnAction action, PsiElement element) {
+  protected static @Nullable String getText(AnAction action, PsiElement element) {
     DataContext parent = DataManager.getInstance().getDataContext();
     DataContext dataContext = DataContext.builder().parent(parent).add(PsiElement.KEY, element).build();
     AnActionEvent event = AnActionEvent.createFromAnAction(action, null, ActionPlaces.STATUS_BAR_PLACE, dataContext);

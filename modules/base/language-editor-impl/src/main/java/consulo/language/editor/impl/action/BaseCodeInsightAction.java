@@ -97,8 +97,7 @@ public abstract class BaseCodeInsightAction extends CodeInsightAction {
         return injectedEditor;
     }
 
-    @Nullable
-    protected Editor getBaseEditor(DataContext dataContext, Project project) {
+    protected @Nullable Editor getBaseEditor(DataContext dataContext, Project project) {
         return super.getEditor(dataContext, project, true);
     }
 

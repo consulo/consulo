@@ -36,8 +36,7 @@ public class ParserDefinitionExtensionPoint {
     private static final ExtensionPointCacheKey<ParserDefinition, ByLanguageValue<ParserDefinition>> KEY =
         ExtensionPointCacheKey.create("ParserDefinition", LanguageOneToOne.build());
 
-    @Nullable
-    public static ParserDefinition forLanguage(Application application, Language language) {
+    public static @Nullable ParserDefinition forLanguage(Application application, Language language) {
         ExtensionValueCache<ParserDefinition> cache = language.getUserData(VALUE_KEY);
         if (cache != null) {
             return cache.get();

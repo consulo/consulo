@@ -283,8 +283,7 @@ public class AnActionEvent implements PlaceProvider<String> {
         return myWorksInInjected ? getInjectedDataContext(myDataContext) : myDataContext;
     }
 
-    @Nullable
-    public <T> T getData(Key<T> key) {
+    public @Nullable <T> T getData(Key<T> key) {
         return getDataContext().getData(key);
     }
 
@@ -375,8 +374,7 @@ public class AnActionEvent implements PlaceProvider<String> {
         return myWorksInInjected;
     }
 
-    @Nullable
-    public final InputDetails getInputDetails() {
+    public final @Nullable InputDetails getInputDetails() {
         return myInputDetails;
     }
 

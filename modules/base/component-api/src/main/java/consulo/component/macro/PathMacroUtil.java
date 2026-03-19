@@ -51,8 +51,7 @@ public class PathMacroUtil {
     return FileUtil.toSystemIndependentName(ContainerPathManager.get().getHomePath());
   }
 
-  @Nullable
-  public static String getGlobalSystemMacroValue(String name) {
+  public static @Nullable String getGlobalSystemMacroValue(String name) {
     if (APPLICATION_HOME_DIR.equals(name)) return getApplicationHomeDirPath();
     if (USER_HOME_MACRO_NAME.equals(name)) return getUserHomePath();
     return null;

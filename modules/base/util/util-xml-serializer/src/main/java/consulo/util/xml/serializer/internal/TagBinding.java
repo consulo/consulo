@@ -82,8 +82,7 @@ class TagBinding extends BasePrimitiveBinding implements MultiNodeBinding {
   }
 
   @Override
-  @Nullable
-  public Object deserialize(@Nullable Object context, Element element) {
+  public @Nullable Object deserialize(@Nullable Object context, Element element) {
     Objects.requireNonNull(context);
     if (myBinding == null) {
       String value = XmlSerializerImpl.getTextValue(element, myTextIfEmpty);

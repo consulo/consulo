@@ -785,8 +785,7 @@ public final class DocumentationManagerImpl extends DockablePopupManager<Documen
     }
 
     @Override
-    @Nullable
-    public JBPopup getDocInfoHint() {
+    public @Nullable JBPopup getDocInfoHint() {
         if (myDocInfoHintRef == null) {
             return null;
         }
@@ -1146,8 +1145,7 @@ public final class DocumentationManagerImpl extends DockablePopupManager<Documen
             this.provider = provider;
         }
 
-        @Nullable
-        abstract String getDocumentation() throws Exception;
+        abstract @Nullable String getDocumentation() throws Exception;
     }
 
     private static class MyCollector extends DocumentationCollector {
@@ -1164,8 +1162,7 @@ public final class DocumentationManagerImpl extends DockablePopupManager<Documen
         }
 
         @Override
-        @Nullable
-        public String getDocumentation() {
+        public @Nullable String getDocumentation() {
             provider = AccessRule.read(() -> DocumentationManagerHelper.getProviderFromElement(element, originalElement));
             LOG.debug("Using provider ", provider);
 

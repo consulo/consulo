@@ -70,8 +70,7 @@ public class IndentAdjuster {
         }
     }
 
-    @Nullable
-    private static IndentData getAlignOffset(LeafBlockWrapper myCurrentBlock) {
+    private static @Nullable IndentData getAlignOffset(LeafBlockWrapper myCurrentBlock) {
         AbstractBlockWrapper current = myCurrentBlock;
         while (true) {
             AlignmentImpl alignment = current.getAlignment();

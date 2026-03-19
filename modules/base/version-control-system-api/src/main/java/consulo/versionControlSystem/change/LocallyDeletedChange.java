@@ -33,8 +33,7 @@ public class LocallyDeletedChange {
     return myPath;
   }
 
-  @Nullable
-  public Image getAddIcon() {
+  public @Nullable Image getAddIcon() {
     return null;
   }
 
@@ -59,8 +58,7 @@ public class LocallyDeletedChange {
     return myPresentableUrl;
   }
 
-  @Nullable
-  public String getDescription() {
+  public @Nullable String getDescription() {
     return null;
   }
 

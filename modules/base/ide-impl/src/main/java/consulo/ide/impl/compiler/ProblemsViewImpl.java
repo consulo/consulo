@@ -53,14 +53,10 @@ public class ProblemsViewImpl extends ProblemsView {
         final int type;
         
         final String[] text;
-        @Nullable
-        final String groupName;
-        @Nullable
-        final Navigatable navigatable;
-        @Nullable
-        final String exportTextPrefix;
-        @Nullable
-        final String rendererTextPrefix;
+        final @Nullable String groupName;
+        final @Nullable Navigatable navigatable;
+        final @Nullable String exportTextPrefix;
+        final @Nullable String rendererTextPrefix;
 
         private TempMessage(
             int type,
@@ -83,8 +79,7 @@ public class ProblemsViewImpl extends ProblemsView {
 
     private List<TempMessage> myTempMessages = new CopyOnWriteArrayList<>();
 
-    @Nullable
-    private ProblemsViewPanel myPanel;
+    private @Nullable ProblemsViewPanel myPanel;
 
     private final ExecutorService myViewUpdater = SequentialTaskExecutor.createSequentialApplicationPoolExecutor("ProblemsView pool");
 

@@ -276,8 +276,7 @@ public class WebToolWindowPanelImpl extends VaadinComponentDelegate<WebToolWindo
         (myWidescreen ? myVerticalSplitter : myHorizontalSplitter).setCenterComponent(component);
     }
 
-    @Nullable
-    private WebToolWindowStripeButtonImpl getButtonById(String id) {
+    private @Nullable WebToolWindowStripeButtonImpl getButtonById(String id) {
         return myId2Button.get(id);
     }
 

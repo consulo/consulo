@@ -48,8 +48,7 @@ public class RearrangeBeforeCheckinHandler extends CheckinHandler implements Che
 
     @RequiredUIAccess
     @Override
-    @Nullable
-    public RefreshableOnComponent getBeforeCheckinConfigurationPanel() {
+    public @Nullable RefreshableOnComponent getBeforeCheckinConfigurationPanel() {
         VcsConfiguration configuration = VcsConfiguration.getInstance(myProject);
 
         return new CheckBoxRefreshableOnComponent(

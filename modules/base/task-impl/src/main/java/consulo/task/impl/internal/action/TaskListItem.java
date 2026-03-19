@@ -57,15 +57,13 @@ abstract class TaskListItem {
         return myIcon;
     }
 
-    @Nullable
-    public String getSeparator() {
+    public @Nullable String getSeparator() {
         return mySeparator;
     }
 
     abstract void select();
 
-    @Nullable
-    public LocalTask getTask() {
+    public @Nullable LocalTask getTask() {
         return myTask;
     }
 

@@ -34,8 +34,7 @@ public interface StubBasedPsiElement<Stub extends StubElement> extends PsiElemen
    * Like {@link #getStub()}, but can return a non-null value after the element has been switched to AST. Can be used
    * to retrieve the information which is cheaper to get from a stub than by tree traversal.
    */
-  @Nullable
-  default Stub getGreenStub() {
+  default @Nullable Stub getGreenStub() {
     return getStub();
   }
 }

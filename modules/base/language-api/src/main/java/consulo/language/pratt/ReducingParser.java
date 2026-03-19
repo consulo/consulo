@@ -33,6 +33,5 @@ public abstract class ReducingParser extends TokenParser {
     return true;
   }
 
-  @Nullable
-  public abstract IElementType parseFurther(PrattBuilder builder);
+  public abstract @Nullable IElementType parseFurther(PrattBuilder builder);
 }

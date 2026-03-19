@@ -393,8 +393,7 @@ public class PluginNode extends PluginDescriptorStub implements PluginDescriptor
         myExperimental = experimental;
     }
 
-    @Nullable
-    public String getStatusText() {
+    public @Nullable String getStatusText() {
         return switch (myInstallStatus) {
             case STATUS_UNKNOWN -> "Available";
             case STATUS_INSTALLED -> "Installed";

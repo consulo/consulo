@@ -152,8 +152,7 @@ public abstract class ChooseElementsDialog<T> extends DialogWrapper {
 
     protected abstract String getItemText(T item);
 
-    @Nullable
-    protected abstract Image getItemIcon(T item);
+    protected abstract @Nullable Image getItemIcon(T item);
 
     
     public List<T> getChosenElements() {

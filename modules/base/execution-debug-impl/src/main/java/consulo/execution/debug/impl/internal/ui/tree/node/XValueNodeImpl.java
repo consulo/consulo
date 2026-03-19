@@ -57,8 +57,7 @@ public class XValueNodeImpl extends XValueContainerNode<XValue>
   private static final int MAX_NAME_LENGTH = 100;
 
   private final String myName;
-  @Nullable
-  private String myRawValue;
+  private @Nullable String myRawValue;
   private XFullValueEvaluator myFullValueEvaluator;
   private boolean myChanged;
   private XValuePresentation myValuePresentation;
@@ -237,8 +236,7 @@ public class XValueNodeImpl extends XValueContainerNode<XValue>
     }
   }
 
-  @Nullable
-  public XFullValueEvaluator getFullValueEvaluator() {
+  public @Nullable XFullValueEvaluator getFullValueEvaluator() {
     return myFullValueEvaluator;
   }
 
@@ -268,19 +266,16 @@ public class XValueNodeImpl extends XValueContainerNode<XValue>
   }
 
   @Override
-  @Nullable
-  public String getName() {
+  public @Nullable String getName() {
     return myName;
   }
 
-  @Nullable
-  public XValuePresentation getValuePresentation() {
+  public @Nullable XValuePresentation getValuePresentation() {
     return myValuePresentation;
   }
 
   @Override
-  @Nullable
-  public String getRawValue() {
+  public @Nullable String getRawValue() {
     return myRawValue;
   }
 

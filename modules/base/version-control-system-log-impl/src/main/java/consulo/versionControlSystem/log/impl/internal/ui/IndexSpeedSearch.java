@@ -40,8 +40,8 @@ public class IndexSpeedSearch extends VcsLogSpeedSearch {
   
   private final VcsUserRegistry myUserRegistry;
 
-  @Nullable private Set<Integer> myMatchedByUserCommits;
-  @Nullable private Collection<VcsUser> myMatchedUsers;
+  private @Nullable Set<Integer> myMatchedByUserCommits;
+  private @Nullable Collection<VcsUser> myMatchedUsers;
 
   public IndexSpeedSearch(Project project, VcsLogIndex index, VcsLogGraphTable component) {
     super(component);
@@ -92,8 +92,7 @@ public class IndexSpeedSearch extends VcsLogSpeedSearch {
             "Getting row text in a Log is unsupported since we match commit subject and author separately.");
   }
 
-  @Nullable
-  private String getCommitSubject(Integer row) {
+  private @Nullable String getCommitSubject(Integer row) {
     Integer id = myComponent.getModel().getIdAtRow(row);
     String message = myIndex.getFullMessage(id);
     if (message == null) return super.getElementText(row);

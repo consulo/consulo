@@ -342,8 +342,7 @@ public class UpdateInfoTreeImpl extends PanelWithActionsAndCloseButton implement
             }
         }
 
-        @Nullable
-        private GroupTreeNode findParentGroupTreeNode(TreeNode treeNode) {
+        private @Nullable GroupTreeNode findParentGroupTreeNode(TreeNode treeNode) {
             TreeNode currentNode = treeNode;
             while (currentNode != null && !(currentNode instanceof GroupTreeNode)) {
                 currentNode = currentNode.getParent();
@@ -376,8 +375,7 @@ public class UpdateInfoTreeImpl extends PanelWithActionsAndCloseButton implement
         return VirtualFileUtil.toVirtualFileArray(result);
     }
 
-    @Nullable
-    private File[] getFileArray() {
+    private @Nullable File[] getFileArray() {
         ArrayList<File> result = new ArrayList<>();
         TreePath[] selectionPaths = myTree.getSelectionPaths();
         if (selectionPaths != null) {
@@ -504,8 +502,7 @@ public class UpdateInfoTreeImpl extends PanelWithActionsAndCloseButton implement
         myAfter = after;
     }
 
-    @Nullable
-    private Pair<PackageSetBase, NamedScopesHolder> getScopeFilter() {
+    private @Nullable Pair<PackageSetBase, NamedScopesHolder> getScopeFilter() {
         String scopeName = getFilterScopeName();
         if (scopeName != null) {
             for (NamedScopesHolder holder : NamedScopesHolder.getAllNamedScopeHolders(myProject)) {
@@ -521,8 +518,7 @@ public class UpdateInfoTreeImpl extends PanelWithActionsAndCloseButton implement
         return null;
     }
 
-    @Nullable
-    private String getFilterScopeName() {
+    private @Nullable String getFilterScopeName() {
         return VcsConfiguration.getInstance(myProject).UPDATE_FILTER_SCOPE_NAME;
     }
 

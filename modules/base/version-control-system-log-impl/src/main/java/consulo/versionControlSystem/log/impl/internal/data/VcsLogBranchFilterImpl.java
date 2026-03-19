@@ -41,8 +41,7 @@ public class VcsLogBranchFilterImpl implements VcsLogBranchFilter {
     myExcludedPatterns = new ArrayList<>();
   }
 
-  @Nullable
-  public static VcsLogBranchFilterImpl fromBranch(String branchName) {
+  public static @Nullable VcsLogBranchFilterImpl fromBranch(String branchName) {
     return new VcsLogBranchFilterImpl(Collections.singletonList(branchName), Collections.<Pattern>emptyList(),
                                       Collections.<String>emptyList(), Collections.<Pattern>emptyList());
   }

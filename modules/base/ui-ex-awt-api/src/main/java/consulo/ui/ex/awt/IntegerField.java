@@ -75,8 +75,7 @@ public class IntegerField extends JBTextField {
     myValueEditor.setValueName(valueName);
   }
 
-  @Nullable
-  public String getValueName() {
+  public @Nullable String getValueName() {
     return myValueEditor.getValueName();
   }
 

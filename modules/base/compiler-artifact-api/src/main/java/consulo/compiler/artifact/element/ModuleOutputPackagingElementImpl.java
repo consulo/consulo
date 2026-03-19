@@ -137,8 +137,7 @@ public class ModuleOutputPackagingElementImpl extends PackagingElement<ModuleOut
   }
 
   @Override
-  @Nullable
-  public String getModuleName() {
+  public @Nullable String getModuleName() {
     return NamedPointerUtil.getName(myModulePointer);
   }
 
@@ -154,8 +153,7 @@ public class ModuleOutputPackagingElementImpl extends PackagingElement<ModuleOut
   }
 
   @Override
-  @Nullable
-  public Module findModule(PackagingElementResolvingContext context) {
+  public @Nullable Module findModule(PackagingElementResolvingContext context) {
     Module module = NamedPointerUtil.get(myModulePointer);
     ModulesProvider modulesProvider = context.getModulesProvider();
     if (module != null) {

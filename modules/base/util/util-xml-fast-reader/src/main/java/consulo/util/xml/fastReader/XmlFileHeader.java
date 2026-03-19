@@ -23,14 +23,10 @@ import org.jspecify.annotations.Nullable;
 public class XmlFileHeader {
   public static final XmlFileHeader EMPTY = new XmlFileHeader(null, null, null, null);
 
-  @Nullable
-  private final String myRootTagLocalName;
-  @Nullable
-  private final String myRootTagNamespace;
-  @Nullable
-  private final String myPublicId;
-  @Nullable
-  private final String mySystemId;
+  private final @Nullable String myRootTagLocalName;
+  private final @Nullable String myRootTagNamespace;
+  private final @Nullable String myPublicId;
+  private final @Nullable String mySystemId;
 
   public XmlFileHeader(
     @Nullable String rootTagLocalName,
@@ -44,23 +40,19 @@ public class XmlFileHeader {
     mySystemId = systemId;
   }
 
-  @Nullable
-  public String getPublicId() {
+  public @Nullable String getPublicId() {
     return myPublicId;
   }
 
-  @Nullable
-  public String getRootTagLocalName() {
+  public @Nullable String getRootTagLocalName() {
     return myRootTagLocalName;
   }
 
-  @Nullable
-  public String getRootTagNamespace() {
+  public @Nullable String getRootTagNamespace() {
     return myRootTagNamespace;
   }
 
-  @Nullable
-  public String getSystemId() {
+  public @Nullable String getSystemId() {
     return mySystemId;
   }
 

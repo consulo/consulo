@@ -32,8 +32,7 @@ public class DeclarationRangeUtil {
     return textRange;
   }
 
-  @Nullable
-  public static TextRange getPossibleDeclarationAtRange(PsiElement container) {
+  public static @Nullable TextRange getPossibleDeclarationAtRange(PsiElement container) {
     DeclarationRangeHandler<PsiElement> rangeHandler = DeclarationRangeHandler.findDeclarationHandler(container);
     if (rangeHandler != null) {
       return rangeHandler.getDeclarationRange(container);

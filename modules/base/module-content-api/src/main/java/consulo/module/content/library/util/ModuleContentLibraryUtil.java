@@ -79,8 +79,7 @@ public class ModuleContentLibraryUtil {
     return VirtualFileUtil.toVirtualFileArray(roots);
   }
 
-  @Nullable
-  public static OrderEntry findLibraryEntry(VirtualFile file, Project project) {
+  public static @Nullable OrderEntry findLibraryEntry(VirtualFile file, Project project) {
     List<OrderEntry> entries = ProjectRootManager.getInstance(project).getFileIndex().getOrderEntriesForFile(file);
     for (OrderEntry entry : entries) {
       if (entry instanceof LibraryOrderEntry || entry instanceof ModuleExtensionWithSdkOrderEntry) {

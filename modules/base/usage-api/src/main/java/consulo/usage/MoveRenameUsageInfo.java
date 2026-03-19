@@ -92,8 +92,7 @@ public class MoveRenameUsageInfo extends UsageInfo {
         return myReferencedElementPointer == null ? null : myReferencedElementPointer.getElement();
     }
 
-    @Nullable
-    public PsiElement getReferencedElement() {
+    public @Nullable PsiElement getReferencedElement() {
         return myReferencedElement;
     }
 

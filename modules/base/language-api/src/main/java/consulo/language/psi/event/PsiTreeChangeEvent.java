@@ -97,8 +97,7 @@ public abstract class PsiTreeChangeEvent extends EventObject {
     return myNewValue;
   }
 
-  @Nullable
-  public PsiFile getFile() {
+  public @Nullable PsiFile getFile() {
     return myFile;
   }
 

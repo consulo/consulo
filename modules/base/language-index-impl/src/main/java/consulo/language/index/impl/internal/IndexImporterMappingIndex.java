@@ -18,8 +18,7 @@ final class IndexImporterMappingIndex<Key, Value, Input> implements SnapshotInpu
 
     private final List<SnapshotInputMappingIndex<Key, Value, Input>> myImporters;
 
-    @Nullable
-    static <Key, Value, Input> SnapshotInputMappingIndex<Key, Value, Input> wrap(
+    static @Nullable <Key, Value, Input> SnapshotInputMappingIndex<Key, Value, Input> wrap(
         @Nullable SnapshotInputMappingIndex<Key, Value, Input> index,
         IndexExtension<Key, Value, Input> indexExtension
     ) {
@@ -110,8 +109,7 @@ final class IndexImporterMappingIndex<Key, Value, Input> implements SnapshotInpu
         };
     }
 
-    @Nullable
-    private static <Key, Value, Input> SnapshotInputMappingIndex<Key, Value, Input>
+    private static @Nullable <Key, Value, Input> SnapshotInputMappingIndex<Key, Value, Input>
     createImportersWrapper(IndexExtension<Key, Value, Input> indexExtension) {
         List<SnapshotInputMappingIndex<Key, Value, Input>> importers;
         try {

@@ -126,26 +126,22 @@ public class NotificationsUtil {
         return XmlStringUtil.wrapInHtml(result.toString());
     }
 
-    @Nullable
-    public static String getFontStyle() {
+    public static @Nullable String getFontStyle() {
         String fontName = getFontName();
         return StringUtil.isEmpty(fontName) ? null : "font-family:" + fontName + ";";
     }
 
-    @Nullable
-    public static Pair<String, Integer> getFontData() {
+    public static @Nullable Pair<String, Integer> getFontData() {
         UIFontManager uiFontManager = UIFontManager.getInstance();
         return Pair.create(uiFontManager.getFontName(), uiFontManager.getFontSize());
     }
 
-    @Nullable
-    public static String getFontName() {
+    public static @Nullable String getFontName() {
         Pair<String, Integer> data = getFontData();
         return data == null ? null : data.first;
     }
 
-    @Nullable
-    public static HyperlinkListener wrapListener(Notification notification) {
+    public static @Nullable HyperlinkListener wrapListener(Notification notification) {
         NotificationListener listener = notification.getListener();
         if (listener == null) {
             return null;

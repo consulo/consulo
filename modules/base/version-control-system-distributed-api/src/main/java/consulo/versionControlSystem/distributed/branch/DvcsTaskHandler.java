@@ -167,8 +167,7 @@ public abstract class DvcsTaskHandler<R extends Repository> extends VcsTaskHandl
 
     protected abstract void checkoutAsNewBranch(String name, List<R> repositories);
 
-    @Nullable
-    protected abstract String getActiveBranch(R repository);
+    protected abstract @Nullable String getActiveBranch(R repository);
 
     
     protected abstract Iterable<TaskInfo> getAllBranches(R repository);
