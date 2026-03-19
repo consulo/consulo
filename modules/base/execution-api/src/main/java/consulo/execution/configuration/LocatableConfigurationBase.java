@@ -88,8 +88,7 @@ public abstract class LocatableConfigurationBase extends RunConfigurationBase im
    *
    * @return the name of the action.
    */
-  @Nullable
-  public String getActionName() {
+  public @Nullable String getActionName() {
     String name = getName();
     return name.length() < 20 ? name : name.substring(0, 20) + "...";
   }

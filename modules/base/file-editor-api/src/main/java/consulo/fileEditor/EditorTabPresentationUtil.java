@@ -30,8 +30,7 @@ public class EditorTabPresentationUtil {
         return name;
     }
 
-    @Nullable
-    public static ColorValue getEditorTabBackgroundColor(
+    public static @Nullable ColorValue getEditorTabBackgroundColor(
         Project project,
         VirtualFile file,
         @Nullable FileEditorWindow editorWindow
@@ -45,8 +44,7 @@ public class EditorTabPresentationUtil {
         return null;
     }
 
-    @Nullable
-    public static ColorValue getFileBackgroundColor(Project project, VirtualFile file) {
+    public static @Nullable ColorValue getFileBackgroundColor(Project project, VirtualFile file) {
         for (EditorTabColorProvider provider : DumbService.getDumbAwareExtensions(project, project.getExtensionPoint(EditorTabColorProvider.class))) {
             ColorValue result = provider.getProjectViewColor(project, file);
             if (result != null) {

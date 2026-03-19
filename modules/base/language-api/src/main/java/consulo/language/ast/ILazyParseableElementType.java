@@ -78,8 +78,7 @@ public class ILazyParseableElementType extends IElementType implements ILazyPars
     return getLanguage();
   }
 
-  @Nullable
-  public ASTNode createNode(CharSequence text) {
+  public @Nullable ASTNode createNode(CharSequence text) {
     return null;
   }
 

@@ -97,8 +97,7 @@ public class ExternalSystemProcessingManager implements ExternalSystemTaskNotifi
         return false;
     }
 
-    @Nullable
-    public ExternalSystemTask findTask(
+    public @Nullable ExternalSystemTask findTask(
         ExternalSystemTaskType type,
         ProjectSystemId projectSystemId,
         String externalProjectPath

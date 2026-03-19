@@ -51,8 +51,7 @@ public abstract class EditorBasedWidget implements StatusBarWidget, FileEditorMa
     return myFactory.getId();
   }
 
-  @Nullable
-  protected final Editor getEditor() {
+  protected final @Nullable Editor getEditor() {
     Project project = getProject();
     if (project.isDisposed()) return null;
 
@@ -116,15 +115,13 @@ public abstract class EditorBasedWidget implements StatusBarWidget, FileEditorMa
     return focusOwner;
   }
 
-  @Nullable
-  protected Editor getFocusedEditor() {
+  protected @Nullable Editor getFocusedEditor() {
     Component component = getFocusedComponent();
     Editor editor = component instanceof EditorHolder ? ((EditorHolder)component).getEditor() : getEditor();
     return editor != null && !editor.isDisposed() ? editor : null;
   }
 
-  @Nullable
-  protected VirtualFile getSelectedFile() {
+  protected @Nullable VirtualFile getSelectedFile() {
     Editor editor = getEditor();
     if (editor == null) return null;
     Document document = editor.getDocument();

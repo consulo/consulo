@@ -268,8 +268,7 @@ public class PlaybackDebugger implements UiDebuggerExtension, PlaybackRunner.Sta
         });
     }
 
-    @Nullable
-    private VirtualFile pathToFile() {
+    private @Nullable VirtualFile pathToFile() {
         if (myState.currentScript.length() == 0) {
             return null;
         }
@@ -480,7 +479,7 @@ public class PlaybackDebugger implements UiDebuggerExtension, PlaybackRunner.Sta
     }
 
     private void message(
-        @Nullable final PlaybackContext context,
+        final @Nullable PlaybackContext context,
         final String text,
         final int currentLine,
         final Type type,

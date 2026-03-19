@@ -130,8 +130,7 @@ public class FileUtil {
 
     private static final Random RANDOM = new Random();
 
-    @Nullable
-    private static String ourCanonicalTempPathCache = null;
+    private static @Nullable String ourCanonicalTempPathCache = null;
 
     public static String getTempDirectory() {
         if (ourCanonicalTempPathCache == null) {
@@ -327,8 +326,7 @@ public class FileUtil {
      * @param file the file
      * @return the relative path from the {@code base} to the {@code file}, or {@code null}
      */
-    @Nullable
-    public static String getRelativePath(File base, File file) {
+    public static @Nullable String getRelativePath(File base, File file) {
         if (base == null || file == null) {
             return null;
         }
@@ -342,13 +340,11 @@ public class FileUtil {
         return getRelativePath(basePath, filePath, File.separatorChar);
     }
 
-    @Nullable
-    public static String getRelativePath(String basePath, String filePath, char separator) {
+    public static @Nullable String getRelativePath(String basePath, String filePath, char separator) {
         return getRelativePath(basePath, filePath, separator, OSInfo.isFileSystemCaseSensitive);
     }
 
-    @Nullable
-    public static String getRelativePath(String basePath, String filePath, char separator, boolean caseSensitive) {
+    public static @Nullable String getRelativePath(String basePath, String filePath, char separator, boolean caseSensitive) {
         basePath = ensureEnds(basePath, separator);
 
         if (caseSensitive ? basePath.equals(ensureEnds(filePath, separator)) : basePath.equalsIgnoreCase(ensureEnds(filePath, separator))) {
@@ -820,8 +816,7 @@ public class FileUtil {
     }
 
     @Contract("_,!null -> !null")
-    @Nullable
-    public static CharSequence getExtension(CharSequence fileName, @Nullable String defaultValue) {
+    public static @Nullable CharSequence getExtension(CharSequence fileName, @Nullable String defaultValue) {
         int index = StringUtil.lastIndexOf(fileName, '.', 0, fileName.length());
         if (index < 0) {
             return defaultValue;
@@ -965,8 +960,7 @@ public class FileUtil {
         T execute(boolean lastAttempt) throws E;
     }
 
-    @Nullable
-    public static <T, E extends Throwable> T doIOOperation(RepeatableIOOperation<T, E> ioTask) throws E {
+    public static @Nullable <T, E extends Throwable> T doIOOperation(RepeatableIOOperation<T, E> ioTask) throws E {
         for (int i = MAX_FILE_IO_ATTEMPTS; i > 0; i--) {
             T result = ioTask.execute(i == 1);
             if (result != null) {
@@ -1069,8 +1063,7 @@ public class FileUtil {
     }
 
     @Contract("null -> null; !null -> !null")
-    @Nullable
-    public static String toCanonicalUriPath(@Nullable String path) {
+    public static @Nullable String toCanonicalUriPath(@Nullable String path) {
         return toCanonicalPath(path, '/', false);
     }
 
@@ -1082,8 +1075,7 @@ public class FileUtil {
      * If the path may contain symlinks, use {@link FileUtil#toCanonicalPath(String, boolean)} instead.
      */
     @Contract("null -> null; !null -> !null")
-    @Nullable
-    public static String toCanonicalPath(@Nullable String path) {
+    public static @Nullable String toCanonicalPath(@Nullable String path) {
         return toCanonicalPath(path, File.separatorChar, true);
     }
 
@@ -1103,8 +1095,7 @@ public class FileUtil {
      * 'root/dir1/link_to_dir1/../dir2' should be resolved to 'root/dir2'
      */
     @Contract("null, _ -> null")
-    @Nullable
-    public static String toCanonicalPath(@Nullable String path, boolean resolveSymlinksIfNecessary) {
+    public static @Nullable String toCanonicalPath(@Nullable String path, boolean resolveSymlinksIfNecessary) {
         return toCanonicalPath(path, File.separatorChar, true, resolveSymlinksIfNecessary);
     }
 
@@ -1127,8 +1118,7 @@ public class FileUtil {
     };
 
     @Contract("null,_,_,_ -> null; !null,_,_,_ -> !null")
-    @Nullable
-    private static String toCanonicalPath(@Nullable String path, char separatorChar, boolean removeLastSlash, boolean resolveSymlinks) {
+    private static @Nullable String toCanonicalPath(@Nullable String path, char separatorChar, boolean removeLastSlash, boolean resolveSymlinks) {
         SymlinkResolver symlinkResolver = resolveSymlinks ? SYMLINK_RESOLVER : null;
         return toCanonicalPath(path, separatorChar, removeLastSlash, symlinkResolver);
     }
@@ -1140,14 +1130,12 @@ public class FileUtil {
      * consider using {@link FileUtil#toCanonicalPath(String, boolean)} instead.
      */
     @Contract("null,_,_ -> null; !null,_,_ -> !null")
-    @Nullable
-    public static String toCanonicalPath(@Nullable String path, char separatorChar, boolean removeLastSlash) {
+    public static @Nullable String toCanonicalPath(@Nullable String path, char separatorChar, boolean removeLastSlash) {
         return toCanonicalPath(path, separatorChar, removeLastSlash, null);
     }
 
     @Contract("null,_,_,_ -> null; !null,_,_,_ -> !null")
-    @Nullable
-    protected static String toCanonicalPath(@Nullable String path, char separatorChar, boolean removeLastSlash, @Nullable SymlinkResolver resolver) {
+    protected static @Nullable String toCanonicalPath(@Nullable String path, char separatorChar, boolean removeLastSlash, @Nullable SymlinkResolver resolver) {
         if (path == null || path.isEmpty()) {
             return path;
         }
@@ -1383,8 +1371,7 @@ public class FileUtil {
         return StringUtil.join(parts, File.separator);
     }
 
-    @Nullable
-    public static File findAncestor(File f1, File f2) {
+    public static @Nullable File findAncestor(File f1, File f2) {
         File ancestor = f1;
         while (ancestor != null && !isAncestor(ancestor, f2, false)) {
             ancestor = ancestor.getParentFile();
@@ -1400,8 +1387,7 @@ public class FileUtil {
      * @param file a file to analyze
      * @return files's parent, or {@code null} if the file has no parent.
      */
-    @Nullable
-    public static File getParentFile(File file) {
+    public static @Nullable File getParentFile(File file) {
         int skipCount = 0;
         File parentFile = file;
         while (true) {
@@ -1436,8 +1422,7 @@ public class FileUtil {
         return list;
     }
 
-    @Nullable
-    public static File findFirstThatExist(String... paths) {
+    public static @Nullable File findFirstThatExist(String... paths) {
         for (String path : paths) {
             if (!StringUtil.isEmptyOrSpaces(path)) {
                 File file = new File(toSystemDependentName(path));
@@ -1505,8 +1490,7 @@ public class FileUtil {
      *
      * @return path of the first of found files or empty string or null.
      */
-    @Nullable
-    public static String findFileInProvidedPath(String providedPath, String... fileNames) {
+    public static @Nullable String findFileInProvidedPath(String providedPath, String... fileNames) {
         if (StringUtil.isEmpty(providedPath)) {
             return "";
         }

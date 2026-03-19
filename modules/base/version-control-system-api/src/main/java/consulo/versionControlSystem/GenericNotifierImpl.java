@@ -174,8 +174,7 @@ public abstract class GenericNotifierImpl<T, Key> {
         }
     }
 
-    @Nullable
-    protected T getObj(Key key) {
+    protected @Nullable T getObj(Key key) {
         synchronized (myLock) {
             MyNotification notification = myState.get(key);
             return notification == null ? null : notification.getObj();

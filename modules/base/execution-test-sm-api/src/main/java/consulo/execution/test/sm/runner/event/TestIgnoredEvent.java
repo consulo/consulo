@@ -44,8 +44,7 @@ public class TestIgnoredEvent extends TreeNodeEvent {
         return myIgnoreComment;
     }
 
-    @Nullable
-    public String getStacktrace() {
+    public @Nullable String getStacktrace() {
         return myStacktrace;
     }
 

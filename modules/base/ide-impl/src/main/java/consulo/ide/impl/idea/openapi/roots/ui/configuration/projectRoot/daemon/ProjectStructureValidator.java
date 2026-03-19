@@ -101,8 +101,7 @@ public abstract class ProjectStructureValidator {
     /**
      * @return list of usages or <code>null</code> when it does not handle such element
      */
-    @Nullable
-    protected List<ProjectStructureElementUsage> getUsagesIn(ProjectStructureElement element) {
+    protected @Nullable List<ProjectStructureElementUsage> getUsagesIn(ProjectStructureElement element) {
         return null;
     }
 }

@@ -128,8 +128,7 @@ public final class JavaVersion implements Comparable<JavaVersion> {
     return compose(feature, 0, 0, 0, false);
   }
 
-  @Nullable
-  private static JavaVersion current = null;
+  private static @Nullable JavaVersion current = null;
 
   /**
    * Returns the version of a Java runtime the class is loaded into.
@@ -153,8 +152,7 @@ public final class JavaVersion implements Comparable<JavaVersion> {
     return current;
   }
 
-  @Nullable
-  private static JavaVersion rtVersion() {
+  private static @Nullable JavaVersion rtVersion() {
     try {
       Runtime.Version version = Runtime.version();
       int major = version.major();
@@ -276,8 +274,7 @@ public final class JavaVersion implements Comparable<JavaVersion> {
   /**
    * A safe version of {@link #parse(String)} - returns {@code null} if can't parse a version string.
    */
-  @Nullable
-  public static JavaVersion tryParse(@Nullable String versionString) {
+  public static @Nullable JavaVersion tryParse(@Nullable String versionString) {
     if (versionString != null) {
       try {
         return parse(versionString);

@@ -36,8 +36,7 @@ public abstract class GraphAlgorithms {
     return Application.get().getInstance(GraphAlgorithms.class);
   }
 
-  @Nullable
-  public abstract <Node> List<Node> findShortestPath(Graph<Node> graph, Node start, Node finish);
+  public abstract @Nullable <Node> List<Node> findShortestPath(Graph<Node> graph, Node start, Node finish);
 
   
   public abstract <Node> List<List<Node>> findKShortestPaths(Graph<Node> graph, Node start, Node finish, int k, ProgressIndicator progressIndicator);

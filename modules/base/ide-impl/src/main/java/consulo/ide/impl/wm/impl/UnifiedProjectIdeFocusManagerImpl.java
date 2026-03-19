@@ -76,8 +76,7 @@ public class UnifiedProjectIdeFocusManagerImpl implements ProjectIdeFocusManager
   }
 
   @Override
-  @Nullable
-  public Component getFocusedDescendantFor(Component comp) {
+  public @Nullable Component getFocusedDescendantFor(Component comp) {
     return IdeFocusManager.getGlobalInstance().getFocusedDescendantFor(comp);
   }
 

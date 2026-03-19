@@ -602,8 +602,7 @@ public class ShelvedChangesViewManagerImpl implements ShelvedChangesViewManager 
             myProviders = Arrays.asList(new MyChangesDeleteProvider(), new MyChangeListDeleteProvider());
         }
 
-        @Nullable
-        private DeleteProvider selectDelegate(DataContext dataContext) {
+        private @Nullable DeleteProvider selectDelegate(DataContext dataContext) {
             for (DeleteProvider provider : myProviders) {
                 if (provider.canDeleteElement(dataContext)) {
                     return provider;

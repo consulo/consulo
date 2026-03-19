@@ -45,16 +45,13 @@ public abstract class Macro {
         return "";
     }
 
-    @Nullable
-    public abstract Result calculateResult(Expression[] params, ExpressionContext context);
+    public abstract @Nullable Result calculateResult(Expression[] params, ExpressionContext context);
 
-    @Nullable
-    public Result calculateQuickResult(Expression[] params, ExpressionContext context) {
+    public @Nullable Result calculateQuickResult(Expression[] params, ExpressionContext context) {
         return null;
     }
 
-    @Nullable
-    public LookupElement[] calculateLookupItems(Expression[] params, ExpressionContext context) {
+    public @Nullable LookupElement[] calculateLookupItems(Expression[] params, ExpressionContext context) {
         return null;
     }
 

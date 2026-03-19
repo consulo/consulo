@@ -47,8 +47,7 @@ public class Subroutine<I, T, O> extends Coroutine<I, O> {
 	 * @param continuation The continuation of the execution
 	 * @return The result of the execution
 	 */
-	@Nullable
-	public O runBlocking(@Nullable I input, Continuation<?> continuation) {
+	public @Nullable O runBlocking(@Nullable I input, Continuation<?> continuation) {
 		continuation.subroutineStarted(this);
 
 		return getRequiredCode().runBlocking(input, continuation);

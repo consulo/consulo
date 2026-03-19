@@ -448,8 +448,7 @@ public class DiffContentFactoryImpl extends DiffContentFactoryEx {
     return document;
   }
 
-  @Nullable
-  private static Document createPsiDocument(
+  private static @Nullable Document createPsiDocument(
     Project project,
     String content,
     FileType fileType,

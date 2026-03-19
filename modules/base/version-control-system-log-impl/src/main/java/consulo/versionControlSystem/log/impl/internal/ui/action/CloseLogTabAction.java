@@ -56,8 +56,7 @@ public class CloseLogTabAction extends CloseTabToolbarAction {
         }
     }
 
-    @Nullable
-    private static Content getTabbedContent(ContentManager contentManager) {
+    private static @Nullable Content getTabbedContent(ContentManager contentManager) {
         Content content = contentManager.getSelectedContent();
         if (content != null && ContentUtilEx.isContentTab(content, VcsLogContentProvider.TAB_NAME)) {
             return content;
@@ -65,8 +64,7 @@ public class CloseLogTabAction extends CloseTabToolbarAction {
         return null;
     }
 
-    @Nullable
-    private static ContentManager getContentManager(Project project) {
+    private static @Nullable ContentManager getContentManager(Project project) {
         ToolWindow toolWindow = ToolWindowManager.getInstance(project).getToolWindow(ToolWindowId.VCS);
         return toolWindow == null ? null : toolWindow.getContentManager();
     }

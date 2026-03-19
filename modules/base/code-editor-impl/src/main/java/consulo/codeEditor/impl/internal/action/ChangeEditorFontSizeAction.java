@@ -48,8 +48,7 @@ public abstract class ChangeEditorFontSizeAction extends AnAction implements Dum
         }
     }
 
-    @Nullable
-    private static RealEditor getEditor(AnActionEvent e) {
+    private static @Nullable RealEditor getEditor(AnActionEvent e) {
         Editor editor = e.getData(Editor.KEY);
         return editor instanceof RealEditor realEditor ? realEditor : null;
     }

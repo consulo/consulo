@@ -63,13 +63,11 @@ public class ConsoleConfigurable implements SearchableConfigurable, Configurable
         }
 
         @Override
-        @Nullable
-        protected String findItemToAdd() {
+        protected @Nullable String findItemToAdd() {
             return showEditDialog("");
         }
 
-        @Nullable
-        private String showEditDialog(String initialValue) {
+        private @Nullable String showEditDialog(String initialValue) {
             return Messages.showInputDialog(this, myQuery, "Folding pattern", Messages.getQuestionIcon(), initialValue, new InputValidatorEx() {
                 @RequiredUIAccess
                 @Override

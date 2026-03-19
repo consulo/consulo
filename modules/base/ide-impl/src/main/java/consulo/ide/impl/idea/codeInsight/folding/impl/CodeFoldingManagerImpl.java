@@ -148,8 +148,7 @@ public class CodeFoldingManagerImpl extends CodeFoldingManager implements Dispos
   }
 
   @Override
-  @Nullable
-  public FoldRegion findFoldRegion(Editor editor, int startOffset, int endOffset) {
+  public @Nullable FoldRegion findFoldRegion(Editor editor, int startOffset, int endOffset) {
     return FoldingUtil.findFoldRegion(editor, startOffset, endOffset);
   }
 
@@ -173,8 +172,7 @@ public class CodeFoldingManagerImpl extends CodeFoldingManager implements Dispos
   }
 
   @Override
-  @Nullable
-  public Runnable updateFoldRegionsAsync(Editor editor, boolean firstTime) {
+  public @Nullable Runnable updateFoldRegionsAsync(Editor editor, boolean firstTime) {
     if (!editor.getSettings().isAutoCodeFoldingEnabled()) return null;
     Runnable runnable = updateFoldRegions(editor, firstTime, false);
     return () -> {
@@ -187,8 +185,7 @@ public class CodeFoldingManagerImpl extends CodeFoldingManager implements Dispos
     };
   }
 
-  @Nullable
-  private Runnable updateFoldRegions(Editor editor, boolean applyDefaultState, boolean quick) {
+  private @Nullable Runnable updateFoldRegions(Editor editor, boolean applyDefaultState, boolean quick) {
     PsiFile file = PsiDocumentManager.getInstance(myProject).getPsiFile(editor.getDocument());
     return file == null ? null : FoldingUpdate.updateFoldRegions(editor, file, applyDefaultState, quick);
   }

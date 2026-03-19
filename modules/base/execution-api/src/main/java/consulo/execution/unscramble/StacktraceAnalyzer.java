@@ -52,8 +52,7 @@ public interface StacktraceAnalyzer {
   /**
    * Try parse stacktrace as exception trace, and return ExceptionName if its exception trace
    */
-  @Nullable
-  default String parseAsException(String stacktrace) {
+  default @Nullable String parseAsException(String stacktrace) {
     return null;
   }
 }

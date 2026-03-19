@@ -93,8 +93,7 @@ class RangeHighlighterImpl extends RangeMarkerImpl implements RangeHighlighterEx
     }
 
     @Override
-    @Nullable
-    public TextAttributes getTextAttributes(@Nullable EditorColorsScheme scheme) {
+    public @Nullable TextAttributes getTextAttributes(@Nullable EditorColorsScheme scheme) {
         if (myForcedTextAttributes != null) {
             return myForcedTextAttributes;
         }
@@ -107,8 +106,7 @@ class RangeHighlighterImpl extends RangeMarkerImpl implements RangeHighlighterEx
     }
 
     @Override
-    @Nullable
-    public ColorValue getForcedErrorStripeMarkColor() {
+    public @Nullable ColorValue getForcedErrorStripeMarkColor() {
         return myErrorStripeColor;
     }
 

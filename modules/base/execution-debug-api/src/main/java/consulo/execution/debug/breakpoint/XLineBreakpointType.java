@@ -57,8 +57,7 @@ public abstract class XLineBreakpointType<P extends XBreakpointProperties> exten
    * return non-null value if a breakpoint should have specific properties besides containing file and line. These properties will be stored in
    * {@link XBreakpoint} instance and can be obtained by using {@link XBreakpoint#getProperties()} method
    */
-  @Nullable
-  public abstract P createBreakpointProperties(VirtualFile file, int line);
+  public abstract @Nullable P createBreakpointProperties(VirtualFile file, int line);
 
   @Override
   public String getDisplayText(XLineBreakpoint<P> breakpoint) {
@@ -110,8 +109,7 @@ public abstract class XLineBreakpointType<P extends XBreakpointProperties> exten
   /**
    * @return range to highlight on the line, null to highlight the whole line
    */
-  @Nullable
-  public TextRange getHighlightRange(XLineBreakpoint<P> breakpoint) {
+  public @Nullable TextRange getHighlightRange(XLineBreakpoint<P> breakpoint) {
     return null;
   }
 
@@ -145,8 +143,7 @@ public abstract class XLineBreakpointType<P extends XBreakpointProperties> exten
     @RequiredReadAction
     public abstract TextRange getHighlightRange();
 
-    @Nullable
-    public abstract P createProperties();
+    public abstract @Nullable P createProperties();
   }
 
   public class XLineBreakpointAllVariant extends XLineBreakpointVariant {
@@ -178,8 +175,7 @@ public abstract class XLineBreakpointType<P extends XBreakpointProperties> exten
     }
 
     @Override
-    @Nullable
-    public P createProperties() {
+    public @Nullable P createProperties() {
       return createBreakpointProperties(mySourcePosition.getFile(),
                                         mySourcePosition.getLine());
     }

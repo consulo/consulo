@@ -19,10 +19,8 @@ import org.jspecify.annotations.Nullable;
 
 public final class ExternalInfo {
   // we keep it to detect rename
-  @Nullable
-  private String myPreviouslySavedName = null;
-  @Nullable
-  private String myCurrentFileName = null;
+  private @Nullable String myPreviouslySavedName = null;
+  private @Nullable String myCurrentFileName = null;
 
   private int myContentHash;
 
@@ -51,8 +49,7 @@ public final class ExternalInfo {
     return null;
   }
 
-  @Nullable
-  public String getCurrentFileName() {
+  public @Nullable String getCurrentFileName() {
     return myCurrentFileName;
   }
 
@@ -64,8 +61,7 @@ public final class ExternalInfo {
     myCurrentFileName = externalInfo.myCurrentFileName;
   }
 
-  @Nullable
-  public String getPreviouslySavedName() {
+  public @Nullable String getPreviouslySavedName() {
     return myPreviouslySavedName;
   }
 

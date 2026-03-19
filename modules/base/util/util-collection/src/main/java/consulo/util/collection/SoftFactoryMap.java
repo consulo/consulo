@@ -29,8 +29,7 @@ public abstract class SoftFactoryMap<T, V> {
 
   protected abstract V create(@Nullable T key);
 
-  @Nullable
-  public final V get(@Nullable T key) {
+  public final @Nullable V get(@Nullable T key) {
     V v = myMap.get(key);
     if (v != null) {
       return v == ObjectUtil.NULL ? null : v;

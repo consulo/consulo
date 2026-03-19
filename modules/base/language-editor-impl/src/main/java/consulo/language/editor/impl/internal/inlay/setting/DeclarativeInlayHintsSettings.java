@@ -90,8 +90,7 @@ public class DeclarativeInlayHintsSettings implements PersistentStateComponentWi
         }
     }
 
-    @Nullable
-    public Boolean isProviderEnabled(String providerId) {
+    public @Nullable Boolean isProviderEnabled(String providerId) {
         return getState().getProviderIdToEnabled().get(providerId);
     }
 

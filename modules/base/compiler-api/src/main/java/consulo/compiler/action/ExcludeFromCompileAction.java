@@ -50,8 +50,7 @@ public abstract class ExcludeFromCompileAction extends AnAction {
         }
     }
 
-    @Nullable
-    protected abstract VirtualFile getFile();
+    protected abstract @Nullable VirtualFile getFile();
 
     @Override
     public void update(AnActionEvent e) {

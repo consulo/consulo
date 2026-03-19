@@ -46,8 +46,7 @@ public class ArrangementUtil {
 
     //region Serialization
 
-    @Nullable
-    public static ArrangementSettings readExternal(Element element, Language language) {
+    public static @Nullable ArrangementSettings readExternal(Element element, Language language) {
         ArrangementSettingsSerializer serializer = getSerializer(language);
         if (serializer == null) {
             LOG.error("Can't find serializer for language: " + language.getID());
@@ -67,8 +66,7 @@ public class ArrangementUtil {
         serializer.serialize(settings, element);
     }
 
-    @Nullable
-    private static ArrangementSettingsSerializer getSerializer(Language language) {
+    private static @Nullable ArrangementSettingsSerializer getSerializer(Language language) {
         Rearranger<?> rearranger = Rearranger.forLanguage(language);
         return rearranger == null ? null : rearranger.getSerializer();
     }
@@ -159,8 +157,7 @@ public class ArrangementUtil {
     }
     //endregion
 
-    @Nullable
-    public static ArrangementSettingsToken parseType(ArrangementMatchCondition condition) throws IllegalArgumentException {
+    public static @Nullable ArrangementSettingsToken parseType(ArrangementMatchCondition condition) throws IllegalArgumentException {
         SimpleReference<ArrangementSettingsToken> result = new SimpleReference<>();
         condition.invite(new ArrangementMatchConditionVisitor() {
             @Override
@@ -223,8 +220,7 @@ public class ArrangementUtil {
         return result;
     }
 
-    @Nullable
-    public static ArrangementEntryMatcher buildMatcher(ArrangementMatchCondition condition) {
+    public static @Nullable ArrangementEntryMatcher buildMatcher(ArrangementMatchCondition condition) {
         SimpleReference<ArrangementEntryMatcher> result = new SimpleReference<>();
         Stack<CompositeArrangementEntryMatcher> composites = new Stack<>();
         ArrangementMatchConditionVisitor visitor = new ArrangementMatchConditionVisitor() {
@@ -262,8 +258,7 @@ public class ArrangementUtil {
         return result.get();
     }
 
-    @Nullable
-    public static ArrangementEntryMatcher buildMatcher(ArrangementAtomMatchCondition condition) {
+    public static @Nullable ArrangementEntryMatcher buildMatcher(ArrangementAtomMatchCondition condition) {
         if (StdArrangementTokenType.ENTRY_TYPE.is(condition.getType())) {
             return new ByTypeArrangementEntryMatcher(condition);
         }

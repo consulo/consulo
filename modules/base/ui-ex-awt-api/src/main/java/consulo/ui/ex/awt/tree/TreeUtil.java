@@ -123,8 +123,7 @@ public final class TreeUtil {
         return collectVisibleRows(tree, tree::isExpanded, mapper);
     }
 
-    @Nullable
-    public static <T> T findObjectInPath(@Nullable TreePath path, Class<T> clazz) {
+    public static @Nullable <T> T findObjectInPath(@Nullable TreePath path, Class<T> clazz) {
         while (path != null) {
             T object = getLastUserObject(clazz, path);
             if (object != null) {
@@ -265,8 +264,7 @@ public final class TreeUtil {
         return path;
     }
 
-    @Nullable
-    public static TreeNode findNodeWithObject(Object object, TreeModel model, Object parent) {
+    public static @Nullable TreeNode findNodeWithObject(Object object, TreeModel model, Object parent) {
         for (int i = 0; i < model.getChildCount(parent); i++) {
             DefaultMutableTreeNode childNode = (DefaultMutableTreeNode)model.getChild(parent, i);
             if (childNode.getUserObject().equals(object)) {
@@ -295,13 +293,11 @@ public final class TreeUtil {
         removeLastPathComponent((DefaultTreeModel)tree.getModel(), pathToBeRemoved).restoreSelection(tree);
     }
 
-    @Nullable
-    public static DefaultMutableTreeNode findNodeWithObject(DefaultMutableTreeNode aRoot, Object aObject) {
+    public static @Nullable DefaultMutableTreeNode findNodeWithObject(DefaultMutableTreeNode aRoot, Object aObject) {
         return findNode(aRoot, node -> Comparing.equal(node.getUserObject(), aObject));
     }
 
-    @Nullable
-    public static DefaultMutableTreeNode findNode(
+    public static @Nullable DefaultMutableTreeNode findNode(
         DefaultMutableTreeNode aRoot,
         Predicate<? super DefaultMutableTreeNode> condition
     ) {
@@ -1258,8 +1254,7 @@ public final class TreeUtil {
         }
     }
 
-    @Nullable
-    public static Range<Integer> getExpandControlRange(JTree aTree, @Nullable TreePath path) {
+    public static @Nullable Range<Integer> getExpandControlRange(JTree aTree, @Nullable TreePath path) {
         TreeModel treeModel = aTree.getModel();
 
         BasicTreeUI basicTreeUI = (BasicTreeUI)aTree.getUI();
@@ -1388,13 +1383,11 @@ public final class TreeUtil {
         }
     }
 
-    @Nullable
-    public static Object getUserObject(@Nullable Object node) {
+    public static @Nullable Object getUserObject(@Nullable Object node) {
         return node instanceof DefaultMutableTreeNode defMutableTreeNode ? defMutableTreeNode.getUserObject() : node;
     }
 
-    @Nullable
-    public static <T> T getUserObject(Class<T> type, @Nullable Object node) {
+    public static @Nullable <T> T getUserObject(Class<T> type, @Nullable Object node) {
         node = getUserObject(node);
         return type.isInstance(node) ? type.cast(node) : null;
     }
@@ -1402,18 +1395,15 @@ public final class TreeUtil {
     /**
      * @return an user object retrieved from the last component of the specified {@code path}
      */
-    @Nullable
-    public static Object getLastUserObject(@Nullable TreePath path) {
+    public static @Nullable Object getLastUserObject(@Nullable TreePath path) {
         return path == null ? null : getUserObject(path.getLastPathComponent());
     }
 
-    @Nullable
-    public static <T> T getLastUserObject(Class<T> type, @Nullable TreePath path) {
+    public static @Nullable <T> T getLastUserObject(Class<T> type, @Nullable TreePath path) {
         return path == null ? null : getUserObject(type, path.getLastPathComponent());
     }
 
-    @Nullable
-    public static TreePath getSelectedPathIfOne(JTree tree) {
+    public static @Nullable TreePath getSelectedPathIfOne(JTree tree) {
         TreePath[] paths = tree.getSelectionPaths();
         return paths != null && paths.length == 1 ? paths[0] : null;
     }
@@ -2009,8 +1999,7 @@ public final class TreeUtil {
      * @param y    a number of pixels from the top of the specified tree
      * @return found visible tree path or {@code null}
      */
-    @Nullable
-    public static TreePath getPathForLocation(JTree tree, int x, int y) {
+    public static @Nullable TreePath getPathForLocation(JTree tree, int x, int y) {
         TreePath path = tree.getClosestPathForLocation(x, y);
         Rectangle bounds = tree.getPathBounds(path);
         return bounds != null && bounds.y <= y && y < bounds.y + bounds.height ? path : null;
@@ -2019,8 +2008,7 @@ public final class TreeUtil {
     /**
      * @return a navigatable object that corresponds to the specified path,  or {@code null} otherwise
      */
-    @Nullable
-    public static Navigatable getNavigatable(JTree tree, @Nullable TreePath path) {
+    public static @Nullable Navigatable getNavigatable(JTree tree, @Nullable TreePath path) {
         Function<? super TreePath, ? extends Navigatable> supplier = UIUtil.getClientProperty(tree, NAVIGATABLE_PROVIDER);
         return supplier != null ? supplier.apply(path) : getLastUserObject(Navigatable.class, path);
     }
@@ -2055,8 +2043,7 @@ public final class TreeUtil {
      * @param predicate a predicate that allows to skip some paths
      * @return {@code null} if previous visible path cannot be found
      */
-    @Nullable
-    public static TreePath previousVisiblePath(JTree tree, TreePath path, Predicate<TreePath> predicate) {
+    public static @Nullable TreePath previousVisiblePath(JTree tree, TreePath path, Predicate<TreePath> predicate) {
         return previousVisiblePath(tree, tree.getRowForPath(path), predicate);
     }
 
@@ -2066,8 +2053,7 @@ public final class TreeUtil {
      * @param predicate a predicate that allows to skip some paths
      * @return {@code null} if previous visible path cannot be found
      */
-    @Nullable
-    public static TreePath previousVisiblePath(JTree tree, int row, Predicate<TreePath> predicate) {
+    public static @Nullable TreePath previousVisiblePath(JTree tree, int row, Predicate<TreePath> predicate) {
         return previousVisiblePath(tree, row, isCyclicScrollingAllowed(), predicate);
     }
 
@@ -2078,8 +2064,7 @@ public final class TreeUtil {
      * @param predicate a predicate that allows to skip some paths
      * @return {@code null} if previous visible path cannot be found
      */
-    @Nullable
-    public static TreePath previousVisiblePath(JTree tree, int row, boolean cyclic, Predicate<TreePath> predicate) {
+    public static @Nullable TreePath previousVisiblePath(JTree tree, int row, boolean cyclic, Predicate<TreePath> predicate) {
         assert EventQueue.isDispatchThread();
         if (row < 0) {
             return null; // ignore illegal row
@@ -2127,8 +2112,7 @@ public final class TreeUtil {
      * @param predicate a predicate that allows to skip some paths
      * @return {@code null} if next visible path cannot be found
      */
-    @Nullable
-    public static TreePath nextVisiblePath(JTree tree, TreePath path, Predicate<TreePath> predicate) {
+    public static @Nullable TreePath nextVisiblePath(JTree tree, TreePath path, Predicate<TreePath> predicate) {
         return nextVisiblePath(tree, tree.getRowForPath(path), predicate);
     }
 
@@ -2138,8 +2122,7 @@ public final class TreeUtil {
      * @param predicate a predicate that allows to skip some paths
      * @return {@code null} if next visible path cannot be found
      */
-    @Nullable
-    public static TreePath nextVisiblePath(JTree tree, int row, Predicate<TreePath> predicate) {
+    public static @Nullable TreePath nextVisiblePath(JTree tree, int row, Predicate<TreePath> predicate) {
         return nextVisiblePath(tree, row, isCyclicScrollingAllowed(), predicate);
     }
 
@@ -2150,8 +2133,7 @@ public final class TreeUtil {
      * @param predicate a predicate that allows to skip some paths
      * @return {@code null} if next visible path cannot be found
      */
-    @Nullable
-    public static TreePath nextVisiblePath(JTree tree, int row, boolean cyclic, Predicate<TreePath> predicate) {
+    public static @Nullable TreePath nextVisiblePath(JTree tree, int row, boolean cyclic, Predicate<TreePath> predicate) {
         assert EventQueue.isDispatchThread();
         if (row < 0) {
             return null; // ignore illegal row

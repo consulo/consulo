@@ -297,8 +297,7 @@ public class BuildArtifactAction extends DumbAwareAction {
     }
 
     private static class ArtifactPopupItem {
-        @Nullable
-        private final Artifact myArtifact;
+        private final @Nullable Artifact myArtifact;
         
         private final LocalizeValue myText;
         private final Image myIcon;
@@ -309,8 +308,7 @@ public class BuildArtifactAction extends DumbAwareAction {
             myIcon = icon;
         }
 
-        @Nullable
-        public Artifact getArtifact() {
+        public @Nullable Artifact getArtifact() {
             return myArtifact;
         }
 

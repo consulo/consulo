@@ -33,8 +33,7 @@ import java.beans.PropertyChangeListener;
  */
 class TableToolbarDecorator extends ToolbarDecorator {
   private final JTable myTable;
-  @Nullable
-  private final ElementProducer<?> myProducer;
+  private final @Nullable ElementProducer<?> myProducer;
 
   TableToolbarDecorator(JTable table, @Nullable ElementProducer<?> producer) {
     myTable = table;
@@ -95,7 +94,7 @@ class TableToolbarDecorator extends ToolbarDecorator {
     }
   }
 
-  private void createDefaultTableActions(@Nullable final ElementProducer<?> producer) {
+  private void createDefaultTableActions(final @Nullable ElementProducer<?> producer) {
     final JTable table = myTable;
     final EditableModel tableModel = (EditableModel)table.getModel();
 

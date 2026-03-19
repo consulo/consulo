@@ -38,8 +38,7 @@ public class FileUtilRt {
    * consider using {@link consulo.util.io.FileUtil#toCanonicalPath(String, boolean)} instead.
    */
   @Contract("null,_,_ -> null; !null,_,_ -> !null")
-  @Nullable
-  public static String toCanonicalPath(@Nullable String path, char separatorChar, boolean removeLastSlash) {
+  public static @Nullable String toCanonicalPath(@Nullable String path, char separatorChar, boolean removeLastSlash) {
     if (path == null || path.isEmpty()) {
       return path;
     }

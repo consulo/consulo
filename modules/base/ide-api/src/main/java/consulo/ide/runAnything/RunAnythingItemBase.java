@@ -20,8 +20,7 @@ import static consulo.ui.ex.SimpleTextAttributes.*;
 public class RunAnythingItemBase extends RunAnythingItem {
     
     private final String myCommand;
-    @Nullable
-    protected final Image myIcon;
+    protected final @Nullable Image myIcon;
 
     public RunAnythingItemBase(String command, @Nullable Image icon) {
         myCommand = command;
@@ -34,8 +33,7 @@ public class RunAnythingItemBase extends RunAnythingItem {
         return myCommand;
     }
 
-    @Nullable
-    public String getDescription() {
+    public @Nullable String getDescription() {
         return null;
     }
 

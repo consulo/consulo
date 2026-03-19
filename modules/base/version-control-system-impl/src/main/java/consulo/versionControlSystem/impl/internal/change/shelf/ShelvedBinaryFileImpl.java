@@ -41,8 +41,7 @@ import java.io.File;
 public class ShelvedBinaryFileImpl implements ShelvedBinaryFile, JDOMExternalizable {
     public String BEFORE_PATH;
     public String AFTER_PATH;
-    @Nullable
-    public String SHELVED_PATH;         // null if binary file was deleted
+    public @Nullable String SHELVED_PATH;         // null if binary file was deleted
 
     public ShelvedBinaryFileImpl() {
     }

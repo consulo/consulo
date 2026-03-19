@@ -101,8 +101,7 @@ public final class PathMappingsComponent extends LabeledComponent<TextFieldWithB
         }
 
         @Override
-        @Nullable
-        protected JComponent createCenterPanel() {
+        protected @Nullable JComponent createCenterPanel() {
             return myWholePanel;
         }
 

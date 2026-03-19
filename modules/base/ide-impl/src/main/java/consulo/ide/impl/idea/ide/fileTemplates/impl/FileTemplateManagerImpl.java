@@ -324,8 +324,7 @@ public class FileTemplateManagerImpl extends FileTemplateManager implements Pers
         return getTemplateFromManager(templateName, getSettings().getJ2eeTemplatesManager());
     }
 
-    @Nullable
-    private static FileTemplate getTemplateFromManager(String templateName, FTManager ftManager) {
+    private static @Nullable FileTemplate getTemplateFromManager(String templateName, FTManager ftManager) {
         FileTemplateBase template = ftManager.getTemplate(templateName);
         if (template != null) {
             return template;
@@ -405,13 +404,11 @@ public class FileTemplateManagerImpl extends FileTemplateManager implements Pers
         }
     }
 
-    @Nullable
-    public FileTemplateStreamProvider getDefaultTemplateDescription() {
+    public @Nullable FileTemplateStreamProvider getDefaultTemplateDescription() {
         return myDefaultSettings.getDefaultTemplateDescription();
     }
 
-    @Nullable
-    public FileTemplateStreamProvider getDefaultIncludeDescription() {
+    public @Nullable FileTemplateStreamProvider getDefaultIncludeDescription() {
         return myDefaultSettings.getDefaultIncludeDescription();
     }
 

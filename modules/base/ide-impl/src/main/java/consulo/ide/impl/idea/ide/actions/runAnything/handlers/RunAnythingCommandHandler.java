@@ -27,8 +27,7 @@ public abstract class RunAnythingCommandHandler {
      * Provides custom output to be printed in console on the process terminated.
      * E.g. command execution time could be reported on a command execution terminating.
      */
-    @Nullable
-    public String getProcessTerminatedCustomOutput() {
+    public @Nullable String getProcessTerminatedCustomOutput() {
         return null;
     }
 
@@ -37,8 +36,7 @@ public abstract class RunAnythingCommandHandler {
      */
     public abstract TextConsoleBuilder getConsoleBuilder(Project project);
 
-    @Nullable
-    public static RunAnythingCommandHandler getMatchedHandler(String commandLine) {
+    public static @Nullable RunAnythingCommandHandler getMatchedHandler(String commandLine) {
         return Application.get().getExtensionPoint(RunAnythingCommandHandler.class)
             .findFirstSafe(handler -> handler.isMatched(commandLine));
     }

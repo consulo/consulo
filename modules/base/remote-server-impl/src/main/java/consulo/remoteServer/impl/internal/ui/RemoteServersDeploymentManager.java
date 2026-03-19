@@ -198,8 +198,7 @@ public final class RemoteServersDeploymentManager {
         }, POLL_DEPLOYMENTS_DELAY, ModalityState.any()));
     }
 
-    @Nullable
-    public static ServersTreeNodeSelector getNodeSelector(AnActionEvent e) {
+    public static @Nullable ServersTreeNodeSelector getNodeSelector(AnActionEvent e) {
         Project project = e.getData(Project.KEY);
         if (project == null) {
             return null;

@@ -85,8 +85,7 @@ public class ProcessOutputType extends Key<Object> {
     return key.toString().replace("\u001B", "ESC");
   }
 
-  @Nullable
-  public static ProcessOutputType tryCast(Key<?> key) {
+  public static @Nullable ProcessOutputType tryCast(Key<?> key) {
     return key instanceof ProcessOutputType ? (ProcessOutputType)key : null;
   }
 }

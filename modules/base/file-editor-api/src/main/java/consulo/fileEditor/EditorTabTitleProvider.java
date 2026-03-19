@@ -34,8 +34,7 @@ public interface EditorTabTitleProvider {
     @Nullable
     String getEditorTabTitle(Project project, VirtualFile file);
 
-    @Nullable
-    default String getEditorTabTooltipText(Project project, VirtualFile virtualFile) {
+    default @Nullable String getEditorTabTooltipText(Project project, VirtualFile virtualFile) {
         return null;
     }
 }

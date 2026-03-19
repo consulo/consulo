@@ -37,8 +37,7 @@ public final class TextEditorState implements FileEditorState {
    * This field can be <code>null</code>.
    */
   private CodeFoldingState myFoldingState;
-  @Nullable
-  private Supplier<CodeFoldingState> myDelayedFoldInfoProducer;
+  private @Nullable Supplier<CodeFoldingState> myDelayedFoldInfoProducer;
 
   private static final int MIN_CHANGE_DISTANCE = 4;
 
@@ -58,8 +57,7 @@ public final class TextEditorState implements FileEditorState {
     myDelayedFoldInfoProducer = producer;
   }
 
-  @Nullable
-  public CodeFoldingState getFoldingState() {
+  public @Nullable CodeFoldingState getFoldingState() {
     // Assuming single-thread access here.
     if (myFoldingState == null && myDelayedFoldInfoProducer != null) {
       myFoldingState = myDelayedFoldInfoProducer.get();

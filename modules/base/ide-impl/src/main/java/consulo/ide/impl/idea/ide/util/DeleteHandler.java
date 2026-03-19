@@ -72,8 +72,7 @@ public class DeleteHandler {
             return elements != null && shouldEnableDeleteAction(elements);
         }
 
-        @Nullable
-        private static PsiElement[] getPsiElements(DataContext dataContext) {
+        private static @Nullable PsiElement[] getPsiElements(DataContext dataContext) {
             PsiElement[] elements = dataContext.getData(PsiElement.KEY_OF_ARRAY);
             if (elements == null) {
                 Object data = dataContext.getData(PsiElement.KEY);

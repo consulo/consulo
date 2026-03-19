@@ -80,14 +80,11 @@ public abstract class DirectoryInfo {
    */
   public abstract boolean isInLibrarySource(VirtualFile file);
 
-  @Nullable
-  public abstract VirtualFile getSourceRoot();
+  public abstract @Nullable VirtualFile getSourceRoot();
 
-  @Nullable
-  public abstract ContentFolder getContentFolder();
+  public abstract @Nullable ContentFolder getContentFolder();
 
-  @Nullable
-  public abstract ContentFolderTypeProvider getSourceRootTypeId();
+  public abstract @Nullable ContentFolderTypeProvider getSourceRootTypeId();
 
   public boolean hasLibraryClassRoot() {
     return getLibraryClassRoot() != null;
@@ -95,11 +92,9 @@ public abstract class DirectoryInfo {
 
   public abstract VirtualFile getLibraryClassRoot();
 
-  @Nullable
-  public abstract VirtualFile getContentRoot();
+  public abstract @Nullable VirtualFile getContentRoot();
 
-  @Nullable
-  public abstract Module getModule();
+  public abstract @Nullable Module getModule();
 
   /**
    * Return name of an unloaded module to which content this file or directory belongs
@@ -107,6 +102,5 @@ public abstract class DirectoryInfo {
    *
    * @see UnloadedModuleDescription
    */
-  @Nullable
-  public abstract String getUnloadedModuleName();
+  public abstract @Nullable String getUnloadedModuleName();
 }

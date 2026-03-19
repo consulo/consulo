@@ -38,8 +38,7 @@ public interface LibraryOwner {
   
   VirtualFilePointerListener getListener();
 
-  @Nullable
-  default ComponentManager getModule() {
+  default @Nullable ComponentManager getModule() {
     return null;
   }
 }

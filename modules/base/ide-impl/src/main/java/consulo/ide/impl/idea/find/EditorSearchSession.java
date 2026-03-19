@@ -221,8 +221,7 @@ public class EditorSearchSession implements SearchSession, DataProvider, Selecti
         return myEditor;
     }
 
-    @Nullable
-    public static EditorSearchSession get(@Nullable Editor editor) {
+    public static @Nullable EditorSearchSession get(@Nullable Editor editor) {
         JComponent headerComponent = editor != null ? editor.getHeaderComponent() : null;
         SearchReplaceComponent searchReplaceComponent = ObjectUtil.tryCast(headerComponent, SearchReplaceComponent.class);
         return searchReplaceComponent != null ? searchReplaceComponent.getDataUnchecked(SESSION_KEY) : null;
@@ -278,8 +277,7 @@ public class EditorSearchSession implements SearchSession, DataProvider, Selecti
 
 
     @Override
-    @Nullable
-    public Object getData(Key dataId) {
+    public @Nullable Object getData(Key dataId) {
         if (SearchSession.KEY == dataId) {
             return this;
         }

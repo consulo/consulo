@@ -35,7 +35,7 @@ public class FileHistoryRefresher implements FileHistoryRefresherI {
   private final VcsHistoryProvider myVcsHistoryProvider;
   private final FilePath myPath;
   private final AbstractVcs myVcs;
-  @Nullable private final VcsRevisionNumber myStartingRevisionNumber;
+  private final @Nullable VcsRevisionNumber myStartingRevisionNumber;
   private boolean myCanUseCache;
   private boolean myIsRefresh;
 

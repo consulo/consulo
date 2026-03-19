@@ -175,8 +175,7 @@ public class NanoXmlUtil {
   }
 
   public static class EmptyValidator extends NonValidator {
-    @Nullable
-    private IXMLEntityResolver myParameterEntityResolver = null;
+    private @Nullable IXMLEntityResolver myParameterEntityResolver = null;
 
     @Override
     public void setParameterEntityResolver(IXMLEntityResolver resolver) {
@@ -255,10 +254,8 @@ public class NanoXmlUtil {
   }
 
   private static class MyXMLReader extends StdXMLReader {
-    @Nullable
-    private String publicId = null;
-    @Nullable
-    private String systemId = null;
+    private @Nullable String publicId = null;
+    private @Nullable String systemId = null;
 
     MyXMLReader(Reader documentReader) {
       super(documentReader);
@@ -291,10 +288,8 @@ public class NanoXmlUtil {
   }
 
   private static class RootTagInfoBuilder implements IXMLBuilder {
-    @Nullable
-    private String myRootTagName = null;
-    @Nullable
-    private String myNamespace = null;
+    private @Nullable String myRootTagName = null;
+    private @Nullable String myNamespace = null;
 
     @Override
     public void startBuilding(String systemID, int lineNr) {
@@ -327,13 +322,11 @@ public class NanoXmlUtil {
     public void addPCData(Reader reader, String systemID, int lineNr) {
     }
 
-    @Nullable
-    public String getNamespace() {
+    public @Nullable String getNamespace() {
       return myNamespace;
     }
 
-    @Nullable
-    public String getRootTagName() {
+    public @Nullable String getRootTagName() {
       return myRootTagName;
     }
 

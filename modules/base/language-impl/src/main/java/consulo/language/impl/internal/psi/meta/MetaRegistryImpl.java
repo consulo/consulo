@@ -101,8 +101,7 @@ public class MetaRegistryImpl implements MetaDataService, MetaDataRegistrar {
         }
     }
 
-    @Nullable
-    public PsiMetaData getMetaBase(PsiElement element) {
+    public @Nullable PsiMetaData getMetaBase(PsiElement element) {
         ProgressIndicatorProvider.checkCanceled();
         return myCachedMetaCache.get(META_DATA_KEY, element, null).getValue();
     }

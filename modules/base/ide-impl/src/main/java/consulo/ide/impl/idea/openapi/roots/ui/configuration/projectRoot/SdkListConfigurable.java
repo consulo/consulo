@@ -175,8 +175,7 @@ public class SdkListConfigurable extends BaseStructureConfigurable implements Ap
     }
 
     @Override
-    @Nullable
-    public String getHelpTopic() {
+    public @Nullable String getHelpTopic() {
         return myCurrentConfigurable != null ? myCurrentConfigurable.getHelpTopic() : null;
     }
 
@@ -390,8 +389,7 @@ public class SdkListConfigurable extends BaseStructureConfigurable implements Ap
     }
 
     @Override
-    @Nullable
-    protected String getEmptySelectionString() {
+    protected @Nullable String getEmptySelectionString() {
         return ProjectLocalize.globalBundlesEmptyText().get();
     }
 }

@@ -56,8 +56,7 @@ public class StaticFilePath {
     return myVf;
   }
 
-  @Nullable
-  public StaticFilePath getParent() {
+  public @Nullable StaticFilePath getParent() {
     int idx = myKey.lastIndexOf('/');
     return (idx == -1) || (idx == 0) ? null :
            new StaticFilePath(true, myPath.substring(0, idx), myKey.substring(0, idx), myVf == null ? null : myVf.getParent());

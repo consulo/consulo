@@ -38,8 +38,7 @@ public abstract class Executor {
     
     public abstract Image getIcon();
 
-    @Nullable
-    public Image getDisabledIcon() {
+    public @Nullable Image getDisabledIcon() {
         return null;
     }
 
@@ -61,8 +60,7 @@ public abstract class Executor {
         return "Context" + getId();
     }
 
-    @Nullable
-    public String getHelpId() {
+    public @Nullable String getHelpId() {
         return null;
     }
 

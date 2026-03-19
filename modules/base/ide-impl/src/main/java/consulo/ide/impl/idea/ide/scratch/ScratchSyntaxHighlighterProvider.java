@@ -31,8 +31,7 @@ import org.jspecify.annotations.Nullable;
 @ExtensionImpl(order = "first")
 public class ScratchSyntaxHighlighterProvider implements SyntaxHighlighterProvider {
   @Override
-  @Nullable
-  public SyntaxHighlighter create(FileType fileType, @Nullable Project project, @Nullable VirtualFile file) {
+  public @Nullable SyntaxHighlighter create(FileType fileType, @Nullable Project project, @Nullable VirtualFile file) {
     if (project == null || file == null) return null;
     if (!ScratchUtil.isScratch(file)) return null;
 

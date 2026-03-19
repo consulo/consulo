@@ -226,8 +226,7 @@ public class XDebugSessionImpl implements XDebugSession {
     }
 
     @Override
-    @Nullable
-    public RunProfile getRunProfile() {
+    public @Nullable RunProfile getRunProfile() {
         return myEnvironment != null ? myEnvironment.getRunProfile() : null;
     }
 
@@ -258,8 +257,7 @@ public class XDebugSessionImpl implements XDebugSession {
     }
 
     @Override
-    @Nullable
-    public XStackFrame getCurrentStackFrame() {
+    public @Nullable XStackFrame getCurrentStackFrame() {
         return myCurrentStackFrame;
     }
 
@@ -273,8 +271,7 @@ public class XDebugSessionImpl implements XDebugSession {
     }
 
     @Override
-    @Nullable
-    public XSourcePosition getCurrentPosition() {
+    public @Nullable XSourcePosition getCurrentPosition() {
         return myCurrentStackFrame != null ? myCurrentStackFrame.getSourcePosition() : null;
     }
 
@@ -341,8 +338,7 @@ public class XDebugSessionImpl implements XDebugSession {
         return myConsoleView;
     }
 
-    @Nullable
-    public XDebugSessionTab getSessionTab() {
+    public @Nullable XDebugSessionTab getSessionTab() {
         return mySessionTab;
     }
 
@@ -388,8 +384,7 @@ public class XDebugSessionImpl implements XDebugSession {
     }
 
     @Override
-    @Nullable
-    public XValueMarkers<?, ?> getValueMarkers() {
+    public @Nullable XValueMarkers<?, ?> getValueMarkers() {
         if (myValueMarkers == null) {
             XValueMarkerProvider<?, ?> provider = myDebugProcess.createValueMarkerProvider();
             if (provider != null) {
@@ -443,8 +438,7 @@ public class XDebugSessionImpl implements XDebugSession {
         }
     }
 
-    @Nullable
-    public CustomizedBreakpointPresentation getBreakpointPresentation(XBreakpoint<?> breakpoint) {
+    public @Nullable CustomizedBreakpointPresentation getBreakpointPresentation(XBreakpoint<?> breakpoint) {
         synchronized (myRegisteredBreakpoints) {
             return myRegisteredBreakpoints.get(breakpoint);
         }
@@ -598,8 +592,7 @@ public class XDebugSessionImpl implements XDebugSession {
         myDebugProcess.resume(doResume());
     }
 
-    @Nullable
-    private XSuspendContext doResume() {
+    private @Nullable XSuspendContext doResume() {
         if (!myPaused.getAndSet(false)) {
             return null;
         }
@@ -685,8 +678,7 @@ public class XDebugSessionImpl implements XDebugSession {
         return null;
     }
 
-    @Nullable
-    private GutterIconRenderer getPositionIconRenderer(boolean isTopFrame) {
+    private @Nullable GutterIconRenderer getPositionIconRenderer(boolean isTopFrame) {
         if (!isTopFrame) {
             return null;
         }
@@ -1080,8 +1072,7 @@ public class XDebugSessionImpl implements XDebugSession {
         return myDebuggerManager.getWatchesManager().getWatches(getConfigurationName());
     }
 
-    @Nullable
-    public ExecutionEnvironment getExecutionEnvironment() {
+    public @Nullable ExecutionEnvironment getExecutionEnvironment() {
         return myEnvironment;
     }
 

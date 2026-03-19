@@ -63,8 +63,7 @@ public interface LineAnnotationAspect {
      */
     @Deprecated
     @DeprecationInfo("Use getTooltipValue(int)")
-    @Nullable
-    default String getTooltipText(int line) {
+    default @Nullable String getTooltipText(int line) {
         return getTooltipValue(line).getNullIfEmpty();
     }
 

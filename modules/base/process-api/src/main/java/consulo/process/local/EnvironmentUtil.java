@@ -103,8 +103,7 @@ public final class EnvironmentUtil {
     }
   }
 
-  @Nullable
-  public static Boolean loadEnvironment(Runnable activity) {
+  public static @Nullable Boolean loadEnvironment(Runnable activity) {
     if (!shouldLoadShellEnv()) {
       ourEnvGetter.set(CompletableFuture.completedFuture(getSystemEnv()));
       return null;
@@ -186,8 +185,7 @@ public final class EnvironmentUtil {
    *
    * @see #getEnvironmentMap()
    */
-  @Nullable
-  public static String getValue(String name) {
+  public static @Nullable String getValue(String name) {
     return getEnvironmentMap().get(name);
   }
 

@@ -97,8 +97,7 @@ public class VcsLogStorageImpl implements Disposable, VcsLogStorage {
         Disposer.register(parent, this);
     }
 
-    @Nullable
-    private CommitId doGetCommitId(int index) throws IOException {
+    private @Nullable CommitId doGetCommitId(int index) throws IOException {
         return myCommitIdEnumerator.valueOf(index);
     }
 
@@ -119,8 +118,7 @@ public class VcsLogStorageImpl implements Disposable, VcsLogStorage {
     }
 
     @Override
-    @Nullable
-    public CommitId getCommitId(int commitIndex) {
+    public @Nullable CommitId getCommitId(int commitIndex) {
         checkDisposed();
         try {
             CommitId commitId = doGetCommitId(commitIndex);
@@ -136,8 +134,7 @@ public class VcsLogStorageImpl implements Disposable, VcsLogStorage {
     }
 
     @Override
-    @Nullable
-    public CommitId findCommitId(final Predicate<CommitId> condition) {
+    public @Nullable CommitId findCommitId(final Predicate<CommitId> condition) {
         checkDisposed();
         try {
             final SimpleReference<CommitId> hashRef = SimpleReference.create();

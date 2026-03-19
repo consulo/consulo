@@ -203,8 +203,7 @@ public class RunAnythingContext {
         this.icon = icon;
     }
 
-    @Nullable
-    public String getPath() {
+    public @Nullable String getPath() {
         return null;
     }
 

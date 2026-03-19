@@ -57,8 +57,7 @@ public abstract class MoreTabsIcon {
     return iconRec.y + iconRec.height / 2 - getIconHeight() / 2;
   }
 
-  @Nullable
-  protected abstract Rectangle getIconRec();
+  protected abstract @Nullable Rectangle getIconRec();
 
   public void updateCounter(int counter) {
     myCounter = counter;

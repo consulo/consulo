@@ -123,8 +123,7 @@ public abstract class FileTypeRegistry {
     /**
      * Finds a file type with the specified name.
      */
-    @Nullable
-    public abstract FileType findFileTypeByName(String fileTypeName);
+    public abstract @Nullable FileType findFileTypeByName(String fileTypeName);
 
     @Nullable
     @RequiredUIAccess
@@ -134,8 +133,7 @@ public abstract class FileTypeRegistry {
     @RequiredUIAccess
     public abstract FileType getKnownFileTypeOrAssociate(String fileName);
 
-    @Nullable
-    public FileType getFileTypeByMimeType(@Nullable String mimeType) {
+    public @Nullable FileType getFileTypeByMimeType(@Nullable String mimeType) {
         return null;
     }
 }

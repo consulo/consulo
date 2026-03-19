@@ -343,10 +343,8 @@ public class DiffShelvedChangesAction extends AnAction implements DumbAware {
     }
 
     private static abstract class MyDiffRequestProducer implements DiffRequestProducer {
-        @Nullable
-        private final ShelvedChangeImpl myTextChange;
-        @Nullable
-        private final ShelvedBinaryFile myBinaryChange;
+        private final @Nullable ShelvedChangeImpl myTextChange;
+        private final @Nullable ShelvedBinaryFile myBinaryChange;
         
         private final FilePath myFilePath;
 
@@ -362,13 +360,11 @@ public class DiffShelvedChangesAction extends AnAction implements DumbAware {
             myFilePath = filePath;
         }
 
-        @Nullable
-        public ShelvedChangeImpl getTextChange() {
+        public @Nullable ShelvedChangeImpl getTextChange() {
             return myTextChange;
         }
 
-        @Nullable
-        public ShelvedBinaryFile getBinaryChange() {
+        public @Nullable ShelvedBinaryFile getBinaryChange() {
             return myBinaryChange;
         }
 

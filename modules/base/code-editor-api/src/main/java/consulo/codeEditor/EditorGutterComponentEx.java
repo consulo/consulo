@@ -131,8 +131,7 @@ public interface EditorGutterComponentEx extends EditorGutter {
         return -1;
     }
 
-    @Nullable
-    default GutterIconRenderer getGutterRenderer(Point p) {
+    default @Nullable GutterIconRenderer getGutterRenderer(Point p) {
         return null;
     }
 

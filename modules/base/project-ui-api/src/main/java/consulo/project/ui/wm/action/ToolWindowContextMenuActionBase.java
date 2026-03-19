@@ -32,8 +32,7 @@ public abstract class ToolWindowContextMenuActionBase extends AnAction {
 
     public abstract void actionPerformed(AnActionEvent e, ToolWindow toolWindow, @Nullable Content content);
 
-    @Nullable
-    private static Content getContextContent(AnActionEvent e, ToolWindow toolWindow) {
+    private static @Nullable Content getContextContent(AnActionEvent e, ToolWindow toolWindow) {
         Content selectedContent = e.getData(Content.KEY);
         if (selectedContent == null) {
             selectedContent = toolWindow.getContentManager().getSelectedContent();

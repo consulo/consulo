@@ -326,8 +326,7 @@ public class HttpConfirmingTrustManagerImplHttp implements HttpConfirmingTrustMa
          * @param alias certificate's alias
          * @return certificate or null if it's not present
          */
-        @Nullable
-        public X509Certificate getCertificate(String alias) {
+        public @Nullable X509Certificate getCertificate(String alias) {
             myReadLock.lock();
             try {
                 return (X509Certificate)myKeyStore.getCertificate(alias);

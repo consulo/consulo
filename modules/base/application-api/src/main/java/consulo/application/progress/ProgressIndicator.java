@@ -119,8 +119,7 @@ public interface ProgressIndicator {
     /**
      * @return text above the progress bar, set by {@link #setText(String)}
      */
-    @Nullable
-    default String getText() {
+    default @Nullable String getText() {
         return getTextValue().getNullIfEmpty();
     }
 
@@ -150,8 +149,7 @@ public interface ProgressIndicator {
     /**
      * @return text under the progress bar, set by {@link #setText2(String)}
      */
-    @Nullable
-    default String getText2() {
+    default @Nullable String getText2() {
         return getText2Value().getNullIfEmpty();
     }
 

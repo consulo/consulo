@@ -111,8 +111,7 @@ public class ExecutorAction extends AnAction {
         return ExecutionActionValue.buildWithConfiguration(executor::getStartActiveText, actionName);
     }
 
-    @Nullable
-    private static ConfigurationFromContext createConfiguration(RunConfigurationProducer<?> producer, ConfigurationContext context) {
+    private static @Nullable ConfigurationFromContext createConfiguration(RunConfigurationProducer<?> producer, ConfigurationContext context) {
         RunConfiguration configuration = producer.createLightConfiguration(context);
         if (configuration == null) {
             return null;

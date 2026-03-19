@@ -31,8 +31,7 @@ public class GraphicsEnvironmentHacking {
   /**
    * @return null if not avaliable
    */
-  @Nullable
-  public static Boolean isUIScaleEnabled(GraphicsEnvironment ge) throws Exception {
+  public static @Nullable Boolean isUIScaleEnabled(GraphicsEnvironment ge) throws Exception {
     if (ge instanceof SunGraphicsEnvironment) {
       Method m = isUIScaleEnabled();
       if (m == null) {
@@ -66,8 +65,7 @@ public class GraphicsEnvironmentHacking {
     }
   }
 
-  @Nullable
-  private static Method isUIScaleEnabled() {
+  private static @Nullable Method isUIScaleEnabled() {
     try {
       Method isUIScaleEnabled = SunGraphicsEnvironment.class.getDeclaredMethod("isUIScaleEnabled");
       isUIScaleEnabled.setAccessible(true);

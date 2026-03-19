@@ -175,8 +175,7 @@ public class BookmarkImpl implements Bookmark {
         return myFile;
     }
 
-    @Nullable
-    public String getNotEmptyDescription() {
+    public @Nullable String getNotEmptyDescription() {
         return StringUtil.isEmpty(myDescription) ? null : myDescription;
     }
 

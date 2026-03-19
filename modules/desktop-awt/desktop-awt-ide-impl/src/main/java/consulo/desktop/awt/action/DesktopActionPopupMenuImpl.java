@@ -54,8 +54,7 @@ public final class DesktopActionPopupMenuImpl implements ApplicationActivationLi
 
     private final Application myApp;
     private IdeFrame myFrame;
-    @Nullable
-    private Supplier<DataContext> myDataContextProvider;
+    private @Nullable Supplier<DataContext> myDataContextProvider;
     private boolean myIsToolWindowContextMenu;
 
     public DesktopActionPopupMenuImpl(String place,

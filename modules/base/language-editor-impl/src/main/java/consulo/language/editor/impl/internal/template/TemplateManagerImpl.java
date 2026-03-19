@@ -102,8 +102,7 @@ public class TemplateManagerImpl extends TemplateManager implements Disposable {
         return getTemplateStateImpl(editor);
     }
 
-    @Nullable
-    public static TemplateStateImpl getTemplateStateImpl(Editor editor) {
+    public static @Nullable TemplateStateImpl getTemplateStateImpl(Editor editor) {
         TemplateStateImpl templateState = editor.getUserData(TEMPLATE_STATE_KEY);
         if (templateState != null && templateState.isDisposed()) {
             editor.putUserData(TEMPLATE_STATE_KEY, null);
@@ -374,8 +373,7 @@ public class TemplateManagerImpl extends TemplateManager implements Disposable {
     }
 
     @Override
-    @Nullable
-    public Runnable startNonCustomTemplates(
+    public @Nullable Runnable startNonCustomTemplates(
         Map<Template, String> template2argument,
         Editor editor,
         @Nullable BiPredicate<String, String> processor
@@ -547,8 +545,7 @@ public class TemplateManagerImpl extends TemplateManager implements Disposable {
     }
 
     @Override
-    @Nullable
-    public Template getActiveTemplate(Editor editor) {
+    public @Nullable Template getActiveTemplate(Editor editor) {
         TemplateStateImpl templateState = getTemplateStateImpl(editor);
         return templateState != null ? templateState.getTemplate() : null;
     }

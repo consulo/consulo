@@ -50,8 +50,7 @@ import java.util.List;
  * @author nik
  */
 public class CreateNewLibraryAction extends DumbAwareAction {
-    @Nullable
-    private final LibraryType myType;
+    private final @Nullable LibraryType myType;
     private final BaseLibrariesConfigurable myLibrariesConfigurable;
     
     private final Project myProject;
@@ -90,8 +89,7 @@ public class CreateNewLibraryAction extends DumbAwareAction {
     }
 
 
-    @Nullable
-    public static Library createLibrary(
+    public static @Nullable Library createLibrary(
         @Nullable LibraryType type,
         JComponent parentComponent,
         Project project,
@@ -115,8 +113,7 @@ public class CreateNewLibraryAction extends DumbAwareAction {
         return library;
     }
 
-    @Nullable
-    public static NewLibraryConfiguration createNewLibraryConfiguration(
+    public static @Nullable NewLibraryConfiguration createNewLibraryConfiguration(
         @Nullable LibraryType type,
         JComponent parentComponent,
         Project project

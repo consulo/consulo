@@ -47,11 +47,9 @@ public abstract class ModuleCompilerPathsManager {
 
     public abstract void setCompilerOutputUrl(ContentFolderTypeProvider contentFolderType, @Nullable String compilerOutputUrl);
 
-    @Nullable
-    public abstract String getCompilerOutputUrl(ContentFolderTypeProvider contentFolderType);
+    public abstract @Nullable String getCompilerOutputUrl(ContentFolderTypeProvider contentFolderType);
 
-    @Nullable
-    public abstract VirtualFile getCompilerOutput(ContentFolderTypeProvider contentFolderType);
+    public abstract @Nullable VirtualFile getCompilerOutput(ContentFolderTypeProvider contentFolderType);
 
     
     public abstract VirtualFilePointer getCompilerOutputPointer(ContentFolderTypeProvider contentFolderType);

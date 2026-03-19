@@ -59,8 +59,7 @@ public abstract class NewProjectPanel extends BaseWelcomeScreenPanel implements 
     private WizardSession<NewModuleWizardContext> myWizardSession;
     private NewModuleWizardContext myWizardContext;
     private NewModuleBuilderProcessor<NewModuleWizardContext> myProcessor;
-    @Nullable
-    private final VirtualFile myModuleHome;
+    private final @Nullable VirtualFile myModuleHome;
 
     private Tree myTree;
 
@@ -82,13 +81,11 @@ public abstract class NewProjectPanel extends BaseWelcomeScreenPanel implements 
         return 300;
     }
 
-    @Nullable
-    public NewModuleBuilderProcessor<NewModuleWizardContext> getProcessor() {
+    public @Nullable NewModuleBuilderProcessor<NewModuleWizardContext> getProcessor() {
         return myProcessor;
     }
 
-    @Nullable
-    public NewModuleWizardContext getWizardContext() {
+    public @Nullable NewModuleWizardContext getWizardContext() {
         return myWizardContext;
     }
 

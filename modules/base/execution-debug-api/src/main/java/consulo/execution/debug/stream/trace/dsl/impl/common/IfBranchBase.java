@@ -14,8 +14,7 @@ public abstract class IfBranchBase implements IfBranch {
   protected final CodeBlock thenBlock;
   private final StatementFactory statementFactory;
 
-  @Nullable
-  protected Statement elseBlock;
+  protected @Nullable Statement elseBlock;
 
   public IfBranchBase(Expression condition, CodeBlock thenBlock, StatementFactory statementFactory) {
     this.condition = condition;

@@ -64,14 +64,12 @@ public class PrevNextParameterHandler extends EditorActionHandler {
     }
   }
 
-  @Nullable
-  private static PsiElement getExpressionList(Editor editor, int offset, DataContext dataContext) {
+  private static @Nullable PsiElement getExpressionList(Editor editor, int offset, DataContext dataContext) {
     Project project = dataContext.getData(Project.KEY);
     return project != null ? getExpressionList(editor, offset, project) : null;
   }
 
-  @Nullable
-  private static PsiElement getExpressionList(Editor editor, int offset, Project project) {
+  private static @Nullable PsiElement getExpressionList(Editor editor, int offset, Project project) {
     PsiFile file = PsiDocumentManager.getInstance(project).getPsiFile(editor.getDocument());
     return file != null ? ParameterInfoController.findArgumentList(file, offset, -1) : null;
   }

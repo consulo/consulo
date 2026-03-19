@@ -66,8 +66,7 @@ public class ImageOrColorPreviewManager implements Disposable {
      *
      * @link getPsiElementsAt()
      */
-    @Nullable
-    private Collection<PsiElement> myElements;
+    private @Nullable Collection<PsiElement> myElements;
 
     private final EditorMouseMotionListener myEditorMouseMotionListener = new EditorMouseMotionListener() {
         @Override

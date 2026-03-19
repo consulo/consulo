@@ -51,8 +51,7 @@ public abstract class CachingSimpleNode extends SimpleNode {
     myChildren = null;
   }
 
-  @Nullable 
-  protected SimpleNode[] getCached() {
+  protected @Nullable SimpleNode[] getCached() {
     return myChildren;
   }
 }

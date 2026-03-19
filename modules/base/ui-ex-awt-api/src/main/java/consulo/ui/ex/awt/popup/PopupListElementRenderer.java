@@ -23,8 +23,7 @@ import java.util.Collections;
 public class PopupListElementRenderer<E> extends GroupedItemsListRenderer<E> {
     protected final ListPopupInternal myPopup;
     private JLabel myShortcutLabel;
-    @Nullable
-    private JLabel myValueLabel;
+    private @Nullable JLabel myValueLabel;
 
     private JPanel myButtonPane;
     protected JComponent myButtonSeparator;

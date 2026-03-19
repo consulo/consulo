@@ -44,8 +44,7 @@ public class OptimizeImportsBeforeCheckinHandler extends CheckinHandler implemen
 
     @RequiredUIAccess
     @Override
-    @Nullable
-    public RefreshableOnComponent getBeforeCheckinConfigurationPanel() {
+    public @Nullable RefreshableOnComponent getBeforeCheckinConfigurationPanel() {
         VcsConfiguration settings = VcsConfiguration.getInstance(myProject);
         return new CheckBoxRefreshableOnComponent(
                 VcsLocalize.checkboxCheckinOptionsOptimizeImports(),

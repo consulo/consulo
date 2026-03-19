@@ -299,8 +299,7 @@ public class ScopeViewPane extends AbstractProjectViewPane {
         return myViewPanel == null ? AsyncResult.rejected() : callback != null ? callback : AsyncResult.resolved();
     }
 
-    @Nullable
-    public NamedScope getSelectedScope() {
+    public @Nullable NamedScope getSelectedScope() {
         NamedScopeFilter filter = getFilter(getSubId());
         return filter == null ? null : filter.getScope();
     }

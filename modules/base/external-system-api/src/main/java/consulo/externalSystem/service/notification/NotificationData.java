@@ -42,10 +42,8 @@ public class NotificationData {
   private final NotificationSource myNotificationSource;
   
   private NotificationListener myListener;
-  @Nullable
-  private String myFilePath;
-  @Nullable
-  private Navigatable navigatable;
+  private @Nullable String myFilePath;
+  private @Nullable Navigatable navigatable;
   private int myLine;
   private int myColumn;
   private boolean myBalloonNotification;
@@ -126,8 +124,7 @@ public class NotificationData {
     return myListener;
   }
 
-  @Nullable
-  public String getFilePath() {
+  public @Nullable String getFilePath() {
     return myFilePath;
   }
 
@@ -172,8 +169,7 @@ public class NotificationData {
     return new ArrayList<>(myListenerMap.keySet());
   }
 
-  @Nullable
-  public Navigatable getNavigatable() {
+  public @Nullable Navigatable getNavigatable() {
     return navigatable;
   }
 

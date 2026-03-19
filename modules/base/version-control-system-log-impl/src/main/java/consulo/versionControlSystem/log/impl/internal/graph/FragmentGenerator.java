@@ -28,10 +28,8 @@ import java.util.function.Predicate;
 public class FragmentGenerator {
 
     public static class GreenFragment {
-        @Nullable
-        private final Integer myUpRedNode;
-        @Nullable
-        private final Integer myDownRedNode;
+        private final @Nullable Integer myUpRedNode;
+        private final @Nullable Integer myDownRedNode;
         
         private final Set<Integer> myMiddleGreenNodes;
 
@@ -41,13 +39,11 @@ public class FragmentGenerator {
             myMiddleGreenNodes = middleGreenNodes;
         }
 
-        @Nullable
-        public Integer getUpRedNode() {
+        public @Nullable Integer getUpRedNode() {
             return myUpRedNode;
         }
 
-        @Nullable
-        public Integer getDownRedNode() {
+        public @Nullable Integer getDownRedNode() {
             return myDownRedNode;
         }
 
@@ -80,8 +76,7 @@ public class FragmentGenerator {
         return downWalk;
     }
 
-    @Nullable
-    public Integer getNearRedNode(int startNode, int maxWalkSize, boolean isUp) {
+    public @Nullable Integer getNearRedNode(int startNode, int maxWalkSize, boolean isUp) {
         if (myRedNodes.test(startNode)) {
             return startNode;
         }

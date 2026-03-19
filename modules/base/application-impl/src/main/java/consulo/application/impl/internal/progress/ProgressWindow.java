@@ -265,8 +265,7 @@ public class ProgressWindow extends ProgressIndicatorBase implements UnsafeProgr
         SwingUtilities.invokeLater(EmptyRunnable.INSTANCE); // Just to give blocking dispatching a chance to go out.
     }
 
-    @Nullable
-    protected ProgressDialog getDialog() {
+    protected @Nullable ProgressDialog getDialog() {
         return myDialog;
     }
 

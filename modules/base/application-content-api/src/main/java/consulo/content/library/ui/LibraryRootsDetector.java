@@ -44,6 +44,5 @@ public abstract class LibraryRootsDetector {
   /**
    * @return presentable name for the root type or {@code null} if the root type isn't supported by this detector
    */
-  @Nullable
-  public abstract String getRootTypeName(LibraryRootType rootType);
+  public abstract @Nullable String getRootTypeName(LibraryRootType rootType);
 }

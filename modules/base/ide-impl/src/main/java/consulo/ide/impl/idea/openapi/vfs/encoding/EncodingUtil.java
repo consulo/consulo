@@ -229,8 +229,7 @@ public class EncodingUtil {
         return checkCanReload(virtualFile, null) == null;
     }
 
-    @Nullable
-    static FailReason checkCanReload(VirtualFile virtualFile, @Nullable SimpleReference<? super Charset> current) {
+    static @Nullable FailReason checkCanReload(VirtualFile virtualFile, @Nullable SimpleReference<? super Charset> current) {
         if (virtualFile.isDirectory()) {
             return FailReason.IS_DIRECTORY;
         }
@@ -260,8 +259,7 @@ public class EncodingUtil {
         return result;
     }
 
-    @Nullable
-    private static FailReason fileTypeDescriptionError(VirtualFile virtualFile) {
+    private static @Nullable FailReason fileTypeDescriptionError(VirtualFile virtualFile) {
         if (virtualFile.getFileType().isBinary()) {
             return FailReason.IS_BINARY;
         }
@@ -274,8 +272,7 @@ public class EncodingUtil {
      * @param virtualFile
      * @return null means enabled, notnull means disabled and contains error message
      */
-    @Nullable
-    static FailReason checkCanConvert(VirtualFile virtualFile) {
+    static @Nullable FailReason checkCanConvert(VirtualFile virtualFile) {
         if (virtualFile.isDirectory()) {
             return FailReason.IS_DIRECTORY;
         }
@@ -284,8 +281,7 @@ public class EncodingUtil {
         return charsetFromContent != null ? FailReason.BY_FILE : fileTypeDescriptionError(virtualFile);
     }
 
-    @Nullable
-    static FailReason checkCanConvertAndReload(VirtualFile selectedFile) {
+    static @Nullable FailReason checkCanConvertAndReload(VirtualFile selectedFile) {
         FailReason result = checkCanConvert(selectedFile);
         if (result == null) {
             return null;
@@ -293,8 +289,7 @@ public class EncodingUtil {
         return checkCanReload(selectedFile, null);
     }
 
-    @Nullable
-    public static Pair<Charset, LocalizeValue> getCharsetAndTheReasonTooltip(VirtualFile file) {
+    public static @Nullable Pair<Charset, LocalizeValue> getCharsetAndTheReasonTooltip(VirtualFile file) {
         FailReason r1 = checkCanConvert(file);
         if (r1 == null) {
             return null;

@@ -309,8 +309,7 @@ public class MatchPatchPaths {
         return new Pair<>(parent, idx + 1);
     }
 
-    @Nullable
-    private static AbstractFilePatchInProgress processMatch(FilePatch patch, VirtualFile file) {
+    private static @Nullable AbstractFilePatchInProgress processMatch(FilePatch patch, VirtualFile file) {
         String beforeName = patch.getBeforeName();
         Pair<VirtualFile, Integer> pair = compareNames(beforeName, file);
         if (pair == null) {
@@ -327,8 +326,7 @@ public class MatchPatchPaths {
         return result;
     }
 
-    @Nullable
-    private static AbstractFilePatchInProgress createPatchInProgress(FilePatch patch, VirtualFile dir) {
+    private static @Nullable AbstractFilePatchInProgress createPatchInProgress(FilePatch patch, VirtualFile dir) {
         return patch instanceof TextFilePatch textFilePatch ? new TextFilePatchInProgress(textFilePatch, null, dir)
             : patch instanceof ShelvedBinaryFilePatch binaryFilePatch ? new BinaryFilePatchInProgress(binaryFilePatch, null, dir)
             : null;

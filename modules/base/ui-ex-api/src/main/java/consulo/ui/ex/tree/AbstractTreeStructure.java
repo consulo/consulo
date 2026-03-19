@@ -28,8 +28,7 @@ public abstract class AbstractTreeStructure {
     
     public abstract Object[] getChildElements(Object element);
 
-    @Nullable
-    public abstract Object getParentElement(Object element);
+    public abstract @Nullable Object getParentElement(Object element);
 
     
     public abstract NodeDescriptor createDescriptor(Object element, @Nullable NodeDescriptor parentDescriptor);

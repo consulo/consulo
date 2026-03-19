@@ -50,8 +50,7 @@ public class StatisticsTableModel extends ListTableModel<SMTestProxy> {
         SMRunnerUtil.addToInvokeLater(this::updateModel);
     }
 
-    @Nullable
-    public SMTestProxy getTestAt(int rowIndex) {
+    public @Nullable SMTestProxy getTestAt(int rowIndex) {
         if (rowIndex < 0 || rowIndex > getItems().size()) {
             return null;
         }
@@ -106,8 +105,7 @@ public class StatisticsTableModel extends ListTableModel<SMTestProxy> {
         LOG.error("value: " + aValue + " row: " + rowIndex + " column: " + columnIndex);
     }
 
-    @Nullable
-    private SMTestProxy getCurrentSuiteFor(@Nullable SMTestProxy proxy) {
+    private @Nullable SMTestProxy getCurrentSuiteFor(@Nullable SMTestProxy proxy) {
         if (proxy == null) {
             return null;
         }

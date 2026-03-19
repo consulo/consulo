@@ -167,8 +167,7 @@ public class PsiDynaReference<T extends PsiElement> extends PsiReferenceBase<T> 
     return result.toArray(new ResolveResult[result.size()]);
   }
 
-  @Nullable
-  private PsiReference chooseReference() {
+  private @Nullable PsiReference chooseReference() {
     if (myChosenOne != -1) {
       return myReferences.get(myChosenOne);
     }

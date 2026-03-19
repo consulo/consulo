@@ -106,8 +106,7 @@ public abstract class OpenInEditorWithMouseAction extends AnAction implements Du
     openInEditorAction.openEditor(project, navigatable);
   }
 
-  @Nullable
-  private Editor getEditor(Component component) {
+  private @Nullable Editor getEditor(Component component) {
     for (Editor editor : myEditors) {
       if (editor != null && editor.getGutter() == component) {
         return editor;
@@ -116,6 +115,5 @@ public abstract class OpenInEditorWithMouseAction extends AnAction implements Du
     return null;
   }
 
-  @Nullable
-  protected abstract Navigatable getNavigatable(Editor editor, int line);
+  protected abstract @Nullable Navigatable getNavigatable(Editor editor, int line);
 }

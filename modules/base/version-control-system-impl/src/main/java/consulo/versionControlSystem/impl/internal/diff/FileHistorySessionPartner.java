@@ -51,8 +51,7 @@ public class FileHistorySessionPartner implements VcsAppendableHistorySessionPar
   private final VcsHistoryProvider myVcsHistoryProvider;
   
   private final FilePath myPath;
-  @Nullable
-  private final VcsRevisionNumber myStartingRevisionNumber;
+  private final @Nullable VcsRevisionNumber myStartingRevisionNumber;
   
   private final LimitHistoryCheck myLimitHistoryCheck;
   
@@ -91,8 +90,7 @@ public class FileHistorySessionPartner implements VcsAppendableHistorySessionPar
     };
   }
 
-  @Nullable
-  public static FileHistoryRefresherI findExistingHistoryRefresher(Project project,
+  public static @Nullable FileHistoryRefresherI findExistingHistoryRefresher(Project project,
                                                             FilePath path,
                                                             @Nullable VcsRevisionNumber startingRevisionNumber) {
     JComponent component = ContentUtilEx.findContentComponent(getToolWindow(project).getContentManager(), comp ->

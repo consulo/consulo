@@ -35,8 +35,7 @@ public class JarUtil {
    * Returns attribute value from a manifest main section,
    * or null if missing or a file does not contain a manifest.
    */
-  @Nullable
-  public static String getJarAttribute(File file, Attributes.Name attribute) {
+  public static @Nullable String getJarAttribute(File file, Attributes.Name attribute) {
     return getJarAttributeImpl(file, null, attribute);
   }
 
@@ -44,13 +43,11 @@ public class JarUtil {
    * Returns attribute value from a given manifest section,
    * or null if missing or a file does not contain a manifest.
    */
-  @Nullable
-  public static String getJarAttribute(File file, String entryName, Attributes.Name attribute) {
+  public static @Nullable String getJarAttribute(File file, String entryName, Attributes.Name attribute) {
     return getJarAttributeImpl(file, entryName, attribute);
   }
 
-  @Nullable
-  private static String getJarAttributeImpl(File file, @Nullable String entryName, Attributes.Name attribute) {
+  private static @Nullable String getJarAttributeImpl(File file, @Nullable String entryName, Attributes.Name attribute) {
     if (file.canRead()) {
       try {
         try (JarFile jarFile = new JarFile(file)) {
@@ -73,8 +70,7 @@ public class JarUtil {
    * Loads archive entry as Java properties.
    * Returns loaded instance, or null if requested entry is missed or invalid.
    */
-  @Nullable
-  public static Properties loadProperties(File file, String entryName) {
+  public static @Nullable Properties loadProperties(File file, String entryName) {
     if (file.canRead()) {
       try {
         try (ZipFile zipFile = new ZipFile(file)) {

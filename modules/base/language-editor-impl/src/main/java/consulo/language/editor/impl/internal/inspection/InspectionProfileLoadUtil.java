@@ -44,8 +44,7 @@ public class InspectionProfileLoadUtil {
     return element.getAttributeValue(name);
   }
 
-  @Nullable
-  private static String getRootElementAttribute(String name, Element element) {
+  private static @Nullable String getRootElementAttribute(String name, Element element) {
     return getRootElementAttribute(element, name);
   }
 

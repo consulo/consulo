@@ -129,8 +129,7 @@ class FileColorConfiguration implements Cloneable {
         return result;
     }
 
-    @Nullable
-    public static FileColorConfiguration load(Element e) {
+    public static @Nullable FileColorConfiguration load(Element e) {
         String path = e.getAttributeValue(SCOPE_NAME);
         if (path == null) {
             return null;

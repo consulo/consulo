@@ -30,11 +30,9 @@ public abstract class Comment {
 
   public abstract String getText();
 
-  @Nullable
-  public abstract String getAuthor();
+  public abstract @Nullable String getAuthor();
 
-  @Nullable
-  public abstract Date getDate();
+  public abstract @Nullable Date getDate();
 
   public void appendTo(StringBuilder builder) {
     builder.append("<hr>");

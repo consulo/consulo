@@ -65,8 +65,7 @@ public final class NotificationSettings {
     return new NotificationSettings(myGroupId, displayType, myShouldLog, myShouldReadAloud);
   }
 
-  @Nullable
-  public static NotificationSettings load(Element element) {
+  public static @Nullable NotificationSettings load(Element element) {
     String displayTypeString = element.getAttributeValue("displayType");
     NotificationDisplayType displayType = NotificationDisplayType.BALLOON;
     boolean shouldLog = !"false".equals(element.getAttributeValue("shouldLog"));

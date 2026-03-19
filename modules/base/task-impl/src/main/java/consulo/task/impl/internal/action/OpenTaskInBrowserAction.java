@@ -62,8 +62,7 @@ public class OpenTaskInBrowserAction extends BaseTaskAction {
         }
     }
 
-    @Nullable
-    private static String getIssueUrl(AnActionEvent e) {
+    private static @Nullable String getIssueUrl(AnActionEvent e) {
         Project project = e.getData(Project.KEY);
         return project == null ? null : TaskManager.getManager(project).getActiveTask().getIssueUrl();
     }

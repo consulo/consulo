@@ -278,8 +278,7 @@ public class AnnotateToggleAction extends ToggleAction implements DumbAware {
         extensionPoint.forEach(provider -> presentation.addAction(provider.createAction(fileAnnotation)));
     }
 
-    @Nullable
-    private static Map<VcsRevisionNumber, Integer> computeLineNumbers(FileAnnotation fileAnnotation) {
+    private static @Nullable Map<VcsRevisionNumber, Integer> computeLineNumbers(FileAnnotation fileAnnotation) {
         Map<VcsRevisionNumber, Integer> numbers = new HashMap<>();
         List<VcsFileRevision> fileRevisionList = fileAnnotation.getRevisions();
         if (fileRevisionList != null) {
@@ -294,8 +293,7 @@ public class AnnotateToggleAction extends ToggleAction implements DumbAware {
         return numbers.size() < 2 ? null : numbers;
     }
 
-    @Nullable
-    private static Couple<Map<VcsRevisionNumber, ColorValue>> computeBgColors(
+    private static @Nullable Couple<Map<VcsRevisionNumber, ColorValue>> computeBgColors(
         FileAnnotation fileAnnotation,
         Editor editor
     ) {
@@ -346,8 +344,7 @@ public class AnnotateToggleAction extends ToggleAction implements DumbAware {
         );
     }
 
-    @Nullable
-    private static AnnotateToggleActionProvider getProvider(AnActionEvent e) {
+    private static @Nullable AnnotateToggleActionProvider getProvider(AnActionEvent e) {
         for (AnnotateToggleActionProvider provider : Application.get().getExtensionList(AnnotateToggleActionProvider.class)) {
             if (provider.isEnabled(e)) {
                 return provider;

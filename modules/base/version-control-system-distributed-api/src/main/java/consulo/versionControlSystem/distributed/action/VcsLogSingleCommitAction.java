@@ -86,6 +86,5 @@ public abstract class VcsLogSingleCommitAction<Repo extends Repository> extends 
   
   protected abstract AbstractRepositoryManager<Repo> getRepositoryManager(Project project);
 
-  @Nullable
-  protected abstract Repo getRepositoryForRoot(Project project, VirtualFile root);
+  protected abstract @Nullable Repo getRepositoryForRoot(Project project, VirtualFile root);
 }

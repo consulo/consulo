@@ -218,8 +218,7 @@ public class UnscrambleDialog extends DialogWrapper {
         return PropertiesComponent.getInstance().getValue(PROPERTY_LOG_FILE_LAST_URL);
     }
 
-    @Nullable
-    public UnscrambleSupport getSavedUnscrambler() {
+    public @Nullable UnscrambleSupport getSavedUnscrambler() {
         List<UnscrambleSupport> registeredUnscramblers = getRegisteredUnscramblers();
         String savedUnscramblerId = PropertiesComponent.getInstance().getValue(PROPERTY_UNSCRAMBLER_ID_USED);
         UnscrambleSupport selectedUnscrambler = null;
@@ -241,8 +240,7 @@ public class UnscrambleDialog extends DialogWrapper {
         return res;
     }
 
-    @Nullable
-    private UnscrambleSupport getSelectedUnscrambler() {
+    private @Nullable UnscrambleSupport getSelectedUnscrambler() {
         if (!myUseUnscrambler.getValueOrError()) {
             return null;
         }
@@ -395,8 +393,7 @@ public class UnscrambleDialog extends DialogWrapper {
         return showUnscrambledText(selectedUnscrambler, myLogFile.getText(), myProject, myStacktraceEditorPanel.getText()) != null;
     }
 
-    @Nullable
-    private RunContentDescriptor showUnscrambledText(@Nullable UnscrambleSupport unscrambleSupport, String logName, Project project, String textToUnscramble) {
+    private @Nullable RunContentDescriptor showUnscrambledText(@Nullable UnscrambleSupport unscrambleSupport, String logName, Project project, String textToUnscramble) {
         String unscrambledTrace = unscrambleSupport == null ? textToUnscramble : unscrambleSupport.unscramble(project, textToUnscramble, logName);
         if (unscrambledTrace == null) {
             return null;

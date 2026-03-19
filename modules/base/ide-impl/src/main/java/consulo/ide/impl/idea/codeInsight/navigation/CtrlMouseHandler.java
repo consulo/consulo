@@ -99,8 +99,7 @@ public final class CtrlMouseHandler {
     @JdkConstants.InputEventMask
     private int myStoredModifiers;
     private TooltipProvider myTooltipProvider;
-    @Nullable
-    private Point myPrevMouseLocation;
+    private @Nullable Point myPrevMouseLocation;
     private LightweightHintImpl myHint;
 
     public enum BrowseMode {
@@ -230,8 +229,7 @@ public final class CtrlMouseHandler {
         return bounds != null && bounds.contains(mouseLocationOnScreen);
     }
 
-    @Nullable
-    private Rectangle getHintBounds() {
+    private @Nullable Rectangle getHintBounds() {
         LightweightHintImpl hint = myHint;
         if (hint == null) {
             return null;
@@ -291,8 +289,7 @@ public final class CtrlMouseHandler {
         return result == null ? DocInfo.EMPTY : new DocInfo(result, documentationProvider);
     }
 
-    @Nullable
-    private static String doGenerateInfo(PsiElement element) {
+    private static @Nullable String doGenerateInfo(PsiElement element) {
         if (element instanceof PsiFile) {
             VirtualFile virtualFile = ((PsiFile) element).getVirtualFile();
             if (virtualFile != null) {
@@ -315,8 +312,7 @@ public final class CtrlMouseHandler {
         return null;
     }
 
-    @Nullable
-    private static String getQuickNavigateInfo(PsiElement element) {
+    private static @Nullable String getQuickNavigateInfo(PsiElement element) {
         String name = ElementDescriptionUtil.getElementDescription(element, UsageViewShortNameLocation.INSTANCE);
         if (StringUtil.isEmpty(name)) {
             return null;
@@ -459,8 +455,7 @@ public final class CtrlMouseHandler {
         }
     }
 
-    @Nullable
-    private Info getInfoAt(Editor editor, PsiFile file, int offset, BrowseMode browseMode) {
+    private @Nullable Info getInfoAt(Editor editor, PsiFile file, int offset, BrowseMode browseMode) {
         return getInfoAt(myProject, editor, file, offset, browseMode);
     }
 
@@ -965,10 +960,8 @@ public final class CtrlMouseHandler {
     public static final class DocInfo {
         public static final DocInfo EMPTY = new DocInfo(null, null);
 
-        @Nullable
-        public final String text;
-        @Nullable
-        final DocumentationProvider docProvider;
+        public final @Nullable String text;
+        final @Nullable DocumentationProvider docProvider;
 
         DocInfo(@Nullable String text, @Nullable DocumentationProvider provider) {
             this.text = text;

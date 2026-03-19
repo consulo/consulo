@@ -55,19 +55,16 @@ public abstract class XDebugView implements Disposable {
 
   public abstract void processSessionEvent(SessionEvent event, XDebugSession session);
 
-  @Nullable
-  protected static XDebugSession getSession(EventObject e) {
+  protected static @Nullable XDebugSession getSession(EventObject e) {
     Component component = e.getSource() instanceof Component ? (Component)e.getSource() : null;
     return component == null ? null : getSession(component);
   }
 
-  @Nullable
-  public static XDebugSession getSession(Component component) {
+  public static @Nullable XDebugSession getSession(Component component) {
     return getData(XDebugSession.DATA_KEY, component);
   }
 
-  @Nullable
-  protected VirtualFile getCurrentFile(Component component) {
+  protected @Nullable VirtualFile getCurrentFile(Component component) {
     XDebugSession session = getSession(component);
     if (session != null) {
       XSourcePosition position = session.getCurrentPosition();
@@ -79,8 +76,7 @@ public abstract class XDebugView implements Disposable {
   }
 
 
-  @Nullable
-  public static <T> T getData(Key<T> key, Component component) {
+  public static @Nullable <T> T getData(Key<T> key, Component component) {
     DataContext dataContext = DataManager.getInstance().getDataContext(component);
     ViewContext viewContext = dataContext.getData(ViewContext.CONTEXT_KEY);
     ContentManager contentManager = viewContext == null ? null : viewContext.getContentManager();

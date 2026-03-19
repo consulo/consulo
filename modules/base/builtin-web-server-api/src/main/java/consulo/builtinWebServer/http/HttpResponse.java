@@ -63,13 +63,11 @@ public final class HttpResponse {
     return myCode;
   }
 
-  @Nullable
-  public String getContentType() {
+  public @Nullable String getContentType() {
     return myContentType;
   }
 
-  @Nullable
-  public byte[] getContent() {
+  public @Nullable byte[] getContent() {
     return myContent;
   }
 

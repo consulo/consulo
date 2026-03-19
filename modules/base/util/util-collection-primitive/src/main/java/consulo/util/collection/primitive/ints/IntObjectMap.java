@@ -77,8 +77,7 @@ public interface IntObjectMap<V> {
     }
   }
 
-  @Nullable
-  default V putIfAbsent(int key, @Nullable V value) {
+  default @Nullable V putIfAbsent(int key, @Nullable V value) {
     V v = get(key);
     if (v == null) {
       v = put(key, value);

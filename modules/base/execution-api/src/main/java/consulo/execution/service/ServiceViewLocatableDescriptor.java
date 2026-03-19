@@ -5,8 +5,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import org.jspecify.annotations.Nullable;
 
 public interface ServiceViewLocatableDescriptor {
-  @Nullable
-  default VirtualFile getVirtualFile() {
+  default @Nullable VirtualFile getVirtualFile() {
     return null;
   }
 }

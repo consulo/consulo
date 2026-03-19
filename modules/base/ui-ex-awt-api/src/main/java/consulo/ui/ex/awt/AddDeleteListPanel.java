@@ -76,8 +76,7 @@ public abstract class AddDeleteListPanel<T> extends JPanel implements ComponentW
     }
   }
 
-  @Nullable
-  protected abstract T findItemToAdd();
+  protected abstract @Nullable T findItemToAdd();
 
   public Object [] getListItems() {
     List<Object> items = new ArrayList<>();

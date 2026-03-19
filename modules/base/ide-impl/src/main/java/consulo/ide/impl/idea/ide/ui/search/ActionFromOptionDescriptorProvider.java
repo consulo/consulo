@@ -29,6 +29,5 @@ import org.jspecify.annotations.Nullable;
 public abstract class ActionFromOptionDescriptorProvider {
   public static final ExtensionPointName<ActionFromOptionDescriptorProvider> EP = ExtensionPointName.create(ActionFromOptionDescriptorProvider.class);
 
-  @Nullable
-  public abstract AnAction provide(OptionDescription description);
+  public abstract @Nullable AnAction provide(OptionDescription description);
 }

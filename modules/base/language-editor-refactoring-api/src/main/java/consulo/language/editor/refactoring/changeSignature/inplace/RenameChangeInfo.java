@@ -87,8 +87,7 @@ public abstract class RenameChangeInfo implements ChangeInfo {
     return myOldName;
   }
 
-  @Nullable
-  public PsiNameIdentifierOwner getNamedElement() {
+  public @Nullable PsiNameIdentifierOwner getNamedElement() {
     return PsiTreeUtil.getParentOfType(myFile.findElementAt(myOffset), PsiNameIdentifierOwner.class);
   }
 
@@ -103,8 +102,7 @@ public abstract class RenameChangeInfo implements ChangeInfo {
     }
   }
 
-  @Nullable
-  public PsiElement getNameIdentifier() {
+  public @Nullable PsiElement getNameIdentifier() {
     PsiNameIdentifierOwner namedElement = getNamedElement();
     return namedElement != null ? namedElement.getNameIdentifier() : null;
   }

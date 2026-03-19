@@ -73,8 +73,7 @@ public abstract class CompletionService {
   protected abstract PrefixMatcher createMatcher(String prefix, boolean typoTolerant);
 
 
-  @Nullable
-  public abstract CompletionProcess getCurrentCompletion();
+  public abstract @Nullable CompletionProcess getCurrentCompletion();
 
   /**
    * The main method that is invoked to collect all the completion variants

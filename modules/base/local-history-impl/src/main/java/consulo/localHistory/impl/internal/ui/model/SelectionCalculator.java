@@ -91,8 +91,7 @@ public class SelectionCalculator {
     return result;
   }
 
-  @Nullable
-  private String getRevisionContent(Revision r) {
+  private @Nullable String getRevisionContent(Revision r) {
     Entry e = r.findEntry();
     if (e == null) return null;
     Content c = e.getContent();

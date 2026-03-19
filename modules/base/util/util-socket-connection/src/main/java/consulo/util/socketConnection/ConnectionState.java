@@ -3,11 +3,9 @@ package consulo.util.socketConnection;
 import org.jspecify.annotations.Nullable;
 
 public class ConnectionState {
-  @Nullable
-  private final String message;
+  private final @Nullable String message;
   private final ConnectionStatus status;
-  @Nullable
-  private final Object messageLinkListener;
+  private final @Nullable Object messageLinkListener;
 
   public ConnectionState(ConnectionStatus status, @Nullable String message, @Nullable Object messageLinkListener) {
     this.status = status;
@@ -27,8 +25,7 @@ public class ConnectionState {
     return message == null ? status.getStatusText() : message;
   }
 
-  @Nullable
-  public Object getMessageLinkListener() {
+  public @Nullable Object getMessageLinkListener() {
     return messageLinkListener;
   }
 }

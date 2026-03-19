@@ -90,8 +90,7 @@ public class InspectionTree extends Tree {
         return (InspectionTreeNode) getModel().getRoot();
     }
 
-    @Nullable
-    public InspectionToolWrapper getSelectedToolWrapper() {
+    public @Nullable InspectionToolWrapper getSelectedToolWrapper() {
         TreePath[] paths = getSelectionPaths();
         if (paths == null) {
             return null;

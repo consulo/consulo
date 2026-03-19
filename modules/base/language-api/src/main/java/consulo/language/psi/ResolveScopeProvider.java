@@ -30,6 +30,5 @@ import org.jspecify.annotations.Nullable;
 public abstract class ResolveScopeProvider {
   public static final ExtensionPointName<ResolveScopeProvider> EP_NAME = ExtensionPointName.create(ResolveScopeProvider.class);
 
-  @Nullable
-  public abstract GlobalSearchScope getResolveScope(VirtualFile file, Project project);
+  public abstract @Nullable GlobalSearchScope getResolveScope(VirtualFile file, Project project);
 }

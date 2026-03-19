@@ -28,8 +28,7 @@ import java.util.function.Consumer;
 public class AlphaAnimationContext {
   private Component component;
 
-  @Nullable
-  private AlphaComposite composite;
+  private @Nullable AlphaComposite composite;
 
   private ShowHideAnimator animator;
 

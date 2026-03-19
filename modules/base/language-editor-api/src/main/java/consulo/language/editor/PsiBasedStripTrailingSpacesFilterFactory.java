@@ -50,8 +50,7 @@ public abstract class PsiBasedStripTrailingSpacesFilterFactory extends StripTrai
         return StripTrailingSpacesFilter.ALL_LINES;
     }
 
-    @Nullable
-    public static Language getDocumentLanguage(Document document) {
+    public static @Nullable Language getDocumentLanguage(Document document) {
         FileDocumentManager manager = FileDocumentManager.getInstance();
         VirtualFile file = manager.getFile(document);
         if (file != null && file.isValid()) {

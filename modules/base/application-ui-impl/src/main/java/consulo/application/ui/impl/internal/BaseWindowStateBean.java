@@ -24,8 +24,7 @@ public abstract class BaseWindowStateBean implements ModificationTracker, Window
   }
 
   @Override
-  @Nullable
-  public Point2D getLocation() {
+  public @Nullable Point2D getLocation() {
     return myLocation;
   }
 
@@ -36,8 +35,7 @@ public abstract class BaseWindowStateBean implements ModificationTracker, Window
   }
 
   @Override
-  @Nullable
-  public Size2D getSize() {
+  public @Nullable Size2D getSize() {
     return mySize;
   }
 
@@ -71,8 +69,7 @@ public abstract class BaseWindowStateBean implements ModificationTracker, Window
     myModificationCount.getAndIncrement();
   }
 
-  @Nullable
-  private static <T, R> R apply(Function<T, R> function, @Nullable T value) {
+  private static @Nullable <T, R> R apply(Function<T, R> function, @Nullable T value) {
     return value == null ? null : function.apply(value);
   }
 }

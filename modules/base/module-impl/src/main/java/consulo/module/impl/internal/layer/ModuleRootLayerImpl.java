@@ -182,8 +182,7 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, ModuleRoo
 
     private final List<OrderEntry> myOrderEntries = new Order();
     // cleared by myOrderEntries modification, see Order
-    @Nullable
-    private OrderEntry[] myCachedOrderEntries;
+    private @Nullable OrderEntry[] myCachedOrderEntries;
     private Map<String, ModuleExtension> myExtensions = new HashMap<>();
     private final List<Element> myUnknownModuleExtensions = new SmartList<>();
     private RootModelImpl myRootModel;
@@ -921,8 +920,7 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, ModuleRoo
         LOG.assertTrue(error == null, error);
     }
 
-    @Nullable
-    private String checkValidRearrangement(OrderEntry[] newEntries) {
+    private @Nullable String checkValidRearrangement(OrderEntry[] newEntries) {
         if (newEntries.length != myOrderEntries.size()) {
             return "Size mismatch: old size=" + myOrderEntries.size() + "; new size=" + newEntries.length;
         }

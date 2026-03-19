@@ -203,8 +203,7 @@ class DiffPreviewPanel implements PreviewPanel {
     }
   }
 
-  @Nullable
-  private SimpleThreesideDiffChange getChange(ThreeSide side, int line) {
+  private @Nullable SimpleThreesideDiffChange getChange(ThreeSide side, int line) {
     for (SimpleThreesideDiffChange change : myViewer.getChanges()) {
       int startLine = change.getStartLine(side);
       int endLine = change.getEndLine(side);
@@ -215,8 +214,7 @@ class DiffPreviewPanel implements PreviewPanel {
     return null;
   }
 
-  @Nullable
-  private FoldRegion getFoldRegion(ThreeSide side, int line) {
+  private @Nullable FoldRegion getFoldRegion(ThreeSide side, int line) {
     EditorEx editor = myViewer.getEditor(side);
     Document document = editor.getDocument();
     for (FoldRegion region : editor.getFoldingModel().getAllFoldRegions()) {

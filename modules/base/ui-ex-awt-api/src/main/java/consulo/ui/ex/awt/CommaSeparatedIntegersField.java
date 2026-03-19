@@ -60,8 +60,7 @@ public class CommaSeparatedIntegersField extends JBTextField {
     return myValueEditor.getDefaultValue();
   }
 
-  @Nullable
-  public String getValueName() {
+  public @Nullable String getValueName() {
     return myValueEditor.getValueName();
   }
 

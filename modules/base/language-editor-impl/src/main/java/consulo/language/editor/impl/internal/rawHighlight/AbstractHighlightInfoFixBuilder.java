@@ -32,14 +32,11 @@ import static consulo.language.editor.rawHighlight.HighlightInfo.FixBuilderBase;
 public abstract class AbstractHighlightInfoFixBuilder<THIS extends FixBuilderBase<THIS>> implements FixBuilderBase<THIS> {
     
     protected final IntentionAction myAction;
-    @Nullable
-    protected List<IntentionAction> myOptions = null;
+    protected @Nullable List<IntentionAction> myOptions = null;
     
     protected LocalizeValue myDisplayName = LocalizeValue.empty();
-    @Nullable
-    protected TextRange myFixRange;
-    @Nullable
-    protected HighlightDisplayKey myKey;
+    protected @Nullable TextRange myFixRange;
+    protected @Nullable HighlightDisplayKey myKey;
 
     public AbstractHighlightInfoFixBuilder(IntentionAction action) {
         myAction = action;

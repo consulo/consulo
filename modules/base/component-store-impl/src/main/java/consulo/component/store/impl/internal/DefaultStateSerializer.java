@@ -28,8 +28,7 @@ public class DefaultStateSerializer {
   private DefaultStateSerializer() {
   }
 
-  @Nullable
-  public static Element serializeState(Object state, @Nullable Storage storage) throws WriteExternalException {
+  public static @Nullable Element serializeState(Object state, @Nullable Storage storage) throws WriteExternalException {
     if (state instanceof Element) {
       return (Element)state;
     }
@@ -44,8 +43,7 @@ public class DefaultStateSerializer {
   }
 
   @SuppressWarnings({"unchecked"})
-  @Nullable
-  public static <T> T deserializeState(@Nullable Element stateElement, Class <T> stateClass) throws StateStorageException {
+  public static @Nullable <T> T deserializeState(@Nullable Element stateElement, Class <T> stateClass) throws StateStorageException {
     if (stateElement == null) return null;
 
     if (stateClass.equals(Element.class)) {

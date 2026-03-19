@@ -55,8 +55,7 @@ public interface IXMLParser
     *
     * @return the reader.
     */
-   @Nullable
-   public IXMLReader getReader();
+   public @Nullable IXMLReader getReader();
 
 
    /**
@@ -72,8 +71,7 @@ public interface IXMLParser
     *
     * @return the builder.
     */
-   @Nullable
-   public IXMLBuilder getBuilder();
+   public @Nullable IXMLBuilder getBuilder();
 
 
    /**
@@ -89,8 +87,7 @@ public interface IXMLParser
     *
     * @return the validator.
     */
-   @Nullable
-   public IXMLValidator getValidator();
+   public @Nullable IXMLValidator getValidator();
 
 
    /**
@@ -122,8 +119,7 @@ public interface IXMLParser
     * @throws net.n3.nanoxml.XMLException
     *		if an error occurred reading or parsing the data
     */
-   @Nullable
-   public Object parse()
+   public @Nullable Object parse()
       throws XMLException;
 
 }

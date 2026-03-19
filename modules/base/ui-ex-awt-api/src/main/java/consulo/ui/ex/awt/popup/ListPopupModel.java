@@ -56,8 +56,7 @@ public class ListPopupModel extends AbstractListModel implements PopupListModelA
         }
     }
 
-    @Nullable
-    public Object get(int i) {
+    public @Nullable Object get(int i) {
         if (i >= 0 && i < myFilteredList.size()) {
             return myFilteredList.get(i);
         }

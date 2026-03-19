@@ -88,8 +88,7 @@ public class VirtualFileEvent extends EventObject {
    * @return the parent, or null if the file is a root directory or it was not possible to determine the parent
    *         (depends on the specific VFS implementation).
    */
-  @Nullable
-  public VirtualFile getParent() {
+  public @Nullable VirtualFile getParent() {
     return myParent;
   }
 
@@ -99,8 +98,7 @@ public class VirtualFileEvent extends EventObject {
    *
    * @return the refresh initiating object, or null if it was not specified.
    */
-  @Nullable
-  public Object getRequestor() {
+  public @Nullable Object getRequestor() {
     return myRequestor;
   }
 

@@ -71,8 +71,7 @@ public class MultipleFileMergeDialog extends DialogWrapper {
     private final MergeSession myMergeSession;
     private final List<VirtualFile> myFiles;
     private final ListTableModel<VirtualFile> myModel;
-    @Nullable
-    private final Project myProject;
+    private final @Nullable Project myProject;
     private final StoreReloadManager myStoreReloadManager;
     private final List<VirtualFile> myProcessedFiles = new SmartList<>();
     private final Set<VirtualFile> myBinaryFiles = new HashSet<>();
@@ -173,8 +172,7 @@ public class MultipleFileMergeDialog extends DialogWrapper {
     }
 
     @Override
-    @Nullable
-    protected JComponent createCenterPanel() {
+    protected @Nullable JComponent createCenterPanel() {
         return myRootPanel;
     }
 

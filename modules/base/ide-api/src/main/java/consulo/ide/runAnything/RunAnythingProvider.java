@@ -118,8 +118,7 @@ public interface RunAnythingProvider<V> {
     /**
      * Returns help group title this provider belongs to
      */
-    @Nullable
-    default String getHelpGroupTitle() {
+    default @Nullable String getHelpGroupTitle() {
         return null;
     }
 
@@ -164,8 +163,7 @@ public interface RunAnythingProvider<V> {
      * @param dataContext use it to fetch project, module, working directory
      * @param pattern     input string
      */
-    @Nullable
-    static RunAnythingProvider findMatchedProvider(DataContext dataContext, String pattern) {
+    static @Nullable RunAnythingProvider findMatchedProvider(DataContext dataContext, String pattern) {
         return Application.get().getExtensionPoint(RunAnythingProvider.class)
             .findFirstSafe(provider -> provider.findMatchingValue(dataContext, pattern) != null);
     }

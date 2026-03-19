@@ -55,9 +55,9 @@ public class ThreeComponentsSplitter extends JPanel implements Disposable {
   private final Divider myFirstDivider;
   private final Divider myLastDivider;
 
-  @Nullable private JComponent myFirstComponent;
-  @Nullable private JComponent myInnerComponent;
-  @Nullable private JComponent myLastComponent;
+  private @Nullable JComponent myFirstComponent;
+  private @Nullable JComponent myInnerComponent;
+  private @Nullable JComponent myLastComponent;
 
   private int myFirstSize = 0;
   private int myLastSize = 0;
@@ -377,8 +377,7 @@ public class ThreeComponentsSplitter extends JPanel implements Disposable {
     repaint();
   }
 
-  @Nullable
-  public JComponent getFirstComponent() {
+  public @Nullable JComponent getFirstComponent() {
     return myFirstComponent;
   }
 
@@ -400,8 +399,7 @@ public class ThreeComponentsSplitter extends JPanel implements Disposable {
     }
   }
 
-  @Nullable
-  public JComponent getLastComponent() {
+  public @Nullable JComponent getLastComponent() {
     return myLastComponent;
   }
 
@@ -424,8 +422,7 @@ public class ThreeComponentsSplitter extends JPanel implements Disposable {
     }
   }
 
-  @Nullable
-  public JComponent getInnerComponent() {
+  public @Nullable JComponent getInnerComponent() {
     return myInnerComponent;
   }
 

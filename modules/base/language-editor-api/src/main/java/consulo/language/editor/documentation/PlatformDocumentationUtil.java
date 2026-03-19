@@ -42,8 +42,7 @@ public class PlatformDocumentationUtil {
     return anchorMatcher.find() ? anchorMatcher.reset().replaceAll("") : url;
   }
 
-  @Nullable
-  public static List<String> getHttpRoots(String[] roots, String relPath) {
+  public static @Nullable List<String> getHttpRoots(String[] roots, String relPath) {
     ArrayList<String> result = new ArrayList<>();
     for (String root : roots) {
       VirtualFile virtualFile = VirtualFileManager.getInstance().findFileByUrl(root);

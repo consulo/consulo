@@ -48,8 +48,7 @@ public class TemplateCodeStyleHelper {
    * @param offset offset that might point to white space element within the given PSI file
    * @return target white space element for the given offset within the given file (if any); {@code null} otherwise
    */
-  @Nullable
-  public static PsiElement findWhiteSpaceNode(PsiFile file, int offset) {
+  public static @Nullable PsiElement findWhiteSpaceNode(PsiFile file, int offset) {
     return doFindWhiteSpaceNode(file, offset).first;
   }
 

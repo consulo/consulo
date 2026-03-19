@@ -43,8 +43,7 @@ public abstract class ArtifactTemplate {
     return "unnamed";
   }
 
-  @Nullable
-  public NewArtifactConfiguration createArtifact() {
+  public @Nullable NewArtifactConfiguration createArtifact() {
     String name = suggestArtifactName();
     return new NewArtifactConfiguration(createRootElement(name), name, null);
   }

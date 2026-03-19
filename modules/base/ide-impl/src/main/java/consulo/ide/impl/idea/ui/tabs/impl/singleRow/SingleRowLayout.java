@@ -39,8 +39,7 @@ public class SingleRowLayout extends TabLayout {
 
   public final MoreTabsIcon myMoreIcon = new MoreTabsIcon() {
     @Override
-    @Nullable
-    protected Rectangle getIconRec() {
+    protected @Nullable Rectangle getIconRec() {
       return myLastSingRowLayout != null ? myLastSingRowLayout.moreRect : null;
     }
   };
@@ -180,8 +179,7 @@ public class SingleRowLayout extends TabLayout {
     return data;
   }
 
-  @Nullable
-  protected TabLabel findLastVisibleLabel(SingleRowPassInfo data) {
+  protected @Nullable TabLabel findLastVisibleLabel(SingleRowPassInfo data) {
     return myTabs.myInfo2Label.get(data.toLayout.get(data.toLayout.size() - 1));
   }
 

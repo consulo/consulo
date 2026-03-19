@@ -97,8 +97,7 @@ public abstract class FileHistoryColumnWrapper<T> extends DualViewColumnInfo<Tre
     return getMaxValue(myBaseColumn.getName());
   }
 
-  @Nullable
-  private String getMaxValue(String columnHeader) {
+  private @Nullable String getMaxValue(String columnHeader) {
     DualView dualView = getDualView();
     if(dualView == null) {
       return columnHeader + "ww";

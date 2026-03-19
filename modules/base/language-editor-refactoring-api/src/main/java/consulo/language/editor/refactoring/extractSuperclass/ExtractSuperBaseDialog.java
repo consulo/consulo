@@ -83,8 +83,7 @@ public abstract class ExtractSuperBaseDialog<ClassType extends PsiElement, Membe
     @Override
     protected abstract String getHelpId();
 
-    @Nullable
-    protected abstract String validateName(String name);
+    protected abstract @Nullable String validateName(String name);
 
     protected abstract String getTopLabelText();
 

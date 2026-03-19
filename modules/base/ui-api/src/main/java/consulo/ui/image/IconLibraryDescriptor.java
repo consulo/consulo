@@ -33,8 +33,7 @@ public interface IconLibraryDescriptor {
         return false;
     }
 
-    @Nullable
-    default String getInverseLibraryId() {
+    default @Nullable String getInverseLibraryId() {
         return null;
     }
 }

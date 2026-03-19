@@ -16,8 +16,7 @@ import java.util.function.Consumer;
 public abstract class TryBlockBase implements TryBlock {
   protected final StatementFactory statementFactory;
 
-  @Nullable
-  protected CatchBlockDescriptor myCatchDescriptor;
+  protected @Nullable CatchBlockDescriptor myCatchDescriptor;
 
   public TryBlockBase(StatementFactory statementFactory) {
     this.statementFactory = statementFactory;

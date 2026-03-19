@@ -78,8 +78,7 @@ public abstract class AbstractShowDiffAction extends AbstractVcsAction {
         return false;
     }
 
-    @Nullable
-    protected static AbstractVcs isEnabled(VcsContext vcsContext, @Nullable VcsBackgroundableActions actionKey) {
+    protected static @Nullable AbstractVcs isEnabled(VcsContext vcsContext, @Nullable VcsBackgroundableActions actionKey) {
         if (!(isVisible(vcsContext))) {
             return null;
         }

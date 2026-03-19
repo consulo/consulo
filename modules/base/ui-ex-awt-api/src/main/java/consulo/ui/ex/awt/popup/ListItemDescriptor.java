@@ -8,13 +8,11 @@ public interface ListItemDescriptor<T> {
     @Nullable
     String getTextFor(T value);
 
-    @Nullable
-    default String getTooltipFor(T value) {
+    default @Nullable String getTooltipFor(T value) {
         return null;
     }
 
-    @Nullable
-    default Image getIconFor(T value) {
+    default @Nullable Image getIconFor(T value) {
         return null;
     }
 

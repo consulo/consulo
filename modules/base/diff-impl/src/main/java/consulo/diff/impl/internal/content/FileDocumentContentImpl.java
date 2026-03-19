@@ -51,8 +51,7 @@ public class FileDocumentContentImpl extends DocumentContentImpl implements File
                                     .build();
   }
 
-  @Nullable
-  private static LineSeparator getSeparator(VirtualFile file) {
+  private static @Nullable LineSeparator getSeparator(VirtualFile file) {
     String s = LoadTextUtil.detectLineSeparator(file, true);
     if (s == null) return null;
     return LineSeparator.fromString(s);

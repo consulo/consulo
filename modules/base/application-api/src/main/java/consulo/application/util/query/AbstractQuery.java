@@ -47,8 +47,7 @@ public abstract class AbstractQuery<Result> implements Query<Result> {
     }
 
     @Override
-    @Nullable
-    public Result findFirst() {
+    public @Nullable Result findFirst() {
         assertNotProcessing();
         CommonProcessors.FindFirstProcessor<Result> processor = new CommonProcessors.FindFirstProcessor<>();
         forEach(processor);

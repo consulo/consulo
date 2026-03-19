@@ -411,8 +411,7 @@ public abstract class EditorBasedStatusBarPopup extends EditorBasedWidget implem
         return file == null || !myWriteableFileRequired || file.isWritable();
     }
 
-    @Nullable
-    protected abstract ListPopup createPopup(DataContext context);
+    protected abstract @Nullable ListPopup createPopup(DataContext context);
 
     protected void registerCustomListeners() {
     }

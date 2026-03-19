@@ -27,8 +27,7 @@ class SoftMargins implements Cloneable {
     private List<Integer> myValues;
 
     @SuppressWarnings("unused") // Serialization getter
-    @Nullable
-    public String getSOFT_MARGINS() {
+    public @Nullable String getSOFT_MARGINS() {
         return myValues != null ? toString() : null;
     }
 

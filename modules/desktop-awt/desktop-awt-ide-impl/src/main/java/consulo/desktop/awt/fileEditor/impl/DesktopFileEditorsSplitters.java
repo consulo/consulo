@@ -328,8 +328,7 @@ public class DesktopFileEditorsSplitters extends FileEditorsSplittersBase<Deskto
         }
     }
 
-    @Nullable
-    public JPanel getTopPanel() {
+    public @Nullable JPanel getTopPanel() {
         return myComponent.getComponentCount() > 0 ? (JPanel) myComponent.getComponent(0) : null;
     }
 
@@ -381,8 +380,7 @@ public class DesktopFileEditorsSplitters extends FileEditorsSplittersBase<Deskto
         return res.toArray(new DesktopFileEditorWindow[res.size()]);
     }
 
-    @Nullable
-    private DesktopFileEditorWindow findWindowWith(Component component) {
+    private @Nullable DesktopFileEditorWindow findWindowWith(Component component) {
         if (component != null) {
             for (DesktopFileEditorWindow window : myWindows) {
                 if (SwingUtilities.isDescendingFrom(component, window.myPanel)) {
@@ -395,8 +393,7 @@ public class DesktopFileEditorsSplitters extends FileEditorsSplittersBase<Deskto
 
     @RequiredUIAccess
     @Override
-    @Nullable
-    public FileEditorWindow openInRightSplit(VirtualFile file, boolean requestFocus) {
+    public @Nullable FileEditorWindow openInRightSplit(VirtualFile file, boolean requestFocus) {
         DesktopFileEditorWindow window = getCurrentWindow();
 
         if (window == null) {

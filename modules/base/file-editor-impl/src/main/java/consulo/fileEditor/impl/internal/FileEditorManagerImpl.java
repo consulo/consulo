@@ -978,8 +978,7 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
         );
     }
 
-    @Nullable
-    private FileEditorWithProviderComposite createComposite(
+    private @Nullable FileEditorWithProviderComposite createComposite(
         VirtualFile file,
         FileEditor[] editors,
         FileEditorProvider[] providers
@@ -1496,8 +1495,7 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
         getMainSplitters().readExternal(state);
     }
 
-    @Nullable
-    private FileEditorWithProviderComposite getEditorComposite(FileEditor editor) {
+    private @Nullable FileEditorWithProviderComposite getEditorComposite(FileEditor editor) {
         for (FileEditorsSplitters splitters : getAllSplitters()) {
             FileEditorWithProviderComposite[] editorsComposites = splitters.getEditorsComposites();
             for (int i = editorsComposites.length - 1; i >= 0; i--) {

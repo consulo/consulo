@@ -489,8 +489,7 @@ public class Switcher extends AnAction implements DumbAware {
             };
 
             ListSelectionListener filesSelectionListener = new ListSelectionListener() {
-                @Nullable
-                private String getTitle2Text(@Nullable String fullText) {
+                private @Nullable String getTitle2Text(@Nullable String fullText) {
                     int labelWidth = pathLabel.getWidth();
                     if (fullText == null || fullText.length() == 0) {
                         return " ";
@@ -1228,8 +1227,7 @@ public class Switcher extends AnAction implements DumbAware {
             );
         }
 
-        @Nullable
-        private static FileEditorWindow findAppropriateWindow(FileInfo info) {
+        private static @Nullable FileEditorWindow findAppropriateWindow(FileInfo info) {
             if (info.second == null) {
                 return null;
             }

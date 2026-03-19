@@ -475,8 +475,7 @@ public final class EditorMouseHoverPopupManagerImpl implements EditorMouseHoverP
             }
         }
 
-        @Nullable
-        private Info calcInfo(Editor editor) {
+        private @Nullable Info calcInfo(Editor editor) {
             HighlightInfo info = getHighlightInfo();
             if (info != null && (info.getDescription().isEmpty() || info.getToolTip().isEmpty())) {
                 info = null;
@@ -712,8 +711,7 @@ public final class EditorMouseHoverPopupManagerImpl implements EditorMouseHoverP
         }
     }
 
-    @Nullable
-    public DocumentationComponent getDocumentationComponent() {
+    public @Nullable DocumentationComponent getDocumentationComponent() {
         AbstractPopup hint = getCurrentHint();
         return hint == null ? null : UIUtil.findComponentOfType(hint.getComponent(), DocumentationComponent.class);
     }
@@ -729,8 +727,7 @@ public final class EditorMouseHoverPopupManagerImpl implements EditorMouseHoverP
             consumers = null;
         }
 
-        @Nullable
-        private AbstractPopup getPopup() {
+        private @Nullable AbstractPopup getPopup() {
             return popup;
         }
 

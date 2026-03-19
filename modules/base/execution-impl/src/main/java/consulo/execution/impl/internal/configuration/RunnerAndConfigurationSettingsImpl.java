@@ -106,8 +106,7 @@ public class RunnerAndConfigurationSettingsImpl implements JDOMExternalizable, C
     }
 
     @Override
-    @Nullable
-    public ConfigurationFactory getFactory() {
+    public @Nullable ConfigurationFactory getFactory() {
         return myConfiguration == null ? null : myConfiguration.getFactory();
     }
 
@@ -192,8 +191,7 @@ public class RunnerAndConfigurationSettingsImpl implements JDOMExternalizable, C
         return myFolderName;
     }
 
-    @Nullable
-    private ConfigurationFactory getFactory(Element element) {
+    private @Nullable ConfigurationFactory getFactory(Element element) {
         String typeName = element.getAttributeValue(CONFIGURATION_TYPE_ATTRIBUTE);
         String factoryName = element.getAttributeValue(FACTORY_NAME_ATTRIBUTE);
         return myManager.getFactory(typeName, factoryName, !myIsTemplate);
@@ -416,8 +414,7 @@ public class RunnerAndConfigurationSettingsImpl implements JDOMExternalizable, C
     }
 
     @Override
-    @Nullable
-    public ConfigurationPerRunnerSettings getConfigurationSettings(ProgramRunner runner) {
+    public @Nullable ConfigurationPerRunnerSettings getConfigurationSettings(ProgramRunner runner) {
         if (!myConfigurationPerRunnerSettings.containsKey(runner)) {
             ConfigurationPerRunnerSettings settings = myConfiguration.createRunnerSettings(new InfoProvider(runner));
             myConfigurationPerRunnerSettings.put(runner, settings);
@@ -427,8 +424,7 @@ public class RunnerAndConfigurationSettingsImpl implements JDOMExternalizable, C
     }
 
     @Override
-    @Nullable
-    public ConfigurationType getType() {
+    public @Nullable ConfigurationType getType() {
         return myConfiguration == null ? null : myConfiguration.getType();
     }
 

@@ -25,7 +25,7 @@ public class LoadingDetails implements VcsFullCommitDetails {
 
   private final Supplier<CommitId> myCommitIdSupplier;
   private final long myLoadingTaskIndex;
-  @Nullable private volatile CommitId myCommitId;
+  private volatile @Nullable CommitId myCommitId;
 
   public LoadingDetails(Supplier<CommitId> commitIdSupplier, long loadingTaskIndex) {
     myCommitIdSupplier = commitIdSupplier;

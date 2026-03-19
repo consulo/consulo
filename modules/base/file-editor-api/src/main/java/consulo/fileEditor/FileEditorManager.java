@@ -80,23 +80,20 @@ public abstract class FileEditorManager {
    *
    * @return opened text editor. The method returns <code>null</code> in case if text editor wasn't opened.
    */
-  @Nullable
-  public abstract Editor openTextEditor(OpenFileDescriptor descriptor, boolean focusEditor);
+  public abstract @Nullable Editor openTextEditor(OpenFileDescriptor descriptor, boolean focusEditor);
 
   /**
    * @return currently selected text editor. The method returns <code>null</code> in case
    * there is no selected editor at all or selected editor is not a text one.
    */
-  @Nullable
-  public Editor getSelectedTextEditor() {
+  public @Nullable Editor getSelectedTextEditor() {
     return getSelectedTextEditor(false);
   }
 
   /**
    * @param requiredUIThread
    */
-  @Nullable
-  public abstract Editor getSelectedTextEditor(boolean requiredUIThread);
+  public abstract @Nullable Editor getSelectedTextEditor(boolean requiredUIThread);
 
   /**
    * @return <code>true</code> if <code>file</code> is opened, <code>false</code> otherwise
@@ -127,8 +124,7 @@ public abstract class FileEditorManager {
    * @return editor which is currently selected in the currently selected file.
    * The method returns <code>null</code> if <code>file</code> is not opened.
    */
-  @Nullable
-  public abstract FileEditor getSelectedEditor(VirtualFile file);
+  public abstract @Nullable FileEditor getSelectedEditor(VirtualFile file);
 
   /**
    * @param file cannot be null
@@ -168,8 +164,7 @@ public abstract class FileEditorManager {
    * Add component to top of file editor
    * @return disposer for removing it from editor. null mean not added, if editor not found in registry
    */
-  @Nullable
-  public abstract Disposable addTopComponent(FileEditor editor, ComponentContainer component);
+  public abstract @Nullable Disposable addTopComponent(FileEditor editor, ComponentContainer component);
 
   @Deprecated
   @DeprecationInfo("addTopComponent(FileEditor, ComponentContainer)")
@@ -204,8 +199,7 @@ public abstract class FileEditorManager {
    * Returns data associated with given editor/caret context. Data providers are registered via
    * {@link #registerExtraEditorDataProvider(EditorDataProvider, Disposable)} method.
    */
-  @Nullable
-  public abstract Object getData(Key<?> dataId, Editor editor, Caret caret);
+  public abstract @Nullable Object getData(Key<?> dataId, Editor editor, Caret caret);
 
   /**
    * Selects a specified file editor tab for the specified editor.
@@ -240,8 +234,7 @@ public abstract class FileEditorManager {
  
   public abstract Pair<FileEditor[], FileEditorProvider[]> getEditorsWithProviders(VirtualFile file);
 
-  @Nullable
-  public abstract VirtualFile getFile(FileEditor editor);
+  public abstract @Nullable VirtualFile getFile(FileEditor editor);
 
   public abstract void updateFilePresentation(VirtualFile file);
 
@@ -290,11 +283,9 @@ public abstract class FileEditorManager {
 
   public abstract boolean hasOpenedFile();
 
-  @Nullable
-  public abstract VirtualFile getCurrentFile();
+  public abstract @Nullable VirtualFile getCurrentFile();
 
-  @Nullable
-  public abstract FileEditorWithProvider getSelectedEditorWithProvider(VirtualFile file);
+  public abstract @Nullable FileEditorWithProvider getSelectedEditorWithProvider(VirtualFile file);
 
   /**
    * Closes all files IN ACTIVE SPLITTER (window).

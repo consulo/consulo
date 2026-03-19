@@ -27,13 +27,11 @@ public final class VcsConsoleLine {
     console.print("\n", lastType);
   }
 
-  @Nullable
-  public static VcsConsoleLine create(@Nullable String message, ConsoleViewContentType contentType) {
+  public static @Nullable VcsConsoleLine create(@Nullable String message, ConsoleViewContentType contentType) {
     return create(Collections.singletonList(Pair.create(message, contentType)));
   }
 
-  @Nullable
-  public static VcsConsoleLine create(List<Pair<String, ConsoleViewContentType>> lineChunks) {
+  public static @Nullable VcsConsoleLine create(List<Pair<String, ConsoleViewContentType>> lineChunks) {
     List<Pair<String, ConsoleViewContentType>> chunks = ContainerUtil.filter(lineChunks, it -> !StringUtil.isEmptyOrSpaces(it.first));
     if (chunks.isEmpty()) return null;
     return new VcsConsoleLine(chunks);

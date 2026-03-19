@@ -27,23 +27,19 @@ public abstract class DefaultTextCompletionValueDescriptor<T> implements TextCom
   
   protected abstract String getLookupString(T item);
 
-  @Nullable
-  protected Image getIcon(T item) {
+  protected @Nullable Image getIcon(T item) {
     return null;
   }
 
-  @Nullable
-  protected String getTailText(T item) {
+  protected @Nullable String getTailText(T item) {
     return null;
   }
 
-  @Nullable
-  protected String getTypeText(T item) {
+  protected @Nullable String getTypeText(T item) {
     return null;
   }
 
-  @Nullable
-  protected InsertHandler<LookupElement> createInsertHandler(T item) {
+  protected @Nullable InsertHandler<LookupElement> createInsertHandler(T item) {
     return null;
   }
 

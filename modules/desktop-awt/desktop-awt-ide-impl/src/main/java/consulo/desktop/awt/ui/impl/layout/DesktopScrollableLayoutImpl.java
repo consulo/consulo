@@ -47,8 +47,7 @@ public class DesktopScrollableLayoutImpl extends SwingComponentDelegate<JScrollP
         }
     }
 
-    @Nullable
-    private final Component myComponent;
+    private final @Nullable Component myComponent;
     private final ScrollableLayoutOptions myOptions;
 
     public DesktopScrollableLayoutImpl(@Nullable Component component, ScrollableLayoutOptions options) {

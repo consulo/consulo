@@ -157,8 +157,7 @@ public class InspectionCache {
         return message;
     }
 
-    @Nullable
-    public HighlightDisplayKey register(String name, LocalizeValue displayName) {
+    public @Nullable HighlightDisplayKey register(String name, LocalizeValue displayName) {
         return register(name, displayName, name);
     }
 
@@ -166,8 +165,7 @@ public class InspectionCache {
         return myHighlightDisplayNameToKeyMap.get(name);
     }
 
-    @Nullable
-    public HighlightDisplayKey findById(String id) {
+    public @Nullable HighlightDisplayKey findById(String id) {
         HighlightDisplayKey key = myHighlightDisplayIdToKeyMap.get(id);
         if (key != null) {
             return key;
@@ -179,8 +177,7 @@ public class InspectionCache {
         return null;
     }
 
-    @Nullable
-    public HighlightDisplayKey register(
+    public @Nullable HighlightDisplayKey register(
         String name,
         LocalizeValue displayName,
         String id,
@@ -203,8 +200,7 @@ public class InspectionCache {
         }
     }
 
-    @Nullable
-    public HighlightDisplayKey register(String name, LocalizeValue displayName, String id) {
+    public @Nullable HighlightDisplayKey register(String name, LocalizeValue displayName, String id) {
         if (find(name) != null) {
             LOG.info("Key with name \'" + name + "\' already registered");
             return null;

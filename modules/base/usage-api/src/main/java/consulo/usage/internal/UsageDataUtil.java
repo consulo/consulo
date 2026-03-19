@@ -31,8 +31,7 @@ import java.util.Set;
  * @author cdr
  */
 public class UsageDataUtil {
-    @Nullable
-    public static VirtualFile[] provideVirtualFileArray(Usage[] usages, UsageTarget[] usageTargets) {
+    public static @Nullable VirtualFile[] provideVirtualFileArray(Usage[] usages, UsageTarget[] usageTargets) {
         if (usages == null && usageTargets == null) {
             return null;
         }

@@ -43,8 +43,7 @@ public class UIRootConfigurationAccessor extends RootConfigurationAccessor {
   }
 
   @Override
-  @Nullable
-  public Library getLibrary(Library library, String libraryName, String libraryLevel) {
+  public @Nullable Library getLibrary(Library library, String libraryName, String libraryLevel) {
     if (library == null) {
       if (libraryName != null) {
         library = myLibrariesConfigurator.getLibrary(libraryName, libraryLevel);
@@ -61,8 +60,7 @@ public class UIRootConfigurationAccessor extends RootConfigurationAccessor {
   }
 
   @Override
-  @Nullable
-  public Sdk getSdk(Sdk sdk, String sdkName) {
+  public @Nullable Sdk getSdk(Sdk sdk, String sdkName) {
     SdkModel model = ((ProjectStructureSettingsUtil)ShowSettingsUtil.getInstance()).getSdksModel();
     return sdkName != null ? model.findSdk(sdkName) : sdk;
   }

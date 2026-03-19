@@ -65,8 +65,7 @@ public class TemplateDataLanguageMappingsImpl extends LanguagePerFileMappings<La
         return getDefaultMappingForFile(file);
     }
 
-    @Nullable
-    public static Language getDefaultMappingForFile(@Nullable VirtualFile file) {
+    public static @Nullable Language getDefaultMappingForFile(@Nullable VirtualFile file) {
         return file == null ? null : TemplateDataLanguagePatterns.getInstance().getTemplateDataLanguageByFileName(file);
     }
 

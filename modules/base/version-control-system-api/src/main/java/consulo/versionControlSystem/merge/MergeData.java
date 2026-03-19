@@ -40,14 +40,11 @@ public class MergeData {
   
   public byte[] CURRENT;
 
-  @Nullable public VcsRevisionNumber ORIGINAL_REVISION_NUMBER;
-  @Nullable public VcsRevisionNumber LAST_REVISION_NUMBER;
-  @Nullable
-  public VcsRevisionNumber CURRENT_REVISION_NUMBER;
+  public @Nullable VcsRevisionNumber ORIGINAL_REVISION_NUMBER;
+  public @Nullable VcsRevisionNumber LAST_REVISION_NUMBER;
+  public @Nullable VcsRevisionNumber CURRENT_REVISION_NUMBER;
 
-  @Nullable
-  public FilePath ORIGINAL_FILE_PATH;
-  @Nullable public FilePath LAST_FILE_PATH;
-  @Nullable
-  public FilePath CURRENT_FILE_PATH;
+  public @Nullable FilePath ORIGINAL_FILE_PATH;
+  public @Nullable FilePath LAST_FILE_PATH;
+  public @Nullable FilePath CURRENT_FILE_PATH;
 }

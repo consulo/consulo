@@ -70,8 +70,7 @@ public class PsiCopyPasteManagerImpl implements PsiCopyPasteManager {
   }
 
   @Override
-  @Nullable
-  public PsiElement[] getElements(boolean[] isCopied) {
+  public @Nullable PsiElement[] getElements(boolean[] isCopied) {
     try {
       Object transferData = myCopyPasteManager.getContents(ourDataFlavor);
       if (!(transferData instanceof MyData)) {
@@ -92,8 +91,7 @@ public class PsiCopyPasteManagerImpl implements PsiCopyPasteManager {
     }
   }
 
-  @Nullable
-  static PsiElement[] getElements(Transferable content) {
+  static @Nullable PsiElement[] getElements(Transferable content) {
     if (content == null) return null;
     Object transferData;
     try {
@@ -192,8 +190,7 @@ public class PsiCopyPasteManagerImpl implements PsiCopyPasteManager {
       return myPointers.size() > 0 && myPointers.get(0).getElement() != null;
     }
 
-    @Nullable
-    public Project getProject() {
+    public @Nullable Project getProject() {
       return myProject;
     }
   }
@@ -219,8 +216,7 @@ public class PsiCopyPasteManagerImpl implements PsiCopyPasteManager {
     }
 
     @Override
-    @Nullable
-    public Object getTransferData(DataFlavor flavor) throws UnsupportedFlavorException, IOException {
+    public @Nullable Object getTransferData(DataFlavor flavor) throws UnsupportedFlavorException, IOException {
       if (ourDataFlavor.equals(flavor)) {
         return myDataProxy;
       }
@@ -250,8 +246,7 @@ public class PsiCopyPasteManagerImpl implements PsiCopyPasteManager {
       return null;
     }
 
-    @Nullable
-    private String getDataAsText() {
+    private @Nullable String getDataAsText() {
       return AccessRule.read(() -> {
         List<String> names = new ArrayList<>();
         for (PsiElement element : myDataProxy.getElements()) {
@@ -266,8 +261,7 @@ public class PsiCopyPasteManagerImpl implements PsiCopyPasteManager {
       });
     }
 
-    @Nullable
-    private List<File> getDataAsFileList() {
+    private @Nullable List<File> getDataAsFileList() {
       return AccessRule.read(() -> PsiCopyPasteManager.asFileList(myDataProxy.getElements()));
     }
 

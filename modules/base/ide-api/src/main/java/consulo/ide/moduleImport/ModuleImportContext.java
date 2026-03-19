@@ -25,8 +25,7 @@ import org.jspecify.annotations.Nullable;
  * @since 30-Jan-17
  */
 public class ModuleImportContext implements NewModuleWizardContext, Disposable {
-  @Nullable
-  private final Project myProject;
+  private final @Nullable Project myProject;
   private String myFileToImport;
 
   private String myName;
@@ -45,8 +44,7 @@ public class ModuleImportContext implements NewModuleWizardContext, Disposable {
   }
 
   @Override
-  @Nullable
-  public Project getProject() {
+  public @Nullable Project getProject() {
     return myProject;
   }
 

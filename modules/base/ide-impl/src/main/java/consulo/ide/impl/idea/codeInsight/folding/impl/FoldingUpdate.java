@@ -49,8 +49,7 @@ public class FoldingUpdate {
     private FoldingUpdate() {
     }
 
-    @Nullable
-    static Runnable updateFoldRegions(Editor editor, PsiFile file, boolean applyDefaultState, boolean quick) {
+    static @Nullable Runnable updateFoldRegions(Editor editor, PsiFile file, boolean applyDefaultState, boolean quick) {
         ApplicationManager.getApplication().assertReadAccessAllowed();
 
         Project project = file.getProject();

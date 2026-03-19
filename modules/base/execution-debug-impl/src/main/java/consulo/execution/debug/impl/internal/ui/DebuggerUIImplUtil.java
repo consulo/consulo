@@ -100,8 +100,7 @@ public class DebuggerUIImplUtil {
         ApplicationManager.getApplication().invokeLater(runnable);
     }
 
-    @Nullable
-    public static RelativePoint getPositionForPopup(Editor editor, int line) {
+    public static @Nullable RelativePoint getPositionForPopup(Editor editor, int line) {
         return DebuggerUIUtil.getPositionForPopup(editor, line);
     }
 
@@ -213,7 +212,7 @@ public class DebuggerUIImplUtil {
                                                JComponent mainPanel,
                                                Point whereToShow,
                                                JComponent component,
-                                               @Nullable final Runnable showMoreOptions,
+                                               final @Nullable Runnable showMoreOptions,
                                                Object breakpoint) {
         BreakpointEditor editor = new BreakpointEditor();
         editor.setPropertiesPanel(mainPanel);
@@ -320,8 +319,7 @@ public class DebuggerUIImplUtil {
         }
     }
 
-    @Nullable
-    public static String getNodeRawValue(XValueNodeImpl valueNode) {
+    public static @Nullable String getNodeRawValue(XValueNodeImpl valueNode) {
         if (valueNode.getValueContainer() instanceof XValueTextProvider) {
             return ((XValueTextProvider) valueNode.getValueContainer()).getValueText();
         }

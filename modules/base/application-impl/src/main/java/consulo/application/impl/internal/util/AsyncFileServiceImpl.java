@@ -88,8 +88,7 @@ public class AsyncFileServiceImpl implements AsyncFileService {
     return deleteFilesTask;
   }
 
-  @Nullable
-  private static File renameToTempFileOrDelete(File file) {
+  private static @Nullable File renameToTempFileOrDelete(File file) {
     String tempDir = FileUtil.getTempDirectory();
     boolean isSameDrive = true;
     if (Platform.current().os().isWindows()) {

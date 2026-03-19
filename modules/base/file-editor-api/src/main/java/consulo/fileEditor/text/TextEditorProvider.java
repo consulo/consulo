@@ -164,8 +164,7 @@ public abstract class TextEditorProvider implements FileEditorProvider, DumbAwar
     return FileEditorPolicy.NONE;
   }
 
-  @Nullable
-  public static Document[] getDocuments(FileEditor editor) {
+  public static @Nullable Document[] getDocuments(FileEditor editor) {
     if (editor instanceof DocumentsEditor) {
       DocumentsEditor documentsEditor = (DocumentsEditor)editor;
       Document[] documents = documentsEditor.getDocuments();

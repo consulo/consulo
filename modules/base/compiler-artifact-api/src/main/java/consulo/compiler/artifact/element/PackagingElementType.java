@@ -71,8 +71,7 @@ public abstract class PackagingElementType<E extends PackagingElement<?>> {
         return Application.get().getExtensionPoint(PackagingElementType.class).findExtensionOrFail(aClass);
     }
 
-    @Nullable
-    public PackagingElementPropertiesPanel createElementPropertiesPanel(E element, ArtifactEditorContext context) {
+    public @Nullable PackagingElementPropertiesPanel createElementPropertiesPanel(E element, ArtifactEditorContext context) {
         return null;
     }
 }

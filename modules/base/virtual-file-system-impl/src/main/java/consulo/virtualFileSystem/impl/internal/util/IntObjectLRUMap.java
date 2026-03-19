@@ -37,8 +37,7 @@ public final class IntObjectLRUMap<T> {
     myHeader.before = myHeader.after = myHeader;
   }
 
-  @Nullable
-  public MapEntry<T> getEntry(int key) {
+  public @Nullable MapEntry<T> getEntry(int key) {
     MapEntry<T> candidate = myArray[getArrayIndex(key)];
     while (candidate != null) {
       if (candidate.key == key) {

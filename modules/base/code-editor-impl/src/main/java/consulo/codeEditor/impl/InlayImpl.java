@@ -130,8 +130,7 @@ public abstract class InlayImpl<R extends EditorCustomElementRenderer, T extends
     }
 
     @Override
-    @Nullable
-    public GutterIconRenderer getGutterIconRenderer() {
+    public @Nullable GutterIconRenderer getGutterIconRenderer() {
         return null;
     }
 

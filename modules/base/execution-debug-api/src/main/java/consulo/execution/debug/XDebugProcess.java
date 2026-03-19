@@ -174,16 +174,14 @@ public abstract class XDebugProcess {
      *
      * @return {@link consulo.ide.impl.idea.xdebugger.stepping.XSmartStepIntoHandler} instance
      */
-    @Nullable
-    public XSmartStepIntoHandler<?> getSmartStepIntoHandler() {
+    public @Nullable XSmartStepIntoHandler<?> getSmartStepIntoHandler() {
         return null;
     }
 
     /**
      * Implement {@link XDropFrameHandler} and return its instance from this method to enable the Drop Frame action.
      */
-    @Nullable
-    public XDropFrameHandler getDropFrameHandler() {
+    public @Nullable XDropFrameHandler getDropFrameHandler() {
         return null;
     }
 
@@ -254,8 +252,7 @@ public abstract class XDebugProcess {
         return true;
     }
 
-    @Nullable
-    protected ProcessHandler doGetProcessHandler() {
+    protected @Nullable ProcessHandler doGetProcessHandler() {
         return null;
     }
 
@@ -280,8 +277,7 @@ public abstract class XDebugProcess {
      *
      * @return new instance of {@link XValueMarkerProvider}'s implementation or {@code null} if 'Mark Object' feature isn't supported
      */
-    @Nullable
-    public XValueMarkerProvider<?, ?> createValueMarkerProvider() {
+    public @Nullable XValueMarkerProvider<?, ?> createValueMarkerProvider() {
         return null;
     }
 
@@ -304,8 +300,7 @@ public abstract class XDebugProcess {
         }
     }
 
-    @Nullable
-    public HyperlinkListener getCurrentStateHyperlinkListener() {
+    public @Nullable HyperlinkListener getCurrentStateHyperlinkListener() {
         return null;
     }
 
@@ -327,8 +322,7 @@ public abstract class XDebugProcess {
         return false;
     }
 
-    @Nullable
-    public XDebuggerEvaluator getEvaluator() {
+    public @Nullable XDebuggerEvaluator getEvaluator() {
         XStackFrame frame = getSession().getCurrentStackFrame();
         return frame == null ? null : frame.getEvaluator();
     }

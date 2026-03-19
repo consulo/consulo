@@ -79,8 +79,7 @@ public class WrapProcessor {
         }
     }
 
-    @Nullable
-    private WrapImpl getWrapToBeUsed(ArrayList<WrapImpl> wraps, LeafBlockWrapper currentBlock) {
+    private @Nullable WrapImpl getWrapToBeUsed(ArrayList<WrapImpl> wraps, LeafBlockWrapper currentBlock) {
         if (wraps.isEmpty()) {
             return null;
         }

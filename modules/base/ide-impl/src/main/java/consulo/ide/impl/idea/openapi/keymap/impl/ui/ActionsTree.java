@@ -161,8 +161,7 @@ public class ActionsTree {
         myTree.getSelectionModel().addTreeSelectionListener(l);
     }
 
-    @Nullable
-    private Object getSelectedObject() {
+    private @Nullable Object getSelectedObject() {
         TreePath selectionPath = myTree.getSelectionPath();
         if (selectionPath == null) {
             return null;
@@ -170,8 +169,7 @@ public class ActionsTree {
         return ((DefaultMutableTreeNode) selectionPath.getLastPathComponent()).getUserObject();
     }
 
-    @Nullable
-    public String getSelectedActionId() {
+    public @Nullable String getSelectedActionId() {
         Object userObject = getSelectedObject();
         if (userObject instanceof String actionId) {
             return actionId;
@@ -182,8 +180,7 @@ public class ActionsTree {
         return null;
     }
 
-    @Nullable
-    public QuickList getSelectedQuickList() {
+    public @Nullable QuickList getSelectedQuickList() {
         return getSelectedObject() instanceof QuickList quickList ? quickList : null;
     }
 
@@ -299,8 +296,7 @@ public class ActionsTree {
         TreeUtil.selectInTree(node, true, tree);
     }
 
-    @Nullable
-    private DefaultMutableTreeNode getNodeForPath(String path) {
+    private @Nullable DefaultMutableTreeNode getNodeForPath(String path) {
         Enumeration enumeration = ((DefaultMutableTreeNode) myTree.getModel().getRoot()).preorderEnumeration();
         while (enumeration.hasMoreElements()) {
             DefaultMutableTreeNode node = (DefaultMutableTreeNode) enumeration.nextElement();
@@ -324,8 +320,7 @@ public class ActionsTree {
         return result;
     }
 
-    @Nullable
-    private String getPath(DefaultMutableTreeNode node) {
+    private @Nullable String getPath(DefaultMutableTreeNode node) {
         Object userObject = node.getUserObject();
         if (userObject instanceof String actionId) {
             if (node.getParent() instanceof DefaultMutableTreeNode defaultMutableTreeNode

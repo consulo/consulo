@@ -46,14 +46,12 @@ public class OrderRootsCache {
     return container;
   }
 
-  @Nullable
-  public VirtualFile[] getCachedRoots(OrderRootType rootType, int flags) {
+  public @Nullable VirtualFile[] getCachedRoots(OrderRootType rootType, int flags) {
     VirtualFilePointerContainer cached = myRoots.get(new CacheKey(rootType, flags));
     return cached == null ? null : cached.getFiles();
   }
 
-  @Nullable
-  public String[] getCachedUrls(OrderRootType rootType, int flags) {
+  public @Nullable String[] getCachedUrls(OrderRootType rootType, int flags) {
     VirtualFilePointerContainer cached = myRoots.get(new CacheKey(rootType, flags));
     return cached != null ? cached.getUrls() : null;
   }

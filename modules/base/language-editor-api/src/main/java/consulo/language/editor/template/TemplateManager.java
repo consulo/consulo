@@ -74,8 +74,7 @@ public abstract class TemplateManager {
         return TemplateBuilderFactory.getInstance().createRawTemplate(key, group, text);
     }
 
-    @Nullable
-    public abstract Template getActiveTemplate(Editor editor);
+    public abstract @Nullable Template getActiveTemplate(Editor editor);
 
     /**
      * Finished a live template in the given editor, if it's present
@@ -84,8 +83,7 @@ public abstract class TemplateManager {
      */
     public abstract boolean finishTemplate(Editor editor);
 
-    @Nullable
-    public abstract TemplateState getTemplateState(Editor editor);
+    public abstract @Nullable TemplateState getTemplateState(Editor editor);
 
     public abstract boolean isApplicable(Template template, Set<TemplateContextType> contextTypes);
 
@@ -104,8 +102,7 @@ public abstract class TemplateManager {
         TemplateSettings templateSettings
     );
 
-    @Nullable
-    public abstract Runnable startNonCustomTemplates(
+    public abstract @Nullable Runnable startNonCustomTemplates(
         Map<Template, String> template2argument,
         Editor editor,
         @Nullable BiPredicate<String, String> processor

@@ -33,16 +33,14 @@ public abstract class TreeNodeEvent {
         throw new IllegalStateException(message + ", " + toString());
     }
 
-    @Nullable
-    public String getName() {
+    public @Nullable String getName() {
         return myName;
     }
 
     /**
      * @return tree node id, or null if undefined
      */
-    @Nullable
-    public String getId() {
+    public @Nullable String getId() {
         return myId;
     }
 
@@ -76,13 +74,11 @@ public abstract class TreeNodeEvent {
         }
     }
 
-    @Nullable
-    public static String getNodeId(ServiceMessage message) {
+    public static @Nullable String getNodeId(ServiceMessage message) {
         return getNodeId(message, "nodeId");
     }
 
-    @Nullable
-    public static String getNodeId(ServiceMessage message, String key) {
+    public static @Nullable String getNodeId(ServiceMessage message, String key) {
         return message.getAttributes().get(key);
     }
 }

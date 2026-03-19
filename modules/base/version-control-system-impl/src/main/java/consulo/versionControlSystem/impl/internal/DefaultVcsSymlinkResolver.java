@@ -41,8 +41,7 @@ public class DefaultVcsSymlinkResolver implements VcsSymlinkResolver {
     }
 
     @Override
-    @Nullable
-    public VirtualFile resolveSymlink(VirtualFile file) {
+    public @Nullable VirtualFile resolveSymlink(VirtualFile file) {
         if (myMode == Mode.DISABLED) return file;
 
         VirtualFile canonicalFile = file.getCanonicalFile();

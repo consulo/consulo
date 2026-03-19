@@ -37,8 +37,7 @@ public class AWTHackingUtil {
     }
   }
 
-  @Nullable
-  public static Method findMethodSilent(Class<?> clazz, String name, Class... params) {
+  public static @Nullable Method findMethodSilent(Class<?> clazz, String name, Class... params) {
     try {
       Method declaredMethod = clazz.getDeclaredMethod(name, params);
       declaredMethod.setAccessible(true);

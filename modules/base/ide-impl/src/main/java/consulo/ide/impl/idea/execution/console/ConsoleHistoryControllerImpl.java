@@ -555,8 +555,7 @@ public class ConsoleHistoryControllerImpl implements ConsoleHistoryController {
             });
         }
 
-        @Nullable
-        private String loadHistory(Element rootElement, String expectedId) {
+        private @Nullable String loadHistory(Element rootElement, String expectedId) {
             if (!rootElement.getName().equals("console-history")) {
                 return null;
             }
@@ -604,8 +603,7 @@ public class ConsoleHistoryControllerImpl implements ConsoleHistoryController {
             PathUtil.makeFileName(rootType.getHistoryPathName(id), rootType.getDefaultFileExtension());
     }
 
-    @Nullable
-    public static VirtualFile getContentFile(
+    public static @Nullable VirtualFile getContentFile(
         ConsoleRootType rootType,
         String id,
         ScratchFileService.Option option

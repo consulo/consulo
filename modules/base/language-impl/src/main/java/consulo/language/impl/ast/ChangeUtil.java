@@ -152,8 +152,7 @@ public class ChangeUtil {
         return treeElement;
     }
 
-    @Nullable
-    public static TreeElement generateTreeElement(@Nullable PsiElement original, CharTable table, PsiManager manager) {
+    public static @Nullable TreeElement generateTreeElement(@Nullable PsiElement original, CharTable table, PsiManager manager) {
         if (original == null) {
             return null;
         }

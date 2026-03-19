@@ -82,8 +82,7 @@ public class SingletonDeploymentSourceType extends DeploymentSourceType<Deployme
         }
 
         @Override
-        @Nullable
-        public Image getIcon() {
+        public @Nullable Image getIcon() {
             return myIcon;
         }
 

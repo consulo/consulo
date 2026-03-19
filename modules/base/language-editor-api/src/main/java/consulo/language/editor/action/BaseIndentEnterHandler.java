@@ -212,8 +212,7 @@ public class BaseIndentEnterHandler extends EnterHandlerDelegateAdapter {
         return result;
     }
 
-    @Nullable
-    protected IElementType getNonWhitespaceElementType(
+    protected @Nullable IElementType getNonWhitespaceElementType(
         HighlighterIterator iterator,
         int currentLineStartOffset,
         int prevLineStartOffset

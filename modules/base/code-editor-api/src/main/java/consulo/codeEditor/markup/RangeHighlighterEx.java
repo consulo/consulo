@@ -14,13 +14,11 @@ public interface RangeHighlighterEx extends RangeHighlighter, RangeMarkerEx {
 
     Comparator<RangeHighlighterEx> BY_AFFECTED_START_OFFSET = Comparator.comparingInt(RangeHighlighterEx::getAffectedAreaStartOffset);
 
-    @Nullable
-    default TextAttributes getForcedTextAttributes() {
+    default @Nullable TextAttributes getForcedTextAttributes() {
         return null;
     }
 
-    @Nullable
-    default ColorValue getForcedErrorStripeMarkColor() {
+    default @Nullable ColorValue getForcedErrorStripeMarkColor() {
         return null;
     }
 

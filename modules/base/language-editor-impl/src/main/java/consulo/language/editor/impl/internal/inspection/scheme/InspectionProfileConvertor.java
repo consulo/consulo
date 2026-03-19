@@ -171,8 +171,7 @@ public class InspectionProfileConvertor {
   }
 
 
-  @Nullable
-  private static String convertToShortName(String displayName, InspectionToolWrapper[] tools) {
+  private static @Nullable String convertToShortName(String displayName, InspectionToolWrapper[] tools) {
     if (displayName == null) return null;
     for (InspectionToolWrapper tool : tools) {
       if (displayName.equals(tool.getDisplayName())) {

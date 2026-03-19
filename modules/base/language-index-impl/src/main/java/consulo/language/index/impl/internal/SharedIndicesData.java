@@ -330,8 +330,7 @@ public class SharedIndicesData {
     return doRecallData(id, indexId, externalizer, ourSharedContentInputs);
   }
 
-  @Nullable
-  private static <Key, Value> Value doRecallData(int id,
+  private static @Nullable <Key, Value> Value doRecallData(int id,
                                                  ID<Key, ?> indexId,
                                                  DataExternalizer<Value> externalizer,
                                                  IndexedStateMap states)

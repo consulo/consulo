@@ -160,10 +160,8 @@ public class AbstractPopup implements JBPopup, ScreenAreaConsumer {
     InputEvent myDisposeEvent;
 
     private Runnable myFinalRunnable;
-    @Nullable
-    private Runnable myOkHandler;
-    @Nullable
-    private Predicate<? super KeyEvent> myKeyEventHandler;
+    private @Nullable Runnable myOkHandler;
+    private @Nullable Predicate<? super KeyEvent> myKeyEventHandler;
 
     protected boolean myOk;
     private final List<Runnable> myResizeListeners = new ArrayList<>();
@@ -492,8 +490,7 @@ public class AbstractPopup implements JBPopup, ScreenAreaConsumer {
         }
     }
 
-    @Nullable
-    public static Window getCurrentWindow(Project project) {
+    public static @Nullable Window getCurrentWindow(Project project) {
         Window window = null;
 
         WindowManagerEx manager = getWndManager();
@@ -762,8 +759,7 @@ public class AbstractPopup implements JBPopup, ScreenAreaConsumer {
     }
 
     // positions are relative to screen
-    @Nullable
-    private static Point fitToScreenAdjustingVertically(Point position, Dimension size) {
+    private static @Nullable Point fitToScreenAdjustingVertically(Point position, Dimension size) {
         Rectangle screenRectangle = ScreenUtil.getScreenRectangle(position);
         Rectangle rectangle = new Rectangle(position, size);
         if (rectangle.height > screenRectangle.height || rectangle.x < screenRectangle.x || rectangle.x + rectangle.width > screenRectangle.x + screenRectangle.width) {
@@ -1535,8 +1531,7 @@ public class AbstractPopup implements JBPopup, ScreenAreaConsumer {
         }
     }
 
-    @Nullable
-    protected Dimension calculateSizeForPack(boolean width, boolean height) {
+    protected @Nullable Dimension calculateSizeForPack(boolean width, boolean height) {
         if (!isVisible() || !width && !height || isBusy()) {
             return null;
         }
@@ -1575,8 +1570,7 @@ public class AbstractPopup implements JBPopup, ScreenAreaConsumer {
         return size;
     }
 
-    @Nullable
-    private JScrollBar findHorizontalScrollBar() {
+    private @Nullable JScrollBar findHorizontalScrollBar() {
         JScrollPane pane = ScrollUtil.findScrollPane(myContent);
         if (pane == null || ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER == pane.getHorizontalScrollBarPolicy()) {
             return null;
@@ -1720,8 +1714,7 @@ public class AbstractPopup implements JBPopup, ScreenAreaConsumer {
     public static class MyContentPanel extends JPanel implements DataProvider {
         private final Border myBorder;
 
-        @Nullable
-        private DataProvider myDataProvider;
+        private @Nullable DataProvider myDataProvider;
 
         public MyContentPanel(Border border) {
             super(new BorderLayout());
@@ -2206,13 +2199,11 @@ public class AbstractPopup implements JBPopup, ScreenAreaConsumer {
         return null;
     }
 
-    @Nullable
-    private static Point getLocationOnScreen(@Nullable Component component) {
+    private static @Nullable Point getLocationOnScreen(@Nullable Component component) {
         return component == null || !component.isShowing() ? null : component.getLocationOnScreen();
     }
 
-    @Nullable
-    private static Rectangle getBoundsOnScreen(@Nullable Component component) {
+    private static @Nullable Rectangle getBoundsOnScreen(@Nullable Component component) {
         Point point = getLocationOnScreen(component);
         return point == null ? null : new Rectangle(point, component.getSize());
     }
@@ -2269,8 +2260,7 @@ public class AbstractPopup implements JBPopup, ScreenAreaConsumer {
         return focused != window && (focused == null || window != focused.getOwner());
     }
 
-    @Nullable
-    private Point getStoredLocation() {
+    private @Nullable Point getStoredLocation() {
         if (myDimensionServiceKey == null) {
             return null;
         }
@@ -2282,8 +2272,7 @@ public class AbstractPopup implements JBPopup, ScreenAreaConsumer {
         myForcedHeavyweight = forcedHeavyweight;
     }
 
-    @Nullable
-    private Dimension getStoredSize() {
+    private @Nullable Dimension getStoredSize() {
         if (myDimensionServiceKey == null) {
             return null;
         }

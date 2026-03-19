@@ -150,8 +150,7 @@ public class LazyRangeMarkerFactoryImpl extends LazyRangeMarkerFactory {
             return myFile;
         }
 
-        @Nullable
-        final RangeMarker getOrCreateDelegate() {
+        final @Nullable RangeMarker getOrCreateDelegate() {
             if (myDelegate == null) {
                 Document document = FileDocumentManager.getInstance().getDocument(myFile);
                 if (document == null) {
@@ -163,8 +162,7 @@ public class LazyRangeMarkerFactoryImpl extends LazyRangeMarkerFactory {
             return isDisposed() ? null : myDelegate;
         }
 
-        @Nullable
-        protected abstract RangeMarker createDelegate(VirtualFile file, Document document);
+        protected abstract @Nullable RangeMarker createDelegate(VirtualFile file, Document document);
 
         @Override
         
@@ -279,8 +277,7 @@ public class LazyRangeMarkerFactoryImpl extends LazyRangeMarkerFactory {
         }
 
         @Override
-        @Nullable
-        public RangeMarker createDelegate(VirtualFile file, Document document) {
+        public @Nullable RangeMarker createDelegate(VirtualFile file, Document document) {
             if (document.getTextLength() == 0 && !(myLine == 0 && myColumn == 0)) {
                 return null;
             }

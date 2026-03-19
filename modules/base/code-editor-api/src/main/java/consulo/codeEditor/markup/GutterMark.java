@@ -58,8 +58,7 @@ public interface GutterMark {
      */
     @Deprecated
     @DeprecationInfo("Use getTooltipValue()")
-    @Nullable
-    default String getTooltipText() {
+    default @Nullable String getTooltipText() {
         return getTooltipValue().getNullIfEmpty();
     }
 }

@@ -204,8 +204,7 @@ public class ModuleWithDependenciesScopeImpl extends GlobalSearchScope implement
         return i1 > 0 ? 1 : -1;
     }
 
-    @Nullable
-    private VirtualFile getFileRoot(VirtualFile file) {
+    private @Nullable VirtualFile getFileRoot(VirtualFile file) {
         if (myProjectFileIndex.isInContent(file)) {
             return myProjectFileIndex.getSourceRootForFile(file);
         }

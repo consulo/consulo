@@ -178,8 +178,7 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
         }
     }
 
-    @Nullable
-    public File getGeneratedPath(Project project) {
+    public @Nullable File getGeneratedPath(Project project) {
         return myGeneratedDataPaths.get(project);
     }
 
@@ -202,8 +201,7 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
         }
     }
 
-    @Nullable
-    public static VirtualFile getSourceFileByOutput(VirtualFile outputFile) {
+    public static @Nullable VirtualFile getSourceFileByOutput(VirtualFile outputFile) {
         TranslationOutputFileInfo outputFileInfo = TranslationOutputFileInfo.loadOutputInfo(outputFile);
         if (outputFileInfo != null) {
             return outputFileInfo.getSourceFile();
@@ -963,8 +961,7 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
     public class ScheduleOutputsForDeletionProc implements Proc {
         private final String mySrcUrl;
         private final LocalFileSystem myFileSystem;
-        @Nullable
-        private VirtualFile myRootBeingDeleted;
+        private @Nullable VirtualFile myRootBeingDeleted;
 
         public ScheduleOutputsForDeletionProc(String srcUrl) {
             mySrcUrl = srcUrl;
@@ -1034,8 +1031,7 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
 
     private static class Outputs {
         private boolean myIsDirty = false;
-        @Nullable
-        private final File myStoreFile;
+        private final @Nullable File myStoreFile;
         private final Map<String, SourceUrlClassNamePair> myMap;
         private final AtomicInteger myRefCount = new AtomicInteger(1);
 

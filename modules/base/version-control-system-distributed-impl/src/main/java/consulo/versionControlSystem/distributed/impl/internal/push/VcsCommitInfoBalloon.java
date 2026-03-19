@@ -42,8 +42,7 @@ public class VcsCommitInfoBalloon {
     private final JTree myTree;
     
     private final Wrapper myWrapper;
-    @Nullable
-    private JBPopup myBalloon;
+    private @Nullable JBPopup myBalloon;
     
     private final JEditorPane myEditorPane;
     

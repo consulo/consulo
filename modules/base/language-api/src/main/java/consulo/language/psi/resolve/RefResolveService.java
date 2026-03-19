@@ -39,8 +39,7 @@ public abstract class RefResolveService {
    * @param file
    * @return null means the service has not resolved all files and is not ready yet
    */
-  @Nullable
-  public abstract int[] getBackwardIds(VirtualFileWithId file);
+  public abstract @Nullable int[] getBackwardIds(VirtualFileWithId file);
 
   /**
    * @return subset of scope containing only files which reference the virtualFile

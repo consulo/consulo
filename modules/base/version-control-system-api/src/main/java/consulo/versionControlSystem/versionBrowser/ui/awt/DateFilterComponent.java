@@ -114,8 +114,7 @@ public class DateFilterComponent {
         settings.setDateAfter(myDateAfter.getValue());
     }
 
-    @Nullable
-    public String validateInput() {
+    public @Nullable String validateInput() {
         if (myUseDateAfterFilter.isSelected() && myDateAfter.getValue() == null) {
             return "Date After must be a valid date";
         }

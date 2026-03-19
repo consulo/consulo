@@ -42,8 +42,7 @@ public abstract class SimpleConfigurable<T extends Supplier<? extends Component>
   @RequiredUIAccess
   protected abstract void reset(T component);
 
-  @Nullable
-  public final Component getPreferredFocusedComponent(T component) {
+  public final @Nullable Component getPreferredFocusedComponent(T component) {
     return null;
   }
 
@@ -53,8 +52,7 @@ public abstract class SimpleConfigurable<T extends Supplier<? extends Component>
   }
 
   @Override
-  @Nullable
-  public final Component getPreferredFocusedUIComponent() {
+  public final @Nullable Component getPreferredFocusedUIComponent() {
     if (myComponent != null) {
       return getPreferredFocusedComponent(myComponent);
     }

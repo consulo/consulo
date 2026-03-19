@@ -42,8 +42,7 @@ public abstract class BaseToolManager<T extends Tool> {
 
     protected abstract SchemeProcessor<ToolsGroup<T>, ToolsGroup<T>> createProcessor();
 
-    @Nullable
-    public static String convertString(String s) {
+    public static @Nullable String convertString(String s) {
         if (s != null && s.trim().length() == 0) {
             return null;
         }

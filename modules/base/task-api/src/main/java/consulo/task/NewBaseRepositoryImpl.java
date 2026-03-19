@@ -71,8 +71,7 @@ public abstract class NewBaseRepositoryImpl extends BaseRepository {
    *
    * @return specific request interceptor or null by default
    */
-  @Nullable
-  protected HttpRequestInterceptor createRequestInterceptor() {
+  protected @Nullable HttpRequestInterceptor createRequestInterceptor() {
     return null;
   }
 

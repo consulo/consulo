@@ -100,8 +100,7 @@ public class DocumentationManagerHelper {
     return CompositeDocumentationProvider.wrapProviders(result);
   }
 
-  @Nullable
-  public static PsiElement getOriginalElement(PsiElement element) {
+  public static @Nullable PsiElement getOriginalElement(PsiElement element) {
     SmartPsiElementPointer originalElementPointer = element != null ? element.getUserData(ORIGINAL_ELEMENT_KEY) : null;
     return originalElementPointer != null ? originalElementPointer.getElement() : null;
   }

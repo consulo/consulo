@@ -65,8 +65,7 @@ public class TrackRunningTestUtil {
     });
   }
 
-  @Nullable
-  private static AbstractTestProxy setUserSelection(TreePath treePath) {
+  private static @Nullable AbstractTestProxy setUserSelection(TreePath treePath) {
     if (treePath != null) {
       Object component = treePath.getLastPathComponent();
       if (component instanceof DefaultMutableTreeNode) {

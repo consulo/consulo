@@ -45,8 +45,7 @@ public class ReformatBeforeCheckinHandler extends CheckinHandler implements Chec
 
     @RequiredUIAccess
     @Override
-    @Nullable
-    public RefreshableOnComponent getBeforeCheckinConfigurationPanel() {
+    public @Nullable RefreshableOnComponent getBeforeCheckinConfigurationPanel() {
         VcsConfiguration configuration = VcsConfiguration.getInstance(myProject);
 
         return new CheckBoxRefreshableOnComponent(

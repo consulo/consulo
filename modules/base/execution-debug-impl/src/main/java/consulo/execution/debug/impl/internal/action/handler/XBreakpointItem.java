@@ -59,8 +59,7 @@ class XBreakpointItem extends BreakpointItem {
     return XBreakpointUtil.getShortText(myBreakpoint);
   }
 
-  @Nullable
-  private String getUserDescription() {
+  private @Nullable String getUserDescription() {
     return ((XBreakpointBase)myBreakpoint).getUserDescription();
   }
 

@@ -293,8 +293,7 @@ public class UnifiedContentImpl extends UserDataHolderBase implements ContentEx 
   }
 
   @Override
-  @Nullable
-  public AlertIcon getAlertIcon() {
+  public @Nullable AlertIcon getAlertIcon() {
     return myAlertIcon;
   }
 

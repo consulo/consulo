@@ -97,8 +97,7 @@ public abstract class HandleType {
         return Collections.emptyList();
     }
 
-    @Nullable
-    public String getDefaultChangelist() {
+    public @Nullable String getDefaultChangelist() {
         return null;
     }
 }

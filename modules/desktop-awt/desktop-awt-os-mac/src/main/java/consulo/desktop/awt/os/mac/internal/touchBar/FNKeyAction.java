@@ -25,8 +25,7 @@ final class FNKeyAction extends DumbAwareAction {
     private AnAction myAction; // particular action (from keymap for given modifiers) calculated in last update
     private boolean myIsActionDisabled;
 
-    @Nullable
-    private String  [] getActionsIds(int modifiers) {
+    private @Nullable String  [] getActionsIds(int modifiers) {
         KeymapManager manager = KeymapManager.getInstance();
 
         Keymap keymap = manager.getActiveKeymap();

@@ -33,8 +33,7 @@ public class ExceptionUtil {
   }
 
   @SuppressWarnings("unchecked")
-  @Nullable
-  public static <T> T findCause(Throwable e, Class<T> clazz) {
+  public static @Nullable <T> T findCause(Throwable e, Class<T> clazz) {
     @Nullable
     Throwable cause = e;
     while (cause != null && !clazz.isInstance(cause)) {
@@ -111,8 +110,7 @@ public class ExceptionUtil {
     return x.substring(Math.max(idx, offset));
   }
 
-  @Nullable
-  public static String getMessage(Throwable e) {
+  public static @Nullable String getMessage(Throwable e) {
     String result = e.getMessage();
     String exceptionPattern = "Exception: ";
     String errorPattern = "Error: ";

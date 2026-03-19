@@ -40,8 +40,7 @@ public class FindInProjectExecutor {
     return INSTANCE;
   }
 
-  @Nullable
-  public TableCellRenderer createTableCellRenderer() {
+  public @Nullable TableCellRenderer createTableCellRenderer() {
     return null;
   }
 

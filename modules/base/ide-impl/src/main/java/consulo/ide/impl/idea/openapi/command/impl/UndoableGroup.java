@@ -314,16 +314,14 @@ class UndoableGroup {
     return myCommandTimestamp;
   }
 
-  @Nullable
-  public StartMarkAction getStartMark() {
+  public @Nullable StartMarkAction getStartMark() {
     for (UndoableAction action : myActions) {
       if (action instanceof StartMarkAction startMarkAction) return startMarkAction;
     }
     return null;
   }
 
-  @Nullable
-  public FinishMarkAction getFinishMark() {
+  public @Nullable FinishMarkAction getFinishMark() {
     for (UndoableAction action : myActions) {
       if (action instanceof FinishMarkAction finishMarkAction) return finishMarkAction;
     }

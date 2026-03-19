@@ -81,8 +81,7 @@ abstract class DesktopAWTWindowStateServiceImpl extends UnifiedWindowStateServic
   }
 
   @Override
-  @Nullable
-  protected GraphicsConfiguration getConfiguration(@Nullable Object object) {
+  protected @Nullable GraphicsConfiguration getConfiguration(@Nullable Object object) {
     if (object instanceof Project) {
       Project project = (Project)object;
       object = WindowManager.getInstance().getFrame(project);

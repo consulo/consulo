@@ -42,8 +42,7 @@ public class ReplacePromptDialog extends DialogWrapper {
     }
 
     private final boolean myIsMultiple;
-    @Nullable
-    private final Exception myException;
+    private final @Nullable Exception myException;
 
     public ReplacePromptDialog(boolean isMultipleFiles, LocalizeValue title, Project project) {
         this(isMultipleFiles, title, project, null);

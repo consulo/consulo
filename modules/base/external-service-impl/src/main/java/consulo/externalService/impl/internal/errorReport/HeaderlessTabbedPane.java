@@ -13,11 +13,9 @@ import java.awt.*;
 public class HeaderlessTabbedPane extends JPanel {
     private final TabbedPaneWrapper myTabbedPane;
 
-    @Nullable
-    private JComponent myTabContent;
+    private @Nullable JComponent myTabContent;
 
-    @Nullable
-    private String myTabTitle;
+    private @Nullable String myTabTitle;
 
     @RequiredUIAccess
     public HeaderlessTabbedPane(Disposable disposable) {

@@ -353,8 +353,7 @@ public class CoreCommandProcessor extends CommandProcessorEx {
     }
 
     @Override
-    @Nullable
-    public Object getCurrentCommandGroupId() {
+    public @Nullable Object getCurrentCommandGroupId() {
         Command currentCommand = myCurrentCommand;
         if (currentCommand != null) {
             return currentCommand.getDescriptor().groupId();
@@ -367,8 +366,7 @@ public class CoreCommandProcessor extends CommandProcessorEx {
     }
 
     @Override
-    @Nullable
-    public Project getCurrentCommandProject() {
+    public @Nullable Project getCurrentCommandProject() {
         Command currentCommand = myCurrentCommand;
         return currentCommand != null ? currentCommand.getProject() : null;
     }

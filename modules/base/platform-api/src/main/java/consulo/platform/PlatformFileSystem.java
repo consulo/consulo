@@ -33,8 +33,7 @@ public interface PlatformFileSystem {
     /**
      * @return image filemanager image for file. If return null it will use default icon from IDE
      */
-    @Nullable
-    default Image getImage(File file) {
+    default @Nullable Image getImage(File file) {
         return null;
     }
 

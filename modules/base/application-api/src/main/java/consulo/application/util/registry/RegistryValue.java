@@ -30,8 +30,7 @@ import java.util.Properties;
 public class RegistryValue {
   
   private final String myKey;
-  @Nullable
-  private String myValue;
+  private @Nullable String myValue;
   
   private final Properties myProperties;
 

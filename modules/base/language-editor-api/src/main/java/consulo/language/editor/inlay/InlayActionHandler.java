@@ -21,8 +21,7 @@ import org.jspecify.annotations.Nullable;
 public interface InlayActionHandler {
     ExtensionPointName<InlayActionHandler> EP = ExtensionPointName.create(InlayActionHandler.class);
 
-    @Nullable
-    static InlayActionHandler getActionHandler(String handlerId) {
+    static @Nullable InlayActionHandler getActionHandler(String handlerId) {
         return EP.findFirstSafe(b -> handlerId.equals(b.getHandlerId()));
     }
 

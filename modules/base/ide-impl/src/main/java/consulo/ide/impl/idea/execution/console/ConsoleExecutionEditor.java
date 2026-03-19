@@ -127,8 +127,7 @@ public class ConsoleExecutionEditor implements Disposable {
     return myConsoleEditor.getComponent().isVisible();
   }
 
-  @Nullable
-  public String getPrompt() {
+  public @Nullable String getPrompt() {
     return myConsolePromptDecorator.getMainPrompt();
   }
 

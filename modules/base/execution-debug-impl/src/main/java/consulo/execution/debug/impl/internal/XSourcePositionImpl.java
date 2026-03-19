@@ -39,8 +39,7 @@ public abstract class XSourcePositionImpl implements XSourcePosition {
     /**
      * do not call this method from plugins, use {@link XDebuggerUtil#createPositionByOffset(VirtualFile, int)} instead
      */
-    @Nullable
-    public static XSourcePositionImpl createByOffset(@Nullable VirtualFile file, final int offset) {
+    public static @Nullable XSourcePositionImpl createByOffset(@Nullable VirtualFile file, final int offset) {
         if (file == null) {
             return null;
         }
@@ -75,8 +74,7 @@ public abstract class XSourcePositionImpl implements XSourcePosition {
     /**
      * do not call this method from plugins, use {@link XDebuggerUtil#createPositionByElement(PsiElement)} instead
      */
-    @Nullable
-    public static XSourcePositionImpl createByElement(@Nullable PsiElement element) {
+    public static @Nullable XSourcePositionImpl createByElement(@Nullable PsiElement element) {
         if (element == null) {
             return null;
         }

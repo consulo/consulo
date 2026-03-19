@@ -33,8 +33,7 @@ import java.awt.*;
  * @author Konstantin Bulenkov
  */
 public class DesktopSplash extends JDialogAsUIWindow implements StartupProgress {
-    @Nullable
-    public static Rectangle BOUNDS;
+    public static @Nullable Rectangle BOUNDS;
 
     private final AnimatedLogoLabel myLabel;
 

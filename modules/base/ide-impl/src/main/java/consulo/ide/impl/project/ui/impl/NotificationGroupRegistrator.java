@@ -58,8 +58,7 @@ public class NotificationGroupRegistrator implements Consumer<NotificationGroup>
     myGroups.put(notificationGroup.getId(), notificationGroup);
   }
 
-  @Nullable
-  public NotificationGroup get(String groupId) {
+  public @Nullable NotificationGroup get(String groupId) {
     return myGroups.get(groupId);
   }
 

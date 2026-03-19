@@ -160,8 +160,7 @@ public class ChangeListStorageImpl implements ChangeListStorage {
     }
 
     @Override
-    @Nullable
-    public synchronized ChangeSetHolder readPrevious(int id, IntSet recursionGuard) {
+    public synchronized @Nullable ChangeSetHolder readPrevious(int id, IntSet recursionGuard) {
         if (isCompletelyBroken) {
             return null;
         }

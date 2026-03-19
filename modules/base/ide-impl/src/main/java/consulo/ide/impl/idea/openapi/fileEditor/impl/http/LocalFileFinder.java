@@ -29,6 +29,5 @@ import org.jspecify.annotations.Nullable;
 public abstract class LocalFileFinder {
     public static final ExtensionPointName<LocalFileFinder> EP_NAME = ExtensionPointName.create(LocalFileFinder.class);
 
-    @Nullable
-    public abstract VirtualFile findLocalFile(String url, Project project);
+    public abstract @Nullable VirtualFile findLocalFile(String url, Project project);
 }

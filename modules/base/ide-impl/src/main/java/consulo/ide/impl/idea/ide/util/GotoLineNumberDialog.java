@@ -46,8 +46,7 @@ public abstract class GotoLineNumberDialog extends DialogWrapper {
         return myField.getText();
     }
 
-    @Nullable
-    protected final Coordinates getCoordinates() {
+    protected final @Nullable Coordinates getCoordinates() {
         Matcher m = myPattern.matcher(getText());
         if (!m.matches()) {
             return null;

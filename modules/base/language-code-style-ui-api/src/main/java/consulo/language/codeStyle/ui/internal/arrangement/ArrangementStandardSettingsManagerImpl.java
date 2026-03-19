@@ -67,19 +67,15 @@ public class ArrangementStandardSettingsManagerImpl implements ArrangementStanda
   
   private final Collection<Set<ArrangementSettingsToken>> myMutexes;
 
-  @Nullable
-  private final StdArrangementSettings myDefaultSettings;
-  @Nullable
-  private final List<CompositeArrangementSettingsToken> myGroupingTokens;
-  @Nullable
-  private final List<CompositeArrangementSettingsToken> myMatchingTokens;
+  private final @Nullable StdArrangementSettings myDefaultSettings;
+  private final @Nullable List<CompositeArrangementSettingsToken> myGroupingTokens;
+  private final @Nullable List<CompositeArrangementSettingsToken> myMatchingTokens;
 
   
   private final Collection<StdArrangementRuleAliasToken> myRuleAliases;
   
   private final Set<ArrangementSettingsToken> myRuleAliasMutex;
-  @Nullable
-  private CompositeArrangementSettingsToken myRuleAliasToken;
+  private @Nullable CompositeArrangementSettingsToken myRuleAliasToken;
 
   public ArrangementStandardSettingsManagerImpl(ArrangementStandardSettingsAware delegate, ArrangementColorsProvider colorsProvider) {
     this(delegate, colorsProvider, List.of());
@@ -149,8 +145,7 @@ public class ArrangementStandardSettingsManagerImpl implements ArrangementStanda
   /**
    * @see ArrangementStandardSettingsAware#getDefaultSettings()
    */
-  @Nullable
-  public StdArrangementSettings getDefaultSettings() {
+  public @Nullable StdArrangementSettings getDefaultSettings() {
     return myDefaultSettings;
   }
 
@@ -163,8 +158,7 @@ public class ArrangementStandardSettingsManagerImpl implements ArrangementStanda
    * @see ArrangementStandardSettingsAware#getSupportedGroupingTokens()
    */
   @Override
-  @Nullable
-  public List<CompositeArrangementSettingsToken> getSupportedGroupingTokens() {
+  public @Nullable List<CompositeArrangementSettingsToken> getSupportedGroupingTokens() {
     return myGroupingTokens;
   }
 
@@ -172,8 +166,7 @@ public class ArrangementStandardSettingsManagerImpl implements ArrangementStanda
    * @see ArrangementStandardSettingsAware#getSupportedMatchingTokens()
    */
   @Override
-  @Nullable
-  public List<CompositeArrangementSettingsToken> getSupportedMatchingTokens() {
+  public @Nullable List<CompositeArrangementSettingsToken> getSupportedMatchingTokens() {
     if (myMatchingTokens == null || myRuleAliasToken == null) {
       return myMatchingTokens;
     }

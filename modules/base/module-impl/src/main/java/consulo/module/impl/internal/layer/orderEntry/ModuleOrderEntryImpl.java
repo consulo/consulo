@@ -93,8 +93,7 @@ public class ModuleOrderEntryImpl extends OrderEntryBaseImpl implements ModuleOr
     return enumerator != null ? enumerator.getRoots() : VirtualFile.EMPTY_ARRAY;
   }
 
-  @Nullable
-  private OrderRootsEnumerator getEnumerator(OrderRootType type) {
+  private @Nullable OrderRootsEnumerator getEnumerator(OrderRootType type) {
     Module module = myModulePointer.get();
     if (module == null) return null;
 
@@ -135,8 +134,7 @@ public class ModuleOrderEntryImpl extends OrderEntryBaseImpl implements ModuleOr
   }
 
   @Override
-  @Nullable
-  public Module getModule() {
+  public @Nullable Module getModule() {
     return getRootModel().getConfigurationAccessor().getModule(myModulePointer.get(), myModulePointer.getName());
   }
 

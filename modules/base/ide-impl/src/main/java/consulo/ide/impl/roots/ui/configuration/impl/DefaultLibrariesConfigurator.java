@@ -83,8 +83,7 @@ public class DefaultLibrariesConfigurator implements LibrariesConfigurator {
     return createModifiableModelProvider(LibraryTablesRegistrar.PROJECT_LEVEL);
   }
 
-  @Nullable
-  public LibrariesModifiableModel getLibrariesModifiableModel(String level) {
+  public @Nullable LibrariesModifiableModel getLibrariesModifiableModel(String level) {
     return myLevel2Providers.get(level);
   }
 
@@ -125,8 +124,7 @@ public class DefaultLibrariesConfigurator implements LibrariesConfigurator {
   }
 
   @Override
-  @Nullable
-  public Library getLibrary(String libraryName, String libraryLevel) {
+  public @Nullable Library getLibrary(String libraryName, String libraryLevel) {
     /* the null check is added only to prevent NPE when called from getLibrary */
     LibrariesModifiableModel model = myLevel2Providers.get(libraryLevel);
     return model == null ? null : findLibraryModel(libraryName, model);
@@ -148,8 +146,7 @@ public class DefaultLibrariesConfigurator implements LibrariesConfigurator {
   }
 
   @Override
-  @Nullable
-  public Library getLibraryModel(Library library) {
+  public @Nullable Library getLibraryModel(Library library) {
     LibraryTable libraryTable = library.getTable();
     if (libraryTable != null) {
       return findLibraryModel(library, myLevel2Providers.get(libraryTable.getTableLevel()));
@@ -157,8 +154,7 @@ public class DefaultLibrariesConfigurator implements LibrariesConfigurator {
     return library;
   }
 
-  @Nullable
-  private static Library findLibraryModel(String libraryName, LibrariesModifiableModel model) {
+  private static @Nullable Library findLibraryModel(String libraryName, LibrariesModifiableModel model) {
     for (Library library : model.getLibraries()) {
       Library libraryModel = findLibraryModel(library, model);
       if (libraryModel != null && libraryName.equals(libraryModel.getName())) {
@@ -168,8 +164,7 @@ public class DefaultLibrariesConfigurator implements LibrariesConfigurator {
     return null;
   }
 
-  @Nullable
-  private static Library findLibraryModel(Library library, LibrariesModifiableModel tableModel) {
+  private static @Nullable Library findLibraryModel(Library library, LibrariesModifiableModel tableModel) {
     if (tableModel == null) return library;
     if (tableModel.wasLibraryRemoved(library)) return null;
     return tableModel.hasLibraryEditor(library) ? (Library)tableModel.getLibraryEditor(library).getModel() : library;

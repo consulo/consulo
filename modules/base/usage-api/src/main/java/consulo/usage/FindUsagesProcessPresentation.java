@@ -82,8 +82,7 @@ public class FindUsagesProcessPresentation {
         myProgressIndicatorFactory = progressIndicatorFactory;
     }
 
-    @Nullable
-    public Runnable searchIncludingProjectFileUsages() {
+    public @Nullable Runnable searchIncludingProjectFileUsages() {
         return mySearchWithProjectFiles;
     }
 

@@ -33,11 +33,9 @@ import java.util.Collection;
  */
 @Deprecated
 public abstract class FavoriteNodeProvider implements BookmarkNodeProvider {
-  @Nullable
-  public abstract Collection<AbstractTreeNode> getFavoriteNodes(DataContext context, ViewSettings viewSettings);
+  public abstract @Nullable Collection<AbstractTreeNode> getFavoriteNodes(DataContext context, ViewSettings viewSettings);
 
-  @Nullable
-  public AbstractTreeNode createNode(Project project, Object element, ViewSettings viewSettings) {
+  public @Nullable AbstractTreeNode createNode(Project project, Object element, ViewSettings viewSettings) {
     return null;
   }
 
@@ -66,8 +64,7 @@ public abstract class FavoriteNodeProvider implements BookmarkNodeProvider {
    * @param element the element for which the location is requested.
    * @return the location text, or -1 if <code>element</code> is not an element supported by this provider.
    */
-  @Nullable
-  public abstract String getElementLocation(Object element);
+  public abstract @Nullable String getElementLocation(Object element);
 
   /**
    * Checks if the specified element is invalid and needs to be removed from the tree.
@@ -91,8 +88,7 @@ public abstract class FavoriteNodeProvider implements BookmarkNodeProvider {
    * @param element
    * @return the URL, or null if the element is not supported by this provider.
    */
-  @Nullable
-  public abstract String getElementUrl(Object element);
+  public abstract @Nullable String getElementUrl(Object element);
 
   /**
    * Returns the name of the module containing the specified element.
@@ -100,8 +96,7 @@ public abstract class FavoriteNodeProvider implements BookmarkNodeProvider {
    * @param element
    * @return the name of the module, or null if the element is not supported by this provider or the module name is unknown.
    */
-  @Nullable
-  public abstract String getElementModuleName(Object element);
+  public abstract @Nullable String getElementModuleName(Object element);
 
   /**
    * Returns the path of node objects to be added to the favorites tree for the specified persisted URL and module name.
@@ -112,11 +107,9 @@ public abstract class FavoriteNodeProvider implements BookmarkNodeProvider {
    * @return the path of objects to be added to the tree, or null if it was not possible to locate an object with the
    * specified URL.
    */
-  @Nullable
-  public abstract Object[] createPathFromUrl(Project project, String url, String moduleName);
+  public abstract @Nullable Object[] createPathFromUrl(Project project, String url, String moduleName);
 
-  @Nullable
-  public PsiElement getPsiElement(Object element) {
+  public @Nullable PsiElement getPsiElement(Object element) {
     if (element instanceof PsiElement) {
       return (PsiElement)element;
     }

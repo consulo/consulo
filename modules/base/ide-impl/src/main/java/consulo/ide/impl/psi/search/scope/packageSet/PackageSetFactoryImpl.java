@@ -132,8 +132,7 @@ public class PackageSetFactoryImpl extends PackageSetFactory {
             return myLexer.getBufferSequence().subSequence(start, end).toString();
         }
 
-        @Nullable
-        private String parseModulePattern() throws ParsingException {
+        private @Nullable String parseModulePattern() throws ParsingException {
             if (myLexer.getTokenType() != ScopeTokenTypes.LBRACKET) {
                 return null;
             }

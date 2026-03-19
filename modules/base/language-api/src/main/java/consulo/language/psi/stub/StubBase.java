@@ -66,8 +66,7 @@ public abstract class StubBase<T extends PsiElement> extends ObjectStubBase<Stub
   }
 
   @Override
-  @Nullable
-  public <P extends PsiElement, S extends StubElement<P>> S findChildStubByType(IStubElementType<S, P> elementType) {
+  public @Nullable <P extends PsiElement, S extends StubElement<P>> S findChildStubByType(IStubElementType<S, P> elementType) {
     return myStubList.findChildStubByType(id, elementType);
   }
 
@@ -76,8 +75,7 @@ public abstract class StubBase<T extends PsiElement> extends ObjectStubBase<Stub
     myPsi = psi;
   }
 
-  @Nullable
-  public final T getCachedPsi() {
+  public final @Nullable T getCachedPsi() {
     return myPsi;
   }
 
@@ -194,8 +192,7 @@ public abstract class StubBase<T extends PsiElement> extends ObjectStubBase<Stub
   }
 
   @Override
-  @Nullable
-  public <E extends PsiElement> E getParentStubOfType(Class<E> parentClass) {
+  public @Nullable <E extends PsiElement> E getParentStubOfType(Class<E> parentClass) {
     StubElement<?> parent = myParent;
     while (parent != null) {
       PsiElement psi = parent.getPsi();

@@ -107,8 +107,7 @@ public abstract class BaseDockManager implements DockManager, PersistentStateCom
     }
   }
 
-  @Nullable
-  protected DockContainerFactory findFactory(String id) {
+  protected @Nullable DockContainerFactory findFactory(String id) {
     return myProject.getExtensionPoint(DockContainerFactory.class).findFirstSafe(factory -> Objects.equals(factory.getId(), id));
   }
 

@@ -383,8 +383,7 @@ public class ToolsImpl implements Tools {
   }
 
   @Override
-  @Nullable
-  public InspectionToolWrapper getEnabledTool(PsiElement element) {
+  public @Nullable InspectionToolWrapper getEnabledTool(PsiElement element) {
     if (!myEnabled) return null;
     if (myTools == null || element == null) {
       return myDefaultState.isEnabled() ? myDefaultState.getTool() : null;
@@ -524,8 +523,7 @@ public class ToolsImpl implements Tools {
     myDefaultState.setLevel(level);
   }
 
-  @Nullable
-  public List<ScopeToolState> getNonDefaultTools() {
+  public @Nullable List<ScopeToolState> getNonDefaultTools() {
     return myTools;
   }
 }

@@ -26,13 +26,11 @@ public class XEvaluateInConsoleFromEditorActionHandler extends XAddToWatchesFrom
     return super.isEnabled(session, dataContext) && getConsoleExecuteAction(session) != null;
   }
 
-  @Nullable
-  private static ConsoleExecuteAction getConsoleExecuteAction(XDebugSession session) {
+  private static @Nullable ConsoleExecuteAction getConsoleExecuteAction(XDebugSession session) {
     return getConsoleExecuteAction(session.getConsoleView());
   }
 
-  @Nullable
-  public static ConsoleExecuteAction getConsoleExecuteAction(@Nullable ConsoleView consoleView) {
+  public static @Nullable ConsoleExecuteAction getConsoleExecuteAction(@Nullable ConsoleView consoleView) {
     if (!(consoleView instanceof LanguageConsoleView)) {
       return null;
     }

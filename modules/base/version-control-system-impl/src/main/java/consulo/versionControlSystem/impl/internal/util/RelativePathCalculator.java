@@ -107,8 +107,7 @@ public class RelativePathCalculator {
     return myResult;
   }
 
-  @Nullable
-  public static String getMovedString(String beforeName, String afterName) {
+  public static @Nullable String getMovedString(String beforeName, String afterName) {
     if ((beforeName != null) && (afterName != null) && (! stringEqual(beforeName, afterName))) {
       RelativePathCalculator calculator = new RelativePathCalculator(beforeName, afterName);
       calculator.execute();

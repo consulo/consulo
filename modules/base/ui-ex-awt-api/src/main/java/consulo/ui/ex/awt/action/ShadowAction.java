@@ -151,8 +151,7 @@ public final class ShadowAction implements Disposable {
     disconnect();
   }
 
-  @Nullable
-  private static KeymapManager getKeymapManager() {
+  private static @Nullable KeymapManager getKeymapManager() {
     if (ApplicationManager.getApplication().isDisposed()) return null;
     return KeymapManager.getInstance();
   }

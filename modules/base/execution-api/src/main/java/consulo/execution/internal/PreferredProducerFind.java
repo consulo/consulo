@@ -35,8 +35,7 @@ public class PreferredProducerFind {
     private PreferredProducerFind() {
     }
 
-    @Nullable
-    public static RunnerAndConfigurationSettings createConfiguration(Location location, ConfigurationContext context) {
+    public static @Nullable RunnerAndConfigurationSettings createConfiguration(Location location, ConfigurationContext context) {
         ConfigurationFromContext fromContext = findConfigurationFromContext(location, context);
         return fromContext != null ? fromContext.getConfigurationSettings() : null;
     }
@@ -144,8 +143,7 @@ public class PreferredProducerFind {
         return configurationsFromContext;
     }
 
-    @Nullable
-    private static ConfigurationFromContext findConfigurationFromContext(Location location, ConfigurationContext context) {
+    private static @Nullable ConfigurationFromContext findConfigurationFromContext(Location location, ConfigurationContext context) {
         List<ConfigurationFromContext> producers = getConfigurationsFromContext(location, context, true);
         return producers != null ? producers.get(0) : null;
     }

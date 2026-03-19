@@ -74,8 +74,7 @@ public class NamedScope {
         return myScopeId;
     }
 
-    @Nullable
-    public PackageSet getValue() {
+    public @Nullable PackageSet getValue() {
         return myValue;
     }
 
@@ -83,8 +82,7 @@ public class NamedScope {
         return new NamedScope(myScopeId, myPresentableName, myIcon, myValue != null ? myValue.createCopy() : null);
     }
 
-    @Nullable
-    public String getDefaultColorName() {
+    public @Nullable String getDefaultColorName() {
         return null;
     }
 

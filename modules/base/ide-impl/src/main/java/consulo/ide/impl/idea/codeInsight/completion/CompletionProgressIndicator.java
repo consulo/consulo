@@ -81,8 +81,7 @@ public class CompletionProgressIndicator extends ProgressIndicatorBase implement
     private final Editor myEditor;
     
     private final Caret myCaret;
-    @Nullable
-    private CompletionParameters myParameters;
+    private @Nullable CompletionParameters myParameters;
     private final CodeCompletionHandlerBase myHandler;
     private final CompletionLookupArrangerImpl myArranger;
     private final CompletionType myCompletionType;
@@ -372,8 +371,7 @@ public class CompletionProgressIndicator extends ProgressIndicatorBase implement
 
     // non-null when running generators and adding elements to lookup
     @Override
-    @Nullable
-    public CompletionParameters getParameters() {
+    public @Nullable CompletionParameters getParameters() {
         return myParameters;
     }
 

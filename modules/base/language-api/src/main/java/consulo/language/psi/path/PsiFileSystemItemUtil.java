@@ -25,8 +25,7 @@ import java.util.LinkedList;
  * @author peter
  */
 public class PsiFileSystemItemUtil {
-  @Nullable
-  static PsiFileSystemItem getCommonAncestor(PsiFileSystemItem file1, PsiFileSystemItem file2) {
+  static @Nullable PsiFileSystemItem getCommonAncestor(PsiFileSystemItem file1, PsiFileSystemItem file2) {
     PsiFileSystemItem[] path1 = getPathComponents(file1);
     PsiFileSystemItem[] path2 = getPathComponents(file2);
 
@@ -69,8 +68,7 @@ public class PsiFileSystemItemUtil {
     return s;
   }
 
-  @Nullable
-  public static String getRelativePath(PsiFileSystemItem src, PsiFileSystemItem dst) {
+  public static @Nullable String getRelativePath(PsiFileSystemItem src, PsiFileSystemItem dst) {
     PsiFileSystemItem commonAncestor = getCommonAncestor(src, dst);
 
     if (commonAncestor != null) {
@@ -89,8 +87,7 @@ public class PsiFileSystemItemUtil {
     return null;
   }
 
-  @Nullable
-  public static String getRelativePathFromAncestor(PsiFileSystemItem file, PsiFileSystemItem ancestor) {
+  public static @Nullable String getRelativePathFromAncestor(PsiFileSystemItem file, PsiFileSystemItem ancestor) {
     int length = 0;
     PsiFileSystemItem parent = file;
 

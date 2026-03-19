@@ -101,13 +101,11 @@ public class ExtensionPointName<T> {
     return getExtensionPoint(componentManager).getExtensionList();
   }
 
-  @Nullable
-  public <V extends T> V findExtension(Class<V> instanceOf) {
+  public @Nullable <V extends T> V findExtension(Class<V> instanceOf) {
     return findExtension(RootComponentHolder.get(), instanceOf);
   }
 
-  @Nullable
-  public <V extends T> V findExtension(ComponentManager componentManager, Class<V> instanceOf) {
+  public @Nullable <V extends T> V findExtension(ComponentManager componentManager, Class<V> instanceOf) {
     return getExtensionPoint(componentManager).findExtension(instanceOf);
   }
 
@@ -129,23 +127,19 @@ public class ExtensionPointName<T> {
     getExtensionPoint(manager).forEachExtensionSafe(consumer);
   }
 
-  @Nullable
-  public <R> R computeSafeIfAny(Function<? super T, ? extends R> processor) {
+  public @Nullable <R> R computeSafeIfAny(Function<? super T, ? extends R> processor) {
     return computeSafeIfAny(RootComponentHolder.get(), processor);
   }
 
-  @Nullable
-  public <R> R computeSafeIfAny(ComponentManager componentManager, Function<? super T, ? extends R> processor) {
+  public @Nullable <R> R computeSafeIfAny(ComponentManager componentManager, Function<? super T, ? extends R> processor) {
     return getExtensionPoint(componentManager).computeSafeIfAny(processor);
   }
 
-  @Nullable
-  public T findFirstSafe(ComponentManager componentManager, Predicate<T> predicate) {
+  public @Nullable T findFirstSafe(ComponentManager componentManager, Predicate<T> predicate) {
     return getExtensionPoint(componentManager).findFirstSafe(predicate);
   }
 
-  @Nullable
-  public T findFirstSafe(Predicate<T> predicate) {
+  public @Nullable T findFirstSafe(Predicate<T> predicate) {
     return findFirstSafe(RootComponentHolder.get(), predicate);
   }
 

@@ -19,8 +19,7 @@ public class PostfixTemplateCompletionContributor extends CompletionContributor 
         extend(CompletionType.BASIC, PlatformPatterns.psiElement(), new PostfixTemplatesCompletionProvider());
     }
 
-    @Nullable
-    public static PostfixLiveTemplate getPostfixLiveTemplate(PsiFile file, Editor editor) {
+    public static @Nullable PostfixLiveTemplate getPostfixLiveTemplate(PsiFile file, Editor editor) {
         PostfixLiveTemplate postfixLiveTemplate = CustomLiveTemplate.EP_NAME.findExtension(PostfixLiveTemplate.class);
         TemplateActionContext templateActionContext = TemplateActionContext.expanding(file, editor);
         return postfixLiveTemplate != null

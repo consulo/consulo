@@ -29,8 +29,7 @@ import org.jspecify.annotations.Nullable;
  * @author Eugene.Kudelevsky
  */
 public class WebReference extends PsiReferenceBase<PsiElement> {
-    @Nullable
-    private final String myUrl;
+    private final @Nullable String myUrl;
 
     public WebReference(PsiElement element) {
         this(element, (String) null);

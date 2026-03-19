@@ -144,8 +144,7 @@ public class PathFileBasedStorage extends XmlElementStorage implements FileBased
     }
 
     @Override
-    @Nullable
-    protected Element loadLocalData() {
+    protected @Nullable Element loadLocalData() {
         myBlockSavingTheContent = false;
         try {
             if (!Files.exists(myFile)) {
@@ -173,8 +172,7 @@ public class PathFileBasedStorage extends XmlElementStorage implements FileBased
         }
     }
 
-    @Nullable
-    private Element processReadException(@Nullable Exception e) {
+    private @Nullable Element processReadException(@Nullable Exception e) {
         boolean contentTruncated = e == null;
         myBlockSavingTheContent = !contentTruncated
             && (StorageUtil.isProjectOrModuleFile(myFileSpec) || myFileSpec.equals(StoragePathMacros.WORKSPACE_FILE));

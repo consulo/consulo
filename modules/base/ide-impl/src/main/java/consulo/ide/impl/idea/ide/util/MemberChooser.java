@@ -530,19 +530,16 @@ public class MemberChooser<T extends ClassMember> extends DialogWrapper implemen
         return myOptionControls;
     }
 
-    @Nullable
-    private LinkedHashSet<T> getSelectedElementsList() {
+    private @Nullable LinkedHashSet<T> getSelectedElementsList() {
         return getExitCode() == OK_EXIT_CODE ? mySelectedElements : null;
     }
 
-    @Nullable
-    public List<T> getSelectedElements() {
+    public @Nullable List<T> getSelectedElements() {
         LinkedHashSet<T> list = getSelectedElementsList();
         return list == null ? null : new ArrayList<>(list);
     }
 
-    @Nullable
-    public T[] getSelectedElements(T[] a) {
+    public @Nullable T[] getSelectedElements(T[] a) {
         LinkedHashSet<T> list = getSelectedElementsList();
         if (list == null) {
             return null;

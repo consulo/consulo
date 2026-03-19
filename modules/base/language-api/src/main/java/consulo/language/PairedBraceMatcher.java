@@ -40,8 +40,7 @@ import org.jspecify.annotations.Nullable;
 public interface PairedBraceMatcher extends LanguageExtension {
   ExtensionPointCacheKey<PairedBraceMatcher, ByLanguageValue<PairedBraceMatcher>> KEY = ExtensionPointCacheKey.create("PairedBraceMatcher", LanguageOneToOne.build());
 
-  @Nullable
-  static PairedBraceMatcher forLanguage(Language language) {
+  static @Nullable PairedBraceMatcher forLanguage(Language language) {
     return Application.get().getExtensionPoint(PairedBraceMatcher.class).getOrBuildCache(KEY).get(language);
   }
 

@@ -31,8 +31,7 @@ public abstract class StatusText {
         return DEFAULT_EMPTY_TEXT_VALUE.get();
     }
 
-    @Nullable
-    private Component myOwner;
+    private @Nullable Component myOwner;
     private Component myMouseTarget;
     
     private final MouseMotionListener myMouseMotionListener;
@@ -133,8 +132,7 @@ public abstract class StatusText {
 
     protected abstract boolean isStatusVisible();
 
-    @Nullable
-    private static ActionListener findListener(
+    private static @Nullable ActionListener findListener(
         SimpleColoredComponent component,
         List<? extends ActionListener> listeners,
         int xCoord
@@ -146,8 +144,7 @@ public abstract class StatusText {
         return null;
     }
 
-    @Nullable
-    private ActionListener findActionListenerAt(Point point) {
+    private @Nullable ActionListener findActionListenerAt(Point point) {
         if (!myHasActiveClickListeners || !isStatusVisible()) {
             return null;
         }

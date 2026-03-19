@@ -323,8 +323,7 @@ public class DiffLineSeparatorRenderer implements LineMarkerRendererEx, LineSepa
         return color != null ? color : new RGBColor(128, 128, 128);
     }
 
-    @Nullable
-    private static ColorValue getTopBorderColor(int i, int lineHeight, EditorColorsScheme scheme) {
+    private static @Nullable ColorValue getTopBorderColor(int i, int lineHeight, EditorColorsScheme scheme) {
         int border = Math.max(lineHeight / 4, 1);
         double ratio = (double) i / border;
         if (ratio > 1) {
@@ -340,8 +339,7 @@ public class DiffLineSeparatorRenderer implements LineMarkerRendererEx, LineSepa
         return ColorValueUtil.mix(top, background, ratio);
     }
 
-    @Nullable
-    private static ColorValue getBottomBorderColor(int i, int lineHeight, EditorColorsScheme scheme) {
+    private static @Nullable ColorValue getBottomBorderColor(int i, int lineHeight, EditorColorsScheme scheme) {
         int height = getHeight(lineHeight);
         int border = Math.max(lineHeight / 12, 1);
 

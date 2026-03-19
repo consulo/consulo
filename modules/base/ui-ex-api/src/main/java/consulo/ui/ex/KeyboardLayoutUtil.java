@@ -27,8 +27,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * @author gregsh
  */
 public class KeyboardLayoutUtil extends InternalKeyboardLayoutUtil {
-  @Nullable
-  public static Character getAsciiForChar(char a) {
+  public static @Nullable Character getAsciiForChar(char a) {
     return InternalKeyboardLayoutUtil.getAsciiForChar(a);
   }
 

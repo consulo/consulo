@@ -34,16 +34,13 @@ import java.util.List;
 import java.util.Map;
 
 public class BalloonPopupBuilderImpl implements BalloonBuilder {
-    @Nullable
-    private final Map<Disposable, List<Balloon>> myStorage;
-    @Nullable
-    private Disposable myAnchor;
+    private final @Nullable Map<Disposable, List<Balloon>> myStorage;
+    private @Nullable Disposable myAnchor;
 
     private final JComponent myContent;
 
     private Color myBorder = JBColor.border();
-    @Nullable
-    private Insets myBorderInsets = null;
+    private @Nullable Insets myBorderInsets = null;
     private Color myFill = MessageType.INFO.getPopupBackground();
     private boolean myHideOnMouseOutside = true;
     private boolean myHideOnKeyOutside = true;

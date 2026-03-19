@@ -46,11 +46,9 @@ public final class BundleBoxBuilder {
     return new BundleBoxBuilder(sdkModel, uiDisposable);
   }
 
-  @Nullable
-  private final SdkModel mySdkModel;
+  private final @Nullable SdkModel mySdkModel;
 
-  @Nullable
-  private final Disposable myUIDisposable;
+  private final @Nullable Disposable myUIDisposable;
 
   private boolean myWithNoneItem;
 

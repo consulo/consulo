@@ -125,8 +125,7 @@ public interface PsiElementProcessor<T extends PsiElement> {
       return myFoundElement != null;
     }
 
-    @Nullable
-    public T getFoundElement() {
+    public @Nullable T getFoundElement() {
       return myFoundElement;
     }
 

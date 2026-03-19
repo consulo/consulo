@@ -25,10 +25,8 @@ import consulo.language.impl.ast.TreeElement;
 import org.jspecify.annotations.Nullable;
 
 public class ChangeInfoImpl implements ChangeInfo {
-  @Nullable
-  private final TreeElement myOldChild;
-  @Nullable
-  private final TreeElement myNewChild;
+  private final @Nullable TreeElement myOldChild;
+  private final @Nullable TreeElement myNewChild;
   private final int myOffset;
   private final int myOldLength;
   private final int myNewLength;
@@ -41,13 +39,11 @@ public class ChangeInfoImpl implements ChangeInfo {
     myNewLength = newChild != null ? newChild.getTextLength() : 0;
   }
 
-  @Nullable
-  public TreeElement getOldChild() {
+  public @Nullable TreeElement getOldChild() {
     return myOldChild;
   }
 
-  @Nullable
-  public TreeElement getNewChild() {
+  public @Nullable TreeElement getNewChild() {
     return myNewChild;
   }
 

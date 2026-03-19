@@ -120,8 +120,7 @@ public class SimpleTree extends Tree implements CellEditorListener {
     }
   }
 
-  @Nullable
-  public TreePath getPathFor(SimpleNode node) {
+  public @Nullable TreePath getPathFor(SimpleNode node) {
     TreeNode nodeWithObject = TreeUtil.findNodeWithObject((DefaultMutableTreeNode)getModel().getRoot(), node);
     if (nodeWithObject != null) {
       return TreeUtil.getPathFromRoot(nodeWithObject);
@@ -129,8 +128,7 @@ public class SimpleTree extends Tree implements CellEditorListener {
     return null;
   }
 
-  @Nullable
-  public SimpleNode getSelectedNode() {
+  public @Nullable SimpleNode getSelectedNode() {
     if (isSelectionEmpty()) {
       return null;
     }

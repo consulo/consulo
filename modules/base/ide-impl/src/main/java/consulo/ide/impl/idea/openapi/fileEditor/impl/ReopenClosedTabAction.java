@@ -47,8 +47,7 @@ public class ReopenClosedTabAction extends AnAction {
         }
     }
 
-    @Nullable
-    private static FileEditorWindow getEditorWindow(AnActionEvent e) {
+    private static @Nullable FileEditorWindow getEditorWindow(AnActionEvent e) {
         Component component = e.getData(UIExAWTDataKey.CONTEXT_COMPONENT);
         if (component != null) {
             FileEditorsSplitters splitters = DataManager.getInstance().getDataContext(component).getData(FileEditorsSplitters.KEY);

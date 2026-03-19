@@ -40,7 +40,7 @@ import java.util.Set;
 public abstract class ListenerDiffViewerBase extends DiffViewerBase {
   
   private final DocumentListener myDocumentListener;
-  @Nullable private final VirtualFileListener myFileListener;
+  private final @Nullable VirtualFileListener myFileListener;
 
   public ListenerDiffViewerBase(DiffContext context, ContentDiffRequest request) {
     super(context, request);
@@ -79,8 +79,7 @@ public abstract class ListenerDiffViewerBase extends DiffViewerBase {
     };
   }
 
-  @Nullable
-  protected VirtualFileListener createFileListener(ContentDiffRequest request) {
+  protected @Nullable VirtualFileListener createFileListener(ContentDiffRequest request) {
     final List<VirtualFile> files = new ArrayList<VirtualFile>(0);
     for (DiffContent content : request.getContents()) {
       if (content instanceof FileContent && !(content instanceof DocumentContent)) {

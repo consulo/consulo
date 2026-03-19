@@ -106,8 +106,7 @@ public class UpdateSettingsEntryPointActionProvider implements SettingsEntryPoin
                 return AnAction.EMPTY_ARRAY;
             }
 
-            @Nullable
-            private AnAction createAction() {
+            private @Nullable AnAction createAction() {
                 UpdateSettings updateSettings = myUpdateSettingsProvider.get();
 
                 PlatformOrPluginUpdateResultType type = ((UpdateSettingsEx) updateSettings).getLastCheckResult();

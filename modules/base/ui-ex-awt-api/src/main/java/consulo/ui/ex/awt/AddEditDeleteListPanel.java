@@ -42,8 +42,7 @@ public abstract class AddEditDeleteListPanel<T> extends AddDeleteListPanel<T> {
     decorator.setEditAction(b -> editSelectedItem());
   }
 
-  @Nullable
-  protected abstract T editSelectedItem(T item);
+  protected abstract @Nullable T editSelectedItem(T item);
 
   private void editSelectedItem() {
     int index = myList.getSelectedIndex();

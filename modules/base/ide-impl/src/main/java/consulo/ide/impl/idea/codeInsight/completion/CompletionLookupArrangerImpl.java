@@ -45,8 +45,7 @@ public class CompletionLookupArrangerImpl extends LookupArranger implements Comp
     private final int myLimit = Registry.intValue("ide.completion.variant.limit");
     private boolean myOverflow;
 
-    @Nullable
-    private CompletionLocation myLocation;
+    private @Nullable CompletionLocation myLocation;
     private final CompletionProcessEx myProcess;
     private final Map<CompletionSorterImpl, Classifier<LookupElement>> myClassifiers = new LinkedHashMap<>();
     private final Key<CompletionSorterImpl> mySorterKey = Key.create("SORTER_KEY");
@@ -501,8 +500,7 @@ public class CompletionLookupArrangerImpl extends LookupArranger implements Comp
         return exactMatches;
     }
 
-    @Nullable
-    private LookupElement getBestExactMatch(List<? extends LookupElement> items) {
+    private @Nullable LookupElement getBestExactMatch(List<? extends LookupElement> items) {
         List<LookupElement> exactMatches = getExactMatches(items);
         if (exactMatches.isEmpty()) {
             return null;
@@ -515,8 +513,7 @@ public class CompletionLookupArrangerImpl extends LookupArranger implements Comp
         return sortByRelevance(groupItemsBySorter(exactMatches)).iterator().next();
     }
 
-    @Nullable
-    private LookupElement findMostRelevantItem(Iterable<? extends LookupElement> sorted) {
+    private @Nullable LookupElement findMostRelevantItem(Iterable<? extends LookupElement> sorted) {
         List<CompletionPreselectSkipper> skippers = CompletionPreselectSkipper.EP_NAME.getExtensionList();
 
         for (LookupElement element : sorted) {

@@ -226,8 +226,7 @@ public class ScratchFileServiceImpl extends ScratchFileService implements Persis
     });
   }
 
-  @Nullable
-  static Language getLanguageByFileName(@Nullable VirtualFile file) {
+  static @Nullable Language getLanguageByFileName(@Nullable VirtualFile file) {
     return file == null ? null : LanguageUtil.getFileTypeLanguage(FileTypeManager.getInstance().getFileTypeByFileName(file.getName()));
   }
 }

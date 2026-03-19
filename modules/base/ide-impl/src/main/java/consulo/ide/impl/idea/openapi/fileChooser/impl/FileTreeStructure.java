@@ -124,8 +124,7 @@ public class FileTreeStructure extends AbstractTreeStructure {
 
 
     @Override
-    @Nullable
-    public Object getParentElement(Object element) {
+    public @Nullable Object getParentElement(Object element) {
         if (element instanceof FileElement fileElement) {
             VirtualFile elementFile = getValidFile(fileElement);
             if (elementFile != null && myRootElement.getFile() != null && myRootElement.getFile().equals(elementFile)) {
@@ -165,8 +164,7 @@ public class FileTreeStructure extends AbstractTreeStructure {
         return null;
     }
 
-    @Nullable
-    private static VirtualFile getValidFile(FileElement element) {
+    private static @Nullable VirtualFile getValidFile(FileElement element) {
         if (element == null) {
             return null;
         }

@@ -42,8 +42,7 @@ public class EditorColorsUtil {
     return getColorSchemeForBackground(null);
   }
 
-  @Nullable
-  public static ColorValue getGlobalOrDefaultColor(EditorColorKey colorKey) {
+  public static @Nullable ColorValue getGlobalOrDefaultColor(EditorColorKey colorKey) {
     return getColorSchemeForBackground(null).getColor(colorKey);
   }
 
@@ -70,8 +69,7 @@ public class EditorColorsUtil {
     return EditorColorKey.createColorKey(name, TargetAWT.from(JBColor.namedColor(name, defaultColor)));
   }
 
-  @Nullable
-  public static ColorValue getColor(@Nullable Component component, EditorColorKey key) {
+  public static @Nullable ColorValue getColor(@Nullable Component component, EditorColorKey key) {
     Function<EditorColorKey, ColorValue> function = UIUtil.getClientProperty(component, EditorColorKey.FUNCTION_KEY);
     ColorValue color = function == null ? null : function.apply(key);
     return color != null ? color : key.getDefaultColorValue();

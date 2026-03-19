@@ -155,8 +155,7 @@ public class ColorUtil {
     }
   }
 
-  @Nullable
-  public static Color fromHex(String str, @Nullable Color defaultValue) {
+  public static @Nullable Color fromHex(String str, @Nullable Color defaultValue) {
     try {
       return fromHex(str);
     }

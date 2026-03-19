@@ -26,8 +26,7 @@ import javax.swing.*;
  * @since 04/03/2023
  */
 public interface InspectionToolState<T> extends PersistentStateComponent<T> {
-  @Nullable
-  default UnnamedConfigurable createConfigurable() {
+  default @Nullable UnnamedConfigurable createConfigurable() {
     return null;
   }
 }

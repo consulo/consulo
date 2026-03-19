@@ -99,8 +99,7 @@ public abstract class CodeStyleAbstractConfigurable implements Configurable, Opt
         }
     }
 
-    @Nullable
-    public CodeStyleAbstractPanel getPanel() {
+    public @Nullable CodeStyleAbstractPanel getPanel() {
         return myPanel;
     }
 

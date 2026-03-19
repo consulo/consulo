@@ -47,8 +47,7 @@ public class ChangelistConflictFileStatusProvider implements FileStatusProvider 
   }
 
   @Override
-  @Nullable
-  public FileStatus getFileStatus(VirtualFile virtualFile) {
+  public @Nullable FileStatus getFileStatus(VirtualFile virtualFile) {
     ChangelistConflictTracker.Options options = myConflictTracker.getOptions();
     if (!options.TRACKING_ENABLED) {
       return null;

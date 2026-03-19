@@ -33,7 +33,7 @@ public class LineFragmentImpl implements LineFragment {
   private final int myStartOffset2;
   private final int myEndOffset2;
 
-  @Nullable private final List<DiffFragment> myInnerFragments;
+  private final @Nullable List<DiffFragment> myInnerFragments;
 
   public LineFragmentImpl(int startLine1, int endLine1, int startLine2, int endLine2,
                           int startOffset1, int endOffset1, int startOffset2, int endOffset2) {
@@ -103,13 +103,11 @@ public class LineFragmentImpl implements LineFragment {
     return myEndOffset2;
   }
 
-  @Nullable
-  public List<DiffFragment> getInnerFragments() {
+  public @Nullable List<DiffFragment> getInnerFragments() {
     return myInnerFragments;
   }
 
-  @Nullable
-  private static List<DiffFragment> dropWholeChangedFragments(@Nullable List<DiffFragment> fragments, int length1, int length2) {
+  private static @Nullable List<DiffFragment> dropWholeChangedFragments(@Nullable List<DiffFragment> fragments, int length1, int length2) {
     if (fragments != null && fragments.size() == 1) {
       DiffFragment diffFragment = fragments.get(0);
       if (diffFragment.getStartOffset1() == 0 &&

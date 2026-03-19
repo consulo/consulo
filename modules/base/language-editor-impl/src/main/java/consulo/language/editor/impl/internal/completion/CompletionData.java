@@ -131,8 +131,7 @@ public class CompletionData {
     }
   };
 
-  @Nullable
-  public static String getReferencePrefix(PsiElement insertedElement, int offsetInFile) {
+  public static @Nullable String getReferencePrefix(PsiElement insertedElement, int offsetInFile) {
     try {
       PsiReference ref = insertedElement.getContainingFile().findReferenceAt(offsetInFile);
       if (ref != null) {

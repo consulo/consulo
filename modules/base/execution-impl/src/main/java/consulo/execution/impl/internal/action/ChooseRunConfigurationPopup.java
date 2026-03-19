@@ -68,8 +68,7 @@ public class ChooseRunConfigurationPopup implements ExecutorProvider {
     private final String myAddKey;
     
     private final Executor myDefaultExecutor;
-    @Nullable
-    private final Executor myAlternativeExecutor;
+    private final @Nullable Executor myAlternativeExecutor;
 
     private Executor myCurrentExecutor;
     private boolean myEditConfiguration;
@@ -129,8 +128,7 @@ public class ChooseRunConfigurationPopup implements ExecutorProvider {
         return ProgramRunnerUtil.getRunner(executor.getId(), settings) != null;
     }
 
-    @Nullable
-    protected String getAdText(Executor alternateExecutor) {
+    protected @Nullable String getAdText(Executor alternateExecutor) {
         PropertiesComponent properties = ApplicationPropertiesComponent.getInstance();
         if (alternateExecutor != null && !properties.isTrueValue(myAddKey)) {
             return String.format(
@@ -318,8 +316,7 @@ public class ChooseRunConfigurationPopup implements ExecutorProvider {
             return myAddSeparatorAbove;
         }
 
-        @Nullable
-        public abstract Image getIcon();
+        public abstract @Nullable Image getIcon();
 
         public abstract String getText();
 
@@ -379,8 +376,7 @@ public class ChooseRunConfigurationPopup implements ExecutorProvider {
 
         public abstract void perform(Project project, Executor executor, DataContext context);
 
-        @Nullable
-        public ConfigurationType getType() {
+        public @Nullable ConfigurationType getType() {
             return null;
         }
 

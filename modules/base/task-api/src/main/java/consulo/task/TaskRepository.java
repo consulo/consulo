@@ -114,8 +114,7 @@ public abstract class TaskRepository {
    *
    * @return null if not supported
    */
-  @Nullable
-  public CancellableConnection createCancellableConnection() {
+  public @Nullable CancellableConnection createCancellableConnection() {
     return null;
   }
 
@@ -189,8 +188,7 @@ public abstract class TaskRepository {
    *
    * @return preferred task state
    */
-  @Nullable
-  public abstract CustomTaskState getPreferredOpenTaskState();
+  public abstract @Nullable CustomTaskState getPreferredOpenTaskState();
 
   /**
    * Remember state used when closing task most recently.
@@ -204,8 +202,7 @@ public abstract class TaskRepository {
    *
    * @return preferred task state
    */
-  @Nullable
-  public abstract CustomTaskState getPreferredCloseTaskState();
+  public abstract @Nullable CustomTaskState getPreferredCloseTaskState();
 
   /**
    * @param id task ID. Don't forget to define {@link #extractId(String)}, if your server uses not <tt>PROJECT-123</tt> format for task IDs.
@@ -213,8 +210,7 @@ public abstract class TaskRepository {
    * information about failure in other cases.
    * @throws Exception
    */
-  @Nullable
-  public abstract Task findTask(String id) throws Exception;
+  public abstract @Nullable Task findTask(String id) throws Exception;
 
   
   public abstract TaskRepository clone();
@@ -232,8 +228,7 @@ public abstract class TaskRepository {
    * @param taskName ID of the task to check
    * @return extracted ID of the issue or {@code null} if it doesn't look as issue ID of this tracker
    */
-  @Nullable
-  public abstract String extractId(String taskName);
+  public abstract @Nullable String extractId(String taskName);
 
 
   /**
@@ -344,8 +339,7 @@ public abstract class TaskRepository {
     return getClass().getSimpleName() + "(URL='" + myUrl + "')";
   }
 
-  @Nullable
-  public String getTaskComment(Task task) {
+  public @Nullable String getTaskComment(Task task) {
     return isShouldFormatCommitMessage() ? myCommitMessageFormat.replace("{id}", task.getPresentableId()).replace("{summary}", task.getSummary()) : null;
   }
 

@@ -197,8 +197,7 @@ public abstract class CompletionContributor implements LanguageExtension {
    * @return text to be shown at the bottom of lookup list
    * @deprecated use {@link consulo.ide.impl.idea.codeInsight.completion.CompletionResultSet#addLookupAdvertisement(String)}
    */
-  @Nullable
-  public String advertise(CompletionParameters parameters) {
+  public @Nullable String advertise(CompletionParameters parameters) {
     return null;
   }
 
@@ -207,16 +206,14 @@ public abstract class CompletionContributor implements LanguageExtension {
    * @param editor
    * @return hint text to be shown if no variants are found, typically "No suggestions"
    */
-  @Nullable
-  public String handleEmptyLookup(CompletionParameters parameters, Editor editor) {
+  public @Nullable String handleEmptyLookup(CompletionParameters parameters, Editor editor) {
     return null;
   }
 
   /**
    * Called when the completion is finished quickly, lookup hasn't been shown and gives possibility to autoinsert some item (typically - the only one).
    */
-  @Nullable
-  public AutoCompletionDecision handleAutoCompletionPossibility(AutoCompletionContext context) {
+  public @Nullable AutoCompletionDecision handleAutoCompletionPossibility(AutoCompletionContext context) {
     return null;
   }
 

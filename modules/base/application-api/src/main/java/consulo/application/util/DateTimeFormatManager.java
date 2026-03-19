@@ -75,8 +75,7 @@ public class DateTimeFormatManager implements PersistentStateComponent<Element> 
     return myPrettyFormattingAllowed;
   }
 
-  @Nullable
-  public DateFormat getDateFormat() {
+  public @Nullable DateFormat getDateFormat() {
     try {
       return new SimpleDateFormat(myPattern);
     }

@@ -6,8 +6,7 @@ import org.jspecify.annotations.Nullable;
 public abstract class ServerConfiguration {
     public abstract PersistentStateComponent<?> getSerializer();
 
-    @Nullable
-    public String getCustomToolWindowId() {
+    public @Nullable String getCustomToolWindowId() {
         return null;
     }
 }

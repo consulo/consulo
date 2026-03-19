@@ -44,8 +44,7 @@ public class CachedIntentions {
     private final Set<IntentionActionWithTextCaching> myGutters = Sets.newConcurrentHashSet(ACTION_TEXT_AND_CLASS_EQUALS);
     private final Set<IntentionActionWithTextCaching> myNotifications = Sets.newConcurrentHashSet(ACTION_TEXT_AND_CLASS_EQUALS);
     private int myOffset;
-    @Nullable
-    private final Editor myEditor;
+    private final @Nullable Editor myEditor;
     
     private final PsiFile myFile;
     
@@ -82,8 +81,7 @@ public class CachedIntentions {
         return myNotifications;
     }
 
-    @Nullable
-    public Editor getEditor() {
+    public @Nullable Editor getEditor() {
         return myEditor;
     }
 

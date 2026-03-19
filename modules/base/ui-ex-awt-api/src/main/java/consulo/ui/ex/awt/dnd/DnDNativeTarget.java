@@ -45,8 +45,7 @@ public interface DnDNativeTarget extends DnDTarget {
       return myFlavors;
     }
 
-    @Nullable
-    public String getTextForFlavor(DataFlavor flavor) {
+    public @Nullable String getTextForFlavor(DataFlavor flavor) {
       if (myTexts.containsKey(flavor)) {
         return myTexts.get(flavor);
       }

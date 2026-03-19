@@ -122,8 +122,7 @@ public abstract class SyntheticFileSystemItem extends PsiElementBase implements 
     }
 
     @Override
-    @Nullable
-    public PsiFile getContainingFile() {
+    public @Nullable PsiFile getContainingFile() {
         return null;
     }
 

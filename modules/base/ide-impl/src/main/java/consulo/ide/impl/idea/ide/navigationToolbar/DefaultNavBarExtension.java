@@ -44,8 +44,7 @@ import java.util.function.Predicate;
 @ExtensionImpl(id = "defaultNavbar", order = "last")
 public class DefaultNavBarExtension extends AbstractNavBarModelExtension {
   @Override
-  @Nullable
-  public String getPresentableText(Object object) {
+  public @Nullable String getPresentableText(Object object) {
     if (object instanceof Project) {
       return ((Project)object).getName();
     }

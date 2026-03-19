@@ -151,8 +151,7 @@ public class ChangeSignatureAction extends BasePlatformRefactoringAction {
         };
     }
 
-    @Nullable
-    private static ChangeSignatureHandler getChangeSignatureHandler(Language language) {
+    private static @Nullable ChangeSignatureHandler getChangeSignatureHandler(Language language) {
         return RefactoringSupportProvider.forLanguage(language).getChangeSignatureHandler();
     }
 }

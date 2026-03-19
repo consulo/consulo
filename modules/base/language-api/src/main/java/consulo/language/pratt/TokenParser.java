@@ -30,11 +30,10 @@ public abstract class TokenParser {
     return infix(rightPriority, compositeType, null);
   }
 
-  public static TokenParser infix(final int rightPriority, final IElementType compositeType, @Nullable final String errorMessage) {
+  public static TokenParser infix(final int rightPriority, final IElementType compositeType, final @Nullable String errorMessage) {
     return new ReducingParser() {
       @Override
-      @Nullable
-      public IElementType parseFurther(PrattBuilder builder) {
+      public @Nullable IElementType parseFurther(PrattBuilder builder) {
         builder.createChildBuilder(rightPriority, errorMessage).parse();
         return compositeType;
       }
@@ -44,8 +43,7 @@ public abstract class TokenParser {
   public static TokenParser postfix(final IElementType compositeType) {
     return new ReducingParser() {
       @Override
-      @Nullable
-      public IElementType parseFurther(PrattBuilder builder) {
+      public @Nullable IElementType parseFurther(PrattBuilder builder) {
         return compositeType;
       }
     };

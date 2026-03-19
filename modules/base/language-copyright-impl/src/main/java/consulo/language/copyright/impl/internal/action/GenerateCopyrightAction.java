@@ -63,8 +63,7 @@ public class GenerateCopyrightAction extends AnAction {
         }
     }
 
-    @Nullable
-    private static PsiFile getFile(DataContext context, Project project) {
+    private static @Nullable PsiFile getFile(DataContext context, Project project) {
         PsiFile file = context.getData(PsiFile.KEY);
         if (file == null) {
             Editor editor = context.getData(Editor.KEY);

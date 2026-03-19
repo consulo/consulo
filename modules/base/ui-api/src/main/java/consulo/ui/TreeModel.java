@@ -41,8 +41,7 @@ public interface TreeModel<N> {
     return true;
   }
 
-  @Nullable
-  default Comparator<TreeNode<N>> getNodeComparator() {
+  default @Nullable Comparator<TreeNode<N>> getNodeComparator() {
     return null;
   }
 }

@@ -36,16 +36,13 @@ public abstract class InspectionExtensionsFactory {
 
     public abstract GlobalInspectionContextExtension createGlobalInspectionContextExtension();
 
-    @Nullable
-    public abstract RefManagerExtension createRefManagerExtension(RefManager refManager);
+    public abstract @Nullable RefManagerExtension createRefManagerExtension(RefManager refManager);
 
-    @Nullable
-    public abstract HTMLComposerExtension createHTMLComposerExtension(HTMLComposer composer);
+    public abstract @Nullable HTMLComposerExtension createHTMLComposerExtension(HTMLComposer composer);
 
     public abstract boolean isToCheckMember(PsiElement element, String id);
 
-    @Nullable
-    public abstract String getSuppressedInspectionIdsIn(PsiElement element);
+    public abstract @Nullable String getSuppressedInspectionIdsIn(PsiElement element);
 
     public abstract boolean isProjectConfiguredToRunInspections(Project project, boolean online);
 }

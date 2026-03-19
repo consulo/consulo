@@ -123,8 +123,7 @@ public class CustomRegionStructureUtil {
         return customRegions;
     }
 
-    @Nullable
-    static CustomFoldingProvider getProvider(PsiElement element) {
+    static @Nullable CustomFoldingProvider getProvider(PsiElement element) {
         ASTNode node = element.getNode();
         if (node != null) {
             for (CustomFoldingProvider provider : CustomFoldingProvider.EP_NAME.getExtensionList()) {

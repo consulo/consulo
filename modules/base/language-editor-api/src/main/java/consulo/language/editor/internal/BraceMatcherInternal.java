@@ -35,8 +35,7 @@ public class BraceMatcherInternal {
     BRACE_MATCHERS.put(fileType, braceMatcher);
   }
 
-  @Nullable
-  public static BraceMatcher getMatcher(FileType fileType) {
+  public static @Nullable BraceMatcher getMatcher(FileType fileType) {
     return BRACE_MATCHERS.get(fileType);
   }
 }

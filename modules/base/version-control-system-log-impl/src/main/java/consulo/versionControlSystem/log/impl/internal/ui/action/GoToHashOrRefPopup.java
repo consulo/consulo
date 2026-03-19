@@ -65,10 +65,8 @@ public class GoToHashOrRefPopup {
     private final Function<VcsRef, Future> myOnSelectedRef;
     
     private final JBPopup myPopup;
-    @Nullable
-    private Future myFuture;
-    @Nullable
-    private VcsRef mySelectedRef;
+    private @Nullable Future myFuture;
+    private @Nullable VcsRef mySelectedRef;
 
     public GoToHashOrRefPopup(
         Project project,

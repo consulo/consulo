@@ -72,8 +72,7 @@ public abstract class AbstractBlockWrapper {
     myNode = block instanceof ASTBlock ? ((ASTBlock) block).getNode() : null;
   }
 
-  @Nullable
-  private static Language deriveLanguage(Block block) {
+  private static @Nullable Language deriveLanguage(Block block) {
     if (block instanceof BlockEx) {
       return ((BlockEx)block).getLanguage();
     }
@@ -94,8 +93,7 @@ public abstract class AbstractBlockWrapper {
    *
    * @return the AST node or null
    */
-  @Nullable
-  public ASTNode getNode() {
+  public @Nullable ASTNode getNode() {
     return myNode;
   }
 
@@ -138,8 +136,7 @@ public abstract class AbstractBlockWrapper {
    *
    * @return current block's language (if provided)
    */
-  @Nullable
-  public Language getLanguage() {
+  public @Nullable Language getLanguage() {
     return myLanguage;
   }
 
@@ -166,8 +163,7 @@ public abstract class AbstractBlockWrapper {
     return myParent;
   }
 
-  @Nullable
-  public WrapImpl getWrap() {
+  public @Nullable WrapImpl getWrap() {
     ArrayList<WrapImpl> wraps = getWraps();
     if (wraps.size() == 0) return null;
     return wraps.get(0);
@@ -348,8 +344,7 @@ public abstract class AbstractBlockWrapper {
   /**
    * @return    previous block for the current block if any; {@code null} otherwise
    */
-  @Nullable
-  public abstract LeafBlockWrapper getPreviousBlock();
+  public abstract @Nullable LeafBlockWrapper getPreviousBlock();
 
   protected final void setCanUseFirstChildIndentAsBlockIndent(boolean newValue) {
     if (newValue) myFlags |= CAN_USE_FIRST_CHILD_INDENT_AS_BLOCK_INDENT;
@@ -396,8 +391,7 @@ public abstract class AbstractBlockWrapper {
    * @return    alignment of the current block or it's ancestor that starts at the same offset as the current if any;
    *            {@code null} otherwise
    */
-  @Nullable
-  public AlignmentImpl getAlignmentAtStartOffset() {
+  public @Nullable AlignmentImpl getAlignmentAtStartOffset() {
     for (AbstractBlockWrapper block = this; block != null && block.getStartOffset() == getStartOffset(); block = block.getParent()) {
       if (block.getAlignment() != null) {
         return block.getAlignment();
@@ -434,8 +428,7 @@ public abstract class AbstractBlockWrapper {
    *                            indent should be used for it;
    *                            {@code null} otherwise
    */
-  @Nullable
-  private IndentData createAlignmentIndent(IndentData indentFromParent, AbstractBlockWrapper child) {
+  private @Nullable IndentData createAlignmentIndent(IndentData indentFromParent, AbstractBlockWrapper child) {
     if (!child.getWhiteSpace().containsLineFeeds()) {
       return null;
     }
@@ -528,8 +521,7 @@ public abstract class AbstractBlockWrapper {
    * @return    first parent block that starts before the current block and which white space contains line feeds if any;
    *            {@code null} otherwise
    */
-  @Nullable
-  protected AbstractBlockWrapper findFirstIndentedParent() {
+  protected @Nullable AbstractBlockWrapper findFirstIndentedParent() {
     if (myParent == null) return null;
     if (myStart != myParent.getStartOffset() && myParent.getWhiteSpace().containsLineFeeds()) return myParent;
     return myParent.findFirstIndentedParent();

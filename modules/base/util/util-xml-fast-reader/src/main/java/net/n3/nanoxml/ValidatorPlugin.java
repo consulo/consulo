@@ -49,15 +49,13 @@ public class ValidatorPlugin
    /**
     * The delegate.
     */
-   @Nullable
-   private IXMLValidator delegate = null;
+   private @Nullable IXMLValidator delegate = null;
 
 
    /**
     * Returns the delegate.
     */
-   @Nullable
-   public IXMLValidator getDelegate()
+   public @Nullable IXMLValidator getDelegate()
    {
       return this.delegate;
    }
@@ -99,8 +97,7 @@ public class ValidatorPlugin
     *
     * @return the entity resolver.
     */
-   @Nullable
-   public IXMLEntityResolver getParameterEntityResolver()
+   public @Nullable IXMLEntityResolver getParameterEntityResolver()
    {
       return this.getRequiredDelegate().getParameterEntityResolver();
    }

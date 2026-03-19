@@ -54,8 +54,7 @@ public class TestFailedState extends AbstractState implements Disposable {
     public void dispose() {
     }
 
-    @Nullable
-    public static String buildErrorPresentationText(@Nullable String localizedMessage, @Nullable String stackTrace) {
+    public static @Nullable String buildErrorPresentationText(@Nullable String localizedMessage, @Nullable String stackTrace) {
         String text = (StringUtil.isEmptyOrSpaces(localizedMessage) ? "" : localizedMessage + CompositePrintable.NEW_LINE) +
             (StringUtil.isEmptyOrSpaces(stackTrace) ? "" : stackTrace + CompositePrintable.NEW_LINE);
         return StringUtil.isEmptyOrSpaces(text) ? null : text;

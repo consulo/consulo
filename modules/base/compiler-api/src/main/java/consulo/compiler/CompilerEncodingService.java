@@ -35,8 +35,7 @@ public abstract class CompilerEncodingService {
         return project.getInstance(CompilerEncodingService.class);
     }
 
-    @Nullable
-    public static Charset getPreferredModuleEncoding(Chunk<Module> chunk) {
+    public static @Nullable Charset getPreferredModuleEncoding(Chunk<Module> chunk) {
         CompilerEncodingService service = null;
         for (Module module : chunk.getNodes()) {
             if (service == null) {
@@ -50,8 +49,7 @@ public abstract class CompilerEncodingService {
         return null;
     }
 
-    @Nullable
-    public abstract Charset getPreferredModuleEncoding(Module module);
+    public abstract @Nullable Charset getPreferredModuleEncoding(Module module);
 
     
     public abstract Collection<Charset> getAllModuleEncodings(Module module);

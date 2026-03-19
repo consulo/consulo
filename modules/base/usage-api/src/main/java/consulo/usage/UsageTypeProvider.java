@@ -33,8 +33,7 @@ public interface UsageTypeProvider {
     @Nullable
     UsageType getUsageType(PsiElement element);
 
-    @Nullable
-    default UsageType getUsageType(PsiElement element, UsageTarget[] targets) {
+    default @Nullable UsageType getUsageType(PsiElement element, UsageTarget[] targets) {
         return getUsageType(element);
     }
 }

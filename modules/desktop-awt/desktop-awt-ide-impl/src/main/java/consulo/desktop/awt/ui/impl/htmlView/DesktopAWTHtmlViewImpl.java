@@ -186,8 +186,7 @@ public class DesktopAWTHtmlViewImpl extends SwingComponentDelegate<DesktopAWTHtm
         });
     }
 
-    @Nullable
-    private static Range<Integer> nodeToSrcRange(Node node) {
+    private static @Nullable Range<Integer> nodeToSrcRange(Node node) {
         if (!node.hasAttributes()) {
             return null;
         }

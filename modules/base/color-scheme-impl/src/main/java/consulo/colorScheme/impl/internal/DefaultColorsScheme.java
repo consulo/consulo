@@ -34,8 +34,7 @@ public class DefaultColorsScheme extends AbstractColorsScheme implements ReadOnl
   }
 
   @Override
-  @Nullable
-  public TextAttributes getAttributes(TextAttributesKey key) {
+  public @Nullable TextAttributes getAttributes(TextAttributesKey key) {
     if (key != null) {
       TextAttributesKey fallbackKey = key.getFallbackAttributeKey();
       TextAttributes attributes = myAttributesMap.get(key);

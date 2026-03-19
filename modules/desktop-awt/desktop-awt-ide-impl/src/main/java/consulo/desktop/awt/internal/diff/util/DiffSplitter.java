@@ -20,12 +20,9 @@ import java.util.List;
 
 public class DiffSplitter extends Splitter {
 
-  @Nullable
-  private Painter myPainter;
-  @Nullable
-  private AnAction myTopAction;
-  @Nullable
-  private AnAction myBottomAction;
+  private @Nullable Painter myPainter;
+  private @Nullable AnAction myTopAction;
+  private @Nullable AnAction myBottomAction;
 
   public DiffSplitter() {
     setDividerWidth(JBUIScale.scale(Registry.intValue("diff.divider.width", 20)));
@@ -103,8 +100,7 @@ public class DiffSplitter extends Splitter {
     void paint(Graphics g, JComponent divider);
   }
 
-  @Nullable
-  private static JComponent createActionComponent(@Nullable AnAction action) {
+  private static @Nullable JComponent createActionComponent(@Nullable AnAction action) {
     if (action == null) return null;
 
     ActionToolbar toolbar = ActionManager.getInstance().createActionToolbar("DiffSplitter", new DefaultActionGroup(action), true);

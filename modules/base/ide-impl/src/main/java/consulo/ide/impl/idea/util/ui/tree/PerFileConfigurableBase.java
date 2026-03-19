@@ -112,8 +112,7 @@ public abstract class PerFileConfigurableBase<T> implements SearchableConfigurab
             );
     }
 
-    @Nullable
-    protected abstract <S> Object getParameter(Key<S> key);
+    protected abstract @Nullable <S> Object getParameter(Key<S> key);
 
     
     protected List<Trinity<String, Supplier<T>, Consumer<T>>> getDefaultMappings() {
@@ -193,13 +192,11 @@ public abstract class PerFileConfigurableBase<T> implements SearchableConfigurab
         return myPanel;
     }
 
-    @Nullable
-    protected String getToolTipFor(@Nullable T value) {
+    protected @Nullable String getToolTipFor(@Nullable T value) {
         return null;
     }
 
-    @Nullable
-    protected JComponent createDefaultMappingComponent() {
+    protected @Nullable JComponent createDefaultMappingComponent() {
         myDefaultProps.addAll(getDefaultMappings());
         if (myMappings instanceof LanguagePerFileMappings && param(ADD_PROJECT_MAPPING)) {
             myDefaultProps.add(myProjectMapping);
@@ -316,8 +313,7 @@ public abstract class PerFileConfigurableBase<T> implements SearchableConfigurab
         }
     }
 
-    @Nullable
-    public T getNewMapping(@Nullable VirtualFile file) {
+    public @Nullable T getNewMapping(@Nullable VirtualFile file) {
         for (Pair<Object, T> p : ContainerUtil.reverse(myModel.data)) {
             if (keyMatches(p.first, file, false) && p.second != null) {
                 return p.second;
@@ -853,18 +849,15 @@ public abstract class PerFileConfigurableBase<T> implements SearchableConfigurab
         return JBPopupFactory.getInstance().createActionGroupPopup(null, group, dataContext, false, false, false, onDispose, 30, null);
     }
 
-    @Nullable
-    protected Image getActionListIcon(@Nullable Object target, T t) {
+    protected @Nullable Image getActionListIcon(@Nullable Object target, T t) {
         return null;
     }
 
-    @Nullable
-    protected String getClearValueText(@Nullable Object target) {
+    protected @Nullable String getClearValueText(@Nullable Object target) {
         return target == null ? getNullValueText(null) : null;
     }
 
-    @Nullable
-    protected String getNullValueText(@Nullable Object target) {
+    protected @Nullable String getNullValueText(@Nullable Object target) {
         return param(NULL_TEXT);
     }
 

@@ -169,16 +169,13 @@ public abstract class CommandProcessor {
 
     @Deprecated
     @DeprecationInfo("Use #getCurrentCommandNameValue()")
-    @Nullable
-    public String getCurrentCommandName() {
+    public @Nullable String getCurrentCommandName() {
         return getCurrentCommandNameValue().getNullIfEmpty();
     }
 
-    @Nullable
-    public abstract Object getCurrentCommandGroupId();
+    public abstract @Nullable Object getCurrentCommandGroupId();
 
-    @Nullable
-    public abstract Project getCurrentCommandProject();
+    public abstract @Nullable Project getCurrentCommandProject();
 
     /**
      * Defines a scope which contains undoable actions, for which there won't be a separate undo/redo step - they will be undone/redone along

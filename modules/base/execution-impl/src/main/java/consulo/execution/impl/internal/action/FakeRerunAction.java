@@ -72,13 +72,11 @@ public class FakeRerunAction extends AnAction implements DumbAware {
         }
     }
 
-    @Nullable
-    protected RunContentDescriptor getDescriptor(AnActionEvent event) {
+    protected @Nullable RunContentDescriptor getDescriptor(AnActionEvent event) {
         return event.getData(RunContentDescriptor.KEY);
     }
 
-    @Nullable
-    protected ExecutionEnvironment getEnvironment(AnActionEvent event) {
+    protected @Nullable ExecutionEnvironment getEnvironment(AnActionEvent event) {
         ExecutionEnvironment environment = event.getData(ExecutionEnvironment.KEY);
         if (environment == null) {
             Project project = event.getData(Project.KEY);

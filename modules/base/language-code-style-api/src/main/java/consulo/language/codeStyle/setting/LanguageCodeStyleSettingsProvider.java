@@ -36,8 +36,7 @@ public abstract class LanguageCodeStyleSettingsProvider implements CodeStyleSett
         LANGUAGE_SPECIFIC
     }
 
-    @Nullable
-    public abstract String getCodeSample(SettingsType settingsType);
+    public abstract @Nullable String getCodeSample(SettingsType settingsType);
 
     public int getRightMargin(SettingsType settingsType) {
         return settingsType == SettingsType.WRAPPING_AND_BRACES_SETTINGS ? 30 : -1;
@@ -51,8 +50,7 @@ public abstract class LanguageCodeStyleSettingsProvider implements CodeStyleSett
      *
      * @return The file extension for samples (null by default).
      */
-    @Nullable
-    public String getFileExt() {
+    public @Nullable String getFileExt() {
         return null;
     }
 
@@ -77,8 +75,7 @@ public abstract class LanguageCodeStyleSettingsProvider implements CodeStyleSett
      * @param text    code sample to demonstrate formatting settings (see {@link #getCodeSample(LanguageCodeStyleSettingsProvider.SettingsType)}
      * @return a PSI file instance with given text, or null for default implementation using provider's language.
      */
-    @Nullable
-    public PsiFile createFileFromText(Project project, String text) {
+    public @Nullable PsiFile createFileFromText(Project project, String text) {
         return null;
     }
 
@@ -89,8 +86,7 @@ public abstract class LanguageCodeStyleSettingsProvider implements CodeStyleSett
      * @return Created instance of {@code CommonCodeStyleSettings} or null if associated language doesn't
      * use its own language-specific common settings (the settings are shared with other languages).
      */
-    @Nullable
-    public CommonCodeStyleSettings getDefaultCommonSettings() {
+    public @Nullable CommonCodeStyleSettings getDefaultCommonSettings() {
         return new CommonCodeStyleSettings(getLanguage());
     }
 
@@ -110,8 +106,7 @@ public abstract class LanguageCodeStyleSettingsProvider implements CodeStyleSett
             .toArray(Language.EMPTY_ARRAY);
     }
 
-    @Nullable
-    public static String getCodeSample(Language lang, SettingsType settingsType) {
+    public static @Nullable String getCodeSample(Language lang, SettingsType settingsType) {
         LanguageCodeStyleSettingsProvider provider = forLanguage(lang);
         return provider != null ? provider.getCodeSample(settingsType) : null;
     }
@@ -127,8 +122,7 @@ public abstract class LanguageCodeStyleSettingsProvider implements CodeStyleSett
      * @param language The original language.
      * @return Found provider or {@code null} if it doesn't exist neither for the language itself nor for any of its base languages.
      */
-    @Nullable
-    public static LanguageCodeStyleSettingsProvider findUsingBaseLanguage(Language language) {
+    public static @Nullable LanguageCodeStyleSettingsProvider findUsingBaseLanguage(Language language) {
         for (Language currLang = language; currLang != null; currLang = currLang.getBaseLanguage()) {
             LanguageCodeStyleSettingsProvider curr = forLanguage(currLang);
             if (curr != null) {
@@ -142,14 +136,12 @@ public abstract class LanguageCodeStyleSettingsProvider implements CodeStyleSett
     @Override
     public abstract Language getLanguage();
 
-    @Nullable
-    public static CommonCodeStyleSettings getDefaultCommonSettings(Language lang) {
+    public static @Nullable CommonCodeStyleSettings getDefaultCommonSettings(Language lang) {
         LanguageCodeStyleSettingsProvider provider = forLanguage(lang);
         return provider != null ? provider.getDefaultCommonSettings() : null;
     }
 
-    @Nullable
-    public static String getFileExt(Language lang) {
+    public static @Nullable String getFileExt(Language lang) {
         LanguageCodeStyleSettingsProvider provider = forLanguage(lang);
         return provider != null ? provider.getFileExt() : null;
     }
@@ -169,20 +161,17 @@ public abstract class LanguageCodeStyleSettingsProvider implements CodeStyleSett
         return providerLangName.isNotEmpty() ? providerLangName : lang.getDisplayName();
     }
 
-    @Nullable
-    public static PsiFile createFileFromText(Language language, Project project, String text) {
+    public static @Nullable PsiFile createFileFromText(Language language, Project project, String text) {
         LanguageCodeStyleSettingsProvider provider = forLanguage(language);
         return provider != null ? provider.createFileFromText(project, text) : null;
     }
 
-    @Nullable
-    public static LanguageCodeStyleSettingsProvider forLanguage(Language language) {
+    public static @Nullable LanguageCodeStyleSettingsProvider forLanguage(Language language) {
         return Application.get().getExtensionPoint(LanguageCodeStyleSettingsProvider.class)
             .findFirstSafe(provider -> provider.getLanguage().equals(language));
     }
 
-    @Nullable
-    public IndentOptionsEditor getIndentOptionsEditor() {
+    public @Nullable IndentOptionsEditor getIndentOptionsEditor() {
         return null;
     }
 
@@ -282,8 +271,7 @@ public abstract class LanguageCodeStyleSettingsProvider implements CodeStyleSett
         return DocCommentSettings.DEFAULTS;
     }
 
-    @Nullable
-    public CodeStyleBean createBean() {
+    public @Nullable CodeStyleBean createBean() {
         return null;
     }
 

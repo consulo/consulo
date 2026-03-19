@@ -32,8 +32,7 @@ public abstract class BundleBase {
 
   public static boolean assertKeyIsFound = false;
 
-  @Nullable
-  public static String messageOrDefault(
+  public static @Nullable String messageOrDefault(
     @Nullable ResourceBundle bundle,
     String key,
     @Nullable String defaultValue,
@@ -70,14 +69,12 @@ public abstract class BundleBase {
     return value;
   }
 
-  @Nullable
-  public static String message(ResourceBundle bundle, String key, Object... params) {
+  public static @Nullable String message(ResourceBundle bundle, String key, Object... params) {
     return messageOrDefault(bundle, key, null, params);
   }
 
   @Contract("null -> null; !null -> !null")
-  @Nullable
-  public static String replaceMnemonicAmpersand(@Nullable String value) {
+  public static @Nullable String replaceMnemonicAmpersand(@Nullable String value) {
     if (value == null) {
       return null;
     }

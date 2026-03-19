@@ -359,8 +359,7 @@ public abstract class AbstractColorsScheme implements EditorColorsScheme {
         }
     }
 
-    @Nullable
-    private static ColorValue readColor(Element colorElement) {
+    private static @Nullable ColorValue readColor(Element colorElement) {
         String value = getValue(colorElement);
         ColorValue valueColor = null;
         if (value != null && value.trim().length() > 0) {

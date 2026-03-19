@@ -6,15 +6,13 @@ import org.jspecify.annotations.Nullable;
 
 public class CodeStyleSettingsChangeEvent {
   private
-  @Nullable
-  final PsiFile myPsiFile;
+  final @Nullable PsiFile myPsiFile;
 
   public CodeStyleSettingsChangeEvent(@Nullable PsiFile psiFile) {
     myPsiFile = psiFile;
   }
 
-  @Nullable
-  public PsiFile getPsiFile() {
+  public @Nullable PsiFile getPsiFile() {
     return myPsiFile;
   }
 }

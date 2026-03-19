@@ -103,8 +103,7 @@ public class AlphaNumericTypeCommand extends TypeCommand {
     return result;
   }
 
-  @Nullable
-  public static TypingTarget findTarget(PlaybackContext context) {
+  public static @Nullable TypingTarget findTarget(PlaybackContext context) {
     if (!context.isUseTypingTargets()) return null;
 
     Component each = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();

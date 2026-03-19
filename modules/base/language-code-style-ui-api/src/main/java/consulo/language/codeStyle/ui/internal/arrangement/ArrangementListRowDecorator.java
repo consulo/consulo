@@ -48,8 +48,7 @@ public class ArrangementListRowDecorator extends JPanel implements ArrangementUi
     
     private final JToggleButton myEditButton;
 
-    @Nullable
-    private Rectangle myScreenBounds;
+    private @Nullable Rectangle myScreenBounds;
 
     private boolean myBeingEdited;
     private boolean myUnderMouse;
@@ -228,8 +227,7 @@ public class ArrangementListRowDecorator extends JPanel implements ArrangementUi
         return myDelegate.onMouseExited();
     }
 
-    @Nullable
-    private Rectangle getButtonScreenBounds() {
+    private @Nullable Rectangle getButtonScreenBounds() {
         if (myScreenBounds == null) {
             return null;
         }

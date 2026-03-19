@@ -29,8 +29,7 @@ public interface DocumentationProvider {
    * @return the documentation to show, or {@code null} if the provider can't provide any documentation for this element. Documentation can contain
    * HTML markup. If HTML special characters need to be shown in popup, they should be properly escaped.
    */
-  @Nullable
-  default String getQuickNavigateInfo(PsiElement element, PsiElement originalElement) {
+  default @Nullable String getQuickNavigateInfo(PsiElement element, PsiElement originalElement) {
     return null;
   }
 
@@ -46,8 +45,7 @@ public interface DocumentationProvider {
    * For {@link ExternalDocumentationProvider}, first URL, yielding non-empty result in
    * {@link ExternalDocumentationProvider#fetchExternalDocumentation(Project, PsiElement, List)} will be used.
    */
-  @Nullable
-  default List<String> getUrlFor(PsiElement element, PsiElement originalElement) {
+  default @Nullable List<String> getUrlFor(PsiElement element, PsiElement originalElement) {
     return null;
   }
 
@@ -74,8 +72,7 @@ public interface DocumentationProvider {
    * @return target element's documentation, or {@code null} if provider is unable to generate documentation
    * for the given element
    */
-  @Nullable
-  default String generateDoc(PsiElement element, @Nullable PsiElement originalElement) {
+  default @Nullable String generateDoc(PsiElement element, @Nullable PsiElement originalElement) {
     return null;
   }
 
@@ -85,13 +82,11 @@ public interface DocumentationProvider {
    * At the moment it's only invoked to get initial on-hover documentation. If user navigates any link in that documentation,
    * {@link #generateDoc(PsiElement, PsiElement)} will be used to fetch corresponding content.
    */
-  @Nullable
-  default String generateHoverDoc(PsiElement element, @Nullable PsiElement originalElement) {
+  default @Nullable String generateHoverDoc(PsiElement element, @Nullable PsiElement originalElement) {
     return generateDoc(element, originalElement);
   }
 
-  @Nullable
-  default PsiElement getDocumentationElementForLookupItem(PsiManager psiManager, Object object, PsiElement element) {
+  default @Nullable PsiElement getDocumentationElementForLookupItem(PsiManager psiManager, Object object, PsiElement element) {
     return null;
   }
 
@@ -105,8 +100,7 @@ public interface DocumentationProvider {
    * @return the navigation target, or {@code null} if the link couldn't be resolved.
    * @see DocumentationManagerUtil#createHyperlink(StringBuilder, String, String, boolean)
    */
-  @Nullable
-  default PsiElement getDocumentationElementForLink(PsiManager psiManager, String link, PsiElement context) {
+  default @Nullable PsiElement getDocumentationElementForLink(PsiManager psiManager, String link, PsiElement context) {
     return null;
   }
 }

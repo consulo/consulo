@@ -219,8 +219,7 @@ public class DesktopSwtToolWindowPanelImpl implements ToolWindowPanel {
         (myWidescreen ? myVerticalSplitter : myHorizontalSplitter).setCenterComponent(component);
     }
 
-    @Nullable
-    private DesktopSwtToolWindowStripeButtonImpl getButtonById(String id) {
+    private @Nullable DesktopSwtToolWindowStripeButtonImpl getButtonById(String id) {
         return myId2Button.get(id);
     }
 

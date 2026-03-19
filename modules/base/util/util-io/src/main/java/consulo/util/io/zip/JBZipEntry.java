@@ -46,8 +46,7 @@ public class JBZipEntry implements Cloneable {
   private long csize = -1;    // compressed size of entry data
   private int method = -1;    // compression method
   private byte[] extra = ArrayUtil.EMPTY_BYTE_ARRAY;   // optional extra field data for entry
-  @Nullable
-  private String comment = null; // optional comment string for entry
+  private @Nullable String comment = null; // optional comment string for entry
 
   private int internalAttributes = 0;
   private int platform = PLATFORM_FAT;
@@ -435,8 +434,7 @@ public class JBZipEntry implements Cloneable {
    * @return the comment string for the entry, or null if none
    * @see #setComment(String)
    */
-  @Nullable
-  public String getComment() {
+  public @Nullable String getComment() {
     return comment;
   }
 

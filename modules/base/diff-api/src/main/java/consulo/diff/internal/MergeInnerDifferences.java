@@ -22,11 +22,9 @@ import org.jspecify.annotations.Nullable;
 import java.util.List;
 
 public class MergeInnerDifferences {
-  @Nullable private final List<TextRange> myLeft;
-  @Nullable
-  private final List<TextRange> myBase;
-  @Nullable
-  private final List<TextRange> myRight;
+  private final @Nullable List<TextRange> myLeft;
+  private final @Nullable List<TextRange> myBase;
+  private final @Nullable List<TextRange> myRight;
 
   public MergeInnerDifferences(@Nullable List<TextRange> left, @Nullable List<TextRange> base, @Nullable List<TextRange> right) {
     myLeft = left;
@@ -34,23 +32,19 @@ public class MergeInnerDifferences {
     myRight = right;
   }
 
-  @Nullable
-  public List<TextRange> getLeft() {
+  public @Nullable List<TextRange> getLeft() {
     return myLeft;
   }
 
-  @Nullable
-  public List<TextRange> getBase() {
+  public @Nullable List<TextRange> getBase() {
     return myBase;
   }
 
-  @Nullable
-  public List<TextRange> getRight() {
+  public @Nullable List<TextRange> getRight() {
     return myRight;
   }
 
-  @Nullable
-  public List<TextRange> get(ThreeSide side) {
+  public @Nullable List<TextRange> get(ThreeSide side) {
     return side.select(myLeft, myBase, myRight);
   }
 }

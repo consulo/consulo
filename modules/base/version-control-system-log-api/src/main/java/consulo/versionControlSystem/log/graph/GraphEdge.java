@@ -37,12 +37,9 @@ public final class GraphEdge implements GraphElement {
     }
   }
 
-  @Nullable
-  private final Integer myUpNodeIndex;
-  @Nullable
-  private final Integer myDownNodeIndex;
-  @Nullable
-  private final Integer myTargetId;
+  private final @Nullable Integer myUpNodeIndex;
+  private final @Nullable Integer myDownNodeIndex;
+  private final @Nullable Integer myTargetId;
   
   private final GraphEdgeType myType;
 
@@ -56,18 +53,15 @@ public final class GraphEdge implements GraphElement {
     myType = type;
   }
 
-  @Nullable
-  public Integer getUpNodeIndex() {
+  public @Nullable Integer getUpNodeIndex() {
     return myUpNodeIndex;
   }
 
-  @Nullable
-  public Integer getDownNodeIndex() {
+  public @Nullable Integer getDownNodeIndex() {
     return myDownNodeIndex;
   }
 
-  @Nullable
-  public Integer getTargetId() {
+  public @Nullable Integer getTargetId() {
     return myTargetId;
   }
 

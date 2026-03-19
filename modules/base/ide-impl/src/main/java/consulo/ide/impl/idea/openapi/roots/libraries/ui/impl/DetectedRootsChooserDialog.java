@@ -259,8 +259,7 @@ public class DetectedRootsChooserDialog extends DialogWrapper {
       return myFile;
     }
 
-    @Nullable
-    private SuggestedChildRootInfo getRootInfo() {
+    private @Nullable SuggestedChildRootInfo getRootInfo() {
       return userObject instanceof SuggestedChildRootInfo rootInfo ? rootInfo : null;
     }
   }

@@ -136,8 +136,7 @@ public class SimpleEditorPreview implements PreviewPanel {
         }
     }
 
-    @Nullable
-    private HighlightData getDataFromOffset(int offset) {
+    private @Nullable HighlightData getDataFromOffset(int offset) {
         for (HighlightData highlightData : myHighlightData) {
             if (offset >= highlightData.getStartOffset() && offset <= highlightData.getEndOffset()) {
                 return highlightData;
@@ -146,8 +145,7 @@ public class SimpleEditorPreview implements PreviewPanel {
         return null;
     }
 
-    @Nullable
-    private static String selectItem(HighlighterIterator itr, SyntaxHighlighter highlighter) {
+    private static @Nullable String selectItem(HighlighterIterator itr, SyntaxHighlighter highlighter) {
         IElementType tokenType = (IElementType) itr.getTokenType();
         if (tokenType == null) {
             return null;

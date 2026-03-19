@@ -38,8 +38,7 @@ public interface DnDSource extends DnDDropActionHandler {
    * @param bean       a bean to create an image for
    * @return Pair of image and cursor offset at the image
    */
-  @Nullable
-  default Pair<Image, Point> createDraggedImage(DnDAction action, Point dragOrigin, DnDDragStartBean bean) {
+  default @Nullable Pair<Image, Point> createDraggedImage(DnDAction action, Point dragOrigin, DnDDragStartBean bean) {
     return createDraggedImage(action, dragOrigin);
   }
 
@@ -47,8 +46,7 @@ public interface DnDSource extends DnDDropActionHandler {
    * @deprecated override {@link DnDSource#createDraggedImage(DnDAction, Point, DnDDragStartBean)} instead
    */
   @Deprecated
-  @Nullable
-  default Pair<Image, Point> createDraggedImage(DnDAction action, Point dragOrigin) {
+  default @Nullable Pair<Image, Point> createDraggedImage(DnDAction action, Point dragOrigin) {
     return null;
   }
 

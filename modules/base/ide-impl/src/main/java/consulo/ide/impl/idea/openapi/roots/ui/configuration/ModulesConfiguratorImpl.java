@@ -113,8 +113,7 @@ public class ModulesConfiguratorImpl implements ModulesConfigurator, ModuleEdito
     }
 
     @Override
-    @Nullable
-    public Module getModule(String name) {
+    public @Nullable Module getModule(String name) {
         Module moduleByName = myModuleModel.findModuleByName(name);
         if (moduleByName != null) {
             return moduleByName;
@@ -122,8 +121,7 @@ public class ModulesConfiguratorImpl implements ModulesConfigurator, ModuleEdito
         return myModuleModel.getModuleToBeRenamed(name); //if module was renamed
     }
 
-    @Nullable
-    public ModuleEditor getModuleEditor(Module module) {
+    public @Nullable ModuleEditor getModuleEditor(Module module) {
         for (ModuleEditor moduleEditor : myModuleEditors) {
             if (module.equals(moduleEditor.getModule())) {
                 return moduleEditor;

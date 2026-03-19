@@ -35,7 +35,7 @@ abstract class FilterModel<Filter extends VcsLogFilter> {
   
   private final Collection<Runnable> mySetFilterListeners = new ArrayList<>();
 
-  @Nullable private Filter myFilter;
+  private @Nullable Filter myFilter;
 
   FilterModel(String name, Supplier<VcsLogDataPack> provider, MainVcsLogUiProperties uiProperties) {
     myName = name;
@@ -63,14 +63,12 @@ abstract class FilterModel<Filter extends VcsLogFilter> {
     return myFilter;
   }
 
-  @Nullable
-  protected abstract Filter createFilter(List<String> values);
+  protected abstract @Nullable Filter createFilter(List<String> values);
 
   
   protected abstract List<String> getFilterValues(Filter filter);
 
-  @Nullable
-  protected Filter getLastFilter() {
+  protected @Nullable Filter getLastFilter() {
     List<String> values = myUiProperties.getFilterValues(myName);
     if (values != null) {
       return createFilter(values);

@@ -39,8 +39,7 @@ public class UsageInfo2ListRule implements GetDataRule<List<UsageInfo>> {
   }
 
   @Override
-  @Nullable
-  public List<UsageInfo> getData(DataProvider dataProvider) {
+  public @Nullable List<UsageInfo> getData(DataProvider dataProvider) {
     UsageInfo usageInfo = dataProvider.getDataUnchecked(UsageView.USAGE_INFO_KEY);
     if (usageInfo != null) return Collections.singletonList(usageInfo);
     return null;

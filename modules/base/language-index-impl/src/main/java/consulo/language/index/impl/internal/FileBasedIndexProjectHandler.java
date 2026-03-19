@@ -39,8 +39,7 @@ public class FileBasedIndexProjectHandler {
     public static final int ourMinFilesToStartDumMode = Registry.intValue("ide.dumb.mode.minFilesToStart", 20);
     private static final int ourMinFilesSizeToStartDumMode = Registry.intValue("ide.dumb.mode.minFilesSizeToStart", 1048576);
 
-    @Nullable
-    public static DumbModeTask createChangedFilesIndexingTask(final Project project) {
+    public static @Nullable DumbModeTask createChangedFilesIndexingTask(final Project project) {
         FileBasedIndex i = FileBasedIndex.getInstance();
         if (!(i instanceof FileBasedIndexImpl) || !IndexInfrastructure.hasIndices()) {
             return null;

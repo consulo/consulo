@@ -136,8 +136,7 @@ public class XDebuggerFramesList extends DebuggerFramesList {
         myFileColors.clear();
     }
 
-    @Nullable
-    private static VirtualFile getFile(XStackFrame frame) {
+    private static @Nullable VirtualFile getFile(XStackFrame frame) {
         XSourcePosition position = frame.getSourcePosition();
         return position != null ? position.getFile() : null;
     }

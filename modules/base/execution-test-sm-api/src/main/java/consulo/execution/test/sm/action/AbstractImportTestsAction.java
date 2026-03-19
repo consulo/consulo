@@ -113,8 +113,7 @@ public abstract class AbstractImportTestsAction extends AnAction {
         e.getPresentation().setEnabledAndVisible(e.hasData(Project.KEY));
     }
 
-    @Nullable
-    public abstract VirtualFile getFile(Project project);
+    public abstract @Nullable VirtualFile getFile(Project project);
 
     @Override
     @RequiredUIAccess

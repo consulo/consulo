@@ -33,19 +33,16 @@ public class ShelvedBinaryFilePatch extends FilePatch {
   }
 
   @Override
-  @Nullable
-  public String getBeforeFileName() {
+  public @Nullable String getBeforeFileName() {
     return getFileName(myShelvedBinaryFile.BEFORE_PATH);
   }
 
   @Override
-  @Nullable
-  public String getAfterFileName() {
+  public @Nullable String getAfterFileName() {
     return getFileName(myShelvedBinaryFile.AFTER_PATH);
   }
 
-  @Nullable
-  private static String getFileName(String filePath) {
+  private static @Nullable String getFileName(String filePath) {
     return filePath != null ? PathUtil.getFileName(filePath) : null;
   }
 

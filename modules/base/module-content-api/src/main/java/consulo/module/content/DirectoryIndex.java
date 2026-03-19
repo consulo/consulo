@@ -47,14 +47,12 @@ public abstract class DirectoryIndex {
   
   public abstract DirectoryInfo getInfoForFile(VirtualFile file);
 
-  @Nullable
-  public abstract ContentFolderTypeProvider getContentFolderType(VirtualFile file, DirectoryInfo info);
+  public abstract @Nullable ContentFolderTypeProvider getContentFolderType(VirtualFile file, DirectoryInfo info);
 
   
   public abstract Query<VirtualFile> getDirectoriesByPackageName(String packageName, boolean includeLibrarySources);
 
-  @Nullable
-  public abstract String getPackageName(VirtualFile dir);
+  public abstract @Nullable String getPackageName(VirtualFile dir);
 
   
   @RequiredReadAction

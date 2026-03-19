@@ -42,8 +42,7 @@ public class ManipulatableTarget extends DelegatePsiTarget implements PsiDeclare
   }
 
   @Override
-  @Nullable
-  public Object setName(String newName) {
+  public @Nullable Object setName(String newName) {
     ElementManipulators.getManipulator(getNavigationElement()).handleContentChange(getNavigationElement(), newName);
     return null;
   }

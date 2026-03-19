@@ -377,8 +377,7 @@ public class StructureViewWrapperImpl implements StructureViewWrapper, Disposabl
     return panel;
   }
 
-  @Nullable
-  private FileEditor createTempFileEditor(VirtualFile file) {
+  private @Nullable FileEditor createTempFileEditor(VirtualFile file) {
     if (file.getLength() > RawFileLoader.getInstance().getMaxIntellisenseFileSize()) return null;
 
     FileEditorProviderManager editorProviderManager = FileEditorProviderManager.getInstance();

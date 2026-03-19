@@ -40,8 +40,7 @@ public final class KeyboardShortcut extends Shortcut {
     return myFirstKeyStroke;
   }
 
-  @Nullable
-  public KeyStroke getSecondKeyStroke() {
+  public @Nullable KeyStroke getSecondKeyStroke() {
     return mySecondKeyStroke;
   }
 

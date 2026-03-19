@@ -50,8 +50,7 @@ public abstract class Classifier<T> {
   
   public abstract List<Pair<T, Object>> getSortingWeights(Iterable<T> items, ProcessingContext context);
 
-  @Nullable
-  public final Classifier<T> getNext() {
+  public final @Nullable Classifier<T> getNext() {
     return myNext;
   }
 

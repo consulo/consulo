@@ -113,8 +113,7 @@ public abstract class LightVirtualFileBase extends VirtualFile {
         }
 
         @Override
-        @Nullable
-        public VirtualFile findFileByPath(String path) {
+        public @Nullable VirtualFile findFileByPath(String path) {
             return null;
         }
 
@@ -123,8 +122,7 @@ public abstract class LightVirtualFileBase extends VirtualFile {
         }
 
         @Override
-        @Nullable
-        public VirtualFile refreshAndFindFileByPath(String path) {
+        public @Nullable VirtualFile refreshAndFindFileByPath(String path) {
             return null;
         }
     }
@@ -137,8 +135,7 @@ public abstract class LightVirtualFileBase extends VirtualFile {
         return ourFileSystem;
     }
 
-    @Nullable
-    public FileType getAssignedFileType() {
+    public @Nullable FileType getAssignedFileType() {
         return myFileType;
     }
 

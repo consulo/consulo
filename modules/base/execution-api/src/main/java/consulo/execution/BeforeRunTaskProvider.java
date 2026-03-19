@@ -42,16 +42,14 @@ public abstract class BeforeRunTaskProvider<T extends BeforeRunTask> {
     
     public abstract LocalizeValue getName();
 
-    @Nullable
-    public abstract Image getIcon(RunConfiguration runConfiguration);
+    public abstract @Nullable Image getIcon(RunConfiguration runConfiguration);
 
     
     public LocalizeValue getDescription(T task) {
         return getName();
     }
 
-    @Nullable
-    public Image getTaskIcon(RunConfiguration runConfiguration, T task) {
+    public @Nullable Image getTaskIcon(RunConfiguration runConfiguration, T task) {
         return getIcon(runConfiguration);
     }
 
@@ -69,8 +67,7 @@ public abstract class BeforeRunTaskProvider<T extends BeforeRunTask> {
     /**
      * @return 'before run' task for the configuration or null, if the task from this provider is not applicable to the specified configuration
      */
-    @Nullable
-    public abstract T createTask(RunConfiguration runConfiguration);
+    public abstract @Nullable T createTask(RunConfiguration runConfiguration);
 
     /**
      * @return <code>true</code> if task configuration is changed

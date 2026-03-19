@@ -19,13 +19,11 @@ public abstract class StatusBarEditorBasedWidgetFactory implements StatusBarWidg
     return getTextEditor(statusBar) != null;
   }
 
-  @Nullable
-  protected FileEditor getFileEditor(StatusBar statusBar) {
+  protected @Nullable FileEditor getFileEditor(StatusBar statusBar) {
     return StatusBarUtil.getCurrentFileEditor(statusBar);
   }
 
-  @Nullable
-  protected Editor getTextEditor(StatusBar statusBar) {
+  protected @Nullable Editor getTextEditor(StatusBar statusBar) {
     return StatusBarUtil.getCurrentTextEditor(statusBar);
   }
 }

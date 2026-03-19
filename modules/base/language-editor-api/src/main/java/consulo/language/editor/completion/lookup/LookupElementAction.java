@@ -32,8 +32,7 @@ public abstract class LookupElementAction {
     myText = text;
   }
 
-  @Nullable
-  public Image getIcon() {
+  public @Nullable Image getIcon() {
     return myIcon;
   }
 

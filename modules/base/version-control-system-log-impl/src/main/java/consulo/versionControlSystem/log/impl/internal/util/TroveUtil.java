@@ -76,8 +76,7 @@ public class TroveUtil {
     return createJavaSet(result);
   }
 
-  @Nullable
-  private static IntSet intersect(@Nullable IntSet set1, @Nullable IntSet set2) {
+  private static @Nullable IntSet intersect(@Nullable IntSet set1, @Nullable IntSet set2) {
     if (set1 == null) return set2;
     if (set2 == null) return set1;
 

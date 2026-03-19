@@ -74,8 +74,7 @@ public final class CompletionParameters {
     return myPosition;
   }
 
-  @Nullable
-  public PsiElement getOriginalPosition() {
+  public @Nullable PsiElement getOriginalPosition() {
     return myOriginalFile.findElementAt(myPosition.getTextRange().getStartOffset());
   }
 

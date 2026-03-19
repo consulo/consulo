@@ -45,8 +45,7 @@ public class AppIconUtil {
     return new DesktopAWTScalableImage(IconLibraryManager.LIGHT_LIBRARY_ID, x16Key, x32Key);
   }
 
-  @Nullable
-  public static String findIcon(String iconsPath) {
+  public static @Nullable String findIcon(String iconsPath) {
     File iconsDir = new File(iconsPath);
 
     // 1. look for .svg icon

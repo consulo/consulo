@@ -155,8 +155,7 @@ public final class FileBasedIndexImpl extends FileBasedIndex {
     private volatile SmartFMap<Document, PsiFile> myTransactionMap = SmartFMap.emptyMap();
 
     private final boolean myIsUnitTestMode;
-    @Nullable
-    private ScheduledFuture<?> myFlushingFuture;
+    private @Nullable ScheduledFuture<?> myFlushingFuture;
     private final AtomicInteger myLocalModCount = new AtomicInteger();
     AtomicInteger myFilesModCount = new AtomicInteger();
     AtomicInteger myUpdatingFiles = new AtomicInteger();
@@ -209,8 +208,7 @@ public final class FileBasedIndexImpl extends FileBasedIndex {
         });
 
         connection.subscribe(FileTypeListener.class, new FileTypeListener() {
-            @Nullable
-            private Map<FileType, Set<String>> myTypeToExtensionMap;
+            private @Nullable Map<FileType, Set<String>> myTypeToExtensionMap;
 
             @Override
             public void beforeFileTypesChanged(FileTypeEvent event) {
@@ -1214,8 +1212,7 @@ public final class FileBasedIndexImpl extends FileBasedIndex {
     private final Lock myCalcIndexableFilesLock = new ReentrantLock();
 
     @Override
-    @Nullable
-    public ProjectIndexableFilesFilter createProjectIndexableFiles(@Nullable Project project) {
+    public @Nullable ProjectIndexableFilesFilter createProjectIndexableFiles(@Nullable Project project) {
         if (project == null || project.isDefault() || myUpdatingFiles.get() > 0) {
             return null;
         }
@@ -1309,8 +1306,7 @@ public final class FileBasedIndexImpl extends FileBasedIndex {
         return true;
     }
 
-    @Nullable
-    public static Throwable getCauseToRebuildIndex(RuntimeException e) {
+    public static @Nullable Throwable getCauseToRebuildIndex(RuntimeException e) {
         if (Application.get().isUnitTestMode()) {
             // avoid rebuilding index in tests since we do it synchronously in requestRebuild and we can have readAction at hand
             return null;
@@ -1946,8 +1942,7 @@ public final class FileBasedIndexImpl extends FileBasedIndex {
     }
 
     @Override
-    @Nullable
-    public DumbModeAccessType getCurrentDumbModeAccessType() {
+    public @Nullable DumbModeAccessType getCurrentDumbModeAccessType() {
         Stack<DumbModeAccessType> dumbModeAccessTypeStack = ourDumbModeAccessTypeStack.get();
         return dumbModeAccessTypeStack.isEmpty() ? null : dumbModeAccessTypeStack.peek();
     }
@@ -2366,8 +2361,7 @@ public final class FileBasedIndexImpl extends FileBasedIndex {
         return IndexInfrastructure.findFileById((PersistentFS) ManagingFS.getInstance(), id);
     }
 
-    @Nullable
-    private static PsiFile findLatestKnownPsiForUncomittedDocument(Document doc, Project project) {
+    private static @Nullable PsiFile findLatestKnownPsiForUncomittedDocument(Document doc, Project project) {
         return PsiDocumentManager.getInstance(project).getCachedPsiFile(doc);
     }
 

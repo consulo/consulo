@@ -196,8 +196,7 @@ public final class IntentionActionMetaData {
     return urls.toArray(new TextDescriptor[urls.size()]);
   }
 
-  @Nullable
-  private static URL getIntentionDescriptionDirURL(ClassLoader aClassLoader, String intentionFolderName) {
+  private static @Nullable URL getIntentionDescriptionDirURL(ClassLoader aClassLoader, String intentionFolderName) {
     URL pageURL = aClassLoader.getResource(INTENTION_DESCRIPTION_FOLDER + "/" + intentionFolderName + "/" + DESCRIPTION_FILE_NAME);
     if (LOG.isDebugEnabled()) {
       LOG.debug("Path:" + "intentionDescriptions/" + intentionFolderName);
@@ -215,8 +214,7 @@ public final class IntentionActionMetaData {
     return null;
   }
 
-  @Nullable
-  private URL getDirURL() {
+  private @Nullable URL getDirURL() {
     if (myDirURL == null) {
       myDirURL = getIntentionDescriptionDirURL(myAction.getClass().getClassLoader(), myDescriptionDirectoryName);
     }

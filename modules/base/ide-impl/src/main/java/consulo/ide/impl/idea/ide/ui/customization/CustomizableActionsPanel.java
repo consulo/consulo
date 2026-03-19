@@ -538,8 +538,7 @@ public class CustomizableActionsPanel implements Disposable {
             && keymapGroup.getName().equals(KeyMapLocalize.mainToolbarTitle().get());
     }
 
-    @Nullable
-    private static String getActionId(DefaultMutableTreeNode node) {
+    private static @Nullable String getActionId(DefaultMutableTreeNode node) {
         Object userObject = node.getUserObject();
         return userObject instanceof String actionId ? actionId : userObject instanceof Pair pair ? (String)pair.first : null;
     }
@@ -677,8 +676,7 @@ public class CustomizableActionsPanel implements Disposable {
         }
     }
 
-    @Nullable
-    private DefaultMutableTreeNode findNodeOnToolbar(String actionId) {
+    private @Nullable DefaultMutableTreeNode findNodeOnToolbar(String actionId) {
         TreeNode toolbar = ((DefaultMutableTreeNode)myModel.getRoot()).getChildAt(1);
         for (int i = 0; i < toolbar.getChildCount(); i++) {
             DefaultMutableTreeNode child = (DefaultMutableTreeNode)toolbar.getChildAt(i);
@@ -799,8 +797,7 @@ public class CustomizableActionsPanel implements Disposable {
             );
         }
 
-        @Nullable
-        public Set<Object> getTreeSelectedActionIds() {
+        public @Nullable Set<Object> getTreeSelectedActionIds() {
             TreePath[] paths = myTree.getSelectionPaths();
             if (paths == null) {
                 return null;

@@ -60,7 +60,7 @@ public class JBTerminalWidget extends JediTermWidget implements Disposable, Jedi
     public static void convertActions(
         JComponent component,
         List<TerminalAction> actions,
-        @Nullable final Predicate<java.awt.event.KeyEvent> elseAction
+        final @Nullable Predicate<java.awt.event.KeyEvent> elseAction
     ) {
         for (final TerminalAction action : actions) {
             AnAction a = new DumbAwareAction() {

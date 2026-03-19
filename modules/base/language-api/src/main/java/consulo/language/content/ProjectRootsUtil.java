@@ -73,8 +73,7 @@ public class ProjectRootsUtil {
     return projectFileIndex.isInSource(virtualFile);
   }
 
-  @Nullable
-  public static ContentFolder getModuleSourceRoot(VirtualFile root, Project project) {
+  public static @Nullable ContentFolder getModuleSourceRoot(VirtualFile root, Project project) {
     return findContentFolderForDirectory(root, project);
   }
 
@@ -82,13 +81,11 @@ public class ProjectRootsUtil {
     return getModuleSourceRoot(virtualFile, project) != null;
   }
 
-  @Nullable
-  public static ContentFolder findContentFolderForDirectory(VirtualFile virtualFile, Project project) {
+  public static @Nullable ContentFolder findContentFolderForDirectory(VirtualFile virtualFile, Project project) {
     return findContentFolderForDirectory(ProjectRootManager.getInstance(project).getFileIndex(), virtualFile);
   }
 
-  @Nullable
-  public static ContentFolder findContentFolderForDirectory(ProjectFileIndex projectFileIndex, VirtualFile virtualFile) {
+  public static @Nullable ContentFolder findContentFolderForDirectory(ProjectFileIndex projectFileIndex, VirtualFile virtualFile) {
     Module module = projectFileIndex.getModuleForFile(virtualFile);
     if (module == null) {
       return null;

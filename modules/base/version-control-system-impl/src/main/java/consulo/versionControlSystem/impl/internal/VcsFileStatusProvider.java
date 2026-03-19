@@ -234,8 +234,7 @@ public class VcsFileStatusProvider implements FileStatusFacade, Disposable {
         return new BaseContentImpl(beforeRevision);
     }
 
-    @Nullable
-    private VcsBaseContentProvider findProviderFor(VirtualFile file) {
+    private @Nullable VcsBaseContentProvider findProviderFor(VirtualFile file) {
         return myProject.getExtensionPoint(VcsBaseContentProvider.class).findFirstSafe(p -> p.isSupported(file));
     }
 

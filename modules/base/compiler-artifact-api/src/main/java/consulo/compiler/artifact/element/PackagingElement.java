@@ -52,6 +52,5 @@ public abstract class PackagingElement<S> {
 
   public abstract void loadState(ArtifactManager artifactManager, S state);
 
-  @Nullable
-  public abstract S getState();
+  public abstract @Nullable S getState();
 }

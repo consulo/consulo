@@ -133,8 +133,7 @@ public abstract class AlignmentStrategy {
      * @param childType target child type
      * @return alignment to use
      */
-    @Nullable
-    public Alignment getAlignment(@Nullable IElementType childType) {
+    public @Nullable Alignment getAlignment(@Nullable IElementType childType) {
         return getAlignment(null, childType);
     }
 
@@ -145,8 +144,7 @@ public abstract class AlignmentStrategy {
      * @param childType  child type to use for filtering (if not <code>null</code>)
      * @return alignment to use for the given arguments
      */
-    @Nullable
-    public abstract Alignment getAlignment(@Nullable IElementType parentType, @Nullable IElementType childType);
+    public abstract @Nullable Alignment getAlignment(@Nullable IElementType parentType, @Nullable IElementType childType);
 
     /**
      * Stands for {@link AlignmentStrategy} implementation that is configured to return single pre-configured {@link Alignment} object
@@ -165,8 +163,7 @@ public abstract class AlignmentStrategy {
         }
 
         @Override
-        @Nullable
-        public Alignment getAlignment(@Nullable IElementType parentType, @Nullable IElementType childType) {
+        public @Nullable Alignment getAlignment(@Nullable IElementType parentType, @Nullable IElementType childType) {
             return (myFilterElementTypes.contains(childType) ^ myIgnoreFilterTypes) ? myAlignment : null;
         }
     }

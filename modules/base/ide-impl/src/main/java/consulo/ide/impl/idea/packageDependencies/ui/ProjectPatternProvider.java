@@ -80,8 +80,7 @@ public class ProjectPatternProvider extends PatternDialectProvider {
     }
 
     @Override
-    @Nullable
-    public PackageSet createPackageSet(PackageDependenciesNode node, boolean recursively) {
+    public @Nullable PackageSet createPackageSet(PackageDependenciesNode node, boolean recursively) {
         if (node instanceof ModuleGroupNode moduleGroupNode) {
             if (!recursively) {
                 return null;

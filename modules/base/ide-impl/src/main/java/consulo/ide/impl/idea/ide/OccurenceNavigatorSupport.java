@@ -33,8 +33,7 @@ public abstract class OccurenceNavigatorSupport implements OccurenceNavigator {
     myTree = tree;
   }
 
-  @Nullable
-  protected abstract Navigatable createDescriptorForNode(DefaultMutableTreeNode node);
+  protected abstract @Nullable Navigatable createDescriptorForNode(DefaultMutableTreeNode node);
 
   /**
    * @return true if this node is an actual occurrence, i.e. the "next/prev occurrence" actions should show this node (as opposed to groups or other nodes which should be skipped)

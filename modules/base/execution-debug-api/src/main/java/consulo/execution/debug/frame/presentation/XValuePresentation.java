@@ -49,8 +49,7 @@ public abstract class XValuePresentation {
     /**
      * @return optional type of the value, it is shown in gray color and surrounded by braces
      */
-    @Nullable
-    public String getType() {
+    public @Nullable String getType() {
         return null;
     }
 

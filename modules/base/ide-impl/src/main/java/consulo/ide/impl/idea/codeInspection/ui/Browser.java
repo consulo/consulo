@@ -462,8 +462,7 @@ class Browser extends JPanel {
         }
     }
 
-    @Nullable
-    private InspectionToolWrapper getToolWrapper() {
+    private @Nullable InspectionToolWrapper getToolWrapper() {
         return myView.getTree().getSelectedToolWrapper();
     }
 

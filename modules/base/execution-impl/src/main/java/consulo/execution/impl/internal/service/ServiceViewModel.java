@@ -89,8 +89,7 @@ public abstract class ServiceViewModel implements Disposable, InvokerSupplier, S
     return processGroups(myModelFilter.filter(parent.getChildren(), myFilter), visible);
   }
 
-  @Nullable
-  protected ServiceViewItem findItemSafe(ServiceViewItem item) {
+  protected @Nullable ServiceViewItem findItemSafe(ServiceViewItem item) {
     ServiceViewItem updatedItem = findItem(item, myModel.getRoots());
     if (updatedItem != null) {
       return updatedItem;
@@ -214,8 +213,7 @@ public abstract class ServiceViewModel implements Disposable, InvokerSupplier, S
     return item.getChildren().isEmpty();
   }
 
-  @Nullable
-  static ServiceViewModel loadModel(ServiceViewState viewState,
+  static @Nullable ServiceViewModel loadModel(ServiceViewState viewState,
                                     ServiceModel model,
                                     ServiceModelFilter modelFilter,
                                     ServiceModelFilter.@Nullable ServiceViewFilter parentFilter,
@@ -266,13 +264,11 @@ public abstract class ServiceViewModel implements Disposable, InvokerSupplier, S
     }
   }
 
-  @Nullable
-  protected static ServiceViewItem findItem(ServiceViewItem viewItem, List<? extends ServiceViewItem> modelItems) {
+  protected static @Nullable ServiceViewItem findItem(ServiceViewItem viewItem, List<? extends ServiceViewItem> modelItems) {
     return findItem(getPath(viewItem), modelItems);
   }
 
-  @Nullable
-  private static ServiceViewItem findItem(Deque<ServiceViewItem> path, List<? extends ServiceViewItem> modelItems) {
+  private static @Nullable ServiceViewItem findItem(Deque<ServiceViewItem> path, List<? extends ServiceViewItem> modelItems) {
     ServiceViewItem node = path.removeFirst();
     for (ServiceViewItem root : modelItems) {
       if (root.equals(node)) {
@@ -297,8 +293,7 @@ public abstract class ServiceViewModel implements Disposable, InvokerSupplier, S
     return path;
   }
 
-  @Nullable
-  private static List<String> getIdPath(@Nullable ServiceViewItem item) {
+  private static @Nullable List<String> getIdPath(@Nullable ServiceViewItem item) {
     List<String> path = new ArrayList<>();
     while (item != null) {
       String id = item.getViewDescriptor().getId();

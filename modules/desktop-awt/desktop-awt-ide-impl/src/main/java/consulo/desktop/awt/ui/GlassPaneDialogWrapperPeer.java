@@ -621,8 +621,7 @@ public class GlassPaneDialogWrapperPeer extends DialogWrapperPeer {
             super.setSize(rect.width, rect.height);
         }
 
-        @Nullable
-        private Point getLocationInCenter(Dimension size, @Nullable Point _default) {
+        private @Nullable Point getLocationInCenter(Dimension size, @Nullable Point _default) {
             if (myTransparentPane != null) {
                 Dimension d = myTransparentPane.getSize();
                 return new Point((d.width - size.width) / 2, (d.height - size.height) / 2);

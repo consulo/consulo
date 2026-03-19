@@ -218,8 +218,7 @@ public class PaintUtil {
    * @param alignY should the y-translate be aligned
    * @return the original graphics transform when aligned, otherwise null
    */
-  @Nullable
-  public static AffineTransform alignTxToInt(Graphics2D g, @Nullable Point2D offset, boolean alignX, boolean alignY, RoundingMode rm) {
+  public static @Nullable AffineTransform alignTxToInt(Graphics2D g, @Nullable Point2D offset, boolean alignX, boolean alignY, RoundingMode rm) {
     try {
       AffineTransform tx = g.getTransform();
       if (isFractionalScale(tx)) {
@@ -259,8 +258,7 @@ public class PaintUtil {
    * @param whRM   the rounding mode to apply to the clip's width/height
    * @return the original graphics clip when aligned, otherwise null
    */
-  @Nullable
-  public static Shape alignClipToInt(Graphics2D g, boolean alignH, boolean alignV, RoundingMode xyRM, RoundingMode whRM) {
+  public static @Nullable Shape alignClipToInt(Graphics2D g, boolean alignH, boolean alignV, RoundingMode xyRM, RoundingMode whRM) {
     Shape clip = g.getClip();
     if (clip instanceof Rectangle2D && isFractionalScale(g.getTransform())) {
       Rectangle2D rect = (Rectangle2D)clip;

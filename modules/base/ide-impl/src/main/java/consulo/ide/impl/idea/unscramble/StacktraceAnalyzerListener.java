@@ -35,8 +35,7 @@ public class StacktraceAnalyzerListener extends ClipboardAnalyzeListener<Stacktr
   }
 
   @Override
-  @Nullable
-  public StacktraceAnalyzer canHandle(String value) {
+  public @Nullable StacktraceAnalyzer canHandle(String value) {
     for (StacktraceAnalyzer stacktraceAnalyzer : Application.get().getExtensionList(StacktraceAnalyzer.class)) {
         if (stacktraceAnalyzer.isStacktrace(value)) {
           return stacktraceAnalyzer;

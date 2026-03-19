@@ -896,8 +896,7 @@ public class JBUI {
              * Returns the data object from the cache if it matches the {@code ctx},
              * otherwise provides the new data via the provider and caches it.
              */
-            @Nullable
-            public D getOrProvide(S ctx) {
+            public @Nullable D getOrProvide(S ctx) {
                 Pair<Double, D> data = myData.get();
                 double scale = ctx.getScale(PIX_SCALE);
                 if (data == null || Double.compare(scale, data.first) != 0) {
@@ -927,8 +926,7 @@ public class JBUI {
     public static class ScaleContext extends BaseScaleContext {
         protected Scale sysScale = SYS_SCALE.of(sysScale());
 
-        @Nullable
-        private WeakReference<Component> compRef;
+        private @Nullable WeakReference<Component> compRef;
 
         private ScaleContext() {
             update(pixScale, derivePixScale());

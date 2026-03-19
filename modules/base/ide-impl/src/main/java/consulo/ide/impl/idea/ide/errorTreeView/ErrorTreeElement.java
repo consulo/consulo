@@ -53,13 +53,11 @@ public abstract class ErrorTreeElement {
 
   public abstract String getExportTextPrefix();
 
-  @Nullable
-  public CustomizeColoredTreeCellRenderer getLeftSelfRenderer() {
+  public @Nullable CustomizeColoredTreeCellRenderer getLeftSelfRenderer() {
     return null;
   }
 
-  @Nullable
-  public CustomizeColoredTreeCellRenderer getRightSelfRenderer() {
+  public @Nullable CustomizeColoredTreeCellRenderer getRightSelfRenderer() {
     return null;
   }
 }

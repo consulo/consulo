@@ -112,16 +112,14 @@ public class VcsHistoryUtil {
     WaitForProgressToShow.runOrInvokeLaterAboveProgress(() -> DiffManager.getInstance().showDiff(project, request), null, project);
   }
 
-  @Nullable
-  private static Pair<FilePath, VcsRevisionNumber> getRevisionInfo(VcsFileRevision revision) {
+  private static @Nullable Pair<FilePath, VcsRevisionNumber> getRevisionInfo(VcsFileRevision revision) {
     if (revision instanceof VcsFileRevisionEx) {
       return Pair.create(((VcsFileRevisionEx)revision).getPath(), revision.getRevisionNumber());
     }
     return null;
   }
 
-  @Nullable
-  private static FilePath getRevisionPath(VcsFileRevision revision) {
+  private static @Nullable FilePath getRevisionPath(VcsFileRevision revision) {
     if (revision instanceof VcsFileRevisionEx) {
       return ((VcsFileRevisionEx)revision).getPath();
     }

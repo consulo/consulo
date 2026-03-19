@@ -19,8 +19,7 @@ public abstract class RemoteServersManager {
 
     public abstract <C extends ServerConfiguration> List<RemoteServer<C>> getServers(ServerType<C> type);
 
-    @Nullable
-    public abstract <C extends ServerConfiguration> RemoteServer<C> findByName(String name, ServerType<C> type);
+    public abstract @Nullable <C extends ServerConfiguration> RemoteServer<C> findByName(String name, ServerType<C> type);
 
     
     public abstract <C extends ServerConfiguration> RemoteServer<C> createServer(ServerType<C> type, String name);

@@ -199,8 +199,7 @@ public class CompileContextImpl extends UserDataHolderBase implements CompileCon
         addMessage(msg);
     }
 
-    @Nullable
-    private VirtualFile findPresentableFileForMessage(@Nullable String url) {
+    private @Nullable VirtualFile findPresentableFileForMessage(@Nullable String url) {
         VirtualFile file = findFileByUrl(url);
         if (file == null) {
             return null;
@@ -221,8 +220,7 @@ public class CompileContextImpl extends UserDataHolderBase implements CompileCon
         });
     }
 
-    @Nullable
-    private static VirtualFile findFileByUrl(@Nullable String url) {
+    private static @Nullable VirtualFile findFileByUrl(@Nullable String url) {
         if (url == null) {
             return null;
         }
@@ -299,8 +297,7 @@ public class CompileContextImpl extends UserDataHolderBase implements CompileCon
     }
 
     @Override
-    @Nullable
-    public VirtualFile getSourceFileByOutputFile(VirtualFile outputFile) {
+    public @Nullable VirtualFile getSourceFileByOutputFile(VirtualFile outputFile) {
         return TranslatingCompilerFilesMonitorImpl.getSourceFileByOutput(outputFile);
     }
 

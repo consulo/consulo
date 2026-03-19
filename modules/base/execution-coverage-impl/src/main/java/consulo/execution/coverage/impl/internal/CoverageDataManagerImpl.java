@@ -607,8 +607,7 @@ public class CoverageDataManagerImpl extends CoverageDataManager implements JDOM
         return mySubCoverageIsActive;
     }
 
-    @Nullable
-    public SrcFileAnnotator getAnnotator(Editor editor) {
+    public @Nullable SrcFileAnnotator getAnnotator(Editor editor) {
         synchronized (ANNOTATORS_LOCK) {
             return myAnnotators.get(editor);
         }

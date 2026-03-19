@@ -101,8 +101,7 @@ public class HippieWordCompletionHandler implements CodeInsightActionHandler {
     public int startOffset;
   }
 
-  @Nullable
-  private CompletionVariant computeNextVariant(Editor editor,
+  private @Nullable CompletionVariant computeNextVariant(Editor editor,
                                                @Nullable String prefix,
                                                @Nullable CompletionVariant lastProposedVariant,
                                                CompletionData data, PsiFile file) {

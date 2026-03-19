@@ -191,8 +191,7 @@ public class VirtualFileTrackerImpl implements VirtualFileTracker {
     return listeners;
   }
 
-  @Nullable
-  private Collection<VirtualFileListener> getListeners(VirtualFile virtualFile, boolean fromRefresh) {
+  private @Nullable Collection<VirtualFileListener> getListeners(VirtualFile virtualFile, boolean fromRefresh) {
     Set<VirtualFileListener> listeners = null;
 
     while (virtualFile != null) {

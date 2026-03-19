@@ -52,8 +52,7 @@ public abstract class ExternalAnnotator<InitialInfoType, AnnotationResultType> i
    * @param file file to annotate
    * @return see {@link ExternalAnnotator#collectInformation(PsiFile, Editor, boolean)}
    */
-  @Nullable
-  public InitialInfoType collectInformation(PsiFile file) {
+  public @Nullable InitialInfoType collectInformation(PsiFile file) {
     return null;
   }
 
@@ -67,8 +66,7 @@ public abstract class ExternalAnnotator<InitialInfoType, AnnotationResultType> i
    * @param hasErrors indicates if file has errors detected by preceding analyses
    * @return information to pass to {@link ExternalAnnotator#doAnnotate(InitialInfoType)} or {@code null} if annotation should be skipped
    */
-  @Nullable
-  public InitialInfoType collectInformation(PsiFile file, Editor editor, boolean hasErrors) {
+  public @Nullable InitialInfoType collectInformation(PsiFile file, Editor editor, boolean hasErrors) {
     return hasErrors ? null : collectInformation(file);
   }
 
@@ -79,8 +77,7 @@ public abstract class ExternalAnnotator<InitialInfoType, AnnotationResultType> i
    * @param collectedInfo initial information gathered by {@link ExternalAnnotator#collectInformation(PsiFile, Editor, boolean)}
    * @return annotation result to pass to {@link ExternalAnnotator#apply(PsiFile, AnnotationResultType, AnnotationHolder)}
    */
-  @Nullable
-  public AnnotationResultType doAnnotate(InitialInfoType collectedInfo) {
+  public @Nullable AnnotationResultType doAnnotate(InitialInfoType collectedInfo) {
     return null;
   }
 

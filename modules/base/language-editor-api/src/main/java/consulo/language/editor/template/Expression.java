@@ -22,19 +22,15 @@ import org.jspecify.annotations.Nullable;
 
 public abstract class Expression {
 
-  @Nullable
-  public abstract Result calculateResult(ExpressionContext context);
+  public abstract @Nullable Result calculateResult(ExpressionContext context);
 
-  @Nullable
-  public Result calculateQuickResult(ExpressionContext context) {
+  public @Nullable Result calculateQuickResult(ExpressionContext context) {
     return calculateResult(context);
   }
   
-  @Nullable
-  public abstract LookupElement[] calculateLookupItems(ExpressionContext context);
+  public abstract @Nullable LookupElement[] calculateLookupItems(ExpressionContext context);
 
-  @Nullable
-  public String getAdvertisingText() {
+  public @Nullable String getAdvertisingText() {
     return null;
   }
 

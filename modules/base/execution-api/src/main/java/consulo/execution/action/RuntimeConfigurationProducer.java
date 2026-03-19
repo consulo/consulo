@@ -91,8 +91,7 @@ public abstract class RuntimeConfigurationProducer implements Comparable<Runtime
         return result;
     }
 
-    @Nullable
-    public RunnerAndConfigurationSettings findExistingConfiguration(Location location, ConfigurationContext context) {
+    public @Nullable RunnerAndConfigurationSettings findExistingConfiguration(Location location, ConfigurationContext context) {
         assert isClone;
         RunManager runManager = RunManager.getInstance(location.getProject());
         List<RunnerAndConfigurationSettings> configurations = runManager.getConfigurationSettingsList(getConfigurationType());
@@ -111,11 +110,9 @@ public abstract class RuntimeConfigurationProducer implements Comparable<Runtime
         myConfiguration = configuration;
     }
 
-    @Nullable
-    protected abstract RunnerAndConfigurationSettings createConfigurationByElement(Location location, ConfigurationContext context);
+    protected abstract @Nullable RunnerAndConfigurationSettings createConfigurationByElement(Location location, ConfigurationContext context);
 
-    @Nullable
-    protected RunnerAndConfigurationSettings findExistingByElement(
+    protected @Nullable RunnerAndConfigurationSettings findExistingByElement(
         Location location,
         List<RunnerAndConfigurationSettings> existingConfigurations,
         ConfigurationContext context

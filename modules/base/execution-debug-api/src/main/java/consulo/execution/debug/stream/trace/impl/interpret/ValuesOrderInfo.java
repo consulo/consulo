@@ -13,10 +13,8 @@ public class ValuesOrderInfo implements TraceInfo {
   private final StreamCall streamCall;
   private final Map<Integer, TraceElement> before;
   private final Map<Integer, TraceElement> after;
-  @Nullable
-  private final Map<TraceElement, List<TraceElement>> direct;
-  @Nullable
-  private final Map<TraceElement, List<TraceElement>> reverse;
+  private final @Nullable Map<TraceElement, List<TraceElement>> direct;
+  private final @Nullable Map<TraceElement, List<TraceElement>> reverse;
 
   public ValuesOrderInfo(
     StreamCall streamCall,

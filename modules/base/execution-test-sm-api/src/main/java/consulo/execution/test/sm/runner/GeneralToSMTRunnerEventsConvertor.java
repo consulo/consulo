@@ -471,8 +471,7 @@ public class GeneralToSMTRunnerEventsConvertor extends GeneralTestEventsProcesso
         return myRunningTestsFullNameToProxy.size();
     }
 
-    @Nullable
-    protected SMTestProxy getProxyByFullTestName(String fullTestName) {
+    protected @Nullable SMTestProxy getProxyByFullTestName(String fullTestName) {
         return myRunningTestsFullNameToProxy.get(fullTestName);
     }
 

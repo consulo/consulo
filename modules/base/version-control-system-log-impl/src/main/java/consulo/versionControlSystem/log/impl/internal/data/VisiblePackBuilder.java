@@ -194,8 +194,7 @@ class VisiblePackBuilder {
         );
     }
 
-    @Nullable
-    private Set<Integer> getMatchingHeads(
+    private @Nullable Set<Integer> getMatchingHeads(
         VcsLogRefs refs,
         Collection<VirtualFile> roots,
         VcsLogFilterCollection filters
@@ -286,8 +285,7 @@ class VisiblePackBuilder {
         return ContainerUtil.intersects(permanentGraph.getContainingBranches(commitIndex), matchingHeads);
     }
 
-    @Nullable
-    private VcsCommitMetadata getDetailsFromCache(int commitIndex) {
+    private @Nullable VcsCommitMetadata getDetailsFromCache(int commitIndex) {
         VcsCommitMetadata details = myTopCommitsDetailsCache.get(commitIndex);
         if (details != null) {
             return details;
@@ -328,8 +326,7 @@ class VisiblePackBuilder {
         return commits;
     }
 
-    @Nullable
-    private Set<Integer> getMatchedCommitIndex(@Nullable Collection<CommitId> commits) {
+    private @Nullable Set<Integer> getMatchedCommitIndex(@Nullable Collection<CommitId> commits) {
         if (commits == null) {
             return null;
         }
@@ -338,8 +335,7 @@ class VisiblePackBuilder {
     }
 
     private static class FilterResult {
-        @Nullable
-        private final Set<Integer> matchingCommits;
+        private final @Nullable Set<Integer> matchingCommits;
         private final boolean canRequestMore;
         
         private final CommitCountStage commitCount;

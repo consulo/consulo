@@ -21,8 +21,7 @@ public class PreloadedJar {
     myResources = resources;
   }
 
-  @Nullable
-  public Resource getResource(String entryName) {
+  public @Nullable Resource getResource(String entryName) {
     return myResources.get(entryName);
   }
 

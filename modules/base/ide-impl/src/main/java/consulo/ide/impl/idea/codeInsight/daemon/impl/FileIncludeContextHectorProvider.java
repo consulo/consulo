@@ -39,8 +39,7 @@ public class FileIncludeContextHectorProvider implements HectorComponentPanelsPr
   }
 
   @Override
-  @Nullable
-  public HectorComponentPanel createConfigurable(PsiFile file) {
+  public @Nullable HectorComponentPanel createConfigurable(PsiFile file) {
     if (DumbService.getInstance(file.getProject()).isDumb()) {
       return null;
     }

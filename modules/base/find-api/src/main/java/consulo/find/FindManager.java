@@ -38,8 +38,7 @@ import org.jspecify.annotations.Nullable;
 public abstract class FindManager {
   public abstract FindModel createReplaceInFileModel();
 
-  @Nullable
-  public abstract FindModel getPreviousFindModel();
+  public abstract @Nullable FindModel getPreviousFindModel();
 
   public abstract void setPreviousFindModel(FindModel previousFindModel);
 
@@ -274,8 +273,7 @@ public abstract class FindManager {
    */
   public abstract boolean findPreviousUsageInEditor(FileEditor editor);
 
-  @Nullable
-  public abstract FindUsagesHandler getFindUsagesHandler(PsiElement element, boolean forHighlightUsages);
+  public abstract @Nullable FindUsagesHandler getFindUsagesHandler(PsiElement element, boolean forHighlightUsages);
 
   @MagicConstant(valuesFromClass = FindManager.PromptResult.class)
   public @interface PromptResultValue {}

@@ -95,8 +95,7 @@ public abstract class XDebuggerTreeNode implements TreeNode {
     myLeaf = leaf;
   }
 
-  @Nullable
-  protected XDebuggerTreeNodeHyperlink getLink() {
+  protected @Nullable XDebuggerTreeNodeHyperlink getLink() {
     return null;
   }
 
@@ -105,8 +104,7 @@ public abstract class XDebuggerTreeNode implements TreeNode {
     return myText;
   }
 
-  @Nullable
-  public Image getIcon() {
+  public @Nullable Image getIcon() {
     return myIcon;
   }
 

@@ -67,8 +67,7 @@ class LineFragmentsCollector {
     return myLineFragments;
   }
 
-  @Nullable
-  static TextDiffTypeEnum getType(DiffFragmentOld fragment) {
+  static @Nullable TextDiffTypeEnum getType(DiffFragmentOld fragment) {
     TextDiffTypeEnum type;
     if (fragment.getText1() == null) type = TextDiffTypeEnum.INSERT;
     else if (fragment.getText2() == null) type = TextDiffTypeEnum.DELETED;

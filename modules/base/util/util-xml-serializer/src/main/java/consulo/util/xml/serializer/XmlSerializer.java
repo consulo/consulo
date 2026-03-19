@@ -39,23 +39,19 @@ public class XmlSerializer {
   /**
    * Consider to use {@link SkipDefaultValuesSerializationFilters}
    */
-  @Nullable
-  public static Element serialize(Object object) throws XmlSerializationException {
+  public static @Nullable Element serialize(Object object) throws XmlSerializationException {
     return serialize(object, TRUE_FILTER);
   }
 
-  @Nullable
-  public static Element serialize(Object object, @Nullable SerializationFilter filter) throws XmlSerializationException {
+  public static @Nullable Element serialize(Object object, @Nullable SerializationFilter filter) throws XmlSerializationException {
     return XmlSerializerImpl.serialize(object, filter == null ? TRUE_FILTER : filter);
   }
 
-  @Nullable
-  public static Element serializeIfNotDefault(Object object, @Nullable SerializationFilter filter) {
+  public static @Nullable Element serializeIfNotDefault(Object object, @Nullable SerializationFilter filter) {
     return XmlSerializerImpl.serializeIfNotDefault(object, filter == null ? TRUE_FILTER : filter);
   }
 
-  @Nullable
-  public static <T> T deserialize(Document document, Class<T> aClass) throws XmlSerializationException {
+  public static @Nullable <T> T deserialize(Document document, Class<T> aClass) throws XmlSerializationException {
     return deserialize(document.getRootElement(), aClass);
   }
 
@@ -85,8 +81,7 @@ public class XmlSerializer {
     return result;
   }
 
-  @Nullable
-  public static <T> T deserialize(URL url, Class<T> aClass) throws XmlSerializationException {
+  public static @Nullable <T> T deserialize(URL url, Class<T> aClass) throws XmlSerializationException {
     try {
       Element rootElement = JDOMUtil.loadDocument(url).detachRootElement();
       return deserialize(rootElement, aClass);

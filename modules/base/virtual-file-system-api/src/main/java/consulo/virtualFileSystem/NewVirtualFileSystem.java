@@ -15,8 +15,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public abstract class NewVirtualFileSystem implements FileSystemInterface, CachingVirtualFileSystem, VirtualFileSystem {
   private final Map<VirtualFileListener, VirtualFileListener> myListenerWrappers = new ConcurrentHashMap<>();
 
-  @Nullable
-  public abstract VirtualFile findFileByPathIfCached(String path);
+  public abstract @Nullable VirtualFile findFileByPathIfCached(String path);
 
   public String normalize(String path) {
     return path;
@@ -98,8 +97,7 @@ public abstract class NewVirtualFileSystem implements FileSystemInterface, Cachi
    * @param file file to get attributes of.
    * @return attributes of a given file, or {@code null} if the file doesn't exist.
    */
-  @Nullable
-  public abstract FileAttributes getAttributes(VirtualFile file);
+  public abstract @Nullable FileAttributes getAttributes(VirtualFile file);
 
   /**
    * Returns {@code true} if {@code path} represents a directory with at least one child.

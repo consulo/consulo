@@ -224,8 +224,7 @@ public class CodeEditUtil {
         }
     }
 
-    @Nullable
-    private static ASTNode findFirstLeaf(ASTNode first, ASTNode last) {
+    private static @Nullable ASTNode findFirstLeaf(ASTNode first, ASTNode last) {
         do {
             LeafElement leaf = TreeUtil.findFirstLeaf(first);
             if (leaf != null) {
@@ -240,8 +239,7 @@ public class CodeEditUtil {
         return null;
     }
 
-    @Nullable
-    private static ASTNode findLastLeaf(ASTNode first, ASTNode last) {
+    private static @Nullable ASTNode findLastLeaf(ASTNode first, ASTNode last) {
         do {
             ASTNode leaf = TreeUtil.findLastLeaf(last);
             if (leaf != null) {
@@ -256,8 +254,7 @@ public class CodeEditUtil {
         return null;
     }
 
-    @Nullable
-    private static ASTNode makePlaceHolderBetweenTokens(ASTNode left, ASTNode right, boolean forceReformat, boolean normalizeTrailingWS) {
+    private static @Nullable ASTNode makePlaceHolderBetweenTokens(ASTNode left, ASTNode right, boolean forceReformat, boolean normalizeTrailingWS) {
         if (right == null) {
             return left;
         }
@@ -392,8 +389,7 @@ public class CodeEditUtil {
         return element.getCopyableUserData(REFORMAT_BEFORE_KEY) != null;
     }
 
-    @Nullable
-    public static PsiElement createLineFeed(PsiManager manager) {
+    public static @Nullable PsiElement createLineFeed(PsiManager manager) {
         return Factory.createSingleLeafElement(TokenType.WHITE_SPACE, "\n", 0, 1, null, manager).getPsi();
     }
 

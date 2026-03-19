@@ -163,8 +163,7 @@ public abstract class DialogWrapper {
     private Action myNoAction = null;
 
     protected CheckBox myCheckBoxDoNotShowDialog;
-    @Nullable
-    private DoNotAskOption myDoNotAsk;
+    private @Nullable DoNotAskOption myDoNotAsk;
 
     private JComponent myPreferredFocusedComponent;
     private Supplier<Point> myInitialLocationCallback;
@@ -463,13 +462,11 @@ public abstract class DialogWrapper {
      *
      * @return content pane border
      */
-    @Nullable
-    protected Border createContentPaneBorder() {
+    protected @Nullable Border createContentPaneBorder() {
         return JBUI.Borders.empty(ourDefaultBorderInsets);
     }
 
-    @Nullable
-    protected JComponent createDoNotAskCheckbox() {
+    protected @Nullable JComponent createDoNotAskCheckbox() {
         return myCheckBoxDoNotShowDialog != null && myCheckBoxDoNotShowDialog.isVisible()
             ? (JComponent) TargetAWT.to(myCheckBoxDoNotShowDialog)
             : null;
@@ -687,8 +684,7 @@ public abstract class DialogWrapper {
      * @param action should be registered to find corresponding JButton
      * @return button for specified action or null if it's not found
      */
-    @Nullable
-    protected JButton getButton(Action action) {
+    protected @Nullable JButton getButton(Action action) {
         return myButtonMap.get(action);
     }
 
@@ -865,8 +861,7 @@ public abstract class DialogWrapper {
         return DialogWrapperPeerFactory.getInstance().createPeer(this, project, canBeParent);
     }
 
-    @Nullable
-    protected JComponent createTitlePane() {
+    protected @Nullable JComponent createTitlePane() {
         return null;
     }
 
@@ -877,8 +872,7 @@ public abstract class DialogWrapper {
      *
      * @return north panel
      */
-    @Nullable
-    protected JComponent createNorthPanel() {
+    protected @Nullable JComponent createNorthPanel() {
         return null;
     }
 
@@ -889,8 +883,7 @@ public abstract class DialogWrapper {
      *
      * @return center panel
      */
-    @Nullable
-    protected abstract JComponent createCenterPanel();
+    protected abstract @Nullable JComponent createCenterPanel();
 
     /**
      * @see Window#toFront()
@@ -1191,13 +1184,11 @@ public abstract class DialogWrapper {
      *
      * @return dimension service key
      */
-    @Nullable
-    protected String getDimensionServiceKey() {
+    protected @Nullable String getDimensionServiceKey() {
         return null;
     }
 
-    @Nullable
-    public final String getDimensionKey() {
+    public final @Nullable String getDimensionKey() {
         return getDimensionServiceKey();
     }
 
@@ -1582,8 +1573,7 @@ public abstract class DialogWrapper {
     /**
      * @return the help identifier or null if no help is available.
      */
-    @Nullable
-    protected String getHelpId() {
+    protected @Nullable String getHelpId() {
         return null;
     }
 
@@ -1788,8 +1778,7 @@ public abstract class DialogWrapper {
      * or no position was stored yet.
      * Can return null. In that case dialog will be centered relative to its owner.
      */
-    @Nullable
-    public Point getInitialLocation() {
+    public @Nullable Point getInitialLocation() {
         return myInitialLocationCallback == null ? null : myInitialLocationCallback.get();
     }
 
@@ -1883,8 +1872,7 @@ public abstract class DialogWrapper {
     /**
      * @return null if we should ignore <Esc> for window closing
      */
-    @Nullable
-    protected ActionListener createCancelAction() {
+    protected @Nullable ActionListener createCancelAction() {
         return e -> {
             if (!InternalPopupUtil.handleEscKeyEvent()) {
                 doCancelAction(e);
@@ -2266,8 +2254,7 @@ public abstract class DialogWrapper {
         }
     }
 
-    @Nullable
-    public static DialogWrapper findInstance(Component c) {
+    public static @Nullable DialogWrapper findInstance(Component c) {
         while (c != null) {
             if (c instanceof DialogWrapperDialog dialog) {
                 return dialog.getDialogWrapper();

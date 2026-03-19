@@ -69,8 +69,7 @@ public abstract class AttachRootButtonDescriptor {
     return rootCandidates;
   }
 
-  @Nullable
-  public Image getToolbarIcon() {
+  public @Nullable Image getToolbarIcon() {
     return myToolbarIcon;
   }
 }

@@ -167,8 +167,7 @@ public class CopyPasteManagerEx extends CopyPasteManager implements ClipboardOwn
      * @throws IOException                as defined by {@link Transferable#getTransferData(DataFlavor)}
      * @throws UnsupportedFlavorException as defined by {@link Transferable#getTransferData(DataFlavor)}
      */
-    @Nullable
-    private static Transferable merge(
+    private static @Nullable Transferable merge(
         KillRingTransferable newData,
         KillRingTransferable oldData
     ) throws IOException, UnsupportedFlavorException {

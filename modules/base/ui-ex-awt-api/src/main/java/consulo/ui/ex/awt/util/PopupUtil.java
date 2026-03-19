@@ -46,8 +46,7 @@ public class PopupUtil {
   private PopupUtil() {
   }
 
-  @Nullable
-  public static Component getOwner(@Nullable Component c) {
+  public static @Nullable Component getOwner(@Nullable Component c) {
     if (c == null) return null;
 
     Window wnd = SwingUtilities.getWindowAncestor(c);

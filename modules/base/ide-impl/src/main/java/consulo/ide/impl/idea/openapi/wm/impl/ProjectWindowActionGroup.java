@@ -122,8 +122,7 @@ public class ProjectWindowActionGroup extends DefaultActionGroup {
         }
     }
 
-    @Nullable
-    private ProjectWindowAction findWindowAction(String projectLocation) {
+    private @Nullable ProjectWindowAction findWindowAction(String projectLocation) {
         if (projectLocation == null) {
             return null;
         }

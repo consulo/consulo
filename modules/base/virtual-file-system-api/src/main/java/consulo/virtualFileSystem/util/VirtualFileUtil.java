@@ -56,14 +56,12 @@ public final class VirtualFileUtil {
     private static final String PROTOCOL_DELIMITER = ":";
     private static final String MAILTO = "mailto";
 
-    @Nullable
-    public static VirtualFile getUserHomeDir() {
+    public static @Nullable VirtualFile getUserHomeDir() {
         Path path = Platform.current().user().homePath();
         return LocalFileSystem.getInstance().findFileByNioFile(path);
     }
 
-    @Nullable
-    public static URL getURL(String url) throws MalformedURLException {
+    public static @Nullable URL getURL(String url) throws MalformedURLException {
         return URLUtil.isAbsoluteURL(url) ? convertToURL(url) : new URL("file", "", url);
     }
 
@@ -74,14 +72,12 @@ public final class VirtualFileUtil {
      * @param url the URL to find file by
      * @return <code>{@link VirtualFile}</code> if the file was found, <code>null</code> otherwise
      */
-    @Nullable
-    public static VirtualFile findFileByURL(URL url) {
+    public static @Nullable VirtualFile findFileByURL(URL url) {
         VirtualFileManager virtualFileManager = VirtualFileManager.getInstance();
         return findFileByURL(url, virtualFileManager);
     }
 
-    @Nullable
-    public static VirtualFile findFileByURL(URL url, VirtualFileManager virtualFileManager) {
+    public static @Nullable VirtualFile findFileByURL(URL url, VirtualFileManager virtualFileManager) {
         String vfUrl = convertFromUrl(url);
         return virtualFileManager.findFileByUrl(vfUrl);
     }
@@ -120,8 +116,7 @@ public final class VirtualFileUtil {
      * @param vfsUrl VFS url (as constructed by {@link VirtualFile#getUrl()}
      * @return converted URL or null if error has occurred.
      */
-    @Nullable
-    public static URL convertToURL(String vfsUrl) {
+    public static @Nullable URL convertToURL(String vfsUrl) {
         if (vfsUrl.startsWith("jar://") || vfsUrl.startsWith(StandardFileSystems.ZIP_PROTOCOL_PREFIX)) {
             try {
                 // jar:// and zip:// have the same lenght
@@ -215,8 +210,7 @@ public final class VirtualFileUtil {
      * @param urlOrPath Url for virtual file
      * @return file name
      */
-    @Nullable
-    public static String extractFileName(@Nullable String urlOrPath) {
+    public static @Nullable String extractFileName(@Nullable String urlOrPath) {
         if (urlOrPath == null) {
             return null;
         }
@@ -284,8 +278,7 @@ public final class VirtualFileUtil {
      *
      * @return correct URI, must be used only for external communication
      */
-    @Nullable
-    public static URI toUri(String uri) {
+    public static @Nullable URI toUri(String uri) {
         int index = uri.indexOf("://");
         if (index < 0) {
             // true URI, like mailto:
@@ -324,8 +317,7 @@ public final class VirtualFileUtil {
         }
     }
 
-    @Nullable
-    public static VirtualFile findFileByIoFile(File file, boolean refreshIfNeeded) {
+    public static @Nullable VirtualFile findFileByIoFile(File file, boolean refreshIfNeeded) {
         LocalFileSystem fileSystem = LocalFileSystem.getInstance();
         VirtualFile virtualFile = fileSystem.findFileByIoFile(file);
         if (refreshIfNeeded && (virtualFile == null || !virtualFile.isValid())) {
@@ -352,8 +344,7 @@ public final class VirtualFileUtil {
         return parent;
     }
 
-    @Nullable
-    public static VirtualFile createDirectoryIfMissing(String directoryPath) throws IOException {
+    public static @Nullable VirtualFile createDirectoryIfMissing(String directoryPath) throws IOException {
         String path = FileUtil.toSystemIndependentName(directoryPath);
         VirtualFile file = LocalFileSystem.getInstance().refreshAndFindFileByPath(path);
         if (file == null) {
@@ -375,8 +366,7 @@ public final class VirtualFileUtil {
         return file;
     }
 
-    @Nullable
-    public static VirtualFile findRelativeFile(@Nullable VirtualFile base, String... path) {
+    public static @Nullable VirtualFile findRelativeFile(@Nullable VirtualFile base, String... path) {
         VirtualFile file = base;
 
         for (String pathElement : path) {
@@ -427,8 +417,7 @@ public final class VirtualFileUtil {
         return toIdeaUrl(url, false);
     }
 
-    @Nullable
-    public static VirtualFile findRelativeFile(String uri, @Nullable VirtualFile base) {
+    public static @Nullable VirtualFile findRelativeFile(String uri, @Nullable VirtualFile base) {
         if (base != null) {
             if (!base.isValid()) {
                 LOG.error("Invalid file name: " + base.getName() + ", url: " + uri);
@@ -500,8 +489,7 @@ public final class VirtualFileUtil {
      * @param root candidate to be parent file (Project base dir, any content roots etc.)
      * @return relative path of {@code file} or full path if {@code root} is not actual ancestor of {@code file}
      */
-    @Nullable
-    public static String getRelativeLocation(@Nullable VirtualFile file, VirtualFile root) {
+    public static @Nullable String getRelativeLocation(@Nullable VirtualFile file, VirtualFile root) {
         if (file == null) {
             return null;
         }
@@ -509,8 +497,7 @@ public final class VirtualFileUtil {
         return path != null ? path : file.getPresentableUrl();
     }
 
-    @Nullable
-    public static String getRelativePath(VirtualFile file, VirtualFile ancestor) {
+    public static @Nullable String getRelativePath(VirtualFile file, VirtualFile ancestor) {
         return getRelativePath(file, ancestor, VFS_SEPARATOR_CHAR);
     }
 
@@ -523,8 +510,7 @@ public final class VirtualFileUtil {
      * @param separator character to use as files separator
      * @return the relative path or {@code null} if {@code ancestor} is not ancestor for {@code file}
      */
-    @Nullable
-    public static String getRelativePath(VirtualFile file, VirtualFile ancestor, char separator) {
+    public static @Nullable String getRelativePath(VirtualFile file, VirtualFile ancestor, char separator) {
         if (!file.getFileSystem().equals(ancestor.getFileSystem())) {
             return null;
         }
@@ -964,8 +950,7 @@ public final class VirtualFileUtil {
     /**
      * Gets the common ancestor for passed files, or {@code null} if the files do not have common ancestors.
      */
-    @Nullable
-    public static VirtualFile getCommonAncestor(Collection<? extends VirtualFile> files) {
+    public static @Nullable VirtualFile getCommonAncestor(Collection<? extends VirtualFile> files) {
         VirtualFile ancestor = null;
         for (VirtualFile file : files) {
             if (ancestor == null) {
@@ -989,8 +974,7 @@ public final class VirtualFileUtil {
      * @return common ancestor for the passed files. Returns <code>null</code> if
      * the files do not have common ancestor
      */
-    @Nullable
-    public static VirtualFile getCommonAncestor(VirtualFile file1, VirtualFile file2) {
+    public static @Nullable VirtualFile getCommonAncestor(VirtualFile file1, VirtualFile file2) {
         if (!file1.getFileSystem().equals(file2.getFileSystem())) {
             return null;
         }
@@ -1082,8 +1066,7 @@ public final class VirtualFileUtil {
         return file;
     }
 
-    @Nullable
-    public static VirtualFile findContainingDirectory(VirtualFile file, CharSequence name) {
+    public static @Nullable VirtualFile findContainingDirectory(VirtualFile file, CharSequence name) {
         VirtualFile parent = file.isDirectory() ? file : file.getParent();
         while (parent != null) {
             if (Comparing.equal(parent.getNameSequence(), name, Platform.current().fs().isCaseSensitive())) {

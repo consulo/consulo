@@ -48,8 +48,7 @@ public abstract class FileIncludeProvider {
     /**
      * If all providers return {@code null} then {@code FileIncludeInfo} is resolved in a standard way using {@code FileReferenceSet}
      */
-    @Nullable
-    public PsiFileSystemItem resolveIncludedFile(FileIncludeInfo info, PsiFile context) {
+    public @Nullable PsiFileSystemItem resolveIncludedFile(FileIncludeInfo info, PsiFile context) {
         return null;
     }
 

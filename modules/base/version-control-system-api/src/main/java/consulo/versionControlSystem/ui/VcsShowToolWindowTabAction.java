@@ -51,8 +51,7 @@ public abstract class VcsShowToolWindowTabAction extends DumbAwareAction {
         }
     }
 
-    @Nullable
-    private static ToolWindow getToolWindow(@Nullable Project project) {
+    private static @Nullable ToolWindow getToolWindow(@Nullable Project project) {
         if (project == null) {
             return null;
         }

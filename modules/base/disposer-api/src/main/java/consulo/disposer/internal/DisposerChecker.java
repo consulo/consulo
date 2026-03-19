@@ -28,8 +28,7 @@ import java.util.ServiceLoader;
 public class DisposerChecker {
   private static boolean checkDisposer = Boolean.getBoolean("consulo.checker.disposer.register");
 
-  @Nullable
-  private static List<DiposerRegisterChecker> CHECKERS;
+  private static @Nullable List<DiposerRegisterChecker> CHECKERS;
 
   public static void checkRegister(Disposable parent, Disposable target) {
     if (!checkDisposer) {

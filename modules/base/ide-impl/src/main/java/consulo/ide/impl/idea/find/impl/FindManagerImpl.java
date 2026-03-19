@@ -155,12 +155,11 @@ public class FindManagerImpl extends FindManager {
     public int showPromptDialogImpl(
         final FindModel model,
         LocalizeValue title,
-        @Nullable final MalformedReplacementStringException exception
+        final @Nullable MalformedReplacementStringException exception
     ) {
         ReplacePromptDialog replacePromptDialog = new ReplacePromptDialog(model.isMultipleFiles(), title, myProject, exception) {
             @Override
-            @Nullable
-            public Point getInitialLocation() {
+            public @Nullable Point getInitialLocation() {
                 if (model.isMultipleFiles() && myReplaceInProjectPromptPos.x >= 0 && myReplaceInProjectPromptPos.y >= 0) {
                     return myReplaceInProjectPromptPos;
                 }

@@ -373,8 +373,7 @@ public class Alarm implements Disposable {
     /**
      * @return task if not yet executed
      */
-    @Nullable
-    private Runnable cancel() {
+    private @Nullable Runnable cancel() {
       synchronized (LOCK) {
         Future<?> future = myFuture;
         if (future != null) {

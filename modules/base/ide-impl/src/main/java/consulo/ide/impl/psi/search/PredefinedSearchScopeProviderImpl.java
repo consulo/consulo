@@ -247,8 +247,7 @@ public class PredefinedSearchScopeProviderImpl extends PredefinedSearchScopeProv
         }
     }
 
-    @Nullable
-    private static SearchScope getSelectedFilesScope(Project project, @Nullable DataContext dataContext) {
+    private static @Nullable SearchScope getSelectedFilesScope(Project project, @Nullable DataContext dataContext) {
         VirtualFile[] filesOrDirs = dataContext == null ? null : dataContext.getData(VirtualFile.KEY_OF_ARRAY);
         if (filesOrDirs != null) {
             List<VirtualFile> selectedFiles = ContainerUtil.filter(filesOrDirs, file -> !file.isDirectory());

@@ -40,8 +40,7 @@ public class BrowserUtil {
         return URLUtil.isAbsoluteURL(url);
     }
 
-    @Nullable
-    public static URL getURL(String url) throws MalformedURLException {
+    public static @Nullable URL getURL(String url) throws MalformedURLException {
         return isAbsoluteURL(url) ? VirtualFileUtil.convertToURL(url) : new URL("file", "", url);
     }
 

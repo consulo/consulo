@@ -58,8 +58,7 @@ public class ModuleExtensionWithSdkOrderEntryImpl extends LibraryOrderEntryBaseI
   }
 
   @Override
-  @Nullable
-  public Sdk getSdk() {
+  public @Nullable Sdk getSdk() {
     ModuleExtensionWithSdk<?> moduleExtension = getModuleExtension();
     if (moduleExtension == null) {
       return null;
@@ -69,8 +68,7 @@ public class ModuleExtensionWithSdkOrderEntryImpl extends LibraryOrderEntryBaseI
   }
 
   @Override
-  @Nullable
-  public String getSdkName() {
+  public @Nullable String getSdkName() {
     ModuleExtensionWithSdk<?> moduleExtension = getModuleExtension();
     if (moduleExtension == null) {
       return null;

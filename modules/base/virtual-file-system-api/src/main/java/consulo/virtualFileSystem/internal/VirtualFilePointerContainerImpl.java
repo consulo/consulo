@@ -311,8 +311,7 @@ public class VirtualFilePointerContainerImpl implements VirtualFilePointerContai
   }
 
   @Override
-  @Nullable
-  public VirtualFilePointer findByUrl(String url) {
+  public @Nullable VirtualFilePointer findByUrl(String url) {
     checkDisposed();
     for (VirtualFilePointer pointer : ContainerUtil.concat(myList, myJarDirectories, myJarRecursiveDirectories)) {
       if (url.equals(pointer.getUrl())) return pointer;

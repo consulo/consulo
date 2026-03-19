@@ -91,8 +91,7 @@ public class VcsDirectoryMapping {
    * @return VCS-specific settings, or null if none have been defined.
    * @see AbstractVcs#getRootConfigurable(VcsDirectoryMapping)
    */
-  @Nullable
-  public VcsRootSettings getRootSettings() {
+  public @Nullable VcsRootSettings getRootSettings() {
     return myRootSettings;
   }
 

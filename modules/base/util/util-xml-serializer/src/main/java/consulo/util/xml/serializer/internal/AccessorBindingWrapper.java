@@ -43,8 +43,7 @@ class AccessorBindingWrapper extends NonNullAccessorBinding implements MultiNode
   }
 
   @Override
-  @Nullable
-  public Object deserialize(@Nullable Object context, Element element) {
+  public @Nullable Object deserialize(@Nullable Object context, Element element) {
     Objects.requireNonNull(context);
     Object currentValue = myAccessor.read(context);
     if (myBinding instanceof BeanBinding beanBinding && myAccessor.isFinal()) {

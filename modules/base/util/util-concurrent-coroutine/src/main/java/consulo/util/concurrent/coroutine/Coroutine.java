@@ -211,11 +211,9 @@ import java.util.function.Function;
  * @author eso
  */
 public class Coroutine<I, O> extends UserDataHolderBase {
-    @Nullable
-    private StepChain<I, ?, O> code;
+    private @Nullable StepChain<I, ?, O> code;
 
-    @Nullable
-    private String name;
+    private @Nullable String name;
 
     /**
      * Creates a new instance that starts execution with a certain step.
@@ -398,8 +396,7 @@ public class Coroutine<I, O> extends UserDataHolderBase {
         return String.format("%s[%s]", name, code);
     }
 
-    @Nullable
-    public String getName() {
+    public @Nullable String getName() {
         return name;
     }
 

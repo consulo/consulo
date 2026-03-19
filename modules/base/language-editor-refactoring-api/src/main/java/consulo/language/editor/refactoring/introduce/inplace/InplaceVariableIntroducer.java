@@ -209,8 +209,7 @@ public abstract class InplaceVariableIntroducer<E extends PsiElement> extends In
             return myPointer.getElement();
         }
 
-        @Nullable
-        private LookupElement[] createLookupItems(String name, Editor editor, PsiNamedElement psiVariable) {
+        private @Nullable LookupElement[] createLookupItems(String name, Editor editor, PsiNamedElement psiVariable) {
             if (psiVariable == null) {
                 return myLookupItems;
             }

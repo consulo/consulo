@@ -247,8 +247,7 @@ class DesktopColorPicker extends JPanel implements DocumentListener {
         }
     }
 
-    @Nullable
-    private Color gatherRGB() {
+    private @Nullable Color gatherRGB() {
         try {
             int r = Integer.parseInt(myRed.getText());
             int g = Integer.parseInt(myGreen.getText());
@@ -725,8 +724,7 @@ class DesktopColorPicker extends JPanel implements DocumentListener {
             return JBUI.scale(62 + 3);
         }
 
-        @Nullable
-        public Color getMostRecentColor() {
+        public @Nullable Color getMostRecentColor() {
             return myRecentColors.isEmpty() ? null : myRecentColors.get(myRecentColors.size() - 1);
         }
 
@@ -769,8 +767,7 @@ class DesktopColorPicker extends JPanel implements DocumentListener {
             return super.getToolTipText(event);
         }
 
-        @Nullable
-        private Color getColor(MouseEvent event) {
+        private @Nullable Color getColor(MouseEvent event) {
             Couple<Integer> pair = pointToCellCoords(event.getPoint());
             if (pair != null) {
                 int ndx = pair.second + pair.first * 10;
@@ -810,8 +807,7 @@ class DesktopColorPicker extends JPanel implements DocumentListener {
             }
         }
 
-        @Nullable
-        private Couple<Integer> pointToCellCoords(Point p) {
+        private @Nullable Couple<Integer> pointToCellCoords(Point p) {
             int x = p.x;
             int y = p.y;
 

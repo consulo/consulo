@@ -126,8 +126,7 @@ public class ShutDownTracker implements Runnable {
     myShutdownTasks.remove(task);
   }
 
-  @Nullable
-  private synchronized <T> T removeLast(LinkedList<T> list) {
+  private synchronized @Nullable <T> T removeLast(LinkedList<T> list) {
     return list.isEmpty() ? null : list.removeLast();
   }
 }

@@ -36,10 +36,8 @@ public abstract class AbstractBlock implements ASTBlock, ExtraRangesProvider {
     public static final List<Block> EMPTY = Collections.emptyList();
     
     protected final ASTNode myNode;
-    @Nullable
-    protected final Wrap myWrap;
-    @Nullable
-    protected final Alignment myAlignment;
+    protected final @Nullable Wrap myWrap;
+    protected final @Nullable Alignment myAlignment;
 
     private List<Block> mySubBlocks;
     private Boolean myIncomplete;
@@ -154,8 +152,7 @@ public abstract class AbstractBlock implements ASTBlock, ExtraRangesProvider {
         return new ChildAttributes(getChildIndent(), getFirstChildAlignment());
     }
 
-    @Nullable
-    private Alignment getFirstChildAlignment() {
+    private @Nullable Alignment getFirstChildAlignment() {
         List<Block> subBlocks = getSubBlocks();
         for (Block subBlock : subBlocks) {
             Alignment alignment = subBlock.getAlignment();
@@ -166,8 +163,7 @@ public abstract class AbstractBlock implements ASTBlock, ExtraRangesProvider {
         return null;
     }
 
-    @Nullable
-    protected Indent getChildIndent() {
+    protected @Nullable Indent getChildIndent() {
         return null;
     }
 

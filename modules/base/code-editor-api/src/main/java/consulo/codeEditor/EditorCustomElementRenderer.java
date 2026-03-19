@@ -89,8 +89,7 @@ public interface EditorCustomElementRenderer {
      * Returns a registered id of action group, which is to be used for displaying context menu for the given custom element.
      * If {@code null} is returned, standard editor's context menu will be displayed upon corresponding mouse event.
      */
-    @Nullable
-    default String getContextMenuGroupId(Inlay<?> inlay) {
+    default @Nullable String getContextMenuGroupId(Inlay<?> inlay) {
         return null;
     }
 

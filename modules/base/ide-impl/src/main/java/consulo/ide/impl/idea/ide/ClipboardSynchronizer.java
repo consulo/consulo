@@ -131,13 +131,11 @@ public class ClipboardSynchronizer implements Disposable {
     return ClipboardUtil.handleClipboardSafely(() -> myClipboardHandler.areDataFlavorsAvailable(flavors), () -> false);
   }
 
-  @Nullable
-  public Transferable getContents() {
+  public @Nullable Transferable getContents() {
     return ClipboardUtil.handleClipboardSafely(myClipboardHandler::getContents, () -> null);
   }
 
-  @Nullable
-  public Object getData(DataFlavor dataFlavor) {
+  public @Nullable Object getData(DataFlavor dataFlavor) {
     return ClipboardUtil.handleClipboardSafely(() -> {
       try {
         return myClipboardHandler.getData(dataFlavor);
@@ -157,8 +155,7 @@ public class ClipboardSynchronizer implements Disposable {
     myClipboardHandler.resetContent();
   }
 
-  @Nullable
-  private static Clipboard getClipboard() {
+  private static @Nullable Clipboard getClipboard() {
     try {
       return Toolkit.getDefaultToolkit().getSystemClipboard();
     }
@@ -192,14 +189,12 @@ public class ClipboardSynchronizer implements Disposable {
     }
 
 
-    @Nullable
-    public Transferable getContents() {
+    public @Nullable Transferable getContents() {
       Clipboard clipboard = getClipboard();
       return clipboard == null ? null : clipboard.getContents(this);
     }
 
-    @Nullable
-    public Object getData(DataFlavor dataFlavor) throws IOException, UnsupportedFlavorException {
+    public @Nullable Object getData(DataFlavor dataFlavor) throws IOException, UnsupportedFlavorException {
       Clipboard clipboard = getClipboard();
       return clipboard == null ? null : clipboard.getData(dataFlavor);
     }
@@ -218,8 +213,7 @@ public class ClipboardSynchronizer implements Disposable {
   private static class MacClipboardHandler extends ClipboardHandler {
     private Pair<String, Transferable> myFullTransferable;
 
-    @Nullable
-    private Transferable doGetContents() {
+    private @Nullable Transferable doGetContents() {
       return super.getContents();
     }
 
@@ -250,8 +244,7 @@ public class ClipboardSynchronizer implements Disposable {
     }
 
     @Override
-    @Nullable
-    public Object getData(DataFlavor dataFlavor) throws IOException, UnsupportedFlavorException {
+    public @Nullable Object getData(DataFlavor dataFlavor) throws IOException, UnsupportedFlavorException {
       if (myFullTransferable == null) return super.getData(dataFlavor);
       Transferable contents = getContents();
       return contents == null ? null : contents.getTransferData(dataFlavor);
@@ -275,8 +268,7 @@ public class ClipboardSynchronizer implements Disposable {
       }
     }
 
-    @Nullable
-    private static Transferable getContentsSafe() {
+    private static @Nullable Transferable getContentsSafe() {
       CompletableFuture<Transferable> result = new CompletableFuture<>();
 
       Foundation.executeOnMainThread(true, false, () -> {
@@ -294,8 +286,7 @@ public class ClipboardSynchronizer implements Disposable {
       }
     }
 
-    @Nullable
-    private static Transferable getClipboardContentNatively() {
+    private static @Nullable Transferable getClipboardContentNatively() {
       String plainText = "public.utf8-plain-text";
 
       ID pasteboard = Foundation.invoke("NSPasteboard", "generalPasteboard");
@@ -384,8 +375,7 @@ public class ClipboardSynchronizer implements Disposable {
     }
 
     @Override
-    @Nullable
-    public Object getData(DataFlavor dataFlavor) throws IOException, UnsupportedFlavorException {
+    public @Nullable Object getData(DataFlavor dataFlavor) throws IOException, UnsupportedFlavorException {
       Transferable currentContent = myCurrentContent;
       if (currentContent != null) {
         return currentContent.getTransferData(dataFlavor);
@@ -416,8 +406,7 @@ public class ClipboardSynchronizer implements Disposable {
      * @return null if is unable to check; empty list if clipboard owner doesn't respond timely;
      * collection of available data flavors otherwise.
      */
-    @Nullable
-    private static Collection<DataFlavor> checkContentsQuick() {
+    private static @Nullable Collection<DataFlavor> checkContentsQuick() {
       Clipboard clipboard = getClipboard();
       if (clipboard == null || !XClipboardHacking.isAvailable()) return null;
 
@@ -455,8 +444,7 @@ public class ClipboardSynchronizer implements Disposable {
     }
 
     @Override
-    @Nullable
-    public Object getData(DataFlavor dataFlavor) throws IOException, UnsupportedFlavorException {
+    public @Nullable Object getData(DataFlavor dataFlavor) throws IOException, UnsupportedFlavorException {
       return myContent.getTransferData(dataFlavor);
     }
 

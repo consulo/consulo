@@ -47,8 +47,7 @@ public interface FileTypeDetector {
      * Returns the file type that this detector is capable of detecting, or null if it can detect
      * multiple file types.
      */
-    @Nullable
-    default Collection<? extends FileType> getDetectedFileTypes() {
+    default @Nullable Collection<? extends FileType> getDetectedFileTypes() {
         return null;
     }
 

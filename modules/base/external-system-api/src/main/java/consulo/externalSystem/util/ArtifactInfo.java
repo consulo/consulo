@@ -23,9 +23,9 @@ import org.jspecify.annotations.Nullable;
  */
 public class ArtifactInfo {
 
-  @Nullable private final String myName;
-  @Nullable private final String myGroup;
-  @Nullable private final String myVersion;
+  private final @Nullable String myName;
+  private final @Nullable String myGroup;
+  private final @Nullable String myVersion;
 
   public ArtifactInfo(@Nullable String name, @Nullable String group, @Nullable String version) {
     assert name != null || group != null || version != null;
@@ -34,8 +34,7 @@ public class ArtifactInfo {
     myVersion = version;
   }
 
-  @Nullable
-  public String getName() {
+  public @Nullable String getName() {
     return myName;
   }
 
@@ -46,8 +45,7 @@ public class ArtifactInfo {
   //  return myGroup;
   //}
   
-  @Nullable
-  public String getVersion() {
+  public @Nullable String getVersion() {
     return myVersion;
   }
 

@@ -35,8 +35,7 @@ public class JBList<E> extends JList<E> implements ComponentWithEmptyText, Compo
   private StatusText myEmptyText;
   private ExpandableItemsHandler<Integer> myExpandableItemsHandler;
 
-  @Nullable
-  private AsyncProcessIcon myBusyIcon;
+  private @Nullable AsyncProcessIcon myBusyIcon;
   private boolean myBusy;
 
   public JBList() {
@@ -208,8 +207,7 @@ public class JBList<E> extends JList<E> implements ComponentWithEmptyText, Compo
     }
   }
 
-  @Nullable
-  private String itemToText(int index, E value) {
+  private @Nullable String itemToText(int index, E value) {
     ListCellRenderer renderer = getCellRenderer();
     //noinspection unchecked
     Component c = renderer == null ? null : renderer.getListCellRendererComponent(this, value, index, true, true);

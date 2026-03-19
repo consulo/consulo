@@ -89,8 +89,7 @@ public class CommonCodeStyleSettings {
         return myIndentOptions;
     }
 
-    @Nullable
-    public FileType getFileType() {
+    public @Nullable FileType getFileType() {
         return myFileType;
     }
 
@@ -99,13 +98,11 @@ public class CommonCodeStyleSettings {
         return myRootSettings;
     }
 
-    @Nullable
-    public IndentOptions getIndentOptions() {
+    public @Nullable IndentOptions getIndentOptions() {
         return myIndentOptions;
     }
 
-    @Nullable
-    public ArrangementSettings getArrangementSettings() {
+    public @Nullable ArrangementSettings getArrangementSettings() {
         return myArrangementSettings;
     }
 
@@ -154,8 +151,7 @@ public class CommonCodeStyleSettings {
         setSoftMargins(source.getSoftMargins());
     }
 
-    @Nullable
-    private CommonCodeStyleSettings getDefaultSettings() {
+    private @Nullable CommonCodeStyleSettings getDefaultSettings() {
         return LanguageCodeStyleSettingsProvider.getDefaultCommonSettings(myLanguage);
     }
 
@@ -203,8 +199,7 @@ public class CommonCodeStyleSettings {
         }
     }
 
-    @Nullable
-    private Set<String> getSupportedFields() {
+    private @Nullable Set<String> getSupportedFields() {
         LanguageCodeStyleSettingsProvider provider = LanguageCodeStyleSettingsProvider.forLanguage(myLanguage);
         return provider == null ? null : provider.getSupportedFields();
     }
@@ -1018,8 +1013,7 @@ public class CommonCodeStyleSettings {
             copyPublicFields(other, this);
         }
 
-        @Nullable
-        public FileIndentOptionsProvider getFileIndentOptionsProvider() {
+        public @Nullable FileIndentOptionsProvider getFileIndentOptionsProvider() {
             return myFileIndentOptionsProvider;
         }
 
@@ -1031,8 +1025,7 @@ public class CommonCodeStyleSettings {
             document.putUserData(INDENT_OPTIONS_KEY, this);
         }
 
-        @Nullable
-        public static IndentOptions retrieveFromAssociatedDocument(PsiFile file) {
+        public static @Nullable IndentOptions retrieveFromAssociatedDocument(PsiFile file) {
             Document document = PsiDocumentManager.getInstance(file.getProject()).getDocument(file);
             return document != null ? document.getUserData(INDENT_OPTIONS_KEY) : null;
         }

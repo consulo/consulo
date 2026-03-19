@@ -34,8 +34,7 @@ import java.util.function.Predicate;
  * @author eso
  */
 public class Selection<T, V, R> extends Suspension<T> {
-	@Nullable
-	private final CoroutineStep<R, ?> resumeSelectionStep;
+	private final @Nullable CoroutineStep<R, ?> resumeSelectionStep;
 
 	private final Predicate<Continuation<?>> checkSelect;
 

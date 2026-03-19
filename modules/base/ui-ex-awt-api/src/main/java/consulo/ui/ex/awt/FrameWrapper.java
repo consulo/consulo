@@ -272,8 +272,7 @@ public class FrameWrapper implements Disposable, DataProvider {
     return null;
   }
 
-  @Nullable
-  public Object getDataInner(Key<?> dataId) {
+  public @Nullable Object getDataInner(Key<?> dataId) {
     Object data = getData(dataId);
     return data != null ? data : myDataMap.get(dataId);
   }

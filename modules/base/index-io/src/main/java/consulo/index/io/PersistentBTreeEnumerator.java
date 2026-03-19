@@ -181,7 +181,7 @@ public class PersistentBTreeEnumerator<Data> extends PersistentEnumeratorBase<Da
   }
 
   @Override
-  public boolean processAllDataObject(final Predicate<? super Data> processor, @Nullable final DataFilter filter) throws IOException {
+  public boolean processAllDataObject(final Predicate<? super Data> processor, final @Nullable DataFilter filter) throws IOException {
     if (myInlineKeysNoMapping) {
       return traverseAllRecords(new RecordsProcessor() {
         @Override

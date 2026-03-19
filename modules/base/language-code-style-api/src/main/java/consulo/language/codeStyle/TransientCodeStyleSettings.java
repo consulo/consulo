@@ -40,8 +40,7 @@ public final class TransientCodeStyleSettings extends CodeStyleSettings {
         myModifier = modifier;
     }
 
-    @Nullable
-    public CodeStyleSettingsModifier getModifier() {
+    public @Nullable CodeStyleSettingsModifier getModifier() {
         return myModifier;
     }
 
@@ -49,8 +48,7 @@ public final class TransientCodeStyleSettings extends CodeStyleSettings {
      * @return A file for which the settings were initially computed or {@code null} if the file is no longer valid
      * (doesn't exist) and has been garbage collected.
      */
-    @Nullable
-    public PsiFile getPsiFile() {
+    public @Nullable PsiFile getPsiFile() {
         return myPsiFileRef.get();
     }
 

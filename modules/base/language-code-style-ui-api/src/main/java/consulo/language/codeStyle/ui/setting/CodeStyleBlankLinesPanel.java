@@ -118,8 +118,7 @@ public class CodeStyleBlankLinesPanel extends CustomizableLanguageCodeStylePanel
         return LanguageCodeStyleSettingsProvider.SettingsType.BLANK_LINES_SETTINGS;
     }
 
-    @Nullable
-    private OptionGroup createOptionsGroup(String groupName, List<CodeStyleSettingPresentation> settings) {
+    private @Nullable OptionGroup createOptionsGroup(String groupName, List<CodeStyleSettingPresentation> settings) {
         OptionGroup optionGroup = new OptionGroup(groupName);
 
         for (CodeStyleSettingPresentation setting : settings) {

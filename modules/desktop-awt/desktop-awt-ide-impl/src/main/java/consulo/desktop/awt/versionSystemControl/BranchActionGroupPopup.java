@@ -56,8 +56,7 @@ public class BranchActionGroupPopup extends FlatSpeedSearchPopup implements Bran
     private boolean myUserSizeChanged;
     private boolean myInternalSizeChanged;
     private int myMeanRowHeight;
-    @Nullable
-    private final String myKey;
+    private final @Nullable String myKey;
     
     private Dimension myPrevSize = JBUI.emptySize();
 
@@ -314,8 +313,7 @@ public class BranchActionGroupPopup extends FlatSpeedSearchPopup implements Bran
         }
     }
 
-    @Nullable
-    private BranchActionGroup getSelectedBranchGroup() {
+    private @Nullable BranchActionGroup getSelectedBranchGroup() {
         return getSpecificAction(getList().getSelectedValue(), BranchActionGroup.class);
     }
 

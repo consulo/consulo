@@ -29,8 +29,7 @@ public class ApplyPatchDiffRequest extends DiffRequest implements ApplyPatchRequ
   
   private final String myLocalContent;
 
-  @Nullable
-  private final String myWindowTitle;
+  private final @Nullable String myWindowTitle;
   
   private final String myLocalTitle;
   

@@ -152,8 +152,7 @@ public class ScratchFileActions {
         }
     }
 
-    @Nullable
-    static String getSelectionText(@Nullable Editor editor) {
+    static @Nullable String getSelectionText(@Nullable Editor editor) {
         if (editor == null) {
             return null;
         }

@@ -49,14 +49,12 @@ public class RefElementNode extends InspectionTreeNode {
     return myHasDescriptorsUnder;
   }
 
-  @Nullable
-  public RefEntity getElement() {
+  public @Nullable RefEntity getElement() {
     return (RefEntity)getUserObject();
   }
 
   @Override
-  @Nullable
-  public Image getIcon() {
+  public @Nullable Image getIcon() {
     return myIcon;
   }
 

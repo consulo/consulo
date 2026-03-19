@@ -95,8 +95,7 @@ public class CompilerPaths {
         return getPresentableName(project) + "" + project.getLocationHash();
     }
 
-    @Nullable
-    private static String getPresentableName(Project project) {
+    private static @Nullable String getPresentableName(Project project) {
         if (project.isDefault()) {
             return project.getName();
         }
@@ -149,8 +148,7 @@ public class CompilerPaths {
      * @return a directory to which the sources (or test sources depending on the second partameter) should be compiled.
      * Null is returned if output directory is not specified or is not valid
      */
-    @Nullable
-    public static VirtualFile getModuleOutputDirectory(Module module, boolean forTestClasses) {
+    public static @Nullable VirtualFile getModuleOutputDirectory(Module module, boolean forTestClasses) {
         ModuleCompilerPathsManager manager = ModuleCompilerPathsManager.getInstance(module);
         VirtualFile outPath;
         if (forTestClasses) {
@@ -200,8 +198,7 @@ public class CompilerPaths {
         return outPathUrl != null ? VirtualFileManager.extractPath(outPathUrl) : null;
     }
 
-    @Nullable
-    public static String getModuleOutputPath(Module module, ContentFolderTypeProvider contentFolderType) {
+    public static @Nullable String getModuleOutputPath(Module module, ContentFolderTypeProvider contentFolderType) {
         Application application = module.getApplication();
         ModuleCompilerPathsManager pathsManager = ModuleCompilerPathsManager.getInstance(module);
 

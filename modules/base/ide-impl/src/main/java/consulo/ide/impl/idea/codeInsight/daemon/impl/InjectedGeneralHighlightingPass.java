@@ -356,8 +356,7 @@ public class InjectedGeneralHighlightingPass extends GeneralHighlightingPass {
      * @param startOffset
      * @return null means invalid
      */
-    @Nullable
-    private static TextRange getFixedTextRange(DocumentWindow documentWindow, int startOffset) {
+    private static @Nullable TextRange getFixedTextRange(DocumentWindow documentWindow, int startOffset) {
         TextRange fixedTextRange;
         TextRange textRange = documentWindow.getHostRange(startOffset);
         if (textRange == null) {
@@ -450,8 +449,7 @@ public class InjectedGeneralHighlightingPass extends GeneralHighlightingPass {
      * @param startOffset
      * @return null means invalid
      */
-    @Nullable
-    private static TextRange findNearestTextRange(DocumentWindow documentWindow, int startOffset) {
+    private static @Nullable TextRange findNearestTextRange(DocumentWindow documentWindow, int startOffset) {
         TextRange textRange = null;
         for (Segment marker : documentWindow.getHostRanges()) {
             TextRange curRange = ProperTextRange.create(marker);

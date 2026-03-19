@@ -48,17 +48,14 @@ public class ClassPath {
     private final boolean myAcceptUnescapedUrls;
     final boolean myPreloadJarContents;
     final boolean myCanHavePersistentIndex;
-    @Nullable
-    private final Map<URL, Set<String>> myUrlsIndex;
+    private final @Nullable Map<URL, Set<String>> myUrlsIndex;
     final boolean myLazyClassloadingCaches;
     final boolean myEnableJarIndex;
-    @Nullable
-    private final CachePoolImpl myCachePool;
+    private final @Nullable CachePoolImpl myCachePool;
     private final UrlClassLoader.@Nullable CachingCondition myCachingCondition;
     final boolean myLogErrorOnMissingJar;
 
-    @Nullable
-    private final Set<String> myFullJarIndex;
+    private final @Nullable Set<String> myFullJarIndex;
 
     public ClassPath(
         List<URL> urls,
@@ -133,8 +130,7 @@ public class ClassPath {
         }
     }
 
-    @Nullable
-    public Resource getResource(String resourcePath) {
+    public @Nullable Resource getResource(String resourcePath) {
         long started = startTiming();
         try {
             // if we have full jar index, and its not our resource - skip fully
@@ -184,8 +180,7 @@ public class ClassPath {
         return new MyEnumeration(name);
     }
 
-    @Nullable
-    private Loader getLoader(int i) {
+    private @Nullable Loader getLoader(int i) {
         if (i < myLastLoaderProcessed.get()) { // volatile read
             return myLoaders.get(i);
         }
@@ -193,8 +188,7 @@ public class ClassPath {
         return getLoaderSlowPath(i);
     }
 
-    @Nullable
-    private synchronized Loader getLoaderSlowPath(int i) {
+    private synchronized @Nullable Loader getLoaderSlowPath(int i) {
         while (myLoaders.size() < i + 1) {
             URL url;
             synchronized (myUrls) {
@@ -260,8 +254,7 @@ public class ClassPath {
         }
     }
 
-    @Nullable
-    private Loader createLoader(URL url, int index, File file, boolean processRecursively) throws IOException {
+    private @Nullable Loader createLoader(URL url, int index, File file, boolean processRecursively) throws IOException {
         if (file.isDirectory()) {
             return new FileLoader(url, index, this);
         }
@@ -347,8 +340,7 @@ public class ClassPath {
         private int myType = DEFAULT_IMPL;
 
         private int myIndex;
-        @Nullable
-        private Resource myRes = null;
+        private @Nullable Resource myRes = null;
         private final String myName;
         private final String myShortName;
         private final List<Loader> myLoaders;
@@ -499,8 +491,7 @@ public class ClassPath {
         void logResource(String url, URL baseLoaderURL, long resourceSize);
     }
 
-    @Nullable
-    private static final ResourceLoadingLogger ourResourceLoadingLogger;
+    private static final @Nullable ResourceLoadingLogger ourResourceLoadingLogger;
 
     static {
         String className = System.getProperty("intellij.class.resources.loading.logger");

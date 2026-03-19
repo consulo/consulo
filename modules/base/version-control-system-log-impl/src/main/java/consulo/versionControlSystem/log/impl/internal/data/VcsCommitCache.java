@@ -42,8 +42,7 @@ class VcsCommitCache<CommitId, T extends VcsShortCommitDetails> {
     return myCache.get(hash) != null;
   }
 
-  @Nullable
-  public T get(CommitId hash) {
+  public @Nullable T get(CommitId hash) {
     assert EventQueue.isDispatchThread();
     return myCache.get(hash);
   }

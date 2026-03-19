@@ -86,9 +86,8 @@ public abstract class AbstractArrangementUiComponent implements ArrangementUiCom
   
   private final Set<ArrangementSettingsToken> myAvailableTokens = new HashSet<>();
 
-  @Nullable private Listener  myListener;
-  @Nullable
-  private Rectangle myScreenBounds;
+  private @Nullable Listener  myListener;
+  private @Nullable Rectangle myScreenBounds;
 
   private boolean myEnabled = true;
 

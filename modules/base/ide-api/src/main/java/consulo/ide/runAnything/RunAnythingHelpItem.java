@@ -14,10 +14,8 @@ import java.awt.*;
 public class RunAnythingHelpItem extends RunAnythingItemBase {
     
     private final String myPlaceholder;
-    @Nullable
-    private final String myDescription;
-    @Nullable
-    private final Image myIcon;
+    private final @Nullable String myDescription;
+    private final @Nullable Image myIcon;
 
     public RunAnythingHelpItem(String placeholder, String command, @Nullable String description, @Nullable Image icon) {
         super(command, icon);

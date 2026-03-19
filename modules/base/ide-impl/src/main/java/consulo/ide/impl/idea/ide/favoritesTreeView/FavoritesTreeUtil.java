@@ -108,8 +108,7 @@ public class FavoritesTreeUtil {
     return Collections.emptyList();
   }
 
-  @Nullable
-  public static FavoritesListNode extractParentList(FavoritesTreeNodeDescriptor descriptor) {
+  public static @Nullable FavoritesListNode extractParentList(FavoritesTreeNodeDescriptor descriptor) {
     AbstractTreeNode node = descriptor.getElement();
     AbstractTreeNode current = node;
     while (current != null) {

@@ -115,8 +115,7 @@ public class FileColorManagerImpl implements FileColorManager, PersistentStateCo
     }
 
     @Override
-    @Nullable
-    public Color getColor(String name) {
+    public @Nullable Color getColor(String name) {
         Color color = ourDefaultColors.get(name);
         return color == null ? ColorUtil.fromHex(name, null) : color;
     }
@@ -169,8 +168,7 @@ public class FileColorManagerImpl implements FileColorManager, PersistentStateCo
     }
 
     @Override
-    @Nullable
-    public Color getFileColor(VirtualFile file) {
+    public @Nullable Color getFileColor(VirtualFile file) {
         initProjectLevelConfigurations();
 
         if (!file.isValid()) {
@@ -182,8 +180,7 @@ public class FileColorManagerImpl implements FileColorManager, PersistentStateCo
     }
 
     @Override
-    @Nullable
-    public Color getScopeColor(String scopeName) {
+    public @Nullable Color getScopeColor(String scopeName) {
         initProjectLevelConfigurations();
 
         String colorName = myModel.getScopeColor(scopeName, myProject);
@@ -207,8 +204,7 @@ public class FileColorManagerImpl implements FileColorManager, PersistentStateCo
         return myModel.getLocalConfigurations();
     }
 
-    @Nullable
-    public static String getColorId(Color color) {
+    public static @Nullable String getColorId(Color color) {
         for (Map.Entry<String, Color> entry : ourDefaultColors.entrySet()) {
             String id = entry.getKey();
             Color value = entry.getValue();

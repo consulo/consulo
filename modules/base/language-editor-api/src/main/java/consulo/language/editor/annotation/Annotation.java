@@ -61,8 +61,7 @@ public final class Annotation implements Segment {
     private boolean myAfterEndOfLine = false;
     private boolean myIsFileLevelAnnotation = false;
     private GutterIconRenderer myGutterIconRenderer;
-    @Nullable
-    private ProblemGroup myProblemGroup;
+    private @Nullable ProblemGroup myProblemGroup;
     private List<QuickFixInfo> myBatchFixes;
 
     public static class QuickFixInfo {
@@ -308,13 +307,11 @@ public final class Annotation implements Segment {
      * @return the list of quick fixes, or null if none have been registered.
      */
 
-    @Nullable
-    public List<QuickFixInfo> getQuickFixes() {
+    public @Nullable List<QuickFixInfo> getQuickFixes() {
         return myQuickFixes;
     }
 
-    @Nullable
-    public List<QuickFixInfo> getBatchFixes() {
+    public @Nullable List<QuickFixInfo> getBatchFixes() {
         return myBatchFixes;
     }
 
@@ -410,8 +407,7 @@ public final class Annotation implements Segment {
      *
      * @return the gutter icon renderer instance.
      */
-    @Nullable
-    public GutterIconRenderer getGutterIconRenderer() {
+    public @Nullable GutterIconRenderer getGutterIconRenderer() {
         return myGutterIconRenderer;
     }
 
@@ -429,8 +425,7 @@ public final class Annotation implements Segment {
      *
      * @return the problem group
      */
-    @Nullable
-    public ProblemGroup getProblemGroup() {
+    public @Nullable ProblemGroup getProblemGroup() {
         return myProblemGroup;
     }
 

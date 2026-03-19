@@ -487,8 +487,7 @@ public class ActionUpdater {
         }
     }
 
-    @Nullable
-    private Presentation update(AnAction action, UpdateStrategy strategy) {
+    private @Nullable Presentation update(AnAction action, UpdateStrategy strategy) {
         Presentation cached = myUpdatedPresentations.get(action);
         if (cached != null) {
             return cached;

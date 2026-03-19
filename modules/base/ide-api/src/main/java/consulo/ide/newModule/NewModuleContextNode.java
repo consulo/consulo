@@ -38,8 +38,7 @@ public class NewModuleContextNode {
     return myName;
   }
 
-  @Nullable
-  public Image getImage() {
+  public @Nullable Image getImage() {
     return myImage;
   }
 }

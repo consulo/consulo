@@ -49,8 +49,7 @@ public class CustomScopesProviders {
         });
     }
 
-    @Nullable
-    public static NamedScope findScopeByName(String name, CustomScopesProvider provider) {
+    public static @Nullable NamedScope findScopeByName(String name, CustomScopesProvider provider) {
         SimpleReference<NamedScope> ref = SimpleReference.create();
         provider.acceptScopes(namedScope -> {
             if (Objects.equals(namedScope.getName(), name)) {

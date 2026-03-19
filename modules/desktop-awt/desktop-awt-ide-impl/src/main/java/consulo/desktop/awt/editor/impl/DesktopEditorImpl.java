@@ -161,8 +161,7 @@ public final class DesktopEditorImpl extends CodeEditorBase
     private final EditorComponentImpl myEditorComponent;
    
     private final EditorGutterComponentImpl myGutterComponent;
-    @Nullable
-    private final StickyLinesManager myStickyLinesManager;
+    private final @Nullable StickyLinesManager myStickyLinesManager;
     private final FocusModeModelImpl myFocusModeModel;
     private volatile long myLastTypedActionTimestamp = -1;
     private String myLastTypedAction;
@@ -200,10 +199,8 @@ public final class DesktopEditorImpl extends CodeEditorBase
     @SuppressWarnings("RedundantStringConstructorCall")
     private final Object MOUSE_DRAGGED_GROUP = new String("MouseDraggedGroup");
 
-    @Nullable
-    private MouseEvent myMousePressedEvent;
-    @Nullable
-    private MouseEvent myMouseMovedEvent;
+    private @Nullable MouseEvent myMousePressedEvent;
+    private @Nullable MouseEvent myMouseMovedEvent;
 
     private final MouseListener myMouseListener = new MyMouseAdapter();
     private final MouseMotionListener myMouseMotionListener = new MyMouseMotionListener();
@@ -211,8 +208,7 @@ public final class DesktopEditorImpl extends CodeEditorBase
     /**
      * Holds information about area where mouse was pressed.
      */
-    @Nullable
-    private EditorMouseEventArea myMousePressArea;
+    private @Nullable EditorMouseEventArea myMousePressArea;
     private int mySavedSelectionStart = -1;
     private int mySavedSelectionEnd = -1;
 
@@ -221,8 +217,7 @@ public final class DesktopEditorImpl extends CodeEditorBase
 
     @MouseSelectionState
     private int myMouseSelectionState;
-    @Nullable
-    private FoldRegion myMouseSelectedRegion;
+    private @Nullable FoldRegion myMouseSelectedRegion;
 
     private int myHorizontalTextAlignment = TEXT_ALIGNMENT_LEFT;
 
@@ -247,10 +242,8 @@ public final class DesktopEditorImpl extends CodeEditorBase
 
     private MyInputMethodHandler myInputMethodRequestsHandler;
     private InputMethodRequests myInputMethodRequestsSwingWrapper;
-    @Nullable
-    private ColorValue myForcedBackground;
-    @Nullable
-    private Dimension myPreferredSize;
+    private @Nullable ColorValue myForcedBackground;
+    private @Nullable Dimension myPreferredSize;
 
     private final Alarm myMouseSelectionStateAlarm = new Alarm(Alarm.ThreadToUse.SWING_THREAD);
     private Runnable myMouseSelectionStateResetRunnable;
@@ -263,8 +256,7 @@ public final class DesktopEditorImpl extends CodeEditorBase
    
     private final JPanel myHeaderPanel;
 
-    @Nullable
-    private MouseEvent myInitialMouseEvent;
+    private @Nullable MouseEvent myInitialMouseEvent;
     private boolean myIgnoreMouseEventsConsecutiveToInitial;
 
     private EditorDropHandler myDropHandler;
@@ -324,10 +316,8 @@ public final class DesktopEditorImpl extends CodeEditorBase
         myImmediatePainter = new ImmediatePainter(this);
 
         myCaretModel.addCaretListener(new CaretListener() {
-            @Nullable
-            private LightweightHint myCurrentHint;
-            @Nullable
-            private IndentGuideDescriptor myCurrentCaretGuide;
+            private @Nullable LightweightHint myCurrentHint;
+            private @Nullable IndentGuideDescriptor myCurrentCaretGuide;
 
             @Override
             public void caretPositionChanged(CaretEvent e) {
@@ -671,8 +661,7 @@ public final class DesktopEditorImpl extends CodeEditorBase
         myView.setPrefix(prefixText, attributes);
     }
 
-    @Nullable
-    private Cursor getCustomCursor() {
+    private @Nullable Cursor getCustomCursor() {
         return ContainerUtil.getFirstItem(myCustomCursors.values());
     }
 
@@ -1652,8 +1641,7 @@ public final class DesktopEditorImpl extends CodeEditorBase
     }
 
     @Override
-    @Nullable
-    public JComponent getPermanentHeaderComponent() {
+    public @Nullable JComponent getPermanentHeaderComponent() {
         return getUserData(PERMANENT_HEADER);
     }
 
@@ -1663,8 +1651,7 @@ public final class DesktopEditorImpl extends CodeEditorBase
     }
 
     @Override
-    @Nullable
-    public JComponent getHeaderComponent() {
+    public @Nullable JComponent getHeaderComponent() {
         if (myHeaderPanel.getComponentCount() > 0) {
             return (JComponent) myHeaderPanel.getComponent(0);
         }
@@ -1718,8 +1705,7 @@ public final class DesktopEditorImpl extends CodeEditorBase
         return readOnlyColor != null ? readOnlyColor : color;
     }
 
-    @Nullable
-    public TextRange getComposedTextRange() {
+    public @Nullable TextRange getComposedTextRange() {
         return myInputMethodRequestsHandler == null || myInputMethodRequestsHandler.composedText == null ? null : myInputMethodRequestsHandler.composedTextRange;
     }
 
@@ -1737,8 +1723,7 @@ public final class DesktopEditorImpl extends CodeEditorBase
         myPaintSelection = paintSelection;
     }
 
-    @Nullable
-    public CaretRectangle[] getCaretLocations(boolean onlyIfShown) {
+    public @Nullable CaretRectangle[] getCaretLocations(boolean onlyIfShown) {
         return myCaretCursor.getCaretLocations(onlyIfShown);
     }
 
@@ -2925,8 +2910,7 @@ public final class DesktopEditorImpl extends CodeEditorBase
         }
 
         @Override
-        @Nullable
-        public TextHitInfo getLocationOffset(int x, int y) {
+        public @Nullable TextHitInfo getLocationOffset(int x, int y) {
             if (composedText != null) {
                 Point p = getLocationOnScreen(getContentComponent());
                 p.x = x - p.x;
@@ -3983,8 +3967,7 @@ public final class DesktopEditorImpl extends CodeEditorBase
         }
 
         @Override
-        @Nullable
-        protected Transferable createTransferable(JComponent c) {
+        protected @Nullable Transferable createTransferable(JComponent c) {
             DesktopEditorImpl editor = getEditor(c);
             String s = editor.getSelectionModel().getSelectedText();
             if (s == null) {
@@ -4105,8 +4088,7 @@ public final class DesktopEditorImpl extends CodeEditorBase
         return myScrollPane.getWidth() - myVerticalScrollBar.getWidth();
     }
 
-    @Nullable
-    private Pair<StickyLinesManager, StickyLinesPanel> createStickyLinesPanel() {
+    private @Nullable Pair<StickyLinesManager, StickyLinesPanel> createStickyLinesPanel() {
         if (myProject != null && myKind == EditorKind.MAIN_EDITOR && !isMirrored()) {
             StickyLinesModel stickyModel = StickyLinesModel.getModel(myDocumentMarkupModel.getDelegate());
             VisualStickyLines visualStickyLines = new VisualStickyLines(this, stickyModel);

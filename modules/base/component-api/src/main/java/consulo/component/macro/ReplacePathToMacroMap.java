@@ -33,8 +33,7 @@ import java.util.Map;
  * @see PathMacroManager
  */
 public class ReplacePathToMacroMap extends PathMacroMap {
-    @Nullable
-    private List<String> myPathsIndex = null;
+    private @Nullable List<String> myPathsIndex = null;
     private final Map<String, String> myMacroMap = new LinkedHashMap<>();
 
     public void addMacroReplacement(PathMacroProtocolProvider pathMacroProtocolProvider, String path, String macroName) {

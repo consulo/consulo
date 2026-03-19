@@ -157,8 +157,7 @@ public class ExternalServiceConfigurationImpl
         return myState.email;
     }
 
-    @Nullable
-    public String getOAuthKey() {
+    public @Nullable String getOAuthKey() {
         return myState.oauthKey;
     }
 

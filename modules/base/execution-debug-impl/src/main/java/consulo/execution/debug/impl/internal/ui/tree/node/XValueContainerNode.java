@@ -130,8 +130,7 @@ public abstract class XValueContainerNode<ValueContainer extends XValueContainer
     return !tree.isUnderRemoteDebug();
   }
 
-  @Nullable
-  private List<XValueGroupNodeImpl> createGroupNodes(
+  private @Nullable List<XValueGroupNodeImpl> createGroupNodes(
     List<XValueGroup> groups,
     @Nullable List<XValueGroupNodeImpl> prevNodes,
     List<XValueContainerNode<?>> newChildren

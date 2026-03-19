@@ -82,8 +82,7 @@ public abstract class DialogWrapperPeer {
   /**
    * @see javax.swing.JDialog#getContentPane
    */
-  @Nullable
-  public abstract Container getContentPane();
+  public abstract @Nullable Container getContentPane();
 
   /**
    * @see java.awt.Window#getOwner

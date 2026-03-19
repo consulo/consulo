@@ -364,8 +364,7 @@ public final class LocalFileSystemImpl extends LocalFileSystemBase implements Re
         return update;
     }
 
-    @Nullable
-    private static WatchRequestImpl watch(String rootPath, boolean recursively) {
+    private static @Nullable WatchRequestImpl watch(String rootPath, boolean recursively) {
         int index = rootPath.indexOf(URLUtil.ARCHIVE_SEPARATOR);
         if (index >= 0) {
             rootPath = rootPath.substring(0, index);

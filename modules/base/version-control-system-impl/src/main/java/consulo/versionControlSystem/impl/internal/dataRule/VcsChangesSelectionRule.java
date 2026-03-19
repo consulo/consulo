@@ -42,8 +42,7 @@ public class VcsChangesSelectionRule implements GetDataRule<ChangesSelection> {
     return getChangesSelection(dataProvider);
   }
 
-  @Nullable
-  public ChangesSelection getChangesSelection(DataProvider dataProvider) {
+  public @Nullable ChangesSelection getChangesSelection(DataProvider dataProvider) {
     Change currentChange = dataProvider.getDataUnchecked(VcsDataKeys.CURRENT_CHANGE);
 
     Change[] selectedChanges = dataProvider.getDataUnchecked(VcsDataKeys.SELECTED_CHANGES);

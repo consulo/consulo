@@ -44,8 +44,7 @@ public class Streams {
     return args == null ? Stream.<T>empty() : Arrays.stream(args);
   }
 
-  @Nullable
-  public static <T> T getIfSingle(Stream<T> stream) {
+  public static @Nullable <T> T getIfSingle(Stream<T> stream) {
     if (stream == null) {
       return null;
     }

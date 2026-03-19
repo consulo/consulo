@@ -130,8 +130,7 @@ public abstract class VirtualFileVisitor<T> {
    * @param file a virtual file to get children from.
    * @return children iterable, or null to use {@linkplain VirtualFile#getChildren()}.
    */
-  @Nullable
-  public Iterable<VirtualFile> getChildrenIterable(VirtualFile file) {
+  public @Nullable Iterable<VirtualFile> getChildrenIterable(VirtualFile file) {
     return null;
   }
 

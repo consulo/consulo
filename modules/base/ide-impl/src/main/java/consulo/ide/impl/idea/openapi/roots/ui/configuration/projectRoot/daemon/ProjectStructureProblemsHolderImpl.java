@@ -79,8 +79,7 @@ public class ProjectStructureProblemsHolderImpl implements ProjectStructureProbl
         }
     }
 
-    @Nullable
-    public List<ProjectStructureProblemDescription> getProblemDescriptions() {
+    public @Nullable List<ProjectStructureProblemDescription> getProblemDescriptions() {
         return myProblemDescriptions;
     }
 }

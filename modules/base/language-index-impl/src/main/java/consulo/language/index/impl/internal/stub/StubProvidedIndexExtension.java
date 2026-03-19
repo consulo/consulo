@@ -50,8 +50,7 @@ public class StubProvidedIndexExtension implements ProvidedIndexExtension<Intege
     return new SerializedStubTreeDataExternalizer(false, manager);
   }
 
-  @Nullable
-  public <K> ProvidedIndexExtension<K, Void> findProvidedStubIndex(StubIndexExtension<K, ?> extension) {
+  public @Nullable <K> ProvidedIndexExtension<K, Void> findProvidedStubIndex(StubIndexExtension<K, ?> extension) {
     String name = extension.getKey().getName();
     File path = getIndexPath();
 

@@ -77,8 +77,7 @@ public class XmlActionGroupStub extends DefaultActionGroup implements ActionStub
     return convertGroupStub(application, this, manager);
   }
 
-  @Nullable
-  static ActionGroup convertGroupStub(Application application, XmlActionGroupStub stub, ActionManager actionManager) {
+  static @Nullable ActionGroup convertGroupStub(Application application, XmlActionGroupStub stub, ActionManager actionManager) {
     ActionGroup group = XmlActionStub.instantiate(application, stub.getActionClass(), stub.getClassLoader(), stub.getPluginId(), ActionGroup.class);
     if (group == null) return null;
     stub.initGroup(group, actionManager);

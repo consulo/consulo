@@ -28,8 +28,7 @@ import java.util.List;
 public class ProcessOutput {
   private final StringBuilder myStdoutBuilder = new StringBuilder();
   private final StringBuilder myStderrBuilder = new StringBuilder();
-  @Nullable
-  private Integer myExitCode;
+  private @Nullable Integer myExitCode;
   private boolean myTimeout;
   private boolean myCancelled;
 

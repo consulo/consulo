@@ -44,8 +44,7 @@ public interface RefManagerExtension<T> {
    * @param psiElement
    * @return container element for given psiElement
    */
-  @Nullable
-  default PsiNamedElement getElementContainer(PsiElement psiElement) {
+  default @Nullable PsiNamedElement getElementContainer(PsiElement psiElement) {
     return null;
   }
 

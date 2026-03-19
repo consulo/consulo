@@ -131,7 +131,7 @@ public class XDebuggerUtilImpl extends XDebuggerUtil {
         final XLineBreakpointType<P> type,
         XSourcePosition position,
         final boolean temporary,
-        @Nullable final Editor editor
+        final @Nullable Editor editor
     ) {
         return WriteAction.compute(() -> {
             final VirtualFile file = position.getFile();
@@ -309,8 +309,7 @@ public class XDebuggerUtilImpl extends XDebuggerUtil {
         return new XBreakpointFileGroupingRule<>();
     }
 
-    @Nullable
-    public static XSourcePosition getCaretPosition(Project project, DataContext context) {
+    public static @Nullable XSourcePosition getCaretPosition(Project project, DataContext context) {
         Editor editor = getEditor(project, context);
         if (editor == null) {
             return null;
@@ -343,8 +342,7 @@ public class XDebuggerUtilImpl extends XDebuggerUtil {
         return res;
     }
 
-    @Nullable
-    private static Editor getEditor(Project project, DataContext context) {
+    private static @Nullable Editor getEditor(Project project, DataContext context) {
         Editor editor = context.getData(Editor.KEY);
         if (editor == null) {
             return FileEditorManager.getInstance(project).getSelectedTextEditor();
@@ -368,8 +366,7 @@ public class XDebuggerUtilImpl extends XDebuggerUtil {
         };
     }
 
-    @Nullable
-    public static XDebuggerEvaluator getEvaluator(XSuspendContext suspendContext) {
+    public static @Nullable XDebuggerEvaluator getEvaluator(XSuspendContext suspendContext) {
         XExecutionStack executionStack = suspendContext.getActiveExecutionStack();
         if (executionStack != null) {
             XStackFrame stackFrame = executionStack.getTopFrame();
@@ -423,8 +420,7 @@ public class XDebuggerUtilImpl extends XDebuggerUtil {
 
     @RequiredReadAction
     @Override
-    @Nullable
-    public PsiElement findContextElement(VirtualFile virtualFile, int offset, Project project) {
+    public @Nullable PsiElement findContextElement(VirtualFile virtualFile, int offset, Project project) {
         if (!virtualFile.isValid()) {
             return null;
         }
@@ -468,8 +464,7 @@ public class XDebuggerUtilImpl extends XDebuggerUtil {
         ValueLookupManagerImpl.DISABLE_VALUE_LOOKUP.set(editor, Boolean.TRUE);
     }
 
-    @Nullable
-    public static Editor createEditor(OpenFileDescriptor descriptor) {
+    public static @Nullable Editor createEditor(OpenFileDescriptor descriptor) {
         return descriptor.canNavigate()
             ? FileEditorManager.getInstance((Project) descriptor.getProject()).openTextEditor(descriptor, false) : null;
     }

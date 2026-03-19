@@ -54,8 +54,7 @@ public class ProjectPathMacroManagerImpl extends BasePathMacroManager implements
     return result;
   }
 
-  @Nullable
-  private static String getProjectDir(Project project) {
+  private static @Nullable String getProjectDir(Project project) {
     VirtualFile baseDir = project.getBaseDir();
     return baseDir != null ? baseDir.getPath() : null;
   }

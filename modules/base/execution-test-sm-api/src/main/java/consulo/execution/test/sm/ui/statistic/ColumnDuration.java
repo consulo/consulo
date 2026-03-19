@@ -40,8 +40,7 @@ public class ColumnDuration extends BaseColumn implements Comparator<SMTestProxy
     }
 
     @Override
-    @Nullable
-    public Comparator<SMTestProxy> getComparator() {
+    public @Nullable Comparator<SMTestProxy> getComparator() {
         return this;
     }
 

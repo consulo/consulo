@@ -92,8 +92,7 @@ public class LayoutTreeComponent implements DnDTarget, Disposable {
         }
     }
 
-    @Nullable
-    private WeightBasedComparator getComparator() {
+    private @Nullable WeightBasedComparator getComparator() {
         return mySortElements ? new WeightBasedComparator(true) : null;
     }
 
@@ -103,8 +102,7 @@ public class LayoutTreeComponent implements DnDTarget, Disposable {
         myArtifactsEditor.getContext().getParent().getDefaultSettings().setSortElements(sortElements);
     }
 
-    @Nullable
-    private static PackagingElementNode getNode(Object value) {
+    private static @Nullable PackagingElementNode getNode(Object value) {
         if (!(value instanceof DefaultMutableTreeNode)) {
             return null;
         }
@@ -489,8 +487,7 @@ public class LayoutTreeComponent implements DnDTarget, Disposable {
         }
     }
 
-    @Nullable
-    private DefaultMutableTreeNode findParentCompositeElementNode(Point point) {
+    private @Nullable DefaultMutableTreeNode findParentCompositeElementNode(Point point) {
         TreePath path = myTree.getPathForLocation(point.x, point.y);
         while (path != null) {
             PackagingElement<?> element = myTree.getElementByPath(path);

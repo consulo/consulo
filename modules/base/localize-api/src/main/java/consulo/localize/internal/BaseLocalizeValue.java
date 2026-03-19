@@ -32,8 +32,7 @@ public abstract class BaseLocalizeValue implements LocalizeValue {
 
     protected final Object[] myArgs;
 
-    @Nullable
-    private LocalizeManager myLocalizeManager = null;
+    private @Nullable LocalizeManager myLocalizeManager = null;
 
     private String myText = "";
 

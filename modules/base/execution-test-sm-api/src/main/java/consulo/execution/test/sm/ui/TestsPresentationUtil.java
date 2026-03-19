@@ -349,8 +349,7 @@ public class TestsPresentationUtil {
         };
     }
 
-    @Nullable
-    public static String getTestStatusPresentation(SMTestProxy proxy) {
+    public static @Nullable String getTestStatusPresentation(SMTestProxy proxy) {
         return proxy.getMagnitudeInfo().getTitle();
     }
 
@@ -441,8 +440,7 @@ public class TestsPresentationUtil {
      * @param proxy Test or Suite
      * @return Duration presentation for given proxy
      */
-    @Nullable
-    public static String getDurationPresentation(SMTestProxy proxy) {
+    public static @Nullable String getDurationPresentation(SMTestProxy proxy) {
         return switch (proxy.getMagnitudeInfo()) {
             case COMPLETE_INDEX, PASSED_INDEX, FAILED_INDEX, ERROR_INDEX, IGNORED_INDEX, SKIPPED_INDEX ->
                 getDurationTimePresentation(proxy);

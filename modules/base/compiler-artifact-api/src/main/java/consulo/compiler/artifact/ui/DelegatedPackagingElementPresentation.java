@@ -46,8 +46,7 @@ public class DelegatedPackagingElementPresentation extends PackagingElementPrese
   }
 
   @Override
-  @Nullable
-  public String getTooltipText() {
+  public @Nullable String getTooltipText() {
     return myDelegate.getTooltipText();
   }
 

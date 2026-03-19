@@ -322,8 +322,7 @@ public class VcsLogRefresherImpl implements VcsLogRefresher {
       return requirements;
     }
 
-    @Nullable
-    private List<GraphCommit<Integer>> join(
+    private @Nullable List<GraphCommit<Integer>> join(
       List<? extends GraphCommit<Integer>> recentCommits,
       List<GraphCommit<Integer>> fullLog,
       Map<VirtualFile, CompressedRefs> previousRefs,

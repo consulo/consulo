@@ -12,8 +12,7 @@ public abstract class RunAnythingGroupBase extends RunAnythingGroup {
     
     public abstract Collection<RunAnythingItem> getGroupItems(DataContext dataContext, String pattern);
 
-    @Nullable
-    protected Matcher getMatcher(DataContext dataContext, String pattern) {
+    protected @Nullable Matcher getMatcher(DataContext dataContext, String pattern) {
         return null;
     }
 

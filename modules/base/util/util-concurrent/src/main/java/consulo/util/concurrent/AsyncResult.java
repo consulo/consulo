@@ -93,8 +93,7 @@ public class AsyncResult<T> extends ActionCallback {
     return result;
   }
 
-  @Nullable
-  protected T myResult;
+  protected @Nullable T myResult;
 
   @Deprecated
   public AsyncResult() {
@@ -186,18 +185,15 @@ public class AsyncResult<T> extends ActionCallback {
     return result;
   }
 
-  @Nullable
-  public T getResult() {
+  public @Nullable T getResult() {
     return myResult;
   }
 
-  @Nullable
-  public T getResultSync() {
+  public @Nullable T getResultSync() {
     return getResultSync(-1);
   }
 
-  @Nullable
-  public T getResultSync(long msTimeout) {
+  public @Nullable T getResultSync(long msTimeout) {
     waitFor(msTimeout);
     return myResult;
   }

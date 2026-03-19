@@ -58,6 +58,5 @@ public abstract class EditorMacro extends Macro {
     return null;
   }
 
-  @Nullable
-  protected abstract String expand(Editor editor);
+  protected abstract @Nullable String expand(Editor editor);
 }

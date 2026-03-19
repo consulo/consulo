@@ -72,8 +72,7 @@ public class NotificationPopup {
     }
   }
 
-  @Nullable
-  private static IdeFrame findFrame(JComponent owner) {
+  private static @Nullable IdeFrame findFrame(JComponent owner) {
     Window frame = SwingUtilities.getWindowAncestor(owner);
     if(frame == null) {
       return null;

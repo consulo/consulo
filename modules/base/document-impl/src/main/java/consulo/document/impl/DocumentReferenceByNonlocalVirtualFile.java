@@ -29,8 +29,7 @@ class DocumentReferenceByNonlocalVirtualFile implements DocumentReference {
   }
 
   @Override
-  @Nullable
-  public Document getDocument() {
+  public @Nullable Document getDocument() {
     return FileDocumentManager.getInstance().getDocument(myFile);
   }
 

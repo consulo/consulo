@@ -29,8 +29,7 @@ public class SharedProcessingContext {
     return (T)myMap.get(key);
   }
 
-  @Nullable
-  public <T> T get(Key<T> key, Object element) {
+  public @Nullable <T> T get(Key<T> key, Object element) {
     Map map = (Map)myMap.get(key);
     if (map == null) {
       return null;

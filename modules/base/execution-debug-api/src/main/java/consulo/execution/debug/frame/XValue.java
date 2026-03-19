@@ -45,8 +45,7 @@ public abstract class XValue extends XValueContainer {
   /**
    * @return expression which evaluates to the current value
    */
-  @Nullable
-  public String getEvaluationExpression() {
+  public @Nullable String getEvaluationExpression() {
     return null;
   }
 
@@ -64,16 +63,14 @@ public abstract class XValue extends XValueContainer {
   /**
    * @return evaluator to calculate value of the current object instance
    */
-  @Nullable
-  public XInstanceEvaluator getInstanceEvaluator() {
+  public @Nullable XInstanceEvaluator getInstanceEvaluator() {
     return null;
   }
 
   /**
    * @return {@link XValueModifier} instance which can be used to modify the value
    */
-  @Nullable
-  public XValueModifier getModifier() {
+  public @Nullable XValueModifier getModifier() {
     return null;
   }
 
@@ -132,8 +129,7 @@ public abstract class XValue extends XValueContainer {
    * @return provider that creates an XValue returning objects that refer to the current value
    * or null if showing referrers for the value is disabled
    */
-  @Nullable
-  public XReferrersProvider getReferrersProvider() {
+  public @Nullable XReferrersProvider getReferrersProvider() {
     return null;
   }
 }

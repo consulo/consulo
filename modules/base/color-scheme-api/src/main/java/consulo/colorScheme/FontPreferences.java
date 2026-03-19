@@ -61,8 +61,7 @@ public interface FontPreferences {
      * @return fallback font family to use if font family with the given name is not registered at current environment;
      * <code>null</code> if font family with the given name is registered at the current environment
      */
-    @Nullable
-    static String getFallbackName(String fontName, int fontSize, @Nullable EditorColorsScheme fallbackScheme) {
+    static @Nullable String getFallbackName(String fontName, int fontSize, @Nullable EditorColorsScheme fallbackScheme) {
         Font plainFont = new Font(fontName, Font.PLAIN, fontSize);
         if (plainFont.getFamily().equals("Dialog") && !("Dialog".equals(fontName) || fontName.startsWith("Dialog."))) {
             return fallbackScheme == null ? DEFAULT_FONT_NAME : fallbackScheme.getEditorFontName();

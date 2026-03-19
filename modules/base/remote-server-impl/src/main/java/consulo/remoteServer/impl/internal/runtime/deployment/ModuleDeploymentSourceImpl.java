@@ -47,14 +47,12 @@ public class ModuleDeploymentSourceImpl implements ModuleDeploymentSource {
     }
 
     @Override
-    @Nullable
-    public Module getModule() {
+    public @Nullable Module getModule() {
         return myPointer.get();
     }
 
     @Override
-    @Nullable
-    public VirtualFile getContentRoot() {
+    public @Nullable VirtualFile getContentRoot() {
         Module module = myPointer.get();
         if (module == null) {
             return null;

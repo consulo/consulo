@@ -153,8 +153,7 @@ public class TodoTreeHelper {
     }
   }
 
-  @Nullable
-  public static PsiPackage findNonEmptyPackage(PsiPackage rootPackage,
+  public static @Nullable PsiPackage findNonEmptyPackage(PsiPackage rootPackage,
                                                    Module module,
                                                    Project project,
                                                    TodoTreeBuilder builder,
@@ -293,8 +292,7 @@ public class TodoTreeHelper {
     return PsiPackageManager.getInstance(directory.getProject()).findAnyPackage(directory) != null;
   }
 
-  @Nullable
-  public static PsiElement getSelectedElement(Object userObject) {
+  public static @Nullable PsiElement getSelectedElement(Object userObject) {
     if (userObject instanceof TodoDirNode) {
       TodoDirNode descriptor = (TodoDirNode)userObject;
       return descriptor.getValue();

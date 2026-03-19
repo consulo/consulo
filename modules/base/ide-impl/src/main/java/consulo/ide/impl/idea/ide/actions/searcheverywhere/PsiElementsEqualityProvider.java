@@ -34,8 +34,7 @@ public class PsiElementsEqualityProvider implements SEResultsEqualityProvider {
         return SEEqualElementsActionType.DO_NOTHING;
     }
 
-    @Nullable
-    public static PsiElement toPsi(Object o) {
+    public static @Nullable PsiElement toPsi(Object o) {
         return o instanceof PsiElement psiElement
             ? psiElement
             : o instanceof PsiElementNavigationItem psiElementNavigationItem

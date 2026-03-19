@@ -102,8 +102,7 @@ public class ModuleUtilCore {
     return file.getModule();
   }
 
-  @Nullable
-  public static Module findModuleForFile(VirtualFile file, Project project) {
+  public static @Nullable Module findModuleForFile(VirtualFile file, Project project) {
     return ModuleContentUtil.findModuleForFile(file, project);
   }
 
@@ -178,13 +177,11 @@ public class ModuleUtilCore {
     return ModuleContentUtil.getContentFolders(project);
   }
 
-  @Nullable
-  public static <E extends ModuleExtension<E>> E getExtension(Module module, Class<E> extensionClass) {
+  public static @Nullable <E extends ModuleExtension<E>> E getExtension(Module module, Class<E> extensionClass) {
     return module.getExtension(extensionClass);
   }
 
-  @Nullable
-  public static ModuleExtension<?> getExtension(Module module, String key) {
+  public static @Nullable ModuleExtension<?> getExtension(Module module, String key) {
     return module.getExtension(key);
   }
 
@@ -202,13 +199,11 @@ public class ModuleUtilCore {
     return module.getExtension(extensionClass);
   }
 
-  @Nullable
-  public static <E extends ModuleExtension<E>> E getExtension(Project project, VirtualFile virtualFile, Class<E> extensionClass) {
+  public static @Nullable <E extends ModuleExtension<E>> E getExtension(Project project, VirtualFile virtualFile, Class<E> extensionClass) {
     return ModuleContentUtil.getExtension(project, virtualFile, extensionClass);
   }
 
-  @Nullable
-  public static Sdk getSdk(Module module, Class<? extends ModuleExtensionWithSdk> extensionClass) {
+  public static @Nullable Sdk getSdk(Module module, Class<? extends ModuleExtensionWithSdk> extensionClass) {
     return ModuleContentUtil.getSdk(module, extensionClass);
   }
 
@@ -222,8 +217,7 @@ public class ModuleUtilCore {
     return getSdk(moduleForPsiElement, extensionClass);
   }
 
-  @Nullable
-  public static Sdk getSdk(Project project, VirtualFile virtualFile, Class<? extends ModuleExtensionWithSdk> extensionClass) {
+  public static @Nullable Sdk getSdk(Project project, VirtualFile virtualFile, Class<? extends ModuleExtensionWithSdk> extensionClass) {
     Module moduleForPsiElement = findModuleForFile(virtualFile, project);
     if (moduleForPsiElement == null) {
       return null;

@@ -56,14 +56,12 @@ public abstract class LibraryType<P extends LibraryProperties> implements Librar
     /**
      * @return text to show in 'New Library' popup. Return {@code null} if the type should not be shown in the 'New Library' popup
      */
-    @Nullable
-    public abstract String getCreateActionName();
+    public abstract @Nullable String getCreateActionName();
 
     /**
      * Called when a new library of this type is created in Project Structure dialog
      */
-    @Nullable
-    public NewLibraryConfiguration createNewLibrary(
+    public @Nullable NewLibraryConfiguration createNewLibrary(
         JComponent parentComponent,
         @Nullable VirtualFile contextDirectory,
         Project project
@@ -84,13 +82,11 @@ public abstract class LibraryType<P extends LibraryProperties> implements Librar
      *
      * @return {@link LibraryRootsComponentDescriptor} instance
      */
-    @Nullable
-    public LibraryRootsComponentDescriptor createLibraryRootsComponentDescriptor() {
+    public @Nullable LibraryRootsComponentDescriptor createLibraryRootsComponentDescriptor() {
         return null;
     }
 
-    @Nullable
-    public abstract LibraryPropertiesEditor createPropertiesEditor(LibraryEditorComponent<P> editorComponent);
+    public abstract @Nullable LibraryPropertiesEditor createPropertiesEditor(LibraryEditorComponent<P> editorComponent);
 
     @Override
     public P detect(List<VirtualFile> classesRoots) {

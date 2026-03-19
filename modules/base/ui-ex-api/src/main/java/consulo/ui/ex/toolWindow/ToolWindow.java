@@ -222,8 +222,7 @@ public interface ToolWindow extends BusyObject, UserDataHolder {
    
     ContentManager getContentManager();
 
-    @Nullable
-    default ContentManager getContentManagerIfCreated() {
+    default @Nullable ContentManager getContentManagerIfCreated() {
         return getContentManager();
     }
 

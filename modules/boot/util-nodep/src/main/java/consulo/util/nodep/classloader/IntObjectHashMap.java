@@ -10,8 +10,7 @@ final class IntObjectHashMap {
   private int size;
   private int[] keys;
   private Object[] values;
-  @Nullable
-  private Object specialZeroValue = null;
+  private @Nullable Object specialZeroValue = null;
   private boolean hasZeroValue;
 
   IntObjectHashMap() {
@@ -35,8 +34,7 @@ final class IntObjectHashMap {
     if (previousValue == null) ++size;
   }
 
-  @Nullable
-  private static Object doPut(int[] keys, Object[] values, int key, @Nullable Object value) {
+  private static @Nullable Object doPut(int[] keys, Object[] values, int key, @Nullable Object value) {
     int index = hashIndex(keys, key);
     Object obj = values[index];
     values[index] = value;
@@ -73,8 +71,7 @@ final class IntObjectHashMap {
     values = newValues;
   }
 
-  @Nullable
-  public Object get(int key) {
+  public @Nullable Object get(int key) {
     return key == 0 ? specialZeroValue : values[hashIndex(keys, key)];
   }
 }

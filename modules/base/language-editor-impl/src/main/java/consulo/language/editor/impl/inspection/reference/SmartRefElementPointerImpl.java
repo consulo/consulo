@@ -104,8 +104,7 @@ public class SmartRefElementPointerImpl implements SmartRefElementPointer {
     myRefElement = null;
   }
 
-  @Nullable
-  private String getContainingFileName(RefElement ref) {
+  private @Nullable String getContainingFileName(RefElement ref) {
     SmartPsiElementPointer pointer = ref.getPointer();
     if (pointer == null) return null;
     PsiFile file = pointer.getContainingFile();

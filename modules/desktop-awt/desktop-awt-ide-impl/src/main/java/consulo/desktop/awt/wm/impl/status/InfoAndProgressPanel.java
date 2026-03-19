@@ -554,8 +554,7 @@ public class InfoAndProgressPanel extends JPanel implements Disposable, CustomSt
             return Lists.append(super.createEastButtons(), new SuspendAction());
         }
 
-        @Nullable
-        private ProgressSuspender getSuspender() {
+        private @Nullable ProgressSuspender getSuspender() {
             ProgressIndicatorEx original = myOriginal;
             return original == null ? null : ProgressSuspender.getSuspender(original);
         }

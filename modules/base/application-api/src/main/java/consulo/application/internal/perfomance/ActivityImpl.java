@@ -18,11 +18,9 @@ final class ActivityImpl implements Activity {
     // null doesn't mean root - not obligated to set parent, only as hint
     private final ActivityImpl parent;
 
-    @Nullable
-    private ActivityCategory category;
+    private @Nullable ActivityCategory category;
 
-    @Nullable
-    private final String pluginId;
+    private final @Nullable String pluginId;
 
     ActivityImpl(@Nullable String name, @Nullable String pluginId) {
         this(name, StartUpMeasurer.getCurrentTime(), null, pluginId);
@@ -48,13 +46,11 @@ final class ActivityImpl implements Activity {
         return threadId;
     }
 
-    @Nullable
-    public ActivityImpl getParent() {
+    public @Nullable ActivityImpl getParent() {
         return parent;
     }
 
-    @Nullable
-    public ActivityCategory getCategory() {
+    public @Nullable ActivityCategory getCategory() {
         return category;
     }
 
@@ -77,13 +73,11 @@ final class ActivityImpl implements Activity {
         return name;
     }
 
-    @Nullable
-    public String getDescription() {
+    public @Nullable String getDescription() {
         return description;
     }
 
-    @Nullable
-    public String getPluginId() {
+    public @Nullable String getPluginId() {
         return pluginId;
     }
 

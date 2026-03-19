@@ -64,8 +64,7 @@ public class AllFileTemplatesConfigurable implements SearchableConfigurable, Con
     private FileTemplateTab myTemplatesList;
     private FileTemplateTab myIncludesList;
     private FileTemplateTab myCodeTemplatesList;
-    @Nullable
-    private FileTemplateTab myOtherTemplatesList;
+    private @Nullable FileTemplateTab myOtherTemplatesList;
     private JComponent myToolBar;
     private TabbedPaneWrapper myTabbedPane;
     private FileTemplateConfigurable myEditor;

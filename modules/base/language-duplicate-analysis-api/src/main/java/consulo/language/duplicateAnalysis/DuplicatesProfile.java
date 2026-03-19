@@ -46,8 +46,7 @@ public abstract class DuplicatesProfile {
     
     public abstract DuplocatorState getDuplocatorState(Language language);
 
-    @Nullable
-    public String getComment(DupInfo info, int index) {
+    public @Nullable String getComment(DupInfo info, int index) {
         return null;
     }
 
@@ -73,8 +72,7 @@ public abstract class DuplicatesProfile {
         return cost >= FACTOR * lowerBound && cost <= MAX_COST;
     }
 
-    @Nullable
-    public static DuplicatesProfile findProfileForLanguage(Language language) {
+    public static @Nullable DuplicatesProfile findProfileForLanguage(Language language) {
         return findProfileForLanguage(EP_NAME.getExtensionList(), language);
     }
 
@@ -83,8 +81,7 @@ public abstract class DuplicatesProfile {
         return EP_NAME.getExtensionList();
     }
 
-    @Nullable
-    public static DuplicatesProfile findProfileForLanguage(List<? extends DuplicatesProfile> profiles, Language language) {
+    public static @Nullable DuplicatesProfile findProfileForLanguage(List<? extends DuplicatesProfile> profiles, Language language) {
         for (DuplicatesProfile profile : profiles) {
             if (profile.isMyLanguage(language)) {
                 return profile;
@@ -100,8 +97,7 @@ public abstract class DuplicatesProfile {
         return element.getLanguage();
     }
 
-    @Nullable
-    public PsiElementRole getRole(PsiElement element) {
+    public @Nullable PsiElementRole getRole(PsiElement element) {
         return null;
     }
 }

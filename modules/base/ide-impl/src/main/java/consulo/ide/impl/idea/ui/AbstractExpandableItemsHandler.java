@@ -322,8 +322,7 @@ public abstract class AbstractExpandableItemsHandler<KeyType, ComponentType exte
     }
   }
 
-  @Nullable
-  private Point createToolTipImage(KeyType key) {
+  private @Nullable Point createToolTipImage(KeyType key) {
     UIUtil.putClientProperty(myComponent, EXPANDED_RENDERER, true);
     Pair<Component, Rectangle> rendererAndBounds = getCellRendererAndBounds(key);
     UIUtil.putClientProperty(myComponent, EXPANDED_RENDERER, null);
@@ -417,8 +416,7 @@ public abstract class AbstractExpandableItemsHandler<KeyType, ComponentType exte
     return myComponent.getVisibleRect();
   }
 
-  @Nullable
-  protected abstract Pair<Component, Rectangle> getCellRendererAndBounds(KeyType key);
+  protected abstract @Nullable Pair<Component, Rectangle> getCellRendererAndBounds(KeyType key);
 
   protected abstract KeyType getCellKeyForPoint(Point point);
 }

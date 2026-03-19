@@ -35,15 +35,13 @@ public abstract class SchemeManager<T, E extends ExternalizableScheme> {
     
     public abstract List<T> getAllSchemes();
 
-    @Nullable
-    public abstract T findSchemeByName(String schemeName);
+    public abstract @Nullable T findSchemeByName(String schemeName);
 
     public abstract void save();
 
     public abstract void setCurrentSchemeName(@Nullable String schemeName);
 
-    @Nullable
-    public abstract T getCurrentScheme();
+    public abstract @Nullable T getCurrentScheme();
 
     public abstract void removeScheme(T scheme);
 

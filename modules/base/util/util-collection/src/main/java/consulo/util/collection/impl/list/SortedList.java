@@ -27,8 +27,7 @@ public class SortedList<T> extends AbstractList<T>{
   private final SortedMap<T, List<T>> myMap;
   private final Comparator<T> myComparator;
 
-  @Nullable
-  private List<T> myDelegate = null;
+  private @Nullable List<T> myDelegate = null;
 
   public SortedList(Comparator<T> comparator) {
     myComparator = comparator;

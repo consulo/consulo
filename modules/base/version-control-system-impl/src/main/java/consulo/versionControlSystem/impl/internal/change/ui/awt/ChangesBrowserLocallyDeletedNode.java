@@ -63,13 +63,11 @@ public class ChangesBrowserLocallyDeletedNode extends ChangesBrowserNode<Locally
   }
 
   @Override
-  @Nullable
-  public String getTooltip() {
+  public @Nullable String getTooltip() {
     return getUserObject().getDescription();
   }
 
-  @Nullable
-  private Image getIcon() {
+  private @Nullable Image getIcon() {
     Image result = getUserObject().getAddIcon();
 
     if (result == null) {

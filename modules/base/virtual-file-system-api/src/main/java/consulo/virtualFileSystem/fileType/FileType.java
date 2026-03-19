@@ -101,13 +101,11 @@ public interface FileType {
      * @param content file content as byte array
      * @return The character set name, in the format supported by {@link Charset} class.
      */
-    @Nullable
-    default String getCharset(VirtualFile file, byte[] content) {
+    default @Nullable String getCharset(VirtualFile file, byte[] content) {
         return null;
     }
 
-    @Nullable
-    default Charset extractCharsetFromFileContent(
+    default @Nullable Charset extractCharsetFromFileContent(
         @Nullable ComponentManager project,
         @Nullable VirtualFile file,
         CharSequence content

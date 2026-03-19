@@ -93,8 +93,7 @@ public class CompositeBlockWrapper extends AbstractBlockWrapper {
    * @return          last child block that contains line feeds and starts before the given block if any;
    *                  {@code null} otherwise
    */
-  @Nullable
-  public AbstractBlockWrapper getPrevIndentedSibling(AbstractBlockWrapper current) {
+  public @Nullable AbstractBlockWrapper getPrevIndentedSibling(AbstractBlockWrapper current) {
     if (myChildren.size() > 10) {
       return getPrevIndentedSiblingFast(current);
     }
@@ -108,8 +107,7 @@ public class CompositeBlockWrapper extends AbstractBlockWrapper {
     return candidate;
   }
 
-  @Nullable
-  private AbstractBlockWrapper getPrevIndentedSiblingFast(AbstractBlockWrapper current) {
+  private @Nullable AbstractBlockWrapper getPrevIndentedSiblingFast(AbstractBlockWrapper current) {
     if (myPrevBlockCalculator == null) {
       myPrevBlockCalculator = new ProbablyIncreasingLowerboundAlgorithm<>(myChildren);
     }

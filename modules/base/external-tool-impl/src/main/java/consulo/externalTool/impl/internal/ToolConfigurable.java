@@ -80,8 +80,7 @@ public class ToolConfigurable implements SearchableConfigurable, Configurable.No
   }
 
   @Override
-  @Nullable
-  public Runnable enableSearch(String option) {
+  public @Nullable Runnable enableSearch(String option) {
     return null;
   }
 }

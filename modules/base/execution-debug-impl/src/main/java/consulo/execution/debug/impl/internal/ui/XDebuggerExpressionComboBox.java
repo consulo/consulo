@@ -78,8 +78,7 @@ public class XDebuggerExpressionComboBox extends XDebuggerEditorBase {
     }
 
     @Override
-    @Nullable
-    public Editor getEditor() {
+    public @Nullable Editor getEditor() {
         return myEditor.getEditorTextField().getEditor();
     }
 

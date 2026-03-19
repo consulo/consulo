@@ -24,22 +24,16 @@ import org.jspecify.annotations.Nullable;
 import java.util.Objects;
 
 public final class UrlImpl implements Url {
-  @Nullable
-  private final String scheme;
-  @Nullable
-  private final String authority;
+  private final @Nullable String scheme;
+  private final @Nullable String authority;
 
   private final String path;
-  @Nullable
-  private String decodedPath = null;
+  private @Nullable String decodedPath = null;
 
-  @Nullable
-  private final String parameters;
+  private final @Nullable String parameters;
 
-  @Nullable
-  private String externalForm = null;
-  @Nullable
-  private UrlImpl withoutParameters = null;
+  private @Nullable String externalForm = null;
+  private @Nullable UrlImpl withoutParameters = null;
 
   public UrlImpl(@Nullable String path) {
     this(null, null, path, null);

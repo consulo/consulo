@@ -346,8 +346,7 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<
     private class ChangeViewAction extends AnAction {
         
         private final String myId;
-        @Nullable
-        private final String mySubId;
+        private final @Nullable String mySubId;
 
         private ChangeViewAction(String id, @Nullable String subId) {
             myId = id;
@@ -1310,8 +1309,7 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<
      * => MODULE_CONTEXT should be only available for the module node
      * otherwise VirtualFileArrayRule will return all module's content roots when just one of them is selected
      */
-    @Nullable
-    private Module moduleBySingleContentRoot(VirtualFile file) {
+    private @Nullable Module moduleBySingleContentRoot(VirtualFile file) {
         if (ProjectRootsUtil.isModuleContentRoot(file, myProject)) {
             Module module = ProjectRootManager.getInstance(myProject).getFileIndex().getModuleForFile(file);
             if (module != null && !module.isDisposed() && ModuleRootManager.getInstance(module).getContentRoots().length == 1) {
@@ -1914,8 +1912,7 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<
         private class MySelectInContext implements SelectInContext {
             
             private final PsiFile myPsiFile;
-            @Nullable
-            private final Editor myEditor;
+            private final @Nullable Editor myEditor;
 
             private MySelectInContext(PsiFile psiFile, @Nullable Editor editor) {
                 myPsiFile = psiFile;

@@ -46,7 +46,6 @@ public abstract class ComplexPackagingElement<S> extends PackagingElement<S> {
   }
 
 
-  @Nullable
-  public abstract List<? extends PackagingElement<?>> getSubstitution(PackagingElementResolvingContext context, ArtifactType artifactType);
+  public abstract @Nullable List<? extends PackagingElement<?>> getSubstitution(PackagingElementResolvingContext context, ArtifactType artifactType);
 
 }

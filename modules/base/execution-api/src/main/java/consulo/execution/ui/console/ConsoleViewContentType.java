@@ -87,13 +87,11 @@ public class ConsoleViewContentType {
     return myTextAttributes;
   }
 
-  @Nullable
-  public TextAttributes getForcedAttributes() {
+  public @Nullable TextAttributes getForcedAttributes() {
     return myTextAttributes;
   }
 
-  @Nullable
-  public TextAttributesKey getAttributesKey() {
+  public @Nullable TextAttributesKey getAttributesKey() {
     return myTextAttributesKey;
   }
 

@@ -75,8 +75,7 @@ public abstract class BaseTemplateContextType implements TemplateContextType {
    * </ol>
    */
   @Override
-  @Nullable
-  public TemplateContextType getBaseContextType() {
+  public @Nullable TemplateContextType getBaseContextType() {
     return myBaseContextType.get();
   }
 

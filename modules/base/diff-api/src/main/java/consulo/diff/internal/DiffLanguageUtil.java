@@ -44,8 +44,7 @@ public class DiffLanguageUtil {
         editor.reinitSettings();
     }
 
-    @Nullable
-    public static EditorHighlighter initEditorHighlighter(
+    public static @Nullable EditorHighlighter initEditorHighlighter(
         @Nullable Project project,
         DocumentContent content,
         CharSequence text
@@ -65,8 +64,7 @@ public class DiffLanguageUtil {
         return highlighter;
     }
 
-    @Nullable
-    private static EditorHighlighter createEditorHighlighter(@Nullable Project project, DocumentContent content) {
+    private static @Nullable EditorHighlighter createEditorHighlighter(@Nullable Project project, DocumentContent content) {
         FileType type = content.getContentType();
         VirtualFile file = content.getHighlightFile();
         Language language = content.getUserData(Language.KEY);

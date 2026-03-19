@@ -36,17 +36,13 @@ public abstract class AnnotateRevisionActionBase extends AnAction {
         super(text, description, icon);
     }
 
-    @Nullable
-    protected abstract AbstractVcs getVcs(AnActionEvent e);
+    protected abstract @Nullable AbstractVcs getVcs(AnActionEvent e);
 
-    @Nullable
-    protected abstract VirtualFile getFile(AnActionEvent e);
+    protected abstract @Nullable VirtualFile getFile(AnActionEvent e);
 
-    @Nullable
-    protected abstract VcsFileRevision getFileRevision(AnActionEvent e);
+    protected abstract @Nullable VcsFileRevision getFileRevision(AnActionEvent e);
 
-    @Nullable
-    protected Editor getEditor(AnActionEvent e) {
+    protected @Nullable Editor getEditor(AnActionEvent e) {
         return null;
     }
 

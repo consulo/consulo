@@ -26,7 +26,7 @@ public class ChangeRange {
   private final IdeaGateway myGateway;
   private final LocalHistoryFacade myVcs;
   private final Long myFromChangeId;
-  @Nullable private final Long myToChangeId;
+  private final @Nullable Long myToChangeId;
 
   public ChangeRange(IdeaGateway gw, LocalHistoryFacade vcs, Long changeId) {
     this(gw, vcs, changeId, changeId);

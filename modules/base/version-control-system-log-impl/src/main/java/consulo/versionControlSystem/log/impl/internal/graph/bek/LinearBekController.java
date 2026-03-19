@@ -127,8 +127,7 @@ public class LinearBekController extends CascadeController {
     };
   }
 
-  @Nullable
-  private LinearGraphAnswer highlightNode(GraphNode node) {
+  private @Nullable LinearGraphAnswer highlightNode(GraphNode node) {
     Set<LinearBekGraphBuilder.MergeFragment> toCollapse = collectFragmentsToCollapse(node);
     if (toCollapse.isEmpty()) return null;
 
@@ -140,16 +139,14 @@ public class LinearBekController extends CascadeController {
     return LinearGraphUtils.createSelectedAnswer(myCompiledGraph, toHighlight);
   }
 
-  @Nullable
-  private LinearGraphAnswer highlightEdge(GraphEdge edge) {
+  private @Nullable LinearGraphAnswer highlightEdge(GraphEdge edge) {
     if (edge.getType() == GraphEdgeType.DOTTED) {
       return LinearGraphUtils.createSelectedAnswer(myCompiledGraph, Set.of(edge.getUpNodeIndex(), edge.getDownNodeIndex()));
     }
     return null;
   }
 
-  @Nullable
-  private LinearGraphAnswer collapseNode(GraphNode node) {
+  private @Nullable LinearGraphAnswer collapseNode(GraphNode node) {
     SortedSet<Integer> toCollapse = collectNodesToCollapse(node);
 
     if (toCollapse.isEmpty()) return null;
@@ -193,8 +190,7 @@ public class LinearBekController extends CascadeController {
     return result;
   }
 
-  @Nullable
-  private LinearGraphAnswer expandEdge(GraphEdge edge) {
+  private @Nullable LinearGraphAnswer expandEdge(GraphEdge edge) {
     if (edge.getType() == GraphEdgeType.DOTTED) {
       return new LinearGraphAnswer(
         GraphChangesUtil.edgesReplaced(Collections.singleton(edge), myCompiledGraph.expandEdge(edge), getDelegateGraph()));

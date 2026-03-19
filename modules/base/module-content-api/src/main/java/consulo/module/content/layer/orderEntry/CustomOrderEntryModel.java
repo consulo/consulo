@@ -46,8 +46,7 @@ public interface CustomOrderEntryModel extends Synthetic {
   
   CustomOrderEntryModel clone();
 
-  @Nullable
-  default Object getEqualObject() {
+  default @Nullable Object getEqualObject() {
     return null;
   }
 

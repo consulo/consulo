@@ -31,8 +31,7 @@ public interface LibraryPresentation<P extends LibraryProperties> {
   @Nullable
   Image getIcon();
 
-  @Nullable
-  default String getDescription(P properties) {
+  default @Nullable String getDescription(P properties) {
     return null;
   }
 

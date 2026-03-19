@@ -241,8 +241,7 @@ public abstract class FilteredTraverserBase<T, Self extends FilteredTraverserBas
     }
 
     public abstract static class EdgeFilter<T> extends JBIterable.SCond<T> {
-        @Nullable
-        protected T edgeSource = null;
+        protected @Nullable T edgeSource = null;
     }
 
     @SuppressWarnings("unchecked")
@@ -394,8 +393,7 @@ public abstract class FilteredTraverserBase<T, Self extends FilteredTraverserBas
         static final Cond FALSE = new Cond<>(Predicates.alwaysFalse(), null);
 
         final Predicate<? super T> impl;
-        @Nullable
-        final Cond<T> next;
+        final @Nullable Cond<T> next;
 
         Cond(Predicate<? super T> impl, @Nullable Cond<T> next) {
             this.impl = impl;

@@ -35,8 +35,7 @@ public class InactiveEditorRule implements GetDataRule<Editor> {
     }
 
     @Override
-    @Nullable
-    public Editor getData(DataProvider dataProvider) {
+    public @Nullable Editor getData(DataProvider dataProvider) {
         return dataProvider.getDataUnchecked(Editor.KEY);
     }
 }

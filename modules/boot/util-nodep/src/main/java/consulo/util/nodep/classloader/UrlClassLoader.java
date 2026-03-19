@@ -66,8 +66,7 @@ public class UrlClassLoader extends ClassLoader implements AutoCloseable {
     public static final class Builder {
         private List<URL> myURLs = Collections.emptyList();
         private Set<URL> myURLsWithProtectionDomain = new HashSet<>();
-        @Nullable
-        private ClassLoader myParent = null;
+        private @Nullable ClassLoader myParent = null;
         private boolean myLockJars;
         private boolean myUseCache;
         private boolean myEnableJarIndex;
@@ -78,11 +77,9 @@ public class UrlClassLoader extends ClassLoader implements AutoCloseable {
         private boolean myErrorOnMissingJar = true;
         private boolean myLazyClassloadingCaches;
 
-        @Nullable
-        private CachePoolImpl myCachePool = null;
+        private @Nullable CachePoolImpl myCachePool = null;
 
-        @Nullable
-        private CachingCondition myCachingCondition = null;
+        private @Nullable CachingCondition myCachingCondition = null;
 
         private Builder() {
         }
@@ -228,8 +225,7 @@ public class UrlClassLoader extends ClassLoader implements AutoCloseable {
 
     private final List<URL> myURLs;
     private final ClassPath myClassPath;
-    @Nullable
-    private final ClassLoadingLocks myClassLoadingLocks;
+    private final @Nullable ClassLoadingLocks myClassLoadingLocks;
     private final boolean myAllowBootstrapResources;
 
     /**
@@ -355,8 +351,7 @@ public class UrlClassLoader extends ClassLoader implements AutoCloseable {
         return findResource(name);
     }
 
-    @Nullable
-    protected final Class _findClass(String name) {
+    protected final @Nullable Class _findClass(String name) {
         Resource res = getClassPath().getResource(name.replace('.', '/') + CLASS_EXTENSION);
         if (res == null) {
             return null;
@@ -416,8 +411,7 @@ public class UrlClassLoader extends ClassLoader implements AutoCloseable {
         return res != null ? res.getURL() : null;
     }
 
-    @Nullable
-    private Resource findResourceImpl(String name) {
+    private @Nullable Resource findResourceImpl(String name) {
         String n = FileUtilRt.toCanonicalPath(name, '/', false);
         Resource resource = getClassPath().getResource(n);
         if (resource == null && n.startsWith("/")) { // compatibility with existing code, non-standard classloader behavior

@@ -33,8 +33,7 @@ import org.jspecify.annotations.Nullable;
 public interface GotoSuperActionHander extends LanguageCodeInsightActionHandler {
   ExtensionPointCacheKey<GotoSuperActionHander, ByLanguageValue<GotoSuperActionHander>> KEY = ExtensionPointCacheKey.create("GotoSuperActionHander", LanguageOneToOne.build());
 
-  @Nullable
-  static GotoSuperActionHander forLanguage(Language language) {
+  static @Nullable GotoSuperActionHander forLanguage(Language language) {
     return Application.get().getExtensionPoint(GotoSuperActionHander.class).getOrBuildCache(KEY).get(language);
   }
 }

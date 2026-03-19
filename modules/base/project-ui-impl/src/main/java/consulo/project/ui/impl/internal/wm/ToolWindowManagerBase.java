@@ -369,24 +369,21 @@ public abstract class ToolWindowManagerBase extends ToolWindowManagerEx implemen
     /**
      * @return internal decorator for the tool window with specified <code>ID</code>.
      */
-    @Nullable
-    protected ToolWindowInternalDecorator getInternalDecorator(String id) {
+    protected @Nullable ToolWindowInternalDecorator getInternalDecorator(String id) {
         return myId2InternalDecorator.get(id);
     }
 
     /**
      * @return floating decorator for the tool window with specified <code>ID</code>.
      */
-    @Nullable
-    protected ToolWindowFloatingDecorator getFloatingDecorator(String id) {
+    protected @Nullable ToolWindowFloatingDecorator getFloatingDecorator(String id) {
         return myId2FloatingDecorator.get(id);
     }
 
     /**
      * @return windowed decorator for the tool window with specified <code>ID</code>.
      */
-    @Nullable
-    protected ToolWindowWindowedDecorator getWindowedDecorator(String id) {
+    protected @Nullable ToolWindowWindowedDecorator getWindowedDecorator(String id) {
         return myId2WindowedDecorator.get(id);
     }
 
@@ -394,8 +391,7 @@ public abstract class ToolWindowManagerBase extends ToolWindowManagerEx implemen
     /**
      * @return tool button for the window with specified <code>ID</code>.
      */
-    @Nullable
-    protected ToolWindowStripeButton getStripeButton(String id) {
+    protected @Nullable ToolWindowStripeButton getStripeButton(String id) {
         return myId2StripeButton.get(id);
     }
 

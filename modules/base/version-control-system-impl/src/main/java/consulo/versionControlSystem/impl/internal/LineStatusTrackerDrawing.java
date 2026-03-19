@@ -121,8 +121,7 @@ public class LineStatusTrackerDrawing {
     private final Editor myEditor;
     
     private final LineStatusTracker myTracker;
-    @Nullable
-    private final Point myMousePosition;
+    private final @Nullable Point myMousePosition;
 
     public ToggleByWordDiffAction(VcsRange range,
                                   Editor editor,

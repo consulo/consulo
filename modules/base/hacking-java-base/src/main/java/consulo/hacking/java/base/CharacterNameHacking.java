@@ -28,8 +28,7 @@ import java.util.function.Consumer;
  */
 public class CharacterNameHacking {
   @SuppressWarnings("unchecked")
-  @Nullable
-  private static Method getMethod(Class clazz, String name, Class... params) {
+  private static @Nullable Method getMethod(Class clazz, String name, Class... params) {
     try {
       Method method = clazz.getDeclaredMethod(name, params);
       method.setAccessible(true);
@@ -41,8 +40,7 @@ public class CharacterNameHacking {
   }
 
   @SuppressWarnings("unchecked")
-  @Nullable
-  private static Field getField(Class clazz, String name) {
+  private static @Nullable Field getField(Class clazz, String name) {
     try {
       Field declaredField = clazz.getDeclaredField(name);
       declaredField.setAccessible(true);

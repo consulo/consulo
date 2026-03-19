@@ -34,8 +34,7 @@ public class CodeStyleStatusBarPanel extends JPanel {
     myLabel.setText(text);
   }
 
-  @Nullable
-  public String getText() {
+  public @Nullable String getText() {
     return myLabel.getText();
   }
 

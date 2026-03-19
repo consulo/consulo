@@ -245,8 +245,7 @@ public class PerformanceWatcher implements Disposable {
     return name.toString();
   }
 
-  @Nullable
-  public File dumpThreads(String pathPrefix, boolean millis) {
+  public @Nullable File dumpThreads(String pathPrefix, boolean millis) {
     if (!shouldWatch()) return null;
 
     String suffix = millis ? "-" + System.currentTimeMillis() : "";

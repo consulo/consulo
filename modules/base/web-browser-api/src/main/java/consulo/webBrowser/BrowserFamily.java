@@ -47,13 +47,11 @@ public enum BrowserFamily implements Iconable {
         myIcon = icon;
     }
 
-    @Nullable
-    public BrowserSpecificSettings createBrowserSpecificSettings() {
+    public @Nullable BrowserSpecificSettings createBrowserSpecificSettings() {
         return null;
     }
 
-    @Nullable
-    public String getExecutionPath() {
+    public @Nullable String getExecutionPath() {
         if (Platform.current().os().isWindows()) {
             return myWindowsPath;
         }

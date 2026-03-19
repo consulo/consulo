@@ -31,13 +31,11 @@ import org.jspecify.annotations.Nullable;
  * @author yole
  */
 public class RootConfigurationAccessor {
-  @Nullable
-  public Library getLibrary(Library library, String libraryName, String libraryLevel) {
+  public @Nullable Library getLibrary(Library library, String libraryName, String libraryLevel) {
     return library;
   }
 
-  @Nullable
-  public Sdk getSdk(Sdk sdk, String sdkName) {
+  public @Nullable Sdk getSdk(Sdk sdk, String sdkName) {
     return sdk;
   }
 

@@ -26,8 +26,7 @@ import java.util.*;
  * @since 2021-02-07
  */
 public abstract class CollectionFactory {
-    @Nullable
-    private static CollectionFactory ourFactory = null;
+    private static @Nullable CollectionFactory ourFactory = null;
 
     public static CollectionFactory get() {
         if (ourFactory == null) {

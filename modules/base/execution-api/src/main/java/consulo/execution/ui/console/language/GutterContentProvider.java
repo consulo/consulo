@@ -19,11 +19,9 @@ public abstract class GutterContentProvider {
 
   public abstract boolean hasText();
 
-  @Nullable
-  public abstract String getText(int line, Editor editor);
+  public abstract @Nullable String getText(int line, Editor editor);
 
-  @Nullable
-  public abstract String getToolTip(int line, Editor editor);
+  public abstract @Nullable String getToolTip(int line, Editor editor);
 
   public abstract void doAction(int line, Editor editor);
 

@@ -40,8 +40,7 @@ public final class ExtensionList<E, C extends ComponentManager> {
     return component.getExtensionPoint(myExtensionClass).getExtensionList();
   }
 
-  @Nullable
-  public <V extends E> V findExtension(C component, Class<V> instanceOf) {
+  public @Nullable <V extends E> V findExtension(C component, Class<V> instanceOf) {
     return component.getExtensionPoint(myExtensionClass).findExtension(instanceOf);
   }
 
@@ -58,13 +57,11 @@ public final class ExtensionList<E, C extends ComponentManager> {
     component.getExtensionPoint(myExtensionClass).processWithPluginDescriptor(consumer);
   }
 
-  @Nullable
-  public <R> R computeSafeIfAny(C componentManager, Function<? super E, ? extends R> processor) {
+  public @Nullable <R> R computeSafeIfAny(C componentManager, Function<? super E, ? extends R> processor) {
     return componentManager.getExtensionPoint(myExtensionClass).computeSafeIfAny(processor);
   }
 
-  @Nullable
-  public E findFirstSafe(C componentManager, Predicate<E> predicate) {
+  public @Nullable E findFirstSafe(C componentManager, Predicate<E> predicate) {
     return componentManager.getExtensionPoint(myExtensionClass).findFirstSafe(predicate);
   }
 }

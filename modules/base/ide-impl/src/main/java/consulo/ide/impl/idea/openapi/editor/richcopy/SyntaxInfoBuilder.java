@@ -113,13 +113,11 @@ public final class SyntaxInfoBuilder {
             return mySegmentIterator.getCurrentFontFamilyName();
         }
 
-        @Nullable
-        public ColorValue getForegroundColor() {
+        public @Nullable ColorValue getForegroundColor() {
             return myCurrentForegroundColor;
         }
 
-        @Nullable
-        public ColorValue getBackgroundColor() {
+        public @Nullable ColorValue getBackgroundColor() {
             return myCurrentBackgroundColor;
         }
 
@@ -524,12 +522,9 @@ public final class SyntaxInfoBuilder {
         
         private final ColorValue myDefaultBackground;
 
-        @Nullable
-        private ColorValue myBackground;
-        @Nullable
-        private ColorValue myForeground;
-        @Nullable
-        private String myFontFamilyName;
+        private @Nullable ColorValue myBackground;
+        private @Nullable ColorValue myForeground;
+        private @Nullable String myFontFamilyName;
 
         private final int myIndentSymbolsToStrip;
 

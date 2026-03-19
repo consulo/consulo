@@ -56,8 +56,7 @@ public abstract class JBTableRowEditor extends JPanel {
     }
   }
 
-  @Nullable
-  public final MouseEvent getMouseEvent() {
+  public final @Nullable MouseEvent getMouseEvent() {
     if (myMouseEvent != null && myMouseEvent.getClickCount() == 0) return null;
     return myMouseEvent;
   }

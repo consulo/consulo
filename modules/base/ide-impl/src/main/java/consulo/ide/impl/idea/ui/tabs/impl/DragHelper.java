@@ -205,8 +205,7 @@ class DragHelper extends MouseDragHelper {
   }
 
 
-  @Nullable
-  private TabLabel findLabel(Point dragPoint) {
+  private @Nullable TabLabel findLabel(Point dragPoint) {
     Component at = myTabs.findComponentAt(dragPoint);
     if (at instanceof ActionButtonComponent) return null;
     TabLabel label = findLabel(at);
@@ -215,8 +214,7 @@ class DragHelper extends MouseDragHelper {
 
   }
 
-  @Nullable
-  private TabLabel findLabel(Component c) {
+  private @Nullable TabLabel findLabel(Component c) {
     Component eachParent = c;
     while (eachParent != null && eachParent != myTabs) {
       if (eachParent instanceof TabLabel) return (TabLabel)eachParent;

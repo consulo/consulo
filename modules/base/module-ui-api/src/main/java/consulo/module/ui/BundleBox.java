@@ -62,13 +62,11 @@ public class BundleBox implements PseudoComponent {
     }
 
     public abstract static class BundleBoxItem {
-        @Nullable
-        public Sdk getBundle() {
+        public @Nullable Sdk getBundle() {
             return null;
         }
 
-        @Nullable
-        public String getBundleName() {
+        public @Nullable String getBundleName() {
             Sdk bundle = getBundle();
             return bundle != null ? bundle.getName() : null;
         }
@@ -526,8 +524,7 @@ public class BundleBox implements PseudoComponent {
         }
     }
 
-    @Nullable
-    public String getSelectedBundleName() {
+    public @Nullable String getSelectedBundleName() {
         BundleBoxItem value = myOriginalComboBox.getValue();
         if (value != null) {
             return value.getBundleName();
@@ -535,8 +532,7 @@ public class BundleBox implements PseudoComponent {
         return null;
     }
 
-    @Nullable
-    public String getSelectedModuleName() {
+    public @Nullable String getSelectedModuleName() {
         BundleBoxItem value = myOriginalComboBox.getValue();
         if (value instanceof ModuleExtensionBundleBoxItem moduleExtensionBundleBoxItem) {
             return moduleExtensionBundleBoxItem.getModule().getName();

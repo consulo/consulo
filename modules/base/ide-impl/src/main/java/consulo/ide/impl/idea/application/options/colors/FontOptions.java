@@ -326,8 +326,7 @@ public class FontOptions implements OptionsPanel {
     }
 
     @Override
-    @Nullable
-    public Runnable showOption(String option) {
+    public @Nullable Runnable showOption(String option) {
         return null;
     }
 

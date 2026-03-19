@@ -192,8 +192,7 @@ public final class RunDashboardServiceViewContributor
         return actions;
     }
 
-    @Nullable
-    private static RunDashboardRunConfigurationNode getRunConfigurationNode(DnDEvent event, Project project) {
+    private static @Nullable RunDashboardRunConfigurationNode getRunConfigurationNode(DnDEvent event, Project project) {
         Object object = event.getAttachedObject();
         if (!(object instanceof DataProvider dataProvider)) {
             return null;

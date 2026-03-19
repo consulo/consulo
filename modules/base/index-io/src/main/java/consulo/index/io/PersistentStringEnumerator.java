@@ -23,8 +23,7 @@ import java.io.File;
 import java.io.IOException;
 
 public class PersistentStringEnumerator extends PersistentEnumeratorDelegate<String> implements AbstractStringEnumerator {
-  @Nullable
-  private final CachingEnumerator<String> myCache;
+  private final @Nullable CachingEnumerator<String> myCache;
 
   public PersistentStringEnumerator(File file) throws IOException {
     this(file, null);

@@ -37,8 +37,7 @@ public class CaretState {
     this.selectionEnd = selectionEnd;
   }
 
-  @Nullable
-  public LogicalPosition getCaretPosition() {
+  public @Nullable LogicalPosition getCaretPosition() {
     return caretPosition;
   }
 
@@ -51,13 +50,11 @@ public class CaretState {
     return visualColumnAdjustment;
   }
 
-  @Nullable
-  public LogicalPosition getSelectionStart() {
+  public @Nullable LogicalPosition getSelectionStart() {
     return selectionStart;
   }
 
-  @Nullable
-  public LogicalPosition getSelectionEnd() {
+  public @Nullable LogicalPosition getSelectionEnd() {
     return selectionEnd;
   }
 

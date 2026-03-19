@@ -171,8 +171,7 @@ public final class FileIncludeManagerImpl extends FileIncludeManager {
         return doResolve(info, context);
     }
 
-    @Nullable
-    private PsiFileSystemItem doResolve(FileIncludeInfo info, PsiFile context) {
+    private @Nullable PsiFileSystemItem doResolve(FileIncludeInfo info, PsiFile context) {
         if (info instanceof FileIncludeInfoImpl fileIncludeInfo) {
             String id = fileIncludeInfo.providerId;
             FileIncludeProvider provider = id == null ? null : myProviderMap.get(id);

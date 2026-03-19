@@ -77,8 +77,7 @@ public final class EditorUtil {
         return editor != null && editor.getContentComponent() instanceof JPasswordField;
     }
 
-    @Nullable
-    public static EditorEx getEditorEx(@Nullable FileEditor fileEditor) {
+    public static @Nullable EditorEx getEditorEx(@Nullable FileEditor fileEditor) {
         Editor editor = fileEditor instanceof TextEditor textEditor ? textEditor.getEditor() : null;
         return editor instanceof EditorEx editorEx ? editorEx : null;
     }

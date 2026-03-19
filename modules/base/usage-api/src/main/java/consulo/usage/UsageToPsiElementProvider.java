@@ -33,11 +33,9 @@ import org.jspecify.annotations.Nullable;
 public abstract class UsageToPsiElementProvider {
     public static final ExtensionPointName<UsageToPsiElementProvider> EP_NAME = ExtensionPointName.create(UsageToPsiElementProvider.class);
 
-    @Nullable
-    public abstract PsiElement getAppropriateParentFrom(PsiElement element);
+    public abstract @Nullable PsiElement getAppropriateParentFrom(PsiElement element);
 
-    @Nullable
-    public static PsiElement findAppropriateParentFrom(PsiElement element) {
+    public static @Nullable PsiElement findAppropriateParentFrom(PsiElement element) {
         return EP_NAME.computeSafeIfAny(Application.get(), p -> p.getAppropriateParentFrom(element));
     }
 }

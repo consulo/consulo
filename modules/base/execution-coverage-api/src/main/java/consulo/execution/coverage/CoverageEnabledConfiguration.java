@@ -73,8 +73,7 @@ public abstract class CoverageEnabledConfiguration implements JDOMExternalizable
         return myRunnerId;
     }
 
-    @Nullable
-    public CoverageRunner getCoverageRunner() {
+    public @Nullable CoverageRunner getCoverageRunner() {
         return myCoverageRunner;
     }
 
@@ -148,8 +147,7 @@ public abstract class CoverageEnabledConfiguration implements JDOMExternalizable
         return configuration;
     }
 
-    @Nullable
-    public String getCoverageFilePath() {
+    public @Nullable String getCoverageFilePath() {
         if (myCoverageFilePath == null) {
             myCoverageFilePath = createCoverageFile();
         }
@@ -212,8 +210,7 @@ public abstract class CoverageEnabledConfiguration implements JDOMExternalizable
         }
     }
 
-    @Nullable
-    protected String createCoverageFile() {
+    protected @Nullable String createCoverageFile() {
         if (myCoverageRunner == null) {
             return null;
         }

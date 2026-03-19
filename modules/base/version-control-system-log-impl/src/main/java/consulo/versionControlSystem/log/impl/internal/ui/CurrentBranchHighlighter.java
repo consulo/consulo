@@ -37,8 +37,7 @@ public class CurrentBranchHighlighter implements VcsLogHighlighter {
     private final VcsLogUi myLogUi;
     
     private final Map<VirtualFile, Predicate<CommitId>> myConditions = new HashMap<>();
-    @Nullable
-    private String mySingleFilteredBranch;
+    private @Nullable String mySingleFilteredBranch;
 
     public CurrentBranchHighlighter(VcsLogData logData, VcsLogUi logUi) {
         myLogData = logData;

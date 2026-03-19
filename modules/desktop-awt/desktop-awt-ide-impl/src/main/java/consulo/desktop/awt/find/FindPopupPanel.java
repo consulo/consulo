@@ -1504,8 +1504,7 @@ public class FindPopupPanel extends JBPanel<FindPopupPanel> implements FindUI {
     }
 
     @Override
-    @Nullable
-    public String getFileTypeMask() {
+    public @Nullable String getFileTypeMask() {
         String mask = null;
         if (myCbFileFilter != null && myCbFileFilter.getValue()) {
             mask = (String) myFileMaskField.getSelectedItem();
@@ -1655,8 +1654,7 @@ public class FindPopupPanel extends JBPanel<FindPopupPanel> implements FindUI {
         }
     }
 
-    @Nullable
-    private Map<Integer, Usage> getSelectedUsages() {
+    private @Nullable Map<Integer, Usage> getSelectedUsages() {
         int[] rows = myResultsPreviewTable.getSelectedRows();
         Map<Integer, Usage> result = null;
         for (int i = rows.length - 1; i >= 0; i--) {
@@ -1863,8 +1861,7 @@ public class FindPopupPanel extends JBPanel<FindPopupPanel> implements FindUI {
                 return UniqueVFilePathBuilder.getInstance().getUniqueVirtualFilePath(ua.getUsageInfo().getProject(), file, myScope);
             }
 
-            @Nullable
-            private VirtualFile findPrevFile(JTable table, int row, int column) {
+            private @Nullable VirtualFile findPrevFile(JTable table, int row, int column) {
                 if (row <= 0) {
                     return null;
                 }

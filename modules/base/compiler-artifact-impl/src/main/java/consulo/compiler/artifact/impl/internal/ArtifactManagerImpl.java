@@ -148,8 +148,7 @@ public class ArtifactManagerImpl extends ArtifactManager implements Disposable, 
     return state;
   }
 
-  @Nullable
-  private static <S> ArtifactPropertiesState serializeProperties(ArtifactPropertiesProvider provider, ArtifactProperties<S> properties) {
+  private static @Nullable <S> ArtifactPropertiesState serializeProperties(ArtifactPropertiesProvider provider, ArtifactProperties<S> properties) {
     ArtifactPropertiesState state = new ArtifactPropertiesState();
     state.setId(provider.getId());
     Element options = new Element("options");

@@ -72,8 +72,7 @@ public abstract class GlobalInspectionTool extends InspectionTool {
    * additional markers or does not use the reference graph at all.
    * @see #isGraphNeeded
    */
-  @Nullable
-  public RefGraphAnnotator getAnnotator(RefManager refManager, Object state) {
+  public @Nullable RefGraphAnnotator getAnnotator(RefManager refManager, Object state) {
     return getAnnotator(refManager);
   }
 
@@ -114,8 +113,7 @@ public abstract class GlobalInspectionTool extends InspectionTool {
    * @param globalContext the context for the current global inspection run.
    * @return the problems found for the element, or null if no problems were found.
    */
-  @Nullable
-  public CommonProblemDescriptor[] checkElement(RefEntity refEntity,
+  public @Nullable CommonProblemDescriptor[] checkElement(RefEntity refEntity,
                                                 AnalysisScope scope,
                                                 InspectionManager manager,
                                                 GlobalInspectionContext globalContext,
@@ -133,8 +131,7 @@ public abstract class GlobalInspectionTool extends InspectionTool {
    * @param processor     the collector for problems reported by the inspection
    * @return the problems found for the element, or null if no problems were found.
    */
-  @Nullable
-  public CommonProblemDescriptor[] checkElement(RefEntity refEntity,
+  public @Nullable CommonProblemDescriptor[] checkElement(RefEntity refEntity,
                                                 AnalysisScope scope,
                                                 InspectionManager manager,
                                                 GlobalInspectionContext globalContext,
@@ -202,8 +199,7 @@ public abstract class GlobalInspectionTool extends InspectionTool {
    * @param hint a hint to distinguish different quick fixes for one problem
    * @return quickfix to be shown in editor when server side inspections are enabled
    */
-  @Nullable
-  public QuickFix getQuickFix(String hint) {
+  public @Nullable QuickFix getQuickFix(String hint) {
     return null;
   }
 
@@ -213,8 +209,7 @@ public abstract class GlobalInspectionTool extends InspectionTool {
    * @param fix fix to be serialized
    * @return hint to be stored on server
    */
-  @Nullable
-  public String getHint(QuickFix fix) {
+  public @Nullable String getHint(QuickFix fix) {
     return null;
   }
 
@@ -233,8 +228,7 @@ public abstract class GlobalInspectionTool extends InspectionTool {
    * {@link #runInspection(AnalysisScope, InspectionManager, GlobalInspectionContext, ProblemDescriptionsProcessor)})
    * ProgressIndicator should progress with {@link GlobalInspectionContext#incrementJobDoneAmount(JobDescriptor, String)}
    */
-  @Nullable
-  public JobDescriptor[] getAdditionalJobs() {
+  public @Nullable JobDescriptor[] getAdditionalJobs() {
     return null;
   }
 
@@ -253,8 +247,7 @@ public abstract class GlobalInspectionTool extends InspectionTool {
    * For example a global inspection that reports a package could have a local inspection tool which highlights
    * the package statement in a file.
    */
-  @Nullable
-  public LocalInspectionTool getSharedLocalInspectionTool() {
+  public @Nullable LocalInspectionTool getSharedLocalInspectionTool() {
     return null;
   }
 

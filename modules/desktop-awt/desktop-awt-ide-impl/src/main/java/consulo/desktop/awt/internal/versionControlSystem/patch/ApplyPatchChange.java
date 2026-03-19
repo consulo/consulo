@@ -65,8 +65,7 @@ class ApplyPatchChange {
     
     private final HunkStatus myStatus;
 
-    @Nullable
-    private final List<DiffFragment> myPatchInnerDifferences;
+    private final @Nullable List<DiffFragment> myPatchInnerDifferences;
     
     private final List<MyGutterOperation> myOperations = new ArrayList<>();
 
@@ -85,8 +84,7 @@ class ApplyPatchChange {
         myPatchInnerDifferences = calcPatchInnerDifferences(hunk, viewer);
     }
 
-    @Nullable
-    private static List<DiffFragment> calcPatchInnerDifferences(
+    private static @Nullable List<DiffFragment> calcPatchInnerDifferences(
         PatchChangeBuilder.Hunk hunk,
         ApplyPatchViewer viewer
     ) {
@@ -232,8 +230,7 @@ class ApplyPatchChange {
         return myPatchInsertionRange;
     }
 
-    @Nullable
-    public LineRange getResultRange() {
+    public @Nullable LineRange getResultRange() {
         ApplyPatchViewer.MyModel model = myViewer.getModel();
         int lineStart = model.getLineStart(myIndex);
         int lineEnd = model.getLineEnd(myIndex);
@@ -303,8 +300,7 @@ class ApplyPatchChange {
         ContainerUtil.addIfNotNull(myOperations, createOperation(OperationType.IGNORE));
     }
 
-    @Nullable
-    private MyGutterOperation createOperation(OperationType type) {
+    private @Nullable MyGutterOperation createOperation(OperationType type) {
         if (isResolved()) {
             return null;
         }
@@ -342,8 +338,7 @@ class ApplyPatchChange {
             myHighlighter.dispose();
         }
 
-        @Nullable
-        public GutterIconRenderer createRenderer() {
+        public @Nullable GutterIconRenderer createRenderer() {
             return switch (myType) {
                 case APPLY -> createApplyRenderer();
                 case IGNORE -> createIgnoreRenderer();

@@ -50,8 +50,7 @@ public class IndentOptionsEditor extends OptionGroup implements CodeStyleSetting
     @Deprecated
     protected JLabel myIndentLabel;
 
-    @Nullable
-    private final LanguageCodeStyleSettingsProvider myProvider;
+    private final @Nullable LanguageCodeStyleSettingsProvider myProvider;
 
     public IndentOptionsEditor() {
         this(null);

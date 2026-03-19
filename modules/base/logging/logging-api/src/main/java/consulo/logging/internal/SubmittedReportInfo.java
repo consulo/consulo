@@ -67,8 +67,7 @@ public class SubmittedReportInfo {
     return myStatus;
   }
 
-  @Nullable
-  public static String getUrl(SubmittedReportInfo info) {
+  public static @Nullable String getUrl(SubmittedReportInfo info) {
     if (info.getStatus() == SubmittedReportInfo.SubmissionStatus.FAILED || info.getLinkText() == null) {
       return null;
     }

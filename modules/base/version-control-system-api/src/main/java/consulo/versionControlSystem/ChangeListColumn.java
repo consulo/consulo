@@ -31,8 +31,7 @@ public abstract class ChangeListColumn<T extends ChangeList> {
   public abstract String getTitle();
   public abstract Object getValue(T changeList);
 
-  @Nullable
-  public Comparator<T> getComparator() {
+  public @Nullable Comparator<T> getComparator() {
     return null;
   }
 

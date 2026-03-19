@@ -141,8 +141,7 @@ public class OfflineViewParseUtil {
         descriptors.add(descriptor);
     }
 
-    @Nullable
-    public static String parseProfileName(VirtualFile virtualFile) {
+    public static @Nullable String parseProfileName(VirtualFile virtualFile) {
         try {
             return JDOMUtil.load(VirtualFileUtil.virtualToIoFile(virtualFile)).getAttributeValue(InspectionApplication.PROFILE);
         }

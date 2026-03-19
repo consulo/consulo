@@ -75,8 +75,7 @@ public abstract class XBreakpointType<B extends XBreakpoint<P>, P extends XBreak
         mySuspendThreadSupported = suspendThreadSupported;
     }
 
-    @Nullable
-    public P createProperties() {
+    public @Nullable P createProperties() {
         return null;
     }
 
@@ -141,28 +140,23 @@ public abstract class XBreakpointType<B extends XBreakpoint<P>, P extends XBreak
 
     public abstract String getDisplayText(B breakpoint);
 
-    @Nullable
-    public XBreakpointCustomPropertiesPanel<B> createCustomConditionsPanel() {
+    public @Nullable XBreakpointCustomPropertiesPanel<B> createCustomConditionsPanel() {
         return null;
     }
 
-    @Nullable
-    public XBreakpointCustomPropertiesPanel<B> createCustomPropertiesPanel(Project project) {
+    public @Nullable XBreakpointCustomPropertiesPanel<B> createCustomPropertiesPanel(Project project) {
         return null;
     }
 
-    @Nullable
-    public XBreakpointCustomPropertiesPanel<B> createCustomRightPropertiesPanel(Project project) {
+    public @Nullable XBreakpointCustomPropertiesPanel<B> createCustomRightPropertiesPanel(Project project) {
         return null;
     }
 
-    @Nullable
-    public XBreakpointCustomPropertiesPanel<B> createCustomTopPropertiesPanel(Project project) {
+    public @Nullable XBreakpointCustomPropertiesPanel<B> createCustomTopPropertiesPanel(Project project) {
         return null;
     }
 
-    @Nullable
-    public XDebuggerEditorsProvider getEditorsProvider(B breakpoint, Project project) {
+    public @Nullable XDebuggerEditorsProvider getEditorsProvider(B breakpoint, Project project) {
         return null;
     }
 
@@ -193,8 +187,7 @@ public abstract class XBreakpointType<B extends XBreakpoint<P>, P extends XBreak
      * @param parentComponent
      * @return the created breakpoint or <code>null</code> if breakpoint wasn't created
      */
-    @Nullable
-    public B addBreakpoint(Project project, JComponent parentComponent) {
+    public @Nullable B addBreakpoint(Project project, JComponent parentComponent) {
         return null;
     }
 
@@ -204,8 +197,7 @@ public abstract class XBreakpointType<B extends XBreakpoint<P>, P extends XBreak
      *
      * @return a default breakpoint or {@code null} if default breakpoint isn't supported
      */
-    @Nullable
-    public XBreakpoint<P> createDefaultBreakpoint(XBreakpointCreator<P> creator) {
+    public @Nullable XBreakpoint<P> createDefaultBreakpoint(XBreakpointCreator<P> creator) {
         return null;
     }
 
@@ -213,16 +205,14 @@ public abstract class XBreakpointType<B extends XBreakpoint<P>, P extends XBreak
         return true;
     }
 
-    @Nullable
-    public String getBreakpointsDialogHelpTopic() {
+    public @Nullable String getBreakpointsDialogHelpTopic() {
         return null;
     }
 
     /**
      * Override this method to define source position for a breakpoint. It will be used e.g. by 'Go To' and 'View Source' buttons in 'Breakpoints' dialog
      */
-    @Nullable
-    public XSourcePosition getSourcePosition(XBreakpoint<P> breakpoint) {
+    public @Nullable XSourcePosition getSourcePosition(XBreakpoint<P> breakpoint) {
         return null;
     }
 

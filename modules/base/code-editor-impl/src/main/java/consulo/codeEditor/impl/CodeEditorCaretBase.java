@@ -1618,8 +1618,7 @@ public class CodeEditorCaretBase extends UserDataHolderBase implements Caret, Du
             '}';
     }
 
-    @Nullable
-    private VisualPosition getRangeMarkerStartPosition() {
+    private @Nullable VisualPosition getRangeMarkerStartPosition() {
         invalidateRangeMarkerVisualPositions(mySelectionMarker);
         return myRangeMarkerStartPosition;
     }
@@ -1628,8 +1627,7 @@ public class CodeEditorCaretBase extends UserDataHolderBase implements Caret, Du
         myRangeMarkerStartPosition = startPosition;
     }
 
-    @Nullable
-    private VisualPosition getRangeMarkerEndPosition() {
+    private @Nullable VisualPosition getRangeMarkerEndPosition() {
         invalidateRangeMarkerVisualPositions(mySelectionMarker);
         return myRangeMarkerEndPosition;
     }

@@ -69,8 +69,7 @@ public interface Computable <T> extends Supplier<T> {
     private static final Object NULL_VALUE = new Object();
     private Object myValue;
 
-    @Nullable
-    protected abstract T internalCompute();
+    protected abstract @Nullable T internalCompute();
 
     @Nullable
     @Override

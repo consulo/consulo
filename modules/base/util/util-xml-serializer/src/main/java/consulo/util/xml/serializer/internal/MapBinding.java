@@ -45,15 +45,11 @@ class MapBinding extends NonNullAccessorBinding implements MultiNodeBinding {
 
   private final MapAnnotation myMapAnnotation;
 
-  @Nullable
-  private Class<?> keyClass;
-  @Nullable
-  private Class<?> valueClass;
+  private @Nullable Class<?> keyClass;
+  private @Nullable Class<?> valueClass;
 
-  @Nullable
-  private Binding keyBinding;
-  @Nullable
-  private Binding valueBinding;
+  private @Nullable Binding keyBinding;
+  private @Nullable Binding valueBinding;
 
   public MapBinding(MutableAccessor accessor) {
     super(accessor);
@@ -180,8 +176,7 @@ class MapBinding extends NonNullAccessorBinding implements MultiNodeBinding {
     }
   }
 
-  @Nullable
-  private Object deserializeKeyOrValue(Element entry, String attributeName, Object context, @Nullable Binding binding, Class<?> valueClass) {
+  private @Nullable Object deserializeKeyOrValue(Element entry, String attributeName, Object context, @Nullable Binding binding, Class<?> valueClass) {
     Attribute attribute = entry.getAttribute(attributeName);
     if (attribute != null) {
       return XmlSerializerImpl.convert(attribute.getValue(), valueClass);

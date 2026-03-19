@@ -26,8 +26,7 @@ import org.jspecify.annotations.Nullable;
 public abstract class VisibilityPanelBase<V> {
     public final EventDispatcher<VisibilityPanelListener> myEventDispatcher = EventDispatcher.create(VisibilityPanelListener.class);
 
-    @Nullable
-    public abstract V getVisibility();
+    public abstract @Nullable V getVisibility();
 
     public abstract void setVisibility(V visibility);
 

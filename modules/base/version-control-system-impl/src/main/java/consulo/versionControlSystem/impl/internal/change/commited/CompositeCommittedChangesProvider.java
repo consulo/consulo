@@ -92,8 +92,7 @@ public class CompositeCommittedChangesProvider implements CommittedChangesProvid
   }
 
   @Override
-  @Nullable
-  public VcsCommittedListsZipper getZipper() {
+  public @Nullable VcsCommittedListsZipper getZipper() {
     throw new UnsupportedOperationException();
   }
 
@@ -129,8 +128,7 @@ public class CompositeCommittedChangesProvider implements CommittedChangesProvid
   }
 
   @Override
-  @Nullable
-  public VcsCommittedViewAuxiliary createActions(DecoratorManager manager, RepositoryLocation location) {
+  public @Nullable VcsCommittedViewAuxiliary createActions(DecoratorManager manager, RepositoryLocation location) {
     JTabbedPane tabbedPane = null;
     List<AnAction> actions = null;
     List<AnAction> toolbarActions = null;
@@ -295,8 +293,7 @@ public class CompositeCommittedChangesProvider implements CommittedChangesProvid
     }
 
     @Override
-    @Nullable
-    public String validateInput() {
+    public @Nullable String validateInput() {
       for(ChangesBrowserSettingsEditor editor: myEditors.values()) {
         String result = editor.validateInput();
         if (result != null) return result;

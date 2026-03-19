@@ -88,8 +88,7 @@ public abstract class AbstractTreeNode<T> extends TreeNode<T> implements FileSta
     return FileStatus.NOT_CHANGED;
   }
 
-  @Nullable
-  public Project getProject() {
+  public @Nullable Project getProject() {
     return myProject;
   }
 }

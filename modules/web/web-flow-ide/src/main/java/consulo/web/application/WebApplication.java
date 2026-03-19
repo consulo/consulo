@@ -26,8 +26,7 @@ import org.jspecify.annotations.Nullable;
  * @since 23-Sep-17
  */
 public interface WebApplication extends Application {
-  @Nullable
-  static WebApplication getInstance() {
+  static @Nullable WebApplication getInstance() {
     return (WebApplication)ApplicationManager.getApplication();
   }
 

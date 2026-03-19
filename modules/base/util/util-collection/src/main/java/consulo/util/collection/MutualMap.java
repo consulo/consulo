@@ -47,13 +47,11 @@ public class MutualMap<Key, Value> {
     myValue2Key.put(value, key);
   }
 
-  @Nullable
-  public Value getValue(@Nullable Key key) {
+  public @Nullable Value getValue(@Nullable Key key) {
     return myKey2Value.get(key);
   }
 
-  @Nullable
-  public Key getKey(@Nullable Value value) {
+  public @Nullable Key getKey(@Nullable Value value) {
     return myValue2Key.get(value);
   }
 

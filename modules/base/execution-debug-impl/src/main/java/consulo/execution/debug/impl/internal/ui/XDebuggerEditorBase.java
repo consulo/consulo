@@ -77,13 +77,10 @@ public abstract class XDebuggerEditorBase {
     private final XDebuggerEditorsProvider myDebuggerEditorsProvider;
     
     private final EvaluationMode myMode;
-    @Nullable
-    private final String myHistoryId;
-    @Nullable
-    private XSourcePosition mySourcePosition;
+    private final @Nullable String myHistoryId;
+    private @Nullable XSourcePosition mySourcePosition;
     private int myHistoryIndex = -1;
-    @Nullable
-    private PsiElement myContext;
+    private @Nullable PsiElement myContext;
 
     private JBPopup myExpandedPopup;
 
@@ -205,8 +202,7 @@ public abstract class XDebuggerEditorBase {
         return myMode;
     }
 
-    @Nullable
-    public abstract Editor getEditor();
+    public abstract @Nullable Editor getEditor();
 
     public abstract JComponent getComponent();
 
@@ -240,8 +236,7 @@ public abstract class XDebuggerEditorBase {
 
     public abstract XExpression getExpression();
 
-    @Nullable
-    public abstract JComponent getPreferredFocusedComponent();
+    public abstract @Nullable JComponent getPreferredFocusedComponent();
 
     public void requestFocusInEditor() {
         JComponent preferredFocusedComponent = getPreferredFocusedComponent();

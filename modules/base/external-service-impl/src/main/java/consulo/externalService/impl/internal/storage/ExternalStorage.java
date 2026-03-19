@@ -169,13 +169,11 @@ public class ExternalStorage {
         return Files.newOutputStream(filePath, StandardOpenOption.CREATE);
     }
 
-    @Nullable
-    public InputStream loadContent(String fileSpec, RoamingType roamingType) throws IOException {
+    public @Nullable InputStream loadContent(String fileSpec, RoamingType roamingType) throws IOException {
         return loadContent(buildFileSpec(roamingType, fileSpec));
     }
 
-    @Nullable
-    public InputStream loadContent(String fullFileSpec) throws IOException {
+    public @Nullable InputStream loadContent(String fullFileSpec) throws IOException {
         Path file = myProxyDirectory.resolve(fullFileSpec);
         if (Files.exists(file)) {
             return Files.newInputStream(file);

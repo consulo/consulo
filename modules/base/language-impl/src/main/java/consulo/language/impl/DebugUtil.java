@@ -587,8 +587,7 @@ public class DebugUtil {
     }
   }
 
-  @Nullable
-  private static Object calcInvalidationTrace(@Nullable ASTNode treeElement) {
+  private static @Nullable Object calcInvalidationTrace(@Nullable ASTNode treeElement) {
     if (!PsiInvalidElementAccessException.isTrackingInvalidation()) {
       return null;
     }

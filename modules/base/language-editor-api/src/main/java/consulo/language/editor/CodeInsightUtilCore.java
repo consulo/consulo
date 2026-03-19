@@ -142,8 +142,7 @@ public abstract class CodeInsightUtilCore extends FileModificationService {
      *                      the index of returnValue[i] character in the source literal
      * @return String literal value, or null, if the literal is invalid
      */
-    @Nullable
-    public static CharSequence parseStringCharacters(String chars, @Nullable int[] sourceOffsets) {
+    public static @Nullable CharSequence parseStringCharacters(String chars, @Nullable int[] sourceOffsets) {
         LOG.assertTrue(sourceOffsets == null || sourceOffsets.length == chars.length() + 1);
         if (noEscape(chars, sourceOffsets)) {
             return chars;

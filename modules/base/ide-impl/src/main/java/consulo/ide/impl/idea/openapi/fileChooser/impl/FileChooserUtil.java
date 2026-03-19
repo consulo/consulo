@@ -33,8 +33,7 @@ import java.util.List;
 public final class FileChooserUtil {
     private static final String LAST_OPENED_FILE_PATH = "last_opened_file_path";
 
-    @Nullable
-    public static VirtualFile getLastOpenedFile(@Nullable Project project) {
+    public static @Nullable VirtualFile getLastOpenedFile(@Nullable Project project) {
         if (project != null) {
             String path = PropertiesComponent.getInstance(project).getValue(LAST_OPENED_FILE_PATH);
             if (path != null) {
@@ -50,8 +49,7 @@ public final class FileChooserUtil {
         }
     }
 
-    @Nullable
-    public static VirtualFile getFileToSelect(
+    public static @Nullable VirtualFile getFileToSelect(
         FileChooserDescriptor descriptor,
         @Nullable Project project,
         @Nullable VirtualFile toSelect,

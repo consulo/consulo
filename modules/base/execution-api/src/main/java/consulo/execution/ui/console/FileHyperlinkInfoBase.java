@@ -57,8 +57,7 @@ public abstract class FileHyperlinkInfoBase implements FileHyperlinkInfo {
     this(project, true, line, column);
   }
 
-  @Nullable
-  protected abstract VirtualFile getVirtualFile();
+  protected abstract @Nullable VirtualFile getVirtualFile();
 
   @Override
   public OpenFileDescriptor getDescriptor() {

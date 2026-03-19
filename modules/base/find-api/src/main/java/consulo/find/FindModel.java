@@ -587,8 +587,7 @@ public class FindModel extends UserDataHolderBase implements Cloneable {
      *
      * @return the directory used as a scope, or null if the selected scope is not "Directory".
      */
-    @Nullable
-    public String getDirectoryName() {
+    public @Nullable String getDirectoryName() {
         return directoryName;
     }
 
@@ -743,8 +742,7 @@ public class FindModel extends UserDataHolderBase implements Cloneable {
      *
      * @return the module name, or null if the selected scope is not "Module".
      */
-    @Nullable
-    public String getModuleName() {
+    public @Nullable String getModuleName() {
         return moduleName;
     }
 

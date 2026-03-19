@@ -96,8 +96,7 @@ public class ColumnFilteringStrategy implements ChangeListFilteringStrategy {
   }
 
   @Override
-  @Nullable
-  public JComponent getFilterUI() {
+  public @Nullable JComponent getFilterUI() {
     return myScrollPane;
   }
 

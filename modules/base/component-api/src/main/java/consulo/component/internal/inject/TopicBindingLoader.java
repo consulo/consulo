@@ -41,8 +41,7 @@ public class TopicBindingLoader extends BindingLoader<TopicBinding> {
     myBindings.put(binding.getApiClassName(), binding);
   }
 
-  @Nullable
-  public TopicBinding getBinding(String className) {
+  public @Nullable TopicBinding getBinding(String className) {
     return myBindings.get(className);
   }
 

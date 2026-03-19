@@ -58,8 +58,7 @@ public final class VcsRootProblemNotifier {
     
     private final Set<String> myReportedUnregisteredRoots;
 
-    @Nullable
-    private Notification myNotification;
+    private @Nullable Notification myNotification;
     
     private final Object NOTIFICATION_LOCK = new Object();
 

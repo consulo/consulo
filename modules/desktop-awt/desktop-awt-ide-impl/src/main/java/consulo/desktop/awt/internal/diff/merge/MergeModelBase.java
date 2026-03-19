@@ -43,12 +43,10 @@ import java.util.List;
 public abstract class MergeModelBase<S extends MergeModelBase.State> implements Disposable {
     public static final Logger LOG = Logger.getInstance(MergeModelBase.class);
 
-    @Nullable
-    private final Project myProject;
+    private final @Nullable Project myProject;
     
     private final Document myDocument;
-    @Nullable
-    private final UndoManager myUndoManager;
+    private final @Nullable UndoManager myUndoManager;
 
     
     private IntList myStartLines = IntLists.newArrayList();

@@ -138,8 +138,7 @@ public abstract class CopyReferenceActionBase extends DumbAwareAction {
         return true;
     }
 
-    @Nullable
-    public static String elementToFqn(@Nullable PsiElement element) {
+    public static @Nullable String elementToFqn(@Nullable PsiElement element) {
         return CopyReferenceUtil.elementToFqn(element, null);
     }
 }

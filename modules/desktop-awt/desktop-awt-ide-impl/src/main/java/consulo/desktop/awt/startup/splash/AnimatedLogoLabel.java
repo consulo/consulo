@@ -96,8 +96,7 @@ public class AnimatedLogoLabel extends JComponent {
 
     private final Object lock = new Object();
 
-    @Nullable
-    private ScheduledExecutorService myExecutorService;
+    private @Nullable ScheduledExecutorService myExecutorService;
 
     public AnimatedLogoLabel(int pixelSize, Color foreground, boolean animated, boolean unstableScaling) {
         setForeground(foreground);

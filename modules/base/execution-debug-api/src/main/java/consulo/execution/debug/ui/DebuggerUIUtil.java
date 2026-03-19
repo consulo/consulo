@@ -94,8 +94,7 @@ public class DebuggerUIUtil {
         }
     }
 
-    @Nullable
-    public static RelativePoint getPositionForPopup(Editor editor, int line) {
+    public static @Nullable RelativePoint getPositionForPopup(Editor editor, int line) {
         Point p = editor.logicalPositionToXY(new LogicalPosition(line + 1, 0));
         return editor.getScrollingModel().getVisibleArea().contains(p) ? new RelativePoint(editor.getContentComponent(), p) : null;
     }

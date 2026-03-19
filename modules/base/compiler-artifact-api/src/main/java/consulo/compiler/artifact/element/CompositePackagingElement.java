@@ -71,8 +71,7 @@ public abstract class CompositePackagingElement<S> extends PackagingElement<S> i
     return added;
   }
 
-  @Nullable
-  public PackagingElement<?> moveChild(int index, int direction) {
+  public @Nullable PackagingElement<?> moveChild(int index, int direction) {
     int target = index + direction;
     if (0 <= index && index < myChildren.size() && 0 <= target && target < myChildren.size()) {
       PackagingElement<?> element1 = myChildren.get(index);
@@ -118,8 +117,7 @@ public abstract class CompositePackagingElement<S> extends PackagingElement<S> i
     myChildren.clear();
   }
 
-  @Nullable
-  public CompositePackagingElement<?> findCompositeChild(String name) {
+  public @Nullable CompositePackagingElement<?> findCompositeChild(String name) {
     for (PackagingElement<?> child : myChildren) {
       if (child instanceof CompositePackagingElement && name.equals(((CompositePackagingElement)child).getName())) {
         return (CompositePackagingElement)child;

@@ -29,8 +29,7 @@ public class RenameInputValidatorRegistry {
     private RenameInputValidatorRegistry() {
     }
 
-    @Nullable
-    public static Predicate<String> getInputValidator(PsiElement element) {
+    public static @Nullable Predicate<String> getInputValidator(PsiElement element) {
         for (RenameInputValidator validator : RenameInputValidator.EP_NAME.getExtensionList()) {
             ProcessingContext context = new ProcessingContext();
             if (validator.getPattern().accepts(element, context)) {
@@ -40,8 +39,7 @@ public class RenameInputValidatorRegistry {
         return null;
     }
 
-    @Nullable
-    public static Function<String, String> getInputErrorValidator(PsiElement element) {
+    public static @Nullable Function<String, String> getInputErrorValidator(PsiElement element) {
         for (RenameInputValidator validator : RenameInputValidator.EP_NAME.getExtensionList()) {
             if (validator instanceof RenameInputValidatorEx renameInputValidatorEx) {
                 ProcessingContext context = new ProcessingContext();

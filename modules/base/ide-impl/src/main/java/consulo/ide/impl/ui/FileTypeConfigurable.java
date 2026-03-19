@@ -619,8 +619,7 @@ public class FileTypeConfigurable implements SearchableConfigurable, Configurabl
         return fileType instanceof AbstractFileType;
     }
 
-    @Nullable
-    public FileType findExistingFileType(FileNameMatcher matcher) {
+    public @Nullable FileType findExistingFileType(FileNameMatcher matcher) {
         FileType fileTypeByExtension = myTempPatternsTable.findAssociatedFileType(matcher);
 
         if (fileTypeByExtension != null && fileTypeByExtension != UnknownFileType.INSTANCE) {

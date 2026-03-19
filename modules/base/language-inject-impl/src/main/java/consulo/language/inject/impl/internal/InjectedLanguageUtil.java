@@ -284,8 +284,7 @@ public class InjectedLanguageUtil {
   /**
    * Invocation of this method on uncommitted {@code host} can lead to unexpected results, including throwing an exception!
    */
-  @Nullable
-  public static PsiFile findInjectedPsiNoCommit(PsiFile host, int offset) {
+  public static @Nullable PsiFile findInjectedPsiNoCommit(PsiFile host, int offset) {
     PsiElement injected = InjectedLanguageManager.getInstance(host.getProject()).findInjectedElementAt(host, offset);
     return injected == null ? null : injected.getContainingFile();
   }
@@ -388,8 +387,7 @@ public class InjectedLanguageUtil {
    * We can only inject into injection hosts or their ancestors, so if we're sure there are no PsiLanguageInjectionHost descendants,
    * we can skip that PSI safely.
    */
-  @Nullable
-  private static PsiElement skipNonInjectablePsi(PsiElement element, boolean probeUp) {
+  private static @Nullable PsiElement skipNonInjectablePsi(PsiElement element, boolean probeUp) {
     if (!stopLookingForInjection(element) && element.getFirstChild() == null) {
       if (!probeUp) return null;
 
@@ -625,7 +623,7 @@ public class InjectedLanguageUtil {
     return result.get().booleanValue();
   }
 
-  public static String getUnescapedText(PsiFile file, @Nullable final PsiElement startElement, @Nullable final PsiElement endElement) {
+  public static String getUnescapedText(PsiFile file, final @Nullable PsiElement startElement, final @Nullable PsiElement endElement) {
     InjectedLanguageManager manager = InjectedLanguageManager.getInstance(file.getProject());
     if (manager.getInjectionHost(file) == null) {
       return file.getText().substring(startElement == null ? 0 : startElement.getTextRange().getStartOffset(), endElement == null ? file.getTextLength() : endElement.getTextRange().getStartOffset());
@@ -675,20 +673,17 @@ public class InjectedLanguageUtil {
     return shred.getRangeInsideHost().getStartOffset() + host.getTextRange().getStartOffset();
   }
 
-  @Nullable
-  public static PsiElement findElementInInjected(PsiLanguageInjectionHost injectionHost, int offset) {
+  public static @Nullable PsiElement findElementInInjected(PsiLanguageInjectionHost injectionHost, int offset) {
     Ref<PsiElement> ref = Ref.create();
     enumerate(injectionHost, (injectedPsi, places) -> ref.set(injectedPsi.findElementAt(offset - getInjectedStart(places))));
     return ref.get();
   }
 
-  @Nullable
-  public static PsiLanguageInjectionHost findInjectionHost(@Nullable PsiElement psi) {
+  public static @Nullable PsiLanguageInjectionHost findInjectionHost(@Nullable PsiElement psi) {
     return InjectedLanguageManagerUtil.findInjectionHost(psi);
   }
 
-  @Nullable
-  public static PsiLanguageInjectionHost findInjectionHost(@Nullable VirtualFile virtualFile) {
+  public static @Nullable PsiLanguageInjectionHost findInjectionHost(@Nullable VirtualFile virtualFile) {
     return virtualFile instanceof VirtualFileWindow virtualFileWindow
       ? getShreds(virtualFileWindow.getDocumentWindow()).getHostPointer().getElement() : null;
   }
@@ -700,8 +695,7 @@ public class InjectedLanguageUtil {
     }
   }
 
-  @Nullable
-  public static PsiFile getCachedInjectedFileWithLanguage(PsiElement element, Language language) {
+  public static @Nullable PsiFile getCachedInjectedFileWithLanguage(PsiElement element, Language language) {
     if (!element.isValid()) return null;
     PsiFile containingFile = element.getContainingFile();
     if (containingFile == null || !containingFile.isValid()) return null;

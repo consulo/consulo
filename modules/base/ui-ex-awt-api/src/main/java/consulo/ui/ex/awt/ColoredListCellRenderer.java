@@ -28,8 +28,7 @@ public abstract class ColoredListCellRenderer<T> extends SimpleColoredComponent 
     protected boolean mySelected;
     protected Color myForeground;
     protected Color mySelectionForeground;
-    @Nullable
-    private final JComboBox myComboBox;
+    private final @Nullable JComboBox myComboBox;
 
     private boolean mySeparator;
     private String mySeparatorText;

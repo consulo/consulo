@@ -28,8 +28,7 @@ import org.jspecify.annotations.Nullable;
 public final class AuthData {
     
     private final String myLogin;
-    @Nullable
-    private final String myPassword;
+    private final @Nullable String myPassword;
 
     public AuthData(String login, @Nullable String password) {
         myPassword = password;
@@ -41,8 +40,7 @@ public final class AuthData {
         return myLogin;
     }
 
-    @Nullable
-    public String getPassword() {
+    public @Nullable String getPassword() {
         return myPassword;
     }
 }

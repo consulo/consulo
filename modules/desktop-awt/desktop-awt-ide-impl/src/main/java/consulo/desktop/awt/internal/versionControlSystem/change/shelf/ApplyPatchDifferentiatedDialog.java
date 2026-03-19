@@ -103,8 +103,7 @@ public class ApplyPatchDifferentiatedDialog extends DialogWrapper {
     private final List<ShelvedBinaryFilePatch> myBinaryShelvedPatches;
     
     private final MyChangeTreeList myChangesTreeList;
-    @Nullable
-    private final Collection<Change> myPreselectedChanges;
+    private final @Nullable Collection<Change> myPreselectedChanges;
     private final boolean myUseProjectRootAsPredefinedBase;
 
     private JComponent myCenterPanel;
@@ -441,8 +440,7 @@ public class ApplyPatchDifferentiatedDialog extends DialogWrapper {
         }
     }
 
-    @Nullable
-    private static PatchReader loadPatches(VirtualFile patchFile) {
+    private static @Nullable PatchReader loadPatches(VirtualFile patchFile) {
         PatchReader reader;
         patchFile.refresh(false, false);
         try {
@@ -477,8 +475,7 @@ public class ApplyPatchDifferentiatedDialog extends DialogWrapper {
     private static class FilePresentationModel {
         
         private final String myPath;
-        @Nullable
-        private VirtualFile myVf;
+        private @Nullable VirtualFile myVf;
 
         private FilePresentationModel(String path) {
             myPath = path;
@@ -490,8 +487,7 @@ public class ApplyPatchDifferentiatedDialog extends DialogWrapper {
             myVf = file;
         }
 
-        @Nullable
-        public VirtualFile getVf() {
+        public @Nullable VirtualFile getVf() {
             if (myVf == null) {
                 VirtualFile file = VirtualFileUtil.findFileByIoFile(new File(myPath), true);
                 myVf = file != null && !file.isDirectory() ? file : null;
@@ -1043,8 +1039,7 @@ public class ApplyPatchDifferentiatedDialog extends DialogWrapper {
         );
     }
 
-    @Nullable
-    private LocalChangeList getSelectedChangeList() {
+    private @Nullable LocalChangeList getSelectedChangeList() {
         return myChangeListChooser.getSelectedList(myProject);
     }
 

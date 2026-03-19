@@ -381,8 +381,7 @@ public class InspectionEngine {
      * @param wrapper
      * @return null means not specified
      */
-    @Nullable
-    public static Set<String> getDialectIdsSpecifiedForTool(LocalInspectionToolWrapper wrapper) {
+    public static @Nullable Set<String> getDialectIdsSpecifiedForTool(LocalInspectionToolWrapper wrapper) {
         Language language = wrapper.getLanguage();
         if (language == null) {
             return null;

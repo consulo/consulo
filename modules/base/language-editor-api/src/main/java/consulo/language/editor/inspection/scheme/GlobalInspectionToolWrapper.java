@@ -70,8 +70,7 @@ public class GlobalInspectionToolWrapper extends InspectionToolWrapper<GlobalIns
         return getTool().worksInBatchModeOnly();
     }
 
-    @Nullable
-    public LocalInspectionToolWrapper getSharedLocalInspectionToolWrapper() {
+    public @Nullable LocalInspectionToolWrapper getSharedLocalInspectionToolWrapper() {
         LocalInspectionTool sharedTool = getTool().getSharedLocalInspectionTool();
         if (sharedTool == null) {
             return null;

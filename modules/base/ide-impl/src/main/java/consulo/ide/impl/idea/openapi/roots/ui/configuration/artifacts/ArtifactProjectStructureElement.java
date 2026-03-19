@@ -75,8 +75,7 @@ public class ArtifactProjectStructureElement extends ProjectStructureElement {
     return usages;
   }
 
-  @Nullable
-  public static ProjectStructureElement getProjectStructureElementFor(PackagingElement<?> packagingElement, ArtifactsStructureConfigurableContext artifactsStructureContext) {
+  public static @Nullable ProjectStructureElement getProjectStructureElementFor(PackagingElement<?> packagingElement, ArtifactsStructureConfigurableContext artifactsStructureContext) {
     if (packagingElement instanceof ModuleOutputPackagingElement) {
       Module module = ((ModuleOutputPackagingElement)packagingElement).findModule(artifactsStructureContext);
       if (module != null) {

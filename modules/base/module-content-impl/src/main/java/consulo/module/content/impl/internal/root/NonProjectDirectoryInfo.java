@@ -79,8 +79,7 @@ class NonProjectDirectoryInfo extends DirectoryInfo {
   }
 
   @Override
-  @Nullable
-  public VirtualFile getSourceRoot() {
+  public @Nullable VirtualFile getSourceRoot() {
     return null;
   }
 
@@ -96,8 +95,7 @@ class NonProjectDirectoryInfo extends DirectoryInfo {
   }
 
   @Override
-  @Nullable
-  public VirtualFile getContentRoot() {
+  public @Nullable VirtualFile getContentRoot() {
     return null;
   }
 

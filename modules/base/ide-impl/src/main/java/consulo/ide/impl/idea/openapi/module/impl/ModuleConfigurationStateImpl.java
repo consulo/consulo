@@ -55,8 +55,7 @@ public class ModuleConfigurationStateImpl extends UserDataHolderBase implements 
   }
 
   @Override
-  @Nullable
-  public ModifiableRootModel getRootModel() {
+  public @Nullable ModifiableRootModel getRootModel() {
     return myModifiableRootModelValue.get();
   }
 

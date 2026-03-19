@@ -35,8 +35,7 @@ public abstract class LibraryDetectionManager {
 
   public abstract boolean processProperties(List<VirtualFile> files, LibraryPropertiesProcessor processor);
 
-  @Nullable
-  public abstract Pair<LibraryType<?>, LibraryProperties<?>> detectType(List<VirtualFile> files);
+  public abstract @Nullable Pair<LibraryType<?>, LibraryProperties<?>> detectType(List<VirtualFile> files);
 
   public interface LibraryPropertiesProcessor {
     <P extends LibraryProperties> boolean processProperties(LibraryKind kind, P properties);

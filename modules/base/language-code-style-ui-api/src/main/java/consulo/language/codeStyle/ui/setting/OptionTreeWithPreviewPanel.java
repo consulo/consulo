@@ -539,12 +539,9 @@ public abstract class OptionTreeWithPreviewPanel extends CustomizableLanguageCod
         final String fieldName;
         
         final String title;
-        @Nullable
-        final String groupName;
-        @Nullable
-        final OptionAnchor anchor;
-        @Nullable
-        final String anchorFieldName;
+        final @Nullable String groupName;
+        final @Nullable OptionAnchor anchor;
+        final @Nullable String anchorFieldName;
 
         private CustomBooleanOptionInfo(
             Class<? extends CustomCodeStyleSettings> settingClass,

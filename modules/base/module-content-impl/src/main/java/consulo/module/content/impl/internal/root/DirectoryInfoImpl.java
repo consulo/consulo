@@ -109,8 +109,7 @@ public class DirectoryInfoImpl extends DirectoryInfo {
   }
 
   @Override
-  @Nullable
-  public VirtualFile getSourceRoot() {
+  public @Nullable VirtualFile getSourceRoot() {
     return sourceRoot;
   }
 
@@ -126,8 +125,7 @@ public class DirectoryInfoImpl extends DirectoryInfo {
   }
 
   @Override
-  @Nullable
-  public VirtualFile getContentRoot() {
+  public @Nullable VirtualFile getContentRoot() {
     return contentRoot;
   }
 

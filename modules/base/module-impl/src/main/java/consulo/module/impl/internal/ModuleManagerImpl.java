@@ -95,13 +95,11 @@ public abstract class ModuleManagerImpl extends ModuleManagerInternal implements
             }
         }
 
-        @Nullable
-        public String[] getGroups() {
+        public @Nullable String[] getGroups() {
             return myGroups;
         }
 
-        @Nullable
-        public String getDirUrl() {
+        public @Nullable String getDirUrl() {
             return myDirUrl;
         }
 
@@ -267,8 +265,7 @@ public abstract class ModuleManagerImpl extends ModuleManagerInternal implements
         loadModules(myModuleModel, null, true);
     }
 
-    @Nullable
-    private ModuleLoadItem findModuleByUrl(String name, @Nullable String url) {
+    private @Nullable ModuleLoadItem findModuleByUrl(String name, @Nullable String url) {
         if (url == null) {
             for (ModuleLoadItem item : myModuleLoadItems) {
                 if (item.getName().equals(name) && item.getDirUrl() == null) {
@@ -692,8 +689,7 @@ public abstract class ModuleManagerImpl extends ModuleManagerInternal implements
             return myNewNameToModule.get(newName);
         }
 
-        @Nullable
-        public Module getModuleByNewName(String newName) {
+        public @Nullable Module getModuleByNewName(String newName) {
             Module moduleToBeRenamed = getModuleToBeRenamed(newName);
             if (moduleToBeRenamed != null) {
                 return moduleToBeRenamed;
@@ -726,8 +722,7 @@ public abstract class ModuleManagerImpl extends ModuleManagerInternal implements
             return moduleEx;
         }
 
-        @Nullable
-        private ModuleEx getModuleByDirUrl(String dirUrl) {
+        private @Nullable ModuleEx getModuleByDirUrl(String dirUrl) {
             for (Module module : myModules) {
                 if (FileUtil.pathsEqual(dirUrl, module.getModuleDirUrl())) {
                     return (ModuleEx) module;
@@ -736,8 +731,7 @@ public abstract class ModuleManagerImpl extends ModuleManagerInternal implements
             return null;
         }
 
-        @Nullable
-        private Module removeModuleByDirUrl(String dirUrl) {
+        private @Nullable Module removeModuleByDirUrl(String dirUrl) {
             Module toRemove = null;
             for (Module module : myModules) {
                 if (FileUtil.pathsEqual(dirUrl, module.getModuleDirUrl())) {
@@ -921,8 +915,7 @@ public abstract class ModuleManagerImpl extends ModuleManagerInternal implements
         }
 
         @Override
-        @Nullable
-        public String[] getModuleGroupPath(Module module) {
+        public @Nullable String[] getModuleGroupPath(Module module) {
             return myModuleGroupPath == null ? null : myModuleGroupPath.get(module);
         }
 

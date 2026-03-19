@@ -33,11 +33,9 @@ public class SharedProxyConfig {
     private static final PropertiesEncryptionSupport ourEncryptionSupport = new PropertiesEncryptionSupport();
 
     public static final class ProxyParameters {
-        @Nullable
-        public final String host;
+        public final @Nullable String host;
         public final int port;
-        @Nullable
-        public final String login;
+        public final @Nullable String login;
         
         public final char[] password;
 
@@ -57,8 +55,7 @@ public class SharedProxyConfig {
         return FileUtil.delete(CONFIG_FILE);
     }
 
-    @Nullable
-    public static ProxyParameters load() {
+    public static @Nullable ProxyParameters load() {
         try {
             Properties props = ourEncryptionSupport.load(CONFIG_FILE);
             String password = props.getProperty(PASSWORD, "");

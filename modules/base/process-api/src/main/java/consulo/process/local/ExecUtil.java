@@ -84,8 +84,7 @@ public class ExecUtil {
     return "cmd.exe";
   }
 
-  @Nullable
-  public static String execAndReadLine(GeneralCommandLine commandLine) {
+  public static @Nullable String execAndReadLine(GeneralCommandLine commandLine) {
     try {
       return readFirstLine(commandLine.createProcess().getInputStream(), commandLine.getCharset());
     }
@@ -94,8 +93,7 @@ public class ExecUtil {
     }
   }
 
-  @Nullable
-  public static String readFirstLine(InputStream stream, @Nullable Charset cs) {
+  public static @Nullable String readFirstLine(InputStream stream, @Nullable Charset cs) {
     try {
       try (BufferedReader reader = new BufferedReader(cs == null ? new InputStreamReader(stream) : new InputStreamReader(stream, cs))) {
         return reader.readLine();

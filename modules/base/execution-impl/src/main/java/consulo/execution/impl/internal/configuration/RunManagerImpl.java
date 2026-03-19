@@ -82,10 +82,8 @@ public class RunManagerImpl extends RunManagerEx implements PersistentStateCompo
 
     // When readExternal not all configuration may be loaded, so we need to remember the selected configuration
     // so that when it is eventually loaded, we can mark is as a selected.
-    @Nullable
-    private String myLoadedSelectedConfigurationUniqueName = null;
-    @Nullable
-    private String mySelectedConfigurationId = null;
+    private @Nullable String myLoadedSelectedConfigurationUniqueName = null;
+    private @Nullable String mySelectedConfigurationId = null;
 
     private final Map<String, Image> myIdToIcon = new HashMap<>();
     private final Map<String, Long> myIconCheckTimes = new HashMap<>();
@@ -234,8 +232,7 @@ public class RunManagerImpl extends RunManagerEx implements PersistentStateCompo
         return new ArrayList<>(getSortedConfigurations());
     }
 
-    @Nullable
-    public RunnerAndConfigurationSettings getSettings(@Nullable RunConfiguration configuration) {
+    public @Nullable RunnerAndConfigurationSettings getSettings(@Nullable RunConfiguration configuration) {
         if (configuration == null) {
             return null;
         }
@@ -466,8 +463,7 @@ public class RunManagerImpl extends RunManagerEx implements PersistentStateCompo
     }
 
     @Override
-    @Nullable
-    public RunnerAndConfigurationSettings getSelectedConfiguration() {
+    public @Nullable RunnerAndConfigurationSettings getSelectedConfiguration() {
         if (mySelectedConfigurationId == null && myLoadedSelectedConfigurationUniqueName != null) {
             setSelectedConfigurationId(myLoadedSelectedConfigurationUniqueName);
         }
@@ -820,8 +816,7 @@ public class RunManagerImpl extends RunManagerEx implements PersistentStateCompo
         fireRunConfigurationSelected();
     }
 
-    @Nullable
-    private String findExistingConfigurationId(@Nullable RunnerAndConfigurationSettings settings) {
+    private @Nullable String findExistingConfigurationId(@Nullable RunnerAndConfigurationSettings settings) {
         if (settings != null) {
             for (Map.Entry<String, RunnerAndConfigurationSettings> entry : myConfigurations.entrySet()) {
                 if (entry.getValue() == settings) {
@@ -870,8 +865,7 @@ public class RunManagerImpl extends RunManagerEx implements PersistentStateCompo
         fireRunConfigurationsRemoved(configurations);
     }
 
-    @Nullable
-    public RunnerAndConfigurationSettings loadConfiguration(Element element, boolean isShared) {
+    public @Nullable RunnerAndConfigurationSettings loadConfiguration(Element element, boolean isShared) {
         RunnerAndConfigurationSettingsImpl settings = new RunnerAndConfigurationSettingsImpl(this);
         try {
             settings.readExternal(element);
@@ -918,13 +912,11 @@ public class RunManagerImpl extends RunManagerEx implements PersistentStateCompo
         return Lists.notNullize(result);
     }
 
-    @Nullable
-    public ConfigurationFactory getFactory(String typeName, String factoryName) {
+    public @Nullable ConfigurationFactory getFactory(String typeName, String factoryName) {
         return getFactory(typeName, factoryName, false);
     }
 
-    @Nullable
-    public ConfigurationFactory getFactory(String typeName, String factoryName, boolean checkUnknown) {
+    public @Nullable ConfigurationFactory getFactory(String typeName, String factoryName, boolean checkUnknown) {
         ConfigurationType type = typeCache().getConfigurationType(typeName);
         if (type == null && checkUnknown && typeName != null) {
             UnknownFeaturesCollector.getInstance(myProject).registerUnknownFeature(ConfigurationType.class, typeName);
@@ -1121,8 +1113,7 @@ public class RunManagerImpl extends RunManagerEx implements PersistentStateCompo
     }
 
     @Override
-    @Nullable
-    public RunnerAndConfigurationSettings findConfigurationByName(@Nullable String name) {
+    public @Nullable RunnerAndConfigurationSettings findConfigurationByName(@Nullable String name) {
         if (name == null) {
             return null;
         }

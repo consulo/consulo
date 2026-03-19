@@ -79,8 +79,7 @@ public class PreviewFileTypeConsumerImpl implements FileTypeConsumer {
     myRecorder.accept(ExtensionPreview.of(FileTypeFactory.class, id, myFileTypeFactory));
   }
 
-  @Nullable
-  private String buildMatcherIdentify(FileNameMatcher fileNameMatcher) {
+  private @Nullable String buildMatcherIdentify(FileNameMatcher fileNameMatcher) {
     if (fileNameMatcher instanceof ExactFileNameMatcher) {
       if (((ExactFileNameMatcher)fileNameMatcher).isIgnoreCase()) {
         return "!|" + ((ExactFileNameMatcher)fileNameMatcher).getFileName();

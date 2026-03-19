@@ -43,8 +43,7 @@ public class Descriptor {
   private final InspectionToolWrapper myToolWrapper;
   private final HighlightDisplayLevel myLevel;
   private boolean myEnabled = false;
-  @Nullable
-  private final NamedScope myScope;
+  private final @Nullable NamedScope myScope;
   private static final Logger LOG = Logger.getInstance(Descriptor.class);
   private final ScopeToolState myState;
   private final InspectionProfileImpl myInspectionProfile;
@@ -100,8 +99,7 @@ public class Descriptor {
     return myLevel;
   }
 
-  @Nullable
-  public Element getConfig() {
+  public @Nullable Element getConfig() {
     return myConfig;
   }
 
@@ -117,8 +115,7 @@ public class Descriptor {
     return myToolWrapper;
   }
 
-  @Nullable
-  public String loadDescription() {
+  public @Nullable String loadDescription() {
     loadConfig();
     return myToolWrapper.loadDescription();
   }
@@ -147,8 +144,7 @@ public class Descriptor {
     return myScopeName;
   }
 
-  @Nullable
-  public NamedScope getScope() {
+  public @Nullable NamedScope getScope() {
     return myScope;
   }
 

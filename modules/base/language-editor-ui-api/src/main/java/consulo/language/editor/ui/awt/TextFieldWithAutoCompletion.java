@@ -135,7 +135,7 @@ public class TextFieldWithAutoCompletion<T> extends LanguageTextField {
   }
 
   public static class StringsCompletionProvider extends TextFieldWithAutoCompletionListProvider<String> {
-    @Nullable private final Image myIcon;
+    private final @Nullable Image myIcon;
 
     public StringsCompletionProvider(@Nullable Collection<String> variants,
                                      @Nullable Image icon) {

@@ -134,8 +134,7 @@ public interface PropertiesComponent {
 
     @Deprecated
     @DeprecationInfo("Use {@link #getValue(String, String)}")
-    @Nullable
-    default String getOrInit(String name, String defaultValue) {
+    default @Nullable String getOrInit(String name, String defaultValue) {
         if (!isValueSet(name)) {
             setValue(name, defaultValue);
             return defaultValue;

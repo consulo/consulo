@@ -251,8 +251,7 @@ public class IdeRootPane extends JRootPane implements Disposable, UISettingsList
         myStatusBar.install(frame);
     }
 
-    @Nullable
-    public final StatusBar getStatusBar() {
+    public final @Nullable StatusBar getStatusBar() {
         return myStatusBar;
     }
 
@@ -290,8 +289,7 @@ public class IdeRootPane extends JRootPane implements Disposable, UISettingsList
         myNorthComponents.clear();
     }
 
-    @Nullable
-    public IdeRootPaneNorthExtension findExtension(Class<? extends IdeRootPaneNorthExtension> apiClass) {
+    public @Nullable IdeRootPaneNorthExtension findExtension(Class<? extends IdeRootPaneNorthExtension> apiClass) {
         return myNorthComponents.get(apiClass);
     }
 

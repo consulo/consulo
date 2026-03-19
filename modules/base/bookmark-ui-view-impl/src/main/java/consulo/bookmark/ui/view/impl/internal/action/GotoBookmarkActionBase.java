@@ -60,8 +60,7 @@ abstract class GotoBookmarkActionBase extends EditorAction {
                 editor.getScrollingModel().scrollTo(new LogicalPosition(line, 0), ScrollType.CENTER);
             }
 
-            @Nullable
-            private Bookmark getBookmarkToGo(DataContext dataContext, Editor editor) {
+            private @Nullable Bookmark getBookmarkToGo(DataContext dataContext, Editor editor) {
                 Project project = dataContext.getData(Project.KEY);
                 if (project == null) {
                     return null;

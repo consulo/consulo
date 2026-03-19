@@ -62,8 +62,7 @@ public class ArtifactElementPresentation extends TreeNodePresentation {
     presentationData.addText(getPresentableName(), artifact != null ? mainAttributes : SimpleTextAttributes.ERROR_ATTRIBUTES);
   }
 
-  @Nullable
-  private Artifact findArtifact() {
+  private @Nullable Artifact findArtifact() {
     return myArtifactPointer != null ? myArtifactPointer.findArtifact(myContext.getArtifactModel()) : null;
   }
 

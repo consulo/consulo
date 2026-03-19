@@ -540,8 +540,7 @@ public class StubBasedPsiElementBase<T extends StubElement> extends ASTDelegateP
     /**
      * @return a first ancestor of specified type, in stub hierarchy (if this element is currently stub-based) or AST hierarchy (otherwise).
      */
-    @Nullable
-    protected <E extends PsiElement> E getStubOrPsiParentOfType(Class<E> parentClass) {
+    protected @Nullable <E extends PsiElement> E getStubOrPsiParentOfType(Class<E> parentClass) {
         T stub = getStub();
         if (stub != null) {
             //noinspection unchecked

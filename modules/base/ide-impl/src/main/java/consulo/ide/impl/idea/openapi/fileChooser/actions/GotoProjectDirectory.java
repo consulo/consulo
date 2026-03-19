@@ -50,8 +50,7 @@ public final class GotoProjectDirectory extends FileChooserAction {
         e.getPresentation().setEnabled(projectPath != null && fileSystemTree.isUnderRoots(projectPath));
     }
 
-    @Nullable
-    private static VirtualFile getProjectDir(AnActionEvent e) {
+    private static @Nullable VirtualFile getProjectDir(AnActionEvent e) {
         VirtualFile projectFileDir = e.getData(Project.PROJECT_FILE_DIRECTORY);
         return projectFileDir != null && projectFileDir.isValid() ? projectFileDir : null;
     }

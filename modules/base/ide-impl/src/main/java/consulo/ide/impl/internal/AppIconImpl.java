@@ -114,8 +114,7 @@ public class AppIconImpl implements AppIcon {
     TaskBar.get().requestFocus(frame);
   }
 
-  @Nullable
-  private IdeFrame getIdeFrame(ComponentManager project) {
+  private @Nullable IdeFrame getIdeFrame(ComponentManager project) {
     IdeFrame frame = WindowManager.getInstance().getIdeFrame((Project)project);
     if (frame != null) {
       return frame;
@@ -123,8 +122,7 @@ public class AppIconImpl implements AppIcon {
     return null;
   }
 
-  @Nullable
-  private Window getWindow(ComponentManager project) {
+  private @Nullable Window getWindow(ComponentManager project) {
     IdeFrame frame = WindowManager.getInstance().getIdeFrame((Project)project);
     if (frame != null) {
       return frame.getWindow();

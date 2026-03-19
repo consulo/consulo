@@ -67,16 +67,14 @@ public interface ProgramRunner<Settings extends RunnerSettings> {
      * @param settingsProvider source of assorted information about the configuration being edited.
      * @return the per-runner settings, or null if this runner doesn't use any per-runner settings.
      */
-    @Nullable
-    default Settings createConfigurationData(ConfigurationInfoProvider settingsProvider) {
+    default @Nullable Settings createConfigurationData(ConfigurationInfoProvider settingsProvider) {
         return null;
     }
 
     default void checkConfiguration(RunnerSettings settings, @Nullable ConfigurationPerRunnerSettings configurationPerRunnerSettings) throws RuntimeConfigurationException {
     }
 
-    @Nullable
-    default SettingsEditor<Settings> getSettingsEditor(Executor executor, RunConfiguration configuration) {
+    default @Nullable SettingsEditor<Settings> getSettingsEditor(Executor executor, RunConfiguration configuration) {
         return null;
     }
 

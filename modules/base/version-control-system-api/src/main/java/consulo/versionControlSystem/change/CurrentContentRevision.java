@@ -36,8 +36,7 @@ public class CurrentContentRevision implements ContentRevision {
   }
 
   @Override
-  @Nullable
-  public String getContent() {
+  public @Nullable String getContent() {
     VirtualFile vFile = getVirtualFile();
     if (vFile == null) {
       myFile.refresh();
@@ -50,8 +49,7 @@ public class CurrentContentRevision implements ContentRevision {
     return doc.getText();
   }
 
-  @Nullable
-  public VirtualFile getVirtualFile() {
+  public @Nullable VirtualFile getVirtualFile() {
     VirtualFile vFile = myFile.getVirtualFile();
     if (vFile == null || !vFile.isValid()) return null;
     return vFile;

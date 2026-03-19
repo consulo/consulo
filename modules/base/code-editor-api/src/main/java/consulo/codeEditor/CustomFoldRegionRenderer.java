@@ -47,8 +47,7 @@ public interface CustomFoldRegionRenderer {
   /**
    * Enables custom fold region to have a custom context menu in editor (displayed on mouse right click).
    */
-  @Nullable
-  default ActionGroup getContextMenuGroup(CustomFoldRegion region) {
+  default @Nullable ActionGroup getContextMenuGroup(CustomFoldRegion region) {
     return null;
   }
 
@@ -58,8 +57,7 @@ public interface CustomFoldRegionRenderer {
    * Returned provider should have a meaningful implementation of {@code equals} method - {@link CustomFoldRegion#update()}
    * will correctly update the provider (only) if newly returned instance is not equal to the previously defined one.
    */
-  @Nullable
-  default GutterIconRenderer calcGutterIconRenderer(CustomFoldRegion region) {
+  default @Nullable GutterIconRenderer calcGutterIconRenderer(CustomFoldRegion region) {
     return null;
   }
 }

@@ -241,8 +241,7 @@ public class FSRecords {
             throw new RuntimeException("Can't initialize filesystem storage", exception);
         }
 
-        @Nullable
-        private static Exception tryInit() {
+        private static @Nullable Exception tryInit() {
             File basePath = basePath().getAbsoluteFile();
             if (!(basePath.isDirectory() || basePath.mkdirs())) {
                 return new RuntimeException("Cannot create storage directory: " + basePath);
@@ -1018,8 +1017,7 @@ public class FSRecords {
         });
     }
 
-    @Nullable
-    static String readSymlinkTarget(int id) {
+    static @Nullable String readSymlinkTarget(int id) {
         return readAndHandleErrors(() -> {
             try (DataInputStream stream = readAttribute(id, ourSymlinkTargetAttr)) {
                 if (stream != null) {
@@ -1083,11 +1081,9 @@ public class FSRecords {
         });
     }
 
-    @Nullable
-    static VirtualFileSystemEntry findFileById(int id, ConcurrentIntObjectMap<VirtualFileSystemEntry> idToDirCache) {
+    static @Nullable VirtualFileSystemEntry findFileById(int id, ConcurrentIntObjectMap<VirtualFileSystemEntry> idToDirCache) {
         class ParentFinder implements ThrowableComputable<Void, Throwable> {
-            @Nullable
-            private IntList path;
+            private @Nullable IntList path;
             private VirtualFileSystemEntry foundParent;
 
             @Override
@@ -1285,8 +1281,7 @@ public class FSRecords {
         return id * RECORD_SIZE + offset;
     }
 
-    @Nullable
-    static DataInputStream readContent(int fileId) {
+    static @Nullable DataInputStream readContent(int fileId) {
         int page = readAndHandleErrors(() -> {
             checkFileIsValid(fileId);
             return getContentRecordId(fileId);
@@ -1328,8 +1323,7 @@ public class FSRecords {
         return stream;
     }
 
-    @Nullable
-    public static DataInputStream readAttributeWithLock(int fileId, FileAttribute att) {
+    public static @Nullable DataInputStream readAttributeWithLock(int fileId, FileAttribute att) {
         return readAndHandleErrors(() -> {
             try (DataInputStream stream = readAttribute(fileId, att)) {
                 if (stream != null && att.isVersioned()) {
@@ -1349,8 +1343,7 @@ public class FSRecords {
     }
 
     // must be called under r or w lock
-    @Nullable
-    private static DataInputStream readAttribute(int fileId, FileAttribute attribute) throws IOException {
+    private static @Nullable DataInputStream readAttribute(int fileId, FileAttribute attribute) throws IOException {
         checkFileIsValid(fileId);
 
         int recordId = getAttributeRecordId(fileId);

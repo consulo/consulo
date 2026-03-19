@@ -39,8 +39,7 @@ public abstract class TreeExpandAllActionBase extends DumbAwareAction implements
         super(text, description, icon);
     }
 
-    @Nullable
-    protected abstract TreeExpander getExpander(DataContext dataContext);
+    protected abstract @Nullable TreeExpander getExpander(DataContext dataContext);
 
     @Override
     @RequiredUIAccess

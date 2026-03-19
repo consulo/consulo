@@ -29,8 +29,7 @@ import java.io.File;
  * @author max
  */
 public abstract class ProjectOpenProcessor {
-    @Nullable
-    public abstract Image getIcon(VirtualFile file);
+    public abstract @Nullable Image getIcon(VirtualFile file);
 
     public abstract boolean canOpenProject(File file);
 

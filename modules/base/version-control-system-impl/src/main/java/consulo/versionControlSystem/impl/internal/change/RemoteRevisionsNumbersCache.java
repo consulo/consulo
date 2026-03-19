@@ -205,8 +205,7 @@ public class RemoteRevisionsNumbersCache implements ChangesOnServerTracker {
     }
   }
 
-  @Nullable
-  private VirtualFile getRootForPath(String s) {
+  private @Nullable VirtualFile getRootForPath(String s) {
     return myVcsManager.getVcsRootFor(VcsUtil.getFilePath(s, false));
   }
 

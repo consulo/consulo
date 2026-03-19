@@ -65,16 +65,11 @@ public class ExternalActionUtil {
 
     public static final MyInfo EMPTY = new MyInfo(null, null, null, null, null);
 
-    @Nullable
-    public final AbstractExternalSystemSettings<?, ?, ?> settings;
-    @Nullable
-    public final AbstractExternalSystemLocalSettings localSettings;
-    @Nullable
-    public final ExternalProjectPojo externalProject;
-    @Nullable
-    public final Project ideProject;
-    @Nullable
-    public final ProjectSystemId externalSystemId;
+    public final @Nullable AbstractExternalSystemSettings<?, ?, ?> settings;
+    public final @Nullable AbstractExternalSystemLocalSettings localSettings;
+    public final @Nullable ExternalProjectPojo externalProject;
+    public final @Nullable Project ideProject;
+    public final @Nullable ProjectSystemId externalSystemId;
 
     MyInfo(
       @Nullable AbstractExternalSystemSettings<?, ?, ?> settings,

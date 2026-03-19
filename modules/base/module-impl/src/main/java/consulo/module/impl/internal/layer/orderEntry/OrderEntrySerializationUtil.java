@@ -38,13 +38,11 @@ public class OrderEntrySerializationUtil {
 
   public static final String ORDER_ENTRY_TYPE_ATTR = "type";
 
-  @Nullable
-  public static OrderEntryType<?> findOrderEntryType(String id) {
+  public static @Nullable OrderEntryType<?> findOrderEntryType(String id) {
     return Application.get().getExtensionPoint(OrderEntryType.class).getOrBuildCache(ourOrderEntryTypeKey).get(id);
   }
 
-  @Nullable
-  public static OrderEntry loadOrderEntry(Element element, ModuleRootLayer moduleRootLayer) {
+  public static @Nullable OrderEntry loadOrderEntry(Element element, ModuleRootLayer moduleRootLayer) {
     String type = element.getAttributeValue(ORDER_ENTRY_TYPE_ATTR);
     if (type == null) {
       return null;

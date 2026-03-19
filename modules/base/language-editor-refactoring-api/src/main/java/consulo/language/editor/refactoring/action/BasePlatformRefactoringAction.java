@@ -93,8 +93,7 @@ public abstract class BasePlatformRefactoringAction extends BaseRefactoringActio
         return null;
     }
 
-    @Nullable
-    protected RefactoringActionHandler getHandler(Language language, PsiElement element) {
+    protected @Nullable RefactoringActionHandler getHandler(Language language, PsiElement element) {
         RefactoringSupportProvider provider = RefactoringSupportProvider.forLanguage(language);
         if (provider.isAvailable(element)) {
             return getRefactoringHandler(provider, element);
@@ -131,11 +130,9 @@ public abstract class BasePlatformRefactoringAction extends BaseRefactoringActio
         return false;
     }
 
-    @Nullable
-    protected abstract RefactoringActionHandler getRefactoringHandler(RefactoringSupportProvider provider);
+    protected abstract @Nullable RefactoringActionHandler getRefactoringHandler(RefactoringSupportProvider provider);
 
-    @Nullable
-    protected RefactoringActionHandler getRefactoringHandler(RefactoringSupportProvider provider, PsiElement element) {
+    protected @Nullable RefactoringActionHandler getRefactoringHandler(RefactoringSupportProvider provider, PsiElement element) {
         return getRefactoringHandler(provider);
     }
 

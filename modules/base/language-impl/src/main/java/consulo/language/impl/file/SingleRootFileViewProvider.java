@@ -104,8 +104,7 @@ public class SingleRootFileViewProvider extends AbstractFileViewProvider impleme
   }
 
   @Override
-  @Nullable
-  protected PsiFile getPsiInner(Language target) {
+  protected @Nullable PsiFile getPsiInner(Language target) {
     if (target != getBaseLanguage()) {
       return null;
     }

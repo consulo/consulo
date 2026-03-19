@@ -46,8 +46,7 @@ public class CompareClipboardWithSelectionAction extends BaseShowDiffAction {
         super(ActionLocalize.actionCompareclipboardwithselectionText(), ActionLocalize.actionCompareclipboardwithselectionDescription());
     }
 
-    @Nullable
-    private static Editor getEditor(AnActionEvent e) {
+    private static @Nullable Editor getEditor(AnActionEvent e) {
         Project project = e.getData(Project.KEY);
         if (project == null) {
             return null;
@@ -66,8 +65,7 @@ public class CompareClipboardWithSelectionAction extends BaseShowDiffAction {
         return null;
     }
 
-    @Nullable
-    private static FileType getEditorFileType(AnActionEvent e) {
+    private static @Nullable FileType getEditorFileType(AnActionEvent e) {
         DiffContent content = e.getData(DiffDataKeys.CURRENT_CONTENT);
         if (content != null && content.getContentType() != null) {
             return content.getContentType();

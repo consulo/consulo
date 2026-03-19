@@ -17,8 +17,7 @@ import java.util.function.Predicate;
  */
 public class FrozenDocument implements DocumentEx {
     private final ImmutableCharSequence myText;
-    @Nullable
-    private volatile SoftReference<LineSet> myLineSet;
+    private volatile @Nullable SoftReference<LineSet> myLineSet;
     private final long myStamp;
     private volatile SoftReference<String> myTextString;
 

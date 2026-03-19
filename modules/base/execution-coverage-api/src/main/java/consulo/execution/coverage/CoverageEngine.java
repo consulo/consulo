@@ -69,8 +69,7 @@ public abstract class CoverageEngine {
      * @param trackTestFolders         Track test folders option
      * @return Suite
      */
-    @Nullable
-    public CoverageSuite createCoverageSuite(
+    public @Nullable CoverageSuite createCoverageSuite(
         CoverageRunner covRunner,
         String name,
         CoverageFileProvider coverageDataFileProvider,
@@ -110,8 +109,7 @@ public abstract class CoverageEngine {
      * @param project
      * @return Suite
      */
-    @Nullable
-    public abstract CoverageSuite createCoverageSuite(
+    public abstract @Nullable CoverageSuite createCoverageSuite(
         CoverageRunner covRunner,
         String name,
         CoverageFileProvider coverageDataFileProvider,
@@ -133,16 +131,14 @@ public abstract class CoverageEngine {
      * @param config                   Coverage engine configuration
      * @return Suite
      */
-    @Nullable
-    public abstract CoverageSuite createCoverageSuite(
+    public abstract @Nullable CoverageSuite createCoverageSuite(
         CoverageRunner covRunner,
         String name,
         CoverageFileProvider coverageDataFileProvider,
         CoverageEnabledConfiguration config
     );
 
-    @Nullable
-    public abstract CoverageSuite createEmptyCoverageSuite(CoverageRunner coverageRunner);
+    public abstract @Nullable CoverageSuite createEmptyCoverageSuite(CoverageRunner coverageRunner);
 
     /**
      * Coverage annotator which annotates smth(e.g. Project view nodes / editor) with coverage information
@@ -204,8 +200,7 @@ public abstract class CoverageEngine {
      * Qualified name same as in coverage raw project data
      * E.g. java class qualified name by *.class file of some Java class in corresponding source file
      */
-    @Nullable
-    public String getQualifiedName(File outputFile, PsiFile sourceFile) {
+    public @Nullable String getQualifiedName(File outputFile, PsiFile sourceFile) {
         VirtualFile virtualFile = LocalFileSystem.getInstance().findFileByIoFile(outputFile);
         if (virtualFile != null) {
             return getQualifiedName(virtualFile, sourceFile);
@@ -214,8 +209,7 @@ public abstract class CoverageEngine {
     }
 
     @Deprecated
-    @Nullable
-    public String getQualifiedName(VirtualFile outputFile, PsiFile sourceFile) {
+    public @Nullable String getQualifiedName(VirtualFile outputFile, PsiFile sourceFile) {
         return null;
     }
 
@@ -252,15 +246,13 @@ public abstract class CoverageEngine {
      * @param suite
      * @return List (probably empty) of code lines or null if all lines should be marked as uncovered
      */
-    @Nullable
-    public List<Integer> collectSrcLinesForUntouchedFile(File classFile, CoverageSuitesBundle suite) {
+    public @Nullable List<Integer> collectSrcLinesForUntouchedFile(File classFile, CoverageSuitesBundle suite) {
         VirtualFile virtualFile = LocalFileSystem.getInstance().findFileByIoFile(classFile);
         return virtualFile != null ? collectSrcLinesForUntouchedFile(virtualFile, suite) : null;
     }
 
     @Deprecated
-    @Nullable
-    public List<Integer> collectSrcLinesForUntouchedFile(VirtualFile classFile, CoverageSuitesBundle suite) {
+    public @Nullable List<Integer> collectSrcLinesForUntouchedFile(VirtualFile classFile, CoverageSuitesBundle suite) {
         return null;
     }
 
@@ -281,8 +273,7 @@ public abstract class CoverageEngine {
 
     public abstract List<PsiElement> findTestsByNames(String[] testNames, Project project);
 
-    @Nullable
-    public abstract String getTestMethodName(PsiElement element, AbstractTestProxy testProxy);
+    public abstract @Nullable String getTestMethodName(PsiElement element, AbstractTestProxy testProxy);
 
     /**
      * @return true to enable 'Generate Coverage Report...' action

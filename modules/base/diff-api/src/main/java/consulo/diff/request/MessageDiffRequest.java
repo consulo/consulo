@@ -21,7 +21,7 @@ import consulo.diff.request.DiffRequest;
 import consulo.ui.annotation.RequiredUIAccess;
 
 public class MessageDiffRequest extends DiffRequest {
-  @Nullable private String myTitle;
+  private @Nullable String myTitle;
   
   private String myMessage;
 

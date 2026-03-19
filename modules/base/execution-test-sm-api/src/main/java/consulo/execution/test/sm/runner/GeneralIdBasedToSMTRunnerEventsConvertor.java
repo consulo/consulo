@@ -179,8 +179,7 @@ public class GeneralIdBasedToSMTRunnerEventsConvertor extends GeneralTestEventsP
         return node.getProxy();
     }
 
-    @Nullable
-    private Node findValidParentNode(BaseStartedNodeEvent startedNodeEvent) {
+    private @Nullable Node findValidParentNode(BaseStartedNodeEvent startedNodeEvent) {
         String parentId = startedNodeEvent.getParentId();
         if (parentId == null) {
             logProblem("Parent node id should be defined: " + startedNodeEvent + ".", true);
@@ -236,8 +235,7 @@ public class GeneralIdBasedToSMTRunnerEventsConvertor extends GeneralTestEventsP
         });
     }
 
-    @Nullable
-    private Node findNodeToTerminate(TreeNodeEvent treeNodeEvent) {
+    private @Nullable Node findNodeToTerminate(TreeNodeEvent treeNodeEvent) {
         Node node = findNode(treeNodeEvent);
         if (node == null) {
             logProblem("Trying to finish nonexistent node: " + treeNodeEvent);
@@ -367,8 +365,7 @@ public class GeneralIdBasedToSMTRunnerEventsConvertor extends GeneralTestEventsP
         addToInvokeLater(() -> fireOnTestsCountInSuite(count));
     }
 
-    @Nullable
-    private String validateAndGetNodeId(TreeNodeEvent treeNodeEvent) {
+    private @Nullable String validateAndGetNodeId(TreeNodeEvent treeNodeEvent) {
         String nodeId = treeNodeEvent.getId();
         if (nodeId == null || nodeId.equals(TreeNodeEvent.ROOT_NODE_ID)) {
             logProblem((nodeId == null ? "Missing" : "Illegal") + " nodeId: " + treeNodeEvent, true);
@@ -376,14 +373,12 @@ public class GeneralIdBasedToSMTRunnerEventsConvertor extends GeneralTestEventsP
         return nodeId;
     }
 
-    @Nullable
-    private Node findNode(TreeNodeEvent treeNodeEvent) {
+    private @Nullable Node findNode(TreeNodeEvent treeNodeEvent) {
         String nodeId = validateAndGetNodeId(treeNodeEvent);
         return nodeId != null ? myNodeByIdMap.get(nodeId) : null;
     }
 
-    @Nullable
-    public SMTestProxy findProxyById(String id) {
+    public @Nullable SMTestProxy findProxyById(String id) {
         Node node = myNodeByIdMap.get(id);
         return node != null ? node.getProxy() : null;
     }
@@ -470,8 +465,7 @@ public class GeneralIdBasedToSMTRunnerEventsConvertor extends GeneralTestEventsP
             return myId;
         }
 
-        @Nullable
-        public Node getParentNode() {
+        public @Nullable Node getParentNode() {
             return myParentNode;
         }
 

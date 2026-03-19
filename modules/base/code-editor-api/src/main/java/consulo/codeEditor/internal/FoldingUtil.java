@@ -17,14 +17,12 @@ public final class FoldingUtil {
     private FoldingUtil() {
     }
 
-    @Nullable
-    public static FoldRegion findFoldRegion(Editor editor, int startOffset, int endOffset) {
+    public static @Nullable FoldRegion findFoldRegion(Editor editor, int startOffset, int endOffset) {
         FoldRegion region = editor.getFoldingModel().getFoldRegion(startOffset, endOffset);
         return region != null && region.isValid() ? region : null;
     }
 
-    @Nullable
-    public static FoldRegion findFoldRegionStartingAtLine(Editor editor, int line) {
+    public static @Nullable FoldRegion findFoldRegionStartingAtLine(Editor editor, int line) {
         if (line < 0 || line >= editor.getDocument().getLineCount()) {
             return null;
         }

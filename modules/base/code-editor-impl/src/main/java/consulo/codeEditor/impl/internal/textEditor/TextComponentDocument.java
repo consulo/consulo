@@ -206,14 +206,12 @@ public class TextComponentDocument extends UserDataHolderBase implements Documen
     }
 
     @Override
-    @Nullable
-    public RangeMarker getOffsetGuard(int offset) {
+    public @Nullable RangeMarker getOffsetGuard(int offset) {
         throw new UnsupportedOperationException("Not implemented");
     }
 
     @Override
-    @Nullable
-    public RangeMarker getRangeGuard(int start, int end) {
+    public @Nullable RangeMarker getRangeGuard(int start, int end) {
         throw new UnsupportedOperationException("Not implemented");
     }
 

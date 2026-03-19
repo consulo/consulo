@@ -34,8 +34,7 @@ public abstract class LibraryRootsComponentDescriptor {
    *
    * @return custom presentation or {@code null} if default presentation should be used
    */
-  @Nullable
-  public OrderRootTypePresentation getRootTypePresentation(OrderRootType type) {
+  public @Nullable OrderRootTypePresentation getRootTypePresentation(OrderRootType type) {
     // will use default impl
     return null;
   }

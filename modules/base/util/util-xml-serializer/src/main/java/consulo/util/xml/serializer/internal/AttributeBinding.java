@@ -29,8 +29,7 @@ class AttributeBinding extends BasePrimitiveBinding {
   }
 
   @Override
-  @Nullable
-  public Object serialize(Object o, @Nullable Object context, SerializationFilter filter) {
+  public @Nullable Object serialize(Object o, @Nullable Object context, SerializationFilter filter) {
     Object value = myAccessor.read(o);
     if (value == null) {
       return null;

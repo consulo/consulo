@@ -63,8 +63,7 @@ public class GotoDesktopDirAction extends FileChooserAction {
         e.getPresentation().setEnabled(dir != null && tree.isUnderRoots(dir));
     }
 
-    @Nullable
-    private static VirtualFile getDesktopDirectory() {
+    private static @Nullable VirtualFile getDesktopDirectory() {
         File desktop = new File(Platform.current().user().homePath().toFile(), "Desktop");
 
         if (!desktop.isDirectory() && SystemInfo.hasXdgOpen()) {

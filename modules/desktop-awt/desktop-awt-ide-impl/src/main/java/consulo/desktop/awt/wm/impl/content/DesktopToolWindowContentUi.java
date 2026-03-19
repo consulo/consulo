@@ -676,8 +676,7 @@ public class DesktopToolWindowContentUi extends JPanel implements ToolWindowCont
     }
 
     @Override
-    @Nullable
-    public Object getData(Key<?> dataId) {
+    public @Nullable Object getData(Key<?> dataId) {
         if (ToolWindow.KEY == dataId) {
             return myWindow;
         }

@@ -69,8 +69,7 @@ public class OffsetTranslatorImpl implements Disposable, OffsetTranslator {
     }
 
     @Override
-    @Nullable
-    public Integer translateOffset(Integer offset) {
+    public @Nullable Integer translateOffset(Integer offset) {
         for (DocumentEvent event : myTranslation) {
             offset = translateOffset(offset, event);
             if (offset == null) {
@@ -80,8 +79,7 @@ public class OffsetTranslatorImpl implements Disposable, OffsetTranslator {
         return offset;
     }
 
-    @Nullable
-    private static Integer translateOffset(int offset, DocumentEvent event) {
+    private static @Nullable Integer translateOffset(int offset, DocumentEvent event) {
         if (event.getOffset() < offset && offset < event.getOffset() + event.getNewLength()) {
             if (event.getOldLength() == 0) {
                 return event.getOffset();

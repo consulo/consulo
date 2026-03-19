@@ -214,8 +214,7 @@ public class StopAction extends DumbAwareAction {
         }
     }
 
-    @Nullable
-    private static Pair<List<HandlerItem>, HandlerItem> getItemsList(
+    private static @Nullable Pair<List<HandlerItem>, HandlerItem> getItemsList(
         List<? extends RunContentDescriptor> descriptors,
         RunContentDescriptor toSelect
     ) {
@@ -244,8 +243,7 @@ public class StopAction extends DumbAwareAction {
         return Pair.create(items, selected);
     }
 
-    @Nullable
-    public static RunContentDescriptor getRecentlyStartedContentDescriptor(DataContext dataContext) {
+    public static @Nullable RunContentDescriptor getRecentlyStartedContentDescriptor(DataContext dataContext) {
         RunContentDescriptor contentDescriptor = dataContext.getData(RunContentDescriptor.KEY);
         if (contentDescriptor != null) {
             // toolwindow case

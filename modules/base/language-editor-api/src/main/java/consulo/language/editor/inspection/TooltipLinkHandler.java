@@ -51,8 +51,7 @@ public abstract class TooltipLinkHandler {
    * @param editor    an editor in which tooltip with a link was shown.
    * @return detailed description to show.
    */
-  @Nullable
-  public String getDescription(String refSuffix, Editor editor) {
+  public @Nullable String getDescription(String refSuffix, Editor editor) {
     return null;
   }
 

@@ -29,23 +29,19 @@ public abstract class LocalFileSystem extends NewVirtualFileSystem implements Vi
     return (LocalFileSystem)manager.getFileSystem(PROTOCOL);
   }
 
-  @Nullable
-  public VirtualFile findFileByIoFile(File file) {
+  public @Nullable VirtualFile findFileByIoFile(File file) {
     return findFileByPath(file.getAbsolutePath());
   }
 
-  @Nullable
-  public VirtualFile refreshAndFindFileByIoFile(File file) {
+  public @Nullable VirtualFile refreshAndFindFileByIoFile(File file) {
     return refreshAndFindFileByPath(file.getAbsolutePath());
   }
 
-  @Nullable
-  public VirtualFile findFileByNioFile(Path file) {
+  public @Nullable VirtualFile findFileByNioFile(Path file) {
     return findFileByPath(file.toAbsolutePath().toString());
   }
 
-  @Nullable
-  public VirtualFile refreshAndFindFileByNioFile(Path file) {
+  public @Nullable VirtualFile refreshAndFindFileByNioFile(Path file) {
     return refreshAndFindFileByPath(file.toAbsolutePath().toString());
   }
 
@@ -74,8 +70,7 @@ public abstract class LocalFileSystem extends NewVirtualFileSystem implements Vi
     boolean isToWatchRecursively();
   }
 
-  @Nullable
-  public WatchRequest addRootToWatch(String rootPath, boolean watchRecursively) {
+  public @Nullable WatchRequest addRootToWatch(String rootPath, boolean watchRecursively) {
     Set<WatchRequest> result = addRootsToWatch(singleton(rootPath), watchRecursively);
     return result.size() == 1 ? result.iterator().next() : null;
   }
@@ -103,8 +98,7 @@ public abstract class LocalFileSystem extends NewVirtualFileSystem implements Vi
     }
   }
 
-  @Nullable
-  public WatchRequest replaceWatchedRoot(@Nullable WatchRequest watchRequest, String rootPath, boolean watchRecursively) {
+  public @Nullable WatchRequest replaceWatchedRoot(@Nullable WatchRequest watchRequest, String rootPath, boolean watchRecursively) {
     Set<WatchRequest> requests = watchRequest != null ? singleton(watchRequest) : Collections.emptySet();
     Set<String> roots = singleton(rootPath);
     Set<WatchRequest> result = watchRecursively ? replaceWatchedRoots(requests, roots, null) : replaceWatchedRoots(requests, null, roots);

@@ -39,8 +39,7 @@ public abstract class FileIndentOptionsProvider {
      * @param file     The file to retrieve options for.
      * @return Indent options or {@code null} if the provider can't retrieve them.
      */
-    @Nullable
-    public abstract IndentOptions getIndentOptions(CodeStyleSettings settings, PsiFile file);
+    public abstract @Nullable IndentOptions getIndentOptions(CodeStyleSettings settings, PsiFile file);
 
     /**
      * Tells if the provider can be used when a complete file is reformatted.
@@ -55,8 +54,7 @@ public abstract class FileIndentOptionsProvider {
         CodeStyleSettingsManager.getInstance(project).fireCodeStyleSettingsChanged(file);
     }
 
-    @Nullable
-    public IndentStatusBarUIContributor getIndentStatusBarUiContributor(IndentOptions indentOptions) {
+    public @Nullable IndentStatusBarUIContributor getIndentStatusBarUiContributor(IndentOptions indentOptions) {
         return null;
     }
 }

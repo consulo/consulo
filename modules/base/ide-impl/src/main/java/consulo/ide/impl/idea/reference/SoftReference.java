@@ -38,13 +38,11 @@ public class SoftReference<T> extends consulo.util.lang.ref.SoftReference<T> imp
     super(referent, q);
   }
 
-  @Nullable
-  public static <T> T dereference(@Nullable Reference<T> ref) {
+  public static @Nullable <T> T dereference(@Nullable Reference<T> ref) {
     return consulo.util.lang.ref.SoftReference.dereference(ref);
   }
 
-  @Nullable
-  public static <T> T deref(@Nullable Supplier<T> ref) {
+  public static @Nullable <T> T deref(@Nullable Supplier<T> ref) {
     return consulo.util.lang.ref.SoftReference.deref(ref);
   }
 }

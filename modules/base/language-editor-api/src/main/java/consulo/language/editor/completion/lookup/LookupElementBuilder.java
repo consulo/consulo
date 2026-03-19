@@ -26,17 +26,12 @@ public final class LookupElementBuilder extends LookupElement {
   private final String myLookupString;
   
   private final Object myObject;
-  @Nullable
-  private final SmartPsiElementPointer<?> myPsiElement;
+  private final @Nullable SmartPsiElementPointer<?> myPsiElement;
   private final boolean myCaseSensitive;
-  @Nullable
-  private final InsertHandler<LookupElement> myInsertHandler;
-  @Nullable
-  private final LookupElementRenderer<LookupElement> myRenderer;
-  @Nullable
-  private final LookupElementRenderer<LookupElement> myExpensiveRenderer;
-  @Nullable
-  private final LookupElementPresentation myHardcodedPresentation;
+  private final @Nullable InsertHandler<LookupElement> myInsertHandler;
+  private final @Nullable LookupElementRenderer<LookupElement> myRenderer;
+  private final @Nullable LookupElementRenderer<LookupElement> myExpensiveRenderer;
+  private final @Nullable LookupElementPresentation myHardcodedPresentation;
   
   private final Set<String> myAllLookupStrings;
 
@@ -490,19 +485,16 @@ public final class LookupElementBuilder extends LookupElement {
     return myLookupString;
   }
 
-  @Nullable
-  public InsertHandler<LookupElement> getInsertHandler() {
+  public @Nullable InsertHandler<LookupElement> getInsertHandler() {
     return myInsertHandler;
   }
 
-  @Nullable
-  public LookupElementRenderer<LookupElement> getRenderer() {
+  public @Nullable LookupElementRenderer<LookupElement> getRenderer() {
     return myRenderer;
   }
 
   @Override
-  @Nullable
-  public LookupElementRenderer<? extends LookupElement> getExpensiveRenderer() {
+  public @Nullable LookupElementRenderer<? extends LookupElement> getExpensiveRenderer() {
     return myExpensiveRenderer;
   }
 

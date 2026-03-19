@@ -66,8 +66,7 @@ public class VcsHistoryCache {
     }
   }
 
-  @Nullable
-  public <C extends Serializable, T extends VcsAbstractHistorySession> T getFull(FilePath filePath, VcsKey vcsKey,
+  public @Nullable <C extends Serializable, T extends VcsAbstractHistorySession> T getFull(FilePath filePath, VcsKey vcsKey,
                                                                                  VcsCacheableHistorySessionFactory<C, T> factory) {
     synchronized (myLock) {
       CachedHistory cachedHistory = myHistoryCache.get(new HistoryCacheBaseKey(filePath, vcsKey));
@@ -79,8 +78,7 @@ public class VcsHistoryCache {
     }
   }
 
-  @Nullable
-  public <C extends Serializable, T extends VcsAbstractHistorySession> T getMaybePartial(FilePath filePath, VcsKey vcsKey,
+  public @Nullable <C extends Serializable, T extends VcsAbstractHistorySession> T getMaybePartial(FilePath filePath, VcsKey vcsKey,
                                                                                          VcsCacheableHistorySessionFactory<C, T> factory) {
     synchronized (myLock) {
       CachedHistory cachedHistory = myHistoryCache.get(new HistoryCacheBaseKey(filePath, vcsKey));

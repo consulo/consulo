@@ -41,8 +41,7 @@ public class PathInterner {
   };
   private final Map<SubstringWrapper, SubstringWrapper> myInternMap = new HashMap<>();
 
-  @Nullable
-  protected SubstringWrapper[] internParts(String path, boolean forAddition) {
+  protected @Nullable SubstringWrapper[] internParts(String path, boolean forAddition) {
     int start = 0;
     boolean asBytes = forAddition && IOUtil.isAscii(path);
     List<SubstringWrapper> key = new ArrayList<SubstringWrapper>();
@@ -214,8 +213,7 @@ public class PathInterner {
     private final Map<SubstringWrapper[], T> myMap = Maps.newHashMap(PathInterner.HASHING_STRATEGY);
     private final PathInterner myInterner = new PathInterner();
 
-    @Nullable
-    public T get(String path) {
+    public @Nullable T get(String path) {
       PathInterner.SubstringWrapper[] seq = myInterner.internParts(path, false);
       return seq == null ? null : myMap.get(seq);
     }

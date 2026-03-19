@@ -92,8 +92,7 @@ public class PluginExceptionUtil {
     return pluginIds;
   }
 
-  @Nullable
-  public static PluginId findFirstPluginId(Throwable t) {
+  public static @Nullable PluginId findFirstPluginId(Throwable t) {
     Set<PluginId> pluginIds = findAllPluginIds(t);
     return pluginIds.stream().filter(pluginId -> !PluginIds.isPlatformPlugin(pluginId)).findFirst().orElse(null);
   }

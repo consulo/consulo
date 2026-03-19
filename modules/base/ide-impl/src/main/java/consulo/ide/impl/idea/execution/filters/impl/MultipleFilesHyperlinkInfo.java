@@ -153,8 +153,7 @@ class MultipleFilesHyperlinkInfo extends HyperlinkInfoBase implements FileHyperl
         return file != null ? new OpenFileDescriptorImpl(myProject, file, myLineNumber, 0) : null;
     }
 
-    @Nullable
-    private VirtualFile getPreferredFile() {
+    private @Nullable VirtualFile getPreferredFile() {
         return ContainerUtil.getFirstItem(myVirtualFiles);
     }
 }

@@ -51,8 +51,7 @@ public final class EditorBackspaceUtil {
     return editables.size() == 1 && editables.get(0).equals(rangeToEdit);
   }
 
-  @Nullable
-  public static LogicalPosition getBackspaceUnindentPosition(PsiFile file, Editor editor) {
+  public static @Nullable LogicalPosition getBackspaceUnindentPosition(PsiFile file, Editor editor) {
     if (editor.getSelectionModel().hasSelection()) return null;
 
     LogicalPosition caretPos = editor.getCaretModel().getLogicalPosition();

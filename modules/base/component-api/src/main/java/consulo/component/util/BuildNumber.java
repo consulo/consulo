@@ -42,13 +42,11 @@ public class BuildNumber implements Comparable<BuildNumber> {
     return builder.toString();
   }
 
-  @Nullable
-  public static BuildNumber fromString(String version) {
+  public static @Nullable BuildNumber fromString(String version) {
     return fromString(version, null);
   }
 
-  @Nullable
-  public static BuildNumber fromString(@Nullable String version, @Nullable String name) {
+  public static @Nullable BuildNumber fromString(@Nullable String version, @Nullable String name) {
     if (version == null) {
       return null;
     }
@@ -70,8 +68,7 @@ public class BuildNumber implements Comparable<BuildNumber> {
     }
   }
 
-  @Nullable
-  public static BuildNumber fallback() {
+  public static @Nullable BuildNumber fallback() {
     return fromString(SNAPSHOT);
   }
 

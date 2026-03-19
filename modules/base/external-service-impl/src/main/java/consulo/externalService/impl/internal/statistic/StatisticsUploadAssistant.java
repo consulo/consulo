@@ -96,8 +96,7 @@ public class StatisticsUploadAssistant {
         return result;
     }
 
-    @Nullable
-    public static <T extends UsageDescriptor> T findDescriptor(
+    public static @Nullable <T extends UsageDescriptor> T findDescriptor(
         Map<String, Set<T>> descriptors,
         Pair<String, String> id
     ) {

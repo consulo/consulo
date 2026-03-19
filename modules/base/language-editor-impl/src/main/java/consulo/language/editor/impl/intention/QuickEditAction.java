@@ -162,8 +162,7 @@ public class QuickEditAction implements IntentionAction, LowPriorityAction {
         return false;
     }
 
-    @Nullable
-    public JComponent createBalloonComponent(PsiFile file) {
+    public @Nullable JComponent createBalloonComponent(PsiFile file) {
         return null;
     }
 

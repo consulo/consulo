@@ -62,8 +62,7 @@ public abstract class CacheDiffRequestProcessor<T> extends DiffRequestProcessor 
   // Abstract
   //
 
-  @Nullable
-  protected abstract String getRequestName(T provider);
+  protected abstract @Nullable String getRequestName(T provider);
 
   protected abstract T getCurrentRequestProvider();
 
@@ -114,8 +113,7 @@ public abstract class CacheDiffRequestProcessor<T> extends DiffRequestProcessor 
     }, ProgressWindow.DEFAULT_PROGRESS_DIALOG_POSTPONE_TIME_MILLIS);
   }
 
-  @Nullable
-  protected DiffRequest loadRequestFast(T provider) {
+  protected @Nullable DiffRequest loadRequestFast(T provider) {
     return myRequestCache.get(provider);
   }
 

@@ -38,8 +38,7 @@ import org.jspecify.annotations.Nullable;
 public interface CodeBlockProvider extends LanguageExtension {
   ExtensionPointCacheKey<CodeBlockProvider, ByLanguageValue<CodeBlockProvider>> KEY = ExtensionPointCacheKey.create("CodeBlockProvider", LanguageOneToOne.build());
 
-  @Nullable
-  static CodeBlockProvider forLanguage(Language language) {
+  static @Nullable CodeBlockProvider forLanguage(Language language) {
     return Application.get().getExtensionPoint(CodeBlockProvider.class).getOrBuildCache(KEY).get(language);
   }
 

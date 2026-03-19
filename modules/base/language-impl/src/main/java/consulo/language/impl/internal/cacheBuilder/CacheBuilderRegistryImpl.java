@@ -43,8 +43,7 @@ public class CacheBuilderRegistryImpl extends CacheBuilderRegistry {
     }
 
     @Override
-    @Nullable
-    public WordsScanner getCacheBuilder(FileType fileType) {
+    public @Nullable WordsScanner getCacheBuilder(FileType fileType) {
         ExtensionPoint<FileWordsScannerProvider> extensionPoint = myApplication.getExtensionPoint(FileWordsScannerProvider.class);
         Map<FileType, WordsScanner> map = extensionPoint.getOrBuildCache(FileWordsScannerProvider.SCANNERS);
         return map.get(fileType);

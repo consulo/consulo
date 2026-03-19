@@ -65,8 +65,7 @@ public class RefreshVFsSynchronously {
     VirtualFileUtil.markDirtyAndRefresh(false, true, false, ArrayUtil.toObjectArray(filesToRefresh, VirtualFile.class));
   }
 
-  @Nullable
-  private static VirtualFile findFirstValidVirtualParent(@Nullable File file) {
+  private static @Nullable VirtualFile findFirstValidVirtualParent(@Nullable File file) {
     LocalFileSystem lfs = LocalFileSystem.getInstance();
     VirtualFile vf = null;
     while (file != null && (vf == null || !vf.isValid())) {
@@ -147,14 +146,12 @@ public class RefreshVFsSynchronously {
     }
 
     @Override
-    @Nullable
-    public File getBeforeFile(Change change) {
+    public @Nullable File getBeforeFile(Change change) {
       return beforeNull(change) ? null : change.getBeforeRevision().getFile().getIOFile();
     }
 
     @Override
-    @Nullable
-    public File getAfterFile(Change change) {
+    public @Nullable File getAfterFile(Change change) {
       return afterNull(change) ? null : change.getAfterRevision().getFile().getIOFile();
     }
 

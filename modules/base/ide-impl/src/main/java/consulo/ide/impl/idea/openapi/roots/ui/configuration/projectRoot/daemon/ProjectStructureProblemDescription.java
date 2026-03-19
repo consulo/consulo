@@ -67,8 +67,7 @@ public class ProjectStructureProblemDescription {
     return myMessage;
   }
 
-  @Nullable
-  public String getDescription() {
+  public @Nullable String getDescription() {
     return myDescription;
   }
 

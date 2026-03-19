@@ -239,7 +239,7 @@ public abstract class CompletionPhase implements Disposable {
 
   public static abstract class ZombiePhase extends CompletionPhase {
 
-    protected ZombiePhase(@Nullable final LightweightHintImpl hint, CompletionProgressIndicator indicator) {
+    protected ZombiePhase(final @Nullable LightweightHintImpl hint, CompletionProgressIndicator indicator) {
       super(indicator);
       Editor editor = indicator.getEditor();
       final HintListener hintListener = new HintListener() {

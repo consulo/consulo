@@ -15,8 +15,7 @@ public interface FileSetDescriptor {
    */
   boolean matches(PsiFile psiFile);
 
-  @Nullable
-  default String getName() {
+  default @Nullable String getName() {
     return null;
   }
 
@@ -39,12 +38,10 @@ public interface FileSetDescriptor {
     public String type;
 
     @Attribute("name")
-    @Nullable
-    public String name;
+    public @Nullable String name;
 
     @Attribute("pattern")
-    @Nullable
-    public String pattern;
+    public @Nullable String pattern;
 
     public State() {
     }

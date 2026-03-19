@@ -64,8 +64,7 @@ final class PerFileMappingState {
 
   
   private final String url;
-  @Nullable
-  private final String value;
+  private final @Nullable String value;
 
   public PerFileMappingState(String url) {
     this.url = url;
@@ -82,8 +81,7 @@ final class PerFileMappingState {
     return url;
   }
 
-  @Nullable
-  public String getValue() {
+  public @Nullable String getValue() {
     return value;
   }
 }

@@ -220,8 +220,7 @@ public class ListUtil {
         return row >= 0 && list.isSelectedIndex(row);
     }
 
-    @Nullable
-    public static <E> Component getDeepestRendererChildComponentAt(JList<E> list, Point point) {
+    public static @Nullable <E> Component getDeepestRendererChildComponentAt(JList<E> list, Point point) {
         int idx = list.locationToIndex(point);
         if (idx < 0) {
             return null;

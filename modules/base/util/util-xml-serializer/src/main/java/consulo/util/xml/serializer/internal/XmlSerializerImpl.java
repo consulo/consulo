@@ -34,11 +34,9 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class XmlSerializerImpl {
-    @Nullable
-    private static Reference<Map<Pair<Type, MutableAccessor>, Binding>> ourBindings;
+    private static @Nullable Reference<Map<Pair<Type, MutableAccessor>, Binding>> ourBindings;
 
-    @Nullable
-    public static Element serialize(Object object, SerializationFilter filter) throws XmlSerializationException {
+    public static @Nullable Element serialize(Object object, SerializationFilter filter) throws XmlSerializationException {
         try {
             Class<?> aClass = object.getClass();
             Binding binding = getClassBinding(aClass, aClass, null);
@@ -60,20 +58,17 @@ public class XmlSerializerImpl {
         }
     }
 
-    @Nullable
-    public static Element serializeIfNotDefault(Object object, SerializationFilter filter) {
+    public static @Nullable Element serializeIfNotDefault(Object object, SerializationFilter filter) {
         Class<?> aClass = object.getClass();
         Binding binding = Objects.requireNonNull(getClassBinding(aClass, aClass, null));
         return (Element) binding.serialize(object, null, filter);
     }
 
-    @Nullable
-    public static Binding getBinding(Type type) {
+    public static @Nullable Binding getBinding(Type type) {
         return getClassBinding(typeToClass(type), type, null);
     }
 
-    @Nullable
-    public static Binding getBinding(MutableAccessor accessor) {
+    public static @Nullable Binding getBinding(MutableAccessor accessor) {
         Type type = accessor.getGenericType();
         return getClassBinding(typeToClass(type), type, accessor);
     }
@@ -91,8 +86,7 @@ public class XmlSerializerImpl {
         }
     }
 
-    @Nullable
-    public static synchronized Binding getClassBinding(Class<?> aClass, Type originalType, @Nullable MutableAccessor accessor) {
+    public static synchronized @Nullable Binding getClassBinding(Class<?> aClass, Type originalType, @Nullable MutableAccessor accessor) {
         if (aClass.isPrimitive() ||
             aClass == String.class ||
             aClass == Integer.class ||
@@ -165,8 +159,7 @@ public class XmlSerializerImpl {
         return new BeanBinding(aClass, accessor);
     }
 
-    @Nullable
-    static Object convert(@Nullable String value, Class<?> valueClass) {
+    static @Nullable Object convert(@Nullable String value, Class<?> valueClass) {
         if (value == null) {
             return null;
         }

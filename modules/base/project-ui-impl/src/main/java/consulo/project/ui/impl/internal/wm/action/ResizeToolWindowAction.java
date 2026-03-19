@@ -124,8 +124,7 @@ public abstract class ResizeToolWindowAction extends AnAction implements DumbAwa
         actionPerformed(e, myLastWindow, myLastManager);
     }
 
-    @Nullable
-    private ToolWindowScrollable getScrollable(ToolWindow wnd, boolean isHorizontalStretchingOffered) {
+    private @Nullable ToolWindowScrollable getScrollable(ToolWindow wnd, boolean isHorizontalStretchingOffered) {
         KeyboardFocusManager mgr = KeyboardFocusManager.getCurrentKeyboardFocusManager();
 
         Component eachComponent = mgr.getFocusOwner();

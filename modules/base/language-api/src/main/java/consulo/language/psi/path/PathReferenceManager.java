@@ -79,11 +79,9 @@ public abstract class PathReferenceManager {
   public abstract PsiReference[] createCustomReferences(PsiElement psiElement, boolean soft, PathReferenceProvider... providers);
 
 
-  @Nullable
-  public abstract PathReference getPathReference(String path, PsiElement element, PathReferenceProvider... additionalProviders);
+  public abstract @Nullable PathReference getPathReference(String path, PsiElement element, PathReferenceProvider... additionalProviders);
 
-  @Nullable
-  public abstract PathReference getCustomPathReference(String path, Module module, PsiElement element, PathReferenceProvider... providers);
+  public abstract @Nullable PathReference getCustomPathReference(String path, Module module, PsiElement element, PathReferenceProvider... providers);
 
   
   public abstract PathReferenceProvider getGlobalWebPathReferenceProvider();

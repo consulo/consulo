@@ -82,8 +82,7 @@ public abstract class JavaLikeLangLineIndentProvider implements LineIndentProvid
     return null;
   }
 
-  @Nullable
-  protected IndentCalculator getIndent(Project project,
+  protected @Nullable IndentCalculator getIndent(Project project,
                                        Document document,
                                        SemanticEditorPositionFactory factory,
                                        @Nullable Language language,
@@ -380,8 +379,7 @@ public abstract class JavaLikeLangLineIndentProvider implements LineIndentProvid
   protected abstract SemanticEditorPosition.@Nullable SyntaxElement mapType(IElementType tokenType);
 
 
-  @Nullable
-  protected Indent getIndentInBlock(Project project,
+  protected @Nullable Indent getIndentInBlock(Project project,
                                     Document document, @Nullable Language language,
                                     SemanticEditorPosition blockStartPosition) {
     if (language != null) {
@@ -419,14 +417,12 @@ public abstract class JavaLikeLangLineIndentProvider implements LineIndentProvid
       myDocument = document;
     }
 
-    @Nullable
-    public IndentCalculator createIndentCalculator(@Nullable Type indentType,
+    public @Nullable IndentCalculator createIndentCalculator(@Nullable Type indentType,
                                                    IndentCalculator.@Nullable BaseLineOffsetCalculator baseLineOffsetCalculator) {
       return createIndentCalculator(getDefaultIndentFromType(indentType), baseLineOffsetCalculator);
     }
 
-    @Nullable
-    public IndentCalculator createIndentCalculator(@Nullable Indent indent,
+    public @Nullable IndentCalculator createIndentCalculator(@Nullable Indent indent,
                                                    IndentCalculator.@Nullable BaseLineOffsetCalculator baseLineOffsetCalculator) {
       return indent != null ? new IndentCalculator(myProject,
                                                    myDocument,

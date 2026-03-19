@@ -74,8 +74,7 @@ public class TestStateStorage implements Disposable {
   }
 
   private static final Logger LOG = Logger.getInstance(TestStateStorage.class);
-  @Nullable
-  private PersistentHashMap<String, Record> myMap;
+  private @Nullable PersistentHashMap<String, Record> myMap;
   private volatile ScheduledFuture<?> myMapFlusher;
 
   public static TestStateStorage getInstance(Project project) {
@@ -124,8 +123,7 @@ public class TestStateStorage implements Disposable {
     }, 4096, CURRENT_VERSION);
   }
 
-  @Nullable
-  public synchronized Record getState(String testUrl) {
+  public synchronized @Nullable Record getState(String testUrl) {
     try {
       return myMap == null ? null : myMap.get(testUrl);
     }
@@ -146,8 +144,7 @@ public class TestStateStorage implements Disposable {
     }
   }
 
-  @Nullable
-  public synchronized Map<String, Record> getRecentTests(int limit, Date since) {
+  public synchronized @Nullable Map<String, Record> getRecentTests(int limit, Date since) {
     if (myMap == null) return null;
 
     Map<String, Record> result = new HashMap<>();

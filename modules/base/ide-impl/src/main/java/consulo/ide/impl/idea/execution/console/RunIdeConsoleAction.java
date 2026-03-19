@@ -172,8 +172,7 @@ public class RunIdeConsoleAction extends DumbAwareAction {
         ensureOutputIsRedirected(engine, descriptor);
     }
 
-    @Nullable
-    private static String getProfileText(VirtualFile file) {
+    private static @Nullable String getProfileText(VirtualFile file) {
         try {
             VirtualFile folder = file.getParent();
             VirtualFile profileChild = folder == null ? null : folder.findChild(".profile." + file.getExtension());
@@ -315,8 +314,7 @@ public class RunIdeConsoleAction extends DumbAwareAction {
             myOutputType = outputType;
         }
 
-        @Nullable
-        public RunContentDescriptor getDescriptor() {
+        public @Nullable RunContentDescriptor getDescriptor() {
             return myDescriptor.get();
         }
 

@@ -308,13 +308,11 @@ public class SeverityEditorDialog extends DialogWrapper {
   }
 
   @Override
-  @Nullable
-  protected JComponent createCenterPanel() {
+  protected @Nullable JComponent createCenterPanel() {
     return myPanel;
   }
 
-  @Nullable
-  public HighlightInfoType getSelectedType() {
+  public @Nullable HighlightInfoType getSelectedType() {
     SeverityBasedTextAttributes selection = (SeverityBasedTextAttributes)myOptionsList.getSelectedValue();
     return selection != null ? selection.getType() : null;
   }

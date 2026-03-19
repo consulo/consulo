@@ -123,8 +123,7 @@ public class LayoutTree extends SimpleDnDAwareTree implements AdvancedDnDSource 
         return new LayoutTreeSelection(this);
     }
 
-    @Nullable
-    public PackagingElement<?> getElementByPath(TreePath path) {
+    public @Nullable PackagingElement<?> getElementByPath(TreePath path) {
         SimpleNode node = getNodeFor(path);
         if (node instanceof PackagingElementNode) {
             List<? extends PackagingElement<?>> elements = ((PackagingElementNode<?>) node).getPackagingElements();
@@ -170,8 +169,7 @@ public class LayoutTree extends SimpleDnDAwareTree implements AdvancedDnDSource 
         }
     }
 
-    @Nullable
-    public PackagingElementNode<?> findCompositeNodeByPath(String parentPath) {
+    public @Nullable PackagingElementNode<?> findCompositeNodeByPath(String parentPath) {
         PackagingElementNode<?> node = getRootPackagingNode();
         for (String name : StringUtil.split(parentPath, "/")) {
             if (node == null) {

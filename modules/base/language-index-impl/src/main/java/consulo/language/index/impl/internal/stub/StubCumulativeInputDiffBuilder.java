@@ -14,8 +14,7 @@ import java.util.*;
 
 class StubCumulativeInputDiffBuilder extends InputDataDiffBuilder<Integer, SerializedStubTree> {
   private final int myInputId;
-  @Nullable
-  private final SerializedStubTree myCurrentTree;
+  private final @Nullable SerializedStubTree myCurrentTree;
 
   StubCumulativeInputDiffBuilder(int inputId, @Nullable SerializedStubTree currentTree) {
     super(inputId);

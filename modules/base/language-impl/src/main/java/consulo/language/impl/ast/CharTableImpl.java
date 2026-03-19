@@ -100,8 +100,7 @@ public class CharTableImpl implements CharTable {
     return new String(buf); // this way the .toString() doesn't create another instance (as opposed to new CharArrayCharSequence())
   }
 
-  @Nullable
-  public static CharSequence getStaticInterned(CharSequence text) {
+  public static @Nullable CharSequence getStaticInterned(CharSequence text) {
     return STATIC_ENTRIES.get(text);
   }
 

@@ -209,8 +209,7 @@ public final class ServersTreeStructure {
             });
         }
 
-        @Nullable
-        private static Image getStatusIcon(ConnectionStatus status) {
+        private static @Nullable Image getStatusIcon(ConnectionStatus status) {
             return switch (status) {
                 case CONNECTED -> PlatformIconGroup.remoteserversResumescaled();
                 case DISCONNECTED -> PlatformIconGroup.remoteserversSuspendscaled();

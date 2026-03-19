@@ -20,14 +20,12 @@ public abstract class WebBrowser {
     
     public abstract Image getIcon();
 
-    @Nullable
-    public abstract String getPath();
+    public abstract @Nullable String getPath();
 
     
     public abstract String getBrowserNotFoundMessage();
 
-    @Nullable
-    public abstract BrowserSpecificSettings getSpecificSettings();
+    public abstract @Nullable BrowserSpecificSettings getSpecificSettings();
 
     public void addOpenUrlParameter(List<? super String> command, String url) {
         command.add(url);

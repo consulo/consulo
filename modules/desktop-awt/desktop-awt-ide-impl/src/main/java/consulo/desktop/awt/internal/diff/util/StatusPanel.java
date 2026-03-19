@@ -58,8 +58,7 @@ public class StatusPanel extends JPanel {
     }
   }
 
-  @Nullable
-  protected String getMessage() {
+  protected @Nullable String getMessage() {
     int count = getChangesCount();
     if (count == -1) return null;
     return DiffLocalize.diffCountDifferencesStatusText(count).get();

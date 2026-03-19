@@ -137,8 +137,7 @@ public abstract class SpeedSearchBase<Comp extends JComponent> extends SpeedSear
         installSupplyTo(myComponent);
     }
 
-    @Nullable
-    public JTextField getSearchField() {
+    public @Nullable JTextField getSearchField() {
         if (mySearchPopup != null) {
             return mySearchPopup.mySearchField;
         }
@@ -181,8 +180,7 @@ public abstract class SpeedSearchBase<Comp extends JComponent> extends SpeedSear
     
     protected abstract Object[] getAllElements();
 
-    @Nullable
-    protected abstract String getElementText(Object element);
+    protected abstract @Nullable String getElementText(Object element);
 
     protected int getElementCount() {
         return getAllElements().length;
@@ -239,8 +237,7 @@ public abstract class SpeedSearchBase<Comp extends JComponent> extends SpeedSear
         myComparator = comparator;
     }
 
-    @Nullable
-    private Object findNextElement(String s) {
+    private @Nullable Object findNextElement(String s) {
         int selectedIndex = getSelectedIndex();
         ListIterator<?> it = getElementIterator(selectedIndex + 1);
         Object current;
@@ -272,8 +269,7 @@ public abstract class SpeedSearchBase<Comp extends JComponent> extends SpeedSear
         return current != null && isMatchingElement(current, _s) ? current : null;
     }
 
-    @Nullable
-    private Object findPreviousElement(String s) {
+    private @Nullable Object findPreviousElement(String s) {
         int selectedIndex = getSelectedIndex();
         if (selectedIndex < 0) {
             return null;
@@ -308,8 +304,7 @@ public abstract class SpeedSearchBase<Comp extends JComponent> extends SpeedSear
         return isMatchingElement(current, _s) ? current : null;
     }
 
-    @Nullable
-    protected Object findElement(String s) {
+    protected @Nullable Object findElement(String s) {
         int selectedIndex = getSelectedIndex();
         if (selectedIndex < 0) {
             selectedIndex = 0;
@@ -334,8 +329,7 @@ public abstract class SpeedSearchBase<Comp extends JComponent> extends SpeedSear
         return null;
     }
 
-    @Nullable
-    private Object findFirstElement(String s) {
+    private @Nullable Object findFirstElement(String s) {
         String _s = s.trim();
         for (ListIterator<?> it = getElementIterator(0); it.hasNext(); ) {
             Object element = it.next();
@@ -346,8 +340,7 @@ public abstract class SpeedSearchBase<Comp extends JComponent> extends SpeedSear
         return null;
     }
 
-    @Nullable
-    private Object findLastElement(String s) {
+    private @Nullable Object findLastElement(String s) {
         String _s = s.trim();
         for (ListIterator<?> it = getElementIterator(-1); it.hasPrevious(); ) {
             Object element = it.previous();
@@ -406,8 +399,7 @@ public abstract class SpeedSearchBase<Comp extends JComponent> extends SpeedSear
     }
 
     @Override
-    @Nullable
-    public String getEnteredPrefix() {
+    public @Nullable String getEnteredPrefix() {
         return mySearchPopup != null ? mySearchPopup.mySearchField.getText() : null;
     }
 
@@ -434,8 +426,7 @@ public abstract class SpeedSearchBase<Comp extends JComponent> extends SpeedSear
         return false;
     }
 
-    @Nullable
-    private Object findTargetElement(int keyCode, String searchPrefix) {
+    private @Nullable Object findTargetElement(int keyCode, String searchPrefix) {
         if (keyCode == KeyEvent.VK_UP) {
             return findPreviousElement(searchPrefix);
         }

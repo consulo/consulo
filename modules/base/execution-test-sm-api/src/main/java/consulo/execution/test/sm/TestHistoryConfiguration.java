@@ -97,8 +97,7 @@ public class TestHistoryConfiguration implements PersistentStateComponent<TestHi
         return bean != null ? bean.name : null;
     }
 
-    @Nullable
-    public Image getIcon(String file) {
+    public @Nullable Image getIcon(String file) {
         ConfigurationBean bean = myState.getHistoryElements().get(file);
         if (bean != null) {
             ConfigurationType type = ConfigurationTypeUtil.findConfigurationType(bean.configurationId);

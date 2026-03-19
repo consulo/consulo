@@ -202,8 +202,7 @@ public abstract class VirtualFile extends UserDataHolderBase implements Modifica
    *
    * @return the extension or null if file name doesn't contain '.'
    */
-  @Nullable
-  public String getExtension() {
+  public @Nullable String getExtension() {
     String name = getName();
     int index = name.lastIndexOf('.');
     if (index < 0) return null;
@@ -283,8 +282,7 @@ public abstract class VirtualFile extends UserDataHolderBase implements Modifica
    * <code>null</code> otherwise
    * @since 11.1
    */
-  @Nullable
-  public String getCanonicalPath() {
+  public @Nullable String getCanonicalPath() {
     return getPath();
   }
 
@@ -299,8 +297,7 @@ public abstract class VirtualFile extends UserDataHolderBase implements Modifica
    * <code>null</code> otherwise
    * @since 11.1
    */
-  @Nullable
-  public VirtualFile getCanonicalFile() {
+  public @Nullable VirtualFile getCanonicalFile() {
     return this;
   }
 
@@ -335,8 +332,7 @@ public abstract class VirtualFile extends UserDataHolderBase implements Modifica
    * @param name the file name to search by
    * @return the file if found any, <code>null</code> otherwise
    */
-  @Nullable
-  public VirtualFile findChild(String name) {
+  public @Nullable VirtualFile findChild(String name) {
     VirtualFile[] children = getChildren();
     if (children == null) return null;
     for (VirtualFile child : children) {
@@ -371,8 +367,7 @@ public abstract class VirtualFile extends UserDataHolderBase implements Modifica
    * @param relPath the relative path with / used as separators
    * @return the file if found any, <code>null</code> otherwise
    */
-  @Nullable
-  public VirtualFile findFileByRelativePath(String relPath) {
+  public @Nullable VirtualFile findFileByRelativePath(String relPath) {
     if (relPath.isEmpty()) return this;
     relPath = StringUtil.trimStart(relPath, "/");
 
@@ -531,8 +526,7 @@ public abstract class VirtualFile extends UserDataHolderBase implements Modifica
     return charset;
   }
 
-  @Nullable
-  protected Charset getStoredCharset() {
+  protected @Nullable Charset getStoredCharset() {
     return getUserData(CHARSET_KEY);
   }
 
@@ -736,8 +730,7 @@ public abstract class VirtualFile extends UserDataHolderBase implements Modifica
    */
   public abstract InputStream getInputStream() throws IOException;
 
-  @Nullable
-  public byte[] getBOM() {
+  public @Nullable byte[] getBOM() {
     return getUserData(BOM_KEY);
   }
 

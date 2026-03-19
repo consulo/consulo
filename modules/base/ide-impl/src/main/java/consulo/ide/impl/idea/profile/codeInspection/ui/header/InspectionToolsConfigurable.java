@@ -105,8 +105,7 @@ public abstract class InspectionToolsConfigurable implements ErrorsConfigurable,
     return myProjectProfileManager.getProject();
   }
 
-  @Nullable
-  private InspectionProfileImpl copyToNewProfile(ModifiableModel selectedProfile, Project project) {
+  private @Nullable InspectionProfileImpl copyToNewProfile(ModifiableModel selectedProfile, Project project) {
     String profileDefaultName = selectedProfile.getName();
     do {
       profileDefaultName += " (copy)";

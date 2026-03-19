@@ -62,8 +62,7 @@ public class NavBarPresentation {
     }
 
     @SuppressWarnings("MethodMayBeStatic")
-    @Nullable
-    public Image getIcon(Object object) {
+    public @Nullable Image getIcon(Object object) {
         if (!NavBarModel.isValid(object)) {
             return null;
         }

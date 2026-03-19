@@ -57,8 +57,7 @@ public final class SystemShortcuts {
     
     private final Set<String> myNotifiedActions = new HashSet<>();
 
-    @Nullable
-    private Keymap myKeymap;
+    private @Nullable Keymap myKeymap;
 
     
     private final Map<AWTKeyStroke, ConflictItem> myKeymapConflicts = new HashMap<>();
@@ -138,8 +137,7 @@ public final class SystemShortcuts {
         return result;
     }
 
-    @Nullable
-    public Predicate<AnAction> createKeymapConflictsActionFilter() {
+    public @Nullable Predicate<AnAction> createKeymapConflictsActionFilter() {
         if (myKeyStroke2SysShortcut.isEmpty() || myKeymap == null) {
             return null;
         }
@@ -198,8 +196,7 @@ public final class SystemShortcuts {
         return result.get();
     }
 
-    @Nullable
-    public Map<KeyStroke, String> createKeystroke2SysShortcutMap() {
+    public @Nullable Map<KeyStroke, String> createKeystroke2SysShortcutMap() {
         if (myKeyStroke2SysShortcut.isEmpty()) {
             return null;
         }

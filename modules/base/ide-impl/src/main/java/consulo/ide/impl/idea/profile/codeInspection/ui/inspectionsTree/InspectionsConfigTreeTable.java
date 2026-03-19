@@ -222,8 +222,7 @@ public class InspectionsConfigTreeTable extends TreeTable {
             throw new IllegalArgumentException();
         }
 
-        @Nullable
-        private Boolean isEnabled(List<HighlightDisplayKey> selectedInspectionsNodes) {
+        private @Nullable Boolean isEnabled(List<HighlightDisplayKey> selectedInspectionsNodes) {
             Boolean isPreviousEnabled = null;
             for (HighlightDisplayKey key : selectedInspectionsNodes) {
                 ToolsImpl tools = mySettings.getInspectionProfile().getTools(key.toString(), mySettings.getProject());
@@ -405,8 +404,7 @@ public class InspectionsConfigTreeTable extends TreeTable {
                 : MultiScopeSeverityIcon.create(computedSeverities, myDefaultScopeName, inspectionProfile);
         }
 
-        @Nullable
-        private Map<String, HighlightSeverity> computeSeverities(InspectionProfileImpl inspectionProfile) {
+        private @Nullable Map<String, HighlightSeverity> computeSeverities(InspectionProfileImpl inspectionProfile) {
             if (myScopeToAverageSeverityMap.isEmpty()) {
                 return null;
             }

@@ -25,8 +25,7 @@ import org.jspecify.annotations.Nullable;
 public abstract class DiffRequest implements UserDataHolder {
   protected final UserDataHolderBase myUserDataHolder = new UserDataHolderBase();
 
-  @Nullable
-  public abstract String getTitle();
+  public abstract @Nullable String getTitle();
 
   /**
    * Called when DiffRequest is shown

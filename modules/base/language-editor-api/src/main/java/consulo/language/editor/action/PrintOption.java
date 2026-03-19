@@ -31,8 +31,7 @@ import java.util.TreeMap;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class PrintOption {
-  @Nullable
-  public abstract TreeMap<Integer, PsiReference> collectReferences(PsiFile psiFile, Map<PsiFile, PsiFile> filesMap);
+  public abstract @Nullable TreeMap<Integer, PsiReference> collectReferences(PsiFile psiFile, Map<PsiFile, PsiFile> filesMap);
 
   
   public abstract UnnamedConfigurable createConfigurable();

@@ -93,8 +93,7 @@ public abstract class AbstractToggleUseSoftWrapsAction extends ToggleAction impl
         SoftWrapUtil.toggleSoftWraps(editor, myGlobal ? myAppliancePlace : null, state);
     }
 
-    @Nullable
-    protected Editor getEditor(AnActionEvent e) {
+    protected @Nullable Editor getEditor(AnActionEvent e) {
         return e.getData(Editor.KEY);
     }
 }

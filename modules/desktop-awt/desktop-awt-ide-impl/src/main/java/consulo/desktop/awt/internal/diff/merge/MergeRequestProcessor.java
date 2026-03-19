@@ -67,8 +67,7 @@ public abstract class MergeRequestProcessor implements Disposable {
 
     private boolean myDisposed;
 
-    @Nullable
-    private final Project myProject;
+    private final @Nullable Project myProject;
     
     private final MergeContext myContext;
 
@@ -91,10 +90,8 @@ public abstract class MergeRequestProcessor implements Disposable {
 
     
     private MergeTool.MergeViewer myViewer;
-    @Nullable
-    private BooleanSupplier myCloseHandler;
-    @Nullable
-    private BottomActions myBottomActions;
+    private @Nullable BooleanSupplier myCloseHandler;
+    private @Nullable BottomActions myBottomActions;
     private boolean myConflictResolved = false;
 
     @RequiredUIAccess
@@ -320,8 +317,7 @@ public abstract class MergeRequestProcessor implements Disposable {
 
     public abstract void closeDialog();
 
-    @Nullable
-    public <T> T getContextUserData(Key<T> key) {
+    public @Nullable <T> T getContextUserData(Key<T> key) {
         return myContext.getUserData(key);
     }
 
@@ -338,14 +334,12 @@ public abstract class MergeRequestProcessor implements Disposable {
         return myPanel;
     }
 
-    @Nullable
-    public JComponent getPreferredFocusedComponent() {
+    public @Nullable JComponent getPreferredFocusedComponent() {
         JComponent component = myViewer.getPreferredFocusedComponent();
         return component != null ? component : myToolbarPanel.getTargetComponent();
     }
 
-    @Nullable
-    public Project getProject() {
+    public @Nullable Project getProject() {
         return myProject;
     }
 
@@ -364,8 +358,7 @@ public abstract class MergeRequestProcessor implements Disposable {
         return myBottomActions != null ? myBottomActions : new BottomActions();
     }
 
-    @Nullable
-    public String getHelpId() {
+    public @Nullable String getHelpId() {
         return (String)myMainPanel.getData(HelpManager.HELP_ID);
     }
 
@@ -543,13 +536,9 @@ public abstract class MergeRequestProcessor implements Disposable {
     }
 
     public static class BottomActions {
-        @Nullable
-        public LocalizeAction applyLeft;
-        @Nullable
-        public LocalizeAction applyRight;
-        @Nullable
-        public LocalizeAction resolveAction;
-        @Nullable
-        public LocalizeAction cancelAction;
+        public @Nullable LocalizeAction applyLeft;
+        public @Nullable LocalizeAction applyRight;
+        public @Nullable LocalizeAction resolveAction;
+        public @Nullable LocalizeAction cancelAction;
     }
 }

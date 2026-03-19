@@ -120,8 +120,7 @@ public class ExecutionPointHighlighter {
         }
     }
 
-    @Nullable
-    public VirtualFile getCurrentFile() {
+    public @Nullable VirtualFile getCurrentFile() {
         return myOpenFileDescriptor != null ? myOpenFileDescriptor.getFile() : null;
     }
 

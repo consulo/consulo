@@ -158,8 +158,7 @@ public class LineStatusTrackerManager implements LineStatusTrackerManagerI, Disp
     }
 
     @Override
-    @Nullable
-    public LineStatusTracker getLineStatusTracker(Document document) {
+    public @Nullable LineStatusTracker getLineStatusTracker(Document document) {
         synchronized (myLock) {
             if (isDisabled()) {
                 return null;
@@ -463,8 +462,7 @@ public class LineStatusTrackerManager implements LineStatusTrackerManagerI, Disp
     private static class TrackerData {
         
         public final LineStatusTracker tracker;
-        @Nullable
-        private final ContentInfo currentContent;
+        private final @Nullable ContentInfo currentContent;
 
         public TrackerData(LineStatusTracker tracker) {
             this.tracker = tracker;

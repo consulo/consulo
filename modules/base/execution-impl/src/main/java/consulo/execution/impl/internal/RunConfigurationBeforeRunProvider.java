@@ -114,8 +114,7 @@ public class RunConfigurationBeforeRunProvider extends BeforeRunTaskProvider<Run
     }
 
     @Override
-    @Nullable
-    public RunConfigurableBeforeRunTask createTask(RunConfiguration runConfiguration) {
+    public @Nullable RunConfigurableBeforeRunTask createTask(RunConfiguration runConfiguration) {
         if (runConfiguration.getProject().isInitialized()) {
             Collection<RunnerAndConfigurationSettings> configurations = RunManagerImpl.getInstanceImpl(runConfiguration.getProject()).getSortedConfigurations();
             if (configurations.isEmpty() || (configurations.size() == 1 && configurations.iterator().next().getConfiguration() == runConfiguration)) {

@@ -59,8 +59,7 @@ public abstract class BaseProcessHandler extends UserDataHolderBase implements P
   private final ProcessListener myEventMulticaster;
   private final TasksRunner myAfterStartNotifiedRunner;
 
-  @Nullable
-  private volatile Integer myExitCode = null;
+  private volatile @Nullable Integer myExitCode = null;
 
   private Map<Class, ProcessHandlerFeature> myFeatures;
 
@@ -158,8 +157,7 @@ public abstract class BaseProcessHandler extends UserDataHolderBase implements P
    * @return exit code if the process has already finished, null otherwise
    */
   @Override
-  @Nullable
-  public Integer getExitCode() {
+  public @Nullable Integer getExitCode() {
     return myExitCode;
   }
 
@@ -220,8 +218,7 @@ public abstract class BaseProcessHandler extends UserDataHolderBase implements P
   }
 
   @Override
-  @Nullable
-  public abstract OutputStream getProcessInput();
+  public abstract @Nullable OutputStream getProcessInput();
 
   private void fireProcessWillTerminate(boolean willBeDestroyed) {
     LOG.assertTrue(isStartNotified(), "All events should be fired after startNotify is called");

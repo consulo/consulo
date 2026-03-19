@@ -32,8 +32,7 @@ import java.util.function.Supplier;
 @Deprecated
 @DeprecationInfo("Use map#computeIfAbsent() method")
 public abstract class FactoryMap<K, V> implements Map<K, V> {
-  @Nullable
-  private Map<K, V> myMap;
+  private @Nullable Map<K, V> myMap;
 
   /**
    * @deprecated Use {@link #create(Function)} instead
@@ -50,8 +49,7 @@ public abstract class FactoryMap<K, V> implements Map<K, V> {
     return new HashMap<>();
   }
 
-  @Nullable
-  protected abstract V create(K key);
+  protected abstract @Nullable V create(K key);
 
   @Nullable
   @Override
@@ -85,8 +83,7 @@ public abstract class FactoryMap<K, V> implements Map<K, V> {
     return key == null ? FAKE_NULL() : (T)key;
   }
 
-  @Nullable
-  private static <T> T nullize(@Nullable T value) {
+  private static @Nullable <T> T nullize(@Nullable T value) {
     return value == FAKE_NULL() ? null : value;
   }
 

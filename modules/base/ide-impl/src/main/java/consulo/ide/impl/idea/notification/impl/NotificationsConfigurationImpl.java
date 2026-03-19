@@ -60,8 +60,7 @@ public class NotificationsConfigurationImpl implements NotificationsConfiguratio
     return getToolWindowId(groupId) != null || myToolWindowCapable.containsKey(groupId);
   }
 
-  @Nullable
-  public String getToolWindowId(String groupId) {
+  public @Nullable String getToolWindowId(String groupId) {
     NotificationGroup group = NotificationGroupRegistrator.last().get(groupId);
     return group == null ? null : group.getToolWindowId();
   }

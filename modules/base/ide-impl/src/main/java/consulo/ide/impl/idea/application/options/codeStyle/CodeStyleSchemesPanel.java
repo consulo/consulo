@@ -88,8 +88,7 @@ public class CodeStyleSchemesPanel {
         }
     }
 
-    @Nullable
-    private CodeStyleScheme getSelectedScheme() {
+    private @Nullable CodeStyleScheme getSelectedScheme() {
         return mySchemeComboBox.getValue();
     }
 

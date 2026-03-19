@@ -55,8 +55,7 @@ class AnchorElementInfo extends SelfElementInfo {
   }
 
   @Override
-  @Nullable
-  public PsiElement restoreElement(SmartPointerManagerImpl manager) {
+  public @Nullable PsiElement restoreElement(SmartPointerManagerImpl manager) {
     long typeAndId = myStubElementTypeAndId;
     int stubId = (int)typeAndId;
     if (stubId != -1) {

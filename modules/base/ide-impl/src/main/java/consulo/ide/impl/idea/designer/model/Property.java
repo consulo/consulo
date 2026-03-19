@@ -38,13 +38,11 @@ public abstract class Property<T extends PropertiesContainer> {
     myName = name;
   }
 
-  @Nullable
-  public Property<T> createForNewPresentation() {
+  public @Nullable Property<T> createForNewPresentation() {
     return createForNewPresentation(myParent, myName);
   }
 
-  @Nullable
-  public Property<T> createForNewPresentation(@Nullable Property parent, String name) {
+  public @Nullable Property<T> createForNewPresentation(@Nullable Property parent, String name) {
     return null;
   }
 
@@ -54,13 +52,11 @@ public abstract class Property<T extends PropertiesContainer> {
   //
   //////////////////////////////////////////////////////////////////////////////////////////
 
-  @Nullable
-  public String getGroup() {
+  public @Nullable String getGroup() {
     return null;
   }
 
-  @Nullable
-  public final Property getParent() {
+  public final @Nullable Property getParent() {
     return myParent;
   }
 
@@ -80,8 +76,7 @@ public abstract class Property<T extends PropertiesContainer> {
   //
   //////////////////////////////////////////////////////////////////////////////////////////
 
-  @Nullable
-  public Object getValue(T container) throws Exception {
+  public @Nullable Object getValue(T container) throws Exception {
     return null;
   }
 
@@ -130,8 +125,7 @@ public abstract class Property<T extends PropertiesContainer> {
     return myName;
   }
 
-  @Nullable
-  public String getTooltip() {
+  public @Nullable String getTooltip() {
     return null;
   }
 
@@ -162,8 +156,7 @@ public abstract class Property<T extends PropertiesContainer> {
   
   public abstract PropertyRenderer getRenderer();
 
-  @Nullable
-  public abstract PropertyEditor getEditor();
+  public abstract @Nullable PropertyEditor getEditor();
 
   //////////////////////////////////////////////////////////////////////////////////////////
   //
@@ -171,13 +164,11 @@ public abstract class Property<T extends PropertiesContainer> {
   //
   //////////////////////////////////////////////////////////////////////////////////////////
 
-  @Nullable
-  public PsiElement getJavadocElement() {
+  public @Nullable PsiElement getJavadocElement() {
     return null;
   }
 
-  @Nullable
-  public String getJavadocText() {
+  public @Nullable String getJavadocText() {
     return null;
   }
 }

@@ -155,8 +155,7 @@ public class OptionGroup implements PanelWithAnchor {
         return components.toArray(new JComponent[components.size()]);
     }
 
-    @Nullable
-    public JComponent findAnchor() {
+    public @Nullable JComponent findAnchor() {
         double maxWidth = -1;
         JComponent ans = null;
         for (Object o : myOptions) {

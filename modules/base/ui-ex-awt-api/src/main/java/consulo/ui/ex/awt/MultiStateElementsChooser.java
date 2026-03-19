@@ -338,8 +338,7 @@ public class MultiStateElementsChooser<T, S> extends JPanel implements Component
     myTableModel.addElements(elements, markState);
   }
 
-  @Nullable
-  public T getSelectedElement() {
+  public @Nullable T getSelectedElement() {
     int selectedRow = getSelectedElementRow();
     return selectedRow < 0 ? null : myTableModel.getElementAt(selectedRow);
   }
@@ -547,8 +546,7 @@ public class MultiStateElementsChooser<T, S> extends JPanel implements Component
     }
 
     @Override
-    @Nullable
-    public Object getValueAt(int rowIndex, int columnIndex) {
+    public @Nullable Object getValueAt(int rowIndex, int columnIndex) {
       T element = myElements.get(rowIndex);
       if (columnIndex == ELEMENT_COLUMN_INDEX) {
         return element;
@@ -634,8 +632,7 @@ public class MultiStateElementsChooser<T, S> extends JPanel implements Component
     return value.toString();
   }
 
-  @Nullable
-  protected Image getItemIcon(T value) {
+  protected @Nullable Image getItemIcon(T value) {
     return null;
   }
 

@@ -23,8 +23,7 @@ public class PorterStemmerUtil {
   private PorterStemmerUtil() {
   }
 
-  @Nullable
-  public static String stem(String str) {
+  public static @Nullable String stem(String str) {
     // check for zero length
     int strLen = str.length();
     if (strLen > 0) {

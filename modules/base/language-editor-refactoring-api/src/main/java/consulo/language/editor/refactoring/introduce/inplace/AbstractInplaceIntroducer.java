@@ -154,8 +154,7 @@ public abstract class AbstractInplaceIntroducer<V extends PsiNameIdentifierOwner
      * @param names      the suggested names for the declaration
      * @return the declaration
      */
-    @Nullable
-    protected abstract V createFieldToStartTemplateOn(boolean replaceAll, String[] names);
+    protected abstract @Nullable V createFieldToStartTemplateOn(boolean replaceAll, String[] names);
 
     /**
      * Returns the suggested names for the introduced element.
@@ -660,8 +659,7 @@ public abstract class AbstractInplaceIntroducer<V extends PsiNameIdentifierOwner
         return isRestart();
     }
 
-    @Nullable
-    public static AbstractInplaceIntroducer getActiveIntroducer(@Nullable Editor editor) {
+    public static @Nullable AbstractInplaceIntroducer getActiveIntroducer(@Nullable Editor editor) {
         if (editor == null) {
             return null;
         }

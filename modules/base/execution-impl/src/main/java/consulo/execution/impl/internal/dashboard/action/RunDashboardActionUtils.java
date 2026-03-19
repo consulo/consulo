@@ -25,8 +25,7 @@ final class RunDashboardActionUtils {
     return ServiceViewActionUtils.getTargets(e, RunDashboardRunConfigurationNode.class);
   }
 
-  @Nullable
-  static RunDashboardRunConfigurationNode getTarget(AnActionEvent e) {
+  static @Nullable RunDashboardRunConfigurationNode getTarget(AnActionEvent e) {
     return ServiceViewActionUtils.getTarget(e, RunDashboardRunConfigurationNode.class);
   }
 

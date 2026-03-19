@@ -31,8 +31,7 @@ import java.util.List;
 public class GraphNodeImpl<E> implements GraphNode<E>, Named {
   private final List<GraphNode<?>> myArrowNodes = new ArrayList<>();
   private String myName;
-  @Nullable
-  private Image myIcon;
+  private @Nullable Image myIcon;
   private final E myValue;
   private final GraphPositionStrategy myStrategy;
 

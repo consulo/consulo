@@ -110,8 +110,7 @@ public class DesktopContentManagerImpl extends ContentManagerBase {
     }
 
     @Override
-    @Nullable
-    public Object getData(Key<?> dataId) {
+    public @Nullable Object getData(Key<?> dataId) {
       if (PlatformDataKeys.CONTENT_MANAGER == dataId || PlatformDataKeys.NONEMPTY_CONTENT_MANAGER == dataId && getContentCount() > 1) {
         return DesktopContentManagerImpl.this;
       }

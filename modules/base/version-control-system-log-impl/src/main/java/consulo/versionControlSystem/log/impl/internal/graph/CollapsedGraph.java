@@ -266,8 +266,7 @@ public class CollapsedGraph {
       return new GraphEdge(upNodeIndex, downNodeIndex, delegateEdge.getTargetId(), delegateEdge.getType());
     }
 
-    @Nullable
-    private Integer compiledNodeIndex(@Nullable Integer delegateNodeIndex) {
+    private @Nullable Integer compiledNodeIndex(@Nullable Integer delegateNodeIndex) {
       if (delegateNodeIndex == null) return null;
       if (myDelegateNodesVisibility.isVisible(delegateNodeIndex)) {
         return myNodesMap.getShortIndex(delegateNodeIndex);
@@ -317,8 +316,7 @@ public class CollapsedGraph {
     }
 
     @Override
-    @Nullable
-    public Integer getNodeIndex(int nodeId) {
+    public @Nullable Integer getNodeIndex(int nodeId) {
       assertNotUnderModification();
       Integer delegateIndex = myDelegatedGraph.getNodeIndex(nodeId);
       if (delegateIndex == null) return null;

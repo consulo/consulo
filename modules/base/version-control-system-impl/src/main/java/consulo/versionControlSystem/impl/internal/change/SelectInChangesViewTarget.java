@@ -81,8 +81,7 @@ public class SelectInChangesViewTarget implements SelectInTarget, DumbAware {
     }
 
     @Override
-    @Nullable
-    public String getMinorViewId() {
+    public @Nullable String getMinorViewId() {
         return null;
     }
 

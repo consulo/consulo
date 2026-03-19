@@ -94,8 +94,7 @@ public abstract class RunAnythingSearchListModel extends CollectionListModel<Obj
     }
 
     public static class RunAnythingHelpListModel extends RunAnythingSearchListModel {
-        @Nullable
-        private List<RunAnythingGroup> myHelpGroups;
+        private @Nullable List<RunAnythingGroup> myHelpGroups;
 
         
         @Override

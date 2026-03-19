@@ -91,8 +91,7 @@ public class ProjectWindowAction extends ToggleAction implements DumbAware {
     return myProjectName;
   }
 
-  @Nullable
-  private Project findProject() {
+  private @Nullable Project findProject() {
     Project[] projects = ProjectManager.getInstance().getOpenProjects();
     for (Project project : projects) {
       if (myProjectLocation.equals(project.getPresentableUrl())) {

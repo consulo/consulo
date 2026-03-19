@@ -39,16 +39,14 @@ public interface SelectInTarget {
     /**
      * Tool window this target is supposed to select in
      */
-    @Nullable
-    default String getToolWindowId() {
+    default @Nullable String getToolWindowId() {
         return null;
     }
 
     /**
      * aux view id specific for tool window, e.g. Project/Packages/J2EE tab inside project View
      */
-    @Nullable
-    default String getMinorViewId() {
+    default @Nullable String getMinorViewId() {
         return null;
     }
 

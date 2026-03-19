@@ -176,8 +176,7 @@ public final class FileColorsModel implements Cloneable {
         add(new FileColorConfiguration(scopeName, colorName), isProjectLevel);
     }
 
-    @Nullable
-    private FileColorConfiguration findConfiguration(String scopeName, boolean isProjectLevel) {
+    private @Nullable FileColorConfiguration findConfiguration(String scopeName, boolean isProjectLevel) {
         List<FileColorConfiguration> configurations = isProjectLevel ? myProjectLevelConfigurations : myApplicationLevelConfigurations;
         for (FileColorConfiguration configuration : configurations) {
             if (scopeName.equals(configuration.getScopeName())) {
@@ -191,8 +190,7 @@ public final class FileColorsModel implements Cloneable {
         return findConfiguration(scopeName, true) != null;
     }
 
-    @Nullable
-    public String getColor(VirtualFile file, Project project) {
+    public @Nullable String getColor(VirtualFile file, Project project) {
         if (!file.isValid()) {
             return null;
         }
@@ -204,8 +202,7 @@ public final class FileColorsModel implements Cloneable {
         return null;
     }
 
-    @Nullable
-    public String getScopeColor(String scopeName, Project project) {
+    public @Nullable String getScopeColor(String scopeName, Project project) {
         FileColorConfiguration configuration = null;
         for (FileColorConfiguration each : getConfigurations()) {
             if (scopeName.equals(each.getScopeName())) {
@@ -219,8 +216,7 @@ public final class FileColorsModel implements Cloneable {
         return null;
     }
 
-    @Nullable
-    private FileColorConfiguration findConfiguration(VirtualFile colored) {
+    private @Nullable FileColorConfiguration findConfiguration(VirtualFile colored) {
         for (FileColorConfiguration configuration : getConfigurations()) {
             NamedScope scope = NamedScopesHolder.getScope(myProject, configuration.getScopeName());
             if (scope != null) {

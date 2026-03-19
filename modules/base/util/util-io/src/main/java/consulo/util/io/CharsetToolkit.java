@@ -251,8 +251,7 @@ public final class CharsetToolkit {
    *
    * @return the Charset recognized.
    */
-  @Nullable
-  public Charset guessEncoding(int startOffset, int endOffset, Charset defaultCharset) {
+  public @Nullable Charset guessEncoding(int startOffset, int endOffset, Charset defaultCharset) {
     // if the file has a Byte Order Marker, we can assume the file is in UTF-xx
     // otherwise, the file would not be human readable
     Charset charset = guessFromBOM();
@@ -287,8 +286,7 @@ public final class CharsetToolkit {
     return charBuffer.toString();
   }
 
-  @Nullable
-  public static String tryDecodeString(byte[] bytes, Charset charset) {
+  public static @Nullable String tryDecodeString(byte[] bytes, Charset charset) {
     try {
       int bomLength = getBOMLength(bytes, charset);
       ByteBuffer buffer = ByteBuffer.wrap(bytes, bomLength, bytes.length - bomLength);
@@ -417,13 +415,11 @@ public final class CharsetToolkit {
     return GuessedEncoding.VALID_UTF8;
   }
 
-  @Nullable
-  public Charset guessFromBOM() {
+  public @Nullable Charset guessFromBOM() {
     return guessFromBOM(buffer);
   }
 
-  @Nullable
-  public static Charset guessFromBOM(byte[] buffer) {
+  public static @Nullable Charset guessFromBOM(byte[] buffer) {
     if (hasUTF8Bom(buffer)) return StandardCharsets.UTF_8;
     if (hasUTF32BEBom(buffer)) return UTF_32BE_CHARSET;
     if (hasUTF32LEBom(buffer)) return UTF_32LE_CHARSET;
@@ -433,13 +429,11 @@ public final class CharsetToolkit {
     return null;
   }
 
-  @Nullable
-  public Charset guessEncoding(int guess_length) {
+  public @Nullable Charset guessEncoding(int guess_length) {
     return guessEncoding(0, guess_length, defaultCharset);
   }
 
-  @Nullable
-  public static Charset guessEncoding(File f, int bufferLength, Charset defaultCharset) throws IOException {
+  public static @Nullable Charset guessEncoding(File f, int bufferLength, Charset defaultCharset) throws IOException {
     byte[] buffer = new byte[bufferLength];
     int read;
     try (FileInputStream fis = new FileInputStream(f)) {
@@ -586,8 +580,7 @@ public final class CharsetToolkit {
     return charset.equals(StandardCharsets.UTF_8) && Arrays.equals(bom, UTF8_BOM) || Arrays.equals(getMandatoryBom(charset), bom);
   }
 
-  @Nullable
-  public static Charset forName(@Nullable String name) {
+  public static @Nullable Charset forName(@Nullable String name) {
     Charset charset = null;
     if (name != null) {
       try {

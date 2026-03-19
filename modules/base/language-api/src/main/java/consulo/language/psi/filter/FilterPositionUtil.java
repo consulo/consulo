@@ -25,8 +25,7 @@ import org.jspecify.annotations.Nullable;
  * @author Dmitry Avdeev
  */
 public class FilterPositionUtil {
-  @Nullable
-  public static PsiElement searchNonSpaceNonCommentBack(PsiElement element) {
+  public static @Nullable PsiElement searchNonSpaceNonCommentBack(PsiElement element) {
     return element == null ? null : PsiTreeUtil.prevCodeLeaf(element);
   }
 }

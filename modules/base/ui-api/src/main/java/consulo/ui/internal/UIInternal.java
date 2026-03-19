@@ -185,11 +185,9 @@ public abstract class UIInternal {
     public abstract FontManager _FontManager_get();
     public abstract Window _Window_create(String title, WindowOptions options);
 
-    @Nullable
-    public abstract Window _Window_getActiveWindow();
+    public abstract @Nullable Window _Window_getActiveWindow();
 
-    @Nullable
-    public Window _Window_getFocusedWindow() {
+    public @Nullable Window _Window_getFocusedWindow() {
         return _Window_getActiveWindow();
     }
 

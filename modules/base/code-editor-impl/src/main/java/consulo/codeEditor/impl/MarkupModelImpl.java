@@ -95,8 +95,7 @@ public class MarkupModelImpl extends UserDataHolderBase implements MarkupModelEx
     }
 
     @Override
-    @Nullable
-    public RangeHighlighterEx addPersistentLineHighlighter(int lineNumber, int layer, TextAttributes textAttributes) {
+    public @Nullable RangeHighlighterEx addPersistentLineHighlighter(int lineNumber, int layer, TextAttributes textAttributes) {
         return addPersistentLineHighlighter(null, textAttributes, lineNumber, layer);
     }
 

@@ -49,8 +49,7 @@ public class RefsModel implements VcsLogRefs {
     }
   }
 
-  @Nullable
-  public VcsRef bestRefToHead(int headIndex) {
+  public @Nullable VcsRef bestRefToHead(int headIndex) {
     return myBestRefForHead.get(headIndex);
   }
 

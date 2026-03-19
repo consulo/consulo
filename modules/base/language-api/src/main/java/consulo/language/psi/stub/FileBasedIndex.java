@@ -58,11 +58,9 @@ public abstract class FileBasedIndex {
     /**
      * @return the file which the current thread is indexing right now, or {@code null} if current thread isn't indexing.
      */
-    @Nullable
-    public abstract VirtualFile getFileBeingCurrentlyIndexed();
+    public abstract @Nullable VirtualFile getFileBeingCurrentlyIndexed();
 
-    @Nullable
-    public DumbModeAccessType getCurrentDumbModeAccessType() {
+    public @Nullable DumbModeAccessType getCurrentDumbModeAccessType() {
         throw new UnsupportedOperationException();
     }
 
@@ -208,11 +206,11 @@ public abstract class FileBasedIndex {
     public abstract <K, V> Map<K, V> getFileData(ID<K, V> id, VirtualFile virtualFile, Project project);
 
     public static void iterateRecursively(
-        @Nullable final VirtualFile root,
+        final @Nullable VirtualFile root,
         final ContentIterator processor,
-        @Nullable final ProgressIndicator indicator,
-        @Nullable final Set<? super VirtualFile> visitedRoots,
-        @Nullable final ProjectFileIndex projectFileIndex
+        final @Nullable ProgressIndicator indicator,
+        final @Nullable Set<? super VirtualFile> visitedRoots,
+        final @Nullable ProjectFileIndex projectFileIndex
     ) {
         if (root == null) {
             return;
@@ -259,8 +257,7 @@ public abstract class FileBasedIndex {
 
     public abstract boolean isIndexingCandidate(VirtualFile file, ID<?, ?> indexId);
 
-    @Nullable
-    public abstract IdFilter createProjectIndexableFiles(@Nullable Project project);
+    public abstract @Nullable IdFilter createProjectIndexableFiles(@Nullable Project project);
 
     @FunctionalInterface
     public interface ValueProcessor<V> {

@@ -22,8 +22,7 @@ import org.jspecify.annotations.Nullable;
  */
 public abstract class PsiChildLink<Parent extends PsiElement, Child extends PsiElement> implements PsiRefElementCreator<Parent, Child> {
   
-  @Nullable
-  public abstract Child findLinkedChild(@Nullable Parent parent);
+  public abstract @Nullable Child findLinkedChild(@Nullable Parent parent);
 
   
   public final PsiElementRef<Child> createChildRef(Parent parent) {

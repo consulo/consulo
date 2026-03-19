@@ -269,8 +269,7 @@ public class IdeDocumentHistoryImpl extends IdeDocumentHistory implements Dispos
         myChangedFilesInCurrentCommand.clear();
     }
 
-    @Nullable
-    private PlaceInfo getCurrentPlaceInfo() {
+    private @Nullable PlaceInfo getCurrentPlaceInfo() {
         FileEditorWithProvider selectedEditorWithProvider = getSelectedEditor();
         if (selectedEditorWithProvider == null) {
             return null;
@@ -278,8 +277,7 @@ public class IdeDocumentHistoryImpl extends IdeDocumentHistory implements Dispos
         return createPlaceInfo(selectedEditorWithProvider.getFileEditor(), selectedEditorWithProvider.getProvider());
     }
 
-    @Nullable
-    private static PlaceInfo getPlaceInfoFromFocus() {
+    private static @Nullable PlaceInfo getPlaceInfoFromFocus() {
         FileEditor fileEditor = CurrentEditorProvider.getInstance().getCurrentEditor();
         if (fileEditor instanceof TextEditor && fileEditor.isValid()) {
             VirtualFile file = fileEditor.getFile();
@@ -581,8 +579,7 @@ public class IdeDocumentHistoryImpl extends IdeDocumentHistory implements Dispos
     /**
      * @return currently selected FileEditor or null.
      */
-    @Nullable
-    protected FileEditorWithProvider getSelectedEditor() {
+    protected @Nullable FileEditorWithProvider getSelectedEditor() {
         FileEditorManagerEx editorManager = myFileEditorManager;
         VirtualFile file = editorManager.getCurrentFile();
         return file == null ? null : editorManager.getSelectedEditorWithProvider(file);
@@ -608,8 +605,7 @@ public class IdeDocumentHistoryImpl extends IdeDocumentHistory implements Dispos
         );
     }
 
-    @Nullable
-    private static RangeMarker getCaretPosition(FileEditor fileEditor) {
+    private static @Nullable RangeMarker getCaretPosition(FileEditor fileEditor) {
         if (!(fileEditor instanceof TextEditor)) {
             return null;
         }

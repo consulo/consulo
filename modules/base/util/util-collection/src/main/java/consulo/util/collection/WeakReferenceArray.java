@@ -43,8 +43,7 @@ public class WeakReferenceArray<T> {
     myReferences = new MyWeakReference[size];
   }
 
-  @Nullable
-  public T remove(int index) {
+  public @Nullable T remove(int index) {
     checkRange(index);
     T result = getImpl(index);
     removeReference(index);
@@ -181,8 +180,7 @@ public class WeakReferenceArray<T> {
     return size();
   }
 
-  @Nullable
-  private T getImpl(int index) {
+  private @Nullable T getImpl(int index) {
     MyWeakReference<T> reference = MyWeakReference.getFrom(myReferences, index);
     return reference == null ? null : reference.get();
   }
@@ -191,8 +189,7 @@ public class WeakReferenceArray<T> {
     return myReferences.length;
   }
 
-  @Nullable
-  public T get(int index) {
+  public @Nullable T get(int index) {
     checkRange(index);
     return getImpl(index);
   }
@@ -251,8 +248,7 @@ public class WeakReferenceArray<T> {
       new MyWeakReference<E>(element, queue).putTo(array, index);
     }
 
-    @Nullable
-    public static <E> MyWeakReference<E> getFrom(MyWeakReference[] array, int index) {
+    public static @Nullable <E> MyWeakReference<E> getFrom(MyWeakReference[] array, int index) {
       MyWeakReference<E> reference = array[index];
       if (reference == null) {
         return null;

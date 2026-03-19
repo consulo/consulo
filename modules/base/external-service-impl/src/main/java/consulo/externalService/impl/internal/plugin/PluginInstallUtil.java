@@ -140,8 +140,7 @@ public class PluginInstallUtil {
         }
     }
 
-    @Nullable
-    private static PluginDescriptor findDescriptionInRepo(PluginId depPluginId, List<PluginDescriptor> allPlugins) {
+    private static @Nullable PluginDescriptor findDescriptionInRepo(PluginId depPluginId, List<PluginDescriptor> allPlugins) {
         for (PluginDescriptor plugin : allPlugins) {
             if (plugin.getPluginId().equals(depPluginId)) {
                 return plugin;

@@ -26,19 +26,13 @@ public class VcsLogFilterCollectionImpl implements VcsLogFilterCollection {
   
   public static final VcsLogFilterCollection EMPTY = new VcsLogFilterCollectionBuilder().build();
 
-  @Nullable
-  private final VcsLogBranchFilter myBranchFilter;
-  @Nullable
-  private final VcsLogUserFilter myUserFilter;
-  @Nullable private final VcsLogHashFilter myHashFilter;
-  @Nullable
-  private final VcsLogDateFilter myDateFilter;
-  @Nullable
-  private final VcsLogTextFilter myTextFilter;
-  @Nullable
-  private final VcsLogStructureFilter myStructureFilter;
-  @Nullable
-  private final VcsLogRootFilter myRootFilter;
+  private final @Nullable VcsLogBranchFilter myBranchFilter;
+  private final @Nullable VcsLogUserFilter myUserFilter;
+  private final @Nullable VcsLogHashFilter myHashFilter;
+  private final @Nullable VcsLogDateFilter myDateFilter;
+  private final @Nullable VcsLogTextFilter myTextFilter;
+  private final @Nullable VcsLogStructureFilter myStructureFilter;
+  private final @Nullable VcsLogRootFilter myRootFilter;
 
   public VcsLogFilterCollectionImpl(@Nullable VcsLogBranchFilter branchFilter,
                                     @Nullable VcsLogUserFilter userFilter,
@@ -63,8 +57,7 @@ public class VcsLogFilterCollectionImpl implements VcsLogFilterCollection {
   }
 
   @Override
-  @Nullable
-  public VcsLogHashFilter getHashFilter() {
+  public @Nullable VcsLogHashFilter getHashFilter() {
     return myHashFilter;
   }
 
@@ -123,20 +116,13 @@ public class VcsLogFilterCollectionImpl implements VcsLogFilterCollection {
   }
 
   public static class VcsLogFilterCollectionBuilder {
-    @Nullable
-    private VcsLogBranchFilter myBranchFilter;
-    @Nullable
-    private VcsLogUserFilter myUserFilter;
-    @Nullable
-    private VcsLogHashFilter myHashFilter;
-    @Nullable
-    private VcsLogDateFilter myDateFilter;
-    @Nullable
-    private VcsLogTextFilter myTextFilter;
-    @Nullable
-    private VcsLogStructureFilter myStructureFilter;
-    @Nullable
-    private VcsLogRootFilter myRootFilter;
+    private @Nullable VcsLogBranchFilter myBranchFilter;
+    private @Nullable VcsLogUserFilter myUserFilter;
+    private @Nullable VcsLogHashFilter myHashFilter;
+    private @Nullable VcsLogDateFilter myDateFilter;
+    private @Nullable VcsLogTextFilter myTextFilter;
+    private @Nullable VcsLogStructureFilter myStructureFilter;
+    private @Nullable VcsLogRootFilter myRootFilter;
 
     public VcsLogFilterCollectionBuilder() {
     }

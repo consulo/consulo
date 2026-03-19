@@ -379,8 +379,7 @@ public class XDebuggerManagerImpl implements XDebuggerManager, PersistentStateCo
     }
 
     @Override
-    @Nullable
-    public XDebugSession getDebugSession(ExecutionConsole executionConsole) {
+    public @Nullable XDebugSession getDebugSession(ExecutionConsole executionConsole) {
         for (XDebugSessionImpl debuggerSession : mySessions.values()) {
             XDebugSessionTab sessionTab = debuggerSession.getSessionTab();
             if (sessionTab != null) {
@@ -410,8 +409,7 @@ public class XDebuggerManagerImpl implements XDebuggerManager, PersistentStateCo
     }
 
     @Override
-    @Nullable
-    public XDebugSessionImpl getCurrentSession() {
+    public @Nullable XDebugSessionImpl getCurrentSession() {
         return myActiveSession.get();
     }
 

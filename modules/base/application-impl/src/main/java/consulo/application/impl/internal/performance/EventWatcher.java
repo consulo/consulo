@@ -25,8 +25,7 @@ public interface EventWatcher {
     return ourInstance.myIsEnabled;
   }
 
-  @Nullable
-  static EventWatcher getInstanceOrNull() {
+  static @Nullable EventWatcher getInstanceOrNull() {
     return null;
   }
 

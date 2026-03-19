@@ -34,8 +34,7 @@ public class RunAnythingManager {
     private JBPopup myBalloon;
     private RunAnythingPopupUI myRunAnythingUI;
     private Dimension myBalloonFullSize;
-    @Nullable
-    private String mySelectedText;
+    private @Nullable String mySelectedText;
 
     @Inject
     public RunAnythingManager(Project project) {

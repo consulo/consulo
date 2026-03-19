@@ -127,8 +127,7 @@ public class ExceptionUtil {
     return result;
   }
 
-  @Nullable
-  public static String getMessage(Throwable e) {
+  public static @Nullable String getMessage(Throwable e) {
     String result = e.getMessage();
     String exceptionPattern = "Exception: ";
     String errorPattern = "Error: ";

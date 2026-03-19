@@ -95,8 +95,7 @@ public class EditInspectionToolsSettingsInSuppressedPlaceIntention implements In
         return myId != null;
     }
 
-    @Nullable
-    private InspectionToolWrapper getTool(Project project, PsiFile file) {
+    private @Nullable InspectionToolWrapper getTool(Project project, PsiFile file) {
         InspectionProjectProfileManager projectProfileManager = InspectionProjectProfileManager.getInstance(project);
         InspectionProfileImpl inspectionProfile = (InspectionProfileImpl)projectProfileManager.getInspectionProfile();
         return inspectionProfile.getToolById(myId, file);

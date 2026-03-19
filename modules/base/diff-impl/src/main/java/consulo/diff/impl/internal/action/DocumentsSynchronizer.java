@@ -30,8 +30,7 @@ public abstract class DocumentsSynchronizer {
     protected final Document myDocument1;
     
     protected final Document myDocument2;
-    @Nullable
-    private final Project myProject;
+    private final @Nullable Project myProject;
 
     private volatile boolean myDuringModification = false;
 

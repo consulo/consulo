@@ -44,8 +44,7 @@ public class ArtifactsCompiler extends GenericCompiler<String, VirtualFilePersis
         super("artifacts_compiler", 0, GenericCompiler.CompileOrderPlace.PACKAGING);
     }
 
-    @Nullable
-    public static ArtifactsCompiler getInstance(Project project) {
+    public static @Nullable ArtifactsCompiler getInstance(Project project) {
         ArtifactsCompiler[] compilers = CompilerManager.getInstance(project).getCompilers(ArtifactsCompiler.class);
         return compilers.length == 1 ? compilers[0] : null;
     }
@@ -105,13 +104,11 @@ public class ArtifactsCompiler extends GenericCompiler<String, VirtualFilePersis
         return "Artifacts Packaging Compiler";
     }
 
-    @Nullable
-    public static Set<Artifact> getChangedArtifacts(CompileContext compileContext) {
+    public static @Nullable Set<Artifact> getChangedArtifacts(CompileContext compileContext) {
         return compileContext.getUserData(CHANGED_ARTIFACTS);
     }
 
-    @Nullable
-    public static Set<String> getWrittenPaths(CompileContext context) {
+    public static @Nullable Set<String> getWrittenPaths(CompileContext context) {
         return context.getUserData(WRITTEN_PATHS_KEY);
     }
 }

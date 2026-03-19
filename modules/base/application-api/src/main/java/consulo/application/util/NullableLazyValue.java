@@ -41,14 +41,11 @@ public abstract class NullableLazyValue<T> implements Supplier<T>{
   }
 
   private boolean myComputed;
-  @Nullable
-  private T myValue;
+  private @Nullable T myValue;
 
-  @Nullable
-  protected abstract T compute();
+  protected abstract @Nullable T compute();
 
-  @Nullable
-  public T getValue() {
+  public @Nullable T getValue() {
     if (!myComputed) {
       myValue = compute();
       myComputed = true;

@@ -43,8 +43,7 @@ public abstract class ProjectLocator {
    * @param file file to be located in projects.
    * @return project which probably contains the file, or null if couldn't guess (for example, there are no open projects).
    */
-  @Nullable
-  public abstract Project guessProjectForFile(@Nullable VirtualFile file);
+  public abstract @Nullable Project guessProjectForFile(@Nullable VirtualFile file);
 
   /**
    * Gets all open projects containing the given file.
@@ -67,8 +66,7 @@ public abstract class ProjectLocator {
     }
   }
 
-  @Nullable
-  public static Project getPreferredProject(VirtualFile file) {
+  public static @Nullable Project getPreferredProject(VirtualFile file) {
     return ourPreferredProjects.get().get(file);
   }
 

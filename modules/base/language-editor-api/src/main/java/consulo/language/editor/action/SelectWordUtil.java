@@ -89,8 +89,7 @@ public class SelectWordUtil {
         }
     }
 
-    @Nullable
-    private static TextRange getCamelSelectionRange(CharSequence editorText, int cursorOffset, CharCondition isWordPartCondition) {
+    private static @Nullable TextRange getCamelSelectionRange(CharSequence editorText, int cursorOffset, CharCondition isWordPartCondition) {
         if (cursorOffset < 0 || cursorOffset >= editorText.length()) {
             return null;
         }
@@ -122,8 +121,7 @@ public class SelectWordUtil {
         return null;
     }
 
-    @Nullable
-    public static TextRange getWordOrLexemeSelectionRange(
+    public static @Nullable TextRange getWordOrLexemeSelectionRange(
         Editor editor,
         int cursorOffset,
         CharCondition isWordPartCondition
@@ -131,8 +129,7 @@ public class SelectWordUtil {
         return getWordOrLexemeSelectionRange(editor, editor.getDocument().getImmutableCharSequence(), cursorOffset, isWordPartCondition);
     }
 
-    @Nullable
-    public static TextRange getWordSelectionRange(
+    public static @Nullable TextRange getWordSelectionRange(
         CharSequence editorText,
         int cursorOffset,
         CharCondition isWordPartCondition
@@ -140,8 +137,7 @@ public class SelectWordUtil {
         return getWordOrLexemeSelectionRange(null, editorText, cursorOffset, isWordPartCondition);
     }
 
-    @Nullable
-    private static TextRange getWordOrLexemeSelectionRange(
+    private static @Nullable TextRange getWordOrLexemeSelectionRange(
         @Nullable Editor editor,
         CharSequence editorText,
         int cursorOffset,

@@ -31,8 +31,7 @@ import java.util.*;
 public final class PackageElement implements Queryable, RootsProvider {
   public static final Key<PackageElement> DATA_KEY = Key.create("package.element");
 
-  @Nullable
-  private final Module myModule;
+  private final @Nullable Module myModule;
   
   private final PsiPackage myElement;
   private final boolean myIsLibraryElement;
@@ -43,8 +42,7 @@ public final class PackageElement implements Queryable, RootsProvider {
     myIsLibraryElement = isLibraryElement;
   }
 
-  @Nullable
-  public Module getModule() {
+  public @Nullable Module getModule() {
     return myModule;
   }
 

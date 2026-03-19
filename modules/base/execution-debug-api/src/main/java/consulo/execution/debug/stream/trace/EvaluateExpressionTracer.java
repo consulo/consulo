@@ -90,11 +90,8 @@ public class EvaluateExpressionTracer implements StreamTracer {
     }
 
     public static class EvaluationResult {
-        @Nullable
-        public final XValue xValue;
-        @Nullable
-
-        public final String error;
+        public final @Nullable XValue xValue;
+        public final @Nullable String error;
 
         public EvaluationResult(@Nullable XValue xValue, @Nullable String error) {
             this.xValue = xValue;

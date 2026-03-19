@@ -93,8 +93,7 @@ public class PasteReferenceProvider implements CustomPasteProvider {
             });
     }
 
-    @Nullable
-    private static String getCopiedFqn(DataContext context) {
+    private static @Nullable String getCopiedFqn(DataContext context) {
         Supplier<Transferable> producer = context.getData(PasteAction.TRANSFERABLE_PROVIDER);
 
         if (producer != null) {

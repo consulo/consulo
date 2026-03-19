@@ -161,8 +161,7 @@ public class ProjectViewTree extends DnDAwareTree {
     return null;
   }
 
-  @Nullable
-  public static ColorValue getColorForElement(@Nullable PsiElement psi) {
+  public static @Nullable ColorValue getColorForElement(@Nullable PsiElement psi) {
     ColorValue color = null;
     if (psi != null) {
       if (!psi.isValid()) return null;

@@ -111,8 +111,7 @@ public class GridCellImpl implements GridCell {
             }
         }.setDataProvider(new DataProvider() {
             @Override
-            @Nullable
-            public Object getData(Key dataId) {
+            public @Nullable Object getData(Key dataId) {
                 if (ViewContext.CONTENT_KEY == dataId) {
                     TabInfo target = myTabs.getTargetInfo();
                     if (target != null) {
@@ -237,8 +236,7 @@ public class GridCellImpl implements GridCell {
         return tabInfo;
     }
 
-    @Nullable
-    private static TabInfo updatePresentation(TabInfo info, Content content) {
+    private static @Nullable TabInfo updatePresentation(TabInfo info, Content content) {
         if (info == null) {
             return null;
         }
@@ -299,8 +297,7 @@ public class GridCellImpl implements GridCell {
         }
 
         @Override
-        @Nullable
-        public Object getData(Key dataId) {
+        public @Nullable Object getData(Key dataId) {
             if (ViewContext.CONTENT_KEY == dataId) {
                 return new Content[]{myContent};
             }
@@ -435,13 +432,11 @@ public class GridCellImpl implements GridCell {
         }
     }
 
-    @Nullable
-    public Point2D getLocation() {
+    public @Nullable Point2D getLocation() {
         return DimensionService.getInstance().getLocation(getDimensionKey(), myContext.getProject());
     }
 
-    @Nullable
-    public Size2D getSize() {
+    public @Nullable Size2D getSize() {
         return DimensionService.getInstance().getSize(getDimensionKey(), myContext.getProject());
     }
 

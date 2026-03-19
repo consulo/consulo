@@ -51,13 +51,11 @@ public abstract class LookupElementWeigher {
     return myId;
   }
 
-  @Nullable
-  public Comparable weigh(LookupElement element, WeighingContext context) {
+  public @Nullable Comparable weigh(LookupElement element, WeighingContext context) {
     return weigh(element);
   }
 
-  @Nullable
-  public Comparable weigh(LookupElement element) {
+  public @Nullable Comparable weigh(LookupElement element) {
     throw new UnsupportedOperationException("weigh not implemented in " + getClass());
   }
 

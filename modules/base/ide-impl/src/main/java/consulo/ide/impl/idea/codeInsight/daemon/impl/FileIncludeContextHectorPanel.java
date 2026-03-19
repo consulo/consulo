@@ -100,8 +100,7 @@ public class FileIncludeContextHectorPanel extends HectorComponentPanel {
       return rendererComponent;
     }
 
-    @Nullable
-    protected String getPath(Object value) {
+    protected @Nullable String getPath(Object value) {
       VirtualFile file = (VirtualFile)value;
       ProjectFileIndex fileIndex = ProjectRootManager.getInstance(myFile.getProject()).getFileIndex();
       if (file != null) {

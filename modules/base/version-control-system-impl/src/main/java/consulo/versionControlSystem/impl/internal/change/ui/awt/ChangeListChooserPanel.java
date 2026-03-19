@@ -178,8 +178,7 @@ public class ChangeListChooserPanel extends JPanel {
     /**
      * Method used as getResult, usually invoked inside doOkAction
      */
-    @Nullable
-    public LocalChangeList getSelectedList(Project project) {
+    public @Nullable LocalChangeList getSelectedList(Project project) {
         ChangeListManager manager = ChangeListManager.getInstance(project);
         String changeListName = myListPanel.getChangeListName();
         LocalChangeList localChangeList = manager.findChangeList(changeListName);

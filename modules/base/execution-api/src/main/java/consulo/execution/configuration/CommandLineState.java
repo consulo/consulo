@@ -90,8 +90,7 @@ public abstract class CommandLineState implements RunProfileState {
         return new DefaultExecutionResult(console, processHandler, createActions(console, processHandler, executor));
     }
 
-    @Nullable
-    protected ConsoleView createConsole(Executor executor) throws ExecutionException {
+    protected @Nullable ConsoleView createConsole(Executor executor) throws ExecutionException {
         TextConsoleBuilder builder = getConsoleBuilder();
         return builder != null ? builder.getConsole() : null;
     }

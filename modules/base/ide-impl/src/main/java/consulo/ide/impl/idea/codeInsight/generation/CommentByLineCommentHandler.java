@@ -300,20 +300,17 @@ public class CommentByLineCommentHandler extends MultiCaretCodeInsightActionHand
                 final SyntaxTable mySyntaxTable = ((CustomSyntaxTableFileType) file.getFileType()).getSyntaxTable();
 
                 @Override
-                @Nullable
-                public String getLineCommentPrefix() {
+                public @Nullable String getLineCommentPrefix() {
                     return mySyntaxTable.getLineComment();
                 }
 
                 @Override
-                @Nullable
-                public String getBlockCommentPrefix() {
+                public @Nullable String getBlockCommentPrefix() {
                     return mySyntaxTable.getStartComment();
                 }
 
                 @Override
-                @Nullable
-                public String getBlockCommentSuffix() {
+                public @Nullable String getBlockCommentSuffix() {
                     return mySyntaxTable.getEndComment();
                 }
 
@@ -395,8 +392,7 @@ public class CommentByLineCommentHandler extends MultiCaretCodeInsightActionHand
         return commented;
     }
 
-    @Nullable
-    private static Commenter findCommenter(Editor editor, PsiFile file, int line) {
+    private static @Nullable Commenter findCommenter(Editor editor, PsiFile file, int line) {
         FileType fileType = file.getFileType();
         if (fileType instanceof AbstractFileType) {
             return ((AbstractFileType) fileType).getCommenter();

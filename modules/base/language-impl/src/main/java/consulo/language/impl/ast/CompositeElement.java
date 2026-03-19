@@ -165,14 +165,12 @@ public class CompositeElement extends TreeElement {
         }
     }
 
-    @Nullable
-    public PsiElement findPsiChildByType(IElementType type) {
+    public @Nullable PsiElement findPsiChildByType(IElementType type) {
         ASTNode node = findChildByType(type);
         return node == null ? null : node.getPsi();
     }
 
-    @Nullable
-    public PsiElement findPsiChildByType(TokenSet types) {
+    public @Nullable PsiElement findPsiChildByType(TokenSet types) {
         ASTNode node = findChildByType(types);
         return node == null ? null : node.getPsi();
     }
@@ -352,8 +350,7 @@ public class CompositeElement extends TreeElement {
         return curOffset[0];
     }
 
-    @Nullable
-    public final PsiElement findChildByRoleAsPsiElement(int role) {
+    public final @Nullable PsiElement findChildByRoleAsPsiElement(int role) {
         ASTNode element = findChildByRole(role);
         if (element == null) {
             return null;
@@ -361,8 +358,7 @@ public class CompositeElement extends TreeElement {
         return SourceTreeToPsiMap.treeElementToPsi(element);
     }
 
-    @Nullable
-    public ASTNode findChildByRole(int role) {
+    public @Nullable ASTNode findChildByRole(int role) {
         // assert ChildRole.isUnique(role);
         for (ASTNode child = getFirstChildNode(); child != null; child = child.getTreeNext()) {
             if (getChildRole(child) == role) {
@@ -733,8 +729,7 @@ public class CompositeElement extends TreeElement {
     /**
      * Don't call this method, it's here for implementation reasons.
      */
-    @Nullable
-    final PsiElement getCachedPsi() {
+    final @Nullable PsiElement getCachedPsi() {
         return myWrapper;
     }
 

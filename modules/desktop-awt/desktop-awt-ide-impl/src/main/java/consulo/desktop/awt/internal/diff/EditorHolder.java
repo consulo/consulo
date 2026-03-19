@@ -26,8 +26,7 @@ public abstract class EditorHolder implements Disposable {
   
   public abstract JComponent getComponent();
 
-  @Nullable
-  public abstract JComponent getPreferredFocusedComponent();
+  public abstract @Nullable JComponent getPreferredFocusedComponent();
 
   public void installFocusListener(FocusListener listener) {
   }

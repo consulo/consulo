@@ -180,8 +180,7 @@ public class RegexpFilter implements Filter {
     return new Result(highlightStartOffset, highlightEndOffset, info);
   }
 
-  @Nullable
-  protected HyperlinkInfo createOpenFileHyperlink(String fileName, int line, int column) {
+  protected @Nullable HyperlinkInfo createOpenFileHyperlink(String fileName, int line, int column) {
     fileName = fileName.replace(File.separatorChar, '/');
     VirtualFile file = LocalFileSystem.getInstance().findFileByPath(fileName);
     if (file == null) return null;

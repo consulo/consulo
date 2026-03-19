@@ -32,8 +32,7 @@ import javax.swing.tree.TreePath;
  */
 class TreeToolbarDecorator extends ToolbarDecorator {
   private final JTree myTree;
-  @Nullable
-  private final ElementProducer<?> myProducer;
+  private final @Nullable ElementProducer<?> myProducer;
 
   TreeToolbarDecorator(JTree tree, @Nullable ElementProducer<?> producer) {
     myTree = tree;

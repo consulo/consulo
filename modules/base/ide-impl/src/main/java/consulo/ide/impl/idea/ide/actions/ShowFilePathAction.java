@@ -241,8 +241,7 @@ public class ShowFilePathAction extends AnAction {
         }
     }
 
-    @Nullable
-    public static VirtualFile findLocalFile(@Nullable VirtualFile file) {
+    public static @Nullable VirtualFile findLocalFile(@Nullable VirtualFile file) {
         if (file == null) {
             return null;
         }

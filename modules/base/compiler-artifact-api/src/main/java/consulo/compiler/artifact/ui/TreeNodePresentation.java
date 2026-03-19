@@ -33,8 +33,7 @@ public abstract class TreeNodePresentation {
   public abstract void render(PresentationData presentationData, SimpleTextAttributes mainAttributes,
                               SimpleTextAttributes commentAttributes);
 
-  @Nullable
-  public String getTooltipText() {
+  public @Nullable String getTooltipText() {
     return null;
   }
 
@@ -48,8 +47,7 @@ public abstract class TreeNodePresentation {
   /**
    * @deprecated this method is not used and will be removed in the future
    */
-  @Nullable
-  public Object getSourceObject() {
+  public @Nullable Object getSourceObject() {
     return null;
   }
 

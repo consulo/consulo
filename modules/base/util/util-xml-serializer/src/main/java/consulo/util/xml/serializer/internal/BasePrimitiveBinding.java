@@ -22,11 +22,9 @@ import org.jspecify.annotations.Nullable;
 public abstract class BasePrimitiveBinding extends NonNullAccessorBinding {
     protected final String myName;
 
-    @Nullable
-    protected final Converter<Object> myConverter;
+    protected final @Nullable Converter<Object> myConverter;
 
-    @Nullable
-    protected Binding myBinding = null;
+    protected @Nullable Binding myBinding = null;
 
     protected BasePrimitiveBinding(MutableAccessor accessor, @Nullable String suggestedName, @Nullable Class<? extends Converter> converterClass) {
         super(accessor);
@@ -44,8 +42,7 @@ public abstract class BasePrimitiveBinding extends NonNullAccessorBinding {
         }
     }
 
-    @Nullable
-    public Binding getBinding() {
+    public @Nullable Binding getBinding() {
         return myBinding;
     }
 }

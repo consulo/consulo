@@ -211,8 +211,7 @@ public class OfflineInspectionRVContentProvider extends InspectionRVContentProvi
         }
 
         @Override
-        @Nullable
-        public OfflineProblemDescriptorContainer getOwner() {
+        public @Nullable OfflineProblemDescriptorContainer getOwner() {
             OfflineProblemDescriptor descriptor = myDescriptor.getOwner();
             if (descriptor != null) {
                 OfflineProblemDescriptorContainer container = new OfflineProblemDescriptorContainer(descriptor);

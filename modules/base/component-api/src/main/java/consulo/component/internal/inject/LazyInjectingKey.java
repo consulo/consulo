@@ -25,8 +25,7 @@ public class LazyInjectingKey<T> implements InjectingKey<T> {
   private String myClassName;
   private ClassLoader myClassLoader;
 
-  @Nullable
-  private Class<T> myResolvedClass = null;
+  private @Nullable Class<T> myResolvedClass = null;
 
   LazyInjectingKey(String className, ClassLoader classLoader) {
     myClassName = className;

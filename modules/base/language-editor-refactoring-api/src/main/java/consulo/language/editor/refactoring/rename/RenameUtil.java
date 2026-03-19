@@ -306,8 +306,7 @@ public class RenameUtil {
         ref.handleElementRename(newName);
     }
 
-    @Nullable
-    public static List<UnresolvableCollisionUsageInfo> removeConflictUsages(Set<UsageInfo> usages) {
+    public static @Nullable List<UnresolvableCollisionUsageInfo> removeConflictUsages(Set<UsageInfo> usages) {
         List<UnresolvableCollisionUsageInfo> result = new ArrayList<>();
         for (Iterator<UsageInfo> iterator = usages.iterator(); iterator.hasNext(); ) {
             if (iterator.next() instanceof UnresolvableCollisionUsageInfo unresolvableCollisionUsageInfo) {

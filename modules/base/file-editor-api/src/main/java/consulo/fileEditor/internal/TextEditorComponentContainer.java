@@ -21,8 +21,7 @@ public interface TextEditorComponentContainer {
 
   void hideContent();
 
-  @Nullable
-  default Editor validateEditor(Editor editor) {
+  default @Nullable Editor validateEditor(Editor editor) {
     return editor;
   }
 }

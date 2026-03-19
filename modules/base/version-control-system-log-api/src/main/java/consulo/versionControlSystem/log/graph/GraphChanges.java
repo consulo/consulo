@@ -70,10 +70,9 @@ public interface GraphChanges<NodeId> {
   }
 
   class EdgeImpl<NodeId> implements Edge<NodeId> {
-    @Nullable private final NodeId myUpNodeId;
-    @Nullable private final NodeId myDownNodeId;
-    @Nullable
-    private final NodeId myTargetId;
+    private final @Nullable NodeId myUpNodeId;
+    private final @Nullable NodeId myDownNodeId;
+    private final @Nullable NodeId myTargetId;
     private final boolean myRemoved;
 
     public EdgeImpl(@Nullable NodeId upNodeId, @Nullable NodeId downNodeId, @Nullable NodeId targetId, boolean removed) {

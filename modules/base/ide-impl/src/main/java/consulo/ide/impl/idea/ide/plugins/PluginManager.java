@@ -33,8 +33,7 @@ public class PluginManager extends PluginManagerCore {
         return consulo.container.plugin.PluginManager.findPlugin(id) != null;
     }
 
-    @Nullable
-    public static PluginDescriptor getPlugin(PluginId id) {
+    public static @Nullable PluginDescriptor getPlugin(PluginId id) {
         return consulo.container.plugin.PluginManager.findPlugin(id);
     }
 

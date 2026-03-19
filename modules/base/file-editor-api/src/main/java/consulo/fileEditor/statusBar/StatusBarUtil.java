@@ -39,8 +39,7 @@ public class StatusBarUtil {
   private StatusBarUtil() {
   }
 
-  @Nullable
-  public static Editor getCurrentTextEditor(@Nullable StatusBar statusBar) {
+  public static @Nullable Editor getCurrentTextEditor(@Nullable StatusBar statusBar) {
     if (statusBar == null) return null;
 
     FileEditor fileEditor = getCurrentFileEditor(statusBar);
@@ -54,8 +53,7 @@ public class StatusBarUtil {
   /**
    * Finds the current file editor.
    */
-  @Nullable
-  public static FileEditor getCurrentFileEditor(@Nullable StatusBar statusBar) {
+  public static @Nullable FileEditor getCurrentFileEditor(@Nullable StatusBar statusBar) {
     if (statusBar == null) {
       return null;
     }

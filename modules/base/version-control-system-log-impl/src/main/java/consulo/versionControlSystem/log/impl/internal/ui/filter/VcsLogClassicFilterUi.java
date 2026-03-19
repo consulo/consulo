@@ -238,8 +238,7 @@ public class VcsLogClassicFilterUi implements VcsLogFilterUi {
     }
 
     public static class BranchFilterModel extends FilterModel<VcsLogBranchFilter> {
-        @Nullable
-        private Collection<VirtualFile> myVisibleRoots;
+        private @Nullable Collection<VirtualFile> myVisibleRoots;
 
         BranchFilterModel(Supplier<VcsLogDataPack> provider, MainVcsLogUiProperties properties) {
             super("branch", provider, properties);
@@ -254,8 +253,7 @@ public class VcsLogClassicFilterUi implements VcsLogFilterUi {
             }
         }
 
-        @Nullable
-        public Collection<VirtualFile> getVisibleRoots() {
+        public @Nullable Collection<VirtualFile> getVisibleRoots() {
             return myVisibleRoots;
         }
 
@@ -274,8 +272,7 @@ public class VcsLogClassicFilterUi implements VcsLogFilterUi {
     }
 
     private static class TextFilterModel extends FilterModel<VcsLogTextFilter> {
-        @Nullable
-        private String myText;
+        private @Nullable String myText;
 
         public TextFilterModel(Supplier<VcsLogDataPack> dataPackProvider, MainVcsLogUiProperties properties) {
             super("text", dataPackProvider, properties);
@@ -380,8 +377,7 @@ public class VcsLogClassicFilterUi implements VcsLogFilterUi {
             return null;
         }
 
-        @Nullable
-        private VcsLogRootFilter createRootsFilter(List<String> values) {
+        private @Nullable VcsLogRootFilter createRootsFilter(List<String> values) {
             List<VirtualFile> selectedRoots = new ArrayList<>();
             for (String path : values) {
                 VirtualFile root = LocalFileSystem.getInstance().findFileByPath(path);

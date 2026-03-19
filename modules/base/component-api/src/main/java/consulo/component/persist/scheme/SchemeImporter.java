@@ -40,8 +40,7 @@ public interface SchemeImporter<T extends Named> {
      * @param schemeClass The scheme class the importer has to support.
      * @return The found importer or null if there are no importers for the given name and scheme class.
      */
-    @Nullable
-    public static <S extends Named> SchemeImporter<S> getImporter(String name, Class<S> schemeClass) {
+    public static @Nullable <S extends Named> SchemeImporter<S> getImporter(String name, Class<S> schemeClass) {
         for (SchemeImporter<S> importer : getExtensions(schemeClass)) {
             if (name.equals(importer.getName())) {
                 return importer;

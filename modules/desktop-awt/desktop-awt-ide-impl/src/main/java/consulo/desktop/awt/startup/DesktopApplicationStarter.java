@@ -126,8 +126,7 @@ public class DesktopApplicationStarter extends ApplicationStarter {
         return new DesktopApplicationImpl(componentBinding, isHeadlessMode, splashRef);
     }
 
-    @Nullable
-    private SplashScreen getSplashScreen() {
+    private @Nullable SplashScreen getSplashScreen() {
         try {
             return SplashScreen.getSplashScreen();
         }

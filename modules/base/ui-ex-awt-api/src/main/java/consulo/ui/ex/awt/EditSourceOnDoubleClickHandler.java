@@ -91,8 +91,7 @@ public final class EditSourceOnDoubleClickHandler {
 
   public static class TreeMouseListener extends DoubleClickListener {
     private final JTree myTree;
-    @Nullable
-    private final Runnable myWhenPerformed;
+    private final @Nullable Runnable myWhenPerformed;
 
     public TreeMouseListener(JTree tree) {
       this(tree, null);

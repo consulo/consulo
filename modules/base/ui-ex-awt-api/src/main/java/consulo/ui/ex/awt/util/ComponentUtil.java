@@ -50,16 +50,14 @@ public final class ComponentUtil {
    * @return the first window ancestor of the component; or {@code null}
    * if the component is not a window and is not contained inside a window
    */
-  @Nullable
-  public static Window getWindow(@Nullable Component component) {
+  public static @Nullable Window getWindow(@Nullable Component component) {
     if (component == null) {
       return null;
     }
     return component instanceof Window ? (Window)component : SwingUtilities.getWindowAncestor(component);
   }
 
-  @Nullable
-  public static Component findParentByCondition(@Nullable Component c, Predicate<? super Component> condition) {
+  public static @Nullable Component findParentByCondition(@Nullable Component c, Predicate<? super Component> condition) {
     Component eachParent = c;
     while (eachParent != null) {
       if (condition.test(eachParent)) return eachParent;
@@ -103,8 +101,7 @@ public final class ComponentUtil {
    * @param component a view component of the requested scroll pane
    * @return a scroll pane for the given component or {@code null} if none
    */
-  @Nullable
-  public static JScrollPane getScrollPane(@Nullable Component component) {
+  public static @Nullable JScrollPane getScrollPane(@Nullable Component component) {
     return component instanceof JScrollBar ? getScrollPane((JScrollBar)component) : getScrollPane(component instanceof JViewport ? (JViewport)component : getViewport(component));
   }
 
@@ -112,8 +109,7 @@ public final class ComponentUtil {
    * @param viewport a viewport of the requested scroll pane
    * @return a scroll pane for the given viewport or {@code null} if none
    */
-  @Nullable
-  public static JScrollPane getScrollPane(@Nullable JViewport viewport) {
+  public static @Nullable JScrollPane getScrollPane(@Nullable JViewport viewport) {
     Container parent = viewport == null ? null : viewport.getParent();
     return parent instanceof JScrollPane ? (JScrollPane)parent : null;
   }
@@ -122,8 +118,7 @@ public final class ComponentUtil {
    * @param component a view component of the requested viewport
    * @return a viewport for the given component or {@code null} if none
    */
-  @Nullable
-  public static JViewport getViewport(@Nullable Component component) {
+  public static @Nullable JViewport getViewport(@Nullable Component component) {
     Container parent = component == null ? null : SwingUtilities.getUnwrappedParent(component);
     return parent instanceof JViewport ? (JViewport)parent : null;
   }

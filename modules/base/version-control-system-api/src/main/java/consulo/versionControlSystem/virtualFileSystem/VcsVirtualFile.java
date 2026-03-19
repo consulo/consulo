@@ -129,8 +129,7 @@ public class VcsVirtualFile extends AbstractVcsVirtualFile {
 
   }
 
-  @Nullable
-  public VcsFileRevision getFileRevision() {
+  public @Nullable VcsFileRevision getFileRevision() {
     return myFileRevision;
   }
 

@@ -98,8 +98,7 @@ public class ShowUpdatedDiffAction extends AnAction implements DumbAware {
     }
 
     private static class MyDiffRequestChain extends UserDataHolderBase implements DiffRequestChain, GoToChangePopupBuilder.Chain {
-        @Nullable
-        private final Project myProject;
+        private final @Nullable Project myProject;
         
         private final Label myBefore;
         

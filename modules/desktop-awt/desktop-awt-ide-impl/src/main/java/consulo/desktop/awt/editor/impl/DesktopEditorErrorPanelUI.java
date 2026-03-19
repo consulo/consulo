@@ -68,8 +68,7 @@ public class DesktopEditorErrorPanelUI extends ComponentUI {
 
   private final DesktopEditorErrorPanel myPanel;
   private ProperTextRange myDirtyYPositions;
-  @Nullable
-  private BufferedImage myCachedTrack;
+  private @Nullable BufferedImage myCachedTrack;
   private int myCachedHeight = -1;
 
   private MouseListener myMouseListener;

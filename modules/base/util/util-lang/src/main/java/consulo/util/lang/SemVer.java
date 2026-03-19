@@ -30,8 +30,7 @@ public final class SemVer implements Comparable<SemVer> {
   private final int myMajor;
   private final int myMinor;
   private final int myPatch;
-  @Nullable
-  private final String myPreRelease;
+  private final @Nullable String myPreRelease;
 
   public SemVer(String rawVersion, int major, int minor, int patch) {
     this(rawVersion, major, minor, patch, null);
@@ -61,8 +60,7 @@ public final class SemVer implements Comparable<SemVer> {
     return myPatch;
   }
 
-  @Nullable
-  public String getPreRelease() {
+  public @Nullable String getPreRelease() {
     return myPreRelease;
   }
 
@@ -181,8 +179,7 @@ public final class SemVer implements Comparable<SemVer> {
     return diff;
   }
 
-  @Nullable
-  public static SemVer parseFromText(@Nullable String text) {
+  public static @Nullable SemVer parseFromText(@Nullable String text) {
     if (text != null) {
       int majorEndIdx = text.indexOf('.');
       if (majorEndIdx >= 0) {

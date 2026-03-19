@@ -101,8 +101,7 @@ public class IndentData {
     return new IndentData(indent, alignment);
   }
 
-  @Nullable
-  public static IndentData min(@Nullable IndentData first, @Nullable IndentData second) {
+  public static @Nullable IndentData min(@Nullable IndentData first, @Nullable IndentData second) {
     if (first == null) return second;
     if (second == null) return first;
     return first.getTotalSpaces() < second.getTotalSpaces() ? first : second;

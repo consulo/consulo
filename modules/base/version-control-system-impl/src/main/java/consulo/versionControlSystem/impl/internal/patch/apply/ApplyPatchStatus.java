@@ -46,8 +46,7 @@ public enum ApplyPatchStatus {
     static final Set<ApplyPatchStatus> PARTIAL_ADDITIONAL_SET = Set.of(SUCCESS, ALREADY_APPLIED);
     private static final Ordering<ApplyPatchStatus> ORDERING = Ordering.explicit(ORDERED_TYPES).nullsFirst();
 
-    @Nullable
-    public static ApplyPatchStatus and(@Nullable ApplyPatchStatus lhs, @Nullable ApplyPatchStatus rhs) {
+    public static @Nullable ApplyPatchStatus and(@Nullable ApplyPatchStatus lhs, @Nullable ApplyPatchStatus rhs) {
         Set<ApplyPatchStatus> statuses = new HashSet<>();
         ContainerUtil.addIfNotNull(statuses, lhs);
         ContainerUtil.addIfNotNull(statuses, rhs);

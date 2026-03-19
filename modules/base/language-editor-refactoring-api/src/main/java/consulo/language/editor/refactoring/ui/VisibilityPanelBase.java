@@ -28,8 +28,7 @@ public abstract class VisibilityPanelBase<V> extends JPanel {
 
   public final EventDispatcher<ChangeListener> myEventDispatcher = EventDispatcher.create(ChangeListener.class);
 
-  @Nullable
-  public abstract V getVisibility();
+  public abstract @Nullable V getVisibility();
 
   public abstract void setVisibility(V visibility);
 

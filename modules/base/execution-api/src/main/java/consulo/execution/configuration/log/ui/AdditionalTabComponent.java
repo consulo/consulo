@@ -37,8 +37,7 @@ public abstract class AdditionalTabComponent extends JPanel implements Component
 
   public abstract String getTabTitle();
 
-  @Nullable
-  public String getTooltip() {
+  public @Nullable String getTooltip() {
     return null;
   }
 

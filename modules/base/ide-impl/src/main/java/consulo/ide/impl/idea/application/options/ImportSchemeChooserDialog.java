@@ -102,8 +102,7 @@ public class ImportSchemeChooserDialog extends DialogWrapper {
         return myUseCurrentScheme.getValue();
     }
 
-    @Nullable
-    public String getTargetName() {
+    public @Nullable String getTargetName() {
         String name = myTargetNameField.getValue();
         return name != null && !name.trim().isEmpty() ? name : null;
     }

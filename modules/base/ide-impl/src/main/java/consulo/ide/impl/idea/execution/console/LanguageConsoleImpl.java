@@ -181,14 +181,12 @@ public class LanguageConsoleImpl extends ConsoleViewImpl implements LanguageCons
     }
 
     @Override
-    @Nullable
-    public String getPrompt() {
+    public @Nullable String getPrompt() {
         return myConsoleExecutionEditor.getPrompt();
     }
 
     @Override
-    @Nullable
-    public ConsoleViewContentType getPromptAttributes() {
+    public @Nullable ConsoleViewContentType getPromptAttributes() {
         return myConsoleExecutionEditor.getPromptAttributes();
     }
 
@@ -526,8 +524,7 @@ public class LanguageConsoleImpl extends ConsoleViewImpl implements LanguageCons
             return file == null || !file.isValid() ? file = getFile() : file;
         }
 
-        @Nullable
-        protected Object getEditorData(EditorEx editor, Key dataId) {
+        protected @Nullable Object getEditorData(EditorEx editor, Key dataId) {
             if (OpenFileDescriptorImpl.NAVIGATE_IN_EDITOR == dataId) {
                 return editor;
             }

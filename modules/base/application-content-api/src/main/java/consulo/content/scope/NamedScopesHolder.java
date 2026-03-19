@@ -114,8 +114,7 @@ public abstract class NamedScopesHolder implements PersistentStateComponent<Elem
         fireScopeListeners();
     }
 
-    @Nullable
-    public static NamedScope getScope(Project project, String scopeId) {
+    public static @Nullable NamedScope getScope(Project project, String scopeId) {
         NamedScopesHolder[] holders = getAllNamedScopeHolders(project);
         for (NamedScopesHolder holder : holders) {
             NamedScope scope = holder.getScope(scopeId);
@@ -126,8 +125,7 @@ public abstract class NamedScopesHolder implements PersistentStateComponent<Elem
         return null;
     }
 
-    @Nullable
-    public static Pair<NamedScopesHolder, NamedScope> getScopeWithHolder(Project project, String scopeId) {
+    public static @Nullable Pair<NamedScopesHolder, NamedScope> getScopeWithHolder(Project project, String scopeId) {
         NamedScopesHolder[] holders = getAllNamedScopeHolders(project);
         for (NamedScopesHolder holder : holders) {
             NamedScope scope = holder.getScope(scopeId);
@@ -150,8 +148,7 @@ public abstract class NamedScopesHolder implements PersistentStateComponent<Elem
         return holders.toArray(new NamedScopesHolder[holders.size()]);
     }
 
-    @Nullable
-    public static NamedScopesHolder getHolder(Project project, String scopeName, NamedScopesHolder defaultHolder) {
+    public static @Nullable NamedScopesHolder getHolder(Project project, String scopeName, NamedScopesHolder defaultHolder) {
         NamedScopesHolder[] holders = getAllNamedScopeHolders(project);
         for (NamedScopesHolder holder : holders) {
             NamedScope scope = holder.getScope(scopeName);
@@ -202,8 +199,7 @@ public abstract class NamedScopesHolder implements PersistentStateComponent<Elem
         return element;
     }
 
-    @Nullable
-    public NamedScope getScope(@Nullable String name) {
+    public @Nullable NamedScope getScope(@Nullable String name) {
         if (name == null) {
             return null;
         }
@@ -220,8 +216,7 @@ public abstract class NamedScopesHolder implements PersistentStateComponent<Elem
         return Collections.emptyList();
     }
 
-    @Nullable
-    public NamedScope getPredefinedScope(String name) {
+    public @Nullable NamedScope getPredefinedScope(String name) {
         return null;
     }
 

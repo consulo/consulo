@@ -15,8 +15,7 @@ import java.util.List;
 import java.util.Map;
 
 class AnnotateCurrentRevisionAction extends AnnotateRevisionAction {
-    @Nullable
-    private final List<VcsFileRevision> myRevisions;
+    private final @Nullable List<VcsFileRevision> myRevisions;
 
     public AnnotateCurrentRevisionAction(FileAnnotation annotation, AbstractVcs vcs) {
         super(
@@ -44,8 +43,7 @@ class AnnotateCurrentRevisionAction extends AnnotateRevisionAction {
     }
 
     @Override
-    @Nullable
-    public List<VcsFileRevision> getRevisions() {
+    public @Nullable List<VcsFileRevision> getRevisions() {
         return myRevisions;
     }
 }

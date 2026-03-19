@@ -34,8 +34,7 @@ public abstract class CompilerConfiguration {
         return project.getInstance(CompilerConfiguration.class);
     }
 
-    @Nullable
-    public abstract VirtualFile getCompilerOutput();
+    public abstract @Nullable VirtualFile getCompilerOutput();
 
     
     public abstract String getCompilerOutputUrl();

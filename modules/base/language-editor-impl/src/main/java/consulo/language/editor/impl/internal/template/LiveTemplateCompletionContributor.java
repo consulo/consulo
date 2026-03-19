@@ -149,8 +149,7 @@ public class LiveTemplateCompletionContributor extends CompletionContributor imp
         }
     }
 
-    @Nullable
-    public static Template findFullMatchedApplicableTemplate(Editor editor, int offset, Collection<? extends Template> availableTemplates) {
+    public static @Nullable Template findFullMatchedApplicableTemplate(Editor editor, int offset, Collection<? extends Template> availableTemplates) {
         Map<Template, String> templates = filterTemplatesByPrefix(availableTemplates, editor, offset, true, false);
         if (templates.size() == 1) {
             Template template = ContainerUtil.getFirstItem(templates.keySet());

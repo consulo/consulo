@@ -8,10 +8,8 @@ import java.util.Collections;
 
 public class RepoPackage implements Comparable<RepoPackage> {
   private final String myName;
-  @Nullable
-  final String myRepoUrl;
-  @Nullable
-  final String myLatestVersion;
+  final @Nullable String myRepoUrl;
+  final @Nullable String myLatestVersion;
   private final Collection<String> myKeywords;
 
   public RepoPackage(String name, String repoUrl) {
@@ -33,13 +31,11 @@ public class RepoPackage implements Comparable<RepoPackage> {
     return myName;
   }
 
-  @Nullable
-  public String getRepoUrl() {
+  public @Nullable String getRepoUrl() {
     return myRepoUrl;
   }
 
-  @Nullable
-  public String getLatestVersion() {
+  public @Nullable String getLatestVersion() {
     return myLatestVersion;
   }
 

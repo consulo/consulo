@@ -133,8 +133,7 @@ public class DefaultJDOMExternalizer {
     }
   }
 
-  @Nullable
-  public static String filterXMLCharacters(String value) {
+  public static @Nullable String filterXMLCharacters(String value) {
     if (value != null) {
       StringBuilder builder = null;
       for (int i = 0; i < value.length(); i++) {
@@ -298,8 +297,7 @@ public class DefaultJDOMExternalizer {
     }
   }
 
-  @Nullable
-  public static Color toColor(@Nullable String value) throws InvalidDataException {
+  public static @Nullable Color toColor(@Nullable String value) throws InvalidDataException {
     if (value == null) {
       return null;
     }

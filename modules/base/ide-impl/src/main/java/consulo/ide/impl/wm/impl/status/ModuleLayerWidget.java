@@ -128,8 +128,7 @@ public class ModuleLayerWidget extends EditorBasedStatusBarPopup implements Cust
         return JBPopupFactory.getInstance().createActionGroupPopup("Module Layer", builder.build(), context, JBPopupFactory.ActionSelectionAid.SPEEDSEARCH, false);
     }
 
-    @Nullable
-    private ListWithSelection<String> getLayers() {
+    private @Nullable ListWithSelection<String> getLayers() {
         VirtualFile file = getSelectedFile();
         Project project = getProject();
 

@@ -129,8 +129,7 @@ public class ContentFolderPropertiesDialog extends DialogWrapper {
         }
     };
 
-    @Nullable
-    private final Project myProject;
+    private final @Nullable Project myProject;
     private final ContentFolder myContentFolder;
     private List<Item> myItems = new ArrayList<>();
 

@@ -74,8 +74,7 @@ public class StdArrangementMatchRule extends ArrangementMatchRule implements Clo
     }
   }
 
-  @Nullable
-  private static String getEntryType(Set<ArrangementSettingsToken> tokens) {
+  private static @Nullable String getEntryType(Set<ArrangementSettingsToken> tokens) {
     for (ArrangementSettingsToken token : tokens) {
       if (StdArrangementTokenType.ENTRY_TYPE.is(token)) {
         return token.getId();

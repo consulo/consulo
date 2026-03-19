@@ -41,8 +41,7 @@ public class JComponentHacking {
     }
   }
 
-  @Nullable
-  public static Graphics safelyGetGraphics(Component component) {
+  public static @Nullable Graphics safelyGetGraphics(Component component) {
     if (ourSafelyGetGraphicsMethod == null) {
       return null;
     }

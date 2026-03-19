@@ -255,13 +255,11 @@ public class ContentEntriesEditor extends ModuleElementsEditor {
         }
     }
 
-    @Nullable
-    private ContentEntry getNextContentEntry(ContentEntry contentEntryUrl) {
+    private @Nullable ContentEntry getNextContentEntry(ContentEntry contentEntryUrl) {
         return getAdjacentContentEntry(contentEntryUrl, 1);
     }
 
-    @Nullable
-    private ContentEntry getAdjacentContentEntry(ContentEntry contentEntryUrl, int delta) {
+    private @Nullable ContentEntry getAdjacentContentEntry(ContentEntry contentEntryUrl, int delta) {
         ContentEntry[] contentEntries = getModel().getContentEntries();
         for (int idx = 0; idx < contentEntries.length; idx++) {
             ContentEntry entry = contentEntries[idx];

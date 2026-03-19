@@ -39,11 +39,9 @@ public abstract class DisposerInternal {
 
   public abstract TraceableDisposable newTraceDisposable(boolean debug);
 
-  @Nullable
-  public abstract Disposable get(String key);
+  public abstract @Nullable Disposable get(String key);
 
-  @Nullable
-  public abstract Throwable getDisposalTrace(Disposable disposable);
+  public abstract @Nullable Throwable getDisposalTrace(Disposable disposable);
 
   public abstract boolean isDebugMode();
 
@@ -51,8 +49,7 @@ public abstract class DisposerInternal {
 
   public abstract boolean setDebugMode(boolean debugMode);
 
-  @Nullable
-  public abstract <T extends Disposable> T findRegisteredObject(Disposable parentDisposable, T object);
+  public abstract @Nullable <T extends Disposable> T findRegisteredObject(Disposable parentDisposable, T object);
   public abstract <T> DisposableList<T> createList();
 
   public abstract boolean tryRegister(Disposable parent, Disposable child);

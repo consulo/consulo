@@ -210,8 +210,7 @@ public final class PersistentFSImpl extends PersistentFS implements Disposable {
     }
 
     @Override
-    @Nullable
-    public DataInputStream readAttribute(VirtualFile file, FileAttribute att) {
+    public @Nullable DataInputStream readAttribute(VirtualFile file, FileAttribute att) {
         return FSRecords.readAttributeWithLock(getFileId(file), att);
     }
 
@@ -221,8 +220,7 @@ public final class PersistentFSImpl extends PersistentFS implements Disposable {
         return FSRecords.writeAttribute(getFileId(file), att);
     }
 
-    @Nullable
-    private static DataInputStream readContent(VirtualFile file) {
+    private static @Nullable DataInputStream readContent(VirtualFile file) {
         return FSRecords.readContent(getFileId(file));
     }
 
@@ -813,8 +811,7 @@ public final class PersistentFSImpl extends PersistentFS implements Disposable {
         return i;
     }
 
-    @Nullable
-    private static String getAlternativePath(VFileEvent event) {
+    private static @Nullable String getAlternativePath(VFileEvent event) {
         String path2 = null;
         if (event instanceof VFilePropertyChangeEvent vFilePropertyChangeEvent
             && vFilePropertyChangeEvent.getPropertyName().equals(VirtualFile.PROP_NAME)) {
@@ -1276,8 +1273,7 @@ public final class PersistentFSImpl extends PersistentFS implements Disposable {
     }
 
     @Override
-    @Nullable
-    public VirtualFileSystemEntry findRoot(String path, NewVirtualFileSystem fs) {
+    public @Nullable VirtualFileSystemEntry findRoot(String path, NewVirtualFileSystem fs) {
         if (path.isEmpty()) {
             LOG.error("Invalid root, fs=" + fs);
             return null;
@@ -1414,8 +1410,7 @@ public final class PersistentFSImpl extends PersistentFS implements Disposable {
     }
 
     @Override
-    @Nullable
-    public NewVirtualFile findFileById(int id) {
+    public @Nullable NewVirtualFile findFileById(int id) {
         VirtualFileSystemEntry cached = myIdToDirCache.get(id);
         return cached != null ? cached : FSRecords.findFileById(id, myIdToDirCache);
     }

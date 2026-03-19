@@ -24,8 +24,7 @@ public class WSLDistributionLegacy extends WSLDistribution {
     return StringUtil.isEmpty(localAppDataPath) ? null : localAppDataPath + WSL_ROOT_CHUNK;
   });
 
-  @Nullable
-  private static Path getExecutableRootPath() {
+  private static @Nullable Path getExecutableRootPath() {
     String windir = System.getenv().get("windir");
     return StringUtil.isEmpty(windir) ? null : Paths.get(windir, "System32");
   }
@@ -33,8 +32,7 @@ public class WSLDistributionLegacy extends WSLDistribution {
   /**
    * @return legacy WSL ("Bash-on-Windows") if it's available, {@code null} otherwise
    */
-  @Nullable
-  public static WSLDistributionLegacy getInstance() {
+  public static @Nullable WSLDistributionLegacy getInstance() {
     Path executableRoot = getExecutableRootPath();
     if (executableRoot == null) return null;
 

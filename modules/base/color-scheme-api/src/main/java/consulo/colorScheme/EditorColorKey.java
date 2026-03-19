@@ -63,8 +63,7 @@ public final class EditorColorKey implements ColorValue, Comparable<EditorColorK
         return myExternalName;
     }
 
-    @Nullable
-    public EditorColorKey getFallbackColorKey() {
+    public @Nullable EditorColorKey getFallbackColorKey() {
         return myFallbackColorKey;
     }
 
@@ -78,8 +77,7 @@ public final class EditorColorKey implements ColorValue, Comparable<EditorColorK
         return myExternalName.compareTo(key.myExternalName);
     }
 
-    @Nullable
-    public ColorValue getDefaultColorValue() {
+    public @Nullable ColorValue getDefaultColorValue() {
         return myDefaultColorValue;
     }
 

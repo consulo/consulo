@@ -30,13 +30,11 @@ public abstract class AbstractRepositoryManager<T extends Repository> implements
     }
 
     @Override
-    @Nullable
-    public T getRepositoryForRoot(@Nullable VirtualFile root) {
+    public @Nullable T getRepositoryForRoot(@Nullable VirtualFile root) {
         return validateAndGetRepository(myGlobalRepositoryManager.getRepositoryForRoot(root));
     }
 
-    @Nullable
-    public T getRepositoryForRootQuick(@Nullable VirtualFile root) {
+    public @Nullable T getRepositoryForRootQuick(@Nullable VirtualFile root) {
         return validateAndGetRepository(myGlobalRepositoryManager.getRepositoryForRootQuick(root));
     }
 
@@ -56,19 +54,16 @@ public abstract class AbstractRepositoryManager<T extends Repository> implements
     }
 
     @Override
-    @Nullable
-    public T getRepositoryForFile(VirtualFile file) {
+    public @Nullable T getRepositoryForFile(VirtualFile file) {
         return validateAndGetRepository(myGlobalRepositoryManager.getRepositoryForFile(file));
     }
 
-    @Nullable
-    public T getRepositoryForFileQuick(VirtualFile file) {
+    public @Nullable T getRepositoryForFileQuick(VirtualFile file) {
         return validateAndGetRepository(myGlobalRepositoryManager.getRepositoryForFileQuick(file));
     }
 
     @Override
-    @Nullable
-    public T getRepositoryForFile(FilePath file) {
+    public @Nullable T getRepositoryForFile(FilePath file) {
         VirtualFile vFile = ChangesUtil.findValidParentAccurately(file);
         return vFile != null ? getRepositoryForFile(vFile) : null;
     }

@@ -52,8 +52,7 @@ public class TestSuiteStack {
     /**
      * @return Top element of non stack or null for empty stack
      */
-    @Nullable
-    public SMTestProxy getCurrentSuite() {
+    public @Nullable SMTestProxy getCurrentSuite() {
         if (getStackSize() != 0) {
             return myStack.peek();
         }
@@ -65,8 +64,7 @@ public class TestSuiteStack {
      *
      * @param suiteName Predictable name of top suite in stack. May be null if
      */
-    @Nullable
-    public SMTestProxy popSuite(String suiteName) throws EmptyStackException {
+    public @Nullable SMTestProxy popSuite(String suiteName) throws EmptyStackException {
         if (myStack.isEmpty()) {
             if (SMTestRunnerConnectionUtil.isInDebugMode()) {
                 LOG.error(

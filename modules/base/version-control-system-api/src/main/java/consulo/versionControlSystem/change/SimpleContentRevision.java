@@ -19,8 +19,7 @@ public class SimpleContentRevision implements ContentRevision {
     myRevision = revision;
   }
 
-  @Nullable
-  public String getContent() {
+  public @Nullable String getContent() {
     return myContent;
   }
 

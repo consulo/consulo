@@ -70,7 +70,7 @@ class CommitPanel extends JBPanel {
   
   private final VcsLogColorManager myColorManager;
 
-  @Nullable private VcsFullCommitDetails myCommit;
+  private @Nullable VcsFullCommitDetails myCommit;
 
   public CommitPanel(VcsLogDataImpl logData, VcsLogColorManager colorManager) {
     myLogData = logData;
@@ -185,7 +185,7 @@ class CommitPanel extends JBPanel {
   private static class DataPanel extends HtmlPanel {
     
     private final Project myProject;
-    @Nullable private String myMainText;
+    private @Nullable String myMainText;
 
     DataPanel(Project project) {
       myProject = project;
@@ -341,7 +341,7 @@ class CommitPanel extends JBPanel {
     private static final int PER_ROW = 2;
     private static final String LINK_HREF = "show-hide-branches";
 
-    @Nullable private List<String> myBranches;
+    private @Nullable List<String> myBranches;
     private boolean myExpanded = false;
 
     BranchesPanel() {

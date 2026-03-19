@@ -166,7 +166,6 @@ public interface IXMLBuilder {
    * @throws java.lang.Exception If an exception occurred while processing the event.
    * @see net.n3.nanoxml.IXMLParser#parse
    */
-  @Nullable
-  public Object getResult() throws Exception;
+  public @Nullable Object getResult() throws Exception;
 
 }

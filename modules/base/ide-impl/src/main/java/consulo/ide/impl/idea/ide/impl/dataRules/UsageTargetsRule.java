@@ -37,8 +37,7 @@ public class UsageTargetsRule implements GetDataRule<UsageTarget[]> {
   }
 
   @Override
-  @Nullable
-  public UsageTarget[] getData(DataProvider dataProvider) {
+  public @Nullable UsageTarget[] getData(DataProvider dataProvider) {
     return UsageTargetUtil.findUsageTargets(dataProvider);
   }
 }

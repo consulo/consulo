@@ -182,8 +182,7 @@ public class ClassesTable extends JBTable implements DataProvider, Disposable {
         int getNewInstancesCount(TypeInfo ref);
     }
 
-    @Nullable
-    public TypeInfo getSelectedClass() {
+    public @Nullable TypeInfo getSelectedClass() {
         int selectedRow = getSelectedRow();
         if (selectedRow != -1) {
             int ix = convertRowIndexToModel(selectedRow);
@@ -193,8 +192,7 @@ public class ClassesTable extends JBTable implements DataProvider, Disposable {
         return null;
     }
 
-    @Nullable
-    public TypeInfo getClassByName(String name) {
+    public @Nullable TypeInfo getClassByName(String name) {
         for (TypeInfo ref : myItems) {
             if (name.equals(ref.name())) {
                 return ref;
@@ -420,8 +418,7 @@ public class ClassesTable extends JBTable implements DataProvider, Disposable {
         }
     }
 
-    @Nullable
-    private TrackingType getTrackingType(int row) {
+    private @Nullable TrackingType getTrackingType(int row) {
         TypeInfo ref = (TypeInfo) getValueAt(row, convertColumnIndexToView(DiffViewTableModel.CLASSNAME_COLUMN_INDEX));
         return myInstancesTracker.getTrackingType(ref.name());
     }

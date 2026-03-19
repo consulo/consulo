@@ -132,8 +132,7 @@ public class VariableInplaceRenameHandler implements RenameHandler {
         return true;
     }
 
-    @Nullable
-    public InplaceRefactoring doRename(PsiElement elementToRename, Editor editor, DataContext dataContext) {
+    public @Nullable InplaceRefactoring doRename(PsiElement elementToRename, Editor editor, DataContext dataContext) {
         VariableInplaceRenamer renamer = createRenamer(elementToRename, editor);
         boolean startedRename = renamer != null && renamer.performInplaceRename();
 
@@ -163,14 +162,12 @@ public class VariableInplaceRenameHandler implements RenameHandler {
         }
     }
 
-    @Nullable
-    public static String getInitialName() {
+    public static @Nullable String getInitialName() {
         String str = ourPreventInlineRenameFlag.get();
         return StringUtil.isEmpty(str) ? null : str;
     }
 
-    @Nullable
-    protected VariableInplaceRenamer createRenamer(PsiElement elementToRename, Editor editor) {
+    protected @Nullable VariableInplaceRenamer createRenamer(PsiElement elementToRename, Editor editor) {
         return new VariableInplaceRenamer((PsiNamedElement) elementToRename, editor);
     }
 }

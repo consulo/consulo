@@ -45,8 +45,7 @@ public class ProjectLocatorImpl extends ProjectLocator {
     }
 
     @Override
-    @Nullable
-    public Project guessProjectForFile(VirtualFile file) {
+    public @Nullable Project guessProjectForFile(VirtualFile file) {
         // StubUpdatingIndex calls this method very often, so, optimized implementation is required
         Project project = SingleProjectHolder.theOnlyOpenProject();
         if (project != null && !project.isDisposed()) {

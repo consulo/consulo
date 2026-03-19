@@ -34,8 +34,7 @@ public abstract class PropertyEditor {
                                           Object value,
                                           @Nullable InplaceContext inplaceContext);
 
-  @Nullable
-  public JComponent getPreferredFocusedComponent() {
+  public @Nullable JComponent getPreferredFocusedComponent() {
     return null;
   }
 
@@ -43,8 +42,7 @@ public abstract class PropertyEditor {
   public void activate() {
   }
 
-  @Nullable
-  public abstract Object getValue() throws Exception;
+  public abstract @Nullable Object getValue() throws Exception;
 
   public abstract void updateUI();
 

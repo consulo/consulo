@@ -218,8 +218,7 @@ public abstract class LineStatusMarkerPopup {
         );
     }
 
-    @Nullable
-    private EditorFragmentComponent createEditorComponent(@Nullable FileType fileType, @Nullable List<DiffFragment> wordDiff) {
+    private @Nullable EditorFragmentComponent createEditorComponent(@Nullable FileType fileType, @Nullable List<DiffFragment> wordDiff) {
         if (myRange.getType() == VcsRange.INSERTED) {
             return null;
         }
@@ -263,8 +262,7 @@ public abstract class LineStatusMarkerPopup {
     }
 
     private static class PopupPanel extends JPanel {
-        @Nullable
-        private final JComponent myEditorComponent;
+        private final @Nullable JComponent myEditorComponent;
 
         public PopupPanel(final Editor editor, ActionToolbar toolbar, @Nullable JComponent editorComponent) {
             super(new BorderLayout());

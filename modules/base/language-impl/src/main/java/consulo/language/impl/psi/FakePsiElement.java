@@ -56,29 +56,25 @@ public abstract class FakePsiElement extends PsiElementBase implements PsiNamedE
 
     @RequiredReadAction
     @Override
-    @Nullable
-    public PsiElement getFirstChild() {
+    public @Nullable PsiElement getFirstChild() {
         return null;
     }
 
     @RequiredReadAction
     @Override
-    @Nullable
-    public PsiElement getLastChild() {
+    public @Nullable PsiElement getLastChild() {
         return null;
     }
 
     @RequiredReadAction
     @Override
-    @Nullable
-    public PsiElement getNextSibling() {
+    public @Nullable PsiElement getNextSibling() {
         return null;
     }
 
     @RequiredReadAction
     @Override
-    @Nullable
-    public PsiElement getPrevSibling() {
+    public @Nullable PsiElement getPrevSibling() {
         return null;
     }
 
@@ -103,8 +99,7 @@ public abstract class FakePsiElement extends PsiElementBase implements PsiNamedE
 
     @RequiredReadAction
     @Override
-    @Nullable
-    public PsiElement findElementAt(int offset) {
+    public @Nullable PsiElement findElementAt(int offset) {
         return null;
     }
 
@@ -115,9 +110,7 @@ public abstract class FakePsiElement extends PsiElementBase implements PsiNamedE
 
     @RequiredReadAction
     @Override
-    @Nullable
-    
-    public String getText() {
+    public @Nullable String getText() {
         return null;
     }
 
@@ -135,8 +128,7 @@ public abstract class FakePsiElement extends PsiElementBase implements PsiNamedE
     }
 
     @Override
-    @Nullable
-    public ASTNode getNode() {
+    public @Nullable ASTNode getNode() {
         return null;
     }
 
@@ -146,14 +138,12 @@ public abstract class FakePsiElement extends PsiElementBase implements PsiNamedE
     }
 
     @Override
-    @Nullable
-    public String getLocationString() {
+    public @Nullable String getLocationString() {
         return null;
     }
 
     @Override
-    @Nullable
-    public Image getIcon() {
+    public @Nullable Image getIcon() {
         return null;
     }
 

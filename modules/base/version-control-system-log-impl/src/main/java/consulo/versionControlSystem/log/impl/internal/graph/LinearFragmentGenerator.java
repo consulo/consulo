@@ -61,8 +61,7 @@ public class LinearFragmentGenerator {
     myPinnedNodes = pinnedNodes;
   }
 
-  @Nullable
-  public GraphFragment getRelativeFragment(GraphElement element) {
+  public @Nullable GraphFragment getRelativeFragment(GraphElement element) {
     int upNodeIndex;
     int downNodeIndex;
     if (element instanceof GraphNode node) {
@@ -91,34 +90,28 @@ public class LinearFragmentGenerator {
     return null;
   }
 
-  @Nullable
-  public GraphFragment getDownFragment(int upperVisibleNodeIndex) {
+  public @Nullable GraphFragment getDownFragment(int upperVisibleNodeIndex) {
     return getFragment(upperVisibleNodeIndex, downNodesFun, upNodesFun, myPinnedNodes, true);
   }
 
-  @Nullable
-  public GraphFragment getUpFragment(int lowerNodeIndex) {
+  public @Nullable GraphFragment getUpFragment(int lowerNodeIndex) {
     return getFragment(lowerNodeIndex, upNodesFun, downNodesFun, myPinnedNodes, false);
   }
 
-  @Nullable
-  public GraphFragment getLongDownFragment(int rowIndex) {
+  public @Nullable GraphFragment getLongDownFragment(int rowIndex) {
     return getLongFragment(getDownFragment(rowIndex), Integer.MAX_VALUE);
   }
 
-  @Nullable
-  public GraphFragment getLongFragment(GraphElement element) {
+  public @Nullable GraphFragment getLongFragment(GraphElement element) {
     return getLongFragment(getRelativeFragment(element), Integer.MAX_VALUE);
   }
 
   // for hover
-  @Nullable
-  public GraphFragment getPartLongFragment(GraphElement element) {
+  public @Nullable GraphFragment getPartLongFragment(GraphElement element) {
     return getLongFragment(getRelativeFragment(element), 500);
   }
 
-  @Nullable
-  private GraphFragment getLongFragment(@Nullable GraphFragment startFragment, int bound) {
+  private @Nullable GraphFragment getLongFragment(@Nullable GraphFragment startFragment, int bound) {
     if (startFragment == null) return null;
 
     GraphFragment shortFragment;
@@ -145,8 +138,7 @@ public class LinearFragmentGenerator {
     return null;
   }
 
-  @Nullable
-  private static GraphFragment getFragment(int startNode,
+  private static @Nullable GraphFragment getFragment(int startNode,
                                            Function<Integer, List<Integer>> getNextNodes,
                                            Function<Integer, List<Integer>> getPrevNodes,
                                            Set<Integer> thisNodeCantBeInMiddle, boolean isDown) {

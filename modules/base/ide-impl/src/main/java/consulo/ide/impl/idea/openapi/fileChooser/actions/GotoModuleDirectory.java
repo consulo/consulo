@@ -51,8 +51,7 @@ public final class GotoModuleDirectory extends FileChooserAction {
         presentation.setEnabled(moduleDir != null && fileSystemTree.isUnderRoots(moduleDir));
     }
 
-    @Nullable
-    private static VirtualFile getModuleDir(AnActionEvent e) {
+    private static @Nullable VirtualFile getModuleDir(AnActionEvent e) {
         Module module = e.getData(LangDataKeys.MODULE_CONTEXT);
         if (module == null) {
             module = e.getData(Module.KEY);

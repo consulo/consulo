@@ -112,8 +112,7 @@ public abstract class PackagingElementFactory {
   
   public abstract CompositePackagingElementType<?>[] getCompositeElementTypes();
 
-  @Nullable
-  public abstract PackagingElementType<?> findElementType(String id);
+  public abstract @Nullable PackagingElementType<?> findElementType(String id);
 
   
   public abstract PackagingElementType<?>[] getNonCompositeElementTypes();

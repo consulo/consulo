@@ -94,8 +94,7 @@ public final class ScriptRunnerUtil {
         return outputBuilder.toString();
     }
 
-    @Nullable
-    private static File getShell() {
+    private static @Nullable File getShell() {
         String shell = System.getenv("SHELL");
         if (shell != null && (shell.contains("bash") || shell.contains("zsh"))) {
             File file = new File(shell);

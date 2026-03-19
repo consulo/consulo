@@ -191,8 +191,7 @@ public class CommentByBlockCommentHandler extends MultiCaretCodeInsightActionHan
         }
     }
 
-    @Nullable
-    private static String trim(String s) {
+    private static @Nullable String trim(String s) {
         return s == null ? null : s.trim();
     }
 
@@ -325,8 +324,7 @@ public class CommentByBlockCommentHandler extends MultiCaretCodeInsightActionHan
     }
 
 
-    @Nullable
-    private TextRange getSelectedComments(CharSequence text, String prefix, String suffix) {
+    private @Nullable TextRange getSelectedComments(CharSequence text, String prefix, String suffix) {
         TextRange commentedRange = null;
         if (myCaret.hasSelection()) {
             int selectionStart = myCaret.getSelectionStart();
@@ -401,8 +399,7 @@ public class CommentByBlockCommentHandler extends MultiCaretCodeInsightActionHan
         return comment;
     }
 
-    @Nullable
-    private PsiComment getCommentAtOffset(int offset) {
+    private @Nullable PsiComment getCommentAtOffset(int offset) {
         PsiElement elt = myFile.getViewProvider().findElementAt(offset);
         if (elt == null) {
             return null;

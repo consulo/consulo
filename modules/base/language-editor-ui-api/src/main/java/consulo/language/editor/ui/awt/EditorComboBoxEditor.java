@@ -56,8 +56,7 @@ public class EditorComboBoxEditor implements ComboBoxEditor {
     IdeFocusManager.getGlobalInstance().doForceFocusWhenFocusSettlesDown(myTextField);
   }
 
-  @Nullable
-  public Editor getEditor() {
+  public @Nullable Editor getEditor() {
     return myTextField.getEditor();
   }
 

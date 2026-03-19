@@ -63,8 +63,7 @@ public class EncodingReference implements PsiReference, EmptyResolveMessageProvi
 
   @RequiredReadAction
   @Override
-  @Nullable
-  public PsiElement resolve() {
+  public @Nullable PsiElement resolve() {
     return CharsetToolkit.forName(myCharsetName) == null ? null : myElement;
     //if (ApplicationManager.getApplication().isUnitTestMode()) return myValue; // tests do not have full JDK
     //String fqn = charset.getClass().getName();

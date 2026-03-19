@@ -37,8 +37,7 @@ public interface LanguageBackspaceModeOverride extends BackspaceModeOverride, La
     ExtensionPointCacheKey<LanguageBackspaceModeOverride, ByLanguageValue<LanguageBackspaceModeOverride>> KEY =
         ExtensionPointCacheKey.create("LanguageBackspaceModeOverride", LanguageOneToOne.build());
 
-    @Nullable
-    static LanguageBackspaceModeOverride forLanguage(Language language) {
+    static @Nullable LanguageBackspaceModeOverride forLanguage(Language language) {
         ExtensionPoint<LanguageBackspaceModeOverride> extensionPoint =
             Application.get().getExtensionPoint(LanguageBackspaceModeOverride.class);
         ByLanguageValue<LanguageBackspaceModeOverride> map = extensionPoint.getOrBuildCache(KEY);

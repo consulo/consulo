@@ -58,14 +58,12 @@ public abstract class WebReferencesAnnotatorBase extends ExternalAnnotator<WebRe
   
   protected abstract WebReference[] collectWebReferences(PsiFile file);
 
-  @Nullable
-  protected static WebReference lookForWebReference(PsiElement element) {
+  protected static @Nullable WebReference lookForWebReference(PsiElement element) {
     return lookForWebReference(Arrays.asList(element.getReferences()));
   }
 
   @SuppressWarnings("unchecked")
-  @Nullable
-  private static WebReference lookForWebReference(Collection<PsiReference> references) {
+  private static @Nullable WebReference lookForWebReference(Collection<PsiReference> references) {
     for (PsiReference reference : references) {
       if (reference instanceof WebReference) {
         return (WebReference)reference;

@@ -130,8 +130,7 @@ public class SwitchedFileHolder implements FileHolder {
     return false;
   }
 
-  @Nullable
-  public String getBranchForFile(VirtualFile file) {
+  public @Nullable String getBranchForFile(VirtualFile file) {
     VirtualFile floor = myMap.floorKey(file);
     if (floor == null) return null;
     SortedMap<VirtualFile, Pair<Boolean, String>> floorMap = myMap.headMap(floor);

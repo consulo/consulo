@@ -266,8 +266,8 @@ public abstract class WriteCommandAction<T> extends BaseActionRunnable<T> {
     @RequiredUIAccess
     public static void runWriteCommandAction(
         Project project,
-        @Nullable final String commandName,
-        @Nullable final String groupID,
+        final @Nullable String commandName,
+        final @Nullable String groupID,
         final Runnable runnable,
         PsiFile... files
     ) {

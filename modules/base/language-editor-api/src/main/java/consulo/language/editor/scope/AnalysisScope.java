@@ -549,8 +549,7 @@ public class AnalysisScope {
     return "";
   }
 
-  @Nullable
-  private String getRelativePath() {
+  private @Nullable String getRelativePath() {
     String relativePath = displayProjectRelativePath(((PsiFileSystemItem)myElement).getVirtualFile(), myElement.getProject());
     if (relativePath.length() > 100) {
       return null;

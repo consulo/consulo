@@ -85,20 +85,17 @@ public class ChangesUtil {
     return revision.getFile();
   }
 
-  @Nullable
-  public static FilePath getBeforePath(Change change) {
+  public static @Nullable FilePath getBeforePath(Change change) {
     ContentRevision revision = change.getBeforeRevision();
     return revision == null ? null : revision.getFile();
   }
 
-  @Nullable
-  public static FilePath getAfterPath(Change change) {
+  public static @Nullable FilePath getAfterPath(Change change) {
     ContentRevision revision = change.getAfterRevision();
     return revision == null ? null : revision.getFile();
   }
 
-  @Nullable
-  public static AbstractVcs getVcsForChange(Change change, Project project) {
+  public static @Nullable AbstractVcs getVcsForChange(Change change, Project project) {
     AbstractVcs result = ChangeListManager.getInstance(project).getVcsFor(change);
 
     return result != null ? result : ProjectLevelVcsManager.getInstance(project).getVcsFor(getFilePath(change));
@@ -109,13 +106,11 @@ public class ChangesUtil {
     return ContainerUtil.map2SetNotNull(changes, change -> getVcsForChange(change, project));
   }
 
-  @Nullable
-  public static AbstractVcs getVcsForFile(VirtualFile file, Project project) {
+  public static @Nullable AbstractVcs getVcsForFile(VirtualFile file, Project project) {
     return ProjectLevelVcsManager.getInstance(project).getVcsFor(file);
   }
 
-  @Nullable
-  public static AbstractVcs getVcsForFile(File file, Project project) {
+  public static @Nullable AbstractVcs getVcsForFile(File file, Project project) {
     return ProjectLevelVcsManager.getInstance(project).getVcsFor(VcsUtil.getFilePath(file));
   }
 
@@ -194,8 +189,7 @@ public class ChangesUtil {
                 .toArray(Navigatable[]::new);
   }
 
-  @Nullable
-  public static ChangeList getChangeListIfOnlyOne(Project project, @Nullable Change[] changes) {
+  public static @Nullable ChangeList getChangeListIfOnlyOne(Project project, @Nullable Change[] changes) {
     ChangeListManager manager = ChangeListManager.getInstance(project);
     String changeListName = manager.getChangeListNameIfOnlyOne(changes);
 
@@ -238,14 +232,12 @@ public class ChangesUtil {
     return filePath;
   }
 
-  @Nullable
-  public static VirtualFile findValidParentUnderReadAction(FilePath path) {
+  public static @Nullable VirtualFile findValidParentUnderReadAction(FilePath path) {
     VirtualFile file = path.getVirtualFile();
     return file != null ? file : getValidParentUnderReadAction(path);
   }
 
-  @Nullable
-  public static VirtualFile findValidParentAccurately(FilePath filePath) {
+  public static @Nullable VirtualFile findValidParentAccurately(FilePath filePath) {
     VirtualFile result = filePath.getVirtualFile();
 
     if (result == null && !ApplicationManager.getApplication().isReadAccessAllowed()) {
@@ -258,8 +250,7 @@ public class ChangesUtil {
     return result;
   }
 
-  @Nullable
-  private static VirtualFile getValidParentUnderReadAction(FilePath filePath) {
+  private static @Nullable VirtualFile getValidParentUnderReadAction(FilePath filePath) {
     ThrowableComputable<VirtualFile, RuntimeException> action = () -> {
       VirtualFile result = null;
       FilePath parent = filePath;
@@ -275,8 +266,7 @@ public class ChangesUtil {
     return AccessRule.read(action);
   }
 
-  @Nullable
-  public static String getProjectRelativePath(Project project, @Nullable File fileName) {
+  public static @Nullable String getProjectRelativePath(Project project, @Nullable File fileName) {
     if (fileName == null) return null;
     VirtualFile baseDir = project.getBaseDir();
     if (baseDir == null) return fileName.toString();
@@ -378,8 +368,7 @@ public class ChangesUtil {
   /**
    * Find common ancestor for changes (included both before and after files)
    */
-  @Nullable
-  public static File findCommonAncestor(Collection<Change> changes) {
+  public static @Nullable File findCommonAncestor(Collection<Change> changes) {
     File ancestor = null;
     for (Change change : changes) {
       File currentChangeAncestor = getCommonBeforeAfterAncestor(change);
@@ -395,8 +384,7 @@ public class ChangesUtil {
     return ancestor;
   }
 
-  @Nullable
-  private static File getCommonBeforeAfterAncestor(Change change) {
+  private static @Nullable File getCommonBeforeAfterAncestor(Change change) {
     FilePath before = getBeforePath(change);
     FilePath after = getAfterPath(change);
     return before == null ? ObjectUtil.assertNotNull(after)

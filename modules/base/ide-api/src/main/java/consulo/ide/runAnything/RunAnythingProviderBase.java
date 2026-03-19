@@ -24,8 +24,7 @@ public abstract class RunAnythingProviderBase<V> implements RunAnythingProvider<
     }
 
     @Override
-    @Nullable
-    public V findMatchingValue(DataContext dataContext, String pattern) {
+    public @Nullable V findMatchingValue(DataContext dataContext, String pattern) {
         return getValues(dataContext, pattern).stream()
             .filter(value -> StringUtil.equals(pattern, getCommand(value)))
             .findFirst()
@@ -33,14 +32,12 @@ public abstract class RunAnythingProviderBase<V> implements RunAnythingProvider<
     }
 
     @Override
-    @Nullable
-    public Image getIcon(V value) {
+    public @Nullable Image getIcon(V value) {
         return null;
     }
 
     @Override
-    @Nullable
-    public String getAdText() {
+    public @Nullable String getAdText() {
         return null;
     }
 
@@ -79,18 +76,15 @@ public abstract class RunAnythingProviderBase<V> implements RunAnythingProvider<
         return RunAnythingContext.allContexts(dataContext.getData(Project.KEY));
     }
 
-    @Nullable
-    public Image getHelpIcon() {
+    public @Nullable Image getHelpIcon() {
         return Image.empty(16);
     }
 
-    @Nullable
-    public String getHelpDescription() {
+    public @Nullable String getHelpDescription() {
         return null;
     }
 
-    @Nullable
-    public String getHelpCommandPlaceholder() {
+    public @Nullable String getHelpCommandPlaceholder() {
         return getHelpCommand();
     }
 
@@ -99,8 +93,7 @@ public abstract class RunAnythingProviderBase<V> implements RunAnythingProvider<
      *
      * @return Help command.
      */
-    @Nullable
-    public String getHelpCommand() {
+    public @Nullable String getHelpCommand() {
         return null;
     }
 }

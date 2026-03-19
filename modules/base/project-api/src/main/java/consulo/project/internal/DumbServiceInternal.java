@@ -23,6 +23,5 @@ import org.jspecify.annotations.Nullable;
  * @since 2025-08-20
  */
 public abstract class DumbServiceInternal extends DumbService {
-    @Nullable
-    public abstract Throwable getDumbModeStartTrace();
+    public abstract @Nullable Throwable getDumbModeStartTrace();
 }

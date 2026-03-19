@@ -27,8 +27,7 @@ public abstract class TaskRepositoryEditor implements Disposable {
 
   public abstract JComponent createComponent();
 
-  @Nullable
-  public JComponent getPreferredFocusedComponent() {
+  public @Nullable JComponent getPreferredFocusedComponent() {
     return null;
   }
 

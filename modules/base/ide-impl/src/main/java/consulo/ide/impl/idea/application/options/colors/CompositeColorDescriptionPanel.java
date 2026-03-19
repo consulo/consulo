@@ -110,8 +110,7 @@ public class CompositeColorDescriptionPanel extends JPanel implements ColorDescr
         }
     }
 
-    @Nullable
-    private ColorDescriptionPanel getPanelForDescriptor(EditorSchemeAttributeDescriptor descriptor) {
+    private @Nullable ColorDescriptionPanel getPanelForDescriptor(EditorSchemeAttributeDescriptor descriptor) {
         for (int i = myConditions.size() - 1; i >= 0; i--) {
             Predicate<? super EditorSchemeAttributeDescriptor> condition = myConditions.get(i);
             ColorDescriptionPanel panel = myDescriptionPanels.get(i);

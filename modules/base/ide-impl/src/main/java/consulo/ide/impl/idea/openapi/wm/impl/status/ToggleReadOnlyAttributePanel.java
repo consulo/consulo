@@ -41,8 +41,7 @@ public final class ToggleReadOnlyAttributePanel implements StatusBarWidget.Multi
     }
 
     @Override
-    @Nullable
-    public Image getIcon() {
+    public @Nullable Image getIcon() {
         if (!isReadonlyApplicable()) {
             return null;
         }
@@ -120,13 +119,11 @@ public final class ToggleReadOnlyAttributePanel implements StatusBarWidget.Multi
         return file != null && !file.getFileSystem().isReadOnly();
     }
 
-    @Nullable
-    private Project getProject() {
+    private @Nullable Project getProject() {
         return myStatusBar != null ? myStatusBar.getProject() : null;
     }
 
-    @Nullable
-    private VirtualFile getCurrentFile() {
+    private @Nullable VirtualFile getCurrentFile() {
         Project project = getProject();
         if (project == null) {
             return null;

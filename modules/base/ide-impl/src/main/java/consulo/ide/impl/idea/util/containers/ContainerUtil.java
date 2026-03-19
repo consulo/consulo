@@ -788,8 +788,7 @@ public class ContainerUtil extends ContainerUtilRt {
         return consulo.util.collection.ContainerUtil.find(iterator, equalTo);
     }
 
-    @Nullable
-    public static <T, V extends T> V find(Iterator<V> iterator, Predicate<T> condition) {
+    public static @Nullable <T, V extends T> V find(Iterator<V> iterator, Predicate<T> condition) {
         return consulo.util.collection.ContainerUtil.find(iterator, condition);
     }
 
@@ -1050,8 +1049,7 @@ public class ContainerUtil extends ContainerUtilRt {
                         return result;
                     }
 
-                    @Nullable
-                    private T findNext() {
+                    private @Nullable T findNext() {
                         while (impl.hasNext()) {
                             T each = impl.next();
                             if (condition.test(each)) {

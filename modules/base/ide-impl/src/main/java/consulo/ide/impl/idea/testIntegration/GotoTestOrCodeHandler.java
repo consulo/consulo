@@ -47,8 +47,7 @@ public class GotoTestOrCodeHandler extends GotoTargetHandler {
   }
 
   @Override
-  @Nullable
-  protected GotoData getSourceAndTargetElements(final Editor editor, final PsiFile file) {
+  protected @Nullable GotoData getSourceAndTargetElements(final Editor editor, final PsiFile file) {
     PsiElement selectedElement = getSelectedElement(editor, file);
     PsiElement sourceElement = TestFinderHelper.findSourceElement(selectedElement);
     if (sourceElement == null) return null;

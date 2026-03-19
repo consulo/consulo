@@ -174,8 +174,7 @@ public class AWTDiffUtil {
         return result;
     }
 
-    @Nullable
-    private static JComponent createTitleWithNotifications(
+    private static @Nullable JComponent createTitleWithNotifications(
         @Nullable JComponent title,
         DiffContent content
     ) {
@@ -192,8 +191,7 @@ public class AWTDiffUtil {
         return createStackedComponents(components, DiffImplUtil.TITLE_GAP.get());
     }
 
-    @Nullable
-    private static JComponent createTitle(
+    private static @Nullable JComponent createTitle(
         String title,
         DiffContent content,
         boolean equalCharsets,

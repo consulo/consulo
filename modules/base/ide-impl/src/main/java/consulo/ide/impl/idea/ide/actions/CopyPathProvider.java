@@ -95,8 +95,7 @@ public class CopyPathProvider extends DumbAwareAction {
         presentation.setEnabledAndVisible(qualifiedName != null);
     }
 
-    @Nullable
-    public String getQualifiedName(Project project, List<PsiElement> elements, Editor editor, DataContext dataContext) {
+    public @Nullable String getQualifiedName(Project project, List<PsiElement> elements, Editor editor, DataContext dataContext) {
         if (elements.isEmpty()) {
             VirtualFile file = Optional.ofNullable(editor)
                 .map(Editor::getDocument)
@@ -137,8 +136,7 @@ public class CopyPathProvider extends DumbAwareAction {
         }
     }
 
-    @Nullable
-    public String getPathToElement(Project project, @Nullable VirtualFile virtualFile, @Nullable Editor editor) {
+    public @Nullable String getPathToElement(Project project, @Nullable VirtualFile virtualFile, @Nullable Editor editor) {
         return null;
     }
 }

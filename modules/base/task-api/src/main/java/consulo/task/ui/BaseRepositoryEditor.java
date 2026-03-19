@@ -165,8 +165,7 @@ public class BaseRepositoryEditor<T extends BaseRepository> extends TaskReposito
     myUseHttpAuthenticationCheckBox.setEnabled(enabled);
   }
 
-  @Nullable
-  protected JComponent createCustomPanel() {
+  protected @Nullable JComponent createCustomPanel() {
     return null;
   }
 

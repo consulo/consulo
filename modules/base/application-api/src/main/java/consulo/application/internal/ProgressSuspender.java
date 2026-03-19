@@ -82,8 +82,7 @@ public class ProgressSuspender implements AutoCloseable {
         return new ProgressSuspender((ProgressIndicatorEx)indicator, suspendedText);
     }
 
-    @Nullable
-    public static ProgressSuspender getSuspender(ProgressIndicator indicator) {
+    public static @Nullable ProgressSuspender getSuspender(ProgressIndicator indicator) {
         return indicator instanceof UserDataHolder ? ((UserDataHolder)indicator).getUserData(PROGRESS_SUSPENDER) : null;
     }
 

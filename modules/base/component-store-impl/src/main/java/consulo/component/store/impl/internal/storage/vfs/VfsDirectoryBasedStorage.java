@@ -65,7 +65,7 @@ public final class VfsDirectoryBasedStorage extends StateStorageBase<DirectorySt
                                     String dir,
                                     StateSplitterEx splitter,
                                     Disposable parentDisposable,
-                                    @Nullable final StateStorageListener listener,
+                                    final @Nullable StateStorageListener listener,
                                     PathMacrosService pathMacrosService) {
         super(pathMacroSubstitutor, pathMacrosService);
 
@@ -181,8 +181,7 @@ public final class VfsDirectoryBasedStorage extends StateStorageBase<DirectorySt
         return StringUtil.endsWithIgnoreCase(file.getNameSequence(), DirectoryStorageData.DEFAULT_EXT);
     }
 
-    @Nullable
-    private VirtualFile getVirtualFile() {
+    private @Nullable VirtualFile getVirtualFile() {
         VirtualFile virtualFile = myVirtualFile;
         if (virtualFile == null) {
             myVirtualFile = virtualFile = LocalFileSystem.getInstance().findFileByIoFile(myDir);
@@ -202,8 +201,7 @@ public final class VfsDirectoryBasedStorage extends StateStorageBase<DirectorySt
     }
 
     @Override
-    @Nullable
-    public ExternalizationSession startExternalization() {
+    public @Nullable ExternalizationSession startExternalization() {
         return checkIsSavingDisabled() ? null : new MySaveSession(this, getStorageData());
     }
 
@@ -295,8 +293,7 @@ public final class VfsDirectoryBasedStorage extends StateStorageBase<DirectorySt
         }
 
         @Override
-        @Nullable
-        public SaveSession createSaveSession(boolean force) {
+        public @Nullable SaveSession createSaveSession(boolean force) {
             return storage.checkIsSavingDisabled() || copiedStorageData == null ? null : this;
         }
 

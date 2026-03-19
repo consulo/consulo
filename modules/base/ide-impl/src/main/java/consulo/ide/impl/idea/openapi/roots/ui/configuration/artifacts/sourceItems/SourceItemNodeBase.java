@@ -73,6 +73,5 @@ public abstract class SourceItemNodeBase extends ArtifactsTreeNode {
     return children.isEmpty() ? NO_CHILDREN : children.toArray(new SimpleNode[children.size()]);
   }
 
-  @Nullable
-  protected abstract PackagingSourceItem getSourceItem();
+  protected abstract @Nullable PackagingSourceItem getSourceItem();
 }

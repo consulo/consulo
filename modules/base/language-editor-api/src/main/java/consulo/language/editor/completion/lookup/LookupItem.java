@@ -192,8 +192,7 @@ public class LookupItem<T> extends MutableLookupElement<T> implements Comparable
         }
     }
 
-    @Nullable
-    public static TailType getDefaultTailType(char completionChar) {
+    public static @Nullable TailType getDefaultTailType(char completionChar) {
         return switch (completionChar) {
             case '.' -> new CharTailType('.', false);
             case ',' -> CommaTailType.INSTANCE;
@@ -308,8 +307,7 @@ public class LookupItem<T> extends MutableLookupElement<T> implements Comparable
         return this;
     }
 
-    @Nullable
-    public String getPresentableText() {
+    public @Nullable String getPresentableText() {
         return myPresentable;
     }
 

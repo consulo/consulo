@@ -393,8 +393,7 @@ public class PasswordSafeConfigurableUi implements IdeaConfigurableUi<PasswordSa
         }
     }
 
-    @Nullable
-    private PgpKey getNewPgpKey() {
+    private @Nullable PgpKey getNewPgpKey() {
         return pgpKeyCombo.getValue();
     }
 

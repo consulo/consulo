@@ -226,14 +226,12 @@ public class AbstractRerunFailedTestsAction extends AnAction {
         return null;
     }
 
-    @Nullable
-    protected MyRunProfile getRunProfile(ExecutionEnvironment environment) {
+    protected @Nullable MyRunProfile getRunProfile(ExecutionEnvironment environment) {
         //noinspection deprecation
         return getRunProfile();
     }
 
-    @Nullable
-    public TestFrameworkRunningModel getModel() {
+    public @Nullable TestFrameworkRunningModel getModel() {
         if (myModel != null) {
             return myModel;
         }

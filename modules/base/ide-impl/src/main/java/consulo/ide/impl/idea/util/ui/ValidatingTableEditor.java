@@ -114,8 +114,7 @@ public abstract class ValidatingTableEditor<Item> implements ComponentWithEmptyT
 
     protected abstract Item cloneOf(Item item);
 
-    @Nullable
-    protected Pair<String, Fix> validate(List<Item> current, List<String> warnings) {
+    protected @Nullable Pair<String, Fix> validate(List<Item> current, List<String> warnings) {
         String error = null;
         for (int i = 0; i < current.size(); i++) {
             Item item = current.get(i);
@@ -128,13 +127,11 @@ public abstract class ValidatingTableEditor<Item> implements ComponentWithEmptyT
         return error != null ? Pair.create(error, (Fix) null) : null;
     }
 
-    @Nullable
-    protected String validate(Item item) {
+    protected @Nullable String validate(Item item) {
         return null;
     }
 
-    @Nullable
-    protected abstract Item createItem();
+    protected abstract @Nullable Item createItem();
 
     private class IconColumn extends ColumnInfo<Item, Object> implements RowHeightProvider {
         public IconColumn() {
@@ -240,8 +237,7 @@ public abstract class ValidatingTableEditor<Item> implements ComponentWithEmptyT
         this(null);
     }
 
-    @Nullable
-    public List<Item> getSelectedItems() {
+    public @Nullable List<Item> getSelectedItems() {
         return myTable.getSelectedObjects();
     }
 

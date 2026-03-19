@@ -128,8 +128,7 @@ public class InplaceChangeSignature implements DocumentListener {
         showBalloon();
     }
 
-    @Nullable
-    public static InplaceChangeSignature getCurrentRefactoring(Editor editor) {
+    public static @Nullable InplaceChangeSignature getCurrentRefactoring(Editor editor) {
         return editor.getUserData(INPLACE_CHANGE_SIGNATURE);
     }
 

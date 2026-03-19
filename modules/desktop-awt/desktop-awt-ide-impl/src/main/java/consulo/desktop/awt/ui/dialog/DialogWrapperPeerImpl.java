@@ -345,8 +345,7 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer {
     }
 
     @Override
-    @Nullable
-    public Container getContentPane() {
+    public @Nullable Container getContentPane() {
         return getRootPane() != null ? myDialog.getContentPane() : null;
     }
 
@@ -835,8 +834,7 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer {
             super.show();
         }
 
-        @Nullable
-        private Project getProject() {
+        private @Nullable Project getProject() {
             return SoftReference.dereference(myProject);
         }
 

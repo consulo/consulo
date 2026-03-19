@@ -173,8 +173,7 @@ public class SafeDeleteDialog extends DialogWrapper {
         return false;
     }
 
-    @Nullable
-    private SafeDeleteProcessorDelegate getDelegate() {
+    private @Nullable SafeDeleteProcessorDelegate getDelegate() {
         if (myElements.length == 1) {
             for (SafeDeleteProcessorDelegate delegate : SafeDeleteProcessorDelegate.EP_NAME.getExtensionList()) {
                 if (delegate.handlesElement(myElements[0])) {

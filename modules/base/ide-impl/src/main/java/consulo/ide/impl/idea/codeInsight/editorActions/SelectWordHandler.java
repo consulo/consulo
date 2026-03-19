@@ -96,8 +96,7 @@ public class SelectWordHandler extends EditorActionHandler implements ExtensionE
    * @param project
    * @return null means unable to select
    */
-  @Nullable
-  private static TextRange selectWord(Editor editor, Project project) {
+  private static @Nullable TextRange selectWord(Editor editor, Project project) {
     Document document = editor.getDocument();
     PsiFile file = PsiDocumentManager.getInstance(project).getPsiFile(document);
     if (file instanceof PsiCompiledFile) {
@@ -190,8 +189,7 @@ public class SelectWordHandler extends EditorActionHandler implements ExtensionE
     return caretOffset;
   }
 
-  @Nullable
-  private static PsiElement findElementAt(PsiFile file, int caretOffset) {
+  private static @Nullable PsiElement findElementAt(PsiFile file, int caretOffset) {
     PsiElement elementAt = file.findElementAt(caretOffset);
     if (elementAt != null && isLanguageExtension(file, elementAt)) {
       return file.getViewProvider().findElementAt(caretOffset, file.getLanguage());

@@ -42,8 +42,7 @@ public interface DiffUserDataKeysEx extends DiffUserDataKeys {
   enum ScrollToPolicy {
     FIRST_CHANGE, LAST_CHANGE;
 
-    @Nullable
-    public <T> T select(List<T> changes) {
+    public @Nullable <T> T select(List<T> changes) {
       if (this == FIRST_CHANGE) return ContainerUtil.getFirstItem(changes);
       if (this == LAST_CHANGE) return ContainerUtil.getLastItem(changes);
       throw new IllegalStateException();

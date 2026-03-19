@@ -120,8 +120,7 @@ public class UniqueVFilePathBuilderImpl extends UniqueVFilePathBuilder {
     return file.getName();
   }
 
-  @Nullable
-  private static UniqueNameBuilder<VirtualFile> filesWithTheSameName(
+  private static @Nullable UniqueNameBuilder<VirtualFile> filesWithTheSameName(
     String fileName,
     Project project,
     boolean skipNonOpenedFiles,

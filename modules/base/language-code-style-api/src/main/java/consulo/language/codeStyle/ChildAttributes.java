@@ -46,8 +46,7 @@ public class ChildAttributes {
      *
      * @return the indent setting.
      */
-    @Nullable
-    public Indent getChildIndent() {
+    public @Nullable Indent getChildIndent() {
         return myChildIndent;
     }
 
@@ -56,8 +55,7 @@ public class ChildAttributes {
      *
      * @return the alignment setting.
      */
-    @Nullable
-    public Alignment getAlignment() {
+    public @Nullable Alignment getAlignment() {
         return myAlignment;
     }
 }

@@ -142,7 +142,7 @@ public class CheckboxTreeNoPolicy extends Tree {
    * @return an array of collected nodes
    */
   @SuppressWarnings("unchecked")
-  public <T> T[] getCheckedNodes(final Class<T> nodeType, @Nullable final NodeFilter<T> filter) {
+  public <T> T[] getCheckedNodes(final Class<T> nodeType, final @Nullable NodeFilter<T> filter) {
     final ArrayList<T> nodes = new ArrayList<T>();
     Object root = getModel().getRoot();
     if (!(root instanceof CheckedTreeNode)) {

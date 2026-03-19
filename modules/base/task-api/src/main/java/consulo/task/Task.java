@@ -62,8 +62,7 @@ public abstract class Task {
   
   public abstract String getSummary();
 
-  @Nullable
-  public abstract String getDescription();
+  public abstract @Nullable String getDescription();
 
   
   public abstract Comment[] getComments();
@@ -74,16 +73,13 @@ public abstract class Task {
   
   public abstract TaskType getType();
 
-  @Nullable
-  public abstract Date getUpdated();
+  public abstract @Nullable Date getUpdated();
 
-  @Nullable
-  public abstract Date getCreated();
+  public abstract @Nullable Date getCreated();
 
   public abstract boolean isClosed();
 
-  @Nullable
-  public String getCustomIcon() {
+  public @Nullable String getCustomIcon() {
     return null;
   }
 
@@ -92,20 +88,17 @@ public abstract class Task {
    */
   public abstract boolean isIssue();
 
-  @Nullable
-  public abstract String getIssueUrl();
+  public abstract @Nullable String getIssueUrl();
 
   /**
    * @return null if no issue is associated
    * @see #isIssue()
    */
-  @Nullable
-  public TaskRepository getRepository() {
+  public @Nullable TaskRepository getRepository() {
     return null;
   }
 
-  @Nullable
-  public TaskState getState() {
+  public @Nullable TaskState getState() {
     return null;
   }
 
@@ -164,13 +157,11 @@ public abstract class Task {
    * @see #getId()
    * @see TaskRepository#getCommitMessageFormat()
    */
-  @Nullable
-  public String getProject() {
+  public @Nullable String getProject() {
     return extractProjectFromId(getId());
   }
 
-  @Nullable
-  protected static String extractProjectFromId(String id) {
+  protected static @Nullable String extractProjectFromId(String id) {
     int i = id.lastIndexOf('-');
     return i > 0 ? id.substring(0, i) : null;
   }

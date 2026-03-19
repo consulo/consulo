@@ -233,8 +233,7 @@ public abstract class Language extends UserDataHolderBase {
         return myID;
     }
 
-    @Nullable
-    public LanguageFileType getAssociatedFileType() {
+    public @Nullable LanguageFileType getAssociatedFileType() {
         FileType[] types = FileTypeRegistry.getInstance().getRegisteredFileTypes();
         for (FileType fileType : types) {
             if (fileType instanceof LanguageFileType && ((LanguageFileType) fileType).getLanguage() == this) {
@@ -249,8 +248,7 @@ public abstract class Language extends UserDataHolderBase {
         return null;
     }
 
-    @Nullable
-    public LanguageFileType findMyFileType(FileType[] types) {
+    public @Nullable LanguageFileType findMyFileType(FileType[] types) {
         for (FileType fileType : types) {
             if (fileType instanceof LanguageFileType) {
                 LanguageFileType languageFileType = (LanguageFileType) fileType;
@@ -270,8 +268,7 @@ public abstract class Language extends UserDataHolderBase {
         return null;
     }
 
-    @Nullable
-    public Language getBaseLanguage() {
+    public @Nullable Language getBaseLanguage() {
         return myBaseLanguage;
     }
 
@@ -332,8 +329,7 @@ public abstract class Language extends UserDataHolderBase {
         return false;
     }
 
-    @Nullable
-    public static Language findLanguageByID(String id) {
+    public static @Nullable Language findLanguageByID(String id) {
         Collection<Language> languages = getRegisteredLanguages();
         for (Language language : languages) {
             if (language.getID().equals(id)) {

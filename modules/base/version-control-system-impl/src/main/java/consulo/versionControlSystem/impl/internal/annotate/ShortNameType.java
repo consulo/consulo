@@ -48,8 +48,7 @@ public enum ShortNameType {
       ApplicationPropertiesComponent.getInstance().setValue(KEY, myId);
   }
 
-  @Nullable
-  public static String shorten(@Nullable String name, ShortNameType type) {
+  public static @Nullable String shorten(@Nullable String name, ShortNameType type) {
     if (name == null) return null;
     if (type == NONE) return name;
 

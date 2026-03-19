@@ -308,15 +308,13 @@ public class XBreakpointManagerImpl implements XBreakpointManager, PersistentSta
     }
 
     @Override
-    @Nullable
-    public <B extends XBreakpoint<?>> B getDefaultBreakpoint(XBreakpointType<B, ?> type) {
+    public @Nullable <B extends XBreakpoint<?>> B getDefaultBreakpoint(XBreakpointType<B, ?> type) {
         //noinspection unchecked
         return (B) myDefaultBreakpoints.get(type);
     }
 
     @Override
-    @Nullable
-    public <P extends XBreakpointProperties> XLineBreakpoint<P> findBreakpointAtLine(
+    public @Nullable <P extends XBreakpointProperties> XLineBreakpoint<P> findBreakpointAtLine(
         XLineBreakpointType<P> type,
         VirtualFile file,
         int line
@@ -511,8 +509,7 @@ public class XBreakpointManagerImpl implements XBreakpointManager, PersistentSta
         }
     }
 
-    @Nullable
-    private <P extends XBreakpointProperties> XBreakpoint<P> createDefaultBreakpoint(XBreakpointType<? extends XBreakpoint<P>, P> type) {
+    private @Nullable <P extends XBreakpointProperties> XBreakpoint<P> createDefaultBreakpoint(XBreakpointType<? extends XBreakpoint<P>, P> type) {
         return type.createDefaultBreakpoint(properties -> {
             //noinspection unchecked
             return createBreakpoint((XBreakpointType<XBreakpoint<P>, P>) type, properties, false, true);
@@ -553,8 +550,7 @@ public class XBreakpointManagerImpl implements XBreakpointManager, PersistentSta
         myDefaultGroup = defaultGroup;
     }
 
-    @Nullable
-    private XBreakpointBase<?, ?, ?> createBreakpoint(BreakpointState breakpointState) {
+    private @Nullable XBreakpointBase<?, ?, ?> createBreakpoint(BreakpointState breakpointState) {
         XBreakpointType<?, ?> type = XBreakpointUtil.findType(breakpointState.getTypeId());
         if (type == null) {
             LOG.warn("Unknown breakpoint type " + breakpointState.getTypeId());

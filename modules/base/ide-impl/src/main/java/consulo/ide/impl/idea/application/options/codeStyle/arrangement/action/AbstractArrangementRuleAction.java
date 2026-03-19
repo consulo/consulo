@@ -42,8 +42,7 @@ public abstract class AbstractArrangementRuleAction extends AnAction {
         super(text, description, icon);
     }
 
-    @Nullable
-    protected ArrangementMatchingRulesControl getRulesControl(AnActionEvent e) {
+    protected @Nullable ArrangementMatchingRulesControl getRulesControl(AnActionEvent e) {
         return e.getData(ArrangementSectionRulesControl.KEY);
     }
 

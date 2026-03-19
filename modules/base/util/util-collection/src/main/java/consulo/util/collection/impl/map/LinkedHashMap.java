@@ -22,10 +22,8 @@ import java.util.*;
 
 public class LinkedHashMap<K, V> extends AbstractMap<K, V> implements Map<K, V> {
   private Entry<K, V> @Nullable [] table = null;
-  @Nullable
-  private Entry<K, V> top = null;
-  @Nullable
-  private Entry<K, V> back = null;
+  private @Nullable Entry<K, V> top = null;
+  private @Nullable Entry<K, V> back = null;
   private int capacity;
   private int size;
   private final float loadFactor;
@@ -215,13 +213,11 @@ public class LinkedHashMap<K, V> extends AbstractMap<K, V> implements Map<K, V> 
     size = 0;
   }
 
-  @Nullable
-  public K getLastKey() {
+  public @Nullable K getLastKey() {
     return top != null ? top.key : null;
   }
 
-  @Nullable
-  public V getLastValue() {
+  public @Nullable V getLastValue() {
     return top != null ? top.value : null;
   }
 
@@ -286,12 +282,9 @@ public class LinkedHashMap<K, V> extends AbstractMap<K, V> implements Map<K, V> 
     private final K key;
     private final int keyHash;
     private V value;
-    @Nullable
-    private Entry<K, V> next = null;
-    @Nullable
-    private Entry<K, V> previous = null;
-    @Nullable
-    private Entry<K, V> hashNext = null;
+    private @Nullable Entry<K, V> next = null;
+    private @Nullable Entry<K, V> previous = null;
+    private @Nullable Entry<K, V> hashNext = null;
 
     public Entry(K key, V value, int hash) {
       this.key = key;

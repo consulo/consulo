@@ -175,8 +175,7 @@ public abstract class RunManager {
    *
    * @return the selected configuration, or null if no configuration is defined or selected.
    */
-  @Nullable
-  public abstract RunnerAndConfigurationSettings getSelectedConfiguration();
+  public abstract @Nullable RunnerAndConfigurationSettings getSelectedConfiguration();
 
   /**
    * Selects a configuration in the run/debug configurations combobox.
@@ -311,11 +310,9 @@ public abstract class RunManager {
 
   public abstract void removeConfiguration(@Nullable RunnerAndConfigurationSettings settings);
 
-  @Nullable
-  public abstract RunnerAndConfigurationSettings findSettings(RunConfiguration configuration);
+  public abstract @Nullable RunnerAndConfigurationSettings findSettings(RunConfiguration configuration);
 
-  @Nullable
-  public RunnerAndConfigurationSettings findConfigurationByTypeAndName(String typeId, String name) {
+  public @Nullable RunnerAndConfigurationSettings findConfigurationByTypeAndName(String typeId, String name) {
     for (RunnerAndConfigurationSettings settings : getSortedConfigurations()) {
       ConfigurationType t = settings.getType();
       if (t != null && typeId.equals(t.getId()) && name.equals(settings.getName())) {

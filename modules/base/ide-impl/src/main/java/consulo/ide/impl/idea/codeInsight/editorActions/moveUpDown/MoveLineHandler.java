@@ -30,8 +30,7 @@ class MoveLineHandler extends BaseMoveHandler {
   }
 
   @Override
-  @Nullable
-  protected MoverWrapper getSuitableMover(Editor editor, PsiFile file) {
+  protected @Nullable MoverWrapper getSuitableMover(Editor editor, PsiFile file) {
     StatementUpDownMover.MoveInfo info = new StatementUpDownMover.MoveInfo();
     info.indentTarget = false;
     StatementUpDownMover mover = new DefaultLineMover();

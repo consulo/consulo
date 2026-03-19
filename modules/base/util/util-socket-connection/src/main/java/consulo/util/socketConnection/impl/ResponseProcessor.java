@@ -29,13 +29,11 @@ public class ResponseProcessor<R extends AbstractResponse> {
   private final IntObjectMap<TimeoutHandler> myTimeoutHandlers = IntMaps.newIntObjectHashMap();
   private boolean myStopped;
   private final Object myLock = new Object();
-  @Nullable
-  private Thread myThread = null;
+  private @Nullable Thread myThread = null;
 
   private final ScheduledExecutorService myScheduledExecutorService;
 
-  @Nullable
-  private Future<?> myTimeoutTask = null;
+  private @Nullable Future<?> myTimeoutTask = null;
 
   public ResponseProcessor(ScheduledExecutorService executor, SocketConnection<?, R> connection) {
     myScheduledExecutorService = executor;

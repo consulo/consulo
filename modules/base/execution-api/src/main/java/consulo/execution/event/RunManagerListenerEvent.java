@@ -35,8 +35,7 @@ public class RunManagerListenerEvent extends EventObject {
     myExistingId = existingId;
   }
 
-  @Nullable
-  public String getExistingId() {
+  public @Nullable String getExistingId() {
     return myExistingId;
   }
 

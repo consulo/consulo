@@ -32,8 +32,7 @@ public class SoftHardCacheMap<K, V> {
     mySoftLinkMap = ContainerUtil.createSoftValueMap();
   }
 
-  @Nullable
-  public V get(K key) {
+  public @Nullable V get(K key) {
     V val = mySLRUMap.get(key);
     if (val != null) return val;
 

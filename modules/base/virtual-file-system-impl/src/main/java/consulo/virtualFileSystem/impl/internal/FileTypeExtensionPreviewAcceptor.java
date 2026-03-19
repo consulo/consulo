@@ -49,8 +49,7 @@ public class FileTypeExtensionPreviewAcceptor implements ExtensionPreviewAccepto
   /**
    * for correct specification - see hub impl
    */
-  @Nullable
-  public FileNameMatcher createMatcher(String extensionValue) {
+  public @Nullable FileNameMatcher createMatcher(String extensionValue) {
     if (extensionValue.length() < 2) {
       return null;
     }

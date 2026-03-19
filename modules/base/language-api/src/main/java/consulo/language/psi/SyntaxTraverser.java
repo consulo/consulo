@@ -129,8 +129,7 @@ public class SyntaxTraverser<T> extends FilteredTraverserBase<T, SyntaxTraverser
         return super.forceDisregard(compose(api.TO_TYPE, c));
     }
 
-    @Nullable
-    public T getRawDeepestLast() {
+    public @Nullable T getRawDeepestLast() {
         for (T result = JBIterable.from(getRoots()).last(), last; result != null; result = last) {
             JBIterable<T> children = children(result);
             if (children.isEmpty()) {
@@ -157,8 +156,7 @@ public class SyntaxTraverser<T> extends FilteredTraverserBase<T, SyntaxTraverser
         
         public abstract CharSequence textOf(T node);
 
-        @Nullable
-        public abstract T parent(T node);
+        public abstract @Nullable T parent(T node);
 
         
         public abstract JBIterable<? extends T> children(T node);
@@ -212,17 +210,13 @@ public class SyntaxTraverser<T> extends FilteredTraverserBase<T, SyntaxTraverser
 
     public abstract static class ApiEx<T> extends Api<T> {
 
-        @Nullable
-        public abstract T first(T node);
+        public abstract @Nullable T first(T node);
 
-        @Nullable
-        public abstract T last(T node);
+        public abstract @Nullable T last(T node);
 
-        @Nullable
-        public abstract T next(T node);
+        public abstract @Nullable T next(T node);
 
-        @Nullable
-        public abstract T previous(T node);
+        public abstract @Nullable T previous(T node);
 
         
         @Override

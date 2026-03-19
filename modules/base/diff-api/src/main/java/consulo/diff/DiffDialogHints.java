@@ -32,10 +32,8 @@ public class DiffDialogHints {
   public static final DiffDialogHints NON_MODAL = new DiffDialogHints(WindowWrapper.Mode.NON_MODAL);
 
   private final WindowWrapper.@Nullable Mode myMode;
-  @Nullable
-  private final Component myParent;
-  @Nullable
-  private final Consumer<WindowWrapper> myWindowConsumer;
+  private final @Nullable Component myParent;
+  private final @Nullable Consumer<WindowWrapper> myWindowConsumer;
 
   public DiffDialogHints(WindowWrapper.@Nullable Mode mode) {
     this(mode, null);
@@ -55,16 +53,14 @@ public class DiffDialogHints {
     return myMode;
   }
 
-  @Nullable
-  public Component getParent() {
+  public @Nullable Component getParent() {
     return myParent;
   }
 
   /**
    * NB: Consumer might not be called at all (ex: for external diff/merge tools, that do not spawn WindowWrapper)
    */
-  @Nullable
-  public Consumer<WindowWrapper> getWindowConsumer() {
+  public @Nullable Consumer<WindowWrapper> getWindowConsumer() {
     return myWindowConsumer;
   }
 }

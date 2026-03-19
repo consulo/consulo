@@ -134,8 +134,7 @@ public class VcsLogFullDetailsIndex<T> implements Disposable {
     return PersistentUtil.getStorageFile(INDEX, kind, id, VcsLogPersistentIndex.getVersion(), false);
   }
 
-  @Nullable
-  protected Pair<ForwardIndex, ForwardIndexAccessor<Integer, T>> createdForwardIndex() throws IOException {
+  protected @Nullable Pair<ForwardIndex, ForwardIndexAccessor<Integer, T>> createdForwardIndex() throws IOException {
     return null;
   }
 

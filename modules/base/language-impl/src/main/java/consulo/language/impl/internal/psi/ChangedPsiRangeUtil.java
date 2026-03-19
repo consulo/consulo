@@ -58,8 +58,7 @@ public class ChangedPsiRangeUtil {
     return result;
   }
 
-  @Nullable
-  public static TextRange getChangedPsiRange(PsiFile file,
+  public static @Nullable TextRange getChangedPsiRange(PsiFile file,
                                              FileElement treeElement,
                                              CharSequence newDocumentText) {
     int psiLength = treeElement.getTextLength();
@@ -76,8 +75,7 @@ public class ChangedPsiRangeUtil {
     return new TextRange(commonPrefixLength, psiLength - commonSuffixLength);
   }
 
-  @Nullable
-  public static ProperTextRange getChangedPsiRange(PsiFile file,
+  public static @Nullable ProperTextRange getChangedPsiRange(PsiFile file,
                                                    Document document,
                                                    CharSequence oldDocumentText,
                                                    CharSequence newDocumentText) {

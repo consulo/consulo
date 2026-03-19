@@ -28,8 +28,7 @@ import org.jspecify.annotations.Nullable;
 public class EnterHandlerHelper {
     public final static Key<Language> CONTEXT_LANGUAGE = Key.create("EnterHandler.Language");
 
-    @Nullable
-    public static Language getContextLanguage(DataContext dataContext) {
+    public static @Nullable Language getContextLanguage(DataContext dataContext) {
         if (dataContext instanceof UserDataHolder userDataHolder) {
             return CONTEXT_LANGUAGE.get(userDataHolder);
         }

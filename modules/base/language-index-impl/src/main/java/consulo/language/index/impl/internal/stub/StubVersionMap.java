@@ -228,8 +228,7 @@ class StubVersionMap {
     return (int)(myStubIndexStamp - fileTypeToVersion.get(type));
   }
 
-  @Nullable
-  private FileType getFileTypeByIndexingTimestampDiff(int diff) {
+  private @Nullable FileType getFileTypeByIndexingTimestampDiff(int diff) {
     return versionToFileType.get(myStubIndexStamp - diff);
   }
 

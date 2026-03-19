@@ -50,8 +50,7 @@ public class ContentAnnotationCacheImpl implements ContentAnnotationCache {
   }
 
   @Override
-  @Nullable
-  public ThreeState isRecent(VirtualFile vf,
+  public @Nullable ThreeState isRecent(VirtualFile vf,
                              VcsKey vcsKey,
                              VcsRevisionNumber number,
                              TextRange range,

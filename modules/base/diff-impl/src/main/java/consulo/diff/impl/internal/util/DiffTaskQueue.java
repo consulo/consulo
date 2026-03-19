@@ -23,8 +23,7 @@ import org.jspecify.annotations.Nullable;
 import java.util.function.Function;
 
 public class DiffTaskQueue {
-  @Nullable
-  private ProgressIndicator myProgressIndicator;
+  private @Nullable ProgressIndicator myProgressIndicator;
 
   @RequiredUIAccess
   public void abort() {

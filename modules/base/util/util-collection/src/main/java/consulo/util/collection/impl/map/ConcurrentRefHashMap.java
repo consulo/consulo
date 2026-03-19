@@ -116,8 +116,7 @@ abstract class ConcurrentRefHashMap<K, V> extends AbstractMap<K, V> implements C
   }
 
   private static class HardKey<K> extends SoftReference<K> implements KeyReference<K> {
-    @Nullable
-    private K myKey = null;
+    private @Nullable K myKey = null;
     private int myHash = 0;
 
     private HardKey() {
@@ -215,8 +214,7 @@ abstract class ConcurrentRefHashMap<K, V> extends AbstractMap<K, V> implements C
     /**
      * Strong reference to key, so that the GC will leave it alone as long as this Entry exists
      */
-    @Nullable
-    private final K key;
+    private final @Nullable K key;
 
     RefEntry(Entry<?, V> ent, @Nullable K key) {
       this.ent = ent;
@@ -263,8 +261,7 @@ abstract class ConcurrentRefHashMap<K, V> extends AbstractMap<K, V> implements C
     public Iterator<Map.Entry<K, V>> iterator() {
       return new Iterator<>() {
         private final Iterator<Map.Entry<KeyReference<K>, V>> hashIterator = hashEntrySet.iterator();
-        @Nullable
-        private RefEntry<K, V> next;
+        private @Nullable RefEntry<K, V> next;
 
         @Override
         public boolean hasNext() {

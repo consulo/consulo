@@ -97,13 +97,11 @@ public class IndexInfrastructure {
     return indexDir;
   }
 
-  @Nullable
-  public static VirtualFile findFileById(PersistentFS fs, int id) {
+  public static @Nullable VirtualFile findFileById(PersistentFS fs, int id) {
     return fs.findFileById(id);
   }
 
-  @Nullable
-  public static VirtualFile findFileByIdIfCached(PersistentFS fs, int id) {
+  public static @Nullable VirtualFile findFileByIdIfCached(PersistentFS fs, int id) {
     return fs.findFileByIdIfCached(id);
   }
 

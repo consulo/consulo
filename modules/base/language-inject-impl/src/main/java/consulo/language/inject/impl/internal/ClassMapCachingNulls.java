@@ -64,8 +64,7 @@ class ClassMapCachingNulls<T> {
     return value;
   }
 
-  @Nullable
-  private List<T> getFromBackingMap(Class<?> aClass) {
+  private @Nullable List<T> getFromBackingMap(Class<?> aClass) {
     T[] value = myBackingMap.get(aClass);
     Set<T> result = null;
     if (value != null) {

@@ -78,8 +78,7 @@ public interface ExtensionPoint<E> extends ModificationTracker, Iterable<E> {
         return 0;
     }
 
-    @Nullable
-    default <K extends E> K findExtension(Class<K> extensionClass) {
+    default @Nullable <K extends E> K findExtension(Class<K> extensionClass) {
         return ContainerUtil.findInstance(getExtensionList(), extensionClass);
     }
 
@@ -126,13 +125,11 @@ public interface ExtensionPoint<E> extends ModificationTracker, Iterable<E> {
         return findFirstSafe(predicate) == null;
     }
 
-    @Nullable
-    default E findFirstSafe(@InheritCallerContext Predicate<E> predicate) {
+    default @Nullable E findFirstSafe(@InheritCallerContext Predicate<E> predicate) {
         return computeSafeIfAny(e -> predicate.test(e) ? e : null);
     }
 
-    @Nullable
-    default <R> R computeSafeIfAny(@InheritCallerContext Function<? super E, ? extends R> processor) {
+    default @Nullable <R> R computeSafeIfAny(@InheritCallerContext Function<? super E, ? extends R> processor) {
         for (E extension : getExtensionList()) {
             try {
                 R result = processor.apply(extension);

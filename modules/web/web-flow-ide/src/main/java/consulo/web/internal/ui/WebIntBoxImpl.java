@@ -50,8 +50,7 @@ public class WebIntBoxImpl extends VaadinComponentDelegate<WebIntBoxImpl.Vaadin>
     }
 
     @Override
-    @Nullable
-    public Integer getValue() {
+    public @Nullable Integer getValue() {
         return Integer.parseInt(getVaadinComponent().getValue());
     }
 

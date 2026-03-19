@@ -31,8 +31,7 @@ public class RunConfigurationModule implements JDOMExternalizable {
   
   private static final String ATTRIBUTE = "name";
 
-  @Nullable
-  private NamedPointer<Module> myModulePointer;
+  private @Nullable NamedPointer<Module> myModulePointer;
 
   private final Project myProject;
 
@@ -85,8 +84,7 @@ public class RunConfigurationModule implements JDOMExternalizable {
     return myModulePointer != null ? myModulePointer.get() : null;
   }
 
-  @Nullable
-  public Module findModule(String moduleName) {
+  public @Nullable Module findModule(String moduleName) {
     if (myProject.isDisposed()) {
       return null;
     }

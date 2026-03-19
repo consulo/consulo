@@ -25,26 +25,22 @@ public final class QualifiedNameProviderUtil {
     private QualifiedNameProviderUtil() {
     }
 
-    @Nullable
-    public static PsiElement adjustElementToCopy(PsiElement element) {
+    public static @Nullable PsiElement adjustElementToCopy(PsiElement element) {
         return element.getApplication().getExtensionPoint(QualifiedNameProvider.class)
             .computeSafeIfAny(it -> it.adjustElementToCopy(element));
     }
 
-    @Nullable
-    public static String getQualifiedName(PsiElement element) {
+    public static @Nullable String getQualifiedName(PsiElement element) {
         return element.getApplication().getExtensionPoint(QualifiedNameProvider.class)
             .computeSafeIfAny(it -> it.getQualifiedName(element));
     }
 
-    @Nullable
-    public static PsiElement qualifiedNameToElement(String qualifiedName, Project project) {
+    public static @Nullable PsiElement qualifiedNameToElement(String qualifiedName, Project project) {
         return project.getApplication().getExtensionPoint(QualifiedNameProvider.class)
             .computeSafeIfAny(it -> it.qualifiedNameToElement(qualifiedName, project));
     }
 
-    @Nullable
-    public static String getQualifiedNameDumbAware(@Nullable PsiElement element) {
+    public static @Nullable String getQualifiedNameDumbAware(@Nullable PsiElement element) {
         return element == null
             ? null
             : DumbService.getInstance(element.getProject()).computeWithAlternativeResolveEnabled(() -> getQualifiedName(element));

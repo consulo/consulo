@@ -60,8 +60,7 @@ public class VcsProjectLog {
         myUiProperties = uiProperties;
     }
 
-    @Nullable
-    public VcsLogDataImpl getDataManager() {
+    public @Nullable VcsLogDataImpl getDataManager() {
         VcsLogManager cached = myLogManager.getCached();
         if (cached == null) {
             return null;
@@ -83,13 +82,11 @@ public class VcsProjectLog {
     /**
      * The instance of the {@link VcsLogUiImpl} or null if the log was not initialized yet.
      */
-    @Nullable
-    public VcsLogUiImpl getMainLogUi() {
+    public @Nullable VcsLogUiImpl getMainLogUi() {
         return myUi;
     }
 
-    @Nullable
-    public VcsLogManager getLogManager() {
+    public @Nullable VcsLogManager getLogManager() {
         return myLogManager.getCached();
     }
 
@@ -134,8 +131,7 @@ public class VcsProjectLog {
     }
 
     private class LazyVcsLogManager {
-        @Nullable
-        private VcsLogManager myValue;
+        private @Nullable VcsLogManager myValue;
 
         
         @RequiredUIAccess
@@ -162,8 +158,7 @@ public class VcsProjectLog {
             myValue = null;
         }
 
-        @Nullable
-        public synchronized VcsLogManager getCached() {
+        public synchronized @Nullable VcsLogManager getCached() {
             return myValue;
         }
     }

@@ -35,8 +35,7 @@ public abstract class GenericProgramRunner<Settings extends RunnerSettings> exte
         }, state, environment);
     }
 
-    @Nullable
-    protected RunContentDescriptor doExecute(RunProfileState state, ExecutionEnvironment environment) throws ExecutionException {
+    protected @Nullable RunContentDescriptor doExecute(RunProfileState state, ExecutionEnvironment environment) throws ExecutionException {
         return null;
     }
 }

@@ -39,10 +39,8 @@ import java.util.Objects;
  * @since 2002-06-19
  */
 public class SettingsImpl implements EditorSettings {
-    @Nullable
-    protected final EditorEx myEditor;
-    @Nullable
-    private final Language myLanguage;
+    protected final @Nullable EditorEx myEditor;
+    private final @Nullable Language myLanguage;
     private Boolean myIsCamelWords;
 
     // This group of settings does not have UI
@@ -429,8 +427,7 @@ public class SettingsImpl implements EditorSettings {
         return tabSize;
     }
 
-    @Nullable
-    protected PsiFile getPsiFile(@Nullable Project project) {
+    protected @Nullable PsiFile getPsiFile(@Nullable Project project) {
         if (project != null && myEditor != null) {
             return PsiDocumentManager.getInstance(project).getPsiFile(myEditor.getDocument());
         }

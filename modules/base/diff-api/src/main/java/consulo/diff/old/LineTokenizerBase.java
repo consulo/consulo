@@ -80,8 +80,7 @@ public abstract class LineTokenizerBase<T> {
     }
   }
 
-  @Nullable
-  public String getLineSeparator() {
+  public @Nullable String getLineSeparator() {
     if (myLineSeparatorStart == -1) return null;
     return substring(myLineSeparatorStart, myLineSeparatorEnd);
   }

@@ -26,8 +26,7 @@ class RepaintCursorCommand implements Runnable {
   private long mySleepTime = 500;
   private boolean myIsBlinkCaret = true;
 
-  @Nullable
-  protected DesktopEditorImpl myEditor;
+  protected @Nullable DesktopEditorImpl myEditor;
   protected ScheduledFuture<?> mySchedulerHandle;
 
   public void start() {

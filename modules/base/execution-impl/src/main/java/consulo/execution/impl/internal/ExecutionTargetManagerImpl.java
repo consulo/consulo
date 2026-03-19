@@ -63,11 +63,9 @@ public final class ExecutionTargetManagerImpl extends ExecutionTargetManager imp
   private final Project myProject;
   
   private final Object myActiveTargetLock = new Object();
-  @Nullable
-  private ExecutionTarget myActiveTarget;
+  private @Nullable ExecutionTarget myActiveTarget;
 
-  @Nullable
-  private String mySavedActiveTargetId;
+  private @Nullable String mySavedActiveTargetId;
 
   @Inject
   public ExecutionTargetManagerImpl(Project project) {
@@ -90,8 +88,7 @@ public final class ExecutionTargetManagerImpl extends ExecutionTargetManager imp
     });
   }
 
-  @Nullable
-  private RunManagerImpl myRunManager;
+  private @Nullable RunManagerImpl myRunManager;
 
   
   private RunManagerImpl getRunManager() {
@@ -203,8 +200,7 @@ public final class ExecutionTargetManagerImpl extends ExecutionTargetManager imp
     return result != null ? result : DefaultExecutionTarget.INSTANCE;
   }
 
-  @Nullable
-  private ExecutionTarget doSetActiveTarget(ExecutionTarget newTarget) {
+  private @Nullable ExecutionTarget doSetActiveTarget(ExecutionTarget newTarget) {
     if (!DefaultExecutionTarget.INSTANCE.equals(newTarget)) {
       mySavedActiveTargetId = newTarget.getId();
     }
@@ -314,8 +310,7 @@ public final class ExecutionTargetManagerImpl extends ExecutionTargetManager imp
     return true;
   }
 
-  @Nullable
-  public ExecutionTarget findTargetByIdFor(@Nullable RunConfiguration configuration, @Nullable String id) {
+  public @Nullable ExecutionTarget findTargetByIdFor(@Nullable RunConfiguration configuration, @Nullable String id) {
     if (id == null) {
       return null;
     }

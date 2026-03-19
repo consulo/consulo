@@ -100,8 +100,7 @@ public abstract class StatementUpDownMover {
     return range;
   }
 
-  @Nullable
-  protected static Pair<PsiElement, PsiElement> getElementRange(Editor editor, PsiFile file, LineRange range) {
+  protected static @Nullable Pair<PsiElement, PsiElement> getElementRange(Editor editor, PsiFile file, LineRange range) {
     int startOffset = editor.logicalPositionToOffset(new LogicalPosition(range.startLine, 0));
     PsiElement startingElement = firstNonWhiteElement(startOffset, file, true);
     if (startingElement == null) return null;
@@ -119,14 +118,12 @@ public abstract class StatementUpDownMover {
     return null;
   }
 
-  @Nullable
-  protected static PsiElement firstNonWhiteElement(int offset, PsiFile file, boolean lookRight) {
+  protected static @Nullable PsiElement firstNonWhiteElement(int offset, PsiFile file, boolean lookRight) {
     ASTNode leafElement = file.getNode().findLeafElementAt(offset);
     return leafElement == null ? null : firstNonWhiteElement(leafElement.getPsi(), lookRight);
   }
 
-  @Nullable
-  protected static PsiElement firstNonWhiteElement(PsiElement element, boolean lookRight) {
+  protected static @Nullable PsiElement firstNonWhiteElement(PsiElement element, boolean lookRight) {
     if (element instanceof PsiWhiteSpace) {
       element = lookRight ? element.getNextSibling() : element.getPrevSibling();
     }

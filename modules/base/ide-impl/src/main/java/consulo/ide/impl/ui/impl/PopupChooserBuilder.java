@@ -67,8 +67,7 @@ public class PopupChooserBuilder<T> implements IPopupChooserBuilder<T>, AWTPopup
     private boolean myCloseOnEnter = true;
     private boolean myCancelOnWindowDeactivation = true;
     private boolean myUseForXYLocation;
-    @Nullable
-    private Predicate<? super JBPopup> myCouldPin;
+    private @Nullable Predicate<? super JBPopup> myCouldPin;
     private int myVisibleRowCount = 15;
     private boolean myAutoPackHeightOnFiltering = true;
     private List<AnAction> myHeaderLeftActions = List.of();
@@ -116,8 +115,7 @@ public class PopupChooserBuilder<T> implements IPopupChooserBuilder<T>, AWTPopup
             return false;
         }
 
-        @Nullable
-        default Predicate<KeyEvent> getKeyEventHandler() {
+        default @Nullable Predicate<KeyEvent> getKeyEventHandler() {
             return null;
         }
 

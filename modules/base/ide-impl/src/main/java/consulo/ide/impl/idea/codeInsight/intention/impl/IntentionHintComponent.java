@@ -276,8 +276,7 @@ public class IntentionHintComponent implements Disposable, ScrollAwareHint {
         }
     }
 
-    @Nullable
-    private static Point getHintPosition(Editor editor) {
+    private static @Nullable Point getHintPosition(Editor editor) {
         if (ApplicationManager.getApplication().isUnitTestMode()) {
             return new Point();
         }

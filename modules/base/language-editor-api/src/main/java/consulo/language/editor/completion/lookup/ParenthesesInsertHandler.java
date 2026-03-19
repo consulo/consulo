@@ -177,14 +177,12 @@ public abstract class ParenthesesInsertHandler<T extends LookupElement> implemen
     return needSpace ? " " : "";
   }
 
-  @Nullable
-  protected PsiElement findExistingLeftParenthesis(InsertionContext context) {
+  protected @Nullable PsiElement findExistingLeftParenthesis(InsertionContext context) {
     PsiElement element = findNextToken(context);
     return isToken(element, String.valueOf(myLeftParenthesis)) ? element : null;
   }
 
-  @Nullable
-  protected PsiElement findNextToken(InsertionContext context) {
+  protected @Nullable PsiElement findNextToken(InsertionContext context) {
     PsiFile file = context.getFile();
     PsiElement element = file.findElementAt(context.getTailOffset());
     if (element instanceof PsiWhiteSpace) {

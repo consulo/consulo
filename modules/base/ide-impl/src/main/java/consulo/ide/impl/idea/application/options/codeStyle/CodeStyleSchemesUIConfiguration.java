@@ -59,8 +59,7 @@ public class CodeStyleSchemesUIConfiguration implements PersistentStateComponent
   }
 
   public static class Util {
-    @Nullable
-    public static VirtualFile getRecentImportFile() {
+    public static @Nullable VirtualFile getRecentImportFile() {
       CodeStyleSchemesUIConfiguration configuration = getInstance();
       if (configuration != null) {
         String fileLocation = configuration.RECENT_IMPORT_FILE_LOCATION;

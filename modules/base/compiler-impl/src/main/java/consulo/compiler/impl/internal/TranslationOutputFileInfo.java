@@ -30,8 +30,7 @@ public class TranslationOutputFileInfo {
     private static final Logger LOG = Logger.getInstance(TranslationOutputFileInfo.class);
     private static final FileAttribute ourOutputFileAttribute = new FileAttribute("_make_output_file_info_", 4, true);
 
-    @Nullable
-    public static TranslationOutputFileInfo loadOutputInfo(VirtualFile file) {
+    public static @Nullable TranslationOutputFileInfo loadOutputInfo(VirtualFile file) {
         try {
             DataInputStream is = ourOutputFileAttribute.readAttribute(file);
             if (is != null) {
@@ -83,13 +82,11 @@ public class TranslationOutputFileInfo {
         myClassName = StringUtil.nullize(in.readUTF());
     }
 
-    @Nullable
-    public VirtualFile getSourceFile() {
+    public @Nullable VirtualFile getSourceFile() {
         return VirtualFileManager.getInstance().findFileById(mySourcePath);
     }
 
-    @Nullable
-    public String getClassName() {
+    public @Nullable String getClassName() {
         return myClassName;
     }
 

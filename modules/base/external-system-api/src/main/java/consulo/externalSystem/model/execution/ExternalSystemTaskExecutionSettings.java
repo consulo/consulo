@@ -38,14 +38,13 @@ public class ExternalSystemTaskExecutionSettings implements Cloneable {
   private List<String> myTaskNames = new ArrayList<>();
   private List<String> myTaskDescriptions = new ArrayList<>();
 
-  @Nullable private String myExecutionName;
+  private @Nullable String myExecutionName;
   private String myExternalSystemIdString;
   private String myExternalProjectPath;
   private String myVmOptions;
   private String myScriptParameters;
 
-  @Nullable
-  public String getExecutionName() {
+  public @Nullable String getExecutionName() {
     return myExecutionName;
   }
 

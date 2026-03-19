@@ -18,17 +18,12 @@ public class WindowWrapperBuilder {
   private final Mode myMode;
   
   private final JComponent myComponent;
-  @Nullable
-  private Project myProject;
-  @Nullable
-  private Component myParent;
-  @Nullable
-  private String myTitle;
-  @Nullable
-  private JComponent myPreferredFocusedComponent;
-  @Nullable
-  private String myDimensionServiceKey;
-  @Nullable private Runnable myOnShowCallback;
+  private @Nullable Project myProject;
+  private @Nullable Component myParent;
+  private @Nullable String myTitle;
+  private @Nullable JComponent myPreferredFocusedComponent;
+  private @Nullable String myDimensionServiceKey;
+  private @Nullable Runnable myOnShowCallback;
 
   public WindowWrapperBuilder(Mode mode, JComponent component) {
     myMode = mode;
@@ -85,8 +80,7 @@ public class WindowWrapperBuilder {
   }
 
   private static class DialogWindowWrapper implements WindowWrapper {
-    @Nullable
-    private final Project myProject;
+    private final @Nullable Project myProject;
     
     private final JComponent myComponent;
     
@@ -183,10 +177,8 @@ public class WindowWrapperBuilder {
     private static class MyDialogWrapper extends DialogWrapper {
       
       private final JComponent myComponent;
-      @Nullable
-      private final String myDimensionServiceKey;
-      @Nullable
-      private final JComponent myPreferredFocusedComponent;
+      private final @Nullable String myDimensionServiceKey;
+      private final @Nullable JComponent myPreferredFocusedComponent;
 
       public MyDialogWrapper(@Nullable Project project,
                              JComponent component,
@@ -247,13 +239,12 @@ public class WindowWrapperBuilder {
   }
 
   private static class FrameWindowWrapper implements WindowWrapper {
-    @Nullable private final Project myProject;
+    private final @Nullable Project myProject;
     
     private final JComponent myComponent;
     
     private final Mode myMode;
-    @Nullable
-    private final Runnable myOnShowCallback;
+    private final @Nullable Runnable myOnShowCallback;
 
     
     private final FrameWrapper myFrame;

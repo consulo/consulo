@@ -40,8 +40,7 @@ public interface ConfigurationFileEditorProvider {
     
     LocalizeValue getName();
 
-    @Nullable
-    default ColorValue getColor() {
+    default @Nullable ColorValue getColor() {
         return ConfigurationEditorColor.DEFAULT_COLOR;
     }
 

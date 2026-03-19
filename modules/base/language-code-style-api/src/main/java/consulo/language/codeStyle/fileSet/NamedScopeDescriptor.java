@@ -73,8 +73,7 @@ public class NamedScopeDescriptor implements FileSetDescriptor {
     return myFileSet != null ? myFileSet.getText() : null;
   }
 
-  @Nullable
-  public PackageSet getFileSet() {
+  public @Nullable PackageSet getFileSet() {
     return myFileSet;
   }
 

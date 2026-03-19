@@ -62,8 +62,7 @@ public class VirtualFileWrapper {
    *
    * @return VirtualFile or null if file is not exist
    */
-  @Nullable
-  public VirtualFile getVirtualFile() {
+  public @Nullable VirtualFile getVirtualFile() {
     return VirtualFileManager.getInstance().refreshAndFindFileByNioPath(myFile.toPath());
   }
 
@@ -76,8 +75,7 @@ public class VirtualFileWrapper {
    *
    * @return virtual file
    */
-  @Nullable
-  public VirtualFile getVirtualFile(boolean createIfNotExist) {
+  public @Nullable VirtualFile getVirtualFile(boolean createIfNotExist) {
     if (createIfNotExist && !myFile.exists()) {
       try {
         if (!myFile.createNewFile()) {

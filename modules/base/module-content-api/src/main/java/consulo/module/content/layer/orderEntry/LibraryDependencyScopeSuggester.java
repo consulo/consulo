@@ -30,6 +30,5 @@ public abstract class LibraryDependencyScopeSuggester {
     public static final ExtensionPointName<LibraryDependencyScopeSuggester> EP_NAME =
         ExtensionPointName.create(LibraryDependencyScopeSuggester.class);
 
-    @Nullable
-    public abstract DependencyScope getDefaultDependencyScope(Library library);
+    public abstract @Nullable DependencyScope getDefaultDependencyScope(Library library);
 }

@@ -63,8 +63,7 @@ public abstract class PullUpDialogBase<Storage extends AbstractMemberInfoStorage
     setTitle(title);
   }
 
-  @Nullable
-  public Class getSuperClass() {
+  public @Nullable Class getSuperClass() {
     if (myClassCombo != null) {
       return (Class) myClassCombo.getSelectedItem();
     }

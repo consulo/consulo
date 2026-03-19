@@ -76,8 +76,7 @@ public class ChangesDnDSupport implements DnDDropHandler, DnDTargetChecker {
     return new DnDImage(image, new Point(-image.getWidth(null), -image.getHeight(null)));
   }
 
-  @Nullable
-  private DnDDragStartBean createDragStartBean(DnDActionInfo info) {
+  private @Nullable DnDDragStartBean createDragStartBean(DnDActionInfo info) {
     DnDDragStartBean result = null;
 
     if (info.isMove()) {

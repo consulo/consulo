@@ -58,8 +58,7 @@ public class FileAttribute {
     myFixedSize = fixedSize;
   }
 
-  @Nullable
-  public DataInputStream readAttribute(VirtualFile file) {
+  public @Nullable DataInputStream readAttribute(VirtualFile file) {
     return ManagingFS.getInstance().readAttribute(file, this);
   }
 
@@ -68,8 +67,7 @@ public class FileAttribute {
     return ManagingFS.getInstance().writeAttribute(file, this);
   }
 
-  @Nullable
-  public byte[] readAttributeBytes(VirtualFile file) throws IOException {
+  public @Nullable byte[] readAttributeBytes(VirtualFile file) throws IOException {
     DataInputStream stream = readAttribute(file);
     if (stream == null) return null;
 

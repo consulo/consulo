@@ -45,8 +45,7 @@ public class LanguageSupportCache {
     return Application.get().getExtensionPoint(LanguageInjectionSupport.class).getOrBuildCache(CACHE_KEY).values();
   }
 
-  @Nullable
-  public LanguageInjectionSupport getSupport(String id) {
+  public @Nullable LanguageInjectionSupport getSupport(String id) {
     return Application.get().getExtensionPoint(LanguageInjectionSupport.class).getOrBuildCache(CACHE_KEY).get(id);
   }
 

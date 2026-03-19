@@ -47,8 +47,7 @@ public class SoftWrapsStorage implements Dumpable {
         return myWraps.isEmpty();
     }
 
-    @Nullable
-    public SoftWrap getSoftWrap(int offset) {
+    public @Nullable SoftWrap getSoftWrap(int offset) {
         int i = getSoftWrapIndex(offset);
         return i >= 0 ? myWraps.get(i) : null;
     }
@@ -128,8 +127,7 @@ public class SoftWrapsStorage implements Dumpable {
      * @param softWrap soft wrap to store
      * @return previous soft wrap object stored for the same offset if any; <code>null</code> otherwise
      */
-    @Nullable
-    public SoftWrap storeOrReplace(SoftWrapImpl softWrap) {
+    public @Nullable SoftWrap storeOrReplace(SoftWrapImpl softWrap) {
         int i = getSoftWrapIndex(softWrap.getStart());
         if (i >= 0) {
             return myWraps.set(i, softWrap);

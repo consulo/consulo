@@ -395,8 +395,7 @@ public class FileTemplateConfigurable implements Configurable, Configurable.NoSc
         myModified = false;
     }
 
-    @Nullable
-    private PsiFile createFile(String text, String name) {
+    private @Nullable PsiFile createFile(String text, String name) {
         if (myTemplate == null) {
             return null;
         }

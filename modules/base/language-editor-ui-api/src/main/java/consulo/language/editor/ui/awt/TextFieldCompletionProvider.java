@@ -80,7 +80,7 @@ public abstract class TextFieldCompletionProvider {
   }
 
   
-  public EditorTextField createEditor(Project project, final boolean shouldHaveBorder, @Nullable final Consumer<Editor> editorConstructionCallback) {
+  public EditorTextField createEditor(Project project, final boolean shouldHaveBorder, final @Nullable Consumer<Editor> editorConstructionCallback) {
     return new EditorTextField(createDocument(project, ""), project, PlainTextLanguage.INSTANCE.getAssociatedFileType()) {
       @Override
       protected boolean shouldHaveBorder() {

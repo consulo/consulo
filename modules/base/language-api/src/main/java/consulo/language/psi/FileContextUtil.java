@@ -29,14 +29,12 @@ public class FileContextUtil {
 
   private FileContextUtil() { }
 
-  @Nullable
-  public static PsiElement getFileContext(PsiFile file) {
+  public static @Nullable PsiElement getFileContext(PsiFile file) {
     SmartPsiElementPointer pointer = file.getUserData(INJECTED_IN_ELEMENT);
     return pointer == null ? null : pointer.getElement();
   }
 
-  @Nullable
-  public static PsiFile getContextFile(PsiElement element) {
+  public static @Nullable PsiFile getContextFile(PsiElement element) {
     if (!element.isValid()) return null;
     PsiFile file = element.getContainingFile();
     if (file == null) return null;

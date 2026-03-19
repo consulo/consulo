@@ -20,7 +20,6 @@ import javax.swing.*;
 
 public abstract class VcsPushOptionsPanel extends JPanel {
 
-  @Nullable
-  public abstract VcsPushOptionValue getValue();
+  public abstract @Nullable VcsPushOptionValue getValue();
 
 }

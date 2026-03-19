@@ -176,8 +176,7 @@ public class VfsUtil extends VfsUtilCore {
     /**
      * Gets the common ancestor for passed files, or {@code null} if the files do not have common ancestors.
      */
-    @Nullable
-    public static VirtualFile getCommonAncestor(Collection<? extends VirtualFile> files) {
+    public static @Nullable VirtualFile getCommonAncestor(Collection<? extends VirtualFile> files) {
         VirtualFile ancestor = null;
         for (VirtualFile file : files) {
             if (ancestor == null) {
@@ -193,8 +192,7 @@ public class VfsUtil extends VfsUtilCore {
         return ancestor;
     }
 
-    @Nullable
-    public static VirtualFile findRelativeFile(@Nullable VirtualFile base, String... path) {
+    public static @Nullable VirtualFile findRelativeFile(@Nullable VirtualFile base, String... path) {
         return VirtualFileUtil.findRelativeFile(base, path);
     }
 
@@ -205,18 +203,15 @@ public class VfsUtil extends VfsUtilCore {
      * @param url the URL to find file by
      * @return <code>{@link VirtualFile}</code> if the file was found, <code>null</code> otherwise
      */
-    @Nullable
-    public static VirtualFile findFileByURL(URL url) {
+    public static @Nullable VirtualFile findFileByURL(URL url) {
         return VirtualFileUtil.findFileByURL(url);
     }
 
-    @Nullable
-    public static VirtualFile findFileByURL(URL url, VirtualFileManager virtualFileManager) {
+    public static @Nullable VirtualFile findFileByURL(URL url, VirtualFileManager virtualFileManager) {
         return VirtualFileUtil.findFileByURL(url, virtualFileManager);
     }
 
-    @Nullable
-    public static VirtualFile findFileByIoFile(File file, boolean refreshIfNeeded) {
+    public static @Nullable VirtualFile findFileByIoFile(File file, boolean refreshIfNeeded) {
         return VirtualFileUtil.findFileByIoFile(file, refreshIfNeeded);
     }
 
@@ -271,8 +266,7 @@ public class VfsUtil extends VfsUtilCore {
      *
      * @return correct URI, must be used only for external communication
      */
-    @Nullable
-    public static URI toUri(String uri) {
+    public static @Nullable URI toUri(String uri) {
         return VirtualFileUtil.toUri(uri);
     }
 
@@ -285,8 +279,7 @@ public class VfsUtil extends VfsUtilCore {
      * @return the relative path, or null if the files have no common ancestor.
      * @since 5.0.2
      */
-    @Nullable
-    public static String getPath(VirtualFile src, VirtualFile dst, char separatorChar) {
+    public static @Nullable String getPath(VirtualFile src, VirtualFile dst, char separatorChar) {
         VirtualFile commonAncestor = getCommonAncestor(src, dst);
         if (commonAncestor != null) {
             StringBuilder buffer = new StringBuilder();
@@ -340,8 +333,7 @@ public class VfsUtil extends VfsUtilCore {
         return VirtualFileUtil.createDirectoryIfMissing(parent, relativePath);
     }
 
-    @Nullable
-    public static VirtualFile createDirectoryIfMissing(String directoryPath) throws IOException {
+    public static @Nullable VirtualFile createDirectoryIfMissing(String directoryPath) throws IOException {
         return VirtualFileUtil.createDirectoryIfMissing(directoryPath);
     }
 
@@ -366,8 +358,7 @@ public class VfsUtil extends VfsUtilCore {
         processFilesRecursively(root, processor, vf -> !ftm.isFileIgnored(vf));
     }
 
-    @Nullable
-    public static <T> T processInputStream(VirtualFile file, Function<InputStream, T> function) {
+    public static @Nullable <T> T processInputStream(VirtualFile file, Function<InputStream, T> function) {
         InputStream stream = null;
         try {
             stream = file.getInputStream();
@@ -401,8 +392,7 @@ public class VfsUtil extends VfsUtilCore {
         return url;
     }
 
-    @Nullable
-    public static VirtualFile getUserHomeDir() {
+    public static @Nullable VirtualFile getUserHomeDir() {
         String path = Platform.current().user().homePath().toString();
         return LocalFileSystem.getInstance().findFileByPath(FileUtil.toSystemIndependentName(path));
     }
@@ -422,8 +412,7 @@ public class VfsUtil extends VfsUtilCore {
      * @param url Url for virtual file
      * @return url for parent directory of virtual file
      */
-    @Nullable
-    public static String getParentDir(@Nullable String url) {
+    public static @Nullable String getParentDir(@Nullable String url) {
         if (url == null) {
             return null;
         }
@@ -435,8 +424,7 @@ public class VfsUtil extends VfsUtilCore {
      * @param urlOrPath Url for virtual file
      * @return file name
      */
-    @Nullable
-    public static String extractFileName(@Nullable String urlOrPath) {
+    public static @Nullable String extractFileName(@Nullable String urlOrPath) {
         return VirtualFileUtil.extractFileName(urlOrPath);
     }
 

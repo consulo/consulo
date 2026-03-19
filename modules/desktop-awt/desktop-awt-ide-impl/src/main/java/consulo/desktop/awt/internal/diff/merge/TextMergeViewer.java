@@ -512,8 +512,7 @@ public class TextMergeViewer implements MergeTool.MergeViewer {
 
             
             private final Alarm myAlarm = new Alarm(MyThreesideViewer.this);
-            @Nullable
-            private ProgressIndicator myProgress;
+            private @Nullable ProgressIndicator myProgress;
 
             private boolean myEnabled = false;
 
@@ -874,8 +873,7 @@ public class TextMergeViewer implements MergeTool.MergeViewer {
             }
         }
 
-        @Nullable
-        public CharSequence resolveConflictUsingInnerDifferences(TextMergeChange change) {
+        public @Nullable CharSequence resolveConflictUsingInnerDifferences(TextMergeChange change) {
             if (!change.isConflict()) {
                 return null;
             }
@@ -984,8 +982,7 @@ public class TextMergeViewer implements MergeTool.MergeViewer {
         // Actions
         //
 
-        @Nullable
-        private TextMergeChange getFirstUnresolvedChange(boolean acceptConflicts, ThreeSide side) {
+        private @Nullable TextMergeChange getFirstUnresolvedChange(boolean acceptConflicts, ThreeSide side) {
             for (TextMergeChange change : getAllChanges()) {
                 if (change.isResolved()) {
                     continue;

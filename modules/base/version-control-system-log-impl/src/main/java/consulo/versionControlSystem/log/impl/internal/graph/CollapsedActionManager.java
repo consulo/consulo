@@ -27,8 +27,7 @@ import java.util.*;
 
 class CollapsedActionManager {
 
-  @Nullable
-  public static LinearGraphAnswer performAction(CollapsedController graphController, LinearGraphAction action) {
+  public static @Nullable LinearGraphAnswer performAction(CollapsedController graphController, LinearGraphAction action) {
     ActionContext context = new ActionContext(graphController.getCollapsedGraph(), graphController.getPermanentGraphInfo(), action);
 
     for (ActionCase actionCase : FILTER_ACTION_CASES) {
@@ -320,8 +319,7 @@ class CollapsedActionManager {
     return value;
   }
 
-  @Nullable
-  private static GraphEdge getDottedEdge(@Nullable GraphElement graphElement, LinearGraph graph) {
+  private static @Nullable GraphEdge getDottedEdge(@Nullable GraphElement graphElement, LinearGraph graph) {
     if (graphElement == null) return null;
 
     if (graphElement instanceof GraphEdge edge && edge.getType() == GraphEdgeType.DOTTED) {

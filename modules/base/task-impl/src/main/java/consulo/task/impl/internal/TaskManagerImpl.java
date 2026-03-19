@@ -779,8 +779,7 @@ public class TaskManagerImpl extends TaskManager implements PersistentStateCompo
         }
     }
 
-    @Nullable
-    private List<Task> getIssuesFromRepositories(
+    private @Nullable List<Task> getIssuesFromRepositories(
         @Nullable String request,
         int offset,
         int limit,

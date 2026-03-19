@@ -188,14 +188,12 @@ public abstract class HierarchyBrowserBaseEx extends HierarchyBrowserBase implem
         buildUi(createToolbar(getActionPlace(), HELP_ID).getComponent(), contentPanel);
     }
 
-    @Nullable
-    protected PsiElement getOpenFileElementFromDescriptor(HierarchyNodeDescriptor descriptor) {
+    protected @Nullable PsiElement getOpenFileElementFromDescriptor(HierarchyNodeDescriptor descriptor) {
         return getElementFromDescriptor(descriptor);
     }
 
     @Override
-    @Nullable
-    protected abstract PsiElement getElementFromDescriptor(HierarchyNodeDescriptor descriptor);
+    protected abstract @Nullable PsiElement getElementFromDescriptor(HierarchyNodeDescriptor descriptor);
 
     
     protected abstract LocalizeValue getPrevOccurrenceActionNameImpl();
@@ -205,16 +203,13 @@ public abstract class HierarchyBrowserBaseEx extends HierarchyBrowserBase implem
 
     protected abstract void createTrees(Map<String, JTree> trees);
 
-    @Nullable
-    protected abstract JPanel createLegendPanel();
+    protected abstract @Nullable JPanel createLegendPanel();
 
     protected abstract boolean isApplicableElement(PsiElement element);
 
-    @Nullable
-    protected abstract HierarchyTreeStructure createHierarchyTreeStructure(String type, PsiElement psiElement);
+    protected abstract @Nullable HierarchyTreeStructure createHierarchyTreeStructure(String type, PsiElement psiElement);
 
-    @Nullable
-    protected abstract Comparator<NodeDescriptor> getComparator();
+    protected abstract @Nullable Comparator<NodeDescriptor> getComparator();
 
     
     protected abstract String getActionPlace();
@@ -397,8 +392,7 @@ public abstract class HierarchyBrowserBaseEx extends HierarchyBrowserBase implem
     }
 
     @RequiredReadAction
-    @Nullable
-    protected String getContentDisplayName(String typeName, PsiElement element) {
+    protected @Nullable String getContentDisplayName(String typeName, PsiElement element) {
         if (element instanceof PsiNamedElement namedElement) {
             return MessageFormat.format(typeName, namedElement.getName());
         }

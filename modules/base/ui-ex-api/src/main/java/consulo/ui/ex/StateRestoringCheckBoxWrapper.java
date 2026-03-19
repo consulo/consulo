@@ -60,8 +60,7 @@ public final class StateRestoringCheckBoxWrapper {
         return myCheckBox;
     }
 
-    @Nullable
-    public Component getParentComponent() {
+    public @Nullable Component getParentComponent() {
         return myCheckBox;
     }
 

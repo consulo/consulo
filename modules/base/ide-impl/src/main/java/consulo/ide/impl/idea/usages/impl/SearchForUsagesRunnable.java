@@ -172,7 +172,7 @@ class SearchForUsagesRunnable implements Runnable {
     }
 
     private static HyperlinkListener addHrefHandling(
-        @Nullable final HyperlinkListener listener,
+        final @Nullable HyperlinkListener listener,
         final String hrefTarget,
         final Runnable handler
     ) {

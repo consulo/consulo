@@ -58,13 +58,11 @@ public abstract class CreateTemplateInPackageAction<T extends PsiElement> extend
     }
 
     @Override
-    @Nullable
-    protected T createFile(String name, String templateName, PsiDirectory dir) {
+    protected @Nullable T createFile(String name, String templateName, PsiDirectory dir) {
         return checkOrCreate(name, dir, templateName);
     }
 
-    @Nullable
-    protected abstract PsiElement getNavigationElement(T createdElement);
+    protected abstract @Nullable PsiElement getNavigationElement(T createdElement);
 
     @Override
     @SuppressWarnings("unchecked")
@@ -106,8 +104,7 @@ public abstract class CreateTemplateInPackageAction<T extends PsiElement> extend
 
     protected abstract boolean checkPackageExists(PsiDirectory directory);
 
-    @Nullable
-    private T checkOrCreate(String newName, PsiDirectory directory, String templateName) throws IncorrectOperationException {
+    private @Nullable T checkOrCreate(String newName, PsiDirectory directory, String templateName) throws IncorrectOperationException {
         PsiDirectory dir = directory;
         String className = removeExtension(templateName, newName);
 
@@ -139,6 +136,5 @@ public abstract class CreateTemplateInPackageAction<T extends PsiElement> extend
         return className;
     }
 
-    @Nullable
-    protected abstract T doCreate(PsiDirectory dir, String className, String templateName) throws IncorrectOperationException;
+    protected abstract @Nullable T doCreate(PsiDirectory dir, String className, String templateName) throws IncorrectOperationException;
 }

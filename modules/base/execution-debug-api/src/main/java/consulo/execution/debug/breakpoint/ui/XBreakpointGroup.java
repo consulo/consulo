@@ -23,8 +23,7 @@ import org.jspecify.annotations.Nullable;
  * @author nik
  */
 public abstract class XBreakpointGroup implements Comparable<XBreakpointGroup> {
-  @Nullable
-  public Image getIcon(boolean isOpen) {
+  public @Nullable Image getIcon(boolean isOpen) {
     return null;
   }
 

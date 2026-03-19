@@ -169,8 +169,7 @@ public class FindPopupDirectoryChooser {
         return (String) myDirectoryComboBox.getSelectedItem();
     }
 
-    @Nullable
-    public ValidationInfo validate(FindModel model) {
+    public @Nullable ValidationInfo validate(FindModel model) {
         VirtualFile directory = FindInProjectUtil.getDirectory(model);
         if (directory == null) {
             return new ValidationInfo(FindBundle.message("find.directory.not.found.error", getDirectory()), myDirectoryComboBox);

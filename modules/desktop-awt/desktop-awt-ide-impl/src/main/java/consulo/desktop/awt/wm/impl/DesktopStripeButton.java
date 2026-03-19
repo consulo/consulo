@@ -295,8 +295,7 @@ public final class DesktopStripeButton extends AnchoredButton implements ActionL
             .DRAG_START_DEADZONE;
     }
 
-    @Nullable
-    private static JLayeredPane findLayeredPane(MouseEvent e) {
+    private static @Nullable JLayeredPane findLayeredPane(MouseEvent e) {
         if (!(e.getComponent() instanceof JComponent)) {
             return null;
         }

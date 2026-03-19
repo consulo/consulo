@@ -195,8 +195,7 @@ public class SingleInspectionProfilePanel extends JPanel {
         return null;
     }
 
-    @Nullable
-    private static InspectionConfigTreeNode findNodeByKey(String name, InspectionConfigTreeNode root) {
+    private static @Nullable InspectionConfigTreeNode findNodeByKey(String name, InspectionConfigTreeNode root) {
         for (int i = 0; i < root.getChildCount(); i++) {
             InspectionConfigTreeNode child = (InspectionConfigTreeNode) root.getChildAt(i);
             Descriptor descriptor = child.getDefaultDescriptor();

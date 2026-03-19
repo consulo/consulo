@@ -74,8 +74,7 @@ public abstract class Weigher<T, Location> {
     return myDebugName == null ? super.toString() : myDebugName;
   }
 
-  @Nullable
-  public abstract Comparable weigh(T element, Location location);
+  public abstract @Nullable Comparable weigh(T element, Location location);
 
   
   public abstract Key<?> getKey();

@@ -126,8 +126,7 @@ public class AbstractTreeBuilder implements Disposable {
     return new AbstractTreeNodeWrapper();
   }
 
-  @Nullable
-  protected AbstractTreeUpdater createUpdater() {
+  protected @Nullable AbstractTreeUpdater createUpdater() {
     if (isDisposed()) return null;
 
     AbstractTreeUpdater updater = new AbstractTreeUpdater(this);
@@ -135,8 +134,7 @@ public class AbstractTreeBuilder implements Disposable {
     return updater;
   }
 
-  @Nullable
-  protected final AbstractTreeUpdater getUpdater() {
+  protected final @Nullable AbstractTreeUpdater getUpdater() {
     AbstractTreeUi ui = getUi();
     return ui == null ? null : ui.getUpdater();
   }
@@ -156,8 +154,7 @@ public class AbstractTreeBuilder implements Disposable {
     if (ui != null) ui.addSubtreeToUpdate(node, afterUpdate);
   }
 
-  @Nullable
-  public final DefaultMutableTreeNode getRootNode() {
+  public final @Nullable DefaultMutableTreeNode getRootNode() {
     AbstractTreeUi ui = getUi();
     return ui == null ? null : ui.getRootNode();
   }
@@ -206,8 +203,7 @@ public class AbstractTreeBuilder implements Disposable {
     if (ui != null) ui.setTreeStructure(structure);
   }
 
-  @Nullable
-  public Object getRootElement() {
+  public @Nullable Object getRootElement() {
     AbstractTreeStructure structure = getTreeStructure();
     return structure == null ? null : structure.getRootElement();
   }
@@ -280,8 +276,7 @@ public class AbstractTreeBuilder implements Disposable {
    * @deprecated
    */
   @Deprecated
-  @Nullable
-  public DefaultMutableTreeNode getNodeForElement(Object element) {
+  public @Nullable DefaultMutableTreeNode getNodeForElement(Object element) {
     AbstractTreeUi ui = getUi();
     return ui == null ? null : ui.getNodeForElement(element, false);
   }
@@ -291,8 +286,7 @@ public class AbstractTreeBuilder implements Disposable {
     if (ui != null) ui.doCleanUp();
   }
 
-  @Nullable
-  protected ProgressIndicator createProgressIndicator() {
+  protected @Nullable ProgressIndicator createProgressIndicator() {
     return null;
   }
 
@@ -328,8 +322,7 @@ public class AbstractTreeBuilder implements Disposable {
     return ui != null && ui.isNodeBeingBuilt(path);
   }
 
-  @Nullable
-  protected Object findNodeByElement(Object element) {
+  protected @Nullable Object findNodeByElement(Object element) {
     AbstractTreeUi ui = getUi();
     return ui == null ? null : ui.findNodeByElement(element);
   }
@@ -492,8 +485,7 @@ public class AbstractTreeBuilder implements Disposable {
     return ui != null && descriptor.update();
   }
 
-  @Nullable
-  public final DefaultTreeModel getTreeModel() {
+  public final @Nullable DefaultTreeModel getTreeModel() {
     AbstractTreeUi ui = getUi();
     return ui == null ? null : ui.getTreeModel();
   }
@@ -526,19 +518,16 @@ public class AbstractTreeBuilder implements Disposable {
     if (ui != null) ui.setCanYield(yield);
   }
 
-  @Nullable
-  public static AbstractTreeBuilder getBuilderFor(JTree tree) {
+  public static @Nullable AbstractTreeBuilder getBuilderFor(JTree tree) {
     Reference<AbstractTreeBuilder> ref = (Reference)tree.getClientProperty(TREE_BUILDER);
     return SoftReference.dereference(ref);
   }
 
-  @Nullable
-  public final <T> Object accept(Class<?> nodeClass, Predicate<T> visitor) {
+  public final @Nullable <T> Object accept(Class<?> nodeClass, Predicate<T> visitor) {
     return accept(nodeClass, getRootElement(), visitor);
   }
 
-  @Nullable
-  private <T> Object accept(Class<?> nodeClass, Object element, Predicate<T> visitor) {
+  private @Nullable <T> Object accept(Class<?> nodeClass, Object element, Predicate<T> visitor) {
     if (element == null) {
       return null;
     }

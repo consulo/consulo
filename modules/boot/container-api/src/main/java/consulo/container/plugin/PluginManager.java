@@ -61,8 +61,7 @@ public final class PluginManager {
         return getPlugins().size();
     }
 
-    @Nullable
-    public static PluginDescriptor findPlugin(PluginId pluginId) {
+    public static @Nullable PluginDescriptor findPlugin(PluginId pluginId) {
         for (PluginDescriptor descriptor : getPlugins()) {
             if (descriptor.getPluginId().equals(pluginId)) {
                 return descriptor;
@@ -71,19 +70,16 @@ public final class PluginManager {
         return null;
     }
 
-    @Nullable
-    public static PluginDescriptor getPlugin(Class<?> pluginClass) {
+    public static @Nullable PluginDescriptor getPlugin(Class<?> pluginClass) {
         return ourInternal.getPlugin(pluginClass);
     }
 
-    @Nullable
-    public static PluginId getPluginId(Class<?> pluginClass) {
+    public static @Nullable PluginId getPluginId(Class<?> pluginClass) {
         PluginDescriptor plugin = getPlugin(pluginClass);
         return plugin == null ? null : plugin.getPluginId();
     }
 
-    @Nullable
-    public static File getPluginPath(Class<?> pluginClass) {
+    public static @Nullable File getPluginPath(Class<?> pluginClass) {
         return ourInternal.getPluginPath(pluginClass);
     }
 

@@ -21,8 +21,7 @@ public class VcsScopeItem implements ModelScopeItem {
   private final DefaultComboBoxModel<LocalChangeList> myModel;
   private final Project myProject;
 
-  @Nullable
-  public static VcsScopeItem createIfHasVCS(Project project) {
+  public static @Nullable VcsScopeItem createIfHasVCS(Project project) {
     if (ChangeListManager.getInstance(project).getAffectedFiles().isEmpty()) {
       return null;
     }
@@ -68,8 +67,7 @@ public class VcsScopeItem implements ModelScopeItem {
     return new AnalysisScope(myProject, new HashSet<>(files));
   }
 
-  @Nullable
-  public DefaultComboBoxModel<LocalChangeList> getChangeListsModel() {
+  public @Nullable DefaultComboBoxModel<LocalChangeList> getChangeListsModel() {
     return myModel;
   }
 }

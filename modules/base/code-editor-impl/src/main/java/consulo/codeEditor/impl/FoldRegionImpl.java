@@ -96,8 +96,7 @@ public class FoldRegionImpl extends RangeMarkerWithGetterImpl implements FoldReg
     }
 
     @Override
-    @Nullable
-    public FoldingGroup getGroup() {
+    public @Nullable FoldingGroup getGroup() {
         return myGroup;
     }
 

@@ -36,8 +36,7 @@ public interface LanguageQuoteHandler extends QuoteHandler, LanguageExtension {
     ExtensionPointCacheKey<LanguageQuoteHandler, ByLanguageValue<LanguageQuoteHandler>> KEY =
         ExtensionPointCacheKey.create("LanguageQuoteHandler", LanguageOneToOne.build());
 
-    @Nullable
-    static QuoteHandler forLanguage(Language language) {
+    static @Nullable QuoteHandler forLanguage(Language language) {
         ExtensionPoint<LanguageQuoteHandler> extensionPoint = Application.get().getExtensionPoint(LanguageQuoteHandler.class);
         ByLanguageValue<LanguageQuoteHandler> map = extensionPoint.getOrBuildCache(KEY);
         return map.get(language);

@@ -68,8 +68,7 @@ public final class FirefoxSettings extends BrowserSpecificSettings {
         return new FirefoxSettingsConfigurable(this);
     }
 
-    @Nullable
-    public File getProfilesIniFile() {
+    public @Nullable File getProfilesIniFile() {
         if (myProfilesIniPath != null) {
             return new File(FileUtil.toSystemDependentName(myProfilesIniPath));
         }

@@ -20,8 +20,7 @@ public class SingleChildDescriptor {
     return myType;
   }
 
-  @Nullable
-  public PsiElement getElement() {
+  public @Nullable PsiElement getElement() {
     return myElement;
   }
 

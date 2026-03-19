@@ -96,16 +96,11 @@ public class Notification {
         private LocalizeValue mySubtitle = LocalizeValue.empty();
         
         private LocalizeValue myContent = LocalizeValue.empty();
-        @Nullable
-        private Image myIcon = null;
-        @Nullable
-        private Boolean myImportant = null;
-        @Nullable
-        private NotificationListener myListener = null;
-        @Nullable
-        private List<Function<Notification, ? extends AnAction>> myActionAdders = null;
-        @Nullable
-        private Runnable myWhenExpired = null;
+        private @Nullable Image myIcon = null;
+        private @Nullable Boolean myImportant = null;
+        private @Nullable NotificationListener myListener = null;
+        private @Nullable List<Function<Notification, ? extends AnAction>> myActionAdders = null;
+        private @Nullable Runnable myWhenExpired = null;
 
         Builder(NotificationService service, NotificationGroup group, NotificationType type) {
             myService = service;
@@ -303,8 +298,7 @@ public class Notification {
     
     private final NotificationType myType;
 
-    @Nullable
-    private Image myIcon;
+    private @Nullable Image myIcon;
     
     private LocalizeValue myTitle = LocalizeValue.empty();
     
@@ -446,8 +440,7 @@ public class Notification {
         return myTimestamp;
     }
 
-    @Nullable
-    public Image getIcon() {
+    public @Nullable Image getIcon() {
         return myIcon;
     }
 
@@ -485,8 +478,7 @@ public class Notification {
         return this;
     }
 
-    @Nullable
-    public String getSubtitle() {
+    public @Nullable String getSubtitle() {
         return mySubtitle.get();
     }
 
@@ -527,8 +519,7 @@ public class Notification {
         return this;
     }
 
-    @Nullable
-    public NotificationListener getListener() {
+    public @Nullable NotificationListener getListener() {
         return myListener;
     }
 
@@ -667,8 +658,7 @@ public class Notification {
         });
     }
 
-    @Nullable
-    public Balloon getBalloon() {
+    public @Nullable Balloon getBalloon() {
         return SoftReference.dereference(myBalloonRef);
     }
 

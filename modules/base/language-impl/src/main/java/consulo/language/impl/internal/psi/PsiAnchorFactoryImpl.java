@@ -205,8 +205,7 @@ public class PsiAnchorFactoryImpl implements PsiAnchorFactory {
         }
 
         @Override
-        @Nullable
-        public PsiElement retrieve() {
+        public @Nullable PsiElement retrieve() {
             PsiFile psiFile = getFile();
             if (psiFile == null || !psiFile.isValid()) {
                 return null;
@@ -216,8 +215,7 @@ public class PsiAnchorFactoryImpl implements PsiAnchorFactory {
         }
 
         @Override
-        @Nullable
-        public PsiFile getFile() {
+        public @Nullable PsiFile getFile() {
             Language language = myInfo.getFileLanguage();
             if (language == null) {
                 return null;
@@ -288,8 +286,7 @@ public class PsiAnchorFactoryImpl implements PsiAnchorFactory {
         }
 
         @Override
-        @Nullable
-        public PsiFile getFile() {
+        public @Nullable PsiFile getFile() {
             return SelfElementInfo.restoreFileFromVirtual(myFile, myProject, myLanguage);
         }
 
@@ -364,8 +361,7 @@ public class PsiAnchorFactoryImpl implements PsiAnchorFactory {
         }
     }
 
-    @Nullable
-    public static PsiElement restoreFromStubIndex(
+    public static @Nullable PsiElement restoreFromStubIndex(
         PsiFileWithStubSupport fileImpl,
         int index,
         IStubElementType elementType,
@@ -431,8 +427,7 @@ public class PsiAnchorFactoryImpl implements PsiAnchorFactory {
         }
 
         @Override
-        @Nullable
-        public PsiFile getFile() {
+        public @Nullable PsiFile getFile() {
             if (myProject.isDisposed() || !myVirtualFile.isValid()) {
                 return null;
             }

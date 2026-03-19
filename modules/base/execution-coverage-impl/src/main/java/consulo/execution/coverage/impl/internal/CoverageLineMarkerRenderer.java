@@ -271,8 +271,7 @@ public class CoverageLineMarkerRenderer implements LineMarkerRenderer, ActiveGut
         });
     }
 
-    @Nullable
-    public LineData getLineData(int lineNumber) {
+    public @Nullable LineData getLineData(int lineNumber) {
         return myLines != null
             ? myLines.get(myNewToOldConverter != null ? myNewToOldConverter.applyAsInt(lineNumber) : lineNumber)
             : null;
@@ -364,8 +363,7 @@ public class CoverageLineMarkerRenderer implements LineMarkerRenderer, ActiveGut
 
         protected abstract int next(int idx);
 
-        @Nullable
-        private Integer getLineEntry() {
+        private @Nullable Integer getLineEntry() {
             ArrayList<Integer> list = new ArrayList<>(myLines.keySet());
             Collections.sort(list);
             LineData data = getLineData(myLineNumber);

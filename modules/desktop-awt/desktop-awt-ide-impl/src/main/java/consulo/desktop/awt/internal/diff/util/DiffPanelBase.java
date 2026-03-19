@@ -28,7 +28,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public abstract class DiffPanelBase extends JPanel implements DataProvider {
-  @Nullable protected final Project myProject;
+  protected final @Nullable Project myProject;
   
   private final DataProvider myDataProvider;
   

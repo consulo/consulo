@@ -25,8 +25,7 @@ public final class WindowOptions extends ComponentOptions {
   public static final class Builder {
     private boolean myClosable = true;
     private boolean myResizable = true;
-    @Nullable
-    private Window myOwner = null;
+    private @Nullable Window myOwner = null;
 
     private Builder() {
     }
@@ -55,8 +54,7 @@ public final class WindowOptions extends ComponentOptions {
     return new Builder();
   }
 
-  @Nullable
-  private final Window myOwner;
+  private final @Nullable Window myOwner;
   private final boolean myClosable;
   private final boolean myResizable;
 
@@ -68,8 +66,7 @@ public final class WindowOptions extends ComponentOptions {
     myResizable = resizable;
   }
 
-  @Nullable
-  public Window getOwner() {
+  public @Nullable Window getOwner() {
     return myOwner;
   }
 

@@ -61,8 +61,7 @@ public class ImplementationSearcher {
         );
     }
 
-    @Nullable
-    public PsiElement[] searchImplementations(PsiElement element, Editor editor, boolean includeSelfAlways, boolean includeSelfIfNoOthers) {
+    public @Nullable PsiElement[] searchImplementations(PsiElement element, Editor editor, boolean includeSelfAlways, boolean includeSelfIfNoOthers) {
         if (element == null) {
             return PsiElement.EMPTY_ARRAY;
         }
@@ -88,8 +87,7 @@ public class ImplementationSearcher {
      * @param editor
      * @return For the case the search has been cancelled
      */
-    @Nullable
-    protected PsiElement[] searchDefinitions(PsiElement element, Editor editor) {
+    protected @Nullable PsiElement[] searchDefinitions(PsiElement element, Editor editor) {
         PsiElement[][] result = new PsiElement[1][];
         if (!ProgressManager.getInstance().runProcessWithProgressSynchronously(() -> {
             try {

@@ -148,8 +148,7 @@ public class BuildViewServiceImpl {
                 .withExecutionFilter(new UrlFilter(myProject))
                 .withContextAction(node -> new ExcludeFromCompileAction(myProject) {
                     @Override
-                    @Nullable
-                    protected VirtualFile getFile() {
+                    protected @Nullable VirtualFile getFile() {
                         List<Navigatable> navigatables = node.getNavigatables();
                         if (navigatables.size() != 1) {
                             return null;
@@ -327,8 +326,7 @@ public class BuildViewServiceImpl {
         return StringUtil.trimEnd(StringUtil.trimStart(message, "java: "), '.'); //NON-NLS
     }
 
-    @Nullable
-    private BuildIssue buildIssue(
+    private @Nullable BuildIssue buildIssue(
         Collection<String> moduleNames,
         String title,
         String message,

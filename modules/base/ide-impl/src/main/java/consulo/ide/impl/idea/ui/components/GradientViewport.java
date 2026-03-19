@@ -41,8 +41,7 @@ public class GradientViewport extends JBViewport {
     return null;
   }
 
-  @Nullable
-  protected Color getViewColor() {
+  protected @Nullable Color getViewColor() {
     Component view = getView();
     return view == null ? null : view.getBackground();
   }

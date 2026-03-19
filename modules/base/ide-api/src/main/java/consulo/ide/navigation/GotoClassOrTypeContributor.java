@@ -27,13 +27,11 @@ import org.jspecify.annotations.Nullable;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface GotoClassOrTypeContributor extends ChooseByNameContributorEx {
-  @Nullable
-  default String getQualifiedName(NavigationItem item) {
+  default @Nullable String getQualifiedName(NavigationItem item) {
     return null;
   }
 
-  @Nullable
-  default String getQualifiedNameSeparator() {
+  default @Nullable String getQualifiedNameSeparator() {
     return null;
   }
 }

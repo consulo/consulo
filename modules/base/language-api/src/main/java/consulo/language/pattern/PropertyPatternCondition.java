@@ -34,6 +34,5 @@ public abstract class PropertyPatternCondition<T,P> extends PatternConditionPlus
     return processor.test(getPropertyValue(t), context);
   }
 
-  @Nullable
-  public abstract P getPropertyValue(Object o);
+  public abstract @Nullable P getPropertyValue(Object o);
 }

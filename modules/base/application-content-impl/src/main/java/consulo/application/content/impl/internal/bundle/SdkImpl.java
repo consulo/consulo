@@ -128,16 +128,14 @@ public class SdkImpl extends UserDataHolderBase implements Sdk, SdkModificator, 
     }
   }
 
-  @Nullable
-  private String getBundleVersion(BundleType bundleType) {
+  private @Nullable String getBundleVersion(BundleType bundleType) {
     if (myVersionString == null && !myVersionDefined) {
       setVersionString(bundleType.getVersionString(getPlatform(), getHomeNioPath()));
     }
     return myVersionString;
   }
 
-  @Nullable
-  private String getLegacyVersion() {
+  private @Nullable String getLegacyVersion() {
     if (myVersionString == null && !myVersionDefined) {
       String homePath = getHomePath();
       if (homePath != null && !homePath.isEmpty()) {

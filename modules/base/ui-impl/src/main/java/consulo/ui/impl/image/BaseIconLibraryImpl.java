@@ -42,8 +42,7 @@ public abstract class BaseIconLibraryImpl implements IconLibrary {
             myIsSVG = isSVG;
         }
 
-        @Nullable
-        public ImageReference getOrCreateImage(BaseIconLibraryImpl library, String groupId, String imageId) {
+        public @Nullable ImageReference getOrCreateImage(BaseIconLibraryImpl library, String groupId, String imageId) {
             SimpleReference<ImageReference> imageRef = myImageRef;
             if (imageRef != null) {
                 return imageRef.get();
@@ -148,8 +147,7 @@ public abstract class BaseIconLibraryImpl implements IconLibrary {
                                                            String groupId,
                                                            String imageId);
 
-    @Nullable
-    public ImageReference resolveImage(String groupId, String imageId) {
+    public @Nullable ImageReference resolveImage(String groupId, String imageId) {
         ImageReference image = resolveImageNoLog(groupId, imageId);
         if (image != null) {
             return image;
@@ -158,8 +156,7 @@ public abstract class BaseIconLibraryImpl implements IconLibrary {
         return null;
     }
 
-    @Nullable
-    protected ImageReference resolveImageNoLog(String groupId, String imageId) {
+    protected @Nullable ImageReference resolveImageNoLog(String groupId, String imageId) {
         IconGroup iconGroup = myRegisteredGroups.get(groupId);
         if (iconGroup != null) {
             ImageState imageState = iconGroup.myRegisteredIcons.get(imageId);

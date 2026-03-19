@@ -30,7 +30,7 @@ import java.util.function.Consumer;
 @DeprecationInfo("This is desktop only implement")
 public class PaintAwarePanel extends JPanel {
 
-  @Nullable private Consumer<Graphics> myPaintCallback;
+  private @Nullable Consumer<Graphics> myPaintCallback;
 
   public PaintAwarePanel() {
     this(new GridBagLayout());
@@ -48,8 +48,7 @@ public class PaintAwarePanel extends JPanel {
     super.paint(g);
   }
 
-  @Nullable
-  public Consumer<Graphics> getPaintCallback() {
+  public @Nullable Consumer<Graphics> getPaintCallback() {
     return myPaintCallback;
   }
 

@@ -361,8 +361,7 @@ public class VcsFileUtil {
    * @param path the path to to check
    * @return the file base
    */
-  @Nullable
-  public static VirtualFile getPossibleBase(VirtualFile file, String... path) {
+  public static @Nullable VirtualFile getPossibleBase(VirtualFile file, String... path) {
     if (file == null || path.length == 0) return null;
 
     VirtualFile current = file;

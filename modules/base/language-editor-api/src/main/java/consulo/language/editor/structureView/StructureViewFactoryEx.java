@@ -29,8 +29,7 @@ import java.util.Collection;
  */
 public abstract class StructureViewFactoryEx extends StructureViewFactory {
 
-  @Nullable
-  public abstract StructureViewWrapper getStructureViewWrapper();
+  public abstract @Nullable StructureViewWrapper getStructureViewWrapper();
 
   public abstract Collection<StructureViewExtension> getAllExtensions(Class<? extends PsiElement> type);
 

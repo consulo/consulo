@@ -213,8 +213,7 @@ class TypoTolerantMatcher extends MinusculeMatcher {
   }
 
   @Override
-  @Nullable
-  public FList<MatcherTextRange> matchingFragments(String name) {
+  public @Nullable FList<MatcherTextRange> matchingFragments(String name) {
     FList<MatcherTextRange> ranges = new Session(name, false).matchingFragments();
     if (ranges != null) return ranges;
     return new Session(name, true).matchingFragments();
@@ -274,8 +273,7 @@ class TypoTolerantMatcher extends MinusculeMatcher {
       return errorState.length(myPattern);
     }
 
-    @Nullable
-    public FList<MatcherTextRange> matchingFragments() {
+    public @Nullable FList<MatcherTextRange> matchingFragments() {
       if (myName.length() < myMinNameLength) {
         return null;
       }
@@ -304,8 +302,7 @@ class TypoTolerantMatcher extends MinusculeMatcher {
      * After a wildcard (* or space), search for the first non-wildcard pattern character in the name starting from nameIndex
      * and try to {@link #matchFragment} for it.
      */
-    @Nullable
-    private FList<MatcherTextRange> matchWildcards(int patternIndex, int nameIndex, ErrorState errorState) {
+    private @Nullable FList<MatcherTextRange> matchWildcards(int patternIndex, int nameIndex, ErrorState errorState) {
       if (nameIndex < 0) {
         return null;
       }
@@ -353,8 +350,7 @@ class TypoTolerantMatcher extends MinusculeMatcher {
      * Enumerates places in name that could be matched by the pattern at patternIndex position
      * and invokes {@link #matchFragment} at those candidate positions
      */
-    @Nullable
-    private FList<MatcherTextRange> matchSkippingWords(int patternIndex, int nameIndex, boolean allowSpecialChars, ErrorState errorState) {
+    private @Nullable FList<MatcherTextRange> matchSkippingWords(int patternIndex, int nameIndex, boolean allowSpecialChars, ErrorState errorState) {
       boolean wordStartsOnly = !isPatternChar(patternIndex - 1, '*', errorState) && !isWordSeparator(patternIndex, errorState);
 
       int maxFoundLength = 0;
@@ -460,14 +456,12 @@ class TypoTolerantMatcher extends MinusculeMatcher {
       return false;
     }
 
-    @Nullable
-    private FList<MatcherTextRange> matchFragment(int patternIndex, int nameIndex, ErrorState errorState) {
+    private @Nullable FList<MatcherTextRange> matchFragment(int patternIndex, int nameIndex, ErrorState errorState) {
       Fragment fragment = maxMatchingFragment(patternIndex, nameIndex, errorState);
       return fragment == null ? null : matchInsideFragment(patternIndex, nameIndex, fragment);
     }
 
-    @Nullable
-    private Fragment maxMatchingFragment(int patternIndex, int nameIndex, ErrorState baseErrorState) {
+    private @Nullable Fragment maxMatchingFragment(int patternIndex, int nameIndex, ErrorState baseErrorState) {
       ErrorState errorState = baseErrorState.deriveFrom(patternIndex);
 
       if (!isFirstCharMatching(nameIndex, patternIndex, errorState)) {
@@ -489,8 +483,7 @@ class TypoTolerantMatcher extends MinusculeMatcher {
     }
 
     // we've found the longest fragment matching pattern and name
-    @Nullable
-    private FList<MatcherTextRange> matchInsideFragment(int patternIndex, int nameIndex, Fragment fragment) {
+    private @Nullable FList<MatcherTextRange> matchInsideFragment(int patternIndex, int nameIndex, Fragment fragment) {
       // exact middle matches have to be at least of length 3, to prevent too many irrelevant matches
       int minFragment = isMiddleMatch(patternIndex, nameIndex, fragment.getErrorState()) ? 3 : 1;
 
@@ -506,8 +499,7 @@ class TypoTolerantMatcher extends MinusculeMatcher {
       return isPatternChar(patternIndex - 1, '*', errorState) && !isWildcard(patternIndex + 1) && Character.isLetterOrDigit(myName.charAt(nameIndex)) && !NameUtilCore.isWordStart(myName, nameIndex);
     }
 
-    @Nullable
-    private FList<MatcherTextRange> findLongestMatchingPrefix(int patternIndex, int nameIndex, int fragmentLength, int minFragment, ErrorState errorState) {
+    private @Nullable FList<MatcherTextRange> findLongestMatchingPrefix(int patternIndex, int nameIndex, int fragmentLength, int minFragment, ErrorState errorState) {
       if (patternIndex + fragmentLength >= patternLength(errorState)) {
         int errors = errorState.countErrors(patternIndex, patternIndex + fragmentLength);
         if (errors == fragmentLength) return null;
@@ -533,8 +525,7 @@ class TypoTolerantMatcher extends MinusculeMatcher {
      * When pattern is "CU" and the name is "CurrentUser", we already have a prefix "Cu" that matches,
      * but we try to find uppercase "U" later in name for better matching degree
      */
-    @Nullable
-    private FList<MatcherTextRange> improveCamelHumps(int patternIndex, int nameIndex, int maxFragment, int minFragment, ErrorState errorState) {
+    private @Nullable FList<MatcherTextRange> improveCamelHumps(int patternIndex, int nameIndex, int maxFragment, int minFragment, ErrorState errorState) {
       for (int i = minFragment; i < maxFragment; i++) {
         if (isUppercasePatternVsLowercaseNameChar(patternIndex + i, nameIndex + i, errorState)) {
           FList<MatcherTextRange> ranges = findUppercaseMatchFurther(patternIndex + i, nameIndex + i, errorState.deriveFrom(patternIndex + i));
@@ -552,8 +543,7 @@ class TypoTolerantMatcher extends MinusculeMatcher {
       return isUpperCase(patternIndex, errorState) && !charEquals(patternIndex, nameIndex, false, false, errorState);
     }
 
-    @Nullable
-    private FList<MatcherTextRange> findUppercaseMatchFurther(int patternIndex, int nameIndex, ErrorState errorState) {
+    private @Nullable FList<MatcherTextRange> findUppercaseMatchFurther(int patternIndex, int nameIndex, ErrorState errorState) {
       int nextWordStart = indexOfWordStart(patternIndex, nameIndex, errorState);
       return matchWildcards(patternIndex, nextWordStart, errorState.deriveFrom(patternIndex));
     }
@@ -669,8 +659,7 @@ class TypoTolerantMatcher extends MinusculeMatcher {
 
 
   private static class ErrorState {
-    @Nullable
-    private final ErrorState myBase;
+    private final @Nullable ErrorState myBase;
     private final int myDeriveIndex;
 
     private List<Pair<Integer, Error>> myErrors;

@@ -17,8 +17,7 @@ public interface ProvidedIndexExtensionLocator {
     @Nullable
     <K, V> ProvidedIndexExtension<K, V> findProvidedIndexExtension(FileBasedIndexExtension<K, V> originalExtension);
 
-    @Nullable
-    static <K, V> ProvidedIndexExtension<K, V> findProvidedIndexExtensionFor(FileBasedIndexExtension<K, V> originalExtension) {
+    static @Nullable <K, V> ProvidedIndexExtension<K, V> findProvidedIndexExtensionFor(FileBasedIndexExtension<K, V> originalExtension) {
         return EP_NAME.getExtensionList()
             .stream()
             .map(ex -> ex.findProvidedIndexExtension(originalExtension))

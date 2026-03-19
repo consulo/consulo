@@ -75,8 +75,7 @@ public abstract class DiffActionExecutor {
         myProject = project;
     }
 
-    @Nullable
-    protected DiffContent createRemote(VcsRevisionNumber revisionNumber) throws IOException, VcsException {
+    protected @Nullable DiffContent createRemote(VcsRevisionNumber revisionNumber) throws IOException, VcsException {
         ContentRevision fileRevision = myDiffProvider.createFileContent(revisionNumber, mySelectedFile);
         if (fileRevision == null) {
             return null;
@@ -227,8 +226,7 @@ public abstract class DiffActionExecutor {
         executor.showDiff();
     }
 
-    @Nullable
-    protected abstract VcsRevisionNumber getRevisionNumber();
+    protected abstract @Nullable VcsRevisionNumber getRevisionNumber();
 
     public static class CompareToFixedExecutor extends DiffActionExecutor {
         private final VcsRevisionNumber myNumber;
@@ -261,8 +259,7 @@ public abstract class DiffActionExecutor {
         }
 
         @Override
-        @Nullable
-        protected VcsRevisionNumber getRevisionNumber() {
+        protected @Nullable VcsRevisionNumber getRevisionNumber() {
             return myDiffProvider.getCurrentRevision(mySelectedFile);
         }
     }

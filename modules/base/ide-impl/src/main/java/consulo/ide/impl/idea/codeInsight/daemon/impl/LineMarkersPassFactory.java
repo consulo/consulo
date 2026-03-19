@@ -43,8 +43,7 @@ public class LineMarkersPassFactory implements TextEditorHighlightingPassFactory
   }
 
   @Override
-  @Nullable
-  public TextEditorHighlightingPass createHighlightingPass(PsiFile file, Editor editor) {
+  public @Nullable TextEditorHighlightingPass createHighlightingPass(PsiFile file, Editor editor) {
     TextRange restrictRange = FileStatusMapImpl.getDirtyTextRange(editor, Pass.LINE_MARKERS);
     Document document = editor.getDocument();
     if (restrictRange == null) return new ProgressableTextEditorHighlightingPass.EmptyPass(file.getProject(), document);

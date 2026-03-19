@@ -44,8 +44,7 @@ public abstract class AnnotationFieldGutter implements ActiveAnnotationGutter {
     protected final FileAnnotation myAnnotation;
     
     private final TextAnnotationPresentation myPresentation;
-    @Nullable
-    private Couple<Map<VcsRevisionNumber, ColorValue>> myColorScheme;
+    private @Nullable Couple<Map<VcsRevisionNumber, ColorValue>> myColorScheme;
 
     AnnotationFieldGutter(
         FileAnnotation annotation,
@@ -123,8 +122,7 @@ public abstract class AnnotationFieldGutter implements ActiveAnnotationGutter {
         return VcsUtil.isAspectAvailableByDefault(getID(), isShowByDefault());
     }
 
-    @Nullable
-    public String getID() {
+    public @Nullable String getID() {
         return null;
     }
 

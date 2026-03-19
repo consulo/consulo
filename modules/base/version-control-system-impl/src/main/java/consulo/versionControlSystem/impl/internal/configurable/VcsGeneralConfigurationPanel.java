@@ -130,8 +130,7 @@ public class VcsGeneralConfigurationPanel implements SearchableConfigurable {
     settings.SHOW_PATCH_IN_EXPLORER = getShowPatchValue();
   }
   
-  @Nullable
-  private Boolean getShowPatchValue() {
+  private @Nullable Boolean getShowPatchValue() {
     int index = myOnPatchCreation.getSelectedIndex();
     if (index == 0) {
       return null;

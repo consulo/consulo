@@ -35,8 +35,7 @@ public abstract class ConsoleFolding {
      * @param lines   lines to be folded
      * @return placeholder for lines or {@code null} if these lines should not be folded
      */
-    @Nullable
-    public String getPlaceholderText(Project project, List<String> lines) {
+    public @Nullable String getPlaceholderText(Project project, List<String> lines) {
         return null;
     }
 }

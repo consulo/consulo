@@ -10,10 +10,8 @@ import java.util.List;
 import java.util.function.Supplier;
 
 class InjectionResult implements Supplier<InjectionResult> {
-  @Nullable
-  final List<? extends PsiFile> files;
-  @Nullable
-  final List<? extends Pair<ReferenceInjector, PlaceImpl>> references;
+  final @Nullable List<? extends PsiFile> files;
+  final @Nullable List<? extends Pair<ReferenceInjector, PlaceImpl>> references;
   private final long myModificationCount;
 
   InjectionResult(PsiFile hostFile, @Nullable List<? extends PsiFile> files, @Nullable List<? extends Pair<ReferenceInjector, PlaceImpl>> references) {

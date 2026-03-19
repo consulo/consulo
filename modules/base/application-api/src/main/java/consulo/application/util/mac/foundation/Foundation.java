@@ -126,8 +126,7 @@ public class Foundation {
     return myFoundationLibrary.class_isMetaClass(cls);
   }
 
-  @Nullable
-  public static String stringFromSelector(Pointer selector) {
+  public static @Nullable String stringFromSelector(Pointer selector) {
     ID id = myFoundationLibrary.NSStringFromSelector(selector);
     if (id.intValue() > 0) {
       return toStringViaUTF8(id);
@@ -181,8 +180,7 @@ public class Foundation {
     }
   }
 
-  @Nullable
-  public static String toStringViaUTF8(ID cfString) {
+  public static @Nullable String toStringViaUTF8(ID cfString) {
     if (cfString.intValue() == 0) return null;
 
     int lengthInChars = myFoundationLibrary.CFStringGetLength(cfString);
@@ -194,8 +192,7 @@ public class Foundation {
     return Native.toString(buffer);
   }
 
-  @Nullable
-  public static String getEncodingName(long nsStringEncoding) {
+  public static @Nullable String getEncodingName(long nsStringEncoding) {
     long cfEncoding = myFoundationLibrary.CFStringConvertNSStringEncodingToEncoding(nsStringEncoding);
     ID pointer = myFoundationLibrary.CFStringConvertEncodingToIANACharSetName(cfEncoding);
     return toStringViaUTF8(pointer);

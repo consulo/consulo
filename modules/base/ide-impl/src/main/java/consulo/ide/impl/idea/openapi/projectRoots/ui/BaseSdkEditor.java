@@ -426,13 +426,11 @@ public abstract class BaseSdkEditor implements UnnamedConfigurable {
         }
     }
 
-    @Nullable
-    private AdditionalDataConfigurable getAdditionalDataConfigurable() {
+    private @Nullable AdditionalDataConfigurable getAdditionalDataConfigurable() {
         return initAdditionalDataConfigurable(mySdk);
     }
 
-    @Nullable
-    private AdditionalDataConfigurable initAdditionalDataConfigurable(Sdk sdk) {
+    private @Nullable AdditionalDataConfigurable initAdditionalDataConfigurable(Sdk sdk) {
         SdkType sdkType = (SdkType)sdk.getSdkType();
         AdditionalDataConfigurable configurable = myAdditionalDataConfigurables.get(sdkType);
         if (configurable == null) {

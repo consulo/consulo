@@ -100,13 +100,11 @@ public abstract class ConfigurationFactory {
         return myType.getDisplayName();
     }
 
-    @Nullable
-    public Image getIcon(RunConfiguration configuration) {
+    public @Nullable Image getIcon(RunConfiguration configuration) {
         return getIcon();
     }
 
-    @Nullable
-    public Image getIcon() {
+    public @Nullable Image getIcon() {
         return myType.getIcon();
     }
 

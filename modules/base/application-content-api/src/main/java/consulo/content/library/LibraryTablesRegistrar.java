@@ -48,6 +48,5 @@ public abstract class LibraryTablesRegistrar {
   
   public abstract LibraryTable getLibraryTable(Project project);
 
-  @Nullable
-  public abstract LibraryTable getLibraryTableByLevel(String level, Project project);
+  public abstract @Nullable LibraryTable getLibraryTableByLevel(String level, Project project);
 }

@@ -61,21 +61,18 @@ public class CodeStyleStatusBarWidget extends EditorBasedStatusBarPopup implemen
     }
 
 
-    @Nullable
-    private static CodeStyleStatusBarUIContributor getUiContributor(TransientCodeStyleSettings settings) {
+    private static @Nullable CodeStyleStatusBarUIContributor getUiContributor(TransientCodeStyleSettings settings) {
         CodeStyleSettingsModifier modifier = settings.getModifier();
         return modifier != null ? modifier.getStatusBarUiContributor(settings) : null;
     }
 
 
-    @Nullable
-    private static IndentStatusBarUIContributor getUiContributor(VirtualFile file, IndentOptions indentOptions) {
+    private static @Nullable IndentStatusBarUIContributor getUiContributor(VirtualFile file, IndentOptions indentOptions) {
         FileIndentOptionsProvider provider = findProvider(file, indentOptions);
         return provider != null ? provider.getIndentStatusBarUiContributor(indentOptions) : null;
     }
 
-    @Nullable
-    private static FileIndentOptionsProvider findProvider(VirtualFile file, IndentOptions indentOptions) {
+    private static @Nullable FileIndentOptionsProvider findProvider(VirtualFile file, IndentOptions indentOptions) {
         FileIndentOptionsProvider optionsProvider = indentOptions.getFileIndentOptionsProvider();
         if (optionsProvider != null) {
             return optionsProvider;
@@ -110,8 +107,7 @@ public class CodeStyleStatusBarWidget extends EditorBasedStatusBarPopup implemen
         }
     }
 
-    @Nullable
-    private PsiFile getPsiFile() {
+    private @Nullable PsiFile getPsiFile() {
         Editor editor = getEditor();
         Project project = getProject();
         if (editor != null && !project.isDisposed()) {
@@ -196,8 +192,7 @@ public class CodeStyleStatusBarWidget extends EditorBasedStatusBarPopup implemen
     private static class MyWidgetState extends WidgetState {
         
         private final IndentOptions myIndentOptions;
-        @Nullable
-        private final CodeStyleStatusBarUIContributor myContributor;
+        private final @Nullable CodeStyleStatusBarUIContributor myContributor;
         
         private final PsiFile myPsiFile;
 
@@ -217,8 +212,7 @@ public class CodeStyleStatusBarWidget extends EditorBasedStatusBarPopup implemen
             }
         }
 
-        @Nullable
-        public CodeStyleStatusBarUIContributor getContributor() {
+        public @Nullable CodeStyleStatusBarUIContributor getContributor() {
             return myContributor;
         }
 

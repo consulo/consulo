@@ -49,8 +49,7 @@ public class BidirectionalMap<K, V> implements Map<K, V> {
         myValueToKeysMap.clear();
     }
 
-    @Nullable
-    public List<K> getKeysByValue(V value) {
+    public @Nullable List<K> getKeysByValue(V value) {
         return myValueToKeysMap.get(value);
     }
 

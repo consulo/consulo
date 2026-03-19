@@ -29,8 +29,7 @@ import java.util.Set;
 public interface ArrangementStandardSettingsManager {
   public boolean isSectionRulesSupported();
 
-  @Nullable
-  public List<CompositeArrangementSettingsToken> getSupportedMatchingTokens();
+  public @Nullable List<CompositeArrangementSettingsToken> getSupportedMatchingTokens();
 
   public boolean isEnabled(ArrangementSettingsToken token, @Nullable ArrangementMatchCondition current);
 
@@ -39,8 +38,7 @@ public interface ArrangementStandardSettingsManager {
 
   public List<ArrangementSettingsToken> sort(Collection<ArrangementSettingsToken> tokens);
 
-  @Nullable
-  public List<CompositeArrangementSettingsToken> getSupportedGroupingTokens();
+  public @Nullable List<CompositeArrangementSettingsToken> getSupportedGroupingTokens();
 
   
   public Collection<StdArrangementRuleAliasToken> getRuleAliases();

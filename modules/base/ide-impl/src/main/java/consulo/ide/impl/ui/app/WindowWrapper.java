@@ -54,8 +54,7 @@ public abstract class WindowWrapper {
   @RequiredUIAccess
   protected abstract Component createCenterComponent(Disposable uiDisposable);
 
-  @Nullable
-  protected Size2D getDefaultSize() {
+  protected @Nullable Size2D getDefaultSize() {
     return null;
   }
 

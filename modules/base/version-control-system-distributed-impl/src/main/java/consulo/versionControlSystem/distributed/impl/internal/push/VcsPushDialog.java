@@ -47,8 +47,7 @@ public class VcsPushDialog extends DialogWrapper implements LegacyDialog {
     private final Map<PushSupport, VcsPushOptionsPanel> myAdditionalPanels;
 
     private LocalizeAction myPushAction;
-    @Nullable
-    private ForcePushAction myForcePushAction;
+    private @Nullable ForcePushAction myForcePushAction;
 
     public VcsPushDialog(
         Project project,
@@ -155,8 +154,7 @@ public class VcsPushDialog extends DialogWrapper implements LegacyDialog {
         myPushAction.setEnabled(false);
     }
 
-    @Nullable
-    public VcsPushOptionValue getAdditionalOptionValue(PushSupport support) {
+    public @Nullable VcsPushOptionValue getAdditionalOptionValue(PushSupport support) {
         VcsPushOptionsPanel panel = myAdditionalPanels.get(support);
         return panel == null ? null : panel.getValue();
     }

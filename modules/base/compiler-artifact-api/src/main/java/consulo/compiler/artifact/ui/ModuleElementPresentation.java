@@ -48,8 +48,7 @@ public class ModuleElementPresentation extends TreeNodePresentation {
     return findModule() != null;
   }
 
-  @Nullable
-  private Module findModule() {
+  private @Nullable Module findModule() {
     return myModulePointer != null ? myModulePointer.get() : null;
   }
 

@@ -42,16 +42,14 @@ public class DefaultConfigurablePreselectStrategy implements ConfigurablePresele
     return findLastSavedConfigurable(configurables, myPropertiesComponent);
   }
 
-  @Nullable
-  private static Configurable findLastSavedConfigurable(Configurable[] configurables, PropertiesComponent propertiesComponent) {
+  private static @Nullable Configurable findLastSavedConfigurable(Configurable[] configurables, PropertiesComponent propertiesComponent) {
     String id = propertiesComponent.getValue(LAST_SELECTED_CONFIGURABLE);
     if (id == null) return null;
 
     return findConfigurableInGroups(id, configurables);
   }
 
-  @Nullable
-  private static Configurable findConfigurableInGroups(String id, Configurable[] configurables) {
+  private static @Nullable Configurable findConfigurableInGroups(String id, Configurable[] configurables) {
     // avoid unnecessary group expand: check top-level configurables in all groups before looking at children
     for (Configurable c : configurables) {
       if (id.equals(c.getId())) {
@@ -74,8 +72,7 @@ public class DefaultConfigurablePreselectStrategy implements ConfigurablePresele
   }
 
 
-  @Nullable
-  public static Configurable getPreselectedByDisplayName(Configurable[] configurables,
+  public static @Nullable Configurable getPreselectedByDisplayName(Configurable[] configurables,
                                                          String preselectedConfigurableDisplayName,
                                                          Project project) {
     Configurable result = findPreselectedByDisplayName(preselectedConfigurableDisplayName, configurables);
@@ -83,8 +80,7 @@ public class DefaultConfigurablePreselectStrategy implements ConfigurablePresele
     return result == null ? findLastSavedConfigurable(configurables, ProjectPropertiesComponent.getInstance(project)) : result;
   }
 
-  @Nullable
-  private static Configurable findPreselectedByDisplayName(String preselectedConfigurableDisplayName, Configurable[] configurables) {
+  private static @Nullable Configurable findPreselectedByDisplayName(String preselectedConfigurableDisplayName, Configurable[] configurables) {
     List<Configurable> all = SearchUtil.expand(configurables);
     for (Configurable each : all) {
       if (preselectedConfigurableDisplayName.equals(each.getDisplayName().get())) return each;

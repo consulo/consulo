@@ -173,8 +173,7 @@ public class LineFragment extends LineBlock implements Fragment {
         return childFragment != null ? childFragment : this;
     }
 
-    @Nullable
-    public Iterator<Fragment> getChildrenIterator() {
+    public @Nullable Iterator<Fragment> getChildrenIterator() {
         return myChildren == null || myChildren.isEmpty() ? null : myChildren.iterator();
     }
 

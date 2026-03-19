@@ -116,11 +116,9 @@ public abstract class LightToolWindowManager implements Disposable {
     myConnection = null;
   }
 
-  @Nullable
-  protected abstract DesignerEditorPanelFacade getDesigner(FileEditor editor);
+  protected abstract @Nullable DesignerEditorPanelFacade getDesigner(FileEditor editor);
 
-  @Nullable
-  public DesignerEditorPanelFacade getActiveDesigner() {
+  public @Nullable DesignerEditorPanelFacade getActiveDesigner() {
     for (FileEditor editor : myFileEditorManager.getSelectedEditors()) {
       DesignerEditorPanelFacade designer = getDesigner(editor);
       if (designer != null) {
@@ -247,8 +245,7 @@ public abstract class LightToolWindowManager implements Disposable {
     return getEditorMode() != null;
   }
 
-  @Nullable
-  final ToolWindowAnchor getEditorMode() {
+  final @Nullable ToolWindowAnchor getEditorMode() {
     String value = myPropertiesComponent.getValue(myEditorModeKey);
     if (value == null) {
       return getAnchor();

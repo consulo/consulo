@@ -34,8 +34,7 @@ public final class PsiElementRef<T extends PsiElement> {
     return getPsiElement() == null;
   }
 
-  @Nullable
-  public final T getPsiElement() {
+  public final @Nullable T getPsiElement() {
     return myColleague.getPsiElement();
   }
 

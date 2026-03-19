@@ -45,11 +45,9 @@ public abstract class ModuleInheritableNamedPointerImpl<T extends Named> impleme
         myXmlPrefix = xmlPrefix;
     }
 
-    @Nullable
-    public abstract String getItemNameFromModule(Module module);
+    public abstract @Nullable String getItemNameFromModule(Module module);
 
-    @Nullable
-    public abstract T getItemFromModule(Module module);
+    public abstract @Nullable T getItemFromModule(Module module);
 
     
     public abstract NamedPointer<T> getPointer(ModuleRootLayer layer, String name);
@@ -175,8 +173,7 @@ public abstract class ModuleInheritableNamedPointerImpl<T extends Named> impleme
         return ((ModuleRootLayerEx) myRootLayer).getConfigurationAccessor().getModulePointer(myRootLayer.getProject(), name);
     }
 
-    @Nullable
-    public T getDefaultValue() {
+    public @Nullable T getDefaultValue() {
         return null;
     }
 

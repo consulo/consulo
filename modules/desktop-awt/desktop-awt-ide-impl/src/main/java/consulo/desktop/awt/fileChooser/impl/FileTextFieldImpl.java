@@ -249,8 +249,7 @@ public abstract class FileTextFieldImpl implements FileLookup, Disposable, FileT
         return pos;
     }
 
-    @Nullable
-    public static String getAdText(CompletionResult result) {
+    public static @Nullable String getAdText(CompletionResult result) {
         if (result.myCompletionBase == null) {
             return null;
         }
@@ -498,8 +497,7 @@ public abstract class FileTextFieldImpl implements FileLookup, Disposable, FileT
         }
     }
 
-    @Nullable
-    public LookupFile getFile() {
+    public @Nullable LookupFile getFile() {
         String text = getTextFieldText();
         if (text == null) {
             return null;
@@ -639,8 +637,7 @@ public abstract class FileTextFieldImpl implements FileLookup, Disposable, FileT
         myCurrentCompletion = null;
     }
 
-    @Nullable
-    public String getTextFieldText() {
+    public @Nullable String getTextFieldText() {
         String text = myPathTextField.getText();
         if (text == null) {
             return null;
@@ -648,7 +645,7 @@ public abstract class FileTextFieldImpl implements FileLookup, Disposable, FileT
         return text;
     }
 
-    public final void setText(final String text, boolean now, @Nullable final Runnable onDone) {
+    public final void setText(final String text, boolean now, final @Nullable Runnable onDone) {
         Update update = new Update("pathFromTree") {
             @Override
             public void run() {

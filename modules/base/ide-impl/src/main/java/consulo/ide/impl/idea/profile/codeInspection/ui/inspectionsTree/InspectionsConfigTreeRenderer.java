@@ -82,8 +82,7 @@ public abstract class InspectionsConfigTreeRenderer implements TreeCellRenderer 
     return component;
   }
 
-  @Nullable
-  private static String getHint(Descriptor descriptor) {
+  private static @Nullable String getHint(Descriptor descriptor) {
     InspectionToolWrapper toolWrapper = descriptor.getToolWrapper();
     if (toolWrapper instanceof LocalInspectionToolWrapper ||
         toolWrapper instanceof GlobalInspectionToolWrapper && !((GlobalInspectionToolWrapper)toolWrapper).worksInBatchModeOnly()) {

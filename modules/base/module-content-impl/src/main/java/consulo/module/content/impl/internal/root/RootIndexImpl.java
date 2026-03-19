@@ -389,8 +389,7 @@ public class RootIndexImpl implements RootIndex {
     }
 
     @Override
-    @Nullable
-    public String getPackageName(VirtualFile dir) {
+    public @Nullable String getPackageName(VirtualFile dir) {
         if (dir.isDirectory()) {
             if (isIgnored(dir)) {
                 return null;
@@ -411,8 +410,7 @@ public class RootIndexImpl implements RootIndex {
         return null;
     }
 
-    @Nullable
-    protected static String getPackageNameForSubdir(String parentPackageName, String subdirName) {
+    protected static @Nullable String getPackageNameForSubdir(String parentPackageName, String subdirName) {
         if (parentPackageName == null) {
             return null;
         }
@@ -420,8 +418,7 @@ public class RootIndexImpl implements RootIndex {
     }
 
     @Override
-    @Nullable
-    public ContentFolderTypeProvider getContentFolderType(DirectoryInfo directoryInfo) {
+    public @Nullable ContentFolderTypeProvider getContentFolderType(DirectoryInfo directoryInfo) {
         return directoryInfo.getSourceRootTypeId();
     }
 
@@ -435,8 +432,7 @@ public class RootIndexImpl implements RootIndex {
         return false;
     }
 
-    @Nullable
-    private static List<VirtualFile> getHierarchy(VirtualFile dir, Set<VirtualFile> allRoots, RootInfo info) {
+    private static @Nullable List<VirtualFile> getHierarchy(VirtualFile dir, Set<VirtualFile> allRoots, RootInfo info) {
         List<VirtualFile> hierarchy = new ArrayList<>();
         boolean hasContentRoots = false;
         while (dir != null) {
@@ -501,8 +497,7 @@ public class RootIndexImpl implements RootIndex {
                 && ContainerUtil.find(hierarchy, contentRootOf::containsKey) == null;
         }
 
-        @Nullable
-        private VirtualFile findModuleRootInfo(List<VirtualFile> hierarchy) {
+        private @Nullable VirtualFile findModuleRootInfo(List<VirtualFile> hierarchy) {
             for (VirtualFile root : hierarchy) {
                 ContentFolder contentFolder = contentFolders.get(root);
                 // if we found content folder - try search content root
@@ -524,8 +519,7 @@ public class RootIndexImpl implements RootIndex {
             return null;
         }
 
-        @Nullable
-        private VirtualFile findNearestContentRootForExcluded(List<VirtualFile> hierarchy) {
+        private @Nullable VirtualFile findNearestContentRootForExcluded(List<VirtualFile> hierarchy) {
             for (VirtualFile root : hierarchy) {
                 if (contentRootOf.containsKey(root)) {
                     return root;
@@ -534,8 +528,7 @@ public class RootIndexImpl implements RootIndex {
             return null;
         }
 
-        @Nullable
-        private VirtualFile findLibraryRootInfo(List<VirtualFile> hierarchy, boolean source) {
+        private @Nullable VirtualFile findLibraryRootInfo(List<VirtualFile> hierarchy, boolean source) {
             Set<Library> librariesToIgnore = new HashSet<>();
             for (VirtualFile root : hierarchy) {
                 librariesToIgnore.addAll(excludedFromLibraries.get(root));
@@ -568,8 +561,7 @@ public class RootIndexImpl implements RootIndex {
             return prefix;
         }
 
-        @Nullable
-        private VirtualFile findPackageRootInfo(
+        private @Nullable VirtualFile findPackageRootInfo(
             List<VirtualFile> hierarchy,
             VirtualFile moduleContentRoot,
             VirtualFile libraryClassRoot,
@@ -613,8 +605,7 @@ public class RootIndexImpl implements RootIndex {
             return orderEntries;
         }
 
-        @Nullable
-        private ModuleSourceOrderEntry getModuleSourceEntry(
+        private @Nullable ModuleSourceOrderEntry getModuleSourceEntry(
             List<VirtualFile> hierarchy,
             VirtualFile moduleContentRoot,
             MultiMap<VirtualFile, OrderEntry> libClassRootEntries

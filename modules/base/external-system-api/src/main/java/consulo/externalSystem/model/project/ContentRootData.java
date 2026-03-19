@@ -101,8 +101,7 @@ public class ContentRootData extends AbstractExternalEntityData {
     
     private final String myPath;
 
-    @Nullable
-    private final String myPackagePrefix;
+    private final @Nullable String myPackagePrefix;
 
     public SourceRoot(String path, @Nullable String prefix) {
       myPath = path;
@@ -114,8 +113,7 @@ public class ContentRootData extends AbstractExternalEntityData {
       return myPath;
     }
 
-    @Nullable
-    public String getPackagePrefix() {
+    public @Nullable String getPackagePrefix() {
       return myPackagePrefix;
     }
 

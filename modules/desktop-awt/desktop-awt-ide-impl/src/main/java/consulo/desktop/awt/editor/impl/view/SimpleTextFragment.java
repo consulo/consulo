@@ -16,8 +16,7 @@ final class SimpleTextFragment extends TextFragment {
     private final char[] myText;
     
     private final Font myFont;
-    @Nullable
-    private float[] myCharAlignment = null;
+    private @Nullable float[] myCharAlignment = null;
 
     SimpleTextFragment(char[] lineChars, int start, int end, FontInfo fontInfo, @Nullable EditorViewImpl view) {
         super(end - start, view);

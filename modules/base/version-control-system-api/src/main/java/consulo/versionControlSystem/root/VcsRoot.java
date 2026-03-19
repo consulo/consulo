@@ -26,8 +26,7 @@ import org.jspecify.annotations.Nullable;
  */
 public class VcsRoot {
 
-  @Nullable
-  private final AbstractVcs myVcs;
+  private final @Nullable AbstractVcs myVcs;
 
   
   private final VirtualFile myPath;
@@ -39,8 +38,7 @@ public class VcsRoot {
     myPath = path;
   }
 
-  @Nullable
-  public AbstractVcs getVcs() {
+  public @Nullable AbstractVcs getVcs() {
     return myVcs;
   }
 

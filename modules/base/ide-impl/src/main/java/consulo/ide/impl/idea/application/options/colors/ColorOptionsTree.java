@@ -83,14 +83,12 @@ public class ColorOptionsTree extends Tree {
     return list;
   }
 
-  @Nullable
-  public ColorAndFontDescription getSelectedDescriptor() {
+  public @Nullable ColorAndFontDescription getSelectedDescriptor() {
     Object selectedValue = getSelectedValue();
     return selectedValue instanceof ColorAndFontDescription ? (ColorAndFontDescription)selectedValue : null;
   }
 
-  @Nullable
-  public Object getSelectedValue() {
+  public @Nullable Object getSelectedValue() {
     Object selectedNode = getLastSelectedPathComponent();
     if (selectedNode instanceof DefaultMutableTreeNode) {
       return ((DefaultMutableTreeNode)selectedNode).getUserObject();
@@ -111,8 +109,7 @@ public class ColorOptionsTree extends Tree {
     selectPath(findOption(myTreeModel.getRoot(), data -> !optionName.isEmpty() && StringUtil.containsIgnoreCase(data.toString(), optionName)));
   }
 
-  @Nullable
-  private TreePath findOption(Object nodeObject, DescriptorMatcher matcher) {
+  private @Nullable TreePath findOption(Object nodeObject, DescriptorMatcher matcher) {
     for (int i = 0; i < myTreeModel.getChildCount(nodeObject); i ++) {
       Object childObject = myTreeModel.getChild(nodeObject, i);
       if (childObject instanceof MyTreeNode) {
@@ -134,8 +131,7 @@ public class ColorOptionsTree extends Tree {
     }
   }
 
-  @Nullable
-  private static List<String> extractPath(EditorSchemeAttributeDescriptor descriptor) {
+  private static @Nullable List<String> extractPath(EditorSchemeAttributeDescriptor descriptor) {
     if (descriptor instanceof ColorAndFontDescription) {
       String name = descriptor.toString();
       List<String> path = new ArrayList<>();

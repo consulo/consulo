@@ -32,12 +32,9 @@ public class FailureImpl implements Failure {
   private final @BuildEventsNls.Message String myMessage;
   private final @BuildEventsNls.Description String myDescription;
   private final List<? extends Failure> myCauses;
-  @Nullable
-  private final Throwable myError;
-  @Nullable
-  private final Notification myNotification;
-  @Nullable
-  private final Navigatable myNavigatable;
+  private final @Nullable Throwable myError;
+  private final @Nullable Notification myNotification;
+  private final @Nullable Navigatable myNavigatable;
 
   public FailureImpl(@BuildEventsNls.Message String message, Throwable error) {
     this(message, null, Collections.emptyList(), error, null, null);

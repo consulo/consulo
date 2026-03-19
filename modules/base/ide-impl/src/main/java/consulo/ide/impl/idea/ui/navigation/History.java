@@ -165,8 +165,7 @@ public final class History {
     return checkPlace != null && checkPlace.getPath(pathElement) != null;
   }
 
-  @Nullable
-  private Place getCheckPlace(String pathElement) {
+  private @Nullable Place getCheckPlace(String pathElement) {
     Place checkPlace = getCurrent();
     if (checkPlace == null || checkPlace.getPath(pathElement) == null) {
       checkPlace = query();

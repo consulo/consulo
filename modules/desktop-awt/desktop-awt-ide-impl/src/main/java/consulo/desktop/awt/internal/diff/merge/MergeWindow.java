@@ -37,8 +37,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public class MergeWindow {
-    @Nullable
-    private final Project myProject;
+    private final @Nullable Project myProject;
     
     private final MergeRequest myMergeRequest;
 

@@ -49,8 +49,7 @@ public class ProjectUtilCore {
         return result + " [" + module.getName() + "]";
     }
 
-    @Nullable
-    public static String decorateWithLibraryName(VirtualFile file, Project project, String result) {
+    public static @Nullable String decorateWithLibraryName(VirtualFile file, Project project, String result) {
         if (file.getFileSystem() instanceof LocalFileProvider localFileProvider) {
             VirtualFile localFile = localFileProvider.getLocalVirtualFileFor(file);
             if (localFile != null) {

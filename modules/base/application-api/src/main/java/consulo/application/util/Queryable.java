@@ -47,8 +47,7 @@ public interface Queryable {
   }
 
   class Util {
-    @Nullable
-    public static String print(Queryable ui, @Nullable PrintInfo printInfo, @Nullable Contributor contributor) {
+    public static @Nullable String print(Queryable ui, @Nullable PrintInfo printInfo, @Nullable Contributor contributor) {
       PrintInfo print = printInfo != null ? printInfo : new PrintInfo();
 
       Map<String, String> map = new LinkedHashMap<>();
@@ -88,8 +87,7 @@ public interface Queryable {
       return id + (info.length() > 0 ? " " + info.toString() : "");
     }
 
-    @Nullable
-    public static String print(Queryable ui, @Nullable PrintInfo printInfo) {
+    public static @Nullable String print(Queryable ui, @Nullable PrintInfo printInfo) {
       return print(ui, printInfo, null);
     }
   }

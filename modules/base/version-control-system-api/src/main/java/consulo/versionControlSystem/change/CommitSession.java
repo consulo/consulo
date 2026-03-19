@@ -58,8 +58,7 @@ public interface CommitSession {
   @Nullable
   JComponent getAdditionalConfigurationUI();
 
-  @Nullable
-  default JComponent getAdditionalConfigurationUI(Collection<Change> changes, String commitMessage) {
+  default @Nullable JComponent getAdditionalConfigurationUI(Collection<Change> changes, String commitMessage) {
     return getAdditionalConfigurationUI();
   }
 

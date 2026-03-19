@@ -38,8 +38,7 @@ public class TranslationSourceFileInfo {
 
     private static final FileAttribute ourSourceFileAttribute = new FileAttribute("_make_source_file_info_", 4, false);
 
-    @Nullable
-    public static TranslationSourceFileInfo loadSourceInfo(VirtualFile file) {
+    public static @Nullable TranslationSourceFileInfo loadSourceInfo(VirtualFile file) {
         try {
             DataInputStream is = ourSourceFileAttribute.readAttribute(file);
             if (is != null) {

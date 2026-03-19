@@ -35,16 +35,12 @@ public class ExternalDiffSettings implements PersistentStateComponent<ExternalDi
   public static class State {
     public boolean DIFF_ENABLED = false;
     public boolean DIFF_DEFAULT = false;
-    @Nullable
-    public String DIFF_EXE_PATH = "";
-    @Nullable
-    public String DIFF_PARAMETERS = "%1 %2 %3";
+    public @Nullable String DIFF_EXE_PATH = "";
+    public @Nullable String DIFF_PARAMETERS = "%1 %2 %3";
 
     public boolean MERGE_ENABLED = false;
-    @Nullable
-    public String MERGE_EXE_PATH = "";
-    @Nullable
-    public String MERGE_PARAMETERS = "%1 %2 %3 %4";
+    public @Nullable String MERGE_EXE_PATH = "";
+    public @Nullable String MERGE_PARAMETERS = "%1 %2 %3 %4";
 
     public boolean MERGE_TRUST_EXIT_CODE = false;
   }

@@ -47,14 +47,11 @@ public abstract class DvcsCommitAdditionalComponent implements RefreshableOnComp
 
     protected final JPanel myPanel;
     protected final JCheckBox myAmend;
-    @Nullable
-    private String myPreviousMessage;
-    @Nullable
-    private String myAmendedMessage;
+    private @Nullable String myPreviousMessage;
+    private @Nullable String myAmendedMessage;
     
     protected final CheckinProjectPanel myCheckinPanel;
-    @Nullable
-    private Map<VirtualFile, String> myMessagesForRoots;
+    private @Nullable Map<VirtualFile, String> myMessagesForRoots;
 
     public DvcsCommitAdditionalComponent(Project project, CheckinProjectPanel panel) {
         myCheckinPanel = panel;
@@ -173,8 +170,7 @@ public abstract class DvcsCommitAdditionalComponent implements RefreshableOnComp
     
     protected abstract Set<VirtualFile> getVcsRoots(Collection<FilePath> files);
 
-    @Nullable
-    protected abstract String getLastCommitMessage(VirtualFile repo) throws VcsException;
+    protected abstract @Nullable String getLastCommitMessage(VirtualFile repo) throws VcsException;
 
     public boolean isAmend() {
         return myAmend.isSelected();

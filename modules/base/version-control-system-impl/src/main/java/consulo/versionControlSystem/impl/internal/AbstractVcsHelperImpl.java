@@ -787,7 +787,7 @@ public class AbstractVcsHelperImpl extends AbstractVcsHelper {
         final VcsRevisionNumber revision,
         final VirtualFile virtualFile,
         VcsKey vcsKey,
-        @Nullable final RepositoryLocation location,
+        final @Nullable RepositoryLocation location,
         final boolean isNonLocal
     ) {
         final AbstractVcs vcs = ProjectLevelVcsManager.getInstance(project).findVcsByName(vcsKey.getName());
@@ -887,8 +887,7 @@ public class AbstractVcsHelperImpl extends AbstractVcsHelper {
         );
     }
 
-    @Nullable
-    public static CommittedChangeList getRemoteList(
+    public static @Nullable CommittedChangeList getRemoteList(
         AbstractVcs vcs,
         VcsRevisionNumber revision,
         VirtualFile nonLocal

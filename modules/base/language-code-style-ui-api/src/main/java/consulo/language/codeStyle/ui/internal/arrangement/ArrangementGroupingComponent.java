@@ -40,8 +40,7 @@ public class ArrangementGroupingComponent extends JPanel implements ArrangementR
   
   private final ArrangementRuleIndexControl myRowIndexControl;
 
-  @Nullable
-  private final ArrangementUiComponent myOrderTypeToken;
+  private final @Nullable ArrangementUiComponent myOrderTypeToken;
 
   /**
    * Assumes that given token {@link CompositeArrangementSettingsToken#getChildren() has no children} or all its children have
@@ -179,8 +178,7 @@ public class ArrangementGroupingComponent extends JPanel implements ArrangementR
     setBackground(highlight ? UIUtil.getDecoratedRowColor() : UIUtil.getListBackground());
   }
   
-  @Nullable
-  public ArrangementSettingsToken getOrderType() {
+  public @Nullable ArrangementSettingsToken getOrderType() {
     return myOrderTypeToken == null ? null : myOrderTypeToken.getToken();
   }
 

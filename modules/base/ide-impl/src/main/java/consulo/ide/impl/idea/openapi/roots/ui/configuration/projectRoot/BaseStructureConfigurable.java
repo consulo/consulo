@@ -124,8 +124,7 @@ public abstract class BaseStructureConfigurable extends MasterDetailsComponent i
         result.add(actionsManager.createCollapseAllAction(expander, myTree));
     }
 
-    @Nullable
-    public ProjectStructureElement getSelectedElement() {
+    public @Nullable ProjectStructureElement getSelectedElement() {
         TreePath selectionPath = myTree.getSelectionPath();
         if (selectionPath != null && selectionPath.getLastPathComponent() instanceof MyNode node
             && node.getConfigurable() instanceof ProjectStructureElementConfigurable configurable) {
@@ -228,8 +227,7 @@ public abstract class BaseStructureConfigurable extends MasterDetailsComponent i
     public void onStructureSelected() {
     }
 
-    @Nullable
-    protected abstract AbstractAddGroup createAddAction();
+    protected abstract @Nullable AbstractAddGroup createAddAction();
 
     protected class MyRemoveAction extends MyDeleteAction {
         public MyRemoveAction() {

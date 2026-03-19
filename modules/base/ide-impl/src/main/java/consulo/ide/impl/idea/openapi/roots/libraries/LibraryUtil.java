@@ -58,8 +58,7 @@ public class LibraryUtil {
     return false;
   }
 
-  @Nullable
-  public static Library findLibraryByClass(String fqn, @Nullable Project project) {
+  public static @Nullable Library findLibraryByClass(String fqn, @Nullable Project project) {
     if (project != null) {
       LibraryTable projectTable = LibraryTablesRegistrar.getInstance().getLibraryTable(project);
       Library library = findInTable(projectTable, fqn);
@@ -81,8 +80,7 @@ public class LibraryUtil {
     return child != null && findInFile(child, tokenizer);
   }
 
-  @Nullable
-  private static Library findInTable(LibraryTable table, String fqn) {
+  private static @Nullable Library findInTable(LibraryTable table, String fqn) {
     for (Library library : table.getLibraries()) {
       if (isClassAvailableInLibrary(library, fqn)) {
         return library;
@@ -112,8 +110,7 @@ public class LibraryUtil {
     return ModuleContentLibraryUtil.getLibraryRoots(modules, includeSourceFiles, includeSdk);
   }
 
-  @Nullable
-  public static Library findLibrary(Module module, String name) {
+  public static @Nullable Library findLibrary(Module module, String name) {
     Ref<Library> result = Ref.create(null);
     OrderEnumerator.orderEntries(module).forEachLibrary(library -> {
       if (name.equals(library.getName())) {
@@ -125,8 +122,7 @@ public class LibraryUtil {
     return result.get();
   }
 
-  @Nullable
-  public static OrderEntry findLibraryEntry(VirtualFile file, Project project) {
+  public static @Nullable OrderEntry findLibraryEntry(VirtualFile file, Project project) {
     return ModuleContentLibraryUtil.findLibraryEntry(file, project);
   }
 

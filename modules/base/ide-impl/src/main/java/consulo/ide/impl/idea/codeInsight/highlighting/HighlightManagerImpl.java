@@ -113,8 +113,7 @@ public class HighlightManagerImpl extends HighlightManager {
         });
     }
 
-    @Nullable
-    public Map<RangeHighlighter, HighlightInfoFlags> getHighlightInfoMap(Editor editor, boolean toCreate) {
+    public @Nullable Map<RangeHighlighter, HighlightInfoFlags> getHighlightInfoMap(Editor editor, boolean toCreate) {
         if (editor instanceof EditorWindow) {
             return getHighlightInfoMap(((EditorWindow) editor).getDelegate(), toCreate);
         }

@@ -22,8 +22,7 @@ public final class ComplexTextFragment extends TextFragment {
     private static final double CLIP_MARGIN = 1e4;
 
     private final GlyphVector myGlyphVector;
-    @Nullable
-    private final short[] myCodePoint2Offset; // Start offset of each Unicode code point in the fragment
+    private final @Nullable short[] myCodePoint2Offset; // Start offset of each Unicode code point in the fragment
     // (null if each code point takes one char).
     // We expect no more than 1025 chars in a fragment, so 'short' should be enough.
 

@@ -34,8 +34,7 @@ public abstract class MacroBase extends Macro {
     myDescription = description;
   }
 
-  @Nullable
-  protected abstract Result calculateResult(Expression[] params, ExpressionContext context, boolean quick);
+  protected abstract @Nullable Result calculateResult(Expression[] params, ExpressionContext context, boolean quick);
 
   @Override
   public Result calculateResult(Expression[] params, ExpressionContext context) {
@@ -63,13 +62,11 @@ public abstract class MacroBase extends Macro {
     return "a";
   }
 
-  @Nullable
-  public static String getTextResult(Expression[] params, ExpressionContext context) {
+  public static @Nullable String getTextResult(Expression[] params, ExpressionContext context) {
     return getTextResult(params, context, false);
   }
 
-  @Nullable
-  public static String getTextResult(Expression[] params, ExpressionContext context, boolean useSelection) {
+  public static @Nullable String getTextResult(Expression[] params, ExpressionContext context, boolean useSelection) {
     if (params.length == 1) {
       Result result = params[0].calculateResult(context);
       if (result == null && useSelection) {

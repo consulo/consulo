@@ -43,8 +43,7 @@ public final class WordRequestInfoImpl implements WordRequestInfo {
     return searchContext;
   }
 
-  @Nullable
-  public String getContainerName() {
+  public @Nullable String getContainerName() {
     return containerName;
   }
 
@@ -71,8 +70,7 @@ public final class WordRequestInfoImpl implements WordRequestInfo {
     return searchContext;
   }
 
-  @Nullable
-  private String component5() {
+  private @Nullable String component5() {
     return containerName;
   }
 

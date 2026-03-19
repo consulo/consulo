@@ -45,8 +45,7 @@ import java.util.concurrent.ConcurrentHashMap;
 @Deprecated
 @DeprecationInfo("Migrate to new localize")
 public abstract class AbstractBundle {
-  @Nullable
-  private Reference<ResourceBundle> myBundle = null;
+  private @Nullable Reference<ResourceBundle> myBundle = null;
   private final String myPathToBundle;
 
   protected AbstractBundle() {
@@ -57,8 +56,7 @@ public abstract class AbstractBundle {
     myPathToBundle = pathToBundle;
   }
 
-  @Nullable
-  public String getMessage(String key, Object... params) {
+  public @Nullable String getMessage(String key, Object... params) {
     return BundleBase.message(getBundle(), key, params);
   }
 

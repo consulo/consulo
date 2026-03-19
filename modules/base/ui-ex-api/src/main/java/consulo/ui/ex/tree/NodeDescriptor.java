@@ -42,8 +42,7 @@ public abstract class NodeDescriptor<E> {
     myParentDescriptor = parentDescriptor;
   }
 
-  @Nullable
-  public NodeDescriptor getParentDescriptor() {
+  public @Nullable NodeDescriptor getParentDescriptor() {
     return myParentDescriptor;
   }
 
@@ -68,8 +67,7 @@ public abstract class NodeDescriptor<E> {
     return myName;
   }
 
-  @Nullable
-  public final Image getIcon() {
+  public final @Nullable Image getIcon() {
     return myIcon;
   }
 

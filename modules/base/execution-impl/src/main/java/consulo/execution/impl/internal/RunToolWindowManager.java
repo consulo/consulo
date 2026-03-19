@@ -101,8 +101,7 @@ public class RunToolWindowManager {
         return myToolwindowIdToContentManagerMap.entrySet();
     }
 
-    @Nullable
-    public ContentManager get(String toolWindowId, boolean createIfNeed) {
+    public @Nullable ContentManager get(String toolWindowId, boolean createIfNeed) {
         // if project started disposing, return null
         if (myProject.getDisposeState().get() != ThreeState.NO) {
             return null;

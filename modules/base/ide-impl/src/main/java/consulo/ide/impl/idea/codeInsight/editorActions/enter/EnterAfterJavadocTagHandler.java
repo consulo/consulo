@@ -198,8 +198,7 @@ public class EnterAfterJavadocTagHandler extends EnterHandlerDelegateAdapter {
         public final int startTagEndOffset;
         public final int endTagStartOffset;
 
-        @Nullable
-        private final CharSequence myText;
+        private final @Nullable CharSequence myText;
         private final int myOffset;
 
         Context() {
