@@ -65,8 +65,7 @@ public interface Inlay<T extends EditorCustomElementRenderer> extends Disposable
     /**
      * Returns inlay element's bounds in editor coordinate system if it's visible (not folded), or {@code null} otherwise
      */
-    @Nullable
-    Rectangle getBounds();
+    @Nullable Rectangle getBounds();
 
     /**
      * Returns renderer, which defines size and representation for this inlay.
@@ -93,8 +92,7 @@ public interface Inlay<T extends EditorCustomElementRenderer> extends Disposable
      *
      * @see EditorCustomElementRenderer#calcGutterIconRenderer(Inlay)
      */
-    @Nullable
-    GutterIconRenderer getGutterIconRenderer();
+    @Nullable GutterIconRenderer getGutterIconRenderer();
 
     /**
      * Updates inlay properties (width, height, gutter icon renderer) from inlay's renderer. Also, repaints the inlay.

@@ -166,9 +166,8 @@ public abstract class ConcurrentFactoryMap<K, V> implements ConcurrentMap<K, V> 
   
   public static <T, V> ConcurrentMap<T, V> createMap(final Function<? super T, ? extends V> computeValue) {
     return new ConcurrentFactoryMap<T, V>() {
-      @Nullable
       @Override
-      protected V create(T key) {
+      protected @Nullable V create(T key) {
         return computeValue.apply(key);
       }
     };
@@ -177,9 +176,8 @@ public abstract class ConcurrentFactoryMap<K, V> implements ConcurrentMap<K, V> 
   
   public static <K, V> ConcurrentMap<K, V> create(Function<? super K, ? extends V> computeValue, Supplier<? extends ConcurrentMap<K, V>> mapCreator) {
     return new ConcurrentFactoryMap<K, V>() {
-      @Nullable
       @Override
-      protected V create(K key) {
+      protected @Nullable V create(K key) {
         return computeValue.apply(key);
       }
 

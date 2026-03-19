@@ -37,6 +37,5 @@ public interface BuildIssue {
   
   List<BuildIssueQuickFix> getQuickFixes();
 
-  @Nullable
-  Navigatable getNavigatable(Project project);
+  @Nullable Navigatable getNavigatable(Project project);
 }

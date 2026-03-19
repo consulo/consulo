@@ -10,6 +10,5 @@ import org.jspecify.annotations.Nullable;
  * TODO migrate to ui-api
  */
 public interface ColoredItem {
-  @Nullable
-  ColorValue getColor();
+  @Nullable ColorValue getColor();
 }

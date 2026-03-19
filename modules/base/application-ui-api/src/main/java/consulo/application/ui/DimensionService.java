@@ -40,11 +40,9 @@ public interface DimensionService extends ModificationTracker {
    * {@code null} if there is no stored value under the {@code key}.
    * @throws IllegalArgumentException if {@code key} is {@code null}.
    */
-  @Nullable
-  Size2D getSize(String key);
+  @Nullable Size2D getSize(String key);
 
-  @Nullable
-  Size2D getSize(String key, Project project);
+  @Nullable Size2D getSize(String key, Project project);
 
   /**
    * Store specified {@code size} under the {@code key}. If {@code size} is
@@ -66,11 +64,9 @@ public interface DimensionService extends ModificationTracker {
    * properly works in multi-monitor configuration.
    * @throws IllegalArgumentException if {@code key} is {@code null}.
    */
-  @Nullable
-  Point2D getLocation(String key);
+  @Nullable Point2D getLocation(String key);
 
-  @Nullable
-  Point2D getLocation(String key, Project project);
+  @Nullable Point2D getLocation(String key, Project project);
 
   /**
    * Store specified {@code point} under the {@code key}. If {@code point} is

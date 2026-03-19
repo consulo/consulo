@@ -50,9 +50,8 @@ public class LibraryKindRegistryImpl implements LibraryKindRegistry {
         myApplication = application;
     }
 
-    @Nullable
     @Override
-    public LibraryKind findKindById(@Nullable String libraryKindId) {
+    public @Nullable LibraryKind findKindById(@Nullable String libraryKindId) {
         if (libraryKindId == null) {
             return null;
         }
@@ -71,9 +70,8 @@ public class LibraryKindRegistryImpl implements LibraryKindRegistry {
         return null;
     }
 
-    @Nullable
     @Override
-    public LibraryType<?> findLibraryTypeByKindId(@Nullable String libraryKindId) {
+    public @Nullable LibraryType<?> findLibraryTypeByKindId(@Nullable String libraryKindId) {
         return libraryKindId == null ? null : find(libraryKindId, LibraryType.class, KINDS_FROM_LIBRARY_TYPE);
     }
 

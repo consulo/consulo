@@ -48,9 +48,8 @@ public class BuildIssueEventImpl extends AbstractBuildEvent implements BuildIssu
     return BuildNotificationsGroups.BUILD_ISSUES;
   }
 
-  @Nullable
   @Override
-  public Navigatable getNavigatable(Project project) {
+  public @Nullable Navigatable getNavigatable(Project project) {
     return myIssue.getNavigatable(project);
   }
 

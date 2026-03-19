@@ -24,6 +24,5 @@ import org.jspecify.annotations.Nullable;
  * @since 2019-02-23
  */
 public interface ImportantFolderLockerViaBuiltInServer extends ImportantFolderLocker {
-  @Nullable
-  BuiltInServer getServer();
+  @Nullable BuiltInServer getServer();
 }

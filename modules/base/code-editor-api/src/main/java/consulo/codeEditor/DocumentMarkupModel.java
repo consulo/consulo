@@ -43,9 +43,8 @@ public final class DocumentMarkupModel {
    * @return the markup model instance.
    * @see Editor#getMarkupModel()
    */
-  @Nullable
   @Contract("_, _, true -> !null")
-  public static MarkupModelEx forDocument(Document document, @Nullable Project project, boolean create) {
+  public static @Nullable MarkupModelEx forDocument(Document document, @Nullable Project project, boolean create) {
     return CodeEditorInternalHelper.getInstance().forDocument(document, project, create);
   }
 }

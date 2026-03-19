@@ -238,18 +238,14 @@ public final class CachedValueProfiler {
   }
 
   public interface EventPlace {
-    @Nullable
-    StackTraceElement getStackFrame();
+    @Nullable StackTraceElement getStackFrame();
 
-    @Nullable
-    StackTraceElement[] getStackTrace();
+    StackTraceElement @Nullable [] getStackTrace();
   }
 
   private static class ThreadContext {
-    @Nullable
-    Frame topFrame;
-    @Nullable
-    EventConsumer consumer = ourEventConsumer;
+    @Nullable Frame topFrame;
+    @Nullable EventConsumer consumer = ourEventConsumer;
   }
 
   private static class Overhead {

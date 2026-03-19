@@ -58,9 +58,8 @@ public class DateTimeFormatConfigurable extends SimpleConfigurableByProperties i
   /**
    * @see consulo.ide.impl.idea.ide.GeneralSettingsConfigurable
    */
-  @Nullable
   @Override
-  public String getParentId() {
+  public @Nullable String getParentId() {
     return "preferences.general";
   }
 

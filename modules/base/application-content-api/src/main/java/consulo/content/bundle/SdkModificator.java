@@ -31,8 +31,7 @@ public interface SdkModificator {
 
   void setHomeNioPath(Path path);
 
-  @Nullable
-  String getVersionString();
+  @Nullable String getVersionString();
 
   void setVersionString(String versionString);
 

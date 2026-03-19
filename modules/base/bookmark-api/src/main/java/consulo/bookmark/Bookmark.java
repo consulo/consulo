@@ -28,8 +28,7 @@ import org.jspecify.annotations.Nullable;
  * @since 10-Aug-22
  */
 public interface Bookmark extends Navigatable {
-  @Nullable
-  Document getDocument();
+  @Nullable Document getDocument();
 
   
   VirtualFile getFile();

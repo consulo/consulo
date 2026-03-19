@@ -71,21 +71,18 @@ public class FailureImpl implements Failure {
     myNavigatable = navigatable;
   }
 
-  @Nullable
   @Override
-  public String getMessage() {
+  public @Nullable String getMessage() {
     return myMessage;
   }
 
-  @Nullable
   @Override
-  public String getDescription() {
+  public @Nullable String getDescription() {
     return myDescription;
   }
 
-  @Nullable
   @Override
-  public Throwable getError() {
+  public @Nullable Throwable getError() {
     return myError;
   }
 
@@ -94,15 +91,13 @@ public class FailureImpl implements Failure {
     return myCauses;
   }
 
-  @Nullable
   @Override
-  public Notification getNotification() {
+  public @Nullable Notification getNotification() {
     return myNotification;
   }
 
-  @Nullable
   @Override
-  public Navigatable getNavigatable() {
+  public @Nullable Navigatable getNavigatable() {
     return myNavigatable;
   }
 }

@@ -35,9 +35,8 @@ public class BuildOutputCollector implements BuildOutputInstantReader {
     return myReader.getParentEventId();
   }
 
-  @Nullable
   @Override
-  public String readLine() {
+  public @Nullable String readLine() {
     String line = myReader.readLine();
     if (line != null) {
       myReadLines.add(line);

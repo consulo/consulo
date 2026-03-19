@@ -31,8 +31,7 @@ public interface SelectionModel {
   /**
    * @return object that encapsulates information about visual position of selected text start if any
    */
-  @Nullable
-  VisualPosition getSelectionStartPosition();
+  @Nullable VisualPosition getSelectionStartPosition();
 
   /**
    * Returns the end offset in the document of the selected text range, or the caret
@@ -45,23 +44,20 @@ public interface SelectionModel {
   /**
    * @return object that encapsulates information about visual position of selected text end if any;
    */
-  @Nullable
-  VisualPosition getSelectionEndPosition();
+  @Nullable VisualPosition getSelectionEndPosition();
 
   /**
    * Returns the text selected in the editor.
    *
    * @return the selected text, or {@code null} if there is currently no selection.
    */
-  @Nullable
-  String getSelectedText();
+  @Nullable String getSelectedText();
 
   /**
    * If {@code allCarets} is {@code true}, returns the concatenation of selections for all carets, or {@code null} if there
    * are no selections. If {@code allCarets} is {@code false}, works just like {@link #getSelectedText}.
    */
-  @Nullable
-  String getSelectedText(boolean allCarets);
+  @Nullable String getSelectedText(boolean allCarets);
 
   /**
    * Returns the offset from which the user started to extend the selection (the selection start
@@ -76,8 +72,7 @@ public interface SelectionModel {
   /**
    * @return object that encapsulates information about visual position from which the user started to extend the selection if any
    */
-  @Nullable
-  VisualPosition getLeadSelectionPosition();
+  @Nullable VisualPosition getLeadSelectionPosition();
 
   /**
    * Checks if a range of text is currently selected.

@@ -93,8 +93,7 @@ public final class FlushQueue {
     return "LaterInvocator.FlushQueue" + (myLastInfo == null ? "" : " lastInfo=" + myLastInfo);
   }
 
-  @Nullable
-  RunnableInfo getNextEvent(boolean remove) {
+  @Nullable RunnableInfo getNextEvent(boolean remove) {
     synchronized (LOCK) {
       ModalityState currentModality = LaterInvocator.getCurrentModalityState();
 

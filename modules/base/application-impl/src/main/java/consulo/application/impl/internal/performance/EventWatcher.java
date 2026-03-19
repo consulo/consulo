@@ -9,9 +9,7 @@ import java.awt.*;
 public interface EventWatcher {
 
   final class InstanceHolder {
-    private
-    @Nullable
-    EventWatcher myInstance = null;
+    private @Nullable EventWatcher myInstance = null;
     private final boolean myIsEnabled = Boolean.getBoolean("idea.event.queue.dispatch.listen");
 
     private InstanceHolder() {

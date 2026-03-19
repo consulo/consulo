@@ -26,9 +26,8 @@ import org.jspecify.annotations.Nullable;
 public class EmptyFocusModeModel implements FocusModeModel {
     public static final FocusModeModel INSTANCE = new EmptyFocusModeModel();
 
-    @Nullable
     @Override
-    public Segment getFocusModeRange() {
+    public @Nullable Segment getFocusModeRange() {
         return null;
     }
 }

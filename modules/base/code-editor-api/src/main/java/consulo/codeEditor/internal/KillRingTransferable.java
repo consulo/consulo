@@ -82,9 +82,8 @@ public class KillRingTransferable implements Transferable {
         return flavor == DataFlavor.stringFlavor;
     }
 
-    @Nullable
     @Override
-    public Object getTransferData(DataFlavor flavor) throws UnsupportedFlavorException, IOException {
+    public @Nullable Object getTransferData(DataFlavor flavor) throws UnsupportedFlavorException, IOException {
         return isDataFlavorSupported(flavor) ? myData : null;
     }
 

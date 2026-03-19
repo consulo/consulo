@@ -31,6 +31,5 @@ public interface ProgressActivityFactory {
     return Application.get().getInstance(ProgressActivityFactory.class);
   }
 
-  @Nullable
-  Runnable createActivity();
+  @Nullable Runnable createActivity();
 }

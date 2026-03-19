@@ -16,16 +16,14 @@ public interface LineNumberConverter {
    * @param lineNumber 1-based line number
    * @return number to be displayed in gutter, {@code null} means no number is displayed
    */
-  @Nullable
-  Integer convert(Editor editor, int lineNumber);
+  @Nullable Integer convert(Editor editor, int lineNumber);
 
   /**
    * Number which should be used to calculate the width of the line number area in the gutter.
    * This should be the largest number that will be displayed.
    * {@code null} means no width will be allocated to the line number area.
    */
-  @Nullable
-  Integer getMaxLineNumber(Editor editor);
+  @Nullable Integer getMaxLineNumber(Editor editor);
 
   /**
    * Returns text to be displayed in the gutter for the given document line.
@@ -61,9 +59,8 @@ public interface LineNumberConverter {
    * always produces monotonically increasing numbers.
    */
   interface Increasing extends LineNumberConverter {
-    @Nullable
     @Override
-    default Integer getMaxLineNumber(Editor editor) {
+    default @Nullable Integer getMaxLineNumber(Editor editor) {
       for (int i = editor.getDocument().getLineCount(); i > 0; i--) {
         Integer number = convert(editor, i);
         if (number != null) return number;

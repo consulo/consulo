@@ -46,9 +46,8 @@ public class GeneratedContentFolderPropertyProvider extends ContentFolderPropert
         return true;
     }
 
-    @Nullable
     @Override
-    public Image getIcon(Boolean value, ContentFolderTypeProvider typeProvider) {
+    public @Nullable Image getIcon(Boolean value, ContentFolderTypeProvider typeProvider) {
         if (!Objects.equals(value, Boolean.TRUE)) {
             return null;
         }

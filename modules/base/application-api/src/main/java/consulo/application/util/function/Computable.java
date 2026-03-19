@@ -71,9 +71,8 @@ public interface Computable <T> extends Supplier<T> {
 
     protected abstract @Nullable T internalCompute();
 
-    @Nullable
     @Override
-    public final T compute() {
+    public final @Nullable T compute() {
       if (myValue == null) {
         T value = internalCompute();
         myValue = value != null ? value : NULL_VALUE;

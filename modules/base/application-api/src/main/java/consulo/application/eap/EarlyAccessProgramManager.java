@@ -44,7 +44,6 @@ import java.util.Map;
 public class EarlyAccessProgramManager implements PersistentStateComponent<Element> {
     private final Application myApplication;
 
-    
     public static EarlyAccessProgramManager getInstance() {
         return Application.get().getInstance(EarlyAccessProgramManager.class);
     }
@@ -83,9 +82,8 @@ public class EarlyAccessProgramManager implements PersistentStateComponent<Eleme
         }
     }
 
-    @Nullable
     @Override
-    public Element getState() {
+    public @Nullable Element getState() {
         Element element = new Element("state");
         for (Map.Entry<Class<? extends EarlyAccessProgramDescriptor>, Boolean> entry : myStates.entrySet()) {
             EarlyAccessProgramDescriptor extension =

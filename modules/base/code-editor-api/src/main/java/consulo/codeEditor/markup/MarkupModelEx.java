@@ -30,8 +30,7 @@ import java.util.function.Predicate;
 public interface MarkupModelEx extends MarkupModel {
     void dispose();
 
-    @Nullable
-    RangeHighlighterEx addPersistentLineHighlighter(@Nullable TextAttributesKey textAttributesKey, int lineNumber, int layer);
+    @Nullable RangeHighlighterEx addPersistentLineHighlighter(@Nullable TextAttributesKey textAttributesKey, int lineNumber, int layer);
 
     /**
      * Consider using {@link #addPersistentLineHighlighter(TextAttributesKey, int, int)}
@@ -40,8 +39,7 @@ public interface MarkupModelEx extends MarkupModel {
      * An editor can provide a custom scheme different from the global one, also a user can change the global scheme explicitly.
      * Using the overload taking a {@link TextAttributesKey} will make the platform take care of all these cases.
      */
-    @Nullable
-    RangeHighlighterEx addPersistentLineHighlighter(int lineNumber, int layer, @Nullable TextAttributes textAttributes);
+    @Nullable RangeHighlighterEx addPersistentLineHighlighter(int lineNumber, int layer, @Nullable TextAttributes textAttributes);
 
     /**
      * @deprecated use {@code RangeHighlighterEx.setXXX()} methods to fire changes
