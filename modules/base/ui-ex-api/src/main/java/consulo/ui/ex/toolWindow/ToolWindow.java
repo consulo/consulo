@@ -29,8 +29,6 @@ import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolder;
 import org.jspecify.annotations.Nullable;
 
-import javax.swing.JComponent;
-
 public interface ToolWindow extends BusyObject, UserDataHolder {
     Key<ToolWindow> KEY = Key.create(ToolWindow.class);
     Key<Boolean> SHOW_CONTENT_ICON = Key.create("ContentIcon");
@@ -267,7 +265,7 @@ public interface ToolWindow extends BusyObject, UserDataHolder {
 
     // region AWT & Swing dependency
 
-    default @Nullable JComponent getComponent() {
+    default javax.swing.@Nullable JComponent getComponent() {
         throw new AbstractMethodError();
     }
 
