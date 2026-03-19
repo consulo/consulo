@@ -50,7 +50,6 @@ public class TogglePopupHintsPanel extends EditorBasedWidget implements StatusBa
         updateStatus();
     }
 
-
     @Override
     public void fileOpened(FileEditorManager source, VirtualFile file) {
         updateStatus();
@@ -104,7 +103,6 @@ public class TogglePopupHintsPanel extends EditorBasedWidget implements StatusBa
 
         myConnection.subscribe(FileHighlightingSettingListener.class, (r, s) -> updateStatus());
     }
-
 
     @Override
     public WidgetPresentation getPresentation() {

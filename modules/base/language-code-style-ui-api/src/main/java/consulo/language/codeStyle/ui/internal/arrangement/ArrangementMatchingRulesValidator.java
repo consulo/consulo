@@ -26,7 +26,6 @@ import org.jspecify.annotations.Nullable;
 public class ArrangementMatchingRulesValidator {
   protected ArrangementMatchingRulesModel myRulesModel;
 
-
   public ArrangementMatchingRulesValidator(ArrangementMatchingRulesModel model) {
     myRulesModel = model;
   }

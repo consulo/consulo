@@ -95,7 +95,6 @@ public class ExternalDiffSettings implements PersistentStateComponent<ExternalDi
     myState.DIFF_PARAMETERS = path;
   }
 
-
   public boolean isMergeEnabled() {
     return myState.MERGE_ENABLED;
   }

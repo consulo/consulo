@@ -424,7 +424,6 @@ public class UiInspectorAction extends ToggleAction implements DumbAware {
         return new DefaultTreeModel(new UiInspectorAction.HierarchyTree.ComponentNode(c));
     }
 
-
     private abstract static class HierarchyTree extends JTree implements TreeSelectionListener {
         final Component myComponent;
 
@@ -1091,7 +1090,6 @@ public class UiInspectorAction extends ToggleAction implements DumbAware {
         }
         return ImageEffects.twoColorFilled(11, 11, TargetAWT.from(color1), TargetAWT.from(color2));
     }
-
 
     private static class PropertyBean {
         final String propertyName;

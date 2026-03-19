@@ -450,7 +450,6 @@ public class VcsLogGraphTable extends TableWithProgress implements DataProvider,
     private final @Nullable Integer myDelta;
     private final boolean myIsOnTop;
 
-
     public Selection(VcsLogGraphTable table) {
       myTable = table;
       List<Integer> selectedRows = ContainerUtil.sorted(Ints.asList(myTable.getSelectedRows()));

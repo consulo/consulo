@@ -987,7 +987,6 @@ public class FileUtil {
         return toSystemDependentName(fileName, File.separatorChar);
     }
 
-
     public static String toSystemDependentName(String fileName, char separatorChar) {
         return fileName.replace('/', separatorChar).replace('\\', separatorChar);
     }
@@ -1008,7 +1007,6 @@ public class FileUtil {
     public static String getNameWithoutExtension(String name) {
         return getNameWithoutExtension((CharSequence) name).toString();
     }
-
 
     public static String sanitizeFileName(String name) {
         return sanitizeFileName(name, true);

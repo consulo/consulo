@@ -195,7 +195,6 @@ public final class DesktopWindowWatcher implements PropertyChangeListener {
         }
     }
 
-
     public final Component getFocusedComponent(Window window) {
         synchronized (myLock) {
             WindowInfo info = myWindow2Info.get(TargetAWT.from(window));

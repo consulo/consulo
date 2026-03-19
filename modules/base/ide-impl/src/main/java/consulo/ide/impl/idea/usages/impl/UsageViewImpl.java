@@ -87,7 +87,6 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-
 /**
  * @author max
  */
@@ -1428,7 +1427,6 @@ public class UsageViewImpl implements UsageViewEx {
         updateImmediately();
     }
 
-
     @RequiredUIAccess
     private void updateOnSelectionChanged() {
         UIAccess.assertIsUIThread();
@@ -1722,7 +1720,6 @@ public class UsageViewImpl implements UsageViewEx {
 
         return result;
     }
-
 
     @Nullable
     @RequiredUIAccess

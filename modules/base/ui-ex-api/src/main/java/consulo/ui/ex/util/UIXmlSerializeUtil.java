@@ -89,7 +89,6 @@ public final class UIXmlSerializeUtil {
     return element.setAttribute(width, Integer.toString(size.width())).setAttribute(height, Integer.toString(size.height()));
   }
 
-
   public static @Nullable Rectangle2D getBounds(@Nullable Element element) {
     return element == null ? null : getBounds(element, X, Y, WIDTH, HEIGHT);
   }

@@ -89,7 +89,6 @@ public class ResponseProcessor<R extends AbstractResponse> {
     }
   }
 
-
   private void processResponse(R response) throws IOException {
     //noinspection unchecked
     Class<R> responseClass = (Class<R>)response.getClass();

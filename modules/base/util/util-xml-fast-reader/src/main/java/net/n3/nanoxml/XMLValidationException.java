@@ -28,7 +28,6 @@
 
 package net.n3.nanoxml;
 
-
 import org.jspecify.annotations.Nullable;
 
 /**
@@ -47,72 +46,60 @@ public class XMLValidationException
     */
    public static final int MISSING_ELEMENT = 1;
 
-
    /**
     * An unexpected element was encountered.
     */
    public static final int UNEXPECTED_ELEMENT = 2;
-
 
    /**
     * An attribute was missing.
     */
    public static final int MISSING_ATTRIBUTE = 3;
 
-
    /**
     * An unexpected attribute was encountered.
     */
    public static final int UNEXPECTED_ATTRIBUTE = 4;
-
 
    /**
     * An attribute has an invalid value.
     */
    public static final int ATTRIBUTE_WITH_INVALID_VALUE = 5;
 
-
    /**
     * A PCDATA element was missing.
     */
    public static final int MISSING_PCDATA = 6;
-
 
    /**
     * An unexpected PCDATA element was encountered.
     */
    public static final int UNEXPECTED_PCDATA = 7;
 
-
    /**
     * Another error than those specified in this class was encountered.
     */
    public static final int MISC_ERROR = 0;
-
 
    /**
     * Which error occurred.
     */
    private int errorType;
 
-
    /**
     * The name of the element where the exception occurred.
     */
    private @Nullable String elementName;
-
 
    /**
     * The name of the attribute where the exception occurred.
     */
    private @Nullable String attributeName;
 
-
    /**
     * The value of the attribute where the exception occurred.
     */
    private @Nullable String attributeValue;
-
 
    /**
     * Creates a new exception.
@@ -146,7 +133,6 @@ public class XMLValidationException
       this.attributeValue = attributeValue;
    }
 
-
    /**
     * Returns the name of the element in which the validation is violated.
     * If there is no current element, null is returned.
@@ -156,7 +142,6 @@ public class XMLValidationException
       return this.elementName;
    }
 
-
    /**
     * Returns the name of the attribute in which the validation is violated.
     * If there is no current attribute, null is returned.
@@ -165,7 +150,6 @@ public class XMLValidationException
    {
       return this.attributeName;
    }
-
 
    /**
     * Returns the value of the attribute in which the validation is violated.

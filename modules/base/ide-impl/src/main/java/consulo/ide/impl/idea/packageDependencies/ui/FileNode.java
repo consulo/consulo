@@ -114,7 +114,6 @@ public class FileNode extends PackageDependenciesNode implements Comparable<File
     return myVFile.hashCode();
   }
 
-
   @Override
   public boolean isValid() {
     return myVFile != null && myVFile.isValid();

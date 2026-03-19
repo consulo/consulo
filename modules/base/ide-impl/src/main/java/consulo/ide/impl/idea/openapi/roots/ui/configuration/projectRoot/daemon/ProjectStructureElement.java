@@ -23,7 +23,6 @@ public abstract class ProjectStructureElement {
 
   public abstract List<ProjectStructureElementUsage> getUsagesInElement();
 
-
   public boolean shouldShowWarningIfUnused() {
     return false;
   }

@@ -23,7 +23,6 @@ class DaemonTooltipRenderer extends LineTooltipRenderer {
     
     protected static final String END_MARKER = "<!-- end marker -->";
 
-
     DaemonTooltipRenderer(String text, Object[] comparable) {
         super(text, comparable);
     }

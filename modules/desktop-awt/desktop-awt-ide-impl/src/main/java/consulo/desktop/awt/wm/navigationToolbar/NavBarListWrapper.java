@@ -67,7 +67,6 @@ class NavBarListWrapper extends JBScrollPane implements DataProvider {
     myList = list;
   }
 
-
   @Override
   public @Nullable Object getData(Key<?> dataId) {
     if (PlatformDataKeys.SELECTED_ITEM == dataId){

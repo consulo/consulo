@@ -251,7 +251,6 @@ public abstract class DesktopEditorComposite implements FileEditorComposite {
         }
     }
 
-
     /**
      * @return preferred focused component inside myEditor composite. Composite uses FocusWatcher to
      * track focus movement inside the myEditor.

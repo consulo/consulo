@@ -28,14 +28,12 @@
 
 package net.n3.nanoxml;
 
-
 import org.jspecify.annotations.Nullable;
 
 import java.util.Hashtable;
 import java.io.Reader;
 import java.io.StringReader;
 import java.util.Map;
-
 
 /**
  * An XMLEntityResolver resolves entities.
@@ -58,7 +56,6 @@ public class XMLEntityResolver
        "gt", "&#62;"
    ));
 
-
    /**
     * Adds an internal entity.
     *
@@ -72,7 +69,6 @@ public class XMLEntityResolver
          this.entities.put(name, value);
       }
    }
-
 
    /**
     * Adds an external entity.
@@ -89,7 +85,6 @@ public class XMLEntityResolver
          this.entities.put(name, new String[] { publicID, systemID } );
       }
    }
-
 
    /**
     * Returns a Java reader containing the value of an entity.
@@ -115,7 +110,6 @@ public class XMLEntityResolver
       }
    }
 
-
    /**
     * Returns true if an entity is external.
     *
@@ -126,7 +120,6 @@ public class XMLEntityResolver
       Object obj = this.entities.get(name);
       return ! (obj instanceof java.lang.String);
    }
-
 
    /**
     * Opens an external entity.

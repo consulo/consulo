@@ -149,7 +149,6 @@ public abstract class AbstractExternalSystemConfigurable<ProjectSettings extends
       myActiveProjectSettingsControl.showUi(true);
     });
 
-
     if (!myProjectsModel.isEmpty()) {
       addTitle(ExternalSystemBundle.message("settings.title.system.settings", myExternalSystemId.getReadableName()));
       myProjectsList.setSelectedIndex(0);

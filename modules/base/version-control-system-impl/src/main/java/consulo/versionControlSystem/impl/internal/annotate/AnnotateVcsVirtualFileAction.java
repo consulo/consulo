@@ -102,7 +102,6 @@ public class AnnotateVcsVirtualFileAction {
     final AnnotationProviderEx provider = (AnnotationProviderEx)data.vcs.getAnnotationProvider();
     assert provider != null;
 
-
     final Ref<FileAnnotation> fileAnnotationRef = new Ref<>();
     final Ref<VcsException> exceptionRef = new Ref<>();
 

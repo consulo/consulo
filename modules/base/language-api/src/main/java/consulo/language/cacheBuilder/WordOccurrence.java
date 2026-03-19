@@ -17,7 +17,6 @@ package consulo.language.cacheBuilder;
 
 import org.jspecify.annotations.Nullable;
 
-
 /**
  * A single word instance extracted by {@link WordsScanner}.
  *

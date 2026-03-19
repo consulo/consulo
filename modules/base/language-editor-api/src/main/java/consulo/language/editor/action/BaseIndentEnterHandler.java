@@ -61,7 +61,6 @@ public class BaseIndentEnterHandler extends EnterHandlerDelegateAdapter {
         this(language, indentTokens, lineCommentType, lineCommentPrefix, whitespaceTokens, false);
     }
 
-
     public BaseIndentEnterHandler(
         Language language,
         TokenSet indentTokens,

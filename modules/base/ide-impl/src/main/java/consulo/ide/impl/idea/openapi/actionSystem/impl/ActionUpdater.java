@@ -353,7 +353,6 @@ public class ActionUpdater {
         return Collections.singletonList(child);
     }
 
-
     
     private JBIterable<AnAction> iterateGroupChildren(ActionGroup group, UpdateStrategy strategy) {
         boolean isDumb = myProject != null && DumbService.getInstance(myProject).isDumb();

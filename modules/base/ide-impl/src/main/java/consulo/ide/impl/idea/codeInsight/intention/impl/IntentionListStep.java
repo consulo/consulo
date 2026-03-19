@@ -123,7 +123,6 @@ public class IntentionListStep implements ListPopupStep<IntentionActionWithTextC
         };
     }
 
-
     
     IntentionListStep getSubStep(IntentionActionWithTextCaching action, final LocalizeValue title) {
         IntentionsInfo intentions = new IntentionsInfo();

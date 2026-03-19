@@ -126,7 +126,6 @@ public class IdeRootPane extends JRootPane implements Disposable, UISettingsList
         super.setGlassPane(glass);
     }
 
-
     /**
      * Invoked when enclosed frame is being shown.
      */

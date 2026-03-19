@@ -69,7 +69,6 @@ public abstract class CoverageDataManager {
         CoverageRunner coverageRunner, CoverageFileProvider fileProvider
     );
 
-
     public abstract CoverageSuite addCoverageSuite(CoverageEnabledConfiguration config);
 
     /**
@@ -86,7 +85,6 @@ public abstract class CoverageDataManager {
     ) {
         return addCoverageSuite(name, fileProvider, filters, lastCoverageTimeStamp, null, null, false, false);
     }
-
 
     /**
      * @return registered suites

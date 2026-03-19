@@ -144,7 +144,6 @@ public class UsagePreviewPanel extends UsageContextPanelBase implements DataProv
     return myLineHeight;
   }
 
-
   private static final Key<Boolean> IN_PREVIEW_USAGE_FLAG = Key.create("IN_PREVIEW_USAGE_FLAG");
 
   public static void highlight(List<? extends UsageInfo> infos, Editor editor, Project project, boolean highlightOnlyNameElements, int highlightLayer) {

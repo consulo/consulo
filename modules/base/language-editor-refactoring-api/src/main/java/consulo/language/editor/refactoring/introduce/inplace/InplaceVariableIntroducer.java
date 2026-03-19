@@ -138,7 +138,6 @@ public abstract class InplaceVariableIntroducer<E extends PsiElement> extends In
         return myEditor.getDocument().createRangeMarker(element.getTextRange());
     }
 
-
     public RangeMarker getExprMarker() {
         return myExprMarker;
     }
@@ -169,7 +168,6 @@ public abstract class InplaceVariableIntroducer<E extends PsiElement> extends In
             myExprMarker.dispose();
         }
     }
-
 
     @Override
     @RequiredReadAction

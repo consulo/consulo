@@ -100,7 +100,6 @@ public class ThriftTestExecutionUtil {
     final OutputToGeneralTestEventsConverter outputConsumer;
     outputConsumer = new OutputToGeneralTestEventsConverter(testFrameworkName, consoleProperties);
 
-
     //events processor
     final GeneralTestEventsProcessor eventsProcessor =
             new GeneralToSMTRunnerEventsConvertor(consoleProperties.getProject(), resultsViewer.getTestsRootNode(), testFrameworkName);
@@ -126,7 +125,6 @@ public class ThriftTestExecutionUtil {
     resultsViewer.addEventsListener(uiActionsHandler);
     // subscribes statistics tab viewer on event processor
     eventsProcessor.addEventsListener(statisticsPane.createTestEventsListener());
-
 
     processHandler.addProcessListener(new ProcessAdapter() {
       @Override

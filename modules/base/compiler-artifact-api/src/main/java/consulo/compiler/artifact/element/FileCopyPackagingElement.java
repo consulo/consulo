@@ -80,7 +80,6 @@ public class FileCopyPackagingElement extends FileOrDirectoryCopyPackagingElemen
     return new File(FileUtil.toSystemDependentName(myFilePath)).isDirectory();
   }
 
-
   @Override
   public boolean isEqualTo(PackagingElement<?> element) {
     return element instanceof FileCopyPackagingElement && super.isEqualTo(element)

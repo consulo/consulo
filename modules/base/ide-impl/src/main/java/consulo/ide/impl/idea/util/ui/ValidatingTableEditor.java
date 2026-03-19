@@ -378,7 +378,6 @@ public abstract class ValidatingTableEditor<Item> implements ComponentWithEmptyT
         return myTable;
     }
 
-
     private static class WarningIconCellRenderer extends DefaultTableCellRenderer {
         private final NullableComputable<String> myWarningProvider;
 

@@ -119,5 +119,4 @@ public class AlphaNumericTypeCommand extends TypeCommand {
     return null;
   }
 
-
 }

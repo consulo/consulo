@@ -525,7 +525,6 @@ public class CompletionLookupArrangerImpl extends LookupArranger implements Comp
         return null;
     }
 
-
     private static boolean isSuddenLiveTemplate(LookupElement element) {
         return element instanceof LiveTemplateLookupElement liveTemplateLookupElement && liveTemplateLookupElement.sudden;
     }

@@ -285,7 +285,6 @@ public class WindowsDefenderChecker {
         return paths;
     }
 
-
     /**
      * Expands references to environment variables (strings delimited by '%') in 'path'
      */

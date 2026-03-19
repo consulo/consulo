@@ -106,7 +106,6 @@ public class PlaybackDebugger implements UiDebuggerExtension, PlaybackRunner.Sta
         myLog.setEditorKit(new StyledEditorKit());
         myLog.setEditable(false);
 
-
         myState = ServiceManager.getService(PlaybackDebuggerState.class);
 
         DefaultActionGroup controlGroup = new DefaultActionGroup();
@@ -447,7 +446,6 @@ public class PlaybackDebugger implements UiDebuggerExtension, PlaybackRunner.Sta
                 }
                 catch (InterruptedException e) {
                 }
-
 
                 if (myRunner == null) {
                     message(null, "Script stopped", -1, Type.message, true);

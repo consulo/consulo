@@ -137,7 +137,6 @@ public final class FileSystemUtil {
     }
   }
 
-
   private static class Nio2MediatorImpl implements FileSystemMediator {
     private static final Nio2MediatorImpl ourInstance = new Nio2MediatorImpl();
 

@@ -313,7 +313,6 @@ public class TargetElementUtil {
         return getNamedElement(element);
     }
 
-
     @Nullable
     @RequiredReadAction
     private static PsiElement getNamedElement(@Nullable PsiElement element) {

@@ -1119,7 +1119,6 @@ public class RunConfigurable extends BaseConfigurable {
         return null;
     }
 
-
    
     private static String createUniqueName(DefaultMutableTreeNode typeNode, @Nullable String baseName, NodeKind... kinds) {
         String str = (baseName == null) ? ExecutionLocalize.runConfigurationUnnamedNamePrefix().get() : baseName;

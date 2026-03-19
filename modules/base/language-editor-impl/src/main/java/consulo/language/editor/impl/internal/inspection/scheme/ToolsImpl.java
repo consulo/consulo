@@ -427,7 +427,6 @@ public class ToolsImpl implements Tools {
     }
   }
 
-
   public void disableTool(PsiElement element) {
     Project project = element.getProject();
     DependencyValidationManager validationManager = DependencyValidationManager.getInstance(project);

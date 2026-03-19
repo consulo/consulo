@@ -169,7 +169,6 @@ public class OptionsEditor implements DataProvider, Disposable, AWTEventListener
                     wrapComponent.setBorder(new EmptyBorder(UIUtil.PANEL_SMALL_INSETS));
                 }
 
-
                 boolean noScroll = ConfigurableWrapper.isNoScroll(configurable);
                 if (!noScroll) {
                     JScrollPane scroll = ScrollPaneFactory.createScrollPane(wrapComponent, true);
@@ -1199,7 +1198,6 @@ public class OptionsEditor implements DataProvider, Disposable, AWTEventListener
 
         myConfigurableSession.commit();
     }
-
 
     @Override
     public Object getData(Key<?> dataId) {

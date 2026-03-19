@@ -235,7 +235,6 @@ public class ChooseByNamePopup extends ChooseByNameBase implements ChooseByNameP
     setDisposed(true);
     myAlarm.cancelAllRequests();
 
-
     cleanupUI(isOk);
     if (ApplicationManager.getApplication().isUnitTestMode()) return;
     if (myActionListener != null) {

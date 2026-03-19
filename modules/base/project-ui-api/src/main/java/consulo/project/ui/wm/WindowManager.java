@@ -159,7 +159,6 @@ public abstract class WindowManager {
 
   public abstract consulo.ui.@Nullable Window getMostRecentFocusedWindow();
 
-
   /**
    * @return focus owner of the specified window.
    * @throws IllegalArgumentException if <code>window</code> is <code>null</code>.

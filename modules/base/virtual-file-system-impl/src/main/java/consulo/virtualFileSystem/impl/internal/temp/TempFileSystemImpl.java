@@ -83,7 +83,6 @@ public class TempFileSystemImpl extends TempFileSystem implements RefreshableFil
       throw new IOException("Directory already contains a file named " + dir);
     }
 
-
     return new FakeVirtualFile(parent, dir);
   }
 

@@ -155,7 +155,6 @@ public class FileReferenceSet {
         };
     }
 
-
     public FileReferenceSet(
         String str,
         PsiElement element,

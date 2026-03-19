@@ -72,7 +72,6 @@ public class LineFragment extends LineBlock implements Fragment {
         checkChildren(myChildren.iterator());
     }
 
-
     @Override
     public TextRange getRange(FragmentSide side) {
         if (side == FragmentSide.SIDE1) {
@@ -182,7 +181,6 @@ public class LineFragment extends LineBlock implements Fragment {
         TextRange range = getRange(side);
         return text.substring(range.getStartOffset(), range.getEndOffset());
     }
-
 
     public void addAllDescendantsTo(ArrayList<LineFragment> descendants) {
         if (myChildren == null) {

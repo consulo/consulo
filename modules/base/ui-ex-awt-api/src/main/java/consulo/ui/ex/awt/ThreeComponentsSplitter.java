@@ -345,7 +345,6 @@ public class ThreeComponentsSplitter extends JPanel implements Disposable {
     }
   }
 
-
   public int getDividerWidth() {
     return myDividerWidth;
   }
@@ -403,7 +402,6 @@ public class ThreeComponentsSplitter extends JPanel implements Disposable {
     return myLastComponent;
   }
 
-
   /**
    * Sets component which is located as the "secont" splitted area. The method doesn't validate and
    * repaint the splitter.
@@ -425,7 +423,6 @@ public class ThreeComponentsSplitter extends JPanel implements Disposable {
   public @Nullable JComponent getInnerComponent() {
     return myInnerComponent;
   }
-
 
   /**
    * Sets component which is located as the "inner" splitted area. The method doesn't validate and
@@ -449,7 +446,6 @@ public class ThreeComponentsSplitter extends JPanel implements Disposable {
     doLayout();
     repaint();
   }
-
 
   public void setFirstSize(int size) {
     myFirstSize = size;
@@ -571,7 +567,6 @@ public class ThreeComponentsSplitter extends JPanel implements Disposable {
     }
 
     private final MouseAdapter myListener = new MyMouseAdapter();
-
 
     private MouseEvent getTargetEvent(MouseEvent e) {
       return SwingUtilities.convertMouseEvent(e.getComponent(), e, this);

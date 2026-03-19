@@ -224,7 +224,6 @@ public class LookupItem<T> extends MutableLookupElement<T> implements Comparable
         return TailType.NONE;
     }
 
-
     
     public TailType getTailType() {
         TailType tailType = getAttribute(TAIL_TYPE_ATTR);

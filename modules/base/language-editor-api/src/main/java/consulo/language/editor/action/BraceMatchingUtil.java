@@ -177,7 +177,6 @@ public class BraceMatchingUtil {
     return new MatchBraceContext(fileText, fileType, iterator, forward).doBraceMatch();
   }
 
-
   public static synchronized boolean matchBrace(CharSequence fileText,
                                                 FileType fileType,
                                                 HighlighterIterator iterator,

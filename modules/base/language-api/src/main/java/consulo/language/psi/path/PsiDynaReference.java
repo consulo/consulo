@@ -130,7 +130,6 @@ public class PsiDynaReference<T extends PsiElement> extends PsiReferenceBase<T> 
     return false;
   }
 
-
   @Override
   
   public Object[] getVariants() {

@@ -82,7 +82,6 @@ public class RefElementNode extends InspectionTreeNode {
     return myToolPresentation.isElementIgnored(getElement());
   }
 
-
   @Override
   public void ignoreElement() {
     myToolPresentation.ignoreCurrentElement(getElement());

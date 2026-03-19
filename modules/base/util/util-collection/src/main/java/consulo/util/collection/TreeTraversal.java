@@ -282,7 +282,6 @@ public abstract class TreeTraversal {
         }
     };
 
-
     /**
      * Returns an iterator over the leaf nodes only in a tree structure, using DFS traversal.
      * That is, each node's subtrees are traversed before the node itself is returned.

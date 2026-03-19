@@ -214,7 +214,6 @@ public abstract class AbstractMemberSelectionTable<T extends PsiElement, M exten
       return false;
     }
 
-
     @Override
     public int checkForProblems(M member) {
       return OK;
@@ -310,7 +309,6 @@ public abstract class AbstractMemberSelectionTable<T extends PsiElement, M exten
       }
       return false;
     }
-
 
     @Override
     public void setValueAt(Object aValue, int rowIndex, int columnIndex) {

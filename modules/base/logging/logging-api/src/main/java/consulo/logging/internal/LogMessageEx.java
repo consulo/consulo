@@ -89,7 +89,6 @@ public class LogMessageEx extends LogMessage {
         return createEvent(userMessage, details, userMessage, null, Arrays.asList(attachments));
     }
 
-
     /**
      * @param userMessage      user-friendly message description (short, single line if possible)
      * @param details          technical details (exception stack trace etc.)

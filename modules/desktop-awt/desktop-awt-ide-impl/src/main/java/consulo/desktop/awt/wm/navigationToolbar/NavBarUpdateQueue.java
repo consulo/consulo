@@ -150,7 +150,6 @@ public class NavBarUpdateQueue extends MergingUpdateQueue {
     requestModelUpdate(null, object, false);
   }
 
-
   public void queueRebuildUi() {
     queue(new AfterModelUpdate(ID.UI) {
       @Override
@@ -182,7 +181,6 @@ public class NavBarUpdateQueue extends MergingUpdateQueue {
       r.run();
     }
   }
-
 
   private void rebuildComponent() {
     myPanel.removeAll();

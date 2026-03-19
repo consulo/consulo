@@ -387,7 +387,6 @@ public abstract class ToolWindowManagerBase extends ToolWindowManagerEx implemen
         return myId2WindowedDecorator.get(id);
     }
 
-
     /**
      * @return tool button for the window with specified <code>ID</code>.
      */
@@ -1155,7 +1154,6 @@ public abstract class ToolWindowManagerBase extends ToolWindowManagerEx implemen
     ) {
         return registerToolWindow(id, null, anchor, secondary, canCloseContent, false, true);
     }
-
 
     
     @Override

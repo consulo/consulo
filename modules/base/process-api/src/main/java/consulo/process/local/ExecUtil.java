@@ -73,7 +73,6 @@ public class ExecUtil {
     return tempFile;
   }
 
-
   
   public static String getOpenCommandPath() {
     return "/usr/bin/open";

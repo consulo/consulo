@@ -309,7 +309,6 @@ public class SearchableOptionsRegistrarImpl extends SearchableOptionsRegistrar {
         return hits;
     }
 
-
     public synchronized @Nullable Set<OptionDescription> getAcceptableDescriptions(String prefix) {
         if (prefix == null) {
             return null;

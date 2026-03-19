@@ -220,7 +220,6 @@ public class PopupChooserBuilder<T> implements IPopupChooserBuilder<T>, AWTPopup
         return this;
     }
 
-
     @Override
     public PopupChooserBuilder<T> setRequestFocus(boolean requestFocus) {
         myRequestFocus = requestFocus;
@@ -232,7 +231,6 @@ public class PopupChooserBuilder<T> implements IPopupChooserBuilder<T>, AWTPopup
         myForceResizable = forceResizable;
         return this;
     }
-
 
     @Override
     public PopupChooserBuilder<T> setMovable(boolean forceMovable) {
@@ -278,7 +276,6 @@ public class PopupChooserBuilder<T> implements IPopupChooserBuilder<T>, AWTPopup
         myItemsNamer = namer;
         return this;
     }
-
 
     @Override
     public PopupChooserBuilder<T> setNamerForFiltering(Function<? super T, String> namer) {
@@ -407,7 +404,6 @@ public class PopupChooserBuilder<T> implements IPopupChooserBuilder<T>, AWTPopup
     protected void addCenterComponentToContentPane(JPanel contentPane, JComponent component) {
         contentPane.add(component, BorderLayout.CENTER);
     }
-
 
     @Override
     public PopupChooserBuilder<T> setMinSize(Dimension dimension) {

@@ -617,7 +617,6 @@ public class DependenciesPanel extends JPanel implements Disposable, DataProvide
         }
     }
 
-
     private final class FilterLegalsAction extends ToggleAction {
         FilterLegalsAction() {
             super(
@@ -657,7 +656,6 @@ public class DependenciesPanel extends JPanel implements Disposable, DataProvide
                 .doWhenDone(DependenciesPanel.this::rebuild);
         }
     }
-
 
     private class DependenciesExporterToTextFile implements ExporterToTextFile {
 
@@ -717,7 +715,6 @@ public class DependenciesPanel extends JPanel implements Disposable, DataProvide
             return true;
         }
     }
-
 
     private class RerunAction extends AnAction {
         public RerunAction(JComponent comp) {

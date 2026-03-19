@@ -166,7 +166,6 @@ public final class JBHiDPIScaledImage extends BufferedImage {
     return newImg;
   }
 
-
   /**
    * Returns JBHiDPIScaledImage of the same structure scaled to the provided dimensions.
    * Dimensions are in user-space coordinates (unscaled)

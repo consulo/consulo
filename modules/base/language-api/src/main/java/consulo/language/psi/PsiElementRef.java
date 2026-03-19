@@ -190,7 +190,6 @@ public final class PsiElementRef<T extends PsiElement> {
       }
     }
 
-
   }
 
 }

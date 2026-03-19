@@ -114,7 +114,6 @@ public class GeneralToSMTRunnerEventsConvertor extends GeneralTestEventsProcesso
             mySuitesStack.clear();
             myTestsRootProxy.setFinished();
 
-
             //fire events
             fireOnTestingFinished(myTestsRootProxy);
         });
@@ -309,7 +308,6 @@ public class GeneralToSMTRunnerEventsConvertor extends GeneralTestEventsProcesso
         });
     }
 
-
     @Override
     public void onTestFailure(TestFailedEvent testFailedEvent) {
         addToInvokeLater(() -> {
@@ -496,7 +494,6 @@ public class GeneralToSMTRunnerEventsConvertor extends GeneralTestEventsProcesso
         return namesDump;
     }
 
-
     /*
      * Remove listeners,  etc
      */
@@ -515,7 +512,6 @@ public class GeneralToSMTRunnerEventsConvertor extends GeneralTestEventsProcesso
             mySuitesStack.clear();
         });
     }
-
 
     private SMTestProxy findCurrentTestOrSuite() {
         //if we can locate test - we will send output to it, otherwise to current test suite

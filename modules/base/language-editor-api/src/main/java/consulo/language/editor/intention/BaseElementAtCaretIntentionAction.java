@@ -93,5 +93,4 @@ public abstract class BaseElementAtCaretIntentionAction extends BaseIntentionAct
     return file.findElementAt(editor.getCaretModel().getOffset() - 1);
   }
 
-
 }

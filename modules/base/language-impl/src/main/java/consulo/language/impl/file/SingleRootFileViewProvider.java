@@ -182,7 +182,6 @@ public class SingleRootFileViewProvider extends AbstractFileViewProvider impleme
     return findElementAt(getPsi(getBaseLanguage()), offset);
   }
 
-
   @Override
   public PsiElement findElementAt(int offset, Class<? extends Language> lang) {
     if (!ReflectionUtil.isAssignable(lang, getBaseLanguage().getClass())) return null;

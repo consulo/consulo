@@ -75,7 +75,6 @@ public abstract class XDebugView implements Disposable {
     return null;
   }
 
-
   public static @Nullable <T> T getData(Key<T> key, Component component) {
     DataContext dataContext = DataManager.getInstance().getDataContext(component);
     ViewContext viewContext = dataContext.getData(ViewContext.CONTEXT_KEY);

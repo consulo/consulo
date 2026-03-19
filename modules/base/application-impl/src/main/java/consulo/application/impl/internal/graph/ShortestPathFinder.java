@@ -30,7 +30,6 @@ public class ShortestPathFinder<Node> {
     myGraph = graph;
   }
 
-
   public @Nullable List<Node> findPath(Node start, Node finish) {
     Map<Node, Node> nextNodes = new HashMap<Node, Node>();
     Deque<Node> queue = new ArrayDeque<Node>();

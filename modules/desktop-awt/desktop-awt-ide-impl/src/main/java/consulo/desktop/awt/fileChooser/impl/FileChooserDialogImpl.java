@@ -355,7 +355,6 @@ public class FileChooserDialogImpl extends DialogWrapper implements FileChooserD
         panel.add(scrollPane, BorderLayout.CENTER);
         panel.setPreferredSize(JBUI.size(400));
 
-
         JLabel hintLabel = new JLabel(DRAG_N_DROP_HINT, SwingConstants.CENTER);
         hintLabel.setForeground(JBColor.gray);
         hintLabel.setFont(JBUI.Fonts.smallFont());
@@ -613,7 +612,6 @@ public class FileChooserDialogImpl extends DialogWrapper implements FileChooserD
         myNorthPanel.revalidate();
         myNorthPanel.repaint();
     }
-
 
     private void updatePathFromTree(List<? extends VirtualFile> selection, boolean now) {
         if (!isToShowTextField() || myTreeIsUpdating) {

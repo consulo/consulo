@@ -45,7 +45,6 @@ public class Foundation {
 
   static Callback ourRunnableCallback;
 
-
   public static void init() { /* fake method to init foundation */ }
 
   private Foundation() {

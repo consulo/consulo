@@ -659,7 +659,6 @@ public class FavoritesManagerImpl implements FavoritesManager, PersistentStateCo
                 }
             }
 
-
             for (BookmarkNodeProvider provider : myProject.getExtensionList(BookmarkNodeProvider.class)) {
                 if (provider.elementContainsFile(element, vFile)) {
                     return true;

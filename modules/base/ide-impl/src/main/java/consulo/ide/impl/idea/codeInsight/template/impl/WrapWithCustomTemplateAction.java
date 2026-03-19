@@ -35,7 +35,6 @@ public class WrapWithCustomTemplateAction extends AnAction {
     myAfterExecutionCallback = afterExecutionCallback;
   }
 
-
   @Override
   public void actionPerformed(AnActionEvent e) {
     perform();

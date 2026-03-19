@@ -54,7 +54,6 @@ public class DeclarativeInlayHintsSettings implements PersistentStateComponentWi
 
     private HintsState myState = new HintsState();
 
-
     @Override
     public long getStateModificationCount() {
         return myModificationCount;

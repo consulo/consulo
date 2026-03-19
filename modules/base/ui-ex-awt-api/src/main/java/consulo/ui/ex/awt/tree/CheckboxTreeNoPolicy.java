@@ -175,7 +175,6 @@ public class CheckboxTreeNoPolicy extends Tree {
     return result;
   }
 
-
   @Override
   public int getToggleClickCount() {
     // to prevent node expanding/collapsing on checkbox toggling
@@ -387,7 +386,6 @@ public class CheckboxTreeNoPolicy extends Tree {
       return myCheckbox;
     }
   }
-
 
   public enum NodeState {
     FULL,

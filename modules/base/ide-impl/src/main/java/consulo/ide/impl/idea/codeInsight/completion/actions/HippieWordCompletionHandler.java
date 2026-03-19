@@ -94,7 +94,6 @@ public class HippieWordCompletionHandler implements CodeInsightActionHandler {
                                             HighlightManager.HIDE_BY_ANY_KEY, null);
   }
 
-
   private static class CompletionData {
     public String myPrefix;
     public String myWordUnderCursor;
@@ -116,7 +115,6 @@ public class HippieWordCompletionHandler implements CodeInsightActionHandler {
         }
       }
     }
-
 
     if (lastProposedVariant == null) {
       CompletionVariant result = null;
@@ -142,7 +140,6 @@ public class HippieWordCompletionHandler implements CodeInsightActionHandler {
 
       return result;
     }
-
 
     if (myForward) {
       CompletionVariant result = null;

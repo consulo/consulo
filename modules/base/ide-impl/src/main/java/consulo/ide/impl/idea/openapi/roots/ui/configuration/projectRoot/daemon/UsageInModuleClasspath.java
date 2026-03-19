@@ -30,7 +30,6 @@ public class UsageInModuleClasspath extends ProjectStructureElementUsage {
     mySourceElement = sourceElement;
   }
 
-
   @Override
   public ProjectStructureElement getSourceElement() {
     return mySourceElement;

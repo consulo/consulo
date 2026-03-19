@@ -36,7 +36,6 @@ public abstract class CompositePackagingElementType<E extends CompositePackaging
     return true;
   }
 
-
   public abstract @Nullable CompositePackagingElement<?> createComposite(CompositePackagingElement<?> parent, @Nullable String baseName, ArtifactEditorContext context);
 
   @Override

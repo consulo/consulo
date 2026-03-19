@@ -165,7 +165,6 @@ public final class VcsRootScanner implements Disposable {
             );
     }
 
-
     static boolean isUnderIgnoredDirectory(Project project, @Nullable Pattern ignorePattern, @Nullable VirtualFile dir) {
         VirtualFile parent = dir;
         while (parent != null) {

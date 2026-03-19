@@ -19,7 +19,6 @@ import consulo.util.collection.impl.EmptyIterator;
 import consulo.util.collection.impl.SingletonIteratorBase;
 import org.jspecify.annotations.Nullable;
 
-
 import java.lang.reflect.Array;
 import java.util.*;
 

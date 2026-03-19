@@ -15,7 +15,6 @@
  */
 package consulo.ui.ex.action;
 
-
 import org.jspecify.annotations.Nullable;
 import javax.swing.*;
 import java.util.Objects;

@@ -365,7 +365,6 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, ModuleRoo
         }
     }
 
-
     @RequiredReadAction
     public void init() {
         removeAllOrderEntries();
@@ -949,7 +948,6 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, ModuleRoo
         }
         myContent.clear();
     }
-
 
     public void removeAllOrderEntries() {
         for (OrderEntry entry : myOrderEntries) {

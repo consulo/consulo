@@ -334,7 +334,6 @@ public class DnDManagerImpl extends DnDManager implements Disposable {
     currentEvent.clearDelegatedTarget();
     boolean canGoToParent = target.update(currentEvent);
 
-
     String message;
     if (isMessageProvided(currentEvent)) {
       message = currentEvent.getExpectedDropResult();

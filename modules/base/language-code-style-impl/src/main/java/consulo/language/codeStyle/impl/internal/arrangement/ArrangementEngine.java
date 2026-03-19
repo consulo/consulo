@@ -739,7 +739,6 @@ public class ArrangementEngine {
       }
       while (parent != null);
 
-
       while (!parents.isEmpty()) {
 
         for (ArrangementEntryWrapper<E> wrapper = parents.removeLast().getNext(); wrapper != null; wrapper = wrapper.getNext()) {
@@ -874,7 +873,6 @@ public class ArrangementEngine {
         parentWrapper = parentWrapper.getParent();
       }
       while (parentWrapper != null);
-
 
       while (!parents.isEmpty()) {
         for (ArrangementEntryWrapper<E> wrapper = parents.removeLast().getNext(); wrapper != null; wrapper = wrapper.getNext()) {

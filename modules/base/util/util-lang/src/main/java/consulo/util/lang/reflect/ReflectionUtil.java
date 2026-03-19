@@ -79,7 +79,6 @@ public class ReflectionUtil {
     return -1;
   }
 
-
   public static List<Field> collectFields(Class clazz) {
     Set<Field> result = new LinkedHashSet<>();
     processFields(clazz, result::add);

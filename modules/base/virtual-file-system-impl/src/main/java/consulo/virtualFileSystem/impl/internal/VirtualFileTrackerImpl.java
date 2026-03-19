@@ -197,7 +197,6 @@ public class VirtualFileTrackerImpl implements VirtualFileTracker {
     while (virtualFile != null) {
       String url = virtualFile.getUrl();
 
-
       if (!fromRefresh) {
         listeners = addToSet(listeners, myNonRefreshTrackers.get(url));
       }

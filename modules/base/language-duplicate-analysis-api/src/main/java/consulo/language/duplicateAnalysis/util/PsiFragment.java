@@ -246,4 +246,3 @@ public abstract class PsiFragment {
   }
 }
 
-

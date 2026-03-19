@@ -177,7 +177,6 @@ public class PathKt {
       }
     };
 
-
     if (result == null) {
       return truncateFileName.apply(name);
     }

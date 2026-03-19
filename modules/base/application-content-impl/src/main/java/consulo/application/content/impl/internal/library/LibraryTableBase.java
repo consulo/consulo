@@ -240,7 +240,6 @@ public abstract class LibraryTableBase implements PersistentStateComponent<Eleme
       return null;
     }
 
-
     @Override
     
     public Library[] getLibraries() {

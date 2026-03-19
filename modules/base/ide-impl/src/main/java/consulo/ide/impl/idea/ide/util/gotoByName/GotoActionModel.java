@@ -147,7 +147,6 @@ public class GotoActionModel implements ChooseByNameModel, Comparator<Object>, D
         return IdeLocalize.checkboxDisabledIncluded();
     }
 
-
     
     @Override
     public String getNotInMessage() {
@@ -556,7 +555,6 @@ public class GotoActionModel implements ChooseByNameModel, Comparator<Object>, D
         private void addPath(List<ActionGroup> path) {
             myPaths.add(path);
         }
-
 
         @Override
         public int compareTo(GroupMapping o) {

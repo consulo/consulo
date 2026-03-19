@@ -106,7 +106,6 @@ abstract class ChunkOptimizer<T> {
       return;
     }
 
-
     Side touchSide = Side.fromLeft(range1.end1 == range2.start1);
 
     int shift = getShift(touchSide, equalForward, equalBackward, range1, range2);

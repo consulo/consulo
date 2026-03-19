@@ -87,7 +87,6 @@ public abstract class DebuggerSessionTabBase extends RunTab {
     return myEnvironment != null ? myEnvironment.getRunProfile() : null;
   }
 
-
   public void select() {
     if (ApplicationManager.getApplication().isUnitTestMode()) return;
 

@@ -15,7 +15,6 @@
  */
 package consulo.ui.ex.internal;
 
-
 import consulo.application.progress.ProgressIndicator;
 import consulo.container.plugin.PluginId;
 import consulo.dataContext.DataContext;

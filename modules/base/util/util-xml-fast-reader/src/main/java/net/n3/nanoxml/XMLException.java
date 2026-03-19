@@ -33,7 +33,6 @@ import org.jspecify.annotations.Nullable;
 import java.io.PrintStream;
 import java.io.PrintWriter;
 
-
 /**
  * An XMLException is thrown when an exception occurred while processing the
  * XML data.
@@ -49,24 +48,20 @@ public class XMLException extends Exception
     */
    private String msg;
 
-
    /**
     * The system ID of the XML data where the exception occurred.
     */
    private @Nullable String systemID;
-
 
    /**
     * The line number in the XML data where the exception occurred.
     */
    private int lineNr;
 
-
    /**
     * Encapsulated exception.
     */
    private @Nullable Exception encapsulatedException;
-
 
    /**
     * Creates a new exception.
@@ -78,7 +73,6 @@ public class XMLException extends Exception
       this(null, -1, null, msg, false);
    }
 
-
    /**
     * Creates a new exception.
     *
@@ -88,7 +82,6 @@ public class XMLException extends Exception
    {
       this(null, -1, e, "Nested Exception", false);
    }
-
 
    /**
     * Creates a new exception.
@@ -106,7 +99,6 @@ public class XMLException extends Exception
       this(systemID, lineNr, e, "Nested Exception", true);
    }
 
-
    /**
     * Creates a new exception.
     *
@@ -122,7 +114,6 @@ public class XMLException extends Exception
    {
       this(systemID, lineNr, null, msg, true);
    }
-
 
    /**
     * Creates a new exception.
@@ -149,7 +140,6 @@ public class XMLException extends Exception
       this.msg = XMLException.buildMessage(systemID, lineNr, e, msg,
                                            reportParams);
    }
-
 
    /**
     * Builds the exception message
@@ -187,7 +177,6 @@ public class XMLException extends Exception
       return str;
    }
 
-
    /**
     * Returns the system ID of the XML data where the exception occurred.
     * If there is no system ID known, null is returned.
@@ -196,7 +185,6 @@ public class XMLException extends Exception
    {
       return this.systemID;
    }
-
 
    /**
     * Returns the line number in the XML data where the exception occurred.
@@ -207,7 +195,6 @@ public class XMLException extends Exception
       return this.lineNr;
    }
 
-
    /**
     * Returns the encapsulated exception, or null if no exception is
     * encapsulated.
@@ -216,7 +203,6 @@ public class XMLException extends Exception
    {
       return this.encapsulatedException;
    }
-
 
    /**
     * Dumps the exception stack to a print writer.
@@ -233,7 +219,6 @@ public class XMLException extends Exception
       }
    }
 
-
    /**
     * Dumps the exception stack to an output stream.
     *
@@ -249,7 +234,6 @@ public class XMLException extends Exception
       }
    }
 
-
    /**
     * Dumps the exception stack to System.err.
     */
@@ -262,7 +246,6 @@ public class XMLException extends Exception
          this.encapsulatedException.printStackTrace();
       }
    }
-
 
    /**
     * Returns a string representation of the exception.

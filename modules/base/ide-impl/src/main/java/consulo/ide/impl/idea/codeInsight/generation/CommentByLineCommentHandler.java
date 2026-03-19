@@ -293,7 +293,6 @@ public class CommentByLineCommentHandler extends MultiCaretCodeInsightActionHand
             languageSuitableForCompleteFragment = PsiUtilBase.reallyEvaluateLanguageInRange(offset, endOffset, file);
         }
 
-
         Commenter blockSuitableCommenter = languageSuitableForCompleteFragment == null ? Commenter.forLanguage(file.getLanguage()) : null;
         if (blockSuitableCommenter == null && file.getFileType() instanceof CustomSyntaxTableFileType) {
             blockSuitableCommenter = new Commenter() {
@@ -562,12 +561,10 @@ public class CommentByLineCommentHandler extends MultiCaretCodeInsightActionHand
                 CommenterWithLineSuffix commenterWithLineSuffix = (CommenterWithLineSuffix) commenter;
                 String suffix = commenterWithLineSuffix.getLineCommentSuffix();
 
-
                 int theEnd = endOffset > 0 ? endOffset : document.getLineEndOffset(line);
                 while (theEnd > startOffset && Character.isWhitespace(chars.charAt(theEnd - 1))) {
                     theEnd--;
                 }
-
 
                 String lineText = document.getText(new TextRange(startOffset, theEnd));
                 if (lineText.indexOf(suffix) != -1) {

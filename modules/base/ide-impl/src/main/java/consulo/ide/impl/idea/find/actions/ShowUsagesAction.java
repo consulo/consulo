@@ -551,7 +551,6 @@ public class ShowUsagesAction extends AnAction implements PopupAction {
         }
     }
 
-
     
     private JComponent createHintComponent(
         LocalizeValue text,
@@ -1221,7 +1220,6 @@ public class ShowUsagesAction extends AnAction implements PopupAction {
         //table.setPreferredSize(dimension);
         //table.setMaximumSize(dimension);
         //table.setPreferredScrollableViewportSize(dimension);
-
 
         Dimension footerSize = ((AbstractPopup) popup).getFooterPreferredSize();
 

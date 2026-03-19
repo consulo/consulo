@@ -126,7 +126,6 @@ public class KeymapUtil {
         return consulo.ui.ex.keymap.util.KeymapUtil.getFirstKeyboardShortcutText(action);
     }
 
-
     public static boolean isEventForAction(KeyEvent keyEvent, String actionId) {
         return consulo.ui.ex.keymap.util.KeymapUtil.isEventForAction(keyEvent, actionId);
     }

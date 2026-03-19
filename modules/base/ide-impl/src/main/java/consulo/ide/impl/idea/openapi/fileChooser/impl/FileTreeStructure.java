@@ -122,7 +122,6 @@ public class FileTreeStructure extends AbstractTreeStructure {
         return ArrayUtil.toObjectArray(childrenSet);
     }
 
-
     @Override
     public @Nullable Object getParentElement(Object element) {
         if (element instanceof FileElement fileElement) {

@@ -161,7 +161,6 @@ public class IgnoredFilesCompositeHolder implements IgnoredFilesHolder {
         return myVcsIgnoredHolderMap.get(vcs);
     }
 
-
     private static @Nullable VcsIgnoredFilesHolder getHolderFromExtensions(AbstractVcs vcs, Project project) {
         ExtensionPoint<VcsIgnoredFilesHolderProvider> point = project.getExtensionPoint(VcsIgnoredFilesHolderProvider.class);
 

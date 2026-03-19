@@ -495,7 +495,6 @@ public class NewErrorTreeViewPanelImpl extends JPanel implements DataProvider, N
         TreeUtil.collapseAll(myTree, 2);
     }
 
-
     public void expandAll() {
         TreePath[] selectionPaths = myTree.getSelectionPaths();
         TreePath leadSelectionPath = myTree.getLeadSelectionPath();
@@ -523,7 +522,6 @@ public class NewErrorTreeViewPanelImpl extends JPanel implements DataProvider, N
         }
 
         group.add(new StopAction());
-
 
         group.add(new PreviousOccurenceToolbarAction(this));
         group.add(new NextOccurenceToolbarAction(this));

@@ -230,7 +230,6 @@ public class MemberChooserImpl<T extends ClassMember> extends DialogWrapper impl
         myTree.setSelectionPaths(selectionPaths.toArray(new TreePath[selectionPaths.size()]));
     }
 
-
     @Override
     
     protected Action[] createActions() {
@@ -616,7 +615,6 @@ public class MemberChooserImpl<T extends ClassMember> extends DialogWrapper impl
         TreePath leadSelectionPath = myTree.getLeadSelectionPath();
         return Pair.create(leadSelectionPath != null ? (ElementNode) leadSelectionPath.getLastPathComponent() : null, selectedNodes);
     }
-
 
     private void restoreSelection(Pair<ElementNode, List<ElementNode>> pair) {
         List<ElementNode> selectedNodes = pair.second;

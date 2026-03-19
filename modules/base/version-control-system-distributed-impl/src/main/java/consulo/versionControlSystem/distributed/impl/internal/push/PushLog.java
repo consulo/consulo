@@ -692,7 +692,6 @@ public class PushLog extends JPanel implements DataProvider {
             tree.addAncestorListener(myTreeAncestorListener);
         }
 
-
         @Override
         protected void uninstallListeners() {
             tree.removeComponentListener(myTreeSizeListener);

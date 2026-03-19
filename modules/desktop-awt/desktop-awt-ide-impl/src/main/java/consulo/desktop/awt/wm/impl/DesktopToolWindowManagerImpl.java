@@ -250,7 +250,6 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
         });
     }
 
-
     
     @Override
     protected InternalDecoratorListener createInternalDecoratorListener() {
@@ -349,7 +348,6 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
                 }
             }
         }
-
 
         return false;
     }
@@ -1041,7 +1039,6 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
         }
     }
 
-
     /**
      * This command creates and shows <code>FloatingDecorator</code>.
      */
@@ -1147,7 +1144,6 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
             Disposer.dispose(myWindowedDecorator);
         }
     }
-
 
     /**
      * Notifies window manager about focus traversal in tool window

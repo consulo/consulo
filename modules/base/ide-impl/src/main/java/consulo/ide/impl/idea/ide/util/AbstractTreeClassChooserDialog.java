@@ -377,7 +377,6 @@ public abstract class AbstractTreeClassChooserDialog<T extends PsiNamedElement> 
         return myBaseClass != null ? myBaseClass : myInitialClass != null ? myInitialClass : null;
     }
 
-
     protected void selectElementInTree(PsiElement element) {
         element.getApplication().invokeLater(
             () -> {

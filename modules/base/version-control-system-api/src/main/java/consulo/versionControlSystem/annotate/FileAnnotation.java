@@ -228,7 +228,6 @@ public abstract class FileAnnotation {
         return createDefaultRevisionsOrderProvider(this);
     }
 
-
     public interface CurrentFileRevisionProvider {
         @Nullable
         VcsFileRevision getRevision(int lineNumber);

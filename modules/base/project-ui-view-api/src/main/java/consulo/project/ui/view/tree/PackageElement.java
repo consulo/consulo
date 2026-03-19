@@ -92,7 +92,6 @@ public final class PackageElement implements Queryable, RootsProvider {
     return myIsLibraryElement;
   }
 
-
   @Override
   public void putInfo(Map<String, String> info) {
     PsiPackage pkg = getPackage();

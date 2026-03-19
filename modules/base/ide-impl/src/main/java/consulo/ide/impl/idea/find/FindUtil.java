@@ -705,7 +705,6 @@ public class FindUtil {
         ReplaceInProjectManager.reportNumberReplacedOccurrences(project, occurrences);
     }
 
-
     private static boolean selectionMayContainRange(SelectionModel selection, TextRange range) {
         int[] starts = selection.getBlockSelectionStarts();
         int[] ends = selection.getBlockSelectionEnds();

@@ -57,7 +57,6 @@ public interface PasswordSafePromptDialog {
     return askPassword(title, message, requestor, key, resetPassword, null);
   }
 
-
   /**
    * Ask passphrase possibly asking password database first. The method could be invoked from any thread. If UI needs to be shown,
    * the method invokes {@link UIUtil#invokeAndWaitIfNeeded(Runnable)}
@@ -73,7 +72,6 @@ public interface PasswordSafePromptDialog {
   default @Nullable String askPassphrase(String title, String message, Class<?> requestor, String key, boolean resetPassword, String error) {
     return askPassword(title, message, requestor, key, resetPassword, error, "Passphrase:", "Remember the passphrase");
   }
-
 
   /**
    * Ask password possibly asking password database first. The method could be invoked from any thread. If UI needs to be shown,

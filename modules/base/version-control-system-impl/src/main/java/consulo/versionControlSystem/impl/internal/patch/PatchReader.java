@@ -275,7 +275,6 @@ public class PatchReader {
         }
     }
 
-
     private static class PatchContentParser implements Parser {
         private final boolean mySaveHunks;
         private DiffFormat myDiffFormat = null;

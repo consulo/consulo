@@ -194,7 +194,6 @@ public class StructureViewWrapperImpl implements StructureViewWrapper, Disposabl
     }
   }
 
-
   // -------------------------------------------------------------------------
   // StructureView interface implementation
   // -------------------------------------------------------------------------
@@ -384,7 +383,6 @@ public class StructureViewWrapperImpl implements StructureViewWrapper, Disposabl
     FileEditorProvider[] providers = editorProviderManager.getProviders(myProject, file);
     return providers.length == 0 ? null : providers[0].createEditor(myProject, file);
   }
-
 
   protected boolean isStructureViewShowing() {
     ToolWindowManager windowManager = ToolWindowManager.getInstance(myProject);

@@ -61,7 +61,6 @@ public class FileTypeExtensionPreviewAcceptor implements ExtensionPreviewAccepto
       return null;
     }
 
-
     FileNameMatcherFactory factory = myFileNameMatcherFactory;
     String value = values.get(1);
 

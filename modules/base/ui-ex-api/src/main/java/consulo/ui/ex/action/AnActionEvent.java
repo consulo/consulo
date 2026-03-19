@@ -220,7 +220,6 @@ public class AnActionEvent implements PlaceProvider<String> {
         );
     }
 
-
     
     public static AnActionEvent createFromInputEvent(
         @Nullable InputEvent event,
@@ -237,7 +236,6 @@ public class AnActionEvent implements PlaceProvider<String> {
             event == null ? 0 : event.getModifiers()
         );
     }
-
 
     
     public static AnActionEvent createFromInputEvent(

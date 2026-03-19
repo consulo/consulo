@@ -303,7 +303,6 @@ public class DesktopAWTRunnerLayoutUiImpl implements RunnerLayoutUiImpl {
         myContentUI.processBounce(content, activate);
     }
 
-
     @Override
     public boolean isDisposed() {
         return getContentManager().isDisposed();

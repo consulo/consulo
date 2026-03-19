@@ -78,7 +78,6 @@ public class PsiProximityComparator implements Comparator<Object> {
     return -proximity1.compareTo(proximity2);
   }
 
-
   public static @Nullable WeighingComparable<PsiElement, ProximityLocation> getProximity(PsiElement element, PsiElement context) {
     if (element == null) return null;
     Module contextModule = context != null ? ModuleUtilCore.findModuleForPsiElement(context) : null;

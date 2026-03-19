@@ -322,7 +322,6 @@ public class RegExHelpPopup extends JPanel {
             " <p>More on Regular Expressions: <a href=\"http://java.sun.com/j2se/1.5.0/docs/api/java/util/regex/Pattern.html\">Full Java Regular Expressions syntax description</a>, <a href=\"http://www.regular-expressions.info/java.html\">Using Regular Expressions in Java</a>." +
             " </html>");
 
-
         myEditorPane.addHyperlinkListener(new HyperlinkListener() {
             @Override
             public void hyperlinkUpdate(HyperlinkEvent e) {

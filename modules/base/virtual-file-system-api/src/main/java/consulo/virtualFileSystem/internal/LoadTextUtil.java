@@ -263,7 +263,6 @@ public final class LoadTextUtil {
     return new DetectResult(result, info.guessed, bom);
   }
 
-
   
   public static DetectResult guessFromContent(VirtualFile virtualFile, byte[] content) {
     return guessFromContent(virtualFile, content, content.length);

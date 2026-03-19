@@ -1261,7 +1261,6 @@ public abstract class DiffRequestProcessor implements Disposable {
             myContentPanel.setContent(myWrapperViewer.getComponent());
             setTitle(myActiveRequest.getTitle());
 
-
             FrameDiffTool.ToolbarComponents toolbarComponents1 = myViewer.init();
             FrameDiffTool.ToolbarComponents toolbarComponents2 = myWrapperViewer.init();
 
@@ -1288,7 +1287,6 @@ public abstract class DiffRequestProcessor implements Disposable {
                 popupActions.addAll(toolbarComponents2.popupActions);
             }
             buildActionPopup(popupActions);
-
 
             myToolbarStatusPanel.setContent(toolbarComponents1.statusPanel); // TODO: combine both panels ?
         }

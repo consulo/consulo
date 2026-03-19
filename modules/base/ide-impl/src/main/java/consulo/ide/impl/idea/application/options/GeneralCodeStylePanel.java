@@ -169,7 +169,6 @@ public class GeneralCodeStylePanel extends CodeStyleAbstractPanel {
         });
     }
 
-
     @Override
     protected int getRightMargin() {
         return myRightMarginField.getValue();

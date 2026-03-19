@@ -661,7 +661,6 @@ public class FindModel extends UserDataHolderBase implements Cloneable {
         return (FindModel)super.clone();
     }
 
-
     @Override
     public String toString() {
         return "--- FIND MODEL ---\n" +

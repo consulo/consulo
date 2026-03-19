@@ -80,7 +80,6 @@ public class TranslationSourceFileInfo {
         }
     }
 
-
     private Map<Integer, Long> myTimestamps; // ProjectId -> last compiled stamp
     private Map<Integer, Object> myProjectToOutputPathMap; // ProjectId -> either a single output path or a set of output paths
 

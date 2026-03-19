@@ -23,7 +23,6 @@ import consulo.ui.ex.tree.PresentationData;
 import consulo.ui.image.Image;
 import org.jspecify.annotations.Nullable;
 
-
 /**
  * @author nik
  */

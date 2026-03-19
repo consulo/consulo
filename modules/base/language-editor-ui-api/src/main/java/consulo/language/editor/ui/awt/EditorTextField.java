@@ -678,7 +678,6 @@ public class EditorTextField extends NonOpaquePanel implements DocumentListener,
             toReleaseEditor = true;
         }
 
-
         Dimension size = new Dimension(100, 20);
         if (myEditor != null) {
             Dimension preferredSize = new Dimension(myEditor.getComponent().getPreferredSize());
@@ -746,7 +745,6 @@ public class EditorTextField extends NonOpaquePanel implements DocumentListener,
         }
         myNextFocusable = aComponent;
     }
-
 
     @Override
     protected boolean processKeyBinding(KeyStroke ks, KeyEvent e, int condition, boolean pressed) {

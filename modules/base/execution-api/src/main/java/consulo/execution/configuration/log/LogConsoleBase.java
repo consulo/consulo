@@ -189,7 +189,6 @@ public abstract class LogConsoleBase extends AdditionalTabComponent implements L
             myTopComponent.add(getSearchComponent(), BorderLayout.EAST);
         }
 
-
         return myTopComponent;
     }
 

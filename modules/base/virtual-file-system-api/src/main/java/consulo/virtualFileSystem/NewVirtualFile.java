@@ -56,7 +56,6 @@ public abstract class NewVirtualFile extends VirtualFile implements VirtualFileW
 
   public abstract @Nullable NewVirtualFile findChildIfCached(String name);
 
-
   public abstract void setTimeStamp(long time) throws IOException;
 
   @Override

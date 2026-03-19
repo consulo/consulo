@@ -71,7 +71,6 @@ public abstract class PackagingElementFactory {
   
   public abstract PackagingElement<?> createLibraryFiles(String libraryName, String level, String moduleName);
 
-
   
   public abstract PackagingElement<?> createDirectoryCopyWithParentDirectories(String filePath, String relativeOutputPath);
 
@@ -103,7 +102,6 @@ public abstract class PackagingElementFactory {
 
   
   public abstract PackagingElement<?> createParentDirectories(String relativeOutputPath, PackagingElement<?> element);
-
 
   
   public abstract List<? extends PackagingElement<?>> createParentDirectories(String relativeOutputPath, List<? extends PackagingElement<?>> elements);

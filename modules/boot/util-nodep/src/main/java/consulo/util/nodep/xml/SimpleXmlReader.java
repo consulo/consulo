@@ -74,7 +74,6 @@ public class SimpleXmlReader {
     }
   }
 
-
   public static SimpleXmlElement parse(File file) throws SimpleXmlParsingException {
     try {
       DocumentBuilder builder = ourDocumentBuilder.get();

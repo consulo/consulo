@@ -28,11 +28,9 @@
 
 package net.n3.nanoxml;
 
-
 import org.jspecify.annotations.Nullable;
 
 import java.util.Properties;
-
 
 /**
  * IXMLValidator processes the DTD and handles entity references.
@@ -50,14 +48,12 @@ public interface IXMLValidator
     */
    public void setParameterEntityResolver(IXMLEntityResolver resolver);
 
-
    /**
     * Returns the parameter entity resolver.
     *
     * @return the entity resolver.
     */
    public @Nullable IXMLEntityResolver getParameterEntityResolver();
-
 
    /**
     * Parses the DTD. The validator object is responsible for reading the
@@ -77,7 +73,6 @@ public interface IXMLValidator
                         boolean            external)
       throws Exception;
 
-
    /**
     * Indicates that an element has been started.
     *
@@ -93,7 +88,6 @@ public interface IXMLValidator
                               int    lineNr)
       throws Exception;
 
-
    /**
     * Indicates that the current element has ended.
     *
@@ -108,7 +102,6 @@ public interface IXMLValidator
                             String systemId,
                             int    lineNr)
       throws Exception;
-
 
    /**
     * Indicates that an attribute has been added to the current element.
@@ -126,7 +119,6 @@ public interface IXMLValidator
                               String systemId,
                               int    lineNr)
       throws Exception;
-
 
    /**
     * This method is called when the attributes of an XML element have been
@@ -147,7 +139,6 @@ public interface IXMLValidator
                                           String     systemId,
                                           int        lineNr)
       throws Exception;
-
 
    /**
     * Indicates that a new #PCDATA element has been encountered.

@@ -72,7 +72,6 @@ public abstract class CompletionService {
   
   protected abstract PrefixMatcher createMatcher(String prefix, boolean typoTolerant);
 
-
   public abstract @Nullable CompletionProcess getCurrentCompletion();
 
   /**

@@ -219,7 +219,6 @@ public class VcsSelectionHistoryDialog extends FrameWrapper implements DataProvi
         setDimensionKey("VCS.FileHistoryDialog");
         closeOnEsc();
 
-
         myBlockLoader = new BlockLoader(myRevisions, myFile, document, selectionStart, selectionEnd) {
             @Override
             protected void notifyError(VcsException e) {

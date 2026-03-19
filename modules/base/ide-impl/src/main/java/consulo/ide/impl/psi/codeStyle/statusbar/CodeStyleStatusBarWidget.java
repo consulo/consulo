@@ -60,12 +60,10 @@ public class CodeStyleStatusBarWidget extends EditorBasedStatusBarPopup implemen
         }
     }
 
-
     private static @Nullable CodeStyleStatusBarUIContributor getUiContributor(TransientCodeStyleSettings settings) {
         CodeStyleSettingsModifier modifier = settings.getModifier();
         return modifier != null ? modifier.getStatusBarUiContributor(settings) : null;
     }
-
 
     private static @Nullable IndentStatusBarUIContributor getUiContributor(VirtualFile file, IndentOptions indentOptions) {
         FileIndentOptionsProvider provider = findProvider(file, indentOptions);

@@ -161,7 +161,6 @@ public abstract class TwosideTextDiffViewer extends TwosideDiffViewer<TextEditor
 
         new TextDiffViewerUtil.EditorFontSizeSynchronizer(getEditors()).install(this);
 
-
         getEditor(Side.LEFT).getScrollingModel().addVisibleAreaListener(myVisibleAreaListener);
         getEditor(Side.RIGHT).getScrollingModel().addVisibleAreaListener(myVisibleAreaListener);
 
@@ -194,7 +193,6 @@ public abstract class TwosideTextDiffViewer extends TwosideDiffViewer<TextEditor
     //
     // Getters
     //
-
 
    
     protected List<? extends DocumentContent> getContents() {
@@ -234,7 +232,6 @@ public abstract class TwosideTextDiffViewer extends TwosideDiffViewer<TextEditor
     public EditorEx getEditor2() {
         return getEditor(Side.RIGHT);
     }
-
 
    
     public EditorEx getEditor(Side side) {

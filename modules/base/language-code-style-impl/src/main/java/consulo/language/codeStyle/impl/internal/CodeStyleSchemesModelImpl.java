@@ -114,7 +114,6 @@ public class CodeStyleSchemesModelImpl implements CodeStyleSchemesModel {
       myProjectScheme.setCodeStyleSettings(perProjectSettings);
     }
 
-
     myDispatcher.getMulticaster().schemeListChanged();
     myDispatcher.getMulticaster().currentSchemeChanged(this);
 

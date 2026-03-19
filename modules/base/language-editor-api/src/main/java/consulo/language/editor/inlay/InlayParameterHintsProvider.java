@@ -34,7 +34,6 @@ public interface InlayParameterHintsProvider extends LanguageExtension {
         return Application.get().getExtensionPoint(InlayParameterHintsProvider.class).getOrBuildCache(KEY).get(language);
     }
 
-
     /**
      * @param element element for which hints should be shown.
      * @return list of hints to be shown, hints offsets should be located within element's text range.

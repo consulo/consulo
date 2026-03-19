@@ -55,7 +55,6 @@ public class TextFieldWithAutoCompletion<T> extends LanguageTextField {
     this(null, EMPTY_COMPLETION, false, null);
   }
 
-
   public TextFieldWithAutoCompletion(Project project,
                                      TextFieldWithAutoCompletionListProvider<T> provider,
                                      boolean showAutocompletionIsAvailableHint, @Nullable String text) {

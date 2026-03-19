@@ -204,7 +204,6 @@ public class NewLibraryEditor extends LibraryEditorBase {
     exportRoots(model::getUrls, model::isValid, model::removeRoot, model::addRoot, model::addJarDirectory, model::addExcludedRoot);
   }
 
-
   public void applyTo(LibraryEditorBase editor) {
     editor.setProperties(myProperties);
     exportRoots(editor::getUrls, editor::isValid, editor::removeRoot, editor::addRoot, editor::addJarDirectory, editor::addExcludedRoot);

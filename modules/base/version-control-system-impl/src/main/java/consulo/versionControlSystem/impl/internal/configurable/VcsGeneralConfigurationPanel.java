@@ -157,7 +157,6 @@ public class VcsGeneralConfigurationPanel implements SearchableConfigurable {
       .getConfirmation(VcsConfiguration.StandardConfirmation.REMOVE);
   }
 
-
   private static VcsShowConfirmationOption.Value getSelected(JRadioButton[] group) {
     if (group[0].isSelected()) return VcsShowConfirmationOption.Value.SHOW_CONFIRMATION;
     if (group[1].isSelected()) return VcsShowConfirmationOption.Value.DO_ACTION_SILENTLY;
@@ -259,7 +258,6 @@ public class VcsGeneralConfigurationPanel implements SearchableConfigurable {
     }
     group[index].setSelected(true);
   }
-
 
   public JComponent getPanel() {
     return myPanel;

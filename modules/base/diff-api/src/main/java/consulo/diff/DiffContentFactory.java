@@ -44,7 +44,6 @@ public abstract class DiffContentFactory {
   
   public abstract EmptyContent createEmpty();
 
-
   
   public abstract DocumentContent create(String text);
 
@@ -59,7 +58,6 @@ public abstract class DiffContentFactory {
 
   
   public abstract DocumentContent create(String text, @Nullable DocumentContent referent);
-
 
   
   public abstract DocumentContent create(@Nullable Project project, String text);
@@ -77,10 +75,8 @@ public abstract class DiffContentFactory {
   
   public abstract DocumentContent create(@Nullable Project project, String text, @Nullable DocumentContent referent);
 
-
   
   public abstract DocumentContent create(Document document, @Nullable DocumentContent referent);
-
 
   
   public abstract DocumentContent create(@Nullable Project project, Document document);
@@ -94,7 +90,6 @@ public abstract class DiffContentFactory {
   
   public abstract DocumentContent create(@Nullable Project project, Document document, @Nullable DocumentContent referent);
 
-
   
   public abstract DiffContent create(@Nullable Project project, VirtualFile file);
 
@@ -102,13 +97,11 @@ public abstract class DiffContentFactory {
 
   public abstract @Nullable FileContent createFile(@Nullable Project project, VirtualFile file);
 
-
   
   public abstract DocumentContent createFragment(@Nullable Project project, Document document, TextRange range);
 
   
   public abstract DocumentContent createFragment(@Nullable Project project, DocumentContent content, TextRange range);
-
 
   
   public abstract DiffContent createClipboardContent();
@@ -122,7 +115,6 @@ public abstract class DiffContentFactory {
   
   public abstract DocumentContent createClipboardContent(@Nullable Project project, @Nullable DocumentContent referent);
 
-
   
   public abstract DiffContent createFromBytes(@Nullable Project project,
                                               byte[] content,
@@ -133,7 +125,6 @@ public abstract class DiffContentFactory {
                                            byte[] content,
                                            FileType type,
                                            String fileName) throws IOException;
-
 
   
   @Deprecated

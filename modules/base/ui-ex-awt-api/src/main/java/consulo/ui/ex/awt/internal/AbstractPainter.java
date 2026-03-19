@@ -30,7 +30,6 @@ public abstract class AbstractPainter implements Painter {
 
   private final List<Listener> myListeners = Lists.newLockFreeCopyOnWriteList();
 
-
   @Override
   public boolean needsRepaint() {
     return myNeedsRepaint;

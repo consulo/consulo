@@ -158,7 +158,6 @@ public class PackagingElementNode<E extends PackagingElement<?>> extends Artifac
         return null;
     }
 
-
     public List<PackagingElementNode<?>> getNodesByPath(List<PackagingElement<?>> pathToPlace) {
         List<PackagingElementNode<?>> result = new ArrayList<>();
         PackagingElementNode<?> current = this;

@@ -210,7 +210,6 @@ public abstract class ProjectLevelVcsManager {
     
     public abstract VcsShowSettingOption getOrCreateCustomOption(String vcsActionName, AbstractVcs vcs);
 
-
     public abstract void showProjectOperationInfo(UpdatedFiles updatedFiles, String displayActionName);
 
     /**

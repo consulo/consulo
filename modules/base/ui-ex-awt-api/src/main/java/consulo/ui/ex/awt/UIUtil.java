@@ -188,7 +188,6 @@ public class UIUtil {
     public static final String CHECKBOX_ROLLOVER_PROPERTY = "JCheckBox.rollOver.rectangle";
     public static final String CHECKBOX_PRESSED_PROPERTY = "JCheckBox.pressed.rectangle";
 
-
     /**
      * Alt+click does copy text from tooltip or balloon to clipboard.
      * We collect this text from components recursively and this generic approach might 'grab' unexpected text fragments.
@@ -331,7 +330,6 @@ public class UIUtil {
 
     public static final Insets PANEL_REGULAR_INSETS = new Insets(8, 12, 8, 12);
     public static final Insets PANEL_SMALL_INSETS = new Insets(5, 8, 5, 8);
-
 
     public static final Border DEBUG_MARKER_BORDER = new Border() {
         private final Insets empty = new Insets(0, 0, 0, 0);
@@ -1839,7 +1837,6 @@ public class UIUtil {
         return createImage(width, height, type);
     }
 
-
     /**
      * @see #createImage(GraphicsConfiguration, double, double, int, RoundingMode)
      */
@@ -2451,7 +2448,6 @@ public class UIUtil {
     public static Color getBorderSeparatorColor() {
         return getBorderColor();
     }
-
 
     public static @Nullable StyleSheet loadStyleSheet(@Nullable URL url) {
         if (url == null) {
@@ -3231,7 +3227,6 @@ public class UIUtil {
         }
     }
 
-
     public static void setBackgroundRecursively(Component component, Color bg) {
         component.setBackground(bg);
         if (component instanceof Container container) {
@@ -3465,7 +3460,6 @@ public class UIUtil {
 
         textField.setColumns(4);
     }
-
 
     /**
      * Returns the first window ancestor of the component.

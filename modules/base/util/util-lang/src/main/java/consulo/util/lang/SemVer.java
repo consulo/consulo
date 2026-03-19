@@ -142,7 +142,6 @@ public final class SemVer implements Comparable<SemVer> {
       if (end1 < 0) end1 = length1;
       if (end2 < 0) end2 = length2;
 
-
       CharSequence segment1 = new CharSequenceSubSequence(pre1, start1, end1);
       CharSequence segment2 = new CharSequenceSubSequence(pre2, start2, end2);
       if (StringUtil.isNotNegativeNumber(segment1)) {

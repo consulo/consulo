@@ -170,7 +170,6 @@ public abstract class InspectionToolsConfigurable implements ErrorsConfigurable,
     JPanel profilesHolder = new JPanel();
     profilesHolder.setLayout(new CardLayout());
 
-
     JComponent manageButton = new ManageButton(new ManageButtonBuilder() {
       @Override
       public boolean isSharedToTeamMembers() {

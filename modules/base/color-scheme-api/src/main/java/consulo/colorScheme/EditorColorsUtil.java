@@ -42,7 +42,6 @@ public class EditorColorsUtil {
         return getColorSchemeForBackground(null).getColor(colorKey);
     }
 
-
     /**
      * @return the appropriate color scheme for UI other than text editor (QuickDoc, UsagesView, etc.)
      * depending on the current LAF, current editor color scheme and background color.

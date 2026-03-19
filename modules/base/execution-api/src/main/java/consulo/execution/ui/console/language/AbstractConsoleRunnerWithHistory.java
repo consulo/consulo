@@ -122,7 +122,6 @@ public abstract class AbstractConsoleRunnerWithHistory<T extends LanguageConsole
     contentDescriptor.setFocusComputable(() -> getConsoleView().getConsoleEditor().getContentComponent());
     contentDescriptor.setAutoFocusContent(isAutoFocusContent());
 
-
     // tool bar actions
     List<AnAction> actions = fillToolBarActions(toolbarActions, defaultExecutor, contentDescriptor);
     registerActionShortcuts(actions, getConsoleView().getConsoleEditor().getComponent());
@@ -230,6 +229,5 @@ public abstract class AbstractConsoleRunnerWithHistory<T extends LanguageConsole
   public ProcessBackedConsoleExecuteActionHandler getConsoleExecuteActionHandler() {
     return myConsoleExecuteActionHandler;
   }
-
 
 }

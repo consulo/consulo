@@ -148,11 +148,9 @@ public class DesktopDockableEditorTabbedContainer implements DockableEditorTabbe
     DesktopAWTEditorTabbedContainer.DockableEditor dockableEditor = (DesktopAWTEditorTabbedContainer.DockableEditor)content;
     VirtualFile file = dockableEditor.getFile();
 
-
     if (window == null || window.isDisposed()) {
       window = mySplitters.getOrCreateCurrentWindow(file);
     }
-
 
     if (myCurrentOver != null) {
       int index = ((JBTabsImpl)myCurrentOver).getDropInfoIndex();

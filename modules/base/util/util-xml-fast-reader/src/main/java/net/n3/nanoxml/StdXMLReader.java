@@ -28,7 +28,6 @@
 
 package net.n3.nanoxml;
 
-
 import org.jspecify.annotations.Nullable;
 
 import java.io.*;
@@ -37,7 +36,6 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.Objects;
 import java.util.Stack;
-
 
 /**
  * StdXMLReader reads the data to be parsed.
@@ -76,18 +74,15 @@ public class StdXMLReader
    
    }
 
-
    /**
     * The stack of readers.
     */
    private Stack readers;
 
-
    /**
     * The current push-back reader.
     */
    private StackedReader currentReader;
-
 
    /**
     * Creates a new reader using a string as input.
@@ -98,7 +93,6 @@ public class StdXMLReader
    {
       return new StdXMLReader(new StringReader(str));
    }
-
 
    /**
     * Creates a new reader using a file as input.
@@ -124,7 +118,6 @@ public class StdXMLReader
 
       return r;
    }
-
 
    /**
     * Initializes the reader from a system and public ID.
@@ -167,7 +160,6 @@ public class StdXMLReader
          = new PushbackReader(this.currentReader.lineReader, 2);
    }
 
-
    /**
     * Initializes the XML reader.
     *
@@ -188,7 +180,6 @@ public class StdXMLReader
          // never happens
       }
    }
-
 
    /**
     * Scans the encoding from an &lt;?xml...?&gt; tag.
@@ -254,7 +245,6 @@ public class StdXMLReader
       return null;
    }
 
-
    /**
     * Converts a stream to a reader while detecting the encoding.
     *
@@ -318,7 +308,6 @@ public class StdXMLReader
       }
    }
 
-
    /**
     * Initializes the XML reader.
     *
@@ -349,7 +338,6 @@ public class StdXMLReader
       this.startNewStream(new StringReader(charsRead.toString()));
    }
 
-
    /**
     * Reads a character.
     *
@@ -376,7 +364,6 @@ public class StdXMLReader
       return (char) ch;
    }
 
-
    /**
     * Returns true if the current stream has no more characters left to be
     * read.
@@ -396,7 +383,6 @@ public class StdXMLReader
          return false;
       }
    }
-
 
    /**
     * Returns true if there are no more characters left to be read.
@@ -423,7 +409,6 @@ public class StdXMLReader
       return false;
    }
 
-
    /**
     * Pushes the last character read back to the stream.
     *
@@ -437,7 +422,6 @@ public class StdXMLReader
    {
       this.currentReader.getRequiredPbReader().unread(ch);
    }
-
 
    /**
     * Opens a stream from a public and system ID.
@@ -492,7 +476,6 @@ public class StdXMLReader
       return pbreader;
    }
 
-
    /**
     * Starts a new stream from a Java reader. The new stream is used
     * temporary to read data from. If that stream is exhausted, control
@@ -504,7 +487,6 @@ public class StdXMLReader
    {
       this.startNewStream(reader, false);
    }
-
 
    /**
     * Starts a new stream from a Java reader. The new stream is used
@@ -535,7 +517,6 @@ public class StdXMLReader
       this.currentReader.publicId = oldReader.publicId;
    }
 
-
    /**
     * Returns the current "level" of the stream on the stack of streams.
     */
@@ -543,7 +524,6 @@ public class StdXMLReader
    {
       return this.readers.size();
    }
-
 
    /**
     * Returns the line number of the data in the current stream.
@@ -563,7 +543,6 @@ public class StdXMLReader
       return this.currentReader.lineReader.getLineNumber() + 1;
    }
 
-
    /**
     * Sets the system ID of the current stream.
     *
@@ -579,7 +558,6 @@ public class StdXMLReader
                                             systemID);
    }
 
-
    /**
     * Sets the public ID of the current stream.
     *
@@ -590,7 +568,6 @@ public class StdXMLReader
       this.currentReader.publicId = publicID;
    }
 
-
    /**
     * Returns the current system ID.
     */
@@ -598,7 +575,6 @@ public class StdXMLReader
    {
       return Objects.requireNonNull(this.currentReader.systemId).toString();
    }
-
 
    /**
       * Returns the current public ID.

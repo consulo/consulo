@@ -62,7 +62,6 @@ public abstract class JavaLikeLangLineIndentProvider implements LineIndentProvid
     LanguageStartDelimiter
   }
 
-
   @Nullable
   @Override
   public String getLineIndent(Project project,
@@ -377,7 +376,6 @@ public abstract class JavaLikeLangLineIndentProvider implements LineIndentProvid
   }
 
   protected abstract SemanticEditorPosition.@Nullable SyntaxElement mapType(IElementType tokenType);
-
 
   protected @Nullable Indent getIndentInBlock(Project project,
                                     Document document, @Nullable Language language,

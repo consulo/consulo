@@ -364,7 +364,6 @@ public class InjectionsSettingsUI implements SearchableConfigurable.Parent, Conf
         return group;
     }
 
-
     private void performEditAction(AnActionEvent e) {
         AnAction action = getEditAction();
         if (action != null) {

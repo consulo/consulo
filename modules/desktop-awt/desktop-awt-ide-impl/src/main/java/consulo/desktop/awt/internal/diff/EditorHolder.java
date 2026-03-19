@@ -17,7 +17,6 @@ package consulo.desktop.awt.internal.diff;
 
 import consulo.disposer.Disposable;
 
-
 import javax.swing.*;
 import java.awt.event.FocusListener;
 import org.jspecify.annotations.Nullable;

@@ -69,7 +69,6 @@ public class TraceableDisposableImpl implements TraceableDisposable {
       super(msg);
     }
 
-
     @SuppressWarnings("HardCodedStringLiteral")
     @Override
     public void printStackTrace(PrintWriter s) {

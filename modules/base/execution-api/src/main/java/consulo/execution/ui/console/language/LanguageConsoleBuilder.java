@@ -77,7 +77,6 @@ public abstract class LanguageConsoleBuilder {
     return this;
   }
 
-
   /**
    * todo This API doesn't look good, but it is much better than force client to know low-level details
    */

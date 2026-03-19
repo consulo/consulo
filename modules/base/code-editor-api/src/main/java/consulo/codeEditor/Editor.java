@@ -329,7 +329,6 @@ public interface Editor extends UserDataHolder {
         throw new UnsupportedOperationException("Unsupported platform");
     }
 
-
     /**
      * Maps the pixel coordinates in the editor to a visual position.
      *
@@ -340,7 +339,6 @@ public interface Editor extends UserDataHolder {
     default VisualPosition xyToVisualPosition(Point p) {
         throw new UnsupportedOperationException("Unsupported platform");
     }
-
 
     /**
      * Same as {{@link #xyToVisualPosition(Point)}}, but allows to specify target point with higher precision.

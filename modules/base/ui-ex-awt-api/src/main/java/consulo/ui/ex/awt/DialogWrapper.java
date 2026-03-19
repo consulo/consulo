@@ -1731,7 +1731,6 @@ public abstract class DialogWrapper {
         ensureEventDispatchThread();
         registerKeyboardShortcuts();
 
-
         Disposable uiParent = Disposer.get("ui");
         if (uiParent != null) { // may be null if no app yet (license agreement)
             Disposer.register(uiParent, myDisposable); // ensure everything is disposed on app quit
@@ -2246,7 +2245,6 @@ public abstract class DialogWrapper {
             return source;
         }
     }
-
 
     private void updateSize() {
         if (myActualSize == null && !myErrorText.isVisible()) {

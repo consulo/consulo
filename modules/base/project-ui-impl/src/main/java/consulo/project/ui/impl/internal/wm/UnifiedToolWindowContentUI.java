@@ -185,7 +185,6 @@ public class UnifiedToolWindowContentUI implements ToolWindowContentUI, Property
         myContent.center(selected.getUIComponent());
     }
 
-
     private void rebuild() {
         getCurrentLayout().rebuild();
         getCurrentLayout().update();
@@ -199,7 +198,6 @@ public class UnifiedToolWindowContentUI implements ToolWindowContentUI, Property
   public void doLayout() {
     getCurrentLayout().layout();
   }
-
 
   @Override
   protected void paintComponent(final Graphics g) {
@@ -401,7 +399,6 @@ public class UnifiedToolWindowContentUI implements ToolWindowContentUI, Property
 
         return null;
     }
-
 
     private CloseAction.CloseTarget computeCloseTarget() {
         if (myManager.canCloseContents()) {

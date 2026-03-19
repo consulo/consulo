@@ -212,7 +212,6 @@ public class CodeStyleSettings extends LegacyCodeStyleSettings implements Clonea
         copyCustomSettingsFrom(from);
     }
 
-
     public boolean USE_SAME_INDENTS;
 
     public boolean IGNORE_SAME_INDENTS_FOR_LANGUAGES;
@@ -390,7 +389,6 @@ public class CodeStyleSettings extends LegacyCodeStyleSettings implements Clonea
      */
     @Deprecated
     public boolean REPLACE_NULL_CHECK = true;
-
 
     //----------------- JAVA IMPORTS (deprecated, moved to JavaCodeStyleSettings) --------------------
 
@@ -658,7 +656,6 @@ public class CodeStyleSettings extends LegacyCodeStyleSettings implements Clonea
      */
     @Deprecated
     public boolean JD_KEEP_EMPTY_RETURN = true;
-
 
     /**
      * @deprecated Use JavaCodeStyleSettings.JD_LEADING_ASTERISKS_ARE_ENABLED

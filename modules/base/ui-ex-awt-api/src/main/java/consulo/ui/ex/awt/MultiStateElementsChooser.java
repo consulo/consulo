@@ -269,7 +269,6 @@ public class MultiStateElementsChooser<T, S> extends JPanel implements Component
     myTableModel.setMarkState(elementRow, markState);
   }
 
-
   public void removeElement(T element) {
     int elementRow = myTableModel.getElementRow(element);
     if (elementRow < 0) {

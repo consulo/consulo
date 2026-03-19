@@ -123,7 +123,6 @@ class ApplyPatchViewer implements DataProvider, Disposable {
         myContext = context;
         myPatchRequest = request;
 
-
         DocumentContent resultContent = request.getResultContent();
         DocumentContent patchContent = DiffContentFactory.getInstance().create(new DocumentImpl("", true), resultContent);
 
@@ -164,7 +163,6 @@ class ApplyPatchViewer implements DataProvider, Disposable {
         myPrevNextDifferenceIterable = new MyPrevNextDifferenceIterable();
         myStatusPanel = new MyStatusPanel();
         myFoldingModel = new MyFoldingModel(myResultEditor, this);
-
 
         new MyFocusOppositePaneAction().install(myPanel);
         new TextDiffViewerUtil.EditorActionsPopup(createEditorPopupActions()).install(editors, myPanel);
@@ -396,7 +394,6 @@ class ApplyPatchViewer implements DataProvider, Disposable {
         myPatchEditor.getScrollingModel().addVisibleAreaListener(areaListener);
 
         myPatchEditor.getGutterComponentEx().revalidateMarkup();
-
 
         if (myResultChanges.size() > 0) {
             scrollToChange(myResultChanges.get(0), Side.LEFT, true);

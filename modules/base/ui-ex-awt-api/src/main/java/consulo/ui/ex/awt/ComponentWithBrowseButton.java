@@ -70,7 +70,6 @@ public class ComponentWithBrowseButton<Comp extends JComponent> extends JPanel i
         setFocusable(false);
         add(myComponent, BorderLayout.CENTER);
 
-
         if (ApplicationManager.getApplication() != null && AWTHasSuffixComponent.isSuffixComponent(myComponent)) {
             setOpaque(false);
 

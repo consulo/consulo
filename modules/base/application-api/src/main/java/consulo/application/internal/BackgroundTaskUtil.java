@@ -179,7 +179,6 @@ public class BackgroundTaskUtil {
     return Pair.create(result, indicator);
   }
 
-
   /**
    * An alternative to plain {@link Application#executeOnPooledThread(Runnable)} which wraps the task in a process with a
    * {@link ProgressIndicator} which gets cancelled when the given disposable is disposed. <br/><br/>
@@ -295,7 +294,6 @@ public class BackgroundTaskUtil {
       return ApplicationManager.getApplication().getMessageBus().syncPublisher(topic);
     });
   }
-
 
   private static class Helper<T> {
     private static final Object INITIAL_STATE = new Object();

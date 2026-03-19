@@ -632,7 +632,6 @@ public final class CtrlMouseHandler {
             Dimension oldSize = component.getPreferredSize();
             newTextConsumer.accept(updatedText);
 
-
             Dimension newSize = component.getPreferredSize();
             if (newSize.width == oldSize.width) {
                 return;
@@ -675,7 +674,6 @@ public final class CtrlMouseHandler {
             }
         });
     }
-
 
     private final class TooltipProvider {
         

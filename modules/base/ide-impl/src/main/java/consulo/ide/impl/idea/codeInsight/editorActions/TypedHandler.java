@@ -155,7 +155,6 @@ public class TypedHandler extends TypedActionHandlerBase implements ExtensionTyp
             Editor editor = injectedEditorIfCharTypedIsSignificant(charTyped, originalEditor, originalFile);
             PsiFile file = editor == originalEditor ? originalFile : psiDocumentManager.getPsiFile(editor.getDocument());
 
-
             List<TypedHandlerDelegate> delegates = TypedHandlerDelegate.EP_NAME.getExtensionList();
 
             if (caret == originalEditor.getCaretModel().getPrimaryCaret()) {

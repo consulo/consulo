@@ -39,7 +39,6 @@ public class ForcedBuildFileAttribute {
   private static final FileAttribute FRAMEWORK_FILE_ATTRIBUTE = new FileAttribute("forcedBuildFileFrameworkAttribute", 2, false);
   private static final Key<String> FRAMEWORK_FILE_MARKER = Key.create("forcedBuildFileFrameworkAttribute");
 
-
   private ForcedBuildFileAttribute() {
   }
 
@@ -70,7 +69,6 @@ public class ForcedBuildFileAttribute {
     }
     return file.getUserData(FRAMEWORK_FILE_MARKER);
   }
-
 
   public static void forceFileToFramework(VirtualFile file, String frameworkId, boolean value) {
     //belongs to other framework - do not override!

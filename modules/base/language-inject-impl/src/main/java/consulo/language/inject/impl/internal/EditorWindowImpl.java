@@ -130,7 +130,6 @@ class EditorWindowImpl extends UserDataHolderBase implements EditorWindow, Edito
     }
   }
 
-
   @Override
   public boolean isValid() {
     return !isDisposed() && !myInjectedFile.getProject().isDisposed() && myInjectedFile.isValid() && myDocumentWindow.isValid();

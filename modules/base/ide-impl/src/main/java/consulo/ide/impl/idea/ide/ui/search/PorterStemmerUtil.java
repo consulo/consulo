@@ -209,7 +209,6 @@ public class PorterStemmerUtil {
     return str;
   }
 
-
   private static String step3(String str) {
     // (m > 0) ICATE -> IC
     if ((str.endsWith("icate")) && (stringMeasure(str.substring(0, str.length() - 3)) > 0)) {
@@ -241,7 +240,6 @@ public class PorterStemmerUtil {
     }
     return str;
   }
-
 
   private static String step4(String str) {
     if ((str.endsWith("al")) && (stringMeasure(str.substring(0, str.length() - 2)) > 1)) {
@@ -322,7 +320,6 @@ public class PorterStemmerUtil {
     return str;
   }
 
-
   private static String step5a(String str) {
     // (m > 1) E ->
     if (str.endsWith("e") && stringMeasure(str.substring(0, str.length() - 1)) > 1) {
@@ -338,7 +335,6 @@ public class PorterStemmerUtil {
     }
   }
 
-
   private static String step5b(String str) {
     // (m > 1 and *d and *L) ->
     if (str.endsWith("l") && stringMeasure(str.substring(0, str.length() - 1)) > 1 && endsWithDoubleConsonent(str)) {
@@ -348,7 +344,6 @@ public class PorterStemmerUtil {
       return str;
     }
   }
-
 
   private static boolean containsVowel(String str) {
     char[] strchars = str.toCharArray();

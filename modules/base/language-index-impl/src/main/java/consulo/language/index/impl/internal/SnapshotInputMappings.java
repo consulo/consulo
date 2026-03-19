@@ -322,7 +322,6 @@ class SnapshotInputMappings<Key, Value, Input> implements UpdatableSnapshotInput
   private static final consulo.util.dataholder.Key<Integer> ourSavedContentHashIdKey = consulo.util.dataholder.Key.create("saved.content.hash.id");
   private static final consulo.util.dataholder.Key<Integer> ourSavedUncommittedHashIdKey = consulo.util.dataholder.Key.create("saved.uncommitted.hash.id");
 
-
   private StringBuilder buildDiff(Map<Key, Value> data, Map<Key, Value> contentData) {
     StringBuilder moreInfo = new StringBuilder();
     if (contentData.size() != data.size()) {

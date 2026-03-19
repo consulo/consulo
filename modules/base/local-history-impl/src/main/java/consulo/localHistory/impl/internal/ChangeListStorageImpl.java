@@ -126,7 +126,6 @@ public class ChangeListStorageImpl implements ChangeListStorage {
         notifyUser("Local History storage file has become corrupted and will be rebuilt.");
     }
 
-
     public static void notifyUser(String message) {
     /*String createIssuePart = "<br>" +
                              "<br>" +
