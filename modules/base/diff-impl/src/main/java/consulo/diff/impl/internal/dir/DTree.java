@@ -40,8 +40,7 @@ public class DTree {
   };
 
   private boolean myExpanded = true;
-  @Nullable
-  private final DTree myParent;
+  private final @Nullable DTree myParent;
   private Map<String, DTree> myChildren;
   private String myName;
   private final boolean isContainer;
@@ -118,8 +117,7 @@ public class DTree {
     return myName;
   }
 
-  @Nullable
-  public DTree getParent() {
+  public @Nullable DTree getParent() {
     return myParent;
   }
 

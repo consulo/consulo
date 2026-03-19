@@ -29,14 +29,12 @@ public interface SearchEverywhereClassifier {
                 .anyMatchSafe(classifier -> classifier.isSymbol(o));
         }
 
-        @Nullable
-        public static VirtualFile getVirtualFile(Object o) {
+        public static @Nullable VirtualFile getVirtualFile(Object o) {
             return Application.get().getExtensionPoint(SearchEverywhereClassifier.class)
                 .computeSafeIfAny(classifier -> classifier.getVirtualFile(o));
         }
 
-        @Nullable
-        public static Component getListCellRendererComponent(
+        public static @Nullable Component getListCellRendererComponent(
             JList list,
             Object value,
             int index,

@@ -21,11 +21,9 @@ public abstract class AbstractMapForwardIndexAccessor<Key, Value, DataType> exte
     return new MapInputDataDiffBuilder<>(inputId, convertToMap(inputData));
   }
 
-  @Nullable
-  protected abstract Map<Key, Value> convertToMap(@Nullable DataType inputData) throws IOException;
+  protected abstract @Nullable Map<Key, Value> convertToMap(@Nullable DataType inputData) throws IOException;
 
-  @Nullable
-  public Map<Key, Value> convertToInputDataMap(@Nullable ByteArraySequence sequence) throws IOException {
+  public @Nullable Map<Key, Value> convertToInputDataMap(@Nullable ByteArraySequence sequence) throws IOException {
     return convertToMap(deserializeData(sequence));
   }
 }

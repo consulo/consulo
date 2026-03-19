@@ -51,8 +51,7 @@ public interface ScopeOptimizer {
    * @deprecated use {@link ScopeOptimizer#getRestrictedUseScope(PsiElement)} instead.
    */
   @Deprecated
-  @Nullable
-  default GlobalSearchScope getScopeToExclude(PsiElement element) {
+  default @Nullable GlobalSearchScope getScopeToExclude(PsiElement element) {
     return null;
   }
 
@@ -60,15 +59,13 @@ public interface ScopeOptimizer {
    * @param element
    * @return is null when given optimizer can't provide a scope to restrict
    */
-  @Nullable
-  default SearchScope getRestrictedUseScope(PsiElement element) {
+  default @Nullable SearchScope getRestrictedUseScope(PsiElement element) {
     GlobalSearchScope scopeToExclude = getScopeToExclude(element);
 
     return scopeToExclude == null ? null : GlobalSearchScope.notScope(scopeToExclude);
   }
 
-  @Nullable
-  static SearchScope calculateOverallRestrictedUseScope(List<ScopeOptimizer> optimizers, PsiElement element) {
+  static @Nullable SearchScope calculateOverallRestrictedUseScope(List<ScopeOptimizer> optimizers, PsiElement element) {
     return optimizers.stream().peek(optimizer -> ProgressManager.checkCanceled()).map(optimizer -> optimizer.getRestrictedUseScope(element)).filter(Objects::nonNull)
             .reduce(SearchScope::intersectWith).orElse(null);
   }

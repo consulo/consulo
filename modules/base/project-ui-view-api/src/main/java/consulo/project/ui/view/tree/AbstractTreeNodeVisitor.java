@@ -31,8 +31,7 @@ public abstract class AbstractTreeNodeVisitor<T> implements TreeVisitor {
   /**
    * @return an element to search in a tree or {@code null} if it is obsolete
    */
-  @Nullable
-  public final T getElement() {
+  public final @Nullable T getElement() {
     return supplier.get();
   }
 

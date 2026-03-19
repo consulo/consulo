@@ -88,13 +88,11 @@ public class NewElementAction extends AnAction implements DumbAware, PopupAction
         return -1;
     }
 
-    @Nullable
-    protected Predicate<AnAction> getPreselectActionCondition(DataContext dataContext) {
+    protected @Nullable Predicate<AnAction> getPreselectActionCondition(DataContext dataContext) {
         return dataContext.getData(LangDataKeys.PRESELECT_NEW_ACTION_CONDITION);
     }
 
-    @Nullable
-    protected Runnable getDisposeCallback() {
+    protected @Nullable Runnable getDisposeCallback() {
         return null;
     }
 

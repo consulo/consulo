@@ -103,8 +103,7 @@ public abstract class AbstractFileViewProvider extends UserDataHolderBase implem
     return !(file instanceof LightVirtualFile) && FileTypeRegistry.getInstance().isFileIgnored(file);
   }
 
-  @Nullable
-  protected PsiFile createFile(Project project, VirtualFile file, FileType fileType) {
+  protected @Nullable PsiFile createFile(Project project, VirtualFile file, FileType fileType) {
     return createFile(file, fileType, getBaseLanguage());
   }
 
@@ -125,8 +124,7 @@ public abstract class AbstractFileViewProvider extends UserDataHolderBase implem
     return new PsiPlainTextFileImpl(this);
   }
 
-  @Nullable
-  protected PsiFile createFile(Language lang) {
+  protected @Nullable PsiFile createFile(Language lang) {
     if (lang != getBaseLanguage()) return null;
     ParserDefinition parserDefinition = ParserDefinition.forLanguage(lang);
     if (parserDefinition != null) {
@@ -153,8 +151,7 @@ public abstract class AbstractFileViewProvider extends UserDataHolderBase implem
     return myVirtualFile;
   }
 
-  @Nullable
-  private Document getCachedDocument() {
+  private @Nullable Document getCachedDocument() {
     Document document = consulo.util.lang.ref.SoftReference.dereference(myDocument);
     if (document != null) return document;
     return FileDocumentManager.getInstance().getCachedDocument(getVirtualFile());
@@ -171,8 +168,7 @@ public abstract class AbstractFileViewProvider extends UserDataHolderBase implem
   }
 
   @Override
-  @Nullable
-  public final PsiFile getPsi(Language target) {
+  public final @Nullable PsiFile getPsi(Language target) {
     if (!isPhysical()) {
       FileManager fileManager = ((PsiManagerEx)getManager()).getFileManager();
       VirtualFile virtualFile = getVirtualFile();
@@ -183,8 +179,7 @@ public abstract class AbstractFileViewProvider extends UserDataHolderBase implem
     return getPsiInner(target);
   }
 
-  @Nullable
-  protected abstract PsiFile getPsiInner(Language target);
+  protected abstract @Nullable PsiFile getPsiInner(Language target);
 
   @SuppressWarnings("MethodDoesntCallSuperMethod")
   @Override
@@ -206,14 +201,12 @@ public abstract class AbstractFileViewProvider extends UserDataHolderBase implem
   }
 
   @Override
-  @Nullable
-  public PsiReference findReferenceAt(int offset, Language language) {
+  public @Nullable PsiReference findReferenceAt(int offset, Language language) {
     PsiFile psiFile = getPsi(language);
     return psiFile != null ? findReferenceAt(psiFile, offset) : null;
   }
 
-  @Nullable
-  protected static PsiReference findReferenceAt(@Nullable PsiFile psiFile, int offset) {
+  protected static @Nullable PsiReference findReferenceAt(@Nullable PsiFile psiFile, int offset) {
     if (psiFile == null) return null;
     int offsetInElement = offset;
     PsiElement child = psiFile.getFirstChild();
@@ -229,8 +222,7 @@ public abstract class AbstractFileViewProvider extends UserDataHolderBase implem
     return null;
   }
 
-  @Nullable
-  public static PsiElement findElementAt(@Nullable PsiElement psiFile, int offset) {
+  public static @Nullable PsiElement findElementAt(@Nullable PsiElement psiFile, int offset) {
     ASTNode node = psiFile == null ? null : psiFile.getNode();
     return node == null ? null : SourceTreeToPsiMap.treeElementToPsi(node.findLeafElementAt(offset));
   }

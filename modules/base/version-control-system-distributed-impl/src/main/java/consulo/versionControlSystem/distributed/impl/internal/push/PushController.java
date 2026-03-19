@@ -72,8 +72,7 @@ public class PushController implements Disposable {
     private final PushSettings myPushSettings;
     
     private final Set<String> myExcludedRepositoryRoots;
-    @Nullable
-    private final Repository myCurrentlyOpenedRepository;
+    private final @Nullable Repository myCurrentlyOpenedRepository;
     private final boolean mySingleRepoProject;
     private static final int DEFAULT_CHILDREN_PRESENTATION_NUMBER = 20;
     private final ExecutorService myExecutorService = Executors.newSingleThreadExecutor(ConcurrencyUtil.newNamedThreadFactory("DVCS Push"));
@@ -133,8 +132,7 @@ public class PushController implements Disposable {
         return ContainerUtil.exists(myView2Model.values(), model -> model.getSupport().isForcePushEnabled());
     }
 
-    @Nullable
-    public PushTarget getProhibitedTarget() {
+    public @Nullable PushTarget getProhibitedTarget() {
         MyRepoModel model = ContainerUtil.find(
             myView2Model.values(),
             model1 -> {
@@ -205,8 +203,7 @@ public class PushController implements Disposable {
         }
     }
 
-    @Nullable
-    private PushSupport<Repository, PushSource, PushTarget>
+    private @Nullable PushSupport<Repository, PushSource, PushTarget>
     getPushSupportByRepository(Repository repository) {
         //noinspection unchecked
         return ContainerUtil.find(myPushSupports, support -> support.getVcs().equals(repository.getVcs()));
@@ -576,8 +573,7 @@ public class PushController implements Disposable {
         ) == OK;
     }
 
-    @Nullable
-    private static PushTarget getCommonTarget(Collection<MyRepoModel<Repository, PushSource, PushTarget>> selectedNodes) {
+    private static @Nullable PushTarget getCommonTarget(Collection<MyRepoModel<Repository, PushSource, PushTarget>> selectedNodes) {
         PushTarget commonTarget = ObjectUtil.assertNotNull(ContainerUtil.getFirstItem(selectedNodes)).getTarget();
         return commonTarget != null
             && !ContainerUtil.exists(selectedNodes, model -> !commonTarget.equals(model.getTarget())) ? commonTarget : null;
@@ -590,10 +586,8 @@ public class PushController implements Disposable {
         private final PushSupport<Repo, S, T> mySupport;
         
         private final S mySource;
-        @Nullable
-        private T myTarget;
-        @Nullable
-        private VcsError myTargetError;
+        private @Nullable T myTarget;
+        private @Nullable VcsError myTargetError;
 
         private int myNumberOfShownCommits;
         
@@ -631,8 +625,7 @@ public class PushController implements Disposable {
             return mySource;
         }
 
-        @Nullable
-        public T getTarget() {
+        public @Nullable T getTarget() {
             return myTarget;
         }
 

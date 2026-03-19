@@ -424,8 +424,7 @@ public class SimpleColoredComponent extends JComponent implements Accessible, Co
         return computePreferredSize(false);
     }
 
-    @Nullable
-    public synchronized Object getFragmentTag(int index) {
+    public synchronized @Nullable Object getFragmentTag(int index) {
         if (myFragmentTags != null && index < myFragmentTags.size()) {
             return myFragmentTags.get(index);
         }
@@ -526,8 +525,7 @@ public class SimpleColoredComponent extends JComponent implements Accessible, Co
         }
     }
 
-    @Nullable
-    private TextLayout createTextLayout(String text, Font basefont, FontRenderContext fontRenderContext) {
+    private @Nullable TextLayout createTextLayout(String text, Font basefont, FontRenderContext fontRenderContext) {
         if (StringUtil.isEmpty(text)) {
             return null;
         }
@@ -613,8 +611,7 @@ public class SimpleColoredComponent extends JComponent implements Accessible, Co
         return -1;
     }
 
-    @Nullable
-    public Object getFragmentTagAt(int x) {
+    public @Nullable Object getFragmentTagAt(int x) {
         int index = findFragmentAt(x);
         return index < 0 ? null : getFragmentTag(index);
     }

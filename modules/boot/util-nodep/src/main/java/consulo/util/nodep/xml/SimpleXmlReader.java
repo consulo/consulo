@@ -114,8 +114,7 @@ public class SimpleXmlReader {
     }
   }
 
-  @Nullable
-  private static String mapText(Element element) {
+  private static @Nullable String mapText(Element element) {
     Node firstChild = element.getFirstChild();
     Node lastChild = element.getLastChild();
     if (lastChild == firstChild && firstChild instanceof Text) {

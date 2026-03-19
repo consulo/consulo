@@ -56,13 +56,11 @@ public class ExecutionMode {
     return -1;
   }
 
-  @Nullable
-  public String getTitle() {
+  public @Nullable String getTitle() {
     return myTitle;
   }
 
-  @Nullable
-  public String getTitle2() {
+  public @Nullable String getTitle2() {
     return myTitle2;
   }
 
@@ -85,8 +83,7 @@ public class ExecutionMode {
   /**
    * Runner checks this fun during process running, if returns true, process will be canceled.
    */
-  @Nullable
-  public Function<Object, Boolean> shouldCancelFun() {
+  public @Nullable Function<Object, Boolean> shouldCancelFun() {
     synchronized (CANCEL_FUN_LOCK) {
       return myShouldCancelFun;
     }

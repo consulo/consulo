@@ -35,7 +35,7 @@ public abstract class RepositoryImpl implements Repository {
 
   
   protected volatile State myState;
-  @Nullable protected volatile String myCurrentRevision;
+  protected volatile @Nullable String myCurrentRevision;
 
   protected RepositoryImpl(Project project,
                            VirtualFile dir,
@@ -76,8 +76,7 @@ public abstract class RepositoryImpl implements Repository {
 
 
   @Override
-  @Nullable
-  public String getCurrentRevision() {
+  public @Nullable String getCurrentRevision() {
     return myCurrentRevision;
   }
 

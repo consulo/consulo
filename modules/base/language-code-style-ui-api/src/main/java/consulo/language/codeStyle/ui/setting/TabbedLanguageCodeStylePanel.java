@@ -59,8 +59,7 @@ public abstract class TabbedLanguageCodeStylePanel extends CodeStyleAbstractPane
     private TabbedPaneWrapper myTabbedPane;
     private final PredefinedCodeStyle[] myPredefinedCodeStyles;
     private JPopupMenu myCopyFromMenu;
-    @Nullable
-    private TabChangeListener myListener;
+    private @Nullable TabChangeListener myListener;
 
     @RequiredUIAccess
     protected TabbedLanguageCodeStylePanel(@Nullable Language language, CodeStyleSettings currentSettings, CodeStyleSettings settings) {

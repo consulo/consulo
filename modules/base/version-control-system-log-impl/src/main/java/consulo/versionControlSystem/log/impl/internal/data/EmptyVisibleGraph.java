@@ -49,8 +49,7 @@ class EmptyVisibleGraph implements VisibleGraph<Integer> {
   }
 
   @Override
-  @Nullable
-  public Integer getVisibleRowIndex(Integer integer) {
+  public @Nullable Integer getVisibleRowIndex(Integer integer) {
     return null;
   }
 

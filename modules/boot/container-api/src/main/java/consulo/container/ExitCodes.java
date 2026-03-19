@@ -33,8 +33,7 @@ public interface ExitCodes {
 
   public static final int MIN_JAVA_VERSION = 21;
 
-  @Nullable
-  public static String validateJavaRuntime() {
+  public static @Nullable String validateJavaRuntime() {
     if (!SystemInfoRt.isJavaVersionAtLeast(MIN_JAVA_VERSION)) {
       return "Cannot start under Java " + SystemInfoRt.JAVA_RUNTIME_VERSION + ": Java " + MIN_JAVA_VERSION + " or later is required.";
     }

@@ -78,8 +78,7 @@ public abstract class DiffRequestProcessor implements Disposable {
 
     private boolean myDisposed;
 
-    @Nullable
-    private final Project myProject;
+    private final @Nullable Project myProject;
     private final DiffContext myContext;
 
     private final DiffSettings mySettings;
@@ -87,8 +86,7 @@ public abstract class DiffRequestProcessor implements Disposable {
     private final LinkedList<DiffTool> myToolOrder;
 
     private final OpenInEditorAction myOpenInEditorAction;
-    @Nullable
-    private DefaultActionGroup myPopupActionGroup;
+    private @Nullable DefaultActionGroup myPopupActionGroup;
 
     private final JPanel myPanel;
     private final MyPanel myMainPanel;
@@ -248,8 +246,7 @@ public abstract class DiffRequestProcessor implements Disposable {
     // Abstract
     //
 
-    @Nullable
-    private ApplyData myQueuedApplyRequest;
+    private @Nullable ApplyData myQueuedApplyRequest;
 
     @RequiredUIAccess
     protected void applyRequest(DiffRequest request, boolean force, @Nullable ScrollToPolicy scrollToChangePolicy) {
@@ -314,8 +311,7 @@ public abstract class DiffRequestProcessor implements Disposable {
     protected void onDispose() {
     }
 
-    @Nullable
-    public <T> T getContextUserData(Key<T> key) {
+    public @Nullable <T> T getContextUserData(Key<T> key) {
         return myContext.getUserData(key);
     }
 
@@ -493,19 +489,16 @@ public abstract class DiffRequestProcessor implements Disposable {
         return myPanel;
     }
 
-    @Nullable
-    public JComponent getPreferredFocusedComponent() {
+    public @Nullable JComponent getPreferredFocusedComponent() {
         JComponent component = myState.getPreferredFocusedComponent();
         return component != null ? component : myToolbarPanel.getTargetComponent();
     }
 
-    @Nullable
-    public DiffRequest getActiveRequest() {
+    public @Nullable DiffRequest getActiveRequest() {
         return myActiveRequest;
     }
 
-    @Nullable
-    public Project getProject() {
+    public @Nullable Project getProject() {
         return myProject;
     }
 
@@ -1026,8 +1019,7 @@ public abstract class DiffRequestProcessor implements Disposable {
     private static class ApplyData {
         private final DiffRequest request;
         private final boolean force;
-        @Nullable
-        private final ScrollToPolicy scrollToChangePolicy;
+        private final @Nullable ScrollToPolicy scrollToChangePolicy;
 
         public ApplyData(DiffRequest request, boolean force, @Nullable ScrollToPolicy scrollToChangePolicy) {
             this.request = request;
@@ -1085,8 +1077,7 @@ public abstract class DiffRequestProcessor implements Disposable {
     }
 
     private class ErrorState implements ViewerState {
-        @Nullable
-        private final DiffTool myDiffTool;
+        private final @Nullable DiffTool myDiffTool;
         private final MessageDiffRequest myRequest;
 
         private final DiffViewer myViewer;

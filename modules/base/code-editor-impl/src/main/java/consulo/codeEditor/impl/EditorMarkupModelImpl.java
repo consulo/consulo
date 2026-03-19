@@ -80,8 +80,7 @@ public class EditorMarkupModelImpl<E extends CodeEditorBase> extends MarkupModel
         };
     }
 
-    @Nullable
-    public EditorAnalyzeStatus getLastEditorStatus() {
+    public @Nullable EditorAnalyzeStatus getLastEditorStatus() {
         return myLastEditorStatus;
     }
 

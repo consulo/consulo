@@ -339,8 +339,7 @@ public abstract class EditorBasedStatusBarPopup extends EditorBasedWidget implem
          */
         public static final WidgetState NO_CHANGE_MAKE_VISIBLE = new WidgetState();
 
-        @Nullable
-        private final VirtualFile myFile;
+        private final @Nullable VirtualFile myFile;
         protected final LocalizeValue toolTip;
         protected String shortcutText;
 
@@ -365,8 +364,7 @@ public abstract class EditorBasedStatusBarPopup extends EditorBasedWidget implem
             this(file, LocalizeValue.ofNullable(toolTip), LocalizeValue.ofNullable(text), actionEnabled);
         }
 
-        @Nullable
-        public VirtualFile getFile() {
+        public @Nullable VirtualFile getFile() {
             return myFile;
         }
 
@@ -407,8 +405,7 @@ public abstract class EditorBasedStatusBarPopup extends EditorBasedWidget implem
         return file == null || !myWriteableFileRequired || file.isWritable();
     }
 
-    @Nullable
-    protected abstract ListPopup createPopup(DataContext context);
+    protected abstract @Nullable ListPopup createPopup(DataContext context);
 
     protected void registerCustomListeners() {
     }

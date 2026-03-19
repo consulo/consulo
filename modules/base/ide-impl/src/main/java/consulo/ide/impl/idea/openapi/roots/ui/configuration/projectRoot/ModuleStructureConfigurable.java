@@ -404,8 +404,7 @@ public class ModuleStructureConfigurable extends BaseStructureConfigurable imple
         //myTree.repaint();
     }
 
-    @Nullable
-    public MyNode findModuleNode(Module module) {
+    public @Nullable MyNode findModuleNode(Module module) {
         return findNodeByObject(myRoot, module);
     }
 
@@ -449,8 +448,7 @@ public class ModuleStructureConfigurable extends BaseStructureConfigurable imple
         //daemonAnalyzer.queueUpdateForAllElementsWithErrors(); //missing modules added
     }
 
-    @Nullable
-    public Module getSelectedModule() {
+    public @Nullable Module getSelectedModule() {
         Object selectedObject = getSelectedObject();
         if (selectedObject instanceof Module selectedModule) {
             return selectedModule;
@@ -628,8 +626,7 @@ public class ModuleStructureConfigurable extends BaseStructureConfigurable imple
     }
 
     @Override
-    @Nullable
-    protected String getEmptySelectionString() {
+    protected @Nullable String getEmptySelectionString() {
         return ProjectLocalize.emptyModuleSelectionString().get();
     }
 

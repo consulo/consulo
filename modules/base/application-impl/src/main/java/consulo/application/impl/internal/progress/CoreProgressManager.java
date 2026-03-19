@@ -305,8 +305,8 @@ public class CoreProgressManager extends ProgressManager implements ProgressMana
     public void runProcessWithProgressAsynchronously(ComponentManager project,
                                                      @Nls String progressTitle,
                                                      final Runnable process,
-                                                     @Nullable final Runnable successRunnable,
-                                                     @Nullable final Runnable canceledRunnable,
+                                                     final @Nullable Runnable successRunnable,
+                                                     final @Nullable Runnable canceledRunnable,
                                                      PerformInBackgroundOption option) {
         runProcessWithProgressAsynchronously(new Task.Backgroundable(project, progressTitle, true, option) {
             @Override
@@ -770,8 +770,7 @@ public class CoreProgressManager extends ProgressManager implements ProgressMana
         }
     }
 
-    @Nullable
-    protected CheckCanceledHook createCheckCanceledHook() {
+    protected @Nullable CheckCanceledHook createCheckCanceledHook() {
         return null;
     }
 

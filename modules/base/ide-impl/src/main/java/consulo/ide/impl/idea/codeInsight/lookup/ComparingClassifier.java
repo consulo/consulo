@@ -37,8 +37,7 @@ public abstract class ComparingClassifier<T> extends Classifier<T> {
         myNegated = negated;
     }
 
-    @Nullable
-    public abstract Comparable getWeight(T t, ProcessingContext context);
+    public abstract @Nullable Comparable getWeight(T t, ProcessingContext context);
 
     
     @Override

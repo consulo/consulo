@@ -46,10 +46,8 @@ import java.util.stream.Collectors;
  * from kotlin
  */
 public abstract class StructureAwareNavBarModelExtension extends AbstractNavBarModelExtension {
-  @Nullable
-  private SoftReference<PsiFile> currentFile;
-  @Nullable
-  private SoftReference<StructureViewModel> currentFileStructure;
+  private @Nullable SoftReference<PsiFile> currentFile;
+  private @Nullable SoftReference<StructureViewModel> currentFileStructure;
   private long currentFileModCount = -1;
 
   
@@ -186,8 +184,7 @@ public abstract class StructureAwareNavBarModelExtension extends AbstractNavBarM
     return ContainerUtil.concat(children, fromProviders);
   }
 
-  @Nullable
-  private StructureViewModel buildStructureViewModel(PsiFile file, @Nullable Editor editor) {
+  private @Nullable StructureViewModel buildStructureViewModel(PsiFile file, @Nullable Editor editor) {
     if (Comparing.equal(SoftReference.deref(currentFile), file) && currentFileModCount == file.getModificationStamp()) {
       StructureViewModel model = SoftReference.deref(currentFileStructure);
       if (model != null) {

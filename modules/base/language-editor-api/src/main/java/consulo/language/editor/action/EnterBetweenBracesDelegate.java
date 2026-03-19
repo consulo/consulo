@@ -31,8 +31,7 @@ public abstract class EnterBetweenBracesDelegate implements LanguageExtension {
   private static final ExtensionPointCacheKey<EnterBetweenBracesDelegate, ByLanguageValue<EnterBetweenBracesDelegate>> KEY =
     ExtensionPointCacheKey.create("EnterBetweenBracesDelegate", LanguageOneToOne.build());
 
-  @Nullable
-  public static EnterBetweenBracesDelegate forLanguage(Language language) {
+  public static @Nullable EnterBetweenBracesDelegate forLanguage(Language language) {
     return Application.get().getExtensionPoint(EnterBetweenBracesDelegate.class).getOrBuildCache(KEY).get(language);
   }
 

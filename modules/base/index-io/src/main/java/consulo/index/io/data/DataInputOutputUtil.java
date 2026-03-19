@@ -226,8 +226,7 @@ public class DataInputOutputUtil {
    * Reads an element from the stream, using the given function to read it when a not-null element is expected, or returns null otherwise.
    * Should be coupled with {@link #writeNullable}
    */
-  @Nullable
-  public static <T> T readNullable(DataInput in, ThrowableSupplier<T, IOException> readValue) throws IOException {
+  public static @Nullable <T> T readNullable(DataInput in, ThrowableSupplier<T, IOException> readValue) throws IOException {
     return in.readBoolean() ? readValue.get() : null;
   }
 }

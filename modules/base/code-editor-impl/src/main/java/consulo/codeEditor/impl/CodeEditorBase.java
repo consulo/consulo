@@ -257,8 +257,7 @@ public abstract class CodeEditorBase extends UserDataHolderBase implements RealE
         }
 
         @Override
-        @Nullable
-        public EditorColorsScheme clone() {
+        public @Nullable EditorColorsScheme clone() {
             return null;
         }
 
@@ -422,8 +421,7 @@ public abstract class CodeEditorBase extends UserDataHolderBase implements RealE
     protected final Disposable myDisposable = Disposable.newDisposable();
     
     protected final DocumentEx myDocument;
-    @Nullable
-    protected final Project myProject;
+    protected final @Nullable Project myProject;
     protected boolean myIsViewer;
     protected final EditorKind myKind;
     protected boolean myIsRendererMode;
@@ -476,10 +474,8 @@ public abstract class CodeEditorBase extends UserDataHolderBase implements RealE
 
     protected final List<IntFunction<Collection<LineExtensionInfo>>> myLineExtensionPainters = new SmartList<>();
 
-    @Nullable
-    protected CharSequence myPlaceholderText;
-    @Nullable
-    protected TextAttributes myPlaceholderAttributes;
+    protected @Nullable CharSequence myPlaceholderText;
+    protected @Nullable TextAttributes myPlaceholderAttributes;
     protected boolean myShowPlaceholderWhenFocused;
 
     protected boolean myStickySelection;
@@ -902,8 +898,7 @@ public abstract class CodeEditorBase extends UserDataHolderBase implements RealE
         myPlaceholderAttributes = attributes;
     }
 
-    @Nullable
-    public TextAttributes getPlaceholderAttributes() {
+    public @Nullable TextAttributes getPlaceholderAttributes() {
         return myPlaceholderAttributes;
     }
 
@@ -1002,8 +997,7 @@ public abstract class CodeEditorBase extends UserDataHolderBase implements RealE
     }
 
     @Override
-    @Nullable
-    public Project getProject() {
+    public @Nullable Project getProject() {
         return myProject;
     }
 

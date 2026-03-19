@@ -659,8 +659,7 @@ public final class DesktopWindowManagerImpl extends WindowManagerEx implements P
     }
 
     @Override
-    @Nullable
-    public final Component getFocusedComponent(@Nullable Project project) {
+    public final @Nullable Component getFocusedComponent(@Nullable Project project) {
         return myWindowWatcher.getFocusedComponent(project);
     }
 

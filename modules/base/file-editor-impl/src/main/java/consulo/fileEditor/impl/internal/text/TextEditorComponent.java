@@ -228,8 +228,7 @@ public class TextEditorComponent implements UiDataProvider, Disposable {
     statusBar.updateWidgets(); // TODO: do we need this?!
   }
 
-  @Nullable
-  private Editor validateCurrentEditor() {
+  private @Nullable Editor validateCurrentEditor() {
     return myTextEditorComponentContainer.validateEditor(myEditor);
   }
 

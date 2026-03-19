@@ -41,8 +41,7 @@ public interface NavBarModelExtension {
     @Nullable
     String getPresentableText(Object object);
 
-    @Nullable
-    default String getPresentableText(Object object, boolean forPopup) {
+    default @Nullable String getPresentableText(Object object, boolean forPopup) {
         return getPresentableText(object);
     }
 
@@ -54,13 +53,11 @@ public interface NavBarModelExtension {
 
     Collection<VirtualFile> additionalRoots(Project project);
 
-    @Nullable
-    default Object getData(Key<?> dataId, DataProvider provider) {
+    default @Nullable Object getData(Key<?> dataId, DataProvider provider) {
         return null;
     }
 
-    @Nullable
-    default String getPopupMenuGroup(DataProvider provider) {
+    default @Nullable String getPopupMenuGroup(DataProvider provider) {
         return null;
     }
 

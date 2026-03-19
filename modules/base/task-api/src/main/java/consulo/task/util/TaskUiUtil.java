@@ -92,8 +92,7 @@ public class TaskUiUtil {
      *
      * @return extra first combo box item
      */
-    @Nullable
-    public T getExtraItem() {
+    public @Nullable T getExtraItem() {
       return null;
     }
 
@@ -104,8 +103,7 @@ public class TaskUiUtil {
      * @return selected combo box item
      * @see #addSelectedItemIfMissing()
      */
-    @Nullable
-    public T getSelectedItem() {
+    public @Nullable T getSelectedItem() {
       return getExtraItem();
     }
 

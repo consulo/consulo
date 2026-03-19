@@ -48,8 +48,7 @@ public class VcsBalloonProblemNotifier implements Runnable {
     private final String myMessage;
     private final NotificationType myMessageType;
     private final boolean myShowOverChangesView;
-    @Nullable
-    private final NamedRunnable[] myNotificationListener;
+    private final @Nullable NamedRunnable[] myNotificationListener;
 
     public VcsBalloonProblemNotifier(Project project, String message, NotificationType messageType) {
         this(project, message, messageType, true, null);

@@ -105,8 +105,7 @@ public abstract class FindUsagesInProjectStructureActionBase extends AnAction im
         //}.show(point);
     }
 
-    @Nullable
-    protected abstract ProjectStructureElement getSelectedElement();
+    protected abstract @Nullable ProjectStructureElement getSelectedElement();
 
     protected abstract RelativePoint getPointToShowResults();
 }

@@ -52,8 +52,7 @@ public class EnvironmentVariable implements JDOMExternalizable, Cloneable {
     return VALUE;
   }
 
-  @Nullable
-  public String getDescription() {
+  public @Nullable String getDescription() {
     return null;
   }
 

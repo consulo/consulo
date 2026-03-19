@@ -58,7 +58,7 @@ public abstract class ArrangementSettingsPanel extends CodeStyleAbstractPanel {
   private final ArrangementGroupingRulesPanel myGroupingRulesPanel;
   
   private final ArrangementMatchingRulesPanel    myMatchingRulesPanel;
-  @Nullable private final ForceArrangementPanel myForceArrangementPanel;
+  private final @Nullable ForceArrangementPanel myForceArrangementPanel;
 
   public ArrangementSettingsPanel(CodeStyleSettings settings, Language language) {
     super(settings);
@@ -129,8 +129,7 @@ public abstract class ArrangementSettingsPanel extends CodeStyleAbstractPanel {
   }
 
   @SuppressWarnings("unchecked")
-  @Nullable
-  private StdArrangementSettings getSettings(CodeStyleSettings settings) {
+  private @Nullable StdArrangementSettings getSettings(CodeStyleSettings settings) {
     StdArrangementSettings result = (StdArrangementSettings)settings.getCommonSettings(myLanguage).getArrangementSettings();
     if (result == null) {
       result = mySettingsAware.getDefaultSettings();

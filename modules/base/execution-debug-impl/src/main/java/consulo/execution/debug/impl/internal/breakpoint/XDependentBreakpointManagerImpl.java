@@ -148,8 +148,7 @@ public class XDependentBreakpointManagerImpl implements XDependentBreakpointMana
     }
 
     @Override
-    @Nullable
-    public XBreakpoint<?> getMasterBreakpoint(XBreakpoint<?> slave) {
+    public @Nullable XBreakpoint<?> getMasterBreakpoint(XBreakpoint<?> slave) {
         XDependentBreakpointInfo info = mySlave2Info.get(slave);
         return info != null ? info.myMasterBreakpoint : null;
     }

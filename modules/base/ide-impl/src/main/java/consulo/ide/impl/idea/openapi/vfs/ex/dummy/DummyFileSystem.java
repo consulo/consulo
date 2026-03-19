@@ -41,13 +41,11 @@ public class DummyFileSystem extends BaseVirtualFileSystem implements NonPhysica
     return myRoot;
   }
 
-  @Nullable
-  public VirtualFile findById(int id) {
+  public @Nullable VirtualFile findById(int id) {
     return findById(id, myRoot);
   }
 
-  @Nullable
-  private static VirtualFile findById(int id, VirtualFileImpl r) {
+  private static @Nullable VirtualFile findById(int id, VirtualFileImpl r) {
     if (r == null) return null;
     if (r.getId() == id) return r;
     @SuppressWarnings("UnsafeVfsRecursion") VirtualFile[] children = r.getChildren();

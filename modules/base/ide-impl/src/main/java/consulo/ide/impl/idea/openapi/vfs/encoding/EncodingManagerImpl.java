@@ -165,8 +165,7 @@ public class EncodingManagerImpl implements PersistentStateComponent<EncodingMan
      * @param virtualFile
      * @return returns null if charset set cannot be determined from content
      */
-    @Nullable
-    static Charset computeCharsetFromContent(VirtualFile virtualFile) {
+    static @Nullable Charset computeCharsetFromContent(VirtualFile virtualFile) {
         Document document = FileDocumentManager.getInstance().getDocument(virtualFile);
         if (document == null) {
             return null;
@@ -234,8 +233,7 @@ public class EncodingManagerImpl implements PersistentStateComponent<EncodingMan
         }
     }
 
-    @Nullable
-    public Charset getCachedCharsetFromContent(Document document) {
+    public @Nullable Charset getCachedCharsetFromContent(Document document) {
         return document.getUserData(CACHED_CHARSET_FROM_CONTENT);
     }
 
@@ -263,8 +261,7 @@ public class EncodingManagerImpl implements PersistentStateComponent<EncodingMan
     }
 
     @Override
-    @Nullable
-    public Charset getEncoding(@Nullable VirtualFile virtualFile, boolean useParentDefaults) {
+    public @Nullable Charset getEncoding(@Nullable VirtualFile virtualFile, boolean useParentDefaults) {
         Project project = guessProject(virtualFile);
         if (project == null) {
             return null;
@@ -295,8 +292,7 @@ public class EncodingManagerImpl implements PersistentStateComponent<EncodingMan
         }
     }
 
-    @Nullable
-    private static Project guessProject(@Nullable VirtualFile virtualFile) {
+    private static @Nullable Project guessProject(@Nullable VirtualFile virtualFile) {
         return ProjectLocator.getInstance().guessProjectForFile(virtualFile);
     }
 
@@ -347,8 +343,7 @@ public class EncodingManagerImpl implements PersistentStateComponent<EncodingMan
     }
 
     @Override
-    @Nullable
-    public Charset getDefaultCharsetForPropertiesFiles(@Nullable VirtualFile virtualFile) {
+    public @Nullable Charset getDefaultCharsetForPropertiesFiles(@Nullable VirtualFile virtualFile) {
         Project project = guessProject(virtualFile);
         if (project == null) {
             return null;

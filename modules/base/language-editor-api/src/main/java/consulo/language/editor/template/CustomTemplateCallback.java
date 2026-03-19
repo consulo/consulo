@@ -78,8 +78,7 @@ public class CustomTemplateCallback {
     return selectionModel.hasSelection() ? selectionModel.getSelectionStart() : Math.max(editor.getCaretModel().getOffset() - 1, 0);
   }
 
-  @Nullable
-  public Template findApplicableTemplate(String key) {
+  public @Nullable Template findApplicableTemplate(String key) {
     return ContainerUtil.getFirstItem(findApplicableTemplates(key));
   }
 

@@ -38,8 +38,7 @@ public class ColorSettingsPagesImpl implements ColorSettingsPages {
     }
 
     @Override
-    @Nullable
-    public Pair<ColorAndFontDescriptors, AttributesDescriptor> getAttributeDescriptor(TextAttributesKey key) {
+    public @Nullable Pair<ColorAndFontDescriptors, AttributesDescriptor> getAttributeDescriptor(TextAttributesKey key) {
         return myApplication.getExtensionPoint(ColorSettingsPage.class).computeSafeIfAny(page -> {
             for (AttributesDescriptor descriptor : page.getAttributeDescriptors()) {
                 if (descriptor.getKey() == key) {

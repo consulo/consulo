@@ -92,13 +92,11 @@ public class PackageDependenciesNode extends DefaultMutableTreeNode implements N
     return myHasMarked;
   }
 
-  @Nullable
-  public PsiElement getPsiElement() {
+  public @Nullable PsiElement getPsiElement() {
     return null;
   }
 
-  @Nullable
-  public ColorValue getColor() {
+  public @Nullable ColorValue getColor() {
     return myColor;
   }
 
@@ -145,8 +143,7 @@ public class PackageDependenciesNode extends DefaultMutableTreeNode implements N
     }
   }
 
-  @Nullable
-  private Editor openTextEditor(boolean focus) {
+  private @Nullable Editor openTextEditor(boolean focus) {
     OpenFileDescriptorImpl descriptor = getDescriptor();
     if (descriptor != null) {
       return FileEditorManager.getInstance(getProject()).openTextEditor(descriptor, focus);
@@ -163,8 +160,7 @@ public class PackageDependenciesNode extends DefaultMutableTreeNode implements N
     return virtualFile != null && virtualFile.isValid() ? NavigateOptions.CAN_NAVIGATE_FULL : NavigateOptions.CANT_NAVIGATE;
   }
 
-  @Nullable
-  private Project getProject() {
+  private @Nullable Project getProject() {
     PsiElement psiElement = getPsiElement();
     if (psiElement == null || psiElement.getContainingFile() == null) {
       return null;
@@ -172,8 +168,7 @@ public class PackageDependenciesNode extends DefaultMutableTreeNode implements N
     return psiElement.getContainingFile().getProject();
   }
 
-  @Nullable
-  private OpenFileDescriptorImpl getDescriptor() {
+  private @Nullable OpenFileDescriptorImpl getDescriptor() {
     if (getProject() == null) return null;
     PsiElement psiElement = getPsiElement();
     if (psiElement == null) return null;
@@ -198,8 +193,7 @@ public class PackageDependenciesNode extends DefaultMutableTreeNode implements N
     return myRegisteredFiles;
   }
 
-  @Nullable
-  public String getComment() {
+  public @Nullable String getComment() {
     return null;
   }
 

@@ -88,8 +88,7 @@ public interface FormattingModelBuilder extends LanguageExtension {
      * @param elementAtOffset the parameter at {@code offset}
      * @return the range to reformat, or null if the default range should be used
      */
-    @Nullable
-    default TextRange getRangeAffectingIndent(PsiFile file, int offset, ASTNode elementAtOffset) {
+    default @Nullable TextRange getRangeAffectingIndent(PsiFile file, int offset, ASTNode elementAtOffset) {
         return null;
     }
 }

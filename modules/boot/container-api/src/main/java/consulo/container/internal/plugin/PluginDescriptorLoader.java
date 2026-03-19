@@ -32,13 +32,11 @@ import java.util.zip.ZipFile;
 public class PluginDescriptorLoader {
   public static final String PLUGIN_XML = "plugin.xml";
 
-  @Nullable
-  public static PluginDescriptorImpl loadDescriptor(File pluginPath, boolean isPreInstalledPath, ContainerLogger containerLogger) {
+  public static @Nullable PluginDescriptorImpl loadDescriptor(File pluginPath, boolean isPreInstalledPath, ContainerLogger containerLogger) {
     return loadDescriptor(pluginPath, PLUGIN_XML, isPreInstalledPath, containerLogger);
   }
 
-  @Nullable
-  public static PluginDescriptorImpl loadDescriptor(
+  public static @Nullable PluginDescriptorImpl loadDescriptor(
       File pluginPath,
       String fileName,
       boolean isPreInstalledPath,
@@ -115,8 +113,7 @@ public class PluginDescriptorLoader {
     return null;
   }
 
-  @Nullable
-  public static PluginDescriptorImpl loadDescriptorFromJar(
+  public static @Nullable PluginDescriptorImpl loadDescriptorFromJar(
     File jarFile,
     File pluginPath,
     String fileName,

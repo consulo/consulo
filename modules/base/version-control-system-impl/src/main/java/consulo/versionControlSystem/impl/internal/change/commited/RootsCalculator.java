@@ -104,8 +104,7 @@ public class RootsCalculator {
     return result;
   }
 
-  @Nullable
-  private RepositoryLocation getLocation(VirtualFile file) {
+  private @Nullable RepositoryLocation getLocation(VirtualFile file) {
     return myLocationCache.getLocation(myVcs, getFilePath(file), false);
   }
 

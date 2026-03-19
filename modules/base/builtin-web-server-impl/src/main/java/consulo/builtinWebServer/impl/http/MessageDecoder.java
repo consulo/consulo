@@ -35,8 +35,7 @@ public abstract class MessageDecoder extends Decoder {
     return parseInt(builder, 0, false, 10);
   }
 
-  @Nullable
-  protected final CharSequence readChars(ByteBuf input) throws IOException {
+  protected final @Nullable CharSequence readChars(ByteBuf input) throws IOException {
     int readableBytes = input.readableBytes();
     if (readableBytes == 0) {
       input.release();

@@ -35,8 +35,7 @@ public interface BinaryFileStubBuilder {
     ExtensionPointCacheKey<BinaryFileStubBuilder, Map<FileType, BinaryFileStubBuilder>> KEY =
         ExtensionPointCacheKey.groupBy("BinaryFileStubBuilder", BinaryFileStubBuilder::getFileType);
 
-    @Nullable
-    static BinaryFileStubBuilder forFileType(FileType fileType) {
+    static @Nullable BinaryFileStubBuilder forFileType(FileType fileType) {
         ExtensionPoint<BinaryFileStubBuilder> extensionPoint = Application.get().getExtensionPoint(BinaryFileStubBuilder.class);
         Map<FileType, BinaryFileStubBuilder> map = extensionPoint.getOrBuildCache(KEY);
         return map.get(fileType);

@@ -89,8 +89,7 @@ class DaemonTooltipRenderer extends LineTooltipRenderer {
         );
     }
 
-    @Nullable
-    protected static String getLinkRef(String text) {
+    protected static @Nullable String getLinkRef(String text) {
         String linkWithRef = "<a href=\"";
         int linkStartIdx = text.indexOf(linkWithRef);
         if (linkStartIdx >= 0) {

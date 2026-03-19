@@ -11,8 +11,7 @@ import java.util.List;
 public abstract class ProjectStructureElement {
   public abstract String getPresentableName();
 
-  @Nullable
-  public String getDescription() {
+  public @Nullable String getDescription() {
     return null;
   }
 
@@ -29,8 +28,7 @@ public abstract class ProjectStructureElement {
     return false;
   }
 
-  @Nullable
-  public ProjectStructureProblemDescription createUnusedElementWarning(Project project) {
+  public @Nullable ProjectStructureProblemDescription createUnusedElementWarning(Project project) {
     return null;
   }
 

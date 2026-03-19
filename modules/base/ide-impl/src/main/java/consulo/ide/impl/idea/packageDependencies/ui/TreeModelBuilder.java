@@ -285,8 +285,7 @@ public class TreeModelBuilder {
         return new TreeModel(myRoot, myTotalFileCount, myMarkedFileCount);
     }
 
-    @Nullable
-    private PackageDependenciesNode buildFileNode(VirtualFile file, @Nullable PackageDependenciesNode parent) {
+    private @Nullable PackageDependenciesNode buildFileNode(VirtualFile file, @Nullable PackageDependenciesNode parent) {
         ProgressIndicator indicator = ProgressManager.getInstance().getProgressIndicator();
         if (indicator != null) {
             ((PanelProgressIndicator) indicator).update(
@@ -343,8 +342,7 @@ public class TreeModelBuilder {
         return ScopeType.SOURCE;
     }
 
-    @Nullable
-    private OrderEntry getLibraryForFile(VirtualFile virtualFile) {
+    private @Nullable OrderEntry getLibraryForFile(VirtualFile virtualFile) {
         if (virtualFile == null) return null;
         List<OrderEntry> orders = myFileIndex.getOrderEntriesForFile(virtualFile);
         for (OrderEntry order : orders) {

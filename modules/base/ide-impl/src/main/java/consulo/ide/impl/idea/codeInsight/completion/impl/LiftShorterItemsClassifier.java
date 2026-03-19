@@ -201,8 +201,7 @@ public class LiftShorterItemsClassifier extends Classifier<LookupElement> {
                     return singleton.iterator();
                 }
 
-                @Nullable
-                private List<LookupElement> addShorterElements(@Nullable Collection<LookupElement> from) {
+                private @Nullable List<LookupElement> addShorterElements(@Nullable Collection<LookupElement> from) {
                     List<LookupElement> toLift = null;
                     if (from == null) {
                         return null;

@@ -32,8 +32,7 @@ public abstract class InspectionTreeNode extends DefaultMutableTreeNode {
     super(userObject);
   }
 
-  @Nullable
-  public abstract Image getIcon();
+  public abstract @Nullable Image getIcon();
 
   public int getProblemCount() {
     int sum = 0;

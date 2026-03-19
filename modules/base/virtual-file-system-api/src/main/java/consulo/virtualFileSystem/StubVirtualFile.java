@@ -65,8 +65,7 @@ public class StubVirtualFile extends VirtualFile {
   }
 
   @Override
-  @Nullable
-  public VirtualFile getParent() {
+  public @Nullable VirtualFile getParent() {
     throw new UnsupportedOperationException("getParent is not implemented");
   }
 

@@ -177,8 +177,7 @@ public abstract class ComponentStoreImpl implements IComponentStore {
     myComponents.put(componentName, stateComponentInfo);
   }
 
-  @Nullable
-  protected ComponentManager getProject() {
+  protected @Nullable ComponentManager getProject() {
     return null;
   }
 
@@ -242,13 +241,11 @@ public abstract class ComponentStoreImpl implements IComponentStore {
     }
   }
 
-  @Nullable
-  protected PathMacroSubstitutor getPathMacroManagerForDefaults() {
+  protected @Nullable PathMacroSubstitutor getPathMacroManagerForDefaults() {
     return null;
   }
 
-  @Nullable
-  private <T> T loadDefaultState(StateComponentInfo<T> stateComponentInfo, Object component, Class<T> stateClass) {
+  private @Nullable <T> T loadDefaultState(StateComponentInfo<T> stateComponentInfo, Object component, Class<T> stateClass) {
     String defaultStateFilePath = stateComponentInfo.getState().defaultStateFilePath();
 
     if (StringUtil.isEmpty(defaultStateFilePath)) {
@@ -267,8 +264,7 @@ public abstract class ComponentStoreImpl implements IComponentStore {
     return null;
   }
 
-  @Nullable
-  private <T> T deserializeDefaultStore(Element documentElement, Class<T> stateClass) {
+  private @Nullable <T> T deserializeDefaultStore(Element documentElement, Class<T> stateClass) {
     PathMacroSubstitutor pathMacroManager = getPathMacroManagerForDefaults();
     if (pathMacroManager != null) {
       pathMacroManager.expandPaths(documentElement);

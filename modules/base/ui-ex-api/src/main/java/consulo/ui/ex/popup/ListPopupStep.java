@@ -53,8 +53,7 @@ public interface ListPopupStep<T> extends PopupStep<T> {
     @Nullable
     Image getIconFor(T aValue);
 
-    @Nullable
-    default Image getSelectedIconFor(T value) {
+    default @Nullable Image getSelectedIconFor(T value) {
         return getIconFor(value);
     }
 

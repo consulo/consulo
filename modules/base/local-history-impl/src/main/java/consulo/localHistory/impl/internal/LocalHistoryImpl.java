@@ -220,13 +220,11 @@ public class LocalHistoryImpl extends LocalHistory implements Disposable {
         return isInitialized.get();
     }
 
-    @Nullable
-    public LocalHistoryFacade getFacade() {
+    public @Nullable LocalHistoryFacade getFacade() {
         return myVcs;
     }
 
-    @Nullable
-    public IdeaGateway getGateway() {
+    public @Nullable IdeaGateway getGateway() {
         return myGateway;
     }
 

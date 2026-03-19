@@ -365,8 +365,7 @@ public class LocalizeManagerImpl extends LocalizeManager implements LocalizeMana
         return format.format(args);
     }
 
-    @Nullable
-    private String getValue(LocalizeKey key, Locale locale) {
+    private @Nullable String getValue(LocalizeKey key, Locale locale) {
         Map<String, LocalizeFileState> map = myLocalizes.get(locale);
         if (map != null) {
             LocalizeFileState fileInfo = map.get(key.getLocalizeId());

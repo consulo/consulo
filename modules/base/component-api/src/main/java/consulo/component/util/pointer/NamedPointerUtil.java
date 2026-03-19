@@ -22,13 +22,11 @@ import org.jspecify.annotations.Nullable;
  * @since 22.06.14
  */
 public class NamedPointerUtil {
-  @Nullable
-  public static <T extends Named> T get(@Nullable NamedPointer<T> pointer) {
+  public static @Nullable <T extends Named> T get(@Nullable NamedPointer<T> pointer) {
     return pointer == null ? null : pointer.get();
   }
 
-  @Nullable
-  public static <T extends Named> String getName(@Nullable NamedPointer<T> getter) {
+  public static @Nullable <T extends Named> String getName(@Nullable NamedPointer<T> getter) {
     return getter == null ? null : getter.getName();
   }
 }

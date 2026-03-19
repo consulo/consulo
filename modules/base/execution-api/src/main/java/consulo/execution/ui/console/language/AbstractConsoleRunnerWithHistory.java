@@ -131,8 +131,7 @@ public abstract class AbstractConsoleRunnerWithHistory<T extends LanguageConsole
     showConsole(defaultExecutor, contentDescriptor);
   }
 
-  @Nullable
-  protected Image getConsoleIcon() {
+  protected @Nullable Image getConsoleIcon() {
     return null;
   }
 

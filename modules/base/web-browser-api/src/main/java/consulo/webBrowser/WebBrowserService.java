@@ -36,11 +36,9 @@ public interface WebBrowserService {
     public abstract Collection<Url> getUrlsToOpen(OpenInBrowserRequest request, boolean preferLocalUrl)
         throws WebBrowserUrlProvider.BrowserException;
 
-    @Nullable
-    public abstract WebBrowserUrlProvider getProvider(OpenInBrowserRequest request);
+    public abstract @Nullable WebBrowserUrlProvider getProvider(OpenInBrowserRequest request);
 
-    @Nullable
-    public abstract Url getUrlForContext(PsiElement sourceElement);
+    public abstract @Nullable Url getUrlForContext(PsiElement sourceElement);
 
     
     default Collection<Url> getUrlsToOpen(PsiElement element, boolean preferLocalUrl)

@@ -268,8 +268,7 @@ public class ClasspathPanelImpl extends JPanel implements ClasspathPanel {
     }
 
     @Override
-    @Nullable
-    public OrderEntry getSelectedEntry() {
+    public @Nullable OrderEntry getSelectedEntry() {
         if (myEntryTable.getSelectedRowCount() != 1) {
             return null;
         }

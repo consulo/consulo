@@ -115,8 +115,7 @@ public class DisposableWrapperList<E> extends AbstractList<E> {
     }
 
     @Override
-    @Nullable
-    public E remove(int index) {
+    public @Nullable E remove(int index) {
         DisposableWrapper removedWrapper = myWrappedList.remove(index);
         return unwrapAndDispose(removedWrapper);
     }
@@ -275,8 +274,7 @@ public class DisposableWrapperList<E> extends AbstractList<E> {
         return result;
     }
 
-    @Nullable
-    private E unwrapAndDispose(@Nullable DisposableWrapper disposableWrapper) {
+    private @Nullable E unwrapAndDispose(@Nullable DisposableWrapper disposableWrapper) {
         if (disposableWrapper == null) {
             return null;
         }
@@ -348,8 +346,7 @@ public class DisposableWrapperList<E> extends AbstractList<E> {
     private class DisposableWrapperListIterator implements ListIterator<E> {
         
         private final ListIterator<DisposableWrapper> myDelegate;
-        @Nullable
-        private DisposableWrapper myLastReturned;
+        private @Nullable DisposableWrapper myLastReturned;
 
         DisposableWrapperListIterator(int initialCursor) {
             myDelegate = myWrappedList.listIterator(initialCursor);

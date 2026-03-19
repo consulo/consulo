@@ -281,8 +281,7 @@ public class PsiBuilderImpl extends UnprotectedUserDataHolder implements PsiBuil
     }
 
     @Override
-    @Nullable
-    public LighterASTNode getLatestDoneMarker() {
+    public @Nullable LighterASTNode getLatestDoneMarker() {
         int index = myProduction.size() - 1;
         while (index >= 0) {
             ProductionMarker marker = myProduction.get(index);
@@ -642,8 +641,7 @@ public class PsiBuilderImpl extends UnprotectedUserDataHolder implements PsiBuil
             return true;
         }
 
-        @Nullable
-        private  TokenSequence getParsedTokenSequence() {
+        private  @Nullable TokenSequence getParsedTokenSequence() {
             int tokenCount = myEndIndex - myStartIndex;
             if (tokenCount == 1) return null; // not expand single lazy parseable token case
 
@@ -755,8 +753,7 @@ public class PsiBuilderImpl extends UnprotectedUserDataHolder implements PsiBuil
     }
 
     @Override
-    @Nullable
-    public IElementType getTokenType() {
+    public @Nullable IElementType getTokenType() {
         IElementType cached = myCachedTokenType;
         if (cached == null) {
             myCachedTokenType = cached = calcTokenType();
@@ -905,8 +902,7 @@ public class PsiBuilderImpl extends UnprotectedUserDataHolder implements PsiBuil
     }
 
     @Override
-    @Nullable
-    public String getTokenText() {
+    public @Nullable String getTokenText() {
         CharSequence tokenSequence = getTokenSequence();
         return tokenSequence == null ? null : tokenSequence.toString();
     }

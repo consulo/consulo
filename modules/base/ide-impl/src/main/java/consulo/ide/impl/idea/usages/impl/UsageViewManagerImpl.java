@@ -122,7 +122,7 @@ public class UsageViewManagerImpl extends UsageViewManager {
                                     final Supplier<UsageSearcher> searcherFactory,
                                     final UsageViewPresentation presentation,
                                     final FindUsagesProcessPresentation processPresentation,
-                                    @Nullable final UsageViewStateListener listener) {
+                                    final @Nullable UsageViewStateListener listener) {
     final SearchScope searchScopeToWarnOfFallingOutOf = getMaxSearchScopeToWarnOfFallingOutOf(searchFor);
     final AtomicReference<UsageViewImpl> usageViewRef = new AtomicReference<>();
     long start = System.currentTimeMillis();

@@ -365,8 +365,7 @@ public abstract class TodoPanel extends SimpleToolWindowPanel implements Occuren
     /**
      * @return list of all selected virtual files.
      */
-    @Nullable
-    protected PsiFile getSelectedFile() {
+    protected @Nullable PsiFile getSelectedFile() {
         TreePath path = myTree.getSelectionPath();
         if (path == null) {
             return null;
@@ -383,8 +382,7 @@ public abstract class TodoPanel extends SimpleToolWindowPanel implements Occuren
         myContent.setDisplayName(tabName);
     }
 
-    @Nullable
-    private PsiElement getSelectedElement() {
+    private @Nullable PsiElement getSelectedElement() {
         if (myTree == null) {
             return null;
         }
@@ -582,14 +580,12 @@ public abstract class TodoPanel extends SimpleToolWindowPanel implements Occuren
         }
 
         @Override
-        @Nullable
-        public OccurenceInfo goNextOccurence() {
+        public @Nullable OccurenceInfo goNextOccurence() {
             return goToPointer(getNextPointer());
         }
 
         @Override
-        @Nullable
-        public OccurenceInfo goPreviousOccurence() {
+        public @Nullable OccurenceInfo goPreviousOccurence() {
             return goToPointer(getPreviousPointer());
         }
 
@@ -603,8 +599,7 @@ public abstract class TodoPanel extends SimpleToolWindowPanel implements Occuren
             return LanguageTodoLocalize.actionPreviousTodo().get();
         }
 
-        @Nullable
-        private OccurenceInfo goToPointer(TodoItemNode pointer) {
+        private @Nullable OccurenceInfo goToPointer(TodoItemNode pointer) {
             if (pointer == null) {
                 return null;
             }
@@ -620,8 +615,7 @@ public abstract class TodoPanel extends SimpleToolWindowPanel implements Occuren
             );
         }
 
-        @Nullable
-        private TodoItemNode getNextPointer() {
+        private @Nullable TodoItemNode getNextPointer() {
             TreePath path = myTree.getSelectionPath();
             if (path == null) {
                 return null;
@@ -636,8 +630,7 @@ public abstract class TodoPanel extends SimpleToolWindowPanel implements Occuren
                 : myTodoTreeBuilder.getFirstPointerForElement(element);
         }
 
-        @Nullable
-        private TodoItemNode getPreviousPointer() {
+        private @Nullable TodoItemNode getPreviousPointer() {
             TreePath path = myTree.getSelectionPath();
             if (path == null) {
                 return null;

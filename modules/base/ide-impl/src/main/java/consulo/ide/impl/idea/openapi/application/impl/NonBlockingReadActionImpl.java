@@ -219,13 +219,10 @@ public final class NonBlockingReadActionImpl<T> implements NonBlockingReadAction
 
     private final Executor backendExecutor;
     private
-    @Nullable
-    final String myStartTrace;
+    final @Nullable String myStartTrace;
     private volatile ProgressIndicator currentIndicator;
-    @Nullable
-    private Submission<?> myReplacement;
-    @Nullable
-    private final ProgressIndicator myProgressIndicator;
+    private @Nullable Submission<?> myReplacement;
+    private final @Nullable ProgressIndicator myProgressIndicator;
     private final NonBlockingReadActionImpl<T> builder;
 
     // a sum composed of: 1 for non-done promise, 1 for each currently running thread

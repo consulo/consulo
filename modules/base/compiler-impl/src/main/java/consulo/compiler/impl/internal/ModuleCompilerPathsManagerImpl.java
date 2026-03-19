@@ -96,8 +96,7 @@ public class ModuleCompilerPathsManagerImpl extends ModuleCompilerPathsManager i
     }
 
     @Override
-    @Nullable
-    public String getCompilerOutputUrl(ContentFolderTypeProvider contentFolderType) {
+    public @Nullable String getCompilerOutputUrl(ContentFolderTypeProvider contentFolderType) {
         if (!myInheritOutput) {
             VirtualFilePointer virtualFilePointer = myVirtualFilePointers.get(contentFolderType.getId());
             if (virtualFilePointer != null) {

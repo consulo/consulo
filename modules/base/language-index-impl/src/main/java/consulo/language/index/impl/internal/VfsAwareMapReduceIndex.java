@@ -280,8 +280,7 @@ public class VfsAwareMapReduceIndex<Key, Value, Input> extends MapReduceIndex<Ke
     }
   }
 
-  @Nullable
-  private Map<Key, Value> getNullableIndexedData(int fileId) throws IOException, StorageException {
+  private @Nullable Map<Key, Value> getNullableIndexedData(int fileId) throws IOException, StorageException {
     if (myInMemoryMode.get()) {
       Map<Key, Value> map = myInMemoryKeysAndValues.get(fileId);
       if (map != null) return map;
@@ -352,15 +351,13 @@ public class VfsAwareMapReduceIndex<Key, Value, Input> extends MapReduceIndex<Ke
     }
   }
 
-  @Nullable
-  private static <Key, Value> ForwardIndexAccessor<Key, Value> getForwardIndexAccessor(IndexExtension<Key, Value, ?> indexExtension) {
+  private static @Nullable <Key, Value> ForwardIndexAccessor<Key, Value> getForwardIndexAccessor(IndexExtension<Key, Value, ?> indexExtension) {
     if (!shouldCreateForwardIndex(indexExtension)) return null;
     if (indexExtension instanceof SingleEntryFileBasedIndexExtension) return new SingleEntryIndexForwardIndexAccessor(indexExtension);
     return new MapForwardIndexAccessor<>(new InputMapExternalizer<>(indexExtension));
   }
 
-  @Nullable
-  private static ForwardIndex getForwardIndexMap(IndexExtension<?, ?, ?> indexExtension) throws IOException {
+  private static @Nullable ForwardIndex getForwardIndexMap(IndexExtension<?, ?, ?> indexExtension) throws IOException {
     if (!shouldCreateForwardIndex(indexExtension)) return null;
     if (indexExtension instanceof SingleEntryFileBasedIndexExtension<?>)
       return new EmptyForwardIndex(); // indexStorage and forwardIndex are same here

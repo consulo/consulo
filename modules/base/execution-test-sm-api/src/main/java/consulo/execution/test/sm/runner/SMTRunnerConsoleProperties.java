@@ -188,18 +188,15 @@ public class SMTRunnerConsoleProperties extends TestConsoleProperties implements
         return false;
     }
 
-    @Nullable
-    public SMTestLocator getTestLocator() {
+    public @Nullable SMTestLocator getTestLocator() {
         return null;
     }
 
-    @Nullable
-    public TestProxyFilterProvider getFilterProvider() {
+    public @Nullable TestProxyFilterProvider getFilterProvider() {
         return null;
     }
 
-    @Nullable
-    public AbstractRerunFailedTestsAction createRerunFailedTestsAction(ConsoleView consoleView) {
+    public @Nullable AbstractRerunFailedTestsAction createRerunFailedTestsAction(ConsoleView consoleView) {
         return null;
     }
 

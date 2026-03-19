@@ -97,13 +97,11 @@ public class VfsUtilCore {
      * @param root candidate to be parent file (Project base dir, any content roots etc.)
      * @return relative path of {@code file} or full path if {@code root} is not actual ancestor of {@code file}
      */
-    @Nullable
-    public static String getRelativeLocation(@Nullable VirtualFile file, VirtualFile root) {
+    public static @Nullable String getRelativeLocation(@Nullable VirtualFile file, VirtualFile root) {
         return VirtualFileUtil.getRelativeLocation(file, root);
     }
 
-    @Nullable
-    public static String getRelativePath(VirtualFile file, VirtualFile ancestor) {
+    public static @Nullable String getRelativePath(VirtualFile file, VirtualFile ancestor) {
         return VirtualFileUtil.getRelativePath(file, ancestor);
     }
 
@@ -116,13 +114,11 @@ public class VfsUtilCore {
      * @param separator character to use as files separator
      * @return the relative path or {@code null} if {@code ancestor} is not ancestor for {@code file}
      */
-    @Nullable
-    public static String getRelativePath(VirtualFile file, VirtualFile ancestor, char separator) {
+    public static @Nullable String getRelativePath(VirtualFile file, VirtualFile ancestor, char separator) {
         return VirtualFileUtil.getRelativePath(file, ancestor, separator);
     }
 
-    @Nullable
-    public static VirtualFile getVirtualFileForJar(@Nullable VirtualFile entryVFile) {
+    public static @Nullable VirtualFile getVirtualFileForJar(@Nullable VirtualFile entryVFile) {
         if (entryVFile == null) {
             return null;
         }
@@ -303,8 +299,7 @@ public class VfsUtilCore {
      * @param vfsUrl VFS url (as constructed by {@link VirtualFile#getUrl()}
      * @return converted URL or null if error has occurred.
      */
-    @Nullable
-    public static URL convertToURL(String vfsUrl) {
+    public static @Nullable URL convertToURL(String vfsUrl) {
         return VirtualFileUtil.convertToURL(vfsUrl);
     }
 
@@ -325,8 +320,7 @@ public class VfsUtilCore {
         return ideaUrl;
     }
 
-    @Nullable
-    public static VirtualFile findRelativeFile(String uri, @Nullable VirtualFile base) {
+    public static @Nullable VirtualFile findRelativeFile(String uri, @Nullable VirtualFile base) {
         return VirtualFileUtil.findRelativeFile(uri, base);
     }
 
@@ -366,8 +360,7 @@ public class VfsUtilCore {
      * @return common ancestor for the passed files. Returns <code>null</code> if
      * the files do not have common ancestor
      */
-    @Nullable
-    public static VirtualFile getCommonAncestor(VirtualFile file1, VirtualFile file2) {
+    public static @Nullable VirtualFile getCommonAncestor(VirtualFile file1, VirtualFile file2) {
         if (!file1.getFileSystem().equals(file2.getFileSystem())) {
             return null;
         }
@@ -417,8 +410,7 @@ public class VfsUtilCore {
         return false;
     }
 
-    @Nullable
-    public static VirtualFile findContainingDirectory(VirtualFile file, CharSequence name) {
+    public static @Nullable VirtualFile findContainingDirectory(VirtualFile file, CharSequence name) {
         VirtualFile parent = file.isDirectory() ? file : file.getParent();
         while (parent != null) {
             if (Comparing.equal(parent.getNameSequence(), name, Platform.current().fs().isCaseSensitive())) {

@@ -327,8 +327,7 @@ class HttpProxySettingsUi implements IdeaConfigurableUi<HttpProxyManagerImpl> {
     state.PROXY_HOST = getText(myProxyHostTextField);
   }
 
-  @Nullable
-  private static String getText(JTextField field) {
+  private static @Nullable String getText(JTextField field) {
     return StringUtil.nullize(field.getText(), true);
   }
 

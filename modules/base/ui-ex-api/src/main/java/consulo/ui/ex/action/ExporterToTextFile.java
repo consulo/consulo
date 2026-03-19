@@ -9,8 +9,7 @@ import javax.swing.event.ChangeListener;
 import java.util.TooManyListenersException;
 
 public interface ExporterToTextFile {
-  @Nullable
-  default JComponent getSettingsEditor() {
+  default @Nullable JComponent getSettingsEditor() {
     return null;
   }
 

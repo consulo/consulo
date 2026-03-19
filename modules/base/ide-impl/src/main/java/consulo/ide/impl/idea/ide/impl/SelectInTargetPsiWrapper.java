@@ -53,8 +53,7 @@ public abstract class SelectInTargetPsiWrapper implements SelectInTarget {
     return virtualFile.isValid();
   }
 
-  @Nullable
-  protected PsiFileSystemItem getContextPsiFile(SelectInContext context) {
+  protected @Nullable PsiFileSystemItem getContextPsiFile(SelectInContext context) {
     VirtualFile virtualFile = context.getVirtualFile();
     PsiFileSystemItem psiFile = PsiManager.getInstance(myProject).findFile(virtualFile);
     if (psiFile != null) {
@@ -93,8 +92,7 @@ public abstract class SelectInTargetPsiWrapper implements SelectInTarget {
 
   protected abstract void select(PsiElement element, boolean requestFocus);
 
-  @Nullable
-  protected static PsiElement findElementToSelect(PsiElement element, PsiElement candidate) {
+  protected static @Nullable PsiElement findElementToSelect(PsiElement element, PsiElement candidate) {
     PsiElement toSelect = candidate;
 
     if (toSelect == null) {

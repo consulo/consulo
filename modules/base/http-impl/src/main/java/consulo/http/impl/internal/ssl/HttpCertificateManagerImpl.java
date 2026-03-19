@@ -213,8 +213,7 @@ public class HttpCertificateManagerImpl implements HttpCertificateManager, Persi
      * @return key managers or {@code null} in case of any error
      */
     @Override
-    @Nullable
-    public KeyManager[] getDefaultKeyManagers() {
+    public @Nullable KeyManager[] getDefaultKeyManagers() {
         String keyStorePath = System.getProperty("javax.net.ssl.keyStore");
         if (keyStorePath != null) {
             LOG.info("Loading custom key store specified with VM options: " + keyStorePath);

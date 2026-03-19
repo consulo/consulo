@@ -42,8 +42,7 @@ class ProbablyIncreasingLowerboundAlgorithm<T extends AbstractBlockWrapper> {
     reset();
   }
 
-  @Nullable
-  public AbstractBlockWrapper getLeftRespNeighbor(AbstractBlockWrapper block) {
+  public @Nullable AbstractBlockWrapper getLeftRespNeighbor(AbstractBlockWrapper block) {
     int index = getLeftRespNeighborIndex(block);
     if (index == -1) {
       return null;

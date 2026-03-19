@@ -144,8 +144,7 @@ public class LibraryPackagingElement extends ComplexPackagingElement<LibraryPack
     return "lib:" + myLibraryName + "(" + (myModuleName != null ? "module " + myModuleName : myLevel) + ")";
   }
 
-  @Nullable
-  public Library findLibrary(PackagingElementResolvingContext context) {
+  public @Nullable Library findLibrary(PackagingElementResolvingContext context) {
     if (myModuleName == null) {
       return context.findLibrary(myLevel, myLibraryName);
     }

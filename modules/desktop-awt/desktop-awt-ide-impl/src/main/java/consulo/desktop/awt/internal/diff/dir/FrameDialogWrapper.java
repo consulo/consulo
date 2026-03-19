@@ -15,23 +15,19 @@ public abstract class FrameDialogWrapper {
   
   protected abstract JComponent getPanel();
 
-  @Nullable
-  protected String getDimensionServiceKey() {
+  protected @Nullable String getDimensionServiceKey() {
     return null;
   }
 
-  @Nullable
-  protected JComponent getPreferredFocusedComponent() {
+  protected @Nullable JComponent getPreferredFocusedComponent() {
     return null;
   }
 
-  @Nullable
-  protected String getTitle() {
+  protected @Nullable String getTitle() {
     return null;
   }
 
-  @Nullable
-  protected Project getProject() {
+  protected @Nullable Project getProject() {
     return null;
   }
 
@@ -40,8 +36,7 @@ public abstract class FrameDialogWrapper {
     return Mode.MODAL;
   }
 
-  @Nullable
-  protected Disposable getDisposable() {
+  protected @Nullable Disposable getDisposable() {
     return null;
   }
 

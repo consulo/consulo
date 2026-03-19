@@ -335,8 +335,7 @@ public class UiInspectorAction extends ToggleAction implements DumbAware {
             }
         }
 
-        @Nullable
-        private static JComponent getGlassPane(Component component) {
+        private static @Nullable JComponent getGlassPane(Component component) {
             JRootPane rootPane = SwingUtilities.getRootPane(component);
             return rootPane == null ? null : (JComponent) rootPane.getGlassPane();
         }
@@ -851,8 +850,7 @@ public class UiInspectorAction extends ToggleAction implements DumbAware {
             return result;
         }
 
-        @Nullable
-        private static Renderer<Object> getRenderer(Class clazz) {
+        private static @Nullable Renderer<Object> getRenderer(Class clazz) {
             if (clazz == null) {
                 return null;
             }
@@ -1005,8 +1003,7 @@ public class UiInspectorAction extends ToggleAction implements DumbAware {
             return this;
         }
 
-        @Nullable
-        private static Color getBorderColor(Border value) {
+        private static @Nullable Color getBorderColor(Border value) {
             if (value instanceof LineBorder lineBorder) {
                 return lineBorder.getLineColor();
             }
@@ -1360,8 +1357,7 @@ public class UiInspectorAction extends ToggleAction implements DumbAware {
         }
 
         @Override
-        @Nullable
-        public Object getValueAt(int row, int column) {
+        public @Nullable Object getValueAt(int row, int column) {
             PropertyBean bean = myProperties.get(row);
             if (bean != null) {
                 return switch (column) {
@@ -1388,8 +1384,7 @@ public class UiInspectorAction extends ToggleAction implements DumbAware {
             }
         }
 
-        @Nullable
-        public Function<Object, Object> updater(PropertyBean bean) {
+        public @Nullable Function<Object, Object> updater(PropertyBean bean) {
             if (myComponent == null) {
                 return null;
             }

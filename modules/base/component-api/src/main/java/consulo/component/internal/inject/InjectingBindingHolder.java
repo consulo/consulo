@@ -58,8 +58,7 @@ public class InjectingBindingHolder {
     return (componentProfiles & bindingComponentProfiles) == bindingComponentProfiles;
   }
 
-  @Nullable
-  public static InjectingBinding findValid(List<InjectingBinding> bindings, int componentProfiles) {
+  public static @Nullable InjectingBinding findValid(List<InjectingBinding> bindings, int componentProfiles) {
     InjectingBinding result = null;
     //noinspection ForLoopReplaceableByForEach
     for (int i = 0; i < bindings.size(); i++) {

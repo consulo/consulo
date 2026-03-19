@@ -30,7 +30,7 @@ import org.jspecify.annotations.Nullable;
  */
 public class BetterPrefixMatcher extends PrefixMatcher {
   private final PrefixMatcher myOriginal;
-  @Nullable private final CamelHumpMatcher myHumpMatcher;
+  private final @Nullable CamelHumpMatcher myHumpMatcher;
   private final int myMinMatchingDegree;
 
   public BetterPrefixMatcher(PrefixMatcher original, int minMatchingDegree) {

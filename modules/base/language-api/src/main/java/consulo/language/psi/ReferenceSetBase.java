@@ -74,8 +74,7 @@ public abstract class ReferenceSetBase<T extends PsiReference> {
     return next;
   }
 
-  @Nullable
-  protected T createReference(TextRange range, int index) {
+  protected @Nullable T createReference(TextRange range, int index) {
     return null;
   }
 
@@ -101,8 +100,7 @@ public abstract class ReferenceSetBase<T extends PsiReference> {
     return myReferences.get(index);
   }
 
-  @Nullable
-  public T getLastReference() {
+  public @Nullable T getLastReference() {
     return myReferences.isEmpty() ? null : getReference(myReferences.size() - 1);
   }
 }

@@ -22,8 +22,7 @@ public class ElementPreviewHintProvider implements ElementPreviewProvider {
         HintManager.HIDE_BY_SCROLLING |
         HintManager.HIDE_BY_TEXT_CHANGE |
         HintManager.HIDE_IF_OUT_OF_EDITOR;
-    @Nullable
-    private LightweightHintImpl hint;
+    private @Nullable LightweightHintImpl hint;
 
     @Override
     public boolean isSupportedFile(PsiFile psiFile) {
@@ -62,8 +61,7 @@ public class ElementPreviewHintProvider implements ElementPreviewProvider {
         hideCurrentHintIfAny();
     }
 
-    @Nullable
-    private static LightweightHintImpl getHint(PsiElement element) {
+    private static @Nullable LightweightHintImpl getHint(PsiElement element) {
         for (PreviewHintProvider hintProvider : PreviewHintProvider.EP_NAME.getExtensionList()) {
             JComponent preview;
             try {

@@ -208,8 +208,7 @@ public class TextEditorPsiDataRule implements UiDataRule {
         throw new IllegalArgumentException("Cannot find injected caret corresponding to " + hostCaret);
     }
 
-    @Nullable
-    private static PsiFile getPsiFile(Editor editor, VirtualFile file) {
+    private static @Nullable PsiFile getPsiFile(Editor editor, VirtualFile file) {
         if (!file.isValid()) {
             return null;
         }
@@ -221,8 +220,7 @@ public class TextEditorPsiDataRule implements UiDataRule {
         return psiFile != null && psiFile.isValid() ? psiFile : null;
     }
 
-    @Nullable
-    private static PsiElement getPsiElementIn(Editor editor, Caret caret, VirtualFile file) {
+    private static @Nullable PsiElement getPsiElementIn(Editor editor, Caret caret, VirtualFile file) {
         PsiFile psiFile = getPsiFile(editor, file);
         if (psiFile == null) {
             return null;
@@ -262,8 +260,7 @@ public class TextEditorPsiDataRule implements UiDataRule {
         return PsiUtilCore.findLanguageFromElement(elt);
     }
 
-    @Nullable
-    private static Language[] computeLanguages(Editor editor, Caret caret, VirtualFile file) {
+    private static @Nullable Language[] computeLanguages(Editor editor, Caret caret, VirtualFile file) {
         LinkedHashSet<Language> set = new LinkedHashSet<>(4);
 
         // Injected language

@@ -49,13 +49,10 @@ public class ArrangementColorsProviderImpl implements ArrangementColorsProvider 
   
   private final Color myDefaultSelectedBorderColor;
 
-  @Nullable
-  private final ArrangementColorsAware myColorsAware;
+  private final @Nullable ArrangementColorsAware myColorsAware;
 
-  @Nullable
-  private Color myCachedNormalBorderColor;
-  @Nullable
-  private Color myCachedSelectedBorderColor;
+  private @Nullable Color myCachedNormalBorderColor;
+  private @Nullable Color myCachedSelectedBorderColor;
 
   public ArrangementColorsProviderImpl(@Nullable ArrangementColorsAware colorsAware) {
     myColorsAware = colorsAware;

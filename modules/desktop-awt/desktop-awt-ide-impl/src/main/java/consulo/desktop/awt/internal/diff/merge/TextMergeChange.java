@@ -62,8 +62,7 @@ public class TextMergeChange extends ThreesideDiffChangeBase {
     private final boolean[] myResolved = new boolean[2];
     private boolean myOnesideAppliedConflict;
 
-    @Nullable
-    private MergeInnerDifferences myInnerFragments; // warning: might be out of date
+    private @Nullable MergeInnerDifferences myInnerFragments; // warning: might be out of date
 
     @RequiredUIAccess
     public TextMergeChange(
@@ -231,8 +230,7 @@ public class TextMergeChange extends ThreesideDiffChangeBase {
         myOperations.clear();
     }
 
-    @Nullable
-    private MyGutterOperation createOperation(ThreeSide side, OperationType type) {
+    private @Nullable MyGutterOperation createOperation(ThreeSide side, OperationType type) {
         if (isResolved(side)) {
             return null;
         }
@@ -291,8 +289,7 @@ public class TextMergeChange extends ThreesideDiffChangeBase {
                 || myShiftPressed != myViewer.getModifierProvider().isShiftPressed();
         }
 
-        @Nullable
-        public GutterIconRenderer createRenderer() {
+        public @Nullable GutterIconRenderer createRenderer() {
             myCtrlPressed = myViewer.getModifierProvider().isCtrlPressed();
             myShiftPressed = myViewer.getModifierProvider().isShiftPressed();
 
@@ -327,8 +324,7 @@ public class TextMergeChange extends ThreesideDiffChangeBase {
         }
     }
 
-    @Nullable
-    private GutterIconRenderer createApplyRenderer(Side side, boolean modifier) {
+    private @Nullable GutterIconRenderer createApplyRenderer(Side side, boolean modifier) {
         if (isResolved(side)) {
             return null;
         }
@@ -343,8 +339,7 @@ public class TextMergeChange extends ThreesideDiffChangeBase {
         );
     }
 
-    @Nullable
-    private GutterIconRenderer createIgnoreRenderer(Side side, boolean modifier) {
+    private @Nullable GutterIconRenderer createIgnoreRenderer(Side side, boolean modifier) {
         if (isResolved(side)) {
             return null;
         }
@@ -358,8 +353,7 @@ public class TextMergeChange extends ThreesideDiffChangeBase {
         );
     }
 
-    @Nullable
-    private GutterIconRenderer createResolveRenderer() {
+    private @Nullable GutterIconRenderer createResolveRenderer() {
         if (myViewer.resolveConflictUsingInnerDifferences(this) == null) {
             return null;
         }

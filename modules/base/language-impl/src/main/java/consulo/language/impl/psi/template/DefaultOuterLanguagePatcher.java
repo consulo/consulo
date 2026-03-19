@@ -6,8 +6,7 @@ public abstract class DefaultOuterLanguagePatcher implements OuterLanguageRangeP
   public static final String OUTER_EXPRESSION_PLACEHOLDER = "jbIdentifier6b52cc4b";
 
   @Override
-  @Nullable
-  public String getTextForOuterLanguageInsertionRange(TemplateDataElementType templateDataElementType, CharSequence outerElementText) {
+  public @Nullable String getTextForOuterLanguageInsertionRange(TemplateDataElementType templateDataElementType, CharSequence outerElementText) {
     return OUTER_EXPRESSION_PLACEHOLDER;
   }
 }

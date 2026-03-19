@@ -48,8 +48,7 @@ public class FontPreferencesImpl implements ModifiableFontPreferences {
   private boolean myUseLigatures;
   private float myLineSpacing = FontPreferences.DEFAULT_LINE_SPACING;
 
-  @Nullable
-  private Runnable myChangeListener;
+  private @Nullable Runnable myChangeListener;
 
   /**
    * Font size to use by default. Default value is {@link #DEFAULT_FONT_SIZE}.
@@ -60,8 +59,7 @@ public class FontPreferencesImpl implements ModifiableFontPreferences {
     myChangeListener = changeListener;
   }
 
-  @Nullable
-  public Runnable getChangeListener() {
+  public @Nullable Runnable getChangeListener() {
     return myChangeListener;
   }
 

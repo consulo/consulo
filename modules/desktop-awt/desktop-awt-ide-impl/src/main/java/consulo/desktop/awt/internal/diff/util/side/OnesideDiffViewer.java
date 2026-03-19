@@ -84,8 +84,7 @@ public abstract class OnesideDiffViewer<T extends EditorHolder> extends Listener
     Disposer.dispose(myHolder);
   }
 
-  @Nullable
-  protected JComponent createTitle() {
+  protected @Nullable JComponent createTitle() {
     List<JComponent> simpleTitles = AWTDiffUtil.createSimpleTitles(myRequest);
     return mySide.select(simpleTitles);
   }

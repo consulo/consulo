@@ -80,8 +80,7 @@ public abstract class TreeNode<T> extends PresentableNodeDescriptor<TreeNode<T>>
   }
 
   @Override
-  @Nullable
-  public final TreeNode<T> getElement() {
+  public final @Nullable TreeNode<T> getElement() {
     return getEqualityObject() != null ? this : null;
   }
 
@@ -193,8 +192,7 @@ public abstract class TreeNode<T> extends PresentableNodeDescriptor<TreeNode<T>>
   public void navigate(boolean requestFocus) {
   }
 
-  @Nullable
-  protected final Object getParentValue() {
+  protected final @Nullable Object getParentValue() {
     TreeNode parent = getParent();
     return parent == null ? null : parent.getValue();
   }

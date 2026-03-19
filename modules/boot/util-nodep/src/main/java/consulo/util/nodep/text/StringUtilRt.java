@@ -50,13 +50,11 @@ public class StringUtilRt {
         return s == null ? defaultValue : s;
     }
 
-    @Nullable
-    public static String nullize(@Nullable String s) {
+    public static @Nullable String nullize(@Nullable String s) {
         return nullize(s, false);
     }
 
-    @Nullable
-    public static String nullize(@Nullable String s, boolean nullizeSpaces) {
+    public static @Nullable String nullize(@Nullable String s, boolean nullizeSpaces) {
         if (nullizeSpaces) {
             if (isEmptyOrSpaces(s)) {
                 return null;

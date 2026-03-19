@@ -18,8 +18,7 @@ public abstract class LookupManager {
     return project.getInstance(LookupManager.class);
   }
 
-  @Nullable
-  public static LookupEx getActiveLookup(@Nullable Editor editor) {
+  public static @Nullable LookupEx getActiveLookup(@Nullable Editor editor) {
     if (editor == null) return null;
 
     Project project = editor.getProject();
@@ -31,18 +30,15 @@ public abstract class LookupManager {
     return lookup.getTopLevelEditor() == EditorWindow.getTopLevelEditor(editor) ? lookup : null;
   }
 
-  @Nullable
-  public LookupEx showLookup(Editor editor, LookupElement... items) {
+  public @Nullable LookupEx showLookup(Editor editor, LookupElement... items) {
     return showLookup(editor, items, "", new LookupArranger.DefaultArranger());
   }
 
-  @Nullable
-  public LookupEx showLookup(Editor editor, LookupElement[] items, String prefix) {
+  public @Nullable LookupEx showLookup(Editor editor, LookupElement[] items, String prefix) {
     return showLookup(editor, items, prefix, new LookupArranger.DefaultArranger());
   }
 
-  @Nullable
-  public abstract LookupEx showLookup(Editor editor, LookupElement[] items, String prefix, LookupArranger arranger);
+  public abstract @Nullable LookupEx showLookup(Editor editor, LookupElement[] items, String prefix, LookupArranger arranger);
 
   public abstract void hideActiveLookup();
 
@@ -51,8 +47,7 @@ public abstract class LookupManager {
     lookupManager.hideActiveLookup();
   }
 
-  @Nullable
-  public abstract LookupEx getActiveLookup();
+  public abstract @Nullable LookupEx getActiveLookup();
 
   
   public static final String PROP_ACTIVE_LOOKUP = "activeLookup";

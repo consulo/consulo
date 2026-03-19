@@ -66,8 +66,7 @@ public abstract class PopupState<Popup> {
     reference = null;
   }
 
-  @Nullable
-  public Popup getPopup() {
+  public @Nullable Popup getPopup() {
     WeakReference<Popup> reference = this.reference;
     return reference == null ? null : reference.get();
   }

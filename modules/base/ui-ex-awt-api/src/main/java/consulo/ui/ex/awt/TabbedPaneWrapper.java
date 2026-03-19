@@ -334,8 +334,7 @@ public class TabbedPaneWrapper {
     }
   }
 
-  @Nullable
-  public String getSelectedTitle() {
+  public @Nullable String getSelectedTitle() {
     return getSelectedIndex() < 0 ? null : getTitleAt(getSelectedIndex());
   }
 

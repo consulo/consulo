@@ -261,8 +261,7 @@ public class CodeEditorFoldingModelBase extends InlayModel.SimpleAdapter impleme
     }
 
     @Override
-    @Nullable
-    public FoldRegion getCollapsedRegionAtOffset(int offset) {
+    public @Nullable FoldRegion getCollapsedRegionAtOffset(int offset) {
         return myFoldTree.fetchOutermost(offset);
     }
 
@@ -274,8 +273,7 @@ public class CodeEditorFoldingModelBase extends InlayModel.SimpleAdapter impleme
     }
 
     @Override
-    @Nullable
-    public FoldRegion getFoldingPlaceholderAt(Point p) {
+    public @Nullable FoldRegion getFoldingPlaceholderAt(Point p) {
         return getFoldingPlaceholderAt(new EditorLocation(myEditor, p), false);
     }
 
@@ -521,8 +519,7 @@ public class CodeEditorFoldingModelBase extends InlayModel.SimpleAdapter impleme
     }
 
     @Override
-    @Nullable
-    public FoldRegion[] fetchTopLevel() {
+    public @Nullable FoldRegion[] fetchTopLevel() {
         return myFoldTree.fetchTopLevel();
     }
 
@@ -535,8 +532,7 @@ public class CodeEditorFoldingModelBase extends InlayModel.SimpleAdapter impleme
         return myFoldTree.intersectsRegion(startOffset, endOffset);
     }
 
-    @Nullable
-    public FoldRegion[] fetchVisible() {
+    public @Nullable FoldRegion[] fetchVisible() {
         return myFoldTree.fetchVisible();
     }
 

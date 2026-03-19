@@ -94,8 +94,7 @@ public enum ThreeSide {
     return list.get(myIndex);
   }
 
-  @Nullable
-  public static <T> ThreeSide fromValue(List<? extends T> list, @Nullable T value) {
+  public static @Nullable <T> ThreeSide fromValue(List<? extends T> list, @Nullable T value) {
     assert list.size() == 3;
     int index = list.indexOf(value);
     return index != -1 ? fromIndex(index) : null;

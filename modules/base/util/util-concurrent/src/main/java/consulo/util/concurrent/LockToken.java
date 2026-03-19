@@ -40,8 +40,7 @@ public class LockToken implements AutoCloseable {
     return new LockToken(lock);
   }
 
-  @Nullable
-  public static LockToken attemptLock(Lock lock, long time) throws InterruptedException {
+  public static @Nullable LockToken attemptLock(Lock lock, long time) throws InterruptedException {
     if (lock.tryLock(time, TimeUnit.MILLISECONDS)) {
       return new LockToken(lock);
     }

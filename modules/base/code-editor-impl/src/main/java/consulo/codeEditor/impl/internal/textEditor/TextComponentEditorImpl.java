@@ -277,8 +277,7 @@ public class TextComponentEditorImpl extends UserDataHolderBase implements TextC
   }
 
   @Override
-  @Nullable
-  public Project getProject() {
+  public @Nullable Project getProject() {
     return myProject;
   }
 
@@ -304,8 +303,7 @@ public class TextComponentEditorImpl extends UserDataHolderBase implements TextC
   }
 
   @Override
-  @Nullable
-  public EditorMouseEventArea getMouseEventArea(MouseEvent e) {
+  public @Nullable EditorMouseEventArea getMouseEventArea(MouseEvent e) {
     throw new UnsupportedOperationException("Not implemented");
   }
 
@@ -320,8 +318,7 @@ public class TextComponentEditorImpl extends UserDataHolderBase implements TextC
   }
 
   @Override
-  @Nullable
-  public JComponent getHeaderComponent() {
+  public @Nullable JComponent getHeaderComponent() {
     return null;
   }
 

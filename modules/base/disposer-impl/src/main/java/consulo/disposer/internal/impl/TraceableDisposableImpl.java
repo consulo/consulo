@@ -34,10 +34,8 @@ import java.util.Objects;
  * In kill() it saves disposal stacktrace
  */
 public class TraceableDisposableImpl implements TraceableDisposable {
-  @Nullable
-  private final Throwable CREATE_TRACE;
-  @Nullable
-  private Throwable KILL_TRACE;
+  private final @Nullable Throwable CREATE_TRACE;
+  private @Nullable Throwable KILL_TRACE;
 
   public TraceableDisposableImpl(boolean debug) {
     CREATE_TRACE = debug ? ThrowableInterner.intern(new Throwable()) : null;

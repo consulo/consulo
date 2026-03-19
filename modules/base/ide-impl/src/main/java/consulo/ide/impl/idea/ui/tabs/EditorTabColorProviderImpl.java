@@ -40,8 +40,7 @@ public class EditorTabColorProviderImpl implements EditorTabColorProvider, DumbA
     }
 
     @Override
-    @Nullable
-    public ColorValue getEditorTabColor(Project project, VirtualFile file) {
+    public @Nullable ColorValue getEditorTabColor(Project project, VirtualFile file) {
         FileColorManager colorManager = myFileColorManager.get();
         return colorManager.isEnabledForTabs() ? colorManager.getFileColorValue(file) : null;
     }

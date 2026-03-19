@@ -1006,8 +1006,7 @@ public class FileTypeManagerImpl extends FileTypeManagerEx implements Persistent
         return stream;
     }
 
-    @Nullable
-    private Collection<FileTypeDetector> getDetectorsForType(FileType fileType) {
+    private @Nullable Collection<FileTypeDetector> getDetectorsForType(FileType fileType) {
         synchronized (FILE_TYPE_DETECTOR_MAP_LOCK) {
             if (myFileTypeDetectorMap == null) {
                 myFileTypeDetectorMap = new MultiValuesMap<>();
@@ -1426,8 +1425,7 @@ public class FileTypeManagerImpl extends FileTypeManagerEx implements Persistent
     // Helper methods
     // -------------------------------------------------------------------------
 
-    @Nullable
-    private FileType getFileTypeByName(String name) {
+    private @Nullable FileType getFileTypeByName(String name) {
         synchronized (PENDING_INIT_LOCK) {
             return mySchemeManager.findSchemeByName(name);
         }
@@ -1545,8 +1543,7 @@ public class FileTypeManagerImpl extends FileTypeManagerEx implements Persistent
         return type;
     }
 
-    @Nullable
-    private String filterAlreadyRegisteredExtensions(String semicolonDelimited) {
+    private @Nullable String filterAlreadyRegisteredExtensions(String semicolonDelimited) {
         StringTokenizer tokenizer = new StringTokenizer(semicolonDelimited, FileTypeConsumer.EXTENSION_DELIMITER, false);
         StringBuilder builder = null;
         while (tokenizer.hasMoreTokens()) {

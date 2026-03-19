@@ -36,14 +36,11 @@ public interface Failure {
   @BuildEventsNls.Description
   String getDescription();
 
-  @Nullable
-  default Throwable getError() {return null;}
+  default @Nullable Throwable getError() {return null;}
 
   List<? extends Failure> getCauses();
 
-  @Nullable
-  default Notification getNotification() {return null;}
+  default @Nullable Notification getNotification() {return null;}
 
-  @Nullable
-  default Navigatable getNavigatable() {return null;}
+  default @Nullable Navigatable getNavigatable() {return null;}
 }

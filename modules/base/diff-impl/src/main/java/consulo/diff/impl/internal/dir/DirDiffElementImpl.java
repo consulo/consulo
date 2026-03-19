@@ -147,14 +147,12 @@ public class DirDiffElementImpl implements DirDiffElement {
     return myName;
   }
 
-  @Nullable
-  public String getSourceName() {
+  public @Nullable String getSourceName() {
     return myType == DiffType.CHANGED || myType == DiffType.SOURCE || myType == DiffType.EQUAL
            ? mySource.getName() : mySource == null ? null : mySource.getName();
   }
 
-  @Nullable
-  public String getSourceSize() {
+  public @Nullable String getSourceSize() {
     return mySourceLength < 0 ? null : String.valueOf(mySourceLength);
   }
 
@@ -167,14 +165,12 @@ public class DirDiffElementImpl implements DirDiffElement {
     //return NONE;
   }
 
-  @Nullable
-  public String getTargetName() {
+  public @Nullable String getTargetName() {
     return myType == DiffType.CHANGED || myType == DiffType.TARGET || myType == DiffType.EQUAL
            ? myTarget.getName() : myTarget == null ? null : myTarget.getName();
   }
 
-  @Nullable
-  public String getTargetSize() {
+  public @Nullable String getTargetSize() {
     return myTargetLength < 0 ? null : String.valueOf(myTargetLength);
   }
 
@@ -230,18 +226,15 @@ public class DirDiffElementImpl implements DirDiffElement {
     myOperation = operation;
   }
 
-  @Nullable
-  public Image getSourceIcon() {
+  public @Nullable Image getSourceIcon() {
     return getIcon(mySource);
   }
 
-  @Nullable
-  public Image getTargetIcon() {
+  public @Nullable Image getTargetIcon() {
     return getIcon(myTarget);
   }
 
-  @Nullable
-  private static Image getIcon(DiffElement element) {
+  private static @Nullable Image getIcon(DiffElement element) {
     return element != null ? element.getIcon() : null;
   }
 

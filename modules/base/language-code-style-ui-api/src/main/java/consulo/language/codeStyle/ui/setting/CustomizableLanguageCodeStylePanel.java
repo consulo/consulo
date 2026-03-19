@@ -114,8 +114,7 @@ public abstract class CustomizableLanguageCodeStylePanel extends CodeStyleAbstra
     }
 
     @Override
-    @Nullable
-    protected EditorHighlighter createHighlighter(EditorColorsScheme scheme) {
+    protected @Nullable EditorHighlighter createHighlighter(EditorColorsScheme scheme) {
         FileType fileType = getFileType();
         return EditorHighlighterProvider.forFileType(fileType)
             .getEditorHighlighter(ProjectUIUtil.guessCurrentProject(getPanel()), fileType, null, scheme);
@@ -194,10 +193,8 @@ public abstract class CustomizableLanguageCodeStylePanel extends CodeStyleAbstra
     protected abstract static class OrderedOption {
         
         private final String optionName;
-        @Nullable
-        private final OptionAnchor anchor;
-        @Nullable
-        private final String anchorOptionName;
+        private final @Nullable OptionAnchor anchor;
+        private final @Nullable String anchorOptionName;
 
         protected OrderedOption(String optionName, @Nullable OptionAnchor anchor, @Nullable String anchorOptionName) {
             this.optionName = optionName;
@@ -210,13 +207,11 @@ public abstract class CustomizableLanguageCodeStylePanel extends CodeStyleAbstra
             return optionName;
         }
 
-        @Nullable
-        public OptionAnchor getAnchor() {
+        public @Nullable OptionAnchor getAnchor() {
             return anchor;
         }
 
-        @Nullable
-        public String getAnchorOptionName() {
+        public @Nullable String getAnchorOptionName() {
             return anchorOptionName;
         }
     }

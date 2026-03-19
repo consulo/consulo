@@ -37,8 +37,7 @@ public class ChangesBrowserChangeNode extends ChangesBrowserNode<Change> impleme
 
   
   private final Project myProject;
-  @Nullable
-  private final ChangeNodeDecorator myDecorator;
+  private final @Nullable ChangeNodeDecorator myDecorator;
 
   protected ChangesBrowserChangeNode(Project project, Change userObject, @Nullable ChangeNodeDecorator decorator) {
     super(userObject);
@@ -96,8 +95,7 @@ public class ChangesBrowserChangeNode extends ChangesBrowserNode<Change> impleme
     }
   }
 
-  @Nullable
-  private Image getIcon(Change change, FilePath filePath) {
+  private @Nullable Image getIcon(Change change, FilePath filePath) {
     Image result = change.getAdditionalIcon();
 
     if (result == null) {

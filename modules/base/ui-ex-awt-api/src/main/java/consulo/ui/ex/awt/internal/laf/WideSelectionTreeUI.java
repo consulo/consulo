@@ -457,8 +457,7 @@ public class WideSelectionTreeUI extends BasicTreeUI {
         super.paintExpandControl(g, clipBounds, insets, bounds, path, row, isExpanded, hasBeenExpanded, isLeaf);
     }
 
-    @Nullable
-    private static Color getSelectionBackground(JTree tree, boolean checkProperty) {
+    private static @Nullable Color getSelectionBackground(JTree tree, boolean checkProperty) {
         Object property = tree.getClientProperty(TREE_TABLE_TREE_KEY);
         if (property instanceof JTable table) {
             return table.getSelectionBackground();

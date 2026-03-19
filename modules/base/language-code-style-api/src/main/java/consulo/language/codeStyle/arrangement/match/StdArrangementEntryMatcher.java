@@ -137,10 +137,9 @@ public class StdArrangementEntryMatcher implements ArrangementEntryMatcher {
     
     protected final MultiValuesMap<StdArrangementTokenType, ArrangementAtomMatchCondition> context =
             new MultiValuesMap<StdArrangementTokenType, ArrangementAtomMatchCondition>();
-    @Nullable
-    private String myNamePattern;
-    @Nullable private String myNamespacePattern;
-    @Nullable private String myText;
+    private @Nullable String myNamePattern;
+    private @Nullable String myNamespacePattern;
+    private @Nullable String myText;
 
     /**
      * Adds given entry to context by given entry type.

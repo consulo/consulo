@@ -41,8 +41,7 @@ import java.util.*;
 
 public abstract class GlobalSearchScope extends BaseSearchScope implements ModuleAwareSearchScope {
   private static final Logger LOG = Logger.getInstance(GlobalSearchScope.class);
-  @Nullable
-  private final Project myProject;
+  private final @Nullable Project myProject;
 
   protected GlobalSearchScope(@Nullable Project project) {
     myProject = project;
@@ -348,7 +347,7 @@ public abstract class GlobalSearchScope extends BaseSearchScope implements Modul
   }
 
   
-  public static GlobalSearchScope fileScope(Project project, final VirtualFile virtualFile, @Nullable final String displayName) {
+  public static GlobalSearchScope fileScope(Project project, final VirtualFile virtualFile, final @Nullable String displayName) {
     return new FileScope(project, virtualFile) {
       
       @Override
@@ -364,7 +363,7 @@ public abstract class GlobalSearchScope extends BaseSearchScope implements Modul
   }
 
   
-  public static GlobalSearchScope filesScope(Project project, Collection<VirtualFile> files, @Nullable final String displayName) {
+  public static GlobalSearchScope filesScope(Project project, Collection<VirtualFile> files, final @Nullable String displayName) {
     if (files.isEmpty()) return EMPTY_SCOPE;
     return files.size() == 1 ? fileScope(project, files.iterator().next(), displayName) : new FilesScope(project, files) {
       

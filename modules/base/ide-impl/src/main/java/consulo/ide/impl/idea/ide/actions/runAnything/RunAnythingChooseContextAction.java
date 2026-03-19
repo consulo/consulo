@@ -232,8 +232,7 @@ public abstract class RunAnythingChooseContextAction extends ActionGroup impleme
 
     public abstract void setSelectedContext(@Nullable RunAnythingContext context);
 
-    @Nullable
-    public abstract RunAnythingContext getSelectedContext();
+    public abstract @Nullable RunAnythingContext getSelectedContext();
 
     
     public abstract List<RunAnythingContext> getAvailableContexts();

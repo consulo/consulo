@@ -76,8 +76,7 @@ public class AuthenticationDialogImpl extends DialogWrapper {
   }
 
   @Override
-  @Nullable
-  protected JComponent createCenterPanel() {
+  protected @Nullable JComponent createCenterPanel() {
     return panel;
   }
 }

@@ -214,8 +214,7 @@ public class MoveFilesOrDirectoriesUtil {
         }
     }
 
-    @Nullable
-    public static PsiDirectory resolveToDirectory(Project project, PsiElement element) {
+    public static @Nullable PsiDirectory resolveToDirectory(Project project, PsiElement element) {
         if (element instanceof PsiDirectoryContainer directoryContainer) {
             PsiDirectory[] directories = directoryContainer.getDirectories();
             return switch (directories.length) {
@@ -229,8 +228,7 @@ public class MoveFilesOrDirectoriesUtil {
         }
     }
 
-    @Nullable
-    private static PsiDirectory getCommonDirectory(PsiElement[] movedElements) {
+    private static @Nullable PsiDirectory getCommonDirectory(PsiElement[] movedElements) {
         PsiDirectory commonDirectory = null;
 
         for (PsiElement movedElement : movedElements) {
@@ -255,8 +253,7 @@ public class MoveFilesOrDirectoriesUtil {
         return commonDirectory;
     }
 
-    @Nullable
-    public static PsiDirectory getInitialTargetDirectory(PsiDirectory initialTargetElement, PsiElement[] movedElements) {
+    public static @Nullable PsiDirectory getInitialTargetDirectory(PsiDirectory initialTargetElement, PsiElement[] movedElements) {
         if (initialTargetElement == null && movedElements != null) {
             PsiDirectory commonDirectory = getCommonDirectory(movedElements);
             return commonDirectory != null ? commonDirectory : getContainerDirectory(movedElements[0]);
@@ -264,8 +261,7 @@ public class MoveFilesOrDirectoriesUtil {
         return initialTargetElement;
     }
 
-    @Nullable
-    private static PsiDirectory getContainerDirectory(PsiElement psiElement) {
+    private static @Nullable PsiDirectory getContainerDirectory(PsiElement psiElement) {
         if (psiElement instanceof PsiDirectory directory) {
             return directory;
         }

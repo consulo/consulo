@@ -31,7 +31,7 @@ import javax.swing.*;
  * @author Vladimir Kondratyev
  */
 public class LabelPropertyRenderer extends JLabel implements PropertyRenderer {
-  @Nullable private final String myStaticText;
+  private final @Nullable String myStaticText;
 
   public LabelPropertyRenderer(@Nullable String staticText) {
     myStaticText = staticText;

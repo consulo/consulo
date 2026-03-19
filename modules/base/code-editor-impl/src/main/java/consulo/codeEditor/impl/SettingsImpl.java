@@ -42,10 +42,8 @@ import java.util.Objects;
  * @since 2002-06-19
  */
 public class SettingsImpl implements EditorSettings {
-    @Nullable
-    protected final EditorEx myEditor;
-    @Nullable
-    private final Supplier<Language> myLanguageSupplier;
+    protected final @Nullable EditorEx myEditor;
+    private final @Nullable Supplier<Language> myLanguageSupplier;
     private Boolean myIsCamelWords;
 
     // This group of settings does not have UI
@@ -233,8 +231,7 @@ public class SettingsImpl implements EditorSettings {
         return myRightMargin != null ? myRightMargin : CodeStyle.getProjectOrDefaultSettings(project).getRightMargin(getLanguage());
     }
 
-    @Nullable
-    private static Language getDocumentLanguage(@Nullable Project project, Document document) {
+    private static @Nullable Language getDocumentLanguage(@Nullable Project project, Document document) {
         if (project != null) {
             SimpleReference<Language> result = SimpleReference.create();
             Application.get().tryRunReadAction(result, () -> {
@@ -247,8 +244,7 @@ public class SettingsImpl implements EditorSettings {
         return null;
     }
 
-    @Nullable
-    private Language getLanguage() {
+    private @Nullable Language getLanguage() {
         return myLanguageSupplier != null ? myLanguageSupplier.get() : null;
     }
 
@@ -441,8 +437,7 @@ public class SettingsImpl implements EditorSettings {
         return tabSize;
     }
 
-    @Nullable
-    protected PsiFile getPsiFile(@Nullable Project project) {
+    protected @Nullable PsiFile getPsiFile(@Nullable Project project) {
         if (project != null && myEditor != null) {
             SimpleReference<PsiFile> result = SimpleReference.create();
             Application.get().tryRunReadAction(result, () -> PsiDocumentManager.getInstance(project).getPsiFile(myEditor.getDocument()));

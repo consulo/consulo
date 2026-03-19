@@ -40,8 +40,7 @@ public interface PsiCopyPasteManager {
     return Application.get().getInstance(PsiCopyPasteManager.class);
   }
 
-  @Nullable
-  public PsiElement[] getElements(boolean[] isCopied);
+  public @Nullable PsiElement[] getElements(boolean[] isCopied);
 
   public void setElements(PsiElement[] elements, boolean copied);
 
@@ -49,8 +48,7 @@ public interface PsiCopyPasteManager {
 
   public boolean isCutElement(Object element);
 
-  @Nullable
-  public static List<File> asFileList(PsiElement[] elements) {
+  public static @Nullable List<File> asFileList(PsiElement[] elements) {
     List<File> result = new ArrayList<>();
     for (PsiElement element : elements) {
       PsiFileSystemItem psiFile;

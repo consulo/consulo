@@ -141,8 +141,7 @@ public class VcsUtil {
         return getVcsFor(project, getFilePath(path)) == host;
     }
 
-    @Nullable
-    public static AbstractVcs getVcsFor(final Project project, final FilePath file) {
+    public static @Nullable AbstractVcs getVcsFor(final Project project, final FilePath file) {
         final AbstractVcs[] vcss = new AbstractVcs[1];
         ApplicationManager.getApplication().runReadAction(new Runnable() {
             @Override
@@ -158,8 +157,7 @@ public class VcsUtil {
         return vcss[0];
     }
 
-    @Nullable
-    public static AbstractVcs getVcsFor(final Project project, final VirtualFile file) {
+    public static @Nullable AbstractVcs getVcsFor(final Project project, final VirtualFile file) {
         final AbstractVcs[] vcss = new AbstractVcs[1];
 
         ApplicationManager.getApplication().runReadAction(new Runnable() {
@@ -176,8 +174,7 @@ public class VcsUtil {
         return vcss[0];
     }
 
-    @Nullable
-    public static VirtualFile getVcsRootFor(final Project project, final FilePath file) {
+    public static @Nullable VirtualFile getVcsRootFor(final Project project, final FilePath file) {
         final VirtualFile[] roots = new VirtualFile[1];
 
         ApplicationManager.getApplication().runReadAction(new Runnable() {
@@ -194,8 +191,7 @@ public class VcsUtil {
         return roots[0];
     }
 
-    @Nullable
-    public static VirtualFile getVcsRootFor(final Project project, final VirtualFile file) {
+    public static @Nullable VirtualFile getVcsRootFor(final Project project, final VirtualFile file) {
         final VirtualFile[] roots = new VirtualFile[1];
 
         ApplicationManager.getApplication().runReadAction(new Runnable() {
@@ -250,8 +246,7 @@ public class VcsUtil {
         return result;
     }
 
-    @Nullable
-    private static VirtualFile findFileFor(File root) {
+    private static @Nullable VirtualFile findFileFor(File root) {
         File current = root;
         while (current != null) {
             VirtualFile vFile = LocalFileSystem.getInstance().findFileByIoFile(root);
@@ -264,30 +259,25 @@ public class VcsUtil {
         return null;
     }
 
-    @Nullable
-    public static VirtualFile getVirtualFile(final String path) {
+    public static @Nullable VirtualFile getVirtualFile(final String path) {
         return ApplicationManager.getApplication().runReadAction(new Supplier<VirtualFile>() {
             @Override
-            @Nullable
-            public VirtualFile get() {
+            public @Nullable VirtualFile get() {
                 return LocalFileSystem.getInstance().findFileByPath(path.replace(File.separatorChar, '/'));
             }
         });
     }
 
-    @Nullable
-    public static VirtualFile getVirtualFile(final File file) {
+    public static @Nullable VirtualFile getVirtualFile(final File file) {
         return ApplicationManager.getApplication().runReadAction(new Supplier<VirtualFile>() {
             @Override
-            @Nullable
-            public VirtualFile get() {
+            public @Nullable VirtualFile get() {
                 return LocalFileSystem.getInstance().findFileByIoFile(file);
             }
         });
     }
 
-    @Nullable
-    public static VirtualFile getVirtualFileWithRefresh(File file) {
+    public static @Nullable VirtualFile getVirtualFileWithRefresh(File file) {
         if (file == null) {
             return null;
         }
@@ -310,8 +300,7 @@ public class VcsUtil {
         });
     }
 
-    @Nullable
-    public static byte[] getFileByteContent(File file) {
+    public static @Nullable byte[] getFileByteContent(File file) {
         try {
             return RawFileLoader.getInstance().loadFileBytes(file);
         }
@@ -438,8 +427,7 @@ public class VcsUtil {
      * @return <code>VirtualFile</code> available in the current context.
      * Returns not <code>null</code> if and only if exectly one file is available.
      */
-    @Nullable
-    public static VirtualFile getOneVirtualFile(AnActionEvent e) {
+    public static @Nullable VirtualFile getOneVirtualFile(AnActionEvent e) {
         VirtualFile[] files = getVirtualFiles(e);
         return (files.length != 1) ? null : files[0];
     }
@@ -668,8 +656,7 @@ public class VcsUtil {
         return mappings;
     }
 
-    @Nullable
-    public static <T> T getIfSingle(@Nullable Stream<T> items) {
+    public static @Nullable <T> T getIfSingle(@Nullable Stream<T> items) {
         return items == null ? null : items.limit(2).map(Optional::ofNullable).reduce(Optional.empty(), (a, b) -> a.isPresent() ^ b.isPresent() ? b : Optional.empty()).orElse(null);
     }
 
@@ -716,8 +703,7 @@ public class VcsUtil {
         return symlink != null ? symlink : file;
     }
 
-    @Nullable
-    public static VirtualFile resolveSymlink(Project project, @Nullable VirtualFile file) {
+    public static @Nullable VirtualFile resolveSymlink(Project project, @Nullable VirtualFile file) {
         if (file == null) {
             return null;
         }

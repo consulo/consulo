@@ -26,8 +26,7 @@ import org.jspecify.annotations.Nullable;
  * @author peter
  */
 public interface CodeStyleSettingsBase {
-    @Nullable
-    default CustomCodeStyleSettings createCustomSettings(CodeStyleSettings settings) {
+    default @Nullable CustomCodeStyleSettings createCustomSettings(CodeStyleSettings settings) {
         return null;
     }
 
@@ -56,8 +55,7 @@ public interface CodeStyleSettingsBase {
      *
      * @return null by default.
      */
-    @Nullable
-    default Language getLanguage() {
+    default @Nullable Language getLanguage() {
         return null;
     }
 }

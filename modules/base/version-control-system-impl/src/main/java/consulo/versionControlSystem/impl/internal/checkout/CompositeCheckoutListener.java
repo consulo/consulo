@@ -113,8 +113,7 @@ public class CompositeCheckoutListener implements CheckoutProvider.Listener {
         }
     }
 
-    @Nullable
-    static Project findProjectByBaseDirLocation(File directory) {
+    static @Nullable Project findProjectByBaseDirLocation(File directory) {
         return ContainerUtil.find(ProjectManager.getInstance().getOpenProjects(), project -> {
             VirtualFile baseDir = project.getBaseDir();
             return baseDir != null && FileUtil.filesEqual(VirtualFileUtil.virtualToIoFile(baseDir), directory);

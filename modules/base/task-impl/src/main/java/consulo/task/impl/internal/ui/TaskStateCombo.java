@@ -99,8 +99,7 @@ public abstract class TaskStateCombo extends JPanel {
     /**
      * @return {@code null} if no state is available at the moment or special "do not update" state was selected
      */
-    @Nullable
-    public CustomTaskState getSelectedState() {
+    public @Nullable CustomTaskState getSelectedState() {
         CustomStateTrinityAdapter item = (CustomStateTrinityAdapter) myKindCombo.getComboBox().getSelectedItem();
         if (item == null) {
             return null;
@@ -124,8 +123,7 @@ public abstract class TaskStateCombo extends JPanel {
      * @param available  tasks states already downloaded from the repository
      * @return task state to select
      */
-    @Nullable
-    protected abstract CustomTaskState getPreferredState(TaskRepository repository, Collection<CustomTaskState> available);
+    protected abstract @Nullable CustomTaskState getPreferredState(TaskRepository repository, Collection<CustomTaskState> available);
 
     private static class CustomStateTrinityAdapter extends Trinity<String, Icon, String> {
         final CustomTaskState myState;

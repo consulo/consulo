@@ -41,8 +41,7 @@ public interface EncodingRegistry {
   void setEncoding(@Nullable VirtualFile virtualFileOrDir, @Nullable Charset charset);
 
   // "null means 'use system-default'"
-  @Nullable
-  default Charset getDefaultCharsetForPropertiesFiles(@Nullable VirtualFile virtualFile) {
+  default @Nullable Charset getDefaultCharsetForPropertiesFiles(@Nullable VirtualFile virtualFile) {
     return null;
   }
 
@@ -65,8 +64,7 @@ public interface EncodingRegistry {
     return doActionAndRestoreEncoding(getInstance(), fileBefore, action);
   }
 
-  @Nullable
-  public static <E extends Throwable> VirtualFile doActionAndRestoreEncoding(EncodingRegistry registry,
+  public static @Nullable <E extends Throwable> VirtualFile doActionAndRestoreEncoding(EncodingRegistry registry,
                                                                              VirtualFile fileBefore,
                                                                              ThrowableSupplier<? extends VirtualFile, E> action) throws E {
     Charset charsetBefore = registry.getEncoding(fileBefore, true);

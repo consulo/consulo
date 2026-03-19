@@ -56,8 +56,7 @@ abstract class AutoMatchStrategy {
     }
   }
 
-  @Nullable
-  protected Collection<VirtualFile> suggestFolderForCreation(TextFilePatch creation) {
+  protected @Nullable Collection<VirtualFile> suggestFolderForCreation(TextFilePatch creation) {
     String newFileParentPath = extractPathWithoutName(creation.getAfterName());
     if (newFileParentPath != null) {
       return filterVariants(creation, myFolderDecisions.get(newFileParentPath));
@@ -90,16 +89,14 @@ abstract class AutoMatchStrategy {
     return result;
   }
 
-  @Nullable
-  protected String extractPathWithoutName(String path) {
+  protected @Nullable String extractPathWithoutName(String path) {
     String replaced = path.replace("\\", "/");
     int idx = replaced.lastIndexOf('/');
     if (idx == -1) return null;
     return replaced.substring(0, idx);
   }
 
-  @Nullable
-  protected TextFilePatchInProgress processMatch(TextFilePatch patch, VirtualFile file) {
+  protected @Nullable TextFilePatchInProgress processMatch(TextFilePatch patch, VirtualFile file) {
     String beforeName = patch.getBeforeName();
     if (beforeName == null) return null;
     String[] parts = beforeName.replace('\\', '/').split("/");

@@ -72,10 +72,8 @@ public abstract class AbstractExternalSystemConfigurable<ProjectSettings extends
   
   private final Project myProject;
 
-  @Nullable
-  private ExternalSystemSettingsControl<SystemSettings> mySystemSettingsControl;
-  @Nullable
-  private ExternalSystemSettingsControl<ProjectSettings> myActiveProjectSettingsControl;
+  private @Nullable ExternalSystemSettingsControl<SystemSettings> mySystemSettingsControl;
+  private @Nullable ExternalSystemSettingsControl<ProjectSettings> myActiveProjectSettingsControl;
 
   private PaintAwarePanel myComponent;
   private JBList<String> myProjectsList;
@@ -194,8 +192,7 @@ public abstract class AbstractExternalSystemConfigurable<ProjectSettings extends
    * @return a control for managing given system-level settings;
    * <code>null</code> if current external system doesn't have system-level settings (only project-level settings)
    */
-  @Nullable
-  protected abstract ExternalSystemSettingsControl<SystemSettings> createSystemSettingsControl(SystemSettings settings);
+  protected abstract @Nullable ExternalSystemSettingsControl<SystemSettings> createSystemSettingsControl(SystemSettings settings);
 
   @RequiredUIAccess
   @Override

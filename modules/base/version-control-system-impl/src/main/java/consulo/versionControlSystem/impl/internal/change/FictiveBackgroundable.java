@@ -28,7 +28,7 @@ import static consulo.project.util.WaitForProgressToShow.runOrInvokeLaterAbovePr
 class FictiveBackgroundable extends Task.Backgroundable {
   
   private final Waiter myWaiter;
-  @Nullable private final ModalityState myState;
+  private final @Nullable ModalityState myState;
 
   FictiveBackgroundable(Project project,
                         Runnable runnable,

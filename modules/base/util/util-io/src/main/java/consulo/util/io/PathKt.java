@@ -34,8 +34,7 @@ public class PathKt {
     return Files.newInputStream(path);
   }
 
-  @Nullable
-  public static InputStream inputStreamIfExists(Path path) throws IOException {
+  public static @Nullable InputStream inputStreamIfExists(Path path) throws IOException {
     try {
       return inputStream(path);
     }
@@ -122,8 +121,7 @@ public class PathKt {
     });
   }
 
-  @Nullable
-  public static BasicFileAttributes basicAttributesIfExists(Path path) throws IOException {
+  public static @Nullable BasicFileAttributes basicAttributesIfExists(Path path) throws IOException {
     try {
       return Files.readAttributes(path, BasicFileAttributes.class);
     }

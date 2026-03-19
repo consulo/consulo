@@ -43,8 +43,7 @@ public abstract class ArtifactPropertiesProvider {
     
     public abstract ArtifactProperties<?> createProperties(ArtifactType artifactType);
 
-    @Nullable
-    public static ArtifactPropertiesProvider findById(String id) {
+    public static @Nullable ArtifactPropertiesProvider findById(String id) {
         return Application.get().getExtensionPoint(ArtifactPropertiesProvider.class)
             .findFirstSafe(provider -> provider.getId().equals(id));
     }

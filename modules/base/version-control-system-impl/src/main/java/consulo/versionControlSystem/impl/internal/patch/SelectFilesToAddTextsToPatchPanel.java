@@ -70,8 +70,7 @@ public class SelectFilesToAddTextsToPatchPanel {
     return virtualFile.getLength() > VcsConfiguration.ourMaximumFileForBaseRevisionSize;
   }
 
-  @Nullable
-  private static VirtualFile getVfFromChange(Change change) {
+  private static @Nullable VirtualFile getVfFromChange(Change change) {
     ContentRevision after = change.getAfterRevision();
     return after != null ? after.getFile().getVirtualFile() : null;
   }

@@ -38,8 +38,7 @@ public interface BookmarkNodeProvider {
   @Nullable
   Collection<AbstractTreeNode> getFavoriteNodes(DataContext context, ViewSettings viewSettings);
 
-  @Nullable
-  default AbstractTreeNode createNode(Project project, Object element, ViewSettings viewSettings) {
+  default @Nullable AbstractTreeNode createNode(Project project, Object element, ViewSettings viewSettings) {
     return null;
   }
 
@@ -117,8 +116,7 @@ public interface BookmarkNodeProvider {
   @Nullable
   Object[] createPathFromUrl(Project project, String url, String moduleName);
 
-  @Nullable
-  default PsiElement getPsiElement(Object element) {
+  default @Nullable PsiElement getPsiElement(Object element) {
     if (element instanceof PsiElement) {
       return (PsiElement)element;
     }

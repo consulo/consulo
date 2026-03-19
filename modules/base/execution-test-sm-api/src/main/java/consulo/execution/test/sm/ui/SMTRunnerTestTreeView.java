@@ -33,8 +33,7 @@ import javax.swing.tree.TreePath;
 public class SMTRunnerTestTreeView extends TestTreeView {
     public static final Key<SMTRunnerTestTreeView> SM_TEST_RUNNER_VIEW = Key.create("SM_TEST_RUNNER_VIEW");
 
-    @Nullable
-    private TestResultsViewer myResultsViewer;
+    private @Nullable TestResultsViewer myResultsViewer;
 
     @Override
     protected TreeCellRenderer getRenderer(TestConsoleProperties properties) {
@@ -50,8 +49,7 @@ public class SMTRunnerTestTreeView extends TestTreeView {
         return getTestProxyFor(lastComponent);
     }
 
-    @Nullable
-    public static SMTestProxy getTestProxyFor(Object treeNode) {
+    public static @Nullable SMTestProxy getTestProxyFor(Object treeNode) {
         Object userObj = ((DefaultMutableTreeNode) treeNode).getUserObject();
         if (userObj instanceof SMTRunnerNodeDescriptor runnerNodeDescriptor) {
             return runnerNodeDescriptor.getElement();
@@ -64,8 +62,7 @@ public class SMTRunnerTestTreeView extends TestTreeView {
         myResultsViewer = resultsViewer;
     }
 
-    @Nullable
-    public TestResultsViewer getResultsViewer() {
+    public @Nullable TestResultsViewer getResultsViewer() {
         return myResultsViewer;
     }
 

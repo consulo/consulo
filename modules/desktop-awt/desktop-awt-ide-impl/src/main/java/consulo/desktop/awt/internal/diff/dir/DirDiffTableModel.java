@@ -463,8 +463,7 @@ public class DirDiffTableModel extends AbstractTableModel implements DirDiffMode
         return IdeLocalize.diffDialogTitle(mySrc.getPresentablePath(), myTrg.getPresentablePath()).get();
     }
 
-    @Nullable
-    public DirDiffElementImpl getElementAt(int index) {
+    public @Nullable DirDiffElementImpl getElementAt(int index) {
         return 0 <= index && index < myElements.size() ? myElements.get(index) : null;
     }
 

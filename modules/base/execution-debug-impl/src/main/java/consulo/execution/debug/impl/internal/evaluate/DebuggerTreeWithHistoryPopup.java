@@ -44,7 +44,7 @@ class DebuggerTreeWithHistoryPopup<D> extends DebuggerTreeWithHistoryContainer<D
   private JBPopup myPopup;
   private final Editor myEditor;
   private final Point myPoint;
-  @Nullable private final Runnable myHideRunnable;
+  private final @Nullable Runnable myHideRunnable;
 
   private DebuggerTreeWithHistoryPopup(
     D initialItem,

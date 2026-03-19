@@ -345,8 +345,7 @@ public final class FocusManagerImpl implements ApplicationIdeFocusManager, Dispo
     return instance != null ? instance : findInstanceByContext(null);
   }
 
-  @Nullable
-  private IdeFocusManager findByComponent(Component c) {
+  private @Nullable IdeFocusManager findByComponent(Component c) {
     Component parent = UIUtil.findUltimateParent(c);
     if (parent instanceof Window) {
       consulo.ui.Window uiWindow = TargetAWT.from((Window)parent);
@@ -392,8 +391,7 @@ public final class FocusManagerImpl implements ApplicationIdeFocusManager, Dispo
     return this;
   }
 
-  @Nullable
-  static IdeFocusManager getInstanceSafe(@Nullable Project project) {
+  static @Nullable IdeFocusManager getInstanceSafe(@Nullable Project project) {
     if (project != null && !project.isDisposed() && project.isInitialized()) {
       return ProjectIdeFocusManager.getInstance(project);
     }

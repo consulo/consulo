@@ -35,13 +35,11 @@ public abstract class SpeedSearchSupply {
   public static final Key<String> SPEED_SEARCH_CURRENT_QUERY = Key.create("SPEED_SEARCH_CURRENT_QUERY");
   public static final String ENTERED_PREFIX_PROPERTY_NAME = "enteredPrefix";
 
-  @Nullable
-  public static SpeedSearchSupply getSupply(JComponent component) {
+  public static @Nullable SpeedSearchSupply getSupply(JComponent component) {
     return getSupply(component, false);
   }
 
-  @Nullable
-  public static SpeedSearchSupply getSupply(JComponent component, boolean evenIfInactive) {
+  public static @Nullable SpeedSearchSupply getSupply(JComponent component, boolean evenIfInactive) {
     SpeedSearchSupply speedSearch = (SpeedSearchSupply)component.getClientProperty(SPEED_SEARCH_COMPONENT_MARKER);
 
     if (evenIfInactive) {
@@ -51,8 +49,7 @@ public abstract class SpeedSearchSupply {
     return speedSearch != null && speedSearch.isPopupActive() ? speedSearch : null;
   }
 
-  @Nullable
-  public abstract Iterable<MatcherTextRange> matchingFragments(String text);
+  public abstract @Nullable Iterable<MatcherTextRange> matchingFragments(String text);
 
   /**
    * Selects element according to search criteria changes
@@ -61,8 +58,7 @@ public abstract class SpeedSearchSupply {
 
   public abstract boolean isPopupActive();
 
-  @Nullable
-  public String getEnteredPrefix() {
+  public @Nullable String getEnteredPrefix() {
     return null;
   }
 

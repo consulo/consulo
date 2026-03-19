@@ -83,8 +83,7 @@ public abstract class WindowManager {
   /**
    * Get the status bar for the project's main frame
    */
-  @Nullable
-  public abstract StatusBar getStatusBar(Project project);
+  public abstract @Nullable StatusBar getStatusBar(Project project);
 
   /**
    * Get the status bar for the component, it may be either the main status bar or the status bar for an undocked window
@@ -104,8 +103,7 @@ public abstract class WindowManager {
   }
 
   @Deprecated
-  @Nullable
-  public JFrame getFrame(@Nullable Project project) {
+  public @Nullable JFrame getFrame(@Nullable Project project) {
     consulo.ui.Window window = getWindow(project);
     return (JFrame)TargetAWT.to(window);
   }
@@ -146,8 +144,7 @@ public abstract class WindowManager {
     return frame == null ? null : frame.getWindow();
   }
 
-  @Nullable
-  public abstract IdeFrame findVisibleIdeFrame();
+  public abstract @Nullable IdeFrame findVisibleIdeFrame();
 
   public abstract void addListener(WindowManagerListener listener);
 
@@ -175,6 +172,5 @@ public abstract class WindowManager {
    * the method returns focused component in window which has no project.
    * If there is no focused component at all then the method returns <code>null</code>.
    */
-  @Nullable
-  public abstract Component getFocusedComponent(@Nullable Project project);
+  public abstract @Nullable Component getFocusedComponent(@Nullable Project project);
 }

@@ -24,8 +24,8 @@ import org.jspecify.annotations.Nullable;
 public class AddList implements ChangeListCommand {
   
   private final String myName;
-  @Nullable private final String myComment;
-  @Nullable private final Object myData;
+  private final @Nullable String myComment;
+  private final @Nullable Object myData;
 
   private LocalChangeList myNewListCopy;
 

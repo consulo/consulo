@@ -48,14 +48,12 @@ public abstract class EditorCopyPasteHelper {
    *
    * @return ranges of text in the document, corresponding to pasted fragments, if paste succeeds, or <code>null</code> otherwise
    */
-  @Nullable
-  public abstract TextRange[] pasteFromClipboard(Editor editor);
+  public abstract @Nullable TextRange[] pasteFromClipboard(Editor editor);
 
   /**
    * Pastes given Transferable instance into editor at caret(s) position.
    *
    * @return ranges of text in the document, corresponding to pasted fragments, if paste succeeds, or <code>null</code> otherwise
    */
-  @Nullable
-  public abstract TextRange[] pasteTransferable(Editor editor, Transferable content);
+  public abstract @Nullable TextRange[] pasteTransferable(Editor editor, Transferable content);
 }

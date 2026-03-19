@@ -185,8 +185,7 @@ public final class DesktopWindowWatcher implements PropertyChangeListener {
         }
     }
 
-    @Nullable
-    public final Component getFocusedComponent(@Nullable Project project) {
+    public final @Nullable Component getFocusedComponent(@Nullable Project project) {
         synchronized (myLock) {
             Window window = getFocusedWindowForProject(project);
             if (window == null) {
@@ -224,8 +223,7 @@ public final class DesktopWindowWatcher implements PropertyChangeListener {
         }
     }
 
-    @Nullable
-    public FocusWatcher getFocusWatcherFor(Component c) {
+    public @Nullable FocusWatcher getFocusWatcherFor(Component c) {
         Window window = SwingUtilities.getWindowAncestor(c);
         WindowInfo info = myWindow2Info.get(TargetAWT.from(window));
         return info == null ? null : info.myFocusWatcherRef.get();
@@ -298,8 +296,7 @@ public final class DesktopWindowWatcher implements PropertyChangeListener {
      * @return active window for specified <code>project</code>. There is only one window
      * for project can be at any point of time.
      */
-    @Nullable
-    private Window getFocusedWindowForProject(@Nullable Project project) {
+    private @Nullable Window getFocusedWindowForProject(@Nullable Project project) {
         //todo[anton,vova]: it is possible that returned wnd is not contained in myFocusedWindows; investigate
         outer:
         for (consulo.ui.Window window : myFocusedWindows) {

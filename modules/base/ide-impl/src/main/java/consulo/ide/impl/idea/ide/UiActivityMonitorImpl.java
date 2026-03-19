@@ -274,8 +274,7 @@ public class UiActivityMonitorImpl extends UiActivityMonitor implements Disposab
     private final Set<UiActivity> myActivities = new HashSet<>();
 
     private boolean myRemovingActivityNow;
-    @Nullable
-    private final Project myProject;
+    private final @Nullable Project myProject;
 
     public BusyContainer(@Nullable Project project) {
       myProject = project;

@@ -58,18 +58,15 @@ public class FormatterUtil {
         return false;
     }
 
-    @Nullable
-    public static ASTNode getPrevious(@Nullable ASTNode node, IElementType... typesToIgnore) {
+    public static @Nullable ASTNode getPrevious(@Nullable ASTNode node, IElementType... typesToIgnore) {
         return getNextOrPrevious(node, false, typesToIgnore);
     }
 
-    @Nullable
-    public static ASTNode getNext(@Nullable ASTNode node, IElementType... typesToIgnore) {
+    public static @Nullable ASTNode getNext(@Nullable ASTNode node, IElementType... typesToIgnore) {
         return getNextOrPrevious(node, true, typesToIgnore);
     }
 
-    @Nullable
-    private static ASTNode getNextOrPrevious(@Nullable ASTNode node, boolean isNext, IElementType... typesToIgnore) {
+    private static @Nullable ASTNode getNextOrPrevious(@Nullable ASTNode node, boolean isNext, IElementType... typesToIgnore) {
         if (node == null) {
             return null;
         }
@@ -94,8 +91,7 @@ public class FormatterUtil {
         return each;
     }
 
-    @Nullable
-    public static ASTNode getPreviousLeaf(@Nullable ASTNode node, IElementType... typesToIgnore) {
+    public static @Nullable ASTNode getPreviousLeaf(@Nullable ASTNode node, IElementType... typesToIgnore) {
         ASTNode prev = getPrevious(node, typesToIgnore);
         if (prev == null) {
             return null;
@@ -116,13 +112,11 @@ public class FormatterUtil {
         return result;
     }
 
-    @Nullable
-    public static ASTNode getPreviousNonWhitespaceLeaf(@Nullable ASTNode node) {
+    public static @Nullable ASTNode getPreviousNonWhitespaceLeaf(@Nullable ASTNode node) {
         return CodeStyleInternalHelper.getInstance().getPreviousNonWhitespaceLeaf(node);
     }
 
-    @Nullable
-    public static ASTNode getPreviousNonWhitespaceSibling(@Nullable ASTNode node) {
+    public static @Nullable ASTNode getPreviousNonWhitespaceSibling(@Nullable ASTNode node) {
         ASTNode prevNode = node == null ? null : node.getTreePrev();
         while (prevNode != null && isWhitespaceOrEmpty(prevNode)) {
             prevNode = prevNode.getTreePrev();
@@ -130,8 +124,7 @@ public class FormatterUtil {
         return prevNode;
     }
 
-    @Nullable
-    public static ASTNode getNextNonWhitespaceSibling(@Nullable ASTNode node) {
+    public static @Nullable ASTNode getNextNonWhitespaceSibling(@Nullable ASTNode node) {
         ASTNode next = node == null ? null : node.getTreeNext();
         while (next != null && isWhitespaceOrEmpty(next)) {
             next = next.getTreeNext();

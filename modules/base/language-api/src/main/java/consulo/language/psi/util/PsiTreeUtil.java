@@ -123,8 +123,7 @@ public class PsiTreeUtil {
         }
     }
 
-    @Nullable
-    public static PsiElement findCommonParent(List<? extends PsiElement> elements) {
+    public static @Nullable PsiElement findCommonParent(List<? extends PsiElement> elements) {
         if (elements.isEmpty()) {
             return null;
         }
@@ -142,8 +141,7 @@ public class PsiTreeUtil {
         return toReturn;
     }
 
-    @Nullable
-    public static PsiElement findCommonParent(PsiElement... elements) {
+    public static @Nullable PsiElement findCommonParent(PsiElement... elements) {
         if (elements.length == 0) {
             return null;
         }
@@ -161,8 +159,7 @@ public class PsiTreeUtil {
         return toReturn;
     }
 
-    @Nullable
-    public static PsiElement findCommonParent(PsiElement element1, PsiElement element2) {
+    public static @Nullable PsiElement findCommonParent(PsiElement element1, PsiElement element2) {
         // optimization
         if (element1 == element2) {
             return element1;
@@ -196,13 +193,11 @@ public class PsiTreeUtil {
         return parents;
     }
 
-    @Nullable
-    public static PsiElement findCommonContext(PsiElement... elements) {
+    public static @Nullable PsiElement findCommonContext(PsiElement... elements) {
         return findCommonContext(Arrays.asList(elements));
     }
 
-    @Nullable
-    public static PsiElement findCommonContext(Collection<? extends PsiElement> elements) {
+    public static @Nullable PsiElement findCommonContext(Collection<? extends PsiElement> elements) {
         if (elements.isEmpty()) {
             return null;
         }
@@ -219,8 +214,7 @@ public class PsiTreeUtil {
         return toReturn;
     }
 
-    @Nullable
-    public static PsiElement findCommonContext(PsiElement element1, PsiElement element2) {
+    public static @Nullable PsiElement findCommonContext(PsiElement element1, PsiElement element2) {
         // optimization
         if (element1 == element2) {
             return element1;
@@ -306,7 +300,7 @@ public class PsiTreeUtil {
     @SafeVarargs
     @SuppressWarnings("unchecked")
     public static <T extends PsiElement> T findChildOfAnyType(
-        @Nullable final PsiElement element,
+        final @Nullable PsiElement element,
         final boolean strict,
         final Class<? extends T>... classes
     ) {
@@ -334,7 +328,7 @@ public class PsiTreeUtil {
     @SafeVarargs
     @RequiredReadAction
     public static <T extends PsiElement> Collection<T> findChildrenOfAnyType(
-        @Nullable final PsiElement element,
+        final @Nullable PsiElement element,
         final Class<? extends T>... classes
     ) {
         if (element == null) {
@@ -374,13 +368,11 @@ public class PsiTreeUtil {
         return null;
     }
 
-    @Nullable
-    public static PsiElement findFirstParent(@Nullable PsiElement element, Predicate<PsiElement> condition) {
+    public static @Nullable PsiElement findFirstParent(@Nullable PsiElement element, Predicate<PsiElement> condition) {
         return findFirstParent(element, false, condition);
     }
 
-    @Nullable
-    public static PsiElement findFirstParent(@Nullable PsiElement element, boolean strict, Predicate<PsiElement> condition) {
+    public static @Nullable PsiElement findFirstParent(@Nullable PsiElement element, boolean strict, Predicate<PsiElement> condition) {
         if (strict && element != null) {
             element = element.getParent();
         }

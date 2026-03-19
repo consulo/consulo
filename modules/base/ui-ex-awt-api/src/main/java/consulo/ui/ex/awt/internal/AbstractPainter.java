@@ -57,8 +57,7 @@ public abstract class AbstractPainter implements Painter {
     myListeners.remove(listener);
   }
 
-  @Nullable
-  public <T> T setNeedsRepaint(T oldValue, T newValue) {
+  public @Nullable <T> T setNeedsRepaint(T oldValue, T newValue) {
     if (!myNeedsRepaint) {
       if (oldValue != null) {
         setNeedsRepaint(!oldValue.equals(newValue));
@@ -74,8 +73,7 @@ public abstract class AbstractPainter implements Painter {
     return newValue;
   }
 
-  @Nullable
-  public <T> T setNeedsRepaint(T oldValue, T newValue, JComponent dirtyComponent) {
+  public @Nullable <T> T setNeedsRepaint(T oldValue, T newValue, JComponent dirtyComponent) {
     if (!myNeedsRepaint) {
       if (oldValue != null) {
         setNeedsRepaint(!oldValue.equals(newValue));

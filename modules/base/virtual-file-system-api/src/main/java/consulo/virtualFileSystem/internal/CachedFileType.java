@@ -10,15 +10,13 @@ import java.util.concurrent.ConcurrentMap;
 public class CachedFileType {
   private static final ConcurrentMap<FileType, CachedFileType> ourInterner = new ConcurrentHashMap<>();
 
-  @Nullable
-  private FileType fileType;
+  private @Nullable FileType fileType;
 
   private CachedFileType(FileType fileType) {
     this.fileType = fileType;
   }
 
-  @Nullable
-  public FileType getUpToDateOrNull() {
+  public @Nullable FileType getUpToDateOrNull() {
     return fileType;
   }
 

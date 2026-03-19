@@ -58,8 +58,7 @@ public class NewLibraryEditor extends LibraryEditorBase {
   }
 
   @Override
-  @Nullable
-  public LibraryType<?> getType() {
+  public @Nullable LibraryType<?> getType() {
     return myType;
   }
 

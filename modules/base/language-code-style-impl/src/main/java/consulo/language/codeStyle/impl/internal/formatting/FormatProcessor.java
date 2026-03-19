@@ -183,8 +183,7 @@ public class FormatProcessor {
     return adjuster.adjustLineIndent(info);
   }
 
-  @Nullable
-  private static ChildAttributesInfo getChildAttributesInfo(Block block, int index, @Nullable AbstractBlockWrapper parent) {
+  private static @Nullable ChildAttributesInfo getChildAttributesInfo(Block block, int index, @Nullable AbstractBlockWrapper parent) {
     if (parent == null) {
       return null;
     }
@@ -240,8 +239,7 @@ public class FormatProcessor {
     }
   }
 
-  @Nullable
-  private static AbstractBlockWrapper getParentFor(int offset, AbstractBlockWrapper block) {
+  private static @Nullable AbstractBlockWrapper getParentFor(int offset, AbstractBlockWrapper block) {
     AbstractBlockWrapper current = block;
     while (current != null) {
       if (current.getStartOffset() < offset && current.getEndOffset() >= offset) {
@@ -252,8 +250,7 @@ public class FormatProcessor {
     return null;
   }
 
-  @Nullable
-  private AbstractBlockWrapper getParentFor(int offset, LeafBlockWrapper block) {
+  private @Nullable AbstractBlockWrapper getParentFor(int offset, LeafBlockWrapper block) {
     AbstractBlockWrapper previous = getPreviousIncompleteBlock(block, offset);
     if (previous != null) {
       return getLastNestedCompositeBlockForSameRange(previous);
@@ -263,8 +260,7 @@ public class FormatProcessor {
     }
   }
 
-  @Nullable
-  private AbstractBlockWrapper getPreviousIncompleteBlock(LeafBlockWrapper block, int offset) {
+  private @Nullable AbstractBlockWrapper getPreviousIncompleteBlock(LeafBlockWrapper block, int offset) {
     if (block == null) {
       LeafBlockWrapper lastTokenBlock = myWrapState.getLastBlock();
       if (lastTokenBlock.isIncomplete()) {
@@ -309,8 +305,7 @@ public class FormatProcessor {
     return currentResult;
   }
 
-  @Nullable
-  private static AbstractBlockWrapper getLastChildOf(AbstractBlockWrapper currentResult) {
+  private static @Nullable AbstractBlockWrapper getLastChildOf(AbstractBlockWrapper currentResult) {
     AbstractBlockWrapper parentBlockToUse = getLastNestedCompositeBlockForSameRange(currentResult);
     if (!(parentBlockToUse instanceof CompositeBlockWrapper)) return null;
     List<AbstractBlockWrapper> subBlocks = ((CompositeBlockWrapper)parentBlockToUse).getChildren();

@@ -20,8 +20,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
 class SecureJarLoader extends JarLoader {
-  @Nullable
-  private ProtectionDomain myProtectionDomain = null;
+  private @Nullable ProtectionDomain myProtectionDomain = null;
   private final Object myProtectionDomainMonitor = new Object();
 
   SecureJarLoader(URL url, int index, ClassPath configuration, @Nullable Set<String> fullJarIndex) throws IOException {

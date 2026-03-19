@@ -70,8 +70,7 @@ public class MacNativeUIUtil {
     startModal(component, MAC_NATIVE_WINDOW_SHOWING);
   }
 
-  @Nullable
-  public static String getWindowTitle(Window documentRoot) {
+  public static @Nullable String getWindowTitle(Window documentRoot) {
     String windowTitle = null;
     if (documentRoot instanceof Frame) {
       windowTitle = ((Frame)documentRoot).getTitle();

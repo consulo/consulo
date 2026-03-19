@@ -123,8 +123,7 @@ public class ActionsTreeUtil {
         return group;
     }
 
-    @Nullable
-    private static Predicate<AnAction> wrapFilter(
+    private static @Nullable Predicate<AnAction> wrapFilter(
         @Nullable Predicate<AnAction> filter,
         Keymap keymap,
         ActionManager actionManager

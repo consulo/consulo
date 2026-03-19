@@ -73,8 +73,7 @@ public class ImportSourceChooserDialog<S extends Named> extends DialogWrapper {
         mySelectedSourceName = name;
     }
 
-    @Nullable
-    public String getSelectedSourceName() {
+    public @Nullable String getSelectedSourceName() {
         return mySelectedSourceName;
     }
 

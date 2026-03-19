@@ -94,8 +94,7 @@ public interface RefManager {
     
     RefEntity getRefinedElement(RefEntity ref);
 
-    @Nullable
-    default Element export(RefEntity entity, Element parent, int actualLine) {
+    default @Nullable Element export(RefEntity entity, Element parent, int actualLine) {
         Element element = export(entity, actualLine);
         if (element == null) {
             return null;
@@ -104,8 +103,7 @@ public interface RefManager {
         return element;
     }
 
-    @Nullable
-    default Element export(RefEntity entity, int actualLine) {
+    default @Nullable Element export(RefEntity entity, int actualLine) {
         throw new UnsupportedOperationException();
     }
 
@@ -130,8 +128,7 @@ public interface RefManager {
         return true;
     }
 
-    @Nullable
-    default PsiNamedElement getContainerElement(PsiElement element) {
+    default @Nullable PsiNamedElement getContainerElement(PsiElement element) {
         return null;
     }
 }

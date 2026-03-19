@@ -50,8 +50,7 @@ public interface FileDocumentManager extends SavingRequestor {
      * @param file the file for which the document is requested.
      * @return the document, or null if the specified virtual file hasn't been loaded into memory.
      */
-    @Nullable
-    public abstract Document getCachedDocument(VirtualFile file);
+    public abstract @Nullable Document getCachedDocument(VirtualFile file);
 
     /**
      * Returns the virtual file corresponding to the specified document.
@@ -59,8 +58,7 @@ public interface FileDocumentManager extends SavingRequestor {
      * @param document the document for which the virtual file is requested.
      * @return the file, or null if the document wasn't created from a virtual file.
      */
-    @Nullable
-    public abstract VirtualFile getFile(Document document);
+    public abstract @Nullable VirtualFile getFile(Document document);
 
     /**
      * Saves all unsaved documents to disk. This operation can modify documents that will be saved

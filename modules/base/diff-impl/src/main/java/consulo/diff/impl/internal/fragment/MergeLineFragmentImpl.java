@@ -31,8 +31,7 @@ public class MergeLineFragmentImpl implements MergeLineFragment {
   private final int myStartLine3;
   private final int myEndLine3;
 
-  @Nullable
-  private final List<MergeWordFragment> myInnerFragments;
+  private final @Nullable List<MergeWordFragment> myInnerFragments;
 
   public MergeLineFragmentImpl(int startLine1,
                                int endLine1,

@@ -36,15 +36,13 @@ import java.util.function.Function;
  */
 public final class VcsRevisionNumberArrayRule {
 
-  @Nullable
-  public static VcsRevisionNumber[] getData(DataSnapshot dataProvider) {
+  public static @Nullable VcsRevisionNumber[] getData(DataSnapshot dataProvider) {
     List<VcsRevisionNumber> revisionNumbers = getRevisionNumbers(dataProvider);
 
     return !ContainerUtil.isEmpty(revisionNumbers) ? ArrayUtil.toObjectArray(revisionNumbers, VcsRevisionNumber.class) : null;
   }
 
-  @Nullable
-  public static List<VcsRevisionNumber> getRevisionNumbers(DataSnapshot dataProvider) {
+  public static @Nullable List<VcsRevisionNumber> getRevisionNumbers(DataSnapshot dataProvider) {
     VcsRevisionNumber revisionNumber = dataProvider.get(VcsDataKeys.VCS_REVISION_NUMBER);
     if (revisionNumber != null) {
       return Collections.singletonList(revisionNumber);

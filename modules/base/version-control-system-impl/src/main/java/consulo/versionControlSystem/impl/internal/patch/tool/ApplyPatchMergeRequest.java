@@ -29,8 +29,7 @@ import org.jspecify.annotations.Nullable;
 import java.util.function.Consumer;
 
 public class ApplyPatchMergeRequest extends MergeRequest implements ApplyPatchRequest {
-    @Nullable
-    private final Project myProject;
+    private final @Nullable Project myProject;
 
     
     private final DocumentContent myResultContent;
@@ -42,8 +41,7 @@ public class ApplyPatchMergeRequest extends MergeRequest implements ApplyPatchRe
     
     private final String myLocalContent;
 
-    @Nullable
-    private final String myWindowTitle;
+    private final @Nullable String myWindowTitle;
     
     private final String myLocalTitle;
     
@@ -51,8 +49,7 @@ public class ApplyPatchMergeRequest extends MergeRequest implements ApplyPatchRe
     
     private final String myPatchTitle;
 
-    @Nullable
-    private final Consumer<MergeResult> myCallback;
+    private final @Nullable Consumer<MergeResult> myCallback;
 
     public ApplyPatchMergeRequest(
         @Nullable Project project,
@@ -81,8 +78,7 @@ public class ApplyPatchMergeRequest extends MergeRequest implements ApplyPatchRe
         myCallback = callback;
     }
 
-    @Nullable
-    public Project getProject() {
+    public @Nullable Project getProject() {
         return myProject;
     }
 

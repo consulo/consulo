@@ -48,10 +48,9 @@ public class ArrangementEntryWrapper<E extends ArrangementEntry> {
   
   private final E myEntry;
 
-  @Nullable private ArrangementEntryWrapper<E> myParent;
-  @Nullable private ArrangementEntryWrapper<E> myPrevious;
-  @Nullable
-  private ArrangementEntryWrapper<E> myNext;
+  private @Nullable ArrangementEntryWrapper<E> myParent;
+  private @Nullable ArrangementEntryWrapper<E> myPrevious;
+  private @Nullable ArrangementEntryWrapper<E> myNext;
 
   private int myStartOffset;
   private int myEndOffset;
@@ -92,8 +91,7 @@ public class ArrangementEntryWrapper<E extends ArrangementEntry> {
     myEndOffset = endOffset;
   }
 
-  @Nullable
-  public ArrangementEntryWrapper<E> getParent() {
+  public @Nullable ArrangementEntryWrapper<E> getParent() {
     return myParent;
   }
 
@@ -101,8 +99,7 @@ public class ArrangementEntryWrapper<E extends ArrangementEntry> {
     myParent = parent;
   }
 
-  @Nullable
-  public ArrangementEntryWrapper<E> getPrevious() {
+  public @Nullable ArrangementEntryWrapper<E> getPrevious() {
     return myPrevious;
   }
 
@@ -110,8 +107,7 @@ public class ArrangementEntryWrapper<E extends ArrangementEntry> {
     myPrevious = previous;
   }
 
-  @Nullable
-  public ArrangementEntryWrapper<E> getNext() {
+  public @Nullable ArrangementEntryWrapper<E> getNext() {
     return myNext;
   }
 

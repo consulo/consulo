@@ -41,8 +41,7 @@ public abstract class AbstractToolBeforeRunTask<ToolBeforeRunTask extends Abstra
     super(providerId);
   }
 
-  @Nullable
-  public String getToolActionId() {
+  public @Nullable String getToolActionId() {
     return myToolActionId;
   }
 
@@ -97,8 +96,7 @@ public abstract class AbstractToolBeforeRunTask<ToolBeforeRunTask extends Abstra
     return result;
   }
 
-  @Nullable
-  public T findCorrespondingTool() {
+  public @Nullable T findCorrespondingTool() {
     if (myToolActionId == null) {
       return null;
     }

@@ -199,8 +199,7 @@ public abstract class CustomFoldingBuilder extends FoldingBuilderEx implements P
         return set != null && element != null && set.contains(element.getNode());
     }
 
-    @Nullable
-    private CustomFoldingProvider getDefaultProvider(String elementText) {
+    private @Nullable CustomFoldingProvider getDefaultProvider(String elementText) {
         if (myDefaultProvider == null) {
             for (CustomFoldingProvider provider : CustomFoldingProvider.EP_NAME.getExtensionList()) {
                 if (provider.isCustomRegionStart(elementText) || provider.isCustomRegionEnd(elementText)) {

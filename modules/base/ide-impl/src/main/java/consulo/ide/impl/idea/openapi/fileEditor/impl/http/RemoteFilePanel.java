@@ -70,8 +70,7 @@ public class RemoteFilePanel implements PropertyChangeListener {
     private final MergingUpdateQueue myProgressUpdatesQueue;
     private final MyDownloadingListener myDownloadingListener;
     private final EventDispatcher<PropertyChangeListener> myDispatcher = EventDispatcher.create(PropertyChangeListener.class);
-    @Nullable
-    private TextEditor myFileEditor;
+    private @Nullable TextEditor myFileEditor;
 
     public RemoteFilePanel(Project project, HttpVirtualFile virtualFile) {
         myProject = project;
@@ -133,8 +132,7 @@ public class RemoteFilePanel implements PropertyChangeListener {
         });
     }
 
-    @Nullable
-    public TextEditor getFileEditor() {
+    public @Nullable TextEditor getFileEditor() {
         return myFileEditor;
     }
 

@@ -16,8 +16,7 @@ public class Outcome<V> {
     myException = exception;
   }
 
-  @Nullable
-  public V get() {
+  public @Nullable V get() {
     return myData;
   }
 
@@ -25,8 +24,7 @@ public class Outcome<V> {
     return myCancelled;
   }
 
-  @Nullable
-  public Exception getException() {
+  public @Nullable Exception getException() {
     return myException;
   }
 

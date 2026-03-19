@@ -21,8 +21,7 @@ public class LookupOffsets implements DocumentListener {
   private String myAdditionalPrefix = "";
 
   private boolean myStableStart;
-  @Nullable
-  private Supplier<String> myStartMarkerDisposeInfo = null;
+  private @Nullable Supplier<String> myStartMarkerDisposeInfo = null;
   
   private RangeMarker myLookupStartMarker;
   private int myRemovedPrefix;

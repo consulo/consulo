@@ -28,8 +28,7 @@ public abstract class IndentStatusBarUIContributor implements CodeStyleStatusBar
      *
      * @return The indent options source hint or {@code null} if not available.
      */
-    @Nullable
-    public abstract String getHint();
+    public abstract @Nullable String getHint();
 
     @Nullable
     @Override

@@ -55,8 +55,7 @@ public abstract class XExecutionStack {
     return myDisplayName;
   }
 
-  @Nullable
-  public final Image getIcon() {
+  public final @Nullable Image getIcon() {
     return myIcon;
   }
 
@@ -65,8 +64,7 @@ public abstract class XExecutionStack {
    * left of the execution line when this thread is selected in 'Frames' tab.
    * @return
    */
-  @Nullable
-  public GutterIconRenderer getExecutionLineIconRenderer() {
+  public @Nullable GutterIconRenderer getExecutionLineIconRenderer() {
     return null;
   }
 
@@ -74,8 +72,7 @@ public abstract class XExecutionStack {
    * Return top stack frame synchronously
    * @return top stack frame or <code>null</code> if it isn't available
    */
-  @Nullable
-  public abstract XStackFrame getTopFrame();
+  public abstract @Nullable XStackFrame getTopFrame();
 
   /**
    * Start computing stack frames top-down starting from <code>firstFrameIndex</code>. This method is called from the Event Dispatch Thread

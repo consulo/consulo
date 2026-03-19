@@ -24,9 +24,9 @@ import org.jspecify.annotations.Nullable;
  * @author peter
  */
 public class FilterPattern extends ObjectPattern<Object,FilterPattern> {
-  @Nullable private final ElementFilter myFilter;
+  private final @Nullable ElementFilter myFilter;
 
-  public FilterPattern(@Nullable final ElementFilter filter) {
+  public FilterPattern(final @Nullable ElementFilter filter) {
     super(new InitialPatternCondition<Object>(Object.class) {
       @Override
       public boolean accepts(@Nullable Object o, ProcessingContext context) {

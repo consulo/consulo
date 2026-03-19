@@ -217,8 +217,7 @@ public class HttpProxyManagerImpl implements PersistentStateComponent<HttpProxyM
 
     @Override
     @Transient
-    @Nullable
-    public String getProxyLogin() {
+    public @Nullable String getProxyLogin() {
         return getSecure("proxy.login");
     }
 
@@ -229,8 +228,7 @@ public class HttpProxyManagerImpl implements PersistentStateComponent<HttpProxyM
 
     @Override
     @Transient
-    @Nullable
-    public String getPlainProxyPassword() {
+    public @Nullable String getPlainProxyPassword() {
         return getSecure("proxy.password");
     }
 

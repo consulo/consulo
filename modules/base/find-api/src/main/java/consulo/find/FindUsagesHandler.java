@@ -119,8 +119,7 @@ public abstract class FindUsagesHandler {
         return PsiElement.EMPTY_ARRAY;
     }
 
-    @Nullable
-    public String getHelpId() {
+    public @Nullable String getHelpId() {
         return AccessRule.read(() -> FindUsagesHelper.getHelpID(myPsiElement));
     }
 
@@ -197,8 +196,7 @@ public abstract class FindUsagesHandler {
         return stringToSearch == null || FindUsagesHelper.processUsagesInText(element, stringToSearch, searchScope, processor);
         }
 
-    @Nullable
-    protected Collection<String> getStringsToSearch(PsiElement element) {
+    protected @Nullable Collection<String> getStringsToSearch(PsiElement element) {
         if (element instanceof PsiNamedElement) {
             return ContainerUtil.createMaybeSingletonList(((PsiNamedElement)element).getName());
         }

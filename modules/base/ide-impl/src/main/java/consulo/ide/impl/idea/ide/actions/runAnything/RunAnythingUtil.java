@@ -113,8 +113,7 @@ public class RunAnythingUtil {
         });
     }
 
-    @Nullable
-    public static RunAnythingSearchListModel getSearchingModel(JBList list) {
+    public static @Nullable RunAnythingSearchListModel getSearchingModel(JBList list) {
         return list.getModel() instanceof RunAnythingSearchListModel model ? model : null;
     }
 }

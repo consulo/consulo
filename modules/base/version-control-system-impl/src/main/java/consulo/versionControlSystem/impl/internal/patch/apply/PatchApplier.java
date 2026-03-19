@@ -70,10 +70,8 @@ public class PatchApplier<BinaryType extends FilePatch> {
     private boolean mySystemOperation;
 
     private final boolean myReverseConflict;
-    @Nullable
-    private final String myLeftConflictPanelTitle;
-    @Nullable
-    private final String myRightConflictPanelTitle;
+    private final @Nullable String myLeftConflictPanelTitle;
+    private final @Nullable String myRightConflictPanelTitle;
 
     public PatchApplier(
         Project project,
@@ -99,8 +97,7 @@ public class PatchApplier<BinaryType extends FilePatch> {
         myFailedPatches = new ArrayList<>();
         myVerifier = new PathsVerifier<>(myProject, myBaseDirectory, myPatches, new PathsVerifier.BaseMapper() {
             @Override
-            @Nullable
-            public VirtualFile getFile(FilePatch patch, String path) {
+            public @Nullable VirtualFile getFile(FilePatch patch, String path) {
                 return PathMerger.getFile(myBaseDirectory, path);
             }
 
@@ -154,8 +151,7 @@ public class PatchApplier<BinaryType extends FilePatch> {
         mySystemOperation = systemOperation;
     }
 
-    @Nullable
-    private static Consumer<Collection<FilePath>> createMover(Project project, LocalChangeList targetChangeList) {
+    private static @Nullable Consumer<Collection<FilePath>> createMover(Project project, LocalChangeList targetChangeList) {
         ChangeListManager clm = ChangeListManager.getInstance(project);
         if (targetChangeList == null || clm.getDefaultListName().equals(targetChangeList.getName())) {
             return null;

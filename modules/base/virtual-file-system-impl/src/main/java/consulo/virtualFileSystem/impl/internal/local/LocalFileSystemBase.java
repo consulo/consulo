@@ -44,8 +44,7 @@ public abstract class LocalFileSystemBase extends LocalFileSystem {
     private final DiskQueryRelay<Path, String[]> myNioChildrenGetter = new DiskQueryRelay<>(LocalFileSystemBase::listPathChildren);
 
     @Override
-    @Nullable
-    public VirtualFile findFileByPath(String path) {
+    public @Nullable VirtualFile findFileByPath(String path) {
         return VfsImplUtil.findFileByPath(this, path);
     }
 
@@ -55,8 +54,7 @@ public abstract class LocalFileSystemBase extends LocalFileSystem {
     }
 
     @Override
-    @Nullable
-    public VirtualFile refreshAndFindFileByPath(String path) {
+    public @Nullable VirtualFile refreshAndFindFileByPath(String path) {
         return VfsImplUtil.refreshAndFindFileByPath(this, path);
     }
 
@@ -146,8 +144,7 @@ public abstract class LocalFileSystemBase extends LocalFileSystem {
     }
 
     @Override
-    @Nullable
-    public String normalize(String path) {
+    public @Nullable String normalize(String path) {
         if (path.isEmpty()) {
             try {
                 path = new File("").getCanonicalPath();
@@ -776,13 +773,11 @@ public abstract class LocalFileSystemBase extends LocalFileSystem {
     }
 
     @Override
-    @Nullable
-    public Path getNioPath(VirtualFile file) {
+    public @Nullable Path getNioPath(VirtualFile file) {
         return file.getFileSystem() == this ? Paths.get(toIoPath(file)) : null;
     }
 
-    @Nullable
-    private static FileAttributes getAttributesWithCustomTimestamp(VirtualFile file) {
+    private static @Nullable FileAttributes getAttributesWithCustomTimestamp(VirtualFile file) {
         var pathStr = FileUtil.toSystemDependentName(file.getPath());
         if (pathStr.length() == 2 && pathStr.charAt(1) == ':') {
             pathStr += '\\';
@@ -791,8 +786,7 @@ public abstract class LocalFileSystemBase extends LocalFileSystem {
         return copyWithCustomTimestamp(file, attributes);
     }
 
-    @Nullable
-    private static FileAttributes copyWithCustomTimestamp(VirtualFile file, @Nullable FileAttributes attributes) {
+    private static @Nullable FileAttributes copyWithCustomTimestamp(VirtualFile file, @Nullable FileAttributes attributes) {
         return attributes;
     }
 

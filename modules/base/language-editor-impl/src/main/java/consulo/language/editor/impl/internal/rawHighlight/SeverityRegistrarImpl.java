@@ -119,8 +119,7 @@ public class SeverityRegistrarImpl implements JDOMExternalizable, Comparator<Hig
     }
 
     @Override
-    @Nullable
-    public TextAttributes getTextAttributesBySeverity(HighlightSeverity severity) {
+    public @Nullable TextAttributes getTextAttributesBySeverity(HighlightSeverity severity) {
         SeverityBasedTextAttributes infoType = getAttributesBySeverity(severity);
         if (infoType != null) {
             return infoType.getAttributes();
@@ -230,8 +229,7 @@ public class SeverityRegistrarImpl implements JDOMExternalizable, Comparator<Hig
     }
 
     @Override
-    @Nullable
-    public HighlightSeverity getSeverityByIndex(int i) {
+    public @Nullable HighlightSeverity getSeverityByIndex(int i) {
         for (ObjectIntMap.Entry<HighlightSeverity> entry : getOrderMap().entrySet()) {
             if (entry.getValue() == i) {
                 return entry.getKey();
@@ -252,8 +250,7 @@ public class SeverityRegistrarImpl implements JDOMExternalizable, Comparator<Hig
         return max;
     }
 
-    @Nullable
-    public HighlightSeverity getSeverity(String name) {
+    public @Nullable HighlightSeverity getSeverity(String name) {
         HighlightInfoType type = STANDARD_SEVERITIES.get(name);
         if (type != null) {
             return type.getSeverity(null);
@@ -274,8 +271,7 @@ public class SeverityRegistrarImpl implements JDOMExternalizable, Comparator<Hig
         return list;
     }
 
-    @Nullable
-    public Image getRendererIconByIndex(int i) {
+    public @Nullable Image getRendererIconByIndex(int i) {
         HighlightSeverity severity = getSeverityByIndex(i);
         HighlightDisplayLevel level = HighlightDisplayLevel.find(severity);
         if (level != null) {

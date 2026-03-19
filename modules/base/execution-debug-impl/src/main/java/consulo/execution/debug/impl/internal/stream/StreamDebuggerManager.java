@@ -53,8 +53,7 @@ public final class StreamDebuggerManager implements XDebuggerManagerListener, Di
         sessionStates.remove(debugProcess.getSession());
     }
 
-    @Nullable
-    public ChainStatus getChainStatus(XDebugSession id) {
+    public @Nullable ChainStatus getChainStatus(XDebugSession id) {
         TraceDebuggerStateListener listener = sessionStates.get(id);
         return listener != null ? listener.getChainStatus() : null;
     }

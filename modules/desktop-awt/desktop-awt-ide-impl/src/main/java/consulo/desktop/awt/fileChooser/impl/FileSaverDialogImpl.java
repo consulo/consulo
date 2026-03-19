@@ -63,8 +63,7 @@ public class FileSaverDialogImpl extends FileChooserDialogImpl implements FileSa
     return title != null ? title : UIBundle.message("file.chooser.save.dialog.default.title");
   }
 
-  @Nullable
-  public VirtualFileWrapper save(@Nullable VirtualFile baseDir, @Nullable String filename) {
+  public @Nullable VirtualFileWrapper save(@Nullable VirtualFile baseDir, @Nullable String filename) {
     init();
     restoreSelection(baseDir);
     myFileSystemTree.addListener(new FileSystemTree.Listener() {
@@ -87,8 +86,7 @@ public class FileSaverDialogImpl extends FileChooserDialogImpl implements FileSa
     return null;
   }
 
-  @Nullable
-  protected File getFile() {
+  protected @Nullable File getFile() {
     VirtualFile selected = myFileSystemTree.getSelectedFile();
     if (selected != null && !selected.isDirectory()) {
       return new File(selected.getPath());

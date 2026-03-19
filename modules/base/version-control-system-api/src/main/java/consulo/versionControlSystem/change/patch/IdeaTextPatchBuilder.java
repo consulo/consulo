@@ -106,13 +106,11 @@ public class IdeaTextPatchBuilder {
     );
   }
 
-  @Nullable
-  private static AirContentRevision convertRevisionToAir(ContentRevision cr) {
+  private static @Nullable AirContentRevision convertRevisionToAir(ContentRevision cr) {
     return convertRevisionToAir(cr, null);
   }
 
-  @Nullable
-  private static AirContentRevision convertRevisionToAir(final ContentRevision cr, final Long ts) {
+  private static @Nullable AirContentRevision convertRevisionToAir(final ContentRevision cr, final Long ts) {
     if (cr == null) return null;
     final FilePath fp = cr.getFile();
     final StaticPathDescription description = new StaticPathDescription(fp.isDirectory(),
@@ -178,8 +176,7 @@ public class IdeaTextPatchBuilder {
     }
   }
 
-  @Nullable
-  private static AirContentRevision convertRevision(@Nullable ContentRevision cr, VcsOutgoingChangesProvider provider) {
+  private static @Nullable AirContentRevision convertRevision(@Nullable ContentRevision cr, VcsOutgoingChangesProvider provider) {
     if (cr == null) return null;
     Date date = provider.getRevisionDate(cr.getRevisionNumber(), cr.getFile());
     Long ts = date == null ? null : date.getTime();

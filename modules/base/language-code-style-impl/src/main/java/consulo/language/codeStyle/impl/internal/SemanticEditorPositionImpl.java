@@ -220,8 +220,7 @@ public class SemanticEditorPositionImpl implements SemanticEditorPosition {
     }
 
     @Override
-    @Nullable
-    public SyntaxElement elementAfterOnSameLine(SyntaxElement... syntaxElements) {
+    public @Nullable SyntaxElement elementAfterOnSameLine(SyntaxElement... syntaxElements) {
         myIterator.retreat();
         while (!myIterator.atEnd() && !isAtMultiline()) {
             SyntaxElement currElement = map((IElementType) myIterator.getTokenType());
@@ -299,8 +298,7 @@ public class SemanticEditorPositionImpl implements SemanticEditorPosition {
     }
 
     @Override
-    @Nullable
-    public Language getLanguage() {
+    public @Nullable Language getLanguage() {
         return !myIterator.atEnd() ? ((IElementType) myIterator.getTokenType()).getLanguage() : null;
     }
 
@@ -313,8 +311,7 @@ public class SemanticEditorPositionImpl implements SemanticEditorPosition {
     }
 
     @Override
-    @Nullable
-    public SyntaxElement getCurrElement() {
+    public @Nullable SyntaxElement getCurrElement() {
         return !myIterator.atEnd() ? map((IElementType) myIterator.getTokenType()) : null;
     }
 

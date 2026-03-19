@@ -68,13 +68,10 @@ public class PlatformOrPluginDialog extends DialogWrapper {
     private JComponent myRoot;
     
     private List<PlatformOrPluginNode> myNodes;
-    @Nullable
-    private Project myProject;
-    @Nullable
-    private Consumer<Collection<PluginDescriptor>> myAfterCallback;
+    private @Nullable Project myProject;
+    private @Nullable Consumer<Collection<PluginDescriptor>> myAfterCallback;
     private final boolean myModalProgress;
-    @Nullable
-    private String myPlatformVersion;
+    private @Nullable String myPlatformVersion;
     
     private Predicate<PluginId> myGreenStrategy;
     

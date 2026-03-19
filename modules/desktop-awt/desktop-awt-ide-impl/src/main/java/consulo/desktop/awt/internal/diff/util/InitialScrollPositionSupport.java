@@ -37,12 +37,9 @@ public class InitialScrollPositionSupport {
   public abstract static class InitialScrollHelperBase {
     protected boolean myShouldScroll = true;
 
-    @Nullable
-    protected ScrollToPolicy myScrollToChange;
-    @Nullable
-    protected EditorsVisiblePositions myEditorsPosition;
-    @Nullable
-    protected LogicalPosition[] myCaretPosition;
+    protected @Nullable ScrollToPolicy myScrollToChange;
+    protected @Nullable EditorsVisiblePositions myEditorsPosition;
+    protected @Nullable LogicalPosition[] myCaretPosition;
 
     public void processContext(DiffRequest request) {
       myScrollToChange = request.getUserData(DiffUserDataKeysEx.SCROLL_TO_CHANGE);
@@ -59,11 +56,9 @@ public class InitialScrollPositionSupport {
       request.putUserData(DiffUserDataKeysEx.EDITORS_CARET_POSITION, carets);
     }
 
-    @Nullable
-    protected abstract LogicalPosition[] getCaretPositions();
+    protected abstract @Nullable LogicalPosition[] getCaretPositions();
 
-    @Nullable
-    protected abstract EditorsVisiblePositions getVisiblePositions();
+    protected abstract @Nullable EditorsVisiblePositions getVisiblePositions();
   }
 
   private static abstract class SideInitialScrollHelper extends InitialScrollHelperBase {
@@ -109,10 +104,8 @@ public class InitialScrollPositionSupport {
   }
 
   public static abstract class TwosideInitialScrollHelper extends SideInitialScrollHelper {
-    @Nullable
-    protected Pair<Side, Integer> myScrollToLine;
-    @Nullable
-    protected DiffNavigationContext myNavigationContext;
+    protected @Nullable Pair<Side, Integer> myScrollToLine;
+    protected @Nullable DiffNavigationContext myNavigationContext;
 
     @Override
     public void processContext(DiffRequest request) {
@@ -162,8 +155,7 @@ public class InitialScrollPositionSupport {
   }
 
   public static abstract class ThreesideInitialScrollHelper extends SideInitialScrollHelper {
-    @Nullable
-    protected Pair<ThreeSide, Integer> myScrollToLine;
+    protected @Nullable Pair<ThreeSide, Integer> myScrollToLine;
 
     @Override
     public void processContext(DiffRequest request) {
@@ -224,8 +216,7 @@ public class InitialScrollPositionSupport {
     return carets;
   }
 
-  @Nullable
-  public static EditorsVisiblePositions doGetVisiblePositions(List<? extends Editor> editors) {
+  public static @Nullable EditorsVisiblePositions doGetVisiblePositions(List<? extends Editor> editors) {
     LogicalPosition[] carets = doGetCaretPositions(editors);
     Point[] points = doGetScrollingPositions(editors);
     return new EditorsVisiblePositions(carets, points);

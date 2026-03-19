@@ -103,8 +103,7 @@ public class UnifiedDiffViewer extends ListenerDiffViewerBase {
 
     protected Side myMasterSide = Side.RIGHT;
 
-    @Nullable
-    private ChangedBlockData myChangedBlockData;
+    private @Nullable ChangedBlockData myChangedBlockData;
 
     private final boolean[] myForceReadOnlyFlags;
     private boolean myReadOnlyLockSet = false;
@@ -383,8 +382,7 @@ public class UnifiedDiffViewer extends ListenerDiffViewerBase {
         }
     }
 
-    @Nullable
-    private EditorHighlighter buildHighlighter(
+    private @Nullable EditorHighlighter buildHighlighter(
         @Nullable Project project,
         DocumentContent content1,
         DocumentContent content2,
@@ -949,8 +947,7 @@ public class UnifiedDiffViewer extends ListenerDiffViewerBase {
     }
 
     @RequiredUIAccess
-    @Nullable
-    protected List<UnifiedDiffChange> getDiffChanges() {
+    protected @Nullable List<UnifiedDiffChange> getDiffChanges() {
         return myChangedBlockData == null ? null : myChangedBlockData.getDiffChanges();
     }
 
@@ -1037,8 +1034,7 @@ public class UnifiedDiffViewer extends ListenerDiffViewerBase {
     }
 
     @RequiredUIAccess
-    @Nullable
-    protected Navigatable getNavigatable(int offset) {
+    protected @Nullable Navigatable getNavigatable(int offset) {
         LogicalPosition position = myEditor.offsetToLogicalPosition(offset);
         Pair<int[], Side> pair = transferLineFromOneside(position.line);
         int line1 = pair.first[0];
@@ -1263,10 +1259,8 @@ public class UnifiedDiffViewer extends ListenerDiffViewerBase {
 
     private static class TwosideDocumentData {
         private final UnifiedFragmentBuilder myBuilder;
-        @Nullable
-        private final EditorHighlighter myHighlighter;
-        @Nullable
-        private final UnifiedEditorRangeHighlighter myRangeHighlighter;
+        private final @Nullable EditorHighlighter myHighlighter;
+        private final @Nullable UnifiedEditorRangeHighlighter myRangeHighlighter;
 
         public TwosideDocumentData(
             UnifiedFragmentBuilder builder,
@@ -1282,13 +1276,11 @@ public class UnifiedDiffViewer extends ListenerDiffViewerBase {
             return myBuilder;
         }
 
-        @Nullable
-        public EditorHighlighter getHighlighter() {
+        public @Nullable EditorHighlighter getHighlighter() {
             return myHighlighter;
         }
 
-        @Nullable
-        public UnifiedEditorRangeHighlighter getRangeHighlighter() {
+        public @Nullable UnifiedEditorRangeHighlighter getRangeHighlighter() {
             return myRangeHighlighter;
         }
     }
@@ -1330,12 +1322,9 @@ public class UnifiedDiffViewer extends ListenerDiffViewerBase {
 
     private static class CombinedEditorData {
         private final CharSequence myText;
-        @Nullable
-        private final EditorHighlighter myHighlighter;
-        @Nullable
-        private final UnifiedEditorRangeHighlighter myRangeHighlighter;
-        @Nullable
-        private final FileType myFileType;
+        private final @Nullable EditorHighlighter myHighlighter;
+        private final @Nullable UnifiedEditorRangeHighlighter myRangeHighlighter;
+        private final @Nullable FileType myFileType;
         private final IntUnaryOperator myLineConvertor1;
         private final IntUnaryOperator myLineConvertor2;
 
@@ -1359,18 +1348,15 @@ public class UnifiedDiffViewer extends ListenerDiffViewerBase {
             return myText;
         }
 
-        @Nullable
-        public EditorHighlighter getHighlighter() {
+        public @Nullable EditorHighlighter getHighlighter() {
             return myHighlighter;
         }
 
-        @Nullable
-        public UnifiedEditorRangeHighlighter getRangeHighlighter() {
+        public @Nullable UnifiedEditorRangeHighlighter getRangeHighlighter() {
             return myRangeHighlighter;
         }
 
-        @Nullable
-        public FileType getFileType() {
+        public @Nullable FileType getFileType() {
             return myFileType;
         }
 

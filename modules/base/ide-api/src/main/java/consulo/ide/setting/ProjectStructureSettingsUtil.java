@@ -33,13 +33,11 @@ public interface ProjectStructureSettingsUtil {
   
   SettingsSdksModel getSdksModel();
 
-  @Nullable
-  default ModulesConfigurator getModulesModel(Project project) {
+  default @Nullable ModulesConfigurator getModulesModel(Project project) {
     return null;
   }
 
-  @Nullable
-  default LibrariesConfigurator getLibrariesModel(Project project) {
+  default @Nullable LibrariesConfigurator getLibrariesModel(Project project) {
     return null;
   }
 }

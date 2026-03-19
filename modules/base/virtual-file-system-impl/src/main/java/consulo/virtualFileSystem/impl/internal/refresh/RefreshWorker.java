@@ -282,8 +282,7 @@ public class RefreshWorker {
     });
   }
 
-  @Nullable
-  private static ChildInfo childRecord(NewVirtualFileSystem fs, VirtualFile dir, String name) {
+  private static @Nullable ChildInfo childRecord(NewVirtualFileSystem fs, VirtualFile dir, String name) {
     FakeVirtualFile file = new FakeVirtualFile(dir, name);
     FileAttributes attributes = fs.getAttributes(file);
     if (attributes == null) return null;

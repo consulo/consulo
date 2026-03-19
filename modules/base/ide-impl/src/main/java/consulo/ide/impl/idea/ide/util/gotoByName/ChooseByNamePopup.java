@@ -378,8 +378,7 @@ public class ChooseByNamePopup extends ChooseByNameBase implements ChooseByNameP
     return -1;
   }
 
-  @Nullable
-  public String getPathToAnonymous() {
+  public @Nullable String getPathToAnonymous() {
     Matcher matcher = patternToDetectAnonymousClasses.matcher(getTrimmedText());
     return pathToAnonymousClass(matcher);
   }
@@ -388,8 +387,7 @@ public class ChooseByNamePopup extends ChooseByNameBase implements ChooseByNameP
     return getLineOrColumn(false);
   }
 
-  @Nullable
-  public String getMemberPattern() {
+  public @Nullable String getMemberPattern() {
     String enteredText = getTrimmedText();
     int index = enteredText.lastIndexOf('#');
     if (index == -1) {

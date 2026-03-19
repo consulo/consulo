@@ -33,13 +33,11 @@ public interface EditorTabColorProvider {
     @Nullable
     ColorValue getEditorTabColor(Project project, VirtualFile file);
 
-    @Nullable
-    default ColorValue getEditorTabColor(Project project, VirtualFile file, @Nullable FileEditorWindow editorWindow) {
+    default @Nullable ColorValue getEditorTabColor(Project project, VirtualFile file, @Nullable FileEditorWindow editorWindow) {
         return getEditorTabColor(project, file);
     }
 
-    @Nullable
-    default ColorValue getProjectViewColor(Project project, VirtualFile file) {
+    default @Nullable ColorValue getProjectViewColor(Project project, VirtualFile file) {
         return null;
     }
 }

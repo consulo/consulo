@@ -347,8 +347,7 @@ public class ScopeEditorPanel {
         rebuild(true);
     }
 
-    @Nullable
-    static PackageSet processComplementaryScope(
+    static @Nullable PackageSet processComplementaryScope(
         PackageSet current,
         PackageSet added,
         boolean checkComplementSet,
@@ -396,8 +395,7 @@ public class ScopeEditorPanel {
         return current;
     }
 
-    @Nullable
-    private ArrayList<PackageSet> getSelectedSets(boolean recursively) {
+    private @Nullable ArrayList<PackageSet> getSelectedSets(boolean recursively) {
         int[] rows = myPackageTree.getSelectionRows();
         if (rows == null) {
             return null;

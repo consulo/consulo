@@ -48,8 +48,7 @@ public class Iterables {
                 return new Iterator<>() {
                     private final Iterator<? extends T> impl = collection.iterator();
 
-                    @Nullable
-                    private T next = findNext();
+                    private @Nullable T next = findNext();
 
                     @Override
                     public boolean hasNext() {
@@ -64,8 +63,7 @@ public class Iterables {
                         return result;
                     }
 
-                    @Nullable
-                    private T findNext() {
+                    private @Nullable T findNext() {
                         while (impl.hasNext()) {
                             T each = impl.next();
                             if (condition.test(each)) {

@@ -219,8 +219,7 @@ public abstract class CodeStyleManager {
      * @return the indent string (containing of tabs and/or whitespaces), or {@code null} if it
      * was not possible to calculate the indent.
      */
-    @Nullable
-    public abstract String getLineIndent(PsiFile file, int offset);
+    public abstract @Nullable String getLineIndent(PsiFile file, int offset);
 
     /**
      * Calculates the indent that should be used for the specified line in
@@ -233,8 +232,7 @@ public abstract class CodeStyleManager {
      * @return the indent string (containing of tabs and/or whitespaces), or {@code null} if it
      * was not possible to calculate the indent.
      */
-    @Nullable
-    public String getLineIndent(PsiFile file, int offset, FormattingMode mode) {
+    public @Nullable String getLineIndent(PsiFile file, int offset, FormattingMode mode) {
         return getLineIndent(file, offset);
     }
 
@@ -246,8 +244,7 @@ public abstract class CodeStyleManager {
      * @return the indent string (containing of tabs and/or whitespaces), or {@code null} if it
      * was not possible to calculate the indent.
      */
-    @Nullable
-    public abstract String getLineIndent(Document document, int offset);
+    public abstract @Nullable String getLineIndent(Document document, int offset);
 
 
     /**

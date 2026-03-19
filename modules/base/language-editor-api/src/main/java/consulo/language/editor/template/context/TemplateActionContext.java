@@ -16,8 +16,7 @@ import org.jspecify.annotations.Nullable;
 public final class TemplateActionContext {
   
   private final PsiFile myFile;
-  @Nullable
-  private final Editor myEditor;
+  private final @Nullable Editor myEditor;
 
   private final int myStartOffset;
   private final int myEndOffset;
@@ -39,8 +38,7 @@ public final class TemplateActionContext {
   /**
    * @return editor if file is currently opened in one. Sometimes context may be used with fake files, without any editors
    */
-  @Nullable
-  public Editor getEditor() {
+  public @Nullable Editor getEditor() {
     return myEditor;
   }
 

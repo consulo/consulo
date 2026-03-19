@@ -138,8 +138,7 @@ public abstract class AbstractViewManager implements ViewManager, BuildProgressL
     }
 
     //@ApiStatus.Internal
-    @Nullable
-    public BuildView getBuildView(Object buildId) {
+    public @Nullable BuildView getBuildView(Object buildId) {
         MultipleBuildsView buildsView = getMultipleBuildsView(buildId);
         if (buildsView == null) {
             return null;
@@ -155,8 +154,7 @@ public abstract class AbstractViewManager implements ViewManager, BuildProgressL
         toolbarActions.add(BuildTreeFilters.createFilteringActionsGroup(view));
     }
 
-    @Nullable
-    protected Image getContentIcon() {
+    protected @Nullable Image getContentIcon() {
         return null;
     }
 

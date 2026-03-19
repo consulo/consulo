@@ -24,8 +24,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public class ModelDiff {
-  @Nullable
-  public static List<Cmd> createDiffCmds(Model<Object> listModel, Object[] oldElements, Object[] newElements) {
+  public static @Nullable List<Cmd> createDiffCmds(Model<Object> listModel, Object[] oldElements, Object[] newElements) {
     Diff.Change change = null;
     try {
       change = Diff.buildChanges(oldElements, newElements);

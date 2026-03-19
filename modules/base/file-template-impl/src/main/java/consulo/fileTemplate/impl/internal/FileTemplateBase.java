@@ -34,8 +34,7 @@ import java.util.Properties;
 public abstract class FileTemplateBase implements FileTemplate {
   public static final boolean DEFAULT_REFORMAT_CODE_VALUE = true;
   public static final boolean DEFAULT_ENABLED_VALUE = true;
-  @Nullable
-  private String myText;
+  private @Nullable String myText;
   private boolean myShouldReformatCode = DEFAULT_REFORMAT_CODE_VALUE;
   private boolean myLiveTemplateEnabled;
 

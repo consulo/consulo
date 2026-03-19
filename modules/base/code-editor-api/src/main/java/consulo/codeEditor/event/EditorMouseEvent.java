@@ -47,8 +47,7 @@ public class EditorMouseEvent extends EventObject {
 
     
     private final MouseEvent myMouseEvent;
-    @Nullable
-    private final InputDetails myInputDetails;
+    private final @Nullable InputDetails myInputDetails;
     private boolean myConsumed;
     private final boolean myPopupTrigger;
 
@@ -106,8 +105,7 @@ public class EditorMouseEvent extends EventObject {
         return myMouseEvent;
     }
 
-    @Nullable
-    public InputDetails getInputDetails() {
+    public @Nullable InputDetails getInputDetails() {
         return myInputDetails;
     }
 
@@ -165,18 +163,15 @@ public class EditorMouseEvent extends EventObject {
         return myIsOverText;
     }
 
-    @Nullable
-    public FoldRegion getCollapsedFoldRegion() {
+    public @Nullable FoldRegion getCollapsedFoldRegion() {
         return myCollapsedFoldRegion == null || !myCollapsedFoldRegion.isValid() ? null : myCollapsedFoldRegion;
     }
 
-    @Nullable
-    public Inlay getInlay() {
+    public @Nullable Inlay getInlay() {
         return myInlay == null || !myInlay.isValid() ? null : myInlay;
     }
 
-    @Nullable
-    public GutterIconRenderer getGutterIconRenderer() {
+    public @Nullable GutterIconRenderer getGutterIconRenderer() {
         return myGutterIconRenderer;
     }
 }

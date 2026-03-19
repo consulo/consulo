@@ -37,13 +37,11 @@ public abstract class StateStorageBase<T extends StorageDataBase> implements Sta
   }
 
   @Override
-  @Nullable
-  public final <S> S getState(Object component, String componentName, Class<S> stateClass) throws StateStorageException {
+  public final @Nullable <S> S getState(Object component, String componentName, Class<S> stateClass) throws StateStorageException {
     return DefaultStateSerializer.deserializeState(getStateAndArchive(getStorageData(), componentName), stateClass);
   }
 
-  @Nullable
-  protected abstract Element getStateAndArchive(T storageData, String componentName);
+  protected abstract @Nullable Element getStateAndArchive(T storageData, String componentName);
 
   @Override
   public final boolean hasState(@Nullable Object component, String componentName, Class<?> aClass, boolean reloadData) {

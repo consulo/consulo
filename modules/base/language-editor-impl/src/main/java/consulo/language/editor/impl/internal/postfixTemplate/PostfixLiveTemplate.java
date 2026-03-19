@@ -96,8 +96,7 @@ public class PostfixLiveTemplate extends CustomLiveTemplateBase {
         return keys;
     }
 
-    @Nullable
-    private static String computeTemplateKeyWithoutContextChecking(
+    private static @Nullable String computeTemplateKeyWithoutContextChecking(
         PostfixTemplateProvider provider,
         CharSequence documentContent,
         int currentOffset

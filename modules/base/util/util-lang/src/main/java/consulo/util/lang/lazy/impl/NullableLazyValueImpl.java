@@ -29,8 +29,7 @@ public class NullableLazyValueImpl<T> implements LazyValue<T> {
 
   protected boolean myComputed;
 
-  @Nullable
-  protected volatile T myValue;
+  protected volatile @Nullable T myValue;
 
   public NullableLazyValueImpl(Supplier<T> factory) {
     myFactory = factory;

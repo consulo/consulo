@@ -56,8 +56,7 @@ public abstract class JBListWithHintProvider<T> extends JBList<T> {
     super(items);
   }
 
-  @Nullable
-  protected abstract PsiElement getPsiElementForHint(Object selectedValue);
+  protected abstract @Nullable PsiElement getPsiElementForHint(Object selectedValue);
 
   @Deprecated
   public void registerHint(JBPopup hint) {

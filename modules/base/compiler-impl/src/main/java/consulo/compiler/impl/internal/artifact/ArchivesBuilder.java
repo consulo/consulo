@@ -122,8 +122,7 @@ public class ArchivesBuilder {
         writtenPaths.add(toFile.getPath());
     }
 
-    @Nullable
-    private ArchivePackageInfo[] sortArchives() {
+    private @Nullable ArchivePackageInfo[] sortArchives() {
         DFSTBuilder<ArchivePackageInfo> builder =
             new DFSTBuilder<>(GraphGenerator.generate(CachingSemiGraph.cache(new ArchivesGraph())));
         if (!builder.isAcyclic()) {

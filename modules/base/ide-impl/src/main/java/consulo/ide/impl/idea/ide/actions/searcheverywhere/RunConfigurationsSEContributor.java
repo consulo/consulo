@@ -269,8 +269,7 @@ public class RunConfigurationsSEContributor implements SearchEverywhereContribut
         }
     }
 
-    @Nullable
-    private static Executor findExecutor(
+    private static @Nullable Executor findExecutor(
         RunnerAndConfigurationSettings settings,
         @MagicConstant(intValues = {RUN_MODE, DEBUG_MODE}) int mode
     ) {

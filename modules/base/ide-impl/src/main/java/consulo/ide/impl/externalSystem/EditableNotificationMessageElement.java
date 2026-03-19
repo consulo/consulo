@@ -143,8 +143,7 @@ public class EditableNotificationMessageElement extends NotificationMessageEleme
 
   private class MyCellEditor extends AbstractCellEditor implements TreeCellEditor {
     private final JEditorPane editorComponent;
-    @Nullable
-    private JTree myTree;
+    private @Nullable JTree myTree;
 
     private MyCellEditor() {
       editorComponent = installJep(new MyJEditorPane(EditableNotificationMessageElement.this));

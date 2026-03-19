@@ -150,8 +150,7 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
         return myParent.getProfiles() | getProjectType().getProfileBit();
     }
 
-    @Nullable
-    public String getCreationTrace() {
+    public @Nullable String getCreationTrace() {
         return getUserData(CREATION_TRACE);
     }
 
@@ -265,8 +264,7 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
     }
 
     @Override
-    @Nullable
-    public VirtualFile getWorkspaceFile() {
+    public @Nullable VirtualFile getWorkspaceFile() {
         return getStateStore().getWorkspaceFile();
     }
 

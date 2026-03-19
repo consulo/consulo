@@ -38,8 +38,7 @@ public class IgnoredSettingsDialog extends DialogWrapper {
     init();
   }
 
-  @Nullable
-  protected JComponent createCenterPanel() {
+  protected @Nullable JComponent createCenterPanel() {
     return myPanel.createComponent();
   }
 

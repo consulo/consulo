@@ -229,8 +229,7 @@ public class RecentProjectsManagerImpl implements RecentProjectsManager, Persist
      * @return a path pointing to a directory where the last project was created or null if not available
      */
     @Override
-    @Nullable
-    public String getLastProjectCreationLocation() {
+    public @Nullable String getLastProjectCreationLocation() {
         return myState.lastProjectLocation;
     }
 
@@ -424,8 +423,7 @@ public class RecentProjectsManagerImpl implements RecentProjectsManager, Persist
         }
     }
 
-    @Nullable
-    private ProjectGroup getProjectGroup(String path) {
+    private @Nullable ProjectGroup getProjectGroup(String path) {
         if (path == null) {
             return null;
         }
@@ -437,8 +435,7 @@ public class RecentProjectsManagerImpl implements RecentProjectsManager, Persist
         return null;
     }
 
-    @Nullable
-    private String getProjectPath(Project project) {
+    private @Nullable String getProjectPath(Project project) {
         VirtualFile baseDirVFile = project.getBaseDir();
         return baseDirVFile != null ? FileUtil.toSystemDependentName(baseDirVFile.getPath()) : null;
     }

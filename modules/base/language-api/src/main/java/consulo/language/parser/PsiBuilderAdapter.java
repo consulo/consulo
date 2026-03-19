@@ -56,8 +56,7 @@ public class PsiBuilderAdapter implements PsiBuilder {
     }
 
     @Override
-    @Nullable
-    public IElementType getTokenType() {
+    public @Nullable IElementType getTokenType() {
         return myDelegate.getTokenType();
     }
 
@@ -102,8 +101,7 @@ public class PsiBuilderAdapter implements PsiBuilder {
     }
 
     @Override
-    @Nullable
-    public String getTokenText() {
+    public @Nullable String getTokenText() {
         return myDelegate.getTokenText();
     }
 
@@ -156,8 +154,7 @@ public class PsiBuilderAdapter implements PsiBuilder {
     }
 
     @Override
-    @Nullable
-    public LighterASTNode getLatestDoneMarker() {
+    public @Nullable LighterASTNode getLatestDoneMarker() {
         return myDelegate.getLatestDoneMarker();
     }
 
@@ -173,8 +170,7 @@ public class PsiBuilderAdapter implements PsiBuilder {
     }
 
     @Override
-    @Nullable
-    public <T> T getUserData(Key<T> key) {
+    public @Nullable <T> T getUserData(Key<T> key) {
         return myDelegate.getUserData(key);
     }
 

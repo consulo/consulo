@@ -10,8 +10,7 @@ public abstract class DeploymentRuntime {
 
     public abstract void undeploy(UndeploymentTaskCallback callback);
 
-    @Nullable
-    public DeploymentRuntime getParent() {
+    public @Nullable DeploymentRuntime getParent() {
         return null;
     }
 

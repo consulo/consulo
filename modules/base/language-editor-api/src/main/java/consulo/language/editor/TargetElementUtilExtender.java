@@ -57,23 +57,19 @@ public interface TargetElementUtilExtender {
     return true;
   }
 
-  @Nullable
-  default PsiElement adjustElement(Editor editor, Set<String> flags, PsiElement element, PsiElement contextElement) {
+  default @Nullable PsiElement adjustElement(Editor editor, Set<String> flags, PsiElement element, PsiElement contextElement) {
     return null;
   }
 
-  @Nullable
-  default PsiElement adjustReference(PsiReference ref) {
+  default @Nullable PsiElement adjustReference(PsiReference ref) {
     return null;
   }
 
-  @Nullable
-  default PsiElement getReferenceOrReferencedElement(PsiReference reference, Set<String> flags) {
+  default @Nullable PsiElement getReferenceOrReferencedElement(PsiReference reference, Set<String> flags) {
     return null;
   }
 
-  @Nullable
-  default PsiElement modifyReferenceOrReferencedElement(@Nullable PsiElement refElement, PsiFile file, Editor editor, Set<String> flags, int offset) {
+  default @Nullable PsiElement modifyReferenceOrReferencedElement(@Nullable PsiElement refElement, PsiFile file, Editor editor, Set<String> flags, int offset) {
     return null;
   }
 
@@ -85,23 +81,19 @@ public interface TargetElementUtilExtender {
     return true;
   }
 
-  @Nullable
-  default PsiElement getGotoDeclarationTarget(PsiElement element, PsiElement navElement) {
+  default @Nullable PsiElement getGotoDeclarationTarget(PsiElement element, PsiElement navElement) {
     return null;
   }
 
-  @Nullable
-  default Collection<PsiElement> getTargetCandidates(PsiReference reference) {
+  default @Nullable Collection<PsiElement> getTargetCandidates(PsiReference reference) {
     return null;
   }
 
-  @Nullable
-  default PsiElement getNamedElement(PsiElement element) {
+  default @Nullable PsiElement getNamedElement(PsiElement element) {
     return null;
   }
 
-  @Nullable
-  default PsiElement modifyTargetElement(PsiElement element, Set<String> flags) {
+  default @Nullable PsiElement modifyTargetElement(PsiElement element, Set<String> flags) {
     return null;
   }
 }

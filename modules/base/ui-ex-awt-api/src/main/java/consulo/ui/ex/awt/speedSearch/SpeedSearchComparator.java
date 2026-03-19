@@ -49,8 +49,7 @@ public class SpeedSearchComparator {
     return obtainMatcher(pattern).matchingDegree(text);
   }
 
-  @Nullable
-  public List<MatcherTextRange> matchingFragments(String pattern, String text) {
+  public @Nullable List<MatcherTextRange> matchingFragments(String pattern, String text) {
     return obtainMatcher(pattern).matchingFragments(text);
   }
 

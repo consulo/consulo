@@ -143,8 +143,7 @@ public class ArtifactEditorImpl implements ArtifactEditorEx {
         myLayoutTreeComponent.saveElementProperties();
     }
 
-    @Nullable
-    private String getConfiguredOutputPath() {
+    private @Nullable String getConfiguredOutputPath() {
         String outputPath = FileUtil.toSystemIndependentName(myOutputDirectoryField.getText().trim());
         if (outputPath.length() == 0) {
             outputPath = null;
@@ -394,8 +393,7 @@ public class ArtifactEditorImpl implements ArtifactEditorEx {
         myLayoutTreeComponent.rebuildTree();
     }
 
-    @Nullable
-    private CompositePackagingElement<?> findCompositeElementByPath(String pathToElement) {
+    private @Nullable CompositePackagingElement<?> findCompositeElementByPath(String pathToElement) {
         CompositePackagingElement<?> element = getRootElement();
         for (String name : StringUtil.split(pathToElement, "/")) {
             element = element.findCompositeChild(name);

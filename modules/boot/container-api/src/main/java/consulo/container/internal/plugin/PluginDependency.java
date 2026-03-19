@@ -20,6 +20,5 @@ import org.jspecify.annotations.Nullable;
 public class PluginDependency {
   public boolean optional;
 
-  @Nullable
-  public String pluginId;
+  public @Nullable String pluginId;
 }

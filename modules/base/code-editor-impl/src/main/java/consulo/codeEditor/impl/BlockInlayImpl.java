@@ -42,8 +42,7 @@ public class BlockInlayImpl<R extends EditorCustomElementRenderer> extends Inlay
     }
 
     @Override
-    @Nullable
-    public GutterIconRenderer getGutterIconRenderer() {
+    public @Nullable GutterIconRenderer getGutterIconRenderer() {
         return myGutterIconRenderer;
     }
 

@@ -67,8 +67,7 @@ public class InternalMultipleChangeListBrowser extends InternalChangesBrowserBas
     final ChangeListListener myChangeListListener = new MyChangeListListener();
     
     private final EventDispatcher<InternalSelectedListChangeListener> myDispatcher = EventDispatcher.create(InternalSelectedListChangeListener.class);
-    @Nullable
-    private final Runnable myRebuildListListener;
+    private final @Nullable Runnable myRebuildListListener;
     
     private final VcsConfiguration myVcsConfiguration;
     private final boolean myUnversionedFilesEnabled;
@@ -318,8 +317,7 @@ public class InternalMultipleChangeListBrowser extends InternalChangesBrowserBas
         return result;
     }
 
-    @Nullable
-    private ChangesBrowserUnversionedFilesNode findUnversionedFilesNode() {
+    private @Nullable ChangesBrowserUnversionedFilesNode findUnversionedFilesNode() {
         //noinspection unchecked
         Enumeration<TreeNode> nodes = myViewer.getRoot().breadthFirstEnumeration();
 
@@ -418,8 +416,7 @@ public class InternalMultipleChangeListBrowser extends InternalChangesBrowserBas
         }
     }
 
-    @Nullable
-    private static ChangeList findDefaultList(List<? extends ChangeList> lists) {
+    private static @Nullable ChangeList findDefaultList(List<? extends ChangeList> lists) {
         return ContainerUtil.find(
             lists,
             list -> list instanceof LocalChangeList localChangeList && localChangeList.isDefault()

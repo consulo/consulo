@@ -182,8 +182,7 @@ public abstract class FileEditorWindowBase implements FileEditorWindow {
     public abstract FileEditorManagerImpl getManager();
 
     @Override
-    @Nullable
-    public FileEditorWithProviderComposite findFileComposite(VirtualFile file) {
+    public @Nullable FileEditorWithProviderComposite findFileComposite(VirtualFile file) {
         for (int i = 0; i != getTabCount(); ++i) {
             FileEditorWithProviderComposite editor = getEditorAt(i);
             if (editor.getFile().equals(file)) {

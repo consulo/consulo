@@ -21,8 +21,7 @@ import java.util.List;
 public class BuildProgressImpl implements BuildProgress<BuildProgressDescriptor> {
     private final Object myId = new Object();
 
-    @Nullable
-    private final BuildProgress<BuildProgressDescriptor> myParentProgress;
+    private final @Nullable BuildProgress<BuildProgressDescriptor> myParentProgress;
 
     private BuildProgressDescriptor myDescriptor;
 

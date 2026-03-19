@@ -119,8 +119,7 @@ public class CollectHighlightsUtil {
   }
 
 
-  @Nullable
-  public static PsiElement findCommonParent(PsiElement root, int startOffset, int endOffset) {
+  public static @Nullable PsiElement findCommonParent(PsiElement root, int startOffset, int endOffset) {
     if (startOffset == endOffset) return null;
     PsiElement left = findElementAtInRoot(root, startOffset);
     PsiElement right = findElementAtInRoot(root, endOffset - 1);
@@ -140,8 +139,7 @@ public class CollectHighlightsUtil {
     return commonParent;
   }
 
-  @Nullable
-  private static PsiElement findElementAtInRoot(PsiElement root, int offset) {
+  private static @Nullable PsiElement findElementAtInRoot(PsiElement root, int offset) {
     if (root instanceof PsiFile) {
       return ((PsiFile)root).getViewProvider().findElementAt(offset, root.getLanguage());
     }

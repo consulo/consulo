@@ -56,8 +56,7 @@ public abstract class ColumnInfo<Item, Aspect> {
         myName = name;
     }
 
-    @Nullable
-    public Icon getIcon() {
+    public @Nullable Icon getIcon() {
         return null;
     }
 
@@ -66,15 +65,13 @@ public abstract class ColumnInfo<Item, Aspect> {
         return getName();
     }
 
-    @Nullable
-    public abstract Aspect valueOf(Item item);
+    public abstract @Nullable Aspect valueOf(Item item);
 
     public final boolean isSortable() {
         return getComparator() != null;
     }
 
-    @Nullable
-    public Comparator<Item> getComparator() {
+    public @Nullable Comparator<Item> getComparator() {
         return null;
     }
 
@@ -93,8 +90,7 @@ public abstract class ColumnInfo<Item, Aspect> {
     public void setValue(Item item, Aspect value) {
     }
 
-    @Nullable
-    public TableCellRenderer getRenderer(Item item) {
+    public @Nullable TableCellRenderer getRenderer(Item item) {
         return null;
     }
 
@@ -102,18 +98,15 @@ public abstract class ColumnInfo<Item, Aspect> {
         return renderer;
     }
 
-    @Nullable
-    public TableCellEditor getEditor(Item o) {
+    public @Nullable TableCellEditor getEditor(Item o) {
         return null;
     }
 
-    @Nullable
-    public String getMaxStringValue() {
+    public @Nullable String getMaxStringValue() {
         return null;
     }
 
-    @Nullable
-    public String getPreferredStringValue() {
+    public @Nullable String getPreferredStringValue() {
         return null;
     }
 
@@ -135,8 +128,7 @@ public abstract class ColumnInfo<Item, Aspect> {
         myName = s;
     }
 
-    @Nullable
-    public String getTooltipText() {
+    public @Nullable String getTooltipText() {
         return null;
     }
 

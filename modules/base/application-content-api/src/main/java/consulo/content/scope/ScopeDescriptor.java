@@ -21,13 +21,11 @@ public class ScopeDescriptor implements ColoredItem {
         return myScope == null ? null : myScope.getDisplayName();
     }
 
-    @Nullable
-    public Image getIcon() {
+    public @Nullable Image getIcon() {
         return myScope == null ? null : myScope.getIcon();
     }
 
-    @Nullable
-    public SearchScope getScope() {
+    public @Nullable SearchScope getScope() {
         return myScope;
     }
 

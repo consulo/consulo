@@ -40,11 +40,9 @@ public abstract class Macro {
 
   public abstract String getDescription();
 
-  @Nullable
-  public abstract String expand(DataContext dataContext) throws ExecutionCancelledException;
+  public abstract @Nullable String expand(DataContext dataContext) throws ExecutionCancelledException;
 
-  @Nullable
-  public String expand(DataContext dataContext, String... args) throws ExecutionCancelledException {
+  public @Nullable String expand(DataContext dataContext, String... args) throws ExecutionCancelledException {
     return expand(dataContext);
   }
 
@@ -72,8 +70,7 @@ public abstract class Macro {
     return new File(getPath(file));
   }
 
-  @Nullable
-  public static VirtualFile getVirtualDirOrParent(DataContext dataContext) {
+  public static @Nullable VirtualFile getVirtualDirOrParent(DataContext dataContext) {
     VirtualFile vFile = dataContext.getData(VirtualFile.KEY);
     if (vFile != null && !vFile.isDirectory()) {
       vFile = vFile.getParent();

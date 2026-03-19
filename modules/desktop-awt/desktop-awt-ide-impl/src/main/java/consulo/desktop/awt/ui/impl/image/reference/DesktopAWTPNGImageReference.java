@@ -48,8 +48,7 @@ public class DesktopAWTPNGImageReference extends DesktopAWTImageReference {
       myImage = image;
     }
 
-    @Nullable
-    public BufferedImage getOrLoad() {
+    public @Nullable BufferedImage getOrLoad() {
       if (myBytes == null && myImage == null) {
         return null;
       }
@@ -77,8 +76,7 @@ public class DesktopAWTPNGImageReference extends DesktopAWTImageReference {
 
   
   private final ImageBytes myX1Data;
-  @Nullable
-  private final ImageBytes myX2Data;
+  private final @Nullable ImageBytes myX2Data;
 
   public DesktopAWTPNGImageReference(ImageBytes x1Data, @Nullable ImageBytes x2Data) {
     myX1Data = x1Data;

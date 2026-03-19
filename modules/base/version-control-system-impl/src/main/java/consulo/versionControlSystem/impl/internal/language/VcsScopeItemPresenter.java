@@ -76,8 +76,7 @@ public class VcsScopeItemPresenter implements ModelScopeItemPresenter {
   }
 
   @Override
-  @Nullable
-  public ModelScopeItem tryCreate(Project project,
+  public @Nullable ModelScopeItem tryCreate(Project project,
                                             AnalysisScope scope,
                                             @Nullable Module module,
                                             @Nullable PsiElement context) {

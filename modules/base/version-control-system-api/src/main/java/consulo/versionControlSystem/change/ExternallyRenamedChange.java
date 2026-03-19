@@ -64,8 +64,7 @@ public class ExternallyRenamedChange extends Change {
     return super.getOriginText(project);
   }
 
-  @Nullable
-  protected String getRenamedText() {
+  protected @Nullable String getRenamedText() {
     if (myRenamedTargetName != null) {
       return (getBeforeRevision() != null)
         ? VcsLocalize.changeFileRenamedToText(myRenamedTargetName).get()
@@ -74,8 +73,7 @@ public class ExternallyRenamedChange extends Change {
     return super.getRenamedText();
   }
 
-  @Nullable
-  protected String getMovedText(Project project) {
+  protected @Nullable String getMovedText(Project project) {
     if (myRenamedTargetName != null) {
       return (getBeforeRevision() != null)
         ? VcsLocalize.changeFileMovedToText(myRenamedTargetName).get()

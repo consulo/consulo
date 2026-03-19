@@ -87,8 +87,7 @@ public class CommitChangeListDialog extends DialogWrapper implements CheckinProj
     
     private final CommitMessageImpl myCommitMessageArea;
     private Splitter mySplitter;
-    @Nullable
-    private final JPanel myAdditionalOptionsPanel;
+    private final @Nullable JPanel myAdditionalOptionsPanel;
 
     
     private final InternalChangesBrowserBase<?> myBrowser;
@@ -117,8 +116,7 @@ public class CommitChangeListDialog extends DialogWrapper implements CheckinProj
     
     private final Map<AbstractVcs, JPanel> myPerVcsOptionsPanels = new HashMap<>();
 
-    @Nullable
-    private final AbstractVcs myVcs;
+    private final @Nullable AbstractVcs myVcs;
     private final boolean myIsAlien;
     private boolean myDisposed = false;
     private boolean myUpdateDisabled = false;
@@ -141,8 +139,7 @@ public class CommitChangeListDialog extends DialogWrapper implements CheckinProj
 
     private final String myOkActionText;
     private CommitAction myCommitAction;
-    @Nullable
-    private CommitResultHandler myResultHandler;
+    private @Nullable CommitResultHandler myResultHandler;
 
     private static class MyUpdateButtonsRunnable implements Runnable {
         private CommitChangeListDialog myDialog;
@@ -823,8 +820,7 @@ public class CommitChangeListDialog extends DialogWrapper implements CheckinProj
         }
     }
 
-    @Nullable
-    private String getInitialMessageFromVcs() {
+    private @Nullable String getInitialMessageFromVcs() {
         List<Change> list = getIncludedChanges();
         SimpleReference<String> result = new SimpleReference<>();
         ChangesUtil.processChangesByVcs(myProject, list, (vcs, items) -> {
@@ -1089,8 +1085,7 @@ public class CommitChangeListDialog extends DialogWrapper implements CheckinProj
     }
 
     @Override
-    @Nullable
-    protected JComponent createCenterPanel() {
+    protected @Nullable JComponent createCenterPanel() {
         mySplitter = new Splitter(true);
         mySplitter.setHonorComponentsMinimumSize(true);
         mySplitter.setFirstComponent(myBrowser);

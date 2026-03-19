@@ -726,18 +726,15 @@ public abstract class BaseRefactoringProcessor implements Runnable {
         return conflictsDialog;
     }
 
-    @Nullable
-    protected RefactoringEventData getBeforeData() {
+    protected @Nullable RefactoringEventData getBeforeData() {
         return null;
     }
 
-    @Nullable
-    protected RefactoringEventData getAfterData(UsageInfo[] usages) {
+    protected @Nullable RefactoringEventData getAfterData(UsageInfo[] usages) {
         return null;
     }
 
-    @Nullable
-    protected String getRefactoringId() {
+    protected @Nullable String getRefactoringId() {
         return null;
     }
 

@@ -47,8 +47,7 @@ public class LayerDescriptor {
     return myTokenSeparator;
   }
 
-  @Nullable
-  public TextAttributesKey getBackgroundKey() {
+  public @Nullable TextAttributesKey getBackgroundKey() {
     return myBackground;
   }
 }

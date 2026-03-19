@@ -189,8 +189,7 @@ public class FoldingModelSupport {
             }
         }
 
-        @Nullable
-        private FoldedBlock createRange(int[] starts, int[] ends, boolean expanded) {
+        private @Nullable FoldedBlock createRange(int[] starts, int[] ends, boolean expanded) {
             boolean hasFolding = false;
             FoldRegion[] regions = new FoldRegion[myCount];
             boolean hasExpanded = false; // do not desync on runBatchFoldingOperationDoNotCollapseCaret
@@ -218,8 +217,7 @@ public class FoldingModelSupport {
         }
     }
 
-    @Nullable
-    private static FoldRegion addFolding(EditorEx editor, int start, int end, boolean expanded) {
+    private static @Nullable FoldRegion addFolding(EditorEx editor, int start, int end, boolean expanded) {
         Document document = editor.getDocument();
         int startOffset = document.getLineStartOffset(start);
         int endOffset = document.getLineEndOffset(end - 1);
@@ -474,8 +472,7 @@ public class FoldingModelSupport {
      */
 
     private class ExpandSuggester {
-        @Nullable
-        private final FoldingCache myCache;
+        private final @Nullable FoldingCache myCache;
         private final int[] myIndex = new int[myCount];
         private final boolean myDefault;
 
@@ -509,8 +506,7 @@ public class FoldingModelSupport {
             return state == null ? myDefault : state;
         }
 
-        @Nullable
-        private Boolean getCachedExpanded(int start, int end, int index) {
+        private @Nullable Boolean getCachedExpanded(int start, int end, int index) {
             if (start == end) {
                 return null;
             }
@@ -610,10 +606,8 @@ public class FoldingModelSupport {
     }
 
     private static class FoldedRangeState {
-        @Nullable
-        public final LineRange expanded;
-        @Nullable
-        public final LineRange collapsed;
+        public final @Nullable LineRange expanded;
+        public final @Nullable LineRange collapsed;
 
         public FoldedRangeState(@Nullable LineRange expanded, @Nullable LineRange collapsed) {
             assert expanded != null || collapsed != null;
@@ -720,8 +714,7 @@ public class FoldingModelSupport {
             }
         }
 
-        @Nullable
-        public FoldRegion getRegion(int index) {
+        public @Nullable FoldRegion getRegion(int index) {
             return myRegions[index];
         }
 

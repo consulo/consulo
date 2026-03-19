@@ -38,8 +38,7 @@ public abstract class StubList extends AbstractList<StubBase<?>> {
    */
   private final MostlyUShortIntList myStubData;
 
-  @Nullable
-  private TempState myTempState = new TempState();
+  private @Nullable TempState myTempState = new TempState();
 
   StubList(int initialCapacity) {
     myStubData = new MostlyUShortIntList(initialCapacity * 3);
@@ -143,8 +142,7 @@ public abstract class StubList extends AbstractList<StubBase<?>> {
     myTempState.prepareForChildren(parentId, childrenCount);
   }
 
-  @Nullable
-  public abstract StubBase<?> getCachedStub(int index);
+  public abstract @Nullable StubBase<?> getCachedStub(int index);
 
   List<StubBase<?>> getChildrenStubs(int id) {
     int count = getChildrenCount(id);
@@ -195,8 +193,7 @@ public abstract class StubList extends AbstractList<StubBase<?>> {
     }
   }
 
-  @Nullable
-  private <P extends PsiElement, S extends StubElement<P>> S findChildStubByType(IStubElementType<S, P> elementType, IntUnaryOperator idList, int start, int end) {
+  private @Nullable <P extends PsiElement, S extends StubElement<P>> S findChildStubByType(IStubElementType<S, P> elementType, IntUnaryOperator idList, int start, int end) {
     for (int i = start; i < end; ++i) {
       int id = idList.applyAsInt(i);
       if (elementType.getIndex() == getStubTypeIndex(id)) {

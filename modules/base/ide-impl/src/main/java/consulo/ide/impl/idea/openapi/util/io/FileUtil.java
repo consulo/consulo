@@ -80,18 +80,15 @@ public class FileUtil extends FileUtilRt {
         return StringUtil.join(parts, File.separator);
     }
 
-    @Nullable
-    public static String getRelativePath(File base, File file) {
+    public static @Nullable String getRelativePath(File base, File file) {
         return consulo.util.io.FileUtil.getRelativePath(base, file);
     }
 
-    @Nullable
-    public static String getRelativePath(String basePath, String filePath, char separator) {
+    public static @Nullable String getRelativePath(String basePath, String filePath, char separator) {
         return consulo.util.io.FileUtil.getRelativePath(basePath, filePath, separator);
     }
 
-    @Nullable
-    public static String getRelativePath(
+    public static @Nullable String getRelativePath(
         String basePath,
         String filePath,
         char separator,
@@ -232,8 +229,7 @@ public class FileUtil extends FileUtilRt {
         return result;
     }
 
-    @Nullable
-    public static File findAncestor(File f1, File f2) {
+    public static @Nullable File findAncestor(File f1, File f2) {
         File ancestor = f1;
         while (ancestor != null && !isAncestor(ancestor, f2, false)) {
             ancestor = ancestor.getParentFile();
@@ -241,8 +237,7 @@ public class FileUtil extends FileUtilRt {
         return ancestor;
     }
 
-    @Nullable
-    public static File getParentFile(File file) {
+    public static @Nullable File getParentFile(File file) {
         return consulo.util.io.FileUtil.getParentFile(file);
     }
 
@@ -1090,8 +1085,7 @@ public class FileUtil extends FileUtilRt {
         return true;
     }
 
-    @Nullable
-    public static File findFirstThatExist(String... paths) {
+    public static @Nullable File findFirstThatExist(String... paths) {
         for (String path : paths) {
             if (!StringUtil.isEmptyOrSpaces(path)) {
                 File file = new File(toSystemDependentName(path));
@@ -1147,8 +1141,7 @@ public class FileUtil extends FileUtilRt {
      *
      * @return path of the first of found files or empty string or null.
      */
-    @Nullable
-    public static String findFileInProvidedPath(String providedPath, String... fileNames) {
+    public static @Nullable String findFileInProvidedPath(String providedPath, String... fileNames) {
         return consulo.util.io.FileUtil.findFileInProvidedPath(providedPath, fileNames);
     }
 

@@ -69,8 +69,7 @@ public class ShowSelectionHistoryAction extends ShowHistoryAction {
         return super.isEnabled(vcs, gw, f, e) && !f.isDirectory() && getSelection(e) != null;
     }
 
-    @Nullable
-    private static VcsSelection getSelection(AnActionEvent e) {
+    private static @Nullable VcsSelection getSelection(AnActionEvent e) {
         VcsContext c = VcsContextWrapper.createCachedInstanceOn(e);
         return VcsSelectionUtil.getSelection(c);
     }

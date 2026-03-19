@@ -38,8 +38,7 @@ public class IntObjectMap<V> {
     myData = new Object[initialCapacity];
   }
 
-  @Nullable
-  public V get(int key) {
+  public @Nullable V get(int key) {
     if (key < 0 || key >= myData.length) {
       return null;
     }

@@ -118,8 +118,7 @@ public class ColorPanel extends JComponent {
     myListeners.add(actionlistener);
   }
 
-  @Nullable
-  public Color getSelectedColor() {
+  public @Nullable Color getSelectedColor() {
     return myColor;
   }
 

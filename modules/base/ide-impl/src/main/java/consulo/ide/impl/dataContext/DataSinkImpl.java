@@ -123,16 +123,14 @@ public class DataSinkImpl implements DataSink, DataSnapshot {
     }
 
     @Override
-    @Nullable
-    public <T> T get(Key<T> key) {
+    public @Nullable <T> T get(Key<T> key) {
         // DataSnapshot only returns immediate (non-lazy) data
         @SuppressWarnings("unchecked")
         T result = (T) myImmediateData.get(key);
         return result;
     }
 
-    @Nullable
-    private <T> T resolveUnderReadAction(Supplier<T> computation) {
+    private @Nullable <T> T resolveUnderReadAction(Supplier<T> computation) {
         SimpleReference<T> result = SimpleReference.create();
         Application.get().tryRunReadAction(() -> result.set(computation.get()));
         return result.get();

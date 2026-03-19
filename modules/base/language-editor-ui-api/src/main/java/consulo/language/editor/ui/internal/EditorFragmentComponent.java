@@ -158,8 +158,7 @@ public class EditorFragmentComponent extends JPanel {
     /**
      * @param y {@code y} coordinate in layered pane coordinate system.
      */
-    @Nullable
-    public static LightweightHint showEditorFragmentHintAt(
+    public static @Nullable LightweightHint showEditorFragmentHintAt(
         Editor editor,
         TextRange range,
         int y,
@@ -281,8 +280,7 @@ public class EditorFragmentComponent extends JPanel {
         return fragmentComponent;
     }
 
-    @Nullable
-    public static LightweightHint showEditorFragmentHint(Editor editor, TextRange range, boolean showFolding, boolean hideByAnyKey) {
+    public static @Nullable LightweightHint showEditorFragmentHint(Editor editor, TextRange range, boolean showFolding, boolean hideByAnyKey) {
         if (!(editor instanceof EditorEx)) {
             return null;
         }

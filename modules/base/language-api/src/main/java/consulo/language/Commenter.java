@@ -36,8 +36,7 @@ import org.jspecify.annotations.Nullable;
 public interface Commenter extends LanguageExtension {
   ExtensionPointCacheKey<Commenter, ByLanguageValue<Commenter>> KEY = ExtensionPointCacheKey.create("Commenter", LanguageOneToOne.build());
 
-  @Nullable
-  static Commenter forLanguage(Language language) {
+  static @Nullable Commenter forLanguage(Language language) {
     return Application.get().getExtensionPoint(Commenter.class).getOrBuildCache(KEY).get(language);
   }
 

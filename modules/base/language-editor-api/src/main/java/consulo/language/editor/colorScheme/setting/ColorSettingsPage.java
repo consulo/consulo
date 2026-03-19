@@ -59,13 +59,11 @@ public interface ColorSettingsPage extends ColorAndFontDescriptors {
      * @return the mapping from tag names to text attribute keys, or null if the demo text
      * does not contain any additional highlighting tags.
      */
-    @Nullable
-    default Map<String, TextAttributesKey> getAdditionalHighlightingTagToDescriptorMap() {
+    default @Nullable Map<String, TextAttributesKey> getAdditionalHighlightingTagToDescriptorMap() {
         return Map.of();
     }
 
-    @Nullable
-    default Map<String, TextAttributesKey> getAdditionalInlineElementToDescriptorMap() {
+    default @Nullable Map<String, TextAttributesKey> getAdditionalInlineElementToDescriptorMap() {
         return null;
     }
 

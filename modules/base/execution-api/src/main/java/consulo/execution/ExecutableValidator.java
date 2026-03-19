@@ -81,8 +81,7 @@ public abstract class ExecutableValidator {
 
     protected abstract String getCurrentExecutable();
 
-    @Nullable
-    protected Notification validate(String executable) {
+    protected @Nullable Notification validate(String executable) {
         return !isExecutableValid(executable) ? createDefaultNotification() : null;
     }
 

@@ -76,16 +76,14 @@ public abstract class CloneDvcsDialog extends DialogWrapper {
 
     
     private String myTestURL; // the repository URL at the time of the last test
-    @Nullable
-    private Boolean myTestResult; // the test result of the last test or null if not tested
+    private @Nullable Boolean myTestResult; // the test result of the last test or null if not tested
     
     private String myDefaultDirectoryName = "";
     
     protected final Project myProject;
     
     protected final String myVcsDirectoryName;
-    @Nullable
-    private final String myDefaultRepoUrl;
+    private final @Nullable String myDefaultRepoUrl;
 
     public CloneDvcsDialog(
         Project project,
@@ -670,8 +668,7 @@ public abstract class CloneDvcsDialog extends DialogWrapper {
     protected static class TestResult {
         
         public static final TestResult SUCCESS = new TestResult(null);
-        @Nullable
-        private final String myErrorMessage;
+        private final @Nullable String myErrorMessage;
 
         public TestResult(@Nullable String errorMessage) {
             myErrorMessage = errorMessage;
@@ -681,8 +678,7 @@ public abstract class CloneDvcsDialog extends DialogWrapper {
             return myErrorMessage == null;
         }
 
-        @Nullable
-        public String getError() {
+        public @Nullable String getError() {
             return myErrorMessage;
         }
     }

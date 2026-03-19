@@ -62,8 +62,7 @@ public abstract class TestTreeView extends Tree implements UiDataProvider, CopyP
     return myModel;
   }
 
-  @Nullable
-  public AbstractTestProxy getSelectedTest() {
+  public @Nullable AbstractTestProxy getSelectedTest() {
     TreePath[] paths = getSelectionPaths();
     if (paths != null && paths.length > 1) return null;
     TreePath selectionPath = getSelectionPath();

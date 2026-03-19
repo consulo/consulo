@@ -41,8 +41,7 @@ public class ImportTestsFromHistoryAction extends AbstractImportTestsAction {
         myFileName = name;
     }
 
-    @Nullable
-    private static Image getIcon(Project project, String name) {
+    private static @Nullable Image getIcon(Project project, String name) {
         return TestHistoryConfiguration.getInstance(project).getIcon(name);
     }
 

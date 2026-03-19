@@ -61,8 +61,7 @@ public class DeepCompareAction extends ToggleAction implements DumbAware {
         return comparator != null && comparator.hasHighlightingOrInProgress();
     }
 
-    @Nullable
-    protected VcsLogDeepComparator getDeepComparator(Project project, VcsLogUi ui, AnActionEvent e) {
+    protected @Nullable VcsLogDeepComparator getDeepComparator(Project project, VcsLogUi ui, AnActionEvent e) {
         return null; // TODO
     }
 

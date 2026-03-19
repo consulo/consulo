@@ -56,8 +56,7 @@ public abstract class LocalProcessHandler<T extends Process> extends BaseProcess
   }
 
   @Override
-  @Nullable
-  public Charset getCharset() {
+  public @Nullable Charset getCharset() {
     return myCharset;
   }
 

@@ -50,8 +50,7 @@ public class MasterDetailsStateService implements PersistentStateComponent<Maste
     return project.getInstance(MasterDetailsStateService.class);
   }
 
-  @Nullable
-  public MasterDetailsState getComponentState(String key, Class<? extends MasterDetailsState> stateClass) {
+  public @Nullable MasterDetailsState getComponentState(String key, Class<? extends MasterDetailsState> stateClass) {
     ComponentState state = myStates.get(key);
     if (state == null) return null;
     Element settings = state.mySettings;

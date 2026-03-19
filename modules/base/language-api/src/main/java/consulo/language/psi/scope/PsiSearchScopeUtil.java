@@ -46,8 +46,7 @@ public class PsiSearchScopeUtil {
     return scope;
   }
 
-  @Nullable
-  public static SearchScope union(@Nullable SearchScope a, @Nullable SearchScope b) {
+  public static @Nullable SearchScope union(@Nullable SearchScope a, @Nullable SearchScope b) {
     return a == null ? b : b == null ? a : a.union(b);
   }
 

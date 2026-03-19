@@ -64,8 +64,7 @@ public class PsiDirectoryNode extends BasePsiNode<PsiDirectory> implements Navig
         myFilter = filter;
     }
 
-    @Nullable
-    public PsiFileSystemItemFilter getFilter() {
+    public @Nullable PsiFileSystemItemFilter getFilter() {
         return myFilter;
     }
 

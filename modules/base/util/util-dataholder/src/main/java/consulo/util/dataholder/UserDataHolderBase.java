@@ -92,8 +92,7 @@ public class UserDataHolderBase implements CopyableUserDataHolder, UserDataHolde
         return ourUpdaterVarHandle.compareAndSet(this, oldMap, newMap);
     }
 
-    @Nullable
-    public <T> T getCopyableUserData(Key<T> key) {
+    public @Nullable <T> T getCopyableUserData(Key<T> key) {
         KeyFMap map = getUserData(COPYABLE_USER_MAP_KEY);
         //noinspection unchecked,ConstantConditions
         return map == null ? null : map.get(key);

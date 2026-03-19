@@ -25,8 +25,7 @@ import org.jspecify.annotations.Nullable;
  */
 public class ComponentEvent<C extends Component> {
     private final C myComponent;
-    @Nullable
-    private final InputDetails myInputDetails;
+    private final @Nullable InputDetails myInputDetails;
 
     private boolean myConsumed;
 
@@ -39,8 +38,7 @@ public class ComponentEvent<C extends Component> {
         myInputDetails = inputDetails;
     }
 
-    @Nullable
-    public InputDetails getInputDetails() {
+    public @Nullable InputDetails getInputDetails() {
         return myInputDetails;
     }
     public C getComponent() {

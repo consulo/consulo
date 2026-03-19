@@ -92,8 +92,7 @@ public class JBZipFile {
    */
   final RandomAccessFile archive;
 
-  @Nullable
-  private JBZipOutputStream myOutputStream = null;
+  private @Nullable JBZipOutputStream myOutputStream = null;
   private long currentcfdfoffset = 0;
 
   /**
@@ -204,8 +203,7 @@ public class JBZipFile {
    * @return the ZipEntry corresponding to the given name - or
    *         <code>null</code> if not present.
    */
-  @Nullable
-  public JBZipEntry getEntry(String name) {
+  public @Nullable JBZipEntry getEntry(String name) {
     return nameMap.get(name);
   }
 

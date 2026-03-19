@@ -42,8 +42,7 @@ public interface Configurable extends UnnamedConfigurable {
         throw new AbstractMethodError("#getId() implementation required for class " + getClass());
     }
 
-    @Nullable
-    default String getParentId() {
+    default @Nullable String getParentId() {
         return null;
     }
 

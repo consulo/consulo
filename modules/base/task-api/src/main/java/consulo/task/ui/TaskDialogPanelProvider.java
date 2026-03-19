@@ -42,9 +42,7 @@ public abstract class TaskDialogPanelProvider {
         return ContainerUtil.mapNotNull(EP_NAME.getExtensionList(), provider -> provider.getCloseTaskPanel(project, task));
     }
 
-    @Nullable
-    public abstract TaskDialogPanel getOpenTaskPanel(Project project, Task task);
+    public abstract @Nullable TaskDialogPanel getOpenTaskPanel(Project project, Task task);
 
-    @Nullable
-    public abstract TaskDialogPanel getCloseTaskPanel(Project project, LocalTask task);
+    public abstract @Nullable TaskDialogPanel getCloseTaskPanel(Project project, LocalTask task);
 }

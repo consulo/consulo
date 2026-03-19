@@ -72,8 +72,7 @@ public class CommitHelper {
     private final boolean myAllOfDefaultChangeListChangesIncluded;
     private final boolean myForceSyncCommit;
     private final Function<Object, Object> myAdditionalData;
-    @Nullable
-    private final CommitResultHandler myCustomResultHandler;
+    private final @Nullable CommitResultHandler myCustomResultHandler;
     private final List<Document> myCommittingDocuments = new ArrayList<>();
     private final VcsConfiguration myConfiguration;
     private final VcsDirtyScopeManager myDirtyScopeManager;
@@ -411,8 +410,7 @@ public class CommitHelper {
         private LocalHistoryAction myAction;
         private ChangeListsModificationAfterCommit myAfterVcsRefreshModification;
         private boolean myCommitSuccess;
-        @Nullable
-        private final AbstractVcs myVcs;
+        private final @Nullable AbstractVcs myVcs;
 
         private CommitProcessor(@Nullable AbstractVcs vcs) {
             myVcs = vcs;

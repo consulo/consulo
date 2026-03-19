@@ -79,8 +79,7 @@ public class ExcludeEntryDescription implements Disposable {
         myIncludeSubdirectories = includeSubdirectories;
     }
 
-    @Nullable
-    public VirtualFile getVirtualFile() {
+    public @Nullable VirtualFile getVirtualFile() {
         return myFilePointer.getFile();
     }
 

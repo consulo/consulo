@@ -90,7 +90,7 @@ public class RefreshExternalProjectAction extends AnAction implements DumbAware 
             new ExternalProjectRefreshCallback() {
                 @Override
                 @RequiredUIAccess
-                public void onSuccess(@Nullable final DataNode<ProjectData> externalProject) {
+                public void onSuccess(final @Nullable DataNode<ProjectData> externalProject) {
                     if (externalProject == null) {
                         return;
                     }

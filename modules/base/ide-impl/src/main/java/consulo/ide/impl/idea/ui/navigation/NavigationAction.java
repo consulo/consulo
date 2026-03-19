@@ -44,8 +44,7 @@ abstract class NavigationAction extends AnAction implements DumbAware {
 
   protected abstract void doUpdate(AnActionEvent e);
 
-  @Nullable
-  protected static History getHistory(AnActionEvent e) {
+  protected static @Nullable History getHistory(AnActionEvent e) {
     return e.getData(History.KEY);
   }
 

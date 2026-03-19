@@ -32,8 +32,7 @@ public abstract class FileTypeManager extends FileTypeRegistry {
     return ourInstance.get();
   }
 
-  @Nullable
-  public LanguageFileType findFileTypeByLanguage(Language language) {
+  public @Nullable LanguageFileType findFileTypeByLanguage(Language language) {
     return language.findMyFileType(getRegisteredFileTypes());
   }
 
@@ -95,8 +94,7 @@ public abstract class FileTypeManager extends FileTypeRegistry {
     return file.getFileType();
   }
 
-  @Nullable
-  public abstract FileType getKnownFileTypeOrAssociate(VirtualFile file, Project project);
+  public abstract @Nullable FileType getKnownFileTypeOrAssociate(VirtualFile file, Project project);
 
   @Nullable
   @Override

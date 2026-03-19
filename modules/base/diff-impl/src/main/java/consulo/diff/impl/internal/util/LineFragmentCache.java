@@ -51,8 +51,7 @@ public class LineFragmentCache {
     return myModificationStamp1 == stamp1 && myModificationStamp2 == stamp2;
   }
 
-  @Nullable
-  public PolicyData getData(ComparisonPolicy policy) {
+  public @Nullable PolicyData getData(ComparisonPolicy policy) {
     return myFragments.get(policy);
   }
 

@@ -48,15 +48,13 @@ public class StdXMLParser implements IXMLParser
    /**
     * The builder which creates the logical structure of the XML data.
     */
-   @Nullable
-   private IXMLBuilder builder = null;
+   private @Nullable IXMLBuilder builder = null;
 
 
    /**
     * The reader from which the parser retrieves its data.
     */
-   @Nullable
-   private IXMLReader reader = null;
+   private @Nullable IXMLReader reader = null;
 
 
    /**
@@ -69,8 +67,7 @@ public class StdXMLParser implements IXMLParser
     * The validator that will process entity references and validate the XML
     * data.
     */
-   @Nullable
-   private IXMLValidator validator = null;
+   private @Nullable IXMLValidator validator = null;
 
 
    /**
@@ -89,8 +86,7 @@ public class StdXMLParser implements IXMLParser
     *
     * @return the builder
     */
-   @Nullable
-   public IXMLBuilder getBuilder()
+   public @Nullable IXMLBuilder getBuilder()
    {
       return this.builder;
    }
@@ -112,8 +108,7 @@ public class StdXMLParser implements IXMLParser
     *
     * @return the validator
     */
-   @Nullable
-   public IXMLValidator getValidator()
+   public @Nullable IXMLValidator getValidator()
    {
       return this.validator;
    }
@@ -157,8 +152,7 @@ public class StdXMLParser implements IXMLParser
     *
     * @return the reader
     */
-   @Nullable
-   public IXMLReader getReader()
+   public @Nullable IXMLReader getReader()
    {
       return this.reader;
    }
@@ -172,8 +166,7 @@ public class StdXMLParser implements IXMLParser
     * @throws net.n3.nanoxml.XMLException
     *		if an error occurred reading or parsing the data
     */
-   @Nullable
-   public Object parse()
+   public @Nullable Object parse()
       throws XMLException
    {
       try {

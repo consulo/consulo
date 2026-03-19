@@ -54,8 +54,7 @@ public abstract class EnvironmentAwareHost implements XAttachHost {
    * @return stream with file contents or <code>null</code> if the specified file does not exist
    * @throws IOException on stream retrieval error
    */
-  @Nullable
-  public abstract InputStream getFileContent(String filePath) throws IOException;
+  public abstract @Nullable InputStream getFileContent(String filePath) throws IOException;
 
   /**
    * Check if it is possible to read the file on host machine

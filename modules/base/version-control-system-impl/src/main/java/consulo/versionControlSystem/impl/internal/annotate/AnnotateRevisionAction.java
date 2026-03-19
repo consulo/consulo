@@ -63,11 +63,9 @@ abstract class AnnotateRevisionAction extends AnnotateRevisionActionBase impleme
         super.update(e);
     }
 
-    @Nullable
-    protected abstract List<VcsFileRevision> getRevisions();
+    protected abstract @Nullable List<VcsFileRevision> getRevisions();
 
-    @Nullable
-    protected AbstractVcs getVcs(AnActionEvent e) {
+    protected @Nullable AbstractVcs getVcs(AnActionEvent e) {
         return myVcs;
     }
 

@@ -34,8 +34,7 @@ import org.jspecify.annotations.Nullable;
 public interface LanguageElementIconProvider extends LanguageExtension {
   ExtensionPointCacheKey<LanguageElementIconProvider, ByLanguageValue<LanguageElementIconProvider>> KEY = ExtensionPointCacheKey.create("LanguageElementIconProvider", LanguageOneToOne.build());
 
-  @Nullable
-  static LanguageElementIconProvider forLanguage(Language language) {
+  static @Nullable LanguageElementIconProvider forLanguage(Language language) {
     return Application.get().getExtensionPoint(LanguageElementIconProvider.class).getOrBuildCache(KEY).get(language);
   }
 

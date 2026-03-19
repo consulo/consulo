@@ -98,15 +98,13 @@ public class IdeErrorsDialog extends DialogWrapper implements MessagePoolListene
     private List<AbstractMessage> myRawMessages;
     private final MessagePool myMessagePool;
     private HeaderlessTabbedPane myTabs;
-    @Nullable
-    private CommentsTabForm myCommentsTabForm;
+    private @Nullable CommentsTabForm myCommentsTabForm;
     private DetailsTabForm myDetailsTabForm;
     private AttachmentsTabForm myAttachmentsTabForm;
 
     private ClearFatalsAction myClearAction = new ClearFatalsAction();
     private BlameAction myBlameAction = new BlameAction();
-    @Nullable
-    private AnalyzeAction myAnalyzeAction;
+    private @Nullable AnalyzeAction myAnalyzeAction;
     private boolean myMute;
     private final Project myProject;
 
@@ -827,8 +825,7 @@ public class IdeErrorsDialog extends DialogWrapper implements MessagePoolListene
         return myMergedMessages.get(idx).get(0);
     }
 
-    @Nullable
-    public static PluginId findFirstPluginId(Throwable t) {
+    public static @Nullable PluginId findFirstPluginId(Throwable t) {
         return PluginExceptionUtil.findFirstPluginId(t);
     }
 
@@ -906,8 +903,7 @@ public class IdeErrorsDialog extends DialogWrapper implements MessagePoolListene
             return false;
         }
 
-        @Nullable
-        public static IdeFrame findIdeFrameFromParent(@Nullable Component component) {
+        public static @Nullable IdeFrame findIdeFrameFromParent(@Nullable Component component) {
             if (component == null) {
                 return null;
             }
@@ -960,8 +956,7 @@ public class IdeErrorsDialog extends DialogWrapper implements MessagePoolListene
         updateControls();
     }
 
-    @Nullable
-    public static ErrorReportSubmitter getSubmitter(Throwable throwable) {
+    public static @Nullable ErrorReportSubmitter getSubmitter(Throwable throwable) {
         if (throwable instanceof MessagePool.TooManyErrorsException || throwable instanceof AbstractMethodError) {
             return null;
         }

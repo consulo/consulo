@@ -173,8 +173,7 @@ public class ContentEntryEditor implements ContentRootPanel.ActionCallback {
         return new FolderContentRootPanel(this, getContentEntry());
     }
 
-    @Nullable
-    public ContentFolder addFolder(VirtualFile file, ContentFolderTypeProvider contentFolderType) {
+    public @Nullable ContentFolder addFolder(VirtualFile file, ContentFolderTypeProvider contentFolderType) {
         ContentEntry contentEntry = getContentEntry();
         ContentFolder contentFolder = contentEntry.addFolder(file, contentFolderType);
         try {
@@ -200,8 +199,7 @@ public class ContentEntryEditor implements ContentRootPanel.ActionCallback {
         }
     }
 
-    @Nullable
-    public ContentFolder getFolder(VirtualFile file) {
+    public @Nullable ContentFolder getFolder(VirtualFile file) {
         ContentEntry contentEntry = getContentEntry();
         for (ContentFolder contentFolder : contentEntry.getFolders(LanguageContentFolderScopes.all())) {
             VirtualFile f = contentFolder.getFile();

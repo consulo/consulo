@@ -32,8 +32,7 @@ public interface MatcherHolder {
     component.putClientProperty(MatcherHolder.class, matcher);
   }
 
-  @Nullable
-  static Matcher getAssociatedMatcher(JComponent component) {
+  static @Nullable Matcher getAssociatedMatcher(JComponent component) {
     return (Matcher)component.getClientProperty(MatcherHolder.class);
   }
 }

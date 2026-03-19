@@ -111,8 +111,7 @@ public class CachingEnumerator<Data> implements DataEnumerator<Data> {
   }
 
   @Override
-  @Nullable
-  public Data valueOf(int idx) throws IOException {
+  public @Nullable Data valueOf(int idx) throws IOException {
     int stripe = idStripe(idx);
     myStripeLocks[stripe].lock();
     try {

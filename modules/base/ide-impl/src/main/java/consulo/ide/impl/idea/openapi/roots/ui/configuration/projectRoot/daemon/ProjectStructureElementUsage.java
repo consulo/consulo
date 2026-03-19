@@ -14,8 +14,7 @@ public abstract class ProjectStructureElementUsage {
 
   public abstract String getPresentableName();
 
-  @Nullable
-  public String getPresentableLocationInElement() {
+  public @Nullable String getPresentableLocationInElement() {
     return null;
   }
 

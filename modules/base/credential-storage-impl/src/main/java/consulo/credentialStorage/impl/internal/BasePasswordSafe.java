@@ -282,8 +282,7 @@ public abstract class BasePasswordSafe implements PasswordSafe {
         return new InMemoryCredentialStore();
     }
 
-    @Nullable
-    public static CredentialStore createPersistentCredentialStore() {
+    public static @Nullable CredentialStore createPersistentCredentialStore() {
         Platform platform = Platform.current();
 
         ExtensionPoint<CredentialStoreFactory> point = Application.get().getExtensionPoint(CredentialStoreFactory.class);

@@ -71,8 +71,7 @@ import java.util.*;
 class ApplyPatchViewer implements UiDataProvider, Disposable {
     public static final Logger LOG = Logger.getInstance(ApplyPatchViewer.class);
 
-    @Nullable
-    private final Project myProject;
+    private final @Nullable Project myProject;
     private final DiffContext myContext;
     private final ApplyPatchRequest myPatchRequest;
 
@@ -238,8 +237,7 @@ class ApplyPatchViewer implements UiDataProvider, Disposable {
         return myPanel;
     }
 
-    @Nullable
-    public JComponent getPreferredFocusedComponent() {
+    public @Nullable JComponent getPreferredFocusedComponent() {
         return myResultEditor.getContentComponent();
     }
 

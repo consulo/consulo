@@ -64,8 +64,7 @@ public class ExternalSystemTasksPanel extends SimpleToolWindowPanel implements U
   private final NotificationGroup             myNotificationGroup;
   private final Project                       myProject;
 
-  @Nullable
-  private Supplier<ExternalTaskExecutionInfo> mySelectedTaskProvider;
+  private @Nullable Supplier<ExternalTaskExecutionInfo> mySelectedTaskProvider;
 
   public ExternalSystemTasksPanel(Project project,
                                   ProjectSystemId externalSystemId,
@@ -164,8 +163,7 @@ public class ExternalSystemTasksPanel extends SimpleToolWindowPanel implements U
     sink.lazy(Location.DATA_KEY, () -> buildLocation());
   }
 
-  @Nullable
-  private Location buildLocation() {
+  private @Nullable Location buildLocation() {
     if (mySelectedTaskProvider == null) {
       return null;
     }

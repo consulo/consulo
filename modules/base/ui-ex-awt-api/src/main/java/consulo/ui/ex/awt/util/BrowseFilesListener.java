@@ -48,8 +48,7 @@ public class BrowseFilesListener implements ActionListener {
     myChooserDescriptor = chooserDescriptor;
   }
 
-  @Nullable
-  protected VirtualFile getFileToSelect() {
+  protected @Nullable VirtualFile getFileToSelect() {
     String path = myTextField.getText().trim().replace(File.separatorChar, '/');
     if (path.length() > 0) {
       File file = new File(path);

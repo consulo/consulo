@@ -70,8 +70,7 @@ public class DeleteAction extends AnAction implements DumbAware {
         }
     }
 
-    @Nullable
-    protected DeleteProvider getDeleteProvider(DataContext dataContext) {
+    protected @Nullable DeleteProvider getDeleteProvider(DataContext dataContext) {
         return dataContext.getData(DeleteProvider.KEY);
     }
 

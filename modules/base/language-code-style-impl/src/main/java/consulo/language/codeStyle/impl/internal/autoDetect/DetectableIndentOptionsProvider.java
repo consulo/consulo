@@ -117,8 +117,7 @@ public class DetectableIndentOptionsProvider extends FileIndentOptionsProvider {
     }
 
     @TestOnly
-    @Nullable
-    public static DetectableIndentOptionsProvider getInstance() {
+    public static @Nullable DetectableIndentOptionsProvider getInstance() {
         return FileIndentOptionsProvider.EP_NAME.findExtension(DetectableIndentOptionsProvider.class);
     }
 

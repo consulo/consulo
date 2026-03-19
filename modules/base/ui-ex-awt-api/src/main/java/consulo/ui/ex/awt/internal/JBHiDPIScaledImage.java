@@ -19,8 +19,7 @@ import static java.lang.Math.round;
  * @author tav
  */
 public final class JBHiDPIScaledImage extends BufferedImage {
-  @Nullable
-  private final Image myImage;
+  private final @Nullable Image myImage;
   private final double myUserWidth;
   private final double myUserHeight;
   private final double myScale;

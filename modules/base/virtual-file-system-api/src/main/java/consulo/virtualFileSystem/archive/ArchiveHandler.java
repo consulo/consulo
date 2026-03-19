@@ -72,8 +72,7 @@ public abstract class ArchiveHandler {
     return myPath;
   }
 
-  @Nullable
-  public FileAttributes getAttributes(String relativePath) {
+  public @Nullable FileAttributes getAttributes(String relativePath) {
     if (relativePath.isEmpty()) {
       FileAttributes attributes = FileSystemUtil.getAttributes(myPath);
       return attributes != null ? new FileAttributes(true, false, false, false, DEFAULT_LENGTH, DEFAULT_TIMESTAMP, false) : null;
@@ -102,8 +101,7 @@ public abstract class ArchiveHandler {
     myEntries.clear();
   }
 
-  @Nullable
-  protected EntryInfo getEntryInfo(String relativePath) {
+  protected @Nullable EntryInfo getEntryInfo(String relativePath) {
     return getEntriesMap().get(relativePath);
   }
 

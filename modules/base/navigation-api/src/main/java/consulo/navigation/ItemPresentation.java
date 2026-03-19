@@ -47,8 +47,7 @@ public interface ItemPresentation {
   /**
    * Returns the icon representing the object.
    */
-  @Nullable
-  default Image getIcon() {
+  default @Nullable Image getIcon() {
     return getIcon(false);
   }
 

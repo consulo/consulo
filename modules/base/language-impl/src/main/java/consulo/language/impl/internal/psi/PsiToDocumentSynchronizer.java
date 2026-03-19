@@ -58,8 +58,7 @@ public class PsiToDocumentSynchronizer extends PsiTreeChangeAdapter {
     myBus = bus;
   }
 
-  @Nullable
-  public DocumentChangeTransaction getTransaction(Document document) {
+  public @Nullable DocumentChangeTransaction getTransaction(Document document) {
     Pair<DocumentChangeTransaction, Integer> pair = myTransactionsMap.get(document);
     return Pair.getFirst(pair);
   }
@@ -277,8 +276,7 @@ public class PsiToDocumentSynchronizer extends PsiTreeChangeAdapter {
     }
   }
 
-  @Nullable
-  private DocumentChangeTransaction removeTransaction(Document doc) {
+  private @Nullable DocumentChangeTransaction removeTransaction(Document doc) {
     Pair<DocumentChangeTransaction, Integer> pair = myTransactionsMap.get(doc);
     if (pair == null) return null;
     int nestedCount = pair.getSecond().intValue();

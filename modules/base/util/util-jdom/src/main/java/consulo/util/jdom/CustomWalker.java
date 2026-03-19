@@ -311,18 +311,15 @@ class CustomWalker implements Walker {
 
   }
 
-  @Nullable
-  private Content pending = null;
+  private @Nullable Content pending = null;
   private final Iterator<? extends Content> content;
   private final boolean alltext;
   private final boolean allwhite;
   private final String newlineindent;
   private final String endofline;
-  @Nullable
-  private final EscapeStrategy escape;
+  private final @Nullable EscapeStrategy escape;
   private final FormatStack fstack;
-  @Nullable
-  private boolean hasnext = true;
+  private @Nullable boolean hasnext = true;
 
 
   // MultiText handling changed in 2.0.5
@@ -337,10 +334,8 @@ class CustomWalker implements Walker {
   // we use one set of variables to back up both of them. This is fast, and safe in a single
   // threaded environment (which the Walkers are guaranteed to be in).
   // all MultiText-specific variables have the names mt*
-  @Nullable
-  private MultiText multitext = null;
-  @Nullable
-  private MultiText pendingmt = null;
+  private @Nullable MultiText multitext = null;
+  private @Nullable MultiText pendingmt = null;
   private final MultiText holdingmt = new MultiText();
 
   private final StringBuilder mtbuffer = new StringBuilder();
@@ -361,8 +356,7 @@ class CustomWalker implements Walker {
   private int mtpos = -1;
   // we cheat here by using Boolean as a three-state option...
   // we expect it to be null often.
-  @Nullable
-  private Boolean mtwasescape;
+  private @Nullable Boolean mtwasescape;
 
   /**
    * Create a Walker that preserves all content in its raw state.

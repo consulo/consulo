@@ -136,8 +136,7 @@ public class UnsafeWeakList<T> extends AbstractList<T> {
   protected class MyIterator implements Iterator<T> {
     private int myNextIndex = -1;
     private int myCurrentIndex = -1;
-    @Nullable
-    private T myNextElement = null;
+    private @Nullable T myNextElement = null;
     private int myModCount = modCount;
 
     public MyIterator() {

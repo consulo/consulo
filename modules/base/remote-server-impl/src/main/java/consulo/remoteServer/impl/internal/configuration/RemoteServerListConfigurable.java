@@ -83,8 +83,7 @@ public class RemoteServerListConfigurable extends MasterDetailsComponent impleme
         return super.createComponent(uiDisposable);
     }
 
-    @Nullable
-    private ServerType<?> getSingleServerType() {
+    private @Nullable ServerType<?> getSingleServerType() {
         List<ServerType> serverTypes = getDisplayedServerTypes();
         return serverTypes.size() == 1 ? serverTypes.get(0) : null;
     }
@@ -96,8 +95,7 @@ public class RemoteServerListConfigurable extends MasterDetailsComponent impleme
     }
 
     @Override
-    @Nullable
-    protected String getEmptySelectionString() {
+    protected @Nullable String getEmptySelectionString() {
         String typeNames = StringUtil.join(getDisplayedServerTypes(), serverType -> serverType.getPresentableName().get(), ", ");
 
         if (typeNames.length() > 0) {
@@ -150,8 +148,7 @@ public class RemoteServerListConfigurable extends MasterDetailsComponent impleme
     }
 
     @Override
-    @Nullable
-    public Runnable enableSearch(String option) {
+    public @Nullable Runnable enableSearch(String option) {
         return () -> Objects.requireNonNull(SpeedSearchSupply.getSupply(myTree, true)).findAndSelectElement(option);
     }
 

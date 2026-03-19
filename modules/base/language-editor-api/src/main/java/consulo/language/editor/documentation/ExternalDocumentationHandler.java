@@ -36,8 +36,7 @@ public interface ExternalDocumentationHandler {
    *
    * @see DocumentationManagerProtocol
    */
-  @Nullable
-  default String extractRefFromLink(String link) {
+  default @Nullable String extractRefFromLink(String link) {
     return null;
   }
 }

@@ -38,8 +38,7 @@ public class EditorColorsUtil {
         return getColorSchemeForBackground(null);
     }
 
-    @Nullable
-    public static ColorValue getGlobalOrDefaultColor(EditorColorKey colorKey) {
+    public static @Nullable ColorValue getGlobalOrDefaultColor(EditorColorKey colorKey) {
         return getColorSchemeForBackground(null).getColor(colorKey);
     }
 

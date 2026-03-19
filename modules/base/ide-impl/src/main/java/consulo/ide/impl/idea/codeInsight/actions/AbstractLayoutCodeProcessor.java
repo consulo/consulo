@@ -189,8 +189,7 @@ public abstract class AbstractLayoutCodeProcessor implements LayoutCodeProcessor
         myPostRunnable = postRunnable;
     }
 
-    @Nullable
-    private FutureTask<Boolean> getPreviousProcessorTask(PsiFile file, boolean processChangedTextOnly) {
+    private @Nullable FutureTask<Boolean> getPreviousProcessorTask(PsiFile file, boolean processChangedTextOnly) {
         return myPreviousCodeProcessor != null ? myPreviousCodeProcessor.preprocessFile(file, processChangedTextOnly) : null;
     }
 
@@ -644,8 +643,7 @@ public abstract class AbstractLayoutCodeProcessor implements LayoutCodeProcessor
         }
     }
 
-    @Nullable
-    public LayoutCodeInfoCollector getInfoCollector() {
+    public @Nullable LayoutCodeInfoCollector getInfoCollector() {
         return myInfoCollector;
     }
 }

@@ -76,14 +76,12 @@ class FindInProjectTask {
     
     private final Project myProject;
     private final PsiManager myPsiManager;
-    @Nullable
-    private final VirtualFile myDirectory;
+    private final @Nullable VirtualFile myDirectory;
     private final ProjectFileIndex myProjectFileIndex;
     private final FileIndex myFileIndex;
     private final Predicate<VirtualFile> myFileMask;
     private final ProgressIndicator myProgress;
-    @Nullable
-    private final Module myModule;
+    private final @Nullable Module myModule;
     private final Set<VirtualFile> myLargeFiles = Collections.synchronizedSet(new HashSet<>());
     private final Set<? extends VirtualFile> myFilesToScanInitially;
     private final AtomicLong myTotalFilesSize = new AtomicLong();

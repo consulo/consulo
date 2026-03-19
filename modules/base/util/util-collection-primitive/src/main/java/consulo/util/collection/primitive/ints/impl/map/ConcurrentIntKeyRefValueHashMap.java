@@ -153,12 +153,9 @@ public abstract class ConcurrentIntKeyRefValueHashMap<V> implements ConcurrentIn
   private Iterator<IntObjectEntry<V>> entriesIterator() {
     final Iterator<IntObjectEntry<IntReference<V>>> entryIterator = myMap.entrySet().iterator();
     return new Iterator<>() {
-      @Nullable
-      private IntObjectEntry<V> nextVEntry = null;
-      @Nullable
-      private IntObjectEntry<IntReference<V>> nextReferenceEntry = null;
-      @Nullable
-      private IntObjectEntry<IntReference<V>> lastReturned = null;
+      private @Nullable IntObjectEntry<V> nextVEntry = null;
+      private @Nullable IntObjectEntry<IntReference<V>> nextReferenceEntry = null;
+      private @Nullable IntObjectEntry<IntReference<V>> lastReturned = null;
 
       {
         nextAliveEntry();
@@ -218,8 +215,7 @@ public abstract class ConcurrentIntKeyRefValueHashMap<V> implements ConcurrentIn
   public Iterator<V> elementsIterator() {
     final Iterator<IntReference<V>> elementRefs = myMap.values().iterator();
     return new Iterator<V>() {
-      @Nullable
-      private V findNextRef() {
+      private @Nullable V findNextRef() {
         while (elementRefs.hasNext()) {
           IntReference<V> result = elementRefs.next();
           V v = result.get();
@@ -228,8 +224,7 @@ public abstract class ConcurrentIntKeyRefValueHashMap<V> implements ConcurrentIn
         return null;
       }
 
-      @Nullable
-      private V next = findNextRef();
+      private @Nullable V next = findNextRef();
 
       @Override
       public boolean hasNext() {

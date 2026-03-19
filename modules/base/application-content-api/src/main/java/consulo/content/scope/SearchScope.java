@@ -31,8 +31,7 @@ public interface SearchScope extends VirtualFileFilter {
         return "<unknown scope>";
     }
 
-    @Nullable
-    default Image getIcon() {
+    default @Nullable Image getIcon() {
         return null;
     }
 

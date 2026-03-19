@@ -92,8 +92,7 @@ public abstract class ExtendWordSelectionHandlerBase implements ExtendWordSelect
     return result;
   }
 
-  @Nullable
-  private static TextRange getExpandedRange(CharSequence text, TextRange range, boolean isSymmetric) {
+  private static @Nullable TextRange getExpandedRange(CharSequence text, TextRange range, boolean isSymmetric) {
     int startOffset = range.getStartOffset();
     int endOffset = range.getEndOffset();
     int index1 = CharArrayUtil.shiftBackward(text, startOffset - 1, " \t");

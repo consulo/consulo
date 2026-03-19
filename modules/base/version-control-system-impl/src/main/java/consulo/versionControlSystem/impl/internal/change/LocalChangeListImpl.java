@@ -27,7 +27,7 @@ public class LocalChangeListImpl extends LocalChangeList {
   
   private String myName;
   private String myComment = "";
-  @Nullable private Object myData;
+  private @Nullable Object myData;
 
   private boolean myIsDefault = false;
   private boolean myIsReadOnly = false;
@@ -216,8 +216,7 @@ public class LocalChangeListImpl extends LocalChangeList {
     return changesDetected;
   }
 
-  @Nullable
-  private Change findOldChange(Change newChange) {
+  private @Nullable Change findOldChange(Change newChange) {
     Change oldChange = myChangesBeforeUpdate.get(newChange);
     if (oldChange != null && sameBeforeRevision(oldChange, newChange) &&
         newChange.getFileStatus().equals(oldChange.getFileStatus())) {

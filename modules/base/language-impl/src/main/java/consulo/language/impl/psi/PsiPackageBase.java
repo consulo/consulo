@@ -145,8 +145,7 @@ public abstract class PsiPackageBase extends PsiElementBase implements PsiPackag
 
     @RequiredWriteAction
     @Override
-    @Nullable
-    public PsiElement setName(String name) throws IncorrectOperationException {
+    public @Nullable PsiElement setName(String name) throws IncorrectOperationException {
         checkSetName(name);
         PsiDirectory[] dirs = getDirectories();
         for (PsiDirectory dir : dirs) {

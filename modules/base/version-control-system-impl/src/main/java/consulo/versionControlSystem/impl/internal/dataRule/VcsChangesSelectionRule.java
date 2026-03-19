@@ -26,13 +26,11 @@ import java.util.Arrays;
 import java.util.Collections;
 
 public final class VcsChangesSelectionRule {
-  @Nullable
-  public static ChangesSelection getData(DataSnapshot dataProvider) {
+  public static @Nullable ChangesSelection getData(DataSnapshot dataProvider) {
     return getChangesSelection(dataProvider);
   }
 
-  @Nullable
-  public static ChangesSelection getChangesSelection(DataSnapshot dataProvider) {
+  public static @Nullable ChangesSelection getChangesSelection(DataSnapshot dataProvider) {
     Change currentChange = dataProvider.get(VcsDataKeys.CURRENT_CHANGE);
 
     Change[] selectedChanges = dataProvider.get(VcsDataKeys.SELECTED_CHANGES);

@@ -168,8 +168,7 @@ public class CamelHumpMatcher extends PrefixMatcher {
     return matchingDegree(string, matchingFragments(string));
   }
 
-  @Nullable
-  public FList<MatcherTextRange> matchingFragments(String string) {
+  public @Nullable FList<MatcherTextRange> matchingFragments(String string) {
     return myMatcher.matchingFragments(string);
   }
 

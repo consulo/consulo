@@ -50,8 +50,7 @@ public interface ActiveGutterRenderer extends LineMarkerRenderer, SimpleAccessib
      */
     @Deprecated
     @DeprecationInfo("Use getToolTipValue(int)")
-    @Nullable
-    default String getTooltipText() {
+    default @Nullable String getTooltipText() {
         return getTooltipValue().getNullIfEmpty();
     }
 
@@ -97,8 +96,7 @@ public interface ActiveGutterRenderer extends LineMarkerRenderer, SimpleAccessib
      * @param preferredBounds the preferred bounds to take into account
      * @return the new calculated bounds or the preferred bounds or null
      */
-    @Nullable
-    default Rectangle calcBounds(Editor editor, int lineNum, Rectangle preferredBounds) {
+    default @Nullable Rectangle calcBounds(Editor editor, int lineNum, Rectangle preferredBounds) {
         return preferredBounds;
     }
 }

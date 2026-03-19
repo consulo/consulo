@@ -104,8 +104,7 @@ public class WSLUtil {
     /**
      * @return root for WSL executable or null if unavailable
      */
-    @Nullable
-    private static Path getExecutableRootPath() {
+    private static @Nullable Path getExecutableRootPath() {
         String localAppDataPath = System.getenv().get("LOCALAPPDATA");
         return StringUtil.isEmpty(localAppDataPath) ? null : Paths.get(localAppDataPath, "Microsoft\\WindowsApps");
     }
@@ -113,8 +112,7 @@ public class WSLUtil {
     /**
      * @return instance of WSL distribution or null if it's unavailable
      */
-    @Nullable
-    public static WSLDistribution getDistributionById(@Nullable String id) {
+    public static @Nullable WSLDistribution getDistributionById(@Nullable String id) {
         if (id == null) {
             return null;
         }
@@ -152,8 +150,7 @@ public class WSLUtil {
      * @return Windows-dependent path to the file, pointed by {@code wslPath} in WSL or null if the path is unmappable.
      * For example, {@code getWindowsPath("/mnt/c/Users/file.txt", "/mnt/") returns "C:\Users\file.txt"}
      */
-    @Nullable
-    public static String getWindowsPath(String wslPath, String mntRoot) {
+    public static @Nullable String getWindowsPath(String wslPath, String mntRoot) {
         if (!wslPath.startsWith(mntRoot)) {
             return null;
         }

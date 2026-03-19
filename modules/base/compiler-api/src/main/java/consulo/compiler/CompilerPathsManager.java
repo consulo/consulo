@@ -51,13 +51,11 @@ public class CompilerPathsManager {
         myProject = project;
     }
 
-    @Nullable
-    public VirtualFile getCompilerOutput() {
+    public @Nullable VirtualFile getCompilerOutput() {
         return CompilerConfiguration.getInstance(myProject).getCompilerOutput();
     }
 
-    @Nullable
-    public String getCompilerOutputUrl() {
+    public @Nullable String getCompilerOutputUrl() {
         return CompilerConfiguration.getInstance(myProject).getCompilerOutputUrl();
     }
 
@@ -97,8 +95,7 @@ public class CompilerPathsManager {
         return ModuleCompilerPathsManager.getInstance(module).getCompilerOutputUrl(contentFolderType);
     }
 
-    @Nullable
-    public VirtualFile getCompilerOutput(Module module, ContentFolderTypeProvider contentFolderType) {
+    public @Nullable VirtualFile getCompilerOutput(Module module, ContentFolderTypeProvider contentFolderType) {
         return ModuleCompilerPathsManager.getInstance(module).getCompilerOutput(contentFolderType);
     }
 

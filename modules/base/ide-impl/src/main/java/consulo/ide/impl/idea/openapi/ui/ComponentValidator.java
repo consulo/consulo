@@ -205,8 +205,7 @@ public class ComponentValidator {
         validationInfo = null;
     }
 
-    @Nullable
-    public ValidationInfo getValidationInfo() {
+    public @Nullable ValidationInfo getValidationInfo() {
         return validationInfo;
     }
 

@@ -68,8 +68,7 @@ public abstract class LocalHistory {
     @DeprecationInfo("Use variant with LocalizeValue")
     public abstract Label putUserLabel(Project p, String name);
 
-    @Nullable
-    public abstract byte[] getByteContent(VirtualFile f, FileRevisionTimestampComparator c);
+    public abstract @Nullable byte[] getByteContent(VirtualFile f, FileRevisionTimestampComparator c);
 
     public abstract boolean isUnderControl(VirtualFile f);
 

@@ -48,7 +48,7 @@ public class NavBarUpdateQueue extends MergingUpdateQueue {
         IdeEventQueueProxy.getInstance().addActivityListener(this::restartRebuild, panel);
     }
 
-    private void requestModelUpdate(@Nullable final DataContext context, final @Nullable Object object, boolean requeue) {
+    private void requestModelUpdate(final @Nullable DataContext context, final @Nullable Object object, boolean requeue) {
         if (myModelUpdating.getAndSet(true) && !requeue) {
             return;
         }
@@ -276,7 +276,7 @@ public class NavBarUpdateQueue extends MergingUpdateQueue {
         queueAfterAll(myPanel::scrollSelectionToVisible, ID.SCROLL_TO_VISIBLE);
     }
 
-    private void queueRevalidate(@Nullable final Runnable after) {
+    private void queueRevalidate(final @Nullable Runnable after) {
         queue(new AfterModelUpdate(ID.REVALIDATE) {
             @Override
             protected void after() {

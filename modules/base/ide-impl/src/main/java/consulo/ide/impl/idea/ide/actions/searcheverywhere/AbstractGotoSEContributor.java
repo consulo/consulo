@@ -385,8 +385,7 @@ public abstract class AbstractGotoSEContributor implements WeightedSearchEverywh
         return 50;
     }
 
-    @Nullable
-    protected Navigatable createExtendedNavigatable(PsiElement psi, String searchText, int modifiers) {
+    protected @Nullable Navigatable createExtendedNavigatable(PsiElement psi, String searchText, int modifiers) {
         VirtualFile file = PsiUtilCore.getVirtualFile(psi);
         Couple<Integer> position = getLineAndColumn(searchText);
         boolean positionSpecified = position.first >= 0 || position.second >= 0;

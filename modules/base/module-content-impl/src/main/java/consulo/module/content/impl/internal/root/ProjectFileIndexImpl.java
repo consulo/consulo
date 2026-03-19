@@ -147,8 +147,7 @@ public class ProjectFileIndexImpl extends FileIndexBase implements ProjectFileIn
         return getClassRootForFile(file, getInfoForFileOrDirectory(file));
     }
 
-    @Nullable
-    public static VirtualFile getClassRootForFile(VirtualFile file, DirectoryInfo info) {
+    public static @Nullable VirtualFile getClassRootForFile(VirtualFile file, DirectoryInfo info) {
         return info.isInProject(file) ? info.getLibraryClassRoot() : null;
     }
 
@@ -157,8 +156,7 @@ public class ProjectFileIndexImpl extends FileIndexBase implements ProjectFileIn
         return getSourceRootForFile(file, getInfoForFileOrDirectory(file));
     }
 
-    @Nullable
-    public static VirtualFile getSourceRootForFile(VirtualFile file, DirectoryInfo info) {
+    public static @Nullable VirtualFile getSourceRootForFile(VirtualFile file, DirectoryInfo info) {
         return info.isInProject(file) ? info.getSourceRoot() : null;
     }
 
@@ -172,8 +170,7 @@ public class ProjectFileIndexImpl extends FileIndexBase implements ProjectFileIn
         return getContentRootForFile(getInfoForFileOrDirectory(file), file, honorExclusion);
     }
 
-    @Nullable
-    public static VirtualFile getContentRootForFile(DirectoryInfo info, VirtualFile file, boolean honorExclusion) {
+    public static @Nullable VirtualFile getContentRootForFile(DirectoryInfo info, VirtualFile file, boolean honorExclusion) {
         if (info.isInProject(file) || !honorExclusion && info.isExcluded(file)) {
             return info.getContentRoot();
         }

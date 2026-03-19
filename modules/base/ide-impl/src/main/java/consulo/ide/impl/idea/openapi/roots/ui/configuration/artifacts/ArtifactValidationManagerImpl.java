@@ -60,8 +60,7 @@ public class ArtifactValidationManagerImpl implements Disposable {
     }
   }
 
-  @Nullable
-  public Collection<ArtifactProblemDescription> getProblems(PackagingElementNode<?> node) {
+  public @Nullable Collection<ArtifactProblemDescription> getProblems(PackagingElementNode<?> node) {
     return myProblemsForNodes.get(node);
   }
 

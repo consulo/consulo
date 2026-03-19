@@ -39,8 +39,7 @@ public class RepositoryNode extends CheckedTreeNode implements EditableTreeNode,
 
     
     private final RepositoryWithBranchPanel myRepositoryPanel;
-    @Nullable
-    private Future<AtomicReference<OutgoingResult>> myFuture;
+    private @Nullable Future<AtomicReference<OutgoingResult>> myFuture;
 
     public RepositoryNode(RepositoryWithBranchPanel repositoryPanel, CheckBoxModel model, boolean enabled) {
         super(repositoryPanel);

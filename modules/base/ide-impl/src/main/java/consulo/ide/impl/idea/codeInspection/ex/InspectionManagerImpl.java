@@ -78,8 +78,7 @@ public class InspectionManagerImpl extends InspectionManagerBase {
         };
     }
 
-    @Nullable
-    public static SuppressIntentionAction[] getSuppressActions(InspectionToolWrapper toolWrapper) {
+    public static @Nullable SuppressIntentionAction[] getSuppressActions(InspectionToolWrapper toolWrapper) {
         InspectionTool tool = toolWrapper.getTool();
         if (tool instanceof CustomSuppressableInspectionTool customSuppressableInspectionTool) {
             return customSuppressableInspectionTool.getSuppressActions(null);

@@ -39,8 +39,7 @@ public interface ItemPresentationProvider<T extends NavigationItem> {
     return call.apply(element.getClass());
   }
 
-  @Nullable
-  public static ItemPresentation getItemPresentation(NavigationItem element) {
+  public static @Nullable ItemPresentation getItemPresentation(NavigationItem element) {
     ItemPresentationProvider<NavigationItem> provider = getItemPresentationProvider(element);
     return provider != null ? provider.getPresentation(element) : null;
   }

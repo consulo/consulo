@@ -50,8 +50,7 @@ public class ContextHelpAction extends AnAction implements DumbAware {
         }
     }
 
-    @Nullable
-    protected String getHelpId(DataContext dataContext) {
+    protected @Nullable String getHelpId(DataContext dataContext) {
         return myHelpID != null ? myHelpID : dataContext.getData(HelpManager.HELP_ID);
     }
 

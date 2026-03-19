@@ -197,8 +197,7 @@ public class GridImpl extends Wrapper implements Grid, Disposable, UiDataProvide
         }
     }
 
-    @Nullable
-    public Tab getTabIndex() {
+    public @Nullable Tab getTabIndex() {
         return getTab();
     }
 
@@ -211,8 +210,7 @@ public class GridImpl extends Wrapper implements Grid, Disposable, UiDataProvide
         cell.processAlert(content, activate);
     }
 
-    @Nullable
-    public GridCellImpl findCell(Content content) {
+    public @Nullable GridCellImpl findCell(Content content) {
         return myContent2Cell.get(content);
     }
 
@@ -308,8 +306,7 @@ public class GridImpl extends Wrapper implements Grid, Disposable, UiDataProvide
         }
     }
 
-    @Nullable
-    public Tab getTab() {
+    public @Nullable Tab getTab() {
         return myViewContext.getTabFor(this);
     }
 

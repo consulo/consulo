@@ -43,8 +43,7 @@ public abstract class AbstractSyntaxAwareInputStreamTransferableData extends Inp
   
   private final DataFlavor myDataFlavor;
 
-  @Nullable
-  private transient InputStream myDelegate;
+  private transient @Nullable InputStream myDelegate;
 
   public AbstractSyntaxAwareInputStreamTransferableData(SyntaxInfo syntaxInfo, DataFlavor flavor) {
     mySyntaxInfo = syntaxInfo;

@@ -66,8 +66,7 @@ public class WSLDistribution {
   /**
    * @return identification data of WSL distribution.
    */
-  @Nullable
-  public String readReleaseInfo() {
+  public @Nullable String readReleaseInfo() {
     try {
       String key = "PRETTY_NAME";
       String releaseInfo = "/etc/os-release"; // available for all distributions
@@ -321,16 +320,14 @@ public class WSLDistribution {
   /**
    * @return Windows-dependent path for a file, pointed by {@code wslPath} in WSL or null if path is unmappable
    */
-  @Nullable
-  public String getWindowsPath(String wslPath) {
+  public @Nullable String getWindowsPath(String wslPath) {
     return WSLUtil.getWindowsPath(wslPath, myDescriptor.getMntRoot());
   }
 
   /**
    * @return Linux path for a file pointed by {@code windowsPath} or null if unavailable, like \\MACHINE\path
    */
-  @Nullable
-  public String getWslPath(String windowsPath) {
+  public @Nullable String getWslPath(String windowsPath) {
     if (FileUtil.isWindowsAbsolutePath(windowsPath)) { // absolute windows path => /mnt/disk_letter/path
       return myDescriptor.getMntRoot() + convertWindowsPath(windowsPath);
     }
@@ -408,8 +405,7 @@ public class WSLDistribution {
    * @see VirtualFileUtil#findFileByIoFile(java.io.File, boolean)
    */
   //@ApiStatus.Experimental
-  @Nullable
-  public VirtualFile getUNCRootVirtualFile(boolean refreshIfNeed) {
+  public @Nullable VirtualFile getUNCRootVirtualFile(boolean refreshIfNeed) {
     if (!SystemProperties.getBooleanProperty("wsl.p9.support", true)) {
       return null;
     }

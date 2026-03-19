@@ -70,8 +70,7 @@ public class PsiVFSListener implements BulkFileListener {
         myFileManager = (FileManagerImpl) myManager.getFileManager();
     }
 
-    @Nullable
-    private PsiDirectory getCachedDirectory(VirtualFile parent) {
+    private @Nullable PsiDirectory getCachedDirectory(VirtualFile parent) {
         return parent == null ? null : myFileManager.getCachedDirectory(parent);
     }
 
@@ -521,8 +520,7 @@ public class PsiVFSListener implements BulkFileListener {
         }
     }
 
-    @Nullable
-    private PsiFile createFileCopyWithNewName(VirtualFile vFile, String name) {
+    private @Nullable PsiFile createFileCopyWithNewName(VirtualFile vFile, String name) {
         // TODO[ik] remove this. Event handling and generation must be in view providers mechanism since we
         // need to track changes in _all_ psi views (e.g. namespace changes in XML)
         FileTypeManager instance = FileTypeManager.getInstance();

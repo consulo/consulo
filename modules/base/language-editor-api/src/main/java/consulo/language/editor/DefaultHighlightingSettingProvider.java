@@ -34,6 +34,5 @@ import org.jspecify.annotations.Nullable;
 public abstract class DefaultHighlightingSettingProvider {
   public static final ExtensionPointName<DefaultHighlightingSettingProvider> EP_NAME = ExtensionPointName.create(DefaultHighlightingSettingProvider.class);
 
-  @Nullable
-  public abstract FileHighlightingSetting getDefaultSetting(Project project, VirtualFile file);
+  public abstract @Nullable FileHighlightingSetting getDefaultSetting(Project project, VirtualFile file);
 }

@@ -387,8 +387,7 @@ public class InspectionResultsView extends JPanel implements Disposable, Occuren
             && (activeToolWindowId == null || activeToolWindowId.equals(ToolWindowId.INSPECTION));
     }
 
-    @Nullable
-    private static OpenFileDescriptorImpl getOpenFileDescriptor(RefElement refElement) {
+    private static @Nullable OpenFileDescriptorImpl getOpenFileDescriptor(RefElement refElement) {
         VirtualFile[] file = new VirtualFile[1];
         int[] offset = new int[1];
 
@@ -498,8 +497,7 @@ public class InspectionResultsView extends JPanel implements Disposable, Occuren
         mySeverityGroupNodes.clear();
     }
 
-    @Nullable
-    public String getCurrentProfileName() {
+    public @Nullable String getCurrentProfileName() {
         return myInspectionProfile == null ? null : myInspectionProfile.getDisplayName();
     }
 

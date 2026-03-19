@@ -59,8 +59,7 @@ public abstract class TreeCollapseAllActionBase extends DumbAwareAction implemen
         expander.collapseAll();
     }
 
-    @Nullable
-    protected abstract TreeExpander getExpander(DataContext dataContext);
+    protected abstract @Nullable TreeExpander getExpander(DataContext dataContext);
 
     @Override
     @RequiredUIAccess
@@ -70,8 +69,7 @@ public abstract class TreeCollapseAllActionBase extends DumbAwareAction implemen
         presentation.setEnabled(expander != null && expander.canCollapse() && expander.isCollapseAllVisible());
     }
 
-    @Nullable
-    public static TreeExpander getExpanderMaybeFromToolWindow(AnActionEvent e, Function<DataContext, TreeExpander> getExpander) {
+    public static @Nullable TreeExpander getExpanderMaybeFromToolWindow(AnActionEvent e, Function<DataContext, TreeExpander> getExpander) {
         TreeExpander expander = getExpander.apply(e.getDataContext());
         if (expander != null) {
             return expander;

@@ -90,8 +90,7 @@ public class Util {
     return lines;
   }
 
-  @Nullable
-  private static DiffString[] splitByLines(@Nullable DiffString string) {
+  private static @Nullable DiffString[] splitByLines(@Nullable DiffString string) {
     if (string == null) return null;
     if (string.indexOf('\n') == -1) return new DiffString[]{string};
 
@@ -252,8 +251,7 @@ public class Util {
     return isEqual ? DiffFragmentOld.unchanged(text1, text2) : new DiffFragmentOld(text1, text2);
   }
 
-  @Nullable
-  private static DiffString notEmptyContent(DiffString string) {
+  private static @Nullable DiffString notEmptyContent(DiffString string) {
     return string.length() > 0 ? string : null;
   }
 

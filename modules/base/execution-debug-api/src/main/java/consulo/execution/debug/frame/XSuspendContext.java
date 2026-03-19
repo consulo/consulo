@@ -31,8 +31,7 @@ public abstract class XSuspendContext {
    * Returned execution stack will be selected by default in 'Frames' panel of 'Debug' tool window. Also it will be used to obtain current
    * stack frame to perform 'Evaluate' action, for example
    */
-  @Nullable
-  public XExecutionStack getActiveExecutionStack() {
+  public @Nullable XExecutionStack getActiveExecutionStack() {
     return null;
   }
 

@@ -158,8 +158,7 @@ public abstract class LogConsoleBase extends AdditionalTabComponent implements L
         myContentPreprocessor = contentPreprocessor;
     }
 
-    @Nullable
-    protected BufferedReader updateReaderIfNeeded(@Nullable BufferedReader reader) throws IOException {
+    protected @Nullable BufferedReader updateReaderIfNeeded(@Nullable BufferedReader reader) throws IOException {
         return reader;
     }
 
@@ -386,8 +385,7 @@ public abstract class LogConsoleBase extends AdditionalTabComponent implements L
         return myOriginalDocument;
     }
 
-    @Nullable
-    private Editor getEditor() {
+    private @Nullable Editor getEditor() {
         ConsoleView console = getConsole();
         return console != null ? ((DataProvider) console).getDataUnchecked(Editor.KEY) : null;
     }
@@ -495,8 +493,7 @@ public abstract class LogConsoleBase extends AdditionalTabComponent implements L
         }
     }
 
-    @Nullable
-    public synchronized ConsoleView getConsole() {
+    public synchronized @Nullable ConsoleView getConsole() {
         return myConsole;
     }
 
@@ -524,8 +521,7 @@ public abstract class LogConsoleBase extends AdditionalTabComponent implements L
     }
 
     @Override
-    @Nullable
-    public JComponent getToolbarContextComponent() {
+    public @Nullable JComponent getToolbarContextComponent() {
         ConsoleView console = getConsole();
         return console == null ? null : console.getComponent();
     }

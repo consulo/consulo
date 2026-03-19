@@ -35,8 +35,7 @@ public abstract class LogFilterModel {
 
   public abstract String getCustomFilter();
 
-  @Nullable
-  private Pattern getCustomPattern() {
+  private @Nullable Pattern getCustomPattern() {
     String customFilter = getCustomFilter();
     if (myCustomPattern == null && customFilter != null) {
       StringBuilder buf = new StringBuilder();
@@ -91,8 +90,7 @@ public abstract class LogFilterModel {
       myMessagePrefix = messagePrefix;
     }
 
-    @Nullable
-    public Key getKey() {
+    public @Nullable Key getKey() {
       return myKey;
     }
 
@@ -100,8 +98,7 @@ public abstract class LogFilterModel {
       return myApplicable;
     }
 
-    @Nullable
-    public String getMessagePrefix() {
+    public @Nullable String getMessagePrefix() {
       return myMessagePrefix;
     }
   }

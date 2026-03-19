@@ -73,8 +73,7 @@ abstract class SubCompositeConfigurable implements SearchableConfigurable.Parent
     return null;
   }
 
-  @Nullable
-  protected abstract DataViewsConfigurableUi createRootUi();
+  protected abstract @Nullable DataViewsConfigurableUi createRootUi();
 
   
   protected abstract DebuggerSettingsCategory getCategory();

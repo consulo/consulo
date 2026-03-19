@@ -159,8 +159,7 @@ public class DirectoryNode extends PackageDependenciesNode {
     return getTargetDirectory();
   }
 
-  @Nullable
-  private PsiDirectory getPsiDirectory() {
+  private @Nullable PsiDirectory getPsiDirectory() {
     if (myDirectory == null) {
       if (myVDirectory.isValid() && !myProject.isDisposed()) {
         myDirectory = PsiManager.getInstance(myProject).findDirectory(myVDirectory);
@@ -224,8 +223,7 @@ public class DirectoryNode extends PackageDependenciesNode {
     return myWrapper;
   }
 
-  @Nullable
-  public DirectoryNode getCompactedDirNode() {
+  public @Nullable DirectoryNode getCompactedDirNode() {
     return myCompactPackages ? myCompactedDirNode : null;
   }
 

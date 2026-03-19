@@ -225,8 +225,7 @@ public class PsiElementRenameHandler implements RenameHandler {
             || element.getApplication().getExtensionPoint(VetoRenameCondition.class).anyMatchSafe(it -> it.isVetoed(element));
     }
 
-    @Nullable
-    public static PsiElement getElement(DataContext dataContext) {
+    public static @Nullable PsiElement getElement(DataContext dataContext) {
         PsiElement[] elementArray = BaseRefactoringAction.getPsiElementArray(dataContext);
 
         if (elementArray.length != 1) {

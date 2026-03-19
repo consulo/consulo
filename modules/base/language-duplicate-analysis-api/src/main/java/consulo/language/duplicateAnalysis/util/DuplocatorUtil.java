@@ -79,8 +79,7 @@ public class DuplocatorUtil {
     return false;
   }
 
-  @Nullable
-  public static PsiElement skipNodeIfNeccessary(PsiElement element, EquivalenceDescriptor descriptor, NodeFilter filter) {
+  public static @Nullable PsiElement skipNodeIfNeccessary(PsiElement element, EquivalenceDescriptor descriptor, NodeFilter filter) {
     if (element == null) {
       return null;
     }
@@ -105,8 +104,7 @@ public class DuplocatorUtil {
     return getOnlyChild(element, filter);
   }
 
-  @Nullable
-  private static PsiElement getOnlyChildFromDescriptor(EquivalenceDescriptor equivalenceDescriptor, NodeFilter filter) {
+  private static @Nullable PsiElement getOnlyChildFromDescriptor(EquivalenceDescriptor equivalenceDescriptor, NodeFilter filter) {
     if (!equivalenceDescriptor.getConstants().isEmpty()) {
       return null;
     }
@@ -286,8 +284,7 @@ public class DuplocatorUtil {
     }
   }
 
-  @Nullable
-  public static DuplocatorState getDuplocatorState(PsiFragment frag) {
+  public static @Nullable DuplocatorState getDuplocatorState(PsiFragment frag) {
     Language language = frag.getLanguage();
     if (language == null) {
       return null;

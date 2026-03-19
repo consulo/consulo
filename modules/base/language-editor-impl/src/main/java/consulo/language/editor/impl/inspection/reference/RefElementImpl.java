@@ -91,8 +91,7 @@ public abstract class RefElementImpl extends RefEntityImpl implements RefElement
   }
 
   @Override
-  @Nullable
-  public Image getIcon(boolean expanded) {
+  public @Nullable Image getIcon(boolean expanded) {
     PsiElement element = getPsiElement();
     if (element != null && element.isValid()) {
       return IconDescriptorUpdaters.getIcon(element, Iconable.ICON_FLAG_VISIBILITY | Iconable.ICON_FLAG_READ_STATUS);
@@ -112,13 +111,11 @@ public abstract class RefElementImpl extends RefEntityImpl implements RefElement
   }
 
   @Override
-  @Nullable
-  public PsiElement getPsiElement() {
+  public @Nullable PsiElement getPsiElement() {
     return myID.getElement();
   }
 
-  @Nullable
-  public PsiFile getContainingFile() {
+  public @Nullable PsiFile getContainingFile() {
     return myID.getContainingFile();
   }
 
@@ -235,8 +232,7 @@ public abstract class RefElementImpl extends RefEntityImpl implements RefElement
   }
 
   @Override
-  @Nullable
-  public String getURL() {
+  public @Nullable String getURL() {
     PsiElement element = getPsiElement();
     if (element == null || !element.isPhysical()) return null;
     PsiFile containingFile = element.getContainingFile();

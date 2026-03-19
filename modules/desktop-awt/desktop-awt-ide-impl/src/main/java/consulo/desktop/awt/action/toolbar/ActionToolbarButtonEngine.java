@@ -115,8 +115,7 @@ public class ActionToolbarButtonEngine {
         }
     }
 
-    @Nullable
-    protected String getShortcutText() {
+    protected @Nullable String getShortcutText() {
         CustomShortcutBuilder shortcutBuilder = myPresentation.getClientProperty(CustomShortcutBuilder.KEY);
         if (shortcutBuilder != null) {
             LocalizeValue shortcutText = shortcutBuilder.build();
@@ -151,8 +150,7 @@ public class ActionToolbarButtonEngine {
         myButton.setRolloverIcon(TargetAWT.to(hoveredIcon));
     }
 
-    @Nullable
-    private Image wrapWithArrow(@Nullable Image icon) {
+    private @Nullable Image wrapWithArrow(@Nullable Image icon) {
         if (!(myIdeAction instanceof ActionGroup group)) {
             return icon;
         }

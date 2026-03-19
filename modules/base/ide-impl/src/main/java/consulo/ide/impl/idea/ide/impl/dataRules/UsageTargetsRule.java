@@ -7,8 +7,7 @@ import consulo.usage.UsageView;
 import org.jspecify.annotations.Nullable;
 
 public final class UsageTargetsRule {
-    @Nullable
-    static UsageTarget[] getData(DataSnapshot dataProvider) {
+    static @Nullable UsageTarget[] getData(DataSnapshot dataProvider) {
         return UsageTargetUtil.findUsageTargets(dataProvider);
     }
 }

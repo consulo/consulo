@@ -59,8 +59,7 @@ public class XBreakpointUtil {
         return (XBreakpointType<B, ?>) breakpoint.getType();
     }
 
-    @Nullable
-    public static XBreakpointType<?, ?> findType(String id) {
+    public static @Nullable XBreakpointType<?, ?> findType(String id) {
         for (XBreakpointType breakpointType : getBreakpointTypes()) {
             if (id.equals(breakpointType.getId())) {
                 return breakpointType;

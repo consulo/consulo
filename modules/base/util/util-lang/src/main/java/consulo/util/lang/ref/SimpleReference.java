@@ -22,8 +22,7 @@ import java.util.function.Supplier;
  * @author ven
  */
 public class SimpleReference<T> implements Supplier<T> {
-  @Nullable
-  private T myValue;
+  private @Nullable T myValue;
 
   public SimpleReference() {
   }

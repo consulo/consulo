@@ -162,8 +162,7 @@ public class VcsLogFiltererImpl implements VcsLogFilterer {
       }
     }
 
-    @Nullable
-    private VisiblePack getVisiblePack(@Nullable VisiblePack visiblePack, List<Request> requests) {
+    private @Nullable VisiblePack getVisiblePack(@Nullable VisiblePack visiblePack, List<Request> requests) {
       ValidateRequest validateRequest = Lists.findLastInstance(requests, ValidateRequest.class);
       FilterRequest filterRequest = Lists.findLastInstance(requests, FilterRequest.class);
       SortTypeRequest sortTypeRequest = Lists.findLastInstance(requests, SortTypeRequest.class);

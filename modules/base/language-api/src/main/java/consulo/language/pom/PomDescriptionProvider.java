@@ -26,14 +26,12 @@ import org.jspecify.annotations.Nullable;
  */
 public abstract class PomDescriptionProvider implements ElementDescriptionProvider{
   @Override
-  @Nullable
-  public String getElementDescription(PsiElement element, ElementDescriptionLocation location) {
+  public @Nullable String getElementDescription(PsiElement element, ElementDescriptionLocation location) {
     if (element instanceof PomTargetPsiElement) {
       return getElementDescription(((PomTargetPsiElement)element).getTarget(), location);
     }
     return null;
   }
 
-  @Nullable
-  public abstract String getElementDescription(PomTarget element, ElementDescriptionLocation location);
+  public abstract @Nullable String getElementDescription(PomTarget element, ElementDescriptionLocation location);
 }

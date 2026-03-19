@@ -53,15 +53,13 @@ public class StdXMLBuilder
    /**
     * This stack contains the current element and its parents.
     */
-   @Nullable
-   private Stack stack = null;
+   private @Nullable Stack stack = null;
 
 
    /**
     * The root element of the parsed XML tree.
     */
-   @Nullable
-   private IXMLElement root = null;
+   private @Nullable IXMLElement root = null;
 
 
    /**
@@ -317,8 +315,7 @@ public class StdXMLBuilder
     *
     * @return the result of the building process.
     */
-   @Nullable
-   public Object getResult()
+   public @Nullable Object getResult()
    {
       return this.root;
    }

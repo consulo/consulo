@@ -66,8 +66,7 @@ public class UISettings extends SimpleModificationTracker implements PersistentS
     /**
      * @return null if application is not initialized
      */
-    @Nullable
-    public static UISettings getInstanceOrNull() {
+    public static @Nullable UISettings getInstanceOrNull() {
         if (ourInstance != null) {
             return ourInstance;
         }

@@ -59,8 +59,7 @@ public class GraphTableModel extends AbstractTableModel {
         return myDataPack.getVisibleGraph().getRowInfo(row).getCommit();
     }
 
-    @Nullable
-    public CommitId getCommitIdAtRow(int row) {
+    public @Nullable CommitId getCommitIdAtRow(int row) {
         return myLogData.getCommitId(getIdAtRow(row));
     }
 

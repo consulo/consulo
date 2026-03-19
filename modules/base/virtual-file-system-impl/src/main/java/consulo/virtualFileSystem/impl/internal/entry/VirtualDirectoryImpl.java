@@ -59,8 +59,7 @@ public class VirtualDirectoryImpl extends VirtualFileSystemEntry {
     return myFs;
   }
 
-  @Nullable
-  private VirtualFileSystemEntry findChild(String name, boolean doRefresh, boolean ensureCanonicalName, NewVirtualFileSystem delegate) {
+  private @Nullable VirtualFileSystemEntry findChild(String name, boolean doRefresh, boolean ensureCanonicalName, NewVirtualFileSystem delegate) {
     boolean caseSensitive = delegate.isCaseSensitive();
     VirtualFileSystemEntry result = doFindChild(name, ensureCanonicalName, delegate, caseSensitive);
 
@@ -116,8 +115,7 @@ public class VirtualDirectoryImpl extends VirtualFileSystemEntry {
     return findInPersistence(name, ensureCanonicalName, delegate, caseSensitive);
   }
 
-  @Nullable
-  private VirtualFileSystemEntry findInPersistence(String name, boolean ensureCanonicalName, NewVirtualFileSystem delegate, boolean caseSensitive) {
+  private @Nullable VirtualFileSystemEntry findInPersistence(String name, boolean ensureCanonicalName, NewVirtualFileSystem delegate, boolean caseSensitive) {
     VirtualFileSystemEntry child;
     synchronized (myData) {
       // maybe another doFindChild() sneaked in the middle
@@ -249,8 +247,7 @@ public class VirtualDirectoryImpl extends VirtualFileSystemEntry {
     return child;
   }
 
-  @Nullable
-  private VirtualFileSystemEntry createAndFindChildWithEventFire(String name, NewVirtualFileSystem delegate) {
+  private @Nullable VirtualFileSystemEntry createAndFindChildWithEventFire(String name, NewVirtualFileSystem delegate) {
     VirtualFile fake = new FakeVirtualFile(this, name);
     FileAttributes attributes = delegate.getAttributes(fake);
     if (attributes == null) return null;
@@ -265,14 +262,12 @@ public class VirtualDirectoryImpl extends VirtualFileSystemEntry {
   }
 
   @Override
-  @Nullable
-  public NewVirtualFile refreshAndFindChild(String name) {
+  public @Nullable NewVirtualFile refreshAndFindChild(String name) {
     return findChild(name, true, true, getFileSystem());
   }
 
   @Override
-  @Nullable
-  public NewVirtualFile findChildIfCached(String name) {
+  public @Nullable NewVirtualFile findChildIfCached(String name) {
     boolean caseSensitive = getFileSystem().isCaseSensitive();
     VirtualFileSystemEntry found = doFindChildInArray(name, caseSensitive);
     //noinspection UseVirtualFileEquals
@@ -456,8 +451,7 @@ public class VirtualDirectoryImpl extends VirtualFileSystemEntry {
   }
 
   @Override
-  @Nullable
-  public VirtualFileSystemEntry findChild(String name) {
+  public @Nullable VirtualFileSystemEntry findChild(String name) {
     return findChild(name, false, true, getFileSystem());
   }
 

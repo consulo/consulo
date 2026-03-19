@@ -16,8 +16,7 @@ public final class PlaceInfo {
   private final FileEditorState myNavigationState;
   private final String myEditorTypeId;
   private final Reference<FileEditorWindow> myWindow;
-  @Nullable
-  private final RangeMarker myCaretPosition;
+  private final @Nullable RangeMarker myCaretPosition;
   private final long myTimeStamp;
 
   public PlaceInfo(VirtualFile file,
@@ -58,8 +57,7 @@ public final class PlaceInfo {
     return getFile().getName() + " " + getNavigationState();
   }
 
-  @Nullable
-  public RangeMarker getCaretPosition() {
+  public @Nullable RangeMarker getCaretPosition() {
     return myCaretPosition;
   }
 

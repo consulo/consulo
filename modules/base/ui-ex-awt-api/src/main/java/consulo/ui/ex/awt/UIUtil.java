@@ -2295,8 +2295,7 @@ public class UIUtil {
         return parent == null ? c.getBackground() : parent.getBackground();
     }
 
-    @Nullable
-    public static Component findNearestOpaque(@Nullable Component c) {
+    public static @Nullable Component findNearestOpaque(@Nullable Component c) {
         Component eachParent = c;
         while (eachParent != null) {
             if (eachParent.isOpaque()) {
@@ -2308,8 +2307,7 @@ public class UIUtil {
         return null;
     }
 
-    @Nullable
-    public static Component findParentByCondition(@Nullable Component c, Predicate<Component> condition) {
+    public static @Nullable Component findParentByCondition(@Nullable Component c, Predicate<Component> condition) {
         Component eachParent = c;
         while (eachParent != null) {
             if (condition.test(eachParent)) {
@@ -2402,8 +2400,7 @@ public class UIUtil {
         }
     }
 
-    @Nullable
-    public static Component findUltimateParent(Component c) {
+    public static @Nullable Component findUltimateParent(Component c) {
         if (c == null) {
             return null;
         }
@@ -2456,8 +2453,7 @@ public class UIUtil {
     }
 
 
-    @Nullable
-    public static StyleSheet loadStyleSheet(@Nullable URL url) {
+    public static @Nullable StyleSheet loadStyleSheet(@Nullable URL url) {
         if (url == null) {
             return null;
         }
@@ -2833,8 +2829,7 @@ public class UIUtil {
         return child == parent;
     }
 
-    @Nullable
-    public static <T> T getParentOfType(Class<? extends T> cls, Component c) {
+    public static @Nullable <T> T getParentOfType(Class<? extends T> cls, Component c) {
         Component eachParent = c;
         while (eachParent != null) {
             if (cls.isAssignableFrom(eachParent.getClass())) {
@@ -2864,8 +2859,7 @@ public class UIUtil {
         });
     }
 
-    @Nullable
-    public static <T extends JComponent> T findComponentOfType(JComponent parent, Class<T> cls) {
+    public static @Nullable <T extends JComponent> T findComponentOfType(JComponent parent, Class<T> cls) {
         if (parent == null || cls.isAssignableFrom(parent.getClass())) {
             @SuppressWarnings({"unchecked"}) T t = (T)parent;
             return t;
@@ -3135,8 +3129,7 @@ public class UIUtil {
         }
     }
 
-    @Nullable
-    public static JRootPane getRootPane(Component c) {
+    public static @Nullable JRootPane getRootPane(Component c) {
         JRootPane root = getParentOfType(JRootPane.class, c);
         if (root != null) {
             return root;
@@ -3196,13 +3189,11 @@ public class UIUtil {
         return rootPane != null && rootPane.getClientProperty("DIALOG_ROOT_PANE") instanceof Boolean isDialog && isDialog;
     }
 
-    @Nullable
-    public static JComponent mergeComponentsWithAnchor(PanelWithAnchor... panels) {
+    public static @Nullable JComponent mergeComponentsWithAnchor(PanelWithAnchor... panels) {
         return mergeComponentsWithAnchor(Arrays.asList(panels));
     }
 
-    @Nullable
-    public static JComponent mergeComponentsWithAnchor(Collection<? extends PanelWithAnchor> panels) {
+    public static @Nullable JComponent mergeComponentsWithAnchor(Collection<? extends PanelWithAnchor> panels) {
         JComponent maxWidthAnchor = null;
         int maxWidth = 0;
         for (PanelWithAnchor panel : panels) {
@@ -3304,8 +3295,7 @@ public class UIUtil {
         }
     }
 
-    @Nullable
-    public static Color getColorAt(Icon icon, int x, int y) {
+    public static @Nullable Color getColorAt(Icon icon, int x, int y) {
         if (0 <= x && x < icon.getIconWidth() && 0 <= y && y < icon.getIconHeight()) {
             BufferedImage image = createImage(icon.getIconWidth(), icon.getIconHeight(), BufferedImage.TYPE_INT_RGB);
             icon.paintIcon(null, image.getGraphics(), 0, 0);
@@ -3376,8 +3366,7 @@ public class UIUtil {
         return (Registry.is("ui.no.bangs.and.whistles", false)) ? ColorUtil.mix(c1, c2, .5) : new GradientPaint(x1, y1, c1, x2, y2, c2);
     }
 
-    @Nullable
-    public static Point getLocationOnScreen(JComponent component) {
+    public static @Nullable Point getLocationOnScreen(JComponent component) {
         int dx = 0;
         int dy = 0;
         for (Container c = component; c != null; c = c.getParent()) {
@@ -3486,8 +3475,7 @@ public class UIUtil {
      * @return the first window ancestor of the component; or {@code null}
      * if the component is not a window and is not contained inside a window
      */
-    @Nullable
-    public static Window getWindow(@Nullable Component component) {
+    public static @Nullable Window getWindow(@Nullable Component component) {
         return component == null ? null : component instanceof Window window ? window : SwingUtilities.getWindowAncestor(component);
     }
 
@@ -3758,8 +3746,7 @@ public class UIUtil {
     }
 
     //x and y should be from {0, 0} to {parent.getWidth(), parent.getHeight()}
-    @Nullable
-    public static Component getDeepestComponentAt(Component parent, int x, int y) {
+    public static @Nullable Component getDeepestComponentAt(Component parent, int x, int y) {
         Component component = SwingUtilities.getDeepestComponentAt(parent, x, y);
         if (component != null && component.getParent() instanceof JRootPane rootPane) {//GlassPane case
             Point point = SwingUtilities.convertPoint(parent, new Point(x, y), rootPane.getLayeredPane());

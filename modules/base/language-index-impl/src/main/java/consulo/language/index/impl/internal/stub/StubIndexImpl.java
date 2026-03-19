@@ -91,8 +91,7 @@ public final class StubIndexImpl extends StubIndex implements PersistentStateCom
         myStubProcessingHelper = new StubProcessingHelper();
     }
 
-    @Nullable
-    static StubIndexImpl getInstanceOrInvalidate() {
+    static @Nullable StubIndexImpl getInstanceOrInvalidate() {
         if (ourForcedClean.compareAndSet(null, Boolean.TRUE)) {
             return null;
         }

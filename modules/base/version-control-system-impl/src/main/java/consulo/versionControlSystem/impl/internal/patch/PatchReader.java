@@ -76,8 +76,7 @@ public class PatchReader {
         return getTextPatches();
     }
 
-    @Nullable
-    public CharSequence getBaseRevision(Project project, String relativeFilePath) {
+    public @Nullable CharSequence getBaseRevision(Project project, String relativeFilePath) {
         Map<String, Map<String, CharSequence>> map = myAdditionalInfoParser.getResultMap();
         if (!map.isEmpty()) {
             Map<String, CharSequence> inner = map.get(relativeFilePath);
@@ -362,8 +361,7 @@ public class PatchReader {
             return curPatch;
         }
 
-        @Nullable
-        private PatchHunk readNextHunkUnified(ListIterator<String> iterator) throws PatchSyntaxException {
+        private @Nullable PatchHunk readNextHunkUnified(ListIterator<String> iterator) throws PatchSyntaxException {
             String curLine = null;
             int numIncrements = 0;
             while (iterator.hasNext()) {
@@ -427,8 +425,7 @@ public class PatchReader {
             return hunk;
         }
 
-        @Nullable
-        public String getLastName() {
+        public @Nullable String getLastName() {
             if (myPatches.isEmpty()) {
                 return null;
             }
@@ -438,13 +435,11 @@ public class PatchReader {
             }
         }
 
-        @Nullable
-        private static PatchLine parsePatchLine(String line, int prefixLength) {
+        private static @Nullable PatchLine parsePatchLine(String line, int prefixLength) {
             return parsePatchLine(line, prefixLength, true);
         }
 
-        @Nullable
-        private static PatchLine parsePatchLine(String line, int prefixLength, boolean expectMeaningfulLines) {
+        private static @Nullable PatchLine parsePatchLine(String line, int prefixLength, boolean expectMeaningfulLines) {
             PatchLine.Type type;
             if (line.startsWith("+") && expectMeaningfulLines) {
                 type = PatchLine.Type.ADD;
@@ -468,8 +463,7 @@ public class PatchReader {
             return new PatchLine(type, lineText);
         }
 
-        @Nullable
-        private PatchHunk readNextHunkContext(ListIterator<String> iterator) throws PatchSyntaxException {
+        private @Nullable PatchHunk readNextHunkContext(ListIterator<String> iterator) throws PatchSyntaxException {
             while (iterator.hasNext()) {
                 String curLine = iterator.next();
                 if (curLine.startsWith(CONTEXT_FILE_PREFIX)) {

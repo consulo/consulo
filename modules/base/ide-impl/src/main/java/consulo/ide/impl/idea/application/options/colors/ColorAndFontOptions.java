@@ -681,8 +681,7 @@ public class ColorAndFontOptions extends SearchableConfigurable.Parent.Abstract 
         }
     }
 
-    @Nullable
-    private static String calcType(@Nullable EditorColorKey backgroundKey, @Nullable EditorColorKey foregroundKey) {
+    private static @Nullable String calcType(@Nullable EditorColorKey backgroundKey, @Nullable EditorColorKey foregroundKey) {
         if (foregroundKey != null) {
             return foregroundKey.getExternalName();
         }
@@ -1236,8 +1235,7 @@ public class ColorAndFontOptions extends SearchableConfigurable.Parent.Abstract 
         return getHelpTopic();
     }
 
-    @Nullable
-    public SearchableConfigurable findSubConfigurable(Class pageClass) {
+    public @Nullable SearchableConfigurable findSubConfigurable(Class pageClass) {
         if (mySubPanelFactories == null) {
             buildConfigurables();
         }
@@ -1249,8 +1247,7 @@ public class ColorAndFontOptions extends SearchableConfigurable.Parent.Abstract 
         return null;
     }
 
-    @Nullable
-    public SearchableConfigurable findSubConfigurable(String pageName) {
+    public @Nullable SearchableConfigurable findSubConfigurable(String pageName) {
         if (mySubPanelFactories == null) {
             buildConfigurables();
         }
@@ -1262,8 +1259,7 @@ public class ColorAndFontOptions extends SearchableConfigurable.Parent.Abstract 
         return null;
     }
 
-    @Nullable
-    public NewColorAndFontPanel findPage(String pageName) {
+    public @Nullable NewColorAndFontPanel findPage(String pageName) {
         InnerSearchableConfigurable child = (InnerSearchableConfigurable) findSubConfigurable(pageName);
         return child == null ? null : child.createPanel();
     }

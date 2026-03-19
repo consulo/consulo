@@ -87,8 +87,7 @@ public class BaseInjection implements Injection, PersistentStateComponent<Elemen
   }
 
   @Override
-  @Nullable
-  public Language getInjectedLanguage() {
+  public @Nullable Language getInjectedLanguage() {
     return InjectorUtils.getLanguage(this);
   }
 

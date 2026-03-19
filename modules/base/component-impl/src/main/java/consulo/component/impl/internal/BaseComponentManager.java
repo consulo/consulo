@@ -306,8 +306,7 @@ public abstract class BaseComponentManager extends UserDataHolderBase implements
         checkCanceled();
     }
 
-    @Nullable
-    protected Object initProgressIndicatorForLazyServices() {
+    protected @Nullable Object initProgressIndicatorForLazyServices() {
         return null;
     }
 

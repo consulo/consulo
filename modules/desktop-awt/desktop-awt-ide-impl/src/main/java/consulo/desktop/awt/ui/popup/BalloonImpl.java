@@ -946,7 +946,7 @@ public class BalloonImpl implements Balloon, IdeTooltip.Ui, ScreenAreaConsumer {
         show(new RelativePoint(pane, new Point(0, 0)), Position.above);
     }
 
-    private void runAnimation(boolean forward, final JLayeredPane layeredPane, @Nullable final Runnable onDone) {
+    private void runAnimation(boolean forward, final JLayeredPane layeredPane, final @Nullable Runnable onDone) {
         if (myAnimator != null) {
             Disposer.dispose(myAnimator);
         }

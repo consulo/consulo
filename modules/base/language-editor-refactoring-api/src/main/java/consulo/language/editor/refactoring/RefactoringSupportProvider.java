@@ -77,8 +77,7 @@ public abstract class RefactoringSupportProvider implements LanguageExtension {
    * @return handler for introducing local variables in this language
    * @see RefactoringActionHandler
    */
-  @Nullable
-  public RefactoringActionHandler getIntroduceVariableHandler() {
+  public @Nullable RefactoringActionHandler getIntroduceVariableHandler() {
     return null;
   }
 
@@ -86,8 +85,7 @@ public abstract class RefactoringSupportProvider implements LanguageExtension {
    * @return handler for extracting methods in this language
    * @see RefactoringActionHandler
    */
-  @Nullable
-  public RefactoringActionHandler getExtractMethodHandler() {
+  public @Nullable RefactoringActionHandler getExtractMethodHandler() {
     return null;
   }
 
@@ -95,8 +93,7 @@ public abstract class RefactoringSupportProvider implements LanguageExtension {
    * @return handler for introducing constants in this language
    * @see RefactoringActionHandler
    */
-  @Nullable
-  public RefactoringActionHandler getIntroduceConstantHandler() {
+  public @Nullable RefactoringActionHandler getIntroduceConstantHandler() {
     return null;
   }
 
@@ -104,8 +101,7 @@ public abstract class RefactoringSupportProvider implements LanguageExtension {
    * @return handler for introducing fields in this language
    * @see RefactoringActionHandler
    */
-  @Nullable
-  public RefactoringActionHandler getIntroduceFieldHandler() {
+  public @Nullable RefactoringActionHandler getIntroduceFieldHandler() {
     return null;
   }
 
@@ -113,8 +109,7 @@ public abstract class RefactoringSupportProvider implements LanguageExtension {
    * @return handler for introducing parameters in this language
    * @see RefactoringActionHandler
    */
-  @Nullable
-  public RefactoringActionHandler getIntroduceParameterHandler() {
+  public @Nullable RefactoringActionHandler getIntroduceParameterHandler() {
     return null;
   }
 
@@ -122,8 +117,7 @@ public abstract class RefactoringSupportProvider implements LanguageExtension {
    * @return handler for pulling up members in this language
    * @see RefactoringActionHandler
    */
-  @Nullable
-  public RefactoringActionHandler getPullUpHandler() {
+  public @Nullable RefactoringActionHandler getPullUpHandler() {
     return null;
   }
 
@@ -131,8 +125,7 @@ public abstract class RefactoringSupportProvider implements LanguageExtension {
    * @return handler for pushing down members in this language
    * @see RefactoringActionHandler
    */
-  @Nullable
-  public RefactoringActionHandler getPushDownHandler() {
+  public @Nullable RefactoringActionHandler getPushDownHandler() {
     return null;
   }
 
@@ -140,8 +133,7 @@ public abstract class RefactoringSupportProvider implements LanguageExtension {
    * @return handler for extracting members to an interface in this language
    * @see RefactoringActionHandler
    */
-  @Nullable
-  public RefactoringActionHandler getExtractInterfaceHandler() {
+  public @Nullable RefactoringActionHandler getExtractInterfaceHandler() {
     return null;
   }
 
@@ -149,8 +141,7 @@ public abstract class RefactoringSupportProvider implements LanguageExtension {
    * @return handler for extracting members to some module in this language
    * @see RefactoringActionHandler
    */
-  @Nullable
-  public RefactoringActionHandler getExtractModuleHandler() {
+  public @Nullable RefactoringActionHandler getExtractModuleHandler() {
     return null;
   }
 
@@ -158,8 +149,7 @@ public abstract class RefactoringSupportProvider implements LanguageExtension {
    * @return handler for extracting super class in this language
    * @see RefactoringActionHandler
    */
-  @Nullable
-  public RefactoringActionHandler getExtractSuperClassHandler() {
+  public @Nullable RefactoringActionHandler getExtractSuperClassHandler() {
     return null;
   }
 
@@ -167,8 +157,7 @@ public abstract class RefactoringSupportProvider implements LanguageExtension {
    * @return handler for changing signature in this language
    * @see RefactoringActionHandler
    */
-  @Nullable
-  public ChangeSignatureHandler getChangeSignatureHandler() {
+  public @Nullable ChangeSignatureHandler getChangeSignatureHandler() {
     return null;
   }
 
@@ -184,8 +173,7 @@ public abstract class RefactoringSupportProvider implements LanguageExtension {
    * @return handler for extracting [delegate] class in this language
    * @see RefactoringActionHandler
    */
-  @Nullable
-  public RefactoringActionHandler getExtractClassHandler() {
+  public @Nullable RefactoringActionHandler getExtractClassHandler() {
     return null;
   }
 

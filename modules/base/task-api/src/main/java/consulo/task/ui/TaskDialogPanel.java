@@ -32,14 +32,12 @@ public abstract class TaskDialogPanel
 	
 	public abstract JComponent getPanel();
 
-	@Nullable
-	public JComponent getPreferredFocusedComponent()
+	public @Nullable JComponent getPreferredFocusedComponent()
 	{
 		return null;
 	}
 
-	@Nullable
-	public ValidationInfo validate()
+	public @Nullable ValidationInfo validate()
 	{
 		return null;
 	}

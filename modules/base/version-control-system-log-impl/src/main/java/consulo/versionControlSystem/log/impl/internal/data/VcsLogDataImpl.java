@@ -183,8 +183,7 @@ public class VcsLogDataImpl implements VcsLogData {
     }
 
     @Override
-    @Nullable
-    public CommitId getCommitId(int commitIndex) {
+    public @Nullable CommitId getCommitId(int commitIndex) {
         return myHashMap.getCommitId(commitIndex);
     }
 

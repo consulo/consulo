@@ -87,8 +87,7 @@ public class BaseVirtualFileManager extends VirtualFileManagerEx {
     }
 
     @Override
-    @Nullable
-    public VirtualFileSystem getFileSystem(String protocol) {
+    public @Nullable VirtualFileSystem getFileSystem(String protocol) {
         return myVirtualFileSystems.get(protocol);
     }
 
@@ -152,8 +151,7 @@ public class BaseVirtualFileManager extends VirtualFileManagerEx {
         return fileSystem.refreshAndFindFileByPath(extractPath(url));
     }
 
-    @Nullable
-    private VirtualFileSystem getFileSystemForUrl(String url) {
+    private @Nullable VirtualFileSystem getFileSystemForUrl(String url) {
         String protocol = extractProtocol(url);
         if (protocol == null) {
             return null;
@@ -350,19 +348,16 @@ public class BaseVirtualFileManager extends VirtualFileManagerEx {
     }
 
     @Override
-    @Nullable
-    public VirtualFile findFileByNioPath(Path path) {
+    public @Nullable VirtualFile findFileByNioPath(Path path) {
         return findByNioPath(path, false);
     }
 
     @Override
-    @Nullable
-    public VirtualFile refreshAndFindFileByNioPath(Path path) {
+    public @Nullable VirtualFile refreshAndFindFileByNioPath(Path path) {
         return findByNioPath(path, true);
     }
 
-    @Nullable
-    private VirtualFile findByNioPath(Path nioPath, boolean refresh) {
+    private @Nullable VirtualFile findByNioPath(Path nioPath, boolean refresh) {
         if (!FileSystems.getDefault().equals(nioPath.getFileSystem())) {
             return null;
         }

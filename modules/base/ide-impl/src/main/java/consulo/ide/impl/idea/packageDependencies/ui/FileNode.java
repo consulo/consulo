@@ -125,8 +125,7 @@ public class FileNode extends PackageDependenciesNode implements Comparable<File
     return deps.containsKey(getFile());
   }
 
-  @Nullable
-  private PsiFile getFile() {
+  private @Nullable PsiFile getFile() {
     return myVFile.isValid() && !myProject.isDisposed() ? PsiManager.getInstance(myProject).findFile(myVFile) : null;
   }
 

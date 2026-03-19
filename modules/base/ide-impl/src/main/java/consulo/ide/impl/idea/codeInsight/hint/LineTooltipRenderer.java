@@ -53,8 +53,7 @@ public class LineTooltipRenderer extends ComparableObject.Impl implements Toolti
      * very nbsp; long nbsp; text nbsp; with nbsp; 'nbsp;' as spaces cannot be break
      */
     
-    @Nullable
-    protected String myText;
+    protected @Nullable String myText;
 
     //is used for suppressing some events while processing links
     private volatile boolean myActiveLink;
@@ -582,8 +581,7 @@ public class LineTooltipRenderer extends ComparableObject.Impl implements Toolti
         myText = XmlStringUtil.wrapInHtml(newBody);
     }
 
-    @Nullable
-    public String getText() {
+    public @Nullable String getText() {
         return myText;
     }
 }

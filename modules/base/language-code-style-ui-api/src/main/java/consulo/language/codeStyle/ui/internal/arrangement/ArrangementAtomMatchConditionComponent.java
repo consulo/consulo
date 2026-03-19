@@ -91,22 +91,16 @@ public class ArrangementAtomMatchConditionComponent implements ArrangementUiComp
     
     private final ArrangementAnimationPanel myAnimationPanel;
 
-    @Nullable
-    private final JButton myCloseButton;
-    @Nullable
-    private final Rectangle myCloseButtonBounds;
-    @Nullable
-    private final Consumer<ArrangementAtomMatchConditionComponent> myCloseCallback;
+    private final @Nullable JButton myCloseButton;
+    private final @Nullable Rectangle myCloseButtonBounds;
+    private final @Nullable Consumer<ArrangementAtomMatchConditionComponent> myCloseCallback;
 
     
     private ColorValue myBackgroundColor;
 
-    @Nullable
-    private final Dimension myTextControlSize;
-    @Nullable
-    private Rectangle myScreenBounds;
-    @Nullable
-    private Listener myListener;
+    private final @Nullable Dimension myTextControlSize;
+    private @Nullable Rectangle myScreenBounds;
+    private @Nullable Listener myListener;
 
     private boolean myInverted = false;
     private boolean myEnabled = true;
@@ -114,10 +108,8 @@ public class ArrangementAtomMatchConditionComponent implements ArrangementUiComp
     private boolean myCloseButtonHovered;
 
     // cached value for inverted atom condition, e.g. condition: 'static', opposite: 'not static'
-    @Nullable
-    private ArrangementAtomMatchCondition myOppositeCondition;
-    @Nullable
-    private String myInvertedText;
+    private @Nullable ArrangementAtomMatchCondition myOppositeCondition;
+    private @Nullable String myInvertedText;
 
     public ArrangementAtomMatchConditionComponent(ArrangementStandardSettingsManager manager,
                                                   ArrangementColorsProvider colorsProvider,
@@ -366,8 +358,7 @@ public class ArrangementAtomMatchConditionComponent implements ArrangementUiComp
         return getCloseButtonScreenBounds();
     }
 
-    @Nullable
-    private Rectangle getCloseButtonScreenBounds() {
+    private @Nullable Rectangle getCloseButtonScreenBounds() {
         if (myCloseButton == null || myScreenBounds == null) {
             return null;
         }

@@ -18,8 +18,7 @@ import java.util.Objects;
  */
 public class ConcurrentWeakKeyWeakValueHashMap<K, V> extends ConcurrentWeakKeySoftValueHashMap<K, V> {
   private static final class WeakValue<K, V> extends WeakReference<V> implements ValueReference<K, V> {
-    @Nullable
-    private volatile KeyReference<K, V> myKeyReference = null; // can't make it final because of circular dependency of KeyReference to ValueReference
+    private volatile @Nullable KeyReference<K, V> myKeyReference = null; // can't make it final because of circular dependency of KeyReference to ValueReference
 
     private WeakValue(V value, ReferenceQueue<? super V> queue) {
       super(Objects.requireNonNull(value), queue);

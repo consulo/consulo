@@ -66,8 +66,7 @@ class VcsUpdateInfoScopeFilterConfigurable implements NamedScopesHolder.ScopeLis
   
 
   @RequiredUIAccess
-  @Nullable
-  public JComponent createComponent(Disposable uiDisposable) {
+  public @Nullable JComponent createComponent(Disposable uiDisposable) {
     JPanel panel = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
     panel.add(myCheckbox);
     panel.add(myComboBox);

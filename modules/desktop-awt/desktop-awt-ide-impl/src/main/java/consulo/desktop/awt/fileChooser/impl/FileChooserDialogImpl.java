@@ -373,8 +373,7 @@ public class FileChooserDialogImpl extends DialogWrapper implements FileChooserD
         return panel;
     }
 
-    @Nullable
-    protected JPanel createExtraToolbarPanel() {
+    protected @Nullable JPanel createExtraToolbarPanel() {
         return null;
     }
 

@@ -45,8 +45,7 @@ public interface XValueTree {
     
     Project getProject();
 
-    @Nullable
-    default XValue getSelectedValue() {
+    default @Nullable XValue getSelectedValue() {
         XValueNode node = getSelectedNode();
         return node != null ? node.getValueContainer() : null;
     }

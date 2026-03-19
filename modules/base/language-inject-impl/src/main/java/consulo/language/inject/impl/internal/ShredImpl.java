@@ -88,8 +88,7 @@ class ShredImpl implements PsiLanguageInjectionHost.Shred {
    * @return returns null when the host document marker is invalid
    */
   @Override
-  @Nullable
-  public Segment getHostRangeMarker() {
+  public @Nullable Segment getHostRangeMarker() {
     return usePsiRange ? relevantRangeInHost.getPsiRange() : relevantRangeInHost.getRange();
   }
 
@@ -162,8 +161,7 @@ class ShredImpl implements PsiLanguageInjectionHost.Shred {
   }
 
   @Override
-  @Nullable
-  public PsiLanguageInjectionHost getHost() {
+  public @Nullable PsiLanguageInjectionHost getHost() {
     return hostElementPointer.getElement();
   }
 

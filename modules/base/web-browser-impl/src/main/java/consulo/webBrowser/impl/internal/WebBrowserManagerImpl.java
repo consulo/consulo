@@ -255,8 +255,7 @@ public class WebBrowserManagerImpl extends SimpleModificationTracker
         setList(list);
     }
 
-    @Nullable
-    private static UUID readId(
+    private static @Nullable UUID readId(
         @Nullable UUID uuid,
         BrowserFamily family,
         List<ConfigurableWebBrowser> existingBrowsers
@@ -370,8 +369,7 @@ public class WebBrowserManagerImpl extends SimpleModificationTracker
         return browser;
     }
 
-    @Nullable
-    private static UUID parseUuid(String id) {
+    private static @Nullable UUID parseUuid(String id) {
         if (id.indexOf('-') == -1) {
             return null;
         }
@@ -413,8 +411,7 @@ public class WebBrowserManagerImpl extends SimpleModificationTracker
      * @param idOrFamilyName UUID or, due to backward compatibility, browser family name or JS debugger engine ID
      */
     @Override
-    @Nullable
-    public WebBrowser findBrowserById(@Nullable String idOrFamilyName) {
+    public @Nullable WebBrowser findBrowserById(@Nullable String idOrFamilyName) {
         if (StringUtil.isEmpty(idOrFamilyName)) {
             return null;
         }
@@ -438,8 +435,7 @@ public class WebBrowserManagerImpl extends SimpleModificationTracker
         return null;
     }
 
-    @Nullable
-    public WebBrowser getFirstBrowserOrNull(BrowserFamily family) {
+    public @Nullable WebBrowser getFirstBrowserOrNull(BrowserFamily family) {
         for (ConfigurableWebBrowser browser : browsers) {
             if (browser.isActive() && family.equals(browser.getFamily())) {
                 return browser;
@@ -470,8 +466,7 @@ public class WebBrowserManagerImpl extends SimpleModificationTracker
     }
 
     @Override
-    @Nullable
-    public WebBrowser getFirstActiveBrowser() {
+    public @Nullable WebBrowser getFirstActiveBrowser() {
         for (ConfigurableWebBrowser browser : browsers) {
             if (browser.isActive() && browser.getPath() != null) {
                 return browser;

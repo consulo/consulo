@@ -155,8 +155,7 @@ public abstract class AbstractVcsHelper {
         showWhatDiffersBrowser(parent, changes, LocalizeValue.ofNullable(title));
     }
 
-    @Nullable
-    public abstract <T extends CommittedChangeList, U extends ChangeBrowserSettings> T chooseCommittedChangeList(
+    public abstract @Nullable <T extends CommittedChangeList, U extends ChangeBrowserSettings> T chooseCommittedChangeList(
         CommittedChangesProvider<T, U> provider,
         RepositoryLocation location
     );

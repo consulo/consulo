@@ -25,8 +25,7 @@ public abstract class VcsModifiableDirtyScope extends VcsDirtyScope {
 
   public abstract void addDirtyDirRecursively(FilePath newcomer);
 
-  @Nullable
-  public VcsDirtyScopeModifier getModifier() {
+  public @Nullable VcsDirtyScopeModifier getModifier() {
     return null;
   }
 }

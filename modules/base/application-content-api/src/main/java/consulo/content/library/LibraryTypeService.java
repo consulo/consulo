@@ -34,8 +34,7 @@ public abstract class LibraryTypeService {
     return Application.get().getInstance(LibraryTypeService.class);
   }
 
-  @Nullable
-  public abstract NewLibraryConfiguration createLibraryFromFiles(LibraryRootsComponentDescriptor descriptor,
+  public abstract @Nullable NewLibraryConfiguration createLibraryFromFiles(LibraryRootsComponentDescriptor descriptor,
                                                                  JComponent parentComponent,
                                                                  @Nullable VirtualFile contextDirectory,
                                                                  @Nullable LibraryType<?> type,

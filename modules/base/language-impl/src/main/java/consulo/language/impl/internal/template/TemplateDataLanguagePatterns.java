@@ -60,8 +60,7 @@ public class TemplateDataLanguagePatterns implements PersistentStateComponent<El
     return myAssocTable.copy();
   }
 
-  @Nullable
-  public Language getTemplateDataLanguageByFileName(VirtualFile file) {
+  public @Nullable Language getTemplateDataLanguageByFileName(VirtualFile file) {
     return myAssocTable.findAssociatedFileType(file.getName());
   }
 

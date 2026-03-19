@@ -468,8 +468,7 @@ public abstract class AbstractCommonUpdateAction extends AbstractVcsAction {
             return group.getFiles().size() + group.getChildren().stream().mapToInt(this::getFilesCount).sum();
         }
 
-        @Nullable
-        private String prepareScopeUpdatedText(UpdateInfoTreeImpl tree) {
+        private @Nullable String prepareScopeUpdatedText(UpdateInfoTreeImpl tree) {
             String scopeText = null;
             NamedScope scopeFilter = tree.getFilterScope();
             if (scopeFilter != null) {

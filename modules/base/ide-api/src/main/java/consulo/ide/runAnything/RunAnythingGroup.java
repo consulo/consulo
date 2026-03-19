@@ -118,8 +118,7 @@ public abstract class RunAnythingGroup {
      *
      * @return group if {@code titleIndex} is equals to group {@link #myTitleIndex} and {@code null} if nothing found
      */
-    @Nullable
-    public static RunAnythingGroup findGroup(Collection<? extends RunAnythingGroup> groups, int titleIndex) {
+    public static @Nullable RunAnythingGroup findGroup(Collection<? extends RunAnythingGroup> groups, int titleIndex) {
         return groups.stream()
             .filter(runAnythingGroup -> titleIndex == ((RunAnythingGroup)runAnythingGroup).myTitleIndex)
             .findFirst()
@@ -129,8 +128,7 @@ public abstract class RunAnythingGroup {
     /**
      * Finds group {@code itemIndex} belongs to.
      */
-    @Nullable
-    public static RunAnythingGroup findItemGroup(List<? extends RunAnythingGroup> groups, int itemIndex) {
+    public static @Nullable RunAnythingGroup findItemGroup(List<? extends RunAnythingGroup> groups, int itemIndex) {
         RunAnythingGroup runAnythingGroup = null;
         for (RunAnythingGroup group : groups) {
             if (group.myTitleIndex == -1) {
@@ -186,8 +184,7 @@ public abstract class RunAnythingGroup {
     /**
      * Finds matched by {@link #myMoreIndex} group.
      */
-    @Nullable
-    public static RunAnythingGroup findGroupByMoreIndex(Collection<? extends RunAnythingGroup> groups, int moreIndex) {
+    public static @Nullable RunAnythingGroup findGroupByMoreIndex(Collection<? extends RunAnythingGroup> groups, int moreIndex) {
         return groups.stream().filter(runAnythingGroup -> moreIndex == runAnythingGroup.myMoreIndex).findFirst().orElse(null);
     }
 

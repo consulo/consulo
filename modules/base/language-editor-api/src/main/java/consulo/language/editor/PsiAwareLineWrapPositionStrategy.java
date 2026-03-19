@@ -160,8 +160,7 @@ public abstract class PsiAwareLineWrapPositionStrategy implements LanguageLineWr
     return false;
   }
   
-  @Nullable
-  private static PsiElement getPrevious(PsiElement element) {
+  private static @Nullable PsiElement getPrevious(PsiElement element) {
     PsiElement result = element.getPrevSibling();
     if (result != null) {
       return result;

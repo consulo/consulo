@@ -46,8 +46,7 @@ public class TextEditorWithPreviewImpl extends UserDataHolderBase implements Tex
     private JComponent myComponent;
     private SplitEditorToolbar myToolbarWrapper;
 
-    @Nullable
-    private final ActionToolbar myLeftToolbarActionToolbar;
+    private final @Nullable ActionToolbar myLeftToolbarActionToolbar;
     private final String myName;
 
     public TextEditorWithPreviewImpl(TextEditor editor,
@@ -238,18 +237,15 @@ public class TextEditorWithPreviewImpl extends UserDataHolderBase implements Tex
             mySecondState = secondState;
         }
 
-        @Nullable
-        public Layout getSplitLayout() {
+        public @Nullable Layout getSplitLayout() {
             return mySplitLayout;
         }
 
-        @Nullable
-        public FileEditorState getFirstState() {
+        public @Nullable FileEditorState getFirstState() {
             return myFirstState;
         }
 
-        @Nullable
-        public FileEditorState getSecondState() {
+        public @Nullable FileEditorState getSecondState() {
             return mySecondState;
         }
 
@@ -301,8 +297,7 @@ public class TextEditorWithPreviewImpl extends UserDataHolderBase implements Tex
             return myMap.get(listener).getSecond();
         }
 
-        @Nullable
-        public DoublingEventListenerDelegate removeListenerAndGetDelegate(PropertyChangeListener listener) {
+        public @Nullable DoublingEventListenerDelegate removeListenerAndGetDelegate(PropertyChangeListener listener) {
             Pair<Integer, DoublingEventListenerDelegate> oldPair = myMap.get(listener);
             if (oldPair == null) {
                 return null;
@@ -394,8 +389,7 @@ public class TextEditorWithPreviewImpl extends UserDataHolderBase implements Tex
         }
     }
 
-    @Nullable
-    private ActionToolbar createToolbar() {
+    private @Nullable ActionToolbar createToolbar() {
         return myLeftToolbarActionToolbar;
     }
 

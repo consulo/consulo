@@ -204,8 +204,7 @@ public abstract class AbstractExternalModuleImportProvider<C extends AbstractImp
         });
     }
 
-    @Nullable
-    public DataNode<ProjectData> getExternalProjectNode() {
+    public @Nullable DataNode<ProjectData> getExternalProjectNode() {
         return myExternalProjectNode;
     }
 
@@ -290,8 +289,7 @@ public abstract class AbstractExternalModuleImportProvider<C extends AbstractImp
         applyExtraSettings(context);
     }
 
-    @Nullable
-    private File getProjectFile() {
+    private @Nullable File getProjectFile() {
         String path = myControl.getProjectSettings().getExternalProjectPath();
         return path == null ? null : new File(path);
     }

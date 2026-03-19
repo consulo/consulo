@@ -79,8 +79,7 @@ public class CodeDocumentationUtil {
    * @param offset   target offset that identifies line to check and max offset to use during scanning
    * @return
    */
-  @Nullable
-  public static String getIndentInsideJavadoc(Document document, int offset) {
+  public static @Nullable String getIndentInsideJavadoc(Document document, int offset) {
     CharSequence text = document.getCharsSequence();
     if (offset >= text.length()) {
       return null;

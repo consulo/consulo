@@ -145,13 +145,11 @@ public class ArtifactPackagingElement extends ComplexPackagingElement<ArtifactPa
     return element instanceof ArtifactPackagingElement && myArtifactPointer != null && myArtifactPointer.equals(((ArtifactPackagingElement)element).myArtifactPointer);
   }
 
-  @Nullable
-  public Artifact findArtifact(PackagingElementResolvingContext context) {
+  public @Nullable Artifact findArtifact(PackagingElementResolvingContext context) {
     return myArtifactPointer != null ? myArtifactPointer.findArtifact(context.getArtifactModel()) : null;
   }
 
-  @Nullable
-  public String getArtifactName() {
+  public @Nullable String getArtifactName() {
     return myArtifactPointer != null ? myArtifactPointer.getName() : null;
   }
 

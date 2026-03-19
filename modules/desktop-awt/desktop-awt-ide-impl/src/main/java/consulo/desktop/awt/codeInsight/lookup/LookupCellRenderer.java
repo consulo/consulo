@@ -485,8 +485,7 @@ public class LookupCellRenderer implements ListCellRenderer {
     myLookupWidthUpdater.run();
   }
 
-  @Nullable
-  private Font getFontAbleToDisplay(@Nullable String sampleString) {
+  private @Nullable Font getFontAbleToDisplay(@Nullable String sampleString) {
     if (sampleString == null) return null;
 
     // assume a single font can display all chars

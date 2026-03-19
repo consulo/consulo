@@ -65,8 +65,7 @@ public class LanguageVersion {
     return myMimeTypes;
   }
 
-  @Nullable
-  public FileType getAssociatedFileType() {
+  public @Nullable FileType getAssociatedFileType() {
     return null;
   }
 

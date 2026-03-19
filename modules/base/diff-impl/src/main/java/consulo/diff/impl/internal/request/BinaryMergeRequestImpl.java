@@ -37,8 +37,7 @@ import java.util.function.Consumer;
 public class BinaryMergeRequestImpl extends BinaryMergeRequest {
     private static final Logger LOG = Logger.getInstance(BinaryMergeRequestImpl.class);
 
-    @Nullable
-    private final Project myProject;
+    private final @Nullable Project myProject;
     
     private final FileContent myFile;
     
@@ -49,13 +48,11 @@ public class BinaryMergeRequestImpl extends BinaryMergeRequest {
     
     private final byte[] myOriginalContent;
 
-    @Nullable
-    private final String myTitle;
+    private final @Nullable String myTitle;
     
     private final List<String> myTitles;
 
-    @Nullable
-    private final Consumer<MergeResult> myApplyCallback;
+    private final @Nullable Consumer<MergeResult> myApplyCallback;
 
     public BinaryMergeRequestImpl(
         @Nullable Project project,

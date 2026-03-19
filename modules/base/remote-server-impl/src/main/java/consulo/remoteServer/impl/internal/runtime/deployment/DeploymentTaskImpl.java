@@ -50,8 +50,7 @@ public class DeploymentTaskImpl<D extends DeploymentConfiguration> implements De
     return myDebugConnector != null;
   }
 
-  @Nullable
-  public DebugConnector<?, ?> getDebugConnector() {
+  public @Nullable DebugConnector<?, ?> getDebugConnector() {
     return myDebugConnector;
   }
 

@@ -96,8 +96,7 @@ class SnapshotInputMappings<Key, Value, Input> implements UpdatableSnapshotInput
     return data == null ? null : new HashedInputData<>(data, hashId);
   }
 
-  @Nullable
-  private Map<Key, Value> doReadData(int hashId) throws IOException {
+  private @Nullable Map<Key, Value> doReadData(int hashId) throws IOException {
     ByteArraySequence byteSequence = readContents(hashId);
     if (byteSequence != null) {
       if (USE_MANUAL_COMPRESSION) {

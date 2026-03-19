@@ -73,8 +73,7 @@ public class UpToDateLineNumberProviderImpl implements UpToDateLineNumberProvide
         }
     }
 
-    @Nullable
-    private LineStatusTrackerI getTracker() {
+    private @Nullable LineStatusTrackerI getTracker() {
         LineStatusTrackerI tracker = myLineStatusTrackerManagerI.getLineStatusTracker(myDocument);
         return tracker != null && tracker.isOperational() ? tracker : null;
     }

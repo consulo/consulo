@@ -62,8 +62,7 @@ public class Difference {
     if (e == null) return null;
 
     return new ContentRevision() {
-      @Nullable
-      public String getContent() throws VcsException {
+      public @Nullable String getContent() throws VcsException {
         if (e.isDirectory()) return null;
         return e.getContent().getString(e, gw);
       }

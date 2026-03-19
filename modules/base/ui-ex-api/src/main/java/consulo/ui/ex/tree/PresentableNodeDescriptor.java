@@ -137,8 +137,7 @@ public abstract class PresentableNodeDescriptor<E> extends NodeDescriptor<E> {
     return myTemplatePresentation;
   }
 
-  @Nullable
-  public ColorValue getBackground() {
+  public @Nullable ColorValue getBackground() {
     return myBackground;
   }
 

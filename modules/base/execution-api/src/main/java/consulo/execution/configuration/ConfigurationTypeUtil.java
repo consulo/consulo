@@ -35,8 +35,7 @@ public class ConfigurationTypeUtil {
         return type1.getId().equals(type2.getId());
     }
 
-    @Nullable
-    public static ConfigurationType findConfigurationType(String configurationId) {
+    public static @Nullable ConfigurationType findConfigurationType(String configurationId) {
         return Application.get().getExtensionPoint(ConfigurationType.class)
             .findFirstSafe(type -> type.getId().equals(configurationId));
     }

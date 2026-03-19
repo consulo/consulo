@@ -55,8 +55,7 @@ import java.util.function.Predicate;
 @ServiceImpl
 public class CompilerManagerImpl extends CompilerManager implements PersistentStateComponent<Element> {
     private class ListenerNotificator implements CompileStatusNotification {
-        @Nullable
-        private final CompileStatusNotification myDelegate;
+        private final @Nullable CompileStatusNotification myDelegate;
 
         private ListenerNotificator(@Nullable CompileStatusNotification delegate) {
             myDelegate = delegate;

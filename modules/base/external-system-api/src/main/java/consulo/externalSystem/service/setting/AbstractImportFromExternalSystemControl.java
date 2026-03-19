@@ -44,8 +44,7 @@ public abstract class AbstractImportFromExternalSystemControl<ProjectSettings ex
     private final ExternalSystemSettingsControl<ProjectSettings> myProjectSettingsControl;
     
     private final ProjectSystemId myExternalSystemId;
-    @Nullable
-    private final ExternalSystemSettingsControl<SystemSettings> mySystemSettingsControl;
+    private final @Nullable ExternalSystemSettingsControl<SystemSettings> mySystemSettingsControl;
 
     protected AbstractImportFromExternalSystemControl(
         ProjectSystemId externalSystemId,
@@ -77,16 +76,14 @@ public abstract class AbstractImportFromExternalSystemControl<ProjectSettings ex
      * @return a control for managing given system-level settings;
      * <code>null</code> if current external system doesn't have system-level settings (only project-level settings)
      */
-    @Nullable
-    protected abstract ExternalSystemSettingsControl<SystemSettings> createSystemSettingsControl(SystemSettings settings);
+    protected abstract @Nullable ExternalSystemSettingsControl<SystemSettings> createSystemSettingsControl(SystemSettings settings);
 
     
     public ExternalSystemSettingsControl<ProjectSettings> getProjectSettingsControl() {
         return myProjectSettingsControl;
     }
 
-    @Nullable
-    public ExternalSystemSettingsControl<SystemSettings> getSystemSettingsControl() {
+    public @Nullable ExternalSystemSettingsControl<SystemSettings> getSystemSettingsControl() {
         return mySystemSettingsControl;
     }
 

@@ -33,8 +33,7 @@ public interface PsiScopeProcessor {
    */
   boolean execute(PsiElement element, ResolveState state);
 
-  @Nullable
-  default <T> T getHint(Key<T> hintKey) {
+  default @Nullable <T> T getHint(Key<T> hintKey) {
     return null;
   }
 

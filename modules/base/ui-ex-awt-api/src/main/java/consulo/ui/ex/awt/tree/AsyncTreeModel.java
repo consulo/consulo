@@ -598,8 +598,7 @@ public final class AsyncTreeModel extends AbstractTreeModel implements Identifia
             return loaded;
         }
 
-        @Nullable
-        private List<Node> load(int count, IntFunction function) {
+        private @Nullable List<Node> load(int count, IntFunction function) {
             if (count < 0) {
                 LOG.warn("illegal child count: " + count);
             }
@@ -872,8 +871,7 @@ public final class AsyncTreeModel extends AbstractTreeModel implements Identifia
         private final Set<TreePath> paths = new SmartHashSet<>();
         private volatile Object object;
         private volatile boolean leaf;
-        @Nullable
-        private volatile List<Node> children;
+        private volatile @Nullable List<Node> children;
         private volatile Node loading;
 
         private Node(Object object, boolean leaf) {

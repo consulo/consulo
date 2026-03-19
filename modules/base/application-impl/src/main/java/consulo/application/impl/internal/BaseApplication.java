@@ -284,8 +284,7 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
 
     @RequiredUIAccess
     @Override
-    @Nullable
-    public Continuation<Void> saveAll() {
+    public @Nullable Continuation<Void> saveAll() {
         if (myDoNotSave) {
             return null;
         }

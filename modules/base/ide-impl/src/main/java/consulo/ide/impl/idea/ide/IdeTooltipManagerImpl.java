@@ -662,7 +662,7 @@ public final class IdeTooltipManagerImpl implements Disposable, AWTEventListener
         return initPane(html, hintHint, layeredPane, true);
     }
 
-    public static JEditorPane initPane(Html html, final HintHint hintHint, @Nullable final JLayeredPane layeredPane, boolean limitWidthToScreen) {
+    public static JEditorPane initPane(Html html, final HintHint hintHint, final @Nullable JLayeredPane layeredPane, boolean limitWidthToScreen) {
         String text = HintUtil.prepareHintText(html, hintHint);
 
         final boolean[] prefSizeWasComputed = {false};

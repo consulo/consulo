@@ -108,8 +108,7 @@ public final class DesktopRequestFocusInToolWindowCmd {
   }
 
 
-  @Nullable
-  private Component getShowingComponentToRequestFocus() {
+  private @Nullable Component getShowingComponentToRequestFocus() {
     Container container = myToolWindow.getComponent();
     if (container == null || !container.isShowing()) {
       LOG.debug(myToolWindow.getId(), " tool window - parent container is hidden: ", container);

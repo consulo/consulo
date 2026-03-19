@@ -106,8 +106,7 @@ public class CompositeSoftWrapPainter implements SoftWrapPainter {
     myEditor = editor;
   }
 
-  @Nullable
-  private static Character parse(String key) {
+  private static @Nullable Character parse(String key) {
     String value = System.getProperty(key);
     if (value == null) {
       return null;

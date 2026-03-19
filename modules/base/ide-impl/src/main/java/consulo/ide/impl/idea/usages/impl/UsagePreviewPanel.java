@@ -237,8 +237,7 @@ public class UsagePreviewPanel extends UsageContextPanelBase implements UiDataPr
     }
   }
 
-  @Nullable
-  private static FindModel getReplacementModel(Editor editor) {
+  private static @Nullable FindModel getReplacementModel(Editor editor) {
     UsagePreviewPanel panel = editor.getUserData(PREVIEW_EDITOR_FLAG);
     Pattern searchPattern = null;
     Pattern replacePattern = null;
@@ -306,13 +305,11 @@ public class UsagePreviewPanel extends UsageContextPanelBase implements UiDataPr
     }
   }
 
-  @Nullable
-  public final String getCannotPreviewMessage(@Nullable List<? extends UsageInfo> infos) {
+  public final @Nullable String getCannotPreviewMessage(@Nullable List<? extends UsageInfo> infos) {
     return cannotPreviewMessage(infos);
   }
 
-  @Nullable
-  private String cannotPreviewMessage(@Nullable List<? extends UsageInfo> infos) {
+  private @Nullable String cannotPreviewMessage(@Nullable List<? extends UsageInfo> infos) {
     if (infos == null || infos.isEmpty()) {
       return UsageViewBundle.message("select.the.usage.to.preview", myPresentation.getUsagesWord());
     }

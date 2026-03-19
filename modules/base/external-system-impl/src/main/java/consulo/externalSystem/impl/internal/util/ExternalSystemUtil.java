@@ -99,8 +99,7 @@ public class ExternalSystemUtil {
     private ExternalSystemUtil() {
     }
 
-    @Nullable
-    public static VirtualFile refreshAndFindFileByIoFile(File file) {
+    public static @Nullable VirtualFile refreshAndFindFileByIoFile(File file) {
         Application app = Application.get();
         if (!app.isDispatchThread()) {
             assert !((ApplicationEx)app).holdsReadLock();
@@ -138,8 +137,7 @@ public class ExternalSystemUtil {
         return ExternalSystemApiUtil.getToolWindowElement(clazz, project, key, externalSystemId);
     }
 
-    @Nullable
-    public static ToolWindow ensureToolWindowContentInitialized(Project project, ProjectSystemId externalSystemId) {
+    public static @Nullable ToolWindow ensureToolWindowContentInitialized(Project project, ProjectSystemId externalSystemId) {
         return ExternalSystemApiUtil.ensureToolWindowContentInitialized(project, externalSystemId);
     }
 
@@ -518,8 +516,7 @@ public class ExternalSystemUtil {
         ExternalSystemApiUtil.runTask(taskSettings, executorId, project, externalSystemId, callback, progressExecutionMode);
     }
 
-    @Nullable
-    public static Pair<ProgramRunner, ExecutionEnvironment> createRunner(
+    public static @Nullable Pair<ProgramRunner, ExecutionEnvironment> createRunner(
         ExternalSystemTaskExecutionSettings taskSettings,
         String executorId,
         Project project,
@@ -528,8 +525,7 @@ public class ExternalSystemUtil {
         return ExternalSystemApiUtil.createRunner(taskSettings, executorId, project, externalSystemId);
     }
 
-    @Nullable
-    public static AbstractExternalSystemTaskConfigurationType findConfigurationType(ProjectSystemId externalSystemId) {
+    public static @Nullable AbstractExternalSystemTaskConfigurationType findConfigurationType(ProjectSystemId externalSystemId) {
         return ExternalSystemApiUtil.findConfigurationType(externalSystemId);
     }
 
@@ -546,8 +542,7 @@ public class ExternalSystemUtil {
         ExternalSystemApiUtil.updateRecentTasks(taskInfo, project);
     }
 
-    @Nullable
-    public static String getRunnerId(String executorId) {
+    public static @Nullable String getRunnerId(String executorId) {
         return ExternalSystemApiUtil.getRunnerId(executorId);
     }
 

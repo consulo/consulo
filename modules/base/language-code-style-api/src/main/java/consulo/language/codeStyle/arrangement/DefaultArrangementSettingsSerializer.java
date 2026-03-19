@@ -163,8 +163,7 @@ public class DefaultArrangementSettingsSerializer implements ArrangementSettings
     return new StdArrangementExtendableSettings(groupingRules, sectionRules, tokensDefinition);
   }
 
-  @Nullable
-  private Set<StdArrangementRuleAliasToken> deserializeTokensDefinition(Element element, ArrangementSettings defaultSettings) {
+  private @Nullable Set<StdArrangementRuleAliasToken> deserializeTokensDefinition(Element element, ArrangementSettings defaultSettings) {
     if (!(defaultSettings instanceof ArrangementExtendableSettings)) {
       return null;
     }
@@ -287,8 +286,7 @@ public class DefaultArrangementSettingsSerializer implements ArrangementSettings
     return rules;
   }
 
-  @Nullable
-  public Element serialize(ArrangementMatchRule rule) {
+  public @Nullable Element serialize(ArrangementMatchRule rule) {
     Element matcherElement = myMatcherSerializer.serialize(rule.getMatcher());
     if (matcherElement == null) {
       return null;
@@ -302,8 +300,7 @@ public class DefaultArrangementSettingsSerializer implements ArrangementSettings
     return result;
   }
 
-  @Nullable
-  public Element serialize(ArrangementSectionRule section) {
+  public @Nullable Element serialize(ArrangementSectionRule section) {
     Element sectionElement = new Element(SECTION_ELEMENT_NAME);
     if (StringUtil.isNotEmpty(section.getStartComment())) {
       // or only != null ?

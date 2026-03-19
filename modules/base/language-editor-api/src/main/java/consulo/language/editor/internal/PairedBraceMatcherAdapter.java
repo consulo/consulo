@@ -51,8 +51,7 @@ public class PairedBraceMatcherAdapter implements NontrivialBraceMatcher, Langua
     return -1;
   }
 
-  @Nullable
-  public BracePair findPair(boolean left, HighlighterIterator iterator, CharSequence fileText, FileType fileType) {
+  public @Nullable BracePair findPair(boolean left, HighlighterIterator iterator, CharSequence fileText, FileType fileType) {
     IElementType tokenType = (IElementType)iterator.getTokenType();
     BracePair[] pairs = myMatcher.getPairs();
     for (BracePair pair : pairs) {

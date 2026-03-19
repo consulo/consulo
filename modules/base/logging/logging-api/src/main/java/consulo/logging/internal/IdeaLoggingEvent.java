@@ -44,8 +44,7 @@ public class IdeaLoggingEvent {
     return ExceptionUtil.getThrowableText(myThrowable);
   }
 
-  @Nullable
-  public Object getData() {
+  public @Nullable Object getData() {
     return null;
   }
 

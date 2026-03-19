@@ -368,8 +368,7 @@ public abstract class BaseToolsPanel<T extends Tool> extends JPanel {
         return null;
     }
 
-    @Nullable
-    private Tool getSelectedTool() {
+    private @Nullable Tool getSelectedTool() {
         CheckedTreeNode node = getSelectedToolNode();
         if (node == null) {
             return null;
@@ -377,8 +376,7 @@ public abstract class BaseToolsPanel<T extends Tool> extends JPanel {
         return node.getUserObject() instanceof Tool ? (Tool) node.getUserObject() : null;
     }
 
-    @Nullable
-    private ToolsGroup getSelectedToolGroup() {
+    private @Nullable ToolsGroup getSelectedToolGroup() {
         CheckedTreeNode node = getSelectedToolNode();
         if (node == null) {
             return null;

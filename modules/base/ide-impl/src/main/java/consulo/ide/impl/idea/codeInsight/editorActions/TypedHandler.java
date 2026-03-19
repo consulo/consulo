@@ -65,8 +65,7 @@ public class TypedHandler extends TypedActionHandlerBase implements ExtensionTyp
 
     private static final Map<String, FileQuoteHandler> ourCustomQuoterHandlers = new HashMap<>();
 
-    @Nullable
-    public static QuoteHandler getQuoteHandler(PsiFile file, Editor editor) {
+    public static @Nullable QuoteHandler getQuoteHandler(PsiFile file, Editor editor) {
         FileType fileType = getFileType(file, editor);
         QuoteHandler quoteHandler = getQuoteHandlerForType(fileType);
         if (quoteHandler == null) {
@@ -94,8 +93,7 @@ public class TypedHandler extends TypedActionHandlerBase implements ExtensionTyp
         return fileType;
     }
 
-    @Nullable
-    public static FileQuoteHandler getQuoteHandlerForType(FileType fileType) {
+    public static @Nullable FileQuoteHandler getQuoteHandlerForType(FileType fileType) {
         FileQuoteHandler handler = ourCustomQuoterHandlers.get(fileType.getId());
         if (handler != null) {
             return handler;
@@ -565,8 +563,7 @@ public class TypedHandler extends TypedActionHandlerBase implements ExtensionTyp
         return quoteHandler.isClosingQuote(iterator, offset);
     }
 
-    @Nullable
-    private static CharSequence getClosingQuote(Editor editor, MultiCharQuoteHandler quoteHandler, int offset) {
+    private static @Nullable CharSequence getClosingQuote(Editor editor, MultiCharQuoteHandler quoteHandler, int offset) {
         HighlighterIterator iterator = editor.getHighlighter().createIterator(offset);
         if (iterator.atEnd()) {
             LOG.assertTrue(false);

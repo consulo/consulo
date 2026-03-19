@@ -123,8 +123,7 @@ public abstract class ToolWindowManager {
      * @return registered tool window with specified <code>id</code>. If there is no registered
      * tool window with specified <code>id</code> then the method returns <code>null</code>.
      */
-    @Nullable
-    public abstract ToolWindow getToolWindow(String id);
+    public abstract @Nullable ToolWindow getToolWindow(String id);
 
     /**
      * Puts specified runnable to the tail of current command queue.
@@ -138,8 +137,7 @@ public abstract class ToolWindowManager {
 
     public abstract void notifyByBalloon(String toolWindowId, NotificationType type, String htmlBody);
 
-    @Nullable
-    public abstract Balloon getToolWindowBalloon(String id);
+    public abstract @Nullable Balloon getToolWindowBalloon(String id);
 
     public abstract boolean isMaximized(ToolWindow wnd);
 

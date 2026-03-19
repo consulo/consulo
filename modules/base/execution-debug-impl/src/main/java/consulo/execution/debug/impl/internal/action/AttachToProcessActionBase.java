@@ -472,8 +472,7 @@ public abstract class AttachToProcessActionBase extends AnAction {
             return myIsFirstInGroup ? myGroupName : null;
         }
 
-        @Nullable
-        protected Image getIcon(Project project) {
+        protected @Nullable Image getIcon(Project project) {
             return myGroup.getItemIcon(project, myInfo, myDataHolder);
         }
 
@@ -481,8 +480,7 @@ public abstract class AttachToProcessActionBase extends AnAction {
 
         protected abstract String getText(Project project);
 
-        @Nullable
-        protected abstract String getTooltipText(Project project);
+        protected abstract @Nullable String getTooltipText(Project project);
 
         protected abstract List<AttachToProcessItem> getSubItems();
 
@@ -521,8 +519,7 @@ public abstract class AttachToProcessActionBase extends AnAction {
         }
 
         @Override
-        @Nullable
-        public String getTooltipText(Project project) {
+        public @Nullable String getTooltipText(Project project) {
             return myGroup.getItemDescription(project, myInfo, myDataHolder);
         }
 
@@ -627,8 +624,7 @@ public abstract class AttachToProcessActionBase extends AnAction {
         }
 
         @Override
-        @Nullable
-        public String getTooltipText(Project project) {
+        public @Nullable String getTooltipText(Project project) {
             return myGroup.getItemDescription(project, myInfo, myDataHolder);
         }
 

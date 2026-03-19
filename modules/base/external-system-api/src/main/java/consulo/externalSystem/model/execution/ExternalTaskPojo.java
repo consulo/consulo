@@ -33,7 +33,7 @@ public class ExternalTaskPojo implements Comparable<ExternalTaskPojo> {
   
   private String myLinkedExternalProjectPath;
   
-  @Nullable private String myDescription;
+  private @Nullable String myDescription;
 
   @SuppressWarnings("UnusedDeclaration")
   public ExternalTaskPojo() {
@@ -61,8 +61,7 @@ public class ExternalTaskPojo implements Comparable<ExternalTaskPojo> {
     myName = name;
   }
 
-  @Nullable
-  public String getDescription() {
+  public @Nullable String getDescription() {
     return myDescription;
   }
 

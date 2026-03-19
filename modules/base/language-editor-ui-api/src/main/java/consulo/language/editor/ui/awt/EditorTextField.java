@@ -795,8 +795,7 @@ public class EditorTextField extends NonOpaquePanel implements DocumentListener,
      * @see #createEditor()
      * @see #addNotify()
      */
-    @Nullable
-    public Editor getEditor() {
+    public @Nullable Editor getEditor() {
         return myEditor;
     }
 

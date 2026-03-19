@@ -40,8 +40,7 @@ public abstract class UpdateCopyrightsProvider<T extends CopyrightFileConfig> {
     private static final ExtensionPointCacheKey<UpdateCopyrightsProvider, Map<FileType, UpdateCopyrightsProvider>> KEY =
         ExtensionPointCacheKey.groupBy("UpdateCopyrightsProvider", UpdateCopyrightsProvider::getFileType);
 
-    @Nullable
-    public static UpdateCopyrightsProvider forFileType(FileType fileType) {
+    public static @Nullable UpdateCopyrightsProvider forFileType(FileType fileType) {
         ExtensionPoint<UpdateCopyrightsProvider> extensionPoint = Application.get().getExtensionPoint(UpdateCopyrightsProvider.class);
         Map<FileType, UpdateCopyrightsProvider> map = extensionPoint.getOrBuildCache(KEY);
         return map.get(fileType);

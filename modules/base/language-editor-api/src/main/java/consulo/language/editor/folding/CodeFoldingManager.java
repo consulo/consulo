@@ -20,11 +20,9 @@ public abstract class CodeFoldingManager {
 
   public abstract void updateFoldRegions(Editor editor);
 
-  @Nullable
-  public abstract Runnable updateFoldRegionsAsync(Editor editor, boolean firstTime);
+  public abstract @Nullable Runnable updateFoldRegionsAsync(Editor editor, boolean firstTime);
 
-  @Nullable
-  public abstract FoldRegion findFoldRegion(Editor editor, int startOffset, int endOffset);
+  public abstract @Nullable FoldRegion findFoldRegion(Editor editor, int startOffset, int endOffset);
 
   public abstract FoldRegion[] getFoldRegionsAtOffset(Editor editor, int offset);
 
@@ -40,15 +38,13 @@ public abstract class CodeFoldingManager {
 
   public abstract void buildInitialFoldings(Editor editor);
 
-  @Nullable
-  public abstract CodeFoldingState buildInitialFoldings(Document document);
+  public abstract @Nullable CodeFoldingState buildInitialFoldings(Document document);
 
   /**
    * For auto-generated regions (created by {@link FoldingBuilder}s), returns their 'collapsed by default'
    * status, for other regions returns {@code null}.
    */
-  @Nullable
-  public abstract Boolean isCollapsedByDefault(FoldRegion region);
+  public abstract @Nullable Boolean isCollapsedByDefault(FoldRegion region);
 
   /**
    * Schedules recalculation of foldings in editor ({@link CodeFoldingPass}), which

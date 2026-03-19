@@ -42,8 +42,7 @@ import java.util.Set;
  * @since 13-Feb-22
  */
 public class ModuleContentUtil {
-  @Nullable
-  public static <E extends ModuleExtension<E>> E getExtension(Project project, VirtualFile virtualFile, Class<E> extensionClass) {
+  public static @Nullable <E extends ModuleExtension<E>> E getExtension(Project project, VirtualFile virtualFile, Class<E> extensionClass) {
     Module moduleForFile = findModuleForFile(virtualFile, project);
     if (moduleForFile == null) {
       return null;
@@ -51,8 +50,7 @@ public class ModuleContentUtil {
     return moduleForFile.getExtension(extensionClass);
   }
 
-  @Nullable
-  public static Sdk getSdk(Module module, Class<? extends ModuleExtensionWithSdk> extensionClass) {
+  public static @Nullable Sdk getSdk(Module module, Class<? extends ModuleExtensionWithSdk> extensionClass) {
     ModuleRootManager moduleRootManager = ModuleRootManager.getInstance(module);
 
     ModuleExtensionWithSdk<?> extension = moduleRootManager.getExtension(extensionClass);
@@ -79,8 +77,7 @@ public class ModuleContentUtil {
     return contentFolders;
   }
 
-  @Nullable
-  public static Module findModuleForFile(VirtualFile file, Project project) {
+  public static @Nullable Module findModuleForFile(VirtualFile file, Project project) {
     ProjectFileIndex fileIndex = ProjectRootManager.getInstance(project).getFileIndex();
     return fileIndex.getModuleForFile(file);
   }

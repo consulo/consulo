@@ -24,9 +24,8 @@ import org.jspecify.annotations.Nullable;
 public class DiffFragmentOld {
   public static DiffFragmentOld[] EMPTY_ARRAY = new DiffFragmentOld[0];
 
-  @Nullable private CharSequence myText1;
-  @Nullable
-  private CharSequence myText2;
+  private @Nullable CharSequence myText1;
+  private @Nullable CharSequence myText2;
   private boolean myIsModified;
 
   @TestOnly
@@ -102,8 +101,7 @@ public class DiffFragmentOld {
     throw new IllegalStateException("Bad DiffFragment: " + (myText2 != null ? myText2.getClass() : "null"));
   }
 
-  @Nullable
-  public DiffString getText1() {
+  public @Nullable DiffString getText1() {
     if (myText1 == null) return null;
     if (myText1 instanceof DiffString diffString) return diffString;
     if (myText1 instanceof DiffStringBuilder diffStringBuilder) return diffStringBuilder.toDiffString();
@@ -111,8 +109,7 @@ public class DiffFragmentOld {
     throw new IllegalStateException("Bad DiffFragment: " + myText1.getClass());
   }
 
-  @Nullable
-  public DiffString getText2() {
+  public @Nullable DiffString getText2() {
     if (myText2 == null) return null;
     if (myText2 instanceof DiffString diffString) return diffString;
     if (myText2 instanceof DiffStringBuilder diffStringBuilder) return diffStringBuilder.toDiffString();

@@ -171,8 +171,7 @@ public class RollbackAction extends AnAction implements DumbAware {
         return Collections.emptyList();
     }
 
-    @Nullable
-    private static Set<VirtualFile> getModifiedWithoutEditing(AnActionEvent e, Project project) {
+    private static @Nullable Set<VirtualFile> getModifiedWithoutEditing(AnActionEvent e, Project project) {
         List<VirtualFile> modifiedWithoutEditing = e.getData(VcsDataKeys.MODIFIED_WITHOUT_EDITING_DATA_KEY);
         if (modifiedWithoutEditing != null && modifiedWithoutEditing.size() > 0) {
             return new LinkedHashSet<>(modifiedWithoutEditing);

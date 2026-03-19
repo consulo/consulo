@@ -29,8 +29,7 @@ import java.util.function.BiConsumer;
 @SuppressWarnings("ForLoopReplaceableByForEach")
 public class LightTreeUtil {
 
-  @Nullable
-  public static LighterASTNode firstChildOfType(LighterAST tree, @Nullable LighterASTNode node, IElementType type) {
+  public static @Nullable LighterASTNode firstChildOfType(LighterAST tree, @Nullable LighterASTNode node, IElementType type) {
     if (node == null) return null;
 
     List<LighterASTNode> children = tree.getChildren(node);
@@ -41,8 +40,7 @@ public class LightTreeUtil {
     return null;
   }
 
-  @Nullable
-  public static LighterASTNode firstChildOfType(LighterAST tree, @Nullable LighterASTNode node, TokenSet types) {
+  public static @Nullable LighterASTNode firstChildOfType(LighterAST tree, @Nullable LighterASTNode node, TokenSet types) {
     if (node == null) return null;
 
     List<LighterASTNode> children = tree.getChildren(node);
@@ -133,8 +131,7 @@ public class LightTreeUtil {
     }
   }
 
-  @Nullable
-  public static LighterASTNode getParentOfType(LighterAST tree, @Nullable LighterASTNode node,
+  public static @Nullable LighterASTNode getParentOfType(LighterAST tree, @Nullable LighterASTNode node,
                                                TokenSet types, TokenSet stopAt) {
     if (node == null) return null;
     node = tree.getParent(node);
@@ -147,8 +144,7 @@ public class LightTreeUtil {
     return null;
   }
 
-  @Nullable
-  public static LighterASTNode findLeafElementAt(LighterAST tree, int offset) {
+  public static @Nullable LighterASTNode findLeafElementAt(LighterAST tree, int offset) {
     LighterASTNode eachNode = tree.getRoot();
     if (!containsOffset(eachNode, offset)) return null;
 

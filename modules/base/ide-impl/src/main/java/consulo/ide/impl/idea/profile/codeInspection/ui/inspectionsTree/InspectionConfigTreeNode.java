@@ -55,25 +55,21 @@ public class InspectionConfigTreeNode extends DefaultMutableTreeNode {
     return getDefaultDescriptor().getKey();
   }
 
-  @Nullable
-  public Descriptor getDefaultDescriptor() {
+  public @Nullable Descriptor getDefaultDescriptor() {
     ToolDescriptors descriptors = getDescriptors();
     return descriptors == null ? null : descriptors.getDefaultDescriptor();
   }
 
-  @Nullable
-  public ToolDescriptors getDescriptors() {
+  public @Nullable ToolDescriptors getDescriptors() {
     if (userObject instanceof String) return null;
     return (ToolDescriptors)userObject;
   }
 
-  @Nullable
-  public String getGroupName() {
+  public @Nullable String getGroupName() {
     return userObject instanceof String ? (String)userObject : null;
   }
 
-  @Nullable
-  public String getScopeName() {
+  public @Nullable String getScopeName() {
     ToolDescriptors descriptors = getDescriptors();
     return descriptors != null ? descriptors.getDefaultScopeToolState().getScopeId() : null;
   }

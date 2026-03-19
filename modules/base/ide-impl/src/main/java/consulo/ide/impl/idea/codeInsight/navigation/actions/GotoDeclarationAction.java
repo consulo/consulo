@@ -131,8 +131,7 @@ public class GotoDeclarationAction extends BaseCodeInsightAction implements Code
         }
     }
 
-    @Nullable
-    private static PsiElementListCellRenderer<PsiElement> calcElementRender(
+    private static @Nullable PsiElementListCellRenderer<PsiElement> calcElementRender(
         @Nullable GotoDeclarationHandler declarationHandler,
         PsiElement[] elements
     ) {

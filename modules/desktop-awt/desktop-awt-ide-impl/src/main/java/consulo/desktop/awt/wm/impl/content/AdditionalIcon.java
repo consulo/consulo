@@ -84,8 +84,7 @@ public abstract class AdditionalIcon {
     return true;
   }
 
-  @Nullable
-  public String getTooltip() {
+  public @Nullable String getTooltip() {
     return null;
   }
 }

@@ -36,8 +36,7 @@ import org.jspecify.annotations.Nullable;
 public class LanguageFileTypeStructureViewBuilderProvider implements StructureViewBuilderProvider {
   @RequiredReadAction
   @Override
-  @Nullable
-  public StructureViewBuilder getStructureViewBuilder(FileType fileType, VirtualFile file, Project project) {
+  public @Nullable StructureViewBuilder getStructureViewBuilder(FileType fileType, VirtualFile file, Project project) {
     if (!(fileType instanceof LanguageFileType)) return null;
 
     PsiFile psiFile = PsiManager.getInstance(project).findFile(file);

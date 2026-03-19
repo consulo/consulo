@@ -27,8 +27,7 @@ import java.util.function.BooleanSupplier;
 
 public abstract class TextEditorHighlightingPass implements HighlightingPass {
     public static final TextEditorHighlightingPass[] EMPTY_ARRAY = new TextEditorHighlightingPass[0];
-    @Nullable
-    protected final Document myDocument;
+    protected final @Nullable Document myDocument;
     protected final Project myProject;
     private final boolean myRunIntentionPassAfter;
     private final long myInitialDocStamp;
@@ -65,8 +64,7 @@ public abstract class TextEditorHighlightingPass implements HighlightingPass {
         doCollectInformation(progress);
     }
 
-    @Nullable
-    public EditorColorsScheme getColorsScheme() {
+    public @Nullable EditorColorsScheme getColorsScheme() {
         if (myImaginaryEditor != null) {
             return myImaginaryEditor.getColorsScheme();
         }
@@ -77,8 +75,7 @@ public abstract class TextEditorHighlightingPass implements HighlightingPass {
         myColorsScheme = colorsScheme;
     }
 
-    @Nullable
-    public ImaginaryEditor getImaginaryEditor() {
+    public @Nullable ImaginaryEditor getImaginaryEditor() {
         return myImaginaryEditor;
     }
 
@@ -171,8 +168,7 @@ public abstract class TextEditorHighlightingPass implements HighlightingPass {
         myCompletionPredecessorIds = completionPredecessorIds;
     }
 
-    @Nullable
-    public Document getDocument() {
+    public @Nullable Document getDocument() {
         return myDocument;
     }
 

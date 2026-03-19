@@ -141,8 +141,7 @@ public interface PsiBuilder extends UserDataHolder {
      *
      * @return the token char sequencr, or null when the token stream is over.
      */
-    @Nullable
-    default CharSequence getTokenSequence() {
+    default @Nullable CharSequence getTokenSequence() {
         return getTokenText();
     }
 

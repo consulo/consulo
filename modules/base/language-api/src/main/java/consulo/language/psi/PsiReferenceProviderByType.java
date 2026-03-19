@@ -32,8 +32,7 @@ public abstract class PsiReferenceProviderByType extends PsiReferenceProvider {
   private static final ExtensionPointCacheKey<PsiReferenceProviderByType, Map<ReferenceProviderType, PsiReferenceProviderByType>> KEY =
           ExtensionPointCacheKey.groupBy("PsiReferenceProviderByType", PsiReferenceProviderByType::getReferenceProviderType);
 
-  @Nullable
-  public static PsiReferenceProviderByType forType(ReferenceProviderType type) {
+  public static @Nullable PsiReferenceProviderByType forType(ReferenceProviderType type) {
     return Application.get().getExtensionPoint(PsiReferenceProviderByType.class).getOrBuildCache(KEY).get(type);
   }
 

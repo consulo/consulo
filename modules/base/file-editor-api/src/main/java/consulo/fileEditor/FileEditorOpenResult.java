@@ -60,8 +60,7 @@ public final class FileEditorOpenResult {
         return myEntries.isEmpty();
     }
 
-    @Nullable
-    public FileEditor getFirstEditor() {
+    public @Nullable FileEditor getFirstEditor() {
         if (myEntries.isEmpty()) {
             return null;
         }

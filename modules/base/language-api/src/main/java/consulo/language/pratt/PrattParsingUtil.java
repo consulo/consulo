@@ -45,8 +45,7 @@ public class PrattParsingUtil {
     return !builder.isEof();
   }
 
-  @Nullable
-  public static IElementType parseOption(PrattBuilder builder, int rightPriority) {
+  public static @Nullable IElementType parseOption(PrattBuilder builder, int rightPriority) {
     MutableMarker marker = builder.mark();
     IElementType type = builder.createChildBuilder(rightPriority).parse();
     if (type == null) {

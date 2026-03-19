@@ -35,8 +35,7 @@ public abstract class TreeElementPattern<ParentType, T extends ParentType, Self 
     super(aClass);
   }
 
-  @Nullable
-  protected abstract ParentType getParent(ParentType parentType);
+  protected abstract @Nullable ParentType getParent(ParentType parentType);
 
   protected abstract ParentType[] getChildren(ParentType parentType);
 

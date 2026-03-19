@@ -66,8 +66,7 @@ public class DvcsRememberedInputs {
     myState.visitedUrls.add(urlAndUserName);
   }
 
-  @Nullable
-  public String getUserNameForUrl(String url) {
+  public @Nullable String getUserNameForUrl(String url) {
     for (UrlAndUserName urlAndUserName : myState.visitedUrls) {
       if (urlAndUserName.url.equalsIgnoreCase(url)) {
         return urlAndUserName.userName;

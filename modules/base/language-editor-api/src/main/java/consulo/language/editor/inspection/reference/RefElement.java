@@ -108,8 +108,7 @@ public interface RefElement extends RefEntity {
     return false;
   }
 
-  @Nullable
-  default String getURL() {
+  default @Nullable String getURL() {
     return null;
   }
 }

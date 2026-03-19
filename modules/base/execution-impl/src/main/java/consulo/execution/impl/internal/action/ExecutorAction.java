@@ -143,8 +143,7 @@ public class ExecutorAction extends AnAction implements DumbAware {
         }
     }
 
-    @Nullable
-    protected RunnerAndConfigurationSettings getConfiguration(Project project) {
+    protected @Nullable RunnerAndConfigurationSettings getConfiguration(Project project) {
         return RunManagerEx.getInstanceEx(project).getSelectedConfiguration();
     }
 

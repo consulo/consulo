@@ -20,16 +20,14 @@ public interface Problem {
     /**
      * A name used to group problems.
      */
-    @Nullable
-    default String getGroup() {
+    default @Nullable String getGroup() {
         return null;
     }
 
     /**
      * Detailed description of the problem if needed.
      */
-    @Nullable
-    default String getDescription() {
+    default @Nullable String getDescription() {
         return null;
     }
 

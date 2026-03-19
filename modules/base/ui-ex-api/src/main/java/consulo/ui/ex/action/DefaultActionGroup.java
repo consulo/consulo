@@ -402,8 +402,7 @@ public class DefaultActionGroup extends ActionGroup {
         return children;
     }
 
-    @Nullable
-    private AnAction unStub(ActionManager actionManager, ActionStubBase stub) {
+    private @Nullable AnAction unStub(ActionManager actionManager, ActionStubBase stub) {
         try {
             AnAction action = actionManager.getAction(stub.getId());
             if (action == null) {

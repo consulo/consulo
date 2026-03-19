@@ -366,8 +366,7 @@ public class LocalizationManagerImpl implements LocalizationManager, Localizatio
         return format.format(args);
     }
 
-    @Nullable
-    private String getValue(LocalizationKey key, Locale locale) {
+    private @Nullable String getValue(LocalizationKey key, Locale locale) {
         Map<String, LocalizationFileState> map = myLocalizes.get(locale);
         if (map != null) {
             LocalizationFileState fileInfo = map.get(key.getLocalizationId());

@@ -58,8 +58,7 @@ public abstract class CreateFileFromTemplateAction extends CreateFromTemplateAct
         return createFileFromTemplate(name, template, dir, getDefaultTemplateProperty(), true);
     }
 
-    @Nullable
-    public static PsiFile createFileFromTemplate(
+    public static @Nullable PsiFile createFileFromTemplate(
         @Nullable String name,
         FileTemplate template,
         PsiDirectory dir,
@@ -69,8 +68,7 @@ public abstract class CreateFileFromTemplateAction extends CreateFromTemplateAct
         return createFileFromTemplate(name, template, dir, defaultTemplateProperty, openFile, Collections.emptyMap());
     }
 
-    @Nullable
-    public static PsiFile createFileFromTemplate(
+    public static @Nullable PsiFile createFileFromTemplate(
         @Nullable String name,
         FileTemplate template,
         PsiDirectory dir,
@@ -119,8 +117,7 @@ public abstract class CreateFileFromTemplateAction extends CreateFromTemplateAct
         return null;
     }
 
-    @Nullable
-    protected FileType getFileTypeForModuleResolve() {
+    protected @Nullable FileType getFileTypeForModuleResolve() {
         return null;
     }
 

@@ -88,8 +88,7 @@ public class LexerEditorHighlighter implements EditorHighlighter, PrioritizedDoc
         return myHighlighter instanceof DefaultSyntaxHighlighter;
     }
 
-    @Nullable
-    protected final Document getDocument() {
+    protected final @Nullable Document getDocument() {
         return myEditor != null ? myEditor.getDocument() : null;
     }
 

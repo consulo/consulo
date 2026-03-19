@@ -20,14 +20,11 @@ import org.jspecify.annotations.Nullable;
 //@Tag("vendor")
 public class PluginVendor {
   //@Attribute("url")
-  @Nullable
-  public String url;
+  public @Nullable String url;
 
   //@Attribute("email")
-  @Nullable
-  public String email;
+  public @Nullable String email;
 
   //@Text
-  @Nullable
-  public String name;
+  public @Nullable String name;
 }

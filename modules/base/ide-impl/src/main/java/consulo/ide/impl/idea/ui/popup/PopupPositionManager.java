@@ -97,8 +97,7 @@ public class PopupPositionManager {
     return null;
   }
 
-  @Nullable
-  private static PositionAdjuster createPositionAdjuster(JBPopup hint) {
+  private static @Nullable PositionAdjuster createPositionAdjuster(JBPopup hint) {
     Component focusOwner = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
     if (focusOwner == null) return null;
 
@@ -267,8 +266,7 @@ public class PopupPositionManager {
       return result;
     }
 
-    @Nullable
-    public static Size2D getPopupSize(JBPopup popup) {
+    public static @Nullable Size2D getPopupSize(JBPopup popup) {
       Size2D size = null;
       if (popup instanceof AbstractPopup) {
         String dimensionKey = ((AbstractPopup)popup).getDimensionServiceKey();

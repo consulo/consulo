@@ -89,8 +89,7 @@ public class ArrangementMatchingRulesPanel extends JPanel implements UiDataProvi
     myControl.setSections(rules);
   }
 
-  @Nullable
-  public Collection<StdArrangementRuleAliasToken> getRulesAliases() {
+  public @Nullable Collection<StdArrangementRuleAliasToken> getRulesAliases() {
     return myControl.getRulesAliases();
   }
 

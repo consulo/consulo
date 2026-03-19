@@ -35,8 +35,7 @@ public class StateComponentInfo<T> {
 
   private static final String OPTION_WORKSPACE = "workspace";
 
-  @Nullable
-  public static <K> StateComponentInfo<K> build(K o, @Nullable ComponentManager project) {
+  public static @Nullable <K> StateComponentInfo<K> build(K o, @Nullable ComponentManager project) {
     if (!(o instanceof PersistentStateComponent) && !(o instanceof JDOMExternalizable)) {
       return null;
     }
@@ -82,8 +81,7 @@ public class StateComponentInfo<T> {
     return options != null && Boolean.parseBoolean((String)options.get(OPTION_WORKSPACE));
   }
 
-  @Nullable
-  private static State getStateSpec(Class<?> aClass) {
+  private static @Nullable State getStateSpec(Class<?> aClass) {
     do {
       State stateSpec = aClass.getAnnotation(State.class);
       if (stateSpec != null) {

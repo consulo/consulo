@@ -34,8 +34,7 @@ import org.jspecify.annotations.Nullable;
 public class DocumentBasedFormattingModel implements FormattingModelEx {
     private final Block myRootBlock;
     private final FormattingDocumentModel myDocumentModel;
-    @Nullable
-    private final FormattingModel myOriginalFormattingModel;
+    private final @Nullable FormattingModel myOriginalFormattingModel;
     
     private final Document myDocument;
     private final Project myProject;
@@ -291,8 +290,7 @@ public class DocumentBasedFormattingModel implements FormattingModelEx {
         return myFile;
     }
 
-    @Nullable
-    public static String mergeWsWithCdataMarker(String whiteSpace, String s, int cdataPos) {
+    public static @Nullable String mergeWsWithCdataMarker(String whiteSpace, String s, int cdataPos) {
         int firstCrInGeneratedWs = whiteSpace.indexOf('\n');
         int secondCrInGeneratedWs = firstCrInGeneratedWs != -1 ? whiteSpace.indexOf('\n', firstCrInGeneratedWs + 1) : -1;
         int firstCrInPreviousWs = s.indexOf('\n');

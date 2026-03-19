@@ -75,8 +75,7 @@ public class GeneralCodeStylePanel extends CodeStyleAbstractPanel {
 
         
         private final LocalizeValue myName;
-        @Nullable
-        private final String myLineSeparator;
+        private final @Nullable String myLineSeparator;
 
         LineBreak(LocalizeValue name, @Nullable String lineSeparator) {
             myName = name;
@@ -88,8 +87,7 @@ public class GeneralCodeStylePanel extends CodeStyleAbstractPanel {
             return myName;
         }
 
-        @Nullable
-        public String getLineSeparator() {
+        public @Nullable String getLineSeparator() {
             return myLineSeparator;
         }
     }
@@ -779,8 +777,7 @@ public class GeneralCodeStylePanel extends CodeStyleAbstractPanel {
         }
     }
 
-    @Nullable
-    private static Pattern compilePattern(CodeStyleSettings settings, TextBox field, String patternText) {
+    private static @Nullable Pattern compilePattern(CodeStyleSettings settings, TextBox field, String patternText) {
         try {
             return Pattern.compile(patternText);
         }
@@ -799,8 +796,7 @@ public class GeneralCodeStylePanel extends CodeStyleAbstractPanel {
         return fieldText;
     }
 
-    @Nullable
-    private String getSelectedLineSeparator() {
+    private @Nullable String getSelectedLineSeparator() {
         LineBreak selectedLineBreak = myLineSeparatorCombo.getValue();
         return selectedLineBreak == null ? null : selectedLineBreak.getLineSeparator();
     }

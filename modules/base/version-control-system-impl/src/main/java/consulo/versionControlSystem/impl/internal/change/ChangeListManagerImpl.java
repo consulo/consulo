@@ -1021,8 +1021,7 @@ public class ChangeListManagerImpl extends ChangeListManagerEx implements Change
     }
 
     @Override
-    @Nullable
-    public LocalChangeList findChangeList(String name) {
+    public @Nullable LocalChangeList findChangeList(String name) {
         synchronized (myDataLock) {
             return myWorker.getCopyByName(name);
         }
@@ -1113,8 +1112,7 @@ public class ChangeListManagerImpl extends ChangeListManagerEx implements Change
     }
 
     @Override
-    @Nullable
-    public LocalChangeList getDefaultChangeList() {
+    public @Nullable LocalChangeList getDefaultChangeList() {
         synchronized (myDataLock) {
             return myWorker.getDefaultListCopy();
         }
@@ -1137,8 +1135,7 @@ public class ChangeListManagerImpl extends ChangeListManagerEx implements Change
     }
 
     @Override
-    @Nullable
-    public LocalChangeList getChangeList(Change change) {
+    public @Nullable LocalChangeList getChangeList(Change change) {
         synchronized (myDataLock) {
             return myWorker.listForChange(change);
         }
@@ -1155,8 +1152,7 @@ public class ChangeListManagerImpl extends ChangeListManagerEx implements Change
      * @deprecated better use normal comparison, with equals
      */
     @Override
-    @Nullable
-    public LocalChangeList getIdentityChangeList(Change change) {
+    public @Nullable LocalChangeList getIdentityChangeList(Change change) {
         synchronized (myDataLock) {
             List<LocalChangeList> lists = myWorker.getListsCopy();
             for (LocalChangeList list : lists) {
@@ -1178,8 +1174,7 @@ public class ChangeListManagerImpl extends ChangeListManagerEx implements Change
     }
 
     @Override
-    @Nullable
-    public Change getChange(VirtualFile file) {
+    public @Nullable Change getChange(VirtualFile file) {
         return getChange(VcsUtil.getFilePath(file));
     }
 
@@ -1191,8 +1186,7 @@ public class ChangeListManagerImpl extends ChangeListManagerEx implements Change
     }
 
     @Override
-    @Nullable
-    public Change getChange(FilePath file) {
+    public @Nullable Change getChange(FilePath file) {
         synchronized (myDataLock) {
             return myWorker.getChangeForPath(file);
         }
@@ -1257,8 +1251,7 @@ public class ChangeListManagerImpl extends ChangeListManagerEx implements Change
     }
 
     @Override
-    @Nullable
-    public AbstractVcs getVcsFor(Change change) {
+    public @Nullable AbstractVcs getVcsFor(Change change) {
         VcsKey key;
         synchronized (myDataLock) {
             key = myWorker.getVcsFor(change);
@@ -1647,8 +1640,7 @@ public class ChangeListManagerImpl extends ChangeListManagerEx implements Change
     }
 
     @Override
-    @Nullable
-    public String getSwitchedBranch(VirtualFile file) {
+    public @Nullable String getSwitchedBranch(VirtualFile file) {
         synchronized (myDataLock) {
             return myWorker.getBranchForFile(file);
         }
@@ -1796,8 +1788,7 @@ public class ChangeListManagerImpl extends ChangeListManagerEx implements Change
             });
         }
 
-        @Nullable
-        private AbstractVcs getVcs(BaseRevision baseRevision) {
+        private @Nullable AbstractVcs getVcs(BaseRevision baseRevision) {
             VcsKey vcsKey = baseRevision.getVcs();
             if (vcsKey == null) {
                 FilePath path = baseRevision.getPath();
@@ -1809,8 +1800,7 @@ public class ChangeListManagerImpl extends ChangeListManagerEx implements Change
             return myVcsManager.findVcsByName(vcsKey.getName());
         }
 
-        @Nullable
-        private VcsKey findVcs(FilePath path) {
+        private @Nullable VcsKey findVcs(FilePath path) {
             // does not matter directory or not
             VirtualFile vf = path.getVirtualFile();
             if (vf == null) {

@@ -28,8 +28,7 @@ import org.jspecify.annotations.Nullable;
 public abstract class MergeRequest implements UserDataHolder {
   protected final UserDataHolderBase myUserDataHolder = new UserDataHolderBase();
 
-  @Nullable
-  public abstract String getTitle();
+  public abstract @Nullable String getTitle();
 
   /**
    * Called on conflict resolve end. Should be called exactly once for each request, that was shown.

@@ -137,8 +137,7 @@ public class ChangesViewContentManager implements ChangesViewContentI, Disposabl
         }
     }
 
-    @Nullable
-    private Content findContent(ChangesViewContentFactory factory) {
+    private @Nullable Content findContent(ChangesViewContentFactory factory) {
         if (myContentManager == null) {
             for (Content content : myAddedContents) {
                 if (content instanceof ContentStub && ((ContentStub) content).getChangesViewContentFactory() == factory) {
@@ -185,8 +184,7 @@ public class ChangesViewContentManager implements ChangesViewContentI, Disposabl
         }
     }
 
-    @Nullable
-    public Trinity<Image, LocalizeValue, Boolean> getAlreadyLoadedState() {
+    public @Nullable Trinity<Image, LocalizeValue, Boolean> getAlreadyLoadedState() {
         return myAlreadyLoadedState;
     }
 
@@ -217,8 +215,7 @@ public class ChangesViewContentManager implements ChangesViewContentI, Disposabl
     }
 
     @Override
-    @Nullable
-    public <T> T getActiveComponent(Class<T> aClass) {
+    public @Nullable <T> T getActiveComponent(Class<T> aClass) {
         if (myContentManager == null) {
             return null;
         }

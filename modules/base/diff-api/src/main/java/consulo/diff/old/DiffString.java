@@ -35,8 +35,7 @@ public class DiffString implements CharSequence {
   private final int myLength;
   private int myHash;
 
-  @Nullable
-  public static DiffString createNullable(@Nullable String string) {
+  public static @Nullable DiffString createNullable(@Nullable String string) {
     if (string == null) return null;
     return create(string);
   }
@@ -146,8 +145,7 @@ public class DiffString implements CharSequence {
     return h;
   }
 
-  @Nullable
-  public static DiffString concatenateNullable(@Nullable DiffString s1, @Nullable DiffString s2) {
+  public static @Nullable DiffString concatenateNullable(@Nullable DiffString s1, @Nullable DiffString s2) {
     if (s1 == null || s2 == null) {
       if (s1 != null) return s1;
       if (s2 != null) return s2;

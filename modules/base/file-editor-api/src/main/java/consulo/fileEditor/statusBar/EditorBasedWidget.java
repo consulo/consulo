@@ -116,8 +116,7 @@ public abstract class EditorBasedWidget implements StatusBarWidget, FileEditorMa
     return focusOwner;
   }
 
-  @Nullable
-  protected Editor getFocusedEditor() {
+  protected @Nullable Editor getFocusedEditor() {
     Component component = getFocusedComponent();
     Editor editor = component instanceof EditorHolder ? ((EditorHolder)component).getEditor() : getEditor();
     return editor != null && !editor.isDisposed() ? editor : null;
@@ -132,8 +131,7 @@ public abstract class EditorBasedWidget implements StatusBarWidget, FileEditorMa
     return FileDocumentManager.getInstance().getFile(document);
   }
 
-  @Nullable
-  protected VirtualFile getSelectedFile(@Nullable Editor editor) {
+  protected @Nullable VirtualFile getSelectedFile(@Nullable Editor editor) {
     if (editor == null) return null;
     Document document = editor.getDocument();
     return FileDocumentManager.getInstance().getFile(document);

@@ -99,8 +99,7 @@ final class ConfigurableWebBrowser extends WebBrowser {
     }
 
     @Override
-    @Nullable
-    public BrowserSpecificSettings getSpecificSettings() {
+    public @Nullable BrowserSpecificSettings getSpecificSettings() {
         return specificSettings;
     }
 

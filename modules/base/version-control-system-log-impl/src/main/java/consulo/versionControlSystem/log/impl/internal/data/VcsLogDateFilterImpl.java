@@ -24,10 +24,8 @@ import java.util.Date;
 
 public class VcsLogDateFilterImpl implements VcsLogDateFilter, VcsLogDetailsFilter {
 
-  @Nullable
-  private final Date myAfter;
-  @Nullable
-  private final Date myBefore;
+  private final @Nullable Date myAfter;
+  private final @Nullable Date myBefore;
 
   public VcsLogDateFilterImpl(@Nullable Date after, @Nullable Date before) {
     myAfter = after;
@@ -48,14 +46,12 @@ public class VcsLogDateFilterImpl implements VcsLogDateFilter, VcsLogDetailsFilt
   }
 
   @Override
-  @Nullable
-  public Date getAfter() {
+  public @Nullable Date getAfter() {
     return myAfter;
   }
 
   @Override
-  @Nullable
-  public Date getBefore() {
+  public @Nullable Date getBefore() {
     return myBefore;
   }
 }

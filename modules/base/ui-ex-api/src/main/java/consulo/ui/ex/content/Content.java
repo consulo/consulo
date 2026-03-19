@@ -174,16 +174,14 @@ public interface Content extends UserDataHolder, ComponentContainer {
   default void setHelpId(String helpId) {
   }
 
-  @Nullable
-  default String getHelpId() {
+  default @Nullable String getHelpId() {
     return null;
   }
 
   default void setTabColor(@Nullable ColorValue color) {
   }
 
-  @Nullable
-  default ColorValue getTabColor() {
+  default @Nullable ColorValue getTabColor() {
     return null;
   }
 

@@ -103,8 +103,7 @@ public abstract class NavigationGutterIconRenderer extends GutterIconRenderer im
     }
 
     @Override
-    @Nullable
-    public AnAction getClickAction() {
+    public @Nullable AnAction getClickAction() {
         return new AnAction() {
             @Override
             @RequiredUIAccess

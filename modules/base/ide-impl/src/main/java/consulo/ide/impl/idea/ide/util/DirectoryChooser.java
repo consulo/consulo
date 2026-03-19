@@ -245,8 +245,7 @@ public class DirectoryChooser extends DialogWrapper implements DirectoryChooserD
         }
     }
 
-    @Nullable
-    private static String concat(String[] strings, int headLimit, int tailLimit) {
+    private static @Nullable String concat(String[] strings, int headLimit, int tailLimit) {
         if (strings.length <= headLimit + tailLimit) {
             return null;
         }
@@ -299,8 +298,7 @@ public class DirectoryChooser extends DialogWrapper implements DirectoryChooserD
             return myIndex;
         }
 
-        @Nullable
-        public String execute() {
+        public @Nullable String execute() {
             while (true) {
                 String commonHead = getCommonFragment(myIndex);
                 if (commonHead == null) {
@@ -315,8 +313,7 @@ public class DirectoryChooser extends DialogWrapper implements DirectoryChooserD
 
         protected abstract void append(String fragment, StringBuffer buffer);
 
-        @Nullable
-        private String getCommonFragment(int count) {
+        private @Nullable String getCommonFragment(int count) {
             String commonFragment = null;
             for (String[] path : myPaths) {
                 int index = getFragmentIndex(path, count);

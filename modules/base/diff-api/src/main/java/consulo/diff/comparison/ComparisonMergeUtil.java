@@ -158,8 +158,7 @@ public class ComparisonMergeUtil {
     }
   }
 
-  @Nullable
-  public static CharSequence tryResolveConflict(CharSequence leftText,
+  public static @Nullable CharSequence tryResolveConflict(CharSequence leftText,
                                                 CharSequence baseText,
                                                 CharSequence rightText) {
     return MergeResolveUtil.tryResolveConflict(leftText, baseText, rightText);

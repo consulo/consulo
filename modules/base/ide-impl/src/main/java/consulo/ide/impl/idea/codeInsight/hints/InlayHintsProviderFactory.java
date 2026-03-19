@@ -36,8 +36,7 @@ public class InlayHintsProviderFactory {
         return result;
     }
 
-    @Nullable
-    static InlayProviderInfo findProviderInfo(Language language, String providerId) {
+    static @Nullable InlayProviderInfo findProviderInfo(Language language, String providerId) {
         List<InlayProviderInfo> infos = findProvidersForLanguage(language);
 
         for (InlayProviderInfo info : infos) {

@@ -148,8 +148,7 @@ public class CodeStyleInternalHelperImpl implements CodeStyleInternalHelper {
         }
     }
 
-    @Nullable
-    private static ASTNode findPreviousWhiteSpace(ASTNode leafElement, IElementType whiteSpaceTokenType) {
+    private static @Nullable ASTNode findPreviousWhiteSpace(ASTNode leafElement, IElementType whiteSpaceTokenType) {
         int offset = leafElement.getTextRange().getStartOffset() - 1;
         if (offset < 0) {
             return null;
@@ -169,8 +168,7 @@ public class CodeStyleInternalHelperImpl implements CodeStyleInternalHelper {
         return null;
     }
 
-    @Nullable
-    private static ASTNode getWsCandidate(@Nullable ASTNode node) {
+    private static @Nullable ASTNode getWsCandidate(@Nullable ASTNode node) {
         if (node == null) {
             return null;
         }

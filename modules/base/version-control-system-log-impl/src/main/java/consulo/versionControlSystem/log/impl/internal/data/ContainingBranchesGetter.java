@@ -111,8 +111,7 @@ public class ContainingBranchesGetter {
      * Returns the alphabetically sorted list of branches containing the specified node, if this information is ready;
      * if it is not available, starts calculating in the background and returns null.
      */
-    @Nullable
-    public List<String> requestContainingBranches(VirtualFile root, Hash hash) {
+    public @Nullable List<String> requestContainingBranches(VirtualFile root, Hash hash) {
         LOG.assertTrue(EventQueue.isDispatchThread());
         List<String> refs = myCache.get(new CommitId(hash, root));
         if (refs == null) {
@@ -122,8 +121,7 @@ public class ContainingBranchesGetter {
         return refs;
     }
 
-    @Nullable
-    public List<String> getContainingBranchesFromCache(VirtualFile root, Hash hash) {
+    public @Nullable List<String> getContainingBranchesFromCache(VirtualFile root, Hash hash) {
         synchronized (myCache) {
             return myCache.get(new CommitId(hash, root));
         }
@@ -179,10 +177,8 @@ public class ContainingBranchesGetter {
         private final VirtualFile root;
         private final Hash hash;
         private final SLRUMap<CommitId, List<String>> cache;
-        @Nullable
-        private final RefsModel refs;
-        @Nullable
-        private final PermanentGraph<Integer> graph;
+        private final @Nullable RefsModel refs;
+        private final @Nullable PermanentGraph<Integer> graph;
 
         public Task(
             VirtualFile root,

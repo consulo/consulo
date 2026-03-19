@@ -74,8 +74,7 @@ public abstract class VFileEvent {
    * NB: Use this method with caution, because {@link VFileCreateEvent#getFile()} needs
    * {@link VirtualFile#findChild(String)} which may be a performance leak.
    */
-  @Nullable
-  public abstract VirtualFile getFile();
+  public abstract @Nullable VirtualFile getFile();
 
   
   public abstract VirtualFileSystem getFileSystem();

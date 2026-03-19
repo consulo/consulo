@@ -98,11 +98,9 @@ public abstract class DiffContentFactory {
   
   public abstract DiffContent create(@Nullable Project project, VirtualFile file);
 
-  @Nullable
-  public abstract DocumentContent createDocument(@Nullable Project project, VirtualFile file);
+  public abstract @Nullable DocumentContent createDocument(@Nullable Project project, VirtualFile file);
 
-  @Nullable
-  public abstract FileContent createFile(@Nullable Project project, VirtualFile file);
+  public abstract @Nullable FileContent createFile(@Nullable Project project, VirtualFile file);
 
 
   

@@ -150,13 +150,11 @@ public class IgnoredFilesCompositeHolder implements IgnoredFilesHolder {
         myVcsIgnoredHolderMap.put(vcs, ignoredFilesHolder);
     }
 
-    @Nullable
-    public IgnoredFilesHolder getActiveVcsHolder() {
+    public @Nullable IgnoredFilesHolder getActiveVcsHolder() {
         return getIgnoredHolderByVcs(myCurrentVcs);
     }
 
-    @Nullable
-    private IgnoredFilesHolder getIgnoredHolderByVcs(AbstractVcs vcs) {
+    private @Nullable IgnoredFilesHolder getIgnoredHolderByVcs(AbstractVcs vcs) {
         if (!myVcsIgnoredHolderMap.containsKey(vcs)) {
             return null;
         }
@@ -164,8 +162,7 @@ public class IgnoredFilesCompositeHolder implements IgnoredFilesHolder {
     }
 
 
-    @Nullable
-    private static VcsIgnoredFilesHolder getHolderFromExtensions(AbstractVcs vcs, Project project) {
+    private static @Nullable VcsIgnoredFilesHolder getHolderFromExtensions(AbstractVcs vcs, Project project) {
         ExtensionPoint<VcsIgnoredFilesHolderProvider> point = project.getExtensionPoint(VcsIgnoredFilesHolderProvider.class);
 
         VcsIgnoredFilesHolderProvider provider = point.findFirstSafe(p -> Objects.equals(p.getVcsKey(), vcs.getKeyInstanceMethod()));

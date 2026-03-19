@@ -149,8 +149,7 @@ public abstract class ChooseLibrariesDialogBase extends DialogWrapper {
     }
 
     @Override
-    @Nullable
-    protected JComponent createCenterPanel() {
+    protected @Nullable JComponent createCenterPanel() {
         myBuilder = new SimpleTreeBuilder(myTree, new DefaultTreeModel(new DefaultMutableTreeNode()),
             new MyStructure(getProject()),
             WeightBasedComparator.FULL_INSTANCE

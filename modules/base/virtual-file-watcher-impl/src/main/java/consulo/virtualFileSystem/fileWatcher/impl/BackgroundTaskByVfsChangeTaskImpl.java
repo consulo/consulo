@@ -123,8 +123,7 @@ public class BackgroundTaskByVfsChangeTaskImpl implements BackgroundTaskByVfsCha
         this(project, pointer, parameters, provider, name, findProviderByName(provider), manager);
     }
 
-    @Nullable
-    private static BackgroundTaskByVfsChangeProvider findProviderByName(String name) {
+    private static @Nullable BackgroundTaskByVfsChangeProvider findProviderByName(String name) {
         BackgroundTaskByVfsChangeProvider temp = null;
         for (BackgroundTaskByVfsChangeProvider backgroundTaskByVfsChangeProvider : BackgroundTaskByVfsChangeProvider.EP_NAME.getExtensionList()) {
             if (Comparing.equal(name, backgroundTaskByVfsChangeProvider.getTemplateName())) {

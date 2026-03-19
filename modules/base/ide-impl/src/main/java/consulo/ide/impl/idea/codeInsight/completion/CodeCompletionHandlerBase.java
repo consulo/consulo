@@ -448,8 +448,7 @@ public class CodeCompletionHandlerBase {
         return AutoCompletionDecision.SHOW_LOOKUP;
     }
 
-    @Nullable
-    private static AutoCompletionPolicy getAutocompletionPolicy(LookupElement element) {
+    private static @Nullable AutoCompletionPolicy getAutocompletionPolicy(LookupElement element) {
         return element.getAutoCompletionPolicy();
     }
 
@@ -852,8 +851,7 @@ public class CodeCompletionHandlerBase {
         return null;
     }
 
-    @Nullable
-    private <T> T withTimeout(long maxDurationMillis, Supplier<T> task) {
+    private @Nullable <T> T withTimeout(long maxDurationMillis, Supplier<T> task) {
         if (isTestingMode()) {
             return task.get();
         }

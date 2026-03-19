@@ -70,8 +70,7 @@ public class NettyKt {
     return buf.writeCharSequence(data, StandardCharsets.UTF_8);
   }
 
-  @Nullable
-  public static Channel connect(Bootstrap bootstrap,
+  public static @Nullable Channel connect(Bootstrap bootstrap,
                                 InetSocketAddress remoteAddress,
                                 AsyncResult<?> promise,
                                 int maxAttemptCount,
@@ -87,8 +86,7 @@ public class NettyKt {
     }
   }
 
-  @Nullable
-  private static Channel doConnect(Bootstrap bootstrap,
+  private static @Nullable Channel doConnect(Bootstrap bootstrap,
                                    InetSocketAddress remoteAddress,
                                    AsyncResult<?> asyncResult,
                                    int maxAttemptCount,
@@ -131,8 +129,7 @@ public class NettyKt {
     }
   }
 
-  @Nullable
-  private static Channel connectNio(Bootstrap bootstrap,
+  private static @Nullable Channel connectNio(Bootstrap bootstrap,
                                     InetSocketAddress remoteAddress,
                                     AsyncResult<?> promise,
                                     int maxAttemptCount,

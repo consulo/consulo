@@ -70,8 +70,7 @@ public class StructureFilteringStrategy implements ChangeListFilteringStrategy {
     return VcsLocalize.filterStructureName().get();
   }
 
-  @Nullable
-  public JComponent getFilterUI() {
+  public @Nullable JComponent getFilterUI() {
     if (myUI == null) {
       myUI = new MyUI();
     }

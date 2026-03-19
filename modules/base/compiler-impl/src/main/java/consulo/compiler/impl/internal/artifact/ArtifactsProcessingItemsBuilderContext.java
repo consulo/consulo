@@ -86,13 +86,11 @@ public class ArtifactsProcessingItemsBuilderContext implements ArtifactIncrement
         return true;
     }
 
-    @Nullable
-    public ArchivePackageInfo getJarInfo(String outputPath) {
+    public @Nullable ArchivePackageInfo getJarInfo(String outputPath) {
         return myJarByPath.get(outputPath);
     }
 
-    @Nullable
-    public VirtualFile getSourceByOutput(String outputPath) {
+    public @Nullable VirtualFile getSourceByOutput(String outputPath) {
         return mySourceByOutput.get(outputPath);
     }
 

@@ -436,14 +436,12 @@ public class CodeStyleManagerImpl extends CodeStyleManager implements Formatting
     }
 
     @Override
-    @Nullable
-    public String getLineIndent(PsiFile file, int offset) {
+    public @Nullable String getLineIndent(PsiFile file, int offset) {
         return getLineIndent(file, offset, FormattingMode.ADJUST_INDENT);
     }
 
     @Override
-    @Nullable
-    public String getLineIndent(PsiFile file, int offset, FormattingMode mode) {
+    public @Nullable String getLineIndent(PsiFile file, int offset, FormattingMode mode) {
         return new CodeStyleManagerRunnable<String>(this, mode) {
             @Override
             protected boolean useDocumentBaseFormattingModel() {
@@ -458,8 +456,7 @@ public class CodeStyleManagerImpl extends CodeStyleManager implements Formatting
     }
 
     @Override
-    @Nullable
-    public String getLineIndent(Document document, int offset) {
+    public @Nullable String getLineIndent(Document document, int offset) {
         PsiFile file = PsiDocumentManager.getInstance(myProject).getPsiFile(document);
         if (file == null) {
             return "";

@@ -73,16 +73,14 @@ public class LibraryRootsComponent implements Disposable, LibraryEditorComponent
     static final UrlComparator ourUrlComparator = new UrlComparator();
 
     private BorderLayoutPanel myPanel;
-    @Nullable
-    private MultiLineLabel myPropertiesLabel;
+    private @Nullable MultiLineLabel myPropertiesLabel;
     private LibraryPropertiesEditor myPropertiesEditor;
     private Tree myTree;
     private LibraryTableTreeBuilder myTreeBuilder;
     private VirtualFile myLastChosen;
 
     private final Collection<Runnable> myListeners = Lists.newLockFreeCopyOnWriteList();
-    @Nullable
-    private final Project myProject;
+    private final @Nullable Project myProject;
 
     private final Supplier<LibraryEditor> myLibraryEditorComputable;
     private LibraryRootsComponentDescriptor myDescriptor;
@@ -271,8 +269,7 @@ public class LibraryRootsComponent implements Disposable, LibraryEditorComponent
     }
 
     @Override
-    @Nullable
-    public Project getProject() {
+    public @Nullable Project getProject() {
         return myProject;
     }
 
@@ -281,8 +278,7 @@ public class LibraryRootsComponent implements Disposable, LibraryEditorComponent
     }
 
     @Override
-    @Nullable
-    public VirtualFile getExistingRootDirectory() {
+    public @Nullable VirtualFile getExistingRootDirectory() {
         for (OrderRootType orderRootType : OrderRootType.getAllTypes()) {
             VirtualFile[] existingRoots = getLibraryEditor().getFiles(orderRootType);
             if (existingRoots.length > 0) {
@@ -299,8 +295,7 @@ public class LibraryRootsComponent implements Disposable, LibraryEditorComponent
     }
 
     @Override
-    @Nullable
-    public VirtualFile getBaseDirectory() {
+    public @Nullable VirtualFile getBaseDirectory() {
         if (myProject != null) {
             //todo[nik] perhaps we shouldn't select project base dir if global library is edited
             return myProject.getBaseDir();
@@ -336,8 +331,7 @@ public class LibraryRootsComponent implements Disposable, LibraryEditorComponent
         return ArrayUtil.toObjectArray(elements);
     }
 
-    @Nullable
-    private static Object getPathElement(TreePath selectionPath) {
+    private static @Nullable Object getPathElement(TreePath selectionPath) {
         if (selectionPath == null) {
             return null;
         }
@@ -392,8 +386,7 @@ public class LibraryRootsComponent implements Disposable, LibraryEditorComponent
         }
     }
 
-    @Nullable
-    private VirtualFile getFileToSelect() {
+    private @Nullable VirtualFile getFileToSelect() {
         if (myLastChosen != null) {
             return myLastChosen;
         }

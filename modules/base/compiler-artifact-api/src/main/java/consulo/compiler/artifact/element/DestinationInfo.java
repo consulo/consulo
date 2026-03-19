@@ -38,8 +38,7 @@ public abstract class DestinationInfo {
     return myOutputPath;
   }
 
-  @Nullable
-  public VirtualFile getOutputFile() {
+  public @Nullable VirtualFile getOutputFile() {
     return myOutputFile;
   }
 

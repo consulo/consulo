@@ -31,15 +31,13 @@ public abstract class PushTargetPanel<T extends PushTarget> extends JPanel {
                               boolean isActive,
                               @Nullable String forceRenderedText);
 
-  @Nullable
-  abstract public T getValue();
+  abstract public @Nullable T getValue();
 
   public abstract void fireOnCancel();
 
   public abstract void fireOnChange();
 
-  @Nullable
-  public abstract ValidationInfo verify();
+  public abstract @Nullable ValidationInfo verify();
 
   public abstract void setFireOnChangeAction(Runnable action);
 

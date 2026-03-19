@@ -89,8 +89,7 @@ public abstract class AbstractSchemeManager<T, E extends ExternalizableScheme> e
   }
 
   @Override
-  @Nullable
-  public T findSchemeByName(String schemeName) {
+  public @Nullable T findSchemeByName(String schemeName) {
     for (T scheme : mySchemes) {
       if (getName(scheme).equals(schemeName)) {
         return scheme;
@@ -106,8 +105,7 @@ public abstract class AbstractSchemeManager<T, E extends ExternalizableScheme> e
   }
 
   @Override
-  @Nullable
-  public T getCurrentScheme() {
+  public @Nullable T getCurrentScheme() {
     T currentScheme = myCurrentScheme;
     return currentScheme == null ? null : findSchemeByName(getName(currentScheme));
   }

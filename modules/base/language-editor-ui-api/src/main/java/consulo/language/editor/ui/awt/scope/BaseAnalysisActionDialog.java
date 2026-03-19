@@ -299,8 +299,7 @@ public class BaseAnalysisActionDialog extends DialogWrapper {
     protected void extendMainLayout(VerticalLayout layout, Project project) {
     }
 
-    @Nullable
-    protected JComponent getAdditionalActionSettings(Project project) {
+    protected @Nullable JComponent getAdditionalActionSettings(Project project) {
         return null;
     }
 

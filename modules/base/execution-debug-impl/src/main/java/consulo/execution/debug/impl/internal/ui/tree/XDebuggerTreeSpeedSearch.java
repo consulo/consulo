@@ -140,8 +140,7 @@ class XDebuggerTreeSpeedSearch extends TreeSpeedSearch implements XDebuggerTreeL
     return null;
   }
 
-  @Nullable
-  private TreePath match(TreeNode node, String string) {
+  private @Nullable TreePath match(TreeNode node, String string) {
     TreePath path = node instanceof XDebuggerTreeNode ? ((XDebuggerTreeNode)node).getPath() : null;
     return isMatchingElement(path, string) ? path : null;
   }

@@ -50,8 +50,7 @@ public final class LargeFilePrevNextOccurrenceAction extends DumbAwareAction imp
     }
 
     @Override
-    @Nullable
-    public ShortcutSet getShortcut(DataContext context) {
+    public @Nullable ShortcutSet getShortcut(DataContext context) {
         List<Shortcut> list = new ArrayList<>();
         boolean isSingleLine = !isMultiLine();
         if (myDirectionForward) {

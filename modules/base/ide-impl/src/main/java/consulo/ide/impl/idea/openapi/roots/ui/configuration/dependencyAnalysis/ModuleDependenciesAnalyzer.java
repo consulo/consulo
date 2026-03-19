@@ -476,8 +476,7 @@ public class ModuleDependenciesAnalyzer {
     /**
      * @return icon for the classpath
      */
-    @Nullable
-    public Image getIcon() {
+    public @Nullable Image getIcon() {
       VirtualFile file = getLocalFile();
       return file == null ? AllIcons.General.Error : VirtualFilePresentation.getIcon(file);
     }
@@ -485,8 +484,7 @@ public class ModuleDependenciesAnalyzer {
     /**
      * @return the local file
      */
-    @Nullable
-    public VirtualFile getLocalFile() {
+    public @Nullable VirtualFile getLocalFile() {
       VirtualFile file = VirtualFileManager.getInstance().findFileByUrl(myUrl);
       if (file != null) {
         file = VirtualFilePathUtil.getLocalFile(file);

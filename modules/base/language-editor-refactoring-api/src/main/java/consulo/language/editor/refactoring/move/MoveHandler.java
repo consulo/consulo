@@ -151,8 +151,7 @@ public class MoveHandler implements RefactoringActionHandler {
      * Performs some extra checks (that canMove does not)
      * May replace some elements with others which actually shall be moved (e.g. directory->package)
      */
-    @Nullable
-    public static PsiElement[] adjustForMove(Project project, PsiElement[] sourceElements, PsiElement targetElement) {
+    public static @Nullable PsiElement[] adjustForMove(Project project, PsiElement[] sourceElements, PsiElement targetElement) {
         return Application.get().getExtensionPoint(MoveHandlerDelegate.class).computeSafeIfAny(
             delegate -> delegate.canMove(sourceElements, targetElement)
                 ? SimpleReference.create(delegate.adjustForMove(project, sourceElements, targetElement)) : null,

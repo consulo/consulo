@@ -108,8 +108,7 @@ public class EdgeStorageWrapper {
     }
   }
 
-  @Nullable
-  private GraphEdge decompressEdge(int nodeIndex, @Nullable Integer targetId, GraphEdgeType edgeType) {
+  private @Nullable GraphEdge decompressEdge(int nodeIndex, @Nullable Integer targetId, GraphEdgeType edgeType) {
     if (edgeType.isNormalEdge()) {
       assert targetId != null;
       Integer anotherNodeIndex = myGetNodeIndexById.apply(targetId);

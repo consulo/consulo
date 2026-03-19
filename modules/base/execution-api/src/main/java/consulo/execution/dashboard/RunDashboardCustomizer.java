@@ -34,18 +34,15 @@ public abstract class RunDashboardCustomizer {
    * @param node dashboard node
    * @return node's status. Returned status is used for grouping nodes by status.
    */
-  @Nullable
-  public RunDashboardRunConfigurationStatus getStatus(RunDashboardRunConfigurationNode node) {
+  public @Nullable RunDashboardRunConfigurationStatus getStatus(RunDashboardRunConfigurationNode node) {
     return null;
   }
 
-  @Nullable
-  public PsiElement getPsiElement(RunDashboardRunConfigurationNode node) {
+  public @Nullable PsiElement getPsiElement(RunDashboardRunConfigurationNode node) {
     return null;
   }
 
-  @Nullable
-  public Collection<? extends AbstractTreeNode<?>> getChildren(RunDashboardRunConfigurationNode node) {
+  public @Nullable Collection<? extends AbstractTreeNode<?>> getChildren(RunDashboardRunConfigurationNode node) {
     return null;
   }
 

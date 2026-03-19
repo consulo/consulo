@@ -38,8 +38,7 @@ public interface PlatformJvm {
   @Nullable
   String getRuntimeProperty(String key);
 
-  @Nullable
-  default String getRuntimeProperty(String key, String defaultValue) {
+  default @Nullable String getRuntimeProperty(String key, String defaultValue) {
     String runtimeProperty = getRuntimeProperty(key);
     return runtimeProperty == null ? defaultValue : runtimeProperty;
   }

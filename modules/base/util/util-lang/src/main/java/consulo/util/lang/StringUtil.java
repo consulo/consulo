@@ -754,8 +754,7 @@ public final class StringUtil {
     }
 
     @Contract(value = "null -> null", pure = true)
-    @Nullable
-    public static String decapitalize(@Nullable String s) {
+    public static @Nullable String decapitalize(@Nullable String s) {
         if (isEmpty(s)) {
             return s;
         }
@@ -1402,8 +1401,7 @@ public final class StringUtil {
     }
 
     @Contract(value = "null -> null; !null -> !null", pure = true)
-    @Nullable
-    public static String escapeMnemonics(@Nullable String text) {
+    public static @Nullable String escapeMnemonics(@Nullable String text) {
         if (text == null) {
             return null;
         }
@@ -1439,8 +1437,7 @@ public final class StringUtil {
     }
 
     @Contract(value = "null -> null; !null -> !null", pure = true)
-    @Nullable
-    public static String trim(@Nullable String s) {
+    public static @Nullable String trim(@Nullable String s) {
         return s == null ? null : s.trim();
     }
 
@@ -1474,8 +1471,7 @@ public final class StringUtil {
     }
 
     @Contract(value = "null -> null", pure = true)
-    @Nullable
-    public static String trimToNull(@Nullable String s) {
+    public static @Nullable String trimToNull(@Nullable String s) {
         if (s == null) {
             return null;
         }
@@ -1953,8 +1949,7 @@ public final class StringUtil {
     }
 
     @Contract(value = "null -> null; !null -> !null", pure = true)
-    @Nullable
-    public static String toUpperCase(@Nullable String s) {
+    public static @Nullable String toUpperCase(@Nullable String s) {
         return s == null ? null : s.toUpperCase(Locale.US);
     }
 
@@ -1990,8 +1985,7 @@ public final class StringUtil {
     }
 
     @Contract(value = "null -> null; !null -> !null", pure = true)
-    @Nullable
-    public static String toLowerCase(@Nullable String str) {
+    public static @Nullable String toLowerCase(@Nullable String str) {
         return str == null ? null : str.toLowerCase(Locale.US);
     }
 
@@ -2009,8 +2003,7 @@ public final class StringUtil {
     }
 
     @Contract(pure = true)
-    @Nullable
-    public static String getPropertyName(String methodName) {
+    public static @Nullable String getPropertyName(String methodName) {
         if (methodName.startsWith("get")) {
             return decapitalize(methodName.substring(3));
         }
@@ -2358,8 +2351,7 @@ public final class StringUtil {
     }
 
     @Contract(value = "null -> null; !null->!null", pure = true)
-    @Nullable
-    public static String internEmptyString(@Nullable String s) {
+    public static @Nullable String internEmptyString(@Nullable String s) {
         return s == null ? null : s.isEmpty() ? "" : s;
     }
 
@@ -2583,8 +2575,7 @@ public final class StringUtil {
 
     // TODO: process all escapes
     @Contract(value = "null -> null; !null -> !null", pure = true)
-    @Nullable
-    public static String unescapeXml(@Nullable String text) {
+    public static @Nullable String unescapeXml(@Nullable String text) {
         if (text == null) {
             return null;
         }
@@ -2594,8 +2585,7 @@ public final class StringUtil {
     @Contract(value = "null -> null; !null -> !null", pure = true)
     @Deprecated
     @DeprecationInfo("Use XmlStringUtil#escapeText or XmlStringUtil#escapeAttr")
-    @Nullable
-    public static String escapeXml(@Nullable String text) {
+    public static @Nullable String escapeXml(@Nullable String text) {
         if (text == null) {
             return null;
         }
@@ -3019,8 +3009,7 @@ public final class StringUtil {
     }
 
     @Contract(pure = true)
-    @Nullable
-    public static String substringAfter(String text, String subString) {
+    public static @Nullable String substringAfter(String text, String subString) {
         int i = text.indexOf(subString);
         if (i == -1) {
             return null;
@@ -3029,8 +3018,7 @@ public final class StringUtil {
     }
 
     @Contract(pure = true)
-    @Nullable
-    public static String substringAfterLast(String text, String subString) {
+    public static @Nullable String substringAfterLast(String text, String subString) {
         int i = text.lastIndexOf(subString);
         if (i == -1) {
             return null;
@@ -3190,8 +3178,7 @@ public final class StringUtil {
     }
 
     @Contract(pure = true)
-    @Nullable
-    public static String substringBefore(String text, String subString) {
+    public static @Nullable String substringBefore(String text, String subString) {
         int i = text.indexOf(subString);
         if (i == -1) {
             return null;
@@ -3208,8 +3195,7 @@ public final class StringUtil {
         return text.substring(0, i);
     }
 
-    @Nullable
-    public static String replaceUnicodeEscapeSequences(@Nullable String text) {
+    public static @Nullable String replaceUnicodeEscapeSequences(@Nullable String text) {
         if (text == null) {
             return null;
         }

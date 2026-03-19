@@ -40,8 +40,7 @@ public abstract class PushSupport<Repo extends Repository, Source extends PushSo
   /**
    * @return Default push destination
    */
-  @Nullable
-  public abstract Target getDefaultTarget(Repo repository);
+  public abstract @Nullable Target getDefaultTarget(Repo repository);
 
   /**
    * @return current source(branch) for repository
@@ -55,8 +54,7 @@ public abstract class PushSupport<Repo extends Repository, Source extends PushSo
   
   public abstract RepositoryManager<Repo> getRepositoryManager();
 
-  @Nullable
-  public VcsPushOptionsPanel createOptionsPanel() {
+  public @Nullable VcsPushOptionsPanel createOptionsPanel() {
     return null;
   }
 

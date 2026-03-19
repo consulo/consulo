@@ -128,8 +128,7 @@ public class LogConsolePreferences extends LogFilterRegistrar {
     return ConsoleViewContentType.NORMAL_OUTPUT;
   }
 
-  @Nullable
-  public static String getType(String text) {
+  public static @Nullable String getType(String text) {
     String upcased = StringUtil.toUpperCase(text);
     if (ERROR_PATTERN.matcher(upcased).matches()) return ERROR;
     if (WARNING_PATTERN.matcher(upcased).matches() || WARN_PATTERN.matcher(upcased).matches()) return WARNING;

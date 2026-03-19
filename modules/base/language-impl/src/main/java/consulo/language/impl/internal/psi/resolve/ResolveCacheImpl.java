@@ -91,8 +91,7 @@ public class ResolveCacheImpl implements ResolveCache {
     }
   }
 
-  @Nullable
-  private <TRef extends PsiReference, TResult> TResult resolve(TRef ref,
+  private @Nullable <TRef extends PsiReference, TResult> TResult resolve(TRef ref,
                                                                AbstractResolver<? super TRef, TResult> resolver,
                                                                boolean needToPreventRecursion,
                                                                boolean incompleteCode,
@@ -199,8 +198,7 @@ public class ResolveCacheImpl implements ResolveCache {
   }
 
   @Override
-  @Nullable
-  public <TRef extends PsiReference, TResult> TResult resolveWithCaching(TRef ref, AbstractResolver<TRef, TResult> resolver, boolean needToPreventRecursion, boolean incompleteCode) {
+  public @Nullable <TRef extends PsiReference, TResult> TResult resolveWithCaching(TRef ref, AbstractResolver<TRef, TResult> resolver, boolean needToPreventRecursion, boolean incompleteCode) {
     return resolve(ref, resolver, needToPreventRecursion, incompleteCode, false, ref.getElement().isPhysical());
   }
 

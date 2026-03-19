@@ -35,11 +35,9 @@ public abstract class IdeScriptEngineManager {
   
   public abstract List<String> getFileExtensions(@Nullable String language);
 
-  @Nullable
-  public abstract IdeScriptEngine getEngineForLanguage(String language, @Nullable ClassLoader loader);
+  public abstract @Nullable IdeScriptEngine getEngineForLanguage(String language, @Nullable ClassLoader loader);
 
-  @Nullable
-  public abstract IdeScriptEngine getEngineForFileExtension(String extension, @Nullable ClassLoader loader);
+  public abstract @Nullable IdeScriptEngine getEngineForFileExtension(String extension, @Nullable ClassLoader loader);
 
   public abstract boolean isInitialized();
 }

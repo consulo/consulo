@@ -43,8 +43,7 @@ public interface DockManager {
 
   DockContainer getContainerFor(consulo.ui.@Nullable Component c);
 
-  @Nullable
-  default DockContainer getContainerFor(Component c) {
+  default @Nullable DockContainer getContainerFor(Component c) {
     throw new UnsupportedOperationException("desktop only");
   }
 }

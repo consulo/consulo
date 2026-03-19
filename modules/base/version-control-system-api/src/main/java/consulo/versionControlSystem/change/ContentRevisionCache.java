@@ -68,8 +68,7 @@ public final class ContentRevisionCache {
         return CharsetToolkit.bytesToString(bytes, EncodingRegistry.getInstance().getDefaultCharset());
     }
 
-    @Nullable
-    public byte[] getBytes(FilePath path, VcsRevisionNumber number, VcsKey vcsKey, UniqueType type) {
+    public @Nullable byte[] getBytes(FilePath path, VcsRevisionNumber number, VcsKey vcsKey, UniqueType type) {
         return myCache.getIfPresent(new Key(path, number, vcsKey, type));
     }
 

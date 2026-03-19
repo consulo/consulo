@@ -104,8 +104,7 @@ public class PinActiveTabAction extends DumbAwareAction implements Toggleable {
         return selectedFile != null ? createHandler(window, selectedFile) : null;
     }
 
-    @Nullable
-    protected VirtualFile getFileFromEvent(AnActionEvent e, FileEditorWindow window) {
+    protected @Nullable VirtualFile getFileFromEvent(AnActionEvent e, FileEditorWindow window) {
         return getFileInWindow(e, window);
     }
 
@@ -159,16 +158,14 @@ public class PinActiveTabAction extends DumbAwareAction implements Toggleable {
         return null;
     }
 
-    @Nullable
-    private static Content getToolWindowContent(AnActionEvent e) {
+    private static @Nullable Content getToolWindowContent(AnActionEvent e) {
         // note to future readers: TW tab "pinned" icon is shown when content.getUserData(TW.SHOW_CONTENT_ICON) is true
         ToolWindow window = e.getData(ToolWindow.KEY);
         Content result = window != null ? window.getContentManager().getSelectedContent() : null;
         return result != null && result.isPinnable() ? result : null;
     }
 
-    @Nullable
-    private static VirtualFile getFileInWindow(AnActionEvent e, FileEditorWindow window) {
+    private static @Nullable VirtualFile getFileInWindow(AnActionEvent e, FileEditorWindow window) {
         VirtualFile file = e.getData(VirtualFile.KEY);
         if (file == null) {
             file = window.getSelectedFile();

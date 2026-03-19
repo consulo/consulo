@@ -289,8 +289,7 @@ public class ExportTestResultsAction extends DumbAwareAction {
         });
     }
 
-    @Nullable
-    private String getOutputText(ExportTestResultsConfiguration config) throws IOException, TransformerException, SAXException {
+    private @Nullable String getOutputText(ExportTestResultsConfiguration config) throws IOException, TransformerException, SAXException {
         ExportTestResultsConfiguration.ExportFormat exportFormat = config.getExportFormat();
 
         SAXTransformerFactory transformerFactory = (SAXTransformerFactory) SAXTransformerFactory.newInstance();

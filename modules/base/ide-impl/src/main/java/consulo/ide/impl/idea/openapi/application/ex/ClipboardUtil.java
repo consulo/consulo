@@ -48,8 +48,7 @@ public class ClipboardUtil {
     return onFail.get();
   }
 
-  @Nullable
-  public static String getTextInClipboard() {
+  public static @Nullable String getTextInClipboard() {
     if(!Application.get().isSwingApplication()) {
       return null; // TODO [VISTALL] no clipboard support
     }

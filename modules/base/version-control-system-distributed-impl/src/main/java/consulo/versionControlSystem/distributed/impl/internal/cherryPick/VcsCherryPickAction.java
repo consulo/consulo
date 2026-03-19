@@ -91,8 +91,7 @@ public class VcsCherryPickAction extends DumbAwareAction {
         e.getPresentation().setDescription(description == null ? "" : description);
     }
 
-    @Nullable
-    private static VcsCherryPicker getActiveCherryPicker(
+    private static @Nullable VcsCherryPicker getActiveCherryPicker(
         List<VcsCherryPicker> cherryPickers,
         Collection<VirtualFile> roots
     ) {

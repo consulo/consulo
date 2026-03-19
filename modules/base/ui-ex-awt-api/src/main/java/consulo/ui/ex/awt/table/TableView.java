@@ -190,8 +190,7 @@ public class TableView<Item> extends BaseTableView implements ItemsProvider, Sel
     return result;
   }
 
-  @Nullable
-  public Item getSelectedObject() {
+  public @Nullable Item getSelectedObject() {
     int row = getSelectedRow();
     List<Item> list = getItems();
     return row >= 0 && row < list.size() ? list.get(convertRowIndexToModel(row)) : null;

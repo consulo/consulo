@@ -54,8 +54,7 @@ public class ReopenProjectAction extends AnAction implements DumbAware {
     private final String myProjectPath;
     private final String myProjectName;
     private List<String> myExtensions;
-    @Nullable
-    private final IdeFrameState myFrameState;
+    private final @Nullable IdeFrameState myFrameState;
     private final boolean myOpened;
     private boolean myIsRemoved;
 

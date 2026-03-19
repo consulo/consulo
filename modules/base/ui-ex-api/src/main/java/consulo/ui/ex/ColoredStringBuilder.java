@@ -65,8 +65,7 @@ public  class ColoredStringBuilder implements ColoredTextContainer {
     return myBuilder;
   }
 
-  @Nullable
-  public Image getIcon() {
+  public @Nullable Image getIcon() {
     return myIcon;
   }
 

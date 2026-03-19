@@ -40,8 +40,7 @@ public class ModuleImpl extends PlatformComponentManagerImpl implements ModuleEx
     
     private String myName;
 
-    @Nullable
-    private final VirtualFilePointer myDirVirtualFilePointer;
+    private final @Nullable VirtualFilePointer myDirVirtualFilePointer;
 
     public ModuleImpl(String name, @Nullable String dirUrl, Project project, ComponentBinding componentBinding) {
         super(project, "Module " + name, ComponentScope.MODULE, componentBinding);

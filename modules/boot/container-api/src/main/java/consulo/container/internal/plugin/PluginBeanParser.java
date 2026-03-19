@@ -28,8 +28,7 @@ import java.util.*;
 public class PluginBeanParser {
   private static Set<String> ourAllowedRootTags = new HashSet<>(Arrays.asList("consulo-plugin"));
 
-  @Nullable
-  public static PluginBean parseBean(SimpleXmlElement rootTag, @Nullable String pluginId) {
+  public static @Nullable PluginBean parseBean(SimpleXmlElement rootTag, @Nullable String pluginId) {
     String rootTagName = rootTag.getName();
     if (!ourAllowedRootTags.contains(rootTagName)) {
       return null;

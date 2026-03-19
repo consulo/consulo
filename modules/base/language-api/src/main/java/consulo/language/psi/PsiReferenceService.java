@@ -61,8 +61,8 @@ public abstract class PsiReferenceService {
   public static class Hints {
     public static final Hints NO_HINTS = new Hints();
 
-    @Nullable public final PsiElement target;
-    @Nullable public final Integer offsetInElement;
+    public final @Nullable PsiElement target;
+    public final @Nullable Integer offsetInElement;
 
     public Hints() {
       target = null;

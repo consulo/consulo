@@ -33,10 +33,8 @@ import static consulo.language.codeStyle.arrangement.std.StdArrangementTokens.Se
  * @author Svetlana.Zemlyanskaya
  */
 public class ArrangementSectionRule implements Cloneable {
-  @Nullable
-  private final String myStartComment;
-  @Nullable
-  private final String myEndComment;
+  private final @Nullable String myStartComment;
+  private final @Nullable String myEndComment;
   private final List<StdArrangementMatchRule> myMatchRules;
 
   private ArrangementSectionRule(@Nullable String start, @Nullable String end, List<StdArrangementMatchRule> rules) {
@@ -69,8 +67,7 @@ public class ArrangementSectionRule implements Cloneable {
     return new ArrangementSectionRule(start, end, matchRules);
   }
 
-  @Nullable
-  private static StdArrangementMatchRule createSectionRule(@Nullable String comment, ArrangementSettingsToken token) {
+  private static @Nullable StdArrangementMatchRule createSectionRule(@Nullable String comment, ArrangementSettingsToken token) {
     if (StringUtil.isEmpty(comment)) {
       return null;
     }
@@ -80,13 +77,11 @@ public class ArrangementSectionRule implements Cloneable {
     return new StdArrangementMatchRule(new StdArrangementEntryMatcher(condition));
   }
 
-  @Nullable
-  public String getStartComment() {
+  public @Nullable String getStartComment() {
     return myStartComment;
   }
 
-  @Nullable
-  public String getEndComment() {
+  public @Nullable String getEndComment() {
     return myEndComment;
   }
 

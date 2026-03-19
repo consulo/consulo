@@ -115,8 +115,7 @@ public class ModuleLibraryTable implements LibraryTable, LibraryTableBase.Modifi
     }
 
     @Override
-    @Nullable
-    public Library getLibraryByName(String name) {
+    public @Nullable Library getLibraryByName(String name) {
         Iterator<Library> libraryIterator = getLibraryIterator();
         while (libraryIterator.hasNext()) {
             Library library = libraryIterator.next();

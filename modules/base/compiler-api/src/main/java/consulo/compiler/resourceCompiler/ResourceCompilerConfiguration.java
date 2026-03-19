@@ -76,10 +76,8 @@ public class ResourceCompilerConfiguration implements PersistentStateComponent<E
     private static class CompiledPattern {
         
         final Pattern fileName;
-        @Nullable
-        final Pattern dir;
-        @Nullable
-        final Pattern srcRoot;
+        final @Nullable Pattern dir;
+        final @Nullable Pattern srcRoot;
 
         private CompiledPattern(Pattern fileName, @Nullable Pattern dir, @Nullable Pattern srcRoot) {
             this.fileName = fileName;

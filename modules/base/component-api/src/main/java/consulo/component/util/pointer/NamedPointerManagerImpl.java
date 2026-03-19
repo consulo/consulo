@@ -36,8 +36,7 @@ public abstract class NamedPointerManagerImpl<T extends Named> implements NamedP
   private final Map<String, NamedPointerImpl<T>> myUnresolved = new HashMap<>();
   private final Map<T, NamedPointerImpl<T>> myPointers = new HashMap<>();
 
-  @Nullable
-  protected abstract T findByName(String name);
+  protected abstract @Nullable T findByName(String name);
 
   protected void updatePointers(T value) {
     updatePointers(value, value.getName());

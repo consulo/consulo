@@ -114,8 +114,7 @@ public class Jsr223IdeScriptEngineManagerImpl extends IdeScriptEngineManager {
         return ObjectUtil.assertNotNull(manager);
     }
 
-    @Nullable
-    private static IdeScriptEngine createIdeScriptEngine(@Nullable ScriptEngine engine) {
+    private static @Nullable IdeScriptEngine createIdeScriptEngine(@Nullable ScriptEngine engine) {
         return engine == null ? null : redirectOutputToLog(new Jsr223IdeScriptEngine(engine));
     }
 

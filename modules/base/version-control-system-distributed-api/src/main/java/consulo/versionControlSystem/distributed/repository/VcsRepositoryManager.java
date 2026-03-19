@@ -104,18 +104,15 @@ public class VcsRepositoryManager implements Disposable {
     myUpdateFuture = PooledThreadExecutor.getInstance().submit(() -> checkAndUpdateRepositoriesCollection(null));
   }
 
-  @Nullable
-  public Repository getRepositoryForFile(VirtualFile file) {
+  public @Nullable Repository getRepositoryForFile(VirtualFile file) {
     return getRepositoryForFile(file, false);
   }
 
-  @Nullable
-  public Repository getRepositoryForFileQuick(VirtualFile file) {
+  public @Nullable Repository getRepositoryForFileQuick(VirtualFile file) {
     return getRepositoryForFile(file, true);
   }
 
-  @Nullable
-  public Repository getExternalRepositoryForFile(VirtualFile file) {
+  public @Nullable Repository getExternalRepositoryForFile(VirtualFile file) {
     Map<VirtualFile, Repository> repositories = getExternalRepositories();
     for (Map.Entry<VirtualFile, Repository> entry : repositories.entrySet()) {
       if (entry.getKey().isValid() && VirtualFileUtil.isAncestor(entry.getKey(), file, false)) {
@@ -125,8 +122,7 @@ public class VcsRepositoryManager implements Disposable {
     return null;
   }
 
-  @Nullable
-  public Repository getExternalRepositoryForFile(FilePath file) {
+  public @Nullable Repository getExternalRepositoryForFile(FilePath file) {
     Map<VirtualFile, Repository> repositories = getExternalRepositories();
     for (Map.Entry<VirtualFile, Repository> entry : repositories.entrySet()) {
       if (entry.getKey().isValid() && FileUtil.isAncestor(entry.getKey().getPath(), file.getPath(), false)) {
@@ -136,8 +132,7 @@ public class VcsRepositoryManager implements Disposable {
     return null;
   }
 
-  @Nullable
-  public Repository getRepositoryForFile(VirtualFile file, boolean quick) {
+  public @Nullable Repository getRepositoryForFile(VirtualFile file, boolean quick) {
     VcsRoot vcsRoot = myVcsManager.getVcsRootObjectFor(file);
     if (vcsRoot == null) {
       return getExternalRepositoryForFile(file);
@@ -145,18 +140,15 @@ public class VcsRepositoryManager implements Disposable {
     return quick ? getRepositoryForRootQuick(vcsRoot.getPath()) : getRepositoryForRoot(vcsRoot.getPath());
   }
 
-  @Nullable
-  public Repository getRepositoryForRootQuick(@Nullable VirtualFile root) {
+  public @Nullable Repository getRepositoryForRootQuick(@Nullable VirtualFile root) {
     return getRepositoryForRoot(root, false);
   }
 
-  @Nullable
-  public Repository getRepositoryForRoot(@Nullable VirtualFile root) {
+  public @Nullable Repository getRepositoryForRoot(@Nullable VirtualFile root) {
     return getRepositoryForRoot(root, true);
   }
 
-  @Nullable
-  private Repository getRepositoryForRoot(@Nullable VirtualFile root, boolean updateIfNeeded) {
+  private @Nullable Repository getRepositoryForRoot(@Nullable VirtualFile root, boolean updateIfNeeded) {
     if (root == null) return null;
     Repository result;
     try {
@@ -303,8 +295,7 @@ public class VcsRepositoryManager implements Disposable {
     return ContainerUtil.filter(roots, file -> !ArrayUtil.contains(file, validRoots));
   }
 
-  @Nullable
-  private VcsRepositoryCreator getRepositoryCreator(@Nullable AbstractVcs vcs) {
+  private @Nullable VcsRepositoryCreator getRepositoryCreator(@Nullable AbstractVcs vcs) {
     if (vcs == null) return null;
     return ContainerUtil.find(myProject.getExtensionList(VcsRepositoryCreator.class),
                               creator -> creator.getVcsKey().equals(vcs.getKeyInstanceMethod()));

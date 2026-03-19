@@ -257,8 +257,7 @@ public class AnimatedIcon implements Icon, Image {
     component.repaint();
   }
 
-  @Nullable
-  protected Component getRendererOwner(@Nullable Component component) {
+  protected @Nullable Component getRendererOwner(@Nullable Component component) {
     return UIUtil.isClientPropertyTrue(component, ANIMATION_IN_RENDERER_ALLOWED) ? component : null;
   }
 }

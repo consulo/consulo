@@ -51,8 +51,7 @@ abstract public class CustomLiveTemplateBase implements CustomLiveTemplate {
     }
   }
 
-  @Nullable
-  public String computeTemplateKeyWithoutContextChecking(CustomTemplateCallback callback) {
+  public @Nullable String computeTemplateKeyWithoutContextChecking(CustomTemplateCallback callback) {
     return computeTemplateKey(callback);
   }
 

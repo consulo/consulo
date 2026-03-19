@@ -87,8 +87,7 @@ public class CreateFileFix extends LocalQuickFixAndIntentionActionOnPsiElement {
     );
   }
 
-  @Nullable
-  protected String getFileText() {
+  protected @Nullable String getFileText() {
     return myText;
   }
 

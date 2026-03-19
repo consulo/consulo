@@ -169,8 +169,7 @@ public class FlatWelcomeFrame extends JFrameAsUIWindow implements Disposable, Ac
         return TargetAWT.from(getBounds());
     }
 
-    @Nullable
-    public Project getProject() {
+    public @Nullable Project getProject() {
         return ProjectManager.getInstance().getDefaultProject();
     }
 

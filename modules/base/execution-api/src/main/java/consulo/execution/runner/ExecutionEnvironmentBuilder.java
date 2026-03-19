@@ -40,20 +40,16 @@ public final class ExecutionEnvironmentBuilder {
   
   private final Project myProject;
 
-  @Nullable
-  private RunnerSettings myRunnerSettings;
-  @Nullable
-  private ConfigurationPerRunnerSettings myConfigurationSettings;
-  @Nullable private RunContentDescriptor myContentToReuse;
-  @Nullable private RunnerAndConfigurationSettings myRunnerAndConfigurationSettings;
-  @Nullable
-  private String myRunnerId;
+  private @Nullable RunnerSettings myRunnerSettings;
+  private @Nullable ConfigurationPerRunnerSettings myConfigurationSettings;
+  private @Nullable RunContentDescriptor myContentToReuse;
+  private @Nullable RunnerAndConfigurationSettings myRunnerAndConfigurationSettings;
+  private @Nullable String myRunnerId;
   private ProgramRunner<?> myRunner;
   private boolean myAssignNewId;
   
   private Executor myExecutor;
-  @Nullable
-  private DataContext myDataContext;
+  private @Nullable DataContext myDataContext;
 
   public ExecutionEnvironmentBuilder(Project project, Executor executor) {
     myProject = project;
@@ -69,8 +65,7 @@ public final class ExecutionEnvironmentBuilder {
     return builder;
   }
 
-  @Nullable
-  public static ExecutionEnvironmentBuilder createOrNull(Project project, Executor executor, RunProfile runProfile) {
+  public static @Nullable ExecutionEnvironmentBuilder createOrNull(Project project, Executor executor, RunProfile runProfile) {
     ProgramRunner runner = RunnerRegistry.getInstance().getRunner(executor.getId(), runProfile);
     if (runner == null) {
       return null;
@@ -78,8 +73,7 @@ public final class ExecutionEnvironmentBuilder {
     return new ExecutionEnvironmentBuilder(project, executor).runner(runner).runProfile(runProfile);
   }
 
-  @Nullable
-  public static ExecutionEnvironmentBuilder createOrNull(Executor executor, RunnerAndConfigurationSettings settings) {
+  public static @Nullable ExecutionEnvironmentBuilder createOrNull(Executor executor, RunnerAndConfigurationSettings settings) {
     ExecutionEnvironmentBuilder builder = createOrNull(settings.getConfiguration().getProject(), executor, settings.getConfiguration());
     return builder == null ? null : builder.runnerAndSettings(builder.myRunner, settings);
   }

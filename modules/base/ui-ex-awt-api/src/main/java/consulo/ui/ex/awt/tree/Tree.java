@@ -348,8 +348,7 @@ public class Tree extends JTree implements ComponentWithEmptyText, ComponentWith
         config.restore();
     }
 
-    @Nullable
-    public ColorValue getFileColorForPath(@Nullable TreePath path) {
+    public @Nullable ColorValue getFileColorForPath(@Nullable TreePath path) {
         if (path != null) {
             Object node = path.getLastPathComponent();
             if (node instanceof DefaultMutableTreeNode defMutableTreeNode) {
@@ -359,13 +358,11 @@ public class Tree extends JTree implements ComponentWithEmptyText, ComponentWith
         return null;
     }
 
-    @Nullable
-    public ColorValue getFileColorFor(Object object) {
+    public @Nullable ColorValue getFileColorFor(Object object) {
         return null;
     }
 
-    @Nullable
-    public ColorValue getFileColorFor(DefaultMutableTreeNode node) {
+    public @Nullable ColorValue getFileColorFor(DefaultMutableTreeNode node) {
         return getFileColorFor(node.getUserObject());
     }
 
@@ -628,8 +625,7 @@ public class Tree extends JTree implements ComponentWithEmptyText, ComponentWith
         return new int[]{y, x};
     }
 
-    @Nullable
-    private static PresentableNodeDescriptor toPresentableNode(Object pathComponent) {
+    private static @Nullable PresentableNodeDescriptor toPresentableNode(Object pathComponent) {
         if (!(pathComponent instanceof DefaultMutableTreeNode defMutableTreeNode)) {
             return null;
         }
@@ -883,8 +879,7 @@ public class Tree extends JTree implements ComponentWithEmptyText, ComponentWith
      * @param y vertical location in the tree
      * @return the deepest visible component of the renderer
      */
-    @Nullable
-    public Component getDeepestRendererComponentAt(int x, int y) {
+    public @Nullable Component getDeepestRendererComponentAt(int x, int y) {
         int row = getRowForLocation(x, y);
         if (row >= 0) {
             TreeCellRenderer renderer = getCellRenderer();

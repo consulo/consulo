@@ -81,8 +81,7 @@ public abstract class ContentFolderTypeProvider {
         return PlatformIconGroup.nodesTreeopen();
     }
 
-    @Nullable
-    public Image getChildPackageIcon() {
+    public @Nullable Image getChildPackageIcon() {
         return null;
     }
 
@@ -119,8 +118,7 @@ public abstract class ContentFolderTypeProvider {
         return Application.get().getExtensionPoint(ContentFolderTypeProvider.class).collectFiltered(predicate);
     }
 
-    @Nullable
-    public static ContentFolderTypeProvider byId(String attributeValue) {
+    public static @Nullable ContentFolderTypeProvider byId(String attributeValue) {
         return Application.get().getExtensionPoint(ContentFolderTypeProvider.class)
             .findFirstSafe(provider -> Objects.equals(attributeValue, provider.getId()));
     }

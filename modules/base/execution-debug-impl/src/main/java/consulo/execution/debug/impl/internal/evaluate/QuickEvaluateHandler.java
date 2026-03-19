@@ -28,8 +28,7 @@ public abstract class QuickEvaluateHandler {
 
   public abstract boolean isEnabled(Project project);
 
-  @Nullable
-  public abstract AbstractValueHint createValueHint(Project project, Editor editor, Point point, ValueHintType type);
+  public abstract @Nullable AbstractValueHint createValueHint(Project project, Editor editor, Point point, ValueHintType type);
 
   public abstract boolean canShowHint(Project project);
 

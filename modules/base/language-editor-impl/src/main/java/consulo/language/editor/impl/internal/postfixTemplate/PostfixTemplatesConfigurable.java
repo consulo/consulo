@@ -164,8 +164,7 @@ public class PostfixTemplatesConfigurable extends SimpleConfigurable<PostfixTemp
         myChildren = null;
     }
 
-    @Nullable
-    public PostfixTemplatesChildConfigurable findConfigurable(PostfixTemplateProvider postfixTemplateProvider) {
+    public @Nullable PostfixTemplatesChildConfigurable findConfigurable(PostfixTemplateProvider postfixTemplateProvider) {
         for (Configurable configurable : getConfigurables()) {
             PostfixTemplatesChildConfigurable childConfigurable = (PostfixTemplatesChildConfigurable) configurable;
 

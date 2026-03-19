@@ -150,8 +150,7 @@ public class FileReferenceQuickFixProvider {
   }
 
 
-  @Nullable
-  private static Module getModuleForContext(PsiFileSystemItem context) {
+  private static @Nullable Module getModuleForContext(PsiFileSystemItem context) {
     VirtualFile file = context.getVirtualFile();
     return file != null ? ModuleUtilCore.findModuleForFile(file, context.getProject()) : null;
   }

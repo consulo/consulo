@@ -43,8 +43,7 @@ public class PathEnvironmentVariableUtil {
    * @param fileBaseName file base name
    * @return {@code File} instance or null if not found
    */
-  @Nullable
-  public static File findInPath(String fileBaseName) {
+  public static @Nullable File findInPath(String fileBaseName) {
     return findInPath(fileBaseName, false);
   }
 
@@ -56,8 +55,7 @@ public class PathEnvironmentVariableUtil {
    * @param  logFindDetails true if extra logging is needed
    * @return {@code File} instance or null if not found
    */
-  @Nullable
-  public static File findInPath(String fileBaseName, boolean logFindDetails) {
+  public static @Nullable File findInPath(String fileBaseName, boolean logFindDetails) {
     List<File> exeFiles = findExeFilesInPath(fileBaseName, true, logFindDetails);
     return exeFiles.size() > 0 ? exeFiles.get(0) : null;
   }

@@ -187,8 +187,7 @@ public abstract class AbstractMemberSelectionTable<T extends PsiElement, M exten
     scrollSelectionInView();
   }
 
-  @Nullable
-  protected abstract Object getAbstractColumnValue(M memberInfo);
+  protected abstract @Nullable Object getAbstractColumnValue(M memberInfo);
 
   protected abstract boolean isAbstractColumnEditable(int rowIndex);
 

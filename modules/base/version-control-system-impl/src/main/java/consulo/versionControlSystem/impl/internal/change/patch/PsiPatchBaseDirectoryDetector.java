@@ -44,8 +44,7 @@ public class PsiPatchBaseDirectoryDetector extends PatchBaseDirectoryDetector {
   }
 
   @Override
-  @Nullable
-  public Result detectBaseDirectory(String patchFileName) {
+  public @Nullable Result detectBaseDirectory(String patchFileName) {
     String[] nameComponents = patchFileName.split("/");
     String patchName = nameComponents[nameComponents.length - 1];
     if (patchName.isEmpty()) {

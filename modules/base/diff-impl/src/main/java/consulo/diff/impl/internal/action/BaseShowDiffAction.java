@@ -78,6 +78,5 @@ public abstract class BaseShowDiffAction extends AnAction implements DumbAware {
         return !(file instanceof VirtualFileWithoutContent);
     }
 
-    @Nullable
-    protected abstract DiffRequest getDiffRequest(AnActionEvent e);
+    protected abstract @Nullable DiffRequest getDiffRequest(AnActionEvent e);
 }

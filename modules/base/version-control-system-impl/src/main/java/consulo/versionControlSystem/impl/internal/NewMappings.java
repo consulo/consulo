@@ -206,8 +206,7 @@ public class NewMappings implements VcsMapping, Disposable {
     mappingsChanged();
   }
 
-  @Nullable
-  public VcsDirectoryMapping getMappingFor(@Nullable VirtualFile file) {
+  public @Nullable VcsDirectoryMapping getMappingFor(@Nullable VirtualFile file) {
     if (file == null) return null;
     if (!file.isInLocalFileSystem()) {
       return null;
@@ -216,8 +215,7 @@ public class NewMappings implements VcsMapping, Disposable {
     return getMappingFor(file, myDefaultVcsRootPolicy.getMatchContext(file));
   }
 
-  @Nullable
-  public VcsDirectoryMapping getMappingFor(VirtualFile file, Object parentModule) {
+  public @Nullable VcsDirectoryMapping getMappingFor(VirtualFile file, Object parentModule) {
     // if parentModule is not null it means that file belongs to the module so it isn't excluded
     if (parentModule == null && myVcsManager.isIgnored(file)) {
       return null;
@@ -240,8 +238,7 @@ public class NewMappings implements VcsMapping, Disposable {
     return null;
   }
 
-  @Nullable
-  public String getVcsFor(VirtualFile file) {
+  public @Nullable String getVcsFor(VirtualFile file) {
     VcsDirectoryMapping mapping = getMappingFor(file);
     if (mapping == null) {
       return null;
@@ -332,8 +329,7 @@ public class NewMappings implements VcsMapping, Disposable {
     myFileWatchRequestsManager.ping();
   }
 
-  @Nullable
-  public String haveDefaultMapping() {
+  public @Nullable String haveDefaultMapping() {
     synchronized (myLock) {
       // empty mapping MUST be first
       if (mySortedMappings.length == 0) return null;
@@ -491,8 +487,7 @@ public class NewMappings implements VcsMapping, Disposable {
       }
     }
 
-    @Nullable
-    private static Set<String> notInBottom(Set<String> top, Set<String> bottom) {
+    private static @Nullable Set<String> notInBottom(Set<String> top, Set<String> bottom) {
       Set<String> notInBottom = null;
       for (String topItem : top) {
         // omit empty vcs: not a vcs

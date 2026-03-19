@@ -67,8 +67,7 @@ final class StateMap {
     return states.values();
   }
 
-  @Nullable
-  public Object get(String key) {
+  public @Nullable Object get(String key) {
     return states.get(key);
   }
 
@@ -101,8 +100,7 @@ final class StateMap {
     return states.isEmpty();
   }
 
-  @Nullable
-  public Element getState(String key) {
+  public @Nullable Element getState(String key) {
     Object state = states.get(key);
     return state instanceof Element ? (Element)state : null;
   }
@@ -140,8 +138,7 @@ final class StateMap {
     }
   }
 
-  @Nullable
-  public static byte[] getNewByteIfDiffers(String key, Object newState, byte[] oldState) {
+  public static @Nullable byte[] getNewByteIfDiffers(String key, Object newState, byte[] oldState) {
     byte[] newBytes = newState instanceof Element ? archiveState((Element)newState) : (byte[])newState;
     if (Arrays.equals(newBytes, oldState)) {
       return null;
@@ -175,8 +172,7 @@ final class StateMap {
     return ArrayUtil.realloc(byteOut.getInternalBuffer(), byteOut.size());
   }
 
-  @Nullable
-  public Element getStateAndArchive(String key) {
+  public @Nullable Element getStateAndArchive(String key) {
     Object state = states.get(key);
     if (!(state instanceof Element)) {
       return null;
@@ -223,8 +219,7 @@ final class StateMap {
     return JDOMUtil.writeParent(element, "\n");
   }
 
-  @Nullable
-  public Object remove(String key) {
+  public @Nullable Object remove(String key) {
     return states.remove(key);
   }
 

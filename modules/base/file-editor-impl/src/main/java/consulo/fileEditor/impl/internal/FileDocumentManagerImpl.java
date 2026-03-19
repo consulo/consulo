@@ -273,8 +273,7 @@ public class FileDocumentManagerImpl implements FileDocumentManagerEx, SafeWrite
     }
 
     @Override
-    @Nullable
-    public Document getCachedDocument(VirtualFile file) {
+    public @Nullable Document getCachedDocument(VirtualFile file) {
         Document hard = file.getUserData(HARD_REF_TO_DOCUMENT_KEY);
         return hard != null ? hard : getDocumentFromCache(file);
     }
@@ -292,8 +291,7 @@ public class FileDocumentManagerImpl implements FileDocumentManagerEx, SafeWrite
     }
 
     @Override
-    @Nullable
-    public VirtualFile getFile(Document document) {
+    public @Nullable VirtualFile getFile(Document document) {
         return document instanceof FrozenDocument ? null : document.getUserData(FILE_KEY);
     }
 

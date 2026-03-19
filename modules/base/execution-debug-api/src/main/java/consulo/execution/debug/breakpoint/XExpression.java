@@ -28,13 +28,11 @@ public interface XExpression {
   XExpression EMPTY_EXPRESSION = fromText("", EvaluationMode.EXPRESSION);
   XExpression EMPTY_CODE_FRAGMENT = fromText("", EvaluationMode.CODE_FRAGMENT);
 
-  @Nullable
-  public static XExpression fromText(@Nullable String text) {
+  public static @Nullable XExpression fromText(@Nullable String text) {
     return text != null ? new XExpressionImpl(text, null, null, EvaluationMode.EXPRESSION) : null;
   }
 
-  @Nullable
-  public static XExpression fromText(@Nullable String text, EvaluationMode mode) {
+  public static @Nullable XExpression fromText(@Nullable String text, EvaluationMode mode) {
     return text != null ? new XExpressionImpl(text, null, null, mode) : null;
   }
 

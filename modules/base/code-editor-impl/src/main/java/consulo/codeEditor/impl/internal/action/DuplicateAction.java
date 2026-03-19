@@ -80,8 +80,7 @@ public class DuplicateAction extends EditorAction {
         }
     }
 
-    @Nullable
-    static Couple<Integer> duplicateLinesRange(
+    static @Nullable Couple<Integer> duplicateLinesRange(
         Editor editor,
         Document document,
         VisualPosition rangeStart,

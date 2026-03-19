@@ -44,8 +44,7 @@ public final class FileAttributes {
   /**
    * {@code null} means unknown type - typically broken symlink.
    */
-  @Nullable
-  public final Type type;
+  public final @Nullable Type type;
 
   @Flags
   public final byte flags;

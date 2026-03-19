@@ -121,8 +121,7 @@ public class TipUIUtil {
         }
     }
 
-    @Nullable
-    private static String getShortcutText(String actionId, Keymap keymap) {
+    private static @Nullable String getShortcutText(String actionId, Keymap keymap) {
         for (Shortcut shortcut : keymap.getShortcuts(actionId)) {
             if (shortcut instanceof KeyboardShortcut) {
                 return KeymapUtil.getShortcutText(shortcut);

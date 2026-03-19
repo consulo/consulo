@@ -70,8 +70,7 @@ public abstract class EditorTextFieldCellRenderer implements TableCellRenderer, 
 
   protected abstract String getText(JTable table, Object value, int row, int column);
 
-  @Nullable
-  protected TextAttributes getTextAttributes(JTable table, Object value, int row, int column) {
+  protected @Nullable TextAttributes getTextAttributes(JTable table, Object value, int row, int column) {
     return null;
   }
 

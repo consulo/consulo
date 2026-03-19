@@ -164,8 +164,7 @@ public abstract class PsiDocumentManagerBase extends PsiDocumentManager implemen
         return getFileManager().findCachedViewProvider(virtualFile);
     }
 
-    @Nullable
-    private static VirtualFile getVirtualFile(Document document) {
+    private static @Nullable VirtualFile getVirtualFile(Document document) {
         VirtualFile virtualFile = FileDocumentManager.getInstance().getFile(document);
         if (virtualFile == null || !virtualFile.isValid()) {
             return null;
@@ -1072,8 +1071,7 @@ public abstract class PsiDocumentManagerBase extends PsiDocumentManager implemen
         runAfterCommitActions(document);
     }
 
-    @Nullable
-    private UncommittedInfo clearUncommittedInfo(Document document) {
+    private @Nullable UncommittedInfo clearUncommittedInfo(Document document) {
         UncommittedInfo info = myUncommittedInfos.remove(document);
         if (info != null) {
             getSmartPointerManager().updatePointers(document, info.myFrozen, info.myEvents);

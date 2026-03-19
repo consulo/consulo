@@ -516,6 +516,5 @@ public abstract class JBPopupFactory {
 
     public abstract JBPopup createMessage(String text);
 
-    @Nullable
-    public abstract Balloon getParentBalloonFor(@Nullable Component c);
+    public abstract @Nullable Balloon getParentBalloonFor(@Nullable Component c);
 }

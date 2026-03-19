@@ -140,8 +140,7 @@ public abstract class SelectInContextImpl implements SelectInContext {
         }
     }
 
-    @Nullable
-    private static SelectInContext createPsiContext(AnActionEvent event) {
+    private static @Nullable SelectInContext createPsiContext(AnActionEvent event) {
         DataContext dataContext = event.getDataContext();
         PsiElement psiElement = dataContext.getData(PsiElement.KEY);
         if (psiElement == null || !psiElement.isValid()) {
@@ -154,8 +153,7 @@ public abstract class SelectInContextImpl implements SelectInContext {
         return new SimpleSelectInContext(psiFile, psiElement);
     }
 
-    @Nullable
-    private static JComponent getEventComponent(AnActionEvent event) {
+    private static @Nullable JComponent getEventComponent(AnActionEvent event) {
         InputEvent inputEvent = event.getInputEvent();
         if (inputEvent != null && inputEvent.getSource() instanceof JComponent jComponent) {
             return jComponent;
@@ -213,8 +211,7 @@ public abstract class SelectInContextImpl implements SelectInContext {
             return () -> FileEditorManager.getInstance(getProject()).openFile(getVirtualFile(), false)[0];
         }
 
-        @Nullable
-        public static SelectInContext create(Project project, VirtualFile file) {
+        public static @Nullable SelectInContext create(Project project, VirtualFile file) {
             Document document = FileDocumentManager.getInstance().getDocument(file);
             if (document == null) {
                 return null;
@@ -273,8 +270,7 @@ public abstract class SelectInContextImpl implements SelectInContext {
         }
 
         @Override
-        @Nullable
-        public Object getSelectorInFile() {
+        public @Nullable Object getSelectorInFile() {
             return myVirtualFile;
         }
     }

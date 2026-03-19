@@ -59,8 +59,7 @@ public abstract class LocalInspectionTool extends InspectionTool {
   }
 
   @Override
-  @Nullable
-  public String getAlternativeID() {
+  public @Nullable String getAlternativeID() {
     return null;
   }
 
@@ -157,8 +156,7 @@ public abstract class LocalInspectionTool extends InspectionTool {
     };
   }
 
-  @Nullable
-  public PsiNamedElement getProblemElement(PsiElement psiElement) {
+  public @Nullable PsiNamedElement getProblemElement(PsiElement psiElement) {
     while (psiElement != null && !(psiElement instanceof PsiFile)) {
       psiElement = psiElement.getParent();
     }

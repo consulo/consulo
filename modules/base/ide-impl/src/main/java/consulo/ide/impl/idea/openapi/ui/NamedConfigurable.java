@@ -47,7 +47,7 @@ public abstract class NamedConfigurable<T> implements Configurable, MasterDetail
     this(false, null);
   }
 
-  protected NamedConfigurable(boolean isNameEditable, @Nullable final Runnable updateTree) {
+  protected NamedConfigurable(boolean isNameEditable, final @Nullable Runnable updateTree) {
     myNameEditable = isNameEditable;
     myNamePanel.setVisible(myNameEditable);
     if (myNameEditable) {
@@ -110,8 +110,7 @@ public abstract class NamedConfigurable<T> implements Configurable, MasterDetail
     return myWholePanel;
   }
 
-  @Nullable
-  protected JComponent createTopRightComponent(JTextField nameField) {
+  protected @Nullable JComponent createTopRightComponent(JTextField nameField) {
     return null;
   }
 
@@ -141,8 +140,7 @@ public abstract class NamedConfigurable<T> implements Configurable, MasterDetail
     return getIcon(false);
   }
 
-  @Nullable
-  public Image getIcon(boolean expanded) {
+  public @Nullable Image getIcon(boolean expanded) {
     return null;
   }
 }

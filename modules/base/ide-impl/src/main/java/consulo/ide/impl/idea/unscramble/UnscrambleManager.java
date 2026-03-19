@@ -43,8 +43,7 @@ public class UnscrambleManager {
     return ApplicationManager.getApplication().getComponent(UnscrambleManager.class);
   }
 
-  @Nullable
-  private MessageBusConnection myConnection;
+  private @Nullable MessageBusConnection myConnection;
 
   private final StacktraceAnalyzerListener myListener = new StacktraceAnalyzerListener();
 

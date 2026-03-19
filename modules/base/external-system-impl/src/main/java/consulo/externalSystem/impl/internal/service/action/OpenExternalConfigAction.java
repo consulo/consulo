@@ -70,8 +70,7 @@ public class OpenExternalConfigAction extends AnAction implements DumbAware {
         FileEditorManager.getInstance(project).openTextEditor(descriptor, true);
     }
 
-    @Nullable
-    private static VirtualFile getExternalConfig(DataContext context) {
+    private static @Nullable VirtualFile getExternalConfig(DataContext context) {
         ProjectSystemId externalSystemId = context.getData(ExternalSystemDataKeys.EXTERNAL_SYSTEM_ID);
         if (externalSystemId == null) {
             return null;

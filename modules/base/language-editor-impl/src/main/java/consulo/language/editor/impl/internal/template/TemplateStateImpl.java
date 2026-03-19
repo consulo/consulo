@@ -101,12 +101,9 @@ public class TemplateStateImpl implements TemplateState {
     private boolean myDocumentChangesTerminateTemplate = true;
     private boolean myDocumentChanged = false;
 
-    @Nullable
-    private CommandAdapter myCommandListener;
-    @Nullable
-    private CaretListener myCaretListener;
-    @Nullable
-    private LookupListener myLookupListener;
+    private @Nullable CommandAdapter myCommandListener;
+    private @Nullable CaretListener myCaretListener;
+    private @Nullable LookupListener myLookupListener;
 
     private final List<TemplateEditingListener> myListeners = Lists.newLockFreeCopyOnWriteList();
     private DocumentAdapter myEditorDocumentListener;
@@ -114,8 +111,7 @@ public class TemplateStateImpl implements TemplateState {
     private boolean myTemplateIndented = false;
     private Document myDocument;
     private boolean myFinished;
-    @Nullable
-    private BiPredicate<String, String> myProcessor;
+    private @Nullable BiPredicate<String, String> myProcessor;
     private boolean mySelectionCalculated = false;
     private boolean myStarted;
 
@@ -271,8 +267,7 @@ public class TemplateStateImpl implements TemplateState {
     }
 
     @Override
-    @Nullable
-    public TextResult getVariableValue(String variableName) {
+    public @Nullable TextResult getVariableValue(String variableName) {
         if (variableName.equals(TemplateImpl.SELECTION)) {
             return new TextResult(StringUtil.notNullize(getSelectionBeforeTemplate()));
         }
@@ -299,14 +294,12 @@ public class TemplateStateImpl implements TemplateState {
         return new TextResult(text.subSequence(start, end).toString());
     }
 
-    @Nullable
-    private String getSelectionBeforeTemplate() {
+    private @Nullable String getSelectionBeforeTemplate() {
         return (String)getProperties().get(ExpressionContext.SELECTION);
     }
 
     @Override
-    @Nullable
-    public TextRange getCurrentVariableRange() {
+    public @Nullable TextRange getCurrentVariableRange() {
         int number = getCurrentSegmentNumber();
         if (number == -1) {
             return null;

@@ -54,7 +54,7 @@ public class VcsLogManager implements Disposable {
   private final Project myProject;
   
   private final VcsLogTabsProperties myUiProperties;
-  @Nullable private final Runnable myRecreateMainLogHandler;
+  private final @Nullable Runnable myRecreateMainLogHandler;
 
   
   private final VcsLogDataImpl myLogData;

@@ -30,8 +30,7 @@ class InstanceContainer {
     myParent = parent;
   }
 
-  @Nullable
-  public final <T> ComponentAdapter<T> getComponentAdapter(Class componentKey) {
+  public final @Nullable <T> ComponentAdapter<T> getComponentAdapter(Class componentKey) {
     ComponentAdapter<T> adapter = findLocalAdapter(componentKey);
     if (adapter == null && myParent != null) {
       return myParent.getComponentAdapter(componentKey);
@@ -45,8 +44,7 @@ class InstanceContainer {
     return (ComponentAdapter<T>) myInstanceAdapters.get(componentKey);
   }
 
-  @Nullable
-  public <T> T getComponentInstance(Class componentKey) {
+  public @Nullable <T> T getComponentInstance(Class componentKey) {
     ComponentAdapter<T> adapter = findLocalAdapter(componentKey);
     if (adapter != null) {
       return getLocalInstance(adapter);
@@ -60,8 +58,7 @@ class InstanceContainer {
     return null;
   }
 
-  @Nullable
-  public <T> T getComponentInstanceIfCreated(Class componentKey) {
+  public @Nullable <T> T getComponentInstanceIfCreated(Class componentKey) {
     ComponentAdapter<T> adapter = findLocalAdapter(componentKey);
     if (adapter != null) {
       return adapter.getComponentInstanceOfCreated(this);

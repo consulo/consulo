@@ -88,8 +88,7 @@ public abstract class NamedObjectProviderBinding<Provider> implements ProviderBi
     }
   }
 
-  @Nullable
-  protected abstract String getName(PsiElement position);
+  protected abstract @Nullable String getName(PsiElement position);
 
   private void addMatchingProviders(PsiElement position,
                                     @Nullable List<ProviderInfo<Provider, ElementPattern>> providerList,

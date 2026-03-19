@@ -59,8 +59,7 @@ public abstract class XmlElementStorage extends StateStorageBase<StorageData> {
     myStreamProvider = myRoamingType == RoamingType.DISABLED ? null : streamProvider;
   }
 
-  @Nullable
-  protected abstract Element loadLocalData();
+  protected abstract @Nullable Element loadLocalData();
 
   @Nullable
   @Override
@@ -106,8 +105,7 @@ public abstract class XmlElementStorage extends StateStorageBase<StorageData> {
     return result;
   }
 
-  @Nullable
-  protected final Element loadDataFromStreamProvider() throws IOException, JDOMException {
+  protected final @Nullable Element loadDataFromStreamProvider() throws IOException, JDOMException {
     assert myStreamProvider != null;
     try {
       return JDOMUtil.load(myStreamProvider.loadContent(myFileSpec, myRoamingType));
@@ -133,15 +131,13 @@ public abstract class XmlElementStorage extends StateStorageBase<StorageData> {
   }
 
   @Override
-  @Nullable
-  public final XmlElementStorageSaveSession startExternalization() {
+  public final @Nullable XmlElementStorageSaveSession startExternalization() {
     return checkIsSavingDisabled() ? null : createSaveSession(getStorageData());
   }
 
   protected abstract XmlElementStorageSaveSession createSaveSession(StorageData storageData);
 
-  @Nullable
-  protected final Element getElement(StorageData data, boolean collapsePaths, Map<String, Element> newLiveStates) {
+  protected final @Nullable Element getElement(StorageData data, boolean collapsePaths, Map<String, Element> newLiveStates) {
     Element element = data.save(newLiveStates);
     if (element == null || JDOMUtil.isEmpty(element)) {
       return null;

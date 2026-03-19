@@ -31,8 +31,7 @@ public class Version {
     this.major = major;
   }
 
-  @Nullable
-  public static Version parseVersion(String versionString) {
+  public static @Nullable Version parseVersion(String versionString) {
     String[] versions = versionString.split("\\.");
     String version = versions[0];
     int major = parseNumber(version, -1);

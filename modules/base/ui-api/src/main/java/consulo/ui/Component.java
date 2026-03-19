@@ -150,8 +150,7 @@ public interface Component extends UserDataHolder {
         return this;
     }
 
-    @Nullable
-    default ColorValue getForegroundColor() {
+    default @Nullable ColorValue getForegroundColor() {
         throw new AbstractMethodError("not supported");
     }
 
@@ -164,8 +163,7 @@ public interface Component extends UserDataHolder {
         return this;
     }
 
-    @Nullable
-    default Cursor getCursor() {
+    default @Nullable Cursor getCursor() {
         throw new AbstractMethodError("not supported");
     }
 

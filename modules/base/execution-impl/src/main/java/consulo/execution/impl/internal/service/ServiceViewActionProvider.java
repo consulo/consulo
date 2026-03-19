@@ -120,13 +120,11 @@ public final class ServiceViewActionProvider {
     return result;
   }
 
-  @Nullable
-  public static ServiceView getSelectedView(AnActionEvent e) {
+  public static @Nullable ServiceView getSelectedView(AnActionEvent e) {
     return getSelectedView(e.getData(UIExAWTDataKey.CONTEXT_COMPONENT));
   }
 
-  @Nullable
-  public static ServiceView getSelectedView(DataProvider provider) {
+  public static @Nullable ServiceView getSelectedView(DataProvider provider) {
     return getSelectedView(ObjectUtil.tryCast(provider.getData(UIExAWTDataKey.CONTEXT_COMPONENT), Component.class));
   }
 
@@ -166,8 +164,7 @@ public final class ServiceViewActionProvider {
     }
   }
 
-  @Nullable
-  public static ServiceView getSelectedView(@Nullable Component contextComponent) {
+  public static @Nullable ServiceView getSelectedView(@Nullable Component contextComponent) {
     while (contextComponent != null && !(contextComponent instanceof ServiceView)) {
       contextComponent = contextComponent.getParent();
     }

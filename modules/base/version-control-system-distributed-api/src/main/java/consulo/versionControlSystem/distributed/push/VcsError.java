@@ -20,7 +20,7 @@ import org.jspecify.annotations.Nullable;
 public class VcsError {
   
   String myErrorText;
-  @Nullable private final VcsErrorHandler myErrorHandleListener;
+  private final @Nullable VcsErrorHandler myErrorHandleListener;
 
   public VcsError(String text) {
     this(text, null);

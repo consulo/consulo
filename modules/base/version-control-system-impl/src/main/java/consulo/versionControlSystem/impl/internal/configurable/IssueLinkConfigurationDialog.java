@@ -73,8 +73,7 @@ public class IssueLinkConfigurationDialog extends DialogWrapper {
     setOKActionEnabled(myErrorLabel.getText().equals(" "));
   }
 
-  @Nullable
-  protected JComponent createCenterPanel() {
+  protected @Nullable JComponent createCenterPanel() {
     return myPanel;
   }
 

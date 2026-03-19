@@ -98,8 +98,7 @@ public class TrackCoverageAction extends ToggleModelAction {
         return suite != null && suite.isCoverageByTestApplicable();
     }
 
-    @Nullable
-    private CoverageSuitesBundle getCurrentCoverageSuite() {
+    private @Nullable CoverageSuitesBundle getCurrentCoverageSuite() {
         if (myModel == null) {
             return null;
         }

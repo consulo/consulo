@@ -40,8 +40,7 @@ public abstract class LinkMouseListenerBase<T> extends ClickListener implements 
     }.installOn(component);
   }
 
-  @Nullable
-  protected abstract T getTagAt(MouseEvent e);
+  protected abstract @Nullable T getTagAt(MouseEvent e);
 
   @Override
   public boolean onClick(MouseEvent e, int clickCount) {

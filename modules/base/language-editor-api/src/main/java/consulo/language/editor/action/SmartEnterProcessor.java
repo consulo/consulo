@@ -72,8 +72,7 @@ public abstract class SmartEnterProcessor implements LanguageExtension {
         return document.createRangeMarker(elt.getTextRange());
     }
 
-    @Nullable
-    protected PsiElement getStatementAtCaret(Editor editor, PsiFile psiFile) {
+    protected @Nullable PsiElement getStatementAtCaret(Editor editor, PsiFile psiFile) {
         int caret = editor.getCaretModel().getOffset();
 
         Document doc = editor.getDocument();

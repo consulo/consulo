@@ -83,7 +83,7 @@ public abstract class JBIterable<E> implements Iterable<E> {
   /**
    * Lambda-friendly construction method.
    */
-  public static <E> JBIterable<E> create(@Nullable final Supplier<Iterator<E>> producer) {
+  public static <E> JBIterable<E> create(final @Nullable Supplier<Iterator<E>> producer) {
     if (producer == null) return empty();
     return new JBIterable<E>() {
       @Override
@@ -119,7 +119,7 @@ public abstract class JBIterable<E> implements Iterable<E> {
    * the first element is produced by the supplied {@code first} value.
    * Iteration stops when {@code null} is encountered.
    */
-  public static <E> JBIterable<E> generate(@Nullable final E first, final Function<? super E, ? extends E> generator) {
+  public static <E> JBIterable<E> generate(final @Nullable E first, final Function<? super E, ? extends E> generator) {
     if (first == null) return empty();
     return new JBIterable<E>() {
       @Override
@@ -142,8 +142,8 @@ public abstract class JBIterable<E> implements Iterable<E> {
     };
   }
 
-  public static <E> JBIterable<E> generate(@Nullable final E first1,
-                                           @Nullable final E first2,
+  public static <E> JBIterable<E> generate(final @Nullable E first1,
+                                           final @Nullable E first2,
                                            final BiFunction<? super E, ? super E, ? extends E> generator) {
     if (first1 == null) return empty();
     return new JBIterable<E>() {
@@ -279,8 +279,7 @@ public abstract class JBIterable<E> implements Iterable<E> {
   /**
    * Returns element at index if it is present; otherwise {@code null}
    */
-  @Nullable
-  public final E get(int index) {
+  public final @Nullable E get(int index) {
     List<E> list = asRandomAccess();
     if (list != null) {
       return index >= list.size() ? null : list.get(index);
@@ -292,26 +291,22 @@ public abstract class JBIterable<E> implements Iterable<E> {
     return skip(index).first();
   }
 
-  @Nullable
-  private List<E> asRandomAccess() {
+  private @Nullable List<E> asRandomAccess() {
     //noinspection CastConflictsWithInstanceof
     return content instanceof RandomAccess ? (List<E>)content : null;
   }
 
-  @Nullable
-  private Collection<E> asCollection() {
+  private @Nullable Collection<E> asCollection() {
     //noinspection CastConflictsWithInstanceof
     return content instanceof Collection ? (Collection<E>)content : null;
   }
 
-  @Nullable
-  private Iterable<E> asIterable() {
+  private @Nullable Iterable<E> asIterable() {
     //noinspection CastConflictsWithInstanceof
     return content instanceof Iterable ? (Iterable<E>)content : null;
   }
 
-  @Nullable
-  private E asElement() {
+  private @Nullable E asElement() {
     //noinspection unchecked
     return this instanceof Single ? (E)content : null;
   }
@@ -335,8 +330,7 @@ public abstract class JBIterable<E> implements Iterable<E> {
 
   private static final class Appended<E> extends JBIterable<E> {
     final Iterable<? extends E> iterable;
-    @Nullable
-    final Appended<E> parent;
+    final @Nullable Appended<E> parent;
 
     Appended(Iterable<? extends E> iterable, @Nullable Appended<E> parent) {
       this.iterable = iterable;
@@ -534,8 +528,7 @@ public abstract class JBIterable<E> implements Iterable<E> {
   /**
    * Returns the first element in this iterable or null.
    */
-  @Nullable
-  public final E first() {
+  public final @Nullable E first() {
     List<E> list = asRandomAccess();
     if (list != null) {
       return list.isEmpty() ? null : list.get(0);
@@ -551,8 +544,7 @@ public abstract class JBIterable<E> implements Iterable<E> {
   /**
    * Returns the first element if it is an instance of the specified class, otherwise null.
    */
-  @Nullable
-  public final <T> T first(Class<T> type) {
+  public final @Nullable <T> T first(Class<T> type) {
     E first = first();
     return type.isInstance(first) ? (T)first : null;
   }
@@ -560,8 +552,7 @@ public abstract class JBIterable<E> implements Iterable<E> {
   /**
    * Returns the first element if it satisfies the condition, otherwise null.
    */
-  @Nullable
-  public final E first(Predicate<? super E> condition) {
+  public final @Nullable E first(Predicate<? super E> condition) {
     E first = first();
     return condition.test(first) ? first : null;
   }
@@ -569,8 +560,7 @@ public abstract class JBIterable<E> implements Iterable<E> {
   /**
    * Returns the first element if it is the only one, otherwise null.
    */
-  @Nullable
-  public final E single() {
+  public final @Nullable E single() {
     List<E> list = asRandomAccess();
     if (list != null) {
       return list.size() != 1 ? null : list.get(0);
@@ -587,8 +577,7 @@ public abstract class JBIterable<E> implements Iterable<E> {
   /**
    * Returns the last element in this iterable or null.
    */
-  @Nullable
-  public final E last() {
+  public final @Nullable E last() {
     List<E> list = asRandomAccess();
     if (list != null) {
       return list.isEmpty() ? null : list.get(list.size() - 1);
@@ -607,8 +596,7 @@ public abstract class JBIterable<E> implements Iterable<E> {
   /**
    * Perform calculation over this iterable.
    */
-  @Nullable
-  public final <T> T reduce(@Nullable T first, BiFunction<T, ? super E, T> function) {
+  public final @Nullable <T> T reduce(@Nullable T first, BiFunction<T, ? super E, T> function) {
     T cur = first;
     for (E e : this) {
       cur = function.apply(cur, e);
@@ -619,8 +607,7 @@ public abstract class JBIterable<E> implements Iterable<E> {
   /**
    * Returns the index of the first matching element.
    */
-  @Nullable
-  public final E find(Predicate<? super E> condition) {
+  public final @Nullable E find(Predicate<? super E> condition) {
     return filter(condition).first();
   }
 
@@ -661,7 +648,7 @@ public abstract class JBIterable<E> implements Iterable<E> {
   /**
    * Returns the iterable which elements are interleaved with the separator.
    */
-  public final JBIterable<E> join(@Nullable final E separator) {
+  public final JBIterable<E> join(final @Nullable E separator) {
     return intercept(iterator -> {
       final Iterator<E> original = iterator;
       return new JBIterator<E>() {

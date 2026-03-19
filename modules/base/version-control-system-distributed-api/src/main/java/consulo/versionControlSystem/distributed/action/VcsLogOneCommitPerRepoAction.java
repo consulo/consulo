@@ -46,8 +46,7 @@ public abstract class VcsLogOneCommitPerRepoAction<Repo extends Repository> exte
     return !ContainerUtil.exists(grouped.entrySet(), entry -> entry.getValue().size() != 1);
   }
 
-  @Nullable
-  private Map<Repo, VcsFullCommitDetails> convertToSingleElementMap(MultiMap<Repo, VcsFullCommitDetails> groupedCommits) {
+  private @Nullable Map<Repo, VcsFullCommitDetails> convertToSingleElementMap(MultiMap<Repo, VcsFullCommitDetails> groupedCommits) {
     Map<Repo, VcsFullCommitDetails> map = new HashMap<>();
     for (Map.Entry<Repo, Collection<VcsFullCommitDetails>> entry : groupedCommits.entrySet()) {
       Collection<VcsFullCommitDetails> commits = entry.getValue();

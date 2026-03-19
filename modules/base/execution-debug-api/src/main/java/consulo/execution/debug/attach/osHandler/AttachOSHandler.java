@@ -37,8 +37,7 @@ public abstract class AttachOSHandler {
     return myOSType;
   }
 
-  @Nullable
-  protected String getenv(String name) throws Exception {
+  protected @Nullable String getenv(String name) throws Exception {
     if (myHost instanceof LocalAttachHost) {
       return EnvironmentUtil.getValue(name);
     }

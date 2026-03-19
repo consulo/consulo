@@ -114,8 +114,7 @@ public class PsiFileNode extends BasePsiNode<PsiFile> implements NavigatableWith
         return false;
     }
 
-    @Nullable
-    private VirtualFile getArchiveRoot() {
+    private @Nullable VirtualFile getArchiveRoot() {
         VirtualFile file = getVirtualFile();
 
         return ArchiveVfsUtil.getArchiveRootForLocalFile(file);
@@ -185,8 +184,7 @@ public class PsiFileNode extends BasePsiNode<PsiFile> implements NavigatableWith
         return extension == null ? null : new ExtensionSortKey(extension);
     }
 
-    @Nullable
-    public static String extension(@Nullable PsiFile file) {
+    public static @Nullable String extension(@Nullable PsiFile file) {
         if (file != null) {
             VirtualFile vFile = file.getVirtualFile();
             if (vFile != null) {

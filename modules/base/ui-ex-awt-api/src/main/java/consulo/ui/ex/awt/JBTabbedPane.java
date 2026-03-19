@@ -98,8 +98,7 @@ public class JBTabbedPane extends JTabbedPane implements HierarchyListener {
     }
   }
 
-  @Nullable
-  public Insets getTabComponentInsets() {
+  public @Nullable Insets getTabComponentInsets() {
     return myTabComponentInsets;
   }
 

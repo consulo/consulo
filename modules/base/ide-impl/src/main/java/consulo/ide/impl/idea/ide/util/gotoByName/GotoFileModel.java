@@ -130,19 +130,16 @@ public class GotoFileModel extends FilteringGotoByModel<FileType> implements Dum
   }
 
   @Override
-  @Nullable
-  public String getFullName(Object element) {
+  public @Nullable String getFullName(Object element) {
     return element instanceof PsiFileSystemItem ? getFullName(((PsiFileSystemItem)element).getVirtualFile()) : getElementName(element);
   }
 
-  @Nullable
-  public String getFullName(VirtualFile file) {
+  public @Nullable String getFullName(VirtualFile file) {
     VirtualFile root = getTopLevelRoot(file);
     return root != null ? GotoFileCellRenderer.getRelativePathFromRoot(file, root) : GotoFileCellRenderer.getRelativePath(file, myProject);
   }
 
-  @Nullable
-  public VirtualFile getTopLevelRoot(VirtualFile file) {
+  public @Nullable VirtualFile getTopLevelRoot(VirtualFile file) {
     VirtualFile root = getContentRoot(file);
     return root == null ? null : JBIterable.generate(root, r -> getContentRoot(r.getParent())).last();
   }

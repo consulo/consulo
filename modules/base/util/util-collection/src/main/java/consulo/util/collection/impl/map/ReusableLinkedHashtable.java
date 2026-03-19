@@ -70,8 +70,7 @@ public class ReusableLinkedHashtable<K, V> implements ReusableLinkedHashtableRan
     protected final int[] myNextPosAndHash;
     private int mySize, myEndPos = -1;
 
-    @Nullable
-    private Range myLargestRange = null;
+    private @Nullable Range myLargestRange = null;
 
     protected abstract class MyIterator<E> implements Iterator<E> {
         protected final int myStartPos, myEndPos;

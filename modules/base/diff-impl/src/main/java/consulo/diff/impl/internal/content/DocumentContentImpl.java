@@ -38,23 +38,17 @@ import java.nio.charset.Charset;
  * Allows to compare some text associated with document.
  */
 public class DocumentContentImpl extends DiffContentBase implements DocumentContent {
-  @Nullable
-  private final Project myProject;
+  private final @Nullable Project myProject;
 
   
   private final Document myDocument;
 
-  @Nullable
-  private final FileType myType;
-  @Nullable
-  private final VirtualFile myHighlightFile;
+  private final @Nullable FileType myType;
+  private final @Nullable VirtualFile myHighlightFile;
 
-  @Nullable
-  private final LineSeparator mySeparator;
-  @Nullable
-  private final Charset myCharset;
-  @Nullable
-  private final Boolean myBOM;
+  private final @Nullable LineSeparator mySeparator;
+  private final @Nullable Charset myCharset;
+  private final @Nullable Boolean myBOM;
 
   public DocumentContentImpl(Document document) {
     this(null, document, null, null, null, null, null);
@@ -76,8 +70,7 @@ public class DocumentContentImpl extends DiffContentBase implements DocumentCont
     myBOM = bom;
   }
 
-  @Nullable
-  public Project getProject() {
+  public @Nullable Project getProject() {
     return myProject;
   }
 
@@ -113,8 +106,7 @@ public class DocumentContentImpl extends DiffContentBase implements DocumentCont
   }
 
   @Override
-  @Nullable
-  public Boolean hasBom() {
+  public @Nullable Boolean hasBom() {
     return myBOM;
   }
 

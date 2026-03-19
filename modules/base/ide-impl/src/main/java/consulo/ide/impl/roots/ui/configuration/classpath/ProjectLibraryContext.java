@@ -96,8 +96,7 @@ public class ProjectLibraryContext extends AddModuleDependencyContext<List<Libra
         return entries;
     }
 
-    @Nullable
-    private static DependencyScope getDefaultScope(Library item) {
+    private static @Nullable DependencyScope getDefaultScope(Library item) {
         for (LibraryDependencyScopeSuggester suggester : LibraryDependencyScopeSuggester.EP_NAME.getExtensionList()) {
             DependencyScope scope = suggester.getDefaultDependencyScope(item);
             if (scope != null) {

@@ -1073,8 +1073,7 @@ public class LookupImpl extends LightweightHintImpl implements LookupEx, Disposa
     }
 
     @Override
-    @Nullable
-    public LookupElement getCurrentItem() {
+    public @Nullable LookupElement getCurrentItem() {
         synchronized (myUiLock) {
             LookupElement item = (LookupElement)myList.getSelectedValue();
             return item instanceof EmptyLookupItem ? null : item;
@@ -1205,8 +1204,7 @@ public class LookupImpl extends LightweightHintImpl implements LookupEx, Disposa
     }
 
     @Override
-    @Nullable
-    public PsiFile getPsiFile() {
+    public @Nullable PsiFile getPsiFile() {
         return PsiDocumentManager.getInstance(myProject).getPsiFile(getEditor().getDocument());
     }
 
@@ -1235,8 +1233,7 @@ public class LookupImpl extends LightweightHintImpl implements LookupEx, Disposa
         return file.findElementAt(0);
     }
 
-    @Nullable
-    private static DocumentWindow getInjectedDocument(Project project, Editor editor, int offset) {
+    private static @Nullable DocumentWindow getInjectedDocument(Project project, Editor editor, int offset) {
         PsiFile hostFile = PsiDocumentManager.getInstance(project).getPsiFile(editor.getDocument());
         if (hostFile != null) {
             // inspired by consulo.ide.impl.idea.codeInsight.editorActions.TypedHandler.injectedEditorIfCharTypedIsSignificant()

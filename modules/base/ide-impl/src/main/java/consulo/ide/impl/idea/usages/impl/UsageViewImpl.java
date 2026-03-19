@@ -166,8 +166,7 @@ public class UsageViewImpl implements UsageViewEx {
     private boolean myExpandingCollapsing;
     private final UsageViewTreeCellRenderer myUsageViewTreeCellRenderer;
     private Usage myOriginUsage;
-    @Nullable
-    private Action myRerunAction;
+    private @Nullable Action myRerunAction;
     private boolean myDisposeSmartPointersOnClose = true;
     private final ExecutorService updateRequests = AppExecutorUtil.createBoundedApplicationPoolExecutor(
         "Usage View Update Requests",
@@ -1864,8 +1863,7 @@ public class UsageViewImpl implements UsageViewEx {
     }
 
     private class MyPanel extends JPanel implements UiDataProvider, OccurenceNavigator, Disposable {
-        @Nullable
-        private OccurenceNavigatorSupport mySupport;
+        private @Nullable OccurenceNavigatorSupport mySupport;
         private final CopyProvider myCopyProvider;
 
         private MyPanel(JTree tree) {

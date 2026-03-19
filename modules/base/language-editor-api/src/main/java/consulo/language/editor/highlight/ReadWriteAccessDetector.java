@@ -31,8 +31,7 @@ import org.jspecify.annotations.Nullable;
 public abstract class ReadWriteAccessDetector {
     public static final ExtensionPointName<ReadWriteAccessDetector> EP_NAME = ExtensionPointName.create(ReadWriteAccessDetector.class);
 
-    @Nullable
-    public static ReadWriteAccessDetector findDetector(PsiElement element) {
+    public static @Nullable ReadWriteAccessDetector findDetector(PsiElement element) {
         ReadWriteAccessDetector detector = null;
         for (ReadWriteAccessDetector accessDetector : EP_NAME.getExtensionList()) {
             if (accessDetector.isReadWriteAccessible(element)) {

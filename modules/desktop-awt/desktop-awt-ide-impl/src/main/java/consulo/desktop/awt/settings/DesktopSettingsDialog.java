@@ -172,8 +172,7 @@ public class DesktopSettingsDialog extends WholeWestDialogWrapper implements UiD
         return errors.size() == 0;
     }
 
-    @Nullable
-    private static String getErrorMessage(Map<Configurable, ConfigurationException> errors) {
+    private static @Nullable String getErrorMessage(Map<Configurable, ConfigurationException> errors) {
         Collection<ConfigurationException> values = errors.values();
         ConfigurationException[] exceptions = values.toArray(new ConfigurationException[values.size()]);
         if (exceptions.length > 0) {

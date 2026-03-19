@@ -76,8 +76,7 @@ public abstract class PsiElementListCellRenderer<T extends PsiElement> extends J
         return accessibleContext;
     }
 
-    @Nullable
-    protected static ColorValue getBackgroundColor(@Nullable Object value) {
+    protected static @Nullable ColorValue getBackgroundColor(@Nullable Object value) {
         PsiElement psiElement = NavigationItemListCellRenderer.getPsiElement(value);
         VirtualFile virtualFile = PsiUtilCore.getVirtualFile(psiElement);
         ColorValue fileColor = virtualFile == null ? null : VfsPresentationUtil.getFileBackgroundColor(psiElement.getProject(), virtualFile);
@@ -85,10 +84,8 @@ public abstract class PsiElementListCellRenderer<T extends PsiElement> extends J
     }
 
     public static class ItemMatchers {
-        @Nullable
-        public final Matcher nameMatcher;
-        @Nullable
-        final Matcher locationMatcher;
+        public final @Nullable Matcher nameMatcher;
+        final @Nullable Matcher locationMatcher;
 
         public ItemMatchers(@Nullable Matcher nameMatcher, @Nullable Matcher locationMatcher) {
             this.nameMatcher = nameMatcher;
@@ -221,8 +218,7 @@ public abstract class PsiElementListCellRenderer<T extends PsiElement> extends J
         }
     }
 
-    @Nullable
-    protected TextAttributes getNavigationItemAttributes(Object value) {
+    protected @Nullable TextAttributes getNavigationItemAttributes(Object value) {
         TextAttributes attributes = null;
 
         if (value instanceof NavigationItem) {
@@ -289,8 +285,7 @@ public abstract class PsiElementListCellRenderer<T extends PsiElement> extends J
         return false;
     }
 
-    @Nullable
-    protected DefaultListCellRenderer getRightCellRenderer(Object value) {
+    protected @Nullable DefaultListCellRenderer getRightCellRenderer(Object value) {
         if (UISettings.getInstance().SHOW_ICONS_IN_QUICK_NAVIGATION) {
             return new PsiElementModuleRenderer();
         }
@@ -299,11 +294,9 @@ public abstract class PsiElementListCellRenderer<T extends PsiElement> extends J
 
     public abstract String getElementText(T element);
 
-    @Nullable
-    protected abstract String getContainerText(T element, String name);
+    protected abstract @Nullable String getContainerText(T element, String name);
 
-    @Nullable
-    protected String getContainerTextForLeftComponent(T element, String name, int maxWidth, FontMetrics fm) {
+    protected @Nullable String getContainerTextForLeftComponent(T element, String name, int maxWidth, FontMetrics fm) {
         return getContainerText(element, name);
     }
 

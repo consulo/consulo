@@ -71,8 +71,7 @@ public class GeneralCommandLine implements UserDataHolder {
   private Path myWorkingDirectory;
 
   private Platform myPlatform = Platform.current();
-  @Nullable
-  private Map<String, String> myEnvParams;
+  private @Nullable Map<String, String> myEnvParams;
   private ParentEnvironmentType myParentEnvironmentType = ParentEnvironmentType.CONSOLE;
   private final ParametersList myProgramParams = new ParametersList();
   private Charset myCharset = defaultCharset();
@@ -122,8 +121,7 @@ public class GeneralCommandLine implements UserDataHolder {
     myExecutable = path;
   }
 
-  @Nullable
-  public Path getExecutable() {
+  public @Nullable Path getExecutable() {
     return myExecutable;
   }
 
@@ -137,8 +135,7 @@ public class GeneralCommandLine implements UserDataHolder {
     myWorkingDirectory = path;
   }
 
-  @Nullable
-  public Path getWorkingDirectory() {
+  public @Nullable Path getWorkingDirectory() {
     return myWorkingDirectory;
   }
 

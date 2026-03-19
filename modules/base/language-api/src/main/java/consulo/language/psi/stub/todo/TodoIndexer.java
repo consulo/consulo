@@ -37,8 +37,7 @@ public interface TodoIndexer extends DataIndexer<TodoIndexEntry, Integer, FileCo
     ExtensionPointCacheKey<TodoIndexer, Map<FileType, TodoIndexer>> KEY =
         ExtensionPointCacheKey.groupBy("BinaryFileStubBuilder", TodoIndexer::getFileType);
 
-    @Nullable
-    static TodoIndexer forFileType(FileType fileType) {
+    static @Nullable TodoIndexer forFileType(FileType fileType) {
         ExtensionPoint<TodoIndexer> extensionPoint = Application.get().getExtensionPoint(TodoIndexer.class);
         Map<FileType, TodoIndexer> map = extensionPoint.getOrBuildCache(KEY);
         return map.get(fileType);

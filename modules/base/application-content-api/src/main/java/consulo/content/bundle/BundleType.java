@@ -51,8 +51,7 @@ public abstract class BundleType extends SdkType {
         return getDisplayName().get() + " " + getVersionString(platform, path);
     }
 
-    @Nullable
-    public abstract String getVersionString(Platform platform, Path path);
+    public abstract @Nullable String getVersionString(Platform platform, Path path);
 
     /**
      * If a path selected in the file chooser is not a valid SDK home path, returns an adjusted version of the path that is again

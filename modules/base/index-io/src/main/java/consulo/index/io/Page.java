@@ -95,8 +95,7 @@ public class Page {
   }
   private final Range myContinuousRange = new Range();
 
-  @Nullable
-  private Range calcContinousRange(BitSet mask) {
+  private @Nullable Range calcContinousRange(BitSet mask) {
     int lowestByte = mask.nextSetBit(0);
     int highestByte;
     if (lowestByte >= 0) {
@@ -214,8 +213,7 @@ public class Page {
     }
   }
 
-  @Nullable
-  public FinalizationRequest prepareForFinalization(int finalizationId) {
+  public @Nullable FinalizationRequest prepareForFinalization(int finalizationId) {
     synchronized (lock) {
       if (dirty) {
         myFinalizationId = finalizationId;

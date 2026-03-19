@@ -50,8 +50,7 @@ public class RecentsManager implements PersistentStateComponent<Element> {
     return project.getInstance(RecentsManager.class);
   }
 
-  @Nullable
-  public List<String> getRecentEntries(String key) {
+  public @Nullable List<String> getRecentEntries(String key) {
     return myMap.get(key);
   }
 

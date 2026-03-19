@@ -53,8 +53,7 @@ public class PathReferenceManagerImpl extends PathReferenceManager {
   }
 
   @Override
-  @Nullable
-  public PathReference getPathReference(String path,
+  public @Nullable PathReference getPathReference(String path,
                                         PsiElement element,
                                         PathReferenceProvider... additionalProviders) {
     PathReference pathReference;
@@ -82,8 +81,7 @@ public class PathReferenceManagerImpl extends PathReferenceManager {
   }
 
   @Override
-  @Nullable
-  public PathReference getCustomPathReference(String path, Module module, PsiElement element, PathReferenceProvider... providers) {
+  public @Nullable PathReference getCustomPathReference(String path, Module module, PsiElement element, PathReferenceProvider... providers) {
     for (PathReferenceProvider provider : providers) {
       PathReference reference = provider.getPathReference(path, element);
       if (reference != null) {

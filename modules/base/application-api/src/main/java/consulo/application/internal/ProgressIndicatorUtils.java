@@ -37,8 +37,7 @@ public class ProgressIndicatorUtils {
      *
      * @return the computation result or {@code null} if timeout has been exceeded.
      */
-    @Nullable
-    public static <T> T withTimeout(long timeoutMs, Supplier<T> computation) {
+    public static @Nullable <T> T withTimeout(long timeoutMs, Supplier<T> computation) {
         ProgressManager.checkCanceled();
         ProgressIndicator outer = ProgressIndicatorProvider.getGlobalProgressIndicator();
         ProgressIndicator inner = outer != null ? new SensitiveProgressWrapper(outer) : new ProgressIndicatorBase(false, false);

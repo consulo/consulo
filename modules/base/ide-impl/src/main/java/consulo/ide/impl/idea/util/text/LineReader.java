@@ -54,8 +54,7 @@ public class LineReader {
     private String myCurrentEOL = "";
     private ByteArrayOutputStream myResult = null;
 
-    @Nullable
-    public byte[] execute() throws IOException {
+    public @Nullable byte[] execute() throws IOException {
 
       if (myAtEnd) return null;
 
@@ -124,8 +123,7 @@ public class LineReader {
     }
   }
 
-  @Nullable
-  private byte[] readLineInternal() throws IOException {
+  private @Nullable byte[] readLineInternal() throws IOException {
     return new ReadLine().execute();
   }
 

@@ -67,8 +67,7 @@ public class CodeStyleStatusBarWidgetFactory extends StatusBarEditorBasedWidgetF
         return language.getDisplayName();
     }
 
-    @Nullable
-    private static Configurable findCodeStyleConfigurableId(Project project, LocalizeValue langName) {
+    private static @Nullable Configurable findCodeStyleConfigurableId(Project project, LocalizeValue langName) {
         CodeStyleSchemesConfigurable topConfigurable = new CodeStyleSchemesConfigurable(project);
         SearchableConfigurable found = topConfigurable.findSubConfigurable(langName);
         return found != null ? found : topConfigurable.findSubConfigurable(OtherFileTypesCodeStyleConfigurable.getDisplayNameText());

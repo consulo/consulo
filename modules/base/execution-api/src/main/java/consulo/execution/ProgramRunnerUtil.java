@@ -42,8 +42,7 @@ public class ProgramRunnerUtil {
     private ProgramRunnerUtil() {
     }
 
-    @Nullable
-    public static ProgramRunner getRunner(String executorId, RunnerAndConfigurationSettings configuration) {
+    public static @Nullable ProgramRunner getRunner(String executorId, RunnerAndConfigurationSettings configuration) {
         return configuration == null ? null : RunnerRegistry.getInstance().getRunner(executorId, configuration.getConfiguration());
     }
 

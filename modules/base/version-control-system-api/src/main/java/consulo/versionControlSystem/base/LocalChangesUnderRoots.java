@@ -88,8 +88,7 @@ public class LocalChangesUnderRoots {
     addChangeToMap(result, root, change);
   }
 
-  @Nullable
-  private VirtualFile getRootForPath(FilePath file, Collection<VirtualFile> rootsToSave) {
+  private @Nullable VirtualFile getRootForPath(FilePath file, Collection<VirtualFile> rootsToSave) {
     VirtualFile vf = ChangesUtil.findValidParentUnderReadAction(file);
     if (vf == null) {
       return null;

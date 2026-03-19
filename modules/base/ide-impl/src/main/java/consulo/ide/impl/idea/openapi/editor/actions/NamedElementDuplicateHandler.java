@@ -78,8 +78,7 @@ public class NamedElementDuplicateHandler extends EditorWriteActionHandler imple
     myOriginal.execute(editor, dataContext);
   }
 
-  @Nullable
-  private static PsiElement findNameIdentifier(Editor editor, PsiFile file, TextRange toDuplicate) {
+  private static @Nullable PsiElement findNameIdentifier(Editor editor, PsiFile file, TextRange toDuplicate) {
     int nonWs = CharArrayUtil.shiftForward(editor.getDocument().getCharsSequence(), toDuplicate.getStartOffset(), "\n\t ");
     PsiElement psi = file.findElementAt(nonWs);
     PsiElement named = null;

@@ -586,13 +586,10 @@ public class ConcurrentHashMap<K, V> extends AbstractMap<K, V> implements Concur
    */
   static class Node<K, V> implements Map.Entry<K, V> {
     final int hash;
-    @Nullable
-    final K key;
-    @Nullable
-    volatile V val;
+    final @Nullable K key;
+    volatile @Nullable V val;
     final HashingStrategy<K> hashingStrategy;
-    @Nullable
-    volatile Node<K, V> next;
+    volatile @Nullable Node<K, V> next;
 
     Node(int hash, @Nullable K key, @Nullable V val, HashingStrategy<K> hashingStrategy) {
       this(hash, key, val, null, hashingStrategy);
@@ -606,13 +603,11 @@ public class ConcurrentHashMap<K, V> extends AbstractMap<K, V> implements Concur
       this.next = next;
     }
 
-    @Nullable
-    public final K getKey() {
+    public final @Nullable K getKey() {
       return key;
     }
 
-    @Nullable
-    public final V getValue() {
+    public final @Nullable V getValue() {
       return val;
     }
 
@@ -695,8 +690,7 @@ public class ConcurrentHashMap<K, V> extends AbstractMap<K, V> implements Concur
    * Returns x's Class if it is of the form "class C implements
    * Comparable<C>", else null.
    */
-  @Nullable
-  static Class<?> comparableClassFor(Object x) {
+  static @Nullable Class<?> comparableClassFor(Object x) {
     if (x instanceof Comparable) {
       Class<?> c;
       Type[] ts, as;
@@ -804,12 +798,9 @@ public class ConcurrentHashMap<K, V> extends AbstractMap<K, V> implements Concur
   private transient volatile CounterCell @Nullable [] counterCells = null;
 
   // views
-  @Nullable
-  private transient KeySetView<K, V> keySet = null;
-  @Nullable
-  private transient ValuesView<K, V> values = null;
-  @Nullable
-  private transient EntrySetView<K, V> entrySet = null;
+  private transient @Nullable KeySetView<K, V> keySet = null;
+  private transient @Nullable ValuesView<K, V> values = null;
+  private transient @Nullable EntrySetView<K, V> entrySet = null;
 
 
   /* ---------------- Public operations -------------- */
@@ -941,8 +932,7 @@ public class ConcurrentHashMap<K, V> extends AbstractMap<K, V> implements Concur
    *
    * @throws NullPointerException if the specified key is null
    */
-  @Nullable
-  public V get(Object key) {
+  public @Nullable V get(Object key) {
     Objects.requireNonNull(key);
     Node<K, V>[] tab;
     Node<K, V> e, p;
@@ -1010,16 +1000,14 @@ public class ConcurrentHashMap<K, V> extends AbstractMap<K, V> implements Concur
    * {@code null} if there was no mapping for {@code key}
    * @throws NullPointerException if the specified key or value is null
    */
-  @Nullable
-  public V put(K key, V value) {
+  public @Nullable V put(K key, V value) {
     return putVal(key, value, false);
   }
 
   /**
    * Implementation for put and putIfAbsent
    */
-  @Nullable
-  final V putVal(K key, V value, boolean onlyIfAbsent) {
+  final @Nullable V putVal(K key, V value, boolean onlyIfAbsent) {
     if (key == null || value == null) throw new NullPointerException();
     int hash = hash(key);
     int binCount = 0;
@@ -1099,8 +1087,7 @@ public class ConcurrentHashMap<K, V> extends AbstractMap<K, V> implements Concur
    * {@code null} if there was no mapping for {@code key}
    * @throws NullPointerException if the specified key is null
    */
-  @Nullable
-  public V remove(Object key) {
+  public @Nullable V remove(Object key) {
     return replaceNode(key, null, null);
   }
 
@@ -1109,8 +1096,7 @@ public class ConcurrentHashMap<K, V> extends AbstractMap<K, V> implements Concur
    * Replaces node value with v, conditional upon match of cv if
    * non-null.  If resulting value is null, delete.
    */
-  @Nullable
-  final V replaceNode(Object key, @Nullable V value, @Nullable Object cv) {
+  final @Nullable V replaceNode(Object key, @Nullable V value, @Nullable Object cv) {
     int hash = hash(Objects.requireNonNull((K) key));
     for (Node<K, V>[] tab = table; ; ) {
       Node<K, V> f;
@@ -1381,8 +1367,7 @@ public class ConcurrentHashMap<K, V> extends AbstractMap<K, V> implements Concur
    * or {@code null} if there was no mapping for the key
    * @throws NullPointerException if the specified key or value is null
    */
-  @Nullable
-  public V putIfAbsent(K key, V value) {
+  public @Nullable V putIfAbsent(K key, V value) {
     return putVal(key, value, true);
   }
 
@@ -1411,8 +1396,7 @@ public class ConcurrentHashMap<K, V> extends AbstractMap<K, V> implements Concur
    * or {@code null} if there was no mapping for the key
    * @throws NullPointerException if the specified key or value is null
    */
-  @Nullable
-  public V replace(K key, V value) {
+  public @Nullable V replace(K key, V value) {
     if (key == null || value == null) throw new NullPointerException();
     return replaceNode(key, value, null);
   }
@@ -1521,8 +1505,7 @@ public class ConcurrentHashMap<K, V> extends AbstractMap<K, V> implements Concur
    * @throws RuntimeException      or Error if the mappingFunction does so,
    *                               in which case the mapping is left unestablished
    */
-  @Nullable
-  public V computeIfAbsent(K key, Function<? super K, ? extends V> mappingFunction) {
+  public @Nullable V computeIfAbsent(K key, Function<? super K, ? extends V> mappingFunction) {
     if (key == null || mappingFunction == null) throw new NullPointerException();
     int h = hash(key);
     V val = null;
@@ -1615,8 +1598,7 @@ public class ConcurrentHashMap<K, V> extends AbstractMap<K, V> implements Concur
    * @throws RuntimeException      or Error if the remappingFunction does so,
    *                               in which case the mapping is unchanged
    */
-  @Nullable
-  public V computeIfPresent(K key, BiFunction<? super K, ? super V, ? extends V> remappingFunction) {
+  public @Nullable V computeIfPresent(K key, BiFunction<? super K, ? super V, ? extends V> remappingFunction) {
     if (key == null || remappingFunction == null) throw new NullPointerException();
     int h = hash(key);
     V val = null;
@@ -1693,8 +1675,7 @@ public class ConcurrentHashMap<K, V> extends AbstractMap<K, V> implements Concur
    * @throws RuntimeException      or Error if the remappingFunction does so,
    *                               in which case the mapping is unchanged
    */
-  @Nullable
-  public V compute(K key, BiFunction<? super K, ? super V, ? extends V> remappingFunction) {
+  public @Nullable V compute(K key, BiFunction<? super K, ? super V, ? extends V> remappingFunction) {
     if (key == null || remappingFunction == null) throw new NullPointerException();
     int h = hash(key);
     V val = null;
@@ -1807,8 +1788,7 @@ public class ConcurrentHashMap<K, V> extends AbstractMap<K, V> implements Concur
    * @throws RuntimeException     or Error if the remappingFunction does so,
    *                              in which case the mapping is unchanged
    */
-  @Nullable
-  public V merge(K key, V value, BiFunction<? super V, ? super V, ? extends V> remappingFunction) {
+  public @Nullable V merge(K key, V value, BiFunction<? super V, ? super V, ? extends V> remappingFunction) {
     if (key == null || value == null || remappingFunction == null) throw new NullPointerException();
     int h = hash(key);
     V val = null;
@@ -2475,8 +2455,7 @@ public class ConcurrentHashMap<K, V> extends AbstractMap<K, V> implements Concur
      * Returns the TreeNode (or null if not found) for the given key
      * starting at given root.
      */
-    @Nullable
-    final TreeNode<K, V> findTreeNode(int h, @Nullable Object k, @Nullable Class<?> kc) {
+    final @Nullable TreeNode<K, V> findTreeNode(int h, @Nullable Object k, @Nullable Class<?> kc) {
       if (k != null) {
         TreeNode<K, V> p = this;
         do {
@@ -2511,10 +2490,8 @@ public class ConcurrentHashMap<K, V> extends AbstractMap<K, V> implements Concur
   static final class TreeBin<K, V> extends Node<K, V> {
     @Nullable
     TreeNode<K, V> root = null;
-    @Nullable
-    volatile TreeNode<K, V> first = null;
-    @Nullable
-    volatile Thread waiter = null;
+    volatile @Nullable TreeNode<K, V> first = null;
+    volatile @Nullable Thread waiter = null;
     volatile int lockState;
     // values for lockState
     static final int WRITER = 1; // set while holding write lock
@@ -2616,8 +2593,7 @@ public class ConcurrentHashMap<K, V> extends AbstractMap<K, V> implements Concur
      * using tree comparisons from root, but continues linear
      * search when lock not available.
      */
-    @Nullable
-    final Node<K, V> find(int h, Object k) {
+    final @Nullable Node<K, V> find(int h, Object k) {
       if (k != null) {
         for (Node<K, V> e = first; e != null; ) {
           int s;
@@ -2647,8 +2623,7 @@ public class ConcurrentHashMap<K, V> extends AbstractMap<K, V> implements Concur
      *
      * @return null if added
      */
-    @Nullable
-    final TreeNode<K, V> putTreeVal(int h, K k, V v) {
+    final @Nullable TreeNode<K, V> putTreeVal(int h, K k, V v) {
       Class<?> kc = null;
       boolean searched = false;
       for (TreeNode<K, V> p = root; ; ) {
@@ -3038,8 +3013,7 @@ public class ConcurrentHashMap<K, V> extends AbstractMap<K, V> implements Concur
     /**
      * Advances if possible, returning next valid node, or null if none.
      */
-    @Nullable
-    final Node<K, V> advance() {
+    final @Nullable Node<K, V> advance() {
       Node<K, V> e = next;
       if (e != null) e = e.next;
       for (; ; ) {
@@ -3247,8 +3221,7 @@ public class ConcurrentHashMap<K, V> extends AbstractMap<K, V> implements Concur
       this.est = est;
     }
 
-    @Nullable
-    public KeySpliterator<K, V> trySplit() {
+    public @Nullable KeySpliterator<K, V> trySplit() {
       int i, f, h;
       return (h = ((i = baseIndex) + (f = baseLimit)) >>> 1) <= i ? null : new KeySpliterator<K, V>(tab, baseSize, baseLimit = h, f, est >>>= 1);
     }
@@ -3284,8 +3257,7 @@ public class ConcurrentHashMap<K, V> extends AbstractMap<K, V> implements Concur
       this.est = est;
     }
 
-    @Nullable
-    public ValueSpliterator<K, V> trySplit() {
+    public @Nullable ValueSpliterator<K, V> trySplit() {
       int i, f, h;
       return (h = ((i = baseIndex) + (f = baseLimit)) >>> 1) <= i ? null : new ValueSpliterator<K, V>(tab, baseSize, baseLimit = h, f, est >>>= 1);
     }
@@ -3323,8 +3295,7 @@ public class ConcurrentHashMap<K, V> extends AbstractMap<K, V> implements Concur
       this.est = est;
     }
 
-    @Nullable
-    public EntrySpliterator<K, V> trySplit() {
+    public @Nullable EntrySpliterator<K, V> trySplit() {
       int i, f, h;
       return (h = ((i = baseIndex) + (f = baseLimit)) >>> 1) <= i ? null : new EntrySpliterator<K, V>(tab, baseSize, baseLimit = h, f, est >>>= 1, map);
     }
@@ -4089,8 +4060,7 @@ public class ConcurrentHashMap<K, V> extends AbstractMap<K, V> implements Concur
   public static class KeySetView<K, V> extends CollectionView<K, V, K> implements Set<K>, java.io.Serializable {
     private static final long serialVersionUID = 7249069246763182397L;
 
-    @Nullable
-    private final V value;
+    private final @Nullable V value;
 
     KeySetView(ConcurrentHashMap<K, V> map, @Nullable V value) {  // non-public
       super(map);
@@ -4104,8 +4074,7 @@ public class ConcurrentHashMap<K, V> extends AbstractMap<K, V> implements Concur
      * @return the default mapped value for additions, or {@code null}
      * if not supported
      */
-    @Nullable
-    public V getMappedValue() {
+    public @Nullable V getMappedValue() {
       return value;
     }
 
@@ -4397,8 +4366,7 @@ public class ConcurrentHashMap<K, V> extends AbstractMap<K, V> implements Concur
     /**
      * Same as Traverser version.
      */
-    @Nullable
-    final Node<K, V> advance() {
+    final @Nullable Node<K, V> advance() {
       Node<K, V> e = next;
       if (e != null) e = e.next;
 
@@ -4719,8 +4687,7 @@ public class ConcurrentHashMap<K, V> extends AbstractMap<K, V> implements Concur
       this.result = result;
     }
 
-    @Nullable
-    public final U getRawResult() {
+    public final @Nullable U getRawResult() {
       return result.get();
     }
 
@@ -4768,8 +4735,7 @@ public class ConcurrentHashMap<K, V> extends AbstractMap<K, V> implements Concur
       this.result = result;
     }
 
-    @Nullable
-    public final U getRawResult() {
+    public final @Nullable U getRawResult() {
       return result.get();
     }
 
@@ -4817,8 +4783,7 @@ public class ConcurrentHashMap<K, V> extends AbstractMap<K, V> implements Concur
       this.result = result;
     }
 
-    @Nullable
-    public final U getRawResult() {
+    public final @Nullable U getRawResult() {
       return result.get();
     }
 
@@ -4866,8 +4831,7 @@ public class ConcurrentHashMap<K, V> extends AbstractMap<K, V> implements Concur
       this.result = result;
     }
 
-    @Nullable
-    public final U getRawResult() {
+    public final @Nullable U getRawResult() {
       return Objects.requireNonNull(result).get();
     }
 
@@ -4918,8 +4882,7 @@ public class ConcurrentHashMap<K, V> extends AbstractMap<K, V> implements Concur
       this.reducer = reducer;
     }
 
-    @Nullable
-    public final K getRawResult() {
+    public final @Nullable K getRawResult() {
       return result;
     }
 
@@ -4971,8 +4934,7 @@ public class ConcurrentHashMap<K, V> extends AbstractMap<K, V> implements Concur
       this.reducer = reducer;
     }
 
-    @Nullable
-    public final V getRawResult() {
+    public final @Nullable V getRawResult() {
       return result;
     }
 
@@ -5076,8 +5038,7 @@ public class ConcurrentHashMap<K, V> extends AbstractMap<K, V> implements Concur
       this.reducer = reducer;
     }
 
-    @Nullable
-    public final U getRawResult() {
+    public final @Nullable U getRawResult() {
       return result;
     }
 
@@ -5133,8 +5094,7 @@ public class ConcurrentHashMap<K, V> extends AbstractMap<K, V> implements Concur
       this.reducer = reducer;
     }
 
-    @Nullable
-    public final U getRawResult() {
+    public final @Nullable U getRawResult() {
       return result;
     }
 
@@ -5190,8 +5150,7 @@ public class ConcurrentHashMap<K, V> extends AbstractMap<K, V> implements Concur
       this.reducer = reducer;
     }
 
-    @Nullable
-    public final U getRawResult() {
+    public final @Nullable U getRawResult() {
       return result;
     }
 
@@ -5247,8 +5206,7 @@ public class ConcurrentHashMap<K, V> extends AbstractMap<K, V> implements Concur
       this.reducer = reducer;
     }
 
-    @Nullable
-    public final U getRawResult() {
+    public final @Nullable U getRawResult() {
       return result;
     }
 

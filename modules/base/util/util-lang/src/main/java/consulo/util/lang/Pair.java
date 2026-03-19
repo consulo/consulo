@@ -23,10 +23,8 @@ import java.util.Map;
 import java.util.function.Function;
 
 public class Pair<A, B> implements Map.Entry<A, B> {
-  @Nullable
-  public final A first;
-  @Nullable
-  public final B second;
+  public final @Nullable A first;
+  public final @Nullable B second;
 
   public static <A, B> Pair<A, B> create(@Nullable A first, @Nullable B second) {
     //noinspection DontUsePairConstructor
@@ -47,13 +45,11 @@ public class Pair<A, B> implements Map.Entry<A, B> {
     return a -> create(a, value);
   }
 
-  @Nullable
-  public static <T> T getFirst(Pair<T, ?> pair) {
+  public static @Nullable <T> T getFirst(Pair<T, ?> pair) {
     return pair != null ? pair.first : null;
   }
 
-  @Nullable
-  public static <T> T getSecond(Pair<?, T> pair) {
+  public static @Nullable <T> T getSecond(Pair<?, T> pair) {
     return pair != null ? pair.second : null;
   }
 
@@ -70,31 +66,26 @@ public class Pair<A, B> implements Map.Entry<A, B> {
     this.second = second;
   }
 
-  @Nullable
-  public final A getFirst() {
+  public final @Nullable A getFirst() {
     return first;
   }
 
-  @Nullable
-  public final B getSecond() {
+  public final @Nullable B getSecond() {
     return second;
   }
 
   @Override
-  @Nullable
-  public A getKey() {
+  public @Nullable A getKey() {
     return getFirst();
   }
 
   @Override
-  @Nullable
-  public B getValue() {
+  public @Nullable B getValue() {
     return getSecond();
   }
 
   @Override
-  @Nullable
-  public B setValue(@Nullable B value) {
+  public @Nullable B setValue(@Nullable B value) {
     throw new UnsupportedOperationException();
   }
 

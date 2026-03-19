@@ -40,8 +40,7 @@ public abstract class Filter<T extends AbstractTestProxy> {
     return result;
   }
 
-  @Nullable
-  public T detectIn(Collection<? extends T> collection) {
+  public @Nullable T detectIn(Collection<? extends T> collection) {
     for (T test : collection) {
       if (shouldAccept(test)) return test;
     }

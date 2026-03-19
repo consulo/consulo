@@ -103,8 +103,7 @@ public class ContentFolderImpl extends BaseModuleRootLayerChild
         return url;
     }
 
-    @Nullable
-    private static Map<String, Object> readProperties(Element element) throws InvalidDataException {
+    private static @Nullable Map<String, Object> readProperties(Element element) throws InvalidDataException {
         List<Element> elementChildren = element.getChildren("property");
         if (elementChildren.isEmpty()) {
             return null;

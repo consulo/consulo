@@ -48,8 +48,7 @@ public interface ParserDefinition extends LanguageExtension {
         return forLanguage(Application.get(), language);
     }
 
-    @Nullable
-    static ParserDefinition forLanguage(Application application, Language language) {
+    static @Nullable ParserDefinition forLanguage(Application application, Language language) {
         return ParserDefinitionExtensionPoint.forLanguage(application, language);
     }
 

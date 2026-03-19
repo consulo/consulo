@@ -156,8 +156,7 @@ public class CommitMessageImpl extends AbstractDataProviderPanel implements Disp
         return service.getEditorField(PlainTextLanguage.INSTANCE, project, features);
     }
 
-    @Nullable
-    public static ActionGroup getToolbarActions() {
+    public static @Nullable ActionGroup getToolbarActions() {
         return (ActionGroup) ActionManager.getInstance().getAction("Vcs.MessageActionGroup");
     }
 

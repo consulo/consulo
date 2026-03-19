@@ -273,8 +273,7 @@ public class FileTemplatesLoader {
     }
 
     //Example: templateName="NewClass"   templateExtension="java"
-    @Nullable
-    private static String getDescriptionPath(String pathPrefix, String templateName, String templateExtension, Predicate<String> descriptionPaths) {
+    private static @Nullable String getDescriptionPath(String pathPrefix, String templateName, String templateExtension, Predicate<String> descriptionPaths) {
         Locale locale = Locale.getDefault();
 
         String descName = MessageFormat.format("{0}.{1}_{2}_{3}" + DESCRIPTION_EXTENSION_SUFFIX, templateName, templateExtension, locale.getLanguage(), locale.getCountry());

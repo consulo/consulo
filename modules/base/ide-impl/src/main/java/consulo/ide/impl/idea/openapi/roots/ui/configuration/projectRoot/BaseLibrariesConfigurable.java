@@ -324,8 +324,7 @@ public abstract class BaseLibrariesConfigurable extends BaseStructureConfigurabl
     }
 
     @Override
-    @Nullable
-    protected String getEmptySelectionString() {
+    protected @Nullable String getEmptySelectionString() {
         return "Select a library to view or edit its details here";
     }
 

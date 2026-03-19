@@ -651,8 +651,7 @@ public class NotificationsManagerImpl extends NotificationsManager {
         return balloon;
     }
 
-    @Nullable
-    private static JPanel createButtons(
+    private static @Nullable JPanel createButtons(
         Notification notification,
         final JPanel content,
         @Nullable HyperlinkListener listener
@@ -1001,8 +1000,7 @@ public class NotificationsManagerImpl extends NotificationsManager {
         menu.getComponent().show(link, JBUI.scale(-10), link.getHeight() + JBUI.scale(2));
     }
 
-    @Nullable
-    private static Point getCollapsedTextEndLocation(JEditorPane text, BalloonLayoutData layoutData) {
+    private static @Nullable Point getCollapsedTextEndLocation(JEditorPane text, BalloonLayoutData layoutData) {
         try {
             int end = text.viewToModel(new Point(10, layoutData.twoLineHeight + 5));
             if (end == -1) {
@@ -1049,8 +1047,7 @@ public class NotificationsManagerImpl extends NotificationsManager {
             myLayoutData = layoutData;
         }
 
-        @Nullable
-        public Component getTitle() {
+        public @Nullable Component getTitle() {
             if (myTitleComponent != null) {
                 return myTitleComponent;
             }

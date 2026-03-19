@@ -69,9 +69,9 @@ public class ThriftTestExecutionUtil {
 
   public static void initConsoleView(final SMTRunnerConsoleView consoleView,
                                      final String testFrameworkName,
-                                     @Nullable final TestLocationProvider locator,
+                                     final @Nullable TestLocationProvider locator,
                                      final ThriftTestHandlerFactory factory,
-                                     @Nullable final TestProxyFilterProvider filterProvider) {
+                                     final @Nullable TestProxyFilterProvider filterProvider) {
     consoleView.addAttachToProcessListener(new AttachToProcessListener() {
       @Override
       public void onAttachToProcess(ProcessHandler processHandler) {

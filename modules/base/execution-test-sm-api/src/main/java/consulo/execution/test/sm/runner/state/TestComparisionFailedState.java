@@ -87,8 +87,7 @@ public class TestComparisionFailedState extends TestFailedState {
         printer.print(CompositePrintable.NEW_LINE, ConsoleViewContentType.ERROR_OUTPUT);
     }
 
-    @Nullable
-    public DiffHyperlink getHyperlink() {
+    public @Nullable DiffHyperlink getHyperlink() {
         return myHyperlink;
     }
 

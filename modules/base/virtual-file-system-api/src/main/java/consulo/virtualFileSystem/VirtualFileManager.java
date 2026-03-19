@@ -95,8 +95,7 @@ public abstract class VirtualFileManager implements ModificationTracker {
      * @see VirtualFileSystem#findFileByPath
      * @see #refreshAndFindFileByUrl
      */
-    @Nullable
-    public abstract VirtualFile findFileByUrl(String url);
+    public abstract @Nullable VirtualFile findFileByUrl(String url);
 
 
     /**
@@ -107,8 +106,7 @@ public abstract class VirtualFileManager implements ModificationTracker {
      * @see VirtualFileSystem#findFileByPath
      * @see #refreshAndFindFileByUrl
      */
-    @Nullable
-    public VirtualFile findFileByNioPath(Path path) {
+    public @Nullable VirtualFile findFileByNioPath(Path path) {
         return null;
     }
 
@@ -127,8 +125,7 @@ public abstract class VirtualFileManager implements ModificationTracker {
      * @see VirtualFileSystem#findFileByPath
      * @see VirtualFileSystem#refreshAndFindFileByPath
      */
-    @Nullable
-    public abstract VirtualFile refreshAndFindFileByUrl(String url);
+    public abstract @Nullable VirtualFile refreshAndFindFileByUrl(String url);
 
     /**
      * <p>Refreshes only the part of the file system needed for searching the file by the given URL and finds file
@@ -143,8 +140,7 @@ public abstract class VirtualFileManager implements ModificationTracker {
      * @see VirtualFileSystem#findFileByPath
      * @see VirtualFileSystem#refreshAndFindFileByPath
      **/
-    @Nullable
-    public VirtualFile refreshAndFindFileByNioPath(Path path) {
+    public @Nullable VirtualFile refreshAndFindFileByNioPath(Path path) {
         return null;
     }
 
@@ -191,8 +187,7 @@ public abstract class VirtualFileManager implements ModificationTracker {
      * @return protocol or <code>null</code> if there is no "://" in the URL
      * @see VirtualFileSystem#getProtocol
      */
-    @Nullable
-    public static String extractProtocol(String url) {
+    public static @Nullable String extractProtocol(String url) {
         int index = url.indexOf(URLUtil.SCHEME_SEPARATOR);
         if (index < 0) {
             return null;

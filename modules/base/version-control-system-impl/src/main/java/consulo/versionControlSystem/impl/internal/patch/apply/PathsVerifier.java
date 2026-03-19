@@ -505,8 +505,7 @@ public class PathsVerifier<BinaryType extends FilePatch> {
     return file;*/
   }
 
-  @Nullable
-  private VirtualFile makeSureParentPathExists(String[] pieces) throws IOException {
+  private @Nullable VirtualFile makeSureParentPathExists(String[] pieces) throws IOException {
     VirtualFile child = myBaseDirectory;
 
     int size = (pieces.length - 1);

@@ -41,8 +41,7 @@ public abstract class LibraryPresentationManager {
   
   public abstract Image getNamedLibraryIcon(Library library, @Nullable LibrariesConfigurator context);
 
-  @Nullable
-  public abstract Image getCustomIcon(Library library, @Nullable LibrariesConfigurator context);
+  public abstract @Nullable Image getCustomIcon(Library library, @Nullable LibrariesConfigurator context);
 
   
   public abstract List<Image> getCustomIcons(Library library, @Nullable LibrariesConfigurator context);

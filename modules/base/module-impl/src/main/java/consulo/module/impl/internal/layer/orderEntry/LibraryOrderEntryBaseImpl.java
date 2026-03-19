@@ -42,8 +42,7 @@ public abstract class LibraryOrderEntryBaseImpl extends OrderEntryBaseImpl imple
     protected final ProjectRootManagerImpl myProjectRootManagerImpl;
     
     protected DependencyScope myScope = DependencyScope.COMPILE;
-    @Nullable
-    private RootProvider myCurrentlySubscribedRootProvider = null;
+    private @Nullable RootProvider myCurrentlySubscribedRootProvider = null;
 
     public LibraryOrderEntryBaseImpl(OrderEntryType<?> provider, ModuleRootLayerImpl rootModel,
                                      ProjectRootManagerImpl instanceImpl) {
@@ -77,8 +76,7 @@ public abstract class LibraryOrderEntryBaseImpl extends OrderEntryBaseImpl imple
 
     }
 
-    @Nullable
-    protected abstract RootProvider getRootProvider();
+    protected abstract @Nullable RootProvider getRootProvider();
 
     @Override
     

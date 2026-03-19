@@ -31,8 +31,7 @@ public class EvaluateInConsoleFromTreeAction extends XAddToWatchesTreeAction {
         }
     }
 
-    @Nullable
-    private static ConsoleExecuteAction getConsoleExecuteAction(AnActionEvent e) {
+    private static @Nullable ConsoleExecuteAction getConsoleExecuteAction(AnActionEvent e) {
         return XEvaluateInConsoleFromEditorActionHandler.getConsoleExecuteAction(e.getData(ConsoleView.KEY));
     }
 

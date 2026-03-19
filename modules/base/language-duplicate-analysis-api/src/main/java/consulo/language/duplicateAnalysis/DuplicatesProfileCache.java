@@ -19,8 +19,7 @@ public class DuplicatesProfileCache {
         ourProfileCache.remove(info);
     }
 
-    @Nullable
-    public static DuplicatesProfile getProfile(DupInfo dupInfo, int index) {
+    public static @Nullable DuplicatesProfile getProfile(DupInfo dupInfo, int index) {
         IntObjectMap<DuplicatesProfile> patternCache = ourProfileCache.get(dupInfo);
         if (patternCache == null) {
             patternCache = IntMaps.newIntObjectHashMap();

@@ -35,13 +35,11 @@ public interface GotoTargetRendererProvider {
         boolean hasDifferentNames();
     }
 
-    @Nullable
-    default PsiElementListCellRenderer getRenderer(PsiElement element, Options options) {
+    default @Nullable PsiElementListCellRenderer getRenderer(PsiElement element, Options options) {
         return getRenderer(element);
     }
 
-    @Nullable
-    default PsiElementListCellRenderer getRenderer(PsiElement element) {
+    default @Nullable PsiElementListCellRenderer getRenderer(PsiElement element) {
         throw new AbstractMethodError();
     }
 }

@@ -44,8 +44,7 @@ public class MorphColor extends Color {
     return new MorphColor(color, null, func);
   }
 
-  @Nullable
-  private UIModificationTracker myModificationTracker;
+  private @Nullable UIModificationTracker myModificationTracker;
   
   private final Supplier<Color> myColorProducer;
   private long myLastModificationCount;

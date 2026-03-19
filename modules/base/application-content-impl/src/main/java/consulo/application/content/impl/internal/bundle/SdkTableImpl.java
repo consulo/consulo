@@ -125,8 +125,7 @@ public class SdkTableImpl extends SdkTable implements PersistentStateComponent<E
     }
 
     @Override
-    @Nullable
-    public Sdk findSdk(String name) {
+    public @Nullable Sdk findSdk(String name) {
         //noinspection ForLoopReplaceableByForEach
         for (int i = 0, len = mySdks.size(); i < len; ++i) {
             // avoid foreach, it instantiates ArrayList$Itr, this traversal happens very often
@@ -164,8 +163,7 @@ public class SdkTableImpl extends SdkTable implements PersistentStateComponent<E
     }
 
     @Override
-    @Nullable
-    public Sdk findPredefinedSdkByType(SdkTypeId sdkType) {
+    public @Nullable Sdk findPredefinedSdkByType(SdkTypeId sdkType) {
         for (Sdk sdk : mySdks) {
             if (sdk.isPredefined() && sdk.getSdkType() == sdkType) {
                 return sdk;

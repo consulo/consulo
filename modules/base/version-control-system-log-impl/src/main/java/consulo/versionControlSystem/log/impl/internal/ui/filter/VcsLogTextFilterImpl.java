@@ -30,7 +30,7 @@ public class VcsLogTextFilterImpl implements VcsLogDetailsFilter, VcsLogTextFilt
   
   private final String myText;
   private final boolean myMatchCase;
-  @Nullable private final Pattern myPattern;
+  private final @Nullable Pattern myPattern;
 
   public VcsLogTextFilterImpl(String text, boolean isRegexAllowed, boolean matchCase) {
     myText = text;
@@ -38,8 +38,7 @@ public class VcsLogTextFilterImpl implements VcsLogDetailsFilter, VcsLogTextFilt
     myPattern = createPattern(myText, isRegexAllowed, myMatchCase);
   }
 
-  @Nullable
-  private static Pattern createPattern(String text, boolean isRegexAllowed, boolean matchCase) {
+  private static @Nullable Pattern createPattern(String text, boolean isRegexAllowed, boolean matchCase) {
     if (isRegexAllowed && VcsLogUtil.maybeRegexp(text)) {
       try {
         return matchCase ? Pattern.compile(text) : Pattern.compile(text, Pattern.CASE_INSENSITIVE);

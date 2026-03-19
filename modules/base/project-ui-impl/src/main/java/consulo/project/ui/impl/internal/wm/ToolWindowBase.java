@@ -382,8 +382,7 @@ public abstract class ToolWindowBase extends UserDataHolderBase implements ToolW
         return myToolWindowManager;
     }
 
-    @Nullable
-    public ActionGroup getPopupGroup() {
+    public @Nullable ActionGroup getPopupGroup() {
         return myDecorator != null ? myDecorator.createPopupGroup() : null;
     }
 

@@ -41,8 +41,7 @@ public class ClassMap<T> {
     myMap.remove(aClass);
   }
 
-  @Nullable
-  public T get(Class aClass) {
+  public @Nullable T get(Class aClass) {
     T t = myMap.get(aClass);
     if (t != null) {
       return t;

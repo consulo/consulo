@@ -30,15 +30,13 @@ import java.util.Optional;
 public class Suspension<T> {
 	private final CoroutineStep<?, T> suspendingStep;
 
-	@Nullable
-	private final CoroutineStep<T, ?> resumeStep;
+	private final @Nullable CoroutineStep<T, ?> resumeStep;
 
 	private final Continuation<?> continuation;
 
 	private final RunLock cancelLock = new RunLock();
 
-	@Nullable
-	private T value;
+	private @Nullable T value;
 
 	private boolean cancelled = false;
 
@@ -192,8 +190,7 @@ public class Suspension<T> {
 	 *
 	 * @return The suspension value
 	 */
-	@Nullable
-	public final T value() {
+	public final @Nullable T value() {
 		return value;
 	}
 

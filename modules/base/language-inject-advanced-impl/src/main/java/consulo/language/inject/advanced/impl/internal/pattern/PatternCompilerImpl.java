@@ -372,8 +372,7 @@ public class PatternCompilerImpl<T> implements PatternCompiler<T> {
         throw new NoSuchMethodException("unknown symbol: " + methodName + "(" + StringUtil.join(arguments, String::valueOf, ", ") + ")");
     }
 
-    @Nullable
-    private static Method findMethod(String methodName, Object[] arguments, Collection<Method> methods, Ref<Boolean> convertVarArgs) {
+    private static @Nullable Method findMethod(String methodName, Object[] arguments, Collection<Method> methods, Ref<Boolean> convertVarArgs) {
         main:
         for (Method method : methods) {
             if (!methodName.equals(method.getName())) {

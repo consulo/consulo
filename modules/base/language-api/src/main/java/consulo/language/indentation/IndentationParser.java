@@ -20,8 +20,7 @@ public abstract class IndentationParser implements PsiParser {
     private final IElementType myIndentTokenType;
     
     private final IElementType myBlockElementType;
-    @Nullable
-    private final IElementType myDocumentType;
+    private final @Nullable IElementType myDocumentType;
 
     public IndentationParser(@Nullable IElementType documentType,
                              IElementType blockElementType,
@@ -132,8 +131,7 @@ public abstract class IndentationParser implements PsiParser {
         private final int myIndent;
         
         private final PsiBuilder.Marker myMarker;
-        @Nullable
-        private final IElementType myStartTokenType;
+        private final @Nullable IElementType myStartTokenType;
 
         private BlockInfo(int indent, PsiBuilder.Marker marker, @Nullable IElementType type) {
             myIndent = indent;
@@ -150,8 +148,7 @@ public abstract class IndentationParser implements PsiParser {
             return myMarker;
         }
 
-        @Nullable
-        public IElementType getStartTokenType() {
+        public @Nullable IElementType getStartTokenType() {
             return myStartTokenType;
         }
     }

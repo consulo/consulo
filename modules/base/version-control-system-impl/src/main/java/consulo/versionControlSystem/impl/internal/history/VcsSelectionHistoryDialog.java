@@ -404,16 +404,14 @@ public class VcsSelectionHistoryDialog extends FrameWrapper implements UiDataPro
         }
     }
 
-    @Nullable
-    private String createDiffContentTitle(int index) {
+    private @Nullable String createDiffContentTitle(int index) {
         if (index >= myRevisions.size()) {
             return null;
         }
         return VcsLocalize.diffContentTitleRevisionNumber(myRevisions.get(index).getRevisionNumber()).get();
     }
 
-    @Nullable
-    private DiffContent createDiffContent(int index, BlockData data) {
+    private @Nullable DiffContent createDiffContent(int index, BlockData data) {
         if (index >= myRevisions.size()) {
             return DiffContentFactory.getInstance().createEmpty();
         }
@@ -557,8 +555,7 @@ public class VcsSelectionHistoryDialog extends FrameWrapper implements UiDataPro
         private final Charset myCharset;
 
         private final List<Block> myBlocks = new ArrayList<>();
-        @Nullable
-        private VcsException myException;
+        private @Nullable VcsException myException;
         private boolean myIsLoading = true;
         private VcsFileRevision myCurrentLoadingRevision;
 
@@ -650,10 +647,8 @@ public class VcsSelectionHistoryDialog extends FrameWrapper implements UiDataPro
     private static class BlockData {
         private final boolean myIsLoading;
         private final List<Block> myBlocks;
-        @Nullable
-        private final VcsException myException;
-        @Nullable
-        private final VcsFileRevision myCurrentLoadingRevision;
+        private final @Nullable VcsException myException;
+        private final @Nullable VcsFileRevision myCurrentLoadingRevision;
 
         public BlockData(
             boolean isLoading,
@@ -671,18 +666,15 @@ public class VcsSelectionHistoryDialog extends FrameWrapper implements UiDataPro
             return myIsLoading;
         }
 
-        @Nullable
-        public VcsException getException() {
+        public @Nullable VcsException getException() {
             return myException;
         }
 
-        @Nullable
-        public VcsFileRevision getCurrentLoadingRevision() {
+        public @Nullable VcsFileRevision getCurrentLoadingRevision() {
             return myCurrentLoadingRevision;
         }
 
-        @Nullable
-        public Block getBlock(int index) {
+        public @Nullable Block getBlock(int index) {
             if (myBlocks.size() <= index) {
                 return null;
             }

@@ -27,8 +27,7 @@ import java.awt.*;
  * @since 2019-02-20
  */
 public class DesktopIdeFrameUtil {
-  @Nullable
-  public static IdeFrame findIdeFrameFromParent(@Nullable Component component) {
+  public static @Nullable IdeFrame findIdeFrameFromParent(@Nullable Component component) {
      if(component == null) {
        return null;
      }
@@ -51,8 +50,7 @@ public class DesktopIdeFrameUtil {
      return null;
   }
 
-  @Nullable
-  public static IdeFrameEx findIdeFrameExFromParent(@Nullable Component component) {
+  public static @Nullable IdeFrameEx findIdeFrameExFromParent(@Nullable Component component) {
     if (component == null) {
       return null;
     }

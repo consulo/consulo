@@ -174,8 +174,7 @@ public class CopyPasteDelegator implements CopyPasteSupport {
             return target;
         }
 
-        @Nullable
-        private PsiDirectory getTargetDirectory(@Nullable Module module, @Nullable PsiElement target) {
+        private @Nullable PsiDirectory getTargetDirectory(@Nullable Module module, @Nullable PsiElement target) {
             PsiDirectory targetDirectory = target instanceof PsiDirectory ? (PsiDirectory)target : null;
             if (targetDirectory == null && target instanceof PsiDirectoryContainer directoryContainer) {
                 PsiDirectory[] directories = module == null

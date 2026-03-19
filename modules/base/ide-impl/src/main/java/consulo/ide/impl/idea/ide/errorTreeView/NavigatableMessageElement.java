@@ -57,8 +57,7 @@ public class NavigatableMessageElement extends ErrorTreeElement {
     return myParent.getData();
   }
 
-  @Nullable
-  public GroupingElement getParent() {
+  public @Nullable GroupingElement getParent() {
     return myParent;
   }
 

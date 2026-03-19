@@ -60,8 +60,7 @@ public abstract class FileReferenceHelper {
         return file.isDirectory() ? psiManager.findDirectory(file) : psiManager.findFile(file);
     }
 
-    @Nullable
-    public PsiFileSystemItem findRoot(Project project, VirtualFile file) {
+    public @Nullable PsiFileSystemItem findRoot(Project project, VirtualFile file) {
         return null;
     }
 

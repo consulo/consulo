@@ -102,7 +102,7 @@ public abstract class InternalChangesBrowserBase<T> extends JPanel implements Ui
                                  List<T> changes,
                                  final boolean capableOfExcludingChanges,
                                  final boolean highlightProblems,
-                                 @Nullable final Runnable inclusionListener,
+                                 final @Nullable Runnable inclusionListener,
                                  InternalChangesBrowser.MyUseCase useCase,
                                  @Nullable VirtualFile toSelect,
                                  Class<T> clazz) {
@@ -130,8 +130,7 @@ public abstract class InternalChangesBrowserBase<T> extends JPanel implements Ui
             }
 
             @Override
-            @Nullable
-            protected T getLeadSelectedObject(ChangesBrowserNode node) {
+            protected @Nullable T getLeadSelectedObject(ChangesBrowserNode node) {
                 return InternalChangesBrowserBase.this.getLeadSelectedObject(node);
             }
 
@@ -163,8 +162,7 @@ public abstract class InternalChangesBrowserBase<T> extends JPanel implements Ui
     
     protected abstract List<T> getSelectedObjects(ChangesBrowserNode<T> node);
 
-    @Nullable
-    protected abstract T getLeadSelectedObject(ChangesBrowserNode node);
+    protected abstract @Nullable T getLeadSelectedObject(ChangesBrowserNode node);
 
     
     protected Runnable getDoubleClickHandler() {

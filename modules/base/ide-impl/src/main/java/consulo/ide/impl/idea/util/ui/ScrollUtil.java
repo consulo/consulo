@@ -30,19 +30,16 @@ public class ScrollUtil {
   private ScrollUtil() {}
 
 
-  @Nullable
-  public static JScrollPane findScrollPane(JComponent c) {
+  public static @Nullable JScrollPane findScrollPane(JComponent c) {
     if (c == null) return null;
     return UIUtil.findComponentOfType(c, JScrollPane.class);
   }
 
-  @Nullable
-  public static JScrollBar findVerticalScrollBar(JComponent c) {
+  public static @Nullable JScrollBar findVerticalScrollBar(JComponent c) {
     return findScrollBar(c, Adjustable.VERTICAL);
   }
 
-  @Nullable
-  public static JScrollBar findHorizontalScrollBar(JComponent c) {
+  public static @Nullable JScrollBar findHorizontalScrollBar(JComponent c) {
     return findScrollBar(c, Adjustable.HORIZONTAL);
   }
 

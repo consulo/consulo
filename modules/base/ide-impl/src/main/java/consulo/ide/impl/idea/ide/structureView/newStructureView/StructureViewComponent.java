@@ -918,8 +918,7 @@ public class StructureViewComponent extends SimpleToolWindowPanel implements Tre
     return unwrapElement(unwrapWrapper(o));
   }
 
-  @Nullable
-  public static Object unwrapNavigatable(Object o) {
+  public static @Nullable Object unwrapNavigatable(Object o) {
     Object p = TreeUtil.getUserObject(o);
     return p instanceof FilteringTreeStructure.FilteringNode ? ((FilteringTreeStructure.FilteringNode)p).getDelegate() : p;
   }

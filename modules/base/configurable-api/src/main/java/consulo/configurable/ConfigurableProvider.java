@@ -26,6 +26,5 @@ import org.jspecify.annotations.Nullable;
  */
 public abstract class ConfigurableProvider {
 
-  @Nullable
-  public abstract Configurable createConfigurable();
+  public abstract @Nullable Configurable createConfigurable();
 }

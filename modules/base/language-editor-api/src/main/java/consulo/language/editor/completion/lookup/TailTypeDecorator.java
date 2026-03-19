@@ -37,8 +37,7 @@ public abstract class TailTypeDecorator<T extends LookupElement> extends LookupE
     };
   }
 
-  @Nullable
-  protected abstract TailType computeTailType(InsertionContext context);
+  protected abstract @Nullable TailType computeTailType(InsertionContext context);
 
   @Override
   public void handleInsert(InsertionContext context) {

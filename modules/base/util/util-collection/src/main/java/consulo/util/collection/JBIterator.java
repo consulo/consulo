@@ -75,8 +75,7 @@ public abstract class JBIterator<E> implements Iterator<E> {
   /**
    * Returns the next element if any; otherwise calls stop() or skip().
    */
-  @Nullable
-  protected abstract E nextImpl();
+  protected abstract @Nullable E nextImpl();
 
   /**
    * Called right after the new current value is set.
@@ -86,8 +85,7 @@ public abstract class JBIterator<E> implements Iterator<E> {
   /**
    * Notifies the iterator that there's no more elements.
    */
-  @Nullable
-  protected final E stop() {
+  protected final @Nullable E stop() {
     myNext = Do.STOP;
     return null;
   }
@@ -95,8 +93,7 @@ public abstract class JBIterator<E> implements Iterator<E> {
   /**
    * Notifies the iterator to skip and re-invoke nextImpl().
    */
-  @Nullable
-  protected final E skip() {
+  protected final @Nullable E skip() {
     myNext = Do.SKIP;
     return null;
   }
@@ -239,8 +236,7 @@ public abstract class JBIterator<E> implements Iterator<E> {
   };
 
   private static class Op<T> {
-    @Nullable
-    final T impl;
+    final @Nullable T impl;
 
     @Nullable
     Op nextOp = null;

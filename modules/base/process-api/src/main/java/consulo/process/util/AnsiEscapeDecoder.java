@@ -164,8 +164,7 @@ public class AnsiEscapeDecoder {
         return -1;
     }
 
-    @Nullable
-    private List<Pair<String, Key>> processTextChunk(@Nullable List<Pair<String, Key>> buffer,
+    private @Nullable List<Pair<String, Key>> processTextChunk(@Nullable List<Pair<String, Key>> buffer,
                                                      String text,
                                                      Key outputType,
                                                      ColoredTextAcceptor textAcceptor) {

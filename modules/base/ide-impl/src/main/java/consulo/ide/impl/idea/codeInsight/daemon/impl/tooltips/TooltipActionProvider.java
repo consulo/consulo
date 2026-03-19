@@ -32,8 +32,7 @@ public interface TooltipActionProvider {
   TooltipAction getTooltipAction(HighlightInfo info, Editor editor, PsiFile psiFile);
 
 
-  @Nullable
-  static TooltipAction calcTooltipAction(HighlightInfo info, Editor editor) {
+  static @Nullable TooltipAction calcTooltipAction(HighlightInfo info, Editor editor) {
     if (!Registry.is("ide.tooltip.show.with.actions")) return null;
 
     Project project = editor.getProject();

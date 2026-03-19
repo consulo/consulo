@@ -142,12 +142,9 @@ public class MyObjectIntHashMap<K> extends TObjectIntHashMap<K> implements Objec
     }
   }
 
-  @Nullable
-  private MyEntrySet myEntrySet = null;
-  @Nullable
-  private MyKeySet myKeySet = null;
-  @Nullable
-  private MyValueCollection myValueCollection = null;
+  private @Nullable MyEntrySet myEntrySet = null;
+  private @Nullable MyKeySet myKeySet = null;
+  private @Nullable MyValueCollection myValueCollection = null;
 
   public MyObjectIntHashMap() {
   }

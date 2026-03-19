@@ -43,8 +43,7 @@ public enum NavBarKeyboardCommand {
     return myKeyStroke;
   }
 
-  @Nullable
-  public static NavBarKeyboardCommand fromString(String name) {
+  public static @Nullable NavBarKeyboardCommand fromString(String name) {
     if (name != null) {
       for (NavBarKeyboardCommand command : values()) {
         if (command.name().equals(name)) {

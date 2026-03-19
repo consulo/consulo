@@ -325,8 +325,7 @@ public class FileSystemTreeImpl implements FileSystemTree {
     }
 
     @Override
-    @Nullable
-    public VirtualFile getSelectedFile() {
+    public @Nullable VirtualFile getSelectedFile() {
         TreePath path = myTree.getSelectionPath();
         if (path == null) {
             return null;
@@ -335,8 +334,7 @@ public class FileSystemTreeImpl implements FileSystemTree {
     }
 
     @Override
-    @Nullable
-    public VirtualFile getNewFileParent() {
+    public @Nullable VirtualFile getNewFileParent() {
         VirtualFile selected = getSelectedFile();
         if (selected != null) {
             return selected;

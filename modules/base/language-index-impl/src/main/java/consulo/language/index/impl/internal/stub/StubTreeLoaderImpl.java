@@ -79,8 +79,7 @@ public class StubTreeLoaderImpl extends StubTreeLoader {
   }
 
   @Override
-  @Nullable
-  public ObjectStubTree readOrBuild(Project project, VirtualFile vFile, @Nullable PsiFile psiFile) {
+  public @Nullable ObjectStubTree readOrBuild(Project project, VirtualFile vFile, @Nullable PsiFile psiFile) {
     ObjectStubTree fromIndices = readFromVFile(project, vFile);
     if (fromIndices != null) {
       return fromIndices;
@@ -122,8 +121,7 @@ public class StubTreeLoaderImpl extends StubTreeLoader {
   }
 
   @Override
-  @Nullable
-  public ObjectStubTree readFromVFile(Project project, VirtualFile vFile) {
+  public @Nullable ObjectStubTree readFromVFile(Project project, VirtualFile vFile) {
     if (DumbService.getInstance(project).isDumb() || NoAccessDuringPsiEventsService.getInstance().isInsideEventProcessing()) {
       return null;
     }

@@ -74,8 +74,7 @@ public class CharArrayUtil {
     return consulo.util.lang.CharArrayUtil.fromSequenceStrict(seq);
   }
 
-  @Nullable
-  public static char[] fromSequenceWithoutCopying(@Nullable CharSequence seq) {
+  public static @Nullable char[] fromSequenceWithoutCopying(@Nullable CharSequence seq) {
     return consulo.util.lang.CharArrayUtil.fromSequenceWithoutCopying(seq);
   }
 

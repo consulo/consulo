@@ -52,18 +52,13 @@ public class ExecutionEnvironment extends UserDataHolderBase implements Disposab
    
     private ExecutionTarget myTarget;
 
-    @Nullable
-    private RunnerSettings myRunnerSettings;
-    @Nullable
-    private ConfigurationPerRunnerSettings myConfigurationSettings;
-    @Nullable
-    private final RunnerAndConfigurationSettings myRunnerAndConfigurationSettings;
-    @Nullable
-    private RunContentDescriptor myContentToReuse;
+    private @Nullable RunnerSettings myRunnerSettings;
+    private @Nullable ConfigurationPerRunnerSettings myConfigurationSettings;
+    private final @Nullable RunnerAndConfigurationSettings myRunnerAndConfigurationSettings;
+    private @Nullable RunContentDescriptor myContentToReuse;
     private final ProgramRunner<?> myRunner;
     private long myExecutionId = 0;
-    @Nullable
-    private DataContext myDataContext;
+    private @Nullable DataContext myDataContext;
     private  ProgramRunner.@Nullable Callback myCallback;
 
 
@@ -135,13 +130,11 @@ public class ExecutionEnvironment extends UserDataHolderBase implements Disposab
         return myRunProfile;
     }
 
-    @Nullable
-    public RunnerAndConfigurationSettings getRunnerAndConfigurationSettings() {
+    public @Nullable RunnerAndConfigurationSettings getRunnerAndConfigurationSettings() {
         return myRunnerAndConfigurationSettings;
     }
 
-    @Nullable
-    public RunContentDescriptor getContentToReuse() {
+    public @Nullable RunContentDescriptor getContentToReuse() {
         return myContentToReuse;
     }
 
@@ -167,18 +160,15 @@ public class ExecutionEnvironment extends UserDataHolderBase implements Disposab
         return myRunner;
     }
 
-    @Nullable
-    public RunnerSettings getRunnerSettings() {
+    public @Nullable RunnerSettings getRunnerSettings() {
         return myRunnerSettings;
     }
 
-    @Nullable
-    public ConfigurationPerRunnerSettings getConfigurationSettings() {
+    public @Nullable ConfigurationPerRunnerSettings getConfigurationSettings() {
         return myConfigurationSettings;
     }
 
-    @Nullable
-    public RunProfileState getState() throws ExecutionException {
+    public @Nullable RunProfileState getState() throws ExecutionException {
         return myRunProfile.getState(myExecutor, this);
     }
 
@@ -226,8 +216,7 @@ public class ExecutionEnvironment extends UserDataHolderBase implements Disposab
         myDataContext = ExecutionDataContextCacher.getInstance().getCachedContext(dataContext);
     }
 
-    @Nullable
-    public DataContext getDataContext() {
+    public @Nullable DataContext getDataContext() {
         return myDataContext;
     }
 }

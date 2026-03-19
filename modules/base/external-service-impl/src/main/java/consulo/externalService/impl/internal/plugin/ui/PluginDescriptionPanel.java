@@ -302,8 +302,7 @@ public class PluginDescriptionPanel {
         return size;
     }
 
-    @Nullable
-    private static PluginDescriptor findPlugin(List<PluginDescriptor> allPlugins, PluginId pluginId) {
+    private static @Nullable PluginDescriptor findPlugin(List<PluginDescriptor> allPlugins, PluginId pluginId) {
         return ContainerUtil.find(allPlugins, it -> it.getPluginId() == pluginId);
     }
 

@@ -55,8 +55,7 @@ public class FileNameMacro extends Macro {
     return null;
   }
 
-  @Nullable
-  protected TextResult calculateResult(VirtualFile virtualFile) {
+  protected @Nullable TextResult calculateResult(VirtualFile virtualFile) {
     return new TextResult(virtualFile.getName());
   }
 }

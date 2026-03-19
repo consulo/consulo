@@ -75,8 +75,7 @@ public class FormattingDocumentModelImpl implements FormattingDocumentModel {
 
     }
 
-    @Nullable
-    public static Document getDocumentToBeUsedFor(PsiFile file) {
+    public static @Nullable Document getDocumentToBeUsedFor(PsiFile file) {
         Project project = file.getProject();
         Document document = PsiDocumentManager.getInstance(project).getDocument(file);
         if (document == null) {

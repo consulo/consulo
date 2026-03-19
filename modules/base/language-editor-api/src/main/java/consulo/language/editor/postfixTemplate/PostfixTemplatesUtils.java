@@ -60,8 +60,7 @@ public abstract class PostfixTemplatesUtils {
         return copy;
     }
 
-    @Nullable
-    public static TextRange surround(Surrounder surrounder,
+    public static @Nullable TextRange surround(Surrounder surrounder,
                                      Editor editor,
                                      PsiElement expr) {
         Project project = expr.getProject();

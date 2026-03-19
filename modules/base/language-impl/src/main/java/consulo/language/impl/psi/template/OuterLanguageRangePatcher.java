@@ -34,8 +34,7 @@ import org.jspecify.annotations.Nullable;
 public interface OuterLanguageRangePatcher extends LanguageExtension {
   ExtensionPointCacheKey<OuterLanguageRangePatcher, ByLanguageValue<OuterLanguageRangePatcher>> KEY = ExtensionPointCacheKey.create("OuterLanguageRangePatcher", LanguageOneToOne.build());
 
-  @Nullable
-  static OuterLanguageRangePatcher forLanguage(Language language) {
+  static @Nullable OuterLanguageRangePatcher forLanguage(Language language) {
     return Application.get().getExtensionPoint(OuterLanguageRangePatcher.class).getOrBuildCache(KEY).get(language);
   }
 

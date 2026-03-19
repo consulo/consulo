@@ -21,8 +21,7 @@ import consulo.navigation.Navigatable;
 import org.jspecify.annotations.Nullable;
 
 public final class DiffNavigatableArrayRule {
-    @Nullable
-    static Navigatable[] getData(DataSnapshot dataProvider) {
+    static @Nullable Navigatable[] getData(DataSnapshot dataProvider) {
         Navigatable element = dataProvider.get(DiffDataKeys.NAVIGATABLE);
         if (element == null) return null;
         return new Navigatable[]{element};

@@ -68,8 +68,7 @@ public interface TreeStructureProvider {
      */
     @Deprecated
     @DeprecationInfo("Use #uiDataSnapshot(DataSink, Collection)")
-    @Nullable
-    default Object getData(Collection<AbstractTreeNode> selected, Key<?> dataKey) {
+    default @Nullable Object getData(Collection<AbstractTreeNode> selected, Key<?> dataKey) {
         return null;
     }
 }

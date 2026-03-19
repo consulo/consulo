@@ -508,8 +508,7 @@ public class OptionsEditor implements UiDataProvider, Disposable, AWTEventListen
             return configurable instanceof SearchableConfigurable.Parent && !((SearchableConfigurable.Parent) configurable).hasOwnContent();
         }
 
-        @Nullable
-        private Configurable suggestToSelect(Set<Configurable> set, Set<Configurable> fullHits) {
+        private @Nullable Configurable suggestToSelect(Set<Configurable> set, Set<Configurable> fullHits) {
             Configurable candidate = null;
             for (Configurable each : set) {
                 if (fullHits != null && fullHits.contains(each)) {
@@ -752,14 +751,12 @@ public class OptionsEditor implements UiDataProvider, Disposable, AWTEventListen
     }
 
     @Override
-    @Nullable
-    public <T extends Configurable> T findConfigurable(Class<T> configurableClass) {
+    public @Nullable <T extends Configurable> T findConfigurable(Class<T> configurableClass) {
         return myTree.findConfigurable(configurableClass);
     }
 
     @Override
-    @Nullable
-    public SearchableConfigurable findConfigurableById(String configurableId) {
+    public @Nullable SearchableConfigurable findConfigurableById(String configurableId) {
         return myTree.findConfigurableById(configurableId);
     }
 
@@ -1062,8 +1059,7 @@ public class OptionsEditor implements UiDataProvider, Disposable, AWTEventListen
         return content != null && content.isShowing();
     }
 
-    @Nullable
-    public String getHelpTopic() {
+    public @Nullable String getHelpTopic() {
         Configurable current = getContext().getCurrentConfigurable();
         if (current == null || Configurable.DISABLED_HELP_ID.equals(current.getHelpTopic())) {
             return null;

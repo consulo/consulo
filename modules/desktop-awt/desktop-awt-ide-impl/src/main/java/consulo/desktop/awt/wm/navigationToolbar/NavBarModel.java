@@ -65,13 +65,11 @@ public class NavBarModel {
         return mySelectedIndex;
     }
 
-    @Nullable
-    public Object getSelectedValue() {
+    public @Nullable Object getSelectedValue() {
         return getElement(mySelectedIndex);
     }
 
-    @Nullable
-    public Object getElement(int index) {
+    public @Nullable Object getElement(int index) {
         if (index != -1 && index < myModel.size()) {
             return get(index);
         }
@@ -250,8 +248,7 @@ public class NavBarModel {
      * Returns the valid prefix, or null if no update needed.
      */
     @RequiredReadAction
-    @Nullable
-    public List<Object> revalidateInBackground() {
+    public @Nullable List<Object> revalidateInBackground() {
         List<Object> objects = new ArrayList<>();
         boolean needUpdate = false;
         for (Object o : myModel) {
@@ -464,8 +461,7 @@ public class NavBarModel {
         return object != null;
     }
 
-    @Nullable
-    public static PsiElement normalize(@Nullable PsiElement child) {
+    public static @Nullable PsiElement normalize(@Nullable PsiElement child) {
         return NavBarModelExtensions.normalize(child);
     }
 

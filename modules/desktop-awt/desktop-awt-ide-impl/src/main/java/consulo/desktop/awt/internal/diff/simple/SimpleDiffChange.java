@@ -46,8 +46,7 @@ public class SimpleDiffChange {
 
     
     private final LineFragment myFragment;
-    @Nullable
-    private final List<DiffFragment> myInnerFragments;
+    private final @Nullable List<DiffFragment> myInnerFragments;
 
     
     private final List<RangeHighlighter> myHighlighters = new ArrayList<>();
@@ -279,8 +278,7 @@ public class SimpleDiffChange {
             return myCtrlPressed != myViewer.getModifierProvider().isCtrlPressed();
         }
 
-        @Nullable
-        public GutterIconRenderer createRenderer() {
+        public @Nullable GutterIconRenderer createRenderer() {
             myCtrlPressed = myViewer.getModifierProvider().isCtrlPressed();
 
             boolean isOtherEditable = DiffImplUtil.isEditable(myViewer.getEditor(mySide.other()));
@@ -299,8 +297,7 @@ public class SimpleDiffChange {
         }
     }
 
-    @Nullable
-    private GutterIconRenderer createApplyRenderer(Side side) {
+    private @Nullable GutterIconRenderer createApplyRenderer(Side side) {
         return createIconRenderer(
             side,
             DiffLocalize.actionPresentationDiffAcceptText(),
@@ -309,8 +306,7 @@ public class SimpleDiffChange {
         );
     }
 
-    @Nullable
-    private GutterIconRenderer createAppendRenderer(Side side) {
+    private @Nullable GutterIconRenderer createAppendRenderer(Side side) {
         return createIconRenderer(
             side,
             DiffLocalize.actionPresentationDiffAppendText(),
@@ -322,8 +318,7 @@ public class SimpleDiffChange {
         );
     }
 
-    @Nullable
-    private GutterIconRenderer createIconRenderer(
+    private @Nullable GutterIconRenderer createIconRenderer(
         final Side sourceSide,
         final LocalizeValue tooltipText,
         final Image icon,

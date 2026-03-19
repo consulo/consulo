@@ -65,13 +65,11 @@ public class VFileCreateEvent extends VFileEvent {
     return myParent;
   }
 
-  @Nullable
-  public FileAttributes getAttributes() {
+  public @Nullable FileAttributes getAttributes() {
     return myAttributes;
   }
 
-  @Nullable
-  public String getSymlinkTarget() {
+  public @Nullable String getSymlinkTarget() {
     return mySymlinkTarget;
   }
 
@@ -103,8 +101,7 @@ public class VFileCreateEvent extends VFileEvent {
    *
    * @return null means children not available (e.g. the created file is not a directory) or unknown
    */
-  @Nullable
-  public ChildInfo[] getChildren() {
+  public @Nullable ChildInfo[] getChildren() {
     return myChildren;
   }
 

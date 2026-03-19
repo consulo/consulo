@@ -223,8 +223,7 @@ public class BuildView extends CompositeView<ExecutionConsole> implements BuildP
     }
   }
 
-  @Nullable
-  private <R> R getConsoleViewValue(Function<? super ConsoleView, ? extends R> viewConsumer) {
+  private @Nullable <R> R getConsoleViewValue(Function<? super ConsoleView, ? extends R> viewConsumer) {
     ExecutionConsole console = getConsoleView();
     if (console instanceof ConsoleView) {
       return viewConsumer.apply((ConsoleView)console);

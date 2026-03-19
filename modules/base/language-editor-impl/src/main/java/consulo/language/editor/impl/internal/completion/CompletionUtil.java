@@ -37,8 +37,7 @@ public class CompletionUtil {
   public static final String DUMMY_IDENTIFIER = CompletionInitializationContext.DUMMY_IDENTIFIER;
   public static final String DUMMY_IDENTIFIER_TRIMMED = DUMMY_IDENTIFIER.trim();
 
-  @Nullable
-  public static CompletionData getCompletionDataByElement(@Nullable PsiElement position, PsiFile originalFile) {
+  public static @Nullable CompletionData getCompletionDataByElement(@Nullable PsiElement position, PsiFile originalFile) {
     if (position == null) return null;
 
     PsiElement parent = position.getParent();
@@ -55,8 +54,7 @@ public class CompletionUtil {
     return mainData != null ? mainData : ourGenericCompletionData;
   }
 
-  @Nullable
-  private static CompletionData getCompletionDataByFileType(FileType fileType) {
+  private static @Nullable CompletionData getCompletionDataByFileType(FileType fileType) {
     // FIXME [VISTALL] not supported anymore, just remove it later
     return null;
   }
@@ -119,13 +117,11 @@ public class CompletionUtil {
     CompletionUtilCore.emulateInsertion(item, offset, context);
   }
 
-  @Nullable
-  public static PsiElement getTargetElement(LookupElement lookupElement) {
+  public static @Nullable PsiElement getTargetElement(LookupElement lookupElement) {
     return CompletionUtilCore.getTargetElement(lookupElement);
   }
 
-  @Nullable
-  public static <T extends PsiElement> T getOriginalElement(T psi) {
+  public static @Nullable <T extends PsiElement> T getOriginalElement(T psi) {
     return CompletionUtilCore.getOriginalElement(psi);
   }
 

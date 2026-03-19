@@ -42,8 +42,7 @@ import java.util.function.Supplier;
 public class UIDataObject extends UserDataHolderBase {
     private final Map<Class<? extends ComponentEvent<?>>, EventDispatcher<ComponentEventListener>> myListeners = new ConcurrentHashMap<>();
 
-    @Nullable
-    private Map<BorderPosition, BorderInfo> myBorders;
+    private @Nullable Map<BorderPosition, BorderInfo> myBorders;
 
     public <C extends Component, E extends ComponentEvent<C>> Disposable addListener(Class<? extends E> eventClass,
                                                                                      ComponentEventListener<C, E> listener) {

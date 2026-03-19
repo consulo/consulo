@@ -47,18 +47,14 @@ public abstract class NewVirtualFile extends VirtualFile implements VirtualFileW
   public abstract NewVirtualFile getParent();
 
   @Override
-  @Nullable
-  public abstract NewVirtualFile getCanonicalFile();
+  public abstract @Nullable NewVirtualFile getCanonicalFile();
 
   @Override
-  @Nullable
-  public abstract NewVirtualFile findChild(String name);
+  public abstract @Nullable NewVirtualFile findChild(String name);
 
-  @Nullable
-  public abstract NewVirtualFile refreshAndFindChild(String name);
+  public abstract @Nullable NewVirtualFile refreshAndFindChild(String name);
 
-  @Nullable
-  public abstract NewVirtualFile findChildIfCached(String name);
+  public abstract @Nullable NewVirtualFile findChildIfCached(String name);
 
 
   public abstract void setTimeStamp(long time) throws IOException;

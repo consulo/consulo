@@ -219,8 +219,7 @@ public class TemplateListPanel extends JPanel implements Disposable {
         updateTemplateDetails(true);
     }
 
-    @Nullable
-    public JComponent getPreferredFocusedComponent() {
+    public @Nullable JComponent getPreferredFocusedComponent() {
         return getTemplate(getSingleSelectedIndex()) != null ? myCurrentTemplateEditor.getKeyField() : null;
     }
 
@@ -352,8 +351,7 @@ public class TemplateListPanel extends JPanel implements Disposable {
         return panel;
     }
 
-    @Nullable
-    private TemplateImpl getTemplate(int row) {
+    private @Nullable TemplateImpl getTemplate(int row) {
         JTree tree = myTree;
         TreePath path = tree.getPathForRow(row);
         if (path != null) {
@@ -366,8 +364,7 @@ public class TemplateListPanel extends JPanel implements Disposable {
         return null;
     }
 
-    @Nullable
-    private TemplateGroup getGroup(int row) {
+    private @Nullable TemplateGroup getGroup(int row) {
         JTree tree = myTree;
         TreePath path = tree.getPathForRow(row);
         if (path != null) {
@@ -409,8 +406,7 @@ public class TemplateListPanel extends JPanel implements Disposable {
         }
     }
 
-    @Nullable
-    private DefaultMutableTreeNode getNode(int row) {
+    private @Nullable DefaultMutableTreeNode getNode(int row) {
         JTree tree = myTree;
         TreePath path = tree.getPathForRow(row);
         if (path != null) {
@@ -420,8 +416,7 @@ public class TemplateListPanel extends JPanel implements Disposable {
         return null;
     }
 
-    @Nullable
-    private TemplateGroup getTemplateGroup(String groupName) {
+    private @Nullable TemplateGroup getTemplateGroup(String groupName) {
         for (TemplateGroup group : myTemplateGroups) {
             if (group.getName().equals(groupName)) {
                 return group;
@@ -689,8 +684,7 @@ public class TemplateListPanel extends JPanel implements Disposable {
         return decorator.setToolbarPosition(ActionToolbarPosition.RIGHT);
     }
 
-    @Nullable
-    private TemplateGroup getDropGroup(DnDEvent event) {
+    private @Nullable TemplateGroup getDropGroup(DnDEvent event) {
         Point point = event.getPointOn(myTree);
         return getGroup(myTree.getRowForLocation(point.x, point.y));
     }

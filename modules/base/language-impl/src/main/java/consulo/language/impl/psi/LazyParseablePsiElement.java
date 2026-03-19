@@ -70,8 +70,7 @@ public class LazyParseablePsiElement extends LazyParseableElement implements Psi
     return getChildrenAsPsiElements((TokenSet)null, PsiElement.ARRAY_FACTORY);
   }
 
-  @Nullable
-  protected <T> T findChildByClass(Class<T> aClass) {
+  protected @Nullable <T> T findChildByClass(Class<T> aClass) {
     for (PsiElement cur = getFirstChild(); cur != null; cur = cur.getNextSibling()) {
       if (aClass.isInstance(cur)) return (T)cur;
     }

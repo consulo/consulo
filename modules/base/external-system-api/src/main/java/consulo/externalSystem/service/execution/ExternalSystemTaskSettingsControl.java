@@ -65,8 +65,7 @@ public class ExternalSystemTaskSettingsControl implements ExternalSystemSettings
   private JBLabel myScriptParametersLabel;
   private RawCommandLineEditor myScriptParametersEditor;
 
-  @Nullable
-  private ExternalSystemTaskExecutionSettings myOriginalSettings;
+  private @Nullable ExternalSystemTaskExecutionSettings myOriginalSettings;
 
   public ExternalSystemTaskSettingsControl(Project project, ProjectSystemId externalSystemId) {
     myProject = project;

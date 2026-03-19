@@ -43,8 +43,7 @@ public class CStyleCommentBlock extends AbstractBlock {
     }
   }
 
-  @Nullable
-  private final Indent myIndent;
+  private final @Nullable Indent myIndent;
 
   private NotNullLazyValue<List<LineInfo>> lines = NotNullLazyValue.createValue(() -> {
     List<Pair<Integer, Character>> list = new ArrayList<>();
@@ -118,8 +117,7 @@ public class CStyleCommentBlock extends AbstractBlock {
   }
 
   @Override
-  @Nullable
-  public Indent getIndent() {
+  public @Nullable Indent getIndent() {
     return myIndent;
   }
 

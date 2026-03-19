@@ -291,8 +291,7 @@ public class NameSuggester {
     }
   }
 
-  @Nullable
-  private Match checkMatch(int oldClassNameIndex, int propertyNameIndex, String propertyWord) {
+  private @Nullable Match checkMatch(int oldClassNameIndex, int propertyNameIndex, String propertyWord) {
     if (propertyWord.equalsIgnoreCase(myOldClassName[oldClassNameIndex])) {
       return new Match(oldClassNameIndex, propertyNameIndex, propertyWord);
     }

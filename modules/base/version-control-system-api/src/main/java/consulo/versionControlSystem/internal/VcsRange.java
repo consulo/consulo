@@ -38,11 +38,9 @@ public class VcsRange {
   private final int myVcsLine1;
   private final int myVcsLine2;
 
-  @Nullable
-  private final List<InnerRange> myInnerRanges;
+  private final @Nullable List<InnerRange> myInnerRanges;
 
-  @Nullable
-  private RangeHighlighter myRangeHighlighter;
+  private @Nullable RangeHighlighter myRangeHighlighter;
   private boolean myValid = true;
 
   public VcsRange(VcsRange range) {
@@ -113,8 +111,7 @@ public class VcsRange {
     }
   }
 
-  @Nullable
-  public List<InnerRange> getInnerRanges() {
+  public @Nullable List<InnerRange> getInnerRanges() {
     return myInnerRanges;
   }
 
@@ -142,8 +139,7 @@ public class VcsRange {
     myRangeHighlighter = highlighter;
   }
 
-  @Nullable
-  public RangeHighlighter getHighlighter() {
+  public @Nullable RangeHighlighter getHighlighter() {
     return myRangeHighlighter;
   }
 

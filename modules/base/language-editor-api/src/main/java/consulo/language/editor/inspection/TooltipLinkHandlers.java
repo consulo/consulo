@@ -34,8 +34,7 @@ public class TooltipLinkHandlers {
     return false;
   }
 
-  @Nullable
-  public static String getDescription(String ref, Editor editor) {
+  public static @Nullable String getDescription(String ref, Editor editor) {
     for (TooltipLinkHandler handler : Application.get().getExtensionList(TooltipLinkHandler.class)) {
       if (ref.startsWith(handler.getPrefix())) {
         String refSuffix = ref.substring(handler.getPrefix().length());

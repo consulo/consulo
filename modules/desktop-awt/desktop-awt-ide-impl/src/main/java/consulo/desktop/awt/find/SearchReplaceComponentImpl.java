@@ -64,8 +64,7 @@ public class SearchReplaceComponentImpl extends EditorHeaderComponent implements
 
     private final JPanel myReplaceToolbarWrapper;
 
-    @Nullable
-    private final Project myProject;
+    private final @Nullable Project myProject;
     private final JComponent myTargetComponent;
 
     private final Runnable myCloseAction;
@@ -646,8 +645,7 @@ public class SearchReplaceComponentImpl extends EditorHeaderComponent implements
 
 
     private static class MyTextComponentWrapper extends Wrapper {
-        @Nullable
-        public JTextComponent getTextComponent() {
+        public @Nullable JTextComponent getTextComponent() {
             JComponent wrapped = getTargetComponent();
             return wrapped != null ? unwrapTextComponent(wrapped) : null;
         }

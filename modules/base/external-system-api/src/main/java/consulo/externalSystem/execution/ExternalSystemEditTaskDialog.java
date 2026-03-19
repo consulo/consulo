@@ -33,8 +33,7 @@ public class ExternalSystemEditTaskDialog extends DialogWrapper {
     private final ExternalSystemTaskExecutionSettings myTaskExecutionSettings;
     
     private final ExternalSystemTaskSettingsControl myControl;
-    @Nullable
-    private JComponent contentPane;
+    private @Nullable JComponent contentPane;
 
     public ExternalSystemEditTaskDialog(Project project,
                                         ExternalSystemTaskExecutionSettings taskExecutionSettings,

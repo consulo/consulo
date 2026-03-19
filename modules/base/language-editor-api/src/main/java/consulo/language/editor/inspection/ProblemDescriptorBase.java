@@ -35,8 +35,7 @@ public class ProblemDescriptorBase extends CommonProblemDescriptorBase implement
 
     
     private final SmartPsiElementPointer myStartSmartPointer;
-    @Nullable
-    private final SmartPsiElementPointer myEndSmartPointer;
+    private final @Nullable SmartPsiElementPointer myEndSmartPointer;
 
     private final ProblemHighlightType myHighlightType;
     private Navigatable myNavigatable;
@@ -229,8 +228,7 @@ public class ProblemDescriptorBase extends CommonProblemDescriptorBase implement
     }
 
     @Override
-    @Nullable
-    public ProblemGroup getProblemGroup() {
+    public @Nullable ProblemGroup getProblemGroup() {
         return myProblemGroup;
     }
 

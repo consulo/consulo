@@ -31,8 +31,7 @@ public class OfflineRefElementNode extends RefElementNode {
   }
 
   @Override
-  @Nullable
-  public RefEntity getElement() {
+  public @Nullable RefEntity getElement() {
     if (userObject instanceof RefEntity) {
       return (RefEntity)userObject;
     }
@@ -42,8 +41,7 @@ public class OfflineRefElementNode extends RefElementNode {
     return refElement;
   }
 
-  @Nullable
-  public OfflineProblemDescriptor getDescriptor() {
+  public @Nullable OfflineProblemDescriptor getDescriptor() {
     if (userObject instanceof OfflineProblemDescriptor) {
       return (OfflineProblemDescriptor)userObject;
     }

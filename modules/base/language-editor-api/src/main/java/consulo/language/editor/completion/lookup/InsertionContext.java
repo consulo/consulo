@@ -99,8 +99,7 @@ public class InsertionContext {
     return myOffsetMap.getOffset(CompletionInitializationContext.SELECTION_END_OFFSET);
   }
 
-  @Nullable
-  public Runnable getLaterRunnable() {
+  public @Nullable Runnable getLaterRunnable() {
     return myLaterRunnable;
   }
 

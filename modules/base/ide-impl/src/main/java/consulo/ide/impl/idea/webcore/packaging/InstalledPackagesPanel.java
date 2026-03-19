@@ -308,8 +308,7 @@ public class InstalledPackagesPanel extends JPanel {
         ));
     }
 
-    @Nullable
-    private PackageManagementServiceEx getServiceEx() {
+    private @Nullable PackageManagementServiceEx getServiceEx() {
         return ObjectUtil.tryCast(myPackageManagementService, PackageManagementServiceEx.class);
     }
 

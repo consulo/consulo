@@ -74,8 +74,7 @@ public class WebBrowserServiceImpl implements WebBrowserService {
     }
 
     @Override
-    @Nullable
-    public WebBrowserUrlProvider getProvider(OpenInBrowserRequest request) {
+    public @Nullable WebBrowserUrlProvider getProvider(OpenInBrowserRequest request) {
         DumbService dumbService = DumbService.getInstance(request.getProject());
         for (WebBrowserUrlProvider urlProvider : WebBrowserUrlProvider.EP_NAME.getExtensionList()) {
             if ((!dumbService.isDumb() || DumbService.isDumbAware(urlProvider)) && urlProvider.canHandleElement(request)) {
@@ -86,8 +85,7 @@ public class WebBrowserServiceImpl implements WebBrowserService {
     }
 
     @Override
-    @Nullable
-    public Url getUrlForContext(PsiElement sourceElement) {
+    public @Nullable Url getUrlForContext(PsiElement sourceElement) {
         Url url;
         try {
             Collection<Url> urls = WebBrowserService.getInstance().getUrlsToOpen(sourceElement, false);

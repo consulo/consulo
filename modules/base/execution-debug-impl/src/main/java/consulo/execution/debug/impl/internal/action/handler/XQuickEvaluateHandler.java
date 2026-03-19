@@ -88,8 +88,7 @@ public class XQuickEvaluateHandler extends QuickEvaluateHandler {
         });
     }
 
-    @Nullable
-    private static ExpressionInfo getExpressionInfo(XDebuggerEvaluator evaluator,
+    private static @Nullable ExpressionInfo getExpressionInfo(XDebuggerEvaluator evaluator,
                                                     Project project,
                                                     ValueHintType type,
                                                     Editor editor,

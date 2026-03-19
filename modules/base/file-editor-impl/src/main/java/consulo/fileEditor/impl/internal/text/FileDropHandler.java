@@ -93,8 +93,7 @@ public class FileDropHandler implements EditorDropHandler {
         }
     }
 
-    @Nullable
-    private FileEditorWindow findEditorWindow(Project project) {
+    private @Nullable FileEditorWindow findEditorWindow(Project project) {
         Document document = myEditor.getDocument();
         VirtualFile file = FileDocumentManager.getInstance().getFile(document);
         if (file != null) {

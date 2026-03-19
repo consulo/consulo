@@ -58,8 +58,7 @@ public abstract class StubElementTypeHolder<T> {
    * <li>For all other fields, if any, the same {@code prefix+debugName} concatenation doesn't produce an external id used by any other stub element type</li>
    * </ul>
    */
-  @Nullable
-  public abstract String getExternalIdPrefix();
+  public abstract @Nullable String getExternalIdPrefix();
 
   /**
    * Load serializer. By default use {@link #allFromStaticFields(Class, FieldValueGetter)}

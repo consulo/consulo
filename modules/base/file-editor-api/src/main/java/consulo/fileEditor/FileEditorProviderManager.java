@@ -47,6 +47,5 @@ public abstract class FileEditorProviderManager {
   /**
    * @return may be null
    */
-  @Nullable
-  public abstract FileEditorProvider getProvider(String editorTypeId);
+  public abstract @Nullable FileEditorProvider getProvider(String editorTypeId);
 }

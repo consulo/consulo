@@ -57,8 +57,7 @@ final class FileTrees {
   /**
    * Keeps references to all alive stubbed PSI (using {@link SpineRef}) to ensure PSI identity is preserved after AST/stubs are gc-ed and reloaded
    */
-  @Nullable
-  private final Reference<SubstrateRefOwner>[] myRefToPsi;
+  private final @Nullable Reference<SubstrateRefOwner>[] myRefToPsi;
 
   private FileTrees(PsiFileImpl file, @Nullable Reference<StubTree> stub, @Nullable Supplier<FileElement> ast, @Nullable Reference<SubstrateRefOwner>[] refToPsi) {
     myFile = file;
@@ -67,13 +66,11 @@ final class FileTrees {
     myRefToPsi = refToPsi;
   }
 
-  @Nullable
-  public StubTree derefStub() {
+  public @Nullable StubTree derefStub() {
     return SoftReference.dereference(myStub);
   }
 
-  @Nullable
-  public FileElement derefTreeElement() {
+  public @Nullable FileElement derefTreeElement() {
     return SoftReference.deref(myTreeElementPointer);
   }
 

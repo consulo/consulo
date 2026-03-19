@@ -219,8 +219,7 @@ public class RefManagerImpl implements RefManagerInternal {
     }
 
     @Override
-    @Nullable
-    public String getType(RefEntity ref) {
+    public @Nullable String getType(RefEntity ref) {
         for (RefManagerExtension extension : myExtensions.values()) {
             String type = extension.getType(ref);
             if (type != null) {
@@ -310,8 +309,7 @@ public class RefManagerImpl implements RefManagerInternal {
     }
 
     @Override
-    @Nullable
-    public String getGroupName(RefElement entity) {
+    public @Nullable String getGroupName(RefElement entity) {
         for (RefManagerExtension extension : myExtensions.values()) {
             String groupName = extension.getGroupName(entity);
             if (groupName != null) {
@@ -569,13 +567,11 @@ public class RefManagerImpl implements RefManagerInternal {
     }
 
     @Override
-    @Nullable
-    public RefElement getReference(@Nullable PsiElement elem) {
+    public @Nullable RefElement getReference(@Nullable PsiElement elem) {
         return getReference(elem, false);
     }
 
-    @Nullable
-    public RefElement getReference(PsiElement elem, boolean ignoreScope) {
+    public @Nullable RefElement getReference(PsiElement elem, boolean ignoreScope) {
         if (ReadAction.compute(() -> elem == null || !elem.isValid() || elem instanceof LightweightPsiElement
             || !(elem instanceof PsiDirectory) && !belongsToScope(elem, ignoreScope))) {
             return null;
@@ -643,13 +639,11 @@ public class RefManagerImpl implements RefManagerInternal {
         return null;
     }
 
-    @Nullable
-    public <T extends RefElement> T getFromRefTableOrCache(PsiElement element, Supplier<? extends T> factory) {
+    public @Nullable <T extends RefElement> T getFromRefTableOrCache(PsiElement element, Supplier<? extends T> factory) {
         return getFromRefTableOrCache(element, factory, null);
     }
 
-    @Nullable
-    private <T extends RefElement> T getFromRefTableOrCache(
+    private @Nullable <T extends RefElement> T getFromRefTableOrCache(
         PsiElement element,
         Supplier<? extends T> factory,
         @Nullable Consumer<? super T> whenCached

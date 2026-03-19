@@ -18,8 +18,7 @@ package consulo.builtinWebServer.custom;
 import org.jspecify.annotations.Nullable;
 
 public abstract class CustomPortServerManagerBase extends CustomPortServerManager {
-  @Nullable
-  protected CustomPortService manager;
+  protected @Nullable CustomPortService manager;
 
   @Override
   public void setManager(@Nullable CustomPortService manager) {

@@ -101,8 +101,7 @@ public class XmlActionStub extends AnAction implements ActionStubBase {
         throw new UnsupportedOperationException();
     }
 
-    @Nullable
-    static AnAction convertStub(Application application, XmlActionStub stub) {
+    static @Nullable AnAction convertStub(Application application, XmlActionStub stub) {
         AnAction anAction = instantiate(application, stub.getClassName(), stub.getLoader(), stub.getPluginId(), AnAction.class);
         if (anAction == null) {
             return null;

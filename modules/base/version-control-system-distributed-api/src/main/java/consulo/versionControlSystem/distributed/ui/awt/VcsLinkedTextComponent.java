@@ -36,8 +36,7 @@ public class VcsLinkedTextComponent extends JLabel {
     
     private String myHandledLink;
 
-    @Nullable
-    private final VcsLinkListener myLinkListener;
+    private final @Nullable VcsLinkListener myLinkListener;
     private boolean mySelected;
     private boolean myUnderlined;
     private boolean myTransparent;

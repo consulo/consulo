@@ -51,9 +51,8 @@ public class ArrangementAndMatchConditionComponent extends JPanel implements Arr
 
   
   private final ArrangementCompositeMatchCondition mySetting;
-  @Nullable private      Rectangle                          myScreenBounds;
-  @Nullable
-  private      ArrangementUiComponent             myComponentUnderMouse;
+  private      @Nullable Rectangle                          myScreenBounds;
+  private      @Nullable ArrangementUiComponent             myComponentUnderMouse;
 
   public ArrangementAndMatchConditionComponent(StdArrangementMatchRule rule,
                                                ArrangementCompositeMatchCondition setting,

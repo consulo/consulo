@@ -43,13 +43,11 @@ public class StubInputStream extends DataInputStream {
     return IOUtil.readUTFFast(myStringIOBuffer, this);
   }
 
-  @Nullable
-  public StringRef readName() throws IOException {
+  public @Nullable StringRef readName() throws IOException {
     return StringRef.fromStream(this, myNameStorage);
   }
 
-  @Nullable
-  public String readNameString() throws IOException {
+  public @Nullable String readNameString() throws IOException {
     return StringRef.stringFromStream(this, myNameStorage);
   }
 

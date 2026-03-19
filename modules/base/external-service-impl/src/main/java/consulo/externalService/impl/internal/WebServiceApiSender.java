@@ -50,13 +50,11 @@ import java.util.Map;
 public class WebServiceApiSender {
     private static final Gson ourGson = new Gson();
 
-    @Nullable
-    public static <T> T doGet(WebServiceApi serviceApi, String url, Class<T> beanClass) throws IOException {
+    public static @Nullable <T> T doGet(WebServiceApi serviceApi, String url, Class<T> beanClass) throws IOException {
         return doGet(serviceApi, url, Map.of(), beanClass);
     }
 
-    @Nullable
-    public static <T> T doGet(WebServiceApi serviceApi, String url, Map<String, String> parameters, Type beanClass) throws IOException {
+    public static @Nullable <T> T doGet(WebServiceApi serviceApi, String url, Map<String, String> parameters, Type beanClass) throws IOException {
         byte[] bytes = doGetBytes(serviceApi, url, parameters);
         if (bytes == null) {
             return null;
@@ -64,8 +62,7 @@ public class WebServiceApiSender {
         return ourGson.fromJson(new String(bytes, StandardCharsets.UTF_8), beanClass);
     }
 
-    @Nullable
-    public static byte[] doGetBytes(WebServiceApi serviceApi, String url, Map<String, String> parameters) throws IOException {
+    public static @Nullable byte[] doGetBytes(WebServiceApi serviceApi, String url, Map<String, String> parameters) throws IOException {
         HttpClient4Factory client4Factory = Application.get().getInstance(HttpClient4Factory.class);
         try (CloseableHttpClient httpClient = client4Factory.createBuilder().build()) {
             HttpGet request;
@@ -102,8 +99,7 @@ public class WebServiceApiSender {
         }
     }
 
-    @Nullable
-    public static <T> T doPost(WebServiceApi serviceApi, String url, Object bean, Type resultType) throws IOException {
+    public static @Nullable <T> T doPost(WebServiceApi serviceApi, String url, Object bean, Type resultType) throws IOException {
         HttpClient4Factory client4Factory = Application.get().getInstance(HttpClient4Factory.class);
         try (CloseableHttpClient httpClient = client4Factory.createBuilder().build()) {
             HttpPost request = new HttpPost(serviceApi.buildUrl(url));
@@ -148,8 +144,7 @@ public class WebServiceApiSender {
         };
     }
 
-    @Nullable
-    private static ExternalService map(WebServiceApi api) {
+    private static @Nullable ExternalService map(WebServiceApi api) {
         return switch (api) {
             case ERROR_REPORTER_API -> ExternalService.ERROR_REPORTING;
             case STATISTICS_API -> ExternalService.STATISTICS;

@@ -10,8 +10,7 @@ import consulo.language.psi.PsiElement;
 import org.jspecify.annotations.Nullable;
 
 public final class ModuleRule {
-    @Nullable
-    static Module getData(DataSnapshot dataProvider) {
+    static @Nullable Module getData(DataSnapshot dataProvider) {
         Module moduleContext = dataProvider.get(LangDataKeys.MODULE_CONTEXT);
         if (moduleContext != null) {
             return moduleContext;

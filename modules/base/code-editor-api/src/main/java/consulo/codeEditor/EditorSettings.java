@@ -226,8 +226,7 @@ public interface EditorSettings {
 
     void setStickyLinesLimit(int value);
 
-    @Nullable
-    default Float getCharacterGridWidthMultiplier() {
+    default @Nullable Float getCharacterGridWidthMultiplier() {
         return null;
     }
 

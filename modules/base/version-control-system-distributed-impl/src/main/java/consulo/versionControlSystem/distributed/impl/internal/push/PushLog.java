@@ -66,8 +66,7 @@ public class PushLog extends JPanel implements UiDataProvider {
     private final VcsCommitInfoBalloon myBalloon;
     private boolean myShouldRepaint = false;
     private boolean mySyncStrategy;
-    @Nullable
-    private String mySyncRenderedText;
+    private @Nullable String mySyncRenderedText;
     private final boolean myAllowSyncStrategy;
 
     public PushLog(Project project, CheckedTreeNode root, boolean allowSyncStrategy) {
@@ -463,8 +462,7 @@ public class PushLog extends JPanel implements UiDataProvider {
         return super.processKeyBinding(ks, e, condition, pressed);
     }
 
-    @Nullable
-    private DefaultMutableTreeNode getFirstNodeToEdit() {
+    private @Nullable DefaultMutableTreeNode getFirstNodeToEdit() {
         // start edit last selected component if editable
         if (myTree.getLastSelectedPathComponent() instanceof RepositoryNode repositoryNode) {
             RepositoryNode selectedNode = repositoryNode;

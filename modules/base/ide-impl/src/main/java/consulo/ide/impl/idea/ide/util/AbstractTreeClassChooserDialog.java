@@ -74,8 +74,7 @@ public abstract class AbstractTreeClassChooserDialog<T extends PsiNamedElement> 
     
     private final Predicate<T> myClassFilter;
     private final Class<T> myElementClass;
-    @Nullable
-    private final T myBaseClass;
+    private final @Nullable T myBaseClass;
     private T myInitialClass;
     private final boolean myIsShowMembers;
     private final boolean myIsShowLibraryContents;
@@ -314,8 +313,7 @@ public abstract class AbstractTreeClassChooserDialog<T extends PsiNamedElement> 
     /**
      * Makes sense only in case of not null base class.
      */
-    @Nullable
-    protected TreeClassInheritorsProvider<T> getInheritorsProvider(T baseClass) {
+    protected @Nullable TreeClassInheritorsProvider<T> getInheritorsProvider(T baseClass) {
         return null;
     }
 
@@ -448,8 +446,7 @@ public abstract class AbstractTreeClassChooserDialog<T extends PsiNamedElement> 
         return myClassFilter;
     }
 
-    @Nullable
-    protected T getBaseClass() {
+    protected @Nullable T getBaseClass() {
         return myBaseClass;
     }
 
@@ -509,8 +506,7 @@ public abstract class AbstractTreeClassChooserDialog<T extends PsiNamedElement> 
         }
 
         @Override
-        @Nullable
-        public String getPromptText() {
+        public @Nullable String getPromptText() {
             return null;
         }
 

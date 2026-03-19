@@ -48,8 +48,7 @@ public abstract class PomTransactionBase implements PomTransaction{
     myAccumulatedEvent.merge(event);
   }
 
-  @Nullable
-  public abstract PomModelEvent runInner() throws IncorrectOperationException;
+  public abstract @Nullable PomModelEvent runInner() throws IncorrectOperationException;
 
   @Override
   public PsiElement getChangeScope() {

@@ -80,8 +80,7 @@ public abstract class RenameableFakePsiElement extends FakePsiElement implements
     }
 
     @Override
-    @Nullable
-    public PsiMetaData getMetaData() {
+    public @Nullable PsiMetaData getMetaData() {
         return this;
     }
 

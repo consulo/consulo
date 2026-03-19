@@ -58,8 +58,7 @@ public class ActionGroupUtil {
     return true;
   }
 
-  @Nullable
-  public static AnAction getSingleActiveAction(ActionGroup actionGroup, AnActionEvent e, boolean isInModalContext) {
+  public static @Nullable AnAction getSingleActiveAction(ActionGroup actionGroup, AnActionEvent e, boolean isInModalContext) {
     List<AnAction> children = getEnabledChildren(actionGroup, e, new HashMap<>());
     if (children.size() == 1) {
       return children.get(0);

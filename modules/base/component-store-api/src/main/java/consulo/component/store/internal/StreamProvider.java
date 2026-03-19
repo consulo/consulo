@@ -29,8 +29,7 @@ public abstract class StreamProvider {
    */
   public abstract void saveContent(String fileSpec, byte[] content, RoamingType roamingType) throws IOException;
 
-  @Nullable
-  public abstract InputStream loadContent(String fileSpec, RoamingType roamingType) throws IOException;
+  public abstract @Nullable InputStream loadContent(String fileSpec, RoamingType roamingType) throws IOException;
 
   
   public Collection<String> listSubFiles(String fileSpec, RoamingType roamingType) {

@@ -34,8 +34,7 @@ public abstract class XValueGroup extends XValueContainer {
     return myName;
   }
 
-  @Nullable
-  public Image getIcon() {
+  public @Nullable Image getIcon() {
     return null;
   }
 
@@ -57,8 +56,7 @@ public abstract class XValueGroup extends XValueContainer {
   /**
    * @return optional comment shown after the group name
    */
-  @Nullable
-  public String getComment() {
+  public @Nullable String getComment() {
     return null;
   }
 }

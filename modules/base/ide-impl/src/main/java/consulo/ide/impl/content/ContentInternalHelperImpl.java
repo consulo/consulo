@@ -36,8 +36,7 @@ import java.net.URL;
 @ServiceImpl
 public class ContentInternalHelperImpl implements ContentInternalHelper {
   @Override
-  @Nullable
-  public String showSpecifyJavadocUrlDialog(JComponent parent, String initialValue) {
+  public @Nullable String showSpecifyJavadocUrlDialog(JComponent parent, String initialValue) {
     return Messages
             .showInputDialog(parent, ProjectBundle.message("sdk.configure.javadoc.url.prompt"), ProjectBundle.message("sdk.configure.javadoc.url.title"), Messages.getQuestionIcon(), initialValue,
                              new InputValidator() {

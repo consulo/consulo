@@ -38,8 +38,7 @@ public class XValueMarkers<V extends XValue, M> {
     return new XValueMarkers<V, M>(provider);
   }
 
-  @Nullable
-  public ValueMarkup getMarkup(XValue value) {
+  public @Nullable ValueMarkup getMarkup(XValue value) {
     Class<V> valueClass = myProvider.getValueClass();
     if (!valueClass.isInstance(value)) return null;
 

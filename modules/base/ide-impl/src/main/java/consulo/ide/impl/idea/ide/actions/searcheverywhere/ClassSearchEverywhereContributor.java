@@ -148,8 +148,7 @@ public class ClassSearchEverywhereContributor extends AbstractGotoSEContributor 
         return pathToAnonymousClass(ourPatternToDetectAnonymousClasses.matcher(searchedText));
     }
 
-    @Nullable
-    public static String pathToAnonymousClass(Matcher matcher) {
+    public static @Nullable String pathToAnonymousClass(Matcher matcher) {
         if (matcher.matches()) {
             String path = matcher.group(2);
             if (path != null) {

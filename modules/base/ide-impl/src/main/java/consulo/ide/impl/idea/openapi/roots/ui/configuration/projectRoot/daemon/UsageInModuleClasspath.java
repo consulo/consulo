@@ -15,8 +15,7 @@ import org.jspecify.annotations.Nullable;
 public class UsageInModuleClasspath extends ProjectStructureElementUsage {
   private final ModulesConfigurator myModulesConfigurator;
   private final ModuleProjectStructureElement myContainingElement;
-  @Nullable
-  private final DependencyScope myScope;
+  private final @Nullable DependencyScope myScope;
   private final ProjectStructureElement mySourceElement;
   private final Module myModule;
 

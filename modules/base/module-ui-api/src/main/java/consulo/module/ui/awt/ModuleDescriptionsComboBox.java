@@ -102,8 +102,7 @@ public final class ModuleDescriptionsComboBox extends ComboBox<ModuleDescription
     }
   }
 
-  @Nullable
-  public Module getSelectedModule() {
+  public @Nullable Module getSelectedModule() {
     ModuleDescription selected = myModel.getSelectedItem();
     if (selected instanceof LoadedModuleDescription) {
       return ((LoadedModuleDescription)selected).getModule();
@@ -111,8 +110,7 @@ public final class ModuleDescriptionsComboBox extends ComboBox<ModuleDescription
     return null;
   }
 
-  @Nullable
-  public String getSelectedModuleName() {
+  public @Nullable String getSelectedModuleName() {
     ModuleDescription selected = myModel.getSelectedItem();
     return selected != null ? selected.getName() : null;
   }

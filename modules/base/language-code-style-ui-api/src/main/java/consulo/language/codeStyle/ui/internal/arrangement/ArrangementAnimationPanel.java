@@ -35,12 +35,9 @@ public class ArrangementAnimationPanel extends JPanel {
   private final JComponent myContent;
   private int myAnimationIterationStep;
 
-  @Nullable
-  private BufferedImage myImage;
-  @Nullable
-  private BufferedImage myCurrentImage;
-  @Nullable
-  private Listener myListener;
+  private @Nullable BufferedImage myImage;
+  private @Nullable BufferedImage myCurrentImage;
+  private @Nullable Listener myListener;
 
   private final boolean myExpand;
   private final boolean myHorizontal;

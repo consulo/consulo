@@ -34,8 +34,7 @@ public class CustomizedBreakpointPresentation {
     myErrorMessage = errorMessage;
   }
 
-  @Nullable
-  public Image getIcon() {
+  public @Nullable Image getIcon() {
     return myIcon;
   }
 

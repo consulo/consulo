@@ -49,8 +49,7 @@ public class CompareFileWithEditorAction extends BaseShowDiffAction {
         return currentFile != null && canCompare(selectedFile, currentFile);
     }
 
-    @Nullable
-    private static VirtualFile getSelectedFile(AnActionEvent e) {
+    private static @Nullable VirtualFile getSelectedFile(AnActionEvent e) {
         VirtualFile[] array = e.getData(VirtualFile.KEY_OF_ARRAY);
         if (array == null || array.length != 1 || array[0].isDirectory()) {
             return null;
@@ -59,8 +58,7 @@ public class CompareFileWithEditorAction extends BaseShowDiffAction {
         return array[0];
     }
 
-    @Nullable
-    private static VirtualFile getEditingFile(AnActionEvent e) {
+    private static @Nullable VirtualFile getEditingFile(AnActionEvent e) {
         Project project = e.getData(Project.KEY);
         if (project == null) {
             return null;

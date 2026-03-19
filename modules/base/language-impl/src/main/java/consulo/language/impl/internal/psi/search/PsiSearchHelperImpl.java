@@ -787,8 +787,7 @@ public class PsiSearchHelperImpl implements PsiSearchHelperEx {
    * @param keys
    * @return null means we did not find common container files
    */
-  @Nullable
-  private Set<VirtualFile> intersectionWithContainerNameFiles(GlobalSearchScope commonScope,
+  private @Nullable Set<VirtualFile> intersectionWithContainerNameFiles(GlobalSearchScope commonScope,
                                                               Collection<RequestWithProcessor> data,
                                                               Set<IdIndexEntry> keys) {
     String commonName = null;
@@ -903,7 +902,7 @@ public class PsiSearchHelperImpl implements PsiSearchHelperEx {
   @Override
   public SearchCostResult isCheapEnoughToSearch(String name,
                                                 GlobalSearchScope scope,
-                                                @Nullable final PsiFile fileToIgnoreOccurrencesIn,
+                                                final @Nullable PsiFile fileToIgnoreOccurrencesIn,
                                                 @Nullable ProgressIndicator progress) {
     final AtomicInteger count = new AtomicInteger();
     final ProgressIndicator indicator = progress == null ? new EmptyProgressIndicator() : progress;

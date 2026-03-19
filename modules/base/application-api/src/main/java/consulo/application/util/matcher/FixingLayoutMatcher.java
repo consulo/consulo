@@ -15,8 +15,7 @@ public class FixingLayoutMatcher extends MatcherWithFallback {
     super(new MinusculeMatcherImpl(pattern, options, hardSeparators), withFixedLayout(pattern, options, hardSeparators));
   }
 
-  @Nullable
-  public static String fixLayout(String pattern) {
+  public static @Nullable String fixLayout(String pattern) {
     boolean hasLetters = false;
     boolean onlyWrongLetters = true;
     for (int i = 0; i < pattern.length(); i++) {

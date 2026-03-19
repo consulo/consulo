@@ -68,8 +68,7 @@ public class LogbackLoggerFactory implements LoggerFactory {
         }
     }
 
-    @Nullable
-    private static LoggerContext init() {
+    private static @Nullable LoggerContext init() {
         try {
             //String fileRef = Boolean.getBoolean(CONSULO_MAVEN_CONSOLE_LOG) ? "/logback-info.xml" : "/logback-warn.xml";
             String fileRef = "/logback-info.xml";

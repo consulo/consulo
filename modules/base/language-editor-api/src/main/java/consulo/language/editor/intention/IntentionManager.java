@@ -85,8 +85,7 @@ public abstract class IntentionManager  {
   /**
    * @return "Fix all '' inspections problems for a file" intention if toolWrapper is local inspection or simple global one
    */
-  @Nullable
-  public abstract IntentionAction createFixAllIntention(InspectionToolWrapper toolWrapper, IntentionAction action);
+  public abstract @Nullable IntentionAction createFixAllIntention(InspectionToolWrapper toolWrapper, IntentionAction action);
 
   /**
    * Wraps given action in a LocalQuickFix object.

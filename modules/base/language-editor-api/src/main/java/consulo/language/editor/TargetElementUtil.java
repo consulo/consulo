@@ -110,8 +110,7 @@ public class TargetElementUtil {
         return correctedOffset;
     }
 
-    @Nullable
-    public static PsiElement adjustReference(PsiReference ref) {
+    public static @Nullable PsiElement adjustReference(PsiReference ref) {
         return TargetElementUtilExtender.EP.computeSafeIfAny(Application.get(), it -> it.adjustReference(ref));
     }
 
@@ -251,8 +250,7 @@ public class TargetElementUtil {
         return null;
     }
 
-    @Nullable
-    private static PsiElement getTargetElementFromLookup(Project project) {
+    private static @Nullable PsiElement getTargetElementFromLookup(Project project) {
         Lookup activeLookup = LookupManager.getInstance(project).getActiveLookup();
         if (activeLookup != null) {
             LookupElement item = activeLookup.getCurrentItem();
@@ -333,8 +331,7 @@ public class TargetElementUtil {
         return TargetElementUtilExtender.EP.computeSafeIfAny(Application.get(), it -> it.getNamedElement(element));
     }
 
-    @Nullable
-    public static PsiElement adjustElement(Editor editor, Set<String> flags, PsiElement element, PsiElement contextElement) {
+    public static @Nullable PsiElement adjustElement(Editor editor, Set<String> flags, PsiElement element, PsiElement contextElement) {
         return TargetElementUtilExtender.EP.computeSafeIfAny(
             Application.get(),
             it -> it.adjustElement(editor, flags, element, contextElement)
@@ -393,8 +390,7 @@ public class TargetElementUtil {
         return Collections.emptyList();
     }
 
-    @Nullable
-    public static PsiElement getGotoDeclarationTarget(PsiElement element, PsiElement navElement) {
+    public static @Nullable PsiElement getGotoDeclarationTarget(PsiElement element, PsiElement navElement) {
         PsiElement gotoDeclarationTarget =
             TargetElementUtilExtender.EP.computeSafeIfAny(Application.get(), it -> it.getGotoDeclarationTarget(element, navElement));
         if (gotoDeclarationTarget != null) {

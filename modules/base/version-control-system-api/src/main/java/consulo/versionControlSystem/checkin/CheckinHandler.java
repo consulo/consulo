@@ -72,8 +72,7 @@ public abstract class CheckinHandler {
      * @return the panel instance, or null if the handler does not provide any options to show in the
      * "After Check In" group.
      */
-    @Nullable
-    public RefreshableOnComponent getAfterCheckinConfigurationPanel(Disposable parentDisposable) {
+    public @Nullable RefreshableOnComponent getAfterCheckinConfigurationPanel(Disposable parentDisposable) {
         return null;
     }
 

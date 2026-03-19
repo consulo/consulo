@@ -25,8 +25,7 @@ import org.jspecify.annotations.Nullable;
  * from kotlin
  */
 public class FormatterTreeUtil {
-  @Nullable
-  public static ASTNode prev(ASTNode node) {
+  public static @Nullable ASTNode prev(ASTNode node) {
     ASTNode prev = node.getTreePrev();
     while (prev != null && prev.getElementType() == TokenType.WHITE_SPACE) {
       prev = prev.getTreePrev();

@@ -68,8 +68,7 @@ public abstract class BaseOpenInBrowserAction extends DumbAwareAction {
         super(text, description, icon);
     }
 
-    @Nullable
-    protected abstract WebBrowser getBrowser(AnActionEvent event);
+    protected abstract @Nullable WebBrowser getBrowser(AnActionEvent event);
 
     @Override
     public Coroutine<?, ?> updateAsync(AnActionEvent e) {

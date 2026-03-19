@@ -116,8 +116,7 @@ public class VcsRootIterator {
     private final Project myProject;
     private final Predicate<? super FilePath> myPathProcessor;
     private final Predicate<? super VirtualFile> myFileProcessor;
-    @Nullable
-    private final VirtualFileFilter myDirectoryFilter;
+    private final @Nullable VirtualFileFilter myDirectoryFilter;
     private final VirtualFile myRoot;
     private final MyRootFilter myRootPresentFilter;
     private final ProjectLevelVcsManager myVcsManager;
@@ -225,8 +224,7 @@ public class VcsRootIterator {
     }
   }
 
-  @Nullable
-  private static VirtualFile obtainVirtualFile(FilePath file) {
+  private static @Nullable VirtualFile obtainVirtualFile(FilePath file) {
     VirtualFile vFile = file.getVirtualFile();
     return vFile == null ? VirtualFileUtil.findFileByIoFile(file.getIOFile(), false) : vFile;
   }

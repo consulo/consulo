@@ -899,8 +899,8 @@ public class GlobalInspectionContextImpl extends GlobalInspectionContextBase imp
         final Project project,
         final AnalysisScope scope,
         final InspectionProfile profile,
-        @Nullable final String commandName,
-        @Nullable final Runnable postRunnable,
+        final @Nullable String commandName,
+        final @Nullable Runnable postRunnable,
         boolean modal
     ) {
         Task task = modal

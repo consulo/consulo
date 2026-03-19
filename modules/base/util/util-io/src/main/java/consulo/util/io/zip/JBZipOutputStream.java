@@ -58,8 +58,7 @@ class JBZipOutputStream {
    *
    * @since 1.3
    */
-  @Nullable
-  private String encoding = null;
+  private @Nullable String encoding = null;
 
   /**
    * This Deflater object is used for output.
@@ -117,8 +116,7 @@ class JBZipOutputStream {
    * @return null if using the platform's default character encoding.
    * @since 1.3
    */
-  @Nullable
-  public String getEncoding() {
+  public @Nullable String getEncoding() {
     return encoding;
   }
 

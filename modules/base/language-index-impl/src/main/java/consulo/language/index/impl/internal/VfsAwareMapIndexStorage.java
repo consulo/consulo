@@ -287,8 +287,7 @@ public final class VfsAwareMapIndexStorage<Key, Value> extends MapIndexStorage<K
         return sessionDirectory;
     }
 
-    @Nullable
-    private File getSavedProjectFileValueIds(int id, SearchScope scope) {
+    private @Nullable File getSavedProjectFileValueIds(int id, SearchScope scope) {
         ProjectAwareSearchScope projectAwareSearchScope = (ProjectAwareSearchScope) scope;
         Project project = projectAwareSearchScope.getProject();
         if (project == null) {

@@ -265,8 +265,7 @@ public class DesktopAWTRunnerLayoutUiImpl implements RunnerLayoutUiImpl {
     }
 
     @Override
-    @Nullable
-    public Content findContent(String key) {
+    public @Nullable Content findContent(String key) {
         return myContentUI.findContent(key);
     }
 

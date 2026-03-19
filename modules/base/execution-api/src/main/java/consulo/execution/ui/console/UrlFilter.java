@@ -61,8 +61,7 @@ public class UrlFilter implements Filter, DumbAware {
     return fileHyperlinkInfo != null ? fileHyperlinkInfo : new OpenUrlHyperlinkInfo(url);
   }
 
-  @Nullable
-  private HyperlinkInfo buildFileHyperlinkInfo(String url) {
+  private @Nullable HyperlinkInfo buildFileHyperlinkInfo(String url) {
     if (myProject != null && !url.endsWith(".html") && url.startsWith(LocalFileSystem.PROTOCOL_PREFIX)) {
       int documentLine = 0, documentColumn = 0;
       int filePathEndIndex = url.length();
@@ -115,8 +114,7 @@ public class UrlFilter implements Filter, DumbAware {
     }
 
     @Override
-    @Nullable
-    public ActionGroup getPopupMenuGroup(MouseEvent event) {
+    public @Nullable ActionGroup getPopupMenuGroup(MouseEvent event) {
       return new OpenUrlHyperlinkInfo(myUrl).getPopupMenuGroup(event);
     }
   }

@@ -57,8 +57,7 @@ public abstract class FileIndexFacade {
 
   public abstract boolean isUnderIgnored(VirtualFile file);
 
-  @Nullable
-  public abstract Module getModuleForFile(VirtualFile file);
+  public abstract @Nullable Module getModuleForFile(VirtualFile file);
 
   /**
    * Checks if <code>file</code> is an ancestor of <code>baseDir</code> and none of the files

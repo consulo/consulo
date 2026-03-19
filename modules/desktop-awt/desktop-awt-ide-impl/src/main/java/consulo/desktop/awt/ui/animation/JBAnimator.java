@@ -476,8 +476,7 @@ public final class JBAnimator implements Disposable {
 
   public static class Statistic {
     private
-    @Nullable
-    final String myName;
+    final @Nullable String myName;
     private final AtomicLong count = new AtomicLong(0);
     private long start;
     private long end;

@@ -52,8 +52,7 @@ import javax.swing.*;
 import java.util.List;
 
 public abstract class ThreesideTextDiffViewer extends ThreesideDiffViewer<TextEditorHolder> {
-    @Nullable
-    private List<? extends EditorEx> myEditors;
+    private @Nullable List<? extends EditorEx> myEditors;
     private final List<? extends EditorEx> myEditableEditors;
 
     private final MyVisibleAreaListener myVisibleAreaListener1 = new MyVisibleAreaListener(Side.LEFT);
@@ -218,8 +217,7 @@ public abstract class ThreesideTextDiffViewer extends ThreesideDiffViewer<TextEd
         return side.select(getContents());
     }
 
-    @Nullable
-    public ThreeSide getEditorSide(@Nullable Editor editor) {
+    public @Nullable ThreeSide getEditorSide(@Nullable Editor editor) {
         if (getEditor(ThreeSide.BASE) == editor) {
             return ThreeSide.BASE;
         }

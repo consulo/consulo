@@ -28,8 +28,7 @@ public class ConsoleTerminalHandlerImpl extends TerminalHandlerBase {
         myLoggingHandler.attachToProcess(new NopProcessHandler() {
 
             @Override
-            @Nullable
-            public OutputStream getProcessInput() {
+            public @Nullable OutputStream getProcessInput() {
                 return terminalInput;
             }
         });

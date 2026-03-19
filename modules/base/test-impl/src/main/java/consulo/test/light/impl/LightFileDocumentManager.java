@@ -41,8 +41,7 @@ import java.util.function.Function;
 public class LightFileDocumentManager implements FileDocumentManager {
   private static final Key<VirtualFile> MOCK_VIRTUAL_FILE_KEY = Key.create("MockVirtualFile");
   private final Function<? super CharSequence, ? extends Document> myFactory;
-  @Nullable
-  private final Key<Document> myCachedDocumentKey;
+  private final @Nullable Key<Document> myCachedDocumentKey;
 
   public LightFileDocumentManager() {
     myFactory = DocumentImpl::new;

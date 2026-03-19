@@ -54,8 +54,7 @@ public class ArrangementSectionRuleManager {
   private ArrangementMatchingRulesControl myControl;
   private ArrangementMatchingRuleEditor myEditor;
 
-  @Nullable
-  public static ArrangementSectionRuleManager getInstance(Language language,
+  public static @Nullable ArrangementSectionRuleManager getInstance(Language language,
                                                           ArrangementStandardSettingsManager settingsManager,
                                                           ArrangementColorsProvider colorsProvider,
                                                           ArrangementMatchingRulesControl control) {
@@ -98,14 +97,12 @@ public class ArrangementSectionRuleManager {
     return element instanceof StdArrangementMatchRule && getSectionRuleData((StdArrangementMatchRule)element) != null;
   }
 
-  @Nullable
-  public ArrangementSectionRuleData getSectionRuleData(StdArrangementMatchRule element) {
+  public @Nullable ArrangementSectionRuleData getSectionRuleData(StdArrangementMatchRule element) {
     ArrangementMatchCondition condition = element.getMatcher().getCondition();
     return getSectionRuleData(condition);
   }
 
-  @Nullable
-  public ArrangementSectionRuleData getSectionRuleData(ArrangementMatchCondition condition) {
+  public @Nullable ArrangementSectionRuleData getSectionRuleData(ArrangementMatchCondition condition) {
     final Ref<Boolean> isStart = new Ref<Boolean>();
     final Ref<String> text = new Ref<String>();
     condition.invite(new ArrangementMatchConditionVisitor() {

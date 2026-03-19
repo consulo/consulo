@@ -157,8 +157,7 @@ public class BookmarkManagerImpl implements BookmarkManagerInternal, PersistentS
     }
 
     @Override
-    @Nullable
-    public BookmarkImpl addFileBookmark(VirtualFile file, String description) {
+    public @Nullable BookmarkImpl addFileBookmark(VirtualFile file, String description) {
         if (file == null) {
             return null;
         }
@@ -186,8 +185,7 @@ public class BookmarkManagerImpl implements BookmarkManagerInternal, PersistentS
 
 
     @Override
-    @Nullable
-    public BookmarkImpl findEditorBookmark(Document document, int line) {
+    public @Nullable BookmarkImpl findEditorBookmark(Document document, int line) {
         for (BookmarkImpl bookmark : myBookmarks) {
             if (bookmark.getDocument() == document && bookmark.getLine() == line) {
                 return bookmark;
@@ -198,8 +196,7 @@ public class BookmarkManagerImpl implements BookmarkManagerInternal, PersistentS
     }
 
     @Override
-    @Nullable
-    public BookmarkImpl findFileBookmark(VirtualFile file) {
+    public @Nullable BookmarkImpl findFileBookmark(VirtualFile file) {
         for (BookmarkImpl bookmark : myBookmarks) {
             if (Comparing.equal(bookmark.getFile(), file) && bookmark.getLine() == -1) {
                 return bookmark;
@@ -210,8 +207,7 @@ public class BookmarkManagerImpl implements BookmarkManagerInternal, PersistentS
     }
 
     @Override
-    @Nullable
-    public BookmarkImpl findBookmarkForMnemonic(char m) {
+    public @Nullable BookmarkImpl findBookmarkForMnemonic(char m) {
         char mm = Character.toUpperCase(m);
         for (BookmarkImpl bookmark : myBookmarks) {
             if (mm == bookmark.getMnemonic()) {
@@ -387,8 +383,7 @@ public class BookmarkManagerImpl implements BookmarkManagerInternal, PersistentS
     }
 
     @Override
-    @Nullable
-    public Bookmark getNextBookmark(Editor editor, boolean isWrapped) {
+    public @Nullable Bookmark getNextBookmark(Editor editor, boolean isWrapped) {
         Bookmark[] bookmarksForDocument = getBookmarksForDocument(editor.getDocument());
         int lineNumber = editor.getCaretModel().getLogicalPosition().line;
         for (Bookmark bookmark : bookmarksForDocument) {
@@ -403,8 +398,7 @@ public class BookmarkManagerImpl implements BookmarkManagerInternal, PersistentS
     }
 
     @Override
-    @Nullable
-    public Bookmark getPreviousBookmark(Editor editor, boolean isWrapped) {
+    public @Nullable Bookmark getPreviousBookmark(Editor editor, boolean isWrapped) {
         Bookmark[] bookmarksForDocument = getBookmarksForDocument(editor.getDocument());
         int lineNumber = editor.getCaretModel().getLogicalPosition().line;
         for (int i = bookmarksForDocument.length - 1; i >= 0; i--) {

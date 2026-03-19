@@ -331,8 +331,7 @@ public class InspectionProfileImpl extends ProfileEx implements ModifiableModel,
     }
 
     @Override
-    @Nullable
-    public InspectionToolWrapper getInspectionTool(String shortName, PsiElement element) {
+    public @Nullable InspectionToolWrapper getInspectionTool(String shortName, PsiElement element) {
         Tools toolList = getTools(shortName, element.getProject());
         return toolList == null ? null : toolList.getInspectionTool(element);
     }
@@ -377,8 +376,7 @@ public class InspectionProfileImpl extends ProfileEx implements ModifiableModel,
     }
 
     @Override
-    @Nullable
-    public InspectionToolWrapper getInspectionTool(String shortName, Project project) {
+    public @Nullable InspectionToolWrapper getInspectionTool(String shortName, Project project) {
         ToolsImpl tools = getTools(shortName, project);
         return tools != null ? tools.getTool() : null;
     }
@@ -845,8 +843,7 @@ public class InspectionProfileImpl extends ProfileEx implements ModifiableModel,
     /**
      * @return null if it has no base profile
      */
-    @Nullable
-    private Map<String, Boolean> getDisplayLevelMap() {
+    private @Nullable Map<String, Boolean> getDisplayLevelMap() {
         if (myBaseProfile == null) {
             return null;
         }

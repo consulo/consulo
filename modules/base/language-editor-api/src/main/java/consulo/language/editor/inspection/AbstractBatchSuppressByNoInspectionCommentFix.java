@@ -46,8 +46,7 @@ public abstract class AbstractBatchSuppressByNoInspectionCommentFix implements C
   private ThreeState myShouldBeAppliedToInjectionHost = ThreeState.UNSURE;
 
   @Override
-  @Nullable
-  public abstract PsiElement getContainer(PsiElement context);
+  public abstract @Nullable PsiElement getContainer(PsiElement context);
 
   /**
    * @param ID                         Inspection ID
@@ -159,8 +158,7 @@ public abstract class AbstractBatchSuppressByNoInspectionCommentFix implements C
     return false;
   }
 
-  @Nullable
-  protected List<? extends PsiElement> getCommentsFor(PsiElement container) {
+  protected @Nullable List<? extends PsiElement> getCommentsFor(PsiElement container) {
     PsiElement prev = PsiTreeUtil.skipSiblingsBackward(container, PsiWhiteSpace.class);
     if (prev == null) {
       return null;

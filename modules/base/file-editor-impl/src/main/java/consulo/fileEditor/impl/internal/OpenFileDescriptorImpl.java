@@ -116,8 +116,7 @@ public class OpenFileDescriptorImpl extends UnprotectedUserDataHolder implements
         return myFile;
     }
 
-    @Nullable
-    public RangeMarker getRangeMarker() {
+    public @Nullable RangeMarker getRangeMarker() {
         return myRangeMarker;
     }
 
@@ -349,8 +348,7 @@ public class OpenFileDescriptorImpl extends UnprotectedUserDataHolder implements
             }
 
             @Override
-            @Nullable
-            public Object getSelectorInFile() {
+            public @Nullable Object getSelectorInFile() {
                 return null;
             }
         };

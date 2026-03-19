@@ -48,8 +48,7 @@ public abstract class DelegatingHttpRequestHandlerBase extends SimpleChannelInbo
     }
   }
 
-  @Nullable
-  protected abstract HttpResponse process(ChannelHandlerContext context, FullHttpRequest request, QueryStringDecoder urlDecoder) throws Exception;
+  protected abstract @Nullable HttpResponse process(ChannelHandlerContext context, FullHttpRequest request, QueryStringDecoder urlDecoder) throws Exception;
 
   @Override
   public void exceptionCaught(ChannelHandlerContext context, Throwable cause) {

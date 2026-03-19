@@ -30,8 +30,7 @@ class MoveStatementHandler extends BaseMoveHandler {
   }
 
   @Override
-  @Nullable
-  protected MoverWrapper getSuitableMover(Editor editor, PsiFile file) {
+  protected @Nullable MoverWrapper getSuitableMover(Editor editor, PsiFile file) {
     // order is important!
     StatementUpDownMover.MoveInfo info = new StatementUpDownMover.MoveInfo();
     for (StatementUpDownMover mover : StatementUpDownMover.STATEMENT_UP_DOWN_MOVER_EP.getExtensionList()) {

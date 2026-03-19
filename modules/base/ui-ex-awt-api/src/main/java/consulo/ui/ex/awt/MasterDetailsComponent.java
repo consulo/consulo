@@ -426,13 +426,11 @@ public abstract class MasterDetailsComponent implements Configurable, MasterDeta
         return path.toString();
     }
 
-    @Nullable
-    protected String getComponentStateKey() {
+    protected @Nullable String getComponentStateKey() {
         return null;
     }
 
-    @Nullable
-    protected final MasterDetailsStateService getStateService() {
+    protected final @Nullable MasterDetailsStateService getStateService() {
         return myMasterDetailsStateService.get();
     }
 
@@ -484,8 +482,7 @@ public abstract class MasterDetailsComponent implements Configurable, MasterDeta
         myRoot.removeAllChildren();
     }
 
-    @Nullable
-    protected List<AnAction> createActions(boolean fromPopup) {
+    protected @Nullable List<AnAction> createActions(boolean fromPopup) {
         return null;
     }
 
@@ -545,8 +542,7 @@ public abstract class MasterDetailsComponent implements Configurable, MasterDeta
         }
     }
 
-    @Nullable
-    protected ArrayList<AnAction> getAdditionalActions() {
+    protected @Nullable ArrayList<AnAction> getAdditionalActions() {
         return null;
     }
 
@@ -596,8 +592,7 @@ public abstract class MasterDetailsComponent implements Configurable, MasterDeta
         }
     }
 
-    @Nullable
-    public Object getSelectedObject() {
+    public @Nullable Object getSelectedObject() {
         TreePath selectionPath = myTree.getSelectionPath();
         if (selectionPath != null && selectionPath.getLastPathComponent() instanceof MyNode node) {
             MasterDetailsConfigurable configurable = node.getConfigurable();
@@ -607,8 +602,7 @@ public abstract class MasterDetailsComponent implements Configurable, MasterDeta
         return null;
     }
 
-    @Nullable
-    public MasterDetailsConfigurable getSelectedConfigurable() {
+    public @Nullable MasterDetailsConfigurable getSelectedConfigurable() {
         TreePath selectionPath = myTree.getSelectionPath();
         if (selectionPath != null) {
             MyNode node = (MyNode)selectionPath.getLastPathComponent();
@@ -639,16 +633,14 @@ public abstract class MasterDetailsComponent implements Configurable, MasterDeta
         return result;
     }
 
-    @Nullable
-    protected static MyNode findNodeByName(TreeNode root, String profileName) {
+    protected static @Nullable MyNode findNodeByName(TreeNode root, String profileName) {
         if (profileName == null) {
             return null; //do not suggest root node
         }
         return findNodeByCondition(root, configurable -> Comparing.strEqual(profileName, configurable.getDisplayName().get()));
     }
 
-    @Nullable
-    public static MyNode findNodeByObject(TreeNode root, Object editableObject) {
+    public static @Nullable MyNode findNodeByObject(TreeNode root, Object editableObject) {
         if (editableObject == null) {
             return null; //do not suggest root node
         }
@@ -721,8 +713,7 @@ public abstract class MasterDetailsComponent implements Configurable, MasterDeta
         return null;
     }
 
-    @Nullable
-    protected String getEmptySelectionString() {
+    protected @Nullable String getEmptySelectionString() {
         return null;
     }
 
@@ -891,8 +882,7 @@ public abstract class MasterDetailsComponent implements Configurable, MasterDeta
             myDisplayInBold = displayInBold;
         }
 
-        @Nullable
-        public Image getIcon(boolean expanded) {
+        public @Nullable Image getIcon(boolean expanded) {
             // thanks to invokeLater() in TreeUtil.showAndSelect(), we can get calls to getIcon() after the tree has been disposed
             MasterDetailsConfigurable configurable = getConfigurable();
             if (configurable != null) {

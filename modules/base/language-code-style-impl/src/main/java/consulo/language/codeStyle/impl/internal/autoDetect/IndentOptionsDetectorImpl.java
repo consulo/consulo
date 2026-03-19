@@ -39,8 +39,7 @@ public class IndentOptionsDetectorImpl implements IndentOptionsDetector {
   }
 
   @Override
-  @Nullable
-  public IndentOptionsAdjuster getIndentOptionsAdjuster() {
+  public @Nullable IndentOptionsAdjuster getIndentOptionsAdjuster() {
     try {
       List<LineIndentInfo> linesInfo = calcLineIndentInfo(myProgressIndicator);
       if (linesInfo != null) {
@@ -65,8 +64,7 @@ public class IndentOptionsDetectorImpl implements IndentOptionsDetector {
     return indentOptions;
   }
 
-  @Nullable
-  private List<LineIndentInfo> calcLineIndentInfo(@Nullable ProgressIndicator indicator) {
+  private @Nullable List<LineIndentInfo> calcLineIndentInfo(@Nullable ProgressIndicator indicator) {
     if (myDocument == null || myDocument.getLineCount() < 3 || isFileBigToDetect()) {
       return null;
     }

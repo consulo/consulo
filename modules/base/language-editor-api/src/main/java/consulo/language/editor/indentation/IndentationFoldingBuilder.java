@@ -53,8 +53,7 @@ public abstract class IndentationFoldingBuilder implements FoldingBuilder, DumbA
 
     @RequiredReadAction
     @Override
-    @Nullable
-    public String getPlaceholderText(ASTNode node) {
+    public @Nullable String getPlaceholderText(ASTNode node) {
         StringBuilder builder = new StringBuilder();
         ASTNode child = node.getFirstChildNode();
         while (child != null) {

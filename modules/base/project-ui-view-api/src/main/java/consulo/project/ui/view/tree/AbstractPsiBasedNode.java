@@ -54,11 +54,9 @@ public abstract class AbstractPsiBasedNode<Value> extends ProjectViewNode<Value>
         super(project, value, viewSettings);
     }
 
-    @Nullable
-    protected abstract PsiElement extractPsiFromValue();
+    protected abstract @Nullable PsiElement extractPsiFromValue();
 
-    @Nullable
-    protected abstract Collection<AbstractTreeNode> getChildrenImpl();
+    protected abstract @Nullable Collection<AbstractTreeNode> getChildrenImpl();
 
     protected abstract void updateImpl(PresentationData data);
 
@@ -116,8 +114,7 @@ public abstract class AbstractPsiBasedNode<Value> extends ProjectViewNode<Value>
         return FileStatusManager.getInstance(project).getStatus(virtualFile);
     }
 
-    @Nullable
-    private VirtualFile getVirtualFileForValue() {
+    private @Nullable VirtualFile getVirtualFileForValue() {
         PsiElement psiElement = extractPsiFromValue();
         if (psiElement == null) {
             return null;
@@ -168,8 +165,7 @@ public abstract class AbstractPsiBasedNode<Value> extends ProjectViewNode<Value>
         });
     }
 
-    @Nullable
-    public static Image patchIcon(Project project, @Nullable Image original, @Nullable VirtualFile file) {
+    public static @Nullable Image patchIcon(Project project, @Nullable Image original, @Nullable VirtualFile file) {
         if (file == null || original == null) {
             return original;
         }
@@ -220,8 +216,7 @@ public abstract class AbstractPsiBasedNode<Value> extends ProjectViewNode<Value>
         return file.equals(valueFile);
     }
 
-    @Nullable
-    public NavigationItem getNavigationItem() {
+    public @Nullable NavigationItem getNavigationItem() {
         PsiElement psiElement = extractPsiFromValue();
         return psiElement instanceof NavigationItem navigationItem ? navigationItem : null;
     }

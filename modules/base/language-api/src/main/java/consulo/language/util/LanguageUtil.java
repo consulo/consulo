@@ -51,13 +51,11 @@ public final class LanguageUtil {
         return JBIterable.generate(language, Language::getBaseLanguage);
     }
 
-    @Nullable
-    public static Language getLanguageForPsi(Project project, @Nullable VirtualFile file) {
+    public static @Nullable Language getLanguageForPsi(Project project, @Nullable VirtualFile file) {
         return getLanguageForPsi(project, file, null);
     }
 
-    @Nullable
-    public static Language getLanguageForPsi(Project project, @Nullable VirtualFile file, @Nullable FileType fileType) {
+    public static @Nullable Language getLanguageForPsi(Project project, @Nullable VirtualFile file, @Nullable FileType fileType) {
         if (file == null) {
             return null;
         }
@@ -79,8 +77,7 @@ public final class LanguageUtil {
         return LanguageSubstitutors.substituteLanguage(fileLanguage, file, project);
     }
 
-    @Nullable
-    public static Language getFileLanguage(@Nullable VirtualFile file) {
+    public static @Nullable Language getFileLanguage(@Nullable VirtualFile file) {
         if (file == null) {
             return null;
         }
@@ -88,13 +85,11 @@ public final class LanguageUtil {
         return l != null ? l : getFileTypeLanguage(file.getFileType());
     }
 
-    @Nullable
-    public static Language getFileTypeLanguage(@Nullable FileType fileType) {
+    public static @Nullable Language getFileTypeLanguage(@Nullable FileType fileType) {
         return fileType instanceof LanguageFileType languageFileType ? languageFileType.getLanguage() : null;
     }
 
-    @Nullable
-    public static FileType getLanguageFileType(@Nullable Language language) {
+    public static @Nullable FileType getLanguageFileType(@Nullable Language language) {
         return language == null ? null : language.getAssociatedFileType();
     }
 

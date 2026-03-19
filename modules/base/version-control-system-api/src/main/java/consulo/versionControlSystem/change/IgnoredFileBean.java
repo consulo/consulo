@@ -72,13 +72,11 @@ public class IgnoredFileBean {
     myProject = null;
   }
 
-  @Nullable
-  public String getPath() {
+  public @Nullable String getPath() {
     return myPath;
   }
 
-  @Nullable
-  public String getMask() {
+  public @Nullable String getMask() {
     return myMask;
   }
 
@@ -141,8 +139,7 @@ public class IgnoredFileBean {
     return myCachedResolved;
   }
 
-  @Nullable
-  private VirtualFile doResolve() {
+  private @Nullable VirtualFile doResolve() {
     if (myProject == null || myProject.isDisposed()) { return null; }
     VirtualFile baseDir = myProject.getBaseDir();
 

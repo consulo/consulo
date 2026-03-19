@@ -43,11 +43,9 @@ public abstract class CopyPasteManager {
 
   public abstract boolean areDataFlavorsAvailable(DataFlavor... flavors);
 
-  @Nullable
-  public abstract Transferable getContents();
+  public abstract @Nullable Transferable getContents();
 
-  @Nullable
-  public abstract <T> T getContents(DataFlavor flavor);
+  public abstract @Nullable <T> T getContents(DataFlavor flavor);
 
   
   public abstract Transferable[] getAllContents();

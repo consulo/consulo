@@ -139,8 +139,7 @@ public class CompareFilesAction extends BaseShowDiffAction {
         }
     }
 
-    @Nullable
-    private static VirtualFile getOtherFile(@Nullable Project project, VirtualFile file) {
+    private static @Nullable VirtualFile getOtherFile(@Nullable Project project, VirtualFile file) {
         FileChooserDescriptor descriptor;
         String key;
 

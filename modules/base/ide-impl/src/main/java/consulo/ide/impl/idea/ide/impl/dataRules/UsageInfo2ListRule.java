@@ -28,8 +28,7 @@ import java.util.List;
  * @author cdr
  */
 public final class UsageInfo2ListRule {
-  @Nullable
-  static List<UsageInfo> getData(DataSnapshot dataProvider) {
+  static @Nullable List<UsageInfo> getData(DataSnapshot dataProvider) {
     UsageInfo usageInfo = dataProvider.get(UsageView.USAGE_INFO_KEY);
     if (usageInfo != null) return Collections.singletonList(usageInfo);
     return null;

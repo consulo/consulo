@@ -51,8 +51,7 @@ public abstract class LogConsoleImpl extends LogConsoleBase {
     myCharset = charset;
   }
 
-  @Nullable
-  private static Reader getReader(File file, Charset charset, long skippedContents) {
+  private static @Nullable Reader getReader(File file, Charset charset, long skippedContents) {
     Reader reader = null;
     try {
       try {
@@ -76,8 +75,7 @@ public abstract class LogConsoleImpl extends LogConsoleBase {
   }
 
   @Override
-  @Nullable
-  public String getTooltip() {
+  public @Nullable String getTooltip() {
     return myPath;
   }
 

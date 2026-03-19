@@ -34,8 +34,7 @@ public abstract class RefKeyRefValueHashMap<K, V> implements Map<K, V> {
     V get();
   }
 
-  @Nullable
-  protected V dereference(@Nullable ValueReference<K, ? extends V> reference) {
+  protected @Nullable V dereference(@Nullable ValueReference<K, ? extends V> reference) {
     return reference == null ? null : reference.get();
   }
 

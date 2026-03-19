@@ -49,8 +49,7 @@ public class RunnerRegistryImpl extends RunnerRegistry {
     }
 
     @Override
-    @Nullable
-    public ProgramRunner findRunnerById(String id) {
+    public @Nullable ProgramRunner findRunnerById(String id) {
         return myApplication.getExtensionPoint(ProgramRunner.class)
             .findFirstSafe(runner -> Objects.equals(id, runner.getRunnerId()));
     }

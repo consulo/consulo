@@ -30,8 +30,7 @@ public final class AccessRule {
         ReadAction.run(action);
     }
 
-    @Nullable
-    public static <T, E extends Throwable> T read(@RequiredReadAction ThrowableSupplier<T, E> action) throws E {
+    public static @Nullable <T, E extends Throwable> T read(@RequiredReadAction ThrowableSupplier<T, E> action) throws E {
         return ReadAction.compute(action);
     }
 }

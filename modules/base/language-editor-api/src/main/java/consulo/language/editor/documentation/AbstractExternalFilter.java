@@ -176,8 +176,7 @@ public abstract class AbstractExternalFilter {
     return PlatformDocumentationUtil.fixupText(docText);
   }
 
-  @Nullable
-  public String getExternalDocInfoForElement(String docURL, PsiElement element) throws Exception {
+  public @Nullable String getExternalDocInfoForElement(String docURL, PsiElement element) throws Exception {
     return getExternalDocInfo(docURL);
   }
 
@@ -336,8 +335,7 @@ public abstract class AbstractExternalFilter {
     return false;
   }
 
-  @Nullable
-  static String parseContentEncoding(String htmlLine) {
+  static @Nullable String parseContentEncoding(String htmlLine) {
     if (!htmlLine.contains("charset")) {
       return null;
     }

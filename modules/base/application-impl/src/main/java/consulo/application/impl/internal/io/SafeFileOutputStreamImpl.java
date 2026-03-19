@@ -90,8 +90,7 @@ public class SafeFileOutputStreamImpl extends SafeOutputStream {
         }
     }
 
-    @Nullable
-    private Path waitForBackup() throws IOException {
+    private @Nullable Path waitForBackup() throws IOException {
         if (myBackupFuture == null) {
             return null;
         }

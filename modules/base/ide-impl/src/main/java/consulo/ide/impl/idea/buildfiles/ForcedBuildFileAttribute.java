@@ -47,8 +47,7 @@ public class ForcedBuildFileAttribute {
     return frameworkId.equals(getFrameworkIdOfBuildFile(file));
   }
 
-  @Nullable
-  public static String getFrameworkIdOfBuildFile(VirtualFile file) {
+  public static @Nullable String getFrameworkIdOfBuildFile(VirtualFile file) {
     if (file instanceof NewVirtualFile) {
       DataInputStream is = FRAMEWORK_FILE_ATTRIBUTE.readAttribute(file);
       if (is != null) {

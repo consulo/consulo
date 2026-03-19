@@ -31,8 +31,7 @@ public abstract class SingleParentUsageGroupingRule implements UsageGroupingRule
     /**
      * @return a group a specific usage should be placed into, or null, if this rule doesn't apply to this kind of usages.
      */
-    @Nullable
-    protected abstract UsageGroup getParentGroupFor(Usage usage, UsageTarget[] targets);
+    protected abstract @Nullable UsageGroup getParentGroupFor(Usage usage, UsageTarget[] targets);
 
     
     @Override

@@ -36,7 +36,7 @@ import org.jspecify.annotations.Nullable;
 public class OpenInEditorAction extends EditSourceAction implements DumbAware {
   public static final Key<OpenInEditorAction> KEY = Key.create("DiffOpenInEditorAction");
 
-  @Nullable private final Runnable myAfterRunnable;
+  private final @Nullable Runnable myAfterRunnable;
 
   public OpenInEditorAction(@Nullable Runnable afterRunnable) {
     ActionUtil.copyFrom(this, IdeActions.ACTION_EDIT_SOURCE);

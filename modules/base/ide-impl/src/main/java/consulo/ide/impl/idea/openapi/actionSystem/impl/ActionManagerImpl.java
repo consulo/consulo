@@ -304,8 +304,7 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
         injectStat.dump("ActionManager:injecting", LOG::info);
     }
 
-    @Nullable
-    private Pair<AnAction, String> resolveActionRef(ActionRef actionRef, Object context) {
+    private @Nullable Pair<AnAction, String> resolveActionRef(ActionRef actionRef, Object context) {
         Class<?> type = actionRef.type();
         if (type != Object.class) {
             if (type == AnSeparator.class) {
@@ -414,8 +413,7 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
         return true;
     }
 
-    @Nullable
-    private static Anchor parseAnchor(String anchorStr, @Nullable String actionName, @Nullable PluginId pluginId) {
+    private static @Nullable Anchor parseAnchor(String anchorStr, @Nullable String actionName, @Nullable PluginId pluginId) {
         if (StringUtil.isEmptyOrSpaces(anchorStr)) {
             return Anchor.LAST;
         }
@@ -602,13 +600,11 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
     }
 
     @Override
-    @Nullable
-    public AnAction getAction(String id) {
+    public @Nullable AnAction getAction(String id) {
         return getActionImpl(id, false);
     }
 
-    @Nullable
-    private AnAction getActionImpl(String id, boolean canReturnStub) {
+    private @Nullable AnAction getActionImpl(String id, boolean canReturnStub) {
         if (!myInitialized.get()) {
             long wait = System.currentTimeMillis();
             myInitializeLocker.waitFor();
@@ -689,8 +685,7 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
     /**
      * @return instance of ActionGroup or ActionStub. The method never returns real subclasses of {@code AnAction}.
      */
-    @Nullable
-    private AnAction processActionElement(
+    private @Nullable AnAction processActionElement(
         SimpleXmlElement element,
         PluginDescriptor plugin,
         LocalizeHelper localizeHelper
@@ -995,8 +990,7 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
         myId2GroupId.putValue(actionId, myAction2Id.get(group));
     }
 
-    @Nullable
-    public AnAction getParentGroup(String groupId, @Nullable String actionName, @Nullable PluginId pluginId) {
+    public @Nullable AnAction getParentGroup(String groupId, @Nullable String actionName, @Nullable PluginId pluginId) {
         if (groupId == null || groupId.isEmpty()) {
             reportActionError(pluginId, actionName + ": attribute \"group-id\" should be defined");
             return null;
@@ -1103,8 +1097,7 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
         }
     }
 
-    @Nullable
-    private AnAction processReferenceElement(SimpleXmlElement element, PluginId pluginId) {
+    private @Nullable AnAction processReferenceElement(SimpleXmlElement element, PluginId pluginId) {
         if (!REFERENCE_ELEMENT_NAME.equals(element.getName())) {
             reportActionError(pluginId, "unexpected name of element \"" + element.getName() + "\"");
             return null;

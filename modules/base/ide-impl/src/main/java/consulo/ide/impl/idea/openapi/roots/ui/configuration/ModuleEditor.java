@@ -83,15 +83,13 @@ public abstract class ModuleEditor implements Disposable {
 
   protected abstract JComponent createCenterPanel(Disposable parentUIDisposable);
 
-  @Nullable
-  public abstract ModuleConfigurationEditor getSelectedEditor();
+  public abstract @Nullable ModuleConfigurationEditor getSelectedEditor();
 
   public abstract void selectEditor(String displayName);
 
   protected abstract void restoreSelectedEditor();
 
-  @Nullable
-  public abstract ModuleConfigurationEditor getEditor(String displayName);
+  public abstract @Nullable ModuleConfigurationEditor getEditor(String displayName);
 
   protected abstract void disposeCenterPanel();
 
@@ -107,8 +105,7 @@ public abstract class ModuleEditor implements Disposable {
     myEventDispatcher.removeListener(listener);
   }
 
-  @Nullable
-  public Module getModule() {
+  public @Nullable Module getModule() {
     Module[] all = myModulesConfigurator.getModules();
     for (Module each : all) {
       if (each == myModule) return myModule;
@@ -468,8 +465,7 @@ public abstract class ModuleEditor implements Disposable {
     return unwrappedParams;
   }
 
-  @Nullable
-  public String getHelpTopic() {
+  public @Nullable String getHelpTopic() {
     if (myEditors.isEmpty()) {
       return null;
     }

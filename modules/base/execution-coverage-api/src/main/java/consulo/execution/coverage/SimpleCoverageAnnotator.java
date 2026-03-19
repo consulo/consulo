@@ -40,8 +40,7 @@ public abstract class SimpleCoverageAnnotator extends BaseCoverageAnnotator {
         myDirCoverageInfos.clear();
     }
 
-    @Nullable
-    protected DirCoverageInfo getDirCoverageInfo(PsiDirectory directory, CoverageSuitesBundle currentSuite) {
+    protected @Nullable DirCoverageInfo getDirCoverageInfo(PsiDirectory directory, CoverageSuitesBundle currentSuite) {
         VirtualFile dir = directory.getVirtualFile();
 
         ProjectFileIndex projectFileIndex = ProjectRootManager.getInstance(directory.getProject()).getFileIndex();
@@ -124,8 +123,7 @@ public abstract class SimpleCoverageAnnotator extends BaseCoverageAnnotator {
         return getLinesCoverageInformationString(coverageInfo);
     }
 
-    @Nullable
-    protected FileCoverageInfo collectBaseFileCoverage(
+    protected @Nullable FileCoverageInfo collectBaseFileCoverage(
         VirtualFile file,
         Annotator annotator,
         ProjectData projectData,
@@ -152,8 +150,7 @@ public abstract class SimpleCoverageAnnotator extends BaseCoverageAnnotator {
         return info;
     }
 
-    @Nullable
-    private static ClassData getClassData(
+    private static @Nullable ClassData getClassData(
         String filePath,
         ProjectData data,
         Map<String, String> normalizedFiles2Files
@@ -165,8 +162,7 @@ public abstract class SimpleCoverageAnnotator extends BaseCoverageAnnotator {
         return data.getClassData(originalFileName);
     }
 
-    @Nullable
-    protected DirCoverageInfo collectFolderCoverage(
+    protected @Nullable DirCoverageInfo collectFolderCoverage(
         VirtualFile dir,
         CoverageDataManager dataManager,
         Annotator annotator,
@@ -384,8 +380,7 @@ public abstract class SimpleCoverageAnnotator extends BaseCoverageAnnotator {
         };
     }
 
-    @Nullable
-    protected String getLinesCoverageInformationString(FileCoverageInfo info) {
+    protected @Nullable String getLinesCoverageInformationString(FileCoverageInfo info) {
         return calcCoveragePercentage(info) + "% lines covered";
     }
 
@@ -397,13 +392,11 @@ public abstract class SimpleCoverageAnnotator extends BaseCoverageAnnotator {
         return total != 0 ? (int) ((double) covered / total * 100) : 100;
     }
 
-    @Nullable
-    protected String getFilesCoverageInformationString(DirCoverageInfo info) {
+    protected @Nullable String getFilesCoverageInformationString(DirCoverageInfo info) {
         return calcPercent(info.coveredFilesCount, info.totalFilesCount) + "% files";
     }
 
-    @Nullable
-    private static FileCoverageInfo fileInfoForCoveredFile(ClassData classData) {
+    private static @Nullable FileCoverageInfo fileInfoForCoveredFile(ClassData classData) {
         Object[] lines = classData.getLines();
 
         // class data lines = [0, 1, ... count] but first element with index = #0 is fake and isn't
@@ -437,8 +430,7 @@ public abstract class SimpleCoverageAnnotator extends BaseCoverageAnnotator {
         return info;
     }
 
-    @Nullable
-    protected FileCoverageInfo fillInfoForUncoveredFile(File file) {
+    protected @Nullable FileCoverageInfo fillInfoForUncoveredFile(File file) {
         return null;
     }
 

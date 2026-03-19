@@ -37,12 +37,9 @@ public interface LinearGraphController {
 
   // Integer = nodeId
   class LinearGraphAnswer {
-    @Nullable
-    private final GraphChanges<Integer> myGraphChanges;
-    @Nullable
-    private final Cursor myCursor;
-    @Nullable
-    private final Set<Integer> mySelectedNodeIds;
+    private final @Nullable GraphChanges<Integer> myGraphChanges;
+    private final @Nullable Cursor myCursor;
+    private final @Nullable Set<Integer> mySelectedNodeIds;
 
     public LinearGraphAnswer(@Nullable GraphChanges<Integer> changes, @Nullable Cursor cursor, @Nullable Set<Integer> selectedNodeIds) {
       myGraphChanges = changes;
@@ -58,23 +55,19 @@ public interface LinearGraphController {
       this(changes, null, null);
     }
 
-    @Nullable
-    public GraphChanges<Integer> getGraphChanges() {
+    public @Nullable GraphChanges<Integer> getGraphChanges() {
       return myGraphChanges;
     }
 
-    @Nullable
-    public Runnable getGraphUpdater() {
+    public @Nullable Runnable getGraphUpdater() {
       return null;
     }
 
-    @Nullable
-    public Cursor getCursorToSet() {
+    public @Nullable Cursor getCursorToSet() {
       return myCursor;
     }
 
-    @Nullable
-    public Set<Integer> getSelectedNodeIds() {
+    public @Nullable Set<Integer> getSelectedNodeIds() {
       return mySelectedNodeIds;
     }
   }

@@ -42,8 +42,7 @@ public class FileNavigatable implements Navigatable {
     return descriptor != null ? descriptor.getNavigateOptions() : NavigateOptions.CANT_NAVIGATE;
   }
 
-  @Nullable
-  public OpenFileDescriptor getFileDescriptor() {
+  public @Nullable OpenFileDescriptor getFileDescriptor() {
     return myValue.get();
   }
 
@@ -52,8 +51,7 @@ public class FileNavigatable implements Navigatable {
     return myFilePosition;
   }
 
-  @Nullable
-  private OpenFileDescriptor createDescriptor() {
+  private @Nullable OpenFileDescriptor createDescriptor() {
     OpenFileDescriptor descriptor = null;
     VirtualFile file = VirtualFileUtil.findFileByIoFile(myFilePosition.getFile(), false);
     if (file != null) {

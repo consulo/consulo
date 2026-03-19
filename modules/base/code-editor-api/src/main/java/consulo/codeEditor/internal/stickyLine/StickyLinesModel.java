@@ -17,8 +17,7 @@ import java.util.function.Predicate;
  * The current implementation relies on MarkupModel, but that may be changed in the future.
  */
 public interface StickyLinesModel {
-    @Nullable
-    static  StickyLinesModel getModel(Project project, Document document) {
+    static  @Nullable StickyLinesModel getModel(Project project, Document document) {
         return CodeEditorInternalHelper.getInstance().getStickyLinesModel(project, document);
     }
 

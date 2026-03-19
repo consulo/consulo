@@ -145,8 +145,7 @@ public final class RunConfigurationNode extends AbstractTreeNode<RunDashboardMan
     return RunDashboardRunConfigurationStatus.getStatus(this);
   }
 
-  @Nullable
-  private Image getExecutorIcon() {
+  private @Nullable Image getExecutorIcon() {
     Content content = getContent();
     if (content != null) {
       if (!RunContentManagerImpl.isTerminated(content)) {

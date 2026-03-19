@@ -50,8 +50,7 @@ public class NaturalLanguageTextSelectioner extends ExtendWordSelectionHandlerBa
         return new TextRange(paragraphStart >= 0 ? paragraphStart + 2 : 0, paragraphEnd < 0 ? text.length() : paragraphEnd);
     }
 
-    @Nullable
-    private static TextRange findCustomRange(String text, int start, int end, char startChar, char endChar) {
+    private static @Nullable TextRange findCustomRange(String text, int start, int end, char startChar, char endChar) {
         int prev = text.lastIndexOf(startChar, start);
         int next = text.indexOf(endChar, end);
         if (prev < 0 || next < 0) {

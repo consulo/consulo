@@ -30,8 +30,7 @@ public class EventDispatcher<T extends EventListener> {
     private final DisposableList<T> myListeners = DisposableList.create();
     
     private final Class<T> myListenerClass;
-    @Nullable
-    private final Map<String, Object> myMethodReturnValues;
+    private final @Nullable Map<String, Object> myMethodReturnValues;
 
     
     public static <T extends EventListener> EventDispatcher<T> create(Class<T> listenerClass) {
@@ -93,8 +92,7 @@ public class EventDispatcher<T extends EventListener> {
         return (T) Proxy.newProxyInstance(listenerClass.getClassLoader(), new Class[]{listenerClass}, handler);
     }
 
-    @Nullable
-    public static Object handleObjectMethod(Object proxy, Object[] args, String methodName) {
+    public static @Nullable Object handleObjectMethod(Object proxy, Object[] args, String methodName) {
         switch (methodName) {
             case "toString":
                 return "Multicaster";

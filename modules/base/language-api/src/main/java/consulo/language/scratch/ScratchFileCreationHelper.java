@@ -69,8 +69,7 @@ public abstract class ScratchFileCreationHelper implements LanguageExtension {
         public DataContext dataProvider;
     }
 
-    @Nullable
-    public static PsiFile parseHeader(Project project, Language language, String text) {
+    public static @Nullable PsiFile parseHeader(Project project, Language language, String text) {
         LanguageFileType fileType = language.getAssociatedFileType();
         CharSequence fileSnippet = StringUtil.first(text, 10 * 1024, false);
         PsiFileFactory fileFactory = PsiFileFactory.getInstance(project);

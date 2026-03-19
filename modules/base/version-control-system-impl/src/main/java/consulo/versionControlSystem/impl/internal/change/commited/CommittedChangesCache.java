@@ -204,8 +204,7 @@ public class CommittedChangesCache implements PersistentStateComponent<Committed
     updateRefreshTimer();
   }
 
-  @Nullable
-  public CommittedChangesProvider getProviderForProject() {
+  public @Nullable CommittedChangesProvider getProviderForProject() {
     AbstractVcs[] vcss = myVcsManager.getAllActiveVcss();
     List<AbstractVcs> vcsWithProviders = new ArrayList<>();
     for (AbstractVcs vcs : vcss) {
@@ -329,8 +328,7 @@ public class CommittedChangesCache implements PersistentStateComponent<Committed
     myTaskQueue.run(loader);
   }
 
-  @Nullable
-  public List<CommittedChangeList> getChanges(ChangeBrowserSettings settings,
+  public @Nullable List<CommittedChangeList> getChanges(ChangeBrowserSettings settings,
                                               VirtualFile file,
                                               AbstractVcs vcs,
                                               int maxCount,
@@ -399,7 +397,7 @@ public class CommittedChangesCache implements PersistentStateComponent<Committed
     return true;
   }
 
-  public void hasCachesForAnyRoot(@Nullable final Consumer<Boolean> continuation) {
+  public void hasCachesForAnyRoot(final @Nullable Consumer<Boolean> continuation) {
     myTaskQueue.run(new Runnable() {
       @Override
       public void run() {
@@ -450,8 +448,7 @@ public class CommittedChangesCache implements PersistentStateComponent<Committed
     return resultRef.get();
   }
 
-  @Nullable
-  public Iterator<ChangesBunch> getBackBunchedIterator(AbstractVcs vcs,
+  public @Nullable Iterator<ChangesBunch> getBackBunchedIterator(AbstractVcs vcs,
                                                        VirtualFile root,
                                                        RepositoryLocation location,
                                                        int bunchSize) {
@@ -750,7 +747,7 @@ public class CommittedChangesCache implements PersistentStateComponent<Committed
     });
   }
 
-  public void loadIncomingChangesAsync(@Nullable final Consumer<List<CommittedChangeList>> consumer, final boolean inBackground) {
+  public void loadIncomingChangesAsync(final @Nullable Consumer<List<CommittedChangeList>> consumer, final boolean inBackground) {
     debug("Loading incoming changes");
     Runnable task = new Runnable() {
       @Override
@@ -783,8 +780,7 @@ public class CommittedChangesCache implements PersistentStateComponent<Committed
     });
   }
 
-  @Nullable
-  public List<CommittedChangeList> getCachedIncomingChanges() {
+  public @Nullable List<CommittedChangeList> getCachedIncomingChanges() {
     return myCachedIncomingChangeLists;
   }
 
@@ -793,7 +789,7 @@ public class CommittedChangesCache implements PersistentStateComponent<Committed
   }
 
   public void processUpdatedFiles(final UpdatedFiles updatedFiles,
-                                  @Nullable final Consumer<List<CommittedChangeList>> incomingChangesConsumer) {
+                                  final @Nullable Consumer<List<CommittedChangeList>> incomingChangesConsumer) {
     Runnable task = new Runnable() {
       @Override
       public void run() {
@@ -841,7 +837,7 @@ public class CommittedChangesCache implements PersistentStateComponent<Committed
 
   private void processUpdatedFilesAfterRefresh(final ChangesCacheFile cache,
                                                final UpdatedFiles updatedFiles,
-                                               @Nullable final Consumer<List<CommittedChangeList>> incomingChangesConsumer) {
+                                               final @Nullable Consumer<List<CommittedChangeList>> incomingChangesConsumer) {
     refreshCacheAsync(cache, false, new RefreshResultConsumer() {
       @Override
       public void receivedChanges(List<CommittedChangeList> committedChangeLists) {
@@ -1031,7 +1027,7 @@ public class CommittedChangesCache implements PersistentStateComponent<Committed
 
   private void refreshCacheAsync(final ChangesCacheFile cache,
                                  final boolean initIfEmpty,
-                                 @Nullable final RefreshResultConsumer consumer,
+                                 final @Nullable RefreshResultConsumer consumer,
                                  boolean asynch) {
     try {
       if (!initIfEmpty && cache.isEmpty()) {
@@ -1106,8 +1102,7 @@ public class CommittedChangesCache implements PersistentStateComponent<Committed
     }
   }
 
-  @Nullable
-  public Pair<CommittedChangeList, Change> getIncomingChangeList(VirtualFile file) {
+  public @Nullable Pair<CommittedChangeList, Change> getIncomingChangeList(VirtualFile file) {
     if (myCachedIncomingChangeLists != null) {
       File ioFile = new File(file.getPath());
       for (CommittedChangeList changeList : myCachedIncomingChangeLists) {

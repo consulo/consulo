@@ -99,22 +99,19 @@ public class XMLValidationException
    /**
     * The name of the element where the exception occurred.
     */
-   @Nullable
-   private String elementName;
+   private @Nullable String elementName;
 
 
    /**
     * The name of the attribute where the exception occurred.
     */
-   @Nullable
-   private String attributeName;
+   private @Nullable String attributeName;
 
 
    /**
     * The value of the attribute where the exception occurred.
     */
-   @Nullable
-   private String attributeValue;
+   private @Nullable String attributeValue;
 
 
    /**
@@ -154,8 +151,7 @@ public class XMLValidationException
     * Returns the name of the element in which the validation is violated.
     * If there is no current element, null is returned.
     */
-   @Nullable
-   public String getElementName()
+   public @Nullable String getElementName()
    {
       return this.elementName;
    }
@@ -165,8 +161,7 @@ public class XMLValidationException
     * Returns the name of the attribute in which the validation is violated.
     * If there is no current attribute, null is returned.
     */
-   @Nullable
-   public String getAttributeName()
+   public @Nullable String getAttributeName()
    {
       return this.attributeName;
    }
@@ -176,8 +171,7 @@ public class XMLValidationException
     * Returns the value of the attribute in which the validation is violated.
     * If there is no current attribute, null is returned.
     */
-   @Nullable
-   public String getAttributeValue()
+   public @Nullable String getAttributeValue()
    {
       return this.attributeValue;
    }

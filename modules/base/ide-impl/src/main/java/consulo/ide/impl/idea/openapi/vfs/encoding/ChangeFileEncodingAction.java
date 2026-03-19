@@ -98,8 +98,7 @@ public class ChangeFileEncodingAction extends AnAction implements DumbAware {
         }
     }
 
-    @Nullable
-    public ListPopup createPopup(DataContext dataContext) {
+    public @Nullable ListPopup createPopup(DataContext dataContext) {
         VirtualFile virtualFile = dataContext.getData(VirtualFile.KEY);
         if (virtualFile == null) {
             return null;
@@ -134,11 +133,11 @@ public class ChangeFileEncodingAction extends AnAction implements DumbAware {
     }
 
     public DefaultActionGroup createActionGroup(
-        @Nullable final VirtualFile myFile,
+        final @Nullable VirtualFile myFile,
         final Editor editor,
         final Document document,
         final byte[] bytes,
-        @Nullable final String clearItemText
+        final @Nullable String clearItemText
     ) {
         return new ChooseFileEncodingAction(myFile) {
             @Override

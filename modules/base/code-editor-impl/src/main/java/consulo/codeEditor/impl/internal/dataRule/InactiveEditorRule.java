@@ -23,8 +23,7 @@ import org.jspecify.annotations.Nullable;
  * @author max
  */
 public final class InactiveEditorRule {
-    @Nullable
-    static Editor getData(DataSnapshot dataProvider) {
+    static @Nullable Editor getData(DataSnapshot dataProvider) {
         return dataProvider.get(Editor.KEY);
     }
 }

@@ -59,8 +59,7 @@ public class AnalyzeStacktraceUtil {
         consoleView.scrollTo(0);
     }
 
-    @Nullable
-    public static String getTextInClipboard() {
+    public static @Nullable String getTextInClipboard() {
         return CopyPasteManager.getInstance().getContents(DataFlavor.stringFlavor);
     }
 

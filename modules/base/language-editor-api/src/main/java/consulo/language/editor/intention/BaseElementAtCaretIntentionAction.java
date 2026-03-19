@@ -85,13 +85,11 @@ public abstract class BaseElementAtCaretIntentionAction extends BaseIntentionAct
    */
   public abstract void invoke(Project project, Editor editor, PsiElement element) throws IncorrectOperationException;
 
-  @Nullable
-  protected static PsiElement getElementToTheRight(Editor editor, PsiFile file) {
+  protected static @Nullable PsiElement getElementToTheRight(Editor editor, PsiFile file) {
     return file.findElementAt(editor.getCaretModel().getOffset());
   }
 
-  @Nullable
-  protected static PsiElement getElementToTheLeft(Editor editor, PsiFile file) {
+  protected static @Nullable PsiElement getElementToTheLeft(Editor editor, PsiFile file) {
     return file.findElementAt(editor.getCaretModel().getOffset() - 1);
   }
 

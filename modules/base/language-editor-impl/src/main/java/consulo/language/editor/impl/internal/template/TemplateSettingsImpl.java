@@ -192,8 +192,7 @@ public class TemplateSettingsImpl implements PersistentStateComponent<TemplateSe
     public TemplateSettingsImpl(Application application, SchemeManagerFactory schemeManagerFactory) {
         mySchemeManager = schemeManagerFactory.createSchemeManager(TEMPLATES_DIR_PATH, new BaseSchemeProcessor<TemplateGroup, TemplateGroup>() {
             @Override
-            @Nullable
-            public TemplateGroup readScheme(Document schemeContent) throws InvalidDataException {
+            public @Nullable TemplateGroup readScheme(Document schemeContent) throws InvalidDataException {
                 return readTemplateFile(schemeContent, schemeContent.getRootElement().getAttributeValue("group"), false, false, getClass().getClassLoader());
             }
 
@@ -268,8 +267,7 @@ public class TemplateSettingsImpl implements PersistentStateComponent<TemplateSe
         return def == null || !t.equals(def) || !t.contextsEqual(def);
     }
 
-    @Nullable
-    public TemplateImpl getDefaultTemplate(TemplateImpl t) {
+    public @Nullable TemplateImpl getDefaultTemplate(TemplateImpl t) {
         return myDefaultTemplates.get(TemplateKey.keyOf(t));
     }
 
@@ -301,13 +299,11 @@ public class TemplateSettingsImpl implements PersistentStateComponent<TemplateSe
         }
     }
 
-    @Nullable
-    public String getLastSelectedTemplateKey() {
+    public @Nullable String getLastSelectedTemplateKey() {
         return myLastSelectedTemplate != null ? myLastSelectedTemplate.key : null;
     }
 
-    @Nullable
-    public String getLastSelectedTemplateGroup() {
+    public @Nullable String getLastSelectedTemplateGroup() {
         return myLastSelectedTemplate != null ? myLastSelectedTemplate.groupName : null;
     }
 
@@ -337,8 +333,7 @@ public class TemplateSettingsImpl implements PersistentStateComponent<TemplateSe
     }
 
     @Override
-    @Nullable
-    public TemplateImpl getTemplate(String key, String group) {
+    public @Nullable TemplateImpl getTemplate(String key, String group) {
         Collection<TemplateImpl> templates = myTemplates.get(key);
         for (TemplateImpl template : templates) {
             if (template.getGroupName().equals(group)) {
@@ -553,8 +548,7 @@ public class TemplateSettingsImpl implements PersistentStateComponent<TemplateSe
         return template;
     }
 
-    @Nullable
-    private TemplateGroup readTemplateFile(Document document, String path, boolean isDefault, boolean registerTemplate, ClassLoader classLoader) throws InvalidDataException {
+    private @Nullable TemplateGroup readTemplateFile(Document document, String path, boolean isDefault, boolean registerTemplate, ClassLoader classLoader) throws InvalidDataException {
         if (document == null) {
             throw new InvalidDataException();
         }

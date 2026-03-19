@@ -196,8 +196,7 @@ public class FilePathImpl implements FilePath {
   }
 
   @Override
-  @Nullable
-  public VirtualFile getVirtualFile() {
+  public @Nullable VirtualFile getVirtualFile() {
     if (myVirtualFile != null && !myVirtualFile.isValid()) {
       myVirtualFile = null;
     }
@@ -205,8 +204,7 @@ public class FilePathImpl implements FilePath {
   }
 
   @Override
-  @Nullable
-  public VirtualFile getVirtualFileParent() {
+  public @Nullable VirtualFile getVirtualFileParent() {
     if (myVirtualParent != null && !myVirtualParent.isValid()) {
       myVirtualParent = null;
     }
@@ -235,8 +233,7 @@ public class FilePathImpl implements FilePath {
   }
 
   @Override
-  @Nullable
-  public Document getDocument() {
+  public @Nullable Document getDocument() {
     if (myVirtualFile == null || myVirtualFile.getFileType().isBinary()) {
       return null;
     }

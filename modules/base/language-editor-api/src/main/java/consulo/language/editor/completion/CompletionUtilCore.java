@@ -56,8 +56,7 @@ public class CompletionUtilCore {
   public static final String DUMMY_IDENTIFIER = "IntellijIdeaRulezzz ";
   public static final String DUMMY_IDENTIFIER_TRIMMED = "IntellijIdeaRulezzz";
 
-  @Nullable
-  public static PsiElement getTargetElement(LookupElement lookupElement) {
+  public static @Nullable PsiElement getTargetElement(LookupElement lookupElement) {
     PsiElement psiElement = lookupElement.getPsiElement();
     if (psiElement != null && psiElement.isValid()) {
       return getOriginalElement(psiElement);
@@ -72,8 +71,7 @@ public class CompletionUtilCore {
     return null;
   }
 
-  @Nullable
-  public static <T extends PsiElement> T getOriginalElement(T psi) {
+  public static @Nullable <T extends PsiElement> T getOriginalElement(T psi) {
     PsiFile file = psi.getContainingFile();
     return getOriginalElement(psi, file);
   }

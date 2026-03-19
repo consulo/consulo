@@ -64,8 +64,7 @@ public abstract class ContainerPathManager {
     return getHomePath() + File.separator + BIN_FOLDER;
   }
 
-  @Nullable
-  public Path findIconInAppHomeDirectory() {
+  public @Nullable Path findIconInAppHomeDirectory() {
     File appHomeDirectory = getAppHomeDirectory();
     if (!appHomeDirectory.exists()) {
       return null;
@@ -116,8 +115,7 @@ public abstract class ContainerPathManager {
    * @return first that exists, or {@code null} if nothing found.
    * @see #findBinFileWithException(String)
    */
-  @Nullable
-  public File findBinFile(String fileName) {
+  public @Nullable File findBinFile(String fileName) {
     File file = new File(getBinPath(), fileName);
     if (file.isFile()) return file;
     return null;

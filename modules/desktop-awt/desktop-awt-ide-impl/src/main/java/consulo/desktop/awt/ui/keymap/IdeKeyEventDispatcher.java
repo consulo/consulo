@@ -493,8 +493,7 @@ public final class IdeKeyEventDispatcher implements Disposable {
         return hasMnemonic(container, keyCode) || hasMnemonicInBalloons(container, keyCode);
     }
 
-    @Nullable
-    private static Container getContainer(@Nullable Component focusOwner) {
+    private static @Nullable Container getContainer(@Nullable Component focusOwner) {
         if (focusOwner == null) {
             return null;
         }

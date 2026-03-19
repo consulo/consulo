@@ -390,8 +390,7 @@ public class UsageInfo {
         return mySmartPointer.getContainingFile();
     }
 
-    @Nullable
-    public VirtualFile getVirtualFile() {
+    public @Nullable VirtualFile getVirtualFile() {
         return mySmartPointer.getVirtualFile();
     }
 

@@ -110,15 +110,13 @@ public class StringRef {
     return new StringRef(source == null ? "" : source);
   }
 
-  @Nullable
-  public static StringRef fromStream(DataInput in, AbstractStringEnumerator store) throws IOException {
+  public static @Nullable StringRef fromStream(DataInput in, AbstractStringEnumerator store) throws IOException {
     int nameId = DataInputOutputUtil.readINT(in);
 
     return nameId != 0 ? new StringRef(nameId, store) : null;
   }
 
-  @Nullable
-  public static String stringFromStream(DataInput in, AbstractStringEnumerator store) throws IOException {
+  public static @Nullable String stringFromStream(DataInput in, AbstractStringEnumerator store) throws IOException {
     int nameId = DataInputOutputUtil.readINT(in);
     return nameId != 0 ? store.valueOf(nameId) : null;
   }

@@ -76,8 +76,7 @@ public class StructureViewElementWrapper<V extends PsiElement> implements Struct
     }
   }
 
-  @Nullable
-  private Navigatable getNavigatableInTemplateLanguageFile() {
+  private @Nullable Navigatable getNavigatableInTemplateLanguageFile() {
     PsiElement element = (PsiElement)myTreeElement.getValue();
     if (element == null) return null;
 

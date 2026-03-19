@@ -47,8 +47,7 @@ public class OpenProjectFileChooserDescriptor extends FileChooserDescriptor {
         return icon != null ? dressIcon(file, icon) : super.getIcon(file);
     }
 
-    @Nullable
-    private Image getProcessorIcon(VirtualFile virtualFile) {
+    private @Nullable Image getProcessorIcon(VirtualFile virtualFile) {
         ProjectOpenProcessor provider = ProjectOpenProcessors.getInstance().findProcessor(VirtualFileUtil.virtualToIoFile(virtualFile));
         if (provider != null) {
             return provider.getIcon(virtualFile);

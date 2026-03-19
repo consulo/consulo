@@ -39,8 +39,7 @@ public final class TestProxyPrinterProvider {
         myFilterProvider = filterProvider;
     }
 
-    @Nullable
-    public Printer getPrinterByType(String nodeType, String nodeName, @Nullable String nodeArguments) {
+    public @Nullable Printer getPrinterByType(String nodeType, String nodeName, @Nullable String nodeArguments) {
         Filter filter = myFilterProvider.getFilter(nodeType, nodeName, nodeArguments);
         if (filter != null && !Disposer.isDisposed(myTestOutputConsoleView)) {
             return new HyperlinkPrinter(myTestOutputConsoleView, HyperlinkPrinter.ERROR_CONTENT_TYPE, filter);

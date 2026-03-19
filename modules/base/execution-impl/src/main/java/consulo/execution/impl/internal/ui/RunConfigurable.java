@@ -116,8 +116,7 @@ public class RunConfigurable extends BaseConfigurable {
     private final Project myProject;
     private RunDialogBase myRunDialog;
     private final TitlelessDecorator myTitlelessDecorator;
-    @Nullable
-    private final RunConfiguration myPreselectedConfiguration;
+    private final @Nullable RunConfiguration myPreselectedConfiguration;
     final DefaultMutableTreeNode myRoot = new DefaultMutableTreeNode("Root");
     final MyTreeModel myTreeModel = new MyTreeModel(myRoot);
     final Tree myTree = new Tree(myTreeModel);
@@ -630,8 +629,7 @@ public class RunConfigurable extends BaseConfigurable {
         return bottomPanel;
     }
 
-    @Nullable
-    private ConfigurationType getSelectedConfigurationType() {
+    private @Nullable ConfigurationType getSelectedConfigurationType() {
         DefaultMutableTreeNode configurationTypeNode = getSelectedConfigurationTypeNode();
         return configurationTypeNode != null ? (ConfigurationType) configurationTypeNode.getUserObject() : null;
     }
@@ -863,8 +861,7 @@ public class RunConfigurable extends BaseConfigurable {
         }
     }
 
-    @Nullable
-    private DefaultMutableTreeNode getConfigurationTypeNode(ConfigurationType type) {
+    private @Nullable DefaultMutableTreeNode getConfigurationTypeNode(ConfigurationType type) {
         for (int i = 0; i < myRoot.getChildCount(); i++) {
             DefaultMutableTreeNode node = (DefaultMutableTreeNode) myRoot.getChildAt(i);
             if (node.getUserObject() == type) {
@@ -1008,8 +1005,7 @@ public class RunConfigurable extends BaseConfigurable {
         SwingUtilities.invokeLater(() -> UIUtil.setupEnclosingDialogBounds(myWholePanel));
     }
 
-    @Nullable
-    private SingleConfigurationConfigurable<RunConfiguration> getSelectedConfiguration() {
+    private @Nullable SingleConfigurationConfigurable<RunConfiguration> getSelectedConfiguration() {
         TreePath selectionPath = myTree.getSelectionPath();
         if (selectionPath != null) {
             DefaultMutableTreeNode treeNode = (DefaultMutableTreeNode) selectionPath.getLastPathComponent();
@@ -1048,8 +1044,7 @@ public class RunConfigurable extends BaseConfigurable {
         }
     }
 
-    @Nullable
-    private DefaultMutableTreeNode getSelectedConfigurationTypeNode() {
+    private @Nullable DefaultMutableTreeNode getSelectedConfigurationTypeNode() {
         TreePath selectionPath = myTree.getSelectionPath();
         DefaultMutableTreeNode node = selectionPath != null ? (DefaultMutableTreeNode) selectionPath.getLastPathComponent() : null;
         while (node != null) {
@@ -1701,8 +1696,7 @@ public class RunConfigurable extends BaseConfigurable {
         }
     }
 
-    @Nullable
-    private static ConfigurationType getType(DefaultMutableTreeNode node) {
+    private static @Nullable ConfigurationType getType(DefaultMutableTreeNode node) {
         while (node != null) {
             if (node.getUserObject() instanceof ConfigurationType configType) {
                 return configType;
@@ -1716,14 +1710,12 @@ public class RunConfigurable extends BaseConfigurable {
         return myTree.getSelectedNodes(DefaultMutableTreeNode.class, null);
     }
 
-    @Nullable
-    private DefaultMutableTreeNode getSelectedNode() {
+    private @Nullable DefaultMutableTreeNode getSelectedNode() {
         DefaultMutableTreeNode[] nodes = myTree.getSelectedNodes(DefaultMutableTreeNode.class, null);
         return nodes.length > 1 ? nodes[0] : null;
     }
 
-    @Nullable
-    private RunnerAndConfigurationSettings getSelectedSettings() {
+    private @Nullable RunnerAndConfigurationSettings getSelectedSettings() {
         TreePath selectionPath = myTree.getSelectionPath();
         if (selectionPath == null) {
             return null;
@@ -1731,8 +1723,7 @@ public class RunConfigurable extends BaseConfigurable {
         return getSettings((DefaultMutableTreeNode) selectionPath.getLastPathComponent());
     }
 
-    @Nullable
-    private static RunnerAndConfigurationSettings getSettings(DefaultMutableTreeNode treeNode) {
+    private static @Nullable RunnerAndConfigurationSettings getSettings(DefaultMutableTreeNode treeNode) {
         if (treeNode == null) {
             return null;
         }
@@ -2046,8 +2037,7 @@ public class RunConfigurable extends BaseConfigurable {
             }
         }
 
-        @Nullable
-        private RunnerAndConfigurationSettings getSettings(DefaultMutableTreeNode treeNode) {
+        private @Nullable RunnerAndConfigurationSettings getSettings(DefaultMutableTreeNode treeNode) {
             Object userObject = treeNode.getUserObject();
             if (userObject instanceof SingleConfigurationConfigurable configurable) {
                 return (RunnerAndConfigurationSettings) configurable.getSettings();
@@ -2058,8 +2048,7 @@ public class RunConfigurable extends BaseConfigurable {
             return null;
         }
 
-        @Nullable
-        private ConfigurationType getType(@Nullable DefaultMutableTreeNode treeNode) {
+        private @Nullable ConfigurationType getType(@Nullable DefaultMutableTreeNode treeNode) {
             if (treeNode == null) {
                 return null;
             }

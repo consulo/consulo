@@ -107,8 +107,7 @@ public interface FormattingDocumentModel {
         boolean changedViaPsi
     );
 
-    @Nullable
-    default PsiFile getFile() {
+    default @Nullable PsiFile getFile() {
         return null;
     }
 }

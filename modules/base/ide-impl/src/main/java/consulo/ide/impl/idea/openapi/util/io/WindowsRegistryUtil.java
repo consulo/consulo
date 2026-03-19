@@ -30,8 +30,7 @@ public class WindowsRegistryUtil {
   private WindowsRegistryUtil() {
   }
 
-  @Nullable
-  private static String trimToValue(@Nullable StringBuilder output) {
+  private static @Nullable String trimToValue(@Nullable StringBuilder output) {
     if (output == null) {
       return null;
     }
@@ -87,18 +86,15 @@ public class WindowsRegistryUtil {
     return result;
   }
 
-  @Nullable
-  public static String readRegistryDefault(String location) {
+  public static @Nullable String readRegistryDefault(String location) {
     return trimToValue(readRegistry("reg query \"" + location + "\" /ve"));
   }
 
-  @Nullable
-  public static String readRegistryValue(String location, String key) {
+  public static @Nullable String readRegistryValue(String location, String key) {
     return trimToValue(readRegistry("reg query \"" + location + "\" /v " + key));
   }
 
-  @Nullable
-  private static StringBuilder readRegistry(String command) {
+  private static @Nullable StringBuilder readRegistry(String command) {
     try {
       Process process = Runtime.getRuntime().exec(command);
       StringBuilder output = null;

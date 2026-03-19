@@ -61,8 +61,7 @@ public interface ComponentManager extends UserDataHolder, Disposable, InjectingC
         return getInjectingContainer().getInstance(clazz);
     }
 
-    @Nullable
-    default <T> T getInstanceIfCreated(Class<T> clazz) {
+    default @Nullable <T> T getInstanceIfCreated(Class<T> clazz) {
         return getInjectingContainer().getInstanceIfCreated(clazz);
     }
 
@@ -136,8 +135,7 @@ public interface ComponentManager extends UserDataHolder, Disposable, InjectingC
         return ComponentProfiles.DEFAULT;
     }
 
-    @Nullable
-    default ComponentManager getParent() {
+    default @Nullable ComponentManager getParent() {
         return null;
     }
 }

@@ -183,13 +183,11 @@ abstract class AbstractDataGetter<T extends VcsShortCommitDetails> implements Di
   }
 
   @Override
-  @Nullable
-  public T getCommitDataIfAvailable(int hash) {
+  public @Nullable T getCommitDataIfAvailable(int hash) {
     return getFromCache(hash);
   }
 
-  @Nullable
-  private T getFromCache(Integer commitId) {
+  private @Nullable T getFromCache(Integer commitId) {
     T details = myCache.get(commitId);
     if (details != null) {
       if (details instanceof LoadingDetails) {
@@ -207,8 +205,7 @@ abstract class AbstractDataGetter<T extends VcsShortCommitDetails> implements Di
   /**
    * Lookup somewhere else but the standard cache.
    */
-  @Nullable
-  protected abstract T getFromAdditionalCache(int commitId);
+  protected abstract @Nullable T getFromAdditionalCache(int commitId);
 
   private void runLoadCommitsData(Iterable<Integer> hashes) {
     long taskNumber = myCurrentTaskIndex++;

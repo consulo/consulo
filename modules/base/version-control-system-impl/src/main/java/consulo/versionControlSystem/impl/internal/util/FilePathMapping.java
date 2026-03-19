@@ -53,8 +53,7 @@ public final class FilePathMapping<T> {
     return myPathMap.containsKey(path);
   }
 
-  @Nullable
-  public T getMappingFor(String filePath) {
+  public @Nullable T getMappingFor(String filePath) {
     String path = StringUtil.trimTrailing(filePath, '/');
 
     int index = 0;

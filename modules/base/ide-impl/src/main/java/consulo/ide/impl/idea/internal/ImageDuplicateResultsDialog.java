@@ -245,8 +245,7 @@ public class ImageDuplicateResultsDialog extends DialogWrapper {
         return myTree;
     }
 
-    @Nullable
-    private VirtualFile getFileFromSelection() {
+    private @Nullable VirtualFile getFileFromSelection() {
         TreePath path = myTree.getSelectionPath();
         if (path != null) {
             Object component = path.getLastPathComponent();

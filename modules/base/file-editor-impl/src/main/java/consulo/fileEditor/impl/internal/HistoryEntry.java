@@ -52,13 +52,11 @@ public final class HistoryEntry {
   /**
    * can be null when read from XML
    */
-  @Nullable
-  private FileEditorProvider mySelectedProvider;
+  private @Nullable FileEditorProvider mySelectedProvider;
   
   private final Map<FileEditorProvider, FileEditorState> myProvider2State;
 
-  @Nullable
-  private final Disposable myDisposable;
+  private final @Nullable Disposable myDisposable;
 
   private HistoryEntry(VirtualFilePointer filePointer,
                        @Nullable FileEditorProvider selectedProvider,
@@ -138,8 +136,7 @@ public final class HistoryEntry {
     return myFilePointer;
   }
 
-  @Nullable
-  public VirtualFile getFile() {
+  public @Nullable VirtualFile getFile() {
     return myFilePointer.getFile();
   }
 
@@ -151,8 +148,7 @@ public final class HistoryEntry {
     myProvider2State.put(provider, state);
   }
 
-  @Nullable
-  public FileEditorProvider getSelectedProvider() {
+  public @Nullable FileEditorProvider getSelectedProvider() {
     return mySelectedProvider;
   }
 
@@ -232,8 +228,7 @@ public final class HistoryEntry {
     public final String url;
     
     public final List<Pair<FileEditorProvider, FileEditorState>> providerStates;
-    @Nullable
-    public final FileEditorProvider selectedProvider;
+    public final @Nullable FileEditorProvider selectedProvider;
 
     public EntryData(String url,
                      List<Pair<FileEditorProvider, FileEditorState>> providerStates,

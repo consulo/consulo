@@ -268,8 +268,7 @@ public class CodeStyleSchemesModelImpl implements CodeStyleSchemesModel {
     return new CodeStyleSchemeImpl(name, false, parentScheme);
   }
 
-  @Nullable
-  private CodeStyleScheme findSchemeByName(String name) {
+  private @Nullable CodeStyleScheme findSchemeByName(String name) {
     for (CodeStyleScheme scheme : mySchemes) {
       if (name.equals(scheme.getName())) return scheme;
     }

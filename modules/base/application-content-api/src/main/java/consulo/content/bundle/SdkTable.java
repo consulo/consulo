@@ -36,8 +36,7 @@ public abstract class SdkTable implements BundleHolder {
     return Application.get().getInstance(SdkTable.class);
   }
 
-  @Nullable
-  public abstract Sdk findSdk(String name);
+  public abstract @Nullable Sdk findSdk(String name);
 
   
   public abstract Sdk[] getAllSdks();
@@ -50,13 +49,11 @@ public abstract class SdkTable implements BundleHolder {
 
   public abstract List<Sdk> getSdksOfType(SdkTypeId type);
 
-  @Nullable
-  public Sdk findMostRecentSdkOfType(SdkTypeId type) {
+  public @Nullable Sdk findMostRecentSdkOfType(SdkTypeId type) {
     return findMostRecentSdk(sdk -> sdk.getSdkType() == type);
   }
 
-  @Nullable
-  public Sdk findMostRecentSdk(Predicate<Sdk> condition) {
+  public @Nullable Sdk findMostRecentSdk(Predicate<Sdk> condition) {
     Sdk found = null;
     for (Sdk each : getAllSdks()) {
       if (!condition.test(each)) continue;
@@ -89,8 +86,7 @@ public abstract class SdkTable implements BundleHolder {
 
   public abstract SdkTypeId getSdkTypeByName(String name);
 
-  @Nullable
-  public abstract Sdk findPredefinedSdkByType(SdkTypeId sdkType);
+  public abstract @Nullable Sdk findPredefinedSdkByType(SdkTypeId sdkType);
 
   /**
    * Create sdk with target type, but not add to table. use {@link #addSdk(Sdk)} for adding

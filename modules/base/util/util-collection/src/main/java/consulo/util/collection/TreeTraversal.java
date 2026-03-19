@@ -189,8 +189,7 @@ public abstract class TreeTraversal {
 
     public static abstract class TracingIt<T> extends It<T> {
 
-        @Nullable
-        public T parent() {
+        public @Nullable T parent() {
             throw new UnsupportedOperationException();
         }
 
@@ -211,8 +210,7 @@ public abstract class TreeTraversal {
             return (JBIterable<T>)result;
         }
 
-        @Nullable
-        protected T _transform(@Nullable Object original) {
+        protected @Nullable T _transform(@Nullable Object original) {
             Object result = original;
             for (Function<Object, ?> f : getTransformations()) {
                 result = f.apply(result);
@@ -228,10 +226,8 @@ public abstract class TreeTraversal {
             void guide(GuidedIt<T> guidedIt);
         }
 
-        @Nullable
-        public T curChild, curParent;
-        @Nullable
-        public Iterable<? extends T> curChildren;
+        public @Nullable T curChild, curParent;
+        public @Nullable Iterable<? extends T> curChildren;
         public boolean curNoChildren;
 
         public abstract GuidedIt<T> queueNext(@Nullable T child);

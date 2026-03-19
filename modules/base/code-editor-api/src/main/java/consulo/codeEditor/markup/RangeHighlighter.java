@@ -75,8 +75,7 @@ public interface RangeHighlighter extends RangeMarker {
      * @deprecated Use the overload with {@link EditorColorsScheme} and prefer using {@link #getTextAttributesKey()}
      */
     @Deprecated
-    @Nullable
-    default TextAttributes getTextAttributes() {
+    default @Nullable TextAttributes getTextAttributes() {
         return getTextAttributes(null);
     }
 

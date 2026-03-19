@@ -106,8 +106,7 @@ public class ErrorStripeUpdateManagerImpl extends ErrorStripeUpdateManager {
     return new DaemonTooltipRendererProvider(myProject, editor);
   }
 
-  @Nullable
-  protected ErrorStripeRenderer createRenderer(Editor editor, @Nullable PsiFile file) {
+  protected @Nullable ErrorStripeRenderer createRenderer(Editor editor, @Nullable PsiFile file) {
     return new TrafficLightRenderer(myProject, editor.getDocument());
   }
 }

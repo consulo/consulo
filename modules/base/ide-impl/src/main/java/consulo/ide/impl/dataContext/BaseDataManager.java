@@ -84,8 +84,7 @@ public abstract class BaseDataManager implements DataManagerEx {
             }
         }
 
-        @Nullable
-        protected C getComponent() {
+        protected @Nullable C getComponent() {
             return SoftReference.dereference(myRef);
         }
 
@@ -179,8 +178,7 @@ public abstract class BaseDataManager implements DataManagerEx {
         return result;
     }
 
-    @Nullable
-    public <T> T getDataFromProvider(DataProvider provider, Key<T> dataId, @Nullable Set<Key> alreadyComputedIds) {
+    public @Nullable <T> T getDataFromProvider(DataProvider provider, Key<T> dataId, @Nullable Set<Key> alreadyComputedIds) {
         if (alreadyComputedIds != null && alreadyComputedIds.contains(dataId)) {
             return null;
         }
@@ -198,8 +196,7 @@ public abstract class BaseDataManager implements DataManagerEx {
         }
     }
 
-    @Nullable
-    protected static <T> T validated(T data, Key<T> dataId, Object dataSource) {
+    protected static @Nullable <T> T validated(T data, Key<T> dataId, Object dataSource) {
         T invalidData = DataValidators.findInvalidData(dataId, data, dataSource);
         if (invalidData != null) {
             return null;
@@ -226,8 +223,7 @@ public abstract class BaseDataManager implements DataManagerEx {
     }
 
     @Override
-    @Nullable
-    public <T> T loadFromDataContext(DataContext dataContext, Key<T> dataKey) {
+    public @Nullable <T> T loadFromDataContext(DataContext dataContext, Key<T> dataKey) {
         return dataContext instanceof UserDataHolder ? ((UserDataHolder) dataContext).getUserData(dataKey) : null;
     }
 

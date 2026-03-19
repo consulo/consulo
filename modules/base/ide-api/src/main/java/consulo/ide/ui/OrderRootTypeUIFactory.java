@@ -37,8 +37,7 @@ public interface OrderRootTypeUIFactory {
     ExtensionPointCacheKey<OrderRootTypeUIFactory, Map<String, OrderRootTypeUIFactory>> KEY =
         ExtensionPointCacheKey.groupBy("OrderRootTypeUIFactory", OrderRootTypeUIFactory::getOrderRootTypeId);
 
-    @Nullable
-    static OrderRootTypeUIFactory forOrderType(OrderRootType orderRootType) {
+    static @Nullable OrderRootTypeUIFactory forOrderType(OrderRootType orderRootType) {
         ExtensionPoint<OrderRootTypeUIFactory> point = Application.get().getExtensionPoint(OrderRootTypeUIFactory.class);
         Map<String, OrderRootTypeUIFactory> map = point.getOrBuildCache(KEY);
         return map.get(orderRootType.getId());

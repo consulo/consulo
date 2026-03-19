@@ -811,8 +811,7 @@ class DocumentWindowImpl extends UserDataHolderBase implements Disposable, Docum
      * @deprecated Use {@link InjectedLanguageManager#intersectWithAllEditableFragments(PsiFile, TextRange)} instead
      */
     @Deprecated
-    @Nullable
-    private TextRange intersectWithEditable(TextRange rangeToEdit) {
+    private @Nullable TextRange intersectWithEditable(TextRange rangeToEdit) {
         int startOffset = -1;
         int endOffset = -1;
         synchronized (myLock) {

@@ -242,8 +242,7 @@ public class SMTestProxy extends AbstractTestProxy {
         }
     }
 
-    @Nullable
-    private Printer getRightPrinter(@Nullable Printer printer) {
+    private @Nullable Printer getRightPrinter(@Nullable Printer printer) {
         if (myPreferredPrinter != null && printer != null) {
             return myPreferredPrinter;
         }
@@ -266,8 +265,7 @@ public class SMTestProxy extends AbstractTestProxy {
     }
 
     @Override
-    @Nullable
-    public Location getLocation(Project project, GlobalSearchScope searchScope) {
+    public @Nullable Location getLocation(Project project, GlobalSearchScope searchScope) {
         //determines location of test proxy
         return getLocation(project, searchScope, myLocationUrl);
     }
@@ -290,8 +288,7 @@ public class SMTestProxy extends AbstractTestProxy {
     }
 
     @Override
-    @Nullable
-    public Navigatable getDescriptor(@Nullable Location location, TestConsoleProperties properties) {
+    public @Nullable Navigatable getDescriptor(@Nullable Location location, TestConsoleProperties properties) {
         // by location gets navigatable element.
         // It can be file or place in file (e.g. when OPEN_FAILURE_LINE is enabled)
         if (location == null) {
@@ -700,8 +697,7 @@ public class SMTestProxy extends AbstractTestProxy {
     }
 
     @Override
-    @Nullable
-    public DiffHyperlink getDiffViewerProvider() {
+    public @Nullable DiffHyperlink getDiffViewerProvider() {
         if (myState instanceof TestComparisionFailedState testComparisionFailedState) {
             return testComparisionFailedState.getHyperlink();
         }
@@ -758,14 +754,12 @@ public class SMTestProxy extends AbstractTestProxy {
     }
 
     @Override
-    @Nullable
-    public String getLocationUrl() {
+    public @Nullable String getLocationUrl() {
         return myLocationUrl;
     }
 
     @Override
-    @Nullable
-    public String getMetainfo() {
+    public @Nullable String getMetainfo() {
         return myMetainfo;
     }
 
@@ -867,8 +861,7 @@ public class SMTestProxy extends AbstractTestProxy {
     }
 
 
-    @Nullable
-    private Long calcSuiteDuration() {
+    private @Nullable Long calcSuiteDuration() {
         long partialDuration = 0;
         boolean durationOfChildrenIsUnknown = true;
 

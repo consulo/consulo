@@ -31,8 +31,7 @@ public interface SearchableConfigurable extends Configurable {
   
   String getId();
 
-  @Nullable
-  default Runnable enableSearch(String option) {
+  default @Nullable Runnable enableSearch(String option) {
     return null;
   }
 

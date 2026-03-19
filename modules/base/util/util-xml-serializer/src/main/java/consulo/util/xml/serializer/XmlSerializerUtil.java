@@ -34,8 +34,7 @@ public class XmlSerializerUtil {
     }
   }
 
-  @Nullable
-  public static <T> T createCopy(T from) {
+  public static @Nullable <T> T createCopy(T from) {
     try {
       @SuppressWarnings("unchecked")
       T to = (T)InternalReflectionUtil.newInstance(from.getClass());

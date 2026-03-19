@@ -126,8 +126,7 @@ public final class PackageViewPane extends AbstractProjectViewPSIPane {
         });
     }
 
-    @Nullable
-    private PackageElement getSelectedPackageElement() {
+    private @Nullable PackageElement getSelectedPackageElement() {
         PackageElement result = null;
         DefaultMutableTreeNode selectedNode = getSelectedNode();
         if (selectedNode != null) {

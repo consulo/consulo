@@ -36,8 +36,7 @@ public class ArtifactProblemDescription extends ProjectStructureProblemDescripti
     myPathToPlace = pathToPlace;
   }
 
-  @Nullable
-  public List<PackagingElement<?>> getPathToPlace() {
+  public @Nullable List<PackagingElement<?>> getPathToPlace() {
     return myPathToPlace;
   }
 }

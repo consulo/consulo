@@ -368,8 +368,7 @@ public final class DesktopAWTEditorTabbedContainer implements FileEditorTabbedCo
         }
     }
 
-    @Nullable
-    public Object getSelectedComponent() {
+    public @Nullable Object getSelectedComponent() {
         TabInfo info = myTabs.getTargetInfo();
         return info != null ? info.getComponent() : null;
     }

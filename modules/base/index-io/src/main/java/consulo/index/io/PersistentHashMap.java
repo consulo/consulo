@@ -555,8 +555,7 @@ public class PersistentHashMap<Key, Value> extends PersistentEnumeratorDelegate<
     return myBusyReading;
   }
 
-  @Nullable
-  protected Value doGet(Key key) throws IOException {
+  protected @Nullable Value doGet(Key key) throws IOException {
     myEnumerator.lockStorage();
     long valueOffset;
     int id;

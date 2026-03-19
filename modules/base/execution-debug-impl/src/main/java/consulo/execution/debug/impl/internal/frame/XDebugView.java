@@ -56,8 +56,7 @@ public abstract class XDebugView implements Disposable {
     return DataManager.getInstance().getDataContext(component).getData(XDebugSession.DATA_KEY);
   }
 
-  @Nullable
-  protected VirtualFile getCurrentFile() {
+  protected @Nullable VirtualFile getCurrentFile() {
     XDebugSession session = getSession();
     if (session != null) {
       XSourcePosition position = session.getCurrentPosition();

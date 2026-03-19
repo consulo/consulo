@@ -46,8 +46,7 @@ public class EditorHighlighterCache {
         document.putUserData(ourSomeEditorSyntaxHighlighter, new WeakReference<EditorHighlighter>(highlighter));
     }
 
-    @Nullable
-    public static EditorHighlighter getEditorHighlighterForCachesBuilding(Document document) {
+    public static @Nullable EditorHighlighter getEditorHighlighterForCachesBuilding(Document document) {
         if (document == null) {
             return null;
         }
@@ -62,8 +61,7 @@ public class EditorHighlighterCache {
         return null;
     }
 
-    @Nullable
-    public static Lexer getLexerBasedOnLexerHighlighter(CharSequence text, VirtualFile virtualFile, Project project) {
+    public static @Nullable Lexer getLexerBasedOnLexerHighlighter(CharSequence text, VirtualFile virtualFile, Project project) {
         EditorHighlighter highlighter = null;
 
         PsiFile psiFile = virtualFile != null ? PsiManager.getInstance(project).findFile(virtualFile) : null;

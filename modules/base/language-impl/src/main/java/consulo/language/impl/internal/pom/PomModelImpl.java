@@ -177,8 +177,7 @@ public class PomModelImpl extends UserDataHolderBase implements PomModel {
         });
     }
 
-    @Nullable
-    private Pair<PomModelAspect, PomTransaction> getBlockingTransaction(PomModelAspect aspect, PomTransaction transaction) {
+    private @Nullable Pair<PomModelAspect, PomTransaction> getBlockingTransaction(PomModelAspect aspect, PomTransaction transaction) {
         List<PomModelAspect> allDependants = getAllDependants(aspect);
         for (PomModelAspect pomModelAspect : allDependants) {
             Stack<Pair<PomModelAspect, PomTransaction>> blockedAspects = myBlockedAspects.get();
@@ -256,8 +255,7 @@ public class PomModelImpl extends UserDataHolderBase implements PomModel {
         }
     }
 
-    @Nullable
-    private Runnable reparseFile(final PsiFile file, FileElement treeElement, CharSequence newText) {
+    private @Nullable Runnable reparseFile(final PsiFile file, FileElement treeElement, CharSequence newText) {
         TextRange changedPsiRange = ChangedPsiRangeUtil.getChangedPsiRange(file, treeElement, newText);
         if (changedPsiRange == null) {
             return null;
@@ -331,8 +329,7 @@ public class PomModelImpl extends UserDataHolderBase implements PomModel {
         return cachedDocument != null && manager.isUncommited(cachedDocument);
     }
 
-    @Nullable
-    private static PsiFile getContainingFileByTree(PsiElement changeScope) {
+    private static @Nullable PsiFile getContainingFileByTree(PsiElement changeScope) {
         // there could be pseudo physical trees (JSPX/JSP/etc.) which must not translate
         // any changes to document and not to fire any PSI events
         PsiFile psiFile;

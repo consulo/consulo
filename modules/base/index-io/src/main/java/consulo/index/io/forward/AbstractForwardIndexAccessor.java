@@ -23,8 +23,7 @@ public abstract class AbstractForwardIndexAccessor<Key, Value, DataType> impleme
 
   protected abstract InputDataDiffBuilder<Key, Value> createDiffBuilder(int inputId, @Nullable DataType inputData) throws IOException;
 
-  @Nullable
-  public DataType deserializeData(@Nullable ByteArraySequence sequence) throws IOException {
+  public @Nullable DataType deserializeData(@Nullable ByteArraySequence sequence) throws IOException {
     if (sequence == null) return null;
     return deserializeFromByteSeq(sequence, myDataTypeExternalizer);
   }
@@ -35,8 +34,7 @@ public abstract class AbstractForwardIndexAccessor<Key, Value, DataType> impleme
     return createDiffBuilder(inputId, deserializeData(sequence));
   }
 
-  @Nullable
-  public abstract DataType convertToDataType(InputData<Key, Value> data);
+  public abstract @Nullable DataType convertToDataType(InputData<Key, Value> data);
 
   @Nullable
   @Override
@@ -44,8 +42,7 @@ public abstract class AbstractForwardIndexAccessor<Key, Value, DataType> impleme
     return serializeIndexedData(convertToDataType(data));
   }
 
-  @Nullable
-  public ByteArraySequence serializeIndexedData(@Nullable DataType data) throws IOException {
+  public @Nullable ByteArraySequence serializeIndexedData(@Nullable DataType data) throws IOException {
     if (data == null) return null;
     return serializeToByteSeq(data, myDataTypeExternalizer, getBufferInitialSize(data));
   }

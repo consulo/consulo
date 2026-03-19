@@ -329,8 +329,7 @@ public class SyncScrollSupport {
         private final int myMasterIndex;
         private final int mySlaveIndex;
 
-        @Nullable
-        private Anchor myAnchor;
+        private @Nullable Anchor myAnchor;
 
         public ScrollHelper(List<? extends Editor> editors, int masterIndex, int slaveIndex) {
             myEditors = editors;

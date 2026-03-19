@@ -170,8 +170,7 @@ public abstract class AbstractProjectViewPane extends UserDataHolderBase impleme
     public abstract String getId();
 
     @Override
-    @Nullable
-    public final String getSubId() {
+    public final @Nullable String getSubId() {
         return mySubId;
     }
 
@@ -490,8 +489,7 @@ public abstract class AbstractProjectViewPane extends UserDataHolderBase impleme
         return getNodeElement(selectedUserObjects[0]);
     }
 
-    @Nullable
-    private static Object getNodeElement(@Nullable Object userObject) {
+    private static @Nullable Object getNodeElement(@Nullable Object userObject) {
         if (userObject instanceof AbstractTreeNode<?> node) {
             return node.getValue();
         }
@@ -501,8 +499,7 @@ public abstract class AbstractProjectViewPane extends UserDataHolderBase impleme
         return null;
     }
 
-    @Nullable
-    static Module moduleContext(Project project, @Nullable Object element) {
+    static @Nullable Module moduleContext(Project project, @Nullable Object element) {
         if (element instanceof Module module) {
             return module.isDisposed() ? null : module;
         }
@@ -515,8 +512,7 @@ public abstract class AbstractProjectViewPane extends UserDataHolderBase impleme
         return null;
     }
 
-    @Nullable
-    private Module[] getSelectedModules(Object[] selectedUserObjects) {
+    private @Nullable Module[] getSelectedModules(Object[] selectedUserObjects) {
         List<Module> result = new ArrayList<>();
         for (Object value : getSelectedValues(selectedUserObjects)) {
             Module module = moduleContext(myProject, value);
@@ -535,8 +531,7 @@ public abstract class AbstractProjectViewPane extends UserDataHolderBase impleme
         return Collections.emptyList();
     }
 
-    @Nullable
-    private static LibraryOrderEntry getSelectedLibrary(@Nullable Object[] userObjectsPath) {
+    private static @Nullable LibraryOrderEntry getSelectedLibrary(@Nullable Object[] userObjectsPath) {
         if (userObjectsPath == null) {
             return null;
         }
@@ -643,8 +638,7 @@ public abstract class AbstractProjectViewPane extends UserDataHolderBase impleme
      * @deprecated use {@link AbstractProjectViewPane#getElementsFromNode(Object)}
      **/
     @Deprecated
-    @Nullable
-    public PsiElement getPSIElementFromNode(@Nullable TreeNode node) {
+    public @Nullable PsiElement getPSIElementFromNode(@Nullable TreeNode node) {
         return ContainerUtil.getFirstItem(getElementsFromNode(node));
     }
 
@@ -676,8 +670,7 @@ public abstract class AbstractProjectViewPane extends UserDataHolderBase impleme
         return ArrayUtil.toObjectArray(list);
     }
 
-    @Nullable
-    public Object getValueFromNode(@Nullable Object node) {
+    public @Nullable Object getValueFromNode(@Nullable Object node) {
         return extractValueFromNode(node);
     }
 
@@ -689,8 +682,7 @@ public abstract class AbstractProjectViewPane extends UserDataHolderBase impleme
         return getValueFromNode(node);
     }
 
-    @Nullable
-    public static Object extractValueFromNode(@Nullable Object node) {
+    public static @Nullable Object extractValueFromNode(@Nullable Object node) {
         Object userObject = TreeUtil.getUserObject(node);
         Object element = null;
         if (userObject instanceof AbstractTreeNode descriptor) {
@@ -1113,8 +1105,7 @@ public abstract class AbstractProjectViewPane extends UserDataHolderBase impleme
         return Collections.unmodifiableList(list);
     }
 
-    @Nullable
-    public static TreeVisitor createVisitor(Object object) {
+    public static @Nullable TreeVisitor createVisitor(Object object) {
         if (object instanceof AbstractTreeNode node) {
             object = node.getValue();
         }
@@ -1135,18 +1126,15 @@ public abstract class AbstractProjectViewPane extends UserDataHolderBase impleme
         return createVisitor(null, file);
     }
 
-    @Nullable
-    public static TreeVisitor createVisitor(PsiElement element) {
+    public static @Nullable TreeVisitor createVisitor(PsiElement element) {
         return createVisitor(element, null);
     }
 
-    @Nullable
-    public static TreeVisitor createVisitor(@Nullable PsiElement element, @Nullable VirtualFile file) {
+    public static @Nullable TreeVisitor createVisitor(@Nullable PsiElement element, @Nullable VirtualFile file) {
         return createVisitor(element, file, null);
     }
 
-    @Nullable
-    static TreeVisitor createVisitor(@Nullable PsiElement element, @Nullable VirtualFile file, @Nullable List<? super TreePath> collector) {
+    static @Nullable TreeVisitor createVisitor(@Nullable PsiElement element, @Nullable VirtualFile file, @Nullable List<? super TreePath> collector) {
         Predicate<? super TreePath> predicate = collector == null ? null : path -> {
             collector.add(path);
             return false;

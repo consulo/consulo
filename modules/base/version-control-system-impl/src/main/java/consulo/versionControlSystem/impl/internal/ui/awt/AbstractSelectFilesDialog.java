@@ -51,8 +51,7 @@ public abstract class AbstractSelectFilesDialog<T> extends DialogWrapper {
   
   protected abstract ChangesTreeListImpl getFileList();
 
-  @Nullable
-  private JLabel createPromptLabel() {
+  private @Nullable JLabel createPromptLabel() {
     if (myPrompt != null) {
       JLabel label = new JLabel(myPrompt);
       label.setUI(new MultiLineLabelUI());
@@ -88,8 +87,7 @@ public abstract class AbstractSelectFilesDialog<T> extends DialogWrapper {
     return getFileList();
   }
 
-  @Nullable
-  protected JComponent createCenterPanel() {
+  protected @Nullable JComponent createCenterPanel() {
     JPanel panel = new JPanel(new BorderLayout());
     panel.add(createToolbar(), BorderLayout.NORTH);
 

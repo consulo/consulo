@@ -115,11 +115,9 @@ public abstract class HierarchyBrowserBase extends SimpleToolWindowPanel impleme
 
     protected abstract HierarchyTreeBuilder getCurrentBuilder();
 
-    @Nullable
-    protected abstract PsiElement getElementFromDescriptor(HierarchyNodeDescriptor descriptor);
+    protected abstract @Nullable PsiElement getElementFromDescriptor(HierarchyNodeDescriptor descriptor);
 
-    @Nullable
-    protected DefaultMutableTreeNode getSelectedNode() {
+    protected @Nullable DefaultMutableTreeNode getSelectedNode() {
         JTree tree = getCurrentTree();
         if (tree == null) {
             return null;
@@ -166,15 +164,13 @@ public abstract class HierarchyBrowserBase extends SimpleToolWindowPanel impleme
         }
     }
 
-    @Nullable
-    protected final PsiElement getSelectedElement() {
+    protected final @Nullable PsiElement getSelectedElement() {
         DefaultMutableTreeNode node = getSelectedNode();
         HierarchyNodeDescriptor descriptor = node != null ? getDescriptor(node) : null;
         return descriptor != null ? getElementFromDescriptor(descriptor) : null;
     }
 
-    @Nullable
-    protected HierarchyNodeDescriptor getDescriptor(DefaultMutableTreeNode node) {
+    protected @Nullable HierarchyNodeDescriptor getDescriptor(DefaultMutableTreeNode node) {
         Object userObject = node != null ? node.getUserObject() : null;
         if (userObject instanceof HierarchyNodeDescriptor descriptor) {
             return descriptor;

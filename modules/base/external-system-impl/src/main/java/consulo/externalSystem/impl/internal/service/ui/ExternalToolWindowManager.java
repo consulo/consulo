@@ -56,8 +56,7 @@ public class ExternalToolWindowManager {
         });
     }
 
-    @Nullable
-    private static ToolWindow getToolWindow(Project project, ProjectSystemId externalSystemId) {
+    private static @Nullable ToolWindow getToolWindow(Project project, ProjectSystemId externalSystemId) {
         ToolWindowManager toolWindowManager = ToolWindowManager.getInstance(project);
         if (toolWindowManager == null) {
             return null;

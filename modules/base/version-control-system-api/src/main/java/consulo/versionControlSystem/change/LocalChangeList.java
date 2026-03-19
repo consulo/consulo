@@ -50,8 +50,7 @@ public abstract class LocalChangeList implements Cloneable, ChangeList {
 
   public abstract void setName(String name);
 
-  @Nullable
-  public abstract String getComment();
+  public abstract @Nullable String getComment();
 
   public abstract void setComment(@Nullable String comment);
 
@@ -64,8 +63,7 @@ public abstract class LocalChangeList implements Cloneable, ChangeList {
   /**
    * Get additional data associated with this changelist.
    */
-  @Nullable
-  public abstract Object getData();
+  public abstract @Nullable Object getData();
 
   public abstract LocalChangeList copy();
 

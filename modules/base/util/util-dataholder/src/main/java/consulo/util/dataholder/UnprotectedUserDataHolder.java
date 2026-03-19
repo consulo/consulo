@@ -11,8 +11,7 @@ import java.util.Map;
  * Non thread safe version of {@link UserDataHolderBase}.
  */
 public class UnprotectedUserDataHolder implements UserDataHolder {
-    @Nullable
-    private Map<Key, Object> myUserData;
+    private @Nullable Map<Key, Object> myUserData;
 
     @Nullable
     @Override

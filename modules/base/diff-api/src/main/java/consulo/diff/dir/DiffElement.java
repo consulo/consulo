@@ -61,8 +61,7 @@ public abstract class DiffElement<T> {
 
   public abstract DiffElement[] getChildren() throws IOException;
 
-  @Nullable
-  public Navigatable getNavigatable(@Nullable Project project) {
+  public @Nullable Navigatable getNavigatable(@Nullable Project project) {
     return null;
   }
 
@@ -71,8 +70,7 @@ public abstract class DiffElement<T> {
    * @return content byte array
    * @throws IOException when reading
    */
-  @Nullable
-  public abstract byte[] getContent() throws IOException;
+  public abstract @Nullable byte[] getContent() throws IOException;
 
   
   public Charset getCharset() {
@@ -85,8 +83,7 @@ public abstract class DiffElement<T> {
     return "/";
   }
 
-  @Nullable
-  public Image getIcon() {
+  public @Nullable Image getIcon() {
     return null;
   }
 
@@ -114,8 +111,7 @@ public abstract class DiffElement<T> {
     }
   }
 
-  @Nullable
-  public Callable<DiffElement<T>> getElementChooser(Project project) {
+  public @Nullable Callable<DiffElement<T>> getElementChooser(Project project) {
     return null;
   }
 
@@ -137,8 +133,7 @@ public abstract class DiffElement<T> {
    * @return <code>true</code> if coping was completed successfully,
    *        <code>false</code> otherwise
    */
-  @Nullable
-  public DiffElement<?> copyTo(DiffElement<T> container, String relativePath) {
+  public @Nullable DiffElement<?> copyTo(DiffElement<T> container, String relativePath) {
     return null;
   }
 

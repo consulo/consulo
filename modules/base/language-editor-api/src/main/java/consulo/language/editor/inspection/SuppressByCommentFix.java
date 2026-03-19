@@ -46,8 +46,7 @@ public class SuppressByCommentFix extends AbstractBatchSuppressByNoInspectionCom
   }
 
   @Override
-  @Nullable
-  public PsiElement getContainer(PsiElement context) {
+  public @Nullable PsiElement getContainer(PsiElement context) {
     return PsiTreeUtil.getParentOfType(context, mySuppressionHolderClass);
   }
 }

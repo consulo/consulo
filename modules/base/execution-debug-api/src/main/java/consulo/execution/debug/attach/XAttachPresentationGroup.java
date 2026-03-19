@@ -78,8 +78,7 @@ public interface XAttachPresentationGroup<T> extends Comparator<T> {
    *                   and use it for presentation
    * @return a description of process to be shown in tooltip of your item, described by info
    */
-  @Nullable
-  default String getItemDescription(Project project, T info, UserDataHolder dataHolder) {
+  default @Nullable String getItemDescription(Project project, T info, UserDataHolder dataHolder) {
     return null;
   }
 

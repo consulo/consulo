@@ -64,8 +64,7 @@ public abstract class UndoManagerImpl implements UndoManagerInternal, Disposable
 
     
     protected final Application myApplication;
-    @Nullable
-    protected final Project myProject;
+    protected final @Nullable Project myProject;
     private final CommandProcessor myCommandProcessor;
 
     private CurrentEditorProvider myEditorProvider;
@@ -118,8 +117,7 @@ public abstract class UndoManagerImpl implements UndoManagerInternal, Disposable
         myMerger = new CommandMerger(this);
     }
 
-    @Nullable
-    public Project getProject() {
+    public @Nullable Project getProject() {
         return myProject;
     }
 

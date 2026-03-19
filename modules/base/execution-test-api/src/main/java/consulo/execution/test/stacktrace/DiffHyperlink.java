@@ -72,8 +72,7 @@ public class DiffHyperlink implements Printable {
     return filePath == null ? null : filePath.replace(File.separatorChar, '/');
   }
 
-  @Nullable
-  public String getTestName() {
+  public @Nullable String getTestName() {
     return myTestProxyName;
   }
 

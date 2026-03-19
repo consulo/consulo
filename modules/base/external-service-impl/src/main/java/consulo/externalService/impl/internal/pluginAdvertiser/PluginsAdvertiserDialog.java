@@ -38,8 +38,7 @@ import java.util.List;
  * @since 2017-06-22
  */
 public class PluginsAdvertiserDialog extends WholeWestDialogWrapper {
-    @Nullable
-    private final Project myProject;
+    private final @Nullable Project myProject;
     private final List<PluginDescriptor> myToInstallPlugins;
     
     private final List<PluginDescriptor> myAllPlugins;

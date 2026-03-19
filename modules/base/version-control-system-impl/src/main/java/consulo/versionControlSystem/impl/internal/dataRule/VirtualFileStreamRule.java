@@ -23,8 +23,7 @@ import org.jspecify.annotations.Nullable;
 import java.util.stream.Stream;
 
 public final class VirtualFileStreamRule {
-  @Nullable
-  public static Stream<VirtualFile> getData(DataSnapshot dataProvider) {
+  public static @Nullable Stream<VirtualFile> getData(DataSnapshot dataProvider) {
     VirtualFile[] files = dataProvider.get(VirtualFile.KEY_OF_ARRAY);
     if (files != null) {
       return Stream.of(files);

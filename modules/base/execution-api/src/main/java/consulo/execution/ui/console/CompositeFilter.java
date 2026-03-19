@@ -56,8 +56,7 @@ public class CompositeFilter implements Filter, FilterMixin, DumbAware {
   }
 
   @Override
-  @Nullable
-  public Result applyFilter(String line, int entireLength) {
+  public @Nullable Result applyFilter(String line, int entireLength) {
     ApplicationManager.getApplication().assertReadAccessAllowed();
     boolean dumb = myDumbService.isDumb();
     List<Filter> filters = myFilters;

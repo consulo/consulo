@@ -25,13 +25,11 @@ import java.awt.*;
  */
 @Deprecated(forRemoval = true)
 public interface LookupValueWithUIHint extends PresentableLookupValue {
-  @Nullable
-  default String getTypeHint() {
+  default @Nullable String getTypeHint() {
     return null;
   }
 
-  @Nullable
-  default Color getColorHint() {
+  default @Nullable Color getColorHint() {
     return null;
   }
 

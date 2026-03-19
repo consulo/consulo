@@ -29,8 +29,7 @@ public class FoldingPolicy {
         }
     }
 
-    @Nullable
-    public static String getSignature(PsiElement element) {
+    public static @Nullable String getSignature(PsiElement element) {
         for (ElementSignatureProvider provider : ElementSignatureProvider.EP_NAME.getExtensionList()) {
             String signature = provider.getSignature(element);
             if (signature != null) {
@@ -40,8 +39,7 @@ public class FoldingPolicy {
         return GENERIC_PROVIDER.getSignature(element);
     }
 
-    @Nullable
-    public static PsiElement restoreBySignature(PsiFile file, String signature) {
+    public static @Nullable PsiElement restoreBySignature(PsiFile file, String signature) {
         return restoreBySignature(file, signature, null);
     }
 
@@ -54,8 +52,7 @@ public class FoldingPolicy {
      * @return PSI element from the given PSI file that corresponds to the given signature (if found)
      * {@code null} otherwise
      */
-    @Nullable
-    public static PsiElement restoreBySignature(
+    public static @Nullable PsiElement restoreBySignature(
         PsiFile file,
         String signature,
         @Nullable StringBuilder processingInfoStorage

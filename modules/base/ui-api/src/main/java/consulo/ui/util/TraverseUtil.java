@@ -41,8 +41,7 @@ public class TraverseUtil {
     return false;
   }
 
-  @Nullable
-  public static Component findUltimateParent(@Nullable Component c) {
+  public static @Nullable Component findUltimateParent(@Nullable Component c) {
     if (c == null) return null;
 
     Component eachParent = c;

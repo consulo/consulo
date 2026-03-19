@@ -63,13 +63,11 @@ public class InjectorUtils {
     private InjectorUtils() {
     }
 
-    @Nullable
-    public static Language getLanguage(BaseInjection injection) {
+    public static @Nullable Language getLanguage(BaseInjection injection) {
         return getLanguageByString(injection.getInjectedLanguageId());
     }
 
-    @Nullable
-    public static Language getLanguageByString(String languageId) {
+    public static @Nullable Language getLanguageByString(String languageId) {
         Language language = InjectedLanguage.findLanguageById(languageId);
         if (language != null) {
             return language;
@@ -175,8 +173,7 @@ public class InjectorUtils {
         return LanguageSupportCache.getInstance().getAllSupports();
     }
 
-    @Nullable
-    public static LanguageInjectionSupport findInjectionSupport(String id) {
+    public static @Nullable LanguageInjectionSupport findInjectionSupport(String id) {
         return LanguageSupportCache.getInstance().getSupport(id);
     }
 
@@ -309,8 +306,7 @@ public class InjectorUtils {
         return map;
     }
 
-    @Nullable
-    public static BaseInjection detectInjectionFromText(String supportId, String text) {
+    public static @Nullable BaseInjection detectInjectionFromText(String supportId, String text) {
         if (text == null || !text.startsWith("language=")) {
             return null;
         }
@@ -326,8 +322,7 @@ public class InjectorUtils {
         return injection;
     }
 
-    @Nullable
-    public static <T> T findNearestComment(PsiElement element, Function<PsiComment, T> processor) {
+    public static @Nullable <T> T findNearestComment(PsiElement element, Function<PsiComment, T> processor) {
         if (element instanceof PsiComment) {
             return null;
         }
@@ -398,8 +393,7 @@ public class InjectorUtils {
         return true;
     }
 
-    @Nullable
-    public static PsiElement prevOrParent(PsiElement e, PsiElement scope) {
+    public static @Nullable PsiElement prevOrParent(PsiElement e, PsiElement scope) {
         if (e == null || e == scope) {
             return null;
         }

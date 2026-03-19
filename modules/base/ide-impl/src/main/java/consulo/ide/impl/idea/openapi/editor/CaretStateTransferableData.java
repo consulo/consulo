@@ -64,8 +64,7 @@ public class CaretStateTransferableData implements TextBlockTransferableData {
     return startOffsets.length;
   }
 
-  @Nullable
-  public static CaretStateTransferableData getFrom(Transferable t) {
+  public static @Nullable CaretStateTransferableData getFrom(Transferable t) {
     try {
       return t.isDataFlavorSupported(FLAVOR) ? (CaretStateTransferableData)t.getTransferData(FLAVOR) : null;
     }

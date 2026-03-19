@@ -26,8 +26,7 @@ import org.jspecify.annotations.Nullable;
 import java.util.Objects;
 
 public abstract class BasePsiNode<T extends PsiElement> extends AbstractPsiBasedNode<T> {
-  @Nullable
-  private final VirtualFile myVirtualFile;
+  private final @Nullable VirtualFile myVirtualFile;
 
   protected BasePsiNode(Project project, T value, ViewSettings viewSettings) {
     super(project, value, viewSettings);
@@ -41,14 +40,12 @@ public abstract class BasePsiNode<T extends PsiElement> extends AbstractPsiBased
   }
 
   @Override
-  @Nullable
-  public VirtualFile getVirtualFile() {
+  public @Nullable VirtualFile getVirtualFile() {
     return myVirtualFile;
   }
 
   @Override
-  @Nullable
-  protected PsiElement extractPsiFromValue() {
+  protected @Nullable PsiElement extractPsiFromValue() {
     return getValue();
   }
 }

@@ -50,8 +50,7 @@ public interface NewModuleWizardContext {
         return getProject() == null;
     }
 
-    @Nullable
-    default Project getProject() {
+    default @Nullable Project getProject() {
         return null;
     }
 }

@@ -143,8 +143,7 @@ public abstract class CodeStyleAbstractPanel implements Disposable {
         myUserActivityWatcher.register(component);
     }
 
-    @Nullable
-    private Editor createEditor() {
+    private @Nullable Editor createEditor() {
         if (getPreviewText() == null) {
             return null;
         }
@@ -387,14 +386,12 @@ public abstract class CodeStyleAbstractPanel implements Disposable {
         editor.setHighlighter(createHighlighter(scheme));
     }
 
-    @Nullable
-    protected abstract EditorHighlighter createHighlighter(EditorColorsScheme scheme);
+    protected abstract @Nullable EditorHighlighter createHighlighter(EditorColorsScheme scheme);
 
     
     protected abstract FileType getFileType();
 
-    @Nullable
-    protected abstract String getPreviewText();
+    protected abstract @Nullable String getPreviewText();
 
     public abstract void apply(CodeStyleSettings settings) throws ConfigurationException;
 
@@ -421,8 +418,7 @@ public abstract class CodeStyleAbstractPanel implements Disposable {
 
     public abstract boolean isModified(CodeStyleSettings settings);
 
-    @Nullable
-    public abstract JComponent getPanel();
+    public abstract @Nullable JComponent getPanel();
 
     @Override
     public void dispose() {
@@ -594,8 +590,7 @@ public abstract class CodeStyleAbstractPanel implements Disposable {
      *
      * @return The language this panel is associated with.
      */
-    @Nullable
-    public Language getDefaultLanguage() {
+    public @Nullable Language getDefaultLanguage() {
         return myDefaultLanguage;
     }
 

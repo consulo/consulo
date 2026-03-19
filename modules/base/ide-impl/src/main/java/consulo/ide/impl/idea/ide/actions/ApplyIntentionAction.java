@@ -59,8 +59,7 @@ public class ApplyIntentionAction extends AnAction {
         return Application.get().runReadAction((Supplier<LocalizeValue>)myAction::getText);
     }
 
-    @Nullable
-    public static ApplyIntentionAction[] getAvailableIntentions(Editor editor, PsiFile file) {
+    public static @Nullable ApplyIntentionAction[] getAvailableIntentions(Editor editor, PsiFile file) {
         IntentionsInfo info = new IntentionsInfo();
         Application.get().runReadAction(() -> ShowIntentionsPass.getActionsToShow(editor, file, info, -1));
         if (info.isEmpty()) {

@@ -126,10 +126,8 @@ public class ConcurrentLongObjectHashMap<V> implements ConcurrentLongObjectMap<V
   static class Node<V> implements LongEntry<V> {
     final int hash;
     final long key;
-    @Nullable
-    volatile V val;
-    @Nullable
-    volatile Node<V> next;
+    volatile @Nullable V val;
+    volatile @Nullable Node<V> next;
 
     Node(int hash, long key, @Nullable V val, @Nullable Node<V> next) {
       this.hash = hash;
@@ -297,10 +295,8 @@ public class ConcurrentLongObjectHashMap<V> implements ConcurrentLongObjectMap<V
   private transient volatile ConcurrentIntObjectHashMap.CounterCell @Nullable [] counterCells = null;
 
   // views
-  @Nullable
-  private transient ValuesView<V> values = null;
-  @Nullable
-  private transient EntrySetView<V> entrySet = null;
+  private transient @Nullable ValuesView<V> values = null;
+  private transient @Nullable EntrySetView<V> entrySet = null;
 
 
   /* ---------------- Public operations -------------- */
@@ -490,8 +486,7 @@ public class ConcurrentLongObjectHashMap<V> implements ConcurrentLongObjectMap<V
   /**
    * Implementation for put and putIfAbsent
    */
-  @Nullable
-  final V putVal(long key, @Nullable V value, boolean onlyIfAbsent) {
+  final @Nullable V putVal(long key, @Nullable V value, boolean onlyIfAbsent) {
     int hash = spread(key);
     int binCount = 0;
     for (Node<V>[] tab = table; ; ) {
@@ -575,8 +570,7 @@ public class ConcurrentLongObjectHashMap<V> implements ConcurrentLongObjectMap<V
    * Replaces node value with v, conditional upon match of cv if
    * non-null.  If resulting value is null, delete.
    */
-  @Nullable
-  final V replaceNode(long key, @Nullable V value, @Nullable Object cv) {
+  final @Nullable V replaceNode(long key, @Nullable V value, @Nullable Object cv) {
     int hash = spread(key);
     for (Node<V>[] tab = table; ; ) {
       Node<V> f;
@@ -1446,8 +1440,7 @@ public class ConcurrentLongObjectHashMap<V> implements ConcurrentLongObjectMap<V
   /**
    * Returns a list of non-TreeNodes replacing those in given list.
    */
-  @Nullable
-  static <V> Node<V> untreeify(@Nullable Node<V> b) {
+  static @Nullable <V> Node<V> untreeify(@Nullable Node<V> b) {
     Node<V> hd = null, tl = null;
     for (Node<V> q = b; q != null; q = q.next) {
       Node<V> p = new Node<>(q.hash, q.key, q.val, null);
@@ -1493,8 +1486,7 @@ public class ConcurrentLongObjectHashMap<V> implements ConcurrentLongObjectMap<V
      * Returns the TreeNode (or null if not found) for the given key
      * starting at given root.
      */
-    @Nullable
-    final TreeNode<V> findTreeNode(int h, long k) {
+    final @Nullable TreeNode<V> findTreeNode(int h, long k) {
       TreeNode<V> p = this;
       do {
         int ph;
@@ -1540,10 +1532,8 @@ public class ConcurrentLongObjectHashMap<V> implements ConcurrentLongObjectMap<V
   static final class TreeBin<V> extends Node<V> {
     @Nullable
     TreeNode<V> root = null;
-    @Nullable
-    volatile TreeNode<V> first = null;
-    @Nullable
-    volatile Thread waiter = null;
+    volatile @Nullable TreeNode<V> first = null;
+    volatile @Nullable Thread waiter = null;
     volatile int lockState;
     // values for lockState
     static final int WRITER = 1; // set while holding write lock
@@ -1688,8 +1678,7 @@ public class ConcurrentLongObjectHashMap<V> implements ConcurrentLongObjectMap<V
      *
      * @return null if added
      */
-    @Nullable
-    final TreeNode<V> putTreeVal(int h, long k, @Nullable V v) {
+    final @Nullable TreeNode<V> putTreeVal(int h, long k, @Nullable V v) {
       boolean searched = false;
       for (TreeNode<V> p = root; ; ) {
         int dir, ph;
@@ -2187,8 +2176,7 @@ public class ConcurrentLongObjectHashMap<V> implements ConcurrentLongObjectMap<V
     /**
      * Advances if possible, returning next valid node, or null if none.
      */
-    @Nullable
-    final Node<V> advance() {
+    final @Nullable Node<V> advance() {
       Node<V> e = next;
       if (e != null) {
         e = e.next;

@@ -118,8 +118,7 @@ public class ReferencesPanel extends JPanel {
     return createLabel("... " + restSize + " more", null);
   }
 
-  @Nullable
-  protected Image createIcon(VcsRefType type,
+  protected @Nullable Image createIcon(VcsRefType type,
                             Collection<VcsRef> refs,
                             int refIndex, int height) {
     if (refIndex == 0) {

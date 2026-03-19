@@ -27,7 +27,7 @@ import org.jspecify.annotations.Nullable;
 public class DirectoryContentImpl extends DiffContentBase implements DirectoryContent {
   
   private final VirtualFile myFile;
-  @Nullable private final Project myProject;
+  private final @Nullable Project myProject;
 
   public DirectoryContentImpl(@Nullable Project project, VirtualFile file) {
     assert file.isValid() && file.isDirectory();

@@ -47,8 +47,7 @@ public abstract class Task implements TaskInfo, Progressive {
     private static final Logger LOG = Logger.getInstance(Task.class);
 
     protected final ComponentManager myProject;
-    @Nullable
-    protected final JComponent myParentComponent;
+    protected final @Nullable JComponent myParentComponent;
 
     protected LocalizeValue myTitle;
     private final boolean myCanBeCancelled;
@@ -136,8 +135,7 @@ public abstract class Task implements TaskInfo, Progressive {
         ProgressManager.getInstance().run(this);
     }
 
-    @Nullable
-    public final JComponent getParentComponent() {
+    public final @Nullable JComponent getParentComponent() {
         return myParentComponent;
     }
 
@@ -179,13 +177,11 @@ public abstract class Task implements TaskInfo, Progressive {
         return this;
     }
 
-    @Nullable
-    public NotificationInfo getNotificationInfo() {
+    public @Nullable NotificationInfo getNotificationInfo() {
         return null;
     }
 
-    @Nullable
-    public NotificationInfo notifyFinished() {
+    public @Nullable NotificationInfo notifyFinished() {
         return getNotificationInfo();
     }
 

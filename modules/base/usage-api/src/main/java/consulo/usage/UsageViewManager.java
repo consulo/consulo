@@ -62,8 +62,7 @@ public abstract class UsageViewManager {
     /**
      * @return returns null in case of no usages found or usage view not shown for one usage
      */
-    @Nullable
-    public abstract UsageView searchAndShowUsages(
+    public abstract @Nullable UsageView searchAndShowUsages(
         UsageTarget[] searchFor,
         Supplier<UsageSearcher> searcherFactory,
         boolean showPanelIfOnlyOneUsage,
@@ -87,8 +86,7 @@ public abstract class UsageViewManager {
         @Nullable UsageViewStateListener listener
     );
 
-    @Nullable
-    public abstract UsageView getSelectedUsageView();
+    public abstract @Nullable UsageView getSelectedUsageView();
 
     public static boolean isSelfUsage(Usage usage, UsageTarget[] searchForTarget) {
         if (!(usage instanceof PsiElementUsage elementUsage)) {

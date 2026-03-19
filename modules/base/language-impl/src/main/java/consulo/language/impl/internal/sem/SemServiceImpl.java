@@ -137,8 +137,7 @@ public class SemServiceImpl extends SemService {
   }
 
   @Override
-  @Nullable
-  public <T extends SemElement> List<T> getSemElements(SemKey<T> key, PsiElement psi) {
+  public @Nullable <T extends SemElement> List<T> getSemElements(SemKey<T> key, PsiElement psi) {
     List<T> cached = _getCachedSemElements(key, true, psi);
     if (cached != null) {
       return cached;
@@ -195,13 +194,11 @@ public class SemServiceImpl extends SemService {
   }
 
   @Override
-  @Nullable
-  public <T extends SemElement> List<T> getCachedSemElements(SemKey<T> key, PsiElement psi) {
+  public @Nullable <T extends SemElement> List<T> getCachedSemElements(SemKey<T> key, PsiElement psi) {
     return _getCachedSemElements(key, false, psi);
   }
 
-  @Nullable
-  private <T extends SemElement> List<T> _getCachedSemElements(SemKey<T> key, boolean paranoid, PsiElement element) {
+  private @Nullable <T extends SemElement> List<T> _getCachedSemElements(SemKey<T> key, boolean paranoid, PsiElement element) {
     SemCacheChunk chunk = obtainChunk(element);
     if (chunk == null) return null;
 
@@ -241,8 +238,7 @@ public class SemServiceImpl extends SemService {
     return new ArrayList<>(result);
   }
 
-  @Nullable
-  private SemCacheChunk obtainChunk(@Nullable PsiElement root) {
+  private @Nullable SemCacheChunk obtainChunk(@Nullable PsiElement root) {
     return myCache.get(root);
   }
 

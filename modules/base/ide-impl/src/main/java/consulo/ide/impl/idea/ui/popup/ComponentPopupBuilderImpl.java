@@ -86,8 +86,7 @@ public class ComponentPopupBuilderImpl implements ComponentPopupBuilder {
     private Predicate<? super KeyEvent> myKeyEventHandler;
     private Color myBorderColor;
     private boolean myNormalWindowLevel;
-    @Nullable
-    private Runnable myOkHandler;
+    private @Nullable Runnable myOkHandler;
 
     private List<AnAction> myHeaderLeftActions = List.of();
     private List<AnAction> myHeaderRightActions = List.of();

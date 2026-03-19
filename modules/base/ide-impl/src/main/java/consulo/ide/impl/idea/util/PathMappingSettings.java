@@ -98,8 +98,7 @@ public class PathMappingSettings extends AbstractPathMapper implements Cloneable
       }
     }
 
-    @Nullable
-    public PathMapping get() {
+    public @Nullable PathMapping get() {
       return myBest;
     }
   }
@@ -176,8 +175,7 @@ public class PathMappingSettings extends AbstractPathMapper implements Cloneable
     return StringUtil.isEmpty(localRoot) || StringUtil.isEmpty(remoteRoot);
   }
 
-  @Nullable
-  public static PathMappingSettings readExternal(@Nullable Element element) {
+  public static @Nullable PathMappingSettings readExternal(@Nullable Element element) {
     if (element == null) {
       return null;
     }
@@ -235,8 +233,7 @@ public class PathMappingSettings extends AbstractPathMapper implements Cloneable
       myRemoteRoot = normalize(remoteRoot);
     }
 
-    @Nullable
-    private static String normalize(@Nullable String path) {
+    private static @Nullable String normalize(@Nullable String path) {
       if (path == null) {
         return null;
       }

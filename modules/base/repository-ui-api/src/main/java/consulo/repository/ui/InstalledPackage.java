@@ -9,8 +9,7 @@ import java.util.Objects;
 public class InstalledPackage {
   
   private final String myName;
-  @Nullable
-  private final String myVersion;
+  private final @Nullable String myVersion;
 
   public InstalledPackage(String name, @Nullable String version) {
     myName = name;
@@ -22,13 +21,11 @@ public class InstalledPackage {
     return myName;
   }
 
-  @Nullable
-  public String getVersion() {
+  public @Nullable String getVersion() {
     return myVersion;
   }
 
-  @Nullable
-  public String getTooltipText() {
+  public @Nullable String getTooltipText() {
     return null;
   }
 

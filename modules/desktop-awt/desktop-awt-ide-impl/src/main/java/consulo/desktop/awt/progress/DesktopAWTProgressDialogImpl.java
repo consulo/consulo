@@ -416,14 +416,12 @@ public class DesktopAWTProgressDialogImpl implements ProgressDialog {
         }
 
         @Override
-        @Nullable
-        protected JComponent createSouthPanel() {
+        protected @Nullable JComponent createSouthPanel() {
             return null;
         }
 
         @Override
-        @Nullable
-        protected Border createContentPaneBorder() {
+        protected @Nullable Border createContentPaneBorder() {
             return null;
         }
     }

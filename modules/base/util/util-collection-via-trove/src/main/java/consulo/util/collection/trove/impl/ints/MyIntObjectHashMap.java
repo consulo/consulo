@@ -158,12 +158,9 @@ public class MyIntObjectHashMap<V> extends TIntObjectHashMap<V> implements IntOb
     return (T)value;
   }
 
-  @Nullable
-  private Set<IntObjectEntry<V>> myEntrySet = null;
-  @Nullable
-  private Collection<V> myValues = null;
-  @Nullable
-  private IntSet myKeySet = null;
+  private @Nullable Set<IntObjectEntry<V>> myEntrySet = null;
+  private @Nullable Collection<V> myValues = null;
+  private @Nullable IntSet myKeySet = null;
 
   public MyIntObjectHashMap() {
   }

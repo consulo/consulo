@@ -58,8 +58,7 @@ public class LocalInspectionsPassFactory implements MainHighlightingPassFactory 
     }
 
     @Override
-    @Nullable
-    public TextEditorHighlightingPass createHighlightingPass(PsiFile file, Editor editor) {
+    public @Nullable TextEditorHighlightingPass createHighlightingPass(PsiFile file, Editor editor) {
         TextRange textRange = calculateRangeToProcess(editor);
         if (textRange == null || !InspectionProjectProfileManager.getInstance(file.getProject()).isProfileLoaded()) {
             return new ProgressableTextEditorHighlightingPass.EmptyPass(file.getProject(), editor.getDocument());

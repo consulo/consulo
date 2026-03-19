@@ -154,8 +154,7 @@ public class XmlRpcServerImpl implements XmlRpcServer {
     }
   }
 
-  @Nullable
-  private static Object invokeHandler(Object handler, XmlRpcRequest request) throws Throwable {
+  private static @Nullable Object invokeHandler(Object handler, XmlRpcRequest request) throws Throwable {
     if (handler instanceof XmlRpcHandler) {
       return handler;
     }

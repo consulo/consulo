@@ -116,8 +116,7 @@ public class XDebuggerExpressionEditorImpl extends XDebuggerEditorBase implement
     }
 
     @Override
-    @Nullable
-    public JComponent getPreferredFocusedComponent() {
+    public @Nullable JComponent getPreferredFocusedComponent() {
         Editor editor = myEditorTextField.getEditor();
         return editor != null ? editor.getContentComponent() : null;
     }

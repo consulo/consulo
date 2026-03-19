@@ -488,8 +488,7 @@ public class EditorComponentImpl extends JTextComponent
         }
 
         @Override
-        @Nullable
-        public Object getProperty(Object o) {
+        public @Nullable Object getProperty(Object o) {
             return null;
         }
 
@@ -1231,8 +1230,7 @@ public class EditorComponentImpl extends JTextComponent
         }
 
         @Override
-        @Nullable
-        public Rectangle getTextBounds(int startIndex, int endIndex) {
+        public @Nullable Rectangle getTextBounds(int startIndex, int endIndex) {
             LogicalPosition startPos = myEditor.offsetToLogicalPosition(startIndex);
             Point startPoint = myEditor.logicalPositionToXY(startPos);
             Rectangle rectangle = new Rectangle(startPoint);
@@ -1248,8 +1246,7 @@ public class EditorComponentImpl extends JTextComponent
             return rectangle;
         }
 
-        @Nullable
-        private String getTextAtOffset(
+        private @Nullable String getTextAtOffset(
             @MagicConstant(intValues = {AccessibleText.CHARACTER, AccessibleText.WORD, AccessibleText.SENTENCE}) int type,
             int offset,
             @MagicConstant(intValues = {BEFORE, HERE, AFTER}) int direction
@@ -1300,8 +1297,7 @@ public class EditorComponentImpl extends JTextComponent
         /**
          * Similar to {@link #getTextAtOffset} but returns an {@link AccessibleTextSequence} and can accept a few more types.
          */
-        @Nullable
-        private AccessibleTextSequence getSequenceAtIndex(
+        private @Nullable AccessibleTextSequence getSequenceAtIndex(
             @MagicConstant(intValues = {
                 AccessibleText.CHARACTER,
                 AccessibleText.WORD,

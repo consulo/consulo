@@ -182,8 +182,7 @@ public interface WindowStateService {
    */
   public abstract void putBoundsFor(Object object, String key, Rectangle2D bounds);
 
-  @Nullable
-  default Project getProject() {
+  default @Nullable Project getProject() {
     return null;
   }
 }

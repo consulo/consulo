@@ -35,7 +35,7 @@ public interface GraphAction {
   }
 
   class GraphActionImpl implements GraphAction {
-    @Nullable private final PrintElement myPrintElement;
+    private final @Nullable PrintElement myPrintElement;
     
     private final Type myActionType;
 

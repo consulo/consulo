@@ -32,8 +32,7 @@ public interface FoldingBuilder extends LanguageExtension {
     return Application.get().getExtensionPoint(FoldingBuilder.class).getOrBuildCache(KEY).requiredGet(language);
   }
 
-  @Nullable
-  public static FoldingBuilder forLanguageComposite(Language language) {
+  public static @Nullable FoldingBuilder forLanguageComposite(Language language) {
     List<FoldingBuilder> foldingBuilders = Application.get().getExtensionPoint(FoldingBuilder.class).getOrBuildCache(KEY).requiredGet(language);
     if (foldingBuilders.isEmpty()) {
       return null;

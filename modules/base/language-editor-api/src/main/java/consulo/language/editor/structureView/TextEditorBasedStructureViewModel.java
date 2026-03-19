@@ -133,8 +133,7 @@ public abstract class TextEditorBasedStructureViewModel implements StructureView
     return findAcceptableElement(file.getViewProvider().findElementAt(offset, file.getLanguage()));
   }
 
-  @Nullable
-  protected Object findAcceptableElement(PsiElement element) {
+  protected @Nullable Object findAcceptableElement(PsiElement element) {
     while (element != null && !(element instanceof PsiFile)) {
       if (isSuitable(element)) return element;
       element = element.getParent();

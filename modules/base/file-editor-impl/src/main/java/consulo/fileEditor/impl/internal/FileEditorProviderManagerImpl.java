@@ -90,8 +90,7 @@ public final class FileEditorProviderManagerImpl extends FileEditorProviderManag
   }
 
   @Override
-  @Nullable
-  public FileEditorProvider getProvider(String editorTypeId) {
+  public @Nullable FileEditorProvider getProvider(String editorTypeId) {
     for (FileEditorProvider provider : myApplication.getExtensionList(FileEditorProvider.class)) {
       if (provider.getEditorTypeId().equals(editorTypeId)) {
         return provider;
@@ -121,8 +120,7 @@ public final class FileEditorProviderManagerImpl extends FileEditorProviderManag
     return StringUtil.join(ContainerUtil.map(providers, FileEditorProvider::getEditorTypeId), ",");
   }
 
-  @Nullable
- public FileEditorProvider getSelectedFileEditorProvider(EditorHistoryManager editorHistoryManager, VirtualFile file, FileEditorProvider[] providers) {
+  public @Nullable FileEditorProvider getSelectedFileEditorProvider(EditorHistoryManager editorHistoryManager, VirtualFile file, FileEditorProvider[] providers) {
     FileEditorProvider provider = editorHistoryManager.getSelectedProvider(file);
     if (provider != null || providers.length < 2) {
       return provider;

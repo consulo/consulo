@@ -162,7 +162,7 @@ public class VcsHistoryProviderBackgroundableProxy {
     return full;
   }
 
-  private void reportHistory(final FilePath filePath, @Nullable final VcsRevisionNumber startRevisionNumber,
+  private void reportHistory(final FilePath filePath, final @Nullable VcsRevisionNumber startRevisionNumber,
                              final VcsKey vcsKey,
                              final VcsBackgroundableActions resultingActionKey,
                              final BackgroundableActionEnabledHandler handler,
@@ -309,8 +309,7 @@ public class VcsHistoryProviderBackgroundableProxy {
     }
   }
 
-  @Nullable
-  private VcsAbstractHistorySession getSessionFromCacheWithLastRevisionCheck(FilePath filePath, VcsKey vcsKey) {
+  private @Nullable VcsAbstractHistorySession getSessionFromCacheWithLastRevisionCheck(FilePath filePath, VcsKey vcsKey) {
     ProgressIndicator pi = ProgressManager.getInstance().getProgressIndicator();
     if (pi != null) {
       pi.setText2("Checking last revision");

@@ -30,8 +30,7 @@ public class JBSplitter extends Splitter {
   /**
    * Used as a key to save and load proportion
    */
-  @Nullable
-  private String mySplitterProportionKey = null;
+  private @Nullable String mySplitterProportionKey = null;
   private final float myDefaultProportion;
 
   public JBSplitter() {
@@ -80,8 +79,7 @@ public class JBSplitter extends Splitter {
    *
    * @return non empty unique String or <code>null</code> if splitter does not require proportion saving
    */
-  @Nullable
-  public final String getSplitterProportionKey() {
+  public final @Nullable String getSplitterProportionKey() {
     return mySplitterProportionKey;
   }
 

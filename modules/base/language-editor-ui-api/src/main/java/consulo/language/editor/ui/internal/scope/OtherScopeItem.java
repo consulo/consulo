@@ -8,8 +8,7 @@ import org.jspecify.annotations.Nullable;
 public final class OtherScopeItem implements ModelScopeItem {
   private final AnalysisScope myScope;
 
-  @Nullable
-  public static OtherScopeItem tryCreate(AnalysisScope scope) {
+  public static @Nullable OtherScopeItem tryCreate(AnalysisScope scope) {
     if (scope.getScopeType() != AnalysisScope.PROJECT
       && scope.getScopeType() != AnalysisScope.MODULE
       && scope.getScopeType() != AnalysisScope.UNCOMMITTED_FILES

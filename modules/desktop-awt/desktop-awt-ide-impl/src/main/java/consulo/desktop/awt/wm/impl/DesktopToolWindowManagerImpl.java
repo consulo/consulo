@@ -614,8 +614,7 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
      * @return internal decorator for the tool window with specified <code>ID</code>.
      */
     @Override
-    @Nullable
-    protected DesktopInternalDecorator getInternalDecorator(String id) {
+    protected @Nullable DesktopInternalDecorator getInternalDecorator(String id) {
         return (DesktopInternalDecorator) super.getInternalDecorator(id);
     }
 
@@ -623,8 +622,7 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
      * @return tool button for the window with specified <code>ID</code>.
      */
     @Override
-    @Nullable
-    protected DesktopStripeButton getStripeButton(String id) {
+    protected @Nullable DesktopStripeButton getStripeButton(String id) {
         return (DesktopStripeButton) super.getStripeButton(id);
     }
 
@@ -736,8 +734,7 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
             if (button.isShowing()) {
                 PositionTracker<Balloon> tracker = new PositionTracker<>(button) {
                     @Override
-                    @Nullable
-                    public RelativePoint recalculateLocation(Balloon object) {
+                    public @Nullable RelativePoint recalculateLocation(Balloon object) {
                         DesktopStripePanelImpl twStripe = getToolWindowPanel().getStripeFor(toolWindowId);
                         DesktopStripeButton twButton = twStripe != null ? twStripe.getButtonFor(toolWindowId) : null;
 

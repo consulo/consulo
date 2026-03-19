@@ -34,8 +34,7 @@ import org.jspecify.annotations.Nullable;
 public interface LanguageFileViewProviderFactory extends FileViewProviderFactory, LanguageExtension {
   ExtensionPointCacheKey<LanguageFileViewProviderFactory, ByLanguageValue<LanguageFileViewProviderFactory>> KEY = ExtensionPointCacheKey.create("LanguageFileViewProviderFactory", LanguageOneToOne.build());
 
-  @Nullable
-  static LanguageFileViewProviderFactory forLanguage(Language language) {
+  static @Nullable LanguageFileViewProviderFactory forLanguage(Language language) {
     return Application.get().getExtensionPoint(LanguageFileViewProviderFactory.class).getOrBuildCache(KEY).get(language);
   }
 }

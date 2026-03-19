@@ -45,8 +45,7 @@ public class DirectoryGroupingRule implements UsageGroupingRule {
   }
 
   @Override
-  @Nullable
-  public UsageGroup groupUsage(Usage usage) {
+  public @Nullable UsageGroup groupUsage(Usage usage) {
     if (usage instanceof UsageInFile) {
       UsageInFile usageInFile = (UsageInFile)usage;
       VirtualFile file = usageInFile.getFile();

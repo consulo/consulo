@@ -120,8 +120,7 @@ public class DesktopBalloonLayoutImpl implements BalloonLayoutEx {
     }
 
     @Override
-    @Nullable
-    public Component getTopBalloonComponent() {
+    public @Nullable Component getTopBalloonComponent() {
         BalloonImpl balloon = (BalloonImpl) ContainerUtil.getLastItem(myBalloons);
         return balloon == null ? null : balloon.getComponent();
     }
@@ -182,8 +181,7 @@ public class DesktopBalloonLayoutImpl implements BalloonLayoutEx {
         fireRelayout();
     }
 
-    @Nullable
-    private Balloon merge(@Nullable Object data) {
+    private @Nullable Balloon merge(@Nullable Object data) {
         String mergeId = null;
         if (data instanceof String stringId) {
             mergeId = stringId;

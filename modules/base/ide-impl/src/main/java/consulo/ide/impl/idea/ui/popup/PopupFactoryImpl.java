@@ -368,8 +368,7 @@ public abstract class PopupFactoryImpl extends JBPopupFactory {
         return new RelativePoint(editor.getContentComponent(), p);
     }
 
-    @Nullable
-    private static Point getVisibleBestPopupLocation(Editor editor) {
+    private static @Nullable Point getVisibleBestPopupLocation(Editor editor) {
         VisualPosition visualPosition = editor.getUserData(EditorPopupHelper.ANCHOR_POPUP_POSITION);
 
         if (visualPosition == null) {

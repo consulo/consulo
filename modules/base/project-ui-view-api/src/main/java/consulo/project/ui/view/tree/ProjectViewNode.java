@@ -75,8 +75,7 @@ public abstract class ProjectViewNode<Value> extends AbstractTreeNode<Value> imp
      * @return the virtual file instance, or null if the project view node doesn't represent a virtual file.
      */
     @Override
-    @Nullable
-    public VirtualFile getVirtualFile() {
+    public @Nullable VirtualFile getVirtualFile() {
         return null;
     }
 
@@ -208,8 +207,7 @@ public abstract class ProjectViewNode<Value> extends AbstractTreeNode<Value> imp
         return true;
     }
 
-    @Nullable
-    public String getTitle() {
+    public @Nullable String getTitle() {
         return null;
     }
 
@@ -230,8 +228,7 @@ public abstract class ProjectViewNode<Value> extends AbstractTreeNode<Value> imp
      *
      * @return Comparable object.
      */
-    @Nullable
-    public Comparable getTypeSortKey() {
+    public @Nullable Comparable getTypeSortKey() {
         return null;
     }
 
@@ -244,18 +241,15 @@ public abstract class ProjectViewNode<Value> extends AbstractTreeNode<Value> imp
      *
      * @return Comparable object.
      */
-    @Nullable
-    public Comparable getSortKey() {
+    public @Nullable Comparable getSortKey() {
         return null;
     }
 
-    @Nullable
-    public Comparable getManualOrderKey() {
+    public @Nullable Comparable getManualOrderKey() {
         return null;
     }
 
-    @Nullable
-    public String getQualifiedNameSortKey() {
+    public @Nullable String getQualifiedNameSortKey() {
         return null;
     }
 

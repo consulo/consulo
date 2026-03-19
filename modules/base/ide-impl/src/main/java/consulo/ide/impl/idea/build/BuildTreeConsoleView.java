@@ -558,8 +558,7 @@ public class BuildTreeConsoleView implements ConsoleView, UiDataProvider, BuildC
         }
     }
 
-    @Nullable
-    private Runnable showErrorIfFirst(ExecutionNodeImpl node, @Nullable Navigatable navigatable) {
+    private @Nullable Runnable showErrorIfFirst(ExecutionNodeImpl node, @Nullable Navigatable navigatable) {
         if (myShownFirstError.compareAndSet(false, true)) {
             return () -> {
                 TreeUtil.promiseSelect(myTree, visitor(node));
@@ -611,8 +610,7 @@ public class BuildTreeConsoleView implements ConsoleView, UiDataProvider, BuildC
         return new TreeVisitor.ByTreePath<>(treePath, o -> (ExecutionNodeImpl)TreeUtil.getUserObject(o));
     }
 
-    @Nullable
-    private Runnable addChildFailureNode(
+    private @Nullable Runnable addChildFailureNode(
         ExecutionNodeImpl parentNode,
         Failure failure,
         String defaultFailureMessage,
@@ -991,8 +989,7 @@ public class BuildTreeConsoleView implements ConsoleView, UiDataProvider, BuildC
         private final AtomicReference<String> myNodeConsoleViewName = new AtomicReference<>();
         private final Map<String, List<Consumer<? super BuildTextConsoleView>>> deferredNodeOutput = new ConcurrentHashMap<>();
         private final BuildViewSettingsProvider myViewSettingsProvider;
-        @Nullable
-        private ExecutionNodeImpl myExecutionNode;
+        private @Nullable ExecutionNodeImpl myExecutionNode;
         private final List<Filter> myExecutionConsoleFilters;
         private final BuildProgressStripe myPanelWithProgress;
         private final DefaultActionGroup myConsoleToolbarActionGroup;
@@ -1232,8 +1229,7 @@ public class BuildTreeConsoleView implements ConsoleView, UiDataProvider, BuildC
 
         private static class PresentableBuildEventExecutionConsole implements ExecutionConsole {
             private final ExecutionConsole myExecutionConsole;
-            @Nullable
-            private final ActionGroup myActions;
+            private final @Nullable ActionGroup myActions;
 
             private PresentableBuildEventExecutionConsole(
                 ExecutionConsole executionConsole,

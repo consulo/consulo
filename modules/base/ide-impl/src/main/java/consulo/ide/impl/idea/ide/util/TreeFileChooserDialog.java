@@ -82,12 +82,9 @@ public final class TreeFileChooserDialog extends DialogWrapper implements TreeFi
     private BaseProjectTreeBuilder myBuilder;
     private TabbedPaneWrapper myTabbedPane;
     private ChooseByNamePanel myGotoByNamePanel;
-    @Nullable
-    private final PsiFile myInitialFile;
-    @Nullable
-    private final Predicate<PsiFile> myFilter;
-    @Nullable
-    private final FileType myFileType;
+    private final @Nullable PsiFile myInitialFile;
+    private final @Nullable Predicate<PsiFile> myFilter;
+    private final @Nullable FileType myFileType;
 
     private final boolean myDisableStructureProviders;
     private final boolean myShowLibraryContents;

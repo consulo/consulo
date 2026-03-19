@@ -96,8 +96,7 @@ public class SimpleDuplicatesFinder {
     }
   }
 
-  @Nullable
-  protected SimpleMatch isDuplicateFragment(PsiElement candidate) {
+  protected @Nullable SimpleMatch isDuplicateFragment(PsiElement candidate) {
     if (!canReplace(myReplacement, candidate)) return null;
     for (PsiElement pattern : myPattern) {
       if (PsiTreeUtil.isAncestor(pattern, candidate, false)) return null;

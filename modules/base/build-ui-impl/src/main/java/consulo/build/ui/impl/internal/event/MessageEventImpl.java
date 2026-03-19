@@ -20,8 +20,7 @@ public class MessageEventImpl extends AbstractBuildEvent implements MessageEvent
     private final Kind myKind;
     
     private final NotificationGroup myGroup;
-    @Nullable
-    private final Navigatable myNavigatable;
+    private final @Nullable Navigatable myNavigatable;
 
     public MessageEventImpl(Object parentId,
                             Kind kind,

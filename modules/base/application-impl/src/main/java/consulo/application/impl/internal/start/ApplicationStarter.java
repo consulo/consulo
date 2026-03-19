@@ -110,8 +110,7 @@ public abstract class ApplicationStarter {
         return true;
     }
 
-    @Nullable
-    public abstract StartupProgress createSplash(CommandLineArgs args);
+    public abstract @Nullable StartupProgress createSplash(CommandLineArgs args);
 
     protected void initializeEnviroment(boolean isHeadlessMode, CommandLineArgs args, StatCollector stat) {
         StartupProgress splash = createSplash(args);

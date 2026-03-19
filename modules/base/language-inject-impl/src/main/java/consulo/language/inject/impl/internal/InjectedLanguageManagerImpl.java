@@ -180,8 +180,7 @@ public class InjectedLanguageManagerImpl implements InjectedLanguageManagerInter
     }
 
     @Override
-    @Nullable
-    public String getUnescapedLeafText(PsiElement element, boolean strict) {
+    public @Nullable String getUnescapedLeafText(PsiElement element, boolean strict) {
         return InjectedLanguageUtil.getUnescapedLeafText(element, strict);
     }
 
@@ -483,8 +482,7 @@ public class InjectedLanguageManagerImpl implements InjectedLanguageManagerInter
     }
 
     @Override
-    @Nullable
-    public List<Pair<PsiElement, TextRange>> getInjectedPsiFiles(PsiElement host) {
+    public @Nullable List<Pair<PsiElement, TextRange>> getInjectedPsiFiles(PsiElement host) {
         if (!(host instanceof PsiLanguageInjectionHost) || !((PsiLanguageInjectionHost) host).isValidHost()) {
             return null;
         }

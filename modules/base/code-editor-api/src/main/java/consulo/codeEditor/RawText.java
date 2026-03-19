@@ -60,8 +60,7 @@ public class RawText implements Cloneable, Serializable {
     return ourFlavor;
   }
 
-  @Nullable
-  public static RawText fromTransferable(Transferable content) {
+  public static @Nullable RawText fromTransferable(Transferable content) {
     RawText raw = null;
     DataFlavor flavor = getDataFlavor();
     if (flavor != null) {

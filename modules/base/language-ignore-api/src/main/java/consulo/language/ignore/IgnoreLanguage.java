@@ -56,8 +56,7 @@ public class IgnoreLanguage extends Language implements InjectableLanguage {
     /**
      * The Ignore VCS directory name.
      */
-    @Nullable
-    private final String myDirectory;
+    private final @Nullable String myDirectory;
 
     /**
      * The GitignoreLanguage icon.
@@ -102,8 +101,7 @@ public class IgnoreLanguage extends Language implements InjectableLanguage {
      *
      * @return VCS directory name
      */
-    @Nullable
-    public String getDirectory() {
+    public @Nullable String getDirectory() {
         return myDirectory;
     }
 

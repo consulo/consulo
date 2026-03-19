@@ -39,8 +39,7 @@ public abstract class AbstractProblemBuilder implements ProblemBuilder {
     protected boolean myIsAfterEndOfLine = false;
     protected boolean myOnTheFly = false;
     protected boolean myShowTooltip = true;
-    @Nullable
-    protected List<LocalQuickFix> myLocalQuickFixes = null;
+    protected @Nullable List<LocalQuickFix> myLocalQuickFixes = null;
 
     public AbstractProblemBuilder(LocalizeValue descriptionTemplate) {
         myDescriptionTemplate = descriptionTemplate;

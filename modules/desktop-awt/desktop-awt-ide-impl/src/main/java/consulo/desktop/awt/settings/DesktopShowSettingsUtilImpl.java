@@ -167,8 +167,7 @@ public class DesktopShowSettingsUtilImpl extends BaseProjectStructureShowSetting
         );
     }
 
-    @Nullable
-    private static Configurable findConfigurable2Select(String id2Select, Configurable[] configurables) {
+    private static @Nullable Configurable findConfigurable2Select(String id2Select, Configurable[] configurables) {
         for (Configurable configurable : configurables) {
             Configurable conf = containsId(id2Select, configurable);
             if (conf != null) {
@@ -178,8 +177,7 @@ public class DesktopShowSettingsUtilImpl extends BaseProjectStructureShowSetting
         return null;
     }
 
-    @Nullable
-    private static Configurable containsId(String id2Select, Configurable configurable) {
+    private static @Nullable Configurable containsId(String id2Select, Configurable configurable) {
         if (id2Select.equals(configurable.getId())) {
             return configurable;
         }
@@ -263,7 +261,7 @@ public class DesktopShowSettingsUtilImpl extends BaseProjectStructureShowSetting
         Configurable configurable,
         LocalizeValue title,
         String dimensionKey,
-        @Nullable final Runnable advancedInitialization
+        final @Nullable Runnable advancedInitialization
     ) {
         SingleConfigurableEditor editor;
         if (parent != null) {

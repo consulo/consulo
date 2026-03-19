@@ -884,8 +884,7 @@ public class SimpleDiffViewer extends TwosideTextDiffViewer {
     }
 
     private static class CompareData {
-        @Nullable
-        private final List<LineFragment> myFragments;
+        private final @Nullable List<LineFragment> myFragments;
         private final boolean myIsContentsEqual;
 
         public CompareData(@Nullable List<LineFragment> fragments, boolean isContentsEqual) {
@@ -893,8 +892,7 @@ public class SimpleDiffViewer extends TwosideTextDiffViewer {
             myIsContentsEqual = isContentsEqual;
         }
 
-        @Nullable
-        public List<LineFragment> getFragments() {
+        public @Nullable List<LineFragment> getFragments() {
             return myFragments;
         }
 

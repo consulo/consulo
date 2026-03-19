@@ -27,8 +27,7 @@ public interface CodeStyleStatusBarUIContributor {
     /**
      * @return A title used for a group of actions opened from the status bar or {@code null} if no title is shown.
      */
-    @Nullable
-    default String getActionGroupTitle() {
+    default @Nullable String getActionGroupTitle() {
         return null;
     }
 
@@ -68,8 +67,7 @@ public interface CodeStyleStatusBarUIContributor {
      * @param project The project to show the files for.
      * @return The "Show all" action or {@code null} if not applicable;
      */
-    @Nullable
-    default AnAction createShowAllAction(Project project) {
+    default @Nullable AnAction createShowAllAction(Project project) {
         return null;
     }
 

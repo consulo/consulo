@@ -180,8 +180,7 @@ public abstract class ClassesFilteredViewBase extends BorderLayoutPanel implemen
 
     protected abstract void scheduleUpdateClassesCommand(XSuspendContext context);
 
-    @Nullable
-    protected TrackerForNewInstancesBase getStrategy(TypeInfo ref) {
+    protected @Nullable TrackerForNewInstancesBase getStrategy(TypeInfo ref) {
         return null;
     }
 
@@ -281,8 +280,7 @@ public abstract class ClassesFilteredViewBase extends BorderLayoutPanel implemen
         }
     }
 
-    @Nullable
-    protected XDebugSessionListener getAdditionalSessionListener() {
+    protected @Nullable XDebugSessionListener getAdditionalSessionListener() {
         return null;
     }
 

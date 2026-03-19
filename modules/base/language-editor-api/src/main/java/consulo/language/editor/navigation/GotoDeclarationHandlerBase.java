@@ -30,6 +30,5 @@ public abstract class GotoDeclarationHandlerBase implements GotoDeclarationHandl
     return target != null ? new PsiElement[] {target} : null;
   }
 
-  @Nullable
-  public abstract PsiElement getGotoDeclarationTarget(PsiElement sourceElement, Editor editor);
+  public abstract @Nullable PsiElement getGotoDeclarationTarget(PsiElement sourceElement, Editor editor);
 }

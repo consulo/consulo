@@ -23,15 +23,13 @@ import org.jspecify.annotations.Nullable;
  * @since 2019-12-06
  */
 public class PathManagerHolder {
-  @Nullable
-  private static ContainerPathManager ourInstance;
+  private static @Nullable ContainerPathManager ourInstance;
 
   public static void setInstance(ContainerPathManager instance) {
     ourInstance = instance;
   }
 
-  @Nullable
-  public static ContainerPathManager getInstance() {
+  public static @Nullable ContainerPathManager getInstance() {
     return ourInstance;
   }
 }

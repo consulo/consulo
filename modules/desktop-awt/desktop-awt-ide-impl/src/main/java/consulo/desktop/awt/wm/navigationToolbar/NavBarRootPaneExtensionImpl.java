@@ -184,8 +184,7 @@ public class NavBarRootPaneExtensionImpl implements NavBarRootPaneExtension, Ide
         return firstAction instanceof ComboBoxAction;
     }
 
-    @Nullable
-    private static AnAction getFirstAction(AnAction group) {
+    private static @Nullable AnAction getFirstAction(AnAction group) {
         if (group instanceof DefaultActionGroup) {
             AnAction firstAction = null;
             for (AnAction action : ((DefaultActionGroup) group).getChildActionsOrStubs()) {

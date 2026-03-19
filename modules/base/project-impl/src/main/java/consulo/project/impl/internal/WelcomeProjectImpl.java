@@ -38,8 +38,7 @@ public class WelcomeProjectImpl extends ProjectImpl {
         super(application, manager, "", WELCOME_PROJECT_NAME, true, componentBinding);
     }
 
-    @Nullable
-    public Element getStateElement() {
+    public @Nullable Element getStateElement() {
         return myStateElement;
     }
 

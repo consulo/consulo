@@ -267,8 +267,7 @@ public abstract class AbstractFindUsagesDialog extends DialogWrapper {
         return allOptionsPanel;
     }
 
-    @Nullable
-    protected abstract JPanel createFindWhatPanel();
+    protected abstract @Nullable JPanel createFindWhatPanel();
 
     @RequiredUIAccess
     protected void addUsagesOptions(JPanel optionsPanel) {
@@ -291,8 +290,7 @@ public abstract class AbstractFindUsagesDialog extends DialogWrapper {
         }
     }
 
-    @Nullable
-    protected JPanel createUsagesOptionsPanel() {
+    protected @Nullable JPanel createUsagesOptionsPanel() {
         JPanel optionsPanel = new JPanel();
         optionsPanel.setBorder(IdeBorderFactory.createTitledBorder(FindLocalize.findOptionsGroup().get(), true));
         optionsPanel.setLayout(new BoxLayout(optionsPanel, BoxLayout.Y_AXIS));
@@ -300,8 +298,7 @@ public abstract class AbstractFindUsagesDialog extends DialogWrapper {
         return optionsPanel.getComponents().length == 0 ? null : optionsPanel;
     }
 
-    @Nullable
-    private JComponent createSearchScopePanel() {
+    private @Nullable JComponent createSearchScopePanel() {
         if (isInFileOnly()) {
             return null;
         }
@@ -315,8 +312,7 @@ public abstract class AbstractFindUsagesDialog extends DialogWrapper {
         return optionsPanel;
     }
 
-    @Nullable
-    protected JComponent getPreferredFocusedControl() {
+    protected @Nullable JComponent getPreferredFocusedControl() {
         return null;
     }
 

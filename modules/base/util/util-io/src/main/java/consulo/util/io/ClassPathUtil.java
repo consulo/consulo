@@ -34,8 +34,7 @@ public class ClassPathUtil {
   /**
    * Attempts to detect classpath entry which contains given resource.
    */
-  @Nullable
-  public static String getResourceRoot(Class context, String path) {
+  public static @Nullable String getResourceRoot(Class context, String path) {
     URL url = context.getResource(path);
     if (url == null) {
       url = ClassLoader.getSystemResource(path.substring(1));
@@ -43,8 +42,7 @@ public class ClassPathUtil {
     return url != null ? extractRoot(url, path) : null;
   }
 
-  @Nullable
-  public static String getJarPathForClass(Class aClass) {
+  public static @Nullable String getJarPathForClass(Class aClass) {
     String path = "/" + aClass.getName().replace('.', '/') + ".class";
     try {
       CodeSource codeSource = aClass.getProtectionDomain().getCodeSource();
@@ -72,8 +70,7 @@ public class ClassPathUtil {
   /**
    * Attempts to extract classpath entry part from passed URL.
    */
-  @Nullable
-  private static String extractRoot(URL resourceURL, String resourcePath) {
+  private static @Nullable String extractRoot(URL resourceURL, String resourcePath) {
     if (!(StringUtil.startsWithChar(resourcePath, '/') || StringUtil.startsWithChar(resourcePath, '\\'))) {
       //noinspection HardCodedStringLiteral,UseOfSystemOutOrSystemErr
       System.err.println("precondition failed: " + resourcePath);

@@ -26,10 +26,8 @@ public class TooltipEvent {
   private InputEvent myInputEvent;
   private boolean myIsEventInsideBalloon;
 
-  @Nullable
-  private AnAction myAction;
-  @Nullable
-  private AnActionEvent myActionEvent;
+  private @Nullable AnAction myAction;
+  private @Nullable AnActionEvent myActionEvent;
 
   public TooltipEvent(InputEvent inputEvent, boolean isEventInsideBalloon, @Nullable AnAction action, @Nullable AnActionEvent actionEvent) {
     myInputEvent = inputEvent;
@@ -46,13 +44,11 @@ public class TooltipEvent {
     return myIsEventInsideBalloon;
   }
 
-  @Nullable
-  public AnAction getAction() {
+  public @Nullable AnAction getAction() {
     return myAction;
   }
 
-  @Nullable
-  public AnActionEvent getActionEvent() {
+  public @Nullable AnActionEvent getActionEvent() {
     return myActionEvent;
   }
 }

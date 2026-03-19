@@ -69,8 +69,7 @@ public class XDebugSessionTab extends DebuggerSessionTabBase {
 
     private final Map<String, XDebugView> myViews = new LinkedHashMap<>();
 
-    @Nullable
-    private XDebugSessionImpl mySession;
+    private @Nullable XDebugSessionImpl mySession;
     private XDebugSessionData mySessionData;
 
     private final Runnable myRebuildWatchesRunnable = new Runnable() {
@@ -301,8 +300,7 @@ public class XDebugSessionTab extends DebuggerSessionTabBase {
         mySession = null;
     }
 
-    @Nullable
-    public RunContentDescriptor getRunContentDescriptor() {
+    public @Nullable RunContentDescriptor getRunContentDescriptor() {
         return myRunContentDescriptor;
     }
 

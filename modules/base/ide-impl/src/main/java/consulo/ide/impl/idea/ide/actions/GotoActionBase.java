@@ -113,8 +113,7 @@ public abstract class GotoActionBase extends AnAction {
         return true;
     }
 
-    @Nullable
-    public static PsiElement getPsiContext(AnActionEvent e) {
+    public static @Nullable PsiElement getPsiContext(AnActionEvent e) {
         PsiFile file = e.getData(PsiFile.KEY);
         if (file != null) {
             return file;
@@ -123,8 +122,7 @@ public abstract class GotoActionBase extends AnAction {
         return getPsiContext(project);
     }
 
-    @Nullable
-    public static PsiElement getPsiContext(Project project) {
+    public static @Nullable PsiElement getPsiContext(Project project) {
         if (project == null) {
             return null;
         }
@@ -137,8 +135,7 @@ public abstract class GotoActionBase extends AnAction {
     }
 
     protected abstract static class GotoActionCallback<T> {
-        @Nullable
-        protected ChooseByNameFilter<T> createFilter(ChooseByNamePopup popup) {
+        protected @Nullable ChooseByNameFilter<T> createFilter(ChooseByNamePopup popup) {
             return null;
         }
 
@@ -184,8 +181,7 @@ public abstract class GotoActionBase extends AnAction {
         return Pair.create("", 0);
     }
 
-    @Nullable
-    public static String getInitialTextForNavigation(AnActionEvent e) {
+    public static @Nullable String getInitialTextForNavigation(AnActionEvent e) {
         Editor editor = e.getData(Editor.KEY);
         String selectedText = editor != null ? editor.getSelectionModel().getSelectedText() : null;
         if (selectedText == null) {

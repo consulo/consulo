@@ -9,8 +9,7 @@ import consulo.navigation.OpenFileDescriptor;
 import org.jspecify.annotations.Nullable;
 
 public final class NavigatableRule {
-    @Nullable
-    static Navigatable getData(DataSnapshot dataProvider) {
+    static @Nullable Navigatable getData(DataSnapshot dataProvider) {
         Navigatable navigatable = dataProvider.get(Navigatable.KEY);
         if (navigatable != null && navigatable instanceof OpenFileDescriptor openFileDescriptor) {
             if (openFileDescriptor.getFile().isValid()) {

@@ -35,8 +35,7 @@ public class DirectoryChooserUtil {
   private DirectoryChooserUtil() {
   }
 
-  @Nullable
-  public static PsiDirectory getOrChooseDirectory(IdeView view) {
+  public static @Nullable PsiDirectory getOrChooseDirectory(IdeView view) {
     PsiDirectory[] dirs = view.getDirectories();
     if (dirs.length == 0) return null;
     if (dirs.length == 1) {
@@ -48,8 +47,7 @@ public class DirectoryChooserUtil {
     }
   }
 
-  @Nullable
-  public static PsiDirectory selectDirectory(Project project, PsiDirectory[] packageDirectories, PsiDirectory defaultDirectory, String postfixToShow) {
+  public static @Nullable PsiDirectory selectDirectory(Project project, PsiDirectory[] packageDirectories, PsiDirectory defaultDirectory, String postfixToShow) {
     ProjectFileIndex projectFileIndex = ProjectRootManager.getInstance(project).getFileIndex();
 
     ArrayList<PsiDirectory> possibleDirs = new ArrayList<>();
@@ -73,8 +71,7 @@ public class DirectoryChooserUtil {
     return chooser.isOK() ? chooser.getSelectedDirectory() : null;
   }
 
-  @Nullable
-  public static PsiDirectory chooseDirectory(PsiDirectory[] targetDirectories, @Nullable PsiDirectory initialDirectory, Project project, Map<PsiDirectory, String> relativePathsToCreate) {
+  public static @Nullable PsiDirectory chooseDirectory(PsiDirectory[] targetDirectories, @Nullable PsiDirectory initialDirectory, Project project, Map<PsiDirectory, String> relativePathsToCreate) {
     DirectoryChooserDialog chooser = Application.get().getInstance(DirectoryChooserFactory.class).create(project);
     chooser.setTitle(RefactoringLocalize.chooseDestinationDirectory().get());
     chooser.fillList(targetDirectories, initialDirectory, project, relativePathsToCreate);

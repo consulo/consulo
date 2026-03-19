@@ -169,7 +169,7 @@ public class ViewOfflineResultsAction extends AnAction implements DumbAware {
     @SuppressWarnings({"WeakerAccess", "UnusedReturnValue"})
     public InspectionResultsView showOfflineView(
         Project project,
-        @Nullable final String profileName,
+        final @Nullable String profileName,
         final Map<String, Map<String, Set<OfflineProblemDescriptor>>> resMap,
         String title
     ) {

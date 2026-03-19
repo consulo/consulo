@@ -35,8 +35,7 @@ public abstract class UpdateAddedFileProcessor {
 
   public abstract void update(PsiFile element, @Nullable PsiFile originalElement) throws IncorrectOperationException;
 
-  @Nullable
-  public static UpdateAddedFileProcessor forElement(PsiFile element) {
+  public static @Nullable UpdateAddedFileProcessor forElement(PsiFile element) {
     for(UpdateAddedFileProcessor processor: EP_NAME.getExtensionList()) {
       if (processor.canProcessElement(element)) {
         return processor;

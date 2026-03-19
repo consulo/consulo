@@ -859,8 +859,7 @@ public class Messages {
     }
 
     private static class MoreInfoMessageDialog extends MessageDialog {
-        @Nullable
-        private final String myInfoText;
+        private final @Nullable String myInfoText;
 
         public MoreInfoMessageDialog(Project project, String message, String title, @Nullable String moreInfo, String[] options, int defaultOptionIndex, int focusedOptionIndex, Image icon) {
             super(project);
@@ -1435,8 +1434,7 @@ public class Messages {
             return myField;
         }
 
-        @Nullable
-        public String getInputString() {
+        public @Nullable String getInputString() {
             if (getExitCode() == 0) {
                 return myField.getText().trim();
             }
@@ -1632,8 +1630,7 @@ public class Messages {
             return myComboBox;
         }
 
-        @Nullable
-        public String getInputString() {
+        public @Nullable String getInputString() {
             if (getExitCode() == 0) {
                 return myComboBox.getSelectedItem().toString();
             }

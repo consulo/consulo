@@ -154,13 +154,11 @@ public class ExtensionCheckedTreeNode extends CheckedTreeNode {
         return provider;
     }
 
-    @Nullable
-    public ModuleExtensionProvider getProvider() {
+    public @Nullable ModuleExtensionProvider getProvider() {
         return myProvider;
     }
 
-    @Nullable
-    public ModuleExtension getExtension() {
+    public @Nullable ModuleExtension getExtension() {
         return myExtension;
     }
 }

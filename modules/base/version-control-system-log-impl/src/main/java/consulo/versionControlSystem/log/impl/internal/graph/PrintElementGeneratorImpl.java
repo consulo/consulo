@@ -234,8 +234,7 @@ public class PrintElementGeneratorImpl extends AbstractPrintElementGenerator {
     return result;
   }
 
-  @Nullable
-  private RowElementType getArrowType(GraphEdge edge, int rowIndex) {
+  private @Nullable RowElementType getArrowType(GraphEdge edge, int rowIndex) {
     NormalEdge normalEdge = asNormalEdge(edge);
     if (normalEdge != null) {
       return getArrowType(normalEdge, rowIndex);
@@ -261,8 +260,7 @@ public class PrintElementGeneratorImpl extends AbstractPrintElementGenerator {
     return null;
   }
 
-  @Nullable
-  private RowElementType getArrowType(NormalEdge normalEdge, int rowIndex) {
+  private @Nullable RowElementType getArrowType(NormalEdge normalEdge, int rowIndex) {
     int edgeSize = normalEdge.down - normalEdge.up;
     int upOffset = rowIndex - normalEdge.up;
     int downOffset = normalEdge.down - rowIndex;

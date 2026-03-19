@@ -46,8 +46,7 @@ public abstract class AbstractExternalSystemFacadeImpl<S extends ExternalSystemE
     applyProgressManager(RemoteExternalSystemProgressNotificationManager.NULL_OBJECT);
   }
 
-  @Nullable
-  protected S getSettings() {
+  protected @Nullable S getSettings() {
     return mySettings.get();
   }
   

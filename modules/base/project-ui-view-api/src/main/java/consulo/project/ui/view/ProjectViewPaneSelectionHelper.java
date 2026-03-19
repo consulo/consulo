@@ -25,8 +25,7 @@ public interface ProjectViewPaneSelectionHelper {
      * @return collection of tree paths to select in tree or null if this helper can't handle {@link SelectionDescriptor}
      * @see AbstractTreeNode#canRepresent
      */
-    @Nullable
-    public abstract List<? extends TreePath> computeAdjustedPaths(SelectionDescriptor selectionDescriptor);
+    public abstract @Nullable List<? extends TreePath> computeAdjustedPaths(SelectionDescriptor selectionDescriptor);
 
     /**
      * @param selectionDescriptor information about target elements and potential {@link TreePath tree paths} for selection found by {@link AbstractProjectViewPane#createVisitor(PsiElement, VirtualFile, List)}  node visitor}
@@ -45,10 +44,8 @@ public interface ProjectViewPaneSelectionHelper {
     }
 
     public static class SelectionDescriptor {
-        @Nullable
-        public final PsiElement targetPsiElement;
-        @Nullable
-        public final VirtualFile targetVirtualFile;
+        public final @Nullable PsiElement targetPsiElement;
+        public final @Nullable VirtualFile targetVirtualFile;
         
         public final List<TreePath> originalTreePaths;
 

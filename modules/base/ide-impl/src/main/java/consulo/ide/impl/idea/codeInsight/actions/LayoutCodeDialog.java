@@ -134,8 +134,7 @@ public class LayoutCodeDialog extends DialogWrapper {
     myOptionalLabel.setVisible(canOptimizeImports || canRearrangeCode);
   }
 
-  @Nullable
-  private String getChangesNotAvailableHint() {
+  private @Nullable String getChangesNotAvailableHint() {
     if (!VcsUtil.isFileUnderVcs(myProject, VcsUtil.getFilePath(myFile.getVirtualFile()))) {
       return "File not under VCS root";
     }

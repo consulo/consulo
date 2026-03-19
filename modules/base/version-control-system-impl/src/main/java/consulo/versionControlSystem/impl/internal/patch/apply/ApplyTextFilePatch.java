@@ -35,8 +35,7 @@ public class ApplyTextFilePatch extends ApplyFilePatchBase<TextFilePatch> {
     super(patch);
   }
 
-  @Nullable
-  protected Result applyChange(final Project project, final VirtualFile fileToPatch, final FilePath pathBeforeRename, final Supplier<CharSequence> baseContents) throws IOException {
+  protected @Nullable Result applyChange(final Project project, final VirtualFile fileToPatch, final FilePath pathBeforeRename, final Supplier<CharSequence> baseContents) throws IOException {
     byte[] fileContents = fileToPatch.contentsToByteArray();
     CharSequence text = LoadTextUtil.getTextByBinaryPresentation(fileContents, fileToPatch);
     final GenericPatchApplier applier = new GenericPatchApplier(text, myPatch.getHunks());

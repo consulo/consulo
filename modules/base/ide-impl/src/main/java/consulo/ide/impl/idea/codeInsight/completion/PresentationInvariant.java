@@ -25,12 +25,9 @@ import org.jspecify.annotations.Nullable;
  * from kotlin platform\lang-impl\src\com\intellij\codeInsight\completion\PresentationInvariant.kt
  */
 public class PresentationInvariant implements Comparable<PresentationInvariant> {
-  @Nullable
-  private String itemText;
-  @Nullable
-  private String tail;
-  @Nullable
-  private String type;
+  private @Nullable String itemText;
+  private @Nullable String tail;
+  private @Nullable String type;
 
   public PresentationInvariant(@Nullable String itemText, @Nullable String tail, @Nullable String type) {
     this.itemText = itemText;

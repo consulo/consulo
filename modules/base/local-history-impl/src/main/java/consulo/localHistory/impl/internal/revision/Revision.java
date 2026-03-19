@@ -24,8 +24,7 @@ import java.util.Collections;
 import java.util.List;
 
 public abstract class Revision {
-  @Nullable
-  public String getLabel() {
+  public @Nullable String getLabel() {
     return null;
   }
 
@@ -35,13 +34,11 @@ public abstract class Revision {
 
   public abstract long getTimestamp();
 
-  @Nullable
-  public Long getChangeSetId() {
+  public @Nullable Long getChangeSetId() {
     return null;
   }
 
-  @Nullable
-  public String getChangeSetName() {
+  public @Nullable String getChangeSetName() {
     return null;
   }
 

@@ -84,8 +84,7 @@ class JDOMElementBinding extends NonNullAccessorBinding implements MultiNodeBind
   }
 
   @Override
-  @Nullable
-  public Object deserialize(@Nullable Object context, Element element) {
+  public @Nullable Object deserialize(@Nullable Object context, Element element) {
     myAccessor.set(Objects.requireNonNull(context), element);
     return context;
   }

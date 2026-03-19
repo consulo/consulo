@@ -26,8 +26,7 @@ public class Disposer {
     return ourInternal.newTraceDisposable(debug);
   }
 
-  @Nullable
-  public static Disposable get(String key) {
+  public static @Nullable Disposable get(String key) {
     return ourInternal.get(key);
   }
 
@@ -46,8 +45,7 @@ public class Disposer {
     return ourInternal.isDisposed(disposable);
   }
 
-  @Nullable
-  public static Throwable getDisposalTrace(Disposable disposable) {
+  public static @Nullable Throwable getDisposalTrace(Disposable disposable) {
     return ourInternal.getDisposalTrace(disposable);
   }
 
@@ -66,8 +64,7 @@ public class Disposer {
   /**
    * @return object registered on {@code parentDisposable} which is equal to object, or {@code null} if not found
    */
-  @Nullable
-  public static <T extends Disposable> T findRegisteredObject(Disposable parentDisposable, T object) {
+  public static @Nullable <T extends Disposable> T findRegisteredObject(Disposable parentDisposable, T object) {
     return ourInternal.findRegisteredObject(parentDisposable, object);
   }
 

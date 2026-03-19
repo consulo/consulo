@@ -23,8 +23,7 @@ import org.jspecify.annotations.Nullable;
 import java.util.List;
 
 public class SimpleDiffRequest extends ContentDiffRequest {
-  @Nullable
-  private final String myTitle;
+  private final @Nullable String myTitle;
   
   private final List<DiffContent> myContents;
   

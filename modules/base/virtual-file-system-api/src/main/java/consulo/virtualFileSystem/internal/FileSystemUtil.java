@@ -55,8 +55,7 @@ public final class FileSystemUtil {
     LOG.info("Using file system mediator: " + getMediatorName(ourMediator));
   }
 
-  @Nullable
-  public static FileAttributes getAttributes(String path) {
+  public static @Nullable FileAttributes getAttributes(String path) {
     try {
       return ourMediator.getAttributes(path);
     }
@@ -66,8 +65,7 @@ public final class FileSystemUtil {
     return null;
   }
 
-  @Nullable
-  public static FileAttributes getAttributes(File file) {
+  public static @Nullable FileAttributes getAttributes(File file) {
     return getAttributes(file.getPath());
   }
 
@@ -94,8 +92,7 @@ public final class FileSystemUtil {
     return isSymLink(file.getAbsolutePath());
   }
 
-  @Nullable
-  public static String resolveSymLink(String path) {
+  public static @Nullable String resolveSymLink(String path) {
     try {
       String realPath = ourMediator.resolveSymLink(path);
       if (realPath != null && new File(realPath).exists()) {
@@ -108,8 +105,7 @@ public final class FileSystemUtil {
     return null;
   }
 
-  @Nullable
-  public static String resolveSymLink(File file) {
+  public static @Nullable String resolveSymLink(File file) {
     return resolveSymLink(file.getAbsolutePath());
   }
 

@@ -198,8 +198,7 @@ public class CreateFileAction extends CreateElementActionBase implements DumbAwa
         return newName + "." + getDefaultExtension();
     }
 
-    @Nullable
-    protected String getDefaultExtension() {
+    protected @Nullable String getDefaultExtension() {
         return null;
     }
 

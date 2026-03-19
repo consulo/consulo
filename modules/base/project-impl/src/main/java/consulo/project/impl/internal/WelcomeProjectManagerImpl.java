@@ -68,16 +68,14 @@ public class WelcomeProjectManagerImpl implements WelcomeProjectManager, Persist
      * The currently open welcome project, or {@code null} when no welcome project is open.
      * This reference is only held while the project is actively open — it is cleared on close.
      */
-    @Nullable
-    private volatile WelcomeProjectImpl myOpenWelcomeProject;
+    private volatile @Nullable WelcomeProjectImpl myOpenWelcomeProject;
 
     /**
      * Persisted state element from the welcome project.
      * Survives welcome project dispose — used to initialize the next welcome project instance
      * and persisted to {@code project.welcome.xml} via {@link #getState()}.
      */
-    @Nullable
-    private Element myStateElement;
+    private @Nullable Element myStateElement;
 
     @Inject
     public WelcomeProjectManagerImpl(Application application,

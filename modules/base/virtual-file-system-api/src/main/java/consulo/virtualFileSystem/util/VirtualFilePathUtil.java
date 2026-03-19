@@ -28,8 +28,7 @@ public class VirtualFilePathUtil {
   private VirtualFilePathUtil() {
   }
 
-  @Nullable
-  public static String getLocalPath(@Nullable VirtualFile file) {
+  public static @Nullable String getLocalPath(@Nullable VirtualFile file) {
     if (file == null || !file.isValid()) {
       return null;
     }

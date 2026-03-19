@@ -286,8 +286,7 @@ public class PluginsLoader {
     return pluginDescriptors;
   }
 
-  @Nullable
-  public static PluginDescriptor loadPluginDescriptor(File file) {
+  public static @Nullable PluginDescriptor loadPluginDescriptor(File file) {
     return PluginDescriptorLoader.loadDescriptor(file, false, PluginsLoader.C_LOG);
   }
 
@@ -367,8 +366,7 @@ public class PluginsLoader {
     return 0;
   }
 
-  @Nullable
-  static CompositeMessage filterBadPlugins(PluginsInitializeInfo info,
+  static @Nullable CompositeMessage filterBadPlugins(PluginsInitializeInfo info,
                                            List<PluginDescriptorImpl> result,
                                            Map<PluginId, String> disabledPluginNames) {
     Map<PluginId, PluginDescriptor> idToDescriptorMap = new HashMap<>();
@@ -493,8 +491,7 @@ public class PluginsLoader {
     return result;
   }
 
-  @Nullable
-  static ClassLoader createPluginClassLoader(Set<PluginId> enabledPluginIds,
+  static @Nullable ClassLoader createPluginClassLoader(Set<PluginId> enabledPluginIds,
                                              ClassLoader[] parentLoaders,
                                              PluginDescriptor pluginDescriptor) {
     try {

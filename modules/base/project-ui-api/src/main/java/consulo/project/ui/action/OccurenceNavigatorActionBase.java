@@ -120,8 +120,7 @@ abstract class OccurenceNavigatorActionBase extends AnAction implements DumbAwar
         return (OccurenceNavigator) getOccurenceNavigatorFromContext(dataContext);
     }
 
-    @Nullable
-    private static OccurenceNavigator findNavigator(JComponent parent) {
+    private static @Nullable OccurenceNavigator findNavigator(JComponent parent) {
         LinkedList<JComponent> queue = new LinkedList<>();
         queue.addLast(parent);
         while (!queue.isEmpty()) {

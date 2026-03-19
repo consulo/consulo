@@ -107,8 +107,7 @@ public class ShortcutUtil {
         return application.getInstance(KeyMapSetting.class).isUseUnicodeShortcutsWithDefault();
     }
 
-    @Nullable
-    public static KeyStroke getKeyStroke(ShortcutSet shortcutSet) {
+    public static @Nullable KeyStroke getKeyStroke(ShortcutSet shortcutSet) {
         Shortcut[] shortcuts = shortcutSet.getShortcuts();
         if (shortcuts.length != 0 && shortcuts[0] instanceof KeyboardShortcut shortcut && shortcut.getSecondKeyStroke() == null) {
             return shortcut.getFirstKeyStroke();

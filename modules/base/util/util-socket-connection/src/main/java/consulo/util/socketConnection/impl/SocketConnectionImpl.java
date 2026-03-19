@@ -34,8 +34,7 @@ public class SocketConnectionImpl<Request extends AbstractRequest, Response exte
   private static final Logger LOG = LoggerFactory.getLogger(SocketConnectionImpl.class);
   private static final int MAX_CONNECTION_ATTEMPTS = 60;
   private static final int CONNECTION_ATTEMPT_DELAY = 500;
-  @Nullable
-  private final InetAddress myHost;
+  private final @Nullable InetAddress myHost;
   private final int myInitialPort;
   private final int myPortsNumberToTry;
   private final Executor myExecutor;

@@ -50,28 +50,23 @@ public abstract class BaseStartedNodeEvent extends TreeNodeEvent {
     /**
      * @return parent node id, or null if undefined
      */
-    @Nullable
-    public String getParentId() {
+    public @Nullable String getParentId() {
         return myParentId;
     }
 
-    @Nullable
-    public String getLocationUrl() {
+    public @Nullable String getLocationUrl() {
         return myLocationUrl;
     }
 
-    @Nullable
-    public String getMetainfo() {
+    public @Nullable String getMetainfo() {
         return myMetainfo;
     }
 
-    @Nullable
-    public String getNodeType() {
+    public @Nullable String getNodeType() {
         return myNodeType;
     }
 
-    @Nullable
-    public String getNodeArgs() {
+    public @Nullable String getNodeArgs() {
         return myNodeArgs;
     }
 
@@ -87,23 +82,19 @@ public abstract class BaseStartedNodeEvent extends TreeNodeEvent {
         append(buf, "running", myRunning);
     }
 
-    @Nullable
-    public static String getParentNodeId(MessageWithAttributes message) {
+    public static @Nullable String getParentNodeId(MessageWithAttributes message) {
         return TreeNodeEvent.getNodeId(message, "parentNodeId");
     }
 
-    @Nullable
-    public static String getNodeType(MessageWithAttributes message) {
+    public static @Nullable String getNodeType(MessageWithAttributes message) {
         return message.getAttributes().get("nodeType");
     }
 
-    @Nullable
-    public static String getMetainfo(MessageWithAttributes message) {
+    public static @Nullable String getMetainfo(MessageWithAttributes message) {
         return message.getAttributes().get("metainfo");
     }
 
-    @Nullable
-    public static String getNodeArgs(MessageWithAttributes message) {
+    public static @Nullable String getNodeArgs(MessageWithAttributes message) {
         return message.getAttributes().get("nodeArgs");
     }
 

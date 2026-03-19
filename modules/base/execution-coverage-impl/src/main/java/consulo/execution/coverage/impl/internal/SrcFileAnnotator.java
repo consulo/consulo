@@ -171,8 +171,7 @@ public class SrcFileAnnotator implements Disposable {
         return result;
     }
 
-    @Nullable
-    private Int2IntMap getOldToNewLineMapping(long date) {
+    private @Nullable Int2IntMap getOldToNewLineMapping(long date) {
         if (myOldToNewLines == null) {
             myOldToNewLines = doGetLineMapping(date, true);
             if (myOldToNewLines == null) {
@@ -182,8 +181,7 @@ public class SrcFileAnnotator implements Disposable {
         return myOldToNewLines.get();
     }
 
-    @Nullable
-    private Int2IntMap getNewToOldLineMapping(long date) {
+    private @Nullable Int2IntMap getNewToOldLineMapping(long date) {
         if (myNewToOldLines == null) {
             myNewToOldLines = doGetLineMapping(date, false);
             if (myNewToOldLines == null) {
@@ -193,8 +191,7 @@ public class SrcFileAnnotator implements Disposable {
         return myNewToOldLines.get();
     }
 
-    @Nullable
-    private SoftReference<Int2IntMap> doGetLineMapping(long date, boolean oldToNew) {
+    private @Nullable SoftReference<Int2IntMap> doGetLineMapping(long date, boolean oldToNew) {
         VirtualFile f = getVirtualFile();
         byte[] oldContent;
         synchronized (LOCK) {

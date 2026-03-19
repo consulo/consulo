@@ -35,8 +35,7 @@ public abstract class AbstractFileHyperlinkFilter implements Filter {
     myBaseDir = baseDir;
   }
 
-  @Nullable
-  protected static VirtualFile findDir(@Nullable String baseDir) {
+  protected static @Nullable VirtualFile findDir(@Nullable String baseDir) {
     if (StringUtil.isEmpty(baseDir)) {
       return null;
     }
@@ -86,8 +85,7 @@ public abstract class AbstractFileHyperlinkFilter implements Filter {
     return items.isEmpty() ? null : new Result(items);
   }
 
-  @Nullable
-  private File findIoFile(String filePath) {
+  private @Nullable File findIoFile(String filePath) {
     File ioFile = new File(filePath);
     if (ioFile.isAbsolute() && ioFile.isFile()) {
       return ioFile;
@@ -121,8 +119,7 @@ public abstract class AbstractFileHyperlinkFilter implements Filter {
   
   public abstract List<FileHyperlinkRawData> parse(String line);
 
-  @Nullable
-  public VirtualFile findFile(String filePath) {
+  public @Nullable VirtualFile findFile(String filePath) {
     VirtualFile file = LocalFileFinder.findFile(filePath);
     if (file == null && myBaseDir != null && myBaseDir.isValid()) {
       file = myBaseDir.findFileByRelativePath(filePath);

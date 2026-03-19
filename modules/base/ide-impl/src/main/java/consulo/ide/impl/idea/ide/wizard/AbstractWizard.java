@@ -492,6 +492,5 @@ public abstract class AbstractWizard<T extends Step> extends DialogWrapper {
     return mySteps.size();
   }
 
-  @Nullable
-  protected abstract String getHelpID();
+  protected abstract @Nullable String getHelpID();
 }

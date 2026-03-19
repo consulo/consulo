@@ -267,8 +267,7 @@ public class XDebuggerTree extends DnDAwareTree implements UiDataProvider, Dispo
         return (XDebuggerTreeNode) myTreeModel.getRoot();
     }
 
-    @Nullable
-    public XSourcePosition getSourcePosition() {
+    public @Nullable XSourcePosition getSourcePosition() {
         return mySourcePosition;
     }
 
@@ -285,8 +284,7 @@ public class XDebuggerTree extends DnDAwareTree implements UiDataProvider, Dispo
         return myProject;
     }
 
-    @Nullable
-    public XValueMarkers<?, ?> getValueMarkers() {
+    public @Nullable XValueMarkers<?, ?> getValueMarkers() {
         return myValueMarkers;
     }
 
@@ -369,13 +367,11 @@ public class XDebuggerTree extends DnDAwareTree implements UiDataProvider, Dispo
         }
     }
 
-    @Nullable
-    public static XDebuggerTree getTree(AnActionEvent e) {
+    public static @Nullable XDebuggerTree getTree(AnActionEvent e) {
         return e.getData(XDEBUGGER_TREE_KEY);
     }
 
-    @Nullable
-    public static XDebuggerTree getTree(DataContext context) {
+    public static @Nullable XDebuggerTree getTree(DataContext context) {
         return context.getData(XDEBUGGER_TREE_KEY);
     }
 

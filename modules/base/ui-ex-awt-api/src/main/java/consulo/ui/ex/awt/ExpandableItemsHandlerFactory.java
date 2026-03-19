@@ -45,8 +45,7 @@ public abstract class ExpandableItemsHandlerFactory {
     return i == null ? (ExpandableItemsHandler<TableCell>)NULL : i.doInstall(table);
   }
 
-  @Nullable
-  private static ExpandableItemsHandlerFactory getInstance() {
+  private static @Nullable ExpandableItemsHandlerFactory getInstance() {
     if (!Registry.is("ide.windowSystem.showListItemsPopup") || ApplicationManager.getApplication() == null) return null;
     return Application.get().getInstance(ExpandableItemsHandlerFactory.class);
   }

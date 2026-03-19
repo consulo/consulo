@@ -61,8 +61,7 @@ public class UsageTypeGroupingRule extends SingleParentUsageGroupingRule {
         return null;
     }
 
-    @Nullable
-    private static UsageType getUsageType(PsiElement element, UsageTarget[] targets) {
+    private static @Nullable UsageType getUsageType(PsiElement element, UsageTarget[] targets) {
         if (element == null) {
             return null;
         }

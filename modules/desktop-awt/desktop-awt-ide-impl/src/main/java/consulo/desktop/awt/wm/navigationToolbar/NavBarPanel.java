@@ -172,8 +172,7 @@ public class NavBarPanel extends JPanel implements UiDataProvider, PopupOwner, D
         return new NavBarModel(myProject);
     }
 
-    @Nullable
-    public NavBarPopup getNodePopup() {
+    public @Nullable NavBarPopup getNodePopup() {
         return myNodePopup;
     }
 
@@ -381,8 +380,7 @@ public class NavBarPanel extends JPanel implements UiDataProvider, PopupOwner, D
         scrollRectToVisible(myList.get(selectedIndex).getBounds());
     }
 
-    @Nullable
-    private NavBarItem getItem(int index) {
+    private @Nullable NavBarItem getItem(int index) {
         if (index != -1 && index < myList.size()) {
             return myList.get(index);
         }

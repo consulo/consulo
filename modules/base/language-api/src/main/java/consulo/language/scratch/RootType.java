@@ -47,8 +47,7 @@ public abstract class RootType {
     return ROOT_EP.getExtensionList();
   }
 
-  @Nullable
-  public static RootType forFile(@Nullable VirtualFile file) {
+  public static @Nullable RootType forFile(@Nullable VirtualFile file) {
     return ScratchFileService.getInstance().getRootType(file);
   }
 
@@ -70,8 +69,7 @@ public abstract class RootType {
     return myId;
   }
 
-  @Nullable
-  public final String getDisplayName() {
+  public final @Nullable String getDisplayName() {
     return myDisplayName;
   }
 
@@ -85,13 +83,11 @@ public abstract class RootType {
     return service.getRootType(file) == this;
   }
 
-  @Nullable
-  public Language substituteLanguage(Project project, VirtualFile file) {
+  public @Nullable Language substituteLanguage(Project project, VirtualFile file) {
     return null;
   }
 
-  @Nullable
-  public Image substituteIcon(Project project, VirtualFile file) {
+  public @Nullable Image substituteIcon(Project project, VirtualFile file) {
     if (file.isDirectory()) return null;
     Language language = substituteLanguage(project, file);
     FileType fileType = LanguageUtil.getLanguageFileType(language);
@@ -102,8 +98,7 @@ public abstract class RootType {
     return fileType != null ? fileType.getIcon() : null;
   }
 
-  @Nullable
-  public String substituteName(Project project, VirtualFile file) {
+  public @Nullable String substituteName(Project project, VirtualFile file) {
     return null;
   }
 

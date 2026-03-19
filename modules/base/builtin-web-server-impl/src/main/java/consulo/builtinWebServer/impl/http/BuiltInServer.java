@@ -137,7 +137,7 @@ public class BuiltInServer implements Disposable {
     static void configureChildHandler(
         ServerBootstrap bootstrap,
         final ChannelRegistrar channelRegistrar,
-        @Nullable final Supplier<ChannelHandler> channelHandler
+        final @Nullable Supplier<ChannelHandler> channelHandler
     ) {
         final PortUnificationServerHandler portUnificationServerHandler =
             channelHandler == null ? new PortUnificationServerHandler() : null;

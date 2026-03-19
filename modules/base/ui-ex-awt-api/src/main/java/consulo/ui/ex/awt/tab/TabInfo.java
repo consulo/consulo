@@ -190,8 +190,7 @@ public final class TabInfo implements Queryable, PlaceProvider<String> {
         return myText;
     }
 
-    @Nullable
-    public Image getIcon() {
+    public @Nullable Image getIcon() {
         return myIcon;
     }
 
@@ -264,8 +263,7 @@ public final class TabInfo implements Queryable, PlaceProvider<String> {
         return this;
     }
 
-    @Nullable
-    public JComponent getLastFocusOwner() {
+    public @Nullable JComponent getLastFocusOwner() {
         return SoftReference.dereference(myLastFocusOwner);
     }
 
@@ -420,8 +418,7 @@ public final class TabInfo implements Queryable, PlaceProvider<String> {
         myPreviousSelection = new WeakReference<>(previousSelection);
     }
 
-    @Nullable
-    public TabInfo getPreviousSelection() {
+    public @Nullable TabInfo getPreviousSelection() {
         return myPreviousSelection.get();
     }
 

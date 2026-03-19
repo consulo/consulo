@@ -163,18 +163,15 @@ public class DefaultBuildDescriptor implements BuildDescriptor {
     myAutoFocusContent = autoFocusContent;
   }
 
-  @Nullable
-  public BuildProcessHandler getProcessHandler() {
+  public @Nullable BuildProcessHandler getProcessHandler() {
     return myProcessHandler;
   }
 
-  @Nullable
-  public ExecutionEnvironment getExecutionEnvironment() {
+  public @Nullable ExecutionEnvironment getExecutionEnvironment() {
     return myExecutionEnvironment;
   }
 
-  @Nullable
-  public Supplier<? extends RunContentDescriptor> getContentDescriptorSupplier() {
+  public @Nullable Supplier<? extends RunContentDescriptor> getContentDescriptorSupplier() {
     return myContentDescriptorSupplier;
   }
 

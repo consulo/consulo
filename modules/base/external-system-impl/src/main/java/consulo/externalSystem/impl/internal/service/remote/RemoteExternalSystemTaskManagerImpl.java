@@ -44,10 +44,10 @@ public class RemoteExternalSystemTaskManagerImpl<S extends ExternalSystemExecuti
   public void executeTasks(final ExternalSystemTaskId id,
                            final List<String> taskNames,
                            final String projectPath,
-                           @Nullable final S settings,
+                           final @Nullable S settings,
                            final List<String> vmOptions,
                            final List<String> scriptParameters,
-                           @Nullable final String debuggerSetup) throws RemoteException, ExternalSystemException
+                           final @Nullable String debuggerSetup) throws RemoteException, ExternalSystemException
   {
     execute(id, new Supplier<Object>() {
       @Nullable

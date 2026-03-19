@@ -52,8 +52,7 @@ public class LookupEvent extends EventObject {
   /**
    * @return in case ENTER was pressed when no suggestions were available
    */
-  @Nullable
-  public LookupElement getItem() {
+  public @Nullable LookupElement getItem() {
     return myItem;
   }
 

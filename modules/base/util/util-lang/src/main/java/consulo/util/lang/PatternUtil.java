@@ -86,8 +86,7 @@ public class PatternUtil {
    * @param regex pattern to match to.
    * @return pattern's first matched group, or entire matched string if pattern has no groups, or null.
    */
-  @Nullable
-  public static String getFirstMatch(List<String> lines, Pattern regex) {
+  public static @Nullable String getFirstMatch(List<String> lines, Pattern regex) {
     if (lines == null) return null;
     for (String s : lines) {
       Matcher m = regex.matcher(s);

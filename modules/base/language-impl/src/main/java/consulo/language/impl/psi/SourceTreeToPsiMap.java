@@ -24,8 +24,7 @@ import org.jspecify.annotations.Nullable;
 public class SourceTreeToPsiMap {
   private SourceTreeToPsiMap() { }
 
-  @Nullable
-  public static PsiElement treeElementToPsi(@Nullable ASTNode element) {
+  public static @Nullable PsiElement treeElementToPsi(@Nullable ASTNode element) {
     return element == null ? null : element.getPsi();
   }
 
@@ -37,8 +36,7 @@ public class SourceTreeToPsiMap {
     return (T)psi;
   }
 
-  @Nullable
-  public static ASTNode psiElementToTree(@Nullable PsiElement psiElement) {
+  public static @Nullable ASTNode psiElementToTree(@Nullable PsiElement psiElement) {
     return psiElement == null ? null : psiElement.getNode();
   }
 

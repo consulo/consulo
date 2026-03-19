@@ -52,13 +52,11 @@ public abstract class AddEditRemovePanel<T> extends PanelWithButtons implements 
     initPanel();
   }
 
-  @Nullable
-  protected abstract T addItem();
+  protected abstract @Nullable T addItem();
 
   protected abstract boolean removeItem(T o);
 
-  @Nullable
-  protected abstract T editItem(T o);
+  protected abstract @Nullable T editItem(T o);
 
   @Override
   protected void initPanel() {
@@ -253,8 +251,7 @@ public abstract class AddEditRemovePanel<T> extends PanelWithButtons implements 
   public abstract static class TableModel<T> {
 
     public abstract int getColumnCount();
-    @Nullable
-    public abstract String getColumnName(int columnIndex);
+    public abstract @Nullable String getColumnName(int columnIndex);
     public abstract Object getField(T o, int columnIndex);
 
     public Class getColumnClass(int columnIndex) { return String.class; }

@@ -123,8 +123,7 @@ public class FileCopyPackagingElement extends FileOrDirectoryCopyPackagingElemen
     myRenamedOutputFileName = newName.equals(PathUtil.getFileName(myFilePath)) ? null : newName;
   }
 
-  @Nullable
-  public VirtualFile getLibraryRoot() {
+  public @Nullable VirtualFile getLibraryRoot() {
     String url = VirtualFileUtil.getUrlForLibraryRoot(new File(FileUtil.toSystemDependentName(getFilePath())));
     return VirtualFileManager.getInstance().findFileByUrl(url);
   }

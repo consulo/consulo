@@ -48,13 +48,11 @@ public abstract class TextComponentEditorAction extends EditorAction {
     }
 
     @Override
-    @Nullable
-    protected Editor getEditor(DataContext dataContext) {
+    protected @Nullable Editor getEditor(DataContext dataContext) {
         return getEditorFromContext(dataContext);
     }
 
-    @Nullable
-    public static Editor getEditorFromContext(DataContext dataContext) {
+    public static @Nullable Editor getEditorFromContext(DataContext dataContext) {
         Editor editor = dataContext.getData(Editor.KEY);
         if (editor != null) {
             return editor;

@@ -53,7 +53,7 @@ public abstract class IncrementalCompilerInstructionCreatorBase implements Incre
     private static void collectInstructionsRecursively(
         VirtualFile directory,
         final IncrementalCompilerInstructionCreatorBase creator,
-        @Nullable final PackagingFileFilter filter,
+        final @Nullable PackagingFileFilter filter,
         final ProjectFileIndex index,
         final boolean copyExcluded
     ) {

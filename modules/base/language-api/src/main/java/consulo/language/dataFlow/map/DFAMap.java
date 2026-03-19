@@ -72,8 +72,7 @@ public class DFAMap<V> {
     }
   }
 
-  @Nullable
-  public V get(String key) {
+  public @Nullable V get(String key) {
     if (myAll != null) {
       return myAll.get(key);
     }

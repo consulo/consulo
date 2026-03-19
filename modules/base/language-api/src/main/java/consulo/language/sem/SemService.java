@@ -33,8 +33,7 @@ public abstract class SemService {
     return p.getInstance(SemService.class);
   }
 
-  @Nullable
-  public <T extends SemElement> T getSemElement(SemKey<T> key, PsiElement psi) {
+  public @Nullable <T extends SemElement> T getSemElement(SemKey<T> key, PsiElement psi) {
     List<T> list = getSemElements(key, psi);
     if (list.isEmpty()) return null;
     return list.get(0);
@@ -42,8 +41,7 @@ public abstract class SemService {
 
   public abstract <T extends SemElement> List<T> getSemElements(SemKey<T> key, PsiElement psi);
 
-  @Nullable
-  public abstract <T extends SemElement> List<T> getCachedSemElements(SemKey<T> key, PsiElement psi);
+  public abstract @Nullable <T extends SemElement> List<T> getCachedSemElements(SemKey<T> key, PsiElement psi);
 
   public abstract <T extends SemElement> void setCachedSemElement(SemKey<T> key, PsiElement psi, @Nullable T semElement);
 

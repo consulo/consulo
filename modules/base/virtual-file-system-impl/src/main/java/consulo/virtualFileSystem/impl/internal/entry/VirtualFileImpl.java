@@ -48,8 +48,7 @@ public class VirtualFileImpl extends VirtualFileSystemEntry {
     }
 
     @Override
-    @Nullable
-    public NewVirtualFile findChild(String name) {
+    public @Nullable NewVirtualFile findChild(String name) {
         return null;
     }
 
@@ -74,14 +73,12 @@ public class VirtualFileImpl extends VirtualFileSystemEntry {
     }
 
     @Override
-    @Nullable
-    public NewVirtualFile refreshAndFindChild(String name) {
+    public @Nullable NewVirtualFile refreshAndFindChild(String name) {
         return null;
     }
 
     @Override
-    @Nullable
-    public NewVirtualFile findChildIfCached(String name) {
+    public @Nullable NewVirtualFile findChildIfCached(String name) {
         return null;
     }
 

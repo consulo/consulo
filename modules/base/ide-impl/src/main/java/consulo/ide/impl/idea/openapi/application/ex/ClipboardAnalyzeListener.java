@@ -12,8 +12,7 @@ import org.jspecify.annotations.Nullable;
 
 public abstract class ClipboardAnalyzeListener<T> implements ApplicationActivationListener {
   private static final int MAX_SIZE = 100 * 1024;
-  @Nullable
-  private String myCachedClipboardValue;
+  private @Nullable String myCachedClipboardValue;
 
   @Override
   public void applicationActivated(IdeFrame ideFrame) {
@@ -52,6 +51,5 @@ public abstract class ClipboardAnalyzeListener<T> implements ApplicationActivati
   /**
    * Return value of handling. If can handle value will not null
    */
-  @Nullable
-  public abstract T canHandle(String value);
+  public abstract @Nullable T canHandle(String value);
 }

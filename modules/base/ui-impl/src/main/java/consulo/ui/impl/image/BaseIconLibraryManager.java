@@ -122,8 +122,7 @@ public abstract class BaseIconLibraryManager implements IconLibraryManager {
         myModificationCount.incrementAndGet();
     }
 
-    @Nullable
-    public BaseIconLibraryImpl getLibrary(String id) {
+    public @Nullable BaseIconLibraryImpl getLibrary(String id) {
         return (BaseIconLibraryImpl) myLibraries.get(id);
     }
 
@@ -315,8 +314,7 @@ public abstract class BaseIconLibraryManager implements IconLibraryManager {
         }
     }
 
-    @Nullable
-    public ImageReference resolveImage(@Nullable String forceIconLibraryId, ImageKey imageKey) {
+    public @Nullable ImageReference resolveImage(@Nullable String forceIconLibraryId, ImageKey imageKey) {
         String groupId = imageKey.getGroupId();
         String imageId = imageKey.getImageId();
 

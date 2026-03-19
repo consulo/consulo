@@ -60,8 +60,7 @@ public abstract class AbstractAutoTestManager implements PersistentStateComponen
     myWatcher = createWatcher(project);
   }
 
-  @Nullable
-  private static ExecutionEnvironment getCurrentEnvironment(Content content) {
+  private static @Nullable ExecutionEnvironment getCurrentEnvironment(Content content) {
     JComponent component = content.getComponent();
     if (component == null) {
       return null;

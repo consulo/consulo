@@ -48,8 +48,7 @@ public enum DirDiffOperation {
         return myIcon;
     }
 
-    @Nullable
-    public ColorValue getTextColor() {
+    public @Nullable ColorValue getTextColor() {
         return myTextColor.get();
     }
 }

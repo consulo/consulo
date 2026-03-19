@@ -30,8 +30,7 @@ import java.awt.event.MouseEvent;
  */
 public class TableLinkMouseListener extends AbstractBaseTagMouseListener {
   @Override
-  @Nullable
-  public Object getTagAt(MouseEvent e) {
+  public @Nullable Object getTagAt(MouseEvent e) {
     // TODO[yole]: don't update renderer on every event, like it's done in TreeLinkMouseListener
     Object tag = null;
     JTable table = (JTable)e.getSource();

@@ -28,8 +28,7 @@ public abstract class ItemWrapper {
 
   public abstract String speedSearchText();
 
-  @Nullable
-  public abstract String footerText();
+  public abstract @Nullable String footerText();
 
   public void updateDetailView(DetailView panel) {
     if (panel == null) return;

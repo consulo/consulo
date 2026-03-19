@@ -25,8 +25,7 @@ import org.jspecify.annotations.Nullable;
  * @since 2024-09-11
  */
 public final class TreeSelectEvent<V> extends ComponentEvent<Tree<V>> {
-    @Nullable
-    private final TreeNode<V> myValue;
+    private final @Nullable TreeNode<V> myValue;
 
     public TreeSelectEvent(Tree<V> component, @Nullable TreeNode<V> value) {
         this(component, value, null);
@@ -37,8 +36,7 @@ public final class TreeSelectEvent<V> extends ComponentEvent<Tree<V>> {
         myValue = value;
     }
 
-    @Nullable
-    public TreeNode<V> getValue() {
+    public @Nullable TreeNode<V> getValue() {
         return myValue;
     }
 }

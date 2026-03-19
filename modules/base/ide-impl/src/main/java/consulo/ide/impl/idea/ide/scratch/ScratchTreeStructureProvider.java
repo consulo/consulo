@@ -130,14 +130,12 @@ public class ScratchTreeStructureProvider implements TreeStructureProvider, Dumb
     return virtualFile == null ? null : PsiManager.getInstance(project).findDirectory(virtualFile);
   }
 
-  @Nullable
-  private static VirtualFile getVirtualFile(RootType rootType) {
+  private static @Nullable VirtualFile getVirtualFile(RootType rootType) {
     String path = ScratchFileService.getInstance().getRootPath(rootType);
     return LocalFileSystem.getInstance().findFileByPath(path);
   }
 
-  @Nullable
-  private static AbstractTreeNode<?> createRootTypeNode(
+  private static @Nullable AbstractTreeNode<?> createRootTypeNode(
     Project project,
     RootType rootType,
     ViewSettings settings

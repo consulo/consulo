@@ -40,8 +40,7 @@ import java.util.Objects;
  * @author yole
  */
 public class MarkRootAction extends DumbAwareAction {
-    @Nullable
-    private final ContentFolderTypeProvider myContentFolderType;
+    private final @Nullable ContentFolderTypeProvider myContentFolderType;
 
     public MarkRootAction(
         LocalizeValue text,
@@ -77,8 +76,7 @@ public class MarkRootAction extends DumbAwareAction {
         Application.get().runWriteAction(model::commit);
     }
 
-    @Nullable
-    public static ContentEntry findContentEntry(ModuleRootModel model, VirtualFile vFile) {
+    public static @Nullable ContentEntry findContentEntry(ModuleRootModel model, VirtualFile vFile) {
         ContentEntry[] contentEntries = model.getContentEntries();
         for (ContentEntry contentEntry : contentEntries) {
             VirtualFile contentEntryFile = contentEntry.getFile();

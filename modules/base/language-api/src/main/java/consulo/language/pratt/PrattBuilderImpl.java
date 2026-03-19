@@ -77,8 +77,7 @@ public class PrattBuilderImpl extends PrattBuilder {
   }
 
   @Override
-  @Nullable
-  public IElementType parse() {
+  public @Nullable IElementType parse() {
     checkParsed();
     return myLeftSiblings.size() != 1 ? null : myLeftSiblings.getLast();
   }
@@ -121,8 +120,7 @@ public class PrattBuilderImpl extends PrattBuilder {
     myStartMarker.drop();
   }
 
-  @Nullable
-  private TokenParser findParser() {
+  private @Nullable TokenParser findParser() {
     IElementType tokenType = getTokenType();
     for (Trinity<Integer, PathPattern, TokenParser> trinity : myRegistry.getParsers(tokenType)) {
       if (trinity.first > myPriority && trinity.second.accepts(this)) {
@@ -146,14 +144,12 @@ public class PrattBuilderImpl extends PrattBuilder {
   }
 
   @Override
-  @Nullable
-  public IElementType getTokenType() {
+  public @Nullable IElementType getTokenType() {
     return myBuilder.getTokenType();
   }
 
   @Override
-  @Nullable
-  public String getTokenText() {
+  public @Nullable String getTokenText() {
     return myBuilder.getTokenText();
   }
 

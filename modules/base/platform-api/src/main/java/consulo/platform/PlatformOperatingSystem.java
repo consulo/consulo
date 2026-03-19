@@ -67,8 +67,7 @@ public interface PlatformOperatingSystem {
     
     String fileNamePrefix();
 
-    @Nullable
-    default String getEnvironmentVariable(String key, String defaultValue) {
+    default @Nullable String getEnvironmentVariable(String key, String defaultValue) {
         String environmentVariable = getEnvironmentVariable(key);
         return environmentVariable == null ? defaultValue : environmentVariable;
     }

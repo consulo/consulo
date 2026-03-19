@@ -767,8 +767,7 @@ public class DependenciesPanel extends JPanel implements Disposable, UiDataProvi
             });
         }
 
-        @Nullable
-        public PackageDependenciesNode getSelectedNode() {
+        public @Nullable PackageDependenciesNode getSelectedNode() {
             TreePath[] paths = getSelectionPaths();
             if (paths == null || paths.length != 1) {
                 return null;
@@ -892,8 +891,7 @@ public class DependenciesPanel extends JPanel implements Disposable, UiDataProvi
             );
         }
 
-        @Nullable
-        private AnalysisScope getScope() {
+        private @Nullable AnalysisScope getScope() {
             Set<PsiFile> selectedScope = getSelectedScope(myRightTree);
             Set<PsiFile> result = new HashSet<>();
             ((PackageDependenciesNode) myLeftTree.getModel().getRoot()).fillFiles(result, !mySettings.UI_FLATTEN_PACKAGES);

@@ -32,8 +32,7 @@ public abstract class ByteBufferWrapper {
     myLength = length;
   }
 
-  @Nullable
-  public abstract ByteBuffer getCachedBuffer();
+  public abstract @Nullable ByteBuffer getCachedBuffer();
 
   public final void markDirty() {
     if (!myDirty) myDirty = true;

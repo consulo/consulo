@@ -43,8 +43,7 @@ interface ComponentAdapter<T> {
    */
   T getComponentInstance(InstanceContainer container) throws PicoInitializationException, PicoIntrospectionException;
 
-  @Nullable
-  default T getComponentInstanceOfCreated(InstanceContainer container) {
+  default @Nullable T getComponentInstanceOfCreated(InstanceContainer container) {
     return getComponentInstance(container);
   }
 }

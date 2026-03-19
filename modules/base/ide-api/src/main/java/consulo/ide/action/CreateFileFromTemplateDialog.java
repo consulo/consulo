@@ -136,8 +136,7 @@ public class CreateFileFromTemplateDialog  {
       popup.showCenteredInCurrentWindow(myProject);
     }
 
-    @Nullable
-    private static PsiElement createElement(String newElementName, ElementCreator creator) {
+    private static @Nullable PsiElement createElement(String newElementName, ElementCreator creator) {
       PsiElement[] elements = creator.tryCreate(newElementName);
       return elements.length > 0 ? elements[0] : null;
     }
@@ -155,8 +154,7 @@ public class CreateFileFromTemplateDialog  {
     @RequiredUIAccess
     <T extends PsiElement> void show(LocalizeValue errorTitle, @Nullable String selectedItem, FileCreator<T> creator, @RequiredUIAccess Consumer<T> consumer);
 
-    @Nullable
-    default Map<String, String> getCustomProperties() {
+    default @Nullable Map<String, String> getCustomProperties() {
       return null;
     }
   }

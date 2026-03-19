@@ -62,10 +62,8 @@ public class ArrangementMatchingRuleEditor extends JPanel implements Arrangement
   private int myRow = -1;
   private int myLabelWidth;
 
-  @Nullable
-  private JComponent myDefaultFocusRequestor;
-  @Nullable
-  private JComponent myFocusRequestor;
+  private @Nullable JComponent myDefaultFocusRequestor;
+  private @Nullable JComponent myFocusRequestor;
 
   private boolean mySkipStateChange;
 
@@ -193,8 +191,7 @@ public class ArrangementMatchingRuleEditor extends JPanel implements Arrangement
     }
   }
 
-  @Nullable
-  private Pair<ArrangementMatchCondition, ArrangementSettingsToken> buildCondition() {
+  private @Nullable Pair<ArrangementMatchCondition, ArrangementSettingsToken> buildCondition() {
     List<ArrangementMatchCondition> conditions = new ArrayList<>();
     ArrangementSettingsToken orderType = null;
     for (ArrangementUiComponent component : myComponents.values()) {

@@ -44,8 +44,7 @@ public enum HighlightingLevel {
 
     
     private final LocalizeValue myText;
-    @Nullable
-    private final Image myIcon;
+    private final @Nullable Image myIcon;
     
     private final Predicate<RangeHighlighter> myCondition;
 
@@ -60,8 +59,7 @@ public enum HighlightingLevel {
         return myText;
     }
 
-    @Nullable
-    public Image getIcon() {
+    public @Nullable Image getIcon() {
         return myIcon;
     }
 

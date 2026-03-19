@@ -25,8 +25,7 @@ public class CollectionsDelta {
   private CollectionsDelta() {
   }
 
-  @Nullable
-  public static <T> Set<T> notInSecond(Collection<T> first, Collection<T> second) {
+  public static @Nullable <T> Set<T> notInSecond(Collection<T> first, Collection<T> second) {
     Set<T> notInSecond = null;
     for (T topItem : first) {
       if (! second.contains(topItem)) {

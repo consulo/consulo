@@ -94,8 +94,7 @@ public final class X11Hacking {
     private long NET_WM_STATE_DEMANDS_ATTENTION;
     private long NET_ACTIVE_WINDOW;
 
-    @Nullable
-    private static Xlib getInstance() {
+    private static @Nullable Xlib getInstance() {
       Class<? extends Toolkit> toolkitClass = Toolkit.getDefaultToolkit().getClass();
       if (!SystemInfo.INSTANCE.isXWindow || !"sun.awt.X11.XToolkit".equals(toolkitClass.getName())) {
         return null;
@@ -156,15 +155,13 @@ public final class X11Hacking {
       }
     }
 
-    @Nullable
-    private Long getNetWmWindow() throws Exception {
+    private @Nullable Long getNetWmWindow() throws Exception {
       long rootWindow = getRootWindow(0);
       long[] values = getLongArrayProperty(rootWindow, NET_SUPPORTING_WM_CHECK, XA_WINDOW);
       return values != null && values.length > 0 ? values[0] : null;
     }
 
-    @Nullable
-    private long[] getLongArrayProperty(long window, long name, long type) throws Exception {
+    private @Nullable long[] getLongArrayProperty(long window, long name, long type) throws Exception {
       return getWindowProperty(window, name, type, FORMAT_LONG);
     }
 
@@ -264,8 +261,7 @@ public final class X11Hacking {
     }
   }
 
-  @Nullable
-  private static final Xlib X11 = Xlib.getInstance();
+  private static final @Nullable Xlib X11 = Xlib.getInstance();
 
   public static boolean isAvailable() {
     return X11 != null;

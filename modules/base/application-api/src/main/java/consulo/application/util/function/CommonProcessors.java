@@ -139,13 +139,11 @@ public class CommonProcessors {
       return myValue != null;
     }
 
-    @Nullable
-    public T getFoundValue() {
+    public @Nullable T getFoundValue() {
       return myValue;
     }
 
-    @Nullable
-    public T reset() {
+    public @Nullable T reset() {
       T prev = myValue;
       myValue = null;
       return prev;

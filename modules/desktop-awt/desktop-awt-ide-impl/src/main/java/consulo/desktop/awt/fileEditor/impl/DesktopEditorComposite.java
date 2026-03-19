@@ -255,8 +255,7 @@ public abstract class DesktopEditorComposite implements FileEditorComposite {
      * @return preferred focused component inside myEditor composite. Composite uses FocusWatcher to
      * track focus movement inside the myEditor.
      */
-    @Nullable
-    public JComponent getPreferredFocusedComponent() {
+    public @Nullable JComponent getPreferredFocusedComponent() {
         if (mySelectedEditor == null) {
             return null;
         }
@@ -473,8 +472,7 @@ public abstract class DesktopEditorComposite implements FileEditorComposite {
     }
 
     private class MyComponent extends JPanel implements UiDataProvider {
-        @Nullable
-        private JComponent myFocusComponent;
+        private @Nullable JComponent myFocusComponent;
 
         public MyComponent(JComponent realComponent, @Nullable JComponent focusComponent) {
             super(new BorderLayout());

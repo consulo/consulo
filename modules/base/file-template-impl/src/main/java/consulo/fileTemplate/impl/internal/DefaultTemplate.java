@@ -30,8 +30,7 @@ public class DefaultTemplate {
     private final String myName;
     private final String myExtension;
     private final FileTemplateStreamProvider myTemplateURL;
-    @Nullable
-    private final FileTemplateStreamProvider myDescriptionURL;
+    private final @Nullable FileTemplateStreamProvider myDescriptionURL;
     private final String myText;
     private final String myDescriptionText;
 
@@ -74,8 +73,7 @@ public class DefaultTemplate {
         return myTemplateURL;
     }
 
-    @Nullable
-    public FileTemplateStreamProvider getDescriptionURL() {
+    public @Nullable FileTemplateStreamProvider getDescriptionURL() {
         return myDescriptionURL;
     }
 

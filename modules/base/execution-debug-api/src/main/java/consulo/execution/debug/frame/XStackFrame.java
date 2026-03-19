@@ -37,8 +37,7 @@ public abstract class XStackFrame extends XValueContainer {
    * unchanged if this method return equal non-null values before and after step
    * @return an object which will be used to determine if stack frame changed after step
    */
-  @Nullable
-  public Object getEqualityObject() {
+  public @Nullable Object getEqualityObject() {
     return null;
   }
 
@@ -46,16 +45,14 @@ public abstract class XStackFrame extends XValueContainer {
    * Implement to support evaluation in debugger (conditional breakpoints, logging message on breakpoint, "Evaluate" action, watches)
    * @return evaluator instance
    */
-  @Nullable
-  public XDebuggerEvaluator getEvaluator() {
+  public @Nullable XDebuggerEvaluator getEvaluator() {
     return null;
   }
 
   /**
    * @return source position corresponding to stack frame
    */
-  @Nullable 
-  public XSourcePosition getSourcePosition() {
+  public @Nullable XSourcePosition getSourcePosition() {
     return null;
   }
 

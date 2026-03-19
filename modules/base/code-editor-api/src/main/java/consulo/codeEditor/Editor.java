@@ -489,8 +489,7 @@ public interface Editor extends UserDataHolder {
      * @param e the mouse event for which the area is requested.
      * @return the editor area, or null if the event occurred over an unknown area.
      */
-    @Nullable
-    default EditorMouseEventArea getMouseEventArea(MouseEvent e) {
+    default @Nullable EditorMouseEventArea getMouseEventArea(MouseEvent e) {
         throw new UnsupportedOperationException("Unsupported platform");
     }
 
@@ -512,8 +511,7 @@ public interface Editor extends UserDataHolder {
     /**
      * @return a component set by {@link #setHeaderComponent(JComponent)} or <code>null</code> if no header currently installed.
      */
-    @Nullable
-    default JComponent getHeaderComponent() {
+    default @Nullable JComponent getHeaderComponent() {
         throw new UnsupportedOperationException("Unsupported platform");
     }
 
@@ -562,8 +560,7 @@ public interface Editor extends UserDataHolder {
      * <p>
      * See also {@link consulo.document.FileDocumentManager#getFile(Document)} as a more reliable alternative.
      */
-    @Nullable
-    default VirtualFile getVirtualFile() {
+    default @Nullable VirtualFile getVirtualFile() {
         return null;
     }
 

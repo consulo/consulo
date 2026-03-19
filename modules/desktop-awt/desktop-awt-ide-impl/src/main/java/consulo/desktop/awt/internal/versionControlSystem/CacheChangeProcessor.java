@@ -51,8 +51,7 @@ public abstract class CacheChangeProcessor extends DiffRequestProcessor implemen
     
     private final SoftHardCacheMap<Change, Pair<Change, DiffRequest>> myRequestCache = new SoftHardCacheMap<>(5, 5);
 
-    @Nullable
-    private Change myCurrentChange;
+    private @Nullable Change myCurrentChange;
 
     
     private final DiffTaskQueue myQueue = new DiffTaskQueue();

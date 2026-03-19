@@ -88,8 +88,7 @@ public abstract class BaseRefactoringAction extends AnAction {
         return false;
     }
 
-    @Nullable
-    protected abstract RefactoringActionHandler getHandler(DataContext dataContext);
+    protected abstract @Nullable RefactoringActionHandler getHandler(DataContext dataContext);
 
     @Override
     @RequiredUIAccess

@@ -52,13 +52,11 @@ public class IdTableBuilding {
     return ourIdIndexers.containsKey(fileType) || IdIndexer.forFileType(fileType) != null;
   }
 
-  @Nullable
-  public static IdIndexer getFileTypeIndexer(FileType fileType) {
+  public static @Nullable IdIndexer getFileTypeIndexer(FileType fileType) {
     return getFileTypeIndexer(CacheBuilderRegistry.getInstance(), fileType);
   }
 
-  @Nullable
-  public static IdIndexer getFileTypeIndexer(CacheBuilderRegistry registry, FileType fileType) {
+  public static @Nullable IdIndexer getFileTypeIndexer(CacheBuilderRegistry registry, FileType fileType) {
     IdIndexer idIndexer = ourIdIndexers.get(fileType);
 
     if (idIndexer != null) {

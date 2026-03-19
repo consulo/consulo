@@ -119,8 +119,7 @@ public interface Filter {
       return super.getHyperlinkInfo();
     }
 
-    @Nullable
-    public HyperlinkInfo getFirstHyperlinkInfo() {
+    public @Nullable HyperlinkInfo getFirstHyperlinkInfo() {
       HyperlinkInfo info = super.getHyperlinkInfo();
       if (info == null && myResultItems != null) {
         //noinspection ForLoopReplaceableByForEach
@@ -167,14 +166,12 @@ public interface Filter {
      * @deprecated use {@link #getHighlightAttributes()} instead, the visibility of this field will be decreased.
      */
     @Deprecated
-    @Nullable
-    public final TextAttributes highlightAttributes;
+    public final @Nullable TextAttributes highlightAttributes;
     /**
      * @deprecated use {@link #getHyperlinkInfo()} instead, the visibility of this field will be decreased.
      */
     @Deprecated
-    @Nullable
-    public final HyperlinkInfo hyperlinkInfo;
+    public final @Nullable HyperlinkInfo hyperlinkInfo;
 
     private final TextAttributes myFollowedHyperlinkAttributes;
 
@@ -211,18 +208,15 @@ public interface Filter {
       return highlightEndOffset;
     }
 
-    @Nullable
-    public TextAttributes getHighlightAttributes() {
+    public @Nullable TextAttributes getHighlightAttributes() {
       return highlightAttributes;
     }
 
-    @Nullable
-    public TextAttributes getFollowedHyperlinkAttributes() {
+    public @Nullable TextAttributes getFollowedHyperlinkAttributes() {
       return myFollowedHyperlinkAttributes;
     }
 
-    @Nullable
-    public HyperlinkInfo getHyperlinkInfo() {
+    public @Nullable HyperlinkInfo getHyperlinkInfo() {
       return hyperlinkInfo;
     }
 
@@ -233,8 +227,7 @@ public interface Filter {
       return getHyperlinkInfo() != null ? HighlighterLayer.HYPERLINK : HighlighterLayer.CONSOLE_FILTER;
     }
 
-    @Nullable
-    private static TextAttributes getGrayedHyperlinkAttributes(TextAttributesKey normalHyperlinkAttrsKey) {
+    private static @Nullable TextAttributes getGrayedHyperlinkAttributes(TextAttributesKey normalHyperlinkAttrsKey) {
       EditorColorsScheme globalScheme = EditorColorsManager.getInstance().getGlobalScheme();
       TextAttributes grayedHyperlinkAttrs = GRAYED_BY_NORMAL_CACHE.get(normalHyperlinkAttrsKey);
       if (grayedHyperlinkAttrs == null) {

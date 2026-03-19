@@ -191,8 +191,7 @@ class MinusculeMatcherImpl extends MinusculeMatcher {
   }
 
   @Override
-  @Nullable
-  public FList<MatcherTextRange> matchingFragments(String name) {
+  public @Nullable FList<MatcherTextRange> matchingFragments(String name) {
     if (name.length() < myMinNameLength) {
       return null;
     }
@@ -220,8 +219,7 @@ class MinusculeMatcherImpl extends MinusculeMatcher {
     return matchWildcards(name, 0, 0, isAscii);
   }
 
-  @Nullable
-  private FList<MatcherTextRange> matchBySubstring(String name) {
+  private @Nullable FList<MatcherTextRange> matchBySubstring(String name) {
     boolean infix = isPatternChar(0, '*');
     char[] patternWithoutWildChar = filterWildcard(myPattern);
     if (name.length() < patternWithoutWildChar.length) {
@@ -254,8 +252,7 @@ class MinusculeMatcherImpl extends MinusculeMatcher {
    * After a wildcard (* or space), search for the first non-wildcard pattern character in the name starting from nameIndex
    * and try to {@link #matchFragment} for it.
    */
-  @Nullable
-  private FList<MatcherTextRange> matchWildcards(String name, int patternIndex, int nameIndex, boolean isAsciiName) {
+  private @Nullable FList<MatcherTextRange> matchWildcards(String name, int patternIndex, int nameIndex, boolean isAsciiName) {
     if (nameIndex < 0) {
       return null;
     }
@@ -298,8 +295,7 @@ class MinusculeMatcherImpl extends MinusculeMatcher {
    * Enumerates places in name that could be matched by the pattern at patternIndex position
    * and invokes {@link #matchFragment} at those candidate positions
    */
-  @Nullable
-  private FList<MatcherTextRange> matchSkippingWords(String name, int patternIndex, int nameIndex, boolean allowSpecialChars, boolean isAsciiName) {
+  private @Nullable FList<MatcherTextRange> matchSkippingWords(String name, int patternIndex, int nameIndex, boolean allowSpecialChars, boolean isAsciiName) {
     int maxFoundLength = 0;
     while (nameIndex >= 0) {
       int fragmentLength = seemsLikeFragmentStart(name, patternIndex, nameIndex) ? maxMatchingFragment(name, patternIndex, nameIndex) : 0;
@@ -354,8 +350,7 @@ class MinusculeMatcherImpl extends MinusculeMatcher {
     return patternChar == c || isIgnoreCase && (toLowerCase[patternIndex] == c || toUpperCase[patternIndex] == c);
   }
 
-  @Nullable
-  private FList<MatcherTextRange> matchFragment(String name, int patternIndex, int nameIndex, boolean isAsciiName) {
+  private @Nullable FList<MatcherTextRange> matchFragment(String name, int patternIndex, int nameIndex, boolean isAsciiName) {
     int fragmentLength = maxMatchingFragment(name, patternIndex, nameIndex);
     return fragmentLength == 0 ? null : matchInsideFragment(name, patternIndex, nameIndex, isAsciiName, fragmentLength);
   }
@@ -385,8 +380,7 @@ class MinusculeMatcherImpl extends MinusculeMatcher {
   }
 
   // we've found the longest fragment matching pattern and name
-  @Nullable
-  private FList<MatcherTextRange> matchInsideFragment(String name, int patternIndex, int nameIndex, boolean isAsciiName, int fragmentLength) {
+  private @Nullable FList<MatcherTextRange> matchInsideFragment(String name, int patternIndex, int nameIndex, boolean isAsciiName, int fragmentLength) {
     // exact middle matches have to be at least of length 3, to prevent too many irrelevant matches
     int minFragment = isMiddleMatch(name, patternIndex, nameIndex) ? 3 : 1;
 
@@ -402,8 +396,7 @@ class MinusculeMatcherImpl extends MinusculeMatcher {
     return isPatternChar(patternIndex - 1, '*') && !isWildcard(patternIndex + 1) && Character.isLetterOrDigit(name.charAt(nameIndex)) && !NameUtilCore.isWordStart(name, nameIndex);
   }
 
-  @Nullable
-  private FList<MatcherTextRange> findLongestMatchingPrefix(String name, int patternIndex, int nameIndex, boolean isAsciiName, int fragmentLength, int minFragment) {
+  private @Nullable FList<MatcherTextRange> findLongestMatchingPrefix(String name, int patternIndex, int nameIndex, boolean isAsciiName, int fragmentLength, int minFragment) {
     if (patternIndex + fragmentLength >= myPattern.length) {
       return FList.<MatcherTextRange>emptyList().prepend(MatcherTextRange.from(nameIndex, fragmentLength));
     }

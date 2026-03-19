@@ -627,8 +627,7 @@ public final class IterationState {
         return isInCaretRow ? myCaretRowAttributes : null;
     }
 
-    @Nullable
-    private ColorValue getBreakBackgroundColor(boolean lineEnd) {
+    private @Nullable ColorValue getBreakBackgroundColor(boolean lineEnd) {
         return getBreakAttributes(lineEnd).getBackgroundColor();
     }
 

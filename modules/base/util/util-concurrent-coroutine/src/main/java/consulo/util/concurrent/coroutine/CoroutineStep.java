@@ -114,8 +114,7 @@ public abstract class CoroutineStep<I, O> extends UserDataHolderBase {
      * @param continuation The continuation of the execution
      * @return The execution result
      */
-    @Nullable
-    public O runBlocking(@Nullable I input, Continuation<?> continuation) {
+    public @Nullable O runBlocking(@Nullable I input, Continuation<?> continuation) {
         return execute(input, continuation);
     }
 
@@ -135,8 +134,7 @@ public abstract class CoroutineStep<I, O> extends UserDataHolderBase {
      * @param continuation The continuation of the execution
      * @return The result of the execution
      */
-    @Nullable
-    protected abstract O execute(@Nullable I input, Continuation<?> continuation);
+    protected abstract @Nullable O execute(@Nullable I input, Continuation<?> continuation);
 
     /**
      * Allow subclasses to terminate the coroutine they currently run in.

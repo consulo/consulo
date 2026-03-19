@@ -65,8 +65,7 @@ public abstract class PersistentFS extends ManagingFS {
 
     public abstract boolean isFileSystemCaseSensitive(String path) throws FileNotFoundException;
 
-    @Nullable
-    public abstract Path getFileWatcherExecutablePath();
+    public abstract @Nullable Path getFileWatcherExecutablePath();
 
     @Attributes
     public abstract int getFileAttributes(int id);
@@ -91,8 +90,7 @@ public abstract class PersistentFS extends ManagingFS {
         return isSet(attributes, IS_HIDDEN);
     }
 
-    @Nullable
-    public abstract NewVirtualFile findFileByIdIfCached(int id);
+    public abstract @Nullable NewVirtualFile findFileByIdIfCached(int id);
 
     public abstract int storeUnlinkedContent(byte[] bytes);
 

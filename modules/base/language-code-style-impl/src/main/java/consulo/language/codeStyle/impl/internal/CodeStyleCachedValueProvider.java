@@ -231,8 +231,7 @@ class CodeStyleCachedValueProvider implements CachedValueProvider<CodeStyleSetti
             }
         }
 
-        @Nullable
-        public CodeStyleSettings getCurrResult() {
+        public @Nullable CodeStyleSettings getCurrResult() {
             if (myIsActive.compareAndSet(false, true)) {
                 start();
             }

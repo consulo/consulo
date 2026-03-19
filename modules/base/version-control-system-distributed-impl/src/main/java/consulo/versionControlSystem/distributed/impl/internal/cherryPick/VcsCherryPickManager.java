@@ -85,8 +85,7 @@ public class VcsCherryPickManager {
         return false;
     }
 
-    @Nullable
-    private VcsCherryPicker getCherryPickerForCommit(VcsFullCommitDetails commitDetails) {
+    private @Nullable VcsCherryPicker getCherryPickerForCommit(VcsFullCommitDetails commitDetails) {
         AbstractVcs vcs = myProjectLevelVcsManager.getVcsFor(commitDetails.getRoot());
         if (vcs == null) {
             return null;
@@ -95,8 +94,7 @@ public class VcsCherryPickManager {
         return getCherryPickerFor(key);
     }
 
-    @Nullable
-    public VcsCherryPicker getCherryPickerFor(VcsKey key) {
+    public @Nullable VcsCherryPicker getCherryPickerFor(VcsKey key) {
         return ContainerUtil.find(myProject.getExtensionList(VcsCherryPicker.class), picker -> picker.getSupportedVcs().equals(key));
     }
 
@@ -114,8 +112,7 @@ public class VcsCherryPickManager {
             myChangeListManager.blockModalNotifications();
         }
 
-        @Nullable
-        private VcsCherryPicker getCherryPickerOrReportError(VcsFullCommitDetails details) {
+        private @Nullable VcsCherryPicker getCherryPickerOrReportError(VcsFullCommitDetails details) {
             CommitId commitId = new CommitId(details.getId(), details.getRoot());
             if (myIdsInProgress.contains(commitId)) {
                 showError("Cherry pick process is already started for commit " +

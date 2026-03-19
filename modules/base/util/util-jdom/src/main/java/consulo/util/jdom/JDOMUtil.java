@@ -346,20 +346,17 @@ public class JDOMUtil {
   }
 
   @Contract("null -> null; !null -> !null")
-  @Nullable
-  public static Element load(Reader reader) throws JDOMException, IOException {
+  public static @Nullable Element load(Reader reader) throws JDOMException, IOException {
     return reader == null ? null : loadDocument(reader).detachRootElement();
   }
 
   @Contract("null -> null; !null -> !null")
-  @Nullable
-  public static Element load(URL url) throws JDOMException, IOException {
+  public static @Nullable Element load(URL url) throws JDOMException, IOException {
     return url == null ? null : loadDocument(url).detachRootElement();
   }
 
   @Contract("null -> null; !null -> !null")
-  @Nullable
-  public static Element load(InputStream stream) throws JDOMException, IOException {
+  public static @Nullable Element load(InputStream stream) throws JDOMException, IOException {
     return stream == null ? null : loadDocument(stream).detachRootElement();
   }
 
@@ -510,8 +507,7 @@ public class JDOMUtil {
   /**
    * Returns null if no escapement necessary.
    */
-  @Nullable
-  private static String escapeChar(char c, boolean escapeApostrophes, boolean escapeSpaces, boolean escapeLineEnds) {
+  private static @Nullable String escapeChar(char c, boolean escapeApostrophes, boolean escapeSpaces, boolean escapeLineEnds) {
     switch (c) {
       case '\n':
         return escapeLineEnds ? "&#10;" : null;

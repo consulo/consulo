@@ -33,8 +33,7 @@ import org.jspecify.annotations.Nullable;
 @ExtensionImpl
 public class CustomFileTypeHighlighterProvider implements SyntaxHighlighterProvider {
   @Override
-  @Nullable
-  public SyntaxHighlighter create(FileType fileType, @Nullable Project project, @Nullable VirtualFile file) {
+  public @Nullable SyntaxHighlighter create(FileType fileType, @Nullable Project project, @Nullable VirtualFile file) {
     if (fileType instanceof AbstractFileType) {
       return new CustomFileHighlighter(((CustomSyntaxTableFileType) fileType).getSyntaxTable());
     }

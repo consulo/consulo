@@ -63,8 +63,7 @@ public class ClasspathTableItem<T extends OrderEntry> {
     }
   }
 
-  @Nullable
-  public final DependencyScope getScope() {
+  public final @Nullable DependencyScope getScope() {
     return myEntry instanceof ExportableOrderEntry ? ((ExportableOrderEntry)myEntry).getScope() : null;
   }
 
@@ -91,8 +90,7 @@ public class ClasspathTableItem<T extends OrderEntry> {
 
   }
 
-  @Nullable
-  public String getTooltipText() {
+  public @Nullable String getTooltipText() {
     return null;
   }
 }

@@ -66,8 +66,7 @@ public abstract class InspectionRVContentProvider {
 
   public abstract boolean checkReportedProblems(GlobalInspectionContextImpl context, InspectionToolWrapper toolWrapper);
 
-  @Nullable
-  public abstract QuickFixAction[] getQuickFixes(InspectionToolWrapper toolWrapper, InspectionTree tree);
+  public abstract @Nullable QuickFixAction[] getQuickFixes(InspectionToolWrapper toolWrapper, InspectionTree tree);
 
 
   public void appendToolNodeContent(GlobalInspectionContextImpl context,

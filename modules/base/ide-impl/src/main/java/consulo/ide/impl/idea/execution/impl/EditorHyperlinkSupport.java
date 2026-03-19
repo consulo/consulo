@@ -130,8 +130,7 @@ public class EditorHyperlinkSupport {
     return result;
   }
 
-  @Nullable
-  public Runnable getLinkNavigationRunnable(LogicalPosition logical) {
+  public @Nullable Runnable getLinkNavigationRunnable(LogicalPosition logical) {
     if (EditorUtil.inVirtualSpace(myEditor, logical)) {
       return null;
     }
@@ -156,14 +155,12 @@ public class EditorHyperlinkSupport {
     return null;
   }
 
-  @Nullable
-  public static HyperlinkInfo getHyperlinkInfo(RangeHighlighter range) {
+  public static @Nullable HyperlinkInfo getHyperlinkInfo(RangeHighlighter range) {
     HyperlinkInfoTextAttributes attributes = range.getUserData(HYPERLINK);
     return attributes != null ? attributes.getHyperlinkInfo() : null;
   }
 
-  @Nullable
-  private RangeHighlighter findLinkRangeAt(int offset) {
+  private @Nullable RangeHighlighter findLinkRangeAt(int offset) {
     //noinspection LoopStatementThatDoesntLoop
     for (RangeHighlighter highlighter : getHyperlinks(offset, offset, myEditor)) {
       return highlighter;
@@ -171,8 +168,7 @@ public class EditorHyperlinkSupport {
     return null;
   }
 
-  @Nullable
-  private HyperlinkInfo getHyperlinkAt(int offset) {
+  private @Nullable HyperlinkInfo getHyperlinkAt(int offset) {
     RangeHighlighter range = findLinkRangeAt(offset);
     return range == null ? null : getHyperlinkInfo(range);
   }
@@ -195,8 +191,7 @@ public class EditorHyperlinkSupport {
     myEditor.getMarkupModel().removeHighlighter(hyperlink);
   }
 
-  @Nullable
-  public HyperlinkInfo getHyperlinkInfoByLineAndCol(int line, int col) {
+  public @Nullable HyperlinkInfo getHyperlinkInfoByLineAndCol(int line, int col) {
     return getHyperlinkAt(myEditor.logicalPositionToOffset(new LogicalPosition(line, col)));
   }
 
@@ -242,8 +237,7 @@ public class EditorHyperlinkSupport {
     highlighter.putUserData(HYPERLINK, new HyperlinkInfoTextAttributes(hyperlinkInfo, followedHyperlinkAttributes));
   }
 
-  @Nullable
-  public HyperlinkInfo getHyperlinkInfoByPoint(Point p) {
+  public @Nullable HyperlinkInfo getHyperlinkInfoByPoint(Point p) {
     LogicalPosition pos = myEditor.xyToLogicalPosition(new Point(p.x, p.y));
     if (EditorUtil.inVirtualSpace(myEditor, pos)) {
       return null;

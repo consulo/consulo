@@ -44,8 +44,7 @@ public class LinuxDragAndDropSupport {
 
   private LinuxDragAndDropSupport() { }
 
-  @Nullable
-  public static List<File> getFiles(Transferable transferable) throws IOException, UnsupportedFlavorException {
+  public static @Nullable List<File> getFiles(Transferable transferable) throws IOException, UnsupportedFlavorException {
     if (transferable.isDataFlavorSupported(uriListFlavor)) {
       Object transferData = transferable.getTransferData(uriListFlavor);
       return getFiles(transferData.toString());

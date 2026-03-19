@@ -103,8 +103,7 @@ public interface PsiFileFactory {
                                boolean markAsCopy,
                                boolean noSizeLimit);
 
-    @Nullable
-    default PsiFile createFileFromText(String name,
+    default @Nullable PsiFile createFileFromText(String name,
                                        LanguageVersion languageVersion,
                                        CharSequence text,
                                        boolean physical,

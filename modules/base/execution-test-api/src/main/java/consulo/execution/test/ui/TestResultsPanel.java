@@ -138,8 +138,7 @@ public abstract class TestResultsPanel extends JPanel implements Disposable, UiD
 
   protected abstract JComponent createTestTreeView();
 
-  @Nullable
-  protected TestTreeView getTreeView() {
+  protected @Nullable TestTreeView getTreeView() {
     return null;
   }
 

@@ -89,8 +89,7 @@ public class StorageData extends StorageDataBase {
     }
   }
 
-  @Nullable
-  public static String getComponentNameIfValid(Element element) {
+  public static @Nullable String getComponentNameIfValid(Element element) {
     String name = element.getAttributeValue(NAME);
     if (StringUtil.isEmpty(name)) {
       LOG.warn("No name attribute for component in " + JDOMUtil.writeElement(element));
@@ -99,8 +98,7 @@ public class StorageData extends StorageDataBase {
     return name;
   }
 
-  @Nullable
-  public Element save(Map<String, Element> newLiveStates) {
+  public @Nullable Element save(Map<String, Element> newLiveStates) {
     if (myStates.isEmpty()) {
       return null;
     }
@@ -136,18 +134,15 @@ public class StorageData extends StorageDataBase {
     return rootElement;
   }
 
-  @Nullable
-  public Element getState(String name) {
+  public @Nullable Element getState(String name) {
     return myStates.getState(name);
   }
 
-  @Nullable
-  public Element getStateAndArchive(String name) {
+  public @Nullable Element getStateAndArchive(String name) {
     return myStates.getStateAndArchive(name);
   }
 
-  @Nullable
-  public static StorageData setStateAndCloneIfNeed(String componentName, @Nullable Element newState, StorageData storageData, Map<String, Element> newLiveStates) {
+  public static @Nullable StorageData setStateAndCloneIfNeed(String componentName, @Nullable Element newState, StorageData storageData, Map<String, Element> newLiveStates) {
     Object oldState = storageData.myStates.get(componentName);
     if (newState == null || JDOMUtil.isEmpty(newState)) {
       if (oldState == null) {
@@ -181,8 +176,7 @@ public class StorageData extends StorageDataBase {
     return newStorageData;
   }
 
-  @Nullable
-  public final Object setState(String componentName, @Nullable Element newState, Map<String, Element> newLiveStates) {
+  public final @Nullable Object setState(String componentName, @Nullable Element newState, Map<String, Element> newLiveStates) {
     if (newState == null || JDOMUtil.isEmpty(newState)) {
       return myStates.remove(componentName);
     }

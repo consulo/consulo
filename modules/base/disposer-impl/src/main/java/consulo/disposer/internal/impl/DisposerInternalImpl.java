@@ -49,7 +49,7 @@ public class DisposerInternalImpl extends DisposerInternal {
     return newDisposable(null);
   }
 
-  public static Disposable newDisposable(@Nullable final String debugName) {
+  public static Disposable newDisposable(final @Nullable String debugName) {
     return new Disposable() {
       @Override
       public void dispose() {
@@ -92,14 +92,12 @@ public class DisposerInternalImpl extends DisposerInternal {
   }
 
   @Override
-  @Nullable
-  public Disposable get(String key) {
+  public @Nullable Disposable get(String key) {
     return myKeyDisposables.get(key);
   }
 
   @Override
-  @Nullable
-  public Throwable getDisposalTrace(Disposable disposable) {
+  public @Nullable Throwable getDisposalTrace(Disposable disposable) {
     return ObjectUtil.tryCast(getTree().getDisposalInfo(disposable), Throwable.class);
   }
 
@@ -154,8 +152,7 @@ public class DisposerInternalImpl extends DisposerInternal {
    * @return object registered on parentDisposable which is equal to object, or null if not found
    */
   @Override
-  @Nullable
-  public <T extends Disposable> T findRegisteredObject(Disposable parentDisposable, T object) {
+  public @Nullable <T extends Disposable> T findRegisteredObject(Disposable parentDisposable, T object) {
     return myTree.findRegisteredObject(parentDisposable, object);
   }
 

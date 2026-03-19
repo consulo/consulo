@@ -28,8 +28,7 @@ public class VcsSelectionUtil {
   private VcsSelectionUtil() {
   }
 
-  @Nullable
-  public static VcsSelection getSelection(VcsContext context) {
+  public static @Nullable VcsSelection getSelection(VcsContext context) {
     VcsSelection selectionFromEditor = getSelectionFromEditor(context);
     if (selectionFromEditor != null) {
       return selectionFromEditor;
@@ -38,8 +37,7 @@ public class VcsSelectionUtil {
     return Application.get().getExtensionPoint(VcsSelectionProvider.class).computeSafeIfAny(p -> p.getSelection(context));
   }
 
-  @Nullable
-  private static VcsSelection getSelectionFromEditor(VcsContext context) {
+  private static @Nullable VcsSelection getSelectionFromEditor(VcsContext context) {
     Editor editor = context.getEditor();
     if (editor == null) return null;
     SelectionModel selectionModel = editor.getSelectionModel();

@@ -80,8 +80,7 @@ public class LocalQuickFixWrapper extends QuickFixAction {
         return myFix;
     }
 
-    @Nullable
-    protected QuickFix getWorkingQuickFix(QuickFix[] fixes) {
+    protected @Nullable QuickFix getWorkingQuickFix(QuickFix[] fixes) {
         for (QuickFix fix : fixes) {
             if (!myFix.getClass().isInstance(fix)) {
                 continue;

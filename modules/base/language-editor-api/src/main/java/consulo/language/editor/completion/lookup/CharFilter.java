@@ -41,6 +41,5 @@ public abstract class CharFilter {
    * @return further action or null, which indicates that some other {@link CharFilter}
    * should handle this char. Default char filter handles common cases like finishing with ' ', '(', ';', etc.  
    */
-  @Nullable
-  public abstract Result acceptChar(char c, int prefixLength, Lookup lookup);
+  public abstract @Nullable Result acceptChar(char c, int prefixLength, Lookup lookup);
 }

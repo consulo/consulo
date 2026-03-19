@@ -40,6 +40,5 @@ public abstract class PromptingMacro extends Macro {
    * @param dataContext
    * @return user input. If null is returned, ExecutionCancelledException is thrown by expand() method
    */
-  @Nullable
-  protected abstract String promptUser(DataContext dataContext);
+  protected abstract @Nullable String promptUser(DataContext dataContext);
 }

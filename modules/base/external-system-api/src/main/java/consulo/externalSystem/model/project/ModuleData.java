@@ -31,10 +31,8 @@ public class ModuleData extends AbstractNamedData implements Named, ExternalConf
   private final String myExternalConfigPath;
   
   private String myModuleDirPath;
-  @Nullable
-  private String group;
-  @Nullable
-  private String version;
+  private @Nullable String group;
+  private @Nullable String version;
   
   private List<File> myArtifacts;
 
@@ -90,8 +88,7 @@ public class ModuleData extends AbstractNamedData implements Named, ExternalConf
    * {@link JavaProjectData#getCompileOutputPath() project compile output path} should be used if current module
    * doesn't provide specific compile output path
    */
-  @Nullable
-  public String getCompileOutputPath(ExternalSystemSourceType type) {
+  public @Nullable String getCompileOutputPath(ExternalSystemSourceType type) {
     return myCompileOutputPaths.get(type);
   }
 
@@ -103,8 +100,7 @@ public class ModuleData extends AbstractNamedData implements Named, ExternalConf
     myCompileOutputPaths.put(type, ExternalSystemApiUtil.toCanonicalPath(path));
   }
 
-  @Nullable
-  public String getGroup() {
+  public @Nullable String getGroup() {
     return group;
   }
 
@@ -112,8 +108,7 @@ public class ModuleData extends AbstractNamedData implements Named, ExternalConf
     this.group = group;
   }
 
-  @Nullable
-  public String getVersion() {
+  public @Nullable String getVersion() {
     return version;
   }
 

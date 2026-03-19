@@ -217,8 +217,7 @@ final class BrowserSettingsPanel {
                     .doWhenDone(() -> mutator.apply(browser).setSpecificSettings(settings));
             }
 
-            @Nullable
-            private BrowserSpecificSettings cloneSettings(ConfigurableWebBrowser browser) {
+            private @Nullable BrowserSpecificSettings cloneSettings(ConfigurableWebBrowser browser) {
                 BrowserSpecificSettings settings = browser.getSpecificSettings();
                 if (settings == null) {
                     return null;

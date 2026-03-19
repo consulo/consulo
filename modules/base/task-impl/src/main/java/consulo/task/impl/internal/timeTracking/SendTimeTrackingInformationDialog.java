@@ -37,8 +37,7 @@ public class SendTimeTrackingInformationDialog extends DialogWrapper {
   private final static Logger LOG = Logger.getInstance(SendTimeTrackingInformationDialog.class);
   public static final Pattern PATTERN = Pattern.compile("([0-9]+)d ([0-9]+)h ([0-9]+)m");
 
-  @Nullable
-  private final Project myProject;
+  private final @Nullable Project myProject;
   private final LocalTask myTask;
   private JRadioButton myFromPreviousPostRadioButton;
   private JRadioButton myTotallyRadioButton;

@@ -154,8 +154,7 @@ public class EditorGutterComponentImpl extends JComponent implements EditorGutte
     private ClickInfo myLastActionableClick;
     private final DesktopEditorImpl myEditor;
     private final FoldingAnchorsOverlayStrategy myAnchorsDisplayStrategy;
-    @Nullable
-    private IntObjectMap<List<GutterMark>> myLineToGutterRenderers;
+    private @Nullable IntObjectMap<List<GutterMark>> myLineToGutterRenderers;
 
     private boolean myHasInlaysWithGutterIcons;
     private boolean myLineToGutterRenderersCacheForLogicalLines;
@@ -172,12 +171,10 @@ public class EditorGutterComponentImpl extends JComponent implements EditorGutte
     private final Map<TextAnnotationGutterProvider, EditorGutterAction> myProviderToListener = new HashMap<>();
     private LocalizeValue myLastGutterToolTip;
     private LineNumberConverter myLineNumberConverter = LineNumberConverter.DEFAULT;
-    @Nullable
-    private LineNumberConverter myAdditionalLineNumberConverter;
+    private @Nullable LineNumberConverter myAdditionalLineNumberConverter;
     private boolean myShowDefaultGutterPopup = true;
     private boolean myCanCloseAnnotations = true;
-    @Nullable
-    private ActionGroup myCustomGutterPopupGroup;
+    private @Nullable ActionGroup myCustomGutterPopupGroup;
     private final IntObjectMap<ColorValue> myTextFgColors = IntMaps.newIntObjectHashMap();
     private boolean myPaintBackground = true;
     private boolean myLeftFreePaintersAreaShown;
@@ -188,8 +185,7 @@ public class EditorGutterComponentImpl extends JComponent implements EditorGutte
     private final EditorGutterLayout myLayout = new EditorGutterLayout(this);
     private int myHoveredFreeMarkersLine = -1;
     boolean myDnDInProgress;
-    @Nullable
-    private AccessibleGutterLine myAccessibleGutterLine;
+    private @Nullable AccessibleGutterLine myAccessibleGutterLine;
 
     private final AlphaAnimationContext myAlphaContext = new AlphaAnimationContext(composite -> {
         if (isShowing()) {
@@ -1756,8 +1752,7 @@ public class EditorGutterComponentImpl extends JComponent implements EditorGutte
         return myEditor.getVerticalScrollbarOrientation() != EditorEx.VERTICAL_SCROLLBAR_RIGHT;
     }
 
-    @Nullable
-    private AffineTransform setMirrorTransformIfNeeded(Graphics2D g, int offset, int width) {
+    private @Nullable AffineTransform setMirrorTransformIfNeeded(Graphics2D g, int offset, int width) {
         if (isMirrored()) {
             AffineTransform old = g.getTransform();
             AffineTransform transform = new AffineTransform(old);
@@ -2044,8 +2039,7 @@ public class EditorGutterComponentImpl extends JComponent implements EditorGutte
         return getClientProperty(EDITOR_GUTTER_CONTEXT_MENU_KEY) != null;
     }
 
-    @Nullable
-    private TextAnnotationGutterProvider getProviderAtPoint(Point clickPoint) {
+    private @Nullable TextAnnotationGutterProvider getProviderAtPoint(Point clickPoint) {
         int current = getAnnotationsAreaOffset();
         if (clickPoint.x < current) {
             return null;
@@ -2152,8 +2146,7 @@ public class EditorGutterComponentImpl extends JComponent implements EditorGutte
         }
     }
 
-    @Nullable
-    private ActiveGutterRenderer getActiveRendererByMouseEvent(MouseEvent e) {
+    private @Nullable ActiveGutterRenderer getActiveRendererByMouseEvent(MouseEvent e) {
         if (findFoldingAnchorAt(e.getX(), e.getY()) != null) {
             return null;
         }
@@ -2236,8 +2229,7 @@ public class EditorGutterComponentImpl extends JComponent implements EditorGutte
     }
 
     @Override
-    @Nullable
-    public Point getCenterPoint(GutterIconRenderer renderer) {
+    public @Nullable Point getCenterPoint(GutterIconRenderer renderer) {
         Ref<Point> result = Ref.create();
         if (!areIconsShown()) {
             processGutterRenderers((line, renderers) -> {
@@ -2428,8 +2420,7 @@ public class EditorGutterComponentImpl extends JComponent implements EditorGutte
         return info == null ? null : info.renderer;
     }
 
-    @Nullable
-    private GutterIconRenderer getGutterRenderer(MouseEvent e) {
+    private @Nullable GutterIconRenderer getGutterRenderer(MouseEvent e) {
         return getGutterRenderer(e.getPoint());
     }
 

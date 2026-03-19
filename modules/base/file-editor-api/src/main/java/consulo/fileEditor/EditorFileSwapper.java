@@ -29,14 +29,12 @@ import org.jspecify.annotations.Nullable;
 public abstract class EditorFileSwapper {
     public static final ExtensionPointName<EditorFileSwapper> EP_NAME = ExtensionPointName.create(EditorFileSwapper.class);
 
-    @Nullable
-    public abstract Pair<VirtualFile, Integer> getFileToSwapTo(
+    public abstract @Nullable Pair<VirtualFile, Integer> getFileToSwapTo(
         Project project,
         FileEditorWithProviderComposite editorWithProviderComposite
     );
 
-    @Nullable
-    public static TextEditor findSinglePsiAwareEditor(FileEditor[] fileEditors) {
+    public static @Nullable TextEditor findSinglePsiAwareEditor(FileEditor[] fileEditors) {
         TextEditor res = null;
 
         for (FileEditor fileEditor : fileEditors) {

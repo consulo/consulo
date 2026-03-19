@@ -105,8 +105,7 @@ public class CollapsedController extends CascadeController {
     return convertToDelegate(graphElement, myCollapsedGraph);
   }
 
-  @Nullable
-  public static GraphElement convertToDelegate(GraphElement graphElement, CollapsedGraph collapsedGraph) {
+  public static @Nullable GraphElement convertToDelegate(GraphElement graphElement, CollapsedGraph collapsedGraph) {
     if (graphElement instanceof GraphEdge edge) {
       Integer upIndex = edge.getUpNodeIndex();
       Integer downIndex = edge.getDownNodeIndex();

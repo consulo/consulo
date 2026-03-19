@@ -21,8 +21,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 public class ListWithSelection<E> extends ArrayList<E> {
-  @Nullable
-  private E mySelection = null;
+  private @Nullable E mySelection = null;
 
   public ListWithSelection(Collection<E> collection) {
     super(collection);
@@ -44,8 +43,7 @@ public class ListWithSelection<E> extends ArrayList<E> {
     return true;
   }
 
-  @Nullable
-  public E getSelection(){
+  public @Nullable E getSelection(){
     return mySelection;
   }
 

@@ -260,8 +260,7 @@ public class StatisticsPanel implements UiDataProvider {
         });
     }
 
-    @Nullable
-    protected SMTestProxy getSelectedItem() {
+    protected @Nullable SMTestProxy getSelectedItem() {
         return myStatisticsTableView.getSelectedObject();
     }
 

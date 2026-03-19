@@ -160,18 +160,15 @@ public abstract class AbstractVcs<ComList extends CommittedChangeList> extends S
         return false;
     }
 
-    @Nullable
-    public Configurable getConfigurable() {
+    public @Nullable Configurable getConfigurable() {
         return null;
     }
 
-    @Nullable
-    public TransactionProvider getTransactionProvider() {
+    public @Nullable TransactionProvider getTransactionProvider() {
         return null;
     }
 
-    @Nullable
-    public ChangeProvider getChangeProvider() {
+    public @Nullable ChangeProvider getChangeProvider() {
         return null;
     }
 
@@ -184,8 +181,7 @@ public abstract class AbstractVcs<ComList extends CommittedChangeList> extends S
      *
      * @return the interface implementation, or null if none is provided.
      */
-    @Nullable
-    public EditFileProvider getEditFileProvider() {
+    public @Nullable EditFileProvider getEditFileProvider() {
         return null;
     }
 
@@ -196,8 +192,7 @@ public abstract class AbstractVcs<ComList extends CommittedChangeList> extends S
     /**
      * creates the object for performing checkin / commit / submit operations.
      */
-    @Nullable
-    protected CheckinEnvironment createCheckinEnvironment() {
+    protected @Nullable CheckinEnvironment createCheckinEnvironment() {
         return null;
     }
 
@@ -209,16 +204,14 @@ public abstract class AbstractVcs<ComList extends CommittedChangeList> extends S
      *
      * @return the checkin interface, or null if checkins are not supported by the VCS.
      */
-    @Nullable
-    public CheckinEnvironment getCheckinEnvironment() {
+    public @Nullable CheckinEnvironment getCheckinEnvironment() {
         return myCheckinEnvironment;
     }
 
     /**
      * Returns the interface for performing revert / rollback operations.
      */
-    @Nullable
-    protected RollbackEnvironment createRollbackEnvironment() {
+    protected @Nullable RollbackEnvironment createRollbackEnvironment() {
         return null;
     }
 
@@ -228,18 +221,15 @@ public abstract class AbstractVcs<ComList extends CommittedChangeList> extends S
      *
      * @return the rollback interface, or null if rollbacks are not supported by the VCS.
      */
-    @Nullable
-    public RollbackEnvironment getRollbackEnvironment() {
+    public @Nullable RollbackEnvironment getRollbackEnvironment() {
         return myRollbackEnvironment;
     }
 
-    @Nullable
-    public VcsHistoryProvider getVcsHistoryProvider() {
+    public @Nullable VcsHistoryProvider getVcsHistoryProvider() {
         return null;
     }
 
-    @Nullable
-    public VcsHistoryProvider getVcsBlockHistoryProvider() {
+    public @Nullable VcsHistoryProvider getVcsBlockHistoryProvider() {
         return null;
     }
 
@@ -251,8 +241,7 @@ public abstract class AbstractVcs<ComList extends CommittedChangeList> extends S
     /**
      * Returns the interface for performing update/sync operations.
      */
-    @Nullable
-    protected UpdateEnvironment createUpdateEnvironment() {
+    protected @Nullable UpdateEnvironment createUpdateEnvironment() {
         return null;
     }
 
@@ -262,8 +251,7 @@ public abstract class AbstractVcs<ComList extends CommittedChangeList> extends S
      *
      * @return the update interface, or null if the updates are not supported by the VCS.
      */
-    @Nullable
-    public UpdateEnvironment getUpdateEnvironment() {
+    public @Nullable UpdateEnvironment getUpdateEnvironment() {
         return myUpdateEnvironment;
     }
 
@@ -345,18 +333,15 @@ public abstract class AbstractVcs<ComList extends CommittedChangeList> extends S
      *
      * @return the status interface, or null if the check status operation is not supported or required by the VCS.
      */
-    @Nullable
-    public UpdateEnvironment getStatusEnvironment() {
+    public @Nullable UpdateEnvironment getStatusEnvironment() {
         return null;
     }
 
-    @Nullable
-    public AnnotationProvider getAnnotationProvider() {
+    public @Nullable AnnotationProvider getAnnotationProvider() {
         return null;
     }
 
-    @Nullable
-    public DiffProvider getDiffProvider() {
+    public @Nullable DiffProvider getDiffProvider() {
         return null;
     }
 
@@ -391,8 +376,7 @@ public abstract class AbstractVcs<ComList extends CommittedChangeList> extends S
      * @return the revision selector implementation, or null if none is provided.
      * @since 5.0.2
      */
-    @Nullable
-    public RevisionSelector getRevisionSelector() {
+    public @Nullable RevisionSelector getRevisionSelector() {
         return null;
     }
 
@@ -402,18 +386,15 @@ public abstract class AbstractVcs<ComList extends CommittedChangeList> extends S
      *
      * @return the update interface, or null if the integrate operations are not supported by the VCS.
      */
-    @Nullable
-    public UpdateEnvironment getIntegrateEnvironment() {
+    public @Nullable UpdateEnvironment getIntegrateEnvironment() {
         return null;
     }
 
-    @Nullable
-    public CommittedChangesProvider getCommittedChangesProvider() {
+    public @Nullable CommittedChangesProvider getCommittedChangesProvider() {
         return null;
     }
 
-    @Nullable
-    public final CachingCommittedChangesProvider getCachingCommittedChangesProvider() {
+    public final @Nullable CachingCommittedChangesProvider getCachingCommittedChangesProvider() {
         CommittedChangesProvider provider = getCommittedChangesProvider();
         if (provider instanceof CachingCommittedChangesProvider) {
             return (CachingCommittedChangesProvider) provider;
@@ -433,21 +414,18 @@ public abstract class AbstractVcs<ComList extends CommittedChangeList> extends S
      * @param path                 the path for which revision number is queried
      * @return the parsed revision number
      */
-    @Nullable
-    public VcsRevisionNumber parseRevisionNumber(String revisionNumberString, FilePath path) throws VcsException {
+    public @Nullable VcsRevisionNumber parseRevisionNumber(String revisionNumberString, FilePath path) throws VcsException {
         return parseRevisionNumber(revisionNumberString);
     }
 
-    @Nullable
-    public VcsRevisionNumber parseRevisionNumber(String revisionNumberString) throws VcsException {
+    public @Nullable VcsRevisionNumber parseRevisionNumber(String revisionNumberString) throws VcsException {
         return null;
     }
 
     /**
      * @return null if does not support revision parsing
      */
-    @Nullable
-    public String getRevisionPattern() {
+    public @Nullable String getRevisionPattern() {
         return null;
     }
 
@@ -471,18 +449,15 @@ public abstract class AbstractVcs<ComList extends CommittedChangeList> extends S
      * @param mapping the mapping being configured
      * @return the configurable instance, or null if no configuration is required.
      */
-    @Nullable
-    public UnnamedConfigurable getRootConfigurable(VcsDirectoryMapping mapping) {
+    public @Nullable UnnamedConfigurable getRootConfigurable(VcsDirectoryMapping mapping) {
         return null;
     }
 
-    @Nullable
-    public VcsRootSettings createEmptyVcsRootSettings() {
+    public @Nullable VcsRootSettings createEmptyVcsRootSettings() {
         return null;
     }
 
-    @Nullable
-    public RootsConvertor getCustomConvertor() {
+    public @Nullable RootsConvertor getCustomConvertor() {
         return null;
     }
 
@@ -498,8 +473,7 @@ public abstract class AbstractVcs<ComList extends CommittedChangeList> extends S
      *
      * @return the merge provider implementation, or null if the VCS doesn't support merge operations.
      */
-    @Nullable
-    public MergeProvider getMergeProvider() {
+    public @Nullable MergeProvider getMergeProvider() {
         return null;
     }
 
@@ -519,8 +493,7 @@ public abstract class AbstractVcs<ComList extends CommittedChangeList> extends S
         return in;
     }
 
-    @Nullable
-    public VcsExceptionsHotFixer getVcsExceptionsHotFixer() {
+    public @Nullable VcsExceptionsHotFixer getVcsExceptionsHotFixer() {
         return null;
     }
 
@@ -542,13 +515,11 @@ public abstract class AbstractVcs<ComList extends CommittedChangeList> extends S
         return VcsType.centralized;
     }
 
-    @Nullable
-    protected VcsOutgoingChangesProvider<ComList> getOutgoingProviderImpl() {
+    protected @Nullable VcsOutgoingChangesProvider<ComList> getOutgoingProviderImpl() {
         return null;
     }
 
-    @Nullable
-    public final VcsOutgoingChangesProvider<ComList> getOutgoingChangesProvider() {
+    public final @Nullable VcsOutgoingChangesProvider<ComList> getOutgoingChangesProvider() {
         return VcsType.centralized.equals(getType()) ? null : getOutgoingProviderImpl();
     }
 
@@ -560,13 +531,11 @@ public abstract class AbstractVcs<ComList extends CommittedChangeList> extends S
         return false;
     }
 
-    @Nullable
-    protected TreeDiffProvider getTreeDiffProviderImpl() {
+    protected @Nullable TreeDiffProvider getTreeDiffProviderImpl() {
         return null;
     }
 
-    @Nullable
-    public TreeDiffProvider getTreeDiffProvider() {
+    public @Nullable TreeDiffProvider getTreeDiffProvider() {
         RemoteDifferenceStrategy strategy = getRemoteDifferenceStrategy();
         return RemoteDifferenceStrategy.ASK_LATEST_REVISION.equals(strategy) ? null : getTreeDiffProviderImpl();
     }
@@ -614,8 +583,7 @@ public abstract class AbstractVcs<ComList extends CommittedChangeList> extends S
         setRollbackEnvironment(createRollbackEnvironment());
     }
 
-    @Nullable
-    public CommittedChangeList loadRevisions(VirtualFile vf, VcsRevisionNumber number) {
+    public @Nullable CommittedChangeList loadRevisions(VirtualFile vf, VcsRevisionNumber number) {
         CommittedChangeList[] list = new CommittedChangeList[1];
         ThrowableRunnable<VcsException> runnable = () -> {
             Pair<CommittedChangeList, FilePath> pair = getCommittedChangesProvider().getOneList(vf, number);
@@ -637,8 +605,7 @@ public abstract class AbstractVcs<ComList extends CommittedChangeList> extends S
     /**
      * If not specified, the {@link VcsDirtyScopeImpl} will be used.
      */
-    @Nullable
-    public VcsDirtyScopeBuilder createDirtyScope() {
+    public @Nullable VcsDirtyScopeBuilder createDirtyScope() {
         return null;
     }
 

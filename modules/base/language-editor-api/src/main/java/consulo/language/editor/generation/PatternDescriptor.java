@@ -13,8 +13,7 @@ public abstract class PatternDescriptor {
 
   public static final String ROOT = "root";
 
-  @Nullable
-  public String getId() {
+  public @Nullable String getId() {
     return null;
   }
 
@@ -24,11 +23,9 @@ public abstract class PatternDescriptor {
   
   public abstract String getName();
 
-  @Nullable
-  public abstract Icon getIcon();
+  public abstract @Nullable Icon getIcon();
 
-  @Nullable
-  public abstract Template getTemplate();
+  public abstract @Nullable Template getTemplate();
 
   public abstract void actionPerformed(DataContext context);
 }

@@ -31,8 +31,7 @@ public final class NotificationGroup {
     
     private final NotificationDisplayType myDisplayType;
     private final boolean myLogByDefault;
-    @Nullable
-    private final String myToolWindowId;
+    private final @Nullable String myToolWindowId;
 
     @Deprecated
     @DeprecationInfo("Use constructor with LocalizeValue parameter")
@@ -217,8 +216,7 @@ public final class NotificationGroup {
         return myLogByDefault;
     }
 
-    @Nullable
-    public String getToolWindowId() {
+    public @Nullable String getToolWindowId() {
         return myToolWindowId;
     }
 }

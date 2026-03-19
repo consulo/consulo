@@ -120,8 +120,7 @@ public class VcsException extends Exception {
         return StringUtil.join(myMessages, ", ");
     }
 
-    @Nullable
-    public static String getMessage(@Nullable Throwable throwable) {
+    public static @Nullable String getMessage(@Nullable Throwable throwable) {
         return throwable != null ? ObjectUtil.chooseNotNull(throwable.getMessage(), throwable.getLocalizedMessage()) : null;
     }
 }

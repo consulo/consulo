@@ -27,8 +27,7 @@ import java.util.List;
  * @since 2024-11-27
  */
 public class NavBarModelExtensions {
-    @Nullable
-    public static PsiElement normalize(@Nullable PsiElement child) {
+    public static @Nullable PsiElement normalize(@Nullable PsiElement child) {
         if (child == null) {
             return null;
         }

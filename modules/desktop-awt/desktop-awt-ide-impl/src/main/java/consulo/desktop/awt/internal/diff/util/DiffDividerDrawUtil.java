@@ -269,8 +269,7 @@ public class DiffDividerDrawUtil {
     private final int myStart2;
     private final int myEnd1;
     private final int myEnd2;
-    @Nullable
-    private final EditorColorsScheme myScheme;
+    private final @Nullable EditorColorsScheme myScheme;
 
     public DividerSeparator(int start1, int start2, int end1, int end2) {
       this(start1, start2, end1, end2, null);

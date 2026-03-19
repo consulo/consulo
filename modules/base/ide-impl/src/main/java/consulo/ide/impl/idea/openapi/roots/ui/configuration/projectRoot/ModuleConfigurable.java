@@ -166,8 +166,7 @@ public class ModuleConfigurable extends ProjectStructureElementConfigurable<Modu
     }
 
     @Override
-    @Nullable
-    public String getHelpTopic() {
+    public @Nullable String getHelpTopic() {
         ModuleEditor moduleEditor = getModuleEditor();
         return moduleEditor != null ? moduleEditor.getHelpTopic() : null;
     }

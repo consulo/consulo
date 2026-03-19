@@ -519,8 +519,7 @@ public class SearchUtil {
         }
     }
 
-    @Nullable
-    private static JBPopup createPopup(
+    private static @Nullable JBPopup createPopup(
         final ConfigurableSearchTextField searchField,
         final JBPopup[] activePopup,
         Alarm showHintAlarm,

@@ -83,8 +83,7 @@ public class ManagePackagesDialog extends DialogWrapper {
 
     private Future<?> myGetPackagesFuture = CompletableFuture.completedFuture(null);
 
-    @Nullable
-    protected ListSpeedSearch myListSpeedSearch;
+    protected @Nullable ListSpeedSearch myListSpeedSearch;
 
     private final SearchablePackageManagementService mySearchablePackageManagement;
 

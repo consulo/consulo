@@ -220,8 +220,7 @@ public class EditorSearchSession implements SearchSession, UiDataProvider, Selec
         return myEditor;
     }
 
-    @Nullable
-    public static EditorSearchSession get(@Nullable Editor editor) {
+    public static @Nullable EditorSearchSession get(@Nullable Editor editor) {
         JComponent headerComponent = editor != null ? editor.getHeaderComponent() : null;
         SearchReplaceComponent searchReplaceComponent = ObjectUtil.tryCast(headerComponent, SearchReplaceComponent.class);
         return searchReplaceComponent != null ? DataManager.getInstance().getDataContext(searchReplaceComponent.getComponent()).getData(SESSION_KEY) : null;

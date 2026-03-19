@@ -64,8 +64,7 @@ public class WordOccurrence {
    * @return the kind of the occurrence.
    */
 
-  @Nullable
-  public Kind getKind() {
+  public @Nullable Kind getKind() {
     return myKind;
   }
 

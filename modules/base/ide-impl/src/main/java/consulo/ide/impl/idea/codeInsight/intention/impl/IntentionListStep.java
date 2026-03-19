@@ -38,15 +38,13 @@ public class IntentionListStep implements ListPopupStep<IntentionActionWithTextC
     private static final Logger LOG = Logger.getInstance(IntentionListStep.class);
 
     private final CachedIntentions myCachedIntentions;
-    @Nullable
-    private final IntentionHintComponent myIntentionHintComponent;
+    private final @Nullable IntentionHintComponent myIntentionHintComponent;
     private final Size2D myMaxIconSize;
 
     private Runnable myFinalRunnable;
     private final Project myProject;
     private final PsiFile myFile;
-    @Nullable
-    private final Editor myEditor;
+    private final @Nullable Editor myEditor;
 
     public IntentionListStep(@Nullable IntentionHintComponent intentionHintComponent,
                              @Nullable Editor editor,
@@ -199,8 +197,7 @@ public class IntentionListStep implements ListPopupStep<IntentionActionWithTextC
         return icon;
     }
 
-    @Nullable
-    public Image getOriginalIconFor(IntentionActionWithTextCaching value) {
+    public @Nullable Image getOriginalIconFor(IntentionActionWithTextCaching value) {
         if (!value.isShowIcon()) return null;
 
         return myCachedIntentions.getIcon(value);

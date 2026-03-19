@@ -73,8 +73,7 @@ public class PsiElementListNavigator {
     ProgressManager.getInstance().run(listUpdaterTask);
   }
 
-  @Nullable
-  public static JBPopup navigateOrCreatePopup(NavigatablePsiElement[] targets,
+  public static @Nullable JBPopup navigateOrCreatePopup(NavigatablePsiElement[] targets,
                                               String title,
                                               String findUsagesTitle,
                                               ListCellRenderer listRenderer,
@@ -92,8 +91,7 @@ public class PsiElementListNavigator {
   /**
    * listUpdaterTask should be started after alarm is initialized so one-item popup won't blink
    */
-  @Nullable
-  public static JBPopup navigateOrCreatePopup(NavigatablePsiElement[] targets,
+  public static @Nullable JBPopup navigateOrCreatePopup(NavigatablePsiElement[] targets,
                                               String title,
                                               String findUsagesTitle,
                                               ListCellRenderer listRenderer,
@@ -117,17 +115,13 @@ public class PsiElementListNavigator {
     
     protected Consumer<Object[]> myTargetsConsumer;
 
-    @Nullable
-    protected String myFindUsagesTitle;
+    protected @Nullable String myFindUsagesTitle;
 
-    @Nullable
-    protected ListCellRenderer myListRenderer;
+    protected @Nullable ListCellRenderer myListRenderer;
 
-    @Nullable
-    protected BackgroundUpdaterTask myListUpdaterTask;
+    protected @Nullable BackgroundUpdaterTask myListUpdaterTask;
 
-    @Nullable
-    protected Project myProject;
+    protected @Nullable Project myProject;
 
     public NavigateOrPopupBuilder(NavigatablePsiElement[] targets, String title) {
       myTargets = targets;
@@ -172,8 +166,7 @@ public class PsiElementListNavigator {
       return this;
     }
 
-    @Nullable
-    public abstract JBPopup build();
+    public abstract @Nullable JBPopup build();
 
     
     public Project getProject() {

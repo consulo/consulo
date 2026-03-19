@@ -318,8 +318,7 @@ public class Tool implements SchemeElement {
         return false;
     }
 
-    @Nullable
-    public GeneralCommandLine createCommandLine(DataContext dataContext) {
+    public @Nullable GeneralCommandLine createCommandLine(DataContext dataContext) {
         if (StringUtil.isEmpty(getWorkingDirectory())) {
             setWorkingDirectory(dataContext.getRequiredData(Project.KEY).getBasePath());
         }

@@ -135,8 +135,7 @@ public final class LoadTextUtil {
     return -1;
   }
 
-  @Nullable
-  private static String guessLineSeparator(int crCount, int lfCount, int crlfCount) {
+  private static @Nullable String guessLineSeparator(int crCount, int lfCount, int crlfCount) {
     String detectedLineSeparator = null;
     if (crlfCount > crCount && crlfCount > lfCount) {
       detectedLineSeparator = "\r\n";
@@ -185,8 +184,7 @@ public final class LoadTextUtil {
   public static class DetectResult {
     public final Charset hardCodedCharset;
     public final CharsetToolkit.GuessedEncoding guessed;
-    @Nullable
-    public final byte[] BOM;
+    public final @Nullable byte[] BOM;
 
     DetectResult(Charset hardCodedCharset, CharsetToolkit.GuessedEncoding guessed, @Nullable byte[] BOM) {
       this.hardCodedCharset = hardCodedCharset;
@@ -460,8 +458,7 @@ public final class LoadTextUtil {
   }
 
   // null means not supported, otherwise it is converted byte stream
-  @Nullable
-  private static byte[] isSupported(Charset charset, String str) {
+  private static @Nullable byte[] isSupported(Charset charset, String str) {
     try {
       if (!charset.canEncode()) return null;
       byte[] bytes = str.getBytes(charset);
@@ -484,8 +481,7 @@ public final class LoadTextUtil {
   }
 
   // returns null if cannot determine from content
-  @Nullable
-  public static Charset charsetFromContentOrNull(@Nullable ComponentManager project, VirtualFile virtualFile, CharSequence text) {
+  public static @Nullable Charset charsetFromContentOrNull(@Nullable ComponentManager project, VirtualFile virtualFile, CharSequence text) {
     return virtualFile.getFileType().extractCharsetFromFileContent(project, virtualFile, text);
   }
 
@@ -600,8 +596,7 @@ public final class LoadTextUtil {
    * @param checkFile if the line separator was not detected before, try to detect it
    * @return the detected line separator or null
    */
-  @Nullable
-  public static String detectLineSeparator(VirtualFile file, boolean checkFile) {
+  public static @Nullable String detectLineSeparator(VirtualFile file, boolean checkFile) {
     String lineSeparator = getDetectedLineSeparator(file);
     if (lineSeparator == null && checkFile) {
       try {
@@ -652,8 +647,7 @@ public final class LoadTextUtil {
   private static class ConvertResult {
     
     private final CharSequence text;
-    @Nullable
-    private final String lineSeparator;
+    private final @Nullable String lineSeparator;
 
     ConvertResult(CharSequence text, @Nullable String lineSeparator) {
       this.text = text;
@@ -664,8 +658,7 @@ public final class LoadTextUtil {
   private static final Key<AutoDetectionReason> CHARSET_WAS_DETECTED_FROM_BYTES = Key.create("CHARSET_WAS_DETECTED_FROM_BYTES");
 
   // null if was not detected, otherwise the reason it was
-  @Nullable
-  public static AutoDetectionReason getCharsetAutoDetectionReason(VirtualFile virtualFile) {
+  public static @Nullable AutoDetectionReason getCharsetAutoDetectionReason(VirtualFile virtualFile) {
     return virtualFile.getUserData(CHARSET_WAS_DETECTED_FROM_BYTES);
   }
 

@@ -60,8 +60,7 @@ public class NotificationTestAction extends AnAction implements DumbAware {
 
     private static final class NotificationDialog extends DialogWrapper {
         private final JTextArea myMessage = new JTextArea(10, 50);
-        @Nullable
-        private final Project myProject;
+        private final @Nullable Project myProject;
 
         private NotificationDialog(@Nullable Project project) {
             super(project, true, IdeModalityType.MODELESS);
@@ -204,8 +203,7 @@ public class NotificationTestAction extends AnAction implements DumbAware {
             return myNotification;
         }
 
-        @Nullable
-        private NotificationListener getListener() {
+        private @Nullable NotificationListener getListener() {
             return myAddListener ? this : null;
         }
 

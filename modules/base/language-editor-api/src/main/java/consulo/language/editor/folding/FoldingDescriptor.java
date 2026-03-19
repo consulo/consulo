@@ -37,8 +37,7 @@ public class FoldingDescriptor {
 
   private final ASTNode myElement;
   private final TextRange myRange;
-  @Nullable
-  private final FoldingGroup myGroup;
+  private final @Nullable FoldingGroup myGroup;
   private final Set<Object> myDependencies;
   private String myPlaceholderText;
   private byte myFlags;
@@ -208,13 +207,11 @@ public class FoldingDescriptor {
     return myRange;
   }
 
-  @Nullable
-  public FoldingGroup getGroup() {
+  public @Nullable FoldingGroup getGroup() {
     return myGroup;
   }
 
-  @Nullable
-  public String getPlaceholderText() {
+  public @Nullable String getPlaceholderText() {
     return myPlaceholderText == null ? calcPlaceholderText() : myPlaceholderText;
   }
 
@@ -251,8 +248,7 @@ public class FoldingDescriptor {
     return getFlag(FLAG_CAN_BE_REMOVED_WHEN_COLLAPSED);
   }
 
-  @Nullable
-  public Boolean isCollapsedByDefault() {
+  public @Nullable Boolean isCollapsedByDefault() {
     return getFlag(FLAG_COLLAPSED_BY_DEFAULT_DEFINED) ? getFlag(FLAG_COLLAPSED_BY_DEFAULT) : null;
   }
 

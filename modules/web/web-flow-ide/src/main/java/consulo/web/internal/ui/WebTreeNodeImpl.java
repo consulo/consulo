@@ -67,8 +67,7 @@ public class WebTreeNodeImpl<N> implements TreeNode<N> {
         return myChildren.size() == 1 && myChildren.get(0) instanceof NotLoaded;
     }
 
-    @Nullable
-    public WebTreeNodeImpl<N> getParent() {
+    public @Nullable WebTreeNodeImpl<N> getParent() {
         return myParent;
     }
 

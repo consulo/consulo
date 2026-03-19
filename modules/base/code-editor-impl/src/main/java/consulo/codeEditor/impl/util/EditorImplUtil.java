@@ -389,8 +389,7 @@ public class EditorImplUtil {
             FontInfo.getFontRenderContext(editor.getContentComponent()));
     }
 
-    @Nullable
-    public static Transferable getContentsToPasteToEditor(@Nullable Supplier<Transferable> producer) {
+    public static @Nullable Transferable getContentsToPasteToEditor(@Nullable Supplier<Transferable> producer) {
         if (producer == null) {
             CopyPasteManager manager = CopyPasteManager.getInstance();
             return manager.areDataFlavorsAvailable(DataFlavor.stringFlavor) ? manager.getContents() : null;

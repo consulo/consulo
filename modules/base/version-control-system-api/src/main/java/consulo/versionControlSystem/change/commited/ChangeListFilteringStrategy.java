@@ -53,8 +53,7 @@ public interface ChangeListFilteringStrategy {
     }
 
     @Override
-    @Nullable
-    public JComponent getFilterUI() {
+    public @Nullable JComponent getFilterUI() {
       return null;
     }
 

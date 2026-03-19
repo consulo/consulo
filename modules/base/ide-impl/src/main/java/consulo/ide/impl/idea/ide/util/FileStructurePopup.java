@@ -480,8 +480,7 @@ public class FileStructurePopup implements Disposable, TreeActionsOwner {
         return "StructurePopup";
     }
 
-    @Nullable
-    public PsiElement getCurrentElement(@Nullable PsiFile psiFile) {
+    public @Nullable PsiElement getCurrentElement(@Nullable PsiFile psiFile) {
         PsiDocumentManager.getInstance(myProject).commitAllDocuments();
 
         if (myTreeModelWrapper.getCurrentEditorElement() instanceof PsiElement elementAtCursor) {
@@ -735,8 +734,7 @@ public class FileStructurePopup implements Disposable, TreeActionsOwner {
         }
     }
 
-    @Nullable
-    private AbstractTreeNode getSelectedNode() {
+    private @Nullable AbstractTreeNode getSelectedNode() {
         TreePath path = myTree.getSelectionPath();
         Object o = StructureViewComponent.unwrapNavigatable(path == null ? null : path.getLastPathComponent());
         return o instanceof AbstractTreeNode treeNode ? treeNode : null;
@@ -902,8 +900,7 @@ public class FileStructurePopup implements Disposable, TreeActionsOwner {
         }
     }
 
-    @Nullable
-    public static String getSpeedSearchText(Object object) {
+    public static @Nullable String getSpeedSearchText(Object object) {
         String text = String.valueOf(object);
         Object value = StructureViewComponent.unwrapWrapper(object);
         if (text != null) {
@@ -991,8 +988,7 @@ public class FileStructurePopup implements Disposable, TreeActionsOwner {
         }
     }
 
-    @Nullable
-    private String getSearchPrefix() {
+    private @Nullable String getSearchPrefix() {
         if (Application.get().isUnitTestMode()) {
             return myTestSearchFilter;
         }
@@ -1047,8 +1043,7 @@ public class FileStructurePopup implements Disposable, TreeActionsOwner {
         }
     }
 
-    @Nullable
-    private static SpeedSearchObjectWithWeight find(
+    private static @Nullable SpeedSearchObjectWithWeight find(
         PsiElement element,
         List<SpeedSearchObjectWithWeight> objects,
         BiPredicate<PsiElement, TreePath> predicate

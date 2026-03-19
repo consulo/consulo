@@ -36,8 +36,7 @@ public class ActionPopupItem implements ShortcutProvider, UserDataHolder {
     private final Presentation myPresentation = Presentation.newTemplatePresentation();
 
     private final AnAction myAction;
-    @Nullable
-    private final Character myMnemonicChar;
+    private final @Nullable Character myMnemonicChar;
     private final boolean myMnemonicsEnabled;
     private final boolean myHonorActionMnemonics;
     private final int myMaxIconWidth;
@@ -211,8 +210,7 @@ public class ActionPopupItem implements ShortcutProvider, UserDataHolder {
         return myTextValue;
     }
 
-    @Nullable
-    public Image getIcon(boolean selected) {
+    public @Nullable Image getIcon(boolean selected) {
         return selected && mySelectedIcon != null ? mySelectedIcon : myIcon;
     }
 
@@ -234,8 +232,7 @@ public class ActionPopupItem implements ShortcutProvider, UserDataHolder {
         return myAction.getShortcutSet();
     }
 
-    @Nullable
-    public <T> T getClientProperty(Key<T> key) {
+    public @Nullable <T> T getClientProperty(Key<T> key) {
         return myPresentation.getClientProperty(key);
     }
 

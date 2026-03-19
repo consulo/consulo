@@ -129,8 +129,7 @@ public class CommonCheckinFilesAction extends AbstractCommonCheckinAction {
         return changes.stream().anyMatch(changeList.getChanges()::contains);
     }
 
-    @Nullable
-    private static AbstractVcs getCommonVcs(Stream<FilePath> roots, Project project) {
+    private static @Nullable AbstractVcs getCommonVcs(Stream<FilePath> roots, Project project) {
         return Streams.getIfSingle(
             roots.map(root -> VcsUtil.getVcsFor(project, root))
                 .filter(Objects::nonNull)

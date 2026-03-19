@@ -132,8 +132,7 @@ public class PsiViewerDialog extends DialogWrapper implements UiDataProvider, Di
     private TitledSeparator myPsiTreeSeparator;
     private TitledSeparator myRefsSeparator;
     private TitledSeparator myBlockTreeSeparator;
-    @Nullable
-    private BlockTreeBuilder myBlockTreeBuilder;
+    private @Nullable BlockTreeBuilder myBlockTreeBuilder;
     private RangeHighlighter myHighlighter;
     private RangeHighlighter myIntersectHighlighter;
     private Map<PsiElement, BlockTreeNode> myPsiToBlockMap;
@@ -194,8 +193,7 @@ public class PsiViewerDialog extends DialogWrapper implements UiDataProvider, Di
             return myFileType != null ? myFileType.getDisplayName() + " file" : myExtension.getName();
         }
 
-        @Nullable
-        public Icon getIcon() {
+        public @Nullable Icon getIcon() {
             return myFileType != null ? TargetAWT.to(myFileType.getIcon()) : myExtension.getIcon();
         }
 
@@ -535,14 +533,12 @@ public class PsiViewerDialog extends DialogWrapper implements UiDataProvider, Di
         }
     }
 
-    @Nullable
-    private PsiElement getPsiElement() {
+    private @Nullable PsiElement getPsiElement() {
         TreePath path = myPsiTree.getSelectionPath();
         return path == null ? null : getPsiElement((DefaultMutableTreeNode)path.getLastPathComponent());
     }
 
-    @Nullable
-    private static PsiElement getPsiElement(DefaultMutableTreeNode node) {
+    private static @Nullable PsiElement getPsiElement(DefaultMutableTreeNode node) {
         if (node.getUserObject() instanceof ViewerNodeDescriptor descriptor) {
             Object elementObject = descriptor.getElement();
             return elementObject instanceof PsiElement psiElement ? psiElement
@@ -626,8 +622,7 @@ public class PsiViewerDialog extends DialogWrapper implements UiDataProvider, Di
         return myPanel;
     }
 
-    @Nullable
-    private Object getSource() {
+    private @Nullable Object getSource() {
         SourceWrapper wrapper = (SourceWrapper)myFileTypeComboBox.getSelectedItem();
         if (wrapper != null) {
             return wrapper.myFileType != null ? wrapper.myFileType : wrapper.myExtension;
@@ -1084,8 +1079,7 @@ public class PsiViewerDialog extends DialogWrapper implements UiDataProvider, Di
         return null;
     }
 
-    @Nullable
-    public static TreeNode findNodeWithObject(Object object, TreeModel model, Object parent) {
+    public static @Nullable TreeNode findNodeWithObject(Object object, TreeModel model, Object parent) {
         for (int i = 0; i < model.getChildCount(parent); i++) {
             DefaultMutableTreeNode childNode = (DefaultMutableTreeNode)model.getChild(parent, i);
             if (childNode.getUserObject().equals(object)) {
@@ -1299,8 +1293,7 @@ public class PsiViewerDialog extends DialogWrapper implements UiDataProvider, Di
             return myLastParsedTextHashCode == myNewDocumentHashCode && myEditor.getContentComponent().hasFocus();
         }
 
-        @Nullable
-        private PsiFile getPsiFile() {
+        private @Nullable PsiFile getPsiFile() {
             ViewerTreeStructure treeStructure = (ViewerTreeStructure)myPsiTreeBuilder.getTreeStructure();
             PsiElement root = treeStructure != null ? treeStructure.getRootPsiElement() : null;
             return root instanceof PsiFile file ? file : null;
@@ -1344,8 +1337,7 @@ public class PsiViewerDialog extends DialogWrapper implements UiDataProvider, Di
         }
     }
 
-    @Nullable
-    private BlockTreeNode findBlockNode(TextRange range, boolean selectParentIfNotFound) {
+    private @Nullable BlockTreeNode findBlockNode(TextRange range, boolean selectParentIfNotFound) {
         BlockTreeBuilder builder = myBlockTreeBuilder;
         if (builder == null || !myBlockStructurePanel.isVisible()) {
             return null;

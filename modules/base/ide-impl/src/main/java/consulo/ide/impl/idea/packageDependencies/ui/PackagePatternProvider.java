@@ -41,8 +41,7 @@ public class PackagePatternProvider extends PatternDialectProvider {
     public static final String PACKAGES = "package";
     private static final Logger LOG = Logger.getInstance(PackagePatternProvider.class);
 
-    @Nullable
-    private static GeneralGroupNode getGroupParent(PackageDependenciesNode node) {
+    private static @Nullable GeneralGroupNode getGroupParent(PackageDependenciesNode node) {
         if (node instanceof GeneralGroupNode generalGroupNode) {
             return generalGroupNode;
         }

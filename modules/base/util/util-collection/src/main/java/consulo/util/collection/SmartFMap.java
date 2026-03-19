@@ -157,13 +157,11 @@ public class SmartFMap<K,V> implements Map<K,V> {
   }
 
   @Override
-  @Nullable
-  public V get(Object key) {
+  public @Nullable V get(Object key) {
     return (V)doGet(myMap, key);
   }
 
-  @Nullable
-  private static Object doGet(Object map, Object key) {
+  private static @Nullable Object doGet(Object map, Object key) {
     if (key == null) {
       return null;
     }

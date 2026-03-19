@@ -289,8 +289,7 @@ public class InjectionsSettingsUI implements SearchableConfigurable.Parent, Conf
                     super.update(e);
                 }
 
-                @Nullable
-                private CfgInfo getTargetCfgInfo(List<InjInfo> injections) {
+                private @Nullable CfgInfo getTargetCfgInfo(List<InjInfo> injections) {
                     CfgInfo cfg = null;
                     for (InjInfo info : injections) {
                         if (info.bundled) {
@@ -400,8 +399,7 @@ public class InjectionsSettingsUI implements SearchableConfigurable.Parent, Conf
         }
     }
 
-    @Nullable
-    private AnAction getEditAction() {
+    private @Nullable AnAction getEditAction() {
         InjInfo info = getSelectedInjection();
         String supportId = info == null ? null : info.injection.getSupportId();
         return supportId == null ? null : myEditActions.get(supportId);
@@ -588,8 +586,7 @@ public class InjectionsSettingsUI implements SearchableConfigurable.Parent, Conf
         return toRemove;
     }
 
-    @Nullable
-    private InjInfo getSelectedInjection() {
+    private @Nullable InjInfo getSelectedInjection() {
         int row = myInjectionsTable.getSelectedRow();
         return row < 0 ? null : myInjectionsTable.getItems().get(myInjectionsTable.convertRowIndexToModel(row));
     }

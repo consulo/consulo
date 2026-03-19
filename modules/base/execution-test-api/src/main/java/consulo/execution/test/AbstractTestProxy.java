@@ -69,13 +69,11 @@ public abstract class AbstractTestProxy extends CompositePrintable {
 
   public abstract List<? extends AbstractTestProxy> getAllTests();
 
-  @Nullable
-  public Long getDuration() {
+  public @Nullable Long getDuration() {
     return null;
   }
 
-  @Nullable
-  public String getDurationString(TestConsoleProperties consoleProperties) {
+  public @Nullable String getDurationString(TestConsoleProperties consoleProperties) {
     return null;
   }
 
@@ -153,18 +151,15 @@ public abstract class AbstractTestProxy extends CompositePrintable {
     return provider == null ? Collections.emptyList() : Collections.singletonList(provider);
   }
 
-  @Nullable
-  public DiffHyperlink getDiffViewerProvider() {
+  public @Nullable DiffHyperlink getDiffViewerProvider() {
     return null;
   }
 
-  @Nullable
-  public String getLocationUrl() {
+  public @Nullable String getLocationUrl() {
     return null;
   }
 
-  @Nullable
-  public String getMetainfo() {
+  public @Nullable String getMetainfo() {
     return null;
   }
 }

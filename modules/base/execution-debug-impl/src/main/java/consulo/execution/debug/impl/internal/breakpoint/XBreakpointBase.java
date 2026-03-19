@@ -274,8 +274,7 @@ public class XBreakpointBase<Self extends XBreakpoint<P>, P extends XBreakpointP
     }
 
     @Override
-    @Nullable
-    public P getProperties() {
+    public @Nullable P getProperties() {
         return myProperties;
     }
 
@@ -301,8 +300,7 @@ public class XBreakpointBase<Self extends XBreakpoint<P>, P extends XBreakpointP
         myState.setDependencyState(state);
     }
 
-    @Nullable
-    public String getGroup() {
+    public @Nullable String getGroup() {
         return myState.getGroup();
     }
 
@@ -335,8 +333,7 @@ public class XBreakpointBase<Self extends XBreakpoint<P>, P extends XBreakpointP
         return "XBreakpointBase(type=" + myType + ")";
     }
 
-    @Nullable
-    protected GutterDraggableObject createBreakpointDraggableObject() {
+    protected @Nullable GutterDraggableObject createBreakpointDraggableObject() {
         return null;
     }
 
@@ -423,8 +420,7 @@ public class XBreakpointBase<Self extends XBreakpoint<P>, P extends XBreakpointP
         }
     }
 
-    @Nullable
-    protected final Image calculateSpecialIcon() {
+    protected final @Nullable Image calculateSpecialIcon() {
         XDebugSessionImpl session = getBreakpointManager().getDebuggerManager().getCurrentSession();
         if (!isEnabled()) {
             // disabled icon takes precedence to other to visually distinguish it and provide feedback then it is enabled/disabled
@@ -474,8 +470,7 @@ public class XBreakpointBase<Self extends XBreakpoint<P>, P extends XBreakpointP
         return myIcon;
     }
 
-    @Nullable
-    public String getErrorMessage() {
+    public @Nullable String getErrorMessage() {
         XDebugSessionImpl currentSession = getBreakpointManager().getDebuggerManager().getCurrentSession();
         if (currentSession != null) {
             CustomizedBreakpointPresentation presentation = currentSession.getBreakpointPresentation(this);
@@ -520,8 +515,7 @@ public class XBreakpointBase<Self extends XBreakpoint<P>, P extends XBreakpointP
         }
 
         @Override
-        @Nullable
-        public AnAction getClickAction() {
+        public @Nullable AnAction getClickAction() {
             XDebuggerSettingsManager.GeneralViewSettings generalSettings = XDebuggerSettingsManager.getInstance().getGeneralSettings();
             if (generalSettings.isSingleClickForDisablingBreakpoint()) {
                 return new ToggleBreakpointGutterIconAction(XBreakpointBase.this);
@@ -532,8 +526,7 @@ public class XBreakpointBase<Self extends XBreakpoint<P>, P extends XBreakpointP
         }
 
         @Override
-        @Nullable
-        public AnAction getMiddleButtonClickAction() {
+        public @Nullable AnAction getMiddleButtonClickAction() {
             XDebuggerSettingsManager.GeneralViewSettings generalSettings = XDebuggerSettingsManager.getInstance().getGeneralSettings();
             if (generalSettings.isSingleClickForDisablingBreakpoint()) {
                 return new RemoveBreakpointGutterIconAction(XBreakpointBase.this);
@@ -559,8 +552,7 @@ public class XBreakpointBase<Self extends XBreakpoint<P>, P extends XBreakpointP
         }
 
         @Override
-        @Nullable
-        public ActionGroup getPopupMenuActions() {
+        public @Nullable ActionGroup getPopupMenuActions() {
             return null;
         }
 

@@ -63,33 +63,27 @@ public final class FileEditorManagerEvent extends EventObject {
     return (FileEditorManager)getSource();
   }
 
-  @Nullable
-  public VirtualFile getOldFile() {
+  public @Nullable VirtualFile getOldFile() {
     return myOldFile;
   }
 
-  @Nullable
-  public VirtualFile getNewFile() {
+  public @Nullable VirtualFile getNewFile() {
     return myNewFile;
   }
 
-  @Nullable
-  public FileEditor getOldEditor() {
+  public @Nullable FileEditor getOldEditor() {
     return myOldEditor;
   }
 
-  @Nullable
-  public FileEditor getNewEditor() {
+  public @Nullable FileEditor getNewEditor() {
     return myNewEditor;
   }
 
-  @Nullable
-  public FileEditorProvider getOldProvider() {
+  public @Nullable FileEditorProvider getOldProvider() {
     return myOldProvider;
   }
 
-  @Nullable
-  public FileEditorProvider getNewProvider() {
+  public @Nullable FileEditorProvider getNewProvider() {
     return myNewProvider;
   }
 }

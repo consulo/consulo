@@ -46,8 +46,7 @@ public class ProjectCoreUtil {
     return true;
   }
 
-  @Nullable
-  public static VirtualFile getDirectoryStoreFile(Project project) {
+  public static @Nullable VirtualFile getDirectoryStoreFile(Project project) {
     VirtualFile baseDir = project.getBaseDir();
     if (baseDir == null) {
       return null;

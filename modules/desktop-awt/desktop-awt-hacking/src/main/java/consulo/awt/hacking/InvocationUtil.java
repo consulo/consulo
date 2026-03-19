@@ -16,8 +16,7 @@ public class InvocationUtil {
   public InvocationUtil() {
   }
 
-  @Nullable
-  public static Runnable extractRunnable(AWTEvent event) {
+  public static @Nullable Runnable extractRunnable(AWTEvent event) {
     if (event instanceof InvocationEvent) {
       try {
         return (Runnable)INVOCATION_EVENT_RUNNABLE_FIELD.get(event);

@@ -132,8 +132,7 @@ public interface Block {
      *
      * @return debug name, or null for default one.
      */
-    @Nullable
-    default String getDebugName() {
+    default @Nullable String getDebugName() {
         return null;
     }
 }

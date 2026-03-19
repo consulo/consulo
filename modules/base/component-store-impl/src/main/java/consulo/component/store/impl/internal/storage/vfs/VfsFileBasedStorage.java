@@ -61,7 +61,7 @@ public final class VfsFileBasedStorage extends XmlElementStorage implements File
                                @Nullable TrackingPathMacroSubstitutor pathMacroManager,
                                String rootElementName,
                                Disposable parentDisposable,
-                               @Nullable final StateStorageListener listener,
+                               final @Nullable StateStorageListener listener,
                                @Nullable StreamProvider streamProvider,
                                boolean useXmlProlog,
                                PathMacrosService pathMacrosService) {
@@ -145,8 +145,7 @@ public final class VfsFileBasedStorage extends XmlElementStorage implements File
     }
 
     @Override
-    @Nullable
-    public VirtualFile getVirtualFile() {
+    public @Nullable VirtualFile getVirtualFile() {
         VirtualFile virtualFile = myCachedVirtualFile;
         if (virtualFile == null) {
             myCachedVirtualFile = virtualFile = LocalFileSystem.getInstance().findFileByIoFile(myFile);
@@ -166,8 +165,7 @@ public final class VfsFileBasedStorage extends XmlElementStorage implements File
     }
 
     @Override
-    @Nullable
-    protected Element loadLocalData() {
+    protected @Nullable Element loadLocalData() {
         myBlockSavingTheContent = false;
         try {
             VirtualFile file = getVirtualFile();
@@ -192,8 +190,7 @@ public final class VfsFileBasedStorage extends XmlElementStorage implements File
         }
     }
 
-    @Nullable
-    private Element processReadException(@Nullable Exception e) {
+    private @Nullable Element processReadException(@Nullable Exception e) {
         boolean contentTruncated = e == null;
         myBlockSavingTheContent = !contentTruncated && (StorageUtil.isProjectOrModuleFile(myFileSpec) || myFileSpec.equals(StoragePathMacros.WORKSPACE_FILE));
         if (!ApplicationManager.getApplication().isUnitTestMode() && !ApplicationManager.getApplication().isHeadlessEnvironment()) {

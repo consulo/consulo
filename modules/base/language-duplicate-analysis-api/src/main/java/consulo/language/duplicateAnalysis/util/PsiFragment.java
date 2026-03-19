@@ -135,8 +135,7 @@ public abstract class PsiFragment {
     return elements;
   }
 
-  @Nullable
-  public PsiFile getFile() {
+  public @Nullable PsiFile getFile() {
     return myElementAnchors.length > 0 ? myElementAnchors[0].getFile() : null;
   }
 
@@ -170,8 +169,7 @@ public abstract class PsiFragment {
 
   public abstract boolean isEqual(PsiElement[] elements, int discardCost);
 
-  @Nullable
-  public UsageInfo getUsageInfo() {
+  public @Nullable UsageInfo getUsageInfo() {
     if (myElementAnchors.length == 1) {
       PsiElement element = myElementAnchors[0].retrieve();
       if (element == null || !element.isValid()) return null;
@@ -243,8 +241,7 @@ public abstract class PsiFragment {
     return myElementAnchors.length > 1;
   }
 
-  @Nullable
-  public Language getLanguage() {
+  public @Nullable Language getLanguage() {
     return myLanguage;
   }
 }

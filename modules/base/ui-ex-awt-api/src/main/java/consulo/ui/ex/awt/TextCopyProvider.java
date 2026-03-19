@@ -35,8 +35,7 @@ public abstract class TextCopyProvider implements CopyProvider {
    *
    * @return collection of text blocks or null
    */
-  @Nullable
-  public abstract Collection<String> getTextLinesToCopy();
+  public abstract @Nullable Collection<String> getTextLinesToCopy();
 
   @Override
   public void performCopy(DataContext dataContext) {

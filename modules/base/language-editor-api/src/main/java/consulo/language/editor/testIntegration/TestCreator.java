@@ -36,8 +36,7 @@ public interface TestCreator extends LanguageExtension {
     ExtensionPointCacheKey<TestCreator, ByLanguageValue<TestCreator>> KEY =
         ExtensionPointCacheKey.create("TestCreator", LanguageOneToOne.build());
 
-    @Nullable
-    static TestCreator forLanguage(Language language) {
+    static @Nullable TestCreator forLanguage(Language language) {
         ExtensionPoint<TestCreator> extensionPoint = Application.get().getExtensionPoint(TestCreator.class);
         ByLanguageValue<TestCreator> map = extensionPoint.getOrBuildCache(KEY);
         return map.get(language);

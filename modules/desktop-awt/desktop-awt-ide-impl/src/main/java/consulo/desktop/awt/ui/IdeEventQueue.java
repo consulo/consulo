@@ -92,8 +92,7 @@ public class IdeEventQueue extends EventQueue {
     final AtomicInteger myKeyboardEventsPosted = new AtomicInteger();
     final AtomicInteger myKeyboardEventsDispatched = new AtomicInteger();
     private AWTEvent myCurrentEvent = new InvocationEvent(this, EmptyRunnable.getInstance());
-    @Nullable
-    private AWTEvent myCurrentSequencedEvent;
+    private @Nullable AWTEvent myCurrentSequencedEvent;
 
     private final AWTIdleHolder myIdleHolder = new AWTIdleHolder();
 
@@ -507,8 +506,7 @@ public class IdeEventQueue extends EventQueue {
      * <p>
      * Note: As side-effect this method tracks special flag for 'Windows' key state that is valuable on itself
      */
-    @Nullable
-    private AWTEvent mapMetaState(AWTEvent e) {
+    private @Nullable AWTEvent mapMetaState(AWTEvent e) {
         if (myWinMetaPressed) {
             Application app = ApplicationManager.getApplication();
 

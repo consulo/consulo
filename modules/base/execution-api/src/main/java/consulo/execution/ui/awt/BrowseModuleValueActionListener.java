@@ -51,8 +51,7 @@ public abstract class BrowseModuleValueActionListener<T extends JComponent> impl
 
   public JComponent getField() { return myField; }
 
-  @Nullable
-  protected abstract String showDialog();
+  protected abstract @Nullable String showDialog();
 
   public Project getProject() { return myProject; }
 

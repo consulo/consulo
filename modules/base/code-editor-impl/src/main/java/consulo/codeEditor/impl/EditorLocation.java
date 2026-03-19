@@ -149,8 +149,7 @@ public final class EditorLocation {
         }
 
         @Override
-        @Nullable
-        public <T> T getUserData(Key<T> key) {
+        public @Nullable <T> T getUserData(Key<T> key) {
             return null;
         }
 

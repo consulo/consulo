@@ -85,8 +85,7 @@ public class ActionUrl implements JDOMExternalizable {
         return myComponent;
     }
 
-    @Nullable
-    public AnAction getComponentAction() {
+    public @Nullable AnAction getComponentAction() {
         if (myComponent instanceof AnSeparator) {
             return AnSeparator.getInstance();
         }

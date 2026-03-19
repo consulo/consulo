@@ -208,8 +208,7 @@ public class ExternalSystemTasksTreeModel extends DefaultTreeModel {
   }
 
   @SuppressWarnings("unchecked")
-  @Nullable
-  private ExternalSystemNode<ExternalProjectPojo> findProjectNode(String configPath) {
+  private @Nullable ExternalSystemNode<ExternalProjectPojo> findProjectNode(String configPath) {
     for (int i = getRoot().getChildCount() - 1; i >= 0; i--) {
       ExternalSystemNode<?> child = getRoot().getChildAt(i);
       Object childElement = child.getDescriptor().getElement();

@@ -57,13 +57,11 @@ public abstract class PerFileMappingsBase<T> implements PersistentStateComponent
     public void dispose() {
     }
 
-    @Nullable
-    protected FilePropertyPusher<T> getFilePropertyPusher() {
+    protected @Nullable FilePropertyPusher<T> getFilePropertyPusher() {
         return null;
     }
 
-    @Nullable
-    protected Project getProject() {
+    protected @Nullable Project getProject() {
         return myProject;
     }
 
@@ -82,25 +80,21 @@ public abstract class PerFileMappingsBase<T> implements PersistentStateComponent
     }
 
     @Override
-    @Nullable
-    public T getMapping(@Nullable VirtualFile file) {
+    public @Nullable T getMapping(@Nullable VirtualFile file) {
         T t = getConfiguredMapping(file);
         return t == null ? getDefaultMapping(file) : t;
     }
 
-    @Nullable
-    public T getConfiguredMapping(@Nullable VirtualFile file) {
+    public @Nullable T getConfiguredMapping(@Nullable VirtualFile file) {
         FilePropertyPusher<T> pusher = getFilePropertyPusher();
         return getMappingInner(file, pusher == null ? null : pusher.getFileDataKey(), false);
     }
 
-    @Nullable
-    public T getDirectlyConfiguredMapping(@Nullable VirtualFile file) {
+    public @Nullable T getDirectlyConfiguredMapping(@Nullable VirtualFile file) {
         return getMappingInner(file, null, true);
     }
 
-    @Nullable
-    private T getMappingInner(@Nullable VirtualFile file, @Nullable Key<T> pusherKey, boolean forHierarchy) {
+    private @Nullable T getMappingInner(@Nullable VirtualFile file, @Nullable Key<T> pusherKey, boolean forHierarchy) {
         if (file instanceof VirtualFileWindow) {
             VirtualFileWindow window = (VirtualFileWindow) file;
             file = window.getDelegate();
@@ -139,8 +133,7 @@ public abstract class PerFileMappingsBase<T> implements PersistentStateComponent
         }
     }
 
-    @Nullable
-    protected T getNotInHierarchy(@Nullable VirtualFile file, Map<VirtualFile, T> mappings) {
+    protected @Nullable T getNotInHierarchy(@Nullable VirtualFile file, Map<VirtualFile, T> mappings) {
         if (getProject() == null || file == null || file.getFileSystem() instanceof NonPhysicalFileSystem || !getProject().isDefault() && ProjectFileIndex.getInstance(
             getProject()).isInContent(file)) {
             return mappings.get(null);
@@ -231,8 +224,7 @@ public abstract class PerFileMappingsBase<T> implements PersistentStateComponent
     
     public abstract List<T> getAvailableValues();
 
-    @Nullable
-    protected abstract String serialize(T t);
+    protected abstract @Nullable String serialize(T t);
 
     @Override
     public Element getState() {
@@ -265,8 +257,7 @@ public abstract class PerFileMappingsBase<T> implements PersistentStateComponent
         }
     }
 
-    @Nullable
-    protected T handleUnknownMapping(VirtualFile file, String value) {
+    protected @Nullable T handleUnknownMapping(VirtualFile file, String value) {
         return null;
     }
 

@@ -743,8 +743,7 @@ public abstract class SoftWrapApplianceManager implements Dumpable {
      * @param lineData        object that encapsulates information about currently processed logical line
      * @return newly created and registered soft wrap if any; {@code null} otherwise
      */
-    @Nullable
-    private SoftWrapImpl registerSoftWrap(int minOffset, int preferredOffset, int maxOffset, int spaceSize, LogicalLineData lineData) {
+    private @Nullable SoftWrapImpl registerSoftWrap(int minOffset, int preferredOffset, int maxOffset, int spaceSize, LogicalLineData lineData) {
         int softWrapOffset = calculateBackwardSpaceOffsetIfPossible(minOffset, preferredOffset);
         if (softWrapOffset < 0) {
             softWrapOffset = calculateBackwardOffsetForEasternLanguageIfPossible(minOffset, preferredOffset);

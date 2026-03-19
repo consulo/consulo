@@ -39,8 +39,7 @@ public class WolfPassFactory implements TextEditorHighlightingPassFactory {
   }
 
   @Override
-  @Nullable
-  public TextEditorHighlightingPass createHighlightingPass(PsiFile file, final Editor editor) {
+  public @Nullable TextEditorHighlightingPass createHighlightingPass(PsiFile file, final Editor editor) {
     final long psiModificationCount = PsiManager.getInstance(file.getProject()).getModificationTracker().getModificationCount();
     if (psiModificationCount == myPsiModificationCount) {
       return null; //optimization

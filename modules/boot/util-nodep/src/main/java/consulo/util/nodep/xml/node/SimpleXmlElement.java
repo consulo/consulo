@@ -49,8 +49,7 @@ public final class SimpleXmlElement {
     return child == null ? EMPTY_TEXT : child.getText();
   }
 
-  @Nullable
-  public SimpleXmlElement getChild(String tagName) {
+  public @Nullable SimpleXmlElement getChild(String tagName) {
     if (myChildren.isEmpty()) {
       return null;
     }
@@ -91,8 +90,7 @@ public final class SimpleXmlElement {
     return myChildren;
   }
 
-  @Nullable
-  public String getAttributeValue(String value) {
+  public @Nullable String getAttributeValue(String value) {
     return myAttributes.get(value);
   }
 

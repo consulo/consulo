@@ -35,23 +35,17 @@ class JarLoader extends Loader {
     private final String myFilePath;
     private final ClassPath myConfiguration;
     private final URL myUrl;
-    @Nullable
-    private volatile SoftReference<JarFile> myZipFileSoftReference = null; // Used only when myConfiguration.myCanLockJars==true
+    private volatile @Nullable SoftReference<JarFile> myZipFileSoftReference = null; // Used only when myConfiguration.myCanLockJars==true
     private volatile Map<Resource.@Nullable Attribute, String> myAttributes = null;
-    @Nullable
-    private volatile String myClassPathManifestAttribute = null;
+    private volatile @Nullable String myClassPathManifestAttribute = null;
     private static final String NULL_STRING = "<null>";
 
-    @Nullable
-    private JarIndex myJarIndex;
-    @Nullable
-    private PreloadedJar myPreloadedJar = null;
+    private @Nullable JarIndex myJarIndex;
+    private @Nullable PreloadedJar myPreloadedJar = null;
     private final Object myJarLock = new Object();
 
-    @Nullable
-    private final Set<String> myFullJarIndex;
-    @Nullable
-    private volatile Set<String> myFullPackageIndex = null;
+    private final @Nullable Set<String> myFullJarIndex;
+    private volatile @Nullable Set<String> myFullPackageIndex = null;
 
     private boolean myClosed;
 
@@ -120,8 +114,7 @@ class JarLoader extends Loader {
         return true;
     }
 
-    @Nullable
-    protected Set<String> fullPackageIndex() {
+    protected @Nullable Set<String> fullPackageIndex() {
         if (myFullJarIndex == null) {
             return null;
         }
@@ -245,8 +238,7 @@ class JarLoader extends Loader {
         }
     }
 
-    @Nullable
-    protected Attributes loadManifestAttributes(ZipFile zipFile, @Nullable InputStream stream) {
+    protected @Nullable Attributes loadManifestAttributes(ZipFile zipFile, @Nullable InputStream stream) {
         if (stream == null) {
             return null;
         }
@@ -299,8 +291,7 @@ class JarLoader extends Loader {
     }
 
     private final AtomicInteger myNumberOfRequests = new AtomicInteger();
-    @Nullable
-    private volatile IntHashSet myPackageHashesInside = null;
+    private volatile @Nullable IntHashSet myPackageHashesInside = null;
 
     private IntHashSet buildPackageHashes() {
         try {
@@ -357,8 +348,7 @@ class JarLoader extends Loader {
         return getJarResource(name);
     }
 
-    @Nullable
-    private Resource getJarResource(String name) {
+    private @Nullable Resource getJarResource(String name) {
         try {
             JarFile zipFile = getJarFile();
 

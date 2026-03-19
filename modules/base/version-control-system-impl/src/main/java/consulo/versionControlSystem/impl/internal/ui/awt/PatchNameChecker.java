@@ -24,8 +24,7 @@ public class PatchNameChecker {
   public final static int MAX = 100;
   private final static int MAX_PATH = 255; // Windows path len restrictions
 
-  @Nullable
-  public static String validateName(String name) {
+  public static @Nullable String validateName(String name) {
     String fileName = new File(name).getName();
     if (StringUtil.isEmptyOrSpaces(fileName)) {
       return "File name cannot be empty";

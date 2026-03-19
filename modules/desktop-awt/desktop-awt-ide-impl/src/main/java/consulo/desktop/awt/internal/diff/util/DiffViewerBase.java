@@ -52,8 +52,7 @@ public abstract class DiffViewerBase implements DiffViewer, UiDataProvider {
 
     private final List<DiffViewerListener> myListeners = new SmartList<>();
 
-    @Nullable
-    protected final Project myProject;
+    protected final @Nullable Project myProject;
     protected final DiffContext myContext;
     protected final ContentDiffRequest myRequest;
 
@@ -171,8 +170,7 @@ public abstract class DiffViewerBase implements DiffViewer, UiDataProvider {
     // Getters
     //
 
-    @Nullable
-    public Project getProject() {
+    public @Nullable Project getProject() {
         return myProject;
     }
 
@@ -219,8 +217,7 @@ public abstract class DiffViewerBase implements DiffViewer, UiDataProvider {
         return group;
     }
 
-    @Nullable
-    protected JComponent getStatusPanel() {
+    protected @Nullable JComponent getStatusPanel() {
         return null;
     }
 
@@ -248,8 +245,7 @@ public abstract class DiffViewerBase implements DiffViewer, UiDataProvider {
         Disposer.dispose(myTaskAlarm);
     }
 
-    @Nullable
-    protected Navigatable getNavigatable() {
+    protected @Nullable Navigatable getNavigatable() {
         return null;
     }
 

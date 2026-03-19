@@ -25,8 +25,7 @@ public class WebApplicationImpl extends UnifiedApplication implements WebApplica
     super(componentBinding, splash);
   }
 
-  @Nullable
-  public WebStartupProgressImpl getSplash() {
+  public @Nullable WebStartupProgressImpl getSplash() {
     return (WebStartupProgressImpl)mySplashRef.get();
   }
 
@@ -70,8 +69,7 @@ public class WebApplicationImpl extends UnifiedApplication implements WebApplica
   }
 
   @Override
-  @Nullable
-  public WebSession getCurrentSession() {
+  public @Nullable WebSession getCurrentSession() {
     return myCurrentSession;
   }
 }

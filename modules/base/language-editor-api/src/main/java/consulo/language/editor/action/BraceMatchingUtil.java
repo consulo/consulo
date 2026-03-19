@@ -405,8 +405,7 @@ public class BraceMatchingUtil {
     return BraceMatcherHolder.ourDefaultBraceMatcher;
   }
 
-  @Nullable
-  private static BraceMatcher getBraceMatcherByFileType(FileType fileType) {
+  private static @Nullable BraceMatcher getBraceMatcherByFileType(FileType fileType) {
     BraceMatcher braceMatcher = BraceMatcherInternal.getMatcher(fileType);
     if (braceMatcher != null) return braceMatcher;
 
@@ -425,8 +424,7 @@ public class BraceMatchingUtil {
     return matcher instanceof XmlAwareBraceMatcher && ((XmlAwareBraceMatcher)matcher).areTagsCaseSensitive(fileType, tokenGroup);
   }
 
-  @Nullable
-  private static String getTagName(BraceMatcher matcher, CharSequence fileText, HighlighterIterator iterator) {
+  private static @Nullable String getTagName(BraceMatcher matcher, CharSequence fileText, HighlighterIterator iterator) {
     if (matcher instanceof XmlAwareBraceMatcher) return ((XmlAwareBraceMatcher)matcher).getTagName(fileText, iterator);
     return null;
   }

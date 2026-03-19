@@ -383,8 +383,7 @@ public class ScopeTreeViewPanel extends JPanel implements Disposable {
         return scope;
     }
 
-    @Nullable
-    public Object getData(Key<?> dataId) {
+    public @Nullable Object getData(Key<?> dataId) {
         if (LangDataKeys.MODULE_CONTEXT == dataId) {
             TreePath selectionPath = myTree.getSelectionPath();
             if (selectionPath != null && selectionPath.getLastPathComponent() instanceof ModuleNode moduleNode) {
@@ -844,8 +843,7 @@ public class ScopeTreeViewPanel extends JPanel implements Disposable {
             }
         }
 
-        @Nullable
-        private PsiDirectory getDirectory() {
+        private @Nullable PsiDirectory getDirectory() {
             TreePath[] selectedPaths = myTree.getSelectionPaths();
             if (selectedPaths != null) {
                 if (selectedPaths.length != 1) {
@@ -883,8 +881,7 @@ public class ScopeTreeViewPanel extends JPanel implements Disposable {
         }
 
         @Override
-        @Nullable
-        public PsiDirectory getOrChooseDirectory() {
+        public @Nullable PsiDirectory getOrChooseDirectory() {
             return DirectoryChooserUtil.getOrChooseDirectory(this);
         }
     }

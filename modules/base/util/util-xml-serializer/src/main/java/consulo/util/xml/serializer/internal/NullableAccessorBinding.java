@@ -22,8 +22,7 @@ import org.jspecify.annotations.Nullable;
  * @since 2026-03-10
  */
 public abstract class NullableAccessorBinding extends Binding {
-    @Nullable
-    protected final MutableAccessor myAccessor;
+    protected final @Nullable MutableAccessor myAccessor;
 
     public NullableAccessorBinding(@Nullable MutableAccessor accessor) {
         myAccessor = accessor;

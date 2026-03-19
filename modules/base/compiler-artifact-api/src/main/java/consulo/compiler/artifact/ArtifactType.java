@@ -40,8 +40,7 @@ public abstract class ArtifactType {
     private static final ExtensionPointCacheKey<ArtifactType, Map<String, ArtifactType>> GROUP =
         ExtensionPointCacheKey.groupBy("GroupArtifactType", ArtifactType::getId);
 
-    @Nullable
-    public static ArtifactType findById(String id) {
+    public static @Nullable ArtifactType findById(String id) {
         Map<String, ArtifactType> map = Application.get().getExtensionPoint(ArtifactType.class).getOrBuildCache(GROUP);
         return map.get(id);
     }
@@ -74,13 +73,11 @@ public abstract class ArtifactType {
     
     public abstract Image getIcon();
 
-    @Nullable
-    public String getDefaultPathFor(PackagingSourceItem sourceItem) {
+    public @Nullable String getDefaultPathFor(PackagingSourceItem sourceItem) {
         return getDefaultPathFor(sourceItem.getKindOfProducedElements());
     }
 
-    @Nullable
-    public abstract String getDefaultPathFor(PackagingElementOutputKind kind);
+    public abstract @Nullable String getDefaultPathFor(PackagingElementOutputKind kind);
 
     public boolean isSuitableItem(PackagingSourceItem sourceItem) {
         return true;
@@ -108,8 +105,7 @@ public abstract class ArtifactType {
     ) {
     }
 
-    @Nullable
-    public List<? extends PackagingElement<?>> getSubstitution(
+    public @Nullable List<? extends PackagingElement<?>> getSubstitution(
         Artifact artifact,
         PackagingElementResolvingContext context,
         ArtifactType parentType

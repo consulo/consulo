@@ -37,8 +37,7 @@ public interface ModelScopeItemPresenter {
 
   boolean isApplicable(ModelScopeItem model);
 
-  @Nullable
-  default ModelScopeItem tryCreate(Project project,
+  default @Nullable ModelScopeItem tryCreate(Project project,
                                    AnalysisScope scope,
                                    @Nullable Module module,
                                    @Nullable PsiElement context) {

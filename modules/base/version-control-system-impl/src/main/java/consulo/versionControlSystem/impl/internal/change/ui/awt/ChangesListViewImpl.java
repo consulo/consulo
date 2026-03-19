@@ -242,8 +242,7 @@ public class ChangesListViewImpl extends Tree implements ChangesListView, UiData
     return Stream.concat(changes, hijackedChanges).distinct();
   }
 
-  @Nullable
-  private static Change toHijackedChange(Project project, VirtualFile file) {
+  private static @Nullable Change toHijackedChange(Project project, VirtualFile file) {
     VcsCurrentRevisionProxy before = VcsCurrentRevisionProxy.create(file, project);
     if (before != null) {
       ContentRevision afterRevision = new CurrentContentRevision(VcsUtil.getFilePath(file));

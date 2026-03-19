@@ -34,8 +34,7 @@ public class CompletionResult {
     mySorter = sorter;
   }
 
-  @Nullable
-  public static CompletionResult wrap(LookupElement lookupElement, PrefixMatcher matcher, CompletionSorter sorter) {
+  public static @Nullable CompletionResult wrap(LookupElement lookupElement, PrefixMatcher matcher, CompletionSorter sorter) {
     if (matcher.prefixMatches(lookupElement)) {
       return new CompletionResult(lookupElement, matcher, sorter);
     }

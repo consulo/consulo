@@ -23,8 +23,7 @@ public abstract class RunAnythingItem {
      * @deprecated use {@link #createComponent(String, Icon, boolean, boolean)}
      */
     @Deprecated
-    @Nullable
-    public Component createComponent(boolean isSelected) {
+    public @Nullable Component createComponent(boolean isSelected) {
         return null;
     }
 

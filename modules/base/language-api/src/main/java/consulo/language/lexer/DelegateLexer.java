@@ -44,8 +44,7 @@ public class DelegateLexer extends LexerBase {
     }
 
     @Override
-    @Nullable
-    public IElementType getTokenType() {
+    public @Nullable IElementType getTokenType() {
         return myDelegate.getTokenType();
     }
 

@@ -35,13 +35,11 @@ public interface PsiFileWithStubSupport extends PsiFile {
   @Nullable
   StubTree getStubTree();
 
-  @Nullable
-  default StubTree calcStubTree() {
+  default @Nullable StubTree calcStubTree() {
     return null;
   }
 
-  @Nullable
-  default IStubFileElementType getElementTypeForStubBuilder() {
+  default @Nullable IStubFileElementType getElementTypeForStubBuilder() {
     return null;
   }
 

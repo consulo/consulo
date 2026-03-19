@@ -122,8 +122,7 @@ public class CommandLineProcessor {
     return project != null ? project : projects[0];
   }
 
-  @Nullable
-  private static File findProjectDirectoryOrFile(String path) {
+  private static @Nullable File findProjectDirectoryOrFile(String path) {
     File target = new File(path);
 
     while (target != null) {

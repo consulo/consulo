@@ -37,8 +37,7 @@ public class ShowIntentionsPassFactory implements TextEditorHighlightingPassFact
   }
 
   @Override
-  @Nullable
-  public TextEditorHighlightingPass createHighlightingPass(PsiFile file, Editor editor) {
+  public @Nullable TextEditorHighlightingPass createHighlightingPass(PsiFile file, Editor editor) {
     return new ShowIntentionsPass(file, editor, true);
   }
 }

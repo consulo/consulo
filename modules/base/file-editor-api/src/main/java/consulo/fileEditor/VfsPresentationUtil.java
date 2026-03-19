@@ -27,13 +27,11 @@ public class VfsPresentationUtil {
     return EditorTabPresentationUtil.getUniqueEditorTabTitle(project, file);
   }
 
-  @Nullable
-  public static ColorValue getFileTabBackgroundColor(Project project, VirtualFile file) {
+  public static @Nullable ColorValue getFileTabBackgroundColor(Project project, VirtualFile file) {
     return EditorTabPresentationUtil.getEditorTabBackgroundColor(project, file, null);
   }
 
-  @Nullable
-  public static ColorValue getFileBackgroundColor(Project project, VirtualFile file) {
+  public static @Nullable ColorValue getFileBackgroundColor(Project project, VirtualFile file) {
     return EditorTabPresentationUtil.getFileBackgroundColor(project, file);
   }
 }

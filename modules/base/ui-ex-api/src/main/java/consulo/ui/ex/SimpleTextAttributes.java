@@ -124,8 +124,7 @@ public final class SimpleTextAttributes {
     /**
      * @return background color
      */
-    @Nullable
-    public Color getBgColor() {
+    public @Nullable Color getBgColor() {
         return myBgColor;
     }
 
@@ -133,8 +132,7 @@ public final class SimpleTextAttributes {
      * @return wave color. The method can return <code>null</code>. <code>null</code>
      * means that color of wave is the same as foreground color.
      */
-    @Nullable
-    public Color getWaveColor() {
+    public @Nullable Color getWaveColor() {
         return myWaveColor;
     }
 

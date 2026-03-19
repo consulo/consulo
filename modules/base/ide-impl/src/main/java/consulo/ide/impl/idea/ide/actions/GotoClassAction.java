@@ -202,8 +202,7 @@ public class GotoClassAction extends GotoActionBase implements DumbAware {
         }
     }
 
-    @Nullable
-    private static StructureViewTreeElement findElement(StructureViewTreeElement node, PsiElement element, int hopes) {
+    private static @Nullable StructureViewTreeElement findElement(StructureViewTreeElement node, PsiElement element, int hopes) {
         Object value = node.getValue();
         if (value instanceof PsiElement psiElement) {
             if (psiElement.isEquivalentTo(element)) {

@@ -37,8 +37,7 @@ public class ResourceFileUtil {
   private ResourceFileUtil() {
   }
 
-  @Nullable
-  public static VirtualFile findResourceFile(String name, Module inModule) {
+  public static @Nullable VirtualFile findResourceFile(String name, Module inModule) {
     VirtualFile[] sourceRoots = ModuleRootManager.getInstance(inModule).getContentFolderFiles(LanguageContentFolderScopes.productionAndTest());
     ProjectFileIndex fileIndex = ProjectRootManager.getInstance(inModule.getProject()).getFileIndex();
     for (VirtualFile sourceRoot : sourceRoots) {
@@ -54,18 +53,15 @@ public class ResourceFileUtil {
     return null;
   }
 
-  @Nullable
-  public static VirtualFile findResourceFileInDependents(Module searchFromModule, String fileName) {
+  public static @Nullable VirtualFile findResourceFileInDependents(Module searchFromModule, String fileName) {
     return findResourceFileInScope(fileName, searchFromModule.getProject(), GlobalSearchScope.moduleWithDependenciesAndLibrariesScope(searchFromModule, true));
   }
 
-  @Nullable
-  public static VirtualFile findResourceFileInProject(Project project, String resourceName) {
+  public static @Nullable VirtualFile findResourceFileInProject(Project project, String resourceName) {
     return findResourceFileInScope(resourceName, project, GlobalSearchScope.projectScope(project));
   }
 
-  @Nullable
-  public static VirtualFile findResourceFileInScope(String resourceName,
+  public static @Nullable VirtualFile findResourceFileInScope(String resourceName,
                                                     Project project,
                                                     GlobalSearchScope scope) {
     int index = resourceName.lastIndexOf('/');

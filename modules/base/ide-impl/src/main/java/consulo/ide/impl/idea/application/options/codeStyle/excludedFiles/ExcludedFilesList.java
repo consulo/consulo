@@ -30,8 +30,7 @@ public class ExcludedFilesList extends JBList<FileSetDescriptor> {
 
   private final ToolbarDecorator myFileListDecorator;
   private DefaultListModel<FileSetDescriptor> myModel;
-  @Nullable
-  private CodeStyleSchemesModel mySchemesModel;
+  private @Nullable CodeStyleSchemesModel mySchemesModel;
 
   public ExcludedFilesList() {
     super();
@@ -214,8 +213,7 @@ public class ExcludedFilesList extends JBList<FileSetDescriptor> {
     return mySchemesModel.isProjectScheme(scheme) ? mySchemesModel.getProject() : ProjectManager.getInstance().getDefaultProject();
   }
 
-  @Nullable
-  private FileSetDescriptor findDescriptor(String name) {
+  private @Nullable FileSetDescriptor findDescriptor(String name) {
     for (int i = 0; i < myModel.size(); i++) {
       if (name.equals(myModel.get(i).getName())) return myModel.get(i);
     }

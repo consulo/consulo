@@ -64,8 +64,7 @@ public class GraphCommitCellRenderer extends TypeSafeTableCellRenderer<GraphComm
     return myComponent;
   }
 
-  @Nullable
-  public JComponent getTooltip(Object value, Point point, int row) {
+  public @Nullable JComponent getTooltip(Object value, Point point, int row) {
     GraphCommitCell cell = getValue(value);
     Collection<VcsRef> refs = cell.getRefsToThisCommit();
     if (!refs.isEmpty()) {

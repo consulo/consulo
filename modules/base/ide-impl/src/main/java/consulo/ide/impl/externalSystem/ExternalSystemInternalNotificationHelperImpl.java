@@ -161,8 +161,7 @@ public class ExternalSystemInternalNotificationHelperImpl implements ExternalSys
         return errorTreeView;
     }
 
-    @Nullable
-    private Content findContent(Pair<NotificationSource, ProjectSystemId> contentIdPair, String contentDisplayName) {
+    private @Nullable Content findContent(Pair<NotificationSource, ProjectSystemId> contentIdPair, String contentDisplayName) {
         Content targetContent = null;
         MessageView messageView = myProject.getInstance(MessageView.class);
         for (Content content : messageView.getContentManager().getContents()) {

@@ -310,8 +310,7 @@ public class SearchableOptionsRegistrarImpl extends SearchableOptionsRegistrar {
     }
 
 
-    @Nullable
-    public synchronized Set<OptionDescription> getAcceptableDescriptions(String prefix) {
+    public synchronized @Nullable Set<OptionDescription> getAcceptableDescriptions(String prefix) {
         if (prefix == null) {
             return null;
         }
@@ -341,8 +340,7 @@ public class SearchableOptionsRegistrarImpl extends SearchableOptionsRegistrar {
     }
 
     @Override
-    @Nullable
-    public String getInnerPath(SearchableConfigurable configurable, String option) {
+    public @Nullable String getInnerPath(SearchableConfigurable configurable, String option) {
         loadHugeFilesIfNecessary();
         Set<OptionDescription> path = null;
         Set<String> words = getProcessedWordsWithoutStemming(option);

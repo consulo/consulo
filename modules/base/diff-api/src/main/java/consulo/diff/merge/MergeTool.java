@@ -76,15 +76,12 @@ public interface MergeTool {
     }
 
     class ToolbarComponents {
-        @Nullable
-        public List<AnAction> toolbarActions;
-        @Nullable
-        public JComponent statusPanel;
+        public @Nullable List<AnAction> toolbarActions;
+        public @Nullable JComponent statusPanel;
 
         /**
          * return false if merge window should be prevented from closing and canceling resolve.
          */
-        @Nullable
-        public BooleanSupplier closeHandler;
+        public @Nullable BooleanSupplier closeHandler;
     }
 }

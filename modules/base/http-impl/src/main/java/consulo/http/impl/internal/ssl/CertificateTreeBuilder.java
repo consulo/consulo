@@ -117,8 +117,7 @@ public class CertificateTreeBuilder extends AbstractTreeBuilder {
         return selected;
     }
 
-    @Nullable
-    public X509Certificate getFirstSelectedCertificate(boolean addFromOrganization) {
+    public @Nullable X509Certificate getFirstSelectedCertificate(boolean addFromOrganization) {
         Set<X509Certificate> certificates = getSelectedCertificates(addFromOrganization);
         return certificates.isEmpty() ? null : certificates.iterator().next();
     }

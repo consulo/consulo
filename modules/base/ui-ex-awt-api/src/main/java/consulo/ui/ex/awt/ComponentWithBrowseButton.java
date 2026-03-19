@@ -237,8 +237,7 @@ public class ComponentWithBrowseButton<Comp extends JComponent> extends JPanel i
         }
     }
 
-    @Nullable
-    public JButton getButton() {
+    public @Nullable JButton getButton() {
         return myBrowseButton;
     }
 
@@ -329,8 +328,7 @@ public class ComponentWithBrowseButton<Comp extends JComponent> extends JPanel i
             );
         }
 
-        @Nullable
-        protected ComponentManager getProject() {
+        protected @Nullable ComponentManager getProject() {
             return myProject;
         }
 
@@ -355,8 +353,7 @@ public class ComponentWithBrowseButton<Comp extends JComponent> extends JPanel i
             FileChooser.chooseFile(fileChooserDescriptor, getProject(), myTextComponent, getInitialFile()).doWhenDone(this::onFileChosen);
         }
 
-        @Nullable
-        protected VirtualFile getInitialFile() {
+        protected @Nullable VirtualFile getInitialFile() {
             String directoryName = getComponentText();
             if (StringUtil.isEmptyOrSpaces(directoryName)) {
                 return null;

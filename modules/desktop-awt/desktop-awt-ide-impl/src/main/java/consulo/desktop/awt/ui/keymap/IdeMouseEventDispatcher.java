@@ -300,8 +300,7 @@ public final class IdeMouseEventDispatcher {
         myRootPane2BlockedId.put(root, new BlockState(e.getID(), blockMode));
     }
 
-    @Nullable
-    private static JRootPane findRoot(MouseEvent e) {
+    private static @Nullable JRootPane findRoot(MouseEvent e) {
         Component parent = UIUtil.findUltimateParent(e.getComponent());
         JRootPane root = null;
 
@@ -335,14 +334,12 @@ public final class IdeMouseEventDispatcher {
         }
     }
 
-    @Nullable
-    private static Component findDefaultFocusableComponent(@Nullable Component component) {
+    private static @Nullable Component findDefaultFocusableComponent(@Nullable Component component) {
         Container provider = findFocusTraversalPolicyProvider(component);
         return provider == null ? null : provider.getFocusTraversalPolicy().getDefaultComponent(provider);
     }
 
-    @Nullable
-    private static Container findFocusTraversalPolicyProvider(@Nullable Component component) {
+    private static @Nullable Container findFocusTraversalPolicyProvider(@Nullable Component component) {
         Container container = component == null || component instanceof Container ? (Container) component : component.getParent();
         while (container != null) {
             // ensure that container is focus cycle root and provides focus traversal policy

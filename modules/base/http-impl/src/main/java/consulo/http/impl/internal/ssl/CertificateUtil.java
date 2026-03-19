@@ -51,8 +51,7 @@ public class CertificateUtil {
     private CertificateUtil() {
     }
 
-    @Nullable
-    public static X509Certificate loadX509Certificate(String path) {
+    public static @Nullable X509Certificate loadX509Certificate(String path) {
         try {
             try (InputStream stream = new FileInputStream(path)) {
                 return (X509Certificate)ourFactory.generateCertificate(stream);

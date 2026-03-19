@@ -50,13 +50,11 @@ public class PathReference {
     return trimPath(myPath);
   }
 
-  @Nullable
-  public Image getIcon() {
+  public @Nullable Image getIcon() {
     return myIcon.get();
   }
 
-  @Nullable
-  public PsiElement resolve() {
+  public @Nullable PsiElement resolve() {
     return null;
   }
 

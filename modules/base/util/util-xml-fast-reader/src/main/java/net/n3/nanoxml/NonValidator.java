@@ -94,8 +94,7 @@ public class NonValidator
     *
     * @return the entity resolver.
     */
-   @Nullable
-   public IXMLEntityResolver getParameterEntityResolver()
+   public @Nullable IXMLEntityResolver getParameterEntityResolver()
    {
       return this.parameterEntityResolver;
    }

@@ -427,8 +427,7 @@ public class MergingUpdateQueue implements Runnable, Disposable, Activatable {
     }
   }
 
-  @Nullable
-  private ModalityState getMergerModalityState() {
+  private @Nullable ModalityState getMergerModalityState() {
     return myModalityStateComponent == ANY_COMPONENT ? null : getModalityState();
   }
 

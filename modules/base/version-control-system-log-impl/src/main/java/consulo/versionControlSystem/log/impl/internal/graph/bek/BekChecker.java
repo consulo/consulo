@@ -33,8 +33,7 @@ public class BekChecker {
     }
   }
 
-  @Nullable
-  public static Pair<Integer, Integer> findReversedEdge(LinearGraph linearGraph) {
+  public static @Nullable Pair<Integer, Integer> findReversedEdge(LinearGraph linearGraph) {
     for (int i = 0; i < linearGraph.nodesCount(); i++) {
       for (int downNode : getDownNodes(linearGraph, i)) {
         if (downNode <= i) {

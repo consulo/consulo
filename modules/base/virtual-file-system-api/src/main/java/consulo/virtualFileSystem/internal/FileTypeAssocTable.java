@@ -104,8 +104,7 @@ public class FileTypeAssocTable<T> {
     return extensionMappings.entrySet().removeIf(entry -> entry.getValue() == type) || changed;
   }
 
-  @Nullable
-  public T findAssociatedFileType(CharSequence fileName) {
+  public @Nullable T findAssociatedFileType(CharSequence fileName) {
     if (!myExactFileNameMappings.isEmpty()) {
       T t = myExactFileNameMappings.get(fileName);
       if (t != null) return t;
@@ -125,8 +124,7 @@ public class FileTypeAssocTable<T> {
     return findByExtension(FileUtil.getExtension(fileName));
   }
 
-  @Nullable
-  public T findAssociatedFileType(FileNameMatcher matcher) {
+  public @Nullable T findAssociatedFileType(FileNameMatcher matcher) {
     if (matcher instanceof ExtensionFileNameMatcherImpl) {
       return findByExtension(((ExtensionFileNameMatcherImpl)matcher).getExtension());
     }

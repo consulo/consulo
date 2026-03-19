@@ -63,8 +63,7 @@ public class VcsUserUtil {
     return email;
   }
 
-  @Nullable
-  public static String getNameFromEmail(String email) {
+  public static @Nullable String getNameFromEmail(String email) {
     int at = email.indexOf('@');
     String emailNamePart = null;
     if (at > 0) {
@@ -82,8 +81,7 @@ public class VcsUserUtil {
     return nameToLowerCase(name);
   }
 
-  @Nullable
-  public static Couple<String> getFirstAndLastName(String name) {
+  public static @Nullable Couple<String> getFirstAndLastName(String name) {
     Matcher matcher = NAME_PATTERN.matcher(name);
     if (matcher.matches()) {
       return Couple.of(matcher.group(1), matcher.group(2));

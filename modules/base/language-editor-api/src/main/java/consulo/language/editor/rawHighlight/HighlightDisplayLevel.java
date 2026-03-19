@@ -58,12 +58,10 @@ public class HighlightDisplayLevel {
 
     public static final HighlightDisplayLevel NON_SWITCHABLE_ERROR = new HighlightDisplayLevel(HighlightSeverity.ERROR);
 
-    @Nullable
-    private Image myIcon;
+    private @Nullable Image myIcon;
     private final HighlightSeverity mySeverity;
 
-    @Nullable
-    public static HighlightDisplayLevel find(String name) {
+    public static @Nullable HighlightDisplayLevel find(String name) {
         for (Map.Entry<HighlightSeverity, HighlightDisplayLevel> entry : ourMap.entrySet()) {
             HighlightSeverity severity = entry.getKey();
             HighlightDisplayLevel displayLevel = entry.getValue();
@@ -98,8 +96,7 @@ public class HighlightDisplayLevel {
         return mySeverity.getName();
     }
 
-    @Nullable
-    public Image getIcon() {
+    public @Nullable Image getIcon() {
         return myIcon;
     }
 

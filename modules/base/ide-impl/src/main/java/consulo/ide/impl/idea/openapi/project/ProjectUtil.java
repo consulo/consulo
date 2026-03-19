@@ -60,8 +60,7 @@ public class ProjectUtil {
     return consulo.project.util.ProjectUtil.getProjectCachePath(project, baseDir, forceNameUse, hashSeparator);
   }
 
-  @Nullable
-  public static String getProjectLocationString(Project project) {
+  public static @Nullable String getProjectLocationString(Project project) {
     return UserHomeFileUtil.getLocationRelativeToUserHome(project.getBasePath());
   }
 
@@ -134,8 +133,7 @@ public class ProjectUtil {
     return calcRelativeToProjectPath(file, project, true);
   }
 
-  @Nullable
-  public static Project guessProjectForFile(VirtualFile file) {
+  public static @Nullable Project guessProjectForFile(VirtualFile file) {
     return ProjectLocator.getInstance().guessProjectForFile(file);
   }
 

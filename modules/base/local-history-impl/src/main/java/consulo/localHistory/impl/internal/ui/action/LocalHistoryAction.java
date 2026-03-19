@@ -88,18 +88,15 @@ public abstract class LocalHistoryAction extends AnAction implements DumbAware {
     protected void actionPerformed(Project p, IdeaGateway gw, VirtualFile f, AnActionEvent e) {
     }
 
-    @Nullable
-    protected LocalHistoryFacade getVcs() {
+    protected @Nullable LocalHistoryFacade getVcs() {
         return LocalHistoryImpl.getInstanceImpl().getFacade();
     }
 
-    @Nullable
-    protected IdeaGateway getGateway() {
+    protected @Nullable IdeaGateway getGateway() {
         return LocalHistoryImpl.getInstanceImpl().getGateway();
     }
 
-    @Nullable
-    protected VirtualFile getFile(AnActionEvent e) {
+    protected @Nullable VirtualFile getFile(AnActionEvent e) {
         return Streams.getIfSingle(e.getData(VcsDataKeys.VIRTUAL_FILE_STREAM));
     }
 }

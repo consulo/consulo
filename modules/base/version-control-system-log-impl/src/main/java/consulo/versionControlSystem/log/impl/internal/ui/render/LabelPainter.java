@@ -65,8 +65,7 @@ public class LabelPainter {
     private int myWidth = 0;
     
     private Color myBackground = UIUtil.getTableBackground();
-    @Nullable
-    private Color myGreyBackground = null;
+    private @Nullable Color myGreyBackground = null;
     
     private Color myForeground = UIUtil.getTableForeground();
     private boolean myCompact;
@@ -78,8 +77,7 @@ public class LabelPainter {
         myShowTagNames = showTagNames;
     }
 
-    @Nullable
-    public static VcsLogRefManager getRefManager(VcsLogDataImpl logData, Collection<VcsRef> references) {
+    public static @Nullable VcsLogRefManager getRefManager(VcsLogDataImpl logData, Collection<VcsRef> references) {
         if (!references.isEmpty()) {
             VirtualFile root = ObjectUtil.assertNotNull(ContainerUtil.getFirstItem(references)).getRoot();
             return logData.getLogProvider(root).getReferenceManager();
@@ -269,8 +267,7 @@ public class LabelPainter {
         return text;
     }
 
-    @Nullable
-    private static Color calculateGreyBackground(List<RefGroup> refGroups,
+    private static @Nullable Color calculateGreyBackground(List<RefGroup> refGroups,
                                                  Color background,
                                                  boolean isSelected,
                                                  boolean isCompact) {

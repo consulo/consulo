@@ -85,8 +85,7 @@ public class ProjectUtil {
         return name + hashSeparator + locationHash;
     }
 
-    @Nullable
-    public static String getProjectLocationString(Project project) {
+    public static @Nullable String getProjectLocationString(Project project) {
         return UserHomeFileUtil.getLocationRelativeToUserHome(project.getBasePath());
     }
 

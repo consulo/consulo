@@ -42,8 +42,7 @@ public abstract class ProgressableTextEditorHighlightingPass extends TextEditorH
   private volatile long myNextChunkThreshold; // the value myProgressCount should exceed to generate next fireProgressAdvanced event
   private final String myPresentableName;
   protected final PsiFile myFile;
-  @Nullable
-  private final Editor myEditor;
+  private final @Nullable Editor myEditor;
   protected final TextRange myRestrictRange;
   protected final HighlightInfoProcessor myHighlightInfoProcessor;
   protected HighlightingSession myHighlightingSession;
@@ -138,8 +137,7 @@ public abstract class ProgressableTextEditorHighlightingPass extends TextEditorH
   }
 
   // null means do not show progress
-  @Nullable
-  public String getPresentableName() {
+  public @Nullable String getPresentableName() {
     return myPresentableName;
   }
 

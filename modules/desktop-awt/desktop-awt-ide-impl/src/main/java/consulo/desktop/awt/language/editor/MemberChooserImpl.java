@@ -406,8 +406,7 @@ public class MemberChooserImpl<T extends ClassMember> extends DialogWrapper impl
             myTree,
             new Function<>() {
                 @Override
-                @Nullable
-                public String apply(TreePath path) {
+                public @Nullable String apply(TreePath path) {
                     ElementNode lastPathComponent = (ElementNode) path.getLastPathComponent();
                     if (lastPathComponent == null) {
                         return null;
@@ -466,19 +465,16 @@ public class MemberChooserImpl<T extends ClassMember> extends DialogWrapper impl
         return myTree;
     }
 
-    @Nullable
-    private SequencedSet<T> getSelectedElementsList() {
+    private @Nullable SequencedSet<T> getSelectedElementsList() {
         return getExitCode() == OK_EXIT_CODE ? mySelectedElements : null;
     }
 
-    @Nullable
-    public List<T> getSelectedElements() {
+    public @Nullable List<T> getSelectedElements() {
         SequencedSet<T> list = getSelectedElementsList();
         return list == null ? null : new ArrayList<>(list);
     }
 
-    @Nullable
-    public T[] getSelectedElements(T[] a) {
+    public @Nullable T[] getSelectedElements(T[] a) {
         SequencedSet<T> list = getSelectedElementsList();
         if (list == null) {
             return null;

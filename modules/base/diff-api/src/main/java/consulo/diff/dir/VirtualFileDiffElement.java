@@ -84,8 +84,7 @@ public class VirtualFileDiffElement extends DiffElement<VirtualFile> {
   }
 
   @Override
-  @Nullable
-  public Navigatable getNavigatable(@Nullable Project project) {
+  public @Nullable Navigatable getNavigatable(@Nullable Project project) {
     if (project == null || project.isDefault() || !myFile.isValid()) return null;
     return OpenFileDescriptorFactory.getInstance(project).newBuilder(myFile).build();
   }
@@ -135,8 +134,7 @@ public class VirtualFileDiffElement extends DiffElement<VirtualFile> {
     };
   }
 
-  @Nullable
-  protected VirtualFileDiffElement createElement(VirtualFile file) {
+  protected @Nullable VirtualFileDiffElement createElement(VirtualFile file) {
     return new VirtualFileDiffElement(file);
   }
 

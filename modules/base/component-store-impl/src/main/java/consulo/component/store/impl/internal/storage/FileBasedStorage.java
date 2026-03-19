@@ -27,8 +27,7 @@ public interface FileBasedStorage {
     
     String getFilePath();
 
-    @Nullable
-    default VirtualFile getVirtualFile() {
+    default @Nullable VirtualFile getVirtualFile() {
         return LocalFileSystem.getInstance().findFileByPath(getFilePath());
     }
 }

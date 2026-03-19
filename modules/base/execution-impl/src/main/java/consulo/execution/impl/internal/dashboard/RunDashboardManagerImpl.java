@@ -293,8 +293,7 @@ public final class RunDashboardManagerImpl implements RunDashboardManager, Persi
         return myTypes.contains(runConfiguration.getType().getId()) && !myHiddenConfigurations.contains(runConfiguration);
     }
 
-    @Nullable
-    private static RunConfiguration getBaseConfiguration(RunConfiguration runConfiguration) {
+    private static @Nullable RunConfiguration getBaseConfiguration(RunConfiguration runConfiguration) {
         return ExecutionManagerImpl.getDelegatedRunProfile(runConfiguration) instanceof RunConfiguration runProfile ? runProfile : null;
     }
 

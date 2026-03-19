@@ -25,8 +25,7 @@ public abstract class CustomizeColoredTreeCellRenderer {
   public abstract void customizeCellRenderer(SimpleColoredComponent renderer, JTree tree, Object value, boolean selected,
                                              boolean expanded, boolean leaf, int row, boolean hasFocus);
 
-  @Nullable
-  public Object getTag() {
+  public @Nullable Object getTag() {
     return null;
   }
 }

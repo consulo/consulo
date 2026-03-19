@@ -38,8 +38,7 @@ import java.util.List;
  */
 public class SMTRunnerConsoleView extends BaseTestsOutputConsoleView {
     private SMTestRunnerResultsForm myResultsViewer;
-    @Nullable
-    private final String mySplitterProperty;
+    private final @Nullable String mySplitterProperty;
     private final List<AttachToProcessListener> myAttachToProcessListeners = Lists.newLockFreeCopyOnWriteList();
 
     /**

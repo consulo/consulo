@@ -31,10 +31,8 @@ import org.jspecify.annotations.Nullable;
 import javax.swing.*;
 
 public class UnknownFileTypeDiffRequest extends ComponentDiffRequest {
-  @Nullable
-  private final String myFileName;
-  @Nullable
-  private final String myTitle;
+  private final @Nullable String myFileName;
+  private final @Nullable String myTitle;
 
   public UnknownFileTypeDiffRequest(VirtualFile file, @Nullable String title) {
     this(file.getName(), title);
@@ -66,8 +64,7 @@ public class UnknownFileTypeDiffRequest extends ComponentDiffRequest {
     return JBUI.Panels.simplePanel(label).withBorder(JBUI.Borders.empty(5));
   }
 
-  @Nullable
-  public String getFileName() {
+  public @Nullable String getFileName() {
     return myFileName;
   }
 

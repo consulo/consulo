@@ -61,8 +61,7 @@ class FormattingRangesExtender {
     return range;
   }
 
-  @Nullable
-  private TextRange trimSpaces(TextRange range) {
+  private @Nullable TextRange trimSpaces(TextRange range) {
     int startOffset = range.getStartOffset();
     int endOffset = range.getEndOffset();
     startOffset = CharArrayUtil.shiftForward(myDocument.getCharsSequence(), startOffset, endOffset, " /t");

@@ -126,8 +126,7 @@ public class GotoActionAction extends GotoActionBase implements DumbAware {
                             }
                         }
 
-                        @Nullable
-                        private String getText(@Nullable Object o) {
+                        private @Nullable String getText(@Nullable Object o) {
                             if (o instanceof GotoActionModel.MatchedValue mv) {
                                 if (UISettings.getInstance().getShowInplaceCommentsInternal()
                                     && mv.value instanceof GotoActionModel.ActionWrapper actionWrapper) {
@@ -163,8 +162,7 @@ public class GotoActionAction extends GotoActionBase implements DumbAware {
                     });
                 }
 
-                @Nullable
-                private String getValueDescription(@Nullable Object value) {
+                private @Nullable String getValueDescription(@Nullable Object value) {
                     if (value instanceof GotoActionModel.MatchedValue mv
                         && mv.value instanceof GotoActionModel.ActionWrapper actionWrapper) {
                         AnAction action = actionWrapper.getAction();

@@ -42,8 +42,7 @@ public abstract class SearchableOptionsRegistrar {
                                                      String option,
                                                      Project project);
 
-    @Nullable
-    public abstract String getInnerPath(SearchableConfigurable configurable, String option);
+    public abstract @Nullable String getInnerPath(SearchableConfigurable configurable, String option);
 
     public abstract void addOption(String option, String path, String hit, String configurableId, String configurableDisplayName);
 

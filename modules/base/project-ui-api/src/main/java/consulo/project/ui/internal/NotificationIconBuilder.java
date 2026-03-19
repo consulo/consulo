@@ -45,8 +45,7 @@ public class NotificationIconBuilder {
     return PlatformIconGroup.toolwindowsNotificationsnew();
   }
 
-  @Nullable
-  private static NotificationType getMaximumType(List<NotificationType> notifications) {
+  private static @Nullable NotificationType getMaximumType(List<NotificationType> notifications) {
     NotificationType result = null;
     for (NotificationType notificationType : notifications) {
       if (NotificationType.ERROR == notificationType) {

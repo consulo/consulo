@@ -30,8 +30,7 @@ public class ThreadDump {
   /**
    * @return state of the AWT thread from the dump
    */
-  @Nullable
-  public StackTraceElement[] getEDTStackTrace() {
+  public @Nullable StackTraceElement[] getEDTStackTrace() {
     return myEdtStack;
   }
 

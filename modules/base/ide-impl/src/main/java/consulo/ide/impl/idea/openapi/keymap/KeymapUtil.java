@@ -280,8 +280,7 @@ public class KeymapUtil {
         return false;
     }
 
-    @Nullable
-    public static KeyStroke getKeyStroke(ShortcutSet shortcutSet) {
+    public static @Nullable KeyStroke getKeyStroke(ShortcutSet shortcutSet) {
         return ShortcutUtil.getKeyStroke(shortcutSet);
     }
 
