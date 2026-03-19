@@ -5,6 +5,7 @@ import consulo.disposer.Disposer;
 import consulo.execution.RuntimeConfigurationException;
 import consulo.execution.RuntimeConfigurationWarning;
 import consulo.execution.configuration.RuntimeConfigurationError;
+import consulo.localize.LocalizeValue;
 import consulo.remoteServer.CloudBundle;
 import consulo.remoteServer.ServerType;
 import consulo.remoteServer.configuration.RemoteServer;
@@ -128,7 +129,7 @@ public class RemoteServerComboWithAutoDetect<S extends ServerConfiguration> exte
             }
         }
 
-        private void connectionTested(boolean wasConnected, @SuppressWarnings("unused") String errorStatus) {
+        private void connectionTested(boolean wasConnected, LocalizeValue errorStatus) {
             assert myLastStartedTestConnectionMillis > 0;
             waitABit(2000);
 

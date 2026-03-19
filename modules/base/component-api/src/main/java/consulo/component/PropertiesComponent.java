@@ -15,6 +15,7 @@
  */
 package consulo.component;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.StringUtil;
 import org.jspecify.annotations.Nullable;
@@ -87,7 +88,6 @@ public interface PropertiesComponent {
         return getBoolean(name, false);
     }
 
-    
     default String getValue(String name, String defaultValue) {
         if (!isValueSet(name)) {
             return defaultValue;
@@ -125,21 +125,16 @@ public interface PropertiesComponent {
         }
     }
 
-    @SuppressWarnings("unused")
-    /**
-     * @deprecated Use {@link #getInt(String, int)}
-     * Init was never performed and in any case is not recommended.
-     */
     @Deprecated
+    @DeprecationInfo("Use {@link #getInt(String, int)}. Init was never performed and in any case is not recommended.")
+    @SuppressWarnings("unused")
     default int getOrInitInt(String name, int defaultValue) {
         return getInt(name, defaultValue);
     }
 
     @Deprecated
-    /**
-     * @deprecated Use {@link #getValue(String, String)}
-     */
-    default String getOrInit(String name, String defaultValue) {
+    @DeprecationInfo("Use {@link #getValue(String, String)}")
+    default @Nullable String getOrInit(String name, String defaultValue) {
         if (!isValueSet(name)) {
             setValue(name, defaultValue);
             return defaultValue;

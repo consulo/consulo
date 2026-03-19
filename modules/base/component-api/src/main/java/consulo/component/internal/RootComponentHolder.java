@@ -19,20 +19,26 @@ import consulo.component.ComponentManager;
 
 import org.jspecify.annotations.Nullable;
 
+import java.util.Objects;
+
 /**
  * @author VISTALL
- * @since 28/12/2021
+ * @since 2021-12-28
  *
  * This is holder of Application instance for ExtensionPointName (deprecated methods without ComponentManager)
  */
 public class RootComponentHolder {
-  private static ComponentManager ourRootComponent;
+  private static @Nullable ComponentManager ourRootComponent;
 
   public static void setRootComponent(@Nullable ComponentManager rootComponent) {
     ourRootComponent = rootComponent;
   }
 
-  public static ComponentManager getRootComponent() {
+  public static @Nullable ComponentManager getRootComponent() {
     return ourRootComponent;
+  }
+
+  public static ComponentManager get() {
+    return Objects.requireNonNull(ourRootComponent);
   }
 }

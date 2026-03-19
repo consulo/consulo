@@ -42,19 +42,21 @@ public class BuildNumber implements Comparable<BuildNumber> {
     return builder.toString();
   }
 
-  public static BuildNumber fromString(String version) {
+  public static @Nullable BuildNumber fromString(String version) {
     return fromString(version, null);
   }
 
-  public static BuildNumber fromString(String version, @Nullable String name) {
-    if (version == null) return null;
+  public static @Nullable BuildNumber fromString(@Nullable String version, @Nullable String name) {
+    if (version == null) {
+      return null;
+    }
 
-    int buildNumber = parseBuildNumber(version,  name);
+    int buildNumber = parseBuildNumber(version, name);
 
     return new BuildNumber(buildNumber);
   }
 
-  private static int parseBuildNumber(String version, String name) {
+  private static int parseBuildNumber(String version, @Nullable String name) {
     if (SNAPSHOT.equals(version)) {
       return Integer.MAX_VALUE;
     }
@@ -66,7 +68,7 @@ public class BuildNumber implements Comparable<BuildNumber> {
     }
   }
 
-  public static BuildNumber fallback() {
+  public static @Nullable BuildNumber fallback() {
     return fromString(SNAPSHOT);
   }
 
@@ -85,20 +87,21 @@ public class BuildNumber implements Comparable<BuildNumber> {
   }
 
   @Override
-  public boolean equals(Object o) {
-    if (this == o) return true;
-    if (o == null || getClass() != o.getClass()) return false;
+  public boolean equals(@Nullable Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
 
-    BuildNumber that = (BuildNumber)o;
-    if (myBuildNumber != that.myBuildNumber) return false;
-    return true;
+    BuildNumber that = (BuildNumber) o;
+    return myBuildNumber == that.myBuildNumber;
   }
 
   @Override
   public int hashCode() {
-    int result = 0;
-    result = 31 * result + myBuildNumber;
-    return result;
+    return myBuildNumber;
   }
 
   public boolean isSnapshot() {

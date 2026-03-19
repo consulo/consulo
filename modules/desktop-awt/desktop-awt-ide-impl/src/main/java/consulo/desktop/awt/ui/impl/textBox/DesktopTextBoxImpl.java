@@ -94,12 +94,14 @@ public class DesktopTextBoxImpl extends DocumentSwingValidator<String, DesktopTe
     @Override
     protected MyJBTextField createComponent() {
         MyJBTextField field = new MyJBTextField();
+        field.setText(myText);
+
         TextFieldPlaceholderFunction.install(field);
 
         addDocumentListenerForValidator(field.getDocument());
 
         field.getDocument().addDocumentListener(new Listener(this));
-        field.setText(myText);
+
         return field;
     }
 

@@ -16,6 +16,7 @@
 package consulo.container;
 
 import consulo.container.plugin.PluginId;
+import org.jspecify.annotations.Nullable;
 
 /**
  * <p>Represents an internal error caused by a plugin. It may happen if the plugin's code fails with an exception,
@@ -29,7 +30,7 @@ import consulo.container.plugin.PluginId;
 public class PluginException extends RuntimeException {
   private final PluginId myPluginId;
 
-  public PluginException(String message, Throwable cause, PluginId pluginId) {
+  public PluginException(String message, @Nullable Throwable cause, PluginId pluginId) {
     super(message, cause);
     myPluginId = pluginId;
   }

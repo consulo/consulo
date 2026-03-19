@@ -21,6 +21,7 @@ import org.jdom.Element;
 
 import org.jspecify.annotations.Nullable;
 import java.lang.reflect.TypeVariable;
+import java.util.Objects;
 
 /**
  * @author nik
@@ -29,13 +30,13 @@ public class ComponentSerializationUtil {
   @SuppressWarnings("unchecked")
   public static <T> Class<T> getStateClass(Class<? extends PersistentStateComponent> aClass) {
     TypeVariable<Class<PersistentStateComponent>> variable = PersistentStateComponent.class.getTypeParameters()[0];
-    return (Class<T>)ReflectionUtil.getRawType(ReflectionUtil.resolveVariableInHierarchy(variable, aClass));
+    return (Class<T>)ReflectionUtil.getRawType(Objects.requireNonNull(ReflectionUtil.resolveVariableInHierarchy(variable, aClass)));
   }
 
   public static <S> void loadComponentState(PersistentStateComponent<S> configuration, @Nullable Element element) {
     if (element != null) {
       Class<S> stateClass = getStateClass(configuration.getClass());
-      configuration.loadState(XmlSerializer.deserialize(element, stateClass));
+      configuration.loadState(Objects.requireNonNull(XmlSerializer.deserialize(element, stateClass)));
     }
   }
 }

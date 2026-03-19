@@ -15,6 +15,7 @@
  */
 package consulo.component.internal.inject;
 
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -24,24 +25,22 @@ public class LazyInjectingKey<T> implements InjectingKey<T> {
   private String myClassName;
   private ClassLoader myClassLoader;
 
-  private Class<T> myResolvedClass;
+  private @Nullable Class<T> myResolvedClass = null;
 
   LazyInjectingKey(String className, ClassLoader classLoader) {
     myClassName = className;
     myClassLoader = classLoader;
   }
 
-  
   @Override
   public String getTargetClassName() {
     return myClassName;
   }
 
-  
   @Override
   @SuppressWarnings("unchecked")
   public Class<T> getTargetClass() {
-    if(myResolvedClass != null) {
+    if (myResolvedClass != null) {
       return myResolvedClass;
     }
     try {

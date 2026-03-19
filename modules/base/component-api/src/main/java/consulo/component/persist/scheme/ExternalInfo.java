@@ -19,36 +19,37 @@ import org.jspecify.annotations.Nullable;
 
 public final class ExternalInfo {
   // we keep it to detect rename
-  private String myPreviouslySavedName;
-  private String myCurrentFileName;
+  private @Nullable String myPreviouslySavedName = null;
+  private @Nullable String myCurrentFileName = null;
 
   private int myContentHash;
 
   private boolean myRemote;
 
-  @SuppressWarnings({"UnusedParameters", "unused"})
   @Deprecated
+  @SuppressWarnings({"UnusedParameters", "unused"})
   public void setIsImported(boolean isImported) {
   }
 
-  @SuppressWarnings("unused")
   @Deprecated
+  @SuppressWarnings("unused")
   public void setOriginalPath(String originalPath) {
   }
 
-  @SuppressWarnings("unused")
   @Deprecated
+  @SuppressWarnings("unused")
   public boolean isIsImported() {
     return false;
   }
 
-  @SuppressWarnings("unused")
   @Deprecated
+  @Nullable
+  @SuppressWarnings("unused")
   public String getOriginalPath() {
     return null;
   }
 
-  public String getCurrentFileName() {
+  public @Nullable String getCurrentFileName() {
     return myCurrentFileName;
   }
 
@@ -60,7 +61,7 @@ public final class ExternalInfo {
     myCurrentFileName = externalInfo.myCurrentFileName;
   }
 
-  public String getPreviouslySavedName() {
+  public @Nullable String getPreviouslySavedName() {
     return myPreviouslySavedName;
   }
 

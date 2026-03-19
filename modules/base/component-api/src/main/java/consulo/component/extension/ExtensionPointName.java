@@ -66,7 +66,7 @@ public class ExtensionPointName<T> {
   
   @Deprecated
   public T[] getExtensions() {
-    return getExtensions(RootComponentHolder.getRootComponent());
+    return getExtensions(RootComponentHolder.get());
   }
 
   
@@ -76,7 +76,7 @@ public class ExtensionPointName<T> {
   }
 
   public boolean hasAnyExtensions() {
-    return hasAnyExtensions(RootComponentHolder.getRootComponent());
+    return hasAnyExtensions(RootComponentHolder.get());
   }
 
   public boolean hasAnyExtensions(ComponentManager manager) {
@@ -93,7 +93,7 @@ public class ExtensionPointName<T> {
   @Deprecated
   @DeprecationInfo("Use with component manager")
   public List<T> getExtensionList() {
-    return getExtensionList(RootComponentHolder.getRootComponent());
+    return getExtensionList(RootComponentHolder.get());
   }
 
   
@@ -102,7 +102,7 @@ public class ExtensionPointName<T> {
   }
 
   public @Nullable <V extends T> V findExtension(Class<V> instanceOf) {
-    return findExtension(RootComponentHolder.getRootComponent(), instanceOf);
+    return findExtension(RootComponentHolder.get(), instanceOf);
   }
 
   public @Nullable <V extends T> V findExtension(ComponentManager componentManager, Class<V> instanceOf) {
@@ -111,7 +111,7 @@ public class ExtensionPointName<T> {
 
   
   public <V extends T> V findExtensionOrFail(Class<V> instanceOf) {
-    return findExtensionOrFail(RootComponentHolder.getRootComponent(), instanceOf);
+    return findExtensionOrFail(RootComponentHolder.get(), instanceOf);
   }
 
   
@@ -120,7 +120,7 @@ public class ExtensionPointName<T> {
   }
 
   public void forEachExtensionSafe(Consumer<T> consumer) {
-    forEachExtensionSafe(RootComponentHolder.getRootComponent(), consumer);
+    forEachExtensionSafe(RootComponentHolder.get(), consumer);
   }
 
   public void forEachExtensionSafe(ComponentManager manager, Consumer<T> consumer) {
@@ -128,7 +128,7 @@ public class ExtensionPointName<T> {
   }
 
   public @Nullable <R> R computeSafeIfAny(Function<? super T, ? extends R> processor) {
-    return computeSafeIfAny(RootComponentHolder.getRootComponent(), processor);
+    return computeSafeIfAny(RootComponentHolder.get(), processor);
   }
 
   public @Nullable <R> R computeSafeIfAny(ComponentManager componentManager, Function<? super T, ? extends R> processor) {
@@ -140,7 +140,7 @@ public class ExtensionPointName<T> {
   }
 
   public @Nullable T findFirstSafe(Predicate<T> predicate) {
-    return findFirstSafe(RootComponentHolder.getRootComponent(), predicate);
+    return findFirstSafe(RootComponentHolder.get(), predicate);
   }
 
   public void processWithPluginDescriptor(ComponentManager manager, BiConsumer<? super T, ? super PluginDescriptor> consumer) {
@@ -148,6 +148,6 @@ public class ExtensionPointName<T> {
   }
 
   public void processWithPluginDescriptor(BiConsumer<? super T, ? super PluginDescriptor> consumer) {
-    processWithPluginDescriptor(RootComponentHolder.getRootComponent(), consumer);
+    processWithPluginDescriptor(RootComponentHolder.get(), consumer);
   }
 }

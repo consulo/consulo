@@ -1,16 +1,23 @@
 package consulo.remoteServer.runtime;
 
-import consulo.util.lang.StringUtil;
-
-import java.util.Locale;
+import consulo.localize.LocalizeValue;
+import consulo.remoteServer.localize.RemoteServerLocalize;
 
 /**
  * @author nik
  */
 public enum ConnectionStatus {
-  DISCONNECTED, CONNECTED, CONNECTING;
+    DISCONNECTED(RemoteServerLocalize.connectionstatusDisconnected()),
+    CONNECTED(RemoteServerLocalize.connectionstatusConnected()),
+    CONNECTING(RemoteServerLocalize.connectionstatusConnecting());
 
-  public String getPresentableText() {
-    return StringUtil.capitalize(name().toLowerCase(Locale.ROOT));
-  }
+    private final LocalizeValue myPresentableText;
+
+    ConnectionStatus(LocalizeValue presentableText) {
+        myPresentableText = presentableText;
+    }
+
+    public LocalizeValue getPresentableText() {
+        return myPresentableText;
+    }
 }

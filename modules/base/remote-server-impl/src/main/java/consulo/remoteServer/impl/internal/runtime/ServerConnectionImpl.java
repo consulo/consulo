@@ -3,11 +3,11 @@ package consulo.remoteServer.impl.internal.runtime;
 
 import consulo.application.ApplicationManager;
 import consulo.component.messagebus.MessageBusConnection;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.process.ExecutionException;
 import consulo.project.Project;
 import consulo.project.event.ProjectManagerListener;
-import consulo.remoteServer.CloudBundle;
 import consulo.remoteServer.configuration.RemoteServer;
 import consulo.remoteServer.configuration.deployment.DeploymentConfiguration;
 import consulo.remoteServer.impl.internal.runtime.deployment.DeploymentImpl;
@@ -15,6 +15,7 @@ import consulo.remoteServer.impl.internal.runtime.deployment.DeploymentTaskImpl;
 import consulo.remoteServer.impl.internal.runtime.deployment.LocalDeploymentImpl;
 import consulo.remoteServer.impl.internal.runtime.log.DeploymentLogManagerImpl;
 import consulo.remoteServer.impl.internal.runtime.log.LoggingHandlerImpl;
+import consulo.remoteServer.localize.RemoteServerLocalize;
 import consulo.remoteServer.runtime.ConnectionStatus;
 import consulo.remoteServer.runtime.Deployment;
 import consulo.remoteServer.runtime.ServerConnection;
@@ -39,7 +40,7 @@ public class ServerConnectionImpl<D extends DeploymentConfiguration> implements 
     private MessageBusConnection myMessageBusConnection;
 
     private volatile ConnectionStatus myStatus = ConnectionStatus.DISCONNECTED;
-    private volatile String myStatusText;
+    private volatile LocalizeValue myStatusText = LocalizeValue.empty();
     private volatile ServerRuntimeInstance<D> myRuntimeInstance;
     private final Map<Project, LogManagersForProject> myPerProjectLogManagers = new ConcurrentHashMap<>();
     private final MyDeployments myAllDeployments;
@@ -66,8 +67,8 @@ public class ServerConnectionImpl<D extends DeploymentConfiguration> implements 
     }
 
     @Override
-    public String getStatusText() {
-        return myStatusText != null ? myStatusText : myStatus.getPresentableText();
+    public LocalizeValue getStatusText() {
+        return myStatusText.orIfEmpty(myStatus.getPresentableText());
     }
 
     @Override
@@ -80,7 +81,7 @@ public class ServerConnectionImpl<D extends DeploymentConfiguration> implements 
             }
 
             @Override
-            public void errorOccurred(String errorMessage) {
+            public void errorOccurred(LocalizeValue errorMessage) {
                 onFinished.run();
             }
         });
@@ -170,14 +171,14 @@ public class ServerConnectionImpl<D extends DeploymentConfiguration> implements 
 
             @Override
             public void addDeployment(String deploymentName, @Nullable DeploymentRuntime deploymentRuntime) {
-                addDeployment(deploymentName, deploymentRuntime, null, null);
+                addDeployment(deploymentName, deploymentRuntime, null, LocalizeValue.empty());
             }
 
             @Override
             public Deployment addDeployment(String name,
                                             @Nullable DeploymentRuntime runtime,
                                             @Nullable DeploymentStatus status,
-                                            @Nullable String statusText) {
+                                            LocalizeValue statusText) {
                 if (status == null) {
                     status = DeploymentStatus.DEPLOYED;
                 }
@@ -205,10 +206,10 @@ public class ServerConnectionImpl<D extends DeploymentConfiguration> implements 
             }
 
             @Override
-            public void errorOccurred(String errorMessage) {
+            public void errorOccurred(LocalizeValue errorMessage) {
                 myAllDeployments.replaceRemotesWith(Collections.emptyList());
 
-                myStatusText = CloudBundle.message("ServerConnectionImpl.error.cannot.obtain.deployments", errorMessage);
+                myStatusText = RemoteServerLocalize.serverconnectionimplErrorCannotObtainDeployments(errorMessage);
                 myEventDispatcher.queueConnectionStatusChanged(ServerConnectionImpl.this);
                 myEventDispatcher.queueDeploymentsChanged(ServerConnectionImpl.this);
                 onFinished.run();
@@ -260,7 +261,7 @@ public class ServerConnectionImpl<D extends DeploymentConfiguration> implements 
             }
 
             @Override
-            public void errorOccurred(String errorMessage) {
+            public void errorOccurred(LocalizeValue errorMessage) {
                 logConsumer.accept("Failed to undeploy '" + deploymentName + "': " + errorMessage);
 
                 if (undeployInProgress != null) {
@@ -323,7 +324,7 @@ public class ServerConnectionImpl<D extends DeploymentConfiguration> implements 
             }
 
             @Override
-            public void errorOccurred(String errorMessage) {
+            public void errorOccurred(LocalizeValue errorMessage) {
                 setStatus(ConnectionStatus.DISCONNECTED, errorMessage);
                 myRuntimeInstance = null;
                 callback.errorOccurred(errorMessage);
@@ -332,10 +333,10 @@ public class ServerConnectionImpl<D extends DeploymentConfiguration> implements 
     }
 
     private void setStatus(ConnectionStatus status) {
-        setStatus(status, null);
+        setStatus(status, LocalizeValue.empty());
     }
 
-    private void setStatus(ConnectionStatus status, String statusText) {
+    private void setStatus(ConnectionStatus status, LocalizeValue statusText) {
         myStatus = status;
         myStatusText = statusText;
         myEventDispatcher.queueConnectionStatusChanged(this);
@@ -344,7 +345,7 @@ public class ServerConnectionImpl<D extends DeploymentConfiguration> implements 
     public void changeDeploymentState(DeploymentImpl deployment,
                                       @Nullable DeploymentRuntime deploymentRuntime,
                                       DeploymentStatus oldStatus, DeploymentStatus newStatus,
-                                      @Nullable String statusText) {
+                                      LocalizeValue statusText) {
 
         if (myAllDeployments.updateAnyState(deployment, deploymentRuntime, oldStatus, newStatus, statusText)) {
             myEventDispatcher.queueDeploymentsChanged(this);
@@ -395,7 +396,7 @@ public class ServerConnectionImpl<D extends DeploymentConfiguration> implements 
 
     private abstract static class ConnectionCallbackBase<D extends DeploymentConfiguration> implements ServerConnector.ConnectionCallback<D> {
         @Override
-        public void errorOccurred(String errorMessage) {
+        public void errorOccurred(LocalizeValue errorMessage) {
         }
     }
 
@@ -453,7 +454,7 @@ public class ServerConnectionImpl<D extends DeploymentConfiguration> implements 
         }
 
         @Override
-        public void errorOccurred(String errorMessage) {
+        public void errorOccurred(LocalizeValue errorMessage) {
             myLoggingHandler.printlnSystemMessage("Failed to deploy '" + myDeploymentName + "': " + errorMessage);
             myAllDeployments.updateAnyState(myDeployment, null,
                 DeploymentStatus.DEPLOYING, DeploymentStatus.NOT_DEPLOYED, errorMessage);
@@ -461,9 +462,9 @@ public class ServerConnectionImpl<D extends DeploymentConfiguration> implements 
         }
 
         @Override
-        public void errorOccurred(String errorMessage,
+        public void errorOccurred(LocalizeValue errorMessage,
                                   DeploymentRuntime failedDeployment) {
-            myLoggingHandler.printlnSystemMessage("Failed to deploy '" + myDeploymentName + "': " + errorMessage);
+            myLoggingHandler.printlnSystemMessage("Failed to deploy '" + myDeploymentName + "': " + errorMessage.get());
             myDeployment.changeState(DeploymentStatus.DEPLOYING, DeploymentStatus.NOT_DEPLOYED, errorMessage, failedDeployment);
             myEventDispatcher.queueDeploymentsChanged(ServerConnectionImpl.this);
         }
@@ -509,7 +510,7 @@ public class ServerConnectionImpl<D extends DeploymentConfiguration> implements 
         public @Nullable DeploymentImpl updateRemoteState(String deploymentName,
                                                           @Nullable DeploymentRuntime deploymentRuntime,
                                                           DeploymentStatus deploymentStatus,
-                                                          @Nullable String deploymentStatusText) {
+                                                          LocalizeValue deploymentStatusText) {
 
             synchronized (myLock) {
                 DeploymentImpl<?> result = myRemoteDeployments.get(deploymentName);
@@ -524,7 +525,7 @@ public class ServerConnectionImpl<D extends DeploymentConfiguration> implements 
                                       @Nullable DeploymentRuntime deploymentRuntime,
                                       DeploymentStatus oldStatus,
                                       DeploymentStatus newStatus,
-                                      @Nullable String statusText) {
+                                      LocalizeValue statusText) {
 
             synchronized (myLock) {
                 return deployment.changeState(oldStatus, newStatus, statusText, deploymentRuntime);
@@ -571,7 +572,7 @@ public class ServerConnectionImpl<D extends DeploymentConfiguration> implements 
             DeploymentStatus finishedExternally = DeploymentStatus.NOT_DEPLOYED;
             for (LocalDeploymentImpl<?> nextLocal : matchedLocalsBefore) {
                 if (!nextLocal.hasRemoteDeloyment()) {
-                    nextLocal.changeState(nextLocal.getStatus(), finishedExternally, null, null);
+                    nextLocal.changeState(nextLocal.getStatus(), finishedExternally, LocalizeValue.empty(), null);
                 }
             }
 

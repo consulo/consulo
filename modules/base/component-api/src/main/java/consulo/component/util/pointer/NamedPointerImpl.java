@@ -15,19 +15,16 @@
  */
 package consulo.component.util.pointer;
 
-import consulo.logging.Logger;
-
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
- * @since 17:22/15.06.13
+ * @since 2013-06-15
  */
 public class NamedPointerImpl<T extends Named> implements NamedPointer<T> {
-  private static final Logger LOG = Logger.getInstance(NamedPointerImpl.class);
+  private @Nullable T myValue;
 
-  private T myValue;
-  
-  private String myName;
+  private final String myName;
 
   public NamedPointerImpl(T value) {
     myValue = value;
@@ -40,44 +37,45 @@ public class NamedPointerImpl<T extends Named> implements NamedPointer<T> {
   }
 
   public void setValue(T value) {
-    LOG.assertTrue(myValue == null);
-    LOG.assertTrue(myName.equals(value.getName()));
-    myName = value.getName();
+    if (myValue != null) {
+      throw new IllegalStateException("Value is already set");
+    }
+    if (!myName.equals(value.getName())) {
+      throw new IllegalStateException("Value name \"" + value.getName() + "\" is not same as our \"" + myName + '"');
+    }
     myValue = value;
   }
 
   public void dropValue(T value) {
-    LOG.assertTrue(myValue == value);
-    myName = myValue.getName();
+    if (myValue != value) {
+      throw new IllegalStateException("Value is different");
+    }
     myValue = null;
   }
 
-  
   @Override
   public String getName() {
-    if (myValue != null) {
-      return myValue.getName();
-    }
-    else {
-      return myName;
-    }
+    return myName;
   }
 
+  @Nullable
   @Override
   public T get() {
     return myValue;
   }
 
   @Override
-  public boolean equals(Object o) {
-    if (this == o) return true;
-    if (o == null || getClass() != o.getClass()) return false;
+  public boolean equals(@Nullable Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
 
     NamedPointerImpl that = (NamedPointerImpl)o;
 
-    if (!myName.equals(that.myName)) return false;
-
-    return true;
+    return myName.equals(that.myName);
   }
 
   @Override

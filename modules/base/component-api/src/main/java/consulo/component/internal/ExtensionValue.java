@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2023 consulo.io
+ * Copyright 2013-2026 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,27 +15,11 @@
  */
 package consulo.component.internal;
 
-import org.jspecify.annotations.Nullable;
-
-import java.util.Objects;
-import java.util.function.Supplier;
+import consulo.container.plugin.PluginDescriptor;
 
 /**
- * @author VISTALL
- * @since 2023-01-27
+ * @author UNV
+ * @since 2026-03-17
  */
-public class StableExtensionInstance<Impl> implements Supplier<Impl> {
-  private @Nullable Impl myValue = null;
-
-  public StableExtensionInstance() {
-  }
-
-  public void setValue(Impl value) {
-    myValue = value;
-  }
-
-  @Override
-  public Impl get() {
-    return Objects.requireNonNull(myValue);
-  }
+public record ExtensionValue<K>(K extension, PluginDescriptor pluginDescriptor) {
 }

@@ -119,7 +119,7 @@ public class SandServerType extends ServerType<SandServerConfiguration> {
         return new ServerConnector<>() {
             @Override
             public void connect(ConnectionCallback<DeploymentConfiguration> callback) {
-                callback.errorOccurred("error");
+                callback.errorOccurred(LocalizeValue.localizeTODO("error"));
             }
         };
     }

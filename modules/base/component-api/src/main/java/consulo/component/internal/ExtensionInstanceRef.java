@@ -15,16 +15,18 @@
  */
 package consulo.component.internal;
 
+import org.jspecify.annotations.Nullable;
+
 import java.util.function.Consumer;
 
 /**
  * @author VISTALL
- * @since 26/01/2023
+ * @since 2023-01-26
  */
 public class ExtensionInstanceRef {
   public static ThreadLocal<ExtensionInstanceRef> CURRENT_CREATION = new ThreadLocal<>();
 
-  public Consumer<Object> setter;
+  public @Nullable Consumer<Object> setter = null;
 
   public ExtensionInstanceRef() {
   }

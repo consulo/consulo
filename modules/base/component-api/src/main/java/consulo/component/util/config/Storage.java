@@ -17,6 +17,7 @@ package consulo.component.util.config;
 
 import consulo.component.PropertiesComponent;
 import consulo.logging.Logger;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -25,10 +26,11 @@ import java.util.Map;
 
 public interface Storage {
   void put(String key, String value);
+
+  @Nullable
   String get(String key);
 
   class PropertiesComponentStorage implements Storage {
-    private static final Logger LOG = Logger.getInstance(PropertiesComponentStorage.class);
     private final PropertiesComponent myPropertiesComponent;
     private final String myPrefix;
 
@@ -42,11 +44,13 @@ public interface Storage {
       myPropertiesComponent.setValue(myPrefix + key, value);
     }
 
+    @Nullable
     @Override
     public String get(String key) {
       return myPropertiesComponent.getValue(myPrefix + key);
     }
 
+    @Override
     public String toString() {
       //noinspection HardCodedStringLiteral
       return "PropertiesComponentStorage: " + myPrefix;
@@ -55,6 +59,8 @@ public interface Storage {
 
   class MapStorage implements Storage {
     private final Map<String, String> myValues = new HashMap<>();
+
+    @Nullable
     @Override
     public String get(String key) {
       return myValues.get(key);

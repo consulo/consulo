@@ -9,7 +9,6 @@ import consulo.execution.service.ServiceEventListener;
 import consulo.execution.service.ServiceViewManager;
 import consulo.project.Project;
 import consulo.project.ui.view.tree.AbstractTreeNode;
-import consulo.remoteServer.CloudBundle;
 import consulo.remoteServer.configuration.RemoteServer;
 import consulo.remoteServer.configuration.RemoteServerListener;
 import consulo.remoteServer.configuration.RemoteServersManager;
@@ -17,6 +16,7 @@ import consulo.remoteServer.impl.internal.ui.tree.ServerTreeNodeExpander;
 import consulo.remoteServer.impl.internal.ui.tree.ServersToolWindowMessagePanel;
 import consulo.remoteServer.impl.internal.ui.tree.ServersTreeStructure;
 import consulo.remoteServer.impl.internal.util.CloudApplicationRuntime;
+import consulo.remoteServer.localize.RemoteServerLocalize;
 import consulo.remoteServer.runtime.*;
 import consulo.remoteServer.runtime.ui.RemoteServersView;
 import consulo.remoteServer.runtime.ui.ServersTreeNodeSelector;
@@ -24,16 +24,12 @@ import consulo.ui.ModalityState;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.awt.util.Alarm;
 import consulo.util.collection.ContainerUtil;
-import consulo.util.lang.StringUtil;
-import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 @Singleton
 @ServiceAPI(ComponentScope.PROJECT)
@@ -82,8 +78,7 @@ public final class RemoteServersDeploymentManager {
                         .handle(ServiceEventListener.ServiceEvent.createResetEvent(contributor.getClass()));
                     updateServerContent(myServerToContent.get(server), connection);
                     if (connection.getStatus() == ConnectionStatus.CONNECTED) {
-                        // connectionStatusChanged is also called for errors, don't initiate polling once again, IDEA-259400
-                        if (StringUtil.areSameInstance(connection.getStatusText(), connection.getStatus().getPresentableText())) { // effectively, checks for no error
+                        if (Objects.equals(connection.getStatusText(), connection.getStatus().getPresentableText())) {
                             myConnectionsToExpand.add(connection);
                             pollDeployments(connection);
                         }
@@ -175,10 +170,10 @@ public final class RemoteServersDeploymentManager {
         }
 
         if (connection == null) {
-            messagePanel.setEmptyText(CloudBundle.message("cloud.status.double.click.to.connect"));
+            messagePanel.setEmptyText(RemoteServerLocalize.cloudStatusDoubleClickToConnect().get());
         }
         else {
-            String text = connection.getStatusText();
+            String text = connection.getStatusText().get();
             if (text.contains("<br/>") && !text.startsWith("<html>")) {
                 text = "<html><center>" + text + "</center></html>";
             }
@@ -219,7 +214,6 @@ public final class RemoteServersDeploymentManager {
     public interface MessagePanel {
         void setEmptyText(String text);
 
-        
         JComponent getComponent();
     }
 

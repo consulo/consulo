@@ -19,6 +19,7 @@ import com.ibm.icu.lang.UCharacter;
 import com.ibm.icu.util.ValueIterator;
 import consulo.annotation.UsedInPlugin;
 import consulo.hacking.java.base.CharacterNameHacking;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,7 +27,7 @@ import java.util.Objects;
 
 /**
  * @author VISTALL
- * @since 07-Mar-22
+ * @since 2022-03-07
  */
 @UsedInPlugin
 public final class UnicodeCharacterRegistry {
@@ -43,13 +44,12 @@ public final class UnicodeCharacterRegistry {
       return myCodePoint;
     }
 
-    
     public String getName() {
       return myName;
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(@Nullable Object o) {
       if (this == o) return true;
       if (o == null || getClass() != o.getClass()) return false;
       UnicodeCharacter that = (UnicodeCharacter)o;
@@ -68,12 +68,10 @@ public final class UnicodeCharacterRegistry {
   }
 
   private interface Provider {
-    
     List<UnicodeCharacter> list();
   }
 
   private static class ProviderFromJava implements Provider {
-    
     @Override
     public List<UnicodeCharacter> list() {
       List<UnicodeCharacter> characters = new ArrayList<>(50_000);
@@ -87,7 +85,6 @@ public final class UnicodeCharacterRegistry {
   }
 
   private static class ProviderICU4J implements Provider {
-    
     @Override
     public List<UnicodeCharacter> list() {
       List<UnicodeCharacter> characters = new ArrayList<>(150_000);
@@ -106,9 +103,8 @@ public final class UnicodeCharacterRegistry {
   // FIXME [VISTALL] ProviderICU4J return bigger list of characters, we can fallback to ProviderFromJava
   private static Provider ourProvider = Boolean.getBoolean("consulo.use.java.unicode.registry") ? new ProviderFromJava() : new ProviderICU4J();
 
-  private static List<UnicodeCharacter> ourCharacters;
+  private static @Nullable List<UnicodeCharacter> ourCharacters = null;
 
-  
   public static List<UnicodeCharacter> listCharacters() {
     if (ourCharacters == null) {
       ourCharacters = ourProvider.list();

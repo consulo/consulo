@@ -21,10 +21,7 @@ import consulo.application.internal.ApplicationInfo;
 import consulo.application.internal.StartupProgress;
 import consulo.application.localize.ApplicationLocalize;
 import consulo.component.util.BuildNumber;
-import consulo.component.util.graph.DFSTBuilder;
-import consulo.component.util.graph.Graph;
-import consulo.component.util.graph.GraphGenerator;
-import consulo.component.util.graph.InboundSemiGraph;
+import consulo.component.util.graph.*;
 import consulo.container.boot.ContainerPathManager;
 import consulo.container.internal.ContainerLogger;
 import consulo.container.internal.PluginValidator;
@@ -37,7 +34,6 @@ import consulo.container.plugin.*;
 import consulo.container.util.StatCollector;
 import consulo.logging.Logger;
 import consulo.util.collection.SmartList;
-import consulo.util.lang.Couple;
 import consulo.util.lang.StringUtil;
 import org.jspecify.annotations.Nullable;
 
@@ -166,7 +162,8 @@ public class PluginsLoader {
 
     Graph<PluginId> graph = createPluginIdGraph(idToDescriptorMap);
     final DFSTBuilder<PluginId> builder = new DFSTBuilder<>(graph);
-    if (!builder.isAcyclic()) {
+    GraphEdge<PluginId> circularDependency = builder.getCircularDependency();
+    if (circularDependency != null) {
       String cyclePresentation;
       if (ApplicationProperties.isInSandbox()) {
         final List<String> cycles = new ArrayList<>();
@@ -188,13 +185,12 @@ public class PluginsLoader {
         cyclePresentation = ": " + StringUtil.join(cycles, ";");
       }
       else {
-        Couple<PluginId> circularDependency = builder.getCircularDependency();
-        PluginId id = circularDependency.getFirst();
-        PluginId parentId = circularDependency.getSecond();
+        PluginId id = circularDependency.from(), parentId = circularDependency.to();
         cyclePresentation = id + "->" + parentId + "->...->" + id;
       }
-      problemsWithPlugins.add(new CompositeMessage().append(ApplicationLocalize.errorPluginsShouldNotHaveCyclicDependencies(
-        cyclePresentation)));
+      problemsWithPlugins.add(
+          new CompositeMessage().append(ApplicationLocalize.errorPluginsShouldNotHaveCyclicDependencies(cyclePresentation))
+      );
     }
 
     prepareLoadingPluginsErrorMessage(info, problemsWithPlugins, isHeadlessMode);

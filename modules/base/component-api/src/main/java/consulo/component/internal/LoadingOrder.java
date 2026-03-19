@@ -2,11 +2,7 @@
 package consulo.component.internal;
 
 import consulo.component.extension.ExtensionPoint;
-import consulo.component.util.graph.CachingSemiGraph;
-import consulo.component.util.graph.DFSTBuilder;
-import consulo.component.util.graph.GraphGenerator;
-import consulo.component.util.graph.InboundSemiGraph;
-import consulo.util.lang.Couple;
+import consulo.component.util.graph.*;
 import consulo.util.lang.StringUtil;
 import org.jspecify.annotations.Nullable;
 
@@ -86,7 +82,6 @@ public record LoadingOrder(String name, boolean first, boolean last, Set<String>
         }
 
         InboundSemiGraph<Orderable> graph = new InboundSemiGraph<>() {
-            
             @Override
             public Collection<Orderable> getNodes() {
                 List<Orderable> list = new ArrayList<>(orderable);
@@ -136,15 +131,14 @@ public record LoadingOrder(String name, boolean first, boolean last, Set<String>
 
         DFSTBuilder<Orderable> builder = new DFSTBuilder<>(GraphGenerator.generate(CachingSemiGraph.cache(graph)));
 
-        if (!builder.isAcyclic()) {
-            Couple<Orderable> p = builder.getCircularDependency();
-            throw new SortingException("Could not satisfy sorting requirements", p.first, p.second);
+        GraphEdge<Orderable> circularDependency = builder.getCircularDependency();
+        if (circularDependency != null) {
+            throw new SortingException("Could not satisfy sorting requirements", circularDependency.from(), circularDependency.to());
         }
 
         orderable.sort(builder.comparator());
     }
 
-    
     public static LoadingOrder readOrder(@Nullable String orderAttr) {
         if (StringUtil.isEmptyOrSpaces(orderAttr)) {
             return ANY;
@@ -203,7 +197,7 @@ public record LoadingOrder(String name, boolean first, boolean last, Set<String>
 
         LoadingOrder getOrder();
 
-        default Object getObjectValue() {
+        default @Nullable Object getObjectValue() {
             return null;
         }
     }

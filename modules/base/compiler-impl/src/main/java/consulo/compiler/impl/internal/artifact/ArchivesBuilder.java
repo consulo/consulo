@@ -20,16 +20,12 @@ import consulo.compiler.CompilerMessageCategory;
 import consulo.compiler.artifact.element.*;
 import consulo.compiler.impl.internal.ArtifactCompilerUtil;
 import consulo.compiler.localize.CompilerLocalize;
-import consulo.component.util.graph.CachingSemiGraph;
-import consulo.component.util.graph.DFSTBuilder;
-import consulo.component.util.graph.GraphGenerator;
-import consulo.component.util.graph.InboundSemiGraph;
+import consulo.component.util.graph.*;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.io.FilePermissionCopier;
 import consulo.util.io.FileUtil;
-import consulo.util.lang.Couple;
 import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
@@ -125,11 +121,11 @@ public class ArchivesBuilder {
     private @Nullable ArchivePackageInfo[] sortArchives() {
         DFSTBuilder<ArchivePackageInfo> builder =
             new DFSTBuilder<>(GraphGenerator.generate(CachingSemiGraph.cache(new ArchivesGraph())));
-        if (!builder.isAcyclic()) {
-            Couple<ArchivePackageInfo> dependency = builder.getCircularDependency();
+        GraphEdge<ArchivePackageInfo> dependency = builder.getCircularDependency();
+        if (dependency != null) {
             LocalizeValue message = CompilerLocalize.packagingCompilerErrorCannotBuildCircularDependencyFoundBetween0And1(
-                dependency.getFirst().getPresentableDestination(),
-                dependency.getSecond().getPresentableDestination()
+                dependency.from().getPresentableDestination(),
+                dependency.to().getPresentableDestination()
             );
             myContext.addMessage(CompilerMessageCategory.ERROR, message.get(), null, -1, -1);
             return null;

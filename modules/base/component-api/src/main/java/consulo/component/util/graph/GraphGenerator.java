@@ -15,14 +15,12 @@
  */
 package consulo.component.util.graph;
 
-
 import java.util.*;
 
 /**
  * @author dsl
  */
 public class GraphGenerator<Node> implements Graph<Node> {
-  
   public static <T> Graph<T> generate(InboundSemiGraph<T> graph) {
     return new GraphGenerator<T>(graph);
   }
@@ -67,7 +65,7 @@ public class GraphGenerator<Node> implements Graph<Node> {
 
   @Override
   public Iterator<Node> getOut(Node n) {
-    return myOuts.get(n).iterator();
+    return Objects.requireNonNull(myOuts.get(n)).iterator();
   }
 
   //<editor-fold desc="Deprecated stuff.">

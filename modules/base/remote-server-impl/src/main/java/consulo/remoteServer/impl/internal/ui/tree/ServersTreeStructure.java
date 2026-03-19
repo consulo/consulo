@@ -117,7 +117,7 @@ public final class ServersTreeStructure {
 
             presentation.setIcon(icon);
 
-            presentation.setTooltip(connection != null ? connection.getStatusText() : null);
+            presentation.setTooltip(connection != null ? connection.getStatusText().get() : null);
         }
 
         private @Nullable ServerConnection<?> getConnection() {
@@ -384,7 +384,7 @@ public final class ServersTreeStructure {
             Deployment deployment = getDeployment();
             presentation.setIcon(deployment.getStatus().getIcon());
             presentation.setPresentableText(deployment.getPresentableName());
-            presentation.setTooltip(deployment.getStatusText());
+            presentation.setTooltip(deployment.getStatusText().get());
         }
     }
 

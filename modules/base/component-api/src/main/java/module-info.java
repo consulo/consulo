@@ -1,7 +1,10 @@
+import org.jspecify.annotations.NullMarked;
+
 /**
  * @author VISTALL
- * @since 16/01/2022
+ * @since 2022-01-16
  */
+@NullMarked
 module consulo.component.api {
     requires transitive consulo.disposer.api;
     requires transitive consulo.logging.api;
@@ -18,6 +21,7 @@ module consulo.component.api {
     requires transitive consulo.platform.api;
     requires transitive consulo.util.jdom;
     requires transitive org.jdom;
+    requires transitive org.slf4j;
     requires transitive jakarta.inject;
     requires transitive consulo.util.concurrent.coroutine;
 

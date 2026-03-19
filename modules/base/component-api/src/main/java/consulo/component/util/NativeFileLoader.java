@@ -5,10 +5,12 @@ import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginManager;
 import consulo.platform.Platform;
 import consulo.util.lang.reflect.ReflectionUtil;
+import org.jspecify.annotations.Nullable;
 
 import java.io.File;
 import java.nio.file.Path;
 import java.util.Arrays;
+import java.util.Objects;
 import java.util.function.Consumer;
 
 public final class NativeFileLoader {
@@ -19,7 +21,7 @@ public final class NativeFileLoader {
    *                   (from target classloader, not NativeLibraryLoader classloader)
    */
   public static void loadLibrary(String libName, Consumer<String> systemLoad) {
-    Class<?> callerClass = ReflectionUtil.getGrandCallerClass();
+    Class<?> callerClass = Objects.requireNonNull(ReflectionUtil.getGrandCallerClass());
 
     PluginDescriptor plugin = PluginManager.getPlugin(callerClass);
     if (plugin == null) {
@@ -42,9 +44,8 @@ public final class NativeFileLoader {
     systemLoad.accept(libPath);
   }
 
-  
   public static File findExecutable(String fileName) {
-    Class<?> callerClass = ReflectionUtil.getGrandCallerClass();
+    Class<?> callerClass = Objects.requireNonNull(ReflectionUtil.getGrandCallerClass());
 
     PluginDescriptor plugin = PluginManager.getPlugin(callerClass);
     if (plugin == null) {
@@ -56,15 +57,19 @@ public final class NativeFileLoader {
     return new File(nativePluginDirectory, fileName);
   }
 
-  
   public static Path findExecutablePath(String fileName) {
-    Class<?> callerClass = ReflectionUtil.getGrandCallerClass();
+    Class<?> callerClass = Objects.requireNonNull(ReflectionUtil.getGrandCallerClass());
 
     PluginDescriptor plugin = PluginManager.getPlugin(callerClass);
     if (plugin == null) {
       throw new IllegalArgumentException("Can't find plugin for class " + callerClass);
     }
 
-    return plugin.getNioPath().resolve("native").resolve(fileName);
+    @Nullable Path nioPath = plugin.getNioPath();
+    if (nioPath == null) {
+      throw new IllegalArgumentException("Plugin for class " + callerClass + " has null nioPath");
+    }
+
+    return nioPath.resolve("native").resolve(fileName);
   }
 }
