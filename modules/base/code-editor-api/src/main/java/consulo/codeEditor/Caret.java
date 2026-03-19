@@ -176,8 +176,7 @@ public interface Caret extends UserDataHolderEx, Disposable {
    *
    * @return the selected text, or null if there is currently no selection.
    */
-  @Nullable
-  String getSelectedText();
+  @Nullable String getSelectedText();
 
   /**
    * Returns the offset from which the user started to extend the selection (the selection start
@@ -300,8 +299,7 @@ public interface Caret extends UserDataHolderEx, Disposable {
    * @return newly created caret instance, or <code>null</code> if the caret cannot be created because it already exists at the new location
    * or caret model doesn't support multiple carets.
    */
-  @Nullable
-  Caret clone(boolean above);
+  @Nullable Caret clone(boolean above);
 
   /**
    * Returns <code>true</code> if caret is located in RTL text fragment. In that case visual column number is inversely related

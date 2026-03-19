@@ -78,9 +78,8 @@ public abstract class UIFontManagerImpl implements UIFontManager, PersistentStat
     myState.overrideFont = overrideFont;
   }
 
-  @Nullable
   @Override
-  public State getState() {
+  public @Nullable State getState() {
     return myState;
   }
 

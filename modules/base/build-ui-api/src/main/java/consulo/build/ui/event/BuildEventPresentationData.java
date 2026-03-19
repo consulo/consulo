@@ -14,6 +14,5 @@ public interface BuildEventPresentationData {
 
   @Nullable ExecutionConsole getExecutionConsole();
 
-  @Nullable
-  ActionGroup consoleToolbarActions();
+  @Nullable ActionGroup consoleToolbarActions();
 }

@@ -60,9 +60,8 @@ public final class CachedValuesManagerImpl extends CachedValuesManager {
         return myFactory.createParameterizedCachedValue(provider, trackValue);
     }
 
-    @Nullable
     @Override
-    public <T> T getCachedValue(
+    public <T> @Nullable T getCachedValue(
         UserDataHolder dataHolder,
         Key<CachedValue<T>> key,
         CachedValueProvider<T> provider,

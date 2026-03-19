@@ -15,8 +15,7 @@ public interface BuildOutputInstantReader {
     
     Object getParentEventId();
 
-    @Nullable
-    String readLine();
+    @Nullable String readLine();
 
     void pushBack();
 

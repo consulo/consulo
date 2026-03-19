@@ -40,9 +40,8 @@ public final class ReadLock<I, O> extends CoroutineStep<I, O> {
         myFunction = function;
     }
 
-    @Nullable
     @Override
-    protected O execute(@Nullable I input, Continuation<?> continuation) {
+    protected @Nullable O execute(@Nullable I input, Continuation<?> continuation) {
         Application application = Objects.requireNonNull(continuation.getConfiguration(Application.KEY), "Application required");
         return application.runReadAction((Supplier<O>) () -> myFunction.apply(input));
     }

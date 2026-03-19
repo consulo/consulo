@@ -35,11 +35,9 @@ public interface LibraryKindRegistry {
         return Application.get().getInstance(LibraryKindRegistry.class);
     }
 
-    @Nullable
-    LibraryKind findKindById(@Nullable String libraryKindId);
+    @Nullable LibraryKind findKindById(@Nullable String libraryKindId);
 
-    @Nullable
-    LibraryType<?> findLibraryTypeByKindId(@Nullable String libraryKindId);
+    @Nullable LibraryType<?> findLibraryTypeByKindId(@Nullable String libraryKindId);
 
     
     default LibraryType<?> findLibraryTypeByKindIdSafe(@Nullable String libraryKindId) {

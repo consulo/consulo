@@ -24,6 +24,5 @@ import org.jspecify.annotations.Nullable;
  * @since 15/01/2023
  */
 public interface EditorHolder {
-  @Nullable
-  Editor getEditor();
+  @Nullable Editor getEditor();
 }

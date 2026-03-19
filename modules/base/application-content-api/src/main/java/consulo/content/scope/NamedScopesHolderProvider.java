@@ -30,6 +30,5 @@ import org.jspecify.annotations.Nullable;
 public interface NamedScopesHolderProvider {
     ExtensionList<NamedScopesHolderProvider, Project> EP = ExtensionList.of(NamedScopesHolderProvider.class);
 
-    @Nullable
-    NamedScopesHolder getScopesHolder();
+    @Nullable NamedScopesHolder getScopesHolder();
 }

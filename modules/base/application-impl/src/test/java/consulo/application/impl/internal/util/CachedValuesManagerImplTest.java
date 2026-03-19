@@ -46,9 +46,8 @@ public class CachedValuesManagerImplTest {
             this.data = data;
         }
 
-        @Nullable
         @Override
-        public <T> T getUserData(Key<T> key) {
+        public <T> @Nullable T getUserData(Key<T> key) {
             check(key);
             return (T) data;
         }

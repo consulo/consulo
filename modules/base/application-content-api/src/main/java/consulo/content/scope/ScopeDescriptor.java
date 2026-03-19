@@ -33,9 +33,8 @@ public class ScopeDescriptor implements ColoredItem {
         return Comparing.equal(myScope, scope);
     }
 
-    @Nullable
     @Override
-    public ColorValue getColor() {
+    public @Nullable ColorValue getColor() {
         return myScope instanceof ColoredItem ? ((ColoredItem)myScope).getColor() : null;
     }
 }

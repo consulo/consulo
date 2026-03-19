@@ -224,8 +224,7 @@ public class RecursionManager {
             return false;
         }
 
-        @Nullable
-        MemoizedValue getMemoizedValue(MyKey realKey) {
+        @Nullable MemoizedValue getMemoizedValue(MyKey realKey) {
             List<SoftReference<MemoizedValue>> refs = intermediateCache.get(realKey);
             if (refs != null) {
                 for (SoftReference<MemoizedValue> ref : refs) {

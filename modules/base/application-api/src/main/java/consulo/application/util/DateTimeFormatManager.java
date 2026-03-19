@@ -28,7 +28,6 @@ import java.text.SimpleDateFormat;
 public class DateTimeFormatManager implements PersistentStateComponent<Element> {
   private static final Logger LOG = Logger.getInstance(DateTimeFormatManager.class);
 
-  
   public static DateTimeFormatManager getInstance() {
     return Application.get().getInstance(DateTimeFormatManager.class);
   }
@@ -39,9 +38,8 @@ public class DateTimeFormatManager implements PersistentStateComponent<Element> 
   private boolean myOverrideSystemDateFormat = false;
   private boolean myUse24HourTime = true;
 
-  @Nullable
   @Override
-  public Element getState() {
+  public @Nullable Element getState() {
     return XmlSerializer.serialize(this);
   }
 
@@ -85,7 +83,6 @@ public class DateTimeFormatManager implements PersistentStateComponent<Element> 
     return null;
   }
 
-  
   public String getDateFormatPattern() {
     return myPattern;
   }

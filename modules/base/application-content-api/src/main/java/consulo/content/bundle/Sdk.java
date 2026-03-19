@@ -43,11 +43,9 @@ public interface Sdk extends UserDataHolder, Named {
   @Override
   String getName();
 
-  @Nullable
-  String getVersionString();
+  @Nullable String getVersionString();
 
-  @Nullable
-  String getHomePath();
+  @Nullable String getHomePath();
 
   
   Path getHomeNioPath();
@@ -55,8 +53,7 @@ public interface Sdk extends UserDataHolder, Named {
   
   Platform getPlatform();
 
-  @Nullable
-  VirtualFile getHomeDirectory();
+  @Nullable VirtualFile getHomeDirectory();
 
   
   RootProvider getRootProvider();
@@ -64,8 +61,7 @@ public interface Sdk extends UserDataHolder, Named {
   
   SdkModificator getSdkModificator();
 
-  @Nullable
-  SdkAdditionalData getSdkAdditionalData();
+  @Nullable SdkAdditionalData getSdkAdditionalData();
 
   
   Object clone() throws CloneNotSupportedException;

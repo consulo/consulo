@@ -27,6 +27,5 @@ import javax.swing.*;
  */
 @ServiceAPI(ComponentScope.APPLICATION)
 public interface ContentInternalHelper {
-  @Nullable
-  String showSpecifyJavadocUrlDialog(JComponent parent, String initialValue);
+  @Nullable String showSpecifyJavadocUrlDialog(JComponent parent, String initialValue);
 }

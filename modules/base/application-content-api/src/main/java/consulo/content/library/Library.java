@@ -33,8 +33,7 @@ public interface Library extends JDOMExternalizable, Disposable {
 
   Library[] EMPTY_ARRAY = new Library[0];
 
-  @Nullable
-  String getName();
+  @Nullable String getName();
 
   
   String[] getUrls(OrderRootType rootType);
@@ -59,8 +58,7 @@ public interface Library extends JDOMExternalizable, Disposable {
 
   boolean isValid(String url, OrderRootType rootType);
 
-  @Nullable
-  PersistentLibraryKind<?> getKind();
+  @Nullable PersistentLibraryKind<?> getKind();
 
   LibraryProperties getProperties();
 

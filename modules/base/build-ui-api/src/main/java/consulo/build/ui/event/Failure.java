@@ -25,13 +25,11 @@ import java.util.List;
  * @author Vladislav.Soroka
  */
 public interface Failure {
-  @Nullable
   @BuildEventsNls.Message
-  String getMessage();
+  @Nullable String getMessage();
 
-  @Nullable
   @BuildEventsNls.Description
-  String getDescription();
+  @Nullable String getDescription();
 
   default @Nullable Throwable getError() {return null;}
 

@@ -429,9 +429,8 @@ public class EditorUtil {
             return context;
         }
         return new DataContext() {
-            @Nullable
             @Override
-            public <T> T getData(Key<T> dataId) {
+            public <T> @Nullable T getData(Key<T> dataId) {
                 if (Project.KEY == dataId) {
                     return (T) editor.getProject();
                 }

@@ -33,15 +33,13 @@ public abstract class TypePresentationProvider<T> {
   private static final ExtensionPointCacheKey<TypePresentationProvider, Function<Class, TypePresentationProvider>> KEY =
           ExtensionPointCacheKey.create("TypePresentationProvider", ByClassGrouper.build(TypePresentationProvider::getItemClass));
 
-  @Nullable
   @SuppressWarnings("unchecked")
-  public static <T> TypePresentationProvider<T> getPresentationProvider(T element) {
+  public static <T> @Nullable TypePresentationProvider<T> getPresentationProvider(T element) {
     return getPresentationProvider(element.getClass());
   }
 
-  @Nullable
   @SuppressWarnings("unchecked")
-  public static <T> TypePresentationProvider<T> getPresentationProvider(Class typeClass) {
+  public static <T> @Nullable TypePresentationProvider<T> getPresentationProvider(Class typeClass) {
     Function<Class, TypePresentationProvider> call = Application.get().getExtensionPoint(TypePresentationProvider.class).getOrBuildCache(KEY);
     return call.apply(typeClass);
   }

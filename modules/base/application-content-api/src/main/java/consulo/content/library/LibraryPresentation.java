@@ -28,13 +28,11 @@ public interface LibraryPresentation<P extends LibraryProperties> {
   
   LibraryKind getKind();
 
-  @Nullable
-  Image getIcon();
+  @Nullable Image getIcon();
 
   default @Nullable String getDescription(P properties) {
     return null;
   }
 
-  @Nullable
-  P detect(List<VirtualFile> classesRoots);
+  @Nullable P detect(List<VirtualFile> classesRoots);
 }

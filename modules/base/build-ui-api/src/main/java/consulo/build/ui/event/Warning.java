@@ -24,7 +24,6 @@ public interface Warning {
   @BuildEventsNls.Title
   String getMessage();
 
-  @Nullable
   @BuildEventsNls.Description
-  String getDescription();
+  @Nullable String getDescription();
 }

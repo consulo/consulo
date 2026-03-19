@@ -38,8 +38,7 @@ public interface LibraryTable {
   
   Iterator<Library> getLibraryIterator();
 
-  @Nullable
-  Library getLibraryByName(String name);
+  @Nullable Library getLibraryByName(String name);
 
   String getTableLevel();
 
@@ -69,8 +68,7 @@ public interface LibraryTable {
     
     Iterator<Library> getLibraryIterator();
 
-    @Nullable
-    Library getLibraryByName(String name);
+    @Nullable Library getLibraryByName(String name);
 
     
     Library[] getLibraries();

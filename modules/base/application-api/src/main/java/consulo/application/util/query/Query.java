@@ -26,8 +26,7 @@ public interface Query<Result> extends Iterable<Result> {
      *
      * @return first result of the search or {@code null} if no results.
      */
-    @Nullable
-    Result findFirst();
+    @Nullable Result findFirst();
 
     /**
      * Process search results one-by-one. All the results will be subsequently fed to a {@code consumer} passed.

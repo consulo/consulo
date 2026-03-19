@@ -42,17 +42,14 @@ public abstract class LibraryPresentationProvider<P extends LibraryProperties> i
         return myKind;
     }
 
-    @Nullable
     @Override
-    public abstract Image getIcon();
+    public abstract @Nullable Image getIcon();
 
-    @Nullable
     @Override
-    public String getDescription(P properties) {
+    public @Nullable String getDescription(P properties) {
         return null;
     }
 
-    @Nullable
     @Override
-    public abstract P detect(List<VirtualFile> classesRoots);
+    public abstract @Nullable P detect(List<VirtualFile> classesRoots);
 }

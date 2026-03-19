@@ -41,9 +41,8 @@ public class TypePresentationServiceImpl extends TypePresentationService {
   }
 
   @Override
-  @Nullable
   @SuppressWarnings("unchecked")
-  public Image getTypeIcon(Class type) {
+  public @Nullable Image getTypeIcon(Class type) {
     TypePresentationProvider provider = TypePresentationProvider.getPresentationProvider(type);
     if (provider != null) {
       return provider.getIcon(null);
@@ -51,10 +50,9 @@ public class TypePresentationServiceImpl extends TypePresentationService {
     return null;
   }
 
-  @Nullable
   @Override
   @SuppressWarnings("unchecked")
-  public String getPresentableName(Object o) {
+  public @Nullable String getPresentableName(Object o) {
     TypePresentationProvider provider = TypePresentationProvider.getPresentationProvider(o);
     if (provider != null) {
       return provider.getName(o);
@@ -62,10 +60,9 @@ public class TypePresentationServiceImpl extends TypePresentationService {
     return null;
   }
 
-  @Nullable
   @Override
   @SuppressWarnings("unchecked")
-  public String getTypeName(Object o) {
+  public @Nullable String getTypeName(Object o) {
     TypePresentationProvider provider = TypePresentationProvider.getPresentationProvider(o);
     if (provider != null) {
       return provider.getTypeName(o);

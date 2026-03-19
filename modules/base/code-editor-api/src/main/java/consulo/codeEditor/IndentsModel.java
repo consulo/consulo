@@ -22,8 +22,7 @@ import java.util.List;
  * @author max
  */
 public interface IndentsModel {
-  @Nullable
-  IndentGuideDescriptor getCaretIndentGuide();
+  @Nullable IndentGuideDescriptor getCaretIndentGuide();
 
   /**
    * Tries to return a descriptor (if any) that defines indent guide for the given lines.
@@ -33,8 +32,7 @@ public interface IndentsModel {
    * @return            indent guide descriptor registered for the given lines at the current model previously if any;
    *                    <code>null</code> otherwise
    */
-  @Nullable
-  IndentGuideDescriptor getDescriptor(int startLine, int endLine);
+  @Nullable IndentGuideDescriptor getDescriptor(int startLine, int endLine);
 
   void assumeIndents(List<IndentGuideDescriptor> descriptors);
   

@@ -43,11 +43,9 @@ public interface HttpRequest {
   
   String path();
 
-  @Nullable
-  String getHeaderValue(String headerName);
+  @Nullable String getHeaderValue(String headerName);
 
-  @Nullable
-  String getParameterValue(String parameter);
+  @Nullable String getParameterValue(String parameter);
 
   void terminate();
 }

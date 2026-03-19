@@ -44,8 +44,7 @@ public interface FavoritesListProvider extends Comparator<FavoritesTreeNodeDescr
 
     int getWeight();
 
-    @Nullable
-    FavoritesListNode createFavoriteListNode(Project project);
+    @Nullable FavoritesListNode createFavoriteListNode(Project project);
 
     void customizeRenderer(
         ColoredTreeCellRenderer renderer,

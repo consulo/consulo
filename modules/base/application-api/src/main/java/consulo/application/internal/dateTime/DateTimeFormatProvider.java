@@ -28,6 +28,5 @@ import java.text.DateFormat;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface DateTimeFormatProvider {
-    @Nullable
-    DateFormat[] getFormats(Platform platform);
+    DateFormat @Nullable [] getFormats(Platform platform);
 }

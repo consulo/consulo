@@ -28,9 +28,8 @@ import java.util.function.Supplier;
 public abstract class NullableLazyValue<T> implements Supplier<T>{
   public static <E> NullableLazyValue<E> createValue(final Supplier<? extends E> factory) {
     return new NullableLazyValue<E>() {
-      @Nullable
       @Override
-      protected E compute() {
+      protected @Nullable E compute() {
         return factory.get();
       }
     };

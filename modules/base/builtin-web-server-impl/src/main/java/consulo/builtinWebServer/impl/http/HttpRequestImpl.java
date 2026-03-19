@@ -76,15 +76,13 @@ public class HttpRequestImpl implements HttpRequest {
     return myQueryStringDecoder.path();
   }
 
-  @Nullable
   @Override
-  public String getHeaderValue(String headerName) {
+  public @Nullable String getHeaderValue(String headerName) {
     return myFullHttpRequest.headers().getAsString(headerName);
   }
 
-  @Nullable
   @Override
-  public String getParameterValue(String parameter) {
+  public @Nullable String getParameterValue(String parameter) {
     return ContainerUtil.getFirstItem(myQueryStringDecoder.parameters().get(parameter));
   }
 

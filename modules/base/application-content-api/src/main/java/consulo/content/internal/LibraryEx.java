@@ -36,8 +36,7 @@ public interface LibraryEx extends Library {
    *
    * @return not null only if it module table
    */
-  @Nullable
-  ComponentManager getModule();
+  @Nullable ComponentManager getModule();
 
   @Deprecated
   interface ModifiableModelEx extends ModifiableModel {
