@@ -983,9 +983,8 @@ public abstract class DiffRequestProcessor implements Disposable {
             }
         }
 
-        @Nullable
         @Override
-        public Project getProject() {
+        public @Nullable Project getProject() {
             return DiffRequestProcessor.this.getProject();
         }
 
@@ -1004,9 +1003,8 @@ public abstract class DiffRequestProcessor implements Disposable {
             DiffRequestProcessor.this.requestFocusInternal();
         }
 
-        @Nullable
         @Override
-        public <T> T getUserData(Key<T> key) {
+        public <T> @Nullable T getUserData(Key<T> key) {
             return myContext.getUserData(key);
         }
 
@@ -1039,8 +1037,7 @@ public abstract class DiffRequestProcessor implements Disposable {
         @RequiredUIAccess
         void destroy();
 
-        @Nullable
-        JComponent getPreferredFocusedComponent();
+        @Nullable JComponent getPreferredFocusedComponent();
 
         void uiDataSnapshot(DataSink sink);
 
@@ -1060,9 +1057,8 @@ public abstract class DiffRequestProcessor implements Disposable {
         public void destroy() {
         }
 
-        @Nullable
         @Override
-        public JComponent getPreferredFocusedComponent() {
+        public @Nullable JComponent getPreferredFocusedComponent() {
             return null;
         }
 
@@ -1110,9 +1106,8 @@ public abstract class DiffRequestProcessor implements Disposable {
             Disposer.dispose(myViewer);
         }
 
-        @Nullable
         @Override
-        public JComponent getPreferredFocusedComponent() {
+        public @Nullable JComponent getPreferredFocusedComponent() {
             return null;
         }
 
@@ -1155,9 +1150,8 @@ public abstract class DiffRequestProcessor implements Disposable {
             Disposer.dispose(myViewer);
         }
 
-        @Nullable
         @Override
-        public JComponent getPreferredFocusedComponent() {
+        public @Nullable JComponent getPreferredFocusedComponent() {
             return myViewer.getPreferredFocusedComponent();
         }
 
@@ -1229,9 +1223,8 @@ public abstract class DiffRequestProcessor implements Disposable {
             Disposer.dispose(myWrapperViewer);
         }
 
-        @Nullable
         @Override
-        public JComponent getPreferredFocusedComponent() {
+        public @Nullable JComponent getPreferredFocusedComponent() {
             return myWrapperViewer.getPreferredFocusedComponent();
         }
 

@@ -71,9 +71,8 @@ public class XmlActionGroupStub extends DefaultActionGroup implements ActionStub
     return myIconPath;
   }
 
-  @Nullable
   @Override
-  public AnAction initialize(Application application, ActionManager manager) {
+  public @Nullable AnAction initialize(Application application, ActionManager manager) {
     return convertGroupStub(application, this, manager);
   }
 

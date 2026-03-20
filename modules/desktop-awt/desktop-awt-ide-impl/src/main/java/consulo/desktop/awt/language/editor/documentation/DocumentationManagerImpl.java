@@ -690,9 +690,8 @@ public final class DocumentationManagerImpl extends DockablePopupManager<Documen
     }
 
     @Override
-    @Nullable
     @RequiredUIAccess
-    public PsiElement findTargetElement(Editor editor, int offset, @Nullable PsiFile file, PsiElement contextElement) {
+    public @Nullable PsiElement findTargetElement(Editor editor, int offset, @Nullable PsiFile file, PsiElement contextElement) {
         try {
             return findTargetElementUnsafe(editor, offset, file, contextElement);
         }
@@ -706,9 +705,8 @@ public final class DocumentationManagerImpl extends DockablePopupManager<Documen
     /**
      * in case index is not ready will throw IndexNotReadyException
      */
-    @Nullable
     @RequiredUIAccess
-    private PsiElement findTargetElementUnsafe(Editor editor, int offset, @Nullable PsiFile file, PsiElement contextElement) {
+    private @Nullable PsiElement findTargetElementUnsafe(Editor editor, int offset, @Nullable PsiFile file, PsiElement contextElement) {
         if (LookupManager.getInstance(myProject).getActiveLookup() != null) {
             return assertSameProject(getElementFromLookup(editor, file));
         }
@@ -750,9 +748,8 @@ public final class DocumentationManagerImpl extends DockablePopupManager<Documen
     }
 
     @Override
-    @Nullable
     @RequiredUIAccess
-    public PsiElement getElementFromLookup(Editor editor, @Nullable PsiFile file) {
+    public @Nullable PsiElement getElementFromLookup(Editor editor, @Nullable PsiFile file) {
         Lookup activeLookup = LookupManager.getInstance(myProject).getActiveLookup();
 
         if (activeLookup != null) {
@@ -1100,8 +1097,7 @@ public final class DocumentationManagerImpl extends DockablePopupManager<Documen
         return getTitle(element, true);
     }
 
-    @Nullable
-    Image getElementImage(PsiElement element, String imageSpec) {
+    @Nullable Image getElementImage(PsiElement element, String imageSpec) {
         DocumentationProvider provider = DocumentationManagerHelper.getProviderFromElement(element);
         if (provider instanceof CompositeDocumentationProvider compositeProvider) {
             for (DocumentationProvider p : compositeProvider.getAllProviders()) {
@@ -1209,9 +1205,8 @@ public final class DocumentationManagerImpl extends DockablePopupManager<Documen
         }
     }
 
-    @Nullable
     @RequiredReadAction
-    private static String generateFileDoc(PsiFile psiFile, boolean withUrl) {
+    private static @Nullable String generateFileDoc(PsiFile psiFile, boolean withUrl) {
         VirtualFile file = PsiUtilCore.getVirtualFile(psiFile);
         File ioFile = file == null || !file.isInLocalFileSystem() ? null : VirtualFileUtil.virtualToIoFile(file);
         BasicFileAttributes attr = null;

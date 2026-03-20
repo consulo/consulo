@@ -36,9 +36,8 @@ public class ExternalSystemProjectResolverWrapper<S extends ExternalSystemExecut
     myProgressManager = progressManager;
   }
 
-  @Nullable
   @Override
-  public DataNode<ProjectData> resolveProjectInfo(ExternalSystemTaskId id,
+  public @Nullable DataNode<ProjectData> resolveProjectInfo(ExternalSystemTaskId id,
                                                     String projectPath,
                                                     boolean isPreviewMode,
                                                     @Nullable S settings)

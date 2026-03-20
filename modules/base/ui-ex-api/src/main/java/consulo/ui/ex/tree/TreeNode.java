@@ -146,9 +146,8 @@ public abstract class TreeNode<T> extends PresentableNodeDescriptor<TreeNode<T>>
     return myNullValueSet ? null : myValue;
   }
 
-  @Nullable
   @TestOnly
-  public String toTestString(Queryable.@Nullable PrintInfo printInfo) {
+  public @Nullable String toTestString(Queryable.@Nullable PrintInfo printInfo) {
     if (getValue() instanceof Queryable) {
       String text = Queryable.Util.print((Queryable)getValue(), printInfo, this);
       if (text != null) return text;
@@ -165,10 +164,9 @@ public abstract class TreeNode<T> extends PresentableNodeDescriptor<TreeNode<T>>
    * @deprecated use {@link #toTestString(Queryable.PrintInfo)} instead
    */
   @Deprecated
-  @Nullable
   @NonNls
   @TestOnly
-  public String getTestPresentation() {
+  public @Nullable String getTestPresentation() {
     if (myName != null) {
       return myName;
     }

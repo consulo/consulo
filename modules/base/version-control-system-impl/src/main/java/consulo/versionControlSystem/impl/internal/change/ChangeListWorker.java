@@ -749,9 +749,8 @@ public class ChangeListWorker implements ChangeListsWriteOperations {
       return myWorker.getListsCopy();
     }
 
-    @Nullable
     @Override
-    public LocalChangeList findChangeList(String name) {
+    public @Nullable LocalChangeList findChangeList(String name) {
       return myWorker.getCopyByName(name);
     }
 

@@ -37,10 +37,9 @@ public class CleanupOnScopeIntention extends CleanupIntention {
 
   private CleanupOnScopeIntention() {}
 
-  @Nullable
   @Override                               
   @RequiredUIAccess
-  protected AnalysisScope getScope(Project project, PsiFile file) {
+  protected @Nullable AnalysisScope getScope(Project project, PsiFile file) {
     Module module = file.getModule();
     AnalysisScope analysisScope = new AnalysisScope(file);
     VirtualFile virtualFile = file.getVirtualFile();

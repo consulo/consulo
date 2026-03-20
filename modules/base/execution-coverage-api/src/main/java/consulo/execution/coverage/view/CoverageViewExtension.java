@@ -72,9 +72,8 @@ public abstract class CoverageViewExtension {
         return object instanceof VirtualFile virtualFile && PsiManager.getInstance(myProject).findFile(virtualFile) != null;
     }
 
-    @Nullable
     @RequiredReadAction
-    public PsiElement getElementToSelect(Object object) {
+    public @Nullable PsiElement getElementToSelect(Object object) {
         if (object instanceof PsiElement element) {
             return element;
         }

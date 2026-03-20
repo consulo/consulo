@@ -37,9 +37,8 @@ public class PluginManager extends PluginManagerCore {
         return consulo.container.plugin.PluginManager.findPlugin(id);
     }
 
-    @Nullable
     @Deprecated
-    public static File getPluginPath(Class<?> pluginClass) {
+    public static @Nullable File getPluginPath(Class<?> pluginClass) {
         return consulo.container.plugin.PluginManager.getPluginPath(pluginClass);
     }
 

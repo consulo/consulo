@@ -1061,8 +1061,7 @@ public class RunConfigurable extends BaseConfigurable {
         return (DefaultMutableTreeNode) myTree.getPathForRow(row).getLastPathComponent();
     }
 
-    @Nullable
-    Trinity<Integer, Integer, RowsDnDSupport.RefinedDropSupport.Position> getAvailableDropPosition(int direction) {
+    @Nullable Trinity<Integer, Integer, RowsDnDSupport.RefinedDropSupport.Position> getAvailableDropPosition(int direction) {
         int[] rows = myTree.getSelectionRows();
         if (rows == null || rows.length != 1) {
             return null;
@@ -1787,8 +1786,7 @@ public class RunConfigurable extends BaseConfigurable {
     public interface RunDialogBase {
         void setOKActionEnabled(boolean isEnabled);
 
-        @Nullable
-        Executor getExecutor();
+        @Nullable Executor getExecutor();
 
         void setTitle(String title);
 

@@ -235,9 +235,8 @@ public class DesktopSwtToolWindowManagerImpl extends ToolWindowManagerBase {
     public void notifyByBalloon(String toolWindowId, NotificationType type, String htmlBody) {
     }
 
-    @Nullable
     @Override
-    public Balloon getToolWindowBalloon(String id) {
+    public @Nullable Balloon getToolWindowBalloon(String id) {
         return null;
     }
 

@@ -42,8 +42,7 @@ public interface CustomFoldRegion extends FoldRegion {
    *
    * @see CustomFoldRegionRenderer#calcGutterIconRenderer(CustomFoldRegion)
    */
-  @Nullable
-  GutterIconRenderer getGutterIconRenderer();
+  @Nullable GutterIconRenderer getGutterIconRenderer();
 
   /**
    * Updates fold region's properties (width, height, gutter icon renderer) from its renderer. Also, repaints the region's placeholder.
@@ -64,6 +63,5 @@ public interface CustomFoldRegion extends FoldRegion {
    * Returns the location of fold region's placeholder in editor coordinate system, or {@code null} if the placeholder isn't visible
    * currently (due to being 'inside' another collapsed fold region).
    */
-  @Nullable
-  Point getLocation();
+  @Nullable Point getLocation();
 }

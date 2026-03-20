@@ -51,9 +51,8 @@ public abstract class CodeStyleFacadeImpl implements CodeStyleFacade {
   }
 
   @Override
-  @Nullable
   @Deprecated
-  public String getLineIndent(Document document, int offset) {
+  public @Nullable String getLineIndent(Document document, int offset) {
     if (myProject == null) return null;
     PsiDocumentManager.getInstance(myProject).commitDocument(document);
     return CodeStyleManager.getInstance(myProject).getLineIndent(document, offset);

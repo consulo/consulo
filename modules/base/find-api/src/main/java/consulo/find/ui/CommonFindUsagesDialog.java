@@ -78,9 +78,8 @@ public class CommonFindUsagesDialog extends AbstractFindUsagesDialog {
         coloredComponent.append(DescriptiveNameUtil.getDescriptiveName(myPsiElement), SimpleTextAttributes.REGULAR_BOLD_ATTRIBUTES);
     }
 
-    @Nullable
     @Override
-    protected String getHelpId() {
+    protected @Nullable String getHelpId() {
         return myHandler.getHelpId();
     }
 }

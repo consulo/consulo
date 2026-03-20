@@ -20,8 +20,7 @@ import consulo.versionControlSystem.VcsException;
 import org.jspecify.annotations.Nullable;
 
 public interface VcsHistoryProviderEx extends VcsHistoryProvider {
-  @Nullable
-  VcsFileRevision getLastRevision(FilePath filePath) throws VcsException;
+  @Nullable VcsFileRevision getLastRevision(FilePath filePath) throws VcsException;
 
   void reportAppendableHistory(FilePath path,
                                @Nullable VcsRevisionNumber startingRevision,

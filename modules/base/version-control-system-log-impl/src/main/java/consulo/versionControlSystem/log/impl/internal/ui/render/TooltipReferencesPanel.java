@@ -67,9 +67,8 @@ class TooltipReferencesPanel extends ReferencesPanel {
     return myReferencePainter.getReferenceFont();
   }
 
-  @Nullable
   @Override
-  protected Image createIcon(VcsRefType type, Collection<VcsRef> refs, int refIndex, int height) {
+  protected @Nullable Image createIcon(VcsRefType type, Collection<VcsRef> refs, int refIndex, int height) {
     if (refIndex == 0) {
       Color color = type.getBackgroundColor();
       return new LabelIcon(height, getBackground(),

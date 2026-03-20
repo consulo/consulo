@@ -36,9 +36,8 @@ public class ConcurrentWeakKeySoftValueHashMap<K, V> implements ConcurrentMap<K,
   }
 
   public interface KeyReference<K, V> extends Supplier<K> {
-    @Nullable
     @Override
-    K get();
+    @Nullable K get();
 
     ValueReference<K, V> getValueReference(); // no strong references
 
@@ -51,8 +50,7 @@ public class ConcurrentWeakKeySoftValueHashMap<K, V> implements ConcurrentMap<K,
   }
 
   public interface ValueReference<K, V> extends Supplier<V> {
-    @Nullable
-    KeyReference<K, V> getKeyReference(); // no strong references
+    @Nullable KeyReference<K, V> getKeyReference(); // no strong references
 
     @Override
     V get();
@@ -124,9 +122,8 @@ public class ConcurrentWeakKeySoftValueHashMap<K, V> implements ConcurrentMap<K,
       return v != null && v.equals(thatV);
     }
 
-    @Nullable
     @Override
-    public KeyReference<K, V> getKeyReference() {
+    public @Nullable KeyReference<K, V> getKeyReference() {
       return myKeyReference;
     }
   }
@@ -182,9 +179,8 @@ public class ConcurrentWeakKeySoftValueHashMap<K, V> implements ConcurrentMap<K,
       myKey = null;
     }
 
-    @Nullable
     @Override
-    public K get() {
+    public @Nullable K get() {
       return myKey;
     }
 
@@ -220,9 +216,8 @@ public class ConcurrentWeakKeySoftValueHashMap<K, V> implements ConcurrentMap<K,
 
 ///////////////////////////////////
 
-  @Nullable
   @Override
-  public V get(Object key) {
+  public @Nullable V get(Object key) {
     HardKey<K, V> hardKey = createHardKey(key);
     try {
       ValueReference<K, V> valueReference = myMap.get(hardKey);
@@ -243,9 +238,8 @@ public class ConcurrentWeakKeySoftValueHashMap<K, V> implements ConcurrentMap<K,
     throw RefValueHashMap.pointlessContainsValue();
   }
 
-  @Nullable
   @Override
-  public V remove(Object key) {
+  public @Nullable V remove(Object key) {
     HardKey<K, V> hardKey = createHardKey(key);
     try {
       ValueReference<K, V> valueReference = myMap.remove(hardKey);
@@ -264,9 +258,8 @@ public class ConcurrentWeakKeySoftValueHashMap<K, V> implements ConcurrentMap<K,
     }
   }
 
-  @Nullable
   @Override
-  public V put(K key, V value) {
+  public @Nullable V put(K key, V value) {
     KeyReference<K, V> keyReference = createKeyReference(key, value);
     ValueReference<K, V> valueReference = keyReference.getValueReference();
     ValueReference<K, V> prevValReference = myMap.put(keyReference, valueReference);
@@ -319,9 +312,8 @@ public class ConcurrentWeakKeySoftValueHashMap<K, V> implements ConcurrentMap<K,
     throw new UnsupportedOperationException();
   }
 
-  @Nullable
   @Override
-  public boolean remove(Object key, Object value) {
+  public @Nullable boolean remove(Object key, Object value) {
     Objects.requireNonNull(value);
     HardKey<K, V> hardKey = createHardKey(key);
     try {
@@ -335,9 +327,8 @@ public class ConcurrentWeakKeySoftValueHashMap<K, V> implements ConcurrentMap<K,
     }
   }
 
-  @Nullable
   @Override
-  public V putIfAbsent(K key, V value) {
+  public @Nullable V putIfAbsent(K key, V value) {
     KeyReference<K, V> keyRef = createKeyReference(key, value);
     ValueReference<K, V> newRef = keyRef.getValueReference();
     V prev;
@@ -364,9 +355,8 @@ public class ConcurrentWeakKeySoftValueHashMap<K, V> implements ConcurrentMap<K,
     return prev;
   }
 
-  @Nullable
   @Override
-  public boolean replace(K key, V oldValue, V newValue) {
+  public @Nullable boolean replace(K key, V oldValue, V newValue) {
     HardKey<K, V> oldKeyReference = createHardKey(key);
     ValueReference<K, V> oldValueReference;
     try {
@@ -385,9 +375,8 @@ public class ConcurrentWeakKeySoftValueHashMap<K, V> implements ConcurrentMap<K,
     }
   }
 
-  @Nullable
   @Override
-  public V replace(K key, V value) {
+  public @Nullable V replace(K key, V value) {
     HardKey<K, V> keyReference = createHardKey(key);
     try {
       ValueReference<K, V> valueReference = createValueReference(value, myValueQueue);

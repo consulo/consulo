@@ -146,9 +146,8 @@ public class ExecutionEnvironment extends UserDataHolderBase implements Disposab
         }
     }
 
-    @Nullable
     @Deprecated
-    /**
+    @Nullable /**
      * Use {@link #getRunner()} instead
      * to remove in IDEA 15
      */ public String getRunnerId() {

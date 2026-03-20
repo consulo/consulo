@@ -57,9 +57,8 @@ public abstract class JBIterator<E> implements Iterator<E> {
 
   static <E> JBIterator<E> wrap(final Iterator<E> it) {
     return new JBIterator<E>() {
-      @Nullable
       @Override
-      protected E nextImpl() {
+      protected @Nullable E nextImpl() {
         return it.hasNext() ? it.next() : stop();
       }
     };
@@ -238,15 +237,13 @@ public abstract class JBIterator<E> implements Iterator<E> {
   private static class Op<T> {
     final @Nullable T impl;
 
-    @Nullable
-    Op nextOp = null;
+    @Nullable Op nextOp = null;
 
     public Op(@Nullable T impl) {
       this.impl = impl;
     }
 
-    @Nullable
-    Object apply(@Nullable Object o) {
+    @Nullable Object apply(@Nullable Object o) {
       throw new UnsupportedOperationException();
     }
 
@@ -274,9 +271,8 @@ public abstract class JBIterator<E> implements Iterator<E> {
       super(function);
     }
 
-    @Nullable
     @Override
-    Object apply(@Nullable Object o) {
+    @Nullable Object apply(@Nullable Object o) {
       return Objects.requireNonNull(impl).apply((E)o);
     }
   }
@@ -286,9 +282,8 @@ public abstract class JBIterator<E> implements Iterator<E> {
       super(condition);
     }
 
-    @Nullable
     @Override
-    Object apply(@Nullable Object o) {
+    @Nullable Object apply(@Nullable Object o) {
       return Objects.requireNonNull(impl).test((E)o) ? o : skip();
     }
   }
@@ -298,9 +293,8 @@ public abstract class JBIterator<E> implements Iterator<E> {
       super(condition);
     }
 
-    @Nullable
     @Override
-    Object apply(@Nullable Object o) {
+    @Nullable Object apply(@Nullable Object o) {
       return Objects.requireNonNull(impl).test((E)o) ? o : stop();
     }
   }
@@ -312,9 +306,8 @@ public abstract class JBIterator<E> implements Iterator<E> {
       super(condition);
     }
 
-    @Nullable
     @Override
-    Object apply(@Nullable Object o) {
+    @Nullable Object apply(@Nullable Object o) {
       if (active && Objects.requireNonNull(impl).test((E)o)) return skip();
       active = false;
       return o;
@@ -326,9 +319,8 @@ public abstract class JBIterator<E> implements Iterator<E> {
       super(null);
     }
 
-    @Nullable
     @Override
-    Object apply(@Nullable Object o) {
+    @Nullable Object apply(@Nullable Object o) {
       return o;
     }
   }
@@ -340,9 +332,8 @@ public abstract class JBIterator<E> implements Iterator<E> {
       super(null);
     }
 
-    @Nullable
     @Override
-    Object apply(@Nullable Object o) {
+    @Nullable Object apply(@Nullable Object o) {
       JBIterator<?> it = (JBIterator<?>)Objects.requireNonNull(o);
       return ((advanced = nextOp != null) ? it.advance() : it.hasNext()) ? it : stop();
     }

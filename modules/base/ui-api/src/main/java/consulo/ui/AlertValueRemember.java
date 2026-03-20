@@ -27,8 +27,7 @@ public interface AlertValueRemember<V> {
   /**
    * @return null if no value, dialog will show
    */
-  @Nullable
-  V getValue();
+  @Nullable V getValue();
   String getMessageBoxText();
 
   default boolean isRememberByDefault() {

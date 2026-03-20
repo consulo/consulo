@@ -75,9 +75,8 @@ public class CoverageListNode extends AbstractTreeNode<PsiNamedElement> {
     @Override
     public FileStatus getFileStatus() {
         PsiFile containingFile = myProject.getApplication().runReadAction(new Supplier<PsiFile>() {
-            @Nullable
             @Override
-            public PsiFile get() {
+            public @Nullable PsiFile get() {
                 if (getValue() instanceof PsiElement element && element.isValid()) {
                     return element.getContainingFile();
                 }

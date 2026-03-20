@@ -23,6 +23,5 @@ import java.io.IOException;
 public interface VcsFileContent {
   byte[] loadContent() throws IOException, VcsException;
 
-  @Nullable
-  byte[] getContent() throws IOException, VcsException;
+  @Nullable byte[] getContent() throws IOException, VcsException;
 }

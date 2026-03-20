@@ -15,8 +15,7 @@ public interface MultiCharQuoteHandler extends QuoteHandler {
   /**
    * Returns a closing quote for an opening quote placed immediately before offset, or {@code null} when there is no matching quote.
    */
-  @Nullable
-  CharSequence getClosingQuote(HighlighterIterator iterator, int offset);
+  @Nullable CharSequence getClosingQuote(HighlighterIterator iterator, int offset);
 
   /**
    * Should insert the {@code closingQuote} returned from {@link #getClosingQuote(HighlighterIterator, int)} into the document.

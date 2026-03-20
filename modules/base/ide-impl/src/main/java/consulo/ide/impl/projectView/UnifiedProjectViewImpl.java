@@ -224,9 +224,8 @@ public class UnifiedProjectViewImpl implements ProjectViewEx, Disposable {
                 });
         }
 
-        @Nullable
         @RequiredReadAction
-        private Module[] getSelectedModules() {
+        private @Nullable Module[] getSelectedModules() {
             AbstractProjectViewPane viewPane = getCurrentProjectViewPane();
             if (viewPane == null) {
                 return null;
@@ -368,9 +367,8 @@ public class UnifiedProjectViewImpl implements ProjectViewEx, Disposable {
         return AsyncResult.done(null);
     }
 
-    @Nullable
     @Override
-    public PsiElement getParentOfCurrentSelection() {
+    public @Nullable PsiElement getParentOfCurrentSelection() {
         return null;
     }
 

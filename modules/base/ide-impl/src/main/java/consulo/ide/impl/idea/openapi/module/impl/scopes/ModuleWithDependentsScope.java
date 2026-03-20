@@ -88,9 +88,8 @@ class ModuleWithDependentsScope extends GlobalSearchScope {
 
   private static ModuleIndex getModuleIndex(final Project project) {
     return CachedValuesManager.getManager(project).getCachedValue(project, new CachedValueProvider<ModuleIndex>() {
-      @Nullable
       @Override
-      public Result<ModuleIndex> compute() {
+      public @Nullable Result<ModuleIndex> compute() {
         ModuleIndex index = new ModuleIndex();
         for (Module module : ModuleManager.getInstance(project).getModules()) {
           for (OrderEntry orderEntry : ModuleRootManager.getInstance(module).getOrderEntries()) {

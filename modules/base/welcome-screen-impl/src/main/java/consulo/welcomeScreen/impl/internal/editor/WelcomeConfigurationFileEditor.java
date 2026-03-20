@@ -53,10 +53,9 @@ public class WelcomeConfigurationFileEditor extends ConfigurationFileEditor {
         return myComponent;
     }
 
-    @Nullable
     @Override
     @RequiredUIAccess
-    public Component getPreferredFocusedUIComponent() {
+    public @Nullable Component getPreferredFocusedUIComponent() {
         return myComponent;
     }
 

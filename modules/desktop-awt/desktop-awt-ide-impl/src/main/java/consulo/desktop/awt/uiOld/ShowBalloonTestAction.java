@@ -60,10 +60,9 @@ public class ShowBalloonTestAction extends DumbAwareAction {
             init();
         }
 
-        @Nullable
         @Override
         @RequiredUIAccess
-        protected JComponent createCenterPanel() {
+        protected @Nullable JComponent createCenterPanel() {
             VerticalLayout layout = VerticalLayout.create();
             layout.addBorders(BorderStyle.EMPTY, null, 150);
 

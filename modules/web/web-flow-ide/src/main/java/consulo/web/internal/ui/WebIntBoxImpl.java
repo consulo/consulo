@@ -31,9 +31,8 @@ import org.jspecify.annotations.Nullable;
  */
 public class WebIntBoxImpl extends VaadinComponentDelegate<WebIntBoxImpl.Vaadin> implements IntBox {
     public class Vaadin extends TextField implements FromVaadinComponentWrapper {
-        @Nullable
         @Override
-        public Component toUIComponent() {
+        public @Nullable Component toUIComponent() {
             return WebIntBoxImpl.this;
         }
     }

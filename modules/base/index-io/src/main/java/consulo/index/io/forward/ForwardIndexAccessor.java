@@ -17,6 +17,5 @@ public interface ForwardIndexAccessor<Key, Value> {
   /**
    * serialize indexed data to forward index format.
    */
-  @Nullable
-  ByteArraySequence serializeIndexedData(InputData<Key, Value> data) throws IOException;
+  @Nullable ByteArraySequence serializeIndexedData(InputData<Key, Value> data) throws IOException;
 }

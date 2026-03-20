@@ -388,9 +388,8 @@ public class LibraryImpl implements LibraryEx.ModifiableModelEx, LibraryEx, Root
     return mySource != null;
   }
 
-  @Nullable
   @Override
-  public PersistentLibraryKind<?> getKind() {
+  public @Nullable PersistentLibraryKind<?> getKind() {
     return myKind;
   }
 

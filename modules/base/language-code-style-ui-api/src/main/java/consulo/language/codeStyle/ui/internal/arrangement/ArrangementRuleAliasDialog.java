@@ -62,9 +62,8 @@ public class ArrangementRuleAliasDialog extends DialogWrapper {
     return myEditor.getItems();
   }
 
-  @Nullable
   @Override
-  protected JComponent createCenterPanel() {
+  protected @Nullable JComponent createCenterPanel() {
     return myEditor.createComponent(getDisposable());
   }
 

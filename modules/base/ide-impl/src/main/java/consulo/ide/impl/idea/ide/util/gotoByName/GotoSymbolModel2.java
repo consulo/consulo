@@ -43,9 +43,8 @@ public class GotoSymbolModel2 extends FilteringGotoByModel<Language> {
     return item instanceof PsiElement ? ((PsiElement) item).getLanguage() : null;
   }
 
-  @Nullable
   @Override
-  protected synchronized Collection<Language> getFilterItems() {
+  protected synchronized @Nullable Collection<Language> getFilterItems() {
     Collection<Language> result = super.getFilterItems();
     if (result == null) {
       return result;

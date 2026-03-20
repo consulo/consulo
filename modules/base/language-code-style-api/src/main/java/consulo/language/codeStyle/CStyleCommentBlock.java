@@ -145,9 +145,8 @@ public class CStyleCommentBlock extends AbstractBlock {
     });
   }
 
-  @Nullable
   @Override
-  public Spacing getSpacing(@Nullable Block child1, Block child2) {
+  public @Nullable Spacing getSpacing(@Nullable Block child1, Block child2) {
     boolean isLicenseComment = child1 == null && FormatterTreeUtil.prev(getNode()) == null;
     if (isLicenseComment) {
       return Spacing.getReadOnlySpacing();

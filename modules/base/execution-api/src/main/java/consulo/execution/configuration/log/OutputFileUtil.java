@@ -120,9 +120,8 @@ public class OutputFileUtil {
           @Override
           public void navigate(final Project project) {
             final VirtualFile file = ApplicationManager.getApplication().runWriteAction(new Supplier<VirtualFile>() {
-              @Nullable
               @Override
-              public VirtualFile get() {
+              public @Nullable VirtualFile get() {
                 return LocalFileSystem.getInstance().refreshAndFindFileByPath(FileUtil.toSystemIndependentName(filePath));
               }
             });

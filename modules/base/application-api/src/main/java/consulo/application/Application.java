@@ -207,8 +207,7 @@ public interface Application extends ComponentManager, CoroutineContextOwner {
      * @return a {@link Continuation} that completes when the save operation finishes, or {@code null} if saving was skipped
      */
     @RequiredUIAccess
-    @Nullable
-    Continuation<Void> saveAll();
+    @Nullable Continuation<Void> saveAll();
 
     /**
      * Saves all open documents, projects, and application settings with a visible progress dialog.

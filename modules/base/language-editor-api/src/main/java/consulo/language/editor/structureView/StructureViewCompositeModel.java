@@ -159,21 +159,18 @@ public class StructureViewCompositeModel extends StructureViewModelBase implemen
       @Override
       public ItemPresentation getPresentation() {
         return new ItemPresentation() {
-          @Nullable
           @Override
-          public String getPresentableText() {
+          public @Nullable String getPresentableText() {
             return view.title;
           }
 
-          @Nullable
           @Override
-          public String getLocationString() {
+          public @Nullable String getLocationString() {
             return null;
           }
 
-          @Nullable
           @Override
-          public Image getIcon() {
+          public @Nullable Image getIcon() {
             return view.icon;
           }
         };

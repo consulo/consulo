@@ -42,8 +42,7 @@ public interface ViewContext extends Disposable {
 
   CellTransform.Facade getCellTransform();
 
-  @Nullable
-  Tab getTabFor(Grid grid);
+  @Nullable Tab getTabFor(Grid grid);
 
   View getStateFor(Content content);
 

@@ -38,6 +38,5 @@ public interface ColorSettingsPages {
     return Application.get().getInstance(ColorSettingsPages.class);
   }
 
-  @Nullable
-  Pair<ColorAndFontDescriptors, AttributesDescriptor> getAttributeDescriptor(TextAttributesKey key);
+  @Nullable Pair<ColorAndFontDescriptors, AttributesDescriptor> getAttributeDescriptor(TextAttributesKey key);
 }

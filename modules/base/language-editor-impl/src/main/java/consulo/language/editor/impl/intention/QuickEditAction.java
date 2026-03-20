@@ -70,9 +70,8 @@ public class QuickEditAction implements IntentionAction, LowPriorityAction {
         return getRangePair(file, editor) != null;
     }
 
-    @Nullable
     @RequiredReadAction
-    protected Pair<PsiElement, TextRange> getRangePair(PsiFile file, Editor editor) {
+    protected @Nullable Pair<PsiElement, TextRange> getRangePair(PsiFile file, Editor editor) {
         int offset = editor.getCaretModel().getOffset();
         PsiLanguageInjectionHost host = PsiTreeUtil.getParentOfType(file.findElementAt(offset), PsiLanguageInjectionHost.class, false);
         if (host == null || ElementManipulators.getManipulator(host) == null) {

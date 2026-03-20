@@ -58,9 +58,8 @@ public abstract class CheckinHandler {
      * @return the panel instance, or null if the handler does not provide any options to show in the
      * "Before Check In" group.
      */
-    @Nullable
     @RequiredUIAccess
-    public RefreshableOnComponent getBeforeCheckinConfigurationPanel() {
+    public @Nullable RefreshableOnComponent getBeforeCheckinConfigurationPanel() {
         return null;
     }
 

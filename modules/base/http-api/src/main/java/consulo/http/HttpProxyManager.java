@@ -104,6 +104,5 @@ public interface HttpProxyManager {
     
     ProxySelector getOnlyBySettingsSelector();
 
-    @Nullable
-    PasswordAuthentication getGenericPassword(String host, int port);
+    @Nullable PasswordAuthentication getGenericPassword(String host, int port);
 }

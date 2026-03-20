@@ -128,9 +128,8 @@ public class ProgressManagerImpl extends CoreProgressManager implements Disposab
         }
     }
 
-    @Nullable
     @Override
-    protected CheckCanceledHook createCheckCanceledHook() {
+    protected @Nullable CheckCanceledHook createCheckCanceledHook() {
         if (myHooks.isEmpty()) {
             return null;
         }

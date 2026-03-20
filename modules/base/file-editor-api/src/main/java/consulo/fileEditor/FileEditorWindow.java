@@ -36,8 +36,7 @@ public interface FileEditorWindow {
 
   void closeAllExcept(VirtualFile selectedFile);
 
-  @Nullable
-  FileEditorWindow split(int orientation, boolean forceSplit, @Nullable VirtualFile virtualFile, boolean focusNew);
+  @Nullable FileEditorWindow split(int orientation, boolean forceSplit, @Nullable VirtualFile virtualFile, boolean focusNew);
 
   void unsplit(boolean setCurrent);
 
@@ -52,11 +51,9 @@ public interface FileEditorWindow {
   
   VirtualFile[] getFiles();
 
-  @Nullable
-  FileEditorWithProviderComposite findFileComposite(VirtualFile file);
+  @Nullable FileEditorWithProviderComposite findFileComposite(VirtualFile file);
 
-  @Nullable
-  FileEditorWithProviderComposite getSelectedEditor();
+  @Nullable FileEditorWithProviderComposite getSelectedEditor();
 
   
   FileEditorsSplitters getOwner();

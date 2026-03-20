@@ -219,9 +219,8 @@ public class GlobalInspectionContextBase extends UserDataHolderBase implements G
         return myRefManager;
     }
 
-    @Nullable
     @Override
-    public Tools getTools(String shortName) {
+    public @Nullable Tools getTools(String shortName) {
         return myTools.get(shortName);
     }
 

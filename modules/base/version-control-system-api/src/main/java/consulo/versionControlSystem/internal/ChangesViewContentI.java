@@ -36,8 +36,7 @@ public interface ChangesViewContentI {
 
     void setSelectedContent(Content content);
 
-    @Nullable
-    <T> T getActiveComponent(Class<T> aClass);
+    <T> @Nullable T getActiveComponent(Class<T> aClass);
 
     default void selectContent(String tabName) {
         selectContent(tabName, false);

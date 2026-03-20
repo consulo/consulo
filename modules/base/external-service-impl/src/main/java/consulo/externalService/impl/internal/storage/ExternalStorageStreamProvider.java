@@ -60,9 +60,8 @@ public class ExternalStorageStreamProvider extends StreamProvider {
         myStorage.saveContent(fileSpec, roamingType, content);
     }
 
-    @Nullable
     @Override
-    public InputStream loadContent(String fileSpec, RoamingType roamingType) throws IOException {
+    public @Nullable InputStream loadContent(String fileSpec, RoamingType roamingType) throws IOException {
         return myStorage.loadContent(fileSpec, roamingType);
     }
 

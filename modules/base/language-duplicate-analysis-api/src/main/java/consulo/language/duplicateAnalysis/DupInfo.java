@@ -17,11 +17,9 @@ public interface DupInfo {
 
     int getFileCount(int pattern);
 
-    @Nullable
-    String getTitle(int pattern);
+    @Nullable String getTitle(int pattern);
 
-    @Nullable
-    String getComment(int pattern);
+    @Nullable String getComment(int pattern);
 
     int getHash(int i);
 }

@@ -169,8 +169,7 @@ public interface JBPopup extends Disposable, LightweightWindow {
 
     void setUiVisible(boolean visible);
 
-    @Nullable
-    <T> T getUserData(Class<T> userDataClass);
+    <T> @Nullable T getUserData(Class<T> userDataClass);
 
     boolean isFocused();
 

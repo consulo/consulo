@@ -112,9 +112,8 @@ public class SelfElementInfo extends SmartPointerElementInfo {
     return myIdentikit.findPsiElement(file, segment.getStartOffset(), segment.getEndOffset());
   }
 
-  @Nullable
   @Override
-  TextRange getPsiRange(SmartPointerManagerImpl manager) {
+  @Nullable TextRange getPsiRange(SmartPointerManagerImpl manager) {
     return calcPsiRange();
   }
 
@@ -127,8 +126,7 @@ public class SelfElementInfo extends SmartPointerElementInfo {
   }
 
   @Override
-  @Nullable
-  PsiFile restoreFile(SmartPointerManagerImpl manager) {
+  @Nullable PsiFile restoreFile(SmartPointerManagerImpl manager) {
     Language language = myIdentikit.getFileLanguage();
     if (language == null) return null;
     return restoreFileFromVirtual(getVirtualFile(), manager.getProject(), language);
@@ -205,8 +203,7 @@ public class SelfElementInfo extends SmartPointerElementInfo {
   }
 
   @Override
-  @Nullable
-  Segment getRange(SmartPointerManagerImpl manager) {
+  @Nullable Segment getRange(SmartPointerManagerImpl manager) {
     if (hasRange()) {
       Document document = getDocumentToSynchronize();
       if (document != null) {

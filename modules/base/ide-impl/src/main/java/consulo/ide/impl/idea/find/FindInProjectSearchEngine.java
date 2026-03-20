@@ -24,8 +24,7 @@ public interface FindInProjectSearchEngine {
   /**
    * Constructs a searcher for a given {@param findModel} which serves as a input query.
    */
-  @Nullable
-  FindInProjectSearcher createSearcher(FindModel findModel, Project project);
+  @Nullable FindInProjectSearcher createSearcher(FindModel findModel, Project project);
 
   interface FindInProjectSearcher {
     /**

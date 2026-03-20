@@ -22,8 +22,7 @@ import org.jspecify.annotations.Nullable;
 import java.util.Collection;
 
 public interface CachedValueProvider<T> {
-    @Nullable
-    Result<T> compute();
+    @Nullable Result<T> compute();
 
     class Result<T> {
         private final T myValue;

@@ -107,23 +107,19 @@ final class ServiceModel implements Disposable, InvokerSupplier {
         );
     }
 
-    @Nullable
-    ServiceViewItem findItem(Predicate<? super ServiceViewItem> visitChildrenCondition, Predicate<? super ServiceViewItem> condition) {
+    @Nullable ServiceViewItem findItem(Predicate<? super ServiceViewItem> visitChildrenCondition, Predicate<? super ServiceViewItem> condition) {
         return doFindItems(visitChildrenCondition, condition, false).first();
     }
 
-    @Nullable
-    ServiceViewItem findItem(Object service, Class<?> contributorClass) {
+    @Nullable ServiceViewItem findItem(Object service, Class<?> contributorClass) {
         return findItems(service, contributorClass, false).first();
     }
 
-    @Nullable
-    ServiceViewItem findItemSafe(Object service, Class<?> contributorClass) {
+    @Nullable ServiceViewItem findItemSafe(Object service, Class<?> contributorClass) {
         return findItems(service, contributorClass, true).first();
     }
 
-    @Nullable
-    ServiceViewItem findItemById(List<String> ids, ServiceViewContributor<?> contributor) {
+    @Nullable ServiceViewItem findItemById(List<String> ids, ServiceViewContributor<?> contributor) {
         if (ids.isEmpty()) {
             return null;
         }
@@ -663,8 +659,7 @@ final class ServiceModel implements Disposable, InvokerSupplier {
             myLoaded = node.myLoaded;
         }
 
-        @Nullable
-        ServiceViewContributor<?> getProvidingContributor() {
+        @Nullable ServiceViewContributor<?> getProvidingContributor() {
             return myProvidingContributor;
         }
 

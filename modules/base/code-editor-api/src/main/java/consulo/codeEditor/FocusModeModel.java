@@ -27,6 +27,5 @@ import org.jspecify.annotations.Nullable;
 public interface FocusModeModel {
     Key<TextAttributes> FOCUS_MODE_ATTRIBUTES = Key.create("editor.focus.mode.attributes");
 
-    @Nullable
-    Segment getFocusModeRange();
+    @Nullable Segment getFocusModeRange();
 }

@@ -31,9 +31,8 @@ import org.jspecify.annotations.Nullable;
 public class WebMenuSeparatorImpl extends VaadinComponentDelegate<WebMenuSeparatorImpl.Vaadin> implements MenuSeparator {
   public class Vaadin extends SimpleComponent implements FromVaadinComponentWrapper {
 
-    @Nullable
     @Override
-    public Component toUIComponent() {
+    public @Nullable Component toUIComponent() {
       return WebMenuSeparatorImpl.this;
     }
   }

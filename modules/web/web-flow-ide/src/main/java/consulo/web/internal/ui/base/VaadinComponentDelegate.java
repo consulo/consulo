@@ -117,9 +117,8 @@ public abstract class VaadinComponentDelegate<T extends com.vaadin.flow.componen
         return data;
     }
 
-    @Nullable
     @Override
-    public Component getParent() {
+    public @Nullable Component getParent() {
         Optional<com.vaadin.flow.component.Component> parent = myVaadinComponent.getParent();
         while (parent.isPresent()) {
             com.vaadin.flow.component.Component component = parent.get();
@@ -162,9 +161,8 @@ public abstract class VaadinComponentDelegate<T extends com.vaadin.flow.componen
         dataObject().putUserData(key, value);
     }
 
-    @Nullable
     @Override
-    public <T> T getUserData(Key<T> key) {
+    public <T> @Nullable T getUserData(Key<T> key) {
         return dataObject().getUserData(key);
     }
 
@@ -233,9 +231,8 @@ public abstract class VaadinComponentDelegate<T extends com.vaadin.flow.componen
         // TODO CursorConverter.setCursor(toVaadinComponent(), cursor);
     }
 
-    @Nullable
     @Override
-    public Cursor getCursor() {
+    public @Nullable Cursor getCursor() {
         return myCursor;
     }
 

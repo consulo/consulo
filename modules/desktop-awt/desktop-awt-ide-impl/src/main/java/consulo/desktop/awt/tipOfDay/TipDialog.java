@@ -44,15 +44,13 @@ public class TipDialog extends DialogWrapper {
     init();
   }
 
-  @Nullable
   @Override
-  protected Border createContentPaneBorder() {
+  protected @Nullable Border createContentPaneBorder() {
     return JBUI.Borders.empty();
   }
 
-  @Nullable
   @Override
-  protected JComponent createSouthPanel() {
+  protected @Nullable JComponent createSouthPanel() {
     JComponent panel = super.createSouthPanel();
     assert panel != null;
     panel.setBorder(new CompoundBorder(JBUI.Borders.customLine(JBColor.border(), 1, 0, 0, 0), super.createContentPaneBorder()));

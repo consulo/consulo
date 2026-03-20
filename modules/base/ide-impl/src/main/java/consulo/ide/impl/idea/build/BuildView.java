@@ -59,8 +59,7 @@ public class BuildView extends CompositeView<ExecutionConsole> implements BuildP
   private final
   DefaultBuildDescriptor myBuildDescriptor;
   private volatile
-  @Nullable
-  ExecutionConsole myExecutionConsole;
+  @Nullable ExecutionConsole myExecutionConsole;
   private volatile BuildViewSettingsProvider myViewSettingsProvider;
 
   public BuildView(
@@ -191,14 +190,12 @@ public class BuildView extends CompositeView<ExecutionConsole> implements BuildP
     }
   }
 
-  @Nullable
-    //@ApiStatus.Internal
+    @Nullable //@ApiStatus.Internal
   ExecutionConsole getConsoleView() {
     return myExecutionConsole;
   }
 
-  @Nullable
-    //@ApiStatus.Internal
+    @Nullable //@ApiStatus.Internal
   BuildTreeConsoleView getEventView() {
     return getView(BuildTreeConsoleView.class.getName(), BuildTreeConsoleView.class);
   }
@@ -262,9 +259,8 @@ public class BuildView extends CompositeView<ExecutionConsole> implements BuildP
     delegateToConsoleView(view -> view.setProcessTextFilter(filter));
   }
 
-  @Nullable
   @Override
-  public BiPredicate<ProcessEvent, Key> getProcessTextFilter() {
+  public @Nullable BiPredicate<ProcessEvent, Key> getProcessTextFilter() {
     return getConsoleViewValue(ConsoleView::getProcessTextFilter);
   }
 

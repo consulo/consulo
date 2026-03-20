@@ -45,9 +45,8 @@ public class InMemoryStorage implements VcsLogStorage {
         return myCommitIdEnumerator.getValue(commitIndex);
     }
 
-    @Nullable
     @Override
-    public CommitId findCommitId(Predicate<CommitId> condition) {
+    public @Nullable CommitId findCommitId(Predicate<CommitId> condition) {
         CommitId[] result = new CommitId[]{null};
         myCommitIdEnumerator.forEachValue(commitId -> {
             if (condition.test(commitId)) {
@@ -62,9 +61,8 @@ public class InMemoryStorage implements VcsLogStorage {
         return myRefsEnumerator.enumerate(ref);
     }
 
-    @Nullable
     @Override
-    public VcsRef getVcsRef(int refIndex) {
+    public @Nullable VcsRef getVcsRef(int refIndex) {
         return myRefsEnumerator.getValue(refIndex);
     }
 

@@ -44,9 +44,8 @@ public class PersistableCodeStyleSchemes extends CodeStyleSchemesImpl implements
     super(schemeManagerFactory);
   }
 
-  @Nullable
   @Override
-  public Element getState() {
+  public @Nullable Element getState() {
     CodeStyleScheme currentScheme = getCurrentScheme();
     CURRENT_SCHEME_NAME = currentScheme == null ? null : currentScheme.getName();
     return XmlSerializer.serialize(this, new SerializationFilter() {

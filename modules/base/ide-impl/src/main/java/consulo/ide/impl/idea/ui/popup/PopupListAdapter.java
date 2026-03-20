@@ -78,9 +78,8 @@ public class PopupListAdapter<T> implements PopupChooserBuilder.PopupComponentAd
     return true;
   }
 
-  @Nullable
   @Override
-  public Predicate<KeyEvent> getKeyEventHandler() {
+  public @Nullable Predicate<KeyEvent> getKeyEventHandler() {
     return InputEvent::isConsumed;
   }
 

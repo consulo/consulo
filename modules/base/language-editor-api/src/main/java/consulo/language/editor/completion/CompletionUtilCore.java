@@ -221,9 +221,8 @@ public class CompletionUtilCore {
     return prefix == null ? findAlphanumericPrefix(parameters) : prefix;
   }
 
-  @Nullable
   @RequiredReadAction
-  public static String findReferencePrefix(CompletionParameters parameters) {
+  public static @Nullable String findReferencePrefix(CompletionParameters parameters) {
     PsiElement insertedElement = parameters.getPosition();
     int offsetInFile = parameters.getOffset();
     try {

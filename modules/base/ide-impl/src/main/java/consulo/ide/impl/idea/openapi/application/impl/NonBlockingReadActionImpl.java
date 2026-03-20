@@ -55,11 +55,9 @@ public final class NonBlockingReadActionImpl<T> implements NonBlockingReadAction
   private final BooleanSupplier[] myCancellationConditions;
   private final Set<? extends Disposable> myDisposables;
   private final
-  @Nullable
-  List<?> myCoalesceEquality;
+  @Nullable List<?> myCoalesceEquality;
   private final
-  @Nullable
-  ProgressIndicator myProgressIndicator;
+  @Nullable ProgressIndicator myProgressIndicator;
   private final Callable<? extends T> myComputation;
 
   private static final Set<Submission<?>> ourTasks = ContainerUtil.newConcurrentSet();

@@ -57,9 +57,8 @@ public abstract class PsiDocumentManager {
    * @param document the document for which the PSI file is requested.
    * @return the PSI file instance.
    */
-  @Nullable
   @RequiredReadAction
-  public abstract PsiFile getPsiFile(Document document);
+  public abstract @Nullable PsiFile getPsiFile(Document document);
 
   /**
    * Returns the cached PSI file for the specified document.

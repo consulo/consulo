@@ -43,9 +43,8 @@ public abstract class RunAnythingRunConfigurationProvider extends RunAnythingPro
         return value.getIcon();
     }
 
-    @Nullable
     @Override
-    public String getAdText() {
+    public @Nullable String getAdText() {
         return IdeLocalize.runAnythingAdRunInContext(RunAnythingUtil.PRESSED_ALT) + ", " +
             IdeLocalize.runAnythingAdRunWithDebug(RunAnythingUtil.SHIFT_SHORTCUT_TEXT);
     }

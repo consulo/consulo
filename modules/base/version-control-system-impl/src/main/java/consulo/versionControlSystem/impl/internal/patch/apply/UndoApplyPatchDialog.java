@@ -50,9 +50,8 @@ class UndoApplyPatchDialog extends DialogWrapper {
     init();
   }
 
-  @Nullable
   @Override
-  protected JComponent createCenterPanel() {
+  protected @Nullable JComponent createCenterPanel() {
     JPanel panel = new JPanel(new BorderLayout());
     int numFiles = myFailedFilePaths.size();
     JPanel labelsPanel = new JPanel(new BorderLayout());

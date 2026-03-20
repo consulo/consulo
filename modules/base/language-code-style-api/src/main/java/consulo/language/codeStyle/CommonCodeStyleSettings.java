@@ -57,8 +57,7 @@ public class CommonCodeStyleSettings {
     private ArrangementSettings myArrangementSettings;
     private CodeStyleSettings myRootSettings;
     private
-    @Nullable
-    IndentOptions myIndentOptions;
+    @Nullable IndentOptions myIndentOptions;
     private final FileType myFileType;
     private boolean myForceArrangeMenuAvailable;
 

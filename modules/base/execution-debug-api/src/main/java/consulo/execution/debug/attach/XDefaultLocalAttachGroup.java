@@ -52,9 +52,8 @@ public class XDefaultLocalAttachGroup implements XLocalAttachGroup {
     return getProcessDisplayText(project, info, dataHolder);
   }
 
-  @Nullable
   @Override
-  public String getItemDescription(Project project, ProcessInfo info, UserDataHolder dataHolder) {
+  public @Nullable String getItemDescription(Project project, ProcessInfo info, UserDataHolder dataHolder) {
     return null;
   }
 

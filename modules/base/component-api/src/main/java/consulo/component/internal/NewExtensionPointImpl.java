@@ -150,10 +150,9 @@ public class NewExtensionPointImpl<T> implements ExtensionPoint<T> {
         return orders.stream().map(orderable -> (K) orderable.getObjectValue()).toList();
     }
 
-    @Nullable
     @Override
     @SuppressWarnings("unchecked")
-    public <K extends T> K findExtension(Class<K> extensionClass) {
+    public <K extends T> @Nullable K findExtension(Class<K> extensionClass) {
         Map<Class, Object> instanceOfCacheValue = myInstanceOfCacheValue;
         if (instanceOfCacheValue == null) {
             instanceOfCacheValue = myInstanceOfCacheValue = Maps.newConcurrentHashMap(HashingStrategy.identity());
@@ -312,9 +311,8 @@ public class NewExtensionPointImpl<T> implements ExtensionPoint<T> {
         return extensionCache;
     }
 
-    @Nullable
     @Override
-    public T findFirstSafe(@InheritCallerContext Predicate<T> predicate) {
+    public @Nullable T findFirstSafe(@InheritCallerContext Predicate<T> predicate) {
         List<ExtensionValue<T>> extensionCache = buildOrGet();
 
         //noinspection ForLoopReplaceableByForEach
@@ -332,9 +330,8 @@ public class NewExtensionPointImpl<T> implements ExtensionPoint<T> {
         return null;
     }
 
-    @Nullable
     @Override
-    public <R> R computeSafeIfAny(@InheritCallerContext Function<? super T, ? extends R> processor) {
+    public <R> @Nullable R computeSafeIfAny(@InheritCallerContext Function<? super T, ? extends R> processor) {
         List<ExtensionValue<T>> extensionCache = buildOrGet();
 
         //noinspection ForLoopReplaceableByForEach

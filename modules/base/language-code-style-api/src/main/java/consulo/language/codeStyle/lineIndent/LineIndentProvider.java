@@ -56,8 +56,7 @@ public interface LineIndentProvider {
      * indent (in this case indent calculation is delegated to formatter if smart indent mode is used) or {@link #DO_NOT_ADJUST} constant to
      * leave the current caret position as is without any further formatter-based adjustment.
      */
-    @Nullable
-    String getLineIndent(
+    @Nullable String getLineIndent(
         Project project,
         Document document,
         SemanticEditorPositionFactory factory,

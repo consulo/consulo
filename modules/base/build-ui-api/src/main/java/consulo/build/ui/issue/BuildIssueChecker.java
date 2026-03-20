@@ -24,6 +24,5 @@ import org.jspecify.annotations.Nullable;
  * from kotlin
  */
 public interface BuildIssueChecker<T extends BuildIssueData> {
-  @Nullable
-  BuildIssue check(T issueData);
+  @Nullable BuildIssue check(T issueData);
 }

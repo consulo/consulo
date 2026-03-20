@@ -53,8 +53,7 @@ public interface RunnerLayoutUi  {
 
   boolean removeContent(@Nullable Content content, boolean dispose);
 
-  @Nullable
-  Content findContent(String contentId);
+  @Nullable Content findContent(String contentId);
 
   
   ActionCallback selectAndFocus(@Nullable Content content, boolean requestFocus, boolean forced);

@@ -32,9 +32,8 @@ public abstract class DiffContext implements UserDataHolder {
 
   public abstract void requestFocus();
 
-  @Nullable
   @Override
-  public <T> T getUserData(Key<T> key) {
+  public <T> @Nullable T getUserData(Key<T> key) {
     return myUserDataHolder.getUserData(key);
   }
 

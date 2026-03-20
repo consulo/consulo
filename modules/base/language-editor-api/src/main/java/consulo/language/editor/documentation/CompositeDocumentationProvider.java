@@ -236,9 +236,8 @@ public class CompositeDocumentationProvider extends DocumentationProviderEx impl
     return false;
   }
 
-  @Nullable
   @Override
-  public PsiElement getCustomDocumentationElement(Editor editor,
+  public @Nullable PsiElement getCustomDocumentationElement(Editor editor,
                                                   PsiFile file,
                                                   @Nullable PsiElement contextElement) {
     for (DocumentationProvider provider : getAllProviders()) {

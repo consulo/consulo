@@ -92,9 +92,8 @@ public class EnvVariablesTable extends ListTableWithButtons<EnvironmentVariable>
                 setModified();
             }
 
-            @Nullable
             @Override
-            protected String getDescription(EnvironmentVariable environmentVariable) {
+            protected @Nullable String getDescription(EnvironmentVariable environmentVariable) {
                 return environmentVariable.getDescription();
             }
 

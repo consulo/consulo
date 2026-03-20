@@ -116,9 +116,8 @@ class AnchorElementInfo extends SelfElementInfo {
     return super.getRange(manager);
   }
 
-  @Nullable
   @Override
-  public TextRange getPsiRange(SmartPointerManagerImpl manager) {
+  public @Nullable TextRange getPsiRange(SmartPointerManagerImpl manager) {
     if (getStubId() != -1) {
       switchToTree(manager);
     }

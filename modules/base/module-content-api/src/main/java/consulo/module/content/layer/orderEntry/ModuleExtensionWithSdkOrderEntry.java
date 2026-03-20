@@ -27,12 +27,9 @@ public interface ModuleExtensionWithSdkOrderEntry extends OrderEntry, OrderEntry
   
   String getModuleExtensionId();
 
-  @Nullable
-  ModuleExtensionWithSdk<?> getModuleExtension();
+  @Nullable ModuleExtensionWithSdk<?> getModuleExtension();
 
-  @Nullable
-  Sdk getSdk();
+  @Nullable Sdk getSdk();
 
-  @Nullable
-  String getSdkName();
+  @Nullable String getSdkName();
 }

@@ -92,15 +92,13 @@ public class ReformatFilesDialog extends DialogWrapper implements ReformatFilesO
         }
     }
 
-    @Nullable
     @Override
-    public SearchScope getSearchScope() {
+    public @Nullable SearchScope getSearchScope() {
         return null;
     }
 
-    @Nullable
     @Override
-    public String getFileTypeMask() {
+    public @Nullable String getFileTypeMask() {
         return null;
     }
 

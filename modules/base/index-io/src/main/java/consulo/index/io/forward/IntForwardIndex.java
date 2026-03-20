@@ -13,9 +13,8 @@ public interface IntForwardIndex extends ForwardIndex {
 
   void putInt(Integer key, int value) throws IOException;
 
-  @Nullable
   @Override
-  default ByteArraySequence get(Integer key) throws IOException {
+  default @Nullable ByteArraySequence get(Integer key) throws IOException {
     int intValue = getInt(key);
     return AbstractForwardIndexAccessor.serializeToByteSeq(intValue, EnumeratorIntegerDescriptor.INSTANCE, 4);
   }

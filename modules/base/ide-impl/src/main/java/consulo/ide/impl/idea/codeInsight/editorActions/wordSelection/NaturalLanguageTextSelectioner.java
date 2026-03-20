@@ -130,9 +130,8 @@ public class NaturalLanguageTextSelectioner extends ExtendWordSelectionHandlerBa
         return result;
     }
 
-    @Nullable
     @RequiredReadAction
-    private static TextRange expandSelection(PsiElement e, CharSequence editorText, int selStart, int selEnd) {
+    private static @Nullable TextRange expandSelection(PsiElement e, CharSequence editorText, int selStart, int selEnd) {
         TextRange range = e.getTextRange();
         int shift = range.getStartOffset();
         if (selStart <= shift || selEnd >= range.getEndOffset()) {

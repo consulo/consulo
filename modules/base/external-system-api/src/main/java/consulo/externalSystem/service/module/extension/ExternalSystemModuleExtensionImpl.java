@@ -77,9 +77,8 @@ public class ExternalSystemModuleExtensionImpl extends ModuleExtensionBase<Exter
         }
     }
 
-    @Nullable
     @Override
-    public String getOption(String key) {
+    public @Nullable String getOption(String key) {
         return myOptions.get(key);
     }
 }

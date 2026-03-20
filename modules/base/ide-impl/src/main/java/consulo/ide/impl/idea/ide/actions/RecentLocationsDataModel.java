@@ -112,9 +112,8 @@ public class RecentLocationsDataModel {
         }).filter(Objects::nonNull).limit(UISettings.getInstance().getRecentLocationsLimit()).collect(Collectors.toList());
     }
 
-    @Nullable
     @RequiredReadAction
-    private EditorEx createEditor(PlaceInfo placeInfo) {
+    private @Nullable EditorEx createEditor(PlaceInfo placeInfo) {
         RangeMarker positionOffset = placeInfo.getCaretPosition();
         if (positionOffset == null || !positionOffset.isValid()) {
             return null;

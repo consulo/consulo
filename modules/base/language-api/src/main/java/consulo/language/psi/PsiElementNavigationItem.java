@@ -23,6 +23,5 @@ import org.jspecify.annotations.Nullable;
  * @author yole
  */
 public interface PsiElementNavigationItem extends NavigationItem {
-  @Nullable
-  PsiElement getTargetElement();
+  @Nullable PsiElement getTargetElement();
 }

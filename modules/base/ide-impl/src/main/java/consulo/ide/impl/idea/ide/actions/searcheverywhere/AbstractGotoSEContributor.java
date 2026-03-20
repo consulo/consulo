@@ -529,10 +529,9 @@ public abstract class AbstractGotoSEContributor implements WeightedSearchEverywh
                 return true;
             });
             BaseListPopupStep<ScopeDescriptor> step = new BaseListPopupStep<ScopeDescriptor>("", items) {
-                @Nullable
                 @Override
                 @RequiredUIAccess
-                public PopupStep onChosen(ScopeDescriptor selectedValue, boolean finalChoice) {
+                public @Nullable PopupStep onChosen(ScopeDescriptor selectedValue, boolean finalChoice) {
                     onScopeSelected(selectedValue);
                     ActionToolbar toolbar = UIUtil.uiParents(component, true).filter(ActionToolbar.class).first();
                     if (toolbar != null) {

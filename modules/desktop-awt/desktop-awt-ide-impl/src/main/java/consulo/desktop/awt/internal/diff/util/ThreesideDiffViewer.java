@@ -120,9 +120,8 @@ public abstract class ThreesideDiffViewer<T extends EditorHolder> extends Listen
     return myPanel;
   }
 
-  @Nullable
   @Override
-  public JComponent getPreferredFocusedComponent() {
+  public @Nullable JComponent getPreferredFocusedComponent() {
     if (!myPanel.isGoodContent()) return null;
     return getCurrentEditorHolder().getPreferredFocusedComponent();
   }
@@ -154,9 +153,8 @@ public abstract class ThreesideDiffViewer<T extends EditorHolder> extends Listen
   // Misc
   //
 
-  @Nullable
   @Override
-  protected Navigatable getNavigatable() {
+  protected @Nullable Navigatable getNavigatable() {
     return getCurrentSide().select(getRequest().getContents()).getNavigatable();
   }
 

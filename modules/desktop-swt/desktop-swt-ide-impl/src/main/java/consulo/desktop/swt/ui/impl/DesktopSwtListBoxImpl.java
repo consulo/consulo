@@ -61,9 +61,8 @@ public class DesktopSwtListBoxImpl<E> extends SWTComponentDelegate<List> impleme
     public void setValueByIndex(int index) {
     }
 
-    @Nullable
     @Override
-    public E getValue() {
+    public @Nullable E getValue() {
         return null;
     }
 

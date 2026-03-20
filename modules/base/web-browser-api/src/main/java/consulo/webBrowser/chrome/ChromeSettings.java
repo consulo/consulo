@@ -39,9 +39,8 @@ public final class ChromeSettings extends BrowserSpecificSettings {
     public ChromeSettings() {
     }
 
-    @Nullable
     @Tag("user-data-dir")
-    public String getUserDataDirectoryPath() {
+    public @Nullable String getUserDataDirectoryPath() {
         return myUserDataDirectoryPath;
     }
 
@@ -50,9 +49,8 @@ public final class ChromeSettings extends BrowserSpecificSettings {
         return myUseCustomProfile;
     }
 
-    @Nullable
     @Tag("command-line-options")
-    public String getCommandLineOptions() {
+    public @Nullable String getCommandLineOptions() {
         return myCommandLineOptions;
     }
 

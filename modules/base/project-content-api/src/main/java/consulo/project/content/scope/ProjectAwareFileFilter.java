@@ -24,6 +24,5 @@ import org.jspecify.annotations.Nullable;
  * @author peter
  */
 public interface ProjectAwareFileFilter extends VirtualFileFilter {
-  @Nullable
-  Project getProject();
+  @Nullable Project getProject();
 }

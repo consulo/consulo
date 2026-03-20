@@ -9,6 +9,5 @@ import org.jspecify.annotations.Nullable;
 public interface TraceElement {
   int getTime();
 
-  @Nullable
-  Value getValue();
+  @Nullable Value getValue();
 }

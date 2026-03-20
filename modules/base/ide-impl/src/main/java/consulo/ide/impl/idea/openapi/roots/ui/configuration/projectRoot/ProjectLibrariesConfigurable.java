@@ -65,9 +65,8 @@ public class ProjectLibrariesConfigurable extends BaseLibrariesConfigurable impl
         return LocalizeValue.localizeTODO("Libraries");
     }
 
-    @Nullable
     @Override
-    public String getParentId() {
+    public @Nullable String getParentId() {
         return StandardConfigurableIds.PROJECT_GROUP;
     }
 

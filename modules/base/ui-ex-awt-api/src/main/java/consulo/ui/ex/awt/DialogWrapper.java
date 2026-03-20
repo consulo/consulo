@@ -349,9 +349,8 @@ public abstract class DialogWrapper {
      *
      * @return <code>null</code> if everything is OK or validation descriptor
      */
-    @Nullable
     @RequiredUIAccess
-    protected ValidationInfo doValidate() {
+    protected @Nullable ValidationInfo doValidate() {
         return null;
     }
 
@@ -479,9 +478,8 @@ public abstract class DialogWrapper {
      *
      * @return south panel
      */
-    @Nullable
     @RequiredUIAccess
-    protected JComponent createSouthPanel() {
+    protected @Nullable JComponent createSouthPanel() {
         Action[] actions = createActions();
         Action[] leftSideActions = createLeftSideActions();
         Map<Action, JButton> buttonMap = new LinkedHashMap<>();
@@ -1200,9 +1198,8 @@ public abstract class DialogWrapper {
      * @return component which should be focused when the dialog appears
      * on the screen.
      */
-    @Nullable
     @RequiredUIAccess
-    public JComponent getPreferredFocusedComponent() {
+    public @Nullable JComponent getPreferredFocusedComponent() {
         return Platform.current().os().isMac() ? myPreferredFocusedComponent : null;
     }
 

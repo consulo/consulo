@@ -76,9 +76,8 @@ public class DesktopSwtWindowManagerImpl extends UnifiedWindowManagerImpl implem
     return null;
   }
 
-  @Nullable
   @Override
-  public StatusBar getStatusBar(Project project) {
+  public @Nullable StatusBar getStatusBar(Project project) {
     IdeFrameEx ideFrame = getIdeFrame(project);
     return ideFrame == null ? null : ideFrame.getStatusBar();
   }
@@ -109,9 +108,8 @@ public class DesktopSwtWindowManagerImpl extends UnifiedWindowManagerImpl implem
     return new IdeFrame[0];
   }
 
-  @Nullable
   @Override
-  public IdeFrame findVisibleIdeFrame() {
+  public @Nullable IdeFrame findVisibleIdeFrame() {
     return null;
   }
 
@@ -155,9 +153,8 @@ public class DesktopSwtWindowManagerImpl extends UnifiedWindowManagerImpl implem
     return null;
   }
 
-  @Nullable
   @Override
-  public Component getFocusedComponent(@Nullable Project project) {
+  public @Nullable Component getFocusedComponent(@Nullable Project project) {
     return null;
   }
 
@@ -227,9 +224,8 @@ public class DesktopSwtWindowManagerImpl extends UnifiedWindowManagerImpl implem
 
   }
 
-  @Nullable
   @Override
-  public Element getState() {
+  public @Nullable Element getState() {
     return new Element("state");
   }
 

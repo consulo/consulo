@@ -100,16 +100,14 @@ public class PluginsAdvertiserDialog extends WholeWestDialogWrapper {
         return JBUI.Borders.empty();
     }
 
-    @Nullable
     @Override
-    protected String getDimensionServiceKey() {
+    protected @Nullable String getDimensionServiceKey() {
         return getClass().getName();
     }
 
-    @Nullable
     @Override
     @RequiredUIAccess
-    protected JComponent createSouthPanel() {
+    protected @Nullable JComponent createSouthPanel() {
         // no actions buttons
         return null;
     }

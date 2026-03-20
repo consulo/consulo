@@ -12,9 +12,6 @@ import org.jspecify.annotations.Nullable;
 public interface MessageEventResult extends EventResult {
   MessageEvent.Kind getKind();
 
-  @Nullable
-
-
   @BuildEventsNls.Description
-  default String getDetails() { return null; }
+  default @Nullable String getDetails() { return null; }
 }

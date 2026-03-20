@@ -86,9 +86,8 @@ public abstract class XDebuggerEditorsProviderBase extends XDebuggerEditorsProvi
     return Collections.emptyList();
   }
 
-  @Nullable
   @RequiredReadAction
-  protected PsiElement getContextElement(VirtualFile virtualFile, int offset, Project project) {
+  protected @Nullable PsiElement getContextElement(VirtualFile virtualFile, int offset, Project project) {
     return XDebuggerUtil.getInstance().findContextElement(virtualFile, offset, project);
   }
 }

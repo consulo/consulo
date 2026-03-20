@@ -95,9 +95,8 @@ public class ScratchFileServiceImpl extends ScratchFileService implements Persis
         return getRootPath() + "/" + rootId.getId();
     }
 
-    @Nullable
     @Override
-    public RootType getRootType(@Nullable VirtualFile file) {
+    public @Nullable RootType getRootType(@Nullable VirtualFile file) {
         if (file == null) {
             return null;
         }
@@ -164,17 +163,15 @@ public class ScratchFileServiceImpl extends ScratchFileService implements Persis
                 myScratchMapping.setMapping(file, value == null ? null : value.getID());
             }
 
-            @Nullable
             @Override
-            public Language getMapping(@Nullable VirtualFile file) {
+            public @Nullable Language getMapping(@Nullable VirtualFile file) {
                 return Language.findLanguageByID(myScratchMapping.getMapping(file));
             }
         };
     }
 
-    @Nullable
     @Override
-    public Element getState() {
+    public @Nullable Element getState() {
         return myScratchMapping.getState();
     }
 
@@ -193,15 +190,13 @@ public class ScratchFileServiceImpl extends ScratchFileService implements Persis
             return ContainerUtil.map(LanguageUtil.getFileLanguages(), Language::getID);
         }
 
-        @Nullable
         @Override
-        protected String serialize(String languageID) {
+        protected @Nullable String serialize(String languageID) {
             return languageID;
         }
 
-        @Nullable
         @Override
-        protected String handleUnknownMapping(VirtualFile file, String value) {
+        protected @Nullable String handleUnknownMapping(VirtualFile file, String value) {
             return PlainTextLanguage.INSTANCE.getID();
         }
     }

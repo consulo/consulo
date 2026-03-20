@@ -69,9 +69,8 @@ public abstract class RunAnythingCommandProvider extends RunAnythingProviderBase
         }
     }
 
-    @Nullable
     @Override
-    public String getAdText() {
+    public @Nullable String getAdText() {
         return IdeLocalize.runAnythingAdRunInContext(PRESSED_ALT) + ", " +
             IdeLocalize.runAnythingAdRunWithDebug(SHIFT_SHORTCUT_TEXT) + ", " +
             IdeLocalize.runAnythingAdCommandDelete(SHIFT_BACK_SPACE);
@@ -83,9 +82,8 @@ public abstract class RunAnythingCommandProvider extends RunAnythingProviderBase
         return value;
     }
 
-    @Nullable
     @Override
-    public Image getIcon(String value) {
+    public @Nullable Image getIcon(String value) {
         return PlatformIconGroup.actionsRun_anything();
     }
 }

@@ -10,8 +10,7 @@ import java.util.List;
  * @author Vitaliy.Bibaev
  */
 public interface PrevAwareState extends IntermediateState {
-  @Nullable
-  StreamCall getPrevCall();
+  @Nullable StreamCall getPrevCall();
 
   
   List<TraceElement> getPrevValues(TraceElement value);

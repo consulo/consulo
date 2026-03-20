@@ -107,9 +107,8 @@ public class CodeStyle {
      * @param document The document to get settings for.
      * @return The language code style settings for the editor or {@code null}.
      */
-    @Nullable
     @RequiredReadAction
-    public static CommonCodeStyleSettings getLanguageSettings(@Nullable Project project, @Nullable Document document) {
+    public static @Nullable CommonCodeStyleSettings getLanguageSettings(@Nullable Project project, @Nullable Document document) {
         if (project != null) {
             PsiFile file = PsiDocumentManager.getInstance(project).getPsiFile(Objects.requireNonNull(document));
             if (file != null) {

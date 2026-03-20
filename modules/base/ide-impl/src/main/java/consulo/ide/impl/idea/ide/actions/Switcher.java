@@ -150,9 +150,8 @@ public class Switcher extends AnAction implements DumbAware {
      * @deprecated Please use {@link Switcher#createAndShowSwitcher(AnActionEvent, String, String, boolean, boolean)}
      */
     @Deprecated
-    @Nullable
     @RequiredUIAccess
-    public static SwitcherPanel createAndShowSwitcher(
+    public static @Nullable SwitcherPanel createAndShowSwitcher(
         AnActionEvent e,
         String title,
         boolean pinned,
@@ -161,9 +160,8 @@ public class Switcher extends AnAction implements DumbAware {
         return createAndShowSwitcher(e, title, "RecentFiles", pinned, vFiles != null);
     }
 
-    @Nullable
     @RequiredUIAccess
-    public static SwitcherPanel createAndShowSwitcher(
+    public static @Nullable SwitcherPanel createAndShowSwitcher(
         AnActionEvent e,
         String title,
         String actionId,
@@ -906,9 +904,8 @@ public class Switcher extends AnAction implements DumbAware {
             return keymap;
         }
 
-        @Nullable
         @RequiredUIAccess
-        private static String getSmartShortcut(ToolWindow window, Map<String, ToolWindow> keymap) {
+        private static @Nullable String getSmartShortcut(ToolWindow window, Map<String, ToolWindow> keymap) {
             String title = window.getDisplayName().getValue();
             if (StringUtil.isEmpty(title)) {
                 return null;
@@ -1103,8 +1100,7 @@ public class Switcher extends AnAction implements DumbAware {
             return getSelectedList(files);
         }
 
-        @Nullable
-        JBList getSelectedList(@Nullable JBList preferable) {
+        @Nullable JBList getSelectedList(@Nullable JBList preferable) {
             return files.hasFocus() ? files : toolWindows.hasFocus() ? toolWindows : preferable;
         }
 
@@ -1361,9 +1357,8 @@ public class Switcher extends AnAction implements DumbAware {
                 }
             }
 
-            @Nullable
             @Override
-            protected Object findElement(String s) {
+            protected @Nullable Object findElement(String s) {
                 List<SpeedSearchObjectWithWeight> elements = SpeedSearchObjectWithWeight.findElement(s, this);
                 return elements.isEmpty() ? null : elements.get(0).node;
             }

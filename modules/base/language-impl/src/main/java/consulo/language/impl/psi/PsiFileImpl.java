@@ -134,9 +134,8 @@ public abstract class PsiFileImpl extends UserDataHolderBase
         return false;
     }
 
-    @Nullable
     @RequiredReadAction
-    public FileElement getTreeElement() {
+    public @Nullable FileElement getTreeElement() {
         FileElement node = derefTreeElement();
         if (node != null) {
             return node;
@@ -284,10 +283,9 @@ public abstract class PsiFileImpl extends UserDataHolderBase
         return astSpine;
     }
 
-    @Nullable
     @Override
     @RequiredReadAction
-    public IStubFileElementType getElementTypeForStubBuilder() {
+    public @Nullable IStubFileElementType getElementTypeForStubBuilder() {
         ParserDefinition definition = ParserDefinition.forLanguage(getLanguage());
         IFileElementType type = definition == null ? null : definition.getFileNodeType();
         return type instanceof IStubFileElementType stubFileElementType ? stubFileElementType : null;
@@ -468,10 +466,9 @@ public abstract class PsiFileImpl extends UserDataHolderBase
         return getContainingDirectory();
     }
 
-    @Nullable
     @Override
     @RequiredReadAction
-    public PsiDirectory getContainingDirectory() {
+    public @Nullable PsiDirectory getContainingDirectory() {
         VirtualFile file = getViewProvider().getVirtualFile();
         VirtualFile parentFile = file.getParent();
         if (parentFile == null) {
@@ -569,9 +566,8 @@ public abstract class PsiFileImpl extends UserDataHolderBase
         return myElementType.getLanguage();
     }
 
-    @Nullable
     @Override
-    public IFileElementType getFileElementType() {
+    public @Nullable IFileElementType getFileElementType() {
         return myElementType instanceof IFileElementType fileElementType
             ? fileElementType
             : ObjectUtil.tryCast(myContentElementType, IFileElementType.class);
@@ -619,10 +615,9 @@ public abstract class PsiFileImpl extends UserDataHolderBase
         return result.toArray(ArrayUtil.newArray(aClass, result.size()));
     }
 
-    @Nullable
     @RequiredReadAction
     @SuppressWarnings("unchecked")
-    public <T> T findChildByClass(Class<T> aClass) {
+    public <T> @Nullable T findChildByClass(Class<T> aClass) {
         for (PsiElement child : getChildren()) {
             if (aClass.isInstance(child)) {
                 return (T) child;
@@ -666,9 +661,8 @@ public abstract class PsiFileImpl extends UserDataHolderBase
     /**
      * @return a root stub of {@link #getStubTree()}, or null if the file is not stub-based or AST has been loaded.
      */
-    @Nullable
     @RequiredReadAction
-    public StubElement getStub() {
+    public @Nullable StubElement getStub() {
         StubTree stubHolder = getStubTree();
         return stubHolder != null ? stubHolder.getRoot() : null;
     }
@@ -682,9 +676,8 @@ public abstract class PsiFileImpl extends UserDataHolderBase
      * @see #getStub()
      * @see #getStubTree()
      */
-    @Nullable
     @RequiredReadAction
-    public final StubElement getGreenStub() {
+    public final @Nullable StubElement getGreenStub() {
         StubTree stubHolder = getGreenStubTree();
         return stubHolder != null ? stubHolder.getRoot() : null;
     }
@@ -692,10 +685,9 @@ public abstract class PsiFileImpl extends UserDataHolderBase
     /**
      * @return a stub tree, if this file has it, and only if AST isn't loaded
      */
-    @Nullable
     @Override
     @RequiredReadAction
-    public StubTree getStubTree() {
+    public @Nullable StubTree getStubTree() {
         assertReadAccessAllowed();
 
         if (getTreeElement() != null) {
@@ -1060,10 +1052,9 @@ public abstract class PsiFileImpl extends UserDataHolderBase
         return getManager().getProject();
     }
 
-    @Nullable
     @Override
     @RequiredReadAction
-    public Module getModule() throws PsiInvalidElementAccessException {
+    public @Nullable Module getModule() throws PsiInvalidElementAccessException {
         if (!isValid()) {
             throw new PsiInvalidElementAccessException(this);
         }
@@ -1085,9 +1076,8 @@ public abstract class PsiFileImpl extends UserDataHolderBase
     /**
      * @return a stub tree object having {@link #getGreenStub()} as a root, or null if there's no green stub available
      */
-    @Nullable
     @RequiredReadAction
-    public final StubTree getGreenStubTree() {
+    public final @Nullable StubTree getGreenStubTree() {
         StubTree result = derefStub();
         return result != null ? result : getStubTree();
     }

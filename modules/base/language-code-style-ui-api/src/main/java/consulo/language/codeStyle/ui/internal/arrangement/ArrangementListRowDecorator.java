@@ -150,9 +150,8 @@ public class ArrangementListRowDecorator extends JPanel implements ArrangementUi
         return this;
     }
 
-    @Nullable
     @Override
-    public Rectangle getScreenBounds() {
+    public @Nullable Rectangle getScreenBounds() {
         return myScreenBounds;
     }
 
@@ -177,9 +176,8 @@ public class ArrangementListRowDecorator extends JPanel implements ArrangementUi
         return myDelegate.onMouseEntered(e);
     }
 
-    @Nullable
     @Override
-    public Rectangle onMouseMove(MouseEvent event) {
+    public @Nullable Rectangle onMouseMove(MouseEvent event) {
         myEditButton.setVisible(myControl.getSelectedModelRows().size() <= 1);
         Rectangle bounds = getButtonScreenBounds();
         if (!myBeingEdited && bounds != null) {
@@ -217,9 +215,8 @@ public class ArrangementListRowDecorator extends JPanel implements ArrangementUi
         myDelegate.onMouseRelease(event);
     }
 
-    @Nullable
     @Override
-    public Rectangle onMouseExited() {
+    public @Nullable Rectangle onMouseExited() {
         setBackground(UIUtil.getListBackground());
         if (!myBeingEdited) {
             myEditButton.setVisible(false);
@@ -235,9 +232,8 @@ public class ArrangementListRowDecorator extends JPanel implements ArrangementUi
         return new Rectangle(bounds.x + myScreenBounds.x, bounds.y + myScreenBounds.y, bounds.width, bounds.height);
     }
 
-    @Nullable
     @Override
-    public ArrangementSettingsToken getToken() {
+    public @Nullable ArrangementSettingsToken getToken() {
         return myDelegate.getToken();
     }
 

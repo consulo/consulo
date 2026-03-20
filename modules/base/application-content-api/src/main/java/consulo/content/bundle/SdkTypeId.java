@@ -25,11 +25,9 @@ public interface SdkTypeId {
     
     String getId();
 
-    @Nullable
-    String getVersionString(Sdk sdk);
+    @Nullable String getVersionString(Sdk sdk);
 
     void saveAdditionalData(SdkAdditionalData additionalData, Element additional);
 
-    @Nullable
-    SdkAdditionalData loadAdditionalData(Sdk currentSdk, Element additional);
+    @Nullable SdkAdditionalData loadAdditionalData(Sdk currentSdk, Element additional);
 }

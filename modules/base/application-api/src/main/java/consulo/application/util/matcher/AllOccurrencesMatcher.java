@@ -29,9 +29,8 @@ public class AllOccurrencesMatcher extends MinusculeMatcher {
     return delegate.matchingDegree(name, valueStartCaseMatch, fragments);
   }
 
-  @Nullable
   @Override
-  public FList<MatcherTextRange> matchingFragments(String name) {
+  public @Nullable FList<MatcherTextRange> matchingFragments(String name) {
     FList<MatcherTextRange> match = delegate.matchingFragments(name);
     if (match != null && !match.isEmpty()) {
       List<FList<MatcherTextRange>> allMatchesReversed = new ArrayList<>();

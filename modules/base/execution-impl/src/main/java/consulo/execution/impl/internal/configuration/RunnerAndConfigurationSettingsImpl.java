@@ -185,9 +185,8 @@ public class RunnerAndConfigurationSettingsImpl implements JDOMExternalizable, C
         myFolderName = folderName;
     }
 
-    @Nullable
     @Override
-    public String getFolderName() {
+    public @Nullable String getFolderName() {
         return myFolderName;
     }
 

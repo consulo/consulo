@@ -105,15 +105,13 @@ public class DesktopSettingsDialog extends WholeWestDialogWrapper implements UiD
         return new Size2D(1028, 500);
     }
 
-    @Nullable
     @Override
-    protected Border createContentPaneBorder() {
+    protected @Nullable Border createContentPaneBorder() {
         return JBUI.Borders.empty();
     }
 
-    @Nullable
     @Override
-    protected JComponent createSouthPanel() {
+    protected @Nullable JComponent createSouthPanel() {
         JComponent southPanel = super.createSouthPanel();
         if (southPanel != null) {
             southPanel.setBorder(JBUI.Borders.empty(ourDefaultBorderInsets));

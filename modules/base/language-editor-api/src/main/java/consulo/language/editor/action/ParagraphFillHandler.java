@@ -182,9 +182,8 @@ public abstract class ParagraphFillHandler implements LanguageExtension {
         return document.getLineEndOffset(lineNumber);
     }
 
-    @Nullable
     @RequiredReadAction
-    private PsiElement getFirstElement(PsiElement element) {
+    private @Nullable PsiElement getFirstElement(PsiElement element) {
         IElementType elementType = element.getNode().getElementType();
         PsiElement prevSibling = element.getPrevSibling();
         PsiElement result = element;
@@ -207,9 +206,8 @@ public abstract class ParagraphFillHandler implements LanguageExtension {
         return result;
     }
 
-    @Nullable
     @RequiredReadAction
-    private PsiElement getLastElement(PsiElement element) {
+    private @Nullable PsiElement getLastElement(PsiElement element) {
         IElementType elementType = element.getNode().getElementType();
         PsiElement nextSibling = element.getNextSibling();
         PsiElement result = element;

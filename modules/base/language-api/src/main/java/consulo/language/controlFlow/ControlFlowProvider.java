@@ -14,13 +14,11 @@ public interface ControlFlowProvider {
     /**
      * @return a control flow which contains the <code>element</code> or null if the <code>element</code> is not supported by provider
      */
-    @Nullable
-    ControlFlow getControlFlow(PsiElement element);
+    @Nullable ControlFlow getControlFlow(PsiElement element);
 
     /**
      * @param instruction belongs to a control flow which was created by the provider
      * @return an additional language-specific representation of the <code>instruction</code>
      */
-    @Nullable
-    String getAdditionalInfo(Instruction instruction);
+    @Nullable String getAdditionalInfo(Instruction instruction);
 }

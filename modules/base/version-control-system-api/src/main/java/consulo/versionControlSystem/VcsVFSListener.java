@@ -104,9 +104,8 @@ public abstract class VcsVFSListener implements Disposable {
                 || event instanceof VFileMoveEvent;
         }
 
-        @Nullable
         @Override
-        public ChangeApplier prepareChange(List<? extends VFileEvent> events) {
+        public @Nullable ChangeApplier prepareChange(List<? extends VFileEvent> events) {
             List<VFileContentChangeEvent> contentChangedEvents = new ArrayList<>();
             List<VFileEvent> beforeEvents = new ArrayList<>();
             List<VFileEvent> afterEvents = new ArrayList<>();

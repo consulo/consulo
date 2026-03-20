@@ -83,9 +83,8 @@ public class XAddToWatchesTreeAction extends XDebuggerTreeActionBase {
         return view;
     }
 
-    @Nullable
     @Override
-    protected Image getTemplateIcon() {
+    protected @Nullable Image getTemplateIcon() {
         return ExecutionDebugIconGroup.actionAddtowatch();
     }
 }

@@ -31,8 +31,7 @@ public interface PsiPackage extends PsiDirectoryContainer, PsiQualifiedNamedElem
 
     public static ArrayFactory<PsiPackage> ARRAY_FACTORY = count -> count == 0 ? EMPTY_ARRAY : new PsiPackage[count];
 
-    @Nullable
-    PsiPackage getParentPackage();
+    @Nullable PsiPackage getParentPackage();
 
     /**
      * Returns the list of subpackages of this package under all source roots of the project.
@@ -54,10 +53,9 @@ public interface PsiPackage extends PsiDirectoryContainer, PsiQualifiedNamedElem
     /**
      * @return null means default package
      */
-    @Nullable
     @Override
     @RequiredReadAction
-    String getName();
+    @Nullable String getName();
 
     /**
      * This method must be invoked on the package after all directories corresponding

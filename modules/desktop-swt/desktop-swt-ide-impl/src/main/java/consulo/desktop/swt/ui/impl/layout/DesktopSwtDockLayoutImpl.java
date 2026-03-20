@@ -28,9 +28,8 @@ public class DesktopSwtDockLayoutImpl extends DesktopSwtLayoutComponent<StaticPo
     public DesktopSwtDockLayoutImpl(int gapInPixels) {
     }
 
-    @Nullable
     @Override
-    protected Layout createLayout() {
+    protected @Nullable Layout createLayout() {
         return new BorderLayout();
     }
 

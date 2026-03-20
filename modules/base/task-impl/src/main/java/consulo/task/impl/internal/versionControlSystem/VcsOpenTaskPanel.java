@@ -180,9 +180,8 @@ public class VcsOpenTaskPanel extends TaskDialogPanel {
     }
   }
 
-  @Nullable
   @Override
-  public ValidationInfo validate() {
+  public @Nullable ValidationInfo validate() {
     if (myCreateBranch.isSelected()) {
       String branchName = myBranchName.getText().trim();
       if (branchName.isEmpty()) {
@@ -208,9 +207,8 @@ public class VcsOpenTaskPanel extends TaskDialogPanel {
     return null;
   }
 
-  @Nullable
   @Override
-  public JComponent getPreferredFocusedComponent() {
+  public @Nullable JComponent getPreferredFocusedComponent() {
     if (myCreateBranch.isSelected()) {
       return myBranchName;
     }

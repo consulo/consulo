@@ -12,8 +12,7 @@ import org.jspecify.annotations.Nullable;
  * @see CommandProcessorEx#newCommand()
  */
 public interface CommandToken {
-    @Nullable
-    Project getProject();
+    @Nullable Project getProject();
 
     @RequiredUIAccess
     void finish(@Nullable Throwable throwable);

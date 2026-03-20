@@ -165,15 +165,13 @@ public class DesktopAwtDialogService implements DialogService {
         }
 
         @RequiredUIAccess
-        @Nullable
         @Override
-        public JComponent getPreferredFocusedComponent() {
+        public @Nullable JComponent getPreferredFocusedComponent() {
             return (JComponent) TargetAWT.to(myDescriptor.getPreferredFocusedComponent());
         }
 
-        @Nullable
         @Override
-        protected JComponent createSouthPanel() {
+        protected @Nullable JComponent createSouthPanel() {
             JPanel panel = new JPanel(new BorderLayout());
             DataManager.registerUiDataProvider(panel, sink -> {
                 sink.set(Dialog.KEY, myDialog);
@@ -230,24 +228,21 @@ public class DesktopAwtDialogService implements DialogService {
             }
         }
 
-        @Nullable
         @Override
-        public String getHelpId() {
+        public @Nullable String getHelpId() {
             return myHelpId;
         }
 
-        @Nullable
         @Override
-        protected Border createContentPaneBorder() {
+        protected @Nullable Border createContentPaneBorder() {
             if (!myDescriptor.hasDefaultContentBorder()) {
                 return JBUI.Borders.empty();
             }
             return super.createContentPaneBorder();
         }
 
-        @Nullable
         @Override
-        protected JComponent createCenterPanel() {
+        protected @Nullable JComponent createCenterPanel() {
             return (JComponent) TargetAWT.to(myDescriptor.createCenterComponent(getDisposable()));
         }
     }

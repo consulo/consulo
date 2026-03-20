@@ -39,9 +39,8 @@ public class ModuleRootLayerLibraryOwner implements LibraryOwner {
     return myModuleRootLayer.getRootsChangedListener();
   }
 
-  @Nullable
   @Override
-  public ComponentManager getModule() {
+  public @Nullable ComponentManager getModule() {
     return myModuleRootLayer.getModule();
   }
 }

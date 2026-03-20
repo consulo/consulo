@@ -90,15 +90,13 @@ public class ConsolePromptDecorator extends EditorLinePainter implements TextAnn
         return promptAttributes;
     }
 
-    @Nullable
     @Override
-    public Collection<LineExtensionInfo> getLineExtensions(Project project, VirtualFile file, int lineNumber) {
+    public @Nullable Collection<LineExtensionInfo> getLineExtensions(Project project, VirtualFile file, int lineNumber) {
         return null;
     }
 
-    @Nullable
     @Override
-    public String getLineText(int line, Editor editor) {
+    public @Nullable String getLineText(int line, Editor editor) {
         if (line == 0) {
             return mainPrompt;
         }
@@ -119,15 +117,13 @@ public class ConsolePromptDecorator extends EditorLinePainter implements TextAnn
         return EditorFontType.CONSOLE_PLAIN;
     }
 
-    @Nullable
     @Override
-    public EditorColorKey getColor(int line, Editor editor) {
+    public @Nullable EditorColorKey getColor(int line, Editor editor) {
         return promptColor;
     }
 
-    @Nullable
     @Override
-    public ColorValue getBgColor(int line, Editor editor) {
+    public @Nullable ColorValue getBgColor(int line, Editor editor) {
         ColorValue backgroundColor = this.promptAttributes.getAttributes().getBackgroundColor();
         if (backgroundColor == null) {
             backgroundColor = myEditorEx.getBackgroundColor();

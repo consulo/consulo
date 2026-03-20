@@ -107,9 +107,8 @@ public class OffsetsElementSignatureProvider extends AbstractElementSignaturePro
         return result;
     }
 
-    @Nullable
     @RequiredReadAction
-    private PsiElement findElement(int start, int end, int index, PsiElement element, @Nullable StringBuilder processingInfoStorage) {
+    private @Nullable PsiElement findElement(int start, int end, int index, PsiElement element, @Nullable StringBuilder processingInfoStorage) {
         TextRange range = element.getTextRange();
         if (processingInfoStorage != null) {
             processingInfoStorage.append(String.format("Starting processing from element '%s'. It's range is %s%n", element, range));

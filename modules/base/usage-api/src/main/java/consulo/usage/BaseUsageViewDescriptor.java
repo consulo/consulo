@@ -46,9 +46,8 @@ public class BaseUsageViewDescriptor implements UsageViewDescriptor {
     return UsageLocalize.referencesToBeChanged(UsageViewBundle.getReferencesString(usagesCount, filesCount)).get();
   }
 
-  @Nullable
   @Override
-  public String getCommentReferencesText(int usagesCount, int filesCount) {
+  public @Nullable String getCommentReferencesText(int usagesCount, int filesCount) {
     return null;
   }
 }

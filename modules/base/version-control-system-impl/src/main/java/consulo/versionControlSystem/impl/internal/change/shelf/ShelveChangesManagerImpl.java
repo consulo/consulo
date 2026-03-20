@@ -125,9 +125,8 @@ public class ShelveChangesManagerImpl implements ShelveChangesManager, JDOMExter
         mySchemeManager = schemeManagerFactory.createSchemeManager(
             SHELVE_MANAGER_DIR_PATH,
             new BaseSchemeProcessor<ShelvedChangeList, ShelvedChangeListImpl>() {
-                @Nullable
                 @Override
-                public ShelvedChangeListImpl readScheme(Element element, boolean duringLoad) throws InvalidDataException {
+                public @Nullable ShelvedChangeListImpl readScheme(Element element, boolean duringLoad) throws InvalidDataException {
                     return readOneShelvedChangeList(element);
                 }
 

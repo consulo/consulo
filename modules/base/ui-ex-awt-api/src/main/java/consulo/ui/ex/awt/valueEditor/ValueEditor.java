@@ -35,8 +35,7 @@ public interface ValueEditor<T> {
   /**
    * @return The value name used in validation messages.
    */
-  @Nullable
-  String getValueName();
+  @Nullable String getValueName();
 
   /**
    * Check if the current component content is valid and throw ConfigurationException if not.

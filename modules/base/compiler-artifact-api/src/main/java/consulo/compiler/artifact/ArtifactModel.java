@@ -26,8 +26,7 @@ public interface ArtifactModel {
   
   Artifact[] getArtifacts();
 
-  @Nullable
-  Artifact findArtifact(String name);
+  @Nullable Artifact findArtifact(String name);
 
   
   Artifact getArtifactByOriginal(Artifact artifact);

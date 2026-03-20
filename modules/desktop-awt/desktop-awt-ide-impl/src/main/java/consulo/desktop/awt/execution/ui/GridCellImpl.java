@@ -298,8 +298,7 @@ public class GridCellImpl implements GridCell {
         }
     }
 
-    @Nullable
-    TabInfo getTabFor(Content content) {
+    @Nullable TabInfo getTabFor(Content content) {
         return myContents.getValue(content);
     }
 

@@ -55,10 +55,9 @@ public class PairElementsFMap implements KeyFMap {
         return this;
     }
 
-    @Nullable
     @Override
     @SuppressWarnings("unchecked")
-    public <V> V get(Key<V> key) {
+    public <V> @Nullable V get(Key<V> key) {
         return key == key1 ? (V)value1 : key == key2 ? (V)value2 : null;
     }
 

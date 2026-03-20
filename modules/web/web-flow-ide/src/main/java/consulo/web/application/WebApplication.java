@@ -43,8 +43,7 @@ public interface WebApplication extends Application {
     access.give(runnable);
   }
 
-  @Nullable
-  WebSession getCurrentSession();
+  @Nullable WebSession getCurrentSession();
 
   void setCurrentSession(@Nullable WebSession session);
 }

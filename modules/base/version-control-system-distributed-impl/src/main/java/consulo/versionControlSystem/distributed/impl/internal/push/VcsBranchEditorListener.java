@@ -61,9 +61,8 @@ public class VcsBranchEditorListener extends LinkMouseListenerBase {
         }
     }
 
-    @Nullable
     @Override
-    protected Object getTagAt(MouseEvent e) {
+    protected @Nullable Object getTagAt(MouseEvent e) {
         return PushLogTreeImplUtil.getTagAtForRenderer(myRenderer, e);
     }
 

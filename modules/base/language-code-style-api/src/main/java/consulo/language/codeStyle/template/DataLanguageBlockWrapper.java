@@ -90,9 +90,8 @@ public class DataLanguageBlockWrapper implements ASTBlock, BlockEx, BlockWithPar
     }
   }
 
-  @Nullable
   @Override
-  public Language getLanguage() {
+  public @Nullable Language getLanguage() {
     // Use base language code style settings for the template blocks.
     return myLanguage;
   }

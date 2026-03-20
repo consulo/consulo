@@ -41,6 +41,5 @@ public interface FSRecordsProxy {
     
     DataOutputStream writeAttribute(int fileId, FileAttribute att);
 
-    @Nullable
-    DataInputStream readAttributeWithLock(int fileId, FileAttribute att);
+    @Nullable DataInputStream readAttributeWithLock(int fileId, FileAttribute att);
 }

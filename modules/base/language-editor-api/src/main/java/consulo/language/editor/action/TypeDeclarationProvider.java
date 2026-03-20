@@ -31,9 +31,8 @@ import org.jspecify.annotations.Nullable;
 public abstract class TypeDeclarationProvider {
     public static final ExtensionPointName<TypeDeclarationProvider> EP_NAME = ExtensionPointName.create(TypeDeclarationProvider.class);
 
-    @Nullable
     @RequiredReadAction
-    public PsiElement[] getSymbolTypeDeclarations(PsiElement symbol, @Nullable Editor editor, int offset) {
+    public @Nullable PsiElement[] getSymbolTypeDeclarations(PsiElement symbol, @Nullable Editor editor, int offset) {
         return null;
     }
 }

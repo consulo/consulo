@@ -28,8 +28,7 @@ public interface TooltipActionProvider {
   String SHOW_FIXES_KEY = "tooltips.show.actions.in.key";
   boolean SHOW_FIXES_DEFAULT_VALUE = true;
 
-  @Nullable
-  TooltipAction getTooltipAction(HighlightInfo info, Editor editor, PsiFile psiFile);
+  @Nullable TooltipAction getTooltipAction(HighlightInfo info, Editor editor, PsiFile psiFile);
 
 
   static @Nullable TooltipAction calcTooltipAction(HighlightInfo info, Editor editor) {

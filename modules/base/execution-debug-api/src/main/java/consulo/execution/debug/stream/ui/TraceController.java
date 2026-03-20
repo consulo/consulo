@@ -12,17 +12,14 @@ import java.util.List;
  * @author Vitaliy.Bibaev
  */
 public interface TraceController extends ValuesHighlightingListener {
-  @Nullable
-  Value getStreamResult();
+  @Nullable Value getStreamResult();
 
   
   List<TraceElement> getTrace();
 
-  @Nullable
-  StreamCall getNextCall();
+  @Nullable StreamCall getNextCall();
 
-  @Nullable
-  StreamCall getPrevCall();
+  @Nullable StreamCall getPrevCall();
 
   
   List<TraceElement> getNextValues(TraceElement element);

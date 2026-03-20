@@ -26,8 +26,7 @@ import java.awt.*;
  * @since 14-Oct-17
  */
 public interface BalloonLayoutEx extends BalloonLayout {
-  @Nullable
-  Component getTopBalloonComponent();
+  @Nullable Component getTopBalloonComponent();
 
   void addListener(Runnable listener);
 

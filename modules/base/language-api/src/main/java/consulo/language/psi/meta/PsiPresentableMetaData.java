@@ -25,6 +25,5 @@ import org.jspecify.annotations.Nullable;
 public interface PsiPresentableMetaData extends PsiMetaData {
   String getTypeName();
 
-  @Nullable
-  Image getIcon();
+  @Nullable Image getIcon();
 }

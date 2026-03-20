@@ -384,9 +384,8 @@ public class StubBasedPsiElementBase<T extends StubElement> extends ASTDelegateP
      * if the file text was loaded from the very beginning, or if it was loaded via {@link #getNode()} on this or any other element
      * in the containing file.
      */
-    @Nullable
     @Override
-    public T getStub() {
+    public @Nullable T getStub() {
         ProgressIndicatorProvider.checkCanceled(); // Hope, this is called often
         //noinspection unchecked
         return (T) mySubstrateRef.getStub();
@@ -398,9 +397,8 @@ public class StubBasedPsiElementBase<T extends StubElement> extends ASTDelegateP
      *
      * @see PsiFileImpl#getGreenStub()
      */
-    @Nullable
     @Override
-    public final T getGreenStub() {
+    public final @Nullable T getGreenStub() {
         ProgressIndicatorProvider.checkCanceled(); // Hope, this is called often
         //noinspection unchecked
         return (T) mySubstrateRef.getGreenStub();
@@ -409,9 +407,8 @@ public class StubBasedPsiElementBase<T extends StubElement> extends ASTDelegateP
     /**
      * @return a child of specified type, taken from stubs (if this element is currently stub-based) or AST (otherwise).
      */
-    @Nullable
     @RequiredReadAction
-    public <Psi extends PsiElement> Psi getStubOrPsiChild(IStubElementType<? extends StubElement, Psi> elementType) {
+    public <Psi extends PsiElement> @Nullable Psi getStubOrPsiChild(IStubElementType<? extends StubElement, Psi> elementType) {
         T stub = getGreenStub();
         if (stub != null) {
             //noinspection unchecked

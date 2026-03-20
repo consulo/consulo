@@ -55,8 +55,7 @@ public interface CodeStyleInternalHelper {
 
     boolean containsWhiteSpacesOnly(@Nullable ASTNode node);
 
-    @Nullable
-    ASTNode getPreviousNonWhitespaceLeaf(@Nullable ASTNode node);
+    @Nullable ASTNode getPreviousNonWhitespaceLeaf(@Nullable ASTNode node);
 
     void allowToMarkNodesForPostponedFormatting(boolean value);
 

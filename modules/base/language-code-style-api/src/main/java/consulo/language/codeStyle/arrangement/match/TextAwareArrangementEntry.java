@@ -29,6 +29,5 @@ import org.jspecify.annotations.Nullable;
  * @since 25/04/14 08:17 PM
  */
 public interface TextAwareArrangementEntry extends ArrangementEntry {
-  @Nullable
-  String getText();
+  @Nullable String getText();
 }

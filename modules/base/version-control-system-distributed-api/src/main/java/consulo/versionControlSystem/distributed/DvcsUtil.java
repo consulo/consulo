@@ -290,15 +290,13 @@ public class DvcsUtil {
             .loadFileText(file, encoding == null ? StandardCharsets.UTF_8 : encoding)).trim(), file);
     }
 
-    @Nullable
     @Contract("_ , !null -> !null")
-    public static String tryLoadFileOrReturn(File file, @Nullable String defaultValue) {
+    public static @Nullable String tryLoadFileOrReturn(File file, @Nullable String defaultValue) {
         return tryLoadFileOrReturn(file, defaultValue, null);
     }
 
-    @Nullable
     @Contract("_ , !null, _ -> !null")
-    public static String tryLoadFileOrReturn(File file, @Nullable String defaultValue, @Nullable Charset encoding) {
+    public static @Nullable String tryLoadFileOrReturn(File file, @Nullable String defaultValue, @Nullable Charset encoding) {
         try {
             return tryLoadFile(file, encoding);
         }

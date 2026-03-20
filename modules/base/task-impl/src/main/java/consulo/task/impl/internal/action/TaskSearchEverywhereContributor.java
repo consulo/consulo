@@ -170,9 +170,8 @@ public class TaskSearchEverywhereContributor implements SearchEverywhereContribu
         return new TaskCellRenderer(myProject);
     }
 
-    @Nullable
     @Override
-    public Object getDataForItem(Object element, Key dataId) {
+    public @Nullable Object getDataForItem(Object element, Key dataId) {
         return null;
     }
 }

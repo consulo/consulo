@@ -509,9 +509,8 @@ public class ShowUsagesAction extends AnAction implements PopupAction {
 
         private static ColumnInfo[] cols(int cols) {
             ColumnInfo<UsageNode, UsageNode> o = new ColumnInfo<UsageNode, UsageNode>(LocalizeValue.empty()) {
-                @Nullable
                 @Override
-                public UsageNode valueOf(UsageNode node) {
+                public @Nullable UsageNode valueOf(UsageNode node) {
                     return node;
                 }
             };
@@ -1394,9 +1393,8 @@ public class ShowUsagesAction extends AnAction implements PopupAction {
             return component;
         }
 
-        @Nullable
         @RequiredReadAction
-        private static PsiElement getPsiElementForHint(Object selectedValue) {
+        private static @Nullable PsiElement getPsiElementForHint(Object selectedValue) {
             if (selectedValue instanceof UsageNode usageNode
                 && usageNode.getUsage() instanceof UsageInfo2UsageAdapter usageInfo2UsageAdapter) {
                 PsiElement element = usageInfo2UsageAdapter.getElement();

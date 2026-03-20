@@ -156,9 +156,8 @@ public abstract class AbstractParameterTablePanel<P extends AbstractVariableData
       myNameValidator = (paramName) -> NamesValidator.forLanguage(lang).isIdentifier(paramName, project);
     }
 
-    @Nullable
     @Override
-    public String valueOf(AbstractVariableData data) {
+    public @Nullable String valueOf(AbstractVariableData data) {
       return data.getName();
     }
 
@@ -180,15 +179,13 @@ public abstract class AbstractParameterTablePanel<P extends AbstractVariableData
       super("");
     }
 
-    @Nullable
     @Override
-    public TableCellRenderer getRenderer(AbstractVariableData data) {
+    public @Nullable TableCellRenderer getRenderer(AbstractVariableData data) {
       return new BooleanTableCellRenderer();
     }
 
-    @Nullable
     @Override
-    public Boolean valueOf(AbstractVariableData data) {
+    public @Nullable Boolean valueOf(AbstractVariableData data) {
       return data.isPassAsParameter();
     }
 

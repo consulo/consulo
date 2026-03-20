@@ -74,9 +74,8 @@ public class UnknownFeaturesCollectorImpl implements PersistentStateComponent<El
         return myUnknownExtensions;
     }
 
-    @Nullable
     @Override
-    public Element getState() {
+    public @Nullable Element getState() {
         if (myIgnoredUnknownExtensions.isEmpty()) {
             return null;
         }

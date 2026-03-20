@@ -52,20 +52,17 @@ public interface VcsLogHighlighter {
     /**
      * Text color for commit entry or null if unspecified.
      */
-    @Nullable
-    Color getForeground();
+    @Nullable Color getForeground();
 
     /**
      * Background color for commit entry or null if unspecified.
      */
-    @Nullable
-    Color getBackground();
+    @Nullable Color getBackground();
 
     /**
      * Text style for commit entry or null if unspecified.
      */
-    @Nullable
-    TextStyle getTextStyle();
+    @Nullable TextStyle getTextStyle();
   }
 
   /**

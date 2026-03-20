@@ -33,9 +33,8 @@ public class PsiFileDataValidator implements DataValidator<PsiFile> {
     return PsiFile.KEY;
   }
 
-  @Nullable
   @Override
-  public PsiFile findInvalid(Key<PsiFile> key, PsiFile data, Object dataSource) {
+  public @Nullable PsiFile findInvalid(Key<PsiFile> key, PsiFile data, Object dataSource) {
     return data.isValid() ? null : data;
   }
 }

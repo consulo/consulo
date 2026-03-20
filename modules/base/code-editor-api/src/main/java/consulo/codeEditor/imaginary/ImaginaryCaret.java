@@ -147,9 +147,8 @@ public class ImaginaryCaret extends UserDataHolderBase implements Caret {
         return myCaretModel.getEditor().offsetToVisualPosition(myEnd);
     }
 
-    @Nullable
     @Override
-    public String getSelectedText() {
+    public @Nullable String getSelectedText() {
         if (!hasSelection()) {
             return null;
         }
@@ -240,9 +239,8 @@ public class ImaginaryCaret extends UserDataHolderBase implements Caret {
         throw notImplemented();
     }
 
-    @Nullable
     @Override
-    public Caret clone(boolean above) {
+    public @Nullable Caret clone(boolean above) {
         throw notImplemented();
     }
 

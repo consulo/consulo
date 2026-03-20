@@ -12,15 +12,13 @@ public interface WindowState {
    * @return a window location
    * @see Window#getLocation()
    */
-  @Nullable
-  Point2D getLocation();
+  @Nullable Point2D getLocation();
 
   /**
    * @return a window size
    * @see Window#getSize()
    */
-  @Nullable
-  Size2D getSize();
+  @Nullable Size2D getSize();
 
   /**
    * @return a bitwise mask that represents an extended frame state

@@ -41,9 +41,8 @@ public class DefaultExternalSystemUiAware implements ExternalSystemUiAware {
     return new File(targetProjectPath).getParentFile().getName();
   }
 
-  @Nullable
   @Override
-  public FileChooserDescriptor getExternalProjectConfigDescriptor() {
+  public @Nullable FileChooserDescriptor getExternalProjectConfigDescriptor() {
     return null;
   }
 

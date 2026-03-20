@@ -53,8 +53,7 @@ public interface ProjectView {
   
   AsyncResult<Void> changeViewCB(String viewId, String subId);
 
-  @Nullable
-  PsiElement getParentOfCurrentSelection();
+  @Nullable PsiElement getParentOfCurrentSelection();
 
   // show pane identified by id using default(or currently selected) subId
   void changeView(String viewId);

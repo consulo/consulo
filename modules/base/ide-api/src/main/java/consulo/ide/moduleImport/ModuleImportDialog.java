@@ -124,17 +124,15 @@ public class ModuleImportDialog<C extends ModuleImportContext> extends DialogWra
         }
     }
 
-    @Nullable
     @Override
-    protected String getDimensionServiceKey() {
+    protected @Nullable String getDimensionServiceKey() {
         return getClass().getName();
     }
 
-    @Nullable
     @Override
     @RequiredUIAccess
     @SuppressWarnings("deprecation")
-    protected JComponent createCenterPanel() {
+    protected @Nullable JComponent createCenterPanel() {
         JBCardLayout layout = new JBCardLayout();
         JPanel contentPanel = new JPanel(layout);
 

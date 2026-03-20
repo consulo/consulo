@@ -62,9 +62,8 @@ public class TaskUiUtil {
      * {@link #onSuccess()} can't be used for this purpose, because it doesn't consider current modality state
      * which will prevent UI updating in modal dialog (e.g. in {@link TaskRepositoryEditor}).
      */
-    @Nullable
     @Override
-    public final NotificationInfo notifyFinished() {
+    public final @Nullable NotificationInfo notifyFinished() {
       ApplicationManager.getApplication().invokeLater(() -> updateUI(), myModalityState);
       return null;
     }

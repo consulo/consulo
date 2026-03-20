@@ -248,9 +248,8 @@ public class CommentByBlockCommentHandler extends MultiCaretCodeInsightActionHan
         return element instanceof PsiWhiteSpace || PsiTreeUtil.getParentOfType(element, PsiComment.class, false) != null;
     }
 
-    @Nullable
     @RequiredReadAction
-    private TextRange findCommentedRange(Commenter commenter) {
+    private @Nullable TextRange findCommentedRange(Commenter commenter) {
         CharSequence text = myDocument.getCharsSequence();
         FileType fileType = myFile.getFileType();
         if (fileType instanceof CustomSyntaxTableFileType customSyntaxTableFileType) {
@@ -340,9 +339,8 @@ public class CommentByBlockCommentHandler extends MultiCaretCodeInsightActionHan
         return commentedRange;
     }
 
-    @Nullable
     @RequiredReadAction
-    private static Commenter findCommenter(PsiFile file, Editor editor, Caret caret) {
+    private static @Nullable Commenter findCommenter(PsiFile file, Editor editor, Caret caret) {
         FileType fileType = file.getFileType();
         if (fileType instanceof AbstractFileType abstractFileType) {
             return abstractFileType.getCommenter();
@@ -353,9 +351,8 @@ public class CommentByBlockCommentHandler extends MultiCaretCodeInsightActionHan
         return getCommenter(file, editor, lang, lang);
     }
 
-    @Nullable
     @RequiredReadAction
-    public static Commenter getCommenter(PsiFile file, Editor editor, Language lineStartLanguage, Language lineEndLanguage) {
+    public static @Nullable Commenter getCommenter(PsiFile file, Editor editor, Language lineStartLanguage, Language lineEndLanguage) {
         FileViewProvider viewProvider = file.getViewProvider();
 
         for (MultipleLangCommentProvider provider : MultipleLangCommentProvider.EP_NAME.getExtensionList()) {
@@ -380,9 +377,8 @@ public class CommentByBlockCommentHandler extends MultiCaretCodeInsightActionHan
         return Commenter.forLanguage(lang);
     }
 
-    @Nullable
     @RequiredReadAction
-    private PsiElement findCommentAtCaret() {
+    private @Nullable PsiElement findCommentAtCaret() {
         int offset = myCaret.getOffset();
         TextRange range = new TextRange(myCaret.getSelectionStart(), myCaret.getSelectionEnd());
         if (offset == range.getEndOffset()) {

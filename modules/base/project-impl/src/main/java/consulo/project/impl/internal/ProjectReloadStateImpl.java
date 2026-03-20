@@ -45,9 +45,8 @@ public class ProjectReloadStateImpl implements ProjectReloadState, PersistentSta
     STATE = BEFORE_RELOAD;
   }
 
-  @Nullable
   @Override
-  public ProjectReloadStateImpl getState() {
+  public @Nullable ProjectReloadStateImpl getState() {
     return this;
   }
 

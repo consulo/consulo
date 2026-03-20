@@ -98,9 +98,8 @@ public class BinaryMergeRequestImpl extends BinaryMergeRequest {
         return myByteContents;
     }
 
-    @Nullable
     @Override
-    public String getTitle() {
+    public @Nullable String getTitle() {
         return myTitle;
     }
 

@@ -111,23 +111,20 @@ public abstract class ChangeSignatureProcessorBase extends BaseRefactoringProces
         return super.isPreviewUsages(usages);
     }
 
-    @Nullable
     @Override
-    protected String getRefactoringId() {
+    protected @Nullable String getRefactoringId() {
         return "refactoring.changeSignature";
     }
 
-    @Nullable
     @Override
-    protected RefactoringEventData getBeforeData() {
+    protected @Nullable RefactoringEventData getBeforeData() {
         RefactoringEventData data = new RefactoringEventData();
         data.addElement(getChangeInfo().getMethod());
         return data;
     }
 
-    @Nullable
     @Override
-    protected RefactoringEventData getAfterData(UsageInfo[] usages) {
+    protected @Nullable RefactoringEventData getAfterData(UsageInfo[] usages) {
         RefactoringEventData data = new RefactoringEventData();
         data.addElement(getChangeInfo().getMethod());
         return data;

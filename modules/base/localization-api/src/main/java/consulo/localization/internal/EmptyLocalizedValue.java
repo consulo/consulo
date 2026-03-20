@@ -49,9 +49,8 @@ public final class EmptyLocalizedValue implements LocalizedValue {
         return EMPTY_STRING;
     }
 
-    @Nullable
     @Override
-    public String getNullIfEmpty() {
+    public @Nullable String getNullIfEmpty() {
         return null;
     }
     @Override

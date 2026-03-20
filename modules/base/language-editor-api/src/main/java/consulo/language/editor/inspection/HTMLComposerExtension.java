@@ -34,8 +34,7 @@ public interface HTMLComposerExtension<T> {
 
   void appendLocation(RefEntity entity, StringBuffer buf);
 
-  @Nullable
-  String getQualifiedName(RefEntity entity);
+  @Nullable String getQualifiedName(RefEntity entity);
 
   void appendReferencePresentation(RefEntity entity, StringBuffer buf, boolean isPackageIncluded);
 }

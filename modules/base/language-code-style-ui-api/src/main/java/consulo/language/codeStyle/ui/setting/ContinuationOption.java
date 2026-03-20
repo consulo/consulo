@@ -27,8 +27,7 @@ import java.util.function.Function;
 
 public class ContinuationOption implements CodeStyleConstraints {
     private
-    @Nullable
-    IntegerField myField;
+    @Nullable IntegerField myField;
     private boolean mySupported;
     private final String myName;
     private final Function<CommonCodeStyleSettings.IndentOptions, Integer> myGetter;

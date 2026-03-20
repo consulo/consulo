@@ -59,9 +59,8 @@ public class OtherFileTypesCodeStyleOptionsForm extends CodeStyleAbstractPanel {
         return 0;
     }
 
-    @Nullable
     @Override
-    protected EditorHighlighter createHighlighter(EditorColorsScheme scheme) {
+    protected @Nullable EditorHighlighter createHighlighter(EditorColorsScheme scheme) {
         return null;
     }
 
@@ -71,9 +70,8 @@ public class OtherFileTypesCodeStyleOptionsForm extends CodeStyleAbstractPanel {
         return PlainTextFileType.INSTANCE;
     }
 
-    @Nullable
     @Override
-    protected String getPreviewText() {
+    protected @Nullable String getPreviewText() {
         return null;
     }
 
@@ -87,9 +85,8 @@ public class OtherFileTypesCodeStyleOptionsForm extends CodeStyleAbstractPanel {
         return myIndentOptionsEditor.isModified(settings, settings.OTHER_INDENT_OPTIONS);
     }
 
-    @Nullable
     @Override
-    public JComponent getPanel() {
+    public @Nullable JComponent getPanel() {
         return myTopPanel;
     }
 

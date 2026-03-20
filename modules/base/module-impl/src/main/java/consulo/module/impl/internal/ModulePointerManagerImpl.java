@@ -70,10 +70,9 @@ public class ModulePointerManagerImpl extends NamedPointerManagerImpl<Module> im
     Disposer.register(value, () -> unregisterPointer(value));
   }
 
-  @Nullable
   @Override
   @RequiredReadAction
-  protected Module findByName(String name) {
+  protected @Nullable Module findByName(String name) {
     if (!myProject.isModulesReady()) {
       return null;
     }

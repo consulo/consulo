@@ -134,9 +134,8 @@ public class WebWindowImpl extends VaadinComponentDelegate<WebWindowImpl.Vaadin>
 
   }
 
-  @Nullable
   @Override
-  public Window getParent() {
+  public @Nullable Window getParent() {
     return (Window)super.getParent();
   }
 }

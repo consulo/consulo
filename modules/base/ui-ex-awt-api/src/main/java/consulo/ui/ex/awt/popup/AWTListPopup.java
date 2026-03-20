@@ -30,8 +30,7 @@ import javax.swing.*;
 public interface AWTListPopup extends ListPopupInternal {
     ListPopupModel getListModel();
 
-    @Nullable
-    SpeedSearch getSpeedSearch();
+    @Nullable SpeedSearch getSpeedSearch();
 
     int getSelectedIndex();
 

@@ -190,9 +190,8 @@ public class TreeTraverser<T> {
     private abstract static class DfsIt<T> extends TracingIt<T> {
         final ArrayDeque<Pair<T, Iterator<? extends T>>> stack = new ArrayDeque<>();
 
-        @Nullable
         @Override
-        public T parent() {
+        public @Nullable T parent() {
             Iterator<Pair<T, Iterator<? extends T>>> it = stack.descendingIterator();
             it.next();
             return it.hasNext() ? it.next().first : null;

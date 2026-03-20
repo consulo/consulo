@@ -504,9 +504,8 @@ public final class LookupElementBuilder extends LookupElement {
     return myObject;
   }
 
-  @Nullable
   @Override
-  public PsiElement getPsiElement() {
+  public @Nullable PsiElement getPsiElement() {
     if (myPsiElement != null) return myPsiElement.getElement();
     return super.getPsiElement();
   }

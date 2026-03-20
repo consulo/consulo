@@ -44,8 +44,7 @@ public interface FileColorManager {
 
     boolean isEnabledForProjectView();
 
-    @Nullable
-    Color getColor(String name);
+    @Nullable Color getColor(String name);
 
     Collection<String> getColorNames();
 
@@ -56,13 +55,11 @@ public interface FileColorManager {
         return TargetAWT.from(getFileColor(file));
     }
 
-    @Nullable
-    Color getScopeColor(String scopeName);
+    @Nullable Color getScopeColor(String scopeName);
 
     boolean isShared(String scopeName);
 
     boolean isColored(String scopeName, boolean shared);
 
-    @Nullable
-    Color getRendererBackground(VirtualFile file);
+    @Nullable Color getRendererBackground(VirtualFile file);
 }

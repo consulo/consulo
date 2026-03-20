@@ -33,8 +33,7 @@ public interface Usage extends Navigatable {
 
     boolean isReadOnly();
 
-    @Nullable
-    FileEditorLocation getLocation();
+    @Nullable FileEditorLocation getLocation();
 
     void selectInEditor();
 

@@ -45,17 +45,13 @@ public interface LineStatusTrackerI {
 
     List<VcsRange> getRanges();
 
-    @Nullable
-    VcsRange getNextRange(VcsRange range);
+    @Nullable VcsRange getNextRange(VcsRange range);
 
-    @Nullable
-    VcsRange getPrevRange(VcsRange range);
+    @Nullable VcsRange getPrevRange(VcsRange range);
 
-    @Nullable
-    VcsRange getNextRange(int line);
+    @Nullable VcsRange getNextRange(int line);
 
-    @Nullable
-    VcsRange getPrevRange(int line);
+    @Nullable VcsRange getPrevRange(int line);
 
     
     CharSequence getVcsContent(VcsRange range);
@@ -72,6 +68,5 @@ public interface LineStatusTrackerI {
     
     VirtualFile getVirtualFile();
 
-    @Nullable
-    Project getProject();
+    @Nullable Project getProject();
 }

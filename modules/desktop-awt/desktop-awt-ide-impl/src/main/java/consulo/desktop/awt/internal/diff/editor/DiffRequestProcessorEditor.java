@@ -94,15 +94,13 @@ public class DiffRequestProcessorEditor extends FileEditorBase {
     return myPanel;
   }
 
-  @Nullable
   @Override
-  public JComponent getPreferredFocusedComponent() {
+  public @Nullable JComponent getPreferredFocusedComponent() {
     return myProcessor.getPreferredFocusedComponent();
   }
 
-  @Nullable
   @Override
-  public DiffVirtualFile getFile() {
+  public @Nullable DiffVirtualFile getFile() {
     return myFile;
   }
 

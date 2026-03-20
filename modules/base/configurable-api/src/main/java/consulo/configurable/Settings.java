@@ -29,8 +29,7 @@ import org.jspecify.annotations.Nullable;
 public interface Settings {
     Key<Settings> KEY = Key.create("options.editor");
 
-    @Nullable
-    SearchableConfigurable findConfigurableById(String configurableId);
+    @Nullable SearchableConfigurable findConfigurableById(String configurableId);
 
     <T extends Configurable> T findConfigurable(Class<T> configurableClass);
 

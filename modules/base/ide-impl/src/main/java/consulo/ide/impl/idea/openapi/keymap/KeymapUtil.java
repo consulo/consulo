@@ -96,9 +96,8 @@ public class KeymapUtil {
      * @param actionId action to find the shortcut for
      * @return first keyboard shortcut that activates given action in active keymap; null if not found
      */
-    @Nullable
     @Deprecated
-    public static Shortcut getPrimaryShortcut(@Nullable String actionId) {
+    public static @Nullable Shortcut getPrimaryShortcut(@Nullable String actionId) {
         return consulo.ui.ex.keymap.util.KeymapUtil.getPrimaryShortcut(actionId);
     }
 

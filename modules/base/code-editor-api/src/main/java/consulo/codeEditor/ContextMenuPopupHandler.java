@@ -52,9 +52,8 @@ public abstract class ContextMenuPopupHandler implements EditorPopupHandler {
    * {@link ContextMenuPopupHandler} specification, which uses an action group registered in {@link ActionManager} under given id.
    */
   public abstract static class ById extends ContextMenuPopupHandler {
-    @Nullable
     @Override
-    public ActionGroup getActionGroup(EditorMouseEvent event) {
+    public @Nullable ActionGroup getActionGroup(EditorMouseEvent event) {
       return ContextMenuPopupHandler.getGroupForId(getActionGroupId(event));
     }
 
@@ -75,9 +74,8 @@ public abstract class ContextMenuPopupHandler implements EditorPopupHandler {
       this(ContextMenuPopupHandler.getGroupForId(groupId));
     }
 
-    @Nullable
     @Override
-    public ActionGroup getActionGroup(EditorMouseEvent event) {
+    public @Nullable ActionGroup getActionGroup(EditorMouseEvent event) {
       return myActionGroup;
     }
   }

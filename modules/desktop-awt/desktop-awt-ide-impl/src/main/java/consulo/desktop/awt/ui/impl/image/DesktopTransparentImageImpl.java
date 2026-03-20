@@ -37,9 +37,8 @@ public class DesktopTransparentImageImpl implements RetrievableIcon, Image {
     myAlpha = alpha;
   }
 
-  @Nullable
   @Override
-  public Icon retrieveIcon() {
+  public @Nullable Icon retrieveIcon() {
     return TargetAWT.to(myImage);
   }
 

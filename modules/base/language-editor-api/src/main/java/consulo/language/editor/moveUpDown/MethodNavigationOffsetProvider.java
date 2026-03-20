@@ -29,6 +29,5 @@ import org.jspecify.annotations.Nullable;
 public interface MethodNavigationOffsetProvider {
   ExtensionPointName<MethodNavigationOffsetProvider> EP_NAME = ExtensionPointName.create(MethodNavigationOffsetProvider.class);
 
-  @Nullable
-  int[] getMethodNavigationOffsets(PsiFile file, int caretOffset);
+  @Nullable int[] getMethodNavigationOffsets(PsiFile file, int caretOffset);
 }

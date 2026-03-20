@@ -45,8 +45,7 @@ public interface ParameterInfo {
    *
    * @return default value, or null if the parameter wasn't added.
    */
-  @Nullable
-  String getDefaultValue();
+  @Nullable String getDefaultValue();
 
   /**
    * Set parameter new name (to be changed to during refactoring)

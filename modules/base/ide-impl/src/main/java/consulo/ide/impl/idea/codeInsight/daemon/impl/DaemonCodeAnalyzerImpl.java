@@ -505,15 +505,13 @@ public class DaemonCodeAnalyzerImpl extends DaemonCodeAnalyzerInternal implement
         );
     }
 
-    @Nullable
     @RequiredReadAction
-    public HighlightInfoImpl findHighlightByOffset(Document document, int offset, boolean includeFixRange) {
+    public @Nullable HighlightInfoImpl findHighlightByOffset(Document document, int offset, boolean includeFixRange) {
         return findHighlightByOffset(document, offset, includeFixRange, HighlightSeverity.INFORMATION);
     }
 
-    @Nullable
     @RequiredReadAction
-    HighlightInfoImpl findHighlightByOffset(
+    @Nullable HighlightInfoImpl findHighlightByOffset(
         Document document,
         int offset,
         boolean includeFixRange,
@@ -597,9 +595,8 @@ public class DaemonCodeAnalyzerImpl extends DaemonCodeAnalyzerInternal implement
         return (IntentionHintComponent)IntentionsUI.getInstance(myProject).getLastIntentionHint();
     }
 
-    @Nullable
     @Override
-    public Element getState() {
+    public @Nullable Element getState() {
         Element state = new Element("state");
         if (myDisabledHintsFiles.isEmpty()) {
             return state;

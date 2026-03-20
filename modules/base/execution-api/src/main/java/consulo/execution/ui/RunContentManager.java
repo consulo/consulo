@@ -35,11 +35,9 @@ import java.util.List;
 public interface RunContentManager {
   Key<Boolean> LIGHTWEIGHT_CONTENT_MARKER = Key.create("LightweightContent");
 
-  @Nullable
-  RunContentDescriptor getSelectedContent();
+  @Nullable RunContentDescriptor getSelectedContent();
 
-  @Nullable
-  RunContentDescriptor getSelectedContent(Executor runnerInfo);
+  @Nullable RunContentDescriptor getSelectedContent(Executor runnerInfo);
 
   
   List<RunContentDescriptor> getAllDescriptors();
@@ -49,11 +47,9 @@ public interface RunContentManager {
    * some of them during showRunContent (for ex. if a process was stopped)
    */
   @RequiredUIAccess
-  @Nullable
-  RunContentDescriptor getReuseContent(ExecutionEnvironment executionEnvironment);
+  @Nullable RunContentDescriptor getReuseContent(ExecutionEnvironment executionEnvironment);
 
-  @Nullable
-  RunContentDescriptor findContentDescriptor(Executor requestor, ProcessHandler handler);
+  @Nullable RunContentDescriptor findContentDescriptor(Executor requestor, ProcessHandler handler);
 
   void showRunContent(Executor executor, RunContentDescriptor descriptor, @Nullable RunContentDescriptor contentToReuse);
 
@@ -67,8 +63,7 @@ public interface RunContentManager {
 
   void toFrontRunContent(Executor requestor, ProcessHandler handler);
 
-  @Nullable
-  ToolWindow getToolWindowByDescriptor(RunContentDescriptor descriptor);
+  @Nullable ToolWindow getToolWindowByDescriptor(RunContentDescriptor descriptor);
 
   void selectRunContent(RunContentDescriptor descriptor);
 

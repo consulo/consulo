@@ -178,9 +178,8 @@ public class DefaultNavBarExtension extends AbstractNavBarModelExtension {
     });
   }
 
-  @Nullable
   @Override
-  public PsiElement getParent(PsiElement psiElement) {
+  public @Nullable PsiElement getParent(PsiElement psiElement) {
     PsiFile containingFile = psiElement.getContainingFile();
     if (containingFile != null) {
       PsiDirectory containingDirectory = containingFile.getContainingDirectory();

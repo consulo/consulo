@@ -27,13 +27,11 @@ import org.jspecify.annotations.Nullable;
  * @since 20-Mar-22
  */
 public interface TemplateState extends Disposable {
-  @Nullable
-  TextRange getCurrentVariableRange();
+  @Nullable TextRange getCurrentVariableRange();
 
   int getCurrentVariableNumber();
 
-  @Nullable
-  TextResult getVariableValue(String name);
+  @Nullable TextResult getVariableValue(String name);
 
   void nextTab();
 
@@ -50,8 +48,7 @@ public interface TemplateState extends Disposable {
   
   TextRange getSegmentRange(int index);
 
-  @Nullable
-  TextRange getVariableRange(String varName);
+  @Nullable TextRange getVariableRange(String varName);
 
   
   Editor getEditor();

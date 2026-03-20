@@ -47,8 +47,7 @@ public interface CodeStyleSchemesModel {
 
   CodeStyleScheme getProjectScheme();
 
-  @Nullable
-  CodeStyleScheme getSelectedGlobalScheme();
+  @Nullable CodeStyleScheme getSelectedGlobalScheme();
 
   void copyToProject(CodeStyleScheme selectedScheme);
 

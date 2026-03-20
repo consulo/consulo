@@ -439,9 +439,8 @@ public class TodoConfigurable implements SearchableConfigurable, Configurable.No
         return "preferences.toDoOptions";
     }
 
-    @Nullable
     @Override
-    public String getParentId() {
+    public @Nullable String getParentId() {
         return StandardConfigurableIds.EDITOR_GROUP;
     }
 }

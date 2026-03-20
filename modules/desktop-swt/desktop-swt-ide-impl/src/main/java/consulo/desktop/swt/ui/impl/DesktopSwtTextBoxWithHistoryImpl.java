@@ -83,9 +83,8 @@ public class DesktopSwtTextBoxWithHistoryImpl extends SWTComponentDelegate<Text>
         return false;
     }
 
-    @Nullable
     @Override
-    public String getValue() {
+    public @Nullable String getValue() {
         return null;
     }
 
@@ -100,9 +99,8 @@ public class DesktopSwtTextBoxWithHistoryImpl extends SWTComponentDelegate<Text>
 
     }
 
-    @Nullable
     @Override
-    public Component getSuffixComponent() {
+    public @Nullable Component getSuffixComponent() {
         return null;
     }
 }

@@ -38,8 +38,7 @@ public interface Injection {
   
   String getInjectedLanguageId();
 
-  @Nullable
-  Language getInjectedLanguage();
+  @Nullable Language getInjectedLanguage();
 
   
   String getPrefix();

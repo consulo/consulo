@@ -86,9 +86,8 @@ public class MoveRenameUsageInfo extends UsageInfo {
         }
     }
 
-    @Nullable
     @RequiredReadAction
-    public PsiElement getUpToDateReferencedElement() {
+    public @Nullable PsiElement getUpToDateReferencedElement() {
         return myReferencedElementPointer == null ? null : myReferencedElementPointer.getElement();
     }
 
@@ -97,9 +96,8 @@ public class MoveRenameUsageInfo extends UsageInfo {
     }
 
     @Override
-    @Nullable
     @RequiredReadAction
-    public PsiReference getReference() {
+    public @Nullable PsiReference getReference() {
         if (myReference != null) {
             PsiElement element = myReference.getElement();
             if (element != null && element.isValid()) {

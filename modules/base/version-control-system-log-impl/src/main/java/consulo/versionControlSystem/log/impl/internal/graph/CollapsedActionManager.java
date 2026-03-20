@@ -67,8 +67,7 @@ class CollapsedActionManager {
 
 
   private interface ActionCase {
-    @Nullable
-    LinearGraphAnswer performAction(ActionContext context);
+    @Nullable LinearGraphAnswer performAction(ActionContext context);
 
     
     Set<GraphAction.Type> supportedActionTypes();
@@ -100,8 +99,7 @@ class CollapsedActionManager {
       return myGraphAction.getType();
     }
 
-    @Nullable
-    GraphElement getAffectedGraphElement() {
+    @Nullable GraphElement getAffectedGraphElement() {
       return myGraphAction.getAffectedElement() == null ? null : myGraphAction.getAffectedElement().getGraphElement();
     }
 
@@ -156,9 +154,8 @@ class CollapsedActionManager {
   }
 
   private final static ActionCase LINEAR_COLLAPSE_CASE = new ActionCase() {
-    @Nullable
     @Override
-    public LinearGraphAnswer performAction(ActionContext context) {
+    public @Nullable LinearGraphAnswer performAction(ActionContext context) {
       if (isForDelegateGraph(context)) return null;
 
       GraphElement affectedGraphElement = context.getAffectedGraphElement();
@@ -208,9 +205,8 @@ class CollapsedActionManager {
   };
 
   private final static ActionCase EXPAND_ALL = new ActionCase() {
-    @Nullable
     @Override
-    public LinearGraphAnswer performAction(ActionContext context) {
+    public @Nullable LinearGraphAnswer performAction(ActionContext context) {
       CollapsedGraph.Modification modification = context.myCollapsedGraph.startModification();
       modification.removeAdditionalEdges();
       modification.resetNodesVisibility();
@@ -257,9 +253,8 @@ class CollapsedActionManager {
   };
 
   private final static ActionCase LINEAR_EXPAND_CASE = new ActionCase() {
-    @Nullable
     @Override
-    public LinearGraphAnswer performAction(ActionContext context) {
+    public @Nullable LinearGraphAnswer performAction(ActionContext context) {
       if (isForDelegateGraph(context)) return null;
 
       GraphEdge dottedEdge = getDottedEdge(context.getAffectedGraphElement(), context.getCompiledGraph());
@@ -343,9 +338,8 @@ class CollapsedActionManager {
       myModification = modification;
     }
 
-    @Nullable
     @Override
-    public Runnable getGraphUpdater() {
+    public @Nullable Runnable getGraphUpdater() {
       return myModification::apply;
     }
   }

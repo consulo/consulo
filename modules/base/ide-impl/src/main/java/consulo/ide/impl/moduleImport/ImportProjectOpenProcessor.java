@@ -57,9 +57,8 @@ public class ImportProjectOpenProcessor extends ProjectOpenProcessor {
         myProviders = ModuleImportProviders.getExtensions(false);
     }
 
-    @Nullable
     @Override
-    public Image getIcon(VirtualFile file) {
+    public @Nullable Image getIcon(VirtualFile file) {
         File ioFile = VfsUtil.virtualToIoFile(file);
         for (ModuleImportProvider provider : myProviders) {
             if (provider.canImport(ioFile)) {

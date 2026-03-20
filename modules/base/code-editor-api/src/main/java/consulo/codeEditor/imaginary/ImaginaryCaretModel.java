@@ -140,21 +140,18 @@ public class ImaginaryCaretModel implements CaretModel {
         return Collections.singletonList(myCaret);
     }
 
-    @Nullable
     @Override
-    public Caret getCaretAt(VisualPosition pos) {
+    public @Nullable Caret getCaretAt(VisualPosition pos) {
         throw notImplemented();
     }
 
-    @Nullable
     @Override
-    public Caret addCaret(VisualPosition pos) {
+    public @Nullable Caret addCaret(VisualPosition pos) {
         throw notImplemented();
     }
 
-    @Nullable
     @Override
-    public Caret addCaret(VisualPosition pos, boolean makePrimary) {
+    public @Nullable Caret addCaret(VisualPosition pos, boolean makePrimary) {
         throw notImplemented();
     }
 

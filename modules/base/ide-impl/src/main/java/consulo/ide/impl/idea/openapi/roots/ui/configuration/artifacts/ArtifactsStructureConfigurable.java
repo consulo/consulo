@@ -104,9 +104,8 @@ public class ArtifactsStructureConfigurable extends BaseStructureConfigurable
         myNorthPanel.add(bannerComponent, BorderLayout.NORTH);
     }
 
-    @Nullable
     @Override
-    public String getParentId() {
+    public @Nullable String getParentId() {
         return StandardConfigurableIds.PROJECT_GROUP;
     }
 

@@ -189,10 +189,9 @@ public abstract class CodeEditorSoftWrapModelBase extends InlayModel.SimpleAdapt
         return myUseSoftWraps && !myEditor.isPurePaintingMode();
     }
 
-    @Nullable
     @Override
     @RequiredUIAccess
-    public SoftWrap getSoftWrap(int offset) {
+    public @Nullable SoftWrap getSoftWrap(int offset) {
         if (!isSoftWrappingEnabled()) {
             return null;
         }

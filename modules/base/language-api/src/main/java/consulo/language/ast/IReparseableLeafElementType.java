@@ -34,7 +34,6 @@ public interface IReparseableLeafElementType<T extends ASTNode> {
    * @param newText the updated text inside the leaf's range
    * @return a replacement leaf with newText text, if it's correct to do such replacement, or null otherwise
    */
-  @Nullable
-  T reparseLeaf(T leaf, CharSequence newText);
+  @Nullable T reparseLeaf(T leaf, CharSequence newText);
 
 }

@@ -41,8 +41,7 @@ public interface RunProfile {
    * @param environment the environment object containing additional settings for executing the configuration.
    * @return the RunProfileState describing the process which is about to be started, or null if it's impossible to start the process.
    */
-  @Nullable
-  RunProfileState getState(Executor executor, ExecutionEnvironment environment) throws ExecutionException;
+  @Nullable RunProfileState getState(Executor executor, ExecutionEnvironment environment) throws ExecutionException;
 
   /**
    * Returns the name of the run configuration.
@@ -57,6 +56,5 @@ public interface RunProfile {
    *
    * @return the icon for the run configuration, or null if the default executor icon should be used.
    */
-  @Nullable
-  Image getIcon();
+  @Nullable Image getIcon();
 }

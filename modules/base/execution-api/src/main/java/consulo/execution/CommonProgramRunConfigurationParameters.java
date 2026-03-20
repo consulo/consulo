@@ -21,18 +21,15 @@ import org.jspecify.annotations.Nullable;
 import java.util.Map;
 
 public interface CommonProgramRunConfigurationParameters {
-  @Nullable
-  Project getProject();
+  @Nullable Project getProject();
 
   void setProgramParameters(@Nullable String value);
 
-  @Nullable
-  String getProgramParameters();
+  @Nullable String getProgramParameters();
 
   void setWorkingDirectory(@Nullable String value);
 
-  @Nullable
-  String getWorkingDirectory();
+  @Nullable String getWorkingDirectory();
 
   void setEnvs(Map<String, String> envs);
 

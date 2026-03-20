@@ -303,9 +303,8 @@ public class ScopeChooserConfigurable extends MasterDetailsComponent implements 
         }
     }
 
-    @Nullable
     @Override
-    protected String getEmptySelectionString() {
+    protected @Nullable String getEmptySelectionString() {
         return "Select a scope to view or edit its details here";
     }
 
@@ -380,9 +379,8 @@ public class ScopeChooserConfigurable extends MasterDetailsComponent implements 
         return PROJECT_SCOPES;
     }
 
-    @Nullable
     @Override
-    public String getParentId() {
+    public @Nullable String getParentId() {
         return StandardConfigurableIds.GENERAL_GROUP;
     }
 

@@ -27,9 +27,8 @@ public class RunAnythingRunConfigurationProviderImpl extends RunAnythingRunConfi
         return getWrappers(dataContext);
     }
 
-    @Nullable
     @Override
-    public String getHelpGroupTitle() {
+    public @Nullable String getHelpGroupTitle() {
         return null;
     }
 

@@ -69,8 +69,7 @@ public interface Content extends UserDataHolder, ComponentContainer {
 
   void setIcon(Image icon);
 
-  @Nullable
-  Image getIcon();
+  @Nullable Image getIcon();
 
   void setDisplayName(String displayName);
 
@@ -136,8 +135,7 @@ public interface Content extends UserDataHolder, ComponentContainer {
 
   ActionGroup getActions();
 
-  @Nullable
-  JComponent getSearchComponent();
+  @Nullable JComponent getSearchComponent();
 
   String getPlace();
 
@@ -145,13 +143,11 @@ public interface Content extends UserDataHolder, ComponentContainer {
 
   void setAlertIcon(@Nullable AlertIcon icon);
 
-  @Nullable
-  AlertIcon getAlertIcon();
+  @Nullable AlertIcon getAlertIcon();
 
   void fireAlert();
 
-  @Nullable
-  BusyObject getBusyObject();
+  @Nullable BusyObject getBusyObject();
 
   void setBusyObject(BusyObject object);
 
@@ -161,8 +157,7 @@ public interface Content extends UserDataHolder, ComponentContainer {
 
   void setPopupIcon(@Nullable Image icon);
 
-  @Nullable
-  Image getPopupIcon();
+  @Nullable Image getPopupIcon();
 
   /**
    * @param executionId supposed to identify group of contents (for example "Before Launch" tasks and the main Run Configuration)

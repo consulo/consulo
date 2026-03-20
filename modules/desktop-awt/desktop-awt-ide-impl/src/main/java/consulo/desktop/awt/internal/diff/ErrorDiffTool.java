@@ -107,9 +107,8 @@ public class ErrorDiffTool implements FrameDiffTool {
             return myPanel;
         }
 
-        @Nullable
         @Override
-        public JComponent getPreferredFocusedComponent() {
+        public @Nullable JComponent getPreferredFocusedComponent() {
             return null;
         }
 

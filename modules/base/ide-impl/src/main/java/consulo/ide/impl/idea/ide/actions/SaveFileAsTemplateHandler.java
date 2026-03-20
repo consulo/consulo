@@ -25,6 +25,5 @@ import org.jspecify.annotations.Nullable;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface SaveFileAsTemplateHandler {
-    @Nullable
-    String getTemplateText(PsiFile file, String fileText, String nameWithoutExtension);
+    @Nullable String getTemplateText(PsiFile file, String fileText, String nameWithoutExtension);
 }

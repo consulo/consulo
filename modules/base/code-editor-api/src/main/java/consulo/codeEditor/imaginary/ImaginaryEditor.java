@@ -95,9 +95,8 @@ public class ImaginaryEditor extends UserDataHolderBase implements Editor {
         return myDocument;
     }
 
-    @Nullable
     @Override
-    public Project getProject() {
+    public @Nullable Project getProject() {
         return myProject;
     }
 

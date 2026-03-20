@@ -32,9 +32,8 @@ public interface EditorNotificationProvider {
     
     String getId();
 
-    @Nullable
     @RequiredReadAction
-    EditorNotificationBuilder buildNotification(VirtualFile file,
+    @Nullable EditorNotificationBuilder buildNotification(VirtualFile file,
                                                 FileEditor fileEditor,
                                                 Supplier<EditorNotificationBuilder> builderFactory);
 }

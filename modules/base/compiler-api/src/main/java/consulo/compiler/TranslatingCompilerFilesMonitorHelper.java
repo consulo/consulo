@@ -28,8 +28,7 @@ import org.jspecify.annotations.Nullable;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface TranslatingCompilerFilesMonitorHelper {
-    @Nullable
-    VirtualFile[] getRootsForModule(Module module);
+    @Nullable VirtualFile[] getRootsForModule(Module module);
 
     boolean isModuleExtensionAffectToCompilation(ModuleExtension<?> oldExtension);
 }

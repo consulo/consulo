@@ -223,9 +223,8 @@ public abstract class LRUPopupBuilder<T> {
                 return null;
             }
 
-            @Nullable
             @Override
-            public ListSeparator getSeparatorAbove(T value) {
+            public @Nullable ListSeparator getSeparatorAbove(T value) {
                 return value == separator1 || value == separator2 ? new ListSeparator() : null;
             }
         };

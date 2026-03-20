@@ -46,9 +46,8 @@ public class BrowserSettings implements ApplicationConfigurable, SearchableConfi
     return "web.browsers";
   }
 
-  @Nullable
   @Override
-  public String getParentId() {
+  public @Nullable String getParentId() {
     return StandardConfigurableIds.GENERAL_GROUP;
   }
 

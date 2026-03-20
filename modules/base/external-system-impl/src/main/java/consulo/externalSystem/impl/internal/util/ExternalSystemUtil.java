@@ -126,9 +126,8 @@ public class ExternalSystemUtil {
         });
     }
 
-    @Nullable
     @SuppressWarnings("unchecked")
-    public static <T> T getToolWindowElement(
+    public static <T> @Nullable T getToolWindowElement(
         Class<T> clazz,
         Project project,
         Key<T> key,
@@ -289,9 +288,8 @@ public class ExternalSystemUtil {
                     init();
                 }
 
-                @Nullable
                 @Override
-                protected JComponent createCenterPanel() {
+                protected @Nullable JComponent createCenterPanel() {
                     return new JBScrollPane(content);
                 }
             };
@@ -317,9 +315,8 @@ public class ExternalSystemUtil {
         });
     }
 
-    @Nullable
     @SuppressWarnings("ThrowableResultOfMethodCallIgnored")
-    private static String extractDetails(Throwable e) {
+    private static @Nullable String extractDetails(Throwable e) {
         Throwable unwrapped = RemoteUtil.unwrap(e);
         if (unwrapped instanceof ExternalSystemException externalSystemException) {
             return externalSystemException.getOriginalReason();
@@ -670,9 +667,8 @@ public class ExternalSystemUtil {
         refreshProject(project, externalSystemId, projectSettings.getExternalProjectPath(), callback, isPreviewMode, progressExecutionMode);
     }
 
-    @Nullable
     @RequiredUIAccess
-    public static VirtualFile waitForTheFile(@Nullable String path) {
+    public static @Nullable VirtualFile waitForTheFile(@Nullable String path) {
         if (path == null) {
             return null;
         }

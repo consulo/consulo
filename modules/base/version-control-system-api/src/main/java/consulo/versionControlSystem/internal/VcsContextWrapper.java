@@ -57,9 +57,8 @@ public class VcsContextWrapper implements VcsContext {
     return myPlace;
   }
 
-  @Nullable
   @Override
-  public String getActionName() {
+  public @Nullable String getActionName() {
     return myActionName;
   }
 
@@ -73,15 +72,13 @@ public class VcsContextWrapper implements VcsContext {
     return new VcsContextWrapper(event.getDataContext(), event.getModifiers(), event.getPlace(), event.getPresentation().getText());
   }
 
-  @Nullable
   @Override
-  public Project getProject() {
+  public @Nullable Project getProject() {
     return myContext.getData(Project.KEY);
   }
 
-  @Nullable
   @Override
-  public VirtualFile getSelectedFile() {
+  public @Nullable VirtualFile getSelectedFile() {
     return getSelectedFilesStream().findFirst().orElse(null);
   }
 
@@ -115,17 +112,15 @@ public class VcsContextWrapper implements VcsContext {
     return Arrays.asList(getSelectedFiles());
   }
 
-  @Nullable
   @Override
-  public File getSelectedIOFile() {
+  public @Nullable File getSelectedIOFile() {
     File file = myContext.getData(VcsDataKeys.IO_FILE);
 
     return file != null ? file : ArrayUtil.getFirstElement(myContext.getData(VcsDataKeys.IO_FILE_ARRAY));
   }
 
-  @Nullable
   @Override
-  public File[] getSelectedIOFiles() {
+  public @Nullable File[] getSelectedIOFiles() {
     File[] files = myContext.getData(VcsDataKeys.IO_FILE_ARRAY);
     if (!ArrayUtil.isEmpty(files)) return files;
 
@@ -162,21 +157,18 @@ public class VcsContextWrapper implements VcsContext {
     );
   }
 
-  @Nullable
   @Override
-  public FilePath getSelectedFilePath() {
+  public @Nullable FilePath getSelectedFilePath() {
     return ArrayUtil.getFirstElement(getSelectedFilePaths());
   }
 
-  @Nullable
   @Override
-  public ChangeList[] getSelectedChangeLists() {
+  public @Nullable ChangeList[] getSelectedChangeLists() {
     return myContext.getData(VcsDataKeys.CHANGE_LISTS);
   }
 
-  @Nullable
   @Override
-  public Change[] getSelectedChanges() {
+  public @Nullable Change[] getSelectedChanges() {
     return myContext.getData(VcsDataKeys.CHANGES);
   }
 }

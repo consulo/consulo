@@ -86,7 +86,6 @@ public interface ResolveCache {
 
   <TRef extends PsiReference, TResult> TResult resolveWithCaching(TRef ref, AbstractResolver<TRef, TResult> resolver, boolean needToPreventRecursion, boolean incompleteCode);
 
-  @Nullable
-    // null means not cached
+    @Nullable // null means not cached
   <T extends PsiPolyVariantReference> ResolveResult[] getCachedResults(T ref, boolean physical, boolean incompleteCode, boolean isPoly);
 }

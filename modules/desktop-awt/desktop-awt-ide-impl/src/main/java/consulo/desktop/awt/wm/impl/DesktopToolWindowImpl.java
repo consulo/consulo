@@ -116,9 +116,8 @@ public final class DesktopToolWindowImpl extends ToolWindowBase {
     return myAvailable && myComponent != null;
   }
 
-  @Nullable
   @Override
-  public final JComponent getComponent() {
+  public final @Nullable JComponent getComponent() {
     return myComponent;
   }
 

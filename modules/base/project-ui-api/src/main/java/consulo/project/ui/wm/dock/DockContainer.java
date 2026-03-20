@@ -56,11 +56,9 @@ public interface DockContainer extends Disposable, Activatable {
 
   boolean isEmpty();
 
-  @Nullable
-  Image startDropOver(DockableContent content, RelativePoint point);
+  @Nullable Image startDropOver(DockableContent content, RelativePoint point);
 
-  @Nullable
-  Image processDropOver(DockableContent content, RelativePoint point);
+  @Nullable Image processDropOver(DockableContent content, RelativePoint point);
 
   void resetDropOver(DockableContent content);
 

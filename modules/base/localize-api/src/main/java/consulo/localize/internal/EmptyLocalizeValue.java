@@ -47,9 +47,8 @@ public final class EmptyLocalizeValue implements LocalizeValue {
         return "";
     }
 
-    @Nullable
     @Override
-    public String getNullIfEmpty() {
+    public @Nullable String getNullIfEmpty() {
         return null;
     }
     @Override

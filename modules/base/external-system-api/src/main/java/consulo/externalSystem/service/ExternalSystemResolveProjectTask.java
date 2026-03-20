@@ -25,6 +25,5 @@ import org.jspecify.annotations.Nullable;
  * @since 2025-04-10
  */
 public interface ExternalSystemResolveProjectTask extends ExternalSystemTask {
-    @Nullable
-    DataNode<ProjectData> getExternalProject();
+    @Nullable DataNode<ProjectData> getExternalProject();
 }

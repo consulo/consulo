@@ -67,9 +67,8 @@ public class InjectedLanguageManagerUtil {
     return ref.get();
   }
 
-  @Nullable
   @RequiredReadAction
-  public static PsiLanguageInjectionHost findInjectionHost(@Nullable PsiElement psi) {
+  public static @Nullable PsiLanguageInjectionHost findInjectionHost(@Nullable PsiElement psi) {
     if (psi == null) return null;
     InjectedLanguageManager injectedLanguageManager = InjectedLanguageManager.getInstance(psi.getProject());
     PsiFile containingFile = psi.getContainingFile().getOriginalFile();

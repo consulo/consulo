@@ -53,10 +53,9 @@ public interface CodeEditorInternalHelper {
             myCaret = caret;
         }
 
-        @Nullable
         @Override
         @SuppressWarnings("unchecked")
-        public <T> T getData(Key<T> dataId) {
+        public <T> @Nullable T getData(Key<T> dataId) {
             if (Caret.KEY == dataId) {
                 return (T) myCaret;
             }
@@ -111,8 +110,7 @@ public interface CodeEditorInternalHelper {
         return 1;
     }
 
-    @Nullable
-    MarkupModelEx forDocument(Document document, @Nullable Project project, boolean create);
+    @Nullable MarkupModelEx forDocument(Document document, @Nullable Project project, boolean create);
 
     default boolean isShowMethodSeparators() {
         return false;

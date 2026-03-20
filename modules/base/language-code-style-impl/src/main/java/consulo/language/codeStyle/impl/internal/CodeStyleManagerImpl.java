@@ -782,9 +782,8 @@ public class CodeStyleManagerImpl extends CodeStyleManager implements Formatting
         return model == null ? -1 : FormatterEx.getInstanceEx().getMinLineFeedsBeforeBlockAtOffset(model, offset);
     }
 
-    @Nullable
     @RequiredReadAction
-    private static FormattingModel createFormattingModel(PsiFile file) {
+    private static @Nullable FormattingModel createFormattingModel(PsiFile file) {
         FormattingModelBuilder builder = FormattingModelBuilder.forContext(file);
         if (builder == null) {
             return null;

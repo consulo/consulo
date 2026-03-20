@@ -27,6 +27,5 @@ public interface VirtualFileQualifiedNameProvider {
     /**
      * @return {@code virtualFile} fqn (relative path for example) or null if not handled by this provider
      */
-    @Nullable
-    String getQualifiedName(Project project, VirtualFile virtualFile);
+    @Nullable String getQualifiedName(Project project, VirtualFile virtualFile);
 }

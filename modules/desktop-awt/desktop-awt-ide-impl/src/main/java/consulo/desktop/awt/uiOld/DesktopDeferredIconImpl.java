@@ -307,9 +307,8 @@ public class DesktopDeferredIconImpl<T> extends JBUI.CachingScalableJBIcon<Deskt
         }
     }
 
-    @Nullable
     @Override
-    public Icon retrieveIcon() {
+    public @Nullable Icon retrieveIcon() {
         return isDone() ? TargetAWT.to(myScaledDelegateIcon) : evaluate();
     }
 

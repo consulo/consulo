@@ -117,9 +117,8 @@ public abstract class ExpirableConstrainedExecution<E extends ConstrainedExecuti
 
   private final Supplier<Expiration> compositeExpiration = LazyValue.nullable(() -> ExpirationUtil.composeExpiration(getExpirationSet()));
 
-  @Nullable
   @Override
-  protected Expiration composeExpiration() {
+  protected @Nullable Expiration composeExpiration() {
     return compositeExpiration.get();
   }
 
@@ -149,9 +148,8 @@ public abstract class ExpirableConstrainedExecution<E extends ConstrainedExecuti
     return expirationSet;
   }
 
-  @Nullable
   @Override
-  protected BooleanSupplier composeCancellationCondition() {
+  protected @Nullable BooleanSupplier composeCancellationCondition() {
     BooleanSupplier[] conditions = this.cancellationConditions;
     if (conditions.length == 0) {
       return null;

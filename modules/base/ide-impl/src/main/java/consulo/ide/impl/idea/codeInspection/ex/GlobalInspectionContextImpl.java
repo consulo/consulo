@@ -782,9 +782,8 @@ public class GlobalInspectionContextImpl extends GlobalInspectionContextBase imp
         final Map<String, InspectionToolWrapper> wrappersMap
     ) {
         return new ProblemDescriptionsProcessor() {
-            @Nullable
             @Override
-            public CommonProblemDescriptor[] getDescriptions(RefEntity refEntity) {
+            public @Nullable CommonProblemDescriptor[] getDescriptions(RefEntity refEntity) {
                 return new CommonProblemDescriptor[0];
             }
 

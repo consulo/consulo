@@ -109,9 +109,8 @@ public class ArrangementAndMatchConditionComponent extends JPanel implements Arr
     return this;
   }
 
-  @Nullable
   @Override
-  public Rectangle getScreenBounds() {
+  public @Nullable Rectangle getScreenBounds() {
     return myScreenBounds;
   }
 
@@ -211,9 +210,8 @@ public class ArrangementAndMatchConditionComponent extends JPanel implements Arr
     return null;
   }
 
-  @Nullable
   @Override
-  public Rectangle onMouseExited() {
+  public @Nullable Rectangle onMouseExited() {
     if (myComponentUnderMouse != null) {
       Rectangle result = myComponentUnderMouse.onMouseExited();
       myComponentUnderMouse = null;
@@ -222,9 +220,8 @@ public class ArrangementAndMatchConditionComponent extends JPanel implements Arr
     return null;
   }
 
-  @Nullable
   @Override
-  public ArrangementSettingsToken getToken() {
+  public @Nullable ArrangementSettingsToken getToken() {
     return myComponentUnderMouse == null ? null : myComponentUnderMouse.getToken();
   }
 

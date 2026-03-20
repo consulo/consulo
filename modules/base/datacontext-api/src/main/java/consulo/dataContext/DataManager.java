@@ -62,8 +62,7 @@ public interface DataManager {
    * @param dataKey     key to find value by
    * @return value stored by {@link #saveInDataContext(DataContext, Key, Object)}
    */
-  @Nullable
-  <T> T loadFromDataContext(DataContext dataContext, Key<T> dataKey);
+  <T> @Nullable T loadFromDataContext(DataContext dataContext, Key<T> dataKey);
 
   // TODO [VISTALL] region AWT & Swing dependency
 

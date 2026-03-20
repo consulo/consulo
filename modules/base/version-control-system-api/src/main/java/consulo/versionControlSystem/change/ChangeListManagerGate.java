@@ -32,8 +32,7 @@ import java.util.List;
 public interface ChangeListManagerGate {
   List<LocalChangeList> getListsCopy();
 
-  @Nullable
-  LocalChangeList findChangeList(String name);
+  @Nullable LocalChangeList findChangeList(String name);
 
   LocalChangeList addChangeList(String name, String comment);
 
@@ -47,8 +46,7 @@ public interface ChangeListManagerGate {
 
   FileStatus getStatus(VirtualFile file);
 
-  @Nullable
-  FileStatus getStatus(FilePath filePath);
+  @Nullable FileStatus getStatus(FilePath filePath);
 
   /**
    * Use {@link #getStatus(FilePath)

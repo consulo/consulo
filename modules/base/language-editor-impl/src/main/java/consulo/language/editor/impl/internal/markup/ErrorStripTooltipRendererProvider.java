@@ -27,8 +27,7 @@ import java.util.Collection;
  * @author max
  */
 public interface ErrorStripTooltipRendererProvider {
-  @Nullable
-  TooltipRenderer calcTooltipRenderer(Collection<? extends RangeHighlighter> highlighters);
+  @Nullable TooltipRenderer calcTooltipRenderer(Collection<? extends RangeHighlighter> highlighters);
 
   
   TooltipRenderer calcTooltipRenderer(String text);

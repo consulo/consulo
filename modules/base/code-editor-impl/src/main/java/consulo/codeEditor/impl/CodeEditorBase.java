@@ -144,9 +144,8 @@ public abstract class CodeEditorBase extends UserDataHolderBase implements RealE
             myOwnAttributes.put(key, attributes);
         }
 
-        @Nullable
         @Override
-        public ColorValue getColor(EditorColorKey key) {
+        public @Nullable ColorValue getColor(EditorColorKey key) {
             if (myOwnColors.containsKey(key)) {
                 return myOwnColors.get(key);
             }
@@ -297,9 +296,8 @@ public abstract class CodeEditorBase extends UserDataHolderBase implements RealE
     }
 
     private class DefaultPopupHandler extends ContextMenuPopupHandler.ById {
-        @Nullable
         @Override
-        public String getActionGroupId(EditorMouseEvent event) {
+        public @Nullable String getActionGroupId(EditorMouseEvent event) {
             String contextMenuGroupId = myContextMenuGroupId;
             Inlay inlay = myInlayModel.getElementAt(event.getMouseEvent().getPoint());
             if (inlay != null) {
@@ -981,9 +979,8 @@ public abstract class CodeEditorBase extends UserDataHolderBase implements RealE
         myContextMenuGroupId = groupId;
     }
 
-    @Nullable
     @Override
-    public String getContextMenuGroupId() {
+    public @Nullable String getContextMenuGroupId() {
         return myContextMenuGroupId;
     }
 
@@ -1112,10 +1109,9 @@ public abstract class CodeEditorBase extends UserDataHolderBase implements RealE
         }
 
         return new DataContext() {
-            @Nullable
             @Override
             @SuppressWarnings("unchecked")
-            public <T> T getData(Key<T> dataId) {
+            public <T> @Nullable T getData(Key<T> dataId) {
                 if (Project.KEY == dataId) {
                     return (T) myProject;
                 }

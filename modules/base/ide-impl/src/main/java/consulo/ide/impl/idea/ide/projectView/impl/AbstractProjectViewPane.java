@@ -642,9 +642,8 @@ public abstract class AbstractProjectViewPane extends UserDataHolderBase impleme
         return ContainerUtil.getFirstItem(getElementsFromNode(node));
     }
 
-    @Nullable
     @RequiredReadAction
-    protected Module getNodeModule(@Nullable Object element) {
+    protected @Nullable Module getNodeModule(@Nullable Object element) {
         if (element instanceof PsiElement psiElement) {
             return ModuleUtilCore.findModuleForPsiElement(psiElement);
         }
@@ -912,15 +911,13 @@ public abstract class AbstractProjectViewPane extends UserDataHolderBase impleme
     protected void enableDnD() {
         if (!myProject.getApplication().isHeadlessEnvironment()) {
             myDropTarget = new ProjectViewDropTarget(myTree, myProject) {
-                @Nullable
                 @Override
-                protected PsiElement getPsiElement(TreePath path) {
+                protected @Nullable PsiElement getPsiElement(TreePath path) {
                     return ContainerUtil.getFirstItem(getElementsFromNode(path.getLastPathComponent()));
                 }
 
-                @Nullable
                 @Override
-                protected Module getModule(PsiElement element) {
+                protected @Nullable Module getModule(PsiElement element) {
                     return getNodeModule(element);
                 }
 
@@ -989,9 +986,8 @@ public abstract class AbstractProjectViewPane extends UserDataHolderBase impleme
                     return PsiCopyPasteManager.asFileList(psiElements);
                 }
 
-                @Nullable
                 @Override
-                public TreePath[] getTreePaths() {
+                public @Nullable TreePath[] getTreePaths() {
                     return paths;
                 }
 
@@ -1007,9 +1003,8 @@ public abstract class AbstractProjectViewPane extends UserDataHolderBase impleme
             });
         }
 
-        @Nullable
         @Override
-        public Pair<Image, Point> createDraggedImage(DnDAction action, Point dragOrigin, DnDDragStartBean bean) {
+        public @Nullable Pair<Image, Point> createDraggedImage(DnDAction action, Point dragOrigin, DnDDragStartBean bean) {
             TreePath[] paths = getSelectionPaths();
             if (paths == null) {
                 return null;

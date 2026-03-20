@@ -79,8 +79,7 @@ public interface ModifiableModuleModel {
    * @param name the name of the module to find.
    * @return the module instance, or null if no module with such name exists.
    */
-  @Nullable
-  Module findModuleByName(String name);
+  @Nullable Module findModuleByName(String name);
 
   /**
    * Disposes of all modules in the project.
@@ -116,8 +115,7 @@ public interface ModifiableModuleModel {
    * @param newName the name of the renamed module to find.
    * @return the module instance, or null if no module has been renamed to such a name.
    */
-  @Nullable
-  Module getModuleToBeRenamed(String newName);
+  @Nullable Module getModuleToBeRenamed(String newName);
 
   /**
    * Returns the name to which the specified module has been renamed.
@@ -125,11 +123,9 @@ public interface ModifiableModuleModel {
    * @param module the module for which the new name is requested.
    * @return the new name, or null if the module has not been renamed.
    */
-  @Nullable
-  String getNewName(Module module);
+  @Nullable String getNewName(Module module);
 
-  @Nullable
-  String[] getModuleGroupPath(Module module);
+  @Nullable String[] getModuleGroupPath(Module module);
 
   boolean hasModuleGroups();
 

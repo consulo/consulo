@@ -58,8 +58,7 @@ public interface ConfigurationType extends PossiblyDumbAware {
      *
      * @return the icon
      */
-    @Nullable
-    Image getIcon();
+    @Nullable Image getIcon();
 
     /**
      * Returns the ID of the configuration type. The ID is used to store run configuration settings in a project or workspace file and

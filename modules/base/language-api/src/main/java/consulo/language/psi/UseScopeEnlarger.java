@@ -39,6 +39,5 @@ public interface UseScopeEnlarger {
     return scope;
   }
 
-  @Nullable
-  SearchScope getAdditionalUseScope(PsiElement element);
+  @Nullable SearchScope getAdditionalUseScope(PsiElement element);
 }

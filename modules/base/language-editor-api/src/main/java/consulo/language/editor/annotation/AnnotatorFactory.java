@@ -40,6 +40,5 @@ public interface AnnotatorFactory extends LanguageExtension {
     return project.getExtensionPoint(AnnotatorFactory.class).getOrBuildCache(KEY).requiredGet(language);
   }
 
-  @Nullable
-  Annotator createAnnotator();
+  @Nullable Annotator createAnnotator();
 }

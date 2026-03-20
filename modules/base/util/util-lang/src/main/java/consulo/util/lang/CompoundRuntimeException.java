@@ -33,9 +33,8 @@ public class CompoundRuntimeException extends RuntimeException {
     myExceptions = throwables;
   }
 
-  @Nullable
   @Override
-  public synchronized Throwable getCause() {
+  public synchronized @Nullable Throwable getCause() {
     return !myExceptions.isEmpty() ? myExceptions.get(0) : null;
   }
 

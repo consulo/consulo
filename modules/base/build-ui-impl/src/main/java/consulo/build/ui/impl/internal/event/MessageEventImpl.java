@@ -60,9 +60,8 @@ public class MessageEventImpl extends AbstractBuildEvent implements MessageEvent
         return myGroup;
     }
 
-    @Nullable
     @Override
-    public Navigatable getNavigatable(Project project) {
+    public @Nullable Navigatable getNavigatable(Project project) {
         return myNavigatable;
     }
 

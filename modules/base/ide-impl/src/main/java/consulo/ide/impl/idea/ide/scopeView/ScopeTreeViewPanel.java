@@ -124,9 +124,8 @@ public class ScopeTreeViewPanel extends JPanel implements Disposable {
             return ProjectViewTree.isFileColorsEnabledFor(myApplicationFileColorManager, this);
         }
 
-        @Nullable
         @Override
-        public ColorValue getFileColorFor(DefaultMutableTreeNode node) {
+        public @Nullable ColorValue getFileColorFor(DefaultMutableTreeNode node) {
             return node instanceof PackageDependenciesNode dependenciesNode
                 ? ProjectViewTree.getColorForElement(dependenciesNode.getPsiElement())
                 : null;
@@ -443,9 +442,8 @@ public class ScopeTreeViewPanel extends JPanel implements Disposable {
         return null;
     }
 
-    @Nullable
     @RequiredReadAction
-    private Module[] getSelectedModules() {
+    private @Nullable Module[] getSelectedModules() {
         TreePath[] treePaths = myTree.getSelectionPaths();
         if (treePaths != null) {
             Set<Module> result = new HashSet<>();

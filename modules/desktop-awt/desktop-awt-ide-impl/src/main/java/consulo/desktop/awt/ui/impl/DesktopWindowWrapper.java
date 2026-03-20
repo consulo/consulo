@@ -42,9 +42,8 @@ public class DesktopWindowWrapper extends WindowOverAWTWindow {
       super(owner, title);
     }
 
-    @Nullable
     @Override
-    public Window toUIWindow() {
+    public @Nullable Window toUIWindow() {
       return Objects.requireNonNull(myWindow);
     }
   }

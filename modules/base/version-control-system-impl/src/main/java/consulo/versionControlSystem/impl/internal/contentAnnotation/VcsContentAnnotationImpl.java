@@ -60,9 +60,8 @@ public class VcsContentAnnotationImpl implements VcsContentAnnotation {
     myContentAnnotationCache = contentAnnotationCache;
   }
 
-  @Nullable
   @Override
-  public VcsRevisionNumber fileRecentlyChanged(VirtualFile vf) {
+  public @Nullable VcsRevisionNumber fileRecentlyChanged(VirtualFile vf) {
     ProjectLevelVcsManager vcsManager = ProjectLevelVcsManager.getInstance(myProject);
     AbstractVcs vcs = vcsManager.getVcsFor(vf);
     if (vcs == null) return null;

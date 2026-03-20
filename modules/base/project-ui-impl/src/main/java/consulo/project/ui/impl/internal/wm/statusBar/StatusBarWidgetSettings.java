@@ -63,9 +63,8 @@ public class StatusBarWidgetSettings implements PersistentStateComponent<StatusB
     }
   }
 
-  @Nullable
   @Override
-  public StatusBarState getState() {
+  public @Nullable StatusBarState getState() {
     return myState;
   }
 

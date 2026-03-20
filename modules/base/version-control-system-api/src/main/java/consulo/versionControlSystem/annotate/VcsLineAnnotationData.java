@@ -28,8 +28,7 @@ import org.jspecify.annotations.Nullable;
 public interface VcsLineAnnotationData {
   int getNumLines();
 
-  @Nullable
-  VcsRevisionNumber getRevision(int lineNumber);
+  @Nullable VcsRevisionNumber getRevision(int lineNumber);
 
   void put(int lineNumber, VcsRevisionNumber revisionNumber);
 }

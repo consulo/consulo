@@ -994,9 +994,8 @@ public final class FileBasedIndexImpl extends FileBasedIndex {
         );
     }
 
-    @Nullable
     @RequiredReadAction
-    private <K, V, R> R processExceptions(
+    private <K, V, R> @Nullable R processExceptions(
         ID<K, V> indexId,
         @Nullable VirtualFile restrictToFile,
         SearchScope filter,
@@ -1260,9 +1259,8 @@ public final class FileBasedIndexImpl extends FileBasedIndex {
         return null; // ok, no filtering
     }
 
-    @Nullable
     @RequiredReadAction
-    private <K, V> IntSet collectFileIdsContainingAllKeys(
+    private <K, V> @Nullable IntSet collectFileIdsContainingAllKeys(
         ID<K, V> indexId,
         Collection<? extends K> dataKeys,
         SearchScope filter,
@@ -2007,8 +2005,7 @@ public final class FileBasedIndexImpl extends FileBasedIndex {
         return !myNotRequiringContentIndices.contains(indexId);
     }
 
-    @Nullable
-    IndexableFileSet getIndexableSetForFile(VirtualFile file) {
+    @Nullable IndexableFileSet getIndexableSetForFile(VirtualFile file) {
         for (IndexableFileSet set : myIndexableSets) {
             if (set.isInSet(file)) {
                 return set;

@@ -25,6 +25,5 @@ public interface IndentedCommenter extends Commenter {
    * Used to override CodeStyleSettings#LINE_COMMENT_AT_FIRST_COLUMN option
    * @return true or false to override, null to use settings option
    */
-  @Nullable
-  Boolean forceIndentedLineComment();
+  @Nullable Boolean forceIndentedLineComment();
 }

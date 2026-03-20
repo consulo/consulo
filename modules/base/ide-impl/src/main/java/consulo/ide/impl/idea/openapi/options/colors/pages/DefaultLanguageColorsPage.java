@@ -314,9 +314,8 @@ public class DefaultLanguageColorsPage implements ColorSettingsPage, Configurabl
       "    <template_language>{% Template language %}</template_language>";
   }
 
-  @Nullable
   @Override
-  public Map<String, TextAttributesKey> getAdditionalHighlightingTagToDescriptorMap() {
+  public @Nullable Map<String, TextAttributesKey> getAdditionalHighlightingTagToDescriptorMap() {
     return TAG_HIGHLIGHTING_MAP;
   }
 

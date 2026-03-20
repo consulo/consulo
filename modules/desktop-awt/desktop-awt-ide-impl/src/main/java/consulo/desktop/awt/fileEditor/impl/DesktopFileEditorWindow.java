@@ -533,10 +533,9 @@ public class DesktopFileEditorWindow extends FileEditorWindowBase implements Fil
         return getTabCount() >= 1;
     }
 
-    @Nullable
     @Override
     @RequiredUIAccess
-    public DesktopFileEditorWindow split(int orientation, boolean forceSplit, @Nullable VirtualFile virtualFile, boolean focusNew) {
+    public @Nullable DesktopFileEditorWindow split(int orientation, boolean forceSplit, @Nullable VirtualFile virtualFile, boolean focusNew) {
         checkConsistency();
         FileEditorManagerImpl fileEditorManager = myOwner.getManager();
         if (splitAvailable()) {
@@ -908,9 +907,8 @@ public class DesktopFileEditorWindow extends FileEditorWindowBase implements Fil
         }
     }
 
-    @Nullable
     @Override
-    public DesktopFileEditorWithProviderComposite findFileComposite(VirtualFile file) {
+    public @Nullable DesktopFileEditorWithProviderComposite findFileComposite(VirtualFile file) {
         return (DesktopFileEditorWithProviderComposite)super.findFileComposite(file);
     }
 

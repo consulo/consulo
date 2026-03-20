@@ -78,21 +78,18 @@ public class TextEditorWithPreviewImpl extends UserDataHolderBase implements Tex
         adjustEditorsVisibility();
     }
 
-    @Nullable
     @Override
-    public BackgroundEditorHighlighter getBackgroundHighlighter() {
+    public @Nullable BackgroundEditorHighlighter getBackgroundHighlighter() {
         return myEditor.getBackgroundHighlighter();
     }
 
-    @Nullable
     @Override
-    public FileEditorLocation getCurrentLocation() {
+    public @Nullable FileEditorLocation getCurrentLocation() {
         return myEditor.getCurrentLocation();
     }
 
-    @Nullable
     @Override
-    public StructureViewBuilder getStructureViewBuilder() {
+    public @Nullable StructureViewBuilder getStructureViewBuilder() {
         return myEditor.getStructureViewBuilder();
     }
 
@@ -178,9 +175,8 @@ public class TextEditorWithPreviewImpl extends UserDataHolderBase implements Tex
         return "TextEditorWithPreview.SplitterProportionKey";
     }
 
-    @Nullable
     @Override
-    public JComponent getPreferredFocusedComponent() {
+    public @Nullable JComponent getPreferredFocusedComponent() {
         switch (myLayout) {
             case SHOW_EDITOR_AND_PREVIEW:
             case SHOW_EDITOR:

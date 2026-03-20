@@ -89,9 +89,8 @@ public class MarkupModelWindow extends UserDataHolderBase implements MarkupModel
         myHostModel.dispose();
     }
 
-    @Nullable
     @Override
-    public RangeHighlighterEx addPersistentLineHighlighter(@Nullable TextAttributesKey textAttributesKey, int lineNumber, int layer) {
+    public @Nullable RangeHighlighterEx addPersistentLineHighlighter(@Nullable TextAttributesKey textAttributesKey, int lineNumber, int layer) {
         int hostLine = myDocument.injectedToHostLine(lineNumber);
         return myHostModel.addPersistentLineHighlighter(textAttributesKey, hostLine, layer);
     }

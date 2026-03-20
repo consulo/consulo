@@ -41,9 +41,8 @@ public abstract class NotificationsManager {
 
     public abstract void expire(Notification notification);
 
-    @Nullable
     @RequiredUIAccess
-    public abstract Window findWindowForBalloon(@Nullable Project project);
+    public abstract @Nullable Window findWindowForBalloon(@Nullable Project project);
 
     public abstract <T extends Notification> T[] getNotificationsOfType(Class<T> clazz, @Nullable Project project);
 

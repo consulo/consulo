@@ -62,9 +62,8 @@ public class FolderProjectOpenProcessor extends ProjectOpenProcessor {
     ) {
     }
 
-    @Nullable
     @Override
-    public Image getIcon(VirtualFile file) {
+    public @Nullable Image getIcon(VirtualFile file) {
         return PlatformIconGroup.nodesFolder();
     }
 

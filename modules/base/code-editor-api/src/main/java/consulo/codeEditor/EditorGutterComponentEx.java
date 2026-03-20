@@ -29,8 +29,7 @@ public interface EditorGutterComponentEx extends EditorGutter {
      */
     public static final Key<Point> ICON_CENTER_POSITION = Key.create("EditorGutter.ICON_CENTER_POSITION");
 
-    @Nullable
-    FoldRegion findFoldingAnchorAt(int x, int y);
+    @Nullable FoldRegion findFoldingAnchorAt(int x, int y);
 
     
     List<GutterMark> getGutterRenderers(int line);
@@ -51,8 +50,7 @@ public interface EditorGutterComponentEx extends EditorGutter {
 
     int getAnnotationsAreaWidth();
 
-    @Nullable
-    Point getCenterPoint(GutterIconRenderer renderer);
+    @Nullable Point getCenterPoint(GutterIconRenderer renderer);
 
     @Deprecated
     default void setLineNumberConvertor(@Nullable IntUnaryOperator lineNumberConvertor) {
@@ -71,15 +69,13 @@ public interface EditorGutterComponentEx extends EditorGutter {
         }
 
         return new LineNumberConverter() {
-            @Nullable
             @Override
-            public Integer convert(Editor editor, int lineNumber) {
+            public @Nullable Integer convert(Editor editor, int lineNumber) {
                 return operator.applyAsInt(lineNumber);
             }
 
-            @Nullable
             @Override
-            public Integer getMaxLineNumber(Editor editor) {
+            public @Nullable Integer getMaxLineNumber(Editor editor) {
                 return editor.getDocument().getLineCount();
             }
         };

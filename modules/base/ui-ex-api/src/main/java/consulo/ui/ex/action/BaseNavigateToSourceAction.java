@@ -77,9 +77,8 @@ public abstract class BaseNavigateToSourceAction extends AnAction implements Dum
         e.getPresentation().setTextValue(navigateActionText.isEmpty() ? getTemplatePresentation().getTextValue() : navigateActionText);
     }
 
-    @Nullable
     @RequiredReadAction
-    private Navigatable findTargetForUpdate(DataContext dataContext) {
+    private @Nullable Navigatable findTargetForUpdate(DataContext dataContext) {
         Navigatable[] navigatables = getNavigatables(dataContext);
         if (navigatables == null) {
             return null;

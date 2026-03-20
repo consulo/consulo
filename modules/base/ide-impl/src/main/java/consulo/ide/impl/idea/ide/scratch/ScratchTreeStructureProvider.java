@@ -123,9 +123,8 @@ public class ScratchTreeStructureProvider implements TreeStructureProvider, Dumb
     }
   }
 
-  @Nullable
   @RequiredReadAction
-  private static PsiDirectory getDirectory(Project project, RootType rootType) {
+  private static @Nullable PsiDirectory getDirectory(Project project, RootType rootType) {
     VirtualFile virtualFile = getVirtualFile(rootType);
     return virtualFile == null ? null : PsiManager.getInstance(project).findDirectory(virtualFile);
   }
@@ -215,9 +214,8 @@ public class ScratchTreeStructureProvider implements TreeStructureProvider, Dumb
       return getValue().containsFile(file);
     }
 
-    @Nullable
     @Override
-    public VirtualFile getVirtualFile() {
+    public @Nullable VirtualFile getVirtualFile() {
       return ScratchTreeStructureProvider.getVirtualFile(getRootType());
     }
 

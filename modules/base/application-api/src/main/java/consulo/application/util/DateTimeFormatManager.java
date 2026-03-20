@@ -39,9 +39,8 @@ public class DateTimeFormatManager implements PersistentStateComponent<Element> 
   private boolean myOverrideSystemDateFormat = false;
   private boolean myUse24HourTime = true;
 
-  @Nullable
   @Override
-  public Element getState() {
+  public @Nullable Element getState() {
     return XmlSerializer.serialize(this);
   }
 

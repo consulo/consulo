@@ -45,8 +45,7 @@ public interface JBTabs {
     
     ActionCallback select(TabInfo info, boolean requestFocus);
 
-    @Nullable
-    TabInfo getSelectedInfo();
+    @Nullable TabInfo getSelectedInfo();
 
     
     TabInfo getTabAt(int tabIndex);
@@ -56,8 +55,7 @@ public interface JBTabs {
     
     JBTabsPresentation getPresentation();
 
-    @Nullable
-    TabInfo getTargetInfo();
+    @Nullable TabInfo getTargetInfo();
 
     
     JBTabs addTabMouseListener(MouseListener listener);
@@ -69,11 +67,9 @@ public interface JBTabs {
     
     JComponent getComponent();
 
-    @Nullable
-    TabInfo findInfo(MouseEvent event);
+    @Nullable TabInfo findInfo(MouseEvent event);
 
-    @Nullable
-    TabInfo findInfo(Object object);
+    @Nullable TabInfo findInfo(Object object);
 
     int getIndexOf(@Nullable TabInfo tabInfo);
 

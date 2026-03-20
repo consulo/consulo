@@ -151,9 +151,8 @@ public class IssueNavigationConfigurationPanel implements SearchableConfigurable
                 return list.toArray(AnAction.ARRAY_FACTORY);
             }
 
-            @Nullable
             @Override
-            protected Image getTemplateIcon() {
+            protected @Nullable Image getTemplateIcon() {
                 return PlatformIconGroup.generalAdd();
             }
 

@@ -269,9 +269,8 @@ public class RunContentManagerImpl implements RunContentManager, Disposable {
         }, myProject.getDisposed());
     }
 
-    @Nullable
     @RequiredUIAccess
-    private Image getToolWindowIcon(String toolWindowId) {
+    private @Nullable Image getToolWindowIcon(String toolWindowId) {
         if (Objects.equals(myRunDashboardManager.getToolWindowId(), toolWindowId)) {
             return myRunDashboardManager.getToolWindowIcon();
         }
@@ -280,9 +279,8 @@ public class RunContentManagerImpl implements RunContentManager, Disposable {
     }
 
     @RequiredUIAccess
-    @Nullable
     @Override
-    public RunContentDescriptor getReuseContent(ExecutionEnvironment executionEnvironment) {
+    public @Nullable RunContentDescriptor getReuseContent(ExecutionEnvironment executionEnvironment) {
         RunContentDescriptor contentToReuse = executionEnvironment.getContentToReuse();
         if (contentToReuse != null) {
             return contentToReuse;

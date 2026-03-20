@@ -73,9 +73,8 @@ public class WebTableLayoutImpl extends VaadinComponentDelegate<WebTableLayoutIm
             return row.getDataCell(columnIndex).get();
         }
 
-        @Nullable
         @Override
-        public Component toUIComponent() {
+        public @Nullable Component toUIComponent() {
             return WebTableLayoutImpl.this;
         }
     }

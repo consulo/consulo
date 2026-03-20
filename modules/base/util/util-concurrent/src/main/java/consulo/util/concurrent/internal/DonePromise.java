@@ -92,9 +92,8 @@ public class DonePromise<T> extends InternalPromiseUtil.BasePromise<T> {
     }
   }
 
-  @Nullable
   @Override
-  public T blockingGet(int timeout, TimeUnit timeUnit) throws ExecutionException, TimeoutException {
+  public @Nullable T blockingGet(int timeout, TimeUnit timeUnit) throws ExecutionException, TimeoutException {
     return value.getResultOrThrowError();
   }
 
@@ -102,9 +101,8 @@ public class DonePromise<T> extends InternalPromiseUtil.BasePromise<T> {
   public void _setValue(PromiseValue<T> value) {
   }
 
-  @Nullable
   @Override
-  protected PromiseValue<T> getValue() {
+  protected @Nullable PromiseValue<T> getValue() {
     return value;
   }
 

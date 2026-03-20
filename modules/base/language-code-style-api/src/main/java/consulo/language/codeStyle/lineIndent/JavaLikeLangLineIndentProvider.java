@@ -63,9 +63,8 @@ public abstract class JavaLikeLangLineIndentProvider implements LineIndentProvid
   }
 
 
-  @Nullable
   @Override
-  public String getLineIndent(Project project,
+  public @Nullable String getLineIndent(Project project,
                               Document document,
                               SemanticEditorPositionFactory factory,
                               Language language,

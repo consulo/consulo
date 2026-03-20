@@ -168,9 +168,8 @@ public class PluginNode extends PluginDescriptorStub implements PluginDescriptor
         return myTags;
     }
 
-    @Nullable
     @Override
-    public PluginPermissionDescriptor getPermissionDescriptor(PluginPermissionType permissionType) {
+    public @Nullable PluginPermissionDescriptor getPermissionDescriptor(PluginPermissionType permissionType) {
         return myPermissions.get(permissionType);
     }
 
@@ -383,9 +382,8 @@ public class PluginNode extends PluginDescriptorStub implements PluginDescriptor
         return myExperimental;
     }
 
-    @Nullable
     @Override
-    public String getChecksumSHA3_256() {
+    public @Nullable String getChecksumSHA3_256() {
         return myChecksumSha3_256;
     }
 

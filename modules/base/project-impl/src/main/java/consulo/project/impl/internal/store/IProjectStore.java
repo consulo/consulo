@@ -34,24 +34,19 @@ public interface IProjectStore extends IComponentStore {
 
     void setProjectFilePath(String filePath);
 
-    @Nullable
-    VirtualFile getProjectBaseDir();
+    @Nullable VirtualFile getProjectBaseDir();
 
-    @Nullable
-    String getProjectBasePath();
+    @Nullable String getProjectBasePath();
 
     String getProjectName();
 
     TrackingPathMacroSubstitutor[] getSubstitutors();
 
-    @Nullable
-    String getPresentableUrl();
+    @Nullable String getPresentableUrl();
 
-    @Nullable
-    VirtualFile getProjectFile();
+    @Nullable VirtualFile getProjectFile();
 
-    @Nullable
-    VirtualFile getWorkspaceFile();
+    @Nullable VirtualFile getWorkspaceFile();
 
     void loadProjectFromTemplate(ProjectImpl project);
 

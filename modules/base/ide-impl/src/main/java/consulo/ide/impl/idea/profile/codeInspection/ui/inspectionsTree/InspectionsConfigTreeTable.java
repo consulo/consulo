@@ -98,9 +98,8 @@ public class InspectionsConfigTreeTable extends TreeTable {
         }.installOn(this);
 
         setTransferHandler(new TransferHandler() {
-            @Nullable
             @Override
-            protected Transferable createTransferable(JComponent c) {
+            protected @Nullable Transferable createTransferable(JComponent c) {
                 TreePath path = getTree().getPathForRow(getTree().getLeadSelectionRow());
                 if (path != null) {
                     return new TextTransferable(StringUtil.join(
@@ -175,9 +174,8 @@ public class InspectionsConfigTreeTable extends TreeTable {
             return 3;
         }
 
-        @Nullable
         @Override
-        public String getColumnName(int column) {
+        public @Nullable String getColumnName(int column) {
             return null;
         }
 
@@ -191,9 +189,8 @@ public class InspectionsConfigTreeTable extends TreeTable {
             };
         }
 
-        @Nullable
         @Override
-        public Object getValueAt(Object node, int column) {
+        public @Nullable Object getValueAt(Object node, int column) {
             if (column == TREE_COLUMN) {
                 return null;
             }

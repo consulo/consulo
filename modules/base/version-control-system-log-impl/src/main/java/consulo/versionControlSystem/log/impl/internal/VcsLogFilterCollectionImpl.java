@@ -50,9 +50,8 @@ public class VcsLogFilterCollectionImpl implements VcsLogFilterCollection {
     myRootFilter = rootFilter;
   }
 
-  @Nullable
   @Override
-  public VcsLogBranchFilter getBranchFilter() {
+  public @Nullable VcsLogBranchFilter getBranchFilter() {
     return myBranchFilter;
   }
 
@@ -61,33 +60,28 @@ public class VcsLogFilterCollectionImpl implements VcsLogFilterCollection {
     return myHashFilter;
   }
 
-  @Nullable
   @Override
-  public VcsLogUserFilter getUserFilter() {
+  public @Nullable VcsLogUserFilter getUserFilter() {
     return myUserFilter;
   }
 
-  @Nullable
   @Override
-  public VcsLogDateFilter getDateFilter() {
+  public @Nullable VcsLogDateFilter getDateFilter() {
     return myDateFilter;
   }
 
-  @Nullable
   @Override
-  public VcsLogTextFilter getTextFilter() {
+  public @Nullable VcsLogTextFilter getTextFilter() {
     return myTextFilter;
   }
 
-  @Nullable
   @Override
-  public VcsLogStructureFilter getStructureFilter() {
+  public @Nullable VcsLogStructureFilter getStructureFilter() {
     return myStructureFilter;
   }
 
-  @Nullable
   @Override
-  public VcsLogRootFilter getRootFilter() {
+  public @Nullable VcsLogRootFilter getRootFilter() {
     return myRootFilter;
   }
 

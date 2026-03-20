@@ -55,9 +55,8 @@ public class DesktopDatePickerImpl extends SwingComponentDelegate<DesktopDatePic
         return picker;
     }
 
-    @Nullable
     @Override
-    public Date getValue() {
+    public @Nullable Date getValue() {
         return toAWTComponent().getDate();
     }
 

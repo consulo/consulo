@@ -43,9 +43,8 @@ public class CodeStyleSchemesUIConfiguration implements PersistentStateComponent
 
   public String RECENT_IMPORT_FILE_LOCATION = "";
 
-  @Nullable
   @Override
-  public CodeStyleSchemesUIConfiguration getState() {
+  public @Nullable CodeStyleSchemesUIConfiguration getState() {
     return this;
   }
 

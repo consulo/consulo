@@ -15,9 +15,8 @@ public interface IntForwardIndexAccessor<Key, Value> extends ForwardIndexAccesso
     return getDiffBuilderFromInt(inputId, sequence == null ? 0 : AbstractForwardIndexAccessor.deserializeFromByteSeq(sequence, EnumeratorIntegerDescriptor.INSTANCE));
   }
 
-  @Nullable
   @Override
-  default ByteArraySequence serializeIndexedData(InputData<Key, Value> data) throws IOException {
+  default @Nullable ByteArraySequence serializeIndexedData(InputData<Key, Value> data) throws IOException {
     return AbstractForwardIndexAccessor.serializeToByteSeq(serializeIndexedDataToInt(data), EnumeratorIntegerDescriptor.INSTANCE, 8);
   }
 

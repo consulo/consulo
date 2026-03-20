@@ -69,9 +69,8 @@ class HttpRequestImpl implements HttpRequest, AutoCloseable {
         return 0;
     }
 
-    @Nullable
     @Override
-    public String statusMessage() throws IOException {
+    public @Nullable String statusMessage() throws IOException {
         URLConnection connection = getConnection();
         if (connection instanceof HttpURLConnection httpURLConnection) {
             return httpURLConnection.getResponseMessage();
@@ -112,15 +111,13 @@ class HttpRequestImpl implements HttpRequest, AutoCloseable {
         return myConnection;
     }
 
-    @Nullable
     @Override
-    public String getContentEncoding() throws IOException {
+    public @Nullable String getContentEncoding() throws IOException {
         return getConnection().getContentEncoding();
     }
 
-    @Nullable
     @Override
-    public String getContentType() throws IOException {
+    public @Nullable String getContentType() throws IOException {
         return getConnection().getContentType();
     }
 

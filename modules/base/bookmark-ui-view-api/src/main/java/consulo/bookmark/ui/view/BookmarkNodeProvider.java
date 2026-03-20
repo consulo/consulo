@@ -35,8 +35,7 @@ import java.util.Collection;
  */
 @ExtensionAPI(ComponentScope.PROJECT)
 public interface BookmarkNodeProvider {
-  @Nullable
-  Collection<AbstractTreeNode> getFavoriteNodes(DataContext context, ViewSettings viewSettings);
+  @Nullable Collection<AbstractTreeNode> getFavoriteNodes(DataContext context, ViewSettings viewSettings);
 
   default @Nullable AbstractTreeNode createNode(Project project, Object element, ViewSettings viewSettings) {
     return null;
@@ -67,8 +66,7 @@ public interface BookmarkNodeProvider {
    * @param element the element for which the location is requested.
    * @return the location text, or -1 if <code>element</code> is not an element supported by this provider.
    */
-  @Nullable
-  String getElementLocation(Object element);
+  @Nullable String getElementLocation(Object element);
 
   /**
    * Checks if the specified element is invalid and needs to be removed from the tree.
@@ -92,8 +90,7 @@ public interface BookmarkNodeProvider {
    * @param element
    * @return the URL, or null if the element is not supported by this provider.
    */
-  @Nullable
-  String getElementUrl(Object element);
+  @Nullable String getElementUrl(Object element);
 
   /**
    * Returns the name of the module containing the specified element.
@@ -101,8 +98,7 @@ public interface BookmarkNodeProvider {
    * @param element
    * @return the name of the module, or null if the element is not supported by this provider or the module name is unknown.
    */
-  @Nullable
-  String getElementModuleName(Object element);
+  @Nullable String getElementModuleName(Object element);
 
   /**
    * Returns the path of node objects to be added to the favorites tree for the specified persisted URL and module name.
@@ -113,8 +109,7 @@ public interface BookmarkNodeProvider {
    * @return the path of objects to be added to the tree, or null if it was not possible to locate an object with the
    * specified URL.
    */
-  @Nullable
-  Object[] createPathFromUrl(Project project, String url, String moduleName);
+  @Nullable Object[] createPathFromUrl(Project project, String url, String moduleName);
 
   default @Nullable PsiElement getPsiElement(Object element) {
     if (element instanceof PsiElement) {

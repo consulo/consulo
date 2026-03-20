@@ -60,8 +60,7 @@ public interface ContentManager extends Disposable, BusyObject {
 
     void addSelectedContent(Content content);
 
-    @Nullable
-    Content getSelectedContent();
+    @Nullable Content getSelectedContent();
 
     Content[] getSelectedContents();
 
@@ -74,8 +73,7 @@ public interface ContentManager extends Disposable, BusyObject {
     //TODO[anton,vova] is this method needed?
     Content findContent(String displayName);
 
-    @Nullable
-    Content getContent(int index);
+    @Nullable Content getContent(int index);
 
     int getIndexOfContent(Content content);
 

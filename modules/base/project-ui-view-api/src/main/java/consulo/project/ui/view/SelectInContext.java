@@ -35,8 +35,7 @@ public interface SelectInContext {
   
   VirtualFile getVirtualFile();
 
-  @Nullable
-  Object getSelectorInFile();
+  @Nullable Object getSelectorInFile();
 
   default @Nullable Supplier<FileEditor> getFileEditorProvider() {
     return null;

@@ -35,8 +35,7 @@ public interface BackgroundTaskByVfsChangeTask extends Named {
   
   String getProviderName();
 
-  @Nullable
-  BackgroundTaskByVfsChangeProvider getProvider();
+  @Nullable BackgroundTaskByVfsChangeProvider getProvider();
 
   
   VirtualFilePointer getVirtualFilePointer();

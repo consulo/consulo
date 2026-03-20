@@ -163,9 +163,8 @@ class DesktopLabelImpl extends SwingComponentDelegate<DesktopLabelImpl.MyJLabel>
         toAWTComponent().setIcon(TargetAWT.to(icon));
     }
 
-    @Nullable
     @Override
-    public Image getImage() {
+    public @Nullable Image getImage() {
         return TargetAWT.from(toAWTComponent().getIcon());
     }
 
@@ -202,15 +201,13 @@ class DesktopLabelImpl extends SwingComponentDelegate<DesktopLabelImpl.MyJLabel>
         return () -> toAWTComponent().removeFocusListener(adapter);
     }
 
-    @Nullable
     @Override
-    public ColorValue getForegroundColor() {
+    public @Nullable ColorValue getForegroundColor() {
         return toAWTComponent().myForegroudColor;
     }
 
-    @Nullable
     @Override
-    public Component getTarget() {
+    public @Nullable Component getTarget() {
         return TargetAWT.from(toAWTComponent().getLabelFor());
     }
 

@@ -66,9 +66,8 @@ public class CoreCodeStyleUtil {
         return result.toArray(new TextRange[result.size()]);
     }
 
-    @Nullable
     @RequiredReadAction
-    public static PsiElement findElementInTreeWithFormatterEnabled(PsiFile file, int offset) {
+    public static @Nullable PsiElement findElementInTreeWithFormatterEnabled(PsiFile file, int offset) {
         PsiElement bottomost = file.findElementAt(offset);
         if (bottomost != null && FormattingModelBuilder.forContext(bottomost) != null) {
             return bottomost;

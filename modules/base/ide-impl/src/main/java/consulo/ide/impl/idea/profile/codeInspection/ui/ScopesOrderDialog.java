@@ -95,9 +95,8 @@ public class ScopesOrderDialog extends DialogWrapper {
     myOptionsList.setSelectedIndex(0);
   }
 
-  @Nullable
   @Override
-  protected JComponent createCenterPanel() {
+  protected @Nullable JComponent createCenterPanel() {
     return myPanel;
   }
 

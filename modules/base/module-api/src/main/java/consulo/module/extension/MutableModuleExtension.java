@@ -26,9 +26,8 @@ import org.jspecify.annotations.Nullable;
  * @since 10:58/19.05.13
  */
 public interface MutableModuleExtension<T extends ModuleExtension<T>> extends ModuleExtension<T> {
-  @Nullable
   @RequiredUIAccess
-  Component createConfigurationComponent(Disposable uiDisposable, Runnable updateOnCheck);
+  @Nullable Component createConfigurationComponent(Disposable uiDisposable, Runnable updateOnCheck);
 
   void setEnabled(boolean val);
 

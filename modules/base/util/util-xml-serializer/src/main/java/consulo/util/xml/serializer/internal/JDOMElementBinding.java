@@ -42,9 +42,8 @@ class JDOMElementBinding extends NonNullAccessorBinding implements MultiNodeBind
     myTagName = tagName;
   }
 
-  @Nullable
   @Override
-  public Object serialize(Object o, @Nullable Object context, SerializationFilter filter) {
+  public @Nullable Object serialize(Object o, @Nullable Object context, SerializationFilter filter) {
     Object value = myAccessor.read(o);
     if (value == null) {
       return null;
@@ -66,9 +65,8 @@ class JDOMElementBinding extends NonNullAccessorBinding implements MultiNodeBind
     throw new XmlSerializationException("org.jdom.Element expected but " + value + " found");
   }
 
-  @Nullable
   @Override
-  public Object deserializeList(Object context, List<Element> elements) {
+  public @Nullable Object deserializeList(Object context, List<Element> elements) {
     if (myAccessor.getValueClass().isArray()) {
       myAccessor.set(context, elements.toArray(new Element[elements.size()]));
     }

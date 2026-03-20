@@ -49,9 +49,8 @@ public class LinearBekController extends CascadeController {
     return delegateAnswer;
   }
 
-  @Nullable
   @Override
-  protected LinearGraphAnswer performAction(LinearGraphAction action) {
+  protected @Nullable LinearGraphAnswer performAction(LinearGraphAction action) {
     if (action.getAffectedElement() != null) {
       if (action.getType() == GraphAction.Type.MOUSE_CLICK) {
         GraphElement graphElement = action.getAffectedElement().getGraphElement();
@@ -102,9 +101,8 @@ public class LinearBekController extends CascadeController {
   
   private LinearGraphAnswer expandAll() {
     return new LinearGraphAnswer(GraphChangesUtil.SOME_CHANGES) {
-      @Nullable
       @Override
-      public Runnable getGraphUpdater() {
+      public @Nullable Runnable getGraphUpdater() {
         return () -> {
           myCompiledGraph.myDottedEdges.removeAll();
           myCompiledGraph.myHiddenEdges.removeAll();
@@ -119,9 +117,8 @@ public class LinearBekController extends CascadeController {
     new LinearBekGraphBuilder(workingGraph, myBekGraphLayout).collapseAll();
     return new LinearGraphAnswer(
       GraphChangesUtil.edgesReplaced(workingGraph.getRemovedEdges(), workingGraph.getAddedEdges(), getDelegateGraph())) {
-      @Nullable
       @Override
-      public Runnable getGraphUpdater() {
+      public @Nullable Runnable getGraphUpdater() {
         return workingGraph::applyChanges;
       }
     };

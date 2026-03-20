@@ -32,8 +32,7 @@ public interface KeyFMap {
 
     KeyFMap minus(Key<?> key);
 
-    @Nullable
-    <V> V get(Key<V> key);
+    <V> @Nullable V get(Key<V> key);
 
     Key[] getKeys();
 

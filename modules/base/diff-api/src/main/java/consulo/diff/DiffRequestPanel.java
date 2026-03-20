@@ -36,8 +36,7 @@ public interface DiffRequestPanel extends Disposable {
   
   JComponent getComponent();
 
-  @Nullable
-  JComponent getPreferredFocusedComponent();
+  @Nullable JComponent getPreferredFocusedComponent();
 
   @RequiredUIAccess
   <T> void putContextHints(Key<T> key, @Nullable T value);

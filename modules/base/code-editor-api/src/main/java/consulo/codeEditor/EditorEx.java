@@ -311,8 +311,7 @@ public interface EditorEx extends Editor {
      *
      * @see #setContextMenuGroupId(String)
      */
-    @Nullable
-    String getContextMenuGroupId();
+    @Nullable String getContextMenuGroupId();
 
     /**
      * Allows to override default editor's context popup logic.

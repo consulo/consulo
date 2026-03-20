@@ -50,9 +50,8 @@ public abstract class BaseSandEditorNotificationProvider implements EditorNotifi
     }
 
     @RequiredReadAction
-    @Nullable
     @Override
-    public EditorNotificationBuilder buildNotification(VirtualFile file, FileEditor fileEditor, Supplier<EditorNotificationBuilder> builderFactory) {
+    public @Nullable EditorNotificationBuilder buildNotification(VirtualFile file, FileEditor fileEditor, Supplier<EditorNotificationBuilder> builderFactory) {
         if (file.getFileType() != SandFileType.INSTANCE) {
             return null;
         }

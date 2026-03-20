@@ -59,9 +59,8 @@ public abstract class SettingsEditor<Settings> implements Disposable {
         throw new AbstractMethodError("please implement 'createEditor()' or 'createUIComponent()'");
     }
 
-    @Nullable
     @RequiredUIAccess
-    protected Component createUIComponent() {
+    protected @Nullable Component createUIComponent() {
         return null;
     }
 

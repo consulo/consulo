@@ -1739,9 +1739,8 @@ public class AbstractPopup implements JBPopup, ScreenAreaConsumer {
             return getPreferredSize();
         }
 
-        @Nullable
         @Override
-        public Object getData(Key dataId) {
+        public @Nullable Object getData(Key dataId) {
             return myDataProvider != null ? myDataProvider.getData(dataId) : null;
         }
 

@@ -23,6 +23,5 @@ import org.jspecify.annotations.Nullable;
  * An entity having an associated intention action
  */
 public interface IntentionActionProvider {
-  @Nullable
-  IntentionActionWithOptions getIntentionAction();
+  @Nullable IntentionActionWithOptions getIntentionAction();
 }

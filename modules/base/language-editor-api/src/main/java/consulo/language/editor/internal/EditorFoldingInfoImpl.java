@@ -52,9 +52,8 @@ public class EditorFoldingInfoImpl implements EditorFoldingInfo {
   }
 
   @Override
-  @Nullable
   @RequiredReadAction
-  public PsiElement getPsiElement(FoldRegion region) {
+  public @Nullable PsiElement getPsiElement(FoldRegion region) {
     SmartPsiElementPointer<?> pointer = myFoldRegionToSmartPointerMap.get(region);
     if (pointer == null) {
       return null;
@@ -64,9 +63,8 @@ public class EditorFoldingInfoImpl implements EditorFoldingInfo {
   }
 
   @Override
-  @Nullable
   @RequiredReadAction
-  public TextRange getPsiElementRange(FoldRegion region) {
+  public @Nullable TextRange getPsiElementRange(FoldRegion region) {
     PsiElement element = getPsiElement(region);
     if (element == null) return null;
     PsiFile containingFile = element.getContainingFile();

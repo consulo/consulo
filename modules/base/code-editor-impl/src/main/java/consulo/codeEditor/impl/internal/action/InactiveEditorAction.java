@@ -31,9 +31,8 @@ public abstract class InactiveEditorAction extends EditorAction {
         super(text, defaultHandler);
     }
 
-    @Nullable
     @Override
-    protected Editor getEditor(DataContext dataContext) {
+    protected @Nullable Editor getEditor(DataContext dataContext) {
         return dataContext.getData(EditorKeys.EDITOR_EVEN_IF_INACTIVE);
     }
 }

@@ -62,11 +62,9 @@ public interface LanguageConsoleView extends ConsoleView, Disposable {
 
   void setLanguage(Language language);
 
-  @Nullable
-  String getPrompt();
+  @Nullable String getPrompt();
 
-  @Nullable
-  ConsoleViewContentType getPromptAttributes();
+  @Nullable ConsoleViewContentType getPromptAttributes();
 
   void setPrompt(@Nullable String prompt);
 

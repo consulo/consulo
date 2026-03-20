@@ -29,9 +29,8 @@ public interface ModelScopeItemPresenter {
   
   RadioButton getButton(ModelScopeItem model);
 
-  @Nullable
   @RequiredUIAccess
-  default Component getAdditionalComponents(RadioButton button, ModelScopeItem model, Disposable dialogDisposable) {
+  default @Nullable Component getAdditionalComponents(RadioButton button, ModelScopeItem model, Disposable dialogDisposable) {
     return null;
   }
 

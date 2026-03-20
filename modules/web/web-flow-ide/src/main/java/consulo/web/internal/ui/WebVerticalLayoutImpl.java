@@ -32,9 +32,8 @@ import org.jspecify.annotations.Nullable;
  */
 public class WebVerticalLayoutImpl extends VaadinComponentDelegate<WebVerticalLayoutImpl.Vaadin> implements VerticalLayout {
     public class Vaadin extends com.vaadin.flow.component.orderedlayout.VerticalLayout implements FromVaadinComponentWrapper {
-        @Nullable
         @Override
-        public Component toUIComponent() {
+        public @Nullable Component toUIComponent() {
             return WebVerticalLayoutImpl.this;
         }
     }

@@ -36,9 +36,8 @@ public abstract class ProjectStructureElementConfigurable<T> extends NamedConfig
 
   public abstract @Nullable ProjectStructureElement getProjectStructureElement();
 
-  @Nullable
   @Override
-  public Image getIcon() {
+  public @Nullable Image getIcon() {
     return null;
   }
 }

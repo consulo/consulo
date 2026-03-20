@@ -29,20 +29,16 @@ import org.jspecify.annotations.Nullable;
 public interface ProblemDescriptor extends CommonProblemDescriptor {
   ProblemDescriptor[] EMPTY_ARRAY = new ProblemDescriptor[0];
 
-  @Nullable
   @RequiredReadAction
-  PsiElement getPsiElement();
+  @Nullable PsiElement getPsiElement();
 
-  @Nullable
   @RequiredReadAction
-  PsiElement getStartElement();
+  @Nullable PsiElement getStartElement();
 
-  @Nullable
   @RequiredReadAction
-  PsiElement getEndElement();
+  @Nullable PsiElement getEndElement();
 
-  @Nullable
-  TextRange getTextRangeInElement();
+  @Nullable TextRange getTextRangeInElement();
 
   int getLineNumber();
 
@@ -64,8 +60,7 @@ public interface ProblemDescriptor extends CommonProblemDescriptor {
    *
    * @return the problem group
    */
-  @Nullable
-  ProblemGroup getProblemGroup();
+  @Nullable ProblemGroup getProblemGroup();
 
   /**
    * Sets the unique object, which is the same for all of the problems of this group

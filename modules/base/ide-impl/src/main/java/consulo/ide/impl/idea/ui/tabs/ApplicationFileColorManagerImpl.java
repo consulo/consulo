@@ -42,9 +42,8 @@ public class ApplicationFileColorManagerImpl implements ApplicationFileColorMana
 
   private final State myState = new State();
 
-  @Nullable
   @Override
-  public State getState() {
+  public @Nullable State getState() {
     return myState;
   }
 

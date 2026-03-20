@@ -33,9 +33,8 @@ import java.util.List;
 public final class ExportableTemplateSettings implements PersistentStateComponent<ExportableTemplateSettings> {
   public Collection<TemplateSettingsImpl.TemplateKey> deletedKeys = new SmartList<TemplateSettingsImpl.TemplateKey>();
 
-  @Nullable
   @Override
-  public ExportableTemplateSettings getState() {
+  public @Nullable ExportableTemplateSettings getState() {
     return this;
   }
 

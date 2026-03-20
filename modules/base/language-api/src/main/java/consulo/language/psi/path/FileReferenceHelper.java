@@ -48,9 +48,8 @@ public abstract class FileReferenceHelper {
     //  return Collections.emptyList();
     //}
 
-    @Nullable
     @RequiredReadAction
-    public PsiFileSystemItem getPsiFileSystemItem(Project project, VirtualFile file) {
+    public @Nullable PsiFileSystemItem getPsiFileSystemItem(Project project, VirtualFile file) {
         PsiManager psiManager = PsiManager.getInstance(project);
         return getPsiFileSystemItem(psiManager, file);
     }

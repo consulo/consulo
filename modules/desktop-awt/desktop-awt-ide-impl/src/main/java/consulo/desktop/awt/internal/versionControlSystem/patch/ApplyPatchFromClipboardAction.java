@@ -72,9 +72,8 @@ public class ApplyPatchFromClipboardAction extends DumbAwareAction {
             );
         }
 
-        @Nullable
         @Override
-        protected JComponent createDoNotAskCheckbox() {
+        protected @Nullable JComponent createDoNotAskCheckbox() {
             return createAnalyzeOnTheFlyOptionPanel();
         }
 

@@ -32,6 +32,5 @@ public interface UnscrambleSupport {
 
   boolean isAvailable(StacktraceAnalyzer analyzer);
 
-  @Nullable
-  String unscramble(Project project, String text, String logName);
+  @Nullable String unscramble(Project project, String text, String logName);
 }

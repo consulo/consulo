@@ -42,9 +42,8 @@ public class SandTaskRepository extends BaseRepository {
     return myTasks.values().toArray(Task[]::new);
   }
 
-  @Nullable
   @Override
-  public Task findTask(String id) throws Exception {
+  public @Nullable Task findTask(String id) throws Exception {
     return myTasks.get(id);
   }
 

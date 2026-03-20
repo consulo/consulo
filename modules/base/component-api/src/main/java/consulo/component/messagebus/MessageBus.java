@@ -29,8 +29,7 @@ public interface MessageBus {
    *
    * @return parent bus (if defined)
    */
-  @Nullable
-  MessageBus getParent();
+  @Nullable MessageBus getParent();
 
   /**
    * Allows to create new connection that is not bound to any {@link Disposable}.

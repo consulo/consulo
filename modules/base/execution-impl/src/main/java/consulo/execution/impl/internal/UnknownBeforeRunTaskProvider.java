@@ -60,9 +60,8 @@ public class UnknownBeforeRunTaskProvider extends BeforeRunTaskProvider<UnknownB
         return ExecutionLocalize.beforeLaunchRunUnknownTask();
     }
 
-    @Nullable
     @Override
-    public Image getIcon(RunConfiguration runConfiguration) {
+    public @Nullable Image getIcon(RunConfiguration runConfiguration) {
         return PlatformIconGroup.actionsHelp();
     }
 

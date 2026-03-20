@@ -517,10 +517,9 @@ public class ShowImplementationsAction extends AnAction implements PopupAction {
             //todo notify busy
         }
 
-        @Nullable
         @Override
         @RequiredReadAction
-        protected Usage createUsage(PsiElement element) {
+        protected @Nullable Usage createUsage(PsiElement element) {
             return new UsageInfo2UsageAdapter(new UsageInfo(element));
         }
 

@@ -266,18 +266,16 @@ public class GoToHashOrRefPopup {
             return item.getName();
         }
 
-        @Nullable
         @Override
-        protected String getTailText(VcsRef item) {
+        protected @Nullable String getTailText(VcsRef item) {
             if (!myColorManager.isMultipleRoots()) {
                 return null;
             }
             return "";
         }
 
-        @Nullable
         @Override
-        protected String getTypeText(VcsRef item) {
+        protected @Nullable String getTypeText(VcsRef item) {
             if (!myColorManager.isMultipleRoots()) {
                 return null;
             }
@@ -293,9 +291,8 @@ public class GoToHashOrRefPopup {
             return myReferenceComparator.compare(item1, item2);
         }
 
-        @Nullable
         @Override
-        protected InsertHandler<LookupElement> createInsertHandler(VcsRef item) {
+        protected @Nullable InsertHandler<LookupElement> createInsertHandler(VcsRef item) {
             return (context, item1) -> {
                 mySelectedRef = (VcsRef) item1.getObject();
                 // handleInsert is called in the middle of some other code that works with editor

@@ -28,9 +28,8 @@ class TextBinding extends NonNullAccessorBinding {
     valueClass = XmlSerializerImpl.typeToClass(accessor.getGenericType());
   }
 
-  @Nullable
   @Override
-  public Object serialize(Object o, @Nullable Object context, SerializationFilter filter) {
+  public @Nullable Object serialize(Object o, @Nullable Object context, SerializationFilter filter) {
     Object value = myAccessor.read(o);
     return value == null ? null : new Text(XmlSerializerImpl.convertToString(value));
   }

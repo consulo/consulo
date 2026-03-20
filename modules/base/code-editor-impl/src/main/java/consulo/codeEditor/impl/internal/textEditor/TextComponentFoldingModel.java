@@ -62,9 +62,8 @@ public class TextComponentFoldingModel implements FoldingModel {
         return null;
     }
 
-    @Nullable
     @Override
-    public FoldRegion getFoldRegion(int startOffset, int endOffset) {
+    public @Nullable FoldRegion getFoldRegion(int startOffset, int endOffset) {
         return null;
     }
 
@@ -119,9 +118,8 @@ public class TextComponentFoldingModel implements FoldingModel {
         return new FoldRegion[0];
     }
 
-    @Nullable
     @Override
-    public FoldRegion createFoldRegion(int startOffset, int endOffset, String placeholder, @Nullable FoldingGroup group, boolean neverExpands) {
+    public @Nullable FoldRegion createFoldRegion(int startOffset, int endOffset, String placeholder, @Nullable FoldingGroup group, boolean neverExpands) {
         return null;
     }
 

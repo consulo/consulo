@@ -66,9 +66,8 @@ public class SandLocalInspection extends LocalInspectionTool {
         return HighlightDisplayLevel.ERROR;
     }
 
-    @Nullable
     @Override
-    public Language getLanguage() {
+    public @Nullable Language getLanguage() {
         return SandLanguage.INSTANCE;
     }
 

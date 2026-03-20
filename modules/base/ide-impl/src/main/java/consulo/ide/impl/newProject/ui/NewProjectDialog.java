@@ -143,24 +143,21 @@ public class NewProjectDialog extends DialogWrapper {
         root.add(myProjectPanel, BorderLayout.CENTER);
     }
 
-    @Nullable
     @Override
-    protected String getDimensionServiceKey() {
+    protected @Nullable String getDimensionServiceKey() {
         Dimension defaultWindowSize = TargetAWT.to(WelcomeFrameManager.getDefaultWindowSize());
         setSize(defaultWindowSize.width, defaultWindowSize.height);
         return "NewProjectDialog";
     }
 
     @RequiredUIAccess
-    @Nullable
     @Override
-    public JComponent getPreferredFocusedComponent() {
+    public @Nullable JComponent getPreferredFocusedComponent() {
         return myProjectPanel.getLeftComponent();
     }
 
-    @Nullable
     @Override
-    protected JComponent createCenterPanel() {
+    protected @Nullable JComponent createCenterPanel() {
         throw new IllegalArgumentException();
     }
 }

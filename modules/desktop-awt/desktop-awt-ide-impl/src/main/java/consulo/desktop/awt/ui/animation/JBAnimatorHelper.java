@@ -24,8 +24,7 @@ public final class JBAnimatorHelper {
   WinMM lib;
 
   private static
-  @Nullable
-  Throwable exceptionInInitialization = null;
+  @Nullable Throwable exceptionInInitialization = null;
 
   private static JBAnimatorHelper getInstance() {
     return JBAnimatorHelperHolder.INSTANCE;

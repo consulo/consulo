@@ -108,9 +108,8 @@ public abstract class AbstractInplaceIntroducer<V extends PsiNameIdentifierOwner
         showDialogAdvertisement(getActionName());
     }
 
-    @Nullable
     @RequiredReadAction
-    protected String getExpressionText(E expr) {
+    protected @Nullable String getExpressionText(E expr) {
         return expr != null ? expr.getText() : null;
     }
 

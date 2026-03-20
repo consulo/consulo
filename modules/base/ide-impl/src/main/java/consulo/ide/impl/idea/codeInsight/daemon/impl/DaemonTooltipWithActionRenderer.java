@@ -131,9 +131,8 @@ public class DaemonTooltipWithActionRenderer extends DaemonTooltipRenderer {
             setPopup(true);
         }
 
-        @Nullable
         @Override
-        protected Image getTemplateIcon() {
+        protected @Nullable Image getTemplateIcon() {
             return PlatformIconGroup.actionsMorevertical();
         }
 

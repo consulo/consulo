@@ -111,10 +111,9 @@ public abstract class BundleType extends SdkType {
         throw new UnsupportedOperationException();
     }
 
-    @Nullable
     @Override
     @Deprecated
-    public final String getVersionString(String sdkHome) {
+    public final @Nullable String getVersionString(String sdkHome) {
         throw new UnsupportedOperationException();
     }
 

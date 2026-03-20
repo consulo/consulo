@@ -30,8 +30,7 @@ public interface SemanticEditorPosition {
   public interface SyntaxElement {
   }
 
-  @Nullable
-  Language getLanguage();
+  @Nullable Language getLanguage();
 
   void moveToLeftParenthesisBackwardsSkippingNested(SyntaxElement leftParenthesis, SyntaxElement rightParenthesis);
 
@@ -58,8 +57,7 @@ public interface SemanticEditorPosition {
 
   boolean isAfterOnSameLine(SyntaxElement... syntaxElements);
 
-  @Nullable
-  SyntaxElement elementAfterOnSameLine(SyntaxElement... syntaxElements);
+  @Nullable SyntaxElement elementAfterOnSameLine(SyntaxElement... syntaxElements);
 
   boolean isAtMultiline(SyntaxElement... elements);
 
@@ -93,8 +91,7 @@ public interface SemanticEditorPosition {
 
   SyntaxElement map(IElementType elementType);
 
-  @Nullable
-  SyntaxElement getCurrElement();
+  @Nullable SyntaxElement getCurrElement();
 
   boolean hasEmptyLineAfter(int offset);
 

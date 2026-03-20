@@ -26,6 +26,5 @@ import org.jspecify.annotations.Nullable;
  */
 @ExtensionAPI(ComponentScope.PROJECT)
 public interface PackageElementHelper {
-    @Nullable
-    String getQualifiedName(PsiElement element);
+    @Nullable String getQualifiedName(PsiElement element);
 }

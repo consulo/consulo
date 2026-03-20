@@ -39,27 +39,22 @@ public abstract class PsiPackageManager {
 
   public abstract void dropCache(Class<? extends ModuleExtension> extensionClass);
 
-  @Nullable
   @RequiredReadAction
-  public abstract PsiPackage findPackage(String qualifiedName, Class<? extends ModuleExtension> extensionClass);
+  public abstract @Nullable PsiPackage findPackage(String qualifiedName, Class<? extends ModuleExtension> extensionClass);
 
-  @Nullable
   @RequiredReadAction
-  public abstract PsiPackage findPackage(PsiDirectory directory, Class<? extends ModuleExtension> extensionClass);
+  public abstract @Nullable PsiPackage findPackage(PsiDirectory directory, Class<? extends ModuleExtension> extensionClass);
 
-  @Nullable
   @RequiredReadAction
-  public PsiPackage findAnyPackage(PsiDirectory directory) {
+  public @Nullable PsiPackage findAnyPackage(PsiDirectory directory) {
     return findAnyPackage(directory.getVirtualFile());
   }
 
-  @Nullable
   @RequiredReadAction
-  public abstract PsiPackage findAnyPackage(VirtualFile directory);
+  public abstract @Nullable PsiPackage findAnyPackage(VirtualFile directory);
 
-  @Nullable
   @RequiredReadAction
-  public abstract PsiPackage findAnyPackage(String packageName);
+  public abstract @Nullable PsiPackage findAnyPackage(String packageName);
 
   @RequiredReadAction
   public boolean isValidPackageName(PsiDirectory directory, String packageName) {

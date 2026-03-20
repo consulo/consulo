@@ -30,8 +30,7 @@ import org.jspecify.annotations.Nullable;
 public interface SurroundWithRangeAdjuster {
   ExtensionPointName<SurroundWithRangeAdjuster> EP_NAME = ExtensionPointName.create(SurroundWithRangeAdjuster.class);
 
-  @Nullable
-  TextRange adjustSurroundWithRange(PsiFile file, TextRange selectedRange);
+  @Nullable TextRange adjustSurroundWithRange(PsiFile file, TextRange selectedRange);
 
   default @Nullable TextRange adjustSurroundWithRange(PsiFile file, TextRange selectedRange, boolean hasSelection) {
     return adjustSurroundWithRange(file, selectedRange);

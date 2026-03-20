@@ -22,6 +22,5 @@ import org.jspecify.annotations.Nullable;
  * It is used to split some inspection to several fake inspections
  */
 public interface ProblemGroup {
-  @Nullable
-  String getProblemName();
+  @Nullable String getProblemName();
 }

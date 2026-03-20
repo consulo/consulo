@@ -111,9 +111,8 @@ public class PsiFileFactoryImpl implements PsiFileFactory {
                               text, physical, markAsCopy, noSizeLimit);
   }
 
-  @Nullable
   @Override
-  public PsiFile createFileFromText(String name,
+  public @Nullable PsiFile createFileFromText(String name,
                                     Language language,
                                     LanguageVersion languageVersion,
                                     CharSequence text,
@@ -128,9 +127,8 @@ public class PsiFileFactoryImpl implements PsiFileFactory {
     return trySetupPsiForFile(virtualFile, language, languageVersion, physical, markAsCopy);
   }
 
-  @Nullable
   @Override
-  public PsiFile createFileFromText(String name,
+  public @Nullable PsiFile createFileFromText(String name,
                                     LanguageVersion languageVersion,
                                     CharSequence text,
                                     boolean physical,
@@ -248,9 +246,8 @@ public class PsiFileFactoryImpl implements PsiFileFactory {
     return createFileFromText(fileName, fileType, text);
   }
 
-  @Nullable
   @Override
-  public PsiFile createFileFromText(CharSequence chars, PsiFile original) {
+  public @Nullable PsiFile createFileFromText(CharSequence chars, PsiFile original) {
     PsiFile file = createFileFromText(original.getName(), original.getLanguage(), chars, false, true);
     if (file != null) {
       file.putUserData(ORIGINAL_FILE, original);

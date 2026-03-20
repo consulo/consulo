@@ -39,8 +39,7 @@ public interface InlayModel {
      * @param renderer               defines the width and appearance of the inlay
      * @return {@code null} if the inlay cannot be created, for example when the editor doesn't support its functionality
      */
-    @Nullable
-    <T extends EditorCustomElementRenderer> Inlay<T> addInlineElement(
+    <T extends EditorCustomElementRenderer> @Nullable Inlay<T> addInlineElement(
         int offset,
         boolean relatesToPrecedingText,
         int priority,
@@ -55,8 +54,7 @@ public interface InlayModel {
      * @return {@code null} if requested element cannot be created, e.g. if corresponding functionality
      * is not supported by current editor instance.
      */
-    @Nullable
-    <T extends EditorCustomElementRenderer> Inlay<T> addInlineElement(int offset, boolean relatesToPrecedingText, T renderer);
+    <T extends EditorCustomElementRenderer> @Nullable Inlay<T> addInlineElement(int offset, boolean relatesToPrecedingText, T renderer);
 
     /**
      * Adds an inline inlay at the given offset.
@@ -65,8 +63,7 @@ public interface InlayModel {
      * @param renderer defines the width and appearance of the inlay
      * @return {@code null} if the inlay cannot be created, for example when the editor doesn't support its functionality
      */
-    @Nullable
-    <T extends EditorCustomElementRenderer> Inlay<T> addInlineElement(int offset, InlayProperties properties, T renderer);
+    <T extends EditorCustomElementRenderer> @Nullable Inlay<T> addInlineElement(int offset, InlayProperties properties, T renderer);
 
     /**
      * Adds a block inlay at the given offset.
@@ -106,8 +103,7 @@ public interface InlayModel {
      * @return {@code null} if requested element cannot be created, e.g. if corresponding functionality
      * is not supported by current editor instance.
      */
-    @Nullable
-    <T extends EditorCustomElementRenderer> Inlay<T> addAfterLineEndElement(int offset, boolean relatesToPrecedingText, T renderer);
+    <T extends EditorCustomElementRenderer> @Nullable Inlay<T> addAfterLineEndElement(int offset, boolean relatesToPrecedingText, T renderer);
 
     /**
      * Adds an after-line-end inlay at the given offset.
@@ -116,8 +112,7 @@ public interface InlayModel {
      * @param renderer defines the width and appearance of the inlay
      * @return {@code null} if the inlay cannot be created, for example when the editor doesn't support its functionality
      */
-    @Nullable
-    <T extends EditorCustomElementRenderer> Inlay<T> addAfterLineEndElement(int offset, InlayProperties properties, T renderer);
+    <T extends EditorCustomElementRenderer> @Nullable Inlay<T> addAfterLineEndElement(int offset, InlayProperties properties, T renderer);
 
     /**
      * Returns a list of inline elements for a given offset range (both limits are inclusive). Returned list is sorted by offset.
@@ -193,15 +188,13 @@ public interface InlayModel {
     /**
      * Return a custom visual element at at a given visual position. Only visual position to the left of the element is recognized.
      */
-    @Nullable
-    Inlay getInlineElementAt(VisualPosition visualPosition);
+    @Nullable Inlay getInlineElementAt(VisualPosition visualPosition);
 
     /**
      * Return a custom visual element at given coordinates in editor's coordinate space,
      * or {@code null} if there's no element at given point.
      */
-    @Nullable
-    Inlay getElementAt(Point point);
+    @Nullable Inlay getElementAt(Point point);
 
     /**
      * Return a custom visual element with renderer of given type at given coordinates in editor's coordinate space,

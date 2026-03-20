@@ -12,9 +12,8 @@ public class MapForwardIndexAccessor<Key, Value> extends AbstractMapForwardIndex
     super(externalizer);
   }
 
-  @Nullable
   @Override
-  protected Map<Key, Value> convertToMap(@Nullable Map<Key, Value> inputData) {
+  protected @Nullable Map<Key, Value> convertToMap(@Nullable Map<Key, Value> inputData) {
     return inputData;
   }
 
@@ -23,9 +22,8 @@ public class MapForwardIndexAccessor<Key, Value> extends AbstractMapForwardIndex
     return 4 * map.size();
   }
 
-  @Nullable
   @Override
-  public Map<Key, Value> convertToDataType(InputData<Key, Value> data) {
+  public @Nullable Map<Key, Value> convertToDataType(InputData<Key, Value> data) {
     return data.getKeyValues();
   }
 }

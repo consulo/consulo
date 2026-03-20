@@ -58,9 +58,8 @@ public class CommonFindUsagesDialogDescriptor extends AbstractFindUsagesDialogDe
         return FindUsagesUtil.isSearchForTextOccurrencesAvailable(element, isSingleFile, handler);
     }
 
-    @Nullable
     @Override
-    public String getHelpId() {
+    public @Nullable String getHelpId() {
         return myHandler.getHelpId();
     }
 

@@ -69,9 +69,8 @@ public class AuthenticationDialogImpl extends DialogWrapper {
   }
 
   @RequiredUIAccess
-  @Nullable
   @Override
-  public JComponent getPreferredFocusedComponent() {
+  public @Nullable JComponent getPreferredFocusedComponent() {
     return panel.getPreferredFocusedComponent();
   }
 

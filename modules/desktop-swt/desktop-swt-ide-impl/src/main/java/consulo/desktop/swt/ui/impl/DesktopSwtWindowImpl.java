@@ -72,9 +72,8 @@ public class DesktopSwtWindowImpl extends SWTComponentDelegate<Shell> implements
     throw new UnsupportedOperationException();
   }
 
-  @Nullable
   @Override
-  public Window getParent() {
+  public @Nullable Window getParent() {
     return (Window)super.getParent();
   }
 

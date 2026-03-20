@@ -83,9 +83,8 @@ class NonProjectDirectoryInfo extends DirectoryInfo {
     return null;
   }
 
-  @Nullable
   @Override
-  public ContentFolder getContentFolder() {
+  public @Nullable ContentFolder getContentFolder() {
     return null;
   }
 

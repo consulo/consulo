@@ -45,9 +45,8 @@ public class FileGroupingRule extends SingleParentUsageGroupingRule implements D
     myProject = project;
   }
 
-  @Nullable
   @Override
-  public UsageGroup getParentGroupFor(Usage usage, UsageTarget[] targets) {
+  public @Nullable UsageGroup getParentGroupFor(Usage usage, UsageTarget[] targets) {
     VirtualFile virtualFile;
     if (usage instanceof UsageInFile && (virtualFile = ((UsageInFile)usage).getFile()) != null) {
       return new FileUsageGroup(myProject, virtualFile);
@@ -143,9 +142,8 @@ public class FileGroupingRule extends SingleParentUsageGroupingRule implements D
       sink.lazy(PsiElement.KEY, () -> getPsiFile());
     }
 
-    @Nullable
     @RequiredReadAction
-    public PsiFile getPsiFile() {
+    public @Nullable PsiFile getPsiFile() {
       return myFile.isValid() ? PsiManager.getInstance(myProject).findFile(myFile) : null;
     }
 

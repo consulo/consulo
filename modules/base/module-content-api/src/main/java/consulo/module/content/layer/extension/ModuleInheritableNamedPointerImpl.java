@@ -52,9 +52,8 @@ public abstract class ModuleInheritableNamedPointerImpl<T extends Named> impleme
     
     public abstract NamedPointer<T> getPointer(ModuleRootLayer layer, String name);
 
-    @Nullable
     @Override
-    public T get() {
+    public @Nullable T get() {
         if (myModulePointer != null) {
             Module module = myModulePointer.get();
             if (module == null) {
@@ -65,9 +64,8 @@ public abstract class ModuleInheritableNamedPointerImpl<T extends Named> impleme
         return myTargetPointer == null ? getDefaultValue() : myTargetPointer.get();
     }
 
-    @Nullable
     @Override
-    public String getName() {
+    public @Nullable String getName() {
         if (myModulePointer != null) {
             Module module = myModulePointer.get();
             if (module == null) {
@@ -177,18 +175,16 @@ public abstract class ModuleInheritableNamedPointerImpl<T extends Named> impleme
         return null;
     }
 
-    @Nullable
     @Override
-    public Module getModule() {
+    public @Nullable Module getModule() {
         if (myModulePointer == null) {
             return null;
         }
         return myModulePointer.get();
     }
 
-    @Nullable
     @Override
-    public String getModuleName() {
+    public @Nullable String getModuleName() {
         if (myModulePointer == null) {
             return null;
         }

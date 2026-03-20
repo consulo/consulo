@@ -41,9 +41,8 @@ public class CustomOrderEntryImpl<M extends CustomOrderEntryModel> extends Libra
     }
   }
 
-  @Nullable
   @Override
-  public Object getEqualObject() {
+  public @Nullable Object getEqualObject() {
     return myModel.getEqualObject();
   }
 
@@ -68,9 +67,8 @@ public class CustomOrderEntryImpl<M extends CustomOrderEntryModel> extends Libra
     return myModel;
   }
 
-  @Nullable
   @Override
-  protected RootProvider getRootProvider() {
+  protected @Nullable RootProvider getRootProvider() {
     return myModel.getRootProvider();
   }
 

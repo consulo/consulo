@@ -37,9 +37,8 @@ public interface DeclarationRangeHandler<T extends PsiElement> {
   ExtensionPointCacheKey<DeclarationRangeHandler, Function<Class, DeclarationRangeHandler>> KEY =
           ExtensionPointCacheKey.create("DeclarationRangeHandler", ByClassGrouper.build(DeclarationRangeHandler::getElementClass));
 
-  @Nullable
   @SuppressWarnings("unchecked")
-  public static <T extends PsiElement> DeclarationRangeHandler<T> findDeclarationHandler(T element) {
+  public static <T extends PsiElement> @Nullable DeclarationRangeHandler<T> findDeclarationHandler(T element) {
     Function<Class, DeclarationRangeHandler> call = Application.get().getExtensionPoint(DeclarationRangeHandler.class).getOrBuildCache(KEY);
     return call.apply(element.getClass());
   }

@@ -25,6 +25,5 @@ public interface DataValidator<T> {
     
     Key<T> getKey();
 
-    @Nullable
-    T findInvalid(Key<T> key, T data, Object dataSource);
+    @Nullable T findInvalid(Key<T> key, T data, Object dataSource);
 }

@@ -111,9 +111,8 @@ public class NonProjectFileWritingAccessProvider extends WritingAccessProvider {
         return Collections.emptyList();
     }
 
-    @Nullable
     @RequiredUIAccess
-    private UnlockOption askToUnlock(List<VirtualFile> files) {
+    private @Nullable UnlockOption askToUnlock(List<VirtualFile> files) {
         NonProjectFileWritingAccessDialog dialog = new NonProjectFileWritingAccessDialog(myProject, files);
         if (!dialog.showAndGet()) {
             return null;

@@ -118,9 +118,8 @@ public class ExternalDiffSettingsConfigurable extends SimpleConfigurableByProper
     return "diff.external";
   }
 
-  @Nullable
   @Override
-  public String getParentId() {
+  public @Nullable String getParentId() {
     return "diff.base";
   }
 

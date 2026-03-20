@@ -56,8 +56,7 @@ public final class FileStatusMapImpl implements Disposable, FileStatusMap {
      * @param passId
      * @return null means the file is clean
      */
-    @Nullable
-    // used in scala
+    @Nullable // used in scala
     public static TextRange getDirtyTextRange(Editor editor, int passId) {
         Document document = editor.getDocument();
 

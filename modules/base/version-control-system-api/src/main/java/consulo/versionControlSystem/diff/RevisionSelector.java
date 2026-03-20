@@ -37,6 +37,5 @@ public interface RevisionSelector {
    * @param file the file for which the version number is requested.
    * @return the version number or null.
    */
-  @Nullable
-  VcsRevisionNumber selectNumber(VirtualFile file);
+  @Nullable VcsRevisionNumber selectNumber(VirtualFile file);
 }

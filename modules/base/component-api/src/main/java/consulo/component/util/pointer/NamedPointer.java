@@ -26,6 +26,5 @@ public interface NamedPointer<T> extends Supplier<T> {
   
   String getName();
 
-  @Nullable
-  T get();
+  @Nullable T get();
 }

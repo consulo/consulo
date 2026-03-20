@@ -18,9 +18,8 @@ import java.io.File;
 public class BasicProvidedExtensionLocator implements ProvidedIndexExtensionLocator {
   private static final String PREBUILT_INDEX_PATH_PROP = "prebuilt.hash.index.dir";
 
-  @Nullable
   @Override
-  public <K, V> ProvidedIndexExtension<K, V> findProvidedIndexExtension(FileBasedIndexExtension<K, V> originalExtension) {
+  public <K, V> @Nullable ProvidedIndexExtension<K, V> findProvidedIndexExtension(FileBasedIndexExtension<K, V> originalExtension) {
     File root = getPrebuiltIndexPath();
     if (root == null || !new File(root, StringUtil.toLowerCase(originalExtension.getName().getName())).exists()) return null;
 

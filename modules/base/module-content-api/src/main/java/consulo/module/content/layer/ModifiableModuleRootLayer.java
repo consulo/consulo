@@ -116,11 +116,9 @@ public interface ModifiableModuleRootLayer extends ModuleRootLayer {
   
   ModuleOrderEntry addInvalidModuleEntry(String name);
 
-  @Nullable
-  LibraryOrderEntry findLibraryOrderEntry(Library library);
+  @Nullable LibraryOrderEntry findLibraryOrderEntry(Library library);
 
-  @Nullable
-  ModuleExtensionWithSdkOrderEntry findModuleExtensionSdkEntry(ModuleExtension extension);
+  @Nullable ModuleExtensionWithSdkOrderEntry findModuleExtensionSdkEntry(ModuleExtension extension);
 
   /**
    * Removes order entry from an order.

@@ -81,9 +81,8 @@ public class SurroundWithHandler implements CodeInsightActionHandler {
         }
     }
 
-    @Nullable
     @RequiredUIAccess
-    public static List<AnAction> buildSurroundActions(Project project, Editor editor, PsiFile file, @Nullable Surrounder surrounder) {
+    public static @Nullable List<AnAction> buildSurroundActions(Project project, Editor editor, PsiFile file, @Nullable Surrounder surrounder) {
         SelectionModel selectionModel = editor.getSelectionModel();
         boolean hasSelection = selectionModel.hasSelection();
         if (!hasSelection) {

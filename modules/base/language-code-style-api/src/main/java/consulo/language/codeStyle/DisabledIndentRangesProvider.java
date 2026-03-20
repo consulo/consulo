@@ -39,6 +39,5 @@ public interface DisabledIndentRangesProvider {
      * @param element The PSI element to check.
      * @return A collection of ranges with indentation disabled or <i>null</i> if the check is not relevant for the element in question.
      */
-    @Nullable
-    Collection<TextRange> getDisabledIndentRanges(PsiElement element);
+    @Nullable Collection<TextRange> getDisabledIndentRanges(PsiElement element);
 }

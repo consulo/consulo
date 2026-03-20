@@ -119,9 +119,8 @@ class DirDiffViewer implements FrameDiffTool.DiffViewer {
     return myPanel;
   }
 
-  @Nullable
   @Override
-  public JComponent getPreferredFocusedComponent() {
+  public @Nullable JComponent getPreferredFocusedComponent() {
     return myDirDiffPanel.getTable();
   }
 
@@ -184,9 +183,8 @@ class DirDiffViewer implements FrameDiffTool.DiffViewer {
           return EMPTY_ARRAY;
         }
 
-        @Nullable
         @Override
-        public byte[] getContent() throws IOException {
+        public @Nullable byte[] getContent() throws IOException {
           return null;
         }
 

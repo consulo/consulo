@@ -39,8 +39,7 @@ public interface ArrangementSettingsSerializer {
    * @param element  serialized settings holder
    * @return         settings de-serialized from the given element
    */
-  @Nullable
-  ArrangementSettings deserialize(Element element);
+  @Nullable ArrangementSettings deserialize(Element element);
 
   /**
    * Allows to provide custom settings serialization logic. This method is expected to be consistent with {@link #deserialize(Element)}.

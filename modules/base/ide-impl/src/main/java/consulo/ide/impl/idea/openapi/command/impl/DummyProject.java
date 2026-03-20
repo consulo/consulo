@@ -58,9 +58,8 @@ public class DummyProject extends UserDataHolderBase implements Project {
     }
 
     @Override
-    @Nullable
     @NonNls
-    public String getPresentableUrl() {
+    public @Nullable String getPresentableUrl() {
         return null;
     }
 

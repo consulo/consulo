@@ -363,9 +363,8 @@ public class VcsLogClassicFilterUi implements VcsLogFilterUi {
             return ContainerUtil.map(filter.getRoots(), VirtualFile::getPath);
         }
 
-        @Nullable
         @Override
-        protected VcsLogFileFilter getLastFilter() {
+        protected @Nullable VcsLogFileFilter getLastFilter() {
             List<String> values = myUiProperties.getFilterValues(STRUCTURE);
             if (values != null) {
                 return new VcsLogFileFilter(createStructureFilter(values), null);
@@ -422,9 +421,8 @@ public class VcsLogClassicFilterUi implements VcsLogFilterUi {
             super("date", dataPackGetter, uiProperties);
         }
 
-        @Nullable
         @Override
-        protected VcsLogDateFilter createFilter(List<String> values) {
+        protected @Nullable VcsLogDateFilter createFilter(List<String> values) {
             if (values.size() != 2) {
                 LOG.warn("Can not create date filter from " + values + " before and after dates are required.");
                 return null;

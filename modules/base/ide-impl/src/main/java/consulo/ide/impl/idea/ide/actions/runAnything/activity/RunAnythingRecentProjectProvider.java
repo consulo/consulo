@@ -62,9 +62,8 @@ public class RunAnythingRecentProjectProvider extends RunAnythingAnActionProvide
         return "open";
     }
 
-    @Nullable
     @Override
-    public String getHelpGroupTitle() {
+    public @Nullable String getHelpGroupTitle() {
         return IdeLocalize.runAnythingRecentProjectHelpGroupTitle().get();
     }
 
@@ -86,9 +85,8 @@ public class RunAnythingRecentProjectProvider extends RunAnythingAnActionProvide
             myValue = value;
         }
 
-        @Nullable
         @Override
-        public String getDescription() {
+        public @Nullable String getDescription() {
             return myValue.getProjectPath();
         }
     }

@@ -136,9 +136,8 @@ public abstract class AbstractFindUsagesDialogDescriptor extends DialogDescripto
         return cb;
     }
 
-    @Nullable
     @RequiredUIAccess
-    private Component createSearchScopePanel(Disposable uiDisposable) {
+    private @Nullable Component createSearchScopePanel(Disposable uiDisposable) {
         if (isInFileOnly()) {
             return null;
         }

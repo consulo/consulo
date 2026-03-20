@@ -149,9 +149,8 @@ public abstract class EditorBasedStatusBarPopup extends EditorBasedWidget implem
         return createInstance(getProject());
     }
 
-    @Nullable
     @Override
-    public WidgetPresentation getPresentation() {
+    public @Nullable WidgetPresentation getPresentation() {
         return null;
     }
 

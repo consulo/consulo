@@ -34,9 +34,8 @@ public class MessageDiffRequest extends DiffRequest {
     myMessage = message;
   }
 
-  @Nullable
   @Override
-  public String getTitle() {
+  public @Nullable String getTitle() {
     return myTitle;
   }
 

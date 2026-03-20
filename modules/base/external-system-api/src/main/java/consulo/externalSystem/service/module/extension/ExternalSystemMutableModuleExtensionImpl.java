@@ -54,9 +54,8 @@ public class ExternalSystemMutableModuleExtensionImpl extends ExternalSystemModu
     }
 
     @RequiredUIAccess
-    @Nullable
     @Override
-    public Component createConfigurationComponent(Disposable uiDisposable, Runnable updateOnCheck) {
+    public @Nullable Component createConfigurationComponent(Disposable uiDisposable, Runnable updateOnCheck) {
         return null;
     }
 

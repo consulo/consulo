@@ -121,10 +121,9 @@ public class PostfixLiveTemplate extends CustomLiveTemplateBase {
         return String.valueOf(documentContent.subSequence(startOffset, currentOffset));
     }
 
-    @Nullable
     @Override
     @RequiredReadAction
-    public String computeTemplateKey(CustomTemplateCallback callback) {
+    public @Nullable String computeTemplateKey(CustomTemplateCallback callback) {
         Editor editor = callback.getEditor();
         CharSequence charsSequence = editor.getDocument().getCharsSequence();
         int offset = editor.getCaretModel().getOffset();
@@ -137,9 +136,8 @@ public class PostfixLiveTemplate extends CustomLiveTemplateBase {
         return null;
     }
 
-    @Nullable
     @Override
-    public String computeTemplateKeyWithoutContextChecking(CustomTemplateCallback callback) {
+    public @Nullable String computeTemplateKeyWithoutContextChecking(CustomTemplateCallback callback) {
         Editor editor = callback.getEditor();
         int currentOffset = editor.getCaretModel().getOffset();
         for (PostfixTemplateProvider provider : PostfixTemplateProvider.forLanguage(getLanguage(callback))) {
@@ -395,9 +393,8 @@ public class PostfixLiveTemplate extends CustomLiveTemplateBase {
         return result;
     }
 
-    @Nullable
     @RequiredReadAction
-    private static PostfixTemplate findApplicableTemplate(
+    private static @Nullable PostfixTemplate findApplicableTemplate(
         PostfixTemplateProvider provider,
         @Nullable String key,
         Editor editor,

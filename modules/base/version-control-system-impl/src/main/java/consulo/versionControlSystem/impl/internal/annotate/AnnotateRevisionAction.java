@@ -69,9 +69,8 @@ abstract class AnnotateRevisionAction extends AnnotateRevisionActionBase impleme
         return myVcs;
     }
 
-    @Nullable
     @Override
-    protected VirtualFile getFile(AnActionEvent e) {
+    protected @Nullable VirtualFile getFile(AnActionEvent e) {
         VcsFileRevision revision = getFileRevision(e);
         if (revision == null) {
             return null;
@@ -96,9 +95,8 @@ abstract class AnnotateRevisionAction extends AnnotateRevisionActionBase impleme
         };
     }
 
-    @Nullable
     @Override
-    protected VcsFileRevision getFileRevision(AnActionEvent e) {
+    protected @Nullable VcsFileRevision getFileRevision(AnActionEvent e) {
         List<VcsFileRevision> revisions = getRevisions();
         assert revisions != null;
 

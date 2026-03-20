@@ -21,8 +21,7 @@ public interface CodeStyleStatusBarUIContributor {
      * @param file The current PSI file
      * @return An array of actions available for the given PSI file or {@code null} if no actions are available.
      */
-    @Nullable
-    AnAction[] getActions(PsiFile file);
+    @Nullable AnAction[] getActions(PsiFile file);
 
     /**
      * @return A title used for a group of actions opened from the status bar or {@code null} if no title is shown.
@@ -34,8 +33,7 @@ public interface CodeStyleStatusBarUIContributor {
     /**
      * @return A status bar tooltip or null for default tooltip.
      */
-    @Nullable
-    String getTooltip();
+    @Nullable String getTooltip();
 
     /**
      * Returns a text shown in a popup to drag user's attention to a UI element associated with the current indent options and related actions.
@@ -46,9 +44,8 @@ public interface CodeStyleStatusBarUIContributor {
      * @return The text to be shown or null for no popup.
      * @deprecated Dropped. The returned text is ignored.
      */
-    @Nullable
     @Deprecated
-    default String getAdvertisementText(PsiFile psiFile) {
+    default @Nullable String getAdvertisementText(PsiFile psiFile) {
         return null;
     }
 
@@ -58,8 +55,7 @@ public interface CodeStyleStatusBarUIContributor {
      * @param project The project to disable the source in.
      * @return The disable action or null if not available.
      */
-    @Nullable
-    AnAction createDisableAction(Project project);
+    @Nullable AnAction createDisableAction(Project project);
 
     /**
      * Creates an action showing all files related to the code style modification feature.

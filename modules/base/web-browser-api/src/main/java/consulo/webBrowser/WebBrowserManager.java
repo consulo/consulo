@@ -54,14 +54,12 @@ public interface WebBrowserManager extends ModificationTracker {
     
     DefaultBrowserPolicy getDefaultBrowserPolicy();
 
-    @Nullable
-    WebBrowser getFirstActiveBrowser();
+    @Nullable WebBrowser getFirstActiveBrowser();
 
     /**
      * @param idOrFamilyName UUID or, due to backward compatibility, browser family name or JS debugger engine ID
      */
-    @Nullable
-    WebBrowser findBrowserById(@Nullable String idOrFamilyName);
+    @Nullable WebBrowser findBrowserById(@Nullable String idOrFamilyName);
 
     
     String getAlternativeBrowserPath();

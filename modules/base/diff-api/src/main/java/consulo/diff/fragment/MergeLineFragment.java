@@ -25,6 +25,5 @@ public interface MergeLineFragment {
 
   int getEndLine(ThreeSide side);
 
-  @Nullable
-  List<MergeWordFragment> getInnerFragments();
+  @Nullable List<MergeWordFragment> getInnerFragments();
 }

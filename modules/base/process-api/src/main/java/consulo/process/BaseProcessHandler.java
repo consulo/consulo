@@ -245,9 +245,8 @@ public abstract class BaseProcessHandler extends UserDataHolderBase implements P
   }
 
   @Override
-  @Nullable
   @SuppressWarnings("unchecked")
-  public <F extends ProcessHandlerFeature> F getFeature(Class<F> featureClass) {
+  public <F extends ProcessHandlerFeature> @Nullable F getFeature(Class<F> featureClass) {
     Map<Class, ProcessHandlerFeature> features = myFeatures;
     if (features == null) {
       return null;

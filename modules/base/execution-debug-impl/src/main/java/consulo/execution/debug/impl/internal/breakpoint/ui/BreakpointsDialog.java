@@ -141,9 +141,8 @@ public class BreakpointsDialog extends WholeWestDialogWrapper {
         }
     }
 
-    @Nullable
     @Override
-    protected String getDimensionServiceKey() {
+    protected @Nullable String getDimensionServiceKey() {
         return getClass().getName();
     }
 
@@ -328,9 +327,8 @@ public class BreakpointsDialog extends WholeWestDialogWrapper {
         }
     }
 
-    @Nullable
     @Override
-    public JComponent getPreferredFocusedComponent() {
+    public @Nullable JComponent getPreferredFocusedComponent() {
         return myTreeController.getTreeView();
     }
 
@@ -380,9 +378,8 @@ public class BreakpointsDialog extends WholeWestDialogWrapper {
         }
     }
 
-    @Nullable
     @Override
-    protected String getHelpId() {
+    protected @Nullable String getHelpId() {
         return "reference.dialogs.breakpoints";
     }
 

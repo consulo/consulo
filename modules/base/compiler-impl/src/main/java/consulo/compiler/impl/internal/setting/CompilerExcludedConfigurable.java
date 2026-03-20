@@ -45,9 +45,8 @@ public class CompilerExcludedConfigurable implements ProjectConfigurable {
                                                      compilerManager.getExcludedEntriesConfiguration());
   }
 
-  @Nullable
   @Override
-  public JComponent createComponent() {
+  public @Nullable JComponent createComponent() {
     return myConfigurable.createComponent();
   }
 
@@ -83,9 +82,8 @@ public class CompilerExcludedConfigurable implements ProjectConfigurable {
     return "project.propCompiler.excluded";
   }
 
-  @Nullable
   @Override
-  public String getParentId() {
+  public @Nullable String getParentId() {
     return StandardConfigurableIds.COMPILER_GROUP;
   }
 }

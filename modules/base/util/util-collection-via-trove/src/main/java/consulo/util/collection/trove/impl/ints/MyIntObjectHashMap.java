@@ -37,9 +37,8 @@ public class MyIntObjectHashMap<V> extends TIntObjectHashMap<V> implements IntOb
       return key();
     }
 
-    @Nullable
     @Override
-    public V1 getValue() {
+    public @Nullable V1 getValue() {
       return value();
     }
   }
@@ -91,9 +90,8 @@ public class MyIntObjectHashMap<V> extends TIntObjectHashMap<V> implements IntOb
       return myIterator.hasNext();
     }
 
-    @Nullable
     @Override
-    public V1 next() {
+    public @Nullable V1 next() {
       myIterator.advance();
 
       return nullize(myIterator.value());
@@ -149,9 +147,8 @@ public class MyIntObjectHashMap<V> extends TIntObjectHashMap<V> implements IntOb
     }
   }
 
-  @Nullable
   @SuppressWarnings("unchecked")
-  private static <T> T nullize(Object value) {
+  private static <T> @Nullable T nullize(Object value) {
     if(value == TObjectHash.NULL) {
       return null;
     }

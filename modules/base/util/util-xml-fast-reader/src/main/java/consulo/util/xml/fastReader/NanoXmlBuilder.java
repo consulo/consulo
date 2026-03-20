@@ -34,9 +34,8 @@ public interface NanoXmlBuilder extends IXMLBuilder {
   default void addPCData(Reader reader, String systemID, int lineNr) throws Exception {
   }
 
-  @Nullable
   @Override
-  default Object getResult() throws Exception {
+  default @Nullable Object getResult() throws Exception {
     return null;
   }
 

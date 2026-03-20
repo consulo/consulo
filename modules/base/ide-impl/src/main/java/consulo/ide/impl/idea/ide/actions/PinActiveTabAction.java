@@ -108,9 +108,8 @@ public class PinActiveTabAction extends DumbAwareAction implements Toggleable {
         return getFileInWindow(e, window);
     }
 
-    @Nullable
     @RequiredUIAccess
-    protected Content getContentFromEvent(AnActionEvent e) {
+    protected @Nullable Content getContentFromEvent(AnActionEvent e) {
         Content content = getNonToolWindowContent(e);
         if (content == null) {
             content = getToolWindowContent(e);
@@ -138,9 +137,8 @@ public class PinActiveTabAction extends DumbAwareAction implements Toggleable {
         };
     }
 
-    @Nullable
     @RequiredUIAccess
-    private static Content getNonToolWindowContent(AnActionEvent e) {
+    private static @Nullable Content getNonToolWindowContent(AnActionEvent e) {
         Content result = null;
         Content[] contents = e.getData(Content.KEY_OF_ARRAY);
         if (contents != null && contents.length == 1) {
@@ -177,9 +175,8 @@ public class PinActiveTabAction extends DumbAwareAction implements Toggleable {
     }
 
     public static class TW extends PinActiveTabAction {
-        @Nullable
         @Override
-        protected VirtualFile getFileFromEvent(AnActionEvent e, FileEditorWindow window) {
+        protected @Nullable VirtualFile getFileFromEvent(AnActionEvent e, FileEditorWindow window) {
             return null;
         }
 
@@ -191,9 +188,8 @@ public class PinActiveTabAction extends DumbAwareAction implements Toggleable {
     }
 
     public static class EW extends PinActiveTabAction {
-        @Nullable
         @Override
-        protected VirtualFile getFileFromEvent(AnActionEvent e, FileEditorWindow window) {
+        protected @Nullable VirtualFile getFileFromEvent(AnActionEvent e, FileEditorWindow window) {
             return window.getSelectedFile();
         }
 

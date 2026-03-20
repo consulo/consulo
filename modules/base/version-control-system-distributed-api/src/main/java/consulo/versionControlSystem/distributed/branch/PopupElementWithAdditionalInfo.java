@@ -18,6 +18,5 @@ package consulo.versionControlSystem.distributed.branch;
 import org.jspecify.annotations.Nullable;
 
 public interface PopupElementWithAdditionalInfo {
-  @Nullable
-  String getInfoText();
+  @Nullable String getInfoText();
 }

@@ -61,8 +61,7 @@ public interface PsiLanguageInjectionHost extends PsiElement {
     /**
      * @return returns null when the host document marker is invalid
      */
-    @Nullable
-    Segment getHostRangeMarker();
+    @Nullable Segment getHostRangeMarker();
 
     
     TextRange getRangeInsideHost();
@@ -71,8 +70,7 @@ public interface PsiLanguageInjectionHost extends PsiElement {
 
     void dispose();
 
-    @Nullable
-    PsiLanguageInjectionHost getHost();
+    @Nullable PsiLanguageInjectionHost getHost();
 
     /**
      * @return range in decoded PSI

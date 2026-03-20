@@ -70,11 +70,9 @@ public interface FilePropertyPusher<T> {
     
     T getDefaultValue();
 
-    @Nullable
-    T getImmediateValue(Module module);
+    @Nullable T getImmediateValue(Module module);
 
-    @Nullable
-    T getImmediateValue(Project project, @Nullable VirtualFile file);
+    @Nullable T getImmediateValue(Project project, @Nullable VirtualFile file);
 
     boolean acceptsFile(VirtualFile file, Project project);
 

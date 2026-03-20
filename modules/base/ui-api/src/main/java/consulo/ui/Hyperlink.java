@@ -44,8 +44,7 @@ public interface Hyperlink extends Component {
 
   void setIcon(@Nullable Image icon);
 
-  @Nullable
-  Image getIcon();
+  @Nullable Image getIcon();
   default Disposable addHyperlinkListener(ComponentEventListener<Component, HyperlinkEvent> hyperlinkListener) {
     return addListener(HyperlinkEvent.class, hyperlinkListener);
   }

@@ -92,8 +92,7 @@ public class CompositeView<T extends ComponentContainer> extends JPanel implemen
   }
 
   public
-  @Nullable
-  <U> U getView(String viewName, Class<U> viewClass) {
+  <U> @Nullable U getView(String viewName, Class<U> viewClass) {
     T view = getView(viewName);
     return viewClass.isInstance(view) ? viewClass.cast(view) : null;
   }
@@ -142,8 +141,7 @@ public class CompositeView<T extends ComponentContainer> extends JPanel implemen
   }
 
   private
-  @Nullable
-  String getStoredState() {
+  @Nullable String getStoredState() {
     return mySelectionStateKey == null ? null : PropertiesComponent.getInstance().getValue(mySelectionStateKey);
   }
 

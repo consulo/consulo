@@ -32,8 +32,7 @@ public interface PathReferenceProvider {
 
   boolean createReferences(PsiElement psiElement, List<PsiReference> references, boolean soft);
 
-  @Nullable
-  PathReference getPathReference(String path, PsiElement element);
+  @Nullable PathReference getPathReference(String path, PsiElement element);
 
   /**
    * Will move provider to end of providers, and will ignored by {@link PathReferenceManager#getPathReference}

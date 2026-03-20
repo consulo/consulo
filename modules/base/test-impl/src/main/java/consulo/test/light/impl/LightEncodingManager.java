@@ -51,9 +51,8 @@ public abstract class LightEncodingManager implements EncodingManager {
     return StandardCharsets.UTF_8;
   }
 
-  @Nullable
   @Override
-  public Charset getEncoding(@Nullable VirtualFile virtualFile, boolean useParentDefaults) {
+  public @Nullable Charset getEncoding(@Nullable VirtualFile virtualFile, boolean useParentDefaults) {
     return null;
   }
 
@@ -78,9 +77,8 @@ public abstract class LightEncodingManager implements EncodingManager {
 
   }
 
-  @Nullable
   @Override
-  public Charset getDefaultCharsetForPropertiesFiles(@Nullable VirtualFile virtualFile) {
+  public @Nullable Charset getDefaultCharsetForPropertiesFiles(@Nullable VirtualFile virtualFile) {
     return null;
   }
 

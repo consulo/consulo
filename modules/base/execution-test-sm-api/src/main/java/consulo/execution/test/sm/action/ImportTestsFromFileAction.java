@@ -36,9 +36,8 @@ public class ImportTestsFromFileAction extends AbstractImportTestsAction {
         );
     }
 
-    @Nullable
     @Override
-    public VirtualFile getFile(Project project) {
+    public @Nullable VirtualFile getFile(Project project) {
         FileChooserDescriptor xmlDescriptor = FileChooserDescriptorFactory.createSingleFileNoJarsDescriptor()
             .withFileFilter(virtualFile -> "xml".equals(virtualFile.getExtension()));
         xmlDescriptor.withTitleValue(SMTestLocalize.smTestRunnerImportTestChooseTestFileTitle());

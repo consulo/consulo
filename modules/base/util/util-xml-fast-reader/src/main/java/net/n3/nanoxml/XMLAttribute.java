@@ -116,8 +116,7 @@ class XMLAttribute
    /**
     * Returns the namespace of the attribute.
     */
-   @Nullable
-   String getNamespace()
+   @Nullable String getNamespace()
    {
       return this.namespace;
    }

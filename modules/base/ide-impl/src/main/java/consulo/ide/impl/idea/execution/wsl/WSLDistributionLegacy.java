@@ -53,9 +53,8 @@ public class WSLDistributionLegacy extends WSLDistribution {
     return "-c";
   }
 
-  @Nullable
   @Override
-  public String getWslPath(String windowsPath) {
+  public @Nullable String getWslPath(String windowsPath) {
     String wslRootInHost = WSL_ROOT_IN_WINDOWS_PROVIDER.getValue();
     if (wslRootInHost == null) {
       return null;
@@ -68,9 +67,8 @@ public class WSLDistributionLegacy extends WSLDistribution {
     return super.getWslPath(windowsPath);
   }
 
-  @Nullable
   @Override
-  public String getWindowsPath(String wslPath) {
+  public @Nullable String getWindowsPath(String wslPath) {
     String windowsPath = super.getWindowsPath(wslPath);
     if (windowsPath != null) {
       return windowsPath;

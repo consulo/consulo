@@ -31,9 +31,7 @@ import org.jspecify.annotations.Nullable;
 public interface UsageTargetProvider {
     ExtensionPointName<UsageTargetProvider> EP_NAME = ExtensionPointName.create(UsageTargetProvider.class);
 
-    @Nullable
-    UsageTarget[] getTargets(Editor editor, PsiFile file);
+    @Nullable UsageTarget[] getTargets(Editor editor, PsiFile file);
 
-    @Nullable
-    UsageTarget[] getTargets(PsiElement psiElement);
+    @Nullable UsageTarget[] getTargets(PsiElement psiElement);
 }

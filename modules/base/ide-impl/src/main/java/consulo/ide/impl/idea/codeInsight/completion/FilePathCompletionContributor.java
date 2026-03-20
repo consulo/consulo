@@ -370,9 +370,8 @@ public class FilePathCompletionContributor extends CompletionContributor {
             presentation.setIcon(myIcon);
         }
 
-        @Nullable
         @RequiredReadAction
-        private String getRelativePath() {
+        private @Nullable String getRelativePath() {
             VirtualFile virtualFile = myFile.getVirtualFile();
             LOG.assertTrue(virtualFile != null);
             for (FileReferenceHelper helper : myHelpers) {

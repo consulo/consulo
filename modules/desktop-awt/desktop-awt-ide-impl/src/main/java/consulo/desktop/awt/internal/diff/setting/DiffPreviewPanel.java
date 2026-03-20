@@ -108,9 +108,8 @@ class DiffPreviewPanel implements PreviewPanel {
       return Arrays.asList(null, null, null);
     }
 
-    @Nullable
     @Override
-    public String getTitle() {
+    public @Nullable String getTitle() {
       return DiffLocalize.mergeColorOptionsDialogTitle().get();
     }
   }
@@ -125,9 +124,8 @@ class DiffPreviewPanel implements PreviewPanel {
       putUserData(TextDiffSettings.KEY, settings);
     }
 
-    @Nullable
     @Override
-    public Project getProject() {
+    public @Nullable Project getProject() {
       return null;
     }
 

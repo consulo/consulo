@@ -499,9 +499,8 @@ public class PagedFileStorage implements Forceable {
           return mySize > mySizeLimit;
         }
 
-        @Nullable
         @Override
-        public ByteBufferWrapper remove(Object key) {
+        public @Nullable ByteBufferWrapper remove(Object key) {
           // this method can be called after removeEldestEntry
           ByteBufferWrapper wrapper = super.remove(key);
           if (wrapper != null) {

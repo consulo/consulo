@@ -39,8 +39,7 @@ public interface RecentProjectsManager {
         return Application.get().getInstance(RecentProjectsManager.class);
     }
 
-    @Nullable
-    String getLastProjectCreationLocation();
+    @Nullable String getLastProjectCreationLocation();
 
     void setLastProjectCreationLocation(@Nullable String lastProjectLocation);
 

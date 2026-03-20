@@ -54,9 +54,8 @@ public class KeyMapSettingImpl implements KeyMapSetting, PersistentStateComponen
         myState.enabledDoublePressShortcuts = enabledDoublePressShortcuts;
     }
 
-    @Nullable
     @Override
-    public KeyMapSettingState getState() {
+    public @Nullable KeyMapSettingState getState() {
         return myState;
     }
 

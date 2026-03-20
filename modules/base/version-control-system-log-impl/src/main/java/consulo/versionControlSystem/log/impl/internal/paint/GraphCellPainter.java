@@ -28,7 +28,6 @@ public interface GraphCellPainter {
 
   void draw(Graphics2D g2, Collection<? extends PrintElement> printElements);
 
-  @Nullable
-  PrintElement getElementUnderCursor(Collection<? extends PrintElement> printElements, int x, int y);
+  @Nullable PrintElement getElementUnderCursor(Collection<? extends PrintElement> printElements, int x, int y);
 }
 

@@ -25,8 +25,7 @@ public interface CoverageSuite extends JDOMExternalizable {
 
     boolean isCoverageByTestEnabled();
 
-    @Nullable
-    ProjectData getCoverageData(CoverageDataManager coverageDataManager);
+    @Nullable ProjectData getCoverageData(CoverageDataManager coverageDataManager);
 
     void setCoverageData(ProjectData projectData);
 

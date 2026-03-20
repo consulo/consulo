@@ -62,9 +62,8 @@ public class PasswordSafeConfigurableUi implements IdeaConfigurableUi<PasswordSa
         public GearActionGroup() {
         }
 
-        @Nullable
         @Override
-        protected Image getTemplateIcon() {
+        protected @Nullable Image getTemplateIcon() {
             return PlatformIconGroup.generalGearplain();
         }
 

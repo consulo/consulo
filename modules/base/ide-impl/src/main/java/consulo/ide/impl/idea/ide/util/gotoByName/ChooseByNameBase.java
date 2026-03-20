@@ -154,8 +154,7 @@ public abstract class ChooseByNameBase implements ChooseByNameViewModel {
     private final boolean myInitIsDone;
     private boolean myAlwaysHasMore;
     private Point myFocusPoint;
-    @Nullable
-    SelectionSnapshot currentChosenInfo;
+    @Nullable SelectionSnapshot currentChosenInfo;
 
     public boolean checkDisposed() {
         return myDisposedFlag;
@@ -214,9 +213,8 @@ public abstract class ChooseByNameBase implements ChooseByNameViewModel {
         myInitIsDone = true;
     }
 
-    @Nullable
     @Override
-    public Project getProject() {
+    public @Nullable Project getProject() {
         return myProject;
     }
 

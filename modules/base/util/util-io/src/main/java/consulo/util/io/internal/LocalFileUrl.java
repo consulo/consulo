@@ -36,21 +36,18 @@ public final class LocalFileUrl implements Url {
     return path;
   }
 
-  @Nullable
   @Override
-  public String getScheme() {
+  public @Nullable String getScheme() {
     return null;
   }
 
-  @Nullable
   @Override
-  public String getAuthority() {
+  public @Nullable String getAuthority() {
     return null;
   }
 
-  @Nullable
   @Override
-  public String getParameters() {
+  public @Nullable String getParameters() {
     return null;
   }
 

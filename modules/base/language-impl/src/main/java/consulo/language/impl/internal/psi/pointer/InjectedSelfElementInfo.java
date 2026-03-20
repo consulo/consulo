@@ -91,9 +91,8 @@ class InjectedSelfElementInfo extends SmartPointerElementInfo {
     return getInjectedRange(false);
   }
 
-  @Nullable
   @Override
-  Segment getPsiRange(SmartPointerManagerImpl manager) {
+  @Nullable Segment getPsiRange(SmartPointerManagerImpl manager) {
     return getInjectedRange(true);
   }
 
@@ -209,9 +208,8 @@ class InjectedSelfElementInfo extends SmartPointerElementInfo {
     SmartPointerManager.getInstance(getProject()).removePointer(myInjectedFileRangeInHostFile);
   }
 
-  @Nullable
   @Override
-  Document getDocumentToSynchronize() {
+  @Nullable Document getDocumentToSynchronize() {
     return ((SmartPsiElementPointerImpl)myHostContext).getElementInfo().getDocumentToSynchronize();
   }
 
@@ -243,8 +241,7 @@ class InjectedSelfElementInfo extends SmartPointerElementInfo {
       this.endAffixOffset = endAffixOffset;
     }
 
-    @Nullable
-    ProperTextRange expandRangeToAffixes(int start, int end, List<? extends TextRange> fragments) {
+    @Nullable ProperTextRange expandRangeToAffixes(int start, int end, List<? extends TextRange> fragments) {
       if (startAffixIndex >= 0) {
         TextRange fragment = startAffixIndex < fragments.size() ? fragments.get(startAffixIndex) : null;
         if (fragment == null || startAffixOffset > fragment.getLength()) return null;

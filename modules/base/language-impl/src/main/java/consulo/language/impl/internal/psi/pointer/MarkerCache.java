@@ -141,8 +141,7 @@ class MarkerCache {
         return sorted;
     }
 
-    @Nullable
-    TextRange getUpdatedRange(SelfElementInfo info, FrozenDocument frozen, List<? extends DocumentEvent> events) {
+    @Nullable TextRange getUpdatedRange(SelfElementInfo info, FrozenDocument frozen, List<? extends DocumentEvent> events) {
         UpdatedRanges struct = getUpdatedMarkers(frozen, events);
         int i = Collections.binarySearch(struct.mySortedInfos, info, INFO_COMPARATOR);
         ManualRangeMarker updated = i >= 0 ? struct.myMarkers[i] : null;

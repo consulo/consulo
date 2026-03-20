@@ -89,9 +89,8 @@ public class CompositeDependencyCache implements DependencyCache {
         }
     }
 
-    @Nullable
     @Override
-    public String relativePathToQName(String path, char separator) {
+    public @Nullable String relativePathToQName(String path, char separator) {
         for (DependencyCache ourDependencyExtension : myDependencyCaches) {
             String s = ourDependencyExtension.relativePathToQName(path, separator);
             if (s != null) {

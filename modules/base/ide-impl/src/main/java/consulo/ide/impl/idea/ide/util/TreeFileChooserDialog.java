@@ -439,10 +439,9 @@ public final class TreeFileChooserDialog extends DialogWrapper implements TreeFi
             return element instanceof PsiFile psiFile ? psiFile.getName() : null;
         }
 
-        @Nullable
         @Override
         @RequiredReadAction
-        public String getFullName(Object element) {
+        public @Nullable String getFullName(Object element) {
             if (element instanceof PsiFile file) {
                 VirtualFile virtualFile = file.getVirtualFile();
                 return virtualFile != null ? virtualFile.getPath() : null;

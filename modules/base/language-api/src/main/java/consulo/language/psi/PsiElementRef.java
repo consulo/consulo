@@ -80,8 +80,7 @@ public final class PsiElementRef<T extends PsiElement> {
 
     boolean isValid();
 
-    @Nullable
-    T getPsiElement();
+    @Nullable T getPsiElement();
 
     
     Real<T> makeReal();

@@ -40,9 +40,8 @@ public abstract class DiffRequest implements UserDataHolder {
   public void onAssigned(boolean isAssigned) {
   }
 
-  @Nullable
   @Override
-  public <T> T getUserData(Key<T> key) {
+  public <T> @Nullable T getUserData(Key<T> key) {
     return myUserDataHolder.getUserData(key);
   }
 

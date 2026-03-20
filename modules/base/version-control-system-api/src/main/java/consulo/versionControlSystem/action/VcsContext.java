@@ -31,11 +31,9 @@ import java.util.Collection;
 import java.util.stream.Stream;
 
 public interface VcsContext extends PlaceProvider<String> {
-  @Nullable
-  Project getProject();
+  @Nullable Project getProject();
 
-  @Nullable
-  VirtualFile getSelectedFile();
+  @Nullable VirtualFile getSelectedFile();
 
   
   VirtualFile[] getSelectedFiles();
@@ -65,14 +63,11 @@ public interface VcsContext extends PlaceProvider<String> {
     return Arrays.stream(getSelectedFilePaths());
   }
 
-  @Nullable
-  FilePath getSelectedFilePath();
+  @Nullable FilePath getSelectedFilePath();
 
-  @Nullable
-  ChangeList[] getSelectedChangeLists();
+  @Nullable ChangeList[] getSelectedChangeLists();
 
-  @Nullable
-  Change[] getSelectedChanges();
+  @Nullable Change[] getSelectedChanges();
 
   String getActionName();
 }

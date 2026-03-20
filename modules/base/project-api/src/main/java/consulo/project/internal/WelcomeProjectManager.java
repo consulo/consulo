@@ -49,6 +49,5 @@ public interface WelcomeProjectManager {
     /**
      * Returns the currently open welcome project, or {@code null} if no welcome project is open.
      */
-    @Nullable
-    Project getOpenWelcomeProject();
+    @Nullable Project getOpenWelcomeProject();
 }

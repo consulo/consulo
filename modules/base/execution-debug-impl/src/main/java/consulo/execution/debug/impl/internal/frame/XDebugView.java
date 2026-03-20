@@ -50,9 +50,8 @@ public abstract class XDebugView implements Disposable {
 
   public abstract void processSessionEvent(SessionEvent event, XDebugSession session);
 
-  @Nullable
   @Deprecated
-  public static XDebugSession getSession(Component component) {
+  public static @Nullable XDebugSession getSession(Component component) {
     return DataManager.getInstance().getDataContext(component).getData(XDebugSession.DATA_KEY);
   }
 

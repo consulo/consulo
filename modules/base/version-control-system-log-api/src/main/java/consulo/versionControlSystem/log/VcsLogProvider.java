@@ -116,8 +116,7 @@ public interface VcsLogProvider {
    * Returns the name of current user as specified for the given root,
    * or null if user didn't configure his name in the VCS settings.
    */
-  @Nullable
-  VcsUser getCurrentUser(VirtualFile root) throws VcsException;
+  @Nullable VcsUser getCurrentUser(VirtualFile root) throws VcsException;
 
   /**
    * Returns the list of names of branches/references which contain the given commit.
@@ -140,8 +139,7 @@ public interface VcsLogProvider {
    * @param root root for which branch is requested.
    * @return branch that is currently checked out in the specified root.
    */
-  @Nullable
-  String getCurrentBranch(VirtualFile root);
+  @Nullable String getCurrentBranch(VirtualFile root);
 
   interface Requirements {
 

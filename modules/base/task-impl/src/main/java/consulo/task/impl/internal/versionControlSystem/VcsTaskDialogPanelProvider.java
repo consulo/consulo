@@ -30,15 +30,13 @@ import org.jspecify.annotations.Nullable;
  */
 @ExtensionImpl
 public class VcsTaskDialogPanelProvider extends TaskDialogPanelProvider {
-  @Nullable
   @Override
-  public TaskDialogPanel getOpenTaskPanel(Project project, Task task) {
+  public @Nullable TaskDialogPanel getOpenTaskPanel(Project project, Task task) {
     return TaskManager.getManager(project).isVcsEnabled() ? new VcsOpenTaskPanel(project, task) : null;
   }
 
-  @Nullable
   @Override
-  public TaskDialogPanel getCloseTaskPanel(Project project, LocalTask task) {
+  public @Nullable TaskDialogPanel getCloseTaskPanel(Project project, LocalTask task) {
     return TaskManager.getManager(project).isVcsEnabled() ? new VcsCloseTaskPanel(project, task) : null;
   }
 }

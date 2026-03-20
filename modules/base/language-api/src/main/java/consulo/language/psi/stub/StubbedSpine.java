@@ -32,13 +32,11 @@ public interface StubbedSpine {
   /**
    * @return the stubbed PSI element at the given index or null if index is greater than the spine size
    */
-  @Nullable
-  PsiElement getStubPsi(int index);
+  @Nullable PsiElement getStubPsi(int index);
 
   /**
    * @return the stubbed PSI element's type at the given index or null if index is greater than the spine size.
    * This method avoids PSI element allocation if possible.
    */
-  @Nullable
-  IElementType getStubType(int index);
+  @Nullable IElementType getStubType(int index);
 }

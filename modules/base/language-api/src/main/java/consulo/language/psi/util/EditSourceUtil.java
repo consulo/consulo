@@ -29,11 +29,10 @@ public class EditSourceUtil {
     private EditSourceUtil() {
     }
 
-    @Nullable
     @RequiredReadAction
     @Deprecated
     @DeprecationInfo("Use PsiNavigationSupport")
-    public static Navigatable getDescriptor(PsiElement element) {
+    public static @Nullable Navigatable getDescriptor(PsiElement element) {
         return PsiNavigationSupport.getInstance().getDescriptor(element);
     }
 

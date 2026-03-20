@@ -57,9 +57,8 @@ public class DesktopDataManagerImpl extends BaseDataManager {
     }
 
     @Override
-    @Nullable
     @SuppressWarnings("unchecked")
-    protected <T> T doGetData(Key<T> dataId) {
+    protected <T> @Nullable T doGetData(Key<T> dataId) {
       Component component = getComponent();
       if (PlatformDataKeys.IS_MODAL_CONTEXT == dataId) {
         if (component == null) {
@@ -117,9 +116,8 @@ public class DesktopDataManagerImpl extends BaseDataManager {
   }
 
   @Override
-  @Nullable
   @SuppressWarnings("deprecation")
-  public DataProvider getDataProviderEx(Component component) {
+  public @Nullable DataProvider getDataProviderEx(Component component) {
     // UiDataProvider takes priority over DataProvider
     if (component instanceof UiDataProvider uiProvider) {
       return new UiDataProviderAdapter(uiProvider);

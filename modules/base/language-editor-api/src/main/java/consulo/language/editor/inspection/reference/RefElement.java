@@ -34,8 +34,7 @@ public interface RefElement extends RefEntity {
    * @return the node for the module, or null if the element is not valid or the module
    * was not found.
    */
-  @Nullable
-  RefModule getModule();
+  @Nullable RefModule getModule();
 
   /**
    * Returns the PSI element corresponding to the node.
@@ -101,8 +100,7 @@ public interface RefElement extends RefEntity {
   
   RefElement getContainingEntry();
 
-  @Nullable
-  PsiFile getContainingFile();
+  @Nullable PsiFile getContainingFile();
 
   default boolean isSuppressed(String... toolId) {
     return false;

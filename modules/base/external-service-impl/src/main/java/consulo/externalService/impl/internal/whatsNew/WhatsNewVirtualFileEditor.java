@@ -320,9 +320,8 @@ public class WhatsNewVirtualFileEditor extends ConfigurationFileEditor {
         return null;
     }
 
-    @Nullable
     @Override
-    public JComponent getPreferredFocusedComponent() {
+    public @Nullable JComponent getPreferredFocusedComponent() {
         return myEditorPanel;
     }
 

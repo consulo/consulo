@@ -81,9 +81,8 @@ class FileLoader extends Loader {
 
   private final DirEntry root = new DirEntry(0, "");
 
-  @Nullable
   @Override
-  Resource getResource(String name) {
+  @Nullable Resource getResource(String name) {
     try {
       if (myConfiguration.myLazyClassloadingCaches) {
         DirEntry lastEntry = root;

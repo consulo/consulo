@@ -44,9 +44,8 @@ public class ExpandMacroToPathMap extends PathMacroMap {
   }
 
   @Contract("null,_ -> null; !null,_ -> !null")
-  @Nullable
   @Override
-  public String substitute(@Nullable String text, boolean caseSensitive) {
+  public @Nullable String substitute(@Nullable String text, boolean caseSensitive) {
     if (text == null) {
       //noinspection ConstantConditions
       return null;

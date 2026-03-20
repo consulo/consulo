@@ -244,9 +244,8 @@ public class InspectionProfileManagerImpl extends InspectionProfileManager imple
         return mySeverityRegistrar;
     }
 
-    @Nullable
     @Override
-    public Element getState() {
+    public @Nullable Element getState() {
         Element state = new Element("state");
         try {
             mySeverityRegistrar.writeExternal(state);

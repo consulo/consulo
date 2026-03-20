@@ -928,9 +928,8 @@ public class KeymapPanel implements SearchableConfigurable, Configurable.NoScrol
         return "preferences.keymap";
     }
 
-    @Nullable
     @Override
-    public String getParentId() {
+    public @Nullable String getParentId() {
         return null;
     }
 

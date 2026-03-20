@@ -240,9 +240,8 @@ public abstract class ThreesideTextDiffViewerEx extends ThreesideTextDiffViewer 
     // Misc
     //
 
-    @Nullable
     @RequiredUIAccess
-    protected ThreesideDiffChangeBase getSelectedChange(ThreeSide side) {
+    protected @Nullable ThreesideDiffChangeBase getSelectedChange(ThreeSide side) {
         int caretLine = getEditor(side).getCaretModel().getLogicalPosition().line;
 
         for (ThreesideDiffChangeBase change : getChanges()) {
@@ -377,9 +376,8 @@ public abstract class ThreesideTextDiffViewerEx extends ThreesideTextDiffViewer 
     }
 
     protected class MyStatusPanel extends StatusPanel {
-        @Nullable
         @Override
-        protected String getMessage() {
+        protected @Nullable String getMessage() {
             if (myChangesCount < 0 || myConflictsCount < 0) {
                 return null;
             }

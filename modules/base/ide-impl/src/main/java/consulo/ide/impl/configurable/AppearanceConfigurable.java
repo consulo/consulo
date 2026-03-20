@@ -246,9 +246,8 @@ public class AppearanceConfigurable extends SimpleConfigurable<AppearanceConfigu
         return "appearance";
     }
 
-    @Nullable
     @Override
-    public String getParentId() {
+    public @Nullable String getParentId() {
         return StandardConfigurableIds.GENERAL_GROUP;
     }
 

@@ -39,9 +39,8 @@ public interface LanguageGraphProvider<V> {
     @RequiredReadAction
     String getURL(V element);
 
-    @Nullable
     @RequiredReadAction
-    PsiElement restoreFromURL(Project project, String url);
+    @Nullable PsiElement restoreFromURL(Project project, String url);
 
     boolean isSupported(PsiElement element);
 

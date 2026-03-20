@@ -173,8 +173,7 @@ final class ServiceViewDragHelper {
       return myItems;
     }
 
-    @Nullable
-    ServiceViewContributor getContributor() {
+    @Nullable ServiceViewContributor getContributor() {
       return myContributor;
     }
 

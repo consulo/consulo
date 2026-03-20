@@ -37,8 +37,7 @@ public interface StructureViewModel extends TreeModel, Disposable {
    * @return the selected element, or null if the current editor position does not
    * correspond to any element that can be shown in the structure view.
    */
-  @Nullable
-  Object getCurrentEditorElement();
+  @Nullable Object getCurrentEditorElement();
 
   /**
    * Adds a listener which gets notified when the selection in the editor linked to the

@@ -88,9 +88,8 @@ public class CompoundRunConfiguration extends RunConfigurationBase implements Wi
     if (getSetToRun().isEmpty()) throw new RuntimeConfigurationException("There is nothing to run");
   }
 
-  @Nullable
   @Override
-  public RunProfileState getState(Executor executor, ExecutionEnvironment environment) throws ExecutionException {
+  public @Nullable RunProfileState getState(Executor executor, ExecutionEnvironment environment) throws ExecutionException {
     try {
       checkConfiguration();
     }
@@ -98,9 +97,8 @@ public class CompoundRunConfiguration extends RunConfigurationBase implements Wi
       throw new ExecutionException(e.getMessage());
     }
     return new RunProfileState() {
-      @Nullable
       @Override
-      public ExecutionResult execute(Executor executor, ProgramRunner runner) throws ExecutionException {
+      public @Nullable ExecutionResult execute(Executor executor, ProgramRunner runner) throws ExecutionException {
         ApplicationManager.getApplication().invokeLater(() -> {
           RunManagerImpl manager = RunManagerImpl.getInstanceImpl(getProject());
           for (RunConfiguration configuration : getSetToRun()) {

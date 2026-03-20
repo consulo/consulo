@@ -32,9 +32,8 @@ import java.util.List;
 
 @UsedInPlugin
 public abstract class DvcsQuickListContentProvider implements VcsQuickListContentProvider {
-    @Nullable
     @Override
-    public List<AnAction> getVcsActions(
+    public @Nullable List<AnAction> getVcsActions(
         @Nullable Project project,
         @Nullable AbstractVcs activeVcs,
         @Nullable DataContext dataContext

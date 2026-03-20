@@ -39,9 +39,8 @@ public abstract class RenameableFakePsiElement extends FakePsiElement implements
         myParent = parent;
     }
 
-    @Nullable
     @Override
-    public Image getIcon() {
+    public @Nullable Image getIcon() {
         return null;
     }
 
@@ -55,10 +54,9 @@ public abstract class RenameableFakePsiElement extends FakePsiElement implements
         return myParent.getContainingFile();
     }
 
-    @Nullable
     @Override
     @RequiredReadAction
-    public abstract String getName();
+    public abstract @Nullable String getName();
 
     @Override
     

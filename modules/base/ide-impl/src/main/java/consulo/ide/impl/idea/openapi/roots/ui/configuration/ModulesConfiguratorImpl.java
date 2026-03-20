@@ -312,9 +312,8 @@ public class ModulesConfiguratorImpl implements ModulesConfigurator, ModuleEdito
         return myModuleModelCommitted;
     }
 
-    @Nullable
     @Override
-    public ModifiableRootModel getModuleEditorModelProxy(Module module) {
+    public @Nullable ModifiableRootModel getModuleEditorModelProxy(Module module) {
         ModuleEditor moduleEditor = getModuleEditor(module);
         if (moduleEditor != null) {
             return moduleEditor.getModifiableRootModelProxy();

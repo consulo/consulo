@@ -42,9 +42,8 @@ public interface PsiStructureViewFactory extends LanguageExtension {
     return Application.get().getExtensionPoint(PsiStructureViewFactory.class).getOrBuildCache(KEY).get(language);
   }
 
-  @Nullable
   @RequiredReadAction
-  static StructureViewBuilder createBuilderForFile(PsiFile file) {
+  static @Nullable StructureViewBuilder createBuilderForFile(PsiFile file) {
     PsiStructureViewFactory factory = forLanguage(file.getLanguage());
     if (factory != null) {
       return factory.getStructureViewBuilder(file);
@@ -52,6 +51,5 @@ public interface PsiStructureViewFactory extends LanguageExtension {
     return null;
   }
 
-  @Nullable
-  StructureViewBuilder getStructureViewBuilder(PsiFile psiFile);
+  @Nullable StructureViewBuilder getStructureViewBuilder(PsiFile psiFile);
 }

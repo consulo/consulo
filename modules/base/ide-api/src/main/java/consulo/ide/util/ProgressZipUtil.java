@@ -29,8 +29,7 @@ public class ProgressZipUtil {
         /**
          * Return null to skip the file
          */
-        @Nullable
-        byte[] processContent(byte[] content, File file) throws IOException;
+        @Nullable byte[] processContent(byte[] content, File file) throws IOException;
     }
 
     public static void unzipWithProgressSynchronously(@Nullable Project project, String progressTitle, final File zipArchive, final File extractToDir)

@@ -103,9 +103,8 @@ public class WebIdeFrameImpl implements IdeFrameEx, Disposable {
         return null;
     }
 
-    @Nullable
     @Override
-    public Project getProject() {
+    public @Nullable Project getProject() {
         return myProject;
     }
 
@@ -119,15 +118,13 @@ public class WebIdeFrameImpl implements IdeFrameEx, Disposable {
 
     }
 
-    @Nullable
     @Override
-    public <E extends IdeRootPaneNorthExtension> E getNorthExtension(Class<? extends E> extensioClass) {
+    public <E extends IdeRootPaneNorthExtension> @Nullable E getNorthExtension(Class<? extends E> extensioClass) {
         return null;
     }
 
-    @Nullable
     @Override
-    public BalloonLayout getBalloonLayout() {
+    public @Nullable BalloonLayout getBalloonLayout() {
         return null;
     }
 

@@ -77,8 +77,7 @@ public interface NavBarUI {
    * @param focused is element focused (can be selected, but has no focus - while NavBarPopup showing)
    * @return NavBarItem foreground
    */
-  @Nullable
-  Color getForeground(boolean selected, boolean focused, boolean inactive);
+  @Nullable Color getForeground(boolean selected, boolean focused, boolean inactive);
 
   void doPaintNavBarItem(Graphics2D g, NavBarItem item, NavBarPanel navbar);
 

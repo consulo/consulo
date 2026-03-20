@@ -23,8 +23,7 @@ import java.util.stream.Stream;
 
 public interface IdePopupEventDispatcher {
 
-  @Nullable
-  Component getComponent();
+  @Nullable Component getComponent();
 
   
   Stream<JBPopup> getPopupStream();

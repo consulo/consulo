@@ -183,8 +183,7 @@ public final class SmartPointerManagerImpl extends SmartPointerManager {
     }
   }
 
-  @Nullable
-  SmartPointerTracker getTracker(VirtualFile containingFile) {
+  @Nullable SmartPointerTracker getTracker(VirtualFile containingFile) {
     return containingFile.getUserData(POINTERS_KEY);
   }
 

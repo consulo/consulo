@@ -36,9 +36,8 @@ public class WebHorizontalTwoComponentSplitLayoutImpl extends VaadinComponentDel
         public Vaadin() {
             setOrientation(Orientation.HORIZONTAL);
         }
-        @Nullable
         @Override
-        public Component toUIComponent() {
+        public @Nullable Component toUIComponent() {
             return WebHorizontalTwoComponentSplitLayoutImpl.this;
         }
 

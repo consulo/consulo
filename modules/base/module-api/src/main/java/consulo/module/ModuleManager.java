@@ -81,9 +81,8 @@ public abstract class ModuleManager {
    * @param name the name of the module to find.
    * @return the module instance, or null if no module with such name exists.
    */
-  @Nullable
   @RequiredReadAction
-  public abstract Module findModuleByName(String name);
+  public abstract @Nullable Module findModuleByName(String name);
 
   /**
    * Returns the list of modules sorted by dependency (the modules which do not depend
@@ -167,9 +166,8 @@ public abstract class ModuleManager {
    * @param module the module for which the path is requested.
    * @return the path to the group for the module, or null if the module does not belong to any group.
    */
-  @Nullable
   @RequiredReadAction
-  public abstract String[] getModuleGroupPath(Module module);
+  public abstract @Nullable String[] getModuleGroupPath(Module module);
 
   public @Nullable UnloadedModuleDescription getUnloadedModuleDescription(String name) {
     // we not support module unloading

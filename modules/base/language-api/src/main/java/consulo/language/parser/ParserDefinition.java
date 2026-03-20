@@ -41,10 +41,9 @@ import org.jspecify.annotations.Nullable;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface ParserDefinition extends LanguageExtension {
-    @Nullable
     @Deprecated
     @DeprecationInfo("prefer Application parameter")
-    static ParserDefinition forLanguage(Language language) {
+    static @Nullable ParserDefinition forLanguage(Language language) {
         return forLanguage(Application.get(), language);
     }
 

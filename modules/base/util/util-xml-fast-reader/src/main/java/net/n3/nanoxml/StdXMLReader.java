@@ -58,17 +58,13 @@ public class StdXMLReader
    private class StackedReader
    {
 
-      @Nullable
-      PushbackReader pbReader;
+      @Nullable PushbackReader pbReader;
 
-      @Nullable
-      LineNumberReader lineReader;
+      @Nullable LineNumberReader lineReader;
 
-      @Nullable
-      URL systemId;
+      @Nullable URL systemId;
 
-      @Nullable
-      String publicId;
+      @Nullable String publicId;
 
       public PushbackReader getRequiredPbReader() {
          return Objects.requireNonNull(pbReader);

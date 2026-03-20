@@ -23,6 +23,5 @@ import java.awt.*;
  * @since 2005-11-11
  */
 public interface PopupOwner {
-  @Nullable
-  Point getBestPopupPosition();
+  @Nullable Point getBestPopupPosition();
 }

@@ -45,9 +45,8 @@ public class DiagramVirtualFileSystem extends BaseVirtualFileSystem {
         return PROTOCOL;
     }
 
-    @Nullable
     @Override
-    public VirtualFile findFileByPath(String path) {
+    public @Nullable VirtualFile findFileByPath(String path) {
         List<String> parts = StringUtil.split(path, URLUtil.ARCHIVE_SEPARATOR);
         if (parts.size() < 3) {
             return null;
@@ -56,9 +55,8 @@ public class DiagramVirtualFileSystem extends BaseVirtualFileSystem {
         return new DiagramVirtualFile(parts.get(1), path, this);
     }
 
-    @Nullable
     @Override
-    public VirtualFile refreshAndFindFileByPath(String path) {
+    public @Nullable VirtualFile refreshAndFindFileByPath(String path) {
         return findFileByPath(path);
     }
 

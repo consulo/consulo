@@ -27,8 +27,7 @@ import org.jspecify.annotations.Nullable;
  * Should be implemented to include corresponding pass in code smells check
  */
 public interface MainHighlightingPassFactory extends TextEditorHighlightingPassFactory {
-  @Nullable
-  TextEditorHighlightingPass createMainHighlightingPass(PsiFile file,
+  @Nullable TextEditorHighlightingPass createMainHighlightingPass(PsiFile file,
                                                         Document document,
                                                         HighlightInfoProcessor highlightInfoProcessor);
 }

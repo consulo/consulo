@@ -46,9 +46,8 @@ public class SymbolPresentationUtil {
     return element.getText();
   }
 
-  @Nullable
   @RequiredReadAction
-  public static String getSymbolContainerText(PsiElement element) {
+  public static @Nullable String getSymbolContainerText(PsiElement element) {
     if (element instanceof NavigationItem) {
       ItemPresentation presentation = ((NavigationItem)element).getPresentation();
       if (presentation != null){

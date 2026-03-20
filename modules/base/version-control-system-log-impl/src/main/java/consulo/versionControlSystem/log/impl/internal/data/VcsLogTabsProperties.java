@@ -39,9 +39,8 @@ public class VcsLogTabsProperties implements PersistentStateComponent<VcsLogTabs
   public VcsLogTabsProperties() {
   }
 
-  @Nullable
   @Override
-  public State getState() {
+  public @Nullable State getState() {
     return myState;
   }
 

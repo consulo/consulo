@@ -36,9 +36,8 @@ public class SharedPsiElementImplUtil {
   private SharedPsiElementImplUtil() {
   }
 
-  @Nullable
   @RequiredReadAction
-  public static PsiReference findReferenceAt(PsiElement thisElement, int offset, @Nullable Language lang) {
+  public static @Nullable PsiReference findReferenceAt(PsiElement thisElement, int offset, @Nullable Language lang) {
     if (thisElement == null) return null;
     PsiElement element = lang != null ? thisElement.getContainingFile().getViewProvider().findElementAt(offset, lang) :
                          thisElement.findElementAt(offset);
@@ -63,9 +62,8 @@ public class SharedPsiElementImplUtil {
                                  referencesList.get(referencesList.size() - 1).getElement());
   }
 
-  @Nullable
   @RequiredReadAction
-  public static PsiReference findReferenceAt(PsiElement thisElement, int offset) {
+  public static @Nullable PsiReference findReferenceAt(PsiElement thisElement, int offset) {
     return findReferenceAt(thisElement, offset, null);
   }
 

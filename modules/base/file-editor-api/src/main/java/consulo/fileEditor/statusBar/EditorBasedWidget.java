@@ -50,9 +50,8 @@ public abstract class EditorBasedWidget implements StatusBarWidget, FileEditorMa
     return myFactory.getId();
   }
 
-  @Nullable
   @RequiredUIAccess
-  protected final Editor getEditor() {
+  protected final @Nullable Editor getEditor() {
     Project project = getProject();
     if (project.isDisposed()) return null;
 
@@ -122,9 +121,8 @@ public abstract class EditorBasedWidget implements StatusBarWidget, FileEditorMa
     return editor != null && !editor.isDisposed() ? editor : null;
   }
 
-  @Nullable
   @Deprecated
-  protected VirtualFile getSelectedFile() {
+  protected @Nullable VirtualFile getSelectedFile() {
     Editor editor = getEditor();
     if (editor == null) return null;
     Document document = editor.getDocument();

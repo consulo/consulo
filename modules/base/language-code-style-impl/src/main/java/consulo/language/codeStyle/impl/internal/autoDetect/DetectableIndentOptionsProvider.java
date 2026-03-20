@@ -51,10 +51,9 @@ public class DetectableIndentOptionsProvider extends FileIndentOptionsProvider {
     private boolean myIsEnabledInTest;
     private final Map<VirtualFile, IndentOptions> myDiscardedOptions = Maps.newWeakHashMap();
 
-    @Nullable
     @Override
     @RequiredReadAction
-    public IndentOptions getIndentOptions(CodeStyleSettings settings, PsiFile file) {
+    public @Nullable IndentOptions getIndentOptions(CodeStyleSettings settings, PsiFile file) {
         if (!isEnabled(settings, file)) {
             return null;
         }
@@ -157,9 +156,8 @@ public class DetectableIndentOptionsProvider extends FileIndentOptionsProvider {
         return indentOptions instanceof TimeStampedIndentOptions timeStampedIndentOptions && timeStampedIndentOptions.isDetected();
     }
 
-    @Nullable
     @Override
-    public IndentStatusBarUIContributor getIndentStatusBarUiContributor(IndentOptions indentOptions) {
+    public @Nullable IndentStatusBarUIContributor getIndentStatusBarUiContributor(IndentOptions indentOptions) {
         return new MyUIContributor(indentOptions);
     }
 

@@ -164,18 +164,16 @@ public class WelcomeProjectManagerImpl implements WelcomeProjectManager, Persist
         return welcomeProject != null && ((ProjectManagerImpl) myProjectManager).isProjectOpened(welcomeProject);
     }
 
-    @Nullable
     @Override
-    public Project getOpenWelcomeProject() {
+    public @Nullable Project getOpenWelcomeProject() {
         return myOpenWelcomeProject;
     }
 
     // region PersistentStateComponent
 
     @RequiredWriteAction
-    @Nullable
     @Override
-    public Element getState() {
+    public @Nullable Element getState() {
         // If welcome project is currently open, save it and capture fresh state
         WelcomeProjectImpl welcomeProject = myOpenWelcomeProject;
         if (welcomeProject != null && !Disposer.isDisposed(welcomeProject)) {

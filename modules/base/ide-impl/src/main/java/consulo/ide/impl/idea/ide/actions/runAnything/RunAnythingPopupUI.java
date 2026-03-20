@@ -969,9 +969,8 @@ public class RunAnythingPopupUI extends BigPopupUI {
                 mySelectedExecutingContext = context;
             }
 
-            @Nullable
             @Override
-            public RunAnythingContext getSelectedContext() {
+            public @Nullable RunAnythingContext getSelectedContext() {
                 return mySelectedExecutingContext;
             }
         };

@@ -79,9 +79,8 @@ public class PackagingErrorDialog extends DialogWrapper {
     }
   }
 
-  @Nullable
   @Override
-  protected JComponent createCenterPanel() {
+  protected @Nullable JComponent createCenterPanel() {
     return myMainPanel;
   }
 }

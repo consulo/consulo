@@ -25,6 +25,5 @@ import org.jspecify.annotations.Nullable;
  * @since 7.0.3
  */
 public interface FileHyperlinkInfo extends HyperlinkInfo {
-  @Nullable
-  OpenFileDescriptor getDescriptor();
+  @Nullable OpenFileDescriptor getDescriptor();
 }

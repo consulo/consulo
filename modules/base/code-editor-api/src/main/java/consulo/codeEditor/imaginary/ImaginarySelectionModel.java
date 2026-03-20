@@ -43,9 +43,8 @@ public class ImaginarySelectionModel implements SelectionModel {
         return myEditor.getCaretModel().getCurrentCaret().getSelectionStart();
     }
 
-    @Nullable
     @Override
-    public VisualPosition getSelectionStartPosition() {
+    public @Nullable VisualPosition getSelectionStartPosition() {
         return myEditor.getCaretModel().getCurrentCaret().getSelectionStartPosition();
     }
 
@@ -54,21 +53,18 @@ public class ImaginarySelectionModel implements SelectionModel {
         return myEditor.getCaretModel().getCurrentCaret().getSelectionEnd();
     }
 
-    @Nullable
     @Override
-    public VisualPosition getSelectionEndPosition() {
+    public @Nullable VisualPosition getSelectionEndPosition() {
         return myEditor.getCaretModel().getCurrentCaret().getSelectionEndPosition();
     }
 
-    @Nullable
     @Override
-    public String getSelectedText() {
+    public @Nullable String getSelectedText() {
         return myEditor.getCaretModel().getCurrentCaret().getSelectedText();
     }
 
-    @Nullable
     @Override
-    public String getSelectedText(boolean allCarets) {
+    public @Nullable String getSelectedText(boolean allCarets) {
         return myEditor.getDocument().getText(TextRange.create(getSelectionStart(), getSelectionEnd()));
     }
 
@@ -77,9 +73,8 @@ public class ImaginarySelectionModel implements SelectionModel {
         return myEditor.getCaretModel().getCurrentCaret().getLeadSelectionOffset();
     }
 
-    @Nullable
     @Override
-    public VisualPosition getLeadSelectionPosition() {
+    public @Nullable VisualPosition getLeadSelectionPosition() {
         return myEditor.getCaretModel().getCurrentCaret().getLeadSelectionPosition();
     }
 

@@ -62,8 +62,7 @@ public interface LibraryEditor {
 
   LibraryProperties getProperties();
 
-  @Nullable
-  LibraryType<?> getType();
+  @Nullable LibraryType<?> getType();
 
   void addRoots(Collection<? extends OrderRoot> roots);
 }

@@ -30,8 +30,7 @@ public interface FileStatusMap {
     /**
      * @return null for processed file, whole file for untouched or entirely dirty file, range(usually code block) for dirty region (optimization)
      */
-    @Nullable
-    TextRange getFileDirtyScope(Document document, int passId);
+    @Nullable TextRange getFileDirtyScope(Document document, int passId);
 
     void setErrorFoundFlag(Project project, Document document, boolean errorFound);
 

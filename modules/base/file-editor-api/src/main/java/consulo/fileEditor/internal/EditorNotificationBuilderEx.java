@@ -30,6 +30,5 @@ public interface EditorNotificationBuilderEx extends EditorNotificationBuilder, 
     throw new AbstractMethodError();
   }
 
-  @Nullable
-  Object getIntentionAction();
+  @Nullable Object getIntentionAction();
 }

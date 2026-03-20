@@ -36,9 +36,8 @@ import org.jspecify.annotations.Nullable;
 public class WebHyperlinkImpl extends VaadinComponentDelegate<WebHyperlinkImpl.Vaadin> implements Hyperlink {
     @Tag("a")
     public class Vaadin extends SimpleComponent implements ClickNotifier<Vaadin>, HasText, FromVaadinComponentWrapper {
-        @Nullable
         @Override
-        public Component toUIComponent() {
+        public @Nullable Component toUIComponent() {
             return WebHyperlinkImpl.this;
         }
     }
@@ -72,9 +71,8 @@ public class WebHyperlinkImpl extends VaadinComponentDelegate<WebHyperlinkImpl.V
         // TODO getVaadinComponent().setImage(icon);
     }
 
-    @Nullable
     @Override
-    public Image getIcon() {
+    public @Nullable Image getIcon() {
         return null;
         // TODO return getVaadinComponent().myImage;
     }

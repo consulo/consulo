@@ -41,9 +41,8 @@ public class ServiceViewGroupByGroup extends NonEmptyActionGroup {
         return true;
     }
 
-    @Nullable
     @Override
-    protected Image getTemplateIcon() {
+    protected @Nullable Image getTemplateIcon() {
         return PlatformIconGroup.actionsGroupby();
     }
 }

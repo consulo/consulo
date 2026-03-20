@@ -387,9 +387,8 @@ public class VcsLogPersistentIndex implements VcsLogIndex, Disposable {
         return TroveUtil.intersect(filteredByMessage, filteredByPath, filteredByUser);
     }
 
-    @Nullable
     @Override
-    public String getFullMessage(int index) {
+    public @Nullable String getFullMessage(int index) {
         if (myIndexStorage != null) {
             try {
                 return myIndexStorage.messages.get(index);

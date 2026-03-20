@@ -29,9 +29,8 @@ import org.jspecify.annotations.Nullable;
  */
 @ExtensionImpl
 public class WindowsCredentialStoreFactory implements CredentialStoreFactory {
-    @Nullable
     @Override
-    public CredentialStore create(Platform platform) {
+    public @Nullable CredentialStore create(Platform platform) {
         if (platform.os().isWindows() && JnaLoader.isLoaded()) {
             return new NativeCredentialStoreWrapper(new WindowsCredentialStore());
         }

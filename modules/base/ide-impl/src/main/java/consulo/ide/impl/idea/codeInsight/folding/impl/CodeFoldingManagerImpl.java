@@ -78,9 +78,8 @@ public class CodeFoldingManagerImpl extends CodeFoldingManager implements Dispos
     }
   }
 
-  @Nullable
   @Override
-  public CodeFoldingState buildInitialFoldings(Document document) {
+  public @Nullable CodeFoldingState buildInitialFoldings(Document document) {
     if (myProject.isDisposed()) {
       return null;
     }
@@ -112,9 +111,8 @@ public class CodeFoldingManagerImpl extends CodeFoldingManager implements Dispos
     };
   }
 
-  @Nullable
   @Override
-  public Boolean isCollapsedByDefault(FoldRegion region) {
+  public @Nullable Boolean isCollapsedByDefault(FoldRegion region) {
     return region.getUserData(UpdateFoldRegionsOperation.COLLAPSED_BY_DEFAULT);
   }
 

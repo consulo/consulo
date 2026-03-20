@@ -49,14 +49,12 @@ public interface XDebuggerManager {
     
     XDebugSession[] getDebugSessions();
 
-    @Nullable
-    XDebugSession getDebugSession(ExecutionConsole executionConsole);
+    @Nullable XDebugSession getDebugSession(ExecutionConsole executionConsole);
 
     
     <T extends XDebugProcess> List<? extends T> getDebugProcesses(Class<T> processClass);
 
-    @Nullable
-    XDebugSession getCurrentSession();
+    @Nullable XDebugSession getCurrentSession();
 
 
     /**

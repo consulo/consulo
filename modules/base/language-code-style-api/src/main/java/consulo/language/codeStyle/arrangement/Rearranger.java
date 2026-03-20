@@ -71,8 +71,7 @@ public interface Rearranger<E extends ArrangementEntry> extends LanguageExtensio
      * available at the given context plus newly created entry for the given element;
      * <code>null</code> otherwise
      */
-    @Nullable
-    Pair<E, List<E>> parseWithNew(
+    @Nullable Pair<E, List<E>> parseWithNew(
         PsiElement root,
         @Nullable Document document,
         Collection<TextRange> ranges,

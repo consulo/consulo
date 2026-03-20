@@ -18,6 +18,5 @@ package consulo.ui.ex.awt.internal;
 import org.jspecify.annotations.Nullable;
 
 public interface ListWithInlineButtons {
-    @Nullable
-    Integer getSelectedButtonIndex();
+    @Nullable Integer getSelectedButtonIndex();
 }

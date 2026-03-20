@@ -59,8 +59,7 @@ public interface CachingCommittedChangesProvider<T extends CommittedChangeList, 
    * @param location the location where changes are requested.
    * @return the files which may contain the changes, or null if the call is not supported.
    */
-  @Nullable
-  Collection<FilePath> getIncomingFiles(RepositoryLocation location) throws VcsException;
+  @Nullable Collection<FilePath> getIncomingFiles(RepositoryLocation location) throws VcsException;
 
   /**
    * Returns true if the changelist number restriction should be used when refreshing the cache,
@@ -75,9 +74,7 @@ public interface CachingCommittedChangesProvider<T extends CommittedChangeList, 
    *
    * @return the name of the concept, or null if the VCS (like CVS) does not use changelist numbering.
    */
-  @Nullable
-  
-  String getChangelistTitle();
+  @Nullable String getChangelistTitle();
 
   boolean isChangeLocallyAvailable(FilePath filePath, @Nullable VcsRevisionNumber localRevision, VcsRevisionNumber changeRevision, T changeList);
 

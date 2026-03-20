@@ -58,9 +58,8 @@ public class PreCachedDataContext implements AsyncDataContext, UserDataHolder {
         myProviders = providers;
     }
 
-    @Nullable
     @Override
-    public <T> T getData(Key<T> dataId) {
+    public <T> @Nullable T getData(Key<T> dataId) {
         for (DataProvider provider : myProviders) {
             T data = myDataManager.getDataFromProvider(provider, dataId, null);
             if (data != null) {
@@ -110,9 +109,8 @@ public class PreCachedDataContext implements AsyncDataContext, UserDataHolder {
         }
 
         return new DataProvider() {
-            @Nullable
             @Override
-            public Object getData(Key<?> dataKey) {
+            public @Nullable Object getData(Key<?> dataKey) {
                 long start = System.currentTimeMillis();
                 try {
                     return provider.getData(dataKey);

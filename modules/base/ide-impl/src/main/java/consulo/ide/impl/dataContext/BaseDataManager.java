@@ -121,9 +121,8 @@ public abstract class BaseDataManager implements DataManagerEx {
         }
 
         @Override
-        @Nullable
         @SuppressWarnings("unchecked")
-        protected <T> T doGetData(Key<T> dataId) {
+        protected <T> @Nullable T doGetData(Key<T> dataId) {
             consulo.ui.Component component = getComponent();
             if (PlatformDataKeys.IS_MODAL_CONTEXT == dataId) {
                 if (component == null) {

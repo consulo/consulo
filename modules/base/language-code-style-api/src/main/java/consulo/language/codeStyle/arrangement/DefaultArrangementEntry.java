@@ -45,9 +45,8 @@ public class DefaultArrangementEntry implements ArrangementEntry {
     myEndOffset = endOffset;
   }
 
-  @Nullable
   @Override
-  public ArrangementEntry getParent() {
+  public @Nullable ArrangementEntry getParent() {
     return myParent;
   }
 
@@ -61,9 +60,8 @@ public class DefaultArrangementEntry implements ArrangementEntry {
     myChildren.add(entry);
   }
 
-  @Nullable
   @Override
-  public List<? extends ArrangementEntry> getDependencies() {
+  public @Nullable List<? extends ArrangementEntry> getDependencies() {
     return myDependencies;
   }
 

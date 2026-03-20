@@ -354,9 +354,8 @@ class LookupUi {
             return myActions.toArray(AnAction[]::new);
         }
 
-        @Nullable
         @Override
-        protected Image getTemplateIcon() {
+        protected @Nullable Image getTemplateIcon() {
             return PlatformIconGroup.actionsMorevertical();
         }
 

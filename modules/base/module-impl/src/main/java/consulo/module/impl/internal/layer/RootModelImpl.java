@@ -209,9 +209,8 @@ public class RootModelImpl extends RootModelBase implements ModifiableRootModel 
         return getCurrentLayer().addInvalidModuleEntry(name);
     }
 
-    @Nullable
     @Override
-    public LibraryOrderEntry findLibraryOrderEntry(Library library) {
+    public @Nullable LibraryOrderEntry findLibraryOrderEntry(Library library) {
         return getCurrentLayer().findLibraryOrderEntry(library);
     }
 
@@ -460,9 +459,8 @@ public class RootModelImpl extends RootModelBase implements ModifiableRootModel 
         myCachedCurrentLayer = null;
     }
 
-    @Nullable
     @Override
-    public ModifiableModuleRootLayer setCurrentLayer(String name) {
+    public @Nullable ModifiableModuleRootLayer setCurrentLayer(String name) {
         assertWritable();
         ModuleRootLayerImpl moduleRootLayer = myLayers.get(name);
         if (moduleRootLayer == null) {
@@ -521,9 +519,8 @@ public class RootModelImpl extends RootModelBase implements ModifiableRootModel 
         return Collections.<String, ModuleRootLayer>unmodifiableSortedMap(myLayers);
     }
 
-    @Nullable
     @Override
-    public ModuleRootLayer findLayerByName(String name) {
+    public @Nullable ModuleRootLayer findLayerByName(String name) {
         return myLayers.get(name);
     }
 }

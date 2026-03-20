@@ -1269,8 +1269,7 @@ public class EditorGutterComponentImpl extends JComponent implements EditorGutte
         return startFoldRegion == null || !startFoldRegion.equals(endFoldRegion);
     }
 
-    @Nullable
-    Rectangle getLineRendererRectangle(RangeHighlighter highlighter) {
+    @Nullable Rectangle getLineRendererRectangle(RangeHighlighter highlighter) {
         if (!isLineMarkerVisible(highlighter)) {
             return null;
         }
@@ -1673,8 +1672,7 @@ public class EditorGutterComponentImpl extends JComponent implements EditorGutte
         return 0;
     }
 
-    @Nullable
-    EditorMouseEventArea getEditorMouseAreaByOffset(int offset) {
+    @Nullable EditorMouseEventArea getEditorMouseAreaByOffset(int offset) {
         return myLayout.getEditorMouseAreaByOffset(offset);
     }
 
@@ -1767,9 +1765,8 @@ public class EditorGutterComponentImpl extends JComponent implements EditorGutte
         }
     }
 
-    @Nullable
     @Override
-    public FoldRegion findFoldingAnchorAt(int x, int y) {
+    public @Nullable FoldRegion findFoldingAnchorAt(int x, int y) {
         if (!myEditor.getSettings().isFoldingOutlineShown()) {
             return null;
         }
@@ -2550,8 +2547,7 @@ public class EditorGutterComponentImpl extends JComponent implements EditorGutte
         myAccessibleGutterLine = line;
     }
 
-    @Nullable
-    AccessibleGutterLine getCurrentAccessibleLine() {
+    @Nullable AccessibleGutterLine getCurrentAccessibleLine() {
         return myAccessibleGutterLine;
     }
 

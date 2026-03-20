@@ -63,8 +63,7 @@ public abstract class TextFragment implements LineFragment {
         return myView != null && myView.getEditor().getCharacterGrid() != null;
     }
 
-    @Nullable
-    Float adjustedWidthOrNull(int codePoint, float width) {
+    @Nullable Float adjustedWidthOrNull(int codePoint, float width) {
         assert myView != null;
         var actualWidth = myView.getCodePointWidth(codePoint, Font.PLAIN); // in the grid mode all font styles should have identical widths
         if (Math.abs(width - actualWidth) < 0.001) {

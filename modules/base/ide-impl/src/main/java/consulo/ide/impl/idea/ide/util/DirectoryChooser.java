@@ -530,9 +530,8 @@ public class DirectoryChooser extends DialogWrapper implements DirectoryChooserD
         myView.getComponent().repaint();
     }
 
-    @Nullable
     @RequiredReadAction
-    private static PsiDirectory getDefaultSelection(PsiDirectory[] directories, Project project) {
+    private static @Nullable PsiDirectory getDefaultSelection(PsiDirectory[] directories, Project project) {
         String defaultSelectionPath = project.getInstance(ProjectPropertiesComponent.class).getValue(DEFAULT_SELECTION);
         if (defaultSelectionPath != null) {
             VirtualFile directoryByDefault = LocalFileSystem.getInstance().findFileByPath(defaultSelectionPath);
@@ -558,9 +557,8 @@ public class DirectoryChooser extends DialogWrapper implements DirectoryChooserD
         setOKActionEnabled(myView.getSelectedItem() != null);
     }
 
-    @Nullable
     @Override
-    public PsiDirectory getSelectedDirectory() {
+    public @Nullable PsiDirectory getSelectedDirectory() {
         if (mySelection != null) {
             PsiFile file = mySelection.getContainingFile();
             if (file != null) {

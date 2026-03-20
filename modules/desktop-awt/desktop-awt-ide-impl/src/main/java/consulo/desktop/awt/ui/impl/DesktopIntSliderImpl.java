@@ -63,9 +63,8 @@ public class DesktopIntSliderImpl extends SwingComponentDelegate<DesktopIntSlide
         toAWTComponent().setMaximum(max);
     }
 
-    @Nullable
     @Override
-    public Integer getValue() {
+    public @Nullable Integer getValue() {
         return toAWTComponent().getValue();
     }
 

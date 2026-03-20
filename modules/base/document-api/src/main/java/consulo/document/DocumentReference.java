@@ -24,9 +24,7 @@ import org.jspecify.annotations.Nullable;
 public interface DocumentReference {
   DocumentReference[] EMPTY_ARRAY = new DocumentReference[0];
 
-  @Nullable
-  Document getDocument();
+  @Nullable Document getDocument();
 
-  @Nullable
-  VirtualFile getFile();
+  @Nullable VirtualFile getFile();
 }

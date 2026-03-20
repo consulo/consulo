@@ -86,9 +86,8 @@ public class MarkupModelImpl extends UserDataHolderBase implements MarkupModelEx
         return addRangeHighlighterAndChangeAttributes(textAttributesKey, offset, offset, layer, area, false, changeAction);
     }
 
-    @Nullable
     @Override
-    public RangeHighlighterEx addPersistentLineHighlighter(@Nullable TextAttributesKey textAttributesKey, int lineNumber, int layer) {
+    public @Nullable RangeHighlighterEx addPersistentLineHighlighter(@Nullable TextAttributesKey textAttributesKey, int lineNumber, int layer) {
         return addPersistentLineHighlighter(textAttributesKey, null, lineNumber, layer);
     }
 

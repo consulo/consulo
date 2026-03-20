@@ -41,10 +41,9 @@ public class SandClass extends StubBasedPsiElementBase<SandClassStub> implements
         super(stub, nodeType);
     }
 
-    @Nullable
     @Override
     @RequiredReadAction
-    public String getName() {
+    public @Nullable String getName() {
         PsiElement nameIdentifier = getNameIdentifier();
         return nameIdentifier != null ? nameIdentifier.getText() : null;
     }
@@ -55,10 +54,9 @@ public class SandClass extends StubBasedPsiElementBase<SandClassStub> implements
         return null;
     }
 
-    @Nullable
     @Override
     @RequiredReadAction
-    public PsiElement getNameIdentifier() {
+    public @Nullable PsiElement getNameIdentifier() {
         return findChildByType(SandTokens.IDENTIFIER);
     }
 }

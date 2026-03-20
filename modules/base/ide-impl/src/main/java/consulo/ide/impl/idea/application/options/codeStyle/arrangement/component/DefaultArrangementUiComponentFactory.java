@@ -31,9 +31,8 @@ import java.util.List;
 @ExtensionImpl(order = "last")
 public class DefaultArrangementUiComponentFactory implements ArrangementUiComponentFactory {
 
-  @Nullable
   @Override
-  public ArrangementUiComponent build(StdArrangementTokenUiRole role,
+  public @Nullable ArrangementUiComponent build(StdArrangementTokenUiRole role,
                                       List<ArrangementSettingsToken> tokens,
                                       ArrangementColorsProvider colorsProvider,
                                       ArrangementStandardSettingsManager settingsManager) {

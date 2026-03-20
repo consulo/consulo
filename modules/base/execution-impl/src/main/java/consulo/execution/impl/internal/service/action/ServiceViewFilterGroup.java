@@ -32,9 +32,8 @@ public class ServiceViewFilterGroup extends NonEmptyActionGroup {
     return true;
   }
 
-  @Nullable
   @Override
-  protected Image getTemplateIcon() {
+  protected @Nullable Image getTemplateIcon() {
     return PlatformIconGroup.generalFilter();
   }
 }

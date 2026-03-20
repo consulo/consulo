@@ -72,9 +72,8 @@ public class DesktopSwtHyperlinkImpl extends SWTComponentDelegate<Link> implemen
 
   }
 
-  @Nullable
   @Override
-  public Image getIcon() {
+  public @Nullable Image getIcon() {
     return null;
   }
 }

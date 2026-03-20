@@ -521,10 +521,9 @@ public class Notification {
 
     public static void fire(final Notification notification, AnAction action, @Nullable DataContext context) {
         AnActionEvent event = AnActionEvent.createFromAnAction(action, null, ActionPlaces.UNKNOWN, new DataContext() {
-            @Nullable
             @Override
             @SuppressWarnings("unchecked")
-            public <T> T getData(Key<T> dataId) {
+            public <T> @Nullable T getData(Key<T> dataId) {
                 if (KEY == dataId) {
                     return (T) notification;
                 }

@@ -179,8 +179,7 @@ public interface HighlightInfo extends Segment {
         /**
          * @return null means filtered out
          */
-        @Nullable
-        HighlightInfo create();
+        @Nullable HighlightInfo create();
 
         
         HighlightInfo createUnconditionally();
@@ -232,8 +231,7 @@ public interface HighlightInfo extends Segment {
     
     HighlightSeverity getSeverity();
 
-    @Nullable
-    RangeHighlighter getHighlighter();
+    @Nullable RangeHighlighter getHighlighter();
 
     int getActualStartOffset();
 
@@ -244,17 +242,14 @@ public interface HighlightInfo extends Segment {
 
     HighlightInfoType getType();
 
-    @Nullable
-    PsiElement getPsiElement();
+    @Nullable PsiElement getPsiElement();
 
     
     LocalizeValue getToolTip();
 
-    @Nullable
-    TextAttributes getTextAttributes(@Nullable PsiElement element, @Nullable EditorColorsScheme editorColorsScheme);
+    @Nullable TextAttributes getTextAttributes(@Nullable PsiElement element, @Nullable EditorColorsScheme editorColorsScheme);
 
-    @Nullable
-    GutterMark getGutterIconRenderer();
+    @Nullable GutterMark getGutterIconRenderer();
 
     @Deprecated
     @DeprecationInfo("Use HighlightInfo.Builder.newFix()...register()")

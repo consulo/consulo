@@ -97,8 +97,7 @@ public interface FileIndex {
    */
   boolean isInTestSourceContent(VirtualFile fileOrDir);
 
-  @Nullable
-  ContentFolderTypeProvider getContentFolderTypeForFile(VirtualFile file);
+  @Nullable ContentFolderTypeProvider getContentFolderTypeForFile(VirtualFile file);
 
   default boolean isUnderContentFolderType(VirtualFile virtualFile, ContentFolderTypeProvider contentFolderTypeProvider) {
     ContentFolderTypeProvider contentFolderTypeForFile = getContentFolderTypeForFile(virtualFile);

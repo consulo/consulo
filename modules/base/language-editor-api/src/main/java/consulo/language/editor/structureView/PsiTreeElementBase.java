@@ -38,9 +38,8 @@ public abstract class PsiTreeElementBase<T extends PsiElement> implements Struct
     return String.valueOf(getElement());
   }
 
-  @Nullable
   @SuppressWarnings("unchecked")
-  public final T getElement() {
+  public final @Nullable T getElement() {
      if (myValue != null) {
          return (T) myValue.extractValue();
      }

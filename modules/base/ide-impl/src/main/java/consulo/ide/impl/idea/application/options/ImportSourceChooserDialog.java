@@ -63,9 +63,8 @@ public class ImportSourceChooserDialog<S extends Named> extends DialogWrapper {
         mySourceList.setSelectedIndex(0);
     }
 
-    @Nullable
     @Override
-    protected JComponent createCenterPanel() {
+    protected @Nullable JComponent createCenterPanel() {
         return myContentPane;
     }
 

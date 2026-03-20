@@ -26,6 +26,5 @@ import org.jspecify.annotations.Nullable;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface VcsSelectionProvider {
-  @Nullable
-  VcsSelection getSelection(VcsContext context);
+  @Nullable VcsSelection getSelection(VcsContext context);
 }

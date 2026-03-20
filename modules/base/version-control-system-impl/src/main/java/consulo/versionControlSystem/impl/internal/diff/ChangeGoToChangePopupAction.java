@@ -168,9 +168,8 @@ public abstract class ChangeGoToChangePopupAction<Chain extends DiffRequestChain
             return myChanges;
         }
 
-        @Nullable
         @Override
-        protected Change getCurrentSelection() {
+        protected @Nullable Change getCurrentSelection() {
             if (mySelection < 0 || mySelection >= myChanges.size()) {
                 return null;
             }
@@ -185,9 +184,8 @@ public abstract class ChangeGoToChangePopupAction<Chain extends DiffRequestChain
                 myFilePath = filePath;
             }
 
-            @Nullable
             @Override
-            public String getContent() throws VcsException {
+            public @Nullable String getContent() throws VcsException {
                 return null;
             }
 

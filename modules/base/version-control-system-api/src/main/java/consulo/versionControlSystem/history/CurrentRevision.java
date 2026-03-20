@@ -90,9 +90,8 @@ public class CurrentRevision implements VcsFileRevision {
     return null;
   }
 
-  @Nullable
   @Override
-  public RepositoryLocation getChangedRepositoryPath() {
+  public @Nullable RepositoryLocation getChangedRepositoryPath() {
     return null;  // use initial url..
   }
 }

@@ -825,9 +825,8 @@ class ApplyPatchViewer implements UiDataProvider, Disposable {
     }
 
     private class MyStatusPanel extends StatusPanel {
-        @Nullable
         @Override
-        protected String getMessage() {
+        protected @Nullable String getMessage() {
             int totalUnresolved = 0;
             int alreadyApplied = 0;
             int notApplied = 0;

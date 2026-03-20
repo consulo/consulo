@@ -49,8 +49,7 @@ public interface ExternalSystemProjectResolver<S extends ExternalSystemExecution
      * @throws IllegalArgumentException if given path is invalid
      * @throws IllegalStateException    if it's not possible to resolve target project info
      */
-    @Nullable
-    DataNode<ProjectData> resolveProjectInfo(ExternalSystemTaskId id,
+    @Nullable DataNode<ProjectData> resolveProjectInfo(ExternalSystemTaskId id,
                                              String projectPath,
                                              boolean isPreviewMode,
                                              @Nullable S settings,

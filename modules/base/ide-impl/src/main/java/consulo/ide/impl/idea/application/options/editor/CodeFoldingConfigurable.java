@@ -53,9 +53,8 @@ public class CodeFoldingConfigurable extends SimpleConfigurableByProperties impl
     return "editor.preferences.folding";
   }
 
-  @Nullable
   @Override
-  public String getParentId() {
+  public @Nullable String getParentId() {
     return StandardConfigurableIds.EDITOR_GROUP;
   }
 

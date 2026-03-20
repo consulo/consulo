@@ -33,8 +33,7 @@ import org.jspecify.annotations.Nullable;
 public interface ProjectViewPane extends UserDataHolder, Disposable {
   String getId();
 
-  @Nullable
-  String getSubId();
+  @Nullable String getSubId();
 
   SelectInTarget createSelectInTarget();
 
@@ -51,8 +50,7 @@ public interface ProjectViewPane extends UserDataHolder, Disposable {
     return AsyncResult.resolved();
   }
 
-  @Nullable
-  NodeDescriptor getSelectedDescriptor();
+  @Nullable NodeDescriptor getSelectedDescriptor();
 
   String[] getSubIds();
 

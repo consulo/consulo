@@ -27,19 +27,16 @@ import java.util.List;
  * @author gregsh
  */
 public abstract class AbstractNavBarModelExtension implements NavBarModelExtension {
-  @Nullable
   @Override
-  public abstract String getPresentableText(Object object);
+  public abstract @Nullable String getPresentableText(Object object);
 
-  @Nullable
   @Override
-  public PsiElement adjustElement(PsiElement psiElement) {
+  public @Nullable PsiElement adjustElement(PsiElement psiElement) {
     return psiElement;
   }
 
-  @Nullable
   @Override
-  public PsiElement getParent(PsiElement psiElement) {
+  public @Nullable PsiElement getParent(PsiElement psiElement) {
     return null;
   }
 

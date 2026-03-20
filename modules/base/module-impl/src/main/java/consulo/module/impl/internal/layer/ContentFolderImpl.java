@@ -210,10 +210,9 @@ public class ContentFolderImpl extends BaseModuleRootLayerChild
         }
     }
 
-    @Nullable
     @Override
     @SuppressWarnings("unchecked")
-    public <T> T getPropertyValue(Key<T> key) {
+    public <T> @Nullable T getPropertyValue(Key<T> key) {
         if (myProperties == null) {
             return null;
         }
@@ -276,9 +275,8 @@ public class ContentFolderImpl extends BaseModuleRootLayerChild
         return getUrl().hashCode();
     }
 
-    @Nullable
     @Override
-    public String toString() {
+    public @Nullable String toString() {
         return getUrl();
     }
 

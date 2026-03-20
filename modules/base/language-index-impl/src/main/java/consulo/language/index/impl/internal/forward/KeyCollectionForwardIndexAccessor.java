@@ -33,9 +33,8 @@ public class KeyCollectionForwardIndexAccessor<Key, Value> extends AbstractForwa
     return new CollectionInputDataDiffBuilder<>(inputId, keys);
   }
 
-  @Nullable
   @Override
-  public Collection<Key> convertToDataType(InputData<Key, Value> data) {
+  public @Nullable Collection<Key> convertToDataType(InputData<Key, Value> data) {
     Set<Key> keys = data.getKeyValues().keySet();
     return keys.isEmpty() ? null : keys;
   }

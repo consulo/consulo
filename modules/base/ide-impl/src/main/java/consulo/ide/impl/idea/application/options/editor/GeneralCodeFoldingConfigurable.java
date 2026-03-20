@@ -42,9 +42,8 @@ public class GeneralCodeFoldingConfigurable extends SimpleConfigurableByProperti
     return "editor.preferences.folding.general";
   }
 
-  @Nullable
   @Override
-  public String getParentId() {
+  public @Nullable String getParentId() {
     return "editor.preferences.folding";
   }
 

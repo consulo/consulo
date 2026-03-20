@@ -75,8 +75,7 @@ public class GraphTableController {
         table.addMouseListener(mouseAdapter);
     }
 
-    @Nullable
-    PrintElement findPrintElement(MouseEvent e) {
+    @Nullable PrintElement findPrintElement(MouseEvent e) {
         int row = myTable.rowAtPoint(e.getPoint());
         if (row >= 0 && row < myTable.getRowCount()) {
             return findPrintElement(row, e);

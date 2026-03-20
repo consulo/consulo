@@ -34,11 +34,9 @@ public interface RootIndex {
     
     DirectoryInfo getInfoForFile(VirtualFile file);
 
-    @Nullable
-    ContentFolderTypeProvider getContentFolderType(DirectoryInfo directoryInfo);
+    @Nullable ContentFolderTypeProvider getContentFolderType(DirectoryInfo directoryInfo);
 
-    @Nullable
-    String getPackageName(VirtualFile dir);
+    @Nullable String getPackageName(VirtualFile dir);
 
     
     @RequiredReadAction

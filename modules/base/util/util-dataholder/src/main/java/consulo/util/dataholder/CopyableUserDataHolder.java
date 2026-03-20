@@ -25,8 +25,7 @@ import org.jspecify.annotations.Nullable;
 public interface CopyableUserDataHolder extends UserDataHolder {
     <T> void putCopyableUserData(Key<T> key, T value);
 
-    @Nullable
-    <T> T getCopyableUserData(Key<T> key);
+    <T> @Nullable T getCopyableUserData(Key<T> key);
 
     void copyCopyableDataTo(CopyableUserDataHolder clone);
 }

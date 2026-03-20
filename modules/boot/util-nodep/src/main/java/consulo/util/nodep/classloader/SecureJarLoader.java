@@ -103,9 +103,8 @@ class SecureJarLoader extends JarLoader {
       return result;
     }
 
-    @Nullable
     @Override
-    public ProtectionDomain getProtectionDomain() {
+    public @Nullable ProtectionDomain getProtectionDomain() {
       synchronized (myProtectionDomainMonitor) {
         return myProtectionDomain;
       }

@@ -53,9 +53,8 @@ final class BrowserSettingsPanel {
             item.setPath(value);
         }
 
-        @Nullable
         @Override
-        public TableCellEditor getEditor(ConfigurableWebBrowser item) {
+        public @Nullable TableCellEditor getEditor(ConfigurableWebBrowser item) {
             return new LocalPathCellEditor().fileChooserDescriptor(APP_FILE_CHOOSER_DESCRIPTOR).normalizePath(true);
         }
     };

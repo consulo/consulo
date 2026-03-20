@@ -30,9 +30,8 @@ public interface LinearGraphController {
   LinearGraphAnswer performLinearGraphAction(LinearGraphAction action);
 
   interface LinearGraphAction extends GraphAction {
-    @Nullable
     @Override
-    PrintElementWithGraphElement getAffectedElement();
+    @Nullable PrintElementWithGraphElement getAffectedElement();
   }
 
   // Integer = nodeId

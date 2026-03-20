@@ -58,9 +58,8 @@ public class XBreakpointFileGroupingRule<B> extends XBreakpointGroupingRule<B, X
     return new XBreakpointFileGroup(file);
   }
 
-  @Nullable
   @Override
-  public Image getIcon() {
+  public @Nullable Image getIcon() {
     return AllIcons.FileTypes.Text;
   }
 }

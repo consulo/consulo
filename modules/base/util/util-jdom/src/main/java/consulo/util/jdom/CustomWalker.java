@@ -403,9 +403,8 @@ class CustomWalker implements Walker {
     hasnext = pendingmt != null || pending != null;
   }
 
-  @Nullable
   @Override
-  public final Content next() {
+  public final @Nullable Content next() {
 
     if (!hasnext) {
       throw new NoSuchElementException("Cannot walk off end of Content");
@@ -630,9 +629,8 @@ class CustomWalker implements Walker {
     return holdingmt;
   }
 
-  @Nullable
   @Override
-  public final String text() {
+  public final @Nullable String text() {
     if (multitext == null || mtpos >= mtsize) {
       return null;
     }

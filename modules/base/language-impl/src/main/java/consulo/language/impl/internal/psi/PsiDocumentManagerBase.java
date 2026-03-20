@@ -105,9 +105,8 @@ public abstract class PsiDocumentManagerBase extends PsiDocumentManager implemen
     }
 
     @Override
-    @Nullable
     @RequiredReadAction
-    public PsiFile getPsiFile(Document document) {
+    public @Nullable PsiFile getPsiFile(Document document) {
         if (document instanceof DocumentWindow documentWindow && !documentWindow.isValid()) {
             return null;
         }
@@ -154,9 +153,8 @@ public abstract class PsiDocumentManagerBase extends PsiDocumentManager implemen
         return getCachedPsiFile(virtualFile);
     }
 
-    @Nullable
     @RequiredReadAction
-    public FileViewProvider getCachedViewProvider(Document document) {
+    public @Nullable FileViewProvider getCachedViewProvider(Document document) {
         VirtualFile virtualFile = getVirtualFile(document);
         if (virtualFile == null) {
             return null;
@@ -172,15 +170,13 @@ public abstract class PsiDocumentManagerBase extends PsiDocumentManager implemen
         return virtualFile;
     }
 
-    @Nullable
     @RequiredReadAction
-    public PsiFile getCachedPsiFile(VirtualFile virtualFile) {
+    public @Nullable PsiFile getCachedPsiFile(VirtualFile virtualFile) {
         return getFileManager().getCachedPsiFile(virtualFile);
     }
 
-    @Nullable
     @RequiredReadAction
-    private PsiFile getPsiFile(VirtualFile virtualFile) {
+    private @Nullable PsiFile getPsiFile(VirtualFile virtualFile) {
         return getFileManager().findFile(virtualFile);
     }
 
@@ -802,9 +798,8 @@ public abstract class PsiDocumentManagerBase extends PsiDocumentManager implemen
     }
 
     @Override
-    @Nullable
     @RequiredReadAction
-    public Document getLastCommittedDocument(PsiFile file) {
+    public @Nullable Document getLastCommittedDocument(PsiFile file) {
         Document document = getDocument(file);
         return document == null ? null : getLastCommittedDocument(document);
     }

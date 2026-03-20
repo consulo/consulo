@@ -130,9 +130,8 @@ public class SplitterProportionsDataImpl implements SplitterProportionsData {
     }
 
     public static final class SplitterProportionsConverter extends Converter<SplitterProportionsDataImpl> {
-        @Nullable
         @Override
-        public SplitterProportionsDataImpl fromString(String value) {
+        public @Nullable SplitterProportionsDataImpl fromString(String value) {
             SplitterProportionsDataImpl data = new SplitterProportionsDataImpl();
             StringTokenizer tokenizer = new StringTokenizer(value, ",");
             while (tokenizer.hasMoreTokens()) {

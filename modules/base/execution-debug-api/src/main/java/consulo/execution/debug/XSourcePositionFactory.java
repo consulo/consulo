@@ -37,8 +37,7 @@ public interface XSourcePositionFactory {
      * @param line 0-based line number
      * @return source position
      */
-    @Nullable
-    XSourcePosition createPosition(@Nullable VirtualFile file, int line);
+    @Nullable XSourcePosition createPosition(@Nullable VirtualFile file, int line);
 
     /**
      * Create {@link XSourcePosition} instance by line and column number
@@ -48,8 +47,7 @@ public interface XSourcePositionFactory {
      * @param column 0-based column number
      * @return source position
      */
-    @Nullable
-    XSourcePosition createPosition(@Nullable VirtualFile file, int line, int column);
+    @Nullable XSourcePosition createPosition(@Nullable VirtualFile file, int line, int column);
 
     /**
      * Create {@link XSourcePosition} instance by line number
@@ -58,11 +56,9 @@ public interface XSourcePositionFactory {
      * @param offset offset from the beginning of file
      * @return source position
      */
-    @Nullable
-    XSourcePosition createPositionByOffset(@Nullable VirtualFile file, int offset);
+    @Nullable XSourcePosition createPositionByOffset(@Nullable VirtualFile file, int offset);
 
-    @Nullable
-    XSourcePosition createPositionByElement(@Nullable PsiElement element);
+    @Nullable XSourcePosition createPositionByElement(@Nullable PsiElement element);
 
     
     @UsedInPlugin

@@ -66,8 +66,7 @@ class CommonCodeStyleSettingsManager {
         myParentSettings = parentSettings;
     }
 
-    @Nullable
-    CommonCodeStyleSettings getCommonSettings(@Nullable Language lang) {
+    @Nullable CommonCodeStyleSettings getCommonSettings(@Nullable Language lang) {
         Map<Language, CommonCodeStyleSettings> commonSettingsMap = getCommonSettingsMap();
         Language baseLang = ObjectUtil.notNull(lang, Language.ANY);
         while (baseLang != null) {

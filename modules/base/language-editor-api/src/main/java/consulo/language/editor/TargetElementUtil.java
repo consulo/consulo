@@ -70,9 +70,8 @@ public class TargetElementUtil {
         return flags;
     }
 
-    @Nullable
     @RequiredReadAction
-    public static PsiReference findReference(Editor editor) {
+    public static @Nullable PsiReference findReference(Editor editor) {
         int offset = editor.getCaretModel().getOffset();
         PsiReference result = findReference(editor, offset);
         if (result == null) {
@@ -114,9 +113,8 @@ public class TargetElementUtil {
         return TargetElementUtilExtender.EP.computeSafeIfAny(Application.get(), it -> it.adjustReference(ref));
     }
 
-    @Nullable
     @RequiredReadAction
-    public static PsiReference findReference(Editor editor, int offset) {
+    public static @Nullable PsiReference findReference(Editor editor, int offset) {
         Project project = editor.getProject();
         if (project == null) {
             return null;
@@ -135,9 +133,8 @@ public class TargetElementUtil {
             : file.findReferenceAt(offset);
     }
 
-    @Nullable
     @RequiredReadAction
-    public static PsiElement findTargetElement(Editor editor, Set<String> flags) {
+    public static @Nullable PsiElement findTargetElement(Editor editor, Set<String> flags) {
         int offset = editor.getCaretModel().getOffset();
         PsiElement result = findTargetElement(editor, flags, offset);
         if (result != null) {
@@ -151,9 +148,8 @@ public class TargetElementUtil {
         return null;
     }
 
-    @Nullable
     @RequiredReadAction
-    public static PsiElement findTargetElement(Editor editor, Set<String> flags, int offset) {
+    public static @Nullable PsiElement findTargetElement(Editor editor, Set<String> flags, int offset) {
         PsiElement targetElement = findTargetElementImpl(editor, flags, offset);
         if (targetElement == null) {
             return null;
@@ -167,9 +163,8 @@ public class TargetElementUtil {
         return targetElement;
     }
 
-    @Nullable
     @RequiredReadAction
-    private static PsiElement findTargetElementImpl(Editor editor, Set<String> flags, int offset) {
+    private static @Nullable PsiElement findTargetElementImpl(Editor editor, Set<String> flags, int offset) {
         Project project = editor.getProject();
         if (project == null) {
             return null;
@@ -218,9 +213,8 @@ public class TargetElementUtil {
         return null;
     }
 
-    @Nullable
     @RequiredReadAction
-    private static PsiElement getReferenceOrReferencedElement(PsiFile file, Editor editor, Set<String> flags, int offset) {
+    private static @Nullable PsiElement getReferenceOrReferencedElement(PsiFile file, Editor editor, Set<String> flags, int offset) {
         PsiElement referenceOrReferencedElement = getReferenceOrReferencedElementImpl(file, editor, flags, offset);
 
         PsiElement psiElement = TargetElementUtilExtender.EP.computeSafeIfAny(
@@ -233,9 +227,8 @@ public class TargetElementUtil {
         return referenceOrReferencedElement;
     }
 
-    @Nullable
     @RequiredReadAction
-    private static PsiElement getReferenceOrReferencedElementImpl(PsiFile file, Editor editor, Set<String> flags, int offset) {
+    private static @Nullable PsiElement getReferenceOrReferencedElementImpl(PsiFile file, Editor editor, Set<String> flags, int offset) {
         PsiReference ref = findReference(editor, offset);
         if (ref == null) {
             return null;
@@ -274,9 +267,8 @@ public class TargetElementUtil {
         return true;
     }
 
-    @Nullable
     @RequiredReadAction
-    public static PsiElement getNamedElement(@Nullable PsiElement element, int offsetInElement) {
+    public static @Nullable PsiElement getNamedElement(@Nullable PsiElement element, int offsetInElement) {
         if (element == null) {
             return null;
         }
@@ -314,9 +306,8 @@ public class TargetElementUtil {
     }
 
 
-    @Nullable
     @RequiredReadAction
-    private static PsiElement getNamedElement(@Nullable PsiElement element) {
+    private static @Nullable PsiElement getNamedElement(@Nullable PsiElement element) {
         PsiElement parent;
         if ((parent = PsiTreeUtil.getParentOfType(element, PsiNamedElement.class, false)) != null) {
             // A bit hacky depends on navigation offset correctly overridden

@@ -298,10 +298,9 @@ public class CompilerManagerImpl extends CompilerManager implements PersistentSt
         return new CompositeScope(list);
     }
 
-    @Nullable
     @Override
     @RequiredReadAction
-    public Element getState() {
+    public @Nullable Element getState() {
         Element state = new Element("state");
         CompilerConfigurationImpl configuration = (CompilerConfigurationImpl) CompilerConfiguration.getInstance(myProject);
         configuration.getState(state);

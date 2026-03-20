@@ -471,9 +471,8 @@ public class EditorGeneralConfigurable extends SimpleConfigurableByProperties im
         return "editor.general";
     }
 
-    @Nullable
     @Override
-    public String getParentId() {
+    public @Nullable String getParentId() {
         return StandardConfigurableIds.EDITOR_GROUP;
     }
 

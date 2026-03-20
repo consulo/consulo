@@ -141,9 +141,8 @@ public class GotoActionModel implements ChooseByNameModel, Comparator<Object>, D
         return IdeLocalize.promptGotoactionEnterAction().get();
     }
 
-    @Nullable
     @Override
-    public LocalizeValue getCheckBoxName() {
+    public @Nullable LocalizeValue getCheckBoxName() {
         return IdeLocalize.checkboxDisabledIncluded();
     }
 
@@ -181,9 +180,8 @@ public class GotoActionModel implements ChooseByNameModel, Comparator<Object>, D
             this.pattern = pattern;
         }
 
-        @Nullable
         @VisibleForTesting
-        public String getValueText() {
+        public @Nullable String getValueText() {
             if (value instanceof OptionDescription optionDescription) {
                 return optionDescription.getHit();
             }
@@ -193,9 +191,8 @@ public class GotoActionModel implements ChooseByNameModel, Comparator<Object>, D
             return null;
         }
 
-        @Nullable
         @Override
-        public String toString() {
+        public @Nullable String toString() {
             return getMatchingDegree() + " " + getValueText();
         }
 
@@ -409,8 +406,7 @@ public class GotoActionModel implements ChooseByNameModel, Comparator<Object>, D
         }
     }
 
-    @Nullable
-    GroupMapping getGroupMapping(AnAction action) {
+    @Nullable GroupMapping getGroupMapping(AnAction action) {
         return myActionGroups.get(action);
     }
 
@@ -430,9 +426,8 @@ public class GotoActionModel implements ChooseByNameModel, Comparator<Object>, D
         return ArrayUtil.EMPTY_STRING_ARRAY;
     }
 
-    @Nullable
     @Override
-    public String getElementName(Object mv) {
+    public @Nullable String getElementName(Object mv) {
         return ((MatchedValue)mv).getValueText();
     }
 

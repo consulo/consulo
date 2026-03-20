@@ -103,9 +103,8 @@ public class SwitchTaskAction extends BaseTaskAction {
                 return value.getText();
             }
 
-            @Nullable
             @Override
-            public ListSeparator getSeparatorAbove(TaskListItem value) {
+            public @Nullable ListSeparator getSeparatorAbove(TaskListItem value) {
                 return value.getSeparator() == null ? null : new ListSeparator(value.getSeparator());
             }
 

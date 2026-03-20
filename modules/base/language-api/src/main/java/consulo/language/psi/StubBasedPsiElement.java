@@ -27,8 +27,7 @@ public interface StubBasedPsiElement<Stub extends StubElement> extends PsiElemen
   
   IStubElementType getElementType();
 
-  @Nullable
-  Stub getStub();
+  @Nullable Stub getStub();
 
   /**
    * Like {@link #getStub()}, but can return a non-null value after the element has been switched to AST. Can be used

@@ -32,16 +32,13 @@ public interface LibraryEditorComponent<P extends LibraryProperties> {
 
   LibraryEditor getLibraryEditor();
 
-  @Nullable
-  VirtualFile getBaseDirectory();
+  @Nullable VirtualFile getBaseDirectory();
 
-  @Nullable
-  VirtualFile getExistingRootDirectory();
+  @Nullable VirtualFile getExistingRootDirectory();
 
   void updateRootsTree();
 
-  @Nullable
-  Project getProject();
+  @Nullable Project getProject();
 
   void renameLibrary(String newName);
 }

@@ -48,9 +48,8 @@ public class WebRadioButtonImpl extends VaadinComponentDelegate<WebRadioButtonIm
             add(myInput, myLabel);
         }
 
-        @Nullable
         @Override
-        public Component toUIComponent() {
+        public @Nullable Component toUIComponent() {
             return WebRadioButtonImpl.this;
         }
 

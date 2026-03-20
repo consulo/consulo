@@ -46,9 +46,8 @@ public class SandUnscrambleSupport implements UnscrambleSupport {
     return true;
   }
 
-  @Nullable
   @Override
-  public String unscramble(Project project, String text, String logName) {
+  public @Nullable String unscramble(Project project, String text, String logName) {
     return text;
   }
 }

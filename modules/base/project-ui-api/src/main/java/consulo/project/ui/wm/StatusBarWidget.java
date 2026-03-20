@@ -38,8 +38,7 @@ public interface StatusBarWidget extends Disposable {
     
     String getId();
 
-    @Nullable
-    WidgetPresentation getPresentation();
+    @Nullable WidgetPresentation getPresentation();
 
     void install(StatusBar statusBar);
 
@@ -59,13 +58,11 @@ public interface StatusBarWidget extends Disposable {
             return null;
         }
 
-        @Nullable
-        Consumer<MouseEvent> getClickConsumer();
+        @Nullable Consumer<MouseEvent> getClickConsumer();
     }
 
     interface IconPresentation extends WidgetPresentation {
-        @Nullable
-        Image getIcon();
+        @Nullable Image getIcon();
     }
 
     interface TextPresentation extends WidgetPresentation {
@@ -79,12 +76,10 @@ public interface StatusBarWidget extends Disposable {
         /**
          * @return null means the widget is unable to show the popup
          */
-        @Nullable
-        ListPopup getPopupStep();
+        @Nullable ListPopup getPopupStep();
 
-        @Nullable
         @RequiredUIAccess
-        String getSelectedValue();
+        @Nullable String getSelectedValue();
 
         
         @Deprecated

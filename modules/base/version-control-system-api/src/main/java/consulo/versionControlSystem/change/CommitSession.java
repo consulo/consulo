@@ -55,8 +55,7 @@ public interface CommitSession {
   /**
    * @deprecated Since version 7.0, {@link #getAdditionalConfigurationUI(Collection, String)} is called instead
    */
-  @Nullable
-  JComponent getAdditionalConfigurationUI();
+  @Nullable JComponent getAdditionalConfigurationUI();
 
   default @Nullable JComponent getAdditionalConfigurationUI(Collection<Change> changes, String commitMessage) {
     return getAdditionalConfigurationUI();

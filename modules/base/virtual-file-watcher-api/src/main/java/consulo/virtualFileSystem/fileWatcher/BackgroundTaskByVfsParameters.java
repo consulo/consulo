@@ -30,8 +30,7 @@ public interface BackgroundTaskByVfsParameters extends CommonProgramRunConfigura
 
   void setOutPath(@Nullable String path);
 
-  @Nullable
-  String getOutPath();
+  @Nullable String getOutPath();
 
   void set(BackgroundTaskByVfsParameters parameters);
 

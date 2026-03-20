@@ -74,9 +74,8 @@ public class SandConfiguration extends RunConfigurationBase {
 
   }
 
-  @Nullable
   @Override
-  public RunProfileState getState(Executor executor, ExecutionEnvironment env) throws ExecutionException {
+  public @Nullable RunProfileState getState(Executor executor, ExecutionEnvironment env) throws ExecutionException {
     return null;
   }
 }

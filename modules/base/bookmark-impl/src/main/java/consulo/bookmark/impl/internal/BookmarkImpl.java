@@ -286,9 +286,8 @@ public class BookmarkImpl implements Bookmark {
             return myBookmark.getBookmarkTooltip();
         }
 
-        @Nullable
         @Override
-        public ActionGroup getPopupMenuActions() {
+        public @Nullable ActionGroup getPopupMenuActions() {
             return (ActionGroup) ActionManager.getInstance().getAction("popup@BookmarkContextMenu");
         }
 

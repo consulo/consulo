@@ -30,6 +30,5 @@ public interface CurrentEditorProvider {
     return Application.get().getInstance(CurrentEditorProvider.class);
   }
 
-  @Nullable
-  FileEditor getCurrentEditor();
+  @Nullable FileEditor getCurrentEditor();
 }

@@ -35,9 +35,8 @@ class DesktopAWTFileSystemImpl extends PlatformFileSystemImpl {
         super(platform, jvmProperties);
     }
 
-    @Nullable
     @Override
-    public Image getImage(File file) {
+    public @Nullable Image getImage(File file) {
         Icon systemIcon = FileSystemView.getFileSystemView().getSystemIcon(file);
         return systemIcon == null ? null : new DesktopImageOverIconImpl(systemIcon);
     }

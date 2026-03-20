@@ -150,9 +150,8 @@ public class FileColorManagerImpl implements FileColorManager, PersistentStateCo
     }
 
     @RequiredReadAction
-    @Nullable
     @Override
-    public Color getRendererBackground(VirtualFile file) {
+    public @Nullable Color getRendererBackground(VirtualFile file) {
         if (file == null) {
             return null;
         }

@@ -120,10 +120,9 @@ public abstract class PsiPackageBase extends PsiElementBase implements PsiPackag
         return result == null ? PsiDirectory.EMPTY_ARRAY : result.toArray(new PsiDirectory[result.size()]);
     }
 
-    @Nullable
     @Override
     @RequiredReadAction
-    public String getName() {
+    public @Nullable String getName() {
         if (DebugUtil.CHECK_INSIDE_ATOMIC_ACTION_ENABLED) {
             getApplication().assertReadAccessAllowed();
         }
@@ -231,16 +230,14 @@ public abstract class PsiPackageBase extends PsiElementBase implements PsiPackag
         return PsiElement.EMPTY_ARRAY;
     }
 
-    @Nullable
     @Override
     @RequiredReadAction
-    public PsiElement getParent() {
+    public @Nullable PsiElement getParent() {
         return getParentPackage();
     }
 
-    @Nullable
     @Override
-    public PsiFile getContainingFile() {
+    public @Nullable PsiFile getContainingFile() {
         return null;
     }
 
@@ -274,10 +271,9 @@ public abstract class PsiPackageBase extends PsiElementBase implements PsiPackag
         return -1;
     }
 
-    @Nullable
     @Override
     @RequiredReadAction
-    public String getText() {
+    public @Nullable String getText() {
         return null;
     }
 

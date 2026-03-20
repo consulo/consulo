@@ -25,9 +25,8 @@ public interface PsiNavigationSupport {
         return Application.get().getInstance(PsiNavigationSupport.class);
     }
 
-    @Nullable
     @RequiredReadAction
-    Navigatable getDescriptor(PsiElement element);
+    @Nullable Navigatable getDescriptor(PsiElement element);
 
     
     @Deprecated

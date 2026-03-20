@@ -46,8 +46,7 @@ public interface DependencyCache {
 
     void update() throws CacheCorruptedException;
 
-    @Nullable
-    String relativePathToQName(String path, char separator);
+    @Nullable String relativePathToQName(String path, char separator);
 
     void syncOutDir(Trinity<File, String, Boolean> trinity) throws CacheCorruptedException;
 }

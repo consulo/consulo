@@ -245,9 +245,8 @@ public class CodeFormatterFacade {
         }
     }
 
-    @Nullable
     @RequiredReadAction
-    static ASTNode findContainingNode(PsiFile file, @Nullable TextRange range) {
+    static @Nullable ASTNode findContainingNode(PsiFile file, @Nullable TextRange range) {
         Language language = file.getLanguage();
         if (range == null) {
             return null;

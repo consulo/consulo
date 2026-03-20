@@ -98,9 +98,8 @@ public abstract class OnesideDiffViewer<T extends EditorHolder> extends Listener
     return myPanel;
   }
 
-  @Nullable
   @Override
-  public JComponent getPreferredFocusedComponent() {
+  public @Nullable JComponent getPreferredFocusedComponent() {
     if (!myPanel.isGoodContent()) return null;
     return getEditorHolder().getPreferredFocusedComponent();
   }
@@ -128,9 +127,8 @@ public abstract class OnesideDiffViewer<T extends EditorHolder> extends Listener
   // Misc
   //
 
-  @Nullable
   @Override
-  protected Navigatable getNavigatable() {
+  protected @Nullable Navigatable getNavigatable() {
     return getContent().getNavigatable();
   }
 

@@ -34,8 +34,7 @@ public class DuplicateNodeRenderer {
   public interface DuplicatableNode<T> {
     //returns first duplicate node, if any, or null if there are none
     //duplicate nodes are painted gray
-    @Nullable
-    T getDuplicate();
+    @Nullable T getDuplicate();
 
   }
 

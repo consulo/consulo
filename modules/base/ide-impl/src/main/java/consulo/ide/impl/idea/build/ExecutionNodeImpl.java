@@ -351,8 +351,7 @@ public class ExecutionNodeImpl extends ExecutionNode<ExecutionNodeImpl> {
         return reapplyParentFilterIfRequired(null);
     }
 
-    @Nullable
-        //@ApiStatus.Experimental
+        @Nullable //@ApiStatus.Experimental
     ExecutionNodeImpl findFirstChild(Predicate<? super ExecutionNodeImpl> filter) {
         assert myIsCorrectThread.get();
         //noinspection SSBasedInspection

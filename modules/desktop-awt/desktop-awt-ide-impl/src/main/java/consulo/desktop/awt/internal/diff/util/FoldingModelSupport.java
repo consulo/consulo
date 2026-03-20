@@ -761,9 +761,8 @@ public class FoldingModelSupport {
         };
     }
 
-    @Nullable
     @Contract("null, _ -> null; !null, _ -> !null")
-    protected static <T, V> Iterator<V> map(@Nullable List<T> list, final Function<T, V> mapping) {
+    protected static <T, V> @Nullable Iterator<V> map(@Nullable List<T> list, final Function<T, V> mapping) {
         if (list == null) {
             return null;
         }

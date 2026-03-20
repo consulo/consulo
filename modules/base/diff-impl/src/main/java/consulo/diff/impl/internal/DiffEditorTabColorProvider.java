@@ -23,9 +23,8 @@ public class DiffEditorTabColorProvider implements EditorTabColorProvider, DumbA
         myFileColorManager = fileColorManager;
     }
 
-    @Nullable
     @Override
-    public ColorValue getEditorTabColor(Project project, VirtualFile file) {
+    public @Nullable ColorValue getEditorTabColor(Project project, VirtualFile file) {
         if (file instanceof DiffVirtualFile) {
             FileColorManager fileColorManager = myFileColorManager.get();
             if (file.getName().equals("Shelf")) {

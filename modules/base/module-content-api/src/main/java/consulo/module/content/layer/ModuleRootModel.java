@@ -34,6 +34,5 @@ public interface ModuleRootModel extends ModuleRootLayer {
   
   ModuleRootLayer getCurrentLayer();
 
-  @Nullable
-  ModuleRootLayer findLayerByName(String name);
+  @Nullable ModuleRootLayer findLayerByName(String name);
 }

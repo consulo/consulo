@@ -30,9 +30,8 @@ import java.util.List;
  * @since 18/12/2021
  */
 public class DesktopSwtEditorGutterComponentImpl implements EditorGutterComponentEx {
-  @Nullable
   @Override
-  public FoldRegion findFoldingAnchorAt(int x, int y) {
+  public @Nullable FoldRegion findFoldingAnchorAt(int x, int y) {
     return null;
   }
 
@@ -82,9 +81,8 @@ public class DesktopSwtEditorGutterComponentImpl implements EditorGutterComponen
     return 0;
   }
 
-  @Nullable
   @Override
-  public Point getCenterPoint(GutterIconRenderer renderer) {
+  public @Nullable Point getCenterPoint(GutterIconRenderer renderer) {
     return null;
   }
 

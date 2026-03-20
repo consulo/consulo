@@ -98,8 +98,7 @@ public class VfsData {
     }
   }
 
-  @Nullable
-  VirtualFileSystemEntry getFileById(int id, VirtualDirectoryImpl parent) {
+  @Nullable VirtualFileSystemEntry getFileById(int id, VirtualDirectoryImpl parent) {
     PersistentFSImpl persistentFS = (PersistentFSImpl)PersistentFS.getInstance();
     VirtualFileSystemEntry dir = persistentFS.getCachedDir(id);
     if (dir != null) return dir;
@@ -134,9 +133,8 @@ public class VfsData {
     return id & OFFSET_MASK;
   }
 
-  @Nullable
   @Contract("_,true->!null")
-  public Segment getSegment(int id, boolean create) {
+  public @Nullable Segment getSegment(int id, boolean create) {
     int key = id >>> SEGMENT_BITS;
     Segment segment = mySegments.get(key);
     if (segment != null || !create) return segment;
@@ -186,8 +184,7 @@ public class VfsData {
     return !myInvalidatedIds.get(id);
   }
 
-  @Nullable
-  VirtualDirectoryImpl getChangedParent(int id) {
+  @Nullable VirtualDirectoryImpl getChangedParent(int id) {
     return myHasChangedParents ? myChangedParents.get(id) : null;
   }
 

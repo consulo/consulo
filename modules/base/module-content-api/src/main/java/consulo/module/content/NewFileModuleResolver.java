@@ -38,6 +38,5 @@ public interface NewFileModuleResolver {
             .computeSafeIfAny(it -> it.resolveModule(parent, newFileType));
     }
 
-    @Nullable
-    Module resolveModule(VirtualFile directory, FileType fileType);
+    @Nullable Module resolveModule(VirtualFile directory, FileType fileType);
 }

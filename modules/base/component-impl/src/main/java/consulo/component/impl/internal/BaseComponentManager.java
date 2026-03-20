@@ -135,9 +135,8 @@ public abstract class BaseComponentManager extends UserDataHolderBase implements
 
     public abstract ComponentManager getApplication();
 
-    @Nullable
     @Override
-    public ComponentManager getParent() {
+    public @Nullable ComponentManager getParent() {
         return myParent;
     }
 
@@ -324,9 +323,8 @@ public abstract class BaseComponentManager extends UserDataHolderBase implements
         return myMessageBus;
     }
 
-    @Nullable
     @Override
-    public <T> T getInstanceIfCreated(Class<T> clazz) {
+    public <T> @Nullable T getInstanceIfCreated(Class<T> clazz) {
         if (myInjectingContainer == null) {
             throw throwDisposed();
         }

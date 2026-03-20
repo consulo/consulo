@@ -72,9 +72,8 @@ public class PathMacroConfigurable implements SearchableConfigurable, Configurab
     return ApplicationLocalize.titlePathVariables();
   }
 
-  @Nullable
   @Override
-  public String getParentId() {
+  public @Nullable String getParentId() {
     return StandardConfigurableIds.GENERAL_GROUP;
   }
 

@@ -354,9 +354,8 @@ public class CodeCompletionHandlerBase {
         indicator.showLookup();
     }
 
-    @Nullable
     @RequiredUIAccess
-    private Future<?> startContributorThread(
+    private @Nullable Future<?> startContributorThread(
         CompletionInitializationContextImpl initContext,
         CompletionProgressIndicator indicator,
         OffsetsInFile hostCopyOffsets,

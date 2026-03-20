@@ -21,15 +21,13 @@ public interface StubElement<T extends PsiElement> extends Stub {
   @Override
   StubElement getParentStub();
 
-  @Nullable
-  PsiFileStub<?> getContainingFileStub();
+  @Nullable PsiFileStub<?> getContainingFileStub();
 
   @Override
   
   List<StubElement> getChildrenStubs();
 
-  @Nullable
-  <P extends PsiElement, S extends StubElement<P>> S findChildStubByType(IStubElementType<S, P> elementType);
+  <P extends PsiElement, S extends StubElement<P>> @Nullable S findChildStubByType(IStubElementType<S, P> elementType);
 
   T getPsi();
 
@@ -45,6 +43,5 @@ public interface StubElement<T extends PsiElement> extends Stub {
   
   <E extends PsiElement> E[] getChildrenByType(TokenSet filter, IntFunction<E[]> f);
 
-  @Nullable
-  <E extends PsiElement> E getParentStubOfType(Class<E> parentClass);
+  <E extends PsiElement> @Nullable E getParentStubOfType(Class<E> parentClass);
 }

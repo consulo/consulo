@@ -19,9 +19,8 @@ public class RunAnythingRecentCommandProvider extends RunAnythingCommandProvider
         return ((RunAnythingCacheImpl) RunAnythingCache.getInstance(fetchProject(dataContext))).getState().getCommands();
     }
 
-    @Nullable
     @Override
-    public String getHelpGroupTitle() {
+    public @Nullable String getHelpGroupTitle() {
         return null;
     }
 }

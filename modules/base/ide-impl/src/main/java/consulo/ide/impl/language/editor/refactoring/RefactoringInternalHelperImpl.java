@@ -53,9 +53,8 @@ public class RefactoringInternalHelperImpl implements RefactoringInternalHelper 
     return new PsiElement2UsageTargetAdapter(element);
   }
 
-  @Nullable
   @Override
-  public PsiDirectory chooseDirectory(PsiDirectory[] targetDirectories, @Nullable PsiDirectory initialDirectory, Project project, Map<PsiDirectory, String> relativePathsToCreate) {
+  public @Nullable PsiDirectory chooseDirectory(PsiDirectory[] targetDirectories, @Nullable PsiDirectory initialDirectory, Project project, Map<PsiDirectory, String> relativePathsToCreate) {
     return DirectoryChooserUtil.chooseDirectory(targetDirectories, initialDirectory, project, relativePathsToCreate);
   }
 }

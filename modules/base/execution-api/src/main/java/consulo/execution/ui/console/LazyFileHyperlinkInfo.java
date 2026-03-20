@@ -36,9 +36,8 @@ public class LazyFileHyperlinkInfo extends FileHyperlinkInfoBase {
     myFile = LazyValue.nullable(() -> LocalFileSystem.getInstance().refreshAndFindFileByPath(filePath));
   }
 
-  @Nullable
   @Override
-  protected VirtualFile getVirtualFile() {
+  protected @Nullable VirtualFile getVirtualFile() {
     return myFile.get();
   }
 }

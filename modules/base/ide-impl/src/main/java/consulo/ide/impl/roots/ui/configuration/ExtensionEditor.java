@@ -163,10 +163,9 @@ public class ExtensionEditor extends ModuleElementsEditor {
         return rootPane;
     }
 
-    @Nullable
     @RequiredUIAccess
     @SuppressWarnings("deprecation")
-    private JComponent createConfigurationPanel(MutableModuleExtension extension) {
+    private @Nullable JComponent createConfigurationPanel(MutableModuleExtension extension) {
         myConfigurablePanelExtension = extension;
         @RequiredUIAccess Runnable updateOnCheck = () -> extensionChanged(extension);
 

@@ -144,9 +144,8 @@ final class ServiceViewTreeUi implements ServiceViewUi {
         });
     }
 
-    @Nullable
     @Override
-    public JComponent getDetailsComponent() {
+    public @Nullable JComponent getDetailsComponent() {
         int count = myContentComponentPanel.getComponentCount();
         if (count == 0) {
             return null;

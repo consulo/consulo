@@ -32,6 +32,5 @@ public interface BinaryContentRevision extends ContentRevision {
    * @return content of the revision
    * @throws VcsException in case when content retrieval fails
    */
-  @Nullable
-  byte[] getBinaryContent() throws VcsException;
+  @Nullable byte[] getBinaryContent() throws VcsException;
 }

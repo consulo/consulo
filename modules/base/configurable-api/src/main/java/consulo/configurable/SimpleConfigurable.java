@@ -60,9 +60,8 @@ public abstract class SimpleConfigurable<T extends Supplier<? extends Component>
   }
 
   @RequiredUIAccess
-  @Nullable
   @Override
-  public Component createUIComponent(Disposable uiDisposable) {
+  public @Nullable Component createUIComponent(Disposable uiDisposable) {
     if (myComponent == null) {
       myComponent = createPanel(uiDisposable);
     }

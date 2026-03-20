@@ -32,9 +32,8 @@ import java.util.function.Predicate;
 public interface PsiElementFactory extends Predicate<IElementType> {
   ElementTypeEntryExtensionCollector<PsiElementFactory> EP = ElementTypeEntryExtensionCollector.create(PsiElementFactory.class);
 
-  @Nullable
   @RequiredReadAction
-  PsiElement createElement(ASTNode node);
+  @Nullable PsiElement createElement(ASTNode node);
 
   @Override
   boolean test(IElementType elementType);

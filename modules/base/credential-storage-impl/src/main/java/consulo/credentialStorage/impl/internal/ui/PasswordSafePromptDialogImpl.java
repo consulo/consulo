@@ -129,9 +129,8 @@ public class PasswordSafePromptDialogImpl extends DialogWrapper {
      * @param promptLabel   the prompt label text
      * @param checkboxLabel the checkbox text   @return null if dialog was cancelled or password (stored in database or a entered by user)
      */
-    @Nullable
     @RequiredUIAccess
-    static String askPassword(Project project,
+    static @Nullable String askPassword(Project project,
                               String title,
                               String message,
                               Class<?> requestor,

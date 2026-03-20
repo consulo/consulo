@@ -158,9 +158,8 @@ public class GotoClassAction extends GotoActionBase implements DumbAware {
         }
     }
 
-    @Nullable
     @RequiredReadAction
-    public static Navigatable findMember(String memberPattern, String fullPattern, PsiElement psiElement, VirtualFile file) {
+    public static @Nullable Navigatable findMember(String memberPattern, String fullPattern, PsiElement psiElement, VirtualFile file) {
         StructureViewBuilder builder = PsiStructureViewFactory.createBuilderForFile(psiElement.getContainingFile());
         FileEditor[] editors = FileEditorManager.getInstance(psiElement.getProject()).getEditors(file);
         if (builder == null || editors.length == 0) {

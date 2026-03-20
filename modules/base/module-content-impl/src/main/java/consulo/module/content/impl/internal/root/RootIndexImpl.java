@@ -55,8 +55,7 @@ public class RootIndexImpl implements RootIndex {
     };
 
     public interface InfoCache {
-        @Nullable
-        DirectoryInfo getCachedInfo(VirtualFile dir);
+        @Nullable DirectoryInfo getCachedInfo(VirtualFile dir);
 
         void cacheInfo(VirtualFile dir, DirectoryInfo info);
     }

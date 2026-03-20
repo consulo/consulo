@@ -57,9 +57,8 @@ public abstract class WelcomeFrameManager {
     myApplication = application;
   }
 
-  @Nullable
   @RequiredUIAccess
-  public IdeFrame getCurrentFrame() {
+  public @Nullable IdeFrame getCurrentFrame() {
     UIAccess.assertIsUIThread();
     WelcomeProjectManager welcomeProjectManager = WelcomeProjectManager.getInstance();
     Project welcomeProject = welcomeProjectManager.getOpenWelcomeProject();

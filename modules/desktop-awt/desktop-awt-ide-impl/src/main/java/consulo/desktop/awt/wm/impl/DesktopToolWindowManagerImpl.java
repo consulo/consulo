@@ -927,10 +927,9 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
         balloon.show(new RelativePoint(baseLabel, new Point(baseLabel.getWidth() / 2, 0)), Balloon.Position.above);
     }
 
-    @Nullable
     @Override
     @RequiredUIAccess
-    public String getLastActiveToolWindowId(@Nullable Predicate<JComponent> condition) {
+    public @Nullable String getLastActiveToolWindowId(@Nullable Predicate<JComponent> condition) {
         UIAccess.assertIsUIThread();
         String lastActiveToolWindowId = null;
         for (int i = 0; i < myActiveStack.getPersistentSize(); i++) {

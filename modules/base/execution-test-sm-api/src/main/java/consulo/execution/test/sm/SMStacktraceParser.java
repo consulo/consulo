@@ -25,6 +25,5 @@ import org.jspecify.annotations.Nullable;
  */
 @Deprecated
 public interface SMStacktraceParser {
-    @Nullable
-    Navigatable getErrorNavigatable(Project project, String stacktrace);
+    @Nullable Navigatable getErrorNavigatable(Project project, String stacktrace);
 }

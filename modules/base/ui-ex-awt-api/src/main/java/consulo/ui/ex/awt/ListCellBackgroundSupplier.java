@@ -5,6 +5,5 @@ import org.jspecify.annotations.Nullable;
 import java.awt.*;
 
 public interface ListCellBackgroundSupplier<T> {
-  @Nullable
-  Color getCellBackground(T value, int row);
+  @Nullable Color getCellBackground(T value, int row);
 }

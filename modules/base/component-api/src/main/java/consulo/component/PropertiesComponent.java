@@ -31,8 +31,7 @@ public interface PropertiesComponent {
 
     boolean isValueSet(String name);
 
-    @Nullable
-    String getValue(String name);
+    @Nullable String getValue(String name);
 
     /**
      * Consider to use {@link #setValue(String, String, String)} to avoid write defaults.
@@ -71,8 +70,7 @@ public interface PropertiesComponent {
      */
     void setValue(String name, boolean value, boolean defaultValue);
 
-    @Nullable
-    String[] getValues(String name);
+    @Nullable String[] getValues(String name);
 
     void setValues(String name, String[] values);
 

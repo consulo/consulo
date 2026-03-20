@@ -49,9 +49,8 @@ public enum ThreeSide {
   // Helpers
   //
 
-  @Nullable
   @Contract("!null, !null, !null -> !null; null, null, null -> null")
-  public <T> T select(@Nullable T left, @Nullable T base, @Nullable T right) {
+  public <T> @Nullable T select(@Nullable T left, @Nullable T base, @Nullable T right) {
     if (myIndex == 0) return left;
     if (myIndex == 1) return base;
     if (myIndex == 2) return right;

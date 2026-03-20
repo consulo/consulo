@@ -901,9 +901,8 @@ public abstract class MasterDetailsComponent implements Configurable, MasterDeta
                 public void setDisplayName(String name) {
                 }
 
-                @Nullable
                 @Override
-                public Image getIcon() {
+                public @Nullable Image getIcon() {
                     return null;
                 }
 

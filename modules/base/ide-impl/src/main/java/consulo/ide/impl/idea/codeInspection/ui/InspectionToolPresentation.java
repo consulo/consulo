@@ -68,8 +68,7 @@ public interface InspectionToolPresentation extends ProblemDescriptionsProcessor
   
   Collection<RefEntity> getIgnoredRefElements();
 
-  @Nullable
-  IntentionAction findQuickFixes(CommonProblemDescriptor descriptor, String hint);
+  @Nullable IntentionAction findQuickFixes(CommonProblemDescriptor descriptor, String hint);
 
   
   HTMLComposerBase getComposer();
@@ -78,8 +77,7 @@ public interface InspectionToolPresentation extends ProblemDescriptionsProcessor
 
   Set<RefModule> getModuleProblems();
 
-  @Nullable
-  QuickFixAction[] getQuickFixes(RefEntity[] refElements);
+  @Nullable QuickFixAction[] getQuickFixes(RefEntity[] refElements);
 
   
   Map<RefEntity, CommonProblemDescriptor[]> getProblemElements();
@@ -92,8 +90,7 @@ public interface InspectionToolPresentation extends ProblemDescriptionsProcessor
 
   boolean isOldProblemsIncluded();
 
-  @Nullable
-  Map<RefEntity, CommonProblemDescriptor[]> getOldProblemElements();
+  @Nullable Map<RefEntity, CommonProblemDescriptor[]> getOldProblemElements();
 
   boolean isProblemResolved(RefEntity refEntity, CommonProblemDescriptor descriptor);
 
@@ -108,8 +105,7 @@ public interface InspectionToolPresentation extends ProblemDescriptionsProcessor
 
   void ignoreProblem(RefEntity refEntity, CommonProblemDescriptor problem, int idx);
 
-  @Nullable
-  QuickFixAction[] extractActiveFixes(RefEntity[] refElements, Map<RefEntity, Set<QuickFix>> actions);
+  @Nullable QuickFixAction[] extractActiveFixes(RefEntity[] refElements, Map<RefEntity, Set<QuickFix>> actions);
 
   void exportResults(Element parentNode);
 }

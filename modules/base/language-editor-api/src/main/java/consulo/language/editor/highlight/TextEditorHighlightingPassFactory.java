@@ -92,6 +92,5 @@ public interface TextEditorHighlightingPassFactory {
 
     void register(Registrar registrar);
 
-    @Nullable
-    TextEditorHighlightingPass createHighlightingPass(PsiFile file, Editor editor);
+    @Nullable TextEditorHighlightingPass createHighlightingPass(PsiFile file, Editor editor);
 }

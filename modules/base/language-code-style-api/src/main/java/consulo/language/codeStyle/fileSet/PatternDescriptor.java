@@ -36,14 +36,11 @@ public class PatternDescriptor implements FileSetDescriptor {
 
   public static final String PATTERN_TYPE = "pattern";
   private
-  @Nullable
-  String myRawPattern;
+  @Nullable String myRawPattern;
   private
-  @Nullable
-  Pattern myPathPattern;
+  @Nullable Pattern myPathPattern;
   private
-  @Nullable
-  Pattern myFileNamePattern;
+  @Nullable Pattern myFileNamePattern;
   private final static String FORBIDDEN_CHARS = "<>:\"\\;";
 
   public PatternDescriptor(String pattern) {

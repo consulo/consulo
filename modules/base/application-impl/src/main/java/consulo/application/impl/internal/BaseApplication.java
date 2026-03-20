@@ -175,9 +175,8 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
         }
     }
 
-    @Nullable
     @Override
-    public ProgressIndicatorProvider getProgressIndicatorProvider() {
+    public @Nullable ProgressIndicatorProvider getProgressIndicatorProvider() {
         return myProgressManager;
     }
 

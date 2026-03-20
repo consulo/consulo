@@ -273,9 +273,8 @@ public class SimpleOnesideDiffViewer extends OnesideTextDiffViewer {
             return true;
         }
 
-        @Nullable
         @Override
-        protected LogicalPosition[] getCaretPositions() {
+        protected @Nullable LogicalPosition[] getCaretPositions() {
             int index = getSide().getIndex();
             int otherIndex = getSide().other().getIndex();
 

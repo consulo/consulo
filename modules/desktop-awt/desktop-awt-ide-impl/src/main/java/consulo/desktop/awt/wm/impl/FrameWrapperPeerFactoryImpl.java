@@ -204,9 +204,8 @@ public class FrameWrapperPeerFactoryImpl implements FrameWrapperPeerFactory {
       return null;
     }
 
-    @Nullable
     @Override
-    public BalloonLayout getBalloonLayout() {
+    public @Nullable BalloonLayout getBalloonLayout() {
       return null;
     }
 

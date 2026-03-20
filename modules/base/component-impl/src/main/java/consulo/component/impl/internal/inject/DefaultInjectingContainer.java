@@ -74,10 +74,9 @@ public class DefaultInjectingContainer implements InjectingContainer {
     throw new IllegalArgumentException("Class " + clazz.getName() + " is not bind");
   }
 
-  @Nullable
   @Override
   @SuppressWarnings("unchecked")
-  public <T> T getInstanceIfCreated(Class<T> clazz) {
+  public <T> @Nullable T getInstanceIfCreated(Class<T> clazz) {
     Class<?> insideObjectCreation = GetInstanceValidator.insideObjectCreation();
     if (LOG_INJECTING_PROBLEMS && insideObjectCreation != null && myGetInstanceWarningSet.add(Pair.create(clazz, insideObjectCreation))) {
       LOG.warn("Calling #getInstance(" + clazz.getName() + ".class) inside object initialization. Use constructor injection instead. MainInjecting: " + insideObjectCreation);

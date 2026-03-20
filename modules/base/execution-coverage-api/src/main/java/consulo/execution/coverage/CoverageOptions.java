@@ -10,6 +10,5 @@ import org.jspecify.annotations.Nullable;
  */
 @ExtensionAPI(ComponentScope.PROJECT)
 public interface CoverageOptions {
-    @Nullable
-    Configurable createConfigurable();
+    @Nullable Configurable createConfigurable();
 }

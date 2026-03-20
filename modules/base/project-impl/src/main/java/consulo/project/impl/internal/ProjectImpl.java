@@ -190,9 +190,8 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
         builder.bind(ProjectEx.class).to(this);
     }
 
-    @Nullable
     @Override
-    public IProjectStore getStateStore() {
+    public @Nullable IProjectStore getStateStore() {
         return (IProjectStore) super.getStateStore();
     }
 
@@ -340,9 +339,8 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
         TimedReference.disposeTimed();
     }
 
-    @Nullable
     @Override
-    public Window getWindow() {
+    public @Nullable Window getWindow() {
         return WindowManager.getInstance().getWindow(this);
     }
 

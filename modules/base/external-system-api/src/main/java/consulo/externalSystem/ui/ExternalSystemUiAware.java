@@ -29,12 +29,9 @@ public interface ExternalSystemUiAware {
   
   String getProjectRepresentationName(String targetProjectPath, @Nullable String rootProjectPath);
 
-  @Nullable
-  FileChooserDescriptor getExternalProjectConfigDescriptor();
+  @Nullable FileChooserDescriptor getExternalProjectConfigDescriptor();
 
-  @Nullable
-  Image getProjectIcon();
+  @Nullable Image getProjectIcon();
 
-  @Nullable
-  Image getTaskIcon();
+  @Nullable Image getTaskIcon();
 }

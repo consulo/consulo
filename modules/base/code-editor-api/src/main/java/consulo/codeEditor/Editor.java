@@ -449,8 +449,7 @@ public interface Editor extends UserDataHolder {
      *
      * @return the project instance, or null if the editor is not related to any project.
      */
-    @Nullable
-    Project getProject();
+    @Nullable Project getProject();
 
     /**
      * Returns the insert/overwrite mode for the editor.

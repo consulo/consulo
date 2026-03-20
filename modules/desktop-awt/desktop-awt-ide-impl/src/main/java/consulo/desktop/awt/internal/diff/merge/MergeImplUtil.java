@@ -96,9 +96,8 @@ public class MergeImplUtil {
             myMergeContext = mergeContext;
         }
 
-        @Nullable
         @Override
-        public Project getProject() {
+        public @Nullable Project getProject() {
             return myMergeContext.getProject();
         }
 
@@ -117,9 +116,8 @@ public class MergeImplUtil {
             myMergeContext.requestFocus();
         }
 
-        @Nullable
         @Override
-        public <T> T getUserData(Key<T> key) {
+        public <T> @Nullable T getUserData(Key<T> key) {
             return myMergeContext.getUserData(key);
         }
 

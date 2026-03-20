@@ -52,16 +52,14 @@ class MergedCompositeConfigurable implements SearchableConfigurable {
     return displayName;
   }
 
-  @Nullable
   @Override
-  public String getHelpTopic() {
+  public @Nullable String getHelpTopic() {
     return children.length == 1 ? children[0].getHelpTopic() : null;
   }
 
   @RequiredUIAccess
-  @Nullable
   @Override
-  public Component createUIComponent(Disposable uiDisposable) {
+  public @Nullable Component createUIComponent(Disposable uiDisposable) {
     if (myRootComponent == null) {
       Configurable firstConfigurable = children[0];
       if (children.length == 1) {
@@ -92,9 +90,8 @@ class MergedCompositeConfigurable implements SearchableConfigurable {
   }
 
   @RequiredUIAccess
-  @Nullable
   @Override
-  public JComponent createComponent(Disposable parentDisposable) {
+  public @Nullable JComponent createComponent(Disposable parentDisposable) {
     if (!Application.get().isSwingApplication()) {
       return null;
     }

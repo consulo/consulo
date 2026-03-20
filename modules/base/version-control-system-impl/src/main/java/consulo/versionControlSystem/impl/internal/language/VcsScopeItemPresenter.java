@@ -39,9 +39,8 @@ public class VcsScopeItemPresenter implements ModelScopeItemPresenter {
   }
 
   @RequiredUIAccess
-  @Nullable
   @Override
-  public Component getAdditionalComponents(RadioButton button, ModelScopeItem m, Disposable dialogDisposable) {
+  public @Nullable Component getAdditionalComponents(RadioButton button, ModelScopeItem m, Disposable dialogDisposable) {
     VcsScopeItem model = (VcsScopeItem)m;
     DefaultComboBoxModel<LocalChangeList> comboBoxModel = model.getChangeListsModel();
     if (comboBoxModel == null) {

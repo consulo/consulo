@@ -198,9 +198,8 @@ public class LocalHistoryImpl extends LocalHistory implements Disposable {
         };
     }
 
-    @Nullable
     @Override
-    public byte[] getByteContent(VirtualFile f, FileRevisionTimestampComparator c) {
+    public @Nullable byte[] getByteContent(VirtualFile f, FileRevisionTimestampComparator c) {
         if (!isInitialized()) {
             return null;
         }

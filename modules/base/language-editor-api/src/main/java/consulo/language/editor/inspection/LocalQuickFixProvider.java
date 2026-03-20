@@ -29,6 +29,5 @@ import org.jspecify.annotations.Nullable;
 @Deprecated
 @DeprecationInfo("Use PsiReferenceLocalQuickFixProvider")
 public interface LocalQuickFixProvider {
-  @Nullable
-  LocalQuickFix[] getQuickFixes();
+  @Nullable LocalQuickFix[] getQuickFixes();
 }

@@ -22,6 +22,5 @@ import javax.swing.tree.TreeNode;
  * @author Konstantin Bulenkov
  */
 public interface XNamedTreeNode extends TreeNode {
-  @Nullable
-  String getName();
+  @Nullable String getName();
 }

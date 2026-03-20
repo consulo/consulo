@@ -36,9 +36,7 @@ public interface BaseCheckinHandlerFactory {
    * @param commitContext
    * @return the handler instance - null if not supported
    */
-  @Nullable
-  CheckinHandler createHandler(CheckinProjectPanel panel, CommitContext commitContext);
+  @Nullable CheckinHandler createHandler(CheckinProjectPanel panel, CommitContext commitContext);
 
-  @Nullable
-  BeforeCheckinDialogHandler createSystemReadyHandler(Project project);
+  @Nullable BeforeCheckinDialogHandler createSystemReadyHandler(Project project);
 }

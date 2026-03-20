@@ -42,9 +42,8 @@ public class BekBaseController extends CascadeController {
     throw new IllegalStateException();
   }
 
-  @Nullable
   @Override
-  protected LinearGraphAnswer performAction(LinearGraphAction action) {
+  protected @Nullable LinearGraphAnswer performAction(LinearGraphAction action) {
     return null;
   }
 
@@ -53,9 +52,8 @@ public class BekBaseController extends CascadeController {
     return myBekIntMap;
   }
 
-  @Nullable
   @Override
-  protected GraphElement convertToDelegate(GraphElement graphElement) {
+  protected @Nullable GraphElement convertToDelegate(GraphElement graphElement) {
     if (graphElement instanceof GraphEdge) {
       Integer upIndex = ((GraphEdge)graphElement).getUpNodeIndex();
       Integer downIndex = ((GraphEdge)graphElement).getDownNodeIndex();
@@ -119,9 +117,8 @@ public class BekBaseController extends CascadeController {
       return myBekIntMap.getUsualIndex(nodeIndex);
     }
 
-    @Nullable
     @Override
-    public Integer getNodeIndex(int nodeId) {
+    public @Nullable Integer getNodeIndex(int nodeId) {
       if (!inRanges(nodeId)) return null;
 
       return myBekIntMap.getBekIndex(nodeId);

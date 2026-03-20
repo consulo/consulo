@@ -146,9 +146,8 @@ public abstract class Language extends UserDataHolderBase {
      * @param klass <code>java.lang.Class</code> of the particular language. Serves key purpose.
      * @return instance of the <code>klass</code> language registered if any.
      */
-    @Nullable
     @SuppressWarnings("unchecked")
-    public static <T extends Language> T findInstance(Class<T> klass) {
+    public static <T extends Language> @Nullable T findInstance(Class<T> klass) {
         return (T) ourRegisteredLanguages.get(klass);
     }
 
@@ -277,10 +276,9 @@ public abstract class Language extends UserDataHolderBase {
         return myVersions.get();
     }
 
-    @Nullable
     @SuppressWarnings("unchecked")
     @UsedInPlugin
-    public <T extends LanguageVersion> T findVersionByClass(Class<T> clazz) {
+    public <T extends LanguageVersion> @Nullable T findVersionByClass(Class<T> clazz) {
         for (LanguageVersion languageVersion : getVersions()) {
             if (languageVersion.getClass() == clazz) {
                 return (T) languageVersion;

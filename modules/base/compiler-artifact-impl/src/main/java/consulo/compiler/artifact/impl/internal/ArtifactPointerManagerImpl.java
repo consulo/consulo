@@ -95,9 +95,8 @@ public class ArtifactPointerManagerImpl extends NamedPointerManagerImpl<Artifact
     return create(artifactModel.getOriginalArtifact(artifact));
   }
 
-  @Nullable
   @Override
-  protected Artifact findByName(String name) {
+  protected @Nullable Artifact findByName(String name) {
     return myArtifactManagerProvider.get().findArtifact(name);
   }
 

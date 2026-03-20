@@ -26,6 +26,5 @@ import org.jspecify.annotations.Nullable;
  */
 @ExtensionAPI(ComponentScope.PROJECT)
 public interface UnscrambleDialogOptionProvider {
-    @Nullable
-    UnnamedConfigurable createConfigurable();
+    @Nullable UnnamedConfigurable createConfigurable();
 }

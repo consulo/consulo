@@ -175,9 +175,8 @@ public class TemporaryPlacesRegistry {
         return myInjectorSupport;
     }
 
-    @Nullable
     @RequiredReadAction
-    public InjectedLanguage getLanguageFor(PsiLanguageInjectionHost host, PsiFile containingFile) {
+    public @Nullable InjectedLanguage getLanguageFor(PsiLanguageInjectionHost host, PsiFile containingFile) {
         PsiLanguageInjectionHost originalHost = CompletionUtilCore.getOriginalElement(host, containingFile);
         PsiLanguageInjectionHost injectionHost = originalHost == null ? host : originalHost;
         getInjectionPlacesSafe();

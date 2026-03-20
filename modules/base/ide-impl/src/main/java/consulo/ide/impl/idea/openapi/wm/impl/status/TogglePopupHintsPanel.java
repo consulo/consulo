@@ -161,9 +161,8 @@ public class TogglePopupHintsPanel extends EditorBasedWidget implements StatusBa
         return file != null && DaemonCodeAnalyzer.getInstance(file.getProject()).isHighlightingAvailable(file);
     }
 
-    @Nullable
     @RequiredReadAction
-    private PsiFile getCurrentFile() {
+    private @Nullable PsiFile getCurrentFile() {
         VirtualFile virtualFile = getSelectedFile();
         if (virtualFile != null && virtualFile.isValid()) {
             return PsiManager.getInstance(getProject()).findFile(virtualFile);

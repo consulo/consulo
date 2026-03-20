@@ -467,8 +467,7 @@ public abstract class AttachToProcessActionBase extends AnAction {
             return myGroup;
         }
 
-        @Nullable
-        String getSeparatorTitle() {
+        @Nullable String getSeparatorTitle() {
             return myIsFirstInGroup ? myGroupName : null;
         }
 
@@ -699,9 +698,8 @@ public abstract class AttachToProcessActionBase extends AnAction {
             super(project, title, items);
         }
 
-        @Nullable
         @Override
-        public ListSeparator getSeparatorAbove(AttachItem value) {
+        public @Nullable ListSeparator getSeparatorAbove(AttachItem value) {
             String separatorTitle = value.getSeparatorTitle();
             return separatorTitle == null ? null : new ListSeparator(separatorTitle);
         }
@@ -722,9 +720,8 @@ public abstract class AttachToProcessActionBase extends AnAction {
             return selectedValue.hasSubStep();
         }
 
-        @Nullable
         @Override
-        public String getTooltipTextFor(AttachItem value) {
+        public @Nullable String getTooltipTextFor(AttachItem value) {
             return value.getTooltipText(myProject);
         }
 

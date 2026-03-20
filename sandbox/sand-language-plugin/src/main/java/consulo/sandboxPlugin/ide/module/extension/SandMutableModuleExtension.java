@@ -43,9 +43,8 @@ public class SandMutableModuleExtension extends SandModuleExtension implements M
   }
 
   @RequiredUIAccess
-  @Nullable
   @Override
-  public Component createConfigurationComponent(Disposable uiDisposable, Runnable updateOnCheck) {
+  public @Nullable Component createConfigurationComponent(Disposable uiDisposable, Runnable updateOnCheck) {
     VerticalLayout panel = VerticalLayout.create();
     panel.add(ModuleExtensionBundleBoxBuilder.createAndDefine(this, uiDisposable, updateOnCheck).uiDisposable(uiDisposable).build());
     return panel;

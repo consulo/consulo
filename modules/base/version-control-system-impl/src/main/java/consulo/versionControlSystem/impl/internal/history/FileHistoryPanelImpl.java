@@ -930,9 +930,8 @@ public class FileHistoryPanelImpl extends PanelWithActionsAndCloseButton impleme
             }
         }
 
-        @Nullable
         @Override
-        public byte[] getContentAsBytes() throws VcsException {
+        public @Nullable byte[] getContentAsBytes() throws VcsException {
             try {
                 return VcsHistoryUtil.loadRevisionContent(myRevision);
             }
@@ -1405,9 +1404,8 @@ public class FileHistoryPanelImpl extends PanelWithActionsAndCloseButton impleme
             setShortcutSet(ActionManager.getInstance().getAction("Annotate").getShortcutSet());
         }
 
-        @Nullable
         @Override
-        protected Editor getEditor(AnActionEvent e) {
+        protected @Nullable Editor getEditor(AnActionEvent e) {
             VirtualFile virtualFile = getVirtualFile();
             if (virtualFile == null) {
                 return null;
@@ -1425,15 +1423,13 @@ public class FileHistoryPanelImpl extends PanelWithActionsAndCloseButton impleme
             return fileEditor instanceof TextEditor textEditor ? textEditor.getEditor() : null;
         }
 
-        @Nullable
         @Override
-        protected AbstractVcs getVcs(AnActionEvent e) {
+        protected @Nullable AbstractVcs getVcs(AnActionEvent e) {
             return myVcs;
         }
 
-        @Nullable
         @Override
-        protected VirtualFile getFile(AnActionEvent e) {
+        protected @Nullable VirtualFile getFile(AnActionEvent e) {
             Boolean nonLocal = e.getData(VcsDataKeys.VCS_NON_LOCAL_HISTORY_SESSION);
             if (Boolean.TRUE.equals(nonLocal)) {
                 return null;
@@ -1449,9 +1445,8 @@ public class FileHistoryPanelImpl extends PanelWithActionsAndCloseButton impleme
             return file;
         }
 
-        @Nullable
         @Override
-        protected VcsFileRevision getFileRevision(AnActionEvent e) {
+        protected @Nullable VcsFileRevision getFileRevision(AnActionEvent e) {
             VcsFileRevision revision = e.getData(VcsDataKeys.VCS_FILE_REVISION);
 
             if (!myHistorySession.isContentAvailable(revision)) {

@@ -35,9 +35,8 @@ class EmptyFMap implements KeyFMap {
         return this;
     }
 
-    @Nullable
     @Override
-    public <V> V get(Key<V> key) {
+    public <V> @Nullable V get(Key<V> key) {
         return null;
     }
 

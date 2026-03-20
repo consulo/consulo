@@ -31,6 +31,5 @@ import org.jspecify.annotations.Nullable;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface SyntaxHighlighterProvider {
-  @Nullable
-  SyntaxHighlighter create(FileType fileType, @Nullable Project project, @Nullable VirtualFile file);
+  @Nullable SyntaxHighlighter create(FileType fileType, @Nullable Project project, @Nullable VirtualFile file);
 }

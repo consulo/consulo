@@ -252,9 +252,8 @@ public class GotoDeclarationAction extends BaseCodeInsightAction implements Code
         return false;
     }
 
-    @Nullable
     @RequiredReadAction
-    public static PsiElement findTargetElement(Project project, Editor editor, int offset) {
+    public static @Nullable PsiElement findTargetElement(Project project, Editor editor, int offset) {
         Pair<PsiElement[], GotoDeclarationHandler> pair = findAllTargetElementsInfo(project, editor, offset);
         PsiElement[] targets = pair.getFirst();
         return targets.length == 1 ? targets[0] : null;
@@ -271,9 +270,8 @@ public class GotoDeclarationAction extends BaseCodeInsightAction implements Code
         return Pair.create(ObjectUtil.notNull(pair.getFirst(), PsiElement.EMPTY_ARRAY), pair.getSecond());
     }
 
-    @Nullable
     @RequiredReadAction
-    public static PsiElement[] findTargetElementsNoVS(Project project, Editor editor, int offset, boolean lookupAccepted) {
+    public static @Nullable PsiElement[] findTargetElementsNoVS(Project project, Editor editor, int offset, boolean lookupAccepted) {
         return findTargetElementsNoVSWithHandler(project, editor, offset, lookupAccepted).getFirst();
     }
 

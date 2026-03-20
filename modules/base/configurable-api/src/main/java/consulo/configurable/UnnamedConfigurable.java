@@ -36,10 +36,9 @@ public interface UnnamedConfigurable {
    * @param parentDisposable disposable parameter, per ui page, dispose on ui close
    * @return the component instance.
    */
-  @Nullable
   @RequiredUIAccess
   @SuppressWarnings("deprecation")
-  default JComponent createComponent(Disposable parentDisposable) {
+  default @Nullable JComponent createComponent(Disposable parentDisposable) {
     return createComponent();
   }
 
@@ -48,11 +47,10 @@ public interface UnnamedConfigurable {
    *
    * @return the component instance.
    */
-  @Nullable
   @RequiredUIAccess
   @Deprecated(forRemoval = true)
   @DeprecationInfo("Use with Disposable parameter")
-  default JComponent createComponent() {
+  default @Nullable JComponent createComponent() {
     return null;
   }
 
@@ -62,24 +60,21 @@ public interface UnnamedConfigurable {
    * @param parentDisposable disposable parameter, per ui page, dispose on ui close
    * @return the component instance.
    */
-  @Nullable
   @RequiredUIAccess
   @SuppressWarnings("deprecation")
-  default Component createUIComponent(Disposable parentDisposable) {
+  default @Nullable Component createUIComponent(Disposable parentDisposable) {
     return createUIComponent();
   }
 
-  @Nullable
   @RequiredUIAccess
   @Deprecated(forRemoval = true)
   @DeprecationInfo("Use with Disposable parameter")
-  default Component createUIComponent() {
+  default @Nullable Component createUIComponent() {
     return null;
   }
 
-  @Nullable
   @RequiredUIAccess
-  default JComponent getPreferredFocusedComponent() {
+  default @Nullable JComponent getPreferredFocusedComponent() {
     return null;
   }
 

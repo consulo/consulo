@@ -35,9 +35,8 @@ public abstract class StatisticsManager {
    */
   public static final int RECENCY_OBLIVION_THRESHOLD = 10000;
 
-  @Nullable
   @SuppressWarnings("unchecked")
-  public static <T, Loc, Stat extends Statistician<T, Loc, Stat>> StatisticsInfo serialize(Key<? extends Statistician<T, Loc, Stat>> key, T element, Loc location) {
+  public static <T, Loc, Stat extends Statistician<T, Loc, Stat>> @Nullable StatisticsInfo serialize(Key<? extends Statistician<T, Loc, Stat>> key, T element, Loc location) {
     for (Statistician<T, Loc, Stat> statistician : Statistician.forKey(key)) {
       StatisticsInfo info = statistician.serialize(element, location);
       if (info != null) return info;

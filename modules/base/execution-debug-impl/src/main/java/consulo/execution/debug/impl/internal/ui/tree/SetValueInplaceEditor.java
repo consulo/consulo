@@ -60,9 +60,8 @@ public class SetValueInplaceEditor extends XDebuggerTreeInplaceEditor {
     myEditorPanel = JBUI.Panels.simplePanel(myExpressionEditor.getComponent());
   }
 
-  @Nullable
   @Override
-  protected Rectangle getEditorBounds() {
+  protected @Nullable Rectangle getEditorBounds() {
     Rectangle bounds = super.getEditorBounds();
     if (bounds == null) {
       return null;

@@ -27,6 +27,5 @@ public interface ObjectStubSerializerProvider {
 
   boolean isLazy();
 
-  @Nullable
-  ObjectStubSerializer getObjectStubSerializer();
+  @Nullable ObjectStubSerializer getObjectStubSerializer();
 }

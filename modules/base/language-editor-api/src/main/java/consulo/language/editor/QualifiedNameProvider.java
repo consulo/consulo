@@ -29,14 +29,11 @@ import org.jspecify.annotations.Nullable;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface QualifiedNameProvider {
-    @Nullable
-    PsiElement adjustElementToCopy(PsiElement element);
+    @Nullable PsiElement adjustElementToCopy(PsiElement element);
 
-    @Nullable
-    String getQualifiedName(PsiElement element);
+    @Nullable String getQualifiedName(PsiElement element);
 
-    @Nullable
-    PsiElement qualifiedNameToElement(String fqn, Project project);
+    @Nullable PsiElement qualifiedNameToElement(String fqn, Project project);
 
     default void insertQualifiedName(String fqn, PsiElement element, Editor editor, Project project) {
         EditorModificationUtil.insertStringAtCaret(editor, fqn);

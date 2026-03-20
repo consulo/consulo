@@ -36,22 +36,19 @@ public interface ArrangementStandardSettingsAware {
    * @return  settings to use by default, i.e. when a user hasn't been explicitly modified arrangement settings;
    *          <code>null</code> as an indication that no default settings are available
    */
-  @Nullable
-  StdArrangementSettings getDefaultSettings();
+  @Nullable StdArrangementSettings getDefaultSettings();
 
   /**
    * @return    ordered collection of grouping tokens eligible to use with the current rearranger.
    *            <b>Note:</b> platform code which uses this method caches returned results
    */
-  @Nullable
-  List<CompositeArrangementSettingsToken> getSupportedGroupingTokens();
+  @Nullable List<CompositeArrangementSettingsToken> getSupportedGroupingTokens();
 
   /**
    * @return    ordered collection of matching tokens eligible to use with the current rearranger
    *            <b>Note:</b> platform code which uses this method caches returned results
    */
-  @Nullable
-  List<CompositeArrangementSettingsToken> getSupportedMatchingTokens();
+  @Nullable List<CompositeArrangementSettingsToken> getSupportedMatchingTokens();
 
   /**
    * Allows to answer if given token is enabled in combination with other conditions specified by the given condition object.

@@ -54,9 +54,8 @@ public class SimpleTextCellAppearance implements ModifiableCellAppearanceEx {
     component.append(myText, myTextAttributes);
   }
 
-  @Nullable
   @Override
-  public Image getIcon() {
+  public @Nullable Image getIcon() {
     return myIcon;
   }
 

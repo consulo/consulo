@@ -27,8 +27,7 @@ import java.util.Map;
 public interface Storage {
   void put(String key, String value);
 
-  @Nullable
-  String get(String key);
+  @Nullable String get(String key);
 
   class PropertiesComponentStorage implements Storage {
     private final PropertiesComponent myPropertiesComponent;
@@ -44,9 +43,8 @@ public interface Storage {
       myPropertiesComponent.setValue(myPrefix + key, value);
     }
 
-    @Nullable
     @Override
-    public String get(String key) {
+    public @Nullable String get(String key) {
       return myPropertiesComponent.getValue(myPrefix + key);
     }
 
@@ -60,9 +58,8 @@ public interface Storage {
   class MapStorage implements Storage {
     private final Map<String, String> myValues = new HashMap<>();
 
-    @Nullable
     @Override
-    public String get(String key) {
+    public @Nullable String get(String key) {
       return myValues.get(key);
     }
 

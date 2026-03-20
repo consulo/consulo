@@ -30,9 +30,8 @@ public abstract class IndentStatusBarUIContributor implements CodeStyleStatusBar
      */
     public abstract @Nullable String getHint();
 
-    @Nullable
     @Override
-    public String getTooltip() {
+    public @Nullable String getTooltip() {
         return createTooltip(getIndentInfo(myIndentOptions).get(), getHint());
     }
 

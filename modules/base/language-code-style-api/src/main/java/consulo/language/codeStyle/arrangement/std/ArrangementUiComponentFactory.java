@@ -27,8 +27,7 @@ import java.util.List;
 public interface ArrangementUiComponentFactory {
   ExtensionPointName<ArrangementUiComponentFactory> EP_NAME = ExtensionPointName.create(ArrangementUiComponentFactory.class);
 
-  @Nullable
-  ArrangementUiComponent build(StdArrangementTokenUiRole role,
+  @Nullable ArrangementUiComponent build(StdArrangementTokenUiRole role,
                                List<ArrangementSettingsToken> tokens,
                                ArrangementColorsProvider colorsProvider,
                                ArrangementStandardSettingsManager settingsManager);

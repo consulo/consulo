@@ -20,9 +20,7 @@ public interface TraceInfo {
   
   Map<Integer, TraceElement> getValuesOrderAfter();
 
-  @Nullable
-  Map<TraceElement, List<TraceElement>> getDirectTrace();
+  @Nullable Map<TraceElement, List<TraceElement>> getDirectTrace();
 
-  @Nullable
-  Map<TraceElement, List<TraceElement>> getReverseTrace();
+  @Nullable Map<TraceElement, List<TraceElement>> getReverseTrace();
 }

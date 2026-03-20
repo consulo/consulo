@@ -47,14 +47,11 @@ public sealed interface BookmarkManager permits BookmarkManagerInternal {
 
   boolean hasBookmarksWithMnemonics();
 
-  @Nullable
-  Bookmark findBookmarkForMnemonic(char m);
+  @Nullable Bookmark findBookmarkForMnemonic(char m);
 
-  @Nullable
-  Bookmark findFileBookmark(VirtualFile file);
+  @Nullable Bookmark findFileBookmark(VirtualFile file);
 
-  @Nullable
-  Bookmark findEditorBookmark(Document document, int line);
+  @Nullable Bookmark findEditorBookmark(Document document, int line);
 
   
   List<Bookmark> getValidBookmarks();
@@ -62,16 +59,13 @@ public sealed interface BookmarkManager permits BookmarkManagerInternal {
   
   Bookmark addTextBookmark(VirtualFile file, int lineIndex, String description);
 
-  @Nullable
-  Bookmark addFileBookmark(VirtualFile file, String description);
+  @Nullable Bookmark addFileBookmark(VirtualFile file, String description);
 
   void addEditorBookmark(Editor editor, int lineIndex);
 
-  @Nullable
-  Bookmark getNextBookmark(Editor editor, boolean isWrapped);
+  @Nullable Bookmark getNextBookmark(Editor editor, boolean isWrapped);
 
-  @Nullable
-  Bookmark getPreviousBookmark(Editor editor, boolean isWrapped);
+  @Nullable Bookmark getPreviousBookmark(Editor editor, boolean isWrapped);
 
   
   List<? extends Bookmark> moveBookmarkDown(Bookmark bookmark);

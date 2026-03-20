@@ -47,8 +47,7 @@ public interface ExternalSystemCommunicationManager {
      * @return newly created facade for the given arguments (if it was possible to create one)
      * @throws Exception in case something goes wrong
      */
-    @Nullable
-    RemoteExternalSystemFacade acquire(String id, ProjectSystemId externalSystemId) throws Exception;
+    @Nullable RemoteExternalSystemFacade acquire(String id, ProjectSystemId externalSystemId) throws Exception;
 
     /**
      * Release resource acquired by the current manager

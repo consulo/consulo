@@ -814,9 +814,8 @@ public abstract class PerFileConfigurableBase<T> implements SearchableConfigurab
                 return popup;
             }
 
-            @Nullable
             @Override
-            public String getTooltipText(ComboBoxButton button) {
+            public @Nullable String getTooltipText(ComboBoxButton button) {
                 boolean cellEditor = UIUtil.uiParents(button.getComponent(), true).take(4).filter(JBTable.class).first() != null;
                 return cellEditor ? null : getToolTipFor(value.get());
             }

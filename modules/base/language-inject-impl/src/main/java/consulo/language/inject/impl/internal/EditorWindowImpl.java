@@ -874,9 +874,8 @@ class EditorWindowImpl extends UserDataHolderBase implements EditorWindow, Edito
     myDelegate.setContextMenuGroupId(groupId);
   }
 
-  @Nullable
   @Override
-  public String getContextMenuGroupId() {
+  public @Nullable String getContextMenuGroupId() {
     return myDelegate.getContextMenuGroupId();
   }
 

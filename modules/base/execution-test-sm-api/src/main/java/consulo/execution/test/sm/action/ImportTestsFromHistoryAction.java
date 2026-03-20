@@ -64,9 +64,8 @@ public class ImportTestsFromHistoryAction extends AbstractImportTestsAction {
         return LocalizeValue.of(nameWithoutExtension);
     }
 
-    @Nullable
     @Override
-    public VirtualFile getFile(Project project) {
+    public @Nullable VirtualFile getFile(Project project) {
         return LocalFileSystem.getInstance().findFileByPath(TestStateStorage.getTestHistoryRoot(project).getPath() + "/" + myFileName);
     }
 }

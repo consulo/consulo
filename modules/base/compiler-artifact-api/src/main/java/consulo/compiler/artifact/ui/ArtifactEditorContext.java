@@ -44,8 +44,7 @@ public interface ArtifactEditorContext extends PackagingElementResolvingContext 
     
     ModifiableArtifactModel getOrCreateModifiableArtifactModel();
 
-    @Nullable
-    ModifiableModuleModel getModifiableModuleModel();
+    @Nullable ModifiableModuleModel getModifiableModuleModel();
 
     
     ModifiableRootModel getOrCreateModifiableRootModel(Module module);

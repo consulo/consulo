@@ -31,9 +31,8 @@ public class PsiDelegateReference implements PsiReference {
   }
 
   @RequiredReadAction
-  @Nullable
   @Override
-  public PsiElement resolve() {
+  public @Nullable PsiElement resolve() {
     return myDelegate.resolve();
   }
 

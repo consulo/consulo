@@ -52,9 +52,8 @@ public class RunAnythingContext {
             return myProject;
         }
 
-        @Nullable
         @Override
-        public String getPath() {
+        public @Nullable String getPath() {
             return myProject.getBasePath();
         }
 
@@ -132,9 +131,8 @@ public class RunAnythingContext {
             myModule = module;
         }
 
-        @Nullable
         @Override
-        public String getPath() {
+        public @Nullable String getPath() {
             return myModule.getModuleDirPath();
         }
 

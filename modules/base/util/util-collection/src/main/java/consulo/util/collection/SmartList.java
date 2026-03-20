@@ -62,9 +62,8 @@ public class SmartList<E> extends AbstractList<E> implements RandomAccess {
         }
     }
 
-    @Nullable
     @Override
-    public E get(int index) {
+    public @Nullable E get(int index) {
         if (index < 0 || index >= mySize) {
             throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + mySize);
         }
@@ -153,9 +152,8 @@ public class SmartList<E> extends AbstractList<E> implements RandomAccess {
         modCount++;
     }
 
-    @Nullable
     @Override
-    public E set(int index, @Nullable E element) {
+    public @Nullable E set(int index, @Nullable E element) {
         if (index < 0 || index >= mySize) {
             throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + mySize);
         }
@@ -173,9 +171,8 @@ public class SmartList<E> extends AbstractList<E> implements RandomAccess {
         return oldValue;
     }
 
-    @Nullable
     @Override
-    public E remove(int index) {
+    public @Nullable E remove(int index) {
         if (index < 0 || index >= mySize) {
             throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + mySize);
         }
@@ -223,9 +220,8 @@ public class SmartList<E> extends AbstractList<E> implements RandomAccess {
             myInitialModCount = modCount;
         }
 
-        @Nullable
         @Override
-        protected E getElement() {
+        protected @Nullable E getElement() {
             return (E) myElem;
         }
 

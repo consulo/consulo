@@ -1073,9 +1073,8 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponentA
             super(new BorderLayout());
         }
 
-        @Nullable
         @RequiredUIAccess
-        private LibraryOrderEntry getSelectedLibrary() {
+        private @Nullable LibraryOrderEntry getSelectedLibrary() {
             AbstractProjectViewPane viewPane = getCurrentProjectViewPane();
             DefaultMutableTreeNode node = viewPane != null ? viewPane.getSelectedNode() : null;
             if (node == null) {
@@ -1138,9 +1137,8 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponentA
                 });
         }
 
-        @Nullable
         @RequiredUIAccess
-        private Module[] getSelectedModules() {
+        private @Nullable Module[] getSelectedModules() {
             AbstractProjectViewPane viewPane = getCurrentProjectViewPane();
             if (viewPane == null) {
                 return null;

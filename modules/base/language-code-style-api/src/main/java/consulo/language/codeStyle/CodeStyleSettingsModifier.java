@@ -54,8 +54,7 @@ public interface CodeStyleSettingsModifier {
      * @return The UI contributor or null if code style changes should not be indicated in the status bar.
      * @see CodeStyleStatusBarUIContributor
      */
-    @Nullable
-    CodeStyleStatusBarUIContributor getStatusBarUiContributor(TransientCodeStyleSettings transientSettings);
+    @Nullable CodeStyleStatusBarUIContributor getStatusBarUiContributor(TransientCodeStyleSettings transientSettings);
 
     /**
      * @return The function which disables the modifier in the given code style settings or by other means. It is purely programmatic and

@@ -33,8 +33,7 @@ public interface BuildEvent {
    *
    * @return The parent event id.
    */
-  @Nullable
-  Object getParentId();
+  @Nullable Object getParentId();
 
   /**
    * Returns the time this event was triggered.
@@ -51,15 +50,9 @@ public interface BuildEvent {
   @BuildEventsNls.Message
   String getMessage();
 
-  @Nullable
-
-
   @BuildEventsNls.Hint
-  String getHint();
-
-  @Nullable
-
+  @Nullable String getHint();
 
   @BuildEventsNls.Description
-  String getDescription();
+  @Nullable String getDescription();
 }

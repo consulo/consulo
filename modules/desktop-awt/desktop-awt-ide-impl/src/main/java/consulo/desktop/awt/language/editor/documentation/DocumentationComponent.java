@@ -693,9 +693,8 @@ public class DocumentationComponent extends JPanel implements Disposable, UiData
         return myEditorPane;
     }
 
-    @Nullable
     @RequiredReadAction
-    public PsiElement getElement() {
+    public @Nullable PsiElement getElement() {
         return myElement != null ? myElement.getElement() : null;
     }
 
@@ -1009,9 +1008,8 @@ public class DocumentationComponent extends JPanel implements Disposable, UiData
         return text;
     }
 
-    @Nullable
     @RequiredReadAction
-    private static String getExternalText(
+    private static @Nullable String getExternalText(
         DocumentationManagerImpl manager,
         @Nullable PsiElement element,
         @Nullable String externalUrl,
@@ -1193,9 +1191,8 @@ public class DocumentationComponent extends JPanel implements Disposable, UiData
         myEditorPane.setFont(UIUtil.getFontWithFallback(fontName, Font.PLAIN, JBUIScale.scale(getQuickDocFontSize().getSize())));
     }
 
-    @Nullable
     @RequiredReadAction
-    private Image getImageByKeyImpl(Object key) {
+    private @Nullable Image getImageByKeyImpl(Object key) {
         if (myManager == null || key == null) {
             return null;
         }
@@ -1448,10 +1445,9 @@ public class DocumentationComponent extends JPanel implements Disposable, UiData
             }
         }
 
-        @Nullable
         @Override
         @RequiredReadAction
-        protected Navigatable[] getNavigatables(DataContext dataContext) {
+        protected @Nullable Navigatable[] getNavigatables(DataContext dataContext) {
             SmartPsiElementPointer<PsiElement> element = myElement;
             if (element != null) {
                 PsiElement psiElement = element.getElement();

@@ -19,6 +19,5 @@ import consulo.language.psi.PsiElement;
 import org.jspecify.annotations.Nullable;
 
 public interface UsageInfoFactory {
-    @Nullable
-    UsageInfo createUsageInfo(PsiElement usage, int startOffset, int endOffset);
+    @Nullable UsageInfo createUsageInfo(PsiElement usage, int startOffset, int endOffset);
 }

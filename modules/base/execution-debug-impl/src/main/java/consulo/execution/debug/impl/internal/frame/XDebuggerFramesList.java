@@ -156,9 +156,8 @@ public class XDebuggerFramesList extends DebuggerFramesList {
 
         public XDebuggerGroupedFrameListRenderer() {
             super(new ListItemDescriptorAdapter<>() {
-                @Nullable
                 @Override
-                public String getTextFor(Object value) {
+                public @Nullable String getTextFor(Object value) {
                     return null;
                 }
 

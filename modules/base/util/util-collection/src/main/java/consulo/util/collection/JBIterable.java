@@ -126,12 +126,10 @@ public abstract class JBIterable<E> implements Iterable<E> {
       public Iterator<E> iterator() {
         final Function<? super E, ? extends E> fun = Stateful.copy(generator);
         return new JBIterator<E>() {
-          @Nullable
-          E cur = first;
+          @Nullable E cur = first;
 
-          @Nullable
           @Override
-          public E nextImpl() {
+          public @Nullable E nextImpl() {
             E result = cur;
             if (result == null) return stop();
             cur = fun.apply(cur);
@@ -150,15 +148,12 @@ public abstract class JBIterable<E> implements Iterable<E> {
       @Override
       public Iterator<E> iterator() {
         return new JBIterator<E>() {
-          @Nullable
-          E cur1 = first1;
+          @Nullable E cur1 = first1;
 
-          @Nullable
-          E cur2 = first2;
+          @Nullable E cur2 = first2;
 
-          @Nullable
           @Override
-          public E nextImpl() {
+          public @Nullable E nextImpl() {
             E result = cur1;
             cur1 = cur2;
             cur2 = generator.apply(result, cur2);
@@ -454,17 +449,15 @@ public abstract class JBIterable<E> implements Iterable<E> {
     static final class FlattenIt<E, T> extends JBIterator<T> {
       final Iterator<E> original;
       final Function<? super E, ? extends Iterable<? extends T>> function;
-      @Nullable
-      Iterator<? extends T> cur = null;
+      @Nullable Iterator<? extends T> cur = null;
 
       public FlattenIt(Iterator<E> iterator, Function<? super E, ? extends Iterable<? extends T>> fun) {
         original = iterator;
         function = fun;
       }
 
-      @Nullable
       @Override
-      public T nextImpl() {
+      public @Nullable T nextImpl() {
         if (cur != null && cur.hasNext()) return cur.next();
         if (!original.hasNext()) return stop();
         Iterable<? extends T> next = function.apply(original.next());
@@ -486,8 +479,7 @@ public abstract class JBIterable<E> implements Iterable<E> {
    */
   public final JBIterable<E> unique(final Function<? super E, ?> identity) {
     return filter(new SCond<E>() {
-      @Nullable
-      Set<Object> visited = null;
+      @Nullable Set<Object> visited = null;
 
       @Override
       public boolean test(E e) {
@@ -654,9 +646,8 @@ public abstract class JBIterable<E> implements Iterable<E> {
       return new JBIterator<E>() {
         boolean flag;
 
-        @Nullable
         @Override
-        protected E nextImpl() {
+        protected @Nullable E nextImpl() {
           if (!original.hasNext()) return stop();
           return (flag = !flag) ? original.next() : separator;
         }
@@ -685,12 +676,10 @@ public abstract class JBIterable<E> implements Iterable<E> {
     return intercept(iterator -> {
       final Iterator<E> orig = iterator;
       return new JBIterator<JBIterable<E>>() {
-        @Nullable
-        JBIterator<E> it;
+        @Nullable JBIterator<E> it;
 
-        @Nullable
         @Override
-        protected JBIterable<E> nextImpl() {
+        protected @Nullable JBIterable<E> nextImpl() {
           // iterate through the previous result fully before proceeding
           while (it != null && it.advance()) /* no-op */ ;
           it = null;
@@ -717,17 +706,14 @@ public abstract class JBIterable<E> implements Iterable<E> {
       final Iterator<E> orig = iterator;
       final Predicate<? super E> condition = Stateful.copy(separator);
       return new JBIterator<JBIterable<E>>() {
-        @Nullable
-        JBIterator<E> it = null;
+        @Nullable JBIterator<E> it = null;
 
-        @Nullable
-        E stored = null;
+        @Nullable E stored = null;
 
         int st; // encode transitions: -2:sep->sep, -1:val->sep, 1:sep->val, 2:val->val
 
-        @Nullable
         @Override
-        protected JBIterable<E> nextImpl() {
+        protected @Nullable JBIterable<E> nextImpl() {
           // iterate through the previous result fully before proceeding
           while (it != null && it.advance()) /* no-op */ ;
           it = null;
@@ -747,9 +733,8 @@ public abstract class JBIterable<E> implements Iterable<E> {
           E tmp = stored;
           stored = null;
           return of(tmp).append(once((it = JBIterator.wrap(orig)).takeWhile(new Predicate<E>() {
-            @Nullable
             @Override
-            public boolean test(E e) {
+            public @Nullable boolean test(E e) {
               boolean sep = condition.test(e);
               int st0 = st;
               st = st0 < 0 && sep ? -2 : st0 > 0 && !sep ? 2 : sep ? -1 : 1;

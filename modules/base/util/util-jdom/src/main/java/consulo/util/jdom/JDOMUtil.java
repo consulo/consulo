@@ -232,9 +232,8 @@ public class JDOMUtil {
   }
 
   private static class EmptyTextFilter extends AbstractFilter<Content> {
-    @Nullable
     @Override
-    public Content filter(Object obj) {
+    public @Nullable Content filter(Object obj) {
       if (obj instanceof Text && CharArrayUtil.containsOnlyWhiteSpaces(((Text)obj).getText())) {
         return null;
       }
@@ -739,9 +738,8 @@ public class JDOMUtil {
   }
 
   @SuppressWarnings("unused")
-  @Nullable
   @Deprecated
-  public static Element cloneElement(Element element, ElementFilter elementFilter) {
+  public static @Nullable Element cloneElement(Element element, ElementFilter elementFilter) {
     Element result = new Element(element.getName(), element.getNamespace());
     List<Attribute> attributes = element.getAttributes();
     if (!attributes.isEmpty()) {

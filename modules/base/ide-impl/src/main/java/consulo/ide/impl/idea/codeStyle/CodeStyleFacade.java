@@ -55,9 +55,8 @@ public interface CodeStyleFacade {
      * @deprecated Use {@link #getLineIndent(Editor, Language, int, boolean)} instead.
      */
     @SuppressWarnings("DeprecatedIsStillUsed")
-    @Nullable
     @Deprecated
-    public abstract String getLineIndent(Document document, int offset);
+    public abstract @Nullable String getLineIndent(Document document, int offset);
 
     /**
      * Calculates the indent that should be used for the line at specified offset in the specified

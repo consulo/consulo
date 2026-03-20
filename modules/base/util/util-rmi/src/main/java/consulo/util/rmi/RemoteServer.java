@@ -103,9 +103,8 @@ public class RemoteServer {
       return (Context)Proxy.newProxyInstance(getClass().getClassLoader(), new Class[]{Context.class}, this);
     }
 
-    @Nullable
     @Override
-    public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+    public @Nullable Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
       return null;
     }
   }

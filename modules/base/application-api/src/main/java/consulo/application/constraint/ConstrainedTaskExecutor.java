@@ -17,11 +17,9 @@ public class ConstrainedTaskExecutor implements Executor {
   
   ConstrainedExecutionScheduler myExecutionScheduler;
   private final
-  @Nullable
-  BooleanSupplier myCancellationCondition;
+  @Nullable BooleanSupplier myCancellationCondition;
   private final
-  @Nullable
-  Expiration myExpiration;
+  @Nullable Expiration myExpiration;
 
   public ConstrainedTaskExecutor(ConstrainedExecutionScheduler executionScheduler, @Nullable BooleanSupplier cancellationCondition, @Nullable Expiration expiration) {
     myExecutionScheduler = executionScheduler;

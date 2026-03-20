@@ -25,8 +25,7 @@ public interface MessageEvent extends BuildEvent {
     
     NotificationGroup getGroup();
 
-    @Nullable
-    Navigatable getNavigatable(Project project);
+    @Nullable Navigatable getNavigatable(Project project);
 
     MessageEventResult getResult();
 }

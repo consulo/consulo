@@ -21,6 +21,5 @@ import consulo.navigation.Navigatable;
 import org.jspecify.annotations.Nullable;
 
 public interface SMStacktraceParserEx extends SMStacktraceParser {
-    @Nullable
-    Navigatable getErrorNavigatable(Location<?> location, String stacktrace);
+    @Nullable Navigatable getErrorNavigatable(Location<?> location, String stacktrace);
 }

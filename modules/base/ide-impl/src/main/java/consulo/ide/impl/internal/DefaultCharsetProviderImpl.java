@@ -38,9 +38,8 @@ public class DefaultCharsetProviderImpl implements DefaultCharsetProvider {
     myEncodingManager = encodingManager;
   }
 
-  @Nullable
   @Override
-  public Charset getDefaultCharset() {
+  public @Nullable Charset getDefaultCharset() {
     return myEncodingManager.getDefaultConsoleEncoding();
   }
 }

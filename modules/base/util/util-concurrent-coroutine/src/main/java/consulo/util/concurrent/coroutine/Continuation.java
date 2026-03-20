@@ -59,11 +59,9 @@ public class Continuation<T> extends UserDataHolderBase implements Executor {
 
     private final RunLock stateLock = new RunLock();
 
-    @Nullable
-    BiConsumer<Suspension<?>, Boolean> suspensionListener = null;
+    @Nullable BiConsumer<Suspension<?>, Boolean> suspensionListener = null;
 
-    @Nullable
-    BiConsumer<CoroutineStep<?, ?>, Continuation<?>> fStepListener = null;
+    @Nullable BiConsumer<CoroutineStep<?, ?>, Continuation<?>> fStepListener = null;
 
     private @Nullable T result = null;
 

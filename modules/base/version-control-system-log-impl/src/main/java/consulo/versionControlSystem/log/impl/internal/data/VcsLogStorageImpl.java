@@ -168,9 +168,8 @@ public class VcsLogStorageImpl implements Disposable, VcsLogStorage {
         return NO_INDEX;
     }
 
-    @Nullable
     @Override
-    public VcsRef getVcsRef(int refIndex) {
+    public @Nullable VcsRef getVcsRef(int refIndex) {
         checkDisposed();
         try {
             return myRefsEnumerator.valueOf(refIndex);
@@ -250,9 +249,8 @@ public class VcsLogStorageImpl implements Disposable, VcsLogStorage {
             throw new UnsupportedOperationException("Illegal access to empty hash map by index " + commitIndex);
         }
 
-        @Nullable
         @Override
-        public CommitId findCommitId(Predicate<CommitId> string) {
+        public @Nullable CommitId findCommitId(Predicate<CommitId> string) {
             return null;
         }
 
@@ -261,9 +259,8 @@ public class VcsLogStorageImpl implements Disposable, VcsLogStorage {
             return 0;
         }
 
-        @Nullable
         @Override
-        public VcsRef getVcsRef(int refIndex) {
+        public @Nullable VcsRef getVcsRef(int refIndex) {
             throw new UnsupportedOperationException("Illegal access to empty ref map by index " + refIndex);
         }
 

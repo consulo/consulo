@@ -60,8 +60,7 @@ public interface RangeHighlighter extends RangeMarker {
      *
      * @return the attributes key or {@code null} if the highlighter does not have a key.
      */
-    @Nullable
-    TextAttributesKey getTextAttributesKey();
+    @Nullable TextAttributesKey getTextAttributesKey();
 
     /**
      * Sets the text attributes key used for highlighting.
@@ -86,8 +85,7 @@ public interface RangeHighlighter extends RangeMarker {
      * @return the attributes, or null if highlighter does not modify the text attributes.
      * @see RangeHighlighter#getTextAttributesKey()
      */
-    @Nullable
-    TextAttributes getTextAttributes(@Nullable EditorColorsScheme scheme);
+    @Nullable TextAttributes getTextAttributes(@Nullable EditorColorsScheme scheme);
 
     /**
      * Returns the renderer used for drawing line markers in the area covered by the
@@ -98,8 +96,7 @@ public interface RangeHighlighter extends RangeMarker {
      * @return the renderer instance, or null if the highlighter does not add any line markers.
      * @see ActiveGutterRenderer
      */
-    @Nullable
-    LineMarkerRenderer getLineMarkerRenderer();
+    @Nullable LineMarkerRenderer getLineMarkerRenderer();
 
     /**
      * Sets the renderer used for drawing line markers in the area covered by the
@@ -112,8 +109,7 @@ public interface RangeHighlighter extends RangeMarker {
      */
     void setLineMarkerRenderer(@Nullable LineMarkerRenderer renderer);
 
-    @Nullable
-    CustomHighlighterRenderer getCustomRenderer();
+    @Nullable CustomHighlighterRenderer getCustomRenderer();
 
     void setCustomRenderer(CustomHighlighterRenderer renderer);
 
@@ -124,8 +120,7 @@ public interface RangeHighlighter extends RangeMarker {
      *
      * @return the renderer instance, or null if the highlighter does not add any gutter icons.
      */
-    @Nullable
-    GutterIconRenderer getGutterIconRenderer();
+    @Nullable GutterIconRenderer getGutterIconRenderer();
 
     /**
      * Sets the renderer used for drawing gutter icons in the area covered by the
@@ -143,8 +138,7 @@ public interface RangeHighlighter extends RangeMarker {
      * @return the error stripe marker color, or {@code null} if the highlighter does not add any
      * error stripe markers.
      */
-    @Nullable
-    ColorValue getErrorStripeMarkColor(@Nullable EditorColorsScheme scheme);
+    @Nullable ColorValue getErrorStripeMarkColor(@Nullable EditorColorsScheme scheme);
 
     /**
      * Sets the color of the marker drawn in the error stripe in the area covered by the highlighter.
@@ -161,8 +155,7 @@ public interface RangeHighlighter extends RangeMarker {
      * @return the error stripe tooltip objects, or null if the highlighter does not add any error
      * stripe markers or the marker has no tooltip.
      */
-    @Nullable
-    Object getErrorStripeTooltip();
+    @Nullable Object getErrorStripeTooltip();
 
     /**
      * Sets the object whose <code>toString()</code> method is called to get the text of the tooltip
@@ -195,8 +188,7 @@ public interface RangeHighlighter extends RangeMarker {
      *
      * @return the separator color, or null if the highlighter does not add a line separator.
      */
-    @Nullable
-    Color getLineSeparatorColor();
+    @Nullable Color getLineSeparatorColor();
 
     /**
      * Sets the color of the separator drawn above or below the range covered by
@@ -216,8 +208,7 @@ public interface RangeHighlighter extends RangeMarker {
      *
      * @return the separator placement, or null if the highlighter does not add a line separator.
      */
-    @Nullable
-    SeparatorPlacement getLineSeparatorPlacement();
+    @Nullable SeparatorPlacement getLineSeparatorPlacement();
 
     /**
      * Sets the placement of the separator drawn by the range highlighter

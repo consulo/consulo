@@ -51,9 +51,8 @@ public class FileContentImpl extends DiffContentBase implements FileContent {
     myHighlightFile = highlightFile;
   }
 
-  @Nullable
   @Override
-  public Navigatable getNavigatable() {
+  public @Nullable Navigatable getNavigatable() {
     if (myProject == null || myProject.isDefault()) return null;
     if (myHighlightFile == null || !myHighlightFile.isValid()) return null;
     return OpenFileDescriptorFactory.getInstance(myProject).newBuilder(myHighlightFile).build();

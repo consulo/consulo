@@ -31,14 +31,12 @@ import org.jspecify.annotations.Nullable;
  * @see DiffRequest
  */
 public interface DiffContent extends UserDataHolder {
-  @Nullable
-  FileType getContentType();
+  @Nullable FileType getContentType();
 
   /**
    * Provides a way to open related content in editor
    */
-  @Nullable
-  Navigatable getNavigatable();
+  @Nullable Navigatable getNavigatable();
 
   /**
    * @see DiffRequest#onAssigned(boolean)
@@ -46,9 +44,8 @@ public interface DiffContent extends UserDataHolder {
   @RequiredUIAccess
   void onAssigned(boolean isAssigned);
 
-  @Nullable
   @Deprecated
-  default OpenFileDescriptor getOpenFileDescriptor() {
+  default @Nullable OpenFileDescriptor getOpenFileDescriptor() {
     return ObjectUtil.tryCast(getNavigatable(), OpenFileDescriptor.class);
   }
 }

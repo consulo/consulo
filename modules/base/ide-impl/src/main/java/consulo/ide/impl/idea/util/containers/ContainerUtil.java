@@ -748,9 +748,8 @@ public class ContainerUtil extends ContainerUtilRt {
         return EmptyIterable.getInstance();
     }
 
-    @Nullable
     @Contract(pure = true)
-    public static <T> T find(T[] array, Predicate<? super T> condition) {
+    public static <T> @Nullable T find(T[] array, Predicate<? super T> condition) {
         return consulo.util.collection.ContainerUtil.find(array, condition);
     }
 
@@ -770,21 +769,18 @@ public class ContainerUtil extends ContainerUtilRt {
         return consulo.util.collection.ContainerUtil.process(iterator, processor);
     }
 
-    @Nullable
     @Contract(pure = true)
-    public static <T, V extends T> V find(Iterable<V> iterable, Predicate<T> condition) {
+    public static <T, V extends T> @Nullable V find(Iterable<V> iterable, Predicate<T> condition) {
         return consulo.util.collection.ContainerUtil.find(iterable, condition);
     }
 
-    @Nullable
     @Contract(pure = true)
-    public static <T> T find(Iterable<? extends T> iterable, T equalTo) {
+    public static <T> @Nullable T find(Iterable<? extends T> iterable, T equalTo) {
         return consulo.util.collection.ContainerUtil.find(iterable, equalTo);
     }
 
-    @Nullable
     @Contract(pure = true)
-    public static <T> T find(Iterator<? extends T> iterator, T equalTo) {
+    public static <T> @Nullable T find(Iterator<? extends T> iterator, T equalTo) {
         return consulo.util.collection.ContainerUtil.find(iterator, equalTo);
     }
 
@@ -1142,9 +1138,8 @@ public class ContainerUtil extends ContainerUtilRt {
         return consulo.util.collection.ContainerUtil.filterIsInstance(collection, aClass);
     }
 
-    @Nullable
     @Contract(pure = true)
-    public static <T, U extends T> U findInstance(T[] array, Class<U> aClass) {
+    public static <T, U extends T> @Nullable U findInstance(T[] array, Class<U> aClass) {
         return consulo.util.collection.ContainerUtil.findInstance(array, aClass);
     }
 
@@ -1288,15 +1283,13 @@ public class ContainerUtil extends ContainerUtilRt {
         return consulo.util.collection.ContainerUtil.intersection(collection1, collection2);
     }
 
-    @Nullable
     @Contract(pure = true)
-    public static <T> T getFirstItem(@Nullable Collection<T> items) {
+    public static <T> @Nullable T getFirstItem(@Nullable Collection<T> items) {
         return consulo.util.collection.ContainerUtil.getFirstItem(items);
     }
 
-    @Nullable
     @Contract(pure = true)
-    public static <T> T getFirstItem(@Nullable List<T> items) {
+    public static <T> @Nullable T getFirstItem(@Nullable List<T> items) {
         return consulo.util.collection.ContainerUtil.getFirstItem(items);
     }
 
@@ -1320,9 +1313,8 @@ public class ContainerUtil extends ContainerUtilRt {
         return items.subList(0, Math.min(maxItems, items.size()));
     }
 
-    @Nullable
     @Contract(pure = true)
-    public static <T> T iterateAndGetLastItem(Iterable<T> items) {
+    public static <T> @Nullable T iterateAndGetLastItem(Iterable<T> items) {
         return consulo.util.collection.ContainerUtil.iterateAndGetLastItem(items);
     }
 
@@ -1338,15 +1330,13 @@ public class ContainerUtil extends ContainerUtilRt {
         return Iterators.mapIterator(iterator, mapper);
     }
 
-    @Nullable
     @Contract(pure = true)
-    public static <T, L extends List<T>> T getLastItem(@Nullable L list, @Nullable T def) {
+    public static <T, L extends List<T>> @Nullable T getLastItem(@Nullable L list, @Nullable T def) {
         return consulo.util.collection.ContainerUtil.getLastItem(list, def);
     }
 
-    @Nullable
     @Contract(pure = true)
-    public static <T, L extends List<T>> T getLastItem(@Nullable L list) {
+    public static <T, L extends List<T>> @Nullable T getLastItem(@Nullable L list) {
         return consulo.util.collection.ContainerUtil.getLastItem(list);
     }
 
@@ -1911,9 +1901,8 @@ public class ContainerUtil extends ContainerUtilRt {
         return -1;
     }
 
-    @Nullable
     @Contract(pure = true)
-    public static <T, U extends T> U findLastInstance(List<T> list, Class<U> clazz) {
+    public static <T, U extends T> @Nullable U findLastInstance(List<T> list, Class<U> clazz) {
         int i = lastIndexOf(list, clazz::isInstance);
         //noinspection unchecked
         return i < 0 ? null : (U)list.get(i);
@@ -2354,9 +2343,8 @@ public class ContainerUtil extends ContainerUtilRt {
         return Sets.notNullize(set);
     }
 
-    @Nullable
     @Contract(pure = true)
-    public static <T, C extends Collection<T>> C nullize(@Nullable C collection) {
+    public static <T, C extends Collection<T>> @Nullable C nullize(@Nullable C collection) {
         return isEmpty(collection) ? null : collection;
     }
 

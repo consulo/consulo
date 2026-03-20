@@ -24,12 +24,9 @@ import org.jspecify.annotations.Nullable;
  * @since 2025-08-31
  */
 public interface VcsMapping {
-    @Nullable
-    String getVcsFor(VirtualFile file);
+    @Nullable String getVcsFor(VirtualFile file);
 
-    @Nullable
-    VcsDirectoryMapping getMappingFor(@Nullable VirtualFile file);
+    @Nullable VcsDirectoryMapping getMappingFor(@Nullable VirtualFile file);
 
-    @Nullable
-    VcsDirectoryMapping getMappingFor(VirtualFile file, Object parentModule);
+    @Nullable VcsDirectoryMapping getMappingFor(VirtualFile file, Object parentModule);
 }

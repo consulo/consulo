@@ -9,6 +9,5 @@ import org.jspecify.annotations.Nullable;
  * Container might be used by IDEA for checking fix availability and highlighting suppression element.
  */
 public interface ContainerBasedSuppressQuickFix extends SuppressQuickFix {
-  @Nullable
-  PsiElement getContainer(@Nullable PsiElement context);
+  @Nullable PsiElement getContainer(@Nullable PsiElement context);
 }

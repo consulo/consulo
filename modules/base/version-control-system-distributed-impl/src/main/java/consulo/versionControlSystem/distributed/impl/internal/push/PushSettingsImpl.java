@@ -48,9 +48,8 @@ public class PushSettingsImpl implements PushSettings, PersistentStateComponent<
         public List<ForcePushTargetInfo> FORCE_PUSH_TARGETS = new ArrayList<>();
     }
 
-    @Nullable
     @Override
-    public State getState() {
+    public @Nullable State getState() {
         return myState;
     }
 

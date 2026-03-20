@@ -31,9 +31,8 @@ public class LocalAttachHost extends EnvironmentAwareHost {
     return ProcessHandlerBuilder.create(commandLine).build();
   }
 
-  @Nullable
   @Override
-  public InputStream getFileContent(String filePath) throws IOException {
+  public @Nullable InputStream getFileContent(String filePath) throws IOException {
     VirtualFile file = LocalFileSystem.getInstance().findFileByPath(filePath);
     if (file == null) {
       return null;

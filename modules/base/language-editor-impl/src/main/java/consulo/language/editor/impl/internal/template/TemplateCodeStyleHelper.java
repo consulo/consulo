@@ -103,9 +103,8 @@ public class TemplateCodeStyleHelper {
    * @return text range that points to the newly inserted dummy text if any; {@code null} otherwise
    * @throws IncorrectOperationException if given file is read-only
    */
-  @Nullable
   @RequiredReadAction
-  public static TextRange insertNewLineIndentMarker(PsiFile file, Document document, int offset) {
+  public static @Nullable TextRange insertNewLineIndentMarker(PsiFile file, Document document, int offset) {
     CharSequence text = document.getImmutableCharSequence();
     if (offset <= 0 || offset >= text.length() || !isWhiteSpaceSymbol(text.charAt(offset))) {
       return null;

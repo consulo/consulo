@@ -53,9 +53,8 @@ class DesktopColorBoxImpl extends SwingComponentDelegate<DesktopColorBoxImpl.MyC
         return panel;
     }
 
-    @Nullable
     @Override
-    public ColorValue getValue() {
+    public @Nullable ColorValue getValue() {
         return TargetAWT.from(toAWTComponent().getSelectedColor());
     }
 

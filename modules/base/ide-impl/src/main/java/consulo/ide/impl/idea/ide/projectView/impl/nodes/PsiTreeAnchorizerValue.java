@@ -40,9 +40,8 @@ public class PsiTreeAnchorizerValue implements TreeAnchorizerValue<PsiElement> {
         myPointer = pointer;
     }
 
-    @Nullable
     @Override
-    public PsiElement extractValue() {
+    public @Nullable PsiElement extractValue() {
         if (myApplication.isReadAccessAllowed()) {
             //noinspection RequiredXAction
             return myPointer.getElement();
@@ -51,9 +50,8 @@ public class PsiTreeAnchorizerValue implements TreeAnchorizerValue<PsiElement> {
         return myApplication.runReadAction((Supplier<PsiElement>) myPointer::getElement);
     }
 
-    @Nullable
     @Override
-    public PsiElement tryExtractValue() {
+    public @Nullable PsiElement tryExtractValue() {
         if (myApplication.isReadAccessAllowed()) {
             //noinspection RequiredXAction
             return myPointer.getElement();

@@ -25,8 +25,7 @@ public abstract class AbstractValueEditor<T> implements ValueEditor<T> {
   
   T myDefaultValue;
   private
-  @Nullable
-  String myValueName;
+  @Nullable String myValueName;
   private final List<Listener<T>> myListeners = new ArrayList<>();
 
   protected AbstractValueEditor(@Nullable String valueName, T defaultValue) {
@@ -54,9 +53,8 @@ public abstract class AbstractValueEditor<T> implements ValueEditor<T> {
     myValueName = valueName;
   }
 
-  @Nullable
   @Override
-  public String getValueName() {
+  public @Nullable String getValueName() {
     return myValueName;
   }
 

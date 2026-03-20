@@ -569,9 +569,8 @@ public class DesktopEditorAnalyzeStatusPanel implements Disposable {
             return false;
         }
 
-        @Nullable
         @Override
-        protected Image getTemplateIcon() {
+        protected @Nullable Image getTemplateIcon() {
             return PlatformIconGroup.actionsMorevertical();
         }
     }

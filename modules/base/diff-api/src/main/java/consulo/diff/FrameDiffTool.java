@@ -36,8 +36,7 @@ public interface FrameDiffTool extends DiffTool {
         
         JComponent getComponent();
 
-        @Nullable
-        JComponent getPreferredFocusedComponent();
+        @Nullable JComponent getPreferredFocusedComponent();
 
         /**
          * Should be called after adding {@link #getComponent()} to the components hierarchy.

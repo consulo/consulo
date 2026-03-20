@@ -27,8 +27,7 @@ import java.util.Set;
 public interface CompileContextEx extends CompileContext {
     CompositeDependencyCache getDependencyCache();
 
-    @Nullable
-    VirtualFile getSourceFileByOutputFile(VirtualFile outputFile);
+    @Nullable VirtualFile getSourceFileByOutputFile(VirtualFile outputFile);
 
     void addMessage(CompilerMessage message);
 

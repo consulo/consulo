@@ -195,17 +195,13 @@ public interface ModuleRootLayer {
   
   String[] getDependencyModuleNames();
 
-  @Nullable
-  <T extends ModuleExtension> T getExtension(Class<T> clazz);
+  <T extends ModuleExtension> @Nullable T getExtension(Class<T> clazz);
 
-  @Nullable
-  <T extends ModuleExtension> T getExtension(String key);
+  <T extends ModuleExtension> @Nullable T getExtension(String key);
 
-  @Nullable
-  <T extends ModuleExtension> T getExtensionWithoutCheck(Class<T> clazz);
+  <T extends ModuleExtension> @Nullable T getExtensionWithoutCheck(Class<T> clazz);
 
-  @Nullable
-  <T extends ModuleExtension> T getExtensionWithoutCheck(String key);
+  <T extends ModuleExtension> @Nullable T getExtensionWithoutCheck(String key);
 
   
   List<ModuleExtension> getExtensions();

@@ -385,8 +385,7 @@ public class EditorHyperlinkSupport {
       return myHyperlinkInfo;
     }
 
-    @Nullable
-    TextAttributes getFollowedHyperlinkAttributes() {
+    @Nullable TextAttributes getFollowedHyperlinkAttributes() {
       return myFollowedHyperlinkAttributes;
     }
   }

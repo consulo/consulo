@@ -58,9 +58,8 @@ public class EmptyMarkupModel implements MarkupModelEx {
         throw new ProcessCanceledException();
     }
 
-    @Nullable
     @Override
-    public RangeHighlighterEx addPersistentLineHighlighter(@Nullable TextAttributesKey textAttributesKey, int lineNumber, int layer) {
+    public @Nullable RangeHighlighterEx addPersistentLineHighlighter(@Nullable TextAttributesKey textAttributesKey, int lineNumber, int layer) {
         throw new ProcessCanceledException();
     }
 

@@ -176,9 +176,8 @@ public class CoverageSuitesBundle {
         if (myCachedValue == null) {
             myCachedValue = CachedValuesManager.getManager(project).createCachedValue(
                 new CachedValueProvider<GlobalSearchScope>() {
-                    @Nullable
                     @Override
-                    public Result<GlobalSearchScope> compute() {
+                    public @Nullable Result<GlobalSearchScope> compute() {
                         return new Result<>(getSearchScopeInner(project), ProjectRootModificationTracker.getInstance(project));
                     }
                 },

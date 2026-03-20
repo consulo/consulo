@@ -144,9 +144,8 @@ public class CompoundRunConfigurationSettingsEditor extends SettingsEditor<Compo
                 configuration -> !mySnapshot.getSetToRun().contains(configuration) && canBeAdded(configuration, mySnapshot)
             );
             JBPopupFactory.getInstance().createListPopup(new MultiSelectionListPopupStep<>(null, configurations) {
-                @Nullable
                 @Override
-                public ListSeparator getSeparatorAbove(RunConfiguration value) {
+                public @Nullable ListSeparator getSeparatorAbove(RunConfiguration value) {
                     int i = configurations.indexOf(value);
                     if (i < 1) {
                         return null;

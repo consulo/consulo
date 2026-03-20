@@ -79,9 +79,8 @@ public class TextMergeRequestImpl extends TextMergeRequest {
         return myContents;
     }
 
-    @Nullable
     @Override
-    public String getTitle() {
+    public @Nullable String getTitle() {
         return myTitle;
     }
 

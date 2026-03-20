@@ -54,8 +54,7 @@ public interface Project extends ComponentManager, WindowOwner, CoroutineContext
    *
    * @return project base directory, or <code>null</code> for default project
    */
-  @Nullable
-  VirtualFile getBaseDir();
+  @Nullable VirtualFile getBaseDir();
 
   /**
    * Returns a system-dependent path to a project base directory (see {@linkplain #getBaseDir()}).<br/>
@@ -75,8 +74,7 @@ public interface Project extends ComponentManager, WindowOwner, CoroutineContext
    *
    * @return project descriptor file, or null for default project
    */
-  @Nullable
-  VirtualFile getProjectFile();
+  @Nullable VirtualFile getProjectFile();
 
   /**
    * Returns a system-dependent path to project descriptor file (see {@linkplain #getProjectFile()}).<br/>
@@ -94,8 +92,7 @@ public interface Project extends ComponentManager, WindowOwner, CoroutineContext
    *
    * @return presentable project path
    */
-  @Nullable
-  String getPresentableUrl();
+  @Nullable String getPresentableUrl();
 
   /**
    * <p>Returns a workspace file:
@@ -107,8 +104,7 @@ public interface Project extends ComponentManager, WindowOwner, CoroutineContext
    *
    * @return workspace file, or null for default project
    */
-  @Nullable
-  VirtualFile getWorkspaceFile();
+  @Nullable VirtualFile getWorkspaceFile();
 
   String getLocationHash();
 
@@ -137,9 +133,8 @@ public interface Project extends ComponentManager, WindowOwner, CoroutineContext
   /**
    * @return window which is associated with current project
    */
-  @Nullable
   @Override
-  default Window getWindow() {
+  default @Nullable Window getWindow() {
     return null;
   }
 

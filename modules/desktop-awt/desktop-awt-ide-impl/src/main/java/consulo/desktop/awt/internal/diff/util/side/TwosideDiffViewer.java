@@ -121,9 +121,8 @@ public abstract class TwosideDiffViewer<T extends EditorHolder> extends Listener
     return myPanel;
   }
 
-  @Nullable
   @Override
-  public JComponent getPreferredFocusedComponent() {
+  public @Nullable JComponent getPreferredFocusedComponent() {
     if (!myPanel.isGoodContent()) return null;
     return getCurrentEditorHolder().getPreferredFocusedComponent();
   }
@@ -155,9 +154,8 @@ public abstract class TwosideDiffViewer<T extends EditorHolder> extends Listener
   // Misc
   //
 
-  @Nullable
   @Override
-  protected Navigatable getNavigatable() {
+  protected @Nullable Navigatable getNavigatable() {
     Navigatable navigatable1 = getCurrentSide().select(getRequest().getContents()).getNavigatable();
     if (navigatable1 != null) return navigatable1;
     return getCurrentSide().other().select(getRequest().getContents()).getNavigatable();

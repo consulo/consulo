@@ -35,22 +35,18 @@ public interface FilePathChange {
             myAfterPath = afterPath;
         }
 
-        @Nullable
         @Override
-        public FilePath getBeforePath() {
+        public @Nullable FilePath getBeforePath() {
             return myBeforePath;
         }
 
-        @Nullable
         @Override
-        public FilePath getAfterPath() {
+        public @Nullable FilePath getAfterPath() {
             return myAfterPath;
         }
     }
 
-    @Nullable
-    FilePath getBeforePath();
+    @Nullable FilePath getBeforePath();
 
-    @Nullable
-    FilePath getAfterPath();
+    @Nullable FilePath getAfterPath();
 }

@@ -291,17 +291,15 @@ public class DesktopScrollingModelImpl extends CodeEditorScrollingModelBase {
         return new Point(hOffset, vOffset);
     }
 
-    @Nullable
     @RequiredUIAccess
-    public JScrollBar getVerticalScrollBar() {
+    public @Nullable JScrollBar getVerticalScrollBar() {
         assertIsDispatchThread();
         JScrollPane scrollPane = myEditor.getScrollPane();
         return scrollPane.getVerticalScrollBar();
     }
 
-    @Nullable
     @RequiredUIAccess
-    public JScrollBar getHorizontalScrollBar() {
+    public @Nullable JScrollBar getHorizontalScrollBar() {
         assertIsDispatchThread();
         return myEditor.getScrollPane().getHorizontalScrollBar();
     }
@@ -417,9 +415,8 @@ public class DesktopScrollingModelImpl extends CodeEditorScrollingModelBase {
         cancelAnimatedScrolling(true);
     }
 
-    @Nullable
     @RequiredUIAccess
-    private AnimatedScrollingRunnable cancelAnimatedScrolling(boolean scrollToTarget) {
+    private @Nullable AnimatedScrollingRunnable cancelAnimatedScrolling(boolean scrollToTarget) {
         AnimatedScrollingRunnable request = myCurrentAnimationRequest;
         myCurrentAnimationRequest = null;
         if (request != null) {

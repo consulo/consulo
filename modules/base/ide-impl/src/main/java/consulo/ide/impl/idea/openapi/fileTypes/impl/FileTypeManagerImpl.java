@@ -1643,9 +1643,8 @@ public class FileTypeManagerImpl extends FileTypeManagerEx implements Persistent
     }
 
     @Override
-    @Nullable
     @RequiredUIAccess
-    public FileType getKnownFileTypeOrAssociate(VirtualFile file) {
+    public @Nullable FileType getKnownFileTypeOrAssociate(VirtualFile file) {
         FileType type = file.getFileType();
         if (type == UnknownFileType.INSTANCE) {
             type = FileTypeChooser.associateFileType(file.getName());
@@ -1661,9 +1660,8 @@ public class FileTypeManagerImpl extends FileTypeManagerEx implements Persistent
     }
 
     @RequiredUIAccess
-    @Nullable
     @Override
-    public FileType getKnownFileTypeOrAssociate(String fileName) {
+    public @Nullable FileType getKnownFileTypeOrAssociate(String fileName) {
         return FileTypeChooser.getKnownFileTypeOrAssociate(fileName);
     }
 
@@ -1716,9 +1714,8 @@ public class FileTypeManagerImpl extends FileTypeManagerEx implements Persistent
         LOG.info(String.format("%s auto-detected files. Detection took %s ms", counterAutoDetect, elapsedAutoDetect));
     }
 
-    @Nullable
     @Override
-    public FileType getFileTypeByMimeType(@Nullable String mimeType) {
+    public @Nullable FileType getFileTypeByMimeType(@Nullable String mimeType) {
         for (Language language : Language.getRegisteredLanguages()) {
             String[] types = language.getMimeTypes();
             for (String type : types) {

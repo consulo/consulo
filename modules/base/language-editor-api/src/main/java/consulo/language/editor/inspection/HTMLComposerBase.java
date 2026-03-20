@@ -107,9 +107,8 @@ public abstract class HTMLComposerBase extends HTMLComposer {
         }
     }
 
-    @Nullable
     @RequiredReadAction
-    private HTMLComposerExtension getLanguageExtension(RefElement refElement) {
+    private @Nullable HTMLComposerExtension getLanguageExtension(RefElement refElement) {
         PsiElement element = refElement.getPsiElement();
         return element != null ? myLanguageExtensions.get(element.getLanguage()) : null;
     }

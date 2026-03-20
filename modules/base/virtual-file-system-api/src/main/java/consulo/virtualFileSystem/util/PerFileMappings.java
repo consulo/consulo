@@ -27,7 +27,6 @@ public interface PerFileMappings<T> {
 
   void setMapping(@Nullable VirtualFile file, @Nullable T value);
 
-  @Nullable
-  T getMapping(@Nullable VirtualFile file);
+  @Nullable T getMapping(@Nullable VirtualFile file);
 }
                                                

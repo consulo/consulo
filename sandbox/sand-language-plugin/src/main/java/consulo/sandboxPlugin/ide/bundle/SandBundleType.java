@@ -60,9 +60,8 @@ public class SandBundleType extends BundleType {
     public void collectHomePaths(Platform platform, Consumer<Path> pathConsumer) {
     }
 
-    @Nullable
     @Override
-    public String getVersionString(Platform platform, Path path) {
+    public @Nullable String getVersionString(Platform platform, Path path) {
         return "1";
     }
 

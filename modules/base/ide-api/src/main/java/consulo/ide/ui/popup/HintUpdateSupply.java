@@ -65,9 +65,8 @@ public abstract class HintUpdateSupply {
 
   public static void installHintUpdateSupply(final JComponent component, final Function<Object, PsiElement> provider) {
     HintUpdateSupply supply = new HintUpdateSupply(component) {
-      @Nullable
       @Override
-      protected PsiElement getPsiElementForHint(@Nullable Object selectedValue) {
+      protected @Nullable PsiElement getPsiElementForHint(@Nullable Object selectedValue) {
         return provider.apply(selectedValue);
       }
     };

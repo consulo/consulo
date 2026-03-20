@@ -155,9 +155,8 @@ public class LookupElementPresentation {
     return myTail != null && myTail.get(0).myGrayed;
   }
 
-  @Nullable
   @Deprecated
-  public ColorValue getTailForeground() {
+  public @Nullable ColorValue getTailForeground() {
     return myTail != null ? myTail.get(0).myFgColor : null;
   }
 

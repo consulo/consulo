@@ -43,15 +43,13 @@ public class TemplateDataLanguagePusher implements FileStringPropertyPusher<Lang
     return Language.ANY;
   }
 
-  @Nullable
   @Override
-  public Language getImmediateValue(Project project, @Nullable VirtualFile file) {
+  public @Nullable Language getImmediateValue(Project project, @Nullable VirtualFile file) {
     return TemplateDataLanguageMappings.getInstance(project).getImmediateMapping(file);
   }
 
-  @Nullable
   @Override
-  public Language getImmediateValue(Module module) {
+  public @Nullable Language getImmediateValue(Module module) {
     return null;
   }
 

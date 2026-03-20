@@ -34,9 +34,8 @@ public class CopyContentRootPathProvider extends DumbAwareCopyPathProvider {
         super(ActionLocalize.actionCopycontentrootpathText());
     }
 
-    @Nullable
     @Override
-    public String getPathToElement(Project project, @Nullable VirtualFile virtualFile, @Nullable Editor editor) {
+    public @Nullable String getPathToElement(Project project, @Nullable VirtualFile virtualFile, @Nullable Editor editor) {
         return ObjectUtil.doIfNotNull(
             virtualFile,
             file -> {

@@ -177,9 +177,8 @@ public class CompilerPaths {
      * The same as {@link #getModuleOutputDirectory} but returns String.
      * The method still returns a non-null value if the output path is specified in Settings but does not exist on disk.
      */
-    @Nullable
     @Deprecated
-    public static String getModuleOutputPath(Module module, boolean forTestClasses) {
+    public static @Nullable String getModuleOutputPath(Module module, boolean forTestClasses) {
         Application application = module.getApplication();
         ModuleCompilerPathsManager pathsManager = ModuleCompilerPathsManager.getInstance(module);
 

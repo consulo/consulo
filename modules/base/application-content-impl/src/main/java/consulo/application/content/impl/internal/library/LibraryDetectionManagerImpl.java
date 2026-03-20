@@ -55,9 +55,8 @@ public class LibraryDetectionManagerImpl extends LibraryDetectionManager {
         return true;
     }
 
-    @Nullable
     @Override
-    public Pair<LibraryType<?>, LibraryProperties<?>> detectType(List<VirtualFile> files) {
+    public @Nullable Pair<LibraryType<?>, LibraryProperties<?>> detectType(List<VirtualFile> files) {
         Pair<LibraryType<?>, LibraryProperties<?>> result = null;
         for (LibraryType<?> type : myApplication.getExtensionPoint(LibraryType.class).getExtensionList()) {
             LibraryProperties<?> properties = type.detect(files);

@@ -34,8 +34,7 @@ public interface ValueComponent<V> extends Component {
         return addListener((Class)ValueComponentEvent.class, valueListener);
     }
 
-    @Nullable
-    V getValue();
+    @Nullable V getValue();
 
     default V getValueOrError() {
         return Objects.requireNonNull(getValue(), "value required");

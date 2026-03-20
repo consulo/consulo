@@ -20,10 +20,8 @@ import org.jspecify.annotations.Nullable;
 
 public interface ReformatFilesOptions extends LayoutCodeOptions {
 
-  @Nullable
-  String getFileTypeMask();
+  @Nullable String getFileTypeMask();
 
-  @Nullable
-  SearchScope getSearchScope();
+  @Nullable SearchScope getSearchScope();
 
 }

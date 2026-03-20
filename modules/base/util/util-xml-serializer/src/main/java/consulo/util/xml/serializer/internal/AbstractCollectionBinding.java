@@ -95,9 +95,8 @@ abstract class AbstractCollectionBinding extends NullableAccessorBinding impleme
 
   abstract Collection<Object> getIterable(Object o);
 
-  @Nullable
   @Override
-  public Object serialize(Object o, @Nullable Object context, SerializationFilter filter) {
+  public @Nullable Object serialize(Object o, @Nullable Object context, SerializationFilter filter) {
     Collection<Object> collection = getIterable(o);
 
     String tagName = getTagName(o);
@@ -124,9 +123,8 @@ abstract class AbstractCollectionBinding extends NullableAccessorBinding impleme
     }
   }
 
-  @Nullable
   @Override
-  public Object deserializeList(Object context, List<Element> elements) {
+  public @Nullable Object deserializeList(Object context, List<Element> elements) {
     Collection result;
     if (getTagName(context) == null) {
       if (context instanceof Collection) {

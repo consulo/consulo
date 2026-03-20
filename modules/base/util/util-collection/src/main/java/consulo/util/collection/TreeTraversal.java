@@ -103,8 +103,7 @@ public abstract class TreeTraversal {
                 Function<T, ? extends Iterable<? extends T>> tree
             ) {
                 class WrappedTree implements Predicate<T>, Function<T, Iterable<? extends T>> {
-                    @Nullable
-                    Set<Object> visited;
+                    @Nullable Set<Object> visited;
 
                     @Override
                     public boolean test(T e) {
@@ -352,16 +351,14 @@ public abstract class TreeTraversal {
     // -----------------------------------------------------------------------------
 
     private abstract static class DfsIt<T, H extends P<T, H>> extends TracingIt<T> {
-        @Nullable
-        H last = null;
+        @Nullable H last = null;
 
         protected DfsIt(Function<? super T, ? extends Iterable<? extends T>> tree) {
             super(tree);
         }
 
-        @Nullable
         @Override
-        public T parent() {
+        public @Nullable T parent() {
             if (last == null) {
                 throw new NoSuchElementException();
             }
@@ -385,9 +382,8 @@ public abstract class TreeTraversal {
             last = P1.create(roots);
         }
 
-        @Nullable
         @Override
-        public T nextImpl() {
+        public @Nullable T nextImpl() {
             while (last != null) {
                 Iterator<? extends T> it = last.iterator(tree);
                 if (it.hasNext()) {
@@ -412,9 +408,8 @@ public abstract class TreeTraversal {
             }
         }
 
-        @Nullable
         @Override
-        public T nextImpl() {
+        public @Nullable T nextImpl() {
             while (last != null) {
                 Iterator<? extends T> it = last.iterator(tree);
                 if (it.hasNext()) {
@@ -437,9 +432,8 @@ public abstract class TreeTraversal {
             last = P1.create(roots);
         }
 
-        @Nullable
         @Override
-        public T nextImpl() {
+        public @Nullable T nextImpl() {
             while (last != null) {
                 P1<T> top = last;
                 if (top.iterator(tree).hasNext() && !top.empty) {
@@ -458,8 +452,7 @@ public abstract class TreeTraversal {
     }
 
     private final static class InterleavedIt<T> extends DfsIt<T, P2<T>> {
-        @Nullable
-        P2<T> cur, max;
+        @Nullable P2<T> cur, max;
 
         InterleavedIt(Iterable<? extends T> roots, Function<? super T, ? extends Iterable<? extends T>> tree) {
             super(tree);
@@ -467,9 +460,8 @@ public abstract class TreeTraversal {
             cur = max = last;
         }
 
-        @Nullable
         @Override
-        public T nextImpl() {
+        public @Nullable T nextImpl() {
             while (last != null) {
                 if (cur == null) {
                     cur = max;
@@ -504,17 +496,15 @@ public abstract class TreeTraversal {
     private static final class PlainBfsIt<T> extends It<T> {
         final ArrayDeque<T> queue = new ArrayDeque<>();
 
-        @Nullable
-        P1<T> top = null;
+        @Nullable P1<T> top = null;
 
         PlainBfsIt(Iterable<? extends T> roots, Function<T, ? extends Iterable<? extends T>> tree) {
             super(tree);
             JBIterable.from(roots).addAllTo(queue);
         }
 
-        @Nullable
         @Override
-        public T nextImpl() {
+        public @Nullable T nextImpl() {
             if (top != null) {
                 JBIterable.from(top.iterable(tree)).addAllTo(queue);
                 top = null;
@@ -535,9 +525,8 @@ public abstract class TreeTraversal {
             JBIterable.from(roots).addAllTo(queue);
         }
 
-        @Nullable
         @Override
-        public T nextImpl() {
+        public @Nullable T nextImpl() {
             while (!queue.isEmpty()) {
                 T result = queue.remove();
                 Iterable<? extends T> children = tree.apply(result);
@@ -555,17 +544,15 @@ public abstract class TreeTraversal {
         final ArrayDeque<T> queue = new ArrayDeque<>();
         final Map<T, T> paths = Maps.newHashMap(HashingStrategy.identity());
 
-        @Nullable
-        P1<T> top = null;
+        @Nullable P1<T> top = null;
 
         TracingBfsIt(Iterable<? extends T> roots, Function<T, ? extends Iterable<? extends T>> tree) {
             super(tree);
             JBIterable.from(roots).addAllTo(queue);
         }
 
-        @Nullable
         @Override
-        public T nextImpl() {
+        public @Nullable T nextImpl() {
             if (top != null) {
                 for (T t : top.iterable(tree)) {
                     if (paths.containsKey(t)) {
@@ -583,9 +570,8 @@ public abstract class TreeTraversal {
             return top.node;
         }
 
-        @Nullable
         @Override
-        public T parent() {
+        public @Nullable T parent() {
             if (top == null) {
                 throw new NoSuchElementException();
             }
@@ -609,11 +595,9 @@ public abstract class TreeTraversal {
 
         P1<T> first;
 
-        @Nullable
-        P1<T> last;
+        @Nullable P1<T> last;
 
-        @Nullable
-        T curResult = null;
+        @Nullable T curResult = null;
 
         GuidedItImpl(
             Iterable<? extends T> roots,
@@ -647,9 +631,8 @@ public abstract class TreeTraversal {
             return this;
         }
 
-        @Nullable
         @Override
-        public T nextImpl() {
+        public @Nullable T nextImpl() {
             if (guide == null) {
                 return stop();
             }
@@ -677,19 +660,15 @@ public abstract class TreeTraversal {
     }
 
     private static class P<T, Self extends P<T, Self>> {
-        @Nullable
-        T node = null;
+        @Nullable T node = null;
 
-        @Nullable
-        Iterable<? extends T> itle = null;
+        @Nullable Iterable<? extends T> itle = null;
 
-        @Nullable
-        Iterator<? extends T> it = null;
+        @Nullable Iterator<? extends T> it = null;
 
         boolean empty;
 
-        @Nullable
-        Self parent;
+        @Nullable Self parent;
 
         static <T, Self extends P<T, Self>> Self create(Self p, T node) {
             p.node = node;
@@ -729,16 +708,14 @@ public abstract class TreeTraversal {
         }
 
         static final Function TO_NODE = new Function<P<?, ?>, Object>() {
-            @Nullable
             @Override
-            public Object apply(P<?, ?> tp) {
+            public @Nullable Object apply(P<?, ?> tp) {
                 return tp.node;
             }
         };
         static final Function TO_PREV = new Function<P<?, ?>, P<?, ?>>() {
-            @Nullable
             @Override
-            public P<?, ?> apply(P<?, ?> tp) {
+            public @Nullable P<?, ?> apply(P<?, ?> tp) {
                 return tp.parent;
             }
         };
@@ -764,8 +741,7 @@ public abstract class TreeTraversal {
             return next;
         }
 
-        @Nullable
-        P1<T> remove() {
+        @Nullable P1<T> remove() {
             P1<T> p = parent;
             parent = null;
             return p;
@@ -780,8 +756,7 @@ public abstract class TreeTraversal {
     }
 
     private static final class P2<T> extends P<T, P2<T>> {
-        @Nullable
-        P2<T> next, prev;
+        @Nullable P2<T> next, prev;
 
         static <T> P2<T> create(T node) {
             return create(new P2<>(), node);
@@ -798,8 +773,7 @@ public abstract class TreeTraversal {
             return next;
         }
 
-        @Nullable
-        P2<T> remove() {
+        @Nullable P2<T> remove() {
             P2<T> p = prev;
             P2<T> n = next;
             prev = next = null;

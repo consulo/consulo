@@ -422,9 +422,8 @@ public class PatchApplier<BinaryType extends FilePatch> {
             : ApplyPatchStatus.PARTIAL;
     }
 
-    @Nullable
     @RequiredUIAccess
-    protected ApplyPatchStatus executeWritable() {
+    protected @Nullable ApplyPatchStatus executeWritable() {
         ReadonlyStatusHandler.OperationStatus readOnlyFilesStatus = getReadOnlyFilesStatus(myVerifier.getWritableFiles());
         if (readOnlyFilesStatus.hasReadonlyFiles()) {
             showError(myProject, readOnlyFilesStatus.getReadonlyFilesMessage(), true);
@@ -514,9 +513,8 @@ public class PatchApplier<BinaryType extends FilePatch> {
         vcsDirtyScopeManager.filesDirty(indirectlyAffected, null);
     }
 
-    @Nullable
     @RequiredUIAccess
-    private ApplyPatchStatus actualApply(
+    private @Nullable ApplyPatchStatus actualApply(
         List<Pair<VirtualFile, ApplyTextFilePatch>> textPatches,
         List<Pair<VirtualFile, ApplyFilePatchBase<BinaryType>>> binaryPatches,
         CommitContext commitContext

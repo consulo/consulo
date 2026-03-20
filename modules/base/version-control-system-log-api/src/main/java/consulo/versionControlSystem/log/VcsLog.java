@@ -68,8 +68,7 @@ public interface VcsLog {
   /**
    * Returns names of branches which contain the given commit, or null if this information is unavailable.
    */
-  @Nullable
-  Collection<String> getContainingBranches(Hash commitHash, VirtualFile root);
+  @Nullable Collection<String> getContainingBranches(Hash commitHash, VirtualFile root);
 
   /**
    * Asynchronously selects the commit node defined by the given reference (commit hash, branch or tag).

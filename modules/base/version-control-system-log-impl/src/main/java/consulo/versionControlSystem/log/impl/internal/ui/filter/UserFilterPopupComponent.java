@@ -59,9 +59,8 @@ class UserFilterPopupComponent extends MultipleValueFilterPopupComponent<VcsLogU
         return displayableText(myFilterModel.getFilterValues(filter));
     }
 
-    @Nullable
     @Override
-    protected String getToolTip(VcsLogUserFilter filter) {
+    protected @Nullable String getToolTip(VcsLogUserFilter filter) {
         return tooltip(myFilterModel.getFilterValues(filter));
     }
 

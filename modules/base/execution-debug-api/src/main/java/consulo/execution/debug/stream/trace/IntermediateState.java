@@ -13,6 +13,5 @@ public interface IntermediateState {
   
   List<TraceElement> getTrace();
 
-  @Nullable
-  Value getStreamResult();
+  @Nullable Value getStreamResult();
 }

@@ -274,9 +274,8 @@ public class InternalMultipleChangeListBrowser extends InternalChangesBrowserBas
         return result;
     }
 
-    @Nullable
     @Override
-    protected Object getLeadSelectedObject(ChangesBrowserNode node) {
+    protected @Nullable Object getLeadSelectedObject(ChangesBrowserNode node) {
         Object result = null;
         Object userObject = node.getUserObject();
 

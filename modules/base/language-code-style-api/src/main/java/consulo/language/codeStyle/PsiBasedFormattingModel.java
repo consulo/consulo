@@ -78,9 +78,8 @@ public class PsiBasedFormattingModel implements FormattingModelEx {
     public void commitChanges() {
     }
 
-    @Nullable
     @RequiredReadAction
-    private String replaceWithPSI(TextRange textRange, String whiteSpace) {
+    private @Nullable String replaceWithPSI(TextRange textRange, String whiteSpace) {
         int offset = textRange.getEndOffset();
         ASTNode leafElement = findElementAt(offset);
 
@@ -150,9 +149,8 @@ public class PsiBasedFormattingModel implements FormattingModelEx {
         return whiteSpace;
     }
 
-    @Nullable
     @RequiredReadAction
-    protected ASTNode findElementAt(int offset) {
+    protected @Nullable ASTNode findElementAt(int offset) {
         PsiFile containingFile = myASTNode.getPsi().getContainingFile();
         Project project = containingFile.getProject();
 

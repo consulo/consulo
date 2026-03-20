@@ -119,9 +119,8 @@ public class LocalChangeListImpl extends LocalChangeList {
     myData = data;
   }
 
-  @Nullable
   @Override
-  public Object getData() {
+  public @Nullable Object getData() {
     return myData;
   }
 

@@ -82,10 +82,9 @@ class CodeStyleCachedValueProvider implements CachedValueProvider<CodeStyleSetti
         myComputation.schedule(runnable);
     }
 
-    @Nullable
     @Override
     @RequiredReadAction
-    public Result<CodeStyleSettings> compute() {
+    public @Nullable Result<CodeStyleSettings> compute() {
         CodeStyleSettings settings = myComputation.getCurrResult();
         if (settings != null) {
             logCached(getReferencedPsi(), settings);

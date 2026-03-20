@@ -45,9 +45,8 @@ public abstract class OccurrenceAction extends DumbAwareAction implements Shortc
     e.getPresentation().setEnabled(isFind && hasMatches);
   }
 
-  @Nullable
   @Override
-  public ShortcutSet getShortcut() {
+  public @Nullable ShortcutSet getShortcut() {
     return getShortcutSet();
   }
 }

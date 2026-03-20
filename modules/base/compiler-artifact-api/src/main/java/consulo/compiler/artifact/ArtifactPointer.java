@@ -26,6 +26,5 @@ public interface ArtifactPointer extends NamedPointer<Artifact> {
   
   String getArtifactName(ArtifactModel artifactModel);
 
-  @Nullable
-  Artifact findArtifact(ArtifactModel artifactModel);
+  @Nullable Artifact findArtifact(ArtifactModel artifactModel);
 }

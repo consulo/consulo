@@ -31,8 +31,7 @@ public interface EncodingRegistry {
    * if useParentDefaults is true, encoding configured for nearest parent of virtualFile or,
    * null if there is no configured encoding found.
    */
-  @Nullable
-  Charset getEncoding(@Nullable VirtualFile virtualFile, boolean useParentDefaults);
+  @Nullable Charset getEncoding(@Nullable VirtualFile virtualFile, boolean useParentDefaults);
 
   /**
    * @param virtualFileOrDir null means project

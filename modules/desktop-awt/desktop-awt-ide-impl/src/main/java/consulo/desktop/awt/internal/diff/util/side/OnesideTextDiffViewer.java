@@ -90,9 +90,8 @@ public abstract class OnesideTextDiffViewer extends OnesideDiffViewer<TextEditor
         return holder;
     }
 
-    @Nullable
     @Override
-    protected JComponent createTitle() {
+    protected @Nullable JComponent createTitle() {
         List<JComponent> textTitles = AWTDiffUtil.createTextTitles(myRequest, ContainerUtil.list(getEditor(), getEditor()));
         return getSide().select(textTitles);
     }
@@ -157,9 +156,8 @@ public abstract class OnesideTextDiffViewer extends OnesideDiffViewer<TextEditor
     // Misc
     //
 
-    @Nullable
     @Override
-    protected Navigatable getNavigatable() {
+    protected @Nullable Navigatable getNavigatable() {
         return getContent().getNavigatable(LineCol.fromCaret(getEditor()));
     }
 

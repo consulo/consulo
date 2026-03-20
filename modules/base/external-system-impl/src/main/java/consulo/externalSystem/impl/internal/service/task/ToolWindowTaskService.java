@@ -53,9 +53,8 @@ public class ToolWindowTaskService extends AbstractToolWindowService<TaskData> {
   public static final Function<DataNode<TaskData>, ExternalTaskPojo> MAPPER = node -> ExternalTaskPojo.from(node.getData());
 
   public static final Function<DataNode<TaskData>, ExternalConfigPathAware> TASK_HOLDER_RETRIEVAL_STRATEGY = new Function<>() {
-    @Nullable
     @Override
-    public ExternalConfigPathAware apply(DataNode<TaskData> node) {
+    public @Nullable ExternalConfigPathAware apply(DataNode<TaskData> node) {
       ModuleData moduleData = node.getData(ProjectKeys.MODULE);
       return moduleData == null ? node.getData(ProjectKeys.PROJECT) : moduleData;
     }

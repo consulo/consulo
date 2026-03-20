@@ -111,8 +111,7 @@ public interface Repository extends Disposable {
   
   State getState();
 
-  @Nullable
-  String getCurrentBranchName();
+  @Nullable String getCurrentBranchName();
 
   
   AbstractVcs getVcs();
@@ -121,8 +120,7 @@ public interface Repository extends Disposable {
    * Returns the hash of the revision, which HEAD currently points to.
    * Returns null only in the case of a fresh repository, when no commit have been made.
    */
-  @Nullable
-  String getCurrentRevision();
+  @Nullable String getCurrentRevision();
 
   /**
    * @return true if current repository is "fresh", i.e. if no commits have been made yet.

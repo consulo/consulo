@@ -824,9 +824,8 @@ public class DefaultInspectionToolPresentation implements ProblemDescriptionsPro
     }
 
     @Override
-    @Nullable
     @RequiredReadAction
-    public IntentionAction findQuickFixes(final CommonProblemDescriptor commonProblemDescriptor, String hint) {
+    public @Nullable IntentionAction findQuickFixes(final CommonProblemDescriptor commonProblemDescriptor, String hint) {
         InspectionTool tool = getToolWrapper().getTool();
         if (!(tool instanceof GlobalInspectionTool globalInspectionTool)) {
             return null;

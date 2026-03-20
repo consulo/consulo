@@ -36,7 +36,6 @@ public interface StructureViewBuilderProvider {
    * @param project The project to which the file belongs.
    * @return The structure view builder, or null if no structure view is available for the file.
    */
-  @Nullable
   @RequiredReadAction
-  StructureViewBuilder getStructureViewBuilder(FileType fileType, VirtualFile file, Project project);
+  @Nullable StructureViewBuilder getStructureViewBuilder(FileType fileType, VirtualFile file, Project project);
 }

@@ -63,9 +63,8 @@ class DocumentWindowImpl extends UserDataHolderBase implements Disposable, Docum
      * @param hPos
      * @return null means we were unable to calculate
      */
-    @Nullable
     @RequiredReadAction
-    LogicalPosition hostToInjectedInVirtualSpace(LogicalPosition hPos) {
+    @Nullable LogicalPosition hostToInjectedInVirtualSpace(LogicalPosition hPos) {
         // beware the virtual space
         int hLineStartOffset =
             hPos.line >= myDelegate.getLineCount() ? myDelegate.getTextLength() : myDelegate.getLineStartOffset(hPos.line);

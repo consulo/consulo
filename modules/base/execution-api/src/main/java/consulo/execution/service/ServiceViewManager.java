@@ -22,6 +22,5 @@ public interface ServiceViewManager {
   
   Promise<Void> extract(Object service, Class<?> contributorClass);
 
-  @Nullable
-  String getToolWindowId(Class<?> contributorClass);
+  @Nullable String getToolWindowId(Class<?> contributorClass);
 }

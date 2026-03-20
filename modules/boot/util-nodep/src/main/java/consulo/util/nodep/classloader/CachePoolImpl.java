@@ -24,8 +24,7 @@ class CachePoolImpl implements UrlClassLoader.CachePool {
 
   private final Map<URL, Attributes> myManifestData = new ConcurrentHashMap<>();
 
-  @Nullable
-  Attributes getManifestData(URL url) {
+  @Nullable Attributes getManifestData(URL url) {
     return myManifestData.get(url);
   }
 

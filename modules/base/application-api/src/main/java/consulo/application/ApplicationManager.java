@@ -33,10 +33,9 @@ public class ApplicationManager {
    *
    * @return <code>Application</code>
    */
-  @Nullable
   @Deprecated
   @DeprecationInfo("Use Application.get()")
-  public static Application getApplication() {
+  public static @Nullable Application getApplication() {
     return ourApplication;
   }
 

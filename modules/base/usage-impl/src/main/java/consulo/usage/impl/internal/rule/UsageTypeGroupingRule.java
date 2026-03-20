@@ -31,9 +31,8 @@ import org.jspecify.annotations.Nullable;
  * @author max
  */
 public class UsageTypeGroupingRule extends SingleParentUsageGroupingRule {
-    @Nullable
     @Override
-    protected UsageGroup getParentGroupFor(Usage usage, UsageTarget[] targets) {
+    protected @Nullable UsageGroup getParentGroupFor(Usage usage, UsageTarget[] targets) {
         if (usage instanceof PsiElementUsage elementUsage) {
             PsiElement element = elementUsage.getElement();
             UsageType usageType = getUsageType(element, targets);

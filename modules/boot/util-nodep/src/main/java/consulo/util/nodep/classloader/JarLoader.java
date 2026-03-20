@@ -167,8 +167,7 @@ class JarLoader extends Loader {
         return Objects.requireNonNull(myAttributes);
     }
 
-    @Nullable
-    String getClassPathManifestAttribute() {
+    @Nullable String getClassPathManifestAttribute() {
         loadManifestAttributes();
         String manifestAttribute = myClassPathManifestAttribute;
         return manifestAttribute != NULL_STRING ? manifestAttribute : null;
@@ -317,9 +316,8 @@ class JarLoader extends Loader {
         }
     }
 
-    @Nullable
     @Override
-    Resource getResource(String name) {
+    @Nullable Resource getResource(String name) {
         if (myConfiguration.myLazyClassloadingCaches) {
             int numberOfHits = myNumberOfRequests.incrementAndGet();
             IntHashSet packagesInside = myPackageHashesInside;
@@ -408,9 +406,8 @@ class JarLoader extends Loader {
             }
         }
 
-        @Nullable
         @Override
-        public String getValue(Attribute key) {
+        public @Nullable String getValue(Attribute key) {
             loadManifestAttributes();
             return myAttributes != null ? myAttributes.get(key) : null;
         }

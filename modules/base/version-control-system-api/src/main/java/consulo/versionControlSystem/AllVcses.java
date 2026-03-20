@@ -31,11 +31,9 @@ public interface AllVcses {
     return project.getInstance(AllVcses.class);
   }
 
-  @Nullable
-  AbstractVcs getByName(String name);
+  @Nullable AbstractVcs getByName(String name);
 
-  @Nullable
-  VcsDescriptor getDescriptor(String name);
+  @Nullable VcsDescriptor getDescriptor(String name);
 
   VcsDescriptor[] getAll();
 

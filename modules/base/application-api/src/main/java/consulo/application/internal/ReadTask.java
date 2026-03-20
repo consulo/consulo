@@ -46,9 +46,8 @@ public abstract class ReadTask {
      *
      * @return an action that should be performed later on Swing thread if no write actions have happened before that
      */
-    @Nullable
     @RequiredReadAction
-    public Continuation performInReadAction(ProgressIndicator indicator) throws ProcessCanceledException {
+    public @Nullable Continuation performInReadAction(ProgressIndicator indicator) throws ProcessCanceledException {
         computeInReadAction(indicator);
         return null;
     }

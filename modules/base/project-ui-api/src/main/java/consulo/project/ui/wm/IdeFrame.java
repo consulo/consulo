@@ -36,24 +36,19 @@ public interface IdeFrame extends FocusableFrame {
 
     Key<IdeFrame> KEY = Key.create("IdeFrame");
 
-    @Nullable
-    StatusBar getStatusBar();
+    @Nullable StatusBar getStatusBar();
 
-    @Nullable
-    Rectangle2D suggestChildFrameBounds();
+    @Nullable Rectangle2D suggestChildFrameBounds();
 
-    @Nullable
-    Project getProject();
+    @Nullable Project getProject();
 
     void setFrameTitle(String title);
 
     void setFileTitle(String fileTitle, File ioFile);
 
-    @Nullable
-    <E extends IdeRootPaneNorthExtension> E getNorthExtension(Class<? extends E> extensioClass);
+    <E extends IdeRootPaneNorthExtension> @Nullable E getNorthExtension(Class<? extends E> extensioClass);
 
-    @Nullable
-    BalloonLayout getBalloonLayout();
+    @Nullable BalloonLayout getBalloonLayout();
 
     default boolean isInFullScreen() {
         return false;

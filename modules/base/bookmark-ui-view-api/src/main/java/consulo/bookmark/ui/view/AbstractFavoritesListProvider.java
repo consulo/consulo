@@ -69,9 +69,8 @@ public abstract class AbstractFavoritesListProvider<T> implements FavoritesListP
         return myListName;
     }
 
-    @Nullable
     @Override
-    public FavoritesListNode createFavoriteListNode(Project project) {
+    public @Nullable FavoritesListNode createFavoriteListNode(Project project) {
         return myNode;
     }
 

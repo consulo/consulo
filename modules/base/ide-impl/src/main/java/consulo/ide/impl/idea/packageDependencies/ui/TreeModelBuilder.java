@@ -313,9 +313,8 @@ public class TreeModelBuilder {
         return null;
     }
 
-    @Nullable
     @RequiredUIAccess
-    public PackageDependenciesNode getFileParentNode(VirtualFile vFile) {
+    public @Nullable PackageDependenciesNode getFileParentNode(VirtualFile vFile) {
         LOG.assertTrue(vFile != null);
         VirtualFile containingDirectory = vFile.getParent();
         LOG.assertTrue(containingDirectory != null);
@@ -405,9 +404,8 @@ public class TreeModelBuilder {
         return node;
     }
 
-    @Nullable
     @RequiredUIAccess
-    private PackageDependenciesNode getModuleNode(Module module, ScopeType scopeType) {
+    private @Nullable PackageDependenciesNode getModuleNode(Module module, ScopeType scopeType) {
         if (module == null || !myShowModules) {
             return getRootNode(scopeType);
         }

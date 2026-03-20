@@ -113,9 +113,8 @@ public abstract class InlayImpl<R extends EditorCustomElementRenderer, T extends
 
     abstract Point getPosition();
 
-    @Nullable
     @Override
-    public Rectangle getBounds() {
+    public @Nullable Rectangle getBounds() {
         if (EditorImplUtil.isInlayFolded(this)) {
             return null;
         }

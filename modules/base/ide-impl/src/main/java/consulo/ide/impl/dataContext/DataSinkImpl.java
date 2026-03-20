@@ -92,9 +92,8 @@ public class DataSinkImpl implements DataSink, DataSnapshot {
      *   <li>Return null</li>
      * </ol>
      */
-    @Nullable
     @SuppressWarnings("unchecked")
-    public <T> T resolve(Key<T> key) {
+    public <T> @Nullable T resolve(Key<T> key) {
         // 1. Immediate data
         Object immediate = myImmediateData.get(key);
         if (immediate != null) {

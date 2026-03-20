@@ -89,8 +89,7 @@ public interface PasswordSafePromptDialog {
    * @param promptLabel   the prompt label text
    * @param checkboxLabel the checkbox text   @return null if dialog was cancelled or password (stored in database or a entered by user)
    */
-  @Nullable
-  String askPassword(String title,
+  @Nullable String askPassword(String title,
                      String message,
                      Class<?> requestor,
                      String key,

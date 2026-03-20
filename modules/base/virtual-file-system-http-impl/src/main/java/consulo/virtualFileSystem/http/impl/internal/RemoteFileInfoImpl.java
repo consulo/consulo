@@ -47,8 +47,7 @@ public class RemoteFileInfoImpl implements RemoteFileInfo {
     private final String myUrl;
     private final RemoteFileManagerImpl myManager;
     private
-    @Nullable
-    RemoteContentProvider myContentProvider;
+    @Nullable RemoteContentProvider myContentProvider;
     private File myLocalFile;
     private VirtualFile myLocalVirtualFile;
     private VirtualFile myPrevLocalFile;

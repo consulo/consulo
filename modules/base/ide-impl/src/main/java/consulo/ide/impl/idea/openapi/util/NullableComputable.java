@@ -24,6 +24,5 @@ import org.jspecify.annotations.Nullable;
  */
 @Deprecated
 public interface NullableComputable<T> extends Computable<T> {
-    @Nullable
-    T compute();
+    @Nullable T compute();
 }

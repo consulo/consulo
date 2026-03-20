@@ -25,9 +25,8 @@ import org.jspecify.annotations.Nullable;
 public interface PersistentStateComponentAsync<T> extends PersistentStateComponent<T> {
     Coroutine<?, T> getStateAsync();
 
-    @Nullable
     @Override
-    default T getState() {
+    default @Nullable T getState() {
         throw new IllegalStateException("Use getStateAsync() instead");
     }
 }

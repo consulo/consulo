@@ -90,8 +90,7 @@ public interface SdkModel extends BundleHolder {
    * @param sdkName the name of the SDK to find.
    * @return the SDK instance or null.
    */
-  @Nullable
-  Sdk findSdk(String sdkName);
+  @Nullable Sdk findSdk(String sdkName);
 
   /**
    * Adds the specified SDK (already created and initialized) to the model.

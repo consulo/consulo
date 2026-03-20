@@ -104,9 +104,8 @@ public class VcsCurrentRevisionProxy implements ContentRevision {
         return ContentRevisionCache.getAsString(getContentAsBytes(), file, null);
       }
 
-      @Nullable
       @Override
-      public byte[] getContentAsBytes() throws VcsException {
+      public @Nullable byte[] getContentAsBytes() throws VcsException {
         return pair.getSecond();
       }
 

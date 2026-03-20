@@ -1476,9 +1476,8 @@ public class SearchEverywhereUI extends BigPopupUI implements UiDataProvider, Qu
                     return filter.getElementText(value);
                 }
 
-                @Nullable
                 @Override
-                protected Image getItemIcon(T value) {
+                protected @Nullable Image getItemIcon(T value) {
                     return filter.getElementIcon(value);
                 }
             };
@@ -1639,9 +1638,8 @@ public class SearchEverywhereUI extends BigPopupUI implements UiDataProvider, Qu
             return myCommandRenderer;
         }
 
-        @Nullable
         @Override
-        public Object getDataForItem(Object element, Key dataId) {
+        public @Nullable Object getDataForItem(Object element, Key dataId) {
             return null;
         }
     };

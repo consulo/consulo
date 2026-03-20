@@ -41,9 +41,8 @@ public abstract class Location<E extends PsiElement> {
   
   public abstract <T extends PsiElement> Iterator<Location<T>> getAncestors(Class<T> ancestorClass, boolean strict);
 
-  @Nullable
   @RequiredReadAction
-  public VirtualFile getVirtualFile() {
+  public @Nullable VirtualFile getVirtualFile() {
     E psiElement = getPsiElement();
     if (!psiElement.isValid()) return null;
     PsiFile psiFile = psiElement.getContainingFile();
@@ -53,9 +52,8 @@ public abstract class Location<E extends PsiElement> {
     return virtualFile;
   }
 
-  @Nullable
   @RequiredReadAction
-  public OpenFileDescriptor getOpenFileDescriptor() {
+  public @Nullable OpenFileDescriptor getOpenFileDescriptor() {
     VirtualFile virtualFile = getVirtualFile();
     if (virtualFile == null) {
       return null;
@@ -63,9 +61,8 @@ public abstract class Location<E extends PsiElement> {
     return OpenFileDescriptorFactory.getInstance(getProject()).newBuilder(virtualFile).offset(getPsiElement().getTextOffset()).build();
   }
 
-  @Nullable
   @SuppressWarnings("unchecked")
-  public <Ancestor extends PsiElement> Location<Ancestor> getParent(Class<Ancestor> parentClass) {
+  public <Ancestor extends PsiElement> @Nullable Location<Ancestor> getParent(Class<Ancestor> parentClass) {
     Iterator<Location<PsiElement>> ancestors = getAncestors(PsiElement.class, true);
     if (!ancestors.hasNext()) return null;
     Location<? extends PsiElement> parent = ancestors.next();
@@ -87,9 +84,8 @@ public abstract class Location<E extends PsiElement> {
     return location != null ? location.getPsiElement() : null;
   }
 
-  @Nullable
   @SuppressWarnings("unchecked")
-  public static <T> T safeCast(Object obj, Class<T> expectedClass) {
+  public static <T> @Nullable T safeCast(Object obj, Class<T> expectedClass) {
     if (expectedClass.isInstance(obj)) return (T)obj;
     return null;
   }

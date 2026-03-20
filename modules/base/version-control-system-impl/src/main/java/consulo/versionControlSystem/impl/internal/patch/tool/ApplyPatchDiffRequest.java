@@ -73,9 +73,8 @@ public class ApplyPatchDiffRequest extends DiffRequest implements ApplyPatchRequ
     return myAppliedPatch;
   }
 
-  @Nullable
   @Override
-  public String getTitle() {
+  public @Nullable String getTitle() {
     return myWindowTitle;
   }
 

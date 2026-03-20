@@ -177,9 +177,8 @@ public class FileTypeChooser extends DialogWrapper {
     /**
      * Speculates if file with newName would have known file type
      */
-    @Nullable
     @RequiredUIAccess
-    public static FileType getKnownFileTypeOrAssociate(VirtualFile parent, String newName, @Nullable Project project) {
+    public static @Nullable FileType getKnownFileTypeOrAssociate(VirtualFile parent, String newName, @Nullable Project project) {
         return getKnownFileTypeOrAssociate(new FakeVirtualFile(parent, newName), project);
     }
 
@@ -189,9 +188,8 @@ public class FileTypeChooser extends DialogWrapper {
      *
      * @return Known file type or null. Never returns {@link UnknownFileType#INSTANCE}.
      */
-    @Nullable
     @RequiredUIAccess
-    public static FileType getKnownFileTypeOrAssociate(VirtualFile file, @Nullable Project project) {
+    public static @Nullable FileType getKnownFileTypeOrAssociate(VirtualFile file, @Nullable Project project) {
         FileType type = file.getFileType();
         if (type == UnknownFileType.INSTANCE) {
             type = getKnownFileTypeOrAssociate(file.getName());
@@ -199,9 +197,8 @@ public class FileTypeChooser extends DialogWrapper {
         return type;
     }
 
-    @Nullable
     @RequiredUIAccess
-    public static FileType getKnownFileTypeOrAssociate(String fileName) {
+    public static @Nullable FileType getKnownFileTypeOrAssociate(String fileName) {
         FileTypeManager fileTypeManager = FileTypeManager.getInstance();
         FileType type = fileTypeManager.getFileTypeByFileName(fileName);
         if (type == UnknownFileType.INSTANCE) {
@@ -210,9 +207,8 @@ public class FileTypeChooser extends DialogWrapper {
         return type;
     }
 
-    @Nullable
     @RequiredUIAccess
-    public static FileType associateFileType(String fileName) {
+    public static @Nullable FileType associateFileType(String fileName) {
         FileTypeChooser chooser = new FileTypeChooser(suggestPatterns(fileName), fileName);
         if (!chooser.showAndGet()) {
             return null;

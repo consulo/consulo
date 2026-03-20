@@ -77,9 +77,8 @@ public class CopyrightConfigurable extends NamedConfigurable<CopyrightProfile> i
             }
         }
 
-        @Nullable
         @Override
-        protected JComponent createCenterPanel() {
+        protected @Nullable JComponent createCenterPanel() {
             Document document = EditorFactory.getInstance().createDocument(myText);
             myEditor = EditorFactory.getInstance().createViewer(document, myProject);
             CopyrightEditorUtil.setupEditor(myEditor);

@@ -257,9 +257,8 @@ public abstract class FindUsagesHandler {
             throw new IncorrectOperationException();
         }
 
-        @Nullable
         @Override
-        public String getHelpId() {
+        public @Nullable String getHelpId() {
             throw new IncorrectOperationException();
         }
 
@@ -293,9 +292,8 @@ public abstract class FindUsagesHandler {
             throw new IncorrectOperationException();
         }
 
-        @Nullable
         @Override
-        protected Collection<String> getStringsToSearch(PsiElement element) {
+        protected @Nullable Collection<String> getStringsToSearch(PsiElement element) {
             throw new IncorrectOperationException();
         }
 

@@ -101,9 +101,8 @@ public class DesktopApplicationStarter extends ApplicationStarter {
         return !Boolean.parseBoolean(myPlatform.jvm().getRuntimeProperty(ApplicationProperties.CONSULO_IN_SANDBOX));
     }
 
-    @Nullable
     @Override
-    public StartupProgress createSplash(CommandLineArgs args) {
+    public @Nullable StartupProgress createSplash(CommandLineArgs args) {
         if (!args.isNoSplash()) {
             SplashScreen splashScreen = getSplashScreen();
             if (splashScreen == null) {

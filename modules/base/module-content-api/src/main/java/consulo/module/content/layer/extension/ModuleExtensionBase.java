@@ -67,9 +67,8 @@ public class ModuleExtensionBase<T extends ModuleExtension<T>> implements Module
     myIsEnabled = mutableModuleExtension.isEnabled();
   }
 
-  @Nullable
   @Override
-  public final Element getState() {
+  public final @Nullable Element getState() {
     if (!isEnabled()) {
       return null;
     }

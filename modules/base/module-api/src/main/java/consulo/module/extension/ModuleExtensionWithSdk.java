@@ -28,11 +28,9 @@ public interface ModuleExtensionWithSdk<T extends ModuleExtensionWithSdk<T>> ext
   
   ModuleInheritableNamedPointer<Sdk> getInheritableSdk();
 
-  @Nullable
-  Sdk getSdk();
+  @Nullable Sdk getSdk();
 
-  @Nullable
-  String getSdkName();
+  @Nullable String getSdkName();
 
   
   Class<? extends SdkType> getSdkTypeClass();

@@ -46,9 +46,8 @@ public class CopyrightProjectConfigurable extends SearchableConfigurable.Parent.
     return LocalizeValue.localizeTODO("Copyright");
   }
 
-  @Nullable
   @Override
-  public String getParentId() {
+  public @Nullable String getParentId() {
     return StandardConfigurableIds.EDITOR_GROUP;
   }
 

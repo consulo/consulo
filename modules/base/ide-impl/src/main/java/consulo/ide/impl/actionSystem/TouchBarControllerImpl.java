@@ -100,9 +100,8 @@ public class TouchBarControllerImpl implements TouchBarControllerInternal {
         myFacade.setButtonActions(component, buttons, principal, defaultButton, extraActions);
     }
 
-    @Nullable
     @Override
-    public Disposable showWindowActions(Component contentPane) {
+    public @Nullable Disposable showWindowActions(Component contentPane) {
         return myFacade == null ? null : myFacade.showWindowActions(contentPane);
     }
 

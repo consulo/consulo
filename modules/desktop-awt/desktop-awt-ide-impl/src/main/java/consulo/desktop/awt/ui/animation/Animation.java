@@ -37,8 +37,7 @@ public final class Animation {
   private int myDelay = 0;
   private int myDuration = 500;
   private
-  @Nullable
-  List<Listener> myListeners;
+  @Nullable List<Listener> myListeners;
 
   public Animation(DoubleConsumer consumer) {
     myConsumer = consumer;

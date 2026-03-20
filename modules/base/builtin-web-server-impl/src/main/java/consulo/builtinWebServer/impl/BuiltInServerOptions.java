@@ -34,9 +34,8 @@ public class BuiltInServerOptions implements PersistentStateComponent<BuiltInSer
         return Application.get().getInstance(BuiltInServerOptions.class);
     }
 
-    @Nullable
     @Override
-    public BuiltInServerOptionsState getState() {
+    public @Nullable BuiltInServerOptionsState getState() {
         return myState;
     }
 

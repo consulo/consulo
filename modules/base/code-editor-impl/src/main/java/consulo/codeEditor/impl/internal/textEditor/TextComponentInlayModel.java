@@ -10,27 +10,23 @@ import java.util.Collections;
 import java.util.List;
 
 public class TextComponentInlayModel implements InlayModel {
-    @Nullable
     @Override
-    public <T extends EditorCustomElementRenderer> Inlay<T> addInlineElement(int offset, boolean relatesToPrecedingText, int priority, T renderer) {
+    public <T extends EditorCustomElementRenderer> @Nullable Inlay<T> addInlineElement(int offset, boolean relatesToPrecedingText, int priority, T renderer) {
         return null;
     }
 
-    @Nullable
     @Override
-    public <T extends EditorCustomElementRenderer> Inlay<T> addInlineElement(int offset, boolean relatesToPrecedingText, T renderer) {
+    public <T extends EditorCustomElementRenderer> @Nullable Inlay<T> addInlineElement(int offset, boolean relatesToPrecedingText, T renderer) {
         return null;
     }
 
-    @Nullable
     @Override
-    public <T extends EditorCustomElementRenderer> Inlay<T> addInlineElement(int offset, InlayProperties properties, T renderer) {
+    public <T extends EditorCustomElementRenderer> @Nullable Inlay<T> addInlineElement(int offset, InlayProperties properties, T renderer) {
         return null;
     }
 
-    @Nullable
     @Override
-    public <T extends EditorCustomElementRenderer> Inlay<T> addBlockElement(int offset, boolean relatesToPrecedingText, boolean showAbove, int priority, T renderer) {
+    public <T extends EditorCustomElementRenderer> @Nullable Inlay<T> addBlockElement(int offset, boolean relatesToPrecedingText, boolean showAbove, int priority, T renderer) {
         return null;
     }
 
@@ -39,15 +35,13 @@ public class TextComponentInlayModel implements InlayModel {
         return null;
     }
 
-    @Nullable
     @Override
-    public <T extends EditorCustomElementRenderer> Inlay<T> addAfterLineEndElement(int offset, boolean relatesToPrecedingText, T renderer) {
+    public <T extends EditorCustomElementRenderer> @Nullable Inlay<T> addAfterLineEndElement(int offset, boolean relatesToPrecedingText, T renderer) {
         return null;
     }
 
-    @Nullable
     @Override
-    public <T extends EditorCustomElementRenderer> Inlay<T> addAfterLineEndElement(int offset, InlayProperties properties, T renderer) {
+    public <T extends EditorCustomElementRenderer> @Nullable Inlay<T> addAfterLineEndElement(int offset, InlayProperties properties, T renderer) {
         return null;
     }
 
@@ -74,15 +68,13 @@ public class TextComponentInlayModel implements InlayModel {
         return false;
     }
 
-    @Nullable
     @Override
-    public Inlay getInlineElementAt(VisualPosition visualPosition) {
+    public @Nullable Inlay getInlineElementAt(VisualPosition visualPosition) {
         return null;
     }
 
-    @Nullable
     @Override
-    public Inlay getElementAt(Point point) {
+    public @Nullable Inlay getElementAt(Point point) {
         return null;
     }
 

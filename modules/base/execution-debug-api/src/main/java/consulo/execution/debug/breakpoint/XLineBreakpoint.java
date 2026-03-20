@@ -35,8 +35,7 @@ public interface XLineBreakpoint<P extends XBreakpointProperties> extends XBreak
 
     String getPresentableFilePath();
 
-    @Nullable
-    VirtualFile getFile();
+    @Nullable VirtualFile getFile();
 
     @Override
     
@@ -48,6 +47,5 @@ public interface XLineBreakpoint<P extends XBreakpointProperties> extends XBreak
 
     void setTemporary(boolean temporary);
 
-    @Nullable
-    RangeHighlighter getHighlighter();
+    @Nullable RangeHighlighter getHighlighter();
 }

@@ -33,9 +33,8 @@ public class AtomicLazyValueImpl<T> implements LazyValue<T> {
     myFactory = factory;
   }
 
-  @Nullable
   @Override
-  public T getStoredValue() {
+  public @Nullable T getStoredValue() {
     return myValue;
   }
 

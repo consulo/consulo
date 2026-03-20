@@ -35,14 +35,12 @@ public interface PsiQualifiedNamedElement {
    *
    * @return the qualified name of the element, or null
    */
-  @Nullable
-  String getQualifiedName();
+  @Nullable String getQualifiedName();
 
   /**
    * Returns the name of the element.
    *
    * @return the element name
    */
-  @Nullable
-  String getName();
+  @Nullable String getName();
 }

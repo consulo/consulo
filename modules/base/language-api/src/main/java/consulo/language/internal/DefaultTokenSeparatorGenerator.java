@@ -30,9 +30,8 @@ import org.jspecify.annotations.Nullable;
  * @since 11-Jul-22
  */
 public class DefaultTokenSeparatorGenerator implements TokenSeparatorGenerator {
-  @Nullable
   @Override
-  public ASTNode generateWhitespaceBetweenTokens(ASTNode left, ASTNode right) {
+  public @Nullable ASTNode generateWhitespaceBetweenTokens(ASTNode left, ASTNode right) {
     Language l = PsiUtilCore.getNotAnyLanguage(left);
     Language rightLang = PsiUtilCore.getNotAnyLanguage(right);
     if (rightLang.isKindOf(l)) {

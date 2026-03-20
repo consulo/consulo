@@ -81,11 +81,9 @@ public interface DocumentationManager {
 
   void showJavaDocInfo(Editor editor, @Nullable PsiFile file, boolean requestFocus, @Nullable Runnable closeCallback);
 
-  @Nullable
-  PsiElement getElementFromLookup(Editor editor, @Nullable PsiFile file);
+  @Nullable PsiElement getElementFromLookup(Editor editor, @Nullable PsiFile file);
 
-  @Nullable
-  JBPopup getDocInfoHint();
+  @Nullable JBPopup getDocInfoHint();
 
   boolean hasActiveDockedDocWindow();
 
@@ -109,8 +107,7 @@ public interface DocumentationManager {
     return findTargetElement(editor, editor.getCaretModel().getOffset(), file, contextElement);
   }
 
-  @Nullable
-  PsiElement findTargetElement(Editor editor, int offset, @Nullable PsiFile file, PsiElement contextElement);
+  @Nullable PsiElement findTargetElement(Editor editor, int offset, @Nullable PsiFile file, PsiElement contextElement);
 
   String generateDocumentation(PsiElement element, @Nullable PsiElement originalElement, boolean onHover);
 

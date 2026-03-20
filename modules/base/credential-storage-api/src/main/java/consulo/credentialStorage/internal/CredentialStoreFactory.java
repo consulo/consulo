@@ -12,6 +12,5 @@ import org.jspecify.annotations.Nullable;
 public interface CredentialStoreFactory {
     ExtensionPointName<CredentialStoreFactory> CREDENTIAL_STORE_FACTORY = ExtensionPointName.create(CredentialStoreFactory.class);
 
-    @Nullable
-    CredentialStore create(Platform platform);
+    @Nullable CredentialStore create(Platform platform);
 }

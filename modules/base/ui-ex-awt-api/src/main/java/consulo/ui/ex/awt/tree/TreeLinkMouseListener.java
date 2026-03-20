@@ -46,9 +46,8 @@ public class TreeLinkMouseListener extends LinkMouseListenerBase {
     }
   }
 
-  @Nullable
   @Override
-  protected Object getTagAt(MouseEvent e) {
+  protected @Nullable Object getTagAt(MouseEvent e) {
     JTree tree = (JTree)e.getSource();
     Object tag = null;
     HaveTooltip haveTooltip = null;

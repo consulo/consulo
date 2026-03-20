@@ -91,8 +91,7 @@ class InjectionRegistrarImpl implements MultiHostRegistrar {
     myHostDocument = (DocumentEx)viewProvider.getDocument();
   }
 
-  @Nullable
-  InjectionResult getInjectedResult() {
+  @Nullable InjectionResult getInjectedResult() {
     return resultFiles == null && resultReferences == null ? null : new InjectionResult(myHostPsiFile, resultFiles, resultReferences);
   }
 

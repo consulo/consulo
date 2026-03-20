@@ -52,9 +52,8 @@ public abstract class AbstractLanguageInjectionSupport extends LanguageInjection
         return false;
     }
 
-    @Nullable
     @Override
-    public BaseInjection findCommentInjection(PsiElement host, @Nullable Ref<PsiElement> commentRef) {
+    public @Nullable BaseInjection findCommentInjection(PsiElement host, @Nullable Ref<PsiElement> commentRef) {
         return InjectorUtils.findCommentInjection(host, "comment", commentRef);
     }
 

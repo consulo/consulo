@@ -24,6 +24,5 @@ import java.util.List;
 * @author Konstantin Bulenkov
 */
 public interface FileFlavorProvider {
-  @Nullable
-  List<File> asFileList();
+  @Nullable List<File> asFileList();
 }

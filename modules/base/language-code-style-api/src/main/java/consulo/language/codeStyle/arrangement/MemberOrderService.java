@@ -49,7 +49,6 @@ public interface MemberOrderService {
    * given 'context' element if given member should be the first child
    * <code>null</code> otherwise
    */
-  @Nullable
   @RequiredReadAction
-  PsiElement getAnchor(PsiElement member, CommonCodeStyleSettings settings, PsiElement context);
+  @Nullable PsiElement getAnchor(PsiElement member, CommonCodeStyleSettings settings, PsiElement context);
 }

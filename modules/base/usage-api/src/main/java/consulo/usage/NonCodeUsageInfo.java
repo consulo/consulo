@@ -32,9 +32,8 @@ public class NonCodeUsageInfo extends MoveRenameUsageInfo {
         this.newText = newText;
     }
 
-    @Nullable
     @RequiredReadAction
-    public static NonCodeUsageInfo create(
+    public static @Nullable NonCodeUsageInfo create(
         PsiFile file,
         int startOffset,
         int endOffset,
@@ -63,9 +62,8 @@ public class NonCodeUsageInfo extends MoveRenameUsageInfo {
     }
 
     @Override
-    @Nullable
     @RequiredReadAction
-    public PsiReference getReference() {
+    public @Nullable PsiReference getReference() {
         return null;
     }
 

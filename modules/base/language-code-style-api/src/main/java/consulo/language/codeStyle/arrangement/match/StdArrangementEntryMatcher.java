@@ -170,9 +170,8 @@ public class StdArrangementEntryMatcher implements ArrangementEntryMatcher {
       }
     }
 
-    @Nullable
     @Override
-    public Collection<ArrangementEntryMatcher> buildMatchers() {
+    public @Nullable Collection<ArrangementEntryMatcher> buildMatchers() {
       List<ArrangementEntryMatcher> result = new ArrayList<>(myMatchers);
       Collection<ArrangementAtomMatchCondition> entryTokens = context.get(StdArrangementTokenType.ENTRY_TYPE);
       if (entryTokens!= null) {

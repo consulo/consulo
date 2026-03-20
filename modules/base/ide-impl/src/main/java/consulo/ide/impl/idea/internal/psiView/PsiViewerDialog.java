@@ -742,9 +742,8 @@ public class PsiViewerDialog extends DialogWrapper implements UiDataProvider, Di
         return null;
     }
 
-    @Nullable
     @RequiredReadAction
-    private static Block buildBlocks(PsiElement rootElement) {
+    private static @Nullable Block buildBlocks(PsiElement rootElement) {
         FormattingModelBuilder formattingModelBuilder = FormattingModelBuilder.forContext(rootElement);
         CodeStyleSettings settings = CodeStyleSettingsManager.getSettings(rootElement.getProject());
         if (formattingModelBuilder != null) {
@@ -880,9 +879,8 @@ public class PsiViewerDialog extends DialogWrapper implements UiDataProvider, Di
         }
     }
 
-    @Nullable
     @RequiredReadAction
-    private BlockTreeNode findBlockNode(PsiElement element) {
+    private @Nullable BlockTreeNode findBlockNode(PsiElement element) {
         BlockTreeNode result = myPsiToBlockMap.get(element);
         if (result == null) {
             TextRange rangeInHostFile = InjectedLanguageManager.getInstance(myProject).injectedToHost(element, element.getTextRange());
@@ -1037,9 +1035,8 @@ public class PsiViewerDialog extends DialogWrapper implements UiDataProvider, Di
         super.dispose();
     }
 
-    @Nullable
     @RequiredReadAction
-    private PsiElement resolve(int index) {
+    private @Nullable PsiElement resolve(int index) {
         PsiElement element = getPsiElement();
         if (element == null) {
             return null;
@@ -1061,9 +1058,8 @@ public class PsiViewerDialog extends DialogWrapper implements UiDataProvider, Di
         return index >= cache.length ? null : cache[index];
     }
 
-    @Nullable
     @RequiredReadAction
-    private PsiFile getContainingFileForClass(String fqn) {
+    private @Nullable PsiFile getContainingFileForClass(String fqn) {
         String filename = fqn;
         if (fqn.contains(".")) {
             filename = fqn.substring(fqn.lastIndexOf('.') + 1);
@@ -1275,9 +1271,8 @@ public class PsiViewerDialog extends DialogWrapper implements UiDataProvider, Di
             myPsiTreeBuilder.select(element);
         }
 
-        @Nullable
         @RequiredReadAction
-        private PsiElement findCommonParent(PsiElement start, PsiElement end) {
+        private @Nullable PsiElement findCommonParent(PsiElement start, PsiElement end) {
             if (end == null || start == end) {
                 return start;
             }

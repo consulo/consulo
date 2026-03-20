@@ -37,13 +37,11 @@ public interface SmartPointerAnchorProvider {
    * @param element
    * @return anchor to be used when restoring element
    */
-  @Nullable
-  PsiElement getAnchor(PsiElement element);
+  @Nullable PsiElement getAnchor(PsiElement element);
 
   /**
    * @param anchor
    * @return restored original element using anchor
    */
-  @Nullable
-  PsiElement restoreElement(PsiElement anchor);
+  @Nullable PsiElement restoreElement(PsiElement anchor);
 }

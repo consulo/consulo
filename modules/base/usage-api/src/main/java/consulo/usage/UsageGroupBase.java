@@ -13,9 +13,8 @@ public abstract class UsageGroupBase implements UsageGroup {
   public void update() {
   }
 
-  @Nullable
   @Override
-  public FileStatus getFileStatus() {
+  public @Nullable FileStatus getFileStatus() {
     return null;
   }
 

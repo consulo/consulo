@@ -40,8 +40,7 @@ public interface FileTypeDetector {
      * @param firstCharsIfText - characters, converted from first bytes parameter if the file content was determined to be text, or null otherwise
      * @return detected file type, or null if was unable to detect
      */
-    @Nullable
-    FileType detect(VirtualFile file, ByteSequence firstBytes, @Nullable CharSequence firstCharsIfText);
+    @Nullable FileType detect(VirtualFile file, ByteSequence firstBytes, @Nullable CharSequence firstCharsIfText);
 
     /**
      * Returns the file type that this detector is capable of detecting, or null if it can detect

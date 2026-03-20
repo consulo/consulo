@@ -25,6 +25,5 @@ import org.jspecify.annotations.Nullable;
  * Only returns immediately available (non-lazy) data.
  */
 public interface DataSnapshot {
-    @Nullable
-    <T> T get(Key<T> key);
+    <T> @Nullable T get(Key<T> key);
 }

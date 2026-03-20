@@ -39,9 +39,8 @@ public class NotificationsConfigurable implements Configurable, SearchableConfig
     return "notifications";
   }
 
-  @Nullable
   @Override
-  public String getParentId() {
+  public @Nullable String getParentId() {
     return StandardConfigurableIds.GENERAL_GROUP;
   }
 

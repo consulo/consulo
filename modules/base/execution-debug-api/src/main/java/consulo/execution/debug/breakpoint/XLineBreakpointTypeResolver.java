@@ -52,9 +52,8 @@ public interface XLineBreakpointTypeResolver {
         return map.getOrDefault(fileType, List.of());
     }
 
-    @Nullable
     @RequiredReadAction
-    static XLineBreakpointType<?> forFile(Project project, VirtualFile virtualFile, int line) {
+    static @Nullable XLineBreakpointType<?> forFile(Project project, VirtualFile virtualFile, int line) {
         for (XLineBreakpointTypeResolver resolver : forFileType(virtualFile.getFileType())) {
             XLineBreakpointType<?> breakpointType = resolver.resolveBreakpointType(project, virtualFile, line);
             if (breakpointType != null) {
@@ -64,9 +63,8 @@ public interface XLineBreakpointTypeResolver {
         return null;
     }
 
-    @Nullable
     @RequiredReadAction
-    XLineBreakpointType<?> resolveBreakpointType(Project project, VirtualFile virtualFile, int line);
+    @Nullable XLineBreakpointType<?> resolveBreakpointType(Project project, VirtualFile virtualFile, int line);
 
     
     FileType getFileType();

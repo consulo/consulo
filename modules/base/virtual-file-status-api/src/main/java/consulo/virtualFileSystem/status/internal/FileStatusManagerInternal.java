@@ -27,8 +27,7 @@ import org.jspecify.annotations.Nullable;
 public non-sealed interface FileStatusManagerInternal extends FileStatusManager {
     void setFileStatusProvider(FileStatusFacade fileStatusProvider);
 
-    @Nullable
-    FileStatus getCachedStatus(VirtualFile file);
+    @Nullable FileStatus getCachedStatus(VirtualFile file);
 
     
     FileStatus getDefaultStatus(VirtualFile file);

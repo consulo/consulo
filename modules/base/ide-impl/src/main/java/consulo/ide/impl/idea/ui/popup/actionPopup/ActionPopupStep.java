@@ -249,9 +249,8 @@ public class ActionPopupStep implements ListPopupStepEx<ActionPopupItem>, Mnemon
         return value.getText().getValue();
     }
 
-    @Nullable
     @Override
-    public String getTooltipTextFor(ActionPopupItem value) {
+    public @Nullable String getTooltipTextFor(ActionPopupItem value) {
         return value.getDescription().get();
     }
 

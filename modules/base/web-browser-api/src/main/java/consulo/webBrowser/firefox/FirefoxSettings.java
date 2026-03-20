@@ -42,9 +42,8 @@ public final class FirefoxSettings extends BrowserSpecificSettings {
         myProfile = StringUtil.nullize(profile);
     }
 
-    @Nullable
     @Tag("profiles-ini-path")
-    public String getProfilesIniPath() {
+    public @Nullable String getProfilesIniPath() {
         return myProfilesIniPath;
     }
 
@@ -52,9 +51,8 @@ public final class FirefoxSettings extends BrowserSpecificSettings {
         myProfilesIniPath = PathUtil.toSystemIndependentName(StringUtil.nullize(value));
     }
 
-    @Nullable
     @Tag("profile")
-    public String getProfile() {
+    public @Nullable String getProfile() {
         return myProfile;
     }
 

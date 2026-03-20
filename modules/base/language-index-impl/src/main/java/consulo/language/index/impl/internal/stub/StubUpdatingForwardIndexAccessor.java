@@ -43,9 +43,8 @@ class StubUpdatingForwardIndexAccessor implements ForwardIndexAccessor<Integer, 
     return new StubCumulativeInputDiffBuilder(inputId, tree);
   }
 
-  @Nullable
   @Override
-  public ByteArraySequence serializeIndexedData(InputData<Integer, SerializedStubTree> data) {
+  public @Nullable ByteArraySequence serializeIndexedData(InputData<Integer, SerializedStubTree> data) {
     return null;
   }
 

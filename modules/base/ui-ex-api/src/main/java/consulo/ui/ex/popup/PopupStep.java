@@ -33,8 +33,7 @@ public interface PopupStep<T> {
    *
    * @return the title of the list.
    */
-  @Nullable
-  String getTitle();
+  @Nullable String getTitle();
 
   /**
    * Handles the selection of an item in the list.
@@ -45,8 +44,7 @@ public interface PopupStep<T> {
    * @return the substep to be displayed, or {@link #FINAL_CHOICE} if the popup should be closed after the item has been selected.
    * @see #hasSubstep
    */
-  @Nullable
-  PopupStep onChosen(T selectedValue, boolean finalChoice);
+  @Nullable PopupStep onChosen(T selectedValue, boolean finalChoice);
 
   /**
    * Checks if the specified item in the list has an associated substep.
@@ -76,8 +74,7 @@ public interface PopupStep<T> {
    * @return the mnemonics navigation filter instance, or null if navigation by mnemonics is not supported.
    * @see #isMnemonicsNavigationEnabled()
    */
-  @Nullable
-  MnemonicNavigationFilter<T> getMnemonicNavigationFilter();
+  @Nullable MnemonicNavigationFilter<T> getMnemonicNavigationFilter();
 
   /**
    * Returns true if items in the list can be selected by typing part of an item's text. If this method returns true,
@@ -93,8 +90,7 @@ public interface PopupStep<T> {
    * @return the speed search filter instance, or null if speed search is not supported.
    * @see #isSpeedSearchEnabled()
    */
-  @Nullable
-  SpeedSearchFilter<T> getSpeedSearchFilter();
+  @Nullable SpeedSearchFilter<T> getSpeedSearchFilter();
 
   /**
    * Returns true if the submenu for the first selectable item should be displayed automatically when the item has a submenu.
@@ -106,6 +102,5 @@ public interface PopupStep<T> {
   /**
    * @return runnable to be executed when final step is chosen
    */
-  @Nullable
-  Runnable getFinalRunnable();
+  @Nullable Runnable getFinalRunnable();
 }

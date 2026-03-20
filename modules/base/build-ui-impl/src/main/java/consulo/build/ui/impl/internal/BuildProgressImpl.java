@@ -141,8 +141,7 @@ public class BuildProgressImpl implements BuildProgress<BuildProgressDescriptor>
         MessageEventImpl event = new MessageEventImpl(getId(), kind, BuildNotificationsGroups.BUILD_ISSUES, title, message) {
             @Override
             public
-            @Nullable
-            Navigatable getNavigatable(Project project) {
+            @Nullable Navigatable getNavigatable(Project project) {
                 return navigatable;
             }
         };

@@ -104,9 +104,8 @@ public class NewErrorTreeRenderer extends MultilineTreeCellRenderer {
             return this;
         }
 
-        @Nullable
         @Override
-        public Object getTag() {
+        public @Nullable Object getTag() {
             return myCurrentCallback == null ? null : myCurrentCallback.getTag();
         }
 

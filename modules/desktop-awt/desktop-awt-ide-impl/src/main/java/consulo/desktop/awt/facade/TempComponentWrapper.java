@@ -75,9 +75,8 @@ class TempComponentWrapper implements Component, ToSwingComponentWrapper, HasFoc
         throw new UnsupportedOperationException();
     }
 
-    @Nullable
     @Override
-    public Component getParent() {
+    public @Nullable Component getParent() {
         throw new UnsupportedOperationException();
     }
 
@@ -107,9 +106,8 @@ class TempComponentWrapper implements Component, ToSwingComponentWrapper, HasFoc
         throw new UnsupportedOperationException();
     }
 
-    @Nullable
     @Override
-    public <T> T getUserData(Key<T> key) {
+    public <T> @Nullable T getUserData(Key<T> key) {
         throw new UnsupportedOperationException();
     }
 

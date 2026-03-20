@@ -378,13 +378,11 @@ public class MasterDetailPopupBuilder implements MasterController {
     }
 
     public interface Delegate {
-        @Nullable
-        String getTitle();
+        @Nullable String getTitle();
 
         void handleMnemonic(KeyEvent e, Project project, JBPopup popup);
 
-        @Nullable
-        JComponent createAccessoryView(Project project);
+        @Nullable JComponent createAccessoryView(Project project);
 
         Object[] getSelectedItemsInTree();
 

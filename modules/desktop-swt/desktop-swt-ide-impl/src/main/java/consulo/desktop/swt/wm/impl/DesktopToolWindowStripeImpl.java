@@ -49,9 +49,8 @@ public class DesktopToolWindowStripeImpl extends DesktopSwtLayoutComponent {
     addImpl((SWTComponentDelegate<?>)button, null);
   }
 
-  @Nullable
   @Override
-  protected Layout createLayout() {
+  protected @Nullable Layout createLayout() {
     switch (myPosition) {
       case LEFT:
       case RIGHT:

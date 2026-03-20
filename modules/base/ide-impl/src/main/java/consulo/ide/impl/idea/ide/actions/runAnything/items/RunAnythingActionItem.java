@@ -24,9 +24,8 @@ public class RunAnythingActionItem<T extends AnAction> extends RunAnythingItemBa
         );
     }
 
-    @Nullable
     @Override
-    public String getDescription() {
+    public @Nullable String getDescription() {
         return myAction.getTemplatePresentation().getDescription();
     }
 }

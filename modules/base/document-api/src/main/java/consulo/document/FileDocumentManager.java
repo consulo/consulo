@@ -38,9 +38,8 @@ public interface FileDocumentManager extends SavingRequestor {
      * @see VirtualFile#contentsToByteArray()
      * @see Application#runReadAction(java.util.function.Supplier)
      */
-    @Nullable
     @RequiredReadAction
-    public abstract Document getDocument(VirtualFile file);
+    public abstract @Nullable Document getDocument(VirtualFile file);
 
     /**
      * Returns the document for the specified file which has already been loaded into memory.<p/>

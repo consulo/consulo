@@ -14,14 +14,11 @@ public interface Url {
 
   String toExternalForm();
 
-  @Nullable
-  String getScheme();
+  @Nullable String getScheme();
 
-  @Nullable
-  String getAuthority();
+  @Nullable String getAuthority();
 
-  @Nullable
-  String getParameters();
+  @Nullable String getParameters();
 
   boolean equalsIgnoreParameters(@Nullable Url url);
 

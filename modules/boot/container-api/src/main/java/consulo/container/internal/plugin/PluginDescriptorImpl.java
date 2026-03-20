@@ -201,15 +201,13 @@ public class PluginDescriptorImpl extends PluginDescriptorStub {
         return myTags;
     }
 
-    @Nullable
     @Override
-    public String getDescription() {
+    public @Nullable String getDescription() {
         return myDescriptionChildText;
     }
 
-    @Nullable
     @Override
-    public String getChangeNotes() {
+    public @Nullable String getChangeNotes() {
         return myChangeNotes;
     }
 
@@ -221,9 +219,8 @@ public class PluginDescriptorImpl extends PluginDescriptorStub {
         return myIconBytes;
     }
 
-    @Nullable
     @Override
-    public String getName() {
+    public @Nullable String getName() {
         return myName;
     }
 
@@ -242,33 +239,28 @@ public class PluginDescriptorImpl extends PluginDescriptorStub {
         return myIncompatibleWithPlugins;
     }
 
-    @Nullable
     @Override
-    public String getVendor() {
+    public @Nullable String getVendor() {
         return myVendor;
     }
 
-    @Nullable
     @Override
-    public String getVersion() {
+    public @Nullable String getVersion() {
         return myVersion;
     }
 
-    @Nullable
     @Override
-    public String getPlatformVersion() {
+    public @Nullable String getPlatformVersion() {
         return myPlatformVersion;
     }
 
-    @Nullable
     @Override
-    public String getResourceBundleBaseName() {
+    public @Nullable String getResourceBundleBaseName() {
         return myResourceBundleBaseName;
     }
 
-    @Nullable
     @Override
-    public String getLocalization() {
+    public @Nullable String getLocalization() {
         return myLocalization;
     }
 
@@ -404,27 +396,23 @@ public class PluginDescriptorImpl extends PluginDescriptorStub {
         return myActionsElements;
     }
 
-    @Nullable
     @Override
-    public String getVendorEmail() {
+    public @Nullable String getVendorEmail() {
         return myVendorEmail;
     }
 
-    @Nullable
     @Override
-    public String getVendorUrl() {
+    public @Nullable String getVendorUrl() {
         return myVendorUrl;
     }
 
-    @Nullable
     @Override
-    public String getUrl() {
+    public @Nullable String getUrl() {
         return url;
     }
 
-    @Nullable
     @Override
-    public PluginPermissionDescriptor getPermissionDescriptor(PluginPermissionType permissionType) {
+    public @Nullable PluginPermissionDescriptor getPermissionDescriptor(PluginPermissionType permissionType) {
         return myPermissionDescriptors.get(permissionType);
     }
 
@@ -450,9 +438,8 @@ public class PluginDescriptorImpl extends PluginDescriptorStub {
         myModuleLayer = moduleLayer;
     }
 
-    @Nullable
     @Override
-    public ModuleLayer getModuleLayer() {
+    public @Nullable ModuleLayer getModuleLayer() {
         return myModuleLayer;
     }
 

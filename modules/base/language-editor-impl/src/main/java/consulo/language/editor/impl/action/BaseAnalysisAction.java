@@ -146,9 +146,8 @@ public abstract class BaseAnalysisAction extends AnAction {
 
     protected abstract void analyze(Project project, AnalysisScope scope);
 
-    @Nullable
     @RequiredReadAction
-    private AnalysisScope getInspectionScope(DataContext dataContext) {
+    private @Nullable AnalysisScope getInspectionScope(DataContext dataContext) {
         if (!dataContext.hasData(Project.KEY)) {
             return null;
         }
@@ -158,9 +157,8 @@ public abstract class BaseAnalysisAction extends AnAction {
         return scope != null && scope.getScopeType() != AnalysisScope.INVALID ? scope : null;
     }
 
-    @Nullable
     @RequiredReadAction
-    private AnalysisScope getInspectionScopeImpl(DataContext dataContext) {
+    private @Nullable AnalysisScope getInspectionScopeImpl(DataContext dataContext) {
         //Possible scopes: file, directory, package, project, module.
         Project projectContext = dataContext.getData(PlatformDataKeys.PROJECT_CONTEXT);
         if (projectContext != null) {

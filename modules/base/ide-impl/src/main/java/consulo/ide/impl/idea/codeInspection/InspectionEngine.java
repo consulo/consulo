@@ -276,9 +276,8 @@ public class InspectionEngine {
                 if (globalTool instanceof GlobalSimpleInspectionTool simpleTool) {
                     ProblemsHolderImpl problemsHolder = new ProblemsHolderImpl(inspectionManager, file, false);
                     ProblemDescriptionsProcessor collectProcessor = new ProblemDescriptionsProcessor() {
-                        @Nullable
                         @Override
-                        public CommonProblemDescriptor[] getDescriptions(RefEntity refEntity) {
+                        public @Nullable CommonProblemDescriptor[] getDescriptions(RefEntity refEntity) {
                             return descriptors.toArray(new CommonProblemDescriptor[descriptors.size()]);
                         }
 

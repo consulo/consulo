@@ -479,9 +479,8 @@ public abstract class MergeRequestProcessor implements Disposable {
     }
 
     private class MyDiffContext extends MergeContextEx {
-        @Nullable
         @Override
-        public Project getProject() {
+        public @Nullable Project getProject() {
             return MergeRequestProcessor.this.getProject();
         }
 

@@ -374,8 +374,7 @@ public final class EnvironmentUtil {
     }
 
     protected
-    @Nullable
-    String getShell() {
+    @Nullable String getShell() {
       return System.getenv(SHELL_VARIABLE_NAME);
     }
   }
@@ -479,8 +478,7 @@ public final class EnvironmentUtil {
    * @return the exit code of the process if it has already terminated, or it has terminated within the timeout; or {@code null} otherwise
    */
   private static
-  @Nullable
-  Integer waitFor(Process process, long timeoutMillis) {
+  @Nullable Integer waitFor(Process process, long timeoutMillis) {
     try {
       if (process.waitFor(timeoutMillis, TimeUnit.MILLISECONDS)) {
         return process.exitValue();

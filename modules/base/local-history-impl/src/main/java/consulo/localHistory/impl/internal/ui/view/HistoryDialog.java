@@ -670,23 +670,20 @@ public abstract class HistoryDialog<T extends HistoryDialogModel> extends FrameW
             initValidation();
         }
 
-        @Nullable
         @Override
-        protected JComponent createCenterPanel() {
+        protected @Nullable JComponent createCenterPanel() {
             return myPanel.getPanel();
         }
 
-        @Nullable
         @Override
         @RequiredUIAccess
-        public JComponent getPreferredFocusedComponent() {
+        public @Nullable JComponent getPreferredFocusedComponent() {
             return IdeFocusTraversalPolicy.getPreferredFocusedComponent(myPanel.getPanel());
         }
 
-        @Nullable
         @Override
         @RequiredUIAccess
-        protected ValidationInfo doValidate() {
+        protected @Nullable ValidationInfo doValidate() {
             return myPanel.validateFields();
         }
     }

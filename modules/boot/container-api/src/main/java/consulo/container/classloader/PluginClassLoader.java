@@ -38,6 +38,5 @@ public interface PluginClassLoader {
 
     Enumeration<URL> findOwnResources(String name) throws IOException;
 
-    @Nullable
-    Map<URL, Set<String>> getUrlsIndex();
+    @Nullable Map<URL, Set<String>> getUrlsIndex();
 }

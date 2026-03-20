@@ -204,9 +204,8 @@ public class TaskRepositoriesConfigurable implements Configurable.NoScroll, Proj
         return "tasks.servers";
     }
 
-    @Nullable
     @Override
-    public String getParentId() {
+    public @Nullable String getParentId() {
         return StandardConfigurableIds.TASKS_GROUP;
     }
 

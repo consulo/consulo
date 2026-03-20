@@ -22,8 +22,7 @@ import org.jspecify.annotations.Nullable;
  * @author Gregory.Shrago
  */
 public interface PatternCompiler<T> {
-  @Nullable
-  ElementPattern<T> createElementPattern(String text, String displayName);
+  @Nullable ElementPattern<T> createElementPattern(String text, String displayName);
 
   ElementPattern<T> compileElementPattern(String text);
 

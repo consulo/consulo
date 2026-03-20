@@ -28,9 +28,8 @@ public sealed class KeyEvent extends ComponentEvent<Component> permits KeyPresse
         super(component, inputDetails);
     }
 
-    @Nullable
     @Override
-    public KeyboardInputDetails getInputDetails() {
+    public @Nullable KeyboardInputDetails getInputDetails() {
         return (KeyboardInputDetails) super.getInputDetails();
     }
 }

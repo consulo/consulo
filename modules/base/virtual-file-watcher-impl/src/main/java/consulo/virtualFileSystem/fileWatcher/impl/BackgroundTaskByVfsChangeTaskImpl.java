@@ -253,9 +253,8 @@ public class BackgroundTaskByVfsChangeTaskImpl implements BackgroundTaskByVfsCha
         return myName;
     }
 
-    @Nullable
     @Override
-    public BackgroundTaskByVfsChangeProvider getProvider() {
+    public @Nullable BackgroundTaskByVfsChangeProvider getProvider() {
         return myProvider;
     }
 

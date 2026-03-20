@@ -39,8 +39,7 @@ class ImmutableSameTypeAttributeList implements List<Attribute> {
     return new ImmutableAttribute(myNameValues[index * 2], myNameValues[index * 2 + 1], myType, myNs);
   }
 
-  @Nullable
-  Attribute get(String name, Namespace namespace) {
+  @Nullable Attribute get(String name, Namespace namespace) {
     if (!myNs.equals(namespace)) return null;
     for (int i = 0; i < myNameValues.length; i+=2) {
       String aname = myNameValues[i];

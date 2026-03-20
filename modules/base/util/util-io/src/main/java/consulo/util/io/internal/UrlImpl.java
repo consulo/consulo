@@ -58,15 +58,13 @@ public final class UrlImpl implements Url {
     return decodedPath;
   }
 
-  @Nullable
   @Override
-  public String getScheme() {
+  public @Nullable String getScheme() {
     return scheme;
   }
 
-  @Nullable
   @Override
-  public String getAuthority() {
+  public @Nullable String getAuthority() {
     return authority;
   }
 
@@ -75,9 +73,8 @@ public final class UrlImpl implements Url {
     return URLUtil.FILE_PROTOCOL.equals(scheme);
   }
 
-  @Nullable
   @Override
-  public String getParameters() {
+  public @Nullable String getParameters() {
     return parameters;
   }
 

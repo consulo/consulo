@@ -75,9 +75,8 @@ public class DummyWindow implements Window {
 
     }
 
-    @Nullable
     @Override
-    public Window getParent() {
+    public @Nullable Window getParent() {
         return null;
     }
 
@@ -135,9 +134,8 @@ public class DummyWindow implements Window {
         return false;
     }
 
-    @Nullable
     @Override
-    public <T> T getUserData(Key<T> key) {
+    public <T> @Nullable T getUserData(Key<T> key) {
         return null;
     }
 

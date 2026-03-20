@@ -44,8 +44,7 @@ public interface FoldingModel {
    * @return the fold region, or {@code null} if folding is currently disabled or corresponding region cannot be added (e.g. if it
    * intersects with another existing region)
    */
-  @Nullable
-  FoldRegion addFoldRegion(int startOffset, int endOffset, String placeholderText);
+  @Nullable FoldRegion addFoldRegion(int startOffset, int endOffset, String placeholderText);
 
   /**
    * @deprecated Does nothing
@@ -95,14 +94,12 @@ public interface FoldingModel {
    *
    * @see #isOffsetCollapsed(int)
    */
-  @Nullable
-  FoldRegion getCollapsedRegionAtOffset(int offset);
+  @Nullable FoldRegion getCollapsedRegionAtOffset(int offset);
 
   /**
    * Returns fold region with given boundaries, if it exists, or {@code null} otherwise.
    */
-  @Nullable
-  FoldRegion getFoldRegion(int startOffset, int endOffset);
+  @Nullable FoldRegion getFoldRegion(int startOffset, int endOffset);
 
   /**
    * Runs an operation which is allowed to modify fold regions in the editor by calling
@@ -144,8 +141,7 @@ public interface FoldingModel {
 
   FoldRegion[] fetchTopLevel();
 
-  @Nullable
-  FoldRegion createFoldRegion(int startOffset, int endOffset, String placeholder, @Nullable FoldingGroup group, boolean neverExpands);
+  @Nullable FoldRegion createFoldRegion(int startOffset, int endOffset, String placeholder, @Nullable FoldingGroup group, boolean neverExpands);
 
   void addListener(FoldingListener listener, Disposable parentDisposable);
 

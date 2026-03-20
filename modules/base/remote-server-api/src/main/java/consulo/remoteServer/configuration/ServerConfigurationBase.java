@@ -14,9 +14,8 @@ public abstract class ServerConfigurationBase<Self extends ServerConfigurationBa
     return this;
   }
 
-  @Nullable
   @Override
-  public Self getState() {
+  public @Nullable Self getState() {
     return (Self)this;
   }
 

@@ -290,8 +290,7 @@ public class SearchEverywhereManagerImpl implements SearchEverywhereManager {
         myPrevSelections.put(mySearchEverywhereUI.getSelectedContributorID(), mySearchEverywhereUI.getSelectionIdentity());
     }
 
-    @Nullable
-    Object getPrevSelection(String contributorID) {
+    @Nullable Object getPrevSelection(String contributorID) {
         return myPrevSelections.remove(contributorID);
     }
 

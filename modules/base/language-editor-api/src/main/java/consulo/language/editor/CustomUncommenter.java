@@ -35,8 +35,7 @@ public interface CustomUncommenter {
    * @param text text to search comment for.
    * @return commented block (including comment prefix and suffix!) or null if text does not contain any  commented blocks.
    */
-  @Nullable
-  TextRange findMaximumCommentedRange(CharSequence text);
+  @Nullable TextRange findMaximumCommentedRange(CharSequence text);
 
 
   /**

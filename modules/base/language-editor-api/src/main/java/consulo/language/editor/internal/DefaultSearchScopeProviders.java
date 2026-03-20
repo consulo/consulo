@@ -48,9 +48,8 @@ public class DefaultSearchScopeProviders {
       return weight;
     }
 
-    @Nullable
     @Override
-    public ColorValue getColor() {
+    public @Nullable ColorValue getColor() {
       return color;
     }
   }

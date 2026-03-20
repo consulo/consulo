@@ -162,9 +162,8 @@ public class LivePreviewController implements LivePreview.Delegate, FindUtil.Rep
         return null;
     }
 
-    @Nullable
     @RequiredUIAccess
-    public TextRange performReplace(FindResult occurrence, String replacement, Editor editor) {
+    public @Nullable TextRange performReplace(FindResult occurrence, String replacement, Editor editor) {
         Project project = mySearchResults.getProject();
         if (myReplaceDenied || !ReadonlyStatusHandlerUtil.ensureDocumentWritable(project, editor.getDocument())) {
             return null;

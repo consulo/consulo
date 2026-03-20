@@ -184,16 +184,14 @@ public class SingleConfigurableEditor extends DialogWrapper {
         return displayName.get().replaceAll("\n", " ");
     }
 
-    @Nullable
     @Override
-    protected Border createContentPaneBorder() {
+    protected @Nullable Border createContentPaneBorder() {
         return myConfigurable instanceof Configurable.NoMargin ? JBUI.Borders.empty() : super.createContentPaneBorder();
     }
 
-    @Nullable
     @Override
     @RequiredUIAccess
-    protected JComponent createSouthPanel() {
+    protected @Nullable JComponent createSouthPanel() {
         if (myConfigurable instanceof Configurable.NoMargin) {
             JComponent southPanel = super.createSouthPanel();
             if (southPanel != null) {

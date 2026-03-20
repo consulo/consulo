@@ -145,9 +145,8 @@ public abstract class HierarchyBrowserBaseEx extends HierarchyBrowserBase implem
             String key = keys.nextElement();
             JTree tree = myType2TreeMap.get(key);
             myOccurrenceNavigators.put(key, new OccurenceNavigatorSupport(tree) {
-                @Nullable
                 @Override
-                protected Navigatable createDescriptorForNode(DefaultMutableTreeNode node) {
+                protected @Nullable Navigatable createDescriptorForNode(DefaultMutableTreeNode node) {
                     HierarchyNodeDescriptor descriptor = getDescriptor(node);
                     if (descriptor == null) {
                         return null;

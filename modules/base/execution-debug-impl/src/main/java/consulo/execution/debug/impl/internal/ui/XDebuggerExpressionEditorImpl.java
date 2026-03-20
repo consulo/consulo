@@ -126,9 +126,8 @@ public class XDebuggerExpressionEditorImpl extends XDebuggerEditorBase implement
         myEditorTextField.setEnabled(enable);
     }
 
-    @Nullable
     @Override
-    public Editor getEditor() {
+    public @Nullable Editor getEditor() {
         return myEditorTextField.getEditor();
     }
 

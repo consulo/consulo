@@ -65,18 +65,16 @@ public class SandLocalInspectionState implements InspectionToolState<SandLocalIn
     mySomeString = someString;
   }
 
-  @Nullable
   @Override
-  public UnnamedConfigurable createConfigurable() {
+  public @Nullable UnnamedConfigurable createConfigurable() {
     ConfigurableBuilder<ConfigurableState> builder = ConfigurableBuilder.newBuilder(ConfigurableState::new);
     builder.checkBox(LocalizeValue.localizeTODO("Check Class"), this::isCheckClass, this::setCheckClass, (o, box) -> o.myClassCheckBox = box);
     builder.textBox(this::getSomeString, this::setSomeString, (o, box) -> o.myTestCheckBox = box);
     return builder.buildUnnamed();
   }
 
-  @Nullable
   @Override
-  public SandLocalInspectionState getState() {
+  public @Nullable SandLocalInspectionState getState() {
     return this;
   }
 

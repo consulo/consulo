@@ -218,9 +218,8 @@ public class DuplexConsoleView<S extends ConsoleView, T extends ConsoleView> ext
         mySecondaryConsoleView.setProcessTextFilter(filter);
     }
 
-    @Nullable
     @Override
-    public BiPredicate<ProcessEvent, Key> getProcessTextFilter() {
+    public @Nullable BiPredicate<ProcessEvent, Key> getProcessTextFilter() {
         return null;
     }
 

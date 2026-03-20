@@ -279,9 +279,8 @@ public class UITester {
             return layout;
         }
 
-        @Nullable
         @Override
-        public Size2D getInitialSize() {
+        public @Nullable Size2D getInitialSize() {
             return new Size2D(500, 500);
         }
     }

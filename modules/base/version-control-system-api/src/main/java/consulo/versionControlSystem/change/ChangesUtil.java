@@ -295,8 +295,7 @@ public class ChangesUtil {
 
   @FunctionalInterface
   public interface VcsSeparator<T> {
-    @Nullable
-    AbstractVcs getVcsFor(T item);
+    @Nullable AbstractVcs getVcsFor(T item);
   }
 
   public static <T> void processItemsByVcs(Collection<T> items,

@@ -588,9 +588,8 @@ public class EnterHandler extends BaseEnterHandler implements ExtensionEditorAct
             PsiDocumentManager.getInstance(getProject()).commitAllDocuments();
         }
 
-        @Nullable
         @RequiredWriteAction
-        private PsiComment createComment(CharSequence buffer, CodeInsightSettings settings) throws IncorrectOperationException {
+        private @Nullable PsiComment createComment(CharSequence buffer, CodeInsightSettings settings) throws IncorrectOperationException {
             myDocument.insertString(myOffset, buffer);
 
             PsiDocumentManager.getInstance(getProject()).commitAllDocuments();
@@ -635,9 +634,8 @@ public class EnterHandler extends BaseEnterHandler implements ExtensionEditorAct
             commentMarker.dispose();
         }
 
-        @Nullable
         @RequiredReadAction
-        private PsiComment createJavaDocStub(CodeInsightSettings settings, PsiComment comment, Project project) {
+        private @Nullable PsiComment createJavaDocStub(CodeInsightSettings settings, PsiComment comment, Project project) {
             if (settings.JAVADOC_STUB_ON_ENTER) {
                 DocumentationProvider langDocumentationProvider =
                     LanguageDocumentationProvider.forLanguageComposite(comment.getParent().getLanguage());

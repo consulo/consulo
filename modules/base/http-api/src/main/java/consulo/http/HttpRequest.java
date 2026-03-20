@@ -33,8 +33,7 @@ public interface HttpRequest {
 
     int statusCode() throws IOException;
 
-    @Nullable
-    String statusMessage() throws IOException;
+    @Nullable String statusMessage() throws IOException;
 
     
     Map<String, List<String>> responseHeaders() throws IOException;
@@ -48,11 +47,9 @@ public interface HttpRequest {
         return headers == null || headers.isEmpty() ? null : headers.getFirst();
     }
 
-    @Nullable
-    String getContentEncoding() throws IOException;
+    @Nullable String getContentEncoding() throws IOException;
 
-    @Nullable
-    String getContentType() throws IOException;
+    @Nullable String getContentType() throws IOException;
 
     
     InputStream getInputStream() throws IOException;

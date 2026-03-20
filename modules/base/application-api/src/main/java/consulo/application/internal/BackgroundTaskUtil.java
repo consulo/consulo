@@ -119,9 +119,8 @@ public class BackgroundTaskUtil {
    * <li> If the computation is slow, abort computation (cancel ProgressIndicator).
    * </ul>
    */
-  @Nullable
   @RequiredUIAccess
-  public static <T> T tryComputeFast(Function<ProgressIndicator, T> backgroundTask, long waitMillis) {
+  public static <T> @Nullable T tryComputeFast(Function<ProgressIndicator, T> backgroundTask, long waitMillis) {
     Pair<T, ProgressIndicator> pair = computeInBackgroundAndTryWait(backgroundTask, (result, indicator) -> {
     }, Application.get().getDefaultModalityState(), waitMillis);
 

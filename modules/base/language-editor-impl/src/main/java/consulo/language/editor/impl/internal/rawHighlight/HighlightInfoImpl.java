@@ -206,9 +206,8 @@ public class HighlightInfoImpl implements HighlightInfo {
         return isFlagSet(AFTER_END_OF_LINE_MASK);
     }
 
-    @Nullable
     @Override
-    public TextAttributes getTextAttributes(@Nullable PsiElement element, @Nullable EditorColorsScheme editorColorsScheme) {
+    public @Nullable TextAttributes getTextAttributes(@Nullable PsiElement element, @Nullable EditorColorsScheme editorColorsScheme) {
         if (myForcedTextAttributes != null) {
             return myForcedTextAttributes;
         }
@@ -227,9 +226,8 @@ public class HighlightInfoImpl implements HighlightInfo {
      * @param colorsScheme when null, a global scheme will be used
      * @return
      */
-    @Nullable
     @SuppressWarnings("deprecation")
-    public ColorValue getErrorStripeMarkColor(PsiElement element, @Nullable EditorColorsScheme colorsScheme) {
+    public @Nullable ColorValue getErrorStripeMarkColor(PsiElement element, @Nullable EditorColorsScheme colorsScheme) {
         if (myForcedTextAttributes != null) {
             return myForcedTextAttributes.getErrorStripeColor();
         }

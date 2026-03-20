@@ -43,9 +43,8 @@ public class PersistentMapBasedForwardIndex implements ForwardIndex {
     }
   }
 
-  @Nullable
   @Override
-  public ByteArraySequence get(Integer key) throws IOException {
+  public @Nullable ByteArraySequence get(Integer key) throws IOException {
     return myPersistentMap.get(key);
   }
 

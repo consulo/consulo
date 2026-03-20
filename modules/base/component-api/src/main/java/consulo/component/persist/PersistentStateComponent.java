@@ -35,8 +35,7 @@ public interface PersistentStateComponent<T> {
    * that no state should be stored
    * @see XmlSerializer
    */
-  @Nullable
-  T getState();
+  @Nullable T getState();
 
   /**
    * This method is called when new component state is loaded. A component should expect this method

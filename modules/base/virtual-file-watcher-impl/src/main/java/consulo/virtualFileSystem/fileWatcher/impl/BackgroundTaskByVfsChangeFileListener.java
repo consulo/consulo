@@ -43,9 +43,8 @@ public class BackgroundTaskByVfsChangeFileListener implements AsyncFileListener 
     myProjectManager = projectManager;
   }
 
-  @Nullable
   @Override
-  public ChangeApplier prepareChange(List<? extends VFileEvent> events) {
+  public @Nullable ChangeApplier prepareChange(List<? extends VFileEvent> events) {
     return new ChangeApplier() {
       private List<Runnable> myTasks = new ArrayList<>();
 

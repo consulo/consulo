@@ -248,9 +248,8 @@ public class FindPopupPanel extends JBPanel<FindPopupPanel> implements FindUI {
                     super.dispose();
                 }
 
-                @Nullable
                 @Override
-                protected Border createContentPaneBorder() {
+                protected @Nullable Border createContentPaneBorder() {
                     return null;
                 }
 

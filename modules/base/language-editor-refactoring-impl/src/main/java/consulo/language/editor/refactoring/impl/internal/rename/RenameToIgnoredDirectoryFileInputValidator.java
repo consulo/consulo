@@ -33,9 +33,8 @@ import org.jspecify.annotations.Nullable;
  */
 @ExtensionImpl(id = "RenameToIgnoredDirectoryFileInputValidator", order = "last")
 public class RenameToIgnoredDirectoryFileInputValidator implements RenameInputValidatorEx {
-  @Nullable
   @Override
-  public String getErrorMessage(String newName, Project project) {
+  public @Nullable String getErrorMessage(String newName, Project project) {
     if (FileTypeManager.getInstance().isFileIgnored(newName)) {
       return "Trying to create a directory with ignored name, result will not be visible";
     }

@@ -143,10 +143,9 @@ public class ProjectManagerImpl implements ProjectManagerEx, Disposable {
         myApplication.assertWriteAccessAllowed();
     }
 
-    @Nullable
     @Override
     @RequiredUIAccess
-    public Project newProject(String projectName, String dirPath, boolean useDefaultProjectSettings) {
+    public @Nullable Project newProject(String projectName, String dirPath, boolean useDefaultProjectSettings) {
         dirPath = toCanonicalName(dirPath);
 
         ProjectImpl project = createProject(projectName, dirPath, false);

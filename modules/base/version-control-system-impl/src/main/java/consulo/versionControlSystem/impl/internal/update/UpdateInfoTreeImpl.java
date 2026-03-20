@@ -504,8 +504,7 @@ public class UpdateInfoTreeImpl extends PanelWithActionsAndCloseButton implement
         return VcsConfiguration.getInstance(myProject).UPDATE_FILTER_SCOPE_NAME;
     }
 
-    @Nullable
-    NamedScope getFilterScope() {
+    @Nullable NamedScope getFilterScope() {
         Pair<PackageSetBase, NamedScopesHolder> filter = getScopeFilter();
         return filter == null ? null : filter.second.getScope(getFilterScopeName());
     }

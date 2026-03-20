@@ -48,9 +48,8 @@ public class PresentationAssistant implements Disposable, PersistentStateCompone
     private PresentationAssistantState myConfiguration = new PresentationAssistantState();
     private ShortcutPresenter myPresenter;
 
-    @Nullable
     @Override
-    public PresentationAssistantState getState() {
+    public @Nullable PresentationAssistantState getState() {
         return myConfiguration;
     }
 

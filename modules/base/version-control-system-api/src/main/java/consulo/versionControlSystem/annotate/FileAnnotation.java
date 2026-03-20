@@ -230,16 +230,13 @@ public abstract class FileAnnotation {
 
 
     public interface CurrentFileRevisionProvider {
-        @Nullable
-        VcsFileRevision getRevision(int lineNumber);
+        @Nullable VcsFileRevision getRevision(int lineNumber);
     }
 
     public interface PreviousFileRevisionProvider {
-        @Nullable
-        VcsFileRevision getPreviousRevision(int lineNumber);
+        @Nullable VcsFileRevision getPreviousRevision(int lineNumber);
 
-        @Nullable
-        VcsFileRevision getLastRevision();
+        @Nullable VcsFileRevision getLastRevision();
     }
 
     public interface AuthorsMappingProvider {
@@ -300,16 +297,14 @@ public abstract class FileAnnotation {
         VcsFileRevision lastRevision = ContainerUtil.getFirstItem(revisions);
 
         return new PreviousFileRevisionProvider() {
-            @Nullable
             @Override
-            public VcsFileRevision getPreviousRevision(int lineNumber) {
+            public @Nullable VcsFileRevision getPreviousRevision(int lineNumber) {
                 LOG.assertTrue(lineNumber >= 0 && lineNumber < lineToRevision.size());
                 return lineToRevision.get(lineNumber);
             }
 
-            @Nullable
             @Override
-            public VcsFileRevision getLastRevision() {
+            public @Nullable VcsFileRevision getLastRevision() {
                 return lastRevision;
             }
         };

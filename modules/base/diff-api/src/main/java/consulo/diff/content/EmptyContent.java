@@ -24,9 +24,8 @@ import org.jspecify.annotations.Nullable;
  * ex: 'Before' state for new file
  */
 public class EmptyContent extends DiffContentBase {
-  @Nullable
   @Override
-  public FileType getContentType() {
+  public @Nullable FileType getContentType() {
     return null;
   }
 }

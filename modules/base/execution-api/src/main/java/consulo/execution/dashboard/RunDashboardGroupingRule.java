@@ -30,8 +30,7 @@ public interface RunDashboardGroupingRule {
    * @param node node which should be grouped by this grouping rule.
    * @return a group which node belongs to or {@code null} if node could not be grouped by this rule.
    */
-  @Nullable
-  RunDashboardGroup getGroup(AbstractTreeNode<?> node);
+  @Nullable RunDashboardGroup getGroup(AbstractTreeNode<?> node);
 
   /**
    * Returns a unique identifier for the rule.

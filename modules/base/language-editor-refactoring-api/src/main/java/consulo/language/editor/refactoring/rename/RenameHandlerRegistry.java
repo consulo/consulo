@@ -74,9 +74,8 @@ public class RenameHandlerRegistry {
         return myDefaultElementRenameHandler.isAvailableOnDataContext(dataContext);
     }
 
-    @Nullable
     @RequiredUIAccess
-    public RenameHandler getRenameHandler(DataContext dataContext) {
+    public @Nullable RenameHandler getRenameHandler(DataContext dataContext) {
         Map<LocalizeValue, RenameHandler> availableHandlers = new TreeMap<>();
         RenameHandler.EP_NAME.forEachExtensionSafe(renameHandler -> {
             if (renameHandler.isRenaming(dataContext)) {

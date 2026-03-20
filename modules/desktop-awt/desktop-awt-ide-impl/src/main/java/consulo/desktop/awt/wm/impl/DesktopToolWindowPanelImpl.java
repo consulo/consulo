@@ -530,8 +530,7 @@ public final class DesktopToolWindowPanelImpl extends JBLayeredPane implements U
         return false;
     }
 
-    @Nullable
-    DesktopStripePanelImpl getStripeFor(String id) {
+    @Nullable DesktopStripePanelImpl getStripeFor(String id) {
         ToolWindow window = myManager.getToolWindow(id);
         if (window == null) {
             return null;
@@ -554,8 +553,7 @@ public final class DesktopToolWindowPanelImpl extends JBLayeredPane implements U
         throw new IllegalArgumentException("Anchor=" + anchor);
     }
 
-    @Nullable
-    DesktopStripePanelImpl getStripeFor(Rectangle screenRec, DesktopStripePanelImpl preferred) {
+    @Nullable DesktopStripePanelImpl getStripeFor(Rectangle screenRec, DesktopStripePanelImpl preferred) {
         if (preferred.containsScreen(screenRec)) {
             return myStripes.get(myStripes.indexOf(preferred));
         }
@@ -729,9 +727,8 @@ public final class DesktopToolWindowPanelImpl extends JBLayeredPane implements U
         doLayout();
     }
 
-    @Nullable
     @Override
-    public Component getComponent() {
+    public @Nullable Component getComponent() {
         return this;
     }
 

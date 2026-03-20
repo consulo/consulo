@@ -67,9 +67,8 @@ public interface PsiReference {
    *
    * @return the target element, or null if it was not possible to resolve the reference to a valid target.
    */
-  @Nullable
   @RequiredReadAction
-  PsiElement resolve();
+  @Nullable PsiElement resolve();
 
   /**
    * Returns the name of the reference target element which does not depend on import statements

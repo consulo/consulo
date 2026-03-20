@@ -34,8 +34,7 @@ public interface Tree<E> extends Component {
     return UIInternal.get()._Components_tree(rootValue, model, disposable);
   }
 
-  @Nullable
-  TreeNode<E> getSelectedNode();
+  @Nullable TreeNode<E> getSelectedNode();
 
   void expand(TreeNode<E> node);
 

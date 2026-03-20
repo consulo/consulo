@@ -37,9 +37,8 @@ public class InvalidOrderable<K> implements LoadingOrder.Orderable {
     return myValue;
   }
 
-  @Nullable
   @Override
-  public String getOrderId() {
+  public @Nullable String getOrderId() {
     return null;
   }
 

@@ -350,9 +350,8 @@ public class CodeEditorInlayModelBase implements InlayModel, Disposable, Dumpabl
         return visualPosition.line == inlayStartPosition.line && visualPosition.column >= inlayStartPosition.column && visualPosition.column < inlayStartPosition.column + inlayCount;
     }
 
-    @Nullable
     @Override
-    public Inlay getInlineElementAt(VisualPosition visualPosition) {
+    public @Nullable Inlay getInlineElementAt(VisualPosition visualPosition) {
         int offset = myEditor.logicalPositionToOffset(myEditor.visualToLogicalPosition(visualPosition));
         List<Inlay<?>> inlays = getInlineElementsInRange(offset, offset);
         if (inlays.isEmpty()) {
@@ -366,9 +365,8 @@ public class CodeEditorInlayModelBase implements InlayModel, Disposable, Dumpabl
         return inlayIndex >= 0 && inlayIndex < inlays.size() ? inlays.get(inlayIndex) : null;
     }
 
-    @Nullable
     @Override
-    public Inlay getElementAt(Point point) {
+    public @Nullable Inlay getElementAt(Point point) {
         return getElementAt(new EditorLocation(myEditor, point), false);
     }
 

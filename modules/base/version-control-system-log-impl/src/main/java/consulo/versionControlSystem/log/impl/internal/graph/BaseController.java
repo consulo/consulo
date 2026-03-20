@@ -30,9 +30,8 @@ public class BaseController extends CascadeController {
     throw new IllegalStateException();
   }
 
-  @Nullable
   @Override
-  protected LinearGraphAnswer performAction(LinearGraphAction action) {
+  protected @Nullable LinearGraphAnswer performAction(LinearGraphAction action) {
     return null;
   }
 

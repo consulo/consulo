@@ -7,15 +7,13 @@ import org.jspecify.annotations.Nullable;
 
 @ExtensionImpl(order = "last")
 public class RunAnythingCommandExecutionProvider extends RunAnythingCommandProvider {
-    @Nullable
     @Override
-    public String findMatchingValue(DataContext dataContext, String pattern) {
+    public @Nullable String findMatchingValue(DataContext dataContext, String pattern) {
         return pattern;
     }
 
-    @Nullable
     @Override
-    public String getHelpGroupTitle() {
+    public @Nullable String getHelpGroupTitle() {
         return null;
     }
 }

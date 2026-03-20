@@ -37,8 +37,7 @@ public interface LibrariesConfigurator extends LibraryEditorListener, Disposable
   
   LibraryTable.ModifiableModel getModifiableLibraryTable(LibraryTable table);
 
-  @Nullable
-  Library getLibrary(String libraryName, String libraryLevel);
+  @Nullable Library getLibrary(String libraryName, String libraryLevel);
 
   
   LibraryTableModifiableModelProvider createModifiableModelProvider(String level);
@@ -46,8 +45,7 @@ public interface LibrariesConfigurator extends LibraryEditorListener, Disposable
   
   LibraryTableModifiableModelProvider getProjectLibrariesProvider();
 
-  @Nullable
-  Library getLibraryModel(Library library);
+  @Nullable Library getLibraryModel(Library library);
 
   Collection<? extends LibraryTable.ModifiableModel> getModels();
 

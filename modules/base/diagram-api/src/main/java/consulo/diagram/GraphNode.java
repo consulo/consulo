@@ -38,8 +38,7 @@ public interface GraphNode<T> {
   
   String getName();
 
-  @Nullable
-  Image getIcon();
+  @Nullable Image getIcon();
 
   T getValue();
 

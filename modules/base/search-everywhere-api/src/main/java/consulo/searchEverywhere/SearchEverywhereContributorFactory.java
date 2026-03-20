@@ -23,6 +23,5 @@ import org.jspecify.annotations.Nullable;
 
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface SearchEverywhereContributorFactory<Item> {
-    @Nullable
-    SearchEverywhereContributor<Item> createContributor(AnActionEvent initEvent);
+    @Nullable SearchEverywhereContributor<Item> createContributor(AnActionEvent initEvent);
 }

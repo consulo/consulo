@@ -81,9 +81,8 @@ public class TreeTableTree extends Tree {
         super.processKeyEvent(e);
     }
 
-    @Nullable
     @Override
-    public Rectangle getPathBounds(TreePath path) {
+    public @Nullable Rectangle getPathBounds(TreePath path) {
         Rectangle bounds = super.getPathBounds(path);
         if (bounds == null) {
             return null;

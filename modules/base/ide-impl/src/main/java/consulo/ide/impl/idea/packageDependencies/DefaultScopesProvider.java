@@ -46,9 +46,8 @@ public class DefaultScopesProvider implements CustomScopesProvider {
       myScopes = List.of(new ProjectFilesScope(), getAllScope(), new NonProjectFilesScope(), new ScratchesNamedScope());
   }
 
-  @Nullable
   @Override
-  public NamedScope getCustomScope(String name) {
+  public @Nullable NamedScope getCustomScope(String name) {
     for (NamedScope scope : myScopes) {
       if (Objects.equals(scope.getScopeId(), name)) {
         return scope;

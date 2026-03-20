@@ -365,9 +365,8 @@ public class FileTypeConfigurable implements SearchableConfigurable, Configurabl
     }
 
     @RequiredUIAccess
-    @Nullable
     @Override
-    public JComponent createComponent(Disposable parentDisposable) {
+    public @Nullable JComponent createComponent(Disposable parentDisposable) {
         TabbedPaneWrapper tabbedPaneWrapper = new TabbedPaneWrapper(parentDisposable);
 
         myRecognizedFileType = new RecognizedFileTypes();
@@ -638,9 +637,8 @@ public class FileTypeConfigurable implements SearchableConfigurable, Configurabl
         return "preferences.fileType";
     }
 
-    @Nullable
     @Override
-    public String getParentId() {
+    public @Nullable String getParentId() {
         return StandardConfigurableIds.EDITOR_GROUP;
     }
 

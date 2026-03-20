@@ -38,9 +38,8 @@ public class AbbreviationManagerImpl extends AbbreviationManager implements Pers
   private final Map<String, Set<String>> myActionId2Abbreviations = new HashMap<>();
   private final Map<String, Set<String>> myPluginsActionId2Abbreviations = new HashMap<>();
 
-  @Nullable
   @Override
-  public Element getState() {
+  public @Nullable Element getState() {
     Element actions = new Element("actions");
     Element abbreviations = new Element("abbreviations");
     actions.addContent(abbreviations);

@@ -36,8 +36,7 @@ public interface EditorColorsScheme extends Cloneable, TextAttributesScheme, Nam
     
     ColorValue getDefaultForeground();
 
-    @Nullable
-    ColorValue getColor(EditorColorKey key);
+    @Nullable ColorValue getColor(EditorColorKey key);
 
     void setColor(EditorColorKey key, ColorValue color);
 

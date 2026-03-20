@@ -35,9 +35,8 @@ public class WrappedElementAnchor implements PsiAnchor {
     myBaseAnchor = anchor;
   }
 
-  @Nullable
   @Override
-  public PsiElement retrieve() {
+  public @Nullable PsiElement retrieve() {
     PsiElement baseElement = myBaseAnchor.retrieve();
     return baseElement == null ? null : myAnchorProvider.restoreElement(baseElement);
   }

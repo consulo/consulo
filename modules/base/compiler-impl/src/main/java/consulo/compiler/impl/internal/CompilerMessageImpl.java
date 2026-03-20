@@ -72,9 +72,8 @@ public final class CompilerMessageImpl implements CompilerMessage {
         return myMessage;
     }
 
-    @Nullable
     @Override
-    public Navigatable getNavigatable() {
+    public @Nullable Navigatable getNavigatable() {
         if (myNavigatable != null) {
             return myNavigatable;
         }

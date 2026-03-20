@@ -519,9 +519,8 @@ public abstract class InplaceRefactoring {
         }
     }
 
-    @Nullable
     @RequiredReadAction
-    protected PsiElement getNameIdentifier() {
+    protected @Nullable PsiElement getNameIdentifier() {
         return myElementToRename instanceof PsiNameIdentifierOwner nameIdentifierOwner ? nameIdentifierOwner.getNameIdentifier() : null;
     }
 
@@ -560,9 +559,8 @@ public abstract class InplaceRefactoring {
             .compute(() -> StartMarkAction.start(myEditor.getDocument(), myProject, getCommandName()));
     }
 
-    @Nullable
     @RequiredReadAction
-    protected PsiNamedElement getVariable() {
+    protected @Nullable PsiNamedElement getVariable() {
         // todo we can use more specific class, shouldn't we?
         //Class clazz = myElementToRename != null? myElementToRename.getClass() : PsiNameIdentifierOwner.class;
         if (myElementToRename != null && myElementToRename.isValid()) {

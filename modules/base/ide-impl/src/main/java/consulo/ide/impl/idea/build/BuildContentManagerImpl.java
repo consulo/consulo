@@ -276,8 +276,7 @@ public final class BuildContentManagerImpl implements BuildContentManager {
 
     private final class CloseListener extends BaseContentCloseListener {
         private
-        @Nullable
-        BuildProcessHandler myProcessHandler;
+        @Nullable BuildProcessHandler myProcessHandler;
 
         private CloseListener( Content content, BuildProcessHandler processHandler) {
             super(content, myProject);

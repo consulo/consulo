@@ -66,10 +66,9 @@ public abstract class BaseCodeInsightAction extends CodeInsightAction {
         myLookForInjectedEditor = lookForInjectedEditor;
     }
 
-    @Nullable
     @Override
     @RequiredUIAccess
-    protected Editor getEditor(DataContext dataContext, Project project, boolean forUpdate) {
+    protected @Nullable Editor getEditor(DataContext dataContext, Project project, boolean forUpdate) {
         Editor editor = getBaseEditor(dataContext, project);
         if (!myLookForInjectedEditor) {
             return editor;

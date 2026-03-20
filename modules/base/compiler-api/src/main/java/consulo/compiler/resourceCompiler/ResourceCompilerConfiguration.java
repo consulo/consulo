@@ -383,9 +383,8 @@ public class ResourceCompilerConfiguration implements PersistentStateComponent<E
         return extensionsString.toString();
     }
 
-    @Nullable
     @Override
-    public Element getState() {
+    public @Nullable Element getState() {
         String[] patterns = getRegexpPatterns();
         if (patterns.length == 0 && myWildcardPatterns.isEmpty()) {
             return null;

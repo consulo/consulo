@@ -46,9 +46,8 @@ public class ProblemsViewPanel extends NewErrorTreeViewPanelImpl {
     @Override
     protected void addExtraPopupMenuActions(ActionGroup.Builder group) {
         group.add(new ExcludeFromCompileAction(myProject) {
-            @Nullable
             @Override
-            protected VirtualFile getFile() {
+            protected @Nullable VirtualFile getFile() {
                 ErrorTreeNodeDescriptor descriptor = getSelectedNodeDescriptor();
                 ErrorTreeElement element = descriptor != null ? descriptor.getElement() : null;
                 if (element != null && !(element instanceof GroupingElement)) {

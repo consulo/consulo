@@ -41,6 +41,5 @@ public interface PackagingElementResolvingContext {
   
   ModulesProvider getModulesProvider();
 
-  @Nullable
-  Library findLibrary(String level, String libraryName);
+  @Nullable Library findLibrary(String level, String libraryName);
 }

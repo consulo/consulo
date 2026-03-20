@@ -67,8 +67,7 @@ public abstract class ServiceViewItem implements ColoredItem {
     });
   }
 
-  @Nullable
-  ServiceViewItem getParent() {
+  @Nullable ServiceViewItem getParent() {
     return myParent;
   }
 
@@ -81,9 +80,8 @@ public abstract class ServiceViewItem implements ColoredItem {
     return myChildren;
   }
 
-  @Nullable
   @Override
-  public ColorValue getColor() {
+  public @Nullable ColorValue getColor() {
     ServiceViewDescriptor descriptor = getViewDescriptor();
     return descriptor instanceof ColoredItem ? ((ColoredItem)descriptor).getColor() : null;
   }

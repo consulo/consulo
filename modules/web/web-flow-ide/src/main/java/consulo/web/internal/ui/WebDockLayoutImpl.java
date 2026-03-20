@@ -34,9 +34,8 @@ public class WebDockLayoutImpl extends WebLayoutImpl<WebDockLayoutImpl.Vaadin, S
     }
 
     public class Vaadin extends BorderLayoutEx implements FromVaadinComponentWrapper {
-        @Nullable
         @Override
-        public Component toUIComponent() {
+        public @Nullable Component toUIComponent() {
             return WebDockLayoutImpl.this;
         }
     }

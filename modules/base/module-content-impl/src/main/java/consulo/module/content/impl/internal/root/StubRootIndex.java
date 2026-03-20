@@ -43,15 +43,13 @@ public class StubRootIndex implements RootIndex {
         return NonProjectDirectoryInfo.INVALID;
     }
 
-    @Nullable
     @Override
-    public ContentFolderTypeProvider getContentFolderType(DirectoryInfo directoryInfo) {
+    public @Nullable ContentFolderTypeProvider getContentFolderType(DirectoryInfo directoryInfo) {
         return null;
     }
 
-    @Nullable
     @Override
-    public String getPackageName(VirtualFile dir) {
+    public @Nullable String getPackageName(VirtualFile dir) {
         return null;
     }
 

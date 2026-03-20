@@ -24,8 +24,7 @@ import org.jspecify.annotations.Nullable;
  * @since 23-Sep-17
  */
 public interface WebSession {
-  @Nullable
-  UIAccess getAccess();
+  @Nullable UIAccess getAccess();
 
   void close();
 

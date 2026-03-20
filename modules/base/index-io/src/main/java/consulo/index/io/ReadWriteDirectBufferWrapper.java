@@ -42,9 +42,8 @@ public class ReadWriteDirectBufferWrapper extends DirectBufferWrapper {
       file = FileUtil.doIOOperation(new FileUtil.RepeatableIOOperation<RandomAccessFile, IOException>() {
         boolean parentWasCreated;
 
-        @Nullable
         @Override
-        public RandomAccessFile execute(boolean finalAttempt) throws IOException {
+        public @Nullable RandomAccessFile execute(boolean finalAttempt) throws IOException {
           try {
             return new RandomAccessFile(path, RW);
           }

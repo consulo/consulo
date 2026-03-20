@@ -155,9 +155,8 @@ public class CompileContextExDelegate implements CompileContextEx {
         return myDelegate.getOutputForFile(module, virtualFile);
     }
 
-    @Nullable
     @Override
-    public VirtualFile getOutputForFile(Module module, ContentFolderTypeProvider contentFolderType) {
+    public @Nullable VirtualFile getOutputForFile(Module module, ContentFolderTypeProvider contentFolderType) {
         return myDelegate.getOutputForFile(module, contentFolderType);
     }
 

@@ -269,9 +269,8 @@ class HighlightInfoBuilder implements HighlightInfo.Builder {
         return new MyFixBuilder(action);
     }
 
-    @Nullable
     @Override
-    public HighlightInfoImpl create() {
+    public @Nullable HighlightInfoImpl create() {
         HighlightInfoImpl info = createUnconditionally();
         LOG.assertTrue(
             myPsiElement != null

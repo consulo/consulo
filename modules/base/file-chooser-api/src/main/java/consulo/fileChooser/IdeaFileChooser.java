@@ -57,15 +57,13 @@ public class IdeaFileChooser {
     return chooser.choose(project, toSelect == null ? VirtualFile.EMPTY_ARRAY : new VirtualFile[]{toSelect});
   }
 
-  @Nullable
   @Deprecated
-  public static VirtualFile chooseFile(FileChooserDescriptor descriptor, @Nullable ComponentManager project, @Nullable VirtualFile toSelect) {
+  public static @Nullable VirtualFile chooseFile(FileChooserDescriptor descriptor, @Nullable ComponentManager project, @Nullable VirtualFile toSelect) {
     return chooseFile(descriptor, null, project, toSelect);
   }
 
-  @Nullable
   @Deprecated
-  public static VirtualFile chooseFile(FileChooserDescriptor descriptor, @Nullable Component parent, @Nullable ComponentManager project, @Nullable VirtualFile toSelect) {
+  public static @Nullable VirtualFile chooseFile(FileChooserDescriptor descriptor, @Nullable Component parent, @Nullable ComponentManager project, @Nullable VirtualFile toSelect) {
     LOG.assertTrue(!descriptor.isChooseMultiple());
     return ArrayUtil.getFirstElement(chooseFiles(descriptor, parent, project, toSelect));
   }

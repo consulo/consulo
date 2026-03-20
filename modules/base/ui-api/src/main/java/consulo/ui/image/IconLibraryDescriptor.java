@@ -25,8 +25,7 @@ import org.jspecify.annotations.Nullable;
 public interface IconLibraryDescriptor {
     String getLibraryId();
 
-    @Nullable
-    String getBaseLibraryId();
+    @Nullable String getBaseLibraryId();
     LocalizeValue getName();
 
     default boolean isDark() {

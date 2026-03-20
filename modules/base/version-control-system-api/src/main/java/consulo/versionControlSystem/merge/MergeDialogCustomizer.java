@@ -35,8 +35,7 @@ public class MergeDialogCustomizer {
    * @return description that is shows above the list of conflicted files. Null (which is equivalent to empty) by default.
    */
   public
-  @Nullable
-  String getMultipleFileMergeDescription(Collection<VirtualFile> files) {
+  @Nullable String getMultipleFileMergeDescription(Collection<VirtualFile> files) {
     return null;
   }
 
@@ -45,8 +44,7 @@ public class MergeDialogCustomizer {
    * @return title of the merge dialog invoked for a 3-way merge of a file.
    */
   public
-  @Nullable
-  String getMergeWindowTitle(VirtualFile file) {
+  @Nullable String getMergeWindowTitle(VirtualFile file) {
     return VcsBundle.message("multiple.file.merge.request.title", FileUtil.toSystemDependentName(file.getPresentableUrl()));
   }
 
@@ -55,8 +53,7 @@ public class MergeDialogCustomizer {
    * @return title that is shown above the left panel in the 3-way merge dialog. "Local changes" by default.
    */
   public
-  @Nullable
-  String getLeftPanelTitle(VirtualFile file) {
+  @Nullable String getLeftPanelTitle(VirtualFile file) {
     return VcsBundle.message("merge.version.title.local.changes");
   }
 
@@ -65,8 +62,7 @@ public class MergeDialogCustomizer {
    * @return title that is shown above the center panel in the 3-way merge dialog. "Merge result" by default.
    */
   public
-  @Nullable
-  String getCenterPanelTitle(VirtualFile file) {
+  @Nullable String getCenterPanelTitle(VirtualFile file) {
     return VcsBundle.message("merge.version.title.merge.result");
   }
 
@@ -76,8 +72,7 @@ public class MergeDialogCustomizer {
    * @return title that is shown above the right panel in the 3-way merge dialog. "Changes from server" with the revision number by default.
    */
   public
-  @Nullable
-  String getRightPanelTitle(VirtualFile file, VcsRevisionNumber lastRevisionNumber) {
+  @Nullable String getRightPanelTitle(VirtualFile file, VcsRevisionNumber lastRevisionNumber) {
     if (lastRevisionNumber != null) {
       return VcsBundle.message("merge.version.title.last.version.number", lastRevisionNumber.asString());
     }

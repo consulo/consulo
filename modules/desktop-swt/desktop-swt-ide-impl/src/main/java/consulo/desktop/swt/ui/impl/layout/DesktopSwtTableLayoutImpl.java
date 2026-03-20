@@ -35,9 +35,8 @@ public class DesktopSwtTableLayoutImpl extends DesktopSwtLayoutComponent<TableLa
     myFillOption = fillOption;
   }
 
-  @Nullable
   @Override
-  protected Layout createLayout() {
+  protected @Nullable Layout createLayout() {
     return new GridLayout();
   }
 

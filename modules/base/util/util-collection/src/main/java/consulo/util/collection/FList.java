@@ -41,9 +41,8 @@ public class FList<E> extends AbstractList<E> {
     mySize = size;
   }
 
-  @Nullable
   @Override
-  public E get(int index) {
+  public @Nullable E get(int index) {
     if (index < 0 || index >= mySize) {
       throw new IndexOutOfBoundsException("index = " + index + ", size = " + mySize);
     }
@@ -95,9 +94,8 @@ public class FList<E> extends AbstractList<E> {
         return list.size() > 0;
       }
 
-      @Nullable
       @Override
-      public E next() {
+      public @Nullable E next() {
         if (list.size() == 0) throw new NoSuchElementException();
 
         E res = list.myHead;

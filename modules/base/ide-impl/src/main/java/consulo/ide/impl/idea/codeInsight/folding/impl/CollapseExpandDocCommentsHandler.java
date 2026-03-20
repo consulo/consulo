@@ -60,9 +60,8 @@ public class CollapseExpandDocCommentsHandler implements CodeInsightActionHandle
     editor.getFoldingModel().runBatchFoldingOperation(processor);
   }
 
-  @Nullable
   @Override
-  public PsiElement getElementToMakeWritable(PsiFile currentFile) {
+  public @Nullable PsiElement getElementToMakeWritable(PsiFile currentFile) {
     return null;
   }
 

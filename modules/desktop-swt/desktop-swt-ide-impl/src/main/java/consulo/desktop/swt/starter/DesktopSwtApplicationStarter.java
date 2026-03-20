@@ -41,9 +41,8 @@ public class DesktopSwtApplicationStarter extends ApplicationStarter {
     super(commandLineArgs, stat);
   }
 
-  @Nullable
   @Override
-  public StartupProgress createSplash(CommandLineArgs args) {
+  public @Nullable StartupProgress createSplash(CommandLineArgs args) {
     return null;
   }
 

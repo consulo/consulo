@@ -197,21 +197,18 @@ public class VisibleGraphImpl<CommitId> implements VisibleGraph<CommitId> {
       myDoJump = doJump;
     }
 
-    @Nullable
     @Override
-    public Cursor getCursorToSet() {
+    public @Nullable Cursor getCursorToSet() {
       return myCursor;
     }
 
-    @Nullable
     @Override
-    public CommitId getCommitToJump() {
+    public @Nullable CommitId getCommitToJump() {
       return myCommitToJump;
     }
 
-    @Nullable
     @Override
-    public Runnable getGraphUpdater() {
+    public @Nullable Runnable getGraphUpdater() {
       return myUpdater;
     }
 
@@ -231,9 +228,8 @@ public class VisibleGraphImpl<CommitId> implements VisibleGraph<CommitId> {
       myType = type;
     }
 
-    @Nullable
     @Override
-    public PrintElementWithGraphElement getAffectedElement() {
+    public @Nullable PrintElementWithGraphElement getAffectedElement() {
       return myAffectedElement;
     }
 

@@ -40,9 +40,8 @@ class DesktopAsyncDataContext implements AsyncDataContext {
         myDelegate = new PreCachedDataContext(dataManager, providers);
     }
 
-    @Nullable
     @Override
-    public <T> T getData(Key<T> dataId) {
+    public <T> @Nullable T getData(Key<T> dataId) {
         return myDelegate.getData(dataId);
     }
 }

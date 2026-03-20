@@ -45,9 +45,8 @@ public class IncompatibleEncodingDialog extends DialogWrapper {
         init();
     }
 
-    @Nullable
     @Override
-    protected JComponent createCenterPanel() {
+    protected @Nullable JComponent createCenterPanel() {
         JLabel label = new JLabel(XmlStringUtil.wrapInHtml(
             IdeLocalize.dialogMessageIncompatibleEncoding(charset.displayName(), virtualFile.getName()).get()
         ));

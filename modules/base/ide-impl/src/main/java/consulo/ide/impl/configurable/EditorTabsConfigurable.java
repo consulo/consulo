@@ -52,9 +52,8 @@ public class EditorTabsConfigurable extends SimpleConfigurableByProperties imple
     return "editor.preferences.tabs";
   }
 
-  @Nullable
   @Override
-  public String getParentId() {
+  public @Nullable String getParentId() {
     return StandardConfigurableIds.EDITOR_GROUP;
   }
 
