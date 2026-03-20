@@ -114,7 +114,6 @@ public class UnknownRunConfiguration implements RunConfiguration, WithoutOwnBefo
     }
   }
 
-
   @Override
   public int getUniqueID() {
     return System.identityHashCode(this);

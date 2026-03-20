@@ -8,7 +8,6 @@ import consulo.process.ExecutionException;
 import consulo.remoteServer.configuration.deployment.DeploymentConfiguration;
 import consulo.remoteServer.configuration.deployment.DeploymentSource;
 
-
 /**
  * @author VISTALL
  * @since 18:38/01.10.13

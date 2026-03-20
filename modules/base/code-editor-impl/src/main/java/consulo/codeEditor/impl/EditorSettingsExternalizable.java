@@ -474,7 +474,6 @@ public class EditorSettingsExternalizable implements PersistentStateComponent<Ed
         myOptions.CARET_BLINKING_PERIOD = BLINKING_RANGE.fit(blinkInterval);
     }
 
-
     @Override
     public boolean isEnsureNewLineAtEOF() {
         return myOptions.IS_ENSURE_NEWLINE_AT_EOF;

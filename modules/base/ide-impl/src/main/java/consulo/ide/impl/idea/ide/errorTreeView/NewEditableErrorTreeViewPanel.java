@@ -20,7 +20,6 @@ import org.jspecify.annotations.Nullable;
 
 public class NewEditableErrorTreeViewPanel extends NewErrorTreeViewPanelImpl {
 
-
   public NewEditableErrorTreeViewPanel(Project project, String helpId) {
     this(project, helpId, true);
   }

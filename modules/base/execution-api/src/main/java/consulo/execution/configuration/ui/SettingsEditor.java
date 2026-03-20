@@ -123,7 +123,6 @@ public abstract class SettingsEditor<Settings> implements Disposable {
         fireEditorStateChanged();
     }
 
-
     public final void applyTo(Settings s) throws ConfigurationException {
         applyEditorTo(s);
     }

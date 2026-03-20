@@ -15,7 +15,6 @@
  */
 package consulo.versionControlSystem.log.impl.internal.data;
 
-
 public interface VisiblePackChangeListener {
   void onVisiblePackChange(VisiblePack visiblePack);
 }

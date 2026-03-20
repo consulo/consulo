@@ -149,7 +149,6 @@ public class VcsLogPathsIndex extends VcsLogFullDetailsIndex<Integer> {
     public Map<Integer, Integer> map(VcsFullCommitDetails inputData) {
       Map<Integer, Integer> result = new HashMap<>();
 
-
       Collection<Couple<String>> moves;
       Collection<String> changedPaths;
       if (inputData instanceof VcsChangesLazilyParsedDetails vcsChangesLazilyParsedDetails) {

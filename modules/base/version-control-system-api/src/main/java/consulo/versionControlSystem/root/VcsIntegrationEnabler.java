@@ -40,7 +40,6 @@ public abstract class VcsIntegrationEnabler<VcsT extends AbstractVcs> {
     
     protected final VcsT myVcs;
 
-
     protected VcsIntegrationEnabler(VcsT vcs) {
         myProject = vcs.getProject();
         myVcs = vcs;

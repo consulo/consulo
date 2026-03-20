@@ -695,7 +695,6 @@ public class MemberChooser<T extends ClassMember> extends DialogWrapper implemen
         return Pair.create(leadSelectionPath != null ? (ElementNode) leadSelectionPath.getLastPathComponent() : null, selectedNodes);
     }
 
-
     private void restoreSelection(Pair<ElementNode, List<ElementNode>> pair) {
         List<ElementNode> selectedNodes = pair.second;
 

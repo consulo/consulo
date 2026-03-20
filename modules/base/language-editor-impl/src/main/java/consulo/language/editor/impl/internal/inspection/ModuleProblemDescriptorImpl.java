@@ -21,7 +21,6 @@ import consulo.language.editor.inspection.QuickFix;
 import consulo.localize.LocalizeValue;
 import consulo.module.Module;
 
-
 public class ModuleProblemDescriptorImpl extends CommonProblemDescriptorBase implements ModuleProblemDescriptor {
     private final Module myModule;
 

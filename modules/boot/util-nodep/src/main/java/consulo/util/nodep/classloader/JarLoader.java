@@ -254,7 +254,6 @@ class JarLoader extends Loader {
         return null;
     }
 
-
     @Override
     public ClasspathCache.LoaderData buildData() throws IOException {
         if (myPreloadedJar != null) {

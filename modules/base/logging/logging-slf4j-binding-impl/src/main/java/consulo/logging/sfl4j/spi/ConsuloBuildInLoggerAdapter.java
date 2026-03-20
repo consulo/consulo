@@ -183,7 +183,6 @@ public class ConsuloBuildInLoggerAdapter extends MarkerIgnoringBase implements o
     return search;
   }
 
-
   
   private static String format(String value, Object... params) {
     if (params.length > 0 && value.indexOf('{') >= 0) {

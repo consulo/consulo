@@ -15,7 +15,6 @@
  */
 package consulo.language.psi.event;
 
-
 /**
  * Default empty implementation of {@link PsiTreeChangeListener}.
  */

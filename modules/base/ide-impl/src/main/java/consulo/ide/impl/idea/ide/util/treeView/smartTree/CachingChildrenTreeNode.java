@@ -191,7 +191,6 @@ public abstract class CachingChildrenTreeNode <Value> extends AbstractTreeNode<V
     return new GroupWrapper(project, group, treeModel);
   }
 
-
   private void rebuildSubtree() {
     initChildren();
     performTreeActions();

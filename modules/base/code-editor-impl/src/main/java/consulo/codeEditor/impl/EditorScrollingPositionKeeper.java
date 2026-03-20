@@ -15,7 +15,6 @@ import java.awt.*;
 import java.util.Collections;
 import java.util.List;
 
-
 /**
  * Allows to keep vertical scrolling position in editor for operations that affect editor contents (changing document, collapsing/expanding
  * folding regions, etc). If caret is in view, then its vertical position is preserved, otherwise, the code displayed in top left corner of
@@ -63,7 +62,6 @@ public class EditorScrollingPositionKeeper implements Disposable {
     scrollingModel.scroll(targetArea.x, newY - myViewportShift); // can't use 'scrollVertically' - it aborts horizontal scrolling
     if (disableAnimation) scrollingModel.enableAnimation();
   }
-
 
   @Override
   public void dispose() {

@@ -29,7 +29,6 @@ import consulo.ui.image.Image;
 import consulo.usage.localize.UsageLocalize;
 import consulo.virtualFileSystem.status.FileStatus;
 
-
 import java.util.Objects;
 
 /**

@@ -148,7 +148,6 @@ public interface PersistentEditorSettings {
 
     void setBlinkPeriod(int blinkInterval);
 
-
     boolean isEnsureNewLineAtEOF();
 
     void setEnsureNewLineAtEOF(boolean ensure);

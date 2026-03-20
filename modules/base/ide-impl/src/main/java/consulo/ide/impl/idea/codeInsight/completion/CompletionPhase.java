@@ -275,7 +275,6 @@ public abstract class CompletionPhase implements Disposable {
       SelectionModel selectionModel = editor.getSelectionModel();
       CaretModel caretModel = editor.getCaretModel();
 
-
       if (hint != null) {
         hint.addHintListener(hintListener);
       }

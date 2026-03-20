@@ -81,7 +81,6 @@ public final class RangeSearchTask extends SearchTaskBase {
             prefixSymbol = getPrefixSymbol(prevPageText);
             postfixSymbol = getPostfixSymbol(nextPageText, tailLength);
 
-
             while (true) {
                 /* searching result in current page */
                 searcher.setFrame(curPageNumber, prefixSymbol, curPageText, tailText, postfixSymbol);
@@ -100,7 +99,6 @@ public final class RangeSearchTask extends SearchTaskBase {
                     myCallback.tellSearchIsStopped(curPageNumber);
                     return;
                 }
-
 
                 /* preparing data for searching in next page if it's possible*/
                 pagesAmount = fileDataProviderForSearch.getPagesAmount();

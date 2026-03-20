@@ -8,8 +8,6 @@ import consulo.execution.debug.stream.trace.IntermediateCallHandler;
 import consulo.execution.debug.stream.trace.dsl.Dsl;
 import consulo.execution.debug.stream.wrapper.IntermediateStreamCall;
 
-
-
 /**
  * @author Vitaliy.Bibaev
  */

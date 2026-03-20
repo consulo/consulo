@@ -7,7 +7,6 @@ import consulo.component.extension.ExtensionPointName;
 import consulo.index.io.KeyDescriptor;
 import consulo.language.psi.PsiElement;
 
-
 /**
  * @author max
  */

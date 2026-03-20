@@ -18,7 +18,6 @@ package consulo.versionControlSystem.log;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 
-
 @ExtensionAPI(ComponentScope.PROJECT)
 public interface VcsLogHighlighterFactory {
   

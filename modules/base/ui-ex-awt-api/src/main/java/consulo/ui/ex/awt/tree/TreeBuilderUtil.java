@@ -99,7 +99,6 @@ public class TreeBuilderUtil {
 
   }
 
-
   public static boolean isNodeOrChildSelected(JTree tree, DefaultMutableTreeNode node){
     TreePath[] selectionPaths = tree.getSelectionPaths();
     if (selectionPaths == null || selectionPaths.length == 0) return false;

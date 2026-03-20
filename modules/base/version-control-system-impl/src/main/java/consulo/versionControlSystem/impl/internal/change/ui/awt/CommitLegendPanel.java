@@ -22,7 +22,6 @@ import consulo.ui.ex.awt.SimpleColoredComponent;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 
-
 import javax.swing.*;
 
 public class CommitLegendPanel {

@@ -18,7 +18,6 @@ package consulo.virtualFileSystem.event;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileSystem;
 
-
 /**
  * @author max
  */

@@ -18,7 +18,6 @@ package consulo.execution.ui.console;
 import consulo.content.scope.SearchScope;
 import consulo.project.Project;
 
-
 public abstract class ConsoleDependentFilterProvider implements ConsoleFilterProvider {
   
   public abstract Filter[] getDefaultFilters(ConsoleView consoleView, Project project, SearchScope scope);

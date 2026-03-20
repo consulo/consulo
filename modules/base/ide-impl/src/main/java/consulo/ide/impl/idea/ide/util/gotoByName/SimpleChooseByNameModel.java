@@ -39,7 +39,6 @@ public abstract class SimpleChooseByNameModel implements ChooseByNameModel {
 
     protected abstract Object[] getElementsByName(String name, String pattern);
 
-
     public Project getProject() {
         return myProject;
     }

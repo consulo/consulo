@@ -20,7 +20,6 @@ import consulo.annotation.component.ExtensionAPI;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 
-
 import java.util.List;
 
 /**

@@ -141,7 +141,6 @@ public abstract class BaseRefactoringProcessor implements Runnable {
         return unloadedModulesInUseScope;
     }
 
-
     public void setPreviewUsages(boolean isPreviewUsages) {
         myIsPreviewUsages = isPreviewUsages;
     }

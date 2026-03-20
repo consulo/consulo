@@ -60,7 +60,6 @@ public interface Refactoring {
    */
   boolean isInteractive();
 
-
   /**
    * Searches for places in code that refactoring will change. <br>
    * This method should be best invoked in the process with progress and it does

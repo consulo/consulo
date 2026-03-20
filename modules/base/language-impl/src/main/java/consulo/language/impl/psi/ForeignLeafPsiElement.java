@@ -22,7 +22,6 @@ import consulo.language.impl.ast.LeafElement;
 import consulo.language.impl.ast.TokenWrapper;
 import consulo.language.psi.PsiElement;
 
-
 /**
  * @author max
  */

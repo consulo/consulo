@@ -18,7 +18,6 @@ package consulo.desktop.swt.editor.impl;
 import consulo.codeEditor.impl.CodeEditorBase;
 import consulo.codeEditor.impl.CodeEditorCaretModelBase;
 
-
 /**
  * @author VISTALL
  * @since 18/12/2021

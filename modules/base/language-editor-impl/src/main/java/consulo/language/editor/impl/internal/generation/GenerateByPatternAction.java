@@ -28,7 +28,6 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.util.collection.ArrayUtil;
 import jakarta.inject.Inject;
 
-
 /**
  * @author Dmitry Avdeev
  */

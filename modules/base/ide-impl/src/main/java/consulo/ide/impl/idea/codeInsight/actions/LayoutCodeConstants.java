@@ -15,7 +15,6 @@
  */
 package consulo.ide.impl.idea.codeInsight.actions;
 
-
 /**
  * @author Denis Zhdanov
  * @since 12/16/11 6:10 PM

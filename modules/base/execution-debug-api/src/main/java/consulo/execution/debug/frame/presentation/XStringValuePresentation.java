@@ -17,7 +17,6 @@ package consulo.execution.debug.frame.presentation;
 
 import consulo.execution.debug.frame.XValueNode;
 
-
 /**
  * Renders a value as a string
  *

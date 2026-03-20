@@ -36,7 +36,6 @@ import consulo.language.psi.util.PsiTreeUtil;
 import consulo.language.util.IncorrectOperationException;
 import consulo.logging.Logger;
 
-
 public class OwnBufferLeafPsiElement extends LeafElement implements PsiElement {
   private static final Logger LOG = Logger.getInstance(OwnBufferLeafPsiElement.class);
 

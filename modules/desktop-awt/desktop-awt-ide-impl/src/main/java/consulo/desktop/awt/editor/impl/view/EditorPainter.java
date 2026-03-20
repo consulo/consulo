@@ -1378,7 +1378,6 @@ public final class EditorPainter implements TextDrawingCallback {
             return ranges;
         }
 
-
         /**
          * Returns a list of pairs of x coordinates for visual ranges representing given logical range. If
          * {@code startOffset == endOffset}, a pair of equal numbers is returned, corresponding to target position. Target offsets are

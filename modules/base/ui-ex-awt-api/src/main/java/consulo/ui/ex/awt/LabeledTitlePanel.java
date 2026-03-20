@@ -87,4 +87,3 @@ public class LabeledTitlePanel extends CaptionPanel {
   }
 }
 
-

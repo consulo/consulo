@@ -15,7 +15,6 @@
  */
 package consulo.language.codeStyle;
 
-
 /**
  * Internal interface for creating indent instances.
  * <p/>

@@ -17,7 +17,6 @@ package consulo.language.ast;
 
 import consulo.language.Language;
 
-
 /**
  * @author max
  */

@@ -9,7 +9,6 @@ import consulo.project.Project;
 import consulo.ui.ex.awt.tree.ColoredTreeCellRenderer;
 import jakarta.inject.Inject;
 
-
 /**
  * @author VISTALL
  * @since 2018-08-21

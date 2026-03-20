@@ -15,7 +15,6 @@
  */
 package consulo.externalSystem.service.project;
 
-
 /**
  * @author Vladislav.Soroka
  * @since 11/27/13

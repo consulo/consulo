@@ -18,7 +18,6 @@ package consulo.language.lexer;
 import consulo.language.ast.IElementType;
 import consulo.logging.Logger;
 
-
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;

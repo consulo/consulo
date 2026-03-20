@@ -25,7 +25,6 @@ import consulo.project.Project;
 import consulo.project.internal.ProjectManagerEx;
 import consulo.ui.annotation.RequiredUIAccess;
 
-
 @ActionImpl(id = "TemplateProjectStructure")
 public class TemplateProjectStructureAction extends AnAction implements DumbAware {
     public TemplateProjectStructureAction() {

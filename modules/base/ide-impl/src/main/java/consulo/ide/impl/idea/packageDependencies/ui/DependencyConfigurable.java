@@ -221,7 +221,6 @@ public class DependencyConfigurable implements Configurable {
     public abstract void setValue(DependencyRule rule, NamedScope packageSet);
   }
 
-
   private class RightColumn extends MyColumnInfo {
     public RightColumn(String name) {
       super(name);

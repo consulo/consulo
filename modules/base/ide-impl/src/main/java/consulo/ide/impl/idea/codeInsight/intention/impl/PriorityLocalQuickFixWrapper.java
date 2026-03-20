@@ -55,7 +55,6 @@ public abstract class PriorityLocalQuickFixWrapper implements LocalQuickFix {
     }
   }
 
-
   private static class LowPriorityLocalQuickFixWrapper extends PriorityLocalQuickFixWrapper implements LowPriorityAction {
     protected LowPriorityLocalQuickFixWrapper(LocalQuickFix fix) {
       super(fix);

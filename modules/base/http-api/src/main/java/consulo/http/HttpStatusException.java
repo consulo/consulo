@@ -15,7 +15,6 @@
  */
 package consulo.http;
 
-
 import java.io.IOException;
 
 public class HttpStatusException extends IOException {

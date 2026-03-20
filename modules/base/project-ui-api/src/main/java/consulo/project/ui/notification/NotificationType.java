@@ -15,7 +15,6 @@
  */
 package consulo.project.ui.notification;
 
-
 /**
  * @author spleaner
  */

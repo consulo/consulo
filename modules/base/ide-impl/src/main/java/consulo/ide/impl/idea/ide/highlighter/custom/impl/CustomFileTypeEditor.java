@@ -133,7 +133,6 @@ public class CustomFileTypeEditor extends SettingsEditor<AbstractFileType> {
   public void disposeEditor() {
   }
 
-
   protected JComponent createCenterPanel() {
     JPanel panel = new JPanel(new BorderLayout());
 
@@ -186,7 +185,6 @@ public class CustomFileTypeEditor extends SettingsEditor<AbstractFileType> {
 
     _panel1.add(commentsAndNumbersPanel, BorderLayout.WEST);
 
-
     highlighterPanel.add(_panel1, BorderLayout.NORTH);
 
     TabbedPaneWrapper tabbedPaneWrapper = new TabbedPaneWrapper(this);
@@ -215,7 +213,6 @@ public class CustomFileTypeEditor extends SettingsEditor<AbstractFileType> {
         }
       }.installOn(myKeywordsLists[i]);
     }
-
 
     return panel;
   }

@@ -25,7 +25,6 @@ import consulo.virtualFileSystem.util.VirtualFilePathUtil;
 import consulo.disposer.TraceableDisposable;
 import consulo.logging.Logger;
 
-
 class VirtualFilePointerImpl implements VirtualFilePointer {
   private static final Logger LOG = Logger.getInstance(VirtualFilePointerImpl.class);
 

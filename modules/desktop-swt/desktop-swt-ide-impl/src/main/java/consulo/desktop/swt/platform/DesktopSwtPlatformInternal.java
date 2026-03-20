@@ -18,7 +18,6 @@ package consulo.desktop.swt.platform;
 import consulo.platform.Platform;
 import consulo.platform.internal.PlatformInternal;
 
-
 /**
  * @author VISTALL
  * @since 29/04/2021

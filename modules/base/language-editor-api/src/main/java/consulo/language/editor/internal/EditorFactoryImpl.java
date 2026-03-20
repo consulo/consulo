@@ -196,7 +196,6 @@ public abstract class EditorFactoryImpl extends InternalEditorFactory {
         return editor;
     }
 
-
     @Override
     public void releaseEditor(Editor editor) {
         try {

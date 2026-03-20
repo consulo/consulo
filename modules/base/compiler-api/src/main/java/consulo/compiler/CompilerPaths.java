@@ -212,7 +212,6 @@ public class CompilerPaths {
         return outPathUrl != null ? VirtualFileManager.extractPath(outPathUrl) : null;
     }
 
-
     public static String[] getOutputPaths(Module[] modules) {
         if (modules.length == 0) {
             return ArrayUtil.EMPTY_STRING_ARRAY;

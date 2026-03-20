@@ -116,7 +116,6 @@ public abstract class CoverageEnabledConfiguration implements JDOMExternalizable
             .anyMatchSafe(engine -> engine.isApplicableTo(myConfiguration) && engine.canHavePerTestCoverage(myConfiguration));
     }
 
-
     public static boolean isApplicableTo(RunConfigurationBase runConfiguration) {
         CoverageEnabledConfiguration configuration = runConfiguration.getCopyableUserData(COVERAGE_KEY);
         //noinspection SimplifiableIfStatement

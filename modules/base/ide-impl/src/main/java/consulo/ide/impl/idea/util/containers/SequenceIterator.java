@@ -15,7 +15,6 @@
  */
 package consulo.ide.impl.idea.util.containers;
 
-
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.NoSuchElementException;

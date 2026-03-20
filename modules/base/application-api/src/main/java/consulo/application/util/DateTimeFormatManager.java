@@ -28,7 +28,6 @@ import java.text.SimpleDateFormat;
 public class DateTimeFormatManager implements PersistentStateComponent<Element> {
   private static final Logger LOG = Logger.getInstance(DateTimeFormatManager.class);
 
-  
   public static DateTimeFormatManager getInstance() {
     return Application.get().getInstance(DateTimeFormatManager.class);
   }
@@ -84,7 +83,6 @@ public class DateTimeFormatManager implements PersistentStateComponent<Element> 
     return null;
   }
 
-  
   public String getDateFormatPattern() {
     return myPattern;
   }

@@ -213,7 +213,6 @@ public class DirectoryChooserModuleTreeView implements DirectoryChooserView {
     return node.getUserObject() instanceof DirectoryChooser.ItemWrapper itemWrapper ? itemWrapper : null;
   }
 
-
   private class MyTreeCellRenderer extends ColoredTreeCellRenderer {
     @Override
     @RequiredUIAccess

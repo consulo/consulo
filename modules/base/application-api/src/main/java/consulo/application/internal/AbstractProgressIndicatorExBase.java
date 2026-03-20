@@ -48,7 +48,6 @@ public class AbstractProgressIndicatorExBase extends AbstractProgressIndicatorBa
     }
   }
 
-
   @Override
   public void stop() {
     super.stop();

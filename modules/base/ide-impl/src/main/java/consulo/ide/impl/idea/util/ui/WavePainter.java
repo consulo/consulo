@@ -15,7 +15,6 @@
  */
 package consulo.ide.impl.idea.util.ui;
 
-
 import java.awt.*;
 
 /**

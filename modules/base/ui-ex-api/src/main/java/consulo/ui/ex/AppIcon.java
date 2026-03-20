@@ -22,7 +22,6 @@ import consulo.component.ComponentManager;
 import consulo.ui.TaskBar;
 import consulo.ui.Window;
 
-
 @ServiceAPI(ComponentScope.APPLICATION)
 public interface AppIcon {
   

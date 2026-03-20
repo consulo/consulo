@@ -23,7 +23,6 @@ import consulo.language.copyright.config.CopyrightProfile;
 import consulo.language.psi.PsiFile;
 import consulo.virtualFileSystem.fileType.FileType;
 
-
 /**
  * @author VISTALL
  * @since 28-Jun-22

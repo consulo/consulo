@@ -18,7 +18,6 @@ package consulo.language.psi.search;
 import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.content.scope.SearchScope;
 
-
 /**
  * @author peter
  */

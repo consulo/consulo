@@ -211,7 +211,6 @@ public abstract class HierarchyBrowserBase extends SimpleToolWindowPanel impleme
         return PsiUtilCore.toPsiElementArray(elements);
     }
 
-
     private Navigatable[] getNavigatables() {
         HierarchyNodeDescriptor[] selectedDescriptors = getSelectedDescriptors();
         if (selectedDescriptors == null || selectedDescriptors.length == 0) {

@@ -410,7 +410,6 @@ public final class LfeSearchManagerImpl implements LfeSearchManager, CloseSearch
         }
     }
 
-
     @RequiredUIAccess
     @Override
     public void onSearchParametersChanged() {
@@ -639,7 +638,6 @@ public final class LfeSearchManagerImpl implements LfeSearchManager, CloseSearch
             return index;
         }
     }
-
 
     private final class CloseSearchResultsListSelectionListener implements ListSelectionListener {
         private final JBList<SearchResult> list;

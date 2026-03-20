@@ -30,7 +30,6 @@ public class DefaultExternalFilter implements ExternalFilter {
     myFilterType = "";
   }
 
-
   public DefaultExternalFilter(ExternalFilter filter) {
     myPropertiesAsJsonMap = filter.getPropertiesAsJsonMap();
     myFilterType = filter.getFilterType();

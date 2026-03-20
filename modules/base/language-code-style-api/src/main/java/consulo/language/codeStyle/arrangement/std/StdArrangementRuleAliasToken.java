@@ -41,7 +41,6 @@ public class StdArrangementRuleAliasToken extends StdArrangementSettingsToken im
     myDefinitionRules = definitionRules;
   }
 
-
   public StdArrangementRuleAliasToken(String id, String name,
                                       List<StdArrangementMatchRule> definitionRules) {
     super(id, createRepresentationValue(name), StdArrangementTokenType.ALIAS);
@@ -57,7 +56,6 @@ public class StdArrangementRuleAliasToken extends StdArrangementSettingsToken im
   private static String createIdByName(String name) {
     return name.replaceAll("\\s+", "_");
   }
-
 
   public String getName() {
     return myName;

@@ -18,7 +18,6 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.status.FileStatusListener;
 import consulo.virtualFileSystem.status.FileStatusManager;
 
-
 import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;

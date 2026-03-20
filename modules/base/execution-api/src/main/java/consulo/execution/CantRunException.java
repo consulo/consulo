@@ -22,7 +22,6 @@ import consulo.module.extension.ModuleExtension;
 import consulo.module.extension.ModuleExtensionHelper;
 import consulo.process.ExecutionException;
 
-
 public class CantRunException extends ExecutionException {
   public CantRunException(String message) {
     super(message);

@@ -20,7 +20,6 @@ import consulo.language.ast.IElementType;
 import consulo.language.psi.LiteralTextEscaper;
 import consulo.language.psi.PsiLanguageInjectionHost;
 
-
 public class PsiCommentImpl extends PsiCoreCommentImpl implements PsiLanguageInjectionHost {
   public PsiCommentImpl(IElementType type, CharSequence text) {
     super(type, text);

@@ -15,7 +15,6 @@
  */
 package consulo.ui.ex.awt;
 
-
 import javax.swing.*;
 import javax.swing.plaf.UIResource;
 import java.awt.*;

@@ -15,7 +15,6 @@
  */
 package consulo.component.util;
 
-
 public class CompositeModificationTracker extends SimpleModificationTracker {
   
   private final ModificationTracker myAdditionalTracker;

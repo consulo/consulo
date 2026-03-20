@@ -142,7 +142,6 @@ public class ReconfigureOnChangeTask extends ContextAwareBase implements Runnabl
         return "ReconfigureOnChangeTask(born:" + birthdate + ")";
     }
 
-
     public void setScheduredFuture(ScheduledFuture<?> aScheduledFuture) {
         this.scheduledFuture = aScheduledFuture;
     }

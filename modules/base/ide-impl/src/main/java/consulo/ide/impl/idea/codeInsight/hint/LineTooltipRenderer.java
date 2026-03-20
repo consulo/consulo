@@ -283,7 +283,6 @@ public class LineTooltipRenderer extends ComparableObject.Impl implements Toolti
             }
         };
 
-
         TooltipReloader reloader = tooltipReloader == null ? toExpand -> reloadFor(
             hint,
             editor,

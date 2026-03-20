@@ -81,13 +81,11 @@ public class RightAlignedLabelUI extends BasicLabelUI {
     int hAlign = horizontalAlignment;
     int hTextPos = horizontalTextPosition;
 
-
     if (c != null) {
       if (!(c.getComponentOrientation().isLeftToRight())) {
         orientationIsLeftToRight = false;
       }
     }
-
 
     // Translate LEADING/TRAILING values in horizontalAlignment
     // to LEFT/RIGHT values depending on the components orientation
@@ -198,7 +196,6 @@ public class RightAlignedLabelUI extends BasicLabelUI {
         availTextWidth = viewR.width - (iconR.width + gap);
       }
 
-
       if (textR.width > availTextWidth) {
         String clipString = "...";
         int totalWidth = SwingUtilities.computeStringWidth(fm, clipString);
@@ -215,7 +212,6 @@ public class RightAlignedLabelUI extends BasicLabelUI {
         textR.width = SwingUtilities.computeStringWidth(fm, rettext);
       }
     }
-
 
     /* Compute textR.x,y given the verticalTextPosition and
      * horizontalTextPosition properties

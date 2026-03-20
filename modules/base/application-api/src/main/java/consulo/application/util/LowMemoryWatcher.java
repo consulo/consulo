@@ -21,7 +21,6 @@ import consulo.logging.Logger;
 import consulo.util.collection.WeakList;
 import org.jetbrains.annotations.Contract;
 
-
 /**
  * @author Eugene Zhuravlev
  */

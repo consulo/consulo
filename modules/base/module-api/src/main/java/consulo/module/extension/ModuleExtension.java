@@ -21,7 +21,6 @@ import consulo.module.Module;
 import consulo.project.Project;
 import org.jdom.Element;
 
-
 /**
  * @author VISTALL
  * @since 22:39/18.05.13

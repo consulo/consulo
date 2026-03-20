@@ -14,7 +14,6 @@ package consulo.content.library.ui;
 
 import consulo.ui.image.Image;
 
-
 /**
  * @author nik
  */

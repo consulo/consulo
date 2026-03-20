@@ -3,7 +3,6 @@ package consulo.externalSystem.service.project;
 import consulo.externalSystem.model.ProjectSystemId;
 import consulo.externalSystem.util.ExternalSystemApiUtil;
 
-
 /**
  * Not thread-safe.
  *

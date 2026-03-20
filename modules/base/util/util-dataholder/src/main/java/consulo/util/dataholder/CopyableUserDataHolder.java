@@ -15,7 +15,6 @@
  */
 package consulo.util.dataholder;
 
-
 import org.jspecify.annotations.Nullable;
 
 /**

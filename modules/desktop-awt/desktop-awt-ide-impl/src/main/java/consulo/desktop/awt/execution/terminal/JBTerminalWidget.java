@@ -79,7 +79,6 @@ public class JBTerminalWidget extends JediTermWidget implements Disposable, Jedi
         }
     }
 
-
     @Override
     protected TerminalStarter createTerminalStarter(JediTerminal terminal, TtyConnector connector) {
         return new JBTerminalStarter(terminal, connector);

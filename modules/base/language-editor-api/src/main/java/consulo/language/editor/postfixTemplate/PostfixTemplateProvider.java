@@ -15,7 +15,6 @@
  */
 package consulo.language.editor.postfixTemplate;
 
-
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.application.Application;

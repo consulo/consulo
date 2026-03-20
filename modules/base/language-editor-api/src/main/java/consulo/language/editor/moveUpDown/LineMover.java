@@ -23,7 +23,6 @@ import consulo.language.psi.PsiFile;
 import consulo.language.psi.util.PsiTreeUtil;
 import consulo.util.lang.Pair;
 
-
 public class LineMover extends StatementUpDownMover {
 
   @Override

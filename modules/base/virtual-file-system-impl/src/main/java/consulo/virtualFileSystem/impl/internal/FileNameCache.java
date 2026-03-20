@@ -96,7 +96,6 @@ public class FileNameCache {
   private static final AtomicInteger ourQueries = new AtomicInteger();
   private static final AtomicInteger ourMisses = new AtomicInteger();
 
-
   @FunctionalInterface
   public interface NameComputer {
     String compute(int id) throws IOException;

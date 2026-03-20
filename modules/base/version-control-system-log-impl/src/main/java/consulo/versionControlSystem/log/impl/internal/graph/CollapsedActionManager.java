@@ -65,7 +65,6 @@ class CollapsedActionManager {
     modification.apply();
   }
 
-
   private interface ActionCase {
     @Nullable LinearGraphAnswer performAction(ActionContext context);
 

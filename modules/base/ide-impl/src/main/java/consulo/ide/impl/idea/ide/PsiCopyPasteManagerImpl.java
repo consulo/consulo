@@ -154,7 +154,6 @@ public class PsiCopyPasteManagerImpl implements PsiCopyPasteManager {
     }
   }
 
-
   public static class MyData {
     private final Project myProject;
     private final List<SmartPsiElementPointer> myPointers = new ArrayList<>();

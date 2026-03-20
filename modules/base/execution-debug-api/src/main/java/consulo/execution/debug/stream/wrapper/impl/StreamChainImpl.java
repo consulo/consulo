@@ -74,7 +74,6 @@ public class StreamChainImpl implements StreamChain {
         return builder.toString();
     }
 
-
     @Override
     public String getCompactText() {
         StringBuilder builder = new StringBuilder();

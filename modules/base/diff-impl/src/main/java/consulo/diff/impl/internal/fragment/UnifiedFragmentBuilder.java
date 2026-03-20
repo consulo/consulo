@@ -177,7 +177,6 @@ public class UnifiedFragmentBuilder {
   // Result
   //
 
-
   public boolean isEqual() {
     return myEqual;
   }

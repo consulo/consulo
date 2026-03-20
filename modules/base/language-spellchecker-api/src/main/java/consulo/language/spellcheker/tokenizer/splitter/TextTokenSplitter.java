@@ -17,7 +17,6 @@ package consulo.language.spellcheker.tokenizer.splitter;
 
 import consulo.document.util.TextRange;
 
-
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 

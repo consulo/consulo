@@ -19,7 +19,6 @@ import consulo.util.lang.StringUtil;
 import consulo.language.pom.PomRenameableTarget;
 import consulo.language.psi.PsiNamedElement;
 
-
 /**
  * @author peter
  */

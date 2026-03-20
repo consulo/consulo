@@ -94,7 +94,6 @@ public class UiActivityMonitorImpl extends UiActivityMonitor implements Disposab
   public void addActivity(ComponentManager project, UiActivity activity, consulo.ui.ModalityState effectiveModalityState) {
     if (!isActive()) return;
 
-
     UIUtil.invokeLaterIfNeeded(() -> getBusyContainer((Project)project).addActivity(activity, effectiveModalityState));
   }
 

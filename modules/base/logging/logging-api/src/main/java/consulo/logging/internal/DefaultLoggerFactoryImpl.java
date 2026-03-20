@@ -17,7 +17,6 @@ package consulo.logging.internal;
 
 import consulo.logging.Logger;
 
-
 /**
  * @author VISTALL
  * @since 2019-08-10

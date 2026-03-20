@@ -20,7 +20,6 @@ import consulo.util.collection.impl.map.*;
 import org.jspecify.annotations.Nullable;
 import org.jetbrains.annotations.Contract;
 
-
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;

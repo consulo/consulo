@@ -50,7 +50,6 @@ public class CoverageSuitesBundle {
         }
     }
 
-
     public boolean isValid() {
         for (CoverageSuite suite : mySuites) {
             if (!suite.isValid()) {

@@ -47,7 +47,6 @@ public class VcsEventWatcher implements PostStartupActivity {
     connection.subscribe(ProblemListener.class, new MyProblemListener(project));
   }
 
-
   private class MyProblemListener implements ProblemListener {
     private final Project myProject;
 

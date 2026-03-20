@@ -708,7 +708,6 @@ public class PsiViewerDialog extends DialogWrapper implements UiDataProvider, Di
             blockNode = findBlockNode(rootPsi);
         }
 
-
         blockTreeStructure.setRoot(blockNode);
         myBlockTree.addTreeSelectionListener(new MyBlockTreeSelectionListener());
         myBlockTree.setRootVisible(true);

@@ -19,7 +19,6 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.component.store.internal.IComponentStore;
 
-
 @ServiceAPI(ComponentScope.APPLICATION)
 public interface IApplicationStore extends IComponentStore {
   void setOptionsPath(String path);

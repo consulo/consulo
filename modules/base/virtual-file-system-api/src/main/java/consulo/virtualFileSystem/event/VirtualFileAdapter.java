@@ -17,7 +17,6 @@ package consulo.virtualFileSystem.event;
 
 import consulo.annotation.DeprecationInfo;
 
-
 @Deprecated
 @DeprecationInfo("Use VirtualFileListener instead")
 public abstract class VirtualFileAdapter implements VirtualFileListener {

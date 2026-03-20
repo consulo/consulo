@@ -22,7 +22,6 @@ import consulo.execution.ui.console.TextConsoleBuilderFactory;
 import consulo.project.Project;
 import jakarta.inject.Singleton;
 
-
 /**
  * @author yole
  * @author dyoma

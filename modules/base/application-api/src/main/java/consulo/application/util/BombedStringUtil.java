@@ -19,7 +19,6 @@ import consulo.component.ProcessCanceledException;
 import consulo.util.lang.StringUtil;
 import org.jetbrains.annotations.Contract;
 
-
 /**
  * @author VISTALL
  * @since 2021-12-28

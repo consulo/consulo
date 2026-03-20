@@ -396,7 +396,6 @@ class InjectionRegistrarImpl implements MultiHostRegistrar {
     return viewProvider.setShreds(place);
   }
 
-
   
   private static String exceptionContext(String msg,
                                          LanguageVersion languageVersion,
@@ -481,7 +480,6 @@ class InjectionRegistrarImpl implements MultiHostRegistrar {
     }
     resultReferences.add(pair);
   }
-
 
   // under InjectedLanguageManagerImpl.ourInjectionPsiLock
   
@@ -782,7 +780,6 @@ class InjectionRegistrarImpl implements MultiHostRegistrar {
       return null;
     }
   }
-
 
   static boolean intersect(DocumentWindowImpl doc1, DocumentWindowImpl doc2) {
     Segment[] hostRanges1 = doc1.getHostRanges();

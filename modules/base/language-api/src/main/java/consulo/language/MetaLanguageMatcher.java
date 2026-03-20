@@ -2,7 +2,6 @@
 
 package consulo.language;
 
-
 final class MetaLanguageMatcher extends LanguageMatcher {
 
   private final

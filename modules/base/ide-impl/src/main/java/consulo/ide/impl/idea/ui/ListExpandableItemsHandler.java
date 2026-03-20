@@ -53,7 +53,6 @@ public class ListExpandableItemsHandler extends AbstractExpandableItemsHandler<I
       }
     });
 
-
     final ListDataListener modelListener = new ListDataListener() {
       public void intervalAdded(ListDataEvent e) {
         updateSelection(list);

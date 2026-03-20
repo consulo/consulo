@@ -15,7 +15,6 @@
  */
 package consulo.util.io;
 
-
 public class BufferExposingByteArrayInputStream extends UnsyncByteArrayInputStream {
   public BufferExposingByteArrayInputStream(byte[] bytes) {
     super(bytes);

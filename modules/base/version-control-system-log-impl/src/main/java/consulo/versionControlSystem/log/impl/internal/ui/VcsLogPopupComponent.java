@@ -73,7 +73,6 @@ public abstract class VcsLogPopupComponent extends JPanel {
     return this;
   }
 
-
   public abstract String getCurrentText();
 
   public abstract void installChangeListener(Runnable onChange);

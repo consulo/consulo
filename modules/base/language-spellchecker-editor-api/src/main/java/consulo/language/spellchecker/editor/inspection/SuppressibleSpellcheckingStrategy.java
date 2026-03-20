@@ -19,7 +19,6 @@ import consulo.language.editor.inspection.SuppressQuickFix;
 import consulo.language.psi.PsiElement;
 import consulo.language.spellcheker.SpellcheckingStrategy;
 
-
 /**
  * Base class to use to make spellchecking in your language suppressible.
  * Just delegate this to your suppression util code, as you'll do in normal inspection for your language.

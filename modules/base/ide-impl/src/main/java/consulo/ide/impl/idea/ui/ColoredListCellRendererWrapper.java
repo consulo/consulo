@@ -18,7 +18,6 @@ package consulo.ide.impl.idea.ui;
 import consulo.ui.ex.SimpleColoredText;
 import consulo.ui.ex.awt.ColoredListCellRenderer;
 
-
 import javax.swing.*;
 
 /**

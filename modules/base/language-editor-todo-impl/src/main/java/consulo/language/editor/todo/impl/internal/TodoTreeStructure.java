@@ -45,7 +45,6 @@ public abstract class TodoTreeStructure extends AbstractTreeStructureBase implem
   protected boolean myArePackagesShown;
   private boolean myAreModulesShown;
 
-
   protected final PsiTodoSearchHelper mySearchHelper;
   /**
    * Current {@code TodoFilter}. If no filter is set then this field is {@code null}.

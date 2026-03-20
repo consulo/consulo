@@ -25,7 +25,6 @@ import consulo.language.ast.IElementType;
 import consulo.language.editor.action.FileQuoteHandler;
 import consulo.virtualFileSystem.fileType.FileType;
 
-
 /**
  * @author Maxim.Mossienko
  */

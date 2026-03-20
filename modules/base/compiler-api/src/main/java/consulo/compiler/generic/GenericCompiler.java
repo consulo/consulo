@@ -22,7 +22,6 @@ import consulo.index.io.EnumeratorStringDescriptor;
 import consulo.index.io.KeyDescriptor;
 import consulo.index.io.data.DataExternalizer;
 
-
 /**
  * @author nik
  */

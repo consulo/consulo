@@ -19,7 +19,6 @@ import consulo.language.Language;
 import consulo.language.ast.ASTNode;
 import consulo.language.psi.PsiElement;
 
-
 /**
  * @author Denis Zhdanov
  * @since 2011-12-06

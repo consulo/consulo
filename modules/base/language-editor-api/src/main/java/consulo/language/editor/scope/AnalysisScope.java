@@ -287,7 +287,6 @@ public class AnalysisScope {
     }
   }
 
-
   public void accept(PsiElementVisitor visitor) {
     accept(visitor, true);
   }
@@ -540,7 +539,6 @@ public class AnalysisScope {
       case DIRECTORY:
         String relativeDirPath = getRelativePath();
         return relativeDirPath != null ? AnalysisScopeLocalize.scopeDirectory(relativeDirPath).get() : "Current Directory";
-
 
       case VIRTUAL_FILES:
         return AnalysisScopeLocalize.scopeSelectedFiles().get();

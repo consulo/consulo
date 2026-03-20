@@ -105,7 +105,6 @@ public class PatternDescriptor implements FileSetDescriptor {
     return sb.toString();
   }
 
-
   private static boolean isRegexSpecialChar(char c) {
     return "^${}[]().*+-&".indexOf(c) >= 0;
   }

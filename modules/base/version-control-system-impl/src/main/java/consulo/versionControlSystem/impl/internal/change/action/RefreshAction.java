@@ -30,7 +30,6 @@ import consulo.versionControlSystem.change.ChangesViewRefresher;
 import consulo.versionControlSystem.change.VcsDirtyScopeManager;
 import consulo.virtualFileSystem.VirtualFileManager;
 
-
 /**
  * @author yole
  * @since 2006-11-02

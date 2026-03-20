@@ -15,7 +15,6 @@
  */
 package consulo.compiler.generic;
 
-
 /**
  * @author nik
  */

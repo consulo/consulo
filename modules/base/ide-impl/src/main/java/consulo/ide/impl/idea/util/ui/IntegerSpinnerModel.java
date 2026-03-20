@@ -17,8 +17,6 @@ package consulo.ide.impl.idea.util.ui;
 
 import javax.swing.*;
 
-
-
 class IntegerSpinnerModel extends AbstractSpinnerModel {
   private final int myMinValue;
   private final int myMaxValue;

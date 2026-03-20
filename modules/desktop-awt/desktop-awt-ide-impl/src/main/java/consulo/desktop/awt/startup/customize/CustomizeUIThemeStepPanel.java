@@ -89,7 +89,6 @@ public class CustomizeUIThemeStepPanel extends AbstractCustomizeWizardStep {
         return size;
     }
 
-
     @Override
     public String getTitle() {
         return "UI Themes";

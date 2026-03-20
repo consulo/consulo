@@ -1050,7 +1050,6 @@ public class ChangeListManagerImpl extends ChangeListManagerEx implements Change
         });
     }
 
-
     @Override
     public void removeChangeList(String name) {
         myProject.getApplication().runReadAction(() -> {

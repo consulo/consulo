@@ -20,7 +20,6 @@ import consulo.dataContext.DataContext;
 import consulo.pathMacro.PathMacroBundle;
 import consulo.virtualFileSystem.VirtualFile;
 
-
 public final class FileNameWithoutExtension extends FileNameMacro {
   @Override
   public String getName() {

@@ -49,7 +49,6 @@ public class UISimpleSettingsProvider implements SearchTopHitProvider, OptionsTo
   private static OptionDescription SHOW_METHOD_SEPARATORS =
     new DaemonCodeAnalyzerOptionDescription("SHOW_METHOD_SEPARATORS", "Show Method Separators", "appearance");
 
-
   @Override
   public void consumeTopHits(String pattern, Consumer<Object> collector, ComponentManager project) {
     pattern = pattern.trim().toLowerCase();

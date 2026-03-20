@@ -1,6 +1,5 @@
 package consulo.credentialStorage.impl.internal.gpg;
 
-
 import consulo.credentialStorage.impl.internal.SharedLogger;
 import consulo.application.ApplicationManager;
 import consulo.process.ExecutionException;

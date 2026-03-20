@@ -82,7 +82,6 @@ public class TerminateRemoteProcessDialog {
     };
     processHandler.addProcessListener(listener);
 
-
     boolean defaultDisconnect = processHandler.detachIsDefault();
     int exitCode = Messages.showDialog(
       project,

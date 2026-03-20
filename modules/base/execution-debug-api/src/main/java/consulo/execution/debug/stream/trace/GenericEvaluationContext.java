@@ -3,7 +3,6 @@ package consulo.execution.debug.stream.trace;
 
 import consulo.project.Project;
 
-
 public interface GenericEvaluationContext {
   
   Project getProject();

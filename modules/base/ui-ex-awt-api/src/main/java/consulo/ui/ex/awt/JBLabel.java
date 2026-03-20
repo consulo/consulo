@@ -143,7 +143,6 @@ public class JBLabel extends JLabel implements AnchorableComponent {
     return super.getMinimumSize();
   }
 
-
   @Override
   protected void paintComponent(Graphics g) {
     if (myEditorPane == null) {

@@ -22,7 +22,6 @@ import consulo.versionControlSystem.change.Change;
 import consulo.versionControlSystem.ui.Refreshable;
 import consulo.virtualFileSystem.VirtualFile;
 
-
 import javax.swing.*;
 import java.io.File;
 import java.util.Collection;

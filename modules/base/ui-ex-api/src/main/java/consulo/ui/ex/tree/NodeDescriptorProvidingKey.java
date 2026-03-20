@@ -16,7 +16,6 @@
 
 package consulo.ui.ex.tree;
 
-
 public interface NodeDescriptorProvidingKey {
   
   Object getKey();

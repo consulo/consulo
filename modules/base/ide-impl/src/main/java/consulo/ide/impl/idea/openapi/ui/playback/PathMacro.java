@@ -43,7 +43,6 @@ public class PathMacro {
       actualtPath = actualtPath.replaceAll(each, myMap.get(each).getAbsolutePath());
     }
 
-
     File file = new File(actualtPath);
     if (!file.isAbsolute()) {
       file = new File(defaultDir, actualtPath);

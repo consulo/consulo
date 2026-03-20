@@ -33,7 +33,6 @@ public abstract class PromptingMacro extends Macro {
     return userInput;
   }
 
-
   /**
    * Called from expand() method
    *

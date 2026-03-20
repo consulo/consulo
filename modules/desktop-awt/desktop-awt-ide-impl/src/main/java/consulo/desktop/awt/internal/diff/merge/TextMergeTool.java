@@ -23,7 +23,6 @@ import consulo.diff.merge.TextMergeRequest;
 import consulo.logging.Logger;
 import consulo.ui.annotation.RequiredUIAccess;
 
-
 @ExtensionImpl(id = "text")
 public class TextMergeTool implements MergeTool {
     public static final TextMergeTool INSTANCE = new TextMergeTool();

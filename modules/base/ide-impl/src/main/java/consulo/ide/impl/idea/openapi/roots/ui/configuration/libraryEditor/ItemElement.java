@@ -27,7 +27,6 @@ import consulo.virtualFileSystem.archive.ArchiveFileSystem;
 
 import java.io.File;
 
-
 class ItemElement extends LibraryTableTreeContentElement<ItemElement> {
   protected final String myUrl;
   private final OrderRootType myRootType;

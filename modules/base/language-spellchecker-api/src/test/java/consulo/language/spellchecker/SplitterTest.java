@@ -106,7 +106,6 @@ public class SplitterTest {
         correctListToCheck(PlainTextTokenSplitter.getInstance(), text, "qwerty", "test");
     }
 
-
     @Test
     public void testHex() {
         String text = "0xacvfgt";

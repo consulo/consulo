@@ -15,7 +15,6 @@
  */
 package consulo.execution.ui.console;
 
-
 public class FileHyperlinkRawData {
 
   private final String myFilePath;

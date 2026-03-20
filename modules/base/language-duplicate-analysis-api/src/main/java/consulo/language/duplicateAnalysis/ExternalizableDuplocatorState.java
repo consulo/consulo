@@ -1,6 +1,5 @@
 package consulo.language.duplicateAnalysis;
 
-
 /**
  * @author Eugene.Kudelevsky
  */

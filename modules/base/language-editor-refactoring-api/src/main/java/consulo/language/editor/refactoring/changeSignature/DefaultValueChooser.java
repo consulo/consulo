@@ -71,7 +71,6 @@ public class DefaultValueChooser extends DialogWrapper{
     return myFeelLuckyRadioButton.isSelected();
   }
 
-
   public String getDefaultValue() {
     if (myLeaveBlankRadioButton.isSelected()) {
       return "";

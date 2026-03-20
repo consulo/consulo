@@ -15,7 +15,6 @@
  */
 package consulo.ide.impl.idea.util;
 
-
 import java.io.PrintWriter;
 import java.util.StringTokenizer;
 
@@ -42,7 +41,6 @@ public class CodeWriter extends PrintWriter {
       if (isCloseBrace(s, i)) myIndentLevel--;
     }
   }
-
 
   private static boolean isCloseBrace(String s, int index) {
     char c = s.charAt(index);

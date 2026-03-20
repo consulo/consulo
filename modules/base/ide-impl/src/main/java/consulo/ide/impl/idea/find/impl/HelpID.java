@@ -17,7 +17,6 @@
 
 package consulo.ide.impl.idea.find.impl;
 
-
 public interface HelpID {
   
   String FIND_PACKAGE_USAGES = "reference.dialogs.findUsages.package";
@@ -29,7 +28,6 @@ public interface HelpID {
   String FIND_OTHER_USAGES = "reference.dialogs.findUsages.other";
   
   String FIND_THROW_USAGES = "reference.dialogs.findUsages.throwUsages";
-
 
   
   String FIND_IN_PROJECT = "find.findInProject";

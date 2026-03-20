@@ -126,7 +126,6 @@ public final class CloseSearchTask extends SearchTaskBase {
         }
     }
 
-
     /**
      * @return the closest search result index in 'allMatchesAtFrame' for search direction
      * if such result exists; '-1' if doesn't.

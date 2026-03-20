@@ -135,7 +135,6 @@ abstract class DebuggerTreeWithHistoryContainer<D> {
             }
         }
 
-
         @Override
         public void update(AnActionEvent e) {
             e.getPresentation().setEnabled(myHistory.size() > 1 && myCurrentIndex > 0);

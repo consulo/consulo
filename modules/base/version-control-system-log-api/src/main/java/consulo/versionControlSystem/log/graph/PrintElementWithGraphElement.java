@@ -16,7 +16,6 @@
 
 package consulo.versionControlSystem.log.graph;
 
-
 public abstract class PrintElementWithGraphElement implements PrintElement {
 
   protected final int myRowIndex;

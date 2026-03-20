@@ -18,7 +18,6 @@ package consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts;
 import consulo.compiler.artifact.ArtifactType;
 import consulo.ui.ex.awt.ColoredListCellRenderer;
 
-
 import javax.swing.*;
 
 /**

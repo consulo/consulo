@@ -249,7 +249,6 @@ public class DesktopSwtEditorImpl extends CodeEditorBase implements RealEditor {
     return offsetToVisualPosition(offset);
   }
 
-
   
   @Override
   public EditorGutter getGutter() {

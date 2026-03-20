@@ -25,7 +25,6 @@ public class DnDDragStartBean {
   private final Object myAttachedObject;
   private final Point myPoint;
 
-
   public DnDDragStartBean(Object attachedObject) {
     this(attachedObject, null);
   }
@@ -34,7 +33,6 @@ public class DnDDragStartBean {
     myAttachedObject = attachedObject;
     myPoint = point;
   }
-
 
   public Object getAttachedObject() {
     return myAttachedObject;

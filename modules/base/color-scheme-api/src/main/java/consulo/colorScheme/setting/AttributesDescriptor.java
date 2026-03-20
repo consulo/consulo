@@ -19,7 +19,6 @@ import consulo.annotation.DeprecationInfo;
 import consulo.colorScheme.TextAttributesKey;
 import consulo.localize.LocalizeValue;
 
-
 /**
  * Describes a text attribute key the attributes for which can be configured in a custom
  * colors and fonts page.

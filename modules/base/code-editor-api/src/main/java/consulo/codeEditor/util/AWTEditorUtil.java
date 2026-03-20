@@ -28,7 +28,6 @@ public final class AWTEditorUtil {
     private AWTEditorUtil() {
     }
 
-
     public static int yPositionToLogicalLine(Editor editor, MouseEvent event) {
         return EditorUtil.yPositionToLogicalLine(editor, event.getY());
     }

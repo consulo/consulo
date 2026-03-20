@@ -126,7 +126,6 @@ public class IdeGlassPaneImpl extends JPanel implements IdeGlassPaneEx, Predicat
       if (eventWindow != thisGlassWindow) return false;
     }
 
-
     if (e.getID() == MouseEvent.MOUSE_DRAGGED) {
       if (ApplicationManager.getApplication() != null) {
         IdeTooltipManagerImpl.getInstanceImpl().hideCurrent((MouseEvent)e);
@@ -244,7 +243,6 @@ public class IdeGlassPaneImpl extends JPanel implements IdeGlassPaneEx, Predicat
         }
       }
     }
-
 
     if (isVisible() && getComponentCount() == 0) {
       boolean cursorSet = false;
@@ -553,7 +551,6 @@ public class IdeGlassPaneImpl extends JPanel implements IdeGlassPaneEx, Predicat
     getPainters().removePainter(painter);
     deactivateIfNeeded();
   }
-
 
   @Override
   protected void addImpl(Component comp, Object constraints, int index) {

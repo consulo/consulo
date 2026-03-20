@@ -20,7 +20,6 @@ import consulo.annotation.component.TopicAPI;
 import consulo.execution.executor.Executor;
 import consulo.execution.ui.RunContentDescriptor;
 
-
 /**
  * @author nik
  */

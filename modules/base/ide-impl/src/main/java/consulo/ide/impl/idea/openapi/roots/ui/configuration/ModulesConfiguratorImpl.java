@@ -446,7 +446,6 @@ public class ModulesConfiguratorImpl implements ModulesConfigurator, ModuleEdito
         return true;
     }
 
-
     private void processModuleCountChanged() {
         for (ModuleEditor moduleEditor : myModuleEditors) {
             moduleEditor.fireModuleStateChanged();

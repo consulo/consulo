@@ -20,7 +20,6 @@ import consulo.annotation.component.ServiceAPI;
 import consulo.application.ui.WindowStateService;
 import consulo.project.Project;
 
-
 /**
  * @author VISTALL
  * @since 2018-08-24

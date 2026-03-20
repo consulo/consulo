@@ -26,7 +26,6 @@ import consulo.ui.ex.action.event.AnActionListener;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 
-
 /**
  * @author VISTALL
  * @since 22/04/2023

@@ -18,7 +18,6 @@ package consulo.web.internal.ui.image;
 import consulo.ui.impl.image.BaseIconLibraryManager;
 import consulo.ui.impl.image.BaseIconLibraryImpl;
 
-
 /**
  * @author VISTALL
  * @since 2020-10-03

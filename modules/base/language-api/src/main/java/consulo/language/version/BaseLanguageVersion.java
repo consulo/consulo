@@ -18,7 +18,6 @@ package consulo.language.version;
 import consulo.annotation.DeprecationInfo;
 import consulo.language.Language;
 
-
 /**
  * @author VISTALL
  * @since 13:23/25.08.13

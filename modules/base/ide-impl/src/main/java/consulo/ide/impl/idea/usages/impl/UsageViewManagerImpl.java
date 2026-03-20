@@ -203,7 +203,6 @@ public class UsageViewManagerImpl extends UsageViewManager {
     });
   }
 
-
   public static void showTooManyUsagesWarningLater(Project project,
                                                    TooManyUsagesStatus tooManyUsagesStatus,
                                                    ProgressIndicator indicator,

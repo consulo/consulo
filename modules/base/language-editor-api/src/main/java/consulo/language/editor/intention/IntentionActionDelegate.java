@@ -15,7 +15,6 @@
  */
 package consulo.language.editor.intention;
 
-
 public interface IntentionActionDelegate {
   
   IntentionAction getDelegate();

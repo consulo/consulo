@@ -1,6 +1,5 @@
 package consulo.execution.ui.console;
 
-
 import org.jspecify.annotations.Nullable;
 import java.io.IOException;
 import java.nio.file.Files;

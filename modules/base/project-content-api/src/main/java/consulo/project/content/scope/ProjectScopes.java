@@ -3,7 +3,6 @@ package consulo.project.content.scope;
 
 import consulo.project.Project;
 
-
 /**
  * @author max
  */

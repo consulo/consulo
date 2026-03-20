@@ -24,7 +24,6 @@ import consulo.language.editor.template.Result;
 import consulo.language.editor.template.TextResult;
 import consulo.util.lang.StringUtil;
 
-
 /**
  * @author Konstantin Bulenkov
  */

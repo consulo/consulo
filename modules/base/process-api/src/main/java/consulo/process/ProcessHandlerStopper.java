@@ -15,7 +15,6 @@
  */
 package consulo.process;
 
-
 /**
  * @author VISTALL
  * @since 05-Sep-22

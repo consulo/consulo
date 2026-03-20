@@ -21,7 +21,6 @@ import consulo.dataContext.DataContext;
 import consulo.language.editor.completion.lookup.LookupEx;
 import consulo.ui.ex.action.IdeActions;
 
-
 @ExtensionImpl
 public class LookupActionDownHandler extends LookupActionHandler {
   @Override

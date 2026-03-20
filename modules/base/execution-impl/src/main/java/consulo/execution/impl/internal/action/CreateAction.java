@@ -64,7 +64,6 @@ public class CreateAction extends BaseRunConfigurationAction {
         return SELECTED_STABLE;
     }
 
-
     private static abstract class BaseCreatePolicy {
         public enum ActionType {
             CREATE,

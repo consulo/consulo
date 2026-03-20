@@ -22,7 +22,6 @@ import consulo.ide.setting.ShowSettingsUtil;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
-
 /**
  * @author VISTALL
  * @since 14-Apr-22

@@ -15,7 +15,6 @@
  */
 package consulo.ui.ex.awt;
 
-
 import org.intellij.lang.annotations.MagicConstant;
 
 import javax.swing.*;

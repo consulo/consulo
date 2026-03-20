@@ -56,7 +56,6 @@ public abstract class FileTypeManager extends FileTypeRegistry {
   
   public abstract String[] getAssociatedExtensions(FileType type);
 
-
   
   public abstract List<FileNameMatcher> getAssociations(FileType type);
 

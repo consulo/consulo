@@ -22,7 +22,6 @@ import consulo.util.lang.Pair;
 import consulo.component.messagebus.MessageBusConnection;
 import consulo.versionControlSystem.*;
 
-
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;

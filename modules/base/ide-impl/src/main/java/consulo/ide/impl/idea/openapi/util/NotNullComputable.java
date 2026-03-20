@@ -17,7 +17,6 @@ package consulo.ide.impl.idea.openapi.util;
 
 import consulo.application.util.function.Computable;
 
-
 /**
  * @author Nikolay Matveev
  */

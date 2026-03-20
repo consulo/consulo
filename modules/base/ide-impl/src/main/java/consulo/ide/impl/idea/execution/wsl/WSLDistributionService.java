@@ -1,7 +1,6 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.execution.wsl;
 
-
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
@@ -69,7 +68,6 @@ public class WSLDistributionService implements PersistentStateComponent<WSLDistr
     myVersion = CURRENT_VERSION;
     return true;
   });
-
 
   
   public Collection<WslDistributionDescriptor> getDescriptors() {

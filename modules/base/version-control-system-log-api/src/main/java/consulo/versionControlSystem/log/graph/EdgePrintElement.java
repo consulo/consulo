@@ -15,7 +15,6 @@
  */
 package consulo.versionControlSystem.log.graph;
 
-
 public interface EdgePrintElement extends PrintElement {
 
   int getPositionInOtherRow();

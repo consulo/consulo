@@ -18,7 +18,6 @@ package consulo.util.dataholder.internal.keyFMap;
 import consulo.util.dataholder.Key;
 import org.jspecify.annotations.Nullable;
 
-
 class EmptyFMap implements KeyFMap {
     private static final Key[] EMPTY_KEYS_ARRAY = {};
 

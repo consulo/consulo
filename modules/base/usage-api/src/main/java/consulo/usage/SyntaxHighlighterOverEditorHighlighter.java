@@ -26,7 +26,6 @@ import consulo.language.plain.PlainTextFileType;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 
-
 /**
  * @author Maxim.Mossienko
  * @since 2014-07-31

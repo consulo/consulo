@@ -1,6 +1,5 @@
 package consulo.remoteServer.impl.internal.ui.tree;
 
-
 public interface DeploymentNode extends ServersTreeNode {
 
     

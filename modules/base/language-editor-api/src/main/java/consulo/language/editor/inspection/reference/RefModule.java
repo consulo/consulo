@@ -17,7 +17,6 @@ package consulo.language.editor.inspection.reference;
 
 import consulo.module.Module;
 
-
 /**
  * A node in the reference graph corresponding to a module.
  *

@@ -24,7 +24,6 @@ import consulo.project.Project;
 import consulo.language.psi.PsiFile;
 import consulo.ui.annotation.RequiredUIAccess;
 
-
 public class ShowErrorDescriptionHandler implements CodeInsightActionHandler {
   private final int myWidth;
   private final boolean myRequestFocus;

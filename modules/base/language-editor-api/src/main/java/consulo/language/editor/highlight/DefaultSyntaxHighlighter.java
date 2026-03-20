@@ -21,7 +21,6 @@ import consulo.language.ast.IElementType;
 import consulo.language.lexer.EmptyLexer;
 import consulo.language.lexer.Lexer;
 
-
 public class DefaultSyntaxHighlighter implements SyntaxHighlighter {
   private static final TextAttributesKey[] ATTRS = new TextAttributesKey[] {HighlighterColors.TEXT};
 

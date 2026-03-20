@@ -4,7 +4,6 @@ package consulo.util.collection;
 import consulo.util.lang.StringUtil;
 import org.jspecify.annotations.Nullable;
 
-
 import java.util.Objects;
 
 public interface HashingStrategy<T> {

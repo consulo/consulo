@@ -15,7 +15,6 @@
  */
 package consulo.util.lang;
 
-
 public class SingleCharSequence implements CharSequence {
   private final char myCh;
 

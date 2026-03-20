@@ -22,13 +22,11 @@ import consulo.document.DocumentWindow;
 import consulo.language.psi.PsiFile;
 import consulo.util.dataholder.UserDataHolderEx;
 
-
 public interface EditorWindow extends UserDataHolderEx, InjectedEditor {
   
   static Editor getTopLevelEditor(Editor editor) {
     return editor instanceof EditorWindow ? ((EditorWindow)editor).getDelegate() : editor;
   }
-
 
   boolean isValid();
 

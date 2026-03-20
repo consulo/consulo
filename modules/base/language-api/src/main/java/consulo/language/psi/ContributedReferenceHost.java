@@ -15,7 +15,6 @@
  */
 package consulo.language.psi;
 
-
 /**
  * @author Gregory.Shrago
  */

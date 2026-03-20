@@ -241,7 +241,6 @@ public class ContainerUtil extends ContainerUtilRt {
         }
     }
 
-
     
     @Contract(pure = true)
     public static <T> List<T> newSmartList() {

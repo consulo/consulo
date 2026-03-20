@@ -2,7 +2,6 @@ package consulo.externalSystem.model.project;
 
 import consulo.externalSystem.service.project.Named;
 
-
 /**
  * Not thread-safe.
  * 

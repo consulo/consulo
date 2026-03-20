@@ -44,7 +44,6 @@ import java.util.Map;
 public class EarlyAccessProgramManager implements PersistentStateComponent<Element> {
     private final Application myApplication;
 
-    
     public static EarlyAccessProgramManager getInstance() {
         return Application.get().getInstance(EarlyAccessProgramManager.class);
     }

@@ -19,7 +19,6 @@ import consulo.annotation.UsedInPlugin;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 
-
 /**
  * @author max
  */

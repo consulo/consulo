@@ -19,7 +19,6 @@ package consulo.ide.impl.idea.ui;
 import org.jspecify.annotations.Nullable;
 import javax.swing.*;
 
-
 /**
  * This class is mostly for testing purposes: in case an icon is hidden behind a private or a restricted interface,
  * marking it as RetrievableIcon will help get the actual icon and perform checks.

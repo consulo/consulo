@@ -176,7 +176,6 @@ public final class FrameSearcher {
         return str;
     }
 
-
     private void calculateAndResetStartResultPosition(Position resultStartPos, FindResult ijFindResult) {
         if (ijFindResult.getStartOffset() - 1 < curPageText.length()) { // "-1" because of beforeFrameStartSymbol in frame
             resultStartPos.pageNumber = curPageNumber;

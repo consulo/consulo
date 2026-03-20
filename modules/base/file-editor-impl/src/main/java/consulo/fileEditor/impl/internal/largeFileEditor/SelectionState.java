@@ -7,7 +7,6 @@ public final class SelectionState {
     final AbsoluteSymbolPosition start = new AbsoluteSymbolPosition(0, 0);
     final AbsoluteSymbolPosition end = new AbsoluteSymbolPosition(0, 0);
 
-
     void set(AbsoluteSymbolPosition startPosition, AbsoluteSymbolPosition endPosition) {
         setStart(startPosition);
         setEnd(endPosition);

@@ -7,7 +7,6 @@ import consulo.language.file.inject.VirtualFileWindow;
 import consulo.language.file.light.LightVirtualFile;
 import consulo.virtualFileSystem.VirtualFile;
 
-
 class VirtualFileWindowImpl extends LightVirtualFile implements VirtualFileWindow {
   private final VirtualFile myDelegate;
   private final DocumentWindowImpl myDocumentWindow;

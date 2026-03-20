@@ -20,7 +20,6 @@ import consulo.annotation.DeprecationInfo;
 import consulo.logging.Logger;
 import org.jetbrains.annotations.TestOnly;
 
-
 @Deprecated(forRemoval = true)
 @DeprecationInfo("Old diff impl, must be removed")
 public class Word {

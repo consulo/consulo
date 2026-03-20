@@ -61,7 +61,6 @@ public class UpdatedFiles implements JDOMExternalizable {
     return true;
   }
 
-
   public FileGroup getGroupById(String id) {
     if (id == null) return null;
     return findByIdIn(myGroups, id);

@@ -18,7 +18,6 @@ package consulo.compiler;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 
-
 import java.util.List;
 
 /**

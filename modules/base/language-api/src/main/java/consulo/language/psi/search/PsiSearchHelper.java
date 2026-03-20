@@ -189,7 +189,6 @@ public interface PsiSearchHelper {
   
   AsyncFuture<Boolean> processElementsWithWordAsync(TextOccurenceProcessor processor, SearchScope searchScope, String text, short searchContext, boolean caseSensitive);
 
-
   default boolean hasIdentifierInFile(PsiFile file, String name) {
     throw new UnsupportedOperationException();
   }

@@ -83,7 +83,6 @@ public abstract class AbstractVcsAction extends DumbAwareAction {
         return true;
     }
 
-
     /**
      * @deprecated Use {@link AbstractVcsAction#update(VcsContext, Presentation)}.
      */

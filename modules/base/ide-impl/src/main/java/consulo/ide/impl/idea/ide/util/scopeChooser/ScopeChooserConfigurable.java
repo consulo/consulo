@@ -112,7 +112,6 @@ public class ScopeChooserConfigurable extends MasterDetailsComponent implements 
         super.reset();
     }
 
-
     @Override
     @RequiredUIAccess
     public void apply() throws ConfigurationException {
@@ -215,7 +214,6 @@ public class ScopeChooserConfigurable extends MasterDetailsComponent implements 
         if (isModified()) {
             loadStateOrder();
         }
-
 
         List<String> order = getScopesState().myOrder;
         TreeUtil.sort(myRoot, (o1, o2) -> {
@@ -470,7 +468,6 @@ public class ScopeChooserConfigurable extends MasterDetailsComponent implements 
             return 0;
         }
     }
-
 
     private class MyMoveAction extends AnAction {
         private final int myDirection;

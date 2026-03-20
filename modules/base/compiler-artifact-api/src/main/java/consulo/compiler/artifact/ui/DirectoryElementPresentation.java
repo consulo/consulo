@@ -20,7 +20,6 @@ import consulo.compiler.artifact.element.DirectoryPackagingElement;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.tree.PresentationData;
 
-
 /**
  * @author nik
  */

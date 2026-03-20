@@ -259,7 +259,6 @@ public class DaemonTooltipWithActionRenderer extends DaemonTooltipRenderer {
             return;
         }
 
-
         JPanel buttons = new JPanel(new GridBagLayout());
         JPanel wrapper = createActionPanelWithBackground(highlightActions);
         wrapper.add(buttons, BorderLayout.WEST);
@@ -287,7 +286,6 @@ public class DaemonTooltipWithActionRenderer extends DaemonTooltipRenderer {
             hint.hide();
             tooltipAction.showAllActions(editor);
         };
-
 
         buttons.add(createActionLabel(LocalizeValue.localizeTODO("More actions..."), showAllFixes, hintHint.getTextBackground()), gridBag.next().insets(topInset, 12, bottomInset, 4));
         buttons.add(createKeymapHint(shortcutShowAllActionsText), gridBag.next().fillCellHorizontally().insets(newLayout ? topInset : 0, 4, newLayout ? bottomInset : 0, 20));

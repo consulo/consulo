@@ -15,7 +15,6 @@
  */
 package consulo.ide.impl.idea.util.io;
 
-
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;

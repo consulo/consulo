@@ -362,7 +362,6 @@ public class BreakpointsDialog extends WholeWestDialogWrapper {
         getBreakpointManager().setBreakpointsDialogSettings(dialogState);
     }
 
-
     @Override
     protected void dispose() {
         saveCurrentItem();

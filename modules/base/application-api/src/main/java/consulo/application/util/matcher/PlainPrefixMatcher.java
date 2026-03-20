@@ -2,7 +2,6 @@ package consulo.application.util.matcher;
 
 import consulo.util.lang.StringUtil;
 
-
 /**
  * @author yole
  */

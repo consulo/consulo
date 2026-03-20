@@ -15,7 +15,6 @@
  */
 package consulo.ui.ex.action;
 
-
 /**
  * @author VISTALL
  * @since 27/06/2023

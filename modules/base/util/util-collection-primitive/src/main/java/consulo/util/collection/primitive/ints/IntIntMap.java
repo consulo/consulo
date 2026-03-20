@@ -15,7 +15,6 @@
  */
 package consulo.util.collection.primitive.ints;
 
-
 /**
  * @author VISTALL
  * @since 08/05/2021

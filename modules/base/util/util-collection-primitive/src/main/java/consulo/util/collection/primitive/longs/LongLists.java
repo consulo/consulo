@@ -17,7 +17,6 @@ package consulo.util.collection.primitive.longs;
 
 import consulo.util.collection.primitive.longs.impl.list.LongArrayList;
 
-
 /**
  * @author VISTALL
  * @since 10/06/2021

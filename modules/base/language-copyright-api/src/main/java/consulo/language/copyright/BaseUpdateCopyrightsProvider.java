@@ -20,7 +20,6 @@ import consulo.language.copyright.ui.TemplateCommentPanel;
 import consulo.project.Project;
 import consulo.virtualFileSystem.fileType.FileType;
 
-
 /**
  * @author VISTALL
  * @since 13.02.15

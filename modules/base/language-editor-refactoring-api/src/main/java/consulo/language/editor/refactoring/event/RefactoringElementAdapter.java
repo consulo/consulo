@@ -17,7 +17,6 @@ package consulo.language.editor.refactoring.event;
 
 import consulo.language.psi.PsiElement;
 
-
 /**
  * @author yole
  */

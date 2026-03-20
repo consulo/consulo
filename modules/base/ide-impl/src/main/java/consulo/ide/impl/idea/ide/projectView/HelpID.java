@@ -16,7 +16,6 @@
 
 package consulo.ide.impl.idea.ide.projectView;
 
-
 public interface HelpID {
   String PROJECT_VIEWS = "viewingStructure.projectViews";
 }

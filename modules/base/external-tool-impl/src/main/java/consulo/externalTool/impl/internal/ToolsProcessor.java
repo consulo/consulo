@@ -30,7 +30,6 @@ import org.jdom.Parent;
 import java.io.File;
 import java.io.IOException;
 
-
 abstract public class ToolsProcessor<T extends Tool> extends BaseSchemeProcessor<ToolsGroup<T>, ToolsGroup<T>> {
   private static final String TOOL_SET = "toolSet";
   private static final String TOOL = "tool";

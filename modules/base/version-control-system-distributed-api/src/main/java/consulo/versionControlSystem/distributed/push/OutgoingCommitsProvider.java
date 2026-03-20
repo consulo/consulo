@@ -17,7 +17,6 @@ package consulo.versionControlSystem.distributed.push;
 
 import consulo.versionControlSystem.distributed.repository.Repository;
 
-
 /**
  * Provider for outgoing commits
  */

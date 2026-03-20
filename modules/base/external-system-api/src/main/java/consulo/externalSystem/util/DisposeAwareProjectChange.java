@@ -18,7 +18,6 @@ package consulo.externalSystem.util;
 import consulo.component.ComponentManager;
 import consulo.ui.annotation.RequiredUIAccess;
 
-
 /**
  * @author Vladislav.Soroka
  * @since 11/6/13

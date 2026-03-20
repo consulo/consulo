@@ -16,7 +16,6 @@
 
 package consulo.language.psi.include;
 
-
 /**
  * @author Dmitry Avdeev
  */

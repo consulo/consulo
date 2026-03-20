@@ -21,7 +21,6 @@ import consulo.versionControlSystem.VcsShowSettingOption;
 public class VcsShowOptionsSettingImpl extends VcsAbstractSetting implements VcsShowSettingOption {
   private boolean myValue = true;
 
-
   public VcsShowOptionsSettingImpl(String displayName) {
     super(displayName);
   }

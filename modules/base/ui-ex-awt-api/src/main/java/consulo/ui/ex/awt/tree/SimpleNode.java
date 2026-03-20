@@ -262,7 +262,6 @@ public abstract class SimpleNode extends PresentableNodeDescriptor implements Co
     return getChildren()[i];
   }
 
-
   public final boolean equals(Object o) {
     return ComparableObjectCheck.equals(this, o);
   }

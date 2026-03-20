@@ -68,7 +68,6 @@ public class RenameChange extends StructuralChange {
     return new String[]{myPath, getOldPath()};
   }
 
-
   @Override
   public void accept(ChangeVisitor v) throws ChangeVisitor.StopVisitingException {
     v.visit(this);

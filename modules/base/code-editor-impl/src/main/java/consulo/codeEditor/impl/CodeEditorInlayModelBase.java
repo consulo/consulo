@@ -461,7 +461,6 @@ public class CodeEditorInlayModelBase implements InlayModel, Disposable, Dumpabl
         return null;
     }
 
-
     private static Inlay<?> findInlay(List<? extends Inlay<?>> inlays, int x, int startX) {
         for (Inlay inlay : inlays) {
             int endX = startX + inlay.getWidthInPixels();

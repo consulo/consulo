@@ -38,7 +38,6 @@ public class Patches {
    */
   public static final boolean SUN_BUG_ID_6486393 = Platform.current().os().isXWindow();
 
-
   /**
    * JDK on Mac detects font style for system fonts based only on their name (PostScript name).
    * This doesn't work for some fonts which don't use recognizable style suffixes in their names.

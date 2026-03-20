@@ -39,7 +39,6 @@ public class LanguageSupportCache {
   private static final ExtensionPointCacheKey<LanguageInjectionSupport, Map<String, LanguageInjectionSupport>> CACHE_KEY =
     ExtensionPointCacheKey.groupBy("LanguageInjectionSupportCache", LanguageInjectionSupport::getId);
 
-
   
   public Collection<LanguageInjectionSupport> getAllSupports() {
     return Application.get().getExtensionPoint(LanguageInjectionSupport.class).getOrBuildCache(CACHE_KEY).values();

@@ -15,7 +15,6 @@
  */
 package consulo.ui.ex.awt.util;
 
-
 import java.awt.event.MouseEvent;
 
 public final class TimedDeadzone {

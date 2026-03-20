@@ -20,7 +20,6 @@ import consulo.project.Project;
 import consulo.project.ui.view.internal.AbstractUrl;
 import consulo.project.ui.view.tree.ModuleGroup;
 
-
 public class ModuleGroupUrl extends AbstractUrl {
   private static final String ELEMENT_TYPE = "module_group";
 

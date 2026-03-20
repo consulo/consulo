@@ -17,7 +17,6 @@ package consulo.language.editor.inspection;
 
 import consulo.module.Module;
 
-
 public interface ModuleProblemDescriptor extends CommonProblemDescriptor {
   
   Module getModule();

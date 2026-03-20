@@ -15,7 +15,6 @@
  */
 package consulo.ide.impl.idea.util.containers;
 
-
 /**
  * A single threaded, resizable, circular char queue backed by an array.
  *

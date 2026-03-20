@@ -15,7 +15,6 @@
  */
 package consulo.language.codeStyle;
 
-
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.language.Language;

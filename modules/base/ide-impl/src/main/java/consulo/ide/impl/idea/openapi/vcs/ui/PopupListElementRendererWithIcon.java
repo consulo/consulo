@@ -11,7 +11,6 @@ import consulo.ui.ex.awt.popup.PopupListElementRenderer;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 
-
 import javax.swing.*;
 import java.awt.*;
 

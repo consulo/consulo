@@ -129,7 +129,6 @@ public final class FileEditorProviderManagerImpl extends FileEditorProviderManag
     return id == null ? null : getProvider(id);
   }
 
-
   private static final class MyComparator implements Comparator<FileEditorProvider> {
     public static final MyComparator ourInstance = new MyComparator();
 

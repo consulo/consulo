@@ -44,7 +44,6 @@ public class SurroundWithTemplateHandler implements CodeInsightActionHandler {
       return;
     }
 
-
     ListPopup popup = JBPopupFactory.getInstance().createActionGroupPopup(CodeInsightBundle.message("templates.select.template.chooser.title"), new DefaultActionGroup(group),
                                                                           DataManager.getInstance().getDataContext(editor.getContentComponent()), JBPopupFactory.ActionSelectionAid.MNEMONICS, false);
 

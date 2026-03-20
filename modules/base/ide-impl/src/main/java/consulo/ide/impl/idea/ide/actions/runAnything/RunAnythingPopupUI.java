@@ -518,7 +518,6 @@ public class RunAnythingPopupUI extends BigPopupUI {
         myIsUsedTrigger = false;
     }
 
-
     public void setAdText(String s) {
         myHintLabel.setText(s);
     }

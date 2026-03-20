@@ -91,7 +91,6 @@ public class DeployToServerRunConfiguration<S extends ServerConfiguration, D ext
             myDeploymentSourceIsLocked ? new DeployToServerSettingsEditor.LockedSource(serverType, myDeploymentConfigurator, getProject(), myDeploymentSource)
                 : new DeployToServerSettingsEditor.AnySource(serverType, myDeploymentConfigurator, getProject());
 
-
         SettingsEditorGroup<DeployToServerRunConfiguration> group = new SettingsEditorGroup<>();
         group.addEditor(RemoteServerLocalize.deploytoserverrunconfigurationTabTitleDeployment(), commonEditor);
         DeployToServerRunConfigurationExtensionsManager.getInstance().appendEditors(this, group);

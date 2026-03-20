@@ -25,7 +25,6 @@ import com.sun.jna.Pointer;
 import consulo.container.boot.ContainerPathManager;
 import consulo.desktop.awt.ui.util.AppIconUtil;
 
-
 /**
  * @author Denis Fokin
  */

@@ -356,7 +356,6 @@ public class EditorHyperlinkSupport {
     markupModel.addRangeHighlighter(0, 0, link.getLayer(), getHyperlinkAttributes(), HighlighterTargetArea.EXACT_RANGE).dispose();
   }
 
-
  
   public static String getLineText(Document document, int lineNumber, boolean includeEol) {
     return getLineSequence(document, lineNumber, includeEol).toString();

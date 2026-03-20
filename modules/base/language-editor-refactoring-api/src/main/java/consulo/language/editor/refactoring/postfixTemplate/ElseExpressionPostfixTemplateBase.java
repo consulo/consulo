@@ -24,7 +24,6 @@ public abstract class ElseExpressionPostfixTemplateBase extends SurroundPostfixT
     super("else", "if (!expr)", psiInfo, selector);
   }
 
-
   @Override
   protected PsiElement getWrappedExpression(PsiElement expression) {
     return myPsiInfo.getNegatedExpression(expression);

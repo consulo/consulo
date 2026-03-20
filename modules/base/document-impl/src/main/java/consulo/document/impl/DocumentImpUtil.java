@@ -17,7 +17,6 @@ package consulo.document.impl;
 
 import consulo.undoRedo.util.UndoUtil;
 
-
 /**
  * @author VISTALL
  * @since 19-Mar-22

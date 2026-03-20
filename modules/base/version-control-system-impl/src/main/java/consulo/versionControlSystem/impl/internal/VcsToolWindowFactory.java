@@ -32,7 +32,6 @@ import consulo.ui.image.Image;
 import consulo.util.lang.Trinity;
 import consulo.versionControlSystem.VcsToolWindow;
 
-
 import java.util.List;
 
 /**

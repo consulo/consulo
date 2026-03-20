@@ -21,7 +21,6 @@ import consulo.project.content.GeneratedSourcesFilter;
 import consulo.sandboxPlugin.lang.SandFileType;
 import consulo.virtualFileSystem.VirtualFile;
 
-
 /**
  * @author VISTALL
  * @since 20-Jul-22

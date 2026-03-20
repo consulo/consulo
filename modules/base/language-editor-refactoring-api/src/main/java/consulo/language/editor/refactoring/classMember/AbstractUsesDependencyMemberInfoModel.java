@@ -19,7 +19,6 @@ package consulo.language.editor.refactoring.classMember;
 import consulo.language.psi.NavigatablePsiElement;
 import consulo.language.psi.PsiElement;
 
-
 /**
  * @author Dennis.Ushakov
  */

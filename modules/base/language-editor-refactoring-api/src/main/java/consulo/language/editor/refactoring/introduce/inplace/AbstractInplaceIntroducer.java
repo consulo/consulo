@@ -131,7 +131,6 @@ public abstract class AbstractInplaceIntroducer<V extends PsiNameIdentifierOwner
         return myPreview;
     }
 
-
     @Override
     @RequiredUIAccess
     protected StartMarkAction startRename() throws StartMarkAction.AlreadyStartedException {
@@ -348,7 +347,6 @@ public abstract class AbstractInplaceIntroducer<V extends PsiNameIdentifierOwner
     public String getInputName() {
         return myInsertedName;
     }
-
 
     @Override
     @RequiredUIAccess

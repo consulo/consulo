@@ -71,7 +71,6 @@ public class ExternalSystemInternalNotificationHelperImpl implements ExternalSys
         NotificationData notificationData
     ) {
 
-
         int line = notificationData.getLine() - 1;
         int column = notificationData.getColumn() - 1;
         if (virtualFile == null) {

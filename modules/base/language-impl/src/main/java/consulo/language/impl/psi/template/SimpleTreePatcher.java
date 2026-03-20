@@ -20,7 +20,6 @@ import consulo.language.impl.ast.CompositeElement;
 import consulo.language.impl.ast.TreeElement;
 import consulo.language.psi.OuterLanguageElement;
 
-
 class SimpleTreePatcher implements TreePatcher {
   @Override
   public void insert(CompositeElement parent, TreeElement anchorBefore, OuterLanguageElement toInsert) {

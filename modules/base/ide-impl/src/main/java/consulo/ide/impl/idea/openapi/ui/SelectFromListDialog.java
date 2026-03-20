@@ -29,7 +29,6 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 
-
 public class SelectFromListDialog extends DialogWrapper {
   private final ToStringAspect myToStringAspect;
   private final DefaultListModel myModel = new DefaultListModel();
@@ -66,7 +65,6 @@ public class SelectFromListDialog extends DialogWrapper {
                new SimpleTextAttributes(SimpleTextAttributes.STYLE_PLAIN, list.getForeground()));
       }
     });
-
 
     init();
   }

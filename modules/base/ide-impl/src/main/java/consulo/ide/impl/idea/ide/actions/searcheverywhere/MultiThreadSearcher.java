@@ -197,7 +197,6 @@ class MultiThreadSearcher implements SESearcher {
             finishCallback = callback;
         }
 
-
         @Override
         public void run() {
             LOG.debug("Search task started for contributor ", myContributor);

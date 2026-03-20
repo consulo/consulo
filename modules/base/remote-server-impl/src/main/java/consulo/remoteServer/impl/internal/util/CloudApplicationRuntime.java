@@ -16,7 +16,6 @@ public abstract class CloudApplicationRuntime extends DeploymentRuntime {
 
     private static final Logger LOG = Logger.getInstance(CloudApplicationRuntime.class);
 
-
     private final String myApplicationName;
     private Deployment myDeployment;
 

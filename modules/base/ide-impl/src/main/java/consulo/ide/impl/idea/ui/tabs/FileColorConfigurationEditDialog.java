@@ -205,7 +205,6 @@ public class FileColorConfigurationEditDialog extends DialogWrapper {
         myColorToButtonMap.put(customButton.getText(), customButton);
         inner.add(Box.createHorizontalStrut(5));
 
-
         if (configuration != null) {
             AbstractButton button = myColorToButtonMap.get(configuration.getColorName());
             if (button != null) {

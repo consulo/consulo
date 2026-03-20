@@ -269,7 +269,6 @@ public class RootIndexImpl implements RootIndex {
         return array;
     }
 
-
     public void checkConsistency() {
         for (VirtualFile file : myProjectExcludedRoots) {
             assert file.exists() : file.getPath() + " does not exist";

@@ -142,7 +142,6 @@ class Banner extends NonOpaquePanel implements PropertyChangeListener {
     }
   }
 
-
   private static class MyText extends NonOpaquePanel {
     @Override
     public void doLayout() {

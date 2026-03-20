@@ -64,7 +64,6 @@ public abstract class PriorityActionWrapper extends LocalQuickFixAndIntentionAct
     }
   }
 
-
   private static class LowPriorityLocalQuickFixWrapper extends PriorityActionWrapper implements LowPriorityAction {
     protected LowPriorityLocalQuickFixWrapper(PsiElement element, LocalQuickFixAndIntentionActionOnPsiElement fix) {
       super(element, fix);

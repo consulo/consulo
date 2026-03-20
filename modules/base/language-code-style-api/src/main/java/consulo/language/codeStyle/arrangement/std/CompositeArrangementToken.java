@@ -15,7 +15,6 @@
  */
 package consulo.language.codeStyle.arrangement.std;
 
-
 import java.util.HashSet;
 import java.util.Set;
 

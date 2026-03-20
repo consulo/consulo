@@ -6,7 +6,6 @@ import consulo.annotation.component.ServiceAPI;
 import consulo.project.Project;
 import consulo.ui.ex.content.Content;
 
-
 import javax.swing.*;
 
 /**

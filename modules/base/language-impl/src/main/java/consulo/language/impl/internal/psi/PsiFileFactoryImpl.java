@@ -278,7 +278,6 @@ public class PsiFileFactoryImpl implements PsiFileFactory {
     return node.getPsi();
   }
 
-
   public static void markGenerated(PsiElement element) {
     TreeElement node = (TreeElement)element.getNode();
     assert node != null;

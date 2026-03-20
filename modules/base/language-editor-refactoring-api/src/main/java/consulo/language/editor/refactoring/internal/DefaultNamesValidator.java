@@ -19,7 +19,6 @@ import consulo.language.Language;
 import consulo.language.editor.refactoring.NamesValidator;
 import consulo.project.Project;
 
-
 public class DefaultNamesValidator implements NamesValidator {
   @Override
   public boolean isIdentifier(String name, Project project) {

@@ -15,7 +15,6 @@
  */
 package consulo.colorScheme;
 
-
 import java.util.List;
 
 public interface ModifiableFontPreferences extends FontPreferences {

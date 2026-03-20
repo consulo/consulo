@@ -33,7 +33,6 @@ public class SelectionSaver implements TreeSelectionListener, TreeModelListener,
     private final JTree myTree;
     private Collection<TreeNode> myCurrentSelection = new ArrayList<>();
 
-
     private SelectionSaver(JTree tree) {
         myTree = tree;
     }

@@ -17,7 +17,6 @@ package consulo.language.spellcheker.tokenizer.splitter;
 
 import consulo.document.util.TextRange;
 
-
 public interface TokenSplitter {
     void split(SplitContext context, TextRange range);
 }

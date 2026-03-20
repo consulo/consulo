@@ -20,7 +20,6 @@ import consulo.application.ApplicationProperties;
 import consulo.localize.LocalizeValue;
 import consulo.util.lang.ThreeState;
 
-
 /**
  * @author VISTALL
  * @since 04/09/2021

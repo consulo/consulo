@@ -216,7 +216,6 @@ public class TemplateDataElementType extends IFileElementType implements ITempla
     return modifications;
   }
 
-
   
   private static String getRangeDump(TextRange range, CharSequence sequence) {
     return "'" + StringUtil.escapeLineBreak(range.subSequence(sequence).toString()) + "' " + range;
@@ -359,7 +358,6 @@ public class TemplateDataElementType extends IFileElementType implements ITempla
     public void addRangeToRemove(TextRange rangeToRemove) {
     }
   }
-
 
   /**
    * Marker interface for element types which handle outer language elements themselves in

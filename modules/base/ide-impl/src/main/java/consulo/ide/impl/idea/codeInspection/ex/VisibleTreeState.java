@@ -131,7 +131,6 @@ public class VisibleTreeState{
     }
   }
 
-
   public static class State implements Comparable<State> {
     @Tag("id")
     public String myKey;

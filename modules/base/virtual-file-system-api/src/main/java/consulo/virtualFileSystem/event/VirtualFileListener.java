@@ -19,7 +19,6 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.TopicAPI;
 import consulo.virtualFileSystem.VirtualFileManager;
 
-
 import java.util.EventListener;
 
 /**

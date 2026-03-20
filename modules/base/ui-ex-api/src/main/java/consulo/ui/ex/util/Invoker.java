@@ -18,7 +18,6 @@ package consulo.ui.ex.util;
 import consulo.disposer.Disposable;
 import consulo.util.concurrent.CancellablePromise;
 
-
 /**
  * @author VISTALL
  * @since 24-Feb-22

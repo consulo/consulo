@@ -55,7 +55,6 @@ public abstract class AbstractUrl {
   protected abstract AbstractUrl createUrl(String moduleName, String url);
   public abstract AbstractUrl createUrlByElement(Object element);
 
-
   public boolean equals(Object o) {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;

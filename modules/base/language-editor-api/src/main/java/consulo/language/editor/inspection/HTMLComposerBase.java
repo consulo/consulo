@@ -315,7 +315,6 @@ public abstract class HTMLComposerBase extends HTMLComposer {
         }
     }
 
-
     @Override
     public void startList(StringBuffer buf) {
         buf.append("<ul>");

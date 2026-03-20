@@ -45,7 +45,6 @@ public class WebMenuImpl extends VaadinComponentDelegate<WebMenuImpl.Vaadin> imp
       myMenuItems.add(vaadinComponent);
     }
 
-
     @Override
     public consulo.ui.@Nullable Component toUIComponent() {
       return WebMenuImpl.this;

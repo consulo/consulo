@@ -19,7 +19,6 @@ import consulo.annotation.component.ExtensionImpl;
 import consulo.execution.ui.console.ConsoleFoldingContributor;
 import consulo.execution.ui.console.ConsoleFoldingRegistrator;
 
-
 /**
  * @author VISTALL
  * @since 01-Aug-22

@@ -21,7 +21,6 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
 
-
 import java.util.ArrayList;
 import java.util.List;
 

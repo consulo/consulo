@@ -23,7 +23,6 @@ import consulo.component.extension.ExtensionPointName;
 import consulo.language.editor.intention.HintAction;
 import consulo.language.psi.PsiFile;
 
-
 /**
  * @author yole
  */

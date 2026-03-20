@@ -15,7 +15,6 @@
  */
 package consulo.ui.ex.awt;
 
-
 public class SeparatorOrientation {
   public static final SeparatorOrientation HORIZONTAL = new SeparatorOrientation("HORIZONTAL");
   public static final SeparatorOrientation VERTICAL = new SeparatorOrientation("VERTICAL");

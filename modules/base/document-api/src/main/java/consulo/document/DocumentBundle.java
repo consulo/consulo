@@ -18,7 +18,6 @@ package consulo.document;
 import consulo.component.util.localize.AbstractBundle;
 import org.jetbrains.annotations.PropertyKey;
 
-
 /**
  * @author VISTALL
  * @since 19/01/2022

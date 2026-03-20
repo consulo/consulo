@@ -28,7 +28,6 @@ public class PostfixTemplateLookupElement extends CustomLiveTemplateLookupElemen
   
   private final PostfixTemplateProvider myProvider;
 
-
   public PostfixTemplateLookupElement(PostfixLiveTemplate liveTemplate,
                                       PostfixTemplate postfixTemplate,
                                       String templateKey,

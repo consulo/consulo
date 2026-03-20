@@ -18,7 +18,6 @@ package consulo.ide.impl.idea.openapi.editor.actions;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.ui.ex.action.IdeActions;
 
-
 /**
  * @author VISTALL
  * @since 28-Aug-22

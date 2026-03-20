@@ -21,7 +21,6 @@ import consulo.annotation.component.ServiceAPI;
 import consulo.compiler.artifact.Artifact;
 import consulo.module.Module;
 
-
 /**
  * @author VISTALL
  * @since 22/01/2023

@@ -15,7 +15,6 @@
  */
 package consulo.execution.debug.frame;
 
-
 /**
  * Provides implementation of 'Mark Object' feature. <p>
  *

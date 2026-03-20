@@ -100,7 +100,6 @@ public abstract class BaseToolManager<T extends Tool> {
         registerActions();
     }
 
-
     void registerActions() {
         unregisterActions();
 

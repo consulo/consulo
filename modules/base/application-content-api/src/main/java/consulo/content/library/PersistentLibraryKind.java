@@ -15,7 +15,6 @@
  */
 package consulo.content.library;
 
-
 /**
  * @author yole
  */

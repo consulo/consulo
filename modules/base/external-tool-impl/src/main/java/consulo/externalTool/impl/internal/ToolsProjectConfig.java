@@ -59,7 +59,6 @@ public class ToolsProjectConfig implements PersistentStateComponent<ToolsProject
     myAfterCommitToolsId = state.getAfterCommitToolId();
   }
 
-
   @SuppressWarnings("UnusedDeclaration")
   public static class State {
     private String myAfterCommitToolId;

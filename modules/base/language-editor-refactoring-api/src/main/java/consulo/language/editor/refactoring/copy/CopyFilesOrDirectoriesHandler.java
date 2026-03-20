@@ -148,7 +148,6 @@ public class CopyFilesOrDirectoriesHandler extends CopyHandlerDelegateBase {
             }
         }
 
-
         if (targetDirectory != null) {
             PsiManager manager = PsiManager.getInstance(project);
             try {

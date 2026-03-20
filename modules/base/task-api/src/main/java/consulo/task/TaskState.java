@@ -15,7 +15,6 @@
  */
 package consulo.task;
 
-
 /**
  * Predefined common task states were used before {@link CustomTaskState} was introduced.
  *

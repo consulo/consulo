@@ -55,7 +55,6 @@ public abstract class MultilineTreeCellRenderer extends JComponent implements Tr
     protected static final String FONT_PROPERTY_NAME = "font";
     private JTree myTree;
 
-
     public MultilineTreeCellRenderer() {
         myTextInsets = new Insets(0, 0, 0, 0);
 

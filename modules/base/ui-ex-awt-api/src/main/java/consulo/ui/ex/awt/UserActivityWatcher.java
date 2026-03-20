@@ -133,7 +133,6 @@ public class UserActivityWatcher extends ComponentTreeWatcher {
     }
   };
 
-
   public UserActivityWatcher(Class[] controlsToIgnore) {
     super(controlsToIgnore);
   }

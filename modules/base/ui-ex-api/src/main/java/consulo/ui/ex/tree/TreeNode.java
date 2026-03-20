@@ -195,7 +195,6 @@ public abstract class TreeNode<T> extends PresentableNodeDescriptor<TreeNode<T>>
     return parent == null ? null : parent.getValue();
   }
 
-
   public boolean canRepresent(Object element) {
     return Comparing.equal(getValue(), element);
   }

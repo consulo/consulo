@@ -22,7 +22,6 @@ import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.util.dataholder.Key;
 
-
 /**
  * @author VISTALL
  * @since 09-Mar-22

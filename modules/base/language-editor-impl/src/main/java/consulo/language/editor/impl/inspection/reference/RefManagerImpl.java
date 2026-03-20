@@ -151,7 +151,6 @@ public class RefManagerImpl implements RefManagerInternal {
         return myScope;
     }
 
-
     private void fireNodeInitialized(RefElement refElement) {
         for (RefGraphAnnotator annotator : myGraphAnnotators) {
             annotator.onInitialize(refElement);

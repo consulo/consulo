@@ -24,7 +24,6 @@ import consulo.web.gwt.shared.ui.state.image.MultiImageState;
 import consulo.web.gwt.shared.ui.state.menu.MenuItemRpc;
 import consulo.web.gwt.shared.ui.state.menu.MenuItemState;
 
-
 /**
  * @author VISTALL
  * @since 12-Sep-17

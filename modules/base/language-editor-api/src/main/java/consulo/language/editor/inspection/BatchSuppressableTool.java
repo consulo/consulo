@@ -28,7 +28,6 @@ public interface BatchSuppressableTool {
    */
   boolean isSuppressedFor(PsiElement element);
 
-
   /**
    * Returns the list of suppression actions for the specified element.
    *

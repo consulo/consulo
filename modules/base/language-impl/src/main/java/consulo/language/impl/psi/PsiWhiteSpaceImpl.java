@@ -23,7 +23,6 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiElementVisitor;
 import consulo.language.psi.PsiWhiteSpace;
 
-
 public class PsiWhiteSpaceImpl extends LeafPsiElement implements PsiWhiteSpace {
   public PsiWhiteSpaceImpl(CharSequence text) {
     super(TokenType.WHITE_SPACE, text);

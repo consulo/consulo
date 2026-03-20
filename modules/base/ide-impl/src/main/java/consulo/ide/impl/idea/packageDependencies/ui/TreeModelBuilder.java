@@ -473,7 +473,6 @@ public class TreeModelBuilder {
         return node;
     }
 
-
     
     private PackageDependenciesNode getRootNode(ScopeType scopeType) {
         if (!myGroupByScopeType) {

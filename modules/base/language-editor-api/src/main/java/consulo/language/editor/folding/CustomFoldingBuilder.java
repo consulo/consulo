@@ -135,13 +135,11 @@ public abstract class CustomFoldingBuilder extends FoldingBuilderEx implements P
 
     protected abstract String getLanguagePlaceholderText(ASTNode node, TextRange range);
 
-
     @RequiredReadAction
     @Override
     public final String getPlaceholderText(ASTNode node) {
         return "...";
     }
-
 
     @RequiredReadAction
     @Override

@@ -19,7 +19,6 @@ import consulo.application.AllIcons;
 import consulo.fileEditor.FileEditorBundle;
 import consulo.ui.ex.action.Shortcut;
 
-
 /**
  * @author Konstantin Bulenkov
  */

@@ -119,7 +119,6 @@ public abstract class BaseButtonBehavior {
       }
     }
 
-
     public void mouseReleased(MouseEvent e) {
       try {
         if (passIfNeeded(e, !myWasPressedOnFocusTransfer)) return;

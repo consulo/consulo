@@ -69,7 +69,6 @@ public class LocalDescriptorsUtil {
         if (SuppressionUtil.inspectionResultSuppressed(element, tool)) continue;
       }
 
-
       RefElement refElement = getProblemElementFunction.fun(tool, element, context);
 
       List<ProblemDescriptor> elementProblems = problems.get(refElement);

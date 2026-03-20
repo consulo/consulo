@@ -48,7 +48,6 @@ public abstract class Executor {
     
     public abstract LocalizeValue getActionName();
 
-
     
     public abstract LocalizeValue getStartActionText();
 

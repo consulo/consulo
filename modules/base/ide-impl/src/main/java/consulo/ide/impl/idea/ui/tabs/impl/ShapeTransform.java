@@ -171,7 +171,6 @@ public abstract class ShapeTransform {
       return (int)getShapeRect().getMaxY();
     }
 
-
     @Override
     public ShapeTransform createTransform(Rectangle innerRec) {
       return new Top(innerRec);
@@ -305,7 +304,6 @@ public abstract class ShapeTransform {
                               Math.abs(y1));
     }
   }
-
 
   public static class Right extends ShapeTransform {
     public Right(Rectangle shapeRect, GeneralPath path) {

@@ -15,7 +15,6 @@
  */
 package consulo.ide.impl.script;
 
-
 import java.io.Reader;
 import java.io.Writer;
 import java.util.List;

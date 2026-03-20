@@ -502,7 +502,6 @@ public abstract class HistoryDialog<T extends HistoryDialogModel> extends FrameW
         return dialogWrapper.getExitCode() == DialogWrapper.OK_EXIT_CODE;
     }
 
-
     @RequiredUIAccess
     public void showError(String s) {
         Messages.showErrorDialog(myProject, s, CommonLocalize.titleError().get());

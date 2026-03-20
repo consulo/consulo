@@ -34,7 +34,6 @@ import consulo.virtualFileSystem.pointer.VirtualFilePointerManager;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
 import org.jdom.Element;
 
-
 import java.util.*;
 import java.util.function.Predicate;
 
@@ -99,7 +98,6 @@ public class ContentEntryImpl extends BaseModuleRootLayerChild implements Conten
         }
         return list.isEmpty() ? ContentFolder.EMPTY_ARRAY : list.toArray(new ContentFolder[list.size()]);
     }
-
 
     
     @Override

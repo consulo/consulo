@@ -99,7 +99,6 @@ public class ControlFlowBuilder {
         return new ControlFlowImpl(result.toArray(Instruction.EMPTY_ARRAY));
     }
 
-
     /**
      * Adds edge between 2 edges
      *
@@ -282,7 +281,6 @@ public class ControlFlowBuilder {
             }
         });
     }
-
 
     @FunctionalInterface
     public interface PendingProcessor {

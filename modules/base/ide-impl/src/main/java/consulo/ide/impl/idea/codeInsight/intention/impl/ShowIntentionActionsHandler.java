@@ -253,7 +253,6 @@ public class ShowIntentionActionsHandler implements CodeInsightActionHandler {
         }
     }
 
-
     public static @Nullable Pair<PsiFile, Editor> chooseFileForAction(
         PsiFile hostFile,
         @Nullable Editor hostEditor,

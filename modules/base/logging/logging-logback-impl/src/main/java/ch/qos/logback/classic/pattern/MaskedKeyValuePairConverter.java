@@ -14,7 +14,6 @@
 
 package ch.qos.logback.classic.pattern;
 
-
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.CoreConstants;
 import org.slf4j.event.KeyValuePair;
@@ -35,7 +34,6 @@ import static ch.qos.logback.classic.pattern.KeyValuePairConverter.*;
  * @author Ceki G&uuml;lc&uuml;
  * @since 1.5.7
  */
-
 
 public class MaskedKeyValuePairConverter extends ClassicConverter {
     public static final String MASK = "XXX";
@@ -71,7 +69,6 @@ public class MaskedKeyValuePairConverter extends ClassicConverter {
             addWarn("extra quote spec "+NONE_OPTION_STR+ " found in the wrong order");
         }
     }
-
 
     KeyValuePairConverter.ValueQuoteSpecification extractSpec(List<String> optionList) {
 

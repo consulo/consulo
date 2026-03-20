@@ -58,7 +58,6 @@ public abstract class AsynchronousFileStep
      */
     public static final Key<Long> FILE_POSITION = Key.create("AsynchronousFileStep#FILE_POSITION");
 
-
     private final Function<Continuation<?>, AsynchronousFileChannel>
         getFileChannel;
 

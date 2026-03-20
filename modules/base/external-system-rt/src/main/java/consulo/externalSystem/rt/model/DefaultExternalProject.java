@@ -90,7 +90,6 @@ public class DefaultExternalProject implements ExternalProject {
     }
   }
 
-
   
   @Override
   public String getExternalSystemId() {

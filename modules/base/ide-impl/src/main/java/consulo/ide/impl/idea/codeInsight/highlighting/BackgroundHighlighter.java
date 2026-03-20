@@ -71,7 +71,6 @@ public class BackgroundHighlighter implements PostStartupActivity {
                 }
                 updateBraces(editor, braceAlarm);
 
-
                 if (!highlightSelection(project, editor, selectionAlarm)) {
                     removeSelectionHighlights(editor);
                 }

@@ -16,7 +16,6 @@
 
 package consulo.versionControlSystem.log.impl.internal.graph;
 
-
 import consulo.versionControlSystem.log.graph.GraphCommit;
 
 import java.util.*;

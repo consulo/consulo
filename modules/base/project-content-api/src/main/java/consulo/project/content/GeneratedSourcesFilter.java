@@ -22,7 +22,6 @@ import consulo.component.extension.ExtensionPoint;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 
-
 /**
  * @author nik
  */

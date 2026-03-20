@@ -66,7 +66,6 @@ public abstract class InspectionRVContentProvider {
 
   public abstract @Nullable QuickFixAction[] getQuickFixes(InspectionToolWrapper toolWrapper, InspectionTree tree);
 
-
   public void appendToolNodeContent(GlobalInspectionContextImpl context,
                                     InspectionNode toolNode,
                                     InspectionTreeNode parentNode,

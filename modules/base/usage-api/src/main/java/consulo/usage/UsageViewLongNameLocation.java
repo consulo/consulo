@@ -17,7 +17,6 @@ package consulo.usage;
 
 import consulo.language.psi.*;
 
-
 /**
  * @author yole
  */

@@ -15,7 +15,6 @@
  */
 package consulo.versionControlSystem.log.impl.internal.util;
 
-
 import java.util.BitSet;
 
 public class UnsignedBitSet implements Cloneable {

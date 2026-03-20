@@ -20,7 +20,6 @@ import consulo.execution.ui.console.ConsoleView;
 import consulo.execution.ui.console.ConsoleViewRunningState;
 import consulo.process.ProcessHandler;
 
-
 /**
  * @author VISTALL
  * @since 03-Apr-22

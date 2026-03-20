@@ -17,8 +17,6 @@ public interface CredentialStoreUiService {
     boolean showChangeMainPasswordDialog(@Nullable Component contextComponent,
                                          ChangePasswordHandler setNewMainPassword);
 
-
-
     @FunctionalInterface
     interface ChangePasswordHandler {
         boolean change(char[] current, char[] newPassword);

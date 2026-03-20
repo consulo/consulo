@@ -139,7 +139,6 @@ public class PopupListAdapter<T> implements PopupChooserBuilder.PopupComponentAd
       list.setVisibleRowCount(myBuilder.getVisibleRowCount());
       setViewportView(list);
 
-
       if (myBuilder.isAutoselectOnMouseMove()) {
         ListUtil.installAutoSelectOnMouseMove(list);
       }

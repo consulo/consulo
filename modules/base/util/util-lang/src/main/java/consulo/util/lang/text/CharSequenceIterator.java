@@ -15,7 +15,6 @@
  */
 package consulo.util.lang.text;
 
-
 import java.text.CharacterIterator;
 
 /**

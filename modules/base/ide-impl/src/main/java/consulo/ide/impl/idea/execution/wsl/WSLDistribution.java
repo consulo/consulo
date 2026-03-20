@@ -229,7 +229,6 @@ public class WSLDistribution {
       prependCommandLineString(commandLineString, "export", key + "=" + val, "&&");
     });
 
-
     commandLine.setExePath(getExecutablePath().toString());
     parametersList.clearAll();
     parametersList.add(getRunCommandLineParameter());

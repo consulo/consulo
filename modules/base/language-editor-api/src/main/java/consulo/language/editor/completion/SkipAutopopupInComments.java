@@ -21,7 +21,6 @@ import consulo.language.psi.PsiFile;
 import consulo.language.psi.util.PsiTreeUtil;
 import consulo.util.lang.ThreeState;
 
-
 /**
  * @author peter
  */

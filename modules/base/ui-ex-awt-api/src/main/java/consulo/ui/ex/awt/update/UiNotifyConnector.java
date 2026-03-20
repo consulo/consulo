@@ -22,7 +22,6 @@ import consulo.disposer.Disposer;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.update.Activatable;
 
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.HierarchyEvent;

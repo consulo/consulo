@@ -15,7 +15,6 @@
  */
 package consulo.versionControlSystem.history;
 
-
 public interface VcsRevisionNumber extends Comparable<VcsRevisionNumber>{
   VcsRevisionNumber NULL = new VcsRevisionNumber() {
     @Override public String asString() {

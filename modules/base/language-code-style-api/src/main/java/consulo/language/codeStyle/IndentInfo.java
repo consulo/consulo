@@ -19,7 +19,6 @@ package consulo.language.codeStyle;
 import consulo.language.codeStyle.internal.WhiteSpace;
 import consulo.util.lang.StringUtil;
 
-
 public final class IndentInfo {
     private final int mySpaces;
     private final int myIndentSpaces;

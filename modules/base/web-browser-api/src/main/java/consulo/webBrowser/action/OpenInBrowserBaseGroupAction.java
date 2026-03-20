@@ -67,7 +67,6 @@ public abstract class OpenInBrowserBaseGroupAction extends ComputableActionGroup
         return actions;
     }
 
-
     public static final class OpenInBrowserGroupAction extends OpenInBrowserBaseGroupAction {
         public OpenInBrowserGroupAction() {
             super(true);

@@ -8,7 +8,6 @@ import consulo.language.psi.PsiTarget;
 import consulo.language.psi.search.DefinitionsScopedSearch;
 import consulo.language.psi.search.DefinitionsScopedSearchExecutor;
 
-
 import java.util.function.Predicate;
 
 /**

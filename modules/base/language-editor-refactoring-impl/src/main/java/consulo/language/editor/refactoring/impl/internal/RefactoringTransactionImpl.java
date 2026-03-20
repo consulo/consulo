@@ -63,7 +63,6 @@ public class RefactoringTransactionImpl implements RefactoringTransaction {
     myOldElementToListenerListMap.put(oldElement, listenerList);
   }
 
-
   @Override
   public RefactoringElementListener getElementListener(PsiElement oldElement) {
     RefactoringElementListener listener =

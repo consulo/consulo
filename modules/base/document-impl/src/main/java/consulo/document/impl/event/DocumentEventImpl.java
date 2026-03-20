@@ -204,7 +204,6 @@ public class DocumentEventImpl extends DocumentEvent {
         return lines.isEmpty() ? new String[]{""} : ArrayUtil.toStringArray(lines);
     }
 
-
     /**
      * This method is supposed to be called right after the document change, represented by this event instance (e.g. from
      * {@link DocumentListener#documentChanged(DocumentEvent)} callback).

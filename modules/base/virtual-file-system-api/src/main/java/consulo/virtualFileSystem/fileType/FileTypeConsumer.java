@@ -15,7 +15,6 @@
  */
 package consulo.virtualFileSystem.fileType;
 
-
 /**
  * @author yole
  */

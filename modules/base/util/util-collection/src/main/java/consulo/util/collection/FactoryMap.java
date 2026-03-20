@@ -124,7 +124,6 @@ public abstract class FactoryMap<K, V> implements Map<K, V> {
     return getMap().values().remove(t);
   }
 
-
   @Override
   public void clear() {
     getMap().clear();

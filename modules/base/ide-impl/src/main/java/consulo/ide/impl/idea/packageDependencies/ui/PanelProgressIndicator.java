@@ -75,7 +75,6 @@ public class PanelProgressIndicator extends ProgressIndicatorBase {
     }
   }
 
-
   @Override
   public void setIndeterminate(boolean indeterminate) {
     if (isIndeterminate() == indeterminate) return;

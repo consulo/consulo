@@ -146,7 +146,6 @@ public class ConsoleExecutionEditor implements Disposable {
     setPromptInner(prompt != null && !prompt.endsWith(" ") ? prompt + " " : prompt);
   }
 
-
   public void setEditable(boolean editable) {
     myConsoleEditor.setRendererMode(!editable);
     myConsolePromptDecorator.update();
@@ -155,7 +154,6 @@ public class ConsoleExecutionEditor implements Disposable {
   public boolean isEditable() {
     return !myConsoleEditor.isRendererMode();
   }
-
 
   private void setPromptInner(@Nullable String prompt) {
     if (!myConsoleEditor.isDisposed()) {

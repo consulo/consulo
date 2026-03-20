@@ -18,7 +18,6 @@ package consulo.codeEditor.action;
 import consulo.codeEditor.Editor;
 import consulo.dataContext.DataContext;
 
-
 /**
  * Interface for actions activated by typing in the editor.
  *

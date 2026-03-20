@@ -338,7 +338,6 @@ public class ChangesListViewImpl extends Tree implements ChangesListView, UiData
       }
     }
 
-
     super.processMouseEvent(e);
   }
 

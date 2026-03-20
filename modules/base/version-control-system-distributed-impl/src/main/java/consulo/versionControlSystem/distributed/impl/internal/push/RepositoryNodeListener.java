@@ -17,7 +17,6 @@ package consulo.versionControlSystem.distributed.impl.internal.push;
 
 import consulo.versionControlSystem.distributed.push.PushTarget;
 
-
 public interface RepositoryNodeListener<T extends PushTarget> {
     void onTargetChanged(T newTarget);
 

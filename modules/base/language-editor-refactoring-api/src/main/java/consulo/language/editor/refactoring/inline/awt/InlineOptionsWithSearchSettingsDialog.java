@@ -72,7 +72,6 @@ public abstract class InlineOptionsWithSearchSettingsDialog extends InlineOption
     gbc.gridwidth = 2;
     panel.add(super.createCenterPanel(), gbc);
 
-
     myCbSearchInComments = new JCheckBox(RefactoringLocalize.searchInCommentsAndStrings().get(), isSearchInCommentsAndStrings());
     myCbSearchTextOccurences = new JCheckBox(RefactoringLocalize.searchForTextOccurrences().get(), isSearchForTextOccurrences());
     gbc.weightx = 0;

@@ -69,7 +69,6 @@ public class CStyleCommentBlock extends AbstractBlock {
     });
   });
 
-
   private NotNullLazyValue<Boolean> isCommentFormattable = NotNullLazyValue.createValue(() -> {
     List<LineInfo> value = lines.getValue();
 

@@ -9,7 +9,6 @@ import consulo.codeEditor.impl.softwrap.SoftWrapsStorage;
 import consulo.codeEditor.impl.softwrap.mapping.CachingSoftWrapDataMapper;
 import consulo.codeEditor.impl.softwrap.mapping.SoftWrapApplianceManager;
 
-
 /**
  * Default {@link SoftWrapModelEx} implementation.
  * <p/>

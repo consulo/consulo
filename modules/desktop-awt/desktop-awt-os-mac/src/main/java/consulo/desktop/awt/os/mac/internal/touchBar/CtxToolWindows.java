@@ -71,7 +71,6 @@ final class CtxToolWindows {
             return;
         }
 
-
         LOG.debug("subscribe for ToolWindow topic of project %s", project);
         MessageBusConnection pbc = project.getMessageBus().connect();
         pbc.subscribe(ToolWindowManagerListener.class, new ToolWindowManagerListener() {

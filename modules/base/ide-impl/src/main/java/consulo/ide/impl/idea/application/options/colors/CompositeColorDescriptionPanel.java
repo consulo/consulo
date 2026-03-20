@@ -121,7 +121,6 @@ public class CompositeColorDescriptionPanel extends JPanel implements ColorDescr
         return null;
     }
 
-
     @Override
     public void apply(EditorSchemeAttributeDescriptor descriptor, EditorColorsScheme scheme) {
         if (myActive != null) {

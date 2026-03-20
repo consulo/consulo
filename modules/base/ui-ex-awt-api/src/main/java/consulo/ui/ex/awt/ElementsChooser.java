@@ -15,7 +15,6 @@
  */
 package consulo.ui.ex.awt;
 
-
 import org.jspecify.annotations.Nullable;
 import javax.swing.table.TableCellRenderer;
 import java.util.ArrayList;

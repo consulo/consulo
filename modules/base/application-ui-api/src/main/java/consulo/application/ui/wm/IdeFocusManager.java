@@ -56,7 +56,6 @@ public interface IdeFocusManager extends FocusRequestor {
      */
     public abstract @Nullable JComponent getFocusTargetFor(JComponent comp);
 
-
     /**
      * Executes given runnable after all focus activities are finished
      */
@@ -79,7 +78,6 @@ public interface IdeFocusManager extends FocusRequestor {
      * Executes given runnable after all focus activities are finished
      */
     public abstract void doWhenFocusSettlesDown(@RequiredUIAccess ExpirableRunnable runnable);
-
 
     /**
      * Finds focused component among descendants of the given component. Descendants may be in child popups and windows

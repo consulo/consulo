@@ -122,7 +122,6 @@ public class ZipUtil {
         return true;
     }
 
-
     public static void extract(File file, File outputDir, @Nullable FilenameFilter filenameFilter) throws IOException {
         extract(file, outputDir, filenameFilter, true);
     }

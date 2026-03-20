@@ -19,7 +19,6 @@ import consulo.util.collection.HashingStrategy;
 import consulo.util.collection.impl.CollectionFactory;
 import consulo.util.collection.primitive.impl.PrimitiveCollectionFactory;
 
-
 /**
  * @author VISTALL
  * @since 10/02/2021

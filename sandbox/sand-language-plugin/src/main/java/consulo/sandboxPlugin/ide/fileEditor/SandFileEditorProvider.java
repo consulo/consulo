@@ -26,7 +26,6 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.virtualFileSystem.VirtualFile;
 import org.jdom.Element;
 
-
 /**
  * @author VISTALL
  * @since 30.05.14

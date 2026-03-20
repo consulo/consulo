@@ -15,7 +15,6 @@
  */
 package consulo.ide.impl.idea.codeInsight.editorActions;
 
-
 import java.awt.datatransfer.DataFlavor;
 import java.io.Serializable;
 

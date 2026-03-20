@@ -31,7 +31,6 @@ import consulo.usage.rule.PsiElementUsage;
 import consulo.usage.rule.UsageGroupingRule;
 import consulo.ui.image.Image;
 
-
 /**
  * @author max
  */

@@ -8,7 +8,6 @@ import consulo.util.xml.serializer.XmlSerializer;
 import consulo.util.xml.serializer.annotation.OptionTag;
 import org.jdom.Element;
 
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -34,7 +33,6 @@ public class ExcludedFiles {
     public List<FileSetDescriptor> getDescriptors() {
         return myDescriptors;
     }
-
 
     public void setDescriptors(List<FileSetDescriptor> descriptors) {
         myDescriptors.clear();

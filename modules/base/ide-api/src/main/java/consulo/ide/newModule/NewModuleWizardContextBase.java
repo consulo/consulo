@@ -15,7 +15,6 @@
  */
 package consulo.ide.newModule;
 
-
 /**
  * @author VISTALL
  * @since 2019-08-20

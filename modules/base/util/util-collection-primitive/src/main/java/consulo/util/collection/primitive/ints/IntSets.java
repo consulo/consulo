@@ -18,7 +18,6 @@ package consulo.util.collection.primitive.ints;
 import consulo.util.collection.impl.CollectionFactory;
 import consulo.util.collection.primitive.impl.PrimitiveCollectionFactory;
 
-
 /**
  * @author VISTALL
  * @since 08/05/2021

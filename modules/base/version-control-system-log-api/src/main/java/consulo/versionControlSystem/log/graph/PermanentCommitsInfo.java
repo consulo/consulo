@@ -15,7 +15,6 @@
  */
 package consulo.versionControlSystem.log.graph;
 
-
 import java.util.Collection;
 import java.util.Set;
 

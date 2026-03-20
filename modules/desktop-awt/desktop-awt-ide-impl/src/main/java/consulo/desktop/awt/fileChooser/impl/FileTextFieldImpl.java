@@ -100,7 +100,6 @@ public abstract class FileTextFieldImpl implements FileLookup, Disposable, FileT
             }
         }
 
-
         FileTextFieldImpl assigned = (FileTextFieldImpl) myPathTextField.getClientProperty(KEY);
         if (assigned != null) {
             assigned.myFinder = finder;
@@ -153,7 +152,6 @@ public abstract class FileTextFieldImpl implements FileLookup, Disposable, FileT
         });
 
         myCancelAction = new CancelAction();
-
 
         new LazyUiDisposable<>(parent, field, this) {
             @Override
@@ -399,7 +397,6 @@ public abstract class FileTextFieldImpl implements FileLookup, Disposable, FileT
             .setFocusOwners(new Component[]{myPathTextField}).
             createPopup();
 
-
         if (result.myPreselected != null) {
             myList.setSelectedValue(result.myPreselected, false);
         }
@@ -610,7 +607,6 @@ public abstract class FileTextFieldImpl implements FileLookup, Disposable, FileT
         KeyStroke stroke = KeyStroke.getKeyStroke(e.getKeyCode(), e.getModifiers());
         return comp.getInputMap().get(stroke);
     }
-
 
     @Override
     public JTextField getField() {

@@ -21,7 +21,6 @@ import consulo.logging.Logger;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 
-
 import java.util.List;
 
 @ActionImpl(id = "CollapseBlock")

@@ -20,7 +20,6 @@ import consulo.language.ast.IElementType;
 import consulo.language.ast.TokenSet;
 import consulo.logging.Logger;
 
-
 import java.util.Map;
 
 public abstract class SyntaxHighlighterBase implements SyntaxHighlighter {

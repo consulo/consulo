@@ -6,7 +6,6 @@ import consulo.versionControlSystem.log.VcsRefType;
 import consulo.util.interner.Interner;
 import consulo.virtualFileSystem.VirtualFile;
 
-
 /**
  * @author erokhins
  */

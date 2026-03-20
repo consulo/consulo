@@ -86,7 +86,6 @@ public class RenameElementFix extends LocalQuickFixAndIntentionActionOnPsiElemen
     return namesValidator != null && namesValidator.isIdentifier(myNewName, project);
   }
 
-
   @Override
   public boolean startInWriteAction() {
     return false;

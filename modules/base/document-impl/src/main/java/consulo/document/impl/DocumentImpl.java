@@ -1158,7 +1158,6 @@ public class DocumentImpl extends UserDataHolderBase implements DocumentEx {
         myReadOnlyListeners.remove(listener);
     }
 
-
     @Override
     public void addPropertyChangeListener(PropertyChangeListener listener) {
         myPropertyChangeSupport.addPropertyChangeListener(listener);

@@ -15,7 +15,6 @@
  */
 package consulo.fileChooser.provider;
 
-
 /**
  * @author VISTALL
  * @since 2018-06-28

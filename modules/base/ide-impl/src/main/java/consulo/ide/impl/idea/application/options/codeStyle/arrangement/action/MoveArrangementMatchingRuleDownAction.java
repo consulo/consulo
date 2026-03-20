@@ -22,7 +22,6 @@ import consulo.language.codeStyle.ui.internal.arrangement.ArrangementMatchingRul
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.util.collection.primitive.ints.IntList;
 
-
 import java.util.List;
 
 /**

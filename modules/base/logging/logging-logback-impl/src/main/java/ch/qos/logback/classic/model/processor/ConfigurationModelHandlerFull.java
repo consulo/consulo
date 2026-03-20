@@ -38,12 +38,9 @@ public class ConfigurationModelHandlerFull extends  ConfigurationModelHandler {
         super(context);
     }
 
-
-
     static public ModelHandlerBase makeInstance2(Context context, ModelInterpretationContext mic) {
         return new ConfigurationModelHandlerFull(context);
     }
-
 
     protected void processScanAttrib(ModelInterpretationContext mic, ConfigurationModel configurationModel) {
         String scanStr = mic.subst(configurationModel.getScanStr());

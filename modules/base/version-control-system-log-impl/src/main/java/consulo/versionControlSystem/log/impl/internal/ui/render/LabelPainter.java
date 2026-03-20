@@ -133,7 +133,6 @@ public class LabelPainter {
         return calculateLongPresentation(refGroups, fontMetrics, height, background, availableWidth);
     }
 
-
     
     private static Pair<List<Pair<String, LabelIcon>>, Integer> calculateCompactPresentation(
         List<RefGroup> refGroups,

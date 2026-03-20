@@ -35,7 +35,6 @@ import java.util.*;
  */
 public class LogbackMDCAdapterSimple implements MDCAdapter {
 
-
     // We wish to avoid unnecessarily copying of the map. To ensure
     // efficient/timely copying, we have a variable keeping track of the previous
     // operation. A copy is necessary on 'put' or 'remove' but only if the last

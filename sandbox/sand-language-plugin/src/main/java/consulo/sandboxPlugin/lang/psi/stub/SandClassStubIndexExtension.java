@@ -20,7 +20,6 @@ import consulo.language.psi.stub.StringStubIndexExtension;
 import consulo.language.psi.stub.StubIndexKey;
 import consulo.sandboxPlugin.lang.psi.SandClass;
 
-
 /**
  * @author VISTALL
  * @since 09-Jul-22

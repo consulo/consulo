@@ -1,6 +1,5 @@
 package consulo.versionControlSystem.log;
 
-
 /**
  * <p>Represents a unique reference to a VCS commit.</p>
  * <p>

@@ -6,7 +6,6 @@ import consulo.codeEditor.impl.CodeEditorFoldingModelBase;
 import consulo.codeEditor.impl.FoldRegionImpl;
 import consulo.logging.Logger;
 
-
 public class DesktopFoldingModelImpl extends CodeEditorFoldingModelBase {
   private static final Logger LOG = Logger.getInstance(DesktopFoldingModelImpl.class);
 

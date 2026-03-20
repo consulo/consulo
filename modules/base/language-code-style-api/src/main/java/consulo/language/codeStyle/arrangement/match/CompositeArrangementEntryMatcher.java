@@ -17,7 +17,6 @@ package consulo.language.codeStyle.arrangement.match;
 
 import consulo.language.codeStyle.arrangement.ArrangementEntry;
 
-
 import java.util.*;
 
 /**

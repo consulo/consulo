@@ -23,7 +23,6 @@ import consulo.language.parser.ParserDefinition;
 import consulo.language.psi.PsiElementVisitor;
 import consulo.virtualFileSystem.fileType.FileType;
 
-
 import java.util.ArrayList;
 import java.util.Set;
 

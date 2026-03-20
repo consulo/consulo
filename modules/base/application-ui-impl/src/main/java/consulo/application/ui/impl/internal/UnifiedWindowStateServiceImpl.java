@@ -122,7 +122,6 @@ public abstract class UnifiedWindowStateServiceImpl<GC> implements WindowStateSe
     myProject = project;
   }
 
-
   protected <T> T getFor(Object object, String key, Class<T> type) {
     if (isHeadless()) return null;
     if (UISettings.getInstance().getPresentationMode()) key += ".inPresentationMode"; // separate key for the presentation mode

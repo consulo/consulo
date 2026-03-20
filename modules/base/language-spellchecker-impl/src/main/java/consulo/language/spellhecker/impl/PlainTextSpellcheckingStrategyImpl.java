@@ -20,7 +20,6 @@ import consulo.language.Language;
 import consulo.language.plain.PlainTextLanguage;
 import consulo.language.spellcheker.SpellcheckingStrategy;
 
-
 /**
  * @author VISTALL
  * @since 2023-03-26

@@ -17,7 +17,6 @@ package consulo.language;
 
 import consulo.annotation.DeprecationInfo;
 
-
 @Deprecated
 @DeprecationInfo("See consulo.lang.LanguageVersion")
 public abstract class LanguageDialect extends Language {

@@ -28,11 +28,9 @@
 
 package consulo.util.xml.fastReader;
 
-
 import org.jspecify.annotations.Nullable;
 
 import java.io.Reader;
-
 
 /**
  * NanoXML uses IXMLBuilder to construct the XML data structure it retrieved
@@ -61,7 +59,6 @@ public interface IXMLBuilder extends net.n3.nanoxml.IXMLBuilder {
    */
   public void startBuilding(String systemID, int lineNr) throws Exception;
 
-
   /**
    * This method is called when a processing instruction is encountered.
    * A PI with a reserved target ("xml" with any case) is never reported.
@@ -73,7 +70,6 @@ public interface IXMLBuilder extends net.n3.nanoxml.IXMLBuilder {
    * @throws java.lang.Exception If an exception occurred while processing the event.
    */
   public void newProcessingInstruction(String target, Reader reader) throws Exception;
-
 
   /**
    * This method is called when a new XML element is encountered.
@@ -90,7 +86,6 @@ public interface IXMLBuilder extends net.n3.nanoxml.IXMLBuilder {
    * @see #endElement
    */
   public void startElement(String name, @Nullable String nsPrefix, @Nullable String nsURI, String systemID, int lineNr) throws Exception;
-
 
   /**
    * This method is called when a new attribute of an XML element is
@@ -109,7 +104,6 @@ public interface IXMLBuilder extends net.n3.nanoxml.IXMLBuilder {
    */
   public void addAttribute(String key, @Nullable String nsPrefix, @Nullable String nsURI, String value, String type) throws Exception;
 
-
   /**
    * This method is called when the attributes of an XML element have been
    * processed.
@@ -126,7 +120,6 @@ public interface IXMLBuilder extends net.n3.nanoxml.IXMLBuilder {
    */
   public void elementAttributesProcessed(String name, @Nullable String nsPrefix, @Nullable String nsURI) throws Exception;
 
-
   /**
    * This method is called when the end of an XML elemnt is encountered.
    *
@@ -140,7 +133,6 @@ public interface IXMLBuilder extends net.n3.nanoxml.IXMLBuilder {
    * @see #startElement
    */
   public void endElement(String name, @Nullable String nsPrefix, @Nullable String nsURI) throws Exception;
-
 
   /**
    * This method is called when a PCDATA element is encountered. A Java
@@ -158,7 +150,6 @@ public interface IXMLBuilder extends net.n3.nanoxml.IXMLBuilder {
    * @throws java.lang.Exception If an exception occurred while processing the event.
    */
   public void addPCData(Reader reader, String systemID, int lineNr) throws Exception;
-
 
   /**
    * Returns the result of the building process. This method is called just

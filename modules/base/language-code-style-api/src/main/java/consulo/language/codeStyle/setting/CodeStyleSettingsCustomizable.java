@@ -229,7 +229,6 @@ public interface CodeStyleSettingsCustomizable {
     BLOCK_COMMENT_AT_FIRST_COLUMN
   }
 
-
   String SPACES_AROUND_OPERATORS = CodeStyleBundle.message("group.spaces.around.operators");
   String SPACES_BEFORE_PARENTHESES = CodeStyleBundle.message("group.spaces.before.parentheses");
   String SPACES_BEFORE_LEFT_BRACE = CodeStyleBundle.message("group.spaces.before.left.brace");

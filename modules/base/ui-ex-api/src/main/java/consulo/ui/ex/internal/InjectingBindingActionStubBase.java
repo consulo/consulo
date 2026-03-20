@@ -17,7 +17,6 @@ package consulo.ui.ex.internal;
 
 import consulo.annotation.component.ActionImpl;
 
-
 /**
  * @author VISTALL
  * @since 26-Jun-22

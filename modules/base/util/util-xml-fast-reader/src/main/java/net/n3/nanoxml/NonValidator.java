@@ -28,13 +28,11 @@
 
 package net.n3.nanoxml;
 
-
 import org.jspecify.annotations.Nullable;
 
 import java.io.Reader;
 import java.io.StringReader;
 import java.util.*;
-
 
 /**
  * NonValidator is a concrete implementation of IXMLValidator which processes
@@ -53,19 +51,16 @@ public class NonValidator
     */
    protected IXMLEntityResolver parameterEntityResolver;
 
-
    /**
     * Contains the default values for attributes for the different element
     * types.
     */
    protected Hashtable attributeDefaultValues;
 
-
    /**
     * The stack of elements to be processed.
     */
    protected Stack currentElements;
-
 
    /**
     * Creates the &quot;validator&quot;.
@@ -77,7 +72,6 @@ public class NonValidator
       this.parameterEntityResolver = new XMLEntityResolver();
    }
 
-
    /**
     * Sets the parameter entity resolver.
     *
@@ -88,7 +82,6 @@ public class NonValidator
       this.parameterEntityResolver = resolver;
    }
 
-
    /**
     * Returns the parameter entity resolver.
     *
@@ -98,7 +91,6 @@ public class NonValidator
    {
       return this.parameterEntityResolver;
    }
-
 
    /**
     * Parses the DTD. The validator object is responsible for reading the
@@ -153,7 +145,6 @@ public class NonValidator
       }
    }
 
-
    /**
     * Processes an element in the DTD.
     *
@@ -199,7 +190,6 @@ public class NonValidator
             XMLUtil.skipTag(reader);
       }
    }
-
 
    /**
     * Processes a conditional section.
@@ -272,7 +262,6 @@ public class NonValidator
       reader.startNewStream(new StringReader(buf.toString()));
    }
 
-
    /**
     * Processes an ignore section.
     *
@@ -304,7 +293,6 @@ public class NonValidator
       Reader subreader = new CDATAReader(reader);
       subreader.close();
    }
-
 
    /**
     * Processes an ATTLIST element.
@@ -429,7 +417,6 @@ public class NonValidator
       }
    }
 
-
    /**
     * Processes an ENTITY element.
     *
@@ -513,7 +500,6 @@ public class NonValidator
       }
    }
 
-
    /**
     * Indicates that an element has been started.
     *
@@ -537,7 +523,6 @@ public class NonValidator
       this.currentElements.push(attribs);
    }
 
-
    /**
     * Indicates that the current element has ended.
     *
@@ -551,7 +536,6 @@ public class NonValidator
    {
       // nothing to do
    }
-
 
    /**
     * This method is called when the attributes of an XML element have been
@@ -578,7 +562,6 @@ public class NonValidator
       }
    }
 
-
    /**
     * Indicates that an attribute has been added to the current element.
     *
@@ -598,7 +581,6 @@ public class NonValidator
          props.remove(key);
       }
    }
-
 
    /**
     * Indicates that a new #PCDATA element has been encountered.

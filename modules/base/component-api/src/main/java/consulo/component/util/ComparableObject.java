@@ -17,7 +17,6 @@ package consulo.component.util;
 
 import consulo.util.collection.ArrayUtil;
 
-
 public interface ComparableObject {
   Object[] NONE = ArrayUtil.EMPTY_OBJECT_ARRAY;
 

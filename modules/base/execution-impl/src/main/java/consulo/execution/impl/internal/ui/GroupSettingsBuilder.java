@@ -24,7 +24,6 @@ import consulo.ui.ex.awt.TabbedPaneWrapper;
 import consulo.execution.configuration.ui.CompositeSettingsBuilder;
 import consulo.execution.configuration.ui.SettingsEditor;
 
-
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;

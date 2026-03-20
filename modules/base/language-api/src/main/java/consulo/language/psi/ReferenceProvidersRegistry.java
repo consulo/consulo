@@ -23,7 +23,6 @@ import consulo.application.progress.ProgressIndicatorProvider;
 import consulo.language.Language;
 import consulo.language.util.ProcessingContext;
 
-
 /**
  * @author ik
  * @since 2003-03-27

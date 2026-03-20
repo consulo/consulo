@@ -19,7 +19,6 @@ import consulo.codeEditor.Editor;
 import consulo.language.editor.highlight.TextEditorHighlightingPass;
 import consulo.language.psi.PsiFile;
 
-
 /**
  * The pass which should be applied to every editor, even if there are many for this document.
  *

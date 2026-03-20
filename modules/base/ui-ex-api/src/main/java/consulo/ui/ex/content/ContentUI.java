@@ -19,7 +19,6 @@ import consulo.annotation.DeprecationInfo;
 import consulo.disposer.Disposable;
 import consulo.ui.Component;
 
-
 public interface ContentUI extends Disposable {
   void setManager(ContentManager manager);
 

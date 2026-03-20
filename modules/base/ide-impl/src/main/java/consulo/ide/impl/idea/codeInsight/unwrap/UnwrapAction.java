@@ -25,7 +25,6 @@ import consulo.language.psi.PsiFile;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 
-
 @ActionImpl(id = "Unwrap")
 public class UnwrapAction extends BaseCodeInsightAction {
     public UnwrapAction() {

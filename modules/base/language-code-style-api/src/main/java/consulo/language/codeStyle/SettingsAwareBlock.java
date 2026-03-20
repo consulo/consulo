@@ -15,7 +15,6 @@
  */
 package consulo.language.codeStyle;
 
-
 /**
  * @author Denis Zhdanov
  * @since 2012-09-06

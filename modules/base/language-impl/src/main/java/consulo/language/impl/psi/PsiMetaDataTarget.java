@@ -19,7 +19,6 @@ import consulo.language.pom.PomRenameableTarget;
 import consulo.language.psi.meta.PsiMetaData;
 import consulo.language.psi.meta.PsiWritableMetaData;
 
-
 /**
  * @author peter
  */

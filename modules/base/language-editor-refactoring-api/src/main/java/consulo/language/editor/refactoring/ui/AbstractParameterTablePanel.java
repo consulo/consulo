@@ -77,7 +77,6 @@ public abstract class AbstractParameterTablePanel<P extends AbstractVariableData
     DefaultCellEditor defaultEditor = (DefaultCellEditor)myTable.getDefaultEditor(Object.class);
     defaultEditor.setClickCountToStart(1);
 
-
     myTable.getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
     myTable.setCellSelectionEnabled(true);
 
@@ -121,10 +120,8 @@ public abstract class AbstractParameterTablePanel<P extends AbstractVariableData
       }
     });
 
-
     JPanel listPanel = ToolbarDecorator.createDecorator(myTable).disableAddAction().disableRemoveAction().createPanel();
     add(listPanel, BorderLayout.CENTER);
-
 
     myTableModel.addTableModelListener(e -> updateSignature());
   }
@@ -136,7 +133,6 @@ public abstract class AbstractParameterTablePanel<P extends AbstractVariableData
       myTable.getSelectionModel().setSelectionInterval(0, 0);
     }
   }
-
 
   public void setEnabled(boolean enabled) {
     myTable.setEnabled(enabled);

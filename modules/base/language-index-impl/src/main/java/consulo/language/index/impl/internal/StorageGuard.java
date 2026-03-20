@@ -15,7 +15,6 @@
  */
 package consulo.language.index.impl.internal;
 
-
 @SuppressWarnings({"WhileLoopSpinsOnField", "SynchronizeOnThis"})
 class StorageGuard {
   private int myHolds;

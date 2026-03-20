@@ -79,7 +79,6 @@ public class CredentialStorageTesterAction extends DumbAwareAction {
                 myPasswordSafe.set(new CredentialAttributes(serviceName, user), new Credentials(user, password));
             });
 
-
             Button fetchPassword = Button.create(LocalizeValue.localizeTODO("Get Password"), event -> {
                 String user = userBox.getValueOrError();
 

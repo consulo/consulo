@@ -153,7 +153,6 @@ public class TextAttributes implements Cloneable {
         );
     }
 
-
     public boolean isFallbackEnabled() {
         return isEmpty() && !myEnforceEmpty;
     }

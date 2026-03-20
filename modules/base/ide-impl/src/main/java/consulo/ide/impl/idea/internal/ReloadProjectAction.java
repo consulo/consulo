@@ -24,7 +24,6 @@ import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.ui.UIAccess;
 
-
 /**
  * @author mike
  */

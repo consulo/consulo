@@ -97,7 +97,6 @@ public abstract class VirtualFileManager implements ModificationTracker {
      */
     public abstract @Nullable VirtualFile findFileByUrl(String url);
 
-
     /**
      * Looks for a related {@link VirtualFile} for a given {@link Path}
      *

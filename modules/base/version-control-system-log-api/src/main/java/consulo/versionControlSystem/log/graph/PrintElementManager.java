@@ -16,7 +16,6 @@
 
 package consulo.versionControlSystem.log.graph;
 
-
 import java.util.Comparator;
 
 public interface PrintElementManager {

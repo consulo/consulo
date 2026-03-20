@@ -22,7 +22,6 @@ import consulo.externalSystem.model.DataNode;
 import consulo.externalSystem.model.Key;
 import consulo.project.Project;
 
-
 import java.util.Collection;
 
 /**

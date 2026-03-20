@@ -28,7 +28,6 @@ import consulo.language.icon.IconDescriptor;
 import consulo.language.icon.IconDescriptorUpdater;
 import jakarta.inject.Inject;
 
-
 /**
  * @author VISTALL
  * @since 2013-07-19

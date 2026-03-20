@@ -26,7 +26,6 @@ import consulo.navigation.OpenFileDescriptorFactory;
 import consulo.navigation.SimpleNavigateOptions;
 import consulo.virtualFileSystem.VirtualFile;
 
-
 /**
  * @author peter
  */

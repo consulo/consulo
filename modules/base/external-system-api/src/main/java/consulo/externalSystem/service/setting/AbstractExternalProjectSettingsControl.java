@@ -23,7 +23,6 @@ import consulo.externalSystem.ui.awt.PaintAwarePanel;
 import consulo.ui.ex.awt.JBCheckBox;
 import consulo.disposer.Disposable;
 
-
 /**
  * Templates class for managing single external project settings (single ide project might contain multiple bindings to external
  * projects, e.g. one module is backed by a single external project and couple of others are backed by a single external multi-project).

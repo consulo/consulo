@@ -231,7 +231,6 @@ public class DirectoryNode extends PackageDependenciesNode {
     myWrapper = null;
   }
 
-
   @Override
   public boolean isValid() {
     return myVDirectory != null && myVDirectory.isValid();

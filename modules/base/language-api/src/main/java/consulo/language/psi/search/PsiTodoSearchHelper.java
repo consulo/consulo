@@ -21,7 +21,6 @@ import consulo.annotation.component.ServiceAPI;
 import consulo.language.psi.PsiFile;
 import consulo.project.Project;
 
-
 /**
  * @author irengrig
  * @since 2011-02-24
@@ -77,7 +76,6 @@ public abstract class PsiTodoSearchHelper {
    * @return the count of to do items in the file.
    */
   public abstract int getTodoItemsCount(PsiFile file, TodoPattern pattern);
-
 
   /**
    * Returns if td items should be highlighted in editor

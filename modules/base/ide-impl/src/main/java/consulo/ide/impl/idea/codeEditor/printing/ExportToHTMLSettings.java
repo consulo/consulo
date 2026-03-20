@@ -63,7 +63,6 @@ public class ExportToHTMLSettings implements PersistentStateComponent<ExportToHT
     isIncludeSubpackages = includeSubpackages;
   }
 
-
   @Override
   public ExportToHTMLSettings getState() {
     return this;

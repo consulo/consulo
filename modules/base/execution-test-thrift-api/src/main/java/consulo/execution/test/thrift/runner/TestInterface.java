@@ -1806,10 +1806,8 @@ public class TestInterface {
   public static class runStarted_args implements org.apache.thrift.TBase<runStarted_args, runStarted_args._Fields>, java.io.Serializable, Cloneable, Comparable<runStarted_args>   {
     private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("runStarted_args");
 
-
     private static final org.apache.thrift.scheme.SchemeFactory STANDARD_SCHEME_FACTORY = new runStarted_argsStandardSchemeFactory();
     private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new runStarted_argsTupleSchemeFactory();
-
 
     /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
     public enum _Fields implements org.apache.thrift.TFieldIdEnum {
@@ -2072,10 +2070,8 @@ public class TestInterface {
   public static class runStarted_result implements org.apache.thrift.TBase<runStarted_result, runStarted_result._Fields>, java.io.Serializable, Cloneable, Comparable<runStarted_result>   {
     private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("runStarted_result");
 
-
     private static final org.apache.thrift.scheme.SchemeFactory STANDARD_SCHEME_FACTORY = new runStarted_resultStandardSchemeFactory();
     private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new runStarted_resultTupleSchemeFactory();
-
 
     /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
     public enum _Fields implements org.apache.thrift.TFieldIdEnum {
@@ -2337,10 +2333,8 @@ public class TestInterface {
   public static class runFinished_args implements org.apache.thrift.TBase<runFinished_args, runFinished_args._Fields>, java.io.Serializable, Cloneable, Comparable<runFinished_args>   {
     private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("runFinished_args");
 
-
     private static final org.apache.thrift.scheme.SchemeFactory STANDARD_SCHEME_FACTORY = new runFinished_argsStandardSchemeFactory();
     private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new runFinished_argsTupleSchemeFactory();
-
 
     /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
     public enum _Fields implements org.apache.thrift.TFieldIdEnum {
@@ -2603,10 +2597,8 @@ public class TestInterface {
   public static class runFinished_result implements org.apache.thrift.TBase<runFinished_result, runFinished_result._Fields>, java.io.Serializable, Cloneable, Comparable<runFinished_result>   {
     private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("runFinished_result");
 
-
     private static final org.apache.thrift.scheme.SchemeFactory STANDARD_SCHEME_FACTORY = new runFinished_resultStandardSchemeFactory();
     private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new runFinished_resultTupleSchemeFactory();
-
 
     /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
     public enum _Fields implements org.apache.thrift.TFieldIdEnum {
@@ -3352,10 +3344,8 @@ public class TestInterface {
   public static class suiteStarted_result implements org.apache.thrift.TBase<suiteStarted_result, suiteStarted_result._Fields>, java.io.Serializable, Cloneable, Comparable<suiteStarted_result>   {
     private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("suiteStarted_result");
 
-
     private static final org.apache.thrift.scheme.SchemeFactory STANDARD_SCHEME_FACTORY = new suiteStarted_resultStandardSchemeFactory();
     private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new suiteStarted_resultTupleSchemeFactory();
-
 
     /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
     public enum _Fields implements org.apache.thrift.TFieldIdEnum {
@@ -3991,10 +3981,8 @@ public class TestInterface {
   public static class suiteTestCount_result implements org.apache.thrift.TBase<suiteTestCount_result, suiteTestCount_result._Fields>, java.io.Serializable, Cloneable, Comparable<suiteTestCount_result>   {
     private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("suiteTestCount_result");
 
-
     private static final org.apache.thrift.scheme.SchemeFactory STANDARD_SCHEME_FACTORY = new suiteTestCount_resultStandardSchemeFactory();
     private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new suiteTestCount_resultTupleSchemeFactory();
-
 
     /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
     public enum _Fields implements org.apache.thrift.TFieldIdEnum {
@@ -4635,10 +4623,8 @@ public class TestInterface {
   public static class suiteFinished_result implements org.apache.thrift.TBase<suiteFinished_result, suiteFinished_result._Fields>, java.io.Serializable, Cloneable, Comparable<suiteFinished_result>   {
     private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("suiteFinished_result");
 
-
     private static final org.apache.thrift.scheme.SchemeFactory STANDARD_SCHEME_FACTORY = new suiteFinished_resultStandardSchemeFactory();
     private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new suiteFinished_resultTupleSchemeFactory();
-
 
     /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
     public enum _Fields implements org.apache.thrift.TFieldIdEnum {
@@ -5384,10 +5370,8 @@ public class TestInterface {
   public static class testStarted_result implements org.apache.thrift.TBase<testStarted_result, testStarted_result._Fields>, java.io.Serializable, Cloneable, Comparable<testStarted_result>   {
     private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("testStarted_result");
 
-
     private static final org.apache.thrift.scheme.SchemeFactory STANDARD_SCHEME_FACTORY = new testStarted_resultStandardSchemeFactory();
     private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new testStarted_resultTupleSchemeFactory();
-
 
     /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
     public enum _Fields implements org.apache.thrift.TFieldIdEnum {
@@ -6548,10 +6532,8 @@ public class TestInterface {
   public static class testFailed_result implements org.apache.thrift.TBase<testFailed_result, testFailed_result._Fields>, java.io.Serializable, Cloneable, Comparable<testFailed_result>   {
     private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("testFailed_result");
 
-
     private static final org.apache.thrift.scheme.SchemeFactory STANDARD_SCHEME_FACTORY = new testFailed_resultStandardSchemeFactory();
     private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new testFailed_resultTupleSchemeFactory();
-
 
     /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
     public enum _Fields implements org.apache.thrift.TFieldIdEnum {
@@ -7402,10 +7384,8 @@ public class TestInterface {
   public static class testIgnored_result implements org.apache.thrift.TBase<testIgnored_result, testIgnored_result._Fields>, java.io.Serializable, Cloneable, Comparable<testIgnored_result>   {
     private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("testIgnored_result");
 
-
     private static final org.apache.thrift.scheme.SchemeFactory STANDARD_SCHEME_FACTORY = new testIgnored_resultStandardSchemeFactory();
     private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new testIgnored_resultTupleSchemeFactory();
-
 
     /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
     public enum _Fields implements org.apache.thrift.TFieldIdEnum {
@@ -8251,10 +8231,8 @@ public class TestInterface {
   public static class testOutput_result implements org.apache.thrift.TBase<testOutput_result, testOutput_result._Fields>, java.io.Serializable, Cloneable, Comparable<testOutput_result>   {
     private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("testOutput_result");
 
-
     private static final org.apache.thrift.scheme.SchemeFactory STANDARD_SCHEME_FACTORY = new testOutput_resultStandardSchemeFactory();
     private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new testOutput_resultTupleSchemeFactory();
-
 
     /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
     public enum _Fields implements org.apache.thrift.TFieldIdEnum {
@@ -8995,10 +8973,8 @@ public class TestInterface {
   public static class testFinished_result implements org.apache.thrift.TBase<testFinished_result, testFinished_result._Fields>, java.io.Serializable, Cloneable, Comparable<testFinished_result>   {
     private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("testFinished_result");
 
-
     private static final org.apache.thrift.scheme.SchemeFactory STANDARD_SCHEME_FACTORY = new testFinished_resultStandardSchemeFactory();
     private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new testFinished_resultTupleSchemeFactory();
-
 
     /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
     public enum _Fields implements org.apache.thrift.TFieldIdEnum {

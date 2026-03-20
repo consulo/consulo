@@ -168,7 +168,6 @@ public interface EditorSettings {
 
     void setMouseClickSelectionHonorsCamelWords(boolean val);
 
-
     boolean isVariableInplaceRenameEnabled();
 
     void setVariableInplaceRenameEnabled(boolean val);

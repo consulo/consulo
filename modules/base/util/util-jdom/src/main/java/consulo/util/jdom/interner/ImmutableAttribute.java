@@ -15,7 +15,6 @@ package consulo.util.jdom.interner;
 
 import org.jdom.*;
 
-
 class ImmutableAttribute extends Attribute {
   ImmutableAttribute(String name, String value, AttributeType type, Namespace namespace) {
     super.setName(name);

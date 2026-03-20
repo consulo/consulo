@@ -22,7 +22,6 @@ import consulo.language.util.IncorrectOperationException;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 
-
 public class LocalQuickFixOnPsiElementAsIntentionAdapter implements SyntheticIntentionAction {
   private final LocalQuickFixOnPsiElement myFix;
 

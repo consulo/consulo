@@ -15,7 +15,6 @@
  */
 package consulo.util.lang;
 
-
 import org.jspecify.annotations.Nullable;
 
 /**

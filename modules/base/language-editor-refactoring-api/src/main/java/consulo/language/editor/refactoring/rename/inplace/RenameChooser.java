@@ -98,7 +98,6 @@ abstract class RenameChooser {
     myEditor.showPopupInBestPositionFor(popup);
   }
 
-
   private void dropHighlighters() {
     for (RangeHighlighter highlight : myRangeHighlighters) {
       highlight.dispose();

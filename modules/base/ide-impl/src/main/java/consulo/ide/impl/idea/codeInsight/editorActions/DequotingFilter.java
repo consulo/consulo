@@ -20,7 +20,6 @@ import consulo.annotation.component.ExtensionAPI;
 import consulo.codeEditor.Editor;
 import consulo.language.psi.PsiFile;
 
-
 @ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class DequotingFilter {
   public abstract boolean skipReplacementQuotesOrBraces(PsiFile file, Editor editor, String selectedText, char c);

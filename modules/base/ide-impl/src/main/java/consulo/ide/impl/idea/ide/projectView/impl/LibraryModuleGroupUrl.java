@@ -22,7 +22,6 @@ import consulo.module.Module;
 import consulo.module.ModuleManager;
 import consulo.project.Project;
 
-
 public class LibraryModuleGroupUrl extends AbstractUrl {
 
   private static final String ELEMENT_TYPE = "libraryModuleGroup";

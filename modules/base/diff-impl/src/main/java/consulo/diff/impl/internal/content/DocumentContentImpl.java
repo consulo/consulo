@@ -116,7 +116,6 @@ public class DocumentContentImpl extends DiffContentBase implements DocumentCont
     return myCharset;
   }
 
-
   private static class MyNavigatable implements Navigatable {
     
     private final Project myProject;

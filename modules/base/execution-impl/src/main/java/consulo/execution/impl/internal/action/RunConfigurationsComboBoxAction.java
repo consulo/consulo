@@ -223,7 +223,6 @@ public class RunConfigurationsComboBoxAction extends ComboBoxAction implements D
                 continue;
             }
 
-
             for (Map.Entry<String, List<RunnerAndConfigurationSettings>> entry : structure.entrySet()) {
                 DefaultActionGroup group = entry.getKey() != null ? new DefaultActionGroup(LocalizeValue.of(entry.getKey()), true) : actionGroup;
                 group.getTemplatePresentation().setIcon(PlatformIconGroup.nodesFolder());

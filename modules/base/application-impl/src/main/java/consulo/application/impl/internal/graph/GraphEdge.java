@@ -15,7 +15,6 @@
  */
 package consulo.application.impl.internal.graph;
 
-
 /**
  * @author nik
  */

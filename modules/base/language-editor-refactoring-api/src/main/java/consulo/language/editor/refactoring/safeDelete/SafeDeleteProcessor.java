@@ -382,7 +382,6 @@ public class SafeDeleteProcessor extends BaseRefactoringProcessor {
         return result;
     }
 
-
     @Override
     protected void refreshElements(PsiElement[] elements) {
         LOG.assertTrue(elements.length == myElements.length);

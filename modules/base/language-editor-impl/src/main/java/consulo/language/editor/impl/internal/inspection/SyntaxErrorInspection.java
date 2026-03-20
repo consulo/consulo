@@ -18,7 +18,6 @@ package consulo.language.editor.impl.internal.inspection;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.localize.LocalizeValue;
 
-
 @ExtensionImpl
 public class SyntaxErrorInspection extends DefaultHighlightVisitorBasedInspection {
   public SyntaxErrorInspection() {

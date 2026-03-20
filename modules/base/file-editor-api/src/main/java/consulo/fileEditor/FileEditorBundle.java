@@ -20,7 +20,6 @@ import consulo.component.util.localize.AbstractBundle;
 import consulo.fileEditor.localize.FileEditorLocalize;
 import org.jetbrains.annotations.PropertyKey;
 
-
 /**
  * @author VISTALL
  * @since 19-Feb-22

@@ -19,7 +19,6 @@ import consulo.annotation.DeprecationInfo;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.TaskInfo;
 
-
 public interface ProgressIndicatorEx extends ProgressIndicator {
   @Deprecated
   @DeprecationInfo("Prefer #addListener(ProgressIndicatorListener)")

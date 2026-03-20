@@ -101,7 +101,6 @@ public class ProblemsViewImpl extends ProblemsView {
         }
     }
 
-
     @RequiredUIAccess
     @Override
     public void addMessage(

@@ -22,7 +22,6 @@ import consulo.document.util.TextRange;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 
-
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface PostFormatProcessor {
     ExtensionPointName<PostFormatProcessor> EP_NAME = ExtensionPointName.create(PostFormatProcessor.class);

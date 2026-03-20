@@ -20,7 +20,6 @@ import consulo.language.file.LanguageFileType;
 import consulo.localize.LocalizeValue;
 import consulo.ui.image.Image;
 
-
 /**
  * @author VISTALL
  * @since 19.03.14

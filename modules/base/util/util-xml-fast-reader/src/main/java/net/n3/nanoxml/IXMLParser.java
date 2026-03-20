@@ -28,10 +28,7 @@
 
 package net.n3.nanoxml;
 
-
 import org.jspecify.annotations.Nullable;
-
-
 
 /**
  * IXMLParser is the core parser of NanoXML.
@@ -49,14 +46,12 @@ public interface IXMLParser
     */
    public void setReader(IXMLReader reader);
 
-
    /**
     * Returns the reader from which the parser retrieves its data.
     *
     * @return the reader.
     */
    public @Nullable IXMLReader getReader();
-
 
    /**
     * Sets the builder which creates the logical structure of the XML data.
@@ -65,14 +60,12 @@ public interface IXMLParser
     */
    public void setBuilder(IXMLBuilder builder);
 
-
    /**
     * Returns the builder which creates the logical structure of the XML data.
     *
     * @return the builder.
     */
    public @Nullable IXMLBuilder getBuilder();
-
 
    /**
     * Sets the validator that validates the XML data.
@@ -81,14 +74,12 @@ public interface IXMLParser
     */
    public void setValidator(IXMLValidator validator);
 
-
    /**
     * Returns the validator that validates the XML data.
     *
     * @return the validator.
     */
    public @Nullable IXMLValidator getValidator();
-
 
    /**
     * Sets the entity resolver.
@@ -97,14 +88,12 @@ public interface IXMLParser
     */
    public void setResolver(IXMLEntityResolver resolver);
 
-
    /**
     * Returns the entity resolver.
     *
     * @return the non-null resolver.
     */
    public IXMLEntityResolver getResolver();
-
 
    /**
     * Parses the data and lets the builder create the logical data structure.

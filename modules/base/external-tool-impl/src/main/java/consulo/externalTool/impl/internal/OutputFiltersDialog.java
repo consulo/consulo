@@ -23,7 +23,6 @@ import consulo.application.ui.wm.IdeFocusManager;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.awt.util.ListUtil;
 
-
 import javax.swing.*;
 import java.awt.*;
 

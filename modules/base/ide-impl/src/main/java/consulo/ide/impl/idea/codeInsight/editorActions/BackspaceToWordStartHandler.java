@@ -22,7 +22,6 @@ import consulo.codeEditor.Editor;
 import consulo.dataContext.DataContext;
 import consulo.ui.ex.action.IdeActions;
 
-
 /**
  * @author yole
  */

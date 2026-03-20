@@ -15,8 +15,6 @@
  */
 package consulo.codeEditor;
 
-
-
 /**
  * Represents a visual position in the editor. Visual positions take folding into account -
  * for example, if the top 10 lines of the document are folded, the 10th line in the document

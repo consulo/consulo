@@ -31,7 +31,6 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.popup.Balloon;
 import consulo.ui.ex.popup.BalloonBuilder;
 
-
 import javax.swing.*;
 import java.awt.*;
 

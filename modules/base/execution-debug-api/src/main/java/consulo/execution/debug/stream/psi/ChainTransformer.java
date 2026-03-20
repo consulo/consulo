@@ -13,5 +13,4 @@ public interface ChainTransformer<T extends PsiElement> {
   
   StreamChain transform(List<T> callChain, PsiElement context);
 
-
 }

@@ -94,7 +94,6 @@ public class Functions {
     };
   }
 
-
   private static final Function WRAP_ARRAY = new Function<Object[], Iterable<Object>>() {
     public Iterable<Object> apply(Object[] t) {
       return t == null ? Collections.emptyList() : Arrays.asList(t);

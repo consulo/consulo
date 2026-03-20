@@ -86,7 +86,6 @@ public class PatchChangeBuilder {
       List<String> trimContext = contextBefore.subList(overlappedContext, contextBefore.size());
       addContext(trimContext, beforeRange.start + overlappedContext, afterRange.start + overlappedContext);
 
-
       int deletion = totalLines;
       appendLines(hunk.getDeletedLines());
       int insertion = totalLines;
@@ -96,10 +95,8 @@ public class PatchChangeBuilder {
       myConvertor.put1(deletion, beforeRange.start + contextBefore.size(), insertion - deletion);
       myConvertor.put2(insertion, afterRange.start + contextBefore.size(), hunkEnd - insertion);
 
-
       addContext(contextAfter, beforeRange.end - contextAfter.size(), afterRange.end - contextAfter.size());
       lastBeforeLine = beforeRange.end - 1;
-
 
       LineRange deletionRange = new LineRange(deletion, insertion);
       LineRange insertionRange = new LineRange(insertion, hunkEnd);
@@ -150,7 +147,6 @@ public class PatchChangeBuilder {
   public IntList getSeparatorLines() {
     return myChangedLines;
   }
-
 
   public static class Hunk {
     

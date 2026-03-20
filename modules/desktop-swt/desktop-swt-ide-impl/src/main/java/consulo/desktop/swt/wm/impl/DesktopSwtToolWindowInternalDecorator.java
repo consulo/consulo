@@ -29,7 +29,6 @@ import consulo.ui.ex.toolWindow.ToolWindowInternalDecorator;
 import consulo.ui.layout.DockLayout;
 import consulo.project.ui.impl.internal.wm.UnifiedToolWindowImpl;
 
-
 /**
  * @author VISTALL
  * @since 12/12/2021

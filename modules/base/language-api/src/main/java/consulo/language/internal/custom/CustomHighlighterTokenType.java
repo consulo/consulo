@@ -17,7 +17,6 @@ package consulo.language.internal.custom;
 
 import consulo.language.ast.IElementType;
 
-
 /**
  * @author Yura Cangea
  * @version 1.0

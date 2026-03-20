@@ -369,7 +369,6 @@ public final class LafManagerImpl implements LafManager, Disposable, PersistentS
         
         factory.refreshAllEditors();
 
-
         Project[] openProjects = ProjectManager.getInstance().getOpenProjects();
         for (Project openProject : openProjects) {
             FileStatusManager.getInstance(openProject).fileStatusesChanged();

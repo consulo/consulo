@@ -146,7 +146,6 @@ public class IntelliJEditorTabsUI extends JBEditorTabsUI {
             currentTab++;
         }
 
-
         if (horizontal) {
             size.height += tabs.getTabBorderSize();
         }

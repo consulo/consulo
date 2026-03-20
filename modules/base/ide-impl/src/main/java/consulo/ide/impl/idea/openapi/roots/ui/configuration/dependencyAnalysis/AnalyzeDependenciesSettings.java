@@ -122,7 +122,6 @@ public class AnalyzeDependenciesSettings implements PersistentStateComponent<Ana
     myState.IS_URL_MODE = value;
   }
 
-
   /**
    * Get project instance
    *

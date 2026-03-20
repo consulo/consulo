@@ -67,7 +67,6 @@ public interface ParameterInfo {
    */
   boolean isUseAnySingleVariable();
 
-
   /**
    * Flag whether refactoring should use any appropriate nearby variable as the default value
    *

@@ -16,7 +16,6 @@
 
 package consulo.ide.impl.idea.application.options.colors;
 
-
 import java.awt.*;
 
 public interface PreviewPanel {

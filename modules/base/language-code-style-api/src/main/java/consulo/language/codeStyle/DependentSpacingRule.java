@@ -19,7 +19,6 @@ import consulo.document.util.TextRange;
 import consulo.util.collection.primitive.objects.ObjectIntMap;
 import consulo.util.collection.primitive.objects.ObjectMaps;
 
-
 /**
  * Holds settings that should be used if
  * {@link Spacing#createDependentLFSpacing(int, int, TextRange, boolean, int, DependentSpacingRule) dependent spacing}

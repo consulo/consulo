@@ -87,7 +87,6 @@ public abstract class RefGraphAnnotator {
     onMarkReferenced(refWhat, refFrom, referencedFromClassInitializer);
   }
 
-
   /**
    * Called when 'what' element doesn't belong to the selected scope.
    *

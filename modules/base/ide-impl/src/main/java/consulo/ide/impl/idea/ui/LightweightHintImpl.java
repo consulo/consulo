@@ -140,7 +140,6 @@ public class LightweightHintImpl extends UserDataHolderBase implements Lightweig
             beforeShow();
             Dimension preferredSize = myComponent.getPreferredSize();
 
-
             if (hintHint.isAwtTooltip()) {
                 IdeTooltip tooltip = new IdeTooltip(hintHint.getOriginalComponent(), hintHint.getOriginalPoint(), myComponent, hintHint, myComponent) {
                     @Override

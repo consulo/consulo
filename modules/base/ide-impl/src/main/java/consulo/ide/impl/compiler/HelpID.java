@@ -15,7 +15,6 @@
  */
 package consulo.ide.impl.compiler;
 
-
 public interface HelpID {
   String  COMPILER = "reference.toolWindows.messages";
   String  GENERATE_ANT_BUILD = "editing.generateAntBuild";

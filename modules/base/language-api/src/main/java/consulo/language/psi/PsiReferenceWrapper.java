@@ -5,7 +5,6 @@ import consulo.annotation.access.RequiredWriteAction;
 import consulo.document.util.TextRange;
 import consulo.language.util.IncorrectOperationException;
 
-
 /**
  * @author traff
  */

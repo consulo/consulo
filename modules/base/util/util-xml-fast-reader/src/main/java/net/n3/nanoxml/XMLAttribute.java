@@ -28,7 +28,6 @@
 
 package net.n3.nanoxml;
 
-
 import org.jspecify.annotations.Nullable;
 
 /**
@@ -47,30 +46,25 @@ class XMLAttribute
     */
    private String fullName;
 
-
    /**
     * The short name of the attribute.
     */
    private String name;
-
 
    /**
     * The namespace URI of the attribute.
     */
    private @Nullable String namespace;
 
-
    /**
     * The value of the attribute.
     */
    private String value;
 
-
    /**
     * The type of the attribute.
     */
    private String type;
-
 
    /**
     * Creates a new attribute.
@@ -94,7 +88,6 @@ class XMLAttribute
       this.type = type;
    }
 
-
    /**
     * Returns the full name of the attribute.
     */
@@ -102,7 +95,6 @@ class XMLAttribute
    {
       return this.fullName;
    }
-
 
    /**
     * Returns the short name of the attribute.
@@ -112,7 +104,6 @@ class XMLAttribute
       return this.name;
    }
 
-
    /**
     * Returns the namespace of the attribute.
     */
@@ -121,7 +112,6 @@ class XMLAttribute
       return this.namespace;
    }
 
-
    /**
     * Returns the value of the attribute.
     */
@@ -129,7 +119,6 @@ class XMLAttribute
    {
       return this.value;
    }
-
 
    /**
     * Sets the value of the attribute.
@@ -140,7 +129,6 @@ class XMLAttribute
    {
       this.value = value;
    }
-
 
    /**
     * Returns the type of the attribute.

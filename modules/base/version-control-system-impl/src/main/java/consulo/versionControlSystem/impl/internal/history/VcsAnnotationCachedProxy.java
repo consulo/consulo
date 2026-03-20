@@ -35,7 +35,6 @@ import consulo.versionControlSystem.util.VcsUtil;
 import consulo.logging.Logger;
 import org.jspecify.annotations.Nullable;
 
-
 /**
  * @author irengrig
  * @since 2011-03-17

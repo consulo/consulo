@@ -15,7 +15,6 @@
  */
 package consulo.ui.ex.popup;
 
-
 import java.util.List;
 
 public interface MnemonicNavigationFilter<T> {

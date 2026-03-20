@@ -23,7 +23,6 @@ import consulo.platform.base.localize.ActionLocalize;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.NonTrivialActionGroup;
 
-
 // from kotlin
 @ActionImpl(
     id = "PasteGroup",

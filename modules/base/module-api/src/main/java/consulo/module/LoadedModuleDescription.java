@@ -15,7 +15,6 @@
  */
 package consulo.module;
 
-
 /**
  * @author nik
  */

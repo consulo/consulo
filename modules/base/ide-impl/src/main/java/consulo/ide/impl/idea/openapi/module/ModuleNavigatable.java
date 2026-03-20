@@ -20,7 +20,6 @@ import consulo.navigation.NavigateOptions;
 import consulo.navigation.Navigatable;
 import consulo.module.Module;
 
-
 /**
  * @author Konstantin Bulenkov
  */

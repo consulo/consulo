@@ -24,7 +24,6 @@ import consulo.ide.newModule.NewModuleWizardContext;
 import consulo.ide.newModule.NewModuleWizardContextBase;
 import consulo.localize.LocalizeValue;
 
-
 /**
  * @author VISTALL
  * @since 05.06.14

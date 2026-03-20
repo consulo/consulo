@@ -23,7 +23,6 @@ import consulo.document.util.TextRange;
 import consulo.language.Language;
 import consulo.language.psi.PsiLanguageInjectionHost;
 
-
 /**
  * Describes logic for injecting language inside hosting PSI element.
  * E.g. "inject XPath language into all XML attributes named 'select' that sit inside XML tag prefixed with 'xsl:'".

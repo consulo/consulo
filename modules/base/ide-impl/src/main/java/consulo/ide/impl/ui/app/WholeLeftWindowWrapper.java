@@ -24,7 +24,6 @@ import consulo.ui.layout.Layout;
 import consulo.ui.layout.SplitLayoutPosition;
 import consulo.ui.layout.TwoComponentSplitLayout;
 
-
 /**
  * @author VISTALL
  * @since 2018-06-29

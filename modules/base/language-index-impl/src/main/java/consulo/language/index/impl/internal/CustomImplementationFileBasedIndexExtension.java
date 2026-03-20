@@ -6,7 +6,6 @@ import consulo.index.io.StorageException;
 import consulo.language.psi.stub.FileBasedIndexExtension;
 import consulo.language.psi.stub.FileContent;
 
-
 import java.io.IOException;
 
 /**

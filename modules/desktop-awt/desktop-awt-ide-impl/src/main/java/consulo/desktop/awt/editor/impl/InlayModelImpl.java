@@ -4,7 +4,6 @@ package consulo.desktop.awt.editor.impl;
 import consulo.codeEditor.impl.CodeEditorBase;
 import consulo.codeEditor.impl.CodeEditorInlayModelBase;
 
-
 public class InlayModelImpl extends CodeEditorInlayModelBase {
   InlayModelImpl(CodeEditorBase editor) {
     super(editor);

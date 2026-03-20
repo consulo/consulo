@@ -57,7 +57,6 @@ public class DefaultExternalTask implements ExternalTask {
         myQName = QName;
     }
 
-
     @Override
     public String getDescription() {
         return myDescription;
@@ -66,7 +65,6 @@ public class DefaultExternalTask implements ExternalTask {
     public void setDescription(String description) {
         myDescription = description;
     }
-
 
     @Override
     public String getGroup() {

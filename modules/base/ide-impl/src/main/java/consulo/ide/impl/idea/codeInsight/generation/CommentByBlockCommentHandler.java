@@ -322,7 +322,6 @@ public class CommentByBlockCommentHandler extends MultiCaretCodeInsightActionHan
         return commentedRange;
     }
 
-
     private @Nullable TextRange getSelectedComments(CharSequence text, String prefix, String suffix) {
         TextRange commentedRange = null;
         if (myCaret.hasSelection()) {
@@ -756,7 +755,6 @@ public class CommentByBlockCommentHandler extends MultiCaretCodeInsightActionHan
         int startOffset = range.getStartOffset();
         //boolean endsProperly = CharArrayUtil.regionMatches(chars, range.getEndOffset() - commentSuffix.length(), commentSuffix);
         List<Couple<TextRange>> ranges = new ArrayList<>();
-
 
         if (commenter instanceof CustomUncommenter customUncommenter) {
             // In case of custom uncommenter, we need to ask it for list of [commentOpen-start,commentOpen-end], [commentClose-start,commentClose-end]

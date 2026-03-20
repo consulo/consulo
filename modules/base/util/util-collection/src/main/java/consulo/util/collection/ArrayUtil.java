@@ -247,7 +247,6 @@ public class ArrayUtil {
         return ret;
     }
 
-
     @Contract(pure = true)
     public static <T> T[] mergeArrays(T[] a1, T[] a2) {
         if (a1.length == 0) {

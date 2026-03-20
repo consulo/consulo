@@ -18,7 +18,6 @@ package consulo.language.pattern;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiNamedElement;
 
-
 /**
  * @author peter
 */

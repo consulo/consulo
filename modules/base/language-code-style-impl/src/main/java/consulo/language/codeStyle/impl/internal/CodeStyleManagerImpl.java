@@ -162,7 +162,6 @@ public class CodeStyleManagerImpl extends CodeStyleManager implements Formatting
         });
     }
 
-
     @Override
     @RequiredWriteAction
     public void reformatText(PsiFile file, int startOffset, int endOffset) throws IncorrectOperationException {
@@ -341,7 +340,6 @@ public class CodeStyleManagerImpl extends CodeStyleManager implements Formatting
         return canChangeWhiteSpacesOnly ? formatted : postProcessElement(file, formatted);
     }
 
-
     @Override
     @RequiredWriteAction
     public void reformatNewlyAddedElement(ASTNode parent, ASTNode addedElement) throws IncorrectOperationException {
@@ -508,7 +506,6 @@ public class CodeStyleManagerImpl extends CodeStyleManager implements Formatting
             && (element.getElementType() == docAwareCommenter.getBlockCommentTokenType()
             || element.getElementType() == docAwareCommenter.getLineCommentTokenType());
     }
-
 
     public IndentOld getIndent(String text, FileType fileType) {
         int indent = IndentHelperImpl.getIndent(CodeStyle.getSettings(myProject).getIndentOptions(fileType), text, true);

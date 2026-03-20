@@ -188,7 +188,6 @@ public class ClipboardSynchronizer implements Disposable {
       return false;
     }
 
-
     public @Nullable Transferable getContents() {
       Clipboard clipboard = getClipboard();
       return clipboard == null ? null : clipboard.getContents(this);

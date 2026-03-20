@@ -40,7 +40,6 @@ public final class FileTextFieldUtil {
 
     String typedText = finder.normalize(typed);
 
-
     result.current = getClosestParent(typed, finder, fileSpitRegExp);
     result.myClosestParent = result.current;
 

@@ -76,7 +76,6 @@ public final class StructureViewFactoryImpl extends StructureViewFactoryEx imple
       return map;
     });
 
-
   private final MultiValuesMap<Class<? extends PsiElement>, StructureViewExtension> myImplExtensions = new MultiValuesMap<>();
 
   @Inject

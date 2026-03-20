@@ -94,7 +94,6 @@ public class CompletionInitializationUtil {
         return new CompletionParameters(insertedElement, originalFile, initContext.getCompletionType(), offset, initContext.getInvocationCount(), initContext.getEditor(), indicator);
     }
 
-
     static OffsetsInFile insertDummyIdentifier(CompletionInitializationContext initContext, CompletionProgressIndicator indicator) {
         OffsetsInFile topLevelOffsets = indicator.getHostOffsets();
         CompletionAssertions.checkEditorValid(initContext.getEditor());

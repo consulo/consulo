@@ -20,7 +20,6 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
 import consulo.virtualFileSystem.util.VirtualFileVisitor;
 
-
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;

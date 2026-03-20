@@ -865,7 +865,6 @@ public abstract class OptionTableWithPreviewPanel extends CustomizableLanguageCo
         }
     }
 
-
     protected @Nullable JComponent getCustomValueRenderer(String optionName, Object value) {
         return null;
     }

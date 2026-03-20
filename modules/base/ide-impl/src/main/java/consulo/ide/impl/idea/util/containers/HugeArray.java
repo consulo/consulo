@@ -15,8 +15,6 @@
  */
 package consulo.ide.impl.idea.util.containers;
 
-
-
 public class HugeArray {
   private Object[][] myRows;
   private final int myRowBits;

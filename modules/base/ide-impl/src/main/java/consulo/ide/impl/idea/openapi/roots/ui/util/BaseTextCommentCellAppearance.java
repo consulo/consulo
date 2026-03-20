@@ -21,7 +21,6 @@ import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.image.Image;
 import consulo.util.lang.StringUtil;
 
-
 public abstract class BaseTextCommentCellAppearance implements CellAppearanceEx {
   protected abstract Image getIcon();
 

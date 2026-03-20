@@ -18,7 +18,6 @@ package consulo.language.editor.internal;
 import consulo.language.Language;
 import consulo.language.editor.action.ParagraphFillHandler;
 
-
 /**
  * @author VISTALL
  * @since 04-Aug-22

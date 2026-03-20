@@ -33,12 +33,10 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
-
 public class ActionUsagePanel extends JPanel implements Disposable {
   private static final String SPOT_MARKER = "spot";
   protected final EditorEx myEditor;
   protected final RangeBlinker myRangeBlinker;
-
 
   public ActionUsagePanel() {
     myEditor = (EditorEx)createEditor("", 10, 3, -1);

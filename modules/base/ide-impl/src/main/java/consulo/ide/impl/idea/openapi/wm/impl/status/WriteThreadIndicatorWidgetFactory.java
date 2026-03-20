@@ -95,7 +95,6 @@ public class WriteThreadIndicatorWidgetFactory implements StatusBarWidgetFactory
             return null;
         }
 
-
         @Override
         public void install(StatusBar statusBar) {
             BaseApplication application = ObjectUtil.tryCast(Application.get(), BaseApplication.class);

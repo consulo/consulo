@@ -67,7 +67,6 @@ public class LivePreviewController implements LivePreview.Delegate, FindUtil.Rep
         myListeningSelection = b;
     }
 
-
     private final DocumentListener myDocumentListener = new BulkAwareDocumentListener.Simple() {
         @Override
         public void afterDocumentChange(Document document) {

@@ -34,7 +34,6 @@ public class StringPattern extends ObjectPattern<String, StringPattern> {
       return o instanceof String;
     }
 
-
     @Override
     public void append(StringBuilder builder, String indent) {
       builder.append("string()");

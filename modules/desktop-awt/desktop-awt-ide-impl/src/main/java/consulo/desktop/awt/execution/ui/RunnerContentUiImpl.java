@@ -361,7 +361,6 @@ public class RunnerContentUiImpl implements RunnerContentUi, ViewContextEx, Prop
             new AnActionEvent(null, DataManager.getInstance().getDataContext(), place, new Presentation(), ActionManager.getInstance(), 0);
         AnAction[] originalActions = original.getChildren(event);
 
-
         for (AnAction each : originalActions) {
             if (each == focusPlaceholder) {
                 AnAction[] focusActions = ((ActionGroup) each).getChildren(event);
@@ -415,7 +414,6 @@ public class RunnerContentUiImpl implements RunnerContentUi, ViewContextEx, Prop
         }
     }
 
-
     public void processBounce(Content content, boolean activate) {
         GridImpl grid = getGridFor(content, false);
         if (grid == null) {
@@ -427,12 +425,10 @@ public class RunnerContentUiImpl implements RunnerContentUi, ViewContextEx, Prop
             return;
         }
 
-
         TabInfo tab = myTabs.findInfo(grid);
         if (tab == null) {
             return;
         }
-
 
         if (getSelectedGrid() != grid) {
             tab.setAlertIcon(content.getAlertIcon());
@@ -702,7 +698,6 @@ public class RunnerContentUiImpl implements RunnerContentUi, ViewContextEx, Prop
                     });
                 }
 
-
                 GridImpl grid = getGridFor(event.getContent(), true);
                 if (grid == null) {
                     return;
@@ -827,14 +822,11 @@ public class RunnerContentUiImpl implements RunnerContentUi, ViewContextEx, Prop
 
         TabInfo tab = new TabInfo(grid).setObject(getStateFor(content).getTab()).setText("Tab");
 
-
         Wrapper left = new Wrapper();
         myCommonActionsPlaceholder.put(grid, left);
 
-
         Wrapper minimizedToolbar = new Wrapper();
         myMinimizedButtonsPlaceholder.put(grid, minimizedToolbar);
-
 
         Wrapper searchComponent = new Wrapper();
         if (content.getSearchComponent() != null) {
@@ -842,7 +834,6 @@ public class RunnerContentUiImpl implements RunnerContentUi, ViewContextEx, Prop
         }
 
         TwoSideComponent right = new TwoSideComponent(searchComponent, minimizedToolbar);
-
 
         NonOpaquePanel sideComponent = new TwoSideComponent(left, right);
 
@@ -1179,7 +1170,6 @@ public class RunnerContentUiImpl implements RunnerContentUi, ViewContextEx, Prop
     private ArrayList<GridImpl> getGrids() {
         return myTabs.getTabs().stream().map(RunnerContentUiImpl::getGridFor).collect(Collectors.toCollection(ArrayList::new));
     }
-
 
     @Override
     public void setHorizontalToolbar(boolean state) {
@@ -1690,7 +1680,6 @@ public class RunnerContentUiImpl implements RunnerContentUi, ViewContextEx, Prop
         }, afterInitialized));
     }
 
-
     public static boolean ensureValid(JComponent c) {
         if (c.getRootPane() == null) {
             return false;
@@ -1763,16 +1752,13 @@ public class RunnerContentUiImpl implements RunnerContentUi, ViewContextEx, Prop
             return ActionCallback.DONE;
         }
 
-
         TabInfo info = myTabs.findInfo(grid);
         if (info == null) {
             return ActionCallback.DONE;
         }
 
-
         ActionCallback result = new ActionCallback();
         myTabs.select(info, false).doWhenDone(() -> grid.select(content, requestFocus).notifyWhenDone(result));
-
 
         return result;
     }

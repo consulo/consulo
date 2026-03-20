@@ -140,7 +140,6 @@ public class AbstractTreeUpdater implements Disposable, Activatable {
       }
     }
 
-
     if (toAdd.getUpdateStamp() >= 0) {
       Object element = ui.getElementFor(toAdd.getNode());
       if ((element == null || !ui.isParentLoadingInBackground(element)) && !ui.isParentUpdatingChildrenNow(toAdd.getNode())) {
@@ -162,12 +161,10 @@ public class AbstractTreeUpdater implements Disposable, Activatable {
       }
     }
 
-
     if (toAdd.isExpired()) {
       reQueueViewUpdateIfNeeded();
       return;
     }
-
 
     myNodeQueue.add(toAdd);
     ui.addActivity();

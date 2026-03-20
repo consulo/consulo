@@ -4,7 +4,6 @@ import consulo.application.Application;
 import consulo.localize.LocalizeValue;
 import consulo.ui.ModalityState;
 
-
 public class DumbProgressIndicator implements StandardProgressIndicator {
   public static final DumbProgressIndicator INSTANCE = new DumbProgressIndicator();
 

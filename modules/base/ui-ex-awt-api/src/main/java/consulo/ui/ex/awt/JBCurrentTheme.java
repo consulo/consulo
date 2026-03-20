@@ -327,7 +327,6 @@ public class JBCurrentTheme {
         }
     }
 
-
     public static final class Label {
         
         public static Color foreground(boolean selected) {
@@ -514,7 +513,6 @@ public class JBCurrentTheme {
         }
     }
 
-
     public static class BigPopup {
         
         public static Insets tabInsets() {
@@ -535,7 +533,6 @@ public class JBCurrentTheme {
         public static Color listTitleLabelForeground() {
             return JBColor.namedColor("SearchEverywhere.List.separatorForeground", UIUtil.getLabelDisabledForeground());
         }
-
 
         
         public static Color advertiserForeground() {

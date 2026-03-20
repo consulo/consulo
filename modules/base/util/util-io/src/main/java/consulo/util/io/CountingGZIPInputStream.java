@@ -15,7 +15,6 @@
  */
 package consulo.util.io;
 
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.zip.GZIPInputStream;

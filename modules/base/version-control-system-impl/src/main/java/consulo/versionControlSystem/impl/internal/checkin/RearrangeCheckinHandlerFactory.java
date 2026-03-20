@@ -22,7 +22,6 @@ import consulo.versionControlSystem.checkin.CheckinProjectPanel;
 import consulo.versionControlSystem.change.CommitContext;
 import consulo.versionControlSystem.checkin.CheckinHandler;
 
-
 @ExtensionImpl(id = "rearrange", order = "after reformat")
 public class RearrangeCheckinHandlerFactory extends CheckinHandlerFactory {
   @Override

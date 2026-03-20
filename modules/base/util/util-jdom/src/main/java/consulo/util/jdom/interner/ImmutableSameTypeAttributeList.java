@@ -122,7 +122,6 @@ class ImmutableSameTypeAttributeList implements List<Attribute> {
     return list;
   }
 
-
   @Override
   public boolean equals(Object o) {
     if (o == this) {

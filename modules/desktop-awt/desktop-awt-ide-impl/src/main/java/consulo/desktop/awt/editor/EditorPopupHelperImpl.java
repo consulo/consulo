@@ -26,7 +26,6 @@ import consulo.ui.ex.popup.JBPopupFactory;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
-
 /**
  * @author VISTALL
  * @since 10-Apr-22

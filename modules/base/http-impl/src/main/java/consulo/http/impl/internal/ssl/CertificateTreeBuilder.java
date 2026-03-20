@@ -184,7 +184,6 @@ public class CertificateTreeBuilder extends AbstractTreeBuilder {
             return new CertificateDescriptor(parentDescriptor, (CertificateWrapper)element);
         }
 
-
         @Override
         public void commit() {
             // do nothing

@@ -47,7 +47,6 @@ public class DirDiffFrame extends FrameWrapper {
     });
   }
 
-
   @Override
   protected void loadFrameState(@Nullable WindowState state) {
     super.loadFrameState(state);

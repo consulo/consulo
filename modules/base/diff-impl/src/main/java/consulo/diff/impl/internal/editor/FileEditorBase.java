@@ -20,7 +20,6 @@ import consulo.util.dataholder.UserDataHolderBase;
 import kava.beans.PropertyChangeListener;
 import kava.beans.PropertyChangeSupport;
 
-
 // from kotlin
 public abstract class FileEditorBase extends UserDataHolderBase implements FileEditor {
   private PropertyChangeSupport myPropertyChangeSupport = new PropertyChangeSupport(this);

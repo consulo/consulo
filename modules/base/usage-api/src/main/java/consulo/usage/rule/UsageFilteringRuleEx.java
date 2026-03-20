@@ -18,7 +18,6 @@ package consulo.usage.rule;
 import consulo.usage.Usage;
 import consulo.usage.UsageTarget;
 
-
 /**
  * @deprecated implement {@link UsageFilteringRule#isVisible(Usage, UsageTarget[])} instead
  */

@@ -18,7 +18,6 @@ package consulo.task;
 import consulo.localize.LocalizeValue;
 import consulo.ui.image.Image;
 
-
 /**
  * This auxiliary interface was added to support creation of configured generic repositories.
  * Every TaskRepositoryType subclass can be considered subtype of its own.

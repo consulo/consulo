@@ -15,7 +15,6 @@
  */
 package consulo.ui.ex.awt.util;
 
-
 public interface CollectionItemEditor<T> {
   /**
    * Class must have an empty constructor.

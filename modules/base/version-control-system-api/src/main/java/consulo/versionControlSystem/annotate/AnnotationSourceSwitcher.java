@@ -15,7 +15,6 @@
  */
 package consulo.versionControlSystem.annotate;
 
-
 public interface AnnotationSourceSwitcher {
   
   AnnotationSource getAnnotationSource(int lineNumber);

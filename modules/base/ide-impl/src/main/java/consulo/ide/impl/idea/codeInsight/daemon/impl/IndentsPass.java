@@ -144,7 +144,6 @@ public class IndentsPass extends TextEditorHighlightingPass implements DumbAware
       }
     });
 
-
     myEditor.putUserData(INDENT_HIGHLIGHTERS_IN_EDITOR_KEY, newHighlighters);
     myEditor.putUserData(LAST_TIME_INDENTS_BUILT, nowStamp());
     myEditor.getIndentsModel().assumeIndents(myDescriptors);

@@ -18,7 +18,6 @@ package consulo.language.spellcheker.internal;
 import consulo.document.util.TextRange;
 import consulo.util.lang.StringUtil;
 
-
 import java.text.CharacterIterator;
 import java.text.StringCharacterIterator;
 import java.util.List;

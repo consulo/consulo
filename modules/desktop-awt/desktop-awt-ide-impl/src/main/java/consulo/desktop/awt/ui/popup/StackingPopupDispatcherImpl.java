@@ -46,7 +46,6 @@ public class StackingPopupDispatcherImpl extends StackingPopupDispatcher impleme
 
   private final Collection<JBPopup> myAllPopups = new WeakList<>();
 
-
   @Inject
   public StackingPopupDispatcherImpl() {
   }

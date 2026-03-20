@@ -15,7 +15,6 @@
  */
 package consulo.versionControlSystem.distributed.push;
 
-
 /**
  * Source to push from. For example, local branch for git or branch/bookmark for mercurial.
  */

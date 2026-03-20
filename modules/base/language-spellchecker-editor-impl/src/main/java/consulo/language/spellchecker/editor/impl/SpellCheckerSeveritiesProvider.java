@@ -27,7 +27,6 @@ import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.color.ColorValue;
 import consulo.ui.image.Image;
 
-
 import java.util.List;
 
 /**

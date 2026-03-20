@@ -20,7 +20,6 @@ import consulo.ui.ex.awt.util.DesktopAntialiasingTypeUtil;
 import consulo.ui.ex.awt.FontInfo;
 import consulo.ui.ex.SimpleTextAttributes;
 
-
 import javax.swing.*;
 import java.awt.*;
 

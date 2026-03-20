@@ -206,7 +206,6 @@ public abstract class AbstractExternalSystemTask implements ExternalSystemTask {
 
   protected abstract boolean doCancel() throws Exception;
 
-
   
   protected String wrapProgressText(String text) {
     return ExternalSystemBundle.message("progress.update.text", getExternalSystemId(), text);

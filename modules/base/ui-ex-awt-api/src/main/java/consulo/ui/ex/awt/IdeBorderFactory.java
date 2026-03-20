@@ -114,7 +114,6 @@ public class IdeBorderFactory {
     return JBColor.border();
   }
 
-
   public static class PlainSmallWithIndent {
     private PlainSmallWithIndent() {
     }

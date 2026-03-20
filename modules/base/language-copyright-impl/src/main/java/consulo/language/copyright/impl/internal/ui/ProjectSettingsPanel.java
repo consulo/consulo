@@ -220,7 +220,6 @@ public class ProjectSettingsPanel {
         myScopeMappingModel.setItems(mappings);
     }
 
-
     private class ScopeSetting {
         private NamedScope myScope;
         private CopyrightProfile myProfile;

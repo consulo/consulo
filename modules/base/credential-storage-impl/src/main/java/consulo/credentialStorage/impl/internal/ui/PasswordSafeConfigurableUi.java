@@ -446,7 +446,6 @@ public class PasswordSafeConfigurableUi implements IdeaConfigurableUi<PasswordSa
             FileChooserDescriptor descriptor = FileChooserDescriptorFactory.createSingleFileNoJarsDescriptor();
             descriptor.withFileFilter(file -> "kdbx".equals(file.getExtension()));
 
-
             Project project = e.getData(Project.KEY);
 
             FileChooserDialog dialog =

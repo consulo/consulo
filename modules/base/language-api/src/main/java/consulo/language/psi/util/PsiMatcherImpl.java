@@ -79,7 +79,6 @@ public class PsiMatcherImpl implements PsiMatcher {
     return e == null || Objects.equals(e.match(myElement), Boolean.TRUE) ? this : NullPsiMatcherImpl.INSTANCE;
   }
 
-
   @Override
   public PsiElement getElement() {
     return myElement;

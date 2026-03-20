@@ -23,7 +23,6 @@ public abstract class PopupState<Popup> {
   private boolean hiddenLongEnough = true;
   private long timeHiddenAt;
 
-
   
   public static PopupState<JBPopup> forPopup() {
     return new JBPopupState();
@@ -87,7 +86,6 @@ public abstract class PopupState<Popup> {
     timeHiddenAt = System.currentTimeMillis();
   }
 
-
   private static final class JBPopupState extends PopupState<JBPopup> implements JBPopupListener {
     @Override
     void addListener(JBPopup popup) {
@@ -115,7 +113,6 @@ public abstract class PopupState<Popup> {
       onHide();
     }
   }
-
 
   private static final class JPopupMenuState extends PopupState<JPopupMenu> implements PopupMenuListener {
     @Override
@@ -152,7 +149,6 @@ public abstract class PopupState<Popup> {
     public void popupMenuCanceled(PopupMenuEvent event) {
     }
   }
-
 
   private static final class BalloonState extends PopupState<Balloon> implements JBPopupListener {
     @Override

@@ -20,7 +20,6 @@ import consulo.document.Document;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 
-
 public class TextResult implements Result {
   private final String myText;
 

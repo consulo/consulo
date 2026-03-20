@@ -17,7 +17,6 @@ package consulo.language.lexer;
 
 import consulo.language.ast.IElementType;
 
-
 public abstract class MergingLexerAdapterBase extends DelegateLexer {
     private IElementType myTokenType;
     private int myState;

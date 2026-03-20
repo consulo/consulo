@@ -17,7 +17,6 @@ package consulo.virtualFileSystem;
 
 import consulo.virtualFileSystem.event.*;
 
-
 /**
  * @author max
  */

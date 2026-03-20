@@ -21,7 +21,6 @@ import consulo.codeEditor.markup.RangeHighlighter;
 import consulo.diff.util.TextDiffType;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 
-
 import java.awt.*;
 
 public class DiffEmptyHighlighterRenderer implements CustomHighlighterRenderer {

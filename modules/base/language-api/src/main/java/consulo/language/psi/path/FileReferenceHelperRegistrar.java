@@ -20,7 +20,6 @@ import consulo.project.Project;
 import consulo.util.collection.ContainerUtil;
 import consulo.virtualFileSystem.VirtualFile;
 
-
 import java.util.List;
 
 /**

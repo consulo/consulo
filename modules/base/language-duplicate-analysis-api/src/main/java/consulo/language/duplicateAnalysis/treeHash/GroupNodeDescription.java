@@ -5,13 +5,11 @@ public class GroupNodeDescription {
   private final String myTitle;
   private final String myComment;
 
-
   public GroupNodeDescription(int filesCount, String title, String comment) {
     myFilesCount = filesCount;
     myTitle = title;
     myComment = comment;
   }
-
 
   public int getFilesCount() {
     return myFilesCount;

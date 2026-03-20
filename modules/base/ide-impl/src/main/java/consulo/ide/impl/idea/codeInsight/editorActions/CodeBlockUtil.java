@@ -110,7 +110,6 @@ public class CodeBlockUtil {
       }
     }
 
-
     editor.getScrollingModel().scrollToCaret(ScrollType.RELATIVE);
 
     if (isWithSelection) {

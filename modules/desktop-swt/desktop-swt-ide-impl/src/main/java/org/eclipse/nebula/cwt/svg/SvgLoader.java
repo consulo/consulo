@@ -102,7 +102,6 @@ class SvgLoader {
 	private static final String paramRegex = "[ ,]+"; //$NON-NLS-1$
 	private static final Matcher urlMatcher = Pattern.compile(" *url\\( *#(\\w+) *\\) *").matcher(""); //$NON-NLS-1$  //$NON-NLS-2$
 
-
 	private static void addArc(String[] sa, int ix, List<Byte> types, List<Float> points, boolean relative) {
 		float x1 = points.get(points.size() - 2);
 		float y1 = points.get(points.size() - 1);

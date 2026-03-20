@@ -151,7 +151,6 @@ public class ProjectConfigurableGroup extends ProjectStructureElementConfigurabl
     // todo myContext.getDaemonAnalyzer().queueUpdate(mySettingsElement);
   }
 
-
   @RequiredUIAccess
   @Override
   public void apply() throws ConfigurationException {
@@ -185,7 +184,6 @@ public class ProjectConfigurableGroup extends ProjectStructureElementConfigurabl
       }
     });
   }
-
 
   @Override
   public void setDisplayName(String name) {

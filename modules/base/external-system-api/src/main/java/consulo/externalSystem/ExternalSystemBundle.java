@@ -21,7 +21,6 @@ import consulo.component.util.localize.AbstractBundle;
 import consulo.externalSystem.localize.ExternalSystemLocalize;
 import org.jetbrains.annotations.PropertyKey;
 
-
 /**
  * @author Denis Zhdanov
  * @since 2011-08-01

@@ -164,7 +164,6 @@ class FilePointerPartNode {
         return leaf.findChildByNameId(childNameId, false);
     }
 
-
     // returns start index of the name (i.e. path[return..length) is considered a name)
     private static int extractName(CharSequence path, int length) {
         if (length == 1 && path.charAt(0) == '/') {

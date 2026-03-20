@@ -68,7 +68,6 @@ public abstract class CustomizableLanguageCodeStylePanel extends CodeStyleAbstra
 
     public abstract LanguageCodeStyleSettingsProvider.SettingsType getSettingsType();
 
-
     protected void resetDefaultNames() {
     }
 
@@ -119,7 +118,6 @@ public abstract class CustomizableLanguageCodeStylePanel extends CodeStyleAbstra
         return EditorHighlighterProvider.forFileType(fileType)
             .getEditorHighlighter(ProjectUIUtil.guessCurrentProject(getPanel()), fileType, null, scheme);
     }
-
 
     @Override
     @RequiredUIAccess

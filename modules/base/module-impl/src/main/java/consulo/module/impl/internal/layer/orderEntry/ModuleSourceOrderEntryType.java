@@ -22,7 +22,6 @@ import consulo.module.impl.internal.layer.ModuleRootLayerImpl;
 import consulo.util.xml.serializer.InvalidDataException;
 import org.jdom.Element;
 
-
 /**
  * @author VISTALL
  * @since 2014-08-21

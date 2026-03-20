@@ -28,7 +28,6 @@ import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.fileWatcher.BackgroundTaskByVfsParameters;
 import consulo.virtualFileSystem.fileWatcher.impl.BackgroundTaskByVfsParametersImpl;
 
-
 /**
  * @author VISTALL
  * @since 31-Jul-22

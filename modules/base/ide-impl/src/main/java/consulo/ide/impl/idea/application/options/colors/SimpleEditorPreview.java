@@ -317,7 +317,6 @@ public class SimpleEditorPreview implements PreviewPanel {
         return matchingHighlights;
     }
 
-
     @Override
     public void addListener(ColorAndFontSettingsListener listener) {
         myDispatcher.addListener(listener);

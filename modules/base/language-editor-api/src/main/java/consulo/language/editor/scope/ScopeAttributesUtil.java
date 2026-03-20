@@ -19,7 +19,6 @@ import consulo.annotation.DeprecationInfo;
 import consulo.colorScheme.TextAttributesKey;
 import consulo.content.scope.NamedScope;
 
-
 public class ScopeAttributesUtil {
   
   public static TextAttributesKey getScopeTextAttributeKey(NamedScope scope) {

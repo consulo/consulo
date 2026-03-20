@@ -64,7 +64,6 @@ public class TodoCheckinHandlerWorker {
     private List<TodoItem> myNewTodoItems;
     private final MyEditedFileProcessor myEditedFileProcessor;
 
-
     public TodoCheckinHandlerWorker(Project project, Collection<Change> changes, TodoFilter todoFilter,
                                     boolean includePattern) {
         this.changes = changes;

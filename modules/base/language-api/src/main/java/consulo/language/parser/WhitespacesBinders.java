@@ -18,7 +18,6 @@ package consulo.language.parser;
 import consulo.language.ast.TokenSet;
 import consulo.language.parser.WhitespacesAndCommentsBinder;
 
-
 public class WhitespacesBinders {
     private WhitespacesBinders() {
     }

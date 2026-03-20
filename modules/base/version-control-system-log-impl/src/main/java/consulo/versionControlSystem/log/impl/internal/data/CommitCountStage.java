@@ -15,7 +15,6 @@
  */
 package consulo.versionControlSystem.log.impl.internal.data;
 
-
 enum CommitCountStage {
 
   INITIAL(5),

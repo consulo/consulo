@@ -15,7 +15,6 @@
  */
 package consulo.language;
 
-
 final class ExactMatcher extends LanguageMatcher {
 
   private final

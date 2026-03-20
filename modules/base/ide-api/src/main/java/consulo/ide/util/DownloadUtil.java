@@ -75,7 +75,6 @@ public class DownloadUtil {
         downloadAtomically(indicator, url, outputFile, tempFile, null);
     }
 
-
     
     public static <V> Outcome<V> provideDataWithProgressSynchronously(@Nullable Project project,
                                                                       String progressTitle,

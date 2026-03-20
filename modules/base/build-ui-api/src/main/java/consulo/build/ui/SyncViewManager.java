@@ -23,7 +23,6 @@ import consulo.build.ui.progress.BuildProgressListener;
 import consulo.disposer.Disposable;
 import consulo.project.Project;
 
-
 /**
  * @author VISTALL
  * @since 01-Aug-22

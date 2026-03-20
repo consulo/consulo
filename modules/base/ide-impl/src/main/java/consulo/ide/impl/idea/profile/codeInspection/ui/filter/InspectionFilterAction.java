@@ -182,7 +182,6 @@ public class InspectionFilterAction extends DefaultActionGroup implements Toggle
             myShowEnabledActions = showEnabledActions;
         }
 
-
         @Override
         public boolean isSelected(AnActionEvent e) {
             return Objects.equals(myInspectionsFilter.getSuitableInspectionsStates(), myShowEnabledActions);

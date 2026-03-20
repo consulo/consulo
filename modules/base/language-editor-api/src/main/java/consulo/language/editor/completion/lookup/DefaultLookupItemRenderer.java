@@ -76,7 +76,6 @@ public class DefaultLookupItemRenderer extends LookupElementRenderer<LookupItem>
     return null;
   }
 
-
   private static @Nullable String getText3(LookupItem item) {
     Object o = item.getObject();
     String text;

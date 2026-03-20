@@ -21,7 +21,6 @@ import consulo.language.util.IncorrectOperationException;
 import consulo.logging.Logger;
 import org.jspecify.annotations.Nullable;
 
-
 /**
  * @author Dmitry Avdeev
  */
@@ -88,7 +87,6 @@ public abstract class PsiReferenceBase<T extends PsiElement> implements PsiRefer
       return text;
     }
   }
-
 
   @Override
   public T getElement() {

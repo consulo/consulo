@@ -28,7 +28,6 @@ import consulo.language.psi.stub.IStubFileElementType;
 import consulo.language.version.LanguageVersionableParserDefinition;
 import consulo.sandboxPlugin.lang.psi.SandFile;
 
-
 /**
  * @author VISTALL
  * @since 19.03.14

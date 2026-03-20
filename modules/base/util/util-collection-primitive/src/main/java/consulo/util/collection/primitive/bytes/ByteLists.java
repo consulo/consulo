@@ -17,7 +17,6 @@ package consulo.util.collection.primitive.bytes;
 
 import consulo.util.collection.primitive.bytes.impl.list.ByteArrayList;
 
-
 /**
  * @author VISTALL
  * @since 09/05/2021

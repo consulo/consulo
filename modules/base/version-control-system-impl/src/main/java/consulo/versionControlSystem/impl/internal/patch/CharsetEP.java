@@ -25,7 +25,6 @@ import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.inject.Inject;
 
-
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;

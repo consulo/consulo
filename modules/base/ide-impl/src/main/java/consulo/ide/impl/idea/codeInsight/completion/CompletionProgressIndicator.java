@@ -257,7 +257,6 @@ public class CompletionProgressIndicator extends ProgressIndicatorBase implement
         }
     }
 
-
     private void addDefaultAdvertisements(CompletionParameters parameters) {
         if (DumbService.isDumb(getProject())) {
             addAdvertisement("Results might be incomplete while indexing is in progress", PlatformIconGroup.generalWarning());
@@ -327,7 +326,6 @@ public class CompletionProgressIndicator extends ProgressIndicatorBase implement
 
         return selectionEndOffset;
     }
-
 
     void scheduleAdvertising(CompletionParameters parameters) {
         if (myLookup.isAvailableToUser()) {

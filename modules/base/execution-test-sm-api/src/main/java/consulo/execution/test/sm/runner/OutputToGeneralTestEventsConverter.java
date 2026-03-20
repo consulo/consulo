@@ -145,7 +145,6 @@ public class OutputToGeneralTestEventsConverter implements ProcessOutputConsumer
         return message != null;
     }
 
-
     private void fireOnTestStarted(TestStartedEvent testStartedEvent) {
         // local variable is used to prevent concurrent modification
         GeneralTestEventsProcessor processor = myProcessor;
@@ -227,7 +226,6 @@ public class OutputToGeneralTestEventsConverter implements ProcessOutputConsumer
             processor.onSuiteTreeNodeAdded(testName, locationHint, id, parentNodeId);
         }
     }
-
 
     private void fireRootPresentationAdded(String rootName, @Nullable String comment, String rootLocation) {
         GeneralTestEventsProcessor processor = myProcessor;

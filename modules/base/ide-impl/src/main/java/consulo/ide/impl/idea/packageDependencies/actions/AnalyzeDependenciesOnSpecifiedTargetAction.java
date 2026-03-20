@@ -27,7 +27,6 @@ import consulo.util.dataholder.Key;
 import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.ui.annotation.RequiredUIAccess;
 
-
 /**
  * @author nik
  */

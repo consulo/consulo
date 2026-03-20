@@ -23,7 +23,6 @@ import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.logging.Logger;
 import consulo.ui.ex.awt.event.DocumentAdapter;
 
-
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import java.awt.*;
@@ -63,7 +62,6 @@ public abstract class AbstractFieldPanel extends JPanel {
         setBrowseButtonActionListener(browseButtonActionListener);
         myViewerDialogTitle = viewerDialogTitle;
     }
-
 
     public abstract String getText();
 

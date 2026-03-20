@@ -21,7 +21,6 @@ import consulo.ui.layout.TwoComponentSplitLayout;
 import consulo.ui.web.internal.TargetVaddin;
 import consulo.ui.web.internal.base.VaadinComponentDelegate;
 
-
 /**
  * @author VISTALL
  * @since 2019-02-17

@@ -18,7 +18,6 @@ package consulo.language.psi;
 
 import consulo.document.util.TextRange;
 
-
 /**
  * @author cdr
 */

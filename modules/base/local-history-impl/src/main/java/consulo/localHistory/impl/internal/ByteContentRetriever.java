@@ -104,7 +104,6 @@ public class ByteContentRetriever extends ChangeSetsProcessor {
     }
   }
 
-
   private static class ContentFoundException extends RuntimeException {
   }
 }

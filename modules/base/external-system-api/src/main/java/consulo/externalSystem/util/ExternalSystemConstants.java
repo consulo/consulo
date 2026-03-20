@@ -16,7 +16,6 @@ package consulo.externalSystem.util;
 
 import consulo.util.lang.SystemProperties;
 
-
 /**
  * @author Denis Zhdanov
  * @since 4/16/13 11:44 AM

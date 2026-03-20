@@ -93,7 +93,6 @@ public class LookupManagerImpl extends LookupManager {
       }
     });
 
-
     EditorFactory.getInstance().addEditorFactoryListener(new EditorFactoryListener() {
       @Override
       public void editorReleased(EditorFactoryEvent event) {

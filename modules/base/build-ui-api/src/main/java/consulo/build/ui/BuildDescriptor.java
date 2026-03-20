@@ -17,7 +17,6 @@ package consulo.build.ui;
 
 import consulo.build.ui.event.BuildEventsNls;
 
-
 /**
  * @author Vladislav.Soroka
  */

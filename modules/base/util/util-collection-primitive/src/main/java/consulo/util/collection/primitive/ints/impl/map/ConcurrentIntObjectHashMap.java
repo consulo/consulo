@@ -60,7 +60,6 @@ public class ConcurrentIntObjectHashMap<V> implements ConcurrentIntObjectMap<V> 
    */
   static final int MAX_ARRAY_SIZE = Integer.MAX_VALUE - 8;
 
-
   /**
    * The bin count threshold for using a tree rather than list for a
    * bin.  Bins are converted to trees when adding an element to a
@@ -334,7 +333,6 @@ public class ConcurrentIntObjectHashMap<V> implements ConcurrentIntObjectMap<V> 
   private transient @Nullable ValuesView<V> values = null;
   private transient @Nullable EntrySetView<V> entrySet = null;
 
-
   /* ---------------- Public operations -------------- */
 
   /**
@@ -360,7 +358,6 @@ public class ConcurrentIntObjectHashMap<V> implements ConcurrentIntObjectMap<V> 
     int cap = ((initialCapacity >= (MAXIMUM_CAPACITY >>> 1)) ? MAXIMUM_CAPACITY : tableSizeFor(initialCapacity + (initialCapacity >>> 1) + 1));
     sizeCtl = cap;
   }
-
 
   /**
    * Creates a new, empty map with an initial table size based on
@@ -713,7 +710,6 @@ public class ConcurrentIntObjectHashMap<V> implements ConcurrentIntObjectMap<V> 
     }
   }
 
-
   /**
    * Returns a {@link Collection} view of the values contained in this map.
    * The collection is backed by the map, so changes to the map are
@@ -851,7 +847,6 @@ public class ConcurrentIntObjectHashMap<V> implements ConcurrentIntObjectMap<V> 
     return true;
   }
 
-
   // ConcurrentMap methods
 
   /**
@@ -907,7 +902,6 @@ public class ConcurrentIntObjectHashMap<V> implements ConcurrentIntObjectMap<V> 
     V v;
     return (v = get(key)) == null ? defaultValue : v;
   }
-
 
   // Hashtable legacy methods
 
@@ -966,8 +960,6 @@ public class ConcurrentIntObjectHashMap<V> implements ConcurrentIntObjectMap<V> 
     long n = sumCount();
     return (n < 0L) ? 0L : n; // ignore transient negative values
   }
-
-
 
   /* ---------------- Special Nodes -------------- */
 
@@ -2303,7 +2295,6 @@ public class ConcurrentIntObjectHashMap<V> implements ConcurrentIntObjectMap<V> 
     }
   }
 
-
   static final class ValueIterator<V> extends BaseIterator<V> implements Iterator<V>, Enumeration<V> {
     ValueIterator(Node<V> @Nullable [] tab, int index, int size, int limit, ConcurrentIntObjectHashMap<V> map) {
       super(tab, index, size, limit, map);
@@ -2658,7 +2649,6 @@ public class ConcurrentIntObjectHashMap<V> implements ConcurrentIntObjectMap<V> 
 
   // -------------------------------------------------------
 
-
   // Unsafe mechanics
   private static final UnsafeDelegate U;
   private static final long SIZECTL;
@@ -2691,7 +2681,6 @@ public class ConcurrentIntObjectHashMap<V> implements ConcurrentIntObjectMap<V> 
       throw new Error(e);
     }
   }
-
 
   /**
    * Returns a sun.misc.Unsafe.  Suitable for use in a 3rd party package.

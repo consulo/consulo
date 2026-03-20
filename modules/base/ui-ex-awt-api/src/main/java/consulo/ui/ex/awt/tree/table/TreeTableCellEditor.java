@@ -60,7 +60,6 @@ public class TreeTableCellEditor extends AbstractCellEditor implements TableCell
     return false;
   }
 
-
   @Override
   public Object getCellEditorValue() {
     return "";

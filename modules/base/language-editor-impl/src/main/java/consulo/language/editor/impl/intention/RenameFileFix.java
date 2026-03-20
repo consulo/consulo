@@ -88,7 +88,6 @@ public class RenameFileFix implements SyntheticIntentionAction, LocalQuickFix {
         return newVFile == null || newVFile.equals(vFile);
     }
 
-
     @Override
     public void invoke(Project project, Editor editor, PsiFile file) {
         VirtualFile vFile = file.getVirtualFile();

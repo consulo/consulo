@@ -150,7 +150,6 @@ public class PluginAdvertiserImpl implements PluginAdvertiser {
             .notify(myProject);
     }
 
-
     
     public static Set<PluginDescriptor> findImpl(List<PluginDescriptor> descriptors, ExtensionPreview feature) {
         ExtensionPreviewAcceptor<?> acceptor = findAcceptor(feature);

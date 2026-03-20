@@ -17,7 +17,6 @@ package consulo.logging.attachment;
 
 import consulo.logging.attachment.Attachment;
 
-
 /**
  * @author peter
  */

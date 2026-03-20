@@ -15,7 +15,6 @@
  */
 package consulo.ui.ex;
 
-
 public interface ComponentWithExpandableItems<T> {
   
   ExpandableItemsHandler<T> getExpandableItemsHandler();

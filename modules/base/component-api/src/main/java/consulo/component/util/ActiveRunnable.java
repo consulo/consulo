@@ -17,7 +17,6 @@ package consulo.component.util;
 
 import consulo.util.concurrent.AsyncResult;
 
-
 public abstract class ActiveRunnable extends ComparableObject.Impl {
 
   protected ActiveRunnable() {

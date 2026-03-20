@@ -31,7 +31,6 @@ import consulo.logging.Logger;
 import consulo.util.collection.ArrayUtil;
 import consulo.virtualFileSystem.VirtualFile;
 
-
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;

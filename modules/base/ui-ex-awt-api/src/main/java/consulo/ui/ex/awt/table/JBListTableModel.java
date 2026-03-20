@@ -45,7 +45,6 @@ public abstract class JBListTableModel extends AbstractTableModel implements Edi
     return null;
   }
 
-
   @Override
   public boolean isCellEditable(int rowIndex, int columnIndex) {
     return true;

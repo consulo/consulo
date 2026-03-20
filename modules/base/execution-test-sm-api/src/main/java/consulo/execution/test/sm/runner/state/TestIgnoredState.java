@@ -83,7 +83,6 @@ public class TestIgnoredState extends AbstractState {
         }
     }
 
-
     @Override
     public String toString() {
         //noinspection HardCodedStringLiteral

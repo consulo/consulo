@@ -43,7 +43,6 @@ public class HttpRequestUtil {
     return parseAndCheckIsLocalHost(uri, true, false);
   }
 
-
   public static String getOrigin(HttpRequest request) {
     return request.getHeaderValue("Origin");
   }
@@ -101,7 +100,6 @@ public class HttpRequestUtil {
     }
     return false;
   }
-
 
   public static boolean isLocalHost(String host, boolean onlyAnyOrLoopback, boolean hostsOnly) {
     return BuiltInServerManager.getInstance().isLocalHost(host, onlyAnyOrLoopback, hostsOnly);

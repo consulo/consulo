@@ -19,7 +19,6 @@ import consulo.application.util.CachedValue;
 import consulo.application.util.CachedValueProvider;
 import consulo.project.Project;
 
-
 public class CachedValueImpl<T> extends CachedValueBase<T> implements CachedValue<T> {
     private final CachedValueProvider<T> myProvider;
 

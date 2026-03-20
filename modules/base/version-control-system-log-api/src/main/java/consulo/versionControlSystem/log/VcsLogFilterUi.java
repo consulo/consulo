@@ -1,6 +1,5 @@
 package consulo.versionControlSystem.log;
 
-
 /**
  * Graphical UI for filtering commits in the log.
  */

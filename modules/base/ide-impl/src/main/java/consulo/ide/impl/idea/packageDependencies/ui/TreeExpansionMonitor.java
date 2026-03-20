@@ -98,7 +98,6 @@ public abstract class TreeExpansionMonitor<T> {
     myFrozen = true;
   }
 
-
   public void restore() {
     freeze();
     for (T mySelectionNode : mySelectionNodes) {

@@ -20,7 +20,6 @@ import consulo.language.editor.CodeInsightBundle;
 import consulo.language.editor.template.TextResult;
 import consulo.virtualFileSystem.VirtualFile;
 
-
 /**
  * @author Nikolay Matveev
  */

@@ -98,7 +98,6 @@ public class CompletionSorterImpl extends CompletionSorter {
         return new CompletionSorterImpl(copy);
     }
 
-
     private int idIndex(String id) {
         return ContainerUtil.indexOf(myMembers, factory -> id.equals(factory.getId()));
     }

@@ -24,7 +24,6 @@ import consulo.module.extension.MutableModuleExtension;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.image.Image;
 
-
 /**
  * @author VISTALL
  * @since 24-Jun-22

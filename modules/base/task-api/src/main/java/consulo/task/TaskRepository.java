@@ -230,7 +230,6 @@ public abstract class TaskRepository {
    */
   public abstract @Nullable String extractId(String taskName);
 
-
   /**
    * @deprecated Use {@link #setTaskState(Task, CustomTaskState)} instead.
    */
@@ -256,7 +255,6 @@ public abstract class TaskRepository {
       setTaskState(task, state.asPredefined());
     }
   }
-
 
   // for serialization
   public TaskRepository() {

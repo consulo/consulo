@@ -49,7 +49,6 @@ public class KeepTrailingSpacesOnEmptyLinesFilterFactory extends StripTrailingSp
       return containsWhitespacesOnly(myDocument.getCharsSequence(), startOffset, endOffset) ? getMaxIndentChars(line): 0;
     }
 
-
     private static boolean containsWhitespacesOnly(CharSequence chars, int start, int end) {
       for (int i = start; i < end; i++) {
         char c = chars.charAt(i);
@@ -104,7 +103,6 @@ public class KeepTrailingSpacesOnEmptyLinesFilterFactory extends StripTrailingSp
     }
   }
 
-
   
   @Override
   public StripTrailingSpacesFilter createFilter(@Nullable ComponentManager project, Document document) {
@@ -113,7 +111,6 @@ public class KeepTrailingSpacesOnEmptyLinesFilterFactory extends StripTrailingSp
     }
     return ALL_LINES;
   }
-
 
   private static boolean shouldKeepTrailingSpacesOnEmptyLines(Project project, Document document) {
     PsiFile file = PsiDocumentManager.getInstance(project).getCachedPsiFile(document);

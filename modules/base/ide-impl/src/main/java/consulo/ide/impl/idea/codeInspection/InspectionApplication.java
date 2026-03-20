@@ -16,7 +16,6 @@
 
 package consulo.ide.impl.idea.codeInspection;
 
-
 /**
  * @author max
  */

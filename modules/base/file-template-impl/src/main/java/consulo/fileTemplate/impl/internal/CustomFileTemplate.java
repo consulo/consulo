@@ -15,7 +15,6 @@
  */
 package consulo.fileTemplate.impl.internal;
 
-
 /**
  * @author Eugene Zhuravlev
  * @since 2011-04-06

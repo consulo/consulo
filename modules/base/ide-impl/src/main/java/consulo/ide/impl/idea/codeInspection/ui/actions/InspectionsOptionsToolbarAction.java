@@ -135,7 +135,6 @@ public class InspectionsOptionsToolbarAction extends AnAction {
 
         result.add(new SuppressActionWrapper(myView.getProject(), toolWrapper, tree.getSelectionPaths()));
 
-
         return result;
     }
 

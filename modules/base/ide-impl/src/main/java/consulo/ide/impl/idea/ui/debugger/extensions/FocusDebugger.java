@@ -62,13 +62,11 @@ public class FocusDebugger implements UiDebuggerExtension, PropertyChangeListene
         myLog = new JBList<>(myLogModel);
         myLog.setCellRenderer(new FocusElementRenderer());
 
-
         myAllocation = new JEditorPane();
         DefaultCaret caret = new DefaultCaret();
         myAllocation.setCaret(caret);
         caret.setUpdatePolicy(DefaultCaret.NEVER_UPDATE);
         myAllocation.setEditable(false);
-
 
         Splitter splitter = new Splitter(true);
         splitter.setFirstComponent(ScrollPaneFactory.createScrollPane(myLog));
@@ -79,7 +77,6 @@ public class FocusDebugger implements UiDebuggerExtension, PropertyChangeListene
         KeyboardFocusManager.getCurrentKeyboardFocusManager().addPropertyChangeListener(this);
 
         result.add(splitter, BorderLayout.CENTER);
-
 
         DefaultActionGroup group = new DefaultActionGroup();
         group.add(new ClearAction());
@@ -138,7 +135,6 @@ public class FocusDebugger implements UiDebuggerExtension, PropertyChangeListene
         if (oldValue instanceof Component && isInsideDebuggerDialog((Component) oldValue)) {
             affectsDebugger |= true;
         }
-
 
         SimpleColoredText text = new SimpleColoredText();
         text.append(

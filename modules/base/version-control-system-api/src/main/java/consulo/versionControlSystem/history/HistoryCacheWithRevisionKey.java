@@ -18,7 +18,6 @@ package consulo.versionControlSystem.history;
 import consulo.versionControlSystem.FilePath;
 import consulo.versionControlSystem.VcsKey;
 
-
 /**
 * @author Irina.Chernushina
 * @since 2011-08-08

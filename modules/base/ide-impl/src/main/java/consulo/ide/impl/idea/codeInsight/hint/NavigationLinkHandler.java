@@ -23,7 +23,6 @@ import consulo.fileEditor.impl.internal.OpenFileDescriptorImpl;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 
-
 /**
  * Handles tooltip links in format <code>#navigation/file_path:offset</code>.
  * On a click opens specified file in an editor and positions caret to the given offset.

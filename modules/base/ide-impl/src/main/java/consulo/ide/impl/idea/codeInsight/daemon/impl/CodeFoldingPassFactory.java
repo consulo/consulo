@@ -23,7 +23,6 @@ import consulo.language.editor.highlight.TextEditorHighlightingPassFactory;
 import consulo.codeEditor.Editor;
 import consulo.language.psi.PsiFile;
 
-
 /**
  * @author cdr
  */

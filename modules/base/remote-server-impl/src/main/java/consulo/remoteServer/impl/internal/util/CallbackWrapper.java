@@ -1,6 +1,5 @@
 package consulo.remoteServer.impl.internal.util;
 
-
 /**
  * @author michael.golubev
  */

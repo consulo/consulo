@@ -5,7 +5,6 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 
-
 /**
  * An extension allowing plugins to provide the data at runtime for the setting search to work on.
  *

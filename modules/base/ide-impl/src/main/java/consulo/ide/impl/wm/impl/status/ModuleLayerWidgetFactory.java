@@ -21,7 +21,6 @@ import consulo.project.ui.wm.StatusBar;
 import consulo.project.ui.wm.StatusBarWidget;
 import consulo.project.ui.wm.StatusBarWidgetFactory;
 
-
 /**
  * @author VISTALL
  * @since 2020-11-01

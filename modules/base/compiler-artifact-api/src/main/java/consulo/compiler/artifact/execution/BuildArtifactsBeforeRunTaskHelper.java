@@ -21,7 +21,6 @@ import consulo.compiler.artifact.Artifact;
 import consulo.dataContext.DataContext;
 import consulo.execution.configuration.RunConfiguration;
 
-
 /**
  * @author VISTALL
  * @since 22/01/2023

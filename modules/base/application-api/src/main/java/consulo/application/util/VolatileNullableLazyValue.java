@@ -3,7 +3,6 @@ package consulo.application.util;
 
 import consulo.annotation.DeprecationInfo;
 
-
 import org.jspecify.annotations.Nullable;
 import java.util.function.Supplier;
 

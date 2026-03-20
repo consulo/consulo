@@ -111,7 +111,6 @@ public class UpdaterTreeState {
         return myToExpand.isEmpty() && myToSelect.isEmpty() && myAdjustedSelection.isEmpty();
     }
 
-
     boolean isProcessingNow() {
         return myProcessingCount > 0;
     }
@@ -140,7 +139,6 @@ public class UpdaterTreeState {
 
         Object[] toSelect = getToSelect();
         Object[] toExpand = getToExpand();
-
 
         Map<Object, Predicate> adjusted = new WeakHashMap<>(myAdjustedSelection);
 

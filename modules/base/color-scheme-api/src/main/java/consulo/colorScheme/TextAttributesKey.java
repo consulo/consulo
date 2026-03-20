@@ -23,11 +23,9 @@ import consulo.util.collection.Maps;
 import consulo.util.lang.lazy.LazyValue;
 import org.jdom.Element;
 
-
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.function.Supplier;
-
 
 /**
  * A type of item with a distinct highlighting in an editor or in other views.
@@ -167,7 +165,6 @@ public final class TextAttributesKey implements Comparable<TextAttributesKey> {
     public int compareTo(TextAttributesKey key) {
         return myExternalName.compareTo(key.myExternalName);
     }
-
 
     public void writeExternal(Element element) throws WriteExternalException {
         JDOMExternalizerUtil.writeField(element, "myExternalName", myExternalName);

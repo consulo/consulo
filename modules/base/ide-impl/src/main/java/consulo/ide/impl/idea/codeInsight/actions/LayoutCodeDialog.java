@@ -83,7 +83,6 @@ public class LayoutCodeDialog extends DialogWrapper {
     setUpTextRangeMode();
   }
 
-
   private void setUpTextRangeMode() {
     mySelectedTextRadioButton.setEnabled(myTextSelected);
     if (!myTextSelected) {

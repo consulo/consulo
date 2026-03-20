@@ -464,7 +464,6 @@ public class PathsVerifier<BinaryType extends FilePatch> {
     myWritableFiles.clear();*/
   }
 
-
   private static VirtualFile createFile(VirtualFile parent, String name) throws IOException {
     return parent.createChildData(PatchApplier.class, name);
     /*final Ref<IOException> ioExceptionRef = new Ref<IOException>();

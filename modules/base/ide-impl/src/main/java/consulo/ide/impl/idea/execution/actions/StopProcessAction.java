@@ -67,7 +67,6 @@ public class StopProcessAction extends DumbAwareAction {
     presentation.setDescription(description);
   }
 
-
   @Override
   @RequiredUIAccess
   public void actionPerformed(AnActionEvent e) {

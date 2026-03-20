@@ -39,7 +39,6 @@ public class DiffSplitter extends Splitter {
         List<JComponent> actionComponents = Arrays.asList(createActionComponent(myTopAction), createActionComponent(myBottomAction));
         List<JComponent> syncComponents = AWTDiffUtil.createSyncHeightComponents(actionComponents);
 
-
         GridBag bag = new GridBag();
         JComponent button1 = syncComponents.get(0);
         JComponent button2 = syncComponents.get(1);
@@ -53,7 +52,6 @@ public class DiffSplitter extends Splitter {
           if (getDividerWidth() < width) setDividerWidth(width);
         }
 
-
         if (button1 != null) {
           add(button1, bag.nextLine());
         }
@@ -63,7 +61,6 @@ public class DiffSplitter extends Splitter {
         if (button2 != null) {
           add(button2, bag.nextLine());
         }
-
 
         revalidate();
         repaint();

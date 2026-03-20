@@ -855,7 +855,6 @@ public class DaemonCodeAnalyzerImpl extends DaemonCodeAnalyzerInternal implement
         }
     }
 
-
     @Override
     public void autoImportReferenceAtCursor(Editor editor, PsiFile file) {
         file.getApplication().getExtensionPoint(ReferenceImporter.class)

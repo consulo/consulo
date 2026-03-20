@@ -29,7 +29,6 @@ import java.awt.*;
 public class ScrollUtil {
   private ScrollUtil() {}
 
-
   public static @Nullable JScrollPane findScrollPane(JComponent c) {
     if (c == null) return null;
     return UIUtil.findComponentOfType(c, JScrollPane.class);

@@ -38,7 +38,6 @@ public interface XAttachDebuggerProvider {
     return XDefaultLocalAttachGroup.INSTANCE;
   }
 
-
   /**
    * @return if this XAttachDebuggerProvider is able to interact with this host
    */

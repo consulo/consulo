@@ -69,7 +69,6 @@ public abstract class TypeCommand extends AbstractCommand {
       robot.keyRelease(keyStroke.getKeyChar());
     }
 
-
     if (shift) {
       robot.keyRelease(KeyEvent.VK_SHIFT);
     }

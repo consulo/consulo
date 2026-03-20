@@ -15,7 +15,6 @@
  */
 package consulo.component.persist.scheme;
 
-
 public interface SchemeElement {
   void setGroupName(String name);
 

@@ -20,7 +20,6 @@ import consulo.content.library.LibraryType;
 import consulo.content.library.PersistentLibraryKind;
 import consulo.module.content.layer.ModuleRootLayer;
 
-
 /**
  * @author VISTALL
  * @since 24/01/2022

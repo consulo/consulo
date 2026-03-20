@@ -626,7 +626,6 @@ public class XDebugSessionImpl implements XDebugSession {
         return myCurrentExecutionStack != null && myIsTopFrame;
     }
 
-
     @Override
     public void showExecutionPoint() {
         if (mySuspendContext != null) {

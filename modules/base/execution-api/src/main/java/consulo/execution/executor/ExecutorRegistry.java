@@ -22,7 +22,6 @@ import consulo.application.ApplicationManager;
 import consulo.execution.runner.ExecutionEnvironment;
 import consulo.project.Project;
 
-
 /**
  * @author spleaner
  */

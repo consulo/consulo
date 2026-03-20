@@ -28,10 +28,8 @@
 
 package net.n3.nanoxml;
 
-
 import java.io.Reader;
 import java.io.IOException;
-
 
 /**
  * This reader reads data from another reader until the end of a CDATA section
@@ -61,7 +59,6 @@ class CDATAReader
     */
    private boolean atEndOfData;
 
-
    /**
     * Creates the reader.
     *
@@ -73,7 +70,6 @@ class CDATAReader
       this.savedChar = 0;
       this.atEndOfData = false;
    }
-
 
    /**
     * Reads a block of data.

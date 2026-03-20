@@ -27,7 +27,6 @@ import static ch.qos.logback.core.CoreConstants.NA;
  */
 public class CallerData {
 
-
     // All logger call's in log4j-over-slf4j use the Category class
     private static final String LOG4J_CATEGORY = "org.apache.log4j.Category";
     private static final String SLF4J_BOUNDARY = "org.slf4j.Logger";

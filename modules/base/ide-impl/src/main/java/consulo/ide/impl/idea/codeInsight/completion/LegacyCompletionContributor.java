@@ -141,7 +141,6 @@ public class LegacyCompletionContributor extends CompletionContributor {
     }
   }
 
-
   
   @Override
   public Language getLanguage() {

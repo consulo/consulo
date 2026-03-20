@@ -16,7 +16,6 @@
 
 package consulo.project.ui.view;
 
-
 import java.util.Collection;
 
 /**

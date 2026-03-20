@@ -78,7 +78,6 @@ public class ExtractMethodHelper {
         });
     }
 
-
     /**
      * Finds duplicates of the code fragment specified in the finder in given scopes.
      * Note that in contrast to {@link #processDuplicates} the search is performed synchronously because normally you need the results in
@@ -115,7 +114,6 @@ public class ExtractMethodHelper {
             return Collections.emptyList();
         }
     }
-
 
     /**
      * Notifies user about found duplicates and then highlights each of them in the editor and asks user how to proceed.

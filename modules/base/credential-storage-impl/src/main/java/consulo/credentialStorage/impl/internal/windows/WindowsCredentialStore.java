@@ -109,7 +109,6 @@ public class WindowsCredentialStore implements CredentialStore {
         credential.Type = CredAdvapi32.CRED_TYPE_GENERIC;
         credential.TargetName = key;
 
-
         credential.CredentialBlobSize = credentialBlob.length;
         credential.CredentialBlob = getPointer(credentialBlob);
 

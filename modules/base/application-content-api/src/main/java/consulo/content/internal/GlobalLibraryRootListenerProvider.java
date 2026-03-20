@@ -19,7 +19,6 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.virtualFileSystem.pointer.VirtualFilePointerListener;
 
-
 /**
  * @author VISTALL
  * @since 09-Apr-22

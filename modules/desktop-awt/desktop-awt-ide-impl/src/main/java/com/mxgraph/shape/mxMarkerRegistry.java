@@ -93,7 +93,6 @@ public class mxMarkerRegistry {
       }
     });
 
-
     registerMarker(mxConstants.ARROW_DIAMOND, new mxIMarker() {
       public mxPoint paintMarker(mxGraphics2DCanvas canvas,
                                  mxCellState state,

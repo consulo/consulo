@@ -126,7 +126,6 @@ class PatternDialog extends DialogWrapper {
         super.doOKAction();
     }
 
-
     private boolean useCustomTodoColor() {
         return !myUsedDefaultColorsCeckBox.isSelected();
     }

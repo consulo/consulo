@@ -158,7 +158,6 @@ public class NaturalLanguageTextSelectioner extends ExtendWordSelectionHandlerBa
             return paragraph.shiftRight(shift);
         }
 
-
         return best.shiftRight(shift);
     }
 

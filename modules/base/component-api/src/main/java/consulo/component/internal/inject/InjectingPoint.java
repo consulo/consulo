@@ -41,7 +41,6 @@ public interface InjectingPoint<T> {
 
   InjectingPoint<T> forceSingleton();
 
-
   InjectingPoint<T> factory(Function<Provider<T>, T> remap);
 
   

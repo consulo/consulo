@@ -79,7 +79,6 @@ public class TreeModelBuilder {
     return Comparing.compare(fp1.getPath().length(), fp2.getPath().length());
   };
 
-
   public TreeModelBuilder(Project project, boolean showFlatten) {
     myProject = project;
     myShowFlatten = showFlatten;
@@ -91,7 +90,6 @@ public class TreeModelBuilder {
     });
     myFoldersCache = new HashMap<>();
   }
-
 
   
   public static DefaultTreeModel buildEmpty(Project project) {
@@ -120,7 +118,6 @@ public class TreeModelBuilder {
   public static DefaultTreeModel buildFromVirtualFiles(Project project, boolean showFlatten, Collection<VirtualFile> virtualFiles) {
     return new TreeModelBuilder(project, showFlatten).setVirtualFiles(virtualFiles, null).build();
   }
-
 
   
   public TreeModelBuilder setChanges(Collection<? extends Change> changes, @Nullable ChangeNodeDecorator changeNodeDecorator) {

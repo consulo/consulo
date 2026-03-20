@@ -3,7 +3,6 @@ package consulo.util.concurrent.internal;
 
 import org.jetbrains.annotations.Contract;
 
-
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.AbstractExecutorService;

@@ -61,7 +61,6 @@ public class JBPopupMenu extends JPopupMenu {
     super.setLayout(mgr);
   }
 
-
   @Override
   public void paint(Graphics g) {
     GraphicsUtil.setupAntialiasing(g);

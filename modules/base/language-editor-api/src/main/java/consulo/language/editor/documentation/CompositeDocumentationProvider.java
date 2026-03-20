@@ -172,7 +172,6 @@ public class CompositeDocumentationProvider extends DocumentationProviderEx impl
     return null;
   }
 
-
   public @Nullable CodeDocumentationProvider getFirstCodeDocumentationProvider() {
     for (DocumentationProvider provider : getAllProviders()) {
       if (provider instanceof CodeDocumentationProvider) {

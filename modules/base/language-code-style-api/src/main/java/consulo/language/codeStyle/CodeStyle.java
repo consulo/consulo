@@ -227,7 +227,6 @@ public class CodeStyle {
         CodeStyleSettingsManager.getInstance(project).setTemporarySettings(settings);
     }
 
-
     /**
      * Drop temporary settings.
      * <p>

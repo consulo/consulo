@@ -19,7 +19,6 @@ import consulo.language.statistician.Statistician;
 import consulo.language.psi.PsiElement;
 import consulo.util.dataholder.Key;
 
-
 /**
  * @author peter
  */

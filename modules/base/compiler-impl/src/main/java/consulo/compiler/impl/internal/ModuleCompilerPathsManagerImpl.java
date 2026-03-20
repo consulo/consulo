@@ -173,7 +173,6 @@ public class ModuleCompilerPathsManagerImpl extends ModuleCompilerPathsManager i
         return pathElement;
     }
 
-
     @Override
     public void loadState(Element element) {
         myInheritOutput = false;

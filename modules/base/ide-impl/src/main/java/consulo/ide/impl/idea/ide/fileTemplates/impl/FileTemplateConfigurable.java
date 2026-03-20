@@ -480,7 +480,6 @@ public class FileTemplateConfigurable implements Configurable, Configurable.NoSc
         return new MergingLexerAdapter(new FileTemplateTextLexer(), TokenSet.create(FileTemplateTokenType.TEXT));
     }
 
-
     public void focusToNameField() {
         myNameField.selectAll();
         IdeFocusManager.getGlobalInstance().doWhenFocusSettlesDown(

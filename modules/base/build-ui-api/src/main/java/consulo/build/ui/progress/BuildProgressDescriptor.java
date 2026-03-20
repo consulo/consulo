@@ -3,7 +3,6 @@ package consulo.build.ui.progress;
 
 import consulo.build.ui.BuildDescriptor;
 
-
 public interface BuildProgressDescriptor {
   
   public static BuildProgressDescriptor of(BuildDescriptor descriptor) {

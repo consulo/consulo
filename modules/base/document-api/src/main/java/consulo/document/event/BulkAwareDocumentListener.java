@@ -3,7 +3,6 @@ package consulo.document.event;
 
 import consulo.document.Document;
 
-
 /**
  * Convenience interface for {@link DocumentListener}-s which only process notifications on document changes performed not in
  * {@link Document#setInBulkUpdate(boolean) bulk mode}.

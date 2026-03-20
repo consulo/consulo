@@ -150,7 +150,6 @@ public abstract class BaseDataReader {
       }
     };
 
-
     int getTimeToSleep(boolean wasActive);
 
     /**

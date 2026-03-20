@@ -253,7 +253,6 @@ public class OnePixelDivider extends Divider {
     mySwitchOrientationEnabled = switchOrientationEnabled;
   }
 
-
   public boolean isVertical() {
     return myVertical;
   }

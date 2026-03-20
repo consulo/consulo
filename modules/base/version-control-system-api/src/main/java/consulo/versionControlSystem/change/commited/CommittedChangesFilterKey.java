@@ -15,7 +15,6 @@
  */
 package consulo.versionControlSystem.change.commited;
 
-
 /**
 * @author irengrig
 */

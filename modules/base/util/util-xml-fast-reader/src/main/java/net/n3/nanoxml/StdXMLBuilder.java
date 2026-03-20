@@ -28,14 +28,12 @@
 
 package net.n3.nanoxml;
 
-
 import org.jspecify.annotations.Nullable;
 
 import java.io.IOException;
 import java.io.Reader;
 import java.util.Objects;
 import java.util.Stack;
-
 
 /**
  * StdXMLBuilder is a concrete implementation of IXMLBuilder which creates a
@@ -55,18 +53,15 @@ public class StdXMLBuilder
     */
    private @Nullable Stack stack = null;
 
-
    /**
     * The root element of the parsed XML tree.
     */
    private @Nullable IXMLElement root = null;
 
-
    /**
     * Prototype element for creating the tree.
     */
    private final IXMLElement prototype;
-
 
    /**
     * Creates the builder.
@@ -75,7 +70,6 @@ public class StdXMLBuilder
    {
       this(new XMLElement());
    }
-
 
    /**
     * Creates the builder.
@@ -86,7 +80,6 @@ public class StdXMLBuilder
    {
       this.prototype = prototype;
    }
-
 
    /**
     * This method is called before the parser starts processing its input.
@@ -101,7 +94,6 @@ public class StdXMLBuilder
       this.root = null;
    }
 
-
    /**
     * This method is called when a processing instruction is encountered.
     * PIs with target "xml" are handled by the parser.
@@ -114,7 +106,6 @@ public class StdXMLBuilder
    {
       // nothing to do
    }
-
 
    /**
     * This method is called when a new XML element is encountered.
@@ -156,7 +147,6 @@ public class StdXMLBuilder
       stack.push(elt);
    }
 
-
    /**
     * This method is called when the attributes of an XML element have been
     * processed.
@@ -177,7 +167,6 @@ public class StdXMLBuilder
    {
       // nothing to do
    }
-
 
    /**
     * This method is called when the end of an XML elemnt is encountered.
@@ -206,7 +195,6 @@ public class StdXMLBuilder
          }
       }
    }
-
 
    /**
     * This method is called when a new attribute of an XML element is
@@ -252,7 +240,6 @@ public class StdXMLBuilder
          top.setAttribute(fullName, value);
       }
    }
-
 
    /**
     * This method is called when a PCDATA element is encountered. A Java
@@ -305,7 +292,6 @@ public class StdXMLBuilder
          top.addChild(elt);
       }
    }
-
 
    /**
     * Returns the result of the building process. This method is called just

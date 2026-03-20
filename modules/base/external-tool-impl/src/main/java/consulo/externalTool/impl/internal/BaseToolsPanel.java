@@ -232,7 +232,6 @@ public abstract class BaseToolsPanel<T extends Tool> extends JPanel {
         update();
     }
 
-
     protected abstract BaseToolManager<T> getToolManager();
 
     protected List<ToolsGroup<T>> getToolsGroups() {
@@ -456,7 +455,6 @@ public abstract class BaseToolsPanel<T extends Tool> extends JPanel {
 
         (getModel()).nodesWereRemoved(parent, new int[]{idx}, new TreeNode[]{node});
     }
-
 
     private void editSelected() {
         CheckedTreeNode node = getSelectedToolNode();

@@ -41,7 +41,6 @@ public class ChangeBrowserSettings implements JDOMExternalizable {
   public boolean USE_CHANGE_BEFORE_FILTER = false;
   public boolean USE_CHANGE_AFTER_FILTER = false;
 
-
   public String DATE_BEFORE = "";
   public String DATE_AFTER = "";
 

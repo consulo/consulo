@@ -4,7 +4,6 @@ package consulo.ide.impl.idea.openapi.editor.ex;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.event.FocusChangeListener;
 
-
 /**
  * @author tav
  */

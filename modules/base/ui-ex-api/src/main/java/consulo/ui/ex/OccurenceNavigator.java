@@ -17,7 +17,6 @@ package consulo.ui.ex;
 
 import consulo.navigation.Navigatable;
 
-
 public interface OccurenceNavigator {
   OccurenceNavigator EMPTY = new OccurenceNavigator() {
     @Override

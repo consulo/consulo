@@ -17,7 +17,6 @@ package consulo.web.gwt.client.util;
 
 import consulo.web.gwt.shared.ui.state.RGBColorShared;
 
-
 /**
  * @author VISTALL
  * @since 20-May-16

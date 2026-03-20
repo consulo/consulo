@@ -18,7 +18,6 @@ package consulo.util.dataholder.internal.keyFMap;
 import consulo.util.dataholder.Key;
 import org.jspecify.annotations.Nullable;
 
-
 public class PairElementsFMap implements KeyFMap {
     private final Key key1;
     private final Key key2;

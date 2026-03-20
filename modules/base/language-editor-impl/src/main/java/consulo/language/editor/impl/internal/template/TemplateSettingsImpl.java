@@ -195,7 +195,6 @@ public class TemplateSettingsImpl implements PersistentStateComponent<TemplateSe
                 return readTemplateFile(schemeContent, schemeContent.getRootElement().getAttributeValue("group"), false, false, getClass().getClassLoader());
             }
 
-
             @Override
             public boolean shouldBeSaved(TemplateGroup template) {
                 for (TemplateImpl t : template.getElements()) {

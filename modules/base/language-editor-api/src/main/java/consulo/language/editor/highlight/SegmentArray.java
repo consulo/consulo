@@ -187,7 +187,6 @@ public class SegmentArray {
         return myEnds[index];
     }
 
-
     public int getSegmentCount() {
         return mySegmentCount;
     }

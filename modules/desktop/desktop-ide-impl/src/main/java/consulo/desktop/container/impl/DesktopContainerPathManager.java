@@ -429,7 +429,6 @@ public class DesktopContainerPathManager extends ContainerPathManager {
     return s;
   }
 
-
   // helpers
 
   private static String getAbsolutePath(String path) {

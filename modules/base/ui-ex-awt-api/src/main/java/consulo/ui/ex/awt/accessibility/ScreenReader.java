@@ -18,7 +18,6 @@ package consulo.ui.ex.awt.accessibility;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 
-
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.io.File;

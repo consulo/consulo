@@ -15,7 +15,6 @@
  */
 package consulo.document.util;
 
-
 /**
  * Text range which asserts its non-negative startOffset and length
  */

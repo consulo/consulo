@@ -320,7 +320,6 @@ public class CompileContextImpl extends UserDataHolderBase implements CompileCon
         return null;
     }
 
-
     private final Map<Module, VirtualFile[]> myModuleToRootsCache = new HashMap<>();
 
     @Override

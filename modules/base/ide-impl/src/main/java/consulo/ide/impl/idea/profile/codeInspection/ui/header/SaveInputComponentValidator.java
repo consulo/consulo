@@ -15,7 +15,6 @@
  */
 package consulo.ide.impl.idea.profile.codeInspection.ui.header;
 
-
 /**
  * @author Dmitry Batkovich
  */

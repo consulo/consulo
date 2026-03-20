@@ -45,7 +45,6 @@ public class KeyboardGestureProcessor {
 
   KeyGestureState myState = myWaitForStart;
 
-
   final Timer myHoldTimer = UIUtil.createNamedTimer("Keyboard hold",1200, new ActionListener() {
     public void actionPerformed(ActionEvent e) {
     }

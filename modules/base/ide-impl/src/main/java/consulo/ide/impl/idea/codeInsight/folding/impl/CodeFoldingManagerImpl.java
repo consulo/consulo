@@ -95,7 +95,6 @@ public class CodeFoldingManagerImpl extends CodeFoldingManager implements Dispos
       return null;
     }
 
-
     List<FoldingUpdate.RegionInfo> regionInfos = FoldingUpdate.getFoldingsFor(file, document, true);
 
     return editor -> {

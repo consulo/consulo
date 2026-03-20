@@ -604,7 +604,6 @@ public abstract class IntervalTreeImpl<T> extends RedBlackTree<T> implements Int
         return processOverlappingWithOutside(root.getRight(), start, end, modCountBefore, delta, processor);
     }
 
-
     @Override
     public boolean processContaining(int offset, Predicate<? super T> processor) {
         try {
@@ -1409,7 +1408,6 @@ public abstract class IntervalTreeImpl<T> extends RedBlackTree<T> implements Int
             l.writeLock().unlock();
         }
     }
-
 
     // called under write lock
     private void processReferenceQueue() {

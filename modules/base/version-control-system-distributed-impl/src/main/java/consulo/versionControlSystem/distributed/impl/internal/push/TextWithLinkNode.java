@@ -15,7 +15,6 @@
  */
 package consulo.versionControlSystem.distributed.impl.internal.push;
 
-
 import consulo.ui.ex.awt.tree.ColoredTreeCellRenderer;
 import consulo.ui.ex.awt.tree.TreeUtil;
 import consulo.versionControlSystem.distributed.ui.awt.VcsLinkedTextComponent;

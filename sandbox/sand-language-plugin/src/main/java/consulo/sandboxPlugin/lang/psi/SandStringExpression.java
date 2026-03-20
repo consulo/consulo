@@ -20,7 +20,6 @@ import consulo.language.impl.psi.ASTWrapperPsiElement;
 import consulo.language.psi.LiteralTextEscaper;
 import consulo.language.psi.PsiLanguageInjectionHost;
 
-
 /**
  * @author VISTALL
  * @since 16-Jul-22

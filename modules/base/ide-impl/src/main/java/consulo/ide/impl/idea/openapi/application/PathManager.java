@@ -88,7 +88,6 @@ public class PathManager {
     return resultPath;
   }
 
-
   public static @Nullable String getJarPathForClass(Class aClass) {
     String path = "/" + aClass.getName().replace('.', '/') + ".class";
     try {

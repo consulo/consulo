@@ -23,7 +23,6 @@ import consulo.module.content.internal.ModuleRootManagerInternal;
 import consulo.module.content.layer.ModifiableRootModel;
 import consulo.module.content.layer.ModuleRootModel;
 
-
 /**
  * Interface for getting information about the contents and dependencies of a module.
  *

@@ -21,7 +21,6 @@ import consulo.util.xml.serializer.JDOMExternalizable;
 import consulo.util.xml.serializer.WriteExternalException;
 import org.jdom.Element;
 
-
 /**
  * @author nik
  */
@@ -33,7 +32,6 @@ public class PredefinedLogFile implements JDOMExternalizable {
 
   public PredefinedLogFile() {
   }
-
 
   public PredefinedLogFile(PredefinedLogFile logFile) {
     myEnabled = logFile.myEnabled;
@@ -68,7 +66,6 @@ public class PredefinedLogFile implements JDOMExternalizable {
   public int hashCode() {
     return myId.hashCode();
   }
-
 
   @Override
   public void readExternal(Element element) throws InvalidDataException {

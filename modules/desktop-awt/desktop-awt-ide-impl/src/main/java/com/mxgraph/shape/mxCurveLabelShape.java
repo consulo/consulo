@@ -290,7 +290,6 @@ public class mxCurveLabelShape implements mxITextShape {
 
           i += characterLen;
 
-
         }
       }
 

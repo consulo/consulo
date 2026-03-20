@@ -47,7 +47,6 @@ public class UsesMemberDependencyGraph<T extends NavigatablePsiElement, C extend
     myMemberDependenciesStorage = new MemberDependenciesStorage<>(aClass, superClass);
   }
 
-
   @Override
   public Set<? extends T> getDependent() {
     if (myDependencies == null) {
@@ -77,7 +76,6 @@ public class UsesMemberDependencyGraph<T extends NavigatablePsiElement, C extend
     if (strings.isEmpty()) return null;
     return RefactoringLocalize.usedBy0(StringUtil.join(strings, ", ")).get();
   }
-
 
   private void buildDeps(T sourceElement, Set<T> members) {
     if (myRecursive) {

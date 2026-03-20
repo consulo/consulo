@@ -20,7 +20,6 @@ import consulo.annotation.component.ExtensionAPI;
 import consulo.configurable.AdditionalPropertiesProvider;
 import consulo.localize.LocalizeValue;
 
-
 /**
  * @author VISTALL
  * @since 17-Jul-22

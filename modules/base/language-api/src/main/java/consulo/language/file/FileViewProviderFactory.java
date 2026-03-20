@@ -19,7 +19,6 @@ import consulo.language.Language;
 import consulo.language.psi.PsiManager;
 import consulo.virtualFileSystem.VirtualFile;
 
-
 /**
  * @author yole
  *

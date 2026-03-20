@@ -13,7 +13,6 @@
  *****************************************************************************/
 package org.eclipse.nebula.cwt.svg;
 
-
 class SvgGradientStop extends SvgElement {
 
 	/**

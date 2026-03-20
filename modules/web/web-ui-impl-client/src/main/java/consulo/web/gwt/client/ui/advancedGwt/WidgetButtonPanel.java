@@ -125,7 +125,6 @@ public abstract class WidgetButtonPanel extends FlexTable implements AdvancedWid
   public void display() {
   }
 
-
   /**
    * Checks whether the controls palced on this panel are enabled.
    *

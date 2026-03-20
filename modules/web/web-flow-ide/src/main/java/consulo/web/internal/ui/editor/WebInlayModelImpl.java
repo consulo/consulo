@@ -18,7 +18,6 @@ package consulo.web.internal.ui.editor;
 import consulo.codeEditor.impl.CodeEditorBase;
 import consulo.codeEditor.impl.CodeEditorInlayModelBase;
 
-
 /**
  * @author VISTALL
  * @since 04/08/2021

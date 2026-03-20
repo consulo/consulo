@@ -58,7 +58,6 @@ public class ColumnDuration extends BaseColumn implements Comparator<SMTestProxy
         return duration1.compareTo(duration2);
     }
 
-
     @Override
     public TableCellRenderer getRenderer(SMTestProxy proxy) {
         return new DurationCellRenderer(proxy);

@@ -242,7 +242,6 @@ public abstract class DockablePopupManager<T extends JComponent & Disposable> {
         });
     }
 
-
     public void restorePopupBehavior() {
         if (myToolWindow != null) {
             PropertiesComponent.getInstance().setValue(getShowInToolWindowProperty(), Boolean.FALSE.toString());

@@ -107,7 +107,6 @@ public final class DesktopRequestFocusInToolWindowCmd {
     checkerAlarm.addRequest(checker, 0);
   }
 
-
   private @Nullable Component getShowingComponentToRequestFocus() {
     Container container = myToolWindow.getComponent();
     if (container == null || !container.isShowing()) {

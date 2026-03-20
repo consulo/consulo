@@ -31,7 +31,6 @@ public class DirectoryUtil {
   private DirectoryUtil() {
   }
 
-
   /**
    * Creates the directory with the given path via PSI, including any
    * necessary but nonexistent parent directories. Must be run in write action.

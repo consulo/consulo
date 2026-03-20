@@ -34,7 +34,6 @@ import consulo.language.util.IncorrectOperationException;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
-
 /**
  * @author yole
  */

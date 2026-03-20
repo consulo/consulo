@@ -9,7 +9,6 @@ import consulo.ui.ex.awt.ColumnInfo;
 import consulo.ui.ex.awt.SortableColumnModel;
 import consulo.util.collection.ArrayUtil;
 
-
 import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
 import java.util.ArrayList;

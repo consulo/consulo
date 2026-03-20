@@ -70,7 +70,6 @@ public class MasterDetailPopupBuilder implements MasterController {
         myUseDimensionServiceForXYLocation = useDimensionServiceForXYLocation;
     }
 
-
     public String getDimensionServiceKey() {
         return myDimensionServiceKey;
     }
@@ -80,7 +79,6 @@ public class MasterDetailPopupBuilder implements MasterController {
     }
 
     private String myDimensionServiceKey;
-
 
     public MasterDetailPopupBuilder setDetailView(DetailView detailView) {
         myDetailView = detailView;
@@ -119,7 +117,6 @@ public class MasterDetailPopupBuilder implements MasterController {
             }
         };
 
-
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
@@ -155,7 +152,6 @@ public class MasterDetailPopupBuilder implements MasterController {
             setCancelOnClickOutside(myCancelOnClickOutside).
             setUseDimensionServiceForXYLocation(myUseDimensionServiceForXYLocation);
 
-
         if (myDoneRunnable != null) {
             builder.setHeaderRightActions(List.of(
                 new DumbAwareAction(LocalizeValue.localizeTODO("Close"), LocalizeValue.empty(), PlatformIconGroup.actionsClose()) {
@@ -172,7 +168,6 @@ public class MasterDetailPopupBuilder implements MasterController {
         if (title != null) {
             builder.setTitle(title);
         }
-
 
         builder.
             setItemChoosenCallback(runnable).

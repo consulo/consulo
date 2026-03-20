@@ -65,7 +65,6 @@ class NavBarListWrapper extends JBScrollPane implements UiDataProvider {
     myList = list;
   }
 
-
   @Override
   public void uiDataSnapshot(DataSink sink) {
     sink.lazy(PlatformDataKeys.SELECTED_ITEM, () -> myList.getSelectedValue());

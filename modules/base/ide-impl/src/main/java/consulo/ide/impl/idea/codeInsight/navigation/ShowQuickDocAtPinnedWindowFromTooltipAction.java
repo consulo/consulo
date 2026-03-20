@@ -22,7 +22,6 @@ import consulo.language.psi.PsiElement;
 import consulo.project.Project;
 import consulo.ui.ex.action.ActionsBundle;
 
-
 /**
  * @author Denis Zhdanov
  * @since 7/13/12 11:43 AM

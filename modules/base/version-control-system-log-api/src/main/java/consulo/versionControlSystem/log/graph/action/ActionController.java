@@ -15,7 +15,6 @@
  */
 package consulo.versionControlSystem.log.graph.action;
 
-
 /**
  * @author erokhins
  */

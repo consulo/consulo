@@ -15,7 +15,6 @@
  */
 package consulo.util.io;
 
-
 import java.io.InputStream;
 
 public class UnsyncByteArrayInputStream extends InputStream {

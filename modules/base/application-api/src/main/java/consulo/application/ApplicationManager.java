@@ -45,10 +45,13 @@ public class ApplicationManager {
   }
 
   public static void setApplication(Application instance, Disposable parent) {
-    Disposer.register(parent, () -> {
-      setApplication(null);
-      RootComponentHolder.setRootComponent(null);
-    });
+    Disposer.register(
+      parent,
+      () -> {
+        setApplication(null);
+        RootComponentHolder.setRootComponent(null);
+      }
+    );
 
     setApplication(instance);
   }

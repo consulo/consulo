@@ -15,7 +15,6 @@
  */
 package consulo.ui.ex.awt.accessibility;
 
-
 import javax.accessibility.Accessible;
 import javax.accessibility.AccessibleContext;
 import java.awt.*;

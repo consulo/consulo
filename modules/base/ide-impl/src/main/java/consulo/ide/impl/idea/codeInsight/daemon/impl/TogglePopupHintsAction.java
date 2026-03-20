@@ -31,7 +31,6 @@ import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiManager;
 import consulo.logging.Logger;
 
-
 @ActionImpl(id = "TogglePopupHints")
 public class TogglePopupHintsAction extends AnAction {
     private static final Logger LOG = Logger.getInstance(TogglePopupHintsAction.class);

@@ -24,7 +24,6 @@ import consulo.module.content.util.OrderEntryUtil;
 import consulo.ide.setting.module.ModulesConfigurator;
 import consulo.util.concurrent.AsyncResult;
 
-
 /**
  * @author nik
  */

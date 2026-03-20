@@ -25,7 +25,6 @@ import consulo.util.collection.ArrayUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import org.jspecify.annotations.Nullable;
 
-
 /**
  * @author VISTALL
  * @since 21.08.14

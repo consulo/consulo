@@ -147,7 +147,6 @@ public class BaseRepositoryEditor<T extends BaseRepository> extends TaskReposito
     loginAnonymouslyChanged(!myLoginAnonymouslyJBCheckBox.isSelected());
   }
 
-
   protected final void updateCustomPanel() {
     myCustomPanel.removeAll();
     JComponent customPanel = createCustomPanel();

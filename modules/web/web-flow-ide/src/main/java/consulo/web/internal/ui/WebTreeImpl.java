@@ -120,7 +120,6 @@ public class WebTreeImpl<NODE> extends VaadinComponentDelegate<WebTreeImpl.Vaadi
             });
         }
 
-
         @Override
         protected void onAttach(AttachEvent attachEvent) {
             super.onAttach(attachEvent);

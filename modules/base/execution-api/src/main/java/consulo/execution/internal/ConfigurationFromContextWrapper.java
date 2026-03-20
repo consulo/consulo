@@ -21,7 +21,6 @@ import consulo.execution.action.ConfigurationFromContext;
 import consulo.execution.action.RuntimeConfigurationProducer;
 import consulo.language.psi.PsiElement;
 
-
 /**
  * Wraps a {@link RuntimeConfigurationProducer} in a {@link ConfigurationFromContext}.
  *

@@ -21,7 +21,6 @@ import consulo.ui.color.ColorValue;
 import consulo.ui.image.Image;
 import consulo.ui.style.StandardColors;
 
-
 /**
  * @author VISTALL
  * @since 22:59/31.10.13

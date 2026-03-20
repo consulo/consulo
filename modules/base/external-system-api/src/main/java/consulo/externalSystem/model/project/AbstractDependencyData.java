@@ -102,7 +102,6 @@ public abstract class AbstractDependencyData<T extends AbstractExternalEntityDat
     myTarget.setInternalName(name);
   }
 
-
   @SuppressWarnings("MethodOverridesPrivateMethodOfSuperclass")
   private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
     in.defaultReadObject();

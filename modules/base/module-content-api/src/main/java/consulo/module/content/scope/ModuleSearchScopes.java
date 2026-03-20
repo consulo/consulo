@@ -17,7 +17,6 @@ package consulo.module.content.scope;
 
 import consulo.module.Module;
 
-
 /**
  * @author VISTALL
  * @since 11-Feb-22

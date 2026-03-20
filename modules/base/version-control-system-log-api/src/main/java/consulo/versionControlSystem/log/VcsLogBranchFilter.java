@@ -15,7 +15,6 @@
  */
 package consulo.versionControlSystem.log;
 
-
 import java.util.Collection;
 
 /**

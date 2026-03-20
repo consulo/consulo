@@ -147,8 +147,6 @@ public abstract class DependenciesBuilder {
     return result;
   }
 
-
-
   public static void analyzeFileDependencies(PsiFile file, DependencyProcessor processor) {
     file.putUserData(PsiFileEx.BATCH_REFERENCE_PROCESSING, Boolean.TRUE);
     file.accept(DependenciesVisitorFactory.getInstance().createVisitor(processor));

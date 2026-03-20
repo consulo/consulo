@@ -100,7 +100,6 @@ public class ApplyPatchDefaultExecutor implements ApplyPatchExecutor<AbstractFil
         return appliers;
     }
 
-
     public static void applyAdditionalInfoBefore(
         Project project,
         @Nullable ThrowableComputable<Map<String, Map<String, CharSequence>>, PatchSyntaxException> additionalInfo,

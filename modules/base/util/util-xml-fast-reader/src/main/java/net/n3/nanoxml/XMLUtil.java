@@ -90,7 +90,6 @@ class XMLUtil
       }
    }
 
-
    /**
     * Skips the remainder of the current XML tag.
     *
@@ -120,7 +119,6 @@ class XMLUtil
       }
    }
 
-
    /**
     * Scans a public ID.
     *
@@ -147,7 +145,6 @@ class XMLUtil
       return XMLUtil.scanString(reader, '\0', null);
    }
 
-
    /**
     * Scans a system ID.
     *
@@ -169,7 +166,6 @@ class XMLUtil
       XMLUtil.skipWhitespace(reader, null);
       return XMLUtil.scanString(reader, '\0', null);
    }
-
 
    /**
     * Retrieves an identifier from the data.
@@ -201,7 +197,6 @@ class XMLUtil
 
       return result.toString();
    }
-
 
    /**
     * Retrieves a delimited string from the data.
@@ -262,7 +257,6 @@ class XMLUtil
 
       return result.toString();
    }
-
 
    /**
     * Processes an entity.
@@ -432,7 +426,6 @@ class XMLUtil
       return ch;
    }
 
-
    /**
     * Returns true if the data starts with <I>literal</I>.
     * Enough chars are read to determine this result.
@@ -475,7 +468,6 @@ class XMLUtil
                                   "Expected: " + expectedString);
    }
 
-
    /**
     * Throws an XMLParseException to indicate that an entity could not be
     * resolved.
@@ -492,7 +484,6 @@ class XMLUtil
       throw new XMLParseException(systemID, lineNr,
                                   "Invalid entity: `&" + entity + ";'");
    }
-
 
    /**
     * Throws an XMLParseException to indicate that an entity reference is
@@ -512,7 +503,6 @@ class XMLUtil
                                   + entity + ")");
    }
 
-
    /**
     * Throws an XMLParseException to indicate that a CDATA section is
     * unexpected at this point.
@@ -527,7 +517,6 @@ class XMLUtil
       throw new XMLParseException(systemID, lineNr,
                                   "No CDATA section is expected here");
    }
-
 
    /**
     * Throws an XMLParseException to indicate that a string is not expected
@@ -545,7 +534,6 @@ class XMLUtil
       throw new XMLParseException(systemID, lineNr,
                                   "Invalid input: " + unexpectedString);
    }
-
 
    /**
     * Throws an XMLParseException to indicate that the closing tag of an
@@ -568,7 +556,6 @@ class XMLUtil
                                   + "'");
    }
 
-
    /**
     * Throws an XMLParseException to indicate that extra data is encountered
     * in a closing tag.
@@ -583,7 +570,6 @@ class XMLUtil
       throw new XMLParseException(systemID, lineNr,
                                   "Closing tag must be empty");
    }
-
 
    /**
     * Throws an XMLValidationException to indicate that an element is missing.
@@ -608,7 +594,6 @@ class XMLUtil
                               "Element " + parentElementName
                               + " expects to have a " + missingElementName);
    }
-
 
    /**
     * Throws an XMLValidationException to indicate that an element is
@@ -635,7 +620,6 @@ class XMLUtil
                               + parentElementName);
    }
 
-
    /**
     * Throws an XMLValidationException to indicate that an attribute is
     * missing.
@@ -660,7 +644,6 @@ class XMLUtil
                      "Element " + elementName + " expects an attribute named "
                      + attributeName);
    }
-
 
    /**
     * Throws an XMLValidationException to indicate that an attribute is
@@ -687,7 +670,6 @@ class XMLUtil
                      + "named " + attributeName);
    }
 
-
    /**
     * Throws an XMLValidationException to indicate that an attribute has an
     * invalid value.
@@ -713,7 +695,6 @@ class XMLUtil
                            attributeValue,
                            "Invalid value for attribute " + attributeName);
    }
-
 
    /**
     * Throws an XMLValidationException to indicate that a #PCDATA element was
@@ -759,7 +740,6 @@ class XMLUtil
                         /*attributeValue*/ null,
                         "Unexpected #PCDATA in element " + parentElementName);
    }
-
 
    /**
     * Throws an XMLValidationException.

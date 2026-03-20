@@ -15,7 +15,6 @@
  */
 package consulo.util.xml.serializer;
 
-
 public interface SerializationFilter {
   boolean accepts(Accessor accessor, Object bean);
 }

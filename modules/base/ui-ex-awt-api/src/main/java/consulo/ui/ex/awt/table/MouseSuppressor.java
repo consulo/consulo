@@ -15,7 +15,6 @@
  */
 package consulo.ui.ex.awt.table;
 
-
 import javax.swing.*;
 import java.awt.event.*;
 

@@ -318,7 +318,6 @@ public class UnifiedStatusBarImpl implements StatusBarEx {
     return null;
   }
 
-
   @Override
   public void updateWidgets() {
     for (String s : myWidgetMap.keySet()) {

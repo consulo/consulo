@@ -27,7 +27,6 @@ import consulo.project.Project;
 import consulo.ui.ex.awt.Messages;
 import consulo.logging.Logger;
 
-
 import java.io.IOException;
 import java.util.List;
 import org.jspecify.annotations.Nullable;

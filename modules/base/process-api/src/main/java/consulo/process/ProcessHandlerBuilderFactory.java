@@ -19,7 +19,6 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.process.cmd.GeneralCommandLine;
 
-
 /**
  * @author VISTALL
  * @since 07/11/2022

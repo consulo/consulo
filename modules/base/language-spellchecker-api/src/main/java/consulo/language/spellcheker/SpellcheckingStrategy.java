@@ -31,7 +31,6 @@ import consulo.language.spellcheker.internal.SpellcheckerInternalHelper;
 import consulo.language.spellcheker.tokenizer.*;
 import consulo.language.spellcheker.tokenizer.splitter.PlainTextTokenSplitter;
 
-
 import java.util.List;
 
 @ExtensionAPI(ComponentScope.APPLICATION)

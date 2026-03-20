@@ -20,7 +20,6 @@ import consulo.ui.ex.tree.NodeDescriptor;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFileManager;
 
-
 /**
  * @author nik
  */

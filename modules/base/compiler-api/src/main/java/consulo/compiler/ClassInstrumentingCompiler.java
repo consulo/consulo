@@ -15,7 +15,6 @@
  */
 package consulo.compiler;
 
-
 /**
  * A tag interface indicating that the compiler will instrument java classes.
  * This affects the order of compiler calls:

@@ -33,7 +33,6 @@ import consulo.ui.ex.awt.internal.JBHiDPIScaledImage;
 import consulo.ui.ex.awt.util.UISettingsUtil;
 import org.intellij.lang.annotations.JdkConstants;
 
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.datatransfer.Clipboard;
@@ -173,7 +172,6 @@ public class JBTerminalPanel extends TerminalPanel implements FocusListener, Ter
         }
         return false;
     }
-
 
     @Override
     protected void setupAntialiasing(Graphics graphics) {

@@ -16,7 +16,6 @@
 
 package consulo.util.lang;
 
-
 public class Range<T extends Comparable<T>> {
 
   private final T myFrom;

@@ -17,7 +17,6 @@ package consulo.ide.impl.idea.ide.errorTreeView;
 
 import consulo.ui.ex.errorTreeView.ErrorTreeElementKind;
 
-
 /**
  * @author Eugene Zhuravlev
  * @since 2004-11-12

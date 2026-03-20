@@ -17,7 +17,6 @@ package consulo.language;
 
 import consulo.language.psi.PsiElement;
 
-
 /**
  * Support for extended code documentation handling.
  */

@@ -48,7 +48,6 @@ public abstract class TextFieldValueEditor<T> extends AbstractValueEditor<T> {
     // TODO: to be implemented later
   }
 
-
   @Override
   public String getValueText() {
     return myField.getText();

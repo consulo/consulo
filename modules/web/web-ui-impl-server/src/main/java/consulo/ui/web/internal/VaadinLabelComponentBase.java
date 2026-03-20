@@ -24,7 +24,6 @@ import consulo.ui.web.internal.util.Mappers;
 import consulo.ui.web.servlet.WebImageMapper;
 import consulo.web.gwt.shared.ui.state.LabelState;
 
-
 /**
  * @author VISTALL
  * @since 2019-02-19

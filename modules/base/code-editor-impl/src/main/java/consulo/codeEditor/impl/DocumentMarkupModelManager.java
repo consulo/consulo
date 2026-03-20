@@ -26,7 +26,6 @@ import consulo.util.collection.WeakList;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
-
 /**
  * @author max
  */

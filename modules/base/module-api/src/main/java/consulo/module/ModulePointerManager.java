@@ -22,7 +22,6 @@ import consulo.component.util.pointer.NamedPointer;
 import consulo.component.util.pointer.NamedPointerManager;
 import consulo.project.Project;
 
-
 @ServiceAPI(ComponentScope.PROJECT)
 public interface ModulePointerManager extends NamedPointerManager<Module> {
   

@@ -223,7 +223,6 @@ public class DebuggerUIImplUtil {
             JBPopupFactory.getInstance().createDialogBalloonBuilder(panel, null).setHideOnClickOutside(true).setCloseButtonEnabled(false).setAnimationCycle(0)
                 .setBlockClicksThroughBalloon(true).createBalloon();
 
-
         editor.setDelegate(new BreakpointEditor.Delegate() {
             @Override
             public void done() {

@@ -17,7 +17,6 @@ package consulo.language.editor.ui;
 
 import consulo.codeEditor.EditorEx;
 
-
 /**
  * Editor customization that can make target editor soft wraps-aware.
  * <p/>

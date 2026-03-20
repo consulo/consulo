@@ -61,7 +61,6 @@ public class ExecutionEnvironment extends UserDataHolderBase implements Disposab
     private @Nullable DataContext myDataContext;
     private  ProgramRunner.@Nullable Callback myCallback;
 
-
     public ExecutionEnvironment(Executor executor, ProgramRunner runner, RunnerAndConfigurationSettings configuration, Project project) {
         this(configuration.getConfiguration(), executor, DefaultExecutionTarget.INSTANCE, project, configuration.getRunnerSettings(runner), configuration.getConfigurationSettings(runner), null, null,
             runner);

@@ -256,7 +256,6 @@ public class CodeStyleInternalHelperImpl implements CodeStyleInternalHelper {
         return true;
     }
 
-
     private static boolean spacesOnly(@Nullable ASTNode node) {
         if (node == null) {
             return false;

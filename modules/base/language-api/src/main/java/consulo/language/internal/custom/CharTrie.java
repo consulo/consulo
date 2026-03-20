@@ -4,7 +4,6 @@ package consulo.language.internal.custom;
 import consulo.util.collection.ArrayFactory;
 import consulo.util.collection.ArrayUtil;
 
-
 public final class CharTrie {
   private int myAllNodesSize;
   private char[] myAllNodesChars;

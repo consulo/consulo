@@ -20,7 +20,6 @@ import consulo.annotation.component.ExtensionAPI;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiLanguageInjectionHost;
 
-
 /**
  * @see PsiLanguageInjectionHost
  *

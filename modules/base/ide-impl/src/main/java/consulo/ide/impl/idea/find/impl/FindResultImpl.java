@@ -36,5 +36,3 @@ public class FindResultImpl extends FindResult {
   }
 }
 
-
-

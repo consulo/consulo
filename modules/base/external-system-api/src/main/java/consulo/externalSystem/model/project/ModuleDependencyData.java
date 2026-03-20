@@ -1,6 +1,5 @@
 package consulo.externalSystem.model.project;
 
-
 /**
  * @author Denis Zhdanov
  * @since 8/10/11 6:40 PM

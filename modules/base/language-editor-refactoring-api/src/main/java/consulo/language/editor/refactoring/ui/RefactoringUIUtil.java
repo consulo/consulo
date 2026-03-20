@@ -28,7 +28,6 @@ import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.usage.UsageViewUtil;
 
-
 /**
  * @author yole
  */

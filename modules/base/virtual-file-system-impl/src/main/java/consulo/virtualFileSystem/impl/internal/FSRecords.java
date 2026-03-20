@@ -441,7 +441,6 @@ public class FSRecords {
             return myDirty || myNames.isDirty() || myAttributes.isDirty() || myContents.isDirty() || myRecords.isDirty() || myContentHashesEnumerator != null && myContentHashesEnumerator.isDirty();
         }
 
-
         private static int getVersion() {
             int recordsVersion = myRecords.getInt(HEADER_VERSION_OFFSET);
             if (myAttributes.getVersion() != recordsVersion || myContents.getVersion() != recordsVersion) {
@@ -1711,7 +1710,6 @@ public class FSRecords {
             Storage storage = getAttributesStorage();
             BufferExposingByteArrayOutputStream unchangedPreviousDirectoryStream = null;
             boolean directoryRecord = false;
-
 
             if (recordId == 0) {
                 recordId = storage.createNewRecord();

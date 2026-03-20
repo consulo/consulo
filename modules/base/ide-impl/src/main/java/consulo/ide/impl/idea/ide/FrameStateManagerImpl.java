@@ -29,7 +29,6 @@ import consulo.util.concurrent.AsyncResult;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
-
 @Singleton
 @ServiceImpl
 public class FrameStateManagerImpl extends FrameStateManager {

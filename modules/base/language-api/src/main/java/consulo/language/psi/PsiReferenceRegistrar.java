@@ -18,7 +18,6 @@ package consulo.language.psi;
 import consulo.language.pattern.ElementPattern;
 import consulo.language.util.ProcessingContext;
 
-
 /**
  * Allows to register reference providers for specific locations. The locations are described by
  * {@link consulo.ide.impl.idea.patterns.ElementPattern}s. If a pattern matches some PSI element, then the corresponding
@@ -41,7 +40,6 @@ public abstract class PsiReferenceRegistrar {
   public void registerReferenceProvider(ElementPattern<? extends PsiElement> pattern, PsiReferenceProvider provider) {
     registerReferenceProvider(pattern, provider, DEFAULT_PRIORITY);
   }
-
 
   /**
    * Register reference provider

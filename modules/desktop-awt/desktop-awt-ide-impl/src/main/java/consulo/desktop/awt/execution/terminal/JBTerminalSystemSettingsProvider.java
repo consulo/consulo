@@ -191,7 +191,6 @@ public class JBTerminalSystemSettingsProvider extends DefaultTabbedSettingsProvi
         return (float) myColorScheme.getConsoleFontSize();
     }
 
-
     @Override
     public boolean useAntialiasing() {
         return true; // we return true here because all the settings are checked again in UiSettings.setupAntialiasing
@@ -274,7 +273,6 @@ public class JBTerminalSystemSettingsProvider extends DefaultTabbedSettingsProvi
         public String getName() {
             return getGlobal().getName();
         }
-
 
         protected void initFonts() {
             String consoleFontName = getConsoleFontName();

@@ -56,7 +56,6 @@ public class JBZipEntry implements Cloneable {
   private long headerOffset = -1;
   private final JBZipFile myFile;
 
-
   /**
    * Creates a new zip entry with the specified name.
    *
@@ -426,7 +425,6 @@ public class JBZipEntry implements Cloneable {
     }
     return count;
   }
-
 
   /**
    * Returns the comment string for the entry, or null if none.

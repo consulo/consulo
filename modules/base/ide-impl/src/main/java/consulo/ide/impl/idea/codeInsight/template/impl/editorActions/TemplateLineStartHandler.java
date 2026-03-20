@@ -19,7 +19,6 @@ package consulo.ide.impl.idea.codeInsight.template.impl.editorActions;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.ui.ex.action.IdeActions;
 
-
 /**
  * @author yole
  */

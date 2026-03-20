@@ -198,7 +198,6 @@ public final class DesktopIdeFrameImpl implements IdeFrameEx, AccessibleContextA
             return accessibleContext;
         }
 
-
         public void setTitleWithoutCheck(String title) {
             super.setTitle(title);
         }

@@ -15,7 +15,6 @@
  */
 package consulo.fileEditor.structureView.tree;
 
-
 /**
  * Model of a generic tree control displayed in the IDEA user interface, with a set
  * of actions for grouping, sorting and filtering. Used, for example, for the structure

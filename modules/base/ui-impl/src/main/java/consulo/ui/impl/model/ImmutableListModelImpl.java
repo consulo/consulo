@@ -17,7 +17,6 @@ package consulo.ui.impl.model;
 
 import consulo.ui.model.ListModel;
 
-
 import java.util.*;
 
 /**

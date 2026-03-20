@@ -19,7 +19,6 @@ import consulo.ui.ex.tree.NodeDescriptor;
 import consulo.content.OrderRootType;
 import consulo.ui.image.Image;
 
-
 /**
  * @author nik
  */

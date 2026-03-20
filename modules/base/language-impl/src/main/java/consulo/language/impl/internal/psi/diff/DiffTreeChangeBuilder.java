@@ -16,7 +16,6 @@
 
 package consulo.language.impl.internal.psi.diff;
 
-
 /**
  * @author max
  */

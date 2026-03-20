@@ -15,7 +15,6 @@
  */
 package consulo.util.jdom;
 
-
 import consulo.util.collection.ArrayUtil;
 import consulo.util.io.CharSequenceReader;
 import consulo.util.io.URLUtil;

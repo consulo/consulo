@@ -107,7 +107,6 @@ public class VfsEventGenerationHelper {
         return false;
     }
 
-
     void beginTransaction() {
         myMarkedStart = myEvents.size();
     }

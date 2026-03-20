@@ -18,7 +18,6 @@ package consulo.fileEditor.event;
 import consulo.fileEditor.FileEditorManager;
 import consulo.virtualFileSystem.VirtualFile;
 
-
 public abstract class FileEditorManagerAdapter implements FileEditorManagerListener {
   @Override
   public void fileOpened(FileEditorManager source, VirtualFile file) {}

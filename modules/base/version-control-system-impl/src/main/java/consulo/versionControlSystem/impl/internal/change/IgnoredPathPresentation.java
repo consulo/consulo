@@ -19,7 +19,6 @@ import consulo.project.Project;
 import consulo.util.io.FileUtil;
 import consulo.versionControlSystem.change.ChangesUtil;
 
-
 import java.io.File;
 
 public class IgnoredPathPresentation {

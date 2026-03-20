@@ -15,7 +15,6 @@
  */
 package consulo.application.util;
 
-
 /**
  * @author Denis Zhdanov
  * @since 2012-04-09

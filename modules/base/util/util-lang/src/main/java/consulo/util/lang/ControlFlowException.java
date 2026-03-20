@@ -15,7 +15,6 @@
  */
 package consulo.util.lang;
 
-
 /**
  * A marker interface for exceptions that should never be logged.
  */

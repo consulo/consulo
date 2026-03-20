@@ -91,7 +91,6 @@ public class ThreesideContentPanel extends JPanel {
     public Holders(List<? extends EditorHolder> holders) {
       super(ContainerUtil.map(holders, holder -> holder.getComponent()));
 
-
       EditorHolder baseHolder = ThreeSide.BASE.select(holders);
       myBaseEditor = baseHolder instanceof TextEditorHolder ? ((TextEditorHolder)baseHolder).getEditor() : null;
     }

@@ -76,7 +76,6 @@ public class FlatSpeedSearchPopup extends ActionGroupPopup {
         return getSpeedSearch().isHoldingFilter() || !FlatSpeedSearchPopupFactory.isSpeedsearchAction(action);
     }
 
-
     protected static <T> T getSpecificAction(Object value, Class<T> clazz) {
         if (value instanceof ActionPopupItem) {
             AnAction action = ((ActionPopupItem)value).getAction();

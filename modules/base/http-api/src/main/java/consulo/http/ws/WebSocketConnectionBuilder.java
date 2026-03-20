@@ -15,7 +15,6 @@
  */
 package consulo.http.ws;
 
-
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 

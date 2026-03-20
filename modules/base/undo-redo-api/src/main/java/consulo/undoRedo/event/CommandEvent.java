@@ -8,7 +8,6 @@ import consulo.project.Project;
 import consulo.undoRedo.CommandProcessor;
 import consulo.undoRedo.UndoConfirmationPolicy;
 
-
 import org.jspecify.annotations.Nullable;
 
 import java.util.EventObject;

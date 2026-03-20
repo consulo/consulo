@@ -62,7 +62,6 @@ public class DesktopPsiAwareFileEditorManagerImpl extends PsiAwareFileEditorMana
     super(application, applicationConcurrency, project, psiManager, problemSolver, dockManager);
   }
 
-
   
   @Override
   protected FileEditorWithProviderComposite createEditorWithProviderComposite(VirtualFile file,

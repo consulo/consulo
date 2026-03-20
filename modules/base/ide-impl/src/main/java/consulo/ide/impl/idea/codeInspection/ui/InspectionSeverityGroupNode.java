@@ -21,7 +21,6 @@ import consulo.project.Project;
 import consulo.util.lang.StringUtil;
 import consulo.ui.image.Image;
 
-
 /**
  * @author anna
  * @since 2005-03-15

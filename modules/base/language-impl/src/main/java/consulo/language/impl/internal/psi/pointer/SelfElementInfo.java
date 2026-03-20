@@ -68,7 +68,6 @@ public class SelfElementInfo extends SmartPointerElementInfo {
     return false;
   }
 
-
   void setRange(@Nullable Segment range) {
     if (range == null) {
       myStartOffset = -1;

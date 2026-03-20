@@ -19,7 +19,6 @@ import consulo.project.Project;
 import consulo.project.ui.view.SelectInContext;
 import consulo.virtualFileSystem.VirtualFile;
 
-
 /**
  * @author Konstantin Bulenkov
  */

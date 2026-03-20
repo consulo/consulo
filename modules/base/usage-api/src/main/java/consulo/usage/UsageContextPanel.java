@@ -18,7 +18,6 @@ package consulo.usage;
 import consulo.component.extension.ExtensionPointName;
 import consulo.disposer.Disposable;
 
-
 import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;

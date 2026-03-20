@@ -94,7 +94,6 @@ public class BlockSupportImpl extends BlockSupport {
         return new ReparseResult(diffLog, oldRoot, newRoot);
     }
 
-
     /**
      * Find ast node that could be reparsed incrementally
      *

@@ -19,7 +19,6 @@ import consulo.fileEditor.*;
 import consulo.logging.Logger;
 import consulo.util.collection.ArrayUtil;
 
-
 /**
  * @author VISTALL
  * @since 15-Mar-22

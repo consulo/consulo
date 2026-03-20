@@ -129,7 +129,6 @@ public abstract class LibraryOrderEntryBaseImpl extends OrderEntryBaseImpl imple
         myCurrentlySubscribedRootProvider = wrapper;
     }
 
-
     private void unsubscribe() {
         if (myCurrentlySubscribedRootProvider != null) {
             myProjectRootManagerImpl.unsubscribeFromRootProvider(this, myCurrentlySubscribedRootProvider);

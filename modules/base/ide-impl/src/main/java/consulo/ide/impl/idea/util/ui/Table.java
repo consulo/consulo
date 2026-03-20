@@ -19,7 +19,6 @@ import consulo.ui.ex.awt.table.JBTable;
 
 import javax.swing.table.TableModel;
 
-
 /**
  * @deprecated use {@link JBTable}
  */

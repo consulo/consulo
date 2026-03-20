@@ -20,7 +20,6 @@ import consulo.language.ast.IElementType;
 import consulo.language.lexer.Lexer;
 import consulo.language.version.LanguageVersion;
 
-
 /**
  * @author VISTALL
  * @since 21:11/24.06.13

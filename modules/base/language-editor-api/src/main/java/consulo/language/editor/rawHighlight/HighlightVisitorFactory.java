@@ -19,7 +19,6 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.language.psi.PsiFile;
 
-
 /**
  * @author VISTALL
  * @since 2023-03-25

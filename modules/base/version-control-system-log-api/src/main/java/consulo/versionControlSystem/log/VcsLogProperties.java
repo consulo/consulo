@@ -17,7 +17,6 @@ package consulo.versionControlSystem.log;
 
 import consulo.versionControlSystem.log.VcsLogProvider;
 
-
 public class VcsLogProperties {
   public static class VcsLogProperty<T> {
     private final T defaultValue;

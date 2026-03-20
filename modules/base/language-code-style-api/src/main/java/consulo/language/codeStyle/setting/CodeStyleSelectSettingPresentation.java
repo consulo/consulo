@@ -15,7 +15,6 @@
  */
 package consulo.language.codeStyle.setting;
 
-
 /**
  * @author Roman.Shein
  * @since 2015-09-16

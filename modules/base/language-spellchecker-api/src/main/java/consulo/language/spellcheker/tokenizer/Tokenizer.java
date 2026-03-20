@@ -19,7 +19,6 @@ import consulo.annotation.access.RequiredReadAction;
 import consulo.document.util.TextRange;
 import consulo.language.psi.PsiElement;
 
-
 public abstract class Tokenizer<T extends PsiElement> {
     @RequiredReadAction
     public abstract void tokenize(T element, TokenConsumer consumer);

@@ -23,7 +23,6 @@ import consulo.language.psi.PsiComment;
 import consulo.language.psi.PsiReferenceContributor;
 import consulo.language.psi.PsiReferenceRegistrar;
 
-
 @ExtensionImpl
 public class CommentsReferenceContributor extends PsiReferenceContributor {
   /**

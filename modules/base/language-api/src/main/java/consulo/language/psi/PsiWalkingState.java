@@ -19,7 +19,6 @@ package consulo.language.psi;
 import consulo.logging.Logger;
 import consulo.util.collection.util.WalkingState;
 
-
 /**
  * @author cdr
  */

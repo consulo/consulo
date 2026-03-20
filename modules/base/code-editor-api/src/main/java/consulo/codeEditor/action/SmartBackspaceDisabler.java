@@ -15,7 +15,6 @@
  */
 package consulo.codeEditor.action;
 
-
 public class SmartBackspaceDisabler implements BackspaceModeOverride {
   
   @Override

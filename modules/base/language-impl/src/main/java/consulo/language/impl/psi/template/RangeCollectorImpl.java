@@ -313,7 +313,6 @@ public class RangeCollectorImpl extends TemplateDataElementType.RangeCollector {
     return nextLeaf;
   }
 
-
   /**
    * Removes part the nextLeaf that intersects rangeToRemove.
    * If nextLeaf doesn't intersect rangeToRemove the method returns the nextLeaf without changes
@@ -431,7 +430,6 @@ public class RangeCollectorImpl extends TemplateDataElementType.RangeCollector {
 
     return applyOuterAndRemoveRanges(sourceCode);
   }
-
 
   final static class RangeToRemove extends TextRange {
     /**

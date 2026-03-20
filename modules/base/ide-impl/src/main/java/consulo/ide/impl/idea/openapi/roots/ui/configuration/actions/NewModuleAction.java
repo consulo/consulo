@@ -32,7 +32,6 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.fileChooser.FileChooser;
 import consulo.util.concurrent.AsyncResult;
 
-
 /**
  * @author Eugene Zhuravlev
  * @since 2004-01-05

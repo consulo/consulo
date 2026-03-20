@@ -20,7 +20,6 @@ import consulo.annotation.component.ServiceAPI;
 import consulo.document.util.TextRange;
 import consulo.project.Project;
 
-
 /**
  * Allows to create references to PSI elements that can survive a reparse and return the corresponding
  * element in the PSI tree after the reparse.

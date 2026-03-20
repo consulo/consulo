@@ -32,7 +32,6 @@ import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 
-
 /**
  * @author VISTALL
  * @since 2022-07-17

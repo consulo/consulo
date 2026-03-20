@@ -20,7 +20,6 @@ import consulo.ui.ex.awt.util.GraphicsUtil;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.image.Image;
 
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.Area;

@@ -143,7 +143,6 @@ public class IndexCacheManagerImpl implements CacheManager {
       }
     };
 
-
     // IMPORTANT!!!
     // Since implementation of virtualFileProcessor.process() may call indices directly or indirectly,
     // we cannot call it inside FileBasedIndex.processValues() method

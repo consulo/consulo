@@ -5,7 +5,6 @@ import consulo.disposer.Disposable;
 import consulo.document.event.DocumentListener;
 import consulo.codeEditor.EditorFactory;
 
-
 /**
  * Allows to attach listeners which receive notifications about changes in any currently open
  * editor.

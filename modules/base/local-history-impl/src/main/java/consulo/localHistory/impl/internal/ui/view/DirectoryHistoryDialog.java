@@ -246,7 +246,6 @@ public class DirectoryHistoryDialog extends HistoryDialog<DirectoryHistoryDialog
 
         protected abstract void doPerform(DirectoryHistoryDialogModel model, List<DirectoryChange> selected);
 
-
         @Override
         protected boolean isEnabled(DirectoryHistoryDialogModel model) {
             List<DirectoryChange> changes = getSelectedChanges();

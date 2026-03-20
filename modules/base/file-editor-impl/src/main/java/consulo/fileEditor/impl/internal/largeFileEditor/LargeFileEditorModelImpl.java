@@ -80,7 +80,6 @@ public final class LargeFileEditorModelImpl implements LargeFileEditorModel {
     private final GlobalScrollBar myGlobalScrollBar;
     private final LocalInvisibleScrollBar myLocalInvisibleScrollBar;
 
-
     LargeFileEditorModelImpl(Document document, Project project, DataProvider dataProvider) {
         this.dataProvider = dataProvider;
         pageRangeHighlighters = new ArrayList<>();
@@ -1118,7 +1117,6 @@ public final class LargeFileEditorModelImpl implements LargeFileEditorModel {
         });
         requestUpdate();
     }
-
 
     interface DataProvider {
 

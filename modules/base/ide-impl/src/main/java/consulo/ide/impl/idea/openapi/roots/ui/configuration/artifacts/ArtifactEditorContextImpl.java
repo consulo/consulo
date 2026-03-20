@@ -155,7 +155,6 @@ public class ArtifactEditorContextImpl implements ArtifactEditorContext {
         return dialog.isOK() ? dialog.getChosenElements() : Collections.<Artifact>emptyList();
     }
 
-
     @Override
     
     public ArtifactModel getArtifactModel() {

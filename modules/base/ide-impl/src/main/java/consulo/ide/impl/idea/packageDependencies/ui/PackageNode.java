@@ -33,7 +33,6 @@ public class PackageNode extends PackageDependenciesNode {
     private final String myPackageQName;
     private final PsiPackage myPackage;
 
-
     public PackageNode(PsiPackage aPackage, boolean showFQName) {
         super(aPackage.getProject());
         myPackage = aPackage;
@@ -112,7 +111,6 @@ public class PackageNode extends PackageDependenciesNode {
     public Image getIcon() {
         return AllIcons.Nodes.Parameter;
     }
-
 
     public boolean isValid() {
         return myPackage != null && myPackage.isValid();

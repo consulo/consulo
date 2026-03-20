@@ -24,7 +24,6 @@ import consulo.project.content.GeneratedSourcesFilter;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.inject.Inject;
 
-
 import java.util.Objects;
 
 /**

@@ -21,7 +21,6 @@ import consulo.annotation.component.TopicBroadcastDirection;
 import consulo.component.store.internal.StateStorage;
 import consulo.virtualFileSystem.event.VirtualFileEvent;
 
-
 /**
 * @author VISTALL
 * @since 19-Jun-22

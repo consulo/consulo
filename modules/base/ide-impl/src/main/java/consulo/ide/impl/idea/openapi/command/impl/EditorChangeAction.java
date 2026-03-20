@@ -120,7 +120,6 @@ public class EditorChangeAction extends BasicUndoableAction {
     }
   }
 
-
   private DocumentEx getDocument() {
     return (DocumentEx)getAffectedDocuments()[0].getDocument();
   }

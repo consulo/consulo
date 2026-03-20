@@ -20,7 +20,6 @@ import consulo.annotation.component.ServiceAPI;
 import consulo.component.util.pointer.NamedPointerManager;
 import consulo.project.Project;
 
-
 /**
  * @author nik
  */

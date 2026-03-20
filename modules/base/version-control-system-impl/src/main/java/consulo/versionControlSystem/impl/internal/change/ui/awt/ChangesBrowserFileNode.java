@@ -27,7 +27,6 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.status.FileStatus;
 import consulo.virtualFileSystem.status.FileStatusManager;
 
-
 import static consulo.ui.ex.awt.FontUtil.spaceAndThinSpace;
 
 /**

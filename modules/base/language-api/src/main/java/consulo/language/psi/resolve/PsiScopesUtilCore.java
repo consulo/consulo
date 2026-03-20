@@ -49,7 +49,6 @@ public class PsiScopesUtilCore {
         return false; // resolved
       }
 
-
       if (scope == maxScope) break;
       prevParent = scope;
       scope = prevParent.getContext();

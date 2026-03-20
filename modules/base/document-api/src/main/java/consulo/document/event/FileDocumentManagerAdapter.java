@@ -18,7 +18,6 @@ package consulo.document.event;
 import consulo.document.Document;
 import consulo.virtualFileSystem.VirtualFile;
 
-
 public abstract class FileDocumentManagerAdapter implements FileDocumentManagerListener {
   public void beforeAllDocumentsSaving() {
   }

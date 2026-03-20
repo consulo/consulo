@@ -224,7 +224,6 @@ class DesktopColorPicker extends JPanel implements DocumentListener {
             myPreviewComponent.setColor(color);
             myColorWheelPanel.setColor(color, fromHex ? myHex : null);
 
-
             if (fromHex) {
                 applyColor(color);
             }
@@ -532,13 +531,11 @@ class DesktopColorPicker extends JPanel implements DocumentListener {
             }
         }
 
-
         public void setOpacity(int opacity) {
             if (opacity != myOpacity) {
                 setHSBValue(myHue, mySaturation, myBrightness, opacity);
             }
         }
-
 
         @Override
         public Dimension getPreferredSize() {
@@ -860,7 +857,6 @@ class DesktopColorPicker extends JPanel implements DocumentListener {
                 getComponentWidth() - JBUI.scale(3),
                 getComponentHeight() - JBUI.scale(3)
             );
-
 
             for (int k = 1; k < 10; k++) {
                 g.drawLine(

@@ -26,7 +26,6 @@ import consulo.ui.layout.HorizontalLayout;
 import consulo.ui.style.ComponentColors;
 import consulo.project.ui.impl.internal.wm.UnifiedToolWindowImpl;
 
-
 /**
  * @author VISTALL
  * @since 2020-11-21

@@ -114,7 +114,6 @@ public abstract class ContentChooser<Data> extends DialogWrapper {
       }
     }.installOn(myList);
 
-
     myList.setCellRenderer(new MyListCellRenderer());
     myList.addKeyListener(new KeyAdapter() {
       @Override

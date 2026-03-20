@@ -18,7 +18,6 @@ package consulo.language.editor.rawHighlight;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 
-
 /**
  * @see HighlightVisitorFactory
  */

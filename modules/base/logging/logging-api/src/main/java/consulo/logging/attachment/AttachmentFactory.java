@@ -17,7 +17,6 @@ package consulo.logging.attachment;
 
 import consulo.logging.internal.AttachmentFactoryInternal;
 
-
 /**
  * @author VISTALL
  * @since 2019-08-10

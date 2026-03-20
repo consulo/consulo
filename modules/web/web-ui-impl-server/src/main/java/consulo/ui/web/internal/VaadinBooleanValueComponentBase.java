@@ -19,7 +19,6 @@ import consulo.ui.web.internal.base.VaadinComponent;
 import consulo.web.gwt.shared.ui.state.checkbox.CheckBoxRpc;
 import consulo.web.gwt.shared.ui.state.checkbox.CheckBoxState;
 
-
 /**
  * @author VISTALL
  * @since 2019-02-19

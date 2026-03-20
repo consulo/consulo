@@ -3,7 +3,6 @@ package consulo.language.codeStyle;
 
 import consulo.document.util.TextRange;
 
-
 import java.util.List;
 
 /**
@@ -95,7 +94,6 @@ public abstract class Spacing {
     ) {
         return createDependentLFSpacing(minSpaces, maxSpaces, dependency, keepLineBreaks, keepBlankLines, DependentSpacingRule.DEFAULT);
     }
-
 
     /**
      * Needed when implementing options like "Next line after '('" or "Place ')' on new line". This options works only if parameters are

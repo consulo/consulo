@@ -17,7 +17,6 @@ package consulo.language.psi.event;
 
 import consulo.language.psi.PsiManager;
 
-
 import java.util.EventListener;
 
 /**

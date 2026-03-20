@@ -15,7 +15,6 @@
  */
 package consulo.versionControlSystem;
 
-
 /**
  * Incorrect VCS root definition: either an unregistered, or an incorrectly registered VCS root.
  *

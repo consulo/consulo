@@ -15,7 +15,6 @@
  */
 package consulo.language.codeStyle.ui.internal.arrangement;
 
-
 import javax.swing.*;
 
 /**

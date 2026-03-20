@@ -23,7 +23,6 @@ import consulo.util.lang.Pair;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
-
 import java.util.List;
 import java.util.function.Function;
 

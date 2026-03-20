@@ -24,7 +24,6 @@ import consulo.util.xml.serializer.WriteExternalException;
 import consulo.util.xml.serializer.JDOMExternalizable;
 import org.jdom.Element;
 
-
 /**
  * @author Dmitry Avdeev
  */

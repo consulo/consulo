@@ -64,7 +64,6 @@ public class BasicSentUsagesPersistenceComponent extends SentUsagesPersistence {
         setSentTime(System.currentTimeMillis());
     }
 
-
     @Override
     
     public Map<String, Set<UsageDescriptor>> getSentUsages() {

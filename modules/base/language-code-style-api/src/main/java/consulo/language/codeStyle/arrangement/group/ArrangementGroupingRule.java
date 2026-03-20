@@ -18,7 +18,6 @@ package consulo.language.codeStyle.arrangement.group;
 import consulo.language.codeStyle.arrangement.std.ArrangementSettingsToken;
 import consulo.language.codeStyle.arrangement.std.StdArrangementTokens;
 
-
 /**
  * Encapsulates information about grouping rules to use during arrangement.
  * <p/>

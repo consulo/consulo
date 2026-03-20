@@ -19,7 +19,6 @@ import consulo.disposer.Disposable;
 import consulo.ui.FocusManager;
 import consulo.ui.event.GlobalFocusListener;
 
-
 /**
  * @author VISTALL
  * @since 18/12/2021

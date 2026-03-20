@@ -28,7 +28,6 @@ import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 
-
 /**
  * @author ven
  */

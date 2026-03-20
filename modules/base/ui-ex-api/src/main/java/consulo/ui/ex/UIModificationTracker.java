@@ -28,7 +28,6 @@ public class UIModificationTracker {
 
   private static final UIModificationTracker ourInstance = new UIModificationTracker();
 
-
   private static final AtomicIntegerFieldUpdater<UIModificationTracker> UPDATER =
           AtomicIntegerFieldUpdater.newUpdater(UIModificationTracker.class, "myCounter");
 

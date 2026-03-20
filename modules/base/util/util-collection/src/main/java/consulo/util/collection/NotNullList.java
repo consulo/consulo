@@ -15,7 +15,6 @@
  */
 package consulo.util.collection;
 
-
 import java.util.AbstractList;
 import java.util.ArrayList;
 import java.util.Collection;

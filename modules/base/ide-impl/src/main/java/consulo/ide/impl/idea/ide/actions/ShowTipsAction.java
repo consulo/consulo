@@ -24,7 +24,6 @@ import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import jakarta.inject.Inject;
 
-
 @ActionImpl(id = "ShowTips")
 public class ShowTipsAction extends AnAction implements DumbAware {
     private final TipOfDayManager myManager;

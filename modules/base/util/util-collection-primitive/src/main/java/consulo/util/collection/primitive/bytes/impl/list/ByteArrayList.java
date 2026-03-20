@@ -425,7 +425,6 @@ public class ByteArrayList implements ByteList, Cloneable {
     // value
   }
 
-
   /**
    * Reverse the order of the elements in the list.
    */

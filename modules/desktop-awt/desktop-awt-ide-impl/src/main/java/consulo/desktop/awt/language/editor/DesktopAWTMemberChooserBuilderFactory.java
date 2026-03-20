@@ -21,7 +21,6 @@ import consulo.language.editor.generation.MemberChooserBuilder;
 import consulo.language.editor.internal.MemberChooserBuilderFactory;
 import jakarta.inject.Singleton;
 
-
 /**
  * @author VISTALL
  * @since 20-Aug-22

@@ -25,8 +25,6 @@ import consulo.language.file.FileTypeManager;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
-
-
 /**
  * @author Dmitry Avdeev
  */

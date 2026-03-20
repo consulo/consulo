@@ -231,7 +231,6 @@ public class WidgetComboBox extends WidgetButtonPanel implements HasAllFocusHand
   //  getSelectedValue().setText(text);
   //}
 
-
   /**
    * This method returns a selected item.
    *
@@ -622,7 +621,6 @@ public class WidgetComboBox extends WidgetButtonPanel implements HasAllFocusHand
     value.addKeyDownHandler(getDelegateHandler());
     value.addKeyPressHandler(getDelegateHandler());
   }
-
 
   /**
    * Getter for property 'listPanel'.

@@ -256,7 +256,6 @@ public class BaseInjection implements Injection, PersistentStateComponent<Elemen
     }
   }
 
-
   public PatternCompiler<PsiElement> getCompiler() {
     return PatternCompilerFactory.getFactory().getPatternCompiler(InjectorUtils.getPatternClasses(getSupportId()));
   }
@@ -342,7 +341,6 @@ public class BaseInjection implements Injection, PersistentStateComponent<Elemen
   public boolean isTerminal() {
     return myCompiledValuePattern == null;
   }
-
 
   private static List<TextRange> getMatchingRanges(Matcher matcher, int length) {
     List<TextRange> list = new SmartList<TextRange>();

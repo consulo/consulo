@@ -125,7 +125,6 @@ public class StubBasedPsiElementBase<T extends StubElement> extends ASTDelegateP
         }
     }
 
-
     /**
      * Ensures this element is AST-based. This is an expensive operation that might take significant time and allocate lots of objects,
      * so it should be to be avoided if possible.

@@ -21,7 +21,6 @@ import consulo.language.parser.PsiBuilder;
 import consulo.language.parser.PsiParser;
 import consulo.language.version.LanguageVersion;
 
-
 /**
  * @author peter
 */

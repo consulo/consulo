@@ -1,6 +1,5 @@
 package consulo.application.util.matcher;
 
-
 /**
  * @author Konstantin Bulenkov
  */

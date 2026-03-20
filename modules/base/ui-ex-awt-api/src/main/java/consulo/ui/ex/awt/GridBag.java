@@ -155,7 +155,6 @@ public final class GridBag extends GridBagConstraints {
     return this;
   }
 
-
   
   public GridBag weighty(double weight) {
     weighty = weight;
@@ -197,7 +196,6 @@ public final class GridBag extends GridBagConstraints {
     ipady = padding;
     return this;
   }
-
 
   /**
    * @see #insets(Insets)
@@ -320,7 +318,6 @@ public final class GridBag extends GridBagConstraints {
     return this;
   }
 
-
   public double getDefaultWeightY() {
     return myDefaultWeightY;
   }
@@ -345,7 +342,6 @@ public final class GridBag extends GridBagConstraints {
     }
     return this;
   }
-
 
   public int getDefaultPaddingX() {
     return myDefaultPaddingX;

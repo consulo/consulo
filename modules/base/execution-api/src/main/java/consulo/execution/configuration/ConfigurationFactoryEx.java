@@ -17,7 +17,6 @@ package consulo.execution.configuration;
 
 import consulo.annotation.DeprecationInfo;
 
-
 /**
  * @author nik
  */

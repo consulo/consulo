@@ -18,7 +18,6 @@ package consulo.ui.ex.keymap;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 
-
 /**
  * @author VISTALL
  * @since 17-Jun-22

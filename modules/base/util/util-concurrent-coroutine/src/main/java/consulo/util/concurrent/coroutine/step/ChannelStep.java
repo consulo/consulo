@@ -25,7 +25,6 @@ import consulo.util.concurrent.coroutine.CoroutineStep;
 import java.util.Objects;
 import java.util.function.Function;
 
-
 /********************************************************************
  * A base class for coroutine steps that perform {@link Channel} operations.
  *

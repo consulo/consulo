@@ -151,7 +151,6 @@ public class ConcurrentBitSet {
     return array;
   }
 
-
   /**
    * Clear method in presense of concurrency complicates everything to no end.
    * PLEASE REWRITE EVERY OTHER METHOD IF EVER DECIDE TO IMPLEMENT THIS
@@ -240,7 +239,6 @@ public class ConcurrentBitSet {
     }
   }
 
-
   /**
    * Returns the index of the first bit that is set to {@code false}
    * that occurs on or after the specified starting index.
@@ -311,7 +309,6 @@ public class ConcurrentBitSet {
 
     return (int)(h >> 32 ^ h);
   }
-
 
   /**
    * Returns the number of bits of space actually in use

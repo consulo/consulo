@@ -12,7 +12,6 @@ import java.util.List;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
-
 /**
  * Default abstract implementation of {@link PostfixTemplateExpressionSelector}.
  * You need impl method {@link #getNonFilteredExpressions}

@@ -115,7 +115,6 @@ public abstract class AbstractFileTreeTable<T> extends TreeTable {
         });
         getTableHeader().setReorderingAllowed(false);
 
-
         setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         setPreferredScrollableViewportSize(new Dimension(300, getRowHeight() * 10));
 

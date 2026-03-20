@@ -20,7 +20,6 @@ import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
 import consulo.component.macro.PathMacroManager;
 
-
 /**
  * @author VISTALL
  * @since 23-Mar-22

@@ -96,7 +96,6 @@ public class ModelClassToModelHandlerLinker extends ModelClassToModelHandlerLink
         }
     }
 
-
     /**
      * Allow configurators to override the factory method for ConfigurationModelHandler
      *

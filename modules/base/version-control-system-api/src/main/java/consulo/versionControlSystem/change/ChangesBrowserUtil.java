@@ -15,7 +15,6 @@
  */
 package consulo.versionControlSystem.change;
 
-
 import java.util.ArrayList;
 import java.util.List;
 

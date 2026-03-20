@@ -196,7 +196,6 @@ public class ArrangementMatchingRulesControl extends JBTable {
     repaint(x, location.y, width, bounds.height);
   }
 
-
   private void onMouseReleased(MouseEvent e) {
     int i = rowAtPoint(e.getPoint());
     if (i < 0) {

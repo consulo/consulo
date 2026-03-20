@@ -21,7 +21,6 @@ import consulo.ui.ex.awt.AnimatedIcon;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
 
-
 /**
  * @author Roman.Chernyatchik
  */

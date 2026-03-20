@@ -53,7 +53,6 @@ public class SmartRefElementPointerImpl implements SmartRefElementPointer {
     }
   }
 
-
   public SmartRefElementPointerImpl(Element jDomElement) {
     myIsPersistent = true;
     myRefElement = null;

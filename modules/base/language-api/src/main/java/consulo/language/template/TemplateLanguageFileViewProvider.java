@@ -19,7 +19,6 @@ import consulo.language.Language;
 import consulo.language.file.FileViewProvider;
 import consulo.language.ast.IElementType;
 
-
 /**
  * @author peter
  */

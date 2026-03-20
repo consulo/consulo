@@ -20,7 +20,6 @@ import consulo.ui.ex.awt.UIUtil;
 import jakarta.inject.Singleton;
 import org.jetbrains.annotations.TestOnly;
 
-
 /**
  * Storage for file types user selected in "Override File Type" action
  */

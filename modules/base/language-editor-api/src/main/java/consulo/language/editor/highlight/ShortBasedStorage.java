@@ -4,7 +4,6 @@ package consulo.language.editor.highlight;
 import consulo.language.ast.IElementType;
 import consulo.util.collection.ArrayUtil;
 
-
 import static consulo.language.editor.highlight.SegmentArray.INITIAL_SIZE;
 import static consulo.language.editor.highlight.SegmentArray.calcCapacity;
 

@@ -157,7 +157,6 @@ class UndoRedoStacksHolder {
       myDocumentStacks.remove(each);
     }
 
-
     Set<Document> docsToDrop = new HashSet<Document>();
     for (Document each : myDocumentsWithStacks) {
       LinkedList<UndoableGroup> stack = each.getUserData(STACK_IN_DOCUMENT_KEY);

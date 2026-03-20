@@ -170,7 +170,6 @@ public class NewErrorTreeEditor extends AbstractCellEditor implements TreeCellEd
         }
     }
 
-
     private static class CellEditorDelegate extends AbstractCellEditor implements TreeCellEditor {
         private TreeCellEditor myCurrentCallback;
 

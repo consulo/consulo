@@ -26,7 +26,6 @@ import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.inject.Singleton;
 
-
 @Singleton
 @ServiceImpl
 public class AllScopeHolderImpl implements AllScopeHolder {

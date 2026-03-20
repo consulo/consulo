@@ -15,7 +15,6 @@
  */
 package consulo.ui.ex.awt.util;
 
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.InputEvent;

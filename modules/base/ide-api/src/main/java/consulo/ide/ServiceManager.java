@@ -22,7 +22,6 @@ import consulo.module.Module;
 import consulo.project.Project;
 import consulo.util.dataholder.NotNullLazyKey;
 
-
 @Deprecated
 @DeprecationInfo("Use ComponentManager#getInstance() method")
 public class ServiceManager {

@@ -34,7 +34,6 @@ import javax.swing.*;
  */
 public class DesktopScrollableLayoutImpl extends SwingComponentDelegate<JScrollPane> implements ScrollableLayout {
 
-
     class MyJBScrollPane extends JBScrollPane implements FromSwingComponentWrapper {
         MyJBScrollPane(java.awt.Component view) {
             super(view);

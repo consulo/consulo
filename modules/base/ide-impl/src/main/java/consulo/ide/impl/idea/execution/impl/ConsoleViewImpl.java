@@ -1001,7 +1001,6 @@ public class ConsoleViewImpl extends JPanel implements ConsoleView, ObservableCo
         CustomShortcutSet shortcutSet = new CustomShortcutSet(ArrayUtil.mergeArrays(shortcuts, CommonShortcuts.ENTER.getShortcuts()));
         new HyperlinkNavigationAction().registerCustomShortcutSet(shortcutSet, myEditor.getContentComponent());
 
-
         if (!myIsViewer) {
             new EnterHandler().registerCustomShortcutSet(CommonShortcuts.ENTER, myEditor.getContentComponent());
             registerActionHandler(myEditor, IdeActions.ACTION_EDITOR_PASTE, new PasteHandler());
@@ -1440,7 +1439,6 @@ public class ConsoleViewImpl extends JPanel implements ConsoleView, ObservableCo
         getComponent();
         return myEditor.getContentComponent();
     }
-
 
     // navigate up/down in stack trace
     @Override

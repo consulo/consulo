@@ -1,7 +1,6 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ui.ex.tree;
 
-
 public enum LeafState {
   /**
    * Specifies that a tree should not show the collapse/expand icon for the node, because this node cannot have any children.

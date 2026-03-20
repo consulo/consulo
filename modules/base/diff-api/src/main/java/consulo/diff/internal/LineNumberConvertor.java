@@ -106,7 +106,6 @@ public class LineNumberConvertor {
     myCorrector.handleOnesideChange(startLine, endLine, shift, masterSide);
   }
 
-
   private static int convert(TreeMap<Integer, Integer> fragments, int value, boolean approximate) {
     return approximate ? convertApproximate(fragments, value) : convert(fragments, value);
   }

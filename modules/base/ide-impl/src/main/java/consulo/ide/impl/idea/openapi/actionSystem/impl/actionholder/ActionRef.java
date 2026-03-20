@@ -32,6 +32,5 @@ public abstract class ActionRef<T extends AnAction> {
     return id == null ? new SimpleActionRef<T>(action) : new IdActionRef<T>(id);
   }
 
-
   public abstract T getAction();
 }

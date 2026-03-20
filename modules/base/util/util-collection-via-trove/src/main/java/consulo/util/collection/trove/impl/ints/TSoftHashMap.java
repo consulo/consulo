@@ -18,7 +18,6 @@ package consulo.util.collection.trove.impl.ints;
 import consulo.util.collection.HashingStrategy;
 import consulo.util.collection.impl.map.SoftHashMap;
 
-
 /**
  * @author VISTALL
  * @since 07/02/2021

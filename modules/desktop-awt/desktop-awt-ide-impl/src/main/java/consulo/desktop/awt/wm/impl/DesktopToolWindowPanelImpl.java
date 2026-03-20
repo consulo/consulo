@@ -237,7 +237,6 @@ public final class DesktopToolWindowPanelImpl extends JBLayeredPane implements U
         myId2Button.put(copiedInfo.getId(), (DesktopStripeButton) button);
         myButton2Info.put((DesktopStripeButton) button, copiedInfo);
 
-
         ToolWindowAnchor anchor = copiedInfo.getAnchor();
         if (ToolWindowAnchor.TOP == anchor) {
             myTopStripe.addButton((DesktopStripeButton) button, comparator);
@@ -513,7 +512,6 @@ public final class DesktopToolWindowPanelImpl extends JBLayeredPane implements U
         myTopStripe.setOverlayed(overlayed);
         myBottomStripe.setOverlayed(overlayed);
 
-
         if (oldVisible != visible) {
             revalidate();
             repaint();
@@ -731,7 +729,6 @@ public final class DesktopToolWindowPanelImpl extends JBLayeredPane implements U
     public @Nullable Component getComponent() {
         return this;
     }
-
 
     @FunctionalInterface
     interface Resizer {

@@ -15,7 +15,6 @@
  */
 package consulo.language.pom;
 
-
 import java.util.Set;
 
 /**

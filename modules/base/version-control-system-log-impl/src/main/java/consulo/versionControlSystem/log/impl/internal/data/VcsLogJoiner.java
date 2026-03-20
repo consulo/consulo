@@ -68,7 +68,6 @@ public class VcsLogJoiner<CommitId, Commit extends GraphCommit<CommitId>> {
     );
   }
 
-
   
   private Pair<Integer, Set<Commit>> getNewCommitsAndSavedGreenIndex(
     List<? extends Commit> savedLog,
@@ -189,7 +188,6 @@ public class VcsLogJoiner<CommitId, Commit extends GraphCommit<CommitId>> {
       return allRedCommit;
     }
   }
-
 
   static class NewCommitIntegrator<CommitId, Commit extends GraphCommit<CommitId>> {
     private final List<Commit> list;

@@ -102,7 +102,6 @@ public class HyperlinkLabel extends HighlightableComponent {
     this.setMinimumSize(preferredSize);
   }
 
-
   @Override
   protected void processMouseEvent(MouseEvent e) {
     if (e.getID() == MouseEvent.MOUSE_ENTERED && isOnLink(e.getX())) {

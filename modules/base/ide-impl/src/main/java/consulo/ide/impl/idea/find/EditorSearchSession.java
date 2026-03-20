@@ -270,7 +270,6 @@ public class EditorSearchSession implements SearchSession, UiDataProvider, Selec
         return findModel;
     }
 
-
     @Override
     public void uiDataSnapshot(DataSink sink) {
         sink.set(SearchSession.KEY, this);
@@ -496,7 +495,6 @@ public class EditorSearchSession implements SearchSession, UiDataProvider, Selec
                     return;
                 }
             }
-
 
             FindManager findManager = FindManager.getInstance(getProject());
             if (allowedToChangedEditorSelection) {

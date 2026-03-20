@@ -16,7 +16,6 @@
 
 package consulo.language.internal.custom;
 
-
 /**
  * @author dsl
  */

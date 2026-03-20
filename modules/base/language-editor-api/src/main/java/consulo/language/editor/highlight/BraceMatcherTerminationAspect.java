@@ -4,7 +4,6 @@ import consulo.codeEditor.HighlighterIterator;
 import consulo.language.PairedBraceMatcher;
 import consulo.language.ast.IElementType;
 
-
 /**
  * In some cases brace matching should be terminated to prevent search for a paired brace beyond some element types.
  * For example, in a sequence like '{)}' the closing brace '}' does not belong to the same structural level as the

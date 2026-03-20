@@ -18,7 +18,6 @@ package consulo.usage;
 import consulo.fileEditor.FileEditorLocation;
 import consulo.navigation.NavigateOptions;
 
-
 public class UsageAdapter implements Usage {
     @Override
     

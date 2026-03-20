@@ -18,7 +18,6 @@ package consulo.execution.ui.console;
 import consulo.content.scope.SearchScope;
 import consulo.project.Project;
 
-
 /**
  * @author anna
  * @since 2007-08-20

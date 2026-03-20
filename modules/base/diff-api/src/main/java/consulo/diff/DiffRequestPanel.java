@@ -20,7 +20,6 @@ import consulo.disposer.Disposable;
 import consulo.util.dataholder.Key;
 import consulo.ui.annotation.RequiredUIAccess;
 
-
 import org.jspecify.annotations.Nullable;
 import javax.swing.*;
 

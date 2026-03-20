@@ -88,7 +88,6 @@ public abstract class CustomCodeStyleSettings implements Cloneable {
     protected void beforeLoading() {
     }
 
-
     /**
      * Fired when settings just loaded.
      * <p>

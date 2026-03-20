@@ -15,7 +15,6 @@
  */
 package consulo.language.editor.internal.intention;
 
-
 public interface ActionClassHolder {
   
   Class getActionClass();

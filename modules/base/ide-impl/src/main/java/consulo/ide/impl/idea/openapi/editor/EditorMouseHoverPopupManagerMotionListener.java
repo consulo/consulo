@@ -23,7 +23,6 @@ import consulo.ui.annotation.RequiredUIAccess;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 
-
 @ExtensionImpl
 final class EditorMouseHoverPopupManagerMotionListener implements EditorMouseMotionListener {
   private final Provider<EditorMouseHoverPopupManager> myEditorMouseHoverPopupManager;

@@ -27,7 +27,6 @@ import consulo.usage.UsageViewNodeTextLocation;
 import consulo.usage.UsageViewTypeLocation;
 import consulo.util.lang.StringUtil;
 
-
 /**
  * @author peter
  */

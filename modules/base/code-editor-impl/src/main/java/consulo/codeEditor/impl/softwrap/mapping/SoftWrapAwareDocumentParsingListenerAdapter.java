@@ -15,7 +15,6 @@
  */
 package consulo.codeEditor.impl.softwrap.mapping;
 
-
 /**
  * @author Denis Zhdanov
  * @since 11/23/11 7:04 PM

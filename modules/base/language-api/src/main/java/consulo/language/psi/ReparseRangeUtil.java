@@ -19,7 +19,6 @@ import consulo.document.Document;
 import consulo.language.util.IncorrectOperationException;
 import consulo.logging.Logger;
 
-
 /**
  * @see consulo.language.impl.internal.psi.diff.BlockSupport
  */

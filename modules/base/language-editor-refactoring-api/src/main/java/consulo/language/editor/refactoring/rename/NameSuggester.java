@@ -37,7 +37,6 @@ public class NameSuggester {
   private final String myOldClassNameAsGiven;
   private final String myNewClassNameAsGiven;
 
-
   public NameSuggester(String oldClassName, String newClassName) {
     myOldClassNameAsGiven = oldClassName;
     myNewClassNameAsGiven = newClassName;
@@ -97,7 +96,6 @@ public class NameSuggester {
     if (replacements.isEmpty()) return propertyName;
     return calculateNewName(replacements, propertyWords, propertyName);
   }
-
 
   private static Pair<int[],int[]> calculateWordPositions(String s, String[] words) {
     int[] starts = new int[words.length + 1];

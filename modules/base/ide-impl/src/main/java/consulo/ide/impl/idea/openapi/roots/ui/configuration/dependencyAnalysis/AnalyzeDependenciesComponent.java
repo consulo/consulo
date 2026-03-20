@@ -386,7 +386,6 @@ public class AnalyzeDependenciesComponent extends MasterDetailsComponent {
             addDependencyPath(n, orderPath, i + 1);
         }
 
-
         /**
          * {@inheritDoc}
          */

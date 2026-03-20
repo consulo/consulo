@@ -25,7 +25,6 @@ import consulo.compiler.localize.CompilerLocalize;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.image.Image;
 
-
 /**
  * @author nik
  */

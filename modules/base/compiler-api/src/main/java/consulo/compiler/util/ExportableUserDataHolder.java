@@ -18,7 +18,6 @@ package consulo.compiler.util;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolder;
 
-
 import java.util.Map;
 
 /**

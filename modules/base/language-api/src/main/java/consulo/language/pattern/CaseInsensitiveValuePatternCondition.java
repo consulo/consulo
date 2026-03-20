@@ -17,7 +17,6 @@ package consulo.language.pattern;
 
 import consulo.language.util.ProcessingContext;
 
-
 /**
  * @author peter
 */

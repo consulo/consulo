@@ -15,7 +15,6 @@
  */
 package consulo.ide.impl.idea.ide.hierarchy.scope;
 
-
 /**
  * @author UNV
  * @since 2025-04-24

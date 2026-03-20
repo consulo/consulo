@@ -165,7 +165,6 @@ public class DesktopDockManagerImpl extends BaseDockManager implements FileEdito
         return myCurrentDragSession;
     }
 
-
     public void stopCurrentDragSession() {
         if (myCurrentDragSession != null) {
             myCurrentDragSession.cancelSession();
@@ -358,7 +357,6 @@ public class DesktopDockManagerImpl extends BaseDockManager implements FileEdito
         Rectangle target = new Rectangle(showPoint, size);
         ScreenUtil.moveRectangleToFitTheScreen(target);
         ScreenUtil.cropRectangleToFitTheScreen(target);
-
 
         window.setLocation(target.getLocation());
         window.myDockContentUiContainer.setPreferredSize(target.getSize());

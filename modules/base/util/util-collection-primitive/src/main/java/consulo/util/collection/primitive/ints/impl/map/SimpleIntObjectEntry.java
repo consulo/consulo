@@ -3,7 +3,6 @@ package consulo.util.collection.primitive.ints.impl.map;
 
 import consulo.util.collection.primitive.ints.IntObjectMap;
 
-
 class SimpleIntObjectEntry<V> implements IntObjectMap.IntObjectEntry<V> {
   private final int myKey;
   private final V myValue;

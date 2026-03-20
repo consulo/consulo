@@ -26,7 +26,6 @@ import consulo.module.content.ProjectRootManager;
 import consulo.module.extension.ModuleExtension;
 import consulo.project.Project;
 
-
 /**
  * @author VISTALL
  * @since 2015-04-27

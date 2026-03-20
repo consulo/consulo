@@ -19,7 +19,6 @@ package consulo.ui.ex;
 import consulo.dataContext.DataContext;
 import consulo.util.dataholder.Key;
 
-
 public interface PasteProvider {
   Key<PasteProvider> KEY = Key.create(PasteProvider.class);
 

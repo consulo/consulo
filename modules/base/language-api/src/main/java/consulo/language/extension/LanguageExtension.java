@@ -17,7 +17,6 @@ package consulo.language.extension;
 
 import consulo.language.Language;
 
-
 /**
  * @author VISTALL
  * @since 24-Jun-22

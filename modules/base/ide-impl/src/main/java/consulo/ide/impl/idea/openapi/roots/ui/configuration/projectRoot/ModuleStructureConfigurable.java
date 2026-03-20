@@ -137,7 +137,6 @@ public class ModuleStructureConfigurable extends BaseStructureConfigurable imple
         return StandardConfigurableIds.PROJECT_GROUP;
     }
 
-
     @Override
     protected String getComponentStateKey() {
         return "ModuleStructureConfigurable.UI";
@@ -193,7 +192,6 @@ public class ModuleStructureConfigurable extends BaseStructureConfigurable imple
             updateModuleEditorSelection(configurable);
         }
     }
-
 
     @Override
     protected boolean isAutoScrollEnabled() {

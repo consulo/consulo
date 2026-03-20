@@ -66,7 +66,6 @@ public final class BaseSplitContext implements SplitContext {
         myConsumer.accept(range);
     }
 
-
     @Override
     public void checkCanceled() {
         myProgressIndicatorProvider.checkForCanceled();

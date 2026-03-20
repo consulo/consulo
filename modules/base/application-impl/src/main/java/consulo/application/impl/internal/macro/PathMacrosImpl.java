@@ -286,7 +286,6 @@ public class PathMacrosImpl implements PathMacros, PersistentStateComponent<Elem
     }
   }
 
-
   @Override
   public void addMacroExpands(ExpandMacroToPathMap result) {
     for (String name : getUserMacroNames()) {

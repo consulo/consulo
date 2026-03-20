@@ -15,7 +15,6 @@
  */
 package consulo.language.codeStyle.arrangement.std;
 
-
 import consulo.util.collection.ContainerUtil;
 
 import java.util.ArrayList;

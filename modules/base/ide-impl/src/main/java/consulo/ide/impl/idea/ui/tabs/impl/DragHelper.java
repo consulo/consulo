@@ -134,7 +134,6 @@ class DragHelper extends MouseDragHelper {
     TabLabel left = findLabel(new Point(myDragRec.x + deadZoneX, myDragRec.y + myDragRec.height / 2));
     TabLabel right = findLabel(new Point(myDragRec.x + myDragRec.width - deadZoneX, myDragRec.y + myDragRec.height / 2));
 
-
     TabLabel targetLabel;
     if (myTabs.isHorizontalTabs()) {
       targetLabel = findMostOverlapping(Axis.X, left, right);
@@ -184,7 +183,6 @@ class DragHelper extends MouseDragHelper {
       freeSpace = measurer.getMinValue(myDragRec) - measurer.getMinValue(myDragOriginalRec);
     }
 
-
     int max = -1;
     TabLabel maxLabel = null;
     for (TabLabel each : labels) {
@@ -204,7 +202,6 @@ class DragHelper extends MouseDragHelper {
     return maxLabel;
   }
 
-
   private @Nullable TabLabel findLabel(Point dragPoint) {
     Component at = myTabs.findComponentAt(dragPoint);
     if (at instanceof ActionButtonComponent) return null;
@@ -223,7 +220,6 @@ class DragHelper extends MouseDragHelper {
 
     return null;
   }
-
 
   @Override
   protected boolean canStartDragging(JComponent dragComponent, Point dragComponentPoint) {

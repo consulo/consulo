@@ -7,7 +7,6 @@ import consulo.application.Application;
 import consulo.codeEditor.Editor;
 import consulo.ui.annotation.RequiredUIAccess;
 
-
 /**
  * This service keeps track of scopes inside quotes or brackets in editor, which user can exit (moving caret just to the right of closing
  * quote/bracket) using Tab key. The scope is usually created (registered) when a pair of quotes/brackets is inserted into a document, and

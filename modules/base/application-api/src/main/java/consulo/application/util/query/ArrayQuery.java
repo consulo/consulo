@@ -43,7 +43,6 @@ public class ArrayQuery<T> implements Query<T> {
         return AsyncUtil.wrapBoolean(forEach(consumer));
     }
 
-
     
     @Override
     public T[] toArray(T[] a) {

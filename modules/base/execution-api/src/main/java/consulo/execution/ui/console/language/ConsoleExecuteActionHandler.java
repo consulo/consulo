@@ -20,7 +20,6 @@ import consulo.execution.internal.LanguageConsoleViewEx;
 import consulo.execution.ui.console.ConsoleViewContentType;
 import consulo.undoRedo.ProjectUndoManager;
 
-
 public abstract class ConsoleExecuteActionHandler {
 
   private boolean myAddToHistory = true;

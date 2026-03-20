@@ -37,7 +37,6 @@ public class FilterElementProcessor implements PsiElementProcessor{
     myResults = container;
   }
 
-
   public FilterElementProcessor(ElementFilter filter, List container){
     this(filter,  null, container);
   }
@@ -45,7 +44,6 @@ public class FilterElementProcessor implements PsiElementProcessor{
   public FilterElementProcessor(ElementFilter filter, PsiElementProcessor proc){
     this(filter, proc, new ArrayList());
   }
-
 
   public FilterElementProcessor(ElementFilter filter){
     this(filter, null, new ArrayList());

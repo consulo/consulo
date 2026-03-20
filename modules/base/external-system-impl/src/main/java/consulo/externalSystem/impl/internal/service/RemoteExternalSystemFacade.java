@@ -34,7 +34,6 @@ public interface RemoteExternalSystemFacade<S extends ExternalSystemExecutionSet
       return RemoteExternalSystemProjectResolver.NULL_OBJECT;
     }
 
-
     
     @Override
     public RemoteExternalSystemTaskManager<ExternalSystemExecutionSettings> getTaskManager() throws RemoteException {

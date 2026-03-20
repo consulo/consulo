@@ -754,7 +754,6 @@ final public class Verifier {
     return null;
   }
 
-
   /**
    * This will ensure that the data for a system literal
    * is legal.
@@ -795,7 +794,6 @@ final public class Verifier {
     if (len == 0) {
       return "XML names cannot be empty";
     }
-
 
     // Cannot start with a number
     if (!isXMLNameStartCharacter(name.charAt(0))) {
@@ -944,7 +942,6 @@ final public class Verifier {
     }
     return (byte)0 != (byte)(CHARFLAGS[c] & MASKXMLCHARACTER);
   }
-
 
   /**
    * This is a utility function for determining whether a specified
@@ -1105,6 +1102,5 @@ final public class Verifier {
     }
     return true;
   }
-
 
 }

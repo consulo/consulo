@@ -19,7 +19,6 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
 
-
 @ServiceAPI(ComponentScope.APPLICATION)
 public abstract class XDebuggerSettingsManager {
   

@@ -100,7 +100,6 @@ class MacGestureAdapter extends GestureAdapterWrapper {
     return new MouseEvent(frame.getComponent(), ActionEvent.ACTION_PERFORMED, System.currentTimeMillis(), 0, 0, 0, 0, false, 0);
   }
 
-
   @Override
   public void magnify(MagnificationEventWrapper event) {
     myManager.activateTrackpad();

@@ -16,7 +16,6 @@
 
 package consulo.versionControlSystem.log.impl.internal.graph;
 
-
 import consulo.logging.Logger;
 import consulo.util.collection.ContainerUtil;
 import consulo.versionControlSystem.log.graph.GraphCommit;

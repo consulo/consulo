@@ -160,7 +160,6 @@ public class ShowImplementationsAction extends AnAction implements PopupAction {
             return;
         }
 
-
         PsiReference ref = null;
         if (editor != null) {
             ref = TargetElementUtil.findReference(editor, editor.getCaretModel().getOffset());

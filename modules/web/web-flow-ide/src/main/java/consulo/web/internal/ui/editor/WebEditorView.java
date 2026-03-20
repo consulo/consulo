@@ -22,7 +22,6 @@ import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.codeEditor.impl.CodeEditorBase;
 
-
 /**
  * @author VISTALL
  * @since 07/08/2021

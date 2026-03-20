@@ -23,7 +23,6 @@ import consulo.virtualFileSystem.archive.ArchiveVfsUtil;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
 
-
 /**
  * Implementation of {@link RootDetector} which detects a root by presence of files of some specified type under it
  *

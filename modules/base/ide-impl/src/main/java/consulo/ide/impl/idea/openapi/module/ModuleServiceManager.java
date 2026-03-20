@@ -20,7 +20,6 @@ import consulo.ide.ServiceManager;
 import consulo.annotation.DeprecationInfo;
 import consulo.module.Module;
 
-
 /**
  * @author yole
  */

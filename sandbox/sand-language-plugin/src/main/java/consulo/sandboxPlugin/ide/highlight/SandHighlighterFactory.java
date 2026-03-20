@@ -22,7 +22,6 @@ import consulo.language.editor.highlight.SyntaxHighlighter;
 import consulo.language.version.LanguageVersion;
 import consulo.sandboxPlugin.lang.SandLanguage;
 
-
 /**
  * @author VISTALL
  * @since 19.03.14

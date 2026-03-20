@@ -80,7 +80,6 @@ public interface Promise<T> {
    */
   Promise<T> onSuccess(Consumer<? super T> handler);
 
-
   /**
    * Execute passed handler on promise reject.
    */
@@ -96,7 +95,6 @@ public interface Promise<T> {
    * or on promise reject (null as result value will be passed).
    */
   Promise<T> onProcessed(Consumer<? super T> processed);
-
 
   /**
    * Get promise state.

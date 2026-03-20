@@ -126,7 +126,6 @@ public interface PsiFile extends PsiFileSystemItem {
     @Override
     FileASTNode getNode();
 
-
     /**
      * Called by the PSI framework when the contents of the file changes.
      * If you override this method, you <b>must</b> call the base class implementation.

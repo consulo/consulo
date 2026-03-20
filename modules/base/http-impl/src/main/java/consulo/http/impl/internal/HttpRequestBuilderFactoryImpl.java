@@ -128,7 +128,6 @@ public class HttpRequestBuilderFactoryImpl implements HttpRequestBuilderFactory 
             connection.setConnectTimeout(builder.myConnectTimeout);
             connection.setReadTimeout(builder.myTimeout);
 
-
             if (builder.myHostnameVerifier != null && connection instanceof HttpsURLConnection httpsURLConnection) {
                 httpsURLConnection.setHostnameVerifier(builder.myHostnameVerifier);
             }

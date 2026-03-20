@@ -30,7 +30,6 @@ import consulo.logging.Logger;
 import consulo.navigation.NavigationItem;
 import consulo.project.ProjectCoreUtil;
 
-
 @ExtensionImpl
 public class DefaultFileNavigationContributor implements GotoFileContributor, ChooseByNameContributorEx, DumbAware {
   private static final Logger LOG = Logger.getInstance(DefaultFileNavigationContributor.class);

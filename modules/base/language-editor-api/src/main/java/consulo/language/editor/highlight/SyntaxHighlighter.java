@@ -22,7 +22,6 @@ import consulo.language.lexer.Lexer;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 
-
 /**
  * Controls the syntax highlighting of a file.
  *

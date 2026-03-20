@@ -18,7 +18,6 @@ package consulo.execution.test.sm;
 import consulo.execution.test.TestConsoleProperties;
 import consulo.execution.test.sm.runner.OutputToGeneralTestEventsConverter;
 
-
 /**
  * @author gregsh
  */

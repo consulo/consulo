@@ -25,7 +25,6 @@ import consulo.project.Project;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.ThreeState;
 
-
 public class SuppressIntentionActionFromFix extends SuppressIntentionAction {
   private final SuppressQuickFix myFix;
 

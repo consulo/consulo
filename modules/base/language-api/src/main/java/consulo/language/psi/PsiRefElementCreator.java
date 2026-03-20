@@ -17,7 +17,6 @@ package consulo.language.psi;
 
 import consulo.language.util.IncorrectOperationException;
 
-
 /**
  * @author peter
  */

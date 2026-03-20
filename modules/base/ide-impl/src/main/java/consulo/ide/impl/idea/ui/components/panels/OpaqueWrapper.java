@@ -15,7 +15,6 @@
  */
 package consulo.ide.impl.idea.ui.components.panels;
 
-
 import consulo.ui.ex.awt.Wrapper;
 
 import javax.swing.*;

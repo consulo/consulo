@@ -83,7 +83,6 @@ abstract class SpecificFilesViewDialog extends DialogWrapper {
     myView.setMinimumSize(new Dimension(100, 100));
   }
 
-
   
   @Override
   protected Action[] createActions() {

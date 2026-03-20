@@ -15,7 +15,6 @@
  */
 package consulo.document.impl;
 
-
 import java.util.function.Predicate;
 
 interface IntervalTree<T> {

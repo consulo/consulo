@@ -15,7 +15,6 @@
  */
 package consulo.versionControlSystem.log;
 
-
 /**
  * Encapsulates information about a VcsUser - author or committer to the VCS.
  */

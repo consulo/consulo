@@ -15,7 +15,6 @@
  */
 package consulo.component.util.pointer;
 
-
 /**
  * @author VISTALL
  * @since 17:19/15.06.13

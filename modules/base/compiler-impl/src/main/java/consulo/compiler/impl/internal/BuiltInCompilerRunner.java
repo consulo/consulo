@@ -246,7 +246,6 @@ public class BuiltInCompilerRunner implements CompilerRunner {
         return didSomething;
     }
 
-
     private boolean generateSources(
         CompileDriver compileDriver,
         CompilerManager compilerManager,
@@ -516,7 +515,6 @@ public class BuiltInCompilerRunner implements CompilerRunner {
         return didSomething;
     }
 
-
     private static List<VirtualFile> getFilesInScope(CompileContextEx context, Chunk<Module> chunk, Collection<VirtualFile> files) {
         List<VirtualFile> filesInScope = new ArrayList<>(files.size());
         Application.get().runReadAction(() -> {
@@ -619,7 +617,6 @@ public class BuiltInCompilerRunner implements CompilerRunner {
         }
         return !toCompile.isEmpty() || wereFilesDeleted[0];
     }
-
 
     private static boolean syncOutputDir(
         CompileDriver compileDriver,
@@ -736,7 +733,6 @@ public class BuiltInCompilerRunner implements CompilerRunner {
 
         return didSomething;
     }
-
 
     private boolean generateOutput(
         CompileDriver compileDriver,
@@ -910,7 +906,6 @@ public class BuiltInCompilerRunner implements CompilerRunner {
         return new GeneratingCompiler.GenerationItem[][]{production.toArray(new GeneratingCompiler.GenerationItem[production.size()]),
             tests.toArray(new GeneratingCompiler.GenerationItem[tests.size()])};
     }
-
 
     private FileProcessingCompilerStateCache getFileProcessingCompilerCache(FileProcessingCompiler compiler) throws IOException {
         return CompilerCacheManager.getInstance(myProject).getFileProcessingCompilerCache(compiler);

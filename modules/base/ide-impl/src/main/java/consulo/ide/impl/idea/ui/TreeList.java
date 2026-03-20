@@ -150,8 +150,6 @@ public class TreeList extends JBList implements TreeModelListener {
     //To change body of implemented methods use Options | File Templates.
   }
 
-
-
   @SuppressWarnings({"HardCodedStringLiteral"})
   public static void main(String[] args) {
     JFrame frame = new JFrame("TreeList Showcase");

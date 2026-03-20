@@ -61,7 +61,6 @@ public final class FileAttributes {
    */
   public final long lastModified;
 
-
   public FileAttributes(boolean directory, boolean special, boolean symlink, boolean hidden, long length, long lastModified, boolean writable) {
     this(type(directory, special), flags(symlink, hidden, !writable), length, lastModified);
   }

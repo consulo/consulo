@@ -19,7 +19,6 @@ import consulo.annotation.access.RequiredReadAction;
 import consulo.language.psi.PsiPackage;
 import consulo.project.ui.view.internal.PsiPackageAbbreviateHelper;
 
-
 /**
  * @author Eugene Zhuravlev
  * @since 2004-10-06

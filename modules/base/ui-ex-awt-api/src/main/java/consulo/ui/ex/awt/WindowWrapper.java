@@ -3,7 +3,6 @@ package consulo.ui.ex.awt;
 import consulo.project.Project;
 import consulo.disposer.Disposable;
 
-
 import org.jspecify.annotations.Nullable;
 import javax.swing.*;
 import java.awt.*;

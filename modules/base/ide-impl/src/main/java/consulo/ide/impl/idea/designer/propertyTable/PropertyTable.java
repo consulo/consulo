@@ -1185,7 +1185,6 @@ public abstract class PropertyTable extends JBTable {
         private boolean mySelected;
         public boolean myDrawTopLine;
 
-
         @Override
         protected void customizeCellRenderer(JTable table, Object value, boolean selected, boolean hasFocus, int row, int column) {
           super.customizeCellRenderer(table, value, selected, hasFocus, row, column);

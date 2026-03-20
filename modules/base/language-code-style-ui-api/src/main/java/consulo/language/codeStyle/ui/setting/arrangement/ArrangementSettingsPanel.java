@@ -40,7 +40,6 @@ import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.List;
 
-
 /**
  * @author Denis Zhdanov
  * @since 10/30/12 5:17 PM
@@ -83,8 +82,6 @@ public abstract class ArrangementSettingsPanel extends CodeStyleAbstractPanel {
 
     myContent.add(myGroupingRulesPanel, new GridBag().coverLine().fillCellHorizontally().weightx(1));
     myContent.add(myMatchingRulesPanel, new GridBag().fillCell().weightx(1).weighty(1).coverLine());
-
-
 
     if (settings.getCommonSettings(myLanguage).isForceArrangeMenuAvailable()) {
       myForceArrangementPanel = new ForceArrangementPanel();

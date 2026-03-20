@@ -158,7 +158,6 @@ public abstract class ModuleManager {
   @RequiredReadAction
   public abstract ModifiableModuleModel getModifiableModel();
 
-
   /**
    * Returns the path to the group to which the specified module belongs, as an
    * array of group names starting from the project root.

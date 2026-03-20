@@ -58,7 +58,6 @@ public class TaskUtil {
                                                                 "(?:\\s?" + "([+-]\\d{2}:\\d{2}|[+-]\\d{4}|[+-]\\d{2}|Z)" +    // optional timezone info (4), if time is also present
                                                                 ")?)?");
 
-
   private TaskUtil() {
     // empty
   }

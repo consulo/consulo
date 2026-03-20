@@ -3,7 +3,6 @@ package consulo.externalSystem.model.project;
 import consulo.externalSystem.service.project.ExternalEntityData;
 import consulo.module.content.layer.orderEntry.DependencyScope;
 
-
 /**
  * Implementations of this interface are not obliged to be thread-safe.
  * 

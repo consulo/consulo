@@ -20,7 +20,6 @@ import consulo.ui.color.ColorValue;
 import consulo.ui.color.RGBColor;
 import consulo.ui.style.StandardColors;
 
-
 public class AppIconScheme {
   private static ColorValue TESTS_OK_COLOR = new RGBColor(46, 191, 38);
   private static ColorValue BUILD_OK_COLOR = new RGBColor(51, 153, 255);

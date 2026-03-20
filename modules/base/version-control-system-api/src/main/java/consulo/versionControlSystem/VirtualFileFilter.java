@@ -17,7 +17,6 @@ package consulo.versionControlSystem;
 
 import consulo.virtualFileSystem.VirtualFile;
 
-
 /**
  * @author Irina.Chernushina
  * @since 2012-07-19

@@ -15,7 +15,6 @@
  */
 package consulo.ide.impl.idea.util.containers;
 
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;

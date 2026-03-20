@@ -22,7 +22,6 @@ import consulo.module.Module;
 import consulo.pathMacro.Macro;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
 
-
 /**
  * @author VISTALL
  * @since 18.08.14

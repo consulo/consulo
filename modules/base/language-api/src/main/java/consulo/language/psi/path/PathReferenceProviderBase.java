@@ -7,7 +7,6 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiReference;
 import consulo.logging.Logger;
 
-
 import java.util.List;
 
 /**

@@ -83,7 +83,6 @@ public class DisposableWrapperList<E> extends AbstractList<E> {
         return disposableWrapper;
     }
 
-
     @Override
     public boolean addAll(Collection<? extends E> collection) {
         Collection<DisposableWrapper> disposableWrappers = wrapAll(collection);

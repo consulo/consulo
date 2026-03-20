@@ -22,7 +22,6 @@ import consulo.component.ComponentManager;
 import consulo.component.util.BusyObject;
 import consulo.ui.ModalityState;
 
-
 @ServiceAPI(ComponentScope.APPLICATION)
 public abstract class UiActivityMonitor {
 

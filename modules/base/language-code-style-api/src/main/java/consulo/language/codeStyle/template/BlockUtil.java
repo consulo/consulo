@@ -89,7 +89,6 @@ class BlockUtil {
     return wrapper;
   }
 
-
   public static List<Block> mergeBlocks(List<TemplateLanguageBlock> tlBlocks, List<DataLanguageBlockWrapper> foreignBlocks) {
     ArrayList<Block> result = new ArrayList<Block>(tlBlocks.size() + foreignBlocks.size());
     int vInd = 0;

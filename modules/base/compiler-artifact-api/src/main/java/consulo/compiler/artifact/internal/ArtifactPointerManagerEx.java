@@ -19,7 +19,6 @@ import consulo.compiler.artifact.ArtifactManager;
 import consulo.compiler.artifact.ArtifactPointer;
 import consulo.compiler.artifact.ArtifactPointerManager;
 
-
 /**
  * @author VISTALL
  * @since 03-Sep-22

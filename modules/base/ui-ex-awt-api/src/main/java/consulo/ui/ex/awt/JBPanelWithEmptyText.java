@@ -17,7 +17,6 @@ package consulo.ui.ex.awt;
 
 import consulo.ui.ex.awt.util.JBSwingUtilities;
 
-
 import java.awt.*;
 
 /**

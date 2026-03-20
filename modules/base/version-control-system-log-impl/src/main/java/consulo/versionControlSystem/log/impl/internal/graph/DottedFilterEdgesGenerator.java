@@ -189,7 +189,6 @@ public class DottedFilterEdgesGenerator {
     }
   }
 
-
   static class ShiftNumber {
     private final int startIndex;
     private final int endIndex;

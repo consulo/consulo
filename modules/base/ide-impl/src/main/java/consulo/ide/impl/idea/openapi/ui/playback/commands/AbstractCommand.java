@@ -96,7 +96,6 @@ public abstract class AbstractCommand implements PlaybackCommand {
     return myScriptDir;
   }
 
-
   public PlaybackCommand setScriptDir(File scriptDir) {
     myScriptDir = scriptDir;
     return this;

@@ -20,7 +20,6 @@ import consulo.project.Project;
 import consulo.ide.impl.roots.ui.configuration.projectRoot.daemon.ApplicationStructureProblemsSettings;
 import consulo.ide.impl.roots.ui.configuration.projectRoot.daemon.ProjectStructureProblemsSettings;
 
-
 /**
  * @author nik
  */

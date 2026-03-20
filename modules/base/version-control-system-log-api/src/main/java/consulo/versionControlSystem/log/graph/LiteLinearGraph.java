@@ -15,7 +15,6 @@
  */
 package consulo.versionControlSystem.log.graph;
 
-
 import java.util.List;
 
 import static consulo.versionControlSystem.log.graph.EdgeFilter.*;

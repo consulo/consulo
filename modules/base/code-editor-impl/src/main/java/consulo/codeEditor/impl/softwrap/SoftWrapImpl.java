@@ -18,7 +18,6 @@ package consulo.codeEditor.impl.softwrap;
 import consulo.codeEditor.SoftWrap;
 import consulo.codeEditor.internal.TextChangeImpl;
 
-
 /**
  * {@link SoftWrap} implementation that is built around {@link TextChangeImpl}.
  *

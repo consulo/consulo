@@ -23,7 +23,6 @@ import consulo.module.content.layer.ModuleRootLayer;
 import consulo.module.content.util.ModuleContentUtil;
 import consulo.module.extension.ModuleExtensionWithSdk;
 
-
 /**
  * @author VISTALL
  * @since 19:35/15.06.13

@@ -24,7 +24,6 @@ import consulo.ui.annotation.RequiredUIAccess;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 
-
 /**
  * @author VISTALL
  * @since 2021-01-09

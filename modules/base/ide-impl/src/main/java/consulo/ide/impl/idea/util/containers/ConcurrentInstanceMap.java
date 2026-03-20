@@ -19,7 +19,6 @@ package consulo.ide.impl.idea.util.containers;
 import consulo.annotation.DeprecationInfo;
 import consulo.application.util.ConcurrentFactoryMap;
 
-
 import java.util.Map;
 
 /**

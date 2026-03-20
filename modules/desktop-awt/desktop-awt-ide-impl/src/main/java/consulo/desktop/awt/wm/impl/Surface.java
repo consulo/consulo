@@ -57,7 +57,6 @@ public final class Surface extends JComponent {
     int count = 0;
     myOffset = 0;
 
-
     while(true){
       paintImmediately(0,0,getWidth(),getHeight());
       long timeSpent = System.currentTimeMillis() - startTime;

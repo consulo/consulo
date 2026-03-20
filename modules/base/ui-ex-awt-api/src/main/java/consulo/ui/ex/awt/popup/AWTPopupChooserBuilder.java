@@ -18,7 +18,6 @@ package consulo.ui.ex.awt.popup;
 import consulo.annotation.DeprecationInfo;
 import consulo.ui.ex.popup.IPopupChooserBuilder;
 
-
 /**
  * @author VISTALL
  * @since 21-Jul-22

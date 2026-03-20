@@ -161,7 +161,6 @@ public class TreeComboBox extends ComboBoxWithWidePopup {
         }
       }
 
-
       setSelected(isSelected);
       setFont(list.getFont());
 

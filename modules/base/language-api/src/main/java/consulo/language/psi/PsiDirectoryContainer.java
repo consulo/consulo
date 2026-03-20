@@ -18,7 +18,6 @@ package consulo.language.psi;
 
 import consulo.language.psi.scope.GlobalSearchScope;
 
-
 /**
  * @author yole
  */

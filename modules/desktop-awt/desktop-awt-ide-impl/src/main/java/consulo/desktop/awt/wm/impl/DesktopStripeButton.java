@@ -193,7 +193,6 @@ public final class DesktopStripeButton extends AnchoredButton implements ActionL
             }
         }
 
-
         return c == this;
     }
 

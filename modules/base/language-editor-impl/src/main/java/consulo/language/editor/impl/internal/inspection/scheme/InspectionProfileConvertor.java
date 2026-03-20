@@ -170,7 +170,6 @@ public class InspectionProfileConvertor {
     }
   }
 
-
   private static @Nullable String convertToShortName(String displayName, InspectionToolWrapper[] tools) {
     if (displayName == null) return null;
     for (InspectionToolWrapper tool : tools) {

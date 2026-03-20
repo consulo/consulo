@@ -22,7 +22,6 @@ import consulo.util.collection.primitive.ints.impl.map.ConcurrentIntKeyWeakValue
 import consulo.util.collection.primitive.ints.impl.map.ConcurrentIntObjectHashMap;
 import org.jetbrains.annotations.Contract;
 
-
 /**
  * @author VISTALL
  * @since 07/02/2021

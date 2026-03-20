@@ -18,7 +18,6 @@ package consulo.ui.web.internal;
 import consulo.ui.ListBox;
 import consulo.ui.model.ListModel;
 
-
 /**
  * @author VISTALL
  * @since 2019-02-19

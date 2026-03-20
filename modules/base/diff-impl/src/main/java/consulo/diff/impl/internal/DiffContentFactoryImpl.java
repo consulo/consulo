@@ -212,7 +212,6 @@ public class DiffContentFactoryImpl extends DiffContentFactoryEx {
     return new DocumentFragmentContent(project, content, range);
   }
 
-
   
   @Override
   public DiffContent createClipboardContent() {

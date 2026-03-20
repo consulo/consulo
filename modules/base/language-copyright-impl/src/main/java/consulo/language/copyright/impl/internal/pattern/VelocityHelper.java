@@ -47,7 +47,6 @@ public class VelocityHelper {
     if (module != null) vc.put("module", new ModuleInfo(module));
     vc.put("username", System.getProperty("user.name"));
 
-
     StringWriter sw = new StringWriter();
     boolean stripLineBreak = false;
     if (template.endsWith("$")) {

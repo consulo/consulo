@@ -28,7 +28,6 @@ import consulo.logging.Logger;
 import consulo.versionControlSystem.change.patch.PatchEP;
 import jakarta.inject.Inject;
 
-
 import java.io.File;
 import java.util.HashMap;
 import java.util.List;

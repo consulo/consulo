@@ -30,7 +30,6 @@ import consulo.project.Project;
 import consulo.ui.ex.tree.PresentationData;
 import consulo.virtualFileSystem.VirtualFile;
 
-
 @ExtensionImpl
 public class DirectoryPresentationProvider implements ItemPresentationProvider<PsiDirectory> {
   

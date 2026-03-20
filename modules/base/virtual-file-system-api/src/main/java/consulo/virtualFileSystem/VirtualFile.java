@@ -221,7 +221,6 @@ public abstract class VirtualFile extends UserDataHolderBase implements Modifica
     return StringUtil.trimExtension(getName());
   }
 
-
   /**
    * Renames this file to the <code>newName</code>.<p>
    * This method should be only called within write-action.

@@ -200,7 +200,6 @@ public class ExternalDiffToolUtil {
       patterns.put("%3", files.get(1).getPath());
     }
 
-
     execute(settings.getDiffExePath(), settings.getDiffParameters(), patterns);
   }
 
@@ -332,7 +331,6 @@ public class ExternalDiffToolUtil {
   //
   // Helpers
   //
-
 
   private interface InputFile {
     
@@ -498,7 +496,6 @@ public class ExternalDiffToolUtil {
       if (!StringUtil.isEmptyOrSpaces(fileName)) {
         return fileName;
       }
-
 
       FileType fileType = content.getContentType();
       String ext = fileType != null ? fileType.getDefaultExtension() : null;

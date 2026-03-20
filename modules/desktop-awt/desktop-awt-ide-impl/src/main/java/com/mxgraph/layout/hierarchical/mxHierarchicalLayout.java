@@ -329,7 +329,6 @@ JGraphLayout.Stoppable*/ {
 
     // Iterate through the result removing parents who have children in this layout
 
-
     // Perform a layout for each separate hierarchy
     // Track initial coordinate x-positioning
     double initialX = 0;

@@ -16,7 +16,6 @@
 
 package consulo.ui.ex.awt;
 
-
 import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.xml.XmlStringUtil;

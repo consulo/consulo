@@ -256,7 +256,6 @@ public class SeverityEditorDialog extends DialogWrapper {
     myOptionsList.setSelectedValue(preselection, true);
   }
 
-
   private void apply(SeverityBasedTextAttributes info) {
     MyTextAttributesDescription description =
             new MyTextAttributesDescription(LocalizeValue.of(info.getType().toString()), LocalizeValue.empty(), new TextAttributes(), info.getType().getAttributesKey());
@@ -331,7 +330,6 @@ public class SeverityEditorDialog extends DialogWrapper {
     public boolean isErrorStripeEnabled() {
       return true;
     }
-
 
     @Override
     public TextAttributes getTextAttributes() {

@@ -18,7 +18,6 @@ package consulo.language.codeStyle.arrangement.match;
 import consulo.language.codeStyle.arrangement.ArrangementEntry;
 import org.jspecify.annotations.Nullable;
 
-
 /**
  * @author Denis Zhdanov
  * @since 3/14/13 1:01 PM

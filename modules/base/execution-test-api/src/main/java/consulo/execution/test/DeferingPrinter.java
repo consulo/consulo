@@ -19,7 +19,6 @@ package consulo.execution.test;
 import consulo.execution.ui.console.ConsoleViewContentType;
 import consulo.execution.ui.console.HyperlinkInfo;
 
-
 public class DeferingPrinter implements Printer {
   private CompositePrintable myCompositePrintable;
 

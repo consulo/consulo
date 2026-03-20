@@ -41,4 +41,3 @@ public interface EditorFoldingInfo {
   @Nullable TextRange getPsiElementRange(FoldRegion region);
 }
 
-

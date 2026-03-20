@@ -28,11 +28,9 @@
 
 package net.n3.nanoxml;
 
-
 import org.jspecify.annotations.Nullable;
 
 import java.io.Reader;
-
 
 /**
  * An IXMLEntityResolver resolves entities.
@@ -52,7 +50,6 @@ public interface IXMLEntityResolver
    public void addInternalEntity(String name,
                                  String value);
 
-
    /**
     * Adds an external entity.
     *
@@ -63,7 +60,6 @@ public interface IXMLEntityResolver
    public void addExternalEntity(String name,
                                  String publicID,
                                  String systemID);
-
 
    /**
     * Returns a Java reader containing the value of an entity.
@@ -79,7 +75,6 @@ public interface IXMLEntityResolver
    public @Nullable Reader getEntity(IXMLReader xmlReader,
                            String     name)
       throws XMLParseException;
-
 
    /**
     * Returns true if an entity is external.

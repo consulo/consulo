@@ -45,7 +45,6 @@ public interface PsiLanguageInjectionHost extends PsiElement {
   
   LiteralTextEscaper<? extends PsiLanguageInjectionHost> createLiteralTextEscaper();
 
-
   @FunctionalInterface
   interface InjectedPsiVisitor {
     @RequiredReadAction

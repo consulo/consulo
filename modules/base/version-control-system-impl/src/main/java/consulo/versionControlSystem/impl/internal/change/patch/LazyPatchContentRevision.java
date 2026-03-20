@@ -25,7 +25,6 @@ import consulo.versionControlSystem.history.VcsRevisionNumber;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.application.AccessRule;
 
-
 public class LazyPatchContentRevision implements ContentRevision {
   private volatile String myContent;
   private final VirtualFile myVf;

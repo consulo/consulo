@@ -73,7 +73,6 @@ public class UIServlet extends VaadinServlet {
                 ComponentUtil.setData(event.getUI(), RootUIInfo.class, new RootUIInfo(myBuilderSupplier));
             });
 
-
             RouteRegistry registry = source.getRouter().getRegistry();
 
             registry.clean();

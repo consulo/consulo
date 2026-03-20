@@ -23,7 +23,6 @@ import consulo.language.util.CharTable;
 import consulo.language.version.LanguageVersion;
 import consulo.language.version.LanguageVersionUtil;
 
-
 /**
  * @author max
  */

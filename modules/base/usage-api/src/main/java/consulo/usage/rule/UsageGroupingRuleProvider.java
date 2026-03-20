@@ -11,7 +11,6 @@ import consulo.ui.ex.action.AnAction;
 import consulo.usage.UsageView;
 import consulo.usage.UsageViewSettings;
 
-
 /**
  * @author max
  */

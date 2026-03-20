@@ -15,7 +15,6 @@
  */
 package consulo.execution.debug.impl.internal.breakpoint.ui;
 
-
 import consulo.codeEditor.util.popup.DetailView;
 import consulo.navigation.NavigateOptions;
 import consulo.execution.debug.XDebuggerBundle;

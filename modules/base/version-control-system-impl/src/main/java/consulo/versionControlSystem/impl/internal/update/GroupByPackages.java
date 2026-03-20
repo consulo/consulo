@@ -15,7 +15,6 @@
  */
 package consulo.versionControlSystem.impl.internal.update;
 
-
 import java.io.File;
 import java.util.*;
 

@@ -62,7 +62,6 @@ public interface DockContainer extends Disposable, Activatable {
 
   void resetDropOver(DockableContent content);
 
-
   boolean isDisposeWhenEmpty();
 
   interface Dialog extends DockContainer {

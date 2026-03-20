@@ -15,7 +15,6 @@
  */
 package consulo.desktop.awt.ui.animation;
 
-
 /**
  * @author VISTALL
  * @since 13/05/2023

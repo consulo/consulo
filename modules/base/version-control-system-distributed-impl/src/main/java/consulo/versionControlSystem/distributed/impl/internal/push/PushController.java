@@ -505,7 +505,6 @@ public class PushController implements Disposable {
         );
     }
 
-
     
     private List<DefaultMutableTreeNode> getPresentationForCommits(
         Project project,

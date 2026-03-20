@@ -51,7 +51,6 @@ public final class ListSelection<T> {
     return new ListSelection<>(Collections.emptyList(), -1);
   }
 
-
   
   public List<T> getList() {
     return myList;

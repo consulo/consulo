@@ -23,7 +23,6 @@ import consulo.language.psi.search.IndexPatternProvider;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 
-
 @ServiceAPI(ComponentScope.PROJECT)
 public abstract class TodoCacheManager {
   

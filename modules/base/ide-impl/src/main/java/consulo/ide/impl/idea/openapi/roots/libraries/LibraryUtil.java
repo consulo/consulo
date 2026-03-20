@@ -69,7 +69,6 @@ public class LibraryUtil {
     return null;
   }
 
-
   private static boolean findInFile(VirtualFile file, StringTokenizer tokenizer) {
     if (!tokenizer.hasMoreTokens()) return true;
     StringBuilder name = new StringBuilder(tokenizer.nextToken());

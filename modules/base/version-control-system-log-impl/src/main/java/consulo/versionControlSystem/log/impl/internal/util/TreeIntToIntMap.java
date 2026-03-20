@@ -16,7 +16,6 @@
 
 package consulo.versionControlSystem.log.impl.internal.util;
 
-
 import java.util.function.Predicate;
 
 public class TreeIntToIntMap extends AbstractIntToIntMap implements UpdatableIntToIntMap {
@@ -62,7 +61,6 @@ public class TreeIntToIntMap extends AbstractIntToIntMap implements UpdatableInt
     myCountLevels = countLevels;
     myTree = tree;
   }
-
 
   @Override
   public int shortSize() {

@@ -99,7 +99,6 @@ public class FilePatternPackageSet extends PatternBasedPackageSet {
     return modulePattern == null && moduleGroupPattern == null;
   }
 
-
   //public for tests only
   public static String convertToRegexp(String aspectsntx, char separator) {
     StringBuffer buf = new StringBuffer(aspectsntx.length());

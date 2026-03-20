@@ -63,7 +63,6 @@ public class TestResultsXmlFormatter {
 
     public static final String ROOT_ELEM = "root";
 
-
     private final RunConfiguration myRuntimeConfiguration;
     private final ContentHandler myResultHandler;
     private final AbstractTestProxy myTestRoot;

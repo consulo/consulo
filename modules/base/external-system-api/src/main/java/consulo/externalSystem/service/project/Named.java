@@ -1,6 +1,5 @@
 package consulo.externalSystem.service.project;
 
-
 /**
  * @author Denis Zhdanov
  * @since 8/12/11 12:34 PM

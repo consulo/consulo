@@ -15,7 +15,6 @@
  */
 package consulo.ui.ex;
 
-
 import java.awt.*;
 
 public interface Splittable {

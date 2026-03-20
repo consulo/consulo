@@ -11,7 +11,6 @@ import consulo.language.psi.LiteralTextEscaper;
 import consulo.language.psi.PsiLanguageInjectionHost;
 import consulo.language.Language;
 
-
 /**
  * stores injection registration info temporarily
  * from the {@link MultiHostRegistrar#startInjecting(Language)} call

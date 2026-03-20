@@ -3,7 +3,6 @@ package consulo.language.editor.inspection;
 import consulo.language.psi.PsiElement;
 import consulo.util.lang.ThreeState;
 
-
 /**
  * This kind of suppression fix allows to clients to specify whether the fix should
  * be invoked on injected elements or on elements of host files.

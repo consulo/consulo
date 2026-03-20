@@ -17,7 +17,6 @@ package consulo.versionControlSystem.log.event;
 
 import consulo.versionControlSystem.log.VcsLogDataPack;
 
-
 /**
  * Listens to changes in the log, both in Permanent and Visible parts.
  */

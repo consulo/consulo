@@ -27,7 +27,6 @@ import consulo.container.boot.ContainerPathManager;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
 
-
 import java.io.File;
 
 /**

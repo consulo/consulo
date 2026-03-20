@@ -72,7 +72,6 @@ public class CompressibleSingleRowLayout extends SingleRowLayout {
       if (i < lengths.length - 1 && actualGridSize < lengths[i+1]) break;
     }
 
-
     for (Iterator<TabInfo> iterator = data.toLayout.iterator(); iterator.hasNext(); ) {
       TabLabel label = myTabs.myInfo2Label.get(iterator.next());
       label.setActionPanelVisible(true);

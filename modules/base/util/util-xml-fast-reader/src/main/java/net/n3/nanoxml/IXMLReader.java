@@ -28,12 +28,10 @@
 
 package net.n3.nanoxml;
 
-
 import java.io.Reader;
 import java.io.IOException;
 import java.io.FileNotFoundException;
 import java.net.MalformedURLException;
-
 
 /**
  * IXMLReader reads the data to be parsed.
@@ -55,7 +53,6 @@ public interface IXMLReader
    public char read()
       throws IOException;
 
-
    /**
     * Returns true if the current stream has no more characters left to be
     * read.
@@ -66,7 +63,6 @@ public interface IXMLReader
    public boolean atEOFOfCurrentStream()
       throws IOException;
 
-
    /**
     * Returns true if there are no more characters left to be read.
     *
@@ -75,7 +71,6 @@ public interface IXMLReader
     */
    public boolean atEOF()
       throws IOException;
-
 
    /**
     * Pushes the last character read back to the stream.
@@ -88,12 +83,10 @@ public interface IXMLReader
    public void unread(char ch)
       throws IOException;
 
-
    /**
     * Returns the line number of the data in the current stream.
     */
    public int getLineNr();
-
 
    /**
     * Opens a stream from a public and system ID.
@@ -114,7 +107,6 @@ public interface IXMLReader
              FileNotFoundException,
              IOException;
 
-
    /**
     * Starts a new stream from a Java reader. The new stream is used
     * temporary to read data from. If that stream is exhausted, control
@@ -123,7 +115,6 @@ public interface IXMLReader
     * @param reader the reader to read the new data from.
     */
    public void startNewStream(Reader reader);
-
 
    /**
     * Starts a new stream from a Java reader. The new stream is used
@@ -137,12 +128,10 @@ public interface IXMLReader
    public void startNewStream(Reader  reader,
                               boolean isInternalEntity);
 
-
    /**
     * Returns the current "level" of the stream on the stack of streams.
     */
    public int getStreamLevel();
-
 
    /**
     * Sets the system ID of the current stream.
@@ -155,7 +144,6 @@ public interface IXMLReader
    public void setSystemID(String systemID)
       throws MalformedURLException;
 
-
    /**
     * Sets the public ID of the current stream.
     *
@@ -163,12 +151,10 @@ public interface IXMLReader
     */
    public void setPublicID(String publicID);
 
-
    /**
     * Returns the current system ID.
     */
    public String getSystemID();
-
 
    /**
     * Returns the current public ID.

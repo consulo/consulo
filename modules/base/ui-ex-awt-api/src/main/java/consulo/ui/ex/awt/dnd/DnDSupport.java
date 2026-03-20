@@ -80,7 +80,6 @@ public class DnDSupport implements DnDTarget, DnDSource, Disposable {
            && myBeanProvider.apply(new DnDActionInfo(action, dragOrigin)) != null;
   }
 
-
   @Override
   public DnDDragStartBean startDragging(DnDAction action, Point dragOrigin) {
     return  myBeanProvider.apply(new DnDActionInfo(action, dragOrigin));

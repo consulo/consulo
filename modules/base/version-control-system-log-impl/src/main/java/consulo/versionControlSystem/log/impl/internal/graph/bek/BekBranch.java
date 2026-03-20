@@ -29,7 +29,6 @@ class BekBranch {
   private static final int MAX_DELTA_TIME = 60 * 60 * 24 * 3 * 1000;
   private static final int SMALL_DELTA_TIME = 60 * 60 * 4 * 1000;
 
-
   
   private final LinearGraph myPermanentGraph;
   

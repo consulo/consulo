@@ -15,7 +15,6 @@
  */
 package consulo.language.codeStyle.arrangement.std;
 
-
 /**
  * @author Svetlana.Zemlyanskaya
  */

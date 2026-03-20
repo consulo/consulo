@@ -28,10 +28,8 @@
 
 package net.n3.nanoxml;
 
-
 import java.io.Reader;
 import java.io.IOException;
-
 
 /**
  * This reader reads data from another reader until the end of a processing
@@ -49,12 +47,10 @@ class PIReader
     */
    private IXMLReader reader;
 
-
    /**
     * True if the end of the stream has been reached.
     */
    private boolean atEndOfData;
-
 
    /**
     * Creates the reader.
@@ -66,7 +62,6 @@ class PIReader
       this.reader = reader;
       this.atEndOfData = false;
    }
-
 
    /**
     * Reads a block of data.
@@ -119,7 +114,6 @@ class PIReader
 
       return charsRead;
    }
-
 
    /**
     * Skips remaining data and closes the stream.

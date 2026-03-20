@@ -570,7 +570,6 @@ public class SrcFileAnnotator implements Disposable {
             mapping = null;
         }
 
-
         List<Integer> uncoveredLines = coverageSuite.getCoverageEngine().collectSrcLinesForUntouchedFile(outputFile, coverageSuite);
 
         int lineCount = myDocument.getLineCount();

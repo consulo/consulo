@@ -77,7 +77,6 @@ public class LiveTemplatesConfigurable implements SearchableConfigurable, Config
     return "editing.templates";
   }
 
-
   public TemplateListPanel getTemplateListPanel() {
     return myPanel;
   }

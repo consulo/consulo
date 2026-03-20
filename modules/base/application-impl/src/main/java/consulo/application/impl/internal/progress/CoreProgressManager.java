@@ -314,7 +314,6 @@ public class CoreProgressManager extends ProgressManager implements ProgressMana
                 process.run();
             }
 
-
             @RequiredUIAccess
             @Override
             public void onCancel() {

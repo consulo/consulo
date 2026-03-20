@@ -1,6 +1,5 @@
 package consulo.language.controlFlow;
 
-
 /**
  * @author oleg
  */

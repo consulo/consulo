@@ -319,7 +319,6 @@ final class DesktopStripePanelImpl extends JPanel {
             tryDroppingOnGap(data, gap, -1);
         }
 
-
         if (isDroppingButton()) {
             Dimension dragSize = myDragButton.getPreferredSize();
             if (getAnchor().isHorizontal() == myDragButton.getWindowInfo().getAnchor().isHorizontal()) {
@@ -398,7 +397,6 @@ final class DesktopStripePanelImpl extends JPanel {
 
         return result;
     }
-
 
     public ToolWindowAnchor getAnchor() {
         return ToolWindowAnchor.get(myAnchor);
@@ -580,7 +578,6 @@ final class DesktopStripePanelImpl extends JPanel {
             updatePresentation();
         }
     }
-
 
     public String toString() {
         String anchor = null;

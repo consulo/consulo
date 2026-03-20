@@ -23,7 +23,6 @@ import consulo.language.psi.PsiFile;
 import consulo.project.Project;
 import jakarta.inject.Inject;
 
-
 /**
  * @author VISTALL
  * @since 25/03/2023

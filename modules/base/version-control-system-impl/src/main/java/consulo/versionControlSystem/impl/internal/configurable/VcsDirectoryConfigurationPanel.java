@@ -421,7 +421,6 @@ public class VcsDirectoryConfigurationPanel extends JPanel {
         checkNotifyListeners(getActiveVcses());
     }
 
-
     private void addSelectedUnregisteredMappings(List<MapInfo> infos) {
         List<MapInfo> items = new ArrayList<>(myModel.getItems());
         for (MapInfo info : infos) {

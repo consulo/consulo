@@ -60,7 +60,6 @@ public class ContinuationOption implements CodeStyleConstraints {
         }
     }
 
-
     public void setSupported(boolean supported) {
         mySupported = supported;
     }

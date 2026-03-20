@@ -20,7 +20,6 @@ import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
 import consulo.component.util.pointer.NamedPointerManager;
 
-
 /**
  * @author VISTALL
  * @since 17:17/15.06.13

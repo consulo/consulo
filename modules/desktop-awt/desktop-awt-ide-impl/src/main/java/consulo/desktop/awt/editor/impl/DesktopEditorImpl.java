@@ -1546,7 +1546,6 @@ public final class DesktopEditorImpl extends CodeEditorBase
         }
         putUserData(BUFFER, null);
 
-
         Rectangle rect = ((JViewport) myEditorComponent.getParent()).getViewRect();
         if (rect.isEmpty()) {
             return;
@@ -4197,7 +4196,6 @@ public final class DesktopEditorImpl extends CodeEditorBase
 
             super.processMouseWheelEvent(e);
         }
-
 
         @Override
         protected void setupCorners() {

@@ -2,7 +2,6 @@ package consulo.language.editor.refactoring.classMember;
 
 import consulo.language.psi.PsiElement;
 
-
 /**
  * @author Nikolay.Tropin
  * @since 2013-08-23

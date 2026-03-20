@@ -276,7 +276,6 @@ public class CommonCodeStyleSettings {
     public int BLANK_LINES_AROUND_FIELD_IN_INTERFACE = 0;
     public int BLANK_LINES_AROUND_METHOD_IN_INTERFACE = 1;
 
-
     public int BLANK_LINES_AFTER_CLASS_HEADER = 0;
     public int BLANK_LINES_AFTER_ANONYMOUS_CLASS_HEADER = 0;
 
@@ -879,7 +878,6 @@ public class CommonCodeStyleSettings {
     public boolean SPACE_WITHIN_ANNOTATION_PARENTHESES = false;
 
     //----------------------------------------------------------------------------------------
-
 
     //-------------------------Enums----------------------------------------------------------
     public int ENUM_CONSTANTS_WRAP = DO_NOT_WRAP;

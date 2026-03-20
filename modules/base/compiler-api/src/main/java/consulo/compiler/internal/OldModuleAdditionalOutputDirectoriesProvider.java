@@ -22,7 +22,6 @@ import consulo.compiler.ModuleAdditionalOutputDirectory;
 import consulo.module.Module;
 import jakarta.inject.Inject;
 
-
 import java.util.ArrayList;
 import java.util.List;
 

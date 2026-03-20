@@ -15,7 +15,6 @@
  */
 package consulo.codeEditor;
 
-
 /**
  * Provides generic contract for object encapsulating information about single unit of text change.
  * <p/>

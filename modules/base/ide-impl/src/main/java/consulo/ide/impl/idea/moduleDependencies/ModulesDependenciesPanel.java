@@ -206,7 +206,6 @@ public class ModulesDependenciesPanel extends JPanel implements ModuleRootListen
                 analyzeDepsAction.actionPerformed(e);
             }
 
-
             @Override
             public void update(AnActionEvent e) {
                 analyzeDepsAction.update(e);

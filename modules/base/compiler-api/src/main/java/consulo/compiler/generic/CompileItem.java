@@ -15,7 +15,6 @@
  */
 package consulo.compiler.generic;
 
-
 /**
  * @author nik
  */
@@ -27,7 +26,6 @@ public abstract class CompileItem<Key, SourceState, OutputState> {
 
     
     public abstract SourceState computeSourceState();
-
 
     public abstract boolean isOutputUpToDate(OutputState state);
 

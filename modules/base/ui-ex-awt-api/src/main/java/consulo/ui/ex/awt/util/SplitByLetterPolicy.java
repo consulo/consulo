@@ -17,7 +17,6 @@ package consulo.ui.ex.awt.util;
 
 import java.io.File;
 
-
 public class SplitByLetterPolicy extends FilePathSplittingPolicy {
 
   protected SplitByLetterPolicy() {
@@ -45,7 +44,5 @@ public class SplitByLetterPolicy extends FilePathSplittingPolicy {
         return "...";
     }
   }
-
-
 
 }

@@ -75,7 +75,6 @@ public class HttpConfirmingTrustManagerImplHttp implements HttpConfirmingTrustMa
     private final X509TrustManager mySystemManager;
     private final MutableTrustManagerHttp myCustomManager;
 
-
     private HttpConfirmingTrustManagerImplHttp(X509TrustManager system, MutableTrustManagerHttp custom) {
         mySystemManager = system;
         myCustomManager = custom;
@@ -231,7 +230,6 @@ public class HttpConfirmingTrustManagerImplHttp implements HttpConfirmingTrustMa
             }
             return keyStore;
         }
-
 
         /**
          * Add certificate to underlying trust store.

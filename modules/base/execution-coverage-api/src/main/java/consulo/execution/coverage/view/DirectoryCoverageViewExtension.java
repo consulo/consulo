@@ -77,7 +77,6 @@ public class DirectoryCoverageViewExtension extends CoverageViewExtension {
             : null;
     }
 
-
     @Override
     public PsiElement getParentElement(PsiElement element) {
         PsiFile containingFile = element.getContainingFile();

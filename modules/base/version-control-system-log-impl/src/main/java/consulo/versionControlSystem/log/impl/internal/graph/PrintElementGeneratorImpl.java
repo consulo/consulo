@@ -48,7 +48,6 @@ public class PrintElementGeneratorImpl extends AbstractPrintElementGenerator {
   private static final boolean SHOW_ARROW_WHEN_SHOW_LONG_EDGES = true;
   private static final int SAMPLE_SIZE = 20000;
 
-
   
   private final SLRUMap<Integer, List<GraphElement>> myCache = new SLRUMap<>(CACHE_SIZE, CACHE_SIZE * 2);
   

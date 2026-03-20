@@ -15,7 +15,6 @@
  */
 package consulo.ide.impl.idea.ide.util.gotoByName;
 
-
 /**
  * @author Roman.Chernyatchik
  * @since 2009-03-11

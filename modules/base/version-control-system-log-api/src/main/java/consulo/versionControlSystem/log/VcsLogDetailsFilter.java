@@ -1,6 +1,5 @@
 package consulo.versionControlSystem.log;
 
-
 /**
  * Filter which needs {@link VcsCommitMetadata} to work.
  *

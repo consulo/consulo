@@ -22,7 +22,6 @@ import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.virtualFileSystem.VirtualFile;
 
-
 /**
  * @author Dmitry Avdeev
  */

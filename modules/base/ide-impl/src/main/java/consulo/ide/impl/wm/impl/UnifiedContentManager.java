@@ -28,7 +28,6 @@ import consulo.ui.layout.DockLayout;
 import consulo.util.concurrent.AsyncResult;
 import org.jspecify.annotations.Nullable;
 
-
 /**
  * @author VISTALL
  * @since 18-Oct-17

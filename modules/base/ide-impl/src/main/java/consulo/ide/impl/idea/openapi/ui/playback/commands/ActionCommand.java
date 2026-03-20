@@ -48,7 +48,6 @@ public class ActionCommand extends TypeCommand {
             return new ActionCallback.Rejected();
         }
 
-
         if (!context.isUseDirectActionCall()) {
             Shortcut[] sc = KeymapManager.getInstance().getActiveKeymap().getShortcuts(actionName);
             KeyStroke stroke = null;

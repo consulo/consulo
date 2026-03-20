@@ -28,7 +28,6 @@ import consulo.language.internal.custom.SyntaxTable;
 import consulo.language.plain.PlainTextLanguage;
 import consulo.virtualFileSystem.fileType.FileType;
 
-
 @ExtensionImpl
 public class StandardFileTypeRegistrator implements FileTypeRegistrator {
   @Override

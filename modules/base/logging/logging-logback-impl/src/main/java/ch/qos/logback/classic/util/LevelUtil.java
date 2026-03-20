@@ -28,7 +28,6 @@ import static ch.qos.logback.core.joran.JoranConstants.NULL;
  */
 public class LevelUtil {
 
-
     public static boolean isInheritedLevelString(String levelStr) {
         if (JoranConstants.INHERITED.equalsIgnoreCase(levelStr) || NULL.equalsIgnoreCase(levelStr)) {
             return true;

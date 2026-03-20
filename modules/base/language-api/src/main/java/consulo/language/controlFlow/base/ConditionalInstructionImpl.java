@@ -19,7 +19,6 @@ public class ConditionalInstructionImpl extends InstructionImpl implements Condi
         myResult = result;
     }
 
-
     @Override
     public @Nullable PsiElement getCondition() {
         return myCondition;

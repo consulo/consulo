@@ -33,10 +33,8 @@ public interface ToolWindow extends BusyObject, UserDataHolder {
     Key<ToolWindow> KEY = Key.create(ToolWindow.class);
     Key<Boolean> SHOW_CONTENT_ICON = Key.create("ContentIcon");
 
-   
     String getId();
 
-   
     LocalizeValue getDisplayName();
 
     void setDisplayName(LocalizeValue displayName);
@@ -139,7 +137,6 @@ public interface ToolWindow extends BusyObject, UserDataHolder {
     /**
      * @throws IllegalStateException if tool window isn't installed.
      */
-   
     ToolWindowType getType();
 
     /**
@@ -151,24 +148,23 @@ public interface ToolWindow extends BusyObject, UserDataHolder {
     /**
      * @return selected content title
      */
-    @RequiredUIAccess
     @Deprecated
+    @RequiredUIAccess
     String getTitle();
 
     /**
      * Sets new window title.
      */
-    @RequiredUIAccess
     @Deprecated
     @DeprecationInfo("Use getSelectedContent() for change")
+    @RequiredUIAccess
     void setTitle(String title);
 
     /**
      * @return window stripe button text.
      */
-   
-    @RequiredUIAccess
     @Deprecated
+    @RequiredUIAccess
     default String getStripeTitle() {
         return getDisplayName().getValue();
     }
@@ -213,13 +209,11 @@ public interface ToolWindow extends BusyObject, UserDataHolder {
 
     void setDefaultContentUiType(ToolWindowContentUiType type);
 
-   
     @RequiredUIAccess
     ToolWindowContentUiType getContentUiType();
 
     void installWatcher(ContentManager contentManager);
 
-   
     ContentManager getContentManager();
 
     default @Nullable ContentManager getContentManagerIfCreated() {
@@ -253,7 +247,6 @@ public interface ToolWindow extends BusyObject, UserDataHolder {
     default void setAdditionalGearActions(@Nullable ActionGroup additionalGearActions) {
     }
 
-   
     default Component getUIComponent() {
         throw new AbstractMethodError();
     }

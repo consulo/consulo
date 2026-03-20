@@ -15,7 +15,6 @@
  */
 package consulo.versionControlSystem.distributed.push;
 
-
 /**
  * For a single repository, specifies what is pushed and where.
  */
