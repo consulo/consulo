@@ -21,7 +21,6 @@ import consulo.externalSystem.rt.model.ExternalSystemException;
 import consulo.externalSystem.task.ExternalSystemTaskManager;
 import org.jspecify.annotations.Nullable;
 
-import java.rmi.RemoteException;
 import java.util.List;
 import java.util.function.Supplier;
 
@@ -47,7 +46,7 @@ public class RemoteExternalSystemTaskManagerImpl<S extends ExternalSystemExecuti
                            final @Nullable S settings,
                            final List<String> vmOptions,
                            final List<String> scriptParameters,
-                           final @Nullable String debuggerSetup) throws RemoteException, ExternalSystemException
+                           final @Nullable String debuggerSetup) throws ExternalSystemException
   {
     execute(id, new Supplier<Object>() {
       @Nullable
@@ -61,7 +60,7 @@ public class RemoteExternalSystemTaskManagerImpl<S extends ExternalSystemExecuti
   }
 
   @Override
-  public boolean cancelTask(ExternalSystemTaskId id) throws RemoteException, ExternalSystemException
+  public boolean cancelTask(ExternalSystemTaskId id) throws ExternalSystemException
   {
     return myDelegate.cancelTask(id, getNotificationListener());
   }

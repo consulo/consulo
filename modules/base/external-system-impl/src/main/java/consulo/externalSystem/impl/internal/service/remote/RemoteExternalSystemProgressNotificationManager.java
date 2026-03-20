@@ -3,22 +3,19 @@ package consulo.externalSystem.impl.internal.service.remote;
 import consulo.externalSystem.model.task.ExternalSystemTaskId;
 import consulo.externalSystem.model.task.ExternalSystemTaskNotificationEvent;
 
-import java.rmi.Remote;
-import java.rmi.RemoteException;
-
 /**
- * Defines interface for the entity that manages notifications about progress of long-running operations performed at Gradle API side.
+ * Defines interface for the entity that manages notifications about progress of long-running operations performed at external system side.
  * <p/>
  * Implementations of this interface are expected to be thread-safe.
- * 
+ *
  * @author Denis Zhdanov
  * @since 11/10/11 9:03 AM
  */
-public interface RemoteExternalSystemProgressNotificationManager extends Remote {
+public interface RemoteExternalSystemProgressNotificationManager {
 
   RemoteExternalSystemProgressNotificationManager NULL_OBJECT = new RemoteExternalSystemProgressNotificationManager() {
     @Override
-    public void onQueued(ExternalSystemTaskId id) throws RemoteException {
+    public void onQueued(ExternalSystemTaskId id) {
     }
 
     @Override
@@ -38,25 +35,25 @@ public interface RemoteExternalSystemProgressNotificationManager extends Remote 
     }
 
     @Override
-    public void onSuccess(ExternalSystemTaskId id) throws RemoteException {
+    public void onSuccess(ExternalSystemTaskId id) {
     }
 
     @Override
-    public void onFailure(ExternalSystemTaskId id, Exception e) throws RemoteException {
+    public void onFailure(ExternalSystemTaskId id, Exception e) {
     }
   };
 
-  void onQueued(ExternalSystemTaskId id) throws RemoteException;
+  void onQueued(ExternalSystemTaskId id);
 
-  void onStart(ExternalSystemTaskId id) throws RemoteException;
+  void onStart(ExternalSystemTaskId id);
 
-  void onStatusChange(ExternalSystemTaskNotificationEvent event) throws RemoteException;
+  void onStatusChange(ExternalSystemTaskNotificationEvent event);
 
-  void onTaskOutput(ExternalSystemTaskId id, String text, boolean stdOut) throws RemoteException;
+  void onTaskOutput(ExternalSystemTaskId id, String text, boolean stdOut);
 
-  void onEnd(ExternalSystemTaskId id) throws RemoteException;
+  void onEnd(ExternalSystemTaskId id);
 
-  void onSuccess(ExternalSystemTaskId id) throws RemoteException;
+  void onSuccess(ExternalSystemTaskId id);
 
-  void onFailure(ExternalSystemTaskId id, Exception e) throws RemoteException;
+  void onFailure(ExternalSystemTaskId id, Exception e);
 }

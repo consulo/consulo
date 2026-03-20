@@ -3,30 +3,15 @@ package consulo.externalSystem.impl.internal.service;
 import consulo.externalSystem.model.setting.ExternalSystemExecutionSettings;
 import consulo.externalSystem.model.task.ExternalSystemTaskNotificationListener;
 
-import java.rmi.Remote;
-import java.rmi.RemoteException;
-
 /**
  * Generic interface with common functionality for all remote services that work with external system.
- * 
+ *
  * @author Denis Zhdanov
  * @since 8/9/11 3:19 PM
  */
-public interface RemoteExternalSystemService<S extends ExternalSystemExecutionSettings> extends Remote, ExternalSystemTaskAware {
+public interface RemoteExternalSystemService<S extends ExternalSystemExecutionSettings> extends ExternalSystemTaskAware {
 
-  /**
-   * Provides the service settings to use.
-   * 
-   * @param settings  settings to use
-   * @throws RemoteException      as required by RMI
-   */
-  void setSettings(S settings) throws RemoteException;
+  void setSettings(S settings);
 
-  /**
-   * Allows to define notification callback to use within the current service
-   * 
-   * @param notificationListener  notification listener to use with the current service
-   * @throws RemoteException      as required by RMI
-   */
-  void setNotificationListener(ExternalSystemTaskNotificationListener notificationListener) throws RemoteException;
+  void setNotificationListener(ExternalSystemTaskNotificationListener notificationListener);
 }

@@ -25,7 +25,6 @@ import consulo.externalSystem.rt.model.ExternalSystemException;
 import consulo.externalSystem.service.project.ProjectData;
 import org.jspecify.annotations.Nullable;
 
-import java.rmi.RemoteException;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
@@ -36,7 +35,6 @@ import java.util.Set;
  */
 public interface RemoteExternalSystemProjectResolver<S extends ExternalSystemExecutionSettings> extends RemoteExternalSystemService<S> {
 
-  /** <a href="http://en.wikipedia.org/wiki/Null_Object_pattern">Null object</a> for {@link RemoteExternalSystemProjectResolverImpl}. */
   RemoteExternalSystemProjectResolver<ExternalSystemExecutionSettings> NULL_OBJECT
     = new RemoteExternalSystemProjectResolver<ExternalSystemExecutionSettings>() {
     @Nullable
@@ -51,26 +49,26 @@ public interface RemoteExternalSystemProjectResolver<S extends ExternalSystemExe
     }
 
     @Override
-    public void setSettings(ExternalSystemExecutionSettings settings) throws RemoteException {
+    public void setSettings(ExternalSystemExecutionSettings settings) {
     }
 
     @Override
-    public void setNotificationListener(ExternalSystemTaskNotificationListener notificationListener) throws RemoteException {
+    public void setNotificationListener(ExternalSystemTaskNotificationListener notificationListener) {
     }
 
     @Override
-    public boolean isTaskInProgress(ExternalSystemTaskId id) throws RemoteException {
+    public boolean isTaskInProgress(ExternalSystemTaskId id) {
       return false;
     }
 
     @Override
-    public boolean cancelTask(ExternalSystemTaskId id) throws RemoteException {
+    public boolean cancelTask(ExternalSystemTaskId id) {
       return false;
     }
 
-    
+
     @Override
-    public Map<ExternalSystemTaskType, Set<ExternalSystemTaskId>> getTasksInProgress() throws RemoteException {
+    public Map<ExternalSystemTaskType, Set<ExternalSystemTaskId>> getTasksInProgress() {
       return Collections.emptyMap();
     }
   };
@@ -80,5 +78,5 @@ public interface RemoteExternalSystemProjectResolver<S extends ExternalSystemExe
                                            String projectPath,
                                            boolean isPreviewMode,
                                            @Nullable S settings)
-    throws RemoteException, ExternalSystemException, IllegalArgumentException, IllegalStateException;
+    throws ExternalSystemException, IllegalArgumentException, IllegalStateException;
 }

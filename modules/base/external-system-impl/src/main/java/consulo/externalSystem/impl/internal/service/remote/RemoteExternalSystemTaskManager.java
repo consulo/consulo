@@ -23,7 +23,6 @@ import consulo.externalSystem.model.task.ExternalSystemTaskType;
 import consulo.externalSystem.rt.model.ExternalSystemException;
 import org.jspecify.annotations.Nullable;
 
-import java.rmi.RemoteException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -35,7 +34,6 @@ import java.util.Set;
  */
 public interface RemoteExternalSystemTaskManager<S extends ExternalSystemExecutionSettings> extends RemoteExternalSystemService<S> {
 
-  /** <a href="http://en.wikipedia.org/wiki/Null_Object_pattern">Null object</a> for {@link RemoteExternalSystemProjectResolverImpl}. */
   RemoteExternalSystemTaskManager<ExternalSystemExecutionSettings> NULL_OBJECT =
     new RemoteExternalSystemTaskManager<ExternalSystemExecutionSettings>() {
 
@@ -46,32 +44,32 @@ public interface RemoteExternalSystemTaskManager<S extends ExternalSystemExecuti
                                @Nullable ExternalSystemExecutionSettings settings,
                                List<String> vmOptions,
                                List<String> scriptParameters,
-                               @Nullable String debuggerSetup) throws RemoteException, ExternalSystemException
+                               @Nullable String debuggerSetup) throws ExternalSystemException
       {
       }
 
       @Override
-      public boolean cancelTask(ExternalSystemTaskId id) throws RemoteException, ExternalSystemException
+      public boolean cancelTask(ExternalSystemTaskId id) throws ExternalSystemException
       {
         return false;
       }
 
       @Override
-      public void setSettings(ExternalSystemExecutionSettings settings) throws RemoteException {
+      public void setSettings(ExternalSystemExecutionSettings settings) {
       }
 
       @Override
-      public void setNotificationListener(ExternalSystemTaskNotificationListener notificationListener) throws RemoteException {
+      public void setNotificationListener(ExternalSystemTaskNotificationListener notificationListener) {
       }
 
       @Override
-      public boolean isTaskInProgress(ExternalSystemTaskId id) throws RemoteException {
+      public boolean isTaskInProgress(ExternalSystemTaskId id) {
         return false;
       }
 
-      
+
       @Override
-      public Map<ExternalSystemTaskType, Set<ExternalSystemTaskId>> getTasksInProgress() throws RemoteException {
+      public Map<ExternalSystemTaskType, Set<ExternalSystemTaskId>> getTasksInProgress() {
         return Collections.emptyMap();
       }
     };
@@ -82,7 +80,7 @@ public interface RemoteExternalSystemTaskManager<S extends ExternalSystemExecuti
                     @Nullable S settings,
                     List<String> vmOptions,
                     List<String> scriptParameters,
-                    @Nullable String debuggerSetup) throws RemoteException, ExternalSystemException;
+                    @Nullable String debuggerSetup) throws ExternalSystemException;
 
-  boolean cancelTask(ExternalSystemTaskId id) throws RemoteException, ExternalSystemException;
+  boolean cancelTask(ExternalSystemTaskId id) throws ExternalSystemException;
 }

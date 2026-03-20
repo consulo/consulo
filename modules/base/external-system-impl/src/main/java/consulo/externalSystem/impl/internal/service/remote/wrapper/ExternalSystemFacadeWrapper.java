@@ -8,7 +8,6 @@ import consulo.externalSystem.model.setting.ExternalSystemExecutionSettings;
 import consulo.externalSystem.model.task.ExternalSystemTaskId;
 import consulo.externalSystem.model.task.ExternalSystemTaskType;
 
-import java.rmi.RemoteException;
 import java.util.Map;
 import java.util.Set;
 
@@ -43,39 +42,39 @@ public class ExternalSystemFacadeWrapper<S extends ExternalSystemExecutionSettin
 
   
   @Override
-  public RemoteExternalSystemProjectResolver<S> getResolver() throws RemoteException, IllegalStateException {
+  public RemoteExternalSystemProjectResolver<S> getResolver() throws IllegalStateException {
     return new ExternalSystemProjectResolverWrapper<S>(myDelegate.getResolver(), myProgressManager);
   }
 
   
   @Override
-  public RemoteExternalSystemTaskManager<S> getTaskManager() throws RemoteException {
+  public RemoteExternalSystemTaskManager<S> getTaskManager() {
     return new ExternalSystemTaskManagerWrapper<S>(myDelegate.getTaskManager(), myProgressManager);
   }
 
   @Override
-  public void applySettings(S settings) throws RemoteException {
+  public void applySettings(S settings) {
     myDelegate.applySettings(settings);
   }
 
   @Override
-  public void applyProgressManager(RemoteExternalSystemProgressNotificationManager progressManager) throws RemoteException {
+  public void applyProgressManager(RemoteExternalSystemProgressNotificationManager progressManager) {
     myDelegate.applyProgressManager(progressManager);
   }
 
   @Override
-  public boolean isTaskInProgress(ExternalSystemTaskId id) throws RemoteException {
+  public boolean isTaskInProgress(ExternalSystemTaskId id) {
     return myDelegate.isTaskInProgress(id);
   }
 
   
   @Override
-  public Map<ExternalSystemTaskType, Set<ExternalSystemTaskId>> getTasksInProgress() throws RemoteException {
+  public Map<ExternalSystemTaskType, Set<ExternalSystemTaskId>> getTasksInProgress() {
     return myDelegate.getTasksInProgress();
   }
 
   @Override
-  public boolean cancelTask(ExternalSystemTaskId id) throws RemoteException {
+  public boolean cancelTask(ExternalSystemTaskId id) {
     return myDelegate.cancelTask(id);
   }
 }

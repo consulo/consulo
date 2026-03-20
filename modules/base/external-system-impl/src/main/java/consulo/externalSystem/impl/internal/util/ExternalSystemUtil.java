@@ -76,7 +76,8 @@ import consulo.util.dataholder.Key;
 import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.ref.SimpleReference;
-import consulo.util.rmi.RemoteUtil;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.UndeclaredThrowableException;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import org.jspecify.annotations.Nullable;
@@ -317,10 +318,20 @@ public class ExternalSystemUtil {
         });
     }
 
+    private static Throwable unwrapException(Throwable e) {
+        for (Throwable candidate = e; candidate != null; candidate = candidate.getCause()) {
+            Class<? extends Throwable> clazz = candidate.getClass();
+            if (clazz != InvocationTargetException.class && clazz != UndeclaredThrowableException.class) {
+                return candidate;
+            }
+        }
+        return e;
+    }
+
     @Nullable
     @SuppressWarnings("ThrowableResultOfMethodCallIgnored")
     private static String extractDetails(Throwable e) {
-        Throwable unwrapped = RemoteUtil.unwrap(e);
+        Throwable unwrapped = unwrapException(e);
         if (unwrapped instanceof ExternalSystemException externalSystemException) {
             return externalSystemException.getOriginalReason();
         }

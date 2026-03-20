@@ -77,7 +77,8 @@ import consulo.util.io.PathUtil;
 import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.ref.SimpleReference;
-import consulo.util.rmi.RemoteUtil;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.UndeclaredThrowableException;
 import consulo.virtualFileSystem.StandardFileSystems;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.archive.ArchiveVfsUtil;
@@ -802,15 +803,15 @@ public class ExternalSystemApiUtil {
     }
 
     /**
-     * {@link RemoteUtil#unwrap(Throwable) unwraps} given exception if possible and builds error message for it.
+     * Unwraps given exception if possible and builds error message for it.
      *
      * @param e exception to process
      * @return error message for the given exception
      */
     @SuppressWarnings({"ThrowableResultOfMethodCallIgnored", "IOResourceOpenedButNotSafelyClosed"})
-    
+
     public static String buildErrorMessage(Throwable e) {
-        Throwable unwrapped = RemoteUtil.unwrap(e);
+        Throwable unwrapped = unwrapException(e);
         String reason = unwrapped.getLocalizedMessage();
         if (!StringUtil.isEmpty(reason)) {
             return reason;
@@ -928,5 +929,15 @@ public class ExternalSystemApiUtil {
 
     private static @Nullable VirtualFile findLocalFileByPathUnderReadAction(String path) {
         return AccessRule.read(() -> StandardFileSystems.local().findFileByPath(path));
+    }
+
+    private static Throwable unwrapException(Throwable e) {
+        for (Throwable candidate = e; candidate != null; candidate = candidate.getCause()) {
+            Class<? extends Throwable> clazz = candidate.getClass();
+            if (clazz != InvocationTargetException.class && clazz != UndeclaredThrowableException.class) {
+                return candidate;
+            }
+        }
+        return e;
     }
 }
