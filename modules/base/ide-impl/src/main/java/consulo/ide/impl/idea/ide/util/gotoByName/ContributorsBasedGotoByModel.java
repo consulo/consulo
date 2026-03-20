@@ -267,7 +267,6 @@ public abstract class ContributorsBasedGotoByModel implements ChooseByNameModelE
      * @return a list of navigation items from contributors for
      * which {@link #acceptItem(NavigationItem) returns true.
      */
-    
     @Override
     public Object[] getElementsByName(String name, boolean checkBoxState, String pattern) {
         return getElementsByName(name, FindSymbolParameters.wrap(pattern, myProject, checkBoxState), new ProgressIndicatorBase());

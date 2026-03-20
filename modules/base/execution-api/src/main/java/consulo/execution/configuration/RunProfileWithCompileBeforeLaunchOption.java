@@ -25,7 +25,6 @@ public interface RunProfileWithCompileBeforeLaunchOption extends RunProfile {
   /**
    * @return modules to compile before run. Empty list to build project
    */
-  
   Module[] getModules();
 
   /**

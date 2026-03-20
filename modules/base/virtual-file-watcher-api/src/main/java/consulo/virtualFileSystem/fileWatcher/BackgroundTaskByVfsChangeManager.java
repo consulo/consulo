@@ -37,7 +37,6 @@ public abstract class BackgroundTaskByVfsChangeManager {
   /**
    * Create task without adding to list
    */
-  
   public abstract BackgroundTaskByVfsChangeTask createTask(BackgroundTaskByVfsChangeProvider provider,
                                                            VirtualFile virtualFile,
                                                            String name);

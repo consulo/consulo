@@ -70,7 +70,6 @@ public abstract class ContentFolderTypeProvider {
      * @param dir child directory
      * @return icon of child directory
      */
-    
     @RequiredReadAction
     public Image getChildDirectoryIcon(@Nullable VirtualFile dir, @Nullable ComponentManager project) {
         return getChildDirectoryIcon();

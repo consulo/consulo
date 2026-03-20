@@ -48,7 +48,6 @@ public abstract class XValueGroup extends XValueContainer {
   /**
    * @return separator between the group name and the {@link #getComment() comment} in the node text
    */
-  
   public String getSeparator() {
     return " = ";
   }

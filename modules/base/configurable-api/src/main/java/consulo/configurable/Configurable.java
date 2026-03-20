@@ -56,7 +56,6 @@ public interface Configurable extends UnnamedConfigurable {
      *
      * @return the visible name of the component.
      */
-    
     LocalizeValue getDisplayName();
 
     /**

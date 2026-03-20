@@ -16,7 +16,6 @@ public interface ValueEditor<T> {
    *
    * @return The current value or the default one if component doesn't contain valid data.
    */
-  
   T getValue();
 
   /**
@@ -29,7 +28,6 @@ public interface ValueEditor<T> {
   /**
    * @return The current default value.
    */
-  
   T getDefaultValue();
 
   /**
@@ -55,7 +53,6 @@ public interface ValueEditor<T> {
    * @return Parsed data.
    * @throws ValueValidationException if parsing fails.
    */
-  
   T parseValue(@Nullable String text) throws ValueValidationException;
 
   /**

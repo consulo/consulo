@@ -37,7 +37,6 @@ public abstract class JobScheduler {
    * </ul>
    * If you need to execute only one task (when it's ready) at a time, you can use {@link AppExecutorUtil#createBoundedScheduledExecutorService(int)}.
    */
-  
   public static ScheduledExecutorService getScheduler() {
     ApplicationConcurrency concurrency = Application.get().getInstance(ApplicationConcurrency.class);
     return concurrency.getScheduledExecutorService();

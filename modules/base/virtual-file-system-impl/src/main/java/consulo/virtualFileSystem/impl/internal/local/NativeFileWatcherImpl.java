@@ -126,7 +126,6 @@ public class NativeFileWatcherImpl extends PluggableFileWatcher {
   /**
    * Subclasses should override this method to provide a custom binary to run.
    */
-  
   public static Path getExecutablePath() {
     Path path = getExecutablePathImpl();
     if (path == null) {

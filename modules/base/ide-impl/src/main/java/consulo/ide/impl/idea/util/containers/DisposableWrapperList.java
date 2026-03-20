@@ -60,7 +60,6 @@ public class DisposableWrapperList<E> extends AbstractList<E> {
      * @return the disposable object representing the added element. Disposal of this object removes the element from
      * the list. Conversely, removal of the element from the list triggers disposal of its disposable object.
      */
-    
     public Disposable add(E element, Disposable parentDisposable) {
         DisposableWrapper disposableWrapper = createDisposableWrapper(element, parentDisposable);
         myWrappedList.add(disposableWrapper);
@@ -76,7 +75,6 @@ public class DisposableWrapperList<E> extends AbstractList<E> {
      * @return the disposable object representing the added element. Disposal of this object removes the element from
      * the list. Conversely, removal of the element from the list triggers disposal of its disposable object.
      */
-    
     public Disposable add(int index, E element, Disposable parentDisposable) {
         DisposableWrapper disposableWrapper = createDisposableWrapper(element, parentDisposable);
         myWrappedList.add(index, disposableWrapper);

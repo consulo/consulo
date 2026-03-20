@@ -32,7 +32,6 @@ public interface XDebugProcessStarter {
      * @param session session to be passed to {@link XDebugProcess#XDebugProcess} constructor
      * @return new {@link XDebugProcess} instance
      */
-    
     public XDebugProcess start(XDebugSession session) throws ExecutionException;
 
     /**

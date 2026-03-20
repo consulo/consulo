@@ -125,7 +125,6 @@ public abstract class XLineBreakpointType<P extends XBreakpointProperties> exten
   /**
    * Return a list of variants if there can be more than one breakpoint on the line
    */
-  
   public List<? extends XLineBreakpointVariant> computeVariants(Project project, XSourcePosition position) {
     return Collections.emptyList();
   }

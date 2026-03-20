@@ -55,7 +55,6 @@ public abstract class VFileEvent {
    * asynchronously from the event dispatching procedure
    * (e.g. {@code event.getPath()} can become not equal to {@code event.getFile().getPath()}).
    */
-  
   public String getPath() {
     String path = myCachedPath;
     if (path == null) {

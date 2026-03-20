@@ -90,7 +90,6 @@ public interface Rearranger<E extends ArrangementEntry> extends LanguageExtensio
      *                 in order to build method dependency graph if no such grouping rule is defined
      * @return given root's children which are subject for further rearrangement
      */
-    
     List<E> parse(
         PsiElement root,
         @Nullable Document document,
@@ -117,6 +116,5 @@ public interface Rearranger<E extends ArrangementEntry> extends LanguageExtensio
      * <p/>
      * @see DefaultArrangementSettingsSerializer
      */
-    
     ArrangementSettingsSerializer getSerializer();
 }

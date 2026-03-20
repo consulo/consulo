@@ -30,7 +30,6 @@ public interface InvertedIndex<Key, Value, Input> {
   /**
    * @param inputId *positive* id of content.
    */
-  
   Supplier<Boolean> update(int inputId, @Nullable Input content);
 
   void flush() throws StorageException;

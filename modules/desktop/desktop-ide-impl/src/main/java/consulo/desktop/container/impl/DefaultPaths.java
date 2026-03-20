@@ -171,13 +171,11 @@ public abstract class DefaultPaths {
   /**
    * @return default directory for new projects
    */
-  
   public abstract File getDocumentsDir();
 
   /**
    * @return directory for caches, etc. Removing will not broke user settings
    */
-  
   public abstract String getLocalSettingsDir();
 
   
@@ -188,7 +186,6 @@ public abstract class DefaultPaths {
   /**
    * @return directory for user settings
    */
-  
   public abstract String getRoamingSettingsDir();
 
   
@@ -199,7 +196,6 @@ public abstract class DefaultPaths {
   /**
    * @return external platform directory, on each updates directory will be install in it, or inside distribution directory if null
    */
-  
   public File getExternalPlatformDirectory(File defaultPath) {
     return defaultPath;
   }

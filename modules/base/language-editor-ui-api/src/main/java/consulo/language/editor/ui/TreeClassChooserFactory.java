@@ -75,7 +75,6 @@ public interface TreeClassChooserFactory {
     /**
      * return converter, which converter user data from project tree node, to target element
      */
-    
     Builder<T> withTreeElementConverter(Function<Object, T> userObjectElementConverter);
 
     

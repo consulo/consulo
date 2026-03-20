@@ -32,7 +32,6 @@ public interface IndexPatternBuilder {
    * Characters (in addition to whitespace) which can be present in the indent section of pattern occurrence's continuation
    * on subsequent line
    */
-  
   default String getCharsAllowedInContinuationPrefix(IElementType tokenType) {
     return "";
   }

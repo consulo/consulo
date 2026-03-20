@@ -78,7 +78,6 @@ public interface ProjectFileIndex extends FileIndex {
    * @param file the file for which the order entries are requested.
    * @return the array of order entries containing the file.
    */
-  
   List<OrderEntry> getOrderEntriesForFile(VirtualFile file);
 
   /**

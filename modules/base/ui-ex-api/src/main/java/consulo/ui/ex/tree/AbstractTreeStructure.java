@@ -44,7 +44,6 @@ public abstract class AbstractTreeStructure {
      * E.g. when you should commit all documents during the {@link #commit()},
      * you can use {@link PsiDocumentManager#asyncCommitDocuments(Project)} to do it asynchronously.
      */
-    
     public ActionCallback asyncCommit() {
         if (hasSomethingToCommit()) {
             commit();
@@ -65,7 +64,6 @@ public abstract class AbstractTreeStructure {
      * @return a leaf state for the given element
      * @see LeafState.Supplier#getLeafState()
      */
-    
     public LeafState getLeafState(Object element) {
         if (isAlwaysLeaf(element)) {
             return LeafState.ALWAYS;

@@ -33,6 +33,5 @@ public abstract class VcsFileRevisionEx implements VcsFileRevision {
   /**
    * Returns the path of the file as it were in this revision
    */
-  
   public abstract FilePath getPath();
 }

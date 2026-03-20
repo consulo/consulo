@@ -34,7 +34,6 @@ public interface ChooseByNameContributor {
    *                               library classes) should be included in the returned array.
    * @return the array of names.
    */
-  
   String[] getNames(Project project, boolean includeNonProjectItems);
 
   /**
@@ -47,6 +46,5 @@ public interface ChooseByNameContributor {
    *                               library classes) should be included in the returned array.
    * @return the array of navigation items.
    */
-  
   NavigationItem[] getItemsByName(String name, String pattern, Project project, boolean includeNonProjectItems);
 }

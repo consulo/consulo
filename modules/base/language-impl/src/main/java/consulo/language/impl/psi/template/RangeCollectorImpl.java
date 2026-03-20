@@ -340,7 +340,6 @@ public class RangeCollectorImpl extends TemplateDataElementType.RangeCollector {
    *
    * @return right part of the split node
    */
-  
   private TreeElement removeLeftPartOfLeaf(TreeElement nextLeaf, int offsetToSplit, TreePatcher templateTreePatcher, CharTable charTable) {
     if (offsetToSplit == 0) return nextLeaf;
     if (!(nextLeaf instanceof LeafElement)) {
@@ -356,7 +355,6 @@ public class RangeCollectorImpl extends TemplateDataElementType.RangeCollector {
   /**
    * Like {@link TemplateDataElementType#parseContents} builds the tree considering outer language elements, but for inner lazy parseables.
    */
-  
   ASTNode applyRangeCollectorAndExpandChameleon(ASTNode chameleon, Language language, Function<CharSequence, ASTNode> parser) {
     CharSequence chars = chameleon.getChars();
     if (myOuterAndRemoveRanges.isEmpty()) return parser.apply(chars);
@@ -400,7 +398,6 @@ public class RangeCollectorImpl extends TemplateDataElementType.RangeCollector {
    * Removes "middle" part of the leaf and returns the new leaf with content of the right and left parts
    * e.g. if we process whitespace leaf " \n " and range "1, 2" the result will be new leaf with content "  "
    */
-  
   private TreeElement removeRange(TreeElement leaf, TextRange rangeToRemove, CharTable table) {
     CharSequence chars = leaf.getChars();
     String res = rangeToRemove.replace(chars.toString(), "");

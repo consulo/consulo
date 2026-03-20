@@ -32,7 +32,6 @@ public interface ProjectViewPaneSelectionHelper {
      * @return list of {@link TreePath tree paths} to select, computed from {@code selectionDescriptor} with first suitable selection helper
      * Returns {@link SelectionDescriptor#originalTreePaths original paths} by default
      */
-    
     public static List<? extends TreePath> getAdjustedPaths(SelectionDescriptor selectionDescriptor) {
         for (ProjectViewPaneSelectionHelper helper : EP_NAME.getExtensionList()) {
             List<? extends TreePath> adjustedPaths = helper.computeAdjustedPaths(selectionDescriptor);

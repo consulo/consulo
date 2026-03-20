@@ -72,7 +72,6 @@ public interface RemoteExternalSystemFacade<S extends ExternalSystemExecutionSet
    * @throws RemoteException        in case of unexpected I/O exception during processing
    * @throws IllegalStateException  in case of inability to create the service
    */
-  
   RemoteExternalSystemProjectResolver<S> getResolver() throws RemoteException, IllegalStateException;
 
   /**
@@ -81,7 +80,6 @@ public interface RemoteExternalSystemFacade<S extends ExternalSystemExecutionSet
    * @return external system build manager
    * @throws RemoteException  in case of inability to create the service
    */
-  
   RemoteExternalSystemTaskManager<S> getTaskManager() throws RemoteException;
 
   /**

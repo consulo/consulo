@@ -36,7 +36,6 @@ public abstract class CachedValuesManager {
      * @param trackValue if value tracking is required. T should be trackable in this case.
      * @return new CachedValue instance.
      */
-    
     public abstract <T> CachedValue<T> createCachedValue(CachedValueProvider<T> provider, boolean trackValue);
 
     
@@ -48,7 +47,6 @@ public abstract class CachedValuesManager {
     /**
      * Creates a new CachedValue instance with the given provider.
      */
-    
     public <T> CachedValue<T> createCachedValue(CachedValueProvider<T> provider) {
         return createCachedValue(provider, false);
     }

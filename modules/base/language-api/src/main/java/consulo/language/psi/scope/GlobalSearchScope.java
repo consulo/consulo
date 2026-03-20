@@ -261,7 +261,6 @@ public abstract class GlobalSearchScope extends BaseSearchScope implements Modul
    * @param module the module to get the scope.
    * @return scope including sources and tests, excluding libraries and dependencies.
    */
-  
   public static GlobalSearchScope moduleScope(Module module) {
     return (GlobalSearchScope)ModuleScopeProvider.getInstance(module).getModuleScope();
   }
@@ -273,7 +272,6 @@ public abstract class GlobalSearchScope extends BaseSearchScope implements Modul
    * @param includeTests include tests or not
    * @return scope including sources and tests(if set includeTests), excluding libraries and dependencies.
    */
-  
   public static GlobalSearchScope moduleScope(Module module, boolean includeTests) {
     return (GlobalSearchScope)ModuleScopeProvider.getInstance(module).getModuleScope(includeTests);
   }
@@ -289,7 +287,6 @@ public abstract class GlobalSearchScope extends BaseSearchScope implements Modul
    * @param module the module to get the scope.
    * @return scope including sources, tests, and libraries, excluding dependencies.
    */
-  
   public static GlobalSearchScope moduleWithLibrariesScope(Module module) {
     return (GlobalSearchScope)ModuleScopeProvider.getInstance(module).getModuleWithLibrariesScope();
   }
@@ -300,7 +297,6 @@ public abstract class GlobalSearchScope extends BaseSearchScope implements Modul
    * @param module the module to get the scope.
    * @return scope including sources, tests, and dependencies, excluding libraries.
    */
-  
   public static GlobalSearchScope moduleWithDependenciesScope(Module module) {
     return (GlobalSearchScope)ModuleScopeProvider.getInstance(module).getModuleWithDependenciesScope();
   }
@@ -379,7 +375,6 @@ public abstract class GlobalSearchScope extends BaseSearchScope implements Modul
    * it should include libraries or not in order to avoid checking each file.
    * Also, if you have a lot of files it might be faster to always search in libraries.
    */
-  
   public static GlobalSearchScope filesWithoutLibrariesScope(Project project, Collection<VirtualFile> files) {
     if (files.isEmpty()) return EMPTY_SCOPE;
     return new FilesScope(project, files, false);

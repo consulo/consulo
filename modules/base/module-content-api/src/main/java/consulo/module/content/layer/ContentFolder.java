@@ -36,7 +36,6 @@ public interface ContentFolder extends Synthetic {
    * Returns the type of root directory
    * @return
    */
-  
   ContentFolderTypeProvider getType();
 
   /**
@@ -51,7 +50,6 @@ public interface ContentFolder extends Synthetic {
    *
    * @return this <code>ContentFolder</code>s {@link ContentEntry}.
    */
-  
   ContentEntry getContentEntry();
 
   /**
@@ -59,7 +57,6 @@ public interface ContentFolder extends Synthetic {
    *
    * @return the root directory URL.
    */
-  
   String getUrl();
 
   

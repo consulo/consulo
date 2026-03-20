@@ -39,7 +39,6 @@ public abstract class CodeSmellDetector {
    * @return the list of problems found during the analysis.
    * @throws ProcessCanceledException if the analysis was cancelled by the user.
    */
-  
   public abstract List<CodeSmellInfo> findCodeSmells(List<VirtualFile> files) throws ProcessCanceledException;
 
   /**

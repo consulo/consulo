@@ -29,7 +29,6 @@ public interface ActionPopupMenu {
     /**
      * Returns the visual presentation of the popup menu.
      */
-    
     @Deprecated
     @DeprecationInfo("Desktop only")
     default JPopupMenu getComponent() {
@@ -39,13 +38,11 @@ public interface ActionPopupMenu {
     /**
      * Returns the place where the action group is displayed (the first parameter of {@link ActionManager#createActionPopupMenu(String, ActionGroup)}.
      */
-    
     String getPlace();
 
     /**
      * Returns the action group from which the menu was created.
      */
-    
     ActionGroup getActionGroup();
 
     /**

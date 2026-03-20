@@ -22,7 +22,6 @@ import org.jspecify.annotations.Nullable;
  *
  * @author max
  */
-
 public class WordOccurrence {
   private Kind myKind;
   private CharSequence myText;
@@ -36,7 +35,6 @@ public class WordOccurrence {
    * @param end end offset in initial char sequence.
    * @param kind The type of text where the word was encountered (code, comments or literals).
    */
-
   public WordOccurrence(CharSequence text, int start, int end, @Nullable Kind kind) {
     myKind = kind;
     myText = text;
@@ -62,7 +60,6 @@ public class WordOccurrence {
    * Returns the type of text where the word was encountered (code, comments or literals).
    * @return the kind of the occurrence.
    */
-
   public @Nullable Kind getKind() {
     return myKind;
   }

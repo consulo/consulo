@@ -39,7 +39,6 @@ public interface CompileScope extends ExportableUserDataHolder {
      * @param fileType the type of the files. Null should be passed if all available files are needed.
      * @return a list of files of given type that belong to this scope.
      */
-    
     VirtualFile[] getFiles(@Nullable FileType fileType);
 
     /**
@@ -56,7 +55,6 @@ public interface CompileScope extends ExportableUserDataHolder {
      *
      * @return a list of modules this scope affects.
      */
-    
     Module[] getAffectedModules();
 
     /**

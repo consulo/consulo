@@ -350,7 +350,6 @@ public class PluginNode extends PluginDescriptorStub implements PluginDescriptor
     /**
      * Methods below implement PluginDescriptor and IdeaPluginDescriptor interface
      */
-    
     @Override
     public PluginId getPluginId() {
         return id;

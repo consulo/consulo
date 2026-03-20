@@ -42,6 +42,5 @@ public abstract class StripTrailingSpacesFilterFactory {
    *         <li>{@link StripTrailingSpacesFilter#ALL_LINES}</li> Allow stripping with no restrictions. Return this value by default.
    *         </ul>
    */
-  
   public abstract StripTrailingSpacesFilter createFilter(@Nullable ComponentManager project, Document document);
 }

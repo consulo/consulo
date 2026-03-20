@@ -133,7 +133,6 @@ public abstract class XBreakpointType<B extends XBreakpoint<P>, P extends XBreak
     /**
      * @return the icon which is shown for a dependent breakpoint until its master breakpoint is reached
      */
-    
     public Image getInactiveDependentIcon() {
         return ExecutionDebugIconGroup.breakpointBreakpointdependent();
     }

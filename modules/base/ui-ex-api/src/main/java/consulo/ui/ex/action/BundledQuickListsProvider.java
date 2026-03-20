@@ -30,6 +30,5 @@ public interface BundledQuickListsProvider {
    * @return Array of relative paths without extensions for lists.
    * E.g. : ["/quickLists/myList", "otherList"] for quickLists/myList.xml, otherList.xml
    */
-  
   String[] getBundledListsRelativePaths();
 }

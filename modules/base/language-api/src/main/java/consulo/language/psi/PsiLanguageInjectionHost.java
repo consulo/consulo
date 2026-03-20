@@ -42,7 +42,6 @@ public interface PsiLanguageInjectionHost extends PsiElement {
   /**
    * @return {@link LiteralTextEscaper} instance which will be used to convert the content of this host element to the content of injected file
    */
-  
   LiteralTextEscaper<? extends PsiLanguageInjectionHost> createLiteralTextEscaper();
 
   @FunctionalInterface
@@ -74,7 +73,6 @@ public interface PsiLanguageInjectionHost extends PsiElement {
     /**
      * @return range in decoded PSI
      */
-    
     TextRange getRange();
 
     

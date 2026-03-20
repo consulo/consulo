@@ -43,7 +43,6 @@ public abstract class RecursionGuard<Key> {
   /**
    * @deprecated Use {@link RecursionManager#markStack()} instead
    */
-  
   @Deprecated
   public StackStamp markStack() {
     return RecursionManager.markStack();
@@ -55,7 +54,6 @@ public abstract class RecursionGuard<Key> {
    *
    * @return the current thread-local stack of keys passed to {@link #doPreventingRecursion(Key, boolean, Supplier)}.
    */
-  
   public abstract List<? extends Key> currentStack();
 
   /**

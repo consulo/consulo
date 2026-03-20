@@ -137,7 +137,6 @@ public class ArrangementUtil {
      * @param document     target document against which the ranges are built
      * @return expanded range if possible; <code>null</code> otherwise
      */
-    
     public static TextRange expandToLineIfPossible(TextRange initialRange, Document document) {
         CharSequence text = document.getCharsSequence();
         String ws = " \t";

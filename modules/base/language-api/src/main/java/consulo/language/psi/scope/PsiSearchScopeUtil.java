@@ -33,7 +33,6 @@ public class PsiSearchScopeUtil {
    * @param element the element to return the use scope form.
    * @return the search scope instance.
    */
-  
   public static SearchScope getUseScope(PsiElement element) {
     Project project = element.getProject();
     SearchScope scope = element.getUseScope();

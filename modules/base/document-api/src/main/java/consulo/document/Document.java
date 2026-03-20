@@ -35,7 +35,6 @@ public interface Document extends UserDataHolder {
      *
      * @return document content.
      */
-    
     @Contract(pure = true)
     default String getText() {
         return getImmutableCharSequence().toString();
@@ -66,14 +65,12 @@ public interface Document extends UserDataHolder {
      * @return a char sequence representing document content that's guaranteed to be immutable. No read- or write-action is necessary.
      * @see consulo.util.lang.ImmutableCharSequence
      */
-    
     @Contract(pure = true)
     CharSequence getImmutableCharSequence();
 
     /**
      * @deprecated Use {@link #getCharsSequence()} or {@link #getText()} instead.
      */
-    
     @Deprecated
     default char[] getChars() {
         return CharArrayUtil.fromSequence(getImmutableCharSequence());
@@ -245,7 +242,6 @@ public interface Document extends UserDataHolder {
      * @param endOffset   the end offset for the range of text covered by the marker.
      * @return the marker instance.
      */
-    
     default RangeMarker createRangeMarker(int startOffset, int endOffset) {
         return createRangeMarker(startOffset, endOffset, false);
     }
@@ -260,7 +256,6 @@ public interface Document extends UserDataHolder {
      * @param surviveOnExternalChange if true, the marker is not invalidated by external changes.
      * @return the marker instance.
      */
-    
     RangeMarker createRangeMarker(int startOffset, int endOffset, boolean surviveOnExternalChange);
 
     /**
@@ -303,7 +298,6 @@ public interface Document extends UserDataHolder {
      * @see #startGuardedBlockChecking()
      * @see consulo.ide.impl.idea.openapi.editor.actionSystem.EditorActionManager#setReadonlyFragmentModificationHandler(consulo.ide.impl.idea.openapi.editor.actionSystem.ReadonlyFragmentModificationHandler)
      */
-    
     RangeMarker createGuardedBlock(int startOffset, int endOffset);
 
     /**

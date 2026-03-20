@@ -41,7 +41,6 @@ public abstract class XValuePresentation {
     /**
      * @return separator between name and value in a debugger tree
      */
-    
     public String getSeparator() {
         return DEFAULT_SEPARATOR;
     }

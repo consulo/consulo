@@ -92,7 +92,6 @@ public interface WhiteSpaceFormattingStrategy extends LanguageExtension {
      * @param nodeAfter         the AST node following the whitespace, if known
      * @return symbols to use for replacing <code>[startOffset; endOffset)</code> sub-sequence of the given text
      */
-    
     CharSequence adjustWhiteSpaceIfNecessary(
         CharSequence whiteSpaceText,
         CharSequence text,

@@ -67,7 +67,6 @@ public abstract class XDebugProcess {
     /**
      * @return breakpoint handlers which will be used to set/clear breakpoints in the underlying debugging process
      */
-    
     public XBreakpointHandler<?>[] getBreakpointHandlers() {
         return XBreakpointHandler.EMPTY_ARRAY;
     }
@@ -75,7 +74,6 @@ public abstract class XDebugProcess {
     /**
      * @return editor provider which will be used to produce editors for "Evaluate" and "Set Value" actions
      */
-    
     public XDebuggerEditorsProvider getEditorsProvider() {
         return UnsupportedDebuggerEditorsProvider.INSTANCE;
     }
@@ -290,7 +288,6 @@ public abstract class XDebugProcess {
     /**
      * @return message to show in Variables View when debugger isn't paused
      */
-    
     public LocalizeValue getCurrentStateMessage() {
         if (mySession.isStopped()) {
             return XDebuggerLocalize.debuggerStateMessageDisconnected();
@@ -307,7 +304,6 @@ public abstract class XDebugProcess {
     /**
      * Override this method to customize content of tab in 'Debug' tool window
      */
-    
     public XDebugTabLayouter createTabLayouter() {
         return new XDebugTabLayouter() {
         };

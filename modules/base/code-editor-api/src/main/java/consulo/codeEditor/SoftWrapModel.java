@@ -92,7 +92,6 @@ public interface SoftWrapModel {
    * @param end     end document offset range to use (inclusive)
    * @return        all soft wraps registered for the target document offsets range
    */
-  
   List<? extends SoftWrap> getSoftWrapsForRange(int start, int end);
 
   /**
@@ -101,7 +100,6 @@ public interface SoftWrapModel {
    * @param documentLine    target document line
    * @return                all soft wraps registered for the given document line
    */
-  
   List<? extends SoftWrap> getSoftWrapsForLine(int documentLine);
 
   /**

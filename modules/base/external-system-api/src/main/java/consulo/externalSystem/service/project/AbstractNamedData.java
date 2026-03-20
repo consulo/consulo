@@ -28,7 +28,6 @@ public abstract class AbstractNamedData extends AbstractExternalEntityData imple
   /**
    * please use {@link #getExternalName()} or {@link #getInternalName()} instead
    */
-  
   @Deprecated
   @Override
   public String getName() {

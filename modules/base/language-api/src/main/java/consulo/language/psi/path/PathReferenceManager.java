@@ -48,7 +48,6 @@ public abstract class PathReferenceManager {
    * @param additionalProviders additional providers to process.
    * @return created references or an empty array.
    */
-  
   public abstract PsiReference[] createReferences(PsiElement psiElement, boolean soft, PathReferenceProvider... additionalProviders);
 
   /**
@@ -61,7 +60,6 @@ public abstract class PathReferenceManager {
    *                              Otherwise, web application root will be used.
    * @param additionalProviders   additional providers to process.  @return created references or an empty array.
    */
-  
   public abstract PsiReference[] createReferences(PsiElement psiElement,
                                                   boolean soft,
                                                   boolean endingSlashNotAllowed,

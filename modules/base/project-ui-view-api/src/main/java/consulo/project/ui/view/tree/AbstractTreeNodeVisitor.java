@@ -73,7 +73,6 @@ public abstract class AbstractTreeNodeVisitor<T> implements TreeVisitor {
    * @param element an element to find
    * @return an action that controls visiting a tree
    */
-  
   protected Action visit(TreePath path, AbstractTreeNode node, T element) {
     if (matches(node, element)) {
       LOG.debug("found ", path);

@@ -19,7 +19,6 @@ public final class WindowsCryptUtils {
      * @param data the data to protect
      * @return the protected form of the data
      */
-    
     public static byte[] protect(byte[] data) {
         if (data.length == 0) {
             return data;
@@ -36,7 +35,6 @@ public final class WindowsCryptUtils {
      * @param data the data to protect
      * @return the unprotected form of the data
      */
-    
     public static byte[] unprotect(byte[] data) {
         if (data.length == 0) {
             return data;

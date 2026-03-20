@@ -148,7 +148,6 @@ public class GeneralCommandLine implements UserDataHolder {
   /**
    * Note: the map returned is forgiving to passing null values into putAll().
    */
-  
   public Map<String, String> getEnvironment() {
     if (myEnvParams == null) {
       myEnvParams = new MyStrictMap(myPlatform);
@@ -189,7 +188,6 @@ public class GeneralCommandLine implements UserDataHolder {
    *
    * @see #getEffectiveEnvironment()
    */
-  
   public Map<String, String> getParentEnvironment() {
     switch (myParentEnvironmentType) {
       case SYSTEM:
@@ -205,7 +203,6 @@ public class GeneralCommandLine implements UserDataHolder {
    * Returns an environment as seen by a child process,
    * that is the {@link #getEnvironment() environment} merged with the {@link #getParentEnvironment() parent} one.
    */
-  
   public Map<String, String> getEffectiveEnvironment() {
     MyStrictMap env = new MyStrictMap(myPlatform);
     setupEnvironment(env);
@@ -284,7 +281,6 @@ public class GeneralCommandLine implements UserDataHolder {
    *
    * @param sudoPromt      the prompt string for the users
    */
-  
   public GeneralCommandLine withSudo(String sudoPromt) {
     mySudoPromt = sudoPromt;
     return this;
@@ -333,7 +329,6 @@ public class GeneralCommandLine implements UserDataHolder {
    * @param filePathSeparator a target platform
    * @return command as a newline-separated list.
    */
-  
   public String getPreparedCommandLine(FilePathSeparator filePathSeparator) {
     String exePath = myExecutable != null ? myExecutable.toString() : "";
     return StringUtil.join(CommandLineUtil.toCommandLine(exePath, myProgramParams.getList(), filePathSeparator), "\n");
@@ -400,7 +395,6 @@ public class GeneralCommandLine implements UserDataHolder {
    *
    * @see SystemExecutableInfo#getTerminalCommand(String, String)
    */
-  
   public static String inescapableQuote(String parameter) {
     return CommandLineUtil.specialQuote(parameter);
   }

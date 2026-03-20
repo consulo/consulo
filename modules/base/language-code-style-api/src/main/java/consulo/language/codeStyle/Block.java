@@ -32,7 +32,6 @@ public interface Block {
      *
      * @return the text range.
      */
-    
     TextRange getTextRange();
 
     /**
@@ -43,7 +42,6 @@ public interface Block {
      * @return the child block list.
      * @see #isLeaf()
      */
-    
     List<Block> getSubBlocks();
 
     /**
@@ -98,7 +96,6 @@ public interface Block {
      * @param newChildIndex the index where a new child is inserted.
      * @return the object containing the indent and alignment settings for the new child.
      */
-    
     ChildAttributes getChildAttributes(int newChildIndex);
 
     /**

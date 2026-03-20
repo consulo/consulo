@@ -23,7 +23,6 @@ public interface IntForwardIndexAccessor<Key, Value> extends ForwardIndexAccesso
   /**
    * creates a diff builder for given inputId.
    */
-  
   InputDataDiffBuilder<Key, Value> getDiffBuilderFromInt(int inputId, int value) throws IOException;
 
   int serializeIndexedDataToInt(InputData<Key, Value> data);

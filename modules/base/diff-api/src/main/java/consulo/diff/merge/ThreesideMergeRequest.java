@@ -23,7 +23,6 @@ public abstract class ThreesideMergeRequest extends MergeRequest {
   /**
    * 3 contents: left - middle - right (local - base - server)
    */
-  
   public abstract List<? extends DiffContent> getContents();
 
   
@@ -33,6 +32,5 @@ public abstract class ThreesideMergeRequest extends MergeRequest {
    * @return contents names. Should have same length as {@link #getContents()}
    * Titles could be null.
    */
-  
   public abstract List<String> getContentTitles();
 }

@@ -55,7 +55,6 @@ public class SoftWrapsStorage implements Dumpable {
     /**
      * @return view for registered soft wraps sorted by offset in ascending order if any; empty collection otherwise
      */
-    
     public List<SoftWrapImpl> getSoftWraps() {
         return myWrapsView;
     }

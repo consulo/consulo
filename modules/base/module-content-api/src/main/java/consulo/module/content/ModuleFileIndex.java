@@ -48,6 +48,5 @@ public interface ModuleFileIndex extends FileIndex {
    * @param fileOrDir the file or directory to check.
    * @return the list of order entries to which the file or directory belongs.
    */
-  
   List<OrderEntry> getOrderEntriesForFile(VirtualFile fileOrDir);
 }

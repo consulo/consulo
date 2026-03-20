@@ -74,7 +74,6 @@ public class StopWatch {
   /**
    * 1h 1m 1.001s
    */
-  
   public static String formatTime(long time) {
     if (time < 1000 * UNITS[0]) {
       return time + "ms";

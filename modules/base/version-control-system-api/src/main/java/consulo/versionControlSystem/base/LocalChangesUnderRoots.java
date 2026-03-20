@@ -60,7 +60,6 @@ public class LocalChangesUnderRoots {
    * @param rootsToSave roots to search for changes only in them.
    * @return a map, whose keys are VCS roots (from the specified list) and values are {@link Change changes} from these roots.
    */
-  
   public Map<VirtualFile, Collection<Change>> getChangesUnderRoots(Collection<VirtualFile> rootsToSave) {
     Map<VirtualFile, Collection<Change>> result = new HashMap<>();
     Collection<Change> allChanges = myChangeManager.getAllChanges();

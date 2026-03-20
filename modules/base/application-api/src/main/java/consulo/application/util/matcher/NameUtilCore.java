@@ -15,7 +15,6 @@ public class NameUtilCore {
    * @param name the identifier to split.
    * @return the array of strings into which the identifier has been split.
    */
-  
   public static String[] splitNameIntoWords(String name) {
     String[] underlineDelimited = name.split("_");
     List<String> result = new ArrayList<>();

@@ -83,7 +83,6 @@ public interface FindUsagesProvider extends LanguageExtension {
    * @param element the element for which the type is requested.
    * @return the type of the element.
    */
-  
   String getType(PsiElement element);
 
   /**
@@ -94,7 +93,6 @@ public interface FindUsagesProvider extends LanguageExtension {
    * @param element the element for which the name is requested.
    * @return the user-visible name.
    */
-  
   String getDescriptiveName(PsiElement element);
 
   /**
@@ -104,6 +102,5 @@ public interface FindUsagesProvider extends LanguageExtension {
    * @param useFullName if true, the returned text should use fully qualified names
    * @return the text representing the element.
    */
-  
   String getNodeText(PsiElement element, boolean useFullName);
 }

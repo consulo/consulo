@@ -229,7 +229,6 @@ public class WhiteSpace {
    * @param tabSize      tab width in columns
    * @return             information about white space symbols at the target region of the given text
    */
-  
   private static WhiteSpaceInfo parse(CharSequence text, int startOffset, int endOffset, int startColumn, int tabSize) {
     assert startOffset <= endOffset;
 

@@ -37,7 +37,6 @@ public interface HintedReferenceHost extends PsiElement {
    * @param hints the hints about the desired references
    * @return the array of references, or an empty array if the element has no associated references.
    */
-  
   @RequiredReadAction
   PsiReference[] getReferences(PsiReferenceService.Hints hints);
 

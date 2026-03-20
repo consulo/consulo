@@ -52,7 +52,6 @@ public interface LanguageLineWrapPositionStrategy extends LineWrapPositionStrate
    * @param editor editor that manages document which text should be processed by wrap position strategy
    * @return line wrap position strategy to use for the lines from the document managed by the given editor
    */
-  
   @RequiredReadAction
   static LineWrapPositionStrategy forEditor(Editor editor) {
     LineWrapPositionStrategy result = null;

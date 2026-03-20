@@ -55,7 +55,6 @@ public interface PsiElement extends UserDataHolder {
      *
      * @throws PsiInvalidElementAccessException if this element is invalid
      */
-    
     default Application getApplication() throws PsiInvalidElementAccessException {
         return getProject().getApplication();
     }
@@ -66,7 +65,6 @@ public interface PsiElement extends UserDataHolder {
      * @return the project instance.
      * @throws PsiInvalidElementAccessException if this element is invalid
      */
-    
     Project getProject() throws PsiInvalidElementAccessException;
 
     /**
@@ -84,7 +82,6 @@ public interface PsiElement extends UserDataHolder {
      *
      * @return the language instance.
      */
-    
     @RequiredReadAction
     Language getLanguage();
 
@@ -93,7 +90,6 @@ public interface PsiElement extends UserDataHolder {
      *
      * @return language version
      */
-    
     @RequiredReadAction
     LanguageVersion getLanguageVersion();
 
@@ -110,7 +106,6 @@ public interface PsiElement extends UserDataHolder {
      *
      * @return the array of child elements.
      */
-    
     @RequiredReadAction
     PsiElement[] getChildren();
 
@@ -167,7 +162,6 @@ public interface PsiElement extends UserDataHolder {
      *
      * @return the text range.
      */
-    
     @RequiredReadAction
     TextRange getTextRange();
 
@@ -238,7 +232,6 @@ public interface PsiElement extends UserDataHolder {
      *
      * @return the element text as a character array.
      */
-    
     @RequiredReadAction
     char[] textToCharArray();
 
@@ -473,7 +466,6 @@ public interface PsiElement extends UserDataHolder {
      * references.
      * @see com.intellij.psi.PsiReferenceService#getReferences
      */
-    
     PsiReference[] getReferences();
 
     /**
@@ -539,7 +531,6 @@ public interface PsiElement extends UserDataHolder {
      *
      * @return the resolve scope instance.
      */
-    
     GlobalSearchScope getResolveScope();
 
     /**
@@ -548,7 +539,6 @@ public interface PsiElement extends UserDataHolder {
      * @return the search scope instance.
      * @see {@link com.intellij.psi.search.PsiSearchHelper#getUseScope(PsiElement)}
      */
-    
     SearchScope getUseScope();
 
     /**

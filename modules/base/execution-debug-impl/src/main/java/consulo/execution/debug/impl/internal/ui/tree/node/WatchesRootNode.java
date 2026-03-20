@@ -129,7 +129,6 @@ public class WatchesRootNode extends XValueContainerNode<XValueContainer> {
     /**
      * @deprecated use {@link #getWatchChildren()} instead
      */
-    
     public List<? extends WatchNodeImpl> getAllChildren() {
         return getWatchChildren();
     }

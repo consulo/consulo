@@ -26,7 +26,6 @@ public interface PostfixTemplateExpressionSelector {
    * Returns the list of all expressions applicable in the current context.
    * If the list size is greater than 1, then expression chooser popup is shown to a user.
    */
-  
   List<PsiElement> getExpressions(PsiElement context,
                                   Document document,
                                   int offset);
@@ -35,6 +34,5 @@ public interface PostfixTemplateExpressionSelector {
    * Returns a renderer for expressions returned from the {@link #getExpressions} method,
    * which is used to render template item in the expression chooser popup.
    */
-  
   Function<PsiElement, String> getRenderer();
 }

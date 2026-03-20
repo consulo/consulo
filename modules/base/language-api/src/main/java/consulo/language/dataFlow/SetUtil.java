@@ -16,7 +16,6 @@ public class SetUtil {
   /**
    * Intersects two sets
    */
-  
   public static <T> Set<T> intersect(@Nullable Set<T> set1, @Nullable Set<T> set2) {
     if (set1 == null && set2 == null) {
       return Collections.emptySet();

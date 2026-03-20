@@ -23,7 +23,6 @@ public class XDebugTabLayouter {
      * @param ui      {@code RunnerLayoutUi} instance
      * @return registered {@code Content} instance
      */
-    
     public Content registerConsoleContent(RunnerLayoutUi ui, ExecutionConsole console) {
         Content content = ui.createContent(DebuggerContentInfo.CONSOLE_CONTENT, console.getComponent(),
             XDebuggerBundle.message("debugger.session.tab.console.content.name"),

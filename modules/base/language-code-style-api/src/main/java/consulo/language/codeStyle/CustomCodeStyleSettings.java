@@ -48,7 +48,6 @@ public abstract class CustomCodeStyleSettings implements Cloneable {
     /**
      * in case settings save additional top-level tags, list the list of them to prevent serializer to treat such tag as unknown settings.
      */
-    
     public List<String> getKnownTagNames() {
         return Collections.singletonList(getTagName());
     }

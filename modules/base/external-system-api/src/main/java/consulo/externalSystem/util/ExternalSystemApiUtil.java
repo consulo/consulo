@@ -483,7 +483,6 @@ public class ExternalSystemApiUtil {
      * @param path target path
      * @return absolute path that points to the same location as the given one and that uses only slashes
      */
-    
     public static String toCanonicalPath(String path) {
         String p = normalizePath(new File(path).getAbsolutePath());
         assert p != null;

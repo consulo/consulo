@@ -169,7 +169,6 @@ public abstract class TaskRepository {
    * @param task task to update
    * @return set of available states
    */
-  
   public Set<CustomTaskState> getAvailableTaskStates(Task task) throws Exception {
     //noinspection unchecked
     EnumSet<TaskState> set = getRepositoryType().getPossibleTaskStates();

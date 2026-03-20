@@ -231,7 +231,6 @@ public class ShelveChangesManagerImpl implements ShelveChangesManager, JDOMExter
      *
      * @return collection of non-migrated or not deleted files to show a error somewhere outside
      */
-    
     public Collection<String> checkAndMigrateOldPatchResourcesToNewSchemeStorage() {
         Collection<String> nonMigratedPaths = new ArrayList<>();
         for (ShelvedChangeList list : mySchemeManager.getAllSchemes()) {

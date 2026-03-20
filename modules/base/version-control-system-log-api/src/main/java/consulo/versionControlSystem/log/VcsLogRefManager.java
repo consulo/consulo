@@ -32,7 +32,6 @@ public interface VcsLogRefManager {
    *
    * @see #getLabelsOrderComparator()
    */
-  
   Comparator<VcsRef> getBranchLayoutComparator();
 
   /**
@@ -50,7 +49,6 @@ public interface VcsLogRefManager {
    *
    * @see #getBranchLayoutComparator()
    */
-  
   Comparator<VcsRef> getLabelsOrderComparator();
 
   /**
@@ -58,14 +56,12 @@ public interface VcsLogRefManager {
    * <p>Groups containing only one element will be displayed as a single ref. Others will provide a popup menu.</p>
    * <p>Groups must be pre-sorted in the order which they are to be painted on the panel.</p>
    */
-  
   List<RefGroup> groupForBranchFilter(Collection<VcsRef> refs);
 
   /**
    * Groups VCS references to show them in graph table.
    * All references given to this method are from the same commit.
    */
-  
   List<RefGroup> groupForTable(Collection<VcsRef> refs, boolean compact, boolean showTagNames);
 
   /**
@@ -82,6 +78,5 @@ public interface VcsLogRefManager {
    * @param in input to read type from
    * @return reference type read from the input
    */
-  
   VcsRefType deserialize(DataInput in) throws IOException;
 }

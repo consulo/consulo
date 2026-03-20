@@ -56,7 +56,6 @@ public class LazyParseableElement extends CompositeElement {
      * Cached or non-parsed text of this element. Must be non-null if {@link #myParsed} is false.
      * Coordinated writes to (myParsed, myText) are guarded by {@link #lock}
      */
-    
     private volatile Supplier<CharSequence> myText;
     private volatile boolean myParsed;
 

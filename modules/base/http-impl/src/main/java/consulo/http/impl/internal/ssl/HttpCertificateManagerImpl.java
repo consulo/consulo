@@ -63,7 +63,6 @@ import java.util.concurrent.atomic.AtomicReference;
  *
  * @author Mikhail Golubev
  */
-
 @Singleton
 @State(name = "CertificateManagerImpl", storages = @Storage(file = StoragePathMacros.APP_CONFIG + "/other.xml"))
 @ServiceImpl
@@ -140,7 +139,6 @@ public class HttpCertificateManagerImpl implements HttpCertificateManager, Persi
      *
      * @return instance of SSLContext with described behavior or default SSL context in case of error
      */
-    
     public synchronized SSLContext getSslContext() {
         if (mySslContext == null) {
             SSLContext context = getSystemSslContext();

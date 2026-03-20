@@ -32,13 +32,11 @@ public interface Caret extends UserDataHolderEx, Disposable {
   /**
    * Returns an instance of Editor, current caret belongs to.
    */
-  
   Editor getEditor();
 
   /**
    * Returns an instance of CaretModel, current caret is associated with.
    */
-  
   CaretModel getCaretModel();
 
   /**
@@ -113,7 +111,6 @@ public interface Caret extends UserDataHolderEx, Disposable {
    *
    * @return the caret position.
    */
-  
   LogicalPosition getLogicalPosition();
 
   /**
@@ -121,7 +118,6 @@ public interface Caret extends UserDataHolderEx, Disposable {
    *
    * @return the caret position.
    */
-  
   VisualPosition getVisualPosition();
 
   /**
@@ -154,7 +150,6 @@ public interface Caret extends UserDataHolderEx, Disposable {
   /**
    * @return    object that encapsulates information about visual position of selected text start if any
    */
-  
   VisualPosition getSelectionStartPosition();
 
   /**
@@ -168,7 +163,6 @@ public interface Caret extends UserDataHolderEx, Disposable {
   /**
    * @return    object that encapsulates information about visual position of selected text end if any;
    */
-  
   VisualPosition getSelectionEndPosition();
 
   /**
@@ -191,7 +185,6 @@ public interface Caret extends UserDataHolderEx, Disposable {
   /**
    * @return    object that encapsulates information about visual position from which the user started to extend the selection if any
    */
-  
   VisualPosition getLeadSelectionPosition();
 
   /**
@@ -321,7 +314,6 @@ public interface Caret extends UserDataHolderEx, Disposable {
    *
    * @see #setVisualAttributes(CaretVisualAttributes)
    */
-  
   CaretVisualAttributes getVisualAttributes();
 
   /**

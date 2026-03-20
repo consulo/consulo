@@ -68,7 +68,6 @@ public class NamedScope {
      * @deprecated please use {@link NamedScope#getScopeId()} for search/serialization/mappings and
      * {@link #getPresentableName()} to display in UI
      */
-    
     @Deprecated
     public String getName() {
         return myScopeId;

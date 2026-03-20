@@ -40,7 +40,6 @@ public interface RefactoringQuickFix extends LocalQuickFix {
    * Usually a call to consulo.ide.impl.idea.refactoring.RefactoringActionHandlerFactory or a language specific factory like
    * consulo.ide.impl.idea.refactoring.JavaRefactoringActionHandlerFactory.
    */
-  
   RefactoringActionHandler getHandler();
 
   default PsiElement getElementToRefactor(PsiElement element) {
@@ -69,7 +68,6 @@ public interface RefactoringQuickFix extends LocalQuickFix {
   /**
    * @see consulo.ide.impl.idea.openapi.actionSystem.impl.SimpleDataContext
    */
-  
   default DataContext enhanceDataContext(DataContext context) {
     return context;
   }

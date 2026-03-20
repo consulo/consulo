@@ -100,7 +100,6 @@ public class RemoveBomAction extends AnAction implements DumbAware {
      * @param all   flag the defines if all files with {@link VirtualFile#getBOM() BOM} should be collected or just any of them
      * @return collection of detected files with defined {@link VirtualFile#getBOM() BOM} if any; empty collection otherwise
      */
-    
     private static List<VirtualFile> getFilesWithBom(VirtualFile[] roots, boolean all) {
         List<VirtualFile> result = new ArrayList<>();
         for (VirtualFile root : roots) {

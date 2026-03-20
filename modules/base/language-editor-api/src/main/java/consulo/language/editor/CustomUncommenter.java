@@ -46,6 +46,5 @@ public interface CustomUncommenter {
    * @param text text with comments
    * @return list of couples: [commentPrefix-start,commentPrefix-end], [commentSuffix-start,commentSuffix-end]
    */
-  
   Collection<? extends Couple<TextRange>> getCommentRangesToDelete(CharSequence text);
 }

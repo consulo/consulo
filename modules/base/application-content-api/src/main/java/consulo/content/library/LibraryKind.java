@@ -41,7 +41,6 @@ public class LibraryKind {
      * @param kindId must be unique among all {@link LibraryType} and {@link LibraryPresentationProvider} implementations
      * @return new {@link LibraryKind} instance
      */
-    
     public static LibraryKind create(String kindId) {
         return new LibraryKind(kindId);
     }

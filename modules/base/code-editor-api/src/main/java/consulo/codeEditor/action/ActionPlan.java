@@ -37,7 +37,6 @@ public interface ActionPlan {
    *
    * @return text content.
    */
-  
   ImmutableCharSequence getText();
 
   /**

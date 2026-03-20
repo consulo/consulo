@@ -11,6 +11,5 @@ public interface ProblemsProvider extends Disposable {
     /**
      * The project that the problem provider belongs to.
      */
-    
     Project getProject();
 }

@@ -62,7 +62,6 @@ public abstract class CreateElementActionBase extends CreateInDirectoryActionBas
     /**
      * @return created elements. Never null.
      */
-    
     @RequiredUIAccess
     protected abstract PsiElement[] create(String newName, PsiDirectory directory) throws Exception;
 

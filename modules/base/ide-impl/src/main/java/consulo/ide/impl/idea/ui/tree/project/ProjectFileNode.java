@@ -22,7 +22,6 @@ public interface ProjectFileNode {
    * <dt>VirtualFile</dt><dd>a topmost directory that contains this file (specifies a tree view without modules).</dd>
    * </dl>
    */
-  
   Object getRootID();
 
   

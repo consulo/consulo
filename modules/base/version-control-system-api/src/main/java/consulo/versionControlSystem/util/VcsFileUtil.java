@@ -64,7 +64,6 @@ public class VcsFileUtil {
    * @return list of result values
    * @throws VcsException
    */
-  
   public static <T> List<T> foreachChunk(List<String> arguments,
                                          ThrowableFunction<List<String>, List<? extends T>, VcsException> processor)
           throws VcsException {
@@ -81,7 +80,6 @@ public class VcsFileUtil {
    * @return list of result values
    * @throws VcsException
    */
-  
   public static <T> List<T> foreachChunk(
     List<String> arguments,
     int groupSize,
@@ -124,7 +122,6 @@ public class VcsFileUtil {
    * @param arguments the arguments to chunk
    * @return a list of lists of arguments
    */
-  
   public static List<List<String>> chunkArguments(List<String> arguments) {
     return chunkArguments(arguments, 1);
   }
@@ -136,7 +133,6 @@ public class VcsFileUtil {
    * @param groupSize size of argument groups that should be put in the same chunk
    * @return a list of lists of arguments
    */
-  
   public static List<List<String>> chunkArguments(List<String> arguments, int groupSize) {
     assert arguments.size() % groupSize == 0 : "Arguments size should be divisible by group size";
 

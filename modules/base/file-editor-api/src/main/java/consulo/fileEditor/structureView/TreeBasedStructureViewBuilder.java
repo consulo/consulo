@@ -40,7 +40,6 @@ public abstract class TreeBasedStructureViewBuilder implements StructureViewBuil
    * @return the structure view model instance.
    * @see TextEditorBasedStructureViewModel
    */
-  
   public abstract StructureViewModel createStructureViewModel(@Nullable Editor editor);
 
   @Override

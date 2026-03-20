@@ -36,7 +36,6 @@ public interface ColorSettingsPage extends ColorAndFontDescriptors {
      *
      * @return the syntax highlighter instance.
      */
-    
     SyntaxHighlighter getHighlighter();
 
     /**
@@ -48,7 +47,6 @@ public interface ColorSettingsPage extends ColorAndFontDescriptors {
      *
      * @return the text to show in the preview pane.
      */
-    
     String getDemoText();
 
     /**

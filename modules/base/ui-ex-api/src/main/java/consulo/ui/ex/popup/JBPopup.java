@@ -50,7 +50,6 @@ public interface JBPopup extends Disposable, LightweightWindow {
      * @see #showInBestPositionFor(DataContext)
      * @see #setLocation(Point)
      */
-    
     Point getBestPositionFor(DataContext dataContext);
 
     /**
@@ -144,7 +143,6 @@ public interface JBPopup extends Disposable, LightweightWindow {
      *
      * @return the contents of the popup.
      */
-    
     JComponent getContent();
 
     /**

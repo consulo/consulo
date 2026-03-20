@@ -26,6 +26,5 @@ public interface CommenterWithLineSuffix extends Commenter {
    *
    * @return the line comment text
    */
-  
   String getLineCommentSuffix();
 }

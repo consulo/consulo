@@ -34,7 +34,6 @@ import static ch.qos.logback.classic.pattern.KeyValuePairConverter.*;
  * @author Ceki G&uuml;lc&uuml;
  * @since 1.5.7
  */
-
 public class MaskedKeyValuePairConverter extends ClassicConverter {
     public static final String MASK = "XXX";
     List<String> optionList;

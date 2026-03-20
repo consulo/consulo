@@ -41,7 +41,6 @@ public class TextChangesStorage {
    *            text and that returned list is sorted by start offset in ascending order
    * @see #store(TextChange)
    */
-  
   public List<TextChangeImpl> getChanges() {
     if (myChanges.isEmpty()) return Collections.emptyList();
     List<TextChangeImpl> result = new ArrayList<TextChangeImpl>(myChanges.size());
@@ -60,7 +59,6 @@ public class TextChangesStorage {
    * @param end     target range end offset (exclusive)
    * @return        list that contains all registered changes that have intersections with the target text range
    */
-  
   public List<? extends TextChange> getChanges(int start, int end) {
     assert start <= end;
     

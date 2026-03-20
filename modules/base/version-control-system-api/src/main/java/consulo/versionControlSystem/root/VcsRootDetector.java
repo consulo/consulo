@@ -18,12 +18,10 @@ public interface VcsRootDetector {
   /**
    * Detect vcs roots for whole project
    */
-  
   Collection<VcsRoot> detect();
 
   /**
    * Detect vcs roots for startDir
    */
-  
   Collection<VcsRoot> detect(@Nullable VirtualFile startDir);
 }

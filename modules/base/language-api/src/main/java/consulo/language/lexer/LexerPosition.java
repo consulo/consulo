@@ -18,7 +18,6 @@ package consulo.language.lexer;
 /**
  * Specifies the state and position of a lexer.
  */
-
 public interface LexerPosition {
     /**
      * Returns the current offset of the lexer.

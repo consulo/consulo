@@ -35,7 +35,6 @@ public interface ProcessHandlerBuilder {
    *
    * {@link #build()} will return object instance of {@link BinaryProcessHandler}
    */
-  
   ProcessHandlerBuilder binary();
 
   
@@ -44,19 +43,16 @@ public interface ProcessHandlerBuilder {
   /**
    * {@link #build()} will return object instance of {@link KillableProcessHandler}
    */
-  
   ProcessHandlerBuilder killable();
 
   /**
    * {@link BaseOutputReader.Options#forMostlySilentProcess()}
    */
-  
   ProcessHandlerBuilder silentReader();
 
   /**
    * {@link BaseOutputReader.Options#BLOCKING}
    */
-  
   ProcessHandlerBuilder blockingReader();
 
   
@@ -70,7 +66,6 @@ public interface ProcessHandlerBuilder {
    *
    * @param killProcessSoftly true, if graceful process termination should be attempted first (i.e. soft kill)
    */
-  
   ProcessHandlerBuilder shouldKillProcessSoftly(boolean killProcessSoftly);
 
   

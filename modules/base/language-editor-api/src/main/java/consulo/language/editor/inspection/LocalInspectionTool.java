@@ -116,7 +116,6 @@ public abstract class LocalInspectionTool extends InspectionTool {
    * @param state state from {@link #createStateProvider()} {@link PersistentStateComponent#getState()}
    * @return not-null visitor for this inspection.
    */
-  
   public PsiElementVisitor buildVisitor(ProblemsHolder holder,
                                         boolean isOnTheFly,
                                         LocalInspectionToolSession session,
@@ -134,7 +133,6 @@ public abstract class LocalInspectionTool extends InspectionTool {
    * @param isOnTheFly true if inspection was run in non-batch mode
    * @return not-null visitor for this inspection.
    */
-  
   public PsiElementVisitor buildVisitor(final ProblemsHolder holder, final boolean isOnTheFly) {
     return new PsiElementVisitor() {
       @Override

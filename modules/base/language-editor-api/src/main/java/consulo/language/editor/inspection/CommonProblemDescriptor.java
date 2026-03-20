@@ -39,7 +39,6 @@ public interface CommonProblemDescriptor {
    *
    * @return the template for the problem description.
    */
-  
   LocalizeValue getDescriptionTemplate();
 
   /**

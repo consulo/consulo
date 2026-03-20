@@ -28,6 +28,5 @@ public interface SearchScopeProvidingRunProfile extends RunProfile {
   /**
    * @return modules where to search sources for this configuration
    */
-  
   Module[] getModules();
 }

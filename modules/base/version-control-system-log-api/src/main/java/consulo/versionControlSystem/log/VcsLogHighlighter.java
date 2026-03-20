@@ -29,7 +29,6 @@ public interface VcsLogHighlighter {
    * @param commitDetails details of selected commit.
    * @param isSelected    if true, the row currently has selection on it.
    */
-  
   VcsCommitStyle getStyle(VcsShortCommitDetails commitDetails, boolean isSelected);
 
   /**

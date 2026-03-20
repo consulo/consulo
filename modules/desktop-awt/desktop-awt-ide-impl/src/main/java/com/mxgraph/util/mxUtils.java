@@ -1412,7 +1412,6 @@ public class mxUtils {
    * @return Returns true if the node name of the user object is equal to the
    *         given type.
    */
-
   public static boolean isNode(Object value, String nodeName) {
     return isNode(value, nodeName, null, null);
   }

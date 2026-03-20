@@ -23,7 +23,6 @@ public interface ASTNode extends UserDataHolder {
    *
    * @return the element type.
    */
-  
   IElementType getElementType();
 
   /**
@@ -33,7 +32,6 @@ public interface ASTNode extends UserDataHolder {
    *
    * @return the node text.
    */
-  
   String getText();
 
   /**
@@ -45,7 +43,6 @@ public interface ASTNode extends UserDataHolder {
    * @see PsiElement#textMatches
    * @see #textContains
    */
-  
   CharSequence getChars();
 
   /**
@@ -134,7 +131,6 @@ public interface ASTNode extends UserDataHolder {
    *               all children should be returned.
    * @return the children array.
    */
-  
   ASTNode[] getChildren(@Nullable TokenSet filter);
 
   /**
@@ -207,7 +203,6 @@ public interface ASTNode extends UserDataHolder {
    *
    * @return the top node of the copied tree (as an ASTNode object)
    */
-  
   Object clone();
 
   /**

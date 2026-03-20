@@ -26,7 +26,6 @@ public interface ChooseByNameViewModel {
   /**
    * Transforms text entered by the user in the dialog into the search pattern (for example, removes irrelevant suffixes like "line ...")
    */
-  
   String transformPattern(String pattern);
 
   /**

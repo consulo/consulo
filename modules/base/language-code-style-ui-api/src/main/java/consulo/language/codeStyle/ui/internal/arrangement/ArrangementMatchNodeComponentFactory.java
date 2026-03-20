@@ -63,7 +63,6 @@ public class ArrangementMatchNodeComponentFactory {
    * @param allowModification   flag which indicates whether given model can be changed at future
    * @return renderer for the given model
    */
-  
   public ArrangementUiComponent getComponent(ArrangementMatchCondition rendererTarget,
                                              final StdArrangementMatchRule rule,
                                              final boolean allowModification)

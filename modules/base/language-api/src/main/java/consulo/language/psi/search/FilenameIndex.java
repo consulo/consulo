@@ -194,7 +194,6 @@ public class FilenameIndex {
      * @return all files with provided extension
      * @author Konstantin Bulenkov
      */
-    
     public static Collection<VirtualFile> getAllFilesByExt(Project project, String ext) {
         return getAllFilesByExt(project, ext, GlobalSearchScope.allScope(project));
     }

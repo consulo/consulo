@@ -32,6 +32,5 @@ public interface SdkModelFactory {
   /**
    * @return new sdk model, or return already created if it was created, for example while settings dialog opened
    */
-  
   SdkModel getOrCreateModel();
 }

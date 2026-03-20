@@ -43,7 +43,6 @@ public interface FileViewProvider extends Cloneable, UserDataHolder {
   /**
    * @return this project's PsiManager
    */
-  
   PsiManager getManager();
 
   /**
@@ -61,13 +60,11 @@ public interface FileViewProvider extends Cloneable, UserDataHolder {
    * @see #getDocument()
    * @see PsiDocumentManager#isUncommited(Document)
    */
-  
   CharSequence getContents();
 
   /**
    * @return the virtual file corresponding to this view provider. Physical or an instance of {@link LightVirtualFile} for most non-physical files.
    */
-  
   VirtualFile getVirtualFile();
 
   /**
@@ -75,14 +72,12 @@ public interface FileViewProvider extends Cloneable, UserDataHolder {
    * {@link PsiManager#findFile(VirtualFile)},
    * {@link PsiDocumentManager#getPsiFile(Document)} etc.
    */
-  
   Language getBaseLanguage();
 
   /**
    * @return all languages this file supports, in no particular order.
    * @see #getPsi(Language)
    */
-  
   Set<Language> getLanguages();
 
   /**
@@ -104,7 +99,6 @@ public interface FileViewProvider extends Cloneable, UserDataHolder {
    * should be the same as {@link #getLanguages()}. The main file which corresponds to {@link #getBaseLanguage()}, should be the first one. Otherwise
    * the order is non-deterministic and should not be relied upon.
    */
-  
   List<PsiFile> getAllFiles();
 
   /**
@@ -219,19 +213,16 @@ public interface FileViewProvider extends Cloneable, UserDataHolder {
    * @see LightVirtualFile
    * @see #isEventSystemEnabled()
    */
-  
   FileViewProvider createCopy(VirtualFile copy);
 
   /**
    * @return the PSI root for which stubs are to be built if supported. By default it's the main root.
    * @see #getBaseLanguage()
    */
-  
   PsiFile getStubBindingRoot();
 
   /**
    * @return the same as {@code getVirtualFile().getFileType()}, but cached.
    */
-  
   FileType getFileType();
 }

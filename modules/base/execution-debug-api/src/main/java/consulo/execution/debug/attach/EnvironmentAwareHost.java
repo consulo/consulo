@@ -24,14 +24,12 @@ public abstract class EnvironmentAwareHost implements XAttachHost {
    * @param commandLine commandLine to execute on this host
    * @return {@link ProcessHandler}, with which the command is executed (for example with a timeout)
    */
-  
   public abstract ProcessHandler getProcessHandler(GeneralCommandLine commandLine) throws ExecutionException;
 
   /**
    * @param commandLine commandLine to execute on this host
    * @return output of the corresponding process
    */
-  
   public ProcessOutput getProcessOutput(GeneralCommandLine commandLine) throws ExecutionException {
     ProcessHandler handler = getProcessHandler(commandLine);
     CapturingProcessRunner runner = new CapturingProcessRunner(handler);
@@ -68,7 +66,6 @@ public abstract class EnvironmentAwareHost implements XAttachHost {
    * File system prefix for files from this host. It should be noted that the prefixes must be different for different hosts.
    * Path to the host file is obtained by concatenation of hostId and it's on-host path
    */
-  
   public abstract String getFileSystemHostId();
 
   /**

@@ -36,7 +36,6 @@ public abstract class WritingAccessProvider {
      * @param files files to be checked
      * @return set of files that cannot be accessed
      */
-    
     public abstract Collection<VirtualFile> requestWriting(VirtualFile... files);
 
     public abstract boolean isPotentiallyWritable(VirtualFile file);

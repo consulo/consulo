@@ -32,13 +32,11 @@ public abstract class VcsCherryPicker {
   /**
    * @return - return vcs for current cherryPicker
    */
-  
   public abstract VcsKey getSupportedVcs();
 
   /**
    * @return CherryPick Action name for supported vcs
    */
-  
   public abstract String getActionTitle();
 
   /**

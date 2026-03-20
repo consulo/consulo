@@ -126,7 +126,6 @@ public class VcsLogClassicFilterUi implements VcsLogFilterUi {
     /**
      * Returns filter components which will be added to the Log toolbar.
      */
-    
     public ActionGroup createActionGroup() {
         ActionGroup.Builder actionGroup = ActionGroup.newImmutableBuilder();
         actionGroup.add(new FilterActionComponent(() -> new BranchFilterPopupComponent(

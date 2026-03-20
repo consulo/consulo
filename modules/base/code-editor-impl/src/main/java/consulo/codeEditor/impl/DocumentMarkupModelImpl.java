@@ -52,7 +52,6 @@ public class DocumentMarkupModelImpl {
      * @return the markup model instance.
      * @see Editor#getMarkupModel()
      */
-    
     public static MarkupModelEx forDocument(Document document, @Nullable Project project, boolean create) {
         if (document instanceof DocumentWindow) {
             Document delegate = ((DocumentWindow) document).getDelegate();

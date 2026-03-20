@@ -55,7 +55,6 @@ public interface ProjectDataService<E, I> {
     /**
      * @return key of project data supported by the current manager
      */
-    
     Key<E> getTargetDataKey();
 
     /**

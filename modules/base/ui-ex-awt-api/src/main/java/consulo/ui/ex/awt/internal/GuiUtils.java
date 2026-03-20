@@ -361,7 +361,6 @@ public class GuiUtils {
    * @param comp      component
    * @return dimension with width enough to insert provided number of chars into component
    */
-  
   public static Dimension getSizeByChars(int charCount, JComponent comp) {
     Dimension size = comp.getPreferredSize();
     FontMetrics fontMetrics = comp.getFontMetrics(comp.getFont());

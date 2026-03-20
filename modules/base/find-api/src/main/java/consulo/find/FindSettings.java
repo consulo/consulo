@@ -101,13 +101,11 @@ public abstract class FindSettings {
     /**
      * FindInProjectSettings.addDirectory
      */
-    
     public abstract String[] getRecentFindStrings();
 
     /**
      * FindInProjectSettings.addDirectory
      */
-    
     public abstract String[] getRecentReplaceStrings();
 
     /**
@@ -117,7 +115,6 @@ public abstract class FindSettings {
      * @return the recent file masks list
      * @since 5.0.2
      */
-    
     public abstract String[] getRecentFileMasks();
 
     /**

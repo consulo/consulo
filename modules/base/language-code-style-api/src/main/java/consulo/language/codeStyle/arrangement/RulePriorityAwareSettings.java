@@ -32,6 +32,5 @@ public interface RulePriorityAwareSettings extends ArrangementSettings {
    * <b>Note:</b> It's expected that rules sort is stable
    * @return list of rules sorted in order of matching
    */
-  
   List<? extends ArrangementMatchRule> getRulesSortedByPriority();
 }

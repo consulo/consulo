@@ -45,6 +45,5 @@ public interface IndexPatternProvider {
    *
    * @return the array of index patterns
    */
-  
   IndexPattern[] getIndexPatterns();
 }

@@ -231,7 +231,6 @@ public interface RangeHighlighter extends RangeMarker {
      *
      * @return the filter controlling the highlighter availability. Default availability is controlled by MarkupEditorFilter.EMPTY
      */
-    
     MarkupEditorFilter getEditorFilter();
 
     boolean isAfterEndOfLine();

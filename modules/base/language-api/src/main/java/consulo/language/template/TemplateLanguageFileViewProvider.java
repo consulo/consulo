@@ -38,7 +38,6 @@ public interface TemplateLanguageFileViewProvider extends FileViewProvider {
    *
    * @return not instanceof {@link consulo.ide.impl.idea.lang.DependentLanguage}
    */
-  
   Language getTemplateDataLanguage();
 
   /**

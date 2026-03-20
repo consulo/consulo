@@ -22,7 +22,6 @@ public final class AppExecutorUtil {
    * </ul>
    * </ul>
    */
-  
   public static ScheduledExecutorService getAppScheduledExecutorService() {
     ApplicationConcurrency concurrency = Application.get().getInstance(ApplicationConcurrency.class);
     return concurrency.getScheduledExecutorService();
@@ -38,7 +37,6 @@ public final class AppExecutorUtil {
    *
    * @see Application#executeOnPooledThread(Runnable)
    */
-  
   public static ExecutorService getAppExecutorService() {
     ApplicationConcurrency concurrency = Application.get().getInstance(ApplicationConcurrency.class);
     return concurrency.getExecutorService();
@@ -48,7 +46,6 @@ public final class AppExecutorUtil {
    * Returns {@link ScheduledExecutorService} which allows to {@link ScheduledExecutorService#schedule(Callable, long, TimeUnit)} tasks later
    * and execute them in parallel in the application pool (see {@link #getAppExecutorService()} not more than at {@code maxThreads} at a time.
    */
-  
   public static ScheduledExecutorService createBoundedScheduledExecutorService(String name, int maxThreads) {
     ApplicationConcurrency concurrency = Application.get().getInstance(ApplicationConcurrency.class);
     return concurrency.createBoundedScheduledExecutorService(name, maxThreads);
@@ -59,14 +56,12 @@ public final class AppExecutorUtil {
    * (i.e. all tasks are run in the {@link #getAppExecutorService()} global thread pool).
    * @see #getAppExecutorService()
    */
-  
   public static ExecutorService createBoundedApplicationPoolExecutor(String name, int maxThreads) {
     return createBoundedApplicationPoolExecutor(name, getAppExecutorService(), maxThreads);
   }
   /**
    * @return the bounded executor (executor which runs no more than {@code maxThreads} tasks simultaneously) backed by the {@code backendExecutor}
    */
-  
   public static ExecutorService createBoundedApplicationPoolExecutor(String name,
                                                                      Executor backendExecutor,
                                                                      int maxThreads) {
@@ -79,7 +74,6 @@ public final class AppExecutorUtil {
    * @return the bounded executor (executor which runs no more than {@code maxThreads} tasks simultaneously) backed by the {@code backendExecutor}
    * which will shutdown itself when {@code parentDisposable} gets disposed.
    */
-  
   public static ExecutorService createBoundedApplicationPoolExecutor(String name,
                                                                      Executor backendExecutor,
                                                                      int maxThreads,

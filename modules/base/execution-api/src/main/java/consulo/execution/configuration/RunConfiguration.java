@@ -41,7 +41,6 @@ public interface RunConfiguration extends RunProfile, JDOMExternalizable, Clonea
    *
    * @return the configuration type.
    */
-  
   ConfigurationType getType();
 
   /**
@@ -66,7 +65,6 @@ public interface RunConfiguration extends RunProfile, JDOMExternalizable, Clonea
    *
    * @return the settings editor component.
    */
-  
   SettingsEditor<? extends RunConfiguration> getConfigurationEditor();
 
   /**

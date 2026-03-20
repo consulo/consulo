@@ -49,7 +49,6 @@ public interface ProgramRunner<Settings extends RunnerSettings> {
      *
      * @return the program runner ID.
      */
-    
     String getRunnerId();
 
     /**

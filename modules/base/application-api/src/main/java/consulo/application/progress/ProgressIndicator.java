@@ -199,7 +199,6 @@ public interface ProgressIndicator {
      * By default, depending on implementation, it's {@link ModalityState#NON_MODAL} or current modality at the moment of progress indicator creation.
      * It can be later modified by {@link #setModalityProgress(ProgressIndicator)}, but it mostly makes sense for processes showing modal dialogs.
      */
-    
     ModalityState getModalityState();
 
     /**

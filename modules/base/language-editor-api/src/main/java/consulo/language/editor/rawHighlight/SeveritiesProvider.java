@@ -36,7 +36,6 @@ public abstract class SeveritiesProvider {
     /**
      * @see TextAttributesKey#createTextAttributesKey(String, TextAttributes)
      */
-    
     public abstract List<HighlightInfoType> getSeveritiesHighlightInfoTypes();
 
     public boolean isGotoBySeverityEnabled(HighlightSeverity minSeverity) {

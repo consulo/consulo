@@ -31,7 +31,6 @@ import java.awt.*;
  * @see StructureViewBuilder#createStructureView(FileEditor, Project)
  * @see TreeBasedStructureViewBuilder
  */
-
 public interface StructureView extends Disposable {
   /**
    * Returns the editor whose structure is displayed in the structure view.

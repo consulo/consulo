@@ -175,7 +175,6 @@ public class RunContentExecutor implements Disposable {
     /**
      * @param console console to use instead of new one. Pass null to always create new
      */
-    
     public RunContentExecutor withConsole(@Nullable ConsoleView console) {
         myUserProvidedConsole = console;
         return this;

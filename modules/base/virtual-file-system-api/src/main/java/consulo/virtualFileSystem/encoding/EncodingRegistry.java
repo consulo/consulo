@@ -21,7 +21,6 @@ public interface EncodingRegistry {
   /**
    * @return charset configured in Settings|File Encodings|IDE encoding
    */
-  
   Charset getDefaultCharset();
 
   /**
@@ -47,7 +46,6 @@ public interface EncodingRegistry {
   /**
    * @return encoding used by default in {@link consulo.ide.impl.idea.execution.configurations.GeneralCommandLine}
    */
-  
   Charset getDefaultConsoleEncoding();
 
   

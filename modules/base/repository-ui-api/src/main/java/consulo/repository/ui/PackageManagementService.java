@@ -65,7 +65,6 @@ public abstract class PackageManagementService {
    * @return the list of all packages in all repositories
    * @throws IOException
    */
-  
   public abstract List<RepoPackage> getAllPackages() throws IOException;
 
   /**
@@ -75,7 +74,6 @@ public abstract class PackageManagementService {
    * @return the list of all packages in all repositories
    * @throws IOException
    */
-  
   public List<RepoPackage> reloadAllPackages() throws IOException {
     return getAllPackages();
   }
@@ -85,7 +83,6 @@ public abstract class PackageManagementService {
    *
    * @return the list of all packages or an empty list.
    */
-  
   public List<RepoPackage> getAllPackagesCached() {
     return List.of();
   }
@@ -124,7 +121,6 @@ public abstract class PackageManagementService {
    *
    * @return the collection of currently installed packages.
    */
-  
   public List<? extends InstalledPackage> getInstalledPackagesList() throws IOException {
     return new ArrayList<>(getInstalledPackages());
   }
@@ -206,7 +202,6 @@ public abstract class PackageManagementService {
     /**
      * The reason message that explains why the error has occurred.
      */
-    
     public String getMessage() {
       return myMessage;
     }

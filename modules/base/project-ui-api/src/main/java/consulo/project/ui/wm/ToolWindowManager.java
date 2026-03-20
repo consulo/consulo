@@ -151,7 +151,6 @@ public abstract class ToolWindowManager {
     /**
      * @deprecated {@link ToolWindowManager#registerToolWindow(String, boolean, ToolWindowAnchor)}
      */
-
     @Deprecated
     public void notifyByBalloon(
         String toolWindowId,

@@ -69,7 +69,6 @@ public final class CompletionParameters {
    * <p>
    * If the dummy identifier is empty, then the file isn't copied and this method returns whatever is at caret in the original file.
    */
-  
   public PsiElement getPosition() {
     return myPosition;
   }
@@ -81,7 +80,6 @@ public final class CompletionParameters {
   /**
    * @return the file being edited, possibly injected, where code completion was invoked.
    */
-  
   public PsiFile getOriginalFile() {
     return myOriginalFile;
   }
@@ -123,7 +121,6 @@ public final class CompletionParameters {
   /**
    * @return the editor where the completion was started
    */
-  
   public Editor getEditor() {
     return myEditor;
   }

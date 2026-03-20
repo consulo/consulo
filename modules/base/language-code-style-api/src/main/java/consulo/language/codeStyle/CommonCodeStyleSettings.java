@@ -320,7 +320,6 @@ public class CommonCodeStyleSettings {
      * }
      * </PRE>
      */
-
     public static final int END_OF_LINE = 1;
     public static final int NEXT_LINE = 2;
     public static final int NEXT_LINE_SHIFTED = 3;

@@ -32,7 +32,6 @@ import java.util.Objects;
  *
  * @author max
  */
-
 public abstract class FoldingBuilderEx implements FoldingBuilder {
   /**
    * Builds the folding regions for the specified node in the AST tree and its children.
@@ -45,7 +44,6 @@ public abstract class FoldingBuilderEx implements FoldingBuilder {
    *                 If true, one should perform no reference resolving and avoid complex checks if possible.
    * @return the array of folding descriptors.
    */
-  
   @RequiredReadAction
   public abstract FoldingDescriptor[] buildFoldRegions(PsiElement root, Document document, boolean quick);
 

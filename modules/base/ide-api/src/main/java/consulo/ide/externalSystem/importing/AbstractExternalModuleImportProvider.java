@@ -112,7 +112,6 @@ public abstract class AbstractExternalModuleImportProvider<C extends AbstractImp
      * @param file base external project config file
      * @return external project config file to use
      */
-    
     protected abstract File getExternalProjectConfigToUse(File file);
 
     protected abstract void applyExtraSettings(ExternalModuleImportContext<C> context);
@@ -394,7 +393,6 @@ public abstract class AbstractExternalModuleImportProvider<C extends AbstractImp
      * @param context current wizard context
      * @return {@link Project} instance to use
      */
-    
     public Project getContextOrDefaultProject(ExternalModuleImportContext<C> context) {
         Project result = context.getProject();
         if (result == null) {

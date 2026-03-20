@@ -101,7 +101,6 @@ public interface InjectedLanguageManager {
     /**
      * @return the ranges in this document window that correspond to prefix/suffix injected text fragments and thus can't be edited and are not visible in the editor.
      */
-   
     List<TextRange> getNonEditableFragments(DocumentWindow window);
 
     /**

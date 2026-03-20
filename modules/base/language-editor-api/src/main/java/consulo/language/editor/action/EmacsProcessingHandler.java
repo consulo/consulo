@@ -76,6 +76,5 @@ public interface EmacsProcessingHandler extends LanguageExtension {
      * @param file    current file
      * @return processing result
      */
-    
     Result changeIndent(Project project, Editor editor, PsiFile file);
 }

@@ -248,7 +248,6 @@ public class AnnotationHolderImpl extends SmartList<Annotation> implements Annot
     /**
      * @deprecated this is an old way of creating annotations, via createXXXAnnotation(). please use newAnnotation() instead
      */
-    
     @Deprecated
     private Annotation doCreateAnnotation(
         HighlightSeverity severity,
@@ -272,7 +271,6 @@ public class AnnotationHolderImpl extends SmartList<Annotation> implements Annot
     /**
      * @deprecated this is an old way of creating annotations, via createXXXAnnotation(). please use newAnnotation() instead
      */
-    
     @Deprecated
     private Annotation doCreateAnnotation(
         HighlightSeverity severity,

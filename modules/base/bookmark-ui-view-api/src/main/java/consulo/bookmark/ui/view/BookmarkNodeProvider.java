@@ -81,7 +81,6 @@ public interface BookmarkNodeProvider {
    *
    * @return the string identifier.
    */
-  
   String getFavoriteTypeId();
 
   /**

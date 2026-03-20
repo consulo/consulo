@@ -49,7 +49,6 @@ public abstract class XValueMarkerProvider<V extends XValue, M> {
    * if necessary.
    * @return a marker for {@code value}
    */
-  
   public M markValue(V value) {
     return getMarker(value);
   }

@@ -39,6 +39,5 @@ public interface EditorTextFieldProvider {
      * @param project  target project
      * @return {@link EditorTextField} with specified customizations applied to its editor.
      */
-    
     EditorTextField getEditorField(Language language, Project project, Iterable<Consumer<EditorEx>> features);
 }

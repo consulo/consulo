@@ -31,7 +31,6 @@ public class CertificateWrapper {
      * @param name - Common name of desired issuer field
      * @return field value of {@link #NOT_AVAILABLE}. if it doesn't exist
      */
-    
     public String getIssuerField(CommonField name) {
         String field = myIssuerFields.get(name.getShortName());
         return field == null ? NOT_AVAILABLE : field;
@@ -41,7 +40,6 @@ public class CertificateWrapper {
      * @param name - Common name of desired subject field
      * @return field value of {@link #NOT_AVAILABLE}, if it doesn't exist
      */
-    
     public String getSubjectField(CommonField name) {
         String field = mySubjectFields.get(name.getShortName());
         return field == null ? NOT_AVAILABLE : field;
@@ -52,7 +50,6 @@ public class CertificateWrapper {
      *
      * @return SHA-256 fingerprint or {@link #NOT_AVAILABLE} in case of any error
      */
-    
     public String getSha256Fingerprint() {
         try {
             return DigestUtils.sha256Hex(myCertificate.getEncoded());

@@ -121,7 +121,6 @@ public interface BalloonBuilder {
      * @param anchor target anchor to link to
      * @return balloon builder which produces balloon linked to the given object life cycle
      */
-    
     BalloonBuilder setDisposable(Disposable anchor);
 
     

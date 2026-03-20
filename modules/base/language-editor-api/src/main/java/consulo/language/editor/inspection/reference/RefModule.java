@@ -30,6 +30,5 @@ public interface RefModule extends RefEntity {
    *
    * @return the module for the node.
    */
-  
   Module getModule();
 }

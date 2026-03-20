@@ -36,6 +36,5 @@ public interface StructureViewBuilder {
    * @return the structure view implementation.
    * @see TreeBasedStructureViewBuilder
    */
-  
   StructureView createStructureView(FileEditor fileEditor, Project project);
 }

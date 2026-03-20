@@ -20,7 +20,6 @@ public interface IndexPatternOccurrence {
    *
    * @return the file in which the occurrence was found.
    */
-  
   PsiFile getFile();
 
   /**
@@ -28,13 +27,11 @@ public interface IndexPatternOccurrence {
    *
    * @return the text range which was matched by the pattern.
    */
-  
   TextRange getTextRange();
 
   /**
    * Additional ranges associated with matched range (e.g. for multi-line matching)
    */
-  
   default List<TextRange> getAdditionalTextRanges() {
     return Collections.emptyList();
   }
@@ -44,6 +41,5 @@ public interface IndexPatternOccurrence {
    *
    * @return the instance of the pattern which was matched.
    */
-  
   IndexPattern getPattern();
 }

@@ -103,7 +103,6 @@ public abstract class PostfixTemplate implements PossiblyDumbAware {
   /**
    * @return identifier used for saving the settings related to this template
    */
-  
   public String getId() {
     return myId;
   }
@@ -111,7 +110,6 @@ public abstract class PostfixTemplate implements PossiblyDumbAware {
   /**
    * @return key used for expanding the template in the editor
    */
-  
   public final String getKey() {
     return myKey;
   }
@@ -119,7 +117,6 @@ public abstract class PostfixTemplate implements PossiblyDumbAware {
   /**
    * @return template name displayed in UI
    */
-  
   public String getPresentableName() {
     return myPresentableName;
   }
@@ -127,7 +124,6 @@ public abstract class PostfixTemplate implements PossiblyDumbAware {
   /**
    * @return template description displayed in UI
    */
-  
   public String getDescription() {
     return myLazyDescription.get();
   }
@@ -135,7 +131,6 @@ public abstract class PostfixTemplate implements PossiblyDumbAware {
   /**
    * @return short example of the expanded form shown in the completion popup and templates tree on the configuration page
    */
-  
   public String getExample() {
     return myExample;
   }

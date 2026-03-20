@@ -66,7 +66,6 @@ public abstract class AbstractImportFromExternalSystemControl<ProjectSettings ex
      * @param settings target external project settings
      * @return control for managing given project settings
      */
-    
     protected abstract ExternalSystemSettingsControl<ProjectSettings> createProjectSettingsControl(ProjectSettings settings);
 
     /**

@@ -98,7 +98,6 @@ public class DocPreviewUtil {
    *                                   element with the given qualified name is added to the preview's end if the qName is provided then
    * @param fullText                   full documentation text (if available)
    */
-  
   public static String buildPreview(String header, @Nullable String qName, @Nullable String fullText) {
     if (fullText == null) {
       return header;

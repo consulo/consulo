@@ -26,6 +26,5 @@ public interface ShortcutSet {
    * @return array of keyboard <code>Shortcut</code>s that are in the set.
    * The method returns an empty array if there are no keyboard <code>Shortcuts</code>
    */
-  
   Shortcut[] getShortcuts();
 }

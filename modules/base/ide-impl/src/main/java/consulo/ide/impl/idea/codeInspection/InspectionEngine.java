@@ -63,7 +63,6 @@ public class InspectionEngine {
      * @param dialectIdsSpecifiedForTool null means all accepted
      * @return
      */
-    
     @RequiredReadAction
     public static PsiElementVisitor createVisitorAndAcceptElements(
         LocalInspectionTool tool,

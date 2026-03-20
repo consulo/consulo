@@ -30,6 +30,5 @@ public interface PredefinedCopyrightProvider {
   /**
    * Map of copyright name and text
    */
-  
   Map<LocalizeValue, String> getCopyrightTexts();
 }

@@ -48,7 +48,6 @@ public interface ExternalFormatProcessor {
     /**
      * @return the unique id for external formatter
      */
-    
     String getId();
 
     /**
@@ -63,7 +62,6 @@ public interface ExternalFormatProcessor {
      * @param externalFormatterId the unique id for external formatter
      * @return the external formatter with the unique id, if any
      */
-    
     static Optional<ExternalFormatProcessor> findExternalFormatter(String externalFormatterId) {
         return EP_NAME.getExtensionList().stream().filter(efp -> externalFormatterId.equals(efp.getId())).findFirst();
     }
@@ -106,7 +104,6 @@ public interface ExternalFormatProcessor {
      * @param canChangeWhiteSpacesOnly procedure can change only whitespaces
      * @return the element after formatting
      */
-    
     @RequiredReadAction
     static PsiElement formatElement(PsiElement elementToFormat, TextRange range, boolean canChangeWhiteSpacesOnly) {
         PsiFile file = elementToFormat.getContainingFile();

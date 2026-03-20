@@ -35,7 +35,6 @@ public interface VcsLog {
   /**
    * Returns commits currently selected in the log.
    */
-  
   List<CommitId> getSelectedCommits();
 
   /**
@@ -45,14 +44,12 @@ public interface VcsLog {
    * which means that the short details are already loaded. <br/>
    * This makes this method preferable to {@link #getSelectedDetails()}.
    */
-  
   List<VcsShortCommitDetails> getSelectedShortDetails();
 
   /**
    * Returns details of the selected commits.
    * For commits that are not loaded an instance of LoadingDetails is returned.
    */
-  
   List<VcsFullCommitDetails> getSelectedDetails();
 
   /**
@@ -75,12 +72,10 @@ public interface VcsLog {
    * Returns a {@link Future future} that allows to check if the commit was selected, wait for the selection while log is being loaded,
    * or cancel commit selection.
    */
-  
   Future<Boolean> jumpToReference(String reference);
 
   /**
    * Returns {@link VcsLogProvider VcsLogProviders} which are active in this log, i.e. which VCS roots are shown in the log.
    */
-  
   Map<VirtualFile, VcsLogProvider> getLogProviders();
 }

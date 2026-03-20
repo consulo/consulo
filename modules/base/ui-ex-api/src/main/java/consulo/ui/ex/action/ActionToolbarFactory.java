@@ -41,6 +41,5 @@ public interface ActionToolbarFactory {
      * @param style Style of toolbar, see documentation of {@link ActionToolbar.Style}
      * @return An instance of <code>ActionToolbar</code>
      */
-    
     ActionToolbar createActionToolbar(String place, ActionGroup group, ActionToolbar.Style style);
 }

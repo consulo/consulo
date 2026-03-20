@@ -41,7 +41,6 @@ public class ExpressionInfo {
    * Text range to highlight as link,
    * will be used to compute evaluation and display text if these values not specified.
    */
-  
   public TextRange getTextRange() {
     return textRange;
   }

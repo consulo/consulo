@@ -23,13 +23,11 @@ public interface Inlay<T extends EditorCustomElementRenderer> extends Disposable
     /**
      * Returns editor, this custom visual element belongs to.
      */
-    
     Editor getEditor();
 
     /**
      * Defines relative position of inlay element with respect to the containing text.
      */
-    
     Placement getPlacement();
 
     /**
@@ -59,7 +57,6 @@ public interface Inlay<T extends EditorCustomElementRenderer> extends Disposable
      * Returns current visual position of the inlay's left boundary. For 'block' elements, this is just a visual position associated with
      * inlay's offset.
      */
-    
     VisualPosition getVisualPosition();
 
     /**
@@ -70,7 +67,6 @@ public interface Inlay<T extends EditorCustomElementRenderer> extends Disposable
     /**
      * Returns renderer, which defines size and representation for this inlay.
      */
-    
     T getRenderer();
 
     /**
@@ -116,7 +112,6 @@ public interface Inlay<T extends EditorCustomElementRenderer> extends Disposable
      * @see InlayModel#addBlockElement(int, InlayProperties, EditorCustomElementRenderer)
      * @see InlayModel#addAfterLineEndElement(int, InlayProperties, EditorCustomElementRenderer)
      */
-    
     default InlayProperties getProperties() {
         return new InlayProperties();
     }

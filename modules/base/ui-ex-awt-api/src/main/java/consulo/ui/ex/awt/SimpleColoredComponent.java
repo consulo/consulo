@@ -333,7 +333,6 @@ public class SimpleColoredComponent extends JComponent implements Accessible, Co
     /**
      * @return "leave" (internal) internal paddings of the component
      */
-    
     public Insets getIpad() {
         return myIpad;
     }

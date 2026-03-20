@@ -51,7 +51,6 @@ public interface ArrangementEntry {
    * @return    current entry's children. Empty collection if there are no children
    * @see #getParent() 
    */
-  
   List<? extends ArrangementEntry> getChildren();
 
   /**

@@ -134,7 +134,6 @@ public class VfsUtil extends VfsUtilCore {
      * @param files array of files
      * @return array of common ancestors for passed files
      */
-    
     public static VirtualFile[] getCommonAncestors(VirtualFile[] files) {
         // Separate files by first component in the path.
         Map<VirtualFile, Set<VirtualFile>> map = new HashMap<>();
@@ -247,7 +246,6 @@ public class VfsUtil extends VfsUtilCore {
     /**
      * @return correct URL, must be used only for external communication
      */
-    
     public static URI toUri(VirtualFile file) {
         return VirtualFileUtil.toUri(file);
     }
@@ -255,7 +253,6 @@ public class VfsUtil extends VfsUtilCore {
     /**
      * @return correct URL, must be used only for external communication
      */
-    
     public static URI toUri(File file) {
         return VirtualFileUtil.toUri(file);
     }
@@ -343,7 +340,6 @@ public class VfsUtil extends VfsUtilCore {
      * @param root virtual file to get descendants
      * @return descendants
      */
-    
     public static List<VirtualFile> collectChildrenRecursively(VirtualFile root) {
         List<VirtualFile> result = new ArrayList<>();
         processFilesRecursively(root, t -> {

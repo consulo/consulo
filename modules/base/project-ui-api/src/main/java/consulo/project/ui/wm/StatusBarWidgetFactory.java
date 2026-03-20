@@ -19,7 +19,6 @@ public interface StatusBarWidgetFactory {
     /**
      * @return Widget identifier. Used to store visibility settings.
      */
-    
     default String getId() {
         ExtensionImpl extension = getClass().getAnnotation(ExtensionImpl.class);
         if (extension == null) {
@@ -37,7 +36,6 @@ public interface StatusBarWidgetFactory {
      * e.g. for "Enable/disable &lt;display name>" action names
      * or for checkbox texts in settings.
      */
-    
     String getDisplayName();
 
     /**
@@ -73,7 +71,6 @@ public interface StatusBarWidgetFactory {
      * {@link consulo.ide.impl.idea.openapi.wm.impl.status.widget.StatusBarWidgetsManager#updateWidget(StatusBarWidgetFactory)}
      * to recreate the widget and re-add it to the status bar.
      */
-    
     StatusBarWidget createWidget(Project project);
 
     default void disposeWidget(StatusBarWidget widget) {

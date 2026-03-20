@@ -33,6 +33,5 @@ public interface AnnotationGutterActionProvider {
      * @param annotation annotation which is currently shown on the gutter.
      * @return new action that can be invoked from the annotation gutter popup.
      */
-    
     AnAction createAction(FileAnnotation annotation);
 }

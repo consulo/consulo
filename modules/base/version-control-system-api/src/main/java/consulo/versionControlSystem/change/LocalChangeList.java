@@ -40,7 +40,6 @@ public abstract class LocalChangeList implements Cloneable, ChangeList {
    * Logical id that identifies the changelist and should survive name changing.
    * @return changelist id
    */
-  
   public String getId() {
     return getName();
   }

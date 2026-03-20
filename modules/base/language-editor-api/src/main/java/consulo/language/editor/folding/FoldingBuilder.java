@@ -52,7 +52,6 @@ public interface FoldingBuilder extends LanguageExtension {
    *                 numbers for folding regions.
    * @return the array of folding descriptors.
    */
-  
   @RequiredReadAction
   FoldingDescriptor[] buildFoldRegions(ASTNode node, Document document);
 

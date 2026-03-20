@@ -47,7 +47,6 @@ public class IgnoreElementImpl extends ASTWrapperPsiElement {
      *
      * @return {@link PsiReference} list
      */
-    
     @Override
     public PsiReference[] getReferences() {
         return ReferenceProvidersRegistry.getReferencesFromProviders(this);

@@ -33,7 +33,6 @@ public interface FoldRegion extends RangeMarker {
    *
    * @return the placeholder text.
    */
-  
   String getPlaceholderText();
 
   Editor getEditor();

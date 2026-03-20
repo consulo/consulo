@@ -52,7 +52,6 @@ public interface FileTemplate extends Cloneable {
   /**
    * Name without extension
    */
-  
   String getName();
 
   void setName(String name);

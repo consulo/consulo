@@ -34,12 +34,10 @@ public interface XAttachHostProvider<T extends XAttachHost> {
   /**
    * @return the group to which all connections provided by this provider belong
    */
-  
   XAttachPresentationGroup<? extends XAttachHost> getPresentationGroup();
 
   /**
    * @return a list of connections of this type, which is characterized by the provider
    */
-  
   List<T> getAvailableHosts(@Nullable Project project);
 }

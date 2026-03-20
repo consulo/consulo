@@ -108,7 +108,6 @@ public class IElementType {
      *
      * @return the associated language.
      */
-    
     public final Language getLanguage() {
         return myLanguage;
     }
@@ -182,7 +181,6 @@ public class IElementType {
      * @param p the predicate which should be matched by the element types.
      * @return the array of matching element types.
      */
-    
     public static IElementType[] enumerate(Predicate<IElementType> p) {
         List<IElementType> matches = new ArrayList<>();
         for (IElementType value : ourRegistry) {

@@ -213,7 +213,6 @@ public abstract class AbstractVcsHelper {
      * @param mergeDialogCustomizer custom container of titles, descriptions and messages for the merge dialog.
      * @return changed files for which the merge was actually performed.
      */
-    
     public abstract List<VirtualFile> showMergeDialog(
         List<VirtualFile> files,
         MergeProvider provider,
@@ -223,7 +222,6 @@ public abstract class AbstractVcsHelper {
     /**
      * {@link #showMergeDialog(java.util.List, MergeProvider)} without description.
      */
-    
     public final List<VirtualFile> showMergeDialog(List<VirtualFile> files, MergeProvider provider) {
         return showMergeDialog(files, provider, new MergeDialogCustomizer());
     }
@@ -232,7 +230,6 @@ public abstract class AbstractVcsHelper {
      * {@link #showMergeDialog(java.util.List, MergeProvider)} without description and with default merge provider
      * for the current VCS.
      */
-    
     public final List<VirtualFile> showMergeDialog(List<VirtualFile> files) {
         if (files.isEmpty()) {
             return Collections.emptyList();

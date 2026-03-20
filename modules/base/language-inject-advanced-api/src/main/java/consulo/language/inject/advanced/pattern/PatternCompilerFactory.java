@@ -35,13 +35,11 @@ public abstract class PatternCompilerFactory {
    * @param alias or null
    * @return pattern classes
    */
-  
   public abstract Class[] getPatternClasses(@Nullable String alias);
 
   /**
    * Classes from {@link PatternClassProvider} extension
    */
-  
   public abstract <T> PatternCompiler<T> getPatternCompiler(Class[] patternClasses);
 
   

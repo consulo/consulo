@@ -1215,7 +1215,6 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
     /**
      * Delegate method for compatibility with older versions of IDEA
      */
-    
     public AsyncResult<Void> requestFocus(Component c, boolean forced) {
         return ProjectIdeFocusManager.getInstance(myProject).requestFocus(c, forced);
     }

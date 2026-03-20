@@ -42,7 +42,6 @@ public class VirtualFilePropertyEvent extends VirtualFileEvent {
    * @see VirtualFile#PROP_NAME
    * @see VirtualFile#PROP_WRITABLE
    */
-  
   public String getPropertyName() {
     return myPropertyName;
   }

@@ -50,7 +50,6 @@ public abstract class ServerType<C extends ServerConfiguration> {
     /**
      * This method must be overridden and a proper ID must be returned from it (it'll be used as a key in run configuration file).
      */
-    
     public final String getDeploymentConfigurationFactoryId() {
         return myDeploymentId;
     }

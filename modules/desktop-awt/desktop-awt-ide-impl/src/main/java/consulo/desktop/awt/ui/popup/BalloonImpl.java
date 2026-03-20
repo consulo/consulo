@@ -719,7 +719,6 @@ public class BalloonImpl implements Balloon, IdeTooltip.Ui, ScreenAreaConsumer {
     /**
      * Figure out the component to focus inside the {@link #myContent} field.
      */
-   
     private Component getContentToFocus() {
         Component focusComponent = myContent;
         FocusTraversalPolicy policy = myContent.getFocusTraversalPolicy();
@@ -1240,7 +1239,6 @@ public class BalloonImpl implements Balloon, IdeTooltip.Ui, ScreenAreaConsumer {
          * @param contentSize size without shadow insets
          * @return adjusted size with shadow insets
          */
-       
         public Rectangle2D getUpdatedBounds(BalloonImpl balloon, Size2D contentSize, ImmutableInsets shadowInsets) {
             Rectangle2D bounds = balloon.myForcedBounds;
             if (bounds != null) {

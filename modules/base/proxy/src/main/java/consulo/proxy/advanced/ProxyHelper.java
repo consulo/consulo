@@ -31,7 +31,6 @@ public final class ProxyHelper {
   /**
    * @return base {@link ClassLoader} based on superclass and interfaces
    */
-  
   public static ClassLoader preferClassLoader(@Nullable Class<?> superclass, @Nullable Class<?>... interfaces) {
     int maxIndex = -1;
     ClassLoader bestLoader = null;

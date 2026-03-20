@@ -168,7 +168,6 @@ public abstract class ProjectLevelVcsManager {
     /**
      * Returns the list of VCSes supported by plugins.
      */
-    
     public abstract Collection<AbstractVcs> getAllSupportedVcss();
 
     /**

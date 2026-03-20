@@ -35,7 +35,6 @@ public interface SyntaxHighlighter {
    *
    * @return The lexer implementation.
    */
-  
   Lexer getHighlightingLexer();
 
   /**
@@ -45,6 +44,5 @@ public interface SyntaxHighlighter {
    * @param tokenType The token type for which the highlighting is requested.
    * @return The array of text attribute keys.
    */
-  
   TextAttributesKey[] getTokenHighlights(IElementType tokenType);
 }

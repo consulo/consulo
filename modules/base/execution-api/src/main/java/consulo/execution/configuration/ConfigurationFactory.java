@@ -85,7 +85,6 @@ public abstract class ConfigurationFactory {
     /**
      * @return id for factory
      */
-    
     public String getId() {
         return myType.getId();
     }
@@ -95,7 +94,6 @@ public abstract class ConfigurationFactory {
      *
      * @return the name of the run configuration variant created by this factory
      */
-    
     public LocalizeValue getDisplayName() {
         return myType.getDisplayName();
     }

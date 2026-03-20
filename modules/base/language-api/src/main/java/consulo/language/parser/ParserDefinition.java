@@ -65,7 +65,6 @@ public interface ParserDefinition extends LanguageExtension {
      * @param languageVersion version of language
      * @return the lexer instance.
      */
-    
     Lexer createLexer(LanguageVersion languageVersion);
 
     /**
@@ -74,7 +73,6 @@ public interface ParserDefinition extends LanguageExtension {
      * @param languageVersion version of language
      * @return the parser instance.
      */
-    
     PsiParser createParser(LanguageVersion languageVersion);
 
     /**
@@ -82,7 +80,6 @@ public interface ParserDefinition extends LanguageExtension {
      *
      * @return the file node element type.
      */
-    
     IFileElementType getFileNodeType();
 
     /**
@@ -96,7 +93,6 @@ public interface ParserDefinition extends LanguageExtension {
      * @param languageVersion version of language
      * @return the set of whitespace token types.
      */
-    
     default TokenSet getWhitespaceTokens(LanguageVersion languageVersion) {
         return TokenSet.WHITE_SPACE;
     }
@@ -109,7 +105,6 @@ public interface ParserDefinition extends LanguageExtension {
      * @param languageVersion version of language
      * @return the set of comment token types.
      */
-    
     TokenSet getCommentTokens(LanguageVersion languageVersion);
 
     /**
@@ -119,7 +114,6 @@ public interface ParserDefinition extends LanguageExtension {
      * @param languageVersion version of language
      * @return the set of string literal element types.
      */
-    
     TokenSet getStringLiteralElements(LanguageVersion languageVersion);
 
     /**
@@ -130,7 +124,6 @@ public interface ParserDefinition extends LanguageExtension {
      * @param node the node for which the PSI element should be returned.
      * @return the PSI element matching the element type of the AST node.
      */
-    
     @RequiredReadAction
     default PsiElement createElement(ASTNode node) {
         throw new UnsupportedOperationException("#createElement() is not implemented for elementType: " + node.getElementType());
@@ -142,7 +135,6 @@ public interface ParserDefinition extends LanguageExtension {
      * @param viewProvider virtual file.
      * @return the PSI file element.
      */
-    
     PsiFile createFile(FileViewProvider viewProvider);
 
     /**
@@ -154,7 +146,6 @@ public interface ParserDefinition extends LanguageExtension {
      * @param right the second token to check.
      * @return the spacing requirements.
      */
-    
     default SpaceRequirements spaceExistenceTypeBetweenTokens(ASTNode left, ASTNode right) {
         //noinspection deprecation
         return spaceExistanceTypeBetweenTokens(left, right);

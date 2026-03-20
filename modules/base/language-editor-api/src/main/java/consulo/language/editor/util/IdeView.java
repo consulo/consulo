@@ -42,7 +42,6 @@ public interface IdeView {
    *
    * @return the list of directories, or an empty array if nothing is selected.
    */
-  
   PsiDirectory[] getDirectories();
 
   /**

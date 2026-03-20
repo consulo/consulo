@@ -36,7 +36,6 @@ public sealed interface ModuleScopeProvider permits ModuleScopeProviderInternal 
    *
    * @return scope including sources and tests, excluding libraries and dependencies.
    */
-  
   ModuleWithDependenciesScope getModuleScope();
 
   
@@ -47,7 +46,6 @@ public sealed interface ModuleScopeProvider permits ModuleScopeProviderInternal 
    *
    * @return scope including sources, tests, and libraries, excluding dependencies.
    */
-  
   ModuleWithDependenciesScope getModuleWithLibrariesScope();
 
   /**
@@ -55,7 +53,6 @@ public sealed interface ModuleScopeProvider permits ModuleScopeProviderInternal 
    *
    * @return scope including sources, tests, and dependencies, excluding libraries.
    */
-  
   ModuleWithDependenciesScope getModuleWithDependenciesScope();
 
   

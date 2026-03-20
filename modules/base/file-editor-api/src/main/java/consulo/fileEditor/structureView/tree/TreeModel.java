@@ -26,7 +26,6 @@ public interface TreeModel {
    *
    * @return the tree root.
    */
-  
   TreeElement getRoot();
 
   /**
@@ -35,7 +34,6 @@ public interface TreeModel {
    * @return the array of grouping actions.
    * @see Grouper#EMPTY_ARRAY
    */
-  
   Grouper[] getGroupers();
 
   /**
@@ -44,7 +42,6 @@ public interface TreeModel {
    * @return the array of sorting actions.
    * @see Sorter#EMPTY_ARRAY
    */
-  
   Sorter[] getSorters();
 
   /**
@@ -53,6 +50,5 @@ public interface TreeModel {
    * @return the array of filtering actions.
    * @see Filter#EMPTY_ARRAY
    */
-  
   Filter[] getFilters();
 }

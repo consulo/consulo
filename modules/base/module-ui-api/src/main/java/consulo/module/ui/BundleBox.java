@@ -51,7 +51,6 @@ public class BundleBox implements PseudoComponent {
     /**
      * @return builder with global sdk table
      */
-    
     public static BundleBoxBuilder builder(Disposable uiDisposable) {
         return BundleBoxBuilder.create(uiDisposable);
     }

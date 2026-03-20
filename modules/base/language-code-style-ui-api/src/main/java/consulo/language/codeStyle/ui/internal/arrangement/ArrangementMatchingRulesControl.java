@@ -426,7 +426,6 @@ public class ArrangementMatchingRulesControl extends JBTable {
   /**
    * @return    selected model rows sorted in descending order
    */
-  
   public IntList getSelectedModelRows() {
     mySelectedRows.clear();
     int min = selectionModel.getMinSelectionIndex();

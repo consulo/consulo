@@ -71,7 +71,6 @@ public interface ArrangementStandardSettingsAware {
    * @return           a matcher for the given condition
    * @throws IllegalArgumentException   if current rearranger doesn't know how to build a matcher from the given condition
    */
-  
   ArrangementEntryMatcher buildMatcher(ArrangementMatchCondition condition) throws IllegalArgumentException;
 
   /**
@@ -79,6 +78,5 @@ public interface ArrangementStandardSettingsAware {
    *            deselect elements on selection change. Example: 'private' modifier was selected. When any other modifier is selected
    *            'public' modifier is deselected if returned collection contains set of all supported visibility modifiers
    */
-  
   Collection<Set<ArrangementSettingsToken>> getMutexes();
 }

@@ -42,6 +42,5 @@ public interface ExternalSystemTaskAware {
    * @return      ids of all tasks being executed at the moment grouped by type
    * @throws RemoteException      as required by RMI
    */
-  
   Map<ExternalSystemTaskType, Set<ExternalSystemTaskId>> getTasksInProgress() throws RemoteException;
 }

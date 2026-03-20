@@ -23,7 +23,6 @@ import consulo.navigation.Navigatable;
  *
  * @see StructureViewModel#getRoot()
  */
-
 public interface StructureViewTreeElement extends TreeElement, Navigatable {
     StructureViewTreeElement[] EMPTY_ARRAY = new StructureViewTreeElement[0];
 

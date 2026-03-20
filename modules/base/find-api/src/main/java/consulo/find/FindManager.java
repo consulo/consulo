@@ -82,7 +82,6 @@ public abstract class FindManager {
    *
    * @return the last Find in File settings.
    */
-  
   public abstract FindModel getFindInFileModel();
 
   /**
@@ -91,7 +90,6 @@ public abstract class FindManager {
    *
    * @return the last Find in Project settings.
    */
-  
   public abstract FindModel getFindInProjectModel();
 
   /**
@@ -105,7 +103,6 @@ public abstract class FindManager {
    * @param model  the settings for the search, including the string to find.
    * @return the result of the search.
    */
-  
   public abstract FindResult findString(CharSequence text, int offset, FindModel model);
 
   /**
@@ -119,7 +116,6 @@ public abstract class FindManager {
    * @param model  the settings for the search, including the string to find.
    * @return the result of the search.
    */
-  
   public abstract FindResult findString(CharSequence text, int offset, FindModel model,
                                         @Nullable VirtualFile findContextFile);
 

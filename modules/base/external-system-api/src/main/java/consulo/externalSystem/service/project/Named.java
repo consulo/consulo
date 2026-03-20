@@ -9,7 +9,6 @@ public interface Named {
   /**
    * please use {@link #getExternalName()} or {@link #getInternalName()} instead
    */
-  
   @Deprecated
   String getName();
 

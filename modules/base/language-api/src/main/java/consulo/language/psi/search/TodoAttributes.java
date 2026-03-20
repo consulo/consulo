@@ -77,7 +77,6 @@ public class TodoAttributes implements Cloneable {
   /**
    * @see TodoAttributesUtil#getTextAttributes(TodoAttributes)
    */
-  
   public TextAttributes getTextAttributes() {
     return myTextAttributes;
   }

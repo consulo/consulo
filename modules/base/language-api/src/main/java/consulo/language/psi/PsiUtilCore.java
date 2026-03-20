@@ -642,7 +642,6 @@ public class PsiUtilCore {
     /**
      * Tries to find PSI file for a virtual file and throws assertion error with debug info if it is null.
      */
-    
     @RequiredReadAction
     public static PsiFile getPsiFile(Project project, VirtualFile file) {
         PsiManager psiManager = PsiManager.getInstance(project);

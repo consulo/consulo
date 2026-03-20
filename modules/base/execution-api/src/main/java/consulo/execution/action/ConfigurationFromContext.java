@@ -35,7 +35,6 @@ public abstract class ConfigurationFromContext {
    *
    * @return the created run configuration settings.
    */
-  
   public abstract RunnerAndConfigurationSettings getConfigurationSettings();
 
   public abstract void setConfigurationSettings(RunnerAndConfigurationSettings configurationSettings);
@@ -45,7 +44,6 @@ public abstract class ConfigurationFromContext {
    *
    * @return the run configuration object.
    */
-  
   public RunConfiguration getConfiguration() {
     return getConfigurationSettings().getConfiguration();
   }
@@ -55,7 +53,6 @@ public abstract class ConfigurationFromContext {
    *
    * @return the configuration type.
    */
-  
   public ConfigurationType getConfigurationType() {
     return getConfiguration().getType();
   }
@@ -66,7 +63,6 @@ public abstract class ConfigurationFromContext {
    *
    * @return the PSI element from which the configuration was created.
    */
-  
   public abstract PsiElement getSourceElement();
 
   /**

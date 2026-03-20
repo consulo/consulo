@@ -46,7 +46,6 @@ public abstract class CompletionConfidence implements LanguageExtension {
    * This method is invoked first when a completion autopopup is scheduled. Extensions are able to cancel this completion process based on location.
    * For example, in string literals or comments completion autopopup may do more harm than good.
    */
-  
   public ThreeState shouldSkipAutopopup(PsiElement contextElement, PsiFile psiFile, int offset) {
     return ThreeState.UNSURE;
   }

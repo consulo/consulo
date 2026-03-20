@@ -209,7 +209,6 @@ public abstract class OrderEnumerator {
    * @param module module
    * @return new enumerator instance
    */
-  
   public static OrderEnumerator orderEntries(Module module) {
     return ModuleRootManager.getInstance(module).orderEntries();
   }
@@ -221,7 +220,6 @@ public abstract class OrderEnumerator {
    * @param project project
    * @return new enumerator instance
    */
-  
   public static OrderEnumerator orderEntries(Project project) {
     return ProjectRootManager.getInstance(project).orderEntries();
   }

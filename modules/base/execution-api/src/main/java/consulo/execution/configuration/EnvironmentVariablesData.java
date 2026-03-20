@@ -42,7 +42,6 @@ public final class EnvironmentVariablesData {
   /**
    * @return immutable Map instance containing user-defined environment variables (iteration order is reliable user-specified)
    */
-  
   public Map<String, String> getEnvs() {
     return myEnvs;
   }

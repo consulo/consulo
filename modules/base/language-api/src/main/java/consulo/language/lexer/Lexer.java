@@ -80,7 +80,6 @@ public abstract class Lexer {
      *
      * @return the current token end offset.
      */
-
     public abstract int getTokenEnd();
 
     /**

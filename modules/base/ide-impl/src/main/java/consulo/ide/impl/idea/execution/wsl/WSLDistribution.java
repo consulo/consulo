@@ -58,7 +58,6 @@ public class WSLDistribution {
   /**
    * @return executable file
    */
-  
   public Path getExecutablePath() {
     return myExecutablePath;
   }
@@ -90,7 +89,6 @@ public class WSLDistribution {
    * @return creates and patches command line from args. e.g:
    * {@code ruby -v} => {@code bash -c "ruby -v"}
    */
-  
   public GeneralCommandLine createWslCommandLine(String... args) {
     return patchCommandLine(new GeneralCommandLine(args), null, null, false);
   }
@@ -128,7 +126,6 @@ public class WSLDistribution {
    * @param handlerConsumer   consumes process handler just before execution. Can be used for fast cancellation
    * @return process output
    */
-
   @SuppressWarnings("UnusedReturnValue")
   public ProcessOutput copyFromWsl(String wslPath, String windowsPath, @Nullable List<String> additionalOptions, @Nullable Consumer<? super ProcessHandler> handlerConsumer)
           throws ExecutionException {
@@ -164,7 +161,6 @@ public class WSLDistribution {
    * @param <T>              GeneralCommandLine or descendant
    * @return original {@code commandLine}, prepared to run in WSL context
    */
-  
   public <T extends GeneralCommandLine> T patchCommandLine(T commandLine, @Nullable Project project, @Nullable String remoteWorkingDir, boolean askForSudo) {
     Map<String, String> additionalEnvs = new HashMap<>(commandLine.getEnvironment());
     commandLine.getEnvironment().clear();
@@ -250,7 +246,6 @@ public class WSLDistribution {
    * @param timeoutInMilliseconds timeout for execution
    * @return actual file name
    */
-  
   public String resolveSymlink(String path, int timeoutInMilliseconds) {
 
     try {
@@ -280,7 +275,6 @@ public class WSLDistribution {
    * @param processHandler process handler, created from patched commandline
    * @return passed processHandler, patched with sudo listener if any
    */
-  
   public <T extends ProcessHandler> T patchProcessHandler(GeneralCommandLine commandLine, T processHandler) {
     ProcessListener listener = SUDO_LISTENER_KEY.get(commandLine);
     if (listener != null) {
@@ -293,7 +287,6 @@ public class WSLDistribution {
   /**
    * @return environment map of the default user in wsl
    */
-  
   public Map<String, String> getEnvironment() {
     try {
       ProcessOutput processOutput = executeOnWsl(5000, "env");
@@ -337,7 +330,6 @@ public class WSLDistribution {
    * @param windowsAbsolutePath properly formatted windows local absolute path: {@code drive:\path}
    * @return windows path converted to the linux path according to wsl rules: {@code c:\some\path} => {@code c/some/path}
    */
-  
   static String convertWindowsPath(String windowsAbsolutePath) {
     return Character.toLowerCase(windowsAbsolutePath.charAt(0)) + FileUtil.toSystemIndependentName(windowsAbsolutePath.substring(2));
   }

@@ -478,7 +478,6 @@ public abstract class VcsVFSListener implements Disposable {
      * @param deletedFiles deleted files set
      * @return selected files or null (that is considered as empty file set)
      */
-    
     protected List<FilePath> selectFilePathsToDelete(List<FilePath> deletedFiles) {
         return selectFilePathsForOption(
             myRemoveOption,

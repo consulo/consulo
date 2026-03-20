@@ -16,7 +16,6 @@ public interface CustomFoldRegion extends FoldRegion {
   /**
    * Renderer for this fold region (specified at creation time).
    */
-  
   CustomFoldRegionRenderer getRenderer();
 
   /**

@@ -30,7 +30,6 @@ public interface ChooseByNameModel {
     /**
      * @return consulo.localize.LocalizeValue#of() for disable
      */
-    
     LocalizeValue getCheckBoxName();
 
     boolean loadInitialCheckBoxState();
@@ -45,7 +44,6 @@ public interface ChooseByNameModel {
      * @param checkBoxState the current state of the chooser checkbox (for example, [x] Include non-project classes for Ctrl-N)
      * @return the names to show. All items in the returned array must be non-null.
      */
-    
     String[] getNames(boolean checkBoxState);
 
     

@@ -113,7 +113,6 @@ public class EnterAfterUnmatchedBraceHandler extends EnterHandlerDelegateAdapter
      * @param maxRBraceCount the maximum number of '}' for insert at position, it always positive
      * @return the string of '}' that has to be inserted by handler, it must have at least one '}'
      */
-    
     protected String generateStringToInsert(Editor editor, int caretOffset, int maxRBraceCount) {
         assert maxRBraceCount > 0;
 

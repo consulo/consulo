@@ -37,7 +37,6 @@ public abstract class ProjectRootManager extends SimpleModificationTracker {
    * @param project the project for which the instance is requested.
    * @return the instance.
    */
-  
   public static ProjectRootManager getInstance(Project project) {
     return project.getComponent(ProjectRootManager.class);
   }
@@ -47,7 +46,6 @@ public abstract class ProjectRootManager extends SimpleModificationTracker {
    *
    * @return the file index instance.
    */
-  
   public abstract ProjectFileIndex getFileIndex();
 
   /**
@@ -56,7 +54,6 @@ public abstract class ProjectRootManager extends SimpleModificationTracker {
    *
    * @return new enumerator instance
    */
-  
   public abstract OrderEnumerator orderEntries();
 
   /**
@@ -65,7 +62,6 @@ public abstract class ProjectRootManager extends SimpleModificationTracker {
    * @param modules modules to process
    * @return new enumerator instance
    */
-  
   public abstract OrderEnumerator orderEntries(Collection<? extends Module> modules);
 
   /**
@@ -81,7 +77,6 @@ public abstract class ProjectRootManager extends SimpleModificationTracker {
    *
    * @return the list of content root URLs.
    */
-  
   public abstract List<String> getContentRootUrls();
 
   /**
@@ -89,7 +84,6 @@ public abstract class ProjectRootManager extends SimpleModificationTracker {
    *
    * @return the list of content roots.
    */
-  
   public abstract VirtualFile[] getContentRoots();
 
   /**

@@ -104,7 +104,6 @@ public class DvcsUtil {
     /**
      * @deprecated use {@link VcsUtil#getShortVcsRootName}
      */
-    
     @Deprecated
     public static String getShortRepositoryName(Project project, VirtualFile root) {
         return VcsUtil.getShortVcsRootName(project, root);
@@ -279,7 +278,6 @@ public class DvcsUtil {
      * @param file File to read.
      * @return file content.
      */
-    
     public static String tryLoadFile(File file) throws RepoStateException {
         return tryLoadFile(file, null);
     }

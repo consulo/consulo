@@ -40,7 +40,6 @@ public abstract class RunConfigurationExtensionBase<T extends RunConfigurationBa
    *
    * @return the serialization ID (must be unique across all run configuration extensions).
    */
- 
   protected String getSerializationId() {
     return getClass().getCanonicalName();
   }

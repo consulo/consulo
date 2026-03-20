@@ -246,7 +246,6 @@ public class ParametersList implements Cloneable {
   /**
    * @see ParametersListUtil#join(java.util.List)
    */
-  
   public static String join(List<String> parameters) {
     return ParametersListUtil.join(parameters);
   }
@@ -254,7 +253,6 @@ public class ParametersList implements Cloneable {
   /**
    * @see ParametersListUtil#join(java.util.List)
    */
-  
   public static String join(String... parameters) {
     return ParametersListUtil.join(parameters);
   }
@@ -262,7 +260,6 @@ public class ParametersList implements Cloneable {
   /**
    * @see ParametersListUtil#parseToArray(String)
    */
-  
   public static String[] parse(String string) {
     return ParametersListUtil.parseToArray(string);
   }

@@ -58,7 +58,6 @@ public abstract class PostfixTemplateProvider implements LanguageExtension {
   /**
    * Return all templates registered in the provider
    */
-  
   public final Set<PostfixTemplate> getTemplates() {
     return myTemplatesValue.get();
   }
@@ -99,6 +98,5 @@ public abstract class PostfixTemplateProvider implements LanguageExtension {
    * NOTE: editor is real (not copy) and it doesn't represents the copyFile.
    * So it's safer to use currentOffset parameter instead of offset from editor. Do not modify text via editor.
    */
-  
   public abstract PsiFile preCheck(PsiFile copyFile, Editor realEditor, int currentOffset);
 }

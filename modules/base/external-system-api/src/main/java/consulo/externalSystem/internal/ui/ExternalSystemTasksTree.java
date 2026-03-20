@@ -61,7 +61,6 @@ public class ExternalSystemTasksTree extends Tree implements Supplier<ExternalTa
   /**
    * Holds list of paths which 'expand/collapse' state should be restored.
    */
-  
   private final Set<TreePath> myPathsToProcessCollapseState = new HashSet<>();
 
   

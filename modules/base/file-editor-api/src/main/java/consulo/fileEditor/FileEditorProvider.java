@@ -55,7 +55,6 @@ public interface FileEditorProvider {
    *
    * @return created editor for specified file. This method should never return {@code null}.
    */
-  
   @RequiredUIAccess
   FileEditor createEditor(Project project, VirtualFile file);
 
@@ -73,7 +72,6 @@ public interface FileEditorProvider {
    * Deserialize state from the specified {@code sourceElement}
    * Use {@link FileEditorState#INSTANCE} as default implementation
    */
-  
   default FileEditorState readState(Element sourceElement, Project project, VirtualFile file) {
     return FileEditorState.INSTANCE;
   }
@@ -88,7 +86,6 @@ public interface FileEditorProvider {
    * @return id of type of the editors that are created with this FileEditorProvider. Each FileEditorProvider should have
    * unique non null id. The id is used for saving/loading of EditorStates.
    */
-  
   String getEditorTypeId();
 
   /**
@@ -97,7 +94,6 @@ public interface FileEditorProvider {
    * @see FileEditorPolicy#HIDE_DEFAULT_EDITOR
    * @see FileEditorPolicy#PLACE_BEFORE_DEFAULT_EDITOR
    */
-  
   default FileEditorPolicy getPolicy() {
     return FileEditorPolicy.HIDE_DEFAULT_EDITOR;
   }

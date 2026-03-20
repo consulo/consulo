@@ -19,7 +19,6 @@ package consulo.bootstrap.charset;
 /**
  * @author Alexey
  */
-
 import java.nio.BufferUnderflowException;
 import java.nio.ByteBuffer;
 import java.nio.CharBuffer;

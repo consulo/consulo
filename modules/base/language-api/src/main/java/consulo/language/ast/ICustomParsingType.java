@@ -36,6 +36,5 @@ public interface ICustomParsingType {
    * @param table {@link CharTable} object used for interning string in the file
    * @return a tree element of this type with a given text.
    */
-  
   ASTNode parse(CharSequence text, CharTable table);
 }

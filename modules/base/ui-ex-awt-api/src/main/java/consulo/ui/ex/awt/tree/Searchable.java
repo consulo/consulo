@@ -30,6 +30,5 @@ public interface Searchable {
    * @return a {@code Promise} containing a search result
    * @see Identifiable#getUniqueID
    */
-  
   Promise<TreePath> getTreePath(Object object);
 }

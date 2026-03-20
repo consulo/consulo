@@ -108,7 +108,6 @@ public class CodeDocumentationUtil {
    * @param lineStartOffset start offset of the line that contains given offset
    * @return object that encapsulates information about comments at the given offset at the given text
    */
-  
   public static CommentContext tryParseCommentContext(PsiFile file, CharSequence chars, int offset, int lineStartOffset) {
     Commenter langCommenter = Commenter.forLanguage(PsiUtilCore.getLanguageAtOffset(file, offset));
     return tryParseCommentContext(langCommenter, chars, lineStartOffset);

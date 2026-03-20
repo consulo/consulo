@@ -132,7 +132,6 @@ public class ReferencesSearch extends ExtensibleQueryFactory<PsiReference, Refer
      * @param element the element (declaration) the references to which are requested.
      * @return the query allowing to enumerate the references.
      */
-    
     public static Query<PsiReference> search(PsiElement element) {
         return search(element, GlobalSearchScope.allScope(PsiUtilCore.getProjectInReadAction(element)), false);
     }
@@ -144,7 +143,6 @@ public class ReferencesSearch extends ExtensibleQueryFactory<PsiReference, Refer
      * @param searchScope the scope in which the search is performed.
      * @return the query allowing to enumerate the references.
      */
-    
     public static Query<PsiReference> search(PsiElement element, SearchScope searchScope) {
         return search(element, searchScope, false);
     }
@@ -158,7 +156,6 @@ public class ReferencesSearch extends ExtensibleQueryFactory<PsiReference, Refer
      * @param ignoreAccessScope if true, references which are invalid because of access rules are included in the results.
      * @return the query allowing to enumerate the references.
      */
-    
     public static Query<PsiReference> search(PsiElement element, SearchScope searchScope, boolean ignoreAccessScope) {
         return search(new SearchParameters(element, searchScope, ignoreAccessScope));
     }
@@ -169,7 +166,6 @@ public class ReferencesSearch extends ExtensibleQueryFactory<PsiReference, Refer
      * @param parameters the parameters for the search (contain also the element the references to which are requested).
      * @return the query allowing to enumerate the references.
      */
-    
     public static Query<PsiReference> search(SearchParameters parameters) {
         Query<PsiReference> result = INSTANCE.createQuery(parameters);
         if (parameters.isSharedOptimizer) {
