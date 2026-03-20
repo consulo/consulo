@@ -60,7 +60,7 @@ public interface EncodingRegistry {
     return doActionAndRestoreEncoding(getInstance(), fileBefore, action);
   }
 
-  public static @Nullable <E extends Throwable> @Nullable VirtualFile doActionAndRestoreEncoding(EncodingRegistry registry,
+  public static <E extends Throwable> @Nullable VirtualFile doActionAndRestoreEncoding(EncodingRegistry registry,
                                                                              VirtualFile fileBefore,
                                                                              ThrowableSupplier<? extends VirtualFile, E> action) throws E {
     Charset charsetBefore = registry.getEncoding(fileBefore, true);
