@@ -28,7 +28,6 @@ public class TreeActionWrapper extends ToggleAction implements DumbAware {
   private final TreeAction myAction;
   private final TreeActionsOwner myStructureView;
 
-
   public TreeActionWrapper(TreeAction action, TreeActionsOwner structureView) {
     myAction = action;
     myStructureView = structureView;

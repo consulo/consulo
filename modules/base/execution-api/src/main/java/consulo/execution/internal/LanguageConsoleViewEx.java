@@ -20,7 +20,6 @@ import consulo.document.util.TextRange;
 import consulo.execution.ui.console.ConsoleRootType;
 import consulo.execution.ui.console.language.LanguageConsoleView;
 
-
 /**
  * @author VISTALL
  * @since 15/01/2023

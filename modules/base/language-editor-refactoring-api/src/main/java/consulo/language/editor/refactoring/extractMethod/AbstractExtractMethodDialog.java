@@ -86,7 +86,6 @@ public class AbstractExtractMethodDialog extends DialogWrapper implements Extrac
             }
         });
 
-
         myVariableData = createVariableDataByNames(myArguments);
         myVariablesMap = createVariableMap(myVariableData);
         myParametersPanel.init(myVariableData);

@@ -6,7 +6,6 @@ import consulo.codeEditor.EditorSettings;
 import consulo.document.Document;
 import consulo.project.Project;
 
-
 public final class EditorCoreUtil {
   public static void indentLine(Project project, Editor editor, int lineNumber, int indent, boolean shouldUseSmartTabs) {
     int caretOffset = editor.getCaretModel().getOffset();

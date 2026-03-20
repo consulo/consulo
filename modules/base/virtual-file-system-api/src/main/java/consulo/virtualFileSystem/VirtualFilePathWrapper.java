@@ -15,7 +15,6 @@
  */
 package consulo.virtualFileSystem;
 
-
 /**
  * For virtual files containing meta information in the path. Like,
  * <code>x=3746374;y=738495;size=45\id=6729304\id=34343\id=656543</code>

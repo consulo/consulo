@@ -111,7 +111,6 @@ public interface Rearranger<E extends ArrangementEntry> extends LanguageExtensio
      */
     int getBlankLines(CodeStyleSettings settings, @Nullable E parent, @Nullable E previous, E target);
 
-
     /**
      * @return serializer to save {@link ArrangementSettings arrangement settings}.
      * Serializer is expected to be lazy and don't save

@@ -19,7 +19,6 @@ import consulo.codeEditor.TextChange;
 import consulo.util.lang.CharArrayUtil;
 import consulo.util.lang.StringUtil;
 
-
 /**
  * Default {@link TextChange} implementation with mutable state.
  *

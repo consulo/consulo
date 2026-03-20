@@ -23,7 +23,6 @@ import consulo.colorScheme.event.EditorColorsListener;
 import consulo.colorScheme.internal.EditorColorsManagerInternal;
 import consulo.disposer.Disposable;
 
-
 import java.util.Map;
 
 @ServiceAPI(ComponentScope.APPLICATION)

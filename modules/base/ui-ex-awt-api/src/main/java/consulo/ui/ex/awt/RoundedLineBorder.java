@@ -15,7 +15,6 @@
  */
 package consulo.ui.ex.awt;
 
-
 import javax.swing.border.LineBorder;
 import java.awt.*;
 

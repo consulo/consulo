@@ -96,7 +96,6 @@ public class TaskSearchEverywhereContributor implements SearchEverywhereContribu
         });
     }
 
-
     @Override
     public void fetchElements(String pattern, ProgressIndicator progressIndicator, Predicate<? super Object> predicate) {
         myNewTaskAction.setTaskName(pattern);

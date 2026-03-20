@@ -20,7 +20,6 @@ import consulo.annotation.component.ServiceAPI;
 import consulo.execution.test.sm.TestsLocationProviderUtil;
 import consulo.project.Project;
 
-
 import java.util.List;
 
 /**

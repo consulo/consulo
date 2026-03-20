@@ -218,7 +218,6 @@ public class StartupUtil {
     if (pluginId != null && !PluginIds.isPlatformPlugin(pluginId)) {
       LoggerHolder.ourLogger.warn(t);
 
-
       StringWriter message = new StringWriter();
       message.append("Plugin '").append(pluginId.getIdString()).append("' failed to initialize. ");
       message.append(" Please remove plugin, and restart IDE.").append('.');

@@ -15,7 +15,6 @@
  */
 package consulo.language.codeStyle.impl.internal.autoDetect;
 
-
 public class LineIndentInfo {
   public static final LineIndentInfo EMPTY_LINE = new LineIndentInfo(LineType.EMPTY_LINE, -1);
   public static final LineIndentInfo LINE_WITH_COMMENT = new LineIndentInfo(LineType.LINE_WITH_COMMENT, -1);

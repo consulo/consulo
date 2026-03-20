@@ -24,7 +24,6 @@ import consulo.language.version.LanguageVersion;
 import consulo.sandboxPlugin.lang.psi.SandTokens;
 import consulo.sandboxPlugin.lang.version.BaseSandLanguageVersion;
 
-
 /**
  * @author VISTALL
  * @since 19.03.14

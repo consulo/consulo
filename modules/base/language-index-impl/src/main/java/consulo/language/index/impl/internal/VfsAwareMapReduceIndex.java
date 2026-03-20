@@ -235,7 +235,6 @@ public class VfsAwareMapReduceIndex<Key, Value, Input> extends MapReduceIndex<Ke
     }
   }
 
-
   @Override
   public void setBufferingEnabled(boolean enabled) {
     ((MemoryIndexStorage<Key, Value>)getStorage()).setBufferingEnabled(enabled);

@@ -17,7 +17,6 @@ package consulo.process;
 
 import consulo.platform.Platform;
 
-
 public enum FilePathSeparator {
   WINDOWS('\\', ';'), UNIX('/', ':');
 

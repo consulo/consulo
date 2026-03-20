@@ -18,7 +18,6 @@ package consulo.project.util.query;
 import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
 
-
 /**
  * A marker interface for {@link QueryExecutorBase} parameters which indicates that searches should only be executed when indexing is complete.
  * The query executors that are not {@link DumbAware} are delayed in processing until index is ready.

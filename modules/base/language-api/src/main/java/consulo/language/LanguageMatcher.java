@@ -3,7 +3,6 @@ package consulo.language;
 
 import org.jetbrains.annotations.Contract;
 
-
 public abstract class LanguageMatcher {
 
   LanguageMatcher() {

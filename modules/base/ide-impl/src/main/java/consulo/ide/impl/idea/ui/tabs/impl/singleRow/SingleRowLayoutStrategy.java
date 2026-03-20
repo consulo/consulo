@@ -190,7 +190,6 @@ public abstract class SingleRowLayoutStrategy {
                                             data.moreRectAxisSize - 1, myTabs.myHeaderFitSize.height - 1);
     }
 
-
     @Override
     public void layoutComp(SingleRowPassInfo data) {
       if (myTabs.isHideTabs()) {
@@ -324,7 +323,6 @@ public abstract class SingleRowLayoutStrategy {
     Left(SingleRowLayout layout) {
       super(layout);
     }
-
 
     @Override
     public void layoutComp(SingleRowPassInfo data) {

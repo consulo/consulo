@@ -25,7 +25,6 @@ import consulo.language.psi.PsiManager;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
 
-
 class SingleRootInjectedFileViewProvider extends SingleRootFileViewProvider implements InjectedFileViewProvider {
   static final ThreadLocal<Boolean> disabledTemporarily = ThreadLocal.withInitial(() -> false);
   static Key<Language> LANGUAGE_FOR_INJECTED_COPY_KEY = Key.create("LANGUAGE_FOR_INJECTED_COPY_KEY");

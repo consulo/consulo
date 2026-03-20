@@ -71,7 +71,6 @@ public abstract class DuplicatesInspectionBase extends LocalInspectionTool {
     DuplicatesProfile profile = DuplicatesIndex.findDuplicatesProfile(psiFile.getFileType());
     if (profile == null) return ProblemDescriptor.EMPTY_ARRAY;
 
-
     FileASTNode node = psiFile.getNode();
     boolean usingLightProfile = profile instanceof LightDuplicateProfile &&
                                 node.getElementType() instanceof ILightStubFileElementType &&

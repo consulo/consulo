@@ -17,7 +17,6 @@ package consulo.virtualFileSystem.event;
 
 import consulo.virtualFileSystem.VirtualFile;
 
-
 /**
  * @author nik
  */

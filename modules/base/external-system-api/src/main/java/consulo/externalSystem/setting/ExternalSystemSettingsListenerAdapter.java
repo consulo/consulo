@@ -15,7 +15,6 @@
  */
 package consulo.externalSystem.setting;
 
-
 import java.util.Collection;
 import java.util.Set;
 

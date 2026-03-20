@@ -6,7 +6,6 @@ import consulo.language.psi.PsiElementVisitor;
 import consulo.language.psi.PsiReference;
 import consulo.language.psi.ReferenceProvidersRegistry;
 
-
 /**
  * @author yole
  */

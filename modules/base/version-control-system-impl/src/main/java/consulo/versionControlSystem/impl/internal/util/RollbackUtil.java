@@ -33,7 +33,6 @@ public class RollbackUtil {
   private RollbackUtil() {
   }
 
-
   /**
    * Finds the most appropriate name for the "Rollback" operation for the given VCSs.
    * That is: iterates through the all {@link RollbackEnvironment#getRollbackOperationName() RollbackEnvironments} and picks

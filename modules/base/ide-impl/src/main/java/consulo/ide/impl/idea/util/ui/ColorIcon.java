@@ -19,7 +19,6 @@ import consulo.ui.ex.awt.EmptyIcon;
 import consulo.ui.ex.Gray;
 import consulo.annotation.DeprecationInfo;
 
-
 import java.awt.*;
 import java.util.Objects;
 

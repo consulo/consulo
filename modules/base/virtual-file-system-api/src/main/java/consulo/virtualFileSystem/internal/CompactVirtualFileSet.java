@@ -100,7 +100,6 @@ public class CompactVirtualFileSet extends AbstractSet<VirtualFile> {
     throw new UnsupportedOperationException();
   }
 
-
   /**
    * Make unmodifiable
    */

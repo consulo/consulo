@@ -9,7 +9,6 @@ import consulo.project.ui.view.tree.AbstractTreeNode;
 import consulo.ui.ex.tree.AbstractTreeStructure;
 import consulo.ui.ex.tree.NodeDescriptor;
 
-
 import java.util.Collection;
 import java.util.List;
 

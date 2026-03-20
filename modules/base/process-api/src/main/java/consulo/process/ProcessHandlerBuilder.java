@@ -19,7 +19,6 @@ import consulo.application.Application;
 import consulo.process.cmd.GeneralCommandLine;
 import consulo.process.io.BaseOutputReader;
 
-
 /**
  * @author VISTALL
  * @since 07/11/2022

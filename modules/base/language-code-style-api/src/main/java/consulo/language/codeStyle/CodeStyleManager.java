@@ -246,7 +246,6 @@ public abstract class CodeStyleManager {
      */
     public abstract @Nullable String getLineIndent(Document document, int offset);
 
-
     /**
      * Reformats line indents inside new element and reformats white spaces around it
      *

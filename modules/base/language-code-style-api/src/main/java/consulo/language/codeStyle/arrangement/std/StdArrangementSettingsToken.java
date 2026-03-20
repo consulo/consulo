@@ -18,7 +18,6 @@ package consulo.language.codeStyle.arrangement.std;
 import consulo.language.codeStyle.CodeStyleBundle;
 import org.jetbrains.annotations.PropertyKey;
 
-
 /**
  * Represents ArrangementSettingsToken designed for use with standard GUI, i.e. a token that knows its UI role.
  * @author Roman.Shein

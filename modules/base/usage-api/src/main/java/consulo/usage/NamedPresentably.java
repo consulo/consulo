@@ -15,7 +15,6 @@
  */
 package consulo.usage;
 
-
 /**
  * @author traff
  */

@@ -328,7 +328,6 @@ public class PlaybackRunner {
 
     abstract class Edt implements StatusCallback {
 
-
       public final void message(final PlaybackContext context,
                                 final String text,
                                 final Type type) {

@@ -2,7 +2,6 @@ package consulo.module.content.layer;
 
 import consulo.module.Module;
 
-
 /**
  * @author yole
  */

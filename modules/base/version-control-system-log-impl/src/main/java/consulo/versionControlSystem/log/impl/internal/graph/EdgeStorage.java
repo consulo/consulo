@@ -23,7 +23,6 @@ import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 
-
 public class EdgeStorage {
   private static final int EDGE_TYPE_BITS = 4;
   private static final int EDGE_BITS_OFFSET = Integer.SIZE - EDGE_TYPE_BITS;

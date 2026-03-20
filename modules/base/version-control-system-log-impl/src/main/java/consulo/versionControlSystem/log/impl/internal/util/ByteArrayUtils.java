@@ -15,7 +15,6 @@
  */
 package consulo.versionControlSystem.log.impl.internal.util;
 
-
 class ByteArrayUtils {
   private static final int BYTE_OFFSET = 8;
   private static final int BYTE_MASK = 0xff;

@@ -34,8 +34,6 @@ import ch.qos.logback.core.model.processor.DefaultProcessor;
  */
 public class JoranConfigurator extends JoranConfiguratorBase<ILoggingEvent> {
 
-
-
     @Override
     public void addElementSelectorAndActionAssociations(RuleStore rs) {
         // add parent rules
@@ -58,7 +56,6 @@ public class JoranConfigurator extends JoranConfiguratorBase<ILoggingEvent> {
         rs.addRule(new ElementSelector("configuration/include"), () -> new IncludeAction());
 
     }
-
 
     @Override
     protected void sanityCheck(Model topModel) {
@@ -88,7 +85,6 @@ public class JoranConfigurator extends JoranConfiguratorBase<ILoggingEvent> {
         m.setConfigurationModelHandlerFactoryMethod(ConfigurationModelHandlerFull::makeInstance2);
         m.link(defaultProcessor);
     }
-
 
     // The final filters in the two filter chain are rather crucial.
     // They ensure that only Models attached to the firstPhaseFilter will

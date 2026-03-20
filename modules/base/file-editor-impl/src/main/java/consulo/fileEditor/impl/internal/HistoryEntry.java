@@ -130,7 +130,6 @@ public final class HistoryEntry {
     return entry;
   }
 
-
   
   public VirtualFilePointer getFilePointer() {
     return myFilePointer;

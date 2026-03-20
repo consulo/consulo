@@ -42,7 +42,6 @@ public class WrapImpl extends Wrap {
   private static final int TYPE_SHIFT = 3;
   private static final Type[] myTypes = Type.values();
 
-
   public boolean isChildOf(@Nullable WrapImpl wrap, LeafBlockWrapper leaf) {
     if (getIgnoreParentWraps()) return false;
     if (leaf != null && myIgnoredWraps != null) {

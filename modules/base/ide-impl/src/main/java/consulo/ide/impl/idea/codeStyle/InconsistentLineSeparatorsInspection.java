@@ -28,7 +28,6 @@ import consulo.language.psi.PsiFile;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 
-
 /**
  * @author Nikolay Matveev
  */

@@ -29,7 +29,6 @@ import consulo.web.gwt.shared.ui.state.tree.TreeClientRpc;
 import consulo.web.gwt.shared.ui.state.tree.TreeServerRpc;
 import consulo.web.gwt.shared.ui.state.tree.TreeState;
 
-
 /**
  * @author VISTALL
  * @since 12-Sep-17

@@ -19,7 +19,6 @@ package consulo.ide.impl.idea.ide.fileTemplates.impl;
 import consulo.fileTemplate.FileTemplate;
 import consulo.fileTemplate.impl.internal.FileTemplateBase;
 
-
 import org.jspecify.annotations.Nullable;
 import javax.swing.*;
 import java.awt.*;

@@ -23,7 +23,6 @@ import consulo.component.persist.Storage;
 import consulo.project.Project;
 import jakarta.inject.Singleton;
 
-
 @Singleton
 @State(name = "ProjectCodeStyleSettingsManager", storages = @Storage("codeStyleSettings.xml"))
 @ServiceAPI(ComponentScope.PROJECT)

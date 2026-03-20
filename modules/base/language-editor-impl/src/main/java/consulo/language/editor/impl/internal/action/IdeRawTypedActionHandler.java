@@ -24,7 +24,6 @@ import consulo.codeEditor.action.TypedActionHandlerEx;
 import consulo.codeEditor.internal.RawTypedActionHandlerInternal;
 import consulo.dataContext.DataContext;
 
-
 @ExtensionImpl
 public class IdeRawTypedActionHandler implements TypedActionHandlerEx, RawTypedActionHandlerInternal {
   private TypedActionHandler myDelegate;

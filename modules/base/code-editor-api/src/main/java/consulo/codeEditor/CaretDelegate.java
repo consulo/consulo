@@ -15,7 +15,6 @@
  */
 package consulo.codeEditor;
 
-
 /**
  * @author VISTALL
  * @since 2025-09-19

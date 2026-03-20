@@ -230,7 +230,6 @@ public class MessagesEx extends Messages {
 
   public static abstract class BaseInputInfo<ThisClass extends BaseInputInfo> extends BaseDialogInfo<ThisClass> {
 
-
     public BaseInputInfo(Project project) {
       super(project);
     }

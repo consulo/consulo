@@ -285,7 +285,6 @@ public class SearchUtil {
             }
         }
 
-
         Component[] components = rootComponent.getComponents();
         for (Component component : components) {
             if (component instanceof JComponent) {
@@ -302,7 +301,6 @@ public class SearchUtil {
                         }
                     }
                 }
-
 
                 if (innerHighlight) {
                     highlight = true;
@@ -640,7 +638,6 @@ public class SearchUtil {
         activePopup[0] = popup;
         activePopup[1] = null;
     }
-
 
     public static void registerKeyboardNavigation(
         final ConfigurableSearchTextField searchField,

@@ -29,7 +29,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-
 public class BaseAnalysisActionDialog extends DialogWrapper {
     private final static Logger LOG = Logger.getInstance(BaseAnalysisActionDialog.class);
 

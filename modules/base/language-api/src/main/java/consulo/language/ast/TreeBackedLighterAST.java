@@ -15,7 +15,6 @@
  */
 package consulo.language.ast;
 
-
 import java.util.ArrayList;
 import java.util.List;
 

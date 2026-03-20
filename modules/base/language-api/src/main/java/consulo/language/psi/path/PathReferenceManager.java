@@ -78,7 +78,6 @@ public abstract class PathReferenceManager {
   
   public abstract PsiReference[] createCustomReferences(PsiElement psiElement, boolean soft, PathReferenceProvider... providers);
 
-
   public abstract @Nullable PathReference getPathReference(String path, PsiElement element, PathReferenceProvider... additionalProviders);
 
   public abstract @Nullable PathReference getCustomPathReference(String path, Module module, PsiElement element, PathReferenceProvider... providers);

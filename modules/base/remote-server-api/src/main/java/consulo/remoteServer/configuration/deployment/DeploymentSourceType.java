@@ -54,7 +54,6 @@ public abstract class DeploymentSourceType<S extends DeploymentSource> {
 
     public abstract void save(S s, Element tag);
 
-
     public void setBuildBeforeRunTask(RunConfiguration configuration, S source) {
     }
 

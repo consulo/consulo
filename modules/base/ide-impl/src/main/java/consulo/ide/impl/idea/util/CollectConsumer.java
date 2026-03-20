@@ -3,7 +3,6 @@ package consulo.ide.impl.idea.util;
 
 import consulo.util.collection.SmartList;
 
-
 import java.util.Collection;
 import java.util.function.Consumer;
 

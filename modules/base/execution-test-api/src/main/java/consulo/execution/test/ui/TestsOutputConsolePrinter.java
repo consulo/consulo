@@ -21,7 +21,6 @@ import consulo.execution.ui.console.ConsoleView;
 import consulo.execution.ui.console.ConsoleViewContentType;
 import consulo.disposer.Disposable;
 
-
 public class TestsOutputConsolePrinter implements Printer, Disposable {
   private final ConsoleView myConsole;
   private final TestConsoleProperties myProperties;

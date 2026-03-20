@@ -7,7 +7,6 @@ import consulo.language.psi.PsiNamedElement;
 import consulo.project.Project;
 import consulo.project.ui.view.tree.AbstractTreeNode;
 
-
 import java.util.Collection;
 import java.util.List;
 

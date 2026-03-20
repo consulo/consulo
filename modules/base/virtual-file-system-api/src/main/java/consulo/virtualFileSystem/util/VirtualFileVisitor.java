@@ -36,7 +36,6 @@ public abstract class VirtualFileVisitor<T> {
     return new Option.LimitOption(maxDepth);
   }
 
-
   public static class Result {
     public final boolean skipChildren;
     public final VirtualFile skipToParent;
@@ -59,13 +58,11 @@ public abstract class VirtualFileVisitor<T> {
     return new Result(true, parentToSkipTo);
   }
 
-
   public static class VisitorException extends RuntimeException {
     public VisitorException(Throwable cause) {
       super(cause);
     }
   }
-
 
   private boolean myFollowSymLinks = true;
   private boolean mySkipRoot;
@@ -88,7 +85,6 @@ public abstract class VirtualFileVisitor<T> {
       }
     }
   }
-
 
   /**
    * Simple visiting method.
@@ -151,7 +147,6 @@ public abstract class VirtualFileVisitor<T> {
   public final T getCurrentValue() {
     return myValue;
   }
-
 
   final boolean allowVisitFile(@SuppressWarnings("UnusedParameters") VirtualFile file) {
     return myLevel > 0 || !mySkipRoot;

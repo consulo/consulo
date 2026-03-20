@@ -20,7 +20,6 @@ import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 import consulo.language.psi.PsiElement;
 
-
 /**
  * @author cdr
  * @since 2007-09-10

@@ -19,7 +19,6 @@ import consulo.codeEditor.DefaultLineWrapPositionStrategy;
 import consulo.language.Language;
 import consulo.language.editor.LanguageLineWrapPositionStrategy;
 
-
 /**
  * @author VISTALL
  * @since 01-Aug-22

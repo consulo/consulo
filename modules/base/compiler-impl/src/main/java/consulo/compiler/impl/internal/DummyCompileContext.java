@@ -51,7 +51,6 @@ public class DummyCompileContext implements CompileContext {
     public void addMessage(CompilerMessageCategory category, String message, String url, int lineNum, int columnNum) {
     }
 
-
     @Override
     public void addMessage(
         CompilerMessageCategory category,

@@ -27,7 +27,6 @@ public class NanoXmlUtil {
   private NanoXmlUtil() {
   }
 
-
   public static void parse(InputStream is, IXMLBuilder builder) {
     try {
       parse(new MyXMLReader(is), builder);

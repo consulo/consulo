@@ -26,7 +26,6 @@ import consulo.project.Project;
 import consulo.project.startup.PostStartupActivity;
 import consulo.ui.UIAccess;
 
-
 @ExtensionImpl(order = "first")
 public class PsiVFSListenerStartUpActivity implements PostStartupActivity, DumbAware {
 

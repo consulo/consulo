@@ -371,7 +371,6 @@ public class DiffRequestFactoryImpl implements DiffRequestFactoryEx {
     if (fileContents.size() != 3) throw new IllegalArgumentException();
     if (contentTitles.size() != 3) throw new IllegalArgumentException();
 
-
     try {
       FileContent outputContent = myContentFactory.createFile(project, output);
       if (outputContent == null) throw new InvalidDiffRequestException("Can't process file: " + output.getPresentableUrl());

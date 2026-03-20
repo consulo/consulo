@@ -15,7 +15,6 @@
  */
 package consulo.language.codeStyle.arrangement.std;
 
-
 /**
  * Type of {@link StdArrangementSettingsToken}. Defines UI role used to display the token. Used to differentiate between semantically
  * different tokens when constructing matchers.

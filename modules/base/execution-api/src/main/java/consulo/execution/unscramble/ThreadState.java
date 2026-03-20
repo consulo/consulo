@@ -15,7 +15,6 @@
  */
 package consulo.execution.unscramble;
 
-
 import org.jspecify.annotations.Nullable;
 import java.util.Collection;
 import java.util.Collections;

@@ -187,7 +187,6 @@ public class DesktopAwtDialogService implements DialogService {
 
             ActionGroup group = ActionGroup.newImmutableBuilder().addAll(actions).build();
 
-
             if (myHelpId != null) {
                 Insets insets = Platform.current().os().isMac() ? JBUI.emptyInsets() : JBUI.insetsTop(8);
 

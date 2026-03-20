@@ -217,7 +217,6 @@ public class ConfigurationErrorsComponent extends JPanel {
     error.fix(component, new RelativePoint(e));
   }
 
-
   private static class ErrorListRenderer extends JComponent implements ListCellRenderer {
     private JTextPane myText;
     private JTextPane myFakeTextPane;

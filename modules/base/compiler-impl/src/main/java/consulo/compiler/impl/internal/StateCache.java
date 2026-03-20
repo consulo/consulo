@@ -114,7 +114,6 @@ public abstract class StateCache<T> {
         return myMap.getAllKeysWithExistingMapping().iterator();
     }
 
-
     private PersistentHashMap<File, T> createMap(File file) throws IOException {
         return new PersistentHashMap<>(file, FileKeyDescriptor.INSTANCE, new DataExternalizer<T>() {
             @Override

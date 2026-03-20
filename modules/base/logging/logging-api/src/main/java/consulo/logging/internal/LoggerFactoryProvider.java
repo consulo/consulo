@@ -15,7 +15,6 @@
  */
 package consulo.logging.internal;
 
-
 /**
  * @author VISTALL
  * @since 2019-08-10

@@ -15,7 +15,6 @@
  */
 package consulo.component.messagebus;
 
-
 /**
  * Aggregates multiple topic subscriptions for particular {@link MessageBus message bus}. I.e. every time a client wants to
  * listen for messages it should grab appropriate connection (or create a new one) and {@link #subscribe(Class, Object) subscribe}

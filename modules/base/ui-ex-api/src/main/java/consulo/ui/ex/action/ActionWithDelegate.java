@@ -13,7 +13,6 @@
 // limitations under the License.
 package consulo.ui.ex.action;
 
-
 /**
  * IntelliJ Platform uses logging and statistics for actions. Please use this interface for actions with same action class
  * but different business logic passed in constructor.

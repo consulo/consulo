@@ -3,7 +3,6 @@ package consulo.codeEditor;
 
 import consulo.codeEditor.event.EditorMouseEvent;
 
-
 /**
  * Handler of popup trigger mouse events in editor
  *

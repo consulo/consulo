@@ -164,7 +164,6 @@ public class FileOrDirectoryDependencyContext extends AddModuleDependencyContext
             addedLibraries.add(createLibraryFromRoots(layer, roots, libraryType));
         }
 
-
         List<OrderEntry> orderEntries = new ArrayList<>(addedLibraries.size());
         for (Library addedLibrary : addedLibraries) {
             LibraryOrderEntry libraryOrderEntry = layer.findLibraryOrderEntry(addedLibrary);

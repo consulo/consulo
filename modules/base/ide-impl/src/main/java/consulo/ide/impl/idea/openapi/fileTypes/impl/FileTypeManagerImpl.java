@@ -1586,7 +1586,6 @@ public class FileTypeManagerImpl extends FileTypeManagerEx implements Persistent
     // Setup
     // -------------------------------------------------------------------------
 
-
     
     public FileTypeAssocTable<FileType> getExtensionMap() {
         return myPatternsTable;

@@ -47,7 +47,6 @@ public class DiffHyperlink implements Printable {
   private final HyperlinkInfo myDiffHyperlink = new DiffHyperlinkInfo();
   private String myTestProxyName;
 
-
   public DiffHyperlink(String expected, String actual, String filePath) {
     this(expected, actual, filePath, true);
   }

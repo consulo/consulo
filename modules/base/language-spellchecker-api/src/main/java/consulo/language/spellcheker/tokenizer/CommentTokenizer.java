@@ -19,7 +19,6 @@ import consulo.annotation.access.RequiredReadAction;
 import consulo.language.psi.PsiComment;
 import consulo.language.spellcheker.tokenizer.splitter.CommentTokenSplitter;
 
-
 public class CommentTokenizer extends Tokenizer<PsiComment> {
     @Override
     @RequiredReadAction

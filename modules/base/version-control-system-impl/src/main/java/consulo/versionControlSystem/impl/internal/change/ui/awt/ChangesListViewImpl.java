@@ -376,7 +376,6 @@ public class ChangesListViewImpl extends Tree implements ChangesListView, TypeSa
       }
     }
 
-
     super.processMouseEvent(e);
   }
 

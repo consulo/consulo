@@ -15,7 +15,6 @@
  */
 package consulo.execution.debug.frame;
 
-
 /**
  * @author traff
  */

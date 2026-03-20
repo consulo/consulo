@@ -16,7 +16,6 @@
 
 package consulo.versionControlSystem.log.impl.internal.util;
 
-
 public class IntDeltaCompressor implements IntList {
 
   

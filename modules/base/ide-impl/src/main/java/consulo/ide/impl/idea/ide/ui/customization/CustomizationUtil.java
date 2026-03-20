@@ -69,7 +69,6 @@ public class CustomizationUtil {
         return new CustomisedActionGroup(text, group.isPopup(), group, schema, defaultGroupName);
     }
 
-
     static AnAction[] getReordableChildren(ActionGroup group, CustomActionsSchemaImpl schema, String defaultGroupName, AnActionEvent e) {
         String text = group.getTemplatePresentation().getText();
         ActionManager actionManager = ActionManager.getInstance();
@@ -212,7 +211,6 @@ public class CustomizationUtil {
         return url;
     }
 
-
     public static TreePath getTreePath(JTree tree, ActionUrl url) {
         return getTreePath(0, url.getGroupPath(), tree.getModel().getRoot(), tree);
     }
@@ -252,7 +250,6 @@ public class CustomizationUtil {
 
         return currentPath;
     }
-
 
     private static ActionUrl[] getChildUserObjects(DefaultMutableTreeNode node, ActionUrl parent) {
         ArrayList<ActionUrl> result = new ArrayList<>();

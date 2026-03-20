@@ -18,7 +18,6 @@ package consulo.execution.configuration;
 
 import consulo.module.Module;
 
-
 /**
  * @author spleaner
  */

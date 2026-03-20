@@ -24,7 +24,6 @@ import consulo.util.xml.serializer.annotation.Transient;
 import consulo.logging.Logger;
 import org.jdom.Element;
 
-
 /**
  * @author anna
  * @since 2005-12-01

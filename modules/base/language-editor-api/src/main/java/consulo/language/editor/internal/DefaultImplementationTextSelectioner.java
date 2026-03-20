@@ -21,7 +21,6 @@ import consulo.language.editor.ImplementationTextSelectioner;
 import consulo.language.psi.PsiElement;
 import consulo.logging.Logger;
 
-
 /**
  * @author anna
  * @since 2008-02-01

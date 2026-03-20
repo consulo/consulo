@@ -15,7 +15,6 @@
  */
 package consulo.versionControlSystem.log.impl.internal.util;
 
-
 public class IDIntToIntMap implements IntToIntMap {
   
   public static final UpdatableIntToIntMap EMPTY = new EmptyIDIntToIntMap();

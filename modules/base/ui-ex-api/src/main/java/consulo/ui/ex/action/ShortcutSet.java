@@ -15,7 +15,6 @@
  */
 package consulo.ui.ex.action;
 
-
 /**
  * Represents a set of keyboard and/or mouse shortcuts.
  * 

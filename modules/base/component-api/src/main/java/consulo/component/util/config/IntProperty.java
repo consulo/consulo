@@ -16,7 +16,6 @@
 
 package consulo.component.util.config;
 
-
 public class IntProperty extends ValueProperty<Integer> {
   public IntProperty(String name, int defaultValue) {
     super(name, defaultValue);

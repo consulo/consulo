@@ -18,7 +18,6 @@ package consulo.codeEditor.internal;
 import consulo.codeEditor.EditorFactory;
 import consulo.document.Document;
 
-
 /**
  * @author VISTALL
  * @since 28-Mar-22

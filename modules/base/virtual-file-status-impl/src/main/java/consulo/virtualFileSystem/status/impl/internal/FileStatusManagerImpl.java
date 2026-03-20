@@ -118,7 +118,6 @@ public class FileStatusManagerImpl implements FileStatusManagerInternal, Disposa
         myCachedStatuses.clear();
     }
 
-
     @Override
     public void addFileStatusListener(FileStatusListener listener) {
         myListeners.add(listener);

@@ -19,7 +19,6 @@ import consulo.annotation.DeprecationInfo;
 import consulo.colorScheme.EditorColorKey;
 import consulo.localize.LocalizeValue;
 
-
 /**
  * Describes a color which can be configured in a custom colors and fonts page.
  *

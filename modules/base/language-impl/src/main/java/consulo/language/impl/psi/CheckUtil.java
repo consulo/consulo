@@ -26,7 +26,6 @@ import consulo.virtualFileSystem.fileType.FileTypeRegistry;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
 import consulo.virtualFileSystem.util.VirtualFileVisitor;
 
-
 public class CheckUtil {
   private CheckUtil() { }
 

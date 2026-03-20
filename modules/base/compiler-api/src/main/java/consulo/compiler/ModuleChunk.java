@@ -31,7 +31,6 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.PathsList;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
 
-
 import java.io.File;
 import java.util.*;
 import java.util.function.Predicate;

@@ -90,7 +90,6 @@ public abstract class ProjectStructureValidator {
         return false;
     }
 
-
     /**
      * @return <code>true</code> if it handled this element
      */

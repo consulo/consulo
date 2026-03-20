@@ -21,7 +21,6 @@ import consulo.content.library.LibraryType;
 import consulo.content.library.OrderRoot;
 import consulo.content.library.ui.LibraryEditor;
 
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;

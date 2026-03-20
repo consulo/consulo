@@ -45,7 +45,6 @@ public class LineCommentSelectioner extends WordSelectioner {
   public List<TextRange> select(PsiElement element, CharSequence editorText, int cursorOffset, Editor editor) {
     List<TextRange> result = super.select(element, editorText, cursorOffset, editor);
 
-
     PsiElement firstComment = element;
     PsiElement e = element;
 
@@ -70,7 +69,6 @@ public class LineCommentSelectioner extends WordSelectioner {
       }
       e = e.getNextSibling();
     }
-
 
     result.addAll(expandToWholeLine(editorText, new TextRange(firstComment.getTextRange().getStartOffset(),
                                                               lastComment.getTextRange().getEndOffset())));

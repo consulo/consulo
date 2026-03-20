@@ -61,7 +61,6 @@ public class DetectingSeparatorReader extends FilterReader {
         return read;
     }
 
-
     private boolean detect(char c) {
         if (c == '\r') {
             myLineSeparator = LineSeparator.CRLF;

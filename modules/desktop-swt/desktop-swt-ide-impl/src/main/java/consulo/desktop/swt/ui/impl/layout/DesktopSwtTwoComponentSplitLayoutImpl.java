@@ -26,7 +26,6 @@ import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Layout;
 
-
 /**
  * @author VISTALL
  * @since 29/04/2021

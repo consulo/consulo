@@ -25,7 +25,6 @@ import consulo.module.content.ProjectFileIndex;
 import consulo.module.extension.ModuleExtension;
 import consulo.virtualFileSystem.VirtualFile;
 
-
 /**
  * @author VISTALL
  * @since 2013-05-20

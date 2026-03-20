@@ -24,7 +24,6 @@ import consulo.component.store.impl.internal.storage.StateStorageFacade;
 import consulo.component.store.impl.internal.storage.StateStorageManagerImpl;
 import consulo.project.Project;
 
-
 public class ProjectStateStorageManager extends StateStorageManagerImpl {
   protected static final String ROOT_TAG_NAME = "project";
 

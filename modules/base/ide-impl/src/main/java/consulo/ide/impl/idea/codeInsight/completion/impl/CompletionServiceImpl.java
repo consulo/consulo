@@ -303,7 +303,6 @@ public final class CompletionServiceImpl extends CompletionService {
         return phase != CompletionPhase.NoCompletion && !(phase instanceof CompletionPhase.ZombiePhase) && !(phase instanceof CompletionPhase.ItemsCalculated);
     }
 
-
     public static CompletionPhase getCompletionPhase() {
         return ourPhase;
     }

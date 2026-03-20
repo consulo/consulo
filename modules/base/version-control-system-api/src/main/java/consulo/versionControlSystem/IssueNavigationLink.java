@@ -16,7 +16,6 @@
 
 package consulo.versionControlSystem;
 
-
 import java.util.regex.Pattern;
 
 /**

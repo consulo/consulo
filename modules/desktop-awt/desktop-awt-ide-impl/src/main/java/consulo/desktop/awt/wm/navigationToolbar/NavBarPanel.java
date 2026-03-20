@@ -395,7 +395,6 @@ public class NavBarPanel extends JPanel implements DataProvider, PopupOwner, Dis
         return myHint != null && myHint.isVisible();
     }
 
-
     @Override
     public Dimension getPreferredSize() {
         if (myDisposed || !myList.isEmpty()) {
@@ -657,7 +656,6 @@ public class NavBarPanel extends JPanel implements DataProvider, PopupOwner, Dis
     void cancelPopup() {
         cancelPopup(false);
     }
-
 
     void cancelPopup(boolean ok) {
         if (myNodePopup != null) {

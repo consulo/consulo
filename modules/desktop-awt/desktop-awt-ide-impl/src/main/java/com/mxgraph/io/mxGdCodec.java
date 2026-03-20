@@ -87,7 +87,6 @@ public class mxGdCodec {
                 double width = Double.valueOf(items[3]);
                 double height = Double.valueOf(items[4]);
 
-
                 //Set the node name as label.
                 String label = items[0];
 

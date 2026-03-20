@@ -231,7 +231,6 @@ public class JarHandler extends ZipHandler {
       }
     }
 
-
     return mirror;
   }
 

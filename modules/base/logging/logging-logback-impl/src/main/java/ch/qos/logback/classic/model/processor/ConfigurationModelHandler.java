@@ -92,5 +92,4 @@ public class ConfigurationModelHandler extends ModelHandlerBase {
         }
     }
 
-
 }

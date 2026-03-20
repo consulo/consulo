@@ -17,7 +17,6 @@ package consulo.desktop.awt.facade;
 
 import consulo.annotation.DeprecationInfo;
 
-
 /**
  * @author VISTALL
  * @since 11-Sep-17

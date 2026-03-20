@@ -18,7 +18,6 @@ package consulo.fileEditor.structureView;
 import consulo.fileEditor.FileEditor;
 import consulo.project.Project;
 
-
 /**
  * Defines the implementation of Structure View and the file structure popup for
  * a file type. This class allows to replace the entire Structure View component

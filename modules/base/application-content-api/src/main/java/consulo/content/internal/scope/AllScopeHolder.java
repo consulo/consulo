@@ -20,7 +20,6 @@ import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
 import consulo.content.scope.NamedScope;
 
-
 /**
  * @author VISTALL
  * @since 20-Sep-22

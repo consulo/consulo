@@ -21,7 +21,6 @@ import java.util.Iterator;
 public final class TodoDirNode extends PsiDirectoryNode {
   private final TodoTreeBuilder myBuilder;
 
-
   public TodoDirNode(Project project, PsiDirectory directory, TodoTreeBuilder builder) {
     super(project, directory, ViewSettings.DEFAULT);
     myBuilder = builder;
@@ -88,6 +87,5 @@ public final class TodoDirNode extends PsiDirectoryNode {
   public int getWeight() {
     return 2;
   }
-
 
 }

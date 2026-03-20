@@ -20,7 +20,6 @@ import consulo.navigation.NavigationItem;
 import consulo.language.psi.PsiNamedElement;
 import consulo.ui.image.Image;
 
-
 /**
  * @author Maxim.Mossienko
  */

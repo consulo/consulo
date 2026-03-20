@@ -242,7 +242,6 @@ public class ChangesViewManagerImpl implements ChangesViewManager, Disposable, P
         actionToolbar.setTargetComponent(panel);
         toolbarPanel.add(actionToolbar.getComponent(), BorderLayout.CENTER);
 
-
         myView.setMenuActions((DefaultActionGroup) ActionManager.getInstance().getAction("ChangesViewPopupMenu"));
 
         myView.setShowFlatten(myState.myShowFlatten);

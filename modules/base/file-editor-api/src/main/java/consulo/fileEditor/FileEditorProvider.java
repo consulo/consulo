@@ -26,7 +26,6 @@ import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
 import org.jdom.Element;
 
-
 /**
  * Should be registered via {@link #EP_FILE_EDITOR_PROVIDER}.
  *

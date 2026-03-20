@@ -104,7 +104,6 @@ public class SystemInfo {
     return ourOsReleaseInfo.get().get("VERSION");
   }
 
-
   private static final Supplier<Boolean> ourHasXdgOpen = LazyValue.atomicNotNull(() -> {
     return isUnix && new File("/usr/bin/xdg-open").canExecute();
   });

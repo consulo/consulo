@@ -108,7 +108,6 @@ public class CommonBundle extends BundleBase {
     return message("button.continue");
   }
 
-
   public static String getYesForAllButtonText() {
     return message("button.yes.for.all");
   }

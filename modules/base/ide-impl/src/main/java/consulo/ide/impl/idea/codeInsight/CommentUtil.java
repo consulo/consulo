@@ -23,7 +23,6 @@ import consulo.language.psi.PsiFile;
 import consulo.language.util.CommentUtilCore;
 import consulo.ide.impl.idea.util.text.CharArrayUtil;
 
-
 public class CommentUtil extends CommentUtilCore {
   private CommentUtil() { }
 

@@ -18,7 +18,6 @@ package consulo.language.impl.internal.psi;
 import consulo.language.psi.StubBasedPsiElement;
 import consulo.language.psi.stub.StubElement;
 
-
 /**
  * @author VISTALL
  * @since 2020-10-16

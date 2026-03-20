@@ -3,7 +3,6 @@ package consulo.execution.debug.attach.osHandler;
 
 import consulo.execution.debug.attach.EnvironmentAwareHost;
 
-
 class GenericAttachOSHandler extends AttachOSHandler {
   GenericAttachOSHandler(EnvironmentAwareHost host) {
     super(host, OSType.UNKNOWN);

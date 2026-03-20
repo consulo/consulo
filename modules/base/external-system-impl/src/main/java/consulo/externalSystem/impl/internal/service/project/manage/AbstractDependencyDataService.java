@@ -30,7 +30,6 @@ import consulo.module.content.layer.orderEntry.OrderEntry;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;

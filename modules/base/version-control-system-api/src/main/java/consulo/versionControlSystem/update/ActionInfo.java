@@ -240,7 +240,6 @@ public interface ActionInfo {
         }
     };
 
-
     boolean showOptions(Project project);
 
     UpdateEnvironment getEnvironment(AbstractVcs vcs);

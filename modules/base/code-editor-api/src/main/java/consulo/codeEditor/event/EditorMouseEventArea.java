@@ -15,7 +15,6 @@
  */
 package consulo.codeEditor.event;
 
-
 public class EditorMouseEventArea {
   private final String myDebugName;
 

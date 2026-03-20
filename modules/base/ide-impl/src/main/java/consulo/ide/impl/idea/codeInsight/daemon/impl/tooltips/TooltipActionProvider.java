@@ -15,7 +15,6 @@ import consulo.project.Project;
 
 import org.jspecify.annotations.Nullable;
 
-
 /**
  * Provides actions for error tooltips
  *
@@ -30,7 +29,6 @@ public interface TooltipActionProvider {
 
   @Nullable
   TooltipAction getTooltipAction(HighlightInfo info, Editor editor, PsiFile psiFile);
-
 
   static @Nullable TooltipAction calcTooltipAction(HighlightInfo info, Editor editor) {
     if (!Registry.is("ide.tooltip.show.with.actions")) return null;

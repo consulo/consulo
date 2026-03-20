@@ -330,7 +330,6 @@ public class KeymapPanel implements SearchableConfigurable, Configurable.NoScrol
             }
         }.installOn(myActionsTree.getTree());
 
-
         myActionsTree.getTree().addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {

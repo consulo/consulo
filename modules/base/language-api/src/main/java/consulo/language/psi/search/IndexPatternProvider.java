@@ -19,7 +19,6 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 
-
 /**
  * Provider of regular expression patterns the occurrences of which in the comments of
  * source code files are indexed by IDEA. Implementations of this interface need to be registered

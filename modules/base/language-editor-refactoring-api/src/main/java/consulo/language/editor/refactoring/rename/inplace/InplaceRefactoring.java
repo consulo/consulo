@@ -186,7 +186,6 @@ public abstract class InplaceRefactoring {
         myAdvertisementText = advertisementText;
     }
 
-
     @RequiredUIAccess
     public boolean performInplaceRefactoring(SequencedSet<String> nameSuggestions) {
         myNameSuggestions = nameSuggestions;

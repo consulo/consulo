@@ -57,7 +57,6 @@ public class VirtualFileWithDependenciesState {
         return true;
     }
 
-
     private static class VirtualFileWithDependenciesExternalizer implements DataExternalizer<VirtualFileWithDependenciesState> {
         @Override
         public void save(DataOutput out, VirtualFileWithDependenciesState value) throws IOException {

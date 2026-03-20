@@ -20,7 +20,6 @@ import consulo.codeEditor.Editor;
 import consulo.codeEditor.FoldRegion;
 import consulo.codeEditor.LogicalPosition;
 
-
 public class EditorPosition implements Cloneable {
   public int logicalLine;
   public int offset;

@@ -1260,7 +1260,6 @@ public final class TreeUtil {
         BasicTreeUI basicTreeUI = (BasicTreeUI)aTree.getUI();
         Icon expandedIcon = basicTreeUI.getExpandedIcon();
 
-
         Range<Integer> box = null;
         if (path != null && !treeModel.isLeaf(path.getLastPathComponent())) {
             int boxWidth;
@@ -1981,7 +1980,6 @@ public final class TreeUtil {
         visitVisibleRows(tree, path -> filter.test(path) ? mapper.apply(path) : null, list::add);
         return list;
     }
-
 
     /**
      * @param tree a tree, which nodes should be found

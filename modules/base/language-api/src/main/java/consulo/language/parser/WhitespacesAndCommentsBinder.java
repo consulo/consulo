@@ -17,7 +17,6 @@ package consulo.language.parser;
 
 import consulo.language.ast.IElementType;
 
-
 import java.util.List;
 
 /**

@@ -285,7 +285,6 @@ public abstract class TodoTreeBuilder implements Disposable {
         return psiFileList.iterator();
     }
 
-
     /**
      * @return read-only iterator of all valid PSI files that can have T.O.D.O items
      * and which in specified {@code module}.
@@ -316,7 +315,6 @@ public abstract class TodoTreeBuilder implements Disposable {
         }
         return psiFileList.iterator();
     }
-
 
     /**
      * @return {@code true} if specified {@code psiFile} can contains too items.

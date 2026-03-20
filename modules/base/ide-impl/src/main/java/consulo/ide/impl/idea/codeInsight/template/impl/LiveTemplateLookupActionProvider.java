@@ -65,7 +65,6 @@ public class LiveTemplateLookupActionProvider implements LookupActionProvider {
                     }
                 });
 
-
                 consumer.accept(new LookupElementAction(
                     PlatformIconGroup.actionsCancel(),
                     String.format("Disable '%s' template", template.getKey())

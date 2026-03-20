@@ -171,7 +171,6 @@ public abstract class BaseExecuteBeforeRunDialog<T extends BeforeRunTask> extend
     return root;
   }
 
-
   private boolean isConfigurationAssigned(ConfigurationType type) {
     RunManagerEx runManager = RunManagerEx.getInstanceEx(myProject);
     for (ConfigurationFactory factory : type.getConfigurationFactories()) {
@@ -295,7 +294,6 @@ public abstract class BaseExecuteBeforeRunDialog<T extends BeforeRunTask> extend
       return myConfiguration;
     }
   }
-
 
   private static final class MyTreeCellRenderer extends JPanel implements TreeCellRenderer {
     private final JLabel myLabel;

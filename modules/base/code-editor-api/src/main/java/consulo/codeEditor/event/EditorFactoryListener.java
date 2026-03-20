@@ -20,7 +20,6 @@ import consulo.annotation.component.ExtensionAPI;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorFactory;
 
-
 import java.util.EventListener;
 
 /**

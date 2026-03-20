@@ -69,7 +69,6 @@ public class DefaultTipOfDayContributor implements TipOfDayContributor {
 
         consumer.accept(TipOfDayLocalize.commentcode());
 
-
         consumer.accept(TipOfDayLocalize.externaljavadoc());
 
         consumer.accept(TipOfDayLocalize.smarttypecasting());

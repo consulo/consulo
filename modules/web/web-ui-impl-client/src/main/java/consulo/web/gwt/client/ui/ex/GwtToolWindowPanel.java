@@ -118,7 +118,6 @@ public class GwtToolWindowPanel extends VerticalPanel {
     panel.setCellHeight(widget, height);
     panel.setCellWidth(widget, width);
 
-
     if (borderPosition != null) {
       Element widgetTd = panel.getWidgetTd(widget);
 

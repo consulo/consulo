@@ -8,7 +8,6 @@ import consulo.execution.debug.stream.trace.TerminatorCallHandler;
 import consulo.execution.debug.stream.trace.dsl.Dsl;
 import consulo.execution.debug.stream.wrapper.TerminatorStreamCall;
 
-
 /**
  * @author Vitaliy.Bibaev
  */

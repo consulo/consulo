@@ -77,7 +77,6 @@ public class FindDependencyUtil {
     final List<UsageInfo> usages = new ArrayList<UsageInfo>();
     ProgressIndicator indicator = ProgressManager.getInstance().getProgressIndicator();
 
-
     Set<PsiFile> deps = new HashSet<PsiFile>();
     for (PsiFile psiFile : searchFor) {
       for (DependenciesBuilder builder : builders) {

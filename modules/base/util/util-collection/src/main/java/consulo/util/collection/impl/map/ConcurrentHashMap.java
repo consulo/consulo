@@ -802,7 +802,6 @@ public class ConcurrentHashMap<K, V> extends AbstractMap<K, V> implements Concur
   private transient @Nullable ValuesView<K, V> values = null;
   private transient @Nullable EntrySetView<K, V> entrySet = null;
 
-
   /* ---------------- Public operations -------------- */
 
   /**
@@ -3886,7 +3885,6 @@ public class ConcurrentHashMap<K, V> extends AbstractMap<K, V> implements Concur
     if (transformer == null || reducer == null) throw new NullPointerException();
     return new MapReduceEntriesToIntTask<K, V>(null, batchFor(parallelismThreshold), 0, 0, table, null, transformer, basis, reducer).invoke();
   }
-
 
   /* ----------------Views -------------- */
 

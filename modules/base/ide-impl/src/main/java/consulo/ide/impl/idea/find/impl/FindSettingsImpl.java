@@ -30,7 +30,6 @@ import consulo.util.xml.serializer.annotation.Tag;
 import consulo.util.xml.serializer.annotation.Transient;
 import jakarta.inject.Singleton;
 
-
 import java.util.ArrayList;
 import java.util.List;
 

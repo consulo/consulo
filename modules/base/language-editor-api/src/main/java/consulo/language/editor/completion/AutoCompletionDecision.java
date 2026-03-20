@@ -18,7 +18,6 @@ package consulo.language.editor.completion;
 
 import consulo.language.editor.completion.lookup.LookupElement;
 
-
 /**
  * @author peter
  */

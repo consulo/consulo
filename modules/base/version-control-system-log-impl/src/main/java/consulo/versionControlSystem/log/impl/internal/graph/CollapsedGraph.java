@@ -57,7 +57,6 @@ public class CollapsedGraph {
   
   private final AtomicReference<Modification> myCurrentModification = new AtomicReference<>(null);
 
-
   private CollapsedGraph(LinearGraph delegatedGraph,
                          UnsignedBitSet matchedNodeId,
                          UnsignedBitSet visibleNodesId,

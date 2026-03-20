@@ -85,7 +85,6 @@ class PrintDialog extends DialogWrapper {
     ALIGNMENT_MAP.put(PrintSettings.RIGHT, CodeEditorBundle.message("print.header.alignment.right"));
   }
 
-
   public PrintDialog(String fileName, String directoryName, String selectedText, Project project) {
     super(project, true);
     mySelectedText = selectedText;
@@ -96,7 +95,6 @@ class PrintDialog extends DialogWrapper {
     setTitle(CodeEditorBundle.message("print.title"));
     init();
   }
-
 
   @Override
   protected JComponent createNorthPanel() {
@@ -568,7 +566,6 @@ class PrintDialog extends DialogWrapper {
 
     myCbDrawBorder.setSelected(printSettings.DRAW_BORDER);
 
-
     myLineTextField1.setText(printSettings.FOOTER_HEADER_TEXT1);
     myLinePlacementCombo1.setSelectedItem(printSettings.FOOTER_HEADER_PLACEMENT1);
     myLineAlignmentCombo1.setSelectedItem(printSettings.FOOTER_HEADER_ALIGNMENT1);
@@ -614,7 +611,6 @@ class PrintDialog extends DialogWrapper {
     printSettings.PRINT_LINE_NUMBERS = myCbLineNumbers.isSelected();
 
     printSettings.WRAP = myRbWrapAtWordBreaks.isSelected();
-
 
     try {
       printSettings.TOP_MARGIN = Float.parseFloat(myTopMarginField.getText());
@@ -681,7 +677,6 @@ class PrintDialog extends DialogWrapper {
     }
   }
 
-
   private static class MyTextField extends JTextField {
     public MyTextField(int size) {
       super(size);
@@ -703,6 +698,5 @@ class PrintDialog extends DialogWrapper {
       return super.getPreferredSize();
     }
   }
-
 
 }

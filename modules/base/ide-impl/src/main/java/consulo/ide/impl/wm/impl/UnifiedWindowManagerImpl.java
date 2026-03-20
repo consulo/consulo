@@ -20,7 +20,6 @@ import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.internal.WindowManagerEx;
 import consulo.ui.Window;
 
-
 /**
  * @author VISTALL
  * @since 29/04/2021

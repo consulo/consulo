@@ -18,7 +18,6 @@ package consulo.ide.impl.idea.util.containers;
 import gnu.trove.TObjectHashingStrategy;
 import gnu.trove.TObjectIntHashMap;
 
-
 /**
  * return -1 instead of 0 if no such mapping exists
  */

@@ -28,7 +28,6 @@ import consulo.ui.UIAccess;
 import jakarta.inject.Inject;
 import org.jdom.Element;
 
-
 import java.util.concurrent.CompletableFuture;
 
 /**

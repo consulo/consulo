@@ -15,7 +15,6 @@
  */
 package consulo.desktop.awt.ui;
 
-
 import consulo.ui.Rectangle2D;
 import consulo.ui.Size2D;
 import org.junit.jupiter.api.Test;

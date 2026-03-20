@@ -1,6 +1,5 @@
 package consulo.remoteServer.configuration.deployment;
 
-
 import consulo.component.persist.PersistentStateComponent;
 import consulo.execution.RuntimeConfigurationException;
 import consulo.project.Project;

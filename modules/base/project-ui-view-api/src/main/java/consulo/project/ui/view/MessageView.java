@@ -21,7 +21,6 @@ import consulo.project.Project;
 import consulo.ui.ex.content.ContentManager;
 import consulo.ui.ex.toolWindow.ToolWindow;
 
-
 @ServiceAPI(ComponentScope.PROJECT)
 public interface MessageView {
   

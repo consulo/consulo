@@ -110,11 +110,9 @@ public interface IdeActions {
 
     String ACTION_EDITOR_TOGGLE_OVERWRITE_MODE = "EditorToggleInsertState";
 
-
     String ACTION_EDITOR_NEXT_TEMPLATE_VARIABLE = "NextTemplateVariable";
 
     String ACTION_EDITOR_PREVIOUS_TEMPLATE_VARIABLE = "PreviousTemplateVariable";
-
 
     String ACTION_EDITOR_REFORMAT = "ReformatCode";
 
@@ -122,11 +120,9 @@ public interface IdeActions {
 
     String ACTION_TOGGLE_FIND_IN_SELECTION_ONLY = "ToggleFindInSelection";
 
-
     String ACTION_COMMENT_LINE = "CommentByLineComment";
 
     String ACTION_COMMENT_BLOCK = "CommentByBlockComment";
-
 
     String ACTION_COPY = "$Copy";
 
@@ -169,14 +165,11 @@ public interface IdeActions {
 
     String ACTION_EXPAND_LIVE_TEMPLATE_CUSTOM = "ExpandLiveTemplateCustom";
 
-
     String ACTION_LOOKUP_UP = "EditorLookupUp";
 
     String ACTION_LOOKUP_DOWN = "EditorLookupDown";
 
-
     String GROUP_EXTERNAL_TOOLS = "ExternalToolsGroup";
-
 
     String GROUP_MAIN_MENU = "MainMenu";
 
@@ -191,7 +184,6 @@ public interface IdeActions {
     String GROUP_CUT_COPY_PASTE = "CutCopyPasteGroup";
 
     String GROUP_EDITOR_TAB_POPUP = "EditorTabPopupMenu";
-
 
     String ACTION_CVS_ADD = "Cvs.Add";
 
@@ -212,7 +204,6 @@ public interface IdeActions {
     String ACTION_CVS_UNEDIT = "Cvs.Unedit";
 
     String ACTION_CVS_CHECKOUT = "Cvs.Checkout";
-
 
     String ACTION_CLOSE_ACTIVE_TAB = "CloseActiveTab";
 
@@ -264,16 +255,13 @@ public interface IdeActions {
 
     String ACTION_FIND_IN_PATH = "FindInPath";
 
-
     String ACTION_TYPE_HIERARCHY = "TypeHierarchy";
 
     String ACTION_METHOD_HIERARCHY = "MethodHierarchy";
 
     String ACTION_CALL_HIERARCHY = "CallHierarchy";
 
-
     String ACTION_EXTERNAL_JAVADOC = "ExternalJavaDoc";
-
 
     String ACTION_CLOSE = "CloseContent";
 
@@ -284,7 +272,6 @@ public interface IdeActions {
     String ACTION_CLOSE_ALL_UNMODIFIED_EDITORS = "CloseAllUnmodifiedEditors";
 
     String ACTION_CLOSE_ALL_EDITORS_BUT_THIS = "CloseAllEditorsButActive";
-
 
     String ACTION_SHOW_DIFF_COMMON = "Diff.ShowDiff";
 
@@ -300,13 +287,11 @@ public interface IdeActions {
 
     String GROUP_DIFF_EDITOR_GUTTER_POPUP = "Diff.EditorGutterPopupMenu";
 
-
     String ACTION_EXPAND_ALL = "ExpandAll";
 
     String ACTION_COLLAPSE_ALL = "CollapseAll";
 
     String ACTION_EXPORT_TO_TEXT_FILE = "ExportToTextFile";
-
 
     String ACTION_EXPAND_ALL_REGIONS = "ExpandAllRegions";
 
@@ -320,7 +305,6 @@ public interface IdeActions {
 
     String ACTION_EXPAND_ALL_TO_LEVEL_1 = "ExpandAllToLevel1";
 
-
     String ACTION_NEW_HORIZONTAL_TAB_GROUP = "NewHorizontalTabGroup";
 
     String ACTION_NEW_VERTICAL_TAB_GROUP = "NewVerticalTabGroup";
@@ -331,9 +315,7 @@ public interface IdeActions {
 
     String ACTION_PIN_ACTIVE_EDITOR = "PinActiveEditor";
 
-
     String GROUP_VERSION_CONTROLS = "VersionControlsGroup";
-
 
     String GROUP_PROJECT_VIEW_POPUP = "ProjectViewPopupMenu";
 
@@ -344,7 +326,6 @@ public interface IdeActions {
     String GROUP_TESTTREE_POPUP = "TestTreePopupMenu";
 
     String GROUP_TESTSTATISTICS_POPUP = "TestStatisticsTablePopupMenu";
-
 
     String GROUP_FAVORITES_VIEW_POPUP = "FavoritesViewPopupMenu";
 
@@ -360,9 +341,7 @@ public interface IdeActions {
 
     String REMOVE_ALL_FAVORITES_LISTS_BUT_THIS = "RemoveAllFavoritesListsButThis";
 
-
     String GROUP_SCOPE_VIEW_POPUP = "ScopeViewPopupMenu";
-
 
     String GROUP_J2EE_VIEW_POPUP = "J2EEViewPopupMenu";
 
@@ -419,7 +398,6 @@ public interface IdeActions {
 
     String ACTION_SHOW_SETTINGS = "ShowSettings";
 
-
     String GROUP_RUN = "RunMenu";
 
     String GROUP_RUNNER_ACTIONS = "RunnerActions";
@@ -432,7 +410,6 @@ public interface IdeActions {
 
     String ACTION_RERUN = "Rerun";
 
-
     String ACTION_VCS_EDIT_SOURCE = "Vcs.EditSourceAction";
 
     String ACTION_INCLUDE = "Vcs.IncludeAction";
@@ -443,7 +420,6 @@ public interface IdeActions {
 
     String ACTION_NEW_ELEMENT = "NewElement";
 
-
     String ACTION_QUICK_JAVADOC = "QuickJavaDoc";
 
     String ACTION_QUICK_IMPLEMENTATIONS = "QuickImplementations";
@@ -451,7 +427,6 @@ public interface IdeActions {
     String ACTION_CHECKIN_PROJECT = "CheckinProject";
 
     String ACTION_FILE_STRUCTURE_POPUP = "FileStructurePopup";
-
 
     String GROUP_USAGE_VIEW_POPUP = "UsageView.Popup";
 
@@ -463,11 +438,9 @@ public interface IdeActions {
 
     String GROUP_GUI_DESIGNER_PROPERTY_INSPECTOR_POPUP = "GuiDesigner.PropertyInspectorPopupMenu";
 
-
     String ACTION_GOTO_LAST_CHANGE = "JumpToLastChange";
 
     String ACTION_GOTO_NEXT_CHANGE = "JumpToNextChange";
-
 
     String ACTION_GOTO_BACK = "Back";
 
@@ -481,9 +454,7 @@ public interface IdeActions {
 
     String ACTION_GOTO_SUPER = "GotoSuperMethod";
 
-
     String MODULE_SETTINGS = "ModuleSettings";
-
 
     String GROUP_WELCOME_SCREEN_QUICKSTART = "WelcomeScreen.QuickStart";
 
@@ -513,14 +484,11 @@ public interface IdeActions {
 
     String ACTION_COPY_REFERENCE = "CopyReference";
 
-
     String GROUP_ANALYZE = "AnalyzeMenu";
 
     String ACTION_SHOW_ERROR_DESCRIPTION = "ShowErrorDescription";
 
-
     String ACTION_EDITOR_DUPLICATE = "EditorDuplicate";
-
 
     String GROUP_EDITOR_GUTTER = "EditorGutterPopupMenu";
 

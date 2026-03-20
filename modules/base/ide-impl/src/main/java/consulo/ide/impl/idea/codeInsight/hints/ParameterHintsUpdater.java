@@ -103,7 +103,6 @@ public final class ParameterHintsUpdater {
         return Objects.equals(newText, oldText);
     }
 
-
     public void update() {
         myUpdateList = getInlayUpdates(myEditorInlays);
         boolean firstTime = myEditor.getUserData(REPEATED_PASS) == null;
@@ -145,11 +144,9 @@ public final class ParameterHintsUpdater {
         return getInfosNear(index).anyMatch(info -> text.equals(info.oldText));
     }
 
-
     private boolean isSameHintAddedNear(String text, int index) {
         return getInfosNear(index).anyMatch(info -> text.equals(info.newText));
     }
-
 
     private Stream<InlayUpdateInfo> getInfosNear(int index) {
         List<InlayUpdateInfo> result = new ArrayList<>();
@@ -161,7 +158,6 @@ public final class ParameterHintsUpdater {
         }
         return result.stream();
     }
-
 
     private boolean delayRemoval(Inlay<?> inlay) {
         int offset = inlay.getOffset();
@@ -175,7 +171,6 @@ public final class ParameterHintsUpdater {
         // check whether caret is to the right of inlay
         return caret.getVisualPosition().equals(afterInlayPosition);
     }
-
 
     private static final class InlayUpdateInfo {
         public enum Action {

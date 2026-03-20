@@ -15,7 +15,6 @@
  */
 package consulo.ide.impl.idea.util;
 
-
 import java.util.Collection;
 
 public class SynchronizedCollectConsumer<T> extends CollectConsumer<T> {

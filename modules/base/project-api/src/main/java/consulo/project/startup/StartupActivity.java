@@ -19,7 +19,6 @@ import consulo.annotation.DeprecationInfo;
 import consulo.project.Project;
 import consulo.ui.UIAccess;
 
-
 /**
  * <p>Runs an activity on project open.</p>
  *

@@ -15,7 +15,6 @@
  */
 package consulo.util.concurrent.coroutine;
 
-
 /**
  * @author VISTALL
  * @since 2026-02-02

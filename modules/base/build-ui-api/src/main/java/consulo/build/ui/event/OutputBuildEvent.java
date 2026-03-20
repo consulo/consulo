@@ -15,7 +15,6 @@
  */
 package consulo.build.ui.event;
 
-
 /**
  * @author Vladislav.Soroka
  */

@@ -114,7 +114,6 @@ public class ChangeListViewerDialog extends DialogWrapper implements DataProvide
     myCommitMessageArea.setCaretPosition(0);
   }
 
-
   protected String getDimensionServiceKey() {
     return "VCS.ChangeListViewerDialog";
   }

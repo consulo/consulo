@@ -19,7 +19,6 @@ import consulo.language.psi.stub.IStubElementType;
 import consulo.language.util.CharTable;
 import consulo.language.parser.PsiBuilder;
 
-
 /**
  * An additional interface to be implemented by {@link IElementType} instances for tokens which are more convenient to parse separately.
  * Parsing is done when leaf elements are created.<p/>

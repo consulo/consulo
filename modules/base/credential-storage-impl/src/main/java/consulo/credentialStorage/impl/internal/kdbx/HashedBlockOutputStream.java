@@ -71,7 +71,6 @@ final class HashedBlockOutputStream extends OutputStream {
         put(b, offset, count);
     }
 
-
     @Override
     public void flush() throws IOException {
         save();

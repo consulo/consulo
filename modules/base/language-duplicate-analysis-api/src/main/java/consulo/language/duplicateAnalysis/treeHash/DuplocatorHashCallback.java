@@ -274,7 +274,6 @@ public class DuplocatorHashCallback implements FragmentsCollector {
         return null;
       }
 
-
       @Override
       public @Nullable String getComment(int pattern) {
         if (getFileCount(pattern) == 1) {
@@ -306,7 +305,6 @@ public class DuplocatorHashCallback implements FragmentsCollector {
       }
       rootElement.addContent(hashElement);
     }
-
 
     try(FileWriter fileWriter = new FileWriter(path + File.separator + "fragments.xml")) {
       XMLOutputter xmlOutputter = new XMLOutputter(Format.getPrettyFormat());

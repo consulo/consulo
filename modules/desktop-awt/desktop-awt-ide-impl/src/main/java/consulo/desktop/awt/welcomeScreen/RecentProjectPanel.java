@@ -185,7 +185,6 @@ public class RecentProjectPanel {
             JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT
         );
 
-
         removeRecentProjectAction = new AnAction() {
             @Override
             @RequiredUIAccess

@@ -58,7 +58,6 @@ public final class ClientProperty {
     return null;
   }
 
-
   /**
    * @param component a Swing component that may hold a client property value
    * @param key       a key corresponding to a client property
@@ -84,7 +83,6 @@ public final class ClientProperty {
     return null;
   }
 
-
   /**
    * @param component a Swing component that may hold a client property value
    * @param key       a typed key corresponding to a client property
@@ -107,7 +105,6 @@ public final class ClientProperty {
     return value != null ? (T)value : null;
   }
 
-
   /**
    * @param component a Swing component that may hold a client property value
    * @param key       a key corresponding to a client property
@@ -125,7 +122,6 @@ public final class ClientProperty {
   public static boolean isSetInHierarchy(@Nullable Component component, Object key) {
     return null != findInHierarchy(component, key);
   }
-
 
   /**
    * @param component a Swing component that may hold a client property value
@@ -147,7 +143,6 @@ public final class ClientProperty {
     return value.equals(findInHierarchy(component, key));
   }
 
-
   /**
    * @param component a Swing component that may hold a client property value
    * @param key       a key corresponding to a boolean client property
@@ -165,7 +160,6 @@ public final class ClientProperty {
   public static boolean isTrueInHierarchy(@Nullable Component component, Object key) {
     return isSetInHierarchy(component, key, Boolean.TRUE);
   }
-
 
   /**
    * @param component a Swing component that may hold a client property value

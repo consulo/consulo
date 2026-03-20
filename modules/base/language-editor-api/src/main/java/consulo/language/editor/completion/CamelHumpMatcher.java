@@ -23,7 +23,6 @@ public class CamelHumpMatcher extends PrefixMatcher {
   private static boolean ourForceStartMatching;
   private final boolean myTypoTolerant;
 
-
   public CamelHumpMatcher(String prefix) {
     this(prefix, true);
   }

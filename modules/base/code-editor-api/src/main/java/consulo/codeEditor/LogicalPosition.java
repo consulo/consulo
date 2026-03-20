@@ -15,7 +15,6 @@
  */
 package consulo.codeEditor;
 
-
 import java.awt.Point;
 
 /**

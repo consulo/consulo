@@ -27,7 +27,6 @@ import consulo.language.extension.ByLanguageValue;
 import consulo.language.extension.LanguageExtension;
 import consulo.language.extension.LanguageOneToOne;
 
-
 /**
  * Defines boundaries between regions for which bidi layout should be performed independently. This is required e.g. to make sure that
  * programming language elements (e.g. identifiers) are not reordered visually even if they are named using RTL languages.

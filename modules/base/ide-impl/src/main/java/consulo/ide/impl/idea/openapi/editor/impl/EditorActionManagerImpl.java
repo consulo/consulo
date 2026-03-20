@@ -87,7 +87,6 @@ public class EditorActionManagerImpl extends EditorActionManager {
     return oldHandler;
   }
 
-
   private static class DefaultReadOnlyFragmentModificationHandler implements ReadonlyFragmentModificationHandler {
     @Override
     public void handle(ReadOnlyFragmentModificationException e) {

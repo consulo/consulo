@@ -19,7 +19,6 @@ import consulo.localize.LocalizeValue;
 import consulo.ui.HtmlLabel;
 import consulo.ui.LabelOptions;
 
-
 /**
  * @author VISTALL
  * @since 2019-02-19

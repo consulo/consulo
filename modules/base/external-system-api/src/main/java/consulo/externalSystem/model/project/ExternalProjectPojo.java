@@ -20,7 +20,6 @@ import consulo.externalSystem.service.project.Identifiable;
 import consulo.externalSystem.service.project.Named;
 import consulo.util.lang.StringUtil;
 
-
 /**
  * @author Denis Zhdanov
  * @since 5/18/13 10:51 PM

@@ -19,7 +19,6 @@ package consulo.language.psi.stub;
 import consulo.index.io.VoidDataExternalizer;
 import consulo.index.io.data.DataExternalizer;
 
-
 /**
  * A specialization of FileBasedIndexExtension allowing to create a mapping [DataObject -> List of files containing this object]
  *

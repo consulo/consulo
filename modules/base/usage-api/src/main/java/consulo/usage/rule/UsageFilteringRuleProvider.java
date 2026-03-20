@@ -22,7 +22,6 @@ import consulo.project.Project;
 import consulo.ui.ex.action.AnAction;
 import consulo.usage.UsageView;
 
-
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface UsageFilteringRuleProvider {
     ExtensionPointName<UsageFilteringRuleProvider> EP_NAME = ExtensionPointName.create(UsageFilteringRuleProvider.class);

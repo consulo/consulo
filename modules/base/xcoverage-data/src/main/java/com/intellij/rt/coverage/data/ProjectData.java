@@ -16,7 +16,6 @@
 
 package com.intellij.rt.coverage.data;
 
-
 import com.intellij.rt.coverage.util.CoverageIOUtil;
 import com.intellij.rt.coverage.util.ErrorReporter;
 
@@ -101,7 +100,6 @@ public class ProjectData implements CoverageData, Serializable {
         projectData.myDiscovery = true;
         return projectData;
     }
-
 
     public static ProjectData createProjectData(
         File dataFile,
@@ -227,7 +225,6 @@ public class ProjectData implements CoverageData, Serializable {
     }
     //---------------------------------------------------------- //
 
-
     private File getTracesDir() {
         if (myTracesDir == null) {
             String fileName = myDataFile.getName();
@@ -258,7 +255,6 @@ public class ProjectData implements CoverageData, Serializable {
     public Map getClasses() {
         return myClasses.asMap();
     }
-
 
     // -----------------------  used from instrumentation  ------------------------------------------------//
 
@@ -460,7 +456,6 @@ public class ProjectData implements CoverageData, Serializable {
 
     //----------test discovery
     public static final String TRACE_DIR = "org.jetbrains.instrumentation.trace.dir";
-
 
     private String myTraceDir = System.getProperty(TRACE_DIR, "");
 

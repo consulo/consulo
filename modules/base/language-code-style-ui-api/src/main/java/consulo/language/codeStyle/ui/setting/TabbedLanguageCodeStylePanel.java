@@ -421,7 +421,6 @@ public abstract class TabbedLanguageCodeStylePanel extends CodeStyleAbstractPane
         }
     }
 
-
     //========================================================================================================================================
 
     private class ConfigurableWrapper extends CodeStyleAbstractPanel {

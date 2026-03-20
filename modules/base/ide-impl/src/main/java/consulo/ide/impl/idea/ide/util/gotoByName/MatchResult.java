@@ -15,7 +15,6 @@
  */
 package consulo.ide.impl.idea.ide.util.gotoByName;
 
-
 public class MatchResult {
   
   public final String elementName;

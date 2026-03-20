@@ -40,7 +40,6 @@ public class SuperParentFilter extends PositionElementFilter {
     return false;
   }
 
-
   public String toString(){
     return "super-parent(" +getFilter()+")";
   }

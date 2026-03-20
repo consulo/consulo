@@ -22,7 +22,6 @@ import consulo.language.psi.SmartPointerManager;
 import consulo.language.psi.SmartPsiElementPointer;
 import consulo.util.collection.ContainerUtil;
 
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;

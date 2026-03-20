@@ -23,7 +23,6 @@ import consulo.project.startup.PostStartupActivity;
 import consulo.ui.UIAccess;
 import jakarta.inject.Inject;
 
-
 @ExtensionImpl(order = "last")
 public class TipOfTheDayStartupActivity implements PostStartupActivity, DumbAware {
   private final TipOfDayManager myManager;

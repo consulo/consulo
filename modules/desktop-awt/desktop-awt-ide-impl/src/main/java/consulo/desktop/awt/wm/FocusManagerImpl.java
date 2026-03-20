@@ -181,7 +181,6 @@ public final class FocusManagerImpl implements ApplicationIdeFocusManager, Dispo
     immediate.set(false);
   }
 
-
   @Override
   public Component getFocusOwner() {
     UIAccess.assertIsUIThread();
@@ -325,7 +324,6 @@ public final class FocusManagerImpl implements ApplicationIdeFocusManager, Dispo
       }
       return AsyncResult.resolved();
     }
-
 
     return AsyncResult.resolved();
   }

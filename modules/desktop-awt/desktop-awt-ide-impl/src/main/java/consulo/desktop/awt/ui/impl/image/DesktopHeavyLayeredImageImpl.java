@@ -19,7 +19,6 @@ import consulo.desktop.awt.uiOld.LayeredIcon;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
 
-
 import javax.swing.*;
 import java.util.Arrays;
 

@@ -15,7 +15,6 @@
  */
 package consulo.project.ui.internal;
 
-
 import javax.swing.*;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;

@@ -20,7 +20,6 @@ import consulo.annotation.component.ExtensionAPI;
 import consulo.dataContext.DataContext;
 import consulo.language.psi.PsiElement;
 
-
 import java.util.Collections;
 import java.util.List;
 

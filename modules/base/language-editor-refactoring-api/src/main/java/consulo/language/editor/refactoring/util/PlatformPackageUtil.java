@@ -45,7 +45,6 @@ public class PlatformPackageUtil {
     return null;
   }
 
-
   private static PsiDirectory[] getPackageDirectories(Project project, String rootPackage, GlobalSearchScope scope) {
     PsiManager manager = PsiManager.getInstance(project);
 

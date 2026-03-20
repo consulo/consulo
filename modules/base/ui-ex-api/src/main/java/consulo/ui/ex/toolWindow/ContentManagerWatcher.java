@@ -21,7 +21,6 @@ import consulo.ui.ex.content.ContentManager;
 import consulo.ui.ex.content.event.ContentManagerEvent;
 import consulo.ui.ex.content.event.ContentManagerListener;
 
-
 public class ContentManagerWatcher {
   @RequiredUIAccess
   public static void watchContentManager(ToolWindow toolWindow, ContentManager contentManager) {

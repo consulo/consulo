@@ -22,7 +22,6 @@ import consulo.document.Document;
 import consulo.document.ReadonlyFragmentModificationHandler;
 import consulo.ui.ex.action.IdeActions;
 
-
 /**
  * Allows to register actions which are activated by typing and navigation keystrokes
  * in the editor.

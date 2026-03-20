@@ -167,7 +167,6 @@ public class TreeUtil {
     }
   }
 
-
   public static @Nullable ASTNode findSiblingBackward(ASTNode start, TokenSet types) {
     ASTNode child = start;
     while (true) {

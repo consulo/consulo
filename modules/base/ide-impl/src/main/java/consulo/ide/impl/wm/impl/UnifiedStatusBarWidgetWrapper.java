@@ -26,7 +26,6 @@ import consulo.ui.border.BorderPosition;
 import consulo.ui.border.BorderStyle;
 import consulo.ui.layout.WrappedLayout;
 
-
 /**
  * @author VISTALL
  * @since 2020-11-21

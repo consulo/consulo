@@ -32,7 +32,6 @@ import consulo.language.psi.PsiFile;
 import consulo.project.Project;
 import jakarta.inject.Inject;
 
-
 @ExtensionImpl
 final class ChameleonSyntaxHighlightingPassFactory implements MainHighlightingPassFactory {
   @Inject

@@ -15,7 +15,6 @@
  */
 package consulo.ui.ex.awt.dnd;
 
-
 import java.awt.*;
 import java.awt.dnd.DnDConstants;
 import java.awt.dnd.DragSource;
@@ -30,12 +29,10 @@ public enum DnDAction {
   //BIND("BIND", DnDConstants.ACTION_LINK, DragSource.DefaultLinkDrop, DragSource.DefaultLinkNoDrop),
   //MOVE("MOVE", DnDConstants.ACTION_MOVE, DragSource.DefaultMoveDrop, DragSource.DefaultMoveNoDrop);
 
-
   String myName;
   int myActionId;
   Cursor myCursor;
   Cursor myRejectCursor;
-
 
   DnDAction(String name, int actionId, Cursor cursor, Cursor rejectCursor) {
    myName = name;
@@ -43,7 +40,6 @@ public enum DnDAction {
    myCursor = cursor;
    myRejectCursor = rejectCursor;
  }
-
 
   public String getName() {
     return myName;

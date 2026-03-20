@@ -5,7 +5,6 @@ import consulo.execution.debug.stream.resolve.IdentityResolver;
 import consulo.execution.debug.stream.trace.impl.handler.unified.ToCollectionHandler;
 import consulo.execution.debug.stream.trace.impl.interpret.CollectIdentityTraceInterpreter;
 
-
 /**
  * @author Vitaliy.Bibaev
  */

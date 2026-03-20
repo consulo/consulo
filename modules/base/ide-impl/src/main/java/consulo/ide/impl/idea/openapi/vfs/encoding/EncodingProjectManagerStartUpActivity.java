@@ -25,7 +25,6 @@ import consulo.ui.ex.awt.internal.GuiUtils;
 import consulo.virtualFileSystem.encoding.EncodingProjectManager;
 import jakarta.inject.Inject;
 
-
 /**
  * @author VISTALL
  * @since 27-Jun-22

@@ -17,7 +17,6 @@ package consulo.application.util;
 
 import consulo.annotation.DeprecationInfo;
 
-
 @Deprecated
 @DeprecationInfo("Use consulo.util.lang.lazy.ClearableLazyValue")
 public abstract class AtomicClearableLazyValue<T> extends ClearableLazyValue<T> {

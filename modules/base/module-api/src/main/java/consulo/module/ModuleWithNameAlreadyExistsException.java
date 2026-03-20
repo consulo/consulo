@@ -15,7 +15,6 @@
  */
 package consulo.module;
 
-
 public class ModuleWithNameAlreadyExistsException extends Exception {
   private final String myModuleName;
 

@@ -17,7 +17,6 @@ package consulo.versionControlSystem.change;
 
 import consulo.versionControlSystem.AbstractVcsHelper;
 
-
 import java.util.Collection;
 
 /**

@@ -57,7 +57,6 @@ public class StatisticsTableModel extends ListTableModel<SMTestProxy> {
         return getItems().get(rowIndex);
     }
 
-
     /**
      * Searches index of given test or suite. If finds nothing will retun -1
      *

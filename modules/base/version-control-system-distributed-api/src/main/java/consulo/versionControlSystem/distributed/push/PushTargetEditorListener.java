@@ -15,7 +15,6 @@
  */
 package consulo.versionControlSystem.distributed.push;
 
-
 public interface PushTargetEditorListener {
   void onTargetInEditModeChanged(String value);
 }

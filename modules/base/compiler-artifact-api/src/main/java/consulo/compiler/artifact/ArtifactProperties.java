@@ -20,7 +20,6 @@ import consulo.compiler.artifact.ui.ArtifactEditorContext;
 import consulo.compiler.artifact.ui.ArtifactPropertiesEditor;
 import consulo.component.persist.PersistentStateComponent;
 
-
 /**
  * @author nik
  */

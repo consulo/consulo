@@ -18,7 +18,6 @@ package consulo.ide.navigation;
 import consulo.navigation.NavigationItem;
 import consulo.project.Project;
 
-
 /**
  * @see GotoFileContributor
  * @see GotoSymbolContributor

@@ -41,12 +41,10 @@ public class AWTIdleHolder {
     private final Runnable myRunnable;
     private final int myTimeout;
 
-
     MyFireIdleRequest(Runnable runnable, int timeout) {
       myTimeout = timeout;
       myRunnable = runnable;
     }
-
 
     @Override
     public void run() {

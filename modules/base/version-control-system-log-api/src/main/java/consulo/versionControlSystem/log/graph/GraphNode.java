@@ -16,7 +16,6 @@
 
 package consulo.versionControlSystem.log.graph;
 
-
 public final class GraphNode implements GraphElement {
   private final int myNodeIndex;
   

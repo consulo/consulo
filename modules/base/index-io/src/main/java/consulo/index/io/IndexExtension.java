@@ -21,7 +21,6 @@ import consulo.index.io.IndexId;
 import consulo.index.io.KeyDescriptor;
 import consulo.index.io.data.DataExternalizer;
 
-
 /**
  * @author Eugene Zhuravlev
  * V class MUST have equals / hashcode properly defined!!!

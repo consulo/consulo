@@ -17,7 +17,6 @@ package consulo.diff.content;
 
 import consulo.virtualFileSystem.VirtualFile;
 
-
 public interface FileContent extends DiffContent {
   /**
    * @return VirtualFile from which this content gets data.

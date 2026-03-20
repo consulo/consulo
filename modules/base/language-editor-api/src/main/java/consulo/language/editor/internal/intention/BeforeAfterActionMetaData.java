@@ -48,7 +48,6 @@ public abstract class BeforeAfterActionMetaData {
   protected TextDescriptor[] myExampleUsagesAfter = null;
   protected TextDescriptor myDescription = null;
 
-
   public BeforeAfterActionMetaData(ClassLoader loader, String descriptionDirectoryName) {
     myLoader = loader;
     myDescriptionDirectoryName = descriptionDirectoryName;

@@ -214,7 +214,6 @@ public abstract class ContentManagerBase implements ContentManager, PropertyChan
             fireContentRemoved(content, indexToBeRemoved);
             ((ContentEx) content).setManager(null);
 
-
             if (dispose) {
                 Disposer.dispose(content);
             }
@@ -298,7 +297,6 @@ public abstract class ContentManagerBase implements ContentManager, PropertyChan
         }
         return null;
     }
-
 
     @Override
     public int getIndexOfContent(Content content) {

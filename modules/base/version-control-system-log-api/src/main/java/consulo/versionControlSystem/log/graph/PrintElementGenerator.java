@@ -16,7 +16,6 @@
 
 package consulo.versionControlSystem.log.graph;
 
-
 import java.util.Collection;
 
 public interface PrintElementGenerator {

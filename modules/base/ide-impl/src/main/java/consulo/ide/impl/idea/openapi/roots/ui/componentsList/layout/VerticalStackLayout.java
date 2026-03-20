@@ -16,7 +16,6 @@
 
 package consulo.ide.impl.idea.openapi.roots.ui.componentsList.layout;
 
-
 import java.awt.*;
 
 public class VerticalStackLayout implements LayoutManager2 {

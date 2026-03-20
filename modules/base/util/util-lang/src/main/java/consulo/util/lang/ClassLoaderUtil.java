@@ -15,7 +15,6 @@
  */
 package consulo.util.lang;
 
-
 import consulo.util.lang.function.ThrowableRunnable;
 import consulo.util.lang.function.ThrowableSupplier;
 

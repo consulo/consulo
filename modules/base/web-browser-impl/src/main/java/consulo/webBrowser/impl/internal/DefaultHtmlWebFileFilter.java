@@ -20,7 +20,6 @@ import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.webBrowser.WebFileFilter;
 
-
 /**
  * @author VISTALL
  * @since 24-Apr-22

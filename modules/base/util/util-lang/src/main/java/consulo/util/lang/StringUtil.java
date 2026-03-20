@@ -302,7 +302,6 @@ public final class StringUtil {
         return html.replaceAll("<(.|\n)*?>", "");
     }
 
-
     public static boolean isAscii(String str) {
         return isAscii((CharSequence) str);
     }
@@ -2439,7 +2438,6 @@ public final class StringUtil {
         }
         return -1;
     }
-
 
     @Contract(pure = true)
     public static List<String> split(String s, String separator) {

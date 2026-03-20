@@ -23,7 +23,6 @@ import consulo.versionControlSystem.VcsBundle;
 import consulo.application.util.Semaphore;
 import consulo.logging.Logger;
 
-
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class Waiter extends Task.Modal {

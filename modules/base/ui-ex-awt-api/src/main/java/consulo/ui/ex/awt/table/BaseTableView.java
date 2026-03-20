@@ -24,7 +24,6 @@ import javax.swing.table.TableColumnModel;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-
 /**
  * Do NOT add code that assumes that table has same number of rows as model. It isn't true!
  */

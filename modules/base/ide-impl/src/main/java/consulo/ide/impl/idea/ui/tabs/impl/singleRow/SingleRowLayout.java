@@ -45,7 +45,6 @@ public class SingleRowLayout extends TabLayout {
   };
   public JPopupMenu myMorePopup;
 
-
   public final GhostComponent myLeftGhost = new GhostComponent(RowDropPolicy.first, RowDropPolicy.first);
   public final GhostComponent myRightGhost = new GhostComponent(RowDropPolicy.last, RowDropPolicy.first);
 
@@ -249,7 +248,6 @@ public class SingleRowLayout extends TabLayout {
     return true;
   }
 
-
   protected void recomputeToLayout(SingleRowPassInfo data) {
     calculateRequiredLength(data);
 
@@ -259,7 +257,6 @@ public class SingleRowLayout extends TabLayout {
 
       TabInfo first = data.toLayout.get(0);
       TabInfo last = data.toLayout.get(data.toLayout.size() - 1);
-
 
       if (myRowDropPolicy == RowDropPolicy.first) {
         if (first != myTabs.getSelectedInfo()) {
@@ -298,7 +295,6 @@ public class SingleRowLayout extends TabLayout {
       }
     }
 
-
   }
 
   protected void calculateRequiredLength(SingleRowPassInfo data) {
@@ -316,7 +312,6 @@ public class SingleRowLayout extends TabLayout {
     return getStrategy().getLengthIncrement(label != null ? label.getPreferredSize() : new Dimension())
            + (myTabs.isEditorTabs() ? myTabs.getInterTabSpaceLength() : 0);
   }
-
 
   public boolean isTabHidden(TabInfo tabInfo) {
     return myLastSingRowLayout != null && myLastSingRowLayout.toDrop.contains(tabInfo);

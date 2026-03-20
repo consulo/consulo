@@ -43,4 +43,3 @@ public interface EditorFoldingInfo {
   TextRange getPsiElementRange(FoldRegion region);
 }
 
-

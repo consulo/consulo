@@ -64,7 +64,6 @@ public class PsiCacheKey<T, H extends PsiElement> extends Key<SoftReference<Pair
     return data.getSecond();
   }
 
-
   /**
    * Gets modification count from tracker based on {@link #myModifyCause}
    *

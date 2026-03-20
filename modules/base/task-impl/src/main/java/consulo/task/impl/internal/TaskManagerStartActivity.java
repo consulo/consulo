@@ -22,7 +22,6 @@ import consulo.project.startup.PostStartupActivity;
 import consulo.task.TaskManager;
 import consulo.ui.UIAccess;
 
-
 /**
  * @author VISTALL
  * @since 03/02/2023

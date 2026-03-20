@@ -24,7 +24,6 @@ import consulo.application.dumb.DumbAware;
 import consulo.platform.Platform;
 import consulo.ui.annotation.RequiredUIAccess;
 
-
 /**
  * @author Vladimir Kondratyev
  */

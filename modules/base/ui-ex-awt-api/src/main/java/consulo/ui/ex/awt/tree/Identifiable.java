@@ -15,7 +15,6 @@
  */
 package consulo.ui.ex.awt.tree;
 
-
 import javax.swing.tree.TreePath;
 
 /**

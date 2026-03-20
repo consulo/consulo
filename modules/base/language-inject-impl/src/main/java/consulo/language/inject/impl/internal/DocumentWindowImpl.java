@@ -119,7 +119,6 @@ class DocumentWindowImpl extends UserDataHolderBase implements Disposable, Docum
         }
     }
 
-
     @Override
     @RequiredReadAction
     public int getLineCount() {

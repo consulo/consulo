@@ -71,7 +71,6 @@ public abstract class BaseShowSettingsUtil extends ShowSettingsUtil {
         List<ApplicationConfigurable> applicationConfigurables = tempProject.getApplication().getExtensionPoint(ApplicationConfigurable.class).getExtensionList();
         List<ProjectConfigurable> projectConfigurables = tempProject.getExtensionPoint(ProjectConfigurable.class).getExtensionList();
 
-
         List<Configurable> mergedConfigurables = ContainerUtil.concat(applicationConfigurables, projectConfigurables);
         List<Configurable> result = ConfigurableExtensionPointUtil.buildConfigurablesList(mergedConfigurables, configurable -> !tempProject.isDefault() || !ConfigurableWrapper.isNonDefaultProject(configurable));
 

@@ -49,7 +49,6 @@ public class ConsoleHighlighter {
   public static final TextAttributesKey CYAN = TextAttributesKey.createTextAttributesKey(CYAN_ID, ConsoleViewContentType.NORMAL_OUTPUT_KEY);
   public static final TextAttributesKey GRAY = TextAttributesKey.createTextAttributesKey(GRAY_ID, ConsoleViewContentType.NORMAL_OUTPUT_KEY);
 
-
   public static final TextAttributesKey DARKGRAY = TextAttributesKey.createTextAttributesKey(DARKGRAY_ID, GRAY);
   public static final TextAttributesKey RED_BRIGHT = TextAttributesKey.createTextAttributesKey(RED_BRIGHT_ID, RED);
   public static final TextAttributesKey GREEN_BRIGHT = TextAttributesKey.createTextAttributesKey(GREEN_BRIGHT_ID, GREEN);
@@ -58,7 +57,6 @@ public class ConsoleHighlighter {
   public static final TextAttributesKey MAGENTA_BRIGHT = TextAttributesKey.createTextAttributesKey(MAGENTA_BRIGHT_ID, MAGENTA);
   public static final TextAttributesKey CYAN_BRIGHT = TextAttributesKey.createTextAttributesKey(CYAN_BRIGHT_ID, CYAN);
   public static final TextAttributesKey WHITE = TextAttributesKey.createTextAttributesKey(WHITE_ID, ConsoleViewContentType.NORMAL_OUTPUT_KEY);
-
 
   private ConsoleHighlighter() {
   }

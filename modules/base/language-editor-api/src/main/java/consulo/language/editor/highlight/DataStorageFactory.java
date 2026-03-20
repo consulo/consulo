@@ -3,7 +3,6 @@ package consulo.language.editor.highlight;
 
 import consulo.language.ast.IElementType;
 
-
 /**
  * An experiment API for providing custom way of storing lexer-based highlighting data.
  * <p>

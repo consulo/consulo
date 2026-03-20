@@ -17,7 +17,6 @@ package consulo.execution.debug.evaluation;
 
 import consulo.execution.debug.frame.XStackFrame;
 
-
 /**
  * Subclass to allow to recalculate instance value in a different context
  *

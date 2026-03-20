@@ -19,7 +19,6 @@ import consulo.externalSystem.model.project.*;
 import consulo.externalSystem.model.task.TaskData;
 import consulo.externalSystem.service.project.ProjectData;
 
-
 /**
  * Holds common project entity {@link Key keys}.
  * 

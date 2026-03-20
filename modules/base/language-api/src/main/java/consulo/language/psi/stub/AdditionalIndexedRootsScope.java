@@ -19,7 +19,6 @@ import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.module.Module;
 import consulo.virtualFileSystem.VirtualFile;
 
-
 /**
  * @author peter
  */

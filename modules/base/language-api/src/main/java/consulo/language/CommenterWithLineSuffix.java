@@ -15,7 +15,6 @@
  */
 package consulo.language;
 
-
 /**
  * Defines the support for line comments with suffix.
  *

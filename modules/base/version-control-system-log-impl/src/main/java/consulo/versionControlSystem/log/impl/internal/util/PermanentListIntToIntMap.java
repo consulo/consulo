@@ -15,7 +15,6 @@
  */
 package consulo.versionControlSystem.log.impl.internal.util;
 
-
 public class PermanentListIntToIntMap extends AbstractIntToIntMap implements IntToIntMap {
   public static final int DEFAULT_BLOCK_SIZE = 30;
 
@@ -85,7 +84,6 @@ public class PermanentListIntToIntMap extends AbstractIntToIntMap implements Int
     myBlockSize = blockSize;
     myStrongShortIndexes = strongShortIndexes;
   }
-
 
   @Override
   public int shortSize() {

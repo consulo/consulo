@@ -40,7 +40,6 @@ import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.TimeUnit;
 
-
 class DetectAndAdjustIndentOptionsTask {
   private static final ExecutorService BOUNDED_EXECUTOR = SequentialTaskExecutor.createSequentialApplicationPoolExecutor("DetectableIndentOptionsProvider Pool");
   private static final Logger LOG = Logger.getInstance(DetectAndAdjustIndentOptionsTask.class);
@@ -114,6 +113,5 @@ class DetectAndAdjustIndentOptionsTask {
     CodeStyleSettings settings = CodeStyle.getSettings(file);
     return new TimeStampedIndentOptions(settings.getIndentOptions(fileType), document.getModificationStamp());
   }
-
 
 }

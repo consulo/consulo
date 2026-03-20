@@ -38,7 +38,6 @@ public class ChangesBrowserSpecificFilesNode extends ChangesBrowserNode {
     myDialogShower = shower;
   }
 
-
   @Override
   public void render(ChangesBrowserNodeRenderer renderer, boolean selected, boolean expanded, boolean hasFocus) {
     super.render(renderer, selected, expanded, hasFocus);

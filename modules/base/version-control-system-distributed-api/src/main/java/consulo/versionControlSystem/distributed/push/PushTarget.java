@@ -15,7 +15,6 @@
  */
 package consulo.versionControlSystem.distributed.push;
 
-
 /**
  * Destination for push action. (Remote  for git or push-path for mercurial).
  */

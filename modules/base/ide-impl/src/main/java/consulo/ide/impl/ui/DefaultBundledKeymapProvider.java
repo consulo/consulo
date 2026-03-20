@@ -18,7 +18,6 @@ package consulo.ide.impl.ui;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.ui.ex.keymap.BundledKeymapProvider;
 
-
 /**
  * @author VISTALL
  * @since 17-Jun-22

@@ -18,7 +18,6 @@ package consulo.language.psi.resolve;
 import consulo.annotation.DeprecationInfo;
 import consulo.util.dataholder.Key;
 
-
 @Deprecated
 @DeprecationInfo("Use PsiScopeProcessor directly")
 public abstract class BaseScopeProcessor implements PsiScopeProcessor {

@@ -18,7 +18,6 @@ package consulo.ui.ex;
 import consulo.dataContext.DataContext;
 import consulo.util.dataholder.Key;
 
-
 public interface CopyProvider {
   Key<CopyProvider> KEY = Key.create(CopyProvider.class);
 

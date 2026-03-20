@@ -110,7 +110,6 @@ public class ModuleRootManagerImpl implements ModuleRootManagerInternal, Disposa
     }
   }
 
-
   @Override
   
   @RequiredReadAction

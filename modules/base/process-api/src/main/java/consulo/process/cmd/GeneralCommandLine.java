@@ -563,7 +563,6 @@ public class GeneralCommandLine implements UserDataHolder {
     withPassParentEnvironment(passParentEnvironment);
   }
 
-
   @Deprecated
   @DeprecationInfo("Use better with# or set# methods, since platform will be always local")
   public GeneralCommandLine(String... command) {

@@ -21,7 +21,6 @@ import consulo.language.psi.PsiElement;
 import consulo.usage.PsiElementUsageTarget;
 import consulo.usage.PsiElementUsageTargetFactory;
 
-
 /**
  * @author VISTALL
  * @since 18/04/2023

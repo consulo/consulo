@@ -117,7 +117,6 @@ public class TreeTableView extends TreeTable implements ItemsProvider, Selection
         };
     }
 
-
     ListTreeTableModelOnColumns getTreeViewModel() {
         return (ListTreeTableModelOnColumns)getTableModel();
     }

@@ -649,7 +649,6 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer {
         }
     }
 
-
     private static class MyDialog extends JDialogAsUIWindow implements DialogWrapperDialog, DataProvider, Queryable, AbstractDialog {
         private final WeakReference<DialogWrapper> myDialogWrapper;
 

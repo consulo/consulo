@@ -25,7 +25,6 @@ import consulo.ui.ex.awt.PopupHandler;
 import consulo.disposer.Disposable;
 import consulo.ui.annotation.RequiredUIAccess;
 
-
 /**
  * @author VISTALL
  * @since 06/12/2020

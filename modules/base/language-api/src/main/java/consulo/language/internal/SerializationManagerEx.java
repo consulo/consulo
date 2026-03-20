@@ -19,7 +19,6 @@ import consulo.language.psi.stub.SerializationManager;
 import consulo.language.psi.stub.SerializerNotFoundException;
 import consulo.language.psi.stub.Stub;
 
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;

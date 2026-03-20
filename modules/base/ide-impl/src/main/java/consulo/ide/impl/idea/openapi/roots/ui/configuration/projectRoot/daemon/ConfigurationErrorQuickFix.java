@@ -14,7 +14,6 @@ package consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.daemon;
 
 import consulo.dataContext.DataContext;
 
-
 /**
  * @author nik
  */

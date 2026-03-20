@@ -20,7 +20,6 @@ import consulo.project.Project;
 import org.jspecify.annotations.Nullable;
 import org.jetbrains.annotations.Contract;
 
-
 import java.util.function.Function;
 
 public interface AnnotationBuilder {

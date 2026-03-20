@@ -112,7 +112,6 @@ public class FindUsagesProcessPresentation {
         myShowFindOptionsPrompt = showFindOptionsPrompt;
     }
 
-
     public void setCanceled(boolean canceled) {
         myCanceled = canceled;
     }
@@ -121,5 +120,4 @@ public class FindUsagesProcessPresentation {
         return myCanceled;
     }
 }
-
 

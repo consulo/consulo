@@ -21,7 +21,6 @@ import consulo.project.Project;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
-
 /**
  * @author VISTALL
  * @since 2018-08-24

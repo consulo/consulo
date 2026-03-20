@@ -5,7 +5,6 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.TopicAPI;
 import consulo.virtualFileSystem.VirtualFile;
 
-
 @TopicAPI(ComponentScope.PROJECT)
 public interface ProblemListener {
 

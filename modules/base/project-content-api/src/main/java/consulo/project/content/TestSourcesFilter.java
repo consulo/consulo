@@ -8,7 +8,6 @@ import consulo.content.FileIndex;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 
-
 /**
  * Implementations of this extension point can tell IDE whether some particular file is a test file.
  * <p>

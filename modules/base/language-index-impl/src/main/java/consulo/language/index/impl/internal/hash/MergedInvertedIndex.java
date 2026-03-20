@@ -66,7 +66,6 @@ public class MergedInvertedIndex<Key, Value> implements UpdatableIndex<Key, Valu
     return myBaseIndex.update(inputId, content);
   }
 
-
   @Override
   public void updateWithMap(AbstractUpdateData<Key, Value> updateData) throws StorageException {
     int fileId = updateData.getInputId();
@@ -166,7 +165,6 @@ public class MergedInvertedIndex<Key, Value> implements UpdatableIndex<Key, Valu
   public IndexExtension<Key, Value, FileContent> getExtension() {
     return myBaseIndex.getExtension();
   }
-
 
   @Override
   public void clear() throws StorageException {

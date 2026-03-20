@@ -28,7 +28,6 @@ import consulo.util.collection.Chunk;
 import consulo.util.collection.ContainerUtil;
 import consulo.virtualFileSystem.fileType.FileType;
 
-
 import java.lang.reflect.Array;
 import java.util.*;
 import java.util.function.Predicate;

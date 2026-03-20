@@ -63,7 +63,6 @@ public class ScalableIconComponent extends JComponent {
     super.paintComponent(g);
   }
 
-
   public final void setSelected(boolean isSelected) {
     myIsSelected = isSelected;
     this.revalidate();

@@ -20,7 +20,6 @@ import consulo.annotation.component.ServiceAPI;
 import consulo.language.psi.PsiElement;
 import consulo.project.Project;
 
-
 @ServiceAPI(ComponentScope.PROJECT)
 public abstract class HighlightingLevelManager {
   public static HighlightingLevelManager getInstance(Project project) {

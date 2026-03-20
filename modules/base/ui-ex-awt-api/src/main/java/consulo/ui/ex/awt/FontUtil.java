@@ -15,7 +15,6 @@
  */
 package consulo.ui.ex.awt;
 
-
 import java.awt.*;
 
 public class FontUtil {

@@ -33,7 +33,6 @@ import consulo.module.content.ProjectFileIndex;
 import consulo.module.content.ProjectRootManager;
 import consulo.virtualFileSystem.VirtualFile;
 
-
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;

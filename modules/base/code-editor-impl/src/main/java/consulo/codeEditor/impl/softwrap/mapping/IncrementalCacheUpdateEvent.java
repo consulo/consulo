@@ -9,7 +9,6 @@ import consulo.codeEditor.util.EditorUtil;
 import consulo.document.Document;
 import consulo.document.event.DocumentEvent;
 
-
 /**
  * Encapsulates information about incremental soft wraps cache update.
  *
@@ -68,7 +67,6 @@ public class IncrementalCacheUpdateEvent {
     myMandatoryEndOffset = newEndOffset;
     myLengthDiff = newEndOffset - oldEndOffset;
   }
-
 
   private static VisualLineInfo getVisualLineInfo(CodeEditorBase editor, int offset, boolean beforeSoftWrap) {
     Document document = editor.getDocument();

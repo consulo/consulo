@@ -310,7 +310,6 @@ public class TabLabel extends JPanel {
         myTabs.myActivePopup.show(e.getComponent(), e.getX(), e.getY());
     }
 
-
     public void setText(SimpleColoredText text) {
         myLabel.change(() -> {
             myLabel.clear();
@@ -324,7 +323,6 @@ public class TabLabel extends JPanel {
 
         invalidateIfNeeded();
     }
-
 
     private void invalidateIfNeeded() {
         if (getLabelComponent().getRootPane() == null) {

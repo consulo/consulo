@@ -17,7 +17,6 @@ package consulo.language.codeStyle.arrangement.match;
 
 import consulo.language.codeStyle.arrangement.ArrangementEntry;
 
-
 /**
  * Defines a contract for strategy that determines if an {@link ArrangementMatchRule arrangement rule} matches particular
  * {@link ArrangementEntry arrangement entry}.

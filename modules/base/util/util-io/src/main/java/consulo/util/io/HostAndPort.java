@@ -316,7 +316,6 @@ public final class HostAndPort implements Serializable {
 
   private static final long serialVersionUID = 0;
 
-
   private static void checkArgument(boolean expression) {
     if (!expression) {
       throw new IllegalArgumentException();

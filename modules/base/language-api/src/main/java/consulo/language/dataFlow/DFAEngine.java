@@ -137,7 +137,6 @@ public class DFAEngine<E> {
         return false;
     }
 
-
     /**
      * Count limit for dfa number of iterations.
      * Every node in dfa should be processed <= pred times * 2

@@ -27,7 +27,6 @@ import consulo.project.Project;
 import consulo.util.xml.serializer.XmlSerializerUtil;
 import jakarta.inject.Singleton;
 
-
 @Singleton
 @State(name = "ErrorTreeViewConfiguration", storages = {@Storage(file = StoragePathMacros.WORKSPACE_FILE)})
 @ServiceAPI(ComponentScope.PROJECT)

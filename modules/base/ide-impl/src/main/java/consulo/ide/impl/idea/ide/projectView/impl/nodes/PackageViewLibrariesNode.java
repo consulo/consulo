@@ -70,7 +70,6 @@ public class PackageViewLibrariesNode extends ProjectViewNode<LibrariesElement> 
         return PackageNodeUtil.createPackageViewChildrenOnFiles(roots, getProject(), getSettings(), null, true);
     }
 
-
     @Override
     public boolean someChildContainsFile(VirtualFile file) {
         ProjectFileIndex index = ProjectRootManager.getInstance(getProject()).getFileIndex();

@@ -136,7 +136,6 @@ public class AnimatedIcon implements Icon, Image {
     }
   }
 
-
   private final Frame[] frames;
   private final Set<Component> requested = Collections.newSetFromMap(new IdentityHashMap<>());
   private long time;

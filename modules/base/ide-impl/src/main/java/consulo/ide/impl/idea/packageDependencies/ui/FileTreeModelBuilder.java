@@ -246,7 +246,6 @@ public class FileTreeModelBuilder {
             update(indicator, false, ((double) myScannedFileCount++) / myTotalFileCount);
         }
 
-
         boolean isMarked = myMarker != null && myMarker.isMarked(file);
         if (isMarked) {
             myMarkedFileCount++;
@@ -564,7 +563,6 @@ public class FileTreeModelBuilder {
         return directoryNode;
     }
 
-
     private @Nullable PackageDependenciesNode getModuleNode(Module module) {
         if (module == null || !myShowModules) {
             return myRoot;
@@ -607,7 +605,6 @@ public class FileTreeModelBuilder {
         }
         return groupNode;
     }
-
 
     private class MyContentIterator implements ContentIterator {
         PackageDependenciesNode lastParent = null;

@@ -20,7 +20,6 @@ import consulo.util.collection.primitive.ints.IntIntMap;
 import gnu.trove.TIntIntHashMap;
 import gnu.trove.TIntIntIterator;
 
-
 /**
  * @author VISTALL
  * @since 08/05/2021

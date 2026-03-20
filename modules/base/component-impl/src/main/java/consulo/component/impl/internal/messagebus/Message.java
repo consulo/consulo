@@ -15,7 +15,6 @@
  */
 package consulo.component.impl.internal.messagebus;
 
-
 /**
  * @author VISTALL
  * @since 25/01/2023

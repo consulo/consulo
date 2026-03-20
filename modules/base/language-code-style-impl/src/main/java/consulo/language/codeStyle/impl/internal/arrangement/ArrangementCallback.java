@@ -15,7 +15,6 @@
  */
 package consulo.language.codeStyle.impl.internal.arrangement;
 
-
 import java.util.List;
 
 /**

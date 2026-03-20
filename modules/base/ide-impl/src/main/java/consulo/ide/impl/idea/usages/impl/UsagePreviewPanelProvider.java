@@ -20,7 +20,6 @@ import consulo.usage.UsageContextPanel;
 import consulo.usage.UsageContextPanelProvider;
 import consulo.usage.UsageView;
 
-
 @ExtensionImpl
 /**
 * @author VISTALL

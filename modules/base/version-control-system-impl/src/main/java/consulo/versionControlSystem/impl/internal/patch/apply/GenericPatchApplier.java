@@ -580,7 +580,6 @@ public class GenericPatchApplier {
     }
   }
 
-
   private void processAppliedInfoForUnApplied(SplitHunk original) {
     myAppliedInfo.add(new AppliedTextPatch.AppliedSplitPatchHunk(original, -1, -1, AppliedTextPatch.HunkStatus.NOT_APPLIED));
   }

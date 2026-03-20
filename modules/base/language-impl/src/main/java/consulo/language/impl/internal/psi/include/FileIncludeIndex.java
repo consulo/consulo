@@ -23,7 +23,6 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.archive.ArchiveFileSystem;
 import consulo.virtualFileSystem.fileType.FileType;
 
-
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
@@ -175,5 +174,4 @@ public class FileIncludeIndex extends FileBasedIndexExtension<String, List<FileI
         return version;
     }
 }
-
 

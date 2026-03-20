@@ -15,7 +15,6 @@
  */
 package consulo.versionControlSystem.log.impl.internal.data;
 
-
 import java.util.Objects;
 
 public interface VcsLogUiProperties {

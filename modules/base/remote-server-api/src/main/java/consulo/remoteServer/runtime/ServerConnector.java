@@ -3,7 +3,6 @@ package consulo.remoteServer.runtime;
 import consulo.remoteServer.configuration.deployment.DeploymentConfiguration;
 import consulo.remoteServer.runtime.deployment.ServerRuntimeInstance;
 
-
 /**
  * @author nik
  */

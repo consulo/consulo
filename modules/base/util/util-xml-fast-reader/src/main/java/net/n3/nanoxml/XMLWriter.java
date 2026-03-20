@@ -28,7 +28,6 @@
 
 package net.n3.nanoxml;
 
-
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintWriter;
@@ -36,7 +35,6 @@ import java.io.Writer;
 import java.util.Enumeration;
 import java.util.Objects;
 import java.util.Vector;
-
 
 /**
  * An XMLWriter writes XML data to a stream.
@@ -55,7 +53,6 @@ public class XMLWriter
     */
    private PrintWriter writer;
 
-
    /**
     * Creates a new XML writer.
     *
@@ -70,7 +67,6 @@ public class XMLWriter
       }
    }
 
-
    /**
     * Creates a new XML writer.
     *
@@ -80,7 +76,6 @@ public class XMLWriter
    {
       this.writer = new PrintWriter(stream);
    }
-
 
    /**
     * Writes an XML element.
@@ -92,7 +87,6 @@ public class XMLWriter
    {
       this.write(xml, false, 0, true);
    }
-
 
    /**
     * Writes an XML element.
@@ -107,7 +101,6 @@ public class XMLWriter
    {
       this.write(xml, prettyPrint, 0, true);
    }
-
 
    /**
     * Writes an XML element.
@@ -249,7 +242,6 @@ public class XMLWriter
 
       this.writer.flush();
    }
-
 
    /**
     * Writes a string encoding reserved characters.

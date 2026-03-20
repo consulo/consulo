@@ -347,7 +347,6 @@ public abstract class PsiElementPattern<T extends PsiElement, Self extends PsiEl
       super(condition);
     }
 
-
   }
 
 }

@@ -42,7 +42,6 @@ public class FavoritesViewSettingsImpl implements FavoritesViewSettings {
     @PropertyName("favorites.view.settings.abbreviate.qualified.package.names")
     public boolean myAbbreviateQualifiedPackages = false;
 
-
     public FavoritesViewSettingsImpl() {
         PropertiesComponent.getInstance().loadFields(this);
     }

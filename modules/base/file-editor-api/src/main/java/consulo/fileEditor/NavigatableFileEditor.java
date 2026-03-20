@@ -18,7 +18,6 @@ package consulo.fileEditor;
 
 import consulo.navigation.Navigatable;
 
-
 /**
  * File editor which supports possibility to navigate to {@link Navigatable} element
  *

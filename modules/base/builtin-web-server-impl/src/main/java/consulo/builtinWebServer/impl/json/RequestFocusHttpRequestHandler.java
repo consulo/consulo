@@ -21,7 +21,6 @@ import consulo.application.ui.wm.IdeFocusManager;
 import consulo.builtinWebServer.http.HttpRequest;
 import consulo.builtinWebServer.json.JsonGetRequestHandler;
 
-
 /**
  * @author VISTALL
  * @since 27.10.2015

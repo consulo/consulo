@@ -21,7 +21,6 @@ import consulo.project.startup.BackgroundStartupActivity;
 import consulo.project.ui.notification.Notification;
 import consulo.ui.UIAccess;
 
-
 import java.util.ArrayList;
 
 /**

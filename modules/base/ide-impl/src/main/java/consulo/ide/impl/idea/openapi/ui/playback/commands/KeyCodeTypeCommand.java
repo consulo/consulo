@@ -59,7 +59,6 @@ public class KeyCodeTypeCommand extends AlphaNumericTypeCommand {
 
     final ActionCallback result = new ActionCallback();
 
-
     IdeFocusManager.getGlobalInstance().doWhenFocusSettlesDown(new Runnable() {
       @Override
       public void run() {
@@ -102,7 +101,6 @@ public class KeyCodeTypeCommand extends AlphaNumericTypeCommand {
         result.setDone();
       }
     };
-
 
     if (SwingUtilities.isEventDispatchThread()) {
       ApplicationManager.getApplication().executeOnPooledThread(runnable);

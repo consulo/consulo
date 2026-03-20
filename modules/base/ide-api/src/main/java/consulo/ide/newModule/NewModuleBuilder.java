@@ -18,7 +18,6 @@ package consulo.ide.newModule;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 
-
 /**
  * @author VISTALL
  * @since 05.06.14

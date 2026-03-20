@@ -15,7 +15,6 @@
  */
 package consulo.index.io;
 
-
 /**
  * @author Maxim.Mossienko
  * @since 2016-11-22

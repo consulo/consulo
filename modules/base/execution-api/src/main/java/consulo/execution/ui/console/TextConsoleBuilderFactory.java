@@ -21,7 +21,6 @@ import consulo.application.Application;
 import consulo.content.scope.SearchScope;
 import consulo.project.Project;
 
-
 /**
  * @author yole
  * @author dyoma

@@ -31,7 +31,6 @@ class DirElementInfo extends SmartPointerElementInfo {
   
   private final Project myProject;
 
-
   DirElementInfo(PsiDirectory directory) {
     myProject = directory.getProject();
     myVirtualFile = directory.getVirtualFile();

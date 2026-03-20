@@ -23,7 +23,6 @@ import consulo.usage.UsageTarget;
 import consulo.usage.rule.UsageFilteringRule;
 import consulo.usage.rule.UsageGroupingRule;
 
-
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.Consumer;

@@ -302,7 +302,6 @@ public final class ScreenUtil {
         moveToFit(aRectangle, screen, null);
     }
 
-
     public static void moveToFit(Rectangle rectangle, Rectangle container, @Nullable Insets padding) {
         moveToFit(rectangle, container, padding, false);
     }
@@ -482,7 +481,6 @@ public final class ScreenUtil {
         if (dy == 0) {
             return (location.y >= bounds.y && location.y < bounds.y + bounds.height) && (dx > 0 ^ bounds.x > location.x);
         }
-
 
         // Calculate line equation parameters - y = a * x + b
         float a = (float) dy / dx;

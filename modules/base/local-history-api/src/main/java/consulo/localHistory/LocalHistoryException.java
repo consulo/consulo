@@ -17,7 +17,6 @@ package consulo.localHistory;
 
 import org.jspecify.annotations.Nullable;
 
-
 /**
  * Wrapper for any exception occurred during local history actions and processes
  */

@@ -24,7 +24,6 @@ import consulo.util.io.PathUtil;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 
-
 /**
  * @author nik
  */

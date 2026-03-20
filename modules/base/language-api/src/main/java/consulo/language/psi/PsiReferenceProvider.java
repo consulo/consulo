@@ -18,7 +18,6 @@ package consulo.language.psi;
 
 import consulo.language.util.ProcessingContext;
 
-
 /**
  * Allows to inject additional references into an element that supports reference contributors.
  * Register it via {@link PsiReferenceContributor} or {@link PsiReferenceProviderByPattern}

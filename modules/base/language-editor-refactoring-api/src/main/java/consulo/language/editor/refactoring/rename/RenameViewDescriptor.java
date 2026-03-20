@@ -63,7 +63,6 @@ public class RenameViewDescriptor implements UsageViewDescriptor {
             codeReferences.add(UsageViewUtil.getType(element) + " " + UsageViewUtil.getLongName(element));
         }
 
-
         myProcessedElementsHeader = StringUtil.join(ArrayUtil.toStringArray(processedElementsHeaders), ", ");
         myCodeReferencesText =
             RefactoringLocalize.referencesInCodeTo0(StringUtil.join(ArrayUtil.toStringArray(codeReferences), ", ")).get();

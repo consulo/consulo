@@ -164,7 +164,6 @@ public class DesktopSwtToolWindowPanelImpl implements ToolWindowPanel {
     private final Map<ToolWindowInternalDecorator, WindowInfoImpl> myDecorator2Info = new HashMap<>();
     private final Map<DesktopSwtToolWindowStripeButtonImpl, WindowInfoImpl> myButton2Info = new HashMap<>();
 
-
     private ThreeComponentSplitLayout myHorizontalSplitter = ThreeComponentSplitLayout.create(SplitLayoutPosition.HORIZONTAL);
     @Deprecated
     @DeprecationInfo("Unsupported for now")

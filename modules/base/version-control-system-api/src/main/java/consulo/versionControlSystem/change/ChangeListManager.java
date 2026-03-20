@@ -60,7 +60,6 @@ public abstract class ChangeListManager {
                                          Consumer<VcsDirtyScopeManager> dirtyScopeManager,
                                          ModalityState state);
 
-
   
   public abstract LocalChangeList addChangeList(String name, @Nullable String comment, @Nullable Object data);
 
@@ -200,7 +199,6 @@ public abstract class ChangeListManager {
   public abstract String isFreezed();
 
   public abstract boolean isFreezedWithNotification(@Nullable String modalTitle);
-
 
   public abstract List<VirtualFile> getModifiedWithoutEditing();
 

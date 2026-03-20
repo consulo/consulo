@@ -19,7 +19,6 @@ import consulo.execution.configuration.RunConfiguration;
 import consulo.execution.localize.ExecutionLocalize;
 import consulo.ui.image.Image;
 
-
 public class DefaultExecutionTarget extends ExecutionTarget {
   public static final ExecutionTarget INSTANCE = new DefaultExecutionTarget();
 

@@ -19,7 +19,6 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.virtualFileSystem.VirtualFile;
 
-
 /**
  * @author max
  */

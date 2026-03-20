@@ -350,7 +350,6 @@ public abstract class InvokerImpl implements Disposable, Invoker {
         }
     }
 
-
     /**
      * This wrapping class is intended to convert a developer's runnable to the obsolescent supplier.
      */
@@ -377,7 +376,6 @@ public abstract class InvokerImpl implements Disposable, Invoker {
             return task.toString();
         }
     }
-
 
     
     private ProgressIndicatorBase indicator(AsyncPromise<?> promise) {
@@ -585,7 +583,6 @@ public abstract class InvokerImpl implements Disposable, Invoker {
             executor.execute(runnable);
         }
     }
-
 
     
     public static InvokerImpl forEventDispatchThread(UIAccess uiAccess, Disposable parent) {

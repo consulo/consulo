@@ -676,7 +676,6 @@ public class SingleInspectionProfilePanel extends JPanel {
             }
         });
 
-
         myTreeTable.addMouseListener(new PopupHandler() {
             @Override
             public void invokePopup(Component comp, int x, int y) {
@@ -689,7 +688,6 @@ public class SingleInspectionProfilePanel extends JPanel {
             }
         });
 
-
         new TreeSpeedSearch(myTreeTable.getTree(), o -> {
             InspectionConfigTreeNode node = (InspectionConfigTreeNode) o.getLastPathComponent();
             Descriptor descriptor = node.getDefaultDescriptor();
@@ -697,7 +695,6 @@ public class SingleInspectionProfilePanel extends JPanel {
                 ? InspectionsConfigTreeComparator.getDisplayTextToSort(descriptor.getText().get())
                 : InspectionsConfigTreeComparator.getDisplayTextToSort(node.getGroupName());
         });
-
 
         JScrollPane scrollPane = ScrollPaneFactory.createScrollPane(myTreeTable);
         myTreeTable.getTree().setShowsRootHandles(true);
@@ -1325,7 +1322,6 @@ public class SingleInspectionProfilePanel extends JPanel {
                 }
             }
         }
-
 
         return false;
     }

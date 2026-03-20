@@ -34,7 +34,6 @@ public abstract class LoggerRt {
     return ourFactory;
   }
 
-
   public static LoggerRt getInstance(String category) {
     return getFactory().getInstance(category);
   }

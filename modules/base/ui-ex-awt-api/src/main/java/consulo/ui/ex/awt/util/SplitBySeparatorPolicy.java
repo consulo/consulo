@@ -55,7 +55,6 @@ public class SplitBySeparatorPolicy extends FilePathSplittingPolicy {
       mult *= -1;
     }
 
-
     if (end.isEmpty()) {
       return name;
     }

@@ -426,7 +426,6 @@ public class PsiSearchHelperImpl implements PsiSearchHelperEx {
                                            true);
   }
 
-
   @Override
   public boolean processUsagesInNonJavaFiles(String qName,
                                              PsiNonJavaFileReferenceProcessor processor,

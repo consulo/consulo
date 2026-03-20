@@ -206,7 +206,6 @@ public class TreePopupImpl extends WizardPopup implements TreePopup, NextStepHan
     }
   }
 
-
   private void restoreExpanded() {
     if (mySavedExpanded.isEmpty()) {
       expandAll();

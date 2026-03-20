@@ -17,7 +17,6 @@ package consulo.ide.setting.module;
 
 import consulo.content.library.LibraryTable;
 
-
 public interface LibraryTableModifiableModelProvider {
   
   LibraryTable.ModifiableModel getModifiableModel();

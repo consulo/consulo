@@ -18,7 +18,6 @@ package consulo.language.codeStyle.arrangement.match;
 import consulo.language.codeStyle.arrangement.ArrangementEntry;
 import consulo.util.lang.StringUtil;
 
-
 /**
  * @author Svetlana.Zemlyanskaya
  */

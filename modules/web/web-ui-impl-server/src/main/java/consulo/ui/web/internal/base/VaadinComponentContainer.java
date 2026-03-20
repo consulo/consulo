@@ -19,7 +19,6 @@ import com.vaadin.shared.ui.AbstractComponentContainerState;
 import com.vaadin.ui.AbstractComponentContainer;
 import consulo.ui.Component;
 
-
 /**
  * @author VISTALL
  * @since 2019-02-17

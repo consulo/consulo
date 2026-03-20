@@ -20,7 +20,6 @@ import consulo.language.lexer.Lexer;
 import consulo.language.parser.ParserDefinition;
 import consulo.language.parser.PsiParser;
 
-
 /**
  * @author VISTALL
  * @since 19:52/24.06.13

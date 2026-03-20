@@ -61,7 +61,6 @@ class SecureJarLoader extends JarLoader {
       myCodeSigners = codeSigners;
     }
 
-
     @Override
     public ProtectionDomain getProtectionDomain() {
       synchronized (myProtectionDomainMonitor) {

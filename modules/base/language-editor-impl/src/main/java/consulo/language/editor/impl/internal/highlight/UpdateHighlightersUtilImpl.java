@@ -513,7 +513,6 @@ public class UpdateHighlightersUtilImpl {
         }
     }
 
-
     // set highlights inside startOffset,endOffset but outside priorityRange
     @RequiredUIAccess
     static void setHighlightersOutsideRange(

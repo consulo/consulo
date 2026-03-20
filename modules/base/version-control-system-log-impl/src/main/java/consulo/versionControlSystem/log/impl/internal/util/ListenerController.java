@@ -16,7 +16,6 @@
 
 package consulo.versionControlSystem.log.impl.internal.util;
 
-
 public interface ListenerController<Listener> {
   void addListener(Listener listener);
 

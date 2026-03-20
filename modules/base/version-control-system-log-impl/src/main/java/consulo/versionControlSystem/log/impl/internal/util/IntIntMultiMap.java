@@ -25,7 +25,6 @@ public class IntIntMultiMap {
   private final static int[] EMPTY = new int[0];
   private final IntObjectMap<int[]> myKeyToArrayMap = IntMaps.newIntObjectHashMap();
 
-
   public void putValue(int key, int value) {
     int[] values = myKeyToArrayMap.get(key);
     if (values == null) {

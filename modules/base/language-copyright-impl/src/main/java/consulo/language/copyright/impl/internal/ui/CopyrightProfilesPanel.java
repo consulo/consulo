@@ -250,7 +250,6 @@ public class CopyrightProfilesPanel extends MasterDetailsComponent
         return result;
     }
 
-
     @Nullable
     @RequiredUIAccess
     private String askForProfileName(String title, String initialName) {

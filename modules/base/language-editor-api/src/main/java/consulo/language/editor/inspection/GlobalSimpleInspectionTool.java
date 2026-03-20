@@ -21,7 +21,6 @@ import consulo.language.editor.scope.AnalysisScope;
 import consulo.language.psi.PsiFile;
 import consulo.language.util.IncorrectOperationException;
 
-
 /**
  * Global inspection tool which doesn't need the graph and, therefore, can be run on per-file basis concurrently.
  * Basically it is a local inspection tool which cannot be selected in the inspection profile to be run on-the-fly.

@@ -20,7 +20,6 @@ import consulo.codeEditor.Editor;
 import consulo.dataContext.DataContext;
 import consulo.document.Document;
 
-
 /**
  * Extension of {@link TypedActionHandler} that can supply an action plan before actually executing an action.
  * <p>

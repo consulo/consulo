@@ -15,7 +15,6 @@
  */
 package consulo.execution.ui.console;
 
-
 /**
  * @author VISTALL
  * @since 01-Aug-22

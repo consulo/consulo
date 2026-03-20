@@ -20,7 +20,6 @@ import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.fileType.FileNameMatcherFactory;
 import consulo.virtualFileSystem.internal.FileTypeAssocTable;
 
-
 import java.util.*;
 
 /**

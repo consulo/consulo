@@ -21,7 +21,6 @@ import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
 
-
 public class HighlighterFactory {
   private HighlighterFactory() {}
 

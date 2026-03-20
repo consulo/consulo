@@ -80,7 +80,6 @@ public abstract class StandardVersionFilterComponent<T extends ChangeBrowserSett
             }
         };
 
-
         installCheckBoxListener(filterListener);
     }
 

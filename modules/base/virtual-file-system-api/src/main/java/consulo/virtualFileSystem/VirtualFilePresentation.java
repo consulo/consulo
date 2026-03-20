@@ -4,7 +4,6 @@ import consulo.application.AllIcons;
 import consulo.application.presentation.TypePresentationService;
 import consulo.ui.image.Image;
 
-
 /**
  * @author yole
  */

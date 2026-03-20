@@ -27,7 +27,6 @@ import consulo.util.xml.serializer.InvalidDataException;
 import consulo.util.xml.serializer.WriteExternalException;
 import org.jdom.Element;
 
-
 /**
  * @author VISTALL
  * @since 2014-08-21

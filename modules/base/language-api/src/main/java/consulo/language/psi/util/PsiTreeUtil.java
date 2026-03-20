@@ -1330,7 +1330,6 @@ public class PsiTreeUtil {
         return skipSiblingsForward(element, WS_COMMENTS);
     }
 
-
     @SafeVarargs
     @Nullable
     @Contract("null, _ -> null")

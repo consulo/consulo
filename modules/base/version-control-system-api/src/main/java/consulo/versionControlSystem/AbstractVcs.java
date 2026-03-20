@@ -349,7 +349,6 @@ public abstract class AbstractVcs<ComList extends CommittedChangeList> extends S
         return myUpdateOption;
     }
 
-
     public VcsShowSettingOption getStatusOptions() {
         return myStatusOption;
     }

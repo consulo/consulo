@@ -26,7 +26,6 @@ import consulo.ui.ex.action.*;
 import consulo.undoRedo.CommandProcessor;
 import consulo.util.lang.Pair;
 
-
 import java.util.ArrayList;
 import java.util.List;
 

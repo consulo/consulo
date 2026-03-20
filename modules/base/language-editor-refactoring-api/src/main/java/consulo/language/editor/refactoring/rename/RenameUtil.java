@@ -151,7 +151,6 @@ public class RenameUtil {
         TextOccurrencesUtil.addTextOccurences(element, stringToSearch, projectScope, result, factory);
     }
 
-
     public static void buildPackagePrefixChangedMessage(
         VirtualFile[] virtualFiles,
         StringBuffer message,

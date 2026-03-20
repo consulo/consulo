@@ -15,7 +15,6 @@
  */
 package consulo.index.io;
 
-
 import java.util.Map;
 
 /**

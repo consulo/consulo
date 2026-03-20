@@ -23,7 +23,6 @@ import consulo.disposer.Disposer;
 import consulo.disposer.TraceableDisposable;
 import org.jetbrains.annotations.TestOnly;
 
-
 /**
  * @author cdr
  */

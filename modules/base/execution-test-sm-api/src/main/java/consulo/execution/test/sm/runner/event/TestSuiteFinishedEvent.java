@@ -17,7 +17,6 @@ package consulo.execution.test.sm.runner.event;
 
 import jetbrains.buildServer.messages.serviceMessages.TestSuiteFinished;
 
-
 public class TestSuiteFinishedEvent extends TreeNodeEvent {
     public TestSuiteFinishedEvent(TestSuiteFinished suiteFinished) {
         super(suiteFinished.getSuiteName(), TreeNodeEvent.getNodeId(suiteFinished));

@@ -22,7 +22,6 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileWatcher.BackgroundTaskByVfsChangeProvider;
 import consulo.virtualFileSystem.fileWatcher.BackgroundTaskByVfsParameters;
 
-
 /**
  * @author VISTALL
  * @since 30.04.14

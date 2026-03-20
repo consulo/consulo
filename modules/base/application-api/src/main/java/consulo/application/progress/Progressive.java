@@ -15,7 +15,6 @@
  */
 package consulo.application.progress;
 
-
 public interface Progressive {
   void run(ProgressIndicator indicator);
 }

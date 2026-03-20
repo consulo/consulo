@@ -47,7 +47,6 @@ public class TimeTrackingConfigurable implements SearchableConfigurable, Configu
   public void disposeUIResources() {
   }
 
-
   @Override
   public boolean isModified() {
     return myEnableTimeTrackingCheckBox.isSelected() != getConfig().enabled || !myTimeTrackingSuspendDelay.getText().equals(String.valueOf(getConfig().suspendDelayInSeconds));

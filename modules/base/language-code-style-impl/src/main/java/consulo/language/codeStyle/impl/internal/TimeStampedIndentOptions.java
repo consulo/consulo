@@ -18,7 +18,6 @@ package consulo.language.codeStyle.impl.internal;
 import consulo.document.Document;
 import consulo.language.codeStyle.CommonCodeStyleSettings;
 
-
 public class TimeStampedIndentOptions extends CommonCodeStyleSettings.IndentOptions {
   private long myTimeStamp;
   private int myOriginalIndentOptionsHash;

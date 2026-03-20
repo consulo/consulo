@@ -194,12 +194,10 @@ public abstract class WizardPopup extends AbstractPopup implements ActionListene
         PopupDispatcher.unsetShowing(this);
         PopupDispatcher.clearRootIfNeeded(this);
 
-
         if (myOwnerWindow != null && myOwnerListener != null) {
             myOwnerWindow.removeComponentListener(myOwnerListener);
         }
     }
-
 
     public void disposeChildren() {
         if (myChild != null) {
@@ -500,7 +498,6 @@ public abstract class WizardPopup extends AbstractPopup implements ActionListene
     public SpeedSearch getSpeedSearch() {
         return mySpeedSearch;
     }
-
 
     protected void onSelectByMnemonic(Object value) {
 

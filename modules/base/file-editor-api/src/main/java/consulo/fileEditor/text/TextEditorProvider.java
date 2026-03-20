@@ -78,7 +78,6 @@ public abstract class TextEditorProvider implements FileEditorProvider, DumbAwar
   
   public abstract TextEditor getTextEditor(Editor editor);
 
-
   @Override
   public boolean accept(Project project, VirtualFile file) {
     return isTextFile(file) && !RawFileLoaderHelper.isTooLargeForContentLoading(file);

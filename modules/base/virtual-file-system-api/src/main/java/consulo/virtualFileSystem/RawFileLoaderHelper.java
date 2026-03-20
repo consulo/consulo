@@ -19,7 +19,6 @@ import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.light.LightVirtualFileBase;
 import consulo.virtualFileSystem.light.TextLightVirtualFileBase;
 
-
 /**
  * @author VISTALL
  * @since 16-Apr-22

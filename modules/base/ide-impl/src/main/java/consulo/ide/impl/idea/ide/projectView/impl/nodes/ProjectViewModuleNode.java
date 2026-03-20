@@ -30,7 +30,6 @@ import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiManager;
 import consulo.annotation.access.RequiredReadAction;
 
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;

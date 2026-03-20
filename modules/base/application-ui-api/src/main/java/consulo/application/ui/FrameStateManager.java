@@ -22,7 +22,6 @@ import consulo.application.ui.event.FrameStateListener;
 import consulo.disposer.Disposable;
 import consulo.util.concurrent.AsyncResult;
 
-
 /**
  * Manager of listeners for notifications about activation and deactivation of the IDE window.
  */
@@ -52,7 +51,6 @@ public abstract class FrameStateManager {
    * @param listener the listener instance.
    */
   public abstract void removeListener(FrameStateListener listener);
-
 
   /**
    * @return action callback for application's active state

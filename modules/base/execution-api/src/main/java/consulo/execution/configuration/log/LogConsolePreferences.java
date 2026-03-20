@@ -90,7 +90,6 @@ public class LogConsolePreferences extends LogFilterRegistrar {
     fireStateChanged();
   }
 
-
   public boolean isApplicable(String text, String prevType, boolean checkStandartFilters) {
     for (LogFilter filter : myRegisteredLogFilters.keySet()) {
       if (myRegisteredLogFilters.get(filter).booleanValue() && !filter.isAcceptable(text)) return false;

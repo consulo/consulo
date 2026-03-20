@@ -20,7 +20,6 @@ import consulo.annotation.component.TopicAPI;
 import consulo.language.editor.FileHighlightingSetting;
 import consulo.language.psi.PsiElement;
 
-
 /**
  * Listener for Highlighting settings modified from the 'Hector Inspector' slider.
  * Doesn't get called during the initial settings load

@@ -201,7 +201,6 @@ public class OfflineInspectionRVContentProvider extends InspectionRVContentProvi
         }
     }
 
-
     private static class OfflineProblemDescriptorContainer implements UserObjectContainer<OfflineProblemDescriptor> {
         
         private final OfflineProblemDescriptor myDescriptor;

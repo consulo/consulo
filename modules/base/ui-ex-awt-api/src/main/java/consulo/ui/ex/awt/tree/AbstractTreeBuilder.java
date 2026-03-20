@@ -120,7 +120,6 @@ public class AbstractTreeBuilder implements Disposable {
     if (ui != null) ui.collapseChildren(element, new UserRunnable(onDone));
   }
 
-
   
   static consulo.ui.ex.tree.TreeNode<Object> createSearchingTreeNodeWrapper() {
     return new AbstractTreeNodeWrapper();
@@ -172,7 +171,6 @@ public class AbstractTreeBuilder implements Disposable {
   protected Object getTreeStructureElement(NodeDescriptor nodeDescriptor) {
     return nodeDescriptor == null ? null : nodeDescriptor.getElement();
   }
-
 
   protected void updateNode(DefaultMutableTreeNode node) {
     AbstractTreeUi ui = getUi();
@@ -302,7 +300,6 @@ public class AbstractTreeBuilder implements Disposable {
   protected boolean isAlwaysShowPlus(NodeDescriptor descriptor) {
     return false;
   }
-
 
   protected boolean isSmartExpand() {
     return true;

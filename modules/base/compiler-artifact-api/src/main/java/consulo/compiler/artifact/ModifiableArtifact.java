@@ -17,7 +17,6 @@ package consulo.compiler.artifact;
 
 import consulo.compiler.artifact.element.CompositePackagingElement;
 
-
 /**
  * @author nik
  */

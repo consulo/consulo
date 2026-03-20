@@ -66,7 +66,6 @@ public abstract class HistoryDialogModel {
     return FileUtil.toSystemDependentName(myFile.getPath());
   }
 
-
   public List<RevisionItem> getRevisions() {
     if (myRevisionsCache == null) {
       Pair<Revision, List<RevisionItem>> revs = calcRevisionsCache();

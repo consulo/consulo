@@ -187,7 +187,6 @@ public class TemplateListPanel extends JPanel implements Disposable {
             }
         }
 
-
         for (TemplateGroup templateGroup : templateGroups) {
             for (TemplateImpl template : templateGroup.getElements()) {
                 template.applyOptions(getTemplateOptions(template));
@@ -325,7 +324,6 @@ public class TemplateListPanel extends JPanel implements Disposable {
             },
             TemplateSettingsImpl.getInstanceImpl().getTemplate(template.getKey(), template.getGroupName()) != null
         );
-
 
         myDetailsWrapper.setContent(myCurrentTemplateEditor);
     }

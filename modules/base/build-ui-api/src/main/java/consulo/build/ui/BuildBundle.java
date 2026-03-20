@@ -8,7 +8,6 @@ import consulo.build.ui.localize.BuildLocalize;
 import consulo.component.util.localize.AbstractBundle;
 import org.jetbrains.annotations.PropertyKey;
 
-
 @Deprecated(forRemoval = true)
 @DeprecationInfo("Use BuildLocalize")
 @MigratedExtensionsTo(BuildLocalize.class)

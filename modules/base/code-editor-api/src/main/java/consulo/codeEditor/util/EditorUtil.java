@@ -196,7 +196,6 @@ public class EditorUtil {
             line = foldEndLine;
         }
 
-
         LogicalPosition second = editor.visualToLogicalPosition(new VisualPosition(end.line, 0));
         for (int line = second.line, offset = document.getLineEndOffset(line); offset <= document.getTextLength();
              offset = document.getLineEndOffset(line)) {
@@ -218,7 +217,6 @@ public class EditorUtil {
         }
         return Pair.create(first, second);
     }
-
 
     /**
      * Finds the end offset of visual line at which given offset is located, not taking soft wraps into account.
@@ -420,7 +418,6 @@ public class EditorUtil {
 //                NotificationType.INFORMATION)
 //            .notify(editor.getProject());
     }
-
 
     
     public static DataContext getEditorDataContext(Editor editor) {

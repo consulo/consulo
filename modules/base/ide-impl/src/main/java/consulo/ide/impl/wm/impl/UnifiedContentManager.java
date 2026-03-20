@@ -27,7 +27,6 @@ import consulo.ui.annotation.RequiredUIAccess;
 
 import org.jspecify.annotations.Nullable;
 
-
 /**
  * @author VISTALL
  * @since 18-Oct-17

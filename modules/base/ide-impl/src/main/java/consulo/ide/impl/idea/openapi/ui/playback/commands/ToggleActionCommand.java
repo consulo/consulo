@@ -104,7 +104,6 @@ public class ToggleActionCommand extends AbstractCommand {
       }
     });
 
-
     return result;
   }
 }

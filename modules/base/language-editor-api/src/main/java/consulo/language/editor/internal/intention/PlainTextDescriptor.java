@@ -16,7 +16,6 @@
 
 package consulo.language.editor.internal.intention;
 
-
 import java.io.IOException;
 
 /**

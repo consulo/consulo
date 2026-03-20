@@ -23,7 +23,6 @@ import consulo.remoteServer.configuration.deployment.DeploymentSourceType;
 import consulo.remoteServer.configuration.deployment.ModuleDeploymentSource;
 import org.jdom.Element;
 
-
 /**
  * @author nik
  */

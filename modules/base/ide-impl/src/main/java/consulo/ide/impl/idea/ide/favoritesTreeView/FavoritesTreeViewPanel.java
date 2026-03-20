@@ -189,10 +189,8 @@ public class FavoritesTreeViewPanel extends JPanel implements DataProvider, Dock
             }
         };
 
-
         AnAction editActionButton = new EditFavoritesAction();
         editActionButton.registerCustomShortcutSet(CommonShortcuts.CTRL_ENTER, null);
-
 
         AnAction action = ActionManager.getInstance().getAction(IdeActions.ACTION_NEW_ELEMENT);
         action.registerCustomShortcutSet(action.getShortcutSet(), myTree);

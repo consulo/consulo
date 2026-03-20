@@ -29,7 +29,6 @@ public class JBViewportHacking {
   private static final MethodInvocator ourGetPaintManagerMethod = new MethodInvocator(RepaintManager.class, "getPaintManager");
   private static final MethodInvocator ourGetUseTrueDoubleBufferingMethod = new MethodInvocator(JRootPane.class, "getUseTrueDoubleBuffering");
 
-
   /**
    * Blit-acceleration copies as much of the rendered area as possible and then repaints only newly exposed region.
    * This helps to improve scrolling performance and to reduce CPU usage (especially if drawing is compute-intensive).

@@ -29,7 +29,6 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.PsiElement;
 import consulo.ide.impl.dataContext.BaseDataManager;
 
-
 /**
  * @author Eugene Zhuravlev
  * @since 2004-02-10

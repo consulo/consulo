@@ -20,7 +20,6 @@ import consulo.codeEditor.Editor;
 import consulo.language.psi.PsiFile;
 import consulo.project.Project;
 
-
 public interface ParameterInfoContext {
   Project getProject();
 

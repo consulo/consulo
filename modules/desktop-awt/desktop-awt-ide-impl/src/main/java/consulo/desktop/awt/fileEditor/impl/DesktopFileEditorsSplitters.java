@@ -465,7 +465,6 @@ public class DesktopFileEditorsSplitters extends FileEditorsSplittersBase<Deskto
         }
     }
 
-
     private class UIBuilder extends AsyncConfigTreeReader<JPanel> {
         
         @Override
@@ -560,7 +559,6 @@ public class DesktopFileEditorsSplitters extends FileEditorsSplittersBase<Deskto
             return window.myPanel;
         }
 
-
         
         @Override
         protected CompletableFuture<JPanel> processSplitter(Element splitterElement,
@@ -570,7 +568,6 @@ public class DesktopFileEditorsSplitters extends FileEditorsSplittersBase<Deskto
                                                             UIAccess uiAccess) {
             return processSplitterImpl(splitterElement, firstChild, secondChild, context, uiAccess);
         }
-
 
         protected CompletableFuture<JPanel> processSplitterImpl(Element splitterElement,
                                                                 Element firstChild,

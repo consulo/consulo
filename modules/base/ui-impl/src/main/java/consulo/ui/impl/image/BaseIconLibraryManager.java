@@ -262,7 +262,6 @@ public abstract class BaseIconLibraryManager implements IconLibraryManager {
         }
     }
 
-
     private void processImage(String imagePath, File jarFile, ZipFile zipFile, ZipEntry zipEntry, Map<String, JarIcon> iconUrls) throws IOException {
         boolean isSVG = imagePath.endsWith("svg");
         int dotIndex = imagePath.lastIndexOf('.');

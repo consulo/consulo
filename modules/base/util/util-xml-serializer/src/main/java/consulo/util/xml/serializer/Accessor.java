@@ -15,7 +15,6 @@
  */
 package consulo.util.xml.serializer;
 
-
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
 

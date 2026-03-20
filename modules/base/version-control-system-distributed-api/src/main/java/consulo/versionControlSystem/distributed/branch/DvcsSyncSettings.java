@@ -15,7 +15,6 @@
  */
 package consulo.versionControlSystem.distributed.branch;
 
-
 public interface DvcsSyncSettings {
 
   enum Value {

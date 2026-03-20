@@ -194,7 +194,6 @@ public class DisposerTest extends Assertions {
 
         Disposer.dispose(root);
 
-
         ArrayList<String> expected = new ArrayList<>();
         expected.add("beforeDispose: root");
         expected.add("beforeDispose: subFolder");
@@ -205,7 +204,6 @@ public class DisposerTest extends Assertions {
 
         assertEquals(toString(expected), toString(myDisposeActions));
     }
-
 
     private void assertDisposed(MyDisposable disposable) {
         assertTrue(disposable.isDisposed());

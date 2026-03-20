@@ -17,7 +17,6 @@ package consulo.externalSystem.model.execution;
 
 import consulo.util.lang.StringUtil;
 
-
 /**
  * Essentially this class is {@link ExternalSystemTaskExecutionSettings} plus auxiliary information like execution type (run/debug etc).
  * 

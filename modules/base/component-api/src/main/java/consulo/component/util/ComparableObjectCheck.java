@@ -17,7 +17,6 @@ package consulo.component.util;
 
 import consulo.util.lang.Comparing;
 
-
 public class ComparableObjectCheck {
   public static boolean equals(ComparableObject me, Object him) {
     if (me == him) {

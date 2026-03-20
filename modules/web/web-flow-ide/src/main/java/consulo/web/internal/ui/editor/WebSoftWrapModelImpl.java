@@ -22,7 +22,6 @@ import consulo.codeEditor.impl.CodeEditorBase;
 import consulo.codeEditor.impl.CodeEditorSoftWrapModelBase;
 import consulo.codeEditor.impl.softwrap.mapping.SoftWrapApplianceManager;
 
-
 /**
  * @author VISTALL
  * @since 04/08/2021

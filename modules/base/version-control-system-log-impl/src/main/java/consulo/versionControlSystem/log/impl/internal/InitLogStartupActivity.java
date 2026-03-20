@@ -23,7 +23,6 @@ import consulo.project.startup.PostStartupActivity;
 import consulo.ui.UIAccess;
 import consulo.versionControlSystem.VcsMappingListener;
 
-
 /**
 * @author VISTALL
 * @since 29-Jun-22

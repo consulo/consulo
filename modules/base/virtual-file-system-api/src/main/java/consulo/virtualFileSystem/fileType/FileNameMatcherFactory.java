@@ -20,7 +20,6 @@ import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
 import consulo.util.lang.StringUtil;
 
-
 /**
  * @author nik
  */

@@ -76,7 +76,6 @@ public class TaskDocumentationProvider implements UnrestrictedDocumentationProvi
     return object instanceof Task ? new TaskPsiElement(psiManager, (Task)object) : null;
   }
 
-
   @Override
   public String fetchExternalDocumentation(Project project, PsiElement element, List<String> docUrls) {
     return null;

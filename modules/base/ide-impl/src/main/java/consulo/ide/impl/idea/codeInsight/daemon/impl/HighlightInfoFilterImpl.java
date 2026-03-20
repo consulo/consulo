@@ -24,7 +24,6 @@ import consulo.language.editor.rawHighlight.HighlightInfo;
 import consulo.language.editor.rawHighlight.HighlightInfoFilter;
 import consulo.language.psi.PsiFile;
 
-
 @ExtensionImpl(order = "last")
 public class HighlightInfoFilterImpl implements HighlightInfoFilter {
   private static final boolean ourTestMode = ApplicationManager.getApplication().isUnitTestMode();

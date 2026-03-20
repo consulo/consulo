@@ -15,7 +15,6 @@
  */
 package consulo.fileEditor.structureView.tree;
 
-
 // used in the implementation of FileStructureNodeProvider to avoid dependency on KeyMapManager in FileStructureNodeProvider.getShortcut()
 public interface ActionShortcutProvider {
   

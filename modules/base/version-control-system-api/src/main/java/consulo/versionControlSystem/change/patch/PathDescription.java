@@ -15,7 +15,6 @@
  */
 package consulo.versionControlSystem.change.patch;
 
-
 public interface PathDescription {
   
   String getPath();

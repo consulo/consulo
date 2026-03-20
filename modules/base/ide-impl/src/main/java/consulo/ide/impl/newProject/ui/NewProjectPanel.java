@@ -215,7 +215,6 @@ public abstract class NewProjectPanel extends BaseWelcomeScreenPanel implements 
                 rightContentPanel.add(panel, BorderLayout.CENTER);
             }
 
-
             if (myProcessor == null) {
                 rightContentPanel.add(nullPanel, EMPTY_PANEL);
 

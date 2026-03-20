@@ -135,7 +135,6 @@ public abstract class OutputLineSplitter {
         }
     }
 
-
     public void flush() {
         flushStdOutBuffer();
 

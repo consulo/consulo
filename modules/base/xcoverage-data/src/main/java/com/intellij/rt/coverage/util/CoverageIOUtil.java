@@ -165,7 +165,6 @@ public class CoverageIOUtil {
         }
     }
 
-
     public static String collapse(String methodSignature, final DictionaryLookup dictionaryLookup) {
         return processWithDictionary(
             methodSignature,

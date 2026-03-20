@@ -15,7 +15,6 @@
  */
 package consulo.versionControlSystem.log.impl.internal.util;
 
-
 public class SmartDeltaCompressor implements IntList {
 
   

@@ -54,7 +54,6 @@ public abstract class HighlightInfoProcessor {
   public void progressIsAdvanced(HighlightingSession highlightingSession, @Nullable Editor editor, double progress) {
   }
 
-
   private static final HighlightInfoProcessor EMPTY = new HighlightInfoProcessor() {
   };
 

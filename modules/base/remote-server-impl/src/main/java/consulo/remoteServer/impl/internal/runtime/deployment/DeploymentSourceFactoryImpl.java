@@ -27,7 +27,6 @@ import consulo.remoteServer.configuration.deployment.ModuleDeploymentSource;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
-
 /**
  * @author VISTALL
  * @since 22/01/2023

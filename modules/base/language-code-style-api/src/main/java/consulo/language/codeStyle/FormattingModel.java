@@ -19,7 +19,6 @@ import consulo.document.util.TextRange;
 import consulo.language.ast.ASTNode;
 import consulo.language.psi.PsiFile;
 
-
 /**
  * Defines the formatting model for a file. A formatting model defines how a file is broken
  * into non-whitespace blocks and different types of whitespace (alignment, indents and wraps)

@@ -32,7 +32,6 @@ public abstract class RepositoryImpl implements Repository {
   
   private final VirtualFile myRootDir;
 
-
   
   protected volatile State myState;
   protected volatile @Nullable String myCurrentRevision;
@@ -74,7 +73,6 @@ public abstract class RepositoryImpl implements Repository {
     return myState;
   }
 
-
   @Override
   public @Nullable String getCurrentRevision() {
     return myCurrentRevision;
@@ -104,5 +102,4 @@ public abstract class RepositoryImpl implements Repository {
     return result;
   }
 }
-
 

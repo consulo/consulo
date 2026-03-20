@@ -197,7 +197,6 @@ public class GeneralHighlightingPass extends ProgressableTextEditorHighlightingP
                         : inside;
                 }));
 
-
             List<ProperTextRange> allInsideRanges = ContainerUtil.concat((List<List<ProperTextRange>>) ContainerUtil.map(
                 dividedElements,
                 dividedForRoot -> {

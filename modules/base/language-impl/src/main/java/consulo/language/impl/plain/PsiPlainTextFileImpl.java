@@ -26,7 +26,6 @@ import consulo.language.psi.PsiReference;
 import consulo.language.psi.ReferenceProvidersRegistry;
 import consulo.virtualFileSystem.fileType.FileType;
 
-
 public class PsiPlainTextFileImpl extends PsiFileImpl implements PsiPlainTextFile {
   private final FileType myFileType;
 

@@ -35,7 +35,6 @@ public class CycleFinder<Node> {
   public Set<List<Node>> getNodeCycles(final Node node){
     Set<List<Node>> result = new HashSet<List<Node>>();
 
-
     Graph<Node> graphWithoutNode = new Graph<Node>() {
       public Collection<Node> getNodes() {
         Collection<Node> nodes = myGraph.getNodes();

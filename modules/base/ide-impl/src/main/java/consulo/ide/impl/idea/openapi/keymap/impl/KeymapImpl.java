@@ -108,7 +108,6 @@ public class KeymapImpl implements Keymap, ExternalizableScheme {
         myName = name;
     }
 
-
     public KeymapImpl deriveKeymap() {
         if (canModify()) {
             return copy(false);
@@ -352,7 +351,6 @@ public class KeymapImpl implements Keymap, ExternalizableScheme {
         return listOfShortcuts;
     }
 
-
     protected String[] getParentActionIds(KeyStroke firstKeyStroke) {
         return myParent.getActionIds(firstKeyStroke);
     }
@@ -459,7 +457,6 @@ public class KeymapImpl implements Keymap, ExternalizableScheme {
     protected String[] getParentActionIds(MouseShortcut shortcut) {
         return myParent.getActionIds(shortcut);
     }
-
 
     @Override
     public String[] getActionIds(MouseShortcut shortcut) {
@@ -816,7 +813,6 @@ public class KeymapImpl implements Keymap, ExternalizableScheme {
     protected String[] getParentActionIds() {
         return myParent.getActionIds();
     }
-
 
     @Override
     public HashMap<String, ArrayList<KeyboardShortcut>> getConflicts(String actionId, KeyboardShortcut keyboardShortcut) {

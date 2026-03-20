@@ -20,7 +20,6 @@ import consulo.annotation.component.ExtensionAPI;
 import consulo.ui.ex.action.AnAction;
 import consulo.component.extension.ExtensionPointName;
 
-
 /**
  * Implement this to add additional custom actions to the popup invoked by right-clicking on the annotation gutter.
  *

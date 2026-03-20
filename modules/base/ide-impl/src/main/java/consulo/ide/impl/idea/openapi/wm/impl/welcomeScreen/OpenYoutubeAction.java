@@ -23,7 +23,6 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.ui.annotation.RequiredUIAccess;
 
-
 @ActionImpl(id = "Help.Youtube")
 public class OpenYoutubeAction extends DumbAwareAction {
     public OpenYoutubeAction() {

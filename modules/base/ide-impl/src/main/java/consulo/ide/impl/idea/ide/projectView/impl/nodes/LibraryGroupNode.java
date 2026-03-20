@@ -123,7 +123,6 @@ public class LibraryGroupNode extends ProjectViewNode<LibraryGroupElement> {
         }
     }
 
-
     @Override
     public String getTestPresentation() {
         return "Libraries";

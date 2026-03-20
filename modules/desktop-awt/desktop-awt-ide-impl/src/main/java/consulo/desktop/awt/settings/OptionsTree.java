@@ -628,7 +628,6 @@ public class OptionsTree implements Disposable, OptionsEditorColleague {
                     continue;
                 }
 
-
                 for (TreePath eachSelected : selected) {
                     if (!eachVisiblePath.isDescendant(eachSelected)) {
                         toCollapse.add(eachVisiblePath);

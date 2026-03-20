@@ -15,7 +15,6 @@
  */
 package consulo.versionControlSystem.log.impl.internal.ui.render;
 
-
 import javax.swing.*;
 import javax.swing.table.TableCellRenderer;
 import java.awt.*;
@@ -34,7 +33,6 @@ public abstract class TypeSafeTableCellRenderer<T> implements TableCellRenderer 
     //noinspection unchecked
     return (T)value;
   }
-
 
   protected abstract Component getTableCellRendererComponentImpl(JTable table,
                                                                  T value,

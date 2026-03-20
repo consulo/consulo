@@ -15,7 +15,6 @@
  */
 package consulo.ui.ex.action;
 
-
 import javax.swing.border.Border;
 import java.awt.*;
 

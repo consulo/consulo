@@ -89,7 +89,6 @@ public class VariantsCompletionAction extends AnAction {
             chars.length()
         );
 
-
         List<String> sortedWords = new ArrayList<>(words);
         Collections.sort(sortedWords);
 

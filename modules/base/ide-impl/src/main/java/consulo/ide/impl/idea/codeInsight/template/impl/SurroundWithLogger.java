@@ -7,7 +7,6 @@ import consulo.language.editor.template.CustomLiveTemplate;
 import consulo.language.editor.template.Template;
 import consulo.project.Project;
 
-
 public final class SurroundWithLogger /*extends CounterUsagesCollector*/ {
   //private static final EventLogGroup GROUP = new EventLogGroup("surround.with", 3);
   //private static final VarargEventId LIVE_TEMPLATE_EXECUTED = registerLiveTemplateEvent(GROUP, "live.template.executed");

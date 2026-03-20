@@ -86,7 +86,6 @@ public class ComputeVirtualFileNameStatAction extends AnAction implements DumbAw
         System.out.println("Suffix counts:(" + suffixes.size() + " total)");
         show(suffixes);
 
-
         final TObjectIntHashMap<String> save = new TObjectIntHashMap<String>();
         // compute economy
         suffixes.forEachEntry(new TObjectIntProcedure<String>() {
@@ -99,7 +98,6 @@ public class ComputeVirtualFileNameStatAction extends AnAction implements DumbAw
 
         System.out.println("Supposed save by stripping suffixes: (" + save.size() + " total)");
         final List<Pair<String, Integer>> saveSorted = show(save);
-
 
         final List<String> picked = new ArrayList<String>();
         //List<String> candidates = new ArrayList<String>();

@@ -23,7 +23,6 @@ import consulo.language.codeStyle.IndentInside;
 import consulo.language.codeStyle.internal.LeafBlockWrapper;
 import consulo.language.codeStyle.internal.WhiteSpace;
 
-
 public class FormatProcessorUtils {
     private static int calcShift(
         IndentInside oldIndent,

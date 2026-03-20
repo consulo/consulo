@@ -19,7 +19,6 @@ import consulo.module.content.layer.ModifiableRootModel;
 import consulo.project.Project;
 import consulo.util.dataholder.UserDataHolder;
 
-
 public interface ModuleConfigurationState extends UserDataHolder {
   
   ModulesConfigurator getModulesConfigurator();

@@ -17,7 +17,6 @@ package consulo.language.psi;
 
 import consulo.language.pom.PomTarget;
 
-
 /**
  * @author peter
  */

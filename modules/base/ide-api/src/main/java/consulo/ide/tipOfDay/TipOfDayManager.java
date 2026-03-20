@@ -21,7 +21,6 @@ import consulo.project.Project;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 
-
 /**
  * @author VISTALL
  * @since 2020-06-23

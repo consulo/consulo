@@ -21,7 +21,6 @@ import consulo.language.ast.TokenType;
 import consulo.language.psi.*;
 import consulo.localize.LocalizeValue;
 
-
 public class PsiErrorElementImpl extends CompositePsiElement implements PsiErrorElement {
     private final LocalizeValue myErrorDescription;
 

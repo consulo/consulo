@@ -94,7 +94,6 @@ public interface MultiHostRegistrar {
   /*this*/
   MultiHostRegistrar addPlace(@Nullable String prefix, @Nullable String suffix, PsiLanguageInjectionHost host, TextRange rangeInsideHost);
 
-
   /**
    * The final part of the injecting process.
    * You have to call this method to tell the IDE you finished constructing the injection.

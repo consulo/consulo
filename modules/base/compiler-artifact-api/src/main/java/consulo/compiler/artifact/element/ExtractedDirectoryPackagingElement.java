@@ -26,7 +26,6 @@ import consulo.util.xml.serializer.annotation.Attribute;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.archive.ArchiveVfsUtil;
 
-
 /**
  * @author nik
  */

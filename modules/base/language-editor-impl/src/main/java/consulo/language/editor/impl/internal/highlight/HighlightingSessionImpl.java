@@ -103,7 +103,6 @@ public class HighlightingSessionImpl implements HighlightingSession {
     }
   }
 
-
   
   @Override
   public PsiFile getPsiFile() {

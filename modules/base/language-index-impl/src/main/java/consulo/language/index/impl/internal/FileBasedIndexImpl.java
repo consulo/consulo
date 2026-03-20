@@ -777,7 +777,6 @@ public final class FileBasedIndexImpl extends FileBasedIndex {
         return value == null || value == 0;
     }
 
-
     private final ThreadLocal<Boolean> myReentrancyGuard = ThreadLocal.withInitial(() -> Boolean.FALSE);
 
     /**
@@ -915,7 +914,6 @@ public final class FileBasedIndexImpl extends FileBasedIndex {
         );
         return files;
     }
-
 
     @Override
     @RequiredReadAction

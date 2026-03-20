@@ -15,7 +15,6 @@
  */
 package consulo.util.lang;
 
-
 public class CharSequenceSubSequence implements CharSequence {
     private final CharSequence myChars;
     private final int myStart;

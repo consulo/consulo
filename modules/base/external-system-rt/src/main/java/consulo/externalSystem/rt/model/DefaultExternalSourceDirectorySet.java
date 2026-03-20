@@ -59,7 +59,6 @@ public class DefaultExternalSourceDirectorySet implements ExternalSourceDirector
         }
     }
 
-
     @Override
     public String getName() {
         return myName;
@@ -68,7 +67,6 @@ public class DefaultExternalSourceDirectorySet implements ExternalSourceDirector
     public void setName(String name) {
         myName = name;
     }
-
 
     @Override
     public Set<File> getSrcDirs() {
@@ -79,12 +77,10 @@ public class DefaultExternalSourceDirectorySet implements ExternalSourceDirector
         mySrcDirs = srcDirs;
     }
 
-
     @Override
     public File getOutputDir() {
         return myOutputDir;
     }
-
 
     @Override
     public Set<String> getIncludes() {
@@ -95,7 +91,6 @@ public class DefaultExternalSourceDirectorySet implements ExternalSourceDirector
         myIncludes = includes;
     }
 
-
     @Override
     public Set<String> getExcludes() {
         return myExcludes;
@@ -104,7 +99,6 @@ public class DefaultExternalSourceDirectorySet implements ExternalSourceDirector
     public void setExcludes(Set<String> excludes) {
         myExcludes = excludes;
     }
-
 
     @Override
     public List<ExternalFilter> getFilters() {

@@ -56,7 +56,6 @@ public class ModuleListNode extends ProjectViewNode<Module> {
         return children;
     }
 
-
     @Override
     public String getTestPresentation() {
         return "Modules";

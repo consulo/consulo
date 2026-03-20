@@ -20,7 +20,6 @@ import consulo.annotation.component.ServiceAPI;
 import consulo.language.editor.generation.ClassMember;
 import consulo.language.editor.generation.MemberChooserBuilder;
 
-
 /**
  * @author VISTALL
  * @since 20-Aug-22

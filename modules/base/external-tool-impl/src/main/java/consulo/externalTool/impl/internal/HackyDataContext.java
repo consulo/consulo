@@ -45,7 +45,6 @@ class HackyDataContext implements DataContext {
     PsiFile.KEY
   };
 
-
   private final Map<Key, Object> values = new HashMap<>();
   private AnActionEvent myActionEvent;
 

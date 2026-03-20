@@ -15,7 +15,6 @@
  */
 package consulo.versionControlSystem;
 
-
 public final class VcsKey {
   
   private final String myName;

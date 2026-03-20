@@ -22,7 +22,6 @@ import consulo.codeEditor.Editor;
 import consulo.codeEditor.event.EditorMouseEvent;
 import consulo.language.editor.rawHighlight.HighlightInfo;
 
-
 /**
  * @author VISTALL
  * @since 15/01/2023

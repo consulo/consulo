@@ -16,7 +16,6 @@
 
 package consulo.language.ast;
 
-
 public class DefaultRoleFinder implements RoleFinder {
   protected IElementType[] myElementTypes;
 

@@ -116,7 +116,6 @@ public class SendTimeTrackingInformationDialog extends DialogWrapper {
       }
     }
 
-
     super.doOKAction();
   }
 

@@ -19,7 +19,6 @@ import consulo.versionControlSystem.FilePath;
 import consulo.versionControlSystem.VcsException;
 import consulo.versionControlSystem.history.VcsRevisionNumber;
 
-
 public interface AnnotationProviderEx extends AnnotationProvider {
   
   FileAnnotation annotate(FilePath path, VcsRevisionNumber revision) throws VcsException;

@@ -28,12 +28,10 @@
 
 package net.n3.nanoxml;
 
-
 import org.jspecify.annotations.Nullable;
 
 import java.util.Objects;
 import java.util.Properties;
-
 
 /**
  * ValidatorPlugin allows the application to insert additional validators into
@@ -51,7 +49,6 @@ public class ValidatorPlugin
     */
    private @Nullable IXMLValidator delegate = null;
 
-
    /**
     * Returns the delegate.
     */
@@ -60,7 +57,6 @@ public class ValidatorPlugin
       return this.delegate;
    }
 
-
    /**
     * Returns the delegate.
     */
@@ -68,7 +64,6 @@ public class ValidatorPlugin
    {
       return Objects.requireNonNull(this.delegate);
    }
-
 
    /**
     * Sets the delegate.
@@ -80,7 +75,6 @@ public class ValidatorPlugin
       this.delegate = delegate;
    }
 
-
    /**
     * Sets the parameter entity resolver.
     *
@@ -91,7 +85,6 @@ public class ValidatorPlugin
       this.getRequiredDelegate().setParameterEntityResolver(resolver);
    }
 
-
    /**
     * Returns the parameter entity resolver.
     *
@@ -101,7 +94,6 @@ public class ValidatorPlugin
    {
       return this.getRequiredDelegate().getParameterEntityResolver();
    }
-
 
    /**
     * Parses the DTD. The validator object is responsible for reading the
@@ -124,7 +116,6 @@ public class ValidatorPlugin
       this.getRequiredDelegate().parseDTD(publicID, reader, entityResolver, external);
    }
 
-
    /**
     * Indicates that an element has been started.
     *
@@ -143,7 +134,6 @@ public class ValidatorPlugin
       this.getRequiredDelegate().elementStarted(name, systemId, lineNr);
    }
 
-
    /**
     * Indicates that the current element has ended.
     *
@@ -161,7 +151,6 @@ public class ValidatorPlugin
    {
       this.getRequiredDelegate().elementEnded(name,systemId, lineNr);
    }
-
 
    /**
     * Indicates that an attribute has been added to the current element.
@@ -182,7 +171,6 @@ public class ValidatorPlugin
    {
       this.getRequiredDelegate().elementAttributesProcessed(name, extraAttributes, systemId, lineNr);
    }
-
 
    /**
     * This method is called when the attributes of an XML element have been
@@ -207,7 +195,6 @@ public class ValidatorPlugin
       this.getRequiredDelegate().attributeAdded(key, value, systemId, lineNr);
    }
 
-
    /**
     * Indicates that a new #PCDATA element has been encountered.
     *
@@ -223,7 +210,6 @@ public class ValidatorPlugin
    {
       this.getRequiredDelegate().PCDataAdded(systemId, lineNr);
    }
-
 
    /**
     * Throws an XMLValidationException to indicate that an element is missing.
@@ -245,7 +231,6 @@ public class ValidatorPlugin
       XMLUtil.errorMissingElement(systemID, lineNr, parentElementName,
                                   missingElementName);
    }
-
 
    /**
     * Throws an XMLValidationException to indicate that an element is
@@ -271,7 +256,6 @@ public class ValidatorPlugin
                                      unexpectedElementName);
    }
 
-
    /**
     * Throws an XMLValidationException to indicate that an attribute is
     * missing.
@@ -294,7 +278,6 @@ public class ValidatorPlugin
                                     attributeName);
    }
 
-
    /**
     * Throws an XMLValidationException to indicate that an attribute is
     * unexpected.
@@ -316,7 +299,6 @@ public class ValidatorPlugin
       XMLUtil.errorUnexpectedAttribute(systemID, lineNr, elementName,
                                        attributeName);
    }
-
 
    /**
     * Throws an XMLValidationException to indicate that an attribute has an
@@ -342,7 +324,6 @@ public class ValidatorPlugin
                                          attributeName, attributeValue);
    }
 
-
    /**
     * Throws an XMLValidationException to indicate that a #PCDATA element was
     * missing.
@@ -362,7 +343,6 @@ public class ValidatorPlugin
       XMLUtil.errorMissingPCData(systemID, lineNr, parentElementName);
    }
 
-
    /**
     * Throws an XMLValidationException to indicate that a #PCDATA element was
     * unexpected.
@@ -381,7 +361,6 @@ public class ValidatorPlugin
    {
       XMLUtil.errorUnexpectedPCData(systemID, lineNr, parentElementName);
    }
-
 
    /**
     * Throws an XMLValidationException.

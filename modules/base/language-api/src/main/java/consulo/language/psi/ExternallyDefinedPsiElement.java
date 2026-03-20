@@ -17,7 +17,6 @@ package consulo.language.psi;
 
 import org.jspecify.annotations.Nullable;
 
-
 /**
  * Interface for PSI elements which may be injected into other elements but physically belongs
  * to other file - like AspectJ inter-type fields/methods.

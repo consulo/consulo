@@ -17,7 +17,6 @@ package consulo.ui.web.internal;
 
 import consulo.ui.TextBoxWithExtensions;
 
-
 /**
  * @author VISTALL
  * @since 01/08/2021

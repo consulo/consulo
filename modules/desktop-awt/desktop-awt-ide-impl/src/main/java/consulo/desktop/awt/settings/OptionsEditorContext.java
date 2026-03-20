@@ -38,7 +38,6 @@ public class OptionsEditorContext {
   private final Map<Configurable,  Configurable> myConfigurableToParentMap = new HashMap<>();
   private final MultiValuesMap<Configurable, Configurable> myParentToChildrenMap = new MultiValuesMap<>();
 
-
   public OptionsEditorContext(ElementFilter.Active filter) {
     myFilter = filter;
   }

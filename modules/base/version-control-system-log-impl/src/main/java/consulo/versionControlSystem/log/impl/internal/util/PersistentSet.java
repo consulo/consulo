@@ -15,7 +15,6 @@
  */
 package consulo.versionControlSystem.log.impl.internal.util;
 
-
 import java.io.IOException;
 
 public interface PersistentSet<T> {

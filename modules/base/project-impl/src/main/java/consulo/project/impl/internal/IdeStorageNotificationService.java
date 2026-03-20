@@ -116,7 +116,6 @@ public class IdeStorageNotificationService implements StorageNotificationService
         });
     }
 
-
     private static List<String> getMacrosFromExistingNotifications(Project project) {
         List<String> notified = new ArrayList<>();
         NotificationsManager manager = NotificationsManager.getNotificationsManager();

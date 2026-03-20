@@ -18,7 +18,6 @@ package consulo.diff.old;
 import consulo.application.util.diff.FilesTooBigForDiffException;
 import org.jetbrains.annotations.TestOnly;
 
-
 @Deprecated
 public interface DiffPolicyOld {
   

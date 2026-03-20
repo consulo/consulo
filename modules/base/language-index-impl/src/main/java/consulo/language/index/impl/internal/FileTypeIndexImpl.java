@@ -18,7 +18,6 @@ import consulo.virtualFileSystem.fileType.FileType;
 import consulo.virtualFileSystem.fileType.FileTypeDetector;
 import consulo.virtualFileSystem.fileType.FileTypeRegistry;
 
-
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;

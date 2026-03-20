@@ -20,7 +20,6 @@ import consulo.annotation.component.TopicAPI;
 import consulo.annotation.component.TopicBroadcastDirection;
 import consulo.project.Project;
 
-
 @TopicAPI(value = ComponentScope.APPLICATION, direction = TopicBroadcastDirection.NONE)
 public interface ProjectExListener {
   void saved(Project project);

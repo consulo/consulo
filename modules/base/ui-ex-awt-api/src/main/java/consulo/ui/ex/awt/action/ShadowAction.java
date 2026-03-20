@@ -93,7 +93,6 @@ public final class ShadowAction implements Disposable {
     KeymapManager mgr = getKeymapManager();
     if (mgr == null) return;
 
-
     mgr.addKeymapManagerListener(myKeymapManagerListener);
     rebound();
   }
@@ -101,7 +100,6 @@ public final class ShadowAction implements Disposable {
   private void disconnect() {
     KeymapManager mgr = getKeymapManager();
     if (mgr == null) return;
-
 
     mgr.removeKeymapManagerListener(myKeymapManagerListener);
     if (myKeymap != null) {
@@ -142,7 +140,6 @@ public final class ShadowAction implements Disposable {
       myKeymap.removeShortcutChangeListener(myKeymapListener);
     }
   }
-
 
   @Override
   public void dispose() {

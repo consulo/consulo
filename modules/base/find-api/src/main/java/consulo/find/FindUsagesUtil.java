@@ -18,7 +18,6 @@ package consulo.find;
 
 import consulo.language.psi.PsiElement;
 
-
 public class FindUsagesUtil {
   private FindUsagesUtil() {
   }

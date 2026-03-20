@@ -20,7 +20,6 @@ import consulo.language.pattern.ElementPattern;
 import consulo.language.psi.PsiElement;
 import consulo.util.collection.ArrayFactory;
 
-
 /**
 * @author Gregory.Shrago
 */
@@ -39,7 +38,6 @@ public class InjectionPlace {
 
   private final ElementPattern<PsiElement> myElementPattern;
   private final boolean myEnabled;
-
 
   public InjectionPlace(ElementPattern<PsiElement> myElementPattern, boolean enabled) {
     this.myElementPattern = myElementPattern;

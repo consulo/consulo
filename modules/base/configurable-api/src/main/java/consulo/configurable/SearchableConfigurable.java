@@ -56,7 +56,6 @@ public interface SearchableConfigurable extends Configurable {
 
     boolean isVisible();
 
-
     abstract class Abstract implements Parent {
       private Configurable[] myKids;
 
@@ -92,7 +91,6 @@ public interface SearchableConfigurable extends Configurable {
       public boolean hasOwnContent() {
         return false;
       }
-
 
       @RequiredUIAccess
       @Override

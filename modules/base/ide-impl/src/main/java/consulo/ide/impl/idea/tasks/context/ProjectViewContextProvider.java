@@ -26,7 +26,6 @@ import consulo.ui.ex.awt.tree.TreeUtil;
 import jakarta.inject.Inject;
 import org.jdom.Element;
 
-
 import javax.swing.*;
 import java.util.List;
 

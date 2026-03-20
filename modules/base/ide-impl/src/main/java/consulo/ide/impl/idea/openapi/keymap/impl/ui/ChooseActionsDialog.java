@@ -75,7 +75,6 @@ public class ChooseActionsDialog extends DialogWrapper {
             }
         }.installOn(myActionsTree.getTree());
 
-
         myTreeExpansionMonitor = TreeExpansionMonitor.install(myActionsTree.getTree());
 
         setTitle("Add Actions to Quick List");

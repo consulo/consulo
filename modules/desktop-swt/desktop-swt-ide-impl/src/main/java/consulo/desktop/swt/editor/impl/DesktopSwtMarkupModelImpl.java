@@ -25,7 +25,6 @@ import consulo.ui.ex.awt.PopupHandler;
 import consulo.disposer.Disposable;
 import consulo.ui.annotation.RequiredUIAccess;
 
-
 /**
  * @author VISTALL
  * @since 18/12/2021
@@ -44,7 +43,6 @@ public class DesktopSwtMarkupModelImpl extends MarkupModelImpl implements Editor
   public Editor getEditor() {
     return myWebEditor;
   }
-
 
   @Override
   public void setErrorStripeVisible(boolean val) {

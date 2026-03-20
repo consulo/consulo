@@ -26,7 +26,6 @@ public abstract class FormatterEx implements Formatter {
 
   public abstract boolean isDisabled();
 
-
   public abstract void adjustLineIndentsForRange(FormattingModel model,
                                                  CodeStyleSettings settings,
                                                  CommonCodeStyleSettings.IndentOptions indentOptions,
@@ -50,7 +49,6 @@ public abstract class FormatterEx implements Formatter {
    * or spacing cannot be calculated due to some other reason.
    */
   public abstract int getMinLineFeedsBeforeBlockAtOffset(FormattingModel model, int offset);
-
 
   public static FormatterEx getInstanceEx() {
     return (FormatterEx)Formatter.getInstance();

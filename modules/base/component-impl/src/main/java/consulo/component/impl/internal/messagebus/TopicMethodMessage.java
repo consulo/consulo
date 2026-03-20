@@ -17,7 +17,6 @@ package consulo.component.impl.internal.messagebus;
 
 import consulo.component.bind.TopicMethod;
 
-
 /**
  * @author VISTALL
  * @since 25/01/2023

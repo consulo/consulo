@@ -15,7 +15,6 @@
  */
 package consulo.ui.ex.awt.tab;
 
-
 public interface TabsListener {
     default void selectionChanged(TabInfo oldSelection, TabInfo newSelection) {
     }

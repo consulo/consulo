@@ -879,7 +879,6 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<
         return myContentManager;
     }
 
-
     private class PaneOptionAction extends ToggleAction implements DumbAware {
         Map<String, Boolean> myOptionsMap;
         private final boolean myOptionDefaultValue;
@@ -1382,7 +1381,6 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<
         VirtualFile virtualFile = PsiUtilCore.getVirtualFile(element);
         select(element, virtualFile, requestFocus);
     }
-
 
     private static void readOption(Element node, Map<String, Boolean> options) {
         if (node == null) {

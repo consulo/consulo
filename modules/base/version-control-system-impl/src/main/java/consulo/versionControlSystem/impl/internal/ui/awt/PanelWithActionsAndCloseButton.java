@@ -32,7 +32,6 @@ import consulo.util.dataholder.Key;
 import javax.swing.*;
 import java.awt.*;
 
-
 public abstract class PanelWithActionsAndCloseButton extends JPanel implements DataProvider, Disposable {
   protected final ContentManager myContentManager;
   private final String myHelpId;

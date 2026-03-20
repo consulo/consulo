@@ -118,7 +118,6 @@ public class StructureViewComponent extends SimpleToolWindowPanel implements Tre
   private final MyAutoScrollToSourceHandler myAutoScrollToSourceHandler;
   private final AutoScrollFromSourceHandler myAutoScrollFromSourceHandler;
 
-
   public StructureViewComponent(@Nullable FileEditor editor,
                                 StructureViewModel structureViewModel,
                                 Project project,
@@ -853,7 +852,6 @@ public class StructureViewComponent extends SimpleToolWindowPanel implements Tre
     protected TreeElementWrapper createChildNode(TreeElement child) {
       return new MyNodeWrapper(getProject(), child, myTreeModel);
     }
-
 
    
     @Override

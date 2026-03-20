@@ -25,7 +25,6 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 import consulo.util.concurrent.AsyncResult;
 
-
 /**
  * @author VISTALL
  * @since 27.09.14

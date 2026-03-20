@@ -860,7 +860,6 @@ public class SMTestProxy extends AbstractTestProxy {
         return myIsEmpty;
     }
 
-
     private @Nullable Long calcSuiteDuration() {
         long partialDuration = 0;
         boolean durationOfChildrenIsUnknown = true;

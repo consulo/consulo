@@ -27,7 +27,6 @@ import consulo.virtualFileSystem.VFileProperty;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
 
-
 /**
  * @author VISTALL
  * @since 2013-07-19

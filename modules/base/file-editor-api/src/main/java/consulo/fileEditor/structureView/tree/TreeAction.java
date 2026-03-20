@@ -15,7 +15,6 @@
  */
 package consulo.fileEditor.structureView.tree;
 
-
 /**
  * A grouping, sorting or filtering action which can be applied to a generic tree.
  *

@@ -3,7 +3,6 @@ package consulo.language.editor.inspection;
 
 import consulo.language.editor.intention.IntentionAction;
 
-
 /**
  * Interface for {@link IntentionAction intentions} and {@link LocalQuickFix quick fixes}.
  */

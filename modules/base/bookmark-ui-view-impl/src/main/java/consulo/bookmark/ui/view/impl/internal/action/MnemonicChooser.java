@@ -43,7 +43,6 @@ public class MnemonicChooser extends JPanel {
         }
         numbers.add(wrapLabel('0'));
 
-
         JPanel letters = new NonOpaquePanel(new GridLayout(5, 6, 8, 8));
         for (char c = 'A'; c <= 'Z'; c++) {
             letters.add(wrapLabel(c));

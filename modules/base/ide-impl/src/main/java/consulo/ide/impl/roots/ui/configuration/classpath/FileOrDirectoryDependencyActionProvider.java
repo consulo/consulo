@@ -30,7 +30,6 @@ import consulo.ui.image.Image;
 import consulo.util.concurrent.AsyncResult;
 import consulo.virtualFileSystem.VirtualFile;
 
-
 /**
  * @author VISTALL
  * @since 27.09.14

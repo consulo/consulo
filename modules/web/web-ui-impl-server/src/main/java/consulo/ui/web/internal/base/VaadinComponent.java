@@ -17,7 +17,6 @@ package consulo.web.internal.ui.base;
 
 import consulo.ui.Component;
 
-
 /**
  * @author VISTALL
  * @since 2019-02-17

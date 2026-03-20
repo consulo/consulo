@@ -423,7 +423,6 @@ public class IntArrayList implements Cloneable, IntList {
     return grow(size + 1);
   }
 
-
   @Override
   public int removeByIndex(int index) {
     checkRange(index);

@@ -162,7 +162,6 @@ public class FileTypeConfigurable implements SearchableConfigurable, Configurabl
             }
         }
 
-
         public void attachActions(FileTypeConfigurable controller) {
             myController = controller;
             mySpeedSearch.myController = controller;

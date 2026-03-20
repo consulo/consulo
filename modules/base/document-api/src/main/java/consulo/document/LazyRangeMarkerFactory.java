@@ -20,7 +20,6 @@ import consulo.annotation.component.ServiceAPI;
 import consulo.component.ComponentManager;
 import consulo.virtualFileSystem.VirtualFile;
 
-
 @ServiceAPI(ComponentScope.PROJECT)
 public abstract class LazyRangeMarkerFactory {
   public static LazyRangeMarkerFactory getInstance(ComponentManager project) {

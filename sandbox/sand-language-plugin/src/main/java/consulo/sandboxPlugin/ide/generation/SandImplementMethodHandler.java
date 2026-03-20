@@ -26,7 +26,6 @@ import consulo.sandboxPlugin.lang.SandLanguage;
 import consulo.ui.Alerts;
 import consulo.ui.annotation.RequiredUIAccess;
 
-
 /**
  * @author VISTALL
  * @since 17-Jul-22

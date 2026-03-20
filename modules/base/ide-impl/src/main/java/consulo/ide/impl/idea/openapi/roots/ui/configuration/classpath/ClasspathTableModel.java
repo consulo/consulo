@@ -72,7 +72,6 @@ class ClasspathTableModel extends AbstractTableModel implements ItemRemovable {
     return myItems.remove(row);
   }
 
-
   @Override
   public void removeRow(int row) {
     removeDataRow(row);

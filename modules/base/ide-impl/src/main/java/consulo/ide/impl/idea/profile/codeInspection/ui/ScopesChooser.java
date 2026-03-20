@@ -29,7 +29,6 @@ import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.ui.ex.awt.action.ComboBoxAction;
 
-
 import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Collections;

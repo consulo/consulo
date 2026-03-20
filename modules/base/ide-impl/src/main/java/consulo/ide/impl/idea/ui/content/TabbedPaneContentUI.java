@@ -136,7 +136,6 @@ public class TabbedPaneContentUI implements ContentUI, PropertyChangeListener {
     return myManager.getContent(selectedComponent);
   }
 
-
   private class MyTabbedPaneWrapper extends TabFactoryBuilderImpl.AsJTabbedPane {
     public MyTabbedPaneWrapper(int tabPlacement) {
       super(tabPlacement);

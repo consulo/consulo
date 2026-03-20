@@ -22,7 +22,6 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiManager;
 import consulo.language.util.CharTable;
 
-
 /**
  * @author max
  */

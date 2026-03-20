@@ -18,7 +18,6 @@ package consulo.ui.ex.errorTreeView;
 import consulo.ui.ex.MessageCategory;
 import consulo.ui.ex.UIBundle;
 
-
 /**
  * @author Eugene Zhuravlev
  * @since 2004-11-12

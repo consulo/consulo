@@ -15,7 +15,6 @@
  */
 package consulo.versionControlSystem.change.patch;
 
-
 class StaticPathDescription implements PathDescription {
   private final String myPath;
   private final boolean myIsDirectory;

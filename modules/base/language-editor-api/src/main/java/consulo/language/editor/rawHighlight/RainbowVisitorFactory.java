@@ -15,7 +15,6 @@
  */
 package consulo.language.editor.rawHighlight;
 
-
 /**
  * @author VISTALL
  * @since 2023-03-25

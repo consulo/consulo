@@ -222,7 +222,6 @@ public class PathInterner {
       myMap.put(myInterner.internParts(path, true), value);
     }
 
-
     public Iterable<T> values() {
       return myMap.values();
     }

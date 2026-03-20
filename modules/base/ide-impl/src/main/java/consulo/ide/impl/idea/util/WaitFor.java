@@ -15,8 +15,6 @@
  */
 package consulo.ide.impl.idea.util;
 
-
-
 /**
  * @author kir
  */

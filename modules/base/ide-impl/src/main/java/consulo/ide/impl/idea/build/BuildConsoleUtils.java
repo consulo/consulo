@@ -167,7 +167,6 @@ public final class BuildConsoleUtils {
         return provider;
     }
 
-
     private static @Nullable BuildView findBuildView(Component component) {
         Component parent = component;
         while ((parent = parent.getParent()) != null) {

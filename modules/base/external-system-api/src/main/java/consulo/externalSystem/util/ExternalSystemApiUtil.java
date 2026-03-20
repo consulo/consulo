@@ -366,7 +366,6 @@ public class ExternalSystemApiUtil {
         settings.setRecentTasks(recentTasksList.getModel().getTasks());
     }
 
-
     @SuppressWarnings("unchecked")
     public static @Nullable <T> T getToolWindowElement(
         Class<T> clazz,
@@ -398,7 +397,6 @@ public class ExternalSystemApiUtil {
         }
         return null;
     }
-
 
     public static @Nullable ToolWindow ensureToolWindowContentInitialized(Project project, ProjectSystemId externalSystemId) {
         ToolWindowManager toolWindowManager = ToolWindowManager.getInstance(project);
@@ -609,7 +607,6 @@ public class ExternalSystemApiUtil {
     public static @Nullable <T> DataNode<T> findParent(DataNode<?> node, Key<T> key) {
         return findParent(node, key, null);
     }
-
 
     @SuppressWarnings("unchecked")
     public static @Nullable <T> DataNode<T> findParent(DataNode<?> node, Key<T> key, @Nullable Predicate<DataNode<T>> predicate) {

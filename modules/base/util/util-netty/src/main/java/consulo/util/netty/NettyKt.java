@@ -173,7 +173,6 @@ public class NettyKt {
     }
   }
 
-
   public static boolean sleep(AsyncResult<?> promise, int time) {
     try {
       //noinspection BusyWait

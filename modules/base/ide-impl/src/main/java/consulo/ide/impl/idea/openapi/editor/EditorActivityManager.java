@@ -4,7 +4,6 @@ package consulo.ide.impl.idea.openapi.editor;
 import consulo.application.ApplicationManager;
 import consulo.codeEditor.Editor;
 
-
 /**
  * A way to abstract various properties of an editor (as being visible to a user) away from Swing.
  * Useful in scenarios where an application is headless

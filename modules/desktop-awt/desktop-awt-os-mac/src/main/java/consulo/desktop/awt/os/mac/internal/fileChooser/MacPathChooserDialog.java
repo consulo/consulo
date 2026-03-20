@@ -213,7 +213,6 @@ public class MacPathChooserDialog implements PathChooserDialog, FileChooserDialo
             myFileDialog.setFile(fileName);
         }
 
-
         myFileDialog.setFilenameFilter((dir, name) -> {
             File file = new File(dir, name);
             return myFileChooserDescriptor.isFileSelectable(fileToVirtualFile(file));

@@ -73,7 +73,6 @@ public class DesktopGraphBuilderImpl implements GraphBuilder {
 
     Object parent = graph.getDefaultParent();
 
-
     graph.getModel().beginUpdate();
     try {
       Map<GraphNode<?>, Object> map = new HashMap<>();

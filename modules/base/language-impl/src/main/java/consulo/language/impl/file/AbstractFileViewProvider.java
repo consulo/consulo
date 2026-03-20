@@ -359,7 +359,6 @@ public abstract class AbstractFileViewProvider extends UserDataHolderBase implem
     return true;
   }
 
-
   
   @Override
   public String toString() {

@@ -25,7 +25,6 @@ import consulo.language.psi.PsiPackageManager;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
-
 /**
  * @author yole
  */

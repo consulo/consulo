@@ -21,7 +21,6 @@ public abstract class HoverListener {
 
   public abstract void mouseExited(Component component);
 
-
   public final void addTo(JComponent component, Disposable parent) {
     addTo(component);
     Disposer.register(parent, () -> removeFrom(component));

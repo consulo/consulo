@@ -23,7 +23,6 @@ import consulo.language.spellchecker.editor.SpellcheckerEngineManager;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
-
 import java.util.Optional;
 import java.util.function.Consumer;
 

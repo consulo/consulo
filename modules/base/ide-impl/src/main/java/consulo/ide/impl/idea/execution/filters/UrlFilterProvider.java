@@ -23,7 +23,6 @@ import consulo.execution.ui.console.UrlFilter;
 import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.project.Project;
 
-
 @ExtensionImpl
 public class UrlFilterProvider implements ConsoleFilterProviderEx {
   @Override

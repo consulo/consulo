@@ -32,7 +32,6 @@ public interface HelpTooltip {
    */
   HelpTooltip setTitle(@Nullable String title);
 
-
   /**
    * Sets text for the shortcut placeholder.
    *

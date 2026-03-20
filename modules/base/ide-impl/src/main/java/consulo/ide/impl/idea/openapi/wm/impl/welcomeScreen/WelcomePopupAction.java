@@ -66,7 +66,6 @@ public abstract class WelcomePopupAction extends AnAction implements DumbAware {
             return;
         }
 
-
         if (group.getChildrenCount() == 0) {
             group.add(new AnAction(getTextForEmpty()) {
                 @RequiredUIAccess

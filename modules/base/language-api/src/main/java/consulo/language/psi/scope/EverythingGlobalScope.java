@@ -20,7 +20,6 @@ import consulo.module.Module;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 
-
 /**
  * @author max
  */

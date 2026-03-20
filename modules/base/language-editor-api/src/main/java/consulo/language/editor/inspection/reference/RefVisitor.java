@@ -15,7 +15,6 @@
  */
 package consulo.language.editor.inspection.reference;
 
-
 /**
  * @author anna
  * @since 2007-12-18

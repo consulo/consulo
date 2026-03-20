@@ -18,7 +18,6 @@ package consulo.language.impl.internal.psi.include;
 
 import consulo.language.psi.include.FileIncludeInfo;
 
-
 import java.io.File;
 
 /**

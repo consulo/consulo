@@ -15,7 +15,6 @@
  */
 package consulo.execution.ui.console;
 
-
 import java.util.List;
 
 public interface FileHyperlinkRawDataFinder {

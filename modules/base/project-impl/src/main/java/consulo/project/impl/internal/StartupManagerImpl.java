@@ -239,7 +239,6 @@ public class StartupManagerImpl extends StartupManagerEx implements Disposable {
         }
     }
 
-
     private void runActivities(UIAccess uiAccess, Deque<StartupActivity> activities, String phaseName) {
         Activity activity = StartUpMeasurer.startMainActivity(phaseName);
 

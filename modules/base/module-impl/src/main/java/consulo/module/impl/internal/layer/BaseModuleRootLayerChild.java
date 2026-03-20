@@ -18,8 +18,6 @@ package consulo.module.impl.internal.layer;
 
 import consulo.disposer.Disposable;
 
-
-
 /**
  *  @author dsl
  */

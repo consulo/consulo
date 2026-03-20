@@ -4,7 +4,6 @@ package consulo.language.psi.stub;
 import consulo.language.ast.LighterAST;
 import consulo.language.psi.PsiFile;
 
-
 public interface PsiDependentFileContent extends FileContent {
   @Override
   

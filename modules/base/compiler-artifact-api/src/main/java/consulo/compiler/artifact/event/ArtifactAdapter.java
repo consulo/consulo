@@ -17,7 +17,6 @@ package consulo.compiler.artifact.event;
 
 import consulo.compiler.artifact.Artifact;
 
-
 /**
  * @author nik
  */

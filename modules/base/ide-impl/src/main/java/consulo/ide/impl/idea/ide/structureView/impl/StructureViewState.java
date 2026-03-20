@@ -16,8 +16,6 @@
 
 package consulo.ide.impl.idea.ide.structureView.impl;
 
-
-
 /**
  * @author Yura Cangea
  */

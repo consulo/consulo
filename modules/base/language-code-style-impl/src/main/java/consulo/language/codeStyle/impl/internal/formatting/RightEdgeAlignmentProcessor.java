@@ -19,7 +19,6 @@ import consulo.language.codeStyle.Alignment;
 import consulo.language.codeStyle.CoreFormatterUtil;
 import consulo.language.codeStyle.internal.*;
 
-
 /**
  * {@link BlockAlignmentProcessor} implementation for {@link Alignment} that
  * {@link Alignment.Anchor#RIGHT anchors to the right block edge}.

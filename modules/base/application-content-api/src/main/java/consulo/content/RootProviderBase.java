@@ -19,7 +19,6 @@ package consulo.content;
 import consulo.disposer.Disposable;
 import consulo.proxy.EventDispatcher;
 
-
 /**
  *  @author dsl
  */

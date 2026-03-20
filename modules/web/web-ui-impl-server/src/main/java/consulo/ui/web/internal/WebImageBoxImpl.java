@@ -21,7 +21,6 @@ import consulo.ui.web.internal.base.VaadinComponent;
 import consulo.ui.web.servlet.WebImageMapper;
 import consulo.web.gwt.shared.ui.state.ImageBoxState;
 
-
 /**
  * @author VISTALL
  * @since 2019-02-17

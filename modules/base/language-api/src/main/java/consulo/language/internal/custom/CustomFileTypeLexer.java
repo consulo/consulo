@@ -87,5 +87,4 @@ public final class CustomFileTypeLexer extends AbstractCustomLexer {
     return tokenParsers;
   }
 
-
 }

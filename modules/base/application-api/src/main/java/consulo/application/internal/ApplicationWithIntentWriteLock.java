@@ -18,7 +18,6 @@ package consulo.application.internal;
 import consulo.application.Application;
 import consulo.application.util.function.ThrowableComputable;
 
-
 public interface ApplicationWithIntentWriteLock extends Application {
   /**
    * Acquires IW lock if it's not acquired by the current thread.

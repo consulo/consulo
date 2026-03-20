@@ -481,7 +481,6 @@ public class mxOrganicLayout extends mxGraphLayout {
 
     unchangedEnergyRoundCount = 0;
 
-
     // Form internal model of edges
     e = new CellWrapper[edges.length];
 
@@ -531,7 +530,6 @@ public class mxOrganicLayout extends mxGraphLayout {
       xNormTry[i] = Math.cos(angle);
       yNormTry[i] = Math.sin(angle);
     }
-
 
     int childCount = model.getChildCount(parent);
 

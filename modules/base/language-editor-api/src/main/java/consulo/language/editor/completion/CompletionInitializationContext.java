@@ -8,7 +8,6 @@ import consulo.language.psi.PsiFile;
 import consulo.project.Project;
 import consulo.util.lang.ObjectUtil;
 
-
 /**
  * @author peter
  */

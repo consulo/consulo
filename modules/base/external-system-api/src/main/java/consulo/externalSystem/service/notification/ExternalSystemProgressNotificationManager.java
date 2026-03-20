@@ -5,7 +5,6 @@ import consulo.annotation.component.ServiceAPI;
 import consulo.externalSystem.model.task.ExternalSystemTaskId;
 import consulo.externalSystem.model.task.ExternalSystemTaskNotificationListener;
 
-
 /**
  * @author Denis Zhdanov
  * @since 11/10/11 12:04 PM

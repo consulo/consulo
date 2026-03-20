@@ -16,7 +16,6 @@
 
 package consulo.util.lang;
 
-
 import java.util.Date;
 
 public class Clock {

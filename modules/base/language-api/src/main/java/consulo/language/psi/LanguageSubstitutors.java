@@ -25,7 +25,6 @@ import consulo.util.dataholder.Key;
 import consulo.util.lang.ObjectUtil;
 import consulo.virtualFileSystem.VirtualFile;
 
-
 /**
  * @author peter
  */

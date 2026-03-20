@@ -26,7 +26,6 @@ import org.jspecify.annotations.Nullable;
  */
 public class PrattTokenType extends IElementType {
 
-
   public PrattTokenType(String debugName,
                         @Nullable Language language) {
     super(debugName, language);

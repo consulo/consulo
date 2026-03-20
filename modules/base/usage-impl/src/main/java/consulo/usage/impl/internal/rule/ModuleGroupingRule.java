@@ -32,7 +32,6 @@ import consulo.usage.rule.UsageInLibrary;
 import consulo.usage.rule.UsageInModule;
 import consulo.ui.image.Image;
 
-
 /**
  * @author max
  */

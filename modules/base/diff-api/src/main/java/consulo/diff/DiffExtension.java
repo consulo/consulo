@@ -20,7 +20,6 @@ import consulo.annotation.component.ExtensionAPI;
 import consulo.diff.request.DiffRequest;
 import consulo.ui.annotation.RequiredUIAccess;
 
-
 @ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class DiffExtension {
     @RequiredUIAccess

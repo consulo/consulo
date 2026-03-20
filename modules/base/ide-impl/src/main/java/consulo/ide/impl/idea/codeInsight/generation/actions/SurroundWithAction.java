@@ -16,7 +16,6 @@ import consulo.language.psi.PsiUtilCore;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 
-
 @ActionImpl(id = "SurroundWith")
 public class SurroundWithAction extends BaseCodeInsightAction {
     public SurroundWithAction() {

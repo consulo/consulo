@@ -194,7 +194,6 @@ public class FileManagerProxy {
         }
     }
 
-
     private static void openViaShellApi(String dir, @Nullable String toSelect) {
         if (LOG.isDebugEnabled()) {
             LOG.debug("shell open: dir=" + dir + " toSelect=" + toSelect);

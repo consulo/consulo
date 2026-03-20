@@ -15,7 +15,6 @@
  */
 package consulo.desktop.awt.ui.plaf;
 
-
 /**
  * @author VISTALL
  * @since 2020-10-02

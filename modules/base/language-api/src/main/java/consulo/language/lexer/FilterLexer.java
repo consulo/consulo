@@ -61,7 +61,6 @@ public class FilterLexer extends DelegateLexer {
         locateToken();
     }
 
-
     @Override
     public void advance() {
         myPrevTokenEnd = getDelegate().getTokenEnd();

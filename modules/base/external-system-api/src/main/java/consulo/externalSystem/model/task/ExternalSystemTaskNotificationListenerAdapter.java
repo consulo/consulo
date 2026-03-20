@@ -1,6 +1,5 @@
 package consulo.externalSystem.model.task;
 
-
 /**
  * @author Denis Zhdanov
  * @since 11/10/11 12:18 PM

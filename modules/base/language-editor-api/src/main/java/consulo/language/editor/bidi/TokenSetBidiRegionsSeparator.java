@@ -18,7 +18,6 @@ package consulo.language.editor.bidi;
 import consulo.language.ast.IElementType;
 import consulo.language.ast.TokenSet;
 
-
 /**
  * Implementation of {@link BidiRegionsSeparator} allowing to define a number of token sets, tokens within each set will be processed
  * as a whole by bidi layout algorithm.

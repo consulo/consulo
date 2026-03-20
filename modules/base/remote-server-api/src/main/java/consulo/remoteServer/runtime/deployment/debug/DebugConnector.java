@@ -20,7 +20,6 @@ import consulo.remoteServer.ServerType;
 import consulo.remoteServer.runtime.deployment.DeploymentTask;
 import consulo.remoteServer.runtime.deployment.ServerRuntimeInstance;
 
-
 /**
  * Implement this class if a server supports deployment in debug mode. When an user starts a deployment run configuration using 'Debug' button
  * the following happens:

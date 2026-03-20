@@ -19,7 +19,6 @@ import consulo.usage.UsageTarget;
 import consulo.usage.UsageView;
 import consulo.util.lang.ObjectUtil;
 
-
 /**
  * @author max
  */

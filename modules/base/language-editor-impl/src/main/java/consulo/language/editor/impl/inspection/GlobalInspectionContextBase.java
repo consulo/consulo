@@ -156,7 +156,6 @@ public class GlobalInspectionContextBase extends UserDataHolderBase implements G
         return SuppressionUtil.isSuppressed(element, id);
     }
 
-
     public void cleanupTools() {
         myProgressIndicator.cancel();
         for (GlobalInspectionContextExtension extension : myExtensions.values()) {
@@ -207,7 +206,6 @@ public class GlobalInspectionContextBase extends UserDataHolderBase implements G
             app.getDisposed()
         );
     }
-
 
     @Override
     
@@ -324,7 +322,6 @@ public class GlobalInspectionContextBase extends UserDataHolderBase implements G
 
     protected void runTools(AnalysisScope scope, boolean runGlobalToolsOnly, boolean isOfflineInspections) {
     }
-
 
     public void initializeTools(
         List<Tools> outGlobalTools,

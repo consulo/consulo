@@ -81,7 +81,6 @@ public abstract class HighlightManager {
         addRangeHighlight(editor, startOffset, endOffset, attributesKey, hideByTextChange, false, highlighters);
     }
 
-
     /**
      * Highlights a specified range of text in an editor. The highlighting is removed when the user presses the Esc key or (optionally)
      * any other key, and optionally when the editor text is changed. If the highlighter added by this method needs to be removed

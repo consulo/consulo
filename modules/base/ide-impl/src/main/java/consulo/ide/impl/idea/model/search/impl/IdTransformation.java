@@ -1,6 +1,5 @@
 package consulo.ide.impl.idea.model.search.impl;
 
-
 import java.util.Collection;
 import java.util.List;
 

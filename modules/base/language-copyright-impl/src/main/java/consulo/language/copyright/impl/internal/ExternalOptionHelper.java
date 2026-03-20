@@ -30,7 +30,6 @@ import java.util.List;
 
 public class ExternalOptionHelper {
 
-
   public static @Nullable List<CopyrightProfile> loadOptions(File file) {
     try {
       List<CopyrightProfile> profiles = new ArrayList<CopyrightProfile>();
@@ -100,7 +99,6 @@ public class ExternalOptionHelper {
     }
     return false;
   }
-
 
   private ExternalOptionHelper() {
   }

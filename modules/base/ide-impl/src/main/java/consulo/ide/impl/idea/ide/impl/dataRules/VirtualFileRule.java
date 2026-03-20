@@ -25,7 +25,6 @@ import consulo.language.psi.PsiFile;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
 
-
 @ExtensionImpl
 public class VirtualFileRule implements GetDataRule<VirtualFile> {
   

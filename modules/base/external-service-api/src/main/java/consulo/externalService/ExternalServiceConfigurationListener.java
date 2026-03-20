@@ -18,7 +18,6 @@ package consulo.externalService;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.TopicAPI;
 
-
 /**
  * @author VISTALL
  * @since 11/09/2021

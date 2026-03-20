@@ -184,7 +184,6 @@ public class LazyRangeMarkerFactoryImpl extends LazyRangeMarkerFactory {
             return myDelegate == this;
         }
 
-
         @Override
         public int getEndOffset() {
             return myDelegate == null || isDisposed() ? myInitialOffset : myDelegate.getEndOffset();

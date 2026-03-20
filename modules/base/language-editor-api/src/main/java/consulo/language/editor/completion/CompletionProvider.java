@@ -18,7 +18,6 @@ package consulo.language.editor.completion;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.language.util.ProcessingContext;
 
-
 /**
  * @author VISTALL
  * @since 12.12.2015

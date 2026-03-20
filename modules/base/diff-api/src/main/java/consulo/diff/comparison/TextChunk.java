@@ -15,7 +15,6 @@
  */
 package consulo.diff.comparison;
 
-
 abstract class TextChunk {
   
   private final CharSequence myText;

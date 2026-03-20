@@ -19,7 +19,6 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 
-
 @ExtensionAPI(ComponentScope.PROJECT)
 public interface UsageContextPanelProvider {
     ExtensionPointName<UsageContextPanelProvider> EP_NAME = ExtensionPointName.create(UsageContextPanelProvider.class);

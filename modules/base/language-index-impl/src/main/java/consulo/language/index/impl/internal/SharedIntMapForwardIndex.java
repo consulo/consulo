@@ -49,7 +49,6 @@ public class SharedIntMapForwardIndex implements IntForwardIndex {
     }
   }
 
-
   @Override
   public int getInt(Integer key) throws IOException {
     if (!SharedIndicesData.ourFileSharedIndicesEnabled) {

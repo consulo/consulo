@@ -77,7 +77,6 @@ public class MacGestureSupportForEditor {
     });
   }
 
-
   private final BasePresentationFactory myPresentationFactory = new BasePresentationFactory();
 
   private void fillActionsList(MouseShortcut mouseShortcut, boolean isModalContext) {

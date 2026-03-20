@@ -189,7 +189,6 @@ public class EnterAfterJavadocTagHandler extends EnterHandlerDelegateAdapter {
             }
         }
 
-
         return new Context(text, startTagEndOffset, endTagStartOffset, offset);
     }
 

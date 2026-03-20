@@ -71,7 +71,6 @@ public class DefaultConfigurablePreselectStrategy implements ConfigurablePresele
     return null;
   }
 
-
   public static @Nullable Configurable getPreselectedByDisplayName(Configurable[] configurables,
                                                          String preselectedConfigurableDisplayName,
                                                          Project project) {

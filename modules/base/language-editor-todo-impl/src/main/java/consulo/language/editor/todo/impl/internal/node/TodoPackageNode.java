@@ -77,7 +77,6 @@ public final class TodoPackageNode extends PackageElementNode implements Highlig
     }
   }
 
-
   @Override
   public ArrayList<HighlightedRegion> getHighlightedRegions() {
     return myHighlightedRegions;

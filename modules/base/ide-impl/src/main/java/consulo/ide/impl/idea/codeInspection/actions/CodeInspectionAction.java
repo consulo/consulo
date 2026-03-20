@@ -89,7 +89,6 @@ public class CodeInspectionAction extends BaseAnalysisAction {
         inspectionContext.doInspections(scope);
     }
 
-
     private GlobalInspectionContextImpl getGlobalInspectionContext(Project project) {
         if (myGlobalInspectionContext == null) {
             myGlobalInspectionContext = ((InspectionManagerImpl) InspectionManager.getInstance(project)).createNewGlobalContext(false);

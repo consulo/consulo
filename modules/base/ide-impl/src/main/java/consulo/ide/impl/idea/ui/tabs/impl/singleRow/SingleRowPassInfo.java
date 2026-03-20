@@ -44,7 +44,6 @@ public class SingleRowPassInfo extends LayoutPassInfo {
   public Rectangle tabRectangle;
   final int scrollOffset;
 
-
   public SingleRowPassInfo(SingleRowLayout layout, List<TabInfo> visibleInfos) {
     super(visibleInfos);
     JBTabsImpl tabs = layout.myTabs;

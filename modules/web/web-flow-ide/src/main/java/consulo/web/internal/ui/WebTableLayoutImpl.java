@@ -15,7 +15,6 @@
  */
 package consulo.web.internal.ui;
 
-
 import com.vaadin.flow.component.HasSize;
 import consulo.ui.Component;
 import consulo.ui.StaticPosition;
@@ -82,7 +81,6 @@ public class WebTableLayoutImpl extends VaadinComponentDelegate<WebTableLayoutIm
 
     public WebTableLayoutImpl(StaticPosition fillOption) {
     }
-
 
     @Override
     public void addStyle(LayoutStyle style) {

@@ -19,7 +19,6 @@ import consulo.execution.ui.ExecutionConsole;
 import consulo.process.ProcessHandler;
 import consulo.ui.ex.action.AnAction;
 
-
 /**
  * @author dyoma
  */

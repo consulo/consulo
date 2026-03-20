@@ -23,7 +23,6 @@ import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 
-
 /**
  * @author yole
  */

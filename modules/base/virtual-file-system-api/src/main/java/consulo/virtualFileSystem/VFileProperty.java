@@ -15,7 +15,6 @@
  */
 package consulo.virtualFileSystem;
 
-
 import java.util.Locale;
 
 public enum VFileProperty {

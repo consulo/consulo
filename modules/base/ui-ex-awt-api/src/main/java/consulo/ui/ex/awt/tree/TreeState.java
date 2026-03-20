@@ -285,7 +285,6 @@ public class TreeState implements JDOMExternalizable {
     }
   }
 
-
   private static @Nullable TreePath findMatchedChild(TreeModel model, TreePath treePath, PathElement pathElement) {
     Object parent = treePath.getLastPathComponent();
     int childCount = model.getChildCount(parent);

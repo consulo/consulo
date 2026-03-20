@@ -347,7 +347,6 @@ public class TrimUtil {
     return new Range(start1, end1, start2, end2);
   }
 
-
   //
   // Misc
   //

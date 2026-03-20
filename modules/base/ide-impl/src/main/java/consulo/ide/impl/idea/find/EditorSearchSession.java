@@ -275,7 +275,6 @@ public class EditorSearchSession implements SearchSession, DataProvider, Selecti
         return findModel;
     }
 
-
     @Override
     public @Nullable Object getData(Key dataId) {
         if (SearchSession.KEY == dataId) {
@@ -512,7 +511,6 @@ public class EditorSearchSession implements SearchSession, DataProvider, Selecti
                     return;
                 }
             }
-
 
             FindManager findManager = FindManager.getInstance(getProject());
             if (allowedToChangedEditorSelection) {

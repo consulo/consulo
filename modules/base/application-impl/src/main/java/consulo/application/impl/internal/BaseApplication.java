@@ -572,7 +572,6 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
         return true;
     }
 
-
     @RequiredUIAccess
     @Override
     public void executeSuspendingWriteAction(@Nullable ComponentManager project, String title, Runnable runnable) {

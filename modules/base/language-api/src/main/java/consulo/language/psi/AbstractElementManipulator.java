@@ -19,7 +19,6 @@ package consulo.language.psi;
 import consulo.document.util.TextRange;
 import consulo.language.util.IncorrectOperationException;
 
-
 /**
  * @author Dmitry Avdeev
  */

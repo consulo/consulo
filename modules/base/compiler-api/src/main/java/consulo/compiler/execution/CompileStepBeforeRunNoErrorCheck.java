@@ -60,7 +60,6 @@ public class CompileStepBeforeRunNoErrorCheck extends CompileStepBeforeRunBase<C
         return ExecutionLocalize.beforeLaunchCompileStepNoErrorCheck();
     }
 
-
     @Override
     public MakeBeforeRunTaskNoErrorCheck createTask(RunConfiguration runConfiguration) {
         return runConfiguration instanceof RunProfileWithCompileBeforeLaunchOption ? new MakeBeforeRunTaskNoErrorCheck() : null;

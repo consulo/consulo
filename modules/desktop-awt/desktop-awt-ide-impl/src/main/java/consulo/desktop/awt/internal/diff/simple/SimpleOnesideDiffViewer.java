@@ -139,7 +139,6 @@ public class SimpleOnesideDiffViewer extends OnesideTextDiffViewer {
         };
     }
 
-
     private void clearDiffPresentation() {
         myPanel.resetNotifications();
 

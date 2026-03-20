@@ -30,7 +30,6 @@ import consulo.util.lang.SystemProperties;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 
-
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;

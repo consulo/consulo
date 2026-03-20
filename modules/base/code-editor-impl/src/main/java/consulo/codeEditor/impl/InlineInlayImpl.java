@@ -27,7 +27,6 @@ public class InlineInlayImpl<R extends EditorCustomElementRenderer> extends Inla
         myPriority = priority;
     }
 
-
     @Override
     RangeMarkerTree<InlineInlayImpl<?>> getTree() {
         return myEditor.getInlayModel().myInlineElementsTree;

@@ -78,7 +78,6 @@ public abstract class AbstractNavBarUI implements NavBarUI {
     boolean selected = item.isSelected() && item.isFocused();
     boolean nextSelected = item.isNextSelected() && navbar.isFocused();
 
-
     ImageType type;
     if (floating) {
       type = selected ? ImageType.ACTIVE_FLOATING : nextSelected ? ImageType.NEXT_ACTIVE_FLOATING : ImageType.INACTIVE_FLOATING;
@@ -129,7 +128,6 @@ public abstract class AbstractNavBarUI implements NavBarUI {
     Graphics2D g2 = result.createGraphics();
     g2.setStroke(new BasicStroke(1f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_ROUND));
     g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-
 
     Path2D.Double shape = new Path2D.Double();
     shape.moveTo(0, 0);

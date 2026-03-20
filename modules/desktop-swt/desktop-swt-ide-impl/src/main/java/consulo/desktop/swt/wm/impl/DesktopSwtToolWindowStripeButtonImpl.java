@@ -33,7 +33,6 @@ import org.eclipse.swt.internal.win32.RECT;
 import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
 
-
 /**
  * @author VISTALL
  * @since 12/12/2021
@@ -90,7 +89,6 @@ public class DesktopSwtToolWindowStripeButtonImpl extends SWTComponentDelegate<D
         }
       });
     }
-
 
     @Override
     public Point computeSize(int wHint, int hHint, boolean changed) {

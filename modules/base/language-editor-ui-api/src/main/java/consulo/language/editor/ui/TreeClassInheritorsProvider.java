@@ -19,7 +19,6 @@ import consulo.application.util.query.Query;
 import consulo.language.psi.PsiNamedElement;
 import consulo.project.content.scope.ProjectAwareSearchScope;
 
-
 /**
  * @author VISTALL
  * @since 25-Jul-22

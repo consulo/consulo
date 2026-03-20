@@ -19,8 +19,6 @@ import consulo.versionControlSystem.VcsException;
 import consulo.versionControlSystem.VcsProviderMarker;
 import consulo.virtualFileSystem.VirtualFile;
 
-
-
 public interface MergeProvider extends VcsProviderMarker {
   
   MergeData loadRevisions(VirtualFile file) throws VcsException;

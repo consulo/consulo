@@ -4,7 +4,6 @@ package consulo.language.editor.completion.lookup.event;
 
 import consulo.language.editor.completion.lookup.Lookup;
 
-
 import java.util.EventListener;
 
 /**

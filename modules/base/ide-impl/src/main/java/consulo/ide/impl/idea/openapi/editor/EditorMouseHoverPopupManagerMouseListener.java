@@ -22,7 +22,6 @@ import consulo.language.editor.impl.internal.hint.EditorMouseHoverPopupManager;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 
-
 @ExtensionImpl
 final class EditorMouseHoverPopupManagerMouseListener implements EditorMouseListener {
   private final Provider<EditorMouseHoverPopupManager> myEditorMouseHoverPopupManager;

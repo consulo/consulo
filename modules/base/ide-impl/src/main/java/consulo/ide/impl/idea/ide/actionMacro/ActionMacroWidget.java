@@ -73,7 +73,6 @@ class ActionMacroWidget implements CustomStatusBarWidget, Consumer<MouseEvent> {
             }
         };
 
-
         new BaseButtonBehavior(myIcon) {
             @Override
             protected void execute(MouseEvent e) {

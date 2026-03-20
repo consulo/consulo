@@ -19,7 +19,6 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.TopicAPI;
 import consulo.execution.debug.XDebugProcess;
 
-
 @TopicAPI(ComponentScope.PROJECT)
 public interface XDebuggerManagerListener {
   void processStarted(XDebugProcess debugProcess);

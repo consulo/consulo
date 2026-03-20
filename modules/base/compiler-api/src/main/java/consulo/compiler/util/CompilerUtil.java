@@ -39,7 +39,6 @@ import consulo.virtualFileSystem.RefreshQueue;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
 
-
 import java.io.File;
 import java.io.FileFilter;
 import java.util.*;
@@ -77,7 +76,6 @@ public class CompilerUtil {
     public static Map<Module, List<VirtualFile>> buildModuleToFilesMap(CompileContext context, VirtualFile[] files) {
         return buildModuleToFilesMap(context, Arrays.asList(files));
     }
-
 
     public static Map<Module, List<VirtualFile>> buildModuleToFilesMap(CompileContext context, List<VirtualFile> files) {
         //assertion: all files are different

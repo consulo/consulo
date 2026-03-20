@@ -6,7 +6,6 @@ import consulo.annotation.component.ExtensionAPI;
 import consulo.disposer.Disposable;
 import consulo.codeEditor.Editor;
 
-
 import java.util.EventListener;
 
 /**

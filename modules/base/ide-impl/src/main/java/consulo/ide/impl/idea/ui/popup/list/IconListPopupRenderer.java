@@ -15,7 +15,6 @@
  */
 package consulo.ide.impl.idea.ui.popup.list;
 
-
 import java.awt.*;
 
 public interface IconListPopupRenderer {

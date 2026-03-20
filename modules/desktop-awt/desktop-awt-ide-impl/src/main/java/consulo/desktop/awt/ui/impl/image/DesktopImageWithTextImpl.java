@@ -22,7 +22,6 @@ import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.image.Image;
 
-
 import javax.swing.*;
 import java.awt.*;
 import java.lang.ref.WeakReference;

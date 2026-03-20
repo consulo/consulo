@@ -23,7 +23,6 @@ import consulo.compiler.artifact.ui.PackagingElementPresentation;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.tree.PresentationData;
 
-
 /**
  * @author nik
  */

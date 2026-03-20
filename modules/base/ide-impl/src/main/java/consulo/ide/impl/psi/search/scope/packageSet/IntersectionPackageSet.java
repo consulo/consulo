@@ -21,7 +21,6 @@ import consulo.content.scope.PackageSetBase;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 
-
 public class IntersectionPackageSet extends PackageSetBase {
   private final PackageSet myFirstSet;
   private final PackageSet mySecondSet;

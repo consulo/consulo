@@ -77,7 +77,6 @@ public class SimpleToolWindowPanel extends JBPanelWithEmptyText implements Quick
       remove(myToolbar);
     }
 
-
     if (c != null) {
       Wrapper wrapper = new Wrapper(c);
       myToolbar = wrapper;

@@ -117,7 +117,6 @@ public class AbbreviationManagerImpl extends AbbreviationManager implements Pers
     return actions == null ? Collections.<String>emptyList() : Collections.unmodifiableList(actions);
   }
 
-
   public void register(String abbreviation, String actionId, Map<String, Set<String>> storage) {
     Set<String> abbreviations = storage.get(actionId);
     if (abbreviations == null) {

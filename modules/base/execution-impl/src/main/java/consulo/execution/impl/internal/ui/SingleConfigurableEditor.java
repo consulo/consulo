@@ -169,7 +169,6 @@ public class SingleConfigurableEditor extends DialogWrapper {
         this(parent, configurable, createDimensionKey(configurable));
     }
 
-
     public Configurable getConfigurable() {
         return myConfigurable;
     }

@@ -26,7 +26,6 @@ import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.ColoredTextContainer;
 
-
 import java.util.Map;
 import java.util.Objects;
 import java.util.function.Consumer;

@@ -6,7 +6,6 @@ import consulo.fileEditor.FileEditor;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 
-
 @ServiceAPI(ComponentScope.PROJECT)
 public interface DiffEditorTabFilesManager {
 

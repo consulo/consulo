@@ -74,7 +74,6 @@ public class GridImpl extends Wrapper implements Grid, Disposable, DataProvider 
         setOpaque(false);
         setFocusCycleRoot(true);
 
-
         myTopSplit.setFirstComponent(left);
         myTopSplit.setInnerComponent(center);
         myTopSplit.setLastComponent(right);
@@ -107,7 +106,6 @@ public class GridImpl extends Wrapper implements Grid, Disposable, DataProvider 
         updateSelection(true);
     }
 
-
     public void processRemoveFromUi() {
         if (Disposer.isDisposed(this)) {
             return;
@@ -121,7 +119,6 @@ public class GridImpl extends Wrapper implements Grid, Disposable, DataProvider 
             each.updateSelection(isShowing);
         }
     }
-
 
     void add(Content content) {
         GridCellImpl cell = getCellFor(content);
@@ -227,7 +224,6 @@ public class GridImpl extends Wrapper implements Grid, Disposable, DataProvider 
     public boolean isMinimized(Content content) {
         return getCellFor(content).isMinimized(content);
     }
-
 
     static class Placeholder extends Wrapper implements NullableComponent {
 
@@ -335,7 +331,6 @@ public class GridImpl extends Wrapper implements Grid, Disposable, DataProvider 
             }
         }
     }
-
 
     float getLeftProportion() {
         float totalSize = myTopSplit.getOrientation() ? myTopSplit.getHeight() : myTopSplit.getWidth();

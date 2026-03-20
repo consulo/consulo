@@ -15,7 +15,6 @@
  */
 package consulo.versionControlSystem.distributed.ui.awt;
 
-
 import javax.swing.tree.DefaultMutableTreeNode;
 import java.awt.event.MouseEvent;
 

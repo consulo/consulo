@@ -40,7 +40,6 @@ import java.util.Set;
  */
 public class LogbackMDCAdapter implements MDCAdapter  {
 
-
     // BEWARE: Keys or values placed in a ThreadLocal should not be of a type/class
     // not included in the JDK. See also https://jira.qos.ch/browse/LOGBACK-450
 
@@ -182,7 +181,6 @@ public class LogbackMDCAdapter implements MDCAdapter  {
         }
         nullifyReadOnlyThreadLocalMap();
     }
-
 
     @Override
     public void pushByKey(String key, String value) {

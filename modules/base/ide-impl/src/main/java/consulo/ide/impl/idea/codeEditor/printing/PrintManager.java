@@ -147,7 +147,6 @@ class PrintManager {
       }
     };
 
-
     try {
       printerJob.setPageable(document);
       printerJob.setPrintable(painter, pageFormat);
@@ -207,7 +206,6 @@ class PrintManager {
       }
     }
   }
-
 
   private static PageFormat createPageFormat() {
     PrintSettings printSettings = PrintSettings.getInstance();

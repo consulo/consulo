@@ -21,7 +21,6 @@ import consulo.component.extension.ExtensionPointName;
 import consulo.execution.action.Location;
 import consulo.project.Project;
 
-
 import java.util.List;
 
 /**

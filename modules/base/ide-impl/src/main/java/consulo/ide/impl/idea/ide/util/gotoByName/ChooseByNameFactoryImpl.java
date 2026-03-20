@@ -22,7 +22,6 @@ import consulo.project.Project;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
-
 /**
  * @author anna
  * @since 2005-01-26

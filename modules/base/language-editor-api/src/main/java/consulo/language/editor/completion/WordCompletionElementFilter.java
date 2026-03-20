@@ -31,7 +31,6 @@ import consulo.language.psi.PsiElement;
 import consulo.language.version.LanguageVersion;
 import consulo.language.version.LanguageVersionUtil;
 
-
 /**
  * @author max
  */

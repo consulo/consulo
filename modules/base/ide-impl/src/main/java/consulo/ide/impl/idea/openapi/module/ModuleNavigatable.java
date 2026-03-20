@@ -19,7 +19,6 @@ import consulo.project.ui.view.internal.ProjectSettingsService;
 import consulo.navigation.Navigatable;
 import consulo.module.Module;
 
-
 /**
  * @author Konstantin Bulenkov
  */

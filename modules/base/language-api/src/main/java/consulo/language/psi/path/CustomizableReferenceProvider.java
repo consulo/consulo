@@ -23,7 +23,6 @@ import org.jspecify.annotations.Nullable;
 
 import java.util.Map;
 
-
 /**
  * @author Maxim.Mossienko
  */

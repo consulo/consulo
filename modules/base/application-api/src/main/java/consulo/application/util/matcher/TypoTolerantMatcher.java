@@ -657,7 +657,6 @@ class TypoTolerantMatcher extends MinusculeMatcher {
     return "TypoTolerantMatcher{myPattern=" + new String(myPattern) + ", myOptions=" + myOptions + '}';
   }
 
-
   private static class ErrorState {
     private final @Nullable ErrorState myBase;
     private final int myDeriveIndex;
@@ -882,7 +881,6 @@ class TypoTolerantMatcher extends MinusculeMatcher {
     System.arraycopy(array, index, result, index + 1, array.length - index);
     return result;
   }
-
 
   private static final char[][] keyboard = {{'q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p'}, {'a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l'}, {'z', 'x', 'c', 'v', 'b', 'n', 'm'}};
 

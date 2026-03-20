@@ -1,6 +1,5 @@
 package consulo.ide.impl.idea.model.search.impl;
 
-
 // from kotlin
 public abstract class InjectionInfo {
   private InjectionInfo() {

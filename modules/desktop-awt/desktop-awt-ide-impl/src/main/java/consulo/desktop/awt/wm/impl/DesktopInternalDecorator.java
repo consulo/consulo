@@ -209,7 +209,6 @@ public final class DesktopInternalDecorator extends JPanel implements Queryable,
         validate();
         repaint();
 
-
         // Push "apply" request forward
 
         if (myInfo.isFloating() && myInfo.isVisible()) {
@@ -701,7 +700,6 @@ public final class DesktopInternalDecorator extends JPanel implements Queryable,
         }
     }
 
-
     private final class ToggleContentUiTypeAction extends ToggleAction implements DumbAware {
         private boolean myHadSeveralContents;
 
@@ -775,7 +773,6 @@ public final class DesktopInternalDecorator extends JPanel implements Queryable,
             Point p = SwingUtilities.convertMouseEvent(e.getComponent(), e, this).getPoint();
             return Math.abs(myInfo.getAnchor().isHorizontal() ? p.y : p.x) < 6;
         }
-
 
         private class MyMouseAdapter extends MouseAdapter {
 

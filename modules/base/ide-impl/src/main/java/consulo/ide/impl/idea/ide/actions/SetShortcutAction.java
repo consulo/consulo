@@ -17,7 +17,6 @@ import consulo.ui.ex.keymap.KeymapManager;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.util.dataholder.Key;
 
-
 import java.awt.*;
 
 public class SetShortcutAction extends AnAction implements DumbAware {

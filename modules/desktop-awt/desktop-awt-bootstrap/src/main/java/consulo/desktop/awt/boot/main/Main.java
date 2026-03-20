@@ -62,7 +62,6 @@ public class Main {
 
     File modulesDirectory = BootstrapClassLoaderUtil.getModulesDirectory();
 
-
     Map<String, Object> map = new HashMap<String, Object>();
     map.put(ContainerStartup.ARGS, args);
     map.put(ContainerStartup.STAT_COLLECTOR, stat);

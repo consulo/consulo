@@ -18,7 +18,6 @@ package consulo.virtualFileSystem.event;
 import consulo.application.progress.ProgressIndicator;
 import consulo.disposer.Disposable;
 
-
 import java.util.List;
 
 /**

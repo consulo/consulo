@@ -112,7 +112,6 @@ public class PatternPackageSetParserExtension implements PackageSetParserExtensi
         return pattern.toString();
     }
 
-
     private static String getTokenText(Lexer lexer) {
         int start = lexer.getTokenStart();
         int end = lexer.getTokenEnd();

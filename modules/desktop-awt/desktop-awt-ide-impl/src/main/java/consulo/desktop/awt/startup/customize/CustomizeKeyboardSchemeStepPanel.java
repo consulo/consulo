@@ -27,7 +27,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.List;
 
-
 public class CustomizeKeyboardSchemeStepPanel extends AbstractCustomizeWizardStep {
     private boolean myInitial = true;
 

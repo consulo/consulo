@@ -15,7 +15,6 @@
  */
 package consulo.diff.util;
 
-
 public class MergeConflictType {
   
   private final TextDiffType myType;

@@ -21,7 +21,6 @@ import consulo.annotation.component.ServiceImpl;
 import consulo.application.json.JsonService;
 import jakarta.inject.Singleton;
 
-
 /**
  * @author VISTALL
  * @since 14-Sep-22

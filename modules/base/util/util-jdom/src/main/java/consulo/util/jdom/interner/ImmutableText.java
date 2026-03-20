@@ -17,7 +17,6 @@ import org.jdom.Element;
 import org.jdom.Parent;
 import org.jdom.Text;
 
-
 class ImmutableText extends Text {
   ImmutableText(String str) {
     super.setText(str);

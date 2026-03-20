@@ -17,7 +17,6 @@ package consulo.language.pom.event;
 
 import consulo.language.ast.ASTNode;
 
-
 /**
  * @author ik
  */

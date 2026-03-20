@@ -30,7 +30,6 @@ import consulo.language.psi.PsiPackageManager;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.lang.StringUtil;
 
-
 /**
  * @author VISTALL
  * @since 2021-12-19

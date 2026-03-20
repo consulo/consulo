@@ -21,7 +21,6 @@ import consulo.annotation.component.ServiceAPI;
 import consulo.disposer.Disposable;
 import consulo.virtualFileSystem.event.VirtualFileListener;
 
-
 /**
  * @author mike
  */

@@ -28,7 +28,6 @@ import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.project.Project;
 
-
 /**
  * @author max
  */
@@ -37,7 +36,6 @@ public class QuickFixWrapper implements IntentionAction, SyntheticIntentionActio
 
   private final ProblemDescriptor myDescriptor;
   private final int myFixNumber;
-
 
   
   public static IntentionAction wrap(ProblemDescriptor descriptor, int fixNumber) {

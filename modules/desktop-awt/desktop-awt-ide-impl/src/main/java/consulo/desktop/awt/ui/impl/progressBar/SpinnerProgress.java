@@ -80,7 +80,6 @@ public class SpinnerProgress extends JProgressBar {
         return horizontalTextPosition;
     }
 
-
     public void setHorizontalTextPosition(int textPosition) {
         if (this.horizontalTextPosition != textPosition) {
             this.horizontalTextPosition = textPosition;

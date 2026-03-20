@@ -38,7 +38,6 @@ public class TreeSpeedSearch extends SpeedSearchBase<JTree> {
         return installOn(tree, false, TO_STRING);
     }
 
-
     protected boolean myCanExpand;
 
     private static final Function<TreePath, String> TO_STRING = path -> path.getLastPathComponent().toString();

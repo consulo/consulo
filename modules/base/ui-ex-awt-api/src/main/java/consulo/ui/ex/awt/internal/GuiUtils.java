@@ -129,14 +129,12 @@ public class GuiUtils {
     return wrapWithBorder(result, IdeBorderFactory.createTitledBorder(aTitle, true));
   }
 
-
   private static JPanel wrapWithBorder(JComponent aPanel, Border aBorder) {
     JPanel wrapper = new JPanel(new BorderLayout());
     wrapper.add(aPanel, BorderLayout.CENTER);
     wrapper.setBorder(aBorder);
     return wrapper;
   }
-
 
   public static BorderLayout createBorderLayout() {
     return new BorderLayout(paddingInsideDialog.left, paddingInsideDialog.top);

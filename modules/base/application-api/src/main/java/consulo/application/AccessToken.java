@@ -15,7 +15,6 @@
  */
 package consulo.application;
 
-
 public abstract class AccessToken implements AutoCloseable {
   @Override
   public final void close() {

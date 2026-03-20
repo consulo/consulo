@@ -23,7 +23,6 @@ import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.usage.UsageTreeColorsScheme;
 import jakarta.inject.Singleton;
 
-
 /**
  * @author VISTALL
  * @since 28-Mar-22

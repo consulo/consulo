@@ -17,7 +17,6 @@ package consulo.language.editor.completion;
 
 import consulo.language.Language;
 
-
 /**
  * @author max
  */

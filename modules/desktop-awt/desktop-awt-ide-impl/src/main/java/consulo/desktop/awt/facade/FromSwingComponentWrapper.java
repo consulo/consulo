@@ -17,7 +17,6 @@ package consulo.desktop.awt.facade;
 
 import consulo.ui.Component;
 
-
 /**
  * @author VISTALL
  * @since 2019-02-16

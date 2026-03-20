@@ -21,7 +21,6 @@ import consulo.component.extension.ExtensionPointName;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 
-
 import org.jspecify.annotations.Nullable;
 
 /**

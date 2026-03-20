@@ -17,7 +17,6 @@ package consulo.execution.test.sm.runner.event;
 
 import jetbrains.buildServer.messages.serviceMessages.BaseTestMessage;
 
-
 public class TestOutputEvent extends TreeNodeEvent {
     private final String myText;
     private final boolean myStdOut;

@@ -15,7 +15,6 @@
  */
 package consulo.ide.impl.idea.openapi.util.io;
 
-
 import java.io.IOException;
 
 class NullAppendable implements Appendable {

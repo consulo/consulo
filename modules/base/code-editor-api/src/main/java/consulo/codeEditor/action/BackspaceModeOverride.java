@@ -15,7 +15,6 @@
  */
 package consulo.codeEditor.action;
 
-
 /**
  * Allows specific languages to override backspace unindent mode set in global editor preferences.
  *

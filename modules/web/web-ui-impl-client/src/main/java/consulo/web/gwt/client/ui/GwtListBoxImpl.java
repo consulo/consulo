@@ -59,7 +59,6 @@ public class GwtListBoxImpl extends FlowPanel {
       comboBoxSelectItem.setWidget(widget);
       comboBoxSelectItem.addClickHandler(event -> setSelectedIndex(index));
 
-
       add(comboBoxSelectItem);
     }
 

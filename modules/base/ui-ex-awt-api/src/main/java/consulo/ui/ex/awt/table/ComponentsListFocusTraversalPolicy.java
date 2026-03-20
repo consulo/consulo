@@ -15,7 +15,6 @@
  */
 package consulo.ui.ex.awt.table;
 
-
 import java.awt.*;
 import java.util.List;
 

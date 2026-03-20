@@ -19,7 +19,6 @@ import consulo.application.progress.ProgressIndicator;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.component.ProcessCanceledException;
 
-
 public interface HighlightingPass {
   HighlightingPass[] EMPTY_ARRAY = new HighlightingPass[0];
   /**

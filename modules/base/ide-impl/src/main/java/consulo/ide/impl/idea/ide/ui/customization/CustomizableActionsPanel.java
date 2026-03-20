@@ -399,7 +399,6 @@ public class CustomizableActionsPanel implements Disposable {
         return false;
     }
 
-
     public JPanel getPanel() {
         return myPanel;
     }

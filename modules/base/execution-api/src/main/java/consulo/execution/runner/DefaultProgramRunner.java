@@ -22,7 +22,6 @@ import consulo.execution.configuration.RunProfileState;
 import consulo.execution.ui.RunContentDescriptor;
 import consulo.process.ExecutionException;
 
-
 /**
  * @author spleaner
  */

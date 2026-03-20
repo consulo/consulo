@@ -6,7 +6,6 @@ import consulo.annotation.DeprecationInfo;
 import consulo.codeEditor.impl.CodeEditorBase;
 import consulo.codeEditor.impl.CodeEditorCaretModelBase;
 
-
 public class DesktopCaretModelImpl extends CodeEditorCaretModelBase<DesktopCaretImpl> {
   public DesktopCaretModelImpl(DesktopEditorImpl editor) {
     super(editor);

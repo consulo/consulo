@@ -61,7 +61,6 @@ public class ViewImpl implements View {
     return myPlaceInGrid;
   }
 
-
   @Override
   public boolean isMinimizedInGrid() {
     return myMinimizedInGrid;
@@ -74,7 +73,6 @@ public class ViewImpl implements View {
   public String getID() {
     return myID;
   }
-
 
   @Override
   public void setMinimizedInGrid(boolean minimizedInGrid) {

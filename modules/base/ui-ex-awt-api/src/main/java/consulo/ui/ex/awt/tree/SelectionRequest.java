@@ -15,7 +15,6 @@
  */
 package consulo.ui.ex.awt.tree;
 
-
 class SelectionRequest {
   final Object[] myElements;
   final Runnable myOnDone;

@@ -106,7 +106,6 @@ public class RunAnythingManager {
         JBInsets.addTo(size, myBalloon.getContent().getInsets());
         myBalloon.setMinimumSize(size);
 
-
         if (myRunAnythingUI.getViewType() == RunAnythingPopupUI.ViewType.SHORT) {
             myBalloonFullSize = TargetAWT.to(ProjectWindowStateService.getInstance(myProject).getSize(LOCATION_SETTINGS_KEY));
             Dimension prefSize = myRunAnythingUI.getPreferredSize();

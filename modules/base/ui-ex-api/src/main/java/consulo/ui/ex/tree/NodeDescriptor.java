@@ -87,7 +87,6 @@ public abstract class NodeDescriptor<E> {
     return 30;
   }
 
-
   public final long getChildrenSortingStamp() {
     return myChildrenSortingStamp;
   }

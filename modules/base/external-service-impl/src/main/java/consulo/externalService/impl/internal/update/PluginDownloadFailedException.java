@@ -18,7 +18,6 @@ package consulo.externalService.impl.internal.update;
 import consulo.container.plugin.PluginId;
 import consulo.localize.LocalizeValue;
 
-
 /**
  * @author VISTALL
  * @since 2021-11-23

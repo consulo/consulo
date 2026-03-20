@@ -17,7 +17,6 @@ package consulo.usage;
 
 import consulo.ui.ex.action.KeyboardShortcut;
 
-
 public interface ConfigurableUsageTarget extends UsageTarget {
     void showSettings();
 

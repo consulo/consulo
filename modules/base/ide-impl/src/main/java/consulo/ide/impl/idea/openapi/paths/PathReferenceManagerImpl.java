@@ -129,7 +129,6 @@ public class PathReferenceManagerImpl extends PathReferenceManager {
     staticProvider.setRelativePathsAllowed(relativePathsAllowed);
     processProvider(psiElement, staticProvider, mergedReferences, soft);
 
-
     for (PathReferenceProvider provider : myApplication.getExtensionPoint(PathReferenceProvider.class)) {
       if (!provider.isAnchorReference()) {
         processProvider(psiElement, provider, mergedReferences, soft);

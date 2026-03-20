@@ -33,7 +33,6 @@ public abstract class RemoteContentProvider {
 
     public abstract boolean isUpToDate(String url, VirtualFile local);
 
-
     public interface DownloadingCallback {
         void finished(@Nullable FileType fileType);
 

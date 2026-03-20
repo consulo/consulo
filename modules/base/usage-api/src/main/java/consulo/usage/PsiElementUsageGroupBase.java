@@ -28,7 +28,6 @@ import consulo.usage.localize.UsageLocalize;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.status.FileStatus;
 
-
 import java.util.Objects;
 
 /**

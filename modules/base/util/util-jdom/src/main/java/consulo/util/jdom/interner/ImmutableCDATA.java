@@ -18,7 +18,6 @@ import org.jdom.Element;
 import org.jdom.Parent;
 import org.jdom.Text;
 
-
 class ImmutableCDATA extends CDATA {
   ImmutableCDATA(String str) {
     super.setText(str);

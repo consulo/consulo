@@ -127,7 +127,6 @@ public class UnifiedProjectOrModuleNameStep<C extends NewModuleWizardContext> im
       }
     });
 
-
     extend(formBuilder, uiDisposable);
 
     return formBuilder.build();

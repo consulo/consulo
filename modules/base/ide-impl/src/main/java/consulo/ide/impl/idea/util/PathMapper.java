@@ -15,7 +15,6 @@
  */
 package consulo.ide.impl.idea.util;
 
-
 import java.util.Collection;
 import java.util.List;
 

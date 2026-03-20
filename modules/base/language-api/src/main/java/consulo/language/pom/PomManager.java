@@ -18,7 +18,6 @@ package consulo.language.pom;
 
 import consulo.project.Project;
 
-
 /**
  * @author yole
  */

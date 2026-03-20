@@ -18,7 +18,6 @@ package consulo.language.codeStyle;
 import consulo.util.collection.primitive.ints.IntSet;
 import consulo.util.collection.primitive.ints.IntSets;
 
-
 /**
  * {@link WhiteSpaceFormattingStrategy} implementation that is pre-configured with the set of symbols that may
  * be treated as white spaces.

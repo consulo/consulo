@@ -49,7 +49,6 @@ public class NotFilter
     return !myFilter.isAcceptable(element, context);
   }
 
-
   public String toString(){
     return "!" + getFilter();
   }

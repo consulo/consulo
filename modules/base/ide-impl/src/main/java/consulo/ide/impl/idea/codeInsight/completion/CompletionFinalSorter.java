@@ -39,7 +39,6 @@ public abstract class CompletionFinalSorter {
   
   public abstract Map<LookupElement, List<Pair<String, Object>>> getRelevanceObjects(Iterable<LookupElement> elements);
 
-
   //@ApiStatus.Internal
   public interface Factory {
     
@@ -50,7 +49,6 @@ public abstract class CompletionFinalSorter {
   public static CompletionFinalSorter newSorter() {
     return EMPTY_SORTER;
   }
-
 
   private static final CompletionFinalSorter EMPTY_SORTER = new CompletionFinalSorter() {
     
@@ -66,5 +64,4 @@ public abstract class CompletionFinalSorter {
     }
   };
 }
-
 

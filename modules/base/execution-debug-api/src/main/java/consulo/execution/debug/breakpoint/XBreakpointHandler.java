@@ -16,7 +16,6 @@
 
 package consulo.execution.debug.breakpoint;
 
-
 /**
  * @author nik
  */

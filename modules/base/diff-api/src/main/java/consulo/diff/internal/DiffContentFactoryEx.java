@@ -31,10 +31,8 @@ public abstract class DiffContentFactoryEx extends DiffContentFactory {
     return (DiffContentFactoryEx)DiffContentFactory.getInstance();
   }
 
-
   
   public abstract DocumentContent create(@Nullable Project project, String text, DiffFilePath filePath);
-
 
   
   public abstract DiffContent createFromBytes(@Nullable Project project,
@@ -45,7 +43,6 @@ public abstract class DiffContentFactoryEx extends DiffContentFactory {
   public abstract DiffContent createFromBytes(@Nullable Project project,
                                               byte[] content,
                                               VirtualFile highlightFile) throws IOException;
-
 
   
   public abstract DocumentContent createDocumentFromBytes(@Nullable Project project,

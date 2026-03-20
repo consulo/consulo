@@ -16,7 +16,6 @@
 
 package com.intellij.rt.coverage.data;
 
-
 import com.intellij.rt.coverage.util.CoverageIOUtil;
 import com.intellij.rt.coverage.util.DictionaryLookup;
 import com.intellij.rt.coverage.util.ErrorReporter;

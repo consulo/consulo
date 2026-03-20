@@ -236,7 +236,6 @@ public final class IdeMouseEventDispatcher {
             return false; // forward mouse processing to the special shortcut panel
         }
 
-
         if (ignore) {
             return false;
         }

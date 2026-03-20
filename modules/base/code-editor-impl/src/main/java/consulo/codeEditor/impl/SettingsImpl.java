@@ -280,7 +280,6 @@ public class SettingsImpl implements EditorSettings {
         fireEditorRefresh();
     }
 
-
     @Override
     public int getAdditionalLinesCount() {
         return myAdditionalLinesCount;
@@ -649,7 +648,6 @@ public class SettingsImpl implements EditorSettings {
         }
         return myPersistentEditorSettings.isRefrainFromScrolling();
     }
-
 
     @Override
     public void setRefrainFromScrolling(boolean b) {

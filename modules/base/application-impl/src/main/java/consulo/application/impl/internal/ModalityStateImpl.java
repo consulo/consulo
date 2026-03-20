@@ -15,7 +15,6 @@
  */
 package consulo.application.impl.internal;
 
-
 /**
  * @author VISTALL
  * @since 14/09/2023

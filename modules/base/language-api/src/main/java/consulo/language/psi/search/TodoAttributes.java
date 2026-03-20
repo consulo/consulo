@@ -22,7 +22,6 @@ import consulo.util.xml.serializer.WriteExternalException;
 import consulo.ui.image.Image;
 import org.jdom.Element;
 
-
 /**
  * @author Vladimir Kondratyev
  */
@@ -125,7 +124,6 @@ public class TodoAttributes implements Cloneable {
     result = 29 * result + Boolean.valueOf(myShouldUseCustomColors).hashCode();
     return result;
   }
-
 
   public boolean shouldUseCustomTodoColor() {
     return myShouldUseCustomColors;

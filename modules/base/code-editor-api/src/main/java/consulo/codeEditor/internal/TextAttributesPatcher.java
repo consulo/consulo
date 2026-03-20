@@ -25,7 +25,6 @@ import consulo.document.util.TextRange;
 import consulo.ui.color.RGBColor;
 import consulo.ui.style.StandardColors;
 
-
 /**
  * @author VISTALL
  * @since 29-Apr-22

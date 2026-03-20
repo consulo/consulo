@@ -15,7 +15,6 @@
  */
 package consulo.externalService.impl.internal;
 
-
 import java.util.Locale;
 
 /**

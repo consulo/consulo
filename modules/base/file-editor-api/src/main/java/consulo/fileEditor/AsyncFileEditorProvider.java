@@ -18,7 +18,6 @@ package consulo.fileEditor;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 
-
 public interface AsyncFileEditorProvider extends FileEditorProvider {
   /**
    * This method is intended to be called from background thread. It should perform all time-consuming tasks required to build an editor,

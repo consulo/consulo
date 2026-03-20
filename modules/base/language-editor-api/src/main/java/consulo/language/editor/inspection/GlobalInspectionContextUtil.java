@@ -24,7 +24,6 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.project.Project;
 
-
 public class GlobalInspectionContextUtil {
     public static RefElement retrieveRefElement(PsiElement element, GlobalInspectionContext globalContext) {
         PsiFile elementFile = element.getContainingFile();

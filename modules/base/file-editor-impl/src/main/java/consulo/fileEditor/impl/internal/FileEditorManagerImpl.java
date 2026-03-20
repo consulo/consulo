@@ -432,7 +432,6 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
 
     //-------------------------------------------------------
 
-
     @Override
     public VirtualFile getFile(FileEditor editor) {
         FileEditorWithProviderComposite editorComposite = getEditorComposite(editor);
@@ -643,7 +642,6 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
         if (isOpenInNewWindow()) {
             return openFileInNewWindow(file);
         }
-
 
         FileEditorWindow wndToOpenIn = null;
         if (searchForSplitter) {
@@ -1752,7 +1750,6 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
             }
         }
     }
-
 
     /**
      * Gets events from VCS and updates color of myEditor tabs

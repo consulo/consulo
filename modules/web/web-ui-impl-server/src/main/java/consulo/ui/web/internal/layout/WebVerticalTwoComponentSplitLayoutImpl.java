@@ -15,7 +15,6 @@
  */
 package consulo.ui.web.internal.layout;
 
-
 /**
  * @author VISTALL
  * @since 2019-02-17

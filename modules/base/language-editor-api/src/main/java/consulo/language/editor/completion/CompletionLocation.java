@@ -21,7 +21,6 @@ import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolder;
 import org.jspecify.annotations.Nullable;
 
-
 /**
  * @author peter
  */

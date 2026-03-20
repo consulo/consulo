@@ -15,7 +15,6 @@
  */
 package consulo.ide.impl.idea.find.actions;
 
-
 import javax.swing.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Predicate;

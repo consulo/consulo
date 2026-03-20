@@ -870,7 +870,6 @@ public class HintManagerImpl implements HintManagerEx {
         showEditorHint(hint, editor, p, flags, timeout, false);
     }
 
-
     @Override
     @RequiredUIAccess
     public void showQuestionHint(

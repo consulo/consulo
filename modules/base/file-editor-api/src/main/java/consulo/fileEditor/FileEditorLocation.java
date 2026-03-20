@@ -15,7 +15,6 @@
  */
 package consulo.fileEditor;
 
-
 /**
  * This interface specifies a location in its file editor.
  * The Comparable interface implementation should present some natural order on locations.

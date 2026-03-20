@@ -15,7 +15,6 @@
  */
 package consulo.ui.ex.action;
 
-
 /**
  * Defines possible positions of an action relative to another action.
  */

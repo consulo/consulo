@@ -22,7 +22,6 @@ import org.jetbrains.annotations.Contract;
 
 import java.util.concurrent.Callable;
 
-
 public final class ReadAction<T> {
     @Deprecated
     public static AccessToken start() {

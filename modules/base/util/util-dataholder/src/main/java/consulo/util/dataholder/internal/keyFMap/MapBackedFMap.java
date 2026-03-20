@@ -22,7 +22,6 @@ import consulo.util.dataholder.Key;
 import consulo.util.dataholder.internal.KeyRegistry;
 import org.jspecify.annotations.Nullable;
 
-
 import static consulo.util.dataholder.internal.keyFMap.ArrayBackedFMap.getKeysByIndices;
 
 class MapBackedFMap implements KeyFMap {

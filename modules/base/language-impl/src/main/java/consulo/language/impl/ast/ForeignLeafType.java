@@ -21,7 +21,6 @@ import consulo.language.ast.IElementType;
 import consulo.language.ast.ILeafElementType;
 import consulo.language.ast.ASTNode;
 
-
 /**
  * @author max
  */

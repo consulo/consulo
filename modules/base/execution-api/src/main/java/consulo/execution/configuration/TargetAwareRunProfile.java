@@ -18,7 +18,6 @@ package consulo.execution.configuration;
 import consulo.execution.ExecutionTarget;
 import consulo.execution.ExecutionTargetProvider;
 
-
 public interface TargetAwareRunProfile extends RunProfile {
   /**
    * Checks if this configuration supports running on the provided target (see {@link ExecutionTarget} for details).

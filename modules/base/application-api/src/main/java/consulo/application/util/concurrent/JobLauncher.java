@@ -63,7 +63,6 @@ public abstract class JobLauncher {
     return invokeConcurrentlyUnderProgress(things, progress, ApplicationManager.getApplication().isReadAccessAllowed(), failFastOnAcquireReadAction, thingProcessor);
   }
 
-
   public abstract <T> boolean invokeConcurrentlyUnderProgress(List<? extends T> things,
                                                               ProgressIndicator progress,
                                                               boolean runInReadAction,

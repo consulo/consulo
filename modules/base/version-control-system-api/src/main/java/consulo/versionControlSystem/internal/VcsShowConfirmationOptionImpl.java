@@ -15,7 +15,6 @@
  */
 package consulo.versionControlSystem.internal;
 
-
 import consulo.versionControlSystem.VcsShowConfirmationOption;
 
 public class VcsShowConfirmationOptionImpl extends VcsAbstractSetting implements VcsShowConfirmationOption {

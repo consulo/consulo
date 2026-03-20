@@ -10,7 +10,6 @@ import consulo.remoteServer.configuration.deployment.DeploymentSourceType;
 import consulo.ui.image.Image;
 import consulo.util.io.FileUtil;
 
-
 import java.io.File;
 
 /**

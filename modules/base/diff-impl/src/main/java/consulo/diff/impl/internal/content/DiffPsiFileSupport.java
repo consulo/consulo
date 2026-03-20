@@ -26,7 +26,6 @@ import java.util.Objects;
 public class DiffPsiFileSupport {
   public static final Key<Boolean> KEY = Key.create("Diff.DiffPsiFileSupport");
 
-
   public static boolean isDiffFile(@Nullable PsiFile file) {
     return file != null && isDiffFile(file.getVirtualFile());
   }

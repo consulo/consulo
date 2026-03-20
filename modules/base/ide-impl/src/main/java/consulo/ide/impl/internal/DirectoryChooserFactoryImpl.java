@@ -21,7 +21,6 @@ import consulo.ide.internal.DirectoryChooserDialog;
 import consulo.ide.internal.DirectoryChooserFactory;
 import consulo.project.Project;
 
-
 /**
  * @author VISTALL
  * @since 10-Jul-22

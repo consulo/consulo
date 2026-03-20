@@ -48,7 +48,6 @@ import consulo.util.lang.Pair;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.VirtualFilePathUtil;
 
-
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
@@ -389,7 +388,6 @@ public class AnalyzeDependenciesComponent extends MasterDetailsComponent {
             }
             addDependencyPath(n, orderPath, i + 1);
         }
-
 
         /**
          * {@inheritDoc}

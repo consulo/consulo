@@ -21,7 +21,6 @@ import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
 import consulo.language.psi.PsiElement;
 
-
 /**
  * @author yole
  */

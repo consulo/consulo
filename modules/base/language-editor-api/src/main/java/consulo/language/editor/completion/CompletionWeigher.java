@@ -19,7 +19,6 @@ import consulo.language.Weigher;
 import consulo.language.editor.completion.lookup.LookupElement;
 import consulo.util.dataholder.Key;
 
-
 /**
  * @author peter
  */

@@ -191,7 +191,6 @@ public class FindUsagesManager {
         return true;
     }
 
-
     @RequiredUIAccess
     private void initLastSearchElement(
         FindUsagesOptions findUsagesOptions,
@@ -312,7 +311,6 @@ public class FindUsagesManager {
         AbstractFindUsagesDialogDescriptor desc =
             handler.createFindUsagesDialogDescriptor(context, singleFile, shouldOpenInNewTab(), mustOpenInNewTab());
         Dialog dialog = dialogService.build(project, desc);
-
 
         if (showDialog) {
             dialog.showAsync().whenComplete((v, throwable) -> {
@@ -466,7 +464,6 @@ public class FindUsagesManager {
         Content selectedContent = UsageViewContentManager.getInstance(myProject).getSelectedContent(true);
         return selectedContent != null && selectedContent.isPinned();
     }
-
 
     /**
      * @throws PsiInvalidElementAccessException when the searcher can't be created (i.e. because element was invalidated)
@@ -795,7 +792,6 @@ public class FindUsagesManager {
     public UsageHistory getHistory() {
         return myHistory;
     }
-
 
     
     public static GlobalSearchScope getMaximalScope(FindUsagesHandler handler) {

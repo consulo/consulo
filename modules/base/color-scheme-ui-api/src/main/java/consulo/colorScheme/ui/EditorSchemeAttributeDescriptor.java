@@ -19,7 +19,6 @@ package consulo.colorScheme.ui;
 import consulo.colorScheme.EditorColorsScheme;
 import consulo.localize.LocalizeValue;
 
-
 public interface EditorSchemeAttributeDescriptor {
   
   LocalizeValue getGroup();

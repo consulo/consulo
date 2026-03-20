@@ -22,7 +22,6 @@ import consulo.language.editor.impl.internal.hint.EditorMouseHoverPopupManager;
 import consulo.language.editor.impl.internal.hint.TooltipGroup;
 import consulo.language.editor.impl.internal.rawHighlight.HighlightInfoImpl;
 
-
 /**
  * @author max
  */

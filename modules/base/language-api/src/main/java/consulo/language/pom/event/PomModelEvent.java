@@ -58,7 +58,6 @@ public class PomModelEvent extends EventObject {
     return set;
   }
 
-
   public @Nullable PomChangeSet getChangeSet(PomModelAspect aspect) {
     if (myChangeSets == null) return null;
     return myChangeSets.get(aspect);
@@ -81,7 +80,6 @@ public class PomModelEvent extends EventObject {
       }
     }
   }
-
 
   @Override
   public PomModel getSource() {

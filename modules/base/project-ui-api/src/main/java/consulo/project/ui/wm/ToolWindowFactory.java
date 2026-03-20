@@ -25,7 +25,6 @@ import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.ui.ex.toolWindow.ToolWindowAnchor;
 import consulo.ui.image.Image;
 
-
 /**
  * Performs lazy initialization of a toolwindow.
  * Please implement {@link DumbAware} marker interface to indicate that the toolwindow content should be

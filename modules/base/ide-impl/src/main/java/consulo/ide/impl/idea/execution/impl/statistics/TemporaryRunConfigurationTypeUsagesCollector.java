@@ -19,7 +19,6 @@ import consulo.annotation.component.ExtensionImpl;
 import consulo.execution.RunManager;
 import consulo.execution.configuration.RunConfiguration;
 
-
 /**
  * @author Nikolay Matveev
  */

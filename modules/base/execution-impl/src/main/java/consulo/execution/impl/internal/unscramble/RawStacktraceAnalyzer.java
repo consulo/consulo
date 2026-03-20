@@ -20,7 +20,6 @@ import consulo.execution.unscramble.StacktraceAnalyzer;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 
-
 /**
  * Default impl of stacktrace analyzer. Not support clipboard sync, and preferring for projects
  *

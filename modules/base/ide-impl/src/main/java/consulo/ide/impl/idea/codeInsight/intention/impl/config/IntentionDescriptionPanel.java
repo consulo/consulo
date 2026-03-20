@@ -134,7 +134,6 @@ public class IntentionDescriptionPanel {
     myPoweredByPanel.add(owner, BorderLayout.WEST);
   }
 
-
   public void reset(String intentionCategory) {
     try {
       String text = CodeInsightBundle.message("intention.settings.category.text", intentionCategory);

@@ -18,7 +18,6 @@ package consulo.desktop.swt.ui.impl.image;
 import consulo.ui.image.Image;
 import org.eclipse.swt.graphics.GC;
 
-
 /**
  * @author VISTALL
  * @since 10/07/2021

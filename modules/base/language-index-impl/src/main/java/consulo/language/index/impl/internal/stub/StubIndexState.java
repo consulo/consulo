@@ -17,7 +17,6 @@ package consulo.language.index.impl.internal.stub;
 
 import consulo.language.psi.stub.StubIndexKey;
 
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;

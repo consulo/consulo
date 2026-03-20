@@ -19,7 +19,6 @@ package consulo.compiler.artifact.element;
 import consulo.compiler.CompileContext;
 import consulo.virtualFileSystem.VirtualFile;
 
-
 /**
  * @author nik
  */

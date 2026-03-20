@@ -17,7 +17,6 @@ package consulo.usage;
 
 import consulo.fileEditor.FileEditorLocation;
 
-
 public class UsageAdapter implements Usage {
     @Override
     

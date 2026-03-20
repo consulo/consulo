@@ -336,7 +336,6 @@ public abstract class NamedItemsListEditor<T> extends MasterDetailsComponent {
         return (T)getSelectedObject();
     }
 
-
     private class CopyAction extends DumbAwareAction {
         public CopyAction() {
             super(CommonLocalize.buttonCopy(), CommonLocalize.buttonCopy(), PlatformIconGroup.actionsCopy());

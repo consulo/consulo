@@ -22,7 +22,6 @@ import consulo.project.Project;
 import consulo.virtualFileSystem.ReadonlyStatusHandler;
 import consulo.virtualFileSystem.VirtualFile;
 
-
 /**
  * @author VISTALL
  * @since 23-Mar-22

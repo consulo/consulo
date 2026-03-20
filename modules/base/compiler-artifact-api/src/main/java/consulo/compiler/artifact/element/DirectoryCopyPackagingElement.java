@@ -22,7 +22,6 @@ import consulo.compiler.artifact.ui.DirectoryCopyPresentation;
 import consulo.compiler.artifact.ui.PackagingElementPresentation;
 import consulo.virtualFileSystem.VirtualFile;
 
-
 /**
  * @author nik
  */

@@ -18,7 +18,6 @@ package consulo.desktop.awt.platform.impl;
 import consulo.platform.Platform;
 import consulo.platform.internal.PlatformInternal;
 
-
 /**
  * @author VISTALL
  * @since 15-Sep-17

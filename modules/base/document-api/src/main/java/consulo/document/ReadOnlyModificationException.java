@@ -15,7 +15,6 @@
  */
 package consulo.document;
 
-
 public class ReadOnlyModificationException extends RuntimeException {
   private final Document myDocument;
 

@@ -249,7 +249,6 @@ public abstract class PopupFactoryImpl extends JBPopupFactory {
         return new ComponentPopupBuilderImpl(content, preferableFocusComponent);
     }
 
-
     
     @Override
     public RelativePoint guessBestPopupLocation(DataContext dataContext) {
@@ -422,7 +421,6 @@ public abstract class PopupFactoryImpl extends JBPopupFactory {
         text.setEditable(false);
         NonOpaquePanel.setTransparent(text);
         text.setBorder(null);
-
 
         JLabel label = new JLabel();
         JPanel content =

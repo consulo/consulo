@@ -17,7 +17,6 @@ package consulo.language.codeStyle;
 
 import consulo.document.Document;
 
-
 /**
  * Used to differentiate between line indent adjustment on a new line after Enter and explicit indent adjustment action.
  *

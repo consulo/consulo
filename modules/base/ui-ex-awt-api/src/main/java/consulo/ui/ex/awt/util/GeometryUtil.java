@@ -67,7 +67,6 @@ public class GeometryUtil implements SwingConstants {
     return new Line2D.Double(aRectangle.getX(), aRectangle.getY(), aRectangle.getX() + aRectangle.getWidth(), aRectangle.getY());
   }
 
-
   private static boolean segmentInsideRectangle(Rectangle aRectangle, Line2D aSegment) {
     return isWithin(aRectangle, aSegment.getP1()) && isWithin(aRectangle, aSegment.getP2());
   }
@@ -90,20 +89,16 @@ public class GeometryUtil implements SwingConstants {
     double kFirst = firstDeltaY / firstDeltaX;
     double bFirst = aFirst.getY1() - kFirst * aFirst.getX1();
 
-
     double secondDeltaX = aSecond.getX2() - aSecond.getX1();
     double secondDeltaY = aSecond.getY2() - aSecond.getY1();
 
     double kSecond = secondDeltaY / secondDeltaX;
     double bSecond = aSecond.getY1() - kSecond * aSecond.getX1();
 
-
     double xIntersection = -100000000;
     double yIntersection = -100000000;
 
-
     double deltaK = (kFirst - kSecond);
-
 
     if (linesAreAngledAndParallel(kFirst, kSecond)) {
       return null;
@@ -138,7 +133,6 @@ public class GeometryUtil implements SwingConstants {
           yIntersection = kFirst * xIntersection + bFirst;
         }
       }
-
 
     }
     else {

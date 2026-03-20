@@ -62,4 +62,3 @@ class RunAnythingIconHandler implements PropertyChangeListener {
     //}
 }
 
-

@@ -33,7 +33,6 @@ public interface TreeVisitor {
     SKIP_SIBLINGS,
   }
 
-
   /**
    * Represents a tree model that accepts a tree visitor and promises a result.
    */
@@ -45,7 +44,6 @@ public interface TreeVisitor {
     
     Promise<TreePath> accept(TreeVisitor visitor);
   }
-
 
   abstract class ByComponent<C, T> implements TreeVisitor {
     private final Function<TreePath, T> converter;
@@ -94,7 +92,6 @@ public interface TreeVisitor {
      */
     protected abstract boolean contains(T pathComponent, C thisComponent);
   }
-
 
   class ByTreePath<T> implements TreeVisitor {
     private final Function<TreePath, T> converter;

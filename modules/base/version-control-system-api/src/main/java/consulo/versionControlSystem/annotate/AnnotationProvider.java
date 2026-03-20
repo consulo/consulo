@@ -22,7 +22,6 @@ import consulo.versionControlSystem.VcsProviderMarker;
 import consulo.versionControlSystem.history.VcsFileRevision;
 import consulo.virtualFileSystem.VirtualFile;
 
-
 public interface AnnotationProvider extends VcsProviderMarker {
   
   FileAnnotation annotate(VirtualFile file) throws VcsException;

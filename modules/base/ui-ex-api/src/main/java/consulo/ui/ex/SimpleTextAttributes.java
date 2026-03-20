@@ -120,7 +120,6 @@ public final class SimpleTextAttributes {
         return myFgColor;
     }
 
-
     /**
      * @return background color
      */

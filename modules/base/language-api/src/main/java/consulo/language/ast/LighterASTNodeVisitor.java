@@ -15,7 +15,6 @@
  */
 package consulo.language.ast;
 
-
 public abstract class LighterASTNodeVisitor {
   public abstract void visitNode(LighterASTNode node);
 

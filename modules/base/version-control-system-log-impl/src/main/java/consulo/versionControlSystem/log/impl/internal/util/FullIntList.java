@@ -16,7 +16,6 @@
 
 package consulo.versionControlSystem.log.impl.internal.util;
 
-
 public class FullIntList implements IntList {
 
   public static FullIntList newInstance(IntList delegateList) {

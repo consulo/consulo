@@ -21,7 +21,6 @@ import consulo.language.psi.PsiFile;
 import consulo.project.Project;
 import consulo.undoRedo.CommandProcessor;
 
-
 /**
  * @author VISTALL
  * @since 2022-02-16

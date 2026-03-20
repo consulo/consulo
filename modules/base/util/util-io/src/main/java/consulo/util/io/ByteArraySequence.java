@@ -13,7 +13,6 @@
 // limitations under the License.
 package consulo.util.io;
 
-
 import java.io.DataInputStream;
 
 /**

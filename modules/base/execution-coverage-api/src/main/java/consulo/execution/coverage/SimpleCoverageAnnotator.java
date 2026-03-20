@@ -236,7 +236,6 @@ public abstract class SimpleCoverageAnnotator extends BaseCoverageAnnotator {
             }
         }
 
-
         //TODO - toplevelFilesCoverage - is unused variable!
 
         // no sense to include directories without ruby files

@@ -15,7 +15,6 @@
  */
 package consulo.externalSystem.model;
 
-
 import java.io.Serializable;
 
 /**

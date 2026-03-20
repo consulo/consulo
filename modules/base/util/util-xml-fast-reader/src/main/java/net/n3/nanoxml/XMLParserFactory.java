@@ -28,9 +28,7 @@
 
 package net.n3.nanoxml;
 
-
 import java.io.IOException;
-
 
 /**
  * Creates an XML parser.
@@ -46,12 +44,10 @@ public class XMLParserFactory
     */
    public static final String DEFAULT_CLASS = "net.n3.nanoxml.StdXMLParser";
 
-
    /**
     * The Java properties key of the XML parser class name.
     */
    public static final String CLASS_KEY = "net.n3.nanoxml.XMLParser";
-
 
    /**
     * Creates a default parser.
@@ -79,7 +75,6 @@ public class XMLParserFactory
                                               new StdXMLBuilder());
    }
 
-
    /**
     * Creates a default parser.
     *
@@ -106,7 +101,6 @@ public class XMLParserFactory
                                             XMLParserFactory.DEFAULT_CLASS);
       return XMLParserFactory.createXMLParser(className, builder);
    }
-
 
    /**
     * Creates a parser.

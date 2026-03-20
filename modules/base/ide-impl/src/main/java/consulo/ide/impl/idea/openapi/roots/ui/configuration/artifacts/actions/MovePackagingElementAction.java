@@ -78,7 +78,6 @@ public class MovePackagingElementAction extends DumbAwareAction {
     final CompositePackagingElement<?> parentElement = parent.getElementIfSingle();
     if (parentElement == null || element == null) return;
 
-
     if (!myLayoutTreeComponent.checkCanModifyChildren(parentElement, parent, Arrays.asList(node))) return;
 
     final List<PackagingElement<?>> toSelect = new ArrayList<PackagingElement<?>>();

@@ -47,7 +47,6 @@ public class CopyHandler {
         return false;
     }
 
-
     public static void doCopy(PsiElement[] elements, PsiDirectory defaultTargetDirectory) {
         if (elements.length == 0) {
             return;

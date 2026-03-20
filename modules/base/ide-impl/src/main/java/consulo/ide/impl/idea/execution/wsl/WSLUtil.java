@@ -61,7 +61,6 @@ public class WSLUtil {
         return !getAvailableDistributions().isEmpty();
     }
 
-
     /**
      * @return list of installed WSL distributions
      * @apiNote order of entries depends on configuration file and may change between launches.

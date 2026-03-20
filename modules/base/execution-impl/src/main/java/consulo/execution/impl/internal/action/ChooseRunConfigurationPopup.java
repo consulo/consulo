@@ -166,7 +166,6 @@ public class ChooseRunConfigurationPopup implements ExecutorProvider {
             }
         });
 
-
         popup.registerAction("invokeAction", KeyStroke.getKeyStroke("shift ENTER"), new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -181,7 +180,6 @@ public class ChooseRunConfigurationPopup implements ExecutorProvider {
                 popup.handleSelect(true);
             }
         });
-
 
         popup.registerAction("deleteConfiguration", KeyStroke.getKeyStroke("DELETE"), new AbstractAction() {
             @Override

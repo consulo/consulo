@@ -138,7 +138,6 @@ public class IndentOptionsEditor extends OptionGroup implements CodeStyleSetting
         }
     }
 
-
     protected static boolean isFieldModified(JCheckBox checkBox, boolean value) {
         return checkBox.isSelected() != value;
     }

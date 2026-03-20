@@ -35,7 +35,6 @@ public abstract class AutoPopupController {
    */
   public static final Key<Boolean> AUTO_POPUP_ON_FOCUS_GAINED = Key.create("Show Completion Auto-Popup On Focus Gained");
 
-
   public static AutoPopupController getInstance(Project project) {
     return project.getInstance(AutoPopupController.class);
   }

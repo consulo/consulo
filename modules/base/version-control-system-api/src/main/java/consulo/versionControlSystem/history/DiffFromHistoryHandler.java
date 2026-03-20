@@ -19,7 +19,6 @@ import consulo.project.Project;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.versionControlSystem.FilePath;
 
-
 /**
  * This handler is called when the user selects one or two revisions in the file history and invokes "Show Diff",
  * or selected one revision and invokes "Show Diff with Local"

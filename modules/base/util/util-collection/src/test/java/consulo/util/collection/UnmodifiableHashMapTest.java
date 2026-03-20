@@ -107,7 +107,6 @@ public class UnmodifiableHashMapTest {
         }
     }
 
-
     @Test
     public void testWithAll() {
         for (int size : new int[]{0, 1, 2, 3, 4, 10, 11, 12}) {

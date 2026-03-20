@@ -17,7 +17,6 @@ package consulo.desktop.swt.ui.impl.image;
 
 import consulo.ui.image.Image;
 
-
 /**
  * @author VISTALL
  * @since 29/04/2021

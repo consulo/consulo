@@ -238,7 +238,6 @@ public final class IdeTooltipManagerImpl implements Disposable, AWTEventListener
         return !StringUtil.isEmpty(comp.getToolTipText(me)) || getCustomTooltip(comp) != null;
     }
 
-
     private void showTooltipForEvent(final JComponent c, final MouseEvent me, boolean toCenter, int shift, int posChangeX, int posChangeY, boolean now) {
         IdeTooltip tooltip = getCustomTooltip(c);
         if (tooltip == null) {

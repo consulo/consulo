@@ -42,7 +42,6 @@ import org.jetbrains.annotations.Contract;
 import javax.swing.*;
 import java.awt.*;
 
-
 /**
  * @author VISTALL
  * @since 2019-02-16

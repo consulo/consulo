@@ -27,7 +27,6 @@ import consulo.language.psi.PsiElement;
 import consulo.project.Project;
 import org.jdom.Element;
 
-
 /**
  * @author anna
  * @since 2005-11-30

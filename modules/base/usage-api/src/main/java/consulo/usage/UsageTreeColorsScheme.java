@@ -21,7 +21,6 @@ import consulo.application.Application;
 import consulo.colorScheme.EditorColorsScheme;
 import jakarta.inject.Singleton;
 
-
 @Singleton
 @ServiceAPI(ComponentScope.APPLICATION)
 public interface UsageTreeColorsScheme {

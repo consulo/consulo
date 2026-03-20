@@ -15,7 +15,6 @@
  */
 package consulo.ui.ex.action;
 
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;

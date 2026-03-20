@@ -26,7 +26,6 @@ import consulo.language.util.IncorrectOperationException;
 import consulo.logging.Logger;
 import consulo.util.dataholder.Key;
 
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;

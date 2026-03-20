@@ -35,7 +35,6 @@ import java.util.Objects;
 import java.util.Properties;
 import java.util.Vector;
 
-
 /**
  * StdXMLParser is the core parser of NanoXML.
  *
@@ -50,25 +49,21 @@ public class StdXMLParser implements IXMLParser
     */
    private @Nullable IXMLBuilder builder = null;
 
-
    /**
     * The reader from which the parser retrieves its data.
     */
    private @Nullable IXMLReader reader = null;
-
 
    /**
     * The entity resolver.
     */
    private IXMLEntityResolver entityResolver = new XMLEntityResolver();
 
-
    /**
     * The validator that will process entity references and validate the XML
     * data.
     */
    private @Nullable IXMLValidator validator = null;
-
 
    /**
     * Sets the builder which creates the logical structure of the XML data.
@@ -80,7 +75,6 @@ public class StdXMLParser implements IXMLParser
       this.builder = builder;
    }
 
-
    /**
     * Returns the builder which creates the logical structure of the XML data.
     *
@@ -90,7 +84,6 @@ public class StdXMLParser implements IXMLParser
    {
       return this.builder;
    }
-
 
    /**
     * Sets the validator that validates the XML data.
@@ -102,7 +95,6 @@ public class StdXMLParser implements IXMLParser
       this.validator = validator;
    }
 
-
    /**
     * Returns the validator that validates the XML data.
     *
@@ -112,7 +104,6 @@ public class StdXMLParser implements IXMLParser
    {
       return this.validator;
    }
-
 
    /**
     * Sets the entity resolver.
@@ -124,7 +115,6 @@ public class StdXMLParser implements IXMLParser
       this.entityResolver = resolver;
    }
 
-
    /**
     * Returns the entity resolver.
     *
@@ -134,7 +124,6 @@ public class StdXMLParser implements IXMLParser
    {
       return this.entityResolver;
    }
-
 
    /**
     * Sets the reader from which the parser retrieves its data.
@@ -146,7 +135,6 @@ public class StdXMLParser implements IXMLParser
       this.reader = reader;
    }
 
-
    /**
     * Returns the reader from which the parser retrieves its data.
     *
@@ -156,7 +144,6 @@ public class StdXMLParser implements IXMLParser
    {
       return this.reader;
    }
-
 
    /**
     * Parses the data and lets the builder create the logical data structure.
@@ -181,7 +168,6 @@ public class StdXMLParser implements IXMLParser
          throw new XMLException(e);
       }
    }
-
 
    /**
     * Scans the XML data for elements.
@@ -226,7 +212,6 @@ public class StdXMLParser implements IXMLParser
       }
    }
 
-
    /**
     * Scans an XML tag.
     *
@@ -265,7 +250,6 @@ public class StdXMLParser implements IXMLParser
       }
    }
 
-
    /**
     * Processes a "processing instruction".
     *
@@ -287,7 +271,6 @@ public class StdXMLParser implements IXMLParser
 
       readerStream.close();
    }
-
 
    /**
     * Processes a tag that starts with a bang (&lt;!...&gt;).
@@ -328,7 +311,6 @@ public class StdXMLParser implements IXMLParser
       }
    }
 
-
    /**
     * Processes a CDATA section.
     *
@@ -348,7 +330,6 @@ public class StdXMLParser implements IXMLParser
       Objects.requireNonNull(this.builder).addPCData(readerStream, reader.getSystemID(), reader.getLineNr());
       readerStream.close();
    }
-
 
    /**
     * Processes a document type declaration.
@@ -401,7 +382,6 @@ public class StdXMLParser implements IXMLParser
          validator.parseDTD(publicID.toString(), reader, this.entityResolver, true);
       }
    }
-
 
    /**
     * Processes a regular element.
@@ -584,7 +564,6 @@ public class StdXMLParser implements IXMLParser
          }
       }
    }
-
 
    /**
     * Processes an attribute of an element.

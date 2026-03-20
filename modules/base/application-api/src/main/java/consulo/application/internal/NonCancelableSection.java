@@ -15,7 +15,6 @@
  */
 package consulo.application.internal;
 
-
 /**
  * @author max
  */

@@ -15,7 +15,6 @@
  */
 package consulo.language.editor.action;
 
-
 /**
  * @author Dmitry Avdeev
  */

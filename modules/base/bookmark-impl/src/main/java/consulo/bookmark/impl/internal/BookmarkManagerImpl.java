@@ -183,7 +183,6 @@ public class BookmarkManagerImpl implements BookmarkManagerInternal, PersistentS
         return answer;
     }
 
-
     @Override
     public @Nullable BookmarkImpl findEditorBookmark(Document document, int line) {
         for (BookmarkImpl bookmark : myBookmarks) {
@@ -361,7 +360,6 @@ public class BookmarkManagerImpl implements BookmarkManagerInternal, PersistentS
         return myBookmarks;
     }
 
-
     /**
      * Try to move bookmark one position down in the list
      *
@@ -449,7 +447,6 @@ public class BookmarkManagerImpl implements BookmarkManagerInternal, PersistentS
             bookmark.updateHighlighter();
         }
     }
-
 
     private class MyEditorMouseListener implements EditorMouseListener {
         @Override

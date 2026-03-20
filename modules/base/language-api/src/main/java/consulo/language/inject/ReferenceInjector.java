@@ -25,7 +25,6 @@ import consulo.language.psi.PsiReference;
 import consulo.language.util.ProcessingContext;
 import consulo.util.collection.ContainerUtil;
 
-
 /**
  * @author Dmitry Avdeev
  * @since 2013-08-01

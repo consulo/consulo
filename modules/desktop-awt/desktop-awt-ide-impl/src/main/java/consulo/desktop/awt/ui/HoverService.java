@@ -79,7 +79,6 @@ final class HoverService {
     return parent instanceof IdeGlassPane ? null : parent;
   }
 
-
   private static final class ComponentPoint {
     private final WeakReference<Component> reference;
     private final Point point = new Point();

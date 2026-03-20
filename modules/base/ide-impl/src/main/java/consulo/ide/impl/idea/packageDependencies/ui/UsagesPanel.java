@@ -57,7 +57,6 @@ public abstract class UsagesPanel extends JPanel implements Disposable, DataProv
 
   public abstract String getCodeUsagesString();
 
-
   void cancelCurrentFindRequest() {
     if (myCurrentProgress != null) {
       myCurrentProgress.cancel();

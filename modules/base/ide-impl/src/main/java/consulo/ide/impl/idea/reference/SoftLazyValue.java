@@ -15,7 +15,6 @@
  */
 package consulo.ide.impl.idea.reference;
 
-
 import java.lang.ref.SoftReference;
 
 /**

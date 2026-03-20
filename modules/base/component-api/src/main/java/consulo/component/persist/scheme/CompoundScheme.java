@@ -22,7 +22,6 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
-
 public class CompoundScheme<T extends SchemeElement> implements ExternalizableScheme {
 
   private static final Logger LOG = Logger.getInstance(CompoundScheme.class);

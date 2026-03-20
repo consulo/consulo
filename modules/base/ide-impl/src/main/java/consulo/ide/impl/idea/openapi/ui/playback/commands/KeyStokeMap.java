@@ -98,7 +98,6 @@ public class KeyStokeMap {
       return throwUnrecognized(symbol);
     }
 
-
     return KeyStroke.getKeyStroke(symbolStroke.getKeyCode(), modifiers, false);
   }
 

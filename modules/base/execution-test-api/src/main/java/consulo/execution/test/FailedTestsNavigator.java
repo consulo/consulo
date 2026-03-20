@@ -114,8 +114,6 @@ public class FailedTestsNavigator implements OccurenceNavigator {
       return this;
     }
 
-
-
     private AbstractTestProxy findNextDefect(int startIndex) {
       for (int i = nextIndex(startIndex); 0 <= i && i < myAllTests.size(); i = nextIndex(i)) {
         AbstractTestProxy nextDefect = myAllTests.get(i);

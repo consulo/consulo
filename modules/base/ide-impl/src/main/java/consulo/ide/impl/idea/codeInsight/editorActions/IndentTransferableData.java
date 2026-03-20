@@ -1,6 +1,5 @@
 package consulo.ide.impl.idea.codeInsight.editorActions;
 
-
 import java.awt.datatransfer.DataFlavor;
 import java.io.Serializable;
 
@@ -15,7 +14,6 @@ public class IndentTransferableData implements TextBlockTransferableData, Serial
   public IndentTransferableData(int offset) {
     myOffset = offset;
   }
-
 
   public int getOffset() {
     return myOffset;

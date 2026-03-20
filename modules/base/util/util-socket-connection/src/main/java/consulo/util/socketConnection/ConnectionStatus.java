@@ -1,6 +1,5 @@
 package consulo.util.socketConnection;
 
-
 public enum ConnectionStatus {
   NOT_CONNECTED("Not connected"),
   WAITING_FOR_CONNECTION("Waiting for connection"),

@@ -308,7 +308,6 @@ public final class DocumentCommitThread implements Disposable, DocumentCommitPro
                 BlockSupportImpl.reparse(file, oldFileNode, changedPsiRange, newDocumentText, indicator, task.myLastCommittedText)) {
             diffLog = result.log;
 
-
             List<BooleanSupplier> injectedRunnables =
                 documentManager.reparseChangedInjectedFragments(document, file, changedPsiRange, indicator, result.oldRoot, result.newRoot);
             outReparseInjectedProcessors.addAll(injectedRunnables);

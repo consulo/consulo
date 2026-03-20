@@ -419,7 +419,6 @@ public class JBZipFile {
                                           /* compressed size                 */ + WORD
                                           /* uncompressed size               */ + WORD;
 
-
   /**
    * Retrieve a String from the given bytes using the encoding set
    * for this ZipFile.

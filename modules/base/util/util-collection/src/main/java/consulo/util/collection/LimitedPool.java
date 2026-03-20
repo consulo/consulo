@@ -16,7 +16,6 @@
 
 package consulo.util.collection;
 
-
 /*
  * @author max
  */

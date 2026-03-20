@@ -18,7 +18,6 @@ import consulo.execution.debug.stream.wrapper.IntermediateStreamCall;
 import consulo.execution.debug.stream.wrapper.StreamCallType;
 import consulo.execution.debug.stream.wrapper.TerminatorStreamCall;
 
-
 public class DefaultLibrarySupport implements LibrarySupport {
   
   @Override

@@ -23,7 +23,6 @@ import consulo.compiler.artifact.ui.PackagingElementPresentation;
 import consulo.util.xml.serializer.XmlSerializerUtil;
 import consulo.util.xml.serializer.annotation.Attribute;
 
-
 /**
  * @author nik
  */

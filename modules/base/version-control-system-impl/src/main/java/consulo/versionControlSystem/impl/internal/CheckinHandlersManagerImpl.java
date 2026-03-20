@@ -27,7 +27,6 @@ import consulo.versionControlSystem.internal.CheckinHandlersManager;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;

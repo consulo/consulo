@@ -21,7 +21,6 @@ import consulo.language.editor.completion.CompletionWeigher;
 import consulo.language.editor.completion.lookup.LookupElement;
 import consulo.language.editor.completion.lookup.PrioritizedLookupElement;
 
-
 /**
  * @author peter
 */

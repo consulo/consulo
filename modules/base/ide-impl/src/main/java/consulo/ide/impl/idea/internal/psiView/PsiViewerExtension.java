@@ -23,7 +23,6 @@ import consulo.language.psi.PsiElement;
 import consulo.project.Project;
 import consulo.virtualFileSystem.fileType.FileType;
 
-
 import javax.swing.*;
 
 /**

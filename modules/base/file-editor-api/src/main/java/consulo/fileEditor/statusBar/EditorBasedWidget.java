@@ -28,7 +28,6 @@ import org.jspecify.annotations.Nullable;
 
 import java.awt.*;
 
-
 public abstract class EditorBasedWidget implements StatusBarWidget, FileEditorManagerListener {
   private static final Logger LOG = Logger.getInstance(EditorBasedWidget.class);
 

@@ -15,7 +15,6 @@
  */
 package consulo.ui.ex.awt;
 
-
 public interface ComponentWithEmptyText {
   
   StatusText getEmptyText();

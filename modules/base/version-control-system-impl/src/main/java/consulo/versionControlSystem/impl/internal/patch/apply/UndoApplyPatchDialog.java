@@ -33,7 +33,6 @@ import org.jspecify.annotations.Nullable;
 
 class UndoApplyPatchDialog extends DialogWrapper {
 
-
   private final List<FilePath> myFailedFilePaths;
   private final Project myProject;
   private final boolean myShouldInformAboutBinaries;

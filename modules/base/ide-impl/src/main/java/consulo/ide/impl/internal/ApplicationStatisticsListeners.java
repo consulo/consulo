@@ -32,7 +32,6 @@ import consulo.project.event.ProjectManagerListener;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
-
 /**
  * @author VISTALL
  * @since 2020-06-14

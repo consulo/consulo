@@ -18,7 +18,6 @@ package consulo.language.editor.inspection;
 import consulo.language.psi.PsiElement;
 import consulo.project.Project;
 
-
 public interface SuppressQuickFix extends LocalQuickFix {
   SuppressQuickFix[] EMPTY_ARRAY = new SuppressQuickFix[0];
 

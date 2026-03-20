@@ -345,7 +345,6 @@ public class ListPopupImpl extends WizardPopup implements AWTListPopup, NextStep
             }
         });
 
-
         myList.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 
         return myList;
@@ -616,7 +615,6 @@ public class ListPopupImpl extends WizardPopup implements AWTListPopup, NextStep
             return true;
         }
     }
-
 
     @Override
     public void addListSelectionListener(ListSelectionListener listSelectionListener) {

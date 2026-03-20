@@ -18,7 +18,6 @@ package consulo.application.util;
 
 import consulo.annotation.DeprecationInfo;
 
-
 /**
  * @author peter
  */

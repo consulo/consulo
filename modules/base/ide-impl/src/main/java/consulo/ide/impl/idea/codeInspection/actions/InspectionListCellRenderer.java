@@ -52,7 +52,6 @@ public class InspectionListCellRenderer extends DefaultListCellRenderer implemen
                                      SimpleTextAttributes.STYLE_PLAIN);
   }
 
-
   @Override
   public Component getListCellRendererComponent(JList list, Object value, int index, boolean sel, boolean focus) {
     JPanel panel = new JPanel(new BorderLayout());

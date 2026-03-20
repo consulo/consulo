@@ -15,7 +15,6 @@
  */
 package consulo.module.content.layer.orderEntry;
 
-
 /**
  * @author VISTALL
  * @since 17-May-22

@@ -161,7 +161,6 @@ public class CompletionVariant {
     return false;
   }
 
-
   private static class Scope {
     Class myClass;
     boolean myIsFinalScope;

@@ -1,6 +1,5 @@
 package consulo.versionControlSystem.log;
 
-
 import java.awt.*;
 import java.util.Collection;
 import java.util.List;

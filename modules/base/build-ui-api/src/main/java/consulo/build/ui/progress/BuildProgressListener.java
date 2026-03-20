@@ -3,7 +3,6 @@ package consulo.build.ui.progress;
 
 import consulo.build.ui.event.BuildEvent;
 
-
 /**
  * @author Vladislav.Soroka
  */

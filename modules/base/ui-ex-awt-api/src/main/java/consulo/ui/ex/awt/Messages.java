@@ -280,7 +280,6 @@ public class Messages {
         return result;
     }
 
-
     /**
      * @return {@link #YES} if user pressed "Yes" or {@link #NO} if user pressed "No" button.
      */
@@ -1075,7 +1074,6 @@ public class Messages {
             final int height = getPreferredSize().height;
             final int frameCount = 10;
             final boolean toClose = isShowing();
-
 
             final AtomicInteger i = new AtomicInteger(-1);
             final Alarm animator = new Alarm(myDisposable);

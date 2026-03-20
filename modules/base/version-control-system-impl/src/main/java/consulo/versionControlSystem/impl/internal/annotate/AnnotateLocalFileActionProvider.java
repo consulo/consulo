@@ -20,7 +20,6 @@ import consulo.localize.LocalizeValue;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.versionControlSystem.action.AnnotateToggleActionProvider;
 
-
 @ExtensionImpl
 public class AnnotateLocalFileActionProvider implements AnnotateToggleActionProvider {
     @Override

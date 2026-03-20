@@ -22,7 +22,6 @@ import consulo.task.BaseRepositoryType;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.image.Image;
 
-
 /**
  * @author VISTALL
  * @since 15/12/2021

@@ -16,7 +16,6 @@ import consulo.ui.ex.awt.paint.RegionPainter2D;
 import consulo.ui.ex.awt.util.UISettingsUtil;
 import org.jetbrains.annotations.TestOnly;
 
-
 import java.awt.*;
 import java.awt.font.LineMetrics;
 import java.awt.geom.Path2D;

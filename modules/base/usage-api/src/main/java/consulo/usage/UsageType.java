@@ -20,7 +20,6 @@ import consulo.localize.LocalizeValue;
 import consulo.usage.localize.UsageLocalize;
 import consulo.util.lang.StringUtil;
 
-
 public final class UsageType {
     public static final UsageType CLASS_INSTANCE_OF = new UsageType(UsageLocalize.usageTypeInstanceof());
     public static final UsageType CLASS_IMPORT = new UsageType(UsageLocalize.usageTypeImport());

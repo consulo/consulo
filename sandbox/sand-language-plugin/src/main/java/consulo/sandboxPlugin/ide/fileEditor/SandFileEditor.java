@@ -25,7 +25,6 @@ import consulo.ui.Label;
 import kava.beans.PropertyChangeListener;
 import org.jspecify.annotations.Nullable;
 
-
 /**
  * @author VISTALL
  * @since 30.05.14

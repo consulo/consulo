@@ -16,7 +16,6 @@ public class RetinaImage { // [tav] todo: create HiDPIImage class
   private static final Component ourComponent = new Component() {
   };
 
-
   /**
    * Creates a Retina-aware wrapper over a raw image.
    * The raw image should be provided in scale of the Retina default scale factor (2x).

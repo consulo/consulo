@@ -58,7 +58,6 @@ public interface TranslatingCompiler extends Compiler {
         void add(String outputRoot, Collection<OutputItem> items, VirtualFile[] filesToRecompile);
     }
 
-
     /**
      * Checks if the compiler can compile the specified file.
      *

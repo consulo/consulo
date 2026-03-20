@@ -66,7 +66,6 @@ public interface ApplicationConcurrency {
     
     ScheduledExecutorService createBoundedScheduledExecutorService(String name, int maxThreads);
 
-
     /**
      * @return the bounded executor (executor which runs no more than {@code maxThreads} tasks simultaneously) backed by the {@code backendExecutor}
      */

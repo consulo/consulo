@@ -140,7 +140,6 @@ public class UnifiedDiffViewer extends ListenerDiffViewerBase {
             myMasterSide = Side.RIGHT;
         }
 
-
         myDocument = EditorFactory.getInstance().createDocument("");
         myEditor = DiffImplUtil.createEditor(myDocument, myProject, true, true);
 
@@ -469,7 +468,6 @@ public class UnifiedDiffViewer extends ListenerDiffViewerBase {
                 data.getRangeHighlighter().apply(myProject, myDocument);
             }
 
-
             ArrayList<UnifiedDiffChange> diffChanges = new ArrayList<>(blocks.size());
             for (ChangedBlock block : blocks) {
                 diffChanges.add(new UnifiedDiffChange(this, block));
@@ -489,9 +487,7 @@ public class UnifiedDiffViewer extends ListenerDiffViewerBase {
                 guarderRangeBlocks.add(createGuardedBlock(textLength, textLength));
             }
 
-
             myChangedBlockData = new ChangedBlockData(diffChanges, guarderRangeBlocks, convertor, isContentsEqual);
-
 
             @SuppressWarnings("RequiredXAction")
             int newCaretLine =
@@ -936,7 +932,6 @@ public class UnifiedDiffViewer extends ListenerDiffViewerBase {
     //
     // Getters
     //
-
 
     
     public Side getMasterSide() {

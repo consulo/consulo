@@ -28,7 +28,6 @@ import consulo.content.ContentFolderTypeProvider;
 import consulo.module.content.layer.ModuleRootLayer;
 import jakarta.inject.Inject;
 
-
 import java.util.ArrayList;
 import java.util.List;
 

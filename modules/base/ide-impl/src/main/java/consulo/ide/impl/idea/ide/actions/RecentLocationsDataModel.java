@@ -88,7 +88,6 @@ public class RecentLocationsDataModel {
             }
         });
 
-
         myNavigationPlaces = calculateItems(false);
         myChangedPlaces = calculateItems(true);
     }

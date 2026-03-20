@@ -15,7 +15,6 @@
  */
 package consulo.versionControlSystem.distributed.ui.awt;
 
-
 /**
  * Event on this component should start edit mode for appropriate path in JTree
  */

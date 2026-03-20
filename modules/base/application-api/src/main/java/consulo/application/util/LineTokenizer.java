@@ -71,7 +71,6 @@ public class LineTokenizer {
     return lines;
   }
 
-
   public static int calcLineCount(CharSequence chars, boolean skipLastEmptyLine) {
     int lineCount = 0;
     if (chars.length() != 0) {

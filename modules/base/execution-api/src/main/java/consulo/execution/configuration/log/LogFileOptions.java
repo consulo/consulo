@@ -142,7 +142,6 @@ public class LogFileOptions implements JDOMExternalizable {
     myEnabled = enable;
   }
 
-
   public void setName(String name) {
     myName = name;
   }

@@ -92,7 +92,6 @@ public interface Repository extends Disposable {
       }
     },
 
-
     /**
      * Detached HEAD state, but not during rebase (for example, manual checkout of a commit hash).
      */

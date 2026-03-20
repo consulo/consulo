@@ -17,7 +17,6 @@ package consulo.module.extension;
 
 import consulo.content.bundle.Sdk;
 
-
 /**
  * @author VISTALL
  * @since 12:27/19.05.13

@@ -25,7 +25,6 @@ import consulo.application.ApplicationManager;
 import consulo.codeEditor.Editor;
 import consulo.language.psi.PsiFile;
 
-
 /**
  * @author yole
  */

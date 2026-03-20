@@ -25,7 +25,6 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 
-
 @ActionImpl(id = "IncrementalSearch")
 public class IncrementalSearchAction extends AnAction implements DumbAware {
     public IncrementalSearchAction() {

@@ -17,7 +17,6 @@ package consulo.util.collection.primitive.ints;
 
 import consulo.util.collection.primitive.ints.impl.set.EmptyIntSet;
 
-
 /**
  * @author VISTALL
  * @since 08/02/2021

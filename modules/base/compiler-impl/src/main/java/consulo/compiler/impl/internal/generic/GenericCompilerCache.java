@@ -102,7 +102,6 @@ public class GenericCompilerCache<Key, SourceState, OutputState> {
         myPersistentMap.put(getKeyAndTargetData(key, targetId), new PersistentStateData<>(sourceState, outputState));
     }
 
-
     private static class KeyAndTargetData<Key> {
         public final int myTarget;
         public final Key myKey;
@@ -145,7 +144,6 @@ public class GenericCompilerCache<Key, SourceState, OutputState> {
             out.writeInt(value.myTarget);
             myKeyDescriptor.save(out, value.myKey);
         }
-
 
         @Override
         public KeyAndTargetData<Key> read(DataInput in) throws IOException {

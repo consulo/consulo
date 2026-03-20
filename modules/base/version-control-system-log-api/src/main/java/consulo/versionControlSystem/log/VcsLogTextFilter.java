@@ -15,7 +15,6 @@
  */
 package consulo.versionControlSystem.log;
 
-
 /**
  * Specifies the log filter by text.
  */

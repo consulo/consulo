@@ -406,7 +406,6 @@ public class CodeFormatterFacade {
         return result == null ? Collections.emptySet() : result;
     }
 
-
     /**
      * Inspects all lines of the given document and wraps all of them that exceed {@link CodeStyleSettings#getRightMargin(Language)}
      * right margin}.

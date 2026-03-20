@@ -20,7 +20,6 @@ import consulo.annotation.component.ExtensionAPI;
 import consulo.compiler.scope.CompileScope;
 import consulo.virtualFileSystem.fileType.FileType;
 
-
 import java.util.function.Consumer;
 
 /**

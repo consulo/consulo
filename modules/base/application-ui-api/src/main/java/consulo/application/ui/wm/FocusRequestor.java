@@ -19,7 +19,6 @@ import consulo.disposer.Disposable;
 import consulo.ui.Component;
 import consulo.util.concurrent.AsyncResult;
 
-
 /**
  * Basic interface for requesting sending focus commands to <code>IdeFocusManager</code>
  */

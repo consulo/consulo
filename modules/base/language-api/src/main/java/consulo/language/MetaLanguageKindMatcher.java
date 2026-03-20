@@ -3,7 +3,6 @@ package consulo.language;
 
 import consulo.language.util.LanguageUtil;
 
-
 final class MetaLanguageKindMatcher extends LanguageMatcher {
 
   

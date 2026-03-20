@@ -195,7 +195,6 @@ public class DesktopCanvas2DImpl implements Canvas2D {
    */
   protected Graphics2D graphics;
 
-
   /**
    * Represents the current state of the canvas.
    */

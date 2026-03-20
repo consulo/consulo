@@ -15,7 +15,6 @@
  */
 package consulo.ui.ex.util;
 
-
 /**
  * @author Sergey.Malenkov
  */

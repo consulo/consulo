@@ -17,7 +17,6 @@ package consulo.language.codeStyle;
 
 import consulo.language.psi.PsiFile;
 
-
 /**
  * A factory for standard formatting model implementations. Not to be used directly
  * by plugins - use {@link FormattingModelProvider} instead.

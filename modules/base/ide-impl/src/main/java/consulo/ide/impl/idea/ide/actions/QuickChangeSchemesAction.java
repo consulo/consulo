@@ -25,7 +25,6 @@ import consulo.project.ui.action.QuickSwitchSchemeAction;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
 
-
 /**
  * @author max
  */

@@ -77,7 +77,6 @@ public class RefDirectoryImpl extends RefElementImpl implements RefDirectory {
     return myRefModule != null ? myRefModule : super.getModule();
   }
 
-
   
   @Override
   public String getQualifiedName() {

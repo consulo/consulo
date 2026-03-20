@@ -190,7 +190,6 @@ public class LanguageConsoleImpl extends ConsoleViewImpl implements LanguageCons
         return myConsoleExecutionEditor.getPromptAttributes();
     }
 
-
     
     public ConsolePromptDecorator getConsolePromptDecorator() {
         return myConsoleExecutionEditor.getConsolePromptDecorator();
@@ -345,7 +344,6 @@ public class LanguageConsoleImpl extends ConsoleViewImpl implements LanguageCons
     
     public String addTextRangeToHistory(TextRange textRange, EditorEx inputEditor, boolean preserveMarkup) {
         return printWithHighlighting(this, inputEditor, textRange);
-
 
         //if (preserveMarkup) {
         //  duplicateHighlighters(markupModel, DocumentMarkupModel.forDocument(inputEditor.getDocument(), myProject, true), offset, textRange);

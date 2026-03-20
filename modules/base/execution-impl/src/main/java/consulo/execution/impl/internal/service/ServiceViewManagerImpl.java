@@ -1,7 +1,6 @@
 // Copyright 2000-2023 JetBrains s.r.o. and contributors. Use of this source code is governed by the Apache 2.0 license.
 package consulo.execution.impl.internal.service;
 
-
 import consulo.annotation.DeprecationInfo;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.AppUIExecutor;
@@ -258,7 +257,6 @@ public final class ServiceViewManagerImpl implements ServiceViewManager, Persist
             }
         }, ModalityState.nonModal(), myProject.getDisposed());
     }
-
 
     public void createToolWindowContent(ToolWindow toolWindow) {
         String toolWindowId = toolWindow.getId();

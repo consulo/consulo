@@ -48,7 +48,6 @@ public class RunnerLayoutImpl implements RunnerLayout {
     private final Map<String, Pair<String, LayoutAttractionPolicy>> myDefaultFocus = new HashMap<>();
     private Set<String> myLightWeightIds = null;
 
-
     public RunnerLayoutImpl(String ID) {
         myID = ID;
     }
@@ -165,7 +164,6 @@ public class RunnerLayoutImpl implements RunnerLayout {
         return parentNode;
     }
 
-
     public void resetToDefault() {
         myViews.clear();
         myTabs.clear();
@@ -223,7 +221,6 @@ public class RunnerLayoutImpl implements RunnerLayout {
         }
         return setDefault(id, Integer.MAX_VALUE, PlaceInGrid.bottom, false);
     }
-
 
     
     public TabImpl.Default setDefault(int tabID, String displayName, Image icon) {

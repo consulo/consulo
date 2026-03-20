@@ -26,7 +26,6 @@ import consulo.module.content.layer.ModifiableModuleRootLayer;
 import consulo.ide.setting.module.LibrariesConfigurator;
 import consulo.ide.setting.module.ModulesConfigurator;
 
-
 import java.util.*;
 
 /**

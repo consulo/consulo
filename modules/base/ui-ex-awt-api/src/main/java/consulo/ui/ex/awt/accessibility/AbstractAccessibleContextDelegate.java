@@ -15,7 +15,6 @@
  */
 package consulo.ui.ex.awt.accessibility;
 
-
 import javax.accessibility.*;
 import java.awt.*;
 import java.beans.PropertyChangeListener;

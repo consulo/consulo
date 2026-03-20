@@ -132,7 +132,6 @@ public class GeneratedParserUtilBase {
     }
   };
 
-
   public static boolean eof(PsiBuilder builder, int level) {
     return builder.eof();
   }
@@ -768,7 +767,6 @@ public class GeneratedParserUtilBase {
     return true;
   }
 
-
   public static final Key<CompletionState> COMPLETION_STATE_KEY = Key.create("COMPLETION_STATE_KEY");
 
   public static class CompletionState implements Function<Object, String> {
@@ -1036,7 +1034,6 @@ public class GeneratedParserUtilBase {
     }
   }
 
-
   private static class Variant {
     int position;
     Object object;
@@ -1090,7 +1087,6 @@ public class GeneratedParserUtilBase {
       return new Hooks<>(hook, param, level, hooks);
     }
   }
-
 
   private static final int MAX_CHILDREN_IN_TREE = 10;
 

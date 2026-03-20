@@ -3,7 +3,6 @@ package consulo.application.constraint;
 
 import consulo.disposer.Disposable;
 
-
 /**
  * Expiration backed by a [Job] instance.
  * <p>

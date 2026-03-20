@@ -23,7 +23,6 @@ import consulo.component.extension.ExtensionPointName;
 import consulo.language.editor.annotation.HighlightSeverity;
 import consulo.ui.color.ColorValue;
 
-
 import java.util.List;
 
 /**

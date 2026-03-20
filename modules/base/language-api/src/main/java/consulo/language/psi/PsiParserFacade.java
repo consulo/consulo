@@ -23,7 +23,6 @@ import consulo.language.file.LanguageFileType;
 import consulo.project.Project;
 import consulo.language.util.IncorrectOperationException;
 
-
 /**
  * @author yole
  */

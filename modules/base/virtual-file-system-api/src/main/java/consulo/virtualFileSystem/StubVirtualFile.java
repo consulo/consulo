@@ -15,7 +15,6 @@
  */
 package consulo.virtualFileSystem;
 
-
 import org.jspecify.annotations.Nullable;
 import java.io.IOException;
 import java.io.InputStream;

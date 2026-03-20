@@ -224,7 +224,6 @@ public class CompletionData {
     return item;
   }
 
-
   protected void addLookupItem(Set<LookupElement> set, TailType tailType, Object completion, CompletionVariant variant) {
     LookupElement ret = objectToLookupItem(completion);
     if (ret == null) return;

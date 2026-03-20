@@ -55,7 +55,6 @@ public class InspectionRVContentProviderImpl extends InspectionRVContentProvider
     return refEntities.length == 0 ? null : presentation.getQuickFixes(refEntities);
   }
 
-
   @Override
   public void appendToolNodeContent(GlobalInspectionContextImpl context,
                                     InspectionNode toolNode,

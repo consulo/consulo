@@ -18,7 +18,6 @@ package consulo.fileEditor.text;
 import consulo.codeEditor.Editor;
 import consulo.ui.annotation.RequiredUIAccess;
 
-
 /**
  * Implementations of this interface are expected to provide correct {@link #equals(Object)} & {@link #hashCode()} implementations.
  */

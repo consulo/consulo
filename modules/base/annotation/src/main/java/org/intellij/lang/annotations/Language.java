@@ -16,7 +16,6 @@
 
 package org.intellij.lang.annotations;
 
-
 import static java.lang.annotation.ElementType.*;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;

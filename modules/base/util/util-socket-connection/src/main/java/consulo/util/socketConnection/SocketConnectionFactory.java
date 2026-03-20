@@ -36,7 +36,6 @@ public final class SocketConnectionFactory {
     return new ServerSocketConnectionImpl<>(executorService, defaultPort, attempts, factory);
   }
 
-
   public static <Request extends AbstractRequest, Response extends AbstractResponse> SocketConnection<Request, Response> createServerConnection(ScheduledExecutorService executorService,
                                                                                                                                                 int defaultPort,
                                                                                                                                                 RequestResponseExternalizerFactory<Request, Response> factory) {

@@ -412,7 +412,6 @@ public final class DaemonListeners implements Disposable {
         return false;
     }
 
-
     private class MyApplicationListener implements ApplicationListener {
         @Override
         public void beforeWriteActionStart(Object action) {

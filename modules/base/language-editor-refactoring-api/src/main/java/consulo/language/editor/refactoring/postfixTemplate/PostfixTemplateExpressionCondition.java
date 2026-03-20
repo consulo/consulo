@@ -23,7 +23,6 @@ public interface PostfixTemplateExpressionCondition<T extends PsiElement> extend
   
   String getPresentableName();
 
-
   /**
    * @return ID for serialization
    */

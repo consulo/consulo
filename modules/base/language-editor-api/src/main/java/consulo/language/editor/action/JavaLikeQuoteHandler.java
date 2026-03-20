@@ -20,7 +20,6 @@ import consulo.language.ast.IElementType;
 import consulo.language.ast.TokenSet;
 import consulo.language.psi.PsiElement;
 
-
 public interface JavaLikeQuoteHandler extends QuoteHandler {
   TokenSet getConcatenatableStringTokenTypes();
 

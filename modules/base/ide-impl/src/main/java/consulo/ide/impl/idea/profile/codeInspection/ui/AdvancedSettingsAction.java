@@ -145,7 +145,6 @@ public abstract class AdvancedSettingsAction extends DumbAwareAction {
             }
         }
 
-
         @Override
         protected boolean enabled() {
             return true;

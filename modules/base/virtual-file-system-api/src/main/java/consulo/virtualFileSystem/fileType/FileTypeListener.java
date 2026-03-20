@@ -18,7 +18,6 @@ package consulo.virtualFileSystem.fileType;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.TopicAPI;
 
-
 import java.util.EventListener;
 
 @TopicAPI(ComponentScope.APPLICATION)

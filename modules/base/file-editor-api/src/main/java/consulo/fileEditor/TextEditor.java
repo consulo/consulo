@@ -17,7 +17,6 @@ package consulo.fileEditor;
 
 import consulo.codeEditor.Editor;
 
-
 public interface TextEditor extends NavigatableFileEditor {
   
   Editor getEditor();

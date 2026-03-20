@@ -645,7 +645,6 @@ public class PatternCompilerImpl<T> implements PatternCompiler<T> {
         }
     }
 
-
     public class LazyPresentablePattern<T> implements CompilableElementPattern<T> {
 
         private ElementPattern<T> myCompiledPattern;

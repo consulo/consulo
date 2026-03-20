@@ -3,7 +3,6 @@ package consulo.language.lexer;
 
 import consulo.document.event.DocumentEvent;
 
-
 /**
  * This interface is suitable for providing even distribution for restartable states in highlighting lexer implementation.
  * Perfect highlighting lexer should be able to restart quickly from any context.

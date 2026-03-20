@@ -27,7 +27,6 @@ import consulo.ui.image.Image;
 import consulo.util.io.FileUtil;
 import consulo.util.io.PathUtil;
 
-
 /**
  * @author nik
  */

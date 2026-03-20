@@ -5,7 +5,6 @@ import consulo.annotation.component.ExtensionAPI;
 import consulo.codeEditor.Editor;
 import consulo.dataContext.DataContext;
 
-
 /**
  * Defines contract for extending editor navigation functionality. 
  * 

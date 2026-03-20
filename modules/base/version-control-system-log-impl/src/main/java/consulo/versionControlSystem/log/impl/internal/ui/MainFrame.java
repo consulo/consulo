@@ -152,7 +152,6 @@ public class MainFrame extends JPanel implements DataProvider, Disposable {
             }
         }, this);
 
-
         JComponent toolbars = new JPanel(new BorderLayout());
         toolbars.add(myToolbar, BorderLayout.NORTH);
         JComponent toolbarsAndTable = new JPanel(new BorderLayout());

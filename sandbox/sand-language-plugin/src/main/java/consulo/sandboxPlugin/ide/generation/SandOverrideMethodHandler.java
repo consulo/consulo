@@ -28,7 +28,6 @@ import consulo.sandboxPlugin.lang.SandLanguage;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.dataholder.KeyWithDefaultValue;
 
-
 /**
  * @author VISTALL
  * @since 17-Jul-22

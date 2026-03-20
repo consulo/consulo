@@ -31,7 +31,6 @@ import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 
-
 @ActionImpl(id = "GotoSuperMethod")
 public class GotoSuperAction extends BaseCodeInsightAction implements CodeInsightActionHandler, DumbAware {
     public static final String FEATURE_ID = "navigation.goto.super";

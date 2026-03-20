@@ -16,7 +16,6 @@
 
 package consulo.util.lang;
 
-
 /**
  * A char sequence base on a char array, Gives access to that array. May be used for performance optimizations
  *

@@ -4,7 +4,6 @@ import consulo.colorScheme.TextAttributesKey;
 import consulo.language.ast.IElementType;
 import consulo.language.lexer.Lexer;
 
-
 import static consulo.language.ast.TokenType.BAD_CHARACTER;
 
 /**

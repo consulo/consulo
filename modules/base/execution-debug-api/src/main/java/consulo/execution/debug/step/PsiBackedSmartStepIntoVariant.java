@@ -21,7 +21,6 @@ import consulo.navigation.ItemPresentation;
 import consulo.navigation.NavigationItem;
 import consulo.ui.image.Image;
 
-
 /**
 * @author Maxim.Mossienko
 */

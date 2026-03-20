@@ -68,7 +68,6 @@ abstract class KeyGestureState {
     boolean process() {
       if (!isPureModifierEvent(KeyEvent.KEY_PRESSED)) return false;
 
-
       myProcessor.myContext.actionKey = myProcessor.myContext.keyToProcess;
       myProcessor.setState(myProcessor.myModifierPressed);
       myProcessor.myHoldTimer.start();

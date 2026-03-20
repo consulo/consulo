@@ -235,7 +235,6 @@ public abstract class IntroduceHandler<Target extends IntroduceTarget, Scope ext
         return map;
     }
 
-
     protected abstract List<UsageInfo> collectUsages(
         Target target,
         Scope scope

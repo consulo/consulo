@@ -17,7 +17,6 @@ package consulo.ide.impl.idea.openapi.keymap.impl;
 
 import consulo.ui.ex.action.IdeActions;
 
-
 public class ActionShortcutRestrictions {
   private static final ActionShortcutRestrictions ourInstance = new ActionShortcutRestrictions();
 

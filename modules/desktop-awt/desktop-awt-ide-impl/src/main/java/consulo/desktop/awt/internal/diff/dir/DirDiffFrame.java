@@ -45,7 +45,6 @@ public class DirDiffFrame extends FrameWrapper {
     DataManager.registerDataProvider(myPanel.getPanel(), dataId -> HelpManager.HELP_ID == dataId ? "reference.dialogs.diff.folder" : null);
   }
 
-
   @Override
   protected void loadFrameState(@Nullable WindowState state) {
     super.loadFrameState(state);

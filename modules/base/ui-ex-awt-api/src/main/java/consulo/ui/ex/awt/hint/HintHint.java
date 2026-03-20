@@ -55,7 +55,6 @@ public class HintHint {
   private boolean myAnimationEnabled;
   private boolean myRequestFocus;
 
-
   public HintHint() {
   }
 
@@ -239,7 +238,6 @@ public class HintHint {
     myBorderInsets = insets;
     return this;
   }
-
 
   public int getCalloutShift() {
     return myCalloutShift;

@@ -17,7 +17,6 @@ package consulo.language.codeStyle;
 
 import consulo.util.lang.CharArrayUtil;
 
-
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;

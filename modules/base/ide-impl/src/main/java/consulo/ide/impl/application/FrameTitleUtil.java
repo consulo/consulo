@@ -23,7 +23,6 @@ import consulo.externalService.update.UpdateSettings;
 import consulo.platform.Platform;
 import consulo.util.lang.StringUtil;
 
-
 /**
  * @author VISTALL
  * @since 04-Sep-16

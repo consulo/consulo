@@ -236,7 +236,6 @@ final class ServiceTreeView extends ServiceView {
       newDescriptor = contributor == null ? null : contributor.getViewDescriptor(getProject());
     }
 
-
     if (newSelection != null && newSelection.equals(myLastSelection)) return;
 
     ServiceViewDescriptor oldDescriptor = myLastSelection == null ? null : myLastSelection.getViewDescriptor();

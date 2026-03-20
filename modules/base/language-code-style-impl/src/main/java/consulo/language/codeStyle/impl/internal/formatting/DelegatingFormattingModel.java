@@ -22,7 +22,6 @@ import consulo.language.codeStyle.FormattingDocumentModel;
 import consulo.language.codeStyle.FormattingModel;
 import consulo.language.codeStyle.FormattingModelEx;
 
-
 /**
  * @author yole
  */

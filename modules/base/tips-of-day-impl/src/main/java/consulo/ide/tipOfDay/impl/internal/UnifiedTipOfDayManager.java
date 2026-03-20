@@ -23,7 +23,6 @@ import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import jakarta.inject.Singleton;
 
-
 /**
  * @author VISTALL
  * @since 2020-06-23

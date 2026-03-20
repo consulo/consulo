@@ -19,7 +19,6 @@ import consulo.index.io.EnumeratorStringDescriptor;
 import consulo.index.io.KeyDescriptor;
 import consulo.language.psi.PsiElement;
 
-
 /**
  * @author max
  */

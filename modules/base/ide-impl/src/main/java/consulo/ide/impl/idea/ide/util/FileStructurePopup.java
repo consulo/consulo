@@ -800,7 +800,6 @@ public class FileStructurePopup implements Disposable, TreeActionsOwner {
 
         Shortcut[] shortcuts = extractShortcutFor(action);
 
-
         JBCheckBox checkBox = new JBCheckBox();
         checkBox.setOpaque(false);
         UIUtil.applyStyle(UIUtil.ComponentStyle.SMALL, checkBox);

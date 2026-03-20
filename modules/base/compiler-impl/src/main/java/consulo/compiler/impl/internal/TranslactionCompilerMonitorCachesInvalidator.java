@@ -22,7 +22,6 @@ import consulo.localize.LocalizeValue;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 
-
 /**
  * @author VISTALL
  * @since 2022-06-18

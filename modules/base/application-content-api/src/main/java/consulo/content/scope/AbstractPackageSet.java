@@ -15,7 +15,6 @@
  */
 package consulo.content.scope;
 
-
 /**
  * @author Konstantin Bulenkov
  */

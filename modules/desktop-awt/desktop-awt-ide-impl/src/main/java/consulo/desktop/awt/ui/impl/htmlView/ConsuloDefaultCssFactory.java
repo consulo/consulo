@@ -101,7 +101,6 @@ public class ConsuloDefaultCssFactory extends DefaultCssFactory {
             *[DIR="ltr"]    { direction: ltr; unicode-bidi: embed }
             *[DIR="rtl"]    { direction: rtl; unicode-bidi: embed }
 
-
             html, body {
                 background: var(--consulo-background);
                 color: var(--consulo-color);

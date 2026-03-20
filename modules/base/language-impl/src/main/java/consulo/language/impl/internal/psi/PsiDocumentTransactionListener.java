@@ -21,7 +21,6 @@ import consulo.annotation.component.TopicBroadcastDirection;
 import consulo.document.Document;
 import consulo.language.psi.PsiFile;
 
-
 /**
  * @author max
  */

@@ -21,7 +21,6 @@ import consulo.sandboxPlugin.lang.version.BaseSandLanguageVersion;
 import consulo.virtualFileSystem.fileType.FileTypeConsumer;
 import consulo.virtualFileSystem.fileType.FileTypeFactory;
 
-
 /**
  * @author VISTALL
  * @since 19.03.14

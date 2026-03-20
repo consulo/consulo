@@ -18,7 +18,6 @@ package consulo.fileEditor.history;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.TopicAPI;
 
-
 /**
  * {@link RecentPlacesListener} listens recently viewed or changed place adding and removing events.
  */

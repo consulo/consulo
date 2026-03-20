@@ -61,7 +61,6 @@ public class Queue<T> {
     return getRaw(last - 1);
   }
 
-
   public boolean isEmpty() {
     return size() == 0;
   }

@@ -53,7 +53,6 @@ public class SegmentArrayWithData extends SegmentArray {
         replace(startIndex, newData, common);
     }
 
-
     protected void replace(int startOffset, SegmentArrayWithData data, int len) {
         myStorage.replace(data.myStorage, startOffset, len);
         super.replace(startOffset, data, len);

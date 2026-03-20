@@ -15,7 +15,6 @@
  */
 package consulo.externalSystem.service.project;
 
-
 /**
  * @author Denis Zhdanov
  * @since 5/18/13 8:01 PM

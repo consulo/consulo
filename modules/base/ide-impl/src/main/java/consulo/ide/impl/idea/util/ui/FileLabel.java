@@ -15,7 +15,6 @@
  */
 package consulo.ide.impl.idea.util.ui;
 
-
 import consulo.language.file.FileTypeManager;
 import consulo.ui.ex.awt.util.FilePathSplittingPolicy;
 import consulo.ui.ex.awtUnsafe.TargetAWT;

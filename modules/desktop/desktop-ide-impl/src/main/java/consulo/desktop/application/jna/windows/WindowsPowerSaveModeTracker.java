@@ -23,7 +23,6 @@ import consulo.logging.Logger;
 import consulo.platform.Platform;
 import consulo.util.jna.JnaLoader;
 
-
 /**
  * @author VISTALL
  * @since 20/04/2023

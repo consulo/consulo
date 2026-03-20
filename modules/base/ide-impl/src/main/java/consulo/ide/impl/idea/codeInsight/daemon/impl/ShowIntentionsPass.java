@@ -214,7 +214,6 @@ public class ShowIntentionsPass extends TextEditorHighlightingPass {
         }
     }
 
-
     /**
      * Returns the list of actions to show in the Alt-Enter popup at the caret offset in the given editor.
      *

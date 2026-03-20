@@ -118,7 +118,6 @@ public class CollectHighlightsUtil {
     return result;
   }
 
-
   public static @Nullable PsiElement findCommonParent(PsiElement root, int startOffset, int endOffset) {
     if (startOffset == endOffset) return null;
     PsiElement left = findElementAtInRoot(root, startOffset);

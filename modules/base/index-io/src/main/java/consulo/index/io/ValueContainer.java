@@ -16,7 +16,6 @@
 
 package consulo.index.io;
 
-
 import org.jspecify.annotations.Nullable;
 import java.util.Iterator;
 

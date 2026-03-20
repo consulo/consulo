@@ -19,7 +19,6 @@ import consulo.content.ContentFolderTypeProvider;
 import consulo.language.content.TestContentFolderTypeProvider;
 import consulo.pathMacro.PathMacroBundle;
 
-
 /**
  * @author VISTALL
  * @since 18.08.14

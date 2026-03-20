@@ -51,7 +51,6 @@ public class ArtifactUtil {
     return newRoot;
   }
 
-
   public static void copyChildren(CompositePackagingElement<?> oldParent,
                                   CompositePackagingElement<?> newParent,
                                   Project project) {

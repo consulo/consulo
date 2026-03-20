@@ -20,7 +20,6 @@ import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 import consulo.content.ContentFolderTypeProvider;
 
-
 import java.util.Set;
 
 /**

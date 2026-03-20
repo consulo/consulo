@@ -21,7 +21,6 @@ import consulo.versionControlSystem.log.VcsLogHighlighter;
 import consulo.versionControlSystem.log.VcsLogHighlighterFactory;
 import consulo.versionControlSystem.log.VcsLogUi;
 
-
 @ExtensionImpl
 public class CurrentBranchHighlighterFactory implements VcsLogHighlighterFactory {
   

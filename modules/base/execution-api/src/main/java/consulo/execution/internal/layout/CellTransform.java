@@ -72,7 +72,6 @@ public interface CellTransform {
     }
   }
 
-
   interface Facade {
     void minimize(Content content, Restore restore);
   }

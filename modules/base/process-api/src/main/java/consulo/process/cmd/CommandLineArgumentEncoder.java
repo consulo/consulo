@@ -3,7 +3,6 @@ package consulo.process.cmd;
 
 import consulo.util.lang.StringUtil;
 
-
 /**
  * Used to safely pass command argument. It handles quoting, escaping.
  */

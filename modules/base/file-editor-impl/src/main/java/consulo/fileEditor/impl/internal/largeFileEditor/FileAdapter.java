@@ -186,7 +186,6 @@ public final class FileAdapter {
         randomAccessFile.readFully(buffer1);
         String text1 = CharsetToolkit.decodeString(buffer1, charset);
 
-
         int substringLength = -1;
 
         int indexOfSlashN = text1.indexOf('\n');

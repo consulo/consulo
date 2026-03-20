@@ -17,7 +17,6 @@ package consulo.versionControlSystem.log;
 
 import consulo.virtualFileSystem.VirtualFile;
 
-
 /**
  * A special reference to a commit, such as a branch or a tag.
  *

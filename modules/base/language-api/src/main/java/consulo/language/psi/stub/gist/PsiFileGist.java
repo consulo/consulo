@@ -17,7 +17,6 @@ package consulo.language.psi.stub.gist;
 
 import consulo.language.psi.PsiFile;
 
-
 /**
  * Calculates some data based on {@link PsiFile} content, persists it between IDE restarts,
  * and updates it when the content is changed. The data is calculated lazily, when needed.<p/>

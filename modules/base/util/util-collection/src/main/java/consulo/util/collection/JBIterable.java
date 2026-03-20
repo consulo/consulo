@@ -429,7 +429,6 @@ public abstract class JBIterable<E> implements Iterable<E> {
     return map(function);
   }
 
-
   /**
    * Returns a {@code JBIterable} that applies {@code function} to each element of this
    * iterable and concatenates the produced iterables in one.
@@ -663,7 +662,6 @@ public abstract class JBIterable<E> implements Iterable<E> {
       };
     });
   }
-
 
   /**
    * Splits this {@code JBIterable} into iterable of lists of the specified size.

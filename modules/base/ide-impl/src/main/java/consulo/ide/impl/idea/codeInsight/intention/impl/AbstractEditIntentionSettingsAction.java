@@ -9,7 +9,6 @@ import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.project.Project;
 
-
 abstract class AbstractEditIntentionSettingsAction implements SyntheticIntentionAction {
   private static final Logger LOG = Logger.getInstance(AbstractEditIntentionSettingsAction.class);
 

@@ -30,7 +30,6 @@ import consulo.project.Project;
 import consulo.ui.ex.action.IdeActions;
 import consulo.virtualFileSystem.fileType.FileType;
 
-
 @ActionImpl(id = IdeActions.ACTION_COMMENT_BLOCK)
 public class CommentByBlockCommentAction extends MultiCaretCodeInsightAction implements DumbAware {
     public CommentByBlockCommentAction() {

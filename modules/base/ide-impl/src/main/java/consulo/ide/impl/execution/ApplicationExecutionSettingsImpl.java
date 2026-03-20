@@ -36,7 +36,6 @@ public class ApplicationExecutionSettingsImpl implements ApplicationExecutionSet
     myGeneralSettings = generalSettings;
   }
 
-
   @Override
   public ProcessCloseConfirmation getProcessCloseConfirmation() {
     return myGeneralSettings.getProcessCloseConfirmation();

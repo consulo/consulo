@@ -31,7 +31,6 @@ public class GotItPanel {
   JLabel myTitle;
   JEditorPane myMessage;
 
-
   private void createUIComponents() {
     myButton = new JButton() {
       @Override

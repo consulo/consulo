@@ -17,7 +17,6 @@ package consulo.language.editor.ui;
 
 import consulo.codeEditor.EditorEx;
 
-
 /**
  * @author Denis Zhdanov
  * @since 2011-01-21

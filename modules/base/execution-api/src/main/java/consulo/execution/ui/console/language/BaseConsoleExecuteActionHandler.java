@@ -17,7 +17,6 @@ package consulo.execution.ui.console.language;
 
 import consulo.execution.ui.console.ConsoleExecuteAction;
 
-
 public abstract class BaseConsoleExecuteActionHandler extends ConsoleExecuteActionHandler {
   public BaseConsoleExecuteActionHandler(boolean preserveMarkup) {
     super(preserveMarkup);

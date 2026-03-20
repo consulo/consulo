@@ -22,7 +22,6 @@ import consulo.module.ModifiableModuleModel;
 import consulo.module.content.layer.ModifiableRootModel;
 import consulo.project.Project;
 
-
 /**
  * @author VISTALL
  * @since 20/01/2023

@@ -259,7 +259,6 @@ public class ListUtil {
         return disableWhenNoSelection(button, list);
     }
 
-
     public static <T> Updatable addMoveDownListener(JButton button, JList<T> list) {
         button.addActionListener(e -> {
             moveSelectedItemsDown(list);

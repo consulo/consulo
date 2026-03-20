@@ -28,12 +28,10 @@
 
 package net.n3.nanoxml;
 
-
 import org.jspecify.annotations.Nullable;
 
 import java.io.Serializable;
 import java.util.*;
-
 
 /**
  * XMLElement is an XML element. The standard NanoXML builder generates a
@@ -51,66 +49,55 @@ public class XMLElement implements IXMLElement, Serializable {
      */
     static final long serialVersionUID = -2383376380548624920L;
 
-
     /**
      * No line number defined.
      */
     public static final int NO_LINE = -1;
-
 
     /**
      * The parent element.
      */
     private @Nullable IXMLElement parent;
 
-
     /**
      * The attributes of the element.
      */
     private final Vector attributes = new Vector();
-
 
     /**
      * The child elements.
      */
     private final Vector children = new Vector(8);
 
-
     /**
      * The name of the element.
      */
     private @Nullable String name;
-
 
     /**
      * The full name of the element.
      */
     private @Nullable String fullName;
 
-
     /**
      * The namespace URI.
      */
     private @Nullable String namespace;
-
 
     /**
      * The content of the element.
      */
     private @Nullable String content;
 
-
     /**
      * The system ID of the source data where this element is located.
      */
     private @Nullable String systemID;
 
-
     /**
      * The line in the source data where this element starts.
      */
     private int lineNr;
-
 
     /**
      * Creates an empty element to be used for #PCDATA content.
@@ -118,7 +105,6 @@ public class XMLElement implements IXMLElement, Serializable {
     public XMLElement() {
         this(null, null, null, NO_LINE);
     }
-
 
     /**
      * Creates an empty element.
@@ -128,7 +114,6 @@ public class XMLElement implements IXMLElement, Serializable {
     public XMLElement(String fullName) {
         this(fullName, null, null, NO_LINE);
     }
-
 
     /**
      * Creates an empty element.
@@ -143,7 +128,6 @@ public class XMLElement implements IXMLElement, Serializable {
         this(fullName, null, systemID, lineNr);
     }
 
-
     /**
      * Creates an empty element.
      *
@@ -154,7 +138,6 @@ public class XMLElement implements IXMLElement, Serializable {
                       @Nullable String namespace) {
         this(fullName, namespace, null, NO_LINE);
     }
-
 
     /**
      * Creates an empty element.
@@ -188,14 +171,12 @@ public class XMLElement implements IXMLElement, Serializable {
         this.parent = null;
     }
 
-
     /**
      * Creates an element to be used for #PCDATA content.
      */
     public IXMLElement createPCDataElement() {
         return new XMLElement();
     }
-
 
     /**
      * Creates an empty element.
@@ -205,7 +186,6 @@ public class XMLElement implements IXMLElement, Serializable {
     public IXMLElement createElement(String fullName) {
         return new XMLElement(fullName);
     }
-
 
     /**
      * Creates an empty element.
@@ -220,7 +200,6 @@ public class XMLElement implements IXMLElement, Serializable {
         return new XMLElement(fullName, systemID, lineNr);
     }
 
-
     /**
      * Creates an empty element.
      *
@@ -231,7 +210,6 @@ public class XMLElement implements IXMLElement, Serializable {
                                      @Nullable String namespace) {
         return new XMLElement(fullName, namespace);
     }
-
 
     /**
      * Creates an empty element.
@@ -248,7 +226,6 @@ public class XMLElement implements IXMLElement, Serializable {
         return new XMLElement(fullName, namespace, systemID, lineNr);
     }
 
-
     /**
      * Returns the parent element. This method returns null for the root
      * element.
@@ -256,7 +233,6 @@ public class XMLElement implements IXMLElement, Serializable {
     public @Nullable IXMLElement getParent() {
         return this.parent;
     }
-
 
     /**
      * Returns the full name (i.e. the name including an eventual namespace
@@ -268,7 +244,6 @@ public class XMLElement implements IXMLElement, Serializable {
         return this.fullName;
     }
 
-
     /**
      * Returns the name of the element.
      *
@@ -277,7 +252,6 @@ public class XMLElement implements IXMLElement, Serializable {
     public @Nullable String getName() {
         return this.name;
     }
-
 
     /**
      * Returns the namespace of the element.
@@ -288,7 +262,6 @@ public class XMLElement implements IXMLElement, Serializable {
     public @Nullable String getNamespace() {
         return this.namespace;
     }
-
 
     /**
      * Sets the full name. This method also sets the short name and clears the
@@ -301,7 +274,6 @@ public class XMLElement implements IXMLElement, Serializable {
         this.fullName = name;
         this.namespace = null;
     }
-
 
     /**
      * Sets the name.
@@ -320,7 +292,6 @@ public class XMLElement implements IXMLElement, Serializable {
         this.fullName = fullName;
         this.namespace = namespace;
     }
-
 
     /**
      * Adds a child element.
@@ -343,7 +314,6 @@ public class XMLElement implements IXMLElement, Serializable {
         ((XMLElement)child).parent = this;
         this.children.addElement(child);
     }
-
 
     /**
      * Inserts a child element.
@@ -368,7 +338,6 @@ public class XMLElement implements IXMLElement, Serializable {
         this.children.insertElementAt(child, index);
     }
 
-
     /**
      * Removes a child element.
      *
@@ -381,7 +350,6 @@ public class XMLElement implements IXMLElement, Serializable {
         this.children.removeElement(child);
     }
 
-
     /**
      * Removes the child located at a certain index.
      *
@@ -390,7 +358,6 @@ public class XMLElement implements IXMLElement, Serializable {
     public void removeChildAtIndex(int index) {
         this.children.removeElementAt(index);
     }
-
 
     /**
      * Returns an enumeration of all child elements.
@@ -401,7 +368,6 @@ public class XMLElement implements IXMLElement, Serializable {
         return this.children.elements();
     }
 
-
     /**
      * Returns whether the element is a leaf element.
      *
@@ -410,7 +376,6 @@ public class XMLElement implements IXMLElement, Serializable {
     public boolean isLeaf() {
         return this.children.isEmpty();
     }
-
 
     /**
      * Returns whether the element has children.
@@ -421,7 +386,6 @@ public class XMLElement implements IXMLElement, Serializable {
         return (! this.children.isEmpty());
     }
 
-
     /**
      * Returns the number of children.
      *
@@ -431,7 +395,6 @@ public class XMLElement implements IXMLElement, Serializable {
         return this.children.size();
     }
 
-
     /**
      * Returns a vector containing all the child elements.
      *
@@ -440,7 +403,6 @@ public class XMLElement implements IXMLElement, Serializable {
     public Vector getChildren() {
         return this.children;
     }
-
 
     /**
      * Returns the child at a specific index.
@@ -477,7 +439,6 @@ public class XMLElement implements IXMLElement, Serializable {
         return null;
     }
 
-
     /**
      * Searches a child element.
      *
@@ -500,7 +461,6 @@ public class XMLElement implements IXMLElement, Serializable {
         return null;
     }
 
-
     /**
      * Returns a vector of all child elements named <I>name</I>.
      *
@@ -520,7 +480,6 @@ public class XMLElement implements IXMLElement, Serializable {
         }
         return result;
     }
-
 
     /**
      * Returns a vector of all child elements named <I>name</I>.
@@ -552,7 +511,6 @@ public class XMLElement implements IXMLElement, Serializable {
         return result;
     }
 
-
     /**
      * Searches an attribute.
      *
@@ -570,7 +528,6 @@ public class XMLElement implements IXMLElement, Serializable {
         }
         return null;
     }
-
 
     /**
      * Searches an attribute.
@@ -599,14 +556,12 @@ public class XMLElement implements IXMLElement, Serializable {
         return null;
     }
 
-
     /**
      * Returns the number of attributes.
      */
     public int getAttributeCount() {
         return this.attributes.size();
     }
-
 
     /**
      * @deprecated As of NanoXML/Java 2.1, replaced by
@@ -620,7 +575,6 @@ public class XMLElement implements IXMLElement, Serializable {
     public @Nullable String getAttribute(String name) {
         return this.getAttribute(name, null);
     }
-
 
     /**
      * Returns the value of an attribute.
@@ -639,7 +593,6 @@ public class XMLElement implements IXMLElement, Serializable {
             return attr.getValue();
         }
     }
-
 
     /**
      * Returns the value of an attribute.
@@ -661,7 +614,6 @@ public class XMLElement implements IXMLElement, Serializable {
         }
     }
 
-
     /**
      * Returns the value of an attribute.
      *
@@ -675,7 +627,6 @@ public class XMLElement implements IXMLElement, Serializable {
         String value = this.getAttribute(name, Integer.toString(defaultValue));
         return Integer.parseInt(value);
     }
-
 
     /**
      * Returns the value of an attribute.
@@ -694,7 +645,6 @@ public class XMLElement implements IXMLElement, Serializable {
         return Integer.parseInt(value);
     }
 
-
     /**
      * Returns the type of an attribute.
      *
@@ -711,7 +661,6 @@ public class XMLElement implements IXMLElement, Serializable {
         }
     }
 
-
     /**
      * Returns the namespace of an attribute.
      *
@@ -727,7 +676,6 @@ public class XMLElement implements IXMLElement, Serializable {
             return attr.getNamespace();
         }
     }
-
 
     /**
      * Returns the type of an attribute.
@@ -747,7 +695,6 @@ public class XMLElement implements IXMLElement, Serializable {
         }
     }
 
-
     /**
      * Sets an attribute.
      *
@@ -764,7 +711,6 @@ public class XMLElement implements IXMLElement, Serializable {
             attr.setValue(value);
         }
     }
-
 
     /**
      * Sets an attribute.
@@ -787,7 +733,6 @@ public class XMLElement implements IXMLElement, Serializable {
         }
     }
 
-
     /**
      * Removes an attribute.
      *
@@ -802,7 +747,6 @@ public class XMLElement implements IXMLElement, Serializable {
             }
         }
     }
-
 
     /**
      * Removes an attribute.
@@ -824,7 +768,6 @@ public class XMLElement implements IXMLElement, Serializable {
         }
     }
 
-
     /**
      * Returns an enumeration of all attribute names.
      *
@@ -840,7 +783,6 @@ public class XMLElement implements IXMLElement, Serializable {
         return result.elements();
     }
 
-
     /**
      * Returns whether an attribute exists.
      *
@@ -849,7 +791,6 @@ public class XMLElement implements IXMLElement, Serializable {
     public boolean hasAttribute(String name) {
         return this.findAttribute(name) != null;
     }
-
 
     /**
      * Returns whether an attribute exists.
@@ -860,7 +801,6 @@ public class XMLElement implements IXMLElement, Serializable {
                                 @Nullable String namespace) {
         return this.findAttribute(name, namespace) != null;
     }
-
 
     /**
      * Returns all attributes as a Properties object.
@@ -876,7 +816,6 @@ public class XMLElement implements IXMLElement, Serializable {
         }
         return result;
     }
-
 
     /**
      * Returns all attributes in a specific namespace as a Properties object.
@@ -903,7 +842,6 @@ public class XMLElement implements IXMLElement, Serializable {
         return result;
     }
 
-
     /**
      * Returns the system ID of the data where the element started.
      *
@@ -914,7 +852,6 @@ public class XMLElement implements IXMLElement, Serializable {
     public @Nullable String getSystemID() {
         return this.systemID;
     }
-
 
     /**
      * Returns the line number in the data where the element started.
@@ -928,7 +865,6 @@ public class XMLElement implements IXMLElement, Serializable {
         return this.lineNr;
     }
 
-
     /**
      * Return the #PCDATA content of the element. If the element has a
      * combination of #PCDATA content and child elements, the #PCDATA
@@ -941,7 +877,6 @@ public class XMLElement implements IXMLElement, Serializable {
         return this.content;
     }
 
-
     /**
      * Sets the #PCDATA content. It is an error to call this method with a
      * non-null value if there are child objects.
@@ -951,7 +886,6 @@ public class XMLElement implements IXMLElement, Serializable {
     public void setContent(@Nullable String content) {
         this.content = content;
     }
-
 
     /**
      * Returns true if the element equals another element.
@@ -965,7 +899,6 @@ public class XMLElement implements IXMLElement, Serializable {
             return false;
         }
     }
-
 
     /**
      * Returns true if the element equals another element.

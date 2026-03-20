@@ -28,7 +28,6 @@
 
 package net.n3.nanoxml;
 
-
 import org.jspecify.annotations.Nullable;
 
 /**
@@ -51,7 +50,6 @@ public class XMLParseException
    {
       super(msg);
    }
-
 
    /**
     * Creates a new exception.

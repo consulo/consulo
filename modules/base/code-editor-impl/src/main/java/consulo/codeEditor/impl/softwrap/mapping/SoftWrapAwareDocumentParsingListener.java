@@ -15,7 +15,6 @@
  */
 package consulo.codeEditor.impl.softwrap.mapping;
 
-
 public interface SoftWrapAwareDocumentParsingListener {
 
   /**

@@ -88,7 +88,6 @@ public class CreateNewLibraryAction extends DumbAwareAction {
         LibraryEditingUtil.showDialogAndAddLibraryToDependencies(library, myProject, true);
     }
 
-
     public static @Nullable Library createLibrary(
         @Nullable LibraryType type,
         JComponent parentComponent,

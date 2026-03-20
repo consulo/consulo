@@ -32,7 +32,6 @@ import consulo.util.dataholder.UserDataHolder;
 import consulo.util.lang.ControlFlowException;
 import consulo.util.lang.Pair;
 
-
 @ServiceAPI(ComponentScope.PROJECT)
 public abstract class BlockSupport {
   public static BlockSupport getInstance(Project project) {

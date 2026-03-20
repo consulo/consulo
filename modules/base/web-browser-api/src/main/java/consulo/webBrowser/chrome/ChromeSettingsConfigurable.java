@@ -89,7 +89,6 @@ public class ChromeSettingsConfigurable implements Configurable {
         return myLayout;
     }
 
-
     @RequiredUIAccess
     @Override
     public boolean isModified() {

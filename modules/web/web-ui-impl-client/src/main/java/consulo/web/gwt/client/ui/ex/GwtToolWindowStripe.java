@@ -73,7 +73,6 @@ public class GwtToolWindowStripe extends SimplePanel {
 
     inner.add(button, false);
 
-
     if (myPosition == DockLayoutState.Constraint.LEFT || myPosition == DockLayoutState.Constraint.RIGHT) {
       button.setWidth("22px");
       button.setVerticalText();

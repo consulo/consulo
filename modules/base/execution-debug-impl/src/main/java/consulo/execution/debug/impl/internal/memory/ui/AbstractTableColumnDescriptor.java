@@ -15,7 +15,6 @@ public abstract class AbstractTableColumnDescriptor implements AbstractTableMode
         return myClass;
     }
 
-
     @Override
     public String getName() {
         return myName;

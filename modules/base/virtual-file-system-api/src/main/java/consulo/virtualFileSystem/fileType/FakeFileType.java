@@ -17,7 +17,6 @@ package consulo.virtualFileSystem.fileType;
 
 import consulo.ui.image.Image;
 
-
 /**
  * @author valentin
  * @since 2004-01-29

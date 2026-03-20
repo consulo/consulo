@@ -78,7 +78,6 @@ public class CodeStyleCachingServiceImpl implements CodeStyleCachingService, Dis
     }
   }
 
-
   @Override
   public @Nullable UserDataHolder getDataHolder(VirtualFile virtualFile) {
     return getOrCreateFileData(getFileKey(virtualFile));

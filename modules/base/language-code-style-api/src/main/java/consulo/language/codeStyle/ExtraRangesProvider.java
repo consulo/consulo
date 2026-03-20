@@ -17,7 +17,6 @@ package consulo.language.codeStyle;
 
 import consulo.document.util.TextRange;
 
-
 import java.util.List;
 
 public interface ExtraRangesProvider {

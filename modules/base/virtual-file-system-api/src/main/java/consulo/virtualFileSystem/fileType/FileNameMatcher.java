@@ -16,7 +16,6 @@
 
 package consulo.virtualFileSystem.fileType;
 
-
 /**
  * @author max
  */

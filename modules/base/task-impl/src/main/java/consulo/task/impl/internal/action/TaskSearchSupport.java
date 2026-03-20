@@ -71,7 +71,6 @@ public class TaskSearchSupport {
         return filterTasks(pattern, getTasks(pattern, cached, autopopup, myManager));
     }
 
-
     private static Matcher getMatcher(String pattern) {
         StringTokenizer tokenizer = new StringTokenizer(pattern, " ");
         StringBuilder builder = new StringBuilder();

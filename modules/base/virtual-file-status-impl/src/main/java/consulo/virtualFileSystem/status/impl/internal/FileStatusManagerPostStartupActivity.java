@@ -22,7 +22,6 @@ import consulo.project.startup.PostStartupActivity;
 import consulo.ui.UIAccess;
 import consulo.virtualFileSystem.status.FileStatusManager;
 
-
 /**
  * @author VISTALL
  * @since 21-Jun-22

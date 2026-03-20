@@ -15,7 +15,6 @@
  */
 package consulo.language.editor.inspection;
 
-
 public interface PairedUnfairLocalInspectionTool extends UnfairLocalInspectionTool {
   /**
    * @return {@link LocalInspectionTool#getShortName()} of

@@ -78,7 +78,6 @@ public class SemServiceImpl extends SemService {
       }
     });
 
-
     LowMemoryWatcher.register(() -> {
       if (myCreatingSem.get() == 0) {
         clearCache();
@@ -225,7 +224,6 @@ public class SemServiceImpl extends SemService {
         result.addAll(cached);
       }
     }
-
 
     if (result == null) {
       if (singleList != null) {

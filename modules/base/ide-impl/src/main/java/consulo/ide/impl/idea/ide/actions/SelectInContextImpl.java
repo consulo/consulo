@@ -56,7 +56,6 @@ public abstract class SelectInContextImpl implements SelectInContext {
         return myPsiFile.getProject();
     }
 
-
     @Override
     
     public VirtualFile getVirtualFile() {
@@ -199,7 +198,6 @@ public abstract class SelectInContextImpl implements SelectInContext {
             return super.getSelectorInFile();
         }
     }
-
 
     private static class OpenFileDescriptorContext extends SelectInContextImpl {
         public OpenFileDescriptorContext(PsiFile psiFile) {

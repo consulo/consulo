@@ -203,7 +203,6 @@ public abstract class ChangeSignatureDialogBase<
         return myParametersList == null ? myParametersTable : myParametersList.getTable();
     }
 
-
     @Override
     protected JComponent createNorthPanel() {
         JPanel panel = new JPanel(new GridBagLayout());

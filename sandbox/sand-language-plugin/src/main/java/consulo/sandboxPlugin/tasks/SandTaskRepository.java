@@ -36,7 +36,6 @@ public class SandTaskRepository extends BaseRepository {
       myTasks.put("SAND-100", new SandTask("SAND-100", "Hello", false));
   }
 
-
   @Override
   public Task[] getIssues(@Nullable String query, int offset, int limit, boolean withClosed, ProgressIndicator cancelled) throws Exception {
     return myTasks.values().toArray(Task[]::new);

@@ -18,7 +18,6 @@ package consulo.ide.newModule;
 import consulo.localize.LocalizeValue;
 import consulo.ui.image.Image;
 
-
 /**
  * @author VISTALL
  * @since 05.06.14

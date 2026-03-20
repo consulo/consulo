@@ -15,7 +15,6 @@
  */
 package consulo.diff.impl.internal.action;
 
-
 import consulo.diff.DiffNavigationContext;
 import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;

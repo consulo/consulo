@@ -75,7 +75,6 @@ public interface RemoteExternalSystemProjectResolver<S extends ExternalSystemExe
     }
   };
 
-
   @Nullable
   DataNode<ProjectData> resolveProjectInfo(ExternalSystemTaskId id,
                                            String projectPath,

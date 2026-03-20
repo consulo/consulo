@@ -24,7 +24,6 @@ import consulo.process.ProcessHandler;
 import consulo.process.ProcessHandlerBuilder;
 import consulo.process.cmd.GeneralCommandLine;
 
-
 /**
  * @see ProcessHandlerBuilder
  */

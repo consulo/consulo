@@ -98,7 +98,6 @@ public class CompletionUtil {
     return CompletionUtilCore.findReferencePrefix(parameters);
   }
 
-
   public static InsertionContext emulateInsertion(InsertionContext oldContext, int newStart, LookupElement item) {
     return CompletionUtilCore.emulateInsertion(oldContext, newStart, item);
   }

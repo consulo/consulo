@@ -21,7 +21,6 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiTarget;
 import consulo.project.Project;
 
-
 /**
  * @author peter
  */

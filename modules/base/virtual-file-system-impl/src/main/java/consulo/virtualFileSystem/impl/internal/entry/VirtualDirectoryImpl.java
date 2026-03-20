@@ -455,7 +455,6 @@ public class VirtualDirectoryImpl extends VirtualFileSystemEntry {
     return findChild(name, false, true, getFileSystem());
   }
 
-
   public VirtualFileSystemEntry doFindChildById(int id) {
     int i = ArrayUtil.indexOf(myData.myChildrenIds, id);
     if (i >= 0) {

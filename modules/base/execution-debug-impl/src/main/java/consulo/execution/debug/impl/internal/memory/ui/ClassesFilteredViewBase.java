@@ -74,7 +74,6 @@ public abstract class ClassesFilteredViewBase extends BorderLayoutPanel implemen
         myTable.getEmptyText().setText(XDebuggerLocalize.memoryViewEmptyRunning());
         Disposer.register(this, myTable);
 
-
         myTable.addKeyListener(new KeyAdapter() {
             @Override
             @RequiredUIAccess

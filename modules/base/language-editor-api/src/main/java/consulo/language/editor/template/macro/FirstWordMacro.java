@@ -23,7 +23,6 @@ import consulo.language.editor.template.ExpressionContext;
 import consulo.language.editor.template.Result;
 import consulo.language.editor.template.TextResult;
 
-
 /**
  * @author ven
  * @author Konstantin Bulenkov

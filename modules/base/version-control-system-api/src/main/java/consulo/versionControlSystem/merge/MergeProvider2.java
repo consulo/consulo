@@ -27,7 +27,6 @@ import java.util.List;
  */
 public interface MergeProvider2 extends MergeProvider {
 
-
   /**
    * Initiates a multiple file merge operation for the specified list of files.
    *

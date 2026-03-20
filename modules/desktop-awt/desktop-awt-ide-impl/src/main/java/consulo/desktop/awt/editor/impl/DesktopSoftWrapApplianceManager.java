@@ -11,7 +11,6 @@ import consulo.codeEditor.impl.softwrap.mapping.SoftWrapApplianceManager;
 import consulo.codeEditor.impl.softwrap.mapping.SoftWrapAwareDocumentParsingListener;
 import consulo.logging.Logger;
 
-
 /**
  * The general idea of soft wraps processing is to build a cache to use for quick document dimensions mapping
  * ({@code 'logical position -> visual position'}, {@code 'offset -> logical position'} etc) and update it incrementally

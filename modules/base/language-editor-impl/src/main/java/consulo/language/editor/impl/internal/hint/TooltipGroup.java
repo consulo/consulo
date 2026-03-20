@@ -15,7 +15,6 @@
  */
 package consulo.language.editor.impl.internal.hint;
 
-
 /**
  * @author cdr
  */

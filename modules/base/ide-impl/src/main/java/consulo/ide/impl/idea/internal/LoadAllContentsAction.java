@@ -43,7 +43,6 @@ public class LoadAllContentsAction extends AnAction implements DumbAware {
     super("Load all files content", "Measure FileUtil.loadFile() for all files in the project", null);
   }
 
-
   AtomicInteger count = new AtomicInteger();
   AtomicLong totalSize = new AtomicLong();
 

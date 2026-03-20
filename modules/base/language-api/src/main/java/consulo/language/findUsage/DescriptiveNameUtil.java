@@ -23,7 +23,6 @@ import consulo.language.psi.meta.PsiMetaOwner;
 import consulo.logging.Logger;
 import consulo.util.lang.StringUtil;
 
-
 public class DescriptiveNameUtil {
   private static final Logger LOG = Logger.getInstance(DescriptiveNameUtil.class);
 

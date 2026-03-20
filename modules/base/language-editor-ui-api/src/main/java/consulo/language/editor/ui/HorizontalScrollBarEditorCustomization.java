@@ -17,7 +17,6 @@ package consulo.language.editor.ui;
 
 import consulo.codeEditor.EditorEx;
 
-
 /**
  * @author irengrig
  * @since 2010-12-06

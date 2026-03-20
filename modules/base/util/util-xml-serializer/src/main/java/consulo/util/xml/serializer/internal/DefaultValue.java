@@ -15,7 +15,6 @@
  */
 package consulo.util.xml.serializer.internal;
 
-
 import java.lang.reflect.Constructor;
 import java.lang.reflect.RecordComponent;
 import java.util.ArrayList;

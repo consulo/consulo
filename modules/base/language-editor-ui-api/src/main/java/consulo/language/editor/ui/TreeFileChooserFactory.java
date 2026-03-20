@@ -37,14 +37,12 @@ public abstract class TreeFileChooserFactory {
   
   public abstract TreeFileChooser createFileChooser(String title, @Nullable PsiFile initialFile, @Nullable FileType fileType, @Nullable Predicate<PsiFile> filter);
 
-
   
   public abstract TreeFileChooser createFileChooser(String title,
                                                     @Nullable PsiFile initialFile,
                                                     @Nullable FileType fileType,
                                                     @Nullable Predicate<PsiFile> filter,
                                                     boolean disableStructureProviders);
-
 
   
   public abstract TreeFileChooser createFileChooser(String title,

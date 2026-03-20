@@ -133,7 +133,6 @@ public class GlassPanel extends JComponent {
     return new Kernel(blurSize, blurSize, kernelData);
   }
 
-
   public static double getArea(JComponent component) {
     return Math.PI * component.getWidth() * component.getHeight() / 4.0;
   }

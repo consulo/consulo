@@ -18,7 +18,6 @@ package consulo.colorScheme;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 
-
 /**
  * @author VISTALL
  * @since 18-Jun-22

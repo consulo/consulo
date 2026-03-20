@@ -23,7 +23,6 @@ public class InputMapExternalizer<Key, Value> implements DataExternalizer<Map<Ke
                                   : new InputIndexDataExternalizer<>(extension.getKeyDescriptor(), ((IndexExtension<Key, ?, ?>)extension).getName());
   }
 
-
   
   public DataExternalizer<Value> getValueExternalizer() {
     return myValueExternalizer;

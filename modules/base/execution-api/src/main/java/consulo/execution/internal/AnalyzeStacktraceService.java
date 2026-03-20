@@ -20,7 +20,6 @@ import consulo.annotation.component.ServiceAPI;
 import consulo.execution.ui.console.ConsoleView;
 import consulo.ui.ex.action.AnAction;
 
-
 /**
  * @author VISTALL
  * @since 01-Sep-22

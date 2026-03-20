@@ -19,7 +19,6 @@ import consulo.annotation.component.ExtensionImpl;
 import consulo.fileTemplate.FileTemplateContributor;
 import consulo.fileTemplate.FileTemplateRegistrator;
 
-
 /**
  * @author VISTALL
  * @since 31-Jul-22

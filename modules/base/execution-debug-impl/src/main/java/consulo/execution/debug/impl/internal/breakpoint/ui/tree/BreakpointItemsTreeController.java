@@ -110,7 +110,6 @@ public class BreakpointItemsTreeController implements BreakpointsCheckboxTree.De
     myInBuild = false;
   }
 
-
   
   private CheckedTreeNode getParentNode(BreakpointItem breakpoint) {
     CheckedTreeNode parent = myRoot;

@@ -100,7 +100,6 @@ public class MacMainFrameDecorator extends IdeFrameDecorator implements UISettin
     }
   }
 
-
   // Fullscreen listener delivers event too late,
   // so we use method swizzling here
   private final Callback windowWillEnterFullScreenCallBack = new Callback() {

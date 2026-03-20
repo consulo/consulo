@@ -15,7 +15,6 @@
  */
 package consulo.colorScheme;
 
-
 import javax.swing.*;
 import javax.swing.text.html.StyleSheet;
 

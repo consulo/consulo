@@ -20,7 +20,6 @@ import consulo.document.util.TextRange;
 import consulo.language.psi.AbstractElementManipulator;
 import consulo.language.util.IncorrectOperationException;
 
-
 /**
  * @author VISTALL
  * @since 16-Jul-22

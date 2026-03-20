@@ -18,7 +18,6 @@ package consulo.util.collection.primitive.longs;
 import consulo.util.collection.primitive.longs.impl.map.ConcurrentLongObjectHashMap;
 import org.jetbrains.annotations.Contract;
 
-
 /**
  * @author VISTALL
  * @since 09/02/2021

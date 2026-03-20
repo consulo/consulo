@@ -554,7 +554,6 @@ public abstract class AbstractColorsScheme implements EditorColorsScheme {
         }
     }
 
-
     private static void writeFontPreferences(String key, Element parent, FontPreferences preferences) {
         for (String fontFamily : preferences.getRealFontFamilies()) {
             Element element = new Element(key);

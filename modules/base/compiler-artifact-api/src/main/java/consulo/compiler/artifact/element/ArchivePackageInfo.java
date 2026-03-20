@@ -19,7 +19,6 @@ package consulo.compiler.artifact.element;
 import consulo.util.lang.Pair;
 import consulo.virtualFileSystem.VirtualFile;
 
-
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;

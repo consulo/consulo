@@ -24,7 +24,6 @@ import consulo.language.psi.util.EditSourceUtil;
 import consulo.navigation.OpenFileDescriptorFactory;
 import consulo.virtualFileSystem.VirtualFile;
 
-
 /**
  * @author peter
  */

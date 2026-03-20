@@ -15,7 +15,6 @@
  */
 package consulo.virtualFileSystem.status;
 
-
 /**
  * @author VISTALL
  * @since 29-Mar-22

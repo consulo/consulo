@@ -29,7 +29,6 @@ import consulo.project.content.scope.ProjectScopes;
 import consulo.virtualFileSystem.RawFileLoaderHelper;
 import consulo.virtualFileSystem.VirtualFile;
 
-
 public class HighlightLevelUtil {
   private HighlightLevelUtil() {
   }
@@ -39,7 +38,6 @@ public class HighlightLevelUtil {
   public static boolean shouldAnalyse(PsiFile root, AnalysisLevel analysisLevel) {
     return analysisLevel == AnalysisLevel.HIGHLIGHT_AND_INSPECT ? shouldInspect(root) : shouldHighlight(root);
   }
-
 
   public static boolean shouldHighlight(PsiElement psiRoot) {
     HighlightingSettingsPerFile component = HighlightingSettingsPerFile.getInstance(psiRoot.getProject());

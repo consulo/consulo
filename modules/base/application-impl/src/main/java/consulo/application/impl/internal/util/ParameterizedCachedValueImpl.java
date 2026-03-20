@@ -21,7 +21,6 @@ import consulo.application.util.ParameterizedCachedValue;
 import consulo.application.util.ParameterizedCachedValueProvider;
 import consulo.project.Project;
 
-
 public class ParameterizedCachedValueImpl<T, P> extends CachedValueBase<T> implements ParameterizedCachedValue<T, P> {
     
     private final Project myProject;

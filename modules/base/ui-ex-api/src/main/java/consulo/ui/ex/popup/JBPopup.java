@@ -77,7 +77,6 @@ public interface JBPopup extends Disposable, LightweightWindow {
      */
     void showInCenterOf(Component component);
 
-
     /**
      * Shows the popups in the center of currently focused component
      */

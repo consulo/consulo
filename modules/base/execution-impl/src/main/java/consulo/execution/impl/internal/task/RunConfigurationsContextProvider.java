@@ -25,7 +25,6 @@ import consulo.util.xml.serializer.WriteExternalException;
 import jakarta.inject.Inject;
 import org.jdom.Element;
 
-
 /**
  * @author Dmitry Avdeev
  */

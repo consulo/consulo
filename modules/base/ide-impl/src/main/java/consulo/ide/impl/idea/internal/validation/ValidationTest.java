@@ -44,7 +44,6 @@ public class ValidationTest extends DialogWrapper {
     init();
   }
 
-
   @Override
   protected boolean postponeValidation() {
     return true;

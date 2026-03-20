@@ -15,7 +15,6 @@ import consulo.ui.annotation.RequiredUIAccess;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
-
 import java.awt.*;
 
 @Singleton

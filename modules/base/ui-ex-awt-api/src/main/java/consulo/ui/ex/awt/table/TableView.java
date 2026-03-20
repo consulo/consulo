@@ -173,7 +173,6 @@ public class TableView<Item> extends BaseTableView implements ItemsProvider, Sel
     }
   }
 
-
   public Collection<Item> getSelection() {
     ArrayList<Item> result = new ArrayList<Item>();
     int[] selectedRows = getSelectedRows();

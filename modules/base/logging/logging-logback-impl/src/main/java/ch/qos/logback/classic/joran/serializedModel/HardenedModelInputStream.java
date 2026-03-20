@@ -24,7 +24,6 @@ import java.util.List;
 
 public class HardenedModelInputStream extends HardenedObjectInputStream {
 
-
     static public List<String> getWhilelist() {
         List<String> whitelist = new ArrayList<String>();
         whitelist.add(Model.class.getName());
@@ -57,7 +56,6 @@ public class HardenedModelInputStream extends HardenedObjectInputStream {
         whitelist.add(ch.qos.logback.core.model.SiftModel.class.getName());
         whitelist.add(ch.qos.logback.classic.model.LoggerModel.class.getName());
         whitelist.add(ch.qos.logback.core.model.SerializeModelModel.class.getName());
-
 
         return whitelist;
     }

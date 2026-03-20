@@ -25,7 +25,6 @@ import consulo.versionControlSystem.ProjectLevelVcsManager;
 import consulo.versionControlSystem.action.AnnotateToggleActionProvider;
 import consulo.versionControlSystem.annotate.AnnotationProvider;
 
-
 import java.util.Set;
 
 @ExtensionImpl

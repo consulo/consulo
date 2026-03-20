@@ -5,7 +5,6 @@ import consulo.util.lang.reflect.ReflectionUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
 public class DeprecatedMethodException extends RuntimeException {
   private static final Logger LOG = LoggerFactory.getLogger(DeprecatedMethodException.class);
 

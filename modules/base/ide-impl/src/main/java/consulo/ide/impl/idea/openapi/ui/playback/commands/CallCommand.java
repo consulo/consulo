@@ -53,7 +53,6 @@ public class CallCommand extends AbstractCommand {
       return new ActionCallback.Done();
     }
 
-
     String methodName = cmd.substring(0, open);
     String [] args = cmd.substring(open + 1, close).split(",");
     boolean noArgs = args.length == 1 && args[0].length() == 0;
@@ -83,7 +82,6 @@ public class CallCommand extends AbstractCommand {
       for (int i = 1; i < actualArgs.length; i++) {
         actualArgs[i] = args[i - 1];
       }
-
 
      AsyncResult<String> result = (AsyncResult<String>)m.invoke(null, actualArgs);
      if (result == null) {

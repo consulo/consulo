@@ -152,7 +152,6 @@ abstract class AbstractCollectionBinding extends NullableAccessorBinding impleme
     return processResult(result, context);
   }
 
-
   private @Nullable Object serializeItem(@Nullable Object value, Object context, SerializationFilter filter) {
     if (value == null) {
       LOG.warn("Collection " + myAccessor + " contains 'null' object");

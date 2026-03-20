@@ -28,10 +28,8 @@
 
 package net.n3.nanoxml;
 
-
 import java.io.Reader;
 import java.io.IOException;
-
 
 /**
  * This reader reads data from another reader until a new element has
@@ -49,18 +47,15 @@ class ContentReader
     */
    private IXMLReader reader;
 
-
    /**
     * Buffer.
     */
    private String buffer;
 
-
    /**
     * Pointer into the buffer.
     */
    private int bufferIndex;
-
 
    /**
     * The entity resolver.
@@ -84,7 +79,6 @@ class ContentReader
       this.buffer = buffer;
       this.bufferIndex = 0;
    }
-
 
    /**
     * Reads a block of data.
@@ -153,7 +147,6 @@ class ContentReader
          throw new IOException(e.getMessage());
       }
    }
-
 
    /**
     * Skips remaining data and closes the stream.

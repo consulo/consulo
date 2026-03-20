@@ -261,7 +261,6 @@ public class AdvancedActionToolbarImpl extends SimpleActionToolbarImpl {
         }
     }
 
-
     private boolean isPopupShowing() {
         return myPopup != null && !myPopup.isDisposed();
     }
@@ -467,7 +466,6 @@ public class AdvancedActionToolbarImpl extends SimpleActionToolbarImpl {
             throw new IllegalStateException("unknown layoutPolicy: " + myLayoutPolicy);
         }
 
-
         if (getComponentCount() > 0 && size2Fit.width < Integer.MAX_VALUE) {
             int maxHeight = 0;
             for (int i = 0; i < bounds.size() - 2; i++) {
@@ -610,7 +608,6 @@ public class AdvancedActionToolbarImpl extends SimpleActionToolbarImpl {
             }
         }
     }
-
 
     private void calculateBoundsWrapImpl(Dimension sizeToFit, List<? extends Rectangle> bounds) {
         // We have to graceful handle case when toolbar was not laid out yet.

@@ -15,7 +15,6 @@
  */
 package consulo.component.persist.scheme;
 
-
 /**
  * A scheme processor can implement this interface to provide a file extension different from default .xml.
  * @see SchemeProcessor

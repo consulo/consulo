@@ -1471,7 +1471,6 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
         return ActionPlaces.JAVADOC_TOOLBAR.equals(e.getPlace());
     }
 
-
     private class ExternalDocAction extends AnAction implements HintManagerImpl.ActionToIgnore {
         private ExternalDocAction() {
             super(CodeInsightLocalize.javadocActionViewExternal(), LocalizeValue.empty(), PlatformIconGroup.actionsPreviousoccurence());

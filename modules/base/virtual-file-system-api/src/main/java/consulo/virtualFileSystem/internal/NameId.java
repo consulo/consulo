@@ -15,7 +15,6 @@
  */
 package consulo.virtualFileSystem.internal;
 
-
 public final class NameId {
     public static final NameId[] EMPTY_ARRAY = new NameId[0];
 

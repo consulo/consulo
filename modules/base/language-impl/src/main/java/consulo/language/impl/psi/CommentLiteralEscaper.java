@@ -22,7 +22,6 @@ import consulo.language.CodeDocumentationAwareCommenter;
 import consulo.language.Commenter;
 import consulo.language.psi.LiteralTextEscaper;
 
-
 /**
  * @author cdr
 */

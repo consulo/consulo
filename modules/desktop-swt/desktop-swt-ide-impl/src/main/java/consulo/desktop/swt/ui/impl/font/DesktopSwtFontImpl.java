@@ -17,7 +17,6 @@ package consulo.desktop.swt.ui.impl.font;
 
 import consulo.ui.font.Font;
 
-
 /**
  * @author VISTALL
  * @since 10/07/2021

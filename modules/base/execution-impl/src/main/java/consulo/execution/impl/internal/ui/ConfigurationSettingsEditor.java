@@ -80,7 +80,6 @@ class ConfigurationSettingsEditor extends CompositeSettingsEditor<RunnerAndConfi
                 );
             }
 
-
             myRunnersComponent = new RunnersEditorComponent();
             ProgramRunner[] runners = RunnerRegistry.getInstance().getRegisteredRunners();
 

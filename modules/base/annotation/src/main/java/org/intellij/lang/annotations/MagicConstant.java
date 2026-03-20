@@ -124,7 +124,6 @@ public @interface MagicConstant {
    */
   Class valuesFromClass() default void.class;
 
-
   /**
    * @return allowed int flags which are defined in the specified class public static final constants.
    *

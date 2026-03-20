@@ -54,7 +54,6 @@ public class ActionMacro implements JDOMExternalizable {
   private static final String ELEMENT_ACTION = "action";
   private static final String ATTRIBUTE_ID = "id";
 
-
   public ActionMacro() {
   }
 
@@ -128,7 +127,6 @@ public class ActionMacro implements JDOMExternalizable {
         actionNode = new Element(ELEMENT_SHORTCUT);
         actionNode.setAttribute(ATTRIBUTE_TEXT, shortcutActionDesciption.getText());
       }
-
 
       assert actionNode != null : action;
 

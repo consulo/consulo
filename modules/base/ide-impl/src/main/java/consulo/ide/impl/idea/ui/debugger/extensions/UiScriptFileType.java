@@ -21,7 +21,6 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.localize.LocalizeValue;
 import consulo.ui.image.Image;
 
-
 /**
  * @author alexander.chernikov
  * @since 2010-03-23

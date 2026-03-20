@@ -22,7 +22,6 @@ import consulo.content.scope.SearchScope;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 
-
 /**
  * @author yole
  */

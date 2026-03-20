@@ -147,5 +147,4 @@ class ThrottlingListenerWrapper implements MultiThreadSearcher.Listener {
         }
     }
 
-
 }

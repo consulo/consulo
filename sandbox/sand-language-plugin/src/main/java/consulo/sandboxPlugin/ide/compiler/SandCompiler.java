@@ -27,7 +27,6 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.util.collection.Chunk;
 import consulo.sandboxPlugin.lang.SandFileType;
 
-
 /**
  * @author VISTALL
  * @since 17.05.14

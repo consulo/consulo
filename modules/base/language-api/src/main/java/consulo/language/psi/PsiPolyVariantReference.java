@@ -17,7 +17,6 @@ package consulo.language.psi;
 
 import consulo.annotation.access.RequiredReadAction;
 
-
 /**
  * Inherit this interface if you want the reference to resolve to more than one element,
  * or if you want to provide resolve result(s) for a superset of valid resolve cases.

@@ -351,7 +351,6 @@ public final class VcsRootProblemNotifier {
         return ContainerUtil.filter(errors, error -> error.getType() == VcsRootError.Type.EXTRA_MAPPING);
     }
 
-
     
     String getPresentableMapping(VcsDirectoryMapping directoryMapping) {
         if (directoryMapping.isDefaultMapping()) {

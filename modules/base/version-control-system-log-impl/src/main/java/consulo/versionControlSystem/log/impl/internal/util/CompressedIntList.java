@@ -16,7 +16,6 @@
 
 package consulo.versionControlSystem.log.impl.internal.util;
 
-
 public class CompressedIntList implements IntList {
   public static final int DEFAULT_BLOCK_SIZE = 30;
 

@@ -110,7 +110,6 @@ public final class ModuleCompilerUtil {
         }
     }
 
-
     public static <T extends ModuleRootModel> GraphGenerator<T> createGraphGenerator(final Map<Module, T> models) {
         return (GraphGenerator<T>)GraphGenerator.generate(CachingSemiGraph.cache(new InboundSemiGraph<T>() {
             @Override

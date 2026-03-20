@@ -447,7 +447,6 @@ public class mxGraph extends mxEventSource {
    */
   protected boolean labelsVisible = true;
 
-
   /**
    * Specifies if nesting of swimlanes is allowed. Default is true.
    */

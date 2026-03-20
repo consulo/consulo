@@ -21,7 +21,6 @@ import consulo.execution.ui.console.ConsoleView;
 import consulo.ui.ex.action.AnAction;
 import jakarta.inject.Singleton;
 
-
 /**
  * @author VISTALL
  * @since 01-Sep-22

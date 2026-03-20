@@ -239,7 +239,6 @@ public class CustomActionsSchemaImpl implements CustomActionsSchema, PersistentS
         }
     }
 
-
     public boolean isCorrectActionGroup(ActionGroup group, String defaultGroupName) {
         if (myActions.isEmpty()) {
             return false;

@@ -108,7 +108,6 @@ public abstract class StateStorageManagerImpl implements StateStorageManager, Di
     return getConfigurationMacro(directorySpec) + "/" + value + (directorySpec ? "/" : "");
   }
 
-
  
   private StateStorage createStateStorage(Storage storageSpec) {
     if (!storageSpec.stateSplitter().equals(StateSplitterEx.class)) {

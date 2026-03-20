@@ -19,7 +19,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.io.File;
 
-
 public abstract class FilePathSplittingPolicy {
   public static final FilePathSplittingPolicy SPLIT_BY_LETTER = new SplitByLetterPolicy();
   public static final FilePathSplittingPolicy SPLIT_BY_SEPARATOR = new SplitBySeparatorPolicy();

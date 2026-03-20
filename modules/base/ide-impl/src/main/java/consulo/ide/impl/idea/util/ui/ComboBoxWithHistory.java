@@ -121,7 +121,6 @@ public class ComboBoxWithHistory extends JComboBox {
         return items;
     }
 
-
     private class MyModel extends DefaultComboBoxModel {
         private MyModel(Object[] items) {
             super(sort(items, myWeights));

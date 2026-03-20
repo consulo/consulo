@@ -37,7 +37,6 @@ public class DiffNavigationContext {
     return myTargetString;
   }
 
-
   public int contextMatchCheck(Iterator<Pair<Integer, CharSequence>> changedLinesIterator) {
     // we ignore spaces.. at least at start/end, since some version controls could ignore their changes when doing annotate
     Iterator<? extends CharSequence> iterator = getPreviousLinesIterable().iterator();

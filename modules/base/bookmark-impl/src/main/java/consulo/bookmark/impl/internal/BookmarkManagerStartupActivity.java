@@ -23,7 +23,6 @@ import consulo.project.Project;
 import consulo.project.startup.PostStartupActivity;
 import consulo.ui.UIAccess;
 
-
 @ExtensionImpl
 public class BookmarkManagerStartupActivity implements PostStartupActivity, DumbAware {
   @Override

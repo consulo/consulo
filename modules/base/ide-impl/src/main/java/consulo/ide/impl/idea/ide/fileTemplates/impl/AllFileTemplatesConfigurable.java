@@ -317,7 +317,6 @@ public class AllFileTemplatesConfigurable implements SearchableConfigurable, Con
         schemaPanel.add(new JLabel("Schema:"), BorderLayout.WEST);
         toolbarPanel.add(schemaPanel, BorderLayout.EAST);
 
-
         JPanel centerPanel = new JPanel(new BorderLayout());
         centerPanel.add(myTabbedPane.getComponent(), BorderLayout.NORTH);
         Splitter splitter = new Splitter(false, 0.3f);

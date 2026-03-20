@@ -28,7 +28,6 @@ public final class SearchTaskOptions implements Cloneable {
     public int contextOneSideLength = 0;
     public int criticalAmountOfSearchResults = DEFAULT_CRITICAL_AMOUNT_OF_SEARCH_RESULTS;
 
-
     public SearchTaskOptions setStringToFind(String stringToFind) {
         this.stringToFind = stringToFind;
         return this;

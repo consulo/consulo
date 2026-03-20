@@ -21,7 +21,6 @@ import consulo.module.content.ProjectFileIndex;
 import consulo.project.content.TestSourcesFilter;
 import consulo.virtualFileSystem.VirtualFile;
 
-
 @ExtensionImpl
 public class ProjectRootTestSourcesFilter extends TestSourcesFilter {
   @Override

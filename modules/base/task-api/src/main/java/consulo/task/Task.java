@@ -45,7 +45,6 @@ public abstract class Task {
   
   public abstract String getId();
 
-
   /**
    * @return ID in the form that is suitable for commit messages, dialogs, completion items, etc.
    */

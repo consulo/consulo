@@ -18,7 +18,6 @@ package consulo.dataContext.internal;
 import consulo.dataContext.GetDataRule;
 import consulo.util.dataholder.Key;
 
-
 /**
  * @author VISTALL
  * @since 03/02/2022

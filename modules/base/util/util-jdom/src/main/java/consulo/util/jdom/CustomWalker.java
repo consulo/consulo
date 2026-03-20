@@ -153,7 +153,6 @@ class CustomWalker implements Walker {
    */
   protected final class MultiText {
 
-
     /**
      * This is private so only this abstract class can create instances.
      */
@@ -321,7 +320,6 @@ class CustomWalker implements Walker {
   private final FormatStack fstack;
   private @Nullable boolean hasnext = true;
 
-
   // MultiText handling changed in 2.0.5
   // MultiText is something quite complicated, but it goes something like this:
   // XML Content is either text-like, or its not. If we encounter text-like content
@@ -440,7 +438,6 @@ class CustomWalker implements Walker {
       mtpos++;
 
       Content ret = mttext[mtpos] == null ? mtdata[mtpos] : null;
-
 
       // we can calculate the hasnext
       hasnext = mtpos + 1 < mtsize || pending != null;
@@ -667,6 +664,5 @@ class CustomWalker implements Walker {
     }
     return false;
   }
-
 
 }

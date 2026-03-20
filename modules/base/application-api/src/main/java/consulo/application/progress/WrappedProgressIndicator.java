@@ -15,7 +15,6 @@
  */
 package consulo.application.progress;
 
-
 public interface WrappedProgressIndicator extends ProgressIndicator {
   
   ProgressIndicator getOriginalProgressIndicator();

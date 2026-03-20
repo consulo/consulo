@@ -418,7 +418,6 @@ public class AbstractPopup implements JBPopup, ScreenAreaConsumer {
         myContent.repaint();
     }
 
-
    
     protected MyContentPanel createContentPanel(boolean resizable, Border border, boolean isToDrawMacCorner) {
         return new MyContentPanel(border);
@@ -1247,7 +1246,6 @@ public class AbstractPopup implements JBPopup, ScreenAreaConsumer {
                 _requestFocus();
             }
 
-
             window.setAutoRequestFocus(myRequestFocus);
 
             SwingUtilities.invokeLater(afterShow);
@@ -1340,7 +1338,6 @@ public class AbstractPopup implements JBPopup, ScreenAreaConsumer {
                     MOUSE_EVENT_MASK | WINDOW_ACTIVATED | WINDOW_GAINED_FOCUS | MOUSE_MOTION_EVENT_MASK
                 );
         }
-
 
         ChildFocusWatcher focusWatcher = new ChildFocusWatcher(myContent) {
             @Override
@@ -1896,7 +1893,6 @@ public class AbstractPopup implements JBPopup, ScreenAreaConsumer {
         setLocation(bounds.getLocation());
         setSize(bounds.getSize(), false);
     }
-
 
     public static Window setSize(JComponent content, Dimension size) {
         Window popupWindow = getContentWindow(content);

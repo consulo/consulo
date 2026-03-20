@@ -22,7 +22,6 @@ import consulo.language.codeStyle.internal.AbstractBlockWrapper;
 import consulo.language.codeStyle.internal.AlignmentImpl;
 import consulo.language.codeStyle.internal.LeafBlockWrapper;
 
-
 import java.util.Map;
 import java.util.Set;
 

@@ -7,7 +7,6 @@ import consulo.language.Language;
 import consulo.language.codeStyle.CommonCodeStyleSettings;
 import consulo.language.psi.PsiUtilCore;
 
-
 public class CompletionStyleUtil {
   
   public static CommonCodeStyleSettings getCodeStyleSettings(InsertionContext context) {

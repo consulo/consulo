@@ -17,7 +17,6 @@ package consulo.language.editor.refactoring.classMember;
 
 import consulo.language.psi.PsiElement;
 
-
 /**
  * @author dsl
  * @since 2002-07-09
@@ -33,7 +32,6 @@ public class ANDCombinedMemberInfoModel<T extends PsiElement, M extends MemberIn
       return myModel2.getTooltipText(memberInfo);
     }
   });
-
 
   public ANDCombinedMemberInfoModel(MemberInfoModel<T, M> model1, MemberInfoModel<T, M> model2) {
     myModel1 = model1;

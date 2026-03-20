@@ -38,7 +38,6 @@ public interface CustomUncommenter {
   @Nullable
   TextRange findMaximumCommentedRange(CharSequence text);
 
-
   /**
    * Returns couples each pointing to comment prefix and suffiix:
    * [commentPrefix-start,commentPrefix-end] -- [commentSuffix-start,commentSuffix-end].

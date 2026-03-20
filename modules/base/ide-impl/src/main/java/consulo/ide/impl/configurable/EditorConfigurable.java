@@ -21,7 +21,6 @@ import consulo.configurable.ConfigurableAdapter;
 import consulo.configurable.StandardConfigurableIds;
 import consulo.localize.LocalizeValue;
 
-
 /**
  * @author VISTALL
  * @since 18-Jun-22

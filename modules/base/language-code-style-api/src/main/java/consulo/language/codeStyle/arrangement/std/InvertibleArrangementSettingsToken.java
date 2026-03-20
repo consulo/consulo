@@ -15,7 +15,6 @@
  */
 package consulo.language.codeStyle.arrangement.std;
 
-
 /**
  * Tokens that can be used in conditions in inverted state,
  * e.g. 'public' -> 'not public' unlike 'order' or 'name' that can't be inverted

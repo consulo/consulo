@@ -39,7 +39,6 @@ public class ParentElementFilter extends PositionElementFilter {
     myParent = parent;
   }
 
-
   public ParentElementFilter(){}
 
   @Override
@@ -57,7 +56,6 @@ public class ParentElementFilter extends PositionElementFilter {
     }
     return false;
   }
-
 
   public String toString(){
     return "parent(" +getFilter()+")";

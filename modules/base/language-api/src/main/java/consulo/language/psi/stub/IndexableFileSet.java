@@ -18,7 +18,6 @@ package consulo.language.psi.stub;
 import consulo.content.ContentIterator;
 import consulo.virtualFileSystem.VirtualFile;
 
-
 /**
  * @author max
  */

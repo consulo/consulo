@@ -23,7 +23,6 @@ import consulo.language.psi.PsiFile;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 
-
 /**
  * @author VISTALL
  * @since 2022-04-24

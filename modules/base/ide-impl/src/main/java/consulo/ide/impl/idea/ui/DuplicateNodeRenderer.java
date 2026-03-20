@@ -18,7 +18,6 @@ package consulo.ide.impl.idea.ui;
 
 import consulo.ui.ex.Gray;
 
-
 import org.jspecify.annotations.Nullable;
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;

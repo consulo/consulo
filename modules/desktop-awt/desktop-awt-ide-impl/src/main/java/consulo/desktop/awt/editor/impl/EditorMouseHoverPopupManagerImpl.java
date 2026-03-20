@@ -528,7 +528,6 @@ public final class EditorMouseHoverPopupManagerImpl implements EditorMouseHoverP
         private final String quickDocMessage;
         private final WeakReference<PsiElement> quickDocElement;
 
-
         private Info(HighlightInfo highlightInfo, String quickDocMessage, PsiElement quickDocElement) {
             assert highlightInfo != null || quickDocMessage != null;
             this.highlightInfo = highlightInfo;

@@ -15,7 +15,6 @@
  */
 package consulo.versionControlSystem.distributed.push;
 
-
 public interface VcsErrorHandler {
   void handleError(CommitLoader loader);
 }

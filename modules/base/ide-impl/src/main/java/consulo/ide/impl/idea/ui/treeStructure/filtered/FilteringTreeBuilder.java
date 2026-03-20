@@ -154,7 +154,6 @@ public class FilteringTreeBuilder extends AbstractTreeBuilder {
     return result;
   }
 
-
   
   protected Promise<?> refilterNow(Object preferredSelection, boolean adjustSelection) {
     ActionCallback selectionDone = new ActionCallback();
@@ -220,7 +219,6 @@ public class FilteringTreeBuilder extends AbstractTreeBuilder {
   public static void revalidateTree(Tree tree) {
     TreeUtil.invalidateCacheAndRepaint(tree.getUI());
   }
-
 
   private FilteringTreeStructure getFilteredStructure() {
     return ((FilteringTreeStructure)getTreeStructure());

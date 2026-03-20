@@ -21,7 +21,6 @@ import consulo.component.util.localize.AbstractBundle;
 import consulo.fileTemplate.localize.FileTemplateLocalize;
 import org.jetbrains.annotations.PropertyKey;
 
-
 /**
  * @author VISTALL
  * @since 27-Mar-22

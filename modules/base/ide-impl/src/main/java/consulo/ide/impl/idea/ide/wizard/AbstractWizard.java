@@ -202,7 +202,6 @@ public abstract class AbstractWizard<T extends Step> extends DialogWrapper {
         y++;
       }
 
-
       g.drawImage(image, 0, 0, this);
     }
 
@@ -265,7 +264,6 @@ public abstract class AbstractWizard<T extends Step> extends DialogWrapper {
     super.init();
     updateStep();
   }
-
 
   protected String addStepComponent(Component component) {
     String id = myComponentToIdMap.get(component);

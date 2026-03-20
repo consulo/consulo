@@ -15,7 +15,6 @@
  */
 package consulo.versionControlSystem.log.impl.internal.paint;
 
-
 import java.awt.*;
 
 public class PositionUtil {

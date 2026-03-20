@@ -849,7 +849,6 @@ public class GlobalInspectionContextImpl extends GlobalInspectionContextBase imp
             return refElement;
         };
 
-
     @Override
     public void close(boolean noSuspisiousCodeFound) {
         if (!noSuspisiousCodeFound && (myView == null || myView.isRerun())) {

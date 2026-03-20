@@ -45,7 +45,6 @@ public class Splitter extends JPanel implements Splittable {
   private final float myMinProp;
   private final float myMaxProp;
 
-
   protected float myProportion;// first size divided by (first + second)
 
   protected final Divider myDivider;
@@ -74,7 +73,6 @@ public class Splitter extends JPanel implements Splittable {
 
   
   private DividerPositionStrategy myDividerPositionStrategy = DividerPositionStrategy.KEEP_PROPORTION;
-
 
   /**
    * Creates horizontal split (with components which are side by side) with proportion equals to .5f

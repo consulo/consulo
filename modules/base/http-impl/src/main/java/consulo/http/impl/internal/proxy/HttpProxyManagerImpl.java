@@ -237,7 +237,6 @@ public class HttpProxyManagerImpl implements PersistentStateComponent<HttpProxyM
         storeSecure("proxy.password", password);
     }
 
-
     private static String decode(String value) {
         return new String(Base64.getDecoder().decode(value), StandardCharsets.UTF_8);
     }

@@ -39,7 +39,6 @@ import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 
-
 @ActionImpl(id = "EmacsStyleIndent")
 public class EmacsStyleIndentAction extends BaseCodeInsightAction implements DumbAware {
     private static class MyHandler implements CodeInsightActionHandler {

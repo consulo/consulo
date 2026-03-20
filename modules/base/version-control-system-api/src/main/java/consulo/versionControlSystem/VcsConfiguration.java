@@ -199,7 +199,6 @@ public final class VcsConfiguration implements PersistentStateComponent<VcsConfi
     myLastCommitMessages.remove(content);
   }
 
-
   public PerformInBackgroundOption getUpdateOption() {
     return myUpdateOption;
   }

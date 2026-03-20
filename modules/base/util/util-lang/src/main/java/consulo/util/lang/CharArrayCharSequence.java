@@ -15,7 +15,6 @@
  */
 package consulo.util.lang;
 
-
 public class CharArrayCharSequence implements CharSequenceBackedByArray {
   protected final char[] myChars;
   protected final int myStart;

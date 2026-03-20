@@ -31,7 +31,6 @@ import consulo.language.psi.stub.StubBuilder;
 import consulo.language.util.CharTable;
 import consulo.util.lang.StackOverflowPreventedException;
 
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;

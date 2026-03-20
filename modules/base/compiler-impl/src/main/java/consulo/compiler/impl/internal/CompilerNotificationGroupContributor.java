@@ -20,7 +20,6 @@ import consulo.compiler.CompilerManager;
 import consulo.project.ui.notification.NotificationGroup;
 import consulo.project.ui.notification.NotificationGroupContributor;
 
-
 import java.util.function.Consumer;
 
 /**

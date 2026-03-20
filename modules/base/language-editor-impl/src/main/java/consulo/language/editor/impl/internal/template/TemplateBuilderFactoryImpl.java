@@ -23,7 +23,6 @@ import consulo.language.editor.template.TemplateBuilderFactory;
 import consulo.language.psi.PsiElement;
 import jakarta.inject.Singleton;
 
-
 /**
  * @author yole
  */

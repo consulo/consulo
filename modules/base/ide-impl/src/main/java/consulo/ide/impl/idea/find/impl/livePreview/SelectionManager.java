@@ -20,7 +20,6 @@ import consulo.ide.impl.idea.find.FindUtil;
 import consulo.document.util.TextRange;
 import consulo.codeEditor.*;
 
-
 import java.util.ArrayList;
 import java.util.List;
 

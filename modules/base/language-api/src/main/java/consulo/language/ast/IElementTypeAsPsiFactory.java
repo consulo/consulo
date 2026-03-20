@@ -17,7 +17,6 @@ package consulo.language.ast;
 
 import consulo.language.psi.PsiElement;
 
-
 /**
  * @author VISTALL
  * @see ElementTypeAsPsiFactory

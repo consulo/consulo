@@ -15,7 +15,6 @@
  */
 package consulo.module.content.scope;
 
-
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.module.Module;

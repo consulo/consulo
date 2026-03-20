@@ -611,7 +611,6 @@ public class SearchReplaceComponentImpl extends EditorHeaderComponent implements
         }
     }
 
-
     
     private ActionToolbar createSearchToolbar1(DefaultActionGroup group) {
         ActionGroup.Builder toolbarGroup = ActionGroup.newImmutableBuilder();
@@ -652,7 +651,6 @@ public class SearchReplaceComponentImpl extends EditorHeaderComponent implements
     }
 
     @SuppressWarnings("HardCodedStringLiteral")
-
 
     private static class MyTextComponentWrapper extends Wrapper {
         public @Nullable JTextComponent getTextComponent() {

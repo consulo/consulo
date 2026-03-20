@@ -179,7 +179,6 @@ public class CheckBoxList<T> extends JBList {
     return c == ancestor ? new Point(dx, dy) : null;
   }
 
-
   
   private JCheckBox getCheckBoxAt(int index) {
     return (JCheckBox)getModel().getElementAt(index);

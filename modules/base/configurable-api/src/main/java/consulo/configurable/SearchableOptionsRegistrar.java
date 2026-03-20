@@ -54,7 +54,6 @@ public abstract class SearchableOptionsRegistrar {
 
     public abstract Map<String, Set<String>> findPossibleExtension(String prefix, Project project);
 
-
     public abstract Set<String> getProcessedWordsWithoutStemming(String text);
 
     public abstract Set<String> getProcessedWords(String text);

@@ -15,7 +15,6 @@
  */
 package consulo.util.lang;
 
-
 /**
  * A char sequence that supports fast copying of its full or partial contents to a char array. May be useful for performance optimizations
  *

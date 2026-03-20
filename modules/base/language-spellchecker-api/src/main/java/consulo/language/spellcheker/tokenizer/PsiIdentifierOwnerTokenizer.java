@@ -22,7 +22,6 @@ import consulo.language.psi.PsiNameIdentifierOwner;
 import consulo.language.psi.util.PsiTreeUtil;
 import consulo.language.spellcheker.tokenizer.splitter.IdentifierTokenSplitter;
 
-
 public class PsiIdentifierOwnerTokenizer extends Tokenizer<PsiNameIdentifierOwner> {
     @Override
     @RequiredReadAction

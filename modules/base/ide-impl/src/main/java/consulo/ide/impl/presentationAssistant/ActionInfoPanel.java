@@ -83,7 +83,6 @@ class ActionInfoPanel extends NonOpaquePanel implements Disposable {
 
   private static final int hideDelay = 4 * 1000;
 
-
   private JPanel labelsPanel;
   private JBPopup hint;
   private Alarm hideAlarm = new Alarm(this);

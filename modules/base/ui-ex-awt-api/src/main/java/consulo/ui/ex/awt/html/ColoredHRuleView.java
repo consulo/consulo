@@ -189,7 +189,6 @@ public class ColoredHRuleView extends View {
 
   }
 
-
   /**
    * Calculates the desired shape of the rule... this is
    * basically the preferred size of the border.

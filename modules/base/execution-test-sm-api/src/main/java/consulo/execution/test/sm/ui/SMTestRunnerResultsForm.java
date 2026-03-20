@@ -287,7 +287,6 @@ public class SMTestRunnerResultsForm extends TestResultsPanel implements TestFra
 
         LvcsHelper.addLabel(this);
 
-
         Runnable onDone = () -> {
             myTestsRunning = false;
             boolean sortByDuration = TestConsoleProperties.SORT_BY_DURATION.value(myProperties);

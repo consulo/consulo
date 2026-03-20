@@ -104,7 +104,6 @@ public class IndexPatternSearcher extends QueryExecutorBase<IndexPatternOccurren
         }
     }
 
-
     private static final TokenSet COMMENT_TOKENS =
         TokenSet.create(CustomHighlighterTokenType.LINE_COMMENT, CustomHighlighterTokenType.MULTI_LINE_COMMENT);
 

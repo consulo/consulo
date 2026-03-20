@@ -19,7 +19,6 @@ import consulo.ui.ex.action.CompactActionGroup;
 import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.action.AnAction;
 
-
 /**
  * @author Konstantin Bulenkov
  */

@@ -115,7 +115,6 @@ public class VcsLogUtil {
     return selectedRoots;
   }
 
-
   // collect absolutely all roots that might be visible
   // if filters unset returns just all roots
   

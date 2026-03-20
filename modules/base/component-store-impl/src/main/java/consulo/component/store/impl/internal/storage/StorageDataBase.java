@@ -15,7 +15,6 @@
  */
 package consulo.component.store.impl.internal.storage;
 
-
 import java.util.Set;
 
 public abstract class StorageDataBase {

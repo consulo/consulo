@@ -17,7 +17,6 @@ package consulo.component.persist;
 
 import consulo.annotation.DeprecationInfo;
 
-
 /**
  * We have a framework for persisting component states (see {@link State} {@link Storage}). It allows to specify which file
  * should hold persisting data. There is a number of standard file system anchors like 'workspace file', 'project config dir' which

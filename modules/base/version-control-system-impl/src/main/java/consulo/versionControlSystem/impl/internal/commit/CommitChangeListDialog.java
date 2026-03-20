@@ -877,7 +877,6 @@ public class CommitChangeListDialog extends DialogWrapper implements CheckinProj
         myCommitMessageArea.setText(listComment);
     }
 
-
     @Override
     public void dispose() {
         myDisposed = true;
