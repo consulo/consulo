@@ -22,7 +22,6 @@ import consulo.externalSystem.model.task.ExternalSystemTaskId;
 import consulo.externalSystem.rt.model.ExternalSystemException;
 import org.jspecify.annotations.Nullable;
 
-import java.rmi.RemoteException;
 import java.util.List;
 
 /**
@@ -51,7 +50,7 @@ public class ExternalSystemTaskManagerWrapper<S extends ExternalSystemExecutionS
                            @Nullable S settings,
                            List<String> vmOptions,
                            List<String> scriptParameters,
-                           @Nullable String debuggerSetup) throws RemoteException, ExternalSystemException
+                           @Nullable String debuggerSetup) throws ExternalSystemException
   {
     myProgressManager.onQueued(id);
     try {
@@ -71,7 +70,7 @@ public class ExternalSystemTaskManagerWrapper<S extends ExternalSystemExecutionS
   }
 
   @Override
-  public boolean cancelTask(ExternalSystemTaskId id) throws RemoteException, ExternalSystemException
+  public boolean cancelTask(ExternalSystemTaskId id) throws ExternalSystemException
   {
     myProgressManager.onQueued(id);
     try {

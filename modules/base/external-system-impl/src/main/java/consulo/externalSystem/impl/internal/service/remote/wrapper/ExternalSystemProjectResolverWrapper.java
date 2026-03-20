@@ -10,7 +10,6 @@ import consulo.externalSystem.rt.model.ExternalSystemException;
 import consulo.externalSystem.service.project.ProjectData;
 import org.jspecify.annotations.Nullable;
 
-import java.rmi.RemoteException;
 
 /**
  * Intercepts calls to the target {@link RemoteExternalSystemProjectResolver} and
@@ -41,7 +40,7 @@ public class ExternalSystemProjectResolverWrapper<S extends ExternalSystemExecut
                                                     String projectPath,
                                                     boolean isPreviewMode,
                                                     @Nullable S settings)
-    throws ExternalSystemException, IllegalArgumentException, IllegalStateException, RemoteException
+    throws ExternalSystemException, IllegalArgumentException, IllegalStateException
   {
     myProgressManager.onQueued(id);
     try {
@@ -64,7 +63,7 @@ public class ExternalSystemProjectResolverWrapper<S extends ExternalSystemExecut
 
   @Override
   public boolean cancelTask(ExternalSystemTaskId id)
-    throws ExternalSystemException, IllegalArgumentException, IllegalStateException, RemoteException {
+    throws ExternalSystemException, IllegalArgumentException, IllegalStateException {
     myProgressManager.onQueued(id);
     try {
       return getDelegate().cancelTask(id);

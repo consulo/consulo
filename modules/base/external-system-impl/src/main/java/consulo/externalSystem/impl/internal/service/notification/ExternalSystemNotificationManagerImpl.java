@@ -28,7 +28,8 @@ import consulo.ui.ex.content.Content;
 import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.Pair;
-import consulo.util.rmi.RemoteUtil;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.UndeclaredThrowableException;
 import consulo.virtualFileSystem.VirtualFile;
 import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
@@ -105,7 +106,7 @@ public class ExternalSystemNotificationManagerImpl implements ExternalSystemNoti
         Integer column = null;
 
         //noinspection ThrowableResultOfMethodCallIgnored
-        Throwable unwrapped = RemoteUtil.unwrap(error);
+        Throwable unwrapped = unwrapException(error);
         if (unwrapped instanceof LocationAwareExternalSystemException locationAwareExternalSystemException) {
             filePath = locationAwareExternalSystemException.getFilePath();
             line = locationAwareExternalSystemException.getLine();
@@ -251,5 +252,15 @@ public class ExternalSystemNotificationManagerImpl implements ExternalSystemNoti
         if (!myProject.isDisposed() && myProject.isOpen()) {
             notification.notify(myProject);
         }
+    }
+
+    private static Throwable unwrapException(Throwable e) {
+        for (Throwable candidate = e; candidate != null; candidate = candidate.getCause()) {
+            Class<? extends Throwable> clazz = candidate.getClass();
+            if (clazz != InvocationTargetException.class && clazz != UndeclaredThrowableException.class) {
+                return candidate;
+            }
+        }
+        return e;
     }
 }

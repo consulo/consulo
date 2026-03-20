@@ -22,7 +22,6 @@ import consulo.externalSystem.model.task.ExternalSystemTaskNotificationListener;
 import consulo.externalSystem.model.task.ExternalSystemTaskType;
 import org.jspecify.annotations.Nullable;
 
-import java.rmi.RemoteException;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -62,7 +61,7 @@ public abstract class AbstractRemoteExternalSystemService<S extends ExternalSyst
   }
 
   @Override
-  public void setSettings(S settings) throws RemoteException {
+  public void setSettings(S settings) {
     mySettings.set(settings);
   }
 
@@ -71,7 +70,7 @@ public abstract class AbstractRemoteExternalSystemService<S extends ExternalSyst
   }
   
   @Override
-  public void setNotificationListener(ExternalSystemTaskNotificationListener listener) throws RemoteException {
+  public void setNotificationListener(ExternalSystemTaskNotificationListener listener) {
     myListener.set(listener);
   }
 
@@ -81,14 +80,14 @@ public abstract class AbstractRemoteExternalSystemService<S extends ExternalSyst
   }
 
   @Override
-  public boolean isTaskInProgress(ExternalSystemTaskId id) throws RemoteException {
+  public boolean isTaskInProgress(ExternalSystemTaskId id) {
     Set<ExternalSystemTaskId> tasks = myTasksInProgress.get(id.getType());
     return tasks != null && tasks.contains(id);
   }
 
   
   @Override
-  public Map<ExternalSystemTaskType, Set<ExternalSystemTaskId>> getTasksInProgress() throws RemoteException {
+  public Map<ExternalSystemTaskType, Set<ExternalSystemTaskId>> getTasksInProgress() {
     return myTasksInProgress;
   }
 }

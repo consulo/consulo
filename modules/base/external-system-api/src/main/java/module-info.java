@@ -13,9 +13,6 @@ module consulo.external.system.api {
     requires transitive consulo.execution.debug.api;
     requires transitive consulo.build.ui.api;
 
-    requires transitive consulo.external.system.rt;
-
-    requires consulo.util.rmi;
     requires consulo.util.nodep;
 
     opens consulo.externalSystem.model.execution to consulo.util.xml.serializer;
@@ -44,6 +41,7 @@ module consulo.external.system.api {
     exports consulo.externalSystem.ui;
     exports consulo.externalSystem.util;
     exports consulo.externalSystem.localize;
+    exports consulo.externalSystem.rt.model;
 
     // TODO remove this dependency in future
     requires java.desktop;

@@ -76,7 +76,8 @@ import consulo.util.dataholder.Key;
 import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.ref.SimpleReference;
-import consulo.util.rmi.RemoteUtil;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.UndeclaredThrowableException;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import org.jspecify.annotations.Nullable;
@@ -126,8 +127,9 @@ public class ExternalSystemUtil {
         });
     }
 
+    @Nullable
     @SuppressWarnings("unchecked")
-    public static <T> @Nullable T getToolWindowElement(
+    public static <T> T getToolWindowElement(
         Class<T> clazz,
         Project project,
         Key<T> key,
@@ -288,8 +290,9 @@ public class ExternalSystemUtil {
                     init();
                 }
 
+                @Nullable
                 @Override
-                protected @Nullable JComponent createCenterPanel() {
+                protected JComponent createCenterPanel() {
                     return new JBScrollPane(content);
                 }
             };
@@ -315,9 +318,20 @@ public class ExternalSystemUtil {
         });
     }
 
+    private static Throwable unwrapException(Throwable e) {
+        for (Throwable candidate = e; candidate != null; candidate = candidate.getCause()) {
+            Class<? extends Throwable> clazz = candidate.getClass();
+            if (clazz != InvocationTargetException.class && clazz != UndeclaredThrowableException.class) {
+                return candidate;
+            }
+        }
+        return e;
+    }
+
+    @Nullable
     @SuppressWarnings("ThrowableResultOfMethodCallIgnored")
-    private static @Nullable String extractDetails(Throwable e) {
-        Throwable unwrapped = RemoteUtil.unwrap(e);
+    private static String extractDetails(Throwable e) {
+        Throwable unwrapped = unwrapException(e);
         if (unwrapped instanceof ExternalSystemException externalSystemException) {
             return externalSystemException.getOriginalReason();
         }
@@ -667,8 +681,9 @@ public class ExternalSystemUtil {
         refreshProject(project, externalSystemId, projectSettings.getExternalProjectPath(), callback, isPreviewMode, progressExecutionMode);
     }
 
+    @Nullable
     @RequiredUIAccess
-    public static @Nullable VirtualFile waitForTheFile(@Nullable String path) {
+    public static VirtualFile waitForTheFile(@Nullable String path) {
         if (path == null) {
             return null;
         }

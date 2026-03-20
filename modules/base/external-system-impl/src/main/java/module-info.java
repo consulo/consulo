@@ -7,13 +7,9 @@ module consulo.external.system.impl {
     requires java.desktop;
 
     requires consulo.external.system.api;
+    requires consulo.external.system.thrift.api;
     requires consulo.version.control.system.api;
     requires consulo.compiler.api;
-
-    requires java.rmi;
-    requires consulo.util.rmi;
-
-    requires consulo.external.system.rt;
 
     requires it.unimi.dsi.fastutil;
 

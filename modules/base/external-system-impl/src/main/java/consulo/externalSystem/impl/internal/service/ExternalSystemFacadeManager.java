@@ -26,7 +26,6 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
-import java.rmi.RemoteException;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -140,7 +139,7 @@ public class ExternalSystemFacadeManager {
             return method.invoke(facade, args);
         }
         catch (InvocationTargetException e) {
-            if (e.getTargetException() instanceof RemoteException && invocationNumber > 0) {
+            if (e.getTargetException() instanceof ExternalSystemCommunicationException && invocationNumber > 0) {
                 Thread.sleep(1000);
                 return doInvoke(key, project, method, args, invocationNumber - 1);
             }
@@ -229,7 +228,7 @@ public class ExternalSystemFacadeManager {
             }
             return true;
         }
-        catch (RemoteException e) {
+        catch (ExternalSystemCommunicationException e) {
             return false;
         }
     }
@@ -243,7 +242,7 @@ public class ExternalSystemFacadeManager {
                     return true;
                 }
             }
-            catch (RemoteException e) {
+            catch (ExternalSystemCommunicationException e) {
                 myLock.lock();
                 try {
                     myRemoteFacades.remove(entry.getKey());

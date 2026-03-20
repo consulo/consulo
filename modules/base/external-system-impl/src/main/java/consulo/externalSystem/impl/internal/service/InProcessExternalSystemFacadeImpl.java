@@ -19,7 +19,6 @@ import consulo.externalSystem.model.setting.ExternalSystemExecutionSettings;
 import consulo.externalSystem.service.project.ExternalSystemProjectResolver;
 import consulo.externalSystem.task.ExternalSystemTaskManager;
 
-import java.rmi.RemoteException;
 import java.util.function.Supplier;
 
 /**
@@ -37,7 +36,7 @@ public class InProcessExternalSystemFacadeImpl<S extends ExternalSystemExecution
 
   @Override
   protected <I extends RemoteExternalSystemService<S>, C extends I> I createService(Class<I> interfaceClass, C impl)
-    throws ClassNotFoundException, IllegalAccessException, InstantiationException, RemoteException
+    throws ClassNotFoundException, IllegalAccessException, InstantiationException
   {
     return impl;
   }
