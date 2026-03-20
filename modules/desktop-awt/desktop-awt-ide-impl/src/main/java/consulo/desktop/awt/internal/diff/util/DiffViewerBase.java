@@ -305,9 +305,8 @@ public abstract class DiffViewerBase implements DiffViewer, DataProvider {
     // Helpers
     //
 
-    @Nullable
     @Override
-    public Object getData(Key<?> dataId) {
+    public @Nullable Object getData(Key<?> dataId) {
         if (DiffDataKeys.NAVIGATABLE == dataId) {
             return getNavigatable();
         }

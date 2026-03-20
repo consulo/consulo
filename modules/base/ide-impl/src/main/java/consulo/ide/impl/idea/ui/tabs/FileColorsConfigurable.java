@@ -42,9 +42,8 @@ public class FileColorsConfigurable implements SearchableConfigurable, Configura
         myProject = project;
     }
 
-    @Nullable
     @Override
-    public String getParentId() {
+    public @Nullable String getParentId() {
         return StandardConfigurableIds.EDITOR_GROUP;
     }
 

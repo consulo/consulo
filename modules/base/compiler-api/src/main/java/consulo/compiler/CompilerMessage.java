@@ -39,7 +39,6 @@ public interface CompilerMessage {
      *
      * @return a category this message belongs to (error, warning, information).
      */
-    
     CompilerMessageCategory getCategory();
 
     /**
@@ -47,7 +46,6 @@ public interface CompilerMessage {
      *
      * @return message text
      */
-    
     String getMessage();
 
     /**
@@ -55,8 +53,7 @@ public interface CompilerMessage {
      *
      * @return the instance.
      */
-    @Nullable
-    Navigatable getNavigatable();
+    @Nullable Navigatable getNavigatable();
 
     /**
      * Returns the file to which the message applies.

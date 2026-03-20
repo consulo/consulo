@@ -102,7 +102,6 @@ public class StructureTreeModel<Structure extends AbstractTreeStructure> extends
    * @param function a function to process current structure on a valid thread
    * @return a promise that will be succeed if the specified function returns non-null value
    */
-  
   private <Result> Promise<Result> onValidThread(Function<? super Structure, ? extends Result> function) {
     AsyncPromise<Result> promise = new AsyncPromise<>();
     invoker.runOrInvokeLater(() -> {
@@ -120,7 +119,6 @@ public class StructureTreeModel<Structure extends AbstractTreeStructure> extends
    * @param function a function to process corresponding node on a valid thread
    * @return a promise that will be succeed if the specified function returns non-null value
    */
-  
   private <Result> Promise<Result> onValidThread(TreePath path, Function<? super Node, ? extends Result> function) {
     Object component = path.getLastPathComponent();
     if (component instanceof Node) {
@@ -135,7 +133,6 @@ public class StructureTreeModel<Structure extends AbstractTreeStructure> extends
    * @param function a function to process corresponding node on a valid thread
    * @return a promise that will be succeed if the specified function returns non-null value
    */
-  
   private <Result> Promise<Result> onValidThread(Object element, Function<? super Node, ? extends Result> function) {
     return onValidThread(structure -> {
       Node node = root.get();
@@ -155,7 +152,6 @@ public class StructureTreeModel<Structure extends AbstractTreeStructure> extends
   /**
    * Invalidates all nodes and notifies Swing model that a whole tree hierarchy is changed.
    */
-  
   public final Promise<?> invalidate() {
     return onValidThread(structure -> invalidateInternal(null, true));
   }
@@ -169,7 +165,6 @@ public class StructureTreeModel<Structure extends AbstractTreeStructure> extends
    * @return a promise that will be succeed if path to invalidate is found
    * @see #invalidate(Object, boolean)
    */
-  
   public final Promise<TreePath> invalidate(TreePath path, boolean structure) {
     return onValidThread(path, node -> invalidateInternal(node, structure));
   }
@@ -184,7 +179,6 @@ public class StructureTreeModel<Structure extends AbstractTreeStructure> extends
    * @return a promise that will be succeed if path to invalidate is found
    * @see #invalidate(TreePath, boolean)
    */
-  
   public final Promise<TreePath> invalidate(Object element, boolean structure) {
     return onValidThread(element, node -> invalidateInternal(node, structure));
   }
@@ -260,7 +254,6 @@ public class StructureTreeModel<Structure extends AbstractTreeStructure> extends
    * @see TreeUtil#promiseExpand(JTree, TreeVisitor)
    * @see TreeUtil#promiseSelect(JTree, TreeVisitor)
    */
-  
   public final Promise<TreeVisitor> promiseVisitor(Object element) {
     return onValidThread(
             structure -> new TreeVisitor.ByTreePath<>(TreePathUtil.pathToCustomNode(element, structure::getParentElement), node -> node instanceof Node ? ((Node)node).getElement() : null));

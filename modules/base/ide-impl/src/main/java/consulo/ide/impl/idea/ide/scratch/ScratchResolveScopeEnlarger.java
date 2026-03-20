@@ -40,9 +40,8 @@ public class ScratchResolveScopeEnlarger extends ResolveScopeEnlarger {
     myScratchFileServiceProvider = scratchFileServiceProvider;
   }
 
-  @Nullable
   @Override
-  public SearchScope getAdditionalResolveScope(VirtualFile file, Project project) {
+  public @Nullable SearchScope getAdditionalResolveScope(VirtualFile file, Project project) {
     ScratchFileService scratchFileService = myScratchFileServiceProvider.get();
 
     RootType rootType = scratchFileService.getRootType(file);

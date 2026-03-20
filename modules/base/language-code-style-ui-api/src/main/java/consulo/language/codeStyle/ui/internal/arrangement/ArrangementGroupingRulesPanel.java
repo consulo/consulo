@@ -58,9 +58,8 @@ public class ArrangementGroupingRulesPanel extends JPanel implements DataProvide
     return myControl.getRules();
   }
 
-  @Nullable
   @Override
-  public Object getData(Key dataId) {
+  public @Nullable Object getData(Key dataId) {
     if (ArrangementGroupingRulesControl.KEY == dataId) {
       return myControl;
     }

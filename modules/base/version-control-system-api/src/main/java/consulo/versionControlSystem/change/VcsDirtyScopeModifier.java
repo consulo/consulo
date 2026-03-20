@@ -30,8 +30,7 @@ public interface VcsDirtyScopeModifier {
 
   Collection<VirtualFile> getAffectedVcsRoots();
 
-  @Nullable
-  Iterator<FilePath> getDirtyDirectoriesIterator(VirtualFile root);
+  @Nullable Iterator<FilePath> getDirtyDirectoriesIterator(VirtualFile root);
 
   void recheckDirtyKeys();
 }

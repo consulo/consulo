@@ -23,6 +23,5 @@ import org.jspecify.annotations.Nullable;
  */
 public interface FileReferenceOwner {
 
-  @Nullable
-  PsiFileReference getLastFileReference();
+  @Nullable PsiFileReference getLastFileReference();
 }

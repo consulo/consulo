@@ -27,9 +27,8 @@ import org.jspecify.annotations.Nullable;
 import java.util.*;
 
 public class IdeaIndexBasedFindInProjectSearchEngine implements FindInProjectSearchEngine {
-    @Nullable
     @Override
-    public FindInProjectSearcher createSearcher(FindModel findModel, Project project) {
+    public @Nullable FindInProjectSearcher createSearcher(FindModel findModel, Project project) {
         return new MyFindInProjectSearcher(project, findModel);
     }
 

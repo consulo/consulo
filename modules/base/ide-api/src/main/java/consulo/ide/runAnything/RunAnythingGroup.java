@@ -41,7 +41,6 @@ public abstract class RunAnythingGroup {
     /**
      * @return Current group title in the main list.
      */
-    
     public abstract LocalizeValue getTitle();
 
     public String getKey() {
@@ -108,7 +107,6 @@ public abstract class RunAnythingGroup {
      *
      * @return group title if {@code titleIndex} is equals to group {@link #myTitleIndex} and {@code null} if nothing found
      */
-    
     public static LocalizeValue getTitle(Collection<? extends RunAnythingGroup> groups, int titleIndex) {
         return Optional.ofNullable(findGroup(groups, titleIndex)).map(RunAnythingGroup::getTitle).orElse(LocalizeValue.empty());
     }

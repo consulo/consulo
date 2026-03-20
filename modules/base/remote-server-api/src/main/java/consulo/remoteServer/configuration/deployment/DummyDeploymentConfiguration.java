@@ -19,9 +19,8 @@ public class DummyDeploymentConfiguration extends DeploymentConfiguration implem
 
     }
 
-    @Nullable
     @Override
-    public DummyDeploymentConfiguration getState() {
+    public @Nullable DummyDeploymentConfiguration getState() {
         return null;
     }
 

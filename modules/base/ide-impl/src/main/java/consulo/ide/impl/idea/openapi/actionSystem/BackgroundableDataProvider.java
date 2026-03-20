@@ -12,12 +12,10 @@ public interface BackgroundableDataProvider extends DataProvider {
    *
    * @return a data provider that might be called in a background thread (so shouldn't access any Swing hierarchy).
    */
-  @Nullable
-  DataProvider createBackgroundDataProvider();
+  @Nullable DataProvider createBackgroundDataProvider();
 
-  @Nullable
   @Override
-  default Object getData(Key<?> dataId) {
+  default @Nullable Object getData(Key<?> dataId) {
     DataProvider async = createBackgroundDataProvider();
     return async == null ? null : async.getData(dataId);
   }

@@ -23,6 +23,5 @@ import org.jspecify.annotations.Nullable;
  * @author max
  */
 public interface NamedStub<T extends PsiNamedElement> extends StubElement<T> {
-    @Nullable
-    String getName();
+    @Nullable String getName();
 }

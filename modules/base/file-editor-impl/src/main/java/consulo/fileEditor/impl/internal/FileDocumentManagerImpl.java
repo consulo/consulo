@@ -186,10 +186,9 @@ public class FileDocumentManagerImpl implements FileDocumentManagerEx, SafeWrite
         }
     }
 
-    @Nullable
     @Override
     @RequiredUIAccess
-    public Document getDocument(VirtualFile file) {
+    public @Nullable Document getDocument(VirtualFile file) {
         Application.get().assertReadAccessAllowed();
         DocumentEx document = (DocumentEx) getCachedDocument(file);
         if (document == null) {

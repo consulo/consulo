@@ -25,18 +25,15 @@ import org.jspecify.annotations.Nullable;
  * @since 2018-12-30
  */
 public interface PersistentStateComponentWithUIState<S, UIState> extends PersistentStateComponent<S> {
-  @Nullable
   @RequiredUIAccess
-  UIState getStateFromUI();
+  @Nullable UIState getStateFromUI();
 
   @RequiredWriteAction
-  @Nullable
   @Override
-  default S getState() {
+  default @Nullable S getState() {
     throw new IllegalStateException("We don't need call this method anymore");
   }
 
-  @Nullable
   @RequiredWriteAction
-  S getState(UIState uiState);
+  @Nullable S getState(UIState uiState);
 }

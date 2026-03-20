@@ -43,31 +43,27 @@ public interface Module extends ComponentManager, Disposable, Named {
    *
    * @return the virtual file instance.
    */
-  @Nullable
-  VirtualFile getModuleDir();
+  @Nullable VirtualFile getModuleDir();
 
   /**
    * Returns the path to the module dir
    *
    * @return the path to the module dir
    */
-  @Nullable
-  String getModuleDirPath();
+  @Nullable String getModuleDirPath();
 
   /**
    * Returns the path to the module url
    *
    * @return the path to the module url
    */
-  @Nullable
-  String getModuleDirUrl();
+  @Nullable String getModuleDirUrl();
 
   /**
    * Returns the project to which this module belongs.
    *
    * @return the project instance.
    */
-  
   Project getProject();
 
   
@@ -92,9 +88,7 @@ public interface Module extends ComponentManager, Disposable, Named {
   @Override
   boolean isDisposed();
 
-  @Nullable
-  <T extends ModuleExtension<T>> T getExtension(Class<T> clazz);
+  <T extends ModuleExtension<T>> @Nullable T getExtension(Class<T> clazz);
 
-  @Nullable
-  <T extends ModuleExtension<T>> T getExtension(String key);
+  <T extends ModuleExtension<T>> @Nullable T getExtension(String key);
 }

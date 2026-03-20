@@ -40,9 +40,8 @@ public interface RepositoryManager<T extends Repository> {
             .findExtensionOrFail(managerClass);
     }
 
-    @Nullable
     @SuppressWarnings("unchecked")
-    static <R extends Repository> RepositoryManager<R> getInstance(Project project,
+    static <R extends Repository> @Nullable RepositoryManager<R> getInstance(Project project,
                                                                    VcsKey vcsKey) {
         return project.getExtensionPoint(RepositoryManager.class)
             .findFirstSafe(m -> Objects.equals(m.getVcsKey(), vcsKey));
@@ -61,27 +60,23 @@ public interface RepositoryManager<T extends Repository> {
      * The method checks both project roots and external roots previously registered
      * via {@link #addExternalRepository(VirtualFile, Repository)}.
      */
-    @Nullable
-    T getRepositoryForRoot(@Nullable VirtualFile root);
+    @Nullable T getRepositoryForRoot(@Nullable VirtualFile root);
 
     boolean isExternal(T repository);
 
     /**
      * Returns the {@link Repository} which the given file belongs to, or {@code null} if the file is not under any Git or Hg repository.
      */
-    @Nullable
-    T getRepositoryForFile(VirtualFile file);
+    @Nullable T getRepositoryForFile(VirtualFile file);
 
     /**
      * Returns the {@link Repository} which the given file belongs to, or {@code null} if the file is not under any Git ot Hg repository.
      */
-    @Nullable
-    T getRepositoryForFile(FilePath file);
+    @Nullable T getRepositoryForFile(FilePath file);
 
     /**
      * @return all repositories tracked by the manager.
      */
-    
     List<T> getRepositories();
 
     /**

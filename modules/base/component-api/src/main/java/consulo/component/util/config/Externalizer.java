@@ -27,16 +27,14 @@ import java.util.function.Supplier;
 public interface Externalizer<T> {
   String VALUE_ATTRIBUTE = "value";
   Externalizer<String> STRING = new BaseExternalizer<>() {
-    @Nullable
     @Override
-    public String readValue(Element dataElement) {
+    public @Nullable String readValue(Element dataElement) {
       return dataElement.getAttributeValue(VALUE_ATTRIBUTE);
     }
   };
   Externalizer<Integer> INTEGER = new BaseExternalizer<>() {
-    @Nullable
     @Override
-    public Integer readValue(Element dataElement) {
+    public @Nullable Integer readValue(Element dataElement) {
       try {
         return Integer.parseInt(dataElement.getAttributeValue(VALUE_ATTRIBUTE));
       }
@@ -61,8 +59,7 @@ public interface Externalizer<T> {
     }
   };
 
-  @Nullable
-  T readValue(Element dataElement);
+  @Nullable T readValue(Element dataElement);
 
   void writeValue(Element dataElement, T value);
 

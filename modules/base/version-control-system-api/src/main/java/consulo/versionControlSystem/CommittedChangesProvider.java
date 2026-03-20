@@ -46,14 +46,11 @@ public interface CommittedChangesProvider<T extends CommittedChangeList, U exten
     return (ChangesBrowserSettingsEditor<U>)new SimpleStandardVersionFilterComponent(showDateFilter);
   }
 
-  @Nullable
-  RepositoryLocation getLocationFor(FilePath root);
+  @Nullable RepositoryLocation getLocationFor(FilePath root);
 
-  @Nullable
-  RepositoryLocation getLocationFor(FilePath root, String repositoryPath);
+  @Nullable RepositoryLocation getLocationFor(FilePath root, String repositoryPath);
 
-  @Nullable
-  VcsCommittedListsZipper getZipper();
+  @Nullable VcsCommittedListsZipper getZipper();
 
   List<T> getCommittedChanges(U settings, RepositoryLocation location, int maxCount) throws VcsException;
 
@@ -61,8 +58,7 @@ public interface CommittedChangesProvider<T extends CommittedChangeList, U exten
 
   ChangeListColumn[] getColumns();
 
-  @Nullable
-  VcsCommittedViewAuxiliary createActions(DecoratorManager manager, RepositoryLocation location);
+  @Nullable VcsCommittedViewAuxiliary createActions(DecoratorManager manager, RepositoryLocation location);
 
   /**
    * since may be different for different VCSs
@@ -72,8 +68,7 @@ public interface CommittedChangesProvider<T extends CommittedChangeList, U exten
   /**
    * @return required list and path of the target file in that revision (changes when move/rename)
    */
-  @Nullable
-  Pair<T, FilePath> getOneList(VirtualFile file, VcsRevisionNumber number) throws VcsException;
+  @Nullable Pair<T, FilePath> getOneList(VirtualFile file, VcsRevisionNumber number) throws VcsException;
 
   RepositoryLocation getForNonLocal(VirtualFile file);
 

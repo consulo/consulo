@@ -122,7 +122,6 @@ public class StubTreeBuilder {
   /**
    * Order is deterministic. First element matches {@link FileViewProvider#getStubBindingRoot()}
    */
-  
   public static List<Pair<IStubFileElementType, PsiFile>> getStubbedRoots(FileViewProvider viewProvider) {
     List<Trinity<Language, IStubFileElementType, PsiFile>> roots = new SmartList<>();
     PsiFile stubBindingRoot = viewProvider.getStubBindingRoot();

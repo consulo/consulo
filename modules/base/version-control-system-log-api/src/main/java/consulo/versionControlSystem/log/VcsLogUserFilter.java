@@ -17,6 +17,5 @@ public interface VcsLogUserFilter extends VcsLogDetailsFilter {
    *             Since current user name can be defined differently for different roots, we pass the root for which this value is
    *             requested.
    */
-  
   Collection<VcsUser> getUsers(VirtualFile root);
 }

@@ -267,9 +267,8 @@ public class FileChooserDialogImpl extends DialogWrapper implements FileChooserD
         syncAction.registerCustomShortcutSet(original.getShortcutSet(), tree, myDisposable);
     }
 
-    @Nullable
     @Override
-    protected final JComponent createTitlePane() {
+    protected final @Nullable JComponent createTitlePane() {
         String description = myChooserDescriptor.getDescription();
         if (StringUtil.isEmptyOrSpaces(description)) {
             return null;

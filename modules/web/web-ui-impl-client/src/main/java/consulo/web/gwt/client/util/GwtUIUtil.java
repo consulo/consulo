@@ -34,9 +34,8 @@ import java.util.List;
  * @since 20-May-16
  */
 public class GwtUIUtil {
-  @Nullable
   @SuppressWarnings("unchecked")
-  public static <T extends Widget> T getParentOf(Widget widget, Class<T> type) {
+  public static <T extends Widget> @Nullable T getParentOf(Widget widget, Class<T> type) {
     Widget target = widget;
 
     do {

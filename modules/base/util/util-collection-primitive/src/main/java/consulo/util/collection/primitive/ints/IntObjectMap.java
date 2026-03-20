@@ -26,8 +26,7 @@ public interface IntObjectMap<V> {
   interface IntObjectEntry<V1> {
     int getKey();
 
-    @Nullable
-    V1 getValue();
+    @Nullable V1 getValue();
   }
 
   IntSet keySet();
@@ -37,18 +36,15 @@ public interface IntObjectMap<V> {
   /**
    * @return old value by key
    */
-  @Nullable
-  V put(int key, @Nullable V value);
+  @Nullable V put(int key, @Nullable V value);
 
-  @Nullable
-  V get(int key);
+  @Nullable V get(int key);
 
   boolean containsKey(int key);
 
   boolean containsValue(V value);
 
-  @Nullable
-  V remove(int key);
+  @Nullable V remove(int key);
 
   Set<IntObjectEntry<V>> entrySet();
 

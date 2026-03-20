@@ -35,9 +35,8 @@ public class DirectoryContentImpl extends DiffContentBase implements DirectoryCo
     myFile = file;
   }
 
-  @Nullable
   @Override
-  public Navigatable getNavigatable() {
+  public @Nullable Navigatable getNavigatable() {
     if (myProject == null || myProject.isDefault() || !myFile.isValid()) return null;
     return OpenFileDescriptorFactory.getInstance(myProject).newBuilder(myFile).build();
   }
@@ -48,9 +47,8 @@ public class DirectoryContentImpl extends DiffContentBase implements DirectoryCo
     return myFile;
   }
 
-  @Nullable
   @Override
-  public FileType getContentType() {
+  public @Nullable FileType getContentType() {
     return null;
   }
 }

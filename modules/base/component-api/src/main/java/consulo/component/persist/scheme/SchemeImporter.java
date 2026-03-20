@@ -24,7 +24,6 @@ public interface SchemeImporter<T extends Named> {
      * @return A collection of importers capable of importing schemes of the given class. An empty collection is returned if there are
      * no matching importers.
      */
-    
     @SuppressWarnings({"unchecked", "GetExtensionPoint"})
     public static <S extends Named> Collection<SchemeImporter<S>> getExtensions(Class<S> schemeClass) {
         List<SchemeImporter> importers =
@@ -52,7 +51,6 @@ public interface SchemeImporter<T extends Named> {
     /**
      * Class of scheme impl
      */
-    
     Class<T> getSchemeClass();
 
     
@@ -71,7 +69,6 @@ public interface SchemeImporter<T extends Named> {
      * @return Either scheme name or null if the scheme doesn't have a name.
      * @throws SchemeImportException
      */
-    
     String[] readSchemeNames(InputStream inputStream) throws SchemeImportException;
 
     /**

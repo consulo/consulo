@@ -165,7 +165,6 @@ public class XBreakpointUtil {
      * - unfolds folded block on the line
      * - if folded, checks if line breakpoints could be toggled inside folded text
      */
-    
     public static AsyncResult<XLineBreakpoint> toggleLineBreakpoint(Project project,
                                                                     XSourcePosition position,
                                                                     @Nullable Editor editor,

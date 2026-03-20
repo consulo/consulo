@@ -67,9 +67,8 @@ public class UserDataHolderBase implements CopyableUserDataHolder, UserDataHolde
         other.setUserMap(getUserMap());
     }
 
-    @Nullable
     @Override
-    public <T> T getUserData(Key<T> key) {
+    public <T> @Nullable T getUserData(Key<T> key) {
         return getUserMap().get(key);
     }
 

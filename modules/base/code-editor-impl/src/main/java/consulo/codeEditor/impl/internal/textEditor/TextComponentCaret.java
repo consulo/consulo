@@ -122,9 +122,8 @@ public class TextComponentCaret extends UserDataHolderBase implements Caret {
     return myEditor.offsetToVisualPosition(getSelectionModel().getSelectionEnd());
   }
 
-  @Nullable
   @Override
-  public String getSelectedText() {
+  public @Nullable String getSelectedText() {
     return getSelectionModel().getSelectedText();
   }
 
@@ -187,9 +186,8 @@ public class TextComponentCaret extends UserDataHolderBase implements Caret {
     getSelectionModel().selectWordAtCaret(honorCamelWordsSettings);
   }
 
-  @Nullable
   @Override
-  public Caret clone(boolean above) {
+  public @Nullable Caret clone(boolean above) {
     return null;
   }
 

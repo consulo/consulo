@@ -99,9 +99,8 @@ public class InjectLanguageAction implements IntentionAction {
         return true;
     }
 
-    @Nullable
     @RequiredReadAction
-    protected static PsiLanguageInjectionHost findInjectionHost(Editor editor, PsiFile file) {
+    protected static @Nullable PsiLanguageInjectionHost findInjectionHost(Editor editor, PsiFile file) {
         if (editor instanceof EditorWindow) {
             return null;
         }

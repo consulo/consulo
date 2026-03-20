@@ -32,7 +32,6 @@ public interface Block {
      *
      * @return the text range.
      */
-    
     TextRange getTextRange();
 
     /**
@@ -43,7 +42,6 @@ public interface Block {
      * @return the child block list.
      * @see #isLeaf()
      */
-    
     List<Block> getSubBlocks();
 
     /**
@@ -55,8 +53,7 @@ public interface Block {
      * @see Wrap#createWrap(WrapType, boolean)
      * @see Wrap#createChildWrap(Wrap, WrapType, boolean)
      */
-    @Nullable
-    Wrap getWrap();
+    @Nullable Wrap getWrap();
 
     /**
      * Returns an indent object indicating how this block is indented relative
@@ -65,8 +62,7 @@ public interface Block {
      * @return the indent object, or null if the default indent ("continuation without first") should be used.
      * @see consulo.ide.impl.idea.formatting.Indent#getContinuationWithoutFirstIndent()
      */
-    @Nullable
-    Indent getIndent();
+    @Nullable Indent getIndent();
 
     /**
      * Returns an alignment object indicating how this block is aligned with other blocks. Blocks
@@ -75,8 +71,7 @@ public interface Block {
      *
      * @return the alignment object instance, or null if no alignment is required for the block.
      */
-    @Nullable
-    Alignment getAlignment();
+    @Nullable Alignment getAlignment();
 
     /**
      * Returns a spacing object indicating what spaces and/or line breaks are added between two
@@ -91,8 +86,7 @@ public interface Block {
      * @see Spacing#createSpacing(int, int, int, boolean, int)
      * @see Spacing#getReadOnlySpacing()
      */
-    @Nullable
-    Spacing getSpacing(@Nullable Block child1, Block child2);
+    @Nullable Spacing getSpacing(@Nullable Block child1, Block child2);
 
     /**
      * Returns the alignment and indent attributes which are applied to a new block inserted at
@@ -102,7 +96,6 @@ public interface Block {
      * @param newChildIndex the index where a new child is inserted.
      * @return the object containing the indent and alignment settings for the new child.
      */
-    
     ChildAttributes getChildAttributes(int newChildIndex);
 
     /**

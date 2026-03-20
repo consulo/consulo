@@ -34,9 +34,8 @@ import org.jspecify.annotations.Nullable;
 public class WebScrollLayoutImpl extends VaadinComponentDelegate<WebScrollLayoutImpl.Vaadin> implements ScrollableLayout {
     public class Vaadin extends Div implements FromVaadinComponentWrapper {
 
-        @Nullable
         @Override
-        public Component toUIComponent() {
+        public @Nullable Component toUIComponent() {
             return WebScrollLayoutImpl.this;
         }
     }

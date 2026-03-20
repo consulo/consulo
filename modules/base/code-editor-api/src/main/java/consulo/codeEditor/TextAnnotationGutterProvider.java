@@ -42,8 +42,7 @@ public interface TextAnnotationGutterProvider {
      * @param editor the editor in which the text will be drawn.
      * @return the text to draw, or null if no text should be drawn.
      */
-    @Nullable
-    String getLineText(int line, Editor editor);
+    @Nullable String getLineText(int line, Editor editor);
 
     //TODO: rename into getToolTip() after deprecation deletion
     
@@ -59,8 +58,7 @@ public interface TextAnnotationGutterProvider {
 
     EditorFontType getStyle(int line, Editor editor);
 
-    @Nullable
-    EditorColorKey getColor(int line, Editor editor);
+    @Nullable EditorColorKey getColor(int line, Editor editor);
 
     /**
      * Returns the background color for the text
@@ -69,8 +67,7 @@ public interface TextAnnotationGutterProvider {
      * @param editor the editor in which the text will be drawn.
      * @return the text to draw, or null if no text should be drawn.
      */
-    @Nullable
-    ColorValue getBgColor(int line, Editor editor);
+    @Nullable ColorValue getBgColor(int line, Editor editor);
 
     /***
      * enables annotation view modifications

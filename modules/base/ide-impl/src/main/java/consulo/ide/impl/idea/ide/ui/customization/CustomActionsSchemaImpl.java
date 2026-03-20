@@ -184,9 +184,8 @@ public class CustomActionsSchemaImpl implements CustomActionsSchema, PersistentS
         readIcons(element);
     }
 
-    @Nullable
     @Override
-    public Element getState() {
+    public @Nullable Element getState() {
         Element element = new Element("state");
         writeActions(element);
         writeIcons(element);

@@ -35,7 +35,6 @@ import java.util.Locale;
 /**
  * @author Denis Fokin
  */
-
 @Singleton
 @ServiceAPI(ComponentScope.APPLICATION)
 @ServiceImpl
@@ -86,9 +85,8 @@ public class KeyboardSettingsExternalizable implements PersistentStateComponent<
     }
   }
 
-  @Nullable
   @Override
-  public OptionSet getState() {
+  public @Nullable OptionSet getState() {
     return myOptions;
   }
 

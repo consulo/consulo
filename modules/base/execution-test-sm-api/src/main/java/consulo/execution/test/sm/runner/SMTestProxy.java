@@ -351,9 +351,8 @@ public class SMTestProxy extends AbstractTestProxy {
      *
      * @return null if duration is unknown, otherwise duration value in milliseconds;
      */
-    @Nullable
     @Override
-    public Long getDuration() {
+    public @Nullable Long getDuration() {
         // Returns duration value for tests
         // or cached duration for suites
         if (myDurationIsCached || !isSuite()) {
@@ -371,9 +370,8 @@ public class SMTestProxy extends AbstractTestProxy {
         return myDuration;
     }
 
-    @Nullable
     @Override
-    public String getDurationString(TestConsoleProperties consoleProperties) {
+    public @Nullable String getDurationString(TestConsoleProperties consoleProperties) {
         switch (getMagnitudeInfo()) {
             case PASSED_INDEX:
             case RUNNING_INDEX:
@@ -972,9 +970,8 @@ public class SMTestProxy extends AbstractTestProxy {
             myHandler = handler;
         }
 
-        @Nullable
         @Override
-        public Location getLocation(Project project, GlobalSearchScope searchScope) {
+        public @Nullable Location getLocation(Project project, GlobalSearchScope searchScope) {
             return myRootLocationUrl != null ? super.getLocation(project, searchScope, myRootLocationUrl)
                 : super.getLocation(project, searchScope);
         }

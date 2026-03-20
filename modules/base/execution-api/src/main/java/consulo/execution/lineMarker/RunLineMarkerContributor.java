@@ -63,9 +63,8 @@ public abstract class RunLineMarkerContributor implements LanguageExtension {
     }
   }
 
-  @Nullable
   @RequiredReadAction
-  public abstract Info getInfo(PsiElement element);
+  public abstract @Nullable Info getInfo(PsiElement element);
 
   /**
    * @param action

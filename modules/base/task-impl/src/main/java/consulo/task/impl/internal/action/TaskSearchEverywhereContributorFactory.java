@@ -28,9 +28,8 @@ import org.jspecify.annotations.Nullable;
  */
 @ExtensionImpl
 public class TaskSearchEverywhereContributorFactory implements SearchEverywhereContributorFactory<Object> {
-    @Nullable
     @Override
-    public SearchEverywhereContributor<Object> createContributor(AnActionEvent initEvent) {
+    public @Nullable SearchEverywhereContributor<Object> createContributor(AnActionEvent initEvent) {
         Project project = initEvent.getData(Project.KEY);
         if (project == null) {
             return null;

@@ -51,7 +51,6 @@ public final class AttributesDescriptor {
      *
      * @return the attributes key.
      */
-    
     public TextAttributesKey getKey() {
         return myKey;
     }
@@ -61,7 +60,6 @@ public final class AttributesDescriptor {
      *
      * @return the name of the attribute.
      */
-    
     public LocalizeValue getDisplayName() {
         return myDisplayName;
     }

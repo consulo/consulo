@@ -84,13 +84,11 @@ public interface ImportOptimizer extends LanguageExtension {
    *             issued from.
    * @return a <code>java.lang.Runnable</code> object, which being called will replace original file imports with optimized version.
    */
-  
   Runnable processFile(PsiFile file);
 
   /**
    * @return action text, it will be displayed for user, default 'Optimize Imports...'
    */
-  
   default String getActionName() {
     return CodeInsightBundle.message("not.action.OptimizeImports.text");
   }
@@ -98,7 +96,6 @@ public interface ImportOptimizer extends LanguageExtension {
   /**
    * @return action description, it will be displayed for user, default 'Remove unused imports and reorder/reorganize imports.'
    */
-  
   default String getActionDescription() {
     return CodeInsightBundle.message("not.action.OptimizeImports.description");
   }
@@ -108,7 +105,6 @@ public interface ImportOptimizer extends LanguageExtension {
    * by default "imports optimized" is shown.
    */
   interface CollectingInfoRunnable extends Runnable {
-    @Nullable
-    String getUserNotificationInfo();
+    @Nullable String getUserNotificationInfo();
   }
 }

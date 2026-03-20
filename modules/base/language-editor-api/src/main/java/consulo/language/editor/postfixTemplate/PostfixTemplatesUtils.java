@@ -81,7 +81,6 @@ public abstract class PostfixTemplatesUtils {
     /**
      * Returns all templates registered in the provider, including the edited templates and builtin templates in their current state
      */
-    
     public static Set<PostfixTemplate> getAvailableTemplates(PostfixTemplateProvider provider) {
         return provider.getTemplates();
     }

@@ -484,7 +484,6 @@ public class ExternalSystemApiUtil {
      * @param path target path
      * @return absolute path that points to the same location as the given one and that uses only slashes
      */
-    
     public static String toCanonicalPath(String path) {
         String p = normalizePath(new File(path).getAbsolutePath());
         assert p != null;
@@ -527,9 +526,8 @@ public class ExternalSystemApiUtil {
     
     public static <K, V> Map<DataNode<K>, List<DataNode<V>>> groupBy(Collection<DataNode<V>> nodes, Key<K> key) {
         return groupBy(nodes, new Function<DataNode<V>, DataNode<K>>() {
-            @Nullable
             @Override
-            public DataNode<K> apply(DataNode<V> node) {
+            public @Nullable DataNode<K> apply(DataNode<V> node) {
                 return node.getDataNode(key);
             }
         });
@@ -908,9 +906,8 @@ public class ExternalSystemApiUtil {
         return getExtensionSystemOption(module, ExternalSystemConstants.LINKED_PROJECT_ID_KEY);
     }
 
-    @Nullable
     @RequiredUIAccess
-    public static VirtualFile findLocalFileByPath(String path) {
+    public static @Nullable VirtualFile findLocalFileByPath(String path) {
         VirtualFile result = StandardFileSystems.local().findFileByPath(path);
         if (result != null) {
             return result;
@@ -921,9 +918,8 @@ public class ExternalSystemApiUtil {
             : findLocalFileByPathUnderReadAction(path);
     }
 
-    @Nullable
     @RequiredUIAccess
-    private static VirtualFile findLocalFileByPathUnderWriteAction(String path) {
+    private static @Nullable VirtualFile findLocalFileByPathUnderWriteAction(String path) {
         return ExternalSystemApiUtil.doWriteAction(() -> StandardFileSystems.local().refreshAndFindFileByPath(path));
     }
 

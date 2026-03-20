@@ -27,6 +27,5 @@ public interface PsiMirrorElement extends PsiElement, SyntheticElement {
   /**
    * @return prototype of this element
    */
-  
   PsiElement getPrototype();
 }

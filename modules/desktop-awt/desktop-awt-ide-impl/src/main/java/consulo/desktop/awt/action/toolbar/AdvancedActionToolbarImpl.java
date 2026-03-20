@@ -305,9 +305,8 @@ public class AdvancedActionToolbarImpl extends SimpleActionToolbarImpl {
             setBorder(myParent.getBorder());
         }
 
-        @Nullable
         @Override
-        public Object getData(Key dataId) {
+        public @Nullable Object getData(Key dataId) {
             Object data = super.getData(dataId);
             if (data != null) {
                 return data;

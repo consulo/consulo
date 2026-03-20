@@ -321,8 +321,7 @@ public class ClassPath {
         myLastLoaderProcessed.incrementAndGet(); // volatile write
     }
 
-    @Nullable
-    Attributes getManifestData(URL url) {
+    @Nullable Attributes getManifestData(URL url) {
         return myCanUseCache && myCachePool != null ? myCachePool.getManifestData(url) : null;
     }
 
@@ -457,9 +456,8 @@ public class ClassPath {
     }
 
     private static class ResourceStringLoaderIterator extends ClasspathCache.LoaderIterator<Resource, String, ClassPath> {
-        @Nullable
         @Override
-        Resource process(Loader loader, String s, ClassPath classPath, String shortName) {
+        @Nullable Resource process(Loader loader, String s, ClassPath classPath, String shortName) {
             if (!loader.containsName(s, shortName)) {
                 return null;
             }
@@ -479,9 +477,8 @@ public class ClassPath {
     }
 
     private static class LoaderCollector extends ClasspathCache.LoaderIterator<Object, Collection<Loader>, Object> {
-        @Nullable
         @Override
-        Object process(Loader loader, Collection<Loader> parameter, Object parameter2, String shortName) {
+        @Nullable Object process(Loader loader, Collection<Loader> parameter, Object parameter2, String shortName) {
             parameter.add(loader);
             return null;
         }

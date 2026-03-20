@@ -53,9 +53,8 @@ class DesktopAsyncDataContext extends DesktopDataManagerImpl.MyDataContext imple
             }
 
             return new DataProvider() {
-                @Nullable
                 @Override
-                public Object getData(Key<?> dataKey) {
+                public @Nullable Object getData(Key<?> dataKey) {
                     long start = System.currentTimeMillis();
                     try {
                         return provider.getData(dataKey);

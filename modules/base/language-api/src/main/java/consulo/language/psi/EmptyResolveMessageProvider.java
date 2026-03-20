@@ -28,6 +28,5 @@ public interface EmptyResolveMessageProvider {
    * If the call fails, returned value is used as is.
    * @return pattern or message
    */
-  
   LocalizeValue buildUnresolvedMessage(String referenceText);
 }

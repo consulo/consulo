@@ -82,7 +82,6 @@ public abstract class InvokerImpl implements Disposable, Invoker {
      * @param task a task to execute on the valid thread
      * @return an object to control task processing
      */
-    
     public final <T> CancellablePromise<T> compute(Supplier<? extends T> task) {
         return promise(new Task<>(task));
     }
@@ -96,7 +95,6 @@ public abstract class InvokerImpl implements Disposable, Invoker {
      * @param task a task to execute asynchronously on the valid thread
      * @return an object to control task processing
      */
-    
     public final <T> CancellablePromise<T> computeLater(Supplier<? extends T> task) {
         return computeLater(task, 0);
     }
@@ -108,7 +106,6 @@ public abstract class InvokerImpl implements Disposable, Invoker {
      * @param delay milliseconds for the initial delay
      * @return an object to control task processing
      */
-    
     public final <T> CancellablePromise<T> computeLater(Supplier<? extends T> task, int delay) {
         return promise(new Task<>(task), delay);
     }
@@ -120,7 +117,6 @@ public abstract class InvokerImpl implements Disposable, Invoker {
      * @param task a task to execute on the valid thread
      * @return an object to control task processing
      */
-    
     @Override
     public final CancellablePromise<?> invoke(Runnable task) {
         return compute(new Wrapper(task));
@@ -135,7 +131,6 @@ public abstract class InvokerImpl implements Disposable, Invoker {
      * @param task a task to execute asynchronously on the valid thread
      * @return an object to control task processing
      */
-    
     @Override
     public final CancellablePromise<?> invokeLater(Runnable task) {
         return invokeLater(task, 0);
@@ -148,7 +143,6 @@ public abstract class InvokerImpl implements Disposable, Invoker {
      * @param delay milliseconds for the initial delay
      * @return an object to control task processing
      */
-    
     @Override
     public final CancellablePromise<?> invokeLater(Runnable task, int delay) {
         return computeLater(new Wrapper(task), delay);
@@ -256,7 +250,6 @@ public abstract class InvokerImpl implements Disposable, Invoker {
      * @param task a task to execute on the valid thread
      * @return an object to control task processing
      */
-    
     private <T> CancellablePromise<T> promise(Task<T> task) {
         if (!isValidThread()) {
             return promise(task, 0);
@@ -273,7 +266,6 @@ public abstract class InvokerImpl implements Disposable, Invoker {
      * @param delay milliseconds for the initial delay
      * @return an object to control task processing
      */
-    
     private <T> CancellablePromise<T> promise(Task<T> task, int delay) {
         if (delay < 0) {
             throw new IllegalArgumentException("delay must be non-negative: " + delay);

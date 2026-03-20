@@ -277,9 +277,8 @@ public class InjectorUtils {
 
     public static BaseInjection findCommentInjection(PsiElement context, final String supportId, final Ref<PsiElement> causeRef) {
         return findNearestComment(context, new Function<PsiComment, BaseInjection>() {
-            @Nullable
             @Override
-            public BaseInjection apply(PsiComment comment) {
+            public @Nullable BaseInjection apply(PsiComment comment) {
                 if (causeRef != null) {
                     causeRef.set(comment);
                 }

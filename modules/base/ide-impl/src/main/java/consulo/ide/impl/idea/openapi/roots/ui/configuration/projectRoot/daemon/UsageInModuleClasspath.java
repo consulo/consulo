@@ -78,9 +78,8 @@ public class UsageInModuleClasspath extends ProjectStructureElementUsage {
     }
   }
 
-  @Nullable
   @Override
-  public String getPresentableLocationInElement() {
+  public @Nullable String getPresentableLocationInElement() {
     return myScope != null && myScope != DependencyScope.COMPILE ? "[" + StringUtil.decapitalize(myScope.getDisplayName()) + "]" : null;
   }
 }

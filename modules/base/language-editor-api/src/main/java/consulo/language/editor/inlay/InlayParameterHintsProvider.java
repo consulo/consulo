@@ -47,7 +47,6 @@ public interface InlayParameterHintsProvider extends LanguageExtension {
      * @param element element for which hints should be shown.
      * @return list of hints to be shown, hints offsets should be located within element's text range.
      */
-    
     default List<InlayInfo> getParameterHints(PsiElement element, PsiFile file) {
         return getParameterHints(element);
     }
@@ -79,7 +78,6 @@ public interface InlayParameterHintsProvider extends LanguageExtension {
     /**
      * Exclude list - default list of patterns for which hints should not be shown.
      */
-    
     Set<String> getDefaultBlackList();
 
     /**
@@ -93,7 +91,6 @@ public interface InlayParameterHintsProvider extends LanguageExtension {
     /**
      * List of supported options, shown in settings dialog.
      */
-    
     default List<Option> getSupportedOptions() {
         return List.of();
     }
@@ -108,7 +105,6 @@ public interface InlayParameterHintsProvider extends LanguageExtension {
     /**
      * Text explaining exclude list patterns.
      */
-    
     default LocalizeValue getBlacklistExplanationHTML() {
         return LocalizeValue.empty();
     }
@@ -137,7 +133,6 @@ public interface InlayParameterHintsProvider extends LanguageExtension {
     /**
      * @return Traverser for `root` element subtree.
      */
-    
     default SyntaxTraverser<PsiElement> createTraversal(PsiElement root) {
         return SyntaxTraverser.psiTraverser(root);
     }

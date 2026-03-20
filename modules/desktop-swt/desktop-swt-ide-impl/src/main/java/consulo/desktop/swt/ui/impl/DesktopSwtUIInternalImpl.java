@@ -283,9 +283,8 @@ public class DesktopSwtUIInternalImpl extends UIInternal {
     return new DesktopSwtWindowImpl(title, options);
   }
 
-  @Nullable
   @Override
-  public Window _Window_getActiveWindow() {
+  public @Nullable Window _Window_getActiveWindow() {
     Display display = DesktopSwtUIAccess.INSTANCE.getDisplay();
 
     Shell activeShell = display.getActiveShell();

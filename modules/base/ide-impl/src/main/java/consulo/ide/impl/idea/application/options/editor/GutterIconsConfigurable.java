@@ -70,16 +70,14 @@ public class GutterIconsConfigurable implements SearchableConfigurable, Configur
     return LocalizeValue.localizeTODO("Gutter Icons");
   }
 
-  @Nullable
   @Override
-  public String getParentId() {
+  public @Nullable String getParentId() {
     return StandardConfigurableIds.EDITOR_GROUP;
   }
 
   @RequiredUIAccess
-  @Nullable
   @Override
-  public JComponent createComponent(Disposable uiDisposable) {
+  public @Nullable JComponent createComponent(Disposable uiDisposable) {
     myShowGutterIconsJBCheckBox = CheckBox.create(ApplicationLocalize.checkboxShowGutterIcons());
 
     JPanel panel = new JPanel(new BorderLayout());
@@ -125,9 +123,8 @@ public class GutterIconsConfigurable implements SearchableConfigurable, Configur
         return panel;
       }
 
-      @Nullable
       @Override
-      protected Point findPointRelativeToCheckBox(int x, int y, JCheckBox checkBox, int index) {
+      protected @Nullable Point findPointRelativeToCheckBox(int x, int y, JCheckBox checkBox, int index) {
         return super.findPointRelativeToCheckBoxWithAdjustedRendering(x, y, checkBox, index);
       }
     };
@@ -230,9 +227,8 @@ public class GutterIconsConfigurable implements SearchableConfigurable, Configur
     return ID;
   }
 
-  @Nullable
   @Override
-  public Runnable enableSearch(String option) {
+  public @Nullable Runnable enableSearch(String option) {
     return () -> ObjectUtil.assertNotNull(SpeedSearchSupply.getSupply(myList, true))
       .findAndSelectElement(option);
   }

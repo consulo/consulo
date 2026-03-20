@@ -86,10 +86,9 @@ public class WholeFileLocalInspectionsPassFactory implements TextEditorHighlight
         );
     }
 
-    @Nullable
     @Override
     @RequiredReadAction
-    public TextEditorHighlightingPass createHighlightingPass(final PsiFile file, final Editor editor) {
+    public @Nullable TextEditorHighlightingPass createHighlightingPass(final PsiFile file, final Editor editor) {
         long psiModificationCount = PsiManager.getInstance(myProject).getModificationTracker().getModificationCount();
         if (psiModificationCount == myPsiModificationCount) {
             return null; //optimization

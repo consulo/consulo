@@ -48,19 +48,16 @@ public class IgnoreFileImpl extends PsiFileImpl {
     /**
      * Current language.
      */
-    
     private final Language language;
 
     /**
      * Current parser definition.
      */
-    
     private final ParserDefinition parserDefinition;
 
     /**
      * Current file type.
      */
-    
     private final IgnoreFileType fileType;
 
     /**
@@ -127,7 +124,6 @@ public class IgnoreFileImpl extends PsiFileImpl {
      *
      * @return current {@link Language}
      */
-    
     @Override
     @RequiredReadAction
     public final Language getLanguage() {
@@ -139,7 +135,6 @@ public class IgnoreFileImpl extends PsiFileImpl {
      *
      * @return current {@link ParserDefinition}
      */
-    
     public ParserDefinition getParserDefinition() {
         return parserDefinition;
     }
@@ -149,7 +144,6 @@ public class IgnoreFileImpl extends PsiFileImpl {
      *
      * @return the file type instance.
      */
-    
     @Override
     public FileType getFileType() {
         return fileType;

@@ -132,9 +132,8 @@ public class ModuleStructureConfigurable extends BaseStructureConfigurable imple
         myModuleManager = manager;
     }
 
-    @Nullable
     @Override
-    public String getParentId() {
+    public @Nullable String getParentId() {
         return StandardConfigurableIds.PROJECT_GROUP;
     }
 
@@ -469,9 +468,8 @@ public class ModuleStructureConfigurable extends BaseStructureConfigurable imple
         return ID;
     }
 
-    @Nullable
     @RequiredReadAction
-    public Module getModule(String moduleName) {
+    public @Nullable Module getModule(String moduleName) {
         if (moduleName == null) {
             return null;
         }

@@ -27,6 +27,5 @@ import org.jspecify.annotations.Nullable;
 public interface VcsCacheableAnnotationProvider {
   VcsAnnotation createCacheable(FileAnnotation fileAnnotation);
 
-  @Nullable
-  FileAnnotation restore(VcsAnnotation vcsAnnotation, VcsAbstractHistorySession session, String annotatedContent, boolean forCurrentRevision, VcsRevisionNumber revisionNumber);
+  @Nullable FileAnnotation restore(VcsAnnotation vcsAnnotation, VcsAbstractHistorySession session, String annotatedContent, boolean forCurrentRevision, VcsRevisionNumber revisionNumber);
 }

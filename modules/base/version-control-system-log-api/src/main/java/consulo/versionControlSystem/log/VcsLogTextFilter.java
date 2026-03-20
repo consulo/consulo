@@ -23,7 +23,6 @@ public interface VcsLogTextFilter extends VcsLogDetailsFilter {
   /**
    * Only commits containing the returned text it their commit messages should match the filter.
    */
-  
   String getText();
 
   /**

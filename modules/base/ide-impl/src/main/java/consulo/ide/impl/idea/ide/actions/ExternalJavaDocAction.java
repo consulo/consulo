@@ -154,9 +154,8 @@ public class ExternalJavaDocAction extends AnAction {
 
     }
 
-    @Nullable
     @RequiredReadAction
-    private static PsiElement getOriginalElement(PsiFile context, Editor editor) {
+    private static @Nullable PsiElement getOriginalElement(PsiFile context, Editor editor) {
         return (context != null && editor != null) ? context.findElementAt(editor.getCaretModel().getOffset()) : null;
     }
 

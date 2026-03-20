@@ -218,7 +218,6 @@ public class DocumentImpl extends UserDataHolderBase implements DocumentEx {
     /**
      * makes range marker without creating the document (which could be expensive)
      */
-    
     public static RangeMarker createRangeMarkerForVirtualFile(VirtualFile file,
                                                               int offset,
                                                               int startLine,

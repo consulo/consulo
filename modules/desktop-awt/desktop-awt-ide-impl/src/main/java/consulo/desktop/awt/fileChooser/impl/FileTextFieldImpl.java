@@ -294,8 +294,7 @@ public abstract class FileTextFieldImpl implements FileLookup, Disposable, FileT
                 }
 
                 private
-                @Nullable
-                String getSeparatorAboveOf(Object value) {
+                @Nullable String getSeparatorAboveOf(Object value) {
                     if (myCurrentCompletion == null) {
                         return null;
                     }
@@ -559,8 +558,7 @@ public abstract class FileTextFieldImpl implements FileLookup, Disposable, FileT
     }
 
     private
-    @Nullable
-    LookupFile getSelectedFileFromCompletionPopup() {
+    @Nullable LookupFile getSelectedFileFromCompletionPopup() {
         if (myList == null) {
             return null;
         }
@@ -666,8 +664,7 @@ public abstract class FileTextFieldImpl implements FileLookup, Disposable, FileT
     }
 
     public
-    @Nullable
-    String getCompletionBase() {
+    @Nullable String getCompletionBase() {
         String text = getTextFieldText();
         if (text == null) {
             return null;

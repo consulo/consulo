@@ -32,9 +32,8 @@ public class CopyAbsolutePathProvider extends DumbAwareCopyPathProvider {
         super(ActionLocalize.actionCopyabsolutepathText());
     }
 
-    @Nullable
     @Override
-    public String getPathToElement(Project project, @Nullable VirtualFile virtualFile, @Nullable Editor editor) {
+    public @Nullable String getPathToElement(Project project, @Nullable VirtualFile virtualFile, @Nullable Editor editor) {
         return ObjectUtil.doIfNotNull(virtualFile, VirtualFile::getPresentableUrl);
     }
 }

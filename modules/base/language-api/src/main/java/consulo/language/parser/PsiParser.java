@@ -38,6 +38,5 @@ public interface PsiParser {
      * @param languageVersion
      * @return the root of the resulting AST tree.
      */
-    
     ASTNode parse(IElementType root, PsiBuilder builder, LanguageVersion languageVersion);
 }

@@ -171,7 +171,6 @@ public abstract class TextEditorBasedStructureViewModel implements StructureView
    *
    * @return the list of classes
    */
-  
   protected Class[] getSuitableClasses() {
     return ArrayUtil.EMPTY_CLASS_ARRAY;
   }

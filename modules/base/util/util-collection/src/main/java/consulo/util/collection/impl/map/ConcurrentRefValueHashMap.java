@@ -40,9 +40,8 @@ public abstract class ConcurrentRefValueHashMap<K, V> implements ConcurrentMap<K
     return processed;
   }
 
-  @Nullable
   @Override
-  public V get(Object key) {
+  public @Nullable V get(Object key) {
     ValueReference<K, V> ref = myMap.get(key);
     if (ref == null) {
       return null;
@@ -50,9 +49,8 @@ public abstract class ConcurrentRefValueHashMap<K, V> implements ConcurrentMap<K
     return ref.get();
   }
 
-  @Nullable
   @Override
-  public V put(K key, V value) {
+  public @Nullable V put(K key, V value) {
     Objects.requireNonNull(key);
     Objects.requireNonNull(value);
     ValueReference<K, V> oldRef = myMap.put(key, createValueReference(key, value));
@@ -62,9 +60,8 @@ public abstract class ConcurrentRefValueHashMap<K, V> implements ConcurrentMap<K
 
   abstract ValueReference<K, V> createValueReference(K key, V value);
 
-  @Nullable
   @Override
-  public V putIfAbsent(K key, V value) {
+  public @Nullable V putIfAbsent(K key, V value) {
     Objects.requireNonNull(key);
     Objects.requireNonNull(value);
     ValueReference<K, V> newRef = createValueReference(key, value);
@@ -92,9 +89,8 @@ public abstract class ConcurrentRefValueHashMap<K, V> implements ConcurrentMap<K
     return removed;
   }
 
-  @Nullable
   @Override
-  public boolean replace(K key, V oldValue, V newValue) {
+  public @Nullable boolean replace(K key, V oldValue, V newValue) {
     Objects.requireNonNull(key);
     Objects.requireNonNull(oldValue);
     Objects.requireNonNull(newValue);
@@ -103,9 +99,8 @@ public abstract class ConcurrentRefValueHashMap<K, V> implements ConcurrentMap<K
     return replaced;
   }
 
-  @Nullable
   @Override
-  public V replace(K key, V value) {
+  public @Nullable V replace(K key, V value) {
     Objects.requireNonNull(key);
     Objects.requireNonNull(value);
     ValueReference<K, V> ref = myMap.replace(key, createValueReference(key, value));
@@ -113,9 +108,8 @@ public abstract class ConcurrentRefValueHashMap<K, V> implements ConcurrentMap<K
     return ref == null ? null : ref.get();
   }
 
-  @Nullable
   @Override
-  public V remove(Object key) {
+  public @Nullable V remove(Object key) {
     ValueReference<K, V> ref = myMap.remove(key);
     processQueue();
     return ref == null ? null : ref.get();

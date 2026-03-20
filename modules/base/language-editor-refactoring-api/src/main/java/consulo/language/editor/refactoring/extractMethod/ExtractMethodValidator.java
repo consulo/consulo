@@ -22,8 +22,7 @@ import org.jspecify.annotations.Nullable;
  * This validator should check if name will clash with existing methods 
  */
 public interface ExtractMethodValidator {
-  @Nullable
-  String check(String name);
+  @Nullable String check(String name);
 
   boolean isValidName(String name);
 }

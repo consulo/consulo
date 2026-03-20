@@ -36,6 +36,5 @@ public interface ErrorsConfigurable extends Configurable {
 
   void setFilterLanguages(Collection<Language> languages);
 
-  @Nullable
-  Object getSelectedObject();
+  @Nullable Object getSelectedObject();
 }

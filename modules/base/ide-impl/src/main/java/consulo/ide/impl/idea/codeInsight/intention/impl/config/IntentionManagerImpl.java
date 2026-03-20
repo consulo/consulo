@@ -86,9 +86,8 @@ public class IntentionManagerImpl extends IntentionManager implements Disposable
         return options;
     }
 
-    @Nullable
     @Override
-    public IntentionAction createFixAllIntention(InspectionToolWrapper toolWrapper, IntentionAction action) {
+    public @Nullable IntentionAction createFixAllIntention(InspectionToolWrapper toolWrapper, IntentionAction action) {
         if (toolWrapper instanceof LocalInspectionToolWrapper) {
             Class aClass = action.getClass();
             if (action instanceof QuickFixWrapper) {

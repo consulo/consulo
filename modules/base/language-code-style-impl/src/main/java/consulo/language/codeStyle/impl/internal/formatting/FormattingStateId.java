@@ -83,7 +83,6 @@ public enum FormattingStateId {
   /**
    * @return    collection of formatting states that are assumed to be executed prior to the current one
    */
-  
   public Set<FormattingStateId> getPreviousStates() {
     Set<FormattingStateId> result = EnumSet.noneOf(FormattingStateId.class);
     for (FormattingStateId state : values()) {

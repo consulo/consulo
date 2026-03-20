@@ -67,9 +67,8 @@ public class AlienLocalChangeList extends LocalChangeList {
     throw new UnsupportedOperationException();
   }
 
-  @Nullable
   @Override
-  public Object getData() {
+  public @Nullable Object getData() {
     throw new UnsupportedOperationException();
   }
 

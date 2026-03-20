@@ -47,7 +47,6 @@ public class RetinaImage { // [tav] todo: create HiDPIImage class
    * @param observer the raw image observer
    * @return the Retina-aware wrapper
    */
-  
   public static Image createFrom(Image image, double scale, ImageObserver observer) {
     int w = image.getWidth(observer);
     int h = image.getHeight(observer);

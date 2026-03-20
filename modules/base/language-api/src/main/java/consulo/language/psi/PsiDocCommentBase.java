@@ -27,6 +27,5 @@ public interface PsiDocCommentBase extends PsiComment {
   /**
    * @return The element which this doc comment refers to or null if there is no such element.
    */
-  @Nullable
-  PsiElement getOwner();
+  @Nullable PsiElement getOwner();
 }

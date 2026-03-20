@@ -97,9 +97,8 @@ public abstract class DiffPanelBase extends JPanel implements DataProvider {
     if (restoreFocus) myContext.requestFocus();
   }
 
-  @Nullable
   @Override
-  public Object getData(Key<?> dataId) {
+  public @Nullable Object getData(Key<?> dataId) {
     return myDataProvider.getData(dataId);
   }
 

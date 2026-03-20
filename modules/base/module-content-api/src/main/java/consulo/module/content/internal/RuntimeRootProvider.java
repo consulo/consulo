@@ -32,9 +32,7 @@ public interface RuntimeRootProvider {
         return module.getInstance(RuntimeRootProvider.class);
     }
 
-    @Nullable
-    String getCompilerOutputUrl(ContentFolderTypeProvider contentFolderType);
+    @Nullable String getCompilerOutputUrl(ContentFolderTypeProvider contentFolderType);
 
-    @Nullable
-    VirtualFile getCompilerOutput(ContentFolderTypeProvider contentFolderType);
+    @Nullable VirtualFile getCompilerOutput(ContentFolderTypeProvider contentFolderType);
 }

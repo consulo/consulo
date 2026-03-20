@@ -36,11 +36,9 @@ public interface XValueTree {
     
     List<XValueNode> getSelectedNodes();
 
-    @Nullable
-    XValueNode getSelectedNode();
+    @Nullable XValueNode getSelectedNode();
 
-    @Nullable
-    XDebugSession getSession();
+    @Nullable XDebugSession getSession();
 
     
     Project getProject();

@@ -116,9 +116,8 @@ public class ProjectFileIndexImpl extends FileIndexBase implements ProjectFileIn
         return getModuleForFile(file, true);
     }
 
-    @Nullable
     @Override
-    public Module getModuleForFile(VirtualFile file, boolean honorExclusion) {
+    public @Nullable Module getModuleForFile(VirtualFile file, boolean honorExclusion) {
         if (file instanceof VirtualFileDelegate) {
             file = ((VirtualFileDelegate) file).getDelegate();
         }
@@ -129,9 +128,8 @@ public class ProjectFileIndexImpl extends FileIndexBase implements ProjectFileIn
         return null;
     }
 
-    @Nullable
     @Override
-    public ContentFolder getContentFolder(VirtualFile file) {
+    public @Nullable ContentFolder getContentFolder(VirtualFile file) {
         DirectoryInfo info = getInfoForFileOrDirectory(file);
         return info.getContentFolder();
     }
@@ -267,9 +265,8 @@ public class ProjectFileIndexImpl extends FileIndexBase implements ProjectFileIn
             myDirectoryIndexProvider.get().getContentFolderType(fileOrDir, info) instanceof TestLikeContentFolderTypeProvider;
     }
 
-    @Nullable
     @Override
-    public ContentFolderTypeProvider getContentFolderTypeForFile(VirtualFile file) {
+    public @Nullable ContentFolderTypeProvider getContentFolderTypeForFile(VirtualFile file) {
         DirectoryInfo info = getInfoForFileOrDirectory(file);
         return myDirectoryIndexProvider.get().getContentFolderType(file, info);
     }

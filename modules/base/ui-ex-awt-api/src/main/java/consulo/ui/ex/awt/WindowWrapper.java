@@ -12,8 +12,7 @@ public interface WindowWrapper extends Disposable {
 
   void show();
 
-  @Nullable
-  Project getProject();
+  @Nullable Project getProject();
 
   
   JComponent getComponent();

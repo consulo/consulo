@@ -24,9 +24,8 @@ import java.util.function.Consumer;
 public abstract class LinkMouseListenerBase<T> extends ClickListener implements MouseMotionListener {
   public static void installSingleTagOn(SimpleColoredComponent component) {
     new LinkMouseListenerBase<Consumer<MouseEvent>>() {
-      @Nullable
       @Override
-      protected Consumer<MouseEvent> getTagAt(MouseEvent e) {
+      protected @Nullable Consumer<MouseEvent> getTagAt(MouseEvent e) {
         //noinspection unchecked
         return (Consumer<MouseEvent>)((SimpleColoredComponent)e.getSource()).getFragmentTagAt(e.getX());
       }

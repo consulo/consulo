@@ -30,8 +30,7 @@ import org.jspecify.annotations.Nullable;
 public interface EditorTabColorProvider {
     ExtensionPointName<EditorTabColorProvider> EP_NAME = ExtensionPointName.create(EditorTabColorProvider.class);
 
-    @Nullable
-    ColorValue getEditorTabColor(Project project, VirtualFile file);
+    @Nullable ColorValue getEditorTabColor(Project project, VirtualFile file);
 
     default @Nullable ColorValue getEditorTabColor(Project project, VirtualFile file, @Nullable FileEditorWindow editorWindow) {
         return getEditorTabColor(project, file);

@@ -52,7 +52,6 @@ public abstract class CoverageEngine {
      * @param conf Run Configuration
      * @return Coverage enabled configuration with engine specific settings
      */
-    
     public abstract CoverageEnabledConfiguration createCoverageEnabledConfiguration(@Nullable RunConfigurationBase conf);
 
     /**
@@ -146,7 +145,6 @@ public abstract class CoverageEngine {
      * @param project Project
      * @return Annotator
      */
-    
     public abstract CoverageAnnotator getCoverageAnnotator(Project project);
 
     /**
@@ -174,7 +172,6 @@ public abstract class CoverageEngine {
      * @param module
      * @return files
      */
-    
     public Set<File> getCorrespondingOutputFiles(
         PsiFile srcFile,
         @Nullable Module module,

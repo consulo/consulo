@@ -48,9 +48,8 @@ public class FilteredController extends CascadeController {
     return LinearGraphUtils.DEFAULT_GRAPH_ANSWER;
   }
 
-  @Nullable
   @Override
-  protected GraphElement convertToDelegate(GraphElement graphElement) {
+  protected @Nullable GraphElement convertToDelegate(GraphElement graphElement) {
     // filter prohibits any actions on delegate graph for now
     return null;
   }
@@ -62,9 +61,8 @@ public class FilteredController extends CascadeController {
     throw new UnsupportedOperationException(); // todo fix later
   }
 
-  @Nullable
   @Override
-  protected LinearGraphAnswer performAction(LinearGraphAction action) {
+  protected @Nullable LinearGraphAnswer performAction(LinearGraphAction action) {
     return null;
   }
 

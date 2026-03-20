@@ -92,7 +92,6 @@ public class VirtualFileWrapper {
    *
    * @return original java.io.File
    */
-  
   public File getFile() {
     return myFile;
   }

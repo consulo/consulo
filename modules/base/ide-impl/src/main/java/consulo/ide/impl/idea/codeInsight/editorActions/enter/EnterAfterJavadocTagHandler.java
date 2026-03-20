@@ -118,7 +118,6 @@ public class EnterAfterJavadocTagHandler extends EnterHandlerDelegateAdapter {
      * @param offset      interested offset
      * @return object that encapsulates information about javadoc tags within the given text and offset
      */
-    
     static Context parse(CharSequence text, int startOffset, int endOffset, int offset) {
         int asteriskOffset = StringUtil.indexOf(text, '*', startOffset, endOffset);
         if (asteriskOffset < 0) {

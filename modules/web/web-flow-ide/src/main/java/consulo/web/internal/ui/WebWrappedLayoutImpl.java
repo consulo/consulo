@@ -32,9 +32,8 @@ import org.jspecify.annotations.Nullable;
  */
 public class WebWrappedLayoutImpl extends VaadinComponentDelegate<WebWrappedLayoutImpl.Vaadin> implements WrappedLayout {
     public class Vaadin extends SingleComponentLayout implements FromVaadinComponentWrapper {
-        @Nullable
         @Override
-        public Component toUIComponent() {
+        public @Nullable Component toUIComponent() {
             return WebWrappedLayoutImpl.this;
         }
     }

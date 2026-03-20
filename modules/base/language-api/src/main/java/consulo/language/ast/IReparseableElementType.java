@@ -53,7 +53,6 @@ public class IReparseableElementType extends ILazyParseableElementType implement
    * @param project      the project containing the content.
    * @return true if the content is valid, false if not
    */
-
   public boolean isParsable(CharSequence buffer, Language fileLanguage, Project project) {
     return false;
   }

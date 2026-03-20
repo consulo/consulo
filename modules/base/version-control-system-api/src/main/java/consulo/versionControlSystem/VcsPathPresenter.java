@@ -39,7 +39,6 @@ public abstract class VcsPathPresenter {
    * @param file the file for which the path is requested.
    * @return the relative path.
    */
-  
   public abstract String getPresentableRelativePathFor(VirtualFile file);
 
   public abstract @Nullable String getPresentableRelativePath(ContentRevision fromRevision, ContentRevision toRevision);

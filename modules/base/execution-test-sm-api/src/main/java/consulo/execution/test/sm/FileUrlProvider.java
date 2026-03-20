@@ -94,9 +94,8 @@ public class FileUrlProvider implements SMTestLocator, DumbAware {
         return locations;
     }
 
-    @Nullable
     @RequiredReadAction
-    public static Location createLocationFor(Project project, VirtualFile virtualFile, int lineNum) {
+    public static @Nullable Location createLocationFor(Project project, VirtualFile virtualFile, int lineNum) {
         return createLocationFor(project, virtualFile, lineNum, -1);
     }
 
@@ -109,9 +108,8 @@ public class FileUrlProvider implements SMTestLocator, DumbAware {
      *                    a non-positive column number doesn't change text caret position inside the file
      * @return Location instance, or null if not found
      */
-    @Nullable
     @RequiredReadAction
-    public static Location createLocationFor(Project project, VirtualFile virtualFile, int lineNum, int columnNum) {
+    public static @Nullable Location createLocationFor(Project project, VirtualFile virtualFile, int lineNum, int columnNum) {
         PsiFile psiFile = PsiManager.getInstance(project).findFile(virtualFile);
         if (psiFile == null) {
             return null;

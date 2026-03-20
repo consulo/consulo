@@ -361,9 +361,8 @@ public final class PersistentFSImpl extends PersistentFS implements Disposable {
         ZipHandler.clearFileAccessorCache();
     }
 
-    @Nullable
     @Override
-    public Path getFileWatcherExecutablePath() {
+    public @Nullable Path getFileWatcherExecutablePath() {
         return NativeFileWatcherImpl.getExecutablePathImpl();
     }
 
@@ -1312,9 +1311,8 @@ public final class PersistentFSImpl extends PersistentFS implements Disposable {
                 return rootPath;
             }
 
-            @Nullable
             @Override
-            public VirtualFile getParent() {
+            public @Nullable VirtualFile getParent() {
                 return null;
             }
         });
@@ -1332,9 +1330,8 @@ public final class PersistentFSImpl extends PersistentFS implements Disposable {
                     return parentPath;
                 }
 
-                @Nullable
                 @Override
-                public VirtualFile getParent() {
+                public @Nullable VirtualFile getParent() {
                     return null;
                 }
             });

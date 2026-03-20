@@ -37,9 +37,8 @@ public class VcsUnscrambleDialogOptionProvider implements UnscrambleDialogOption
         myProject = project;
     }
 
-    @Nullable
     @Override
-    public UnnamedConfigurable createConfigurable() {
+    public @Nullable UnnamedConfigurable createConfigurable() {
         if (ProjectLevelVcsManager.getInstance(myProject).hasActiveVcss()) {
             return new VcsContentAnnotationConfigurable(myProject);
         }

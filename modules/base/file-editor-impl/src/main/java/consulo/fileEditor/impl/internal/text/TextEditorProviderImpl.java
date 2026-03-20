@@ -164,15 +164,13 @@ public class TextEditorProviderImpl extends TextEditorProvider {
             return myEditor.getContentComponent();
         }
 
-        @Nullable
         @Override
-        public Component getUIComponent() {
+        public @Nullable Component getUIComponent() {
             return myEditor.getUIComponent();
         }
 
-        @Nullable
         @Override
-        public Component getPreferredFocusedUIComponent() {
+        public @Nullable Component getPreferredFocusedUIComponent() {
             return myEditor.getUIComponent();
         }
 
@@ -201,9 +199,8 @@ public class TextEditorProviderImpl extends TextEditorProvider {
             return null;
         }
 
-        @Nullable
         @Override
-        public VirtualFile getFile() {
+        public @Nullable VirtualFile getFile() {
             return FileDocumentManager.getInstance().getFile(myEditor.getDocument());
         }
 

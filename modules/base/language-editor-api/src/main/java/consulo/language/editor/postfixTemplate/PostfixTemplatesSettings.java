@@ -115,9 +115,8 @@ public class PostfixTemplatesSettings implements PersistentStateComponent<Elemen
     return Application.get().getInstance(PostfixTemplatesSettings.class);
   }
 
-  @Nullable
   @Override
-  public Element getState() {
+  public @Nullable Element getState() {
     return XmlSerializer.serialize(this, new SkipDefaultValuesSerializationFilters());
   }
 

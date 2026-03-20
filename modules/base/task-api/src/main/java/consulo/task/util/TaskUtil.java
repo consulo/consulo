@@ -284,7 +284,6 @@ public class TaskUtil {
    *
    * @return urlencoded string
    */
-  
   public static String encodeUrl(String s) {
     try {
       return URLEncoder.encode(s, CharsetToolkit.UTF8);

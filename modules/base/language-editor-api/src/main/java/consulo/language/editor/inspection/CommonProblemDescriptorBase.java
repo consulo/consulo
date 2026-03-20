@@ -37,9 +37,8 @@ public class CommonProblemDescriptorBase implements CommonProblemDescriptor {
         return myDescriptionTemplate;
     }
 
-    @Nullable
     @Override
-    public QuickFix[] getFixes() {
+    public @Nullable QuickFix[] getFixes() {
         return myFixes;
     }
 

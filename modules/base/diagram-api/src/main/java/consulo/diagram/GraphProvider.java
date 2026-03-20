@@ -42,10 +42,8 @@ public interface GraphProvider<V> {
     @RequiredReadAction
     String getURL(V value);
 
-    @Nullable
     @RequiredReadAction
-    V restoreFromURL(ComponentManager project, String path);
+    @Nullable V restoreFromURL(ComponentManager project, String path);
 
-    @Nullable
-    V findSupportedElement(DataContext dataContext);
+    @Nullable V findSupportedElement(DataContext dataContext);
 }

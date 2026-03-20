@@ -22,13 +22,11 @@ public interface UsageViewDescriptor {
     /**
      * @return an array of elements whose usages were searched or {@link PsiElement#EMPTY_ARRAY} if not available
      */
-    
     PsiElement[] getElements();
 
     String getProcessedElementsHeader();
 
     String getCodeReferencesText(int usagesCount, int filesCount);
 
-    @Nullable
-    String getCommentReferencesText(int usagesCount, int filesCount);
+    @Nullable String getCommentReferencesText(int usagesCount, int filesCount);
 }

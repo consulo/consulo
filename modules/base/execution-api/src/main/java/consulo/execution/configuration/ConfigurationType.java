@@ -40,7 +40,6 @@ public interface ConfigurationType extends PossiblyDumbAware {
      *
      * @return the display name of the configuration type.
      */
-    
     LocalizeValue getDisplayName();
 
     /**
@@ -48,7 +47,6 @@ public interface ConfigurationType extends PossiblyDumbAware {
      *
      * @return the description of the configuration type.
      */
-    
     default LocalizeValue getConfigurationTypeDescription() {
         return getDisplayName();
     }
@@ -58,8 +56,7 @@ public interface ConfigurationType extends PossiblyDumbAware {
      *
      * @return the icon
      */
-    @Nullable
-    Image getIcon();
+    @Nullable Image getIcon();
 
     /**
      * Returns the ID of the configuration type. The ID is used to store run configuration settings in a project or workspace file and
@@ -67,7 +64,6 @@ public interface ConfigurationType extends PossiblyDumbAware {
      *
      * @return the configuration type ID.
      */
-    
     String getId();
 
     /**

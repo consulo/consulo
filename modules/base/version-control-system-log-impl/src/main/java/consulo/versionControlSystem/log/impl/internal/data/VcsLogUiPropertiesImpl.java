@@ -193,9 +193,8 @@ public abstract class VcsLogUiPropertiesImpl implements PersistentStateComponent
     }
   }
 
-  @Nullable
   @Override
-  public List<String> getFilterValues(String filterName) {
+  public @Nullable List<String> getFilterValues(String filterName) {
     return getState().FILTERS.get(filterName);
   }
 

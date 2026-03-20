@@ -27,12 +27,10 @@ public interface VcsLogDateFilter extends VcsLogDetailsFilter {
   /**
    * If not null, only commits made after the returned date (inclusively) should be accepted.
    */
-  @Nullable
-  Date getAfter();
+  @Nullable Date getAfter();
 
   /**
    * If not null, only commits made before the returned date (inclusively) should be accepted.
    */
-  @Nullable
-  Date getBefore();
+  @Nullable Date getBefore();
 }

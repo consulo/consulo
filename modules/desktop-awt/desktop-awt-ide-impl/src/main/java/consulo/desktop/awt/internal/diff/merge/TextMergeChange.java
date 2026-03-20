@@ -185,9 +185,8 @@ public class TextMergeChange extends ThreesideDiffChangeBase {
         return myViewer.getEditor(side);
     }
 
-    @Nullable
     @Override
-    protected MergeInnerDifferences getInnerFragments() {
+    protected @Nullable MergeInnerDifferences getInnerFragments() {
         return myInnerFragments;
     }
 

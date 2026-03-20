@@ -51,7 +51,6 @@ public class BundleBox implements PseudoComponent {
     /**
      * @return builder with global sdk table
      */
-    
     public static BundleBoxBuilder builder(Disposable uiDisposable) {
         return BundleBoxBuilder.create(uiDisposable);
     }
@@ -82,9 +81,8 @@ public class BundleBox implements PseudoComponent {
             myBundle = bundle;
         }
 
-        @Nullable
         @Override
-        public Sdk getBundle() {
+        public @Nullable Sdk getBundle() {
             return myBundle;
         }
 
@@ -120,9 +118,8 @@ public class BundleBox implements PseudoComponent {
             return mySdkPointer.get();
         }
 
-        @Nullable
         @Override
-        public String getBundleName() {
+        public @Nullable String getBundleName() {
             return mySdkPointer.getName();
         }
 
@@ -170,9 +167,8 @@ public class BundleBox implements PseudoComponent {
             return myPresentableName;
         }
 
-        @Nullable
         @Override
-        public String getBundleName() {
+        public @Nullable String getBundleName() {
             return myKey;
         }
 

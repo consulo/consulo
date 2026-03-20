@@ -147,9 +147,8 @@ public class ExternalSystemTasksPanel extends SimpleToolWindowPanel implements D
     return result;
   }
 
-  @Nullable
   @Override
-  public Object getData(Key<?> dataId) {
+  public @Nullable Object getData(Key<?> dataId) {
     if (ExternalSystemDataKeys.RECENT_TASKS_LIST == dataId) {
       return myRecentTasksList;
     }

@@ -182,7 +182,6 @@ public class AnalyzeDependenciesComponent extends MasterDetailsComponent {
     /**
      * {@inheritDoc}
      */
-    
     @Override
     public LocalizeValue getDisplayName() {
         return LocalizeValue.localizeTODO("Classpath Details");
@@ -546,7 +545,6 @@ public class AnalyzeDependenciesComponent extends MasterDetailsComponent {
         /**
          * {@inheritDoc}
          */
-        
         @Override
         public LocalizeValue getDisplayName() {
             return LocalizeValue.ofNullable(myExplanation.url());
@@ -605,7 +603,6 @@ public class AnalyzeDependenciesComponent extends MasterDetailsComponent {
         /**
          * {@inheritDoc}
          */
-        
         @Override
         public LocalizeValue getDisplayName() {
             return LocalizeValue.ofNullable(myExplanation.entry().getPresentableName());
@@ -685,7 +682,6 @@ public class AnalyzeDependenciesComponent extends MasterDetailsComponent {
         /**
          * {@inheritDoc}
          */
-        
         @Override
         public DefaultActionGroup createPopupActionGroup(JComponent component) {
             if (myItems == null) {

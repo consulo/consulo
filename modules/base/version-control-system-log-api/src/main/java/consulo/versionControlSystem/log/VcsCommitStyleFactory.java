@@ -41,7 +41,6 @@ public class VcsCommitStyleFactory {
    *
    * @param foreground text color or null if unspecified.
    */
- 
   public static VcsLogHighlighter.VcsCommitStyle foreground(@Nullable Color foreground) {
     return createStyle(foreground, null, null);
   }
@@ -51,7 +50,6 @@ public class VcsCommitStyleFactory {
    *
    * @param background background color or null if unspecified.
    */
- 
   public static VcsLogHighlighter.VcsCommitStyle background(@Nullable Color background) {
     return createStyle(null, background, null);
   }
@@ -59,7 +57,6 @@ public class VcsCommitStyleFactory {
   /**
    * Creates VcsCommitStyleImpl with bold text.
    */
- 
   public static VcsLogHighlighter.VcsCommitStyle bold() {
     return createStyle(null, null, VcsLogHighlighter.TextStyle.BOLD);
   }
@@ -73,7 +70,6 @@ public class VcsCommitStyleFactory {
    * @param styles list of styles to combine into one.
    * @return a combination of styles from the list.
    */
- 
   public static VcsLogHighlighter.VcsCommitStyle combine(Collection<VcsLogHighlighter.VcsCommitStyle> styles) {
     Color foreground = null;
     Color background = null;
@@ -116,15 +112,13 @@ public class VcsCommitStyleFactory {
       myTextStyle = textStyle;
     }
 
-    @Nullable
     @Override
-    public Color getForeground() {
+    public @Nullable Color getForeground() {
       return myForeground;
     }
 
-    @Nullable
     @Override
-    public Color getBackground() {
+    public @Nullable Color getBackground() {
       return myBackground;
     }
 

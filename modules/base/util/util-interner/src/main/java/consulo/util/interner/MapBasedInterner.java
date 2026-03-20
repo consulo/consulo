@@ -39,9 +39,8 @@ public class MapBasedInterner<T> implements Interner<T> {
     return prev == null ? item : prev;
   }
 
-  @Nullable
   @Override
-  public T get(T item) {
+  public @Nullable T get(T item) {
     return myMap.get(item);
   }
 

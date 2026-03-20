@@ -36,7 +36,6 @@ abstract public class CustomLiveTemplateBase implements CustomLiveTemplate {
   /**
    * Return lookup elements for popup that appears on ListTemplateAction (Ctrl + J)
    */
-  
   public Collection<? extends CustomLiveTemplateLookupElement> getLookupElements(PsiFile file, Editor editor, int offset) {
     return Collections.emptyList();
   }

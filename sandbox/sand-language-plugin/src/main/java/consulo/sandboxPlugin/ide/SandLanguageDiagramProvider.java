@@ -63,9 +63,8 @@ public class SandLanguageDiagramProvider implements LanguageGraphProvider<SandFi
     }
 
     @RequiredReadAction
-    @Nullable
     @Override
-    public PsiElement restoreFromURL(Project project, String url) {
+    public @Nullable PsiElement restoreFromURL(Project project, String url) {
         VirtualFile file = LocalFileSystem.getInstance().findFileByPath(url);
         if (file == null || !file.isValid()) {
             return null;

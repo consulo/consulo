@@ -26,7 +26,6 @@ public interface VcsLogRefs {
   /**
    * Returns all branches.
    */
-  
   Collection<VcsRef> getBranches();
 
   

@@ -208,9 +208,8 @@ public class EditorComponentImpl extends JTextComponent
         return result;
     }
 
-    @Nullable
     @Override
-    public InputMethodRequests getInputMethodRequests() {
+    public @Nullable InputMethodRequests getInputMethodRequests() {
         return IdeEventQueue.getInstance().isInputMethodEnabled() ? myEditor.getInputMethodRequests() : null;
     }
 
@@ -437,9 +436,8 @@ public class EditorComponentImpl extends JTextComponent
                 return event.getOldLength() == 0 ? EventType.INSERT : event.getNewLength() == 0 ? EventType.REMOVE : EventType.CHANGE;
             }
 
-            @Nullable
             @Override
-            public ElementChange getChange(Element element) {
+            public @Nullable ElementChange getChange(Element element) {
                 return null;
             }
         };
@@ -537,23 +535,20 @@ public class EditorComponentImpl extends JTextComponent
             segment.count = s.length;
         }
 
-        @Nullable
         @Override
-        public Position getStartPosition() {
+        public @Nullable Position getStartPosition() {
             notSupported();
             return null;
         }
 
-        @Nullable
         @Override
-        public Position getEndPosition() {
+        public @Nullable Position getEndPosition() {
             notSupported();
             return null;
         }
 
-        @Nullable
         @Override
-        public Position createPosition(int i) throws BadLocationException {
+        public @Nullable Position createPosition(int i) throws BadLocationException {
             notSupported();
             return null;
         }
@@ -586,21 +581,18 @@ public class EditorComponentImpl extends JTextComponent
             return this;
         }
 
-        @Nullable
         @Override
-        public Element getParentElement() {
+        public @Nullable Element getParentElement() {
             return null;
         }
 
-        @Nullable
         @Override
-        public String getName() {
+        public @Nullable String getName() {
             return null;
         }
 
-        @Nullable
         @Override
-        public AttributeSet getAttributes() {
+        public @Nullable AttributeSet getAttributes() {
             return null;
         }
 
@@ -641,15 +633,13 @@ public class EditorComponentImpl extends JTextComponent
                     return EditorAccessibilityDocument.this;
                 }
 
-                @Nullable
                 @Override
-                public String getName() {
+                public @Nullable String getName() {
                     return null;
                 }
 
-                @Nullable
                 @Override
-                public AttributeSet getAttributes() {
+                public @Nullable AttributeSet getAttributes() {
                     return null;
                 }
 
@@ -675,9 +665,8 @@ public class EditorComponentImpl extends JTextComponent
                     return 0;
                 }
 
-                @Nullable
                 @Override
-                public Element getElement(int i) {
+                public @Nullable Element getElement(int i) {
                     return null;
                 }
 
@@ -786,9 +775,8 @@ public class EditorComponentImpl extends JTextComponent
         public void setMagicCaretPosition(Point point) {
         }
 
-        @Nullable
         @Override
-        public Point getMagicCaretPosition() {
+        public @Nullable Point getMagicCaretPosition() {
             return null;
         }
 
@@ -830,9 +818,8 @@ public class EditorComponentImpl extends JTextComponent
      * Specialized TextUI intended *only* for accessibility usage. Not all the methods are called; only viewToModel, not modelToView.
      */
     private class EditorAccessibilityTextUI extends TextUI {
-        @Nullable
         @Override
-        public Rectangle modelToView(JTextComponent tc, int offset) throws BadLocationException {
+        public @Nullable Rectangle modelToView(JTextComponent tc, int offset) throws BadLocationException {
             LogicalPosition pos = myEditor.offsetToLogicalPosition(offset);
             Point point = myEditor.logicalPositionToXY(pos);
             FontMetrics fontMetrics = myEditor.getFontMetrics(Font.PLAIN);
@@ -878,16 +865,14 @@ public class EditorComponentImpl extends JTextComponent
             damageRange(t, p0, p1);
         }
 
-        @Nullable
         @Override
-        public EditorKit getEditorKit(JTextComponent t) {
+        public @Nullable EditorKit getEditorKit(JTextComponent t) {
             notSupported();
             return null;
         }
 
-        @Nullable
         @Override
-        public View getRootView(JTextComponent t) {
+        public @Nullable View getRootView(JTextComponent t) {
             notSupported();
             return null;
         }
@@ -995,9 +980,8 @@ public class EditorComponentImpl extends JTextComponent
 
         // ---- Implements AccessibleContext ----
 
-        @Nullable
         @Override
-        public String getAccessibleName() {
+        public @Nullable String getAccessibleName() {
             if (accessibleName != null) {
                 return accessibleName;
             }
@@ -1072,27 +1056,24 @@ public class EditorComponentImpl extends JTextComponent
             return myEditor.getCaretModel().getOffset();
         }
 
-        @Nullable
         @Override
-        public String getAtIndex(
+        public @Nullable String getAtIndex(
             @MagicConstant(intValues = {AccessibleText.CHARACTER, AccessibleText.WORD, AccessibleText.SENTENCE}) int part,
             int index
         ) {
             return getTextAtOffset(part, index, HERE);
         }
 
-        @Nullable
         @Override
-        public String getAfterIndex(
+        public @Nullable String getAfterIndex(
             @MagicConstant(intValues = {AccessibleText.CHARACTER, AccessibleText.WORD, AccessibleText.SENTENCE}) int part,
             int index
         ) {
             return getTextAtOffset(part, index, AFTER);
         }
 
-        @Nullable
         @Override
-        public String getBeforeIndex(
+        public @Nullable String getBeforeIndex(
             @MagicConstant(intValues = {AccessibleText.CHARACTER, AccessibleText.WORD, AccessibleText.SENTENCE}) int part,
             int index
         ) {
@@ -1114,9 +1095,8 @@ public class EditorComponentImpl extends JTextComponent
             return myEditor.getSelectionModel().getSelectionEnd();
         }
 
-        @Nullable
         @Override
-        public String getSelectedText() {
+        public @Nullable String getSelectedText() {
             return myEditor.getSelectionModel().getSelectedText();
         }
 
@@ -1195,9 +1175,8 @@ public class EditorComponentImpl extends JTextComponent
          */
         private static final int AFTER = 1;
 
-        @Nullable
         @Override
-        public AccessibleTextSequence getTextSequenceAt(
+        public @Nullable AccessibleTextSequence getTextSequenceAt(
             @MagicConstant(intValues = {
                 AccessibleText.CHARACTER,
                 AccessibleText.WORD,
@@ -1210,9 +1189,8 @@ public class EditorComponentImpl extends JTextComponent
             return getSequenceAtIndex(part, index, HERE);
         }
 
-        @Nullable
         @Override
-        public AccessibleTextSequence getTextSequenceAfter(
+        public @Nullable AccessibleTextSequence getTextSequenceAfter(
             @MagicConstant(
                 intValues = {
                     AccessibleText.CHARACTER,
@@ -1227,9 +1205,8 @@ public class EditorComponentImpl extends JTextComponent
             return getSequenceAtIndex(part, index, AFTER);
         }
 
-        @Nullable
         @Override
-        public AccessibleTextSequence getTextSequenceBefore(
+        public @Nullable AccessibleTextSequence getTextSequenceBefore(
             @MagicConstant(intValues = {
                 AccessibleText.CHARACTER,
                 AccessibleText.WORD,

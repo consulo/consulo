@@ -51,9 +51,8 @@ public abstract class FactoryMap<K, V> implements Map<K, V> {
 
   protected abstract @Nullable V create(K key);
 
-  @Nullable
   @Override
-  public V get(Object key) {
+  public @Nullable V get(Object key) {
     Map<K, V> map = getMap();
     K k = notNull(key);
     V value = map.get(k);
@@ -92,18 +91,16 @@ public abstract class FactoryMap<K, V> implements Map<K, V> {
     return getMap().containsKey(notNull(key));
   }
 
-  @Nullable
   @Override
-  public V put(K key, V value) {
+  public @Nullable V put(K key, V value) {
     K k = notNull(key);
     V v = notNull(value);
     v = getMap().put(k, v);
     return nullize(v);
   }
 
-  @Nullable
   @Override
-  public V remove(Object key) {
+  public @Nullable V remove(Object key) {
     V v = getMap().remove(key);
     return nullize(v);
   }
@@ -166,9 +163,8 @@ public abstract class FactoryMap<K, V> implements Map<K, V> {
 
   public static <K, V> Map<K, V> create(final Function<? super K, ? extends V> computeValue) {
     return new FactoryMap<K, V>(true) {
-      @Nullable
       @Override
-      protected V create(K key) {
+      protected @Nullable V create(K key) {
         return computeValue.apply(key);
       }
     };
@@ -176,9 +172,8 @@ public abstract class FactoryMap<K, V> implements Map<K, V> {
 
   public static <K, V> Map<K, V> createMap(final Function<? super K, ? extends V> computeValue, final Supplier<? extends Map<K, V>> mapCreator) {
     return new FactoryMap<K, V>(true) {
-      @Nullable
       @Override
-      protected V create(K key) {
+      protected @Nullable V create(K key) {
         return computeValue.apply(key);
       }
 

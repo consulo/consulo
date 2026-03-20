@@ -49,7 +49,6 @@ public abstract class SdkType implements SdkTypeId {
     /**
      * @return paths for select in file chooser. Selected path will exists on file system
      */
-    
     public Collection<String> suggestHomePaths() {
         return List.of();
     }
@@ -61,7 +60,6 @@ public abstract class SdkType implements SdkTypeId {
     /**
      * @return env variables which will be checked while creating predefined sdks
      */
-    
     public Set<String> getEnviromentVariables(Platform platform) {
         return Set.of();
     }
@@ -73,7 +71,6 @@ public abstract class SdkType implements SdkTypeId {
      * @param homePath the path selected in the file chooser.
      * @return the path to be used as the SDK home.
      */
-
     public String adjustSelectedSdkHome(String homePath) {
         return homePath;
     }

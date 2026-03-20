@@ -266,9 +266,8 @@ public abstract class ClassesFilteredViewBase extends BorderLayoutPanel implemen
         return myTable;
     }
 
-    @Nullable
     @Override
-    public Object getData(Key<?> dataId) {
+    public @Nullable Object getData(Key<?> dataId) {
         return null;
     }
 

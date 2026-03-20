@@ -468,7 +468,6 @@ public class FindUsagesManager {
     /**
      * @throws PsiInvalidElementAccessException when the searcher can't be created (i.e. because element was invalidated)
      */
-    
     private static UsageSearcher createUsageSearcher(
         PsiElement2UsageTargetAdapter[] primaryTargets,
         PsiElement2UsageTargetAdapter[] secondaryTargets,

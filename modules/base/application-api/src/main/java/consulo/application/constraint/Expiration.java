@@ -21,6 +21,5 @@ public interface Expiration {
   /**
    * The caller must ensure the returned handle is properly disposed.
    */
-  
   Handle invokeOnExpiration(Runnable runnable);
 }

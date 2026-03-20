@@ -23,6 +23,5 @@ public interface DeploymentLogManager {
 
     boolean isTtySupported();
 
-    @Nullable
-    TerminalHandler addTerminal(String presentableName, InputStream terminalOutput, OutputStream terminalInput);
+    @Nullable TerminalHandler addTerminal(String presentableName, InputStream terminalOutput, OutputStream terminalInput);
 }

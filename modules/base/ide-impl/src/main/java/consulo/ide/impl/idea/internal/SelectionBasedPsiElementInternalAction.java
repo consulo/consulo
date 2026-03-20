@@ -101,9 +101,8 @@ public abstract class SelectionBasedPsiElementInternalAction<T extends PsiElemen
         return ContainerUtil.list(PsiTreeUtil.findElementOfClassAtOffset(file, editor.getCaretModel().getOffset(), myClass, false));
     }
 
-    @Nullable
     @RequiredReadAction
-    protected T getElementFromSelection(PsiFile file, SelectionModel selectionModel) {
+    protected @Nullable T getElementFromSelection(PsiFile file, SelectionModel selectionModel) {
         int selectionStart = selectionModel.getSelectionStart();
         int selectionEnd = selectionModel.getSelectionEnd();
         return PsiTreeUtil.findElementOfClassAtRange(file, selectionStart, selectionEnd, myClass);

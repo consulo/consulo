@@ -400,9 +400,8 @@ public class LocalTaskImpl extends LocalTask {
         myNumber = number;
     }
 
-    @Nullable
     @Override
-    public String getProject() {
+    public @Nullable String getProject() {
         // extract project from ID for compatibility
         return StringUtil.isEmpty(myProject) ? extractProjectFromId(myId) : myProject;
     }

@@ -138,9 +138,8 @@ public class DefaultArrangementSettingsSerializer implements ArrangementSettings
     }
   }
 
-  @Nullable
   @Override
-  public ArrangementSettings deserialize(Element element) {
+  public @Nullable ArrangementSettings deserialize(Element element) {
     Set<StdArrangementRuleAliasToken> tokensDefinition = deserializeTokensDefinition(element, myDefaultSettings);
     List<ArrangementGroupingRule> groupingRules = deserializeGropings(element, myDefaultSettings);
     Element rulesElement = element.getChild(RULES_ELEMENT_NAME);
@@ -334,9 +333,8 @@ public class DefaultArrangementSettingsSerializer implements ArrangementSettings
       myRuleAliases = aliases;
     }
 
-    @Nullable
     @Override
-    public ArrangementSettingsToken deserializeToken(String id) {
+    public @Nullable ArrangementSettingsToken deserializeToken(String id) {
       ArrangementSettingsToken token = myDelegate.deserializeToken(id);
       if (token != null || myRuleAliases == null) {
         return token;
@@ -354,12 +352,10 @@ public class DefaultArrangementSettingsSerializer implements ArrangementSettings
   public interface Mixin {
 
     Mixin NULL = new Mixin() {
-      @Nullable
       @Override
-      public ArrangementSettingsToken deserializeToken(String id) { return null; }
+      public @Nullable ArrangementSettingsToken deserializeToken(String id) { return null; }
     };
 
-    @Nullable
-    ArrangementSettingsToken deserializeToken(String id);
+    @Nullable ArrangementSettingsToken deserializeToken(String id);
   }
 }

@@ -33,8 +33,7 @@ public interface ProblemDescriptionsProcessor {
    * @param refEntity the reference graph node.
    * @return the problems found for the specified node.
    */
-  @Nullable
-  CommonProblemDescriptor[] getDescriptions(RefEntity refEntity);
+  @Nullable CommonProblemDescriptor[] getDescriptions(RefEntity refEntity);
 
   /**
    * Drops all problems which have been collected for the specified reference graph node.

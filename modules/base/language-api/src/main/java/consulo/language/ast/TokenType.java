@@ -20,7 +20,6 @@ import consulo.language.Language;
 /**
  * The standard lexer token types common to all languages.
  */
-
 public interface TokenType {
   /**
    * Token type for a sequence of whitespace characters.

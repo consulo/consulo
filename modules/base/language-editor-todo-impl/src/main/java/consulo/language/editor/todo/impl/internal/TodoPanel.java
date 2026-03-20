@@ -453,9 +453,8 @@ public abstract class TodoPanel extends SimpleToolWindowPanel implements Occuren
         return super.getData(dataId);
     }
 
-    @Nullable
     @Override
-    public OccurenceInfo goPreviousOccurence() {
+    public @Nullable OccurenceInfo goPreviousOccurence() {
         return myOccurenceNavigator.goPreviousOccurence();
     }
 
@@ -465,9 +464,8 @@ public abstract class TodoPanel extends SimpleToolWindowPanel implements Occuren
         return myOccurenceNavigator.getNextOccurenceActionName();
     }
 
-    @Nullable
     @Override
-    public OccurenceInfo goNextOccurence() {
+    public @Nullable OccurenceInfo goNextOccurence() {
         return myOccurenceNavigator.goNextOccurence();
     }
 

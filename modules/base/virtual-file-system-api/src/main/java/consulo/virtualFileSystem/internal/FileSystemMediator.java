@@ -21,11 +21,9 @@ import org.jspecify.annotations.Nullable;
 import java.io.IOException;
 
 public interface FileSystemMediator {
-  @Nullable
-  FileAttributes getAttributes(String path) throws IOException;
+  @Nullable FileAttributes getAttributes(String path) throws IOException;
 
-  @Nullable
-  String resolveSymLink(String path) throws IOException;
+  @Nullable String resolveSymLink(String path) throws IOException;
 
   boolean clonePermissions(String source, String target, boolean execOnly) throws IOException;
 }

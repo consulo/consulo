@@ -100,7 +100,6 @@ public abstract class VcsTaskHandler {
   /**
    * @return currently active (checked out) tasks (branches)
    */
-  
   public abstract TaskInfo[] getCurrentTasks();
 
   /**
@@ -124,7 +123,6 @@ public abstract class VcsTaskHandler {
    * @param suggestedName suggested name
    * @return new valid branchName
    */
-  
   public String cleanUpBranchName(String suggestedName) {
     return suggestedName.replaceAll(DEFAULT_PROHIBITED_SYMBOLS, "-");
   }

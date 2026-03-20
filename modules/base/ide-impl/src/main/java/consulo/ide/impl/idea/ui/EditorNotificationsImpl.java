@@ -157,9 +157,8 @@ public class EditorNotificationsImpl extends EditorNotifications implements Disp
             }
 
             @RequiredReadAction
-            @Nullable
             @Override
-            public Continuation performInReadAction(ProgressIndicator indicator) throws ProcessCanceledException {
+            public @Nullable Continuation performInReadAction(ProgressIndicator indicator) throws ProcessCanceledException {
                 if (isOutdated()) {
                     return null;
                 }

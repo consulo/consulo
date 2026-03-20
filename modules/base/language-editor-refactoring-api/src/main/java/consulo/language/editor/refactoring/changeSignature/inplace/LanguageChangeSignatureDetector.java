@@ -38,9 +38,8 @@ public interface LanguageChangeSignatureDetector<C extends ChangeInfo> extends L
   ExtensionPointCacheKey<LanguageChangeSignatureDetector, ByLanguageValue<LanguageChangeSignatureDetector>> KEY =
           ExtensionPointCacheKey.create("LanguageChangeSignatureDetector", LanguageOneToOne.build());
 
-  @Nullable
   @SuppressWarnings("unchecked")
-  static LanguageChangeSignatureDetector<ChangeInfo> forLanguage(Language language) {
+  static @Nullable LanguageChangeSignatureDetector<ChangeInfo> forLanguage(Language language) {
     return Application.get().getExtensionPoint(LanguageChangeSignatureDetector.class).getOrBuildCache(KEY).get(language);
   }
 
@@ -49,8 +48,7 @@ public interface LanguageChangeSignatureDetector<C extends ChangeInfo> extends L
 
   boolean ignoreChanges(PsiElement element);
 
-  @Nullable
-  C createNextChangeInfo(String signature, C currentInfo, boolean delegate);
+  @Nullable C createNextChangeInfo(String signature, C currentInfo, boolean delegate);
 
   void performChange(C changeInfo, Editor editor, String oldText);
 

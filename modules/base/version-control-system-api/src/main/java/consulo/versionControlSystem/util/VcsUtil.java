@@ -680,7 +680,6 @@ public class VcsUtil {
      * <p>
      * Also see {@link Stream#concat(Stream, Stream)} documentation for other possible issues of concatenating large number of streams.
      */
-    
     public static <T> Stream<T> concat(Stream<T>... streams) {
         return toStream(streams).reduce(Stream.empty(), Stream::concat);
     }

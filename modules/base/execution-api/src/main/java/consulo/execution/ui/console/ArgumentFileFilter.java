@@ -26,9 +26,8 @@ public class ArgumentFileFilter implements Filter {
     myFileText = Files.readString(Path.of(path));
   }
 
-  @Nullable
   @Override
-  public Result applyFilter(String line, int entireLength) {
+  public @Nullable Result applyFilter(String line, int entireLength) {
     if(!myTriggred) {
       String path = myFilePath;
       String text = myFileText;

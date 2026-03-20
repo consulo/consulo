@@ -79,9 +79,8 @@ public class PluginAdvertiserEditorNotificationProvider implements EditorNotific
     }
 
     @RequiredReadAction
-    @Nullable
     @Override
-    public EditorNotificationBuilder buildNotification(
+    public @Nullable EditorNotificationBuilder buildNotification(
         VirtualFile file,
         FileEditor fileEditor,
         Supplier<EditorNotificationBuilder> builderFactory

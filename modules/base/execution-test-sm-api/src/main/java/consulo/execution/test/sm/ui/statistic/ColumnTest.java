@@ -39,9 +39,8 @@ public class ColumnTest extends BaseColumn implements Comparator<SMTestProxy> {
         return testProxy.getPresentableName();
     }
 
-    @Nullable
     @Override
-    public Comparator<SMTestProxy> getComparator() {
+    public @Nullable Comparator<SMTestProxy> getComparator() {
         return this;
     }
 

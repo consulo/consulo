@@ -33,7 +33,6 @@ public class EditorColorsUtil {
      * @return the appropriate color scheme for UI other than text editor (QuickDoc, UsagesView, etc.)
      * depending on the current LAF and current editor color scheme.
      */
-    
     public static EditorColorsScheme getGlobalOrDefaultColorScheme() {
         return getColorSchemeForBackground(null);
     }

@@ -27,12 +27,10 @@ import java.util.function.BiFunction;
 @DeprecationInfo("Use BiFunction")
 @FunctionalInterface
 public interface PairFunction<Arg1, Arg2, ResultType> extends BiFunction<Arg1, Arg2, ResultType> {
-  @Nullable
-  ResultType fun(Arg1 t, Arg2 v);
+  @Nullable ResultType fun(Arg1 t, Arg2 v);
 
-  @Nullable
   @Override
-  default ResultType apply(Arg1 arg1, Arg2 arg2) {
+  default @Nullable ResultType apply(Arg1 arg1, Arg2 arg2) {
     return fun(arg1, arg2);
   }
 }

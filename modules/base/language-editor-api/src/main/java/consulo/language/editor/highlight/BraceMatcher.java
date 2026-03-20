@@ -42,8 +42,7 @@ public interface BraceMatcher {
 
   boolean isStructuralBrace(HighlighterIterator iterator, CharSequence text, FileType fileType);
 
-  @Nullable
-  IElementType getOppositeBraceTokenType(IElementType type);
+  @Nullable IElementType getOppositeBraceTokenType(IElementType type);
 
   boolean isPairedBracesAllowedBeforeType(IElementType lbraceType, @Nullable IElementType contextType);
 

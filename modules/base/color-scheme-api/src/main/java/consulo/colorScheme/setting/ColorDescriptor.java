@@ -67,7 +67,6 @@ public final class ColorDescriptor {
      *
      * @return the type of color.
      */
-    
     public Kind getKind() {
         return myKind;
     }
@@ -77,7 +76,6 @@ public final class ColorDescriptor {
      *
      * @return the name of the color.
      */
-    
     public LocalizeValue getDisplayName() {
         return myDisplayName;
     }
@@ -87,7 +85,6 @@ public final class ColorDescriptor {
      *
      * @return the color key.
      */
-    
     public EditorColorKey getKey() {
         return myKey;
     }

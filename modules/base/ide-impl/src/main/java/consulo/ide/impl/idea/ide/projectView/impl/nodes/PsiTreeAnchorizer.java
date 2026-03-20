@@ -78,10 +78,9 @@ public class PsiTreeAnchorizer extends TreeAnchorizer {
         return super.createAnchor(element);
     }
 
-    @Nullable
     @Override
     @RequiredReadAction
-    public Object retrieveElement(Object pointer) {
+    public @Nullable Object retrieveElement(Object pointer) {
         if (pointer instanceof SmartPsiElementPointer smartPointer) {
             return myApplication.runReadAction((Supplier<Object>) smartPointer::getElement);
         }

@@ -26,9 +26,8 @@ public class MiniDetailsGetter extends AbstractDataGetter<VcsShortCommitDetails>
     myTopCommitsDetailsCache = topCommitsDetailsCache;
   }
 
-  @Nullable
   @Override
-  protected VcsShortCommitDetails getFromAdditionalCache(int commitId) {
+  protected @Nullable VcsShortCommitDetails getFromAdditionalCache(int commitId) {
     return myTopCommitsDetailsCache.get(commitId);
   }
 

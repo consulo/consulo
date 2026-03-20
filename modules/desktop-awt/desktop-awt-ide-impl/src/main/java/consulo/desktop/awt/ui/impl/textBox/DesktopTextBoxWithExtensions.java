@@ -114,9 +114,8 @@ public class DesktopTextBoxWithExtensions {
             AWTHasSuffixComponent.setSuffixComponent(toAWTComponent(), TargetAWT.to(suffixComponent));
         }
 
-        @Nullable
         @Override
-        public Component getSuffixComponent() {
+        public @Nullable Component getSuffixComponent() {
             Object object = toAWTComponent().getClientProperty("JTextField.trailingComponent");
             if (object instanceof JComponent jComponent) {
                 return TargetAWT.from(jComponent);
@@ -130,9 +129,8 @@ public class DesktopTextBoxWithExtensions {
             return toAWTComponent();
         }
 
-        @Nullable
         @Override
-        public String getValue() {
+        public @Nullable String getValue() {
             return toAWTComponent().getText();
         }
 
@@ -153,9 +151,8 @@ public class DesktopTextBoxWithExtensions {
             field.putClientProperty("JTextField.placeholderText", text.getNullIfEmpty());
         }
 
-        @Nullable
         @Override
-        public ColorValue getForegroundColor() {
+        public @Nullable ColorValue getForegroundColor() {
             return toAWTComponent().myForegroundColor;
         }
 

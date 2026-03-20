@@ -115,9 +115,8 @@ public class IdeNotificationArea implements CustomStatusBarWidget, IconLikeCusto
         }
     }
 
-    @Nullable
     @Override
-    public Component getUIComponent() {
+    public @Nullable Component getUIComponent() {
         return myLabel;
     }
 

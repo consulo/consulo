@@ -24,6 +24,5 @@ import javax.swing.*;
  * marking it as RetrievableIcon will help get the actual icon and perform checks.
  */
 public interface RetrievableIcon extends Icon {
-  @Nullable
-  Icon retrieveIcon();
+  @Nullable Icon retrieveIcon();
 }

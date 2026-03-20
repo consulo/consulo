@@ -29,7 +29,6 @@ import org.jspecify.annotations.Nullable;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface HighlightUsagesHandlerFactory<T extends PsiElement> {
-    @Nullable
     @RequiredReadAction
-    HighlightUsagesHandlerBase<T> createHighlightUsagesHandler(Editor editor, PsiFile file);
+    @Nullable HighlightUsagesHandlerBase<T> createHighlightUsagesHandler(Editor editor, PsiFile file);
 }

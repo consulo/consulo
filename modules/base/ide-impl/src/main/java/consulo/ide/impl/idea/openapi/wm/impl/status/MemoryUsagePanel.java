@@ -86,9 +86,8 @@ public final class MemoryUsagePanel extends JButton implements CustomStatusBarWi
     public void install(StatusBar statusBar) {
     }
 
-    @Nullable
     @Override
-    public WidgetPresentation getPresentation() {
+    public @Nullable WidgetPresentation getPresentation() {
         return null;
     }
 

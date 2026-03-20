@@ -32,9 +32,8 @@ public class NullableLazyKey<T, H extends UserDataHolder> extends Key<T> {
         myFunction = function;
     }
 
-    @Nullable
     @SuppressWarnings("unchecked")
-    public final T getValue(H h) {
+    public final @Nullable T getValue(H h) {
         T data = h.getUserData(this);
         if (data == null) {
             data = myFunction.apply(h);

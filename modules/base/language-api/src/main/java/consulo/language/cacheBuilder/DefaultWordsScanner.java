@@ -25,7 +25,6 @@ import consulo.language.lexer.Lexer;
  *
  * @author max
  */
-
 public class DefaultWordsScanner implements WordsScanner {
   private final Lexer myLexer;
   private final TokenSet myIdentifierTokenSet;

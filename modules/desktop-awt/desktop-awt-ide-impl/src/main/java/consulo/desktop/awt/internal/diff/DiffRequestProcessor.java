@@ -910,9 +910,8 @@ public abstract class DiffRequestProcessor implements Disposable {
             return new Dimension(Math.max(windowSize.width, size.width), Math.max(windowSize.height, size.height));
         }
 
-        @Nullable
         @Override
-        public Object getData(Key<?> dataId) {
+        public @Nullable Object getData(Key<?> dataId) {
             Object data;
 
             DataProvider contentProvider =
@@ -1033,9 +1032,8 @@ public abstract class DiffRequestProcessor implements Disposable {
             }
         }
 
-        @Nullable
         @Override
-        public Project getProject() {
+        public @Nullable Project getProject() {
             return DiffRequestProcessor.this.getProject();
         }
 
@@ -1054,9 +1052,8 @@ public abstract class DiffRequestProcessor implements Disposable {
             DiffRequestProcessor.this.requestFocusInternal();
         }
 
-        @Nullable
         @Override
-        public <T> T getUserData(Key<T> key) {
+        public <T> @Nullable T getUserData(Key<T> key) {
             return myContext.getUserData(key);
         }
 
@@ -1090,11 +1087,9 @@ public abstract class DiffRequestProcessor implements Disposable {
         @RequiredUIAccess
         void destroy();
 
-        @Nullable
-        JComponent getPreferredFocusedComponent();
+        @Nullable JComponent getPreferredFocusedComponent();
 
-        @Nullable
-        Object getData(Key<?> dataId);
+        @Nullable Object getData(Key<?> dataId);
 
         
         DiffTool getActiveTool();
@@ -1113,15 +1108,13 @@ public abstract class DiffRequestProcessor implements Disposable {
         public void destroy() {
         }
 
-        @Nullable
         @Override
-        public JComponent getPreferredFocusedComponent() {
+        public @Nullable JComponent getPreferredFocusedComponent() {
             return null;
         }
 
-        @Nullable
         @Override
-        public Object getData(Key<?> dataId) {
+        public @Nullable Object getData(Key<?> dataId) {
             return null;
         }
 
@@ -1168,15 +1161,13 @@ public abstract class DiffRequestProcessor implements Disposable {
             Disposer.dispose(myViewer);
         }
 
-        @Nullable
         @Override
-        public JComponent getPreferredFocusedComponent() {
+        public @Nullable JComponent getPreferredFocusedComponent() {
             return null;
         }
 
-        @Nullable
         @Override
-        public Object getData(Key<?> dataId) {
+        public @Nullable Object getData(Key<?> dataId) {
             return null;
         }
 
@@ -1218,9 +1209,8 @@ public abstract class DiffRequestProcessor implements Disposable {
             Disposer.dispose(myViewer);
         }
 
-        @Nullable
         @Override
-        public JComponent getPreferredFocusedComponent() {
+        public @Nullable JComponent getPreferredFocusedComponent() {
             return myViewer.getPreferredFocusedComponent();
         }
 
@@ -1230,9 +1220,8 @@ public abstract class DiffRequestProcessor implements Disposable {
             return myTool;
         }
 
-        @Nullable
         @Override
-        public Object getData(Key<?> dataId) {
+        public @Nullable Object getData(Key<?> dataId) {
             if (DiffDataKeys.DIFF_VIEWER == dataId) {
                 return myViewer;
             }
@@ -1298,9 +1287,8 @@ public abstract class DiffRequestProcessor implements Disposable {
             Disposer.dispose(myWrapperViewer);
         }
 
-        @Nullable
         @Override
-        public JComponent getPreferredFocusedComponent() {
+        public @Nullable JComponent getPreferredFocusedComponent() {
             return myWrapperViewer.getPreferredFocusedComponent();
         }
 
@@ -1310,9 +1298,8 @@ public abstract class DiffRequestProcessor implements Disposable {
             return myTool;
         }
 
-        @Nullable
         @Override
-        public Object getData(Key<?> dataId) {
+        public @Nullable Object getData(Key<?> dataId) {
             if (DiffDataKeys.WRAPPING_DIFF_VIEWER == dataId) {
                 return myWrapperViewer;
             }

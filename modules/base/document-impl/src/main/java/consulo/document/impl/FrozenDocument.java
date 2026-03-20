@@ -196,15 +196,13 @@ public class FrozenDocument implements DocumentEx {
         throw new UnsupportedOperationException();
     }
 
-    @Nullable
     @Override
-    public RangeMarker getOffsetGuard(int offset) {
+    public @Nullable RangeMarker getOffsetGuard(int offset) {
         throw new UnsupportedOperationException();
     }
 
-    @Nullable
     @Override
-    public RangeMarker getRangeGuard(int start, int end) {
+    public @Nullable RangeMarker getRangeGuard(int start, int end) {
         throw new UnsupportedOperationException();
     }
 
@@ -228,9 +226,8 @@ public class FrozenDocument implements DocumentEx {
         return getLineSet().getSeparatorLength(line);
     }
 
-    @Nullable
     @Override
-    public <T> T getUserData(Key<T> key) {
+    public <T> @Nullable T getUserData(Key<T> key) {
         throw new UnsupportedOperationException();
     }
 

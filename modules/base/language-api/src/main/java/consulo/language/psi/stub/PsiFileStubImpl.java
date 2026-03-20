@@ -75,7 +75,6 @@ public class PsiFileStubImpl<T extends PsiFile> extends StubBase<T> implements P
   /**
    * Don't call this method, it's public for implementation reasons
    */
-  
   public PsiFileStub[] getStubRoots() {
     if (myStubRoots != null) return myStubRoots;
 

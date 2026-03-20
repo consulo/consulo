@@ -338,8 +338,7 @@ public class LookupImpl extends LightweightHintImpl implements LookupEx, Disposa
         myCellRenderer.scheduleUpdateLookupWidthFromVisibleItems();
     }
 
-    @Nullable
-    Font getCustomFont(LookupElement item, boolean bold) {
+    @Nullable Font getCustomFont(LookupElement item, boolean bold) {
         Font font = item.getUserData(CUSTOM_FONT_KEY);
         return font == null ? null : bold ? font.deriveFont(Font.BOLD) : font;
     }

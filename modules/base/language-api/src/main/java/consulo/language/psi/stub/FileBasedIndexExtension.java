@@ -37,7 +37,6 @@ public abstract class FileBasedIndexExtension<K, V> extends IndexExtension<K, V,
    * Note that check only file's extension is usually error-prone way and prefer to check {@link VirtualFile#getFileType()}:
    * for example user can enforce language file as plain text one.
    */
-  
   public abstract FileBasedIndex.InputFilter getInputFilter();
 
   public abstract boolean dependsOnFileContent();
@@ -61,7 +60,6 @@ public abstract class FileBasedIndexExtension<K, V> extends IndexExtension<K, V,
    * <p>
    * Use carefully, because indexing large files may influence index update speed dramatically.
    */
-  
   public Collection<FileType> getFileTypesWithSizeLimitNotApplicable() {
     return List.of();
   }

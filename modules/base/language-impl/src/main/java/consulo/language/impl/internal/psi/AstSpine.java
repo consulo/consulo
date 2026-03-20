@@ -41,9 +41,8 @@ public class AstSpine implements StubbedSpine {
     return myNodes.size();
   }
 
-  @Nullable
   @Override
-  public PsiElement getStubPsi(int index) {
+  public @Nullable PsiElement getStubPsi(int index) {
     return index >= myNodes.size() ? null : myNodes.get(index).getPsi();
   }
 
@@ -51,9 +50,8 @@ public class AstSpine implements StubbedSpine {
     return myNodes.indexOf((CompositeElement)psi.getNode());
   }
 
-  @Nullable
   @Override
-  public IElementType getStubType(int index) {
+  public @Nullable IElementType getStubType(int index) {
     return index >= myNodes.size() ? null : myNodes.get(index).getElementType();
   }
 

@@ -32,8 +32,7 @@ public interface ItemPresentation {
    *
    * @return the object name.
    */
-  @Nullable
-  String getPresentableText();
+  @Nullable String getPresentableText();
 
   /**
    * Returns the location of the object (for example, the package of a class). The location
@@ -41,8 +40,7 @@ public interface ItemPresentation {
    *
    * @return the location description, or null if none is applicable.
    */
-  @Nullable
-  String getLocationString();
+  @Nullable String getLocationString();
 
   /**
    * Returns the icon representing the object.
@@ -56,10 +54,9 @@ public interface ItemPresentation {
    *
    * @param unused Used to mean if open/close icons for tree renderer. No longer in use. The parameter is only there for API compatibility reason.
    */
-  @Nullable
   @Deprecated
   @DeprecationInfo("Use #getIcon()")
-  default Image getIcon(boolean unused) {
+  default @Nullable Image getIcon(boolean unused) {
     return getIcon();
   }
 }

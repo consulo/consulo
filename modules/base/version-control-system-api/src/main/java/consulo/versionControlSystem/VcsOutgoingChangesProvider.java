@@ -29,11 +29,9 @@ import java.util.List;
 public interface VcsOutgoingChangesProvider<T extends CommittedChangeList> extends VcsProviderMarker {
   Pair<VcsRevisionNumber, List<T>> getOutgoingChanges(VirtualFile vcsRoot, boolean findRemote) throws VcsException;
 
-  @Nullable
-  VcsRevisionNumber getMergeBaseNumber(VirtualFile anyFileUnderRoot) throws VcsException;
+  @Nullable VcsRevisionNumber getMergeBaseNumber(VirtualFile anyFileUnderRoot) throws VcsException;
 
   Collection<Change> filterLocalChangesBasedOnLocalCommits(Collection<Change> localChanges, VirtualFile vcsRoot) throws VcsException;
 
-  @Nullable
-  Date getRevisionDate(VcsRevisionNumber revision, FilePath file);
+  @Nullable Date getRevisionDate(VcsRevisionNumber revision, FilePath file);
 }

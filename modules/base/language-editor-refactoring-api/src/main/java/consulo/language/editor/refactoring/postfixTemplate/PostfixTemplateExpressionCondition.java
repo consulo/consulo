@@ -19,14 +19,11 @@ public interface PostfixTemplateExpressionCondition<T extends PsiElement> extend
   /**
    * @return presentable name for postfix editor dialog
    */
-  
-  
   String getPresentableName();
 
   /**
    * @return ID for serialization
    */
-  
   String getId();
 
   boolean equals(Object o);

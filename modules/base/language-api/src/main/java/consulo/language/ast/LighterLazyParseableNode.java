@@ -21,8 +21,7 @@ import consulo.language.util.CharTable;
 import org.jspecify.annotations.Nullable;
 
 public interface LighterLazyParseableNode extends LighterASTNode {
-  @Nullable
-  PsiFile getContainingFile();
+  @Nullable PsiFile getContainingFile();
 
   CharTable getCharTable();
 

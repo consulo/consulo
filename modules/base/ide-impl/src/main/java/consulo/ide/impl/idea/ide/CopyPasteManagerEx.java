@@ -110,7 +110,6 @@ public class CopyPasteManagerEx extends CopyPasteManager implements ClipboardOwn
      * @param content content to store
      * @return content that is either the given one or the one that was assembled from it and already stored one
      */
-    
     private Transferable addNewContentToStack(Transferable content) {
         try {
             String clipString = getStringContent(content);
@@ -242,9 +241,8 @@ public class CopyPasteManagerEx extends CopyPasteManager implements ClipboardOwn
         return myClipboardSynchronizer.getContents();
     }
 
-    @Nullable
     @Override
-    public <T> T getContents(DataFlavor flavor) {
+    public <T> @Nullable T getContents(DataFlavor flavor) {
         if (areDataFlavorsAvailable(flavor)) {
             //noinspection unchecked
             return (T)myClipboardSynchronizer.getData(flavor);

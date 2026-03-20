@@ -90,9 +90,8 @@ class FoldingModelWindow implements FoldingModelEx, ModificationTracker {
         return host; //todo convert to window?
     }
 
-    @Nullable
     @Override
-    public FoldRegion getFoldRegion(int startOffset, int endOffset) {
+    public @Nullable FoldRegion getFoldRegion(int startOffset, int endOffset) {
         TextRange range = new TextRange(startOffset, endOffset);
         TextRange hostRange = myDocumentWindow.injectedToHost(range);
         FoldRegion hostRegion = myDelegate.getFoldRegion(hostRange.getStartOffset(), hostRange.getEndOffset());

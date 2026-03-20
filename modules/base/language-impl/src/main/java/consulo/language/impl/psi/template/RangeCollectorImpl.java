@@ -207,8 +207,7 @@ public class RangeCollectorImpl extends TemplateDataElementType.RangeCollector {
    * Similar to {@link TreeUtil#findFirstLeaf(ASTNode)}, but also treats collapsed lazy parseable elements as leaves and returns them.
    */
   private static
-  @Nullable
-  TreeElement findFirstSuitableElement(ASTNode element) {
+  @Nullable TreeElement findFirstSuitableElement(ASTNode element) {
     if (isSuitableElement(element)) {
       return (TreeElement)element;
     }
@@ -225,8 +224,7 @@ public class RangeCollectorImpl extends TemplateDataElementType.RangeCollector {
    * Similar to {@link TreeUtil#nextLeaf(ASTNode)}, but also treats collapsed lazy parseable elements as leaves and returns them.
    */
   private static
-  @Nullable
-  TreeElement findNextSuitableElement(TreeElement start) {
+  @Nullable TreeElement findNextSuitableElement(TreeElement start) {
     TreeElement element = start;
     while (element != null) {
       TreeElement nextTree = element;
@@ -342,7 +340,6 @@ public class RangeCollectorImpl extends TemplateDataElementType.RangeCollector {
    *
    * @return right part of the split node
    */
-  
   private TreeElement removeLeftPartOfLeaf(TreeElement nextLeaf, int offsetToSplit, TreePatcher templateTreePatcher, CharTable charTable) {
     if (offsetToSplit == 0) return nextLeaf;
     if (!(nextLeaf instanceof LeafElement)) {
@@ -358,7 +355,6 @@ public class RangeCollectorImpl extends TemplateDataElementType.RangeCollector {
   /**
    * Like {@link TemplateDataElementType#parseContents} builds the tree considering outer language elements, but for inner lazy parseables.
    */
-  
   ASTNode applyRangeCollectorAndExpandChameleon(ASTNode chameleon, Language language, Function<CharSequence, ASTNode> parser) {
     CharSequence chars = chameleon.getChars();
     if (myOuterAndRemoveRanges.isEmpty()) return parser.apply(chars);
@@ -402,7 +398,6 @@ public class RangeCollectorImpl extends TemplateDataElementType.RangeCollector {
    * Removes "middle" part of the leaf and returns the new leaf with content of the right and left parts
    * e.g. if we process whitespace leaf " \n " and range "1, 2" the result will be new leaf with content "  "
    */
-  
   private TreeElement removeRange(TreeElement leaf, TextRange rangeToRemove, CharTable table) {
     CharSequence chars = leaf.getChars();
     String res = rangeToRemove.replace(chars.toString(), "");
@@ -438,8 +433,7 @@ public class RangeCollectorImpl extends TemplateDataElementType.RangeCollector {
      * We need this text to propagate dummy strings through lazy parseables. If this text is null, dummy identifier won't be propagated.
      */
     public final
-    @Nullable
-    CharSequence myTextToRemove;
+    @Nullable CharSequence myTextToRemove;
 
     RangeToRemove(int startOffset, CharSequence text) {
       super(startOffset, startOffset + text.length());

@@ -69,9 +69,8 @@ public class SimpleDiffRequest extends ContentDiffRequest {
     return myContentTitles;
   }
 
-  @Nullable
   @Override
-  public String getTitle() {
+  public @Nullable String getTitle() {
     return myTitle;
   }
 

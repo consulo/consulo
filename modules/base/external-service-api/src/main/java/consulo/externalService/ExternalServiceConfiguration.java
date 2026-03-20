@@ -28,13 +28,11 @@ import org.jspecify.annotations.Nullable;
  */
 @ServiceAPI(ComponentScope.APPLICATION)
 public interface ExternalServiceConfiguration {
-  @Nullable
-  String getEmail();
+  @Nullable String getEmail();
 
   boolean isAuthorized();
 
-  @Nullable
-  Image getUserIcon();
+  @Nullable Image getUserIcon();
 
   void updateIcon();
 
@@ -42,7 +40,6 @@ public interface ExternalServiceConfiguration {
    * @see ThreeState documentation
    * @return state or default state
    */
-  
   ThreeState getState(ExternalService externalService);
 
   void setState(ExternalService externalService, ThreeState state);

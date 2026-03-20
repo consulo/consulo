@@ -78,7 +78,6 @@ public class WhiteSpaceFormattingStrategyFactory {
     /**
      * @return collection of all registered white space strategies
      */
-    
     public static Collection<WhiteSpaceFormattingStrategy> getAllStrategies() {
         WeakReference<Collection<WhiteSpaceFormattingStrategy>> reference = myCachedStrategies.get();
         if (reference != null) {

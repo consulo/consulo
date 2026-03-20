@@ -26,26 +26,19 @@ import java.util.List;
  */
 public interface VcsLogFilterCollection {
 
-  @Nullable
-  VcsLogBranchFilter getBranchFilter();
+  @Nullable VcsLogBranchFilter getBranchFilter();
 
-  @Nullable
-  VcsLogUserFilter getUserFilter();
+  @Nullable VcsLogUserFilter getUserFilter();
 
-  @Nullable
-  VcsLogDateFilter getDateFilter();
+  @Nullable VcsLogDateFilter getDateFilter();
 
-  @Nullable
-  VcsLogTextFilter getTextFilter();
+  @Nullable VcsLogTextFilter getTextFilter();
 
-  @Nullable
-  VcsLogHashFilter getHashFilter();
+  @Nullable VcsLogHashFilter getHashFilter();
 
-  @Nullable
-  VcsLogStructureFilter getStructureFilter();
+  @Nullable VcsLogStructureFilter getStructureFilter();
 
-  @Nullable
-  VcsLogRootFilter getRootFilter();
+  @Nullable VcsLogRootFilter getRootFilter();
 
   /**
    * Returns true if there are no filters in this collection.

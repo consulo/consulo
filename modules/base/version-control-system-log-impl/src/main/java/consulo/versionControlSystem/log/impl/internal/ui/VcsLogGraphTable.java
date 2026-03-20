@@ -287,9 +287,8 @@ public class VcsLogGraphTable extends TableWithProgress implements DataProvider,
     }
   }
 
-  @Nullable
   @Override
-  public Object getData(Key dataId) {
+  public @Nullable Object getData(Key dataId) {
     return KEY == dataId ? this : null;
   }
 

@@ -157,9 +157,8 @@ public class ExternalSystemAutoImporter implements BulkFileListener, DocumentLis
         ExternalSystemAutoImportAware aware2
     ) {
         return new ExternalSystemAutoImportAware() {
-            @Nullable
             @Override
-            public String getAffectedExternalProjectPath(String changedFileOrDirPath, Project project) {
+            public @Nullable String getAffectedExternalProjectPath(String changedFileOrDirPath, Project project) {
                 String projectPath = aware1.getAffectedExternalProjectPath(changedFileOrDirPath, project);
                 return projectPath == null ? aware2.getAffectedExternalProjectPath(changedFileOrDirPath, project) : projectPath;
             }
@@ -169,9 +168,8 @@ public class ExternalSystemAutoImporter implements BulkFileListener, DocumentLis
     
     private static ExternalSystemAutoImportAware createDefault(AbstractExternalSystemSettings<?, ?, ?> systemSettings) {
         return new ExternalSystemAutoImportAware() {
-            @Nullable
             @Override
-            public String getAffectedExternalProjectPath(String changedFileOrDirPath, Project project) {
+            public @Nullable String getAffectedExternalProjectPath(String changedFileOrDirPath, Project project) {
                 return systemSettings.getLinkedProjectSettings(changedFileOrDirPath) == null ? null : changedFileOrDirPath;
             }
         };

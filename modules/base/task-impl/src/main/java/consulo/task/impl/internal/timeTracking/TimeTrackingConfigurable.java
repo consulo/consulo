@@ -72,9 +72,8 @@ public class TimeTrackingConfigurable implements SearchableConfigurable, Configu
     return "tasks.timeTracking";
   }
 
-  @Nullable
   @Override
-  public Runnable enableSearch(String option) {
+  public @Nullable Runnable enableSearch(String option) {
     return null;
   }
 
@@ -84,15 +83,13 @@ public class TimeTrackingConfigurable implements SearchableConfigurable, Configu
     return LocalizeValue.localizeTODO("Time Tracking");
   }
 
-  @Nullable
   @Override
-  public String getParentId() {
+  public @Nullable String getParentId() {
     return StandardConfigurableIds.TASKS_GROUP;
   }
 
-  @Nullable
   @Override
-  public JComponent createComponent() {
+  public @Nullable JComponent createComponent() {
     return myPanel;
   }
 }

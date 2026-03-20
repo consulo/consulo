@@ -36,9 +36,8 @@ public abstract class AbstractForwardIndexAccessor<Key, Value, DataType> impleme
 
   public abstract @Nullable DataType convertToDataType(InputData<Key, Value> data);
 
-  @Nullable
   @Override
-  public ByteArraySequence serializeIndexedData(InputData<Key, Value> data) throws IOException {
+  public @Nullable ByteArraySequence serializeIndexedData(InputData<Key, Value> data) throws IOException {
     return serializeIndexedData(convertToDataType(data));
   }
 

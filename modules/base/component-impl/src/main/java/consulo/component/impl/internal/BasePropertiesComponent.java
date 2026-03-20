@@ -138,9 +138,8 @@ public class BasePropertiesComponent implements PropertiesComponent, PersistentS
         return myMap.containsKey(name);
     }
 
-    @Nullable
     @Override
-    public String[] getValues(String name) {
+    public @Nullable String[] getValues(String name) {
         String value = getValue(name);
         return value != null ? value.split("\n") : null;
     }

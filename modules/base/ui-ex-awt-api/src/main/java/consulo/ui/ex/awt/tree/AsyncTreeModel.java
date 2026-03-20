@@ -255,7 +255,6 @@ public final class AsyncTreeModel extends AbstractTreeModel implements Identifia
    * @param allowLoading load all needed children if {@code true}
    * @return a promise that will be resolved when visiting is finished
    */
-  
   public Promise<TreePath> accept(TreeVisitor visitor, boolean allowLoading) {
     AbstractTreeWalker<Node> walker = new AbstractTreeWalker<Node>(visitor, node -> node.object) {
       @Override

@@ -23,6 +23,5 @@ import org.jspecify.annotations.Nullable;
 public interface RainbowColorSettingsPage extends ColorSettingsPage {
   boolean isRainbowType(TextAttributesKey type);
 
-  @Nullable
-  Language getLanguage();
+  @Nullable Language getLanguage();
 }

@@ -38,18 +38,15 @@ import java.util.function.Predicate;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface NavBarModelExtension {
-    @Nullable
-    String getPresentableText(Object object);
+    @Nullable String getPresentableText(Object object);
 
     default @Nullable String getPresentableText(Object object, boolean forPopup) {
         return getPresentableText(object);
     }
 
-    @Nullable
-    PsiElement getParent(PsiElement psiElement);
+    @Nullable PsiElement getParent(PsiElement psiElement);
 
-    @Nullable
-    PsiElement adjustElement(PsiElement psiElement);
+    @Nullable PsiElement adjustElement(PsiElement psiElement);
 
     Collection<VirtualFile> additionalRoots(Project project);
 

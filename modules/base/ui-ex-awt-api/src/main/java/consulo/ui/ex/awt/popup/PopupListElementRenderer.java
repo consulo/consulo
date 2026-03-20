@@ -61,9 +61,8 @@ public class PopupListElementRenderer<E> extends GroupedItemsListRenderer<E> {
                 return value != null && aPopup.getListModel().isSeparator(value);
             }
 
-            @Nullable
             @Override
-            public String getTooltipFor(E value) {
+            public @Nullable String getTooltipFor(E value) {
                 ListPopupStep<Object> listStep = aPopup.getListStep();
                 if (!(listStep instanceof ListPopupStepEx)) {
                     return null;

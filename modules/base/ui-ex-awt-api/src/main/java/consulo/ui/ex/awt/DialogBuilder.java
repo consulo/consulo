@@ -405,9 +405,8 @@ public class DialogBuilder implements Disposable {
             myHelpId = helpId;
         }
 
-        @Nullable
         @Override
-        protected String getHelpId() {
+        protected @Nullable String getHelpId() {
             return myHelpId;
         }
 

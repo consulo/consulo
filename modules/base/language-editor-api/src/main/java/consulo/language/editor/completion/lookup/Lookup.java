@@ -46,8 +46,7 @@ public interface Lookup {
    */
   int getLookupStart();
 
-  @Nullable
-  LookupElement getCurrentItem();
+  @Nullable LookupElement getCurrentItem();
 
   void addLookupListener(LookupListener listener);
   void removeLookupListener(LookupListener listener);
@@ -66,20 +65,17 @@ public interface Lookup {
   /**
    * @return leaf PSI element at this lookup's start position (see {@link #getLookupStart()}) in {@link #getPsiFile()} result.
    */
-  @Nullable
-  PsiElement getPsiElement();
+  @Nullable PsiElement getPsiElement();
 
   /**
    * Consider using {@link #getTopLevelEditor()} if you don't need injected editor.
    * @return editor, possibly injected, where this lookup is shown
    */
-  
   Editor getEditor();
 
   /**
    * @return the non-injected editor where this lookup is shown
    */
-  
   Editor getTopLevelEditor();
 
   
@@ -89,8 +85,7 @@ public interface Lookup {
    * @return PSI file, possibly injected, associated with this lookup's editor
    * @see #getEditor()
    */
-  @Nullable
-  PsiFile getPsiFile();
+  @Nullable PsiFile getPsiFile();
 
   boolean isCompletion();
 

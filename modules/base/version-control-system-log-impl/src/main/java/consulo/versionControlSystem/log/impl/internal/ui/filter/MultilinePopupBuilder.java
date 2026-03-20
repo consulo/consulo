@@ -127,9 +127,8 @@ class MultilinePopupBuilder {
             );
         }
 
-        @Nullable
         @Override
-        public String getAdvertisement() {
+        public @Nullable String getAdvertisement() {
             return "Select one or more values separated with | or new lines";
         }
     }

@@ -51,7 +51,6 @@ public interface IntentionAction extends FileModifier {
    * @return the text to show in the intention popup.
    * @see #isAvailable(Project, Editor, PsiFile)
    */
-  
   LocalizeValue getText();
 
   /**

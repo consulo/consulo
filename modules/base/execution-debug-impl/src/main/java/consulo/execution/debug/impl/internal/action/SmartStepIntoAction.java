@@ -43,9 +43,8 @@ public class SmartStepIntoAction extends XDebuggerActionBase {
         return myHandler;
     }
 
-    @Nullable
     @Override
-    protected Image getTemplateIcon() {
+    protected @Nullable Image getTemplateIcon() {
         return ExecutionDebugIconGroup.actionSmartstepinto();
     }
 }

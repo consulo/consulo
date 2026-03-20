@@ -34,8 +34,7 @@ public interface RefManagerExtension<T> {
 
   void removeReference(RefElement refElement);
 
-  @Nullable
-  RefElement createRefElement(PsiElement psiElement);
+  @Nullable RefElement createRefElement(PsiElement psiElement);
 
   /**
    * The method finds problem container (ex: method, class, file) that used to be shown as inspection view tree node.
@@ -48,19 +47,16 @@ public interface RefManagerExtension<T> {
     return null;
   }
 
-  @Nullable
-  RefEntity getReference(String type, String fqName);
+  @Nullable RefEntity getReference(String type, String fqName);
 
-  @Nullable
-  String getType(RefEntity entity);
+  @Nullable String getType(RefEntity entity);
 
   
   RefEntity getRefinedElement(RefEntity ref);
 
   void visitElement(PsiElement element);
 
-  @Nullable
-  String getGroupName(RefEntity entity);
+  @Nullable String getGroupName(RefEntity entity);
 
   boolean belongsToScope(PsiElement psiElement);
 

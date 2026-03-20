@@ -28,9 +28,8 @@ import org.jspecify.annotations.Nullable;
  */
 @ExtensionImpl
 public class GeneratedSourcesHighlightingSettingProvider extends DefaultHighlightingSettingProvider {
-  @Nullable
   @Override
-  public FileHighlightingSetting getDefaultSetting(Project project, VirtualFile file) {
+  public @Nullable FileHighlightingSetting getDefaultSetting(Project project, VirtualFile file) {
     if (GeneratedSourcesFilter.isGenerated(project, file)) {
       return FileHighlightingSetting.SKIP_INSPECTION;
     }

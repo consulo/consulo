@@ -149,9 +149,8 @@ public class CopyrightProfilesPanel extends MasterDetailsComponent
         myInitialized.set(false);
     }
 
-    @Nullable
     @Override
-    protected List<AnAction> createActions(boolean fromPopup) {
+    protected @Nullable List<AnAction> createActions(boolean fromPopup) {
         List<AnAction> result = new ArrayList<>();
         result.add(new AnAction("Add", "Add", PlatformIconGroup.generalAdd()) {
             {
@@ -250,9 +249,8 @@ public class CopyrightProfilesPanel extends MasterDetailsComponent
         return result;
     }
 
-    @Nullable
     @RequiredUIAccess
-    private String askForProfileName(String title, String initialName) {
+    private @Nullable String askForProfileName(String title, String initialName) {
         return Messages.showInputDialog(
             "New copyright profile name:",
             title,

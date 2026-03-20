@@ -140,9 +140,8 @@ public abstract class NamedConfigurable<T> implements Configurable, MasterDetail
         throw new AbstractMethodError();
     }
 
-    @Nullable
     @Override
-    public Image getIcon() {
+    public @Nullable Image getIcon() {
         return getIcon(false);
     }
 

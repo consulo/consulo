@@ -23,7 +23,6 @@ import java.util.concurrent.ConcurrentMap;
 /**
  * @author Alexey
  */
-
 public class Native2AsciiCharset extends Charset {
   private static final String[] ALIASES = new String[0];
   private final Charset myBaseCharset;

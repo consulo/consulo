@@ -39,8 +39,7 @@ public interface InjectingContainer {
   
   <T> T getInstance(Class<T> clazz);
 
-  @Nullable
-  <T> T getInstanceIfCreated(Class<T> clazz);
+  <T> @Nullable T getInstanceIfCreated(Class<T> clazz);
 
   
   <T> T getUnbindedInstance(Class<T> clazz);

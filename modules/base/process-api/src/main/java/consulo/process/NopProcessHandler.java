@@ -34,9 +34,8 @@ public class NopProcessHandler extends BaseProcessHandler {
     return false;
   }
 
-  @Nullable
   @Override
-  public OutputStream getProcessInput() {
+  public @Nullable OutputStream getProcessInput() {
     return null;
   }
 }

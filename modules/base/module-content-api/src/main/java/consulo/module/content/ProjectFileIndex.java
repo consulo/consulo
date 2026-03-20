@@ -56,8 +56,7 @@ public interface ProjectFileIndex extends FileIndex {
    * @param file the file for which the module is requested.
    * @return the module instance or null if the file does not belong to content of any module.
    */
-  @Nullable
-  Module getModuleForFile(VirtualFile file);
+  @Nullable Module getModuleForFile(VirtualFile file);
 
   /**
    * Returns module to which the specified file belongs.
@@ -66,14 +65,12 @@ public interface ProjectFileIndex extends FileIndex {
    * @param honorExclusion if {@code false} the containing module will be returned even if the file is located under a folder marked as excluded
    * @return the module instance or null if the file does not belong to content of any module.
    */
-  @Nullable
-  Module getModuleForFile(VirtualFile file, boolean honorExclusion);
+  @Nullable Module getModuleForFile(VirtualFile file, boolean honorExclusion);
 
   /**
    * Return content folder if virtual file equal to content folder directory (don't check parent directories)
    */
-  @Nullable
-  ContentFolder getContentFolder(VirtualFile file);
+  @Nullable ContentFolder getContentFolder(VirtualFile file);
 
   /**
    * Returns the order entries which contain the specified file (either in CLASSES or SOURCES).
@@ -81,7 +78,6 @@ public interface ProjectFileIndex extends FileIndex {
    * @param file the file for which the order entries are requested.
    * @return the array of order entries containing the file.
    */
-  
   List<OrderEntry> getOrderEntriesForFile(VirtualFile file);
 
   /**
@@ -91,8 +87,7 @@ public interface ProjectFileIndex extends FileIndex {
    * @return the file for the classpath entry, or null if the file is not a compiled
    * class file or directory belonging to a library.
    */
-  @Nullable
-  VirtualFile getClassRootForFile(VirtualFile file);
+  @Nullable VirtualFile getClassRootForFile(VirtualFile file);
 
   /**
    * Returns the module source root or library source root to which the specified file
@@ -102,8 +97,7 @@ public interface ProjectFileIndex extends FileIndex {
    * @return the file for the source root, or null if the file is not located under any
    * of the source roots for the module.
    */
-  @Nullable
-  VirtualFile getSourceRootForFile(VirtualFile file);
+  @Nullable VirtualFile getSourceRootForFile(VirtualFile file);
 
   /**
    * Returns the module content root to which the specified file or directory belongs.
@@ -111,8 +105,7 @@ public interface ProjectFileIndex extends FileIndex {
    * @param file the file or directory for which the information is requested.
    * @return the file for the content root, or null if the file does not belong to this project.
    */
-  @Nullable
-  VirtualFile getContentRootForFile(VirtualFile file);
+  @Nullable VirtualFile getContentRootForFile(VirtualFile file);
 
   /**
    * Returns the module content root to which the specified file or directory belongs.
@@ -121,8 +114,7 @@ public interface ProjectFileIndex extends FileIndex {
    * @param honorExclusion if {@code false} the containing content root will be returned even if the file is located under a folder marked as excluded
    * @return the file for the content root, or null if the file does not belong to this project.
    */
-  @Nullable
-  VirtualFile getContentRootForFile(VirtualFile file, boolean honorExclusion);
+  @Nullable VirtualFile getContentRootForFile(VirtualFile file, boolean honorExclusion);
 
   /**
    * Returns the name of the package corresponding to the specified directory.
@@ -130,8 +122,7 @@ public interface ProjectFileIndex extends FileIndex {
    * @param dir the directory for which the package name is requested.
    * @return the package name, or null if the directory does not correspond to any package.
    */
-  @Nullable
-  String getPackageNameByDirectory(VirtualFile dir); //Q: move to FileIndex?
+  @Nullable String getPackageNameByDirectory(VirtualFile dir); //Q: move to FileIndex?
 
   /**
    * Returns true if <code>file</code> is a file which belongs to the classes (not sources) of some library.

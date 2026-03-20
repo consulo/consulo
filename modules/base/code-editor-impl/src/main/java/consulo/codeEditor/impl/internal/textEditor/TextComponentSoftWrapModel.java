@@ -34,9 +34,8 @@ public class TextComponentSoftWrapModel implements SoftWrapModel {
     return false;
   }
 
-  @Nullable
   @Override
-  public SoftWrap getSoftWrap(int offset) {
+  public @Nullable SoftWrap getSoftWrap(int offset) {
     return null;
   }
 

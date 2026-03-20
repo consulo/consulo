@@ -74,9 +74,8 @@ public class DesktopSwtTextBoxImpl extends SWTComponentDelegate<Text> implements
         return false;
     }
 
-    @Nullable
     @Override
-    public String getValue() {
+    public @Nullable String getValue() {
         return myText;
     }
 
@@ -95,9 +94,8 @@ public class DesktopSwtTextBoxImpl extends SWTComponentDelegate<Text> implements
 
     }
 
-    @Nullable
     @Override
-    public Component getSuffixComponent() {
+    public @Nullable Component getSuffixComponent() {
         return null;
     }
 }

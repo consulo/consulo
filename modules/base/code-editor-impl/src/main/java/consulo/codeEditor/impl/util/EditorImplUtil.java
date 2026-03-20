@@ -104,7 +104,6 @@ public class EditorImplUtil {
      * @return EXCLUSIVE intervals [startY, endY)
      * @see #yToLogicalLineRange(Editor, int)
      */
-    
     public static Pair<Interval, Interval> logicalLineToYRange(Editor editor, int logicalLine) {
         if (logicalLine < 0) {
             throw new IllegalArgumentException("Logical line is negative: " + logicalLine);

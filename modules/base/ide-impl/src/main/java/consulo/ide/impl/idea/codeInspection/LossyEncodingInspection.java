@@ -94,10 +94,9 @@ public class LossyEncodingInspection extends LocalInspectionTool {
         return "LossyEncoding";
     }
 
-    @Nullable
     @Override
     @RequiredReadAction
-    public ProblemDescriptor[] checkFile(PsiFile file, InspectionManager manager, boolean isOnTheFly) {
+    public @Nullable ProblemDescriptor[] checkFile(PsiFile file, InspectionManager manager, boolean isOnTheFly) {
         if (InjectedLanguageManager.getInstance(file.getProject()).isInjectedFragment(file)) {
             return null;
         }

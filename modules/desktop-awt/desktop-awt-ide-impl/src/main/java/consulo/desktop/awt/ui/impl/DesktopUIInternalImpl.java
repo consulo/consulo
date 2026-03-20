@@ -251,16 +251,14 @@ public class DesktopUIInternalImpl extends UIInternal {
         return new DesktopWindowWrapper(title, options);
     }
 
-    @Nullable
     @Override
-    public Window _Window_getActiveWindow() {
+    public @Nullable Window _Window_getActiveWindow() {
         Container window = KeyboardFocusManager.getCurrentKeyboardFocusManager().getActiveWindow();
         return (Window) TargetAWT.from((java.awt.Window) window);
     }
 
-    @Nullable
     @Override
-    public Window _Window_getFocusedWindow() {
+    public @Nullable Window _Window_getFocusedWindow() {
         Container window = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusedWindow();
         return (Window) TargetAWT.from((java.awt.Window) window);
     }

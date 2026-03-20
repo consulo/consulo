@@ -74,9 +74,8 @@ public class CoreCommandProcessor extends CommandProcessorEx {
             finishCommand(this, throwable);
         }
 
-        @Nullable
         @Override
-        public Project getProject() {
+        public @Nullable Project getProject() {
             return myDescriptor.project();
         }
 
@@ -234,9 +233,8 @@ public class CoreCommandProcessor extends CommandProcessorEx {
     }
 
     @Override
-    @Nullable
     @RequiredUIAccess
-    public CommandToken startCommand(CommandDescriptor commandDescriptor) {
+    public @Nullable CommandToken startCommand(CommandDescriptor commandDescriptor) {
         UIAccess.assertIsUIThread();
         Project project = commandDescriptor.project();
         if (project != null && project.isDisposed()) {

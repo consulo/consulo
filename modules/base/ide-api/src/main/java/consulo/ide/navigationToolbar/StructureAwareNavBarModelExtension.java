@@ -99,10 +99,9 @@ public abstract class StructureAwareNavBarModelExtension extends AbstractNavBarM
     return super.processChildren(object, rootElement, processor);
   }
 
-  @Nullable
   @Override
   @RequiredReadAction
-  public PsiElement getParent(PsiElement psiElement) {
+  public @Nullable PsiElement getParent(PsiElement psiElement) {
     if (psiElement.getLanguage() == getLanguage()) {
       PsiFile containingFile = psiElement.getContainingFile();
       if (containingFile == null) {
@@ -125,9 +124,8 @@ public abstract class StructureAwareNavBarModelExtension extends AbstractNavBarM
     return false;
   }
 
-  @Nullable
   @RequiredReadAction
-  private PsiElement findParentInModel(StructureViewTreeElement root, PsiElement psiElement) {
+  private @Nullable PsiElement findParentInModel(StructureViewTreeElement root, PsiElement psiElement) {
     for (TreeElement child : childrenFromNodeAndProviders(root)) {
       if(child instanceof StructureViewTreeElement) {
         if(Comparing.equal(((StructureViewTreeElement)child).getValue(), psiElement)) {

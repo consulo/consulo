@@ -65,9 +65,8 @@ public class BaseListPopupStep<T> extends BaseStep<T> implements ListPopupStep<T
         myIcons = icons;
     }
 
-    @Nullable
     @Override
-    public final String getTitle() {
+    public final @Nullable String getTitle() {
         return myTitle;
     }
 
@@ -107,9 +106,8 @@ public class BaseListPopupStep<T> extends BaseStep<T> implements ListPopupStep<T
         return value.toString();
     }
 
-    @Nullable
     @Override
-    public ListSeparator getSeparatorAbove(T value) {
+    public @Nullable ListSeparator getSeparatorAbove(T value) {
         return null;
     }
 

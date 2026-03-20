@@ -149,7 +149,6 @@ public class UnifiedDimensionServiceImpl extends SimpleModificationTracker imple
    * key is the HiDPI-aware key,
    * scale is the HiDPI-aware factor to transform size metrics.
    */
-  
   protected Pair<String, Float> resolveScale(String key, @Nullable Project project) {
     return Pair.create(key, 1f);
   }

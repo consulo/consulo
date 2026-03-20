@@ -192,7 +192,6 @@ public abstract class ConcurrentFactoryMap<K, V> implements ConcurrentMap<K, V> 
   /**
    * @return Concurrent factory map with weak keys, strong values
    */
-  
   public static <T, V> ConcurrentMap<T, V> createWeakMap(Function<? super T, ? extends V> compute) {
     return create(compute, ContainerUtil::createConcurrentWeakMap);
   }

@@ -158,15 +158,13 @@ public abstract class BrowseHierarchyActionBase<T extends HierarchyProvider> ext
         return target != null;
     }
 
-    @Nullable
     @RequiredReadAction
-    private HierarchyProvider getProvider(AnActionEvent e) {
+    private @Nullable HierarchyProvider getProvider(AnActionEvent e) {
         return findProvider(myHierarchyClass, e.getData(PsiElement.KEY), e.getData(PsiFile.KEY), e.getDataContext());
     }
 
-    @Nullable
     @RequiredReadAction
-    public static <T extends HierarchyProvider> T findProvider(
+    public static <T extends HierarchyProvider> @Nullable T findProvider(
         Class<T> extension,
         @Nullable PsiElement psiElement,
         @Nullable PsiFile psiFile,
@@ -179,10 +177,9 @@ public abstract class BrowseHierarchyActionBase<T extends HierarchyProvider> ext
         return provider;
     }
 
-    @Nullable
     @RequiredReadAction
     @SuppressWarnings("unchecked")
-    public static <T extends HierarchyProvider> T findBestHierarchyProvider(
+    public static <T extends HierarchyProvider> @Nullable T findBestHierarchyProvider(
         Class<T> extension,
         @Nullable PsiElement element,
         DataContext dataContext

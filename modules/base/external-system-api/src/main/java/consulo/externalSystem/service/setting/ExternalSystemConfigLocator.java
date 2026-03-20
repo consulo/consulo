@@ -30,8 +30,7 @@ public interface ExternalSystemConfigLocator {
      * @param configPath base config file
      * @return config file to use (if any)
      */
-    @Nullable
-    VirtualFile adjust(VirtualFile configPath);
+    @Nullable VirtualFile adjust(VirtualFile configPath);
 
     /**
      * Returns all configuration files used by external system to build the project.
@@ -39,6 +38,5 @@ public interface ExternalSystemConfigLocator {
      * @param externalProjectSettings external system project settings
      * @return external system project config files
      */
-    
     List<VirtualFile> findAll(ExternalProjectSettings externalProjectSettings);
 }

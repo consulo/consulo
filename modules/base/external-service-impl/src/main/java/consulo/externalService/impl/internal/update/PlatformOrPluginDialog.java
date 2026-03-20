@@ -353,23 +353,20 @@ public class PlatformOrPluginDialog extends DialogWrapper {
         }
     }
 
-    @Nullable
     @Override
-    protected String getDimensionServiceKey() {
+    protected @Nullable String getDimensionServiceKey() {
         setScalableSize(600, 300);
         return getClass().getSimpleName();
     }
 
-    @Nullable
     @Override
-    protected Border createContentPaneBorder() {
+    protected @Nullable Border createContentPaneBorder() {
         return null;
     }
 
-    @Nullable
     @Override
     @RequiredUIAccess
-    protected JComponent createSouthPanel() {
+    protected @Nullable JComponent createSouthPanel() {
         JComponent southPanel = super.createSouthPanel();
         if (southPanel != null) {
             southPanel.add(new JBLabel(ExternalServiceLocalize.pluginFollowingWillBeDownloadedLabel().get()), BorderLayout.WEST);
@@ -382,9 +379,8 @@ public class PlatformOrPluginDialog extends DialogWrapper {
         return null;
     }
 
-    @Nullable
     @Override
-    protected JComponent createCenterPanel() {
+    protected @Nullable JComponent createCenterPanel() {
         return myRoot;
     }
 }

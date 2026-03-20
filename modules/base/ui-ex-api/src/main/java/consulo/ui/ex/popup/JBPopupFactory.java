@@ -101,7 +101,6 @@ public abstract class JBPopupFactory {
      * @param defaultOptionIndex the index of the option which is selected by default.
      * @return the popup instance.
      */
-    
     public abstract ListPopup createConfirmation(String title, Runnable onYes, int defaultOptionIndex);
 
     /**
@@ -114,7 +113,6 @@ public abstract class JBPopupFactory {
      * @param defaultOptionIndex the index of the option which is selected by default.
      * @return the popup instance.
      */
-    
     public abstract ListPopup createConfirmation(
         String title,
         String yesText,
@@ -134,7 +132,6 @@ public abstract class JBPopupFactory {
      * @param defaultOptionIndex the index of the option which is selected by default.
      * @return the popup instance.
      */
-    
     public abstract ListPopup createConfirmation(
         String title,
         String yesText,
@@ -279,7 +276,6 @@ public abstract class JBPopupFactory {
      * @param showDisabledActions if true, disabled actions are shown as disabled; if false, disabled actions are not shown
      * @return the popup instance.
      */
-    
     public ListPopup createActionGroupPopup(
         @Nullable  String title,
         ActionGroup actionGroup,
@@ -301,7 +297,6 @@ public abstract class JBPopupFactory {
      * @param actionPlace         action place for ActionManager to use when creating the popup
      * @return the popup instance.
      */
-    
     public ListPopup createActionGroupPopup(
          String title,
         ActionGroup actionGroup,
@@ -336,7 +331,6 @@ public abstract class JBPopupFactory {
      *                            is displayed)
      * @return the popup instance.
      */
-    
     public ListPopup createActionGroupPopup(
          String title,
         ActionGroup actionGroup,
@@ -454,7 +448,6 @@ public abstract class JBPopupFactory {
      * @param step the custom step for the list popup.
      * @return the popup instance.
      */
-    
     @Deprecated
     public abstract ListPopup createListPopup(ListPopupStep step);
 
@@ -464,7 +457,6 @@ public abstract class JBPopupFactory {
      * @param step the custom step for the list popup.
      * @return the popup instance.
      */
-    
     public abstract ListPopup createListPopup(@Nullable ComponentManager project, ListPopupStep step);
 
     /**
@@ -475,7 +467,6 @@ public abstract class JBPopupFactory {
      *                    a scrollbar will be displayed).
      * @return the popup instance.
      */
-    
     public abstract ListPopup createListPopup(ListPopupStep step, int maxRowCount);
 
     
@@ -500,7 +491,6 @@ public abstract class JBPopupFactory {
      * - current selected node for tree<br>
      * - current selected row for list<br>
      */
-    
     public abstract RelativePoint guessBestPopupLocation(DataContext dataContext);
 
     public abstract Point getCenterOf(JComponent container, JComponent content);

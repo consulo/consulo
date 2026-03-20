@@ -33,8 +33,7 @@ import org.jspecify.annotations.Nullable;
 public interface MultipleLangCommentProvider {
   ExtensionPointName<MultipleLangCommentProvider> EP_NAME = ExtensionPointName.create(MultipleLangCommentProvider.class);
 
-  @Nullable
-  Commenter getLineCommenter(PsiFile file, Editor editor, Language lineStartLanguage, Language lineEndLanguage);
+  @Nullable Commenter getLineCommenter(PsiFile file, Editor editor, Language lineStartLanguage, Language lineEndLanguage);
 
   boolean canProcess(PsiFile file, FileViewProvider viewProvider);
 }

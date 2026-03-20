@@ -143,7 +143,6 @@ public class VfsUtilCore {
      * @return a copy of the file
      * @throws IOException if file failed to be copied
      */
-    
     public static VirtualFile copyFile(Object requestor, VirtualFile file, VirtualFile toDir) throws IOException {
         return VirtualFileUtil.copyFile(requestor, file, toDir);
     }
@@ -160,7 +159,6 @@ public class VfsUtilCore {
      * @return a copy of the file
      * @throws IOException if file failed to be copied
      */
-    
     public static VirtualFile copyFile(
         Object requestor,
         VirtualFile file,
@@ -386,7 +384,6 @@ public class VfsUtilCore {
      * @param file the file
      * @return virtual files which represents paths from root to the passed file
      */
-    
     static VirtualFile[] getPathComponents(VirtualFile file) {
         ArrayList<VirtualFile> componentsList = new ArrayList<>();
         while (file != null) {

@@ -57,8 +57,7 @@ public class CommonCodeStyleSettings {
     private ArrangementSettings myArrangementSettings;
     private CodeStyleSettings myRootSettings;
     private
-    @Nullable
-    IndentOptions myIndentOptions;
+    @Nullable IndentOptions myIndentOptions;
     private final FileType myFileType;
     private boolean myForceArrangeMenuAvailable;
 
@@ -321,7 +320,6 @@ public class CommonCodeStyleSettings {
      * }
      * </PRE>
      */
-
     public static final int END_OF_LINE = 1;
     public static final int NEXT_LINE = 2;
     public static final int NEXT_LINE_SHIFTED = 3;

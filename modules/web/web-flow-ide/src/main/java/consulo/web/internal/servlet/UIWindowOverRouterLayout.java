@@ -91,9 +91,8 @@ class UIWindowOverRouterLayout extends UserDataHolderBase implements Window {
     public void setEnabled(boolean value) {
     }
 
-    @Nullable
     @Override
-    public Window getParent() {
+    public @Nullable Window getParent() {
         return null;
     }
 

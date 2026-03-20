@@ -163,9 +163,8 @@ public class EditorSettingsExternalizable implements PersistentStateComponent<Ed
         myPropertyChangeSupport.removePropertyChangeListener(listener);
     }
 
-    @Nullable
     @Override
-    public OptionSet getState() {
+    public @Nullable OptionSet getState() {
         return myOptions;
     }
 

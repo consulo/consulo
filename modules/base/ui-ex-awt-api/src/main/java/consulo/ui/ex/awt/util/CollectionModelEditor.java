@@ -52,7 +52,6 @@ public abstract class CollectionModelEditor<T, E extends CollectionItemEditor<T>
     /**
      * Mutable internal list of items (must not be exposed to client)
      */
-    
     protected abstract List<T> getItems();
 
     public void reset(List<T> originalItems) {

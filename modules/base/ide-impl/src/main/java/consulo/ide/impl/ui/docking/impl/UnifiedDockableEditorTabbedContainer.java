@@ -43,9 +43,8 @@ public class UnifiedDockableEditorTabbedContainer implements DockableEditorTabbe
     mySplitters = splitters;
   }
 
-  @Nullable
   @Override
-  public FileEditorsSplitters getSplitters() {
+  public @Nullable FileEditorsSplitters getSplitters() {
     return mySplitters;
   }
 
@@ -91,15 +90,13 @@ public class UnifiedDockableEditorTabbedContainer implements DockableEditorTabbe
     return false;
   }
 
-  @Nullable
   @Override
-  public Image startDropOver(DockableContent content, RelativePoint point) {
+  public @Nullable Image startDropOver(DockableContent content, RelativePoint point) {
     return null;
   }
 
-  @Nullable
   @Override
-  public Image processDropOver(DockableContent content, RelativePoint point) {
+  public @Nullable Image processDropOver(DockableContent content, RelativePoint point) {
     return null;
   }
 

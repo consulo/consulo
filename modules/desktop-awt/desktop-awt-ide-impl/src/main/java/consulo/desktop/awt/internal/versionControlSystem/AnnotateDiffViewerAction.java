@@ -110,9 +110,8 @@ public class AnnotateDiffViewerAction extends ToggleAction implements DumbAware 
         e.getPresentation().setEnabled(enabled && !isSuspended(e));
     }
 
-    @Nullable
     @SuppressWarnings("unchecked")
-    private static ViewerAnnotator getAnnotator(DiffViewerBase viewer, Editor editor) {
+    private static @Nullable ViewerAnnotator getAnnotator(DiffViewerBase viewer, Editor editor) {
         for (ViewerAnnotatorFactory annotator : ANNOTATORS) {
             if (annotator.getViewerClass().isInstance(viewer)) {
                 return annotator.createAnnotator(viewer, editor);
@@ -467,9 +466,8 @@ public class AnnotateDiffViewerAction extends ToggleAction implements DumbAware 
             return TwosideTextDiffViewer.class;
         }
 
-        @Nullable
         @Override
-        public Side getCurrentSide(TwosideTextDiffViewer viewer, Editor editor) {
+        public @Nullable Side getCurrentSide(TwosideTextDiffViewer viewer, Editor editor) {
             Side side = null; // we can't just use getCurrentSide() here, popup can be called on unfocused editor
             if (viewer.getEditor(Side.LEFT) == editor) {
                 side = Side.LEFT;
@@ -505,9 +503,8 @@ public class AnnotateDiffViewerAction extends ToggleAction implements DumbAware 
             return OnesideTextDiffViewer.class;
         }
 
-        @Nullable
         @Override
-        public Side getCurrentSide(OnesideTextDiffViewer viewer, Editor editor) {
+        public @Nullable Side getCurrentSide(OnesideTextDiffViewer viewer, Editor editor) {
             if (viewer.getEditor() != editor) {
                 return null;
             }
@@ -542,9 +539,8 @@ public class AnnotateDiffViewerAction extends ToggleAction implements DumbAware 
             return UnifiedDiffViewer.class;
         }
 
-        @Nullable
         @Override
-        public Side getCurrentSide(UnifiedDiffViewer viewer, Editor editor) {
+        public @Nullable Side getCurrentSide(UnifiedDiffViewer viewer, Editor editor) {
             if (viewer.getEditor() != editor) {
                 return null;
             }
@@ -670,9 +666,8 @@ public class AnnotateDiffViewerAction extends ToggleAction implements DumbAware 
             return TextMergeViewer.MyThreesideViewer.class;
         }
 
-        @Nullable
         @Override
-        public ViewerAnnotator createAnnotator(ThreesideTextDiffViewerEx viewer, ThreeSide side) {
+        public @Nullable ViewerAnnotator createAnnotator(ThreesideTextDiffViewerEx viewer, ThreeSide side) {
             if (side == ThreeSide.BASE) {
                 return null; // middle content is local Document, not the BASE one
             }
@@ -755,9 +750,8 @@ public class AnnotateDiffViewerAction extends ToggleAction implements DumbAware 
                     factory.hideAnnotation(viewer, side);
                 }
 
-                @Nullable
                 @Override
-                public FileAnnotationLoader createAnnotationsLoader() {
+                public @Nullable FileAnnotationLoader createAnnotationsLoader() {
                     return createTwosideAnnotationsLoader(project, viewer.getRequest(), side);
                 }
 
@@ -779,9 +773,8 @@ public class AnnotateDiffViewerAction extends ToggleAction implements DumbAware 
 
         public abstract void hideAnnotation(T viewer, ThreeSide side);
 
-        @Nullable
         @Override
-        public ViewerAnnotator createAnnotator(T viewer, Editor editor) {
+        public @Nullable ViewerAnnotator createAnnotator(T viewer, Editor editor) {
             ThreeSide side = getCurrentSide(viewer, editor);
             if (side == null) {
                 return null;
@@ -853,9 +846,8 @@ public class AnnotateDiffViewerAction extends ToggleAction implements DumbAware 
                     factory.hideAnnotation(viewer, side);
                 }
 
-                @Nullable
                 @Override
-                public FileAnnotationLoader createAnnotationsLoader() {
+                public @Nullable FileAnnotationLoader createAnnotationsLoader() {
                     return createThreesideAnnotationsLoader(project, viewer.getRequest(), side);
                 }
 

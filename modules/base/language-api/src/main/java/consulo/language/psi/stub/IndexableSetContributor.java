@@ -53,7 +53,6 @@ public abstract class IndexableSetContributor {
    * @return an additional project-dependent set of {@link VirtualFile} instances to index,
    * the returned set should not contain nulls or invalid files
    */
-  
   public Set<VirtualFile> getAdditionalProjectRootsToIndex(Project project) {
     return Collections.emptySet();
   }
@@ -62,7 +61,6 @@ public abstract class IndexableSetContributor {
    * @return an additional project-independent set of {@link VirtualFile} instances to index,
    * the returned set should not contain nulls or invalid files
    */
-  
   public abstract Set<VirtualFile> getAdditionalRootsToIndex();
 
   

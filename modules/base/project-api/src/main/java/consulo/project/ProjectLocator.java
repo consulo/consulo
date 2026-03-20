@@ -52,7 +52,6 @@ public abstract class ProjectLocator {
    * @param file file to be located in projects.
    * @return list of open projects containing this file.
    */
-  
   public abstract Collection<Project> getProjectsForFile(VirtualFile file);
 
   public static <T, E extends Throwable> T computeWithPreferredProject(VirtualFile file, Project preferredProject, ThrowableComputable<T, E> action) throws E {

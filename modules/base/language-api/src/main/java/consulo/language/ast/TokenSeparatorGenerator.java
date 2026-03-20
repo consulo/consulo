@@ -40,6 +40,5 @@ public interface TokenSeparatorGenerator extends LanguageExtension {
     return Application.get().getExtensionPoint(TokenSeparatorGenerator.class).getOrBuildCache(KEY).requiredGet(language);
   }
 
-  @Nullable
-  ASTNode generateWhitespaceBetweenTokens(ASTNode left, ASTNode right);
+  @Nullable ASTNode generateWhitespaceBetweenTokens(ASTNode left, ASTNode right);
 }

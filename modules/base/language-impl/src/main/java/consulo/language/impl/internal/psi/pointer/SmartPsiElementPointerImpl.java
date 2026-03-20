@@ -91,8 +91,7 @@ class SmartPsiElementPointerImpl<E extends PsiElement> implements SmartPointerEx
     return element;
   }
 
-  @Nullable
-  E doRestoreElement() {
+  @Nullable E doRestoreElement() {
     //noinspection unchecked
     E element = (E)myElementInfo.restoreElement(myManager);
     if (element != null && !element.isValid()) {
@@ -136,9 +135,8 @@ class SmartPsiElementPointerImpl<E extends PsiElement> implements SmartPointerEx
     return myElementInfo.getRange(myManager);
   }
 
-  @Nullable
   @Override
-  public Segment getPsiRange() {
+  public @Nullable Segment getPsiRange() {
     return myElementInfo.getPsiRange(myManager);
   }
 

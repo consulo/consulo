@@ -106,7 +106,6 @@ public class CertificateTreeBuilder extends AbstractTreeBuilder {
      *
      * @return - selected certificates
      */
-    
     public Set<X509Certificate> getSelectedCertificates(boolean addFromOrganization) {
         Set<X509Certificate> selected = getSelectedElements(X509Certificate.class);
         if (addFromOrganization) {
@@ -161,9 +160,8 @@ public class CertificateTreeBuilder extends AbstractTreeBuilder {
             return ArrayUtil.EMPTY_OBJECT_ARRAY;
         }
 
-        @Nullable
         @Override
-        public Object getParentElement(Object element) {
+        public @Nullable Object getParentElement(Object element) {
             if (element == RootDescriptor.ROOT) {
                 return null;
             }

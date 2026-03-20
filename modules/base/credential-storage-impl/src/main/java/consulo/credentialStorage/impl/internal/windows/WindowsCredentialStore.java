@@ -33,9 +33,8 @@ import java.nio.charset.StandardCharsets;
 public class WindowsCredentialStore implements CredentialStore {
     private static final CredAdvapi32 INSTANCE = CredAdvapi32.INSTANCE;
 
-    @Nullable
     @Override
-    public Credentials get(CredentialAttributes attributes) {
+    public @Nullable Credentials get(CredentialAttributes attributes) {
         CredAdvapi32.PCREDENTIAL pcredential = new CredAdvapi32.PCREDENTIAL();
 
         boolean read = false;

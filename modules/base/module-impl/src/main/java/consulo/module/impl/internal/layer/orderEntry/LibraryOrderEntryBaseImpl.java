@@ -54,9 +54,8 @@ public abstract class LibraryOrderEntryBaseImpl extends OrderEntryBaseImpl imple
         updateFromRootProviderAndSubscribe();
     }
 
-    @Nullable
     @Override
-    public Object getEqualObject() {
+    public @Nullable Object getEqualObject() {
         return null;
     }
 

@@ -66,9 +66,8 @@ public class FileOperateDialogSettings implements PersistentStateComponent<FileO
     myState.myFileSaveDialogId = fileSaveDialogId;
   }
 
-  @Nullable
   @Override
-  public State getState() {
+  public @Nullable State getState() {
     return myState;
   }
 

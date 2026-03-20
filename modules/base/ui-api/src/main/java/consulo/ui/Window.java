@@ -42,9 +42,8 @@ public interface Window extends Component, Disposable {
     @RequiredUIAccess
     void setTitle(String title);
 
-    @Nullable
     @Override
-    Window getParent();
+    @Nullable Window getParent();
 
     @RequiredUIAccess
     void setContent(Component content);

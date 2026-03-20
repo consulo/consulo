@@ -62,7 +62,6 @@ public interface PsiSearchHelper {
    * @param searchScope the scope in which occurrences are searched.
    * @return the array of found comments.
    */
-  
   PsiElement[] findCommentsContainingIdentifier(String identifier, SearchScope searchScope);
 
   /**
@@ -88,7 +87,6 @@ public interface PsiSearchHelper {
    * @param word the word to search.
    * @return the list of files containing the word.
    */
-  
   PsiFile[] findFilesWithPlainTextWords(String word);
 
   /**
@@ -124,7 +122,6 @@ public interface PsiSearchHelper {
    * @param element the element to return the use scope form.
    * @return the search scope instance.
    */
-  
   @Deprecated
   default SearchScope getUseScope(PsiElement element) {
     return PsiSearchScopeUtil.getUseScope(element);

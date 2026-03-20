@@ -40,7 +40,6 @@ public abstract class ActionManager {
     /**
      * Fetches the instance of ActionManager implementation.
      */
-    
     public static ActionManager getInstance() {
         return Application.get().getInstance(ActionManager.class);
     }

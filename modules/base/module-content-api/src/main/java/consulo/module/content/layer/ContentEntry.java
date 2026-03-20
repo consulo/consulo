@@ -37,8 +37,7 @@ public interface ContentEntry extends Synthetic {
    *
    * @return the content root directory, or null if content entry is invalid.
    */
-  @Nullable
-  VirtualFile getFile();
+  @Nullable VirtualFile getFile();
 
   /**
    * Returns the URL of content root.
@@ -47,7 +46,6 @@ public interface ContentEntry extends Synthetic {
    *
    * @return URL of content root, that should never be null.
    */
-  
   String getUrl();
 
   

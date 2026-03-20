@@ -328,10 +328,9 @@ public abstract class CompositePsiElement extends CompositeElement implements Ps
         return canNavigate();
     }
 
-    @Nullable
     @Override
     @RequiredReadAction
-    public Module getModule() throws PsiInvalidElementAccessException {
+    public @Nullable Module getModule() throws PsiInvalidElementAccessException {
         PsiFile file = getContainingFile();
         return file == null ? null : file.getModule();
     }

@@ -90,9 +90,8 @@ public class AllVcsesImpl implements AllVcses, Disposable {
     }
   }
 
-  @Nullable
   @Override
-  public VcsDescriptor getDescriptor(String name) {
+  public @Nullable VcsDescriptor getDescriptor(String name) {
     Map<String, VcsFactory> byIdMap = myProject.getExtensionPoint(VcsFactory.class).getOrBuildCache(BY_ID);
     VcsFactory ep = byIdMap.get(name);
     return ep == null ? null : ep.createDescriptor();

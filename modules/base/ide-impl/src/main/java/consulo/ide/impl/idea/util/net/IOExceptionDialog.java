@@ -47,9 +47,8 @@ public class IOExceptionDialog extends DialogWrapper {
     init();
   }
 
-  @Nullable
   @Override
-  protected JComponent createCenterPanel() {
+  protected @Nullable JComponent createCenterPanel() {
     return myErrorLabel;
   }
 

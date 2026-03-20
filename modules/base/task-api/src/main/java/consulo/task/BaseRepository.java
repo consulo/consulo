@@ -158,9 +158,8 @@ public abstract class BaseRepository extends TaskRepository {
     myPreferredOpenTaskState = state;
   }
 
-  @Nullable
   @Override
-  public CustomTaskState getPreferredOpenTaskState() {
+  public @Nullable CustomTaskState getPreferredOpenTaskState() {
     return myPreferredOpenTaskState;
   }
 
@@ -169,9 +168,8 @@ public abstract class BaseRepository extends TaskRepository {
     myPreferredCloseTaskState = state;
   }
 
-  @Nullable
   @Override
-  public CustomTaskState getPreferredCloseTaskState() {
+  public @Nullable CustomTaskState getPreferredCloseTaskState() {
     return myPreferredCloseTaskState;
   }
 

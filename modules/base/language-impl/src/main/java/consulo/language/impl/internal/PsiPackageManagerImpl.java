@@ -108,10 +108,9 @@ public class PsiPackageManagerImpl extends PsiPackageManager implements Disposab
         myPackageCache.remove(extensionClass);
     }
 
-    @Nullable
     @Override
     @RequiredReadAction
-    public PsiPackage findPackage(String qualifiedName, Class<? extends ModuleExtension> extensionClass) {
+    public @Nullable PsiPackage findPackage(String qualifiedName, Class<? extends ModuleExtension> extensionClass) {
         ConcurrentMap<String, Object> map = myPackageCache.get(extensionClass);
         if (map != null) {
             Object value = map.get(qualifiedName);
@@ -203,10 +202,9 @@ public class PsiPackageManagerImpl extends PsiPackageManager implements Disposab
         return null;
     }
 
-    @Nullable
     @Override
     @RequiredReadAction
-    public PsiPackage findPackage(PsiDirectory directory, Class<? extends ModuleExtension> extensionClass) {
+    public @Nullable PsiPackage findPackage(PsiDirectory directory, Class<? extends ModuleExtension> extensionClass) {
         String packageName = myDirectoryIndex.get().getPackageName(directory.getVirtualFile());
         if (packageName == null) {
             return null;
@@ -214,10 +212,9 @@ public class PsiPackageManagerImpl extends PsiPackageManager implements Disposab
         return findPackage(packageName, extensionClass);
     }
 
-    @Nullable
     @Override
     @RequiredReadAction
-    public PsiPackage findAnyPackage(VirtualFile directory) {
+    public @Nullable PsiPackage findAnyPackage(VirtualFile directory) {
         String packageName = myDirectoryIndex.get().getPackageName(directory);
         if (packageName == null) {
             return null;
@@ -245,9 +242,8 @@ public class PsiPackageManagerImpl extends PsiPackageManager implements Disposab
         return null;
     }
 
-    @Nullable
     @RequiredReadAction
-    private PsiPackage findForModule(String packageName, Module module) {
+    private @Nullable PsiPackage findForModule(String packageName, Module module) {
         ModuleRootManager rootManager = ModuleRootManager.getInstance(module);
         for (ModuleExtension<?> moduleExtension : rootManager.getExtensions()) {
             PsiPackage aPackage = findPackage(packageName, moduleExtension.getClass());

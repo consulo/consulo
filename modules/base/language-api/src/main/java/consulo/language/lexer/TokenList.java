@@ -27,7 +27,6 @@ public interface TokenList {
     /**
      * @return the full text that was split into the tokens represented here
      */
-    
     CharSequence getTokenizedText();
 
     /**
@@ -140,7 +139,6 @@ public interface TokenList {
      * but states and positions might differ. The returned lexer may be used to avoid tokenizing the same text again in APIs where lexer is expected,
      * but it will only accept the very same text from the very beginning; it can't be used on any other strings.
      */
-    
     default Lexer asLexer() {
         return new WrappingLexer(this);
     }

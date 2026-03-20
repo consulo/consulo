@@ -101,7 +101,6 @@ public abstract class BaseArchiveFileSystem extends NewVirtualFileSystem impleme
     /**
      * Strips any separator chars from a root path (obtained via {@link #extractRootPath(String)}) to obtain a path to a local file.
      */
-    
     public String extractLocalPath(String rootPath) {
         return StringUtil.trimEnd(rootPath, URLUtil.ARCHIVE_SEPARATOR);
     }
@@ -109,7 +108,6 @@ public abstract class BaseArchiveFileSystem extends NewVirtualFileSystem impleme
     /**
      * A reverse to {@link #extractLocalPath(String)} - i.e. dresses a local file path to make it a suitable root path for this filesystem.
      */
-    
     public String composeRootPath(String localPath) {
         return localPath + URLUtil.ARCHIVE_SEPARATOR;
     }
@@ -214,9 +212,8 @@ public abstract class BaseArchiveFileSystem extends NewVirtualFileSystem impleme
         return StringUtil.startsWithChar(relativePath, '/') ? relativePath.substring(1) : relativePath;
     }
 
-    @Nullable
     @Override
-    public FileAttributes getAttributes(VirtualFile file) {
+    public @Nullable FileAttributes getAttributes(VirtualFile file) {
         return myAttrGetter.apply(file);
     }
 

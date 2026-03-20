@@ -27,33 +27,28 @@ import org.jspecify.annotations.Nullable;
 public class TemplateCopyrightCommenter implements Commenter {
   public static final TemplateCopyrightCommenter INSTANCE = new TemplateCopyrightCommenter();
 
-  @Nullable
   @Override
-  public String getLineCommentPrefix() {
+  public @Nullable String getLineCommentPrefix() {
     return "//";
   }
 
-  @Nullable
   @Override
-  public String getBlockCommentPrefix() {
+  public @Nullable String getBlockCommentPrefix() {
     return "/*";
   }
 
-  @Nullable
   @Override
-  public String getBlockCommentSuffix() {
+  public @Nullable String getBlockCommentSuffix() {
     return "*/";
   }
 
-  @Nullable
   @Override
-  public String getCommentedBlockCommentPrefix() {
+  public @Nullable String getCommentedBlockCommentPrefix() {
     return null;
   }
 
-  @Nullable
   @Override
-  public String getCommentedBlockCommentSuffix() {
+  public @Nullable String getCommentedBlockCommentSuffix() {
     return null;
   }
 

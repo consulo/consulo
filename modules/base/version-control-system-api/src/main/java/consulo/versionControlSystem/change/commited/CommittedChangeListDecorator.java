@@ -21,6 +21,5 @@ import consulo.ui.image.Image;
 import org.jspecify.annotations.Nullable;
 
 public interface CommittedChangeListDecorator {
-  @Nullable
-  Image decorate(CommittedChangeList list);
+  @Nullable Image decorate(CommittedChangeList list);
 }

@@ -67,9 +67,8 @@ class DirElementInfo extends SmartPointerElementInfo {
     return null;
   }
 
-  @Nullable
   @Override
-  Segment getPsiRange(SmartPointerManagerImpl manager) {
+  @Nullable Segment getPsiRange(SmartPointerManagerImpl manager) {
     return null;
   }
 

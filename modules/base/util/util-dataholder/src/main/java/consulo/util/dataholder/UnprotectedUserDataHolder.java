@@ -12,10 +12,9 @@ import java.util.Map;
 public class UnprotectedUserDataHolder implements UserDataHolder {
     private @Nullable Map<Key, Object> myUserData;
 
-    @Nullable
     @Override
     @SuppressWarnings("unchecked")
-    public <T> T getUserData(Key<T> key) {
+    public <T> @Nullable T getUserData(Key<T> key) {
         T value = myUserData != null ? (T)myUserData.get(key) : null;
         if (value == null && key instanceof KeyWithDefaultValue keyWithDefaultValue) {
             value = (T)keyWithDefaultValue.getDefaultValue();

@@ -207,9 +207,8 @@ public class ModuleRootManagerImpl implements ModuleRootManagerInternal, Disposa
     return myRootModel.getDependencyModuleNames();
   }
 
-  @Nullable
   @Override
-  public <T extends ModuleExtension> T getExtension(Class<T> clazz) {
+  public <T extends ModuleExtension> @Nullable T getExtension(Class<T> clazz) {
     return myRootModel.getExtension(clazz);
   }
 
@@ -218,15 +217,13 @@ public class ModuleRootManagerImpl implements ModuleRootManagerInternal, Disposa
     return myRootModel.getExtension(key);
   }
 
-  @Nullable
   @Override
-  public <T extends ModuleExtension> T getExtensionWithoutCheck(Class<T> clazz) {
+  public <T extends ModuleExtension> @Nullable T getExtensionWithoutCheck(Class<T> clazz) {
     return myRootModel.getExtensionWithoutCheck(clazz);
   }
 
-  @Nullable
   @Override
-  public <T extends ModuleExtension> T getExtensionWithoutCheck(String key) {
+  public <T extends ModuleExtension> @Nullable T getExtensionWithoutCheck(String key) {
     return myRootModel.getExtensionWithoutCheck(key);
   }
 
@@ -351,9 +348,8 @@ public class ModuleRootManagerImpl implements ModuleRootManagerInternal, Disposa
     return myRootModel.getCurrentLayerName();
   }
 
-  @Nullable
   @Override
-  public ModuleRootLayer findLayerByName(String name) {
+  public @Nullable ModuleRootLayer findLayerByName(String name) {
     LOG.assertTrue(!myIsDisposed);
     return myRootModel.findLayerByName(name);
   }

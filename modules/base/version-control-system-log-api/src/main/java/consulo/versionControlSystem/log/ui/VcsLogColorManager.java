@@ -14,7 +14,6 @@ public interface VcsLogColorManager {
   /**
    * Returns the color assigned to the given repository root.
    */
-  
   Color getRootColor(VirtualFile root);
 
   /**

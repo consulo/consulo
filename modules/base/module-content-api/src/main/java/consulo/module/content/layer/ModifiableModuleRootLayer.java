@@ -37,7 +37,6 @@ public interface ModifiableModuleRootLayer extends ModuleRootLayer {
    * @param root root of a content
    * @return new content entry
    */
-  
   ContentEntry addContentEntry(VirtualFile root);
 
   /**
@@ -46,7 +45,6 @@ public interface ModifiableModuleRootLayer extends ModuleRootLayer {
    * @param url root of a content
    * @return new content entry
    */
-  
   ContentEntry addContentEntry(String url);
 
   /**
@@ -55,7 +53,6 @@ public interface ModifiableModuleRootLayer extends ModuleRootLayer {
    * @param file target file
    * @return new content entry
    */
-  
   default ContentEntry addSingleContentEntry(VirtualFile file) {
     return addContentEntry(file);
   }
@@ -66,7 +63,6 @@ public interface ModifiableModuleRootLayer extends ModuleRootLayer {
    * @param url url of file
    * @return new content entry
    */
-  
   default ContentEntry addSingleContentEntry(String url) {
     return addContentEntry(url);
   }
@@ -91,7 +87,6 @@ public interface ModifiableModuleRootLayer extends ModuleRootLayer {
    * @param library the library for which the entry is created.
    * @return newly created order entry for the library
    */
-  
   LibraryOrderEntry addLibraryEntry(Library library);
 
   
@@ -104,7 +99,6 @@ public interface ModifiableModuleRootLayer extends ModuleRootLayer {
    * @param level
    * @return
    */
-  
   LibraryOrderEntry addInvalidLibrary(String name, String level);
 
   
@@ -116,11 +110,9 @@ public interface ModifiableModuleRootLayer extends ModuleRootLayer {
   
   ModuleOrderEntry addInvalidModuleEntry(String name);
 
-  @Nullable
-  LibraryOrderEntry findLibraryOrderEntry(Library library);
+  @Nullable LibraryOrderEntry findLibraryOrderEntry(Library library);
 
-  @Nullable
-  ModuleExtensionWithSdkOrderEntry findModuleExtensionSdkEntry(ModuleExtension extension);
+  @Nullable ModuleExtensionWithSdkOrderEntry findModuleExtensionSdkEntry(ModuleExtension extension);
 
   /**
    * Removes order entry from an order.
@@ -142,6 +134,5 @@ public interface ModifiableModuleRootLayer extends ModuleRootLayer {
    *
    * @return library table to be modified
    */
-  
   LibraryTable getModuleLibraryTable();
 }

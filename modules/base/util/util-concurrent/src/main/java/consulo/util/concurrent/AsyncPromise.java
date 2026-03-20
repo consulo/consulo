@@ -47,9 +47,8 @@ public class AsyncPromise<T> implements CancellablePromise<T>, InternalPromiseUt
     return f.isDone();
   }
 
-  @Nullable
   @Override
-  public T get() throws InterruptedException, ExecutionException {
+  public @Nullable T get() throws InterruptedException, ExecutionException {
     if (isCancelled()) {
       return null;
     }
@@ -62,9 +61,8 @@ public class AsyncPromise<T> implements CancellablePromise<T>, InternalPromiseUt
     }
   }
 
-  @Nullable
   @Override
-  public T get(long timeout, TimeUnit unit) throws InterruptedException, ExecutionException, TimeoutException {
+  public @Nullable T get(long timeout, TimeUnit unit) throws InterruptedException, ExecutionException, TimeoutException {
     if (isCancelled()) {
       return null;
     }
@@ -145,9 +143,8 @@ public class AsyncPromise<T> implements CancellablePromise<T>, InternalPromiseUt
     }), hasErrorHandler);
   }
 
-  @Nullable
   @Override
-  public T blockingGet(int timeout, TimeUnit timeUnit) throws TimeoutException, ExecutionException {
+  public @Nullable T blockingGet(int timeout, TimeUnit timeUnit) throws TimeoutException, ExecutionException {
     try {
       return get(timeout, timeUnit);
     }

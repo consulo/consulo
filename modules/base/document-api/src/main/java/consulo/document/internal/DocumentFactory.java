@@ -40,7 +40,6 @@ public interface DocumentFactory {
      * The noticeable peculiarity of DocumentImpl behavior in this mode is that DocumentImpl won't suppress ProcessCancelledException
      * thrown from listeners during changedUpdate event, so the exception will be rethrown and rest of the listeners WON'T be notified.
      */
-    
     default DocumentEx createDocument(CharSequence chars, boolean forUseInNonAWTThread) {
         return createDocument(chars, false, forUseInNonAWTThread);
     }

@@ -166,10 +166,9 @@ public abstract class ConfigurableFileEditor<U extends UnnamedConfigurable> exte
         return myContentPanel;
     }
 
-    @Nullable
     @Override
     @RequiredUIAccess
-    public JComponent getPreferredFocusedComponent() {
+    public @Nullable JComponent getPreferredFocusedComponent() {
         if (myDisposed) {
             return null;
         }

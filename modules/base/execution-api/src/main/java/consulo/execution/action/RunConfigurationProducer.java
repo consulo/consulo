@@ -69,9 +69,8 @@ public abstract class RunConfigurationProducer<T extends RunConfiguration> {
      * @return a container with a prepared run configuration and the context element from which it was created, or null if the context is
      * not applicable to this run configuration producer.
      */
-    @Nullable
     @SuppressWarnings("unchecked")
-    public ConfigurationFromContext createConfigurationFromContext(ConfigurationContext context) {
+    public @Nullable ConfigurationFromContext createConfigurationFromContext(ConfigurationContext context) {
         RunnerAndConfigurationSettings settings = cloneTemplateConfiguration(context);
         SimpleReference<PsiElement> ref = new SimpleReference<>(context.getPsiLocation());
         try {
@@ -160,9 +159,8 @@ public abstract class RunConfigurationProducer<T extends RunConfiguration> {
      * @param context contains the information about a location in the source code.
      * @return a configuration (new or existing) matching the context, or null if the context is not applicable to this producer.
      */
-    @Nullable
     @RequiredReadAction
-    public ConfigurationFromContext findOrCreateConfigurationFromContext(ConfigurationContext context, boolean preferExisting) {
+    public @Nullable ConfigurationFromContext findOrCreateConfigurationFromContext(ConfigurationContext context, boolean preferExisting) {
         Location location = context.getLocation();
         if (location == null) {
             return null;
@@ -197,9 +195,8 @@ public abstract class RunConfigurationProducer<T extends RunConfiguration> {
      * @param context contains the information about a location in the source code.
      * @return an existing configuration matching the context, or null if no such configuration is found.
      */
-    @Nullable
     @SuppressWarnings("unchecked")
-    public RunnerAndConfigurationSettings findExistingConfiguration(ConfigurationContext context) {
+    public @Nullable RunnerAndConfigurationSettings findExistingConfiguration(ConfigurationContext context) {
         RunManager runManager = RunManager.getInstance(context.getProject());
         List<RunnerAndConfigurationSettings> configurations = runManager.getConfigurationSettingsList(myConfigurationFactory.getType());
         for (RunnerAndConfigurationSettings configurationSettings : configurations) {
@@ -224,9 +221,8 @@ public abstract class RunConfigurationProducer<T extends RunConfiguration> {
         return Application.get().getExtensionPoint(RunConfigurationProducer.class).findExtensionOrFail(aClass);
     }
 
-    @Nullable
     @SuppressWarnings("unchecked")
-    public RunConfiguration createLightConfiguration(ConfigurationContext context) {
+    public @Nullable RunConfiguration createLightConfiguration(ConfigurationContext context) {
         RunConfiguration configuration = myConfigurationFactory.createTemplateConfiguration(context.getProject());
         SimpleReference<PsiElement> ref = new SimpleReference<>(context.getPsiLocation());
         try {

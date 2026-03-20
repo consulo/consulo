@@ -49,6 +49,5 @@ public interface ExternalSystemAutoImportAware {
    * @return                      <code>null</code> if target change should not trigger external project refresh;
    *                              path to config file of an external project which should be refreshed
    */
-  @Nullable
-  String getAffectedExternalProjectPath(String changedFileOrDirPath, Project project);
+  @Nullable String getAffectedExternalProjectPath(String changedFileOrDirPath, Project project);
 }

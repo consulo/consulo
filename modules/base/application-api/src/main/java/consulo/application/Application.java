@@ -346,7 +346,6 @@ public interface Application extends ComponentManager, CoroutineContextOwner {
      *
      * @return the current modality state.
      */
-    
     ModalityState getCurrentModalityState();
 
     /**
@@ -355,7 +354,6 @@ public interface Application extends ComponentManager, CoroutineContextOwner {
      * @param c the component for which the modality state is requested.
      * @return the modality state.
      */
-    
     default ModalityState getModalityStateForComponent(Component c) {
         throw new AbstractMethodError("AWT/Swing dependency");
     }
@@ -366,7 +364,6 @@ public interface Application extends ComponentManager, CoroutineContextOwner {
      *
      * @return the modality state for the current thread.
      */
-    
     ModalityState getDefaultModalityState();
 
     /**
@@ -375,7 +372,6 @@ public interface Application extends ComponentManager, CoroutineContextOwner {
      *
      * @return the modality state for no modal dialogs.
      */
-    
     default ModalityState getNoneModalityState() {
         return ModalityState.nonModal();
     }
@@ -385,7 +381,6 @@ public interface Application extends ComponentManager, CoroutineContextOwner {
      *
      * @return modality state
      */
-    
     default ModalityState getAnyModalityState() {
         return ModalityState.any();
     }
@@ -437,7 +432,6 @@ public interface Application extends ComponentManager, CoroutineContextOwner {
      * @param action to be executed
      * @return future result
      */
-    
     Future<?> executeOnPooledThread(Runnable action);
 
     /**
@@ -446,7 +440,6 @@ public interface Application extends ComponentManager, CoroutineContextOwner {
      * @param action to be executed
      * @return future result
      */
-    
     <T> Future<T> executeOnPooledThread(Callable<T> action);
 
     /**
@@ -492,13 +485,11 @@ public interface Application extends ComponentManager, CoroutineContextOwner {
     /**
      * @return Application icon. In sandbox icon maybe different. Size 16x16
      */
-    
     Image getIcon();
 
     /**
      * @return Application icon. In sandbox icon maybe different. Better for downscale
      */
-    
     default Image getBigIcon() {
         return getIcon();
     }
@@ -521,7 +512,6 @@ public interface Application extends ComponentManager, CoroutineContextOwner {
     /**
      * @return last UIAccess for application
      */
-    
     UIAccess getLastUIAccess();
 
     /**
@@ -550,7 +540,6 @@ public interface Application extends ComponentManager, CoroutineContextOwner {
     /**
      * Returns lock used for read operations, should be closed in finally block
      */
-    
     @Deprecated
     @DeprecationInfo("Use runReadAction(Runnable)")
     AccessToken acquireReadActionLock();
@@ -558,7 +547,6 @@ public interface Application extends ComponentManager, CoroutineContextOwner {
     /**
      * Returns lock used for write operations, should be closed in finally block
      */
-    
     @Deprecated
     @DeprecationInfo("Use runWriteAction(Runnable)")
     @RequiredUIAccess

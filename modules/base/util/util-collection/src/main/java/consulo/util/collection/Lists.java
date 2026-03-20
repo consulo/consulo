@@ -210,9 +210,8 @@ public final class Lists {
         };
     }
 
-    @Nullable
     @Contract(pure = true)
-    public static <T, U extends T> U findLastInstance(List<T> list, Class<U> clazz) {
+    public static <T, U extends T> @Nullable U findLastInstance(List<T> list, Class<U> clazz) {
         int i = lastIndexOf(list, clazz::isInstance);
         //noinspection unchecked
         return i < 0 ? null : (U) list.get(i);

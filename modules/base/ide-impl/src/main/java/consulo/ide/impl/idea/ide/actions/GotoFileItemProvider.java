@@ -319,8 +319,7 @@ public class GotoFileItemProvider extends DefaultChooseByNameItemProvider {
             return true;
         }
 
-        @Nullable
-        SuffixMatches nextGroup(ChooseByNameBase base) {
+        @Nullable SuffixMatches nextGroup(ChooseByNameBase base) {
             if (index >= namePattern.length()) {
                 return null;
             }

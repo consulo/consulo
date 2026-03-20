@@ -679,18 +679,16 @@ public class NavBarPanel extends JPanel implements DataProvider, PopupOwner, Dis
         }
     }
 
-    @Nullable
     @Override
     @RequiredReadAction
-    public Object getData(Key<?> dataId) {
+    public @Nullable Object getData(Key<?> dataId) {
         Object data = myProject.getApplication().getExtensionPoint(NavBarModelExtension.class)
             .computeSafeIfAny(extension -> extension.getData(dataId, this::getDataInner));
         return data != null ? data : getDataInner(dataId);
     }
 
-    @Nullable
     @RequiredReadAction
-    private Object getDataInner(Key<?> dataId) {
+    private @Nullable Object getDataInner(Key<?> dataId) {
         return getDataImpl(dataId, this, this::getSelection);
     }
 

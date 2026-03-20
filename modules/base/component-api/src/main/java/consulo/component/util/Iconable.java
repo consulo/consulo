@@ -32,8 +32,7 @@ public interface Iconable {
   @interface IconFlags {
   }
 
-  @Nullable
-  Image getIcon(@IconFlags int flags);
+  @Nullable Image getIcon(@IconFlags int flags);
 
   class LastComputedIcon {
     private static final Key<ConcurrentIntObjectMap<Image>> LAST_COMPUTED_ICON = Key.create("lastComputedIcon");

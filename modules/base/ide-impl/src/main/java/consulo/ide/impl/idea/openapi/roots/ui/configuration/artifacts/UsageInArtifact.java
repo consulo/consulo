@@ -81,9 +81,8 @@ public class UsageInArtifact extends ProjectStructureElementUsage {
     return myOriginalArtifact.getArtifactType().getIcon();
   }
 
-  @Nullable
   @Override
-  public String getPresentableLocationInElement() {
+  public @Nullable String getPresentableLocationInElement() {
     return "[" + myParentPath + "]";
   }
 

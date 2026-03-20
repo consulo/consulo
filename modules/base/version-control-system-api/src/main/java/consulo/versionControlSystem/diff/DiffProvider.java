@@ -26,20 +26,15 @@ import org.jspecify.annotations.Nullable;
 
 public interface DiffProvider extends VcsProviderMarker {
 
-  @Nullable
-  VcsRevisionNumber getCurrentRevision(VirtualFile file);
+  @Nullable VcsRevisionNumber getCurrentRevision(VirtualFile file);
 
-  @Nullable
-  ItemLatestState getLastRevision(VirtualFile virtualFile);
+  @Nullable ItemLatestState getLastRevision(VirtualFile virtualFile);
 
-  @Nullable
-  ItemLatestState getLastRevision(FilePath filePath);
+  @Nullable ItemLatestState getLastRevision(FilePath filePath);
 
-  @Nullable
-  ContentRevision createFileContent(VcsRevisionNumber revisionNumber, VirtualFile selectedFile);
+  @Nullable ContentRevision createFileContent(VcsRevisionNumber revisionNumber, VirtualFile selectedFile);
 
-  @Nullable
-  VcsRevisionNumber getLatestCommittedRevision(VirtualFile vcsRoot);
+  @Nullable VcsRevisionNumber getLatestCommittedRevision(VirtualFile vcsRoot);
 
   default @Nullable VcsRevisionDescription getCurrentRevisionDescription(VirtualFile file) {
     return null;

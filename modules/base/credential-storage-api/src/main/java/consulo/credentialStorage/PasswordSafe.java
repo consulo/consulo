@@ -79,8 +79,7 @@ public interface PasswordSafe extends CredentialStore {
         return credentials == null ? null : credentials.getPasswordAsString();
     }
 
-    @Nullable
-    Credentials get(CredentialAttributes attributes);
+    @Nullable Credentials get(CredentialAttributes attributes);
 
     void set(CredentialAttributes attributes, @Nullable Credentials credentials);
 }

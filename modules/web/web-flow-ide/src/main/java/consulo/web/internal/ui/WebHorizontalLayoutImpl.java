@@ -31,9 +31,8 @@ import org.jspecify.annotations.Nullable;
 public class WebHorizontalLayoutImpl extends WebLayoutImpl<WebHorizontalLayoutImpl.Vaadin, StaticPosition> implements HorizontalLayout {
     public class Vaadin extends com.vaadin.flow.component.orderedlayout.HorizontalLayout implements FromVaadinComponentWrapper {
 
-        @Nullable
         @Override
-        public Component toUIComponent() {
+        public @Nullable Component toUIComponent() {
             return WebHorizontalLayoutImpl.this;
         }
     }

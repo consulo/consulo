@@ -91,7 +91,6 @@ public abstract class BaseRefactoringProcessor implements Runnable {
     /**
      * Is called inside atomic action.
      */
-    
     protected abstract UsageInfo[] findUsages();
 
     /**

@@ -398,9 +398,8 @@ public final class UnmodifiableHashMap<K, V> extends AbstractImmutableMap<K, V> 
         return false;
     }
 
-    @Nullable
     @Override
-    public V getOrDefault(Object key, V defaultValue) {
+    public @Nullable V getOrDefault(Object key, V defaultValue) {
         @SuppressWarnings("unchecked") K typedKey = (K)key;
         if (k1 != null) {
             if (strategy.equals(k1, typedKey)) {
@@ -536,9 +535,8 @@ public final class UnmodifiableHashMap<K, V> extends AbstractImmutableMap<K, V> 
             }
         }
 
-        @Nullable
         @Override
-        public E next() {
+        public @Nullable E next() {
             if (!hasNext()) {
                 throw new NoSuchElementException();
             }
@@ -618,16 +616,14 @@ public final class UnmodifiableHashMap<K, V> extends AbstractImmutableMap<K, V> 
                 @Override
                 public Iterator<V> iterator() {
                     return new MyIterator<V>() {
-                        @Nullable
                         @Override
-                        V fieldElement(int offset) {
+                        @Nullable V fieldElement(int offset) {
                             return offset == 0 ? v1 : offset == 1 ? v2 : v3;
                         }
 
-                        @Nullable
                         @Override
                         @SuppressWarnings("unchecked")
-                        V tableElement(int offset) {
+                        @Nullable V tableElement(int offset) {
                             return (V)data[offset + 1];
                         }
                     };

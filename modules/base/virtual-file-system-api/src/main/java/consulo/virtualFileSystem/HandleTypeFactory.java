@@ -27,6 +27,5 @@ import org.jspecify.annotations.Nullable;
 public interface HandleTypeFactory {
     ExtensionPointName<HandleTypeFactory> EP_NAME = ExtensionPointName.create(HandleTypeFactory.class);
 
-    @Nullable
-    HandleType createHandleType(VirtualFile file);
+    @Nullable HandleType createHandleType(VirtualFile file);
 }

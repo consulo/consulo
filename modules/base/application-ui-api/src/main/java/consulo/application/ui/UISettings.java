@@ -57,7 +57,6 @@ public class UISettings extends SimpleModificationTracker implements PersistentS
      *
      * @return persisted UISettings instance or default values.
      */
-    
     public static UISettings getShadowInstance() {
         UISettings settings = getInstanceOrNull();
         return settings == null ? new UISettings() : settings;

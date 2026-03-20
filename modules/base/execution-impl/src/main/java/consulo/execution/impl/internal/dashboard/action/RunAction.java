@@ -22,9 +22,8 @@ public final class RunAction extends ExecutorAction {
     return DefaultRunExecutor.getRunExecutorInstance();
   }
 
-  @Nullable
   @Override
-  protected Image getTemplateIcon() {
+  protected @Nullable Image getTemplateIcon() {
     return PlatformIconGroup.actionsExecute();
   }
 

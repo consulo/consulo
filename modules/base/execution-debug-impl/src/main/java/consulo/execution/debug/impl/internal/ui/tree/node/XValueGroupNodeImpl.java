@@ -55,15 +55,13 @@ public class XValueGroupNodeImpl extends XValueContainerNode<XValueGroup> implem
     return "Group:" + myValueContainer.getName();
   }
 
-  @Nullable
   @Override
-  public String getName() {
+  public @Nullable String getName() {
     return myValueContainer.getName();
   }
 
-  @Nullable
   @Override
-  public String getRawValue() {
+  public @Nullable String getRawValue() {
     return null;
   }
 

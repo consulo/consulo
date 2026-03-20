@@ -92,9 +92,8 @@ public class LightProject extends BaseComponentManager implements Project {
         return myName;
     }
 
-    @Nullable
     @Override
-    public VirtualFile getBaseDir() {
+    public @Nullable VirtualFile getBaseDir() {
         return null;
     }
 
@@ -103,9 +102,8 @@ public class LightProject extends BaseComponentManager implements Project {
         return null;
     }
 
-    @Nullable
     @Override
-    public VirtualFile getProjectFile() {
+    public @Nullable VirtualFile getProjectFile() {
         return null;
     }
 
@@ -115,15 +113,13 @@ public class LightProject extends BaseComponentManager implements Project {
         return null;
     }
 
-    @Nullable
     @Override
-    public String getPresentableUrl() {
+    public @Nullable String getPresentableUrl() {
         return null;
     }
 
-    @Nullable
     @Override
-    public VirtualFile getWorkspaceFile() {
+    public @Nullable VirtualFile getWorkspaceFile() {
         return null;
     }
 

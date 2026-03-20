@@ -147,7 +147,6 @@ public class FocusModeModelImpl implements FocusModeModel, Disposable {
    * <p>
    * Return pair or focus region and found / created status.
    */
-  
   public FocusRegion createFocusRegion(int start, int end) {
     FocusRegion marker = new FocusRegion(myEditor, start, end);
     myFocusMarkerTree.addInterval(marker, start, end, false, false, true, 0);

@@ -349,9 +349,8 @@ public abstract class DialogWrapper {
      *
      * @return <code>null</code> if everything is OK or validation descriptor
      */
-    @Nullable
     @RequiredUIAccess
-    protected ValidationInfo doValidate() {
+    protected @Nullable ValidationInfo doValidate() {
         return null;
     }
 
@@ -365,7 +364,6 @@ public abstract class DialogWrapper {
      * @return <code>List&lt;ValidationInfo&gt;</code> of invalid fields. List
      * is empty if no errors found.
      */
-    
     @RequiredUIAccess
     protected List<ValidationInfo> doValidateAll() {
         ValidationInfo vi = doValidate();
@@ -479,9 +477,8 @@ public abstract class DialogWrapper {
      *
      * @return south panel
      */
-    @Nullable
     @RequiredUIAccess
-    protected JComponent createSouthPanel() {
+    protected @Nullable JComponent createSouthPanel() {
         Action[] actions = createActions();
         Action[] leftSideActions = createLeftSideActions();
         Map<Action, JButton> buttonMap = new LinkedHashMap<>();
@@ -1092,7 +1089,6 @@ public abstract class DialogWrapper {
      * @see #createSouthPanel
      * @see #createJButtonForAction
      */
-    
     protected Action[] createActions() {
         if (getHelpId() == null) {
             if (Platform.current().os().isMac()) {
@@ -1119,7 +1115,6 @@ public abstract class DialogWrapper {
      * <code>doOKAction()</code> method.
      * @see #doOKAction
      */
-    
     protected LocalizeAction getOKAction() {
         return myOKAction;
     }
@@ -1129,7 +1124,6 @@ public abstract class DialogWrapper {
      * <code>doCancelAction()</code> method.
      * @see #doCancelAction
      */
-    
     protected LocalizeAction getCancelAction() {
         return myCancelAction;
     }
@@ -1139,7 +1133,6 @@ public abstract class DialogWrapper {
      * <code>doHelpAction()</code> method.
      * @see #doHelpAction
      */
-    
     protected LocalizeAction getHelpAction() {
         return myHelpAction;
     }
@@ -1200,9 +1193,8 @@ public abstract class DialogWrapper {
      * @return component which should be focused when the dialog appears
      * on the screen.
      */
-    @Nullable
     @RequiredUIAccess
-    public JComponent getPreferredFocusedComponent() {
+    public @Nullable JComponent getPreferredFocusedComponent() {
         return Platform.current().os().isMac() ? myPreferredFocusedComponent : null;
     }
 
@@ -1723,7 +1715,6 @@ public abstract class DialogWrapper {
      *
      * @return result callback
      */
-    
     @RequiredUIAccess
     public AsyncResult<Boolean> showAndGetOk() {
         AsyncResult<Boolean> result = new AsyncResult<>();

@@ -25,6 +25,5 @@ import org.jspecify.annotations.Nullable;
  * @author Kirill Likhodedov
  */
 public interface VcsRevisionNumberAware {
-  @Nullable
-  VcsRevisionNumber getRevisionNumber();
+  @Nullable VcsRevisionNumber getRevisionNumber();
 }

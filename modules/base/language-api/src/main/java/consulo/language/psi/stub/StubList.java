@@ -179,8 +179,7 @@ public abstract class StubList extends AbstractList<StubBase<?>> {
     return Objects.requireNonNull(myTempState.myTempJoinedChildrenMap);
   }
 
-  @Nullable
-  <P extends PsiElement, S extends StubElement<P>> S findChildStubByType(int id, IStubElementType<S, P> elementType) {
+  <P extends PsiElement, S extends StubElement<P>> @Nullable S findChildStubByType(int id, IStubElementType<S, P> elementType) {
     int count = getChildrenCount(id);
     int start = getChildrenStart(id);
     switch (getChildrenStorage(start)) {
@@ -208,7 +207,6 @@ public abstract class StubList extends AbstractList<StubBase<?>> {
    * Ensures stubs are in DFS order and the optimizes memory layout. Might return an optimized copy of this list,
    * with all stubs re-targeted to that copy.
    */
-  
   StubList finalizeLoadingStage() {
     if (myTempState != null) {
       myTempState = null;
@@ -233,8 +231,7 @@ public abstract class StubList extends AbstractList<StubBase<?>> {
   }
 
   private class TempState {
-    @Nullable
-    IntObjectMap<MostlyUShortIntList> myTempJoinedChildrenMap;
+    @Nullable IntObjectMap<MostlyUShortIntList> myTempJoinedChildrenMap;
 
     int myCurrentParent = -1;
     int myExpectedChildrenCount;

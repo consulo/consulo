@@ -94,8 +94,7 @@ public interface PsiFileFactory {
 
     @Deprecated
     @DeprecationInfo("Use #createFileFromText() without Language parameter")
-    @Nullable
-    PsiFile createFileFromText(String name,
+    @Nullable PsiFile createFileFromText(String name,
                                Language language,
                                LanguageVersion languageVersion,
                                CharSequence text,
@@ -112,8 +111,7 @@ public interface PsiFileFactory {
         return createFileFromText(name, languageVersion, text, physical, markAsCopy, noSizeLimit, null);
     }
 
-    @Nullable
-    PsiFile createFileFromText(String name,
+    @Nullable PsiFile createFileFromText(String name,
                                LanguageVersion languageVersion,
                                CharSequence text,
                                boolean physical,
@@ -123,11 +121,9 @@ public interface PsiFileFactory {
 
     PsiFile createFileFromText(FileType fileType, String fileName, CharSequence chars, int startOffset, int endOffset);
 
-    @Nullable
-    PsiFile createFileFromText(CharSequence chars, PsiFile original);
+    @Nullable PsiFile createFileFromText(CharSequence chars, PsiFile original);
 
-    @Nullable
-    PsiElement createElementFromText(@Nullable String text,
+    @Nullable PsiElement createElementFromText(@Nullable String text,
                                      Language language,
                                      LanguageVersion languageVersion,
                                      IElementType type,

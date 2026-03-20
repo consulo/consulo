@@ -79,7 +79,6 @@ public abstract class FavoriteNodeProvider implements BookmarkNodeProvider {
    *
    * @return the string identifier.
    */
-  
   public abstract String getFavoriteTypeId();
 
   /**

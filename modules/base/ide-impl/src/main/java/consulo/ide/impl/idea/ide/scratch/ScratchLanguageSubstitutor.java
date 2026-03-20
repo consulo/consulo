@@ -29,9 +29,8 @@ import org.jspecify.annotations.Nullable;
 
 @ExtensionImpl(order = "first")
 public class ScratchLanguageSubstitutor extends LanguageSubstitutor {
-  @Nullable
   @Override
-  public Language getLanguage(VirtualFile file, Project project) {
+  public @Nullable Language getLanguage(VirtualFile file, Project project) {
     return substituteLanguage(project, file);
   }
 

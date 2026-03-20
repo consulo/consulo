@@ -63,10 +63,9 @@ public class PluginManagerCore {
         return ((PluginClassLoader) loader).getPluginId();
     }
 
-    @Nullable
     @Deprecated
     @DeprecationInfo("Must be never used from plugin or platform")
-    public static PluginDescriptor loadPluginDescriptor(File file) {
+    public static @Nullable PluginDescriptor loadPluginDescriptor(File file) {
         return PluginDescriptorLoader.loadDescriptor(file, false, PluginsLoader.C_LOG);
     }
 

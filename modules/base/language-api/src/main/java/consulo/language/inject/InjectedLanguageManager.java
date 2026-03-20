@@ -45,8 +45,7 @@ public interface InjectedLanguageManager {
 
     PsiLanguageInjectionHost getInjectionHost(FileViewProvider injectedProvider);
 
-    @Nullable
-    PsiLanguageInjectionHost getInjectionHost(PsiElement injectedElement);
+    @Nullable PsiLanguageInjectionHost getInjectionHost(PsiElement injectedElement);
 
    
     TextRange injectedToHost(PsiElement injectedContext, TextRange injectedTextRange);
@@ -55,8 +54,7 @@ public interface InjectedLanguageManager {
 
     int injectedToHost(PsiElement injectedContext, int injectedOffset, boolean minHostOffset);
 
-    @Nullable
-    String getUnescapedLeafText(PsiElement element, boolean strict);
+    @Nullable String getUnescapedLeafText(PsiElement element, boolean strict);
 
    
     String getUnescapedText(PsiElement injectedNode);
@@ -74,17 +72,14 @@ public interface InjectedLanguageManager {
      * this method will return XmlToken(XML_TAG_START) with the text {@code "xxx"}.<br/>
      * Invocation of this method on uncommitted {@code hostFile} can lead to unexpected results, including throwing an exception!
      */
-    @Nullable
-    PsiElement findInjectedElementAt(PsiFile hostFile, int hostDocumentOffset);
+    @Nullable PsiElement findInjectedElementAt(PsiFile hostFile, int hostDocumentOffset);
 
     /**
      * Invocation of this method on uncommitted {@code file} can lead to unexpected results, including throwing an exception!
      */
-    @Nullable
-    PsiElement findElementAtNoCommit(PsiFile file, int offset);
+    @Nullable PsiElement findElementAtNoCommit(PsiFile file, int offset);
 
-    @Nullable
-    List<Pair<PsiElement, TextRange>> getInjectedPsiFiles(PsiElement host);
+    @Nullable List<Pair<PsiElement, TextRange>> getInjectedPsiFiles(PsiElement host);
 
     void dropFileCaches(PsiFile file);
 
@@ -106,7 +101,6 @@ public interface InjectedLanguageManager {
     /**
      * @return the ranges in this document window that correspond to prefix/suffix injected text fragments and thus can't be edited and are not visible in the editor.
      */
-   
     List<TextRange> getNonEditableFragments(DocumentWindow window);
 
     /**

@@ -158,7 +158,6 @@ public class KeymapUtil {
      * @param clickCount target clicks count
      * @return string representation of passed mouse shortcut.
      */
-    
     public static LocalizeValue getMouseShortcutText(int button, @JdkConstants.InputEventMask int modifiers, int clickCount) {
         if (clickCount < 3) {
             return clickCount == 1

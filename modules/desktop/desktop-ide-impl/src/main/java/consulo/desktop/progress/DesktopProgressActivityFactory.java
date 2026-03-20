@@ -37,9 +37,8 @@ public class DesktopProgressActivityFactory implements ProgressActivityFactory {
     myShouldStartActivity = isMac && Boolean.parseBoolean(platform.jvm().getRuntimeProperty("consulo.mac.prevent.app.nap", "true"));
   }
 
-  @Nullable
   @Override
-  public Runnable createActivity() {
+  public @Nullable Runnable createActivity() {
     if (myShouldStartActivity) {
       return MacActivityUtil.wakeUpNeo(this);
     }

@@ -61,7 +61,6 @@ public class ExternalSystemTasksTree extends Tree implements Supplier<ExternalTa
   /**
    * Holds list of paths which 'expand/collapse' state should be restored.
    */
-  
   private final Set<TreePath> myPathsToProcessCollapseState = new HashSet<>();
 
   
@@ -187,9 +186,8 @@ public class ExternalSystemTasksTree extends Tree implements Supplier<ExternalTa
     return buffer.toString();
   }
 
-  @Nullable
   @Override
-  public ExternalTaskExecutionInfo get() {
+  public @Nullable ExternalTaskExecutionInfo get() {
     TreePath[] selectionPaths = getSelectionPaths();
     if (selectionPaths == null || selectionPaths.length == 0) {
       return null;

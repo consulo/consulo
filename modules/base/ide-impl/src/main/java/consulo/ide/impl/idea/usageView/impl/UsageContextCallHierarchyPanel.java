@@ -84,9 +84,8 @@ public class UsageContextCallHierarchyPanel extends UsageContextPanelBase {
         revalidate();
     }
 
-    @Nullable
     @RequiredReadAction
-    private static HierarchyBrowser createCallHierarchyPanel(PsiElement element) {
+    private static @Nullable HierarchyBrowser createCallHierarchyPanel(PsiElement element) {
         DataContext context =
             SimpleDataContext.getSimpleContext(PsiElement.KEY, element, SimpleDataContext.getProjectContext(element.getProject()));
         CallHierarchyProvider provider = BrowseHierarchyActionBase.findBestHierarchyProvider(CallHierarchyProvider.class, element, context);

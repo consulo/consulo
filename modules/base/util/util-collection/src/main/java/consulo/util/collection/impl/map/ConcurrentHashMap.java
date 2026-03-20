@@ -634,8 +634,7 @@ public class ConcurrentHashMap<K, V> extends AbstractMap<K, V> implements Concur
     /**
      * Virtualized support for map.get(); overridden in subclasses.
      */
-    @Nullable
-    Node<K, V> find(int h, Object k) {
+    @Nullable Node<K, V> find(int h, Object k) {
       Node<K, V> e = this;
       if (k != null) {
         do {
@@ -738,9 +737,8 @@ public class ConcurrentHashMap<K, V> extends AbstractMap<K, V> implements Concur
    * writes to be conservative.
    */
 
-  @Nullable
   @SuppressWarnings("unchecked")
-  static final <K, V> Node<K, V> tabAt(Node<K, V>[] tab, int i) {
+  static final <K, V> @Nullable Node<K, V> tabAt(Node<K, V>[] tab, int i) {
     return (Node<K, V>)U.getObjectVolatile(tab, ((long)i << ASHIFT) + ABASE);
   }
 
@@ -1980,8 +1978,7 @@ public class ConcurrentHashMap<K, V> extends AbstractMap<K, V> implements Concur
       this.nextTable = tab;
     }
 
-    @Nullable
-    Node<K, V> find(int h, Object k) {
+    @Nullable Node<K, V> find(int h, Object k) {
       // loop to avoid arbitrarily deep recursion on forwarding nodes
       outer:
       for (Node<K, V>[] tab = nextTable; ; ) {
@@ -2013,8 +2010,7 @@ public class ConcurrentHashMap<K, V> extends AbstractMap<K, V> implements Concur
       super(RESERVED, null, null, hashingStrategy);
     }
 
-    @Nullable
-    Node<K, V> find(int h, Object k) {
+    @Nullable Node<K, V> find(int h, Object k) {
       return null;
     }
   }
@@ -2412,8 +2408,7 @@ public class ConcurrentHashMap<K, V> extends AbstractMap<K, V> implements Concur
   /**
    * Returns a list of non-TreeNodes replacing those in given list.
    */
-  @Nullable
-  Node<K, V> untreeify(@Nullable Node<K, V> b) {
+  @Nullable Node<K, V> untreeify(@Nullable Node<K, V> b) {
     Node<K, V> hd = null, tl = null;
     for (Node<K, V> q = b; q != null; q = q.next) {
       Node<K, V> p = new Node<K, V>(q.hash, q.key, q.val, hashingStrategy);
@@ -2430,14 +2425,10 @@ public class ConcurrentHashMap<K, V> extends AbstractMap<K, V> implements Concur
    * Nodes for use in TreeBins.
    */
   static final class TreeNode<K, V> extends Node<K, V> {
-    @Nullable
-    TreeNode<K, V> parent; // red-black tree links
-    @Nullable
-    TreeNode<K, V> left = null;
-    @Nullable
-    TreeNode<K, V> right = null;
-    @Nullable
-    TreeNode<K, V> prev = null; // needed to unlink next upon deletion
+    @Nullable TreeNode<K, V> parent; // red-black tree links
+    @Nullable TreeNode<K, V> left = null;
+    @Nullable TreeNode<K, V> right = null;
+    @Nullable TreeNode<K, V> prev = null; // needed to unlink next upon deletion
     boolean red;
 
     TreeNode(int hash, @Nullable K key, @Nullable V val, @Nullable Node<K, V> next, @Nullable TreeNode<K, V> parent, HashingStrategy<K> hashingStrategy) {
@@ -2445,8 +2436,7 @@ public class ConcurrentHashMap<K, V> extends AbstractMap<K, V> implements Concur
       this.parent = parent;
     }
 
-    @Nullable
-    Node<K, V> find(int h, Object k) {
+    @Nullable Node<K, V> find(int h, Object k) {
       return findTreeNode(h, k, null);
     }
 
@@ -2487,8 +2477,7 @@ public class ConcurrentHashMap<K, V> extends AbstractMap<K, V> implements Concur
    * not) to complete before tree restructuring operations.
    */
   static final class TreeBin<K, V> extends Node<K, V> {
-    @Nullable
-    TreeNode<K, V> root = null;
+    @Nullable TreeNode<K, V> root = null;
     volatile @Nullable TreeNode<K, V> first = null;
     volatile @Nullable Thread waiter = null;
     volatile int lockState;
@@ -2965,8 +2954,7 @@ public class ConcurrentHashMap<K, V> extends AbstractMap<K, V> implements Concur
 
     Node<K, V> @Nullable [] tab = null;
 
-    @Nullable
-    TableStack<K, V> next = null;
+    @Nullable TableStack<K, V> next = null;
   }
 
   /**
@@ -2992,10 +2980,8 @@ public class ConcurrentHashMap<K, V> extends AbstractMap<K, V> implements Concur
    */
   static class Traverser<K, V> {
     Node<K, V> @Nullable [] tab; // current table; updated if resized
-    @Nullable
-    Node<K, V> next;         // the next entry to use
-    @Nullable
-    TableStack<K, V> stack = null, spare = null; // to save/restore on ForwardingNodes
+    @Nullable Node<K, V> next;         // the next entry to use
+    @Nullable TableStack<K, V> stack = null, spare = null; // to save/restore on ForwardingNodes
     int index;              // index of bin to use next
     int baseIndex;          // current index of initial table
     int baseLimit;          // index bound for initial table
@@ -3078,8 +3064,7 @@ public class ConcurrentHashMap<K, V> extends AbstractMap<K, V> implements Concur
    */
   static class BaseIterator<K, V> extends Traverser<K, V> {
     final ConcurrentHashMap<K, V> map;
-    @Nullable
-    Node<K, V> lastReturned = null;
+    @Nullable Node<K, V> lastReturned = null;
 
     BaseIterator(Node<K, V> @Nullable [] tab, int size, int index, int limit, ConcurrentHashMap<K, V> map) {
       super(tab, size, index, limit);
@@ -4338,10 +4323,8 @@ public class ConcurrentHashMap<K, V> extends AbstractMap<K, V> implements Concur
   @SuppressWarnings("serial")
   abstract static class BulkTask<K, V, R> extends CountedCompleter<R> {
     Node<K, V> @Nullable [] tab; // same as Traverser
-    @Nullable
-    Node<K, V> next = null;
-    @Nullable
-    TableStack<K, V> stack, spare;
+    @Nullable Node<K, V> next = null;
+    @Nullable TableStack<K, V> stack, spare;
     int index;
     int baseIndex;
     int baseLimit;
@@ -4861,10 +4844,8 @@ public class ConcurrentHashMap<K, V> extends AbstractMap<K, V> implements Concur
   @SuppressWarnings("serial")
   static final class ReduceKeysTask<K, V> extends BulkTask<K, V, K> {
     final BiFunction<? super K, ? super K, ? extends K> reducer;
-    @Nullable
-    K result = null;
-    @Nullable
-    ReduceKeysTask<K, V> rights = null, nextRight;
+    @Nullable K result = null;
+    @Nullable ReduceKeysTask<K, V> rights = null, nextRight;
 
     ReduceKeysTask(
         @Nullable BulkTask<K, V, ?> p,
@@ -4913,10 +4894,8 @@ public class ConcurrentHashMap<K, V> extends AbstractMap<K, V> implements Concur
   @SuppressWarnings("serial")
   static final class ReduceValuesTask<K, V> extends BulkTask<K, V, V> {
     final BiFunction<? super V, ? super V, ? extends V> reducer;
-    @Nullable
-    V result = null;
-    @Nullable
-    ReduceValuesTask<K, V> rights = null, nextRight;
+    @Nullable V result = null;
+    @Nullable ReduceValuesTask<K, V> rights = null, nextRight;
 
     ReduceValuesTask(
         @Nullable BulkTask<K, V, ?> p,
@@ -4966,8 +4945,7 @@ public class ConcurrentHashMap<K, V> extends AbstractMap<K, V> implements Concur
   static final class ReduceEntriesTask<K, V> extends BulkTask<K, V, Map.Entry<K, V>> {
     final BiFunction<Map.Entry<K, V>, Map.Entry<K, V>, ? extends Map.Entry<K, V>> reducer;
     Map.@Nullable Entry<K, V> result = null;
-    @Nullable
-    ReduceEntriesTask<K, V> rights = null, nextRight;
+    @Nullable ReduceEntriesTask<K, V> rights = null, nextRight;
 
     ReduceEntriesTask(
         @Nullable BulkTask<K, V, ?> p,
@@ -5015,10 +4993,8 @@ public class ConcurrentHashMap<K, V> extends AbstractMap<K, V> implements Concur
   static final class MapReduceKeysTask<K, V, U> extends BulkTask<K, V, U> {
     final Function<? super K, ? extends U> transformer;
     final BiFunction<? super U, ? super U, ? extends U> reducer;
-    @Nullable
-    U result = null;
-    @Nullable
-    MapReduceKeysTask<K, V, U> rights = null, nextRight;
+    @Nullable U result = null;
+    @Nullable MapReduceKeysTask<K, V, U> rights = null, nextRight;
 
     MapReduceKeysTask(
         @Nullable BulkTask<K, V, ?> p,
@@ -5071,10 +5047,8 @@ public class ConcurrentHashMap<K, V> extends AbstractMap<K, V> implements Concur
   static final class MapReduceValuesTask<K, V, U> extends BulkTask<K, V, U> {
     final Function<? super V, ? extends U> transformer;
     final BiFunction<? super U, ? super U, ? extends U> reducer;
-    @Nullable
-    U result = null;
-    @Nullable
-    MapReduceValuesTask<K, V, U> rights = null, nextRight;
+    @Nullable U result = null;
+    @Nullable MapReduceValuesTask<K, V, U> rights = null, nextRight;
 
     MapReduceValuesTask(
         @Nullable BulkTask<K, V, ?> p,
@@ -5127,10 +5101,8 @@ public class ConcurrentHashMap<K, V> extends AbstractMap<K, V> implements Concur
   static final class MapReduceEntriesTask<K, V, U> extends BulkTask<K, V, U> {
     final Function<Map.Entry<K, V>, ? extends U> transformer;
     final BiFunction<? super U, ? super U, ? extends U> reducer;
-    @Nullable
-    U result = null;
-    @Nullable
-    MapReduceEntriesTask<K, V, U> rights = null, nextRight;
+    @Nullable U result = null;
+    @Nullable MapReduceEntriesTask<K, V, U> rights = null, nextRight;
 
     MapReduceEntriesTask(
         @Nullable BulkTask<K, V, ?> p,
@@ -5183,10 +5155,8 @@ public class ConcurrentHashMap<K, V> extends AbstractMap<K, V> implements Concur
   static final class MapReduceMappingsTask<K, V, U> extends BulkTask<K, V, U> {
     final BiFunction<? super K, ? super V, ? extends U> transformer;
     final BiFunction<? super U, ? super U, ? extends U> reducer;
-    @Nullable
-    U result = null;
-    @Nullable
-    MapReduceMappingsTask<K, V, U> rights = null, nextRight;
+    @Nullable U result = null;
+    @Nullable MapReduceMappingsTask<K, V, U> rights = null, nextRight;
 
     MapReduceMappingsTask(
         @Nullable BulkTask<K, V, ?> p,
@@ -5241,8 +5211,7 @@ public class ConcurrentHashMap<K, V> extends AbstractMap<K, V> implements Concur
     final DoubleBinaryOperator reducer;
     final double basis;
     double result;
-    @Nullable
-    MapReduceKeysToDoubleTask<K, V> rights = null, nextRight;
+    @Nullable MapReduceKeysToDoubleTask<K, V> rights = null, nextRight;
 
     MapReduceKeysToDoubleTask(
         @Nullable BulkTask<K, V, ?> p,
@@ -5296,8 +5265,7 @@ public class ConcurrentHashMap<K, V> extends AbstractMap<K, V> implements Concur
     final DoubleBinaryOperator reducer;
     final double basis;
     double result;
-    @Nullable
-    MapReduceValuesToDoubleTask<K, V> rights = null, nextRight;
+    @Nullable MapReduceValuesToDoubleTask<K, V> rights = null, nextRight;
 
     MapReduceValuesToDoubleTask(
         @Nullable BulkTask<K, V, ?> p,
@@ -5351,8 +5319,7 @@ public class ConcurrentHashMap<K, V> extends AbstractMap<K, V> implements Concur
     final DoubleBinaryOperator reducer;
     final double basis;
     double result;
-    @Nullable
-    MapReduceEntriesToDoubleTask<K, V> rights = null, nextRight;
+    @Nullable MapReduceEntriesToDoubleTask<K, V> rights = null, nextRight;
 
     MapReduceEntriesToDoubleTask(
         @Nullable BulkTask<K, V, ?> p,
@@ -5406,8 +5373,7 @@ public class ConcurrentHashMap<K, V> extends AbstractMap<K, V> implements Concur
     final DoubleBinaryOperator reducer;
     final double basis;
     double result;
-    @Nullable
-    MapReduceMappingsToDoubleTask<K, V> rights = null, nextRight;
+    @Nullable MapReduceMappingsToDoubleTask<K, V> rights = null, nextRight;
 
     MapReduceMappingsToDoubleTask(
         @Nullable BulkTask<K, V, ?> p,
@@ -5461,8 +5427,7 @@ public class ConcurrentHashMap<K, V> extends AbstractMap<K, V> implements Concur
     final LongBinaryOperator reducer;
     final long basis;
     long result;
-    @Nullable
-    MapReduceKeysToLongTask<K, V> rights = null, nextRight;
+    @Nullable MapReduceKeysToLongTask<K, V> rights = null, nextRight;
 
     MapReduceKeysToLongTask(
         @Nullable BulkTask<K, V, ?> p,
@@ -5516,8 +5481,7 @@ public class ConcurrentHashMap<K, V> extends AbstractMap<K, V> implements Concur
     final LongBinaryOperator reducer;
     final long basis;
     long result;
-    @Nullable
-    MapReduceValuesToLongTask<K, V> rights = null, nextRight;
+    @Nullable MapReduceValuesToLongTask<K, V> rights = null, nextRight;
 
     MapReduceValuesToLongTask(
         @Nullable BulkTask<K, V, ?> p,
@@ -5571,8 +5535,7 @@ public class ConcurrentHashMap<K, V> extends AbstractMap<K, V> implements Concur
     final LongBinaryOperator reducer;
     final long basis;
     long result;
-    @Nullable
-    MapReduceEntriesToLongTask<K, V> rights = null, nextRight;
+    @Nullable MapReduceEntriesToLongTask<K, V> rights = null, nextRight;
 
     MapReduceEntriesToLongTask(
         @Nullable BulkTask<K, V, ?> p,
@@ -5626,8 +5589,7 @@ public class ConcurrentHashMap<K, V> extends AbstractMap<K, V> implements Concur
     final LongBinaryOperator reducer;
     final long basis;
     long result;
-    @Nullable
-    MapReduceMappingsToLongTask<K, V> rights = null, nextRight;
+    @Nullable MapReduceMappingsToLongTask<K, V> rights = null, nextRight;
 
     MapReduceMappingsToLongTask(
         @Nullable BulkTask<K, V, ?> p,
@@ -5681,8 +5643,7 @@ public class ConcurrentHashMap<K, V> extends AbstractMap<K, V> implements Concur
     final IntBinaryOperator reducer;
     final int basis;
     int result;
-    @Nullable
-    MapReduceKeysToIntTask<K, V> rights = null, nextRight;
+    @Nullable MapReduceKeysToIntTask<K, V> rights = null, nextRight;
 
     MapReduceKeysToIntTask(
         @Nullable BulkTask<K, V, ?> p,
@@ -5736,8 +5697,7 @@ public class ConcurrentHashMap<K, V> extends AbstractMap<K, V> implements Concur
     final IntBinaryOperator reducer;
     final int basis;
     int result;
-    @Nullable
-    MapReduceValuesToIntTask<K, V> rights = null, nextRight;
+    @Nullable MapReduceValuesToIntTask<K, V> rights = null, nextRight;
 
     MapReduceValuesToIntTask(
         @Nullable BulkTask<K, V, ?> p,
@@ -5791,8 +5751,7 @@ public class ConcurrentHashMap<K, V> extends AbstractMap<K, V> implements Concur
     final IntBinaryOperator reducer;
     final int basis;
     int result;
-    @Nullable
-    MapReduceEntriesToIntTask<K, V> rights = null, nextRight;
+    @Nullable MapReduceEntriesToIntTask<K, V> rights = null, nextRight;
 
     MapReduceEntriesToIntTask(
         @Nullable BulkTask<K, V, ?> p,
@@ -5846,8 +5805,7 @@ public class ConcurrentHashMap<K, V> extends AbstractMap<K, V> implements Concur
     final IntBinaryOperator reducer;
     final int basis;
     int result;
-    @Nullable
-    MapReduceMappingsToIntTask<K, V> rights = null, nextRight;
+    @Nullable MapReduceMappingsToIntTask<K, V> rights = null, nextRight;
 
     MapReduceMappingsToIntTask(
         @Nullable BulkTask<K, V, ?> p,

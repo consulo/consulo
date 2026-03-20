@@ -105,9 +105,8 @@ public class PsiBuilderAdapter implements PsiBuilder {
         return myDelegate.getTokenText();
     }
 
-    @Nullable
     @Override
-    public CharSequence getTokenSequence() {
+    public @Nullable CharSequence getTokenSequence() {
         return myDelegate.getTokenSequence();
     }
 
@@ -179,9 +178,8 @@ public class PsiBuilderAdapter implements PsiBuilder {
         myDelegate.putUserData(key, value);
     }
 
-    @Nullable
     @Override
-    public PsiFile getContainingFile() {
+    public @Nullable PsiFile getContainingFile() {
         return myDelegate.getContainingFile();
     }
 

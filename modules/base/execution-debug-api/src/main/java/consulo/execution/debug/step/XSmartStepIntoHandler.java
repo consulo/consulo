@@ -35,7 +35,6 @@ public abstract class XSmartStepIntoHandler<Variant extends XSmartStepIntoVarian
    * @param position current position
    * @return list of function/method calls containing in the current line
    */
-  
   public abstract List<Variant> computeSmartStepVariants(XSourcePosition position);
 
   /**

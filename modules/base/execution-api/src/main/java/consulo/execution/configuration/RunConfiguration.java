@@ -41,7 +41,6 @@ public interface RunConfiguration extends RunProfile, JDOMExternalizable, Clonea
    *
    * @return the configuration type.
    */
-  
   ConfigurationType getType();
 
   /**
@@ -66,7 +65,6 @@ public interface RunConfiguration extends RunProfile, JDOMExternalizable, Clonea
    *
    * @return the settings editor component.
    */
-  
   SettingsEditor<? extends RunConfiguration> getConfigurationEditor();
 
   /**
@@ -83,8 +81,7 @@ public interface RunConfiguration extends RunProfile, JDOMExternalizable, Clonea
    * @param provider source of assorted information about the configuration being edited.
    * @return the per-runner settings.
    */
-  @Nullable
-  ConfigurationPerRunnerSettings createRunnerSettings(ConfigurationInfoProvider provider);
+  @Nullable ConfigurationPerRunnerSettings createRunnerSettings(ConfigurationInfoProvider provider);
 
   /**
    * Creates a UI control for editing the settings for a specific {@link ProgramRunner}. Can return null if the configuration has no
@@ -93,8 +90,7 @@ public interface RunConfiguration extends RunProfile, JDOMExternalizable, Clonea
    * @param runner the runner the settings for which need to be edited.
    * @return the editor for the per-runner settings.
    */
-  @Nullable
-  SettingsEditor<ConfigurationPerRunnerSettings> getRunnerSettingsEditor(ProgramRunner runner);
+  @Nullable SettingsEditor<ConfigurationPerRunnerSettings> getRunnerSettingsEditor(ProgramRunner runner);
 
   /**
    * Clones the run configuration.

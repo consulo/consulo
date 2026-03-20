@@ -23,6 +23,5 @@ import java.util.Date;
  * @since 2011-09-14
  */
 public interface VcsFileRevisionDvcsSpecific {
-  @Nullable
-  Date getDateForRevisionsOrdering();
+  @Nullable Date getDateForRevisionsOrdering();
 }

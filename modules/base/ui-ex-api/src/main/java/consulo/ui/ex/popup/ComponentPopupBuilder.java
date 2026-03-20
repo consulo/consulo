@@ -55,7 +55,6 @@ public interface ComponentPopupBuilder {
     /**
      * @see consulo.application.ui.DimensionService
      */
-    
     ComponentPopupBuilder setDimensionServiceKey(@Nullable ComponentManager project, String key, boolean useForXYLocation);
 
     
@@ -119,7 +118,6 @@ public interface ComponentPopupBuilder {
     /**
      * Adds "advertising" text to the bottom (e.g.: hints in code completion popup).
      */
-    
     ComponentPopupBuilder setAdText(@Nullable String text);
 
     
@@ -142,7 +140,6 @@ public interface ComponentPopupBuilder {
     /**
      * Allows to define custom strategy for processing {@link JBPopup#dispatchKeyEvent(KeyEvent)}.
      */
-    
     ComponentPopupBuilder setKeyEventHandler(Predicate<? super KeyEvent> handler);
 
     
@@ -159,7 +156,6 @@ public interface ComponentPopupBuilder {
     /**
      * Set a handler to be called when popup is closed via {@link JBPopup#closeOk(InputEvent)}.
      */
-    
     ComponentPopupBuilder setOkHandler(@Nullable Runnable okHandler);
 
     

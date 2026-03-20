@@ -57,7 +57,6 @@ public interface UpdateEnvironment extends VcsProviderMarker {
    *                                  cancellation can be reported by returning true from
    *                                  {@link UpdateSession#isCanceled}.
    */
-  
   UpdateSession updateDirectories(FilePath[] contentRoots, UpdatedFiles updatedFiles,
                                   ProgressIndicator progressIndicator, Ref<SequentialUpdatesContext> context) throws ProcessCanceledException;
 
@@ -67,8 +66,7 @@ public interface UpdateEnvironment extends VcsProviderMarker {
    * @param files the content roots for which update/integrate/status will be perfromed.
    * @return the settings dialog instance, or null if the VCS doesn't provide a settings dialog for this operation.
    */
-  @Nullable
-  UnnamedConfigurable createConfigurable(Collection<FilePath> files);
+  @Nullable UnnamedConfigurable createConfigurable(Collection<FilePath> files);
 
   boolean validateOptions(Collection<FilePath> roots);
 }

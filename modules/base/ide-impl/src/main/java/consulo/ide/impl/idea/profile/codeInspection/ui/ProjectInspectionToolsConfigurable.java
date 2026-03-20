@@ -44,9 +44,8 @@ public class ProjectInspectionToolsConfigurable extends InspectionToolsConfigura
     return "editor.code.inspections";
   }
 
-  @Nullable
   @Override
-  public String getParentId() {
+  public @Nullable String getParentId() {
     return StandardConfigurableIds.EDITOR_GROUP;
   }
 

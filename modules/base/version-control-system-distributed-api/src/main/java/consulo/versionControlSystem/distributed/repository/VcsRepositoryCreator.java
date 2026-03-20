@@ -27,8 +27,7 @@ import org.jspecify.annotations.Nullable;
  */
 @ExtensionAPI(ComponentScope.PROJECT)
 public interface VcsRepositoryCreator {
-  @Nullable
-  Repository createRepositoryIfValid(VirtualFile root);
+  @Nullable Repository createRepositoryIfValid(VirtualFile root);
 
   
   VcsKey getVcsKey();

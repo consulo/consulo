@@ -159,9 +159,8 @@ public class ScratchFileActions {
         return editor.getSelectionModel().getSelectedText();
     }
 
-    @Nullable
     @RequiredReadAction
-    static Language getLanguageFromCaret(Project project, @Nullable Editor editor, @Nullable PsiFile psiFile) {
+    static @Nullable Language getLanguageFromCaret(Project project, @Nullable Editor editor, @Nullable PsiFile psiFile) {
         if (editor == null || psiFile == null) {
             return null;
         }

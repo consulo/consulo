@@ -85,9 +85,8 @@ public class IndexSpeedSearch extends VcsLogSpeedSearch {
     return false;
   }
 
-  @Nullable
   @Override
-  protected String getElementText(Object row) {
+  protected @Nullable String getElementText(Object row) {
     throw new UnsupportedOperationException(
             "Getting row text in a Log is unsupported since we match commit subject and author separately.");
   }

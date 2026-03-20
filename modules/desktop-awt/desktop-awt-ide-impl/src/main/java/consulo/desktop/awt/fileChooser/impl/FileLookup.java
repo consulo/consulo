@@ -23,8 +23,7 @@ import java.util.List;
 public interface FileLookup {
 
   interface Finder {
-    @Nullable
-    LookupFile find(String path);
+    @Nullable LookupFile find(String path);
 
     String normalize(String path);
 
@@ -42,13 +41,11 @@ public interface FileLookup {
 
     List<LookupFile> getChildren(LookupFilter filter);
 
-    @Nullable
-    LookupFile getParent();
+    @Nullable LookupFile getParent();
 
     boolean exists();
 
-    @Nullable
-    Image getIcon();
+    @Nullable Image getIcon();
   }
 
   interface LookupFilter {

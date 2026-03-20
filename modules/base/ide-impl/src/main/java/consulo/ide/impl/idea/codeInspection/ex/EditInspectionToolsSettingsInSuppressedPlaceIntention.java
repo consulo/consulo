@@ -53,9 +53,8 @@ public class EditInspectionToolsSettingsInSuppressedPlaceIntention implements In
             : InspectionLocalize.editInspectionOptions(myDisplayName);
     }
 
-    @Nullable
     @RequiredReadAction
-    private static String getSuppressedId(Editor editor, PsiFile file) {
+    private static @Nullable String getSuppressedId(Editor editor, PsiFile file) {
         int offset = editor.getCaretModel().getOffset();
         PsiElement element = file.findElementAt(offset);
         while (element != null && !(element instanceof PsiFile)) {

@@ -27,7 +27,6 @@ public abstract class RemoteServersManager {
     /**
      * Creates new server with unique name derived from {@link ServerType#getPresentableName()}
      */
-    
     public abstract <C extends ServerConfiguration> RemoteServer<C> createServer(ServerType<C> type);
 
     public abstract void addServer(RemoteServer<?> server);

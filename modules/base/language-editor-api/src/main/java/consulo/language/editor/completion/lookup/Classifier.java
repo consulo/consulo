@@ -47,7 +47,6 @@ public abstract class Classifier<T> {
    * May return an empty list if there are no suitable objects available.
    * Used for diagnostics and statistic collection.
    */
-  
   public abstract List<Pair<T, Object>> getSortingWeights(Iterable<T> items, ProcessingContext context);
 
   public final @Nullable Classifier<T> getNext() {

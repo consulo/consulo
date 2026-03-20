@@ -104,9 +104,8 @@ public class VirtualFileDiffElement extends DiffElement<VirtualFile> {
     return elements.toArray(new VirtualFileDiffElement[elements.size()]);
   }
 
-  @Nullable
   @Override
-  public byte[] getContent() throws IOException {
+  public @Nullable byte[] getContent() throws IOException {
     return ApplicationManager.getApplication().runReadAction(new ThrowableComputable<byte[], IOException>() {
       @Override
       public byte[] compute() throws IOException {

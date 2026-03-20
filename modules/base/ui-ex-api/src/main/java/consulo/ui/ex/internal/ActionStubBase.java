@@ -32,6 +32,5 @@ public interface ActionStubBase {
 
   String getIconPath();
 
-  @Nullable
-  AnAction initialize(Application application, ActionManager manager);
+  @Nullable AnAction initialize(Application application, ActionManager manager);
 }

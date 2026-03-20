@@ -23,7 +23,6 @@ public interface IntentionActionWithChoice<T extends IntentionAction, V extends 
    * Title that should be used in UI for this group
    * of actions
    */
-  
   T getTitle();
 
   /**
@@ -32,6 +31,5 @@ public interface IntentionActionWithChoice<T extends IntentionAction, V extends 
    * Not, that if you need variants to maintain specific order,
    * you'll have to implement Comparable for T.
    */
-  
   List<V> getVariants();
 }

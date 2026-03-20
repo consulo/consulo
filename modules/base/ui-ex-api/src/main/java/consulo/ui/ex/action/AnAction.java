@@ -301,7 +301,6 @@ public abstract class AnAction implements PossiblyDumbAware {
      *
      * @return template presentation
      */
-    
     public final Presentation getTemplatePresentation() {
         Presentation presentation = myTemplatePresentation;
         if (presentation == null) {
@@ -320,10 +319,9 @@ public abstract class AnAction implements PossiblyDumbAware {
     /**
      * Icon from template presentation, without creating presentation. Don't use constructor if registering it via @ActionImpl
      */
-    @Nullable
     @Deprecated
     @DeprecationInfo("Use creating via constructor")
-    protected Image getTemplateIcon() {
+    protected @Nullable Image getTemplateIcon() {
         return null;
     }
 
@@ -380,7 +378,6 @@ public abstract class AnAction implements PossiblyDumbAware {
      *
      * @see ActionUpdateThread
      */
-    
     public ActionUpdateThread getActionUpdateThread() {
         return ActionUpdateThread.BGT;
     }

@@ -43,16 +43,14 @@ public interface VcsLogStorage {
      * @param commitIndex index of a commit
      * @return commit identified by this index or null
      */
-    @Nullable
-    CommitId getCommitId(int commitIndex);
+    @Nullable CommitId getCommitId(int commitIndex);
 
     /**
      * Iterates over known commit ids to find the first one which satisfies given condition.
      *
      * @return matching commit or null if no commit matches the given condition
      */
-    @Nullable
-    CommitId findCommitId(Predicate<CommitId> condition);
+    @Nullable CommitId findCommitId(Predicate<CommitId> condition);
 
     /**
      * Returns an integer index that is a unique identifier for a reference.
@@ -68,8 +66,7 @@ public interface VcsLogStorage {
      * @param refIndex index of a reference
      * @return reference identified by this index or null
      */
-    @Nullable
-    VcsRef getVcsRef(int refIndex);
+    @Nullable VcsRef getVcsRef(int refIndex);
 
     /**
      * Forces data in the storage to be written on disk.

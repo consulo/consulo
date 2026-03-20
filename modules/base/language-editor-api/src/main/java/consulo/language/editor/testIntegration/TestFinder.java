@@ -28,8 +28,7 @@ import java.util.Collection;
 public interface TestFinder {
   ExtensionPointName<TestFinder> EP_NAME = ExtensionPointName.create(TestFinder.class);
 
-  @Nullable
-  PsiElement findSourceElement(PsiElement from);
+  @Nullable PsiElement findSourceElement(PsiElement from);
 
   
   Collection<PsiElement> findTestsForClass(PsiElement element);

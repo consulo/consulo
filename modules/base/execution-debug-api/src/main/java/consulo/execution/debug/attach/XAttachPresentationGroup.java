@@ -50,7 +50,6 @@ public interface XAttachPresentationGroup<T> extends Comparator<T> {
    *                   and use it for presentation
    * @return an icon to be shown in popup menu for your item, described by info
    */
-  
   default Image getItemIcon(Project project, T info, UserDataHolder dataHolder) {
     return getProcessIcon(project, info, dataHolder);
   }
@@ -68,7 +67,6 @@ public interface XAttachPresentationGroup<T> extends Comparator<T> {
    *                   and use it for presentation
    * @return a text to be shown on your item, described by info
    */
-  
   default String getItemDisplayText(Project project, T info, UserDataHolder dataHolder) {
     return getProcessDisplayText(project, info, dataHolder);
   }

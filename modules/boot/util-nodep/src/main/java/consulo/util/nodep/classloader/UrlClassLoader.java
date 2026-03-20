@@ -102,7 +102,6 @@ public class UrlClassLoader extends ClassLoader implements AutoCloseable {
         /**
          * @param urls List of URLs that are signed by Sun/Oracle and their signatures must be verified.
          */
-
         public Builder urlsWithProtectionDomain(Set<URL> urls) {
             myURLsWithProtectionDomain = urls;
             return this;
@@ -111,7 +110,6 @@ public class UrlClassLoader extends ClassLoader implements AutoCloseable {
         /**
          * @see #urlsWithProtectionDomain(Set)
          */
-
         public Builder urlsWithProtectionDomain(URL... urls) {
             return urlsWithProtectionDomain(new HashSet<>(Arrays.asList(urls)));
         }
@@ -121,7 +119,6 @@ public class UrlClassLoader extends ClassLoader implements AutoCloseable {
          * from libraries. Caveat: for Windows opened handle will lock the file preventing its modification
          * Thus, the option is recommended when jars are not modified or process that uses this option is transient
          */
-
         public Builder allowLock() {
             myLockJars = true;
             return this;
@@ -135,7 +132,6 @@ public class UrlClassLoader extends ClassLoader implements AutoCloseable {
         /**
          * Build backward index of packages / class or resource names that allows to avoid IO during classloading
          */
-
         public Builder useCache() {
             myUseCache = true;
             return this;
@@ -155,7 +151,6 @@ public class UrlClassLoader extends ClassLoader implements AutoCloseable {
          * logical error since code is prepared for that and disk access is performed upon class / resource loading.
          * See also Builder#usePersistentClasspathIndexForLocalClassDirectories.
          */
-
         public Builder usePersistentClasspathIndexForLocalClassDirectories() {
             myUsePersistentClasspathIndex = ourClassPathIndexEnabled;
             return this;
@@ -170,7 +165,6 @@ public class UrlClassLoader extends ClassLoader implements AutoCloseable {
          * @return this instance
          * @see #createCachePool()
          */
-
         public Builder useCache(CachePool pool, CachingCondition condition) {
             myUseCache = true;
             myCachePool = (CachePoolImpl) pool;
@@ -208,7 +202,6 @@ public class UrlClassLoader extends ClassLoader implements AutoCloseable {
          * Important: this option will result in much smaller initial overhead but for bulk classloading (like complete IDE start) it is less
          * efficient (in number of disk / native code accesses / CPU spent) than combination of useCache / usePersistentClasspathIndexForLocalClassDirectories.
          */
-
         public Builder useLazyClassloadingCaches(boolean pleaseBeLazy) {
             myLazyClassloadingCaches = pleaseBeLazy;
             return this;
@@ -333,9 +326,8 @@ public class UrlClassLoader extends ClassLoader implements AutoCloseable {
     }
 
     // java 9 module method. we can't use override annotation here
-    @Nullable
     @Override
-    protected Class<?> findClass(String moduleName, String name) {
+    protected @Nullable Class<?> findClass(String moduleName, String name) {
         try {
             return findClass(name);
         }
@@ -345,9 +337,8 @@ public class UrlClassLoader extends ClassLoader implements AutoCloseable {
     }
 
     // java 9 module method. we can't use override annotation here
-    @Nullable
     @Override
-    protected URL findResource(String moduleName, String name) throws IOException {
+    protected @Nullable URL findResource(String moduleName, String name) throws IOException {
         return findResource(name);
     }
 
@@ -404,9 +395,8 @@ public class UrlClassLoader extends ClassLoader implements AutoCloseable {
         return defineClass(name, b, 0, b.length, protectionDomain);
     }
 
-    @Nullable
     @Override
-    public URL findResource(String name) {
+    public @Nullable URL findResource(String name) {
         Resource res = findResourceImpl(name);
         return res != null ? res.getURL() : null;
     }
@@ -425,9 +415,8 @@ public class UrlClassLoader extends ClassLoader implements AutoCloseable {
         myClassPath.close();
     }
 
-    @Nullable
     @Override
-    public InputStream getResourceAsStream(String name) {
+    public @Nullable InputStream getResourceAsStream(String name) {
         if (myAllowBootstrapResources) {
             return super.getResourceAsStream(name);
         }
@@ -484,7 +473,6 @@ public class UrlClassLoader extends ClassLoader implements AutoCloseable {
      * @return a new pool to be able to share internal class loader caches between several different class loaders, if they contain the same URLs
      * in their class paths.
      */
-
     public static CachePool createCachePool() {
         return new CachePoolImpl();
     }

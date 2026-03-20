@@ -29,6 +29,5 @@ import java.nio.file.Path;
  */
 @ExtensionAPI(ComponentScope.PROJECT)
 public interface ReadMeFileProvider {
-    @Nullable
-    Path resolveFile(Path projectPath);
+    @Nullable Path resolveFile(Path projectPath);
 }

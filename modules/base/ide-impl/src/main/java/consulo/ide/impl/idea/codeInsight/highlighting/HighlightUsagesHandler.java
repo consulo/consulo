@@ -135,9 +135,8 @@ public class HighlightUsagesHandler extends HighlightHandlerBase {
         }
     }
 
-    @Nullable
     @RequiredUIAccess
-    private static UsageTarget[] getUsageTargets(Editor editor, PsiFile file) {
+    private static @Nullable UsageTarget[] getUsageTargets(Editor editor, PsiFile file) {
         UsageTarget[] usageTargets = UsageTargetUtil.findUsageTargets(editor, file);
 
         if (usageTargets == null) {
@@ -192,17 +191,15 @@ public class HighlightUsagesHandler extends HighlightHandlerBase {
         });
     }
 
-    @Nullable
     @RequiredReadAction
     @SuppressWarnings("unchecked")
-    public static HighlightUsagesHandlerBase<PsiElement> createCustomHandler(Editor editor, PsiFile file) {
+    public static @Nullable HighlightUsagesHandlerBase<PsiElement> createCustomHandler(Editor editor, PsiFile file) {
         return file.getApplication().getExtensionPoint(HighlightUsagesHandlerFactory.class)
             .computeSafeIfAny(it -> it.createHighlightUsagesHandler(editor, file));
     }
 
-    @Nullable
     @RequiredUIAccess
-    private static PsiElement getTargetElement(Editor editor, PsiFile file) {
+    private static @Nullable PsiElement getTargetElement(Editor editor, PsiFile file) {
         PsiElement target = TargetElementUtil.findTargetElement(editor, TargetElementUtil.getReferenceSearchFlags());
 
         if (target == null) {
@@ -328,9 +325,8 @@ public class HighlightUsagesHandler extends HighlightHandlerBase {
         }
     }
 
-    @Nullable
     @RequiredReadAction
-    public static TextRange getNameIdentifierRange(PsiFile file, PsiElement element) {
+    public static @Nullable TextRange getNameIdentifierRange(PsiFile file, PsiElement element) {
         InjectedLanguageManager injectedManager = InjectedLanguageManager.getInstance(element.getProject());
         if (element instanceof PomTargetPsiElement pomTargetPsiElement
             && pomTargetPsiElement.getTarget() instanceof PsiDeclaredTarget declaredTarget) {
@@ -450,7 +446,6 @@ public class HighlightUsagesHandler extends HighlightHandlerBase {
     /**
      * @deprecated Use {@link #collectRangesToHighlight}
      */
-    
     @Deprecated
     @RequiredReadAction
     public static List<TextRange> getRangesToHighlight(PsiReference ref) {

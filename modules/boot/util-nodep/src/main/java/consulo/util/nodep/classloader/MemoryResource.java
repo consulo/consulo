@@ -39,9 +39,8 @@ public class MemoryResource extends Resource {
     return myContent;
   }
 
-  @Nullable
   @Override
-  public String getValue(Attribute key) {
+  public @Nullable String getValue(Attribute key) {
     return myAttributes != null ? myAttributes.get(key) : null;
   }
 

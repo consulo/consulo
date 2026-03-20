@@ -30,6 +30,5 @@ public interface DataGetter<T extends VcsShortCommitDetails> {
                        Consumer<List<T>> consumer,
                        @Nullable ProgressIndicator indicator);
 
-  @Nullable
-  T getCommitDataIfAvailable(int hash);
+  @Nullable T getCommitDataIfAvailable(int hash);
 }

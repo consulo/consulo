@@ -28,6 +28,5 @@ public interface ArtifactDeploymentSource extends DeploymentSource {
   
   ArtifactPointer getArtifactPointer();
 
-  @Nullable
-  Artifact getArtifact();
+  @Nullable Artifact getArtifact();
 }

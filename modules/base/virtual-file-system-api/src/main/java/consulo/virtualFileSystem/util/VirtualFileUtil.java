@@ -234,7 +234,6 @@ public final class VirtualFileUtil {
     /**
      * @return correct URL, must be used only for external communication
      */
-    
     public static URI toUri(VirtualFile file) {
         String path = file.getPath();
         try {
@@ -258,7 +257,6 @@ public final class VirtualFileUtil {
     /**
      * @return correct URL, must be used only for external communication
      */
-    
     public static URI toUri(File file) {
         String path = file.toURI().getPath();
         try {
@@ -576,7 +574,6 @@ public final class VirtualFileUtil {
      * @return a copy of the file
      * @throws IOException if file failed to be copied
      */
-    
     public static VirtualFile copyFile(Object requestor, VirtualFile file, VirtualFile toDir) throws IOException {
         return copyFile(requestor, file, toDir, file.getName());
     }
@@ -593,7 +590,6 @@ public final class VirtualFileUtil {
      * @return a copy of the file
      * @throws IOException if file failed to be copied
      */
-    
     public static VirtualFile copyFile(Object requestor, VirtualFile file, VirtualFile toDir, String newName) throws IOException {
         VirtualFile newChild = toDir.createChildData(requestor, newName);
         newChild.setBinaryContent(file.contentsToByteArray());
@@ -908,7 +904,6 @@ public final class VirtualFileUtil {
      * @param files array of files
      * @return array of common ancestors for passed files
      */
-    
     public static VirtualFile[] getCommonAncestors(VirtualFile[] files) {
         // Separate files by first component in the path.
         HashMap<VirtualFile, Set<VirtualFile>> map = new HashMap<>();
@@ -1000,7 +995,6 @@ public final class VirtualFileUtil {
      * @param file the file
      * @return virtual files which represents paths from root to the passed file
      */
-    
     static VirtualFile[] getPathComponents(VirtualFile file) {
         ArrayList<VirtualFile> componentsList = new ArrayList<>();
         while (file != null) {

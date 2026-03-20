@@ -40,7 +40,6 @@ public abstract class PsiManager extends UserDataHolderBase {
    * @param project the project for which the PSI manager is requested.
    * @return the PSI manager instance.
    */
-  
   public static PsiManager getInstance(Project project) {
     return project.getComponent(PsiManager.class);
   }
@@ -50,7 +49,6 @@ public abstract class PsiManager extends UserDataHolderBase {
    *
    * @return the project instance.
    */
-  
   public abstract Project getProject();
 
   /**
@@ -60,9 +58,8 @@ public abstract class PsiManager extends UserDataHolderBase {
    * @return the PSI file, or null if <code>file</code> is a directory, an invalid virtual file,
    * or the current project is a dummy or default project.
    */
-  @Nullable
   @RequiredReadAction
-  public abstract PsiFile findFile(VirtualFile file);
+  public abstract @Nullable PsiFile findFile(VirtualFile file);
 
   public abstract @Nullable FileViewProvider findViewProvider(VirtualFile file);
 
@@ -72,9 +69,8 @@ public abstract class PsiManager extends UserDataHolderBase {
    * @param file the directory for which the PSI is requested.
    * @return the PSI directory, or null if there is no PSI for the specified directory in this project.
    */
-  @Nullable
   @RequiredReadAction
-  public abstract PsiDirectory findDirectory(VirtualFile file);
+  public abstract @Nullable PsiDirectory findDirectory(VirtualFile file);
 
   /**
    * Checks if the specified two PSI elements (possibly invalid) represent the same source element
@@ -122,7 +118,6 @@ public abstract class PsiManager extends UserDataHolderBase {
    *
    * @return the modification tracker instance.
    */
-  
   public abstract PsiModificationTracker getModificationTracker();
 
   /**
@@ -168,9 +163,8 @@ public abstract class PsiManager extends UserDataHolderBase {
    */
   public abstract boolean isInProject(PsiElement element);
 
-  @Nullable
   @RequiredReadAction
-  public abstract PsiFile findCachedFile(VirtualFile file);
+  public abstract @Nullable PsiFile findCachedFile(VirtualFile file);
 
   /**
    * Call {@link AnyPsiChangeListener} listeners

@@ -25,6 +25,5 @@ import org.jspecify.annotations.Nullable;
  */
 @ExtensionAPI(ComponentScope.PROJECT)
 public interface FileStatusProvider {
-    @Nullable
-    FileStatus getFileStatus(VirtualFile virtualFile);
+    @Nullable FileStatus getFileStatus(VirtualFile virtualFile);
 }

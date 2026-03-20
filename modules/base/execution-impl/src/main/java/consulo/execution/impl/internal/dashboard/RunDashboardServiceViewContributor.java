@@ -224,9 +224,8 @@ public final class RunDashboardServiceViewContributor
             myNode = node;
         }
 
-        @Nullable
         @Override
-        public String getId() {
+        public @Nullable String getId() {
             RunConfiguration configuration = myNode.getConfigurationSettings().getConfiguration();
             return configuration.getType().getId() + "/" + configuration.getName();
         }
@@ -321,9 +320,8 @@ public final class RunDashboardServiceViewContributor
             ((RunDashboardManagerImpl)RunDashboardManager.getInstance(myNode.getProject())).removeFromSelection(content);
         }
 
-        @Nullable
         @Override
-        public Navigatable getNavigatable() {
+        public @Nullable Navigatable getNavigatable() {
             Supplier<PsiElement> value = LazyValue.nullable(() -> {
                 for (RunDashboardCustomizer customizer : myNode.getCustomizers()) {
                     PsiElement psiElement = customizer.getPsiElement(myNode);
@@ -352,9 +350,8 @@ public final class RunDashboardServiceViewContributor
 
         }
 
-        @Nullable
         @Override
-        public VirtualFile getVirtualFile() {
+        public @Nullable VirtualFile getVirtualFile() {
             return ReadAction.compute(() -> {
                 for (RunDashboardCustomizer customizer : myNode.getCustomizers()) {
                     PsiElement psiElement = customizer.getPsiElement(myNode);
@@ -366,16 +363,14 @@ public final class RunDashboardServiceViewContributor
             });
         }
 
-        @Nullable
         @Override
-        public Object getPresentationTag(Object fragment) {
+        public @Nullable Object getPresentationTag(Object fragment) {
             Map<Object, Object> links = myNode.getUserData(RunDashboardCustomizer.NODE_LINKS);
             return links == null ? null : links.get(fragment);
         }
 
-        @Nullable
         @Override
-        public Runnable getRemover() {
+        public @Nullable Runnable getRemover() {
             RunnerAndConfigurationSettings settings = myNode.getConfigurationSettings();
             RunManager runManager = RunManager.getInstance(settings.getConfiguration().getProject());
             return runManager.hasSettings(settings) ? () -> runManager.removeConfiguration(settings) : null;
@@ -467,9 +462,8 @@ public final class RunDashboardServiceViewContributor
             myPresentationData.setIcon(myGroup.getIcon());
         }
 
-        @Nullable
         @Override
-        public String getId() {
+        public @Nullable String getId() {
             return getId(myNode);
         }
 
@@ -495,9 +489,8 @@ public final class RunDashboardServiceViewContributor
             return value instanceof WeighedItem weighedItem ? weighedItem.getWeight() : 0;
         }
 
-        @Nullable
         @Override
-        public Runnable getRemover() {
+        public @Nullable Runnable getRemover() {
             ConfigurationType type = ObjectUtil.tryCast(((RunDashboardGroupImpl<?>)myGroup).getValue(), ConfigurationType.class);
             if (type != null) {
                 return () -> {
@@ -539,9 +532,8 @@ public final class RunDashboardServiceViewContributor
             super(node);
         }
 
-        @Nullable
         @Override
-        public Runnable getRemover() {
+        public @Nullable Runnable getRemover() {
             return () -> {
                 String groupName = myGroup.getName();
                 Project project = ((FolderDashboardGroupingRule.FolderDashboardGroup)myGroup).getProject();
@@ -633,9 +625,8 @@ public final class RunDashboardServiceViewContributor
                     return service.getPresentation();
                 }
 
-                @Nullable
                 @Override
-                public String getId() {
+                public @Nullable String getId() {
                     ItemPresentation presentation = getPresentation();
                     String text = presentation.getPresentableText();
                     if (!StringUtil.isEmpty(text)) {
@@ -654,9 +645,8 @@ public final class RunDashboardServiceViewContributor
                     return null;
                 }
 
-                @Nullable
                 @Override
-                public Runnable getRemover() {
+                public @Nullable Runnable getRemover() {
                     return service instanceof RunDashboardNode runDashboardNode ? runDashboardNode.getRemover() : null;
                 }
 

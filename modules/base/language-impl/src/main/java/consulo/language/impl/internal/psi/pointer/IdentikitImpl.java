@@ -68,10 +68,9 @@ public abstract class IdentikitImpl implements Identikit {
             myFileLanguageId = fileLanguage.getID();
         }
 
-        @Nullable
         @Override
         @RequiredReadAction
-        public PsiElement findPsiElement(PsiFile file, int startOffset, int endOffset) {
+        public @Nullable PsiElement findPsiElement(PsiFile file, int startOffset, int endOffset) {
             Language fileLanguage = Language.findLanguageByID(myFileLanguageId);
             if (fileLanguage == null) {
                 return null;   // plugin has been unloaded
@@ -111,9 +110,8 @@ public abstract class IdentikitImpl implements Identikit {
 
         }
 
-        @Nullable
         @RequiredReadAction
-        private PsiElement findParent(int startOffset, int endOffset, PsiElement anchor) {
+        private @Nullable PsiElement findParent(int startOffset, int endOffset, PsiElement anchor) {
             TextRange range = anchor.getTextRange();
 
             if (range.getStartOffset() != startOffset) {
@@ -211,18 +209,16 @@ public abstract class IdentikitImpl implements Identikit {
             return myElementInfo.hashCode();
         }
 
-        @Nullable
         @Override
         @RequiredReadAction
-        public PsiElement findPsiElement(PsiFile file, int startOffset, int endOffset) {
+        public @Nullable PsiElement findPsiElement(PsiFile file, int startOffset, int endOffset) {
             PsiElement anchor = myAnchorInfo.findPsiElement(file, startOffset, endOffset);
             PsiElement element = anchor == null ? null : myAnchorProvider.restoreElement(anchor);
             return element != null && myElementInfo.isAcceptable(element) ? element : null;
         }
 
-        @Nullable
         @Override
-        public Language getFileLanguage() {
+        public @Nullable Language getFileLanguage() {
             return myAnchorInfo.getFileLanguage();
         }
 

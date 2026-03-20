@@ -80,9 +80,8 @@ public abstract class AnnotationFieldGutter implements ActiveAnnotationGutter {
         return myPresentation.getFontType(line);
     }
 
-    @Nullable
     @Override
-    public EditorColorKey getColor(int line, Editor editor) {
+    public @Nullable EditorColorKey getColor(int line, Editor editor) {
         return myPresentation.getColor(line);
     }
 
@@ -96,9 +95,8 @@ public abstract class AnnotationFieldGutter implements ActiveAnnotationGutter {
         myPresentation.gutterClosed();
     }
 
-    @Nullable
     @Override
-    public ColorValue getBgColor(int line, Editor editor) {
+    public @Nullable ColorValue getBgColor(int line, Editor editor) {
         if (myColorScheme == null) {
             return null;
         }

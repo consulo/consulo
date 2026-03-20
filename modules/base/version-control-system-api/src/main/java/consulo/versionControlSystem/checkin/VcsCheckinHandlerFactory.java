@@ -38,9 +38,8 @@ public abstract class VcsCheckinHandlerFactory implements BaseCheckinHandlerFact
         myKey = key;
     }
 
-    @Nullable
     @Override
-    public CheckinHandler createHandler(CheckinProjectPanel panel, CommitContext commitContext) {
+    public @Nullable CheckinHandler createHandler(CheckinProjectPanel panel, CommitContext commitContext) {
         if (!panel.vcsIsAffected(myKey.getName())) {
             return null;
         }

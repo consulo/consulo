@@ -40,8 +40,7 @@ public interface ImportTestOutputExtension {
      * @return handler if xml contains tests output in recognised format,
      * otherwise null
      */
-    @Nullable
-    DefaultHandler createHandler(Reader reader, GeneralTestEventsProcessor processor) throws IOException;
+    @Nullable DefaultHandler createHandler(Reader reader, GeneralTestEventsProcessor processor) throws IOException;
 
     
     static DefaultHandler findHandler(Supplier<Reader> readerSupplier, GeneralTestEventsProcessor processor) {

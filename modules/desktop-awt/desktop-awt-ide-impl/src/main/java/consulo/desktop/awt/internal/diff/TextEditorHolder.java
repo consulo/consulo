@@ -57,9 +57,8 @@ public class TextEditorHolder extends EditorHolder {
         myEditor.getContentComponent().addFocusListener(listener);
     }
 
-    @Nullable
     @Override
-    public JComponent getPreferredFocusedComponent() {
+    public @Nullable JComponent getPreferredFocusedComponent() {
         return myEditor.getContentComponent();
     }
 

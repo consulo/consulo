@@ -87,9 +87,8 @@ public class AspectAnnotationFieldGutter extends AnnotationFieldGutter {
         return myAspect.isShowByDefault();
     }
 
-    @Nullable
     @Override
-    public String getID() {
+    public @Nullable String getID() {
         return myAspect.getId();
     }
 }

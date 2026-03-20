@@ -370,13 +370,11 @@ final class TouchBarsManager {
             }
         }
 
-        @Nullable
-        TBPanel getCurrent() {
+        @Nullable TBPanel getCurrent() {
             return current;
         }
 
-        @Nullable
-        TBPanel getTouchbar(long altKeyMask, boolean cachedOnly) {
+        @Nullable TBPanel getTouchbar(long altKeyMask, boolean cachedOnly) {
             if (customTouchbar != null) {
                 return customTouchbar;
             }
@@ -421,8 +419,7 @@ final class TouchBarsManager {
             }
         }
 
-        @Nullable
-        ActionGroup getAltActions(long mask) {
+        @Nullable ActionGroup getAltActions(long mask) {
             if (mask == 0) {
                 return actions;
             }

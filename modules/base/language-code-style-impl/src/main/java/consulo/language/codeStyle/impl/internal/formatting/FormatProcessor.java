@@ -320,7 +320,6 @@ public class FormatProcessor {
    * @param block block to check
    * @return the most nested block of the given one that shares the same text range if any; given block otherwise
    */
-  
   private static AbstractBlockWrapper getLastNestedCompositeBlockForSameRange(AbstractBlockWrapper block) {
     if (!(block instanceof CompositeBlockWrapper)) {
       return block;

@@ -71,8 +71,7 @@ public interface Rearranger<E extends ArrangementEntry> extends LanguageExtensio
      * available at the given context plus newly created entry for the given element;
      * <code>null</code> otherwise
      */
-    @Nullable
-    Pair<E, List<E>> parseWithNew(
+    @Nullable Pair<E, List<E>> parseWithNew(
         PsiElement root,
         @Nullable Document document,
         Collection<TextRange> ranges,
@@ -91,7 +90,6 @@ public interface Rearranger<E extends ArrangementEntry> extends LanguageExtensio
      *                 in order to build method dependency graph if no such grouping rule is defined
      * @return given root's children which are subject for further rearrangement
      */
-    
     List<E> parse(
         PsiElement root,
         @Nullable Document document,
@@ -118,6 +116,5 @@ public interface Rearranger<E extends ArrangementEntry> extends LanguageExtensio
      * <p/>
      * @see DefaultArrangementSettingsSerializer
      */
-    
     ArrangementSettingsSerializer getSerializer();
 }

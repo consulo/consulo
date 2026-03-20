@@ -45,7 +45,6 @@ class RemovedMappingTracker {
   /**
    * Applied for removed mappings approved by user
    */
-  
   private static final String ATTRIBUTE_APPROVED = "approved";
   
   private static final String ATTRIBUTE_TYPE = "type";

@@ -92,9 +92,8 @@ public class ImportSchemeChooserDialog extends DialogWrapper {
         return UNNAMED_SCHEME_ITEM.get().equals(mySelectedName) ? null : mySelectedName;
     }
 
-    @Nullable
     @Override
-    protected JComponent createCenterPanel() {
+    protected @Nullable JComponent createCenterPanel() {
         return contentPane;
     }
 

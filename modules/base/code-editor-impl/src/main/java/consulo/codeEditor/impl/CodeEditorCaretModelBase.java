@@ -281,10 +281,9 @@ public abstract class CodeEditorCaretModelBase<CARET extends CodeEditorCaretBase
         return carets;
     }
 
-    @Nullable
     @Override
     @RequiredReadAction
-    public Caret getCaretAt(VisualPosition pos) {
+    public @Nullable Caret getCaretAt(VisualPosition pos) {
         synchronized (myCarets) {
             for (CodeEditorCaretBase caret : myCarets) {
                 if (caret.getVisualPosition().equals(pos)) {
@@ -295,17 +294,15 @@ public abstract class CodeEditorCaretModelBase<CARET extends CodeEditorCaretBase
         }
     }
 
-    @Nullable
     @Override
     @RequiredUIAccess
-    public Caret addCaret(VisualPosition pos) {
+    public @Nullable Caret addCaret(VisualPosition pos) {
         return addCaret(pos, true);
     }
 
-    @Nullable
     @Override
     @RequiredUIAccess
-    public Caret addCaret(VisualPosition pos, boolean makePrimary) {
+    public @Nullable Caret addCaret(VisualPosition pos, boolean makePrimary) {
         UIAccess.assertIsUIThread();
         CARET caret = createCaret(myEditor, this);
         caret.doMoveToVisualPosition(pos, false);

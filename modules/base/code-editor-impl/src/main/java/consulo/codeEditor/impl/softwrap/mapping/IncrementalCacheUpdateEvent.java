@@ -105,7 +105,6 @@ public class IncrementalCacheUpdateEvent {
   /**
    * Returns logical position, from which soft wrap recalculation should start
    */
-  
   public LogicalPosition getStartLogicalPosition() {
     return myStartLogicalPosition;
   }

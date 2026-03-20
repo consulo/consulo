@@ -29,12 +29,10 @@ import org.jspecify.annotations.Nullable;
 public interface PsiFileSystemItem extends PsiCheckedRenameElement, NavigatablePsiElement {
     boolean isDirectory();
 
-    @Nullable
     @Override
-    PsiFileSystemItem getParent();
+    @Nullable PsiFileSystemItem getParent();
 
-    @Nullable
-    VirtualFile getVirtualFile();
+    @Nullable VirtualFile getVirtualFile();
 
     
     @Override

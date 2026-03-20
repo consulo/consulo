@@ -38,13 +38,11 @@ public interface RunnerContentUi extends ContentUI, CellTransform.Facade, ViewCo
         throw new AbstractMethodError();
     }
 
-    @Nullable
-    Content findContent(String key);
+    @Nullable Content findContent(String key);
 
     void restore(Content content);
 
-    @Nullable
-    Content findOrRestoreContentIfNeeded(String key);
+    @Nullable Content findOrRestoreContentIfNeeded(String key);
 
     boolean isHorizontalToolbar();
 

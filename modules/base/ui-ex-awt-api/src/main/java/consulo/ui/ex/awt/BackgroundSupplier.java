@@ -13,6 +13,5 @@ public interface BackgroundSupplier {
    * @param row a visible index of an element that allows to define old fashioned striped background
    * @return a preferred background color or {@code null} if an element should use default background
    */
-  @Nullable
-  Color getElementBackground(int row);
+  @Nullable Color getElementBackground(int row);
 }

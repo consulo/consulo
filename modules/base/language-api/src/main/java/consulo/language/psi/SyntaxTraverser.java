@@ -99,9 +99,8 @@ public class SyntaxTraverser<T> extends FilteredTraverserBase<T, SyntaxTraverser
         return super.isAlwaysLeaf(node) && !(api.typeOf(node) instanceof IFileElementType);
     }
 
-    @Nullable
     @Override
-    public <K> K getUserData(Key<K> key) {
+    public <K> @Nullable K getUserData(Key<K> key) {
         return getUserDataHolder().getUserData(key);
     }
 
@@ -250,60 +249,52 @@ public class SyntaxTraverser<T> extends FilteredTraverserBase<T, SyntaxTraverser
 
         static final ApiEx<PsiElement> INSTANCE = new PsiApi();
         static final ApiEx<PsiElement> INSTANCE_REV = new PsiApi() {
-            @Nullable
             @Override
             @RequiredReadAction
-            public PsiElement previous(PsiElement node) {
+            public @Nullable PsiElement previous(PsiElement node) {
                 return super.next(node);
             }
 
-            @Nullable
             @Override
             @RequiredReadAction
-            public PsiElement next(PsiElement node) {
+            public @Nullable PsiElement next(PsiElement node) {
                 return super.previous(node);
             }
 
-            @Nullable
             @Override
             @RequiredReadAction
-            public PsiElement last(PsiElement node) {
+            public @Nullable PsiElement last(PsiElement node) {
                 return super.first(node);
             }
 
-            @Nullable
             @Override
             @RequiredReadAction
-            public PsiElement first(PsiElement node) {
+            public @Nullable PsiElement first(PsiElement node) {
                 return super.last(node);
             }
         };
 
-        @Nullable
         @Override
         @RequiredReadAction
-        public PsiElement first(PsiElement node) {
+        public @Nullable PsiElement first(PsiElement node) {
             return node.getFirstChild();
         }
 
-        @Nullable
         @Override
         @RequiredReadAction
-        public PsiElement last(PsiElement node) {
+        public @Nullable PsiElement last(PsiElement node) {
             return node.getLastChild();
         }
 
-        @Nullable
         @Override
         @RequiredReadAction
-        public PsiElement next(PsiElement node) {
+        public @Nullable PsiElement next(PsiElement node) {
             return node.getNextSibling();
         }
 
-        @Nullable
         @Override
         @RequiredReadAction
-        public PsiElement previous(PsiElement node) {
+        public @Nullable PsiElement previous(PsiElement node) {
             return node.getPrevSibling();
         }
 
@@ -328,9 +319,8 @@ public class SyntaxTraverser<T> extends FilteredTraverserBase<T, SyntaxTraverser
             return node.getText();
         }
 
-        @Nullable
         @Override
-        public PsiElement parent(PsiElement node) {
+        public @Nullable PsiElement parent(PsiElement node) {
             return node instanceof PsiFile ? null : node.getParent();
         }
     }
@@ -339,27 +329,23 @@ public class SyntaxTraverser<T> extends FilteredTraverserBase<T, SyntaxTraverser
 
         static final ASTApi INSTANCE = new ASTApi();
 
-        @Nullable
         @Override
-        public ASTNode first(ASTNode node) {
+        public @Nullable ASTNode first(ASTNode node) {
             return node.getFirstChildNode();
         }
 
-        @Nullable
         @Override
-        public ASTNode last(ASTNode node) {
+        public @Nullable ASTNode last(ASTNode node) {
             return node.getLastChildNode();
         }
 
-        @Nullable
         @Override
-        public ASTNode next(ASTNode node) {
+        public @Nullable ASTNode next(ASTNode node) {
             return node.getTreeNext();
         }
 
-        @Nullable
         @Override
-        public ASTNode previous(ASTNode node) {
+        public @Nullable ASTNode previous(ASTNode node) {
             return node.getTreePrev();
         }
 
@@ -381,9 +367,8 @@ public class SyntaxTraverser<T> extends FilteredTraverserBase<T, SyntaxTraverser
             return node.getText();
         }
 
-        @Nullable
         @Override
-        public ASTNode parent(ASTNode node) {
+        public @Nullable ASTNode parent(ASTNode node) {
             return node.getTreeParent();
         }
     }
@@ -393,9 +378,8 @@ public class SyntaxTraverser<T> extends FilteredTraverserBase<T, SyntaxTraverser
         
         abstract FlyweightCapableTreeStructure<T> getStructure();
 
-        @Nullable
         @Override
-        public T parent(T node) {
+        public @Nullable T parent(T node) {
             return getStructure().getParent(node);
         }
 
@@ -467,9 +451,8 @@ public class SyntaxTraverser<T> extends FilteredTraverserBase<T, SyntaxTraverser
             return rangeOf(node).subSequence(builder.getOriginalText());
         }
 
-        @Nullable
         @Override
-        public LighterASTNode parent(LighterASTNode node) {
+        public @Nullable LighterASTNode parent(LighterASTNode node) {
             return node instanceof LighterASTTokenNode ? null : super.parent(node);
         }
     }

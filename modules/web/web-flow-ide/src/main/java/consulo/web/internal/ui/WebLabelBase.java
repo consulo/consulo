@@ -75,9 +75,8 @@ public abstract class WebLabelBase<V extends VaadinLabelComponentBase> extends V
         myLabeledComponent = component;
     }
 
-    @Nullable
     @Override
-    public Component getTarget() {
+    public @Nullable Component getTarget() {
         return myLabeledComponent;
     }
 }

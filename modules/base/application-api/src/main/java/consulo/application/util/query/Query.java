@@ -18,7 +18,6 @@ public interface Query<Result> extends Iterable<Result> {
      *
      * @return results in a collection or empty collection if no results found.
      */
-    
     Collection<Result> findAll();
 
     /**
@@ -80,7 +79,6 @@ public interface Query<Result> extends Iterable<Result> {
     /**
      * @param transformation pure function
      */
-    
     default <R> Query<R> transforming(Function<? super Result, ? extends Collection<? extends R>> transformation) {
         return Queries.getInstance().transforming(this, transformation);
     }
@@ -88,7 +86,6 @@ public interface Query<Result> extends Iterable<Result> {
     /**
      * @param mapper pure function
      */
-    
     default <R> Query<R> mapping(Function<? super Result, ? extends R> mapper) {
         return transforming(value -> Collections.singletonList(mapper.apply(value)));
     }
@@ -96,7 +93,6 @@ public interface Query<Result> extends Iterable<Result> {
     /**
      * @param predicate pure function
      */
-    
     default Query<Result> filtering(Predicate<? super Result> predicate) {
         return transforming(value -> predicate.test(value) ? Collections.singletonList(value) : Collections.emptyList());
     }
@@ -104,7 +100,6 @@ public interface Query<Result> extends Iterable<Result> {
     /**
      * @param mapper pure function
      */
-    
     default <R> Query<R> flatMapping(Function<? super Result, ? extends Query<? extends R>> mapper) {
         return Queries.getInstance().flatMapping(this, mapper);
     }
@@ -112,7 +107,6 @@ public interface Query<Result> extends Iterable<Result> {
     /**
      * @return an equivalent query whose {@link #forEach} accepts thread-safe consumers, so it may call the consumer in parallel.
      */
-    
     @Contract(pure = true)
     default Query<Result> allowParallelProcessing() {
         return this;

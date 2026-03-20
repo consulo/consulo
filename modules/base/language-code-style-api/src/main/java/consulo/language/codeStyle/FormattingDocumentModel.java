@@ -29,7 +29,6 @@ import org.jspecify.annotations.Nullable;
  *
  * @see FormattingModel#getDocumentModel()
  */
-
 public interface FormattingDocumentModel {
     
     static FormattingDocumentModel create(PsiFile file) {
@@ -98,7 +97,6 @@ public interface FormattingDocumentModel {
      * @param changedViaPsi  flag that identifies whether formatter introduces changes via PSI tree or directly via the document
      * @return white space to use for replacing document symbols at <code>[startOffset; endOffset)</code> region
      */
-    
     CharSequence adjustWhiteSpaceIfNecessary(
         CharSequence whiteSpaceText,
         int startOffset,

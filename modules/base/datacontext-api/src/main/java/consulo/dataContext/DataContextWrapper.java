@@ -31,15 +31,13 @@ public class DataContextWrapper implements DataContext, UserDataHolder {
     myDataHolder = delegate instanceof UserDataHolder ? (UserDataHolder)delegate : new UserDataHolderBase();
   }
 
-  @Nullable
   @Override
-  public <T> T getData(Key<T> dataId) {
+  public <T> @Nullable T getData(Key<T> dataId) {
     return myDelegate.getData(dataId);
   }
 
-  @Nullable
   @Override
-  public <T> T getUserData(Key<T> key) {
+  public <T> @Nullable T getUserData(Key<T> key) {
     return myDataHolder.getUserData(key);
   }
 

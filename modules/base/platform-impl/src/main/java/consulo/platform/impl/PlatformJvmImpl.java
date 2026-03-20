@@ -103,9 +103,8 @@ class PlatformJvmImpl implements PlatformJvm {
     return myJavaName;
   }
 
-  @Nullable
   @Override
-  public String getRuntimeProperty(String key) {
+  public @Nullable String getRuntimeProperty(String key) {
     return System.getProperty(key);
   }
 

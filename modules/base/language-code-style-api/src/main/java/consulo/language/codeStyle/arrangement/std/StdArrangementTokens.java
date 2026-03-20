@@ -59,9 +59,8 @@ public class StdArrangementTokens {
   private StdArrangementTokens() {
   }
 
-  @Nullable
   @SuppressWarnings("ReturnValueIgnored") // initializing nested classes
-  public static ArrangementSettingsToken byId(String id) {
+  public static @Nullable ArrangementSettingsToken byId(String id) {
     NESTED_CLASSES_INITIALIZER.get();
     return TOKENS_BY_ID.get(id);
   }

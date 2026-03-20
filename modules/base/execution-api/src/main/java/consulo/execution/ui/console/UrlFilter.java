@@ -30,9 +30,8 @@ public class UrlFilter implements Filter, DumbAware {
     myProject = project;
   }
 
-  @Nullable
   @Override
-  public Result applyFilter(String line, int entireLength) {
+  public @Nullable Result applyFilter(String line, int entireLength) {
     if (!URLUtil.canContainUrl(line)) return null;
 
     int textStartOffset = entireLength - line.length();

@@ -77,7 +77,6 @@ public class TextRangeUtil {
    * @param textRanges The list of ranges to process
    * @return least text range that contains all of passed text ranges
    */
-  
   public static TextRange getEnclosingTextRange(List<? extends TextRange> textRanges) {
     if (textRanges.isEmpty()) return TextRange.EMPTY_RANGE;
     int lowerBound = textRanges.get(0).getStartOffset();

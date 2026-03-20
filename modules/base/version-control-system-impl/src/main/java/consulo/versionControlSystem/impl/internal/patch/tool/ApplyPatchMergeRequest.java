@@ -100,9 +100,8 @@ public class ApplyPatchMergeRequest extends MergeRequest implements ApplyPatchRe
         return myAppliedPatch;
     }
 
-    @Nullable
     @Override
-    public String getTitle() {
+    public @Nullable String getTitle() {
         return myWindowTitle;
     }
 

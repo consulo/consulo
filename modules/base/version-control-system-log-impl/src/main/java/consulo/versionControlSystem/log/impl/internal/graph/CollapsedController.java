@@ -82,9 +82,8 @@ public class CollapsedController extends CascadeController {
     CollapsedActionManager.expandNodes(myCollapsedGraph, nodesToShow);
   }
 
-  @Nullable
   @Override
-  protected LinearGraphAnswer performAction(LinearGraphAction action) {
+  protected @Nullable LinearGraphAnswer performAction(LinearGraphAction action) {
     return CollapsedActionManager.performAction(this, action);
   }
 
@@ -99,9 +98,8 @@ public class CollapsedController extends CascadeController {
     return myCollapsedGraph;
   }
 
-  @Nullable
   @Override
-  protected GraphElement convertToDelegate(GraphElement graphElement) {
+  protected @Nullable GraphElement convertToDelegate(GraphElement graphElement) {
     return convertToDelegate(graphElement, myCollapsedGraph);
   }
 

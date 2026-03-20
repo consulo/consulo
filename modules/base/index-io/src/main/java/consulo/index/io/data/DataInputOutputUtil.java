@@ -106,7 +106,6 @@ public class DataInputOutputUtil {
    * Reads a collection using the given function to read each element.
    * Should be coupled with {@link #writeSeq}
    */
-  
   public static <T> List<T> readSeq(DataInput in, @SuppressWarnings("BoundedWildcard") ThrowableSupplier<? extends T, IOException> readElement) throws IOException {
     int size = readINT(in);
     List<T> result = new ArrayList<>(size);
@@ -135,7 +134,6 @@ public class DataInputOutputUtil {
    * Reads a map using the given function to read each element.
    * Should be coupled with {@link #writeMap}
    */
-  
   public static <K, V> Map<K, V> readMap(DataInput in,
                                          ThrowableSupplier<? extends K, ? extends IOException> readKey,
                                          ThrowableSupplier<? extends V, ? extends IOException> readValue) throws IOException {

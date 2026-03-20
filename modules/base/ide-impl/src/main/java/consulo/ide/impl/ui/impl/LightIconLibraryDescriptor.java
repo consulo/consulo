@@ -32,9 +32,8 @@ public class LightIconLibraryDescriptor implements IconLibraryDescriptor {
     return IconLibraryManager.LIGHT_LIBRARY_ID;
   }
 
-  @Nullable
   @Override
-  public String getBaseLibraryId() {
+  public @Nullable String getBaseLibraryId() {
     return null;
   }
 

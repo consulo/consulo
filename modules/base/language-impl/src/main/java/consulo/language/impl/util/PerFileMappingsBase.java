@@ -151,15 +151,13 @@ public abstract class PerFileMappingsBase<T> implements PersistentStateComponent
         return null;
     }
 
-    @Nullable
     @Override
-    public T getDefaultMapping(@Nullable VirtualFile file) {
+    public @Nullable T getDefaultMapping(@Nullable VirtualFile file) {
         return null;
     }
 
-    @Nullable
     @Override
-    public T getImmediateMapping(@Nullable VirtualFile file) {
+    public @Nullable T getImmediateMapping(@Nullable VirtualFile file) {
         synchronized (myMappings) {
             ensureStateLoaded();
             return myMappings.get(file);
@@ -375,8 +373,7 @@ public abstract class PerFileMappingsBase<T> implements PersistentStateComponent
                     }
                 }
 
-                @Nullable
-                MyUndoableAction createUndoableAction(List<? extends VFileEvent> events) {
+                @Nullable MyUndoableAction createUndoableAction(List<? extends VFileEvent> events) {
                     // NOTE: VFS handles renames, so the code for RENAME events is deleted (see history)
                     List<? extends VFileEvent> eventsFiltered = JBIterable.from(events).filter(VFileDeleteEvent.class).toList();
                     if (eventsFiltered.isEmpty()) {

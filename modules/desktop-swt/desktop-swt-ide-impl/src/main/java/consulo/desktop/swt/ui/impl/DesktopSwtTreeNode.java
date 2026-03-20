@@ -87,9 +87,8 @@ public class DesktopSwtTreeNode<E> implements TreeNode<E> {
         return myLeaf;
     }
 
-    @Nullable
     @Override
-    public E getValue() {
+    public @Nullable E getValue() {
         return myValue;
     }
 }

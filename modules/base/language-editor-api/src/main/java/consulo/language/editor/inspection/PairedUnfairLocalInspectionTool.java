@@ -22,6 +22,5 @@ public interface PairedUnfairLocalInspectionTool extends UnfairLocalInspectionTo
    * The returned value can be a short name of this inspection tool, in this case
    * this unfair tool will be run in batch mode.
    */
-  
   String getInspectionForBatchShortName();
 }

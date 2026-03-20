@@ -114,7 +114,6 @@ public class MessageBusImpl implements MessageBus, Disposable {
   /**
    * calculates {@link #myOrder} for the given child bus
    */
-  
   private int[] nextOrder() {
     MessageBusImpl lastChild = ContainerUtil.getLastItem(myChildBuses);
 

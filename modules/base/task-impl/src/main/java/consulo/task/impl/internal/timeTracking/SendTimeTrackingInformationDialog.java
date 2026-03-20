@@ -68,9 +68,8 @@ public class SendTimeTrackingInformationDialog extends DialogWrapper {
     init();
   }
 
-  @Nullable
   @Override
-  protected JComponent createCenterPanel() {
+  protected @Nullable JComponent createCenterPanel() {
     return myPanel;
   }
 
@@ -119,18 +118,16 @@ public class SendTimeTrackingInformationDialog extends DialogWrapper {
     super.doOKAction();
   }
 
-  @Nullable
   @Override
-  protected ValidationInfo doValidate() {
+  protected @Nullable ValidationInfo doValidate() {
     String timeSpentText = myFromPreviousPostRadioButton.isSelected() ? myFromPreviousPostTextField.getText()
                                                                       : myTotallyRadioButton.isSelected() ? myTotallyTextField.getText() : myCustomTextField.getText();
     if (!PATTERN.matcher(timeSpentText).matches()) return new ValidationInfo("Time Spent has broken format");
     return null;
   }
 
-  @Nullable
   @Override
-  protected String getDimensionServiceKey() {
+  protected @Nullable String getDimensionServiceKey() {
     return "consulo.task.impl.internal.timeTracking.TasksToolWindowPanel";
   }
 }

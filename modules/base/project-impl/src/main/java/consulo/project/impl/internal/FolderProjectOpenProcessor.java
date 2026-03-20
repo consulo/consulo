@@ -45,9 +45,8 @@ import java.io.IOException;
 public class FolderProjectOpenProcessor extends ProjectOpenProcessor {
     public static final FolderProjectOpenProcessor INSTANCE = new FolderProjectOpenProcessor();
 
-    @Nullable
     @Override
-    public Image getIcon(VirtualFile file) {
+    public @Nullable Image getIcon(VirtualFile file) {
         return PlatformIconGroup.nodesFolder();
     }
 

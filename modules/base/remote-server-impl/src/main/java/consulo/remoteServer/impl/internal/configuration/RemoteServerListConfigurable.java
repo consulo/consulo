@@ -66,9 +66,8 @@ public class RemoteServerListConfigurable extends MasterDetailsComponent impleme
         myInitialSelectedName = initialSelectedName;
     }
 
-    @Nullable
     @Override
-    public String getParentId() {
+    public @Nullable String getParentId() {
         return StandardConfigurableIds.EXECUTION_GROUP;
     }
 

@@ -112,9 +112,8 @@ public abstract class UpdateOrStatusOptionsDialog extends OptionsDialog {
         return myMainPanel;
     }
 
-    @Nullable
     @Override
-    protected String getHelpId() {
+    protected @Nullable String getHelpId() {
         for (UnnamedConfigurable conf : myEnvToConfMap.values()) {
             String helpTopic = conf.getHelpTopic();
             if (helpTopic != null) {

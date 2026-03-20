@@ -23,9 +23,7 @@ import org.jspecify.annotations.Nullable;
  */
 public interface LocalFileProvider {
 
-  @Nullable
-  VirtualFile getLocalVirtualFileFor(@Nullable VirtualFile entryVFile);
+  @Nullable VirtualFile getLocalVirtualFileFor(@Nullable VirtualFile entryVFile);
 
-  @Nullable
-  VirtualFile findLocalVirtualFileByPath(String path);
+  @Nullable VirtualFile findLocalVirtualFileByPath(String path);
 }

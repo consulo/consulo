@@ -154,9 +154,8 @@ public class UnifiedProjectOrModuleNameStep<C extends NewModuleWizardContext> im
     return myNameTextBox.getValueOrError();
   }
 
-  @Nullable
   @Override
-  public Component getPreferredFocusedComponent() {
+  public @Nullable Component getPreferredFocusedComponent() {
     return myNameTextBox;
   }
 }

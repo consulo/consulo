@@ -525,8 +525,7 @@ public class FavoritesTreeViewPanel extends JPanel implements DataProvider, Dock
         return myBuilder;
     }
 
-    @Nullable
-    FavoritesListNode findFavoritesListNode(Point point) {
+    @Nullable FavoritesListNode findFavoritesListNode(Point point) {
         TreePath path = myTree.getClosestPathForLocation(point.x, point.y);
         FavoritesListNode node = getListNodeFromPath(path);
         return node == null ? (FavoritesListNode) ((FavoritesRootNode) myFavoritesTreeStructure.getRootElement()).getChildren().iterator().next() : node;
@@ -644,9 +643,8 @@ public class FavoritesTreeViewPanel extends JPanel implements DataProvider, Dock
             FavoritesTreeViewPanel.this.selectElement(element, virtualFile, requestFocus);
         }
 
-        @Nullable
         @RequiredReadAction
-        private PsiDirectory[] getSelectedDirectories() {
+        private @Nullable PsiDirectory[] getSelectedDirectories() {
             if (myBuilder == null) {
                 return null;
             }
@@ -751,15 +749,13 @@ public class FavoritesTreeViewPanel extends JPanel implements DataProvider, Dock
         return myTree.isEmpty();
     }
 
-    @Nullable
     @Override
-    public Image startDropOver(DockableContent content, RelativePoint point) {
+    public @Nullable Image startDropOver(DockableContent content, RelativePoint point) {
         return null;
     }
 
-    @Nullable
     @Override
-    public Image processDropOver(DockableContent content, RelativePoint point) {
+    public @Nullable Image processDropOver(DockableContent content, RelativePoint point) {
         Point p = point.getScreenPoint();
         SwingUtilities.convertPointFromScreen(p, myTree);
         TreePath treePath = myTree.getClosestPathForLocation(p.x, p.y);

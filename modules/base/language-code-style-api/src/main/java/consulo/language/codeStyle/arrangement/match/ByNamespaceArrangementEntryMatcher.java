@@ -28,9 +28,8 @@ public class ByNamespaceArrangementEntryMatcher extends AbstractRegexpArrangemen
     super(pattern);
   }
 
-  @Nullable
   @Override
-  protected String getTextToMatch(ArrangementEntry entry) {
+  protected @Nullable String getTextToMatch(ArrangementEntry entry) {
     if (entry instanceof NamespaceAwareArrangementEntry) {
       return ((NamespaceAwareArrangementEntry)entry).getNamespace();
     }

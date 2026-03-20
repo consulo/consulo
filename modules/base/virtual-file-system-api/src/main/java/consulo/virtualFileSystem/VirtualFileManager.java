@@ -49,7 +49,6 @@ public abstract class VirtualFileManager implements ModificationTracker {
      *
      * @return <code>VirtualFileManager</code>
      */
-    
     @Deprecated
     @DeprecationInfo("Use constructor injection")
     public static VirtualFileManager getInstance() {
@@ -174,7 +173,6 @@ public abstract class VirtualFileManager implements ModificationTracker {
      * @param path     the path
      * @return URL
      */
-    
     public static String constructUrl(String protocol, String path) {
         return protocol + URLUtil.SCHEME_SEPARATOR + path;
     }
@@ -201,7 +199,6 @@ public abstract class VirtualFileManager implements ModificationTracker {
      * @param url the URL
      * @return path
      */
-    
     public static String extractPath(String url) {
         int index = url.indexOf(URLUtil.SCHEME_SEPARATOR);
         if (index < 0) {
@@ -254,7 +251,6 @@ public abstract class VirtualFileManager implements ModificationTracker {
     /**
      * Return icon without proxing to lazy icon. Must be called from not UI thread
      */
-    
     @RequiredReadAction
     public abstract Image getFileIconNoDefer(VirtualFile file, @Nullable ComponentManager project, @Iconable.IconFlags int flags);
 }

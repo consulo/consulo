@@ -73,8 +73,7 @@ public interface LineAnnotationAspect {
      *
      * @return unique id
      */
-    @Nullable
-    String getId();
+    @Nullable String getId();
 
     /**
      * Returns <code>true</code> if this aspect will be shown on Annotate action

@@ -17,13 +17,11 @@ public abstract class RunAnythingMatchedRunConfigurationProvider extends RunAnyt
      * @param pattern
      * @return created run configuration
      */
-    
     public abstract RunnerAndConfigurationSettings createConfiguration(DataContext dataContext, String pattern);
 
     /**
      * Returns current provider associated run configuration factory
      */
-    
     public abstract ConfigurationFactory getConfigurationFactory();
 
     @Override

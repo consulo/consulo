@@ -335,9 +335,8 @@ public class OptimizeImportsAction extends AnAction {
             return myOnlyVcsCheckBox.isSelected();
         }
 
-        @Nullable
         @Override
-        protected JComponent createCenterPanel() {
+        protected @Nullable JComponent createCenterPanel() {
             JPanel panel = new JPanel();
             BoxLayout layout = new BoxLayout(panel, BoxLayout.Y_AXIS);
             panel.setLayout(layout);
@@ -353,9 +352,8 @@ public class OptimizeImportsAction extends AnAction {
             return panel;
         }
 
-        @Nullable
         @Override
-        protected String getHelpId() {
+        protected @Nullable String getHelpId() {
             return HELP_ID;
         }
     }

@@ -29,6 +29,5 @@ import org.jspecify.annotations.Nullable;
 public interface ContainerProvider {
     ExtensionPointName<ContainerProvider> EP_NAME = ExtensionPointName.create(ContainerProvider.class);
 
-    @Nullable
-    PsiElement getContainer(PsiElement item);
+    @Nullable PsiElement getContainer(PsiElement item);
 }

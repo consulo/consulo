@@ -25,11 +25,9 @@ import org.jspecify.annotations.Nullable;
  * @author Maxim.Mossienko
  */
 public interface SelfManagingCommenter<T extends CommenterDataHolder> {
-  @Nullable
-  T createLineCommentingState(int startLine, int endLine, Document document, PsiFile file);
+  @Nullable T createLineCommentingState(int startLine, int endLine, Document document, PsiFile file);
 
-  @Nullable
-  T createBlockCommentingState(int selectionStart, int selectionEnd, Document document, PsiFile file);
+  @Nullable T createBlockCommentingState(int selectionStart, int selectionEnd, Document document, PsiFile file);
 
   void commentLine(int line, int offset, Document document, T data);
 
@@ -37,17 +35,13 @@ public interface SelfManagingCommenter<T extends CommenterDataHolder> {
 
   boolean isLineCommented(int line, int offset, Document document, T data);
 
-  @Nullable
-  String getCommentPrefix(int line, Document document, T data);
+  @Nullable String getCommentPrefix(int line, Document document, T data);
 
-  @Nullable
-  TextRange getBlockCommentRange(int selectionStart, int selectionEnd, Document document, T data);
+  @Nullable TextRange getBlockCommentRange(int selectionStart, int selectionEnd, Document document, T data);
 
-  @Nullable
-  String getBlockCommentPrefix(int selectionStart, Document document, T data);
+  @Nullable String getBlockCommentPrefix(int selectionStart, Document document, T data);
 
-  @Nullable
-  String getBlockCommentSuffix(int selectionEnd, Document document, T data);
+  @Nullable String getBlockCommentSuffix(int selectionEnd, Document document, T data);
 
   void uncommentBlockComment(int startOffset, int endOffset, Document document, T data);
 

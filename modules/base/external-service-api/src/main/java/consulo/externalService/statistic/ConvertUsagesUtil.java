@@ -26,7 +26,6 @@ import java.util.Set;
  * ATTENTION! DO NOT IMPORT @NotNull AND @Nullable ANNOTATIONS
  * This class is also used on jetbrains web site
  */
-
 public class ConvertUsagesUtil {
   private static final char GROUP_SEPARATOR = ':';
   private static final char GROUPS_SEPARATOR = ';';

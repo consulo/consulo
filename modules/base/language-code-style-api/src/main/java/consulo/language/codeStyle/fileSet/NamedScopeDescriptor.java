@@ -14,8 +14,7 @@ public class NamedScopeDescriptor implements FileSetDescriptor {
 
   private final String myScopeId;
   private
-  @Nullable
-  PackageSet myFileSet;
+  @Nullable PackageSet myFileSet;
 
   public NamedScopeDescriptor(NamedScope scope) {
     myScopeId = scope.getScopeId();
@@ -67,9 +66,8 @@ public class NamedScopeDescriptor implements FileSetDescriptor {
     return NAMED_SCOPE_TYPE;
   }
 
-  @Nullable
   @Override
-  public String getPattern() {
+  public @Nullable String getPattern() {
     return myFileSet != null ? myFileSet.getText() : null;
   }
 

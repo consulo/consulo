@@ -37,7 +37,6 @@ public abstract class OccurrencesChooser<T> {
          * @param occurrencesCount number of occurrences
          * @return user-readable description of given choice
          */
-        
         String formatDescription(int occurrencesCount);
     }
 

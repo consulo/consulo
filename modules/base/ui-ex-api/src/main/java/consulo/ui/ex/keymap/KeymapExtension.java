@@ -29,6 +29,5 @@ import java.util.function.Predicate;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface KeymapExtension {
-    @Nullable
-    KeymapGroup createGroup(Predicate<AnAction> filtered, ComponentManager project);
+    @Nullable KeymapGroup createGroup(Predicate<AnAction> filtered, ComponentManager project);
 }

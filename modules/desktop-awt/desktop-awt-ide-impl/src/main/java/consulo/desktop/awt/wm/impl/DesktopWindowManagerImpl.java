@@ -147,9 +147,8 @@ public final class DesktopWindowManagerImpl extends WindowManagerEx implements P
         return ideFrames.toArray(new DesktopIdeFrameImpl[ideFrames.size()]);
     }
 
-    @Nullable
     @Override
-    public IdeFrame findVisibleIdeFrame() {
+    public @Nullable IdeFrame findVisibleIdeFrame() {
         IdeFrame[] frames = getAllProjectFrames();
         if (frames.length > 0) {
             return frames[0];
@@ -671,9 +670,8 @@ public final class DesktopWindowManagerImpl extends WindowManagerEx implements P
         }
     }
 
-    @Nullable
     @Override
-    public Element getState() {
+    public @Nullable Element getState() {
         Element state = new Element("state");
 
         // Save default layout

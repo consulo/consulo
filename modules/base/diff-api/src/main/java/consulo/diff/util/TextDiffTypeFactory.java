@@ -103,9 +103,8 @@ public class TextDiffTypeFactory {
       }
     }
 
-    @Nullable
     @Override
-    public ColorValue getMarkerColor(@Nullable Editor editor) {
+    public @Nullable ColorValue getMarkerColor(@Nullable Editor editor) {
       return getAttributes(editor).getErrorStripeColor();
     }
 

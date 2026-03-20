@@ -35,6 +35,5 @@ public interface RefactoringElementListenerProvider {
    *
    * Should return a listener for particular element. Invoked in read action.
    */
-  @Nullable
-  RefactoringElementListener getListener(PsiElement element);
+  @Nullable RefactoringElementListener getListener(PsiElement element);
 }

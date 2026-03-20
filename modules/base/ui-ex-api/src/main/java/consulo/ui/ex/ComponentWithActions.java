@@ -22,17 +22,13 @@ import javax.swing.*;
 
 public interface ComponentWithActions {
 
-  @Nullable
-  ActionGroup getToolbarActions();
+  @Nullable ActionGroup getToolbarActions();
 
-  @Nullable
-  JComponent getSearchComponent();
+  @Nullable JComponent getSearchComponent();
 
-  @Nullable
-  String getToolbarPlace();
+  @Nullable String getToolbarPlace();
 
-  @Nullable
-  JComponent getToolbarContextComponent();
+  @Nullable JComponent getToolbarContextComponent();
 
   
   JComponent getComponent();

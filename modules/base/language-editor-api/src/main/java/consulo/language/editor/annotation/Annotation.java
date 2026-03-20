@@ -231,7 +231,6 @@ public final class Annotation implements Segment {
      *
      * @return the annotation severity.
      */
-    
     public HighlightSeverity getSeverity() {
         return mySeverity;
     }
@@ -257,7 +256,6 @@ public final class Annotation implements Segment {
      *
      * @return the text attribute key used for highlighting
      */
-    
     public TextAttributesKey getTextAttributes() {
         if (myEnforcedAttributesKey != null) {
             return myEnforcedAttributesKey;
@@ -306,7 +304,6 @@ public final class Annotation implements Segment {
      *
      * @return the list of quick fixes, or null if none have been registered.
      */
-
     public @Nullable List<QuickFixInfo> getQuickFixes() {
         return myQuickFixes;
     }
@@ -320,7 +317,6 @@ public final class Annotation implements Segment {
      *
      * @return the description of the annotation.
      */
-    
     public LocalizeValue getMessage() {
         return myMessage;
     }
@@ -330,7 +326,6 @@ public final class Annotation implements Segment {
      *
      * @return the tooltip for the annotation.
      */
-    
     public LocalizeValue getTooltip() {
         return myTooltip;
     }

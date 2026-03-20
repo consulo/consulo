@@ -367,7 +367,6 @@ public class ContainerUtilRt {
     /**
      * @return read-only list consisting of the elements from array converted by mapper
      */
-    
     @Contract(pure = true)
     public static <T, V> List<V> map2List(T[] array, Function<T, V> mapper) {
         return map2List(Arrays.asList(array), mapper);
@@ -376,7 +375,6 @@ public class ContainerUtilRt {
     /**
      * @return read-only list consisting of the elements from collection converted by mapper
      */
-    
     @Contract(pure = true)
     public static <T, V> List<V> map2List(Collection<? extends T> collection, Function<T, V> mapper) {
         if (collection.isEmpty()) {
@@ -392,7 +390,6 @@ public class ContainerUtilRt {
     /**
      * @return read-only set consisting of the elements from collection converted by mapper
      */
-    
     @Contract(pure = true)
     public static <T, V> Set<V> map2Set(T[] collection, Function<T, V> mapper) {
         return map2Set(Arrays.asList(collection), mapper);
@@ -401,7 +398,6 @@ public class ContainerUtilRt {
     /**
      * @return read-only set consisting of the elements from collection converted by mapper
      */
-    
     @Contract(pure = true)
     public static <T, V> Set<V> map2Set(Collection<? extends T> collection, Function<T, V> mapper) {
         if (collection.isEmpty()) {
@@ -430,7 +426,6 @@ public class ContainerUtilRt {
      * This is a replacement for {@link Collection#toArray(Object[])}. For small collections it is faster to stay at java level and refrain
      * from calling JNI {@link System#arraycopy(Object, int, Object, int, int)}
      */
-    
     public static <T> T[] toArray(Collection<T> c, T[] sample) {
         int size = c.size();
         if (size == sample.length && size < ARRAY_COPY_THRESHOLD) {

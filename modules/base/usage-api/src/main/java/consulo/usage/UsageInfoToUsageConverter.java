@@ -78,7 +78,6 @@ public class UsageInfoToUsageConverter {
          * the field searched is a primary target, and its accessor methods are non-primary targets, because
          * for this particular search usages of getter/setter methods are to be considered as a usages of the corresponding field.
          */
-        
         public PsiElement[] getPrimaryElements() {
             return convertToPsiElements(myPrimarySearchedElements);
         }

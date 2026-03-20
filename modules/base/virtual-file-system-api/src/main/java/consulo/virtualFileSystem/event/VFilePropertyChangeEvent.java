@@ -159,7 +159,6 @@ public class VFilePropertyChangeEvent extends VFileEvent {
   /**
    * Replaces file name in {@code myFile} path with {@code fileName}, if an event is a rename event; leaves path as is otherwise
    */
-  
   private String getPathWithFileName(Object fileName) {
     if (VirtualFile.PROP_NAME.equals(myPropertyName)) {
       // fileName must be String, according to `checkPropertyValuesCorrect` implementation

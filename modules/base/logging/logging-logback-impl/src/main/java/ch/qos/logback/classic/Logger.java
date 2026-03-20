@@ -344,7 +344,6 @@ public final class Logger
      * The default size of child list arrays. The JDK 1.5 default is 10. We use a
      * smaller value to save a little space.
      */
-
     Logger createChildByName(String childName) {
         int i_index = LoggerNameUtil.getSeparatorIndexOf(childName, this.name.length() + 1);
         if (i_index != -1) {
@@ -367,7 +366,6 @@ public final class Logger
      * creating a new Object[] with the params. This reduces the cost of not logging
      * by about 20 nanoseconds.
      */
-
     private void filterAndLog_0_Or3Plus(String localFQCN, Marker marker, Level level,
                                         String msg, Object[] params, Throwable t) {
 

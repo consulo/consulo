@@ -18,7 +18,6 @@ public class InlayHintsProviderFactory {
     /**
      * @return list of potentially available providers for a particular language (not filtering enabled ones)
      */
-    
     static List<InlayProviderInfo> findProvidersForLanguage(Language language) {
         List<InlayProviderInfo> result = new ArrayList<>();
         Application application = Application.get();

@@ -43,9 +43,8 @@ public class UnsafeWeakList<T> extends AbstractList<T> {
     myArray = array;
   }
 
-  @Nullable
   @Override
-  public T get(int index) {
+  public @Nullable T get(int index) {
     return myArray.get(index);
   }
 
@@ -74,9 +73,8 @@ public class UnsafeWeakList<T> extends AbstractList<T> {
     myArray.add(index, element);
   }
 
-  @Nullable
   @Override
-  public T remove(int index) {
+  public @Nullable T remove(int index) {
     tryReduceCapacity(-1);
     return myArray.remove(index);
   }

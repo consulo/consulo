@@ -55,7 +55,6 @@ public class ServiceManager {
    * @param <T>          Service class type.
    * @return Key instance.
    */
-  
   @Deprecated
   @DeprecationInfo("Use ComponentUtil.createLazyInject")
   public static <T> NotNullLazyKey<T, Project> createLazyKey(Class<T> serviceClass) {

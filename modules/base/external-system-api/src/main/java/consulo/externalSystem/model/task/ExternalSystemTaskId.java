@@ -53,7 +53,6 @@ public class ExternalSystemTaskId implements Serializable {
    * @param project  target ide project
    * @return         distinct task id object of the given type
    */
-  
   public static ExternalSystemTaskId create(ProjectSystemId projectSystemId, ExternalSystemTaskType type, Project project) {
     return create(projectSystemId, type, getProjectId(project));
   }

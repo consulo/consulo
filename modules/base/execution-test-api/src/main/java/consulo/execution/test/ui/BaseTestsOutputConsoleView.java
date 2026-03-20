@@ -81,9 +81,8 @@ public abstract class BaseTestsOutputConsoleView implements ConsoleView, Observa
     myConsole.setProcessTextFilter(filter);
   }
 
-  @Nullable
   @Override
-  public BiPredicate<ProcessEvent, Key> getProcessTextFilter() {
+  public @Nullable BiPredicate<ProcessEvent, Key> getProcessTextFilter() {
     return myConsole.getProcessTextFilter();
   }
 
@@ -196,9 +195,8 @@ public abstract class BaseTestsOutputConsoleView implements ConsoleView, Observa
     return myProperties;
   }
 
-  @Nullable
   @Override
-  public String getHelpId() {
+  public @Nullable String getHelpId() {
     return "reference.runToolWindow.testResultsTab";
   }
 }

@@ -54,8 +54,7 @@ public interface ProcessHandler extends UserDataHolder, TaskExecutor {
   /**
    * @return exit code if the process has already finished, null otherwise
    */
-  @Nullable
-  Integer getExitCode();
+  @Nullable Integer getExitCode();
 
   void addProcessListener(ProcessListener listener);
 
@@ -69,8 +68,7 @@ public interface ProcessHandler extends UserDataHolder, TaskExecutor {
 
   boolean isSilentlyDestroyOnClose();
 
-  @Nullable
-  <F extends ProcessHandlerFeature> F getFeature(Class<F> featureClass);
+  <F extends ProcessHandlerFeature> @Nullable F getFeature(Class<F> featureClass);
 
   default @Nullable Charset getCharset() {
     return null;

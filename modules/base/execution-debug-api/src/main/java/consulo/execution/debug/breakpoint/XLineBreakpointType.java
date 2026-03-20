@@ -125,7 +125,6 @@ public abstract class XLineBreakpointType<P extends XBreakpointProperties> exten
   /**
    * Return a list of variants if there can be more than one breakpoint on the line
    */
-  
   public List<? extends XLineBreakpointVariant> computeVariants(Project project, XSourcePosition position) {
     return Collections.emptyList();
   }
@@ -135,13 +134,11 @@ public abstract class XLineBreakpointType<P extends XBreakpointProperties> exten
     
     public abstract String getText();
 
-    @Nullable
     @RequiredReadAction
-    public abstract Image getIcon();
+    public abstract @Nullable Image getIcon();
 
-    @Nullable
     @RequiredReadAction
-    public abstract TextRange getHighlightRange();
+    public abstract @Nullable TextRange getHighlightRange();
 
     public abstract @Nullable P createProperties();
   }
@@ -161,16 +158,14 @@ public abstract class XLineBreakpointType<P extends XBreakpointProperties> exten
     }
 
     @RequiredReadAction
-    @Nullable
     @Override
-    public Image getIcon() {
+    public @Nullable Image getIcon() {
       return null;
     }
 
     @RequiredReadAction
-    @Nullable
     @Override
-    public TextRange getHighlightRange() {
+    public @Nullable TextRange getHighlightRange() {
       return null;
     }
 

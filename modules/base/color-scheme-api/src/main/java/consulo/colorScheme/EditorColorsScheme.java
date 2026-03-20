@@ -36,8 +36,7 @@ public interface EditorColorsScheme extends Cloneable, TextAttributesScheme, Nam
     
     ColorValue getDefaultForeground();
 
-    @Nullable
-    ColorValue getColor(EditorColorKey key);
+    @Nullable ColorValue getColor(EditorColorKey key);
 
     void setColor(EditorColorKey key, ColorValue color);
 
@@ -53,7 +52,6 @@ public interface EditorColorsScheme extends Cloneable, TextAttributesScheme, Nam
      *
      * @return font preferences to use
      */
-    
     FontPreferences getFontPreferences();
 
     void setFontPreferences(FontPreferences preferences);
@@ -89,7 +87,6 @@ public interface EditorColorsScheme extends Cloneable, TextAttributesScheme, Nam
      * @return console font preferences to use
      * @see #getFontPreferences()
      */
-    
     FontPreferences getConsoleFontPreferences();
 
     void setConsoleFontPreferences(FontPreferences preferences);

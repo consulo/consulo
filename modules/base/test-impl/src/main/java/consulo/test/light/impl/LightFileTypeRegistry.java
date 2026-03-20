@@ -98,9 +98,8 @@ public class LightFileTypeRegistry extends FileTypeRegistry {
         }
     }
 
-    @Nullable
     @Override
-    public FileType findFileTypeByName(String fileTypeName) {
+    public @Nullable FileType findFileTypeByName(String fileTypeName) {
         for (FileType type : myAllFileTypes) {
             if (type.getId().equals(fileTypeName)) {
                 return type;
@@ -109,16 +108,14 @@ public class LightFileTypeRegistry extends FileTypeRegistry {
         return null;
     }
 
-    @Nullable
     @Override
-    public FileType getKnownFileTypeOrAssociate(VirtualFile file, ComponentManager project) {
+    public @Nullable FileType getKnownFileTypeOrAssociate(VirtualFile file, ComponentManager project) {
         return null;
     }
 
     @RequiredUIAccess
-    @Nullable
     @Override
-    public FileType getKnownFileTypeOrAssociate(String fileName) {
+    public @Nullable FileType getKnownFileTypeOrAssociate(String fileName) {
         return null;
     }
 }

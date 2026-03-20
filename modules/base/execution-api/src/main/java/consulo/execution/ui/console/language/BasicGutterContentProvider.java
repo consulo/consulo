@@ -30,15 +30,13 @@ public class BasicGutterContentProvider extends GutterContentProvider {
     return false;
   }
 
-  @Nullable
   @Override
-  public String getText(int line, Editor editor) {
+  public @Nullable String getText(int line, Editor editor) {
     return null;
   }
 
-  @Nullable
   @Override
-  public String getToolTip(int line, Editor editor) {
+  public @Nullable String getToolTip(int line, Editor editor) {
     return null;
   }
 

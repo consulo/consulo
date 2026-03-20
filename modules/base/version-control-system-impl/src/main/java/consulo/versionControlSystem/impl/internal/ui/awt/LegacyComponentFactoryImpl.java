@@ -85,9 +85,8 @@ public class LegacyComponentFactoryImpl implements LegacyComponentFactory {
     @Override
     public LegacyDialog createChangeListViewerDialog(Project project, CommittedChangeList changeList, VirtualFile toSelect, String description) {
         return new ChangeListViewerDialog(project, changeList, toSelect) {
-            @Nullable
             @Override
-            protected String getDescription() {
+            protected @Nullable String getDescription() {
                 return description;
             }
         };
@@ -96,9 +95,8 @@ public class LegacyComponentFactoryImpl implements LegacyComponentFactory {
     @Override
     public LegacyDialog createChangeListViewerDialog(Project project, Collection<Change> changes, boolean inAir, String description) {
         return new ChangeListViewerDialog(project, changes, inAir) {
-            @Nullable
             @Override
-            protected String getDescription() {
+            protected @Nullable String getDescription() {
                 return description;
             }
         };

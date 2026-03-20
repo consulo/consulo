@@ -75,7 +75,6 @@ public abstract class AbstractTreeWalker<N> {
   /**
    * @return a promise that will be resolved when visiting is finished
    */
-  
   public Promise<TreePath> promise() {
     return promise;
   }

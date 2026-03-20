@@ -34,9 +34,8 @@ public final class ForcedSoftWrapsNotificationProvider implements EditorNotifica
   }
 
   @RequiredReadAction
-  @Nullable
   @Override
-  public EditorNotificationBuilder buildNotification(VirtualFile file, FileEditor fileEditor, Supplier<EditorNotificationBuilder> builderFactory) {
+  public @Nullable EditorNotificationBuilder buildNotification(VirtualFile file, FileEditor fileEditor, Supplier<EditorNotificationBuilder> builderFactory) {
     if (!(fileEditor instanceof TextEditor)) return null;
     Editor editor = ((TextEditor)fileEditor).getEditor();
     if (!Boolean.TRUE.equals(editor.getUserData(RealEditor.FORCED_SOFT_WRAPS)) ||

@@ -56,7 +56,6 @@ public interface Configurable extends UnnamedConfigurable {
      *
      * @return the visible name of the component.
      */
-    
     LocalizeValue getDisplayName();
 
     /**
@@ -64,9 +63,8 @@ public interface Configurable extends UnnamedConfigurable {
      *
      * @return the help id
      */
-    @Nullable
     @Override
-    default String getHelpTopic() {
+    default @Nullable String getHelpTopic() {
         return null;
     }
 

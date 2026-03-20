@@ -505,7 +505,6 @@ public final class EditorUtil {
      *
      * @see Inlay#isRelatedToPrecedingText()
      */
-    
     public static VisualPosition inlayAwareOffsetToVisualPosition(Editor editor, int offset) {
         return consulo.codeEditor.util.EditorUtil.inlayAwareOffsetToVisualPosition(editor, offset);
     }

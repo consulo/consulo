@@ -48,9 +48,8 @@ public class IdeConsoleRootType extends ConsoleRootType implements FileEditorTra
     return findByClass(IdeConsoleRootType.class);
   }
 
-  @Nullable
   @Override
-  public Image substituteIcon(Project project, VirtualFile file) {
+  public @Nullable Image substituteIcon(Project project, VirtualFile file) {
     if (file.isDirectory()) return null;
     FileType fileType = FileTypeManager.getInstance().getFileTypeByFileName(file.getNameSequence());
     Image icon =

@@ -61,8 +61,7 @@ public interface PlatformOperatingSystem {
     
     Map<String, String> environmentVariables();
 
-    @Nullable
-    String getEnvironmentVariable(String key);
+    @Nullable String getEnvironmentVariable(String key);
 
     
     String fileNamePrefix();

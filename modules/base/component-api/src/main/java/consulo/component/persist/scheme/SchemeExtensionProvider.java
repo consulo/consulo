@@ -25,7 +25,6 @@ public interface SchemeExtensionProvider {
   /**
    * @return The scheme file extension <b>with e leading dot</b>, for example ".ext".
    */
-  
   String getSchemeExtension();
 
   /**

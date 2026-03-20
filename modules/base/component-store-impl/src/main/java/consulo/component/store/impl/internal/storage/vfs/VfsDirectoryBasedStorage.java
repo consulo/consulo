@@ -118,9 +118,8 @@ public final class VfsDirectoryBasedStorage extends StateStorageBase<DirectorySt
         }
     }
 
-    @Nullable
     @Override
-    protected Element getStateAndArchive(DirectoryStorageData storageData, String componentName) {
+    protected @Nullable Element getStateAndArchive(DirectoryStorageData storageData, String componentName) {
         return storageData.getCompositeStateAndArchive(componentName, mySplitter);
     }
 

@@ -23,13 +23,11 @@ import org.jspecify.annotations.Nullable;
  *  @author dsl
  */
 public interface LibraryOrderEntry extends ExportableOrderEntry, OrderEntryWithTracking {
-  @Nullable
-  Library getLibrary();
+  @Nullable Library getLibrary();
   
   boolean isModuleLevel();
 
   String getLibraryLevel();
 
-  @Nullable
-  String getLibraryName();
+  @Nullable String getLibraryName();
 }

@@ -134,9 +134,8 @@ public abstract class BaseDataManager implements DataManagerEx, DataRuleHoler {
         }
 
         @Override
-        @Nullable
         @SuppressWarnings("unchecked")
-        protected <T> T doGetData(Key<T> dataId) {
+        protected <T> @Nullable T doGetData(Key<T> dataId) {
             consulo.ui.Component component = getComponent();
             if (PlatformDataKeys.IS_MODAL_CONTEXT == dataId) {
                 if (component == null) {
@@ -193,9 +192,8 @@ public abstract class BaseDataManager implements DataManagerEx, DataRuleHoler {
                     return plainRule.getKey();
                 }
 
-                @Nullable
                 @Override
-                public T getData(DataProvider dataProvider) {
+                public @Nullable T getData(DataProvider dataProvider) {
                     return plainRule.getData(key -> dataProvider.getData(AnActionEvent.injectedId(key)));
                 }
             };
@@ -220,9 +218,8 @@ public abstract class BaseDataManager implements DataManagerEx, DataRuleHoler {
         return result;
     }
 
-    @Nullable
     @SuppressWarnings("unchecked")
-    protected <T> GetDataRule<T> getRuleFromMap(Key<T> dataId) {
+    protected <T> @Nullable GetDataRule<T> getRuleFromMap(Key<T> dataId) {
         Map<Key, GetDataRule> map = myApplication.getExtensionPoint(GetDataRule.class).getOrBuildCache(GetDataRuleCache.CACHE_KEY);
         return map.get(dataId);
     }

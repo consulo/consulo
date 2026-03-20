@@ -132,9 +132,8 @@ public abstract class AbstractExternalFilter {
 
   protected abstract RefConvertor[] getRefConverters();
 
-  @Nullable
   @SuppressWarnings({"HardCodedStringLiteral"})
-  public String getExternalDocInfo(String url) throws Exception {
+  public @Nullable String getExternalDocInfo(String url) throws Exception {
     Application app = ApplicationManager.getApplication();
     if (!app.isUnitTestMode() && app.isDispatchThread() || app.isWriteAccessAllowed()) {
       LOG.error("May block indefinitely: shouldn't be called from EDT or under write lock");

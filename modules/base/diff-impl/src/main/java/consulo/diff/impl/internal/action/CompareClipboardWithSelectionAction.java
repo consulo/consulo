@@ -90,9 +90,8 @@ public class CompareClipboardWithSelectionAction extends BaseShowDiffAction {
         return editor != null;
     }
 
-    @Nullable
     @Override
-    protected DiffRequest getDiffRequest(AnActionEvent e) {
+    protected @Nullable DiffRequest getDiffRequest(AnActionEvent e) {
         Project project = e.getRequiredData(Project.KEY);
         Editor editor = getEditor(e);
         FileType editorFileType = getEditorFileType(e);

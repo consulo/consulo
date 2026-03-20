@@ -303,9 +303,8 @@ public class CompilerOutputsEditor extends ModuleElementsEditor {
             myController.setValue(text);
         }
 
-        @Nullable
         @RequiredUIAccess
-        public String getUrl() {
+        public @Nullable String getUrl() {
             String path = myController.getValue().trim();
             if (path.length() == 0) {
                 return null;

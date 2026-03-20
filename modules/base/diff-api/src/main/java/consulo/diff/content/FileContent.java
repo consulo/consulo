@@ -21,6 +21,5 @@ public interface FileContent extends DiffContent {
   /**
    * @return VirtualFile from which this content gets data.
    */
-  
   VirtualFile getFile();
 }

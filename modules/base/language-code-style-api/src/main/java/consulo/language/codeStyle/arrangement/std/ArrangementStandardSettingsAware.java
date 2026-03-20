@@ -36,22 +36,19 @@ public interface ArrangementStandardSettingsAware {
    * @return  settings to use by default, i.e. when a user hasn't been explicitly modified arrangement settings;
    *          <code>null</code> as an indication that no default settings are available
    */
-  @Nullable
-  StdArrangementSettings getDefaultSettings();
+  @Nullable StdArrangementSettings getDefaultSettings();
 
   /**
    * @return    ordered collection of grouping tokens eligible to use with the current rearranger.
    *            <b>Note:</b> platform code which uses this method caches returned results
    */
-  @Nullable
-  List<CompositeArrangementSettingsToken> getSupportedGroupingTokens();
+  @Nullable List<CompositeArrangementSettingsToken> getSupportedGroupingTokens();
 
   /**
    * @return    ordered collection of matching tokens eligible to use with the current rearranger
    *            <b>Note:</b> platform code which uses this method caches returned results
    */
-  @Nullable
-  List<CompositeArrangementSettingsToken> getSupportedMatchingTokens();
+  @Nullable List<CompositeArrangementSettingsToken> getSupportedMatchingTokens();
 
   /**
    * Allows to answer if given token is enabled in combination with other conditions specified by the given condition object.
@@ -74,7 +71,6 @@ public interface ArrangementStandardSettingsAware {
    * @return           a matcher for the given condition
    * @throws IllegalArgumentException   if current rearranger doesn't know how to build a matcher from the given condition
    */
-  
   ArrangementEntryMatcher buildMatcher(ArrangementMatchCondition condition) throws IllegalArgumentException;
 
   /**
@@ -82,6 +78,5 @@ public interface ArrangementStandardSettingsAware {
    *            deselect elements on selection change. Example: 'private' modifier was selected. When any other modifier is selected
    *            'public' modifier is deselected if returned collection contains set of all supported visibility modifiers
    */
-  
   Collection<Set<ArrangementSettingsToken>> getMutexes();
 }

@@ -33,9 +33,8 @@ import org.jspecify.annotations.Nullable;
 public class DebuggerCopyPastePreprocessor implements CopyPastePreProcessor {
   public static final Key<Boolean> REMOVE_NEWLINES_ON_PASTE = Key.create("REMOVE_NEWLINES_ON_PASTE");
 
-  @Nullable
   @Override
-  public String preprocessOnCopy(PsiFile file, int[] startOffsets, int[] endOffsets, String text) {
+  public @Nullable String preprocessOnCopy(PsiFile file, int[] startOffsets, int[] endOffsets, String text) {
     return null;
   }
 

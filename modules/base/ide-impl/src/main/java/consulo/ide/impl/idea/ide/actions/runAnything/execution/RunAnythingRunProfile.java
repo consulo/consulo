@@ -21,9 +21,8 @@ public class RunAnythingRunProfile implements RunProfile {
         myOriginalCommand = originalCommand;
     }
 
-    @Nullable
     @Override
-    public RunProfileState getState(Executor executor, ExecutionEnvironment environment) {
+    public @Nullable RunProfileState getState(Executor executor, ExecutionEnvironment environment) {
         return new RunAnythingRunProfileState(environment, myOriginalCommand);
     }
 
@@ -43,9 +42,8 @@ public class RunAnythingRunProfile implements RunProfile {
         return myCommandLine;
     }
 
-    @Nullable
     @Override
-    public Image getIcon() {
+    public @Nullable Image getIcon() {
         return PlatformIconGroup.actionsRun_anything();
     }
 }

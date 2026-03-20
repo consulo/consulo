@@ -38,8 +38,7 @@ public interface Injection {
   
   String getInjectedLanguageId();
 
-  @Nullable
-  Language getInjectedLanguage();
+  @Nullable Language getInjectedLanguage();
 
   
   String getPrefix();
@@ -55,7 +54,6 @@ public interface Injection {
    * return a qualified TAG-NAME/@ATT-NAME combination name instead of just
    * the plain name.
    */
-  
   String getDisplayName();
 
   boolean acceptsPsiElement(PsiElement element);

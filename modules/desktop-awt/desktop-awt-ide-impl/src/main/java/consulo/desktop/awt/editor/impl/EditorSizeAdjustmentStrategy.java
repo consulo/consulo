@@ -70,7 +70,6 @@ class EditorSizeAdjustmentStrategy {
    * @param editor           target editor
    * @return preferred size to use (given 'new preferred size' may be adjusted)
    */
-  
   Dimension adjust(Dimension newPreferredSize, @Nullable Dimension oldPreferredSize, DesktopEditorImpl editor) {
     if (oldPreferredSize == null || myInsideValidation) {
       return newPreferredSize;

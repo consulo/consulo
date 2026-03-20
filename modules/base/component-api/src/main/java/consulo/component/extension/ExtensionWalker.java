@@ -29,6 +29,5 @@ public interface ExtensionWalker<E> {
     /**
      * @see ExtensionPoint#sort(List)
      */
-    
     Function<List<E>, List<E>> sorter();
 }

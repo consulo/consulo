@@ -153,9 +153,8 @@ public class EditorSmartKeysConfigurable extends SimpleConfigurable<EditorSmartK
     return "editor.preferences.smartKeys";
   }
 
-  @Nullable
   @Override
-  public String getParentId() {
+  public @Nullable String getParentId() {
     return StandardConfigurableIds.EDITOR_GROUP;
   }
 

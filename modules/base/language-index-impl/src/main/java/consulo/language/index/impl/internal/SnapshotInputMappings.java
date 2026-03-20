@@ -78,9 +78,8 @@ class SnapshotInputMappings<Key, Value, Input> implements UpdatableSnapshotInput
     return ObjectUtil.notNull(doReadData(hashId), Collections.emptyMap());
   }
 
-  @Nullable
   @Override
-  public InputData<Key, Value> readData(Input content) throws IOException {
+  public @Nullable InputData<Key, Value> readData(Input content) throws IOException {
     int hashId = getHashId(content);
 
     Map<Key, Value> data = doReadData(hashId);

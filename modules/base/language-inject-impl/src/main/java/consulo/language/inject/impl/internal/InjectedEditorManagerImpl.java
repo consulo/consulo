@@ -39,9 +39,8 @@ public class InjectedEditorManagerImpl implements InjectedEditorManager {
         myProject = project;
     }
 
-    @Nullable
     @Override
-    public Editor openEditorFor(PsiFile file) {
+    public @Nullable Editor openEditorFor(PsiFile file) {
         return InjectedLanguageUtil.openEditorFor(file, myProject);
     }
 

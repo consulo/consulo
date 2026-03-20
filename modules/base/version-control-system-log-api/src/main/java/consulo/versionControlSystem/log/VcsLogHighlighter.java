@@ -29,7 +29,6 @@ public interface VcsLogHighlighter {
    * @param commitDetails details of selected commit.
    * @param isSelected    if true, the row currently has selection on it.
    */
-  
   VcsCommitStyle getStyle(VcsShortCommitDetails commitDetails, boolean isSelected);
 
   /**
@@ -52,20 +51,17 @@ public interface VcsLogHighlighter {
     /**
      * Text color for commit entry or null if unspecified.
      */
-    @Nullable
-    Color getForeground();
+    @Nullable Color getForeground();
 
     /**
      * Background color for commit entry or null if unspecified.
      */
-    @Nullable
-    Color getBackground();
+    @Nullable Color getBackground();
 
     /**
      * Text style for commit entry or null if unspecified.
      */
-    @Nullable
-    TextStyle getTextStyle();
+    @Nullable TextStyle getTextStyle();
   }
 
   /**

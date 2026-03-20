@@ -14,9 +14,8 @@ public abstract class XLineBreakpointTypeBase extends XLineBreakpointType<XBreak
     myEditorsProvider = editorsProvider;
   }
 
-  @Nullable
   @Override
-  public XDebuggerEditorsProvider getEditorsProvider(XLineBreakpoint<XBreakpointProperties> breakpoint, Project project) {
+  public @Nullable XDebuggerEditorsProvider getEditorsProvider(XLineBreakpoint<XBreakpointProperties> breakpoint, Project project) {
     return myEditorsProvider;
   }
 

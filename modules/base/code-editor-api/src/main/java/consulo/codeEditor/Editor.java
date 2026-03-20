@@ -58,7 +58,6 @@ public interface Editor extends UserDataHolder {
      *
      * @return the document instance.
      */
-    
     Document getDocument();
 
     /**
@@ -80,7 +79,6 @@ public interface Editor extends UserDataHolder {
      *
      * @return the component instance.
      */
-    
     default JComponent getComponent() {
         throw new UnsupportedOperationException("Unsupported platform");
     }
@@ -92,7 +90,6 @@ public interface Editor extends UserDataHolder {
      *
      * @return the component instance.
      */
-    
     default Component getUIComponent() {
         throw new UnsupportedOperationException("Unsupported platform");
     }
@@ -104,7 +101,6 @@ public interface Editor extends UserDataHolder {
      *
      * @return the component instance.
      */
-    
     default JComponent getContentComponent() {
         throw new UnsupportedOperationException("Unsupported platform");
     }
@@ -116,7 +112,6 @@ public interface Editor extends UserDataHolder {
      *
      * @return the component instance.
      */
-    
     default Component getContentUIComponent() {
         throw new UnsupportedOperationException("Unsupported platform");
     }
@@ -138,7 +133,6 @@ public interface Editor extends UserDataHolder {
      * @return the selection model instance.
      * @see #getCaretModel()
      */
-    
     SelectionModel getSelectionModel();
 
     /**
@@ -151,7 +145,6 @@ public interface Editor extends UserDataHolder {
      *
      * @return the markup model instance.
      */
-    
     MarkupModel getMarkupModel();
 
     /**
@@ -160,7 +153,6 @@ public interface Editor extends UserDataHolder {
      *
      * @return the folding model instance.
      */
-    
     FoldingModel getFoldingModel();
 
     /**
@@ -169,7 +161,6 @@ public interface Editor extends UserDataHolder {
      *
      * @return the scrolling model instance.
      */
-    
     ScrollingModel getScrollingModel();
 
     /**
@@ -178,7 +169,6 @@ public interface Editor extends UserDataHolder {
      *
      * @return the caret model instance.
      */
-    
     CaretModel getCaretModel();
 
     /**
@@ -187,7 +177,6 @@ public interface Editor extends UserDataHolder {
      *
      * @return the soft wrap model instance
      */
-    
     SoftWrapModel getSoftWrapModel();
 
     
@@ -201,7 +190,6 @@ public interface Editor extends UserDataHolder {
      *
      * @return the settings instance.
      */
-    
     EditorSettings getSettings();
 
     /**
@@ -210,7 +198,6 @@ public interface Editor extends UserDataHolder {
      *
      * @return the color scheme instance.
      */
-    
     EditorColorsScheme getColorsScheme();
 
     /**
@@ -226,7 +213,6 @@ public interface Editor extends UserDataHolder {
      * @param pos the logical position.
      * @return the coordinates relative to the top left corner of the {@link #getContentComponent() content component}.
      */
-    
     default Point logicalPositionToXY(LogicalPosition pos) {
         throw new UnsupportedOperationException("Unsupported platform");
     }
@@ -246,7 +232,6 @@ public interface Editor extends UserDataHolder {
      * @param logicalPos the logical position.
      * @return the corresponding visual position.
      */
-    
     VisualPosition logicalToVisualPosition(LogicalPosition logicalPos);
 
     /**
@@ -255,7 +240,6 @@ public interface Editor extends UserDataHolder {
      * @param visible the visual position.
      * @return the coordinates relative to the top left corner of the {@link #getContentComponent() content component}.
      */
-    
     default Point visualPositionToXY(VisualPosition visible) {
         throw new UnsupportedOperationException("Unsupported platform");
     }
@@ -263,7 +247,6 @@ public interface Editor extends UserDataHolder {
     /**
      * Same as {@link #visualPositionToXY(VisualPosition)}, but returns potentially more precise result.
      */
-    
     default Point2D visualPositionToPoint2D(VisualPosition pos) {
         throw new UnsupportedOperationException("Unsupported platform");
     }
@@ -275,7 +258,6 @@ public interface Editor extends UserDataHolder {
      * @param visiblePos the visual position.
      * @return the corresponding logical position.
      */
-    
     LogicalPosition visualToLogicalPosition(VisualPosition visiblePos);
 
     /**
@@ -287,7 +269,6 @@ public interface Editor extends UserDataHolder {
      * @param offset the offset in the document.
      * @return the corresponding logical position.
      */
-    
     LogicalPosition offsetToLogicalPosition(int offset);
 
     /**
@@ -301,7 +282,6 @@ public interface Editor extends UserDataHolder {
      * @param offset the offset in the document.
      * @return the corresponding visual position.
      */
-    
     VisualPosition offsetToVisualPosition(int offset);
 
     /**
@@ -315,7 +295,6 @@ public interface Editor extends UserDataHolder {
      *                       at line following the wrap.
      * @return the corresponding visual position.
      */
-    
     VisualPosition offsetToVisualPosition(int offset, boolean leanForward, boolean beforeSoftWrap);
 
     /**
@@ -324,7 +303,6 @@ public interface Editor extends UserDataHolder {
      * @param p the coordinates relative to the top left corner of the {@link #getContentComponent() content component}.
      * @return the corresponding logical position.
      */
-    
     default LogicalPosition xyToLogicalPosition(Point p) {
         throw new UnsupportedOperationException("Unsupported platform");
     }
@@ -335,7 +313,6 @@ public interface Editor extends UserDataHolder {
      * @param p the coordinates relative to the top left corner of the {@link #getContentComponent() content component}.
      * @return the corresponding visual position.
      */
-    
     default VisualPosition xyToVisualPosition(Point p) {
         throw new UnsupportedOperationException("Unsupported platform");
     }
@@ -343,7 +320,6 @@ public interface Editor extends UserDataHolder {
     /**
      * Same as {{@link #xyToVisualPosition(Point)}}, but allows to specify target point with higher precision.
      */
-    
     default VisualPosition xyToVisualPosition(Point2D p) {
         throw new UnsupportedOperationException("Unsupported platform");
     }
@@ -351,7 +327,6 @@ public interface Editor extends UserDataHolder {
     /**
      * @since 2017.2
      */
-    
     default Point offsetToXY(int offset) {
         return offsetToXY(offset, false, false);
     }
@@ -360,7 +335,6 @@ public interface Editor extends UserDataHolder {
      * @see #offsetToVisualPosition(int, boolean, boolean)
      * @since 2017.2
      */
-    
     default Point offsetToXY(int offset, boolean leanForward, boolean beforeSoftWrap) {
         VisualPosition visualPosition = offsetToVisualPosition(offset, leanForward, beforeSoftWrap);
         return visualPositionToXY(visualPosition);
@@ -369,7 +343,6 @@ public interface Editor extends UserDataHolder {
     /**
      * @since 2017.2
      */
-    
     default Point2D offsetToPoint2D(int offset) {
         return offsetToPoint2D(offset, false, false);
     }
@@ -378,7 +351,6 @@ public interface Editor extends UserDataHolder {
      * @see #offsetToVisualPosition(int, boolean, boolean)
      * @since 2017.2
      */
-    
     default Point2D offsetToPoint2D(int offset, boolean leanForward, boolean beforeSoftWrap) {
         VisualPosition visualPosition = offsetToVisualPosition(offset, leanForward, beforeSoftWrap);
         return visualPositionToPoint2D(visualPosition);
@@ -476,7 +448,6 @@ public interface Editor extends UserDataHolder {
      *
      * @return the gutter instance.
      */
-    
     EditorGutter getGutter();
 
     /**
@@ -570,7 +541,6 @@ public interface Editor extends UserDataHolder {
      *
      * @return array of length 2, containing boundaries of the target Y range
      */
-    
     default int[] visualLineToYRange(int visualLine) {
         int startY = visualLineToY(visualLine);
         int startOffset = visualPositionToOffset(new VisualPosition(visualLine, 0));

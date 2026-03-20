@@ -28,9 +28,8 @@ public class DispreferLiveTemplates extends LookupElementWeigher {
     super("templates");
   }
 
-  @Nullable
   @Override
-  public Comparable weigh(LookupElement element) {
+  public @Nullable Comparable weigh(LookupElement element) {
     return element instanceof LiveTemplateLookupElement;
   }
 }

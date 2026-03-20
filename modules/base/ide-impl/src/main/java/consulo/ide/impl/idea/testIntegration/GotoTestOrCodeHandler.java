@@ -124,9 +124,8 @@ public class GotoTestOrCodeHandler extends GotoTargetHandler {
     return CodeInsightBundle.message("goto.test.notFound");
   }
 
-  @Nullable
   @Override
-  protected String getAdText(PsiElement source, int length) {
+  protected @Nullable String getAdText(PsiElement source, int length) {
     if (length > 0 && !TestFinderHelper.isTest(source)) {
       Keymap keymap = KeymapManager.getInstance().getActiveKeymap();
       Shortcut[] shortcuts = keymap.getShortcuts(DefaultRunExecutor.getRunExecutorInstance().getContextActionId());

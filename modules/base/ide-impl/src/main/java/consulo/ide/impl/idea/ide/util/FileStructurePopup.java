@@ -221,9 +221,8 @@ public class FileStructurePopup implements Disposable, TreeActionsOwner {
                 return false;
             }
 
-            @Nullable
             @Override
-            protected Transferable createTransferable(JComponent component) {
+            protected @Nullable Transferable createTransferable(JComponent component) {
                 JBIterable<Pair<FilteringTreeStructure.FilteringNode, PsiElement>> pairs = JBIterable.of(myTree.getSelectionPaths())
                     .filterMap(TreeUtil::getLastUserObject)
                     .filter(FilteringTreeStructure.FilteringNode.class)
@@ -693,9 +692,8 @@ public class FileStructurePopup implements Disposable, TreeActionsOwner {
         return actions;
     }
 
-    @Nullable
     @RequiredReadAction
-    private static Object findClosestPsiElement(PsiElement element, TreePath adjusted, TreeModel treeModel) {
+    private static @Nullable Object findClosestPsiElement(PsiElement element, TreePath adjusted, TreeModel treeModel) {
         TextRange range = element.getTextRange();
         if (range.isEmpty()) {
             return null;

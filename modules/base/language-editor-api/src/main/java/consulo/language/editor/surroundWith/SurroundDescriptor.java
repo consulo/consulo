@@ -57,7 +57,6 @@ public interface SurroundDescriptor extends LanguageExtension {
    * @param endOffset   the selection end offset, with whitespaces skipped
    * @return the elements to be surrounded, or an empty array if cannot surround
    */
-  
   @RequiredReadAction
   PsiElement[] getElementsToSurround(PsiFile file, int startOffset, int endOffset);
 
@@ -67,7 +66,6 @@ public interface SurroundDescriptor extends LanguageExtension {
    *
    * @return the list of surrounders.
    */
-  
   Surrounder[] getSurrounders();
 
   boolean isExclusive();

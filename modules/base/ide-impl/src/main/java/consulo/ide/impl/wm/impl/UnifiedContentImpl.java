@@ -68,9 +68,8 @@ public class UnifiedContentImpl extends UserDataHolderBase implements ContentEx 
     myPinnable = isPinnable;
   }
 
-  @Nullable
   @Override
-  public Component getUIComponent() {
+  public @Nullable Component getUIComponent() {
     return myComponent;
   }
 

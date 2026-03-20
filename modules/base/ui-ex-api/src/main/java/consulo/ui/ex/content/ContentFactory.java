@@ -39,7 +39,6 @@ public interface ContentFactory {
     /**
      * do not rename due it will be conflicted with deprecated method
      */
-    
     default Content createUIContent(@Nullable Component component, String displayName, boolean isLockable) {
         throw new AbstractMethodError();
     }

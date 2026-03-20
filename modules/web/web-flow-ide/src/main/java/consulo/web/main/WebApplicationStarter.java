@@ -37,9 +37,8 @@ public class WebApplicationStarter extends ApplicationStarter {
     super(args, stat);
   }
 
-  @Nullable
   @Override
-  public StartupProgress createSplash(CommandLineArgs args) {
+  public @Nullable StartupProgress createSplash(CommandLineArgs args) {
     return new WebStartupProgressImpl();
   }
 

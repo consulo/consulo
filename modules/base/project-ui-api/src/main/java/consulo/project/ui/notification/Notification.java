@@ -546,10 +546,9 @@ public class Notification {
 
     public static void fire(final Notification notification, AnAction action, @Nullable DataContext context) {
         AnActionEvent event = AnActionEvent.createFromAnAction(action, null, ActionPlaces.UNKNOWN, new DataContext() {
-            @Nullable
             @Override
             @SuppressWarnings("unchecked")
-            public <T> T getData(Key<T> dataId) {
+            public <T> @Nullable T getData(Key<T> dataId) {
                 if (KEY == dataId) {
                     return (T) notification;
                 }
@@ -575,7 +574,6 @@ public class Notification {
     /**
      * @param dropDownText text for popup when all actions collapsed (when all actions width more notification width)
      */
-    
     public Notification setDropDownText(String dropDownText) {
         myDropDownText = dropDownText;
         return this;

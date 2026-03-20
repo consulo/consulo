@@ -29,9 +29,8 @@ import org.jspecify.annotations.Nullable;
 @Deprecated
 @DeprecationInfo("Use WelcomeFrameManager")
 public class WelcomeFrame {
-  @Nullable
   @RequiredUIAccess
-  public static IdeFrame getInstance() {
+  public static @Nullable IdeFrame getInstance() {
     return WelcomeFrameManager.getInstance().getCurrentFrame();
   }
 

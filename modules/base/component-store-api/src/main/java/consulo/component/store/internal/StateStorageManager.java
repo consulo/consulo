@@ -28,22 +28,18 @@ public interface StateStorageManager {
   
   String buildFileSpec(Storage storage);
 
-  @Nullable
-  TrackingPathMacroSubstitutor getMacroSubstitutor();
+  @Nullable TrackingPathMacroSubstitutor getMacroSubstitutor();
 
-  @Nullable
-  StateStorage getStateStorage(Storage storageSpec);
+  @Nullable StateStorage getStateStorage(Storage storageSpec);
 
-  @Nullable
-  StateStorage getStateStorage(String fileSpec, RoamingType roamingType);
+  @Nullable StateStorage getStateStorage(String fileSpec, RoamingType roamingType);
 
   
   Collection<String> getStorageFileNames();
 
   void clearStateStorage(String file);
 
-  @Nullable
-  ExternalizationSession startExternalization();
+  @Nullable ExternalizationSession startExternalization();
 
   
   String expandMacros(String file);
@@ -53,8 +49,7 @@ public interface StateStorageManager {
 
   void setStreamProvider(@Nullable StreamProvider streamProvider);
 
-  @Nullable
-  StreamProvider getStreamProvider();
+  @Nullable StreamProvider getStreamProvider();
 
   interface ExternalizationSession {
     void setState(Storage[] storageSpecs, Object component, String componentName, Object state);
@@ -63,7 +58,6 @@ public interface StateStorageManager {
      * return empty list if nothing to save
      * @param force
      */
-    
     List<StateStorage.SaveSession> createSaveSessions(boolean force);
   }
 }

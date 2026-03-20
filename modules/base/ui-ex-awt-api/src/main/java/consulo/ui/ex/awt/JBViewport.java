@@ -115,9 +115,8 @@ public class JBViewport extends JViewport implements ZoomableViewport {
     myPaintingNow = false;
   }
 
-  @Nullable
   @Override
-  public Magnificator getMagnificator() {
+  public @Nullable Magnificator getMagnificator() {
     return UIUtil.getClientProperty(getView(), Magnificator.CLIENT_PROPERTY_KEY);
   }
 

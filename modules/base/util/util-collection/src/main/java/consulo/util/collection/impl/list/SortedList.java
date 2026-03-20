@@ -58,9 +58,8 @@ public class SortedList<T> extends AbstractList<T>{
     return true;
   }
 
-  @Nullable
   @Override
-  public T remove(int index) {
+  public @Nullable T remove(int index) {
     T value = get(index);
     remove(value);
     return value;
@@ -79,9 +78,8 @@ public class SortedList<T> extends AbstractList<T>{
     return true;
   }
 
-  @Nullable
   @Override
-  public T get(int index) {
+  public @Nullable T get(int index) {
     return ensureLinearized().get(index);
   }
 

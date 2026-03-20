@@ -80,7 +80,6 @@ public abstract class IgnoreEntryExtImpl extends IgnoreElementImpl implements Ig
      *
      * @return syntax
      */
-    
     @Override
     @RequiredReadAction
     public Syntax getSyntax() {
@@ -102,7 +101,6 @@ public abstract class IgnoreEntryExtImpl extends IgnoreElementImpl implements Ig
      *
      * @return entry value without `!` negation sign
      */
-    
     @Override
     @RequiredReadAction
     public String getValue() {

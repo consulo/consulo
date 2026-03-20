@@ -36,7 +36,6 @@ public interface SMTestLocator {
     /**
      * Creates the <code>Location</code> list from <code>protocol</code> and <code>path</code> in <code>scope</code>.
      */
-    
     List<Location> getLocation(String protocol, String path, Project project, GlobalSearchScope scope);
 
     /**
@@ -46,7 +45,6 @@ public interface SMTestLocator {
      * A good example for code>metaInfo</code> is the line number of the beginning of the test. It can speed up the search procedure,
      * but it changes when editing.
      */
-    
     default List<Location> getLocation(
         String protocol,
         String path,

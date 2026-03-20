@@ -126,7 +126,6 @@ public class QueueProcessor<T> {
    *                  If <code>false</code>, then it will wait for the {@link #start()} command.
    *                  After QueueProcessor has started once, autostart setting doesn't matter anymore: all other elements will be processed immediately.
    */
-
   public QueueProcessor(BiConsumer<T, Runnable> processor,
                         boolean autostart,
                         ThreadToUse threadToUse,

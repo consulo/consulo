@@ -44,9 +44,8 @@ public class ChooseByNameLanguageFilter extends ChooseByNameFilter<Language> {
     return value.getDisplayName().get();
   }
 
-  @Nullable
   @Override
-  protected Image iconForFilterValue(Language value) {
+  protected @Nullable Image iconForFilterValue(Language value) {
     LanguageFileType fileType = value.getAssociatedFileType();
     return fileType != null ? fileType.getIcon() : null;
   }

@@ -62,7 +62,6 @@ public interface FilePropertyPusher<T> {
      * After property was pushed it can be retrieved any time using {@see FilePropertyPusher#getFileDataKey()}
      * from {@link VirtualFile#getUserData(Key)}.
      */
-    
     Key<T> getFileDataKey();
 
     boolean pushDirectoriesOnly();
@@ -70,11 +69,9 @@ public interface FilePropertyPusher<T> {
     
     T getDefaultValue();
 
-    @Nullable
-    T getImmediateValue(Module module);
+    @Nullable T getImmediateValue(Module module);
 
-    @Nullable
-    T getImmediateValue(Project project, @Nullable VirtualFile file);
+    @Nullable T getImmediateValue(Project project, @Nullable VirtualFile file);
 
     boolean acceptsFile(VirtualFile file, Project project);
 

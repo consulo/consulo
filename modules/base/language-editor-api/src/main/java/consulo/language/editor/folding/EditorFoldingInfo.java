@@ -35,11 +35,9 @@ public interface EditorFoldingInfo {
     return EditorFoldingInfoImpl.get(editor);
   }
 
-  @Nullable
-  PsiElement getPsiElement(FoldRegion region);
+  @Nullable PsiElement getPsiElement(FoldRegion region);
 
-  @Nullable
   @RequiredReadAction
-  TextRange getPsiElementRange(FoldRegion region);
+  @Nullable TextRange getPsiElementRange(FoldRegion region);
 }
 

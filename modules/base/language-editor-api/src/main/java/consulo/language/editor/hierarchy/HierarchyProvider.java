@@ -35,8 +35,7 @@ public interface HierarchyProvider extends LanguageExtension {
    * @param dataContext the data context for the action invocation.
    * @return the target element, or null if the action is not applicable in this context.
    */
-  @Nullable
-  PsiElement getTarget(DataContext dataContext);
+  @Nullable PsiElement getTarget(DataContext dataContext);
 
   /**
    * Creates a browser for viewing the hierarchy of the specified element.
@@ -44,7 +43,6 @@ public interface HierarchyProvider extends LanguageExtension {
    * @param target the element to view the hierarchy for.
    * @return the browser instance.
    */
-  
   HierarchyBrowser createHierarchyBrowser(PsiElement target);
 
   /**

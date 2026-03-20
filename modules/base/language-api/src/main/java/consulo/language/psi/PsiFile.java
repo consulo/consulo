@@ -50,20 +50,17 @@ public interface PsiFile extends PsiFileSystemItem {
      * @return the virtual file, or null if the file exists only in memory.
      */
     @Override
-    @Nullable
-    VirtualFile getVirtualFile();
+    @Nullable VirtualFile getVirtualFile();
 
     /**
      * Returns the directory containing the file.
      *
      * @return the containing directory, or null if the file exists only in memory.
      */
-    @Nullable
-    PsiDirectory getContainingDirectory();
+    @Nullable PsiDirectory getContainingDirectory();
 
     @Override
-    @Nullable
-    PsiDirectory getParent();
+    @Nullable PsiDirectory getParent();
 
     /**
      * Gets the modification stamp value. Modification stamp is a value changed by any modification
@@ -80,7 +77,6 @@ public interface PsiFile extends PsiFileSystemItem {
      *
      * @return the original file of a copy, or the same file if the file is not a copy.
      */
-    
     PsiFile getOriginalFile();
 
     /**
@@ -88,7 +84,6 @@ public interface PsiFile extends PsiFileSystemItem {
      *
      * @return the file type instance.
      */
-    
     FileType getFileType();
 
     /**
@@ -100,7 +95,6 @@ public interface PsiFile extends PsiFileSystemItem {
      * if the file has only a single language.
      * @deprecated Use {@link FileViewProvider#getAllFiles()} instead.
      */
-    
     PsiFile[] getPsiRoots();
 
     
@@ -116,7 +110,6 @@ public interface PsiFile extends PsiFileSystemItem {
      * @throws UnsupportedOperationException if the document is not associated with this type of file
      *                                       (for example, if the file is binary).
      */
-    
     default Document getFileDocument() {
         Document document = getViewProvider().getDocument();
         if (document == null) {

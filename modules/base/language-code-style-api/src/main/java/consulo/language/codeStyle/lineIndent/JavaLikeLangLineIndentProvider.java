@@ -62,9 +62,8 @@ public abstract class JavaLikeLangLineIndentProvider implements LineIndentProvid
     LanguageStartDelimiter
   }
 
-  @Nullable
   @Override
-  public String getLineIndent(Project project,
+  public @Nullable String getLineIndent(Project project,
                               Document document,
                               SemanticEditorPositionFactory factory,
                               Language language,
@@ -370,7 +369,6 @@ public abstract class JavaLikeLangLineIndentProvider implements LineIndentProvid
    * @param factory factory for position
    * @param offset  the offset in the {@code editor}
    */
- 
   public SemanticEditorPosition getPosition(SemanticEditorPositionFactory factory, int offset) {
     return factory.create(offset, this::mapType);
   }

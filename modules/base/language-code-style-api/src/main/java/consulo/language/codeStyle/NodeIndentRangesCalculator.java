@@ -50,9 +50,8 @@ public class NodeIndentRangesCalculator {
         return Collections.singletonList(node.getTextRange());
     }
 
-    @Nullable
     @RequiredReadAction
-    private Document retrieveDocument(ASTNode node) {
+    private @Nullable Document retrieveDocument(ASTNode node) {
         PsiFile file = node.getPsi().getContainingFile();
         return PsiDocumentManager.getInstance(node.getPsi().getProject()).getDocument(file);
     }

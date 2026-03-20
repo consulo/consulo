@@ -60,8 +60,7 @@ public class XBreakpointBase<Self extends XBreakpoint<P>, P extends XBreakpointP
     private static final String BR_NBSP = "<br>" + CommonXmlStrings.NBSP;
     private final XBreakpointType<Self, P> myType;
     private final
-    @Nullable
-    P myProperties;
+    @Nullable P myProperties;
     protected final S myState;
     private final XBreakpointManagerImpl myBreakpointManager;
     private Image myIcon;
@@ -218,9 +217,8 @@ public class XBreakpointBase<Self extends XBreakpoint<P>, P extends XBreakpointP
         return myLogExpression;
     }
 
-    @Nullable
     @Override
-    public XExpression getLogExpressionObject() {
+    public @Nullable XExpression getLogExpressionObject() {
         return myLogExpressionEnabled ? myLogExpression : null;
     }
 
@@ -250,9 +248,8 @@ public class XBreakpointBase<Self extends XBreakpoint<P>, P extends XBreakpointP
         return myCondition;
     }
 
-    @Nullable
     @Override
-    public XExpression getConditionExpression() {
+    public @Nullable XExpression getConditionExpression() {
         return myConditionEnabled ? myCondition : null;
     }
 
@@ -536,9 +533,8 @@ public class XBreakpointBase<Self extends XBreakpoint<P>, P extends XBreakpointP
             }
         }
 
-        @Nullable
         @Override
-        public AnAction getRightButtonClickAction() {
+        public @Nullable AnAction getRightButtonClickAction() {
             return new EditBreakpointAction.ContextAction(
                 this,
                 XBreakpointBase.this

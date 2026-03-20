@@ -43,11 +43,9 @@ public interface InspectionProfile extends Profile {
    */
   InspectionToolWrapper getInspectionTool(String shortName, PsiElement element);
 
-  @Nullable
-  InspectionToolWrapper getInspectionTool(String shortName, Project project);
+  @Nullable InspectionToolWrapper getInspectionTool(String shortName, Project project);
 
-  @Nullable
-  InspectionToolWrapper getToolById(String id, PsiElement element);
+  @Nullable InspectionToolWrapper getToolById(String id, PsiElement element);
 
   /**
    * @return tool by shortName and scope
@@ -57,8 +55,7 @@ public interface InspectionProfile extends Profile {
   /**
    * @return nullable if tool by shortName not found
    */
-  @Nullable
-  <S> S getToolState(String shortName, PsiElement element);
+  <S> @Nullable S getToolState(String shortName, PsiElement element);
 
   void modifyProfile(Consumer<ModifiableModel> modelConsumer);
 
@@ -77,7 +74,6 @@ public interface InspectionProfile extends Profile {
    * @param element context element
    * @return all (both enabled and disabled) tools
    */
-  
   InspectionToolWrapper[] getInspectionTools(@Nullable PsiElement element);
 
   void cleanup(Project project);
@@ -85,7 +81,6 @@ public interface InspectionProfile extends Profile {
   /**
    * @see #modifyProfile(Consumer)
    */
-  
   ModifiableModel getModifiableModel();
 
   boolean isToolEnabled(HighlightDisplayKey key, PsiElement element);

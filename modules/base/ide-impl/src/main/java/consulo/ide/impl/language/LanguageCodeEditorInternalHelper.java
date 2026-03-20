@@ -80,10 +80,9 @@ public class LanguageCodeEditorInternalHelper implements CodeEditorInternalHelpe
             super(delegate, caret);
         }
 
-        @Nullable
         @Override
         @SuppressWarnings("unchecked")
-        public <T> T getData(Key<T> dataId) {
+        public <T> @Nullable T getData(Key<T> dataId) {
             Project project = super.getData(Project.KEY);
             if (project != null) {
                 FileEditorManager fm = FileEditorManager.getInstance(project);
@@ -111,9 +110,8 @@ public class LanguageCodeEditorInternalHelper implements CodeEditorInternalHelpe
         return EditorModificationUtil.requestWriting(editor);
     }
 
-    @Nullable
     @Override
-    public String getProperIndent(Project project, Document document, int offset) {
+    public @Nullable String getProperIndent(Project project, Document document, int offset) {
         PsiDocumentManager.getInstance(project).commitDocument(document); // Sync document and PSI before formatting.
         return offset >= document.getTextLength() ? "" : CodeStyleFacade.getInstance(project).getLineIndent(document, offset);
     }
@@ -212,9 +210,8 @@ public class LanguageCodeEditorInternalHelper implements CodeEditorInternalHelpe
         foldingManager.updateFoldRegions(editor);
     }
 
-    @Nullable
     @Override
-    public StickyLinesModel getStickyLinesModel(Project project, Document document) {
+    public @Nullable StickyLinesModel getStickyLinesModel(Project project, Document document) {
         return StickyLinesModelImpl.getModel(project, document);
     }
 

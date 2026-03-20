@@ -25,7 +25,6 @@ public interface IntermediateCallHandler extends TraceHandler, CallTransformer<I
    * @return List of methods, that should be called right after the current method and which are "inseparable".
    * It means it is impossible to insert a peek call between them, without breaking type chain.
    */
-  
   default List<IntermediateStreamCall> additionalInseparableCalls() {
     return Collections.emptyList();
   }

@@ -32,7 +32,6 @@ public interface UpdateSession {
    *
    * @return the list of errors.
    */
-  
   List<VcsException> getExceptions();
 
   /**

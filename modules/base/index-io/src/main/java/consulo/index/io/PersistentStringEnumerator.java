@@ -53,9 +53,8 @@ public class PersistentStringEnumerator extends PersistentEnumeratorDelegate<Str
         return PersistentStringEnumerator.super.enumerate(value);
       }
 
-      @Nullable
       @Override
-      public String valueOf(int idx) throws IOException {
+      public @Nullable String valueOf(int idx) throws IOException {
         return PersistentStringEnumerator.super.valueOf(idx);
       }
     }, EnumeratorStringDescriptor.INSTANCE) : null;
@@ -66,9 +65,8 @@ public class PersistentStringEnumerator extends PersistentEnumeratorDelegate<Str
     return myCache != null ? myCache.enumerate(value) : super.enumerate(value);
   }
 
-  @Nullable
   @Override
-  public String valueOf(int idx) throws IOException {
+  public @Nullable String valueOf(int idx) throws IOException {
     return myCache != null ? myCache.valueOf(idx) : super.valueOf(idx);
   }
 

@@ -76,9 +76,8 @@ public abstract class Injectable implements Comparable<Injectable> {
         return language.getDisplayName();
       }
 
-      @Nullable
       @Override
-      public String getAdditionalDescription() {
+      public @Nullable String getAdditionalDescription() {
         FileType ft = language.getAssociatedFileType();
         return ft != null ? " (" + ft.getDisplayName() + ")" : null;
       }

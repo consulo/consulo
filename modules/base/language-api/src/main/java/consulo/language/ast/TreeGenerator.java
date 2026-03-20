@@ -31,6 +31,5 @@ import org.jspecify.annotations.Nullable;
 public interface TreeGenerator {
     ExtensionPointName<TreeGenerator> EP_NAME = ExtensionPointName.create(TreeGenerator.class);
 
-    @Nullable
-    ASTNode generateTreeFor(PsiElement original, CharTable table, PsiManager manager);
+    @Nullable ASTNode generateTreeFor(PsiElement original, CharTable table, PsiManager manager);
 }

@@ -71,9 +71,8 @@ public class RefDirectoryImpl extends RefElementImpl implements RefDirectory {
     });
   }
 
-  @Nullable
   @Override
-  public RefModule getModule() {
+  public @Nullable RefModule getModule() {
     return myRefModule != null ? myRefModule : super.getModule();
   }
 

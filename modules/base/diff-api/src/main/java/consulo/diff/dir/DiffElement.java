@@ -92,7 +92,6 @@ public abstract class DiffElement<T> {
    *
    * @see DiffRequestProducer#process
    */
-  
   public DiffContent createDiffContent(@Nullable Project project, ProgressIndicator indicator)
           throws DiffRequestProducerException, ProcessCanceledException {
     try {

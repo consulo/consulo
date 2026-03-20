@@ -53,9 +53,8 @@ public class UpdatesConfigurable extends SimpleConfigurableByProperties implemen
         return ExternalServiceLocalize.settingsUpdateDisplayName();
     }
 
-    @Nullable
     @Override
-    public String getParentId() {
+    public @Nullable String getParentId() {
         return StandardConfigurableIds.PLATFORM_AND_PLUGINS_GROUP;
     }
 

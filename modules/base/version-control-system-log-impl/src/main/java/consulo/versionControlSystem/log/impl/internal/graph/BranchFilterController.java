@@ -49,9 +49,8 @@ public class BranchFilterController extends CascadeController {
     return delegateAnswer;
   }
 
-  @Nullable
   @Override
-  protected LinearGraphAnswer performAction(LinearGraphAction action) {
+  protected @Nullable LinearGraphAnswer performAction(LinearGraphAction action) {
     return null;
   }
 
@@ -61,9 +60,8 @@ public class BranchFilterController extends CascadeController {
     return myCollapsedGraph.getCompiledGraph();
   }
 
-  @Nullable
   @Override
-  protected GraphElement convertToDelegate(GraphElement graphElement) {
+  protected @Nullable GraphElement convertToDelegate(GraphElement graphElement) {
     return CollapsedController.convertToDelegate(graphElement, myCollapsedGraph);
   }
 }

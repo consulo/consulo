@@ -41,7 +41,6 @@ public abstract class ModuleManager {
    * @param project the project for which the module manager is requested.
    * @return the module manager instance.
    */
-  
   public static ModuleManager getInstance(Project project) {
     return project.getComponent(ModuleManager.class);
   }
@@ -55,7 +54,6 @@ public abstract class ModuleManager {
    * @param dirPath the path at which the module is created.
    * @return the module instance.
    */
-  
   @RequiredWriteAction
   public abstract Module newModule(String name, String dirPath);
 
@@ -72,7 +70,6 @@ public abstract class ModuleManager {
    *
    * @return the array of modules.
    */
-  
   public abstract Module[] getModules();
 
   /**
@@ -81,9 +78,8 @@ public abstract class ModuleManager {
    * @param name the name of the module to find.
    * @return the module instance, or null if no module with such name exists.
    */
-  @Nullable
   @RequiredReadAction
-  public abstract Module findModuleByName(String name);
+  public abstract @Nullable Module findModuleByName(String name);
 
   /**
    * Returns the list of modules sorted by dependency (the modules which do not depend
@@ -92,7 +88,6 @@ public abstract class ModuleManager {
    *
    * @return the sorted array of modules.
    */
-  
   @RequiredReadAction
   public abstract Module[] getSortedModules();
 
@@ -103,7 +98,6 @@ public abstract class ModuleManager {
    *
    * @return the module comparator instance.
    */
-  
   @RequiredReadAction
   public abstract Comparator<Module> moduleDependencyComparator();
 
@@ -115,7 +109,6 @@ public abstract class ModuleManager {
    *
    * @see ModuleUtil#getAllDependentModules(Module)
    */
-  
   @RequiredReadAction
   public abstract List<Module> getModuleDependentModules(Module module);
 
@@ -134,7 +127,6 @@ public abstract class ModuleManager {
    *
    * @return the module dependency graph.
    */
-  
   @RequiredReadAction
   public abstract Graph<Module> moduleGraph();
 
@@ -145,7 +137,6 @@ public abstract class ModuleManager {
    * @return the module dependency graph.
    * @since 11.0
    */
-  
   @RequiredReadAction
   public abstract Graph<Module> moduleGraph(boolean includeTests);
 
@@ -155,7 +146,6 @@ public abstract class ModuleManager {
    *
    * @return the modifiable model instance.
    */
-  
   @RequiredReadAction
   public abstract ModifiableModuleModel getModifiableModel();
 
@@ -166,9 +156,8 @@ public abstract class ModuleManager {
    * @param module the module for which the path is requested.
    * @return the path to the group for the module, or null if the module does not belong to any group.
    */
-  @Nullable
   @RequiredReadAction
-  public abstract String[] getModuleGroupPath(Module module);
+  public abstract @Nullable String[] getModuleGroupPath(Module module);
 
   public @Nullable UnloadedModuleDescription getUnloadedModuleDescription(String name) {
     // we not support module unloading

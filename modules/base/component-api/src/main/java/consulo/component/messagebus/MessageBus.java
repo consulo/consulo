@@ -29,15 +29,13 @@ public interface MessageBus {
    *
    * @return parent bus (if defined)
    */
-  @Nullable
-  MessageBus getParent();
+  @Nullable MessageBus getParent();
 
   /**
    * Allows to create new connection that is not bound to any {@link Disposable}.
    *
    * @return newly created connection
    */
-  
   MessageBusConnection connect();
 
   /**
@@ -47,7 +45,6 @@ public interface MessageBus {
    * @param parentDisposable target parent disposable to which life cycle newly created connection shall be bound
    * @return newly created connection which life cycle is bound to the given disposable parent
    */
-  
   MessageBusConnection connect(Disposable parentDisposable);
 
   /**
@@ -109,7 +106,6 @@ public interface MessageBus {
    * @param topicClass target topic
    * @return publisher for target topic
    */
-  
   <L> L syncPublisher(Class<L> topicClass);
 
   /**

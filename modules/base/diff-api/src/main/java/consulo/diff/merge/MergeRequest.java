@@ -38,9 +38,8 @@ public abstract class MergeRequest implements UserDataHolder {
   @RequiredUIAccess
   public abstract void applyResult(MergeResult result);
 
-  @Nullable
   @Override
-  public <T> T getUserData(Key<T> key) {
+  public <T> @Nullable T getUserData(Key<T> key) {
     return myUserDataHolder.getUserData(key);
   }
 

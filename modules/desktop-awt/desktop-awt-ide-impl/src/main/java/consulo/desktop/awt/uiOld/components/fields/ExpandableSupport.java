@@ -50,14 +50,12 @@ public abstract class ExpandableSupport<Source extends JComponent> implements Ex
    * @param onShow a string converter from the source to the popup content
    * @return a specific content to create the popup
    */
-  
   protected abstract Content prepare(Source source, Function<? super String, String> onShow);
 
   protected interface Content {
     /**
      * @return a component to show on the popup
      */
-    
     JComponent getContentComponent();
 
     /**

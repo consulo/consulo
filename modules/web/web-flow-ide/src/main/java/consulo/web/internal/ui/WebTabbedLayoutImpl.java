@@ -32,9 +32,8 @@ import org.jspecify.annotations.Nullable;
  */
 public class WebTabbedLayoutImpl extends VaadinComponentDelegate<WebTabbedLayoutImpl.Vaadin> implements TabbedLayout {
     public class Vaadin extends TabSheet implements FromVaadinComponentWrapper {
-        @Nullable
         @Override
-        public Component toUIComponent() {
+        public @Nullable Component toUIComponent() {
             return WebTabbedLayoutImpl.this;
         }
     }

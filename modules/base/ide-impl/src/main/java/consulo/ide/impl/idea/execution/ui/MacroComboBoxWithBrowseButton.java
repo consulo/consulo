@@ -61,9 +61,8 @@ public class MacroComboBoxWithBrowseButton extends ComponentWithBrowseButton<Com
                 return module;
             }
 
-            @Nullable
             @Override
-            protected Project getProject() {
+            protected @Nullable Project getProject() {
                 Project project = (Project)super.getProject();
                 if (project != null) {
                     return project;

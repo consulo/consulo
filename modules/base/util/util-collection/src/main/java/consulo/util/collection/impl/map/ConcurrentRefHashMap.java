@@ -18,8 +18,7 @@ import java.util.concurrent.ConcurrentMap;
 abstract class ConcurrentRefHashMap<K, V> extends AbstractMap<K, V> implements ConcurrentMap<K, V>, HashingStrategy<K> {
   @FunctionalInterface
   interface KeyReference<K> {
-    @Nullable
-    K get();
+    @Nullable K get();
 
     // In case of gced reference, equality must be identity-based (to be able to remove stale key in processQueue), otherwise it's myHashingStrategy-based
     @Override
@@ -128,9 +127,8 @@ abstract class ConcurrentRefHashMap<K, V> extends AbstractMap<K, V> implements C
       myHash = hash;
     }
 
-    @Nullable
     @Override
-    public K get() {
+    public @Nullable K get() {
       return myKey;
     }
 
@@ -166,9 +164,8 @@ abstract class ConcurrentRefHashMap<K, V> extends AbstractMap<K, V> implements C
     return hardKey;
   }
 
-  @Nullable
   @Override
-  public V get(Object key) {
+  public @Nullable V get(Object key) {
     if (myMap.isEmpty()) {
       return null;
     }
@@ -181,18 +178,16 @@ abstract class ConcurrentRefHashMap<K, V> extends AbstractMap<K, V> implements C
     }
   }
 
-  @Nullable
   @Override
-  public V put(K key, V value) {
+  public @Nullable V put(K key, V value) {
     KeyReference<K> weakKey = createKeyReference(key);
     V prev = myMap.put(weakKey, Objects.requireNonNull(value));
     processQueue();
     return prev;
   }
 
-  @Nullable
   @Override
-  public V remove(Object key) {
+  public @Nullable V remove(Object key) {
     HardKey<?> hardKey = createHardKey(key);
     try {
       return myMap.remove(hardKey);
@@ -221,21 +216,18 @@ abstract class ConcurrentRefHashMap<K, V> extends AbstractMap<K, V> implements C
       this.key = key;
     }
 
-    @Nullable
     @Override
-    public K getKey() {
+    public @Nullable K getKey() {
       return key;
     }
 
-    @Nullable
     @Override
-    public V getValue() {
+    public @Nullable V getValue() {
       return ent.getValue();
     }
 
-    @Nullable
     @Override
-    public V setValue(V value) {
+    public @Nullable V setValue(V value) {
       return ent.setValue(value);
     }
 

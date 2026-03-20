@@ -21,6 +21,5 @@ import org.jspecify.annotations.Nullable;
 
 interface SmartPointerEx<E extends PsiElement> extends SmartPsiElementPointer<E> {
 
-  @Nullable
-  PsiElement getCachedElement();
+  @Nullable PsiElement getCachedElement();
 }

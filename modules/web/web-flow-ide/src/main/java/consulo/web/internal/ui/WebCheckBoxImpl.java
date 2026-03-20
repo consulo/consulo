@@ -50,9 +50,8 @@ public class WebCheckBoxImpl extends WebBooleanValueComponentBase<WebCheckBoxImp
             setLabel(textWithMnemonic.getText());
         }
 
-        @Nullable
         @Override
-        public Component toUIComponent() {
+        public @Nullable Component toUIComponent() {
             return WebCheckBoxImpl.this;
         }
     }

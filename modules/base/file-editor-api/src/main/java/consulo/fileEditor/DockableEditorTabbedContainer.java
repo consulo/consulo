@@ -24,6 +24,5 @@ import org.jspecify.annotations.Nullable;
  * @since 2020-11-21
  */
 public interface DockableEditorTabbedContainer extends DockContainer.Persistent {
-  @Nullable
-  FileEditorsSplitters getSplitters();
+  @Nullable FileEditorsSplitters getSplitters();
 }

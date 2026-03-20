@@ -69,8 +69,7 @@ public final class JBAnimator implements Disposable {
   private boolean myCyclic = false;
   private boolean myIgnorePowerSaveMode = false;
   private
-  @Nullable
-  String myName = null;
+  @Nullable String myName = null;
 
   private final 
   ScheduledExecutorService myService;
@@ -81,8 +80,7 @@ public final class JBAnimator implements Disposable {
 
   private static final Logger LOG = Logger.getInstance(JBAnimator.class);
   private
-  @Nullable
-  Statistic myStatistic = null;
+  @Nullable Statistic myStatistic = null;
 
   public JBAnimator() {
     this(Thread.SWING_THREAD, null);
@@ -180,8 +178,7 @@ public final class JBAnimator implements Disposable {
       final Type type = myType;
       final int period = myPeriod;
       final boolean cycle = myCyclic;
-      @Nullable
-      FrameCounter frameCounter;
+      @Nullable FrameCounter frameCounter;
       
       LinkedHashSet<Animation> scheduledAnimations = new LinkedHashSet<>();
       //private final long animationStarted = System.nanoTime();
@@ -345,8 +342,7 @@ public final class JBAnimator implements Disposable {
   }
 
   public
-  @Nullable
-  String getName() {
+  @Nullable String getName() {
     return myName;
   }
 
@@ -363,8 +359,7 @@ public final class JBAnimator implements Disposable {
    * @return statistic of the last animation
    */
   public
-  @Nullable
-  Statistic getStatistic() {
+  @Nullable Statistic getStatistic() {
     return myStatistic;
   }
 

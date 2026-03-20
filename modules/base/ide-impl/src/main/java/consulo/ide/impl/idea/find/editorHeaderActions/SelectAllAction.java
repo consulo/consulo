@@ -40,9 +40,8 @@ public class SelectAllAction extends OccurrenceAction {
         search.close();
     }
 
-    @Nullable
     @Override
-    public ShortcutSet getShortcut() {
+    public @Nullable ShortcutSet getShortcut() {
         List<Shortcut> shortcuts = new ArrayList<>();
         AnAction selectAllOccurrences = ActionManager.getInstance().getAction(IdeActions.ACTION_SELECT_ALL_OCCURRENCES);
         if (selectAllOccurrences != null) {

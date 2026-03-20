@@ -95,9 +95,8 @@ public class SimpleThreesideDiffChange extends ThreesideDiffChangeBase {
         return side.select(myEditors);
     }
 
-    @Nullable
     @Override
-    protected MergeInnerDifferences getInnerFragments() {
+    protected @Nullable MergeInnerDifferences getInnerFragments() {
         return myInnerFragments;
     }
 

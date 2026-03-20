@@ -33,8 +33,7 @@ public interface CodeDocumentationProvider extends DocumentationProvider {
    * @param contextElement candidate psi comment
    * @return contextElement if no other applicable
    */
-  @Nullable
-  PsiComment findExistingDocComment(PsiComment contextElement);
+  @Nullable PsiComment findExistingDocComment(PsiComment contextElement);
 
   /**
    * Examines PSI hierarchy identified by the given 'start' element trying to find element which can be documented
@@ -55,14 +54,12 @@ public interface CodeDocumentationProvider extends DocumentationProvider {
    *                    is available;
    *                    returned pair must have non-null PSI element and nullable existing comment references then
    */
-  @Nullable
-  Pair<PsiElement, PsiComment> parseContext(PsiElement startPoint);
+  @Nullable Pair<PsiElement, PsiComment> parseContext(PsiElement startPoint);
 
   /**
    * Generate documentation comment content for given context.
    * @param contextComment context psi comment
    * @return documentation content for given context if any
    */
-  @Nullable
-  String generateDocumentationContentStub(PsiComment contextComment);
+  @Nullable String generateDocumentationContentStub(PsiComment contextComment);
 }

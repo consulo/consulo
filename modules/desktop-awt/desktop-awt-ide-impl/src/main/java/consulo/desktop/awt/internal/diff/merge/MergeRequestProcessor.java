@@ -448,9 +448,8 @@ public abstract class MergeRequestProcessor implements Disposable {
             super(new BorderLayout());
         }
 
-        @Nullable
         @Override
-        public Object getData(Key<?> dataId) {
+        public @Nullable Object getData(Key<?> dataId) {
             Object data;
 
             DataProvider contentProvider =
@@ -505,9 +504,8 @@ public abstract class MergeRequestProcessor implements Disposable {
     }
 
     private class MyDiffContext extends MergeContextEx {
-        @Nullable
         @Override
-        public Project getProject() {
+        public @Nullable Project getProject() {
             return MergeRequestProcessor.this.getProject();
         }
 

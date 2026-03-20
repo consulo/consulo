@@ -70,9 +70,8 @@ public class DesktopSwtButtonImpl extends SWTComponentDelegate<org.eclipse.swt.w
         myText = text;
     }
 
-    @Nullable
     @Override
-    public Image getIcon() {
+    public @Nullable Image getIcon() {
         return null;
     }
 

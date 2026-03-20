@@ -30,9 +30,8 @@ import org.jspecify.annotations.Nullable;
  */
 public class WebTextBoxImpl extends VaadinComponentDelegate<WebTextBoxImpl.Vaadin> implements TextBox {
     public class Vaadin extends TextField implements FromVaadinComponentWrapper {
-        @Nullable
         @Override
-        public Component toUIComponent() {
+        public @Nullable Component toUIComponent() {
             return WebTextBoxImpl.this;
         }
     }
@@ -46,9 +45,8 @@ public class WebTextBoxImpl extends VaadinComponentDelegate<WebTextBoxImpl.Vaadi
 
     }
 
-    @Nullable
     @Override
-    public Component getSuffixComponent() {
+    public @Nullable Component getSuffixComponent() {
         return null;
     }
 
@@ -58,9 +56,8 @@ public class WebTextBoxImpl extends VaadinComponentDelegate<WebTextBoxImpl.Vaadi
         return new Vaadin();
     }
 
-    @Nullable
     @Override
-    public String getValue() {
+    public @Nullable String getValue() {
         return getVaadinComponent().getValue();
     }
 

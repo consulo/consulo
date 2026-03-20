@@ -56,7 +56,6 @@ public abstract class PrefixMatcher {
    * "Start matching" items go first, then others.
    * Within both groups names are sorted lexicographically in a case-insensitive way.
    */
-  
   public LinkedHashSet<String> sortMatching(Collection<String> _names) {
     ProgressManager.checkCanceled();
     if (getPrefix().isEmpty()) {

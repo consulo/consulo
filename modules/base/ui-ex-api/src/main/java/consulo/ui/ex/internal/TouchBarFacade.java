@@ -51,8 +51,7 @@ public interface TouchBarFacade {
                           JButton defaultButton,
                           @Nullable ActionGroup extraActions);
 
-    @Nullable
-    Disposable showWindowActions(Component contentPane);
+    @Nullable Disposable showWindowActions(Component contentPane);
 
     void onUpdateEditorHeader(Object editor, JComponent header);
 

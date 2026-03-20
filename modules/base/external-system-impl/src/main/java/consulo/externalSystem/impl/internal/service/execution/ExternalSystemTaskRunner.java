@@ -47,9 +47,8 @@ public class ExternalSystemTaskRunner extends GenericProgramRunner {
     return profile instanceof ExternalSystemRunConfiguration && DefaultRunExecutor.EXECUTOR_ID.equals(executorId);
   }
 
-  @Nullable
   @Override
-  protected RunContentDescriptor doExecute(RunProfileState state, ExecutionEnvironment env) throws ExecutionException {
+  protected @Nullable RunContentDescriptor doExecute(RunProfileState state, ExecutionEnvironment env) throws ExecutionException {
     ExecutionResult executionResult = state.execute(env.getExecutor(), this);
     return executionResult == null ? null : new RunContentBuilder(executionResult, env).showRunContent(env.getContentToReuse());
   }

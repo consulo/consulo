@@ -49,9 +49,8 @@ public class ChangelistConflictNotificationProvider implements EditorNotificatio
   }
 
   @RequiredReadAction
-  @Nullable
   @Override
-  public EditorNotificationBuilder buildNotification(VirtualFile file, FileEditor fileEditor, Supplier<EditorNotificationBuilder> builderFactory) {
+  public @Nullable EditorNotificationBuilder buildNotification(VirtualFile file, FileEditor fileEditor, Supplier<EditorNotificationBuilder> builderFactory) {
     return myConflictTracker.hasConflict(file) ? ChangelistConflictNotificationPanel.create(myConflictTracker, file, builderFactory) : null;
   }
 }

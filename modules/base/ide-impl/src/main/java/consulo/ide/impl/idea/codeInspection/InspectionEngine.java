@@ -63,7 +63,6 @@ public class InspectionEngine {
      * @param dialectIdsSpecifiedForTool null means all accepted
      * @return
      */
-    
     @RequiredReadAction
     public static PsiElementVisitor createVisitorAndAcceptElements(
         LocalInspectionTool tool,
@@ -276,9 +275,8 @@ public class InspectionEngine {
                 if (globalTool instanceof GlobalSimpleInspectionTool simpleTool) {
                     ProblemsHolderImpl problemsHolder = new ProblemsHolderImpl(inspectionManager, file, false);
                     ProblemDescriptionsProcessor collectProcessor = new ProblemDescriptionsProcessor() {
-                        @Nullable
                         @Override
-                        public CommonProblemDescriptor[] getDescriptions(RefEntity refEntity) {
+                        public @Nullable CommonProblemDescriptor[] getDescriptions(RefEntity refEntity) {
                             return descriptors.toArray(new CommonProblemDescriptor[descriptors.size()]);
                         }
 

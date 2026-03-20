@@ -123,9 +123,8 @@ public abstract class AbstractBlock implements ASTBlock, ExtraRangesProvider {
 
     protected abstract List<Block> buildChildren();
 
-    @Nullable
     @Override
-    public Wrap getWrap() {
+    public @Nullable Wrap getWrap() {
         return myWrap;
     }
 
@@ -134,9 +133,8 @@ public abstract class AbstractBlock implements ASTBlock, ExtraRangesProvider {
         return null;
     }
 
-    @Nullable
     @Override
-    public Alignment getAlignment() {
+    public @Nullable Alignment getAlignment() {
         return myAlignment;
     }
 
@@ -183,10 +181,9 @@ public abstract class AbstractBlock implements ASTBlock, ExtraRangesProvider {
     /**
      * @return additional range to reformat, when this block if formatted
      */
-    @Nullable
     @Override
     @RequiredReadAction
-    public List<TextRange> getExtraRangesToFormat(FormattingRangesInfo info) {
+    public @Nullable List<TextRange> getExtraRangesToFormat(FormattingRangesInfo info) {
         int startOffset = getTextRange().getStartOffset();
         if (info.isOnInsertedLine(startOffset) && myNode.textContains('\n')) {
             return new NodeIndentRangesCalculator(myNode).calculateExtraRanges();

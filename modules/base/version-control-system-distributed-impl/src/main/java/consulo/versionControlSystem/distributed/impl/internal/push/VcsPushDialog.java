@@ -82,10 +82,9 @@ public class VcsPushDialog extends DialogWrapper implements LegacyDialog {
         return ID;
     }
 
-    @Nullable
     @Override
     @RequiredUIAccess
-    protected ValidationInfo doValidate() {
+    protected @Nullable ValidationInfo doValidate() {
         updateOkActions();
         return null;
     }
@@ -117,10 +116,9 @@ public class VcsPushDialog extends DialogWrapper implements LegacyDialog {
         return myController.isForcePushEnabled() && myController.getProhibitedTarget() == null && myController.isPushAllowed(true);
     }
 
-    @Nullable
     @Override
     @RequiredUIAccess
-    public JComponent getPreferredFocusedComponent() {
+    public @Nullable JComponent getPreferredFocusedComponent() {
         return myListPanel.getPreferredFocusedComponent();
     }
 

@@ -169,7 +169,6 @@ public abstract class TaskRepository {
    * @param task task to update
    * @return set of available states
    */
-  
   public Set<CustomTaskState> getAvailableTaskStates(Task task) throws Exception {
     //noinspection unchecked
     EnumSet<TaskState> set = getRepositoryType().getPossibleTaskStates();
@@ -351,9 +350,8 @@ public abstract class TaskRepository {
 
   public abstract static class CancellableConnection implements Callable<Exception> {
 
-    @Nullable
     @Override
-    public final Exception call() {
+    public final @Nullable Exception call() {
       try {
         doTest();
         return null;

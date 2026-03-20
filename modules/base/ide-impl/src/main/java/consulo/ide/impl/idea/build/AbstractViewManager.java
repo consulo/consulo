@@ -128,8 +128,7 @@ public abstract class AbstractViewManager implements ViewManager, BuildProgressL
     }
 
     private
-    @Nullable
-    MultipleBuildsView getMultipleBuildsView(Object buildId) {
+    @Nullable MultipleBuildsView getMultipleBuildsView(Object buildId) {
         MultipleBuildsView buildsView = myBuildsViewValue.getValue();
         if (!buildsView.shouldConsume(buildId)) {
             buildsView = ContainerUtil.find(myPinnedViews, pinnedView -> pinnedView.shouldConsume(buildId));

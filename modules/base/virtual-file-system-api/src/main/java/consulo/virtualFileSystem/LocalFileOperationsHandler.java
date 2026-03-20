@@ -29,8 +29,7 @@ public interface LocalFileOperationsHandler {
 
   boolean move(VirtualFile file, VirtualFile toDir) throws IOException;
 
-  @Nullable
-  File copy(VirtualFile file, VirtualFile toDir, String copyName) throws IOException;
+  @Nullable File copy(VirtualFile file, VirtualFile toDir, String copyName) throws IOException;
 
   boolean rename(VirtualFile file, String newName) throws IOException;
 

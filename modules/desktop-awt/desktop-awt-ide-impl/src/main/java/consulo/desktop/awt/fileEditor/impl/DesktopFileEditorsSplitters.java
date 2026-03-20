@@ -291,8 +291,7 @@ public class DesktopFileEditorsSplitters extends FileEditorsSplittersBase<Deskto
         return 0;
     }
 
-    @Nullable
-    JBTabs getTabsAt(RelativePoint point) {
+    @Nullable JBTabs getTabsAt(RelativePoint point) {
         Point thisPoint = point.getPoint(myComponent);
         Component c = SwingUtilities.getDeepestComponentAt(myComponent, thisPoint.x, thisPoint.y);
         while (c != null) {

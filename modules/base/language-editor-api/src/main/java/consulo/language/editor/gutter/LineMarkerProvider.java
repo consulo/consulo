@@ -80,9 +80,8 @@ public interface LineMarkerProvider extends LanguageExtension {
    * </ul>
    * As a result, line marker icon would blink annoyingly.
    */
-  @Nullable
   @RequiredReadAction
-  LineMarkerInfo getLineMarkerInfo(PsiElement element);
+  @Nullable LineMarkerInfo getLineMarkerInfo(PsiElement element);
 
   @RequiredReadAction
   @Deprecated

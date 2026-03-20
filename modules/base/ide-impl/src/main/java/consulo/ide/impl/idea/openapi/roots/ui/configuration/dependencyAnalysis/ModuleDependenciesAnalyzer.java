@@ -324,7 +324,6 @@ public class ModuleDependenciesAnalyzer {
      * @param isSelected true if the element is selected
      * @return the appearance to use for rendering
      */
-    
     public abstract Consumer<ColoredTextContainer> getRender(boolean isSelected);
   }
 
@@ -384,7 +383,6 @@ public class ModuleDependenciesAnalyzer {
     /**
      * {@inheritDoc}
      */
-    
     @Override
     public Consumer<ColoredTextContainer> getRender(boolean isSelected) {
       return OrderEntryAppearanceService.getInstance().getRenderForOrderEntry(myEntry);

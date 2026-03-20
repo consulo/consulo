@@ -45,9 +45,8 @@ public abstract class BaseProjectStructureShowSettingsUtil extends BaseShowSetti
     }
   }
 
-  @Nullable
   @Override
-  public ModulesConfigurator getModulesModel(Project project) {
+  public @Nullable ModulesConfigurator getModulesModel(Project project) {
     if(myModulesConfigurator == null) {
       myModulesConfigurator = new ModulesConfiguratorImpl(project, () -> getLibrariesModel(project));
       myModulesConfigurator.reset();
@@ -55,9 +54,8 @@ public abstract class BaseProjectStructureShowSettingsUtil extends BaseShowSetti
     return myModulesConfigurator;
   }
 
-  @Nullable
   @Override
-  public LibrariesConfigurator getLibrariesModel(Project project) {
+  public @Nullable LibrariesConfigurator getLibrariesModel(Project project) {
     if(myLibrariesConfigurator == null) {
       myLibrariesConfigurator = new DefaultLibrariesConfigurator(project);
       myLibrariesConfigurator.reset();

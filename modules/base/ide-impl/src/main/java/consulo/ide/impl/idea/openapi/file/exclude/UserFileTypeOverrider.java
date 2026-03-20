@@ -24,9 +24,8 @@ public class UserFileTypeOverrider implements FileTypeOverrider {
     myFileTypeManagerProvider = fileTypeManagerProvider;
   }
 
-  @Nullable
   @Override
-  public FileType getOverriddenFileType(VirtualFile file) {
+  public @Nullable FileType getOverriddenFileType(VirtualFile file) {
     String overriddenType = myOverrideFileTypeManagerProvider.get().getFileValue(file);
     if (overriddenType != null) {
       return myFileTypeManagerProvider.get().findFileTypeByName(overriddenType);

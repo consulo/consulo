@@ -27,9 +27,8 @@ public class ParameterHintsPassFactory implements TextEditorHighlightingPassFact
     }
 
     @Override
-    @Nullable
     @RequiredReadAction
-    public TextEditorHighlightingPass createHighlightingPass(PsiFile psiFile, Editor editor) {
+    public @Nullable TextEditorHighlightingPass createHighlightingPass(PsiFile psiFile, Editor editor) {
         if (editor.isOneLineMode()) return null;
         long currentStamp = getCurrentModificationStamp(psiFile);
         Long savedStamp = editor.getUserData(PSI_MODIFICATION_STAMP);

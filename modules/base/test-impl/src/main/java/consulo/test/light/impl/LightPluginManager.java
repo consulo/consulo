@@ -59,9 +59,8 @@ public class LightPluginManager implements PluginManagerInternal {
     return null;
   }
 
-  @Nullable
   @Override
-  public PluginDescriptor getPlugin(Class<?> pluginClass) {
+  public @Nullable PluginDescriptor getPlugin(Class<?> pluginClass) {
     return myTestPlugin;
   }
 }

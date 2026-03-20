@@ -37,7 +37,6 @@ public interface DataManager {
    * @return {@link DataContext} constructed by the current focused component
    * @deprecated use either {@link #getDataContext(consulo.ui.Component)} or {@link #getDataContextFromFocus()}
    */
- 
   DataContext getDataContext();
 
  
@@ -46,7 +45,6 @@ public interface DataManager {
   /**
    * @return {@link DataContext} constructed by the currently focused component.
    */
- 
   Promise<DataContext> getDataContextFromFocusAsync();
 
  
@@ -55,7 +53,6 @@ public interface DataManager {
   /**
    * @return {@link DataContext} constructed by the specified <code>component</code>
    */
- 
   DataContext getDataContext(consulo.ui.@Nullable Component component);
 
   /**
@@ -70,8 +67,7 @@ public interface DataManager {
    * @param dataKey     key to find value by
    * @return value stored by {@link #saveInDataContext(DataContext, Key, Object)}
    */
-  @Nullable
-  <T> T loadFromDataContext(DataContext dataContext, Key<T> dataKey);
+  <T> @Nullable T loadFromDataContext(DataContext dataContext, Key<T> dataKey);
 
   // TODO [VISTALL] region AWT & Swing dependency
 

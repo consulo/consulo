@@ -22,6 +22,5 @@ import org.jspecify.annotations.Nullable;
  * @since 22.08.14
  */
 public interface OrderEntryWithTracking {
-  @Nullable
-  Object getEqualObject();
+  @Nullable Object getEqualObject();
 }

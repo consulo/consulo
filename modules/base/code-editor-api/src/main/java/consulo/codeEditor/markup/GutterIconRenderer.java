@@ -63,7 +63,6 @@ public abstract class GutterIconRenderer implements GutterMark, PossiblyDumbAwar
      *
      * @return the tooltip text, or empty if no tooltip is required.
      */
-    
     @Override
     public LocalizeValue getTooltipValue() {
         return LocalizeValue.empty();
@@ -107,7 +106,6 @@ public abstract class GutterIconRenderer implements GutterMark, PossiblyDumbAwar
      *
      * @return the priority value.
      */
-    
     public Alignment getAlignment() {
         return Alignment.CENTER;
     }

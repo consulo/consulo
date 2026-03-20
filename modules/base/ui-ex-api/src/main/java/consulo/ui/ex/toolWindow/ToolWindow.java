@@ -251,9 +251,8 @@ public interface ToolWindow extends BusyObject, UserDataHolder {
         throw new AbstractMethodError();
     }
 
-    @Nullable
     @RequiredUIAccess
-    Image getIcon();
+    @Nullable Image getIcon();
 
     /**
      * Sets new window icon.

@@ -51,7 +51,6 @@ public abstract class GistManager {
      * @param <Data>       the type of the data to cache
      * @return the gist object, where {@link VirtualFileGist#getFileData} can later be used to retrieve the cached data
      */
-    
     public abstract <Data> VirtualFileGist<Data> newVirtualFileGist(
         String id,
         int version,
@@ -69,7 +68,6 @@ public abstract class GistManager {
      * @param <Data>       the type of the data to cache
      * @return the gist object, where {@link PsiFileGist#getFileData} can later be used to retrieve the cached data
      */
-    
     public abstract <Data> PsiFileGist<Data> newPsiFileGist(
         String id,
         int version,

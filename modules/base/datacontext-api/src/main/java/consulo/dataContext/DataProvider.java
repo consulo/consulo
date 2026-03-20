@@ -37,12 +37,10 @@ public interface DataProvider {
      * @param dataId the data identifier for which the value is requested.
      * @return the value, or null if no value is available in the current context for this identifier.
      */
-    @Nullable
-    Object getData(Key<?> dataId);
+    @Nullable Object getData(Key<?> dataId);
 
-    @Nullable
     @SuppressWarnings("unchecked")
-    default <T> T getDataUnchecked(Key<T> key) {
+    default <T> @Nullable T getDataUnchecked(Key<T> key) {
         return (T)getData(key);
     }
 }

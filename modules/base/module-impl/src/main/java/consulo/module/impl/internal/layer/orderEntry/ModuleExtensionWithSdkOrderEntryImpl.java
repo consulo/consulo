@@ -142,9 +142,8 @@ public class ModuleExtensionWithSdkOrderEntryImpl extends LibraryOrderEntryBaseI
     return myModuleExtensionId;
   }
 
-  @Nullable
   @Override
-  public ModuleExtensionWithSdk<?> getModuleExtension() {
+  public @Nullable ModuleExtensionWithSdk<?> getModuleExtension() {
     ModuleExtension<?> extensionWithoutCheck = myModuleRootLayer.getExtensionWithoutCheck(myModuleExtensionId);
     if (!(extensionWithoutCheck instanceof ModuleExtensionWithSdk)) {
       return null;

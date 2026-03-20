@@ -34,19 +34,16 @@ public interface OrderRootsEnumerator {
   /**
    * @return all roots processed by this enumerator
    */
-  
   VirtualFile[] getRoots();
 
   /**
    * @return urls of all roots processed by this enumerator
    */
-  
   String[] getUrls();
 
   /**
    * @return list of path to all roots processed by this enumerator
    */
-  
   PathsList getPathsList();
 
   /**
@@ -62,7 +59,6 @@ public interface OrderRootsEnumerator {
    * option is used
    * @return this instance
    */
-  
   OrderRootsEnumerator usingCache();
 
   /**
@@ -72,7 +68,6 @@ public interface OrderRootsEnumerator {
    *
    * @return this instance
    */
-  
   OrderRootsEnumerator withoutSelfModuleOutput();
 
   /**
@@ -81,6 +76,5 @@ public interface OrderRootsEnumerator {
    * @param provider function to evaluate roots for an order entry
    * @return this instance
    */
-  
   OrderRootsEnumerator usingCustomRootProvider(Function<OrderEntry, VirtualFile[]> provider);
 }

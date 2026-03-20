@@ -54,10 +54,8 @@ public interface RunDashboardManager {
     
     RunnerAndConfigurationSettings getSettings();
 
-    @Nullable
-    RunContentDescriptor getDescriptor();
+    @Nullable RunContentDescriptor getDescriptor();
 
-    @Nullable
-    Content getContent();
+    @Nullable Content getContent();
   }
 }

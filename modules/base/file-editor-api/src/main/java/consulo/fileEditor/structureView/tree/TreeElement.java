@@ -30,7 +30,6 @@ public interface TreeElement {
    *
    * @return the element presentation.
    */
-  
   ItemPresentation getPresentation();
 
   /**
@@ -38,6 +37,5 @@ public interface TreeElement {
    *
    * @return the list of children.
    */
-  
   TreeElement[] getChildren();
 }

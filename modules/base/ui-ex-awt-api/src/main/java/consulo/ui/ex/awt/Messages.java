@@ -604,27 +604,24 @@ public class Messages {
     /**
      * @return trimmed input string or <code>null</code> if user cancelled dialog.
      */
-    @Nullable
     @RequiredUIAccess
-    public static String showPasswordDialog(String message, String title) {
+    public static @Nullable String showPasswordDialog(String message, String title) {
         return showPasswordDialog(null, message, title, null, null);
     }
 
     /**
      * @return trimmed input string or <code>null</code> if user cancelled dialog.
      */
-    @Nullable
     @RequiredUIAccess
-    public static String showPasswordDialog(Project project, String message, String title, @Nullable Image icon) {
+    public static @Nullable String showPasswordDialog(Project project, String message, String title, @Nullable Image icon) {
         return showPasswordDialog(project, message, title, icon, null);
     }
 
     /**
      * @return trimmed input string or <code>null</code> if user cancelled dialog.
      */
-    @Nullable
     @RequiredUIAccess
-    public static String showPasswordDialog(@Nullable Project project, String message, String title, @Nullable Image icon, @Nullable InputValidator validator) {
+    public static @Nullable String showPasswordDialog(@Nullable Project project, String message, String title, @Nullable Image icon, @Nullable InputValidator validator) {
         InputDialog dialog = project != null ? new PasswordInputDialog(project, message, title, icon, validator) : new PasswordInputDialog(message, title, icon, validator);
         dialog.show();
         return dialog.getInputString();
@@ -633,18 +630,16 @@ public class Messages {
     /**
      * @return trimmed input string or <code>null</code> if user cancelled dialog.
      */
-    @Nullable
     @RequiredUIAccess
-    public static String showInputDialog(@Nullable Project project, String message, String title, @Nullable Image icon) {
+    public static @Nullable String showInputDialog(@Nullable Project project, String message, String title, @Nullable Image icon) {
         return showInputDialog(project, message, title, icon, null, null);
     }
 
     /**
      * @return trimmed input string or <code>null</code> if user cancelled dialog.
      */
-    @Nullable
     @RequiredUIAccess
-    public static String showInputDialog(Component parent, String message, String title, @Nullable Image icon) {
+    public static @Nullable String showInputDialog(Component parent, String message, String title, @Nullable Image icon) {
         return showInputDialog(parent, message, title, icon, null, null);
     }
 
@@ -654,23 +649,20 @@ public class Messages {
      * @see #showInputDialog(Project, String, String, Image)
      * @see #showInputDialog(Component, String, String, Image)
      */
-    @Nullable
     @RequiredUIAccess
-    public static String showInputDialog(String message, String title, @Nullable Image icon) {
+    public static @Nullable String showInputDialog(String message, String title, @Nullable Image icon) {
         return showInputDialog(message, title, icon, null, null);
     }
 
-    @Nullable
     @RequiredUIAccess
-    public static String showInputDialog(@Nullable Project project, String message, String title, @Nullable Image icon, @Nullable String initialValue, @Nullable InputValidator validator) {
+    public static @Nullable String showInputDialog(@Nullable Project project, String message, String title, @Nullable Image icon, @Nullable String initialValue, @Nullable InputValidator validator) {
         InputDialog dialog = new InputDialog(project, message, title, icon, initialValue, validator);
         dialog.show();
         return dialog.getInputString();
     }
 
-    @Nullable
     @RequiredUIAccess
-    public static String showInputDialog(Project project,
+    public static @Nullable String showInputDialog(Project project,
                                          String message,
                                          String title,
                                          @Nullable Image icon,
@@ -695,9 +687,8 @@ public class Messages {
         return dialog.getInputString();
     }
 
-    @Nullable
     @RequiredUIAccess
-    public static String showInputDialog(Component parent, String message, String title, @Nullable Image icon, @Nullable String initialValue, @Nullable InputValidator validator) {
+    public static @Nullable String showInputDialog(Component parent, String message, String title, @Nullable Image icon, @Nullable String initialValue, @Nullable InputValidator validator) {
         InputDialog dialog = new InputDialog(parent, message, title, icon, initialValue, validator);
         dialog.show();
         return dialog.getInputString();
@@ -709,17 +700,15 @@ public class Messages {
      * @see #showInputDialog(Project, String, String, Image, String, InputValidator)
      * @see #showInputDialog(Component, String, String, Image, String, InputValidator)
      */
-    @Nullable
     @RequiredUIAccess
-    public static String showInputDialog(String message, String title, @Nullable Image icon, @Nullable String initialValue, @Nullable InputValidator validator) {
+    public static @Nullable String showInputDialog(String message, String title, @Nullable Image icon, @Nullable String initialValue, @Nullable InputValidator validator) {
         InputDialog dialog = new InputDialog(message, title, icon, initialValue, validator);
         dialog.show();
         return dialog.getInputString();
     }
 
-    @Nullable
     @RequiredUIAccess
-    public static String showMultilineInputDialog(Project project, String message, String title, @Nullable String initialValue, @Nullable Image icon, @Nullable InputValidator validator) {
+    public static @Nullable String showMultilineInputDialog(Project project, String message, String title, @Nullable String initialValue, @Nullable Image icon, @Nullable InputValidator validator) {
         InputDialog dialog = new MultilineInputDialog(project, message, title, icon, initialValue, validator, new String[]{OK_BUTTON, CANCEL_BUTTON}, 0);
         dialog.show();
         return dialog.getInputString();
@@ -740,9 +729,8 @@ public class Messages {
         return new Pair<String, Boolean>(dialog.getInputString(), dialog.isChecked());
     }
 
-    @Nullable
     @RequiredUIAccess
-    public static String showEditableChooseDialog(String message, String title, @Nullable Image icon, String[] values, String initialValue, @Nullable InputValidator validator) {
+    public static @Nullable String showEditableChooseDialog(String message, String title, @Nullable Image icon, String[] values, String initialValue, @Nullable InputValidator validator) {
         ChooseDialog dialog = new ChooseDialog(message, title, icon, values, initialValue);
         dialog.setValidator(validator);
         dialog.getComboBox().setEditable(true);

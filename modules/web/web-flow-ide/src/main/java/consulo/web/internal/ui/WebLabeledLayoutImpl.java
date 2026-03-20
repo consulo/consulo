@@ -71,9 +71,8 @@ public class WebLabeledLayoutImpl extends VaadinComponentDelegate<WebLabeledLayo
             }
         }
 
-        @Nullable
         @Override
-        public Component toUIComponent() {
+        public @Nullable Component toUIComponent() {
             return WebLabeledLayoutImpl.this;
         }
     }

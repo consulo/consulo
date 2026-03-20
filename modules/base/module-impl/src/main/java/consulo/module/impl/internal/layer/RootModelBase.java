@@ -145,27 +145,23 @@ public abstract class RootModelBase implements ModuleRootModel {
     return getCurrentLayer().getOrderEntries();
   }
 
-  @Nullable
   @Override
-  public <T extends ModuleExtension> T getExtension(Class<T> clazz) {
+  public <T extends ModuleExtension> @Nullable T getExtension(Class<T> clazz) {
     return getCurrentLayer().getExtension(clazz);
   }
 
-  @Nullable
   @Override
-  public <T extends ModuleExtension> T getExtension(String key) {
+  public <T extends ModuleExtension> @Nullable T getExtension(String key) {
     return getCurrentLayer().getExtension(key);
   }
 
-  @Nullable
   @Override
-  public <T extends ModuleExtension> T getExtensionWithoutCheck(Class<T> clazz) {
+  public <T extends ModuleExtension> @Nullable T getExtensionWithoutCheck(Class<T> clazz) {
     return getCurrentLayer().getExtensionWithoutCheck(clazz);
   }
 
-  @Nullable
   @Override
-  public <T extends ModuleExtension> T getExtensionWithoutCheck(String key) {
+  public <T extends ModuleExtension> @Nullable T getExtensionWithoutCheck(String key) {
     return getCurrentLayer().getExtensionWithoutCheck(key);
   }
 

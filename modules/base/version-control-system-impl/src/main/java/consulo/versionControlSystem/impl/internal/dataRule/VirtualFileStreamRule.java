@@ -33,9 +33,8 @@ public class VirtualFileStreamRule implements GetDataRule<Stream<VirtualFile>> {
     return VcsDataKeys.VIRTUAL_FILE_STREAM;
   }
 
-  @Nullable
   @Override
-  public Stream<VirtualFile> getData(DataProvider dataProvider) {
+  public @Nullable Stream<VirtualFile> getData(DataProvider dataProvider) {
     VirtualFile[] files = dataProvider.getDataUnchecked(VirtualFile.KEY_OF_ARRAY);
     if (files != null) {
       return Stream.of(files);

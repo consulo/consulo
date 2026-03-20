@@ -26,8 +26,7 @@ import java.util.List;
  * @author yole
  */
 public interface ChangeListFilteringStrategy {
-  @Nullable
-  JComponent getFilterUI();
+  @Nullable JComponent getFilterUI();
 
   void setFilterBase(List<CommittedChangeList> changeLists);
 

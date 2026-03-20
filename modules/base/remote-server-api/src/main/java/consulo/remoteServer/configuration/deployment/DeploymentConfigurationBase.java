@@ -20,9 +20,8 @@ public class DeploymentConfigurationBase<Self extends DeploymentConfigurationBas
 
     }
 
-    @Nullable
     @Override
-    public Self getState() {
+    public @Nullable Self getState() {
         return (Self) this;
     }
 

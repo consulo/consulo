@@ -140,9 +140,8 @@ public final class XValueNodePresentationConfigurator {
             this.valuePresenter = valuePresenter;
         }
 
-        @Nullable
         @Override
-        public String getType() {
+        public @Nullable String getType() {
             return myType;
         }
 

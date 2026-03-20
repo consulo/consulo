@@ -91,8 +91,7 @@ public interface SearchEverywhereContributor<Item> extends PossiblyDumbAware {
     
     ListCellRenderer<? super Item> getElementsRenderer();
 
-    @Nullable
-    Object getDataForItem(Item element, Key dataId);
+    @Nullable Object getDataForItem(Item element, Key dataId);
 
     
     default String filterControlSymbols(String pattern) {

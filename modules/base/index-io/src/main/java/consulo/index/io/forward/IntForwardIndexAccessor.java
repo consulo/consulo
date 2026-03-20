@@ -15,16 +15,14 @@ public interface IntForwardIndexAccessor<Key, Value> extends ForwardIndexAccesso
     return getDiffBuilderFromInt(inputId, sequence == null ? 0 : AbstractForwardIndexAccessor.deserializeFromByteSeq(sequence, EnumeratorIntegerDescriptor.INSTANCE));
   }
 
-  @Nullable
   @Override
-  default ByteArraySequence serializeIndexedData(InputData<Key, Value> data) throws IOException {
+  default @Nullable ByteArraySequence serializeIndexedData(InputData<Key, Value> data) throws IOException {
     return AbstractForwardIndexAccessor.serializeToByteSeq(serializeIndexedDataToInt(data), EnumeratorIntegerDescriptor.INSTANCE, 8);
   }
 
   /**
    * creates a diff builder for given inputId.
    */
-  
   InputDataDiffBuilder<Key, Value> getDiffBuilderFromInt(int inputId, int value) throws IOException;
 
   int serializeIndexedDataToInt(InputData<Key, Value> data);

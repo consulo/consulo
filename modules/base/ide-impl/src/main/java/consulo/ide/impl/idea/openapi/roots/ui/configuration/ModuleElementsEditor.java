@@ -107,9 +107,8 @@ public abstract class ModuleElementsEditor implements ModuleConfigurationEditor 
     return (JComponent)TargetAWT.to(createUIComponentImpl(parentUIDisposable));
   }
 
-  @Nullable
   @RequiredUIAccess
-  protected Component createUIComponentImpl(Disposable parentUIDisposable) {
+  protected @Nullable Component createUIComponentImpl(Disposable parentUIDisposable) {
     throw new UnsupportedOperationException();
   }
 }

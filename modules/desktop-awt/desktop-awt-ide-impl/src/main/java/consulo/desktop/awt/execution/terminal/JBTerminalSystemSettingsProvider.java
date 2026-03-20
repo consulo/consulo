@@ -414,9 +414,8 @@ public class JBTerminalSystemSettingsProvider extends DefaultTabbedSettingsProvi
             getGlobal().setLineSpacing(lineSpacing);
         }
 
-        @Nullable
         @Override
-        public MyColorSchemeDelegate clone() {
+        public @Nullable MyColorSchemeDelegate clone() {
             return null;
         }
 

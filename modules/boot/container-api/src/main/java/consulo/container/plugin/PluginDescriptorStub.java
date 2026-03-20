@@ -25,33 +25,28 @@ public abstract class PluginDescriptorStub implements PluginDescriptor {
     throw new UnsupportedOperationException();
   }
 
-  @Nullable
   @Override
-  public File getPath() {
+  public @Nullable File getPath() {
     return null;
   }
 
-  @Nullable
   @Override
-  public Path getNioPath() {
+  public @Nullable Path getNioPath() {
     return null;
   }
 
-  @Nullable
   @Override
-  public String getDescription() {
+  public @Nullable String getDescription() {
     return null;
   }
 
-  @Nullable
   @Override
-  public String getChangeNotes() {
+  public @Nullable String getChangeNotes() {
     return null;
   }
 
-  @Nullable
   @Override
-  public String getName() {
+  public @Nullable String getName() {
     return null;
   }
 
@@ -70,33 +65,28 @@ public abstract class PluginDescriptorStub implements PluginDescriptor {
     return PluginId.EMPTY_ARRAY;
   }
 
-  @Nullable
   @Override
-  public String getVendor() {
+  public @Nullable String getVendor() {
     return null;
   }
 
-  @Nullable
   @Override
-  public String getVersion() {
+  public @Nullable String getVersion() {
     return null;
   }
 
-  @Nullable
   @Override
-  public String getPlatformVersion() {
+  public @Nullable String getPlatformVersion() {
     return null;
   }
 
-  @Nullable
   @Override
-  public String getResourceBundleBaseName() {
+  public @Nullable String getResourceBundleBaseName() {
     return null;
   }
 
-  @Nullable
   @Override
-  public String getLocalization() {
+  public @Nullable String getLocalization() {
     return null;
   }
 
@@ -110,15 +100,13 @@ public abstract class PluginDescriptorStub implements PluginDescriptor {
     return Collections.emptyList();
   }
 
-  @Nullable
   @Override
-  public PluginPermissionDescriptor getPermissionDescriptor(PluginPermissionType permissionType) {
+  public @Nullable PluginPermissionDescriptor getPermissionDescriptor(PluginPermissionType permissionType) {
     return null;
   }
 
-  @Nullable
   @Override
-  public ModuleLayer getModuleLayer() {
+  public @Nullable ModuleLayer getModuleLayer() {
     return null;
   }
 
@@ -132,10 +120,9 @@ public abstract class PluginDescriptorStub implements PluginDescriptor {
     return ArrayUtilRt.EMPTY_BYTE_ARRAY;
   }
 
-  @Nullable
   @Override
   @SuppressWarnings("unchecked")
-  public <K, V> V getUserData(K key) {
+  public <K, V> @Nullable V getUserData(K key) {
     return (V)myUserData.get(key);
   }
 
@@ -150,21 +137,18 @@ public abstract class PluginDescriptorStub implements PluginDescriptor {
     return value;
   }
 
-  @Nullable
   @Override
-  public String getVendorEmail() {
+  public @Nullable String getVendorEmail() {
     return null;
   }
 
-  @Nullable
   @Override
-  public String getVendorUrl() {
+  public @Nullable String getVendorUrl() {
     return null;
   }
 
-  @Nullable
   @Override
-  public String getUrl() {
+  public @Nullable String getUrl() {
     return null;
   }
 
@@ -203,9 +187,8 @@ public abstract class PluginDescriptorStub implements PluginDescriptor {
     return false;
   }
 
-  @Nullable
   @Override
-  public String getChecksumSHA3_256() {
+  public @Nullable String getChecksumSHA3_256() {
     return null;
   }
 }

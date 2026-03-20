@@ -31,9 +31,8 @@ class SelectionModelWindow implements SelectionModel {
     return myDocument.hostToInjected(myHostModel.getSelectionStart());
   }
 
-  @Nullable
   @Override
-  public VisualPosition getSelectionStartPosition() {
+  public @Nullable VisualPosition getSelectionStartPosition() {
     return myInjectedEditor.offsetToVisualPosition(getSelectionStart());
   }
 
@@ -42,9 +41,8 @@ class SelectionModelWindow implements SelectionModel {
     return myDocument.hostToInjected(myHostModel.getSelectionEnd());
   }
 
-  @Nullable
   @Override
-  public VisualPosition getSelectionEndPosition() {
+  public @Nullable VisualPosition getSelectionEndPosition() {
     return myInjectedEditor.offsetToVisualPosition(getSelectionEnd());
   }
 
@@ -53,9 +51,8 @@ class SelectionModelWindow implements SelectionModel {
     return myHostModel.getSelectedText();
   }
 
-  @Nullable
   @Override
-  public String getSelectedText(boolean allCarets) {
+  public @Nullable String getSelectedText(boolean allCarets) {
     return myHostModel.getSelectedText(allCarets);
   }
 
@@ -64,9 +61,8 @@ class SelectionModelWindow implements SelectionModel {
     return myDocument.hostToInjected(myHostModel.getLeadSelectionOffset());
   }
 
-  @Nullable
   @Override
-  public VisualPosition getLeadSelectionPosition() {
+  public @Nullable VisualPosition getLeadSelectionPosition() {
     return myHostModel.getLeadSelectionPosition();
   }
 

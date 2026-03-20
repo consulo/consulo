@@ -22,7 +22,6 @@ package consulo.fileEditor.structureView.tree;
  * @see TreeModel#getGroupers()
  * @see TreeModel#getSorters()
  */
-
 public interface TreeAction {
   /**
    * Returns the presentation for the action.
@@ -30,7 +29,6 @@ public interface TreeAction {
    * @return the action presentation.
    * @see ActionPresentationData#ActionPresentationData(String, String, consulo.ui.image.Image)
    */
-  
   ActionPresentation getPresentation();
 
   /**
@@ -38,14 +36,12 @@ public interface TreeAction {
    *
    * @return the action identifier.
    */
-  
   String getName();
 
   /**
    * Return identifier which will be store state in {@link consulo.component.PropertiesComponent}
    * @return property identifier
    */
-  
   default String getSerializePropertyName() {
     return getName();
   }

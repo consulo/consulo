@@ -224,8 +224,7 @@ public class RemoteServerCombo<S extends ServerConfiguration> extends ComboboxWi
     }
 
     public interface ServerItem {
-        @Nullable
-        String getServerName();
+        @Nullable String getServerName();
 
         void render(SimpleColoredComponent ui);
 
@@ -233,8 +232,7 @@ public class RemoteServerCombo<S extends ServerConfiguration> extends ComboboxWi
 
         void onBrowseAction();
 
-        @Nullable
-        RemoteServer<?> findRemoteServer();
+        @Nullable RemoteServer<?> findRemoteServer();
     }
 
     /**

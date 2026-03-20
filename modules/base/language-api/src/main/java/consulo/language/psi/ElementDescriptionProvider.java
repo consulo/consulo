@@ -30,6 +30,5 @@ import org.jspecify.annotations.Nullable;
 public interface ElementDescriptionProvider {
     ExtensionPointName<ElementDescriptionProvider> EP_NAME = ExtensionPointName.create(ElementDescriptionProvider.class);
 
-    @Nullable
-    String getElementDescription(PsiElement element, ElementDescriptionLocation location);
+    @Nullable String getElementDescription(PsiElement element, ElementDescriptionLocation location);
 }

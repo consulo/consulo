@@ -23,9 +23,8 @@ import jakarta.inject.Singleton;
 @ServiceImpl
 public class PsiNavigationSupportImpl implements PsiNavigationSupport {
     @RequiredReadAction
-    @Nullable
     @Override
-    public Navigatable getDescriptor(PsiElement element) {
+    public @Nullable Navigatable getDescriptor(PsiElement element) {
         if (!canNavigate(element)) {
             return null;
         }

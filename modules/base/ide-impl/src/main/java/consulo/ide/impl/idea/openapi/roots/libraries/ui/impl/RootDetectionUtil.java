@@ -200,9 +200,8 @@ public class RootDetectionUtil {
             return item;
         }
 
-        @Nullable
         @Override
-        protected Image getItemIcon(String item) {
+        protected @Nullable Image getItemIcon(String item) {
             return null;
         }
     }

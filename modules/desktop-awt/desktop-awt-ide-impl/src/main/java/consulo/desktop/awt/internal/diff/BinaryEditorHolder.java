@@ -72,9 +72,8 @@ public class BinaryEditorHolder extends EditorHolder {
     myEditor.getComponent().addFocusListener(listener);
   }
 
-  @Nullable
   @Override
-  public JComponent getPreferredFocusedComponent() {
+  public @Nullable JComponent getPreferredFocusedComponent() {
     return myEditor.getPreferredFocusedComponent();
   }
 

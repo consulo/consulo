@@ -148,7 +148,6 @@ public final class PopupNavigationUtil {
      *                              {@code false} by default
      * @return
      */
-    
     public static JBPopup getRelatedItemsPopup(List<? extends GotoRelatedItem> items, String title, boolean showContainingModules) {
         Object[] elements = new Object[items.size()];
         //todo[nik] move presentation logic to GotoRelatedItem class

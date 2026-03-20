@@ -173,15 +173,13 @@ public class UsageInfo {
         myDynamicUsage = dynamicUsage;
     }
 
-    @Nullable
     @RequiredReadAction
-    public PsiElement getElement() { // SmartPointer is used to fix SCR #4572, hotya eto krivo i nado vse perepisat'
+    public @Nullable PsiElement getElement() { // SmartPointer is used to fix SCR #4572, hotya eto krivo i nado vse perepisat'
         return mySmartPointer.getElement();
     }
 
-    @Nullable
     @RequiredReadAction
-    public PsiReference getReference() {
+    public @Nullable PsiReference getReference() {
         PsiElement element = getElement();
         return element == null ? null : element.getReference();
     }
@@ -189,9 +187,8 @@ public class UsageInfo {
     /**
      * @return null means range is invalid
      */
-    @Nullable
     @RequiredReadAction
-    public ProperTextRange getRangeInElement() {
+    public @Nullable ProperTextRange getRangeInElement() {
         PsiElement element = getElement();
         if (element == null) {
             return null;
@@ -284,9 +281,8 @@ public class UsageInfo {
         return psiFile != null && psiFile.getFileType().isBinary();
     }
 
-    @Nullable
     @RequiredReadAction
-    public Segment getSegment() {
+    public @Nullable Segment getSegment() {
         PsiElement element = getElement();
         if (element == null
             // in case of binary file
@@ -384,9 +380,8 @@ public class UsageInfo {
         return reference == null ? super.toString() : reference.getCanonicalText() + " (" + reference.getClass() + ")";
     }
 
-    @Nullable
     @RequiredReadAction
-    public PsiFile getFile() {
+    public @Nullable PsiFile getFile() {
         return mySmartPointer.getContainingFile();
     }
 
@@ -403,9 +398,8 @@ public class UsageInfo {
      *
      * @return null means could not copy because info is no longer valid
      */
-    @Nullable
     @RequiredReadAction
-    public UsageInfo copy() {
+    public @Nullable UsageInfo copy() {
         PsiElement element = mySmartPointer.getElement();
         SmartPointerManager smartPointerManager = SmartPointerManager.getInstance(getProject());
         PsiFile containingFile = myPsiFileRange == null ? null : myPsiFileRange.getContainingFile();

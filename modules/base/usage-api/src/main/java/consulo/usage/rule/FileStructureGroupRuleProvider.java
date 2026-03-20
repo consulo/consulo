@@ -26,6 +26,5 @@ import org.jspecify.annotations.Nullable;
 public interface FileStructureGroupRuleProvider {
     ExtensionPointName<FileStructureGroupRuleProvider> EP_NAME = ExtensionPointName.create(FileStructureGroupRuleProvider.class);
 
-    @Nullable
-    UsageGroupingRule getUsageGroupingRule(Project project);
+    @Nullable UsageGroupingRule getUsageGroupingRule(Project project);
 }

@@ -35,9 +35,8 @@ class TagBinding extends BasePrimitiveBinding implements MultiNodeBinding {
     myTextIfEmpty = tagAnnotation.textIfEmpty();
   }
 
-  @Nullable
   @Override
-  public Object serialize(Object o, @Nullable Object context, SerializationFilter filter) {
+  public @Nullable Object serialize(Object o, @Nullable Object context, SerializationFilter filter) {
     Object value = myAccessor.read(o);
     Element serialized = new Element(myName);
     if (value == null) {
@@ -56,9 +55,8 @@ class TagBinding extends BasePrimitiveBinding implements MultiNodeBinding {
     return serialized;
   }
 
-  @Nullable
   @Override
-  public Object deserializeList(Object context, List<Element> elements) {
+  public @Nullable Object deserializeList(Object context, List<Element> elements) {
     List<Element> children;
     if (elements.size() == 1) {
       children = elements.get(0).getChildren();

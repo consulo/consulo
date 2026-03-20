@@ -97,8 +97,7 @@ public interface HighlightInfoType {
     TextAttributesKey getAttributesKey();
 
     interface Iconable {
-        @Nullable
-        Image getIcon();
+        @Nullable Image getIcon();
     }
 
     interface UpdateOnTypingSuppressible {

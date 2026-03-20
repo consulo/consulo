@@ -32,9 +32,7 @@ import org.jspecify.annotations.Nullable;
 public interface PackageSetParserExtension {
     ExtensionPointName<PackageSetParserExtension> EP_NAME = ExtensionPointName.create(PackageSetParserExtension.class);
 
-    @Nullable
-    PackageSet parsePackageSet(Lexer lexer, String scope, String modulePattern) throws ParsingException;
+    @Nullable PackageSet parsePackageSet(Lexer lexer, String scope, String modulePattern) throws ParsingException;
 
-    @Nullable
-    String parseScope(Lexer lexer);
+    @Nullable String parseScope(Lexer lexer);
 }

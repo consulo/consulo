@@ -28,6 +28,5 @@ public interface ByteBackedContentRevision extends ContentRevision {
    * @return content of the revision
    * @throws VcsException in case when content retrieval fails
    */
-  @Nullable
-  byte[] getContentAsBytes() throws VcsException;
+  @Nullable byte[] getContentAsBytes() throws VcsException;
 }

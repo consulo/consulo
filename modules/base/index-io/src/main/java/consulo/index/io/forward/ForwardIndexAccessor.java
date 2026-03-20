@@ -11,12 +11,10 @@ public interface ForwardIndexAccessor<Key, Value> {
   /**
    * creates a diff builder for given inputId.
    */
-  
   InputDataDiffBuilder<Key, Value> getDiffBuilder(int inputId, @Nullable ByteArraySequence sequence) throws IOException;
 
   /**
    * serialize indexed data to forward index format.
    */
-  @Nullable
-  ByteArraySequence serializeIndexedData(InputData<Key, Value> data) throws IOException;
+  @Nullable ByteArraySequence serializeIndexedData(InputData<Key, Value> data) throws IOException;
 }

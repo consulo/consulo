@@ -33,7 +33,6 @@ public interface ListPopupStep<T> extends PopupStep<T> {
      *
      * @return the list of values to be displayed in the list popup.
      */
-    
     List<T> getValues();
 
     /**
@@ -50,8 +49,7 @@ public interface ListPopupStep<T> extends PopupStep<T> {
      * @param aValue the value for which the icon is requested.
      * @return the icon to display, or null if no icon is necessary.
      */
-    @Nullable
-    Image getIconFor(T aValue);
+    @Nullable Image getIconFor(T aValue);
 
     default @Nullable Image getSelectedIconFor(T value) {
         return getIconFor(value);
@@ -63,7 +61,6 @@ public interface ListPopupStep<T> extends PopupStep<T> {
      * @param value the value for which the text is requested.
      * @return the text to display.
      */
-    
     String getTextFor(T value);
 
     /**
@@ -72,9 +69,8 @@ public interface ListPopupStep<T> extends PopupStep<T> {
      * @param value the value for which the separator is requested.
      * @return the separator to display, or null if no separator is necessary.
      */
-    @Nullable
     @Deprecated
-    default ListSeparator getSeparatorAbove(T value) {
+    default @Nullable ListSeparator getSeparatorAbove(T value) {
         return null;
     }
 

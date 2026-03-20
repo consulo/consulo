@@ -83,9 +83,8 @@ public class MergeLineFragmentImpl implements MergeLineFragment {
     return side.select(myEndLine1, myEndLine2, myEndLine3);
   }
 
-  @Nullable
   @Override
-  public List<MergeWordFragment> getInnerFragments() {
+  public @Nullable List<MergeWordFragment> getInnerFragments() {
     return myInnerFragments;
   }
 }

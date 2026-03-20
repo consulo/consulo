@@ -69,9 +69,8 @@ public class EditorColorsSchemeImpl extends AbstractColorsScheme implements Exte
     return myParentScheme.getAttributes(key);
   }
 
-  @Nullable
   @Override
-  public ColorValue getColor(EditorColorKey key) {
+  public @Nullable ColorValue getColor(EditorColorKey key) {
     if (myColorsMap.containsKey(key)) {
       return myColorsMap.get(key);
     }

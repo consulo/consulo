@@ -60,9 +60,8 @@ public class ModuleDeploymentSourceImpl implements ModuleDeploymentSource {
         return ArrayUtil.getFirstElement(ModuleRootManager.getInstance(module).getContentRoots());
     }
 
-    @Nullable
     @Override
-    public File getFile() {
+    public @Nullable File getFile() {
         VirtualFile contentRoot = getContentRoot();
         if (contentRoot == null) {
             return null;
@@ -70,9 +69,8 @@ public class ModuleDeploymentSourceImpl implements ModuleDeploymentSource {
         return VirtualFileUtil.virtualToIoFile(contentRoot);
     }
 
-    @Nullable
     @Override
-    public String getFilePath() {
+    public @Nullable String getFilePath() {
         File file = getFile();
         if (file == null) {
             return null;
@@ -86,9 +84,8 @@ public class ModuleDeploymentSourceImpl implements ModuleDeploymentSource {
         return LocalizeValue.of(myPointer.getName());
     }
 
-    @Nullable
     @Override
-    public Image getIcon() {
+    public @Nullable Image getIcon() {
         return PlatformIconGroup.nodesModule();
     }
 

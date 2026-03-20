@@ -85,7 +85,6 @@ public final class EnvironmentUtil {
    *
    * @return unmodifiable map of the process environment.
    */
-  
   public static Map<String, String> getEnvironmentMap() {
     CompletableFuture<Map<String, String>> getter = ourEnvGetter.get();
     if (getter == null) {
@@ -331,7 +330,6 @@ public final class EnvironmentUtil {
      * @see #runProcessAndReadOutputAndEnvs(List, Path, Path)
      * @see #runProcessAndReadOutputAndEnvs(List, Path, Map, Path)
      */
-    
     protected final Map.Entry<String, Map<String, String>> runProcessAndReadOutputAndEnvs(List<String> command,
                                                                                           @Nullable Path workingDir,
                                                                                           Consumer<Map<String, String>> scriptEnvironmentProcessor,
@@ -374,8 +372,7 @@ public final class EnvironmentUtil {
     }
 
     protected
-    @Nullable
-    String getShell() {
+    @Nullable String getShell() {
       return System.getenv(SHELL_VARIABLE_NAME);
     }
   }
@@ -389,7 +386,6 @@ public final class EnvironmentUtil {
    * @param isCommand     true iff command should accept a command, instead of script name, usually {@code -c} parameter
    * @return list of commands for starting a process, e.g. {@code /bin/bash -l -i -c}
    */
-  
   public static List<String> buildShellProcessCommand(String shellScript, boolean isLogin, boolean isInteractive, boolean isCommand) {
     List<String> commands = new ArrayList<>();
     commands.add(shellScript);
@@ -479,8 +475,7 @@ public final class EnvironmentUtil {
    * @return the exit code of the process if it has already terminated, or it has terminated within the timeout; or {@code null} otherwise
    */
   private static
-  @Nullable
-  Integer waitFor(Process process, long timeoutMillis) {
+  @Nullable Integer waitFor(Process process, long timeoutMillis) {
     try {
       if (process.waitFor(timeoutMillis, TimeUnit.MILLISECONDS)) {
         return process.exitValue();

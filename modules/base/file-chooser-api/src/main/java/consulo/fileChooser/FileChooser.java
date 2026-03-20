@@ -76,7 +76,6 @@ public final class FileChooser {
    * @param parent     parent component
    * @param toSelect   file to preselect
    */
-  
   @RequiredUIAccess
   public static AsyncResult<VirtualFile[]> chooseFiles(FileChooserDescriptor descriptor, @Nullable ComponentManager project, @Nullable Component parent, @Nullable VirtualFile toSelect) {
     FileChooserFactory factory = FileChooserFactory.getInstance();
@@ -92,7 +91,6 @@ public final class FileChooser {
    * @param parent     parent component
    * @param toSelect   file to preselect
    */
-  
   @RequiredUIAccess
   public static AsyncResult<VirtualFile> chooseFile(FileChooserDescriptor descriptor, @Nullable ComponentManager project, @Nullable Component parent, @Nullable VirtualFile toSelect) {
     LOG.assertTrue(!descriptor.isChooseMultiple());

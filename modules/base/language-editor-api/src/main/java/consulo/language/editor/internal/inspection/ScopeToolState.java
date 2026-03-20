@@ -104,9 +104,8 @@ public class ScopeToolState {
     myLevel = level;
   }
 
-  @Nullable
   @RequiredUIAccess
-  public Component getConfigurablePanel(Disposable parentDisposable) {
+  public @Nullable Component getConfigurablePanel(Disposable parentDisposable) {
     if (myConfigurableRef != null) {
       UnnamedConfigurable unnamedConfigurable = myConfigurableRef.get();
       return unnamedConfigurable == null ? null : unnamedConfigurable.createUIComponent(parentDisposable);

@@ -20,11 +20,9 @@ import org.jspecify.annotations.Nullable;
 public interface IndexPatternBuilder {
   ExtensionPointName<IndexPatternBuilder> EP_NAME = ExtensionPointName.create(IndexPatternBuilder.class);
 
-  @Nullable
-  Lexer getIndexingLexer(PsiFile file);
+  @Nullable Lexer getIndexingLexer(PsiFile file);
 
-  @Nullable
-  TokenSet getCommentTokenSet(PsiFile file);
+  @Nullable TokenSet getCommentTokenSet(PsiFile file);
 
   int getCommentStartDelta(IElementType tokenType);
 
@@ -34,7 +32,6 @@ public interface IndexPatternBuilder {
    * Characters (in addition to whitespace) which can be present in the indent section of pattern occurrence's continuation
    * on subsequent line
    */
-  
   default String getCharsAllowedInContinuationPrefix(IElementType tokenType) {
     return "";
   }

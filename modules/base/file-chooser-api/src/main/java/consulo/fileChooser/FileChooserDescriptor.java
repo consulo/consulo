@@ -131,10 +131,9 @@ public class FileChooserDescriptor extends UserDataHolderBase implements Cloneab
     return myTitleValue;
   }
 
-  @Nullable
   @Deprecated
   @DeprecationInfo("See #getTitleValue()")
-  public String getTitle() {
+  public @Nullable String getTitle() {
     return StringUtil.nullize(myTitleValue.getValue());
   }
 
@@ -178,10 +177,9 @@ public class FileChooserDescriptor extends UserDataHolderBase implements Cloneab
     return this;
   }
 
-  @Nullable
   @Deprecated
   @DeprecationInfo("See #getDescriptionValue()")
-  public String getDescription() {
+  public @Nullable String getDescription() {
     return StringUtil.nullize(myDescriptionValue.get());
   }
 

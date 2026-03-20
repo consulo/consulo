@@ -188,10 +188,9 @@ public class UsageInfo2UsageAdapter implements UsageInModule, UsageInfoAdapter, 
         return psiFile == null || psiFile.isValid() && !psiFile.isWritable();
     }
 
-    @Nullable
     @Override
     @RequiredReadAction
-    public FileEditorLocation getLocation() {
+    public @Nullable FileEditorLocation getLocation() {
         VirtualFile virtualFile = getFile();
         if (virtualFile == null) {
             return null;
@@ -586,9 +585,8 @@ public class UsageInfo2UsageAdapter implements UsageInModule, UsageInfoAdapter, 
         return myUsageInfo.getTooltipText();
     }
 
-    @Nullable
     @RequiredReadAction
-    public UsageType getUsageType() {
+    public @Nullable UsageType getUsageType() {
         UsageType usageType = myUsageType;
 
         if (usageType != null) {

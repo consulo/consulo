@@ -93,7 +93,6 @@ public interface CaretModel {
      *
      * @return the caret position.
      */
-    
     LogicalPosition getLogicalPosition();
 
     /**
@@ -101,7 +100,6 @@ public interface CaretModel {
      *
      * @return the caret position.
      */
-    
     VisualPosition getVisualPosition();
 
     /**
@@ -171,13 +169,11 @@ public interface CaretModel {
      * {@link CaretAction#perform(Caret)} method instead of this method, as the definition of current caret (as
      * well as caret instance operated on by model methods) can potentially change.
      */
-    
     Caret getCurrentCaret();
 
     /**
      * Returns the 'primary' caret.
      */
-    
     Caret getPrimaryCaret();
 
     /**
@@ -188,7 +184,6 @@ public interface CaretModel {
     /**
      * Returns all carets currently existing in the document, ordered by their visual position in editor.
      */
-    
     List<Caret> getAllCarets();
 
     /**
@@ -258,7 +253,6 @@ public interface CaretModel {
      *
      * @see #setCaretsAndSelections(List)
      */
-    
     List<CaretState> getCaretsAndSelections();
 
     /**

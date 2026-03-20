@@ -88,9 +88,8 @@ public class ModuleConfigurable extends ProjectStructureElementConfigurable<Modu
         // TODO [VISTALL] myContext.getDaemonAnalyzer().queueUpdateForAllElementsWithErrors();
     }
 
-    @Nullable
     @Override
-    protected JComponent createTopRightComponent(JTextField nameField) {
+    protected @Nullable JComponent createTopRightComponent(JTextField nameField) {
         return createLayerConfigurationPanel(getModuleEditor());
     }
 

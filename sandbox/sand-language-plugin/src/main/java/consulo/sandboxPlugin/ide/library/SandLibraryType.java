@@ -50,21 +50,18 @@ public class SandLibraryType extends ModuleAwareLibraryType<DummyLibraryProperti
     });
   }
 
-  @Nullable
   @Override
-  public String getCreateActionName() {
+  public @Nullable String getCreateActionName() {
     return "test";
   }
 
-  @Nullable
   @Override
-  public LibraryPropertiesEditor createPropertiesEditor(LibraryEditorComponent<DummyLibraryProperties> editorComponent) {
+  public @Nullable LibraryPropertiesEditor createPropertiesEditor(LibraryEditorComponent<DummyLibraryProperties> editorComponent) {
     return null;
   }
 
-  @Nullable
   @Override
-  public Image getIcon() {
+  public @Nullable Image getIcon() {
     return AllIcons.Nodes.Static;
   }
 

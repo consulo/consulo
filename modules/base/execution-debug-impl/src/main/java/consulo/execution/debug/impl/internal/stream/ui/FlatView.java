@@ -147,9 +147,8 @@ public class FlatView extends JPanel {
         List<ValueWithPositionImpl> nextValues = nextController.getTrace().stream().map(this::getValue).collect(Collectors.toList());
 
         return new LinkedValuesWithPositions(prevValues, nextValues, new LinkedValuesMapping() {
-            @Nullable
             @Override
-            public List<ValueWithPosition> getLinkedValues(ValueWithPosition value) {
+            public @Nullable List<ValueWithPosition> getLinkedValues(ValueWithPosition value) {
                 return resultMapping.get(value);
             }
         });

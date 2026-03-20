@@ -30,6 +30,5 @@ public interface ExternallyDefinedPsiElement extends PsiElement {
    *
    * @return PSI element to which problem descriptions should be redirected
    */
-  @Nullable
-  PsiElement getProblemTarget();
+  @Nullable PsiElement getProblemTarget();
 }

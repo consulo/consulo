@@ -22,6 +22,5 @@ import org.jspecify.annotations.Nullable;
  * @author Sergey Simonchik
  */
 public interface TestProxyFilterProvider {
-    @Nullable
-    Filter getFilter(String nodeType, String nodeName, @Nullable String nodeArguments);
+    @Nullable Filter getFilter(String nodeType, String nodeName, @Nullable String nodeArguments);
 }

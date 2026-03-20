@@ -74,7 +74,6 @@ public class EnvironmentVariablesTextFieldWithBrowseButton implements UserActivi
   /**
    * @return unmodifiable Map instance
    */
-  
   public Map<String, String> getEnvs() {
     return myData.getEnvs();
   }

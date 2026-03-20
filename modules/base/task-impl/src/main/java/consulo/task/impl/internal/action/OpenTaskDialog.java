@@ -165,10 +165,9 @@ public class OpenTaskDialog extends DialogWrapper {
         return null;
     }
 
-    @Nullable
     @Override
     @RequiredUIAccess
-    protected ValidationInfo doValidate() {
+    protected @Nullable ValidationInfo doValidate() {
         for (TaskDialogPanel panel : myPanels) {
             ValidationInfo validate = panel.validate();
             if (validate != null) {
@@ -185,9 +184,8 @@ public class OpenTaskDialog extends DialogWrapper {
 
     private void createUIComponents() {
         myTaskStateCombo = new TaskStateCombo(myProject, myTask) {
-            @Nullable
             @Override
-            protected CustomTaskState getPreferredState(
+            protected @Nullable CustomTaskState getPreferredState(
                 TaskRepository repository,
                 Collection<CustomTaskState> available
             ) {

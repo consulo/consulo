@@ -217,17 +217,15 @@ public class WebToolWindowManagerImpl extends ToolWindowManagerBase {
     protected void updateToolWindowsPane() {
     }
 
-    @Nullable
     @Override
     @RequiredUIAccess
-    public Element getStateFromUI() {
+    public @Nullable Element getStateFromUI() {
         return new Element("state");
     }
 
-    @Nullable
     @Override
     @RequiredUIAccess
-    public Element getState(Element element) {
+    public @Nullable Element getState(Element element) {
         return element;
     }
 
@@ -249,9 +247,8 @@ public class WebToolWindowManagerImpl extends ToolWindowManagerBase {
     public void notifyByBalloon(String toolWindowId, NotificationType type, String htmlBody) {
     }
 
-    @Nullable
     @Override
-    public Balloon getToolWindowBalloon(String id) {
+    public @Nullable Balloon getToolWindowBalloon(String id) {
         return null;
     }
 

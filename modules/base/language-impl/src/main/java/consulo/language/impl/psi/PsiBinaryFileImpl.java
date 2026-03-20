@@ -43,10 +43,9 @@ public class PsiBinaryFileImpl extends PsiElementBase implements PsiBinaryFile, 
         myModuleRef = ClearableLazyValue.nullable(() -> ModuleContentUtil.findModuleForFile(viewProvider.getVirtualFile(), getProject()));
     }
 
-    @Nullable
     @Override
     @RequiredReadAction
-    public Module getModule() {
+    public @Nullable Module getModule() {
         return myModuleRef.get();
     }
 
@@ -114,9 +113,8 @@ public class PsiBinaryFileImpl extends PsiElementBase implements PsiBinaryFile, 
         return getManager().findDirectory(parentFile);
     }
 
-    @Nullable
     @RequiredReadAction
-    public PsiDirectory getParentDirectory() {
+    public @Nullable PsiDirectory getParentDirectory() {
         return getContainingDirectory();
     }
 

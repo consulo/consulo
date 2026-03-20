@@ -28,9 +28,8 @@ public abstract class SingletonIteratorBase<T> implements Iterator<T> {
     return !myVisited;
   }
 
-  @Nullable
   @Override
-  public final T next() {
+  public final @Nullable T next() {
     if (myVisited) {
       throw new NoSuchElementException();
     }

@@ -167,10 +167,9 @@ public final class Presentation implements Cloneable {
         }
     }
 
-    @Nullable
     @Deprecated
     @DeprecationInfo("Use #getTextValue()")
-    public String getText() {
+    public @Nullable String getText() {
         if (BitUtil.isSet(myFlags, IS_DISABLE_MNEMONIC)) {
             return StringUtil.nullize(myTextValue.getValue());
         }
@@ -432,9 +431,8 @@ public final class Presentation implements Cloneable {
         }
     }
 
-    @Nullable
     @SuppressWarnings("unchecked")
-    public <T> T getClientProperty(Key<T> key) {
+    public <T> @Nullable T getClientProperty(Key<T> key) {
         return (T) myUserMap.get(key.toString());
     }
 
@@ -497,7 +495,6 @@ public final class Presentation implements Cloneable {
     /**
      * @see Presentation#setKeepPopupOnPerform(KeepPopupOnPerform)
      */
-    
     public KeepPopupOnPerform getKeepPopupOnPerform() {
         boolean requestedBit = BitUtil.isSet(myFlags, IS_KEEP_POPUP_IF_REQUESTED);
         boolean preferedBit = BitUtil.isSet(myFlags, IS_KEEP_POPUP_IF_PREFERRED);

@@ -90,24 +90,21 @@ public abstract class ASTDelegatePsiElement extends PsiElementBase implements Ps
         return SharedImplUtil.getFirstChild(getNode());
     }
 
-    @Nullable
     @Override
     @RequiredReadAction
-    public PsiElement getLastChild() {
+    public @Nullable PsiElement getLastChild() {
         return SharedImplUtil.getLastChild(getNode());
     }
 
-    @Nullable
     @Override
     @RequiredReadAction
-    public PsiElement getNextSibling() {
+    public @Nullable PsiElement getNextSibling() {
         return SharedImplUtil.getNextSibling(getNode());
     }
 
-    @Nullable
     @Override
     @RequiredReadAction
-    public PsiElement getPrevSibling() {
+    public @Nullable PsiElement getPrevSibling() {
         return SharedImplUtil.getPrevSibling(getNode());
     }
 
@@ -191,18 +188,16 @@ public abstract class ASTDelegatePsiElement extends PsiElementBase implements Ps
         return getNode().getElementType().getLanguage();
     }
 
-    @Nullable
     @RequiredReadAction
     @SuppressWarnings("unchecked")
-    protected <T extends PsiElement> T findChildByType(IElementType type) {
+    protected <T extends PsiElement> @Nullable T findChildByType(IElementType type) {
         ASTNode node = getNode().findChildByType(type);
         return node == null ? null : (T) node.getPsi();
     }
 
-    @Nullable
     @RequiredReadAction
     @SuppressWarnings("unchecked")
-    protected <T extends PsiElement> T findLastChildByType(IElementType type) {
+    protected <T extends PsiElement> @Nullable T findLastChildByType(IElementType type) {
         PsiElement child = getLastChild();
         while (child != null) {
             ASTNode node = child.getNode();
@@ -220,10 +215,9 @@ public abstract class ASTDelegatePsiElement extends PsiElementBase implements Ps
         return notNullChild(findChildByType(type));
     }
 
-    @Nullable
     @RequiredReadAction
     @SuppressWarnings("unchecked")
-    protected <T extends PsiElement> T findChildByType(TokenSet type) {
+    protected <T extends PsiElement> @Nullable T findChildByType(TokenSet type) {
         ASTNode node = getNode().findChildByType(type);
         return node == null ? null : (T) node.getPsi();
     }
@@ -235,10 +229,9 @@ public abstract class ASTDelegatePsiElement extends PsiElementBase implements Ps
         return notNullChild(findChildByType(type));
     }
 
-    @Nullable
     @RequiredReadAction
     @SuppressWarnings("unchecked")
-    protected <T extends PsiElement> T findChildByFilter(TokenSet tokenSet) {
+    protected <T extends PsiElement> @Nullable T findChildByFilter(TokenSet tokenSet) {
         ASTNode[] nodes = getNode().getChildren(tokenSet);
         return nodes.length == 0 ? null : (T) nodes[0].getPsi();
     }

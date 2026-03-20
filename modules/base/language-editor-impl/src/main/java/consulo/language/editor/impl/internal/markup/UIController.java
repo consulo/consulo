@@ -39,20 +39,17 @@ public interface UIController {
    * Contains all possible actions in the settings menu. The <code>List</code> is wrapped
    * in ActionGroup at the UI creation level in <code>EditorMarkupModelImpl</code>
    */
-  
   List<AnAction> getActions();
 
   /**
    * Lists possible <code>InspectionLevel</code>s for the particular file.
    */
-  
   List<InspectionsLevel> getAvailableLevels();
 
   /**
    * Lists highlight levels for the particular file per language if the file
    * contains several languages.
    */
-  
   List<LanguageHighlightLevel> getHighlightLevels();
 
   /**

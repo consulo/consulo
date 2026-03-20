@@ -23,8 +23,7 @@ import org.jspecify.annotations.Nullable;
 public interface VcsLogDataProvider {
   Key<VcsLogDataProvider> KEY = Key.create(VcsLogDataProvider.class);
 
-  @Nullable
-  CommitId getCommitId(int commitIndex);
+  @Nullable CommitId getCommitId(int commitIndex);
 
   int getCommitIndex(Hash hash, VirtualFile root);
 }

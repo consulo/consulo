@@ -56,9 +56,8 @@ public abstract class SimpleCoverageAnnotator extends BaseCoverageAnnotator {
         return isInTestContent ? myTestDirCoverageInfos.get(path) : myDirCoverageInfos.get(path);
     }
 
-    @Nullable
     @Override
-    public String getDirCoverageInformationString(
+    public @Nullable String getDirCoverageInformationString(
         PsiDirectory directory,
         CoverageSuitesBundle currentSuite,
         CoverageDataManager manager
@@ -100,9 +99,8 @@ public abstract class SimpleCoverageAnnotator extends BaseCoverageAnnotator {
         return FileUtil.toSystemIndependentName(filePath);
     }
 
-    @Nullable
     @Override
-    public String getFileCoverageInformationString(
+    public @Nullable String getFileCoverageInformationString(
         PsiFile psiFile,
         CoverageSuitesBundle currentSuite,
         CoverageDataManager manager
@@ -288,9 +286,8 @@ public abstract class SimpleCoverageAnnotator extends BaseCoverageAnnotator {
         );
     }
 
-    @Nullable
     @Override
-    protected Runnable createRenewRequest(CoverageSuitesBundle suite, CoverageDataManager dataManager) {
+    protected @Nullable Runnable createRenewRequest(CoverageSuitesBundle suite, CoverageDataManager dataManager) {
         ProjectData data = suite.getCoverageData();
         if (data == null) {
             return null;

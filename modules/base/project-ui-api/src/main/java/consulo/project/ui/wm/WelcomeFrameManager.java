@@ -67,9 +67,8 @@ public abstract class WelcomeFrameManager {
     });
   }
 
-  @Nullable
   @RequiredUIAccess
-  public IdeFrame getCurrentFrame() {
+  public @Nullable IdeFrame getCurrentFrame() {
     UIAccess.assertIsUIThread();
     return myFrameInstance;
   }

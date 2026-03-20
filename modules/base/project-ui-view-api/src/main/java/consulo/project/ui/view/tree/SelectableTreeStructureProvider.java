@@ -31,6 +31,5 @@ public interface SelectableTreeStructureProvider extends TreeStructureProvider {
    * @param element element on which "Select In" was invoked.
    * @return the element to select in the tree, or null if default selection logic should be used.
    */
-  @Nullable
-  PsiElement getTopLevelElement(PsiElement element);
+  @Nullable PsiElement getTopLevelElement(PsiElement element);
 }

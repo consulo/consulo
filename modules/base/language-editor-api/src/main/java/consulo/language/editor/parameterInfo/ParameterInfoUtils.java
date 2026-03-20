@@ -35,10 +35,9 @@ import java.util.Set;
 public class ParameterInfoUtils {
   public static final String DEFAULT_PARAMETER_CLOSE_CHARS = ",){}";
 
-  @Nullable
   @RequiredReadAction
   @SafeVarargs
-  public static <T extends PsiElement> T findParentOfTypeWithStopElements(PsiFile file, int offset, Class<T> parentClass, Class<? extends PsiElement>... stopAt) {
+  public static <T extends PsiElement> @Nullable T findParentOfTypeWithStopElements(PsiFile file, int offset, Class<T> parentClass, Class<? extends PsiElement>... stopAt) {
     PsiElement element = file.findElementAt(offset);
     if (element == null) return null;
 
@@ -49,9 +48,8 @@ public class ParameterInfoUtils {
     return parentOfType;
   }
 
-  @Nullable
   @RequiredReadAction
-  public static <T extends PsiElement> T findParentOfType(PsiFile file, int offset, Class<T> parentClass) {
+  public static <T extends PsiElement> @Nullable T findParentOfType(PsiFile file, int offset, Class<T> parentClass) {
     return findParentOfTypeWithStopElements(file, offset, parentClass);
   }
 
@@ -77,9 +75,8 @@ public class ParameterInfoUtils {
     return index;
   }
 
-  @Nullable
   @RequiredReadAction
-  public static <E extends PsiElement> E findArgumentList(PsiFile file, int offset, int lbraceOffset, ParameterInfoHandlerWithTabActionSupport findArgumentListHelper) {
+  public static <E extends PsiElement> @Nullable E findArgumentList(PsiFile file, int offset, int lbraceOffset, ParameterInfoHandlerWithTabActionSupport findArgumentListHelper) {
     return findArgumentList(file, offset, lbraceOffset, findArgumentListHelper, true);
   }
 
@@ -87,9 +84,8 @@ public class ParameterInfoUtils {
    * @param allowOuter whether it's OK to return enclosing argument list (starting at {@code lbraceOffset}) when there exists an inner
    *                   argument list at a given {@code offset}
    */
-  @Nullable
   @RequiredReadAction
-  public static <E extends PsiElement> E findArgumentList(PsiFile file, int offset, int lbraceOffset, ParameterInfoHandlerWithTabActionSupport findArgumentListHelper, boolean allowOuter) {
+  public static <E extends PsiElement> @Nullable E findArgumentList(PsiFile file, int offset, int lbraceOffset, ParameterInfoHandlerWithTabActionSupport findArgumentListHelper, boolean allowOuter) {
     if (file == null) return null;
 
     CharSequence chars = file.getViewProvider().getContents();

@@ -35,9 +35,8 @@ public interface PsiNamedElement extends PsiElement {
    *
    * @return the element name.
    */
-  @Nullable
   @RequiredReadAction
-  String getName();
+  @Nullable String getName();
 
   /**
    * Renames the element.

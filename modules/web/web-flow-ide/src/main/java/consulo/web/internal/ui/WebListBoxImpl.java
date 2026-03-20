@@ -57,9 +57,8 @@ public class WebListBoxImpl<E> extends VaadinComponentDelegate<WebListBoxImpl.Va
     public void setValueByIndex(int index) {
     }
 
-    @Nullable
     @Override
-    public E getValue() {
+    public @Nullable E getValue() {
         return null;
     }
 

@@ -27,6 +27,5 @@ import org.jspecify.annotations.Nullable;
 @DeprecationInfo("Use UsageTypeProvider")
 public interface UsageTypeProviderEx extends UsageTypeProvider {
     @Override
-    @Nullable
-    UsageType getUsageType(PsiElement element, UsageTarget[] targets);
+    @Nullable UsageType getUsageType(PsiElement element, UsageTarget[] targets);
 }

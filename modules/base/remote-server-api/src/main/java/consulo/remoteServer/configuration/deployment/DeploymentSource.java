@@ -25,17 +25,14 @@ import java.io.File;
  * @author nik
  */
 public interface DeploymentSource {
-  @Nullable
-  File getFile();
+  @Nullable File getFile();
 
-  @Nullable
-  String getFilePath();
+  @Nullable String getFilePath();
 
   
   LocalizeValue getPresentableName();
 
-  @Nullable
-  Image getIcon();
+  @Nullable Image getIcon();
 
   boolean isValid();
 

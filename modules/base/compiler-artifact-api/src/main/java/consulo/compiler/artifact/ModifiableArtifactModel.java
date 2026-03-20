@@ -37,8 +37,7 @@ public interface ModifiableArtifactModel extends ArtifactModel {
   
   ModifiableArtifact getOrCreateModifiableArtifact(Artifact artifact);
 
-  @Nullable
-  Artifact getModifiableCopy(Artifact artifact);
+  @Nullable Artifact getModifiableCopy(Artifact artifact);
 
   void addListener(ArtifactListener listener);
 

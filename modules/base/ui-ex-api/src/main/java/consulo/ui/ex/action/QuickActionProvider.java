@@ -32,6 +32,5 @@ public interface QuickActionProvider {
     return false;
   }
 
-  @Nullable
-  JComponent getComponent();
+  @Nullable JComponent getComponent();
 }

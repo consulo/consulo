@@ -68,9 +68,8 @@ public class ShowContentAction extends AnAction implements DumbAware {
         getWindow(e).showContentPopup(e.getInputEvent());
     }
 
-    @Nullable
     @RequiredUIAccess
-    private ToolWindow getWindow(AnActionEvent event) {
+    private @Nullable ToolWindow getWindow(AnActionEvent event) {
         if (myWindow != null) {
             return myWindow;
         }

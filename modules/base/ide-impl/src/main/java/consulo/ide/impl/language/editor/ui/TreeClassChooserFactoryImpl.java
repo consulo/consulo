@@ -150,9 +150,8 @@ public class TreeClassChooserFactoryImpl implements TreeClassChooserFactory {
           return myClassProvider.getClassesByName(getProject(), name, checkBoxState, pattern, searchScope);
         }
 
-        @Nullable
         @Override
-        protected TreeClassInheritorsProvider<T> getInheritorsProvider(T baseClass) {
+        protected @Nullable TreeClassInheritorsProvider<T> getInheritorsProvider(T baseClass) {
           return myInheritorsProviderSupplier.create(baseClass, getScope());
         }
       };

@@ -67,9 +67,8 @@ public class DesktopSwtIntBoxImpl extends SWTComponentDelegate<Spinner> implemen
         return true;
     }
 
-    @Nullable
     @Override
-    public Integer getValue() {
+    public @Nullable Integer getValue() {
         Spinner spinner = toSWTComponent();
         return spinner.getSelection();
     }

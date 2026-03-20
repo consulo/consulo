@@ -36,9 +36,8 @@ public class SymbolSearchEverywhereContributorFactory implements SearchEverywher
         myApplication = application;
     }
 
-    @Nullable
     @Override
-    public SearchEverywhereContributor<Object> createContributor(AnActionEvent initEvent) {
+    public @Nullable SearchEverywhereContributor<Object> createContributor(AnActionEvent initEvent) {
         if (!myApplication.getExtensionPoint(GotoSymbolContributor.class).hasAnyExtensions()) {
             return null;
 

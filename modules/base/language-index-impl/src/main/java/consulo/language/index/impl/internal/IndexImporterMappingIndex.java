@@ -54,9 +54,8 @@ final class IndexImporterMappingIndex<Key, Value, Input> implements SnapshotInpu
                     updatableIndex.clear();
                 }
 
-                @Nullable
                 @Override
-                public InputData<Key, Value> readData(Input content) throws IOException {
+                public @Nullable InputData<Key, Value> readData(Input content) throws IOException {
                     InputData<Key, Value> existedData;
                     try {
                         existedData = index.readData(content);
@@ -87,9 +86,8 @@ final class IndexImporterMappingIndex<Key, Value, Input> implements SnapshotInpu
             };
         }
         return new SnapshotInputMappingIndex<>() {
-            @Nullable
             @Override
-            public InputData<Key, Value> readData(Input content) throws IOException {
+            public @Nullable InputData<Key, Value> readData(Input content) throws IOException {
                 InputData<Key, Value> data = index.readData(content);
                 if (data != null) {
                     return data;
@@ -131,9 +129,8 @@ final class IndexImporterMappingIndex<Key, Value, Input> implements SnapshotInpu
         LOG.assertTrue(!importers.isEmpty());
     }
 
-    @Nullable
     @Override
-    public InputData<Key, Value> readData(Input content) {
+    public @Nullable InputData<Key, Value> readData(Input content) {
         for (SnapshotInputMappingIndex<Key, Value, Input> importer : myImporters) {
             try {
                 InputData<Key, Value> data = importer.readData(content);

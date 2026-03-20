@@ -30,21 +30,18 @@ public interface IntroduceTarget {
     /**
      * @return the range of the target in the file
      */
-    
     @RequiredReadAction
     TextRange getTextRange();
 
     /**
      * @return PSI context of the target if applicable (e.g. if you introduce a part of a string literal you could return the string literal)
      */
-    @Nullable
     @RequiredReadAction
-    PsiElement getPlace();
+    @Nullable PsiElement getPlace();
 
     /**
      * @return string presentation of the target to use in the Target Chooser
      */
-    
     @RequiredReadAction
     String render();
 

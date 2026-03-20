@@ -34,13 +34,11 @@ public interface ContentRevision {
    * @return content of the revision
    * @throws VcsException in case when content retrieval fails
    */
-  @Nullable
-  String getContent() throws VcsException;
+  @Nullable String getContent() throws VcsException;
 
   /**
    * @return file path of the revision
    */
-  
   FilePath getFile();
 
   /**
@@ -49,6 +47,5 @@ public interface ContentRevision {
    * the currently uncommitted revision.
    * @return revision ID in terms of version control
    */
-  
   VcsRevisionNumber getRevisionNumber();
 }

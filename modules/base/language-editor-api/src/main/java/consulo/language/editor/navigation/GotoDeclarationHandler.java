@@ -39,8 +39,7 @@ public interface GotoDeclarationHandler {
    * @param offset offset in the file
    *@param editor  @return all target declarations as an array of  {@code PsiElement} or null if none was found
    */
-  @Nullable
-  PsiElement[] getGotoDeclarationTargets(PsiElement sourceElement, int offset, Editor editor);
+  @Nullable PsiElement[] getGotoDeclarationTargets(PsiElement sourceElement, int offset, Editor editor);
 
   /**
    * Provides the custom action text

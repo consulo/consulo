@@ -39,7 +39,6 @@ public interface ProjectManager {
      *
      * @return <code>ProjectManager</code> instance
      */
-    
     public static ProjectManager getInstance() {
         return Application.get().getInstance(ProjectManager.class);
     }
@@ -90,7 +89,6 @@ public interface ProjectManager {
      *
      * @return the array of currently opened projects.
      */
-    
     Project[] getOpenProjects();
 
     /**
@@ -100,7 +98,6 @@ public interface ProjectManager {
      *
      * @return the template project instance.
      */
-    
     default Project getDefaultProject() {
         return DefaultProjectFactory.getInstance().getDefaultProject();
     }
@@ -128,8 +125,7 @@ public interface ProjectManager {
      * @param path project location
      * @return newly crated project
      */
-    @Nullable
-    Project createProject(String name, String path);
+    @Nullable Project createProject(String name, String path);
 
     // region deprecated code
 

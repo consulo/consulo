@@ -39,9 +39,8 @@ public class SMTRunnerTestTreeView extends TestTreeView {
         return new TestTreeRenderer(properties);
     }
 
-    @Nullable
     @Override
-    public SMTestProxy getSelectedTest(TreePath selectionPath) {
+    public @Nullable SMTestProxy getSelectedTest(TreePath selectionPath) {
         Object lastComponent = selectionPath.getLastPathComponent();
         assert lastComponent != null;
 

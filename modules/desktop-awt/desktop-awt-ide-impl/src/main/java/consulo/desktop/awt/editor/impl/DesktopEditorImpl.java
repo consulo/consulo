@@ -2495,8 +2495,7 @@ public final class DesktopEditorImpl extends CodeEditorBase
             myView.repaintCarets();
         }
 
-        @Nullable
-        CaretRectangle[] getCaretLocations(boolean onlyIfShown) {
+        @Nullable CaretRectangle[] getCaretLocations(boolean onlyIfShown) {
             if (onlyIfShown && (!isEnabled() || !myIsShown || isRendererMode() || !IJSwingUtilities.hasFocus(getContentComponent()))) {
                 return null;
             }

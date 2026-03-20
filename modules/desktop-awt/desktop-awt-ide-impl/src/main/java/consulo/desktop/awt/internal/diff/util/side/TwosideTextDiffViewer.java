@@ -283,10 +283,9 @@ public abstract class TwosideTextDiffViewer extends TwosideDiffViewer<TextEditor
     // Misc
     //
 
-    @Nullable
     @Override
     @RequiredUIAccess
-    protected Navigatable getNavigatable() {
+    protected @Nullable Navigatable getNavigatable() {
         Side side = getCurrentSide();
 
         LineCol position = LineCol.fromCaret(getEditor(side));
@@ -355,9 +354,8 @@ public abstract class TwosideTextDiffViewer extends TwosideDiffViewer<TextEditor
     // Helpers
     //
 
-    @Nullable
     @Override
-    public Object getData(Key<?> dataId) {
+    public @Nullable Object getData(Key<?> dataId) {
         if (DiffDataKeys.CURRENT_EDITOR == dataId) {
             return getCurrentEditor();
         }

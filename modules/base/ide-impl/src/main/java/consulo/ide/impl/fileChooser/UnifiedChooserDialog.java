@@ -71,9 +71,8 @@ public class UnifiedChooserDialog implements PathChooserDialog, FileChooserDialo
             return ScrollableLayout.create(myTree);
         }
 
-        @Nullable
         @Override
-        protected Size2D getDefaultSize() {
+        protected @Nullable Size2D getDefaultSize() {
             return new Size2D(400, 400);
         }
 

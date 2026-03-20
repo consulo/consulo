@@ -99,7 +99,6 @@ public final class TreeUtil {
      * @param tree a tree, which viewable paths are processed
      * @return a list of expanded paths
      */
-    
     public static List<TreePath> collectExpandedPaths(JTree tree) {
         return collectExpandedObjects(tree, Function.identity());
     }
@@ -108,7 +107,6 @@ public final class TreeUtil {
      * @param tree a tree, which viewable paths are processed
      * @return a list of user objects which correspond to expanded paths under the specified root node
      */
-    
     public static List<Object> collectExpandedUserObjects(JTree tree) {
         return collectExpandedObjects(tree, TreeUtil::getLastUserObject);
     }
@@ -118,7 +116,6 @@ public final class TreeUtil {
      * @param mapper a function to convert a expanded tree path to a corresponding object
      * @return a list of objects which correspond to expanded paths under the specified root node
      */
-    
     public static <T> List<T> collectExpandedObjects(JTree tree, Function<? super TreePath, ? extends T> mapper) {
         return collectVisibleRows(tree, tree::isExpanded, mapper);
     }
@@ -139,7 +136,6 @@ public final class TreeUtil {
      * @param type a {@code Class} object to filter selected user objects
      * @return a list of user objects of the specified type retrieved from all selected paths
      */
-    
     public static <T> List<T> collectSelectedObjectsOfType(JTree tree, Class<? extends T> type) {
         return collectSelectedObjects(tree, path -> getLastUserObject(type, path));
     }
@@ -149,7 +145,6 @@ public final class TreeUtil {
      * @param root an ascendant tree path to filter expanded tree paths
      * @return a list of expanded paths under the specified root node
      */
-    
     public static List<TreePath> collectExpandedPaths(JTree tree, TreePath root) {
         return collectExpandedObjects(tree, root, Function.identity());
     }
@@ -159,7 +154,6 @@ public final class TreeUtil {
      * @param root an ascendant tree path to filter expanded tree paths
      * @return a list of user objects which correspond to expanded paths under the specified root node
      */
-    
     public static List<Object> collectExpandedUserObjects(JTree tree, TreePath root) {
         return collectExpandedObjects(tree, root, TreeUtil::getLastUserObject);
     }
@@ -182,7 +176,6 @@ public final class TreeUtil {
      * @param mapper a function to convert a expanded tree path to a corresponding object
      * @return a list of objects which correspond to expanded paths under the specified root node
      */
-    
     public static <T> List<T> collectExpandedObjects(
         JTree tree,
         TreePath root,
@@ -963,7 +956,6 @@ public final class TreeUtil {
      * @param keepSelectionLevel a maximal number of elements in the selection path or negative value to preserve the given path
      * @return a parent path with the specified number of elements, or the given {@code path} if it does not have enough elements
      */
-    
     private static TreePath normalize(TreePath path, int minCount, int keepSelectionLevel) {
         if (keepSelectionLevel < 0) {
             return path;
@@ -1047,7 +1039,6 @@ public final class TreeUtil {
      * @param tree a tree, which nodes should be expanded
      * @return a promise that will be succeed when all nodes are expanded
      */
-    
     public static Promise<?> promiseExpandAll(JTree tree) {
         return promiseExpand(tree, Integer.MAX_VALUE);
     }
@@ -1083,7 +1074,6 @@ public final class TreeUtil {
      * @param depth a depth starting from the root node
      * @return a promise that will be succeed when all needed nodes are expanded
      */
-    
     public static Promise<?> promiseExpand(JTree tree, int depth) {
         AsyncPromise<?> promise = new AsyncPromise<>();
         promiseMakeVisible(tree, path -> depth < path.getPathCount() ? SKIP_SIBLINGS : CONTINUE, promise).onError(promise::setError)
@@ -1163,7 +1153,6 @@ public final class TreeUtil {
      * @param tree a tree, which selection is processed
      * @return a list of all selected paths
      */
-    
     public static List<TreePath> collectSelectedPaths(JTree tree) {
         return collectSelectedObjects(tree, Function.identity());
     }
@@ -1172,7 +1161,6 @@ public final class TreeUtil {
      * @param tree a tree, which selection is processed
      * @return a list of user objects which correspond to all selected paths
      */
-    
     public static List<Object> collectSelectedUserObjects(JTree tree) {
         return collectSelectedObjects(tree, TreeUtil::getLastUserObject);
     }
@@ -1182,7 +1170,6 @@ public final class TreeUtil {
      * @param mapper a function to convert a selected tree path to a corresponding object
      * @return a list of objects which correspond to all selected paths
      */
-    
     public static <T> List<T> collectSelectedObjects(JTree tree, Function<? super TreePath, ? extends T> mapper) {
         return getSelection(tree, path -> isViewable(tree, path), mapper);
     }
@@ -1192,7 +1179,6 @@ public final class TreeUtil {
      * @param root an ascendant tree path to filter selected tree paths
      * @return a list of selected paths under the specified root node
      */
-    
     public static List<TreePath> collectSelectedPaths(JTree tree, TreePath root) {
         return collectSelectedObjects(tree, root, Function.identity());
     }
@@ -1202,7 +1188,6 @@ public final class TreeUtil {
      * @param root an ascendant tree path to filter selected tree paths
      * @return a list of user objects which correspond to selected paths under the specified root node
      */
-    
     public static List<Object> collectSelectedUserObjects(JTree tree, TreePath root) {
         return collectSelectedObjects(tree, root, TreeUtil::getLastUserObject);
     }
@@ -1213,7 +1198,6 @@ public final class TreeUtil {
      * @param mapper a function to convert a selected tree path to a corresponding object
      * @return a list of objects which correspond to selected paths under the specified root node
      */
-    
     public static <T> List<T> collectSelectedObjects(
         JTree tree,
         TreePath root,
@@ -1508,7 +1492,6 @@ public final class TreeUtil {
      * @param visitor a visitor that controls expanding of tree nodes
      * @return a promise that will be succeed only if path is found and expanded
      */
-    
     public static Promise<TreePath> promiseExpand(JTree tree, TreeVisitor visitor) {
         return promiseMakeVisibleOne(tree, visitor, path -> expandPathWithDebug(tree, path));
     }
@@ -1523,7 +1506,6 @@ public final class TreeUtil {
      * @param visitors visitors to control expanding of tree nodes
      * @return a promise that will be succeed only if paths are found and expanded
      */
-    
     public static Promise<List<TreePath>> promiseExpand(JTree tree, Stream<? extends TreeVisitor> visitors) {
         return promiseMakeVisibleAll(tree, visitors, paths -> paths.forEach(path -> expandPathWithDebug(tree, path)));
     }
@@ -1549,7 +1531,6 @@ public final class TreeUtil {
      * @param visitor a visitor that controls expanding of tree nodes
      * @return a promise that will be succeed only if path is found and made visible
      */
-    
     public static Promise<TreePath> promiseMakeVisible(JTree tree, TreeVisitor visitor) {
         return promiseMakeVisibleOne(tree, visitor, null);
     }
@@ -1593,7 +1574,6 @@ public final class TreeUtil {
      * @param visitors visitors to control expanding of tree nodes
      * @return a promise that will be succeed only if path are found and made visible
      */
-    
     public static Promise<List<TreePath>> promiseMakeVisible(JTree tree, Stream<? extends TreeVisitor> visitors) {
         return promiseMakeVisibleAll(tree, visitors, null);
     }
@@ -1686,7 +1666,6 @@ public final class TreeUtil {
      * @param visitor a visitor that controls expanding of tree nodes
      * @return a promise that will be succeed only if path is found and selected
      */
-    
     public static Promise<TreePath> promiseSelect(JTree tree, TreeVisitor visitor) {
         return promiseMakeVisibleOne(tree, visitor, path -> internalSelectPath(tree, path));
     }
@@ -1707,7 +1686,6 @@ public final class TreeUtil {
      * @param visitors visitors to control expanding of tree nodes
      * @return a promise that will be succeed only if paths are found and selected
      */
-    
     public static Promise<List<TreePath>> promiseSelect(JTree tree, Stream<? extends TreeVisitor> visitors) {
         return promiseMakeVisibleAll(tree, visitors, paths -> internalSelectPaths(tree, paths));
     }
@@ -1795,7 +1773,6 @@ public final class TreeUtil {
      * @param tree a tree, which node should be selected
      * @return a promise that will be succeed when first visible node is selected
      */
-    
     public static Promise<TreePath> promiseSelectFirst(JTree tree) {
         return promiseSelect(tree, path -> !tree.isRootVisible() && path.getParentPath() == null ? CONTINUE : INTERRUPT);
     }
@@ -1821,7 +1798,6 @@ public final class TreeUtil {
      * @param visitor a visitor that controls processing of tree nodes
      * @return a promise that will be succeed when visiting is finished
      */
-    
     public static Promise<TreePath> promiseVisit(JTree tree, TreeVisitor visitor) {
         TreeModel model = tree.getModel();
         if (model instanceof TreeVisitor.Acceptor acceptor) {
@@ -1966,7 +1942,6 @@ public final class TreeUtil {
      * @param mapper a function to convert a visible tree path to a corresponding object
      * @return a list of objects which correspond to filtered visible paths
      */
-    
     private static <T> List<T> collectVisibleRows(
         JTree tree,
         Predicate<? super TreePath> filter,

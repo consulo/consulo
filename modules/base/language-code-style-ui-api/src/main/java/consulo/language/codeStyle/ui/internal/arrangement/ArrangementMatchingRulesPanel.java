@@ -104,9 +104,8 @@ public class ArrangementMatchingRulesPanel extends JPanel implements DataProvide
     myControl.hideEditor();
   }
 
-  @Nullable
   @Override
-  public Object getData(Key dataId) {
+  public @Nullable Object getData(Key dataId) {
     if (ArrangementSectionRulesControl.KEY == dataId) {
       return myControl;
     }

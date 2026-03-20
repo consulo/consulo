@@ -50,9 +50,8 @@ public class RestorePreviousSettingsAction extends AnAction implements ShortcutP
     findModel.copyFrom(FindManager.getInstance(e.getRequiredData(Project.KEY)).getPreviousFindModel());
   }
 
-  @Nullable
   @Override
-  public ShortcutSet getShortcut() {
+  public @Nullable ShortcutSet getShortcut() {
     return new CustomShortcutSet(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0));
   }
 }

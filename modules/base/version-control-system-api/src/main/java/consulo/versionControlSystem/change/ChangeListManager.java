@@ -106,7 +106,6 @@ public abstract class ChangeListManager {
   /**
    * @return all changes in all changelists.
    */
-  
   public abstract Collection<Change> getAllChanges();
 
   public abstract @Nullable LocalChangeList findChangeList(String name);

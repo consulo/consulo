@@ -111,7 +111,6 @@ public abstract class InspectionManager {
     /**
      * Used in java plugin
      */
-    
     @UsedInPlugin
     @RequiredReadAction
     public abstract List<ProblemDescriptor> runLocalToolLocaly(

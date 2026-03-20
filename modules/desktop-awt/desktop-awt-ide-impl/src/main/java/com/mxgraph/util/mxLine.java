@@ -9,7 +9,6 @@ import java.awt.geom.Line2D;
 /**
  * Implements a line with double precision coordinates.
  */
-
 public class mxLine extends mxPoint {
   /**
    *

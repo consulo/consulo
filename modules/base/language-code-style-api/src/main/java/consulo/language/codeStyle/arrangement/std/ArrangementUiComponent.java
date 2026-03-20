@@ -37,8 +37,7 @@ import java.util.Set;
  */
 public interface ArrangementUiComponent {
 
-  @Nullable
-  ArrangementSettingsToken getToken();
+  @Nullable ArrangementSettingsToken getToken();
 
   
   Set<ArrangementSettingsToken> getAvailableTokens();
@@ -64,8 +63,7 @@ public interface ArrangementUiComponent {
   /**
    * @return screen bounds for the {@link #getUiComponent() target UI component} (if known)
    */
-  @Nullable
-  Rectangle getScreenBounds();
+  @Nullable Rectangle getScreenBounds();
 
   boolean isSelected();
 
@@ -90,16 +88,13 @@ public interface ArrangementUiComponent {
    * @param event  target mouse move event
    * @return       bounds to be repainted (in screen coordinates) if any; <code>null</code> otherwise
    */
-  @Nullable
-  Rectangle onMouseMove(MouseEvent event);
+  @Nullable Rectangle onMouseMove(MouseEvent event);
 
   void onMouseRelease(MouseEvent event);
 
-  @Nullable
-  Rectangle onMouseExited();
+  @Nullable Rectangle onMouseExited();
 
-  @Nullable
-  Rectangle onMouseEntered(MouseEvent e);
+  @Nullable Rectangle onMouseEntered(MouseEvent e);
 
   /**
    * @param width   the width to get baseline for

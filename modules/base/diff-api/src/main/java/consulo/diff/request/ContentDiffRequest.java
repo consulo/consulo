@@ -31,6 +31,5 @@ public abstract class ContentDiffRequest extends DiffRequest {
    * @return contents names. Should have same length as {@link #getContents()}
    * Titles could be null.
    */
-  
   public abstract List<String> getContentTitles();
 }

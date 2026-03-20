@@ -200,15 +200,13 @@ public class TasksToolWindowPanel extends SimpleToolWindowPanel implements Dispo
 
     private ListTableModel<LocalTask> createListModel() {
         ColumnInfo<LocalTask, String> task = new ColumnInfo<LocalTask, String>("Task") {
-            @Nullable
             @Override
-            public String valueOf(LocalTask task) {
+            public @Nullable String valueOf(LocalTask task) {
                 return task.getPresentableName();
             }
 
-            @Nullable
             @Override
-            public TableCellRenderer getRenderer(LocalTask task) {
+            public @Nullable TableCellRenderer getRenderer(LocalTask task) {
                 return (table, value, isSelected, hasFocus, row, column) -> {
                     JPanel panel = new JPanel(new BorderLayout());
                     panel.setBackground(UIUtil.getTableBackground(isSelected));
@@ -231,9 +229,8 @@ public class TasksToolWindowPanel extends SimpleToolWindowPanel implements Dispo
                 };
             }
 
-            @Nullable
             @Override
-            public Comparator<LocalTask> getComparator() {
+            public @Nullable Comparator<LocalTask> getComparator() {
                 return (o1, o2) -> {
                     int i = Comparing.compare(o2.getUpdated(), o1.getUpdated());
                     return i == 0 ? Comparing.compare(o2.getCreated(), o1.getCreated()) : i;
@@ -242,9 +239,8 @@ public class TasksToolWindowPanel extends SimpleToolWindowPanel implements Dispo
         };
 
         ColumnInfo<LocalTask, String> spentTime = new ColumnInfo<LocalTask, String>("Time Spent") {
-            @Nullable
             @Override
-            public String valueOf(LocalTask task) {
+            public @Nullable String valueOf(LocalTask task) {
                 long timeSpent =
                     myTimeTrackingManager.getState().showSpentTimeFromLastPost ? task.getTimeSpentFromLastPost() : task.getTotalTimeSpent();
                 if (task.isActive()) {
@@ -253,9 +249,8 @@ public class TasksToolWindowPanel extends SimpleToolWindowPanel implements Dispo
                 return DateFormatUtil.formatDuration(timeSpent);
             }
 
-            @Nullable
             @Override
-            public TableCellRenderer getRenderer(LocalTask task) {
+            public @Nullable TableCellRenderer getRenderer(LocalTask task) {
                 return (table, value, isSelected, hasFocus, row, column) -> {
                     JPanel panel = new JPanel(new BorderLayout());
                     panel.setBackground(UIUtil.getTableBackground(isSelected));
@@ -270,9 +265,8 @@ public class TasksToolWindowPanel extends SimpleToolWindowPanel implements Dispo
                 };
             }
 
-            @Nullable
             @Override
-            public Comparator<LocalTask> getComparator() {
+            public @Nullable Comparator<LocalTask> getComparator() {
                 return (o1, o2) -> {
                     long timeSpent1 =
                         myTimeTrackingManager.getState().showSpentTimeFromLastPost ? o1.getTimeSpentFromLastPost() : o1.getTotalTimeSpent();

@@ -50,9 +50,8 @@ public class GeneratedFileEditingNotificationProvider implements EditorNotificat
     }
 
     @RequiredReadAction
-    @Nullable
     @Override
-    public EditorNotificationBuilder buildNotification(VirtualFile file, FileEditor fileEditor, Supplier<EditorNotificationBuilder> builderFactory) {
+    public @Nullable EditorNotificationBuilder buildNotification(VirtualFile file, FileEditor fileEditor, Supplier<EditorNotificationBuilder> builderFactory) {
         if (!GeneratedSourcesFilter.isGeneratedSourceByAnyFilter(file, myProject)) {
             return null;
         }

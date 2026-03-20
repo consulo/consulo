@@ -42,10 +42,9 @@ public class UnifiedNotificationsManagerImpl extends NotificationsManager {
     public void expire(Notification notification) {
     }
 
-    @Nullable
     @Override
     @RequiredUIAccess
-    public Window findWindowForBalloon(@Nullable Project project) {
+    public @Nullable Window findWindowForBalloon(@Nullable Project project) {
         return null;
     }
 

@@ -40,7 +40,6 @@ public abstract class FileEditorProviderManager {
    * an empty array if there are no such providers. Please note that returned array
    * is constructed with respect to editor policies.
    */
-  
   public abstract FileEditorProvider[] getProviders(Project project, VirtualFile file);
 
   /**

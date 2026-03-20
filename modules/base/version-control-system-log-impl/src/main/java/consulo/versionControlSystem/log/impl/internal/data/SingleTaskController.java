@@ -79,7 +79,6 @@ public abstract class SingleTaskController<Request, Result> {
    * Returns all awaiting requests and clears the queue. <br/>
    * I.e. the second call to this method will return an empty list (unless new requests came via {@link #request(Object)}.
    */
-  
   protected final List<Request> popRequests() {
     synchronized (LOCK) {
       List<Request> requests = myAwaitingRequests;

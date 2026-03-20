@@ -26,14 +26,11 @@ import java.awt.*;
  */
 public interface GraphAnswer<Id> {
 
-  @Nullable
-  Cursor getCursorToSet();
+  @Nullable Cursor getCursorToSet();
 
-  @Nullable
-  Id getCommitToJump();
+  @Nullable Id getCommitToJump();
 
   boolean doJump();
 
-  @Nullable
-  Runnable getGraphUpdater();
+  @Nullable Runnable getGraphUpdater();
 }

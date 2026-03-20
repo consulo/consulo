@@ -148,9 +148,8 @@ class XDebuggerTreeRenderer extends ColoredTreeCellRenderer {
     return size;
   }
 
-  @Nullable
   @Override
-  public Object getFragmentTagAt(int x) {
+  public @Nullable Object getFragmentTagAt(int x) {
     if (myHaveLink) {
       return myLink.getFragmentTagAt(x - myLinkOffset);
     }

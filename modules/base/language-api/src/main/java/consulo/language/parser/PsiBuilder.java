@@ -42,15 +42,13 @@ public interface PsiBuilder extends UserDataHolder {
      *
      * @return project.
      */
-    @Nullable
-    Project getProject();
+    @Nullable Project getProject();
 
     /**
      * Returns the complete text being parsed.
      *
      * @return the text being parsed
      */
-    
     CharSequence getOriginalText();
 
     /**
@@ -64,8 +62,7 @@ public interface PsiBuilder extends UserDataHolder {
      * @return the token type, or null when the token stream is over.
      * @see #setTokenTypeRemapper(ITokenTypeRemapper).
      */
-    @Nullable
-    IElementType getTokenType();
+    @Nullable IElementType getTokenType();
 
     /**
      * Sets optional remapper that can change the type of tokens.
@@ -100,8 +97,7 @@ public interface PsiBuilder extends UserDataHolder {
      * @param steps 0 is current token (i.e. the same {@link PsiBuilder#getTokenType()} returns)
      * @return type element which getTokenType() will return if we call advance <code>steps</code> times in a row
      */
-    @Nullable
-    IElementType lookAhead(int steps);
+    @Nullable IElementType lookAhead(int steps);
 
     /**
      * See what token type is in <code>steps</code> ahead / behind
@@ -109,8 +105,7 @@ public interface PsiBuilder extends UserDataHolder {
      * @param steps 0 is current token (i.e. the same {@link PsiBuilder#getTokenType()} returns)
      * @return type element ahead or behind, including whitespace / comment tokens
      */
-    @Nullable
-    IElementType rawLookup(int steps);
+    @Nullable IElementType rawLookup(int steps);
 
     /**
      * See what token type is in <code>steps</code> ahead / behind current position
@@ -133,8 +128,7 @@ public interface PsiBuilder extends UserDataHolder {
      *
      * @return the token text, or null when the token stream is over.
      */
-    @Nullable
-    String getTokenText();
+    @Nullable String getTokenText();
 
     /**
      * Returns the char sequencr of the current token from the lexer.
@@ -319,7 +313,6 @@ public interface PsiBuilder extends UserDataHolder {
      *
      * @return the built tree.
      */
-    
     ASTNode getTreeBuilt();
 
     /**
@@ -329,7 +322,6 @@ public interface PsiBuilder extends UserDataHolder {
      *
      * @return the light tree built.
      */
-    
     FlyweightCapableTreeStructure<LighterASTNode> getLightTree();
 
     /**
@@ -345,21 +337,18 @@ public interface PsiBuilder extends UserDataHolder {
     /**
      * @return latest left done node for context dependent parsing.
      */
-    @Nullable
-    LighterASTNode getLatestDoneMarker();
+    @Nullable LighterASTNode getLatestDoneMarker();
 
     /**
      * Return localize value for node, if node is error. If it's not error empty value {@link LocalizeValue#empty()}
      */
-    
     LocalizeValue getErrorMessage(LighterASTNode node);
 
     void setReparseMergeCustomComparator(ReparseMergeCustomComparator comparator);
 
     void setContainingFile(PsiFile containingFile);
 
-    @Nullable
-    PsiFile getContainingFile();
+    @Nullable PsiFile getContainingFile();
 
     
     Lexer getLexer();

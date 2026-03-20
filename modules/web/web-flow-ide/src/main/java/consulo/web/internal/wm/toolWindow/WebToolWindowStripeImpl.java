@@ -36,9 +36,8 @@ public class WebToolWindowStripeImpl extends VaadinComponentDelegate<WebToolWind
   public class Vaadin extends FlexLayout implements FromVaadinComponentWrapper {
     private List<ToolWindowStripeButton> myButtons = new ArrayList<>();
 
-    @Nullable
     @Override
-    public Component toUIComponent() {
+    public @Nullable Component toUIComponent() {
       return WebToolWindowStripeImpl.this;
     }
   }

@@ -37,7 +37,6 @@ public interface ConfigurableSession {
   /**
    * @return default or frame project
    */
-  
   Project getProject();
 
   
@@ -46,7 +45,6 @@ public interface ConfigurableSession {
   /**
    * Can be disposable
    */
-  
   <T> T get(Class<T> key, Function<Project, T> factory);
 
   <T extends EventListener> void addListener(Class<T> listenerClass, T listener);

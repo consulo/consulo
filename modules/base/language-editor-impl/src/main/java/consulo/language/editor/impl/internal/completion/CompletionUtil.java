@@ -92,9 +92,8 @@ public class CompletionUtil {
     return CompletionUtilCore.findIdentifierPrefix(document, offset, idPart, idStart);
   }
 
-  @Nullable
   @RequiredReadAction
-  public static String findReferencePrefix(CompletionParameters parameters) {
+  public static @Nullable String findReferencePrefix(CompletionParameters parameters) {
     return CompletionUtilCore.findReferencePrefix(parameters);
   }
 
@@ -137,7 +136,6 @@ public class CompletionUtil {
    * @return String representation of action shortcut. Useful while advertising something
    * @see #advertise(CompletionParameters)
    */
-  
   public static String getActionShortcut(String actionId) {
     return KeymapUtil.getFirstKeyboardShortcutText(ActionManager.getInstance().getAction(actionId));
   }

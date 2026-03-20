@@ -112,7 +112,6 @@ public abstract class NewVirtualFile extends VirtualFile implements VirtualFileW
   /**
    * iterated children will NOT contain NullVirtualFile.INSTANCE
    */
-  
   public abstract Iterable<VirtualFile> iterInDbChildren();
 
   

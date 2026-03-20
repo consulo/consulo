@@ -100,9 +100,8 @@ public abstract class DefaultProjectProfileManager implements ProjectProfileMana
     myListenerPublisher.profileChanged(profile);
   }
 
-  @Nullable
   @Override
-  public synchronized Element getState() {
+  public synchronized @Nullable Element getState() {
     Element state = new Element("settings");
 
     String[] sortedProfiles = myProfiles.keySet().toArray(new String[myProfiles.size()]);

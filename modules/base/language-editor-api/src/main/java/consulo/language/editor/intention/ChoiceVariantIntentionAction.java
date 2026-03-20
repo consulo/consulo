@@ -36,15 +36,13 @@ public abstract class ChoiceVariantIntentionAction extends IntentionAndQuickFixA
         return true;
     }
 
-    @Nullable
     @Override
-    public Image getIcon() {
+    public @Nullable Image getIcon() {
         return Image.empty(Image.DEFAULT_ICON_SIZE);
     }
 
-    @Nullable
     @Override
-    public Image getIcon(@IconFlags int flags) {
+    public @Nullable Image getIcon(@IconFlags int flags) {
         return getIcon();
     }
 

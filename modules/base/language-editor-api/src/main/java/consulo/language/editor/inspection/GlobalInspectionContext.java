@@ -45,7 +45,6 @@ public interface GlobalInspectionContext extends UserDataHolder {
    *
    * @return the reference graph instance.
    */
-  
   RefManager getRefManager();
 
   /**
@@ -98,6 +97,5 @@ public interface GlobalInspectionContext extends UserDataHolder {
 
   boolean isToCheckFile(PsiFile file, InspectionTool tool);
 
-  @Nullable
-  Tools getTools(String shortName);
+  @Nullable Tools getTools(String shortName);
 }

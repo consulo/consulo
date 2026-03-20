@@ -40,7 +40,6 @@ public interface VirtualFileSystem {
    * @see VirtualFile#getUrl
    * @see VirtualFileManager#getFileSystem
    */
-  
   String getProtocol();
 
   /**
@@ -60,7 +59,6 @@ public interface VirtualFileSystem {
    * @return presentable URL
    * @see VirtualFile#getPresentableUrl
    */
-  
   default String extractPresentableUrl(String path) {
     return path.replace('/', File.separatorChar);
   }
@@ -93,8 +91,7 @@ public interface VirtualFileSystem {
    * @param path the path
    * @return <code>{@link VirtualFile}</code> if the file was found, <code>null</code> otherwise
    */
-  @Nullable
-  VirtualFile refreshAndFindFileByPath(String path);
+  @Nullable VirtualFile refreshAndFindFileByPath(String path);
 
   /**
    * Adds listener to the file system. Normally one should use {@link VirtualFileManager#addVirtualFileListener}.
@@ -138,7 +135,6 @@ public interface VirtualFileSystem {
    *
    * @see VirtualFile#createChildData(Object, String)
    */
-  
   VirtualFile createChildFile(Object requestor, VirtualFile vDir, String fileName) throws IOException;
 
   /**
@@ -146,7 +142,6 @@ public interface VirtualFileSystem {
    *
    * @see VirtualFile#createChildDirectory(Object, String)
    */
-  
   VirtualFile createChildDirectory(Object requestor, VirtualFile vDir, String dirName) throws IOException;
 
   /**
@@ -154,7 +149,6 @@ public interface VirtualFileSystem {
    *
    * @see VirtualFile#copy(Object, VirtualFile, String)
    */
-  
   VirtualFile copyFile(Object requestor,
                        VirtualFile virtualFile,
                        VirtualFile newParent,

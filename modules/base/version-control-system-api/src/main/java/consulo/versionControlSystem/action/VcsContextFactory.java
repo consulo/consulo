@@ -42,7 +42,6 @@ public interface VcsContextFactory {
    * @param virtualFile the file for which the FilePath should be created.
    * @return the FilePath instance.
    */
-  
   FilePath createFilePathOn(VirtualFile virtualFile);
 
   /**
@@ -51,7 +50,6 @@ public interface VcsContextFactory {
    * @param file the file for which the FilePath should be created.
    * @return the FilePath instance.
    */
-  
   FilePath createFilePathOn(File file);
 
   /**
@@ -62,7 +60,6 @@ public interface VcsContextFactory {
    * @param isDirectory whether {@code file} specifies a file or a directory.
    * @return the FilePath instance.
    */
-  
   FilePath createFilePathOnDeleted(File file, boolean isDirectory);
 
   /**
@@ -73,7 +70,6 @@ public interface VcsContextFactory {
    * @param isDirectory whether {@code file} specifies a file or a directory.
    * @return the FilePath instance.
    */
-  
   FilePath createFilePathOn(File file, boolean isDirectory);
 
   /**
@@ -97,7 +93,6 @@ public interface VcsContextFactory {
    * @param isDirectory whether {@code file} specifies a file or a directory.
    * @return the FilePath instance.
    */
-  
   FilePath createFilePathOnNonLocal(String path, boolean isDirectory);
 
   /**
@@ -109,7 +104,6 @@ public interface VcsContextFactory {
    * @param name   the name of the file.
    * @return the FilePath instance.
    */
-  
   FilePath createFilePathOn(VirtualFile parent, String name);
 
   

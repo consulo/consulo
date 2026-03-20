@@ -88,9 +88,8 @@ public class SMTRunnerConsoleProperties extends TestConsoleProperties implements
         return myConfiguration;
     }
 
-    @Nullable
     @Override
-    public AnAction createImportAction() {
+    public @Nullable AnAction createImportAction() {
         return new ImportTestsGroup(this);
     }
 
@@ -110,15 +109,13 @@ public class SMTRunnerConsoleProperties extends TestConsoleProperties implements
         myPrintTestingStartedTime = printTestingStartedTime;
     }
 
-    @Nullable
     @Override
-    public Navigatable getErrorNavigatable(Location<?> location, String stacktrace) {
+    public @Nullable Navigatable getErrorNavigatable(Location<?> location, String stacktrace) {
         return getErrorNavigatable(location.getProject(), stacktrace);
     }
 
-    @Nullable
     @Override
-    public Navigatable getErrorNavigatable(final Project project, String stacktrace) {
+    public @Nullable Navigatable getErrorNavigatable(final Project project, String stacktrace) {
         if (myCustomFilter.isEmpty()) {
             return null;
         }
@@ -171,9 +168,8 @@ public class SMTRunnerConsoleProperties extends TestConsoleProperties implements
     }
 
     @Deprecated
-    @Nullable
     @RequiredReadAction
-    protected Navigatable findSuitableNavigatableForLine(Project project, VirtualFile file, int line) {
+    protected @Nullable Navigatable findSuitableNavigatableForLine(Project project, VirtualFile file, int line) {
         // lets find first non-ws psi element
         Document doc = FileDocumentManager.getInstance().getDocument(file);
         PsiFile psi = doc == null ? null : PsiDocumentManager.getInstance(project).getPsiFile(doc);

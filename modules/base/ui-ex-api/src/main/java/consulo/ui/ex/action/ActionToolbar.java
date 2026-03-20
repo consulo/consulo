@@ -99,7 +99,6 @@ public interface ActionToolbar {
     /**
      * @return component which represents the tool bar on UI
      */
-    
     default javax.swing.JComponent getComponent() {
         return (javax.swing.JComponent) TargetAWT.to(getUIComponent());
     }
@@ -107,7 +106,6 @@ public interface ActionToolbar {
     /**
      * @return component which represents the tool bar on UI
      */
-    
     default Component getUIComponent() {
         throw new AbstractMethodError();
     }

@@ -83,7 +83,6 @@ public abstract class SyntaxHighlighterFactory implements LanguageExtension {
    * @param virtualFile might be necessary to collect file specific settings
    * @return <code>SyntaxHighlighter</code> interface implementation for this particular language.
    */
-  
   public abstract SyntaxHighlighter getSyntaxHighlighter(@Nullable Project project, @Nullable VirtualFile virtualFile);
 
   /**

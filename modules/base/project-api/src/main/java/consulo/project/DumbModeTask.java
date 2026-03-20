@@ -41,7 +41,6 @@ public abstract class DumbModeTask implements Disposable {
    * @return an object whose {@link Object#equals(Object)} determines task equivalence. If several equivalent tasks are queued
    * for dumb mode execution at once, only one of them will be executed. By default the task object itself is returned.
    */
-  
   public final Object getEquivalenceObject() {
     return myEquivalenceObject;
   }

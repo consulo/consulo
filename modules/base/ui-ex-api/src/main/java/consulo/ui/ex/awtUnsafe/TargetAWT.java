@@ -81,7 +81,6 @@ public final class TargetAWT {
     /**
      * Wrap AWT component to untyped UI component. Calling any methods from it except #from() not supported
      */
-   
     public static Component wrap(java.awt.Component component) {
         return ourFacade.wrap(component);
     }

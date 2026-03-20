@@ -56,7 +56,6 @@ public class PostfixTemplatesChildConfigurable implements Configurable, Configur
   /**
    * @see PostfixTemplatesConfigurable#getId()
    */
-  
   @Override
   public String getId() {
     return "editing.postfixCompletion." + myPostfixTemplateProvider.getLanguage().getID();
@@ -69,9 +68,8 @@ public class PostfixTemplatesChildConfigurable implements Configurable, Configur
   }
 
   @RequiredUIAccess
-  @Nullable
   @Override
-  public JComponent createComponent(Disposable uiDisposable) {
+  public @Nullable JComponent createComponent(Disposable uiDisposable) {
     OnePixelSplitter splitter = new OnePixelSplitter();
     splitter.setSplitterProportionKey("PostfixTemplatesChildConfigurable.splitter");
 

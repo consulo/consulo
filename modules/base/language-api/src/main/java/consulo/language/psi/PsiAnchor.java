@@ -24,8 +24,7 @@ import org.jspecify.annotations.Nullable;
  * @since 2025-08-23
  */
 public interface PsiAnchor {
-    @Nullable
-    PsiElement retrieve();
+    @Nullable PsiElement retrieve();
 
     PsiFile getFile();
 

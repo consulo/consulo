@@ -40,7 +40,6 @@ public interface TextChange {
      *
      * @return text related to the change encapsulated by the current object
      */
-    
     CharSequence getText();
 
     /**
@@ -53,7 +52,6 @@ public interface TextChange {
      *
      * @return stored change text as a char array
      */
-    
     char[] getChars();
 
     /**

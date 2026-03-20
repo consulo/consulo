@@ -69,7 +69,6 @@ public class CharArrayUtil {
   /**
    * @deprecated use {@link #fromSequence(CharSequence)}
    */
-  
   public static char[] fromSequenceStrict(CharSequence seq) {
     return consulo.util.lang.CharArrayUtil.fromSequenceStrict(seq);
   }
@@ -81,7 +80,6 @@ public class CharArrayUtil {
   /**
    * @return the underlying char[] array if any, or the new chara array if not
    */
-  
   public static char[] fromSequence(CharSequence seq) {
     return consulo.util.lang.CharArrayUtil.fromSequence(seq);
   }
@@ -89,7 +87,6 @@ public class CharArrayUtil {
   /**
    * @return a new char array containing the sub-sequence's chars
    */
-  
   public static char[] fromSequence(CharSequence seq, int start, int end) {
     return consulo.util.lang.CharArrayUtil.fromSequence(seq, start, end);
   }

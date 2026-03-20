@@ -69,9 +69,8 @@ public abstract class SelectInContextImpl implements SelectInContext {
         return myPsiFile;
     }
 
-    @Nullable
     @RequiredReadAction
-    public static SelectInContext createContext(AnActionEvent event) {
+    public static @Nullable SelectInContext createContext(AnActionEvent event) {
         DataContext dataContext = event.getDataContext();
 
         SelectInContext result = createEditorContext(dataContext);
@@ -110,9 +109,8 @@ public abstract class SelectInContextImpl implements SelectInContext {
         return selectInContext;
     }
 
-    @Nullable
     @RequiredReadAction
-    private static SelectInContext createEditorContext(DataContext dataContext) {
+    private static @Nullable SelectInContext createEditorContext(DataContext dataContext) {
         Project project = dataContext.getData(Project.KEY);
         FileEditor editor = dataContext.getData(FileEditor.KEY);
         return createEditorContext(project, editor);
@@ -162,9 +160,8 @@ public abstract class SelectInContextImpl implements SelectInContext {
         }
     }
 
-    @Nullable
     @SuppressWarnings({"unchecked"})
-    private static <T> T safeCast(Object obj, Class<T> expectedClass) {
+    private static <T> @Nullable T safeCast(Object obj, Class<T> expectedClass) {
         if (expectedClass.isInstance(obj)) {
             return (T)obj;
         }

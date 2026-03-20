@@ -62,9 +62,8 @@ public class ProjectNewWindowDoNotAskOption implements DialogWrapper.DoNotAskOpt
         ProjectOpenSetting.getInstance().setConfirmOpenNewProject(value);
     }
 
-    @Nullable
     @Override
-    public Integer getValue() {
+    public @Nullable Integer getValue() {
         int confirmOpenNewProject = ProjectOpenSetting.getInstance().getConfirmOpenNewProject();
         if (confirmOpenNewProject == ProjectOpenSetting.OPEN_PROJECT_ASK) {
             return null;

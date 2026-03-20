@@ -38,18 +38,16 @@ public abstract class HashBangFileTypeDetector implements FileTypeDetector {
     myDescription = description;
   }
 
-  @Nullable
   @Override
-  public FileType detect(VirtualFile file, ByteSequence firstBytes, @Nullable CharSequence firstCharsIfText) {
+  public @Nullable FileType detect(VirtualFile file, ByteSequence firstBytes, @Nullable CharSequence firstCharsIfText) {
     if (HashBangChecker.isHashBangLine(firstCharsIfText, myMarker)) {
       return myFileType;
     }
     return null;
   }
 
-  @Nullable
   @Override
-  public Collection<? extends FileType> getDetectedFileTypes() {
+  public @Nullable Collection<? extends FileType> getDetectedFileTypes() {
     return List.of(myFileType);
   }
 

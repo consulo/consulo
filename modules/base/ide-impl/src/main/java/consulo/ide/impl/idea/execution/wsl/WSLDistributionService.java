@@ -75,9 +75,8 @@ public class WSLDistributionService implements PersistentStateComponent<WSLDistr
     return myDescriptors;
   }
 
-  @Nullable
   @Override
-  public WSLDistributionService getState() {
+  public @Nullable WSLDistributionService getState() {
     return this;
   }
 

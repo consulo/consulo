@@ -463,9 +463,8 @@ public class SimpleDiffViewer extends TwosideTextDiffViewer {
         return affectedChanges;
     }
 
-    @Nullable
     @RequiredUIAccess
-    private SimpleDiffChange getSelectedChange(Side side) {
+    private @Nullable SimpleDiffChange getSelectedChange(Side side) {
         int caretLine = getEditor(side).getCaretModel().getLogicalPosition().line;
 
         for (SimpleDiffChange change : myDiffChanges) {
@@ -648,9 +647,8 @@ public class SimpleDiffViewer extends TwosideTextDiffViewer {
             return "Accept";
         }
 
-        @Nullable
         @Override
-        protected Image getIcon(Side side) {
+        protected @Nullable Image getIcon(Side side) {
             return DiffImplUtil.getArrowIcon(myModifiedSide.other());
         }
 
@@ -684,9 +682,8 @@ public class SimpleDiffViewer extends TwosideTextDiffViewer {
             return isBothEditable() ? myModifiedSide.select("Append to the Left", "Append to the Right") : "Append";
         }
 
-        @Nullable
         @Override
-        protected Image getIcon(Side side) {
+        protected @Nullable Image getIcon(Side side) {
             return DiffImplUtil.getArrowDownIcon(myModifiedSide.other());
         }
 
@@ -817,10 +814,9 @@ public class SimpleDiffViewer extends TwosideTextDiffViewer {
     // Helpers
     //
 
-    @Nullable
     @Override
     @RequiredUIAccess
-    public Object getData(Key<?> dataId) {
+    public @Nullable Object getData(Key<?> dataId) {
         if (DiffDataKeys.PREV_NEXT_DIFFERENCE_ITERABLE == dataId) {
             return myPrevNextDifferenceIterable;
         }
@@ -900,9 +896,8 @@ public class SimpleDiffViewer extends TwosideTextDiffViewer {
     }
 
     private class MyStatusPanel extends StatusPanel {
-        @Nullable
         @Override
-        protected String getMessage() {
+        protected @Nullable String getMessage() {
             if (getHighlightPolicy() == HighlightPolicy.DO_NOT_HIGHLIGHT) {
                 return DiffLocalize.diffHighlightingDisabledText().get();
             }

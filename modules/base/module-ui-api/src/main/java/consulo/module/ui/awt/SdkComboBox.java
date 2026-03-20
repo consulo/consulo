@@ -524,9 +524,8 @@ public class SdkComboBox extends ComboBoxWithWidePopup {
             return mySdkPointer.get();
         }
 
-        @Nullable
         @Override
-        public String getSdkName() {
+        public @Nullable String getSdkName() {
             return mySdkPointer.getName();
         }
 
@@ -558,9 +557,8 @@ public class SdkComboBox extends ComboBoxWithWidePopup {
             return myPresentableName;
         }
 
-        @Nullable
         @Override
-        public String getSdkName() {
+        public @Nullable String getSdkName() {
             return myKey;
         }
     }

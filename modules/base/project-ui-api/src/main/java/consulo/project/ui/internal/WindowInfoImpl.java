@@ -108,7 +108,6 @@ public final class WindowInfoImpl implements Cloneable, WindowInfo {
     /**
      * Creates copy of <code>WindowInfo</code> object.
      */
-    
     public WindowInfoImpl copy() {
         try {
             WindowInfoImpl info = (WindowInfoImpl) clone();
@@ -144,7 +143,6 @@ public final class WindowInfoImpl implements Cloneable, WindowInfo {
     /**
      * @return tool window's anchor in internal mode.
      */
-    
     @Override
     public ToolWindowAnchor getAnchor() {
         return myAnchor;
@@ -182,7 +180,6 @@ public final class WindowInfoImpl implements Cloneable, WindowInfo {
      * window can be in floating mode, but this method has sense if you want to know what type
      * tool window had when it was internal one. The method never returns <code>null</code>.
      */
-    
     public ToolWindowType getInternalType() {
         return myInternalType;
     }

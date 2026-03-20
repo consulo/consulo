@@ -40,20 +40,15 @@ public interface PluginDescriptor {
 
     ClassLoader getPluginClassLoader();
 
-    @Nullable
-    File getPath();
+    @Nullable File getPath();
 
-    @Nullable
-    Path getNioPath();
+    @Nullable Path getNioPath();
 
-    @Nullable
-    String getDescription();
+    @Nullable String getDescription();
 
-    @Nullable
-    String getChangeNotes();
+    @Nullable String getChangeNotes();
 
-    @Nullable
-    String getName();
+    @Nullable String getName();
 
     PluginId[] getDependentPluginIds();
 
@@ -61,44 +56,34 @@ public interface PluginDescriptor {
 
     PluginId[] getIncompatibleWithPluginIds();
 
-    @Nullable
-    String getVendor();
+    @Nullable String getVendor();
 
-    @Nullable
-    String getVersion();
+    @Nullable String getVersion();
 
-    @Nullable
-    String getPlatformVersion();
+    @Nullable String getPlatformVersion();
 
-    @Nullable
-    String getResourceBundleBaseName();
+    @Nullable String getResourceBundleBaseName();
 
-    @Nullable
-    String getLocalization();
+    @Nullable String getLocalization();
 
     Set<String> getTags();
 
     List<SimpleXmlElement> getActionsDescriptionElements();
 
-    @Nullable
-    String getVendorEmail();
+    @Nullable String getVendorEmail();
 
-    @Nullable
-    String getVendorUrl();
+    @Nullable String getVendorUrl();
 
-    @Nullable
-    String getUrl();
+    @Nullable String getUrl();
 
     int getDownloads();
 
-    @Nullable
-    PluginPermissionDescriptor getPermissionDescriptor(PluginPermissionType permissionType);
+    @Nullable PluginPermissionDescriptor getPermissionDescriptor(PluginPermissionType permissionType);
 
     /**
      * If return not null, plugin loaded in module mode.
      */
-    @Nullable
-    ModuleLayer getModuleLayer();
+    @Nullable ModuleLayer getModuleLayer();
 
     @Deprecated
         //@DeprecationInfo("use #getIconBytes(darkOrLight)")
@@ -122,11 +107,9 @@ public interface PluginDescriptor {
 
     boolean isExperimental();
 
-    @Nullable
-    String getChecksumSHA3_256();
+    @Nullable String getChecksumSHA3_256();
 
-    @Nullable
-    <K, V> V getUserData(K key);
+    <K, V> @Nullable V getUserData(K key);
 
     /**
      * Put user data data

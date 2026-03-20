@@ -574,7 +574,6 @@ public class CommitHelper {
      * @see #unmarkCommittingDocuments(Collection)
      * @see VetoSavingCommittingDocumentsAdapter
      */
-    
     public static Collection<Document> markCommittingDocuments(Project project, List<Change> changes) {
         Collection<Document> committingDocs = new ArrayList<>();
         for (Change change : changes) {

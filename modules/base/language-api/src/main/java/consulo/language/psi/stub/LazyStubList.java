@@ -59,9 +59,8 @@ class LazyStubList extends StubList {
     return newStub;
   }
 
-  @Nullable
   @Override
-  public StubBase<?> getCachedStub(int index) {
+  public @Nullable StubBase<?> getCachedStub(int index) {
     return myStubs.get(index);
   }
 

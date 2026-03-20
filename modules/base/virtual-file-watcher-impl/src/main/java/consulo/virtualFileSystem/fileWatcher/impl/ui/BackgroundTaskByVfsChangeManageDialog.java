@@ -176,15 +176,13 @@ public class BackgroundTaskByVfsChangeManageDialog extends DialogWrapper {
     super.doOKAction();
   }
 
-  @Nullable
   @Override
-  protected String getDimensionServiceKey() {
+  protected @Nullable String getDimensionServiceKey() {
     return "#BackgroundTaskByVfsChangeManageDialog";
   }
 
-  @Nullable
   @Override
-  protected JComponent createCenterPanel() {
+  protected @Nullable JComponent createCenterPanel() {
     return myPanel;
   }
 }

@@ -33,9 +33,8 @@ public class VcsLogPanel extends JBPanel implements DataProvider {
     add(logUi.getMainFrame().getMainComponent(), BorderLayout.CENTER);
   }
 
-  @Nullable
   @Override
-  public Object getData(Key dataId) {
+  public @Nullable Object getData(Key dataId) {
     if (VcsLogInternalDataKeys.LOG_MANAGER == dataId) {
       return myManager;
     }

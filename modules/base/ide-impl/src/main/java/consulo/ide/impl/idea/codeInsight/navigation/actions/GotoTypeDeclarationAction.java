@@ -108,9 +108,8 @@ public class GotoTypeDeclarationAction extends BaseCodeInsightAction implements 
         return false;
     }
 
-    @Nullable
     @RequiredReadAction
-    public static PsiElement findSymbolType(Editor editor, int offset) {
+    public static @Nullable PsiElement findSymbolType(Editor editor, int offset) {
         PsiElement[] psiElements = findSymbolTypes(editor, offset);
         if (psiElements != null && psiElements.length > 0) {
             return psiElements[0];
@@ -118,9 +117,8 @@ public class GotoTypeDeclarationAction extends BaseCodeInsightAction implements 
         return null;
     }
 
-    @Nullable
     @RequiredReadAction
-    public static PsiElement[] findSymbolTypes(Editor editor, int offset) {
+    public static @Nullable PsiElement[] findSymbolTypes(Editor editor, int offset) {
         Set<String> flags = Set.of(
             TargetElementUtilExtender.REFERENCED_ELEMENT_ACCEPTED,
             TargetElementUtilExtender.ELEMENT_NAME_ACCEPTED,
@@ -156,9 +154,8 @@ public class GotoTypeDeclarationAction extends BaseCodeInsightAction implements 
         return null;
     }
 
-    @Nullable
     @RequiredReadAction
-    private static PsiElement[] getSymbolTypeDeclarations(PsiElement targetElement, Editor editor, int offset) {
+    private static @Nullable PsiElement[] getSymbolTypeDeclarations(PsiElement targetElement, Editor editor, int offset) {
         for (TypeDeclarationProvider provider : targetElement.getApplication().getExtensionList(TypeDeclarationProvider.class)) {
             PsiElement[] result = provider.getSymbolTypeDeclarations(targetElement, editor, offset);
             if (result != null) {

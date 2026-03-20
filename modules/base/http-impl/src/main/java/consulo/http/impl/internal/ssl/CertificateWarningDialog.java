@@ -86,9 +86,8 @@ public class CertificateWarningDialog extends DialogWrapper {
         LOG.debug("Preferred size: " + getPreferredSize());
     }
 
-    @Nullable
     @Override
-    protected JComponent createCenterPanel() {
+    protected @Nullable JComponent createCenterPanel() {
         return myRootPanel;
     }
 }

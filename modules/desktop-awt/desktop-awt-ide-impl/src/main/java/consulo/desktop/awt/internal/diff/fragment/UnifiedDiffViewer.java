@@ -980,9 +980,8 @@ public class UnifiedDiffViewer extends ListenerDiffViewerBase {
         return myPanel;
     }
 
-    @Nullable
     @Override
-    public JComponent getPreferredFocusedComponent() {
+    public @Nullable JComponent getPreferredFocusedComponent() {
         if (!myPanel.isGoodContent()) {
             return null;
         }
@@ -1015,16 +1014,14 @@ public class UnifiedDiffViewer extends ListenerDiffViewerBase {
     // Misc
     //
 
-    @Nullable
     @Override
     @RequiredUIAccess
-    protected Navigatable getNavigatable() {
+    protected @Nullable Navigatable getNavigatable() {
         return getNavigatable(myEditor.getCaretModel().getOffset());
     }
 
-    @Nullable
     @RequiredUIAccess
-    protected UnifiedDiffChange getCurrentChange() {
+    protected @Nullable UnifiedDiffChange getCurrentChange() {
         if (myChangedBlockData == null) {
             return null;
         }
@@ -1261,10 +1258,9 @@ public class UnifiedDiffViewer extends ListenerDiffViewerBase {
     // Helpers
     //
 
-    @Nullable
     @Override
     @RequiredUIAccess
-    public Object getData(Key<?> dataId) {
+    public @Nullable Object getData(Key<?> dataId) {
         if (DiffDataKeys.PREV_NEXT_DIFFERENCE_ITERABLE == dataId) {
             return myPrevNextDifferenceIterable;
         }
@@ -1284,9 +1280,8 @@ public class UnifiedDiffViewer extends ListenerDiffViewerBase {
     }
 
     private class MyStatusPanel extends StatusPanel {
-        @Nullable
         @Override
-        protected String getMessage() {
+        protected @Nullable String getMessage() {
             if (myChangedBlockData == null) {
                 return null;
             }
@@ -1441,10 +1436,9 @@ public class UnifiedDiffViewer extends ListenerDiffViewerBase {
             // Will not happen for initial rediff
         }
 
-        @Nullable
         @Override
         @RequiredUIAccess
-        protected LogicalPosition[] getCaretPositions() {
+        protected @Nullable LogicalPosition[] getCaretPositions() {
             LogicalPosition position = myEditor.getCaretModel().getLogicalPosition();
             Pair<int[], Side> pair = transferLineFromOneside(position.line);
             LogicalPosition[] carets = new LogicalPosition[2];

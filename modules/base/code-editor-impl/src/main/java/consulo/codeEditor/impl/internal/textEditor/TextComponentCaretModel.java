@@ -169,21 +169,18 @@ public class TextComponentCaretModel implements CaretModel {
         return Collections.singletonList(myCaret);
     }
 
-    @Nullable
     @Override
-    public Caret getCaretAt(VisualPosition pos) {
+    public @Nullable Caret getCaretAt(VisualPosition pos) {
         return myCaret.getVisualPosition().equals(pos) ? myCaret : null;
     }
 
-    @Nullable
     @Override
-    public Caret addCaret(VisualPosition pos) {
+    public @Nullable Caret addCaret(VisualPosition pos) {
         return null;
     }
 
-    @Nullable
     @Override
-    public Caret addCaret(VisualPosition pos, boolean makePrimary) {
+    public @Nullable Caret addCaret(VisualPosition pos, boolean makePrimary) {
         return null;
     }
 

@@ -58,9 +58,8 @@ public class FirstStartCustomizeUtil {
             }
 
             @RequiredUIAccess
-            @Nullable
             @Override
-            protected JComponent createSouthPanel() {
+            protected @Nullable JComponent createSouthPanel() {
                 return null;
             }
 

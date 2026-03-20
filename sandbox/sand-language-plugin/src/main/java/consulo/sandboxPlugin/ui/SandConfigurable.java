@@ -39,9 +39,8 @@ import java.net.URL;
 @ExtensionImpl
 public class SandConfigurable implements Configurable, ProjectConfigurable {
     @RequiredUIAccess
-    @Nullable
     @Override
-    public Component createUIComponent(Disposable parentDisposable) {
+    public @Nullable Component createUIComponent(Disposable parentDisposable) {
         VerticalLayout verticalLayout = VerticalLayout.create();
 
         verticalLayout.add(Button.create(LocalizeValue.localizeTODO("&Click me"), event -> {
@@ -77,9 +76,8 @@ public class SandConfigurable implements Configurable, ProjectConfigurable {
         return "sand.editor";
     }
 
-    @Nullable
     @Override
-    public String getParentId() {
+    public @Nullable String getParentId() {
         return StandardConfigurableIds.EDITOR_GROUP;
     }
 

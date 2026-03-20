@@ -485,9 +485,8 @@ public class DefaultActionGroup extends ActionGroup {
      */
     public static DefaultActionGroup createUserDataAwareGroup(String templateText) {
         return new DefaultActionGroup() {
-            @Nullable
             @Override
-            public String getTemplateText() {
+            public @Nullable String getTemplateText() {
                 return templateText;
             }
         };

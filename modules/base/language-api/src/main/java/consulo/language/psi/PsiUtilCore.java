@@ -101,31 +101,27 @@ public class PsiUtilCore {
             throw createException();
         }
 
-        @Nullable
         @Override
         @RequiredReadAction
-        public PsiElement getFirstChild() {
+        public @Nullable PsiElement getFirstChild() {
             throw createException();
         }
 
-        @Nullable
         @Override
         @RequiredReadAction
-        public PsiElement getLastChild() {
+        public @Nullable PsiElement getLastChild() {
             throw createException();
         }
 
-        @Nullable
         @Override
         @RequiredReadAction
-        public PsiElement getNextSibling() {
+        public @Nullable PsiElement getNextSibling() {
             throw createException();
         }
 
-        @Nullable
         @Override
         @RequiredReadAction
-        public PsiElement getPrevSibling() {
+        public @Nullable PsiElement getPrevSibling() {
             throw createException();
         }
 
@@ -159,10 +155,9 @@ public class PsiUtilCore {
             throw createException();
         }
 
-        @Nullable
         @Override
         @RequiredReadAction
-        public PsiReference findReferenceAt(int offset) {
+        public @Nullable PsiReference findReferenceAt(int offset) {
             throw createException();
         }
 
@@ -456,9 +451,8 @@ public class PsiUtilCore {
             throw createException();
         }
 
-        @Nullable
         @Override
-        public ItemPresentation getPresentation() {
+        public @Nullable ItemPresentation getPresentation() {
             throw createException();
         }
 
@@ -514,9 +508,8 @@ public class PsiUtilCore {
         return lang == Language.ANY ? getNotAnyLanguage(node.getTreeParent()) : lang;
     }
 
-    @Nullable
     @RequiredReadAction
-    public static VirtualFile getVirtualFile(@Nullable PsiElement element) {
+    public static @Nullable VirtualFile getVirtualFile(@Nullable PsiElement element) {
         // optimisation: call isValid() on file only to reduce walks up and down
         if (element == null) {
             return null;
@@ -604,9 +597,8 @@ public class PsiUtilCore {
     /**
      * @return name for element using element structure info
      */
-    @Nullable
     @RequiredReadAction
-    public static String getName(PsiElement element) {
+    public static @Nullable String getName(PsiElement element) {
         String name = null;
         if (element instanceof PsiMetaOwner metaOwner) {
             PsiMetaData data = metaOwner.getMetaData();
@@ -655,7 +647,6 @@ public class PsiUtilCore {
     /**
      * Tries to find PSI file for a virtual file and throws assertion error with debug info if it is null.
      */
-    
     @RequiredReadAction
     public static PsiFile getPsiFile(Project project, VirtualFile file) {
         PsiManager psiManager = PsiManager.getInstance(project);
@@ -701,9 +692,8 @@ public class PsiUtilCore {
     /**
      * @deprecated use CompletionUtil#getOriginalElement where appropriate instead
      */
-    @Nullable
     @RequiredReadAction
-    public static <T extends PsiElement> T getOriginalElement(T psiElement, Class<? extends T> elementClass) {
+    public static <T extends PsiElement> @Nullable T getOriginalElement(T psiElement, Class<? extends T> elementClass) {
         PsiFile psiFile = psiElement.getContainingFile();
         PsiFile originalFile = psiFile.getOriginalFile();
         if (originalFile == psiFile) {
@@ -806,9 +796,8 @@ public class PsiUtilCore {
         return PsiUtilCore.toPsiFileArray(result);
     }
 
-    @Nullable
     @RequiredReadAction
-    public static PsiFileSystemItem findFileSystemItem(@Nullable Project project, @Nullable VirtualFile file) {
+    public static @Nullable PsiFileSystemItem findFileSystemItem(@Nullable Project project, @Nullable VirtualFile file) {
         if (project == null || file == null || project.isDisposed() || !file.isValid()) {
             return null;
         }

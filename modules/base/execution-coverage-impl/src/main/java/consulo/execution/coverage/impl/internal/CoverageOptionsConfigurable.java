@@ -109,9 +109,8 @@ public class CoverageOptionsConfigurable extends SimpleConfigurable<CoverageOpti
         return "coverage";
     }
 
-    @Nullable
     @Override
-    public String getParentId() {
+    public @Nullable String getParentId() {
         return StandardConfigurableIds.EXECUTION_GROUP;
     }
 

@@ -50,8 +50,7 @@ public interface MergeTool {
         
         JComponent getComponent();
 
-        @Nullable
-        JComponent getPreferredFocusedComponent();
+        @Nullable JComponent getPreferredFocusedComponent();
 
         /**
          * @return Action that should be triggered on the corresponding action.
@@ -60,13 +59,11 @@ public interface MergeTool {
          * <p/>
          * return null if action is not available
          */
-        @Nullable
-        ActionRecord getResolveAction(MergeResult result);
+        @Nullable ActionRecord getResolveAction(MergeResult result);
 
         /**
          * Should be called after adding {@link #getComponent()} to the components hierarchy.
          */
-        
         @RequiredUIAccess
         ToolbarComponents init();
 

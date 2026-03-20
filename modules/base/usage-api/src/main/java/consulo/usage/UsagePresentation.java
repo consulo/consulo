@@ -29,8 +29,7 @@ public interface UsagePresentation {
     
     String getPlainText();
 
-    @Nullable
-    Image getIcon();
+    @Nullable Image getIcon();
 
     String getTooltipText();
 }

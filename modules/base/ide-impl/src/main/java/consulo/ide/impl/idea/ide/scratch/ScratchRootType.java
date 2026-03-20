@@ -57,22 +57,19 @@ public final class ScratchRootType extends RootType {
         return ScratchFileService.getInstance().getScratchesMapping().getMapping(file);
     }
 
-    @Nullable
     @Override
-    public Image substituteIcon(Project project, VirtualFile file) {
+    public @Nullable Image substituteIcon(Project project, VirtualFile file) {
         Image icon = ObjectUtil.chooseNotNull(super.substituteIcon(project, file), AllIcons.FileTypes.Text);
         return ImageEffects.layered(icon, AllIcons.Actions.Scratch);
     }
 
-    @Nullable
     @RequiredUIAccess
-    public VirtualFile createScratchFile(Project project, String fileName, Language language, String text) {
+    public @Nullable VirtualFile createScratchFile(Project project, String fileName, Language language, String text) {
         return createScratchFile(project, fileName, language, text, ScratchFileService.Option.create_new_always);
     }
 
-    @Nullable
     @RequiredUIAccess
-    public VirtualFile createScratchFile(
+    public @Nullable VirtualFile createScratchFile(
         Project project,
         String fileName,
         Language language,

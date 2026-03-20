@@ -74,8 +74,7 @@ class ToolSelectDialog extends DialogWrapper {
     return myToolsPanel;
   }
 
-  @Nullable
-  Tool getSelectedTool() {
+  @Nullable Tool getSelectedTool() {
     return myToolsPanel.getSingleSelectedTool();
   }
 

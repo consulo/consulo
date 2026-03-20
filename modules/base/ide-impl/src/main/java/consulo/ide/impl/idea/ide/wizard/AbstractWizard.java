@@ -402,9 +402,8 @@ public abstract class AbstractWizard<T extends Step> extends DialogWrapper {
   }
 
   @RequiredUIAccess
-  @Nullable
   @Override
-  public JComponent getPreferredFocusedComponent() {
+  public @Nullable JComponent getPreferredFocusedComponent() {
     JComponent component = getCurrentStepObject().getPreferredFocusedComponent();
     return component == null ? super.getPreferredFocusedComponent() : component;
   }

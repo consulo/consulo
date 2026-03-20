@@ -35,8 +35,7 @@ public interface ProjectViewPane extends UserDataHolder, DataProvider, Disposabl
   
   String getId();
 
-  @Nullable
-  String getSubId();
+  @Nullable String getSubId();
 
   
   SelectInTarget createSelectInTarget();
@@ -56,8 +55,7 @@ public interface ProjectViewPane extends UserDataHolder, DataProvider, Disposabl
     return AsyncResult.resolved();
   }
 
-  @Nullable
-  NodeDescriptor getSelectedDescriptor();
+  @Nullable NodeDescriptor getSelectedDescriptor();
 
   
   String[] getSubIds();

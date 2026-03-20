@@ -28,6 +28,5 @@ import org.jspecify.annotations.Nullable;
 public interface FileTemplateGroupDescriptorFactory {
     ExtensionPointName<FileTemplateGroupDescriptorFactory> EP_NAME = ExtensionPointName.create(FileTemplateGroupDescriptorFactory.class);
 
-    @Nullable
-    FileTemplateGroupDescriptor getFileTemplatesDescriptor();
+    @Nullable FileTemplateGroupDescriptor getFileTemplatesDescriptor();
 }

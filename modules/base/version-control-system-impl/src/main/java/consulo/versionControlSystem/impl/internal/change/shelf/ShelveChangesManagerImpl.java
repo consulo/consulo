@@ -125,9 +125,8 @@ public class ShelveChangesManagerImpl implements ShelveChangesManager, JDOMExter
         mySchemeManager = schemeManagerFactory.createSchemeManager(
             SHELVE_MANAGER_DIR_PATH,
             new BaseSchemeProcessor<ShelvedChangeList, ShelvedChangeListImpl>() {
-                @Nullable
                 @Override
-                public ShelvedChangeListImpl readScheme(Element element, boolean duringLoad) throws InvalidDataException {
+                public @Nullable ShelvedChangeListImpl readScheme(Element element, boolean duringLoad) throws InvalidDataException {
                     return readOneShelvedChangeList(element);
                 }
 
@@ -232,7 +231,6 @@ public class ShelveChangesManagerImpl implements ShelveChangesManager, JDOMExter
      *
      * @return collection of non-migrated or not deleted files to show a error somewhere outside
      */
-    
     public Collection<String> checkAndMigrateOldPatchResourcesToNewSchemeStorage() {
         Collection<String> nonMigratedPaths = new ArrayList<>();
         for (ShelvedChangeList list : mySchemeManager.getAllSchemes()) {

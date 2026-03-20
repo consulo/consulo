@@ -681,9 +681,8 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, ModuleRoo
     }
 
     @Override
-    @Nullable
     @SuppressWarnings("unchecked")
-    public <T extends ModuleExtension> T getExtension(Class<T> clazz) {
+    public <T extends ModuleExtension> @Nullable T getExtension(Class<T> clazz) {
         checkDisposed();
 
         if (myExtensions.isEmpty()) {
@@ -699,9 +698,8 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, ModuleRoo
     }
 
     @Override
-    @Nullable
     @SuppressWarnings("unchecked")
-    public <T extends ModuleExtension> T getExtensionWithoutCheck(Class<T> clazz) {
+    public <T extends ModuleExtension> @Nullable T getExtensionWithoutCheck(Class<T> clazz) {
         checkDisposed();
 
         if (myExtensions.isEmpty()) {
@@ -717,9 +715,8 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, ModuleRoo
     }
 
     @Override
-    @Nullable
     @SuppressWarnings("unchecked")
-    public <T extends ModuleExtension> T getExtension(String key) {
+    public <T extends ModuleExtension> @Nullable T getExtension(String key) {
         checkDisposed();
 
         ModuleExtension extension = myExtensions.get(key);
@@ -727,9 +724,8 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, ModuleRoo
     }
 
     @Override
-    @Nullable
     @SuppressWarnings("unchecked")
-    public <T extends ModuleExtension> T getExtensionWithoutCheck(String key) {
+    public <T extends ModuleExtension> @Nullable T getExtensionWithoutCheck(String key) {
         checkDisposed();
 
         ModuleExtension extension = myExtensions.get(key);
@@ -870,9 +866,8 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, ModuleRoo
         return moduleOrderEntry;
     }
 
-    @Nullable
     @Override
-    public LibraryOrderEntry findLibraryOrderEntry(Library library) {
+    public @Nullable LibraryOrderEntry findLibraryOrderEntry(Library library) {
         for (OrderEntry orderEntry : getOrderEntries()) {
             if (orderEntry instanceof LibraryOrderEntry && library.equals(((LibraryOrderEntry) orderEntry).getLibrary())) {
                 return (LibraryOrderEntry) orderEntry;
@@ -881,9 +876,8 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, ModuleRoo
         return null;
     }
 
-    @Nullable
     @Override
-    public ModuleExtensionWithSdkOrderEntry findModuleExtensionSdkEntry(ModuleExtension extension) {
+    public @Nullable ModuleExtensionWithSdkOrderEntry findModuleExtensionSdkEntry(ModuleExtension extension) {
         for (OrderEntry orderEntry : getOrderEntries()) {
             if (orderEntry instanceof ModuleExtensionWithSdkOrderEntry && extension.getId().equals(((ModuleExtensionWithSdkOrderEntry) orderEntry).getModuleExtensionId())) {
                 return (ModuleExtensionWithSdkOrderEntry) orderEntry;

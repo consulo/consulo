@@ -83,9 +83,8 @@ public class CompilerTask extends Task.Backgroundable {
         myEndCompilationStamp = endCompilationStamp;
     }
 
-    @Nullable
     @Override
-    public NotificationInfo getNotificationInfo() {
+    public @Nullable NotificationInfo getNotificationInfo() {
         int errors = myCounters.get(CompilerMessageCategory.ERROR);
         int warnings = myCounters.get(CompilerMessageCategory.WARNING);
 

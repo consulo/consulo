@@ -11,9 +11,8 @@ import java.io.IOException;
  * Represents key-value storage held by <a href="https://en.wikipedia.org/wiki/Search_engine_indexing#The_forward_index">forward index data structure</>.
  */
 public interface ForwardIndex extends KeyValueStore<Integer, ByteArraySequence> {
-  @Nullable
   @Override
-  ByteArraySequence get(Integer key) throws IOException;
+  @Nullable ByteArraySequence get(Integer key) throws IOException;
 
   @Override
   void put(Integer key, @Nullable ByteArraySequence value) throws IOException;

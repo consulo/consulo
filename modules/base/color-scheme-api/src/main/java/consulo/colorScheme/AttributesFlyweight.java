@@ -351,7 +351,6 @@ public class AttributesFlyweight {
     /**
      * @return all attributes effects, main and additional ones
      */
-    
     Map<EffectType, ColorValue> getAllEffects() {
         if (myAdditionalEffects.isEmpty()) {
             return myEffectType == null || myEffectColor == null ? Collections.emptyMap() : Collections.singletonMap(
@@ -450,7 +449,6 @@ public class AttributesFlyweight {
     /**
      * @see TextAttributes#setAdditionalEffects(java.util.Map)
      */
-    
     //@ApiStatus.Experimental
     public AttributesFlyweight withAdditionalEffects(Map<EffectType, ColorValue> additionalEffects) {
         return Comparing.equal(additionalEffects, myAdditionalEffects) ? this : create(

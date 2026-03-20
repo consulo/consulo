@@ -26,6 +26,5 @@ public interface PostfixTemplatePsiInfo {
   /**
    * You can assume that {@code element} is an element produced by {@code createExpression}
    */
-  
   public abstract PsiElement getNegatedExpression(PsiElement element);
 }

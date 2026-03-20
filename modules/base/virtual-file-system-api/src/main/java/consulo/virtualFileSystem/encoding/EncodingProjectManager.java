@@ -19,14 +19,12 @@ public interface EncodingProjectManager extends EncodingManager {
   /**
    * @return Project encoding name (configured in Settings|File Encodings|Project Encoding) or empty string if it's configured to "System Default"
    */
-  
   @Override
   String getDefaultCharsetName();
 
   /**
    * @return Project encoding (configured in Settings|File Encodings|Project Encoding)
    */
-  
   @Override
   Charset getDefaultCharset();
 
@@ -42,6 +40,5 @@ public interface EncodingProjectManager extends EncodingManager {
   /**
    * @return readonly map of current mappings. to modify mappings use {@link #setMapping(Map)}
    */
-  
   Map<? extends VirtualFile, ? extends Charset> getAllMappings();
 }

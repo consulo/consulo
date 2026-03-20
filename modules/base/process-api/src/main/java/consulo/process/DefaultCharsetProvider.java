@@ -32,6 +32,5 @@ public interface DefaultCharsetProvider {
     return Application.get().getInstance(DefaultCharsetProvider.class);
   }
 
-  @Nullable
-  Charset getDefaultCharset();
+  @Nullable Charset getDefaultCharset();
 }

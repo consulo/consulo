@@ -21,8 +21,7 @@ import org.jspecify.annotations.Nullable;
 import java.util.Collection;
 
 public interface FileReferenceResolver {
-  @Nullable
-  PsiFileSystemItem resolveFileReference(FileReference reference, String name);
+  @Nullable PsiFileSystemItem resolveFileReference(FileReference reference, String name);
 
   Collection<Object> getVariants(FileReference reference);
 }

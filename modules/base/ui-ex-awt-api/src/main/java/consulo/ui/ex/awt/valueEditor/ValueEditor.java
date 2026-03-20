@@ -16,7 +16,6 @@ public interface ValueEditor<T> {
    *
    * @return The current value or the default one if component doesn't contain valid data.
    */
-  
   T getValue();
 
   /**
@@ -29,14 +28,12 @@ public interface ValueEditor<T> {
   /**
    * @return The current default value.
    */
-  
   T getDefaultValue();
 
   /**
    * @return The value name used in validation messages.
    */
-  @Nullable
-  String getValueName();
+  @Nullable String getValueName();
 
   /**
    * Check if the current component content is valid and throw ConfigurationException if not.
@@ -56,7 +53,6 @@ public interface ValueEditor<T> {
    * @return Parsed data.
    * @throws ValueValidationException if parsing fails.
    */
-  
   T parseValue(@Nullable String text) throws ValueValidationException;
 
   /**

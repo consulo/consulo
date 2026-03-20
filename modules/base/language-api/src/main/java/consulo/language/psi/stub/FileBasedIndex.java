@@ -136,7 +136,6 @@ public abstract class FileBasedIndex {
      * It is guaranteed to return data which is up-to-date within the given project.
      * Keys obtained from the files which do not belong to the project specified may not be up-to-date or even exist.
      */
-    
     public abstract <K> Collection<K> getAllKeys(ID<K, ?> indexId, Project project);
 
     /**

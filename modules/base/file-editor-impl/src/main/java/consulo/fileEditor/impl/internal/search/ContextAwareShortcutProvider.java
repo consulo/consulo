@@ -20,6 +20,5 @@ import consulo.ui.ex.action.ShortcutSet;
 import org.jspecify.annotations.Nullable;
 
 public interface ContextAwareShortcutProvider {
-  @Nullable
-  ShortcutSet getShortcut(DataContext context);
+  @Nullable ShortcutSet getShortcut(DataContext context);
 }

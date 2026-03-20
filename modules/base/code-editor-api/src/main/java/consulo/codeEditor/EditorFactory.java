@@ -26,7 +26,6 @@ public abstract class EditorFactory {
    *
    * @return the editor factory instance.
    */
-  
   public static EditorFactory getInstance() {
     return Application.get().getInstance(EditorFactory.class);
   }
@@ -34,13 +33,11 @@ public abstract class EditorFactory {
   /**
    * Creates a document from the specified text specified as a character sequence.
    */
-  
   public abstract Document createDocument(CharSequence text);
 
   /**
    * Creates a document from the specified text specified as an array of characters.
    */
-  
   public abstract Document createDocument(char[] text);
 
   /**
@@ -133,13 +130,11 @@ public abstract class EditorFactory {
    * @param project  the project with which editors should be associated, or null if any editors
    *                 for this document should be returned.
    */
-  
   public abstract Editor[] getEditors(Document document, @Nullable Project project);
 
   /**
    * Returns the list of all editors for the specified document.
    */
-  
   public Editor[] getEditors(Document document) {
     return getEditors(document, null);
   }
@@ -147,7 +142,6 @@ public abstract class EditorFactory {
   /**
    * Returns the list of all currently open editors.
    */
-  
   public abstract Editor[] getAllEditors();
 
   /**
@@ -177,7 +171,6 @@ public abstract class EditorFactory {
   /**
    * Returns the service for attaching event listeners to all editor instances.
    */
-  
   public abstract EditorEventMulticaster getEventMulticaster();
 
   /**

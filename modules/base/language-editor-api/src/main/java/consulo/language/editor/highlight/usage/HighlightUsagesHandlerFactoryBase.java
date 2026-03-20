@@ -27,17 +27,15 @@ import org.jspecify.annotations.Nullable;
  * @author Konstantin Bulenkov
  */
 public abstract class HighlightUsagesHandlerFactoryBase<T extends PsiElement> implements HighlightUsagesHandlerFactory<T> {
-  @Nullable
   @Override
   @RequiredReadAction
-  public final HighlightUsagesHandlerBase<T> createHighlightUsagesHandler(Editor editor, PsiFile file) {
+  public final @Nullable HighlightUsagesHandlerBase<T> createHighlightUsagesHandler(Editor editor, PsiFile file) {
     int offset = TargetElementUtil.adjustOffset(file, editor.getDocument(), editor.getCaretModel().getOffset());
     PsiElement target = file.findElementAt(offset);
     if (target == null) return null;
     return createHighlightUsagesHandler(editor, file, target);
   }
 
-  @Nullable
   @RequiredReadAction
-  public abstract HighlightUsagesHandlerBase<T> createHighlightUsagesHandler(Editor editor, PsiFile file, PsiElement target);
+  public abstract @Nullable HighlightUsagesHandlerBase<T> createHighlightUsagesHandler(Editor editor, PsiFile file, PsiElement target);
 }

@@ -85,7 +85,6 @@ public abstract class FileTemplateManager {
   /**
    * Returns all templates from "Default" category.
    */
-  
   public abstract FileTemplate[] getAllTemplates();
 
   public abstract FileTemplate getTemplate(String templateName);
@@ -93,7 +92,6 @@ public abstract class FileTemplateManager {
   /**
    * @return a new Properties object filled with predefined properties.
    */
-  
   @Deprecated
   @DeprecationInfo("Use #getDefaultVariables()")
   public abstract Properties getDefaultProperties();
@@ -121,7 +119,6 @@ public abstract class FileTemplateManager {
    *
    * @return created template
    */
-  
   public abstract FileTemplate addTemplate(String name, String extension);
 
   public abstract void removeTemplate(FileTemplate template);
@@ -163,7 +160,6 @@ public abstract class FileTemplateManager {
   /**
    * Returns template with default (bundled) text.
    */
-  
   public abstract FileTemplate getDefaultTemplate(String name);
 
   public abstract void setTemplates(String templatesCategory, Collection<FileTemplate> templates);

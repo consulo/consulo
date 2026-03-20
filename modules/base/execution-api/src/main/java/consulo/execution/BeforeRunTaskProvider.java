@@ -72,7 +72,6 @@ public abstract class BeforeRunTaskProvider<T extends BeforeRunTask> {
     /**
      * @return <code>true</code> if task configuration is changed
      */
-    
     @RequiredUIAccess
     public abstract AsyncResult<Void> configureTask(RunConfiguration runConfiguration, T task);
 
@@ -98,9 +97,8 @@ public abstract class BeforeRunTaskProvider<T extends BeforeRunTask> {
         return executeTask(context, configuration, env, task) ? AsyncResult.resolved() : AsyncResult.rejected();
     }
 
-    @Nullable
     @SuppressWarnings("unchecked")
-    public static <T extends BeforeRunTask> BeforeRunTaskProvider<T> getProvider(Project project, Key<T> key) {
+    public static <T extends BeforeRunTask> @Nullable BeforeRunTaskProvider<T> getProvider(Project project, Key<T> key) {
         return project.getExtensionPoint(BeforeRunTaskProvider.class).findFirstSafe(provider -> provider.getId() == key);
     }
 }

@@ -98,9 +98,8 @@ public abstract class AbstractRepositoryManager<T extends Repository> implements
         });
     }
 
-    @Nullable
     @SuppressWarnings("unchecked")
-    private T validateAndGetRepository(@Nullable Repository repository) {
+    private @Nullable T validateAndGetRepository(@Nullable Repository repository) {
         if (repository == null ||
             !myVcsKey.equals(repository.getVcs().getKeyInstanceMethod()) ||
             !repository.getRoot().isValid()) {

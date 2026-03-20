@@ -404,9 +404,8 @@ public class PushLog extends JPanel implements DataProvider {
     }
 
     // Make changes available for diff action; revisionNumber for create patch and copy revision number actions
-    @Nullable
     @Override
-    public Object getData(Key<?> dataId) {
+    public @Nullable Object getData(Key<?> dataId) {
         if (VcsDataKeys.CHANGES == dataId) {
             List<CommitNode> commitNodes = getSelectedCommitNodes();
             return ArrayUtil.toObjectArray(collectAllChanges(commitNodes), Change.class);

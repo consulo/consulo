@@ -35,9 +35,8 @@ public class AutoImportOptionsConfigurable extends ConfigurableAdapter implement
     return "editor.preferences.import";
   }
 
-  @Nullable
   @Override
-  public String getParentId() {
+  public @Nullable String getParentId() {
     return StandardConfigurableIds.EDITOR_GROUP;
   }
 

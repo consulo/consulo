@@ -159,9 +159,8 @@ public class ScrollableSingleRowLayout extends SingleRowLayout {
     return getStrategy().getMinPosition(bounds) < -10 || bounds.isEmpty();
   }
 
-  @Nullable
   @Override
-  protected TabLabel findLastVisibleLabel(SingleRowPassInfo data) {
+  protected @Nullable TabLabel findLastVisibleLabel(SingleRowPassInfo data) {
     int i = data.toLayout.size()-1;
     while(i > 0) {
       TabInfo info = data.toLayout.get(i);

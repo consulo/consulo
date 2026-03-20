@@ -54,9 +54,8 @@ public class XBreakpointCustomGroupingRule<B> extends XBreakpointGroupingRule<B,
     return new XBreakpointCustomGroup(name);
   }
 
-  @Nullable
   @Override
-  public Image getIcon() {
+  public @Nullable Image getIcon() {
     return PlatformIconGroup.actionsNewfolder();
   }
 }

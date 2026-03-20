@@ -67,9 +67,8 @@ public class ApplyChangeSignatureAction extends BaseRefactoringIntentionAction i
     detector.performChange(currentInfo, editor, initialSignature);
   }
 
-  @Nullable
   @Override
-  public PsiElement getElementToMakeWritable(PsiFile file) {
+  public @Nullable PsiElement getElementToMakeWritable(PsiFile file) {
     return file;
   }
 

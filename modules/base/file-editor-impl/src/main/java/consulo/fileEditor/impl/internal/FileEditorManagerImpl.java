@@ -750,7 +750,6 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
      *              passed file is valid.
      * @param entry map between FileEditorProvider and FileEditorState. If this parameter
      */
-    
     public Pair<FileEditor[], FileEditorProvider[]> openFileImpl3(
         UIAccess uiAccess,
         FileEditorWindow window,
@@ -785,7 +784,6 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
     /**
      * This method can be invoked from background thread. Of course, UI for returned editors should be accessed from EDT in any case.
      */
-    
     public Pair<FileEditor[], FileEditorProvider[]> openFileImpl4(
         UIAccess uiAccess,
         FileEditorWindow window,
@@ -1074,9 +1072,8 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
         }
     }
 
-    @Nullable
     @RequiredUIAccess
-    public FileEditorWithProviderComposite newEditorComposite(VirtualFile file) {
+    public @Nullable FileEditorWithProviderComposite newEditorComposite(VirtualFile file) {
         if (file == null) {
             return null;
         }
@@ -1191,9 +1188,8 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
     }
 
     @Override
-    @Nullable
     @RequiredUIAccess
-    public Editor openTextEditor(OpenFileDescriptor descriptor, boolean focusEditor) {
+    public @Nullable Editor openTextEditor(OpenFileDescriptor descriptor, boolean focusEditor) {
         Collection<FileEditor> fileEditors = openEditor(descriptor, focusEditor);
         for (FileEditor fileEditor : fileEditors) {
             if (fileEditor instanceof TextEditor textEditor) {
@@ -1280,18 +1276,16 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
         return active == null ? getMainSplitters() : active;
     }
 
-    @Nullable
     @Override
     @RequiredUIAccess
-    public FileEditor getSelectedEditor(VirtualFile file) {
+    public @Nullable FileEditor getSelectedEditor(VirtualFile file) {
         FileEditorWithProvider selectedEditorWithProvider = getSelectedEditorWithProvider(file);
         return selectedEditorWithProvider == null ? null : selectedEditorWithProvider.getFileEditor();
     }
 
-    @Nullable
     @Override
     @RequiredUIAccess
-    public FileEditorWithProvider getSelectedEditorWithProvider(VirtualFile file) {
+    public @Nullable FileEditorWithProvider getSelectedEditorWithProvider(VirtualFile file) {
         if (file instanceof VirtualFileWindow virtualFileWindow) {
             file = virtualFileWindow.getDelegate();
         }
@@ -1357,9 +1351,8 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
         return editors.toArray(new FileEditor[editors.size()]);
     }
 
-    @Nullable
     @RequiredUIAccess
-    private FileEditorWithProviderComposite getCurrentEditorWithProviderComposite(VirtualFile virtualFile) {
+    private @Nullable FileEditorWithProviderComposite getCurrentEditorWithProviderComposite(VirtualFile virtualFile) {
         FileEditorWindow editorWindow = getSplitters().getCurrentWindow();
         if (editorWindow != null) {
             return editorWindow.findFileComposite(virtualFile);
@@ -1408,9 +1401,8 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
         }
     }
 
-    @Nullable
     @Override
-    public Disposable addTopComponent(FileEditor editor, ComponentContainer component) {
+    public @Nullable Disposable addTopComponent(FileEditor editor, ComponentContainer component) {
         FileEditorWithProviderComposite composite = getEditorComposite(editor);
         if (composite != null) {
             return composite.addTopComponent(editor, component);
@@ -1468,9 +1460,8 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
     }
 
     @RequiredUIAccess
-    @Nullable
     @Override
-    public Element getStateFromUI() {
+    public @Nullable Element getStateFromUI() {
         if (mySplitters == null) {
             // do not save if not initialized yet
             return null;
@@ -1482,9 +1473,8 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
     }
 
     @RequiredWriteAction
-    @Nullable
     @Override
-    public Element getState(Element element) {
+    public @Nullable Element getState(Element element) {
         return element;
     }
 
@@ -1619,9 +1609,8 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
         Disposer.dispose(editor);
     }
 
-    @Nullable
     @RequiredUIAccess
-    private FileEditorComposite getLastSelected() {
+    private @Nullable FileEditorComposite getLastSelected() {
         FileEditorWindow currentWindow = getActiveSplittersSync().getCurrentWindow();
         if (currentWindow != null) {
             return currentWindow.getSelectedEditor();

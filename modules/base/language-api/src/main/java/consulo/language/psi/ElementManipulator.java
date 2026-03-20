@@ -38,9 +38,8 @@ public interface ElementManipulator<T extends PsiElement> {
   ExtensionPointCacheKey<ElementManipulator, Function<Class, ElementManipulator>> KEY =
           ExtensionPointCacheKey.create("ElementManipulator", ByClassGrouper.build(ElementManipulator::getElementClass));
 
-  @Nullable
   @SuppressWarnings("unchecked")
-  public static <T extends PsiElement> ElementManipulator<T> getManipulator(T element) {
+  public static <T extends PsiElement> @Nullable ElementManipulator<T> getManipulator(T element) {
     Function<Class, ElementManipulator> call = Application.get().getExtensionPoint(ElementManipulator.class).getOrBuildCache(KEY);
     return call.apply(element.getClass());
   }

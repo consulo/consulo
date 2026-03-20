@@ -27,8 +27,7 @@ public interface WindowInfo {
   
   ToolWindowAnchor getAnchor();
 
-  @Nullable
-  Rectangle2D getFloatingBounds();
+  @Nullable Rectangle2D getFloatingBounds();
 
   boolean isSplit();
 

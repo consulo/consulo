@@ -282,9 +282,8 @@ class ApplyPatchViewer implements DataProvider, Disposable {
         return myPatchChanges;
     }
 
-    @Nullable
     @Override
-    public Object getData(Key<?> dataId) {
+    public @Nullable Object getData(Key<?> dataId) {
         if (Project.KEY == dataId) {
             return myProject;
         }
@@ -861,9 +860,8 @@ class ApplyPatchViewer implements DataProvider, Disposable {
     }
 
     private class MyStatusPanel extends StatusPanel {
-        @Nullable
         @Override
-        protected String getMessage() {
+        protected @Nullable String getMessage() {
             int totalUnresolved = 0;
             int alreadyApplied = 0;
             int notApplied = 0;

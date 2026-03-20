@@ -35,6 +35,5 @@ public interface InputValidatorEx extends InputValidator {
     return defaultError;
   }
 
-  @Nullable
-  String getErrorText(String inputString);
+  @Nullable String getErrorText(String inputString);
 }

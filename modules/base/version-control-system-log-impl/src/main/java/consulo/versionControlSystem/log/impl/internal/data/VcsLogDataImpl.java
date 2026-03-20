@@ -73,7 +73,6 @@ public class VcsLogDataImpl implements VcsLogData {
      * which is important because these details will be constantly visible to the user,
      * thus it would be annoying to re-load them from VCS if the cache overflows.
      */
-    
     private final TopCommitsCache myTopCommitsDetailsCache;
     
     private final VcsUserRegistryImpl myUserRegistry;

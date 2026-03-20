@@ -223,9 +223,8 @@ public class NotificationsManagerImpl extends NotificationsManager {
         }
     }
 
-    @Nullable
     @RequiredUIAccess
-    private Balloon notifyByBalloon(
+    private @Nullable Balloon notifyByBalloon(
         Notification notification,
         NotificationDisplayType displayType,
         @Nullable Project project
@@ -284,9 +283,8 @@ public class NotificationsManagerImpl extends NotificationsManager {
     }
 
     @Override
-    @Nullable
     @RequiredUIAccess
-    public Window findWindowForBalloon(@Nullable Project project) {
+    public @Nullable Window findWindowForBalloon(@Nullable Project project) {
         Window frame = TargetAWT.to(WindowManager.getInstance().getWindow(project));
         if (frame == null && project == null) {
             IdeFrame currentFrame = WelcomeFrameManager.getInstance().getCurrentFrame();
@@ -301,9 +299,8 @@ public class NotificationsManagerImpl extends NotificationsManager {
         return frame;
     }
 
-    @Nullable
     @RequiredUIAccess
-    public IdeFrame findIdeFrameForBalloon(@Nullable Project project) {
+    public @Nullable IdeFrame findIdeFrameForBalloon(@Nullable Project project) {
         Window windowForBalloon = findWindowForBalloon(project);
         consulo.ui.Window uiWindow = TargetAWT.from(windowForBalloon);
         return uiWindow == null ? null : uiWindow.getUserData(IdeFrame.KEY);
@@ -426,9 +423,8 @@ public class NotificationsManagerImpl extends NotificationsManager {
         }
         else if (!showFullContent && layoutData.maxScrollHeight != layoutData.fullHeight) {
             pane.setViewport(new GradientViewport(text, JBUI.insets(10, 0), true) {
-                @Nullable
                 @Override
-                protected Color getViewColor() {
+                protected @Nullable Color getViewColor() {
                     return layoutData.fillColor;
                 }
 

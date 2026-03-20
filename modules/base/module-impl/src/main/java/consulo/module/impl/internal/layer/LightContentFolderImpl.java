@@ -47,9 +47,8 @@ public class LightContentFolderImpl implements ContentFolder {
     return myContentFolderTypeProvider;
   }
 
-  @Nullable
   @Override
-  public VirtualFile getFile() {
+  public @Nullable VirtualFile getFile() {
     return myFile.getFile();
   }
 
@@ -71,9 +70,8 @@ public class LightContentFolderImpl implements ContentFolder {
     return Collections.emptyMap();
   }
 
-  @Nullable
   @Override
-  public <T> T getPropertyValue(Key<T> key) {
+  public <T> @Nullable T getPropertyValue(Key<T> key) {
     return null;
   }
 

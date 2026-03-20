@@ -264,9 +264,8 @@ public class VcsDirectoryConfigurationPanel extends JPanel {
             };
         }
 
-        @Nullable
         @Override
-        public String getMaxStringValue() {
+        public @Nullable String getMaxStringValue() {
             String maxString = null;
             for (String name : myAllVcss.keySet()) {
                 if (maxString == null || maxString.length() < name.length()) {

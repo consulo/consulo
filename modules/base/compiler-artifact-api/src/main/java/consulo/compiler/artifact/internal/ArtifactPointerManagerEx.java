@@ -29,6 +29,5 @@ public interface ArtifactPointerManagerEx extends ArtifactPointerManager {
    * <p>
    * It will be called from consulo.compiler.artifact.element.ArtifactPackagingElement, while ArtifactManager#loadState()
    */
-  
   public ArtifactPointer create(ArtifactManager artifactManager, String name);
 }

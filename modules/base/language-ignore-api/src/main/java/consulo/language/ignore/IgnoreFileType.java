@@ -37,7 +37,6 @@ public class IgnoreFileType extends LanguageFileType {
     /**
      * Current file type language.
      */
-    
     private final IgnoreLanguage language;
 
     /**
@@ -60,7 +59,6 @@ public class IgnoreFileType extends LanguageFileType {
      *
      * @return The file type name.
      */
-    
     @Override
     public String getId() {
         return language.getID() + ".file";
@@ -77,7 +75,6 @@ public class IgnoreFileType extends LanguageFileType {
      *
      * @return The file type description.
      */
-    
     @Override
     public LocalizeValue getDescription() {
         return language.getDisplayName();
@@ -88,7 +85,6 @@ public class IgnoreFileType extends LanguageFileType {
      *
      * @return The extension, not including the leading '.'.
      */
-    
     @Override
     public String getDefaultExtension() {
         return language.getExtension();
@@ -99,7 +95,6 @@ public class IgnoreFileType extends LanguageFileType {
      *
      * @return The icon instance, or null if no icon should be shown.
      */
-    
     @Override
     public Image getIcon() {
         return language.getIcon();

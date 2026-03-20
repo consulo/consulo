@@ -43,9 +43,8 @@ public class AWTComponentProviderUtil {
     return component instanceof JComponent ? (AWTComponentProvider)((JComponent)component).getClientProperty(KEY) : null;
   }
 
-  @Nullable
   @SuppressWarnings("unchecked")
-  public static <T extends AWTComponentProvider> T findChild(@Nullable Component child, Class<T> cls) {
+  public static <T extends AWTComponentProvider> @Nullable T findChild(@Nullable Component child, Class<T> cls) {
     if (child == null) {
       return null;
     }
@@ -67,9 +66,8 @@ public class AWTComponentProviderUtil {
     return null;
   }
 
-  @Nullable
   @SuppressWarnings("unchecked")
-  public static <T extends AWTComponentProvider> T findParent(@Nullable Component parent, Class<T> cls) {
+  public static <T extends AWTComponentProvider> @Nullable T findParent(@Nullable Component parent, Class<T> cls) {
     if (parent == null) {
       return null;
     }

@@ -121,7 +121,6 @@ public abstract class PsiDocumentManager {
    * This sequence is immutable.
    * @see consulo.ide.impl.idea.util.text.ImmutableCharSequence
    */
-  
   public abstract CharSequence getLastCommittedText(Document document);
 
   /**
@@ -148,7 +147,6 @@ public abstract class PsiDocumentManager {
    * @return the list of uncommitted documents.
    * @see #commitDocument(Document)
    */
-  
   public abstract Document[] getUncommittedDocuments();
 
   /**

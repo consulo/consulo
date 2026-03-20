@@ -118,9 +118,8 @@ public class ExternalSystemRecentTasksList extends JBList implements Supplier<Ex
     }
   }
 
-  @Nullable
   @Override
-  public ExternalTaskExecutionInfo get() {
+  public @Nullable ExternalTaskExecutionInfo get() {
     int[] indices = getSelectedIndices();
     if (indices == null || indices.length != 1) {
       return null;

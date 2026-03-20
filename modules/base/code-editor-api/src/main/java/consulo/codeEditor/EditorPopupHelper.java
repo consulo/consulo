@@ -46,7 +46,6 @@ public interface EditorPopupHelper {
    * @param editor the editor over which the popup is shown.
    * @return location as close as possible to the action origin.
    */
-  
   RelativePoint guessBestPopupLocation(Editor editor);
 
   /**

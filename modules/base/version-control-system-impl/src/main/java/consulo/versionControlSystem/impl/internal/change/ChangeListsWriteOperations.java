@@ -21,8 +21,7 @@ import consulo.versionControlSystem.change.LocalChangeList;
 import org.jspecify.annotations.Nullable;
 
 public interface ChangeListsWriteOperations {
-  @Nullable
-  String setDefault(String name);
+  @Nullable String setDefault(String name);
 
   boolean setReadOnly(String name, boolean value);
 
@@ -30,11 +29,9 @@ public interface ChangeListsWriteOperations {
 
   boolean removeChangeList(String name);
 
-  @Nullable
-  MultiMap<LocalChangeList, Change> moveChangesTo(String name, Change[] changes);
+  @Nullable MultiMap<LocalChangeList, Change> moveChangesTo(String name, Change[] changes);
 
   boolean editName(String fromName, String toName);
 
-  @Nullable
-  String editComment(String fromName, String newComment);
+  @Nullable String editComment(String fromName, String newComment);
 }

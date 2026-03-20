@@ -143,9 +143,8 @@ public class PsiAnchorFactoryImpl implements PsiAnchorFactory {
         return new PsiAnchorHardReference(element);
     }
 
-    @Nullable
     @RequiredReadAction
-    public static StubIndexReference createStubReference(PsiElement element, PsiFile containingFile) {
+    public static @Nullable StubIndexReference createStubReference(PsiElement element, PsiFile containingFile) {
         if (element instanceof StubBasedPsiElement elt && element.isPhysical()
             && (element instanceof PsiCompiledElement || canHaveStub(containingFile))) {
             IStubElementType elementType = elt.getElementType();

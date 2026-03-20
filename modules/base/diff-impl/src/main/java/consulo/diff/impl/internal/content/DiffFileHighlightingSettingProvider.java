@@ -29,9 +29,8 @@ import org.jspecify.annotations.Nullable;
 */
 @ExtensionImpl
 public class DiffFileHighlightingSettingProvider extends DefaultHighlightingSettingProvider {
-  @Nullable
   @Override
-  public FileHighlightingSetting getDefaultSetting(Project project, VirtualFile file) {
+  public @Nullable FileHighlightingSetting getDefaultSetting(Project project, VirtualFile file) {
     if (!DiffPsiFileSupport.isDiffFile(file)) return null;
     return FileHighlightingSetting.SKIP_INSPECTION;
   }

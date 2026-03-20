@@ -310,15 +310,13 @@ public class WebUIInternalImpl extends UIInternal {
     return window;
   }
 
-  @Nullable
   @Override
-  public Window _Window_getActiveWindow() {
+  public @Nullable Window _Window_getActiveWindow() {
     return null;
   }
 
-  @Nullable
   @Override
-  public Window _Window_getFocusedWindow() {
+  public @Nullable Window _Window_getFocusedWindow() {
     return null;
   }
 

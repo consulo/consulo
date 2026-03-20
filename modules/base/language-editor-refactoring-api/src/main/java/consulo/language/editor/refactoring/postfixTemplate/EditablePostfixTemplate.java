@@ -125,7 +125,6 @@ public abstract class EditablePostfixTemplate extends PostfixTemplate {
      * @param element element to which the template was applied
      * @return an element to remove before inserting the template
      */
-    
     protected PsiElement getElementToRemove(PsiElement element) {
         return element;
     }
@@ -137,7 +136,6 @@ public abstract class EditablePostfixTemplate extends PostfixTemplate {
      * @param element element to which the template was applied
      * @return a range to remove before inserting the template
      */
-    
     @RequiredReadAction
     protected TextRange getRangeToRemove(PsiElement element) {
         return getElementToRemove(element).getTextRange();

@@ -46,7 +46,6 @@ public interface ExecutionManager {
    *
    * @return the run content manager instance.
    */
-  
   @Deprecated
   @DeprecationInfo("RunContentManager is project service, use constructor injection")
   RunContentManager getContentManager();
@@ -56,7 +55,6 @@ public interface ExecutionManager {
    *
    * @return the list of processes.
    */
-  
   ProcessHandler[] getRunningProcesses();
 
   

@@ -80,9 +80,8 @@ public abstract class RunTab implements DataProvider, Disposable {
     myUi.getContentManager().addDataProvider(this);
   }
 
-  @Nullable
   @Override
-  public Object getData(Key<?> dataId) {
+  public @Nullable Object getData(Key<?> dataId) {
     if (RunProfile.KEY == dataId) {
       return myEnvironment == null ? null : myEnvironment.getRunProfile();
     }

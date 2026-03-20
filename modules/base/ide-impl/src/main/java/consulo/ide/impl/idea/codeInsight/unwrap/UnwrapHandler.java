@@ -81,9 +81,8 @@ public class UnwrapHandler implements CodeInsightActionHandler {
         return result;
     }
 
-    @Nullable
     @RequiredReadAction
-    private static UnwrapDescriptor getUnwrapDescription(PsiFile file) {
+    private static @Nullable UnwrapDescriptor getUnwrapDescription(PsiFile file) {
         return ContainerUtil.getFirstItem(UnwrapDescriptor.forLanguage(file.getLanguage()));
     }
 

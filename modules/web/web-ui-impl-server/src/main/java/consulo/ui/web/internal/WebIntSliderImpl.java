@@ -39,9 +39,8 @@ public class WebIntSliderImpl extends WebUnsupportedComponent implements IntSlid
     return false;
   }
 
-  @Nullable
   @Override
-  public Integer getValue() {
+  public @Nullable Integer getValue() {
     return null;
   }
 

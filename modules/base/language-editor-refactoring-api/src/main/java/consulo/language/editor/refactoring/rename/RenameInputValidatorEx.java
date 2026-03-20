@@ -24,6 +24,5 @@ import org.jspecify.annotations.Nullable;
  * @since 2011-03-14
  */
 public interface RenameInputValidatorEx extends RenameInputValidator {
-    @Nullable
-    String getErrorMessage(String newName, Project project);
+    @Nullable String getErrorMessage(String newName, Project project);
 }

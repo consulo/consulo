@@ -472,9 +472,8 @@ public class InfoAndProgressPanel extends JPanel implements Disposable, CustomSt
         return "progress";
     }
 
-    @Nullable
     @Override
-    public WidgetPresentation getPresentation() {
+    public @Nullable WidgetPresentation getPresentation() {
         return null;
     }
 

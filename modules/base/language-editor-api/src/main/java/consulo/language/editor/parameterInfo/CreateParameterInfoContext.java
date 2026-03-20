@@ -23,8 +23,7 @@ import consulo.language.psi.PsiElement;
 import org.jspecify.annotations.Nullable;
 
 public interface CreateParameterInfoContext extends ParameterInfoContext {
-  @Nullable
-  Object[] getItemsToShow();
+  @Nullable Object[] getItemsToShow();
 
   void setItemsToShow(Object[] items);
 

@@ -86,9 +86,8 @@ public class SessionDialog extends DialogWrapper {
         }
     }
 
-    @Nullable
     @Override
-    protected JComponent createCenterPanel() {
+    protected @Nullable JComponent createCenterPanel() {
         myCenterPanel.add(myConfigurationComponent, BorderLayout.CENTER);
         return myCenterPanel;
     }
@@ -99,10 +98,9 @@ public class SessionDialog extends DialogWrapper {
         return IdeFocusTraversalPolicy.getPreferredFocusedComponent(myConfigurationComponent);
     }
 
-    @Nullable
     @Override
     @RequiredUIAccess
-    protected ValidationInfo doValidate() {
+    protected @Nullable ValidationInfo doValidate() {
         updateButtons();
         return mySession.validateFields();
     }

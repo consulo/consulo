@@ -121,9 +121,8 @@ public class FoldingUpdate {
 
     private static final Key<Object> LAST_UPDATE_INJECTED_STAMP_KEY = Key.create("LAST_UPDATE_INJECTED_STAMP_KEY");
 
-    @Nullable
     @RequiredReadAction
-    public static Runnable updateInjectedFoldRegions(Editor editor, PsiFile file, boolean applyDefaultState) {
+    public static @Nullable Runnable updateInjectedFoldRegions(Editor editor, PsiFile file, boolean applyDefaultState) {
         if (file instanceof PsiCompiledElement) {
             return null;
         }

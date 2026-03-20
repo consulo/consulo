@@ -101,9 +101,8 @@ public class SelectConfigAction extends DumbAwareActionGroup implements AlwaysVi
                     super.actionPerformed(e);
                 }
 
-                @Nullable
                 @Override
-                protected RunnerAndConfigurationSettings getConfiguration(Project project) {
+                protected @Nullable RunnerAndConfigurationSettings getConfiguration(Project project) {
                     return myConfiguration;
                 }
             });

@@ -119,9 +119,8 @@ public class ID<K, V> extends IndexId<K, V> {
     return found == null ? new ID<>(name) : found;
   }
 
-  @Nullable
   @SuppressWarnings("unchecked")
-  public static <K, V> ID<K, V> findByName(String name) {
+  public static <K, V> @Nullable ID<K, V> findByName(String name) {
     return (ID<K, V>)findById(stringToId(name));
   }
 

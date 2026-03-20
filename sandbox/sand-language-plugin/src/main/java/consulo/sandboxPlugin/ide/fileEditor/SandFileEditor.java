@@ -83,9 +83,8 @@ public class SandFileEditor extends UserDataHolderBase implements FileEditor {
 
   }
 
-  @Nullable
   @Override
-  public FileEditorLocation getCurrentLocation() {
+  public @Nullable FileEditorLocation getCurrentLocation() {
     return null;
   }
 

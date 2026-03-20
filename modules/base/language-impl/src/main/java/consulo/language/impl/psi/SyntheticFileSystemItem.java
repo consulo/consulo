@@ -156,10 +156,9 @@ public abstract class SyntheticFileSystemItem extends PsiElementBase implements 
         return -1;
     }
 
-    @Nullable
     @Override
     @RequiredReadAction
-    public String getText() {
+    public @Nullable String getText() {
         return null;
     }
 

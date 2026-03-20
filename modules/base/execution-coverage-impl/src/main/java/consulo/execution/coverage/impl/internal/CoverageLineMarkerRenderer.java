@@ -159,9 +159,8 @@ public class CoverageLineMarkerRenderer implements LineMarkerRenderer, ActiveGut
             && e.getX() < gutter.getIconAreaOffset();
     }
 
-    @Nullable
     @Override
-    public String getTooltipText() {
+    public @Nullable String getTooltipText() {
         return null;
     }
 

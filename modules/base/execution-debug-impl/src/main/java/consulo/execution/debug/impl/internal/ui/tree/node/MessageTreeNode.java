@@ -98,9 +98,8 @@ public class MessageTreeNode extends XDebuggerTreeNode {
     return myEllipsis;
   }
 
-  @Nullable
   @Override
-  protected XDebuggerTreeNodeHyperlink getLink() {
+  protected @Nullable XDebuggerTreeNodeHyperlink getLink() {
     return myLink;
   }
 

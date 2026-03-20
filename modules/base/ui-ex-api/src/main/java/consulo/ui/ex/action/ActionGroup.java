@@ -217,7 +217,6 @@ public abstract class ActionGroup extends AnAction {
      *
      * @return An array representing children of this group. All returned children must be not {@code null}.
      */
-    
     public abstract AnAction[] getChildren(@Nullable AnActionEvent e);
 
     

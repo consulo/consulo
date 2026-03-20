@@ -226,9 +226,8 @@ public abstract class AbstractAutoTestManager implements PersistentStateComponen
     ProjectPropertiesComponent.getInstance(myProject).setValue(AUTO_TEST_MANAGER_DELAY, myDelayMillis, AUTO_TEST_MANAGER_DELAY_DEFAULT);
   }
 
-  @Nullable
   @Override
-  public State getState() {
+  public @Nullable State getState() {
     State state = new State();
     for (RunProfile profile : myEnabledRunProfiles) {
       saveConfigurationState(state, profile);

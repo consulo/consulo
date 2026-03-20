@@ -75,15 +75,13 @@ public class ValuesCompletionProvider<T> implements TextCompletionProvider {
     this(presentation, Collections.emptyList(), values, false);
   }
 
-  @Nullable
   @Override
-  public String getAdvertisement() {
+  public @Nullable String getAdvertisement() {
     return "";
   }
 
-  @Nullable
   @Override
-  public String getPrefix(String text, int offset) {
+  public @Nullable String getPrefix(String text, int offset) {
     return getPrefix(text, offset, mySeparators);
   }
 

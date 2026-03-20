@@ -108,9 +108,8 @@ public class EditorFilteringMarkupModelEx implements MarkupModelEx {
     public void dispose() {
     }
 
-    @Nullable
     @Override
-    public RangeHighlighterEx addPersistentLineHighlighter(@Nullable TextAttributesKey textAttributesKey, int lineNumber, int layer) {
+    public @Nullable RangeHighlighterEx addPersistentLineHighlighter(@Nullable TextAttributesKey textAttributesKey, int lineNumber, int layer) {
         return myDelegate.addPersistentLineHighlighter(textAttributesKey, lineNumber, layer);
     }
 

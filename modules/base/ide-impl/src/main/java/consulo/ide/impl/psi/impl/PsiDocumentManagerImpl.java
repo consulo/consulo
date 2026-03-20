@@ -72,10 +72,9 @@ public final class PsiDocumentManagerImpl extends PsiDocumentManagerBase {
         );
     }
 
-    @Nullable
     @Override
     @RequiredReadAction
-    public PsiFile getPsiFile(Document document) {
+    public @Nullable PsiFile getPsiFile(Document document) {
         PsiFile psiFile = super.getPsiFile(document);
         if (myUnitTestMode) {
             VirtualFile virtualFile = FileDocumentManager.getInstance().getFile(document);

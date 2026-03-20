@@ -55,8 +55,7 @@ class Customizer {
         return myCrossEscInfo;
     }
 
-    @Nullable
-    String [] getAutoCloseActionIds() {
+    @Nullable String [] getAutoCloseActionIds() {
         return myAutoCloseActionIds;
     }
 
@@ -157,8 +156,7 @@ class Customizer {
             this.groupC = TouchbarActionCustomizations.getCustomizations(group);
         }
 
-        @Nullable
-        TouchbarActionCustomizations getCustomizations() {
+        @Nullable TouchbarActionCustomizations getCustomizations() {
             return groupC;
         }
 

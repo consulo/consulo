@@ -22,7 +22,6 @@ import javax.swing.*;
 /**
  * Default implementation of the {@link ShortcutSet} interface.
  */
-
 public final class CustomShortcutSet implements ShortcutSet {
 
   public static final CustomShortcutSet EMPTY = new CustomShortcutSet(Shortcut.EMPTY_ARRAY);

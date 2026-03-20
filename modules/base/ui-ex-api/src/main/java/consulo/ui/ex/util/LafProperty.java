@@ -36,7 +36,6 @@ public final class LafProperty {
   /**
    * @deprecated use {@link #getListSelectionForeground(boolean)}
    */
-  
   @Deprecated
   public static Color getListSelectionForeground() {
     return getListSelectionForeground(true);

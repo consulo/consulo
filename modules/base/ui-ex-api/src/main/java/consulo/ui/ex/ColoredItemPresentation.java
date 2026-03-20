@@ -29,6 +29,5 @@ public interface ColoredItemPresentation extends ItemPresentation {
    *
    * @return the text attributes, or null if default text attributes should be used
    */
-  @Nullable
-  TextAttributesKey getTextAttributesKey();
+  @Nullable TextAttributesKey getTextAttributesKey();
 }

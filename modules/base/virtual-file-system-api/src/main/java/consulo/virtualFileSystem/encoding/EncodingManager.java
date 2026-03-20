@@ -34,7 +34,6 @@ public interface EncodingManager extends EncodingRegistry {
   /**
    * @return returns empty for system default
    */
-  
   String getDefaultCharsetName();
 
   void setDefaultCharsetName(String name);
@@ -43,8 +42,7 @@ public interface EncodingManager extends EncodingRegistry {
    * @return null for system-default
    */
   @Override
-  @Nullable
-  Charset getDefaultCharsetForPropertiesFiles(@Nullable VirtualFile virtualFile);
+  @Nullable Charset getDefaultCharsetForPropertiesFiles(@Nullable VirtualFile virtualFile);
 
   void setDefaultCharsetForPropertiesFiles(@Nullable VirtualFile virtualFile, @Nullable Charset charset);
 

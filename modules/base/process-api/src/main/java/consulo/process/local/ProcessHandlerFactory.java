@@ -38,7 +38,6 @@ public abstract class ProcessHandlerFactory {
   /**
    * Returns a new instance of the {@link ProcessHandler}.
    */
-  
   public final ProcessHandler createProcessHandler(GeneralCommandLine commandLine) throws ExecutionException {
     return createProcessHandler(commandLine, ProcessConsoleType.BUILTIN);
   }
@@ -51,7 +50,6 @@ public abstract class ProcessHandlerFactory {
    *
    * Instance of KillableProcessHandler
    */
-  
   public abstract ProcessHandler createKillableProcessHandler(GeneralCommandLine commandLine) throws ExecutionException;
 
   /**
@@ -59,13 +57,11 @@ public abstract class ProcessHandlerFactory {
    *
    * Instance of KillableProcessHandler
    */
-  
   public abstract ProcessHandler createKillableColoredProcessHandler(GeneralCommandLine commandLine) throws ExecutionException;
 
   /**
    * Returns a new instance of the {@link ProcessHandler} which is aware of ANSI coloring output.
    */
-  
   public abstract ProcessHandler createColoredProcessHandler(GeneralCommandLine commandLine) throws ExecutionException;
 
   

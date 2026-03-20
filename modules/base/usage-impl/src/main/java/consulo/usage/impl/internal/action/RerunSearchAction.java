@@ -35,9 +35,8 @@ import java.util.Objects;
  */
 @ActionImpl(id = "UsageView.Rerun", shortcutFrom = @ActionRef(id = IdeActions.ACTION_RERUN))
 public class RerunSearchAction extends DumbAwareAction {
-    @Nullable
     @Override
-    protected Image getTemplateIcon() {
+    protected @Nullable Image getTemplateIcon() {
         return PlatformIconGroup.actionsRerun();
     }
 

@@ -53,8 +53,7 @@ public interface StatusBar extends Disposable {
 
     void install(IdeFrame frame);
 
-    @Nullable
-    Project getProject();
+    @Nullable Project getProject();
 
     
     default consulo.ui.Component getUIComponent() {

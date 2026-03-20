@@ -28,7 +28,6 @@ public interface VcsLogRefresher {
    * Synchronously loads some recent commits from the VCS, builds the DataPack and queues to refresh everything. <br/>
    * This is called on log initialization and on the full refresh.
    */
-  
   DataPack readFirstBlock();
 
   /**

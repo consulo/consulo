@@ -40,8 +40,7 @@ public interface CompileDriver {
 
     CompileScope attachIntermediateOutputDirectories(CompileScope originalScope, Predicate<Compiler> filter);
 
-    @Nullable
-    VirtualFile getGenerationOutputDir(IntermediateOutputCompiler compiler, Module module, boolean forTestSources);
+    @Nullable VirtualFile getGenerationOutputDir(IntermediateOutputCompiler compiler, Module module, boolean forTestSources);
 
     Predicate<Compiler> getCompilerFilter();
 }

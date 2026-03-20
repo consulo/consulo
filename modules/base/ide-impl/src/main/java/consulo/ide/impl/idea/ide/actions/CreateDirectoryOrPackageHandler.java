@@ -178,9 +178,8 @@ public class CreateDirectoryOrPackageHandler implements InputValidatorEx {
         return myCreatedElement != null;
     }
 
-    @Nullable
     @RequiredUIAccess
-    private Boolean suggestCreatingFileInstead(String subDirName) {
+    private @Nullable Boolean suggestCreatingFileInstead(String subDirName) {
         boolean isDirectory = myType == CreateDirectoryOrPackageType.Directory;
 
         Boolean createFile = false;

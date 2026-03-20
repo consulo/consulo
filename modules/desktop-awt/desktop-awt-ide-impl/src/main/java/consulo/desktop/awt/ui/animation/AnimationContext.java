@@ -11,8 +11,7 @@ import java.util.function.Consumer;
 public final class AnimationContext<T> implements Consumer<T> {
 
   private
-  @Nullable
-  T value;
+  @Nullable T value;
 
   @Override
   public void accept(T t) {

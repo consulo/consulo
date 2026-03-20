@@ -95,8 +95,7 @@ public final class SystemShortcuts {
             return myActionIds;
         }
 
-        @Nullable
-        String getUnmutedActionId(MuteConflictsSettings settings) {
+        @Nullable String getUnmutedActionId(MuteConflictsSettings settings) {
             for (String actId : myActionIds) {
                 if (!settings.isMutedAction(actId)) {
                     return actId;
@@ -159,9 +158,8 @@ public final class SystemShortcuts {
         return ActionsTreeUtil.isActionFiltered(ActionManager.getInstance(), myKeymap, predicate);
     }
 
-    @Nullable
     @RequiredUIAccess
-    public Map<KeyboardShortcut, String> calculateConflicts(Keymap keymap, String actionId) {
+    public @Nullable Map<KeyboardShortcut, String> calculateConflicts(Keymap keymap, String actionId) {
         if (myKeyStroke2SysShortcut.isEmpty()) {
             return null;
         }

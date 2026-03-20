@@ -21,7 +21,6 @@ public interface EncodingRegistry {
   /**
    * @return charset configured in Settings|File Encodings|IDE encoding
    */
-  
   Charset getDefaultCharset();
 
   /**
@@ -31,8 +30,7 @@ public interface EncodingRegistry {
    * if useParentDefaults is true, encoding configured for nearest parent of virtualFile or,
    * null if there is no configured encoding found.
    */
-  @Nullable
-  Charset getEncoding(@Nullable VirtualFile virtualFile, boolean useParentDefaults);
+  @Nullable Charset getEncoding(@Nullable VirtualFile virtualFile, boolean useParentDefaults);
 
   /**
    * @param virtualFileOrDir null means project
@@ -48,7 +46,6 @@ public interface EncodingRegistry {
   /**
    * @return encoding used by default in {@link consulo.ide.impl.idea.execution.configurations.GeneralCommandLine}
    */
-  
   Charset getDefaultConsoleEncoding();
 
   

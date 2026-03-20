@@ -32,16 +32,13 @@ import org.jspecify.annotations.Nullable;
 public interface ChangeSignatureHandler extends RefactoringActionHandler {
     LocalizeValue REFACTORING_NAME = RefactoringLocalize.changesignatureRefactoringName();
 
-    @Nullable
-    PsiElement findTargetMember(PsiFile file, Editor editor);
+    @Nullable PsiElement findTargetMember(PsiFile file, Editor editor);
 
-    @Nullable
-    PsiElement findTargetMember(PsiElement element);
+    @Nullable PsiElement findTargetMember(PsiElement element);
 
     @Override
     @RequiredUIAccess
     void invoke(Project project, PsiElement[] elements, @Nullable DataContext dataContext);
 
-    @Nullable
-    String getTargetNotFoundMessage();
+    @Nullable String getTargetNotFoundMessage();
 }

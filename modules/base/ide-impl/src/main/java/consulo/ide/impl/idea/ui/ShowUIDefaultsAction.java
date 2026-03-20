@@ -74,15 +74,13 @@ public class ShowUIDefaultsAction extends AnAction implements DumbAware {
 
       public JBTable myTable;
 
-      @Nullable
       @Override
-      public JComponent getPreferredFocusedComponent() {
+      public @Nullable JComponent getPreferredFocusedComponent() {
         return myTable;
       }
 
-      @Nullable
       @Override
-      protected String getDimensionServiceKey() {
+      protected @Nullable String getDimensionServiceKey() {
         return project == null ? null : "UI.Defaults.Dialog";
       }
 
@@ -151,9 +149,8 @@ public class ShowUIDefaultsAction extends AnAction implements DumbAware {
         });
         JBScrollPane pane = new JBScrollPane(table);
         new TableSpeedSearch(table, new PairFunction<>() {
-          @Nullable
           @Override
-          public String fun(Object o, Cell cell) {
+          public @Nullable String fun(Object o, Cell cell) {
             return cell.column == 1 ? null : String.valueOf(o);
           }
         });

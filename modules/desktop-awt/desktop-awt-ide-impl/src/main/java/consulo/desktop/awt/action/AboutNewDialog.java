@@ -64,9 +64,8 @@ public class AboutNewDialog extends WholeWestDialogWrapper {
     init();
   }
 
-  @Nullable
   @Override
-  protected String getDimensionServiceKey() {
+  protected @Nullable String getDimensionServiceKey() {
     return getClass().getSimpleName() + ".dimensionKey";
   }
 
@@ -156,9 +155,8 @@ public class AboutNewDialog extends WholeWestDialogWrapper {
     return StringUtil.trimTrailing(builder.toString());
   }
 
-  @Nullable
   @Override
-  protected JComponent createSouthPanel() {
+  protected @Nullable JComponent createSouthPanel() {
     return null;
   }
 }

@@ -29,13 +29,11 @@ import org.jetbrains.annotations.TestOnly;
 import java.util.List;
 
 public interface FileManager extends Disposable {
-    @Nullable
     @RequiredReadAction
-    PsiFile findFile(VirtualFile vFile);
+    @Nullable PsiFile findFile(VirtualFile vFile);
 
-    @Nullable
     @RequiredReadAction
-    PsiDirectory findDirectory(VirtualFile vFile);
+    @Nullable PsiDirectory findDirectory(VirtualFile vFile);
 
     @RequiredWriteAction
     default void reloadFromDisk(PsiFile file) {
@@ -45,9 +43,8 @@ public interface FileManager extends Disposable {
     default void reloadFromDisk(PsiFile file, boolean ignoreDocument) {
     }
 
-    @Nullable
     @RequiredReadAction
-    PsiFile getCachedPsiFile(VirtualFile vFile);
+    @Nullable PsiFile getCachedPsiFile(VirtualFile vFile);
 
     @TestOnly
     void cleanupForNextTest();

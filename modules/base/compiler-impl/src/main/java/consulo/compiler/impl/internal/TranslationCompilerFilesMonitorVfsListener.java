@@ -72,9 +72,8 @@ public class TranslationCompilerFilesMonitorVfsListener implements AsyncFileList
         myProjectManagerProvider = projectManagerProvider;
     }
 
-    @Nullable
     @Override
-    public ChangeApplier prepareChange(List<? extends VFileEvent> events) {
+    public @Nullable ChangeApplier prepareChange(List<? extends VFileEvent> events) {
         List<VFileEvent> beforeEvents = new ArrayList<>();
         List<VFileEvent> afterEvents = new ArrayList<>();
 
@@ -409,9 +408,8 @@ public class TranslationCompilerFilesMonitorVfsListener implements AsyncFileList
                     return CONTINUE;
                 }
 
-                @Nullable
                 @Override
-                public Iterable<VirtualFile> getChildrenIterable(VirtualFile file) {
+                public @Nullable Iterable<VirtualFile> getChildrenIterable(VirtualFile file) {
                     return file.isDirectory() && dbOnly ? ((NewVirtualFile) file).iterInDbChildren() : null;
                 }
             }

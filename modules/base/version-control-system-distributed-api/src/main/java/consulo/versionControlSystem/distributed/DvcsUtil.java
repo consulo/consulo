@@ -104,7 +104,6 @@ public class DvcsUtil {
     /**
      * @deprecated use {@link VcsUtil#getShortVcsRootName}
      */
-    
     @Deprecated
     public static String getShortRepositoryName(Project project, VirtualFile root) {
         return VcsUtil.getShortVcsRootName(project, root);
@@ -279,7 +278,6 @@ public class DvcsUtil {
      * @param file File to read.
      * @return file content.
      */
-    
     public static String tryLoadFile(File file) throws RepoStateException {
         return tryLoadFile(file, null);
     }
@@ -290,15 +288,13 @@ public class DvcsUtil {
             .loadFileText(file, encoding == null ? StandardCharsets.UTF_8 : encoding)).trim(), file);
     }
 
-    @Nullable
     @Contract("_ , !null -> !null")
-    public static String tryLoadFileOrReturn(File file, @Nullable String defaultValue) {
+    public static @Nullable String tryLoadFileOrReturn(File file, @Nullable String defaultValue) {
         return tryLoadFileOrReturn(file, defaultValue, null);
     }
 
-    @Nullable
     @Contract("_ , !null, _ -> !null")
-    public static String tryLoadFileOrReturn(File file, @Nullable String defaultValue, @Nullable Charset encoding) {
+    public static @Nullable String tryLoadFileOrReturn(File file, @Nullable String defaultValue, @Nullable Charset encoding) {
         try {
             return tryLoadFile(file, encoding);
         }

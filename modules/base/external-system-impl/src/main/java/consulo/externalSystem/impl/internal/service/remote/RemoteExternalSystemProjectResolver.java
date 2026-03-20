@@ -37,9 +37,8 @@ public interface RemoteExternalSystemProjectResolver<S extends ExternalSystemExe
 
   RemoteExternalSystemProjectResolver<ExternalSystemExecutionSettings> NULL_OBJECT
     = new RemoteExternalSystemProjectResolver<ExternalSystemExecutionSettings>() {
-    @Nullable
     @Override
-    public DataNode<ProjectData> resolveProjectInfo(ExternalSystemTaskId id,
+    public @Nullable DataNode<ProjectData> resolveProjectInfo(ExternalSystemTaskId id,
                                                     String projectPath,
                                                     boolean isPreviewMode,
                                                     @Nullable ExternalSystemExecutionSettings settings)
@@ -73,8 +72,7 @@ public interface RemoteExternalSystemProjectResolver<S extends ExternalSystemExe
     }
   };
 
-  @Nullable
-  DataNode<ProjectData> resolveProjectInfo(ExternalSystemTaskId id,
+  @Nullable DataNode<ProjectData> resolveProjectInfo(ExternalSystemTaskId id,
                                            String projectPath,
                                            boolean isPreviewMode,
                                            @Nullable S settings)

@@ -42,13 +42,11 @@ public abstract class Task {
    * @see TaskRepository#extractId(String)
    * @see TaskManager#activateTask(Task, boolean)
    */
-  
   public abstract String getId();
 
   /**
    * @return ID in the form that is suitable for commit messages, dialogs, completion items, etc.
    */
-  
   public String getPresentableId() {
     return getId();
   }
@@ -58,7 +56,6 @@ public abstract class Task {
    *
    * @return description
    */
-  
   public abstract String getSummary();
 
   public abstract @Nullable String getDescription();
@@ -136,7 +133,6 @@ public abstract class Task {
    * @see #getId()
    * @see TaskRepository#getCommitMessageFormat()
    */
-  
   public String getNumber() {
     return extractNumberFromId(getId());
   }

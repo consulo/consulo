@@ -95,12 +95,10 @@ public class DirDiffSettings {
   public interface CompareModeNameProvider {
     String COMPARE_MODE_NAME_PROVIDER = "Compare mode name provider"; //NON-NLS
 
-    @Nullable
-    String getName(CompareMode mode);
+    @Nullable String getName(CompareMode mode);
   }
 
   public interface CustomSourceChooser {
-    @Nullable
-    DiffElement chooseSource(DiffElement first, DiffElement second);
+    @Nullable DiffElement chooseSource(DiffElement first, DiffElement second);
   }
 }

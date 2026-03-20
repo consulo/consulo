@@ -32,6 +32,5 @@ import java.util.Set;
 public interface NameSuggestionProvider {
   ExtensionPointName<NameSuggestionProvider> EP_NAME = ExtensionPointName.create(NameSuggestionProvider.class);
 
-  @Nullable
-  SuggestedNameInfo getSuggestedNames(PsiElement element, @Nullable PsiElement nameSuggestionContext, Set<String> result);
+  @Nullable SuggestedNameInfo getSuggestedNames(PsiElement element, @Nullable PsiElement nameSuggestionContext, Set<String> result);
 }

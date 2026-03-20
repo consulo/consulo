@@ -20,13 +20,11 @@ import org.jspecify.annotations.Nullable;
 import java.util.Iterator;
 
 public interface PeekableIterator<T> extends Iterator<T> {
-  @Nullable
-  T peek();
+  @Nullable T peek();
 
   PeekableIterator EMPTY = new PeekableIterator() {
-    @Nullable
     @Override
-    public Object peek() {
+    public @Nullable Object peek() {
       return null;
     }
 
@@ -35,9 +33,8 @@ public interface PeekableIterator<T> extends Iterator<T> {
       return false;
     }
 
-    @Nullable
     @Override
-    public Object next() {
+    public @Nullable Object next() {
       return null;
     }
 

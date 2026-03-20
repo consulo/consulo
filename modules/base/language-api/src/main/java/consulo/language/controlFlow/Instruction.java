@@ -13,19 +13,16 @@ public interface Instruction {
     /**
      * @return related psi elements. Can be null for fake instructions e.g. entry and exit points
      */
-    @Nullable
-    PsiElement getElement();
+    @Nullable PsiElement getElement();
 
     /**
      * Outgoing edges
      */
-    
     Collection<Instruction> allSucc();
 
     /**
      * Incoming edges
      */
-    
     Collection<Instruction> allPred();
 
     int num();
@@ -33,8 +30,6 @@ public interface Instruction {
     /**
      * element presentation is used in toString() for dumping the graph
      */
-    
-    
     String getElementPresentation();
 
     default void addSucc(Instruction endInstruction) {

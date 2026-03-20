@@ -238,9 +238,8 @@ public class QuickListsPanel implements SearchableConfigurable, Configurable.NoS
         return LocalizeValue.localizeTODO("Quick Lists");
     }
 
-    @Nullable
     @Override
-    public String getParentId() {
+    public @Nullable String getParentId() {
         return StandardConfigurableIds.GENERAL_GROUP;
     }
 

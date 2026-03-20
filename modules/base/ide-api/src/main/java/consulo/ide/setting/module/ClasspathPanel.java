@@ -40,8 +40,7 @@ public interface ClasspathPanel {
 
   void navigate(AnActionEvent fromInputEvent, boolean openLibraryEditor);
 
-  @Nullable
-  OrderEntry getSelectedEntry();
+  @Nullable OrderEntry getSelectedEntry();
 
   
   LibraryTableModifiableModelProvider getModifiableModelProvider(String tableLevel);

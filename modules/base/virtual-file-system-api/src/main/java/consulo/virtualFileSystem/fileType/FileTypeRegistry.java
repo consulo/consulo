@@ -67,7 +67,6 @@ public abstract class FileTypeRegistry {
      *
      * @return The list of file types.
      */
-    
     public abstract FileType[] getRegisteredFileTypes();
 
     /**
@@ -76,7 +75,6 @@ public abstract class FileTypeRegistry {
      * @param file The file for which the type is requested.
      * @return The file type instance.
      */
-    
     public abstract FileType getFileTypeByFile(VirtualFile file);
 
     /**
@@ -86,7 +84,6 @@ public abstract class FileTypeRegistry {
      * @param content Content of the file (if already available, to avoid reading from disk again)
      * @return The file type instance.
      */
-    
     public FileType getFileTypeByFile(VirtualFile file, @Nullable byte[] content) {
         return getFileTypeByFile(file);
     }
@@ -97,7 +94,6 @@ public abstract class FileTypeRegistry {
      * @param fileNameSeq The file name for which the type is requested.
      * @return The file type instance, or {@link FileTypes#UNKNOWN} if not found.
      */
-    
     public FileType getFileTypeByFileName(CharSequence fileNameSeq) {
         return getFileTypeByFileName(fileNameSeq.toString());
     }
@@ -107,7 +103,6 @@ public abstract class FileTypeRegistry {
      * <p>
      * Consider to use the method above in case when you want to get VirtualFile's file type by file name.
      */
-    
     public abstract FileType getFileTypeByFileName(String fileTypeId);
 
     /**
@@ -117,7 +112,6 @@ public abstract class FileTypeRegistry {
      * @param extension The extension for which the file type is requested, not including the leading '.'.
      * @return The file type instance, or {@link UnknownFileType#INSTANCE} if corresponding file type not found
      */
-    
     public abstract FileType getFileTypeByExtension(String extension);
 
     /**
@@ -125,13 +119,11 @@ public abstract class FileTypeRegistry {
      */
     public abstract @Nullable FileType findFileTypeByName(String fileTypeName);
 
-    @Nullable
     @RequiredUIAccess
-    public abstract FileType getKnownFileTypeOrAssociate(VirtualFile file, ComponentManager project);
+    public abstract @Nullable FileType getKnownFileTypeOrAssociate(VirtualFile file, ComponentManager project);
 
-    @Nullable
     @RequiredUIAccess
-    public abstract FileType getKnownFileTypeOrAssociate(String fileName);
+    public abstract @Nullable FileType getKnownFileTypeOrAssociate(String fileName);
 
     public @Nullable FileType getFileTypeByMimeType(@Nullable String mimeType) {
         return null;

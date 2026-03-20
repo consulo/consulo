@@ -164,10 +164,8 @@ public class RefreshVFsSynchronously {
   private interface ChangeWrapper {
     boolean beforeNull(Change change);
     boolean afterNull(Change change);
-    @Nullable
-    File getBeforeFile(Change change);
-    @Nullable
-    File getAfterFile(Change change);
+    @Nullable File getBeforeFile(Change change);
+    @Nullable File getAfterFile(Change change);
     boolean movedOrRenamedOrReplaced(Change change);
   }
 

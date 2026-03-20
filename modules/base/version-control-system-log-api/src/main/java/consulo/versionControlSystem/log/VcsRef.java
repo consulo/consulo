@@ -27,24 +27,20 @@ public interface VcsRef {
   /**
    * Returns the hash of the commit which this reference points to.
    */
-  
   Hash getCommitHash();
 
   /**
    * Returns the display name of the reference.
    */
-  
   String getName();
 
   /**
    * Returns the type of this reference. There can be different types across different VCS.
    */
-  
   VcsRefType getType();
 
   /**
    * Returns the VCS root this reference belongs to.
    */
-  
   VirtualFile getRoot();
 }

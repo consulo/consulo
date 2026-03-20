@@ -26,8 +26,7 @@ public final class StubProcessingHelper extends StubProcessingHelperBase {
     Application.get().invokeLater(() -> FileBasedIndex.getInstance().requestReindex(file), IdeaModalityState.nonModal());
   }
 
-  @Nullable
-  Set<VirtualFile> takeAccumulatedFilesWithIndexProblems() {
+  @Nullable Set<VirtualFile> takeAccumulatedFilesWithIndexProblems() {
     Set<VirtualFile> filesWithProblems = myFilesHavingProblems.get();
     if (filesWithProblems != null) myFilesHavingProblems.set(null);
     return filesWithProblems;

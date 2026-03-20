@@ -52,8 +52,7 @@ public interface VirtualFilePointerContainer {
   
   VirtualFile[] getDirectories();
 
-  @Nullable
-  VirtualFilePointer findByUrl(String url);
+  @Nullable VirtualFilePointer findByUrl(String url);
 
   void clear();
 
@@ -101,6 +100,5 @@ public interface VirtualFilePointerContainer {
   /**
    * Returns list of (directory url, isRecursive) which were added via {@link #addJarDirectory(String, boolean)} }
    */
-  
   List<Pair<String, Boolean>> getJarDirectories();
 }

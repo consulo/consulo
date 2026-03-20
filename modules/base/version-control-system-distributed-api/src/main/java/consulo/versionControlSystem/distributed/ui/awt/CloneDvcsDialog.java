@@ -366,7 +366,6 @@ public abstract class CloneDvcsDialog extends DialogWrapper {
      * @param url an URL to checkout
      * @return a default repository name
      */
-    
     private static String defaultDirectoryName(String url, String vcsDirName) {
         String nonSystemName;
         if (url.endsWith("/" + vcsDirName) || url.endsWith(File.separator + vcsDirName)) {
@@ -387,10 +386,9 @@ public abstract class CloneDvcsDialog extends DialogWrapper {
         return i >= 0 ? nonSystemName.substring(i + 1) : "";
     }
 
-    @Nullable
     @Override
     @RequiredUIAccess
-    public JComponent getPreferredFocusedComponent() {
+    public @Nullable JComponent getPreferredFocusedComponent() {
         return myRepositoryURL;
     }
 

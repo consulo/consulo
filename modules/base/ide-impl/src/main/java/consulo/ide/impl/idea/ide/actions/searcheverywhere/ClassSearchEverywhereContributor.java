@@ -110,10 +110,9 @@ public class ClassSearchEverywhereContributor extends AbstractGotoSEContributor 
         return super.preparePsi(psiElement, modifiers, searchText);
     }
 
-    @Nullable
     @Override
     @RequiredReadAction
-    protected Navigatable createExtendedNavigatable(PsiElement psi, String searchText, int modifiers) {
+    protected @Nullable Navigatable createExtendedNavigatable(PsiElement psi, String searchText, int modifiers) {
         Navigatable res = super.createExtendedNavigatable(psi, searchText, modifiers);
         if (res != null) {
             return res;

@@ -63,9 +63,8 @@ public class CompilerConfigurationImpl extends CompilerConfiguration {
         myModuleManager = moduleManager;
     }
 
-    @Nullable
     @Override
-    public VirtualFile getCompilerOutput() {
+    public @Nullable VirtualFile getCompilerOutput() {
         if (myOutputDirPointer == null) {
             VirtualFile baseDir = myProject.getBaseDir();
             if (baseDir == null) {

@@ -62,7 +62,6 @@ public class BaseOSProcessHandler extends LocalProcessHandler<Process> {
   /**
    * Override this method to fine-tune {@link BaseOutputReader} behavior.
    */
-  
   protected BaseOutputReader.Options readerOptions() {
     if (Boolean.getBoolean("output.reader.blocking.mode")) {
       return BaseOutputReader.Options.BLOCKING;

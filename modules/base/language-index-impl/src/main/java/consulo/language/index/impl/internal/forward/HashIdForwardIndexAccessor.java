@@ -21,9 +21,8 @@ public class HashIdForwardIndexAccessor<Key, Value, Input> extends AbstractMapFo
         mySnapshotInputMappingIndex = snapshotInputMappingIndex;
     }
 
-    @Nullable
     @Override
-    protected Map<Key, Value> convertToMap(@Nullable Integer hashId) throws IOException {
+    protected @Nullable Map<Key, Value> convertToMap(@Nullable Integer hashId) throws IOException {
         return hashId == null ? null : mySnapshotInputMappingIndex.readData(hashId);
     }
 
@@ -38,9 +37,8 @@ public class HashIdForwardIndexAccessor<Key, Value, Input> extends AbstractMapFo
         return data == InputData.empty() ? 0 : ((HashedInputData<Key, Value>) data).getHashId();
     }
 
-    @Nullable
     @Override
-    public Integer convertToDataType(InputData<Key, Value> data) {
+    public @Nullable Integer convertToDataType(InputData<Key, Value> data) {
         return serializeIndexedDataToInt(data);
     }
 }

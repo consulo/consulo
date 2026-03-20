@@ -92,9 +92,8 @@ public class ModuleLayerWidget extends EditorBasedStatusBarPopup implements Cust
         });
     }
 
-    @Nullable
     @Override
-    protected ListPopup createPopup(DataContext context) {
+    protected @Nullable ListPopup createPopup(DataContext context) {
         ActionGroup.Builder builder = ActionGroup.newImmutableBuilder();
 
         ListWithSelection<String> profiles = getLayers();

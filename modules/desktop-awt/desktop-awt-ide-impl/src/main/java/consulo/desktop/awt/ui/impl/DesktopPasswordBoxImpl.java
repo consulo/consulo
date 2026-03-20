@@ -53,9 +53,8 @@ public class DesktopPasswordBoxImpl extends SwingValidableComponent<String, Desk
         return new MyPasswordField(myInitPassword);
     }
 
-    @Nullable
     @Override
-    public String getValue() {
+    public @Nullable String getValue() {
         return StringUtil.nullize(toAWTComponent().getText());
     }
 

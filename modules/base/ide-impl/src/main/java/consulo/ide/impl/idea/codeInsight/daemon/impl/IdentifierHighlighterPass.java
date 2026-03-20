@@ -147,7 +147,6 @@ public class IdentifierHighlighterPass extends TextEditorHighlightingPass {
      * @param psiElement psi element to search in
      * @return a pair where first element is read usages and second is write usages
      */
-    
     @RequiredReadAction
     public static Couple<Collection<TextRange>> getHighlightUsages(
         PsiElement target,
@@ -163,7 +162,6 @@ public class IdentifierHighlighterPass extends TextEditorHighlightingPass {
      * @param target     target psi element
      * @param psiElement psi element to search in
      */
-    
     @RequiredReadAction
     public static Collection<TextRange> getUsages(PsiElement target, PsiElement psiElement, boolean withDeclarations) {
         return getUsages(target, psiElement, withDeclarations, false).first;

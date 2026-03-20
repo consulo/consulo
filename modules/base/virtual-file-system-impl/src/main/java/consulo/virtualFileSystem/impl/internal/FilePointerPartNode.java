@@ -341,8 +341,7 @@ class FilePointerPartNode {
     /**
      * @return null means this node's myFileAndUrl became invalid
      */
-    @Nullable
-    // returns pair.second != null always
+    @Nullable // returns pair.second != null always
     Pair<VirtualFile, String> update() {
         long lastUpdated = myLastUpdated;
         Pair<VirtualFile, String> fileAndUrl = myFileAndUrl;

@@ -52,7 +52,6 @@ public abstract class XValue extends XValueContainer {
   /**
    * Asynchronously calculates expression which evaluates to the current value
    */
-  
   public AsyncResult<XExpression> calculateEvaluationExpression() {
     String expression = getEvaluationExpression();
     XExpression res =
@@ -90,7 +89,6 @@ public abstract class XValue extends XValueContainer {
    * {@link ThreeState#YES} if applicable
    * {@link ThreeState#NO} if not applicable
    */
-  
   public ThreeState computeInlineDebuggerData(XInlineDebuggerDataCallback callback) {
     return ThreeState.UNSURE;
   }

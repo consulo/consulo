@@ -82,9 +82,8 @@ public class DesktopDataManagerImpl extends BaseDataManager {
     }
 
     @Override
-    @Nullable
     @SuppressWarnings("unchecked")
-    protected <T> T doGetData(Key<T> dataId) {
+    protected <T> @Nullable T doGetData(Key<T> dataId) {
       Component component = getComponent();
       if (PlatformDataKeys.IS_MODAL_CONTEXT == dataId) {
         if (component == null) {
@@ -142,9 +141,8 @@ public class DesktopDataManagerImpl extends BaseDataManager {
   }
 
   @Override
-  @Nullable
   @SuppressWarnings("deprecation")
-  public DataProvider getDataProviderEx(Component component) {
+  public @Nullable DataProvider getDataProviderEx(Component component) {
     DataProvider dataProvider = null;
     if (component instanceof DataProvider) {
       dataProvider = (DataProvider)component;
@@ -247,8 +245,7 @@ public class DesktopDataManagerImpl extends BaseDataManager {
   }
 
   @Override
-  @Nullable
-  // FIXME [VISTALL] hack until not all UI code will return consulo.ui.Component
+  @Nullable // FIXME [VISTALL] hack until not all UI code will return consulo.ui.Component
   protected <T> T getData(Key<T> dataId, consulo.ui.Component focusedComponent) {
     return getData(dataId, TargetAWT.to(focusedComponent));
   }

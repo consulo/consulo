@@ -59,7 +59,6 @@ public abstract class LanguageCodeStyleSettingsProvider implements CodeStyleSett
      *
      * @return The language name to show in preview tab (null by default).
      */
-    
     public LocalizeValue getLanguageName() {
         return LocalizeValue.empty();
     }
@@ -93,7 +92,6 @@ public abstract class LanguageCodeStyleSettingsProvider implements CodeStyleSett
     /**
      * @deprecated use PredefinedCodeStyle extension point instead
      */
-    
     @Deprecated
     public PredefinedCodeStyle[] getPredefinedCodeStyles() {
         return PredefinedCodeStyle.EMPTY_ARRAY;
@@ -154,7 +152,6 @@ public abstract class LanguageCodeStyleSettingsProvider implements CodeStyleSett
      * @return Alternative UI name defined by provider.getLanguageName() method or (if the method returns null)
      * language's own display name.
      */
-    
     public static LocalizeValue getLanguageName(Language lang) {
         LanguageCodeStyleSettingsProvider provider = forLanguage(lang);
         LocalizeValue providerLangName = provider != null ? provider.getLanguageName() : LocalizeValue.empty();
@@ -266,7 +263,6 @@ public abstract class LanguageCodeStyleSettingsProvider implements CodeStyleSett
      * @return {@code DocCommentSettings} wrapper object object which allows to retrieve and modify language's own
      * settings related to doc comment. The object is used then by common platform doc comment handling algorithms.
      */
-    
     public DocCommentSettings getDocCommentSettings(CodeStyleSettings rootSettings) {
         return DocCommentSettings.DEFAULTS;
     }

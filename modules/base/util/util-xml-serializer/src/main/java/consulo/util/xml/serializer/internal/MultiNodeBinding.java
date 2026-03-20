@@ -21,8 +21,7 @@ import org.jspecify.annotations.Nullable;
 import java.util.List;
 
 interface MultiNodeBinding {
-  @Nullable
-  Object deserializeList(Object context, List<Element> elements);
+  @Nullable Object deserializeList(Object context, List<Element> elements);
 
   boolean isMulti();
 }

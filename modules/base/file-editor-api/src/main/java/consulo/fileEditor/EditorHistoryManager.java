@@ -38,11 +38,9 @@ public interface EditorHistoryManager {
   
   List<VirtualFile> getFileList();
 
-  @Nullable
-  FileEditorState getState(VirtualFile file, FileEditorProvider provider);
+  @Nullable FileEditorState getState(VirtualFile file, FileEditorProvider provider);
 
   void removeFile(VirtualFile file);
 
-  @Nullable
-  FileEditorProvider getSelectedProvider(VirtualFile file);
+  @Nullable FileEditorProvider getSelectedProvider(VirtualFile file);
 }

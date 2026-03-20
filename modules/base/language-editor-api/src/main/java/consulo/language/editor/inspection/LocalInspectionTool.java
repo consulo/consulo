@@ -87,10 +87,9 @@ public abstract class LocalInspectionTool extends InspectionTool {
    * @param isOnTheFly true if called during on the fly editor highlighting. Called from Inspect Code action otherwise.
    * @return <code>null</code> if no problems found or not applicable at file level.
    */
-  @Nullable
   @Deprecated
   @DeprecationInfo("Prefer #buildVisitor()")
-  public ProblemDescriptor[] checkFile(PsiFile file, InspectionManager manager, boolean isOnTheFly) {
+  public @Nullable ProblemDescriptor[] checkFile(PsiFile file, InspectionManager manager, boolean isOnTheFly) {
     return null;
   }
 
@@ -117,7 +116,6 @@ public abstract class LocalInspectionTool extends InspectionTool {
    * @param state state from {@link #createStateProvider()} {@link PersistentStateComponent#getState()}
    * @return not-null visitor for this inspection.
    */
-  
   public PsiElementVisitor buildVisitor(ProblemsHolder holder,
                                         boolean isOnTheFly,
                                         LocalInspectionToolSession session,
@@ -135,7 +133,6 @@ public abstract class LocalInspectionTool extends InspectionTool {
    * @param isOnTheFly true if inspection was run in non-batch mode
    * @return not-null visitor for this inspection.
    */
-  
   public PsiElementVisitor buildVisitor(final ProblemsHolder holder, final boolean isOnTheFly) {
     return new PsiElementVisitor() {
       @Override

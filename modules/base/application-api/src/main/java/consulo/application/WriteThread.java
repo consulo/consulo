@@ -18,7 +18,6 @@ public final class WriteThread {
    * @param runnable the action to run
    * @return a future representing the result of the scheduled computation
    */
-  
   public static Future<Void> submit(Runnable runnable) {
     return submit(() -> {
       runnable.run();
@@ -33,7 +32,6 @@ public final class WriteThread {
    * @param <T>        return type of scheduled computation
    * @return a future representing the result of the scheduled computation
    */
-  
   public static <T> Future<T> submit(ThrowableComputable<? extends T, ?> computable) {
     CompletableFuture<T> future = new CompletableFuture<>();
     ApplicationManager.getApplication().invokeLaterOnWriteThread(() -> {

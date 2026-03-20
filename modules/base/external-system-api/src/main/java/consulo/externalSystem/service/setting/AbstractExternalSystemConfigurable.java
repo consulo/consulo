@@ -91,9 +91,8 @@ public abstract class AbstractExternalSystemConfigurable<ProjectSettings extends
   }
 
   @RequiredUIAccess
-  @Nullable
   @Override
-  public JComponent createComponent(Disposable uiDisposable) {
+  public @Nullable JComponent createComponent(Disposable uiDisposable) {
     if (myComponent == null) {
       myComponent = new PaintAwarePanel(new GridBagLayout());
       SystemSettings settings = getSettings();
@@ -167,7 +166,6 @@ public abstract class AbstractExternalSystemConfigurable<ProjectSettings extends
    * @param settings target external project settings
    * @return control for managing given project settings
    */
-  
   protected abstract ExternalSystemSettingsControl<ProjectSettings> createProjectSettingsControl(ProjectSettings settings);
 
   @SuppressWarnings("MethodMayBeStatic")
@@ -235,7 +233,6 @@ public abstract class AbstractExternalSystemConfigurable<ProjectSettings extends
   /**
    * @return new empty project-level settings object
    */
-  
   protected abstract ProjectSettings newProjectSettings();
 
   @RequiredUIAccess

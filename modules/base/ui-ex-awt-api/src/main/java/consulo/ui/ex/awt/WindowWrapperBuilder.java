@@ -136,9 +136,8 @@ public class WindowWrapperBuilder {
       myDialog.show();
     }
 
-    @Nullable
     @Override
-    public Project getProject() {
+    public @Nullable Project getProject() {
       return myProject;
     }
 
@@ -200,9 +199,8 @@ public class WindowWrapperBuilder {
         myPreferredFocusedComponent = preferredFocusedComponent;
       }
 
-      @Nullable
       @Override
-      protected Border createContentPaneBorder() {
+      protected @Nullable Border createContentPaneBorder() {
         return null;
       }
 
@@ -218,21 +216,18 @@ public class WindowWrapperBuilder {
         return new Action[0];
       }
 
-      @Nullable
       @Override
-      protected JComponent createSouthPanel() {
+      protected @Nullable JComponent createSouthPanel() {
         return null;
       }
 
-      @Nullable
       @Override
-      protected String getDimensionServiceKey() {
+      protected @Nullable String getDimensionServiceKey() {
         return myDimensionServiceKey;
       }
 
-      @Nullable
       @Override
-      public JComponent getPreferredFocusedComponent() {
+      public @Nullable JComponent getPreferredFocusedComponent() {
         return myPreferredFocusedComponent;
       }
     }
@@ -272,9 +267,8 @@ public class WindowWrapperBuilder {
       if (myOnShowCallback != null) myOnShowCallback.run();
     }
 
-    @Nullable
     @Override
-    public Project getProject() {
+    public @Nullable Project getProject() {
       return myProject;
     }
 

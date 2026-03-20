@@ -47,8 +47,7 @@ public interface DocumentWindow extends Document {
 
     int hostToInjected(int hostOffset);
 
-    @Nullable
-    TextRange getHostRange(int hostOffset);
+    @Nullable TextRange getHostRange(int hostOffset);
 
     int injectedToHostLine(int line);
 

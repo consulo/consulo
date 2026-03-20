@@ -172,9 +172,8 @@ public class XDebugSessionTab extends DebuggerSessionTabBase {
         Disposer.register(myProject, myRunContentDescriptor);
     }
 
-    @Nullable
     @Override
-    public Object getData(Key<?> dataId) {
+    public @Nullable Object getData(Key<?> dataId) {
         if (XWatchesView.DATA_KEY == dataId) {
             return myWatchesView;
         }

@@ -26,6 +26,5 @@ import java.awt.*;
  * @author cdr
  */
 public interface TooltipRenderer {
-  @Nullable
-  Hint show(Editor editor, Point p, boolean alignToRight, TooltipGroup group, HintHint intInfo);
+  @Nullable Hint show(Editor editor, Point p, boolean alignToRight, TooltipGroup group, HintHint intInfo);
 }

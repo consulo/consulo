@@ -39,9 +39,8 @@ class NotLazyObjectStubSerializerProvider implements ObjectStubSerializerProvide
     return false;
   }
 
-  @Nullable
   @Override
-  public ObjectStubSerializer getObjectStubSerializer() {
+  public @Nullable ObjectStubSerializer getObjectStubSerializer() {
     return myObjectStubSerializer;
   }
 }

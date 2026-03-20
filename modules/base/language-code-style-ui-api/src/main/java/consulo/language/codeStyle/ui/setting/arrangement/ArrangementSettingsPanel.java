@@ -113,15 +113,13 @@ public abstract class ArrangementSettingsPanel extends CodeStyleAbstractPanel {
     }
   }
 
-  @Nullable
   @Override
-  public JComponent getPanel() {
+  public @Nullable JComponent getPanel() {
     return myContent;
   }
 
-  @Nullable
   @Override
-  protected EditorHighlighter createHighlighter(EditorColorsScheme scheme) {
+  protected @Nullable EditorHighlighter createHighlighter(EditorColorsScheme scheme) {
     return null;
   }
 

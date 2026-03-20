@@ -100,9 +100,8 @@ public class CopyFilesOrDirectoriesHandler extends CopyHandlerDelegateBase {
         copyAsFiles(elements, defaultTargetDirectory, project);
     }
 
-    @Nullable
     @RequiredReadAction
-    private static PsiDirectory tryNotNullizeDirectory(Project project, @Nullable PsiDirectory defaultTargetDirectory) {
+    private static @Nullable PsiDirectory tryNotNullizeDirectory(Project project, @Nullable PsiDirectory defaultTargetDirectory) {
         if (defaultTargetDirectory == null) {
             VirtualFile root = ArrayUtil.getFirstElement(ProjectRootManager.getInstance(project).getContentRoots());
             if (root == null) {
@@ -300,9 +299,8 @@ public class CopyFilesOrDirectoriesHandler extends CopyHandlerDelegateBase {
      * @param newName       can be not null only if elements.length == 1
      * @return first copied PsiFile (recursively); null if no PsiFiles copied
      */
-    @Nullable
     @RequiredUIAccess
-    public static PsiFile copyToDirectory(
+    public static @Nullable PsiFile copyToDirectory(
         PsiFileSystemItem elementToCopy,
         @Nullable String newName,
         PsiDirectory targetDirectory
@@ -316,9 +314,8 @@ public class CopyFilesOrDirectoriesHandler extends CopyHandlerDelegateBase {
      * @param choice        a horrible way to pass/keep user preference
      * @return first copied PsiFile (recursively); null if no PsiFiles copied
      */
-    @Nullable
     @RequiredUIAccess
-    public static PsiFile copyToDirectory(
+    public static @Nullable PsiFile copyToDirectory(
         PsiFileSystemItem elementToCopy,
         @Nullable String newName,
         PsiDirectory targetDirectory,

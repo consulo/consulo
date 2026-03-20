@@ -35,8 +35,7 @@ public interface CustomUncommenter {
    * @param text text to search comment for.
    * @return commented block (including comment prefix and suffix!) or null if text does not contain any  commented blocks.
    */
-  @Nullable
-  TextRange findMaximumCommentedRange(CharSequence text);
+  @Nullable TextRange findMaximumCommentedRange(CharSequence text);
 
   /**
    * Returns couples each pointing to comment prefix and suffiix:
@@ -46,6 +45,5 @@ public interface CustomUncommenter {
    * @param text text with comments
    * @return list of couples: [commentPrefix-start,commentPrefix-end], [commentSuffix-start,commentSuffix-end]
    */
-  
   Collection<? extends Couple<TextRange>> getCommentRangesToDelete(CharSequence text);
 }

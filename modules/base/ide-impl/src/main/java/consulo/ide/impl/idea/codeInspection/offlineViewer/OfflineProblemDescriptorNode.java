@@ -66,10 +66,9 @@ public class OfflineProblemDescriptorNode extends ProblemDescriptionNode {
         return PsiUtilCore.toPsiElementArray(result);
     }
 
-    @Nullable
     @Override
     @RequiredReadAction
-    public RefEntity getElement() {
+    public @Nullable RefEntity getElement() {
         if (userObject instanceof CommonProblemDescriptor) {
             return myElement;
         }
@@ -80,10 +79,9 @@ public class OfflineProblemDescriptorNode extends ProblemDescriptionNode {
         return myElement;
     }
 
-    @Nullable
     @Override
     @RequiredReadAction
-    public CommonProblemDescriptor getDescriptor() {
+    public @Nullable CommonProblemDescriptor getDescriptor() {
         if (userObject == null) {
             return null;
         }

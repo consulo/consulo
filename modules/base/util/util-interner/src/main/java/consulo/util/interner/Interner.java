@@ -93,8 +93,7 @@ public interface Interner<T> {
   /**
    * Return interned value. Null if not interned
    */
-  @Nullable
-  T get(T item);
+  @Nullable T get(T item);
 
   void clear();
 

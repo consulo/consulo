@@ -50,6 +50,5 @@ public interface PreviewHintProvider {
      * @param element the element for which preview is requested
      * @return the component or null if no preview is available for the specified element.
      */
-    @Nullable
-    JComponent getPreviewComponent(PsiElement element);
+    @Nullable JComponent getPreviewComponent(PsiElement element);
 }

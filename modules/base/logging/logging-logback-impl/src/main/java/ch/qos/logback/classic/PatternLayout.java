@@ -35,7 +35,6 @@ import ch.qos.logback.core.pattern.parser.Parser;
  * http://logback.qos.ch/manual/layouts.html#PatternLayout
  * 
  */
-
 public class PatternLayout extends PatternLayoutBase<ILoggingEvent> {
 
     public static final Map<String, String> DEFAULT_CONVERTER_MAP = new HashMap<String, String>();

@@ -221,7 +221,6 @@ public class HashSetQueue<T> extends AbstractCollection<T> implements Queue<T> {
      * @return the current position of this iterator.
      * The position of the newly created iterator is before the first element of the queue (so the {@link IteratorPosition#peek()} value is undefined)
      */
-    
     IteratorPosition<T> position();
 
     interface IteratorPosition<T> extends Comparable<IteratorPosition<T>>  {

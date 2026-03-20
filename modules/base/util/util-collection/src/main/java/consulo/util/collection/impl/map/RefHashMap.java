@@ -75,8 +75,7 @@ public abstract class RefHashMap<K, V> extends AbstractMap<K, V> implements Map<
   }
 
   public interface Key<T> {
-    @Nullable
-    T get();
+    @Nullable T get();
   }
 
   protected abstract <T> Key<T> createKey(T k, HashingStrategy<? super T> strategy, ReferenceQueue<? super T> q);
@@ -85,9 +84,8 @@ public abstract class RefHashMap<K, V> extends AbstractMap<K, V> implements Map<
     private @Nullable K myObject = null;
     private int myHash;
 
-    @Nullable
     @Override
-    public K get() {
+    public @Nullable K get() {
       return myObject;
     }
 
@@ -171,9 +169,8 @@ public abstract class RefHashMap<K, V> extends AbstractMap<K, V> implements Map<
     throw RefValueHashMap.pointlessContainsValue();
   }
 
-  @Nullable
   @Override
-  public V get(Object key) {
+  public @Nullable V get(Object key) {
     if (key == null) {
       return null;
     }
@@ -279,9 +276,8 @@ public abstract class RefHashMap<K, V> extends AbstractMap<K, V> implements Map<
           return false;
         }
 
-        @Nullable
         @Override
-        public Entry<K, V> next() {
+        public @Nullable Entry<K, V> next() {
           Entry<K, V> e = next;
           if (e == null && !hasNext()) {
             throw new NoSuchElementException();

@@ -41,9 +41,8 @@ public class ConcurrentWeakKeyWeakValueHashMap<K, V> extends ConcurrentWeakKeySo
       return v != null && v.equals(thatV);
     }
 
-    @Nullable
     @Override
-    public KeyReference<K, V> getKeyReference() {
+    public @Nullable KeyReference<K, V> getKeyReference() {
       return myKeyReference;
     }
   }

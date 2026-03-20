@@ -73,37 +73,32 @@ public class ContentFolderPropertiesDialog extends DialogWrapper {
             return item.getKey().toString();
         }
 
-        @Nullable
         @Override
-        protected Image getItemIcon(ContentFolderPropertyProvider<?> item) {
+        protected @Nullable Image getItemIcon(ContentFolderPropertyProvider<?> item) {
             return null;
         }
     }
 
     private static final ColumnInfo[] ourColumns = new ColumnInfo[]{
         new ColumnInfo<Item, String>("Name") {
-            @Nullable
             @Override
-            public String valueOf(Item info) {
+            public @Nullable String valueOf(Item info) {
                 return info.myKey.toString();
             }
         },
         new ColumnInfo<Item, String>("Value") {
-            @Nullable
             @Override
-            public String valueOf(Item info) {
+            public @Nullable String valueOf(Item info) {
                 return String.valueOf(info.myValue);
             }
 
-            @Nullable
             @Override
-            public TableCellRenderer getRenderer(Item item) {
+            public @Nullable TableCellRenderer getRenderer(Item item) {
                 return new ComboBoxTableRenderer<>(item.myProvider.getValues());
             }
 
-            @Nullable
             @Override
-            public TableCellEditor getEditor(Item o) {
+            public @Nullable TableCellEditor getEditor(Item o) {
                 return new ComboBoxCellEditor() {
                     @Override
                     protected List<String> getComboBoxItems() {
@@ -149,9 +144,8 @@ public class ContentFolderPropertiesDialog extends DialogWrapper {
         init();
     }
 
-    @Nullable
     @Override
-    protected JComponent createCenterPanel() {
+    protected @Nullable JComponent createCenterPanel() {
         ListTableModel<Item> model = new ListTableModel<>(ourColumns, myItems, 0);
         TableView<Item> table = new TableView<>(model);
 

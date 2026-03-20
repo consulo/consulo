@@ -19,6 +19,5 @@ import org.jspecify.annotations.Nullable;
 import javax.swing.tree.TreeCellRenderer;
 
 public interface ClickableTreeCellRenderer extends TreeCellRenderer {
-  @Nullable
-  Object getTag();
+  @Nullable Object getTag();
 }

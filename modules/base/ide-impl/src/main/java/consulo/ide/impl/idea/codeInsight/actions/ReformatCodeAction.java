@@ -170,9 +170,8 @@ public class ReformatCodeAction extends AnAction implements DumbAware {
         new FileInEditorProcessor(file, editor, currentRunOptions).processCode();
     }
 
-    @Nullable
     @RequiredUIAccess
-    private static DirectoryFormattingOptions getDirectoryFormattingOptions(
+    private static @Nullable DirectoryFormattingOptions getDirectoryFormattingOptions(
         Project project,
         PsiDirectory dir
     ) {
@@ -357,9 +356,8 @@ public class ReformatCodeAction extends AnAction implements DumbAware {
         presentation.setEnabled(true);
     }
 
-    @Nullable
     @RequiredUIAccess
-    private static ReformatFilesOptions getReformatFilesOptions(Project project, VirtualFile[] files) {
+    private static @Nullable ReformatFilesOptions getReformatFilesOptions(Project project, VirtualFile[] files) {
         if (Application.get().isUnitTestMode()) {
             return myTestOptions;
         }
@@ -370,9 +368,8 @@ public class ReformatCodeAction extends AnAction implements DumbAware {
         return dialog;
     }
 
-    @Nullable
     @RequiredUIAccess
-    private static ReformatFilesOptions getLayoutProjectOptions(Project project, @Nullable Module module) {
+    private static @Nullable ReformatFilesOptions getLayoutProjectOptions(Project project, @Nullable Module module) {
         if (Application.get().isUnitTestMode()) {
             return myTestOptions;
         }

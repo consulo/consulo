@@ -501,8 +501,6 @@ public abstract class LogConsoleBase extends AdditionalTabComponent implements L
      * Use this method when you are sure that console must not be null.
      * If we get the assertion then it is a time to revisit logic of caller ;)
      */
-
-    
     private synchronized ConsoleView getConsoleNotNull() {
         ConsoleView console = getConsole();
         assert console != null : "it looks like console has been disposed";

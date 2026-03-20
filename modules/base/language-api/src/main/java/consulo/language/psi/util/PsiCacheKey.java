@@ -33,7 +33,6 @@ public class PsiCacheKey<T, H extends PsiElement> extends Key<SoftReference<Pair
   /**
    * One of {@link PsiModificationTracker} constants that marks when to flush cache
    */
-  
   private final Key<?> myModifyCause;
 
   private PsiCacheKey(String name, Function<H, T> function, Key<?> modifyCause) {

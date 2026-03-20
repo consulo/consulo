@@ -235,9 +235,8 @@ public abstract class PsiElementBase extends UserDataHolderBase implements Navig
     }
 
     @RequiredReadAction
-    @Nullable
     @Override
-    public Module getModule() throws PsiInvalidElementAccessException {
+    public @Nullable Module getModule() throws PsiInvalidElementAccessException {
         PsiFile file = getContainingFile();
         return file == null ? null : file.getModule();
     }
@@ -309,10 +308,9 @@ public abstract class PsiElementBase extends UserDataHolderBase implements Navig
         visitor.visitElement(this);
     }
 
-    @Nullable
     @Override
     @RequiredReadAction
-    public String getName() {
+    public @Nullable String getName() {
         return null;
     }
 
@@ -338,10 +336,9 @@ public abstract class PsiElementBase extends UserDataHolderBase implements Navig
         return result.toArray((T[]) Array.newInstance(aClass, result.size()));
     }
 
-    @Nullable
     @RequiredReadAction
     @SuppressWarnings("unchecked")
-    protected <T> T findChildByClass(Class<T> aClass) {
+    protected <T> @Nullable T findChildByClass(Class<T> aClass) {
         for (PsiElement cur = getFirstChild(); cur != null; cur = cur.getNextSibling()) {
             if (aClass.isInstance(cur)) {
                 return (T) cur;

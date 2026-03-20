@@ -46,9 +46,8 @@ public class WebSearchOptions implements PersistentStateComponent<WebSearchOptio
         myEngine = engine;
     }
 
-    @Nullable
     @Override
-    public WebSearchOptions getState() {
+    public @Nullable WebSearchOptions getState() {
         return this;
     }
 

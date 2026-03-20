@@ -53,9 +53,8 @@ public class ProjectLibraryActionProvider implements AddModuleDependencyActionPr
       return item.getName();
     }
 
-    @Nullable
     @Override
-    protected Image getItemIcon(Library item) {
+    protected @Nullable Image getItemIcon(Library item) {
       Image customIcon = LibraryPresentationManager.getInstance().getCustomIcon(item, myLibrariesConfigurator);
       if(customIcon != null) {
         return customIcon;

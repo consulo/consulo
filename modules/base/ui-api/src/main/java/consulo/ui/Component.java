@@ -125,8 +125,7 @@ public interface Component extends UserDataHolder {
         return this;
     }
 
-    @Nullable
-    Component getParent();
+    @Nullable Component getParent();
 
     @RequiredUIAccess
     void setSize(Size2D size);

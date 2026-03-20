@@ -21,6 +21,5 @@ import org.jspecify.annotations.Nullable;
  * @author Konstantin Bulenkov
  */
 public interface ShortcutProvider {
-  @Nullable
-  ShortcutSet getShortcut();
+  @Nullable ShortcutSet getShortcut();
 }

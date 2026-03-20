@@ -28,9 +28,8 @@ public abstract class RunAnythingAnActionProvider<V extends AnAction> extends Ru
         performRunAnythingAction(value, dataContext);
     }
 
-    @Nullable
     @Override
-    public Image getIcon(V value) {
+    public @Nullable Image getIcon(V value) {
         return value.getTemplatePresentation().getIcon();
     }
 
@@ -47,9 +46,8 @@ public abstract class RunAnythingAnActionProvider<V extends AnAction> extends Ru
         ActionImplUtil.performActionDumbAwareWithCallbacks(action, event, dataContext);
     }
 
-    @Nullable
     @Override
-    public String getAdText() {
+    public @Nullable String getAdText() {
         return IdeLocalize.runAnythingAdRunActionWithDefaultSettings(RunAnythingUtil.SHIFT_SHORTCUT_TEXT).get();
     }
 }

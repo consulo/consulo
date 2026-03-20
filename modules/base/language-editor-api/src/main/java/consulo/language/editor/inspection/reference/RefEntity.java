@@ -82,6 +82,5 @@ public interface RefEntity extends UserDataHolder {
    */
   RefManager getRefManager();
 
-  @Nullable
-  Image getIcon(boolean expanded);
+  @Nullable Image getIcon(boolean expanded);
 }

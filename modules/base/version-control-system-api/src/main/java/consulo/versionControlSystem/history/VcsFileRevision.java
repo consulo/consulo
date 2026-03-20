@@ -50,9 +50,8 @@ public interface VcsFileRevision extends VcsFileContent, VcsRevisionDescription 
       return null;
     }
 
-    @Nullable
     @Override
-    public RepositoryLocation getChangedRepositoryPath() {
+    public @Nullable RepositoryLocation getChangedRepositoryPath() {
       return null;
     }
 
@@ -67,9 +66,7 @@ public interface VcsFileRevision extends VcsFileContent, VcsRevisionDescription 
     }
   };
 
-  @Nullable
-  String getBranchName();
+  @Nullable String getBranchName();
 
-  @Nullable
-  RepositoryLocation getChangedRepositoryPath();
+  @Nullable RepositoryLocation getChangedRepositoryPath();
 }

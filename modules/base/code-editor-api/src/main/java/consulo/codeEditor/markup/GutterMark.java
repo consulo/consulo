@@ -37,7 +37,6 @@ public interface GutterMark {
      *
      * @return the gutter icon.
      */
-    
     Image getIcon();
 
     /**

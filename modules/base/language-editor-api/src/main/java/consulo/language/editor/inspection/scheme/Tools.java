@@ -45,6 +45,5 @@ public interface Tools {
 
   boolean isEnabled(@Nullable PsiElement element);
 
-  @Nullable
-  InspectionToolWrapper getEnabledTool(@Nullable PsiElement element);
+  @Nullable InspectionToolWrapper getEnabledTool(@Nullable PsiElement element);
 }

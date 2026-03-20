@@ -71,9 +71,8 @@ public class ExternalServiceConfigurable extends SimpleConfigurableByProperties 
         return "externalServices";
     }
 
-    @Nullable
     @Override
-    public String getParentId() {
+    public @Nullable String getParentId() {
         return StandardConfigurableIds.PLATFORM_AND_PLUGINS_GROUP;
     }
 

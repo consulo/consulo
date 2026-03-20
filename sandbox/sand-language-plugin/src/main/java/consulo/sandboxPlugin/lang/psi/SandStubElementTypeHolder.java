@@ -29,9 +29,8 @@ import java.util.List;
  */
 @ExtensionImpl
 public class SandStubElementTypeHolder extends StubElementTypeHolder<SandStubTokenType> {
-  @Nullable
   @Override
-  public String getExternalIdPrefix() {
+  public @Nullable String getExternalIdPrefix() {
     return "sand";
   }
 

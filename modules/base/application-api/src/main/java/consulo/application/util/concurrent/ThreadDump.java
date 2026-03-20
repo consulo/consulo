@@ -22,7 +22,6 @@ public class ThreadDump {
   /**
    * @return full thread dump as a string
    */
-  
   public String getRawDump() {
     return myRawDump;
   }

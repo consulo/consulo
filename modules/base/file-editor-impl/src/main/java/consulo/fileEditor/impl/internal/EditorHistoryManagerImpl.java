@@ -251,7 +251,6 @@ public final class EditorHistoryManagerImpl implements PersistentStateComponentW
   /**
    * @return a set of valid files that are in the history, oldest first.
    */
-  
   public synchronized List<VirtualFile> getFileList() {
     List<VirtualFile> result = new ArrayList<>();
     for (HistoryEntry entry : myEntriesList) {

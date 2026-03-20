@@ -215,9 +215,8 @@ public class LightUIInternal extends UIInternal {
     return null;
   }
 
-  @Nullable
   @Override
-  public Window _Window_getActiveWindow() {
+  public @Nullable Window _Window_getActiveWindow() {
     return null;
   }
 

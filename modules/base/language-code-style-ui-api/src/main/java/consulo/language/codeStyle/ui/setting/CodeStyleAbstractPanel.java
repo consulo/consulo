@@ -257,9 +257,8 @@ public abstract class CodeStyleAbstractPanel implements Disposable {
      * @return list of changes applied to the {@link #myTextToReformat target text} during reformatting. It is sorted
      * by change start offset in ascending order
      */
-    @Nullable
     @RequiredReadAction
-    private Document collectChangesBeforeCurrentSettingsAppliance(Project project) {
+    private @Nullable Document collectChangesBeforeCurrentSettingsAppliance(Project project) {
         PsiFile psiFile = createFileFromText(project, myTextToReformat);
         prepareForReformat(psiFile);
         CodeStyleSettings clone = mySettings.clone();

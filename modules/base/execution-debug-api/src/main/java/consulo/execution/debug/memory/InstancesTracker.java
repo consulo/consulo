@@ -85,9 +85,8 @@ public class InstancesTracker implements PersistentStateComponent<InstancesTrack
         }
     }
 
-    @Nullable
     @Override
-    public MyState getState() {
+    public @Nullable MyState getState() {
         return new MyState(myState);
     }
 

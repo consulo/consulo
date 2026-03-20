@@ -66,8 +66,7 @@ class CommonCodeStyleSettingsManager {
         myParentSettings = parentSettings;
     }
 
-    @Nullable
-    CommonCodeStyleSettings getCommonSettings(@Nullable Language lang) {
+    @Nullable CommonCodeStyleSettings getCommonSettings(@Nullable Language lang) {
         Map<Language, CommonCodeStyleSettings> commonSettingsMap = getCommonSettingsMap();
         Language baseLang = ObjectUtil.notNull(lang, Language.ANY);
         while (baseLang != null) {
@@ -107,7 +106,6 @@ class CommonCodeStyleSettingsManager {
      * @param languageId The id of the language whose settings must be returned.
      * @return Common code style settings for the given language or a new instance with default values if not found.
      */
-    
     public CommonCodeStyleSettings getCommonSettings(String languageId) {
         Map<Language, CommonCodeStyleSettings> map = getCommonSettingsMap();
         for (Map.Entry<Language, CommonCodeStyleSettings> entry : map.entrySet()) {

@@ -62,15 +62,13 @@ public class InitialScrollPositionSupport {
   }
 
   private static abstract class SideInitialScrollHelper extends InitialScrollHelperBase {
-    @Nullable
     @Override
-    protected LogicalPosition[] getCaretPositions() {
+    protected @Nullable LogicalPosition[] getCaretPositions() {
       return doGetCaretPositions(getEditors());
     }
 
-    @Nullable
     @Override
-    protected EditorsVisiblePositions getVisiblePositions() {
+    protected @Nullable EditorsVisiblePositions getVisiblePositions() {
       return doGetVisiblePositions(getEditors());
     }
 

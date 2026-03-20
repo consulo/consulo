@@ -29,9 +29,8 @@ import org.jspecify.annotations.Nullable;
  */
 @ExtensionImpl
 public class RecentFilesSEContributorFactory implements SearchEverywhereContributorFactory<Object> {
-    @Nullable
     @Override
-    public SearchEverywhereContributor<Object> createContributor(AnActionEvent e) {
+    public @Nullable SearchEverywhereContributor<Object> createContributor(AnActionEvent e) {
         return new RecentFilesSEContributor(e.getData(Project.KEY), GotoActionBase.getPsiContext(e));
     }
 }

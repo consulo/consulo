@@ -132,7 +132,6 @@ public class FileUtil extends FileUtilRt {
      * {@code ThreeState.UNSURE} if ancestor is not immediate parent of the file,
      * {@code ThreeState.NO} if ancestor is not a parent of the file at all.
      */
-    
     public static ThreeState isAncestorThreeState(String ancestor, String file, boolean strict) {
         String ancestorPath = toCanonicalPath(ancestor);
         String filePath = toCanonicalPath(file);
@@ -639,7 +638,6 @@ public class FileUtil extends FileUtilRt {
      * converts back slashes to forward slashes
      * removes double slashes inside the path, e.g. "x/y//z" => "x/y/z"
      */
-    
     public static String normalize(String path) {
         int start = 0;
         boolean separator = false;
@@ -795,7 +793,6 @@ public class FileUtil extends FileUtilRt {
      * Use {@link #getCaseSensitiveExtension(String)} instead to get the unchanged extension.
      * If you need to check whether a file has a specified extension use {@link consulo.util.io.FileUtil#extensionEquals(String, String)}
      */
-    
     public static String getExtension(String fileName) {
         return consulo.util.io.FileUtil.getExtension(fileName).toLowerCase(Locale.ROOT);
     }
@@ -1376,7 +1373,6 @@ public class FileUtil extends FileUtilRt {
     /**
      * Like {@link Properties#load(Reader)}, but preserves the order of key/value pairs.
      */
-    
     public static Map<String, String> loadProperties(Reader reader) throws IOException {
         final Map<String, String> map = new LinkedHashMap<>();
 

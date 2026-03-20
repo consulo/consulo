@@ -114,9 +114,8 @@ public class ExternalSystemRunConfiguration extends LocatableConfigurationBase {
     return group;
   }
 
-  @Nullable
   @Override
-  public RunProfileState getState(Executor executor, ExecutionEnvironment env) throws ExecutionException {
+  public @Nullable RunProfileState getState(Executor executor, ExecutionEnvironment env) throws ExecutionException {
     return new MyRunnableState(myExternalSystemId, mySettings, getProject(), DefaultDebugExecutor.EXECUTOR_ID.equals(executor.getId()));
   }
 
@@ -160,10 +159,9 @@ public class ExternalSystemRunConfiguration extends LocatableConfigurationBase {
       return myDebugPort;
     }
 
-    @Nullable
     @Override
     @RequiredUIAccess
-    public ExecutionResult execute(Executor executor, ProgramRunner runner) throws ExecutionException {
+    public @Nullable ExecutionResult execute(Executor executor, ProgramRunner runner) throws ExecutionException {
       if (myProject.isDisposed()) return null;
 
       ExternalSystemApiUtil.updateRecentTasks(new ExternalTaskExecutionInfo(mySettings.clone(), executor.getId()), myProject);
@@ -265,9 +263,8 @@ public class ExternalSystemRunConfiguration extends LocatableConfigurationBase {
       return true;
     }
 
-    @Nullable
     @Override
-    public OutputStream getProcessInput() {
+    public @Nullable OutputStream getProcessInput() {
       return null;
     }
 

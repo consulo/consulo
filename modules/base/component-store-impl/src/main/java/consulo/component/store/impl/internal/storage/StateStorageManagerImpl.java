@@ -158,9 +158,8 @@ public abstract class StateStorageManagerImpl implements StateStorageManager, Di
     }
   }
 
-  @Nullable
   @Override
-  public StateStorage getStateStorage(String fileSpec, RoamingType roamingType) {
+  public @Nullable StateStorage getStateStorage(String fileSpec, RoamingType roamingType) {
     myStorageLock.lock();
     try {
       StateStorage stateStorage = myStorages.get(fileSpec);
@@ -243,9 +242,8 @@ public abstract class StateStorageManagerImpl implements StateStorageManager, Di
     return true;
   }
 
-  @Nullable
   @Override
-  public final StreamProvider getStreamProvider() {
+  public final @Nullable StreamProvider getStreamProvider() {
     return myStreamProvider;
   }
 

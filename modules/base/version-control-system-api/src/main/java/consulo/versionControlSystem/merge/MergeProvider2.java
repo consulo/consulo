@@ -33,6 +33,5 @@ public interface MergeProvider2 extends MergeProvider {
    * @param files the list of files to be merged.
    * @return the merge session instance.
    */
-  
   MergeSession createMergeSession(List<VirtualFile> files);
 }

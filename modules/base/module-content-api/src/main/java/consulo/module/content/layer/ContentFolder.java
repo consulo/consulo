@@ -36,7 +36,6 @@ public interface ContentFolder extends Synthetic {
    * Returns the type of root directory
    * @return
    */
-  
   ContentFolderTypeProvider getType();
 
   /**
@@ -44,15 +43,13 @@ public interface ContentFolder extends Synthetic {
    *
    * @return the directory, or null if the source path is invalid.
    */
-  @Nullable
-  VirtualFile getFile();
+  @Nullable VirtualFile getFile();
 
   /**
    * Returns the content entry to which this root belongs.
    *
    * @return this <code>ContentFolder</code>s {@link ContentEntry}.
    */
-  
   ContentEntry getContentEntry();
 
   /**
@@ -60,14 +57,12 @@ public interface ContentFolder extends Synthetic {
    *
    * @return the root directory URL.
    */
-  
   String getUrl();
 
   
   Map<Key, Object> getProperties();
 
-  @Nullable
-  <T> T getPropertyValue(Key<T> key);
+  <T> @Nullable T getPropertyValue(Key<T> key);
 
   <T> void setPropertyValue(Key<T> key, @Nullable T value);
 }

@@ -45,9 +45,8 @@ public class CachingComparingClassifier extends ComparingClassifier<LookupElemen
     myWeigher = weigher;
   }
 
-  @Nullable
   @Override
-  public final Comparable getWeight(LookupElement element, ProcessingContext context) {
+  public final @Nullable Comparable getWeight(LookupElement element, ProcessingContext context) {
     Comparable w = myWeights.get(element);
     if (w == null && myWeigher.isPrefixDependent()) {
       myWeights.put(element, w = myWeigher.weigh(element, context.get(CompletionLookupArranger.WEIGHING_CONTEXT)));

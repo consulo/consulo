@@ -35,7 +35,6 @@ public interface Surrounder {
    *
    * @return the template name
    */
-  
   LocalizeValue getTemplateDescription();
 
   /**
@@ -54,8 +53,7 @@ public interface Surrounder {
    * @param elements the elements to be surrounded.
    * @return range to select/to position the caret
    */
-  @Nullable
-  TextRange surroundElements(Project project,
+  @Nullable TextRange surroundElements(Project project,
                              Editor editor,
                              PsiElement[] elements) throws IncorrectOperationException;
 }

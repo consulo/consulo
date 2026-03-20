@@ -58,7 +58,6 @@ public abstract class LocalTask extends Task {
    * @return two branches per repository: feature-branch itself and original branch to merge into
    * @see #getBranches(boolean)
    */
-  
   public abstract List<BranchInfo> getBranches();
 
   

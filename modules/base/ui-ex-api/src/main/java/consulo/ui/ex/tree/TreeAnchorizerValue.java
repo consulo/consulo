@@ -22,8 +22,7 @@ import org.jspecify.annotations.Nullable;
  * @since 2025-02-12
  */
 public interface TreeAnchorizerValue<T> {
-    @Nullable
-    T extractValue();
+    @Nullable T extractValue();
 
     void dispose();
 }

@@ -42,6 +42,5 @@ public interface OuterLanguageRangePatcher extends LanguageExtension {
    * @return Text to be inserted for parsing in outer element insertion ranges provided by
    * {@link TemplateDataElementType.RangeCollector#addOuterRange(TextRange, boolean)} where <tt>isInsertion == true</tt>
    */
-  @Nullable
-  String getTextForOuterLanguageInsertionRange(TemplateDataElementType templateDataElementType, CharSequence outerElementText);
+  @Nullable String getTextForOuterLanguageInsertionRange(TemplateDataElementType templateDataElementType, CharSequence outerElementText);
 }

@@ -112,9 +112,8 @@ public class ImplementationViewComponentImpl extends JPanel implements Implement
             myElementPresentation = getPresentation(element);
         }
 
-        @Nullable
         @RequiredReadAction
-        private static String getPresentation(PsiElement element) {
+        private static @Nullable String getPresentation(PsiElement element) {
             if (element instanceof NavigationItem navigationItem) {
                 ItemPresentation presentation = navigationItem.getPresentation();
                 if (presentation != null) {
@@ -468,9 +467,8 @@ public class ImplementationViewComponentImpl extends JPanel implements Implement
         }));
     }
 
-    @Nullable
     @RequiredReadAction
-    public static String getNewText(PsiElement elt) {
+    public static @Nullable String getNewText(PsiElement elt) {
         Project project = elt.getProject();
         PsiFile psiFile = getContainingFile(elt);
 

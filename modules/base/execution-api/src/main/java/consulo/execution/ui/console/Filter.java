@@ -103,9 +103,8 @@ public interface Filter {
      * @deprecated This method will be removed. Result may be constructed using ResultItems, in that case this method will return incorrect value. Use {@link #getResultItems()} instead.
      */
     @Deprecated
-    @Nullable
     @Override
-    public TextAttributes getHighlightAttributes() {
+    public @Nullable TextAttributes getHighlightAttributes() {
       return super.getHighlightAttributes();
     }
 
@@ -113,9 +112,8 @@ public interface Filter {
      * @deprecated This method will be removed. Result may be constructed using ResultItems, in that case this method will return incorrect value. Use {@link #getResultItems()} or {@link #getFirstHyperlinkInfo()} instead.
      */
     @Deprecated
-    @Nullable
     @Override
-    public HyperlinkInfo getHyperlinkInfo() {
+    public @Nullable HyperlinkInfo getHyperlinkInfo() {
       return super.getHyperlinkInfo();
     }
 
@@ -251,6 +249,5 @@ public interface Filter {
    * @param entireLength The length of the entire text including the line passed for filtration.
    * @return {@code null} if there was no match. Otherwise, an instance of {@link Result}
    */
-  @Nullable
-  Result applyFilter(String line, int entireLength);
+  @Nullable Result applyFilter(String line, int entireLength);
 }

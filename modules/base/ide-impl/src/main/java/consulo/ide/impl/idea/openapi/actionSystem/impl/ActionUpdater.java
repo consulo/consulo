@@ -184,7 +184,6 @@ public class ActionUpdater {
     /**
      * @return actions from the given and nested non-popup groups that are visible after updating
      */
-    
     public List<AnAction> expandActionGroupWithTimeout(ActionGroup group, boolean hideDisabled) {
         return expandActionGroupWithTimeout(group, hideDisabled, Registry.intValue("actionSystem.update.timeout.ms"));
     }
@@ -192,7 +191,6 @@ public class ActionUpdater {
     /**
      * @return actions from the given and nested non-popup groups that are visible after updating
      */
-    
     public List<AnAction> expandActionGroupWithTimeout(ActionGroup group, boolean hideDisabled, int timeoutMs) {
         List<AnAction> result = ProgressIndicatorUtils.withTimeout(timeoutMs, () -> expandActionGroup(group, hideDisabled));
         try {

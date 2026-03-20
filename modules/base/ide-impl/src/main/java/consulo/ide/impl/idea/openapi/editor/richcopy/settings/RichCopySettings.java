@@ -60,9 +60,8 @@ public class RichCopySettings implements PersistentStateComponent<RichCopySettin
     return result == null ? editorColorsScheme : result;
   }
 
-  @Nullable
   @Override
-  public RichCopySettings getState() {
+  public @Nullable RichCopySettings getState() {
     return this;
   }
 

@@ -97,9 +97,8 @@ public class FileCopyPackagingElement extends FileOrDirectoryCopyPackagingElemen
     setRenamedOutputFileName(state.getRenamedOutputFileName());
   }
 
-  @Nullable
   @Attribute(OUTPUT_FILE_NAME_ATTRIBUTE)
-  public String getRenamedOutputFileName() {
+  public @Nullable String getRenamedOutputFileName() {
     return myRenamedOutputFileName;
   }
 

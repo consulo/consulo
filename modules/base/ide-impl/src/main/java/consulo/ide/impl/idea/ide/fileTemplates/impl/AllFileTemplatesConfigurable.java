@@ -634,9 +634,8 @@ public class AllFileTemplatesConfigurable implements SearchableConfigurable, Con
         return "fileTemplates";
     }
 
-    @Nullable
     @Override
-    public String getParentId() {
+    public @Nullable String getParentId() {
         return StandardConfigurableIds.EDITOR_GROUP;
     }
 

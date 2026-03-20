@@ -19,7 +19,6 @@ public interface CollectionItemEditor<T> {
   /**
    * Class must have an empty constructor.
    */
-  
   Class<? extends T> getItemClass();
 
   /**

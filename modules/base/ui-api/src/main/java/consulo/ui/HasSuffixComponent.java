@@ -24,6 +24,5 @@ import org.jspecify.annotations.Nullable;
 public interface HasSuffixComponent extends Component {
     void setSuffixComponent(@Nullable Component suffixComponent);
 
-    @Nullable
-    Component getSuffixComponent();
+    @Nullable Component getSuffixComponent();
 }

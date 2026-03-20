@@ -22,13 +22,10 @@ import java.nio.charset.Charset;
 
 public interface AirContentRevision {
   boolean isBinary();
-  @Nullable
-  String getContentAsString() throws VcsException;
-  @Nullable
-  byte[] getContentAsBytes() throws VcsException;
+  @Nullable String getContentAsString() throws VcsException;
+  @Nullable byte[] getContentAsBytes() throws VcsException;
   
-  @Nullable
-  String getRevisionNumber();
+  @Nullable String getRevisionNumber();
 
   
   PathDescription getPath();

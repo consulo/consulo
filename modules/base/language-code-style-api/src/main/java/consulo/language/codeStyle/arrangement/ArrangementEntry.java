@@ -40,8 +40,7 @@ public interface ArrangementEntry {
    * @return    parent entry, e.g. it would be a class entry for a method entry
    * @see #getChildren()
    */
-  @Nullable
-  ArrangementEntry getParent();
+  @Nullable ArrangementEntry getParent();
 
   /**
    * Entries can be organised into hierarchies, that means that only siblings position can be changed during the rearrangement.
@@ -52,7 +51,6 @@ public interface ArrangementEntry {
    * @return    current entry's children. Empty collection if there are no children
    * @see #getParent() 
    */
-  
   List<? extends ArrangementEntry> getChildren();
 
   /**
@@ -66,8 +64,7 @@ public interface ArrangementEntry {
    * 
    * @return    current entry's dependencies (if any)
    */
-  @Nullable
-  List<? extends ArrangementEntry> getDependencies();
+  @Nullable List<? extends ArrangementEntry> getDependencies();
 
   /**
    * @return    start offset of the current entry (inclusive) within the target document. Rearranger engine uses this information

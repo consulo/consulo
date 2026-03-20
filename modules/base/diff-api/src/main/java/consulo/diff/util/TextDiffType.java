@@ -44,6 +44,5 @@ public interface TextDiffType {
   
   ColorValue getIgnoredColor(@Nullable Editor editor);
 
-  @Nullable
-  ColorValue getMarkerColor(@Nullable Editor editor);
+  @Nullable ColorValue getMarkerColor(@Nullable Editor editor);
 }

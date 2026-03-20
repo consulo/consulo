@@ -55,7 +55,6 @@ public class Enumerator<T> {
      * @param objects array of objects to be associated
      * @return the mapping of an initial array into associated numbers
      */
-    
     public int[] enumerate(T[] objects) {
         return enumerate(objects, 0, 0);
     }
@@ -68,7 +67,6 @@ public class Enumerator<T> {
      * @param endCut     a number of excluded objects at the end
      * @return the mapping of an initial array into associated numbers
      */
-    
     public int[] enumerate(T[] objects, int startShift, int endCut) {
         int[] idx = ArrayUtil.newIntArray(objects.length - startShift - endCut);
         for (int i = startShift; i < objects.length - endCut; i++) {

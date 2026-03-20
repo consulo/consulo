@@ -139,9 +139,8 @@ public class CertificateConfigurable implements SearchableConfigurable, Configur
     return "http.certificates";
   }
 
-  @Nullable
   @Override
-  public String getParentId() {
+  public @Nullable String getParentId() {
     return StandardConfigurableIds.GENERAL_GROUP;
   }
 
@@ -152,9 +151,8 @@ public class CertificateConfigurable implements SearchableConfigurable, Configur
     return LocalizeValue.localizeTODO("Server Certificates");
   }
 
-  @Nullable
   @Override
-  public JComponent createComponent() {
+  public @Nullable JComponent createComponent() {
     // lazily initialized to ensure that disposeUIResources() will be called, if
     // tree builder was created
     initializeUI();

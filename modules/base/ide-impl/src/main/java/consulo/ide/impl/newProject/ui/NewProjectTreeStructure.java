@@ -53,9 +53,8 @@ public class NewProjectTreeStructure extends AbstractTreeStructure {
     return ArrayUtil.EMPTY_OBJECT_ARRAY;
   }
 
-  @Nullable
   @Override
-  public Object getParentElement(Object element) {
+  public @Nullable Object getParentElement(Object element) {
     return null;
   }
 

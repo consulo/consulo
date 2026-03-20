@@ -21,8 +21,7 @@ import org.jspecify.annotations.Nullable;
 
 public interface GraphAction {
 
-  @Nullable
-  PrintElement getAffectedElement();
+  @Nullable PrintElement getAffectedElement();
 
   
   Type getType();
@@ -44,9 +43,8 @@ public interface GraphAction {
       myActionType = actionType;
     }
 
-    @Nullable
     @Override
-    public PrintElement getAffectedElement() {
+    public @Nullable PrintElement getAffectedElement() {
       return myPrintElement;
     }
 

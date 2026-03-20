@@ -20,8 +20,7 @@ import org.jspecify.annotations.Nullable;
 import java.util.Objects;
 
 public interface UserDataHolder {
-    @Nullable
-    <T> T getUserData(Key<T> key);
+    <T> @Nullable T getUserData(Key<T> key);
 
     <T> void putUserData(Key<T> key, @Nullable T value);
 

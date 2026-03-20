@@ -30,7 +30,6 @@ public interface DocumentContent extends DiffContent {
   /**
    * Represents this content as Document
    */
-  
   Document getDocument();
 
   /**
@@ -69,9 +68,8 @@ public interface DocumentContent extends DiffContent {
     return null;
   }
 
-  @Nullable
   @Deprecated
-  default OpenFileDescriptor getOpenFileDescriptor(int offset) {
+  default @Nullable OpenFileDescriptor getOpenFileDescriptor(int offset) {
     LineCol position = LineCol.fromOffset(getDocument(), offset);
     return ObjectUtil.tryCast(getNavigatable(position), OpenFileDescriptor.class);
   }

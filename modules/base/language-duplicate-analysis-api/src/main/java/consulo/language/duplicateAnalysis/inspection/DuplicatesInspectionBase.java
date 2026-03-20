@@ -63,9 +63,8 @@ public abstract class DuplicatesInspectionBase extends LocalInspectionTool {
   public boolean myFilterOutGeneratedCode;
   private static final int MIN_FRAGMENT_SIZE = 3; // todo 3 statements constant
 
-  @Nullable
   @Override
-  public ProblemDescriptor[] checkFile(PsiFile psiFile, InspectionManager manager, boolean isOnTheFly) {
+  public @Nullable ProblemDescriptor[] checkFile(PsiFile psiFile, InspectionManager manager, boolean isOnTheFly) {
     VirtualFile virtualFile = psiFile.getVirtualFile();
     if (!(virtualFile instanceof VirtualFileWithId) || /*!isOnTheFly || */!DuplicatesIndex.ourEnabled) return ProblemDescriptor.EMPTY_ARRAY;
     DuplicatesProfile profile = DuplicatesIndex.findDuplicatesProfile(psiFile.getFileType());

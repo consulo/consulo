@@ -154,8 +154,7 @@ public class FavoritesViewTreeBuilder extends BaseProjectTreeBuilder {
     return super.findNodeByElement(element);
   }
 
-  @Nullable
-  DefaultMutableTreeNode findSmartFirstLevelNodeByElement(Object element) {
+  @Nullable DefaultMutableTreeNode findSmartFirstLevelNodeByElement(Object element) {
     for (Object child : getRoot().getChildren()) {
       AbstractTreeNode favorite = (AbstractTreeNode)child;
       Object currentValue = favorite.getValue();

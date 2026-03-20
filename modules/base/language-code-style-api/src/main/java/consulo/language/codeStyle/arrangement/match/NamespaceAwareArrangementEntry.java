@@ -23,6 +23,5 @@ import org.jspecify.annotations.Nullable;
  */
 public interface NamespaceAwareArrangementEntry {
 
-  @Nullable
-  String getNamespace();
+  @Nullable String getNamespace();
 }

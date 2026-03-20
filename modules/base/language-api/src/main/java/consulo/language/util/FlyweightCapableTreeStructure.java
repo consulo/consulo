@@ -27,8 +27,7 @@ public interface FlyweightCapableTreeStructure<T> {
   
   T getRoot();
 
-  @Nullable
-  T getParent(T node);
+  @Nullable T getParent(T node);
 
   
   T prepareForGetChildren(T node);

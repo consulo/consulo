@@ -721,9 +721,8 @@ public class ColorAndFontOptions extends SearchableConfigurable.Parent.Abstract 
         list.add(new SchemeTextAttributesDescription(name, group, key, scheme, icon, toolTip));
     }
 
-    @Nullable
     @Override
-    public String getParentId() {
+    public @Nullable String getParentId() {
         return StandardConfigurableIds.EDITOR_GROUP;
     }
 
@@ -920,15 +919,13 @@ public class ColorAndFontOptions extends SearchableConfigurable.Parent.Abstract 
             return true;
         }
 
-        @Nullable
         @Override
-        public TextAttributes getBaseAttributes() {
+        public @Nullable TextAttributes getBaseAttributes() {
             return myFallbackAttributes;
         }
 
-        @Nullable
         @Override
-        public Pair<ColorAndFontDescriptors, AttributesDescriptor> getBaseAttributeDescriptor() {
+        public @Nullable Pair<ColorAndFontDescriptors, AttributesDescriptor> getBaseAttributeDescriptor() {
             return myBaseAttributeDescriptor;
         }
 

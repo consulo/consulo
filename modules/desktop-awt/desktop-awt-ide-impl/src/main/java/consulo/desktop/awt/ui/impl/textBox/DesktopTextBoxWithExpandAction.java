@@ -99,15 +99,13 @@ public class DesktopTextBoxWithExpandAction {
 
         }
 
-        @Nullable
         @Override
-        public Component getSuffixComponent() {
+        public @Nullable Component getSuffixComponent() {
             return null;
         }
 
-        @Nullable
         @Override
-        public String getValue() {
+        public @Nullable String getValue() {
             return toAWTComponent().getText();
         }
 

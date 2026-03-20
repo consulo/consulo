@@ -50,9 +50,7 @@ public interface SearchEverywhereClassifier {
 
     boolean isSymbol(@Nullable Object o);
 
-    @Nullable
-    VirtualFile getVirtualFile(Object o);
+    @Nullable VirtualFile getVirtualFile(Object o);
 
-    @Nullable
-    Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus);
+    @Nullable Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus);
 }

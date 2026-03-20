@@ -104,10 +104,9 @@ public abstract class DvcsStatusWidget<T extends Repository> extends EditorBased
         update();
     }
 
-    @Nullable
     @Override
     @RequiredUIAccess
-    public String getSelectedValue() {
+    public @Nullable String getSelectedValue() {
         return StringUtil.defaultIfEmpty(myText, "");
     }
 
@@ -117,15 +116,13 @@ public abstract class DvcsStatusWidget<T extends Repository> extends EditorBased
         return myTooltip;
     }
 
-    @Nullable
     @Override
-    public Image getIcon() {
+    public @Nullable Image getIcon() {
         return myIcon;
     }
 
-    @Nullable
     @Override
-    public ListPopup getPopupStep() {
+    public @Nullable ListPopup getPopupStep() {
         if (isDisposed()) {
             return null;
         }
@@ -138,9 +135,8 @@ public abstract class DvcsStatusWidget<T extends Repository> extends EditorBased
         return getPopup(project, repository);
     }
 
-    @Nullable
     @Override
-    public Consumer<MouseEvent> getClickConsumer() {
+    public @Nullable Consumer<MouseEvent> getClickConsumer() {
         // has no effect since the click opens a list popup, and the consumer is not called for the MultipleTextValuesPresentation
         return null;
     }

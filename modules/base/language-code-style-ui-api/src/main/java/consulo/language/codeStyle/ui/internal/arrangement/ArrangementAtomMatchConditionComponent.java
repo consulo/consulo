@@ -254,9 +254,8 @@ public class ArrangementAtomMatchConditionComponent implements ArrangementUiComp
         return myAnimationPanel;
     }
 
-    @Nullable
     @Override
-    public Rectangle getScreenBounds() {
+    public @Nullable Rectangle getScreenBounds() {
         return myScreenBounds;
     }
 
@@ -315,9 +314,8 @@ public class ArrangementAtomMatchConditionComponent implements ArrangementUiComp
         }
     }
 
-    @Nullable
     @Override
-    public Rectangle onMouseMove(MouseEvent event) {
+    public @Nullable Rectangle onMouseMove(MouseEvent event) {
         Rectangle buttonBounds = getCloseButtonScreenBounds();
         if (buttonBounds == null) {
             return null;
@@ -348,9 +346,8 @@ public class ArrangementAtomMatchConditionComponent implements ArrangementUiComp
         return null;
     }
 
-    @Nullable
     @Override
-    public Rectangle onMouseExited() {
+    public @Nullable Rectangle onMouseExited() {
         if (myCloseButton == null) {
             return null;
         }

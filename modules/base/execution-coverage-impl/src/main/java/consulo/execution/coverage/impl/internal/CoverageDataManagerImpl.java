@@ -688,9 +688,8 @@ public class CoverageDataManagerImpl extends CoverageDataManager implements JDOM
                 return;
             }
             PsiFile psiFile = myProject.getApplication().runReadAction(new Supplier<PsiFile>() {
-                @Nullable
                 @Override
-                public PsiFile get() {
+                public @Nullable PsiFile get() {
                     if (myProject.isDisposed()) {
                         return null;
                     }

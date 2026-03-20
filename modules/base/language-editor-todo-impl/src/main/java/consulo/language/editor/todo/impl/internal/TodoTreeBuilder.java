@@ -194,10 +194,9 @@ public abstract class TodoTreeBuilder implements Disposable {
                 return iterator.hasNext();
             }
 
-            @Nullable
             @Override
             @RequiredReadAction
-            public PsiFile next() {
+            public @Nullable PsiFile next() {
                 VirtualFile vFile = iterator.next();
                 if (vFile == null || !vFile.isValid()) {
                     return null;

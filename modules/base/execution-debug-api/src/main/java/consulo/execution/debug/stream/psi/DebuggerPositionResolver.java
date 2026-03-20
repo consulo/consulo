@@ -9,6 +9,5 @@ import org.jspecify.annotations.Nullable;
  * @author Vitaliy.Bibaev
  */
 public interface DebuggerPositionResolver {
-  @Nullable
-  PsiElement getNearestElementToBreakpoint(XDebugSession session);
+  @Nullable PsiElement getNearestElementToBreakpoint(XDebugSession session);
 }

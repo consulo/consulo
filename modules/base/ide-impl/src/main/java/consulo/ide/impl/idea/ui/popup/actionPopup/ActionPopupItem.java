@@ -226,9 +226,8 @@ public class ActionPopupItem implements ShortcutProvider, UserDataHolder {
         return myDescription;
     }
 
-    @Nullable
     @Override
-    public ShortcutSet getShortcut() {
+    public @Nullable ShortcutSet getShortcut() {
         return myAction.getShortcutSet();
     }
 
@@ -253,9 +252,8 @@ public class ActionPopupItem implements ShortcutProvider, UserDataHolder {
         return myTextValue.get();
     }
 
-    @Nullable
     @Override
-    public <T> T getUserData(Key<T> key) {
+    public <T> @Nullable T getUserData(Key<T> key) {
         return myPresentation.getClientProperty(key);
     }
 

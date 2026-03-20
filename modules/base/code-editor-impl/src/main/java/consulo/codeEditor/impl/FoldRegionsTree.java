@@ -354,7 +354,6 @@ public abstract class FoldRegionsTree {
     /**
      * @return (prevAdjustment, curAdjustment)
      */
-    
     IntPair getCustomRegionsYAdjustment(int offset, int idx) {
         if (!isFoldingEnabled()) {
             return new IntPair(0, 0);

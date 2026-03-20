@@ -41,16 +41,14 @@ public class DefaultLookupItemRenderer extends LookupElementRenderer<LookupItem>
     presentation.setTypeText(getText3(item), null);
   }
 
-  @Nullable
   @RequiredReadAction
   @Deprecated
-  public static Image getRawIcon(LookupElement item, boolean real) {
+  public static @Nullable Image getRawIcon(LookupElement item, boolean real) {
     return getRawIcon(item);
   }
 
-  @Nullable
   @RequiredReadAction
-  public static Image getRawIcon(LookupElement item) {
+  public static @Nullable Image getRawIcon(LookupElement item) {
     Image icon = _getRawIcon(item);
     if (icon != null && icon.getHeight() > Image.DEFAULT_ICON_SIZE) {
       return ImageEffects.resize(icon, icon.getWidth(), Image.DEFAULT_ICON_SIZE);
@@ -58,9 +56,8 @@ public class DefaultLookupItemRenderer extends LookupElementRenderer<LookupItem>
     return icon;
   }
 
-  @Nullable
   @RequiredReadAction
-  private static Image _getRawIcon(LookupElement item) {
+  private static @Nullable Image _getRawIcon(LookupElement item) {
     if (item instanceof LookupItem) {
       Image icon = (Image)((LookupItem)item).getAttribute(LookupItem.ICON_ATTR);
       if (icon != null) return icon;

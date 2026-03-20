@@ -34,11 +34,9 @@ public interface Identikit {
     return IdentikitImpl.fromPsi(element, fileLanguage); 
   }
 
-  @Nullable
-  PsiElement findPsiElement(PsiFile file, int startOffset, int endOffset);
+  @Nullable PsiElement findPsiElement(PsiFile file, int startOffset, int endOffset);
 
-  @Nullable
-  Language getFileLanguage();
+  @Nullable Language getFileLanguage();
 
   boolean isForPsiFile();
 }

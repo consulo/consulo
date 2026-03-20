@@ -62,10 +62,9 @@ public class OfflineInspectionRVContentProvider extends InspectionRVContentProvi
         return content != null && !content.values().isEmpty();
     }
 
-    @Nullable
     @Override
     @RequiredReadAction
-    public QuickFixAction[] getQuickFixes(InspectionToolWrapper toolWrapper, InspectionTree tree) {
+    public @Nullable QuickFixAction[] getQuickFixes(InspectionToolWrapper toolWrapper, InspectionTree tree) {
         List<RefEntity> selectedElements = new ArrayList<>();
         Map<RefEntity, Set<QuickFix>> actions = new HashMap<>();
         for (TreePath selectionPath : tree.getSelectionPaths()) {
@@ -139,9 +138,8 @@ public class OfflineInspectionRVContentProvider extends InspectionRVContentProvi
         }
     }
 
-    @Nullable
     @SuppressWarnings({"UnusedAssignment"})
-    private Map<String, Set<OfflineProblemDescriptor>> getFilteredContent(
+    private @Nullable Map<String, Set<OfflineProblemDescriptor>> getFilteredContent(
         GlobalInspectionContextImpl context,
         InspectionToolWrapper toolWrapper
     ) {

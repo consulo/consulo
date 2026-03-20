@@ -186,9 +186,8 @@ public class BrowserLauncherAppless extends BrowserLauncher {
         return browser;
     }
 
-    @Nullable
     @RequiredUIAccess
-    private static String extractFiles(String url) {
+    private static @Nullable String extractFiles(String url) {
         try {
             int sharpPos = url.indexOf('#');
             String anchor = "";

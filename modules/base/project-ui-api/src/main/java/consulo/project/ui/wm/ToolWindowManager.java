@@ -115,16 +115,14 @@ public abstract class ToolWindowManager {
     /**
      * @return array of <code>id</code>s of all registered tool windows.
      */
-    
     public abstract String[] getToolWindowIds();
 
     /**
      * @return <code>ID</code> of currently active tool window or <code>null</code> if there is no active
      * tool window.
      */
-    @Nullable
     @RequiredUIAccess
-    public abstract String getActiveToolWindowId();
+    public abstract @Nullable String getActiveToolWindowId();
 
     /**
      * @return registered tool window with specified <code>id</code>. If there is no registered
@@ -140,7 +138,6 @@ public abstract class ToolWindowManager {
     /**
      * Utility method for quick access to the focus manager
      */
-    
     public abstract IdeFocusManager getFocusManager();
 
     public abstract void notifyByBalloon(String toolWindowId, NotificationType type, String htmlBody);

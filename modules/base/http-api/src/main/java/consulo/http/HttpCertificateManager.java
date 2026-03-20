@@ -70,7 +70,6 @@ public interface HttpCertificateManager {
    *
    * @return instance of SSLContext with described behavior or default SSL context in case of error
    */
-  
   SSLContext getSslContext();
 
   

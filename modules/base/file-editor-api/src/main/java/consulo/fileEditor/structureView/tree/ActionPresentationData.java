@@ -35,7 +35,6 @@ public class ActionPresentationData implements ActionPresentation {
    *                    is over the toolbar button.
    * @param icon        the icon for the action, displayed on the toolbar button.
    */
-
   public ActionPresentationData(String text, String description, @Nullable Image icon) {
     myText = text;
     myDescription = description;

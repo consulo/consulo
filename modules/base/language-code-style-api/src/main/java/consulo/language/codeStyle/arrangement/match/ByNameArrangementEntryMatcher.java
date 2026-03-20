@@ -30,9 +30,8 @@ public class ByNameArrangementEntryMatcher extends AbstractRegexpArrangementMatc
     super(pattern);
   }
 
-  @Nullable
   @Override
-  protected String getTextToMatch(ArrangementEntry entry) {
+  protected @Nullable String getTextToMatch(ArrangementEntry entry) {
     if (entry instanceof NameAwareArrangementEntry) {
       return ((NameAwareArrangementEntry)entry).getName();
     }

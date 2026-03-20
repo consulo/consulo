@@ -223,9 +223,8 @@ public class InspectionResultsView extends JPanel implements Disposable, Occuren
     private OccurenceNavigatorSupport initOccurenceNavigator() {
         return new OccurenceNavigatorSupport(myTree) {
             @Override
-            @Nullable
             @RequiredReadAction
-            protected Navigatable createDescriptorForNode(DefaultMutableTreeNode node) {
+            protected @Nullable Navigatable createDescriptorForNode(DefaultMutableTreeNode node) {
                 if (node instanceof RefElementNode refNode) {
                     if (refNode.hasDescriptorsUnder()) {
                         return null;
@@ -251,9 +250,8 @@ public class InspectionResultsView extends JPanel implements Disposable, Occuren
                 return null;
             }
 
-            @Nullable
             @RequiredReadAction
-            private Navigatable navigate(CommonProblemDescriptor descriptor) {
+            private @Nullable Navigatable navigate(CommonProblemDescriptor descriptor) {
                 return getSelectedNavigatable(descriptor);
             }
 
@@ -699,16 +697,14 @@ public class InspectionResultsView extends JPanel implements Disposable, Occuren
         return null;
     }
 
-    @Nullable
     @RequiredReadAction
-    private Navigatable getSelectedNavigatable(CommonProblemDescriptor descriptor) {
+    private @Nullable Navigatable getSelectedNavigatable(CommonProblemDescriptor descriptor) {
         PsiElement psiElement = descriptor instanceof ProblemDescriptor problemDescriptor ? problemDescriptor.getPsiElement() : null;
         return getSelectedNavigatable(descriptor, psiElement);
     }
 
-    @Nullable
     @RequiredReadAction
-    private Navigatable getSelectedNavigatable(CommonProblemDescriptor descriptor, PsiElement psiElement) {
+    private @Nullable Navigatable getSelectedNavigatable(CommonProblemDescriptor descriptor, PsiElement psiElement) {
         if (descriptor instanceof ProblemDescriptorBase problemDescriptor) {
             Navigatable navigatable = problemDescriptor.getNavigatable();
             if (navigatable != null) {

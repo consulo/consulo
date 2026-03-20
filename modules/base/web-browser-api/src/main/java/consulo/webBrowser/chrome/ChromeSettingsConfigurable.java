@@ -57,9 +57,8 @@ public class ChromeSettingsConfigurable implements Configurable {
     }
 
     @RequiredUIAccess
-    @Nullable
     @Override
-    public Component createUIComponent(Disposable parentDisposable) {
+    public @Nullable Component createUIComponent(Disposable parentDisposable) {
         if (myLayout == null) {
             myLayout = VerticalLayout.create();
 

@@ -95,10 +95,9 @@ public class ModuleUtilCore {
     return module == null ? !projectFileIndex.isInLibraryClasses(vFile) : module.isDisposed();
   }
 
-  @Nullable
   @RequiredReadAction
   @Deprecated
-  public static Module findModuleForFile(PsiFile file) {
+  public static @Nullable Module findModuleForFile(PsiFile file) {
     return file.getModule();
   }
 
@@ -106,10 +105,9 @@ public class ModuleUtilCore {
     return ModuleContentUtil.findModuleForFile(file, project);
   }
 
-  @Nullable
   @RequiredReadAction
   @Deprecated
-  public static Module findModuleForPsiElement(PsiElement element) {
+  public static @Nullable Module findModuleForPsiElement(PsiElement element) {
     return element.getModule();
   }
 
@@ -185,9 +183,8 @@ public class ModuleUtilCore {
     return module.getExtension(key);
   }
 
-  @Nullable
   @RequiredReadAction
-  public static <E extends ModuleExtension<E>> E getExtension(PsiElement element, Class<E> extensionClass) {
+  public static <E extends ModuleExtension<E>> @Nullable E getExtension(PsiElement element, Class<E> extensionClass) {
     if (!element.isValid())  {
       return null;
     }
@@ -207,9 +204,8 @@ public class ModuleUtilCore {
     return ModuleContentUtil.getSdk(module, extensionClass);
   }
 
-  @Nullable
   @RequiredReadAction
-  public static Sdk getSdk(PsiElement element, Class<? extends ModuleExtensionWithSdk> extensionClass) {
+  public static @Nullable Sdk getSdk(PsiElement element, Class<? extends ModuleExtensionWithSdk> extensionClass) {
     Module moduleForPsiElement = findModuleForPsiElement(element);
     if (moduleForPsiElement == null) {
       return null;

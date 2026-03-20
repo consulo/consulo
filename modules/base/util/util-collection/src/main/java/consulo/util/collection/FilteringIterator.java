@@ -83,10 +83,9 @@ public class FilteringIterator<Dom, E extends Dom> implements PeekableIterator<E
         return passed;
     }
 
-    @Nullable
     @Override
     @SuppressWarnings("unchecked")
-    public E next() {
+    public @Nullable E next() {
         if (!hasNext()) {
             throw new NoSuchElementException();
         }
@@ -108,10 +107,9 @@ public class FilteringIterator<Dom, E extends Dom> implements PeekableIterator<E
         myDelegate.remove();
     }
 
-    @Nullable
     @Override
     @SuppressWarnings("unchecked")
-    public E peek() {
+    public @Nullable E peek() {
         if (!hasNext()) {
             throw new NoSuchElementException();
         }

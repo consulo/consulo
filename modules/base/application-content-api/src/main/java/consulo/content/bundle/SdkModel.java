@@ -29,7 +29,6 @@ public interface SdkModel extends BundleHolder {
    * Allows to receive notifications when the SDK list has been changed by the
    * user configuring the SDKs.
    */
-
   interface Listener extends EventListener {
     /**
      * Called when a SDK has been added.

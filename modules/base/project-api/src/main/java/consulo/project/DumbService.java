@@ -227,7 +227,6 @@ public abstract class DumbService {
      * or the dumb-aware ones if {@link #isDumb()} is true.
      * @see #isDumbAware(Object)
      */
-    
     public <T> List<T> filterByDumbAwareness(T[] array) {
         return filterByDumbAwareness(Arrays.asList(array));
     }
@@ -237,7 +236,6 @@ public abstract class DumbService {
      * or the dumb-aware ones if {@link #isDumb()} is true.
      * @see #isDumbAware(Object)
      */
-    
     @SuppressWarnings("unchecked")
     public <T> List<T> filterByDumbAwareness(Collection<? extends T> collection) {
         if (isDumb()) {
@@ -462,7 +460,6 @@ public abstract class DumbService {
      *
      * @param activityName the text (a noun phrase) to display as a reason for the indexing being paused
      */
-    
     public abstract AccessToken startHeavyActivityStarted(LocalizeValue activityName);
 
     /**

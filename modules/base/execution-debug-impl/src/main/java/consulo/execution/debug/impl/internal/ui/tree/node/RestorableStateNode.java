@@ -24,8 +24,7 @@ import javax.swing.tree.TreePath;
  * @author nik
  */
 public interface RestorableStateNode extends XNamedTreeNode {
-  @Nullable
-  String getRawValue();
+  @Nullable String getRawValue();
 
   boolean isComputed();
 

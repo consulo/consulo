@@ -10,7 +10,6 @@ public interface Activity {
    * Convenient method to end token and start a new sibling one.
    * So, start of new is always equals to this item end and yet another System.nanoTime() call is avoided.
    */
-  
   Activity endAndStart(String name);
 
   

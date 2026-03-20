@@ -81,9 +81,8 @@ public class ArrangementRuleAliasesPanel extends JPanel implements DataProvider 
     myControl.setRuleSequences(rules);
   }
 
-  @Nullable
   @Override
-  public Object getData(Key<?> dataId) {
+  public @Nullable Object getData(Key<?> dataId) {
     if (ArrangementRuleAliasControl.KEY == dataId) {
       return myControl;
     }

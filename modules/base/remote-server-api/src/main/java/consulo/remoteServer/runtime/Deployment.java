@@ -18,14 +18,11 @@ public interface Deployment {
 
     LocalizeValue getStatusText();
 
-    @Nullable
-    DeploymentRuntime getRuntime();
+    @Nullable DeploymentRuntime getRuntime();
 
-    @Nullable
-    DeploymentRuntime getParentRuntime();
+    @Nullable DeploymentRuntime getParentRuntime();
 
-    @Nullable
-    DeploymentTask<?> getDeploymentTask();
+    @Nullable DeploymentTask<?> getDeploymentTask();
 
     DeploymentLogManager getOrCreateLogManager(Project project);
 

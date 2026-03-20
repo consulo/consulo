@@ -38,7 +38,6 @@ public class QueryFactory<Result, Parameters> {
   /**
    * @return query to perform the search. @param parameters of the search
    */
-  
   public final Query<Result> createQuery(Parameters parameters) {
     return new ExecutorsQuery<>(parameters, getExecutors());
   }

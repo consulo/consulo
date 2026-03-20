@@ -42,9 +42,8 @@ public class SpellcheckerEngineManagerImpl implements SpellcheckerEngineManager 
         myApplication = application;
     }
 
-    @Nullable
     @Override
-    public SpellcheckerEngine getActiveEngine() {
+    public @Nullable SpellcheckerEngine getActiveEngine() {
         List<SpellcheckerEngine> list = myApplication.getExtensionList(SpellcheckerEngine.class);
         return list.isEmpty() ? null : list.get(0);
     }

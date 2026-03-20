@@ -42,7 +42,6 @@ public abstract class SmartPointerManager {
    * @return a pointer to the specified element which can survive PSI reparse
    * @see #createSmartPsiElementPointer(PsiElement)
    */
-  
   public static <E extends PsiElement> SmartPsiElementPointer<E> createPointer(E element) {
     return getInstance(element.getProject()).createSmartPsiElementPointer(element);
   }
@@ -54,7 +53,6 @@ public abstract class SmartPointerManager {
    * @param element the element to create a pointer to.
    * @return the smart pointer instance.
    */
-  
   public abstract <E extends PsiElement> SmartPsiElementPointer<E> createSmartPsiElementPointer(E element);
 
   /**
@@ -64,7 +62,6 @@ public abstract class SmartPointerManager {
    * @param containingFile the result of <code>element.getContainingFile()</code>.
    * @return the smart pointer instance.
    */
-  
   public abstract <E extends PsiElement> SmartPsiElementPointer<E> createSmartPsiElementPointer(E element, PsiFile containingFile);
 
   /**
@@ -74,7 +71,6 @@ public abstract class SmartPointerManager {
    * @param element the element to create a pointer to.
    * @return the smart pointer instance.
    */
-  
   public <E extends PsiElement> SmartPsiElementPointer<E> createLazyPointer(E element) {
     return createSmartPsiElementPointer(element);
   }

@@ -34,9 +34,8 @@ public class ScratchFileEditorTabTitleProvider implements EditorTabTitleProvider
     myScratchFileService = scratchFileService;
   }
 
-  @Nullable
   @Override
-  public String getEditorTabTitle(Project project, VirtualFile file) {
+  public @Nullable String getEditorTabTitle(Project project, VirtualFile file) {
     RootType rootType = myScratchFileService.getRootType(file);
     if (rootType == null) return null;
     return rootType.substituteName(project, file);

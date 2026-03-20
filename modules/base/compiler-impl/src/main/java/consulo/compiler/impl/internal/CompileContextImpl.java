@@ -392,9 +392,8 @@ public class CompileContextImpl extends UserDataHolderBase implements CompileCon
         return getOutputForFile(module, contentFolderTypeForFile);
     }
 
-    @Nullable
     @Override
-    public VirtualFile getOutputForFile(Module module, ContentFolderTypeProvider contentFolderType) {
+    public @Nullable VirtualFile getOutputForFile(Module module, ContentFolderTypeProvider contentFolderType) {
         return ModuleCompilerPathsManager.getInstance(module).getCompilerOutput(contentFolderType);
     }
 

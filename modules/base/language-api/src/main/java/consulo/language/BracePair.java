@@ -23,7 +23,6 @@ import consulo.language.ast.IElementType;
  * @author max
  * @see PairedBraceMatcher
  */
-
 public class BracePair {
   private final IElementType myLeftBrace;
   private final IElementType myRightBrace;

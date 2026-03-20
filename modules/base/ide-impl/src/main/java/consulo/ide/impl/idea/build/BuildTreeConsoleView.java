@@ -301,8 +301,7 @@ public class BuildTreeConsoleView implements ConsoleView, DataProvider, BuildCon
     }
 
     private
-    @Nullable
-    ExecutionNodeImpl getOrMaybeCreateParentNode(BuildEvent event) {
+    @Nullable ExecutionNodeImpl getOrMaybeCreateParentNode(BuildEvent event) {
         ExecutionNodeImpl parentNode = event.getParentId() == null ? null : nodesMap.get(event.getParentId());
         if (event instanceof MessageEvent messageEvent) {
             parentNode = createMessageParentNodes(messageEvent, parentNode);
@@ -520,10 +519,9 @@ public class BuildTreeConsoleView implements ConsoleView, DataProvider, BuildCon
     }
 
     //@ApiStatus.Internal
-    @Nullable
     @RequiredUIAccess
     @TestOnly
-    public ExecutionConsole getSelectedNodeConsole() {
+    public @Nullable ExecutionConsole getSelectedNodeConsole() {
         ExecutionConsole console = myConsoleViewHandler.getCurrentConsole();
         if (console instanceof ConsoleViewImpl consoleView) {
             consoleView.flushDeferredText();
@@ -735,9 +733,8 @@ public class BuildTreeConsoleView implements ConsoleView, DataProvider, BuildCon
     public void setProcessTextFilter(@Nullable BiPredicate<ProcessEvent, Key> filter) {
     }
 
-    @Nullable
     @Override
-    public BiPredicate<ProcessEvent, Key> getProcessTextFilter() {
+    public @Nullable BiPredicate<ProcessEvent, Key> getProcessTextFilter() {
         return null;
     }
 
@@ -900,8 +897,7 @@ public class BuildTreeConsoleView implements ConsoleView, DataProvider, BuildCon
     }
 
     private
-    @Nullable
-    Object extractSelectedNodeNavigatable() {
+    @Nullable Object extractSelectedNodeNavigatable() {
         TreePath selectedPath = TreeUtil.getSelectedPathIfOne(myTree);
         if (selectedPath == null) {
             return null;
@@ -1093,9 +1089,8 @@ public class BuildTreeConsoleView implements ConsoleView, DataProvider, BuildCon
         private DefaultActionGroup createDefaultTextConsoleToolbar() {
             DefaultActionGroup textConsoleToolbarActionGroup = new DefaultActionGroup();
             textConsoleToolbarActionGroup.add(new ToggleUseSoftWrapsToolbarAction(SoftWrapAppliancePlaces.CONSOLE) {
-                @Nullable
                 @Override
-                protected Editor getEditor(AnActionEvent e) {
+                protected @Nullable Editor getEditor(AnActionEvent e) {
                     return ConsoleViewHandler.this.getEditor();
                 }
             });
@@ -1108,8 +1103,7 @@ public class BuildTreeConsoleView implements ConsoleView, DataProvider, BuildCon
         }
 
         private
-        @Nullable
-        ExecutionConsole getCurrentConsole() {
+        @Nullable ExecutionConsole getCurrentConsole() {
             String nodeConsoleViewName = myNodeConsoleViewName.get();
             if (nodeConsoleViewName == null) {
                 return null;
@@ -1118,8 +1112,7 @@ public class BuildTreeConsoleView implements ConsoleView, DataProvider, BuildCon
         }
 
         private
-        @Nullable
-        Editor getEditor() {
+        @Nullable Editor getEditor() {
             ExecutionConsole console = getCurrentConsole();
             if (console instanceof ConsoleViewImpl consoleView) {
                 return consoleView.getEditor();
@@ -1441,8 +1434,7 @@ public class BuildTreeConsoleView implements ConsoleView, DataProvider, BuildCon
 
         @Override
         public
-        @Nullable
-        Object getParentElement(Object element) {
+        @Nullable Object getParentElement(Object element) {
             return ((ExecutionNodeImpl)element).getParent();
         }
 

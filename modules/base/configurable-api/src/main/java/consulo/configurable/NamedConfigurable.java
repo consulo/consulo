@@ -163,9 +163,8 @@ public abstract class NamedConfigurable<T> implements Configurable, MasterDetail
     myOptionsComponent = null;
   }
 
-  @Nullable
   @RequiredUIAccess
-  protected Component createTopRightComponent(TextBox textBox, Disposable parentUIDisposable) {
+  protected @Nullable Component createTopRightComponent(TextBox textBox, Disposable parentUIDisposable) {
     return null;
   }
 

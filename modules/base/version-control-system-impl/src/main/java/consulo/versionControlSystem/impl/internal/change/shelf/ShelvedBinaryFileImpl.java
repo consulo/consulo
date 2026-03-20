@@ -69,15 +69,13 @@ public class ShelvedBinaryFileImpl implements ShelvedBinaryFile, JDOMExternaliza
         return BEFORE_PATH;
     }
 
-    @Nullable
     @Override
-    public String getAfterPath() {
+    public @Nullable String getAfterPath() {
         return AFTER_PATH;
     }
 
-    @Nullable
     @Override
-    public String getShelvedPath() {
+    public @Nullable String getShelvedPath() {
         return SHELVED_PATH;
     }
 

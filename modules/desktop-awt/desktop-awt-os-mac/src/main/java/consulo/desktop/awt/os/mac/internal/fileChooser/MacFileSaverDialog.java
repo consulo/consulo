@@ -59,9 +59,8 @@ public class MacFileSaverDialog implements FileSaverDialog {
     OwnerOptional.fromComponent(parent).ifDialog(dialogConsumer).ifFrame(frameConsumer).ifNull(frameConsumer);
   }
 
-  @Nullable
   @Override
-  public VirtualFileWrapper save(@Nullable VirtualFile baseDir, @Nullable String filename) {
+  public @Nullable VirtualFileWrapper save(@Nullable VirtualFile baseDir, @Nullable String filename) {
     myFileDialog.setDirectory(baseDir == null ? null : baseDir.getCanonicalPath());
     myFileDialog.setFile(filename);
     myFileDialog.setFilenameFilter((dir, name) -> {

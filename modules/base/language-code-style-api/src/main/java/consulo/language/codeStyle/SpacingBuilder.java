@@ -50,7 +50,6 @@ public class SpacingBuilder {
         /**
          * @param parentRange the range that includes both children blocks (usually the range of the parent block).
          */
-        
         Spacing createSpacing(TextRange parentRange) {
             return Spacing.createSpacing(myMinSpaces, myMaxSpaces, myMinLF, myKeepLineBreaks, myKeepBlankLines);
         }

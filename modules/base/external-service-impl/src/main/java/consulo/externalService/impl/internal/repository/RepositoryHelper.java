@@ -98,7 +98,6 @@ public class RepositoryHelper {
     /**
      * Load & return only plugins from repository
      */
-    
     public static List<PluginDescriptor> loadOnlyPluginsFromRepository(
         @Nullable ProgressIndicator indicator,
         UpdateChannel channel,

@@ -41,9 +41,8 @@ public final class OpenFileHyperlinkInfo extends FileHyperlinkInfoBase {
     myVirtualFile = file;
   }
 
-  @Nullable
   @Override
-  protected VirtualFile getVirtualFile() {
+  protected @Nullable VirtualFile getVirtualFile() {
     return myVirtualFile;
   }
 }

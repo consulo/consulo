@@ -18,9 +18,8 @@ final class HttpFileReferenceHelper extends FileReferenceHelper {
   HttpFileReferenceHelper() {
   }
 
-  @Nullable
   @Override
-  public PsiFileSystemItem findRoot(Project project, VirtualFile file) {
+  public @Nullable PsiFileSystemItem findRoot(Project project, VirtualFile file) {
     VirtualFile root = file;
     VirtualFile parent;
     while ((parent = root.getParent()) != null) {

@@ -95,9 +95,8 @@ public class LanguageCachedValueUtil {
             context,
             key,
             new CachedValueProvider<>() {
-                @Nullable
                 @Override
-                public Result<T> compute() {
+                public @Nullable Result<T> compute() {
                     CachedValueProvider.Result<T> result = provider.compute();
                     if (result != null && !context.isPhysical()) {
                         PsiFile file = context.getContainingFile();

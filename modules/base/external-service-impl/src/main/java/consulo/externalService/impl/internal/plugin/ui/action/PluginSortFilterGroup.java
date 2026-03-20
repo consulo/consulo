@@ -36,9 +36,8 @@ public class PluginSortFilterGroup extends DefaultActionGroup implements DumbAwa
         super("Sort & Filters", true);
     }
 
-    @Nullable
     @Override
-    protected Image getTemplateIcon() {
+    protected @Nullable Image getTemplateIcon() {
         return PlatformIconGroup.generalFilter();
     }
 

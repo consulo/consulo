@@ -32,7 +32,6 @@ public enum LeafState {
      * @return a leaf state for the tree node, that implements this interface
      * @see javax.swing.tree.TreeModel#isLeaf(Object)
      */
-    
     LeafState getLeafState();
   }
 }

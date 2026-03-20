@@ -110,10 +110,9 @@ public class XDebuggerFramesList extends DebuggerFramesList {
         doInit();
         setTransferHandler(DEFAULT_TRANSFER_HANDLER);
         setDataProvider(new DataProvider() {
-            @Nullable
             @Override
             @RequiredReadAction
-            public Object getData(Key dataId) {
+            public @Nullable Object getData(Key dataId) {
                 if (mySelectedFrame != null) {
                     if (VirtualFile.KEY == dataId) {
                         return getFile(mySelectedFrame);
@@ -165,9 +164,8 @@ public class XDebuggerFramesList extends DebuggerFramesList {
 
         public XDebuggerGroupedFrameListRenderer() {
             super(new ListItemDescriptorAdapter<>() {
-                @Nullable
                 @Override
-                public String getTextFor(Object value) {
+                public @Nullable String getTextFor(Object value) {
                     return null;
                 }
 

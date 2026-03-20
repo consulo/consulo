@@ -73,7 +73,6 @@ public abstract class AbstractSuppressByNoInspectionCommentFix extends SuppressI
    * @return language that will be used for comment creating.
    * In common case language will be the same as language of quickfix target
    */
-  
   protected Language getCommentLanguage(PsiElement element) {
     return element.getLanguage();
   }

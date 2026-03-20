@@ -39,9 +39,8 @@ import java.util.Set;
  * @since 29/04/2023
  */
 public class LanguageModuleUtilInternal {
-  @Nullable
   @RequiredReadAction
-  public static Module findModuleForPsiElement(PsiElement element) {
+  public static @Nullable Module findModuleForPsiElement(PsiElement element) {
     if (!element.isValid()) return null;
 
     Project project = element.getProject();

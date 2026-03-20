@@ -197,9 +197,8 @@ public class WrappingAndBracesPanel extends OptionTableWithPreviewPanel {
         return Collections.emptyList();
     }
 
-    @Nullable
     @Override
-    protected JComponent getCustomValueRenderer(String optionName, Object value) {
+    protected @Nullable JComponent getCustomValueRenderer(String optionName, Object value) {
         if (CodeStyleSoftMarginsPresentation.OPTION_NAME.equals(optionName)) {
             JLabel softMarginsLabel = new JLabel(getSoftMarginsString(castToIntList(value)));
             UIUtil.applyStyle(UIUtil.ComponentStyle.SMALL, softMarginsLabel);
@@ -223,9 +222,8 @@ public class WrappingAndBracesPanel extends OptionTableWithPreviewPanel {
         return MarginOptionsUtil.getDefaultVisualGuidesText(getSettings());
     }
 
-    @Nullable
     @Override
-    protected JComponent getCustomNodeEditor(MyTreeNode node) {
+    protected @Nullable JComponent getCustomNodeEditor(MyTreeNode node) {
         String optionName = node.getKey().getOptionName();
         if (CodeStyleSoftMarginsPresentation.OPTION_NAME.equals(optionName)) {
             mySoftMarginsEditor.setValue(castToIntList(node.getValue()));
@@ -246,9 +244,8 @@ public class WrappingAndBracesPanel extends OptionTableWithPreviewPanel {
         return super.getCustomNodeEditor(node);
     }
 
-    @Nullable
     @Override
-    protected Object getCustomNodeEditorValue(JComponent customEditor) {
+    protected @Nullable Object getCustomNodeEditorValue(JComponent customEditor) {
         if (customEditor instanceof CommaSeparatedIntegersField commaSeparatedIntegersField) {
             return commaSeparatedIntegersField.getValue();
         }

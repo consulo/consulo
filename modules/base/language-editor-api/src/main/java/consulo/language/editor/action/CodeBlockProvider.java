@@ -42,6 +42,5 @@ public interface CodeBlockProvider extends LanguageExtension {
     return Application.get().getExtensionPoint(CodeBlockProvider.class).getOrBuildCache(KEY).get(language);
   }
 
-  @Nullable
-  TextRange getCodeBlockRange(Editor editor, PsiFile psiFile);
+  @Nullable TextRange getCodeBlockRange(Editor editor, PsiFile psiFile);
 }

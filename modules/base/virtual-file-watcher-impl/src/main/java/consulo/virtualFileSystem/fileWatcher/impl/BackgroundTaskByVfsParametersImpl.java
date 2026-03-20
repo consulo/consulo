@@ -57,9 +57,8 @@ public class BackgroundTaskByVfsParametersImpl implements BackgroundTaskByVfsPar
     myProgramParameters = value;
   }
 
-  @Nullable
   @Override
-  public String getProgramParameters() {
+  public @Nullable String getProgramParameters() {
     return myProgramParameters;
   }
 
@@ -68,9 +67,8 @@ public class BackgroundTaskByVfsParametersImpl implements BackgroundTaskByVfsPar
     myWorkDirectory = value;
   }
 
-  @Nullable
   @Override
-  public String getWorkingDirectory() {
+  public @Nullable String getWorkingDirectory() {
     return myWorkDirectory;
   }
 
@@ -111,9 +109,8 @@ public class BackgroundTaskByVfsParametersImpl implements BackgroundTaskByVfsPar
     myOutPath = path;
   }
 
-  @Nullable
   @Override
-  public String getOutPath() {
+  public @Nullable String getOutPath() {
     return myOutPath;
   }
 

@@ -85,9 +85,8 @@ public abstract class HighlightUsagesHandlerBase<T extends PsiElement> {
     return KeymapUtil.getShortcutText(shortcuts[0]);
   }
 
-  @Nullable
   @RequiredReadAction
-  public abstract List<T> getTargets();
+  public abstract @Nullable List<T> getTargets();
 
   public @Nullable String getFeatureId() {
     return null;

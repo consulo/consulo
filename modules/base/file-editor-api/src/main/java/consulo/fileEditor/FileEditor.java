@@ -60,13 +60,11 @@ public interface FileEditor extends UserDataHolder, Disposable {
      * and "Text". So "GUI Designer" can be a name of one editor and "Text"
      * can be a name of other editor. The method should never return <code>null</code>.
      */
-   
     String getName();
 
     /**
      * @return editor's internal state. Method should never return <code>null</code>.
      */
-   
     default FileEditorState getState(FileEditorStateLevel level) {
         return FileEditorState.INSTANCE;
     }
@@ -153,7 +151,6 @@ public interface FileEditor extends UserDataHolder, Disposable {
      * @return component which represents editor in the UI.
      * The method should never return <code>null</code>.
      */
-   
     default javax.swing.JComponent getComponent() {
         Component uiComponent = getUIComponent();
         if (uiComponent != null) {

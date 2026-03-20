@@ -69,9 +69,8 @@ public class UIRootConfigurationAccessor extends RootConfigurationAccessor {
   @Override
   public NamedPointer<Sdk> getSdkPointer(String sdkName) {
     return new NamedPointer<>() {
-      @Nullable
       @Override
-      public Sdk get() {
+      public @Nullable Sdk get() {
         return ((ProjectStructureSettingsUtil)ShowSettingsUtil.getInstance()).getSdksModel().findSdk(sdkName);
       }
 
@@ -96,9 +95,8 @@ public class UIRootConfigurationAccessor extends RootConfigurationAccessor {
   @Override
   public NamedPointer<Module> getModulePointer(Project project, String name) {
     return new NamedPointer<>() {
-      @Nullable
       @Override
-      public Module get() {
+      public @Nullable Module get() {
         return myModulesConfigurator.getModule(name);
       }
 

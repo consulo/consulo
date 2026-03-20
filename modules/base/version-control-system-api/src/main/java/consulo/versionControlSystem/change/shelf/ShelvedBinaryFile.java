@@ -25,14 +25,11 @@ import org.jspecify.annotations.Nullable;
  * @since 2025-09-06
  */
 public interface ShelvedBinaryFile {
-    @Nullable
-    String getBeforePath();
+    @Nullable String getBeforePath();
 
-    @Nullable
-    String getAfterPath();
+    @Nullable String getAfterPath();
 
-    @Nullable
-    String getShelvedPath();
+    @Nullable String getShelvedPath();
 
     
     FileStatus getFileStatus();

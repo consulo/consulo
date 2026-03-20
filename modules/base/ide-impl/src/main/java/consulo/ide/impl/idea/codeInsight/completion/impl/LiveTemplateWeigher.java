@@ -15,9 +15,8 @@ public class LiveTemplateWeigher extends LookupElementWeigher {
     super("templates", Registry.is("ide.completion.show.live.templates.on.top"), false);
   }
 
-  @Nullable
   @Override
-  public Comparable weigh(LookupElement element) {
+  public @Nullable Comparable weigh(LookupElement element) {
     return element instanceof LiveTemplateLookupElement;
   }
 }

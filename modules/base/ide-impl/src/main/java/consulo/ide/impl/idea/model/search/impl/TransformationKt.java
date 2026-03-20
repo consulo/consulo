@@ -29,7 +29,6 @@ public final class TransformationKt {
     /**
      * (>=>) :: (b -> x i) -> (i -> x r) -> (b -> x r)
      */
-    
     @SuppressWarnings("unchecked")
     public static <B, I, R> XTransformation<? super B, ? extends R> karasique(
         XTransformation<? super B, ? extends I> thisTrans,

@@ -241,9 +241,8 @@ public class BackgroundTaskByVfsChangeManagerImpl extends BackgroundTaskByVfsCha
         task.run(callback, buildProgress);
     }
 
-    @Nullable
     @Override
-    public Element getState() {
+    public @Nullable Element getState() {
         Element element = new Element("state");
         for (BackgroundTaskByVfsChangeTaskImpl task : myTasks) {
             Element taskElement = new Element("task");

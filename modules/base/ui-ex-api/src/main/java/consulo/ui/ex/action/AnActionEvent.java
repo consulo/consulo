@@ -70,9 +70,8 @@ public class AnActionEvent implements PlaceProvider<String> {
     
     public static DataContext getInjectedDataContext(final DataContext context) {
         return new DataContextWrapper(context) {
-            @Nullable
             @Override
-            public <T> T getData(Key<T> dataId) {
+            public <T> @Nullable T getData(Key<T> dataId) {
                 T injected = super.getData(injectedId(dataId));
                 if (injected != null) {
                     return injected;
@@ -276,7 +275,6 @@ public class AnActionEvent implements PlaceProvider<String> {
      *
      * @return the data context instance.
      */
-    
     public DataContext getDataContext() {
         return myWorksInInjected ? getInjectedDataContext(myDataContext) : myDataContext;
     }
@@ -312,7 +310,6 @@ public class AnActionEvent implements PlaceProvider<String> {
      *
      * </pre>
      */
-    
     public <T> T getRequiredData(Key<T> key) {
         return getDataContext().getRequiredData(key);
     }
@@ -344,7 +341,6 @@ public class AnActionEvent implements PlaceProvider<String> {
      *
      * @return the presentation instance.
      */
-    
     public Presentation getPresentation() {
         return myPresentation;
     }

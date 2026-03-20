@@ -150,9 +150,8 @@ public class SingleInspectionProfilePanel extends JPanel {
     }
 
     
-    @Nullable
     @RequiredUIAccess
-    public static ModifiableModel createNewProfile(
+    public static @Nullable ModifiableModel createNewProfile(
         int initValue,
         ModifiableModel selectedProfile,
         JPanel parent,

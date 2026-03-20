@@ -76,21 +76,18 @@ public class CustomRegionTreeElement implements StructureViewTreeElement {
   @Override
   public ItemPresentation getPresentation() {
     return new ItemPresentation() {
-      @Nullable
       @Override
-      public String getPresentableText() {
+      public @Nullable String getPresentableText() {
         return myProvider.getPlaceholderText(myStartElement.getText());
       }
 
-      @Nullable
       @Override
-      public String getLocationString() {
+      public @Nullable String getLocationString() {
         return null;
       }
 
-      @Nullable
       @Override
-      public Image getIcon() {
+      public @Nullable Image getIcon() {
         return AllIcons.Nodes.CustomRegion;
       }
     };

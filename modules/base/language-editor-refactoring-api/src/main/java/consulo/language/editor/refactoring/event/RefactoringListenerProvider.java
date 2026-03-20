@@ -24,7 +24,6 @@ import org.jspecify.annotations.Nullable;
  */
 public interface RefactoringListenerProvider {
 
-  @Nullable
-  RefactoringElementListener getRefactoringElementListener(PsiElement element);
+  @Nullable RefactoringElementListener getRefactoringElementListener(PsiElement element);
 
 }

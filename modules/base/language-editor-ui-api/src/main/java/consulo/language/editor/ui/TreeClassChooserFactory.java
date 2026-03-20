@@ -41,8 +41,7 @@ public interface TreeClassChooserFactory {
 
   @FunctionalInterface
   interface InheritorsProviderFactory<T extends PsiNamedElement> {
-    @Nullable
-    TreeClassInheritorsProvider<T> create(T baseClass, ProjectAwareSearchScope scope);
+    @Nullable TreeClassInheritorsProvider<T> create(T baseClass, ProjectAwareSearchScope scope);
   }
 
   interface Builder<T extends PsiNamedElement> {
@@ -76,7 +75,6 @@ public interface TreeClassChooserFactory {
     /**
      * return converter, which converter user data from project tree node, to target element
      */
-    
     Builder<T> withTreeElementConverter(Function<Object, T> userObjectElementConverter);
 
     

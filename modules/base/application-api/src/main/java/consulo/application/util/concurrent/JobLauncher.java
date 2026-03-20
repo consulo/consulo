@@ -74,6 +74,5 @@ public abstract class JobLauncher {
    * This will cause deadlock since this thread pool is an easily exhaustible resource.
    * Use {@link Application#executeOnPooledThread(Runnable)} instead
    */
-  
   public abstract Job<Void> submitToJobThread(Runnable action, @Nullable Consumer<? super Future<?>> onDoneCallback);
 }

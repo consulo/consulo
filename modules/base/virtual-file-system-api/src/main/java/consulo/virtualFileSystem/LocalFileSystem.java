@@ -109,7 +109,6 @@ public abstract class LocalFileSystem extends NewVirtualFileSystem implements Vi
    * Stops watching given watch requests and starts watching new paths.
    * May do nothing and return the same set of requests when it contains exactly the same paths.
    */
-  
   public abstract Set<WatchRequest> replaceWatchedRoots(Collection<WatchRequest> watchRequests, @Nullable Collection<String> recursiveRoots, @Nullable Collection<String> flatRoots);
 
   /**

@@ -38,15 +38,13 @@ public class CompilerRuntimeRootProvider implements RuntimeRootProvider {
         myModuleCompilerPathsManager = moduleCompilerPathsManager;
     }
 
-    @Nullable
     @Override
-    public String getCompilerOutputUrl(ContentFolderTypeProvider contentFolderType) {
+    public @Nullable String getCompilerOutputUrl(ContentFolderTypeProvider contentFolderType) {
         return myModuleCompilerPathsManager.getCompilerOutputUrl(contentFolderType);
     }
 
-    @Nullable
     @Override
-    public VirtualFile getCompilerOutput(ContentFolderTypeProvider contentFolderType) {
+    public @Nullable VirtualFile getCompilerOutput(ContentFolderTypeProvider contentFolderType) {
         return myModuleCompilerPathsManager.getCompilerOutput(contentFolderType);
     }
 }

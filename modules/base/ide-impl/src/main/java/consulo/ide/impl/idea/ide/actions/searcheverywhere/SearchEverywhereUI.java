@@ -271,9 +271,8 @@ public class SearchEverywhereUI extends BigPopupUI implements DataProvider, Quic
         myListModel.clear();
     }
 
-    @Nullable
     @Override
-    public Object getData(Key dataId) {
+    public @Nullable Object getData(Key dataId) {
         IntStream indicesStream = Arrays.stream(myResultsList.getSelectedIndices())
             .filter(i -> !myListModel.isMoreElement(i));
 
@@ -1502,9 +1501,8 @@ public class SearchEverywhereUI extends BigPopupUI implements DataProvider, Quic
                     return filter.getElementText(value);
                 }
 
-                @Nullable
                 @Override
-                protected Image getItemIcon(T value) {
+                protected @Nullable Image getItemIcon(T value) {
                     return filter.getElementIcon(value);
                 }
             };
@@ -1668,9 +1666,8 @@ public class SearchEverywhereUI extends BigPopupUI implements DataProvider, Quic
             return myCommandRenderer;
         }
 
-        @Nullable
         @Override
-        public Object getDataForItem(Object element, Key dataId) {
+        public @Nullable Object getDataForItem(Object element, Key dataId) {
             return null;
         }
     };

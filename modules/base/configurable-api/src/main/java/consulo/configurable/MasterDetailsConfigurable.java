@@ -24,8 +24,7 @@ import org.jspecify.annotations.Nullable;
  * @since 25/12/2021
  */
 public interface MasterDetailsConfigurable<T> extends Configurable  {
-  @Nullable
-  Image getIcon();
+  @Nullable Image getIcon();
 
   T getEditableObject();
 

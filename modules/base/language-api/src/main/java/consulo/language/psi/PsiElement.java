@@ -55,7 +55,6 @@ public interface PsiElement extends UserDataHolder {
      *
      * @throws PsiInvalidElementAccessException if this element is invalid
      */
-    
     default Application getApplication() throws PsiInvalidElementAccessException {
         return getProject().getApplication();
     }
@@ -66,7 +65,6 @@ public interface PsiElement extends UserDataHolder {
      * @return the project instance.
      * @throws PsiInvalidElementAccessException if this element is invalid
      */
-    
     Project getProject() throws PsiInvalidElementAccessException;
 
     /**
@@ -74,9 +72,8 @@ public interface PsiElement extends UserDataHolder {
      *
      * @throws PsiInvalidElementAccessException if this element is invalid
      */
-    @Nullable
     @RequiredReadAction
-    default Module getModule() throws PsiInvalidElementAccessException {
+    default @Nullable Module getModule() throws PsiInvalidElementAccessException {
         return LanguageModuleUtilInternal.findModuleForPsiElement(this);
     }
 
@@ -85,7 +82,6 @@ public interface PsiElement extends UserDataHolder {
      *
      * @return the language instance.
      */
-    
     @RequiredReadAction
     Language getLanguage();
 
@@ -94,7 +90,6 @@ public interface PsiElement extends UserDataHolder {
      *
      * @return language version
      */
-    
     @RequiredReadAction
     LanguageVersion getLanguageVersion();
 
@@ -111,7 +106,6 @@ public interface PsiElement extends UserDataHolder {
      *
      * @return the array of child elements.
      */
-    
     @RequiredReadAction
     PsiElement[] getChildren();
 
@@ -127,36 +121,32 @@ public interface PsiElement extends UserDataHolder {
      *
      * @return the first child, or null if the element has no children.
      */
-    @Nullable
     @RequiredReadAction
-    PsiElement getFirstChild();
+    @Nullable PsiElement getFirstChild();
 
     /**
      * Returns the last child of the PSI element.
      *
      * @return the last child, or null if the element has no children.
      */
-    @Nullable
     @RequiredReadAction
-    PsiElement getLastChild();
+    @Nullable PsiElement getLastChild();
 
     /**
      * Returns the next sibling of the PSI element.
      *
      * @return the next sibling, or null if the node is the last in the list of siblings.
      */
-    @Nullable
     @RequiredReadAction
-    PsiElement getNextSibling();
+    @Nullable PsiElement getNextSibling();
 
     /**
      * Returns the previous sibling of the PSI element.
      *
      * @return the previous sibling, or null if the node is the first in the list of siblings.
      */
-    @Nullable
     @RequiredReadAction
-    PsiElement getPrevSibling();
+    @Nullable PsiElement getPrevSibling();
 
     /**
      * Returns the file containing the PSI element.
@@ -172,7 +162,6 @@ public interface PsiElement extends UserDataHolder {
      *
      * @return the text range.
      */
-    
     @RequiredReadAction
     TextRange getTextRange();
 
@@ -208,9 +197,8 @@ public interface PsiElement extends UserDataHolder {
      * @param offset the relative offset for which the PSI element is requested.
      * @return the element at the offset, or null if none is found.
      */
-    @Nullable
     @RequiredReadAction
-    PsiElement findElementAt(int offset);
+    @Nullable PsiElement findElementAt(int offset);
 
     /**
      * Finds a reference at the specified offset from the start of the text range of this node.
@@ -218,9 +206,8 @@ public interface PsiElement extends UserDataHolder {
      * @param offset the relative offset for which the reference is requested.
      * @return the reference at the offset, or null if none is found.
      */
-    @Nullable
     @RequiredReadAction
-    PsiReference findReferenceAt(int offset);
+    @Nullable PsiReference findReferenceAt(int offset);
 
     /**
      * Returns the offset in the file to which the caret should be placed
@@ -245,7 +232,6 @@ public interface PsiElement extends UserDataHolder {
      *
      * @return the element text as a character array.
      */
-    
     @RequiredReadAction
     char[] textToCharArray();
 
@@ -463,8 +449,7 @@ public interface PsiElement extends UserDataHolder {
      * @return the reference instance, or null if the PSI element does not have any
      * associated references.
      */
-    @Nullable
-    PsiReference getReference();
+    @Nullable PsiReference getReference();
 
     /**
      * Returns all references associated with this PSI element. An element can be associated
@@ -481,7 +466,6 @@ public interface PsiElement extends UserDataHolder {
      * references.
      * @see com.intellij.psi.PsiReferenceService#getReferences
      */
-    
     PsiReference[] getReferences();
 
     /**
@@ -491,8 +475,7 @@ public interface PsiElement extends UserDataHolder {
      * @return the user data object, or null if no such object is found in the current element.
      * @see #putCopyableUserData(Key, Object)
      */
-    @Nullable
-    <T> T getCopyableUserData(Key<T> key);
+    <T> @Nullable T getCopyableUserData(Key<T> key);
 
     /**
      * Attaches a copyable user data object to this element. Copyable user data objects are copied
@@ -531,8 +514,7 @@ public interface PsiElement extends UserDataHolder {
      *
      * @return the resolve context element.
      */
-    @Nullable
-    PsiElement getContext();
+    @Nullable PsiElement getContext();
 
     /**
      * Checks if an actual source or class file corresponds to the element. Non-physical elements include,
@@ -549,7 +531,6 @@ public interface PsiElement extends UserDataHolder {
      *
      * @return the resolve scope instance.
      */
-    
     GlobalSearchScope getResolveScope();
 
     /**
@@ -558,7 +539,6 @@ public interface PsiElement extends UserDataHolder {
      * @return the search scope instance.
      * @see {@link com.intellij.psi.search.PsiSearchHelper#getUseScope(PsiElement)}
      */
-    
     SearchScope getUseScope();
 
     /**

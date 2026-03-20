@@ -39,16 +39,14 @@ public class StubSpine implements StubbedSpine {
     return myTree.getPlainList().size();
   }
 
-  @Nullable
   @Override
-  public PsiElement getStubPsi(int index) {
+  public @Nullable PsiElement getStubPsi(int index) {
     List<StubElement<?>> stubs = myTree.getPlainList();
     return index >= stubs.size() ? null : stubs.get(index).getPsi();
   }
 
-  @Nullable
   @Override
-  public IElementType getStubType(int index) {
+  public @Nullable IElementType getStubType(int index) {
     List<StubElement<?>> stubs = myTree.getPlainList();
     return index >= stubs.size() ? null : stubs.get(index).getStubType();
   }

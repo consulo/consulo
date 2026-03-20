@@ -62,7 +62,6 @@ public abstract class TooltipLinkHandler {
    * @param editor    an editor in which tooltip with a link was shown.
    * @return title above detailed description in the expanded tooltip
    */
-  
   public String getDescriptionTitle(String refSuffix, Editor editor) {
     return INSPECTION_INFO;
   }

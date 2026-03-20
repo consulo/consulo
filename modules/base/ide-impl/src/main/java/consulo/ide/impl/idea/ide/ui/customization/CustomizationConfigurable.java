@@ -81,9 +81,8 @@ public class CustomizationConfigurable implements SearchableConfigurable, Config
     return "preferences.customizations";
   }
 
-  @Nullable
   @Override
-  public String getParentId() {
+  public @Nullable String getParentId() {
     return StandardConfigurableIds.GENERAL_GROUP;
   }
 }

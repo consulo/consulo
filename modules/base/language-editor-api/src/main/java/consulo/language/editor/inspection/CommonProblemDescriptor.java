@@ -39,7 +39,6 @@ public interface CommonProblemDescriptor {
    *
    * @return the template for the problem description.
    */
-  
   LocalizeValue getDescriptionTemplate();
 
   /**
@@ -47,6 +46,5 @@ public interface CommonProblemDescriptor {
    *
    * @return the list of quickfixes registered for the problem.
    */
-  @Nullable
-  QuickFix[] getFixes();
+  @Nullable QuickFix[] getFixes();
 }

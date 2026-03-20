@@ -51,6 +51,5 @@ public interface RefactoringInternalHelper {
   
   UsageTarget createPsiElement2UsageTargetAdapter(PsiElement element);
 
-  @Nullable
-  PsiDirectory chooseDirectory(PsiDirectory[] targetDirectories, @Nullable PsiDirectory initialDirectory, Project project, Map<PsiDirectory, String> relativePathsToCreate);
+  @Nullable PsiDirectory chooseDirectory(PsiDirectory[] targetDirectories, @Nullable PsiDirectory initialDirectory, Project project, Map<PsiDirectory, String> relativePathsToCreate);
 }

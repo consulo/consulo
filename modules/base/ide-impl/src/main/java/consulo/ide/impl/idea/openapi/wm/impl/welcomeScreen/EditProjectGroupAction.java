@@ -54,10 +54,9 @@ public class EditProjectGroupAction extends RecentProjectsWelcomeScreenActionBas
             null,
             group.getName(),
             new InputValidatorEx() {
-                @Nullable
                 @Override
                 @RequiredUIAccess
-                public String getErrorText(String inputString) {
+                public @Nullable String getErrorText(String inputString) {
                     inputString = inputString.trim();
                     if (inputString.length() == 0) {
                         return ProjectUILocalize.errorRecentProjectsNameCannotBeEmpty().get();

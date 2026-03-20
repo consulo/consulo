@@ -21,6 +21,5 @@ import org.jspecify.annotations.Nullable;
  * @author peter
  */
 public interface PsiMetaOwner {
-  @Nullable
-  PsiMetaData getMetaData();
+  @Nullable PsiMetaData getMetaData();
 }

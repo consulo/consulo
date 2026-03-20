@@ -41,9 +41,8 @@ public class PluginManagerInternalImpl implements PluginManagerInternal {
     return PluginHolderModificator.isInitialized();
   }
 
-  @Nullable
   @Override
-  public File getPluginPath(Class<?> pluginClass) {
+  public @Nullable File getPluginPath(Class<?> pluginClass) {
     ClassLoader temp = pluginClass.getClassLoader();
     assert temp instanceof PluginClassLoader : "classloader is not a plugin";
     PluginClassLoader classLoader = (PluginClassLoader)temp;
@@ -52,9 +51,8 @@ public class PluginManagerInternalImpl implements PluginManagerInternal {
     return plugin.getPath();
   }
 
-  @Nullable
   @Override
-  public PluginDescriptor getPlugin(Class<?> pluginClass) {
+  public @Nullable PluginDescriptor getPlugin(Class<?> pluginClass) {
     ClassLoader temp = pluginClass.getClassLoader();
     if (!(temp instanceof PluginClassLoader)) {
       return null;

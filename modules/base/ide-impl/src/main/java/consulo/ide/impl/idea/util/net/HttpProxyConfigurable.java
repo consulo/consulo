@@ -41,9 +41,8 @@ public class HttpProxyConfigurable extends IdeaConfigurableBase<HttpProxySetting
     this.settings = (HttpProxyManagerImpl)settings;
   }
 
-  @Nullable
   @Override
-  public String getParentId() {
+  public @Nullable String getParentId() {
     return StandardConfigurableIds.GENERAL_GROUP;
   }
 

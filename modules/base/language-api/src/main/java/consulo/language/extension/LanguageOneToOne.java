@@ -38,9 +38,8 @@ public final class LanguageOneToOne<E extends LanguageExtension> implements Func
       walker.walk(extension -> myExtensions.put(extension.getLanguage(), extension));
     }
 
-    @Nullable
     @Override
-    public T get(Language language) {
+    public @Nullable T get(Language language) {
       T extension = myExtensions.get(language);
       if (extension != null) {
         return extension;

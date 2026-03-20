@@ -66,9 +66,8 @@ public class SandServerType extends ServerType<SandServerConfiguration> {
             }
 
             @RequiredUIAccess
-            @Nullable
             @Override
-            public Component createUIComponent(Disposable uiDisposable) {
+            public @Nullable Component createUIComponent(Disposable uiDisposable) {
                 return Label.create("Sand stub UI");
             }
 
@@ -105,9 +104,8 @@ public class SandServerType extends ServerType<SandServerConfiguration> {
                 return new DummyDeploymentConfiguration();
             }
 
-            @Nullable
             @Override
-            public SettingsEditor<DeploymentConfiguration> createEditor(DeploymentSource source, @Nullable RemoteServer<SandServerConfiguration> server) {
+            public @Nullable SettingsEditor<DeploymentConfiguration> createEditor(DeploymentSource source, @Nullable RemoteServer<SandServerConfiguration> server) {
                 return null;
             }
         };

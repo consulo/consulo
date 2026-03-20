@@ -225,9 +225,8 @@ public abstract class AbstractImportTestsAction extends AnAction {
             return DefaultExecutionTarget.INSTANCE;
         }
 
-        @Nullable
         @Override
-        public RunProfileState getState(Executor executor, ExecutionEnvironment environment) throws ExecutionException {
+        public @Nullable RunProfileState getState(Executor executor, ExecutionEnvironment environment) throws ExecutionException {
             if (!myImported) {
                 myImported = true;
                 return new ImportedTestRunnableState(this, VirtualFileUtil.virtualToIoFile(myFile));
@@ -253,9 +252,8 @@ public abstract class AbstractImportTestsAction extends AnAction {
             return myImported && myConfiguration != null ? myConfiguration.getName() : myFile.getNameWithoutExtension();
         }
 
-        @Nullable
         @Override
-        public Image getIcon() {
+        public @Nullable Image getIcon() {
             return myProperties != null ? myProperties.getConfiguration().getIcon() : null;
         }
 

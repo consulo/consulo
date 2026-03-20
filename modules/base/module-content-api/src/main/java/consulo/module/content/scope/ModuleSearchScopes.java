@@ -28,7 +28,6 @@ public class ModuleSearchScopes {
    * @param module the module to get the scope.
    * @return scope including sources and tests, excluding libraries and dependencies.
    */
-  
   public static ModuleAwareSearchScope moduleScope(Module module) {
     return ModuleScopeProvider.getInstance(module).getModuleScope();
   }
@@ -40,7 +39,6 @@ public class ModuleSearchScopes {
    * @param includeTests include tests or not
    * @return scope including sources and tests(if set includeTests), excluding libraries and dependencies.
    */
-  
   public static ModuleAwareSearchScope moduleScope(Module module, boolean includeTests) {
     return ModuleScopeProvider.getInstance(module).getModuleScope(includeTests);
   }
@@ -56,7 +54,6 @@ public class ModuleSearchScopes {
    * @param module the module to get the scope.
    * @return scope including sources, tests, and libraries, excluding dependencies.
    */
-  
   public static ModuleAwareSearchScope moduleWithLibrariesScope(Module module) {
     return ModuleScopeProvider.getInstance(module).getModuleWithLibrariesScope();
   }
@@ -67,7 +64,6 @@ public class ModuleSearchScopes {
    * @param module the module to get the scope.
    * @return scope including sources, tests, and dependencies, excluding libraries.
    */
-  
   public static ModuleAwareSearchScope moduleWithDependenciesScope(Module module) {
     return ModuleScopeProvider.getInstance(module).getModuleWithDependenciesScope();
   }

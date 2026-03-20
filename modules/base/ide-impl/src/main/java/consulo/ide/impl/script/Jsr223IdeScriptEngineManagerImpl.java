@@ -77,9 +77,8 @@ public class Jsr223IdeScriptEngineManagerImpl extends IdeScriptEngineManager {
         return extensions;
     }
 
-    @Nullable
     @Override
-    public IdeScriptEngine getEngineForLanguage(String language, @Nullable ClassLoader loader) {
+    public @Nullable IdeScriptEngine getEngineForLanguage(String language, @Nullable ClassLoader loader) {
         ClassLoader l = ObjectUtil.notNull(loader, AllPluginsLoader.INSTANCE);
         return ClassLoaderUtil.runWithClassLoader(
             l,
@@ -87,9 +86,8 @@ public class Jsr223IdeScriptEngineManagerImpl extends IdeScriptEngineManager {
         );
     }
 
-    @Nullable
     @Override
-    public IdeScriptEngine getEngineForFileExtension(String extension, @Nullable ClassLoader loader) {
+    public @Nullable IdeScriptEngine getEngineForFileExtension(String extension, @Nullable ClassLoader loader) {
         ClassLoader l = ObjectUtil.notNull(loader, AllPluginsLoader.INSTANCE);
         return ClassLoaderUtil.runWithClassLoader(
             l,

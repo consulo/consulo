@@ -39,6 +39,5 @@ public interface LocatableConfiguration extends RunConfiguration {
    * the name of the file to run isn't yet specified). NOTE: Please don't return hard-coded strings which are not based on the current
    * run configuration settings (such as "Unnamed").
    */
-  @Nullable
-  String suggestedName();
+  @Nullable String suggestedName();
 }

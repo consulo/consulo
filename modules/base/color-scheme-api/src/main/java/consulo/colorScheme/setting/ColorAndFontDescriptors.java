@@ -35,7 +35,6 @@ public interface ColorAndFontDescriptors {
      *
      * @return the list of attribute descriptors.
      */
-    
     AttributesDescriptor[] getAttributeDescriptors();
 
     /**
@@ -45,7 +44,6 @@ public interface ColorAndFontDescriptors {
      *
      * @return the list of color descriptors.
      */
-    
     default ColorDescriptor[] getColorDescriptors() {
         return ColorDescriptor.EMPTY_ARRAY;
     }
@@ -55,6 +53,5 @@ public interface ColorAndFontDescriptors {
      *
      * @return the title of the custom page.
      */
-    
     LocalizeValue getDisplayName();
 }

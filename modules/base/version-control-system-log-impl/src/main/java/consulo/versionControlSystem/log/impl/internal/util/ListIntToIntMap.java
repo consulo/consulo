@@ -36,7 +36,6 @@ public class ListIntToIntMap extends AbstractIntToIntMap implements UpdatableInt
    *                  getLongIndex access need: log(longSize) + blockSize
    *                  getShortIndex access need: blockSize
    */
-  
   public static UpdatableIntToIntMap newInstance(Predicate<Integer> thisIsVisible, int longSize, int blockSize) {
     if (longSize < 0) throw new NegativeArraySizeException("size < 0: " + longSize);
 

@@ -38,7 +38,6 @@ public abstract class WorkingContextProvider {
      *
      * @return provider's name
      */
-    
     public abstract String getId();
 
     /**
@@ -46,7 +45,6 @@ public abstract class WorkingContextProvider {
      *
      * @return
      */
-    
     public abstract String getDescription();
 
     /**

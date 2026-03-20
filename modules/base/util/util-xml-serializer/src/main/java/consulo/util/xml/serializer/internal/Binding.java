@@ -43,9 +43,8 @@ public abstract class Binding {
         // called (and make sense) only if MainBinding
     }
 
-    @Nullable
     @SuppressWarnings("CastToIncompatibleInterface")
-    public static Object deserializeList(Binding binding, Object context, List<Element> nodes) {
+    public static @Nullable Object deserializeList(Binding binding, Object context, List<Element> nodes) {
         if (binding instanceof MultiNodeBinding multiNodeBinding) {
             return multiNodeBinding.deserializeList(context, nodes);
         }

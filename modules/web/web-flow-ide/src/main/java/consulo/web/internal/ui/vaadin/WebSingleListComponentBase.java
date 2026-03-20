@@ -75,10 +75,9 @@ public abstract class WebSingleListComponentBase<V, C extends Component & HasLis
     setValue(myModel.get(index));
   }
 
-  @Nullable
   @Override
   @SuppressWarnings("unchecked")
-  public V getValue() {
+  public @Nullable V getValue() {
     return (V)toVaadinComponent().getValue();
   }
 

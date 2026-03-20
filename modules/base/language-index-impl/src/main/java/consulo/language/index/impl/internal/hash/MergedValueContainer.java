@@ -33,9 +33,8 @@ public class MergedValueContainer<Value> extends ValueContainer<Value> {
         return myCurrent.getInputIdsIterator();
       }
 
-      @Nullable
       @Override
-      public IntPredicate getValueAssociationPredicate() {
+      public @Nullable IntPredicate getValueAssociationPredicate() {
         return myCurrent.getValueAssociationPredicate();
       }
 

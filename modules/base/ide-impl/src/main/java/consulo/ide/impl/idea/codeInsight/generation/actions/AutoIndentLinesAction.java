@@ -42,10 +42,9 @@ public class AutoIndentLinesAction extends BaseCodeInsightAction implements Dumb
         super(ActionLocalize.actionAutoindentlinesText(), ActionLocalize.actionAutoindentlinesDescription());
     }
 
-    @Nullable
     @Override
     @RequiredUIAccess
-    protected Editor getEditor(DataContext dataContext, Project project, boolean forUpdate) {
+    protected @Nullable Editor getEditor(DataContext dataContext, Project project, boolean forUpdate) {
         Editor editor = getBaseEditor(dataContext, project);
         if (editor == null) {
             return null;

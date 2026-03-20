@@ -12,7 +12,6 @@ public abstract class RunAnythingItem {
     /**
      * Returns text presentation of command
      */
-    
     public abstract String getCommand();
 
     /**
@@ -33,6 +32,5 @@ public abstract class RunAnythingItem {
      * @param isSelected true if item is selected in the list
      * @param hasFocus   true if item has focus in the list
      */
-    
     public abstract Component createComponent(@Nullable String pattern, boolean isSelected, boolean hasFocus);
 }

@@ -151,7 +151,6 @@ public class WindowsDefenderChecker {
     /**
      * @return full path to consulo.exe or consulo64.exe
      */
-    
     private static String getExecutableOnWindows() {
         return Platform.current().mapWindowsExecutable(ApplicationInfo.getInstance().getName().toLowerCase(Locale.ROOT), "exe");
     }
@@ -226,7 +225,6 @@ public class WindowsDefenderChecker {
     /**
      * Runs a powershell command to determine whether realtime scanning is enabled or not.
      */
-    
     private static RealtimeScanningStatus getRealtimeScanningEnabled() {
         Collection<String> output = getWindowsDefenderProperty("DisableRealtimeMonitoring");
         if (output == null) {
@@ -264,7 +262,6 @@ public class WindowsDefenderChecker {
     /**
      * Returns a list of paths that might impact build performance if Windows Defender were configured to scan them.
      */
-    
     protected List<Path> getImportantPaths(Project project) {
         String homeDir = System.getProperty("user.home");
         String gradleUserHome = System.getenv("GRADLE_USER_HOME");
@@ -288,7 +285,6 @@ public class WindowsDefenderChecker {
     /**
      * Expands references to environment variables (strings delimited by '%') in 'path'
      */
-    
     private static String expandEnvVars(String path) {
         Matcher m = WINDOWS_ENV_VAR_PATTERN.matcher(path);
         StringBuffer result = new StringBuffer();
@@ -309,7 +305,6 @@ public class WindowsDefenderChecker {
      * https://docs.microsoft.com/en-us/windows/security/threat-protection/windows-defender-antivirus/configure-extension-file-exclusions-windows-defender-antivirus
      * for more details.
      */
-    
     private static Pattern wildcardsToRegex(String path) {
         Matcher m = WINDOWS_DEFENDER_WILDCARD_PATTERN.matcher(path);
         StringBuilder sb = new StringBuilder();
@@ -334,7 +329,6 @@ public class WindowsDefenderChecker {
      * Checks whether each of the given paths in {@link paths} is matched by some pattern in {@link excludedPatterns},
      * returning a map of the results.
      */
-    
     private static Map<Path, Boolean> checkPathsExcluded(List<Path> paths, List<Pattern> excludedPatterns) {
         Map<Path, Boolean> result = new HashMap<>();
         for (Path path : paths) {

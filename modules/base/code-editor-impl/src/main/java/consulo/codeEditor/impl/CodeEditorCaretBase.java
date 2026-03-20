@@ -718,9 +718,8 @@ public class CodeEditorCaretBase extends UserDataHolderBase implements Caret, Du
         }
     }
 
-    @Nullable
     @RequiredUIAccess
-    CaretEvent moveToLogicalPosition(
+    @Nullable CaretEvent moveToLogicalPosition(
         LogicalPosition pos,
         boolean locateBeforeSoftWrap,
         @Nullable StringBuilder debugBuffer,
@@ -962,10 +961,9 @@ public class CodeEditorCaretBase extends UserDataHolderBase implements Caret, Du
         return clone;
     }
 
-    @Nullable
     @Override
     @RequiredUIAccess
-    public Caret clone(boolean above) {
+    public @Nullable Caret clone(boolean above) {
         UIAccess.assertIsUIThread();
         int lineShift = above ? -1 : 1;
         LogicalPosition oldPosition = getLogicalPosition();
@@ -1501,10 +1499,9 @@ public class CodeEditorCaretBase extends UserDataHolderBase implements Caret, Du
         });
     }
 
-    @Nullable
     @Override
     @RequiredReadAction
-    public String getSelectedText() {
+    public @Nullable String getSelectedText() {
         if (!hasSelection()) {
             return null;
         }

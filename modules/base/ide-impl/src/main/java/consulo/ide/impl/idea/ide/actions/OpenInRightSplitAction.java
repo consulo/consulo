@@ -81,9 +81,8 @@ public class OpenInRightSplitAction extends DumbAwareAction {
         e.getPresentation().setEnabledAndVisible(contextFile != null && !contextFile.isDirectory());
     }
 
-    @Nullable
     @RequiredUIAccess
-    public static FileEditorWindow openInRightSplit(
+    public static @Nullable FileEditorWindow openInRightSplit(
         Project project,
         VirtualFile file,
         @Nullable Navigatable element,

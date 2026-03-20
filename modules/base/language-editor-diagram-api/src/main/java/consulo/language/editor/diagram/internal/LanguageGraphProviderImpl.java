@@ -64,15 +64,13 @@ public class LanguageGraphProviderImpl implements GraphProvider<PsiElement> {
     }
 
     @RequiredReadAction
-    @Nullable
     @Override
-    public PsiElement restoreFromURL(ComponentManager project, String path) {
+    public @Nullable PsiElement restoreFromURL(ComponentManager project, String path) {
         return myLanguageGraphProvider.restoreFromURL((Project) project, path);
     }
 
-    @Nullable
     @Override
-    public PsiElement findSupportedElement(DataContext context) {
+    public @Nullable PsiElement findSupportedElement(DataContext context) {
         PsiElement element = context.getData(PsiElement.KEY);
         if (element == null) {
             return null;

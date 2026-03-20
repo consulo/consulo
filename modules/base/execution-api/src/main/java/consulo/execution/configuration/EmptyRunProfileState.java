@@ -12,9 +12,8 @@ public final class EmptyRunProfileState implements RunProfileState {
   private EmptyRunProfileState() {
   }
 
-  @Nullable
   @Override
-  public ExecutionResult execute(Executor executor, ProgramRunner runner) throws ExecutionException {
+  public @Nullable ExecutionResult execute(Executor executor, ProgramRunner runner) throws ExecutionException {
     return null;
   }
 }

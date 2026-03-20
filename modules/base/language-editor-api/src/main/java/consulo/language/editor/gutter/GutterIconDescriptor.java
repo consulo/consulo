@@ -35,7 +35,6 @@ public abstract class GutterIconDescriptor {
    *
    * @return {@link LocalizeValue#empty()} if no configuration needed
    */
-  
   public abstract LocalizeValue getName();
 
   public @Nullable Image getIcon() {
@@ -69,9 +68,8 @@ public abstract class GutterIconDescriptor {
       return LineMarkerSettings.getInstance().isEnabled(this);
     }
 
-    @Nullable
     @Override
-    public Image getIcon() {
+    public @Nullable Image getIcon() {
       return myIcon;
     }
 

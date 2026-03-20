@@ -32,8 +32,7 @@ public interface ModulesConfigurator extends ModulesProvider {
 
   boolean isModuleModelCommitted();
 
-  @Nullable
-  ModifiableRootModel getModuleEditorModelProxy(Module module);
+  @Nullable ModifiableRootModel getModuleEditorModelProxy(Module module);
 
   ModifiableModuleModel getModuleModel();
 
