@@ -13,13 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.application.util;
 
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolder;
 import consulo.util.dataholder.UserDataHolderEx;
 import org.jspecify.annotations.Nullable;
+
+import java.util.Objects;
 
 /**
  * @deprecated For recalculate-able caches, use {@link CachedValuesManager#getCachedValue},
@@ -50,23 +51,25 @@ public abstract class UserDataCache<T, Owner extends UserDataHolder, Param> exte
   }
 
   @Override
-  protected final T getValue(Owner owner, Key<T> key) {
-    return owner.getUserData(key);
+  protected final @Nullable T getValue(Owner owner, @Nullable Key<T> key) {
+    return owner.getUserData(Objects.requireNonNull(key));
   }
 
   @Override
-  protected final void putValue(T t, Owner owner, Key<T> key) {
-    owner.putUserData(key, t);
+  protected final void putValue(@Nullable T t, Owner owner, @Nullable Key<T> key) {
+    if (key != null) {
+      owner.putUserData(key, t);
+    }
   }
 
   @Override
-  public T get(Key<T> a, Owner owner, Param p) {
-    T value = owner.getUserData(a);
+  public T get(@Nullable Key<T> a, Owner owner, @Nullable Param p) {
+    T value = owner.getUserData(Objects.requireNonNull(a));
     if (value == null) {
       RecursionGuard.StackStamp stamp = ourGuard.markStack();
       value = compute(owner, p);
       if (stamp.mayCacheNow()) {
-        value = ((UserDataHolderEx)owner).putUserDataIfAbsent(a, value);
+        value = owner.putUserDataIfAbsent(a, value);
       }
     }
     return value;

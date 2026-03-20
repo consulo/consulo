@@ -78,7 +78,7 @@ public class FrequentEventDetector {
         synchronized (myEventsPosted) {
           Integer existingTraceId = myRecentTraces.get(trace);
           logTrace = existingTraceId == null;
-          if (logTrace) {
+          if (existingTraceId == null) {
             myRecentTraces.put(trace, traceId = myLastTraceId.incrementAndGet());
           }
           else {

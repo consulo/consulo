@@ -17,12 +17,12 @@ package consulo.application;
 
 import consulo.logging.Logger;
 import consulo.component.ProcessCanceledException;
+import org.jspecify.annotations.Nullable;
 
 public class RunResult<T> extends Result<T> {
+  private @Nullable BaseActionRunnable<T> myActionRunnable;
 
-  private BaseActionRunnable<T> myActionRunnable;
-
-  private Throwable myThrowable;
+  private @Nullable Throwable myThrowable;
 
   protected RunResult() {
   }
@@ -32,11 +32,15 @@ public class RunResult<T> extends Result<T> {
   }
 
   public RunResult<T> run() {
+    if (myActionRunnable == null) {
+      throw new IllegalStateException("Can only run once");
+    }
+
     try {
       myActionRunnable.run(this);
     }
     catch (ProcessCanceledException e) {
-      throw e; // this exception may occur from time to time and it shouldn't be catched
+      throw e; // this exception may occur from time to time and it shouldn't be caught
     }
     catch (Throwable throwable) {
       myThrowable = throwable;
@@ -57,7 +61,7 @@ public class RunResult<T> extends Result<T> {
     return this;
   }
 
-  public T getResultObject() {
+  public @Nullable T getResultObject() {
     return myResult;
   }
 
@@ -87,7 +91,7 @@ public class RunResult<T> extends Result<T> {
     return myThrowable != null;
   }
 
-  public Throwable getThrowable() {
+  public @Nullable Throwable getThrowable() {
     return myThrowable;
   }
 

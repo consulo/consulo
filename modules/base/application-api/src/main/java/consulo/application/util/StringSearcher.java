@@ -76,7 +76,6 @@ public class StringSearcher {
                         Character.isJavaIdentifierPart(pattern.charAt(pattern.length() - 1)));
   }
 
-  
   public String getPattern(){
     return myPattern;
   }
@@ -105,7 +104,6 @@ public class StringSearcher {
     return scan(text, null, _start, _end);
   }
 
-  
   public int[] findAllOccurrences(CharSequence text) {
     int end = text.length();
     IntList result = IntLists.newArrayList();
@@ -118,7 +116,7 @@ public class StringSearcher {
     return result.toArray();
   }
 
-  public int scan(CharSequence text, @Nullable char[] textArray, int _start, int _end) {
+  public int scan(CharSequence text, char @Nullable [] textArray, int _start, int _end) {
     if (_start > _end) {
       throw new AssertionError("start > end, " + _start + ">" + _end);
     }
@@ -199,7 +197,7 @@ public class StringSearcher {
     }
   }
 
-  private char normalizedCharAt(CharSequence text, @Nullable char[] textArray, int index) {
+  private char normalizedCharAt(CharSequence text, char @Nullable [] textArray, int index) {
     char lastChar = textArray != null ? textArray[index] : text.charAt(index);
     if (myCaseSensitive) {
       return lastChar;
@@ -229,7 +227,7 @@ public class StringSearcher {
   }
 
   @Override
-  public boolean equals(Object o) {
+  public boolean equals(@Nullable Object o) {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
 

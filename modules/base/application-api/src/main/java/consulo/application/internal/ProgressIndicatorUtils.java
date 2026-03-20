@@ -41,9 +41,8 @@ import java.util.function.Supplier;
 public class ProgressIndicatorUtils {
     private static final Logger LOG = Logger.getInstance(ProgressIndicatorUtils.class);
 
-    
     public static ProgressIndicator forceWriteActionPriority(ProgressIndicator progress, Disposable parentDisposable) {
-        ApplicationManager.getApplication().addApplicationListener(new ApplicationListener() {
+        Application.get().addApplicationListener(new ApplicationListener() {
             @Override
             public void beforeWriteActionStart(Object action) {
                 if (progress.isRunning()) {
@@ -58,7 +57,6 @@ public class ProgressIndicatorUtils {
         scheduleWithWriteActionPriority(new ProgressIndicatorBase(false, false), task);
     }
 
-    
     public static CompletableFuture<?> scheduleWithWriteActionPriority(ProgressIndicator progressIndicator, ReadTask readTask) {
         return scheduleWithWriteActionPriority(progressIndicator, PooledThreadExecutor.getInstance(), readTask);
     }
@@ -69,9 +67,11 @@ public class ProgressIndicatorUtils {
      */
     public static boolean runInReadActionWithWriteActionPriority(Runnable action, @Nullable ProgressIndicator progressIndicator) {
         SimpleReference<Boolean> result = new SimpleReference<>(Boolean.FALSE);
-        runWithWriteActionPriority(() -> result.set(ApplicationManagerEx.getApplicationEx().tryRunReadAction(action)),
-            progressIndicator == null ? new ProgressIndicatorBase(false, false) : progressIndicator);
-        return result.get();
+        runWithWriteActionPriority(
+            () -> result.set(Application.get().tryRunReadAction(action)),
+            progressIndicator == null ? new ProgressIndicatorBase(false, false) : progressIndicator
+        );
+        return result.get() == Boolean.TRUE;
     }
 
     /**
@@ -94,7 +94,7 @@ public class ProgressIndicatorUtils {
     }
 
     public static boolean runWithWriteActionPriority(Runnable action, ProgressIndicator progressIndicator) {
-        ApplicationEx application = (ApplicationEx) ApplicationManager.getApplication();
+        ApplicationEx application = (ApplicationEx) Application.get();
         if (application.isDispatchThread()) {
             throw new IllegalStateException("Must not call from EDT");
         }
@@ -117,7 +117,7 @@ public class ProgressIndicatorUtils {
     private static final List<Runnable> ourWACancellations = Lists.newLockFreeCopyOnWriteList();
 
     static {
-        Application app = ApplicationManager.getApplication();
+        Application app = Application.get();
         app.addApplicationListener(new ApplicationListener() {
             @Override
             public void beforeWriteActionStart(Object action) {
@@ -155,7 +155,6 @@ public class ProgressIndicatorUtils {
         }
     }
 
-    
     private static Runnable indicatorCancellation(ProgressIndicator progressIndicator) {
         return () -> {
             if (!progressIndicator.isCanceled()) {
@@ -168,7 +167,6 @@ public class ProgressIndicatorUtils {
         return application.isWriteActionPending() || application.isWriteActionInProgress();
     }
 
-    
     public static CompletableFuture<?> scheduleWithWriteActionPriority(final ProgressIndicator progressIndicator, Executor executor, final ReadTask readTask) {
         // invoke later even if on EDT
         // to avoid tasks eagerly restarting immediately, allocating many pooled threads
@@ -251,7 +249,7 @@ public class ProgressIndicatorUtils {
         return future;
     }
 
-    private static ReadTask.Continuation runUnderProgress(ProgressIndicator progressIndicator, ReadTask task) {
+    private static ReadTask.@Nullable Continuation runUnderProgress(ProgressIndicator progressIndicator, ReadTask task) {
         return ProgressManager.getInstance().runProcess(() -> {
             try {
                 return task.runBackgroundProcess(progressIndicator);
@@ -267,7 +265,7 @@ public class ProgressIndicatorUtils {
      * by background thread read action (until its first checkCanceled call). Shouldn't be called from under read action.
      */
     public static void yieldToPendingWriteActions() {
-        Application application = ApplicationManager.getApplication();
+        Application application = Application.get();
         if (application.isReadAccessAllowed()) {
             throw new IllegalStateException("Mustn't be called from within read action");
         }

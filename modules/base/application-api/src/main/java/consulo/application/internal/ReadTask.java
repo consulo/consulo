@@ -17,7 +17,6 @@ package consulo.application.internal;
 
 import consulo.annotation.access.RequiredReadAction;
 import consulo.application.Application;
-import consulo.application.ApplicationManager;
 import consulo.application.progress.ProgressIndicator;
 import consulo.component.ProcessCanceledException;
 import consulo.ui.ModalityState;
@@ -68,7 +67,7 @@ public abstract class ReadTask {
      * @param indicator the progress indicator of the background thread
      */
     public Continuation runBackgroundProcess(ProgressIndicator indicator) throws ProcessCanceledException {
-        return ApplicationManager.getApplication().runReadAction((Supplier<Continuation>) () -> performInReadAction(indicator));
+        return Application.get().runReadAction((Supplier<Continuation>) () -> performInReadAction(indicator));
     }
 
     /**

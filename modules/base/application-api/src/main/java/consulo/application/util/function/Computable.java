@@ -23,39 +23,35 @@ import java.util.function.Supplier;
 /**
  *  @author dsl
  */
-@FunctionalInterface
 @Deprecated
 @DeprecationInfo("Use Supplier")
+@FunctionalInterface
 public interface Computable <T> extends Supplier<T> {
-
-  T compute();
+  @Nullable T compute();
 
   @Override
-  default T get() {
+  default @Nullable T get() {
     return compute();
   }
 
   class PredefinedValueComputable<T> implements Computable<T> {
-
-    private final T myValue;
+    private final @Nullable T myValue;
 
     public PredefinedValueComputable(@Nullable T value) {
       myValue = value;
     }
 
     @Override
-    public T compute() {
+    public @Nullable T compute() {
       return myValue;
     }
   }
 
   abstract class NotNullCachedComputable<T> implements Computable<T> {
-    private T myValue;
+    private @Nullable T myValue;
 
-    
     protected abstract T internalCompute();
 
-    
     @Override
     public final T compute() {
       if (myValue == null) {
@@ -67,7 +63,7 @@ public interface Computable <T> extends Supplier<T> {
 
   abstract class NullableCachedComputable<T> implements Computable<T> {
     private static final Object NULL_VALUE = new Object();
-    private Object myValue;
+    private @Nullable Object myValue = null;
 
     protected abstract @Nullable T internalCompute();
 

@@ -38,11 +38,11 @@ public abstract class AtomicNullableLazyValue<T> extends NullableLazyValue<T> {
     };
   }
 
-  private volatile T myValue;
+  private volatile @Nullable T myValue;
   private volatile boolean myComputed;
 
   @Override
-  public final T getValue() {
+  public final @Nullable T getValue() {
     boolean computed = myComputed;
     T value = myValue;
     if (computed) {

@@ -21,6 +21,7 @@ import consulo.dataContext.DataProvider;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.execution.executor.Executor;
+import consulo.execution.localize.ExecutionLocalize;
 import consulo.execution.ui.event.RunContentWithExecutorListener;
 import consulo.logging.Logger;
 import consulo.project.Project;
@@ -58,7 +59,7 @@ public class RunToolWindowManager {
     private final Map<String, ContentManager> myToolwindowIdToContentManagerMap = new ConcurrentHashMap<>();
     private final Map<String, Image> myToolwindowIdToBaseIconMap = new HashMap<>();
     private final LinkedList<String> myToolwindowIdZBuffer = new LinkedList<>();
-    
+
     private final Project myProject;
     private final Provider<ToolWindowManager> myToolWindowManager;
     private final Disposable myParentDisposable;
@@ -157,6 +158,7 @@ public class RunToolWindowManager {
             }
         });
 
+        toolWindow.setDisplayName(ExecutionLocalize.toolWindowNameRun());
         toolWindow.setIcon(toolWindowIcon);
         ContentManagerWatcher.watchContentManager(toolWindow, contentManager);
         initToolWindow(executor, toolWindowId, toolWindowIcon, contentManager);

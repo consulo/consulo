@@ -35,6 +35,7 @@ import consulo.util.concurrent.coroutine.CoroutineContextOwner;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.SemVer;
 import consulo.util.lang.function.ThrowableSupplier;
+import org.jspecify.annotations.Nullable;
 
 import java.awt.*;
 import java.util.concurrent.Callable;
@@ -57,7 +58,6 @@ import java.util.function.Supplier;
 public interface Application extends ComponentManager, CoroutineContextOwner {
     Key<Application> KEY = Key.of(Application.class);
 
-    
     @SuppressWarnings("deprecation")
     @Deprecated
     @DeprecationInfo("Use injecting context")
@@ -418,7 +418,6 @@ public interface Application extends ComponentManager, CoroutineContextOwner {
         return false;
     }
 
-    
     default ProgressIndicatorProvider getProgressManager() {
         return getComponent(ProgressIndicatorProvider.class);
     }
@@ -494,17 +493,14 @@ public interface Application extends ComponentManager, CoroutineContextOwner {
         return getIcon();
     }
 
-    
     default LocalizeValue getName() {
         return LocalizeValue.localizeTODO("Consulo");
     }
 
-    
     default SemVer getVersion() {
         return AppSemVer.STUB_VER;
     }
 
-    
     default BuildNumber getBuildNumber() {
         return BuildNumber.fallback();
     }
@@ -529,7 +525,6 @@ public interface Application extends ComponentManager, CoroutineContextOwner {
         return false;
     }
 
-    
     @Override
     default CoroutineContext coroutineContext() {
         throw new UnsupportedOperationException();

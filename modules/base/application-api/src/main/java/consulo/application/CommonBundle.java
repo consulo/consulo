@@ -13,12 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.application;
 
 import consulo.annotation.DeprecationInfo;
 import consulo.component.util.localize.BundleBase;
 import consulo.platform.Platform;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.PropertyKey;
 import org.jspecify.annotations.Nullable;
 
@@ -39,7 +39,7 @@ public class CommonBundle extends BundleBase {
 
   private CommonBundle() {}
 
-  public static String message(@PropertyKey(resourceBundle = BUNDLE) String key, Object... params) {
+  public static @Nullable String message(@PropertyKey(resourceBundle = BUNDLE) String key, Object... params) {
     return message(getCommonBundle(), key, params);
   }
 
@@ -53,90 +53,93 @@ public class CommonBundle extends BundleBase {
     return bundle;
   }
 
-  public static String messageOrDefault(@Nullable ResourceBundle bundle,
-                                        String key,
-                                        @Nullable String defaultValue,
-                                        Object... params) {
+  @Contract("_,_,null,_ -> null; _,_,!null,_ -> !null")
+  public static @Nullable String messageOrDefault(
+    @Nullable ResourceBundle bundle,
+    String key,
+    @Nullable String defaultValue,
+    Object... params
+  ) {
     return BundleBase.messageOrDefault(bundle, key, defaultValue, params);
   }
 
-  public static String message(ResourceBundle bundle, String key, Object... params) {
+  public static @Nullable String message(ResourceBundle bundle, String key, Object... params) {
     return BundleBase.message(bundle, key, params);
   }
 
-  public static String getCancelButtonText() {
+  public static @Nullable String getCancelButtonText() {
     return message("button.cancel");
   }
 
-  public static String getBackgroundButtonText() {
+  public static @Nullable String getBackgroundButtonText() {
     return message("button.background");
   }
 
-  public static String getHelpButtonText() {
+  public static @Nullable String getHelpButtonText() {
     return message("button.help");
   }
 
-  public static String getErrorTitle() {
+  public static @Nullable String getErrorTitle() {
     return message("title.error");
   }
 
-  public static String getWarningTitle() {
+  public static @Nullable String getWarningTitle() {
     return message("title.warning");
   }
 
-  public static String getLoadingTreeNodeText() {
+  public static @Nullable String getLoadingTreeNodeText() {
     return message("tree.node.loading");
   }
 
-  public static String getOkButtonText(){
+  public static @Nullable String getOkButtonText(){
     return message("button.ok");
   }
 
-  public static String getNextButtonText() {
+  public static @Nullable String getNextButtonText() {
     return message("button.next");
   }
 
-  public static String getYesButtonText(){
+  public static @Nullable String getYesButtonText(){
     return message("button.yes");
   }
 
-  public static String getNoButtonText(){
+  public static @Nullable String getNoButtonText(){
     return message("button.no");
   }
 
-  public static String getContinueButtonText(){
+  public static @Nullable String getContinueButtonText(){
     return message("button.continue");
   }
 
-  public static String getYesForAllButtonText() {
+  public static @Nullable String getYesForAllButtonText() {
     return message("button.yes.for.all");
   }
 
-  public static String getCloseButtonText() {
+  public static @Nullable String getCloseButtonText() {
     return message("button.close");
   }
 
-  public static String getNoForAllButtonText() {
+  public static @Nullable String getNoForAllButtonText() {
     return message("button.no.for.all");
   }
 
-  public static String getApplyButtonText() {
+  public static @Nullable String getApplyButtonText() {
     return message("button.apply");
   }
 
-  public static String settingsTitle() {
+  public static @Nullable String settingsTitle() {
     return Platform.current().os().isMac() ? message("title.settings.mac") : message("title.settings");
   }
 
-  public static String settingsAction() {
+  public static @Nullable String settingsAction() {
     return Platform.current().os().isMac() ? message("action.settings.mac") : message("action.settings");
   }
 
-  public static String settingsActionDescription() {
+  public static @Nullable String settingsActionDescription() {
     return Platform.current().os().isMac() ? message("action.settings.description.mac") : message("action.settings.description");
   }
 
-  public static String settingsActionPath() {
+  public static @Nullable String settingsActionPath() {
     return Platform.current().os().isMac() ? message("action.settings.path.mac") : message("action.settings.path");
   }
 }

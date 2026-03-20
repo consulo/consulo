@@ -43,7 +43,7 @@ public class Foundation {
     myObjcMsgSend = nativeLibrary.getFunction("objc_msgSend");
   }
 
-  static Callback ourRunnableCallback;
+  static @Nullable Callback ourRunnableCallback = null;
 
   public static void init() { /* fake method to init foundation */ }
 
@@ -65,7 +65,6 @@ public class Foundation {
     return myFoundationLibrary.sel_registerName(s);
   }
 
-  
   private static Object[] prepInvoke(ID id, Pointer selector, Object[] args) {
     Object[] invokArgs = new Object[args.length + 2];
     invokArgs[0] = id;
@@ -138,7 +137,7 @@ public class Foundation {
     return myFoundationLibrary.objc_getClass(clazz);
   }
 
-  public static String fullUserName() {
+  public static @Nullable String fullUserName() {
     return toStringViaUTF8(myFoundationLibrary.NSFullUserName());
   }
 
@@ -217,7 +216,7 @@ public class Foundation {
     myFoundationLibrary.CFRetain(id);
   }
 
-  public static void cfRelease(ID... ids) {
+  public static void cfRelease(@Nullable ID... ids) {
     for (ID id : ids) {
       if (id != null) {
         myFoundationLibrary.CFRelease(id);

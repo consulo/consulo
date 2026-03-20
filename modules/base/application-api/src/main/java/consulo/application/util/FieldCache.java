@@ -13,8 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.application.util;
+
+import org.jspecify.annotations.Nullable;
 
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
@@ -29,7 +30,7 @@ public abstract class FieldCache<T, Owner,AccessorParameter,Parameter> {
     w = ourLock.writeLock();
   }
 
-  public T get(AccessorParameter a, Owner owner, Parameter p) {
+  public @Nullable T get(@Nullable AccessorParameter a, Owner owner, @Nullable Parameter p) {
     r.lock();
     T result;
     try {
@@ -59,7 +60,7 @@ public abstract class FieldCache<T, Owner,AccessorParameter,Parameter> {
     return result;
   }
 
-  public final T getCached(AccessorParameter a, Owner owner) {
+  public final @Nullable T getCached(AccessorParameter a, Owner owner) {
     r.lock();
 
     try {
@@ -80,7 +81,9 @@ public abstract class FieldCache<T, Owner,AccessorParameter,Parameter> {
     }
   }
 
-  protected abstract T compute(Owner owner, Parameter p);
-  protected abstract T getValue(Owner owner, AccessorParameter p);
-  protected abstract void putValue(T t, Owner owner, AccessorParameter p);
+  protected abstract T compute(Owner owner, @Nullable Parameter p);
+
+  protected abstract @Nullable T getValue(Owner owner, @Nullable AccessorParameter p);
+
+  protected abstract void putValue(@Nullable T t, Owner owner, @Nullable AccessorParameter p);
 }

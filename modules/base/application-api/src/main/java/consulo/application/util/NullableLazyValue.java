@@ -53,7 +53,7 @@ public abstract class NullableLazyValue<T> implements Supplier<T>{
   }
 
   @Override
-  public T get() {
+  public @Nullable T get() {
     return getValue();
   }
 }

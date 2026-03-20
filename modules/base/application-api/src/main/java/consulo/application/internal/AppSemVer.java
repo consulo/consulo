@@ -17,10 +17,12 @@ package consulo.application.internal;
 
 import consulo.util.lang.SemVer;
 
+import java.util.Objects;
+
 /**
  * @author VISTALL
- * @since 03/03/2023
+ * @since 2023-03-03
  */
 public class AppSemVer {
-  public static final SemVer STUB_VER = SemVer.parseFromText("1.0.0");
+  public static final SemVer STUB_VER = Objects.requireNonNull(SemVer.parseFromText("1.0.0"));
 }

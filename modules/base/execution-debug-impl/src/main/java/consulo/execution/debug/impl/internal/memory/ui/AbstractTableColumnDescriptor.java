@@ -1,11 +1,13 @@
 // Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.execution.debug.impl.internal.memory.ui;
 
+import consulo.localize.LocalizeValue;
+
 public abstract class AbstractTableColumnDescriptor implements AbstractTableModelWithColumns.TableColumnDescriptor {
-    private final String myName;
+    private final LocalizeValue myName;
     private final Class<?> myClass;
 
-    protected AbstractTableColumnDescriptor(String name, Class<?> elementClass) {
+    protected AbstractTableColumnDescriptor(LocalizeValue name, Class<?> elementClass) {
         myName = name;
         myClass = elementClass;
     }
@@ -17,6 +19,6 @@ public abstract class AbstractTableColumnDescriptor implements AbstractTableMode
 
     @Override
     public String getName() {
-        return myName;
+        return myName.get();
     }
 }

@@ -30,13 +30,15 @@ import java.io.File;
  */
 public class UserHomeFileUtil {
   @Contract("null -> null; !null -> !null")
-  public static String getLocationRelativeToUserHome(@Nullable String path) {
+  public static @Nullable String getLocationRelativeToUserHome(@Nullable String path) {
     return getLocationRelativeToUserHome(path, true);
   }                                                                                
 
   @Contract("null,_ -> null; !null,_ -> !null")
-  public static String getLocationRelativeToUserHome(@Nullable String path, boolean unixOnly) {
-    if (path == null) return null;
+  public static @Nullable String getLocationRelativeToUserHome(@Nullable String path, boolean unixOnly) {
+    if (path == null) {
+      return null;
+    }
 
     Platform platform = Platform.current();
     if (platform.os().isUnix() || !unixOnly) {

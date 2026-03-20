@@ -22,15 +22,13 @@ import consulo.util.concurrent.AsyncResult;
 import consulo.util.concurrent.Promise;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolder;
-import org.jetbrains.annotations.NonNls;
 
 import org.jspecify.annotations.Nullable;
 
 @ServiceAPI(ComponentScope.APPLICATION)
 public interface DataManager {
- 
   public static DataManager getInstance() {
-    return RootComponentHolder.getRootComponent().getInstance(DataManager.class);
+    return RootComponentHolder.get().getInstance(DataManager.class);
   }
 
   /**
@@ -39,7 +37,6 @@ public interface DataManager {
    */
   DataContext getDataContext();
 
- 
   AsyncDataContext createAsyncDataContext(DataContext dataContext);
 
   /**
@@ -47,7 +44,6 @@ public interface DataManager {
    */
   Promise<DataContext> getDataContextFromFocusAsync();
 
- 
   AsyncResult<DataContext> getDataContextFromFocus();
 
   /**

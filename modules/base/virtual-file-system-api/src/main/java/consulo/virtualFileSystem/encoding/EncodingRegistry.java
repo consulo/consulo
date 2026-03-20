@@ -48,11 +48,10 @@ public interface EncodingRegistry {
    */
   Charset getDefaultConsoleEncoding();
 
-  
   @Deprecated
   @DeprecationInfo("Use constructor injection")
   public static EncodingRegistry getInstance() {
-    return RootComponentHolder.getRootComponent().getInstance(EncodingRegistry.class);
+    return RootComponentHolder.get().getInstance(EncodingRegistry.class);
   }
 
   @Deprecated
@@ -61,7 +60,7 @@ public interface EncodingRegistry {
     return doActionAndRestoreEncoding(getInstance(), fileBefore, action);
   }
 
-  public static @Nullable <E extends Throwable> VirtualFile doActionAndRestoreEncoding(EncodingRegistry registry,
+  public static @Nullable <E extends Throwable> @Nullable VirtualFile doActionAndRestoreEncoding(EncodingRegistry registry,
                                                                              VirtualFile fileBefore,
                                                                              ThrowableSupplier<? extends VirtualFile, E> action) throws E {
     Charset charsetBefore = registry.getEncoding(fileBefore, true);

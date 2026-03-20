@@ -20,6 +20,7 @@ import consulo.annotation.internal.MigratedExtensionsTo;
 import consulo.application.localize.ApplicationLocalize;
 import consulo.component.util.localize.AbstractBundle;
 import org.jetbrains.annotations.PropertyKey;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Provides access to localized properties for the application component of IDEA.
@@ -36,11 +37,11 @@ public class ApplicationBundle extends AbstractBundle {
     super(BUNDLE);
   }
 
-  public static String message(@PropertyKey(resourceBundle = BUNDLE) String key) {
+  public static @Nullable String message(@PropertyKey(resourceBundle = BUNDLE) String key) {
     return ourInstance.getMessage(key);
   }
 
-  public static String message(@PropertyKey(resourceBundle = BUNDLE) String key, Object... params) {
+  public static @Nullable String message(@PropertyKey(resourceBundle = BUNDLE) String key, Object... params) {
     return ourInstance.getMessage(key, params);
   }
 }
