@@ -27,7 +27,6 @@ public interface RemoteExternalSystemFacade<S extends ExternalSystemExecutionSet
       return RemoteExternalSystemProjectResolver.NULL_OBJECT;
     }
 
-
     @Override
     public RemoteExternalSystemTaskManager<ExternalSystemExecutionSettings> getTaskManager() {
       return RemoteExternalSystemTaskManager.NULL_OBJECT;
@@ -50,7 +49,6 @@ public interface RemoteExternalSystemFacade<S extends ExternalSystemExecutionSet
     public boolean cancelTask(ExternalSystemTaskId id) {
       return false;
     }
-
 
     @Override
     public Map<ExternalSystemTaskType, Set<ExternalSystemTaskId>> getTasksInProgress() {

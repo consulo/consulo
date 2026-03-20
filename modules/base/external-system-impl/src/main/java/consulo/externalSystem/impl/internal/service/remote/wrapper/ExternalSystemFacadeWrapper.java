@@ -23,7 +23,6 @@ import java.util.Set;
  */
 public class ExternalSystemFacadeWrapper<S extends ExternalSystemExecutionSettings> implements RemoteExternalSystemFacade<S> {
 
-  
   private final RemoteExternalSystemFacade<S>                   myDelegate;
   
   private final RemoteExternalSystemProgressNotificationManager myProgressManager;
@@ -35,18 +34,15 @@ public class ExternalSystemFacadeWrapper<S extends ExternalSystemExecutionSettin
     myProgressManager = progressManager;
   }
 
-  
   public RemoteExternalSystemFacade<S> getDelegate() {
     return myDelegate;
   }
 
-  
   @Override
   public RemoteExternalSystemProjectResolver<S> getResolver() throws IllegalStateException {
     return new ExternalSystemProjectResolverWrapper<S>(myDelegate.getResolver(), myProgressManager);
   }
 
-  
   @Override
   public RemoteExternalSystemTaskManager<S> getTaskManager() {
     return new ExternalSystemTaskManagerWrapper<S>(myDelegate.getTaskManager(), myProgressManager);
@@ -67,7 +63,6 @@ public class ExternalSystemFacadeWrapper<S extends ExternalSystemExecutionSettin
     return myDelegate.isTaskInProgress(id);
   }
 
-  
   @Override
   public Map<ExternalSystemTaskType, Set<ExternalSystemTaskId>> getTasksInProgress() {
     return myDelegate.getTasksInProgress();
