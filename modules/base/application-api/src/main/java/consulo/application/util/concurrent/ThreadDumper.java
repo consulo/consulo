@@ -203,19 +203,12 @@ public class ThreadDumper {
   }
 
   private static String getReadableState(Thread.State state) {
-    switch (state) {
-      case BLOCKED:
-        return "blocked";
-      case TIMED_WAITING:
-      case WAITING:
-        return "waiting on condition";
-      case RUNNABLE:
-        return "runnable";
-      case NEW:
-        return "new";
-      case TERMINATED:
-        return "terminated";
-    }
-    return null;
+    return switch (state) {
+      case BLOCKED -> "blocked";
+      case TIMED_WAITING, WAITING -> "waiting on condition";
+      case RUNNABLE -> "runnable";
+      case NEW -> "new";
+      case TERMINATED -> "terminated";
+    };
   }
 }
