@@ -47,8 +47,7 @@ public abstract class InspectionRVContentProvider {
   }
 
   protected interface UserObjectContainer<T> {
-    @Nullable
-    UserObjectContainer<T> getOwner();
+    @Nullable UserObjectContainer<T> getOwner();
 
     
     RefElementNode createNode(InspectionToolPresentation presentation);
@@ -56,8 +55,7 @@ public abstract class InspectionRVContentProvider {
     
     T getUserObject();
 
-    @Nullable
-    String getModule();
+    @Nullable String getModule();
 
     boolean areEqual(T o1, T o2);
 

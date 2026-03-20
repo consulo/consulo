@@ -67,23 +67,20 @@ public interface SearchableConfigurable extends Configurable {
       }
 
       @RequiredUIAccess
-      @Nullable
       @Override
-      public JComponent createComponent(Disposable parentDisposable) {
+      public @Nullable JComponent createComponent(Disposable parentDisposable) {
         return createComponent();
       }
 
       @RequiredUIAccess
-      @Nullable
       @Override
-      public Component createUIComponent() {
+      public @Nullable Component createUIComponent() {
         return null;
       }
 
       @RequiredUIAccess
-      @Nullable
       @Override
-      public Component createUIComponent(Disposable parentDisposable) {
+      public @Nullable Component createUIComponent(Disposable parentDisposable) {
         return createUIComponent();
       }
 

@@ -32,6 +32,5 @@ public interface FileASTNode extends ASTNode {
 
   boolean isParsed();
 
-  @Nullable
-  LighterAST getLighterAST();
+  @Nullable LighterAST getLighterAST();
 }

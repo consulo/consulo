@@ -302,9 +302,8 @@ public abstract class ThreesideTextDiffViewer extends ThreesideDiffViewer<TextEd
     // Misc
     //
 
-    @Nullable
     @Override
-    protected Navigatable getNavigatable() {
+    protected @Nullable Navigatable getNavigatable() {
         return getCurrentContent().getNavigatable(LineCol.fromCaret(getCurrentEditor()));
     }
 
@@ -338,9 +337,8 @@ public abstract class ThreesideTextDiffViewer extends ThreesideDiffViewer<TextEd
     // Helpers
     //
 
-    @Nullable
     @Override
-    public Object getData(Key<?> dataId) {
+    public @Nullable Object getData(Key<?> dataId) {
         if (DiffDataKeys.CURRENT_EDITOR == dataId) {
             return getCurrentEditor();
         }

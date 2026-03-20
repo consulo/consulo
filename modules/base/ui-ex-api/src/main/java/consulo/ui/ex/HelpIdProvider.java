@@ -18,6 +18,5 @@ package consulo.ui.ex;
 import org.jspecify.annotations.Nullable;
 
 public interface HelpIdProvider {
-  @Nullable
-  String getHelpId();
+  @Nullable String getHelpId();
 }

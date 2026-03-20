@@ -124,9 +124,8 @@ public class CompilerEncodingServiceImpl extends CompilerEncodingService {
         return map;
     }
 
-    @Nullable
     @Override
-    public Charset getPreferredModuleEncoding(Module module) {
+    public @Nullable Charset getPreferredModuleEncoding(Module module) {
         Set<Charset> encodings = myModuleFileEncodings.getValue().get(module);
         return ContainerUtil.getFirstItem(encodings, EncodingProjectManager.getInstance(myProject).getDefaultCharset());
     }

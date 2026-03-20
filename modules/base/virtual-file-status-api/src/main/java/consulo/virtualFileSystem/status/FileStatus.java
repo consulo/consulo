@@ -46,8 +46,7 @@ public interface FileStatus {
   
   LocalizeValue getText();
 
-  @Nullable
-  ColorValue getColor();
+  @Nullable ColorValue getColor();
 
   
   EditorColorKey getColorKey();

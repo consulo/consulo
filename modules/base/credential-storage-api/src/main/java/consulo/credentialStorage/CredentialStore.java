@@ -7,8 +7,7 @@ import org.jspecify.annotations.Nullable;
  * Please see <a href="https://plugins.jetbrains.com/docs/intellij/persisting-sensitive-data.html">Storing Sensitive Data</a>.
  */
 public interface CredentialStore {
-    @Nullable
-    Credentials get(CredentialAttributes attributes);
+    @Nullable Credentials get(CredentialAttributes attributes);
 
     default @Nullable String getPassword(CredentialAttributes attributes) {
         var credentials = get(attributes);

@@ -101,8 +101,7 @@ public interface Promise<T> {
    */
   State getState();
 
-  @Nullable
-  T blockingGet(int timeout, TimeUnit timeUnit) throws TimeoutException, ExecutionException;
+  @Nullable T blockingGet(int timeout, TimeUnit timeUnit) throws TimeoutException, ExecutionException;
 
   default @Nullable T blockingGet(int timeout) throws TimeoutException, ExecutionException {
     return blockingGet(timeout, TimeUnit.MILLISECONDS);

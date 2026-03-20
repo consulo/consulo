@@ -51,8 +51,7 @@ final class ServiceModelFilter {
       myParent = parent;
     }
 
-    @Nullable
-    ServiceViewFilter getParent() {
+    @Nullable ServiceViewFilter getParent() {
       return myParent;
     }
 

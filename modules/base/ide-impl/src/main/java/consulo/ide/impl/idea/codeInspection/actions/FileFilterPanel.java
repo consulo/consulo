@@ -43,8 +43,7 @@ class FileFilterPanel {
         FindInProjectUtil.initFileFilter(myFileMask, myUseFileMask);
     }
 
-    @Nullable
-    SearchScope getSearchScope() {
+    @Nullable SearchScope getSearchScope() {
         if (!myUseFileMask.isSelected()) {
             return null;
         }

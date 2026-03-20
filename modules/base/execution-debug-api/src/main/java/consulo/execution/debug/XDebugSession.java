@@ -59,22 +59,19 @@ public interface XDebugSession extends AbstractDebuggerSession {
 
     boolean isSuspended();
 
-    @Nullable
-    XStackFrame getCurrentStackFrame();
+    @Nullable XStackFrame getCurrentStackFrame();
 
     XSuspendContext getSuspendContext();
 
     /**
      * source position from the current frame
      */
-    @Nullable
-    XSourcePosition getCurrentPosition();
+    @Nullable XSourcePosition getCurrentPosition();
 
     /**
      * source position from the top frame
      */
-    @Nullable
-    XSourcePosition getTopFramePosition();
+    @Nullable XSourcePosition getTopFramePosition();
 
     void stepOver(boolean ignoreBreakpoints);
 
@@ -188,8 +185,7 @@ public interface XDebugSession extends AbstractDebuggerSession {
     
     RunContentDescriptor getRunContentDescriptor();
 
-    @Nullable
-    RunProfile getRunProfile();
+    @Nullable RunProfile getRunProfile();
 
     void setPauseActionSupported(boolean isSupported);
 
@@ -207,8 +203,7 @@ public interface XDebugSession extends AbstractDebuggerSession {
 
     RunnerLayoutUi getUI();
 
-    @Nullable
-    XValueMarkers<?, ?> getValueMarkers();
+    @Nullable XValueMarkers<?, ?> getValueMarkers();
 
     void addRestartActions(AnAction... restartActions);
 

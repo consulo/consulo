@@ -126,9 +126,8 @@ public class FileTemplateManagerImpl extends FileTemplateManager implements Pers
         return this;
     }
 
-    @Nullable
     @Override
-    public FileTemplatesScheme getProjectScheme() {
+    public @Nullable FileTemplatesScheme getProjectScheme() {
         return myProjectScheme;
     }
 
@@ -419,9 +418,8 @@ public class FileTemplateManagerImpl extends FileTemplateManager implements Pers
         myTestDate = testDate;
     }
 
-    @Nullable
     @Override
-    public State getState() {
+    public @Nullable State getState() {
         myState.SCHEME = myScheme.getName();
         return myState;
     }

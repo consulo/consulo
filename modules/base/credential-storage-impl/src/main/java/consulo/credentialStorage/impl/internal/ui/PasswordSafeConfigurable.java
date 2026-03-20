@@ -23,9 +23,8 @@ public class PasswordSafeConfigurable extends IdeaConfigurableBase<PasswordSafeC
         this.settings = settings;
     }
 
-    @Nullable
     @Override
-    public String getParentId() {
+    public @Nullable String getParentId() {
         return StandardConfigurableIds.GENERAL_GROUP;
     }
 

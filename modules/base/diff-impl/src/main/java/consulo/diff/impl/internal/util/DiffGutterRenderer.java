@@ -67,9 +67,8 @@ public abstract class DiffGutterRenderer extends GutterIconRenderer {
         return Alignment.LEFT;
     }
 
-    @Nullable
     @Override
-    public AnAction getClickAction() {
+    public @Nullable AnAction getClickAction() {
         return new DumbAwareAction() {
             @Override
             public void actionPerformed(AnActionEvent e) {

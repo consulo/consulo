@@ -37,9 +37,7 @@ public interface VcsHistoryProvider extends VcsProviderMarker {
    */
   boolean isDateOmittable();
 
-  @Nullable
-  
-  String getHelpId();
+  @Nullable String getHelpId();
 
   /**
    * Returns the history session for the specified file path.
@@ -48,8 +46,7 @@ public interface VcsHistoryProvider extends VcsProviderMarker {
    * @return the session, or null if the initial revisions loading process was cancelled.
    * @throws VcsException if an error occurred when loading the revisions
    */
-  @Nullable
-  VcsHistorySession createSessionFor(FilePath filePath) throws VcsException;
+  @Nullable VcsHistorySession createSessionFor(FilePath filePath) throws VcsException;
 
   void reportAppendableHistory(FilePath path, VcsAppendableHistorySessionPartner partner) throws VcsException;
 
@@ -59,8 +56,7 @@ public interface VcsHistoryProvider extends VcsProviderMarker {
    * The returned {@link DiffFromHistoryHandler} will be called, when user calls "Show Diff" from the file history panel.
    * If {@code null} is returned, the standard handler will be used, which is suitable for most cases.
    */
-  @Nullable
-  DiffFromHistoryHandler getHistoryDiffHandler();
+  @Nullable DiffFromHistoryHandler getHistoryDiffHandler();
 
   /**
    * Provide any additional restrictions for showing history for the given file.

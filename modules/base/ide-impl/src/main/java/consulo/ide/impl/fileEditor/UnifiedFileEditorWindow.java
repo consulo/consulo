@@ -157,9 +157,8 @@ public class UnifiedFileEditorWindow extends FileEditorWindowBase implements Fil
         return myManager;
     }
 
-    @Nullable
     @Override
-    public FileEditorWindow split(int orientation, boolean forceSplit, @Nullable VirtualFile virtualFile, boolean focusNew) {
+    public @Nullable FileEditorWindow split(int orientation, boolean forceSplit, @Nullable VirtualFile virtualFile, boolean focusNew) {
         return null;
     }
 
@@ -178,9 +177,8 @@ public class UnifiedFileEditorWindow extends FileEditorWindowBase implements Fil
         return new FileEditorWindow[0];
     }
 
-    @Nullable
     @Override
-    public FileEditorWithProviderComposite getSelectedEditor() {
+    public @Nullable FileEditorWithProviderComposite getSelectedEditor() {
         if (myEditors.isEmpty()) {
             return null;
         }

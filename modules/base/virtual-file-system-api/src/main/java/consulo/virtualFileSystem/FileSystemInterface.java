@@ -45,8 +45,7 @@ public interface FileSystemInterface {
 
   boolean isSymLink(VirtualFile file);
 
-  @Nullable
-  String resolveSymLink(VirtualFile file);
+  @Nullable String resolveSymLink(VirtualFile file);
 
   VirtualFile createChildDirectory(@Nullable Object requestor, VirtualFile parent, String dir) throws IOException;
 

@@ -33,8 +33,7 @@ public interface UndoableAction {
    * The action can be undone if all of its affected documents are either
    * not affected by any of further actions or all of such actions are undone.
    */
-  @Nullable
-  DocumentReference[] getAffectedDocuments();
+  @Nullable DocumentReference[] getAffectedDocuments();
 
   /**
    * Global actions are those, that can be undone not only from the document of the file, but also from the project tree view.

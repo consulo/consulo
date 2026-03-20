@@ -52,9 +52,8 @@ public class PluginClassLoaderImpl extends UrlClassLoader implements PluginClass
         myNativeDirectory = new File(myPluginDescriptor.getPath(), "native");
     }
 
-    @Nullable
     @Override
-    public Map<URL, Set<String>> getUrlsIndex() {
+    public @Nullable Map<URL, Set<String>> getUrlsIndex() {
         return myUrlsIndex;
     }
 
@@ -68,8 +67,7 @@ public class PluginClassLoaderImpl extends UrlClassLoader implements PluginClass
     }
 
     public interface ActionWithClassloader<Result, ParameterType> {
-        @Nullable
-        Result execute(String name, ClassLoader classloader, @Nullable ParameterType parameter);
+        @Nullable Result execute(String name, ClassLoader classloader, @Nullable ParameterType parameter);
     }
 
     public interface ActionWithPluginClassLoader<Result, ParameterType> {
@@ -88,8 +86,7 @@ public class PluginClassLoaderImpl extends UrlClassLoader implements PluginClass
             return classloader.processResourcesInParents(name, actionWithPluginClassLoader, actionWithClassloader, visited, parameter);
         }
 
-        @Nullable
-        Result doExecute(String name, PluginClassLoaderImpl classloader, @Nullable ParameterType parameter);
+        @Nullable Result doExecute(String name, PluginClassLoaderImpl classloader, @Nullable ParameterType parameter);
     }
 
     public @Nullable <Result, ParameterType> Result processResourcesInParents(
@@ -133,9 +130,8 @@ public class PluginClassLoaderImpl extends UrlClassLoader implements PluginClass
     }
 
     public static final ActionWithPluginClassLoader<Class, Void> LOAD_CLASS_IN_PLUGIN_CL = new ActionWithPluginClassLoader<Class, Void>() {
-        @Nullable
         @Override
-        public Class execute(
+        public @Nullable Class execute(
             String name,
             PluginClassLoaderImpl classloader,
             Set<ClassLoader> visited,
@@ -146,9 +142,8 @@ public class PluginClassLoaderImpl extends UrlClassLoader implements PluginClass
             return classloader.tryLoadingClass(name, false, visited);
         }
 
-        @Nullable
         @Override
-        public Class doExecute(String name, PluginClassLoaderImpl classloader, @Nullable Void parameter) {
+        public @Nullable Class doExecute(String name, PluginClassLoaderImpl classloader, @Nullable Void parameter) {
             return null;
         }
     };
@@ -216,9 +211,8 @@ public class PluginClassLoaderImpl extends UrlClassLoader implements PluginClass
     public static final ActionWithClassloader<URL, Void> FIND_RESOURCE_IN_CL =
         (name, classloader, parameter) -> classloader.getResource(name);
 
-    @Nullable
     @Override
-    public URL findResource(String name) {
+    public @Nullable URL findResource(String name) {
         URL resource = findOwnResource(name);
         if (resource != null) {
             return resource;
@@ -241,9 +235,8 @@ public class PluginClassLoaderImpl extends UrlClassLoader implements PluginClass
     public static final ActionWithClassloader<InputStream, Void> GET_RESOURCE_AS_STREAM_IN_CL =
         (name, classloader, parameter) -> classloader.getResourceAsStream(name);
 
-    @Nullable
     @Override
-    public InputStream getResourceAsStream(String name) {
+    public @Nullable InputStream getResourceAsStream(String name) {
         InputStream stream = getOwnResourceAsStream(name);
         if (stream != null) {
             return stream;
@@ -293,9 +286,8 @@ public class PluginClassLoaderImpl extends UrlClassLoader implements PluginClass
         return super.findResources(name);
     }
 
-    @Nullable
     @Override
-    protected String findLibrary(String libName) {
+    protected @Nullable String findLibrary(String libName) {
         String libraryInPath = findLibraryInPath(myLibDirectory, libName);
         if (libraryInPath != null) {
             return libraryInPath;

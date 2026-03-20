@@ -138,9 +138,8 @@ public class DesktopSwtTreeImpl<E> extends SWTComponentDelegate<org.eclipse.swt.
 
   }
 
-  @Nullable
   @Override
-  public TreeNode<E> getSelectedNode() {
+  public @Nullable TreeNode<E> getSelectedNode() {
     TreeItem[] selection = myComponent.getSelection();
     if (selection.length != 1) {
       return null;

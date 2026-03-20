@@ -55,8 +55,7 @@ public sealed interface TouchBarController permits TouchBarControllerInternal {
                           JButton defaultButton,
                           @Nullable ActionGroup extraActions);
 
-    @Nullable
-    Disposable showWindowActions(Component contentPane);
+    @Nullable Disposable showWindowActions(Component contentPane);
 
     default void setActions(JComponent component, String actionId) {
         ActionGroup action = (ActionGroup) ActionManager.getInstance().getAction(actionId);

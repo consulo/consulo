@@ -163,9 +163,8 @@ public class GeneralSettings implements PersistentStateComponent<GeneralSettings
         myUseSafeWrite = useSafeWrite;
     }
 
-    @Nullable
     @Override
-    public GeneralSettings getState() {
+    public @Nullable GeneralSettings getState() {
         return this;
     }
 

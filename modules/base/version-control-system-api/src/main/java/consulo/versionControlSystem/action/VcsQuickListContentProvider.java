@@ -23,8 +23,7 @@ public interface VcsQuickListContentProvider {
      * @param dataContext Context
      * @return actions list or null if do nothing
      */
-    @Nullable
-    List<AnAction> getVcsActions(@Nullable Project project, @Nullable AbstractVcs activeVcs, @Nullable DataContext dataContext);
+    @Nullable List<AnAction> getVcsActions(@Nullable Project project, @Nullable AbstractVcs activeVcs, @Nullable DataContext dataContext);
 
     /**
      * Allows to customise VCS actions popup if project isn't in VCS
@@ -33,8 +32,7 @@ public interface VcsQuickListContentProvider {
      * @param dataContext Context
      * @return actions list or null if do nothing
      */
-    @Nullable
-    List<AnAction> getNotInVcsActions(@Nullable Project project, @Nullable DataContext dataContext);
+    @Nullable List<AnAction> getNotInVcsActions(@Nullable Project project, @Nullable DataContext dataContext);
 
     /**
      * @param activeVcs   Active vcs for current file

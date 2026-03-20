@@ -122,9 +122,8 @@ public class FileEncodingConfigurable extends PerFileConfigurableBase<Charset> i
         return "file.encoding";
     }
 
-    @Nullable
     @Override
-    public String getParentId() {
+    public @Nullable String getParentId() {
         return StandardConfigurableIds.EDITOR_GROUP;
     }
 
@@ -310,15 +309,13 @@ public class FileEncodingConfigurable extends PerFileConfigurableBase<Charset> i
                 throw new UnsupportedOperationException();
             }
 
-            @Nullable
             @Override
-            public Charset getDefaultMapping(@Nullable VirtualFile file) {
+            public @Nullable Charset getDefaultMapping(@Nullable VirtualFile file) {
                 return prjManager.getEncoding(file, true);
             }
 
-            @Nullable
             @Override
-            public Charset getImmediateMapping(@Nullable VirtualFile file) {
+            public @Nullable Charset getImmediateMapping(@Nullable VirtualFile file) {
                 throw new UnsupportedOperationException();
             }
         };

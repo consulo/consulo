@@ -45,6 +45,5 @@ public interface ModulesProvider extends RootModelProvider {
     return project == null ? EMPTY_MODULES_PROVIDER : new DefaultModulesProvider(project);
   }
 
-  @Nullable
-  Module getModule(String name);
+  @Nullable Module getModule(String name);
 }

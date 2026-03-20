@@ -48,9 +48,8 @@ public class VcsLogSpeedSearch extends SpeedSearchBase<VcsLogGraphTable> {
     throw new UnsupportedOperationException("Getting all elements in a Log in an array is unsupported.");
   }
 
-  @Nullable
   @Override
-  protected String getElementText(Object row) {
+  protected @Nullable String getElementText(Object row) {
     return myComponent.getModel().getShortDetails((Integer)row).getSubject();
   }
 

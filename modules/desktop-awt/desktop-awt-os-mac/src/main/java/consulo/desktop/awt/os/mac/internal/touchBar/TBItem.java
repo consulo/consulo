@@ -34,8 +34,7 @@ public abstract class TBItem {
         return myNativePeer;
     }
 
-    @Nullable
-    String getUid() {
+    @Nullable String getUid() {
         return myUid;
     }
 

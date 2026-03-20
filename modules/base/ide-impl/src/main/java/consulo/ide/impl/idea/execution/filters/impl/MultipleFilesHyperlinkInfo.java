@@ -146,9 +146,8 @@ class MultipleFilesHyperlinkInfo extends HyperlinkInfoBase implements FileHyperl
         }
     }
 
-    @Nullable
     @Override
-    public OpenFileDescriptorImpl getDescriptor() {
+    public @Nullable OpenFileDescriptorImpl getDescriptor() {
         VirtualFile file = getPreferredFile();
         return file != null ? new OpenFileDescriptorImpl(myProject, file, myLineNumber, 0) : null;
     }

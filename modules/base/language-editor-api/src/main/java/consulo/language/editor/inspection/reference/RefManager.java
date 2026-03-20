@@ -34,8 +34,7 @@ public interface RefManager {
      *
      * @return the analysis scope.
      */
-    @Nullable
-    AnalysisScope getScope();
+    @Nullable AnalysisScope getScope();
 
     /**
      * Returns the project for which the reference graph has been built.
@@ -60,8 +59,7 @@ public interface RefManager {
      * @param module the module for which the reference graph node is requested.
      * @return the node for the module, or null if {@code module} is null.
      */
-    @Nullable
-    RefModule getRefModule(@Nullable Module module);
+    @Nullable RefModule getRefModule(@Nullable Module module);
 
     /**
      * Creates (if necessary) and returns the reference graph node for the specified PSI element.
@@ -70,8 +68,7 @@ public interface RefManager {
      * @return the node for the element, or null if the element is not valid or does not have
      * a corresponding reference graph node type (is not a field, method, class or file).
      */
-    @Nullable
-    RefElement getReference(@Nullable PsiElement elem);
+    @Nullable RefElement getReference(@Nullable PsiElement elem);
 
     /**
      * Creates (if necessary) and returns the reference graph node for the PSI element specified by its type and FQName.
@@ -81,15 +78,13 @@ public interface RefManager {
      * @return the node for the element, or null if the element is not found or does not have
      * a corresponding reference graph node type.
      */
-    @Nullable
-    RefEntity getReference(String type, String fqName);
+    @Nullable RefEntity getReference(String type, String fqName);
 
     long getLastUsedMask();
 
     <T> T getExtension(Key<T> key);
 
-    @Nullable
-    String getType(RefEntity ref);
+    @Nullable String getType(RefEntity ref);
 
     
     RefEntity getRefinedElement(RefEntity ref);
@@ -107,13 +102,11 @@ public interface RefManager {
         throw new UnsupportedOperationException();
     }
 
-    @Nullable
-    String getGroupName(RefElement entity);
+    @Nullable String getGroupName(RefElement entity);
 
     boolean belongsToScope(@Nullable PsiElement psiElement);
 
-    @Nullable
-    String getQualifiedName(@Nullable RefEntity refEntity);
+    @Nullable String getQualifiedName(@Nullable RefEntity refEntity);
 
     void removeRefElement(RefElement refElement, List<RefElement> deletedRefs);
 

@@ -72,9 +72,8 @@ public class DesktopTreeImpl<E> extends SwingComponentDelegate<DesktopTreeImpl.M
             return myLeaf;
         }
 
-        @Nullable
         @Override
-        public K getValue() {
+        public @Nullable K getValue() {
             return myValue;
         }
     }
@@ -175,9 +174,8 @@ public class DesktopTreeImpl<E> extends SwingComponentDelegate<DesktopTreeImpl.M
             return nodes.toArray(MyTreeNodeImpl[]::new);
         }
 
-        @Nullable
         @Override
-        public Object getParentElement(Object element) {
+        public @Nullable Object getParentElement(Object element) {
             return null;
         }
 
@@ -243,10 +241,9 @@ public class DesktopTreeImpl<E> extends SwingComponentDelegate<DesktopTreeImpl.M
         return tree;
     }
 
-    @Nullable
     @Override
     @SuppressWarnings("unchecked")
-    public TreeNode<E> getSelectedNode() {
+    public @Nullable TreeNode<E> getSelectedNode() {
         TreePath path = TreeUtil.getSelectedPathIfOne(toAWTComponent());
         if (path == null) {
             return null;

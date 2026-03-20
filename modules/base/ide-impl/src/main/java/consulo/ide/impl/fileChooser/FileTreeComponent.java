@@ -41,9 +41,8 @@ public class FileTreeComponent {
     };
     fileTreeStructure.showHiddens(true);
     TreeStructureWrappenModel<FileElement> treeStructureWrappenModel = new TreeStructureWrappenModel<>(fileTreeStructure) {
-      @Nullable
       @Override
-      public Comparator<TreeNode<FileElement>> getNodeComparator() {
+      public @Nullable Comparator<TreeNode<FileElement>> getNodeComparator() {
         return UnifiedFileComparator.getInstance();
       }
     };

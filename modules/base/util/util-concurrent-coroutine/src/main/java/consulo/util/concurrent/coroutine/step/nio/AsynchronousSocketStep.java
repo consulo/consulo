@@ -83,9 +83,8 @@ public abstract class AsynchronousSocketStep
     /**
      * {@inheritDoc}
      */
-    @Nullable
     @Override
-    protected ByteBuffer execute(@Nullable ByteBuffer input, Continuation<?> continuation) {
+    protected @Nullable ByteBuffer execute(@Nullable ByteBuffer input, Continuation<?> continuation) {
         try {
             AsynchronousSocketChannel channel = getSocketChannel(continuation);
 

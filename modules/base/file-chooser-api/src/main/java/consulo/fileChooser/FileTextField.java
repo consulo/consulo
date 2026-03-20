@@ -27,8 +27,7 @@ public interface FileTextField {
 
   JTextField getField();
 
-  @Nullable
-  VirtualFile getSelectedFile();
+  @Nullable VirtualFile getSelectedFile();
 
   boolean isPopupDisplayed();
 }

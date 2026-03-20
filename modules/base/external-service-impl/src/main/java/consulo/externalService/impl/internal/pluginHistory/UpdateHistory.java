@@ -76,9 +76,8 @@ public class UpdateHistory implements PersistentStateComponent<UpdateHistory.Sta
         return myState.pluginVersions.getOrDefault(pluginId.getIdString(), defaultVersion);
     }
 
-    @Nullable
     @Override
-    public State getState() {
+    public @Nullable State getState() {
         return myState;
     }
 

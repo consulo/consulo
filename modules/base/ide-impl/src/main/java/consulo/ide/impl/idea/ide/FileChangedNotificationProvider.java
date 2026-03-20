@@ -92,9 +92,8 @@ public class FileChangedNotificationProvider implements EditorNotificationProvid
     }
 
     @RequiredReadAction
-    @Nullable
     @Override
-    public EditorNotificationBuilder buildNotification(VirtualFile file,
+    public @Nullable EditorNotificationBuilder buildNotification(VirtualFile file,
                                                        FileEditor fileEditor,
                                                        Supplier<EditorNotificationBuilder> builderFactory) {
         if (!myProject.isDisposed() && !myGeneralSettings.isSyncOnFrameActivation()) {

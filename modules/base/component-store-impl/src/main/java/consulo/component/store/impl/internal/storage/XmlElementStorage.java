@@ -61,9 +61,8 @@ public abstract class XmlElementStorage extends StateStorageBase<StorageData> {
 
   protected abstract @Nullable Element loadLocalData();
 
-  @Nullable
   @Override
-  protected Element getStateAndArchive(StorageData storageData, String componentName) {
+  protected @Nullable Element getStateAndArchive(StorageData storageData, String componentName) {
     return storageData.getStateAndArchive(componentName);
   }
 
@@ -186,9 +185,8 @@ public abstract class XmlElementStorage extends StateStorageBase<StorageData> {
       myOriginalStorageData = storageData;
     }
 
-    @Nullable
     @Override
-    public final SaveSession createSaveSession(boolean force) {
+    public final @Nullable SaveSession createSaveSession(boolean force) {
       if(force) {
         return this;
       }

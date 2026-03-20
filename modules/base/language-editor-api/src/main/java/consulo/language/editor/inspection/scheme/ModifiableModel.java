@@ -34,8 +34,7 @@ public interface ModifiableModel extends Profile {
 
   InspectionProfile getParentProfile();
 
-  @Nullable
-  String getBaseProfileName();
+  @Nullable String getBaseProfileName();
 
   void setBaseProfile(InspectionProfile profile);
 
@@ -77,8 +76,7 @@ public interface ModifiableModel extends Profile {
   /**
    * @return nullable if tool by shortName not found
    */
-  @Nullable
-  <S> S getToolState(String shortName, PsiElement element);
+  <S> @Nullable S getToolState(String shortName, PsiElement element);
 
   InspectionToolWrapper[] getInspectionTools(PsiElement element);
 

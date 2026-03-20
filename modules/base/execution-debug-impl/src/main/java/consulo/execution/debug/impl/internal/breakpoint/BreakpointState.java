@@ -126,9 +126,8 @@ public class BreakpointState<B extends XBreakpoint<P>, P extends XBreakpointProp
     myDescription = description;
   }
 
-  @Nullable
   @Property(surroundWithTag = false)
-  public LogExpression getLogExpression() {
+  public @Nullable LogExpression getLogExpression() {
     return myLogExpression;
   }
 
@@ -139,9 +138,8 @@ public class BreakpointState<B extends XBreakpoint<P>, P extends XBreakpointProp
     myLogExpression = logExpression;
   }
 
-  @Nullable
   @Property(surroundWithTag = false)
-  public Condition getCondition() {
+  public @Nullable Condition getCondition() {
     return myCondition;
   }
 

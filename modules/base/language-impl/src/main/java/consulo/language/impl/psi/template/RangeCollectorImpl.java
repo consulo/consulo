@@ -207,8 +207,7 @@ public class RangeCollectorImpl extends TemplateDataElementType.RangeCollector {
    * Similar to {@link TreeUtil#findFirstLeaf(ASTNode)}, but also treats collapsed lazy parseable elements as leaves and returns them.
    */
   private static
-  @Nullable
-  TreeElement findFirstSuitableElement(ASTNode element) {
+  @Nullable TreeElement findFirstSuitableElement(ASTNode element) {
     if (isSuitableElement(element)) {
       return (TreeElement)element;
     }
@@ -225,8 +224,7 @@ public class RangeCollectorImpl extends TemplateDataElementType.RangeCollector {
    * Similar to {@link TreeUtil#nextLeaf(ASTNode)}, but also treats collapsed lazy parseable elements as leaves and returns them.
    */
   private static
-  @Nullable
-  TreeElement findNextSuitableElement(TreeElement start) {
+  @Nullable TreeElement findNextSuitableElement(TreeElement start) {
     TreeElement element = start;
     while (element != null) {
       TreeElement nextTree = element;
@@ -438,8 +436,7 @@ public class RangeCollectorImpl extends TemplateDataElementType.RangeCollector {
      * We need this text to propagate dummy strings through lazy parseables. If this text is null, dummy identifier won't be propagated.
      */
     public final
-    @Nullable
-    CharSequence myTextToRemove;
+    @Nullable CharSequence myTextToRemove;
 
     RangeToRemove(int startOffset, CharSequence text) {
       super(startOffset, startOffset + text.length());

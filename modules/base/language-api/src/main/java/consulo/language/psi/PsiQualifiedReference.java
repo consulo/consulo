@@ -27,8 +27,7 @@ public interface PsiQualifiedReference extends PsiReference {
    *
    * @return the qualifier, or null if the reference is not qualified.
    */
-  @Nullable
-  PsiElement getQualifier();
+  @Nullable PsiElement getQualifier();
 
   /**
    * Returns the text of the reference not including its qualifier.
@@ -36,6 +35,5 @@ public interface PsiQualifiedReference extends PsiReference {
    * @return the non-qualified text of the reference, or null if the reference
    * element is incomplete.
    */
-  @Nullable
-  String getReferenceName();
+  @Nullable String getReferenceName();
 }

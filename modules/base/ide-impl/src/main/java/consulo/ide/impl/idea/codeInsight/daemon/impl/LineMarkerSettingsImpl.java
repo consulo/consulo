@@ -57,9 +57,8 @@ public class LineMarkerSettingsImpl extends LineMarkerSettings implements Persis
     }
   }
 
-  @Nullable
   @Override
-  public LineMarkerSettingsImpl getState() {
+  public @Nullable LineMarkerSettingsImpl getState() {
     return this;
   }
 

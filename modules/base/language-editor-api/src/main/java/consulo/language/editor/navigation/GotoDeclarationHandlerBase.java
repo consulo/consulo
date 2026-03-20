@@ -23,9 +23,8 @@ import org.jspecify.annotations.Nullable;
  * @author Eugene.Kudelevsky
  */
 public abstract class GotoDeclarationHandlerBase implements GotoDeclarationHandler {
-  @Nullable
   @Override
-  public PsiElement[] getGotoDeclarationTargets(PsiElement sourceElement, int offset, Editor editor) {
+  public @Nullable PsiElement[] getGotoDeclarationTargets(PsiElement sourceElement, int offset, Editor editor) {
     PsiElement target = getGotoDeclarationTarget(sourceElement, editor);
     return target != null ? new PsiElement[] {target} : null;
   }

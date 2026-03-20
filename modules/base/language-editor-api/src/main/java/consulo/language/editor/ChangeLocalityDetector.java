@@ -37,6 +37,5 @@ public interface ChangeLocalityDetector {
    *       changed element and all its parents anyway.
    *       So the parent check is enough, e.g: {@code changedElement.getParent() instanceof PsiCodeBlock}
    */
-  @Nullable
-  PsiElement getChangeHighlightingDirtyScopeFor(PsiElement changedElement);
+  @Nullable PsiElement getChangeHighlightingDirtyScopeFor(PsiElement changedElement);
 }

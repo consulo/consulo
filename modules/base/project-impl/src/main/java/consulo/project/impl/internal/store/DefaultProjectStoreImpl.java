@@ -50,8 +50,7 @@ public class DefaultProjectStoreImpl extends ProjectStoreImpl {
     super(project, pathMacroManager, applicationDefaultStoreCache);
   }
 
-  @Nullable
-  Element getStateCopy() {
+  @Nullable Element getStateCopy() {
     Element element = getProject().getStateElement();
     return element != null ? element.clone() : null;
   }
@@ -115,9 +114,8 @@ public class DefaultProjectStoreImpl extends ProjectStoreImpl {
         return storage;
       }
 
-      @Nullable
       @Override
-      public StateStorage getStateStorage(String fileSpec, RoamingType roamingType) {
+      public @Nullable StateStorage getStateStorage(String fileSpec, RoamingType roamingType) {
         return storage;
       }
 
@@ -125,9 +123,8 @@ public class DefaultProjectStoreImpl extends ProjectStoreImpl {
       public void clearStateStorage(String file) {
       }
 
-      @Nullable
       @Override
-      public ExternalizationSession startExternalization() {
+      public @Nullable ExternalizationSession startExternalization() {
         StateStorage.ExternalizationSession externalizationSession = storage.startExternalization();
         return externalizationSession == null ? null : new MyExternalizationSession(externalizationSession);
       }
@@ -149,9 +146,8 @@ public class DefaultProjectStoreImpl extends ProjectStoreImpl {
         throw new UnsupportedOperationException("Method setStreamProvider not implemented in " + getClass());
       }
 
-      @Nullable
       @Override
-      public StreamProvider getStreamProvider() {
+      public @Nullable StreamProvider getStreamProvider() {
         throw new UnsupportedOperationException("Method getStreamProviders not implemented in " + getClass());
       }
 

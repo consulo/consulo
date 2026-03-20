@@ -84,9 +84,8 @@ public class CustomizeIDEWizardDialog extends DialogWrapper implements ActionLis
         super.dispose();
     }
 
-    @Nullable
     @Override
-    protected ActionListener createCancelAction() {
+    protected @Nullable ActionListener createCancelAction() {
         return null;//Prevent closing by <Esc>
     }
 

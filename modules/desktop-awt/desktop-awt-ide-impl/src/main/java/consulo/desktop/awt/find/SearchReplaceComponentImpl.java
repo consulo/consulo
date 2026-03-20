@@ -284,9 +284,8 @@ public class SearchReplaceComponentImpl extends EditorHeaderComponent implements
         myStatusColor = UIUtil.getErrorForeground();
     }
 
-    @Nullable
     @Override
-    public Object getData(Key dataId) {
+    public @Nullable Object getData(Key dataId) {
         if (SpeedSearchSupply.SPEED_SEARCH_CURRENT_QUERY == dataId) {
             return mySearchTextComponent.getText();
         }

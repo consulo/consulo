@@ -329,9 +329,8 @@ public class EditorColorsManagerImpl implements EditorColorsManagerInternal, Per
         return myState.USE_ONLY_MONOSPACED_FONTS;
     }
 
-    @Nullable
     @Override
-    public State getState() {
+    public @Nullable State getState() {
         if (mySchemeManager.getCurrentScheme() != null) {
             String name = mySchemeManager.getCurrentScheme().getName();
             myState.colorScheme = EditorColorsScheme.DEFAULT_SCHEME_NAME.equals(name) ? null : name;

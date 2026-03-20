@@ -153,9 +153,8 @@ public class PlatformOperatingSystemImpl implements PlatformOperatingSystem {
         return OS_VERSION;
     }
 
-    @Nullable
     @Override
-    public String getEnvironmentVariable(String key) {
+    public @Nullable String getEnvironmentVariable(String key) {
         return getEnvFunc.apply(key);
     }
 

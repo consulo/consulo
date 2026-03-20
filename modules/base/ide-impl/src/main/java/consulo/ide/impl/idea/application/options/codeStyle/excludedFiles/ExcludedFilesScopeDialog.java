@@ -43,9 +43,8 @@ public class ExcludedFilesScopeDialog extends ExcludedFilesDialogBase {
     myForm.getScopesList().setModel(myScopeListModel);
   }
 
-  @Nullable
   @Override
-  public FileSetDescriptor getDescriptor() {
+  public @Nullable FileSetDescriptor getDescriptor() {
     int selectedIndex = myForm.getScopesList().getSelectedIndex();
     String scopeName = selectedIndex >= 0 ? myScopeListModel.getElementAt(selectedIndex) : null;
     if (scopeName != null) {
@@ -58,9 +57,8 @@ public class ExcludedFilesScopeDialog extends ExcludedFilesDialogBase {
     return null;
   }
 
-  @Nullable
   @Override
-  protected JComponent createCenterPanel() {
+  protected @Nullable JComponent createCenterPanel() {
     myForm = new ExcludedFilesScopeForm();
     return myForm.getTopPanel();
   }

@@ -234,9 +234,8 @@ public class TaskManagerImpl extends TaskManager implements PersistentStateCompo
         return myActiveTask;
     }
 
-    @Nullable
     @Override
-    public LocalTask findTask(String id) {
+    public @Nullable LocalTask findTask(String id) {
         return myTasks.get(id);
     }
 
@@ -278,9 +277,8 @@ public class TaskManagerImpl extends TaskManager implements PersistentStateCompo
         return ContainerUtil.filter(myIssueCache.values(), task -> withClosed || !task.isClosed());
     }
 
-    @Nullable
     @Override
-    public Task updateIssue(String id) {
+    public @Nullable Task updateIssue(String id) {
         for (TaskRepository repository : getAllRepositories()) {
             if (repository.extractId(id) == null) {
                 continue;
@@ -892,9 +890,8 @@ public class TaskManagerImpl extends TaskManager implements PersistentStateCompo
         return false;
     }
 
-    @Nullable
     @Override
-    public LocalTask getAssociatedTask(LocalChangeList list) {
+    public @Nullable LocalTask getAssociatedTask(LocalChangeList list) {
         for (LocalTask task : getLocalTasks()) {
             for (ChangeListInfo changeListInfo : task.getChangeLists()) {
                 if (changeListInfo.id.equals(list.getId())) {

@@ -170,9 +170,8 @@ public class TextAttributesEffectsBuilder {
         return targetAttributes;
     }
 
-    @Nullable
     @Contract("null -> null")
-    public EffectDescriptor getEffectDescriptor(@Nullable EffectSlot effectSlot) {
+    public @Nullable EffectDescriptor getEffectDescriptor(@Nullable EffectSlot effectSlot) {
         return myEffectsMap.get(effectSlot);
     }
 

@@ -51,9 +51,8 @@ public class ShelveChangesAction extends AbstractCommitChangesAction {
         return getActionName(context);
     }
 
-    @Nullable
     @Override
-    protected CommitExecutor getExecutor(Project project) {
+    protected @Nullable CommitExecutor getExecutor(Project project) {
         return new ShelveChangesCommitExecutor(project);
     }
 }

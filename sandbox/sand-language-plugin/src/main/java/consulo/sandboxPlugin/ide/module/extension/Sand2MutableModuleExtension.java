@@ -46,9 +46,8 @@ public class Sand2MutableModuleExtension extends Sand2ModuleExtension implements
   }
 
   @RequiredUIAccess
-  @Nullable
   @Override
-  public Component createConfigurationComponent(Disposable uiDisposable, Runnable updateOnCheck) {
+  public @Nullable Component createConfigurationComponent(Disposable uiDisposable, Runnable updateOnCheck) {
     VerticalLayout vertical = VerticalLayout.create();
     vertical.add(CheckBox.create(LocalizeValue.localizeTODO("Check Me (New UI)")));
     return vertical;

@@ -277,9 +277,8 @@ public class InjectedLanguageManagerImpl implements InjectedLanguageManagerInter
         return InjectedLanguageUtil.findInjectedElementNoCommit(hostFile, hostDocumentOffset);
     }
 
-    @Nullable
     @Override
-    public PsiElement findElementAtNoCommit(PsiFile file, int offset) {
+    public @Nullable PsiElement findElementAtNoCommit(PsiFile file, int offset) {
         return InjectedLanguageUtil.findElementAtNoCommit(file, offset);
     }
 

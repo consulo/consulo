@@ -67,9 +67,8 @@ public class GotoFileModel extends FilteringGotoByModel<FileType> implements Dum
     }
   }
 
-  @Nullable
   @Override
-  protected FileType filterValueFor(NavigationItem item) {
+  protected @Nullable FileType filterValueFor(NavigationItem item) {
     return item instanceof PsiFile ? ((PsiFile)item).getFileType() : null;
   }
 

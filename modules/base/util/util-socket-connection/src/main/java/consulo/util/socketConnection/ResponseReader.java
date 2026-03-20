@@ -23,6 +23,5 @@ import java.io.IOException;
  * @author nik
  */
 public interface ResponseReader<R extends AbstractResponse> {
-  @Nullable
-  R readResponse() throws IOException, InterruptedException;
+  @Nullable R readResponse() throws IOException, InterruptedException;
 }

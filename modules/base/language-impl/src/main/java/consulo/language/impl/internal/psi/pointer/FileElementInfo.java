@@ -72,9 +72,8 @@ class FileElementInfo extends SmartPointerElementInfo {
     return document == null ? null : TextRange.from(0, document.getTextLength());
   }
 
-  @Nullable
   @Override
-  Segment getPsiRange(SmartPointerManagerImpl manager) {
+  @Nullable Segment getPsiRange(SmartPointerManagerImpl manager) {
     Document currentDoc = FileDocumentManager.getInstance().getCachedDocument(myVirtualFile);
     Document committedDoc = currentDoc == null ? null : ((PsiDocumentManagerBase)PsiDocumentManager.getInstance(myProject)).getLastCommittedDocument(currentDoc);
     return committedDoc == null ? getRange(manager) : new TextRange(0, committedDoc.getTextLength());

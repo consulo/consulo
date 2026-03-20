@@ -86,9 +86,8 @@ public abstract class ElementCreator {
         return ContainerUtil.mapNotNull(createdElements.get(), SmartPsiElementPointer::getElement).toArray(PsiElement.EMPTY_ARRAY);
     }
 
-    @Nullable
     @RequiredUIAccess
-    private Exception executeCommand(LocalizeValue commandName, ThrowableRunnable<Exception> invokeCreate) {
+    private @Nullable Exception executeCommand(LocalizeValue commandName, ThrowableRunnable<Exception> invokeCreate) {
         return CommandProcessor.getInstance().<Exception>newCommand()
             .project(myProject)
             .name(commandName)

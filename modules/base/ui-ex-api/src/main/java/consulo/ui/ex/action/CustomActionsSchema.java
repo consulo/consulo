@@ -31,6 +31,5 @@ public interface CustomActionsSchema {
     return Application.get().getInstance(CustomActionsSchema.class);
   }
 
-  @Nullable
-  AnAction getCorrectedAction(String id);
+  @Nullable AnAction getCorrectedAction(String id);
 }

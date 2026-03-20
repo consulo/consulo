@@ -107,9 +107,8 @@ public class PasteHandler extends EditorActionHandler implements EditorTextInser
             public Object getData(Key dataId) {
                 return PasteAction.TRANSFERABLE_PROVIDER == dataId
                     ? new Supplier<Transferable>() {
-                        @Nullable
                         @Override
-                        public Transferable get() {
+                        public @Nullable Transferable get() {
                             return transferable;
                         }
                     }

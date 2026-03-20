@@ -43,8 +43,7 @@ public interface CollapseBlockHandler extends LanguageExtension {
     return Application.get().getExtensionPoint(CollapseBlockHandler.class).getOrBuildCache(KEY).requiredGet(language);
   }
 
-  @Nullable
-  PsiElement findParentBlock(@Nullable PsiElement element);
+  @Nullable PsiElement findParentBlock(@Nullable PsiElement element);
 
   boolean isEndBlockToken(@Nullable PsiElement element);
 

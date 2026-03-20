@@ -157,9 +157,8 @@ public class ManageCodeStyleSchemesDialog extends DialogWrapper {
         Disposer.register(ProjectManager.getInstance().getDefaultProject(), balloon);
     }
 
-    @Nullable
     @RequiredUIAccess
-    private String importExternalCodeStyle(String importerName) throws SchemeImportException {
+    private @Nullable String importExternalCodeStyle(String importerName) throws SchemeImportException {
         final SchemeImporter<CodeStyleScheme> importer = SchemeImporter.getImporter(importerName, CodeStyleScheme.class);
         if (importer != null) {
             FileChooserDialog fileChooser = FileChooserFactory.getInstance().createFileChooser(

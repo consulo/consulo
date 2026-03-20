@@ -27,6 +27,5 @@ import org.jspecify.annotations.Nullable;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface FileEditorAssociateFinder {
-    @Nullable
-    VirtualFile getAssociatedFileToOpen(Project project, VirtualFile original);
+    @Nullable VirtualFile getAssociatedFileToOpen(Project project, VirtualFile original);
 }

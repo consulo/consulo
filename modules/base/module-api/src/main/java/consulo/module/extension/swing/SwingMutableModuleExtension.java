@@ -29,7 +29,6 @@ import javax.swing.*;
 @Deprecated
 @DeprecationInfo("Temporary interface for creating swing component")
 public interface SwingMutableModuleExtension {
-  @Nullable
   @RequiredUIAccess
-  JComponent createConfigurablePanel(Disposable uiDisposable, Runnable updateOnCheck);
+  @Nullable JComponent createConfigurablePanel(Disposable uiDisposable, Runnable updateOnCheck);
 }

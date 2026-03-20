@@ -49,9 +49,8 @@ public class RunLineMarkerProvider extends LineMarkerProviderDescriptor {
   }
 
   @RequiredReadAction
-  @Nullable
   @Override
-  public LineMarkerInfo getLineMarkerInfo(PsiElement element) {
+  public @Nullable LineMarkerInfo getLineMarkerInfo(PsiElement element) {
     List<RunLineMarkerContributor> contributors = RunLineMarkerContributor.forLanguage(element.getLanguage());
     ActionGroup.Builder builder = null;
     Image icon = null;
@@ -92,9 +91,8 @@ public class RunLineMarkerProvider extends LineMarkerProviderDescriptor {
       return tooltip.length() == 0 ? null : tooltip.toString();
     };
     return new LineMarkerInfo<>(element, element.getTextRange(), icon, Pass.LINE_MARKERS, tooltipProvider, null, GutterIconRenderer.Alignment.CENTER) {
-      @Nullable
       @Override
-      public GutterIconRenderer createGutterRenderer() {
+      public @Nullable GutterIconRenderer createGutterRenderer() {
         return new LineMarkerGutterIconRenderer<>(this) {
           @Override
           public AnAction getClickAction() {
@@ -106,9 +104,8 @@ public class RunLineMarkerProvider extends LineMarkerProviderDescriptor {
             return true;
           }
 
-          @Nullable
           @Override
-          public ActionGroup getPopupMenuActions() {
+          public @Nullable ActionGroup getPopupMenuActions() {
             return finalActionGroup;
           }
         };
@@ -122,9 +119,8 @@ public class RunLineMarkerProvider extends LineMarkerProviderDescriptor {
     return LocalizeValue.localizeTODO("Run line marker");
   }
 
-  @Nullable
   @Override
-  public Image getIcon() {
+  public @Nullable Image getIcon() {
     return ExecutionIconGroup.gutterRun();
   }
 }

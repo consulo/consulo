@@ -42,8 +42,7 @@ public interface IComponentStore {
   /**
    * Return storable info about component
    */
-  @Nullable
-  <T> StateComponentInfo<T> loadStateIfStorable(T component);
+  <T> @Nullable StateComponentInfo<T> loadStateIfStorable(T component);
 
   void reinitComponents(Set<String> componentNames, boolean reloadData);
 

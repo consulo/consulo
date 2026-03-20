@@ -32,9 +32,8 @@ public interface ItemPresentationProvider<T extends NavigationItem> {
   ExtensionPointCacheKey<ItemPresentationProvider, Function<Class, ItemPresentationProvider>> KEY =
           ExtensionPointCacheKey.create("ItemPresentationProvider", ByClassGrouper.build(ItemPresentationProvider::getItemClass));
 
-  @Nullable
   @SuppressWarnings("unchecked")
-  public static <T extends NavigationItem> ItemPresentationProvider<T> getItemPresentationProvider(T element) {
+  public static <T extends NavigationItem> @Nullable ItemPresentationProvider<T> getItemPresentationProvider(T element) {
     Function<Class, ItemPresentationProvider> call = Application.get().getExtensionPoint(ItemPresentationProvider.class).getOrBuildCache(KEY);
     return call.apply(element.getClass());
   }

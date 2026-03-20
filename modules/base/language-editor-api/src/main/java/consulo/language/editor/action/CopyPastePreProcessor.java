@@ -40,8 +40,7 @@ public interface CopyPastePreProcessor {
      * @param text
      * @return null if no preprocession is to be applied
      */
-    @Nullable
-    String preprocessOnCopy(PsiFile file, int[] startOffsets, int[] endOffsets, String text);
+    @Nullable String preprocessOnCopy(PsiFile file, int[] startOffsets, int[] endOffsets, String text);
 
     String preprocessOnPaste(Project project, PsiFile file, Editor editor, String text, RawText rawText);
 }

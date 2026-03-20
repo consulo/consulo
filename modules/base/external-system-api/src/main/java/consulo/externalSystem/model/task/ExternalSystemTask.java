@@ -19,8 +19,7 @@ public interface ExternalSystemTask {
   /**
    * @return    error occurred during the task execution (if any)
    */
-  @Nullable
-  Throwable getError();
+  @Nullable Throwable getError();
 
   /**
    * Executes current task and updates given indicator's {@link ProgressIndicator#setText2(String) status} during that.

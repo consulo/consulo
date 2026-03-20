@@ -38,9 +38,8 @@ public final class TextWithMarkupRawTextSetter implements CopyPastePreProcessor 
         myProcessor = CopyPastePostProcessor.EP_NAME.findExtensionOrFail(TextWithMarkupProcessor.class);
     }
 
-    @Nullable
     @Override
-    public String preprocessOnCopy(PsiFile file, int[] startOffsets, int[] endOffsets, String text) {
+    public @Nullable String preprocessOnCopy(PsiFile file, int[] startOffsets, int[] endOffsets, String text) {
         myProcessor.setRawText(text);
         return null;
     }

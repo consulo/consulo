@@ -85,9 +85,8 @@ class DesktopMenuSeparatorImpl implements MenuSeparator {
         throw new UnsupportedOperationException();
     }
 
-    @Nullable
     @Override
-    public Component getParent() {
+    public @Nullable Component getParent() {
         return null;
     }
 
@@ -126,9 +125,8 @@ class DesktopMenuSeparatorImpl implements MenuSeparator {
         throw new UnsupportedOperationException();
     }
 
-    @Nullable
     @Override
-    public <T> T getUserData(Key<T> key) {
+    public <T> @Nullable T getUserData(Key<T> key) {
         throw new UnsupportedOperationException();
     }
 

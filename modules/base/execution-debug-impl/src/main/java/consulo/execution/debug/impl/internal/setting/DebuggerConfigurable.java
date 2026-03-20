@@ -56,9 +56,8 @@ public class DebuggerConfigurable implements SearchableConfigurable.Parent, Appl
         return XDebuggerLocalize.debuggerConfigurableDisplayName();
     }
 
-    @Nullable
     @Override
-    public String getParentId() {
+    public @Nullable String getParentId() {
         return StandardConfigurableIds.EXECUTION_GROUP;
     }
 
@@ -174,10 +173,9 @@ public class DebuggerConfigurable implements SearchableConfigurable.Parent, Appl
         return myRootConfigurable != null ? ConfigurableUIMigrationUtil.createComponent(myRootConfigurable, parent) : null;
     }
 
-    @Nullable
     @Override
     @RequiredUIAccess
-    public Component createUIComponent(Disposable parent) {
+    public @Nullable Component createUIComponent(Disposable parent) {
         compute();
         return myRootConfigurable != null ? myRootConfigurable.createUIComponent(parent) : null;
     }

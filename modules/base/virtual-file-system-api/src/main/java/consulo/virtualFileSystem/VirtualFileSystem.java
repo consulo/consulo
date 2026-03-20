@@ -93,8 +93,7 @@ public interface VirtualFileSystem {
    * @param path the path
    * @return <code>{@link VirtualFile}</code> if the file was found, <code>null</code> otherwise
    */
-  @Nullable
-  VirtualFile refreshAndFindFileByPath(String path);
+  @Nullable VirtualFile refreshAndFindFileByPath(String path);
 
   /**
    * Adds listener to the file system. Normally one should use {@link VirtualFileManager#addVirtualFileListener}.

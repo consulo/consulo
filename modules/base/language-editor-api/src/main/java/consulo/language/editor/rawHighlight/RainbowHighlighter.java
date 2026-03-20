@@ -85,9 +85,8 @@ public class RainbowHighlighter {
     public static final HighlightInfoType RAINBOW_ELEMENT =
         new HighlightInfoTypeImpl(HighlightSeverity.INFORMATION, DefaultLanguageHighlighterColors.CONSTANT);
 
-    @Nullable
     @Contract("_, null -> !null")
-    public static Boolean isRainbowEnabled(@Nullable TextAttributesScheme colorsScheme, @Nullable Language language) {
+    public static @Nullable Boolean isRainbowEnabled(@Nullable TextAttributesScheme colorsScheme, @Nullable Language language) {
         Object value = colorsScheme == null ? null : colorsScheme.getMetaProperties().getOrDefault(getKey(language), INHERITED);
         if (String.valueOf(true).equals(value)) {
             return Boolean.TRUE;

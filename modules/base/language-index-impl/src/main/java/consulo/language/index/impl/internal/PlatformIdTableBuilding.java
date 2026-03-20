@@ -59,9 +59,8 @@ public class PlatformIdTableBuilding {
   private PlatformIdTableBuilding() {
   }
 
-  @Nullable
   @RequiredReadAction
-  public static DataIndexer<TodoIndexEntry, Integer, FileContent> getTodoIndexer(
+  public static @Nullable DataIndexer<TodoIndexEntry, Integer, FileContent> getTodoIndexer(
     FileType fileType,
     Project project,
     VirtualFile virtualFile

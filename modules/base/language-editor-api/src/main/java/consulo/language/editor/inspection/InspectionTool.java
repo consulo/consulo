@@ -149,9 +149,8 @@ public abstract class InspectionTool implements BatchSuppressableTool {
      *
      * @return hard-code inspection description.
      */
-    @Nullable
     @Deprecated
-    public String getStaticDescription() {
+    public @Nullable String getStaticDescription() {
         return null;
     }
 
@@ -160,9 +159,8 @@ public abstract class InspectionTool implements BatchSuppressableTool {
         return null;
     }
 
-    @Nullable
     @Deprecated
-    protected URL getDescriptionUrl() {
+    protected @Nullable URL getDescriptionUrl() {
         String fileName = getDescriptionFileName();
         if (fileName == null) {
             return null;
@@ -176,9 +174,8 @@ public abstract class InspectionTool implements BatchSuppressableTool {
         return getClass();
     }
 
-    @Nullable
     @Deprecated
-    public String loadDescription() {
+    public @Nullable String loadDescription() {
         String description = getStaticDescription();
         if (description != null) {
             return description;

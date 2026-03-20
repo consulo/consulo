@@ -69,14 +69,11 @@ public interface XValueNode extends Obsolescent {
      */
     void setFullValueEvaluator(XFullValueEvaluator fullValueEvaluator);
 
-    @Nullable
-    String getName();
+    @Nullable String getName();
 
-    @Nullable
-    XValue getValueContainer();
+    @Nullable XValue getValueContainer();
 
-    @Nullable
-    XValueTree getTree();
+    @Nullable XValueTree getTree();
 
     @UsedInPlugin
     default void clearFullValueEvaluator() {

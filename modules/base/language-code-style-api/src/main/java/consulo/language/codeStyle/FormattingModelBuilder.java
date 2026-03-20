@@ -43,15 +43,13 @@ public interface FormattingModelBuilder extends LanguageExtension {
         return Application.get().getExtensionPoint(FormattingModelBuilder.class).getOrBuildCache(KEY).requiredGet(language);
     }
 
-    @Nullable
     @RequiredReadAction
-    static FormattingModelBuilder forContext(PsiElement context) {
+    static @Nullable FormattingModelBuilder forContext(PsiElement context) {
         return forContext(context.getLanguage(), context);
     }
 
-    @Nullable
     @RequiredReadAction
-    static FormattingModelBuilder forContext(Language language, PsiElement context) {
+    static @Nullable FormattingModelBuilder forContext(Language language, PsiElement context) {
         if (!isFormatterAllowed(context)) {
             return null;
         }

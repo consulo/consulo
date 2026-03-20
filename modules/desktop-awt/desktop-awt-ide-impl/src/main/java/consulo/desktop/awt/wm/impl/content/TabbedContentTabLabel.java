@@ -82,9 +82,8 @@ public class TabbedContentTabLabel extends ContentTabLabel {
         return hasMultipleTabs();
       }
 
-      @Nullable
       @Override
-      public Runnable getAction() {
+      public @Nullable Runnable getAction() {
         return () -> selectContent();
       }
     });

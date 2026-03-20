@@ -44,8 +44,7 @@ public interface ContentFolder extends Synthetic {
    *
    * @return the directory, or null if the source path is invalid.
    */
-  @Nullable
-  VirtualFile getFile();
+  @Nullable VirtualFile getFile();
 
   /**
    * Returns the content entry to which this root belongs.
@@ -66,8 +65,7 @@ public interface ContentFolder extends Synthetic {
   
   Map<Key, Object> getProperties();
 
-  @Nullable
-  <T> T getPropertyValue(Key<T> key);
+  <T> @Nullable T getPropertyValue(Key<T> key);
 
   <T> void setPropertyValue(Key<T> key, @Nullable T value);
 }

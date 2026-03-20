@@ -30,9 +30,8 @@ import org.jspecify.annotations.Nullable;
 public class WebMenuBarImpl extends VaadinComponentDelegate<WebMenuBarImpl.Vaadin> implements MenuBar {
   public class Vaadin extends com.vaadin.flow.component.menubar.MenuBar implements FromVaadinComponentWrapper {
 
-    @Nullable
     @Override
-    public Component toUIComponent() {
+    public @Nullable Component toUIComponent() {
       return WebMenuBarImpl.this;
     }
   }

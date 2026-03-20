@@ -931,15 +931,13 @@ public class ArrayUtil {
         return count == sample.length ? sample : newArray(getComponentType(sample), count);
     }
 
-    @Nullable
     @Contract(pure = true)
-    public static <T> T getFirstElement(@Nullable T[] array) {
+    public static <T> @Nullable T getFirstElement(@Nullable T[] array) {
         return array != null && array.length > 0 ? array[0] : null;
     }
 
-    @Nullable
     @Contract(pure = true)
-    public static <T> T getLastElement(@Nullable T[] array) {
+    public static <T> @Nullable T getLastElement(@Nullable T[] array) {
         return array != null && array.length > 0 ? array[array.length - 1] : null;
     }
 

@@ -108,7 +108,6 @@ public interface ImportOptimizer extends LanguageExtension {
    * by default "imports optimized" is shown.
    */
   interface CollectingInfoRunnable extends Runnable {
-    @Nullable
-    String getUserNotificationInfo();
+    @Nullable String getUserNotificationInfo();
   }
 }

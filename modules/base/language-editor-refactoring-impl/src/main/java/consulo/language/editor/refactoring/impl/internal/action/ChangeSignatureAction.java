@@ -71,9 +71,8 @@ public class ChangeSignatureAction extends BasePlatformRefactoringAction {
         return targetHandler != null;
     }
 
-    @Nullable
     @RequiredReadAction
-    private static PsiElement findTargetMember(@Nullable PsiElement element) {
+    private static @Nullable PsiElement findTargetMember(@Nullable PsiElement element) {
         if (element == null) {
             return null;
         }
@@ -94,15 +93,13 @@ public class ChangeSignatureAction extends BasePlatformRefactoringAction {
         return null;
     }
 
-    @Nullable
     @Override
-    protected RefactoringActionHandler getRefactoringHandler(RefactoringSupportProvider provider) {
+    protected @Nullable RefactoringActionHandler getRefactoringHandler(RefactoringSupportProvider provider) {
         return provider.getChangeSignatureHandler();
     }
 
-    @Nullable
     @Override
-    protected RefactoringActionHandler getRefactoringHandler(RefactoringSupportProvider provider, final PsiElement element) {
+    protected @Nullable RefactoringActionHandler getRefactoringHandler(RefactoringSupportProvider provider, final PsiElement element) {
         return new RefactoringActionHandler() {
             @Override
             @RequiredUIAccess

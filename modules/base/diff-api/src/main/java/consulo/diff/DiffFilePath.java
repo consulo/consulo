@@ -31,14 +31,12 @@ public interface DiffFilePath {
   /**
    * @return a virtual file that corresponds to this path, or null if the virtual file is no more valid.
    */
-  @Nullable
-  VirtualFile getVirtualFile();
+  @Nullable VirtualFile getVirtualFile();
 
   /**
    * @return the virtual file that corresponds to the parent file path, or null if the virtual file is no more valid.
    */
-  @Nullable
-  VirtualFile getVirtualFileParent();
+  @Nullable VirtualFile getVirtualFileParent();
 
   /**
    * @return the {@link File} that corresponds to the path. The path might be non-existent or not local.
@@ -54,8 +52,7 @@ public interface DiffFilePath {
 
   String getPresentableUrl();
 
-  @Nullable
-  Document getDocument();
+  @Nullable Document getDocument();
 
   Charset getCharset();
 
@@ -100,6 +97,5 @@ public interface DiffFilePath {
   /**
    * @return the parent path or null if there are no parent
    */
-  @Nullable
-  DiffFilePath getParentPath();
+  @Nullable DiffFilePath getParentPath();
 }

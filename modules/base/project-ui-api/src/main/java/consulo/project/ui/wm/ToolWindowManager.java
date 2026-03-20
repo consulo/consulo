@@ -122,9 +122,8 @@ public abstract class ToolWindowManager {
      * @return <code>ID</code> of currently active tool window or <code>null</code> if there is no active
      * tool window.
      */
-    @Nullable
     @RequiredUIAccess
-    public abstract String getActiveToolWindowId();
+    public abstract @Nullable String getActiveToolWindowId();
 
     /**
      * @return registered tool window with specified <code>id</code>. If there is no registered

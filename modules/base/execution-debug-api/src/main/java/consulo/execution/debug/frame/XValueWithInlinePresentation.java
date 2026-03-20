@@ -21,6 +21,5 @@ public interface XValueWithInlinePresentation {
   /**
    * Value to be shown near variable in execution line. Should be calculated fast.
    */
-  @Nullable
-  String computeInlinePresentation();
+  @Nullable String computeInlinePresentation();
 }

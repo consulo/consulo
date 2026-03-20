@@ -52,15 +52,13 @@ public abstract class ModuleExtensionWithSdkBase<T extends ModuleExtensionWithSd
     return mySdkPointer;
   }
 
-  @Nullable
   @Override
-  public Sdk getSdk() {
+  public @Nullable Sdk getSdk() {
     return getInheritableSdk().get();
   }
 
-  @Nullable
   @Override
-  public String getSdkName() {
+  public @Nullable String getSdkName() {
     return getInheritableSdk().getName();
   }
 

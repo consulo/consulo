@@ -83,8 +83,7 @@ public interface SoftWrapModel {
    * @param offset      target document offset
    * @return            soft wrap registered for the given offset within the current model if any; <code>null</code> otherwise
    */
-  @Nullable
-  SoftWrap getSoftWrap(int offset);
+  @Nullable SoftWrap getSoftWrap(int offset);
 
   /**
    * Allows to ask current model about all soft wraps registered for the given document offsets range.

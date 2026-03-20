@@ -29,6 +29,5 @@ import org.jspecify.annotations.Nullable;
  * @since 9.0
  */
 public interface FileSaverDialog {
-  @Nullable
-  VirtualFileWrapper save(@Nullable VirtualFile baseDir, @Nullable String filename);
+  @Nullable VirtualFileWrapper save(@Nullable VirtualFile baseDir, @Nullable String filename);
 }

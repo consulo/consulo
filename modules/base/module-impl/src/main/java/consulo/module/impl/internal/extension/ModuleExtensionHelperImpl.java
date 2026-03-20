@@ -98,9 +98,8 @@ public class ModuleExtensionHelperImpl implements ModuleExtensionHelper, Disposa
         return provider.getName().getValue();
     }
 
-    @Nullable
     @Override
-    public Image getModuleExtensionIcon(String extensionId) {
+    public @Nullable Image getModuleExtensionIcon(String extensionId) {
         ModuleExtensionProvider provider = ModuleExtensionProvider.findProvider(extensionId);
         return provider == null ? null : provider.getIcon();
     }

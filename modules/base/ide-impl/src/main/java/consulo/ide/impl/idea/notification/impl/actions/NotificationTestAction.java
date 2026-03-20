@@ -74,9 +74,8 @@ public class NotificationTestAction extends AnAction implements DumbAware {
             );
         }
 
-        @Nullable
         @Override
-        protected String getDimensionServiceKey() {
+        protected @Nullable String getDimensionServiceKey() {
             return "NotificationTestAction";
         }
 

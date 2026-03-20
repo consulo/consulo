@@ -56,9 +56,8 @@ public class BranchFilterPopupComponent extends MultipleValueFilterPopupComponen
         return MultipleValueFilterPopupComponent.displayableText(myFilterModel.getFilterValues(filter));
     }
 
-    @Nullable
     @Override
-    protected String getToolTip(VcsLogBranchFilter filter) {
+    protected @Nullable String getToolTip(VcsLogBranchFilter filter) {
         return MultipleValueFilterPopupComponent.tooltip(myFilterModel.getFilterValues(filter));
     }
 

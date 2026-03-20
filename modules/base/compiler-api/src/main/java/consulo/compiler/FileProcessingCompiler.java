@@ -49,8 +49,7 @@ public interface FileProcessingCompiler extends Compiler, ValidityStateFactory {
          * be composed of a pair [timestamp("B"), timestamp("C")]. Thus, whenever a timestamp of any of these files is changed,
          * the current ValidityState won't be equal to the stored ValidityState and the item will be picked up by the make for recompilation.
          */
-        @Nullable
-        ValidityState getValidityState();
+        @Nullable ValidityState getValidityState();
     }
 
     /**

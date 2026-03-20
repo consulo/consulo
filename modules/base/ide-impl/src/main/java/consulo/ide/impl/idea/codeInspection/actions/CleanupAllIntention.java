@@ -33,9 +33,8 @@ public class CleanupAllIntention extends CleanupIntention {
     return InspectionLocalize.cleanupInFile();
   }
 
-  @Nullable
   @Override
-  protected AnalysisScope getScope(Project project, PsiFile file) {
+  protected @Nullable AnalysisScope getScope(Project project, PsiFile file) {
     return new AnalysisScope(file);
   }
 }

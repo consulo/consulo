@@ -73,8 +73,7 @@ public class XValueHint extends AbstractValueHint {
     private final String myExpression;
     private final String myValueName;
     private final
-    @Nullable
-    XSourcePosition myExpressionPosition;
+    @Nullable XSourcePosition myExpressionPosition;
     private final ExpressionInfo myExpressionInfo;
     private Disposable myDisposable;
 
@@ -243,9 +242,8 @@ public class XValueHint extends AbstractValueHint {
                         return null;
                     }
 
-                    @Nullable
                     @Override
-                    public XValueTree getTree() {
+                    public @Nullable XValueTree getTree() {
                         return null;
                     }
 

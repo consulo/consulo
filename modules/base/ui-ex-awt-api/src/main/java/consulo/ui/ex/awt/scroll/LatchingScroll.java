@@ -64,8 +64,7 @@ public final class LatchingScroll {
   }
 
   private static
-  @Nullable
-  Component getViewportView(JScrollPane pane) {
+  @Nullable Component getViewportView(JScrollPane pane) {
     JViewport viewport = pane.getViewport();
     if (viewport != null) {
       return viewport.getView();

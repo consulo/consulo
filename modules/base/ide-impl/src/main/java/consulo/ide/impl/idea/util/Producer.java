@@ -24,8 +24,7 @@ import java.util.function.Supplier;
 @Deprecated
 public interface Producer<T> extends Supplier<T> {
   
-  @Nullable
-  T produce();
+  @Nullable T produce();
 
   @Override
   default T get() {

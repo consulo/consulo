@@ -30,9 +30,7 @@ public interface PluginManagerInternal {
 
   boolean isInitialized();
 
-  @Nullable
-  File getPluginPath(Class<?> pluginClass);
+  @Nullable File getPluginPath(Class<?> pluginClass);
 
-  @Nullable
-  PluginDescriptor getPlugin(Class<?> pluginClass);
+  @Nullable PluginDescriptor getPlugin(Class<?> pluginClass);
 }

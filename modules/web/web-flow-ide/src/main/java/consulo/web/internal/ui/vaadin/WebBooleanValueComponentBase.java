@@ -36,9 +36,8 @@ public abstract class WebBooleanValueComponentBase<E extends Component & HasValu
         getVaadinComponent().setValue(value);
     }
 
-    @Nullable
     @Override
-    public Boolean getValue() {
+    public @Nullable Boolean getValue() {
         return getVaadinComponent().getValue();
     }
 

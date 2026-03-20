@@ -198,9 +198,8 @@ public class CompositeElement extends TreeElement {
         return TreeUtil.findSibling(anchor, type);
     }
 
-    @Nullable
     @Override
-    public ASTNode findChildByType(TokenSet types) {
+    public @Nullable ASTNode findChildByType(TokenSet types) {
         if (DebugUtil.CHECK_INSIDE_ATOMIC_ACTION_ENABLED) {
             assertReadAccessAllowed();
         }
@@ -212,9 +211,8 @@ public class CompositeElement extends TreeElement {
         return null;
     }
 
-    @Nullable
     @Override
-    public ASTNode findChildByType(TokenSet typesSet, ASTNode anchor) {
+    public @Nullable ASTNode findChildByType(TokenSet typesSet, ASTNode anchor) {
         if (DebugUtil.CHECK_INSIDE_ATOMIC_ACTION_ENABLED) {
             assertReadAccessAllowed();
         }

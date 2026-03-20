@@ -141,9 +141,8 @@ class ImmutableElement extends Element {
     return getContent(new ElementFilter(name, ns));
   }
 
-  @Nullable
   @Override
-  public Element getChild(String name, Namespace ns) {
+  public @Nullable Element getChild(String name, Namespace ns) {
     List<Element> children = getChildren(name, ns);
     return children.isEmpty() ? null : children.get(0);
   }
@@ -202,9 +201,8 @@ class ImmutableElement extends Element {
     return myAttributes;
   }
 
-  @Nullable
   @Override
-  public Attribute getAttribute(String name, Namespace ns) {
+  public @Nullable Attribute getAttribute(String name, Namespace ns) {
     if (myAttributes instanceof ImmutableSameTypeAttributeList) {
       return ((ImmutableSameTypeAttributeList)myAttributes).get(name, ns);
     }

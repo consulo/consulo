@@ -47,9 +47,8 @@ public abstract class RunAnythingProviderBase<V> implements RunAnythingProvider<
         return new RunAnythingItemBase(getCommand(value), getIcon(value));
     }
 
-    @Nullable
     @Override
-    public RunAnythingHelpItem getHelpItem(DataContext dataContext) {
+    public @Nullable RunAnythingHelpItem getHelpItem(DataContext dataContext) {
         String placeholder = getHelpCommandPlaceholder();
         String commandPrefix = getHelpCommand();
         if (placeholder == null || commandPrefix == null) {
@@ -63,9 +62,8 @@ public abstract class RunAnythingProviderBase<V> implements RunAnythingProvider<
         return null;
     }
 
-    @Nullable
     @Override
-    public Matcher getMatcher(DataContext dataContext, String pattern) {
+    public @Nullable Matcher getMatcher(DataContext dataContext, String pattern) {
         return null;
     }
 

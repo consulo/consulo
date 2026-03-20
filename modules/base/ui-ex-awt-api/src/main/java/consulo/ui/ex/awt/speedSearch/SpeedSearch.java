@@ -150,9 +150,8 @@ public class SpeedSearch extends SpeedSearchSupply implements KeyListener {
     return myMatcher;
   }
 
-  @Nullable
   @Override
-  public Iterable<MatcherTextRange> matchingFragments(String text) {
+  public @Nullable Iterable<MatcherTextRange> matchingFragments(String text) {
     if (myMatcher instanceof MinusculeMatcher) {
       return ((MinusculeMatcher)myMatcher).matchingFragments(text);
     }
@@ -168,9 +167,8 @@ public class SpeedSearch extends SpeedSearchSupply implements KeyListener {
     return isHoldingFilter();
   }
 
-  @Nullable
   @Override
-  public String getEnteredPrefix() {
+  public @Nullable String getEnteredPrefix() {
     return myString;
   }
 

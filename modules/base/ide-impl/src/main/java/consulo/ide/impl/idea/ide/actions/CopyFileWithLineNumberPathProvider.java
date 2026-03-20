@@ -31,9 +31,8 @@ public class CopyFileWithLineNumberPathProvider extends DumbAwareCopyPathProvide
         super(ActionLocalize.actionCopypathwithlinenumberText());
     }
 
-    @Nullable
     @Override
-    public String getPathToElement(Project project, @Nullable VirtualFile virtualFile, @Nullable Editor editor) {
+    public @Nullable String getPathToElement(Project project, @Nullable VirtualFile virtualFile, @Nullable Editor editor) {
         if (virtualFile == null) {
             return null;
         }

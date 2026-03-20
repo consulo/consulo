@@ -40,9 +40,8 @@ public interface ProjectViewPaneOptionProvider<T> {
       return Boolean.parseBoolean(value);
     }
 
-    @Nullable
     @Override
-    public String toString(@Nullable Boolean value) {
+    public @Nullable String toString(@Nullable Boolean value) {
       if(value == null || Objects.equals(getKey().getDefaultValue(), value)) {
         return null;
       }
@@ -58,6 +57,5 @@ public interface ProjectViewPaneOptionProvider<T> {
   
   T parseValue(String value);
 
-  @Nullable
-  String toString(@Nullable T value);
+  @Nullable String toString(@Nullable T value);
 }

@@ -27,9 +27,8 @@ import java.nio.file.Path;
  */
 @ExtensionImpl
 public class SandReadMeFileProvider implements ReadMeFileProvider {
-    @Nullable
     @Override
-    public Path resolveFile(Path projectPath) {
+    public @Nullable Path resolveFile(Path projectPath) {
         return projectPath.resolve("SAND.md");
     }
 }

@@ -33,8 +33,7 @@ public interface TemplateSettings {
     return Application.get().getInstance(TemplateSettings.class);
   }
 
-  @Nullable
-  Template getTemplateById(String id);
+  @Nullable Template getTemplateById(String id);
 
   
   Collection<? extends Template> getTemplates();
@@ -42,8 +41,7 @@ public interface TemplateSettings {
   
   Collection<? extends Template> getTemplates(String templateKey);
 
-  @Nullable
-  Template getTemplate(String key, String group);
+  @Nullable Template getTemplate(String key, String group);
 
   char getDefaultShortcutChar();
 

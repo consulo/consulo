@@ -233,9 +233,8 @@ public class IntentionHintComponent implements Disposable, ScrollAwareHint {
         recreateMyPopup(step);
     }
 
-    @Nullable
     @TestOnly
-    public IntentionAction getAction(int index) {
+    public @Nullable IntentionAction getAction(int index) {
         if (myPopup == null || myPopup.isDisposed()) {
             return null;
         }

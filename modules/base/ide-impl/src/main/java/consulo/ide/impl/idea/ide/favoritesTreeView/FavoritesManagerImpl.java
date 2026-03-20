@@ -518,9 +518,8 @@ public class FavoritesManagerImpl implements FavoritesManager, PersistentStateCo
         return null;
     }
 
-    @Nullable
     @Override
-    public Element getState() {
+    public @Nullable Element getState() {
         Element state = new Element("state");
         for (String name : myName2FavoritesRoots.keySet()) {
             Element list = new Element(ELEMENT_FAVORITES_LIST);
@@ -532,9 +531,8 @@ public class FavoritesManagerImpl implements FavoritesManager, PersistentStateCo
         return state;
     }
 
-    @Nullable
     @RequiredReadAction
-    public static AbstractUrl createUrlByElement(Object element, Project project) {
+    public static @Nullable AbstractUrl createUrlByElement(Object element, Project project) {
         if (element instanceof SmartPsiElementPointer elementPointer) {
             element = elementPointer.getElement();
         }

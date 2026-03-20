@@ -222,9 +222,8 @@ public final class DesktopInternalDecorator extends JPanel implements Queryable,
         myToolWindow.getContentUI().setType(myInfo.getContentUiType());
     }
 
-    @Nullable
     @Override
-    public Object getData(Key<?> dataId) {
+    public @Nullable Object getData(Key<?> dataId) {
         if (ToolWindow.KEY == dataId) {
             return myToolWindow;
         }

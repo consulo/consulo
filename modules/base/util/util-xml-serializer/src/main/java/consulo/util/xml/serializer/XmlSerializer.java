@@ -55,9 +55,8 @@ public class XmlSerializer {
     return deserialize(document.getRootElement(), aClass);
   }
 
-  @Nullable
   @SuppressWarnings({"unchecked"})
-  public static <T> T deserialize(Element element, Class<T> aClass) throws XmlSerializationException {
+  public static <T> @Nullable T deserialize(Element element, Class<T> aClass) throws XmlSerializationException {
     try {
       Binding binding = XmlSerializerImpl.getBinding(aClass);
       return binding == null ? null : (T) binding.deserialize(null, element);

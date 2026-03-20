@@ -27,6 +27,5 @@ import org.jspecify.annotations.Nullable;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface CompileModuleScopeFactory {
-    @Nullable
-    FileIndexCompileScope createScope(Module module, boolean includeDependentModules, boolean includeTestScope);
+    @Nullable FileIndexCompileScope createScope(Module module, boolean includeDependentModules, boolean includeTestScope);
 }

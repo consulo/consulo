@@ -32,8 +32,7 @@ import org.jspecify.annotations.Nullable;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface DeployToServerStateProvider {
-    @Nullable
-    RunProfileState getState(RemoteServer<?> server,
+    @Nullable RunProfileState getState(RemoteServer<?> server,
                              Executor executor,
                              ExecutionEnvironment env,
                              DeploymentSource source,

@@ -24,15 +24,13 @@ import java.util.List;
  * @author irengrig
  */
 public interface ReadonlyList<T> {
-  @Nullable
-  T get(int idx);
+  @Nullable T get(int idx);
 
   int getSize();
 
   ReadonlyList EMPTY = new ReadonlyList() {
-    @Nullable
     @Override
-    public Object get(int idx) {
+    public @Nullable Object get(int idx) {
       return null;
     }
 
@@ -53,9 +51,8 @@ public interface ReadonlyList<T> {
       myDelegate = new ArrayList<T>();
     }
 
-    @Nullable
     @Override
-    public T get(int idx) {
+    public @Nullable T get(int idx) {
       return myDelegate.get(idx);
     }
 

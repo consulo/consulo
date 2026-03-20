@@ -30,8 +30,7 @@ import org.jspecify.annotations.Nullable;
 public interface UsageTypeProvider {
     ExtensionPointName<UsageTypeProvider> EP_NAME = ExtensionPointName.create(UsageTypeProvider.class);
 
-    @Nullable
-    UsageType getUsageType(PsiElement element);
+    @Nullable UsageType getUsageType(PsiElement element);
 
     default @Nullable UsageType getUsageType(PsiElement element, UsageTarget[] targets) {
         return getUsageType(element);

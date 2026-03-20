@@ -41,9 +41,8 @@ public abstract class MergeContext implements UserDataHolder {
   /**
    * @see DiffUserDataKeys
    */
-  @Nullable
   @Override
-  public <T> T getUserData(Key<T> key) {
+  public <T> @Nullable T getUserData(Key<T> key) {
     return myUserDataHolder.getUserData(key);
   }
 

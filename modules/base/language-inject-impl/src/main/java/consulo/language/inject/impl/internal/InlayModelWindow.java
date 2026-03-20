@@ -13,30 +13,26 @@ import java.util.List;
 class InlayModelWindow implements InlayModel {
     private static final Logger LOG = Logger.getInstance(InlayModelWindow.class);
 
-    @Nullable
     @Override
-    public <T extends EditorCustomElementRenderer> Inlay<T> addInlineElement(int offset, boolean relatesToPrecedingText, int priority, T renderer) {
+    public <T extends EditorCustomElementRenderer> @Nullable Inlay<T> addInlineElement(int offset, boolean relatesToPrecedingText, int priority, T renderer) {
         logUnsupported();
         return null;
     }
 
-    @Nullable
     @Override
-    public <T extends EditorCustomElementRenderer> Inlay<T> addInlineElement(int offset, boolean relatesToPrecedingText, T renderer) {
+    public <T extends EditorCustomElementRenderer> @Nullable Inlay<T> addInlineElement(int offset, boolean relatesToPrecedingText, T renderer) {
         logUnsupported();
         return null;
     }
 
-    @Nullable
     @Override
-    public <T extends EditorCustomElementRenderer> Inlay<T> addInlineElement(int offset, InlayProperties properties, T renderer) {
+    public <T extends EditorCustomElementRenderer> @Nullable Inlay<T> addInlineElement(int offset, InlayProperties properties, T renderer) {
         logUnsupported();
         return null;
     }
 
-    @Nullable
     @Override
-    public <T extends EditorCustomElementRenderer> Inlay<T> addBlockElement(int offset, boolean relatesToPrecedingText, boolean showAbove, int priority, T renderer) {
+    public <T extends EditorCustomElementRenderer> @Nullable Inlay<T> addBlockElement(int offset, boolean relatesToPrecedingText, boolean showAbove, int priority, T renderer) {
         logUnsupported();
         return null;
     }
@@ -47,16 +43,14 @@ class InlayModelWindow implements InlayModel {
         return null;
     }
 
-    @Nullable
     @Override
-    public <T extends EditorCustomElementRenderer> Inlay<T> addAfterLineEndElement(int offset, boolean relatesToPrecedingText, T renderer) {
+    public <T extends EditorCustomElementRenderer> @Nullable Inlay<T> addAfterLineEndElement(int offset, boolean relatesToPrecedingText, T renderer) {
         logUnsupported();
         return null;
     }
 
-    @Nullable
     @Override
-    public <T extends EditorCustomElementRenderer> Inlay<T> addAfterLineEndElement(int offset, InlayProperties properties, T renderer) {
+    public <T extends EditorCustomElementRenderer> @Nullable Inlay<T> addAfterLineEndElement(int offset, InlayProperties properties, T renderer) {
         logUnsupported();
         return null;
     }
@@ -88,16 +82,14 @@ class InlayModelWindow implements InlayModel {
         return false;
     }
 
-    @Nullable
     @Override
-    public Inlay getInlineElementAt(VisualPosition visualPosition) {
+    public @Nullable Inlay getInlineElementAt(VisualPosition visualPosition) {
         logUnsupported();
         return null;
     }
 
-    @Nullable
     @Override
-    public Inlay getElementAt(Point point) {
+    public @Nullable Inlay getElementAt(Point point) {
         logUnsupported();
         return null;
     }

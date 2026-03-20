@@ -22,6 +22,5 @@ import java.util.function.Supplier;
 @Deprecated
 @DeprecationInfo("Use Supplier")
 public interface Getter<A> extends Supplier<A> {
-  @Nullable
-  A get();
+  @Nullable A get();
 }

@@ -25,6 +25,5 @@ public interface GetDataRule<T> {
     
     Key<T> getKey();
 
-    @Nullable
-    T getData(DataProvider dataProvider);
+    @Nullable T getData(DataProvider dataProvider);
 }

@@ -104,9 +104,8 @@ abstract class OccurenceNavigatorActionBase extends AnAction implements DumbAwar
 
     protected abstract String getDescription(OccurenceNavigator navigator);
 
-    @Nullable
     @RequiredUIAccess
-    protected OccurenceNavigator getNavigator(DataContext dataContext) {
+    protected @Nullable OccurenceNavigator getNavigator(DataContext dataContext) {
         ContentManager contentManager = ContentManagerUtil.getContentManagerFromContext(dataContext, false);
         if (contentManager != null) {
             Content content = contentManager.getSelectedContent();
@@ -146,9 +145,8 @@ abstract class OccurenceNavigatorActionBase extends AnAction implements DumbAwar
         return null;
     }
 
-    @Nullable
     @RequiredUIAccess
-    private static Component getOccurenceNavigatorFromContext(DataContext dataContext) {
+    private static @Nullable Component getOccurenceNavigatorFromContext(DataContext dataContext) {
         Window window = TargetAWT.to(WindowManagerEx.getInstanceEx().getMostRecentFocusedWindow());
 
         if (window != null) {

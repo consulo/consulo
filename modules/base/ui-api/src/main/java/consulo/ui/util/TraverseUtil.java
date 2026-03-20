@@ -51,9 +51,8 @@ public class TraverseUtil {
     }
   }
   
-  @Nullable
   @Contract("null -> null")
-  public static Window getWindowAncestor(@Nullable Component c) {
+  public static @Nullable Window getWindowAncestor(@Nullable Component c) {
     if (c == null) {
       return null;
     }

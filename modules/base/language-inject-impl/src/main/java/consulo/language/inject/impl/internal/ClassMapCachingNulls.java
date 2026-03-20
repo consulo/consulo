@@ -34,8 +34,7 @@ class ClassMapCachingNulls<T> {
     myOrderingArray = orderingArray;
   }
 
-  @Nullable
-  T[] get(Class<?> aClass) {
+  @Nullable T[] get(Class<?> aClass) {
     T[] value = myMap.get(aClass);
     if (value != null) {
       if (value == myEmptyArray) {

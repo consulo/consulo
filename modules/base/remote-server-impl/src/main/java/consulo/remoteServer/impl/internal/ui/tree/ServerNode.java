@@ -4,6 +4,5 @@ import consulo.project.Project;
 import org.jspecify.annotations.Nullable;
 
 public interface ServerNode extends ServersTreeNode {
-    @Nullable
-    Project getProject();
+    @Nullable Project getProject();
 }

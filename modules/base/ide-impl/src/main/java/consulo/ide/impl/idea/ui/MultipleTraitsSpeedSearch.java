@@ -45,9 +45,8 @@ public abstract class MultipleTraitsSpeedSearch<Comp extends JComponent> extends
         return false;
     }
 
-    @Nullable
     @Override
-    protected final String getElementText(Object element) {
+    protected final @Nullable String getElementText(Object element) {
         throw new IllegalStateException();
     }
 }

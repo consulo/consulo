@@ -59,9 +59,8 @@ public class SingleEntryIndexForwardIndexAccessor<V> implements ForwardIndexAcce
     return new SingleValueDiffBuilder<>(inputId, currentData);
   }
 
-  @Nullable
   @Override
-  public ByteArraySequence serializeIndexedData(InputData<Integer, V> data) {
+  public @Nullable ByteArraySequence serializeIndexedData(InputData<Integer, V> data) {
     return null;
   }
 

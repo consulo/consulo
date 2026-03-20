@@ -127,15 +127,13 @@ public class NonProjectFileWritingAccessDialog extends DialogWrapper {
         button.addItemListener(e -> button.getRootPane().setDefaultButton(getButton(getOKAction())));
     }
 
-    @Nullable
     @Override
-    public JComponent getPreferredFocusedComponent() {
+    public @Nullable JComponent getPreferredFocusedComponent() {
         return myUnlockOneButton;
     }
 
-    @Nullable
     @Override
-    protected JComponent createCenterPanel() {
+    protected @Nullable JComponent createCenterPanel() {
         return myPanel;
     }
 

@@ -27,8 +27,7 @@ import org.jspecify.annotations.Nullable;
  */
 @ExtensionAPI(ComponentScope.PROJECT)
 public interface VcsBaseContentProvider {
-    @Nullable
-    BaseContent getBaseRevision(VirtualFile file);
+    @Nullable BaseContent getBaseRevision(VirtualFile file);
 
     boolean isSupported(VirtualFile file);
 
@@ -36,7 +35,6 @@ public interface VcsBaseContentProvider {
         
         VcsRevisionNumber getRevisionNumber();
 
-        @Nullable
-        String loadContent();
+        @Nullable String loadContent();
     }
 }

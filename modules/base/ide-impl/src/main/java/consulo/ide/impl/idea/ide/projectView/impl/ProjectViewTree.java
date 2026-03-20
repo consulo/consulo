@@ -133,9 +133,8 @@ public class ProjectViewTree extends DnDAwareTree {
     return applicationFileColorManager.isFileColorsEnabledFor(tree::isOpaque, tree::setOpaque);
   }
 
-  @Nullable
   @Override
-  public ColorValue getFileColorFor(Object object) {
+  public @Nullable ColorValue getFileColorFor(Object object) {
     if (object instanceof DefaultMutableTreeNode) {
       DefaultMutableTreeNode node = (DefaultMutableTreeNode)object;
       object = node.getUserObject();

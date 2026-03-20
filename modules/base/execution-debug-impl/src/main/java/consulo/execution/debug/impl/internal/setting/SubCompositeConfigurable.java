@@ -42,15 +42,13 @@ abstract class SubCompositeConfigurable implements SearchableConfigurable.Parent
     return true;
   }
 
-  @Nullable
   @Override
-  public Runnable enableSearch(String option) {
+  public @Nullable Runnable enableSearch(String option) {
     return null;
   }
 
-  @Nullable
   @Override
-  public String getHelpTopic() {
+  public @Nullable String getHelpTopic() {
     getConfigurables();
     return children != null && children.length == 1 ? children[0].getHelpTopic() : null;
   }
@@ -93,9 +91,8 @@ abstract class SubCompositeConfigurable implements SearchableConfigurable.Parent
   }
 
   @RequiredUIAccess
-  @Nullable
   @Override
-  public final JComponent createComponent() {
+  public final @Nullable JComponent createComponent() {
     if (rootComponent == null) {
       if (root == null) {
         root = createRootUi();

@@ -26,6 +26,5 @@ import org.jspecify.annotations.Nullable;
 public interface ExecutionConsoleEx extends ExecutionConsole {
   void buildUi(RunnerLayoutUi layoutUi);
 
-  @Nullable
-  String getExecutionConsoleId();
+  @Nullable String getExecutionConsoleId();
 }

@@ -26,12 +26,10 @@ final class SubmissionTracker {
    * Not-null if we're tracking submissions to provide diagnostics
    */
   private volatile
-  @Nullable
-  Map<String, Integer> myTraces;
+  @Nullable Map<String, Integer> myTraces;
   private volatile boolean myStoppedTracing;
 
-  @Nullable
-  String preventTooManySubmissions() {
+  @Nullable String preventTooManySubmissions() {
     int currentCount = myCount.incrementAndGet();
     if (myStoppedTracing) return null;
 

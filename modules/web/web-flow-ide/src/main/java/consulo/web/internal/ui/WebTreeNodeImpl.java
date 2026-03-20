@@ -71,9 +71,8 @@ public class WebTreeNodeImpl<N> implements TreeNode<N> {
         return myParent;
     }
 
-    @Nullable
     @Override
-    public N getValue() {
+    public @Nullable N getValue() {
         return myNode;
     }
 

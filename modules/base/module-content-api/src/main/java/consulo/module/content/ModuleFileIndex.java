@@ -39,8 +39,7 @@ public interface ModuleFileIndex extends FileIndex {
    * @return the order entry to which the file or directory belongs, or null if
    * it does not belong to any order entry.
    */
-  @Nullable
-  OrderEntry getOrderEntryForFile(VirtualFile fileOrDir);
+  @Nullable OrderEntry getOrderEntryForFile(VirtualFile fileOrDir);
 
   /**
    * Returns the list of all order entries to which the specified file or directory

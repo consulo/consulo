@@ -13,6 +13,5 @@ public interface VcsSymlinkResolver {
 
     boolean isEnabled();
 
-    @Nullable
-    VirtualFile resolveSymlink(VirtualFile file);
+    @Nullable VirtualFile resolveSymlink(VirtualFile file);
 }

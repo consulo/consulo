@@ -35,16 +35,13 @@ public interface Artifact extends UserDataHolder, Named {
   
   CompositePackagingElement<?> getRootElement();
 
-  @Nullable
-  String getOutputPath();
+  @Nullable String getOutputPath();
 
   Collection<? extends ArtifactPropertiesProvider> getPropertiesProviders();
 
   ArtifactProperties<?> getProperties(ArtifactPropertiesProvider propertiesProvider);
 
-  @Nullable
-  VirtualFile getOutputFile();
+  @Nullable VirtualFile getOutputFile();
 
-  @Nullable
-  String getOutputFilePath();
+  @Nullable String getOutputFilePath();
 }

@@ -103,9 +103,8 @@ public class CustomFoldingSurroundDescriptor implements SurroundDescriptor {
         return PsiElement.EMPTY_ARRAY;
     }
 
-    @Nullable
     @RequiredReadAction
-    private static PsiElement findClosestParentAfterLineBreak(PsiElement element) {
+    private static @Nullable PsiElement findClosestParentAfterLineBreak(PsiElement element) {
         PsiElement parent = element;
         while (parent != null) {
             PsiElement prev = parent.getPrevSibling();
@@ -120,9 +119,8 @@ public class CustomFoldingSurroundDescriptor implements SurroundDescriptor {
         return null;
     }
 
-    @Nullable
     @RequiredReadAction
-    private static PsiElement findClosestParentBeforeLineBreak(PsiElement element) {
+    private static @Nullable PsiElement findClosestParentBeforeLineBreak(PsiElement element) {
         PsiElement parent = element;
         while (parent != null) {
             PsiElement next = parent.getNextSibling();

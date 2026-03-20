@@ -44,9 +44,8 @@ public class TextComponentSelectionModel implements SelectionModel {
     return myTextComponent.getSelectionStart();
   }
 
-  @Nullable
   @Override
-  public VisualPosition getSelectionStartPosition() {
+  public @Nullable VisualPosition getSelectionStartPosition() {
     return null;
   }
 
@@ -55,9 +54,8 @@ public class TextComponentSelectionModel implements SelectionModel {
     return myTextComponent.getSelectionEnd();
   }
 
-  @Nullable
   @Override
-  public VisualPosition getSelectionEndPosition() {
+  public @Nullable VisualPosition getSelectionEndPosition() {
     return null;
   }
 
@@ -66,9 +64,8 @@ public class TextComponentSelectionModel implements SelectionModel {
     return myTextComponent.getSelectedText();
   }
 
-  @Nullable
   @Override
-  public String getSelectedText(boolean allCarets) {
+  public @Nullable String getSelectedText(boolean allCarets) {
     return getSelectedText();
   }
 
@@ -80,9 +77,8 @@ public class TextComponentSelectionModel implements SelectionModel {
     return caretPosition == start ? end : start;
   }
 
-  @Nullable
   @Override
-  public VisualPosition getLeadSelectionPosition() {
+  public @Nullable VisualPosition getLeadSelectionPosition() {
     return null;
   }
 

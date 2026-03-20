@@ -51,9 +51,8 @@ public class RestoreUpdateTree implements PersistentStateComponent<Element> {
     myUpdateInfo = new UpdateInfo(myProject, updatedFiles, actionInfo);
   }
 
-  @Nullable
   @Override
-  public Element getState() {
+  public @Nullable Element getState() {
     if (myUpdateInfo != null) {
       Element child = new Element(UPDATE_INFO);
       myUpdateInfo.writeExternal(child);

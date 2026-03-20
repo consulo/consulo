@@ -585,9 +585,8 @@ public class DirDiffPanel implements Disposable, DataProvider {
             super(project, DiffPlaces.DIR_DIFF);
         }
 
-        @Nullable
         @Override
-        protected String getRequestName(ElementWrapper element) {
+        protected @Nullable String getRequestName(ElementWrapper element) {
             return null;
         }
 

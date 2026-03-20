@@ -29,8 +29,7 @@ public abstract class RunAnythingSearchListModel extends CollectionListModel<Obj
         RunAnythingGroup.clearIndexes(getGroups());
     }
 
-    @Nullable
-    RunAnythingGroup findGroupByMoreIndex(int index) {
+    @Nullable RunAnythingGroup findGroupByMoreIndex(int index) {
         return RunAnythingGroup.findGroupByMoreIndex(getGroups(), index);
     }
 
@@ -43,8 +42,7 @@ public abstract class RunAnythingSearchListModel extends CollectionListModel<Obj
         return RunAnythingGroup.getTitle(getGroups(), titleIndex);
     }
 
-    @Nullable
-    RunAnythingGroup findItemGroup(int titleIndex) {
+    @Nullable RunAnythingGroup findItemGroup(int titleIndex) {
         return RunAnythingGroup.findItemGroup(getGroups(), titleIndex);
     }
 

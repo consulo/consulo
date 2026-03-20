@@ -24,8 +24,7 @@ import org.jspecify.annotations.Nullable;
  * @since 03-Jun-17
  */
 public interface ExternalSystemModuleExtension<T extends ExternalSystemModuleExtension<T>> extends ModuleExtension<T> {
-    @Nullable
-    String getOption(String key);
+    @Nullable String getOption(String key);
 
     
     ProjectSystemId getProjectSystemId();

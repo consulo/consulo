@@ -26,8 +26,7 @@ public interface ChangeListStorage {
 
   long nextId();
 
-  @Nullable
-  ChangeSetHolder readPrevious(int id, IntSet recursionGuard);
+  @Nullable ChangeSetHolder readPrevious(int id, IntSet recursionGuard);
 
   void purge(long period, int intervalBetweenActivities, Consumer<ChangeSet> processor);
 

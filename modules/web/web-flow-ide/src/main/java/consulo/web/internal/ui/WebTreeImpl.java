@@ -239,9 +239,8 @@ public class WebTreeImpl<NODE> extends VaadinComponentDelegate<WebTreeImpl.Vaadi
             return list;
         }
 
-        @Nullable
         @Override
-        public Component toUIComponent() {
+        public @Nullable Component toUIComponent() {
             return WebTreeImpl.this;
         }
     }
@@ -275,9 +274,8 @@ public class WebTreeImpl<NODE> extends VaadinComponentDelegate<WebTreeImpl.Vaadi
         return new Vaadin();
     }
 
-    @Nullable
     @Override
-    public TreeNode<NODE> getSelectedNode() {
+    public @Nullable TreeNode<NODE> getSelectedNode() {
         Set selectedItems = toVaadinComponent().getSelectedItems();
         return (TreeNode<NODE>) ContainerUtil.getFirstItem(selectedItems);
     }

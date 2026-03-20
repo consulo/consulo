@@ -28,9 +28,8 @@ import org.jspecify.annotations.Nullable;
 public class WebLabelImpl extends WebLabelBase<WebLabelImpl.Vaadin> {
   public class Vaadin extends VaadinLabelComponentBase {
 
-    @Nullable
     @Override
-    public Component toUIComponent() {
+    public @Nullable Component toUIComponent() {
       return WebLabelImpl.this;
     }
   }

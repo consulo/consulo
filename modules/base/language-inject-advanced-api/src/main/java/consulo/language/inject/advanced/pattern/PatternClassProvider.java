@@ -26,8 +26,7 @@ import org.jspecify.annotations.Nullable;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface PatternClassProvider {
-  @Nullable
-  String getAlias();
+  @Nullable String getAlias();
 
   
   Class<?> getPatternClass();

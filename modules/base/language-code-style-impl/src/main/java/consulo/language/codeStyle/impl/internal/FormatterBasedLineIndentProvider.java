@@ -32,9 +32,8 @@ import org.jspecify.annotations.Nullable;
  */
 @ExtensionImpl(order = "last")
 public class FormatterBasedLineIndentProvider implements LineIndentProvider {
-  @Nullable
   @Override
-  public String getLineIndent(Project project,
+  public @Nullable String getLineIndent(Project project,
                               Document document,
                               SemanticEditorPositionFactory factory,
                               Language language,

@@ -130,9 +130,8 @@ public class ElementsChooser<T> extends MultiStateElementsChooser<T, Boolean> {
       return !state;
     }
 
-    @Nullable
     @Override
-    public Boolean getNextState(Map<T, Boolean> elementsWithStates) {
+    public @Nullable Boolean getNextState(Map<T, Boolean> elementsWithStates) {
       boolean currentlyMarked = true;
       for (Boolean state : elementsWithStates.values()) {
         currentlyMarked = state;
@@ -148,15 +147,13 @@ public class ElementsChooser<T> extends MultiStateElementsChooser<T, Boolean> {
       return state;
     }
 
-    @Nullable
     @Override
-    public Boolean getMarkState(@Nullable Object value) {
+    public @Nullable Boolean getMarkState(@Nullable Object value) {
       return value instanceof Boolean ? ((Boolean)value) : null;
     }
 
-    @Nullable
     @Override
-    public TableCellRenderer getMarkRenderer() {
+    public @Nullable TableCellRenderer getMarkRenderer() {
       return null;
     }
   }

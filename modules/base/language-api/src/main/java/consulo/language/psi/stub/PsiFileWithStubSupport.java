@@ -32,8 +32,7 @@ public interface PsiFileWithStubSupport extends PsiFile {
    * @return the stub tree for this file, if it's stub-based at all. Will be null after the AST has been loaded
    * (e.g. by calling {@link PsiElement#getNode()} or {@link PsiElement#getText()}.
    */
-  @Nullable
-  StubTree getStubTree();
+  @Nullable StubTree getStubTree();
 
   default @Nullable StubTree calcStubTree() {
     return null;

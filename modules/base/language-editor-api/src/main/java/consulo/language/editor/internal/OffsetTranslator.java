@@ -26,6 +26,5 @@ import org.jspecify.annotations.Nullable;
 public interface OffsetTranslator {
   Key<OffsetTranslator> RANGE_TRANSLATION = Key.create("completion.rangeTranslation");
 
-  @Nullable
-  Integer translateOffset(Integer offset);
+  @Nullable Integer translateOffset(Integer offset);
 }

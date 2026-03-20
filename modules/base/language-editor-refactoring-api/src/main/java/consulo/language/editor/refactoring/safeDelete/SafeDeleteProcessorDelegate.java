@@ -39,8 +39,7 @@ public interface SafeDeleteProcessorDelegate {
 
     boolean handlesElement(PsiElement element);
 
-    @Nullable
-    NonCodeUsageSearchInfo findUsages(PsiElement element, PsiElement[] allElementsToDelete, List<UsageInfo> result);
+    @Nullable NonCodeUsageSearchInfo findUsages(PsiElement element, PsiElement[] allElementsToDelete, List<UsageInfo> result);
 
     /**
      * Called before the refactoring dialog is shown. Returns the list of elements for which the
@@ -52,18 +51,15 @@ public interface SafeDeleteProcessorDelegate {
      * @param allElementsToDelete all elements selected for deletion.
      * @return additional elements to search for usages, or null if the user has cancelled the refactoring.
      */
-    @Nullable
-    Collection<? extends PsiElement> getElementsToSearch(PsiElement element, Collection<PsiElement> allElementsToDelete);
+    @Nullable Collection<? extends PsiElement> getElementsToSearch(PsiElement element, Collection<PsiElement> allElementsToDelete);
 
-    @Nullable
-    Collection<PsiElement> getAdditionalElementsToDelete(
+    @Nullable Collection<PsiElement> getAdditionalElementsToDelete(
         PsiElement element,
         Collection<PsiElement> allElementsToDelete,
         boolean askUser
     );
 
-    @Nullable
-    Collection<LocalizeValue> findConflicts(PsiElement element, PsiElement[] allElementsToDelete);
+    @Nullable Collection<LocalizeValue> findConflicts(PsiElement element, PsiElement[] allElementsToDelete);
 
     /**
      * Called after the user has confirmed the refactoring. Can filter out some of the usages
@@ -74,8 +70,7 @@ public interface SafeDeleteProcessorDelegate {
      * @param usages  all usages to be processed by the refactoring.
      * @return the filtered list of usages, or null if the user has cancelled the refactoring.
      */
-    @Nullable
-    UsageInfo[] preprocessUsages(Project project, UsageInfo[] usages);
+    @Nullable UsageInfo[] preprocessUsages(Project project, UsageInfo[] usages);
 
     void prepareForDeletion(PsiElement element) throws IncorrectOperationException;
 

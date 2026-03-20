@@ -102,29 +102,25 @@ public class MergeWindow {
             });
         }
 
-        @Nullable
         @Override
-        protected JComponent createCenterPanel() {
+        protected @Nullable JComponent createCenterPanel() {
             return new MyPanel(myProcessor.getComponent());
         }
 
-        @Nullable
         @Override
-        protected JComponent createSouthPanel() {
+        protected @Nullable JComponent createSouthPanel() {
             rebuildSouthPanel();
             return mySouthPanel;
         }
 
-        @Nullable
         @Override
         @RequiredUIAccess
-        public JComponent getPreferredFocusedComponent() {
+        public @Nullable JComponent getPreferredFocusedComponent() {
             return myProcessor.getPreferredFocusedComponent();
         }
 
-        @Nullable
         @Override
-        protected String getDimensionServiceKey() {
+        protected @Nullable String getDimensionServiceKey() {
             return StringUtil.notNullize(myProcessor.getContextUserData(DiffUserDataKeys.DIALOG_GROUP_KEY), "MergeDialog");
         }
 
@@ -167,9 +163,8 @@ public class MergeWindow {
             return super.getCancelAction();
         }
 
-        @Nullable
         @Override
-        protected String getHelpId() {
+        protected @Nullable String getHelpId() {
             return myProcessor.getHelpId();
         }
 

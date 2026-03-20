@@ -31,9 +31,8 @@ import org.jspecify.annotations.Nullable;
  */
 @ExtensionImpl
 public class ConfigurationFileEditorEditorTabColorProvider implements EditorTabColorProvider, DumbAware {
-    @Nullable
     @Override
-    public ColorValue getEditorTabColor(Project project, VirtualFile file) {
+    public @Nullable ColorValue getEditorTabColor(Project project, VirtualFile file) {
         if (file instanceof ConfigurationEditorFileImpl configurationEditorFile) {
             ConfigurationFileEditorProvider provider = configurationEditorFile.getProvider();
 

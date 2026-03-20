@@ -24,6 +24,5 @@ import org.jspecify.annotations.Nullable;
  * @since 2019-02-17
  */
 public interface FromVaadinComponentWrapper {
-  @Nullable
-  Component toUIComponent();
+  @Nullable Component toUIComponent();
 }

@@ -457,9 +457,8 @@ public class GeneralSettingsConfigurable extends SimpleConfigurable<GeneralSetti
         return LocalizeValue.localizeTODO("System");
     }
 
-    @Nullable
     @Override
-    public String getParentId() {
+    public @Nullable String getParentId() {
         return StandardConfigurableIds.GENERAL_GROUP;
     }
 

@@ -83,9 +83,8 @@ public abstract class FileEditorWindowBase implements FileEditorWindow {
     /**
      * @return icon which represents file's type and modification status
      */
-    @Nullable
     @RequiredReadAction
-    protected Image getFileIcon(VirtualFile file) {
+    protected @Nullable Image getFileIcon(VirtualFile file) {
         UIAccess.assetIsNotUIThread();
         if (!file.isValid()) {
             return UnknownFileType.INSTANCE.getIcon();

@@ -35,16 +35,14 @@ public class ConfigurableAdapter implements Configurable {
     }
 
     @RequiredUIAccess
-    @Nullable
     @Override
-    public JComponent createComponent(Disposable parentDisposable) {
+    public @Nullable JComponent createComponent(Disposable parentDisposable) {
         return null;
     }
 
     @RequiredUIAccess
-    @Nullable
     @Override
-    public Component createUIComponent(Disposable parentDisposable) {
+    public @Nullable Component createUIComponent(Disposable parentDisposable) {
         return null;
     }
 

@@ -223,9 +223,8 @@ public class SettingsImpl implements EditorSettings {
         return myRightMargin != null ? myRightMargin : CodeStyle.getProjectOrDefaultSettings(project).getRightMargin(myLanguage);
     }
 
-    @Nullable
     @RequiredReadAction
-    private static Language getDocumentLanguage(@Nullable Project project, Document document) {
+    private static @Nullable Language getDocumentLanguage(@Nullable Project project, Document document) {
         if (project != null) {
             PsiDocumentManager documentManager = PsiDocumentManager.getInstance(project);
             PsiFile file = documentManager.getPsiFile(document);

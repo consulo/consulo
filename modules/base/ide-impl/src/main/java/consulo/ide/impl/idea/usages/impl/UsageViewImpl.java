@@ -1056,9 +1056,8 @@ public class UsageViewImpl implements UsageViewEx {
         return myProject;
     }
 
-    @Nullable
     @Deprecated
-    public static KeyboardShortcut getShowUsagesWithSettingsShortcut() {
+    public static @Nullable KeyboardShortcut getShowUsagesWithSettingsShortcut() {
         return UsageViewUtil.getShowUsagesWithSettingsShortcut();
     }
 
@@ -1721,9 +1720,8 @@ public class UsageViewImpl implements UsageViewEx {
         return result;
     }
 
-    @Nullable
     @RequiredUIAccess
-    private Node getSelectedNode() {
+    private @Nullable Node getSelectedNode() {
         UIAccess.assertIsUIThread();
         TreePath leadSelectionPath = myTree.getLeadSelectionPath();
         if (leadSelectionPath == null) {
@@ -1734,9 +1732,8 @@ public class UsageViewImpl implements UsageViewEx {
         return node instanceof Node mutableNode ? mutableNode : null;
     }
 
-    @Nullable
     @RequiredUIAccess
-    private Node[] getSelectedNodes() {
+    private @Nullable Node[] getSelectedNodes() {
         UIAccess.assertIsUIThread();
         TreePath[] leadSelectionPath = myTree.getSelectionPaths();
         if (leadSelectionPath == null || leadSelectionPath.length == 0) {
@@ -1811,9 +1808,8 @@ public class UsageViewImpl implements UsageViewEx {
         }
     }
 
-    @Nullable
     @RequiredUIAccess
-    private UsageTarget[] getSelectedUsageTargets() {
+    private @Nullable UsageTarget[] getSelectedUsageTargets() {
         UIAccess.assertIsUIThread();
         TreePath[] selectionPaths = myTree.getSelectionPaths();
         if (selectionPaths == null) {
@@ -1834,9 +1830,8 @@ public class UsageViewImpl implements UsageViewEx {
         return targets.isEmpty() ? null : targets.toArray(UsageTarget.EMPTY_ARRAY);
     }
 
-    @Nullable
     @RequiredReadAction
-    private static Navigatable getNavigatableForNode(DefaultMutableTreeNode node, boolean allowRequestFocus) {
+    private static @Nullable Navigatable getNavigatableForNode(DefaultMutableTreeNode node, boolean allowRequestFocus) {
         Object userObject = node.getUserObject();
         if (userObject instanceof Navigatable navigatable) {
             return navigatable.canNavigate() ? new Navigatable() {
@@ -1916,10 +1911,9 @@ public class UsageViewImpl implements UsageViewEx {
                 }
             };
             myCopyProvider = new TextCopyProvider() {
-                @Nullable
                 @Override
                 @RequiredUIAccess
-                public Collection<String> getTextLinesToCopy() {
+                public @Nullable Collection<String> getTextLinesToCopy() {
                     Node[] selectedNodes = getSelectedNodes();
                     if (selectedNodes != null && selectedNodes.length > 0) {
                         ArrayList<String> lines = new ArrayList<>();

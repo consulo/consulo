@@ -521,8 +521,7 @@ public abstract class BaseToolsPanel<T extends Tool> extends JPanel {
         myTree.getSelectionModel().addTreeSelectionListener(listener);
     }
 
-    @Nullable
-    Tool getSingleSelectedTool() {
+    @Nullable Tool getSingleSelectedTool() {
         TreePath[] selectionPaths = myTree.getSelectionPaths();
         if (selectionPaths == null || selectionPaths.length != 1) {
             return null;

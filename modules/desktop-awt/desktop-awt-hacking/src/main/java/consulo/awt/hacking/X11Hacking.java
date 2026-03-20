@@ -167,8 +167,7 @@ public final class X11Hacking {
 
     @SuppressWarnings("SameParameterValue")
     private
-    @Nullable
-    <T> T getWindowProperty(long window, long name, long type, long expectedFormat) throws Exception {
+    <T> @Nullable T getWindowProperty(long window, long name, long type, long expectedFormat) throws Exception {
       long data = unsafe.allocateMemory(64);
       awtLock.invoke(null);
       try {

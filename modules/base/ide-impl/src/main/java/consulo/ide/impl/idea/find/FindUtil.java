@@ -722,9 +722,8 @@ public class FindUtil {
         return false;
     }
 
-    @Nullable
     @RequiredUIAccess
-    private static FindResult doSearch(
+    private static @Nullable FindResult doSearch(
         Project project,
         Editor editor,
         int offset,
@@ -991,9 +990,8 @@ public class FindUtil {
         boolean shouldReplace(TextRange range, String replace);
     }
 
-    @Nullable
     @RequiredReadAction
-    public static UsageView showInUsageView(
+    public static @Nullable UsageView showInUsageView(
         @Nullable PsiElement sourceElement,
         PsiElement[] targets,
         String title,

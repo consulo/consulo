@@ -63,9 +63,8 @@ public interface FoldingBuilder extends LanguageExtension {
    * @param node the node for which the placeholder text is requested.
    * @return the placeholder text.
    */
-  @Nullable
   @RequiredReadAction
-  String getPlaceholderText(ASTNode node);
+  @Nullable String getPlaceholderText(ASTNode node);
 
   /**
    * Returns the default collapsed state for the folding region related to the specified node.

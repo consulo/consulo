@@ -134,9 +134,8 @@ public class MoveChangesDialog extends DialogWrapper {
     return !getIncludedChanges().isEmpty();
   }
 
-  @Nullable
   @Override
-  protected JComponent createDoNotAskCheckbox() {
+  protected @Nullable JComponent createDoNotAskCheckbox() {
     return myCheckBox;
   }
   /*

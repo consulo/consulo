@@ -192,8 +192,7 @@ public record LoadingOrder(String name, boolean first, boolean last, Set<String>
     }
 
     public interface Orderable {
-        @Nullable
-        String getOrderId();
+        @Nullable String getOrderId();
 
         LoadingOrder getOrder();
 

@@ -43,8 +43,7 @@ public abstract class ValueContainer<Value> {
     
     IntIterator getInputIdsIterator();
 
-    @Nullable
-    IntPredicate getValueAssociationPredicate();
+    @Nullable IntPredicate getValueAssociationPredicate();
   }
 
   public abstract int size();

@@ -41,9 +41,8 @@ import static consulo.util.collection.ContainerUtil.addIfNotNull;
 
 public class TextEditorPsiDataProvider implements EditorDataProvider {
     @Override
-    @Nullable
     @RequiredReadAction
-    public Object getData(Key<?> dataId, Editor e, Caret caret) {
+    public @Nullable Object getData(Key<?> dataId, Editor e, Caret caret) {
         if (!(e instanceof EditorEx)) {
             return null;
         }
@@ -191,9 +190,8 @@ public class TextEditorPsiDataProvider implements EditorDataProvider {
         return PsiUtilCore.findLanguageFromElement(elt);
     }
 
-    @Nullable
     @RequiredReadAction
-    private static PsiElement getPsiElementIn(Editor editor, Caret caret, VirtualFile file) {
+    private static @Nullable PsiElement getPsiElementIn(Editor editor, Caret caret, VirtualFile file) {
         PsiFile psiFile = getPsiFile(editor, file);
         if (psiFile == null) {
             return null;
@@ -207,9 +205,8 @@ public class TextEditorPsiDataProvider implements EditorDataProvider {
         }
     }
 
-    @Nullable
     @RequiredReadAction
-    private static PsiFile getPsiFile(Editor e, VirtualFile file) {
+    private static @Nullable PsiFile getPsiFile(Editor e, VirtualFile file) {
         if (!file.isValid()) {
             return null; // fix for SCR 40329
         }

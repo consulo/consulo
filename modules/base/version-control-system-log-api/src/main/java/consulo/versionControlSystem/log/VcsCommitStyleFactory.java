@@ -116,15 +116,13 @@ public class VcsCommitStyleFactory {
       myTextStyle = textStyle;
     }
 
-    @Nullable
     @Override
-    public Color getForeground() {
+    public @Nullable Color getForeground() {
       return myForeground;
     }
 
-    @Nullable
     @Override
-    public Color getBackground() {
+    public @Nullable Color getBackground() {
       return myBackground;
     }
 

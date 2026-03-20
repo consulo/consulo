@@ -31,8 +31,7 @@ public interface VisibleGraph<Id> {
   
   RowInfo<Id> getRowInfo(int visibleRow);
 
-  @Nullable
-  Integer getVisibleRowIndex(Id id);
+  @Nullable Integer getVisibleRowIndex(Id id);
 
   
   ActionController<Id> getActionController();

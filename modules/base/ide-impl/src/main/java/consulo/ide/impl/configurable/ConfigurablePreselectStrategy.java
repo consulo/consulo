@@ -47,8 +47,7 @@ public interface ConfigurablePreselectStrategy {
     return configurables -> BaseShowSettingsUtil.SKIP_SELECTION_CONFIGURATION;
   }
 
-  @Nullable
-  Configurable get(Configurable[] configurables);
+  @Nullable Configurable get(Configurable[] configurables);
 
   default void save(Configurable configurable) {
   }

@@ -275,9 +275,8 @@ public class XDebugSessionImpl implements XDebugSession {
         return myCurrentStackFrame != null ? myCurrentStackFrame.getSourcePosition() : null;
     }
 
-    @Nullable
     @Override
-    public XSourcePosition getTopFramePosition() {
+    public @Nullable XSourcePosition getTopFramePosition() {
         return myTopFramePosition;
     }
 

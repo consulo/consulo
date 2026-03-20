@@ -114,9 +114,8 @@ public class DummyCompileContext implements CompileContext {
         return null;
     }
 
-    @Nullable
     @Override
-    public VirtualFile getOutputForFile(Module module, ContentFolderTypeProvider contentFolderType) {
+    public @Nullable VirtualFile getOutputForFile(Module module, ContentFolderTypeProvider contentFolderType) {
         return null;
     }
 

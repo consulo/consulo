@@ -24,8 +24,7 @@ import java.util.function.Function;
 @Deprecated
 public interface NullableFunction<Param, Result> extends Function<Param, Result> {
   @Override
-  @Nullable
-  Result apply(Param param);
+  @Nullable Result apply(Param param);
 
   NullableFunction NULL = o -> null;
 }

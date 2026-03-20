@@ -25,8 +25,7 @@ import java.util.Objects;
  * @since 24-Jun-22
  */
 public interface ByLanguageValue<V> {
-  @Nullable
-  V get(Language language);
+  @Nullable V get(Language language);
 
   
   default V requiredGet(Language language) {

@@ -78,9 +78,8 @@ public class CommonCheckinFilesAction extends AbstractCommonCheckinAction {
         return modifyCheckinActionName(context, VcsLocalize.vcsCommandNameCheckinNoMnemonics());
     }
 
-    @Nullable
     @Override
-    protected LocalChangeList getInitiallySelectedChangeList(VcsContext context, Project project) {
+    protected @Nullable LocalChangeList getInitiallySelectedChangeList(VcsContext context, Project project) {
         ChangeListManager manager = ChangeListManager.getInstance(project);
         LocalChangeList defaultChangeList = manager.getDefaultChangeList();
         LocalChangeList result = null;

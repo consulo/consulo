@@ -97,9 +97,8 @@ class BaseComponentAdapter<T> implements ComponentAdapter<T> {
     return myImplementationKey.getTargetClass();
   }
 
-  @Nullable
   @Override
-  public T getComponentInstanceOfCreated(InstanceContainer container) {
+  public @Nullable T getComponentInstanceOfCreated(InstanceContainer container) {
     T instance = myInstanceIfSingleton;
     if (instance != null) {
       return instance;

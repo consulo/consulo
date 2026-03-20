@@ -65,9 +65,8 @@ public final class NioFiles {
             return 0;
         }
 
-        @Nullable
         @Override
-        public Object fileKey() {
+        public @Nullable Object fileKey() {
             return null;
         }
     };

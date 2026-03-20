@@ -87,10 +87,9 @@ public abstract class LocalInspectionTool extends InspectionTool {
    * @param isOnTheFly true if called during on the fly editor highlighting. Called from Inspect Code action otherwise.
    * @return <code>null</code> if no problems found or not applicable at file level.
    */
-  @Nullable
   @Deprecated
   @DeprecationInfo("Prefer #buildVisitor()")
-  public ProblemDescriptor[] checkFile(PsiFile file, InspectionManager manager, boolean isOnTheFly) {
+  public @Nullable ProblemDescriptor[] checkFile(PsiFile file, InspectionManager manager, boolean isOnTheFly) {
     return null;
   }
 

@@ -52,9 +52,8 @@ public class TemplateDataLanguageConfigurable extends PerFileConfigurableBase<La
     return "template.data.language.configurable";
   }
 
-  @Nullable
   @Override
-  public String getParentId() {
+  public @Nullable String getParentId() {
     return StandardConfigurableIds.EDITOR_GROUP;
   }
 

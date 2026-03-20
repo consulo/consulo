@@ -55,21 +55,18 @@ public class DelegateMap<K, V> implements Map<K, V> {
     return myDelegate.containsValue(value);
   }
 
-  @Nullable
   @Override
-  public V get(Object key) {
+  public @Nullable V get(Object key) {
     return myDelegate.get(key);
   }
 
-  @Nullable
   @Override
-  public V put(K key, V value) {
+  public @Nullable V put(K key, V value) {
     return myDelegate.put(key, value);
   }
 
-  @Nullable
   @Override
-  public V remove(Object key) {
+  public @Nullable V remove(Object key) {
     return myDelegate.remove(key);
   }
 

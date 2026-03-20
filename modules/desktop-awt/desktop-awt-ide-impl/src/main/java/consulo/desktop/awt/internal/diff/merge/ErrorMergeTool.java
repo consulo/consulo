@@ -72,9 +72,8 @@ public class ErrorMergeTool implements MergeTool {
             return myPanel;
         }
 
-        @Nullable
         @Override
-        public JComponent getPreferredFocusedComponent() {
+        public @Nullable JComponent getPreferredFocusedComponent() {
             return null;
         }
 
@@ -85,9 +84,8 @@ public class ErrorMergeTool implements MergeTool {
             return new ToolbarComponents();
         }
 
-        @Nullable
         @Override
-        public ActionRecord getResolveAction(MergeResult result) {
+        public @Nullable ActionRecord getResolveAction(MergeResult result) {
             if (result == MergeResult.RESOLVED) {
                 return null;
             }

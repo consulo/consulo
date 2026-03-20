@@ -123,9 +123,8 @@ public class InjectedCaret implements CaretDelegate {
     return myDelegate.getSelectionEndPosition();
   }
 
-  @Nullable
   @Override
-  public String getSelectedText() {
+  public @Nullable String getSelectedText() {
     return myDelegate.getSelectedText();
   }
 
@@ -190,9 +189,8 @@ public class InjectedCaret implements CaretDelegate {
     myDelegate.selectWordAtCaret(honorCamelWordsSettings);
   }
 
-  @Nullable
   @Override
-  public Caret clone(boolean above) {
+  public @Nullable Caret clone(boolean above) {
     Caret clone = myDelegate.clone(above);
     return clone == null ? null : new InjectedCaret(myEditorWindow, clone);
   }
@@ -214,9 +212,8 @@ public class InjectedCaret implements CaretDelegate {
     return myDelegate.replace(key, oldValue, newValue);
   }
 
-  @Nullable
   @Override
-  public <T> T getUserData(Key<T> key) {
+  public <T> @Nullable T getUserData(Key<T> key) {
     return myDelegate.getUserData(key);
   }
 

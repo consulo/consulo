@@ -50,9 +50,8 @@ public class DefaultColorsScheme extends AbstractColorsScheme implements ReadOnl
     return myParentScheme == null ? null : myParentScheme.getAttributes(key);
   }
 
-  @Nullable
   @Override
-  public ColorValue getColor(EditorColorKey key) {
+  public @Nullable ColorValue getColor(EditorColorKey key) {
     if (key == null) return null;
     ColorValue color = myColorsMap.get(key);
     if (color != null) {

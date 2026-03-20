@@ -105,23 +105,20 @@ public class CloseTaskDialog extends DialogWrapper {
         return myPanel;
     }
 
-    @Nullable
     @Override
     @RequiredUIAccess
-    public JComponent getPreferredFocusedComponent() {
+    public @Nullable JComponent getPreferredFocusedComponent() {
         return myStateCombo.isVisible() && myUpdateState.isSelected() ? myStateCombo.getComboBox() : null;
     }
 
-    @Nullable
-    CustomTaskState getCloseIssueState() {
+    @Nullable CustomTaskState getCloseIssueState() {
         return myUpdateState.isSelected() ? myStateCombo.getSelectedState() : null;
     }
 
     private void createUIComponents() {
         myStateCombo = new TaskStateCombo(myProject, myTask) {
-            @Nullable
             @Override
-            protected CustomTaskState getPreferredState(
+            protected @Nullable CustomTaskState getPreferredState(
                 TaskRepository repository,
                 Collection<CustomTaskState> available
             ) {

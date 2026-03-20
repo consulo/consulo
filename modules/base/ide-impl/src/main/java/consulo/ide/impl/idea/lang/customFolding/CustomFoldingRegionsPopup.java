@@ -93,9 +93,8 @@ public class CustomFoldingRegionsPopup {
             return myDescriptor;
         }
 
-        @Nullable
         @Override
-        public String toString() {
+        public @Nullable String toString() {
             return myDescriptor.getPlaceholderText();
         }
     }

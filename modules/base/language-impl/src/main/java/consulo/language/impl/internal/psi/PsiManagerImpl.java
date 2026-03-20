@@ -88,9 +88,8 @@ public class PsiManagerImpl extends PsiManagerEx implements Disposable {
     }
 
     @RequiredReadAction
-    @Nullable
     @Override
-    public PsiFile findCachedFile(VirtualFile file) {
+    public @Nullable PsiFile findCachedFile(VirtualFile file) {
         return getFileManager().getCachedPsiFile(file);
     }
 

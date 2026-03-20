@@ -172,9 +172,8 @@ public abstract class LineStatusMarkerPopup {
         }
     }
 
-    @Nullable
     @RequiredUIAccess
-    private List<DiffFragment> computeWordDiff() {
+    private @Nullable List<DiffFragment> computeWordDiff() {
         if (!isShowInnerDifferences()) {
             return null;
         }

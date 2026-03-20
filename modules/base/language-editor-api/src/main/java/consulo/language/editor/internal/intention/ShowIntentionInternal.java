@@ -40,8 +40,7 @@ public interface ShowIntentionInternal {
 
     boolean markActionInvoked(Project project, Editor editor, IntentionAction action);
 
-    @Nullable
-    Pair<PsiFile, Editor> chooseBetweenHostAndInjected(
+    @Nullable Pair<PsiFile, Editor> chooseBetweenHostAndInjected(
         PsiFile hostFile,
         Editor hostEditor,
         @Nullable PsiFile injectedFile,

@@ -153,21 +153,18 @@ public class StructureViewComposite implements StructureView {
         return EMPTY_ARRAY;
       }
 
-      @Nullable
       @Override
-      public String getPresentableText() {
+      public @Nullable String getPresentableText() {
         return null;
       }
 
-      @Nullable
       @Override
-      public String getLocationString() {
+      public @Nullable String getLocationString() {
         return null;
       }
 
-      @Nullable
       @Override
-      public Image getIcon() {
+      public @Nullable Image getIcon() {
         return null;
       }
 

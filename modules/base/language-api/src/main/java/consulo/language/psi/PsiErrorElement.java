@@ -30,10 +30,9 @@ public interface PsiErrorElement extends PsiElement {
    *
    * @return the error description.
    */
-  @Nullable
   @Deprecated
   @DeprecationInfo("Use #getErrorDescriptionValue()")
-  default String getErrorDescription() {
+  default @Nullable String getErrorDescription() {
     return getErrorDescriptionValue().getNullIfEmpty();
   }
 

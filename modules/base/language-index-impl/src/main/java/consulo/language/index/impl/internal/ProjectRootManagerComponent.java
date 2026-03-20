@@ -180,9 +180,8 @@ public class ProjectRootManagerComponent extends ProjectRootManagerImpl implemen
         }
     }
 
-    @Nullable
     @RequiredReadAction
-    private Couple<Set<String>> getAllRoots(boolean includeSourceRoots) {
+    private @Nullable Couple<Set<String>> getAllRoots(boolean includeSourceRoots) {
         if (myProject.isDefault()) {
             return null;
         }

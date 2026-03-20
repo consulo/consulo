@@ -125,11 +125,10 @@ public class LineMarkerActionWrapper extends ActionGroup implements PriorityActi
             myDelegate = delegate;
         }
 
-        @Nullable
         @Override
         @RequiredReadAction
         @SuppressWarnings("unchecked")
-        public synchronized <T> T getData(Key<T> dataId) {
+        public synchronized <T> @Nullable T getData(Key<T> dataId) {
             if (Location.DATA_KEY == dataId) {
                 return myElement.isValid() ? (T) new PsiLocation<>(myElement) : null;
             }

@@ -46,9 +46,8 @@ public final class QualifiedNameProviderUtil {
             : DumbService.getInstance(element.getProject()).computeWithAlternativeResolveEnabled(() -> getQualifiedName(element));
     }
 
-    @Nullable
     @RequiredReadAction
-    public static String elementToFqn(@Nullable PsiElement element, @Nullable Editor editor) {
+    public static @Nullable String elementToFqn(@Nullable PsiElement element, @Nullable Editor editor) {
         String result = getQualifiedNameDumbAware(element);
         if (result != null) {
             return result;

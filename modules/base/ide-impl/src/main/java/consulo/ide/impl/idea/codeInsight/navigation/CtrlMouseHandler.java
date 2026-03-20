@@ -258,15 +258,13 @@ public final class CtrlMouseHandler {
         return BrowseMode.None;
     }
 
-    @Nullable
     @TestOnly
-    public static String getInfo(PsiElement element, PsiElement atPointer) {
+    public static @Nullable String getInfo(PsiElement element, PsiElement atPointer) {
         return generateInfo(element, atPointer, true).text;
     }
 
-    @Nullable
     @TestOnly
-    public static String getInfo(Editor editor, BrowseMode browseMode) {
+    public static @Nullable String getInfo(Editor editor, BrowseMode browseMode) {
         Project project = editor.getProject();
         if (project == null) {
             return null;
@@ -459,9 +457,8 @@ public final class CtrlMouseHandler {
         return getInfoAt(myProject, editor, file, offset, browseMode);
     }
 
-    @Nullable
     @RequiredReadAction
-    public static Info getInfoAt(Project project, Editor editor, PsiFile file, int offset, BrowseMode browseMode) {
+    public static @Nullable Info getInfoAt(Project project, Editor editor, PsiFile file, int offset, BrowseMode browseMode) {
         PsiElement targetElement = null;
 
         if (browseMode == BrowseMode.TypeDeclaration) {

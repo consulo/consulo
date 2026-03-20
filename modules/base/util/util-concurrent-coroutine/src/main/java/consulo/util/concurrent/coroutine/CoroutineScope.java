@@ -510,17 +510,15 @@ public class CoroutineScope extends CoroutineEnvironment {
             return terminated;
         }
 
-        @Nullable
         @Override
-        public T get() {
+        public @Nullable T get() {
             scope.await();
 
             return getImpl();
         }
 
-        @Nullable
         @Override
-        public T get(long timeout, TimeUnit unit) {
+        public @Nullable T get(long timeout, TimeUnit unit) {
             scope.await(timeout, unit);
 
             return getImpl();

@@ -35,9 +35,8 @@ public class ReplaceUnderscoresToCamelCaseMacro extends MacroBase {
     super("underscoresToCamelCase", CodeInsightBundle.message("macro.undescoresToCamelCase.string"));
   }
 
-  @Nullable
   @Override
-  protected Result calculateResult(Expression[] params, ExpressionContext context, boolean quick) {
+  protected @Nullable Result calculateResult(Expression[] params, ExpressionContext context, boolean quick) {
     String text = getTextResult(params, context, true);
     if (text != null) {
       List<String> strings = StringUtil.split(text, "_");

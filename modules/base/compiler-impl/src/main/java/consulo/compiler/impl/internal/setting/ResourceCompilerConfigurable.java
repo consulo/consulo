@@ -68,15 +68,13 @@ public class ResourceCompilerConfigurable implements ProjectConfigurable, Config
     return "project.propCompiler.resourceCompiler";
   }
 
-  @Nullable
   @Override
-  public String getParentId() {
+  public @Nullable String getParentId() {
     return StandardConfigurableIds.COMPILER_GROUP;
   }
 
-  @Nullable
   @Override
-  public JComponent createComponent() {
+  public @Nullable JComponent createComponent() {
     JBList list = new JBList(myModel);
     ToolbarDecorator decorator = ToolbarDecorator.createDecorator(list);
     decorator.disableUpDownActions();
@@ -123,9 +121,8 @@ public class ResourceCompilerConfigurable implements ProjectConfigurable, Config
         return true;
       }
 
-      @Nullable
       @Override
-      public String getErrorText(String inputString) {
+      public @Nullable String getErrorText(String inputString) {
         try {
           ResourceCompilerConfiguration.convertToRegexp(inputString);
           return null;

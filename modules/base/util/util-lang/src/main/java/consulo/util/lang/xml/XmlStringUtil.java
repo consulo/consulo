@@ -251,27 +251,24 @@ public class XmlStringUtil {
     @Contract(value = "null -> null; !null -> !null", pure = true)
     @Deprecated
     @DeprecationInfo("Use #escapeText or #escapeAttr")
-    @Nullable
     @SuppressWarnings("deprecation")
-    public static String escapeString(@Nullable String str) {
+    public static @Nullable String escapeString(@Nullable String str) {
         return escapeString(str, false);
     }
 
     @Contract(value = "null,_ -> null; !null,_ -> !null", pure = true)
     @Deprecated
     @DeprecationInfo("Use #escapeText or #escapeAttr")
-    @Nullable
     @SuppressWarnings("deprecation")
-    public static String escapeString(@Nullable String str, boolean escapeWhiteSpace) {
+    public static @Nullable String escapeString(@Nullable String str, boolean escapeWhiteSpace) {
         return escapeString(str, escapeWhiteSpace, true);
     }
 
     @Contract(value = "null,_,_ -> null; !null,_,_ -> !null", pure = true)
     @Deprecated
     @DeprecationInfo("Use #escapeText or #escapeAttr")
-    @Nullable
     @SuppressWarnings("deprecation")
-    public static String escapeString(@Nullable String str, boolean escapeWhiteSpace, boolean convertNoBreakSpace) {
+    public static @Nullable String escapeString(@Nullable String str, boolean escapeWhiteSpace, boolean convertNoBreakSpace) {
         if (str == null) {
             return null;
         }

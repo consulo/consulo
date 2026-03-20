@@ -103,15 +103,13 @@ public class TextEditorImpl extends UserDataHolderBase implements RealTextEditor
         return myComponent.getComponentContainer().getComponent();
     }
 
-    @Nullable
     @Override
-    public Component getUIComponent() {
+    public @Nullable Component getUIComponent() {
         return myComponent.getComponentContainer().getUIComponent();
     }
 
-    @Nullable
     @Override
-    public Component getPreferredFocusedUIComponent() {
+    public @Nullable Component getPreferredFocusedUIComponent() {
         return getUIComponent();
     }
 
@@ -218,9 +216,8 @@ public class TextEditorImpl extends UserDataHolderBase implements RealTextEditor
         return null;
     }
 
-    @Nullable
     @Override
-    public VirtualFile getFile() {
+    public @Nullable VirtualFile getFile() {
         return FileDocumentManager.getInstance().getFile(myComponent.getEditor().getDocument());
     }
 

@@ -22,14 +22,12 @@ import consulo.virtualFileSystem.status.FileStatus;
 import org.jspecify.annotations.Nullable;
 
 public interface UsageGroup extends Comparable<UsageGroup>, Navigatable {
-    @Nullable
-    Image getIcon();
+    @Nullable Image getIcon();
 
     
     String getText(@Nullable UsageView view);
 
-    @Nullable
-    FileStatus getFileStatus();
+    @Nullable FileStatus getFileStatus();
 
     boolean isValid();
 

@@ -181,9 +181,8 @@ public class NanoXmlUtil {
       myParameterEntityResolver = resolver;
     }
 
-    @Nullable
     @Override
-    public IXMLEntityResolver getParameterEntityResolver() {
+    public @Nullable IXMLEntityResolver getParameterEntityResolver() {
       return myParameterEntityResolver;
     }
 
@@ -240,9 +239,8 @@ public class NanoXmlUtil {
     public void addExternalEntity(String name, String publicID, String systemID) {
     }
 
-    @Nullable
     @Override
-    public Reader getEntity(IXMLReader xmlReader, String name) {
+    public @Nullable Reader getEntity(IXMLReader xmlReader, String name) {
       return new StringReader("");
     }
 
@@ -329,9 +327,8 @@ public class NanoXmlUtil {
       return myRootTagName;
     }
 
-    @Nullable
     @Override
-    public String getResult() {
+    public @Nullable String getResult() {
       return myRootTagName;
     }
   }

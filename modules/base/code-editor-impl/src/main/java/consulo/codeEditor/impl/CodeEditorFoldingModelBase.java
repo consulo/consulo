@@ -273,9 +273,8 @@ public class CodeEditorFoldingModelBase extends InlayModel.SimpleAdapter impleme
         return myFoldTree.fetchOutermost(offset);
     }
 
-    @Nullable
     @Override
-    public FoldRegion getFoldRegion(int startOffset, int endOffset) {
+    public @Nullable FoldRegion getFoldRegion(int startOffset, int endOffset) {
         assertReadAccess();
         return myFoldTree.getRegionAt(startOffset, endOffset);
     }
@@ -612,9 +611,8 @@ public class CodeEditorFoldingModelBase extends InlayModel.SimpleAdapter impleme
         }
     }
 
-    @Nullable
     @Override
-    public FoldRegion createFoldRegion(int startOffset, int endOffset, String placeholder, @Nullable FoldingGroup group, boolean neverExpands) {
+    public @Nullable FoldRegion createFoldRegion(int startOffset, int endOffset, String placeholder, @Nullable FoldingGroup group, boolean neverExpands) {
         assertIsDispatchThreadForEditor();
         if (!myIsBatchFoldingProcessing) {
             LOG.error("Fold regions must be added or removed inside batchFoldProcessing() only.");

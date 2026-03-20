@@ -33,6 +33,5 @@ public interface TreeNode<T> {
     /**
      * @return if rootValue is null and treeNode wrap it
      */
-    @Nullable
-    T getValue();
+    @Nullable T getValue();
 }

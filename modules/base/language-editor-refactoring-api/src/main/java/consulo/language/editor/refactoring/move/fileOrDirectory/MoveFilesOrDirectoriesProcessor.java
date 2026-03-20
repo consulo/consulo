@@ -238,23 +238,20 @@ public class MoveFilesOrDirectoriesProcessor extends BaseRefactoringProcessor {
         }
     }
 
-    @Nullable
     @Override
-    protected String getRefactoringId() {
+    protected @Nullable String getRefactoringId() {
         return "refactoring.move";
     }
 
-    @Nullable
     @Override
-    protected RefactoringEventData getBeforeData() {
+    protected @Nullable RefactoringEventData getBeforeData() {
         RefactoringEventData data = new RefactoringEventData();
         data.addElements(myElementsToMove);
         return data;
     }
 
-    @Nullable
     @Override
-    protected RefactoringEventData getAfterData(UsageInfo[] usages) {
+    protected @Nullable RefactoringEventData getAfterData(UsageInfo[] usages) {
         RefactoringEventData data = new RefactoringEventData();
         data.addElement(myNewParent);
         return data;

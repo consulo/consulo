@@ -28,9 +28,7 @@ public interface ModuleDeploymentSource extends DeploymentSource {
   
   NamedPointer<Module> getModulePointer();
 
-  @Nullable
-  Module getModule();
+  @Nullable Module getModule();
 
-  @Nullable
-  VirtualFile getContentRoot();
+  @Nullable VirtualFile getContentRoot();
 }

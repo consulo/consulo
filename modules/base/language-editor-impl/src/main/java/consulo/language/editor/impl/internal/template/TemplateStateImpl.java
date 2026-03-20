@@ -307,9 +307,8 @@ public class TemplateStateImpl implements TemplateState {
         return new TextRange(mySegments.getSegmentStart(number), mySegments.getSegmentEnd(number));
     }
 
-    @Nullable
     @Override
-    public TextRange getVariableRange(String variableName) {
+    public @Nullable TextRange getVariableRange(String variableName) {
         int segment = myTemplate.getVariableSegmentNumber(variableName);
         if (segment < 0) {
             return null;
@@ -1080,10 +1079,9 @@ public class TemplateStateImpl implements TemplateState {
                 return (T)myProperties.get(key);
             }
 
-            @Nullable
             @Override
             @RequiredReadAction
-            public PsiElement getPsiElementAtStartOffset() {
+            public @Nullable PsiElement getPsiElementAtStartOffset() {
                 Project project = getProject();
                 int templateStartOffset = getTemplateStartOffset();
                 int offset = templateStartOffset > 0 ? getTemplateStartOffset() - 1 : getTemplateStartOffset();

@@ -166,9 +166,8 @@ public class TodoConfiguration implements PersistentStateComponent<Element> {
         setTodoFilters(filtersList.toArray(new TodoFilter[filtersList.size()]));
     }
 
-    @Nullable
     @Override
-    public Element getState() {
+    public @Nullable Element getState() {
         Element stateElement = new Element("state");
         TodoPattern[] todoPatterns = myTodoPatterns;
         for (TodoPattern pattern : todoPatterns) {

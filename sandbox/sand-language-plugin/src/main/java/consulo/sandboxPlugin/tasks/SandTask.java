@@ -54,9 +54,8 @@ public class SandTask extends Task {
         return mySummary;
     }
 
-    @Nullable
     @Override
-    public String getDescription() {
+    public @Nullable String getDescription() {
         return null;
     }
 
@@ -78,15 +77,13 @@ public class SandTask extends Task {
         return TaskType.BUG;
     }
 
-    @Nullable
     @Override
-    public Date getUpdated() {
+    public @Nullable Date getUpdated() {
         return null;
     }
 
-    @Nullable
     @Override
-    public Date getCreated() {
+    public @Nullable Date getCreated() {
         return null;
     }
 
@@ -100,9 +97,8 @@ public class SandTask extends Task {
         return true;
     }
 
-    @Nullable
     @Override
-    public String getIssueUrl() {
+    public @Nullable String getIssueUrl() {
         return null;
     }
 }

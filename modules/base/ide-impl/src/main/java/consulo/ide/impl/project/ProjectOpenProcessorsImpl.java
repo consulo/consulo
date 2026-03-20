@@ -49,9 +49,8 @@ public class ProjectOpenProcessorsImpl implements ProjectOpenProcessors {
         return myDefaultProcessors.get();
     }
 
-    @Nullable
     @Override
-    public ProjectOpenProcessor findProcessor(File file) {
+    public @Nullable ProjectOpenProcessor findProcessor(File file) {
         for (ProjectOpenProcessor processor : getProcessors()) {
             if (processor.canOpenProject(file)) {
                 return processor;

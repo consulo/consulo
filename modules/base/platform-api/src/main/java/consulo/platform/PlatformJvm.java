@@ -35,8 +35,7 @@ public interface PlatformJvm {
   
   String name();
 
-  @Nullable
-  String getRuntimeProperty(String key);
+  @Nullable String getRuntimeProperty(String key);
 
   default @Nullable String getRuntimeProperty(String key, String defaultValue) {
     String runtimeProperty = getRuntimeProperty(key);

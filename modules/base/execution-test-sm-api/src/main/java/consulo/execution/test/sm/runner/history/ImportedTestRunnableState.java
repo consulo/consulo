@@ -44,9 +44,8 @@ public class ImportedTestRunnableState implements RunProfileState {
         myFile = file;
     }
 
-    @Nullable
     @Override
-    public ExecutionResult execute(Executor executor, ProgramRunner runner) throws ExecutionException {
+    public @Nullable ExecutionResult execute(Executor executor, ProgramRunner runner) throws ExecutionException {
         MyEmptyProcessHandler handler = new MyEmptyProcessHandler();
         SMTRunnerConsoleProperties properties = myRunProfile.getProperties();
         RunProfile configuration;
@@ -103,9 +102,8 @@ public class ImportedTestRunnableState implements RunProfileState {
             return false;
         }
 
-        @Nullable
         @Override
-        public OutputStream getProcessInput() {
+        public @Nullable OutputStream getProcessInput() {
             return null;
         }
     }

@@ -27,6 +27,5 @@ import org.jspecify.annotations.Nullable;
  */
 @ExtensionAPI(ComponentScope.PROJECT)
 public interface VcsConfigurableProvider {
-  @Nullable
-  Configurable getConfigurable(Project project);
+  @Nullable Configurable getConfigurable(Project project);
 }

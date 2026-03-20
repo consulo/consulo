@@ -42,9 +42,8 @@ public class FSRecordsProxyImpl implements FSRecordsProxy {
         return FSRecords.writeAttribute(fileId, att);
     }
 
-    @Nullable
     @Override
-    public DataInputStream readAttributeWithLock(int fileId, FileAttribute att) {
+    public @Nullable DataInputStream readAttributeWithLock(int fileId, FileAttribute att) {
         return FSRecords.readAttributeWithLock(fileId, att);
     }
 }

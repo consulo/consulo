@@ -83,9 +83,8 @@ public class ProjectFileIndexFacade extends FileIndexFacade {
     return myFileIndex.isUnderIgnored(file);
   }
 
-  @Nullable
   @Override
-  public Module getModuleForFile(VirtualFile file) {
+  public @Nullable Module getModuleForFile(VirtualFile file) {
     return myFileIndex.getModuleForFile(file);
   }
 

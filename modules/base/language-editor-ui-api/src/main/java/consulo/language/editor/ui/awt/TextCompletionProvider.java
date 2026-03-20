@@ -28,11 +28,9 @@ import org.jspecify.annotations.Nullable;
  * Use {@link TextFieldWithCompletion} to create a text field component with completion.
  */
 public interface TextCompletionProvider {
-  @Nullable
-  String getAdvertisement();
+  @Nullable String getAdvertisement();
 
-  @Nullable
-  String getPrefix(String text, int offset);
+  @Nullable String getPrefix(String text, int offset);
 
  
   CompletionResultSet applyPrefixMatcher(CompletionResultSet result, String prefix);

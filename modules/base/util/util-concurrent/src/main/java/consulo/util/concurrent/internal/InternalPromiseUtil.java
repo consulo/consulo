@@ -156,9 +156,8 @@ public class InternalPromiseUtil {
       return value != null && value.isCancelled();
     }
 
-    @Nullable
     @Override
-    public final T get() throws ExecutionException {
+    public final @Nullable T get() throws ExecutionException {
       try {
         return blockingGet(-1);
       }
@@ -167,9 +166,8 @@ public class InternalPromiseUtil {
       }
     }
 
-    @Nullable
     @Override
-    public final T get(long timeout, TimeUnit unit) throws ExecutionException, TimeoutException {
+    public final @Nullable T get(long timeout, TimeUnit unit) throws ExecutionException, TimeoutException {
       return blockingGet((int)timeout, unit);
     }
 

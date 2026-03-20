@@ -64,15 +64,13 @@ public interface XBreakpointManager {
     
     <B extends XBreakpoint<?>> Collection<? extends B> getBreakpoints(Class<? extends XBreakpointType<B, ?>> typeClass);
 
-    @Nullable
-    <P extends XBreakpointProperties> XLineBreakpoint<P> findBreakpointAtLine(XLineBreakpointType<P> type,
+    <P extends XBreakpointProperties> @Nullable XLineBreakpoint<P> findBreakpointAtLine(XLineBreakpointType<P> type,
                                                                               VirtualFile file,
                                                                               int line);
 
     boolean isDefaultBreakpoint(XBreakpoint<?> breakpoint);
 
-    @Nullable
-    <B extends XBreakpoint<?>> B getDefaultBreakpoint(XBreakpointType<B, ?> type);
+    <B extends XBreakpoint<?>> @Nullable B getDefaultBreakpoint(XBreakpointType<B, ?> type);
 
     <B extends XBreakpoint<P>, P extends XBreakpointProperties> void addBreakpointListener(XBreakpointType<B, P> type,
                                                                                            XBreakpointListener<B> listener);

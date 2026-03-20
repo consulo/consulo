@@ -48,10 +48,9 @@ import java.util.List;
  */
 @ExtensionImpl(id = "defaultProvider", order = "last")
 public class DaemonTooltipActionProvider implements TooltipActionProvider {
-    @Nullable
     @Override
     @RequiredReadAction
-    public TooltipAction getTooltipAction(HighlightInfo info, Editor editor, PsiFile psiFile) {
+    public @Nullable TooltipAction getTooltipAction(HighlightInfo info, Editor editor, PsiFile psiFile) {
         IntentionAction intention = extractMostPriorityFixFromHighlightInfo((HighlightInfoImpl) info, editor, psiFile);
 
         if (intention == null) {

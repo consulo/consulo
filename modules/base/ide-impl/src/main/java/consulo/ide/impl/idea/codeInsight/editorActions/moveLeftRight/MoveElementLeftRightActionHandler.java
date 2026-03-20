@@ -68,9 +68,8 @@ public class MoveElementLeftRightActionHandler extends EditorWriteActionHandler 
     return elementList != null;
   }
 
-  @Nullable
   @RequiredUIAccess
-  private static PsiElement[] getElementList(PsiFile file, int rangeStart, int rangeEnd) {
+  private static @Nullable PsiElement[] getElementList(PsiFile file, int rangeStart, int rangeEnd) {
     PsiElement startElement = file.findElementAt(rangeStart);
     if (startElement == null) return null;
     PsiElement endElement = rangeEnd > rangeStart ? file.findElementAt(rangeEnd - 1) : startElement;
@@ -143,9 +142,8 @@ public class MoveElementLeftRightActionHandler extends EditorWriteActionHandler 
     caret.setSelection(selectionStart + caretShift, selectionEnd + caretShift);
   }
 
-  @Nullable
   @RequiredWriteAction
-  private Range<Integer> findRangeOfElementsToMove(PsiElement[] elements, int startOffset, int endOffset) {
+  private @Nullable Range<Integer> findRangeOfElementsToMove(PsiElement[] elements, int startOffset, int endOffset) {
     int startIndex = elements.length;
     int endIndex = -1;
     if (startOffset == endOffset) {

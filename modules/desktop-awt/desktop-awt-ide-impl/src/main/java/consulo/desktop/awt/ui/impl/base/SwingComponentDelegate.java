@@ -167,9 +167,8 @@ public abstract class SwingComponentDelegate<T extends java.awt.Component> imple
         toAWTComponent().setEnabled(value);
     }
 
-    @Nullable
     @Override
-    public Component getParent() {
+    public @Nullable Component getParent() {
         return TargetAWT.from(toAWTComponent().getParent());
     }
 
@@ -195,9 +194,8 @@ public abstract class SwingComponentDelegate<T extends java.awt.Component> imple
         dataObject().putUserData(key, value);
     }
 
-    @Nullable
     @Override
-    public <T> T getUserData(Key<T> key) {
+    public <T> @Nullable T getUserData(Key<T> key) {
         return dataObject().getUserData(key);
     }
 
@@ -251,9 +249,8 @@ public abstract class SwingComponentDelegate<T extends java.awt.Component> imple
         toAWTComponent().setCursor(TargetAWT.to(cursor));
     }
 
-    @Nullable
     @Override
-    public Cursor getCursor() {
+    public @Nullable Cursor getCursor() {
         return TargetAWT.from(toAWTComponent().getCursor());
     }
 

@@ -37,9 +37,8 @@ public class DesktopAWTPasswordSafePromptDialogImpl implements PasswordSafePromp
     myProject = project;
   }
 
-  @Nullable
   @Override
-  public String askPassword(String title, String message, Class<?> requestor, String key, boolean resetPassword, String error, String promptLabel, String checkboxLabel) {
+  public @Nullable String askPassword(String title, String message, Class<?> requestor, String key, boolean resetPassword, String error, String promptLabel, String checkboxLabel) {
     return PasswordSafePromptDialogImpl.askPassword(myProject, title, message, requestor, key, resetPassword, error, promptLabel, checkboxLabel);
   }
 }

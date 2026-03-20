@@ -119,9 +119,8 @@ public class IndexingStamp {
             file.getParentFile().mkdirs();
         }
         try (final DataOutputStream os = FileUtil.doIOOperation(new FileUtil.RepeatableIOOperation<DataOutputStream, FileNotFoundException>() {
-            @Nullable
             @Override
-            public DataOutputStream execute(boolean lastAttempt) throws FileNotFoundException {
+            public @Nullable DataOutputStream execute(boolean lastAttempt) throws FileNotFoundException {
                 try {
                     return new DataOutputStream(new BufferedOutputStream(new FileOutputStream(file)));
                 }

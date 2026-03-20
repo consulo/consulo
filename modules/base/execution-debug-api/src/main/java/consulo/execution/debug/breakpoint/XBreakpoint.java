@@ -42,11 +42,9 @@ public interface XBreakpoint<P extends XBreakpointProperties> extends UserDataHo
 
     P getProperties();
 
-    @Nullable
-    XSourcePosition getSourcePosition();
+    @Nullable XSourcePosition getSourcePosition();
 
-    @Nullable
-    Navigatable getNavigatable();
+    @Nullable Navigatable getNavigatable();
 
     
     SuspendPolicy getSuspendPolicy();
@@ -61,15 +59,13 @@ public interface XBreakpoint<P extends XBreakpointProperties> extends UserDataHo
      * @deprecated use {@link #getLogExpressionObject()} instead
      */
     @Deprecated
-    @Nullable
-    String getLogExpression();
+    @Nullable String getLogExpression();
 
     void setLogExpression(@Nullable String expression);
 
     void setLogExpressionEnabled(boolean logExpressionEnabled);
 
-    @Nullable
-    XExpression getLogExpressionObject();
+    @Nullable XExpression getLogExpressionObject();
 
     void setLogExpressionObject(@Nullable XExpression expression);
 
@@ -77,13 +73,11 @@ public interface XBreakpoint<P extends XBreakpointProperties> extends UserDataHo
      * @deprecated use {@link #getConditionExpression()} instead
      */
     @Deprecated
-    @Nullable
-    String getCondition();
+    @Nullable String getCondition();
 
     void setCondition(@Nullable String condition);
 
-    @Nullable
-    XExpression getConditionExpression();
+    @Nullable XExpression getConditionExpression();
 
     void setConditionExpression(@Nullable XExpression condition);
 

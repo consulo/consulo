@@ -33,9 +33,8 @@ public class ModuleDataValidator implements DataValidator<Module> {
     return Module.KEY;
   }
 
-  @Nullable
   @Override
-  public Module findInvalid(Key<Module> key, Module data, Object dataSource) {
+  public @Nullable Module findInvalid(Key<Module> key, Module data, Object dataSource) {
     return data.isDisposed() ? data : null;
   }
 }

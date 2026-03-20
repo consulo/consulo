@@ -60,9 +60,8 @@ public class IntentionSettingsConfigurable implements ApplicationConfigurable, S
     return CodeInsightLocalize.intentionSettings();
   }
 
-  @Nullable
   @Override
-  public String getParentId() {
+  public @Nullable String getParentId() {
     return StandardConfigurableIds.EDITOR_GROUP;
   }
 

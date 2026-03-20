@@ -53,8 +53,7 @@ public interface Button extends Component, HasComponentStyle<ButtonStyle> {
     @RequiredUIAccess
     void setText(LocalizeValue text);
 
-    @Nullable
-    Image getIcon();
+    @Nullable Image getIcon();
 
     @RequiredUIAccess
     void setIcon(@Nullable Image image);

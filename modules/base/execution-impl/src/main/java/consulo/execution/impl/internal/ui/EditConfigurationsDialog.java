@@ -72,9 +72,8 @@ public class EditConfigurationsDialog extends WholeWestSingleConfigurableEditor 
         return new Size2D(750, 500);
     }
 
-    @Nullable
     @Override
-    public Executor getExecutor() {
+    public @Nullable Executor getExecutor() {
         return myExecutor;
     }
 

@@ -13,8 +13,7 @@ interface WordRequestInfo {
   
   SearchScope getSearchScope();
 
-  @Nullable
-  String getContainerName();
+  @Nullable String getContainerName();
 
   short getSearchContext();
 

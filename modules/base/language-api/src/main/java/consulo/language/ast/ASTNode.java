@@ -224,8 +224,7 @@ public interface ASTNode extends UserDataHolder {
    * @param offset the relative offset for which the child node is requested.
    * @return the child node, or null if none is found.
    */
-  @Nullable
-  ASTNode findLeafElementAt(int offset);
+  @Nullable ASTNode findLeafElementAt(int offset);
 
   /**
    * Returns a copyable user data object attached to this node.
@@ -234,8 +233,7 @@ public interface ASTNode extends UserDataHolder {
    * @return the user data object, or null if no such object is found in the current node.
    * @see #putCopyableUserData(Key, Object)
    */
-  @Nullable
-  <T> T getCopyableUserData(Key<T> key);
+  <T> @Nullable T getCopyableUserData(Key<T> key);
 
   /**
    * Attaches a copyable user data object to this node. Copyable user data objects are copied
@@ -253,8 +251,7 @@ public interface ASTNode extends UserDataHolder {
    * @param type the type of the node to return.
    * @return the found node, or null if none was found.
    */
-  @Nullable
-  ASTNode findChildByType(IElementType type);
+  @Nullable ASTNode findChildByType(IElementType type);
 
   /**
    * Returns the first child after anchor of the specified node which has the specified type.
@@ -263,8 +260,7 @@ public interface ASTNode extends UserDataHolder {
    * @param anchor to start search from
    * @return the found node, or null if none was found.
    */
-  @Nullable
-  ASTNode findChildByType(IElementType type, @Nullable ASTNode anchor);
+  @Nullable ASTNode findChildByType(IElementType type, @Nullable ASTNode anchor);
 
   /**
    * Returns the first child of the specified node which has type from specified set.
@@ -272,8 +268,7 @@ public interface ASTNode extends UserDataHolder {
    * @param typesSet the token set used to filter the returned children.
    * @return the found node, or null if none was found.
    */
-  @Nullable
-  ASTNode findChildByType(TokenSet typesSet);
+  @Nullable ASTNode findChildByType(TokenSet typesSet);
 
   /**
    * Returns the first child after anchor of the specified node which has type from specified set.
@@ -282,8 +277,7 @@ public interface ASTNode extends UserDataHolder {
    * @param anchor   to start search from
    * @return the found node, or null if none was found.
    */
-  @Nullable
-  ASTNode findChildByType(TokenSet typesSet, @Nullable ASTNode anchor);
+  @Nullable ASTNode findChildByType(TokenSet typesSet, @Nullable ASTNode anchor);
 
   /**
    * Returns the PSI element for this node.

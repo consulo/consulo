@@ -13,8 +13,7 @@ public interface Instruction {
     /**
      * @return related psi elements. Can be null for fake instructions e.g. entry and exit points
      */
-    @Nullable
-    PsiElement getElement();
+    @Nullable PsiElement getElement();
 
     /**
      * Outgoing edges

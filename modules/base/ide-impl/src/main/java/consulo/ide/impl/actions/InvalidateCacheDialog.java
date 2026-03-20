@@ -75,10 +75,9 @@ public class InvalidateCacheDialog extends DialogWrapper {
         init();
     }
 
-    @Nullable
     @Override
     @RequiredUIAccess
-    protected JComponent createCenterPanel() {
+    protected @Nullable JComponent createCenterPanel() {
         VerticalLayout root = VerticalLayout.create();
         root.add(HorizontalLayout.create().add(Label.create(ApplicationLocalize.dialogMessageCachesWillBeInvalidated())));
 
@@ -129,9 +128,8 @@ public class InvalidateCacheDialog extends DialogWrapper {
         }
     }
 
-    @Nullable
     @Override
-    protected String getHelpId() {
+    protected @Nullable String getHelpId() {
         return "platform/dialogs/invalidate_caches/";
     }
 }

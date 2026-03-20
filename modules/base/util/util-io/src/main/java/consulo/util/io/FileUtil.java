@@ -956,8 +956,7 @@ public class FileUtil {
     }
 
     public interface RepeatableIOOperation<T, E extends Throwable> {
-        @Nullable
-        T execute(boolean lastAttempt) throws E;
+        @Nullable T execute(boolean lastAttempt) throws E;
     }
 
     public static @Nullable <T, E extends Throwable> T doIOOperation(RepeatableIOOperation<T, E> ioTask) throws E {

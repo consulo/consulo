@@ -84,9 +84,8 @@ public class DesktopComboBoxImpl<E> extends SwingComponentDelegate<DesktopComboB
     }
 
     @SuppressWarnings("unchecked")
-    @Nullable
     @Override
-    public E getValue() {
+    public @Nullable E getValue() {
         return (E) toAWTComponent().getSelectedItem();
     }
 }

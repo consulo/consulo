@@ -52,8 +52,7 @@ public interface FileViewProvider extends Cloneable, UserDataHolder {
    * @see PsiBinaryFile
    * @see #isEventSystemEnabled()
    */
-  @Nullable
-  Document getDocument();
+  @Nullable Document getDocument();
 
   /**
    * @return the contents of this file view provider, which are parsed into PSI trees. May or may not be equal
@@ -177,8 +176,7 @@ public interface FileViewProvider extends Cloneable, UserDataHolder {
    * @see #findElementAt(int, Language)
    * @see PsiFile#findElementAt(int)
    */
-  @Nullable
-  PsiElement findElementAt(int offset);
+  @Nullable PsiElement findElementAt(int offset);
 
   /**
    * @param offset an offset in the file
@@ -187,8 +185,7 @@ public interface FileViewProvider extends Cloneable, UserDataHolder {
    * @see PsiFile#findReferenceAt(int)
    * @see #findReferenceAt(int, Language)
    */
-  @Nullable
-  PsiReference findReferenceAt(int offset);
+  @Nullable PsiReference findReferenceAt(int offset);
 
   /**
    * @param offset an offset in the file
@@ -196,8 +193,7 @@ public interface FileViewProvider extends Cloneable, UserDataHolder {
    * @see #getBaseLanguage()
    * @see #findElementAt(int)
    */
-  @Nullable
-  PsiElement findElementAt(int offset, Language language);
+  @Nullable PsiElement findElementAt(int offset, Language language);
 
   /**
    * @param offset an offset in the file
@@ -205,8 +201,7 @@ public interface FileViewProvider extends Cloneable, UserDataHolder {
    * @see #getBaseLanguage()
    * @see #findElementAt(int)
    */
-  @Nullable
-  PsiElement findElementAt(int offset, Class<? extends Language> lang);
+  @Nullable PsiElement findElementAt(int offset, Class<? extends Language> lang);
 
   /**
    * @param offsetInElement an offset in the file
@@ -215,8 +210,7 @@ public interface FileViewProvider extends Cloneable, UserDataHolder {
    * @see PsiFile#findReferenceAt(int)
    * @see #findReferenceAt(int)
    */
-  @Nullable
-  PsiReference findReferenceAt(int offsetInElement, Language language);
+  @Nullable PsiReference findReferenceAt(int offsetInElement, Language language);
 
   /**
    * Creates a copy of this view provider linked with the give (typically light) file.

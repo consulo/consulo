@@ -97,9 +97,8 @@ public class ExternalServiceConfigurationImpl
         });
     }
 
-    @Nullable
     @Override
-    public Image getUserIcon() {
+    public @Nullable Image getUserIcon() {
         if (myUserIcon != null) {
             return myUserIcon;
         }
@@ -151,9 +150,8 @@ public class ExternalServiceConfigurationImpl
         }
     }
 
-    @Nullable
     @Override
-    public String getEmail() {
+    public @Nullable String getEmail() {
         return myState.email;
     }
 

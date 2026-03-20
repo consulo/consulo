@@ -983,9 +983,8 @@ public class SimpleColoredComponent extends JComponent implements Accessible, Co
             return 0;
         }
 
-        @Nullable
         @Override
-        public Accessible getAccessibleChild(int i) {
+        public @Nullable Accessible getAccessibleChild(int i) {
             return null;
         }
 

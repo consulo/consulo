@@ -123,10 +123,9 @@ public abstract class CacheChangeProcessor extends DiffRequestProcessor implemen
         );
     }
 
-    @Nullable
     @Contract("null, _ -> !null")
     @RequiredUIAccess
-    protected DiffRequest loadRequestFast(@Nullable Change change, boolean useCache) {
+    protected @Nullable DiffRequest loadRequestFast(@Nullable Change change, boolean useCache) {
         if (change == null) {
             return NoDiffRequest.INSTANCE;
         }

@@ -58,10 +58,9 @@ public class PluginsConfigurableImpl implements SearchableConfigurable,
         }
     }
 
-    @Nullable
     @Override
     @RequiredUIAccess
-    public JComponent createComponent(Disposable parentDisposable) {
+    public @Nullable JComponent createComponent(Disposable parentDisposable) {
         if (myPanel == null) {
             myPanel = new PluginsPanel();
             Disposer.register(parentDisposable, myPanel);
@@ -75,9 +74,8 @@ public class PluginsConfigurableImpl implements SearchableConfigurable,
         return ExternalServiceLocalize.titlePlugins();
     }
 
-    @Nullable
     @Override
-    public String getHelpTopic() {
+    public @Nullable String getHelpTopic() {
         String suffix = "";
         if (myPanel != null) {
             int selectedIndex = myPanel.getSelectedIndex();
@@ -125,9 +123,8 @@ public class PluginsConfigurableImpl implements SearchableConfigurable,
         myPanel = null;
     }
 
-    @Nullable
     @Override
-    public Runnable enableSearch(String option) {
+    public @Nullable Runnable enableSearch(String option) {
         return () -> {
             if (myPanel != null) {
                 myPanel.filter(option);

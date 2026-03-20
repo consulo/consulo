@@ -40,14 +40,11 @@ public interface SeverityRegistrar extends Comparator<HighlightSeverity> {
 
     int getSeveritiesCount();
 
-    @Nullable
-    HighlightSeverity getSeverityByIndex(int i);
+    @Nullable HighlightSeverity getSeverityByIndex(int i);
 
-    @Nullable
-    TextAttributes getTextAttributesBySeverity(HighlightSeverity severity);
+    @Nullable TextAttributes getTextAttributesBySeverity(HighlightSeverity severity);
 
-    @Nullable
-    HighlightSeverity getSeverity(String name);
+    @Nullable HighlightSeverity getSeverity(String name);
 
     boolean isSeverityValid(String severityName);
 

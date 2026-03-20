@@ -558,10 +558,9 @@ public class ReflectionUtil {
      * Please consider not using it.
      * These aren't the droids you're looking for!</b>
      */
-    @Nullable
     @Deprecated
     @DeprecationInfo("Use consulo.util.lang.reflect.ReflectionUtil")
-    public static Class findCallerClass(int framesToSkip) {
+    public static @Nullable Class findCallerClass(int framesToSkip) {
         StackWalker walker = StackWalker.getInstance(StackWalker.Option.RETAIN_CLASS_REFERENCE);
 
         StackWalker.StackFrame frame = walker.walk(it -> {

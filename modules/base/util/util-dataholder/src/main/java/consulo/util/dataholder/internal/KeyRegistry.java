@@ -53,9 +53,8 @@ public class KeyRegistry {
         return null;
     }
 
-    @Nullable
     @SuppressWarnings("unchecked")
-    public <T> Key<T> getKeyByIndex(int index) {
+    public <T> @Nullable Key<T> getKeyByIndex(int index) {
         return myAllKeys.get(index);
     }
 }

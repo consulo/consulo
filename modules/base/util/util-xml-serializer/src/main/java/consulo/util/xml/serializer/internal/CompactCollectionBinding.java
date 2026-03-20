@@ -37,9 +37,8 @@ class CompactCollectionBinding extends NonNullAccessorBinding {
     name = accessor.getName();
   }
 
-  @Nullable
   @Override
-  public Object serialize(Object o, @Nullable Object context, SerializationFilter filter) {
+  public @Nullable Object serialize(Object o, @Nullable Object context, SerializationFilter filter) {
     Element result = new Element(name);
     @SuppressWarnings("unchecked")
     List<String> list = (List<String>)o;
@@ -53,9 +52,8 @@ class CompactCollectionBinding extends NonNullAccessorBinding {
     return result;
   }
 
-  @Nullable
   @Override
-  public Object deserialize(@Nullable Object context, Element element) {
+  public @Nullable Object deserialize(@Nullable Object context, Element element) {
     @SuppressWarnings("unchecked")
     List<String> list = (List<String>) Objects.requireNonNull(context);
     list.clear();

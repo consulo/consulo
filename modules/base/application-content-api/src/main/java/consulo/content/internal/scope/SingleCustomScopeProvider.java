@@ -37,9 +37,8 @@ public abstract class SingleCustomScopeProvider implements CustomScopesProvider 
     consumer.accept(myScope);
   }
 
-  @Nullable
   @Override
-  public NamedScope getCustomScope(String name) {
+  public @Nullable NamedScope getCustomScope(String name) {
     if (Objects.equals(myScope.getScopeId(), name)) {
       return myScope;
     }

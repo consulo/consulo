@@ -71,9 +71,8 @@ public class MacTouchBarFacade implements TouchBarFacade {
         Touchbar.setButtonActions(component, buttons, principal, defaultButton,  extraActions);
     }
 
-    @Nullable
     @Override
-    public Disposable showWindowActions(Component contentPane) {
+    public @Nullable Disposable showWindowActions(Component contentPane) {
         return TouchbarSupport.showWindowActions(contentPane);
     }
 

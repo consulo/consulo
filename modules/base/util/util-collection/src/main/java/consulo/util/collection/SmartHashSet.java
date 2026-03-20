@@ -129,9 +129,8 @@ public final class SmartHashSet<T> extends HashSet<T> {
         }
       }
 
-      @Nullable
       @Override
-      protected T getElement() {
+      protected @Nullable T getElement() {
         return theElement;
       }
 

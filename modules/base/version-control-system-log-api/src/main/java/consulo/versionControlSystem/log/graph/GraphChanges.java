@@ -35,14 +35,11 @@ public interface GraphChanges<NodeId> {
   }
 
   interface Edge<NodeId> {
-    @Nullable
-    NodeId upNodeId();
+    @Nullable NodeId upNodeId();
 
-    @Nullable
-    NodeId downNodeId();
+    @Nullable NodeId downNodeId();
 
-    @Nullable
-    NodeId targetId();
+    @Nullable NodeId targetId();
 
     boolean removed();
   }
@@ -82,21 +79,18 @@ public interface GraphChanges<NodeId> {
       myRemoved = removed;
     }
 
-    @Nullable
     @Override
-    public NodeId upNodeId() {
+    public @Nullable NodeId upNodeId() {
       return myUpNodeId;
     }
 
-    @Nullable
     @Override
-    public NodeId downNodeId() {
+    public @Nullable NodeId downNodeId() {
       return myDownNodeId;
     }
 
-    @Nullable
     @Override
-    public NodeId targetId() {
+    public @Nullable NodeId targetId() {
       return myTargetId;
     }
 

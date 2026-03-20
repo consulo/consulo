@@ -40,9 +40,8 @@ public class WeakList<T> extends UnsafeWeakList<T> {
     super(array);
   }
 
-  @Nullable
   @Override
-  public T get(int index) {
+  public @Nullable T get(int index) {
     synchronized (myArray) {
       return super.get(index);
     }
@@ -76,9 +75,8 @@ public class WeakList<T> extends UnsafeWeakList<T> {
     }
   }
 
-  @Nullable
   @Override
-  public T set(int index, @Nullable T element) {
+  public @Nullable T set(int index, @Nullable T element) {
     synchronized (myArray) {
       return super.set(index, element);
     }
@@ -119,9 +117,8 @@ public class WeakList<T> extends UnsafeWeakList<T> {
     }
   }
 
-  @Nullable
   @Override
-  public T remove(int index) {
+  public @Nullable T remove(int index) {
     synchronized (myArray) {
       return super.remove(index);
     }

@@ -71,9 +71,8 @@ public class CompareFileWithEditorAction extends BaseShowDiffAction {
         return !file1.equals(file2) && hasContent(file1) && hasContent(file2);
     }
 
-    @Nullable
     @Override
-    protected DiffRequest getDiffRequest(AnActionEvent e) {
+    protected @Nullable DiffRequest getDiffRequest(AnActionEvent e) {
         Project project = e.getData(Project.KEY);
 
         VirtualFile selectedFile = getSelectedFile(e);

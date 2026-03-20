@@ -83,24 +83,21 @@ public abstract class ConcurrentIntKeyRefValueHashMap<V> implements ConcurrentIn
     return myMap.replace(key, createReference(key, oldValue, myQueue), createReference(key, newValue, myQueue));
   }
 
-  @Nullable
   @Override
-  public V put(int key, @Nullable V value) {
+  public @Nullable V put(int key, @Nullable V value) {
     processQueue();
     IntReference<V> ref = myMap.put(key, createReference(key, value, myQueue));
     return SoftReference.deref(ref);
   }
 
-  @Nullable
   @Override
-  public V get(int key) {
+  public @Nullable V get(int key) {
     IntReference<V> ref = myMap.get(key);
     return SoftReference.deref(ref);
   }
 
-  @Nullable
   @Override
-  public V remove(int key) {
+  public @Nullable V remove(int key) {
     processQueue();
     IntReference<V> ref = myMap.remove(key);
     return SoftReference.deref(ref);
@@ -166,9 +163,8 @@ public abstract class ConcurrentIntKeyRefValueHashMap<V> implements ConcurrentIn
         return nextVEntry != null;
       }
 
-      @Nullable
       @Override
-      public IntObjectEntry<V> next() {
+      public @Nullable IntObjectEntry<V> next() {
         if (!hasNext()) throw new NoSuchElementException();
         IntObjectEntry<V> result = nextVEntry;
         lastReturned = nextReferenceEntry;
@@ -241,9 +237,8 @@ public abstract class ConcurrentIntKeyRefValueHashMap<V> implements ConcurrentIn
     };
   }
 
-  @Nullable
   @Override
-  public V putIfAbsent(int key, @Nullable V value) {
+  public @Nullable V putIfAbsent(int key, @Nullable V value) {
     IntReference<V> newRef = createReference(key, value, myQueue);
     while (true) {
       processQueue();

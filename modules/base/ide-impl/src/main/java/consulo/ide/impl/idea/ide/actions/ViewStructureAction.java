@@ -81,9 +81,8 @@ public class ViewStructureAction extends DumbAwareAction {
         popup.show();
     }
 
-    @Nullable
     @RequiredReadAction
-    public static FileStructurePopup createPopup(Project project, FileEditor fileEditor) {
+    public static @Nullable FileStructurePopup createPopup(Project project, FileEditor fileEditor) {
         PsiDocumentManager.getInstance(project).commitAllDocuments();
         StructureViewBuilder builder = fileEditor.getStructureViewBuilder();
         if (builder == null) {

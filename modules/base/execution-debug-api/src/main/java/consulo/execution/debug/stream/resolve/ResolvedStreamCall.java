@@ -16,11 +16,9 @@ public interface ResolvedStreamCall<CALL extends StreamCall, STATE_BEFORE extend
   
   CALL getCall();
 
-  @Nullable
-  STATE_BEFORE getStateBefore();
+  @Nullable STATE_BEFORE getStateBefore();
 
-  @Nullable
-  STATE_AFTER getStateAfter();
+  @Nullable STATE_AFTER getStateAfter();
 
   interface Intermediate extends ResolvedStreamCall<IntermediateStreamCall, NextAwareState, PrevAwareState> {
     

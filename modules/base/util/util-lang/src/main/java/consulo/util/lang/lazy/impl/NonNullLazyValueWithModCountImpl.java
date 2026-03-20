@@ -38,9 +38,8 @@ public class NonNullLazyValueWithModCountImpl<T> implements LazyValue<T> {
     myModCountSupplier = modCountSupplier;
   }
 
-  @Nullable
   @Override
-  public T getStoredValue() {
+  public @Nullable T getStoredValue() {
     return myValue;
   }
 

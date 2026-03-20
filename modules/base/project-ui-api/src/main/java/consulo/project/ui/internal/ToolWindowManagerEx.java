@@ -57,9 +57,8 @@ public abstract class ToolWindowManagerEx extends ToolWindowManager {
     /**
      * @return <code>ID</code> of tool window that was activated last time.
      */
-    @Nullable
     @RequiredUIAccess
-    public String getLastActiveToolWindowId() {
+    public @Nullable String getLastActiveToolWindowId() {
         return getLastActiveToolWindowId(null);
     }
 
@@ -106,10 +105,9 @@ public abstract class ToolWindowManagerEx extends ToolWindowManager {
     /**
      * @return <code>ID</code> of tool window which was last activated among tool windows satisfying the current condition
      */
-    @Nullable
     @RequiredUIAccess
     @Deprecated
-    public String getLastActiveToolWindowId(@Nullable Predicate<JComponent> condition) {
+    public @Nullable String getLastActiveToolWindowId(@Nullable Predicate<JComponent> condition) {
         return null;
     }
     // endregion

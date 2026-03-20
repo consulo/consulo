@@ -29,8 +29,7 @@ import org.jspecify.annotations.Nullable;
  */
 @ServiceAPI(ComponentScope.APPLICATION)
 public interface MetaDataService {
-  @Nullable
-  PsiMetaData getMeta(PsiElement element);
+  @Nullable PsiMetaData getMeta(PsiElement element);
 
   void bindDataToElement(PsiElement element, PsiMetaData data);
 

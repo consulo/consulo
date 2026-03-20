@@ -32,9 +32,8 @@ import org.jspecify.annotations.Nullable;
 @SuppressWarnings("unchecked")
 public class WebComboBoxImpl<V> extends WebSingleListComponentBase<V, WebComboBoxImpl.Vaadin> implements ComboBox<V> {
     public class Vaadin extends Select<V> implements FromVaadinComponentWrapper {
-        @Nullable
         @Override
-        public Component toUIComponent() {
+        public @Nullable Component toUIComponent() {
             return WebComboBoxImpl.this;
         }
     }

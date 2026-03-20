@@ -68,8 +68,7 @@ public interface AsyncFileListener {
    * are finally applied to VFS
    */
   @Contract(pure = true)
-  @Nullable
-  ChangeApplier prepareChange(List<? extends VFileEvent> events);
+  @Nullable ChangeApplier prepareChange(List<? extends VFileEvent> events);
 
   interface ChangeApplier {
     /**

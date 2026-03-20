@@ -36,8 +36,7 @@ public interface RunnerAndConfigurationSettings {
    * @return the type of the run configuration, or null if the settings object was loaded from disk and no plugin corresponding to the
    * stored type of the run configuration is loaded.
    */
-  @Nullable
-  ConfigurationType getType();
+  @Nullable ConfigurationType getType();
 
   /**
    * Returns the factory used to create the run configuration.
@@ -45,8 +44,7 @@ public interface RunnerAndConfigurationSettings {
    * @return the factory, or null if the settings object was loaded from disk and no plugin corresponding to the stored type of the run
    * configuration is loaded.
    */
-  @Nullable
-  ConfigurationFactory getFactory();
+  @Nullable ConfigurationFactory getFactory();
 
   /**
    * Returns true if this configuration settings object represents a template used to create other configurations of the same type
@@ -101,8 +99,7 @@ public interface RunnerAndConfigurationSettings {
    * @param runner the runner for which the settings are requested.
    * @return the settings, or null if the runner doesn't provide any settings or the settings aren't configured for this configuration.
    */
-  @Nullable
-  RunnerSettings getRunnerSettings(ProgramRunner runner);
+  @Nullable RunnerSettings getRunnerSettings(ProgramRunner runner);
 
   /**
    * Returns the configuration-managed settings for the specified runner.
@@ -111,8 +108,7 @@ public interface RunnerAndConfigurationSettings {
    * @return the settings, or null if the configuration doesn't provide any settings specific to this runner or the settings aren't
    * configured for this configuration.
    */
-  @Nullable
-  ConfigurationPerRunnerSettings getConfigurationSettings(ProgramRunner runner);
+  @Nullable ConfigurationPerRunnerSettings getConfigurationSettings(ProgramRunner runner);
 
   /**
    * Checks whether the run configuration settings are valid.
@@ -184,8 +180,7 @@ public interface RunnerAndConfigurationSettings {
    *
    * @return the folder name, or null if the configuration is displayed on the top level.
    */
-  @Nullable
-  String getFolderName();
+  @Nullable String getFolderName();
 
   /**
    * Returns the "Before launch: Activate tool window" flag (for activation tool window Run/Debug etc.)

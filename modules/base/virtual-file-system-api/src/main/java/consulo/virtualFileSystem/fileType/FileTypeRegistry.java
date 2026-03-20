@@ -125,13 +125,11 @@ public abstract class FileTypeRegistry {
      */
     public abstract @Nullable FileType findFileTypeByName(String fileTypeName);
 
-    @Nullable
     @RequiredUIAccess
-    public abstract FileType getKnownFileTypeOrAssociate(VirtualFile file, ComponentManager project);
+    public abstract @Nullable FileType getKnownFileTypeOrAssociate(VirtualFile file, ComponentManager project);
 
-    @Nullable
     @RequiredUIAccess
-    public abstract FileType getKnownFileTypeOrAssociate(String fileName);
+    public abstract @Nullable FileType getKnownFileTypeOrAssociate(String fileName);
 
     public @Nullable FileType getFileTypeByMimeType(@Nullable String mimeType) {
         return null;

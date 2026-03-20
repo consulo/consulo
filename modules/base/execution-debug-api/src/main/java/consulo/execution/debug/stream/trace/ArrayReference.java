@@ -4,8 +4,7 @@ package consulo.execution.debug.stream.trace;
 import org.jspecify.annotations.Nullable;
 
 public interface ArrayReference extends Value {
-  @Nullable
-  Value getValue(int i);
+  @Nullable Value getValue(int i);
 
   int length();
 }

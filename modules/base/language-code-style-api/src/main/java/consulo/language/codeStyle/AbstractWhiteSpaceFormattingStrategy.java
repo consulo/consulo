@@ -94,9 +94,8 @@ public abstract class AbstractWhiteSpaceFormattingStrategy implements WhiteSpace
         return adjustWhiteSpaceIfNecessary(whiteSpaceText, buffer, 0, endOffset - startOffset, codeStyleSettings, null);
     }
 
-    @Nullable
     @RequiredReadAction
-    private static PsiElement next(PsiElement element) {
+    private static @Nullable PsiElement next(PsiElement element) {
         for (PsiElement anchor = element; anchor != null; anchor = anchor.getParent()) {
             PsiElement result = element.getNextSibling();
             if (result != null) {

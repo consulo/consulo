@@ -71,9 +71,8 @@ public class OrderEntryUtil {
     return null;
   }
 
-  @Nullable
   @Deprecated
-  public static ModuleExtensionWithSdkOrderEntry findJdkOrderEntry(ModuleRootModel model, @Nullable Sdk sdk) {
+  public static @Nullable ModuleExtensionWithSdkOrderEntry findJdkOrderEntry(ModuleRootModel model, @Nullable Sdk sdk) {
     return findModuleExtensionWithSdkOrderEntry(model, sdk);
   }
 

@@ -32,9 +32,8 @@ class AccessorBindingWrapper extends NonNullAccessorBinding implements MultiNode
     myBinding = binding;
   }
 
-  @Nullable
   @Override
-  public Object serialize(Object o, @Nullable Object context, SerializationFilter filter) {
+  public @Nullable Object serialize(Object o, @Nullable Object context, SerializationFilter filter) {
     Object value = myAccessor.read(o);
     if (value == null) {
       throw new XmlSerializationException("Property " + myAccessor + " of object " + o + " (" + o.getClass() + ") must not be null");
@@ -58,9 +57,8 @@ class AccessorBindingWrapper extends NonNullAccessorBinding implements MultiNode
     return context;
   }
 
-  @Nullable
   @Override
-  public Object deserializeList(Object context, List<Element> elements) {
+  public @Nullable Object deserializeList(Object context, List<Element> elements) {
     Object currentValue = myAccessor.read(context);
     if (myBinding instanceof BeanBinding beanBinding && myAccessor.isFinal()) {
       beanBinding.deserializeIntoObject(currentValue, elements.get(0), null);

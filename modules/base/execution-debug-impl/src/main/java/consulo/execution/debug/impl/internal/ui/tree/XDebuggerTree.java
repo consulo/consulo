@@ -439,9 +439,8 @@ public class XDebuggerTree extends DnDAwareTree implements DataProvider, Disposa
         return result;
     }
 
-    @Nullable
     @Override
-    public XValueNode getSelectedNode() {
+    public @Nullable XValueNode getSelectedNode() {
         TreePath path = getSelectionPath();
         if (path == null) return null;
 
@@ -449,9 +448,8 @@ public class XDebuggerTree extends DnDAwareTree implements DataProvider, Disposa
         return node instanceof XValueNodeImpl ? (XValueNodeImpl) node : null;
     }
 
-    @Nullable
     @Override
-    public XDebugSession getSession() {
+    public @Nullable XDebugSession getSession() {
         return XDebugView.getSession(this);
     }
 }

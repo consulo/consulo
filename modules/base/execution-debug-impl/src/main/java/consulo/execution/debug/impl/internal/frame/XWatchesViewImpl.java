@@ -359,9 +359,8 @@ public class XWatchesViewImpl extends XVariablesView implements DnDNativeTarget,
         return expressions;
     }
 
-    @Nullable
     @Override
-    public Object getData(Key<?> dataId) {
+    public @Nullable Object getData(Key<?> dataId) {
         if (XWatchesView.DATA_KEY == dataId) {
             return this;
         }

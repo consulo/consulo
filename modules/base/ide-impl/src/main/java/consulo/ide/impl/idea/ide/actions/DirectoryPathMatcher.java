@@ -59,9 +59,8 @@ class DirectoryPathMatcher {
         dirPattern = pattern;
     }
 
-    @Nullable
     @RequiredReadAction
-    static DirectoryPathMatcher root(GotoFileModel model, String pattern) {
+    static @Nullable DirectoryPathMatcher root(GotoFileModel model, String pattern) {
         DirectoryPathMatcher matcher = new DirectoryPathMatcher(model, null, "");
         for (int i = 0; i < pattern.length(); i++) {
             matcher = matcher.appendChar(pattern.charAt(i));
@@ -72,9 +71,8 @@ class DirectoryPathMatcher {
         return matcher;
     }
 
-    @Nullable
     @RequiredReadAction
-    DirectoryPathMatcher appendChar(char c) {
+    @Nullable DirectoryPathMatcher appendChar(char c) {
         String nextPattern = dirPattern + c;
         if (c == '*' || c == '/' || c == ' ') {
             return new DirectoryPathMatcher(myModel, myFiles, nextPattern);
@@ -119,9 +117,8 @@ class DirectoryPathMatcher {
     /**
      * return null if not cheap
      */
-    @Nullable
     @RequiredReadAction
-    Set<String> findFileNamesMatchingIfCheap(char nextLetter, MinusculeMatcher matcher) {
+    @Nullable Set<String> findFileNamesMatchingIfCheap(char nextLetter, MinusculeMatcher matcher) {
         List<Pair<VirtualFile, String>> files = getMatchingRoots();
         Set<String> names = new HashSet<>();
         AtomicInteger counter = new AtomicInteger();
@@ -177,9 +174,8 @@ class DirectoryPathMatcher {
                     return visited.add(file) && scope.contains(file) && predicate.test(file);
                 }
 
-                @Nullable
                 @Override
-                public Iterable<VirtualFile> getChildrenIterable(VirtualFile file) {
+                public @Nullable Iterable<VirtualFile> getChildrenIterable(VirtualFile file) {
                     return file instanceof NewVirtualFile newVirtualFile ? newVirtualFile.getCachedChildren() : null;
                 }
             });

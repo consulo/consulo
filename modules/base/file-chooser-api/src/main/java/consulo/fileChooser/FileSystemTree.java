@@ -32,17 +32,14 @@ public interface FileSystemTree extends Disposable {
 
     void updateTree();
 
-    @Nullable
-    VirtualFile getSelectedFile();
+    @Nullable VirtualFile getSelectedFile();
 
     
     VirtualFile[] getSelectedFiles();
 
-    @Nullable
-    VirtualFile getNewFileParent();
+    @Nullable VirtualFile getNewFileParent();
 
-    @Nullable
-    <T> T getData(Key<T> key);
+    <T> @Nullable T getData(Key<T> key);
 
     void select(VirtualFile file, @Nullable Runnable onDone);
 

@@ -179,9 +179,8 @@ public class UnifiedDiffChange {
             }
         }
 
-        @Nullable
         @RequiredUIAccess
-        public GutterIconRenderer createRenderer() {
+        public @Nullable GutterIconRenderer createRenderer() {
             if (myViewer.isStateIsOutOfDate()) {
                 return null;
             }

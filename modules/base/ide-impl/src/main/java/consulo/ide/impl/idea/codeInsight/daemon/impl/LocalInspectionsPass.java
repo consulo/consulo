@@ -452,9 +452,8 @@ public class LocalInspectionsPass extends ProgressableTextEditorHighlightingPass
         }
     }
 
-    @Nullable
     @RequiredReadAction
-    private HighlightInfoImpl highlightInfoFromDescriptor(
+    private @Nullable HighlightInfoImpl highlightInfoFromDescriptor(
         ProblemDescriptor problemDescriptor,
         HighlightInfoType highlightInfoType,
         LocalizeValue message,
@@ -726,9 +725,8 @@ public class LocalInspectionsPass extends ProgressableTextEditorHighlightingPass
         return viewProvider.getPsi(viewProvider.getBaseLanguage());
     }
 
-    @Nullable
     @RequiredReadAction
-    private HighlightInfoImpl createHighlightInfo(
+    private @Nullable HighlightInfoImpl createHighlightInfo(
         ProblemDescriptor descriptor,
         LocalInspectionToolWrapper tool,
         HighlightInfoType level,

@@ -113,9 +113,8 @@ public class DirectoryInfoImpl extends DirectoryInfo {
     return sourceRoot;
   }
 
-  @Nullable
   @Override
-  public ContentFolder getContentFolder() {
+  public @Nullable ContentFolder getContentFolder() {
     return myContentFolder;
   }
 

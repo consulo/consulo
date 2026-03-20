@@ -40,8 +40,7 @@ public interface CommittedChangeList extends ChangeList {
    *
    * @return the branch of this changelist, or null if not applicable.
    */
-  @Nullable
-  String getBranch();
+  @Nullable String getBranch();
 
   /**
    * Returns the VCS by which the changelist was generated. This method must return a not null

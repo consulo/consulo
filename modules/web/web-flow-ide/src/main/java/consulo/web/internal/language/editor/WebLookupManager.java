@@ -30,9 +30,8 @@ import kava.beans.PropertyChangeListener;
 @Singleton
 @ServiceImpl
 public class WebLookupManager extends LookupManager {
-  @Nullable
   @Override
-  public LookupEx showLookup(Editor editor,
+  public @Nullable LookupEx showLookup(Editor editor,
                              LookupElement[] items,
                              String prefix,
                              LookupArranger arranger) {
@@ -44,9 +43,8 @@ public class WebLookupManager extends LookupManager {
 
   }
 
-  @Nullable
   @Override
-  public LookupEx getActiveLookup() {
+  public @Nullable LookupEx getActiveLookup() {
     return null;
   }
 

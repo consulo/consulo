@@ -28,13 +28,11 @@ import org.jspecify.annotations.Nullable;
  */
 @ServiceAPI(ComponentScope.APPLICATION)
 public interface ExternalServiceConfiguration {
-  @Nullable
-  String getEmail();
+  @Nullable String getEmail();
 
   boolean isAuthorized();
 
-  @Nullable
-  Image getUserIcon();
+  @Nullable Image getUserIcon();
 
   void updateIcon();
 

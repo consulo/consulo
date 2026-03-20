@@ -43,9 +43,8 @@ public class RunAnythingCompletionGroup<V, P extends RunAnythingProvider<V>> ext
         return ContainerUtil.map(provider.getValues(dataContext, pattern), value -> provider.getMainListItem(dataContext, value));
     }
 
-    @Nullable
     @Override
-    protected Matcher getMatcher(DataContext dataContext, String pattern) {
+    protected @Nullable Matcher getMatcher(DataContext dataContext, String pattern) {
         return getProvider().getMatcher(dataContext, pattern);
     }
 

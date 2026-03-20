@@ -102,10 +102,9 @@ public class PsiDirectoryImpl extends PsiElementBase implements PsiDirectory, Qu
         return myFile.getName();
     }
 
-    @Nullable
     @Override
     @RequiredReadAction
-    public Module getModule() throws PsiInvalidElementAccessException {
+    public @Nullable Module getModule() throws PsiInvalidElementAccessException {
         return ModuleContentUtil.findModuleForFile(myFile, myManager.getProject());
     }
 

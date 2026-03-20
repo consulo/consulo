@@ -63,9 +63,8 @@ public class DesktopPlainAlertImpl<V> extends BaseAlert<V> {
       init();
     }
 
-    @Nullable
     @Override
-    protected JComponent createCenterPanel() {
+    protected @Nullable JComponent createCenterPanel() {
       return doCreateCenterPanel();
     }
 
@@ -94,10 +93,9 @@ public class DesktopPlainAlertImpl<V> extends BaseAlert<V> {
       return actions;
     }
 
-    @Nullable
     @Override
     @RequiredUIAccess
-    protected JComponent createSouthPanel() {
+    protected @Nullable JComponent createSouthPanel() {
       JPanel panel = (JPanel)super.createSouthPanel();
 
       if (myRemember != null) {

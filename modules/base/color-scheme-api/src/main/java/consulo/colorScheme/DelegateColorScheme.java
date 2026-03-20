@@ -67,9 +67,8 @@ public abstract class DelegateColorScheme implements EditorColorsScheme {
         return myDelegate.getDefaultForeground();
     }
 
-    @Nullable
     @Override
-    public ColorValue getColor(EditorColorKey key) {
+    public @Nullable ColorValue getColor(EditorColorKey key) {
         return myDelegate.getColor(key);
     }
 

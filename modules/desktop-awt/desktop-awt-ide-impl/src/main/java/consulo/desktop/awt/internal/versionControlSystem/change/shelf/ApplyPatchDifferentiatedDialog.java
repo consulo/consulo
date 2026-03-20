@@ -384,10 +384,9 @@ public class ApplyPatchDifferentiatedDialog extends DialogWrapper {
         return myHelpId;
     }
 
-    @Nullable
     @Override
     @RequiredUIAccess
-    public JComponent getPreferredFocusedComponent() {
+    public @Nullable JComponent getPreferredFocusedComponent() {
         return myChangeListChooser.getPreferredFocusedComponent();
     }
 

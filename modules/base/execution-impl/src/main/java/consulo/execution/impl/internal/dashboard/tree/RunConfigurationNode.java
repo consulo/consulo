@@ -49,16 +49,14 @@ public final class RunConfigurationNode extends AbstractTreeNode<RunDashboardMan
     return getValue().getSettings();
   }
 
-  @Nullable
   @Override
-  public RunContentDescriptor getDescriptor() {
+  public @Nullable RunContentDescriptor getDescriptor() {
     //noinspection ConstantConditions ???
     return getValue().getDescriptor();
   }
 
-  @Nullable
   @Override
-  public Content getContent() {
+  public @Nullable Content getContent() {
     //noinspection ConstantConditions ???
     return getValue().getContent();
   }
@@ -116,9 +114,8 @@ public final class RunConfigurationNode extends AbstractTreeNode<RunDashboardMan
     return Collections.emptyList();
   }
 
-  @Nullable
   @Override
-  public <T> T getUserData(Key<T> key) {
+  public <T> @Nullable T getUserData(Key<T> key) {
     return myUserDataHolder.getUserData(key);
   }
 

@@ -55,9 +55,8 @@ class DateFilterPopupComponent extends FilterPopupComponent<VcsLogDateFilter> {
         }
     }
 
-    @Nullable
     @Override
-    protected String getToolTip(VcsLogDateFilter filter) {
+    protected @Nullable String getToolTip(VcsLogDateFilter filter) {
         return null;
     }
 

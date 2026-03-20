@@ -185,18 +185,16 @@ public class ObjectUtil {
     }
   }
 
-  @Nullable
   @Contract("null, _ -> null")
-  public static <T> T nullizeByCondition(@Nullable T obj, Predicate<? super T> condition) {
+  public static <T> @Nullable T nullizeByCondition(@Nullable T obj, Predicate<? super T> condition) {
     if (condition.test(obj)) {
       return null;
     }
     return obj;
   }
 
-  @Nullable
   @Contract("null, _ -> null")
-  public static <T> T nullizeIfDefaultValue(@Nullable T obj, T defaultValue) {
+  public static <T> @Nullable T nullizeIfDefaultValue(@Nullable T obj, T defaultValue) {
     if (obj == defaultValue) {
       return null;
     }

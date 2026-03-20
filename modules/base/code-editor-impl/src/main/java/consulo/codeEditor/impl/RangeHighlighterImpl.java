@@ -158,9 +158,8 @@ class RangeHighlighterImpl extends RangeMarkerImpl implements RangeHighlighterEx
         return isFlagSet(TARGET_AREA_IS_EXACT_MASK) ? HighlighterTargetArea.EXACT_RANGE : HighlighterTargetArea.LINES_IN_RANGE;
     }
 
-    @Nullable
     @Override
-    public TextAttributesKey getTextAttributesKey() {
+    public @Nullable TextAttributesKey getTextAttributesKey() {
         return myTextAttributesKey;
     }
 

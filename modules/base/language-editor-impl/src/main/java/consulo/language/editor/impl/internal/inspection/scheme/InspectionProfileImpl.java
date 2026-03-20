@@ -336,18 +336,16 @@ public class InspectionProfileImpl extends ProfileEx implements ModifiableModel,
         return toolList == null ? null : toolList.getInspectionTool(element);
     }
 
-    @Nullable
     @Override
     @SuppressWarnings("unchecked")
-    public <T extends InspectionTool> T getUnwrappedTool(String shortName, PsiElement element) {
+    public <T extends InspectionTool> @Nullable T getUnwrappedTool(String shortName, PsiElement element) {
         InspectionToolWrapper tool = getInspectionTool(shortName, element);
         return tool == null ? null : (T) tool.getTool();
     }
 
-    @Nullable
     @Override
     @SuppressWarnings("unchecked")
-    public <S> S getToolState(String shortName, PsiElement element) {
+    public <S> @Nullable S getToolState(String shortName, PsiElement element) {
         InspectionToolWrapper tool = getInspectionTool(shortName, element);
         return tool == null ? null : (S) tool.getToolState().getState();
     }
@@ -546,9 +544,8 @@ public class InspectionProfileImpl extends ProfileEx implements ModifiableModel,
         return true;
     }
 
-    @Nullable
     @Transient
-    public String[] getScopesOrder() {
+    public @Nullable String[] getScopesOrder() {
         return myScopesOrder;
     }
 

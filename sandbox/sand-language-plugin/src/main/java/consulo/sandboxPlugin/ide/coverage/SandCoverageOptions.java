@@ -26,9 +26,8 @@ import org.jspecify.annotations.Nullable;
  */
 @ExtensionImpl
 public class SandCoverageOptions implements CoverageOptions {
-  @Nullable
   @Override
-  public Configurable createConfigurable() {
+  public @Nullable Configurable createConfigurable() {
     return new SandCoverageConfigurable();
   }
 }

@@ -143,9 +143,8 @@ public class FindInProjectUtil {
      */
     //@ApiStatus.ScheduledForRemoval(inVersion = "2018")
     @Deprecated
-    @Nullable
     @RequiredReadAction
-    public static PsiDirectory getPsiDirectory(FindModel findModel, Project project) {
+    public static @Nullable PsiDirectory getPsiDirectory(FindModel findModel, Project project) {
         VirtualFile directory = getDirectory(findModel);
         return directory == null ? null : PsiManager.getInstance(project).findDirectory(directory);
     }

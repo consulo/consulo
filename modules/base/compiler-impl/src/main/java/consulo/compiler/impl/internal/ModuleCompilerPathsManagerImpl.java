@@ -114,9 +114,8 @@ public class ModuleCompilerPathsManagerImpl extends ModuleCompilerPathsManager i
         return outDir != null ? outDir.getUrl() : backUrl;
     }
 
-    @Nullable
     @Override
-    public VirtualFile getCompilerOutput(ContentFolderTypeProvider contentFolderType) {
+    public @Nullable VirtualFile getCompilerOutput(ContentFolderTypeProvider contentFolderType) {
         if (!myInheritOutput) {
             VirtualFilePointer virtualFilePointer = myVirtualFilePointers.get(contentFolderType.getId());
             if (virtualFilePointer != null) {
@@ -147,9 +146,8 @@ public class ModuleCompilerPathsManagerImpl extends ModuleCompilerPathsManager i
         }
     }
 
-    @Nullable
     @Override
-    public Element getState() {
+    public @Nullable Element getState() {
         if (myInheritOutput) {
             return null;
         }

@@ -114,9 +114,8 @@ public class CompareFilesAction extends BaseShowDiffAction {
         return true;
     }
 
-    @Nullable
     @Override
-    protected DiffRequest getDiffRequest(AnActionEvent e) {
+    protected @Nullable DiffRequest getDiffRequest(AnActionEvent e) {
         Project project = e.getData(Project.KEY);
         DiffRequest diffRequest = e.getData(DIFF_REQUEST);
         if (diffRequest != null) {

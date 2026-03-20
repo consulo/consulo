@@ -149,9 +149,8 @@ public class XVariablesView extends XVariablesViewBase implements DataProvider {
         super.clear();
     }
 
-    @Nullable
     @Override
-    public Object getData(Key<?> dataId) {
+    public @Nullable Object getData(Key<?> dataId) {
         return VirtualFile.KEY == dataId ? getCurrentFile(getTree()) : null;
     }
 

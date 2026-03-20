@@ -242,9 +242,8 @@ public class CopyPasteManagerEx extends CopyPasteManager implements ClipboardOwn
         return myClipboardSynchronizer.getContents();
     }
 
-    @Nullable
     @Override
-    public <T> T getContents(DataFlavor flavor) {
+    public <T> @Nullable T getContents(DataFlavor flavor) {
         if (areDataFlavorsAvailable(flavor)) {
             //noinspection unchecked
             return (T)myClipboardSynchronizer.getData(flavor);

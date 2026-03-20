@@ -22,9 +22,8 @@ import consulo.util.dataholder.UserDataHolderBase;
 import org.jspecify.annotations.Nullable;
 
 public abstract class DiffContentBase extends UserDataHolderBase implements DiffContent {
-  @Nullable
   @Override
-  public Navigatable getNavigatable() {
+  public @Nullable Navigatable getNavigatable() {
     return null;
   }
 

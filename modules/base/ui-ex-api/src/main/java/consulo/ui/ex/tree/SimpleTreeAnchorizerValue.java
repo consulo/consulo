@@ -22,9 +22,8 @@ import org.jspecify.annotations.Nullable;
  * @since 2025-02-12
  */
 public record SimpleTreeAnchorizerValue(@Nullable Object value) implements TreeAnchorizerValue {
-    @Nullable
     @Override
-    public Object extractValue() {
+    public @Nullable Object extractValue() {
         return value();
     }
 

@@ -113,9 +113,8 @@ public abstract class AsynchronousFileStep
     /**
      * {@inheritDoc}
      */
-    @Nullable
     @Override
-    protected ByteBuffer execute(@Nullable ByteBuffer input, Continuation<?> continuation) {
+    protected @Nullable ByteBuffer execute(@Nullable ByteBuffer input, Continuation<?> continuation) {
         try {
             AsynchronousFileChannel rChannel = getFileChannel(continuation);
 

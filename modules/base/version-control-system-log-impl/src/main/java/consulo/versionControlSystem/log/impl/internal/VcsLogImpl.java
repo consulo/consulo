@@ -69,9 +69,8 @@ public class VcsLogImpl implements VcsLog {
       .loadCommitsData(getTable().getModel().convertToCommitIds(rowsList), consumer, indicator);
   }
 
-  @Nullable
   @Override
-  public Collection<String> getContainingBranches(Hash commitHash, VirtualFile root) {
+  public @Nullable Collection<String> getContainingBranches(Hash commitHash, VirtualFile root) {
     return myLogData.getContainingBranchesGetter().getContainingBranchesFromCache(root, commitHash);
   }
 

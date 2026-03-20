@@ -34,8 +34,7 @@ public interface InjectedEditorManager {
         return project.getInstance(InjectedEditorManager.class);
     }
 
-    @Nullable
-    Editor openEditorFor(PsiFile file);
+    @Nullable Editor openEditorFor(PsiFile file);
 
     /**
      * Invocation of this method on uncommitted {@code file} can lead to unexpected results, including throwing an exception!

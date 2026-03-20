@@ -35,9 +35,8 @@ public final class ByClassGrouper<E> implements Function<ExtensionWalker<E>, Fun
       walker.walk(extension -> myExtensionsByClass.put(getClassFunc.apply(extension), extension));
     }
 
-    @Nullable
     @Override
-    public S apply(Class aClass) {
+    public @Nullable S apply(Class aClass) {
       S extension = myExtensionsByClass.get(aClass);
       // we found it by class
       if (extension != null) {

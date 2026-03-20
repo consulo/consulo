@@ -26,14 +26,12 @@ import java.util.Collection;
  * @author nik
  */
 public interface ModuleOutputPackagingElement {
-  @Nullable
-  String getModuleName();
+  @Nullable String getModuleName();
 
   
   ContentFolderTypeProvider getContentFolderType();
 
-  @Nullable
-  Module findModule(PackagingElementResolvingContext context);
+  @Nullable Module findModule(PackagingElementResolvingContext context);
 
   
   Collection<VirtualFile> getSourceRoots(PackagingElementResolvingContext context);

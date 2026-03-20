@@ -142,9 +142,8 @@ public abstract class CodeStyleSchemesImpl extends CodeStyleSchemes {
     return findSchemeByName(DEFAULT_SCHEME_NAME);
   }
 
-  @Nullable
   @Override
-  public CodeStyleScheme findSchemeByName(String name) {
+  public @Nullable CodeStyleScheme findSchemeByName(String name) {
     return mySchemeManager.findSchemeByName(name);
   }
 

@@ -101,15 +101,13 @@ public abstract class FrameDialogWrapper {
       return myComponent;
     }
 
-    @Nullable
     @Override
-    public JComponent getPreferredFocusedComponent() {
+    public @Nullable JComponent getPreferredFocusedComponent() {
       return myPreferredFocusedComponent;
     }
 
-    @Nullable
     @Override
-    protected String getDimensionServiceKey() {
+    protected @Nullable String getDimensionServiceKey() {
       return myDimensionServiceKey;
     }
 

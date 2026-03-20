@@ -90,9 +90,8 @@ public class PostfixTemplatesConfigurable extends SimpleConfigurable<PostfixTemp
         return "editing.postfixCompletion";
     }
 
-    @Nullable
     @Override
-    public String getParentId() {
+    public @Nullable String getParentId() {
         return "editor.preferences.completion";
     }
 

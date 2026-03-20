@@ -45,9 +45,8 @@ public interface EnterHandlerDelegate {
     /**
      * Return contextual language while processing enter handler
      */
-    @Nullable
     @UsedInPlugin
-    static Language getContextLanguage(DataContext dataContext) {
+    static @Nullable Language getContextLanguage(DataContext dataContext) {
         return EnterHandlerHelper.getContextLanguage(dataContext);
     }
 

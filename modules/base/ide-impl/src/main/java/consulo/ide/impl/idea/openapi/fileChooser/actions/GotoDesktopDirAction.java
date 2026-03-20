@@ -34,9 +34,8 @@ import java.io.File;
 @ActionImpl(id = "FileChooser.GotoDesktop")
 public class GotoDesktopDirAction extends FileChooserAction {
     private final NullableLazyValue<VirtualFile> myDesktopDirectory = new NullableLazyValue<VirtualFile>() {
-        @Nullable
         @Override
-        protected VirtualFile compute() {
+        protected @Nullable VirtualFile compute() {
             return getDesktopDirectory();
         }
     };

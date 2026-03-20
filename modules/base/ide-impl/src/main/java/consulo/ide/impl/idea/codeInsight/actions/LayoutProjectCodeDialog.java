@@ -219,9 +219,8 @@ public class LayoutProjectCodeDialog extends DialogWrapper implements ReformatFi
         return null;
     }
 
-    @Nullable
     @Override
-    public SearchScope getSearchScope() {
+    public @Nullable SearchScope getSearchScope() {
         if (myUseScopeFilteringCb.isSelected()) {
             return myScopeCombo.getSelectedScope();
         }

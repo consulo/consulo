@@ -34,8 +34,7 @@ public interface ResolveResult {
    *
    * @return an element the reference is resolved to.
    */
-  @Nullable
-  PsiElement getElement();
+  @Nullable PsiElement getElement();
 
   /**
    * Checks if the reference was resolved to a valid element.

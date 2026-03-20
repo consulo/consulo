@@ -26,6 +26,5 @@ public interface XmlAwareBraceMatcher extends BraceMatcher {
 
   boolean areTagsCaseSensitive(FileType fileType, int braceGroupId);
 
-  @Nullable
-  String getTagName(CharSequence fileText, HighlighterIterator iterator);
+  @Nullable String getTagName(CharSequence fileText, HighlighterIterator iterator);
 }

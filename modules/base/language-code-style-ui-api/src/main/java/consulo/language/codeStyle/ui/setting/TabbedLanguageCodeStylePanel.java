@@ -441,9 +441,8 @@ public abstract class TabbedLanguageCodeStylePanel extends CodeStyleAbstractPane
             return 0;
         }
 
-        @Nullable
         @Override
-        protected EditorHighlighter createHighlighter(EditorColorsScheme scheme) {
+        protected @Nullable EditorHighlighter createHighlighter(EditorColorsScheme scheme) {
             return null;
         }
 
@@ -483,10 +482,9 @@ public abstract class TabbedLanguageCodeStylePanel extends CodeStyleAbstractPane
             return myConfigurable.isModified();
         }
 
-        @Nullable
         @Override
         @RequiredUIAccess
-        public JComponent getPanel() {
+        public @Nullable JComponent getPanel() {
             if (myComponent == null) {
                 myComponent = myConfigurable.createComponent();
             }

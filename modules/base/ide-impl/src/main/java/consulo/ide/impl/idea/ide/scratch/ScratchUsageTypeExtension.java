@@ -32,9 +32,8 @@ import java.util.concurrent.ConcurrentMap;
 public class ScratchUsageTypeExtension implements UsageTypeProvider {
   private static final ConcurrentMap<RootType, UsageType> ourUsageTypes = ConcurrentFactoryMap.createMap(key -> new UsageType("Usage in " + key.getDisplayName()));
 
-  @Nullable
   @Override
-  public UsageType getUsageType(PsiElement element) {
+  public @Nullable UsageType getUsageType(PsiElement element) {
     VirtualFile file = PsiUtilCore.getVirtualFile(element);
     RootType rootType = ScratchFileService.getInstance().getRootType(file);
     return rootType == null ? null : ourUsageTypes.get(rootType);

@@ -30,9 +30,8 @@ import org.jspecify.annotations.Nullable;
  * @since 11/12/2021
  */
 public class DesktopSwtWrappedLayoutImpl extends DesktopSwtLayoutComponent<LayoutConstraint, Object> implements WrappedLayout {
-  @Nullable
   @Override
-  protected Layout createLayout() {
+  protected @Nullable Layout createLayout() {
     return new FillLayout(SWT.HORIZONTAL | SWT.VERTICAL);
   }
 

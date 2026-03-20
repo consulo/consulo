@@ -27,9 +27,8 @@ import org.jspecify.annotations.Nullable;
 public class DummyInspectionToolState implements InspectionToolState<Object> {
   public static final DummyInspectionToolState INSTANCE = new DummyInspectionToolState();
 
-  @Nullable
   @Override
-  public Object getState() {
+  public @Nullable Object getState() {
     return ObjectUtil.NULL;
   }
 

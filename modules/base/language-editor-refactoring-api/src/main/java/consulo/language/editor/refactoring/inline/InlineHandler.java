@@ -72,8 +72,7 @@ public interface InlineHandler extends LanguageExtension {
      * @param editor             in case refactoring has been called in the editor
      * @return <code>Settings</code> object in case refactoring should be performed or null otherwise
      */
-    @Nullable
-    Settings prepareInlineElement(PsiElement element, @Nullable Editor editor, boolean invokedOnReference);
+    @Nullable Settings prepareInlineElement(PsiElement element, @Nullable Editor editor, boolean invokedOnReference);
 
     /**
      * @param element inlined element
@@ -86,8 +85,7 @@ public interface InlineHandler extends LanguageExtension {
      * @param settings
      * @return Inliner instance to be used for inlining references in this language
      */
-    @Nullable
-    Inliner createInliner(PsiElement element, Settings settings);
+    @Nullable Inliner createInliner(PsiElement element, Settings settings);
 
     interface Inliner {
         /**
@@ -96,9 +94,8 @@ public interface InlineHandler extends LanguageExtension {
          * @return set of conflicts inline of this element to the place denoted by reference would incur
          * or null if no conflicts detected.
          */
-        @Nullable
         @RequiredReadAction
-        MultiMap<PsiElement, LocalizeValue> getConflicts(PsiReference reference, PsiElement referenced);
+        @Nullable MultiMap<PsiElement, LocalizeValue> getConflicts(PsiReference reference, PsiElement referenced);
 
         /**
          * Perform actual inline of element to the point where it is referenced

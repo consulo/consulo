@@ -27,6 +27,5 @@ public interface LineStatusTrackerManagerI {
         return project.getInstance(LineStatusTrackerManagerI.class);
     }
 
-    @Nullable
-    LineStatusTrackerI getLineStatusTracker(Document document);
+    @Nullable LineStatusTrackerI getLineStatusTracker(Document document);
 }

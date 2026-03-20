@@ -30,9 +30,8 @@ import org.jspecify.annotations.Nullable;
  */
 @ExtensionImpl(id = "defaultPackage", order = "last")
 public class DefaultPackageQualifiedNameProvider implements QualifiedNameProvider {
-  @Nullable
   @Override
-  public PsiElement adjustElementToCopy(PsiElement element) {
+  public @Nullable PsiElement adjustElementToCopy(PsiElement element) {
     if (element instanceof PsiPackage) {
       return element;
     }
@@ -45,9 +44,8 @@ public class DefaultPackageQualifiedNameProvider implements QualifiedNameProvide
     return null;
   }
 
-  @Nullable
   @Override
-  public String getQualifiedName(PsiElement element) {
+  public @Nullable String getQualifiedName(PsiElement element) {
     if (element instanceof PsiDirectory) {
       PsiPackage anyPackage = PsiPackageManager.getInstance(element.getProject()).findAnyPackage((PsiDirectory)element);
       if (anyPackage != null) {
@@ -60,9 +58,8 @@ public class DefaultPackageQualifiedNameProvider implements QualifiedNameProvide
     return null;
   }
 
-  @Nullable
   @Override
-  public PsiElement qualifiedNameToElement(String fqn, Project project) {
+  public @Nullable PsiElement qualifiedNameToElement(String fqn, Project project) {
     return PsiPackageManager.getInstance(project).findAnyPackage(fqn);
   }
 }

@@ -214,9 +214,8 @@ public abstract class BaseArchiveFileSystem extends NewVirtualFileSystem impleme
         return StringUtil.startsWithChar(relativePath, '/') ? relativePath.substring(1) : relativePath;
     }
 
-    @Nullable
     @Override
-    public FileAttributes getAttributes(VirtualFile file) {
+    public @Nullable FileAttributes getAttributes(VirtualFile file) {
         return myAttrGetter.apply(file);
     }
 

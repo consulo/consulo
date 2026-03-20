@@ -25,6 +25,5 @@ import org.jspecify.annotations.Nullable;
 public interface FileTypeOverrider {
     ExtensionPointName<FileTypeOverrider> EP_NAME = ExtensionPointName.create(FileTypeOverrider.class);
 
-    @Nullable
-    FileType getOverriddenFileType(VirtualFile file);
+    @Nullable FileType getOverriddenFileType(VirtualFile file);
 }

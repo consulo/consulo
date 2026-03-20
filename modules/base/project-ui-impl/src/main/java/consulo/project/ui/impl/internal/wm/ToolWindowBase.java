@@ -322,9 +322,8 @@ public abstract class ToolWindowBase extends UserDataHolderBase implements ToolW
         return myContentManager;
     }
 
-    @Nullable
     @Override
-    public ContentManager getContentManagerIfCreated() {
+    public @Nullable ContentManager getContentManagerIfCreated() {
         return myContentManager;
     }
 
@@ -468,10 +467,9 @@ public abstract class ToolWindowBase extends UserDataHolderBase implements ToolW
         myChangeSupport.firePropertyChange(PROP_ICON, oldIcon, icon);
     }
 
-    @Nullable
     @Override
     @RequiredUIAccess
-    public Image getIcon() {
+    public @Nullable Image getIcon() {
         UIAccess.assertIsUIThread();
         return myIcon;
     }

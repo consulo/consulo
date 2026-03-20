@@ -69,9 +69,8 @@ public class SettingsEditorGroup<T> extends SettingsEditor<T> {
     }
 
     @RequiredUIAccess
-    @Nullable
     @Override
-    protected Component createUIComponent() {
+    protected @Nullable Component createUIComponent() {
         throw new UnsupportedOperationException("This method should never be called!");
     }
 

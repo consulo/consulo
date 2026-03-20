@@ -98,9 +98,8 @@ public class GlobalSearchScopesCore {
       return false;
     }
 
-    @Nullable
     @Override
-    public Image getIcon() {
+    public @Nullable Image getIcon() {
       return mySet.getIcon();
     }
 

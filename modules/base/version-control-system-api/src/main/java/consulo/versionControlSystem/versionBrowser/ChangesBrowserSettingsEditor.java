@@ -29,8 +29,7 @@ public interface ChangesBrowserSettingsEditor<T extends ChangeBrowserSettings> {
 
   void setSettings(T settings);
 
-  @Nullable
-  String validateInput();
+  @Nullable String validateInput();
 
   void updateEnabledControls();
 

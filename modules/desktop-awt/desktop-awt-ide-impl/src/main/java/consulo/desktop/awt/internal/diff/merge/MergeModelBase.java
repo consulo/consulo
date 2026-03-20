@@ -169,9 +169,8 @@ public abstract class MergeModelBase<S extends MergeModelBase.State> implements 
         setLineEnd(state.myIndex, state.myEndLine);
     }
 
-    @Nullable
     @RequiredUIAccess
-    protected S processDocumentChange(int index, int oldLine1, int oldLine2, int shift) {
+    protected @Nullable S processDocumentChange(int index, int oldLine1, int oldLine2, int shift) {
         int line1 = getLineStart(index);
         int line2 = getLineEnd(index);
 

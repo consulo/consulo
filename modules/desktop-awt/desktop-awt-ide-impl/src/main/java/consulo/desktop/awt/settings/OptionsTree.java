@@ -492,9 +492,8 @@ public class OptionsTree implements Disposable, OptionsEditorColleague {
             throw new UnsupportedOperationException("just stub, for comparator");
         }
 
-        @Nullable
         @Override
-        public Configurable getValue() {
+        public @Nullable Configurable getValue() {
             return myConfigurable;
         }
     }

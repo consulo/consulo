@@ -76,9 +76,8 @@ public abstract class XDebuggerUtil {
      * @param line 0-based line number
      * @return source position
      */
-    @Nullable
     @Deprecated
-    public XSourcePosition createPosition(@Nullable VirtualFile file, int line) {
+    public @Nullable XSourcePosition createPosition(@Nullable VirtualFile file, int line) {
         XSourcePositionFactory factory = Application.get().getInstance(XSourcePositionFactory.class);
         return factory.createPosition(file, line);
     }
@@ -91,9 +90,8 @@ public abstract class XDebuggerUtil {
      * @param column 0-based column number
      * @return source position
      */
-    @Nullable
     @Deprecated
-    public XSourcePosition createPosition(@Nullable VirtualFile file, int line, int column) {
+    public @Nullable XSourcePosition createPosition(@Nullable VirtualFile file, int line, int column) {
         XSourcePositionFactory factory = Application.get().getInstance(XSourcePositionFactory.class);
         return factory.createPosition(file, line, column);
     }
@@ -105,16 +103,14 @@ public abstract class XDebuggerUtil {
      * @param offset offset from the beginning of file
      * @return source position
      */
-    @Nullable
     @Deprecated
-    public XSourcePosition createPositionByOffset(@Nullable VirtualFile file, int offset) {
+    public @Nullable XSourcePosition createPositionByOffset(@Nullable VirtualFile file, int offset) {
         XSourcePositionFactory factory = Application.get().getInstance(XSourcePositionFactory.class);
         return factory.createPositionByOffset(file, offset);
     }
 
-    @Nullable
     @Deprecated
-    public XSourcePosition createPositionByElement(@Nullable PsiElement element) {
+    public @Nullable XSourcePosition createPositionByElement(@Nullable PsiElement element) {
         XSourcePositionFactory factory = Application.get().getInstance(XSourcePositionFactory.class);
         return factory.createPositionByElement(element);
     }
@@ -147,15 +143,13 @@ public abstract class XDebuggerUtil {
      */
     public abstract void disableValueLookup(Editor editor);
 
-    @Nullable
     @RequiredReadAction
-    public abstract PsiElement findContextElement(VirtualFile virtualFile, int offset, Project projectl);
+    public abstract @Nullable PsiElement findContextElement(VirtualFile virtualFile, int offset, Project projectl);
 
-    @Nullable
     @RequiredReadAction
     @Deprecated
     @DeprecationInfo("'checkXml' always ignored")
-    public PsiElement findContextElement(VirtualFile virtualFile, int offset, Project project, boolean checkXml) {
+    public @Nullable PsiElement findContextElement(VirtualFile virtualFile, int offset, Project project, boolean checkXml) {
         return findContextElement(virtualFile, offset, project);
     }
 

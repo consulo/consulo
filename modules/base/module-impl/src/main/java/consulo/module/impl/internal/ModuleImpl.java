@@ -54,9 +54,8 @@ public class ModuleImpl extends PlatformComponentManagerImpl implements ModuleEx
         application.executeNonCancelableSection(runnable);
     }
 
-    @Nullable
     @Override
-    public IComponentStore getStateStore() {
+    public @Nullable IComponentStore getStateStore() {
         return null;
     }
 
@@ -83,21 +82,18 @@ public class ModuleImpl extends PlatformComponentManagerImpl implements ModuleEx
         myName = newName;
     }
 
-    @Nullable
     @Override
-    public VirtualFile getModuleDir() {
+    public @Nullable VirtualFile getModuleDir() {
         return myDirVirtualFilePointer == null ? null : myDirVirtualFilePointer.getFile();
     }
 
-    @Nullable
     @Override
-    public String getModuleDirPath() {
+    public @Nullable String getModuleDirPath() {
         return myDirVirtualFilePointer == null ? null : VirtualFileManager.extractPath(myDirVirtualFilePointer.getUrl());
     }
 
-    @Nullable
     @Override
-    public String getModuleDirUrl() {
+    public @Nullable String getModuleDirUrl() {
         return myDirVirtualFilePointer == null ? null : myDirVirtualFilePointer.getUrl();
     }
 
@@ -113,16 +109,14 @@ public class ModuleImpl extends PlatformComponentManagerImpl implements ModuleEx
         return myName;
     }
 
-    @Nullable
     @Override
-    public <T extends ModuleExtension<T>> T getExtension(String key) {
+    public <T extends ModuleExtension<T>> @Nullable T getExtension(String key) {
         ModuleRootManagerImpl manager = (ModuleRootManagerImpl) ModuleRootManager.getInstance(this);
         return manager.getExtension(key);
     }
 
-    @Nullable
     @Override
-    public <T extends ModuleExtension<T>> T getExtension(Class<T> clazz) {
+    public <T extends ModuleExtension<T>> @Nullable T getExtension(Class<T> clazz) {
         ModuleRootManagerImpl manager = (ModuleRootManagerImpl) ModuleRootManager.getInstance(this);
         return manager.getExtension(clazz);
     }

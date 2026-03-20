@@ -110,9 +110,8 @@ public class DesktopTextBoxImpl extends DocumentSwingValidator<String, DesktopTe
         AWTHasSuffixComponent.setSuffixComponent(toAWTComponent(), TargetAWT.to(suffixComponent));
     }
 
-    @Nullable
     @Override
-    public Component getSuffixComponent() {
+    public @Nullable Component getSuffixComponent() {
         Object object = toAWTComponent().getClientProperty("JTextField.trailingComponent");
         if (object instanceof JComponent jComponent) {
             return TargetAWT.from(jComponent);
@@ -125,9 +124,8 @@ public class DesktopTextBoxImpl extends DocumentSwingValidator<String, DesktopTe
         toAWTComponent().setForegroundColor(foreground);
     }
 
-    @Nullable
     @Override
-    public ColorValue getForegroundColor() {
+    public @Nullable ColorValue getForegroundColor() {
         return toAWTComponent().myForegroundColor;
     }
 

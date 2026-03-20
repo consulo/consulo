@@ -32,8 +32,7 @@ public interface CodeDocumentationAwareCommenter extends Commenter {
    * It is assumed that line comment prefix is not null when line comment type is not null.
    * @return the line comment type.
    */
-  @Nullable
-  IElementType getLineCommentTokenType();
+  @Nullable IElementType getLineCommentTokenType();
 
   /**
    * Returns the type of the block comment in the language,
@@ -41,8 +40,7 @@ public interface CodeDocumentationAwareCommenter extends Commenter {
    * It is assumed that block comment prefix is not null when block comment type is not null.
    * @return the line block comment type.
    */
-  @Nullable
-  IElementType getBlockCommentTokenType();
+  @Nullable IElementType getBlockCommentTokenType();
 
   /**
    * Returns the type of the documentation comment token in the language,
@@ -50,8 +48,7 @@ public interface CodeDocumentationAwareCommenter extends Commenter {
    * It is assumed that documentation comment prefix is not null when documentation comment type is not null.
    * @return the line block comment type.
    */
-  @Nullable
-  IElementType getDocumentationCommentTokenType();
+  @Nullable IElementType getDocumentationCommentTokenType();
 
   /**
    * Returns the string which starts documentation comment in the language, or null if the language
@@ -65,8 +62,7 @@ public interface CodeDocumentationAwareCommenter extends Commenter {
    * does not support documentation comments.
    * @return the line comment text, or null.
    */
-  @Nullable
-  String getDocumentationCommentLinePrefix();
+  @Nullable String getDocumentationCommentLinePrefix();
 
   /**
    * Returns the string which ends documentation comment in the language, or null if the language

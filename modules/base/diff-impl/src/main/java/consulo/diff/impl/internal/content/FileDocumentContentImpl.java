@@ -39,9 +39,8 @@ public class FileDocumentContentImpl extends DocumentContentImpl implements File
     myFile = file;
   }
 
-  @Nullable
   @Override
-  public Navigatable getNavigatable(LineCol position) {
+  public @Nullable Navigatable getNavigatable(LineCol position) {
     Project project = getProject();
     if (project == null || project.isDefault() || !myFile.isValid()) return null;
     return OpenFileDescriptorFactory.getInstance(project)

@@ -53,9 +53,8 @@ public class EmptyIndex implements VcsLogIndex {
     throw new UnsupportedOperationException();
   }
 
-  @Nullable
   @Override
-  public String getFullMessage(int index) {
+  public @Nullable String getFullMessage(int index) {
     return null;
   }
 

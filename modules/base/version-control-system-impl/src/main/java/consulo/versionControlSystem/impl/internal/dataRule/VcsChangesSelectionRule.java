@@ -36,9 +36,8 @@ public class VcsChangesSelectionRule implements GetDataRule<ChangesSelection> {
     return VcsDataKeys.CHANGES_SELECTION;
   }
 
-  @Nullable
   @Override
-  public ChangesSelection getData(DataProvider dataProvider) {
+  public @Nullable ChangesSelection getData(DataProvider dataProvider) {
     return getChangesSelection(dataProvider);
   }
 

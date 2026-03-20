@@ -128,8 +128,7 @@ public interface ProjectManager {
      * @param path project location
      * @return newly crated project
      */
-    @Nullable
-    Project createProject(String name, String path);
+    @Nullable Project createProject(String name, String path);
 
     // region deprecated code
 

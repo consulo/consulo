@@ -39,8 +39,7 @@ public interface PaintingParent {
    * @param c a component
    * @return a rectangle, if null -- the whole component will be repainted
    */
-  @Nullable
-  Rectangle getChildRec(Component c);
+  @Nullable Rectangle getChildRec(Component c);
 
   class Wrapper extends JPanel implements PaintingParent {
     public Wrapper(Component component) {

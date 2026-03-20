@@ -33,9 +33,8 @@ public class DesktopTableColumnInfo<Value, Item> extends ColumnInfo<Item, Value>
     myConverter = converter;
   }
 
-  @Nullable
   @Override
-  public Value valueOf(Item value) {
+  public @Nullable Value valueOf(Item value) {
     return myConverter.apply(value);
   }
 }

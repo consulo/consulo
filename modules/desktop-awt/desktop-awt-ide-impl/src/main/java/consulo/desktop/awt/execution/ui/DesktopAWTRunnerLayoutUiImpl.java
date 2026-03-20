@@ -382,9 +382,8 @@ public class DesktopAWTRunnerLayoutUiImpl implements RunnerLayoutUiImpl {
         return contents;
     }
 
-    @Nullable
     @Override
-    public Object getData(Key dataId) {
+    public @Nullable Object getData(Key dataId) {
         if (QuickActionProvider.KEY == dataId || RunnerContentUi.KEY == dataId) {
             return myContentUI;
         }

@@ -81,9 +81,8 @@ public class ThreeStateCheckBoxRenderer extends ThreeStateCheckBox implements Ta
     return this;
   }
 
-  @Nullable
   @Override
-  public Object getCellEditorValue() {
+  public @Nullable Object getCellEditorValue() {
     return getState() != State.DONT_CARE ? isSelected() : null;
   }
 

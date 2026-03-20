@@ -23,8 +23,7 @@ public interface ChildInfo {
   /**
    * @return null means children are unknown
    */
-  @Nullable
-  ChildInfo[] getChildren();
+  @Nullable ChildInfo[] getChildren();
 
   FileAttributes getFileAttributes();
 }

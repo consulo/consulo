@@ -61,9 +61,8 @@ public class WebThreeComponentSplitLayoutImpl extends VaadinComponentDelegate<We
             mySecondLayout.addToSecondary(component);
         }
 
-        @Nullable
         @Override
-        public Component toUIComponent() {
+        public @Nullable Component toUIComponent() {
             return WebThreeComponentSplitLayoutImpl.this;
         }
     }

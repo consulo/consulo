@@ -83,9 +83,8 @@ public abstract class LogConsoleImpl extends LogConsoleBase {
     return myPath;
   }
 
-  @Nullable
   @Override
-  protected BufferedReader updateReaderIfNeeded(@Nullable BufferedReader reader) throws IOException {
+  protected @Nullable BufferedReader updateReaderIfNeeded(@Nullable BufferedReader reader) throws IOException {
     if (reader == null) {
       return null;
     }

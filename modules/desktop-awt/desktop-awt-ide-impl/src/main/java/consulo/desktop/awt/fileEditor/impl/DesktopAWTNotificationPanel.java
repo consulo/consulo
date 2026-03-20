@@ -154,9 +154,8 @@ public class DesktopAWTNotificationPanel extends EditorNotificationPanel impleme
         return this;
     }
 
-    @Nullable
     @Override
-    public IntentionActionWithOptions getIntentionAction() {
+    public @Nullable IntentionActionWithOptions getIntentionAction() {
         return super.getIntentionAction();
     }
 }

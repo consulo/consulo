@@ -36,8 +36,7 @@ public interface VcsLogIndex {
   
   Set<Integer> filter(List<VcsLogDetailsFilter> detailsFilters);
 
-  @Nullable
-  String getFullMessage(int index);
+  @Nullable String getFullMessage(int index);
 
   void markCorrupted();
 }

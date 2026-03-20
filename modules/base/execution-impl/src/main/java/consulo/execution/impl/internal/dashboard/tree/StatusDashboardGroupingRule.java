@@ -25,9 +25,8 @@ public final class StatusDashboardGroupingRule implements RunDashboardGroupingRu
     return NAME;
   }
 
-  @Nullable
   @Override
-  public RunDashboardGroup getGroup(AbstractTreeNode<?> node) {
+  public @Nullable RunDashboardGroup getGroup(AbstractTreeNode<?> node) {
     Project project = node.getProject();
     if (project != null && !ProjectPropertiesComponent.getInstance(project).getBoolean(getName(), false)) {
       return null;

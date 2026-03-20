@@ -224,9 +224,8 @@ public class SimpleOnesideDiffViewer extends OnesideTextDiffViewer {
     // Helpers
     //
 
-    @Nullable
     @Override
-    public Object getData(Key<?> dataId) {
+    public @Nullable Object getData(Key<?> dataId) {
         if (DiffDataKeys.CURRENT_CHANGE_RANGE == dataId) {
             int lineCount = getLineCount(getEditor().getDocument());
             return new LineRange(0, lineCount);
@@ -277,9 +276,8 @@ public class SimpleOnesideDiffViewer extends OnesideTextDiffViewer {
             return true;
         }
 
-        @Nullable
         @Override
-        protected LogicalPosition[] getCaretPositions() {
+        protected @Nullable LogicalPosition[] getCaretPositions() {
             int index = getSide().getIndex();
             int otherIndex = getSide().other().getIndex();
 

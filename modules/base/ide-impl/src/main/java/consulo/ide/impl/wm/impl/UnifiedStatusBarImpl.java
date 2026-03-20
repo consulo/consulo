@@ -288,9 +288,8 @@ public class UnifiedStatusBarImpl implements StatusBarEx {
     myFrame = frame;
   }
 
-  @Nullable
   @Override
-  public Project getProject() {
+  public @Nullable Project getProject() {
     return myFrame == null ? null : myFrame.getProject();
   }
 

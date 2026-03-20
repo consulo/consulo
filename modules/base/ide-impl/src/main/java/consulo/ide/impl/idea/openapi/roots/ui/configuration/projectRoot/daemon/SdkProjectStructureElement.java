@@ -21,9 +21,8 @@ public class SdkProjectStructureElement extends ProjectStructureElement {
     return mySdk;
   }
 
-  @Nullable
   @Override
-  public String getDescription() {
+  public @Nullable String getDescription() {
     return mySdk.getVersionString();
   }
 

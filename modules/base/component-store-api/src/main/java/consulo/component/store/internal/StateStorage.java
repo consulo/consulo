@@ -21,13 +21,11 @@ import org.jspecify.annotations.Nullable;
 import java.util.Set;
 
 public interface StateStorage {
-  @Nullable
-  <T> T getState(@Nullable Object component, String componentName, Class<T> stateClass) throws StateStorageException;
+  <T> @Nullable T getState(@Nullable Object component, String componentName, Class<T> stateClass) throws StateStorageException;
 
   boolean hasState(@Nullable Object component, String componentName, Class<?> aClass, boolean reloadData);
 
-  @Nullable
-  ExternalizationSession startExternalization();
+  @Nullable ExternalizationSession startExternalization();
 
   /**
    * Get changed component names
@@ -41,8 +39,7 @@ public interface StateStorage {
      * return null if nothing to save
      * @param force - ignore store check
      */
-    @Nullable
-    SaveSession createSaveSession(boolean force);
+    @Nullable SaveSession createSaveSession(boolean force);
   }
 
   interface SaveSession {

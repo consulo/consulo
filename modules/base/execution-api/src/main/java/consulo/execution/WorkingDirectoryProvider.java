@@ -19,11 +19,9 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.module.Module;
 import org.jetbrains.annotations.SystemIndependent;
-
 import org.jspecify.annotations.Nullable;
 
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface WorkingDirectoryProvider {
-  @Nullable
-  @SystemIndependent String getWorkingDirectoryPath(Module module);
+  @SystemIndependent @Nullable String getWorkingDirectoryPath(Module module);
 }

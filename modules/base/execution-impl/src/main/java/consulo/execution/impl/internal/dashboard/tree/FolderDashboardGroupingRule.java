@@ -25,9 +25,8 @@ public final class FolderDashboardGroupingRule implements RunDashboardGroupingRu
     return NAME;
   }
 
-  @Nullable
   @Override
-  public RunDashboardGroup getGroup(AbstractTreeNode<?> node) {
+  public @Nullable RunDashboardGroup getGroup(AbstractTreeNode<?> node) {
     if (node instanceof RunDashboardRunConfigurationNode) {
       RunnerAndConfigurationSettings configurationSettings = ((RunDashboardRunConfigurationNode)node).getConfigurationSettings();
       String folderName = configurationSettings.getFolderName();

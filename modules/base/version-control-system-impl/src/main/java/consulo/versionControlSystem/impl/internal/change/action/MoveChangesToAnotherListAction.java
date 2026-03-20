@@ -199,9 +199,8 @@ public class MoveChangesToAnotherListAction extends AnAction implements DumbAwar
         return false;
     }
 
-    @Nullable
     @RequiredUIAccess
-    private static LocalChangeList askTargetList(Project project, Collection<Change> changes) {
+    private static @Nullable LocalChangeList askTargetList(Project project, Collection<Change> changes) {
         ChangeListManagerImpl listManager = ChangeListManagerImpl.getInstanceImpl(project);
         List<LocalChangeList> preferredLists = getPreferredLists(listManager.getChangeListsCopy(), changes);
         List<LocalChangeList> listsForChooser =

@@ -35,9 +35,8 @@ public final class DebugAction extends ExecutorAction {
         return ExecutorRegistry.getInstance().getExecutorById(ToolWindowId.DEBUG);
     }
 
-    @Nullable
     @Override
-    protected Image getTemplateIcon() {
+    protected @Nullable Image getTemplateIcon() {
         return ExecutionDebugIconGroup.actionStartdebugger();
     }
 

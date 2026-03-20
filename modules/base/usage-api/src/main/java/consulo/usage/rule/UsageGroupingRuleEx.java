@@ -28,8 +28,7 @@ import java.util.List;
  * @deprecated override {@link UsageGroupingRule#getParentGroupsFor(Usage, UsageTarget[])} instead.
  */
 public interface UsageGroupingRuleEx extends UsageGroupingRule {
-    @Nullable
-    UsageGroup groupUsage(Usage usage, UsageTarget[] targets);
+    @Nullable UsageGroup groupUsage(Usage usage, UsageTarget[] targets);
 
     
     @Override

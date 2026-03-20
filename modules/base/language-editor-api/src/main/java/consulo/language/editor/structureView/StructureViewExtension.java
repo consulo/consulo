@@ -38,8 +38,7 @@ public interface StructureViewExtension {
 
   StructureViewTreeElement[] getChildren(PsiElement parent);
 
-  @Nullable
-  Object getCurrentEditorElement(Editor editor, PsiElement parent);
+  @Nullable Object getCurrentEditorElement(Editor editor, PsiElement parent);
 
   default void filterChildren(Collection<StructureViewTreeElement> baseChildren, List<StructureViewTreeElement> extensionChildren) {
   }

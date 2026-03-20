@@ -55,8 +55,7 @@ abstract class FilterModel<Filter extends VcsLogFilter> {
     myUiProperties.saveFilterValues(myName, filter == null ? null : getFilterValues(filter));
   }
 
-  @Nullable
-  Filter getFilter() {
+  @Nullable Filter getFilter() {
     if (myFilter == null) {
       myFilter = getLastFilter();
     }

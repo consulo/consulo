@@ -17,9 +17,7 @@ public interface TransferableWrapper extends FileFlavorProvider {
     return TreePathUtil.toTreePaths(getTreeNodes());
   }
 
-  @Nullable
-  TreeNode[] getTreeNodes();
+  @Nullable TreeNode[] getTreeNodes();
 
-  @Nullable
-  PsiElement[] getPsiElements();
+  @Nullable PsiElement[] getPsiElements();
 }

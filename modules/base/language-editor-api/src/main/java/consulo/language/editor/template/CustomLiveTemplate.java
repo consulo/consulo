@@ -28,8 +28,7 @@ import org.jspecify.annotations.Nullable;
 public interface CustomLiveTemplate {
   ExtensionPointName<CustomLiveTemplate> EP_NAME = ExtensionPointName.create(CustomLiveTemplate.class);
 
-  @Nullable
-  String computeTemplateKey(CustomTemplateCallback callback);
+  @Nullable String computeTemplateKey(CustomTemplateCallback callback);
 
   boolean isApplicable(CustomTemplateCallback callback, int offset, boolean wrapping);
 

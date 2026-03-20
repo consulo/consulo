@@ -175,9 +175,8 @@ public class ConfigurationContext {
      *
      * @return an existing configuration, or null if none was found.
      */
-    @Nullable
     @SuppressWarnings("deprecation")
-    public RunnerAndConfigurationSettings findExisting() {
+    public @Nullable RunnerAndConfigurationSettings findExisting() {
         if (myExistingConfiguration != null) {
             return myExistingConfiguration.get();
         }
@@ -225,9 +224,8 @@ public class ConfigurationContext {
         return myExistingConfiguration.get();
     }
 
-    @Nullable
     @RequiredUIAccess
-    private static PsiElement getSelectedPsiElement(DataContext dataContext, Project project) {
+    private static @Nullable PsiElement getSelectedPsiElement(DataContext dataContext, Project project) {
         PsiElement element = null;
         Editor editor = dataContext.getData(Editor.KEY);
         if (editor != null) {
@@ -322,17 +320,15 @@ public class ConfigurationContext {
     private List<RuntimeConfigurationProducer> myPreferredProducers;
 
     @Deprecated
-    @Nullable
     @SuppressWarnings({"deprecation", "unused"})
-    public RunnerAndConfigurationSettings updateConfiguration(RuntimeConfigurationProducer producer) {
+    public @Nullable RunnerAndConfigurationSettings updateConfiguration(RuntimeConfigurationProducer producer) {
         myConfiguration = producer.getConfiguration();
         return myConfiguration;
     }
 
     @Deprecated
-    @Nullable
     @SuppressWarnings("deprecation")
-    public List<RuntimeConfigurationProducer> findPreferredProducers() {
+    public @Nullable List<RuntimeConfigurationProducer> findPreferredProducers() {
         if (myPreferredProducers == null) {
             myPreferredProducers = PreferredProducerFind.findPreferredProducers(myLocation, this, true);
         }

@@ -92,9 +92,8 @@ public class CompletionUtil {
     return CompletionUtilCore.findIdentifierPrefix(document, offset, idPart, idStart);
   }
 
-  @Nullable
   @RequiredReadAction
-  public static String findReferencePrefix(CompletionParameters parameters) {
+  public static @Nullable String findReferencePrefix(CompletionParameters parameters) {
     return CompletionUtilCore.findReferencePrefix(parameters);
   }
 

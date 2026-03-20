@@ -42,8 +42,7 @@ import java.util.function.Supplier;
 public class ImplementationSearcher {
     public static final String SEARCHING_FOR_IMPLEMENTATIONS = CodeInsightBundle.message("searching.for.implementations");
 
-    @Nullable
-    PsiElement[] searchImplementations(Editor editor, PsiElement element, int offset) {
+    @Nullable PsiElement[] searchImplementations(Editor editor, PsiElement element, int offset) {
         boolean onRef = Application.get().runReadAction((Supplier<Boolean>) () -> {
             Set<String> flags = new HashSet<>(getFlags());
             flags.remove(TargetElementUtilExtender.REFERENCED_ELEMENT_ACCEPTED);

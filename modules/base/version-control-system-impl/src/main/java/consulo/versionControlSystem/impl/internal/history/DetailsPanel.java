@@ -121,9 +121,8 @@ class DetailsPanel extends HtmlPanel implements DataProvider, CopyProvider {
     return true;
   }
 
-  @Nullable
   @Override
-  public Object getData(Key dataId) {
+  public @Nullable Object getData(Key dataId) {
     return KEY == dataId ? this : null;
   }
 }

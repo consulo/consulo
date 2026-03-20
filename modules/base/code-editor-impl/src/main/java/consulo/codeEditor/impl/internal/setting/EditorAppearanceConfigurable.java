@@ -147,9 +147,8 @@ public class EditorAppearanceConfigurable extends SimpleConfigurableByProperties
         return "editor.preferences.appearance";
     }
 
-    @Nullable
     @Override
-    public String getParentId() {
+    public @Nullable String getParentId() {
         return StandardConfigurableIds.EDITOR_GROUP;
     }
 }

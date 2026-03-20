@@ -44,9 +44,8 @@ public abstract class CallHierarchyBrowserBase extends HierarchyBrowserBaseEx {
         super(project, method);
     }
 
-    @Nullable
     @Override
-    protected JPanel createLegendPanel() {
+    protected @Nullable JPanel createLegendPanel() {
         return null;
     }
 

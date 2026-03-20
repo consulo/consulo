@@ -487,10 +487,9 @@ public class ManagePackagesDialog extends DialogWrapper {
         }
     }
 
-    @Nullable
     @Override
     @RequiredUIAccess
-    public JComponent getPreferredFocusedComponent() {
+    public @Nullable JComponent getPreferredFocusedComponent() {
         return ((MyPackageFilter) myFilter).getTextEditor();
     }
 

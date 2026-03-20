@@ -106,9 +106,8 @@ public class TemplateSettingsImpl implements PersistentStateComponent<TemplateSe
     private State myState = new State();
 
     static final class ShortcutConverter extends Converter<Character> {
-        @Nullable
         @Override
-        public Character fromString(String shortcut) {
+        public @Nullable Character fromString(String shortcut) {
             return TAB.equals(shortcut) ? TAB_CHAR : ENTER.equals(shortcut) ? ENTER_CHAR : CUSTOM.equals(shortcut) ? CUSTOM_CHAR : SPACE_CHAR;
         }
 

@@ -19,6 +19,5 @@ package consulo.language.ast;
 import org.jspecify.annotations.Nullable;
 
 public interface RoleFinder {
-  @Nullable
-  ASTNode findChild(ASTNode parent);
+  @Nullable ASTNode findChild(ASTNode parent);
 }

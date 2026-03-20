@@ -618,9 +618,8 @@ public class ParameterInfoController extends UserDataHolderBase implements Dispo
         return offset > rangeStart ? offset : CharArrayUtil.shiftForward(text, rangeEnd, WHITESPACE);
     }
 
-    @Nullable
     @RequiredReadAction
-    public static <E extends PsiElement> E findArgumentList(PsiFile file, int offset, int lbraceOffset) {
+    public static <E extends PsiElement> @Nullable E findArgumentList(PsiFile file, int offset, int lbraceOffset) {
         if (file == null) {
             return null;
         }

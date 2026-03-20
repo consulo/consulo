@@ -30,9 +30,8 @@ public class PsiElementDataValidator implements DataValidator<PsiElement> {
     return PsiElement.KEY;
   }
 
-  @Nullable
   @Override
-  public PsiElement findInvalid(Key<PsiElement> key, PsiElement psiElement, Object dataSource) {
+  public @Nullable PsiElement findInvalid(Key<PsiElement> key, PsiElement psiElement, Object dataSource) {
     return psiElement.isValid() ? null : psiElement;
   }
 }

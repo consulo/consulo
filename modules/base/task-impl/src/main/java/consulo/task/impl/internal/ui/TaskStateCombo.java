@@ -74,9 +74,8 @@ public abstract class TaskStateCombo extends JPanel {
                     return CustomStateTrinityAdapter.wrapList(repository.getAvailableTaskStates(myTask));
                 }
 
-                @Nullable
                 @Override
-                public CustomStateTrinityAdapter getSelectedItem() {
+                public @Nullable CustomStateTrinityAdapter getSelectedItem() {
                     CustomTaskState state = getPreferredState(repository, CustomStateTrinityAdapter.unwrapList(myResult));
                     return state != null ? new CustomStateTrinityAdapter(state) : null;
                 }

@@ -46,8 +46,7 @@ public interface MainVcsLogUiProperties extends VcsLogUiProperties {
 
   void saveFilterValues(String filterName, @Nullable List<String> values);
 
-  @Nullable
-  List<String> getFilterValues(String filterName);
+  @Nullable List<String> getFilterValues(String filterName);
 
   @RequiredUIAccess
   void addChangeListener(VcsLogUiPropertiesListener listener);

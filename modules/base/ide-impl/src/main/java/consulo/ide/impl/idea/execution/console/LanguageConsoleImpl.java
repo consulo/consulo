@@ -413,9 +413,8 @@ public class LanguageConsoleImpl extends ConsoleViewImpl implements LanguageCons
         }
     }
 
-    @Nullable
     @Override
-    public Object getData(Key<?> dataId) {
+    public @Nullable Object getData(Key<?> dataId) {
         return super.getData(dataId);
     }
 

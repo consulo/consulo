@@ -24,6 +24,5 @@ import org.jspecify.annotations.Nullable;
 public interface XDependentBreakpointManager {
     void setMasterBreakpoint(XBreakpoint<?> slave, XBreakpoint<?> master, boolean leaveEnabled);
 
-    @Nullable
-    XBreakpoint<?> getMasterBreakpoint(XBreakpoint<?> slave);
+    @Nullable XBreakpoint<?> getMasterBreakpoint(XBreakpoint<?> slave);
 }

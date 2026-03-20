@@ -805,9 +805,8 @@ public class PsiBuilderImpl extends UnprotectedUserDataHolder implements PsiBuil
         clearCachedTokenType();
     }
 
-    @Nullable
     @Override
-    public IElementType lookAhead(int steps) {
+    public @Nullable IElementType lookAhead(int steps) {
         if (eof()) {    // ensure we skip over whitespace if it's needed
             return null;
         }
@@ -907,9 +906,8 @@ public class PsiBuilderImpl extends UnprotectedUserDataHolder implements PsiBuil
         return tokenSequence == null ? null : tokenSequence.toString();
     }
 
-    @Nullable
     @Override
-    public CharSequence getTokenSequence() {
+    public @Nullable CharSequence getTokenSequence() {
         if (eof()) {
             return null;
         }
@@ -1968,9 +1966,8 @@ public class PsiBuilderImpl extends UnprotectedUserDataHolder implements PsiBuil
         return ASTFactory.leaf(type, myLanguageVersion, text);
     }
 
-    @Nullable
     @Override
-    public PsiFile getContainingFile() {
+    public @Nullable PsiFile getContainingFile() {
         return myFile;
     }
 

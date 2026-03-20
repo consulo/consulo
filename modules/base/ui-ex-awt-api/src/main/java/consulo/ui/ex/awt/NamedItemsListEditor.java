@@ -137,9 +137,8 @@ public abstract class NamedItemsListEditor<T> extends MasterDetailsComponent {
         return "item";
     }
 
-    @Nullable
     @RequiredUIAccess
-    public String askForProfileName(String titlePattern) {
+    public @Nullable String askForProfileName(String titlePattern) {
         String title = MessageFormat.format(titlePattern, subjDisplayName());
         return Messages.showInputDialog(
             "New " + subjDisplayName() + " name:",
@@ -388,9 +387,8 @@ public abstract class NamedItemsListEditor<T> extends MasterDetailsComponent {
         selectNodeInTree(findByName(myNamer.getName(item)));
     }
 
-    @Nullable
     @RequiredUIAccess
-    protected T createItem() {
+    protected @Nullable T createItem() {
         String name = askForProfileName("Create new {0}");
         if (name == null) {
             return null;

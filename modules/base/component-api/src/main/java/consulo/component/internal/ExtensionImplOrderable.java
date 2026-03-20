@@ -82,9 +82,8 @@ class ExtensionImplOrderable<K> implements LoadingOrder.Orderable {
     return myValue.extension();
   }
 
-  @Nullable
   @Override
-  public String getOrderId() {
+  public @Nullable String getOrderId() {
     return myOrderId;
   }
 

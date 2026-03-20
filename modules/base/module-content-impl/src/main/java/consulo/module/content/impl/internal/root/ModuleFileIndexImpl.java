@@ -124,9 +124,8 @@ public class ModuleFileIndexImpl extends FileIndexBase implements ModuleFileInde
             && myDirectoryIndexProvider.get().getContentFolderType(fileOrDir, info) instanceof TestLikeContentFolderTypeProvider;
     }
 
-    @Nullable
     @Override
-    public ContentFolderTypeProvider getContentFolderTypeForFile(VirtualFile fileOrDir) {
+    public @Nullable ContentFolderTypeProvider getContentFolderTypeForFile(VirtualFile fileOrDir) {
         DirectoryInfo info = getInfoForFileOrDirectory(fileOrDir);
         if (info.isInModuleSource(fileOrDir) && myModule.equals(info.getModule())) {
             return myDirectoryIndexProvider.get().getContentFolderType(fileOrDir, info);

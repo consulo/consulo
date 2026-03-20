@@ -19,6 +19,5 @@ interface ServiceViewUi {
 
   void setMasterComponentVisible(boolean visible);
 
-  @Nullable
-  JComponent getDetailsComponent();
+  @Nullable JComponent getDetailsComponent();
 }

@@ -27,6 +27,5 @@ import org.jspecify.annotations.Nullable;
  */
 @ServiceAPI(ComponentScope.APPLICATION)
 public interface AuthenticationDialog {
-  @Nullable
-  AuthenticationData showNoSafe(String title, String description, String login, String password, boolean rememberPassword);
+  @Nullable AuthenticationData showNoSafe(String title, String description, String login, String password, boolean rememberPassword);
 }

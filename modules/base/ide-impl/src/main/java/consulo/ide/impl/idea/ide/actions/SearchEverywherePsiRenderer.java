@@ -58,17 +58,15 @@ public class SearchEverywherePsiRenderer extends PsiElementListCellRenderer<PsiE
         return StringUtil.notNullize(name, "<unnamed>");
     }
 
-    @Nullable
     @Override
     @RequiredReadAction
-    protected String getContainerText(PsiElement element, String name) {
+    protected @Nullable String getContainerText(PsiElement element, String name) {
         return getContainerTextForLeftComponent(element, name, -1, null);
     }
 
-    @Nullable
     @Override
     @RequiredReadAction
-    protected String getContainerTextForLeftComponent(PsiElement element, String name, int maxWidth, FontMetrics fm) {
+    protected @Nullable String getContainerTextForLeftComponent(PsiElement element, String name, int maxWidth, FontMetrics fm) {
         String text = SymbolPresentationUtil.getSymbolContainerText(element);
 
         if (text == null) {

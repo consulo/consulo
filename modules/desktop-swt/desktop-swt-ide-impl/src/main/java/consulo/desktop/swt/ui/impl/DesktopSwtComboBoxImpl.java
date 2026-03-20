@@ -103,9 +103,8 @@ public class DesktopSwtComboBoxImpl<E> extends SWTComponentDelegate<CCombo> impl
         }
     }
 
-    @Nullable
     @Override
-    public E getValue() {
+    public @Nullable E getValue() {
         return myModel.get(mySelectedIndex);
     }
 

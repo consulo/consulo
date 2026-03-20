@@ -95,9 +95,8 @@ public class ExtractArtifactAction extends LayoutTreeActionBase {
         treeComponent.rebuildTree();
     }
 
-    @Nullable
     @RequiredUIAccess
-    protected IExtractArtifactDialog showDialog(LayoutTreeComponent treeComponent, String initialName) {
+    protected @Nullable IExtractArtifactDialog showDialog(LayoutTreeComponent treeComponent, String initialName) {
         ExtractArtifactDialog dialog = new ExtractArtifactDialog(myArtifactEditor.getContext(), treeComponent, initialName);
         dialog.show();
         if (!dialog.isOK()) {

@@ -19,8 +19,7 @@ import consulo.versionControlSystem.impl.internal.change.ui.StaticFilePath;
 import org.jspecify.annotations.Nullable;
 
 public interface ChangesGroupingPolicy {
-  @Nullable
-  ChangesBrowserNode getParentNodeFor(StaticFilePath node, ChangesBrowserNode rootNode);
+  @Nullable ChangesBrowserNode getParentNodeFor(StaticFilePath node, ChangesBrowserNode rootNode);
 
   void clear();
 }

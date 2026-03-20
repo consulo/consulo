@@ -41,9 +41,8 @@ public class FileTemplateSettingsBase extends FileTemplatesLoader implements Per
     super(typeManager, project);
   }
 
-  @Nullable
   @Override
-  public Element getState() {
+  public @Nullable Element getState() {
     Element element = new Element("fileTemplateSettings");
 
     for (FTManager manager : getAllManagers()) {

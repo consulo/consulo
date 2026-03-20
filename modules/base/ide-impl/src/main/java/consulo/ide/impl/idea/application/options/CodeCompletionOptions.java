@@ -59,9 +59,8 @@ public class CodeCompletionOptions extends SimpleConfigurable<CodeCompletionPane
     return ApplicationLocalize.titleCodeCompletion();
   }
 
-  @Nullable
   @Override
-  public String getParentId() {
+  public @Nullable String getParentId() {
     return StandardConfigurableIds.EDITOR_GROUP;
   }
 

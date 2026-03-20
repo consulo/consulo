@@ -54,9 +54,8 @@ public class TestsUIUtil {
     private TestsUIUtil() {
     }
 
-    @Nullable
     @SuppressWarnings("unchecked")
-    public static <T> T getData(AbstractTestProxy testProxy, Key<T> dataId, TestFrameworkRunningModel model) {
+    public static <T> @Nullable T getData(AbstractTestProxy testProxy, Key<T> dataId, TestFrameworkRunningModel model) {
         TestConsoleProperties properties = model.getProperties();
         Project project = properties.getProject();
         if (testProxy == null) {

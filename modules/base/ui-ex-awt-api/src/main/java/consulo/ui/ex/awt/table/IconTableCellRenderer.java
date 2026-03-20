@@ -12,18 +12,16 @@ import java.awt.*;
 
 public abstract class IconTableCellRenderer<T> extends DefaultTableCellRenderer {
   public static final IconTableCellRenderer<Iconable> ICONABLE = new IconTableCellRenderer<Iconable>() {
-    @Nullable
     @Override
-    protected Image getIcon(Iconable value, JTable table, int row) {
+    protected @Nullable Image getIcon(Iconable value, JTable table, int row) {
       return value.getIcon(Iconable.ICON_FLAG_VISIBILITY);
     }
   };
 
   public static TableCellRenderer create(final Image icon) {
     return new IconTableCellRenderer() {
-      @Nullable
       @Override
-      protected Image getIcon(Object value, JTable table, int row) {
+      protected @Nullable Image getIcon(Object value, JTable table, int row) {
         return icon;
       }
     };

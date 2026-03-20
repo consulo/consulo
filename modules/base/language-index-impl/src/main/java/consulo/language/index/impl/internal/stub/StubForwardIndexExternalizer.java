@@ -50,8 +50,7 @@ public abstract class StubForwardIndexExternalizer<StubKeySerializationState> im
     return doRead(in, null, null);
   }
 
-  @Nullable
-  <K> Map<StubIndexKey, Map<Object, StubIdList>> doRead(DataInput in, @Nullable StubIndexKey<K, ?> requestedIndex, @Nullable K requestedKey) throws IOException {
+  <K> @Nullable Map<StubIndexKey, Map<Object, StubIdList>> doRead(DataInput in, @Nullable StubIndexKey<K, ?> requestedIndex, @Nullable K requestedKey) throws IOException {
     if (!myEnsuredStubElementTypesLoaded) {
       ProgressManager.getInstance().executeNonCancelableSection(() -> {
         SerializationManager.getInstance().initSerializers();

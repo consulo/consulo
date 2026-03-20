@@ -227,9 +227,8 @@ public class BlockSupportImpl extends BlockSupport {
         return chameleon;
     }
 
-    @Nullable
     @SuppressWarnings("unchecked")
-    protected static ASTNode tryReparseLeaf(IReparseableLeafElementType reparseable, ASTNode node, CharSequence newTextStr) {
+    protected static @Nullable ASTNode tryReparseLeaf(IReparseableLeafElementType reparseable, ASTNode node, CharSequence newTextStr) {
         return reparseable.reparseLeaf(node, newTextStr);
     }
 

@@ -51,9 +51,8 @@ public class RemoteAgentReflectiveProxyFactory extends RemoteAgentProxyFactoryBa
       mySourceClassLoader = sourceClassLoader;
     }
 
-    @Nullable
     @Override
-    public Object invoke(Object proxy, Method method, Object[] args) {
+    public @Nullable Object invoke(Object proxy, Method method, Object[] args) {
       ClassLoader initialClassLoader = Thread.currentThread().getContextClassLoader();
       try {
         Thread.currentThread().setContextClassLoader(myTargetClassLoader);

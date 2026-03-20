@@ -10,8 +10,7 @@ import consulo.language.psi.PsiFile;
 import org.jspecify.annotations.Nullable;
 
 abstract class SmartPointerElementInfo {
-  @Nullable
-  Document getDocumentToSynchronize() {
+  @Nullable Document getDocumentToSynchronize() {
     return null;
   }
 

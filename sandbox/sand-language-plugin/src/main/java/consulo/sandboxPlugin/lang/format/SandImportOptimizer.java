@@ -45,9 +45,8 @@ public class SandImportOptimizer implements ImportOptimizer {
   @Override
   public Runnable processFile(PsiFile file) {
     return new CollectingInfoRunnable() {
-      @Nullable
       @Override
-      public String getUserNotificationInfo() {
+      public @Nullable String getUserNotificationInfo() {
         return "test";
       }
 

@@ -45,15 +45,13 @@ public class RemoteFilePath implements FilePath {
     myIsDirectory = isDirectory;
   }
 
-  @Nullable
   @Override
-  public VirtualFile getVirtualFile() {
+  public @Nullable VirtualFile getVirtualFile() {
     return null;
   }
 
-  @Nullable
   @Override
-  public VirtualFile getVirtualFileParent() {
+  public @Nullable VirtualFile getVirtualFileParent() {
     return null;
   }
 
@@ -75,9 +73,8 @@ public class RemoteFilePath implements FilePath {
     return getPath();
   }
 
-  @Nullable
   @Override
-  public Document getDocument() {
+  public @Nullable Document getDocument() {
     return null;
   }
 
@@ -124,9 +121,8 @@ public class RemoteFilePath implements FilePath {
     return FileUtil.isAncestor(parent.getPath(), getPath(), strict);
   }
 
-  @Nullable
   @Override
-  public FilePath getParentPath() {
+  public @Nullable FilePath getParentPath() {
     String parent = PathUtil.getParentPath(myPath);
     return parent.isEmpty() ? null : new RemoteFilePath(parent, true);
   }

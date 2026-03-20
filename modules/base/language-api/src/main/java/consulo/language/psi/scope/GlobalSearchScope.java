@@ -51,9 +51,8 @@ public abstract class GlobalSearchScope extends BaseSearchScope implements Modul
     this(null);
   }
 
-  @Nullable
   @Override
-  public Project getProject() {
+  public @Nullable Project getProject() {
     return myProject;
   }
 

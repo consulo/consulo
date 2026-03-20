@@ -29,8 +29,7 @@ import java.util.List;
  */
 @ServiceAPI(ComponentScope.APPLICATION)
 public interface SpellcheckerEngineManager {
-    @Nullable
-    SpellcheckerEngine getActiveEngine();
+    @Nullable SpellcheckerEngine getActiveEngine();
 
     
     default List<String> getSuggestions(Project project, String text) {

@@ -28,9 +28,8 @@ import org.jspecify.annotations.Nullable;
 @Singleton
 @ServiceImpl
 public class WebProgressActivityFactory implements ProgressActivityFactory {
-  @Nullable
   @Override
-  public Runnable createActivity() {
+  public @Nullable Runnable createActivity() {
     return null;
   }
 }

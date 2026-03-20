@@ -75,9 +75,8 @@ public final class ComponentUtil {
    * @return a component of the specified type, or {@code null} if the search is failed
    * @see SwingUtilities#getAncestorOfClass
    */
-  @Nullable
   @Contract(pure = true)
-  public static <T> T getParentOfType(Class<? extends T> type, Component component) {
+  public static <T> @Nullable T getParentOfType(Class<? extends T> type, Component component) {
     while (component != null) {
       if (type.isInstance(component)) {
         //noinspection unchecked

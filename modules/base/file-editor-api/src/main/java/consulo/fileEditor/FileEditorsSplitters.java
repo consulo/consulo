@@ -60,8 +60,7 @@ public interface FileEditorsSplitters extends AWTComponentProvider {
 
   void setCurrentWindow(FileEditorWindow window, boolean requestFocus);
 
-  @Nullable
-  FileEditorWindow getCurrentWindow();
+  @Nullable FileEditorWindow getCurrentWindow();
 
   @Deprecated
   @DeprecationInfo("Always call async version #updateFileIconAsync()")
@@ -101,8 +100,7 @@ public interface FileEditorsSplitters extends AWTComponentProvider {
 
   FileEditorWindow[] getOrderedWindows();
 
-  @Nullable
-  VirtualFile getCurrentFile();
+  @Nullable VirtualFile getCurrentFile();
 
   boolean isShowing();
 
@@ -115,15 +113,13 @@ public interface FileEditorsSplitters extends AWTComponentProvider {
   default void toFront() {
   }
 
-  @Nullable
   @RequiredUIAccess
-  default FileEditorWindow openInRightSplit(VirtualFile file) {
+  default @Nullable FileEditorWindow openInRightSplit(VirtualFile file) {
     return openInRightSplit(file, true);
   }
 
-  @Nullable
   @RequiredUIAccess
-  default FileEditorWindow openInRightSplit(VirtualFile file, boolean requestFocus) {
+  default @Nullable FileEditorWindow openInRightSplit(VirtualFile file, boolean requestFocus) {
     FileEditorWindow window = getCurrentWindow();
     if (window == null) {
       return null;

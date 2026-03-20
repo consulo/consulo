@@ -32,9 +32,8 @@ import org.jspecify.annotations.Nullable;
  */
 @ExtensionImpl(order = "last")
 public class DefaultDeployToServerStateProvider implements DeployToServerStateProvider {
-    @Nullable
     @Override
-    public RunProfileState getState(RemoteServer<?> server, Executor executor, ExecutionEnvironment env, DeploymentSource source, DeploymentConfiguration config) throws ExecutionException {
+    public @Nullable RunProfileState getState(RemoteServer<?> server, Executor executor, ExecutionEnvironment env, DeploymentSource source, DeploymentConfiguration config) throws ExecutionException {
         return new DeployToServerState<>(server, source, config, env);
     }
 }

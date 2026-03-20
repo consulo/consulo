@@ -35,9 +35,8 @@ import org.jspecify.annotations.Nullable;
 public class WebButtonImpl extends VaadinComponentDelegate<WebButtonImpl.Vaadin> implements Button {
 
     public class Vaadin extends com.vaadin.flow.component.button.Button implements FromVaadinComponentWrapper {
-        @Nullable
         @Override
-        public Component toUIComponent() {
+        public @Nullable Component toUIComponent() {
             return WebButtonImpl.this;
         }
     }
@@ -98,9 +97,8 @@ public class WebButtonImpl extends VaadinComponentDelegate<WebButtonImpl.Vaadin>
 
     }
 
-    @Nullable
     @Override
-    public Image getIcon() {
+    public @Nullable Image getIcon() {
         // TODO
         return null;
         //return toVaadinComponent().myImage;

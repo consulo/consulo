@@ -69,9 +69,8 @@ public class GraphNodeImpl<E> implements GraphNode<E>, Named {
     return myName;
   }
 
-  @Nullable
   @Override
-  public Image getIcon() {
+  public @Nullable Image getIcon() {
     return myIcon;
   }
 }

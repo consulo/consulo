@@ -80,9 +80,8 @@ public class CleanUnshelvedFilterDialog extends DialogWrapper {
     setResizable(false);
   }
 
-  @Nullable
   @Override
-  protected JComponent createCenterPanel() {
+  protected @Nullable JComponent createCenterPanel() {
     JPanel panel = new JPanel(new BorderLayout());
     JLabel questLabel = new JLabel("Delete already unshelved changelists: \n");
     String panelConstraints = "flowx, ins 0";

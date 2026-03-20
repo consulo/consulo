@@ -993,8 +993,7 @@ public class ChangeListManagerImpl extends ChangeListManagerEx implements Change
         }
     }
 
-    @Nullable
-    Map<VirtualFile, String> getSwitchedRoots() {
+    @Nullable Map<VirtualFile, String> getSwitchedRoots() {
         synchronized (myDataLock) {
             return ((SwitchedFileHolder) myComposite.get(FileHolder.HolderType.ROOT_SWITCH)).getFilesMapCopy();
         }
@@ -1498,9 +1497,8 @@ public class ChangeListManagerImpl extends ChangeListManagerEx implements Change
         myConflictTracker.loadState(element);
     }
 
-    @Nullable
     @Override
-    public Element getState() {
+    public @Nullable Element getState() {
         Element element = new Element("state");
         if (myProject.isDefault()) {
             return element;

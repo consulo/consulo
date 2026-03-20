@@ -51,6 +51,5 @@ public interface IdeView {
    *
    * @return the selected directory, or null if there is no selection or the popup was cancelled.
    */
-  @Nullable
-  PsiDirectory getOrChooseDirectory();
+  @Nullable PsiDirectory getOrChooseDirectory();
 }

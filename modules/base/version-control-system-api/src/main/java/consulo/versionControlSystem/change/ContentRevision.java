@@ -34,8 +34,7 @@ public interface ContentRevision {
    * @return content of the revision
    * @throws VcsException in case when content retrieval fails
    */
-  @Nullable
-  String getContent() throws VcsException;
+  @Nullable String getContent() throws VcsException;
 
   /**
    * @return file path of the revision

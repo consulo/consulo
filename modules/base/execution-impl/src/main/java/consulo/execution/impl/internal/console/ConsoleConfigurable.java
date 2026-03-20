@@ -81,9 +81,8 @@ public class ConsoleConfigurable implements SearchableConfigurable, Configurable
                     return !StringUtil.isEmpty(inputString);
                 }
 
-                @Nullable
                 @Override
-                public String getErrorText(String inputString) {
+                public @Nullable String getErrorText(String inputString) {
                     if (!checkInput(inputString)) {
                         return "Console folding rule string cannot be empty";
                     }
@@ -183,9 +182,8 @@ public class ConsoleConfigurable implements SearchableConfigurable, Configurable
         return "execution.console.folding";
     }
 
-    @Nullable
     @Override
-    public String getParentId() {
+    public @Nullable String getParentId() {
         return StandardConfigurableIds.EXECUTION_GROUP;
     }
 

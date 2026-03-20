@@ -70,8 +70,7 @@ public final class ServersTreeStructure {
     }
 
     public interface LogProvidingNode {
-        @Nullable
-        JComponent getComponent();
+        @Nullable JComponent getComponent();
 
         
         String getLogId();

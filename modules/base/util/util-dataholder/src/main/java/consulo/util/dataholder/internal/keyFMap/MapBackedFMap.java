@@ -84,9 +84,8 @@ class MapBackedFMap implements KeyFMap {
         return new MapBackedFMap(this, keyCode);
     }
 
-    @Nullable
     @Override
-    public <V> V get(Key<V> key) {
+    public <V> @Nullable V get(Key<V> key) {
         //noinspection unchecked
         return (V)myMap.get(key.hashCode());
     }

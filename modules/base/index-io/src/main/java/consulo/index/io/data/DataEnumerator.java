@@ -25,6 +25,5 @@ import java.io.IOException;
 public interface DataEnumerator<Data> {
   int enumerate(@Nullable Data value) throws IOException;
 
-  @Nullable
-  Data valueOf(int idx) throws IOException;
+  @Nullable Data valueOf(int idx) throws IOException;
 }

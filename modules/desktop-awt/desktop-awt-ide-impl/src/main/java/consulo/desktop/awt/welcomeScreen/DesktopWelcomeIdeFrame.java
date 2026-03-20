@@ -59,15 +59,13 @@ class DesktopWelcomeIdeFrame implements IdeFrameEx {
         return null;
     }
 
-    @Nullable
     @Override
-    public Rectangle2D suggestChildFrameBounds() {
+    public @Nullable Rectangle2D suggestChildFrameBounds() {
         return myFrame.suggestChildFrameBounds();
     }
 
-    @Nullable
     @Override
-    public Project getProject() {
+    public @Nullable Project getProject() {
         return myFrame.getProject();
     }
 
@@ -81,15 +79,13 @@ class DesktopWelcomeIdeFrame implements IdeFrameEx {
         myFrame.setTitle(fileTitle);
     }
 
-    @Nullable
     @Override
-    public <E extends IdeRootPaneNorthExtension> E getNorthExtension(Class<? extends E> extensionClass) {
+    public <E extends IdeRootPaneNorthExtension> @Nullable E getNorthExtension(Class<? extends E> extensionClass) {
         return null;
     }
 
-    @Nullable
     @Override
-    public BalloonLayout getBalloonLayout() {
+    public @Nullable BalloonLayout getBalloonLayout() {
         return myFrame.getBalloonLayout();
     }
 }

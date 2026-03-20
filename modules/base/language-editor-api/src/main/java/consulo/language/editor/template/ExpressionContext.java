@@ -28,8 +28,7 @@ public interface ExpressionContext {
 
   Project getProject();
 
-  @Nullable
-  Editor getEditor();
+  @Nullable Editor getEditor();
 
   int getStartOffset();
 
@@ -39,7 +38,6 @@ public interface ExpressionContext {
 
   <T> T getProperty(Key<T> key);
 
-  @Nullable
-  PsiElement getPsiElementAtStartOffset();
+  @Nullable PsiElement getPsiElementAtStartOffset();
 }
 

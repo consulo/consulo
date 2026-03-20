@@ -41,9 +41,8 @@ public class ShowIntentionInternalImpl implements ShowIntentionInternal {
         return ShowIntentionsPass.markActionInvoked(project, editor, action);
     }
 
-    @Nullable
     @Override
-    public Pair<PsiFile, Editor> chooseBetweenHostAndInjected(PsiFile hostFile,
+    public @Nullable Pair<PsiFile, Editor> chooseBetweenHostAndInjected(PsiFile hostFile,
                                                               Editor hostEditor,
                                                               @Nullable PsiFile injectedFile,
                                                               @RequiredReadAction BiPredicate<? super PsiFile, ? super Editor> predicate) {

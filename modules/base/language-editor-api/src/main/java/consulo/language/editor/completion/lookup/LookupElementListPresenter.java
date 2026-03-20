@@ -10,11 +10,9 @@ public interface LookupElementListPresenter {
   
   String getAdditionalPrefix();
 
-  @Nullable
-  LookupElement getCurrentItem();
+  @Nullable LookupElement getCurrentItem();
 
-  @Nullable
-  LookupElement getCurrentItemOrEmpty();
+  @Nullable LookupElement getCurrentItemOrEmpty();
 
   boolean isSelectionTouched();
 

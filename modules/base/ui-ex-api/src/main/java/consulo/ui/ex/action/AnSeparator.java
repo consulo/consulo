@@ -73,10 +73,9 @@ public final class AnSeparator extends AnAction implements DumbAware {
         myTextValue = textValue;
     }
 
-    @Nullable
     @Deprecated
     @DeprecationInfo("Use #getTextValue()")
-    public String getText() {
+    public @Nullable String getText() {
         return StringUtil.nullize(myTextValue.getValue());
     }
 

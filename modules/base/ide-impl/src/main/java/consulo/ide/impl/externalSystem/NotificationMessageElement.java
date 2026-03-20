@@ -100,15 +100,13 @@ public class NotificationMessageElement extends NavigatableMessageElement {
     myRightTreeCellRenderer = new MyCustomizeColoredTreeCellRendererReplacement();
   }
 
-  @Nullable
   @Override
-  public CustomizeColoredTreeCellRenderer getRightSelfRenderer() {
+  public @Nullable CustomizeColoredTreeCellRenderer getRightSelfRenderer() {
     return myRightTreeCellRenderer;
   }
 
-  @Nullable
   @Override
-  public CustomizeColoredTreeCellRenderer getLeftSelfRenderer() {
+  public @Nullable CustomizeColoredTreeCellRenderer getLeftSelfRenderer() {
     return myLeftTreeCellRenderer;
   }
 

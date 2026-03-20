@@ -51,17 +51,14 @@ public interface ChooseByNameModel {
     
     Object[] getElementsByName(String name, boolean checkBoxState, String pattern);
 
-    @Nullable
-    String getElementName(Object element);
+    @Nullable String getElementName(Object element);
 
     
     String[] getSeparators();
 
-    @Nullable
-    String getFullName(Object element);
+    @Nullable String getFullName(Object element);
 
-    @Nullable
-    String getHelpId();
+    @Nullable String getHelpId();
 
     boolean willOpenEditor();
 

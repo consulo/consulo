@@ -36,13 +36,11 @@ public interface SmartPsiElementPointer<E extends PsiElement> {
    * @return the PSI element, or null if the PSI reparse has completely invalidated the pointer (for example,
    * the element referenced by the pointer has been deleted).
    */
-  @Nullable
   @RequiredReadAction
-  E getElement();
+  @Nullable E getElement();
 
-  @Nullable
   @RequiredReadAction
-  PsiFile getContainingFile();
+  @Nullable PsiFile getContainingFile();
 
   
   Project getProject();
@@ -54,13 +52,11 @@ public interface SmartPsiElementPointer<E extends PsiElement> {
    * the ranges may be changed (like in {@link RangeMarker}) or even invalidated. In the latter case returns null.
    * Returns null for invalid pointers.
    */
-  @Nullable
-  Segment getRange();
+  @Nullable Segment getRange();
 
   /**
    * @return the range in the committed PSI file. May be different from {@link #getRange()} result when the document has been changed since commit.
    * Returns null for invalid pointers.
    */
-  @Nullable
-  Segment getPsiRange();
+  @Nullable Segment getPsiRange();
 }

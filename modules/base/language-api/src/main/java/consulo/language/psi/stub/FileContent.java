@@ -42,8 +42,7 @@ public interface FileContent extends UserDataHolder {
   
   CharSequence getContentAsText();
 
-  @Nullable
-  Project getProject();
+  @Nullable Project getProject();
 
   
   PsiFile getPsiFile();

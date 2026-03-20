@@ -47,9 +47,8 @@ public class VcsCommitMessageMarginConfigurable implements UnnamedConfigurable {
   }
 
   @RequiredUIAccess
-  @Nullable
   @Override
-  public JComponent createComponent(Disposable uiDisposable) {
+  public @Nullable JComponent createComponent(Disposable uiDisposable) {
     JComponent spinnerComponent = mySpinnerConfigurable.createComponent(uiDisposable);
     mySpinnerConfigurable.myHighlightRecentlyChanged.addActionListener(e -> myWrapCheckbox.setEnabled(mySpinnerConfigurable.myHighlightRecentlyChanged.isSelected()));
 

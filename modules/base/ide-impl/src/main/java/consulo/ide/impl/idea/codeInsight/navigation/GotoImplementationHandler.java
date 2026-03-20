@@ -45,9 +45,8 @@ public class GotoImplementationHandler extends GotoTargetHandler {
     }
 
     @Override
-    @Nullable
     @RequiredReadAction
-    public GotoData getSourceAndTargetElements(Editor editor, PsiFile file) {
+    public @Nullable GotoData getSourceAndTargetElements(Editor editor, PsiFile file) {
         int offset = editor.getCaretModel().getOffset();
         PsiElement source = TargetElementUtil.findTargetElement(editor, ImplementationSearcher.getFlags(), offset);
         if (source == null) {

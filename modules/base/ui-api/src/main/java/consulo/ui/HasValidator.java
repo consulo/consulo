@@ -55,8 +55,7 @@ public interface HasValidator<V> extends Component {
   }
 
   interface Validator<V> {
-    @Nullable
-    ValidationInfo validateValue(V value);
+    @Nullable ValidationInfo validateValue(V value);
   }
 
   Disposable addValidator(Validator<V> validator);

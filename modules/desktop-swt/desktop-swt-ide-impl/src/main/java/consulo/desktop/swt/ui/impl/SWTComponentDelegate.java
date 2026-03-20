@@ -151,9 +151,8 @@ public abstract class SWTComponentDelegate<SWT extends Widget> implements Compon
         }
     }
 
-    @Nullable
     @Override
-    public Component getParent() {
+    public @Nullable Component getParent() {
         return null;
     }
 
@@ -203,9 +202,8 @@ public abstract class SWTComponentDelegate<SWT extends Widget> implements Compon
         return myDataObject.addListener(eventClass, listener);
     }
 
-    @Nullable
     @Override
-    public <T> T getUserData(Key<T> key) {
+    public <T> @Nullable T getUserData(Key<T> key) {
         return myDataObject.getUserData(key);
     }
 

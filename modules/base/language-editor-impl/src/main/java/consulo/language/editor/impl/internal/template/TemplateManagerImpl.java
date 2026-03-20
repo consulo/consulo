@@ -96,9 +96,8 @@ public class TemplateManagerImpl extends TemplateManager implements Disposable {
         Disposer.dispose(state);
     }
 
-    @Nullable
     @Override
-    public TemplateState getTemplateState(Editor editor) {
+    public @Nullable TemplateState getTemplateState(Editor editor) {
         return getTemplateStateImpl(editor);
     }
 
@@ -262,9 +261,8 @@ public class TemplateManagerImpl extends TemplateManager implements Disposable {
         return false;
     }
 
-    @Nullable
     @RequiredReadAction
-    public Runnable prepareTemplate(Editor editor, char shortcutChar, @Nullable BiPredicate<String, String> processor) {
+    public @Nullable Runnable prepareTemplate(Editor editor, char shortcutChar, @Nullable BiPredicate<String, String> processor) {
         if (editor.getSelectionModel().hasSelection()) {
             return null;
         }

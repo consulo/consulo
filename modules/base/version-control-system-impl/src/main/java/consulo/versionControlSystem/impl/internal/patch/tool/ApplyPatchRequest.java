@@ -29,8 +29,7 @@ public interface ApplyPatchRequest {
   
   AppliedTextPatch getPatch();
 
-  @Nullable
-  String getTitle();
+  @Nullable String getTitle();
 
   
   String getLocalTitle();

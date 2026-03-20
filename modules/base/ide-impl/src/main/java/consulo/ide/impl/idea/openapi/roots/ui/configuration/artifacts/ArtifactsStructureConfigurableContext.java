@@ -41,8 +41,7 @@ public interface ArtifactsStructureConfigurableContext extends PackagingElementR
   
   Artifact getOriginalArtifact(Artifact artifact);
 
-  @Nullable
-  ModifiableModuleModel getModifiableModuleModel();
+  @Nullable ModifiableModuleModel getModifiableModuleModel();
 
   void queueValidation(Artifact artifact);
 

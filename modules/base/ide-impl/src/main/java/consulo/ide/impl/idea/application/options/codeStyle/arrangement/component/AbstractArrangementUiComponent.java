@@ -123,9 +123,8 @@ public abstract class AbstractArrangementUiComponent implements ArrangementUiCom
     myListener = listener;
   }
 
-  @Nullable
   @Override
-  public Rectangle getScreenBounds() {
+  public @Nullable Rectangle getScreenBounds() {
     return myScreenBounds;
   }
 
@@ -139,9 +138,8 @@ public abstract class AbstractArrangementUiComponent implements ArrangementUiCom
     myEnabled = enabled;
   }
 
-  @Nullable
   @Override
-  public Rectangle onMouseMove(MouseEvent event) {
+  public @Nullable Rectangle onMouseMove(MouseEvent event) {
     return null;
   }
 
@@ -149,15 +147,13 @@ public abstract class AbstractArrangementUiComponent implements ArrangementUiCom
   public void onMouseRelease(MouseEvent event) {
   }
 
-  @Nullable
   @Override
-  public Rectangle onMouseExited() {
+  public @Nullable Rectangle onMouseExited() {
     return null;
   }
 
-  @Nullable
   @Override
-  public Rectangle onMouseEntered(MouseEvent e) {
+  public @Nullable Rectangle onMouseEntered(MouseEvent e) {
     return null;
   }
 

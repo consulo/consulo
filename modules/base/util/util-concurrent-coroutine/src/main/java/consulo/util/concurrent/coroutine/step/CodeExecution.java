@@ -217,9 +217,8 @@ public class CodeExecution<I, O> extends CoroutineStep<I, O> {
     /**
      * {@inheritDoc}
      */
-    @Nullable
     @Override
-    protected O execute(@Nullable I input, Continuation<?> continuation) {
+    protected @Nullable O execute(@Nullable I input, Continuation<?> continuation) {
         return code.apply(input, continuation);
     }
 }

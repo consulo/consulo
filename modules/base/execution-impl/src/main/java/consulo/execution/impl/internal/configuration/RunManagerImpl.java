@@ -483,9 +483,8 @@ public class RunManagerImpl extends RunManagerEx implements PersistentStateCompo
         }
     }
 
-    @Nullable
     @Override
-    public RunnerAndConfigurationSettings findSettings(RunConfiguration configuration) {
+    public @Nullable RunnerAndConfigurationSettings findSettings(RunConfiguration configuration) {
         for (RunnerAndConfigurationSettings settings : getSortedConfigurations()) {
             if (Objects.equals(settings.getConfiguration(), configuration)) {
                 return settings;
@@ -573,9 +572,8 @@ public class RunManagerImpl extends RunManagerEx implements PersistentStateCompo
         return true;
     }
 
-    @Nullable
     @Override
-    public Element getState() {
+    public @Nullable Element getState() {
         Element parentNode = new Element("state");
         // writes temporary configurations here
         writeContext(parentNode);

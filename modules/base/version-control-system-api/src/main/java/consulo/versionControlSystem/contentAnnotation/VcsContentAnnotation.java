@@ -30,8 +30,7 @@ import java.util.List;
  */
 @ServiceAPI(ComponentScope.PROJECT)
 public interface VcsContentAnnotation {
-  @Nullable
-  VcsRevisionNumber fileRecentlyChanged(VirtualFile vf);
+  @Nullable VcsRevisionNumber fileRecentlyChanged(VirtualFile vf);
 
   boolean intervalRecentlyChanged(VirtualFile file, TextRange lineInterval, VcsRevisionNumber currentRevisionNumber);
 

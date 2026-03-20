@@ -29,9 +29,8 @@ public abstract class TableViewSpeedSearch<Item> extends SpeedSearchBase<TableVi
   
   public static <E> TableViewSpeedSearch<E> register(TableView<E> component, Function<E, String> getItemTextFunc) {
     return new TableViewSpeedSearch<>(component) {
-      @Nullable
       @Override
-      protected String getItemText(E element) {
+      protected @Nullable String getItemText(E element) {
         return getItemTextFunc.apply(element);
       }
     };
@@ -58,10 +57,9 @@ public abstract class TableViewSpeedSearch<Item> extends SpeedSearchBase<TableVi
     return getComponent().getItems().toArray();
   }
 
-  @Nullable
   @Override
   @SuppressWarnings("unchecked")
-  protected String getElementText(Object element) {
+  protected @Nullable String getElementText(Object element) {
     return getItemText((Item)element);
   }
 

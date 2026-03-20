@@ -64,9 +64,8 @@ public class NoneTouchBarFacade implements TouchBarFacade {
 
     }
 
-    @Nullable
     @Override
-    public Disposable showWindowActions(Component contentPane) {
+    public @Nullable Disposable showWindowActions(Component contentPane) {
         return null;
     }
 

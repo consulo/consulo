@@ -219,9 +219,8 @@ public class ScopesAndSeveritiesTable extends JBTable {
             return lastRowIndex() + 1;
         }
 
-        @Nullable
         @Override
-        public String getColumnName(int column) {
+        public @Nullable String getColumnName(int column) {
             return null;
         }
 

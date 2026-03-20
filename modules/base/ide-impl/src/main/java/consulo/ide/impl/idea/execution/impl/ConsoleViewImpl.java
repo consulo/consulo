@@ -1474,9 +1474,8 @@ public class ConsoleViewImpl extends JPanel implements ConsoleView, ObservableCo
         return calcNextOccurrence(1);
     }
 
-    @Nullable
     @RequiredUIAccess
-    protected OccurenceInfo calcNextOccurrence(int delta) {
+    protected @Nullable OccurenceInfo calcNextOccurrence(int delta) {
         if (myHyperlinks == null) {
             return null;
         }

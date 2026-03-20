@@ -86,21 +86,18 @@ class EmptyVisibleGraph implements VisibleGraph<Integer> {
     private static class EmptyGraphAnswer implements GraphAnswer<Integer> {
       private static EmptyGraphAnswer INSTANCE = new EmptyGraphAnswer();
 
-      @Nullable
       @Override
-      public Cursor getCursorToSet() {
+      public @Nullable Cursor getCursorToSet() {
         return null;
       }
 
-      @Nullable
       @Override
-      public Integer getCommitToJump() {
+      public @Nullable Integer getCommitToJump() {
         return null;
       }
 
-      @Nullable
       @Override
-      public Runnable getGraphUpdater() {
+      public @Nullable Runnable getGraphUpdater() {
         return null;
       }
 

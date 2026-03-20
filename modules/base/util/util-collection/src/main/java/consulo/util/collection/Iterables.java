@@ -55,9 +55,8 @@ public class Iterables {
                         return next != null;
                     }
 
-                    @Nullable
                     @Override
-                    public T next() {
+                    public @Nullable T next() {
                         T result = next;
                         next = findNext();
                         return result;

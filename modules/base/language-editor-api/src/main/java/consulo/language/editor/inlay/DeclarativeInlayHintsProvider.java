@@ -23,8 +23,7 @@ public interface DeclarativeInlayHintsProvider extends PossiblyDumbAware {
     /**
      * Creates collector for given file and editor if it may create inlays, or null otherwise.
      */
-    @Nullable
-    DeclarativeInlayHintsCollector createCollector(PsiFile file, Editor editor);
+    @Nullable DeclarativeInlayHintsCollector createCollector(PsiFile file, Editor editor);
 
     
     Language getLanguage();

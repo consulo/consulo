@@ -22,6 +22,5 @@ import org.jspecify.annotations.Nullable;
  * @since 18/06/2023
  */
 public interface WindowOwner {
-  @Nullable
-  Window getWindow();
+  @Nullable Window getWindow();
 }

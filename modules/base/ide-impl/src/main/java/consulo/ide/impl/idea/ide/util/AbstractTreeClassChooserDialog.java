@@ -394,9 +394,8 @@ public abstract class AbstractTreeClassChooserDialog<T extends PsiNamedElement> 
         return IdeaModalityState.stateForComponent(getRootPane());
     }
 
-    @Nullable
     @SuppressWarnings("unchecked")
-    protected T calcSelectedClass() {
+    protected @Nullable T calcSelectedClass() {
         if (getTabbedPane().getSelectedIndex() == 0) {
             return (T) getGotoByNamePanel().getChosenElement();
         }

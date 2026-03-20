@@ -59,9 +59,8 @@ public class SettingsEditorWrapper <Src, Dst> extends SettingsEditor<Src> {
   }
 
   @RequiredUIAccess
-  @Nullable
   @Override
-  protected Component createUIComponent() {
+  protected @Nullable Component createUIComponent() {
     return myWrapped.createUIComponent();
   }
 

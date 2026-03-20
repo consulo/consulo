@@ -73,9 +73,8 @@ public class ModuleVcsPathPresenter extends VcsPathPresenter {
     });
   }
 
-  @Nullable
   @Override
-  public String getPresentableRelativePath(ContentRevision fromRevision, ContentRevision toRevision) {
+  public @Nullable String getPresentableRelativePath(ContentRevision fromRevision, ContentRevision toRevision) {
     // need to use parent path because the old file is already not there
     FilePath fromPath = fromRevision.getFile();
     FilePath toPath = toRevision.getFile();

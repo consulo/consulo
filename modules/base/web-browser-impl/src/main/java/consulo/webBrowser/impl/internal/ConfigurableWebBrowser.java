@@ -88,9 +88,8 @@ final class ConfigurableWebBrowser extends WebBrowser {
         return WebBrowserManagerImpl.checkNameAndPath(what, this);
     }
 
-    @Nullable
     @Override
-    public String getPath() {
+    public @Nullable String getPath() {
         return path;
     }
 

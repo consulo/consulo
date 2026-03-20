@@ -570,9 +570,8 @@ public class XBreakpointManagerImpl implements XBreakpointManager, PersistentSta
         return defaultState;
     }
 
-    @Nullable
     @RequiredWriteAction
-    <T extends XBreakpointProperties> XLineBreakpoint<T> copyLineBreakpoint(
+    <T extends XBreakpointProperties> @Nullable XLineBreakpoint<T> copyLineBreakpoint(
         XLineBreakpoint<T> source,
         String fileUrl,
         int line

@@ -38,9 +38,8 @@ public class DesktopAWTAuthDialogImpl implements AuthDialog {
     myProject = project;
   }
 
-  @Nullable
   @Override
-  public AuthenticationData show(String title,
+  public @Nullable AuthenticationData show(String title,
                                  @Nullable String description,
                                  @Nullable String login,
                                  @Nullable String password,

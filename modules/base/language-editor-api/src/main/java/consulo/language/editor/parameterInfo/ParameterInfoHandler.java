@@ -40,16 +40,14 @@ public interface ParameterInfoHandler<ParameterOwner, ParameterType> extends Lan
 
   boolean couldShowInLookup();
 
-  @Nullable
-  Object[] getParametersForLookup(LookupElement item, ParameterInfoContext context);
+  @Nullable Object[] getParametersForLookup(LookupElement item, ParameterInfoContext context);
 
   /**
    * <p>Find psiElement for parameter info should also set ItemsToShow in context and may set highlighted element</p>
    *
    * <p>Note: it is executed on non UI thread</p>
    */
-  @Nullable
-  ParameterOwner findElementForParameterInfo(CreateParameterInfoContext context);
+  @Nullable ParameterOwner findElementForParameterInfo(CreateParameterInfoContext context);
 
   // Usually context.showHint
   void showParameterInfo(ParameterOwner element, CreateParameterInfoContext context);
@@ -59,8 +57,7 @@ public interface ParameterInfoHandler<ParameterOwner, ParameterType> extends Lan
    *
    * <p>Note: it is executed on non-UI thread</p>
    */
-  @Nullable
-  ParameterOwner findElementForUpdatingParameterInfo(UpdateParameterInfoContext context);
+  @Nullable ParameterOwner findElementForUpdatingParameterInfo(UpdateParameterInfoContext context);
 
   /**
    * This method performs some extra action (e.g. show hints) with a result of execution of

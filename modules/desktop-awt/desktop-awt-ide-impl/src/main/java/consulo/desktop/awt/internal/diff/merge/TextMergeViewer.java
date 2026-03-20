@@ -135,9 +135,8 @@ public class TextMergeViewer implements MergeTool.MergeViewer {
         return myViewer.getComponent();
     }
 
-    @Nullable
     @Override
-    public JComponent getPreferredFocusedComponent() {
+    public @Nullable JComponent getPreferredFocusedComponent() {
         return myViewer.getPreferredFocusedComponent();
     }
 
@@ -268,9 +267,8 @@ public class TextMergeViewer implements MergeTool.MergeViewer {
             return group;
         }
 
-        @Nullable
         @Override
-        protected List<AnAction> createPopupActions() {
+        protected @Nullable List<AnAction> createPopupActions() {
             List<AnAction> group = new ArrayList<>();
 
             group.add(AnSeparator.getInstance());
@@ -1390,9 +1388,8 @@ public class TextMergeViewer implements MergeTool.MergeViewer {
             );
         }
 
-        @Nullable
         @RequiredWriteAction
-        private static CharSequence getChunkContent(
+        private static @Nullable CharSequence getChunkContent(
             TextMergeChange change,
             List<Document> documents,
             ThreeSide side

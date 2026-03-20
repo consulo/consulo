@@ -22,8 +22,7 @@ public interface FileSetDescriptor {
   
   String getType();
 
-  @Nullable
-  String getPattern();
+  @Nullable String getPattern();
 
   void setPattern(@Nullable String pattern);
 

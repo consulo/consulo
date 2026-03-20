@@ -18,11 +18,9 @@ public interface CodeStyleCachingService {
     return project.getInstance(CodeStyleCachingService.class);
   }
 
-  @Nullable
-  CodeStyleSettings tryGetSettings(PsiFile file);
+  @Nullable CodeStyleSettings tryGetSettings(PsiFile file);
 
   void scheduleWhenSettingsComputed(PsiFile file, Runnable runnable);
 
-  @Nullable
-  UserDataHolder getDataHolder(VirtualFile virtualFile);
+  @Nullable UserDataHolder getDataHolder(VirtualFile virtualFile);
 }

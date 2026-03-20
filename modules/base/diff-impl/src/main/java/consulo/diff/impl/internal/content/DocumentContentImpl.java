@@ -79,28 +79,24 @@ public class DocumentContentImpl extends DiffContentBase implements DocumentCont
     return myDocument;
   }
 
-  @Nullable
   @Override
-  public VirtualFile getHighlightFile() {
+  public @Nullable VirtualFile getHighlightFile() {
     return myHighlightFile;
   }
 
-  @Nullable
   @Override
-  public Navigatable getNavigatable(LineCol position) {
+  public @Nullable Navigatable getNavigatable(LineCol position) {
     if (myProject == null || getHighlightFile() == null || !getHighlightFile().isValid()) return null;
     return new MyNavigatable(myProject, getHighlightFile(), getDocument(), position);
   }
 
-  @Nullable
   @Override
-  public Navigatable getNavigatable() {
+  public @Nullable Navigatable getNavigatable() {
     return getNavigatable(new LineCol(0));
   }
 
-  @Nullable
   @Override
-  public LineSeparator getLineSeparator() {
+  public @Nullable LineSeparator getLineSeparator() {
     return mySeparator;
   }
 
@@ -109,15 +105,13 @@ public class DocumentContentImpl extends DiffContentBase implements DocumentCont
     return myBOM;
   }
 
-  @Nullable
   @Override
-  public FileType getContentType() {
+  public @Nullable FileType getContentType() {
     return myType;
   }
 
-  @Nullable
   @Override
-  public Charset getCharset() {
+  public @Nullable Charset getCharset() {
     return myCharset;
   }
 

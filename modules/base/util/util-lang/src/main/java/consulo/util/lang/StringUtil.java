@@ -370,9 +370,8 @@ public final class StringUtil {
      * @return name in singular form or <code>null</code> if failed to find one.
      */
     @SuppressWarnings({"HardCodedStringLiteral"})
-    @Nullable
     @Contract(pure = true)
-    public static String unpluralize(String name) {
+    public static @Nullable String unpluralize(String name) {
         if (name.endsWith("sses") || name.endsWith("shes") || name.endsWith("ches") || name.endsWith("xes")) { //?
             return name.substring(0, name.length() - 2);
         }
@@ -409,9 +408,8 @@ public final class StringUtil {
         return null;
     }
 
-    @Nullable
     @Contract(pure = true)
-    private static String stripEnding(String name, String ending) {
+    private static @Nullable String stripEnding(String name, String ending) {
         if (name.endsWith(ending)) {
             if (name.equals(ending)) {
                 return name; // do not return empty string
@@ -2098,15 +2096,13 @@ public final class StringUtil {
         return isEmpty(s) ? defaultValue : s;
     }
 
-    @Nullable
     @Contract(pure = true)
-    public static String nullize(@Nullable String s) {
+    public static @Nullable String nullize(@Nullable String s) {
         return nullize(s, false);
     }
 
-    @Nullable
     @Contract(pure = true)
-    public static String nullize(@Nullable String s, boolean nullizeSpaces) {
+    public static @Nullable String nullize(@Nullable String s, boolean nullizeSpaces) {
         if (nullizeSpaces) {
             return isEmptyOrSpaces(s) ? null : s;
         }

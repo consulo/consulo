@@ -169,17 +169,15 @@ public class ProjectLevelVcsManagerImpl extends ProjectLevelVcsManagerEx impleme
         myOptionsAndConfirmations.init(mySerialization::getInitOptionValue);
     }
 
-    @Nullable
     @Override
-    public AbstractVcs findVcsByName(String name) {
+    public @Nullable AbstractVcs findVcsByName(String name) {
         AbstractVcs result = myProject.isDisposed() ? null : AllVcses.getInstance(myProject).getByName(name);
         ProgressManager.checkCanceled();
         return result;
     }
 
-    @Nullable
     @Override
-    public VcsDescriptor getDescriptor(String name) {
+    public @Nullable VcsDescriptor getDescriptor(String name) {
         if (name == null) {
             return null;
         }
@@ -230,9 +228,8 @@ public class ProjectLevelVcsManagerImpl extends ProjectLevelVcsManagerEx impleme
         return true;
     }
 
-    @Nullable
     @Override
-    public AbstractVcs getVcsFor(VirtualFile file) {
+    public @Nullable AbstractVcs getVcsFor(VirtualFile file) {
         String vcsName = myMappings.getVcsFor(file);
         if (vcsName == null || vcsName.isEmpty()) {
             return null;
@@ -240,9 +237,8 @@ public class ProjectLevelVcsManagerImpl extends ProjectLevelVcsManagerEx impleme
         return AllVcses.getInstance(myProject).getByName(vcsName);
     }
 
-    @Nullable
     @Override
-    public AbstractVcs getVcsFor(FilePath file) {
+    public @Nullable AbstractVcs getVcsFor(FilePath file) {
         VirtualFile vFile = ChangesUtil.findValidParentAccurately(file);
         ThrowableComputable<AbstractVcs, RuntimeException> action = () -> {
             if (!myProject.getApplication().isUnitTestMode() && !myProject.isInitialized()) {
@@ -259,9 +255,8 @@ public class ProjectLevelVcsManagerImpl extends ProjectLevelVcsManagerEx impleme
         return ReadAction.compute(action);
     }
 
-    @Nullable
     @Override
-    public VirtualFile getVcsRootFor(@Nullable VirtualFile file) {
+    public @Nullable VirtualFile getVcsRootFor(@Nullable VirtualFile file) {
         if (file == null) {
             return null;
         }
@@ -276,9 +271,8 @@ public class ProjectLevelVcsManagerImpl extends ProjectLevelVcsManagerEx impleme
         return LocalFileSystem.getInstance().findFileByPath(directory);
     }
 
-    @Nullable
     @Override
-    public VcsRoot getVcsRootObjectFor(VirtualFile file) {
+    public @Nullable VcsRoot getVcsRootObjectFor(VirtualFile file) {
         VcsDirectoryMapping mapping = myMappings.getMappingFor(file);
         if (mapping == null) {
             return null;
@@ -317,9 +311,8 @@ public class ProjectLevelVcsManagerImpl extends ProjectLevelVcsManagerEx impleme
         return null;
     }
 
-    @Nullable
     @Override
-    public ContentManager getContentManager() {
+    public @Nullable ContentManager getContentManager() {
         if (myContentManager == null) {
             ToolWindow changes = ToolWindowManager.getInstance(myProject).getToolWindow(ToolWindowId.VCS);
             myContentManager = changes == null ? null : changes.getContentManager();
@@ -454,10 +447,9 @@ public class ProjectLevelVcsManagerImpl extends ProjectLevelVcsManagerEx impleme
         }
     }
 
-    @Nullable
     @Override
     @RequiredUIAccess
-    public UpdateInfoTreeImpl showUpdateProjectInfo(
+    public @Nullable UpdateInfoTreeImpl showUpdateProjectInfo(
         UpdatedFiles updatedFiles,
         String displayActionName,
         ActionInfo actionInfo,
@@ -548,9 +540,8 @@ public class ProjectLevelVcsManagerImpl extends ProjectLevelVcsManagerEx impleme
         VcsRootIterator.iterateVcsRoot(myProject, root, iterator, directoryFilter);
     }
 
-    @Nullable
     @Override
-    public Element getState() {
+    public @Nullable Element getState() {
         Element element = new Element("state");
         mySerialization.writeExternalUtil(element, myOptionsAndConfirmations);
         if (myHaveLegacyVcsConfiguration) {

@@ -58,9 +58,8 @@ public class NamedPointerImpl<T extends Named> implements NamedPointer<T> {
     return myName;
   }
 
-  @Nullable
   @Override
-  public T get() {
+  public @Nullable T get() {
     return myValue;
   }
 

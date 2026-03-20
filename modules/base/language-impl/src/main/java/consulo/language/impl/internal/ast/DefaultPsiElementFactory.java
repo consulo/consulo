@@ -33,9 +33,8 @@ import org.jspecify.annotations.Nullable;
 @ExtensionImpl(order = "last")
 public class DefaultPsiElementFactory implements PsiElementFactory {
   @RequiredReadAction
-  @Nullable
   @Override
-  public PsiElement createElement(ASTNode node) {
+  public @Nullable PsiElement createElement(ASTNode node) {
     IElementType elementType = node.getElementType();
     if(elementType instanceof IElementTypeAsPsiFactory) {
       return ((IElementTypeAsPsiFactory)elementType).createElement(node);

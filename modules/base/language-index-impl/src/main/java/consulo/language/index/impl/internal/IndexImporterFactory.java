@@ -11,6 +11,5 @@ import org.jspecify.annotations.Nullable;
 public interface IndexImporterFactory {
     ExtensionPointName<IndexImporterFactory> EP_NAME = ExtensionPointName.create(IndexImporterFactory.class);
 
-    @Nullable
-    <Key, Value, Input> SnapshotInputMappingIndex<Key, Value, Input> createImporter(IndexExtension<Key, Value, Input> extension);
+    <Key, Value, Input> @Nullable SnapshotInputMappingIndex<Key, Value, Input> createImporter(IndexExtension<Key, Value, Input> extension);
 }

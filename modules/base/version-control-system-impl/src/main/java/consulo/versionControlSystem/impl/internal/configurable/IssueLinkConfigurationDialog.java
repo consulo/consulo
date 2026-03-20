@@ -77,9 +77,8 @@ public class IssueLinkConfigurationDialog extends DialogWrapper {
     return myPanel;
   }
 
-  @Nullable
   @Override
-  protected String getHelpId() {
+  protected @Nullable String getHelpId() {
     return "reference.settings.vcs.issue.navigation.add.link";
   }
 

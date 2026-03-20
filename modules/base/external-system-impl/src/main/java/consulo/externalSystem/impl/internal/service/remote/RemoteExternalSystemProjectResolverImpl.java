@@ -26,18 +26,16 @@ public class RemoteExternalSystemProjectResolverImpl<S extends ExternalSystemExe
     myDelegate = delegate;
   }
 
-  @Nullable
   @Override
-  public DataNode<ProjectData> resolveProjectInfo(final ExternalSystemTaskId id,
+  public @Nullable DataNode<ProjectData> resolveProjectInfo(final ExternalSystemTaskId id,
                                                   final String projectPath,
                                                   final boolean isPreviewMode,
                                                   ExternalSystemExecutionSettings settings)
     throws ExternalSystemException, IllegalArgumentException, IllegalStateException
   {
     return execute(id, new Supplier<DataNode<ProjectData>>() {
-      @Nullable
       @Override
-      public DataNode<ProjectData> get() {
+      public @Nullable DataNode<ProjectData> get() {
         return myDelegate.resolveProjectInfo(id, projectPath, isPreviewMode, getSettings(), getNotificationListener());
       }
     });

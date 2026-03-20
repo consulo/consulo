@@ -17,8 +17,7 @@ public class ChildInfoImpl implements ChildInfo {
    * null means children are unknown
    */
   private final
-  @Nullable
-  ChildInfo[] children;
+  @Nullable ChildInfo[] children;
 
   private final byte fileAttributesType;  // inlined FileAttributes to reduce memory
   private final
@@ -72,9 +71,8 @@ public class ChildInfoImpl implements ChildInfo {
     return symLinkTarget;
   }
 
-  @Nullable
   @Override
-  public ChildInfo[] getChildren() {
+  public @Nullable ChildInfo[] getChildren() {
     return children;
   }
 

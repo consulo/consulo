@@ -65,9 +65,8 @@ public abstract class FoldingBuilderEx implements FoldingBuilder {
    * @param range text range within whole file to fold
    * @return the placeholder text.
    */
-  @Nullable
   @RequiredReadAction
-  public String getPlaceholderText(ASTNode node, TextRange range){
+  public @Nullable String getPlaceholderText(ASTNode node, TextRange range){
     return getPlaceholderText(node);
   }
 

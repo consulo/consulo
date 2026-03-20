@@ -30,9 +30,8 @@ import java.io.IOException;
 public class ToolConfigurable implements SearchableConfigurable, Configurable.NoScroll, Configurable.NoMargin, ApplicationConfigurable {
   private BaseToolsPanel myPanel;
 
-  @Nullable
   @Override
-  public String getParentId() {
+  public @Nullable String getParentId() {
     return StandardConfigurableIds.EXECUTION_GROUP;
   }
 

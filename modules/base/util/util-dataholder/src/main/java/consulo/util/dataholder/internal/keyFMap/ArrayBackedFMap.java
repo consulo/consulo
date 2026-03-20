@@ -101,10 +101,9 @@ public class ArrayBackedFMap implements KeyFMap {
         return this;
     }
 
-    @Nullable
     @Override
     @SuppressWarnings("unchecked")
-    public <V> V get(Key<V> key) {
+    public <V> @Nullable V get(Key<V> key) {
         int oldSize = size();
         int keyCode = key.hashCode();
         for (int i = 0; i < oldSize; i++) {

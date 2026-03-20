@@ -39,9 +39,8 @@ public class ShelvedBinaryContentRevision implements BinaryContentRevision {
     myShelvedContentPath = shelvedContentPath;
   }
 
-  @Nullable
   @Override
-  public byte[] getBinaryContent() throws VcsException {
+  public @Nullable byte[] getBinaryContent() throws VcsException {
     try {
       return RawFileLoader.getInstance().loadFileBytes(new File(myShelvedContentPath));
     }
@@ -50,9 +49,8 @@ public class ShelvedBinaryContentRevision implements BinaryContentRevision {
     }
   }
 
-  @Nullable
   @Override
-  public String getContent() throws VcsException {
+  public @Nullable String getContent() throws VcsException {
     throw new IllegalStateException();
   }
 

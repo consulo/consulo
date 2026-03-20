@@ -54,9 +54,8 @@ public abstract class BaseDockManager implements DockManager, PersistentStateCom
     Disposer.register(container, () -> myContainers.remove(container));
   }
 
-  @Nullable
   @Override
-  public DockContainer getContainerFor(Component c) {
+  public @Nullable DockContainer getContainerFor(Component c) {
     if (c == null) return null;
 
     for (DockContainer eachContainer : myContainers) {

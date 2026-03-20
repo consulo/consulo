@@ -56,9 +56,8 @@ public abstract class GlobalInspectionTool extends InspectionTool {
    * additional markers or does not use the reference graph at all.
    * @see #isGraphNeeded
    */
-  @Nullable
   @Deprecated
-  public RefGraphAnnotator getAnnotator(RefManager refManager) {
+  public @Nullable RefGraphAnnotator getAnnotator(RefManager refManager) {
     return null;
   }
 

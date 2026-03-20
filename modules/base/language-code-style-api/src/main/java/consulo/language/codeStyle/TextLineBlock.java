@@ -60,27 +60,23 @@ public class TextLineBlock implements Block {
     return Collections.emptyList();
   }
 
-  @Nullable
   @Override
-  public Wrap getWrap() {
+  public @Nullable Wrap getWrap() {
     return null;
   }
 
-  @Nullable
   @Override
-  public Indent getIndent() {
+  public @Nullable Indent getIndent() {
     return myIndent;
   }
 
-  @Nullable
   @Override
-  public Alignment getAlignment() {
+  public @Nullable Alignment getAlignment() {
     return myAlignment;
   }
 
-  @Nullable
   @Override
-  public Spacing getSpacing(@Nullable Block block, Block block1) {
+  public @Nullable Spacing getSpacing(@Nullable Block block, Block block1) {
     return mySpacing;
   }
 

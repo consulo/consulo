@@ -37,9 +37,8 @@ import java.util.Set;
 public class RunConfigurationStartHistoryImpl implements RunConfigurationStartHistory, PersistentStateComponent<RunConfigurationStartHistoryState> {
     private final RunConfigurationStartHistoryState myState = new RunConfigurationStartHistoryState();
 
-    @Nullable
     @Override
-    public RunConfigurationStartHistoryState getState() {
+    public @Nullable RunConfigurationStartHistoryState getState() {
         return myState;
     }
 

@@ -28,10 +28,9 @@ import org.jspecify.annotations.Nullable;
  */
 @ExtensionImpl
 public class ExternalSystemModuleIconProvider implements ModuleIconProvider {
-    @Nullable
     @Override
     @SuppressWarnings("unchecked")
-    public Image getIcon(Module module) {
+    public @Nullable Image getIcon(Module module) {
         ExternalSystemModuleExtension<?> extension = module.getExtension(ExternalSystemModuleExtension.class);
         if (extension != null) {
             return extension.getProjectSystemId().getModuleIcon();

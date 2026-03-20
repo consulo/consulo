@@ -55,8 +55,7 @@ public interface CompilerMessage {
      *
      * @return the instance.
      */
-    @Nullable
-    Navigatable getNavigatable();
+    @Nullable Navigatable getNavigatable();
 
     /**
      * Returns the file to which the message applies.

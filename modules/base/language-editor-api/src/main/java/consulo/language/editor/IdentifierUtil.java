@@ -24,9 +24,8 @@ import consulo.util.lang.Comparing;
 import org.jspecify.annotations.Nullable;
 
 public class IdentifierUtil {
-  @Nullable
   @RequiredReadAction
-  public static PsiElement getNameIdentifier(PsiElement element) {
+  public static @Nullable PsiElement getNameIdentifier(PsiElement element) {
     if (element instanceof PsiNameIdentifierOwner) {
       return ((PsiNameIdentifierOwner)element).getNameIdentifier();
     }

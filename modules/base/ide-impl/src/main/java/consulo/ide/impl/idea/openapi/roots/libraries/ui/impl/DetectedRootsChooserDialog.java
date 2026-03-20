@@ -226,9 +226,8 @@ public class DetectedRootsChooserDialog extends DialogWrapper {
     return new BorderedTitlePanel("Choose Roots", myDescription);
   }
 
-  @Nullable
   @Override
-  protected JComponent createCenterPanel() {
+  protected @Nullable JComponent createCenterPanel() {
     return myPane;
   }
 

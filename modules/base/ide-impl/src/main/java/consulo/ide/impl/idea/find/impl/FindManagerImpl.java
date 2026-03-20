@@ -799,8 +799,7 @@ public class FindManagerImpl extends FindManager {
     }
 
     private static
-    @Nullable
-    SyntaxHighlighter getHighlighter(VirtualFile file, @Nullable Language lang) {
+    @Nullable SyntaxHighlighter getHighlighter(VirtualFile file, @Nullable Language lang) {
         SyntaxHighlighter syntaxHighlighter = lang != null ? SyntaxHighlighterFactory.getSyntaxHighlighter(lang, null, file) : null;
         if (lang == null || syntaxHighlighter instanceof DefaultSyntaxHighlighter) {
             syntaxHighlighter = SyntaxHighlighterFactory.getSyntaxHighlighter(file.getFileType(), null, file);
@@ -1069,9 +1068,8 @@ public class FindManagerImpl extends FindManager {
         return findNextUsageInFile(fileEditor, SearchResults.Direction.UP);
     }
 
-    @Nullable
     @Override
-    public FindUsagesHandler getFindUsagesHandler(PsiElement element, boolean forHighlightUsages) {
+    public @Nullable FindUsagesHandler getFindUsagesHandler(PsiElement element, boolean forHighlightUsages) {
         FindUsagesManager findUsagesManager = ((FindManagerImpl)FindManager.getInstance(myProject)).getFindUsagesManager();
         return findUsagesManager.getFindUsagesHandler(element, forHighlightUsages);
     }

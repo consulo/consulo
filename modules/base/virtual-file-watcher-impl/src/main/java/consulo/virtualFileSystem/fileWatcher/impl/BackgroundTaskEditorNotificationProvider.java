@@ -54,9 +54,8 @@ public class BackgroundTaskEditorNotificationProvider implements EditorNotificat
   }
 
   @RequiredReadAction
-  @Nullable
   @Override
-  public EditorNotificationBuilder buildNotification(VirtualFile file, FileEditor fileEditor, Supplier<EditorNotificationBuilder> builderFactory) {
+  public @Nullable EditorNotificationBuilder buildNotification(VirtualFile file, FileEditor fileEditor, Supplier<EditorNotificationBuilder> builderFactory) {
     List<BackgroundTaskByVfsChangeProvider> providers = BackgroundTaskByVfsChangeProviders.getProviders(myProject, file);
     if (providers.isEmpty()) {
       return null;

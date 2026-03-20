@@ -44,8 +44,7 @@ public interface DataContext {
      * @param key the data key for which the value is requested.
      * @return the value, or null if no value is available in the current context for this identifier.
      */
-    @Nullable
-    <T> T getData(Key<T> key);
+    <T> @Nullable T getData(Key<T> key);
 
     /**
      * Returns not null value corresponding to the specified data key.

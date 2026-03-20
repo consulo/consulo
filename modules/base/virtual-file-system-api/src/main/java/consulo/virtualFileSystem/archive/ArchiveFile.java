@@ -30,15 +30,13 @@ public interface ArchiveFile {
       throw new UnsupportedOperationException();
     }
 
-    @Nullable
     @Override
-    public ArchiveEntry getEntry(String name) {
+    public @Nullable ArchiveEntry getEntry(String name) {
       return null;
     }
 
-    @Nullable
     @Override
-    public InputStream getInputStream(ArchiveEntry entry) throws IOException {
+    public @Nullable InputStream getInputStream(ArchiveEntry entry) throws IOException {
       return null;
     }
 
@@ -62,11 +60,9 @@ public interface ArchiveFile {
   
   String getName();
 
-  @Nullable
-  ArchiveEntry getEntry(String name);
+  @Nullable ArchiveEntry getEntry(String name);
 
-  @Nullable
-  InputStream getInputStream(ArchiveEntry entry) throws IOException;
+  @Nullable InputStream getInputStream(ArchiveEntry entry) throws IOException;
 
   
   Iterator<? extends ArchiveEntry> entries();

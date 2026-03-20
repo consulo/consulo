@@ -56,11 +56,9 @@ public interface Label extends Component, HasMnemonic, HasComponentStyle<LabelSt
 
   void setImage(@Nullable Image icon);
 
-  @Nullable
-  Image getImage();
+  @Nullable Image getImage();
 
   void setTarget(@Nullable Component component);
 
-  @Nullable
-  Component getTarget();
+  @Nullable Component getTarget();
 }

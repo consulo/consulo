@@ -57,9 +57,8 @@ public class ConfigurationEditorFileSystemImpl extends BaseVirtualFileSystem imp
         return PROTOCOL;
     }
 
-    @Nullable
     @Override
-    public VirtualFile findFileByPath(String path) {
+    public @Nullable VirtualFile findFileByPath(String path) {
         if (!path.isBlank() && path.charAt(0) == '/') {
             String extensionId;
 
@@ -92,9 +91,8 @@ public class ConfigurationEditorFileSystemImpl extends BaseVirtualFileSystem imp
         return null;
     }
 
-    @Nullable
     @Override
-    public VirtualFile refreshAndFindFileByPath(String path) {
+    public @Nullable VirtualFile refreshAndFindFileByPath(String path) {
         return findFileByPath(path);
     }
 

@@ -108,9 +108,8 @@ public class BinaryMergeTool implements MergeTool {
             return myViewer.getComponent();
         }
 
-        @Nullable
         @Override
-        public JComponent getPreferredFocusedComponent() {
+        public @Nullable JComponent getPreferredFocusedComponent() {
             return myViewer.getPreferredFocusedComponent();
         }
 
@@ -130,9 +129,8 @@ public class BinaryMergeTool implements MergeTool {
             return components;
         }
 
-        @Nullable
         @Override
-        public ActionRecord getResolveAction(MergeResult result) {
+        public @Nullable ActionRecord getResolveAction(MergeResult result) {
             if (result == MergeResult.RESOLVED) {
                 return null;
             }

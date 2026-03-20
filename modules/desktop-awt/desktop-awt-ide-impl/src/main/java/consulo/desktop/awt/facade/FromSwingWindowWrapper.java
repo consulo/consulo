@@ -26,6 +26,5 @@ import org.jspecify.annotations.Nullable;
  * Internal class, don't use it in plugins
  */
 public interface FromSwingWindowWrapper {
-  @Nullable
-  Window toUIWindow();
+  @Nullable Window toUIWindow();
 }

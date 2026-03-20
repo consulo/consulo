@@ -92,9 +92,8 @@ public class DiffSettingsConfigurable extends SimpleConfigurableByProperties imp
         return LocalizeValue.localizeTODO("Diff & Merge");
     }
 
-    @Nullable
     @Override
-    public String getParentId() {
+    public @Nullable String getParentId() {
         return StandardConfigurableIds.VCS_GROUP;
     }
 }

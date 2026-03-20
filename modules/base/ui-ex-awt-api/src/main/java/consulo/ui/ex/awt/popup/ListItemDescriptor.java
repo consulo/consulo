@@ -5,8 +5,7 @@ import consulo.ui.image.Image;
 import org.jspecify.annotations.Nullable;
 
 public interface ListItemDescriptor<T> {
-    @Nullable
-    String getTextFor(T value);
+    @Nullable String getTextFor(T value);
 
     default @Nullable String getTooltipFor(T value) {
         return null;
@@ -25,9 +24,8 @@ public interface ListItemDescriptor<T> {
         return false;
     }
 
-    @Nullable
     @Deprecated
-    default String getCaptionAboveOf(T value) {
+    default @Nullable String getCaptionAboveOf(T value) {
         return null;
     }
 

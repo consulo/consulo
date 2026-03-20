@@ -51,9 +51,8 @@ public class ContentEntryDeleteFileListener implements AsyncFileListener {
         myProject = project;
     }
 
-    @Nullable
     @Override
-    public ChangeApplier prepareChange(List<? extends VFileEvent> events) {
+    public @Nullable ChangeApplier prepareChange(List<? extends VFileEvent> events) {
         Map<Module, Set<VirtualFile>> deletedFiles = new HashMap<>();
 
         for (VFileEvent event : events) {

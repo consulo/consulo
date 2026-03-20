@@ -32,16 +32,14 @@ public interface ProjectManagerEx extends ProjectManager {
     /**
      * @param dirPath path to directory where .consulo directory is located
      */
-    @Nullable
-    Project newProject(String projectName, String dirPath, boolean useDefaultProjectSettings);
+    @Nullable Project newProject(String projectName, String dirPath, boolean useDefaultProjectSettings);
 
     // returns true on success
     @RequiredUIAccess
     boolean closeAndDispose(Project project);
 
-    @Nullable
     @Override
-    default Project createProject(String name, String path) {
+    default @Nullable Project createProject(String name, String path) {
         return newProject(name, path, true);
     }
 

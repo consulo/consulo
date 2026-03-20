@@ -75,10 +75,9 @@ public class InjectingBindingActionGroupStub extends DefaultActionGroup implemen
     return null;
   }
 
-  @Nullable
   @Override
   @SuppressWarnings("unchecked")
-  public AnAction initialize(Application application, ActionManager manager) {
+  public @Nullable AnAction initialize(Application application, ActionManager manager) {
     ActionGroup target = (ActionGroup)application.getUnbindedInstance(myInjectingBinding.getImplClass(), myInjectingBinding.getParameterTypes(), myInjectingBinding::create);
 
     XmlActionStub.copyTemplatePresentation(getTemplatePresentation(), target.getTemplatePresentation());

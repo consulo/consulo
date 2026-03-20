@@ -293,9 +293,8 @@ public class MemberInplaceRenamer extends VariableInplaceRenamer {
         revertState();
     }
 
-    @Nullable
     @RequiredReadAction
-    public PsiElement getSubstituted() {
+    public @Nullable PsiElement getSubstituted() {
         if (mySubstituted != null && mySubstituted.isValid()) {
             if (mySubstituted instanceof PsiNameIdentifierOwner nameIdentifierOwner) {
                 if (Comparing.strEqual(myOldName, nameIdentifierOwner.getName())) {

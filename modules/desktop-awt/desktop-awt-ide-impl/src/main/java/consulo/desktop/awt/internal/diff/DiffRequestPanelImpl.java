@@ -72,9 +72,8 @@ public class DiffRequestPanelImpl implements DiffRequestPanel {
     return myPanel;
   }
 
-  @Nullable
   @Override
-  public JComponent getPreferredFocusedComponent() {
+  public @Nullable JComponent getPreferredFocusedComponent() {
     return myProcessor.getPreferredFocusedComponent();
   }
 

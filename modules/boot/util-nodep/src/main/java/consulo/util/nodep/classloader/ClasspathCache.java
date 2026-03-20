@@ -118,8 +118,7 @@ public class ClasspathCache {
     abstract @Nullable ResultType process(Loader loader, ParameterType parameter, ParameterType2 parameter2, String shortName);
   }
 
-  @Nullable
-  <ResultType, ParameterType, ParameterType2> ResultType iterateLoaders(
+  <ResultType, ParameterType, ParameterType2> @Nullable ResultType iterateLoaders(
     String resourcePath,
     LoaderIterator<ResultType, ParameterType, ParameterType2> iterator,
     ParameterType parameter,

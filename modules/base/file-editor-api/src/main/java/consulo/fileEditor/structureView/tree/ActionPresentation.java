@@ -48,6 +48,5 @@ public interface ActionPresentation {
    *
    * @return the action icon.
    */
-  @Nullable
-  Image getIcon();
+  @Nullable Image getIcon();
 }

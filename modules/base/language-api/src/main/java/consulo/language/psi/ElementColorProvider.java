@@ -28,9 +28,8 @@ import org.jspecify.annotations.Nullable;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface ElementColorProvider extends LanguageExtension {
-  @Nullable
   @RequiredReadAction
-  ColorValue getColorFrom(PsiElement element);
+  @Nullable ColorValue getColorFrom(PsiElement element);
 
   @RequiredWriteAction
   void setColorTo(PsiElement element, ColorValue color);

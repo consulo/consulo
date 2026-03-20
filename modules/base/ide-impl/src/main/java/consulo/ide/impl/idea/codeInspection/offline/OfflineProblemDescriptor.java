@@ -107,9 +107,8 @@ public class OfflineProblemDescriptor {
         myParentFQName = parentFQName;
     }
 
-    @Nullable
     @RequiredReadAction
-    public RefEntity getRefElement(RefManager refManager) {
+    public @Nullable RefEntity getRefElement(RefManager refManager) {
         RefEntity refEntity = refManager.getReference(myType, myFQName);
         if (refEntity instanceof RefElement refElement) {
             PsiElement element = refElement.getPsiElement();

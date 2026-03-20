@@ -27,16 +27,14 @@ public class SpineRef extends SubstrateRef {
     return myFile.calcTreeElement().getStubbedSpine().getSpineNodes().get(myIndex);
   }
 
-  @Nullable
   @Override
-  public Stub getStub() {
+  public @Nullable Stub getStub() {
     StubTree tree = myFile.getStubTree();
     return tree == null ? null : tree.getPlainList().get(myIndex);
   }
 
-  @Nullable
   @Override
-  public Stub getGreenStub() {
+  public @Nullable Stub getGreenStub() {
     StubTree tree = myFile.getGreenStubTree();
     return tree == null ? null : tree.getPlainList().get(myIndex);
   }

@@ -33,9 +33,8 @@ public class WebMenuItemImpl extends VaadinComponentDelegate<WebMenuItemImpl.Vaa
     private LocalizeValue myText = LocalizeValue.empty();
     private Image myIcon;
 
-    @Nullable
     @Override
-    public Component toUIComponent() {
+    public @Nullable Component toUIComponent() {
       return WebMenuItemImpl.this;
     }
   }

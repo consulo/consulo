@@ -260,9 +260,8 @@ public class VcsFileStatusProvider implements FileStatusFacade, Disposable {
             return myContentRevision.getRevisionNumber();
         }
 
-        @Nullable
         @Override
-        public String loadContent() {
+        public @Nullable String loadContent() {
             String content;
             try {
                 content = myContentRevision.getContent();

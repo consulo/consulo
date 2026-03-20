@@ -685,10 +685,9 @@ public class AbstractVcsHelperImpl extends AbstractVcsHelper {
     }
 
     @Override
-    @Nullable
     @RequiredUIAccess
     @SuppressWarnings("unchecked")
-    public <T extends CommittedChangeList, U extends ChangeBrowserSettings> T chooseCommittedChangeList(
+    public <T extends CommittedChangeList, U extends ChangeBrowserSettings> @Nullable T chooseCommittedChangeList(
         CommittedChangesProvider<T, U> provider,
         RepositoryLocation location
     ) {

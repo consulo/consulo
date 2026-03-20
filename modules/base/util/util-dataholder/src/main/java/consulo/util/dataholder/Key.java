@@ -84,9 +84,8 @@ public class Key<T> {
         return holder == null ? null : holder.getUserData(this);
     }
 
-    @Nullable
     @SuppressWarnings("unchecked")
-    public T get(@Nullable Map<Key, ?> holder) {
+    public @Nullable T get(@Nullable Map<Key, ?> holder) {
         return holder == null ? null : (T) holder.get(this);
     }
 

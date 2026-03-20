@@ -372,8 +372,7 @@ public class MultipleBuildsView implements BuildProgressListener, Disposable {
         }
 
         private
-        @Nullable
-        Pair<Integer, Supplier<OccurenceInfo>> getOccurenceNavigator(boolean next) {
+        @Nullable Pair<Integer, Supplier<OccurenceInfo>> getOccurenceNavigator(boolean next) {
             if (myBuildsList.getItemsCount() == 0) {
                 return null;
             }

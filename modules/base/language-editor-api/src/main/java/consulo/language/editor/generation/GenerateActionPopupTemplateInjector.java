@@ -24,6 +24,5 @@ import org.jspecify.annotations.Nullable;
  * Generate action could provide an action to edit corresponding file template. It would appear then in the subMenu of the Generate... popup
  */
 public interface GenerateActionPopupTemplateInjector {
-  @Nullable
-  AnAction createEditTemplateAction(DataContext dataContext);
+  @Nullable AnAction createEditTemplateAction(DataContext dataContext);
 }

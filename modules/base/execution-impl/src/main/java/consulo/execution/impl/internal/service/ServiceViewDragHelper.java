@@ -174,14 +174,12 @@ final class ServiceViewDragHelper {
       return myItems;
     }
 
-    @Nullable
-    ServiceViewContributor getContributor() {
+    @Nullable ServiceViewContributor getContributor() {
       return myContributor;
     }
 
-    @Nullable
     @Override
-    public Object getData(Key<?> dataId) {
+    public @Nullable Object getData(Key<?> dataId) {
       if (PlatformDataKeys.SELECTED_ITEMS.is(dataId)) {
         return ContainerUtil.map2Array(myItems, ServiceViewItem::getValue);
       }

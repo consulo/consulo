@@ -25,9 +25,8 @@ import org.jspecify.annotations.Nullable;
 
 @ExtensionImpl
 public class ScratchUseScopeExtension implements UseScopeEnlarger {
-  @Nullable
   @Override
-  public SearchScope getAdditionalUseScope(PsiElement element) {
+  public @Nullable SearchScope getAdditionalUseScope(PsiElement element) {
     SearchScope useScope = element.getUseScope();
     if (useScope instanceof LocalSearchScope) return null;
     return ScratchesSearchScope.getScratchesScope(element.getProject());

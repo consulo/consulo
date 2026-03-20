@@ -79,15 +79,13 @@ public class DocumentFragmentContent extends DiffContentBase implements Document
     return mySynchronizer.getDocument2();
   }
 
-  @Nullable
   @Override
-  public VirtualFile getHighlightFile() {
+  public @Nullable VirtualFile getHighlightFile() {
     return myOriginal.getHighlightFile();
   }
 
-  @Nullable
   @Override
-  public Navigatable getNavigatable(LineCol position) {
+  public @Nullable Navigatable getNavigatable(LineCol position) {
     if (!myRangeMarker.isValid()) return null;
     int offset = position.toOffset(getDocument());
     int originalOffset = offset + myRangeMarker.getStartOffset();
@@ -95,27 +93,23 @@ public class DocumentFragmentContent extends DiffContentBase implements Document
     return myOriginal.getNavigatable(originalPosition);
   }
 
-  @Nullable
   @Override
-  public LineSeparator getLineSeparator() {
+  public @Nullable LineSeparator getLineSeparator() {
     return null;
   }
 
-  @Nullable
   @Override
-  public Charset getCharset() {
+  public @Nullable Charset getCharset() {
     return null;
   }
 
-  @Nullable
   @Override
-  public FileType getContentType() {
+  public @Nullable FileType getContentType() {
     return myOriginal.getContentType();
   }
 
-  @Nullable
   @Override
-  public Navigatable getNavigatable() {
+  public @Nullable Navigatable getNavigatable() {
     return getNavigatable(new LineCol(0));
   }
 

@@ -27,6 +27,5 @@ import org.jspecify.annotations.Nullable;
  */
 @ExtensionAPI(ComponentScope.PROJECT)
 public interface ModuleIconProvider {
-    @Nullable
-    Image getIcon(Module module);
+    @Nullable Image getIcon(Module module);
 }

@@ -141,9 +141,8 @@ class DesktopButtonImpl extends SwingComponentDelegate<DesktopButtonImpl.MyButto
         button.updateText();
     }
 
-    @Nullable
     @Override
-    public Image getIcon() {
+    public @Nullable Image getIcon() {
         return TargetAWT.from(toAWTComponent().getIcon());
     }
 

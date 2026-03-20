@@ -48,8 +48,7 @@ public interface UsageTarget extends NavigationItem {
     /**
      * @return the files this usage target is in. Might be null if usage target is not file-based
      */
-    @Nullable
-    VirtualFile[] getFiles();
+    @Nullable VirtualFile[] getFiles();
 
     void update();
 }

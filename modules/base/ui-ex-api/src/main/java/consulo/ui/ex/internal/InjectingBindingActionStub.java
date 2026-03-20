@@ -76,10 +76,9 @@ public class InjectingBindingActionStub extends AnAction implements InjectingBin
     return null;
   }
 
-  @Nullable
   @Override
   @SuppressWarnings("unchecked")
-  public AnAction initialize(Application application, ActionManager manager) {
+  public @Nullable AnAction initialize(Application application, ActionManager manager) {
     AnAction target = (AnAction)application.getUnbindedInstance(myInjectingBinding.getImplClass(), myInjectingBinding.getParameterTypes(), myInjectingBinding::create);
 
     XmlActionStub.copyTemplatePresentation(getTemplatePresentation(), target.getTemplatePresentation());

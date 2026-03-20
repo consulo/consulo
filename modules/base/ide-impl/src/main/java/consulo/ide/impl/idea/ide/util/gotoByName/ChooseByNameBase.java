@@ -155,8 +155,7 @@ public abstract class ChooseByNameBase implements ChooseByNameViewModel {
     private final boolean myInitIsDone;
     private boolean myAlwaysHasMore;
     private Point myFocusPoint;
-    @Nullable
-    SelectionSnapshot currentChosenInfo;
+    @Nullable SelectionSnapshot currentChosenInfo;
 
     public boolean checkDisposed() {
         return myDisposedFlag;
@@ -215,9 +214,8 @@ public abstract class ChooseByNameBase implements ChooseByNameViewModel {
         myInitIsDone = true;
     }
 
-    @Nullable
     @Override
-    public Project getProject() {
+    public @Nullable Project getProject() {
         return myProject;
     }
 
@@ -1419,10 +1417,9 @@ public abstract class ChooseByNameBase implements ChooseByNameViewModel {
             return DumbService.getInstance(myProject).runReadActionInSmartMode(() -> performInReadAction(indicator));
         }
 
-        @Nullable
         @Override
         @RequiredReadAction
-        public Continuation performInReadAction(ProgressIndicator indicator) throws ProcessCanceledException {
+        public @Nullable Continuation performInReadAction(ProgressIndicator indicator) throws ProcessCanceledException {
             if (isProjectDisposed()) {
                 return null;
             }

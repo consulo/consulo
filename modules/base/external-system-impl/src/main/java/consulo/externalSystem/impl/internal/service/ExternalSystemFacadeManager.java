@@ -267,9 +267,8 @@ public class ExternalSystemFacadeManager {
             myKey.set(key);
         }
 
-        @Nullable
         @Override
-        public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+        public @Nullable Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
             if ("consume".equals(method.getName())) {
                 myKey.set((IntegrationKey) args[0]);
                 return null;

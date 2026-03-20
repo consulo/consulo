@@ -41,9 +41,8 @@ public class TreeNodeOnVcsRevision extends DefaultMutableTreeNode implements Vcs
     }
   }
 
-  @Nullable
   @Override
-  public RepositoryLocation getChangedRepositoryPath() {
+  public @Nullable RepositoryLocation getChangedRepositoryPath() {
     return myRevision.getChangedRepositoryPath();
   }
 

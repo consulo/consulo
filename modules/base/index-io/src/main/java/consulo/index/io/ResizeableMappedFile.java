@@ -126,9 +126,8 @@ public class ResizeableMappedFile implements Forceable {
       stream = FileUtil.doIOOperation(new FileUtil.RepeatableIOOperation<DataOutputStream, IOException>() {
         boolean parentWasCreated;
 
-        @Nullable
         @Override
-        public DataOutputStream execute(boolean lastAttempt) throws IOException {
+        public @Nullable DataOutputStream execute(boolean lastAttempt) throws IOException {
           try {
             return new DataOutputStream(new FileOutputStream(lengthFile));
           }

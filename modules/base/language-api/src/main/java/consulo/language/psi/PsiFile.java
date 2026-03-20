@@ -50,20 +50,17 @@ public interface PsiFile extends PsiFileSystemItem {
      * @return the virtual file, or null if the file exists only in memory.
      */
     @Override
-    @Nullable
-    VirtualFile getVirtualFile();
+    @Nullable VirtualFile getVirtualFile();
 
     /**
      * Returns the directory containing the file.
      *
      * @return the containing directory, or null if the file exists only in memory.
      */
-    @Nullable
-    PsiDirectory getContainingDirectory();
+    @Nullable PsiDirectory getContainingDirectory();
 
     @Override
-    @Nullable
-    PsiDirectory getParent();
+    @Nullable PsiDirectory getParent();
 
     /**
      * Gets the modification stamp value. Modification stamp is a value changed by any modification

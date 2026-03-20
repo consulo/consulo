@@ -24,6 +24,5 @@ import org.jspecify.annotations.Nullable;
  * @since 01-Apr-22
  */
 public interface XSourcePositionWithHighlighter extends XSourcePosition {
-  @Nullable
-  TextRange getHighlightRange();
+  @Nullable TextRange getHighlightRange();
 }

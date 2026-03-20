@@ -649,9 +649,8 @@ public final class EditorMouseHoverPopupManagerImpl implements EditorMouseHoverP
             hint.hide();
         }
 
-        @Nullable
         @RequiredUIAccess
-        private DocumentationComponent createQuickDocComponent(Editor editor, boolean deEmphasize, PopupBridge popupBridge) {
+        private @Nullable DocumentationComponent createQuickDocComponent(Editor editor, boolean deEmphasize, PopupBridge popupBridge) {
             if (quickDocMessage == null) {
                 return null;
             }

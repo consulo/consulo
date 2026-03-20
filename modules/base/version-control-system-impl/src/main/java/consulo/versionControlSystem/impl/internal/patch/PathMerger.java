@@ -244,7 +244,6 @@ public class PathMerger {
      */
     boolean down(String name);
     T getResult();
-    @Nullable
-    String getCurrentName();
+    @Nullable String getCurrentName();
   }
 }

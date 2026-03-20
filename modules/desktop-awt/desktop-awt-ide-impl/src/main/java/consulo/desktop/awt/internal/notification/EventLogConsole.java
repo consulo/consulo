@@ -115,9 +115,8 @@ class EventLogConsole {
         final ClearLogAction clearLog = new ClearLogAction(this);
 
         editor.installPopupHandler(new ContextMenuPopupHandler() {
-            @Nullable
             @Override
-            public ActionGroup getActionGroup(EditorMouseEvent event) {
+            public @Nullable ActionGroup getActionGroup(EditorMouseEvent event) {
                 ActionManager actionManager = ActionManager.getInstance();
                 return createPopupActions(actionManager, clearLog, editor, event);
             }
@@ -486,9 +485,8 @@ class EventLogConsole {
         return highlighter.get();
     }
 
-    @Nullable
     @RequiredUIAccess
-    public RelativePoint getRangeHighlighterLocation(RangeHighlighter range) {
+    public @Nullable RelativePoint getRangeHighlighterLocation(RangeHighlighter range) {
         Editor editor = getConsoleEditor();
         Project project = editor.getProject();
         Window window = NotificationsManagerImpl.getNotificationsManager().findWindowForBalloon(project);

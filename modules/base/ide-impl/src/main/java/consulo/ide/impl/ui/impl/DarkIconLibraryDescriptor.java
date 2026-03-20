@@ -31,9 +31,8 @@ public class DarkIconLibraryDescriptor implements IconLibraryDescriptor {
         return IconLibraryManager.DARK_LIBRARY_ID;
     }
 
-    @Nullable
     @Override
-    public String getBaseLibraryId() {
+    public @Nullable String getBaseLibraryId() {
         return IconLibraryManager.LIGHT_LIBRARY_ID;
     }
 

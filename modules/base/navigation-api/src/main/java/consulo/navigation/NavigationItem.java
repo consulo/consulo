@@ -29,9 +29,7 @@ public interface NavigationItem extends Navigatable {
   @DeprecationInfo("Use NavigationItem#EMPTY_ARRAY")
   NavigationItem[] EMPTY_NAVIGATION_ITEM_ARRAY = new NavigationItem[0];
 
-  @Nullable
-  String getName();
+  @Nullable String getName();
 
-  @Nullable
-  ItemPresentation getPresentation();
+  @Nullable ItemPresentation getPresentation();
 }

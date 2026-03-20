@@ -38,9 +38,8 @@ public class DefaultRootInjectingContainerFactory implements RootInjectingContai
       throw new UnsupportedOperationException();
     }
 
-    @Nullable
     @Override
-    public <T> T getInstanceIfCreated(Class<T> clazz) {
+    public <T> @Nullable T getInstanceIfCreated(Class<T> clazz) {
       throw new UnsupportedOperationException();
     }
 

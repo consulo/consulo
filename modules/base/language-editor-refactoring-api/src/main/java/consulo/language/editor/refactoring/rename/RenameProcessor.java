@@ -375,23 +375,20 @@ public class RenameProcessor extends BaseRefactoringProcessor {
         return myForceShowPreview || super.isPreviewUsages(usages) || UsageViewUtil.reportNonRegularUsages(usages, myProject);
     }
 
-    @Nullable
     @Override
-    protected String getRefactoringId() {
+    protected @Nullable String getRefactoringId() {
         return "refactoring.rename";
     }
 
-    @Nullable
     @Override
-    protected RefactoringEventData getBeforeData() {
+    protected @Nullable RefactoringEventData getBeforeData() {
         RefactoringEventData data = new RefactoringEventData();
         data.addElement(myPrimaryElement);
         return data;
     }
 
-    @Nullable
     @Override
-    protected RefactoringEventData getAfterData(UsageInfo[] usages) {
+    protected @Nullable RefactoringEventData getAfterData(UsageInfo[] usages) {
         RefactoringEventData data = new RefactoringEventData();
         data.addElement(myPrimaryElement);
         return data;

@@ -42,9 +42,8 @@ import java.util.*;
 public class BaseProjectViewDirectoryHelper {
     private static final Logger LOGGER = Logger.getInstance(BaseProjectViewDirectoryHelper.class);
 
-    @Nullable
     @RequiredReadAction
-    public static String getLocationString(PsiDirectory psiDirectory) {
+    public static @Nullable String getLocationString(PsiDirectory psiDirectory) {
         PsiPackage aPackage = PsiPackageManager.getInstance(psiDirectory.getProject()).findAnyPackage(psiDirectory);
         if (ProjectRootsUtil.isSourceRoot(psiDirectory) && aPackage != null) {
             return aPackage.getQualifiedName();

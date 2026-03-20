@@ -78,9 +78,8 @@ public class RunConfigurationModule implements JDOMExternalizable {
     return myProject;
   }
 
-  @Nullable
   @Transient
-  public Module getModule() {
+  public @Nullable Module getModule() {
     return myModulePointer != null ? myModulePointer.get() : null;
   }
 

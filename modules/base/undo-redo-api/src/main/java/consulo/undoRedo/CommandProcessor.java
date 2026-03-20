@@ -152,10 +152,9 @@ public abstract class CommandProcessor {
 
     public abstract void setCurrentCommandGroupId(@Nullable Object groupId);
 
-    @Nullable
     @Deprecated
     @DeprecationInfo("Use #hasCurrentCommand()")
-    public final Runnable getCurrentCommand() {
+    public final @Nullable Runnable getCurrentCommand() {
         return hasCurrentCommand() ? EmptyRunnable.getInstance() : null;
     }
 

@@ -104,9 +104,8 @@ public class DataValidators {
       return map;
     });
 
-  @Nullable
   @SuppressWarnings("unchecked")
-  private static <T> DataValidator<T> getValidator(Key<T> dataId) {
+  private static <T> @Nullable DataValidator<T> getValidator(Key<T> dataId) {
     Map<Key, DataValidator> map = Application.get().getExtensionPoint(DataValidator.class).getOrBuildCache(CACHE_KEY);
     return map.get(dataId);
   }

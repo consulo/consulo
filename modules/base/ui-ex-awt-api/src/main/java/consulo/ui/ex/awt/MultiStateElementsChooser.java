@@ -59,16 +59,13 @@ public class MultiStateElementsChooser<T, S> extends JPanel implements Component
     
     S getNextState(T element, S state);
 
-    @Nullable
-    S getNextState(Map<T, S> elementsWithStates);
+    @Nullable S getNextState(Map<T, S> elementsWithStates);
 
     boolean isMarked(S state);
 
-    @Nullable
-    S getMarkState(@Nullable Object value);
+    @Nullable S getMarkState(@Nullable Object value);
 
-    @Nullable
-    TableCellRenderer getMarkRenderer();
+    @Nullable TableCellRenderer getMarkRenderer();
   }
 
   public MultiStateElementsChooser(boolean elementsCanBeMarked, MarkStateDescriptor<T, S> markStateDescriptor) {
@@ -314,11 +311,9 @@ public class MultiStateElementsChooser<T, S> extends JPanel implements Component
   }
 
   public interface ElementProperties {
-    @Nullable
-    Image getIcon();
+    @Nullable Image getIcon();
 
-    @Nullable
-    Color getColor();
+    @Nullable Color getColor();
   }
 
   public void addElement(T element, S markState, ElementProperties elementProperties) {

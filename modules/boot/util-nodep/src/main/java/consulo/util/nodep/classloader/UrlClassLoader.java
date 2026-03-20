@@ -333,9 +333,8 @@ public class UrlClassLoader extends ClassLoader implements AutoCloseable {
     }
 
     // java 9 module method. we can't use override annotation here
-    @Nullable
     @Override
-    protected Class<?> findClass(String moduleName, String name) {
+    protected @Nullable Class<?> findClass(String moduleName, String name) {
         try {
             return findClass(name);
         }
@@ -345,9 +344,8 @@ public class UrlClassLoader extends ClassLoader implements AutoCloseable {
     }
 
     // java 9 module method. we can't use override annotation here
-    @Nullable
     @Override
-    protected URL findResource(String moduleName, String name) throws IOException {
+    protected @Nullable URL findResource(String moduleName, String name) throws IOException {
         return findResource(name);
     }
 
@@ -404,9 +402,8 @@ public class UrlClassLoader extends ClassLoader implements AutoCloseable {
         return defineClass(name, b, 0, b.length, protectionDomain);
     }
 
-    @Nullable
     @Override
-    public URL findResource(String name) {
+    public @Nullable URL findResource(String name) {
         Resource res = findResourceImpl(name);
         return res != null ? res.getURL() : null;
     }
@@ -425,9 +422,8 @@ public class UrlClassLoader extends ClassLoader implements AutoCloseable {
         myClassPath.close();
     }
 
-    @Nullable
     @Override
-    public InputStream getResourceAsStream(String name) {
+    public @Nullable InputStream getResourceAsStream(String name) {
         if (myAllowBootstrapResources) {
             return super.getResourceAsStream(name);
         }

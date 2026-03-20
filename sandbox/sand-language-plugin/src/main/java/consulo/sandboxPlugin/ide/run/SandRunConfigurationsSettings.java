@@ -35,9 +35,8 @@ public class SandRunConfigurationsSettings implements RunConfigurationsSettings 
   private static class TestConfiguration implements UnnamedConfigurable {
 
     @RequiredUIAccess
-    @Nullable
     @Override
-    public JComponent createComponent() {
+    public @Nullable JComponent createComponent() {
       JPanel panel = new JPanel();
       panel.add(new JLabel("test label"));
       return panel;

@@ -28,9 +28,8 @@ import java.util.List;
  * @author peter
  */
 public abstract class DocumentationProviderEx implements DocumentationProvider {
-  @Nullable
   @Override
-  public String getQuickNavigateInfo(PsiElement element, PsiElement originalElement) {
+  public @Nullable String getQuickNavigateInfo(PsiElement element, PsiElement originalElement) {
     return null;
   }
 

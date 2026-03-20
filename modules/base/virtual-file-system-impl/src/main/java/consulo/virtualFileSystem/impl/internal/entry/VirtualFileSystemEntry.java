@@ -467,21 +467,18 @@ public abstract class VirtualFileSystemEntry extends InternalNewVirtualFile {
       throw new UnsupportedOperationException();
     }
 
-    @Nullable
     @Override
-    public NewVirtualFile findChild(String name) {
+    public @Nullable NewVirtualFile findChild(String name) {
       throw new UnsupportedOperationException();
     }
 
-    @Nullable
     @Override
-    public NewVirtualFile refreshAndFindChild(String name) {
+    public @Nullable NewVirtualFile refreshAndFindChild(String name) {
       throw new UnsupportedOperationException();
     }
 
-    @Nullable
     @Override
-    public NewVirtualFile findChildIfCached(String name) {
+    public @Nullable NewVirtualFile findChildIfCached(String name) {
       throw new UnsupportedOperationException();
     }
 

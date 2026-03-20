@@ -29,9 +29,8 @@ public class SandServerConfiguration extends ServerConfiguration {
   @Override
   public PersistentStateComponent<?> getSerializer() {
     return new PersistentStateComponent<Object>() {
-      @Nullable
       @Override
-      public Object getState() {
+      public @Nullable Object getState() {
         return new Element("state");
       }
 

@@ -24,8 +24,7 @@ public interface VirtualFilePointer {
   
   String getFileName();
 
-  @Nullable
-  VirtualFile getFile();
+  @Nullable VirtualFile getFile();
 
   
   String getUrl();

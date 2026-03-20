@@ -38,9 +38,8 @@ public abstract class IdeFrameDecorator implements Disposable {
     return false;
   }
 
-  @Nullable
   @ReviewAfterMigrationToJRE(9)
-  public static IdeFrameDecorator decorate(IdeFrameEx frame) {
+  public static @Nullable IdeFrameDecorator decorate(IdeFrameEx frame) {
     if (Platform.current().os().isXWindow() && X11UiUtil.isFullScreenSupported()) {
       return new EWMHFrameDecorator(frame);
     }

@@ -73,9 +73,8 @@ class MaterialStubList extends StubList {
     return myPlainList.get(id);
   }
 
-  @Nullable
   @Override
-  public StubBase<?> getCachedStub(int index) {
+  public @Nullable StubBase<?> getCachedStub(int index) {
     return get(index);
   }
 }

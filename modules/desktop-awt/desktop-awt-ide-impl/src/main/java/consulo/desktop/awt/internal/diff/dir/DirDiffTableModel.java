@@ -512,9 +512,8 @@ public class DirDiffTableModel extends AbstractTableModel implements DirDiffMode
         myTable = table;
     }
 
-    @Nullable
     @Override
-    public Object getValueAt(int rowIndex, int columnIndex) {
+    public @Nullable Object getValueAt(int rowIndex, int columnIndex) {
         try {
             DirDiffElementImpl element = myElements.get(rowIndex);
             if (element.isSeparator()) {

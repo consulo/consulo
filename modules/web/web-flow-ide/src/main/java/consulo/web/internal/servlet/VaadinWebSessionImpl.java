@@ -37,9 +37,8 @@ public class VaadinWebSessionImpl implements WebSession {
     myAccess = UIAccess.current();
   }
 
-  @Nullable
   @Override
-  public UIAccess getAccess() {
+  public @Nullable UIAccess getAccess() {
     return myAccess.isValid() ? myAccess : null;
   }
 

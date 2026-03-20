@@ -87,17 +87,15 @@ public abstract class FileTypeManager extends FileTypeRegistry {
    * @return Known file type or {@code null}. Never returns {@link FileTypes#UNKNOWN}.
    * @deprecated Use {@link #getKnownFileTypeOrAssociate(VirtualFile, Project)} instead
    */
-  @Nullable
   @Deprecated
-  public FileType getKnownFileTypeOrAssociate(VirtualFile file) {
+  public @Nullable FileType getKnownFileTypeOrAssociate(VirtualFile file) {
     return file.getFileType();
   }
 
   public abstract @Nullable FileType getKnownFileTypeOrAssociate(VirtualFile file, Project project);
 
-  @Nullable
   @Override
-  public FileType getKnownFileTypeOrAssociate(VirtualFile file, ComponentManager project) {
+  public @Nullable FileType getKnownFileTypeOrAssociate(VirtualFile file, ComponentManager project) {
     return getKnownFileTypeOrAssociate(file, (Project)project);
   }
 

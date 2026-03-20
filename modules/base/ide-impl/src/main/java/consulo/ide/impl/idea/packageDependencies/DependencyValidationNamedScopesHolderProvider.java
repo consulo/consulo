@@ -36,9 +36,8 @@ public class DependencyValidationNamedScopesHolderProvider implements NamedScope
     myDependencyValidationManager = dependencyValidationManager;
   }
 
-  @Nullable
   @Override
-  public NamedScopesHolder getScopesHolder() {
+  public @Nullable NamedScopesHolder getScopesHolder() {
     return myDependencyValidationManager;
   }
 }

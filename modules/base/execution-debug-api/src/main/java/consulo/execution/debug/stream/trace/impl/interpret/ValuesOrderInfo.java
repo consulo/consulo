@@ -56,15 +56,13 @@ public class ValuesOrderInfo implements TraceInfo {
     return after;
   }
 
-  @Nullable
   @Override
-  public Map<TraceElement, List<TraceElement>> getDirectTrace() {
+  public @Nullable Map<TraceElement, List<TraceElement>> getDirectTrace() {
     return direct;
   }
 
-  @Nullable
   @Override
-  public Map<TraceElement, List<TraceElement>> getReverseTrace() {
+  public @Nullable Map<TraceElement, List<TraceElement>> getReverseTrace() {
     return reverse;
   }
 

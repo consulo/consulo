@@ -74,9 +74,8 @@ class MapBinding extends NonNullAccessorBinding implements MultiNodeBinding {
     return true;
   }
 
-  @Nullable
   @Override
-  public Object serialize(Object o, @Nullable Object context, SerializationFilter filter) {
+  public @Nullable Object serialize(Object o, @Nullable Object context, SerializationFilter filter) {
     Element serialized = myMapAnnotation == null || myMapAnnotation.surroundWithTag() ? new Element(MAP) : (Element)context;
     assert serialized != null;
 
@@ -109,9 +108,8 @@ class MapBinding extends NonNullAccessorBinding implements MultiNodeBinding {
     return myMapAnnotation == null ? VALUE : myMapAnnotation.valueAttributeName();
   }
 
-  @Nullable
   @Override
-  public Object deserializeList(Object context, List<Element> elements) {
+  public @Nullable Object deserializeList(Object context, List<Element> elements) {
     List<Element> childNodes;
     if (myMapAnnotation == null || myMapAnnotation.surroundWithTag()) {
       assert elements.size() == 1;

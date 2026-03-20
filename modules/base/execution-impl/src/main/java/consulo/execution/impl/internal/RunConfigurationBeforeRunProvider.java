@@ -340,9 +340,8 @@ public class RunConfigurationBeforeRunProvider extends BeforeRunTaskProvider<Run
             myJBList.setMinimumSize(new Dimension(maxWidth, myJBList.getPreferredSize().height));
         }
 
-        @Nullable
         @Override
-        protected String getDimensionServiceKey() {
+        protected @Nullable String getDimensionServiceKey() {
             return "consulo.execution.impl.internal.RunConfigurationBeforeRunProvider.dimensionServiceKey;";
         }
 

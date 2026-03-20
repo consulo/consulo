@@ -272,9 +272,8 @@ public class CodeStyleInternalHelperImpl implements CodeStyleInternalHelper {
         return WhiteSpaceFormattingStrategyFactory.getStrategy(language).containsWhitespacesOnly(node);
     }
 
-    @Nullable
     @Override
-    public ASTNode getPreviousNonWhitespaceLeaf(@Nullable ASTNode node) {
+    public @Nullable ASTNode getPreviousNonWhitespaceLeaf(@Nullable ASTNode node) {
         if (node == null) {
             return null;
         }

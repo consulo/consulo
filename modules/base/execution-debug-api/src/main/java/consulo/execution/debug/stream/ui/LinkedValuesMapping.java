@@ -8,6 +8,5 @@ import java.util.List;
  * @author Vitaliy.Bibaev
  */
 public interface LinkedValuesMapping {
-  @Nullable
-  List<ValueWithPosition> getLinkedValues(ValueWithPosition value);
+  @Nullable List<ValueWithPosition> getLinkedValues(ValueWithPosition value);
 }

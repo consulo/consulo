@@ -28,6 +28,5 @@ public interface PsiDeclaredTarget extends PsiTarget {
   /**
    * @return the range containing name. Range should be relative to {@link #getNavigationElement()} result
    */
-  @Nullable
-  TextRange getNameIdentifierRange();
+  @Nullable TextRange getNameIdentifierRange();
 }

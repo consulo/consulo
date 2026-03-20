@@ -34,8 +34,7 @@ public interface ExternalFormatProcessor {
      * @param canChangeWhiteSpacesOnly procedure can change only whitespaces
      * @return the range after formatting or null, if external format procedure cannot be applied to the source
      */
-    @Nullable
-    TextRange format(PsiFile source, TextRange range, boolean canChangeWhiteSpacesOnly);
+    @Nullable TextRange format(PsiFile source, TextRange range, boolean canChangeWhiteSpacesOnly);
 
     /**
      * Indents the line.
@@ -44,8 +43,7 @@ public interface ExternalFormatProcessor {
      * @param lineStartOffset the offset of the indented line
      * @return the indentation String or null if nothing to be changed
      */
-    @Nullable
-    String indent(PsiFile source, int lineStartOffset);
+    @Nullable String indent(PsiFile source, int lineStartOffset);
 
     /**
      * @return the unique id for external formatter

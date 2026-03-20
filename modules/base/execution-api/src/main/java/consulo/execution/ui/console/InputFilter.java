@@ -27,7 +27,6 @@ public interface InputFilter {
    * @param contentType the content type of filtered text
    * @return            <tt>null</tt>, if there was no match, otherwise, a list of pairs like ('string to use', 'content type to use')
    */
-  @Nullable
-  List<Pair<String, ConsoleViewContentType>> applyFilter(String text, ConsoleViewContentType contentType);
+  @Nullable List<Pair<String, ConsoleViewContentType>> applyFilter(String text, ConsoleViewContentType contentType);
 
 }

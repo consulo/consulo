@@ -27,6 +27,5 @@ public interface BlockEx extends Block {
     /**
      * @return current block's language (is used to decide on what code style settings should be used for it)
      */
-    @Nullable
-    Language getLanguage();
+    @Nullable Language getLanguage();
 }

@@ -29,6 +29,5 @@ public interface UsageViewDescriptor {
 
     String getCodeReferencesText(int usagesCount, int filesCount);
 
-    @Nullable
-    String getCommentReferencesText(int usagesCount, int filesCount);
+    @Nullable String getCommentReferencesText(int usagesCount, int filesCount);
 }

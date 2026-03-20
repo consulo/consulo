@@ -52,8 +52,7 @@ public interface VirtualFilePointerContainer {
   
   VirtualFile[] getDirectories();
 
-  @Nullable
-  VirtualFilePointer findByUrl(String url);
+  @Nullable VirtualFilePointer findByUrl(String url);
 
   void clear();
 

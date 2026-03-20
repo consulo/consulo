@@ -68,9 +68,8 @@ public class IntentionWrapper implements LocalQuickFix, IntentionAction, ActionC
   public void invoke(Project project, Editor editor, PsiFile file) throws IncorrectOperationException {
     myAction.invoke(project, editor, file);
   }
-  @Nullable
   @Override
-  public PsiElement getElementToMakeWritable(PsiFile file) {
+  public @Nullable PsiElement getElementToMakeWritable(PsiFile file) {
     return myAction.getElementToMakeWritable(file);
   }
 

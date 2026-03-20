@@ -62,8 +62,7 @@ public interface RunAnythingProvider<V> {
      * @param dataContext use it to fetch project, module, working directory
      * @param pattern     input string
      */
-    @Nullable
-    V findMatchingValue(DataContext dataContext, String pattern);
+    @Nullable V findMatchingValue(DataContext dataContext, String pattern);
 
     /**
      * Gets completions variants for input command prefix. E.g. "rvm use" provider should return list of sdk versions.
@@ -88,8 +87,7 @@ public interface RunAnythingProvider<V> {
      *
      * @param value matching value
      */
-    @Nullable
-    Image getIcon(V value);
+    @Nullable Image getIcon(V value);
 
     /**
      * If select a value in the list this command will be inserted into the search field.
@@ -102,8 +100,7 @@ public interface RunAnythingProvider<V> {
     /**
      * Returns text that is painted on the popup bottom and changed according to the list selection.
      */
-    @Nullable
-    String getAdText();
+    @Nullable String getAdText();
 
     /**
      * Returns value's presentation wrapper that is actually added into the main list.
@@ -129,8 +126,7 @@ public interface RunAnythingProvider<V> {
      * @param dataContext use it to fetch project, module, working directory
      */
 
-    @Nullable
-    RunAnythingItem getHelpItem(DataContext dataContext);
+    @Nullable RunAnythingItem getHelpItem(DataContext dataContext);
 
     /**
      * Returns completion group.
@@ -143,8 +139,7 @@ public interface RunAnythingProvider<V> {
      * @param dataContext use it to fetch project, module, working directory
      * @param pattern     to build matcher
      */
-    @Nullable
-    Matcher getMatcher(DataContext dataContext, String pattern);
+    @Nullable Matcher getMatcher(DataContext dataContext, String pattern);
 
     /**
      * Provides context types that can be chosen as execution contexts:

@@ -240,9 +240,8 @@ public class XValueNodeImpl extends XValueContainerNode<XValue>
     return myFullValueEvaluator;
   }
 
-  @Nullable
   @Override
-  protected XDebuggerTreeNodeHyperlink getLink() {
+  protected @Nullable XDebuggerTreeNodeHyperlink getLink() {
     if (myFullValueEvaluator != null) {
       return new XDebuggerTreeNodeHyperlink(myFullValueEvaluator.getLinkText()) {
         @Override

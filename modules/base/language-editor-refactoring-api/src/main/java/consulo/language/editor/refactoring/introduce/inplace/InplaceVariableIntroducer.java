@@ -201,9 +201,8 @@ public abstract class InplaceVariableIntroducer<E extends PsiElement> extends In
             return createLookupItems(myName, context.getEditor(), getElement());
         }
 
-        @Nullable
         @RequiredReadAction
-        public PsiNamedElement getElement() {
+        public @Nullable PsiNamedElement getElement() {
             return myPointer.getElement();
         }
 

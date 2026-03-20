@@ -35,9 +35,8 @@ public class SimpleReference<T> implements Supplier<T> {
     return myValue == null;
   }
 
-  @Nullable
   @Override
-  public T get() {
+  public @Nullable T get() {
     return myValue;
   }
 

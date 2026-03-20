@@ -53,9 +53,8 @@ public class PsiEditorUtil {
    * @return editor that works with a given element if the one is found; <code>null</code> otherwise
    * @see {@link consulo.ide.impl.idea.codeInspection.LocalQuickFixAndIntentionActionOnPsiElement}
    */
-  @Nullable
   @RequiredUIAccess
-  public static Editor findEditor(PsiElement element) {
+  public static @Nullable Editor findEditor(PsiElement element) {
     PsiFile psiFile = element.getContainingFile();
     VirtualFile virtualFile = PsiUtilCore.getVirtualFile(element);
     if (virtualFile == null) {

@@ -61,8 +61,7 @@ public interface ConsoleView extends ExecutionConsole {
      */
     void setProcessTextFilter(@Nullable BiPredicate<ProcessEvent, Key> filter);
 
-    @Nullable
-    BiPredicate<ProcessEvent, Key> getProcessTextFilter();
+    @Nullable BiPredicate<ProcessEvent, Key> getProcessTextFilter();
 
     void printHyperlink(String hyperlinkText, HyperlinkInfo info);
 

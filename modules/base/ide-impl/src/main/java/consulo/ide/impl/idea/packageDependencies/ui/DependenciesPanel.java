@@ -417,9 +417,8 @@ public class DependenciesPanel extends JPanel implements Disposable, DataProvide
         FileTreeModelBuilder.clearCaches(myProject);
     }
 
-    @Nullable
     @Override
-    public Object getData(Key dataId) {
+    public @Nullable Object getData(Key dataId) {
         if (PsiElement.KEY == dataId) {
             PackageDependenciesNode selectedNode = myRightTree.getSelectedNode();
             if (selectedNode != null) {

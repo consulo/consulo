@@ -158,15 +158,13 @@ public class StopAction extends DumbAwareAction {
             IPopupChooserBuilder<HandlerItem> builder = JBPopupFactory.getInstance()
                 .createPopupChooserBuilder(items)
                 .setRenderer(new GroupedItemsListRenderer<>(new ListItemDescriptorAdapter<HandlerItem>() {
-                    @Nullable
                     @Override
-                    public String getTextFor(HandlerItem item) {
+                    public @Nullable String getTextFor(HandlerItem item) {
                         return item.displayName;
                     }
 
-                    @Nullable
                     @Override
-                    public Image getIconFor(HandlerItem item) {
+                    public @Nullable Image getIconFor(HandlerItem item) {
                         return item.icon;
                     }
 

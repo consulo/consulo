@@ -60,9 +60,8 @@ public class WebToolWindowPanelImpl extends VaadinComponentDelegate<WebToolWindo
             myBottomDiv.setWidthFull();
         }
 
-        @Nullable
         @Override
-        public Component toUIComponent() {
+        public @Nullable Component toUIComponent() {
             return WebToolWindowPanelImpl.this;
         }
 

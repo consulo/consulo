@@ -20,9 +20,8 @@ class XDebuggerTreeSpeedSearch extends TreeSpeedSearch implements XDebuggerTreeL
     //((XDebuggerTree)myComponent).addTreeListener(this);
   }
 
-  @Nullable
   @Override
-  protected Object findElement(String s) {
+  protected @Nullable Object findElement(String s) {
     String string = s.trim();
 
     XDebuggerTreeNode node = ObjectUtil.tryCast(myComponent.getLastSelectedPathComponent(), XDebuggerTreeNode.class);

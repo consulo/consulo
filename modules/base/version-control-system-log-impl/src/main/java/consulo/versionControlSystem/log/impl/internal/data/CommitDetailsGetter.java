@@ -25,9 +25,8 @@ public class CommitDetailsGetter extends AbstractDataGetter<VcsFullCommitDetails
     super(hashMap, logProviders, new VcsCommitCache<>(), index, parentDisposable);
   }
 
-  @Nullable
   @Override
-  protected VcsFullCommitDetails getFromAdditionalCache(int commitId) {
+  protected @Nullable VcsFullCommitDetails getFromAdditionalCache(int commitId) {
     return null;
   }
 

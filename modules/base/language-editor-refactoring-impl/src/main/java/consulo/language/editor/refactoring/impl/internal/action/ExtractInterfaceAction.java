@@ -28,9 +28,8 @@ public class ExtractInterfaceAction extends ExtractSuperActionBase {
         setInjectedContext(true);
     }
 
-    @Nullable
     @Override
-    protected RefactoringActionHandler getRefactoringHandler(RefactoringSupportProvider supportProvider) {
+    protected @Nullable RefactoringActionHandler getRefactoringHandler(RefactoringSupportProvider supportProvider) {
         return supportProvider.getExtractInterfaceHandler();
     }
 }

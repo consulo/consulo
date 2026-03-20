@@ -45,9 +45,8 @@ public class InProcessExternalSystemCommunicationManager implements ExternalSyst
   }
 
   @SuppressWarnings("unchecked")
-  @Nullable
   @Override
-  public RemoteExternalSystemFacade acquire(String id, ProjectSystemId externalSystemId) throws Exception {
+  public @Nullable RemoteExternalSystemFacade acquire(String id, ProjectSystemId externalSystemId) throws Exception {
     ExternalSystemManager<?, ?, ?, ?, ?> manager = ExternalSystemApiUtil.getManager(externalSystemId);
     assert manager != null;
     InProcessExternalSystemFacadeImpl result = new InProcessExternalSystemFacadeImpl(manager.getProjectResolverFactory(),

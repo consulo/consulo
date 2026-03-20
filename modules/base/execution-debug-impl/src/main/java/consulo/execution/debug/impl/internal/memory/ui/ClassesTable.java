@@ -377,9 +377,8 @@ public class ClassesTable extends JBTable implements DataProvider, Disposable {
         fireTableDataChanged();
     }
 
-    @Nullable
     @Override
-    public Object getData(Key<?> dataId) {
+    public @Nullable Object getData(Key<?> dataId) {
         if (dataId == SELECTED_CLASS_KEY) {
             return getSelectedClass();
         }

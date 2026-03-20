@@ -116,9 +116,8 @@ public class RenameModuleHandler implements RenameHandler, TitledHandler {
             return true;
         }
 
-        @Nullable
         @RequiredUIAccess
-        private ModifiableModuleModel renameModule(String inputString) {
+        private @Nullable ModifiableModuleModel renameModule(String inputString) {
             ModifiableModuleModel modifiableModel = ModuleManager.getInstance(myProject).getModifiableModel();
             try {
                 modifiableModel.renameModule(myModule, inputString);

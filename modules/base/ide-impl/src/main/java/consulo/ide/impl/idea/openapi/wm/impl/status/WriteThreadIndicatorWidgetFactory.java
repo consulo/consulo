@@ -90,9 +90,8 @@ public class WriteThreadIndicatorWidgetFactory implements StatusBarWidgetFactory
             return myComponent;
         }
 
-        @Nullable
         @Override
-        public WidgetPresentation getPresentation() {
+        public @Nullable WidgetPresentation getPresentation() {
             return null;
         }
 

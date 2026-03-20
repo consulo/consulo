@@ -43,9 +43,8 @@ public final class ExternalInfo {
   }
 
   @Deprecated
-  @Nullable
   @SuppressWarnings("unused")
-  public String getOriginalPath() {
+  public @Nullable String getOriginalPath() {
     return null;
   }
 

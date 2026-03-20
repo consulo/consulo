@@ -70,9 +70,8 @@ public class AnActionEvent implements PlaceProvider<String> {
     
     public static DataContext getInjectedDataContext(final DataContext context) {
         return new DataContextWrapper(context) {
-            @Nullable
             @Override
-            public <T> T getData(Key<T> dataId) {
+            public <T> @Nullable T getData(Key<T> dataId) {
                 T injected = super.getData(injectedId(dataId));
                 if (injected != null) {
                     return injected;

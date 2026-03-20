@@ -46,9 +46,8 @@ public class VcsRevisionNumberArrayRule implements GetDataRule<VcsRevisionNumber
     return VcsDataKeys.VCS_REVISION_NUMBERS;
   }
 
-  @Nullable
   @Override
-  public VcsRevisionNumber[] getData(DataProvider dataProvider) {
+  public @Nullable VcsRevisionNumber[] getData(DataProvider dataProvider) {
     List<VcsRevisionNumber> revisionNumbers = getRevisionNumbers(dataProvider);
 
     return !ContainerUtil.isEmpty(revisionNumbers) ? ArrayUtil.toObjectArray(revisionNumbers, VcsRevisionNumber.class) : null;

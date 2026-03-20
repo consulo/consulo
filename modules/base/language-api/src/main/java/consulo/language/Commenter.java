@@ -46,8 +46,7 @@ public interface Commenter extends LanguageExtension {
    *
    * @return the line comment text, or null.
    */
-  @Nullable
-  String getLineCommentPrefix();
+  @Nullable String getLineCommentPrefix();
 
   /**
    * Returns the string which marks the beginning of a block comment in the language,
@@ -55,8 +54,7 @@ public interface Commenter extends LanguageExtension {
    *
    * @return the block comment start text, or null.
    */
-  @Nullable
-  String getBlockCommentPrefix();
+  @Nullable String getBlockCommentPrefix();
 
   /**
    * Returns the string which marks the end of a block comment in the language,
@@ -64,8 +62,7 @@ public interface Commenter extends LanguageExtension {
    *
    * @return the block comment end text, or null.
    */
-  @Nullable
-  String getBlockCommentSuffix();
+  @Nullable String getBlockCommentSuffix();
 
   /**
    * Returns the string which marks the commented beginning of a block comment in the language,
@@ -73,8 +70,7 @@ public interface Commenter extends LanguageExtension {
    *
    * @return the commented block comment start text, or null.
    */
-  @Nullable
-  String getCommentedBlockCommentPrefix();
+  @Nullable String getCommentedBlockCommentPrefix();
 
   /**
    * Returns the string which marks the commented end of a block comment in the language,
@@ -82,6 +78,5 @@ public interface Commenter extends LanguageExtension {
    *
    * @return the commented block comment end text, or null.
    */
-  @Nullable
-  String getCommentedBlockCommentSuffix();
+  @Nullable String getCommentedBlockCommentSuffix();
 }

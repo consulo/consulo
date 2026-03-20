@@ -31,6 +31,5 @@ public interface PsiFileStub<T extends PsiFile> extends StubElement<T>, UserData
   
   PsiFileStub[] getStubRoots();
 
-  @Nullable
-  String getInvalidationReason();
+  @Nullable String getInvalidationReason();
 }

@@ -27,8 +27,7 @@ import org.jspecify.annotations.Nullable;
  */
 @ServiceAPI(ComponentScope.PROJECT)
 public interface AuthDialog {
-  @Nullable
-  AuthenticationData show(String title,
+  @Nullable AuthenticationData show(String title,
                           @Nullable String description,
                           @Nullable String login,
                           @Nullable String password,

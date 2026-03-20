@@ -32,8 +32,7 @@ import org.jspecify.annotations.Nullable;
  */
 @ServiceAPI(ComponentScope.PROJECT)
 public interface ContentAnnotationCache {
-  @Nullable
-  ThreeState isRecent(VirtualFile vf, VcsKey vcsKey, VcsRevisionNumber number, TextRange range, long boundTime);
+  @Nullable ThreeState isRecent(VirtualFile vf, VcsKey vcsKey, VcsRevisionNumber number, TextRange range, long boundTime);
 
   void register(VirtualFile vf, VcsKey vcsKey, VcsRevisionNumber number, FileAnnotation fa);
 }

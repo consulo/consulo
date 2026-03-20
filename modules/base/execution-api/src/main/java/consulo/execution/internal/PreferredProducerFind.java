@@ -40,10 +40,9 @@ public class PreferredProducerFind {
         return fromContext != null ? fromContext.getConfigurationSettings() : null;
     }
 
-    @Nullable
     @Deprecated
     @SuppressWarnings("deprecation")
-    public static List<RuntimeConfigurationProducer> findPreferredProducers(
+    public static @Nullable List<RuntimeConfigurationProducer> findPreferredProducers(
         Location location,
         ConfigurationContext context,
         boolean strict

@@ -36,9 +36,8 @@ public class ClassSearchEverywhereContributorFactory implements SearchEverywhere
         myApplication = application;
     }
 
-    @Nullable
     @Override
-    public SearchEverywhereContributor<Object> createContributor(AnActionEvent initEvent) {
+    public @Nullable SearchEverywhereContributor<Object> createContributor(AnActionEvent initEvent) {
         if (!myApplication.getExtensionPoint(GotoClassOrTypeContributor.class).hasAnyExtensions()) {
             return null;
         }

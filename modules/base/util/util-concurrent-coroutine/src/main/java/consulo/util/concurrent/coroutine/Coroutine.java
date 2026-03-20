@@ -409,8 +409,7 @@ public class Coroutine<I, O> extends UserDataHolderBase {
      * Returns the {@link StepChain} object containing the code of this
      * coroutine.
      */
-    @Nullable
-    StepChain<I, ?, O> getCode() {
+    @Nullable StepChain<I, ?, O> getCode() {
         return code;
     }
 
@@ -463,10 +462,9 @@ public class Coroutine<I, O> extends UserDataHolderBase {
         /**
          * {@inheritDoc}
          */
-        @Nullable
         @Override
         @SuppressWarnings("unchecked")
-        protected T execute(@Nullable T input, Continuation<?> continuation) {
+        protected @Nullable T execute(@Nullable T input, Continuation<?> continuation) {
             // as this is the finish step, it must have the same type T as the
             // continuation result
             ((Continuation<T>) continuation).finish(input);
@@ -485,8 +483,7 @@ public class Coroutine<I, O> extends UserDataHolderBase {
 
         CoroutineStep<I, T> step;
 
-        @Nullable
-        CoroutineStep<T, O> next;
+        @Nullable CoroutineStep<T, O> next;
 
         /**
          * Creates a new instance.
@@ -534,9 +531,8 @@ public class Coroutine<I, O> extends UserDataHolderBase {
         /**
          * {@inheritDoc}
          */
-        @Nullable
         @Override
-        protected O execute(@Nullable I input, Continuation<?> continuation) {
+        protected @Nullable O execute(@Nullable I input, Continuation<?> continuation) {
             if (continuation.isCancelled()) {
                 return null;
             }
@@ -559,8 +555,7 @@ public class Coroutine<I, O> extends UserDataHolderBase {
          *
          * @return The last step
          */
-        @Nullable
-        CoroutineStep<?, ?> getLastStep() {
+        @Nullable CoroutineStep<?, ?> getLastStep() {
             if (next instanceof StepChain) {
                 return ((StepChain<?, ?, ?>) next).getLastStep();
             }

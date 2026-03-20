@@ -98,9 +98,8 @@ public class GutterIntentionAction implements Comparable<IntentionAction>, Icona
         return myIcon;
     }
 
-    @Nullable
     @Override
-    public ShortcutSet getShortcut() {
+    public @Nullable ShortcutSet getShortcut() {
         return myAction.getShortcutSet();
     }
 }

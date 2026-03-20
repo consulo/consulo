@@ -58,12 +58,10 @@ public interface PsiDirectory extends PsiFileSystemItem {
      *
      * @return the parent directory, or null if the directory has no parent.
      */
-    @Nullable
-    PsiDirectory getParentDirectory();
+    @Nullable PsiDirectory getParentDirectory();
 
     @Override
-    @Nullable
-    PsiDirectory getParent();
+    @Nullable PsiDirectory getParent();
 
     /**
      * Returns the list of subdirectories of this directory.
@@ -88,8 +86,7 @@ public interface PsiDirectory extends PsiFileSystemItem {
      * @param name the name of the subdirectory to find.
      * @return the subdirectory instance, or null if no subdirectory with such a name is found.
      */
-    @Nullable
-    PsiDirectory findSubdirectory(String name);
+    @Nullable PsiDirectory findSubdirectory(String name);
 
     /**
      * Finds a file with the specified name in this directory.
@@ -97,8 +94,7 @@ public interface PsiDirectory extends PsiFileSystemItem {
      * @param name the name of the file to find.
      * @return the file instance, or null if no file with such a name is found.
      */
-    @Nullable
-    PsiFile findFile(String name);
+    @Nullable PsiFile findFile(String name);
 
     /**
      * Creates a subdirectory with the specified name in the directory.

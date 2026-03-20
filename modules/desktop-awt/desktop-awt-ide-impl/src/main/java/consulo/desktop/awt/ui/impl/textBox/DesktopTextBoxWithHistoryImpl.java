@@ -44,9 +44,8 @@ public class DesktopTextBoxWithHistoryImpl extends SwingValidableComponent<Strin
 
     }
 
-    @Nullable
     @Override
-    public Component getSuffixComponent() {
+    public @Nullable Component getSuffixComponent() {
         return null;
     }
 

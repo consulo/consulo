@@ -27,8 +27,7 @@ import javax.swing.tree.TreeCellEditor;
 public interface EditableMessageElement {
   
   TreeCellEditor getRightSelfEditor();
-  @Nullable
-  CustomizeColoredTreeCellRenderer getLeftSelfRenderer();
+  @Nullable CustomizeColoredTreeCellRenderer getLeftSelfRenderer();
 
   boolean startEditingOnMouseMove();
 }

@@ -20,8 +20,7 @@ import org.jspecify.annotations.Nullable;
 
 public interface IndentOptionsDetector {
 
-  @Nullable
-  IndentOptionsAdjuster getIndentOptionsAdjuster();
+  @Nullable IndentOptionsAdjuster getIndentOptionsAdjuster();
 
   
   CommonCodeStyleSettings.IndentOptions getIndentOptions();

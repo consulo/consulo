@@ -610,9 +610,8 @@ public class InjectionsSettingsUI implements SearchableConfigurable.Parent, Conf
         return LocalizeValue.localizeTODO("Language Injections");
     }
 
-    @Nullable
     @Override
-    public String getParentId() {
+    public @Nullable String getParentId() {
         return StandardConfigurableIds.EDITOR_GROUP;
     }
 

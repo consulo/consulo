@@ -975,9 +975,8 @@ public class CompileDriverImpl implements CompileDriver {
 
     private DataContext createDataContextOverCompileScope(CompileScope compileScope) {
         return new DataContext() {
-            @Nullable
             @Override
-            public <T> T getData(Key<T> key) {
+            public <T> @Nullable T getData(Key<T> key) {
                 return compileScope.getUserData(key);
             }
         };

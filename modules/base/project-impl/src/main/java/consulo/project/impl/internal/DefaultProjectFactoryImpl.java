@@ -71,9 +71,8 @@ public class DefaultProjectFactoryImpl extends DefaultProjectFactory implements 
   }
 
   @RequiredWriteAction
-  @Nullable
   @Override
-  public Element getState() {
+  public @Nullable Element getState() {
     assert myDefaultProject != null;
 
     myDefaultProject.save();

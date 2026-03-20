@@ -645,9 +645,8 @@ public class RunConfigurable extends BaseConfigurable {
 
         myWholePanel = new JPanel(new BorderLayout());
         DataManager.registerDataProvider(myWholePanel, new DataProvider() {
-            @Nullable
             @Override
-            public Object getData(Key dataId) {
+            public @Nullable Object getData(Key dataId) {
                 return RunConfigurationSelector.KEY == dataId
                     ? (RunConfigurationSelector) configuration -> selectConfiguration(configuration) : null;
             }
@@ -1793,8 +1792,7 @@ public class RunConfigurable extends BaseConfigurable {
     public interface RunDialogBase {
         void setOKActionEnabled(boolean isEnabled);
 
-        @Nullable
-        Executor getExecutor();
+        @Nullable Executor getExecutor();
 
         void setTitle(String title);
 

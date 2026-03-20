@@ -351,9 +351,8 @@ public abstract class TaskRepository {
 
   public abstract static class CancellableConnection implements Callable<Exception> {
 
-    @Nullable
     @Override
-    public final Exception call() {
+    public final @Nullable Exception call() {
       try {
         doTest();
         return null;

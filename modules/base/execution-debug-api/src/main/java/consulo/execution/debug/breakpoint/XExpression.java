@@ -44,11 +44,9 @@ public interface XExpression {
   
   String getExpression();
 
-  @Nullable
-  Language getLanguage();
+  @Nullable Language getLanguage();
 
-  @Nullable
-  String getCustomInfo();
+  @Nullable String getCustomInfo();
 
   EvaluationMode getMode();
 }

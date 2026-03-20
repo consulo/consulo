@@ -49,15 +49,13 @@ public abstract class IdeaConfigurableBase<UI extends IdeaConfigurableUi<S>, S> 
         return displayName;
     }
 
-    @Nullable
     @Override
-    public final String getHelpTopic() {
+    public final @Nullable String getHelpTopic() {
         return helpTopic;
     }
 
-    @Nullable
     @Override
-    public Runnable enableSearch(String option) {
+    public @Nullable Runnable enableSearch(String option) {
         return null;
     }
 
@@ -71,9 +69,8 @@ public abstract class IdeaConfigurableBase<UI extends IdeaConfigurableUi<S>, S> 
         }
     }
 
-    @Nullable
     @Override
-    public final JComponent createComponent(Disposable disposable) {
+    public final @Nullable JComponent createComponent(Disposable disposable) {
         if (ui == null) {
             ui = createUi();
         }

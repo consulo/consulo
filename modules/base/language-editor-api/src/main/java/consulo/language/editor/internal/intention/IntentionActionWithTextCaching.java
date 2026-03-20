@@ -132,9 +132,8 @@ public class IntentionActionWithTextCaching implements Comparable<IntentionActio
         return DumbService.isDumbAware(myAction);
     }
 
-    @Nullable
     @Override
-    public ShortcutSet getShortcut() {
+    public @Nullable ShortcutSet getShortcut() {
         return myAction instanceof ShortcutProvider ? ((ShortcutProvider) myAction).getShortcut() : null;
     }
 
@@ -219,20 +218,17 @@ public class IntentionActionWithTextCaching implements Comparable<IntentionActio
 
         @Override
         public
-        @Nullable
-        FileModifier getFileModifierForPreview(PsiFile target) {
+        @Nullable FileModifier getFileModifierForPreview(PsiFile target) {
             return myAction.getFileModifierForPreview(target);
         }
 
-        @Nullable
         @Override
-        public PsiElement getElementToMakeWritable(PsiFile currentFile) {
+        public @Nullable PsiElement getElementToMakeWritable(PsiFile currentFile) {
             return myAction.getElementToMakeWritable(currentFile);
         }
 
-        @Nullable
         @Override
-        public ShortcutSet getShortcut() {
+        public @Nullable ShortcutSet getShortcut() {
             return myAction instanceof ShortcutProvider ? ((ShortcutProvider) myAction).getShortcut() : null;
         }
 

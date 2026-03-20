@@ -30,8 +30,7 @@ import org.jspecify.annotations.Nullable;
 public interface EditorTabTitleProvider {
     ExtensionPointName<EditorTabTitleProvider> EP_NAME = ExtensionPointName.create(EditorTabTitleProvider.class);
 
-    @Nullable
-    String getEditorTabTitle(Project project, VirtualFile file);
+    @Nullable String getEditorTabTitle(Project project, VirtualFile file);
 
     default @Nullable String getEditorTabTooltipText(Project project, VirtualFile virtualFile) {
         return null;

@@ -33,6 +33,5 @@ public interface LineFragment extends DiffFragment {
    *
    * null - no inner similarities was found
    */
-  @Nullable
-  List<DiffFragment> getInnerFragments();
+  @Nullable List<DiffFragment> getInnerFragments();
 }

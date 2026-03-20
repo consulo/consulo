@@ -612,8 +612,7 @@ public class PathsVerifier<BinaryType extends FilePatch> {
   }
 
   public interface BaseMapper {
-    @Nullable
-    VirtualFile getFile(FilePatch patch, String path);
+    @Nullable VirtualFile getFile(FilePatch patch, String path);
     FilePath getPath(FilePatch patch, String path);
   }
 

@@ -27,9 +27,7 @@ public interface VcsRevisionDescription {
 
   Date getRevisionDate();
 
-  @Nullable
-  String getAuthor();
+  @Nullable String getAuthor();
 
-  @Nullable
-  String getCommitMessage();
+  @Nullable String getCommitMessage();
 }

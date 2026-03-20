@@ -7,9 +7,8 @@ import consulo.util.io.ByteArraySequence;
 import org.jspecify.annotations.Nullable;
 
 public class EmptyForwardIndex implements ForwardIndex {
-  @Nullable
   @Override
-  public ByteArraySequence get(Integer key) {
+  public @Nullable ByteArraySequence get(Integer key) {
     return null;
   }
 

@@ -27,33 +27,28 @@ import org.jspecify.annotations.Nullable;
  */
 @ExtensionImpl
 public class SandCommenter implements Commenter {
-  @Nullable
   @Override
-  public String getLineCommentPrefix() {
+  public @Nullable String getLineCommentPrefix() {
     return "//";
   }
 
-  @Nullable
   @Override
-  public String getBlockCommentPrefix() {
+  public @Nullable String getBlockCommentPrefix() {
     return null;
   }
 
-  @Nullable
   @Override
-  public String getBlockCommentSuffix() {
+  public @Nullable String getBlockCommentSuffix() {
     return null;
   }
 
-  @Nullable
   @Override
-  public String getCommentedBlockCommentPrefix() {
+  public @Nullable String getCommentedBlockCommentPrefix() {
     return null;
   }
 
-  @Nullable
   @Override
-  public String getCommentedBlockCommentSuffix() {
+  public @Nullable String getCommentedBlockCommentSuffix() {
     return null;
   }
 

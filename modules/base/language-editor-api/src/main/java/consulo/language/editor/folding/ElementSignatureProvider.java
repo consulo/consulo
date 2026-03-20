@@ -30,9 +30,7 @@ import org.jspecify.annotations.Nullable;
 public interface ElementSignatureProvider {
   ExtensionPointName<ElementSignatureProvider> EP_NAME = ExtensionPointName.create(ElementSignatureProvider.class);
 
-  @Nullable
-  String getSignature(PsiElement element);
+  @Nullable String getSignature(PsiElement element);
 
-  @Nullable
-  PsiElement restoreBySignature(PsiFile file, String signature, @Nullable StringBuilder processingInfoStorage);
+  @Nullable PsiElement restoreBySignature(PsiFile file, String signature, @Nullable StringBuilder processingInfoStorage);
 }

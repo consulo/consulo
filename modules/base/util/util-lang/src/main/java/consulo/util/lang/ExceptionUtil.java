@@ -34,8 +34,7 @@ public class ExceptionUtil {
 
   @SuppressWarnings("unchecked")
   public static @Nullable <T> T findCause(Throwable e, Class<T> clazz) {
-    @Nullable
-    Throwable cause = e;
+    @Nullable Throwable cause = e;
     while (cause != null && !clazz.isInstance(cause)) {
       cause = cause.getCause();
     }

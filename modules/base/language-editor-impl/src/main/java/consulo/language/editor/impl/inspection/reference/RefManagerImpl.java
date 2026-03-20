@@ -146,9 +146,8 @@ public class RefManagerImpl implements RefManagerInternal {
         myLanguageExtensions.clear();
     }
 
-    @Nullable
     @Override
-    public AnalysisScope getScope() {
+    public @Nullable AnalysisScope getScope() {
         return myScope;
     }
 
@@ -249,10 +248,9 @@ public class RefManagerImpl implements RefManagerInternal {
         return ref;
     }
 
-    @Nullable
     @Override
     @RequiredReadAction
-    public Element export(RefEntity refEntity, int actualLine) {
+    public @Nullable Element export(RefEntity refEntity, int actualLine) {
         refEntity = getRefinedElement(refEntity);
 
         Element problem = new Element("problem");
@@ -421,10 +419,9 @@ public class RefManagerImpl implements RefManagerInternal {
         return !myUnprocessedFiles.get(((VirtualFileWithId) file).getId());
     }
 
-    @Nullable
     @Override
     @RequiredReadAction
-    public PsiNamedElement getContainerElement(PsiElement element) {
+    public @Nullable PsiNamedElement getContainerElement(PsiElement element) {
         Language language = element.getLanguage();
         RefManagerExtension extension = myLanguageExtensions.get(language);
         if (extension == null) {
@@ -608,10 +605,9 @@ public class RefManagerImpl implements RefManagerInternal {
         return myLanguageExtensions.get(language);
     }
 
-    @Nullable
     @Override
     @RequiredReadAction
-    public RefEntity getReference(String type, String fqName) {
+    public @Nullable RefEntity getReference(String type, String fqName) {
         for (RefManagerExtension extension : myExtensions.values()) {
             RefEntity refEntity = extension.getReference(type, fqName);
             if (refEntity != null) {

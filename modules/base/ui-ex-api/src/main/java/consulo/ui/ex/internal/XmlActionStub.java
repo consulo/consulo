@@ -89,9 +89,8 @@ public class XmlActionStub extends AnAction implements ActionStubBase {
         return myIconPath;
     }
 
-    @Nullable
     @Override
-    public AnAction initialize(Application application, ActionManager manager) {
+    public @Nullable AnAction initialize(Application application, ActionManager manager) {
         return convertStub(application, this);
     }
 
@@ -112,9 +111,8 @@ public class XmlActionStub extends AnAction implements ActionStubBase {
         return anAction;
     }
 
-    @Nullable
     @SuppressWarnings("unchecked")
-    static <T> T instantiate(Application application,
+    static <T> @Nullable T instantiate(Application application,
                              String stubClassName,
                              ClassLoader classLoader,
                              PluginId pluginId,

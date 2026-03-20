@@ -14,8 +14,7 @@ import java.util.Objects;
 public interface ProvidedIndexExtensionLocator {
     ExtensionPointName<ProvidedIndexExtensionLocator> EP_NAME = ExtensionPointName.create(ProvidedIndexExtensionLocator.class);
 
-    @Nullable
-    <K, V> ProvidedIndexExtension<K, V> findProvidedIndexExtension(FileBasedIndexExtension<K, V> originalExtension);
+    <K, V> @Nullable ProvidedIndexExtension<K, V> findProvidedIndexExtension(FileBasedIndexExtension<K, V> originalExtension);
 
     static @Nullable <K, V> ProvidedIndexExtension<K, V> findProvidedIndexExtensionFor(FileBasedIndexExtension<K, V> originalExtension) {
         return EP_NAME.getExtensionList()

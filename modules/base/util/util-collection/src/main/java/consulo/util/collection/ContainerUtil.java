@@ -160,9 +160,8 @@ public class ContainerUtil {
         return findInstance(iterable.iterator(), aClass);
     }
 
-    @Nullable
     @Contract(pure = true)
-    public static <T, U extends T> U findInstance(T[] array, Class<U> aClass) {
+    public static <T, U extends T> @Nullable U findInstance(T[] array, Class<U> aClass) {
         return findInstance(Arrays.asList(array), aClass);
     }
 
@@ -171,15 +170,13 @@ public class ContainerUtil {
         return (U)find(iterator, FilteringIterator.instanceOf(aClass));
     }
 
-    @Nullable
     @Contract(pure = true)
-    public static <T, L extends List<T>> T getLastItem(@Nullable L list, @Nullable T def) {
+    public static <T, L extends List<T>> @Nullable T getLastItem(@Nullable L list, @Nullable T def) {
         return isEmpty(list) ? def : list.get(list.size() - 1);
     }
 
-    @Nullable
     @Contract(pure = true)
-    public static <T, L extends List<T>> T getLastItem(@Nullable L list) {
+    public static <T, L extends List<T>> @Nullable T getLastItem(@Nullable L list) {
         return getLastItem(list, null);
     }
 
@@ -722,15 +719,13 @@ public class ContainerUtil {
         return collection;
     }
 
-    @Nullable
     @Contract(pure = true)
-    public static <T, V extends T> V find(Iterable<V> iterable, Predicate<T> condition) {
+    public static <T, V extends T> @Nullable V find(Iterable<V> iterable, Predicate<T> condition) {
         return find(iterable.iterator(), condition);
     }
 
-    @Nullable
     @Contract(pure = true)
-    public static <T> T find(T[] array, Predicate<? super T> condition) {
+    public static <T> @Nullable T find(T[] array, Predicate<? super T> condition) {
         for (T element : array) {
             if (condition.test(element)) {
                 return element;
@@ -739,15 +734,13 @@ public class ContainerUtil {
         return null;
     }
 
-    @Nullable
     @Contract(pure = true)
-    public static <T> T find(Iterable<? extends T> iterable, T equalTo) {
+    public static <T> @Nullable T find(Iterable<? extends T> iterable, T equalTo) {
         return find(iterable, object -> equalTo == object || equalTo.equals(object));
     }
 
-    @Nullable
     @Contract(pure = true)
-    public static <T> T find(Iterator<? extends T> iterator, T equalTo) {
+    public static <T> @Nullable T find(Iterator<? extends T> iterator, T equalTo) {
         return find(iterator, object -> equalTo == object || equalTo.equals(object));
     }
 
@@ -931,8 +924,7 @@ public class ContainerUtil {
         Predicate<? super T> filter
     ) {
         return new Iterator<>() {
-            @Nullable
-            T next = null;
+            @Nullable T next = null;
 
             boolean hasNext;
 
@@ -957,9 +949,8 @@ public class ContainerUtil {
                 }
             }
 
-            @Nullable
             @Override
-            public T next() {
+            public @Nullable T next() {
                 T result;
                 if (hasNext) {
                     result = next;
@@ -1158,15 +1149,13 @@ public class ContainerUtil {
         return c != null ? c.toArray(factory.apply(c.size())) : factory.apply(0);
     }
 
-    @Nullable
     @Contract(pure = true)
-    public static <T> T getFirstItem(@Nullable Collection<T> items) {
+    public static <T> @Nullable T getFirstItem(@Nullable Collection<T> items) {
         return getFirstItem(items, null);
     }
 
-    @Nullable
     @Contract(pure = true)
-    public static <T> T getFirstItem(@Nullable List<T> items) {
+    public static <T> @Nullable T getFirstItem(@Nullable List<T> items) {
         return items == null || items.isEmpty() ? null : items.get(0);
     }
 
@@ -1377,9 +1366,8 @@ public class ContainerUtil {
         }
     }
 
-    @Nullable
     @Contract(pure = true)
-    public static <T> T iterateAndGetLastItem(Iterable<T> items) {
+    public static <T> @Nullable T iterateAndGetLastItem(Iterable<T> items) {
         Iterator<T> itr = items.iterator();
         T res = null;
         while (itr.hasNext()) {

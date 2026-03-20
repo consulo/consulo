@@ -23,6 +23,5 @@ import org.jspecify.annotations.Nullable;
 public interface ModifiableCellAppearanceEx extends CellAppearanceEx {
   void setIcon(@Nullable Image icon);
 
-  @Nullable
-  Image getIcon();
+  @Nullable Image getIcon();
 }

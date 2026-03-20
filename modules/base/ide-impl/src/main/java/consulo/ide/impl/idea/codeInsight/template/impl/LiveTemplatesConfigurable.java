@@ -42,9 +42,8 @@ public class LiveTemplatesConfigurable implements SearchableConfigurable, Config
     return myPanel;
   }
 
-  @Nullable
   @Override
-  public String getParentId() {
+  public @Nullable String getParentId() {
     return StandardConfigurableIds.EDITOR_GROUP;
   }
 

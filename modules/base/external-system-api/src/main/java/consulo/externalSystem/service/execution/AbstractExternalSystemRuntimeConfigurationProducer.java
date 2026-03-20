@@ -46,9 +46,8 @@ public abstract class AbstractExternalSystemRuntimeConfigurationProducer extends
     return mySourceElement;
   }
 
-  @Nullable
   @Override
-  protected RunnerAndConfigurationSettings createConfigurationByElement(Location location, ConfigurationContext context) {
+  protected @Nullable RunnerAndConfigurationSettings createConfigurationByElement(Location location, ConfigurationContext context) {
     if (!(location instanceof ExternalSystemTaskLocation)) {
       return null;
     }
@@ -67,9 +66,8 @@ public abstract class AbstractExternalSystemRuntimeConfigurationProducer extends
     return settings;
   }
 
-  @Nullable
   @Override
-  protected RunnerAndConfigurationSettings findExistingByElement(Location location,
+  protected @Nullable RunnerAndConfigurationSettings findExistingByElement(Location location,
                                                                  List<RunnerAndConfigurationSettings> existingConfigurationsSettings,
                                                                  ConfigurationContext context) {
     if (!(location instanceof ExternalSystemTaskLocation)) {

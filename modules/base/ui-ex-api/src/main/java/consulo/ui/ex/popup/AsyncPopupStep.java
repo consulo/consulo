@@ -12,15 +12,13 @@ import java.util.concurrent.Callable;
  * When real popup step is obtained from the background task, mock item would be automatically replaced with it.
  */
 public abstract class AsyncPopupStep<T> implements PopupStep<T>, Callable<PopupStep> {
-  @Nullable
   @Override
-  public String getTitle() {
+  public @Nullable String getTitle() {
     return null;
   }
 
-  @Nullable
   @Override
-  public PopupStep<T> onChosen(T selectedValue, boolean finalChoice) {
+  public @Nullable PopupStep<T> onChosen(T selectedValue, boolean finalChoice) {
     return null;
   }
 
@@ -39,9 +37,8 @@ public abstract class AsyncPopupStep<T> implements PopupStep<T>, Callable<PopupS
     return false;
   }
 
-  @Nullable
   @Override
-  public MnemonicNavigationFilter<T> getMnemonicNavigationFilter() {
+  public @Nullable MnemonicNavigationFilter<T> getMnemonicNavigationFilter() {
     return null;
   }
 
@@ -50,9 +47,8 @@ public abstract class AsyncPopupStep<T> implements PopupStep<T>, Callable<PopupS
     return false;
   }
 
-  @Nullable
   @Override
-  public SpeedSearchFilter<T> getSpeedSearchFilter() {
+  public @Nullable SpeedSearchFilter<T> getSpeedSearchFilter() {
     return null;
   }
 
@@ -61,9 +57,8 @@ public abstract class AsyncPopupStep<T> implements PopupStep<T>, Callable<PopupS
     return false;
   }
 
-  @Nullable
   @Override
-  public Runnable getFinalRunnable() {
+  public @Nullable Runnable getFinalRunnable() {
     return null;
   }
 }

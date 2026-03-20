@@ -49,9 +49,8 @@ public class DummyHolderViewProvider extends AbstractFileViewProvider {
     return Collections.singleton(getBaseLanguage());
   }
 
-  @Nullable
   @Override
-  protected PsiFile getPsiInner(Language target) {
+  protected @Nullable PsiFile getPsiInner(Language target) {
     return getCachedPsi(target);
   }
 

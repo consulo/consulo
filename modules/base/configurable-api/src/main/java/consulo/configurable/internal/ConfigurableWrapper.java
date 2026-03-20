@@ -88,37 +88,32 @@ public class ConfigurableWrapper implements SearchableConfigurable {
     return myConfigurable.getDisplayName();
   }
 
-  @Nullable
   @Override
-  public String getHelpTopic() {
+  public @Nullable String getHelpTopic() {
     return myConfigurable.getHelpTopic();
   }
 
   @RequiredUIAccess
-  @Nullable
   @Override
-  public JComponent createComponent(Disposable parentUIDisposable) {
+  public @Nullable JComponent createComponent(Disposable parentUIDisposable) {
     return getConfigurable().createComponent(parentUIDisposable);
   }
 
   @RequiredUIAccess
-  @Nullable
   @Override
-  public JComponent createComponent() {
+  public @Nullable JComponent createComponent() {
     return getConfigurable().createComponent();
   }
 
   @RequiredUIAccess
-  @Nullable
   @Override
-  public Component createUIComponent() {
+  public @Nullable Component createUIComponent() {
     return getConfigurable().createUIComponent();
   }
 
   @RequiredUIAccess
-  @Nullable
   @Override
-  public Component createUIComponent(Disposable parentUIDisposable) {
+  public @Nullable Component createUIComponent(Disposable parentUIDisposable) {
     return getConfigurable().createUIComponent(parentUIDisposable);
   }
 
@@ -179,9 +174,8 @@ public class ConfigurableWrapper implements SearchableConfigurable {
     return myConfigurable.toString();
   }
 
-  @Nullable
   @Override
-  public Runnable enableSearch(String option) {
+  public @Nullable Runnable enableSearch(String option) {
     UnnamedConfigurable configurable = getConfigurable();
     return configurable instanceof SearchableConfigurable ? ((SearchableConfigurable)configurable).enableSearch(option) : null;
   }

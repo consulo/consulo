@@ -80,9 +80,8 @@ public class LinkedHashMap<K, V> extends AbstractMap<K, V> implements Map<K, V> 
     clear(0);
   }
 
-  @Nullable
   @Override
-  public V get(Object key) {
+  public @Nullable V get(Object key) {
     Entry<K, V>[] table = Objects.requireNonNull(this.table);
     int hash = HashUtil.hash(key, hashingStrategy);
     int index = hash % table.length;
@@ -98,9 +97,8 @@ public class LinkedHashMap<K, V> extends AbstractMap<K, V> implements Map<K, V> 
     return null;
   }
 
-  @Nullable
   @Override
-  public V put(K key, V value) {
+  public @Nullable V put(K key, V value) {
     Entry<K, V>[] table = Objects.requireNonNull(this.table);
     int hash = HashUtil.hash(key, hashingStrategy);
     int index = hash % table.length;
@@ -144,9 +142,8 @@ public class LinkedHashMap<K, V> extends AbstractMap<K, V> implements Map<K, V> 
     return get(key) != null;
   }
 
-  @Nullable
   @Override
-  public V remove(Object key) {
+  public @Nullable V remove(Object key) {
     Entry<K, V>[] table = Objects.requireNonNull(this.table);
     int hash = HashUtil.hash(key, hashingStrategy);
     int index = hash % table.length;

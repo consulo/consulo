@@ -36,8 +36,7 @@ interface CompletionProcessEx extends CompletionProcess {
   
   OffsetsInFile getHostOffsets();
 
-  @Nullable
-  Lookup getLookup();
+  @Nullable Lookup getLookup();
 
   void registerChildDisposable(Supplier<? extends Disposable> child);
 

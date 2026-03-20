@@ -38,9 +38,8 @@ public class DocumentationMoreActionGroup extends DefaultActionGroup implements 
         return true;
     }
 
-    @Nullable
     @Override
-    protected Image getTemplateIcon() {
+    protected @Nullable Image getTemplateIcon() {
         return PlatformIconGroup.actionsMorevertical();
     }
 

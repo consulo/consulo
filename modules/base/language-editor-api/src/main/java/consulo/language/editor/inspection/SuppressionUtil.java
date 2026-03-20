@@ -69,9 +69,8 @@ public class SuppressionUtil {
         return false;
     }
 
-    @Nullable
     @RequiredReadAction
-    public static PsiElement getStatementToolSuppressedIn(
+    public static @Nullable PsiElement getStatementToolSuppressedIn(
         PsiElement place,
         String toolId,
         Class<? extends PsiElement> statementClass
@@ -79,9 +78,8 @@ public class SuppressionUtil {
         return getStatementToolSuppressedIn(place, toolId, statementClass, SUPPRESS_IN_LINE_COMMENT_PATTERN);
     }
 
-    @Nullable
     @RequiredReadAction
-    public static PsiElement getStatementToolSuppressedIn(
+    public static @Nullable PsiElement getStatementToolSuppressedIn(
         PsiElement place,
         String toolId,
         Class<? extends PsiElement> statementClass,
@@ -113,9 +111,8 @@ public class SuppressionUtil {
         return parserFacade.createLineOrBlockCommentFromText(language, commentText);
     }
 
-    @Nullable
     @RequiredReadAction
-    public static Couple<String> getBlockPrefixSuffixPair(PsiElement comment) {
+    public static @Nullable Couple<String> getBlockPrefixSuffixPair(PsiElement comment) {
         Commenter commenter = Commenter.forLanguage(comment.getLanguage());
         if (commenter != null) {
             String prefix = commenter.getBlockCommentPrefix();
@@ -127,9 +124,8 @@ public class SuppressionUtil {
         return null;
     }
 
-    @Nullable
     @RequiredReadAction
-    public static String getLineCommentPrefix(PsiElement comment) {
+    public static @Nullable String getLineCommentPrefix(PsiElement comment) {
         Commenter commenter = Commenter.forLanguage(comment.getLanguage());
         return commenter == null ? null : commenter.getLineCommentPrefix();
     }

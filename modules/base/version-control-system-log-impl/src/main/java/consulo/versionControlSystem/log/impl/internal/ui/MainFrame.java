@@ -261,9 +261,8 @@ public class MainFrame extends JPanel implements DataProvider, Disposable {
         return this;
     }
 
-    @Nullable
     @Override
-    public Object getData(Key<?> dataId) {
+    public @Nullable Object getData(Key<?> dataId) {
         if (VcsLog.KEY == dataId) {
             return myLog;
         }

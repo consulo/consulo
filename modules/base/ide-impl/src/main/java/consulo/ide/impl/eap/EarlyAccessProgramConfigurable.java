@@ -61,9 +61,8 @@ public class EarlyAccessProgramConfigurable implements ApplicationConfigurable, 
         return "eap";
     }
 
-    @Nullable
     @Override
-    public String getParentId() {
+    public @Nullable String getParentId() {
         return StandardConfigurableIds.PLATFORM_AND_PLUGINS_GROUP;
     }
 
@@ -73,10 +72,9 @@ public class EarlyAccessProgramConfigurable implements ApplicationConfigurable, 
         return IdeLocalize.eapConfigurableName();
     }
 
-    @Nullable
     @Override
     @RequiredUIAccess
-    public JComponent createComponent(Disposable parentDisposable) {
+    public @Nullable JComponent createComponent(Disposable parentDisposable) {
         myCheckBoxes = new LinkedHashMap<>();
 
         JPanel panel = new JPanel(new VerticalFlowLayout());

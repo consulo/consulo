@@ -195,8 +195,7 @@ public class LayeredLexerEditorHighlighter extends LexerEditorHighlighter {
             super(o);
         }
 
-        @Nullable
-        Mapper getMappingDocument(IElementType token) {
+        @Nullable Mapper getMappingDocument(IElementType token) {
             LayerDescriptor descriptor = myTokensToLayer.get(token);
             if (descriptor == null) {
                 return null;
@@ -490,8 +489,7 @@ public class LayeredLexerEditorHighlighter extends LexerEditorHighlighter {
             return myText.subSequence(getSegments().getSegmentStart(tokenIndex), getSegments().getSegmentEnd(tokenIndex));
         }
 
-        @Nullable
-        MappedRange findPredecessor(int token, MappingSegments segments) {
+        @Nullable MappedRange findPredecessor(int token, MappingSegments segments) {
             token--;
             while (token >= 0) {
                 MappedRange mappedRange = segments.myRanges[token];

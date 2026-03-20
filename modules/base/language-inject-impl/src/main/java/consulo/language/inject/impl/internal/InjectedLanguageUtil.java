@@ -226,9 +226,8 @@ public class InjectedLanguageUtil {
    * @param <T>         class that represents language we look for
    * @return instance of class that represents language we look for or null of not found
    */
-  @Nullable
   @SuppressWarnings("unchecked") // We check types dynamically (using isAssignableFrom)
-  public static <T extends PsiFileBase> T findInjectedFile(PsiElement expression, Class<T> classToFind) {
+  public static <T extends PsiFileBase> @Nullable T findInjectedFile(PsiElement expression, Class<T> classToFind) {
     List<Pair<PsiElement, TextRange>> files = InjectedLanguageManager.getInstance(expression.getProject()).getInjectedPsiFiles(expression);
     if (files == null) {
       return null;
@@ -649,9 +648,8 @@ public class InjectedLanguageUtil {
     return sb.toString();
   }
 
-  @Nullable
   @RequiredReadAction
-  public static String getUnescapedLeafText(PsiElement element, boolean strict) {
+  public static @Nullable String getUnescapedLeafText(PsiElement element, boolean strict) {
     String unescaped = element.getCopyableUserData(LeafPatcher.UNESCAPED_TEXT);
     if (unescaped != null) {
       return unescaped;

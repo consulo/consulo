@@ -160,8 +160,7 @@ public class CreateFileFromTemplateDialog  {
   }
 
   public interface FileCreator<T> {
-    @Nullable
-    T createFile(String name, String templateName);
+    @Nullable T createFile(String name, String templateName);
 
     
     LocalizeValue getActionName(String name, String templateName);

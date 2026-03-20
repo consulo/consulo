@@ -135,9 +135,8 @@ public final class ModuleCompilerUtil {
     /**
      * @return pair of modules which become circular after adding dependency, or null if all remains OK
      */
-    @Nullable
     @RequiredReadAction
-    public static Couple<Module> addingDependencyFormsCircularity(Module currentModule, Module toDependOn) {
+    public static @Nullable Couple<Module> addingDependencyFormsCircularity(Module currentModule, Module toDependOn) {
         assert currentModule != toDependOn;
         // whatsa lotsa of @&#^%$ codes-a!
 

@@ -28,15 +28,13 @@ public abstract class CommandProcessorEx extends CommandProcessor {
     @Override
     public abstract <T> StartableCommandBuilder<T, ? extends StartableCommandBuilder<T, ?>> newCommand();
 
-    @Nullable
     @RequiredUIAccess
-    protected abstract CommandToken startCommand(CommandDescriptor commandDescriptor);
+    protected abstract @Nullable CommandToken startCommand(CommandDescriptor commandDescriptor);
 
     @Deprecated
     @DeprecationInfo("Use #newCommand().start()")
-    @Nullable
     @RequiredUIAccess
-    public CommandToken startCommand(
+    public @Nullable CommandToken startCommand(
         @Nullable Project project,
         String name,
         @Nullable Object groupId,

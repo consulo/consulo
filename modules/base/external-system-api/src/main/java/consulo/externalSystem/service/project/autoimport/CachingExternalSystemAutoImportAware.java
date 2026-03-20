@@ -41,9 +41,8 @@ public class CachingExternalSystemAutoImportAware implements ExternalSystemAutoI
     myDelegate = delegate;
   }
 
-  @Nullable
   @Override
-  public String getAffectedExternalProjectPath(String changedFileOrDirPath, Project project) {
+  public @Nullable String getAffectedExternalProjectPath(String changedFileOrDirPath, Project project) {
     String cached = myCache.get(changedFileOrDirPath);
     if (cached != null) {
       return cached;

@@ -31,16 +31,14 @@ public interface PsiNameIdentifierOwner extends PsiNamedElement {
 
   ArrayFactory<PsiNameIdentifierOwner> ARRAY_FACTORY = ArrayFactory.of(PsiNameIdentifierOwner[]::new);
 
-  @Nullable
   @RequiredReadAction
-  PsiElement getNameIdentifier();
+  @Nullable PsiElement getNameIdentifier();
 
   /**
    * @return element to be used in reference equality checks
    */
-  @Nullable
   @RequiredReadAction
-  default PsiElement getIdentifyingElement() {
+  default @Nullable PsiElement getIdentifyingElement() {
     return getNameIdentifier();
   }
 }

@@ -141,9 +141,8 @@ public abstract class WindowOverAWTWindow implements Window, ToSwingWindowWrappe
     public void setEnabled(boolean value) {
     }
 
-    @Nullable
     @Override
-    public Window getParent() {
+    public @Nullable Window getParent() {
         return TargetAWT.from((java.awt.Window) myWindow.getParent());
     }
 
@@ -176,9 +175,8 @@ public abstract class WindowOverAWTWindow implements Window, ToSwingWindowWrappe
         return myUIDataObject.addListener(eventClass, listener);
     }
 
-    @Nullable
     @Override
-    public <T> T getUserData(Key<T> key) {
+    public <T> @Nullable T getUserData(Key<T> key) {
         return myUIDataObject.getUserData(key);
     }
 }

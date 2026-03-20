@@ -48,9 +48,8 @@ public class UnifiedSettingsDialog extends WholeLeftWindowWrapper {
         myConfigurables = configurables;
     }
 
-    @Nullable
     @Override
-    protected Size2D getDefaultSize() {
+    protected @Nullable Size2D getDefaultSize() {
         return new Size2D(1028, 500);
     }
 
@@ -94,9 +93,8 @@ public class UnifiedSettingsDialog extends WholeLeftWindowWrapper {
                 }
             }
 
-            @Nullable
             @Override
-            public Comparator<TreeNode<Configurable>> getNodeComparator() {
+            public @Nullable Comparator<TreeNode<Configurable>> getNodeComparator() {
                 return UnifiedConfigurableComparator.INSTANCE;
             }
 

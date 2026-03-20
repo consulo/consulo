@@ -8,11 +8,9 @@ import org.jspecify.annotations.Nullable;
 import java.awt.event.InputEvent;
 
 public interface ListPopupStepEx<T> extends ListPopupStep<T> {
-    @Nullable
-    PopupStep<?> onChosen(T selectedValue, boolean finalChoice, @Nullable InputEvent inputEvent);
+    @Nullable PopupStep<?> onChosen(T selectedValue, boolean finalChoice, @Nullable InputEvent inputEvent);
 
-    @Nullable
-    String getTooltipTextFor(T value);
+    @Nullable String getTooltipTextFor(T value);
 
     void setEmptyText(StatusText emptyText);
 

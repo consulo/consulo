@@ -117,9 +117,8 @@ public class ServerSocketAccept extends AsynchronousChannelStep<Void, Void> {
     /**
      * {@inheritDoc}
      */
-    @Nullable
     @Override
-    protected Void execute(@Nullable Void input, Continuation<?> continuation) {
+    protected @Nullable Void execute(@Nullable Void input, Continuation<?> continuation) {
         try {
             AsynchronousServerSocketChannel rChannel =
                 getServerSocketChannel(continuation);

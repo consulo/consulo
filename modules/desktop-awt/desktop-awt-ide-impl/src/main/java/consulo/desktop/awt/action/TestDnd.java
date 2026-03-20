@@ -43,9 +43,8 @@ public class TestDnd extends AnAction {
         setScalableSize(600, 500);
         init();
       }
-      @Nullable
       @Override
-      protected JComponent createCenterPanel() {
+      protected @Nullable JComponent createCenterPanel() {
         JBList<String> list = new JBList<>(new String[]{"1111111", "222222", "333333", "44444", "555555555555555555555555"});
         DnDSupport.createBuilder(list)
           .setBeanProvider(info -> new DnDDragStartBean("something"))

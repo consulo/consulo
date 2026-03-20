@@ -39,34 +39,27 @@ import java.util.function.Function;
  * @see AbstractVcs#getCheckinEnvironment()
  */
 public interface CheckinEnvironment extends VcsProviderMarker {
-    @Nullable
-    RefreshableOnComponent createAdditionalOptionsPanel(CheckinProjectPanel panel, PairConsumer<Object, Object> additionalDataConsumer);
+    @Nullable RefreshableOnComponent createAdditionalOptionsPanel(CheckinProjectPanel panel, PairConsumer<Object, Object> additionalDataConsumer);
 
-    @Nullable
-    String getDefaultMessageFor(FilePath[] filesToCheckin);
+    @Nullable String getDefaultMessageFor(FilePath[] filesToCheckin);
 
-    @Nullable
-    String getHelpId();
+    @Nullable String getHelpId();
 
     
     LocalizeValue getCheckinOperationName();
 
-    @Nullable
-    List<VcsException> commit(List<Change> changes, String preparedComment);
+    @Nullable List<VcsException> commit(List<Change> changes, String preparedComment);
 
-    @Nullable
-    List<VcsException> commit(
+    @Nullable List<VcsException> commit(
         List<Change> changes,
         String preparedComment,
         Function<Object, Object> parametersHolder,
         Set<String> feedback
     );
 
-    @Nullable
-    List<VcsException> scheduleMissingFileForDeletion(List<FilePath> files);
+    @Nullable List<VcsException> scheduleMissingFileForDeletion(List<FilePath> files);
 
-    @Nullable
-    List<VcsException> scheduleUnversionedFilesForAddition(List<VirtualFile> files);
+    @Nullable List<VcsException> scheduleUnversionedFilesForAddition(List<VirtualFile> files);
 
     boolean keepChangeListAfterCommit(ChangeList changeList);
 

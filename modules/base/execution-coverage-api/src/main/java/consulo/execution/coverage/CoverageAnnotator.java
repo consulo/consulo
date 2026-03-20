@@ -14,8 +14,7 @@ public interface CoverageAnnotator {
      * @param manager
      * @return human-readable coverage information
      */
-    @Nullable
-    String getDirCoverageInformationString(
+    @Nullable String getDirCoverageInformationString(
         PsiDirectory directory, CoverageSuitesBundle currentSuite,
         CoverageDataManager manager
     );
@@ -25,8 +24,7 @@ public interface CoverageAnnotator {
      * @param manager
      * @return human-readable coverage information
      */
-    @Nullable
-    String getFileCoverageInformationString(
+    @Nullable String getFileCoverageInformationString(
         PsiFile file, CoverageSuitesBundle currentSuite,
         CoverageDataManager manager
     );

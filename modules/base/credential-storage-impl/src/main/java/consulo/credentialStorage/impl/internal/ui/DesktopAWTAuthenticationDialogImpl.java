@@ -31,9 +31,8 @@ import org.jspecify.annotations.Nullable;
 @Singleton
 @ServiceImpl
 public class DesktopAWTAuthenticationDialogImpl implements AuthenticationDialog {
-  @Nullable
   @Override
-  public AuthenticationData showNoSafe(String title, String description, String login, String password, boolean rememberPassword) {
+  public @Nullable AuthenticationData showNoSafe(String title, String description, String login, String password, boolean rememberPassword) {
     AuthenticationDialogImpl dialog = new AuthenticationDialogImpl(PopupUtil.getActiveComponent(), title, description, login, password, rememberPassword);
     dialog.show();
     if (dialog.getExitCode() == DialogWrapper.OK_EXIT_CODE) {

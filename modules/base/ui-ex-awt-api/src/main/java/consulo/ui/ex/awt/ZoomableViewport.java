@@ -23,8 +23,7 @@ import java.awt.*;
  * @author max
  */
 public interface ZoomableViewport {
-    @Nullable
-    Magnificator getMagnificator();
+    @Nullable Magnificator getMagnificator();
 
     void magnificationStarted(Point at);
 

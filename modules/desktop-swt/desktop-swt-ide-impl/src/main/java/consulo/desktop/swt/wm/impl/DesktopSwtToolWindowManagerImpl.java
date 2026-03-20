@@ -213,16 +213,14 @@ public class DesktopSwtToolWindowManagerImpl extends ToolWindowManagerBase {
     }
 
     @RequiredUIAccess
-    @Nullable
     @Override
-    public Element getStateFromUI() {
+    public @Nullable Element getStateFromUI() {
         return new Element("state");
     }
 
     @RequiredWriteAction
-    @Nullable
     @Override
-    public Element getState(Element element) {
+    public @Nullable Element getState(Element element) {
         return element;
     }
 
@@ -244,9 +242,8 @@ public class DesktopSwtToolWindowManagerImpl extends ToolWindowManagerBase {
     public void notifyByBalloon(String toolWindowId, NotificationType type, String htmlBody) {
     }
 
-    @Nullable
     @Override
-    public Balloon getToolWindowBalloon(String id) {
+    public @Nullable Balloon getToolWindowBalloon(String id) {
         return null;
     }
 

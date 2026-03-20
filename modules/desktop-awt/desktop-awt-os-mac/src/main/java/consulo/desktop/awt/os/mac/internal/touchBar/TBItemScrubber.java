@@ -51,8 +51,7 @@ public final class TBItemScrubber extends TBItem implements NSTLibrary.ScrubberD
         return myItems;
     }
 
-    @Nullable
-    TouchBarStats getStats() {
+    @Nullable TouchBarStats getStats() {
         return myStats;
     }
 

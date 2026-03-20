@@ -26,11 +26,9 @@ import org.jspecify.annotations.Nullable;
  * @since 19:58/15.06.13
  */
 public interface ModuleInheritableNamedPointer<T extends Named> extends NamedPointer<T> {
-  @Nullable
-  Module getModule();
+  @Nullable Module getModule();
 
-  @Nullable
-  String getModuleName();
+  @Nullable String getModuleName();
 
   boolean isNull();
 }

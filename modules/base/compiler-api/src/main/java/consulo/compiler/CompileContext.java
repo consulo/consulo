@@ -116,9 +116,8 @@ public interface CompileContext extends UserDataHolder {
      * @param module the module to check.
      * @return the output directory for the module specified, null if corresponding VirtualFile is not valid or directory not specified
      */
-    @Nullable
     @Deprecated
-    VirtualFile getModuleOutputDirectory(Module module);
+    @Nullable VirtualFile getModuleOutputDirectory(Module module);
 
     /**
      * Returns the test output directory for the specified module.
@@ -127,15 +126,12 @@ public interface CompileContext extends UserDataHolder {
      * @return the tests output directory the module specified, null if corresponding VirtualFile is not valid. If in Paths settings
      * output directory for tests is not configured explicitly, but the output path is present, the output path will be returned.
      */
-    @Nullable
     @Deprecated
-    VirtualFile getModuleOutputDirectoryForTests(Module module);
+    @Nullable VirtualFile getModuleOutputDirectoryForTests(Module module);
 
-    @Nullable
-    VirtualFile getOutputForFile(Module module, VirtualFile virtualFile);
+    @Nullable VirtualFile getOutputForFile(Module module, VirtualFile virtualFile);
 
-    @Nullable
-    VirtualFile getOutputForFile(Module module, ContentFolderTypeProvider contentFolderType);
+    @Nullable VirtualFile getOutputForFile(Module module, ContentFolderTypeProvider contentFolderType);
 
     /**
      * Checks if the compilation is incremental, i.e. triggered by one of "Make" actions.

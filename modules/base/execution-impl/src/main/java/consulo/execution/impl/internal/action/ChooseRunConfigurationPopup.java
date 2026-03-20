@@ -583,9 +583,8 @@ public class ChooseRunConfigurationPopup implements ExecutorProvider {
             }
         }
 
-        @Nullable
         @Override
-        public String getTooltipTextFor(ItemWrapper value) {
+        public @Nullable String getTooltipTextFor(ItemWrapper value) {
             return null;
         }
 
@@ -866,9 +865,8 @@ public class ChooseRunConfigurationPopup implements ExecutorProvider {
             }
         }
 
-        @Nullable
         @Override
-        public Image getIcon() {
+        public @Nullable Image getIcon() {
             return PlatformIconGroup.nodesFolder();
         }
 

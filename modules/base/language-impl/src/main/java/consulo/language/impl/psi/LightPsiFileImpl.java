@@ -155,9 +155,8 @@ public abstract class LightPsiFileImpl extends PsiElementBase implements PsiFile
         return getManager().findDirectory(parentFile);
     }
 
-    @Nullable
     @RequiredReadAction
-    public PsiDirectory getParentDirectory() {
+    public @Nullable PsiDirectory getParentDirectory() {
         return getContainingDirectory();
     }
 

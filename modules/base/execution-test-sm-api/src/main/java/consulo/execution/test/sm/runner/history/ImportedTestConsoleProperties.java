@@ -72,15 +72,13 @@ public class ImportedTestConsoleProperties extends SMTRunnerConsoleProperties im
         return false;
     }
 
-    @Nullable
     @Override
-    public Navigatable getErrorNavigatable(Location<?> location, String stacktrace) {
+    public @Nullable Navigatable getErrorNavigatable(Location<?> location, String stacktrace) {
         return myProperties == null ? null : myProperties.getErrorNavigatable(location, stacktrace);
     }
 
-    @Nullable
     @Override
-    public Navigatable getErrorNavigatable(Project project, String stacktrace) {
+    public @Nullable Navigatable getErrorNavigatable(Project project, String stacktrace) {
         return myProperties == null ? null : myProperties.getErrorNavigatable(project, stacktrace);
     }
 

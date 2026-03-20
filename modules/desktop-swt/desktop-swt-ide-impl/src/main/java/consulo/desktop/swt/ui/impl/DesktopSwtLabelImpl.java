@@ -64,9 +64,8 @@ public class DesktopSwtLabelImpl extends SWTComponentDelegate<org.eclipse.swt.wi
 
     }
 
-    @Nullable
     @Override
-    public Image getImage() {
+    public @Nullable Image getImage() {
         return null;
     }
 
@@ -75,9 +74,8 @@ public class DesktopSwtLabelImpl extends SWTComponentDelegate<org.eclipse.swt.wi
         myLabeledComponent = component;
     }
 
-    @Nullable
     @Override
-    public Component getTarget() {
+    public @Nullable Component getTarget() {
         return myLabeledComponent;
     }
 

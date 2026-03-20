@@ -31,9 +31,7 @@ import java.awt.*;
  */
 public interface ArrangementColorsAware {
   
-  @Nullable
-  TextAttributes getTextAttributes(EditorColorsScheme scheme, ArrangementSettingsToken token, boolean selected);
+  @Nullable TextAttributes getTextAttributes(EditorColorsScheme scheme, ArrangementSettingsToken token, boolean selected);
   
-  @Nullable
-  Color getBorderColor(EditorColorsScheme scheme, boolean selected);
+  @Nullable Color getBorderColor(EditorColorsScheme scheme, boolean selected);
 }

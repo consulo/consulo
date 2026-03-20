@@ -308,8 +308,7 @@ public class ScopeViewPane extends AbstractProjectViewPane {
         return myFilters.values();
     }
 
-    @Nullable
-    NamedScopeFilter getFilter(@Nullable String subId) {
+    @Nullable NamedScopeFilter getFilter(@Nullable String subId) {
         Map<String, NamedScopeFilter> map = myFilters;
         return map == null || subId == null ? null : map.get(subId);
     }
