@@ -42,7 +42,6 @@ import java.util.function.Predicate;
  *
  * @see TreeStructureProvider#modify(AbstractTreeNode, Collection, ViewSettings)
  */
-
 public abstract class ProjectViewNode<Value> extends AbstractTreeNode<Value> implements RootsProvider {
   private static final Logger LOG = Logger.getInstance(ProjectViewNode.class);
 

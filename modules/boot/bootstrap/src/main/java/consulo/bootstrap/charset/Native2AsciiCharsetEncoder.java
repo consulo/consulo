@@ -19,7 +19,6 @@ package consulo.bootstrap.charset;
 /**
  * @author Alexey
  */
-
 import java.nio.charset.CharsetEncoder;
 import java.nio.charset.CoderResult;
 import java.nio.charset.Charset;

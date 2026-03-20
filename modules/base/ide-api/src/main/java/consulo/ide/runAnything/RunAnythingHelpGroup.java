@@ -15,7 +15,6 @@ import java.util.stream.Collectors;
  * 'Run Anything' popup help section is divided into groups by categories.
  * E.g. 'ruby' help group contains 'ruby' related run configuration commands, 'rvm use #sdk_version' commands etc.
  */
-
 @ExtensionAPI(ComponentScope.APPLICATION)
 public class RunAnythingHelpGroup<P extends RunAnythingProvider> extends RunAnythingGroupBase {
     

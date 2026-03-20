@@ -33,7 +33,6 @@ public interface ModifiableModuleModel {
    *
    * @return the array of modules.
    */
-  
   Module[] getModules();
 
   /**
@@ -45,7 +44,6 @@ public interface ModifiableModuleModel {
    * @param dirPath the path at which the module is created.
    * @return the module instance.
    */
-  
   Module newModule(String name, @Nullable String dirPath);
 
   /**
@@ -58,7 +56,6 @@ public interface ModifiableModuleModel {
    * @param options map of module options to be used when creating the module
    * @return the module instance.
    */
-  
   @Deprecated
   @DeprecationInfo("Parameter options is deprecated")
   default Module newModule(String name, @Nullable String dirPath, @Nullable Map<String, String> options) {

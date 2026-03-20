@@ -275,7 +275,6 @@ public class AnActionEvent implements PlaceProvider<String> {
      *
      * @return the data context instance.
      */
-    
     public DataContext getDataContext() {
         return myWorksInInjected ? getInjectedDataContext(myDataContext) : myDataContext;
     }
@@ -311,7 +310,6 @@ public class AnActionEvent implements PlaceProvider<String> {
      *
      * </pre>
      */
-    
     public <T> T getRequiredData(Key<T> key) {
         return getDataContext().getRequiredData(key);
     }
@@ -343,7 +341,6 @@ public class AnActionEvent implements PlaceProvider<String> {
      *
      * @return the presentation instance.
      */
-    
     public Presentation getPresentation() {
         return myPresentation;
     }

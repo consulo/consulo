@@ -574,7 +574,6 @@ public class Notification {
     /**
      * @param dropDownText text for popup when all actions collapsed (when all actions width more notification width)
      */
-    
     public Notification setDropDownText(String dropDownText) {
         myDropDownText = dropDownText;
         return this;

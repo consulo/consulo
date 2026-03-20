@@ -39,7 +39,6 @@ public interface Project extends ComponentManager, WindowOwner, CoroutineContext
   /**
    * @return project annotation
    */
-  
   Application getApplication();
 
   /**
@@ -48,7 +47,6 @@ public interface Project extends ComponentManager, WindowOwner, CoroutineContext
    *
    * @return project name
    */
-  
   String getName();
 
   /**
@@ -86,7 +84,6 @@ public interface Project extends ComponentManager, WindowOwner, CoroutineContext
    *
    * @return project descriptor file, or empty string for default project
    */
-  
   String getProjectFilePath();
 
   /**

@@ -55,7 +55,6 @@ public interface LineMarkerRenderer {
    * <p>
    * Corresponding rectangle will be passed to renderer in {@link #paint(Editor, Graphics, Rectangle)} method.
    */
-  
   default Position getPosition() {
     return Position.RIGHT;
   }

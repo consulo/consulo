@@ -35,7 +35,6 @@ import java.util.Locale;
 /**
  * @author Denis Fokin
  */
-
 @Singleton
 @ServiceAPI(ComponentScope.APPLICATION)
 @ServiceImpl

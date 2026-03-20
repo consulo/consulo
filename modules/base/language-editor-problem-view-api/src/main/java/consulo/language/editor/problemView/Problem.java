@@ -8,13 +8,11 @@ public interface Problem {
     /**
      * The problem provider that the problem belongs to.
      */
-    
     ProblemsProvider getProvider();
 
     /**
      * One line description of the problem.
      */
-    
     String getText();
 
     /**
@@ -34,7 +32,6 @@ public interface Problem {
     /**
      * The problem icon.
      */
-    
     default Image getIcon() {
         return HighlightDisplayLevel.ERROR.getIcon();
     }

@@ -128,7 +128,6 @@ public class TextEditorImpl extends UserDataHolderBase implements RealTextEditor
     /**
      * @see DesktopTextEditorComponent#getEditor()
      */
-    
     private Editor getActiveEditor() {
         return myComponent.getEditor();
     }

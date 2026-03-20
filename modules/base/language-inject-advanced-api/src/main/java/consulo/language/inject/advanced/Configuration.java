@@ -387,7 +387,6 @@ public class Configuration implements PersistentStateComponent<Element>, Modific
     /**
      * @param injectorId see {@link LanguageInjectionSupport#getId()}
      */
-    
     public List<BaseInjection> getInjections(String injectorId) {
         return Collections.unmodifiableList(myInjections.get(injectorId));
     }

@@ -479,7 +479,6 @@ public class InjectedLanguageUtil {
   /**
    * @deprecated use {@link InjectedLanguageManager#getCachedInjectedDocumentsInRange(PsiFile, TextRange)} instead
    */
-  
   @Deprecated
   public static ConcurrentList<DocumentWindow> getCachedInjectedDocuments(PsiFile hostPsiFile) {
     // modification of cachedInjectedDocuments must be under InjectedLanguageManagerImpl.ourInjectionPsiLock only

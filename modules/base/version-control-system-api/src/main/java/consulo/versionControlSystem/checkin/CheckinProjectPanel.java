@@ -92,7 +92,6 @@ public interface CheckinProjectPanel extends Refreshable, CommitMessage {
      * @return the description text.
      * @since 5.1
      */
-    
     @Override
     String getCommitMessage();
 

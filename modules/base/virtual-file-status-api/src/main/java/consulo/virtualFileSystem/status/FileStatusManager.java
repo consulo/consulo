@@ -66,7 +66,6 @@ public sealed interface FileStatusManager permits FileStatusManagerInternal {
      * @see FileStatus#NOT_CHANGED_IMMEDIATE
      * @see FileStatus#NOT_CHANGED_RECURSIVE
      */
-    
     default FileStatus getRecursiveStatus(VirtualFile file) {
         FileStatus status = getStatus(file);
         return status != null ? status : FileStatus.NOT_CHANGED;

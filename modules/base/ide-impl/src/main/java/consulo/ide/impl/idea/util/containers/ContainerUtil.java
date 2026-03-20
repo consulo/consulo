@@ -877,7 +877,6 @@ public class ContainerUtil extends ContainerUtilRt {
     /**
      * @return iterator with elements from the original {@param iterator} which are valid according to {@param filter} predicate.
      */
-    
     @Contract(pure = true)
     public static <T> Iterator<T> filterIterator(
         Iterator<? extends T> iterator,
@@ -1100,7 +1099,6 @@ public class ContainerUtil extends ContainerUtilRt {
     /**
      * Adds all not-null elements from the {@code elements}, ignoring nulls
      */
-    
     @SafeVarargs
     public static <T, A extends T, C extends Collection<T>> C addAllNotNull(C collection, A... elements) {
         return consulo.util.collection.ContainerUtil.addAllNotNull(collection, elements);
@@ -1151,7 +1149,6 @@ public class ContainerUtil extends ContainerUtilRt {
     /**
      * @return read-only list consisting of the elements from the collections stored in list added together
      */
-    
     @Contract(pure = true)
     public static <T> List<T> concat(Iterable<? extends Collection<T>> list) {
         return consulo.util.collection.ContainerUtil.concat(list);
@@ -1182,7 +1179,6 @@ public class ContainerUtil extends ContainerUtilRt {
      *
      * @return read-only list consisting of values and the elements from specified list
      */
-    
     @Contract(pure = true)
     @SafeVarargs
     public static <T> List<T> prepend(List<? extends T> list, T... values) {
@@ -1192,7 +1188,6 @@ public class ContainerUtil extends ContainerUtilRt {
     /**
      * @return read-only list consisting of the two lists added together
      */
-    
     @Contract(pure = true)
     public static <T> List<T> concat(List<? extends T> list1, List<? extends T> list2) {
         return consulo.util.collection.ContainerUtil.concat(list1, list2);
@@ -1240,7 +1235,6 @@ public class ContainerUtil extends ContainerUtilRt {
     /**
      * @return read-only list consisting of the lists added together
      */
-    
     @Contract(pure = true)
     @SafeVarargs
     public static <T> List<T> concat(List<? extends T>... lists) {
@@ -1250,7 +1244,6 @@ public class ContainerUtil extends ContainerUtilRt {
     /**
      * @return read-only list consisting of the lists added together
      */
-    
     @Contract(pure = true)
     public static <T> List<T> concat(List<List<? extends T>> lists) {
         return consulo.util.collection.ContainerUtil.concat(lists);
@@ -1259,7 +1252,6 @@ public class ContainerUtil extends ContainerUtilRt {
     /**
      * @return read-only list consisting of the lists (made by listGenerator) added together
      */
-    
     @Contract(pure = true)
     public static <T, V> List<T> concat(Iterable<? extends V> list, Function<V, Collection<? extends T>> listGenerator) {
         return consulo.util.collection.ContainerUtil.concat(list, listGenerator);
@@ -1273,7 +1265,6 @@ public class ContainerUtil extends ContainerUtilRt {
     /**
      * @return read-only collection consisting of elements from both collections
      */
-    
     @Contract(pure = true)
     public static <T> Collection<T> intersection(
         Collection<? extends T> collection1,
@@ -1306,7 +1297,6 @@ public class ContainerUtil extends ContainerUtilRt {
      * @param <T>      type of list
      * @return new list with no more than {@code maxItems} first elements
      */
-    
     @Contract(pure = true)
     public static <T> List<T> getFirstItems(List<T> items, int maxItems) {
         return items.subList(0, Math.min(maxItems, items.size()));
@@ -1342,7 +1332,6 @@ public class ContainerUtil extends ContainerUtilRt {
     /**
      * @return read-only collection consisting of elements from the 'from' collection which are absent from the 'what' collection
      */
-    
     @Contract(pure = true)
     public static <T> Collection<T> subtract(Collection<T> from, Collection<T> what) {
         return consulo.util.collection.ContainerUtil.subtract(from, what);
@@ -1469,7 +1458,6 @@ public class ContainerUtil extends ContainerUtilRt {
     /**
      * @return read-only list consisting of the elements from the iterable converted by mapping
      */
-    
     @Contract(pure = true)
     public static <T, V> List<V> map(Iterable<? extends T> iterable, Function<T, V> mapping) {
         return consulo.util.collection.ContainerUtil.map(iterable, mapping);
@@ -1478,7 +1466,6 @@ public class ContainerUtil extends ContainerUtilRt {
     /**
      * @return read-only list consisting of the elements from the iterable converted by mapping
      */
-    
     @Contract(pure = true)
     public static <T, V> List<V> map(Collection<? extends T> iterable, Function<T, V> mapping) {
         return consulo.util.collection.ContainerUtil.map(iterable, mapping);
@@ -1487,7 +1474,6 @@ public class ContainerUtil extends ContainerUtilRt {
     /**
      * @return read-only list consisting of the elements from the array converted by mapping with nulls filtered out
      */
-    
     @Contract(pure = true)
     public static <T, V> List<V> mapNotNull(T[] array, Function<T, V> mapping) {
         return consulo.util.collection.ContainerUtil.mapNotNull(array, mapping);
@@ -1496,7 +1482,6 @@ public class ContainerUtil extends ContainerUtilRt {
     /**
      * @return read-only list consisting of the elements from the array converted by mapping with nulls filtered out
      */
-    
     @Contract(pure = true)
     public static <T, V> V[] mapNotNull(T[] array, Function<T, V> mapping, V[] emptyArray) {
         return consulo.util.collection.ContainerUtil.mapNotNull(array, mapping, emptyArray);
@@ -1505,7 +1490,6 @@ public class ContainerUtil extends ContainerUtilRt {
     /**
      * @return read-only list consisting of the elements from the iterable converted by mapping with nulls filtered out
      */
-    
     @Contract(pure = true)
     public static <T, V> List<V> mapNotNull(Iterable<? extends T> iterable, Function<T, V> mapping) {
         return consulo.util.collection.ContainerUtil.mapNotNull(iterable, mapping);
@@ -1514,7 +1498,6 @@ public class ContainerUtil extends ContainerUtilRt {
     /**
      * @return read-only list consisting of the elements from the array converted by mapping with nulls filtered out
      */
-    
     @Contract(pure = true)
     public static <T, V> List<V> mapNotNull(Collection<? extends T> iterable, Function<T, V> mapping) {
         return consulo.util.collection.ContainerUtil.mapNotNull(iterable, mapping);
@@ -1523,7 +1506,6 @@ public class ContainerUtil extends ContainerUtilRt {
     /**
      * @return read-only list consisting of the elements with nulls filtered out
      */
-    
     @Contract(pure = true)
     @SafeVarargs
     public static <T> List<T> packNullables(T... elements) {
@@ -1537,7 +1519,6 @@ public class ContainerUtil extends ContainerUtilRt {
     /**
      * @return read-only list consisting of the elements from the array converted by mapping
      */
-    
     @Contract(pure = true)
     public static <T, V> List<V> map(T[] array, Function<T, V> mapping) {
         return consulo.util.collection.ContainerUtil.map(array, mapping);
@@ -1758,7 +1739,6 @@ public class ContainerUtil extends ContainerUtilRt {
     /**
      * @return read-only list consisting of the elements from all of the collections
      */
-    
     @Contract(pure = true)
     public static <E> List<E> flatten(Collection<E>[] collections) {
         return flatten(Arrays.asList(collections));
@@ -1769,7 +1749,6 @@ public class ContainerUtil extends ContainerUtilRt {
      *
      * @param list must be sorted (according to the comparator), all elements must be not-null
      */
-    
     public static <T> List<T> removeDuplicatesFromSorted(List<T> list, Comparator<? super T> comparator) {
         T prev = null;
         List<T> result = null;
@@ -1801,7 +1780,6 @@ public class ContainerUtil extends ContainerUtilRt {
     /**
      * @return read-only list consisting of the elements from all of the collections
      */
-    
     @Contract(pure = true)
     public static <E> List<E> flatten(Iterable<? extends Collection<? extends E>> collections) {
         int totalSize = 0;
@@ -1819,7 +1797,6 @@ public class ContainerUtil extends ContainerUtilRt {
     /**
      * @return read-only list consisting of the elements from all of the collections
      */
-    
     @Contract(pure = true)
     public static <E> List<E> flattenIterables(Iterable<? extends Iterable<E>> collections) {
         List<E> result = new ArrayList<>();
@@ -1997,7 +1974,6 @@ public class ContainerUtil extends ContainerUtilRt {
      * N.B. Avoid using {@code list.toArray(new T[list.size()])} on this list because it is inherently racey and
      * therefore can return array with null elements at the end.
      */
-    
     @Contract(pure = true)
     public static <T> List<T> createLockFreeCopyOnWriteList() {
         return Lists.newLockFreeCopyOnWriteList();
@@ -2179,7 +2155,6 @@ public class ContainerUtil extends ContainerUtilRt {
     /**
      * @see #createLockFreeCopyOnWriteList()
      */
-    
     @Contract(pure = true)
     public static <T> consulo.util.collection.ConcurrentList<T> createConcurrentList() {
         return Lists.newLockFreeCopyOnWriteList();
@@ -2372,7 +2347,6 @@ public class ContainerUtil extends ContainerUtilRt {
     /**
      * Returns a String representation of the given map, by listing all key-value pairs contained in the map.
      */
-    
     @Contract(pure = true)
     public static String toString(Map<?, ?> map) {
         StringBuilder sb = new StringBuilder("{");

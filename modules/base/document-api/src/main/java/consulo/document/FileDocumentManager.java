@@ -94,7 +94,6 @@ public interface FileDocumentManager extends SavingRequestor {
    *
    * @return the documents that have unsaved changes.
    */
-  
   public abstract Document[] getUnsavedDocuments();
 
   /**
@@ -143,7 +142,6 @@ public interface FileDocumentManager extends SavingRequestor {
   /**
    * Requests writing access info on the given document. Can involve interaction with user.
    */
-  
   default WriteAccessStatus requestWritingStatus(Document document, @Nullable ComponentManager project) {
     return requestWriting(document, project) ? WriteAccessStatus.WRITABLE : WriteAccessStatus.NON_WRITABLE;
   }

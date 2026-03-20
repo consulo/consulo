@@ -63,7 +63,6 @@ public abstract class StubElementTypeHolder<T> {
   /**
    * Load serializer. By default use {@link #allFromStaticFields(Class, FieldValueGetter)}
    */
-  
   public abstract List<ObjectStubSerializerProvider> loadSerializers();
 
   

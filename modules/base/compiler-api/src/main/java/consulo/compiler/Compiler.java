@@ -32,7 +32,6 @@ public interface Compiler {
      *
      * @return the description string.
      */
-    
     String getDescription();
 
     /**

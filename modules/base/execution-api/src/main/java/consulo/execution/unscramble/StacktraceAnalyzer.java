@@ -44,7 +44,6 @@ public interface StacktraceAnalyzer {
   /**
    * Parse stacktrace as thread dump, and will show as thread dump if list not empty
    */
-  
   default List<ThreadState> parseAsThreadDump(String stacktrace) {
     return List.of();
   }

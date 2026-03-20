@@ -77,7 +77,6 @@ public interface RepositoryManager<T extends Repository> {
     /**
      * @return all repositories tracked by the manager.
      */
-    
     List<T> getRepositories();
 
     /**

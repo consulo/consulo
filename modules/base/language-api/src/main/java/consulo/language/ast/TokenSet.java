@@ -55,7 +55,6 @@ public class TokenSet {
    *
    * @return the contents of the set.
    */
-  
   public IElementType[] getTypes() {
     IElementType[] types = myTypes;
 
@@ -91,7 +90,6 @@ public class TokenSet {
    * @param types the element types contained in the set.
    * @return the new token set.
    */
-  
   public static TokenSet create(IElementType... types) {
     if (types.length == 0) return EMPTY;
     if (types.length == 1 && types[0] == TokenType.WHITE_SPACE) {
@@ -131,7 +129,6 @@ public class TokenSet {
    * @param sets the token sets to unite.
    * @return the new token set.
    */
-  
   public static TokenSet orSet(TokenSet... sets) {
     if (sets.length == 0) return EMPTY;
 
@@ -159,7 +156,6 @@ public class TokenSet {
    * @param b the second token set to intersect.
    * @return the new token set.
    */
-  
   public static TokenSet andSet(TokenSet a, TokenSet b) {
     TokenSet newSet = new TokenSet((short)Math.min(a.myShift, b.myShift), (short)Math.max(a.myMax, b.myMax));
     for (int i = 0; i < newSet.myWords.length; i++) {
@@ -177,7 +173,6 @@ public class TokenSet {
    * @param b the token set to subtract.
    * @return the new token set.
    */
-  
   public static TokenSet andNot(TokenSet a, TokenSet b) {
     TokenSet newSet = new TokenSet((short)Math.min(a.myShift, b.myShift), (short)Math.max(a.myMax, b.myMax));
     for (int i = 0; i < newSet.myWords.length; i++) {

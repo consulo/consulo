@@ -58,7 +58,6 @@ public interface PsiReference {
    *
    * @return Relative range in element
    */
-  
   @RequiredReadAction
   TextRange getRangeInElement();
 
@@ -77,7 +76,6 @@ public interface PsiReference {
    *
    * @return the canonical text of the reference.
    */
-  
   @RequiredReadAction
   String getCanonicalText();
 
@@ -122,7 +120,6 @@ public interface PsiReference {
    *
    * @return the array of available identifiers.
    */
-  
   @RequiredReadAction
   @Deprecated
   @DeprecationInfo(value = "Use consulo.ide.impl.idea.codeInsight.completion.CompletionContributor")

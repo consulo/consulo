@@ -63,7 +63,6 @@ public interface XDebuggerManager {
      * @param icon                        icon of 'Debug' tool window
      * @param showToolWindowOnSuspendOnly if {@code true} 'Debug' tool window won't be shown until debug process is suspended on a breakpoint
      */
-    
     XDebugSession startSessionAndShowTab(String sessionName,
                                                          @Nullable Image icon,
                                                          @Nullable RunContentDescriptor contentToReuse,
@@ -74,7 +73,6 @@ public interface XDebuggerManager {
      * Start a new debugging session. Use this method only if debugging is started by using standard 'Debug' action i.e. this methods is called
      * from {@link ProgramRunner#execute} method. Otherwise use {@link #startSessionAndShowTab} method
      */
-    
     XDebugSession startSession(ExecutionEnvironment environment, XDebugProcessStarter processStarter)
         throws ExecutionException;
 
@@ -83,7 +81,6 @@ public interface XDebuggerManager {
      *
      * @param sessionName title of 'Debug' tool window
      */
-    
     default XDebugSession startSessionAndShowTab(String sessionName,
                                                 @Nullable RunContentDescriptor contentToReuse,
                                                 XDebugProcessStarter starter) throws ExecutionException {
@@ -96,7 +93,6 @@ public interface XDebuggerManager {
      * @param sessionName                 title of 'Debug' tool window
      * @param showToolWindowOnSuspendOnly if {@code true} 'Debug' tool window won't be shown until debug process is suspended on a breakpoint
      */
-    
     default XDebugSession startSessionAndShowTab(String sessionName,
                                                 @Nullable RunContentDescriptor contentToReuse,
                                                 boolean showToolWindowOnSuspendOnly,

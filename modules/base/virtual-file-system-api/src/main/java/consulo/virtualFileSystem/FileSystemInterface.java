@@ -65,13 +65,11 @@ public interface FileSystemInterface {
   /**
    * Does NOT strip the BOM from the beginning of the stream, unlike the {@link VirtualFile#getInputStream()}
    */
-  
   InputStream getInputStream(VirtualFile file) throws IOException;
 
   /**
    * Does NOT add the BOM to the beginning of the stream, unlike the {@link VirtualFile#getOutputStream(Object)}
    */
-  
   OutputStream getOutputStream(VirtualFile file, Object requestor, long modStamp, long timeStamp) throws IOException;
 
   long getLength(VirtualFile file);

@@ -64,7 +64,6 @@ public abstract class VcsAbstractHistorySession implements VcsHistorySession {
    * This method should return actual value for current revision (it can be changed after submit for example)
    * @return current file revision, null if file does not exist anymore
    */
-
   protected abstract @Nullable VcsRevisionNumber calcCurrentRevisionNumber();
 
   public final VcsRevisionNumber getCurrentRevisionNumber() {

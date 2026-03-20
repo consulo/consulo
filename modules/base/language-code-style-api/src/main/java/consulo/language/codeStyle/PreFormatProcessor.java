@@ -50,7 +50,6 @@ public interface PreFormatProcessor {
      * @param range   target range within the given element
      * @return range recommended to use for further processing
      */
-    
     TextRange process(ASTNode element, TextRange range);
 
     /**

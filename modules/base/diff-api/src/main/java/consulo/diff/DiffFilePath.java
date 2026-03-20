@@ -42,7 +42,6 @@ public interface DiffFilePath {
    * @return the {@link File} that corresponds to the path. The path might be non-existent or not local.
    * @see #isNonLocal()
    */
-  
   File getIOFile();
 
   /**

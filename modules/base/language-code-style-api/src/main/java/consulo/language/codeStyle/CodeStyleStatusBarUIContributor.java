@@ -79,7 +79,6 @@ public interface CodeStyleStatusBarUIContributor {
      * @param psiFile The currently open {@code PsiFile}.
      * @return A status text to be shown in code style widget for the given {@code PsiFile}
      */
-    
     default String getStatusText(PsiFile psiFile) {
         return "*";
     }

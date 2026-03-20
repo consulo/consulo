@@ -66,7 +66,6 @@ public interface EditorEx extends Editor {
      * @see consulo.ide.impl.idea.openapi.editor.impl.DesktopEditorImpl#setHighlightingFilter(Predicate<RangeHighlighter>)
      * @see consulo.ide.impl.idea.openapi.editor.impl.DocumentMarkupModel#forDocument(Document, Project, boolean)
      */
-    
     MarkupModelEx getFilteredDocumentMarkupModel();
 
     
@@ -195,7 +194,6 @@ public interface EditorEx extends Editor {
     /**
      * Creates color scheme delegate which is bound to current editor. E.g. all schema changes will update editor state.
      */
-    
     EditorColorsScheme createBoundColorSchemeDelegate(@Nullable EditorColorsScheme customGlobalScheme);
 
     /**

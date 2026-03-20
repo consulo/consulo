@@ -40,7 +40,6 @@ public interface OrderEntry extends Synthetic, Comparable<OrderEntry> {
    * Return provider of ths order entry
    * @return provider
    */
-  
   OrderEntryType<?> getType();
 
   /**
@@ -55,7 +54,6 @@ public interface OrderEntry extends Synthetic, Comparable<OrderEntry> {
    * @return list of virtual files.
    * @see #getUrls(OrderRootType)
    */
-  
   VirtualFile[] getFiles(OrderRootType type);
 
   /**
@@ -67,7 +65,6 @@ public interface OrderEntry extends Synthetic, Comparable<OrderEntry> {
    * @param rootType the type of roots which should be returned.
    * @return the list of roots of the specified type.
    */
-  
   String[] getUrls(OrderRootType rootType);
 
   /**
@@ -75,7 +72,6 @@ public interface OrderEntry extends Synthetic, Comparable<OrderEntry> {
    *
    * @return name of this OrderEntry to be shown to user.
    */
-  
   String getPresentableName();
 
   /**
@@ -91,13 +87,11 @@ public interface OrderEntry extends Synthetic, Comparable<OrderEntry> {
    *
    * @return the module instance.
    */
-  
   Module getOwnerModule();
 
   /**
    * Return owner module root layer
    */
-  
   ModuleRootLayer getModuleRootLayer();
 
   /**

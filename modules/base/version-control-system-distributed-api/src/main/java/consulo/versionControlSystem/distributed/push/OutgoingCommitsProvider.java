@@ -33,7 +33,6 @@ public abstract class OutgoingCommitsProvider<Repo extends Repository, Source ex
    *                E.g. if authentication is needed to collect outgoing changes, then the method should silently show the corresponding
    *                request in the error field of the OutgoingResult.
    */
-  
   public abstract OutgoingResult getOutgoingCommits(Repo repository, PushSpec<Source, Target> pushSpec, boolean initial);
 
 }

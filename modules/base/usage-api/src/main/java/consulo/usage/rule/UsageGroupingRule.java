@@ -39,7 +39,6 @@ public interface UsageGroupingRule {
      * <p>If the rule returns at most one parent group extend {@link SingleParentUsageGroupingRule} and override
      * {@link SingleParentUsageGroupingRule#getParentGroupFor getParentGroupFor} instead.</p>
      */
-    
     default List<UsageGroup> getParentGroupsFor(Usage usage, UsageTarget[] targets) {
         return ContainerUtil.createMaybeSingletonList(groupUsage(usage));
     }

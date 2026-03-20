@@ -33,7 +33,6 @@ public interface XAttachDebuggerProvider {
    * @return a group in which the supported processes should be visually organized.
    * Return {@link XDefaultLocalAttachGroup} for a common process group.
    */
-  
   default XAttachPresentationGroup<ProcessInfo> getPresentationGroup() {
     return XDefaultLocalAttachGroup.INSTANCE;
   }
@@ -55,6 +54,5 @@ public interface XAttachDebuggerProvider {
    * @param process       process to attach to
    * @return a list of the debuggers that can attach and debug a given process
    */
-  
   List<XAttachDebugger> getAvailableDebuggers(Project project, XAttachHost hostInfo, ProcessInfo process, UserDataHolder contextHolder);
 }

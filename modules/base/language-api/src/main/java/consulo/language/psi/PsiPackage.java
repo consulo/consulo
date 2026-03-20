@@ -38,7 +38,6 @@ public interface PsiPackage extends PsiDirectoryContainer, PsiQualifiedNamedElem
      *
      * @return the array of subpackages.
      */
-    
     PsiPackage[] getSubPackages();
 
     /**
@@ -47,7 +46,6 @@ public interface PsiPackage extends PsiDirectoryContainer, PsiQualifiedNamedElem
      * @param scope the scope in which packages are searched.
      * @return the array of subpackages.
      */
-    
     PsiPackage[] getSubPackages(GlobalSearchScope scope);
 
     /**

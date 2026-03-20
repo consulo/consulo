@@ -137,7 +137,6 @@ public abstract class Language extends UserDataHolderBase {
     /**
      * @return collection of all languages registered so far.
      */
-    
     public static Collection<Language> getRegisteredLanguages() {
         return Collections.unmodifiableCollection(ourRegisteredLanguages.values());
     }
@@ -155,7 +154,6 @@ public abstract class Language extends UserDataHolderBase {
      * @param mimeType of the particular language.
      * @return collection of all languages for the given <code>mimeType</code>.
      */
-    
     @UsedInPlugin
     public static Collection<Language> findInstancesByMimeType(@Nullable String mimeType) {
         if (mimeType == null) {
@@ -217,7 +215,6 @@ public abstract class Language extends UserDataHolderBase {
      *
      * @return The list of MIME types.
      */
-    
     public String[] getMimeTypes() {
         return myMimeTypes;
     }
@@ -227,7 +224,6 @@ public abstract class Language extends UserDataHolderBase {
      *
      * @return the name of the language.
      */
-    
     public String getID() {
         return myID;
     }

@@ -35,7 +35,6 @@ public interface Surrounder {
    *
    * @return the template name
    */
-  
   LocalizeValue getTemplateDescription();
 
   /**

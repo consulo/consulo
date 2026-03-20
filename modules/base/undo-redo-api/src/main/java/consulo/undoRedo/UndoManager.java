@@ -63,13 +63,11 @@ public interface UndoManager {
   /**
    * @param editor instanceof FileEditor
    */
-  
   Couple<String> getUndoActionNameAndDescription(Object editor);
 
   /**
    * @param editor instanceof FileEditor
    */
-  
   Couple<String> getRedoActionNameAndDescription(Object editor);
 
   void invalidateActionsFor(DocumentReference ref);

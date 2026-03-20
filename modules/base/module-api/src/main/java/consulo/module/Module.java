@@ -64,7 +64,6 @@ public interface Module extends ComponentManager, Disposable, Named {
    *
    * @return the project instance.
    */
-  
   Project getProject();
 
   

@@ -440,7 +440,6 @@ public class ReflectionUtil {
     /**
      * Like {@link Class#newInstance()} but also handles private classes
      */
-    
     public static <T> T newInstance(Class<T> aClass) {
         try {
             Constructor<T> constructor = aClass.getDeclaredConstructor();

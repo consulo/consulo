@@ -64,7 +64,6 @@ public interface MergeTool {
         /**
          * Should be called after adding {@link #getComponent()} to the components hierarchy.
          */
-        
         @RequiredUIAccess
         ToolbarComponents init();
 

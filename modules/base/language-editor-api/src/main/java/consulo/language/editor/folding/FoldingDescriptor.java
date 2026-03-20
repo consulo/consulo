@@ -192,7 +192,6 @@ public class FoldingDescriptor {
   /**
    * @return the node to which the folding region is related.
    */
-  
   public ASTNode getElement() {
     return myElement;
   }
@@ -202,7 +201,6 @@ public class FoldingDescriptor {
    *
    * @return the folded text range.
    */
-  
   public TextRange getRange() {
     return myRange;
   }

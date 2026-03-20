@@ -34,7 +34,6 @@ public class ItemLatestState {
    * @param itemExists true if the item still exists in the remote repository
    * @param defaultHead
    */
-
   public ItemLatestState(VcsRevisionNumber number, boolean itemExists, boolean defaultHead) {
     myNumber = number;
     myItemExists = itemExists;

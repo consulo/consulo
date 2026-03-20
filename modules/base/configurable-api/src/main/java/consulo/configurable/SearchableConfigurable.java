@@ -46,7 +46,6 @@ public interface SearchableConfigurable extends Configurable {
    *
    * @return a class which is a cause of the creation of this configurable
    */
-  
   default Class<?> getOriginalClass() {
     return this.getClass();
   }

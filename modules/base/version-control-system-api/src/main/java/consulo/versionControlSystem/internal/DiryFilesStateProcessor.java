@@ -77,7 +77,6 @@ public abstract class DiryFilesStateProcessor {
   /**
    * @return get a list of files under lock and clear the given collection of files
    */
-  
   private <T> List<T> acquireListUnderLock(Collection<? extends T> files) {
     return ConcurrencyUtil.withLock(PROCESSING_LOCK.writeLock(), () -> {
       List<T> copiedFiles = new ArrayList<>(files);
@@ -89,7 +88,6 @@ public abstract class DiryFilesStateProcessor {
   /**
    * @return get a map of copied files under lock and clear the given map
    */
-  
   public Map<VirtualFile, VirtualFile> acquireCopiedFiles() {
     return ConcurrencyUtil.withLock(PROCESSING_LOCK.writeLock(), () -> {
       Map<VirtualFile, VirtualFile> copyFromMap = new HashMap<>(myCopyFromMap);

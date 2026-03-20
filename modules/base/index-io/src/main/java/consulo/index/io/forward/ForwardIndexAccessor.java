@@ -11,7 +11,6 @@ public interface ForwardIndexAccessor<Key, Value> {
   /**
    * creates a diff builder for given inputId.
    */
-  
   InputDataDiffBuilder<Key, Value> getDiffBuilder(int inputId, @Nullable ByteArraySequence sequence) throws IOException;
 
   /**

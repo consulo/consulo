@@ -20,7 +20,6 @@ package consulo.fileEditor.structureView.tree;
  *
  * @see TreeModel#getFilters()
  */
-
 public interface Filter extends TreeAction {
   Filter[] EMPTY_ARRAY = new Filter[0];
 

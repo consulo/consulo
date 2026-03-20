@@ -60,7 +60,6 @@ public abstract class BundleType extends SdkType {
      * @param homePath the path selected in the file chooser.
      * @return the path to be used as the SDK home.
      */
-    
     public Path adjustSelectedSdkHome(Platform platform, Path homePath) {
         return homePath;
     }

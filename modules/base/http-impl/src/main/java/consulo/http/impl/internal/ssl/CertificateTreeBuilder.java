@@ -106,7 +106,6 @@ public class CertificateTreeBuilder extends AbstractTreeBuilder {
      *
      * @return - selected certificates
      */
-    
     public Set<X509Certificate> getSelectedCertificates(boolean addFromOrganization) {
         Set<X509Certificate> selected = getSelectedElements(X509Certificate.class);
         if (addFromOrganization) {

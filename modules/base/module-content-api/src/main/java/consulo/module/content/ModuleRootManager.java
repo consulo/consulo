@@ -45,7 +45,6 @@ public sealed interface ModuleRootManager extends ModuleRootModel permits Module
    *
    * @return the file index instance.
    */
-  
   public abstract ModuleFileIndex getFileIndex();
 
   /**
@@ -54,7 +53,6 @@ public sealed interface ModuleRootManager extends ModuleRootModel permits Module
    *
    * @return the modifiable root model.
    */
-  
   @RequiredReadAction
   public abstract ModifiableRootModel getModifiableModel();
 
@@ -64,7 +62,6 @@ public sealed interface ModuleRootManager extends ModuleRootModel permits Module
    *
    * @return the list of module direct dependencies.
    */
-  
   public abstract Module[] getDependencies();
 
   /**
@@ -74,7 +71,6 @@ public sealed interface ModuleRootManager extends ModuleRootModel permits Module
    * @param includeTests whether test-only dependencies should be included
    * @return the list of module direct dependencies.
    */
-  
   public abstract Module[] getDependencies(boolean includeTests);
 
   /**

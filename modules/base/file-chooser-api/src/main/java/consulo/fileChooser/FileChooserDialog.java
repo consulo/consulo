@@ -44,7 +44,6 @@ public interface FileChooserDialog {
    * @param toSelect files to be selected automatically.
    * @return files chosen by user
    */
-  
   @Deprecated
   @DeprecationInfo("Use #chooseAsync")
   default VirtualFile[] choose(@Nullable ComponentManager project, VirtualFile... toSelect) {

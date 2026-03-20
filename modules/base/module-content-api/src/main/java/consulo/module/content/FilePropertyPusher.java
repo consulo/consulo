@@ -62,7 +62,6 @@ public interface FilePropertyPusher<T> {
      * After property was pushed it can be retrieved any time using {@see FilePropertyPusher#getFileDataKey()}
      * from {@link VirtualFile#getUserData(Key)}.
      */
-    
     Key<T> getFileDataKey();
 
     boolean pushDirectoriesOnly();

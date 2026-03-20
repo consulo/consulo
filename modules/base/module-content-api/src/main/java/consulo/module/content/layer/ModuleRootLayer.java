@@ -41,7 +41,6 @@ public interface ModuleRootLayer {
    *
    * @return the module instance.
    */
-  
   Module getModule();
 
   /**
@@ -65,7 +64,6 @@ public interface ModuleRootLayer {
    *
    * @return list of order entries for this module
    */
-  
   OrderEntry[] getOrderEntries();
 
   /**
@@ -74,7 +72,6 @@ public interface ModuleRootLayer {
    * @return the array of content roots.
    * @see #getContentEntries()
    */
-  
   VirtualFile[] getContentRoots();
 
   /**
@@ -83,7 +80,6 @@ public interface ModuleRootLayer {
    * @return the array of content root URLs.
    * @see #getContentEntries()
    */
-  
   String[] getContentRootUrls();
 
   
@@ -101,7 +97,6 @@ public interface ModuleRootLayer {
    * @return the array of excluded roots.
    * @see #getContentEntries()
    */
-  
   @Deprecated
   @DeprecationInfo(value = "Use #getContentFolderFiles(ContentFolderScopes.excluded())")
   VirtualFile[] getExcludeRoots();
@@ -124,7 +119,6 @@ public interface ModuleRootLayer {
    * @see #getContentEntries()
    * @see #getSourceRoots(boolean)
    */
-  
   @Deprecated
   @DeprecationInfo(value = "Use #getContentFolderFiles(ContentFolderScopes.productionAndTest())")
   VirtualFile[] getSourceRoots();
@@ -137,7 +131,6 @@ public interface ModuleRootLayer {
    * @see #getContentEntries()
    * @since 10.0
    */
-  
   @Deprecated
   @DeprecationInfo(value = "Use #getContentFolderFiles(ContentFolderScopes.production()) or #getContentFolderFiles(ContentFolderScopes.productionAndTest()")
   VirtualFile[] getSourceRoots(boolean includingTests);
@@ -162,7 +155,6 @@ public interface ModuleRootLayer {
    * @see #getContentEntries()
    * @since 10.0
    */
-  
   @Deprecated
   @DeprecationInfo(value = "Use #getContentFolderUrls(ContentFolderScopes.production()) or #getContentFolderFiles(ContentFolderScopes.productionAndTest()")
   String[] getSourceRootUrls(boolean includingTests);
@@ -184,7 +176,6 @@ public interface ModuleRootLayer {
    * @return {@link consulo.ide.impl.idea.openapi.roots.OrderEnumerator} instance
    * @since 10.0
    */
-  
   OrderEnumerator orderEntries();
 
   /**
@@ -192,7 +183,6 @@ public interface ModuleRootLayer {
    *
    * @return the list of module names this module depends on.
    */
-  
   String[] getDependencyModuleNames();
 
   <T extends ModuleExtension> @Nullable T getExtension(Class<T> clazz);

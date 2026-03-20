@@ -31,7 +31,6 @@ public interface ChangeInfo {
    *
    * @return parameter list.
    */
-  
   ParameterInfo[] getNewParameters();
 
   boolean isParameterSetOrOrderChanged();

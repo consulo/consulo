@@ -87,7 +87,6 @@ public interface CachedValue<T> {
     /**
      * @return the object calculating the value to cache
      */
-    
     CachedValueProvider<T> getValueProvider();
 
     /**

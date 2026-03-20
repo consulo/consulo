@@ -133,7 +133,6 @@ public class StubBasedPsiElementBase<T extends StubElement> extends ASTDelegateP
      * this causes AST to be loaded for the whole file and all stub-based PSI elements in this file (including the current one)
      * to be switched from stub to AST. So, after this call {@link #getStub()} will return null.
      */
-    
     @Override
     @RequiredReadAction
     public ASTNode getNode() {
@@ -429,7 +428,6 @@ public class StubBasedPsiElementBase<T extends StubElement> extends ASTDelegateP
     /**
      * @return a not-null child of specified type, taken from stubs (if this element is currently stub-based) or AST (otherwise).
      */
-    
     @RequiredReadAction
     public <S extends StubElement, Psi extends PsiElement> Psi getRequiredStubOrPsiChild(IStubElementType<S, Psi> elementType) {
         Psi result = getStubOrPsiChild(elementType);
@@ -442,7 +440,6 @@ public class StubBasedPsiElementBase<T extends StubElement> extends ASTDelegateP
     /**
      * @return children of specified type, taken from stubs (if this element is currently stub-based) or AST (otherwise).
      */
-    
     @RequiredReadAction
     public <S extends StubElement, Psi extends PsiElement> Psi[] getStubOrPsiChildren(
         IStubElementType<S, ? extends Psi> elementType,
@@ -467,7 +464,6 @@ public class StubBasedPsiElementBase<T extends StubElement> extends ASTDelegateP
     /**
      * @return children of specified type, taken from stubs (if this element is currently stub-based) or AST (otherwise).
      */
-    
     @RequiredReadAction
     public <S extends StubElement, Psi extends PsiElement> Psi[] getStubOrPsiChildren(
         IStubElementType<S, ? extends Psi> elementType,
@@ -492,7 +488,6 @@ public class StubBasedPsiElementBase<T extends StubElement> extends ASTDelegateP
     /**
      * @return children of specified type, taken from stubs (if this element is currently stub-based) or AST (otherwise).
      */
-    
     @RequiredReadAction
     public <Psi extends PsiElement> Psi[] getStubOrPsiChildren(TokenSet filter, Psi[] array) {
         T stub = getGreenStub();
@@ -514,7 +509,6 @@ public class StubBasedPsiElementBase<T extends StubElement> extends ASTDelegateP
     /**
      * @return children of specified type, taken from stubs (if this element is currently stub-based) or AST (otherwise).
      */
-    
     @RequiredReadAction
     public <Psi extends PsiElement> Psi[] getStubOrPsiChildren(TokenSet filter, ArrayFactory<? extends Psi> f) {
         T stub = getGreenStub();

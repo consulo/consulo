@@ -38,7 +38,6 @@ public abstract class CustomFoldingProvider {
     /**
      * @return A description string shown in "Surround With" action.
      */
-    
     public abstract LocalizeValue getDescription();
 
     public abstract String getStartString();

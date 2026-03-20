@@ -26,6 +26,5 @@ public interface InvertibleArrangementSettingsToken {
   /**
    * Inverted representation value that will be used in UI
    */
-  
   String getInvertedRepresentationValue();
 }

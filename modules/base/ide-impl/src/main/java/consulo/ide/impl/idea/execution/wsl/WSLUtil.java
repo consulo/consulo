@@ -66,7 +66,6 @@ public class WSLUtil {
      * @apiNote order of entries depends on configuration file and may change between launches.
      * @see WSLDistributionService
      */
-    
     public static List<WSLDistribution> getAvailableDistributions() {
         if (!isSystemCompatible()) {
             return Collections.emptyList();

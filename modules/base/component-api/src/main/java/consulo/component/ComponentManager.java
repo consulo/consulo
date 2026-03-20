@@ -109,7 +109,6 @@ public interface ComponentManager extends UserDataHolder, Disposable, InjectingC
      * @return condition for this component being disposed.
      * see {@link Application#invokeLater(Runnable, BooleanSupplier)} for the usage example.
      */
-    
     BooleanSupplier getDisposed();
 
     

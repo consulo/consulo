@@ -35,7 +35,6 @@ public abstract class GutterIconDescriptor {
    *
    * @return {@link LocalizeValue#empty()} if no configuration needed
    */
-  
   public abstract LocalizeValue getName();
 
   public @Nullable Image getIcon() {

@@ -23,7 +23,6 @@ import consulo.language.psi.PsiFile;
  *
  * @see FormattingModelProvider
  */
-
 public interface FormattingModelFactory {
     default FormattingModel createFormattingModelForPsiFile(PsiFile file, Block rootBlock, CodeStyleSettings settings) {
         return new PsiBasedFormattingModel(file, rootBlock, FormattingDocumentModel.create(file));

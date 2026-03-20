@@ -110,7 +110,6 @@ public class CopyPasteManagerEx extends CopyPasteManager implements ClipboardOwn
      * @param content content to store
      * @return content that is either the given one or the one that was assembled from it and already stored one
      */
-    
     private Transferable addNewContentToStack(Transferable content) {
         try {
             String clipString = getStringContent(content);

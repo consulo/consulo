@@ -40,7 +40,6 @@ public interface RefactoringActionHandlerFactory {
      * {@link RefactoringActionHandler#invoke(Project, PsiElement[], DataContext)}
      * accepts a list of {@link PsiElement}s to delete.
      */
-    
     RefactoringActionHandler createSafeDeleteHandler();
 
     

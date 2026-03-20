@@ -79,7 +79,6 @@ public abstract class DesktopEditorComposite implements FileEditorComposite {
     /**
      * File for which composite is created
      */
-    
     private final VirtualFile myFile;
     /**
      * Whether the composite is pinned or not

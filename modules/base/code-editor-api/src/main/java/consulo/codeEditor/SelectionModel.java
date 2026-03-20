@@ -195,7 +195,6 @@ public interface SelectionModel {
    *
    * @return an array of start offsets, array size is equal to the number of carets existing in the editor currently.
    */
-  
   int[] getBlockSelectionStarts();
 
   /**
@@ -204,7 +203,6 @@ public interface SelectionModel {
    *
    * @return an array of start offsets, array size is equal to the number of carets existing in the editor currently.
    */
-  
   int[] getBlockSelectionEnds();
 
   /**

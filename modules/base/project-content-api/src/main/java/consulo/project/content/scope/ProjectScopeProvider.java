@@ -37,7 +37,6 @@ public interface ProjectScopeProvider {
   /**
    * @return Scope for all things inside the project: files in the project content plus files in libraries/libraries sources
    */
-  
   ProjectAwareSearchScope getAllScope();
 
   

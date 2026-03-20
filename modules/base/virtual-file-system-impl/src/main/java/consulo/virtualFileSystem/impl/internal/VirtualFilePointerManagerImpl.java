@@ -176,7 +176,6 @@ public final class VirtualFilePointerManagerImpl extends SimpleModificationTrack
      * @param recursive
      * @return
      */
-    
     private VirtualFilePointer create(
         @Nullable VirtualFile file,
         @Nullable String url,

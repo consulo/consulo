@@ -77,7 +77,6 @@ public class EditorUtil {
      *
      * @see Inlay#isRelatedToPrecedingText()
      */
-    
     public static VisualPosition inlayAwareOffsetToVisualPosition(Editor editor, int offset) {
         return ReadAction.compute(() -> {
             Editor e = editor;

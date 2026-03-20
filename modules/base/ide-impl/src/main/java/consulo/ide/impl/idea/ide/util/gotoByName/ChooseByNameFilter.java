@@ -157,7 +157,6 @@ public abstract class ChooseByNameFilter<T> {
      * @param filterConfiguration
      * @return a created file chooser
      */
-   
     protected ElementsChooser<T> createChooser(
         final FilteringGotoByModel<T> model,
         final ChooseByNameFilterConfiguration<T> filterConfiguration

@@ -16,7 +16,6 @@ public interface CollectionTreeBuilder {
   /**
    * Is called under `com.intellij.debugger.streams.trace.EvaluationContextWrapper.launchDebuggerCommand`
    */
-  
   Object getKey(XValueContainer container, Object nullMarker);
 
   

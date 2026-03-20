@@ -41,7 +41,6 @@ public class RollbackUtil {
    * @param vcses affected VCSs.
    * @return name for the "rollback" operation to be used in the UI.
    */
-  
   public static String getRollbackOperationName(Collection<AbstractVcs> vcses) {
     String operationName = null;
     for (AbstractVcs vcs : vcses) {
@@ -63,7 +62,6 @@ public class RollbackUtil {
    * Finds the appropriate name for the "rollback" operation, looking through all VCSs registered in the project.
    * @see #getRollbackOperationName(java.util.Collection)
    */
-  
   public static String getRollbackOperationName(Project project) {
     return getRollbackOperationName(asList(ProjectLevelVcsManager.getInstance(project).getAllActiveVcss()));
   }

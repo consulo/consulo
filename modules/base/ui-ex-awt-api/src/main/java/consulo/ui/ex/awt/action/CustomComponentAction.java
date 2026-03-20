@@ -41,7 +41,6 @@ public interface CustomComponentAction {
    * be shown on several toolbars simultaneously. Use {@link CustomComponentAction#COMPONENT_KEY}
    * to retrieve current component from a Presentation instance in {@link AnAction#update(AnActionEvent)} method.
    */
-  
   default JComponent createCustomComponent(Presentation presentation, String place) {
     return createCustomComponent(presentation);
   }

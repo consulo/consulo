@@ -6,7 +6,6 @@ public interface FileProblem extends Problem {
     /**
      * The file that the problem belongs to.
      */
-    
     VirtualFile getFile();
 
     /**

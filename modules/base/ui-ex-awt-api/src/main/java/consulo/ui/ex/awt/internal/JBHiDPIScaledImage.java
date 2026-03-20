@@ -143,7 +143,6 @@ public final class JBHiDPIScaledImage extends BufferedImage {
    * @param scaleFactor the scale factor
    * @return scaled instance
    */
- 
   public JBHiDPIScaledImage scale(double scaleFactor) {
     Image img = myImage == null ? this : myImage;
 
@@ -172,7 +171,6 @@ public final class JBHiDPIScaledImage extends BufferedImage {
    *
    * @return scaled instance
    */
- 
   public JBHiDPIScaledImage scale(int targetUserWidth, int targetUserHeight) {
     return scale(targetUserWidth, targetUserHeight, Scalr.Method.QUALITY);
   }
@@ -183,7 +181,6 @@ public final class JBHiDPIScaledImage extends BufferedImage {
    *
    * @return scaled instance
    */
- 
   public JBHiDPIScaledImage scale(int targetUserWidth, int targetUserHeight, Scalr.Method method) {
     Image img = myImage == null ? this : myImage;
 

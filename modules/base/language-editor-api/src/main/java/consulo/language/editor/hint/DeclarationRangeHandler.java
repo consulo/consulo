@@ -46,7 +46,6 @@ public interface DeclarationRangeHandler<T extends PsiElement> {
   /**
    * @return element class
    */
-  
   Class<T> getElementClass();
 
   /**
@@ -55,6 +54,5 @@ public interface DeclarationRangeHandler<T extends PsiElement> {
    * @param container the container
    * @return the declaration range for it.
    */
-  
   TextRange getDeclarationRange(T container);
 }

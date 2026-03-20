@@ -364,7 +364,6 @@ public abstract class DialogWrapper {
      * @return <code>List&lt;ValidationInfo&gt;</code> of invalid fields. List
      * is empty if no errors found.
      */
-    
     @RequiredUIAccess
     protected List<ValidationInfo> doValidateAll() {
         ValidationInfo vi = doValidate();
@@ -1090,7 +1089,6 @@ public abstract class DialogWrapper {
      * @see #createSouthPanel
      * @see #createJButtonForAction
      */
-    
     protected Action[] createActions() {
         if (getHelpId() == null) {
             if (Platform.current().os().isMac()) {
@@ -1117,7 +1115,6 @@ public abstract class DialogWrapper {
      * <code>doOKAction()</code> method.
      * @see #doOKAction
      */
-    
     protected LocalizeAction getOKAction() {
         return myOKAction;
     }
@@ -1127,7 +1124,6 @@ public abstract class DialogWrapper {
      * <code>doCancelAction()</code> method.
      * @see #doCancelAction
      */
-    
     protected LocalizeAction getCancelAction() {
         return myCancelAction;
     }
@@ -1137,7 +1133,6 @@ public abstract class DialogWrapper {
      * <code>doHelpAction()</code> method.
      * @see #doHelpAction
      */
-    
     protected LocalizeAction getHelpAction() {
         return myHelpAction;
     }
@@ -1720,7 +1715,6 @@ public abstract class DialogWrapper {
      *
      * @return result callback
      */
-    
     @RequiredUIAccess
     public AsyncResult<Boolean> showAndGetOk() {
         AsyncResult<Boolean> result = new AsyncResult<>();

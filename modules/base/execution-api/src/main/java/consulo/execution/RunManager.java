@@ -56,7 +56,6 @@ public abstract class RunManager {
    *
    * @return all registered configuration types.
    */
-  
   public List<ConfigurationType> getConfigurationFactories() {
     return getConfigurationFactories(true);
   }
@@ -70,7 +69,6 @@ public abstract class RunManager {
    * @param type a run configuration type.
    * @return all configurations of the type, or an empty array if no configurations of the type are defined.
    */
-  
   @Deprecated
   public abstract RunConfiguration[] getConfigurations(ConfigurationType type);
 
@@ -80,7 +78,6 @@ public abstract class RunManager {
    * @param type a run configuration type.
    * @return all configurations of the type, or an empty array if no configurations of the type are defined.
    */
-  
   public abstract List<RunConfiguration> getConfigurationsList(ConfigurationType type);
 
   /**
@@ -89,7 +86,6 @@ public abstract class RunManager {
    * @param type a run configuration type.
    * @return settings for all configurations of the type, or an empty array if no configurations of the type are defined.
    */
-  
   @Deprecated
   public abstract RunnerAndConfigurationSettings[] getConfigurationSettings(ConfigurationType type);
 
@@ -99,7 +95,6 @@ public abstract class RunManager {
    * @param type a run configuration type.
    * @return settings for all configurations of the type, or an empty array if no configurations of the type are defined.
    */
-  
   public abstract List<RunnerAndConfigurationSettings> getConfigurationSettingsList(ConfigurationType type);
 
   /**
@@ -107,7 +102,6 @@ public abstract class RunManager {
    *
    * @return the list of all run configurations.
    */
-  
   @Deprecated
   public abstract RunConfiguration[] getAllConfigurations();
 
@@ -116,7 +110,6 @@ public abstract class RunManager {
    *
    * @return the list of all run configurations.
    */
-  
   public abstract List<RunConfiguration> getAllConfigurationsList();
 
   /**
@@ -124,7 +117,6 @@ public abstract class RunManager {
    *
    * @return the list of all run configurations settings.
    */
-  
   public abstract List<RunnerAndConfigurationSettings> getAllSettings();
 
   /**
@@ -133,7 +125,6 @@ public abstract class RunManager {
    * @return the list of all temporary run configurations.
    * @see RunnerAndConfigurationSettings#isTemporary()
    */
-  
   @Deprecated
   public abstract RunConfiguration[] getTempConfigurations();
 
@@ -143,7 +134,6 @@ public abstract class RunManager {
    * @return the list of all temporary run configurations settings.
    * @see RunnerAndConfigurationSettings#isTemporary()
    */
-  
   public abstract List<RunnerAndConfigurationSettings> getTempConfigurationsList();
 
   /**
@@ -193,7 +183,6 @@ public abstract class RunManager {
    * @return the configuration settings object.
    * @see RunManager#suggestUniqueName(String, Collection)
    */
-  
   public abstract RunnerAndConfigurationSettings createRunConfiguration(String name, ConfigurationFactory type);
 
   /**
@@ -204,7 +193,6 @@ public abstract class RunManager {
    * @param factory          the factory instance.
    * @return the configuration settings object.
    */
-  
   public abstract RunnerAndConfigurationSettings createConfiguration(RunConfiguration runConfiguration,
                                                                      ConfigurationFactory factory);
 
@@ -214,7 +202,6 @@ public abstract class RunManager {
    * @param factory the configuration factory.
    * @return the template settings.
    */
-  
   public abstract RunnerAndConfigurationSettings getConfigurationTemplate(ConfigurationFactory factory);
 
   /**

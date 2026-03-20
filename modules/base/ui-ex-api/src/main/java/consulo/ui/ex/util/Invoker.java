@@ -32,7 +32,6 @@ public interface Invoker extends Disposable {
    * @param task a task to execute on the valid thread
    * @return an object to control task processing
    */
-  
   CancellablePromise<?> invoke(Runnable task);
 
   /**
@@ -44,7 +43,6 @@ public interface Invoker extends Disposable {
    * @param task a task to execute asynchronously on the valid thread
    * @return an object to control task processing
    */
-  
   CancellablePromise<?> invokeLater(Runnable task);
 
   /**
@@ -54,7 +52,6 @@ public interface Invoker extends Disposable {
    * @param delay milliseconds for the initial delay
    * @return an object to control task processing
    */
-  
   CancellablePromise<?> invokeLater(Runnable task, int delay);
 
   /**

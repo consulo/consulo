@@ -72,7 +72,6 @@ public abstract class CompilerManager {
      * @param compilerClass the class for which the compilers should be returned.
      * @return all registered compilers of the specified class.
      */
-    
     public abstract <T extends Compiler> T[] getCompilers(Class<T> compilerClass);
 
     /**
@@ -82,7 +81,6 @@ public abstract class CompilerManager {
      * @param filter        additional filter to restrict compiler instances
      * @return all registered compilers of the specified class.
      */
-    
     public abstract <T extends Compiler> T[] getCompilers(Class<T> compilerClass, Predicate<Compiler> filter);
 
     /**
@@ -101,7 +99,6 @@ public abstract class CompilerManager {
      *
      * @return all tasks to be executed before compilation.
      */
-    
     public abstract List<? extends CompileTask> getBeforeTasks();
 
     /**
@@ -109,7 +106,6 @@ public abstract class CompilerManager {
      *
      * @return all tasks to be executed after compilation.
      */
-    
     public abstract List<? extends CompileTask> getAfterTasks();
 
     /**

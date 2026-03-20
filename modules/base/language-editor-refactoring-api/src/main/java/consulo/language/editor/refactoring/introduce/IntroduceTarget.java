@@ -30,7 +30,6 @@ public interface IntroduceTarget {
     /**
      * @return the range of the target in the file
      */
-    
     @RequiredReadAction
     TextRange getTextRange();
 
@@ -43,7 +42,6 @@ public interface IntroduceTarget {
     /**
      * @return string presentation of the target to use in the Target Chooser
      */
-    
     @RequiredReadAction
     String render();
 

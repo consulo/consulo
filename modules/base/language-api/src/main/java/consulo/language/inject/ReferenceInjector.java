@@ -42,7 +42,6 @@ public abstract class ReferenceInjector extends Injectable {
   /**
    * Generated references should be soft ({@link PsiReference#isSoft()})
    */
-  
   public abstract PsiReference[] getReferences(PsiElement element, ProcessingContext context, TextRange range);
 
   public static ReferenceInjector findById(String id) {

@@ -41,7 +41,6 @@ public interface ComparisonManager {
   /**
    * Compare two texts by-line
    */
-  
   List<LineFragment> compareLines(CharSequence text1,
                                   CharSequence text2,
                                   ComparisonPolicy policy,
@@ -50,7 +49,6 @@ public interface ComparisonManager {
   /**
    * Compare two texts by-line and then compare changed fragments by-word
    */
-  
   List<LineFragment> compareLinesInner(CharSequence text1,
                                        CharSequence text2,
                                        ComparisonPolicy policy,
@@ -67,7 +65,6 @@ public interface ComparisonManager {
   /**
    * Compare three texts by-line (LEFT - BASE - RIGHT)
    */
-  
   List<MergeLineFragment> compareLines(CharSequence text1,
                                        CharSequence text2,
                                        CharSequence text3,
@@ -77,7 +74,6 @@ public interface ComparisonManager {
   /**
    * Compare two texts by-word
    */
-  
   List<DiffFragment> compareWords(CharSequence text1,
                                   CharSequence text2,
                                   ComparisonPolicy policy,
@@ -86,7 +82,6 @@ public interface ComparisonManager {
   /**
    * Compare two texts by-char
    */
-  
   List<DiffFragment> compareChars(CharSequence text1,
                                   CharSequence text2,
                                   ComparisonPolicy policy,
@@ -107,14 +102,12 @@ public interface ComparisonManager {
    * ex: "A\nB" vs "A X\nB Y" will result to two LineFragments: [0, 1) - [0, 1) and [1, 2) - [1, 2)
    * squash will produce a single fragment: [0, 2) - [0, 2)
    */
-  
   List<LineFragment> squash(List<LineFragment> oldFragments);
 
   /**
    * @param trim - if leading/trailing LineFragments with equal contents should be skipped
    * @see #squash
    */
-  
   List<LineFragment> processBlocks(List<LineFragment> oldFragments,
                                    CharSequence text1, CharSequence text2,
                                    ComparisonPolicy policy,

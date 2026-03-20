@@ -37,7 +37,6 @@ public interface DataManager {
    * @return {@link DataContext} constructed by the current focused component
    * @deprecated use either {@link #getDataContext(consulo.ui.Component)} or {@link #getDataContextFromFocus()}
    */
- 
   DataContext getDataContext();
 
  
@@ -46,7 +45,6 @@ public interface DataManager {
   /**
    * @return {@link DataContext} constructed by the currently focused component.
    */
- 
   Promise<DataContext> getDataContextFromFocusAsync();
 
  
@@ -55,7 +53,6 @@ public interface DataManager {
   /**
    * @return {@link DataContext} constructed by the specified <code>component</code>
    */
- 
   DataContext getDataContext(consulo.ui.@Nullable Component component);
 
   /**

@@ -27,6 +27,5 @@ public interface VcsLogRootFilter extends VcsLogFilter {
   /**
    * Returns vcs roots that are visible.
    */
-  
   Collection<VirtualFile> getRoots();
 }

@@ -64,7 +64,6 @@ public interface MultiHostRegistrar {
    *
    * @param extension the created injected file name will have. Some parsers require specific extension. By default the extension is taken from the host file.
    */
-  
   default MultiHostRegistrar startInjecting(Language language, @Nullable String extension) {
     return startInjecting(LanguageVersionUtil.findDefaultVersion(language), extension);
   }

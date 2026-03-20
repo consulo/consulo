@@ -40,7 +40,6 @@ public abstract class PsiManager extends UserDataHolderBase {
    * @param project the project for which the PSI manager is requested.
    * @return the PSI manager instance.
    */
-  
   public static PsiManager getInstance(Project project) {
     return project.getComponent(PsiManager.class);
   }
@@ -50,7 +49,6 @@ public abstract class PsiManager extends UserDataHolderBase {
    *
    * @return the project instance.
    */
-  
   public abstract Project getProject();
 
   /**
@@ -120,7 +118,6 @@ public abstract class PsiManager extends UserDataHolderBase {
    *
    * @return the modification tracker instance.
    */
-  
   public abstract PsiModificationTracker getModificationTracker();
 
   /**

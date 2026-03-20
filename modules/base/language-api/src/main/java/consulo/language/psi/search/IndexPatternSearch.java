@@ -98,7 +98,6 @@ public abstract class IndexPatternSearch extends QueryFactory<IndexPatternOccurr
    * @param pattern the pattern to search for.
    * @return the query instance.
    */
-  
   public static Query<IndexPatternOccurrence> search(PsiFile file, IndexPattern pattern) {
     SearchParameters parameters = new SearchParameters(file, pattern);
     return getInstance().createQuery(parameters);
@@ -114,7 +113,6 @@ public abstract class IndexPatternSearch extends QueryFactory<IndexPatternOccurr
    * @param endOffset   the end offset of the range to search.
    * @return the query instance.
    */
-  
   public static Query<IndexPatternOccurrence> search(PsiFile file, IndexPattern pattern, int startOffset, int endOffset) {
     SearchParameters parameters = new SearchParameters(file, pattern, new TextRange(startOffset, endOffset));
     return getInstance().createQuery(parameters);
@@ -129,7 +127,6 @@ public abstract class IndexPatternSearch extends QueryFactory<IndexPatternOccurr
    * @param patternProvider the provider the patterns from which are searched.
    * @return the query instance.
    */
-  
   public static Query<IndexPatternOccurrence> search(PsiFile file, IndexPatternProvider patternProvider) {
     SearchParameters parameters = new SearchParameters(file, patternProvider);
     return getInstance().createQuery(parameters);
@@ -146,7 +143,6 @@ public abstract class IndexPatternSearch extends QueryFactory<IndexPatternOccurr
    *                             (will be returned as {@link IndexPatternOccurrence#getAdditionalTextRanges()}
    * @return the query instance.
    */
-  
   public static Query<IndexPatternOccurrence> search(PsiFile file, IndexPatternProvider patternProvider, boolean multiLineOccurrences) {
     SearchParameters parameters = new SearchParameters(file, patternProvider, multiLineOccurrences);
     return getInstance().createQuery(parameters);
@@ -163,7 +159,6 @@ public abstract class IndexPatternSearch extends QueryFactory<IndexPatternOccurr
    * @param endOffset       the end offset of the range to search.
    * @return the query instance.
    */
-  
   public static Query<IndexPatternOccurrence> search(PsiFile file, IndexPatternProvider patternProvider, int startOffset, int endOffset) {
     SearchParameters parameters = new SearchParameters(file, patternProvider, new TextRange(startOffset, endOffset));
     return getInstance().createQuery(parameters);

@@ -219,7 +219,6 @@ public class ShowIntentionsPass extends TextEditorHighlightingPass {
      *
      * @param includeSyncActions whether EDT-only providers should be queried, if {@code true}, this method should be invoked in EDT
      */
-    
     @RequiredUIAccess
     public static IntentionsInfo getActionsToShow(Editor hostEditor, PsiFile hostFile, boolean includeSyncActions) {
         IntentionsInfo result = new IntentionsInfo();

@@ -54,7 +54,6 @@ public interface Injection {
    * return a qualified TAG-NAME/@ATT-NAME combination name instead of just
    * the plain name.
    */
-  
   String getDisplayName();
 
   boolean acceptsPsiElement(PsiElement element);

@@ -44,7 +44,6 @@ public interface IgnoreEntryBase extends PsiElement {
      *
      * @return current syntax
      */
-    
     Syntax getSyntax();
 
     /**
@@ -52,6 +51,5 @@ public interface IgnoreEntryBase extends PsiElement {
      *
      * @return value
      */
-    
     String getValue();
 }

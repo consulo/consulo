@@ -43,7 +43,6 @@ public class VirtualFileMoveEvent extends VirtualFileEvent {
    *
    * @return the parent of the file before the move.
    */
-  
   public VirtualFile getOldParent() {
     return myOldParent;
   }
@@ -53,7 +52,6 @@ public class VirtualFileMoveEvent extends VirtualFileEvent {
    *
    * @return the parent of the file after the move.
    */
-  
   public VirtualFile getNewParent() {
     return myNewParent;
   }

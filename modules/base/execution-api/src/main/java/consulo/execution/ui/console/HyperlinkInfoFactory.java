@@ -32,7 +32,6 @@ public abstract class HyperlinkInfoFactory {
    * @param action  an action to be performed once editor is opened
    * @return newly created HyperlinkInfo which navigates to given line and column
    */
-  
   public abstract HyperlinkInfo createMultipleFilesHyperlinkInfo(List<? extends VirtualFile> files, int line, Project project, @Nullable HyperlinkHandler action);
 
   /**
@@ -41,7 +40,6 @@ public abstract class HyperlinkInfoFactory {
    * @param elements elements list
    * @return newly create HyperlinkInfo that navigates to given psi elements
    */
-  
   public abstract HyperlinkInfo createMultiplePsiElementHyperlinkInfo(Collection<? extends PsiElement> elements);
 
   public interface HyperlinkHandler {

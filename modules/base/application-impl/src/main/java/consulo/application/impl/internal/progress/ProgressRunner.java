@@ -128,7 +128,6 @@ public final class ProgressRunner<R> {
      *
      * @param progressIndicator progress indicator instance
      */
-    
     public ProgressRunner<R> withProgress(ProgressIndicator progressIndicator) {
         ProgressIndicator myIndicator;
         try {
@@ -146,7 +145,6 @@ public final class ProgressRunner<R> {
      *
      * @param progressIndicatorFuture future with progress indicator
      */
-    
     public ProgressRunner<R> withProgress(CompletableFuture<? extends ProgressIndicator> progressIndicatorFuture) {
         return myProgressIndicatorFuture == progressIndicatorFuture ? this : new ProgressRunner<>(myComputation, isSync, isModal, progressIndicatorFuture);
     }
@@ -156,7 +154,6 @@ public final class ProgressRunner<R> {
      *
      * @return a {@link ProgressResult} data class representing the result of computation
      */
-    
     public ProgressResult<R> submitAndGet() {
         Future<ProgressResult<R>> future = sync().submit();
 
@@ -174,7 +171,6 @@ public final class ProgressRunner<R> {
      *
      * @return a completable future representing the computation via {@link ProgressResult} data class
      */
-    
     public CompletableFuture<ProgressResult<R>> submit() {
         /*
          *    General flow:

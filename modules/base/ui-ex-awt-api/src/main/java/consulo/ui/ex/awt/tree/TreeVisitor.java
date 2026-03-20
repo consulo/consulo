@@ -11,7 +11,6 @@ public interface TreeVisitor {
    * @param path a currently visited path
    * @return an action that controls visiting a tree
    */
-  
   Action visit(TreePath path);
 
   enum Action {
@@ -41,7 +40,6 @@ public interface TreeVisitor {
      * @param visitor an object that controls visiting a tree structure
      * @return a promise that will be resolved when visiting is finished
      */
-    
     Promise<TreePath> accept(TreeVisitor visitor);
   }
 
@@ -68,7 +66,6 @@ public interface TreeVisitor {
      * @param component a last component of the current path
      * @return an action that controls visiting a tree
      */
-    
     protected Action visit(T component) {
       if (component == null) return Action.SKIP_CHILDREN;
       if (matches(component, this.component)) return Action.INTERRUPT;
@@ -121,7 +118,6 @@ public interface TreeVisitor {
      * @param component a corresponding component
      * @return an action that controls visiting a tree
      */
-    
     protected Action visit(TreePath path, T component) {
       if (component == null) return Action.SKIP_CHILDREN;
       int count = path.getPathCount();
@@ -143,7 +139,6 @@ public interface TreeVisitor {
      * @param depth     a depth starting from the found node
      * @return an action that controls visiting a tree
      */
-    
     @SuppressWarnings("unused")
     protected Action visit(TreePath path, T component, int depth) {
       return depth == 0 ? Action.INTERRUPT : Action.SKIP_CHILDREN;

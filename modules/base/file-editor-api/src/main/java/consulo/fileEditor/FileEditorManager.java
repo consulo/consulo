@@ -50,7 +50,6 @@ public abstract class FileEditorManager {
    * @param file file to open. Parameter cannot be null. File should be valid.
    * @return array of opened editors
    */
- 
   public FileEditor[] openFile(VirtualFile file, boolean focusEditor) {
     return openFileWithProviders(file, focusEditor, false).getFirst();
   }
@@ -62,7 +61,6 @@ public abstract class FileEditorManager {
    * @param focusEditor <code>true</code> if need to focus
    * @return array of opened editors
    */
- 
   public FileEditor[] openFile(VirtualFile file, boolean focusEditor, boolean searchForOpen) {
     return openFileWithProviders(file, focusEditor, searchForOpen).getFirst();
   }
@@ -103,20 +101,17 @@ public abstract class FileEditorManager {
   /**
    * @return all opened files. Order of files in the array corresponds to the order of editor tabs.
    */
- 
   public abstract VirtualFile[] getOpenFiles();
 
   /**
    * @return files currently selected. The method returns empty array if there are no selected files.
    * If more than one file is selected (split), the file with most recent focused editor is returned first.
    */
- 
   public abstract VirtualFile[] getSelectedFiles();
 
   /**
    * @return editors currently selected. The method returns empty array if no editors are open.
    */
- 
   public abstract FileEditor[] getSelectedEditors();
 
   /**
@@ -130,20 +125,17 @@ public abstract class FileEditorManager {
    * @param file cannot be null
    * @return current editors for the specified <code>file</code>
    */
- 
   public abstract FileEditor[] getEditors(VirtualFile file);
 
   /**
    * @param file cannot be null
    * @return all editors for the specified <code>file</code>
    */
- 
   public abstract FileEditor[] getAllEditors(VirtualFile file);
 
   /**
    * @return all open editors
    */
- 
   public abstract FileEditor[] getAllEditors();
 
   /**
@@ -190,7 +182,6 @@ public abstract class FileEditorManager {
    * @return the project instance.
    * @since 5.0.1
    */
- 
   public abstract Project getProject();
 
   public abstract void registerExtraEditorDataProvider(EditorDataProvider provider, Disposable parentDisposable);
@@ -213,7 +204,6 @@ public abstract class FileEditorManager {
   /**
    * @return <code>JComponent</code> which represent the place where all editors are located
    */
- 
   public javax.swing.JComponent getComponent() {
     throw new UnsupportedOperationException("Not supported at this platform");
   }
@@ -272,7 +262,6 @@ public abstract class FileEditorManager {
    * is not open. The returned files have the same order as they have in the
    * tabbed container.
    */
- 
   public abstract VirtualFile[] getSiblings(VirtualFile file);
 
   public abstract void createSplitter(int orientation, @Nullable FileEditorWindow window);

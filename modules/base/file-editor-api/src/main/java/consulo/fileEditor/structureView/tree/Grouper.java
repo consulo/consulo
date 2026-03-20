@@ -33,6 +33,5 @@ public interface Grouper extends TreeAction {
    * @param children the children of the parent node.
    * @return the collection of groups
    */
-  
   Collection<Group> group(Object parent, Collection<TreeElement> children);
 }

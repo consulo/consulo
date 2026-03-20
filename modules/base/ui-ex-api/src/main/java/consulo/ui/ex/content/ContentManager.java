@@ -109,7 +109,6 @@ public interface ContentManager extends Disposable, BusyObject {
      * @return the action name.
      * @since 5.1
      */
-    
     String getCloseAllButThisActionName();
 
     

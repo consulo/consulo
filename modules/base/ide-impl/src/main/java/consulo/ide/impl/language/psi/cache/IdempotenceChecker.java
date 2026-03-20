@@ -118,7 +118,6 @@ public final class IdempotenceChecker {
    * @return Both the computation result and the log
    * @see #logTrace(String)
    */
-  
   public static <T> ResultWithLog<T> computeWithLogging(Supplier<? extends T> recomputeValue) {
     List<String> threadLog = ourLog.get();
     boolean outermost = threadLog == null;

@@ -26,7 +26,6 @@ import org.jspecify.annotations.Nullable;
  * @see TreeAction#getPresentation()
  * @see ActionPresentationData
  */
-
 public interface ActionPresentation {
   /**
    * Returns the name of the action, displayed in the tooltip for the toolbar button.

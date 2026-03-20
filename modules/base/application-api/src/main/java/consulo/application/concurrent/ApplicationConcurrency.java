@@ -55,7 +55,6 @@ public interface ApplicationConcurrency {
      * </ul>
      * </ul>
      */
-    
     ScheduledExecutorService getScheduledExecutorService();
 
     /**
@@ -63,13 +62,11 @@ public interface ApplicationConcurrency {
      * (i.e. all tasks are run in the {@link #getExecutorService()} global thread pool).
      * @see #getExecutorService()
      */
-    
     ScheduledExecutorService createBoundedScheduledExecutorService(String name, int maxThreads);
 
     /**
      * @return the bounded executor (executor which runs no more than {@code maxThreads} tasks simultaneously) backed by the {@code backendExecutor}
      */
-    
     ExecutorService createBoundedApplicationPoolExecutor(String name,
                                                          Executor backendExecutor,
                                                          int maxThreads);
@@ -79,7 +76,6 @@ public interface ApplicationConcurrency {
      * @return the bounded executor (executor which runs no more than {@code maxThreads} tasks simultaneously) backed by the {@code backendExecutor}
      * which will shutdown itself when {@code parentDisposable} gets disposed.
      */
-    
     ExecutorService createBoundedApplicationPoolExecutor(String name,
                                                          Executor backendExecutor,
                                                          int maxThreads,
@@ -90,7 +86,6 @@ public interface ApplicationConcurrency {
      * @return the bounded executor (executor which runs no more than {@code maxThreads} tasks simultaneously) backed by the {@code backendExecutor}
      * which will shutdown itself when {@code parentDisposable} gets disposed.
      */
-    
     ExecutorService createBoundedApplicationPoolExecutor(String name,
                                                          int maxThreads,
                                                          Disposable parentDisposable);

@@ -126,7 +126,6 @@ public class GraphicsUtil {
      *
      * @see JRootPane#disableTrueDoubleBuffering()
      */
-    
     public static Graphics safelyGetGraphics(Component c) {
         Graphics safelyGetGraphics = JComponentHacking.safelyGetGraphics(c);
         return safelyGetGraphics != null ? safelyGetGraphics : c.getGraphics();

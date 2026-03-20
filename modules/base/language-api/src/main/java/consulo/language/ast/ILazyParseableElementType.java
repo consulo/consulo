@@ -34,7 +34,6 @@ import org.jspecify.annotations.Nullable;
  *
  * @author max
  */
-
 public class ILazyParseableElementType extends IElementType implements ILazyParseableElementTypeBase {
 
   public static final Key<Language> LANGUAGE_KEY = Key.create("LANGUAGE_KEY");

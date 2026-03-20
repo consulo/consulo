@@ -32,13 +32,11 @@ public class StoragePathMacros {
   /**
    * Points to the application-level settings root directory.
    */
-  
   public static final String ROOT_CONFIG = "$ROOT_CONFIG$";
 
   /**
    * Points to {@link #ROOT_CONFIG}/options by default. Should be used to store single files and {@link #ROOT_CONFIG} to store subdirectories with many files.
    */
-  
   public static final String APP_CONFIG = "$APP_CONFIG$";
 
   /**
@@ -52,7 +50,6 @@ public class StoragePathMacros {
   /**
    * <code>'.consulo'</code> directory path key.
    */
-  
   public static final String PROJECT_CONFIG_DIR = "$PROJECT_CONFIG_DIR$";
 
   /**
@@ -61,13 +58,11 @@ public class StoragePathMacros {
    * <code>'Workspace file'</code> holds settings that are local to a particular environment and should not be shared with another
    * team members.
    */
-  
   public static final String WORKSPACE_FILE = "$WORKSPACE_FILE$";
 
   /**
    * Default file for storage. For application it's 'other.xml', for project it's 'misc.xml'
    */
-  
   public static final String DEFAULT_FILE = "$DEFAULT_FILE$";
 
   
@@ -87,7 +82,6 @@ public class StoragePathMacros {
    * @return name of the given macro definition
    * @throws IllegalArgumentException if given macro definition has unexpected format
    */
-  
   @Deprecated
   public static String getMacroName(String macro) throws IllegalArgumentException {
     if (macro.length() < 3 || macro.charAt(0) != '$' || macro.charAt(macro.length() - 1) != '$') {

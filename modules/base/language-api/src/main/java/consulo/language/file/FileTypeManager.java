@@ -27,7 +27,6 @@ public abstract class FileTypeManager extends FileTypeRegistry {
    *
    * @return the instance of FileTypeManager
    */
-  
   public static FileTypeManager getInstance() {
     return ourInstance.get();
   }
@@ -106,7 +105,6 @@ public abstract class FileTypeManager extends FileTypeRegistry {
    *
    * @return Semicolon-delimited list of patterns.
    */
-  
   @Deprecated
   public String getIgnoredFilesList() {
     Set<String> masks = getIgnoredFiles();
@@ -118,7 +116,6 @@ public abstract class FileTypeManager extends FileTypeRegistry {
    * which are excluded from the project structure though they may be present
    * physically on disk.
    */
-  
   public Set<String> getIgnoredFiles() {
     throw new UnsupportedOperationException();
   }

@@ -200,7 +200,6 @@ public final class GridBag extends GridBagConstraints {
   /**
    * @see #insets(Insets)
    */
-  
   public GridBag insets(int top, int left, int bottom, int right) {
     return insets(JBUI.insets(top, left, bottom, right));
   }
@@ -229,7 +228,6 @@ public final class GridBag extends GridBagConstraints {
    * Pass -1 to use a default value for this column.
    * E.g, Insets(10, -1, -1, -1) means that 'top' will be changed to 10 and other sides will be set to defaults for this column.
    */
-  
   public GridBag insets(@Nullable Insets insets) {
     if (insets != null && (insets.top < 0 || insets.bottom < 0 || insets.left < 0 || insets.right < 0)) {
       Insets def = getDefaultInsets(gridx);

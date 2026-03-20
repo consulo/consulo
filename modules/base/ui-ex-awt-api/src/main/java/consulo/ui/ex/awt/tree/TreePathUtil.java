@@ -19,7 +19,6 @@ public class TreePathUtil {
    * @param component the last path component
    * @return a tree path with all the parent components plus the given component
    */
-  
   public static TreePath createTreePath(TreePath parent, Object component) {
     return parent != null ? parent.pathByAddingChild(component) : new TreePath(component);
   }

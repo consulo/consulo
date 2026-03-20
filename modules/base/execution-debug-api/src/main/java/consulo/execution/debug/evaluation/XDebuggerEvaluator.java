@@ -88,7 +88,6 @@ public abstract class XDebuggerEvaluator {
   /**
    * Override this method to format selected text before it is shown in 'Evaluate' dialog
    */
-  
   public String formatTextForEvaluation(String text) {
     return text;
   }

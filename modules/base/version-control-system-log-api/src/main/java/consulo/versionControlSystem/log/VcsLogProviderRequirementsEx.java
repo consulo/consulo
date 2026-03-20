@@ -36,6 +36,5 @@ public interface VcsLogProviderRequirementsEx extends Requirements {
   /**
    * Returns the refs which were in the log before the refresh request.
    */
-  
   Collection<VcsRef> getPreviousRefs();
 }

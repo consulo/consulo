@@ -381,7 +381,6 @@ public abstract class ChangesTreeListImpl<T> extends Tree implements TypeSafeDat
      * TODO: This method does not respect T type parameter while filling the result - just "Change" class is used
      * TODO: ("ChangesBrowserNode.getAllChangesUnder()").
      */
-    
     public List<T> getChanges() {
         //noinspection unchecked
         return ((ChangesBrowserNode) getRoot()).getAllChangesUnder();

@@ -40,7 +40,6 @@ public class VcsLogJoiner<CommitId, Commit extends GraphCommit<CommitId>> {
    * @param newRefs      all references (branches) of the repository.
    * @return Total saved log with new commits properly attached to it + number of new commits attached to the log.
    */
-  
   public Pair<List<Commit>, Integer> addCommits(List<? extends Commit> savedLog,
                                                 Collection<CommitId> previousRefs,
                                                 List<? extends Commit> firstBlock,

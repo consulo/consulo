@@ -45,13 +45,11 @@ public abstract class PushSupport<Repo extends Repository, Source extends PushSo
   /**
    * @return current source(branch) for repository
    */
-  
   public abstract Source getSource(Repo repository);
 
   /**
    * @return RepositoryManager for vcs
    */
-  
   public abstract RepositoryManager<Repo> getRepositoryManager();
 
   public @Nullable VcsPushOptionsPanel createOptionsPanel() {

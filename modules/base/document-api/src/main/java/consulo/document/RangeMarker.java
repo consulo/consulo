@@ -43,7 +43,6 @@ public interface RangeMarker extends UserDataHolder, Segment {
      *
      * @return the document instance.
      */
-    
     Document getDocument();
 
     /**
@@ -100,7 +99,6 @@ public interface RangeMarker extends UserDataHolder, Segment {
      * the more conventional {@code TextRange.create(getStartOffset(), getEndOffset())} could return inconsistent range when the selection
      * changed between {@link #getStartOffset()} and {@link #getEndOffset()} calls.
      */
-    
     default TextRange getTextRange() {
         return new TextRange(getStartOffset(), getEndOffset());
     }

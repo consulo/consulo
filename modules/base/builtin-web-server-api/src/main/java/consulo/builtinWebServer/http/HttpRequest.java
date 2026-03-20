@@ -40,7 +40,6 @@ public interface HttpRequest {
   /**
    * Returns the decoded path string of the URI.
    */
-  
   String path();
 
   @Nullable String getHeaderValue(String headerName);

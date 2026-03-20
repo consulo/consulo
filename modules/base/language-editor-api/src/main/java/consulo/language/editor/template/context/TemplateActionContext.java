@@ -52,7 +52,6 @@ public final class TemplateActionContext {
   /**
    * @return a copy of current context with specific {@code file}
    */
-  
   public TemplateActionContext withFile(PsiFile file) {
     return new TemplateActionContext(file, myEditor, myStartOffset, myEndOffset, myIsSurrounding);
   }

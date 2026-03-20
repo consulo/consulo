@@ -495,7 +495,6 @@ public final class DesktopInternalDecorator extends JPanel implements Queryable,
     /**
      * @return tool window associated with the decorator.
      */
-    
     @Override
     public DesktopToolWindowImpl getToolWindow() {
         return myToolWindow;

@@ -57,7 +57,6 @@ public abstract class CodeStyleManager {
      *
      * @return the project instance.
      */
-    
     public abstract Project getProject();
 
     /**
@@ -70,7 +69,6 @@ public abstract class CodeStyleManager {
      * @throws IncorrectOperationException if the file to reformat is read-only.
      * @see #reformatText(PsiFile, int, int)
      */
-    
     public abstract PsiElement reformat(PsiElement element) throws IncorrectOperationException;
 
     /**
@@ -85,7 +83,6 @@ public abstract class CodeStyleManager {
      * @throws IncorrectOperationException if the file to reformat is read-only.
      * @see #reformatText(PsiFile, int, int)
      */
-    
     public abstract PsiElement reformat(PsiElement element, boolean canChangeWhiteSpacesOnly) throws IncorrectOperationException;
 
     /**

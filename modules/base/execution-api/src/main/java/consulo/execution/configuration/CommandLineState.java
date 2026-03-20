@@ -102,7 +102,6 @@ public abstract class CommandLineState implements RunProfileState {
      * @throws ExecutionException if the execution failed.
      * @see GeneralCommandLine
      */
-    
     protected abstract ProcessHandler startProcess() throws ExecutionException;
 
     protected AnAction[] createActions(ConsoleView console, ProcessHandler processHandler) {

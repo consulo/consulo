@@ -113,7 +113,6 @@ public abstract class TypedAction {
      *
      * @see #setupRawHandler(TypedActionHandler)
      */
-    
     public TypedActionHandler getRawHandler() {
         return myRawHandler;
     }

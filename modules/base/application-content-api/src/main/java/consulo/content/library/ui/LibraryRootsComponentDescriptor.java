@@ -44,7 +44,6 @@ public abstract class LibraryRootsComponentDescriptor {
    *
    * @return non-empty list of {@link RootDetector}'s implementations
    */
-  
   public abstract List<? extends RootDetector> getRootDetectors();
 
   /**
@@ -53,7 +52,6 @@ public abstract class LibraryRootsComponentDescriptor {
    *
    * @return {@link LibraryRootsDetector}'s implementation
    */
-  
   public LibraryRootsDetector getRootsDetector() {
     return new LibraryRootsDetectorImpl(getRootDetectors());
   }
@@ -62,7 +60,6 @@ public abstract class LibraryRootsComponentDescriptor {
    * @return descriptor for the file chooser which will be shown when 'Attach Files' button is pressed
    * @param libraryName
    */
-  
   public FileChooserDescriptor createAttachFilesChooserDescriptor(@Nullable String libraryName) {
     return new FileChooserDescriptor(true, true, true, false, true, true)
       .withTitleValue(
@@ -76,14 +73,12 @@ public abstract class LibraryRootsComponentDescriptor {
   /**
    * @return descriptors for 'Attach' buttons in the library roots editor
    */
-  
   public abstract List<? extends AttachRootButtonDescriptor> createAttachButtons();
 
   /**
    * @return Array of root types supported by a library type associated with the roots
    *         component descriptor. All persistent root types are returned by default. 
    */
-  
   public List<OrderRootType> getRootTypes() {
     return OrderRootType.getAllTypes();
   }

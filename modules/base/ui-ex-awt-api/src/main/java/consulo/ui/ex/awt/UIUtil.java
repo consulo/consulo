@@ -864,7 +864,6 @@ public class UIUtil {
     /**
      * @deprecated use {@link #getListSelectionForeground(boolean)}
      */
-   
     @Deprecated
     public static Color getListSelectionForeground() {
         return getListSelectionForeground(true);
@@ -928,7 +927,6 @@ public class UIUtil {
     /**
      * @see RenderingUtil#getForeground(JTree, boolean)
      */
-   
     public static Color getTreeForeground(boolean selected, boolean focused) {
         return !selected ? getTreeForeground() : getTreeSelectionForeground(focused);
     }
@@ -945,7 +943,6 @@ public class UIUtil {
     /**
      * @see RenderingUtil#getForeground(JTree)
      */
-   
     public static Color getTreeForeground() {
         return JBCurrentTheme.Tree.FOREGROUND;
     }
@@ -953,7 +950,6 @@ public class UIUtil {
     /**
      * @see RenderingUtil#getSelectionForeground(JTree)
      */
-   
     public static Color getTreeSelectionForeground(boolean focused) {
         return JBCurrentTheme.Tree.Selection.foreground(focused);
     }
@@ -1107,7 +1103,6 @@ public class UIUtil {
     /**
      * @deprecated use {@link #getListSelectionBackground(boolean)}
      */
-   
     @Deprecated
     public static Color getListSelectionBackground() {
         return getListSelectionBackground(true);
@@ -1116,7 +1111,6 @@ public class UIUtil {
     /**
      * @deprecated use {@link #getListSelectionBackground(boolean)}
      */
-   
     @Deprecated
     public static Color getListUnfocusedSelectionBackground() {
         return getListSelectionBackground(false);
@@ -1125,7 +1119,6 @@ public class UIUtil {
     /**
      * @deprecated use {@link #getTreeSelectionBackground(boolean)}
      */
-   
     @Deprecated
     public static Color getTreeSelectionBackground() {
         return getTreeSelectionBackground(true);
@@ -1139,7 +1132,6 @@ public class UIUtil {
     /**
      * @deprecated use {@link #getTreeSelectionBackground(boolean)}
      */
-   
     @Deprecated
     public static Color getTreeUnfocusedSelectionBackground() {
         return getTreeSelectionBackground(false);
@@ -1789,7 +1781,6 @@ public class UIUtil {
      * @param type   the type of the image
      * @return a HiDPI-aware BufferedImage in device scale
      */
-   
     public static BufferedImage createImage(int width, int height, int type) {
         if (isJreHiDPI()) {
             return RetinaImage.create(width, height, type);
@@ -1807,7 +1798,6 @@ public class UIUtil {
      * @param type   the type of the image
      * @return a HiDPI-aware BufferedImage in the graphics scale
      */
-   
     public static BufferedImage createImage(GraphicsConfiguration gc, int width, int height, int type) {
         if (isJreHiDPI(gc)) {
             return RetinaImage.create(gc, width, height, type);
@@ -1825,7 +1815,6 @@ public class UIUtil {
      * @param type   the type of the image
      * @return a HiDPI-aware BufferedImage in the graphics scale
      */
-   
     public static BufferedImage createImage(Graphics g, int width, int height, int type) {
         if (g instanceof Graphics2D g2d) {
             if (isJreHiDPI(g2d)) {
@@ -1840,7 +1829,6 @@ public class UIUtil {
     /**
      * @see #createImage(GraphicsConfiguration, double, double, int, RoundingMode)
      */
-   
     public static BufferedImage createImage(Graphics g, double width, double height, int type, PaintUtil.RoundingMode rm) {
         if (g instanceof Graphics2D g2d) {
             if (isJreHiDPI(g2d)) {
@@ -1855,7 +1843,6 @@ public class UIUtil {
     /**
      * @see #createImage(GraphicsConfiguration, double, double, int, RoundingMode)
      */
-   
     public static BufferedImage createImage(JBUI.ScaleContext ctx, double width, double height, int type, PaintUtil.RoundingMode rm) {
         if (isJreHiDPI(ctx)) {
             return RetinaImage.create(ctx, width, height, type, rm);
@@ -1873,7 +1860,6 @@ public class UIUtil {
      * @param type   the type of the image
      * @return a HiDPI-aware BufferedImage in the component scale
      */
-   
     public static BufferedImage createImage(Component comp, int width, int height, int type) {
         return comp != null ? createImage(comp.getGraphicsConfiguration(), width, height, type) : createImage(width, height, type);
     }
@@ -3811,7 +3797,6 @@ public class UIUtil {
      * @param component a component to process
      * @return a component style of the specified component
      */
-   
     public static ComponentStyle getComponentStyle(Component component) {
         if (component instanceof JComponent jComponent) {
             Object property = jComponent.getClientProperty("JComponent.sizeVariant");

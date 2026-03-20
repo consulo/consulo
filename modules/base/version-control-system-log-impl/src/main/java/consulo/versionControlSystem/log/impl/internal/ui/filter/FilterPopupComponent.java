@@ -63,7 +63,6 @@ abstract class FilterPopupComponent<Filter extends VcsLogFilter> extends VcsLogP
     /**
      * Returns the special action that indicates that no filtering is selected in this component.
      */
-    
     protected AnAction createAllAction() {
         return new AllAction();
     }

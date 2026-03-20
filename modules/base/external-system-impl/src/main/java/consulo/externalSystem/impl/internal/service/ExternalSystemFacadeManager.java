@@ -115,7 +115,6 @@ public class ExternalSystemFacadeManager {
      * @return gradle api facade to use
      * @throws Exception in case of inability to return the facade
      */
-    
     public RemoteExternalSystemFacade getFacade(@Nullable Project project,
                                                 String externalProjectPath,
                                                 ProjectSystemId externalSystemId) throws Exception {

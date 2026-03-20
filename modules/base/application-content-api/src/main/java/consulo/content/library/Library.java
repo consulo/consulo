@@ -44,7 +44,6 @@ public interface Library extends JDOMExternalizable, Disposable {
   /**
    * As soon as you obtaining modifiable model you will have to commit it or call Disposer.dispose(model)!
    */
-  
   ModifiableModel getModifiableModel();
 
   LibraryTable getTable();

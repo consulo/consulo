@@ -14,7 +14,6 @@ public interface Hash {
   /**
    * Returns the String representation of this hash.
    */
-  
   String asString();
 
   /**
@@ -25,6 +24,5 @@ public interface Hash {
    * <p>
    * <p>Usually (e.g. it is default for Git) the short hash is 7 symbols long.</p>
    */
-  
   String toShortString();
 }

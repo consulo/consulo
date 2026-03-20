@@ -140,7 +140,6 @@ public class SMTestRunnerConnectionUtil {
      * @throws ExecutionException If IDEA cannot execute process this exception will
      *                            be caught and shown in error message box
      */
-    
     public static BaseTestsOutputConsoleView createAndAttachConsole(
         String testFrameworkName,
         ProcessHandler processHandler,

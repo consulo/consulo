@@ -36,7 +36,6 @@ public abstract class PsiTodoSearchHelper {
    *
    * @return the list of files with to do items.
    */
-  
   public abstract PsiFile[] findFilesWithTodoItems();
 
   /**
@@ -45,7 +44,6 @@ public abstract class PsiTodoSearchHelper {
    * @param file the file to search for to do items.
    * @return the array of found items.
    */
-  
   public abstract TodoItem[] findTodoItems(PsiFile file);
 
   /**
@@ -56,7 +54,6 @@ public abstract class PsiTodoSearchHelper {
    * @param endOffset   the end offset of the text range to search to do items in.
    * @return the array of found items.
    */
-  
   public abstract TodoItem[] findTodoItems(PsiFile file, int startOffset, int endOffset);
 
   

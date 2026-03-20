@@ -29,7 +29,6 @@ public class ExternalProjectBuildClasspathPojo {
   /**
    * Common for all project modules build classpath. E.g. it can be build system SDK libraries, configured at project level.
    */
-  
   private List<String> myProjectBuildClasspath;
   
   private Map<String, ExternalModuleBuildClasspathPojo> myModulesBuildClasspath;

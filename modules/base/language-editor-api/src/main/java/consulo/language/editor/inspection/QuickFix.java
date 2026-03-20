@@ -33,7 +33,6 @@ public interface QuickFix<D extends CommonProblemDescriptor> extends WriteAction
      *
      * @return the name of the quick fix.
      */
-    
     LocalizeValue getName();
 
     /**

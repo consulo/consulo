@@ -18,13 +18,11 @@ public interface Instruction {
     /**
      * Outgoing edges
      */
-    
     Collection<Instruction> allSucc();
 
     /**
      * Incoming edges
      */
-    
     Collection<Instruction> allPred();
 
     int num();
@@ -32,8 +30,6 @@ public interface Instruction {
     /**
      * element presentation is used in toString() for dumping the graph
      */
-    
-    
     String getElementPresentation();
 
     default void addSucc(Instruction endInstruction) {

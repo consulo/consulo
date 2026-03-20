@@ -27,7 +27,6 @@ public abstract class BinaryRequestHandler {
   /**
    * uuidgen on Mac OS X could be used to generate UUID
    */
-  
   public abstract UUID getId();
 
   

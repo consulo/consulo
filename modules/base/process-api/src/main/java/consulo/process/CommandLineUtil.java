@@ -497,7 +497,6 @@ public final class CommandLineUtil {
    * When necessary, quotes the specified argument with single quotes, according to the POSIX shell rules,
    * replacing single quotes with hardly readable but recursion-safe {@code '"'"'}.
    */
-  
   public static String posixQuote(String argument) {
     return shouldWrapWithQuotes(argument) ? "'" + StringUtil.replace(argument, "'", "'\"'\"'") + "'" : argument;
   }

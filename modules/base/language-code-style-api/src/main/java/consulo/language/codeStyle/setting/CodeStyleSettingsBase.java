@@ -38,7 +38,6 @@ public interface CodeStyleSettingsBase {
      *
      * @return the display name of the configurable page.
      */
-    
     default LocalizeValue getConfigurableDisplayName() {
         Language lang = getLanguage();
         return lang == null ? LocalizeValue.empty() : lang.getDisplayName();

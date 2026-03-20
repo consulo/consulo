@@ -69,7 +69,6 @@ public final class Animation {
   /**
    * @param delay in milliseconds.
    */
-  
   public Animation setDelay(int delay) {
     myDelay = Math.max(delay, 0);
     return this;
@@ -85,7 +84,6 @@ public final class Animation {
   /**
    * @param duration in milliseconds.
    */
-  
   public Animation setDuration(int duration) {
     myDuration = Math.max(duration, 0);
     return this;
@@ -126,7 +124,6 @@ public final class Animation {
    * Runnable is called before first {@link Animation#update(double)} is called.
    * The time between animation is scheduled and updated can differ.
    */
-  
   public Animation runWhenScheduled(Runnable runnable) {
     return addListener(Phase.SCHEDULED, runnable);
   }
@@ -134,7 +131,6 @@ public final class Animation {
   /**
    * Runnable is called right after {@link Animation#update(double)} is called.
    */
-  
   public Animation runWhenUpdated(Runnable runnable) {
     return addListener(Phase.UPDATED, runnable);
   }
@@ -142,7 +138,6 @@ public final class Animation {
   /**
    * Runnable is called if animation is expired.
    */
-  
   public Animation runWhenExpired(Runnable runnable) {
     return addListener(Phase.EXPIRED, runnable);
   }
@@ -150,7 +145,6 @@ public final class Animation {
   /**
    * Runnable is called if animation is cancelled but not expired.
    */
-  
   public Animation runWhenCancelled(Runnable runnable) {
     return addListener(Phase.CANCELLED, runnable);
   }

@@ -40,7 +40,6 @@ public class ContentRootData extends AbstractExternalEntityData {
    * @param type      target dir type
    * @return          directories of the target type configured for the current content root
    */
-  
   public Collection<SourceRoot> getPaths(ExternalSystemSourceType type) {
     Collection<SourceRoot> result = myData.get(type);
     return result == null ? Collections.<SourceRoot>emptyList() : result;

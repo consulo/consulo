@@ -8,7 +8,6 @@ public interface VcsLogFilterUi {
   /**
    * Returns the filters currently active, i.e. switched on by user.
    */
-  
   VcsLogFilterCollection getFilters();
 
   /**

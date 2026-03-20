@@ -40,7 +40,6 @@ public interface ExternalServiceConfiguration {
    * @see ThreeState documentation
    * @return state or default state
    */
-  
   ThreeState getState(ExternalService externalService);
 
   void setState(ExternalService externalService, ThreeState state);

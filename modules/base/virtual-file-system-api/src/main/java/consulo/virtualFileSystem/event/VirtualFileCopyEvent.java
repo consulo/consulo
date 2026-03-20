@@ -38,7 +38,6 @@ public class VirtualFileCopyEvent extends VirtualFileEvent {
    *
    * @return original file.
    */
-  
   public VirtualFile getOriginalFile() {
     return myOriginalFile;
   }

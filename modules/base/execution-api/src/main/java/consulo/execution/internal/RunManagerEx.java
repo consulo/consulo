@@ -53,7 +53,6 @@ public abstract class RunManagerEx extends RunManager {
    * @return
    * @deprecated use {@link RunManager#createRunConfiguration(String, ConfigurationFactory)} instead
    */
-  
   public abstract RunnerAndConfigurationSettings createConfiguration(String name, ConfigurationFactory type);
 
   public abstract RunnerAndConfigurationSettings createConfiguration(RunConfiguration configuration, boolean isTemplate);

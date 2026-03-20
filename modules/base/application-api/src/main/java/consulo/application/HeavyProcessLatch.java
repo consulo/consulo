@@ -129,7 +129,6 @@ public final class HeavyProcessLatch {
   /**
    * @return all heavy operations currently running, in undefined order, or an empty collection
    */
-  
   public Collection<Operation> getRunningOperations() {
     return new ArrayList<>(myHeavyProcesses);
   }

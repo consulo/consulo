@@ -107,7 +107,6 @@ public abstract class NewBaseRepositoryImpl extends BaseRepository {
    *
    * @return server's REST API path prefix
    */
-  
   public String getRestApiPathPrefix() {
     return "";
   }
@@ -121,7 +120,6 @@ public abstract class NewBaseRepositoryImpl extends BaseRepository {
    *
    * @return described URL
    */
-  
   public String getRestApiUrl(Object... parts) {
     StringBuilder builder = new StringBuilder(getUrl());
     builder.append(getRestApiPathPrefix());

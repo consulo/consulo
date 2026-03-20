@@ -60,8 +60,6 @@ public abstract class LanguageFileType implements FileType {
      *
      * @return The language instance.
      */
-
-    
     public final Language getLanguage() {
         return myLanguage;
     }

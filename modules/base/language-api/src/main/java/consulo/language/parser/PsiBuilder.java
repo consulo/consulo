@@ -49,7 +49,6 @@ public interface PsiBuilder extends UserDataHolder {
      *
      * @return the text being parsed
      */
-    
     CharSequence getOriginalText();
 
     /**
@@ -314,7 +313,6 @@ public interface PsiBuilder extends UserDataHolder {
      *
      * @return the built tree.
      */
-    
     ASTNode getTreeBuilt();
 
     /**
@@ -324,7 +322,6 @@ public interface PsiBuilder extends UserDataHolder {
      *
      * @return the light tree built.
      */
-    
     FlyweightCapableTreeStructure<LighterASTNode> getLightTree();
 
     /**
@@ -345,7 +342,6 @@ public interface PsiBuilder extends UserDataHolder {
     /**
      * Return localize value for node, if node is error. If it's not error empty value {@link LocalizeValue#empty()}
      */
-    
     LocalizeValue getErrorMessage(LighterASTNode node);
 
     void setReparseMergeCustomComparator(ReparseMergeCustomComparator comparator);

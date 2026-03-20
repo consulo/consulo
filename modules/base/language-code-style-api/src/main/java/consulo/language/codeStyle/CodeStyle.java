@@ -27,7 +27,6 @@ public class CodeStyle {
     /**
      * @return Default application-wide root code style settings.
      */
-    
     public static CodeStyleSettings getDefaultSettings() {
         //noinspection deprecation
         return CodeStyleSettingsManager.getInstance().getCurrentSettings();
@@ -40,7 +39,6 @@ public class CodeStyle {
      * @param project The project to get code style settings for.
      * @return The current root code style settings associated with the project.
      */
-    
     public static CodeStyleSettings getSettings(Project project) {
         //noinspection deprecation
         return CodeStyleSettingsManager.getInstance(project).getCurrentSettings();
@@ -52,7 +50,6 @@ public class CodeStyle {
      * @param project The project to return the settings for or {@code null} for default settings.
      * @return Project or default code style settings.
      */
-    
     public static CodeStyleSettings getProjectOrDefaultSettings(@Nullable Project project) {
         return project != null ? getSettings(project) : getDefaultSettings();
     }
@@ -64,7 +61,6 @@ public class CodeStyle {
      * @param file The file to get code style settings for.
      * @return The current root code style settings associated with the file or default settings if the file is invalid.
      */
-    
     public static CodeStyleSettings getSettings(PsiFile file) {
         Project project = file.getProject();
         CodeStyleSettings tempSettings = CodeStyleSettingsManager.getInstance(project).getTemporarySettings();
@@ -126,7 +122,6 @@ public class CodeStyle {
      * @param <T>                 Settings class type.
      * @return The current custom settings associated with the PSI file.
      */
-    
     public static <T extends CustomCodeStyleSettings> T getCustomSettings(PsiFile file, Class<T> customSettingsClass) {
         CodeStyleSettings rootSettings = getSettings(file);
         return rootSettings.getCustomSettings(customSettingsClass);
@@ -138,7 +133,6 @@ public class CodeStyle {
      * @param file The file to retrieve language settings for.
      * @return The associated language settings.
      */
-    
     @RequiredReadAction
     public static CommonCodeStyleSettings getLanguageSettings(PsiFile file) {
         CodeStyleSettings rootSettings = getSettings(file);
@@ -152,7 +146,6 @@ public class CodeStyle {
      * @param file The file to retrieve language settings for.
      * @return The associated language settings.
      */
-    
     public static CommonCodeStyleSettings getLanguageSettings(PsiFile file, Language language) {
         CodeStyleSettings rootSettings = getSettings(file);
         return rootSettings.getCommonSettings(language);
@@ -167,7 +160,6 @@ public class CodeStyle {
      * @return The file indent options.
      * @see FileIndentOptionsProvider
      */
-    
     public static CommonCodeStyleSettings.IndentOptions getIndentOptions(PsiFile file) {
         CodeStyleSettings rootSettings = getSettings(file);
         return rootSettings.getIndentOptionsByFile(file);
@@ -179,7 +171,6 @@ public class CodeStyle {
      * @param file The file to get indent options for.
      * @return The indent options associated with the file type.
      */
-    
     public static CommonCodeStyleSettings.IndentOptions getIndentOptionsByFileType(PsiFile file) {
         return getSettings(file).getIndentOptions(file.getFileType());
     }
@@ -191,7 +182,6 @@ public class CodeStyle {
      * @param document The document to get indent options for.
      * @return The indent options associated with document's PSI file if the file is available or other indent options otherwise.
      */
-    
     public static CommonCodeStyleSettings.IndentOptions getIndentOptions(Project project, Document document) {
         PsiFile file = PsiDocumentManager.getInstance(project).getPsiFile(document);
         if (file != null) {

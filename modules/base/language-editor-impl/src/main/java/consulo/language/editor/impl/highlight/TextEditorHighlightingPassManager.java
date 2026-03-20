@@ -42,7 +42,6 @@ public abstract class TextEditorHighlightingPassManager {
   /**
    * Same as {@link #instantiateMainPasses(PsiFile, Document, HighlightInfoProcessor)} but with default process
    */
-  
   public abstract List<TextEditorHighlightingPass> instantiateMainPasses(PsiFile psiFile, Document document);
 
   

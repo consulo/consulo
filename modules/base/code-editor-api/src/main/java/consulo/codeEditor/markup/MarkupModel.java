@@ -36,7 +36,6 @@ public interface MarkupModel extends UserDataHolder {
      *
      * @return the document instance.
      */
-    
     Document getDocument();
 
     /**
@@ -56,7 +55,6 @@ public interface MarkupModel extends UserDataHolder {
      * @param targetArea        type of highlighting (specific range or all full lines covered by the range).
      * @return the highlighter instance.
      */
-    
     RangeHighlighter addRangeHighlighter(@Nullable TextAttributesKey textAttributesKey,
                                          int startOffset,
                                          int endOffset,
@@ -70,7 +68,6 @@ public interface MarkupModel extends UserDataHolder {
      * An editor can provide a custom scheme different from the global one, also a user can change the global scheme explicitly.
      * Using the overload taking a {@link TextAttributesKey} will make the platform take care of all these cases.
      */
-    
     RangeHighlighter addRangeHighlighter(int startOffset,
                                          int endOffset,
                                          int layer,
@@ -89,7 +86,6 @@ public interface MarkupModel extends UserDataHolder {
      *                       does not modify the text attributes.
      * @return the highlighter instance.
      */
-    
     RangeHighlighter addLineHighlighter(int line, int layer, @Nullable TextAttributes textAttributes);
 
     /**
@@ -104,7 +100,6 @@ public interface MarkupModel extends UserDataHolder {
      *                          {@link HighlighterLayer})
      * @return the highlighter instance.
      */
-    
     RangeHighlighter addLineHighlighter(@Nullable TextAttributesKey textAttributesKey, int line, int layer);
 
     /**
@@ -124,6 +119,5 @@ public interface MarkupModel extends UserDataHolder {
      *
      * @return the array of highlighter instances.
      */
-    
     RangeHighlighter[] getAllHighlighters();
 }

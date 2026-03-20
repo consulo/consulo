@@ -119,7 +119,6 @@ public class RunContentDescriptor implements Disposable {
   /**
    * @return actions to restart or rerun
    */
-  
   public AnAction[] getRestartActions() {
     return myRestartActions.length == 0 ? AnAction.EMPTY_ARRAY : myRestartActions.clone();
   }

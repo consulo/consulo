@@ -38,6 +38,5 @@ public interface ExternalSystemConfigLocator {
      * @param externalProjectSettings external system project settings
      * @return external system project config files
      */
-    
     List<VirtualFile> findAll(ExternalProjectSettings externalProjectSettings);
 }

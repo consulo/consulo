@@ -91,7 +91,6 @@ public abstract class SdkTable implements BundleHolder {
   /**
    * Create sdk with target type, but not add to table. use {@link #addSdk(Sdk)} for adding
    */
-  
   @Deprecated
   @DeprecationInfo("Prefer createSdk(Path,String,SdkTypeId)")
   public abstract Sdk createSdk(String name, SdkTypeId sdkType);
@@ -99,6 +98,5 @@ public abstract class SdkTable implements BundleHolder {
   /**
    * Create sdk with target type, but not add to table. use {@link #addSdk(Sdk)} for adding
    */
-  
   public abstract Sdk createSdk(Path homePath, String name, SdkTypeId sdkType);
 }

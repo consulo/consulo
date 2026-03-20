@@ -207,7 +207,6 @@ public abstract class StubList extends AbstractList<StubBase<?>> {
    * Ensures stubs are in DFS order and the optimizes memory layout. Might return an optimized copy of this list,
    * with all stubs re-targeted to that copy.
    */
-  
   StubList finalizeLoadingStage() {
     if (myTempState != null) {
       myTempState = null;

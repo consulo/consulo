@@ -31,7 +31,6 @@ public abstract class AbstractAccessibleContextDelegate extends AccessibleContex
   /**
    * Sub-classes provide the {@link AccessibleContext} to forward calls to.
    */
-  
   protected abstract AccessibleContext getDelegate();
 
   @Override

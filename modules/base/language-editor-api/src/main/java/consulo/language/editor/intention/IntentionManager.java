@@ -62,7 +62,6 @@ public abstract class IntentionManager  {
    *
    * @return array of registered actions.
    */
-  
   public abstract IntentionAction[] getIntentionActions();
 
   /**
@@ -71,7 +70,6 @@ public abstract class IntentionManager  {
    *
    * @return array of actions.
    */
-  
   public abstract IntentionAction[] getAvailableIntentionActions();
 
   /**
@@ -79,7 +77,6 @@ public abstract class IntentionManager  {
    * E.g. actions for suppress the problem via comment, javadoc or annotation,
    * and edit corresponding inspection settings.
    */
-  
   public abstract List<IntentionAction> getStandardIntentionOptions(HighlightDisplayKey displayKey, PsiElement context);
 
   /**
@@ -92,19 +89,16 @@ public abstract class IntentionManager  {
    * @param action action to convert.
    * @return quick fix instance.
    */
-  
   public abstract LocalQuickFix convertToFix(IntentionAction action);
 
   /**
    * @return intention to start code cleanup on file
    */
-  
   public abstract IntentionAction createCleanupAllIntention();
 
   /**
    * @return options for cleanup intention {@link #createCleanupAllIntention()}
    * e.g. edit enabled cleanup inspections or starting cleanup on predefined scope
    */
-  
   public abstract List<IntentionAction> getCleanupIntentionOptions();
 }

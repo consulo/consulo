@@ -125,7 +125,6 @@ public abstract class AbstractVcs<ComList extends CommittedChangeList> extends S
      * (e.g. it can be "SVN" for Subversion or "Hg" for Mercurial).<br/><br/>
      * By default returns the same as {@link #getDisplayName()}.
      */
-    
     public LocalizeValue getShortName() {
         return getDisplayName();
     }
@@ -135,7 +134,6 @@ public abstract class AbstractVcs<ComList extends CommittedChangeList> extends S
      * (e.g. it can be "_SVN" for Subversion or "_Hg" for Mercurial).<br/><br/>
      * Returns generic "VC_S" by default.
      */
-    
     public LocalizeValue getShortNameWithMnemonic() {
         return VcsLocalize.vcsGenericNameWithMnemonic();
     }

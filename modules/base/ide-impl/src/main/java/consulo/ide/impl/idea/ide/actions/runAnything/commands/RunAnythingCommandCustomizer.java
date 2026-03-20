@@ -23,7 +23,6 @@ public abstract class RunAnythingCommandCustomizer {
      * @param commandLine   command line to be customized
      * @return patched command line
      */
-    
     @SuppressWarnings("unused")
     protected GeneralCommandLine customizeCommandLine(
         VirtualFile workDirectory,
@@ -39,7 +38,6 @@ public abstract class RunAnythingCommandCustomizer {
      * @param dataContext original {@link DataContext}
      * @return customized {@link DataContext}
      */
-    
     protected DataContext customizeDataContext(DataContext dataContext) {
         return dataContext;
     }

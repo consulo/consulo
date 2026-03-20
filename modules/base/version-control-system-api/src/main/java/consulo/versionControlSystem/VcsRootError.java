@@ -31,12 +31,10 @@ public interface VcsRootError {
   /**
    * @return type of mapping error
    */
-  
   Type getType();
 
   /**
    * @return affected directory mapping
    */
-  
   VcsDirectoryMapping getMapping();
 }

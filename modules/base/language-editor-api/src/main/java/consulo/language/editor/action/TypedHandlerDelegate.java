@@ -29,7 +29,6 @@ public abstract class TypedHandlerDelegate {
      * If the specified character triggers auto-popup, schedules the auto-popup appearance. This method is called even
      * in overwrite mode, when the rest of typed handler delegate methods are not called. It is invoked only for the primary caret.
      */
-    
     public Result checkAutoPopup(char charTyped, Project project, Editor editor, PsiFile file) {
         return Result.CONTINUE;
     }
@@ -38,7 +37,6 @@ public abstract class TypedHandlerDelegate {
      * Called before selected text is deleted.
      * This method is supposed to be overridden by handlers having custom behaviour with respect to selection.
      */
-    
     public Result beforeSelectionRemoved(char c, Project project, Editor editor, PsiFile file) {
         return Result.CONTINUE;
     }
@@ -46,7 +44,6 @@ public abstract class TypedHandlerDelegate {
     /**
      * Called before the specified character typed by the user is inserted in the editor.
      */
-    
     public Result beforeCharTyped(
         char c,
         Project project,
@@ -60,7 +57,6 @@ public abstract class TypedHandlerDelegate {
     /**
      * Called after the specified character typed by the user has been inserted in the editor.
      */
-    
     public Result charTyped(char c, Project project, Editor editor, PsiFile file) {
         return Result.CONTINUE;
     }

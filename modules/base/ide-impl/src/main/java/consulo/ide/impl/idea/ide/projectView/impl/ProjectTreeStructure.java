@@ -22,7 +22,6 @@ import consulo.project.Project;
 /**
  * @author ven
  * */
-
 public abstract class ProjectTreeStructure extends AbstractProjectTreeStructure {
   private final String myId;
 

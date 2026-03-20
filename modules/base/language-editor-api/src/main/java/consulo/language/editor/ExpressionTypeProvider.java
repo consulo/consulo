@@ -46,19 +46,16 @@ public abstract class ExpressionTypeProvider<T extends PsiElement> implements La
    *
    * @see consulo.util.lang.xml.XmlStringUtil#escapeText(CharSequence)
    */
-  
   public abstract String getInformationHint(T element);
 
   /**
    * Returns HTML string if no target found at position.
    */
-  
   public abstract String getErrorHint();
 
   /**
    * Returns the list of all possible targets at specified position.
    */
-  
   public abstract List<T> getExpressionsAt(PsiElement elementAt);
 
   /**
@@ -78,7 +75,6 @@ public abstract class ExpressionTypeProvider<T extends PsiElement> implements La
    * @throws UnsupportedOperationException if this provider does not provide any advanced information
    *                                       (in this case {@link #hasAdvancedInformation()} method must return false).
    */
-  
   public String getAdvancedInformationHint(T element) {
     throw new UnsupportedOperationException();
   }

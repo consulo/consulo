@@ -446,7 +446,6 @@ public class HighlightUsagesHandler extends HighlightHandlerBase {
     /**
      * @deprecated Use {@link #collectRangesToHighlight}
      */
-    
     @Deprecated
     @RequiredReadAction
     public static List<TextRange> getRangesToHighlight(PsiReference ref) {

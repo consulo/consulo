@@ -166,7 +166,6 @@ public abstract class AbstractExternalSystemConfigurable<ProjectSettings extends
    * @param settings target external project settings
    * @return control for managing given project settings
    */
-  
   protected abstract ExternalSystemSettingsControl<ProjectSettings> createProjectSettingsControl(ProjectSettings settings);
 
   @SuppressWarnings("MethodMayBeStatic")
@@ -234,7 +233,6 @@ public abstract class AbstractExternalSystemConfigurable<ProjectSettings extends
   /**
    * @return new empty project-level settings object
    */
-  
   protected abstract ProjectSettings newProjectSettings();
 
   @RequiredUIAccess

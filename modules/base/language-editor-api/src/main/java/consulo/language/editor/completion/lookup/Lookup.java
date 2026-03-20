@@ -71,13 +71,11 @@ public interface Lookup {
    * Consider using {@link #getTopLevelEditor()} if you don't need injected editor.
    * @return editor, possibly injected, where this lookup is shown
    */
-  
   Editor getEditor();
 
   /**
    * @return the non-injected editor where this lookup is shown
    */
-  
   Editor getTopLevelEditor();
 
   

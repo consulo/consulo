@@ -43,7 +43,6 @@ public interface HierarchyProvider extends LanguageExtension {
    * @param target the element to view the hierarchy for.
    * @return the browser instance.
    */
-  
   HierarchyBrowser createHierarchyBrowser(PsiElement target);
 
   /**

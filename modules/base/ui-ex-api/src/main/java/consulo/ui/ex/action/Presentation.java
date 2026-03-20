@@ -495,7 +495,6 @@ public final class Presentation implements Cloneable {
     /**
      * @see Presentation#setKeepPopupOnPerform(KeepPopupOnPerform)
      */
-    
     public KeepPopupOnPerform getKeepPopupOnPerform() {
         boolean requestedBit = BitUtil.isSet(myFlags, IS_KEEP_POPUP_IF_REQUESTED);
         boolean preferedBit = BitUtil.isSet(myFlags, IS_KEEP_POPUP_IF_PREFERRED);

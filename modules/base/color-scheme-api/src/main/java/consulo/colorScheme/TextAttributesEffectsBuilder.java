@@ -48,7 +48,6 @@ public class TextAttributesEffectsBuilder {
     /**
      * Creates a builder without any effects
      */
-    
     public static TextAttributesEffectsBuilder create() {
         return new TextAttributesEffectsBuilder();
     }
@@ -56,7 +55,6 @@ public class TextAttributesEffectsBuilder {
     /**
      * Creates a builder with effects from {@code deepestAttributes}
      */
-    
     public static TextAttributesEffectsBuilder create(TextAttributes deepestAttributes) {
         return create().coverWith(deepestAttributes);
     }
@@ -65,7 +63,6 @@ public class TextAttributesEffectsBuilder {
      * Applies effects from {@code attributes} above current state of the merger. Effects may override mutually exclusive ones. E.g
      * If current state has underline and we applying attributes with wave underline, underline effect will be removed.
      */
-    
     public final TextAttributesEffectsBuilder coverWith(TextAttributes attributes) {
         attributes.forEachAdditionalEffect(this::coverWith);
         coverWith(attributes.getEffectType(), attributes.getEffectColor());
@@ -75,7 +72,6 @@ public class TextAttributesEffectsBuilder {
     /**
      * Applies effects from {@code attributes} if effect slots are not used.
      */
-    
     public final TextAttributesEffectsBuilder slipUnder(TextAttributes attributes) {
         slipUnder(attributes.getEffectType(), attributes.getEffectColor());
         attributes.forEachAdditionalEffect(this::slipUnder);
@@ -86,7 +82,6 @@ public class TextAttributesEffectsBuilder {
      * Applies effect with {@code effectType} and {@code effectColor} to the current state. Effects may override mutually exclusive ones. E.g
      * If current state has underline and we applying attributes with wave underline, underline effect will be removed.
      */
-    
     public TextAttributesEffectsBuilder coverWith(@Nullable EffectType effectType, @Nullable ColorValue effectColor) {
         return mutateBuilder(effectType, effectColor, myEffectsMap::put);
     }
@@ -94,7 +89,6 @@ public class TextAttributesEffectsBuilder {
     /**
      * Applies effect with {@code effectType} and {@code effectColor} to the current state if effect slot is not used.
      */
-    
     public TextAttributesEffectsBuilder slipUnder(@Nullable EffectType effectType, @Nullable ColorValue effectColor) {
         return mutateBuilder(effectType, effectColor, myEffectsMap::putIfAbsent);
     }
@@ -120,7 +114,6 @@ public class TextAttributesEffectsBuilder {
     /**
      * @return map of {@link EffectType} => {@link Color} representation of builder state
      */
-    
     Map<EffectType, ColorValue> getEffectsMap() {
         if (myEffectsMap.isEmpty()) {
             return Collections.emptyMap();
@@ -140,7 +133,6 @@ public class TextAttributesEffectsBuilder {
      * @param targetAttributes passed targetAttributes
      * @apiNote this method is not a thread safe, builder can't be modified in some other thread when applying to something
      */
-    
     public TextAttributes applyTo(TextAttributes targetAttributes) {
         Iterator<EffectDescriptor> effectsIterator = myEffectsMap.values().iterator();
         if (!effectsIterator.hasNext()) {

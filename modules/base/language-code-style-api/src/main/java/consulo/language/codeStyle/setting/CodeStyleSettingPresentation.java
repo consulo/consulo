@@ -392,7 +392,6 @@ public class CodeStyleSettingPresentation {
    * @param settingsType type to get standard settings for
    * @return mapping setting groups to contained setting presentations
    */
-  
   public static Map<SettingsGroup, List<CodeStyleSettingPresentation>> getStandardSettings(LanguageCodeStyleSettingsProvider.SettingsType settingsType) {
     switch (settingsType) {
       case BLANK_LINES_SETTINGS:

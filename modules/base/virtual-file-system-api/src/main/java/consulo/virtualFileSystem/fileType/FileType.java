@@ -38,7 +38,6 @@ public interface FileType {
      *
      * @return The file type id.
      */
-    
     String getId();
 
     
@@ -51,7 +50,6 @@ public interface FileType {
      *
      * @return The file type description.
      */
-    
     @Deprecated
     @DeprecationInfo("Override #getDisplayName()")
     LocalizeValue getDescription();
@@ -61,7 +59,6 @@ public interface FileType {
      *
      * @return The extension, not including the leading '.'.
      */
-    
     default String getDefaultExtension() {
         return "";
     }
@@ -71,8 +68,6 @@ public interface FileType {
      *
      * @return The icon instance, or null if no icon should be shown.
      */
-
-    
     Image getIcon();
 
     /**

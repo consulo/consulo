@@ -30,7 +30,6 @@ public interface DocumentContent extends DiffContent {
   /**
    * Represents this content as Document
    */
-  
   Document getDocument();
 
   /**

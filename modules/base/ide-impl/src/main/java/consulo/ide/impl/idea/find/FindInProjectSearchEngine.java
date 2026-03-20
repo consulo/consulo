@@ -30,7 +30,6 @@ public interface FindInProjectSearchEngine {
     /**
      * @return files that contain non-trivial search results for corresponding {@link FindModel}.
      */
-    
     Collection<VirtualFile> searchForOccurrences();
 
     /**

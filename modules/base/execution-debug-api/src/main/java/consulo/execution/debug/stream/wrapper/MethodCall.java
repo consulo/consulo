@@ -17,7 +17,6 @@ public interface MethodCall  {
    * collection.Cast&lt;int&gt;()`, so for this call this method should return `&lt;int&gt;`.  This string is necessary for a code generator to recreate
    * a method call for evaluation.
    */
-  
  String getGenericArguments();
 
   

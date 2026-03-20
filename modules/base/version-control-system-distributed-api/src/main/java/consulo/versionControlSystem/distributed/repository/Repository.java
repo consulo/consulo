@@ -134,6 +134,5 @@ public interface Repository extends Disposable {
   /**
    * Returns a detailed String representation suitable for logging purposes.
    */
-  
   String toLogString();
 }

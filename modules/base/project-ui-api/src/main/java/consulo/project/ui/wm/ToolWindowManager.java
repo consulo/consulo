@@ -115,7 +115,6 @@ public abstract class ToolWindowManager {
     /**
      * @return array of <code>id</code>s of all registered tool windows.
      */
-    
     public abstract String[] getToolWindowIds();
 
     /**
@@ -139,7 +138,6 @@ public abstract class ToolWindowManager {
     /**
      * Utility method for quick access to the focus manager
      */
-    
     public abstract IdeFocusManager getFocusManager();
 
     public abstract void notifyByBalloon(String toolWindowId, NotificationType type, String htmlBody);

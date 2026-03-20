@@ -288,7 +288,6 @@ public class VfsData {
      *
      * @see VirtualDirectoryImpl#findIndex(int[], CharSequence, boolean)
      */
-    
     volatile int[] myChildrenIds = ArrayUtil.EMPTY_INT_ARRAY; // guarded by this
 
     // assigned under lock(this) only; accessed/modified map contents under lock(myAdoptedNames)
@@ -367,7 +366,6 @@ public class VfsData {
     /**
      * Must be called in synchronized(VfsData)
      */
-    
     private Set<CharSequence> getOrCreateAdoptedNames(boolean caseSensitive) {
       Set<CharSequence> adopted = myAdoptedNames;
       if (adopted == null) {

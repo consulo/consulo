@@ -61,6 +61,5 @@ public abstract class RootDetector {
    * @param progressIndicator can be used to show information about the progress and to abort searching if process is cancelled
    * @return suitable roots
    */
-  
   public abstract Collection<VirtualFile> detectRoots(VirtualFile rootCandidate, ProgressIndicator progressIndicator);
 }

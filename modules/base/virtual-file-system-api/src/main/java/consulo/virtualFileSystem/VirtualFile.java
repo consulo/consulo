@@ -138,7 +138,6 @@ public abstract class VirtualFile extends UserDataHolderBase implements Modifica
    *
    * @see #getNameSequence()
    */
-  
   public abstract String getName();
 
   
@@ -151,7 +150,6 @@ public abstract class VirtualFile extends UserDataHolderBase implements Modifica
    *
    * @return the {@link VirtualFileSystem}
    */
-  
   public abstract VirtualFileSystem getFileSystem();
 
   /**
@@ -179,7 +177,6 @@ public abstract class VirtualFile extends UserDataHolderBase implements Modifica
    * @see VirtualFile#getPath
    * @see VirtualFileSystem#getProtocol
    */
-  
   public String getUrl() {
     return VirtualFileManager.constructUrl(getFileSystem().getProtocol(), getPath());
   }
@@ -191,7 +188,6 @@ public abstract class VirtualFile extends UserDataHolderBase implements Modifica
    * @return the presentable URL.
    * @see VirtualFileSystem#extractPresentableUrl
    */
-  
   public final String getPresentableUrl() {
     return getFileSystem().extractPresentableUrl(getPath());
   }
@@ -216,7 +212,6 @@ public abstract class VirtualFile extends UserDataHolderBase implements Modifica
    * @return the name without extension
    * if there is no '.' in it
    */
-  
   public String getNameWithoutExtension() {
     return StringUtil.trimExtension(getName());
   }
@@ -410,7 +405,6 @@ public abstract class VirtualFile extends UserDataHolderBase implements Modifica
    * @return <code>VirtualFile</code> representing the created directory
    * @throws IOException if directory failed to be created
    */
-  
   public VirtualFile createChildDirectory(Object requestor, String name) throws IOException {
     if (!isDirectory()) {
       throw new IOException(VirtualFileSystemLocalize.directoryCreateWrongParentError().get());
@@ -441,7 +435,6 @@ public abstract class VirtualFile extends UserDataHolderBase implements Modifica
    * @return <code>VirtualFile</code> representing the created file
    * @throws IOException if file failed to be created
    */
-  
   public VirtualFile createChildData(Object requestor, String name) throws IOException {
     if (!isDirectory()) {
       throw new IOException(VirtualFileSystemLocalize.fileCreateWrongParentError().get());
@@ -515,7 +508,6 @@ public abstract class VirtualFile extends UserDataHolderBase implements Modifica
   /**
    * @return Retrieve the charset file has been loaded with (if loaded) and would be saved with (if would).
    */
-  
   public Charset getCharset() {
     Charset charset = getStoredCharset();
     if (charset == null) {
@@ -611,7 +603,6 @@ public abstract class VirtualFile extends UserDataHolderBase implements Modifica
    * @throws IOException if an I/O error occurs
    * @see #getModificationStamp()
    */
-  
   public abstract OutputStream getOutputStream(Object requestor, long newModificationStamp, long newTimeStamp) throws IOException;
 
   /**
@@ -623,7 +614,6 @@ public abstract class VirtualFile extends UserDataHolderBase implements Modifica
    * @see #contentsToByteArray(boolean)
    * @see #getInputStream()
    */
-  
   public abstract byte[] contentsToByteArray() throws IOException;
 
   /**
@@ -634,7 +624,6 @@ public abstract class VirtualFile extends UserDataHolderBase implements Modifica
    * @throws IOException if an I/O error occurs
    * @see #contentsToByteArray()
    */
-  
   public byte[] contentsToByteArray(boolean cacheContent) throws IOException {
     return contentsToByteArray();
   }

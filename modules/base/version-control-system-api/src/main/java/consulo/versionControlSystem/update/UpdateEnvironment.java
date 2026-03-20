@@ -57,7 +57,6 @@ public interface UpdateEnvironment extends VcsProviderMarker {
    *                                  cancellation can be reported by returning true from
    *                                  {@link UpdateSession#isCanceled}.
    */
-  
   UpdateSession updateDirectories(FilePath[] contentRoots, UpdatedFiles updatedFiles,
                                   ProgressIndicator progressIndicator, Ref<SequentialUpdatesContext> context) throws ProcessCanceledException;
 

@@ -34,7 +34,6 @@ public interface CustomizableIntentionAction extends IntentionAction {
   /**
    * Get text specifically for tooltip view
    */
-  
   default LocalizeValue getTooltipText() {
     return getText();
   }

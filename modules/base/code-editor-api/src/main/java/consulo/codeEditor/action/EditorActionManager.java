@@ -63,7 +63,6 @@ public abstract class EditorActionManager {
    *
    * @return the typed action service instance.
    */
-  
   public abstract TypedAction getTypedAction();
 
   /**

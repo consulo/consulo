@@ -153,7 +153,6 @@ public class TextEditorComponent implements DataProvider, Disposable {
   /**
    * @return most recently used editor. This method never returns {@code null}.
    */
-  
   public Editor getEditor() {
     return myEditor;
   }

@@ -514,7 +514,6 @@ public final class LoadTextUtil {
    * @return Full or truncated CharSequence with file content
    * @throws IllegalArgumentException for binary files
    */
-  
   public static CharSequence loadText(VirtualFile file, int limit) {
     FileType type = file.getFileType();
     if (type.isBinary())

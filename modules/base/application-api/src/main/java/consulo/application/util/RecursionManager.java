@@ -75,7 +75,6 @@ public class RecursionManager {
      * @return a helper object which allow you to perform reentrancy-safe computations and check whether caching will be safe.
      * Don't use it unless you need to call it from several places in the code, inspect the computation stack and/or prohibit result caching.
      */
-    
     public static <Key> RecursionGuard<Key> createGuard(final String id) {
         return new RecursionGuard<>() {
             @Override
@@ -169,7 +168,6 @@ public class RecursionManager {
      *
      * @return an object representing the current stack state, managed by {@link RecursionManager}
      */
-    
     public static RecursionGuard.StackStamp markStack() {
         int stamp = ourStack.get().reentrancyCount;
         return () -> stamp == ourStack.get().reentrancyCount;

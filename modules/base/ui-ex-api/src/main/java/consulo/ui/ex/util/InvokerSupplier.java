@@ -22,6 +22,5 @@ public interface InvokerSupplier {
   /**
    * @return preferable invoker to be used to access the supplier
    */
-  
   Invoker getInvoker();
 }

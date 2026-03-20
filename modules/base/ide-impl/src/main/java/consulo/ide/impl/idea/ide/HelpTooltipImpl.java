@@ -90,7 +90,6 @@ import java.util.function.BooleanSupplier;
  * You can create it using one of its static methods and pass title/description/link. This label can also be used in forms.
  * The UI designer will offer to create {@code private void createUIComponents()} method where you can create the label with a static method.</p>
  */
-
 public class HelpTooltipImpl implements HelpTooltip {
     private static final Color BACKGROUND_COLOR = JBColor.namedColor("ToolTip.background", new JBColor(0xf7f7f7, 0x474a4c));
     public static final Color SHORTCUT_COLOR = JBColor.namedColor("ToolTip.shortcutForeground", new JBColor(0x787878, 0x999999));

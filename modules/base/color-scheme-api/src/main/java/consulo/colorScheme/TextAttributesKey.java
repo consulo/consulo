@@ -42,7 +42,6 @@ public final class TextAttributesKey implements Comparable<TextAttributesKey> {
      * identifier was already registered.
      * @deprecated Use {@link #createTextAttributesKey(String, TextAttributesKey)} to guarantee compatibility with generic color schemes.
      */
-    
     @Deprecated
     @DeprecationInfo("Use #of()")
     public static TextAttributesKey createTextAttributesKey(String externalName, TextAttributes defaultAttributes) {
@@ -69,7 +68,6 @@ public final class TextAttributesKey implements Comparable<TextAttributesKey> {
      * @return the new key instance, or an existing instance if the key with the same
      * identifier was already registered.
      */
-    
     @Deprecated
     @DeprecationInfo("Use #of()")
     public static TextAttributesKey createTextAttributesKey(String externalName, TextAttributesKey fallbackAttributeKey) {
@@ -83,7 +81,6 @@ public final class TextAttributesKey implements Comparable<TextAttributesKey> {
      * @return the new key instance, or an existing instance if the key with the same
      * identifier was already registered.
      */
-    
     @Deprecated
     @DeprecationInfo("Use #of()")
     public static TextAttributesKey createTextAttributesKey(String externalName) {
@@ -97,7 +94,6 @@ public final class TextAttributesKey implements Comparable<TextAttributesKey> {
      * @return the new key instance, or an existing instance if the key with the same
      * identifier was already registered.
      */
-    
     public static TextAttributesKey of(String externalName) {
         return find(externalName);
     }
@@ -118,7 +114,6 @@ public final class TextAttributesKey implements Comparable<TextAttributesKey> {
      * @return the new key instance, or an existing instance if the key with the same
      * identifier was already registered.
      */
-    
     public static TextAttributesKey of(String externalName, TextAttributesKey fallbackAttributeKey) {
         TextAttributesKey key = find(externalName);
         key.setFallbackAttributeKey(fallbackAttributeKey);

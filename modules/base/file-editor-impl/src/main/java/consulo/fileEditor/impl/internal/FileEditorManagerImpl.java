@@ -750,7 +750,6 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
      *              passed file is valid.
      * @param entry map between FileEditorProvider and FileEditorState. If this parameter
      */
-    
     public Pair<FileEditor[], FileEditorProvider[]> openFileImpl3(
         UIAccess uiAccess,
         FileEditorWindow window,
@@ -785,7 +784,6 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
     /**
      * This method can be invoked from background thread. Of course, UI for returned editors should be accessed from EDT in any case.
      */
-    
     public Pair<FileEditor[], FileEditorProvider[]> openFileImpl4(
         UIAccess uiAccess,
         FileEditorWindow window,

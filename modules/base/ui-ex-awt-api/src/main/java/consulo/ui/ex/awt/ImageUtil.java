@@ -41,7 +41,6 @@ public class ImageUtil {
      * @return a HiDPI-aware BufferedImage in device scale
      * @throws IllegalArgumentException if {@code width} or {@code height} is not greater than 0
      */
-    
     public static BufferedImage createImage(int width, int height, int type) {
         if (JreHiDpiUtil.isJreHiDPIEnabled()) {
             return RetinaImage.create(width, height, type);
@@ -60,7 +59,6 @@ public class ImageUtil {
      * @return a HiDPI-aware BufferedImage in the graphics scale
      * @throws IllegalArgumentException if {@code width} or {@code height} is not greater than 0
      */
-    
     public static BufferedImage createImage(GraphicsConfiguration gc, int width, int height, int type) {
         if (UIUtil.isJreHiDPI(gc)) {
             return RetinaImage.create(gc, width, height, type);
@@ -79,7 +77,6 @@ public class ImageUtil {
      * @return a HiDPI-aware BufferedImage in the graphics scale
      * @throws IllegalArgumentException if {@code width} or {@code height} is not greater than 0
      */
-    
     public static BufferedImage createImage(Graphics g, int width, int height, int type) {
         return createImage(g, width, height, type, PaintUtil.RoundingMode.FLOOR);
     }
@@ -88,7 +85,6 @@ public class ImageUtil {
      * @throws IllegalArgumentException if {@code width} or {@code height} is not greater than 0
      * @see #createImage(GraphicsConfiguration, double, double, int, PaintUtil.RoundingMode)
      */
-    
     public static BufferedImage createImage(Graphics g, double width, double height, int type, PaintUtil.RoundingMode rm) {
         if (g instanceof Graphics2D g2d) {
             if (UIUtil.isJreHiDPI(g2d)) {

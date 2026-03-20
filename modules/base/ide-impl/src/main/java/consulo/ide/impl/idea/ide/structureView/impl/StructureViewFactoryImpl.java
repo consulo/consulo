@@ -48,7 +48,6 @@ import java.util.HashSet;
 /**
  * @author Eugene Belyaev
  */
-
 @Singleton
 @State(name = "StructureViewFactory", storages = {@Storage(file = StoragePathMacros.WORKSPACE_FILE)})
 @ServiceImpl

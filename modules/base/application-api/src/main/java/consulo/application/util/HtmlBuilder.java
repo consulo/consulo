@@ -236,7 +236,6 @@ public final class HtmlBuilder {
     /**
      * @return a fragment chunk that contains all the chunks of this builder.
      */
-    
     public HtmlChunk toFragment() {
         if (myChunks.isEmpty()) {
             return HtmlChunk.empty();

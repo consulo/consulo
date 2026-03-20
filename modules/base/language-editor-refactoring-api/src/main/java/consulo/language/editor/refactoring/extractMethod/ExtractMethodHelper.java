@@ -89,7 +89,6 @@ public class ExtractMethodHelper {
      * @return list of discovered duplicate code fragments or empty list if user interrupted the search
      * @see #replaceDuplicates(PsiElement, Editor, Consumer, List)
      */
-    
     public static List<SimpleMatch> collectDuplicates(
         SimpleDuplicatesFinder finder,
         List<PsiElement> searchScopes,

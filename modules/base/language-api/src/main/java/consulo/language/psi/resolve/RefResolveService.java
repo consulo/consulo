@@ -44,7 +44,6 @@ public abstract class RefResolveService {
   /**
    * @return subset of scope containing only files which reference the virtualFile
    */
-  
   public abstract GlobalSearchScope restrictByBackwardIds(VirtualFile virtualFile, GlobalSearchScope scope);
 
   /**

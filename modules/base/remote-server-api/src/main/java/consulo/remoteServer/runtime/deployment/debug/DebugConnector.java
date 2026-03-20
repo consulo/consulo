@@ -39,7 +39,6 @@ public abstract class DebugConnector<D extends DebugConnectionData, R extends De
   /**
    * @see JavaDebuggerLauncher#getInstance()
    */
-  
   public abstract DebuggerLauncher<D> getLauncher();
 
   

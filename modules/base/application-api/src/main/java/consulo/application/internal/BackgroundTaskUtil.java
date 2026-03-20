@@ -64,7 +64,6 @@ public class BackgroundTaskUtil {
    * will lead to "Loading..." visible between current moment and execution of invokeLater() event.
    * This period can be very short and looks like 'jumping' if background operation is fast.
    */
-  
   @RequiredUIAccess
   public static ProgressIndicator executeAndTryWait(Function<ProgressIndicator, /*@NotNull*/ Runnable> backgroundTask,
                                                     @Nullable Runnable onSlowAction,
@@ -148,7 +147,6 @@ public class BackgroundTaskUtil {
    * </ul>
    * Callback will be executed on the same thread as the background task.
    */
-  
   private static <T> Pair<T, ProgressIndicator> computeInBackgroundAndTryWait(Function<ProgressIndicator, T> task,
                                                                               BiConsumer<T, ProgressIndicator> asyncCallback,
                                                                               ModalityState modality,
@@ -185,7 +183,6 @@ public class BackgroundTaskUtil {
    * This allows to stop a lengthy background activity by calling {@link ProgressManager#checkCanceled()}
    * and avoid Already Disposed exceptions (in particular, because checkCanceled() is called in {@link ServiceManager#getService(Class)}.
    */
-  
   public static ProgressIndicator executeOnPooledThread(Disposable parent, Runnable runnable) {
     ProgressIndicator indicator = new EmptyProgressIndicator();
     indicator.start();
@@ -271,7 +268,6 @@ public class BackgroundTaskUtil {
    *
    * @see #syncPublisher(Class)
    */
-  
   public static <L> L syncPublisher(ComponentManager project, Class<L> topic) throws ProcessCanceledException {
     return AccessRule.read(() -> {
       if (project.isDisposed()) throw new ProcessCanceledException();
@@ -286,7 +282,6 @@ public class BackgroundTaskUtil {
    *
    * @see #syncPublisher(ComponentManager, Class)
    */
-  
   public static <L> L syncPublisher(Class<L> topic) throws ProcessCanceledException {
     return AccessRule.read(() -> {
       if (ApplicationManager.getApplication().isDisposed()) throw new ProcessCanceledException();

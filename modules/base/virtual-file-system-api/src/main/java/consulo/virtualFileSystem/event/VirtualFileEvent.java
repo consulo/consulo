@@ -67,7 +67,6 @@ public class VirtualFileEvent extends EventObject {
    *
    * @return the changed file.
    */
-  
   public VirtualFile getFile() {
     return myFile;
   }
@@ -77,7 +76,6 @@ public class VirtualFileEvent extends EventObject {
    *
    * @return the name of the changed file.
    */
-  
   public String getFileName() {
     return myFileName;
   }

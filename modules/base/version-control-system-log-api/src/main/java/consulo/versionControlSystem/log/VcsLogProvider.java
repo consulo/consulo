@@ -30,7 +30,6 @@ public interface VcsLogProvider {
    * @param requirements some limitations on commit data that should be returned, e.g. the number of commits.
    * @return given amount of ordered commits and <b>all</b> references in the repository.
    */
- 
   DetailedLogData readFirstBlock(VirtualFile root, Requirements requirements) throws VcsException;
 
   /**
@@ -40,7 +39,6 @@ public interface VcsLogProvider {
    *
    * @return all references and all authors in the repository.
    */
- 
   LogData readAllHashes(VirtualFile root, Consumer<TimedVcsCommit> commitConsumer) throws VcsException;
 
   /**
@@ -60,7 +58,6 @@ public interface VcsLogProvider {
   /**
    * Reads those details of the given commits, which are necessary to be shown in the log table.
    */
- 
   List<? extends VcsShortCommitDetails> readShortDetails(VirtualFile root, List<String> hashes) throws VcsException;
 
   /**
@@ -70,7 +67,6 @@ public interface VcsLogProvider {
    * <p>
    * To be removed after 2017.1 release.
    */
- 
   @Deprecated
   default List<? extends VcsFullCommitDetails> readFullDetails(VirtualFile root, List<String> hashes) throws VcsException {
     List<VcsFullCommitDetails> result = ContainerUtil.newArrayList();
@@ -82,14 +78,12 @@ public interface VcsLogProvider {
    * <p>Returns the VCS which is supported by this provider.</p>
    * <p>If there will be several VcsLogProviders which support the same VCS, only one will be chosen. It is undefined, which one.</p>
    */
- 
   VcsKey getSupportedVcs();
 
   /**
    * Returns the {@link VcsLogRefManager} which will be used to identify positions of references in the log table, on the branches panel,
    * and on the details panel.
    */
- 
   VcsLogRefManager getReferenceManager();
 
   /**
@@ -101,7 +95,6 @@ public interface VcsLogProvider {
    * @param refresher The refresher which should be notified about the need of refresh.
    * @return Disposable that unsubscribes from events on dispose.
    */
- 
   Disposable subscribeToRootRefreshEvents(Collection<VirtualFile> roots, VcsLogRefresher refresher);
 
   /**
@@ -109,7 +102,6 @@ public interface VcsLogProvider {
    *
    * @param maxCount maximum number of commits to request from the VCS, or -1 for unlimited.
    */
- 
   List<TimedVcsCommit> getCommitsMatchingFilter(VirtualFile root, VcsLogFilterCollection filterCollection, int maxCount) throws VcsException;
 
   /**
@@ -121,7 +113,6 @@ public interface VcsLogProvider {
   /**
    * Returns the list of names of branches/references which contain the given commit.
    */
- 
   Collection<String> getContainingBranches(VirtualFile root, Hash commitHash) throws VcsException;
 
   /**

@@ -46,7 +46,6 @@ public interface ContentEntry extends Synthetic {
    *
    * @return URL of content root, that should never be null.
    */
-  
   String getUrl();
 
   

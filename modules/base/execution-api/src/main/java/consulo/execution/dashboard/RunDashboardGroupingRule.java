@@ -37,6 +37,5 @@ public interface RunDashboardGroupingRule {
    *
    * @return the rule identifier.
    */
-  
   String getName();
 }

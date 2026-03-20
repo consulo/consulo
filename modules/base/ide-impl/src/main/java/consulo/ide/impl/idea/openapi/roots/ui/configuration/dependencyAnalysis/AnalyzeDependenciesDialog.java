@@ -54,7 +54,6 @@ public class AnalyzeDependenciesDialog extends DialogWrapper {
   /**
    * {@inheritDoc}
    */
-  
   @Override
   protected Action[] createActions() {
     return new Action[]{getOKAction()};

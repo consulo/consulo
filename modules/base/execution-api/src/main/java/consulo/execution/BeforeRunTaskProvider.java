@@ -72,7 +72,6 @@ public abstract class BeforeRunTaskProvider<T extends BeforeRunTask> {
     /**
      * @return <code>true</code> if task configuration is changed
      */
-    
     @RequiredUIAccess
     public abstract AsyncResult<Void> configureTask(RunConfiguration runConfiguration, T task);
 

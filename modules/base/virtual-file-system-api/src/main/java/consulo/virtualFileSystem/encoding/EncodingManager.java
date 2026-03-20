@@ -34,7 +34,6 @@ public interface EncodingManager extends EncodingRegistry {
   /**
    * @return returns empty for system default
    */
-  
   String getDefaultCharsetName();
 
   void setDefaultCharsetName(String name);

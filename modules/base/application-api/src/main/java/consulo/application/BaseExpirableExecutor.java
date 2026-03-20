@@ -17,7 +17,6 @@ public interface BaseExpirableExecutor<E extends BaseExpirableExecutor<E>> {
   /**
    * @return an executor that no longer invokes the given runnable after the supplied Disposable is disposed
    */
-  
   @Contract(pure = true)
   E expireWith(Disposable parentDisposable);
 

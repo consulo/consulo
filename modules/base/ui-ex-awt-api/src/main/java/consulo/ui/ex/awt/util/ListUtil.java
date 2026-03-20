@@ -333,7 +333,6 @@ public class ListUtil {
     /**
      * @noinspection unchecked
      */
-    
     private static <T, ModelType extends ListModel<T>> ListModelExtension<T, ModelType> getExtension(ModelType model) {
         if (model instanceof DefaultListModel) {
             return DEFAULT_MODEL;

@@ -32,6 +32,5 @@ public interface ModuleDescription {
   /**
    * Names of the modules on which the current module depend.
    */
-  
   List<String> getDependencyModuleNames();
 }

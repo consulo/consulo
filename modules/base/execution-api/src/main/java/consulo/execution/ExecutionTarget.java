@@ -27,7 +27,6 @@ public abstract class ExecutionTarget {
   /**
    * Id is used to save selected target between restarts
    */
-  
   public abstract String getId();
 
   

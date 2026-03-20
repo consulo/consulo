@@ -68,7 +68,6 @@ public interface PsiDirectory extends PsiFileSystemItem {
      *
      * @return the array of subdirectories.
      */
-    
     PsiDirectory[] getSubdirectories();
 
     /**
@@ -76,7 +75,6 @@ public interface PsiDirectory extends PsiFileSystemItem {
      *
      * @return the array of files.
      */
-    
     @RequiredReadAction
     PsiFile[] getFiles();
 
@@ -103,7 +101,6 @@ public interface PsiDirectory extends PsiFileSystemItem {
      * @return the created directory instance.
      * @throws IncorrectOperationException if the operation failed for some reason.
      */
-    
     PsiDirectory createSubdirectory(String name) throws IncorrectOperationException;
 
     /**
@@ -123,7 +120,6 @@ public interface PsiDirectory extends PsiFileSystemItem {
      * @return the created file instance.
      * @throws IncorrectOperationException if the operation failed for some reason.
      */
-    
     PsiFile createFile(String name) throws IncorrectOperationException;
 
     

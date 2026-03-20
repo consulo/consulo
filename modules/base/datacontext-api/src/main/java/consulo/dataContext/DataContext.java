@@ -52,7 +52,6 @@ public interface DataContext {
      * @param key the data key for which the value is requested.
      * @return not null value, or throws {@link IllegalArgumentException}.
      */
-    
     default <T> T getRequiredData(Key<T> key) {
         T data = getData(key);
         if (data == null) {

@@ -36,7 +36,6 @@ public abstract class CompletionFinalSorter {
   /**
    * For debugging purposes, provide weights by which completion will be sorted.
    */
-  
   public abstract Map<LookupElement, List<Pair<String, Object>>> getRelevanceObjects(Iterable<LookupElement> elements);
 
   //@ApiStatus.Internal

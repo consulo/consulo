@@ -54,7 +54,6 @@ public interface TreePatcher extends LanguageExtension {
    *
    * @return first part of the split
    */
-  
   default LeafElement split(LeafElement leaf, int offset, CharTable table) {
     CharSequence chars = leaf.getChars();
     LeafElement leftPart = ASTFactory.leaf(leaf.getElementType(), table.intern(chars, 0, offset));
@@ -69,7 +68,6 @@ public interface TreePatcher extends LanguageExtension {
    * Removes "middle" part of the leaf and returns the new leaf with content of the right and left parts
    * e.g. if we process whitespace leaf " \n " and range "1, 2" the result will be new leaf with content "  "
    */
-  
   default LeafElement removeRange(LeafElement leaf, TextRange rangeToRemove, CharTable table) {
     CharSequence chars = leaf.getChars();
     String res = rangeToRemove.replace(chars.toString(), "");

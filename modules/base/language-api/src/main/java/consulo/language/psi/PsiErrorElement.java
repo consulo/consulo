@@ -41,6 +41,5 @@ public interface PsiErrorElement extends PsiElement {
    *
    * @return the error description.
    */
-  
   LocalizeValue getErrorDescriptionValue();
 }

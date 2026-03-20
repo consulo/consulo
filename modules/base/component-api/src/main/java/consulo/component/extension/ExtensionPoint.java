@@ -85,7 +85,6 @@ public interface ExtensionPoint<E> extends ModificationTracker, Iterable<E> {
     /**
      * Sort extensions depends on @{@link ExtensionImpl#order()} - internal logic
      */
-    
     default List<E> sort(List<E> extensionsList) {
         return extensionsList;
     }
@@ -93,7 +92,6 @@ public interface ExtensionPoint<E> extends ModificationTracker, Iterable<E> {
     /**
      * Return cache or build it. This cache will be dropped if extensions reloaded (for example plugin added/removed)
      */
-    
     <K> K getOrBuildCache(ExtensionPointCacheKey<E, K> key);
 
     

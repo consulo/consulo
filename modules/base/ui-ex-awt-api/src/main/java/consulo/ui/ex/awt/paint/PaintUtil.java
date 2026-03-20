@@ -307,7 +307,6 @@ public class PaintUtil {
    * }
    * </pre>
    */
-  
   public static Point2D getFractOffsetInRootPane(JComponent comp) {
     if (!comp.isShowing() || !isFractionalScale(comp.getGraphicsConfiguration().getDefaultTransform())) return new Point2D.Double();
     int x = 0;
@@ -326,7 +325,6 @@ public class PaintUtil {
   /**
    * Returns negated Point2D instance.
    */
-  
   public static Point2D negate(Point2D pt) {
     return new Point2D.Double(-pt.getX(), -pt.getY());
   }

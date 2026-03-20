@@ -1007,7 +1007,6 @@ public class CodeStyleSettings extends LegacyCodeStyleSettings implements Clonea
      * @see FileTypeIndentOptionsProvider
      * @see LanguageCodeStyleSettingsProvider
      */
-   
     public CommonCodeStyleSettings.IndentOptions getIndentOptions(@Nullable FileType fileType) {
         CommonCodeStyleSettings.IndentOptions indentOptions = getLanguageIndentOptions(fileType);
         if (indentOptions != null) {
@@ -1040,7 +1039,6 @@ public class CodeStyleSettings extends LegacyCodeStyleSettings implements Clonea
      * @see FileTypeIndentOptionsProvider
      * @see LanguageCodeStyleSettingsProvider
      */
-   
     public CommonCodeStyleSettings.IndentOptions getIndentOptionsByDocument(@Nullable Project project, Document document) {
         PsiFile file = project != null ? PsiDocumentManager.getInstance(project).getPsiFile(document) : null;
         if (file != null) {
@@ -1076,7 +1074,6 @@ public class CodeStyleSettings extends LegacyCodeStyleSettings implements Clonea
      * @return Indent options from the associated document or file indent options providers.
      * @see FileIndentOptionsProvider
      */
-   
     @RequiredReadAction
     public CommonCodeStyleSettings.IndentOptions getIndentOptionsByFile(
         @Nullable PsiFile file,
@@ -1367,7 +1364,6 @@ public class CodeStyleSettings extends LegacyCodeStyleSettings implements Clonea
      * returns the instance of settings for this language. Otherwise returns new instance of common code style settings
      * with default values.
      */
-   
     public CommonCodeStyleSettings getCommonSettings(@Nullable Language lang) {
         CommonCodeStyleSettings settings = myCommonSettingsManager.getCommonSettings(lang);
         if (settings == null) {
@@ -1553,7 +1549,6 @@ public class CodeStyleSettings extends LegacyCodeStyleSettings implements Clonea
      * @return Language or default soft margins.
      * @see #getDefaultSoftMargins()
      */
-   
     public List<Integer> getSoftMargins(@Nullable Language language) {
         if (language != null) {
             CommonCodeStyleSettings languageSettings = myCommonSettingsManager.getCommonSettings(language);
@@ -1579,7 +1574,6 @@ public class CodeStyleSettings extends LegacyCodeStyleSettings implements Clonea
     /**
      * @return Default (root) soft margins used for languages not defining them explicitly.
      */
-   
     public List<Integer> getDefaultSoftMargins() {
         return mySoftMargins.getValues();
     }

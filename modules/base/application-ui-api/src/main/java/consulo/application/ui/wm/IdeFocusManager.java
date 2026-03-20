@@ -87,7 +87,6 @@ public interface IdeFocusManager extends FocusRequestor {
     /**
      * Requests default focus. The method should not be called by the user code.
      */
-    
     public abstract AsyncResult<Void> requestDefaultFocus(boolean forced);
 
     /**

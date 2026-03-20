@@ -41,7 +41,6 @@ public interface ArrangementSettings extends Cloneable {
    * @deprecated collect match rules from {@link #getSections()}
    * @return
    */
-  
   List<? extends ArrangementMatchRule> getRules();
 
   /**
@@ -50,7 +49,6 @@ public interface ArrangementSettings extends Cloneable {
    * Example: 'public static' rule would have higher priority then 'public'
    * @return list of rules sorted in order of matching
    */
-  
   List<? extends ArrangementMatchRule> getRulesSortedByPriority();
 
   

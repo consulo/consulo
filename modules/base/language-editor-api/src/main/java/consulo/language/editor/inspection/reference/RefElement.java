@@ -71,7 +71,6 @@ public interface RefElement extends RefEntity {
    *
    * @return the collection of outgoing references.
    */
-  
   Collection<RefElement> getOutReferences();
 
   /**
@@ -79,7 +78,6 @@ public interface RefElement extends RefEntity {
    *
    * @return the collection of incoming references.
    */
-  
   Collection<RefElement> getInReferences();
 
   /**

@@ -39,7 +39,6 @@ public interface ContentRevision {
   /**
    * @return file path of the revision
    */
-  
   FilePath getFile();
 
   /**
@@ -48,6 +47,5 @@ public interface ContentRevision {
    * the currently uncommitted revision.
    * @return revision ID in terms of version control
    */
-  
   VcsRevisionNumber getRevisionNumber();
 }

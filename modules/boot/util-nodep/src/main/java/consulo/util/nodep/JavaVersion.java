@@ -135,7 +135,6 @@ public final class JavaVersion implements Comparable<JavaVersion> {
    * The method attempts to parse {@code "java.runtime.version"} system property first (usually, it is more complete),
    * and falls back to {@code "java.version"} if the former is invalid or differs in {@link #feature} or {@link #minor} numbers.
    */
-
   public static JavaVersion current() {
     if (current == null) {
       JavaVersion fallback = parse(System.getProperty("java.version"));

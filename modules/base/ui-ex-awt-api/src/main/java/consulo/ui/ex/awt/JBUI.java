@@ -407,7 +407,6 @@ public class JBUI {
     /**
      * @deprecated use JBUI.scale(EmptyIcon.create(size)) instead
      */
-    
     public static EmptyIcon emptyIcon(int size) {
         return scale(EmptyIcon.create(size));
     }
@@ -709,7 +708,6 @@ public class JBUI {
         /**
          * Creates a context with the provided scale factors (system scale is ignored)
          */
-        
         public static BaseScaleContext create(Scale... scales) {
             BaseScaleContext ctx = create();
             for (Scale s : scales) ctx.update(s);
@@ -719,7 +717,6 @@ public class JBUI {
         /**
          * Creates a default context with the current user scale
          */
-        
         public static BaseScaleContext create() {
             return new BaseScaleContext();
         }
@@ -952,7 +949,6 @@ public class JBUI {
         /**
          * Creates a context with all scale factors set to 1.
          */
-        
         public static ScaleContext createIdentity() {
             return create(USR_SCALE.of(1), SYS_SCALE.of(1));
         }
@@ -960,7 +956,6 @@ public class JBUI {
         /**
          * Creates a context based on the component's system scale and sticks to it via the {@link #update()} method.
          */
-        
         public static ScaleContext create(@Nullable Component comp) {
             ScaleContext ctx = new ScaleContext(SYS_SCALE.of(sysScale(comp)));
             if (comp != null) {
@@ -972,7 +967,6 @@ public class JBUI {
         /**
          * Creates a context based on the component's (or graphics's) scale and sticks to it via the {@link #update()} method.
          */
-        
         public static ScaleContext create(@Nullable Component component, @Nullable Graphics2D graphics) {
             // Component is preferable to Graphics as a scale provider, as it lets the context stick
             // to the component's actual scale via the update method.
@@ -994,7 +988,6 @@ public class JBUI {
         /**
          * Creates a context based on the gc's system scale
          */
-        
         public static ScaleContext create(@Nullable GraphicsConfiguration gc) {
             return new ScaleContext(SYS_SCALE.of(sysScale(gc)));
         }
@@ -1002,7 +995,6 @@ public class JBUI {
         /**
          * Creates a context based on the g's system scale
          */
-        
         public static ScaleContext create(Graphics2D g) {
             return new ScaleContext(SYS_SCALE.of(sysScale(g)));
         }
@@ -1010,7 +1002,6 @@ public class JBUI {
         /**
          * Creates a context with the provided scale
          */
-        
         public static ScaleContext create(Scale scale) {
             return new ScaleContext(scale);
         }
@@ -1018,7 +1009,6 @@ public class JBUI {
         /**
          * Creates a context with the provided scale factors
          */
-        
         public static ScaleContext create(Scale... scales) {
             ScaleContext ctx = create();
             for (Scale s : scales) ctx.update(s);
@@ -1028,7 +1018,6 @@ public class JBUI {
         /**
          * Creates a default context with the default screen scale and the current user scale
          */
-        
         public static ScaleContext create() {
             return new ScaleContext();
         }
@@ -1151,7 +1140,6 @@ public class JBUI {
         /**
          * @return the scale context
          */
-        
         T getScaleContext();
 
         /**
@@ -1265,7 +1253,6 @@ public class JBUI {
          * @return the icon in the provided pre-scaled state
          * @see JBUI#scale(JBIcon)
          */
-        
         public JBIcon withIconPreScaled(boolean preScaled) {
             setIconPreScaled(preScaled);
             return this;
@@ -1380,7 +1367,6 @@ public class JBUI {
         /**
          * @return a copy of this icon instance
          */
-        
         protected abstract T copy();
     }
 

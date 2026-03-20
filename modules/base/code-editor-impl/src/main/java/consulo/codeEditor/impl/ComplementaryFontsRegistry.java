@@ -137,7 +137,6 @@ public class ComplementaryFontsRegistry {
    * If you intend to use font metrics from returned {@link FontInfo} object,
    * pass not-null correct {@link FontRenderContext} to this method.
    */
- 
   public static FontInfo getFontAbleToDisplay(CharSequence text, int start, int end, @JdkConstants.FontStyle int style, FontPreferences preferences, FontRenderContext context) {
     assert 0 <= start && start < end && end <= text.length() : "Start: " + start + ", end: " + end + ", length: " + text.length();
     if (end - start == 1) {
@@ -158,7 +157,6 @@ public class ComplementaryFontsRegistry {
    * If you intend to use font metrics from returned {@link FontInfo} object,
    * pass not-null correct {@link FontRenderContext} to this method.
    */
- 
   public static FontInfo getFontAbleToDisplay(char[] text, int start, int end, @JdkConstants.FontStyle int style, FontPreferences preferences, FontRenderContext context) {
     assert 0 <= start && start < end && end <= text.length : "Start: " + start + ", end: " + end + ", length: " + text.length;
     if (end - start == 1) {
@@ -211,7 +209,6 @@ public class ComplementaryFontsRegistry {
    * If you intend to use font metrics from returned {@link FontInfo} object,
    * pass not-null correct {@link FontRenderContext} to this method.
    */
- 
   public static FontInfo getFontAbleToDisplay(int codePoint, @JdkConstants.FontStyle int style, FontPreferences preferences, FontRenderContext context) {
     boolean tryDefaultFont = true;
     List<String> fontFamilies = preferences.getEffectiveFontFamilies();
@@ -256,7 +253,6 @@ public class ComplementaryFontsRegistry {
    * If you intend to use font metrics from returned {@link FontInfo} object,
    * pass not-null correct {@link FontRenderContext} to this method.
    */
- 
   public static FontInfo getFontAbleToDisplay(int codePoint, int size, @JdkConstants.FontStyle int style, String defaultFontFamily, FontRenderContext context) {
     FontInfo result = doGetFontAbleToDisplay(codePoint, size, style, defaultFontFamily, false, context, false);
     if (result != null) {

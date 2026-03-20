@@ -220,7 +220,6 @@ public abstract class AbstractLayoutCodeProcessor implements LayoutCodeProcessor
      * is finished correctly or not (exception occurred, user cancelled formatting etc)
      * @throws IncorrectOperationException if unexpected exception occurred during formatting
      */
-    
     protected abstract FutureTask<Boolean> prepareTask(PsiFile file, boolean processChangedTextOnly)
         throws IncorrectOperationException;
 

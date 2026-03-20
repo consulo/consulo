@@ -51,7 +51,6 @@ public interface EditorSettings {
      *
      * @return A list of current editor soft margins. The list may be empty if no soft margins are defined.
      */
-    
     List<Integer> getSoftMargins();
 
     /**

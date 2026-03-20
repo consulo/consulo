@@ -105,7 +105,6 @@ public abstract class VirtualFileVisitor<T> {
    * {@linkplain #SKIP_CHILDREN} to skip to file's next sibling,<br/>
    * result of {@linkplain #skipTo(VirtualFile)} to skip to given file's next sibling.
    */
-  
   public Result visitFileEx(VirtualFile file) {
     return visitFile(file) ? CONTINUE : SKIP_CHILDREN;
   }

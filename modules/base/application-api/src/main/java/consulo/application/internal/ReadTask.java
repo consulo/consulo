@@ -99,7 +99,6 @@ public abstract class ReadTask {
         /**
          * @return modality state when {@link #getAction()} is to be executed
          */
-        
         public ModalityState getModalityState() {
             return myModalityState;
         }
@@ -107,7 +106,6 @@ public abstract class ReadTask {
         /**
          * @return runnable to be executed in Swing thread in default modality state
          */
-        
         public Runnable getAction() {
             return myAction;
         }

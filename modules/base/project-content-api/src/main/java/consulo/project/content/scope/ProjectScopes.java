@@ -13,7 +13,6 @@ public class ProjectScopes {
   /**
    * @return Scope for all things inside the project: files in the project content plus files in libraries/libraries sources
    */
-  
   public static ProjectAwareSearchScope getAllScope(Project project) {
     return ProjectScopeProvider.getInstance(project).getAllScope();
   }
@@ -36,7 +35,6 @@ public class ProjectScopes {
   /**
    * @return The biggest possible scope: every file on the planet belongs to this.
    */
-  
   public static ProjectAwareSearchScope getEverythingScope(Project project) {
     return ProjectScopeProvider.getInstance(project).getEverythingScope();
   }

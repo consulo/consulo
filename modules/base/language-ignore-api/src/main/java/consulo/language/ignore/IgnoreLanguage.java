@@ -50,7 +50,6 @@ public class IgnoreLanguage extends Language implements InjectableLanguage {
     /**
      * The Ignore file extension suffix.
      */
-    
     private final String myExtension;
 
     /**
@@ -61,7 +60,6 @@ public class IgnoreLanguage extends Language implements InjectableLanguage {
     /**
      * The GitignoreLanguage icon.
      */
-    
     private final Image icon;
 
     /**
@@ -91,7 +89,6 @@ public class IgnoreLanguage extends Language implements InjectableLanguage {
      *
      * @return extension
      */
-    
     public String getExtension() {
         return myExtension;
     }
@@ -110,7 +107,6 @@ public class IgnoreLanguage extends Language implements InjectableLanguage {
      *
      * @return filename.
      */
-    
     public String getFilename() {
         return DOT + getExtension();
     }
@@ -126,7 +122,6 @@ public class IgnoreLanguage extends Language implements InjectableLanguage {
      *
      * @return icon
      */
-    
     public Image getIcon() {
         return icon;
     }
@@ -145,7 +140,6 @@ public class IgnoreLanguage extends Language implements InjectableLanguage {
      *
      * @return default syntax
      */
-    
     public Syntax getDefaultSyntax() {
         return Syntax.GLOB;
     }

@@ -45,7 +45,6 @@ public interface GlobalInspectionContext extends UserDataHolder {
    *
    * @return the reference graph instance.
    */
-  
   RefManager getRefManager();
 
   /**

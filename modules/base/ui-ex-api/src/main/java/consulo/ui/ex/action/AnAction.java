@@ -301,7 +301,6 @@ public abstract class AnAction implements PossiblyDumbAware {
      *
      * @return template presentation
      */
-    
     public final Presentation getTemplatePresentation() {
         Presentation presentation = myTemplatePresentation;
         if (presentation == null) {
@@ -379,7 +378,6 @@ public abstract class AnAction implements PossiblyDumbAware {
      *
      * @see ActionUpdateThread
      */
-    
     public ActionUpdateThread getActionUpdateThread() {
         return ActionUpdateThread.BGT;
     }

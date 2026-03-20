@@ -27,6 +27,5 @@ public interface XAttachHost {
   /**
    * @return a list of running processes on this host
    */
-  
   Collection<ProcessInfo> getProcessList() throws ExecutionException;
 }

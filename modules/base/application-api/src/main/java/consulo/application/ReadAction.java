@@ -47,7 +47,6 @@ public final class ReadAction<T> {
     /**
      * Create an {@link NonBlockingReadAction} builder to run the given Runnable in non-blocking read action on a background thread.
      */
-    
     @Contract(pure = true)
     public static NonBlockingReadAction<Void> nonBlocking(@RequiredReadAction Runnable task) {
         return nonBlocking(() -> {
@@ -59,7 +58,6 @@ public final class ReadAction<T> {
     /**
      * Create an {@link NonBlockingReadAction} builder to run the given Callable in a non-blocking read action on a background thread.
      */
-    
     @Contract(pure = true)
     public static <T> NonBlockingReadAction<T> nonBlocking(@RequiredReadAction Callable<T> task) {
         return AsyncExecutionService.getService().buildNonBlockingReadAction(task);

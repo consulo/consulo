@@ -62,7 +62,6 @@ public final class ChangesDiffCalculator {
    * Thus, when comparing whitespace sequences of different length, we always highlight rightmost whitespaces
    * (while general algorithm gives no warranty on this case, and usually highlights leftmost whitespaces).
    */
-  
   private static TextRange calculateChangeHighlightRange(CharSequence text, int startOffset, int endOffset) {
     if (startOffset == endOffset) {
       while (startOffset < text.length() && text.charAt(startOffset) == ' ') {

@@ -49,7 +49,6 @@ public class ParametersListUtil {
    * @param parameters a list of parameters to join.
    * @return a string with parameters.
    */
-  
   public static String join(List<? extends CharSequence> parameters) {
     return encode(parameters);
   }
@@ -58,7 +57,6 @@ public class ParametersListUtil {
    * @param commandLineArgumentEncoder used to handle (quote or escape) special characters in command line argument
    * @see ParametersListUtil#join(List)
    */
-  
   public static String join(List<? extends CharSequence> parameters, CommandLineArgumentEncoder commandLineArgumentEncoder) {
     return encode(parameters, commandLineArgumentEncoder);
   }
@@ -71,7 +69,6 @@ public class ParametersListUtil {
   /**
    * @see #parse(String)
    */
-  
   public static String[] parseToArray(String string) {
     List<String> params = parse(string);
     return ArrayUtil.toStringArray(params);
@@ -102,7 +99,6 @@ public class ParametersListUtil {
    * @param parameterString parameter string to split.
    * @return array of parameters.
    */
-  
   public static List<String> parse(String parameterString) {
     return parse(parameterString, false);
   }

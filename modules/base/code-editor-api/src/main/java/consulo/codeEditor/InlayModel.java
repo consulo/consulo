@@ -118,7 +118,6 @@ public interface InlayModel {
      * Returns a list of inline elements for a given offset range (both limits are inclusive). Returned list is sorted by offset.
      * Both visible and invisible (due to folding) elements are returned.
      */
-    
     List<Inlay<?>> getInlineElementsInRange(int startOffset, int endOffset);
 
     /**
@@ -133,7 +132,6 @@ public interface InlayModel {
      * Returns a list of block elements for a given offset range (both limits are inclusive) in priority order
      * (higher priority ones appear first). Both visible and invisible (due to folding) elements are returned.
      */
-    
     List<Inlay<?>> getBlockElementsInRange(int startOffset, int endOffset);
 
     /**
@@ -148,7 +146,6 @@ public interface InlayModel {
      * Returns a list of block elements displayed for a given visual line in appearance order (top to bottom).
      * Only visible (not folded) elements are returned.
      */
-    
     List<Inlay<?>> getBlockElementsForVisualLine(int visualLine, boolean above);
 
     /**
@@ -212,13 +209,11 @@ public interface InlayModel {
      *
      * @see #addAfterLineEndElement(int, boolean, EditorCustomElementRenderer)
      */
-    
     List<Inlay<?>> getAfterLineEndElementsInRange(int startOffset, int endOffset);
 
     /**
      * Same as {@link #getAfterLineEndElementsInRange(int, int)}, but returned list contains only inlays with renderer of given type.
      */
-    
     default <T> List<Inlay<? extends T>> getAfterLineEndElementsInRange(int startOffset, int endOffset, Class<T> type) {
         //noinspection unchecked
         return (List) ContainerUtil.filter(getAfterLineEndElementsInRange(startOffset, endOffset), inlay -> type.isInstance(inlay.getRenderer()));
@@ -230,7 +225,6 @@ public interface InlayModel {
      *
      * @see #addAfterLineEndElement(int, boolean, EditorCustomElementRenderer)
      */
-    
     List<Inlay<?>> getAfterLineEndElementsForLogicalLine(int logicalLine);
 
     /**

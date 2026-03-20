@@ -75,7 +75,6 @@ public interface FormattingModelBuilder extends LanguageExtension {
      * @return the formatting model for the file.
      * @see FormattingContext
      */
-    
     FormattingModel createModel(FormattingContext formattingContext);
 
     /**

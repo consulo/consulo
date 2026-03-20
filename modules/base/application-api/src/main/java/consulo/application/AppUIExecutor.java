@@ -18,7 +18,6 @@ public interface AppUIExecutor extends BaseExpirableExecutor<AppUIExecutor> {
    *
    * @see ModalityState
    */
-  
   static AppUIExecutor onUiThread(ModalityState modality) {
     return AsyncExecutionService.getService().createUIExecutor(modality);
   }
@@ -28,7 +27,6 @@ public interface AppUIExecutor extends BaseExpirableExecutor<AppUIExecutor> {
    *
    * @see Application#getDefaultModalityState()
    */
-  
   static AppUIExecutor onUiThread() {
     return onUiThread(Application.get().getDefaultModalityState());
   }
@@ -38,7 +36,6 @@ public interface AppUIExecutor extends BaseExpirableExecutor<AppUIExecutor> {
    *
    * @see ModalityState
    */
-  
   static AppUIExecutor onWriteThread(ModalityState modality) {
     return AsyncExecutionService.getService().createWriteThreadExecutor(modality);
   }
@@ -48,7 +45,6 @@ public interface AppUIExecutor extends BaseExpirableExecutor<AppUIExecutor> {
    *
    * @see Application#getDefaultModalityState()
    */
-  
   static AppUIExecutor onWriteThread() {
     return onWriteThread(Application.get().getDefaultModalityState());
   }
@@ -57,7 +53,6 @@ public interface AppUIExecutor extends BaseExpirableExecutor<AppUIExecutor> {
    * @return an executor that should always invoke the given runnable later. Otherwise, if {@link #execute} is called
    * on dispatch thread already, and all others constraints are met, the runnable would be executed immediately.
    */
-  
   @Contract(pure = true)
   AppUIExecutor later();
 
@@ -65,7 +60,6 @@ public interface AppUIExecutor extends BaseExpirableExecutor<AppUIExecutor> {
    * @return an executor that invokes runnables only when all documents are committed. Automatically expires when the project is disposed.
    * @see PsiDocumentManager#hasUncommitedDocuments()
    */
-  
   @Contract(pure = true)
   AppUIExecutor withDocumentsCommitted(ComponentManager project);
 
@@ -73,7 +67,6 @@ public interface AppUIExecutor extends BaseExpirableExecutor<AppUIExecutor> {
    * @return an executor that invokes runnables only when indices have been built and are available to use. Automatically expires when the project is disposed.
    * @see consulo.ide.impl.idea.openapi.project.DumbService#isDumb(Project)
    */
-  
   @Contract(pure = true)
   AppUIExecutor inSmartMode(ComponentManager project);
 }

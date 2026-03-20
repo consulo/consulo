@@ -139,7 +139,6 @@ public abstract class PsiTreeElementBase<T extends PsiElement> implements Struct
   /**
    * @return element base children merged with children provided by extensions
    */
-  
   public static List<StructureViewTreeElement> mergeWithExtensions(PsiElement element, Collection<StructureViewTreeElement> baseChildren, boolean withCustomRegions) {
     List<StructureViewTreeElement> result = new ArrayList<>(withCustomRegions ? CustomRegionStructureUtil.groupByCustomRegions(element, baseChildren) : baseChildren);
     StructureViewFactoryEx structureViewFactory = StructureViewFactoryEx.getInstanceEx(element.getProject());

@@ -71,7 +71,6 @@ public interface FoldingModel {
    *
    * @return the array of fold regions, or an empty array if folding is currently disabled.
    */
-  
   FoldRegion[] getAllFoldRegions();
 
   /**

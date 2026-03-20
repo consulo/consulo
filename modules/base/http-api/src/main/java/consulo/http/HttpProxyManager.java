@@ -49,7 +49,6 @@ public interface HttpProxyManager {
      * @return instance of {@link HttpURLConnection}
      * @throws IOException in case of any I/O troubles or if created connection isn't instance of HttpURLConnection.
      */
-    
     @Deprecated
     @DeprecationInfo("Prefer HttpRequests")
     default HttpURLConnection openHttpConnection(String location) throws IOException {

@@ -70,7 +70,6 @@ public interface RunAnythingProvider<V> {
      * @param dataContext use it to fetch project, module, working directory
      * @param pattern     input string, use it to provide specific variants for the input command if needed, e.g. for command arguments completion
      */
-    
     Collection<V> getValues(DataContext dataContext, String pattern);
 
     /**
@@ -94,7 +93,6 @@ public interface RunAnythingProvider<V> {
      *
      * @param value matching value
      */
-    
     String getCommand(V value);
 
     /**
@@ -109,7 +107,6 @@ public interface RunAnythingProvider<V> {
      * @param dataContext use it to fetch project, module, working directory
      * @param value       matching value
      */
-    
     RunAnythingItem getMainListItem(DataContext dataContext, V value);
 
     /**
@@ -125,7 +122,6 @@ public interface RunAnythingProvider<V> {
      *
      * @param dataContext use it to fetch project, module, working directory
      */
-
     @Nullable RunAnythingItem getHelpItem(DataContext dataContext);
 
     /**
@@ -149,7 +145,6 @@ public interface RunAnythingProvider<V> {
      * <p>
      * The first context will be chosen as default context.
      */
-    
     List<RunAnythingContext> getExecutionContexts(DataContext dataContext);
 
     /**

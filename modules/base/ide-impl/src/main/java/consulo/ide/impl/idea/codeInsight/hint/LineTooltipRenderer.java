@@ -52,7 +52,6 @@ public class LineTooltipRenderer extends ComparableObject.Impl implements Toolti
      * <br>
      * very nbsp; long nbsp; text nbsp; with nbsp; 'nbsp;' as spaces cannot be break
      */
-    
     protected @Nullable String myText;
 
     //is used for suppressing some events while processing links

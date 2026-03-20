@@ -155,7 +155,6 @@ public final class ToolWindowLayout {
   /**
    * @return <code>WindowInfo</code>s for all registered tool windows.
    */
-  
   public final WindowInfoImpl[] getInfos() {
     if (myRegisteredInfos == null) {
       myRegisteredInfos = myRegisteredId2Info.values().toArray(new WindowInfoImpl[myRegisteredId2Info.size()]);
@@ -166,7 +165,6 @@ public final class ToolWindowLayout {
   /**
    * @return <code>WindowInfos</code>s for all windows that are currently unregistered.
    */
-  
   private WindowInfoImpl[] getUnregisteredInfos() {
     if (myUnregisteredInfos == null) {
       myUnregisteredInfos = myUnregisteredId2Info.values().toArray(new WindowInfoImpl[myUnregisteredId2Info.size()]);
@@ -177,7 +175,6 @@ public final class ToolWindowLayout {
   /**
    * @return <code>WindowInfo</code>s of all (registered and unregistered) tool windows.
    */
-  
   private WindowInfoImpl[] getAllInfos() {
     WindowInfoImpl[] registeredInfos = getInfos();
     WindowInfoImpl[] unregisteredInfos = getUnregisteredInfos();
@@ -189,7 +186,6 @@ public final class ToolWindowLayout {
    * @return all (registered and not unregistered) <code>WindowInfos</code> for the specified <code>anchor</code>.
    * Returned infos are sorted by order.
    */
-  
   private WindowInfoImpl[] getAllInfos(ToolWindowAnchor anchor) {
     WindowInfoImpl[] infos = getAllInfos();
     ArrayList<WindowInfoImpl> list = new ArrayList<>(infos.length);
@@ -225,7 +221,6 @@ public final class ToolWindowLayout {
    * @return comparator which compares <code>StripeButtons</code> in the stripe with
    * specified <code>anchor</code>.
    */
-  
   public final Comparator<ToolWindowStripeButton> comparator(ToolWindowAnchor anchor) {
     return new MyStripeButtonComparator(anchor);
   }

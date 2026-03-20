@@ -25,7 +25,6 @@ public enum ExpandOnDoubleClick {
    * @return the preferable behaviour for the given tree.
    * @see EditSourceOnDoubleClickHandler#isExpandPreferable
    */
-  
   public static ExpandOnDoubleClick getBehavior(JTree tree) {
     Object property = tree.getClientProperty(KEY);
     if (property instanceof ExpandOnDoubleClick) return (ExpandOnDoubleClick)property;

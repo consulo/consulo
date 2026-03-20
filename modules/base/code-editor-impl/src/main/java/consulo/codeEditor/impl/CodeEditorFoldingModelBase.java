@@ -120,7 +120,6 @@ public class CodeEditorFoldingModelBase extends InlayModel.SimpleAdapter impleme
      * coordinate of that visual line due to custom fold regions located before (above) that line. The second value gives adjustment to the
      * height of that particular visual line (due to the custom fold region it contains (if it does)).
      */
-    
     public IntPair getCustomRegionsYAdjustment(int offset, int prevFoldRegionIndex) {
         return myFoldTree.getCustomRegionsYAdjustment(offset, prevFoldRegionIndex);
     }

@@ -134,7 +134,6 @@ public class TodoConfiguration implements PersistentStateComponent<Element> {
     /**
      * @return all <code>TodoFilter</code>s.
      */
-    
     public TodoFilter[] getTodoFilters() {
         return myTodoFilters;
     }

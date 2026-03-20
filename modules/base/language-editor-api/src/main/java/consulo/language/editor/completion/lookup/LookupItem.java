@@ -104,7 +104,6 @@ public class LookupItem<T> extends MutableLookupElement<T> implements Comparable
     /**
      * Returns a data object.  This object is used e.g. for rendering the node.
      */
-    
     @Override
     @SuppressWarnings("unchecked")
     public T getObject() {

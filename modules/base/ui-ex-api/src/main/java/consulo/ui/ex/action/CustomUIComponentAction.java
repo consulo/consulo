@@ -37,7 +37,6 @@ public interface CustomUIComponentAction {
      * be shown on several toolbars simultaneously. Use {@link CustomUIComponentAction#COMPONENT_KEY}
      * to retrieve current component from a Presentation instance in {@link AnAction#update(AnActionEvent)} method.
      */
-    
     @RequiredUIAccess
     Component createCustomComponent(Presentation presentation, String place);
 }

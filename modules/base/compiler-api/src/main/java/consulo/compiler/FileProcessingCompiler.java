@@ -40,7 +40,6 @@ public interface FileProcessingCompiler extends Compiler, ValidityStateFactory {
          *
          * @return a file to be processed; cannot be null
          */
-        
         File getFile();
 
         /**
@@ -60,7 +59,6 @@ public interface FileProcessingCompiler extends Compiler, ValidityStateFactory {
      * @return a non-null array of all items that potentially can be processed at the moment of method call. Even if
      * the file is not changed, it should be returned if it _can_ be processed by the compiler implementing the interface.
      */
-    
     ProcessingItem[] getProcessingItems(CompileContext context);
 
     /**

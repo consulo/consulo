@@ -74,7 +74,6 @@ public interface InspectionProfile extends Profile {
    * @param element context element
    * @return all (both enabled and disabled) tools
    */
-  
   InspectionToolWrapper[] getInspectionTools(@Nullable PsiElement element);
 
   void cleanup(Project project);
@@ -82,7 +81,6 @@ public interface InspectionProfile extends Profile {
   /**
    * @see #modifyProfile(Consumer)
    */
-  
   ModifiableModel getModifiableModel();
 
   boolean isToolEnabled(HighlightDisplayKey key, PsiElement element);

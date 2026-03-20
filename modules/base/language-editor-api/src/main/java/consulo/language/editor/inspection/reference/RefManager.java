@@ -41,7 +41,6 @@ public interface RefManager {
      *
      * @return the project instance.
      */
-    
     Project getProject();
 
     /**
@@ -50,7 +49,6 @@ public interface RefManager {
      *
      * @return the node for the project.
      */
-    
     RefProject getRefProject();
 
     /**

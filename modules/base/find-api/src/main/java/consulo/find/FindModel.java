@@ -256,7 +256,6 @@ public class FindModel extends UserDataHolderBase implements Cloneable {
      *
      * @return the string to find.
      */
-    
     public String getStringToFind() {
         return myStringToFind;
     }
@@ -280,7 +279,6 @@ public class FindModel extends UserDataHolderBase implements Cloneable {
      *
      * @return the string to replace with.
      */
-    
     public String getStringToReplace() {
         return myStringToReplace;
     }

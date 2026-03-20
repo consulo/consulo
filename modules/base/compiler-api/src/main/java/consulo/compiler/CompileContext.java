@@ -71,7 +71,6 @@ public interface CompileContext extends UserDataHolder {
      *
      * @return the progress indicator instance.
      */
-    
     ProgressIndicator getProgressIndicator();
 
     /**

@@ -134,7 +134,6 @@ public class StdArrangementEntryMatcher implements ArrangementEntryMatcher {
      * Maps token type to all arrangement tokens that were encountered so far by parsing conditions with
      * {@link #onCondition(ArrangementAtomMatchCondition) onCondition} calls.
      */
-    
     protected final MultiValuesMap<StdArrangementTokenType, ArrangementAtomMatchCondition> context =
             new MultiValuesMap<StdArrangementTokenType, ArrangementAtomMatchCondition>();
     private @Nullable String myNamePattern;

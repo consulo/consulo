@@ -2,7 +2,6 @@
  * $Id: mxCoordinateAssignment.java,v 1.2 2013/04/26 21:35:56 david Exp $
  * Copyright (c) 2005-2012, JGraph Ltd
  */
-
 package com.mxgraph.layout.hierarchical.stage;
 
 import com.mxgraph.layout.hierarchical.model.*;
