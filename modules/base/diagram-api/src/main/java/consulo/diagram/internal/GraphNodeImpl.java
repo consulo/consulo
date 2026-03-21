@@ -26,16 +26,16 @@ import java.util.List;
 
 /**
  * @author VISTALL
- * @since 22:44/15.10.13
+ * @since 2013-10-15
  */
-public class GraphNodeImpl<E> implements GraphNode<E>, Named {
+public class GraphNodeImpl<E extends @Nullable Object> implements GraphNode<E>, Named {
   private final List<GraphNode<?>> myArrowNodes = new ArrayList<>();
   private String myName;
   private @Nullable Image myIcon;
   private final E myValue;
   private final GraphPositionStrategy myStrategy;
 
-  public GraphNodeImpl(String name, @Nullable Image icon, @Nullable E value, GraphPositionStrategy strategy) {
+  public GraphNodeImpl(String name, @Nullable Image icon, E value, GraphPositionStrategy strategy) {
     myName = name;
     myIcon = icon;
     myValue = value;
@@ -58,12 +58,10 @@ public class GraphNodeImpl<E> implements GraphNode<E>, Named {
   }
 
   @Override
-  
   public List<GraphNode<?>> getArrowNodes() {
     return myArrowNodes;
   }
 
-  
   @Override
   public String getName() {
     return myName;

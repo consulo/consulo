@@ -22,9 +22,9 @@ import java.util.List;
 
 /**
  * @author VISTALL
- * @since 22:43/15.10.13
+ * @since 2013-10-15
  */
-public interface GraphNode<T> {
+public interface GraphNode<T extends @Nullable Object> {
   /**
    * Create arrow to target
    *  [THIS NODE] -> [TARGET NODE]
@@ -32,10 +32,8 @@ public interface GraphNode<T> {
    */
   void makeArrow(GraphNode<?> target);
 
-  
   List<GraphNode<?>> getArrowNodes();
 
-  
   String getName();
 
   @Nullable Image getIcon();

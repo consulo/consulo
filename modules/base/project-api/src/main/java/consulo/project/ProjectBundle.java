@@ -20,6 +20,7 @@ import consulo.annotation.internal.MigratedExtensionsTo;
 import consulo.component.util.localize.AbstractBundle;
 import consulo.project.localize.ProjectLocalize;
 import org.jetbrains.annotations.PropertyKey;
+import org.jspecify.annotations.Nullable;
 
 @Deprecated(forRemoval = true)
 @DeprecationInfo("Use ProjectLocalize")
@@ -31,11 +32,11 @@ public class ProjectBundle extends AbstractBundle {
     super("consulo.project.ProjectBundle");
   }
 
-  public static String message(@PropertyKey(resourceBundle = "consulo.project.ProjectBundle") String key) {
+  public static @Nullable String message(@PropertyKey(resourceBundle = "consulo.project.ProjectBundle") String key) {
     return ourInstance.getMessage(key);
   }
 
-  public static String message(@PropertyKey(resourceBundle = "consulo.project.ProjectBundle") String key, Object... params) {
+  public static @Nullable String message(@PropertyKey(resourceBundle = "consulo.project.ProjectBundle") String key, Object... params) {
     return ourInstance.getMessage(key, params);
   }
 }
