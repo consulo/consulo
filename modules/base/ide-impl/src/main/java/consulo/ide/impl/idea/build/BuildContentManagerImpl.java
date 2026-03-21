@@ -7,37 +7,31 @@ import consulo.build.ui.BuildContentManager;
 import consulo.build.ui.BuildDescriptor;
 import consulo.build.ui.localize.BuildLocalize;
 import consulo.build.ui.process.BuildProcessHandler;
-import consulo.compiler.localize.CompilerLocalize;
-import consulo.dataContext.DataManager;
-import consulo.dataContext.DataProvider;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.execution.ExecutionUtil;
 import consulo.execution.impl.internal.ui.BaseContentCloseListener;
 import consulo.execution.impl.internal.ui.RunContentManagerImpl;
-import consulo.platform.base.localize.CommonLocalize;
-import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.content.ContentUtilEx;
 import consulo.language.LangBundle;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.project.internal.StartupManagerEx;
 import consulo.project.ui.wm.ToolWindowManager;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.internal.GuiUtils;
 import consulo.ui.ex.content.Content;
 import consulo.ui.ex.content.ContentManager;
+import consulo.ui.ex.content.ContentUtilEx;
 import consulo.ui.ex.content.TabbedContent;
-import consulo.ui.ex.toolWindow.ContentManagerWatcher;
 import consulo.ui.ex.toolWindow.ToolWindow;
-import consulo.ui.ex.toolWindow.ToolWindowAnchor;
 import consulo.ui.image.Image;
 import consulo.util.collection.MultiMap;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
-import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -82,38 +76,18 @@ public final class BuildContentManagerImpl implements BuildContentManager {
         myProject = project;
     }
 
-    
+
     @Override
     @RequiredUIAccess
     public ToolWindow getOrCreateToolWindow() {
         ToolWindowManager toolWindowManager = ToolWindowManager.getInstance(myProject);
         ToolWindow toolWindow = toolWindowManager.getToolWindow(TOOL_WINDOW_ID);
         if (toolWindow != null) {
+            toolWindow.setAvailable(true);
             return toolWindow;
+        } else {
+            throw new UnsupportedOperationException("ToolWindow must be Registered");
         }
-
-        toolWindow = toolWindowManager.registerToolWindow(TOOL_WINDOW_ID, true, ToolWindowAnchor.BOTTOM, false);
-        toolWindow.setDisplayName(CompilerLocalize.toolwindowBuildDisplayName());
-        toolWindow.setIcon(PlatformIconGroup.toolwindowsToolwindowbuild());
-        ContentManager contentManager = toolWindow.getContentManager();
-        contentManager.addDataProvider(new DataProvider() {
-            private int myInsideGetData = 0;
-
-            @Override
-            public Object getData(Key dataId) {
-                myInsideGetData++;
-                try {
-                    return myInsideGetData == 1
-                        ? DataManager.getInstance().getDataContext(contentManager.getComponent()).getData(dataId) : null;
-                }
-                finally {
-                    myInsideGetData--;
-                }
-            }
-        });
-
-        ContentManagerWatcher.watchContentManager(toolWindow, contentManager);
-        return toolWindow;
     }
 
     private void invokeLaterIfNeeded(Runnable runnable) {
@@ -297,7 +271,7 @@ public final class BuildContentManagerImpl implements BuildContentManager {
         private
         @Nullable BuildProcessHandler myProcessHandler;
 
-        private CloseListener( Content content, BuildProcessHandler processHandler) {
+        private CloseListener(Content content, BuildProcessHandler processHandler) {
             super(content, myProject);
             myProcessHandler = processHandler;
         }

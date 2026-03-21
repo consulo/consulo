@@ -41,13 +41,10 @@ public interface ToolWindowFactory {
     @RequiredUIAccess
     void createToolWindowContent(Project project, ToolWindow toolWindow);
 
-    
     ToolWindowAnchor getAnchor();
 
-    
     Image getIcon();
 
-    
     LocalizeValue getDisplayName();
 
     default boolean activateOnProjectOpening() {
