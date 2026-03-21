@@ -38,6 +38,9 @@ public class ModuleData extends AbstractNamedData implements Named, ExternalConf
 
   private boolean myInheritProjectCompileOutputPath = true;
 
+  private @Nullable String myIdeGrouping;
+  private @Nullable String myIdeParentGrouping;
+
   @Deprecated
   public ModuleData(ProjectSystemId owner, String name, String moduleDir, String externalConfigPath) {
     this("", owner, name, moduleDir, externalConfigPath);
@@ -123,6 +126,22 @@ public class ModuleData extends AbstractNamedData implements Named, ExternalConf
 
   public void setArtifacts(List<File> artifacts) {
     myArtifacts = artifacts;
+  }
+
+  public @Nullable String getIdeGrouping() {
+    return myIdeGrouping;
+  }
+
+  public void setIdeGrouping(@Nullable String ideGrouping) {
+    myIdeGrouping = ideGrouping;
+  }
+
+  public @Nullable String getIdeParentGrouping() {
+    return myIdeParentGrouping;
+  }
+
+  public void setIdeParentGrouping(@Nullable String ideParentGrouping) {
+    myIdeParentGrouping = ideParentGrouping;
   }
 
   @Override

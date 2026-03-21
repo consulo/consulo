@@ -15,9 +15,10 @@
  */
 package consulo.externalSystem.ui;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.fileChooser.FileChooserDescriptor;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.image.Image;
-
 import org.jspecify.annotations.Nullable;
 
 /**
@@ -26,12 +27,17 @@ import org.jspecify.annotations.Nullable;
  */
 public interface ExternalSystemUiAware {
 
-  
   String getProjectRepresentationName(String targetProjectPath, @Nullable String rootProjectPath);
 
   @Nullable FileChooserDescriptor getExternalProjectConfigDescriptor();
 
-  @Nullable Image getProjectIcon();
+  @Deprecated
+  @DeprecationInfo("ProjectSystemId#getIcon()")
+  default @Nullable Image getProjectIcon() {
+      return PlatformIconGroup.nodesFolder();
+  }
 
-  @Nullable Image getTaskIcon();
+  default Image getTaskIcon() {
+      return PlatformIconGroup.nodesTarget();
+  }
 }

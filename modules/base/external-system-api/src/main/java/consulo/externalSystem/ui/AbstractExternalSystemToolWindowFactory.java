@@ -16,15 +16,16 @@
 package consulo.externalSystem.ui;
 
 import consulo.application.dumb.DumbAware;
+import consulo.disposer.Disposable;
 import consulo.externalSystem.ExternalSystemManager;
 import consulo.externalSystem.model.ExternalSystemDataKeys;
 import consulo.externalSystem.model.ProjectSystemId;
+import consulo.externalSystem.service.project.manage.ExternalProjectsManager;
 import consulo.externalSystem.setting.AbstractExternalSystemSettings;
-import consulo.externalSystem.ui.awt.ExternalSystemTasksPanel;
 import consulo.externalSystem.util.ExternalSystemApiUtil;
+import consulo.externalSystem.view.ExternalProjectsViewImpl;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
-import consulo.project.ui.notification.NotificationGroup;
 import consulo.project.ui.wm.ToolWindowFactory;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.content.Content;
@@ -32,7 +33,6 @@ import consulo.ui.ex.content.ContentFactory;
 import consulo.ui.ex.content.ContentManager;
 import consulo.ui.ex.toolWindow.ToolWindow;
 
-import java.util.Locale;
 import java.util.Objects;
 
 /**
@@ -40,28 +40,18 @@ import java.util.Objects;
  * @since 2013-05-13
  */
 public abstract class AbstractExternalSystemToolWindowFactory implements ToolWindowFactory, DumbAware {
-    
+
     private final ProjectSystemId myExternalSystemId;
-    
-    private final NotificationGroup myNotificationGroup;
 
     protected AbstractExternalSystemToolWindowFactory(ProjectSystemId id) {
         myExternalSystemId = id;
-        myNotificationGroup = NotificationGroup.toolWindowGroup(
-            "notification.group.id." + id.toString().toLowerCase(Locale.ROOT),
-            myExternalSystemId.getDisplayName(),
-            myExternalSystemId.getToolWindowId(),
-            true
-        );
     }
 
-    
     @Override
     public final String getId() {
         return myExternalSystemId.getToolWindowId();
     }
 
-    
     @Override
     public final LocalizeValue getDisplayName() {
         return myExternalSystemId.getDisplayName();
@@ -71,11 +61,19 @@ public abstract class AbstractExternalSystemToolWindowFactory implements ToolWin
     @Override
     public void createToolWindowContent(Project project, ToolWindow toolWindow) {
         ContentManager contentManager = toolWindow.getContentManager();
-        ExternalSystemManager<?, ?, ?, ?, ?> manager = ExternalSystemApiUtil.getManager(myExternalSystemId);
-        assert manager != null;
-        ExternalSystemTasksPanel panel = new ExternalSystemTasksPanel(project, myExternalSystemId, myNotificationGroup);
-        Content tasksContent = ContentFactory.getInstance().createContent(panel, "", true);
-        contentManager.addContent(tasksContent);
+        ExternalProjectsManager.getInstance(project).runWhenInitialized(() -> {
+            ExternalProjectsViewImpl view = new ExternalProjectsViewImpl(
+                Disposable.newDisposable("ExternalProjectsView[" + myExternalSystemId.getId() + "]"),
+                project,
+                toolWindow,
+                myExternalSystemId
+            );
+            ExternalProjectsManager.getInstance(project).registerView(myExternalSystemId, view);
+            view.init();
+            Content content = ContentFactory.getInstance().createContent(view, "", true);
+            toolWindow.getContentManager().addDataProvider(view);
+            contentManager.addContent(content);
+        });
     }
 
     @Override

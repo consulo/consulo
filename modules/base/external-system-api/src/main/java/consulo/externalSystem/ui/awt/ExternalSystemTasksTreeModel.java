@@ -105,7 +105,7 @@ public class ExternalSystemTasksTreeModel extends DefaultTreeModel {
       }
     }
     ExternalProjectPojo element = new ExternalProjectPojo(project.getName(), project.getPath());
-    ExternalSystemNodeDescriptor<ExternalProjectPojo> descriptor = descriptor(element, myUiAware.getProjectIcon());
+    ExternalSystemNodeDescriptor<ExternalProjectPojo> descriptor = descriptor(element, myExternalSystemId.getIcon());
     ExternalSystemNode<ExternalProjectPojo> result = new ExternalSystemNode<>(descriptor);
     insertNodeInto(result, root);
     return result;
@@ -157,7 +157,7 @@ public class ExternalSystemTasksTreeModel extends DefaultTreeModel {
     if (!toAdd.isEmpty()) {
       for (Map.Entry<String, ExternalProjectPojo> entry : toAdd.entrySet()) {
         ExternalProjectPojo element = new ExternalProjectPojo(entry.getValue().getName(), entry.getValue().getPath());
-        insertNodeInto(new ExternalSystemNode<>(descriptor(element, myUiAware.getProjectIcon())), topLevelProjectNode);
+        insertNodeInto(new ExternalSystemNode<>(descriptor(element, myExternalSystemId.getIcon())), topLevelProjectNode);
       }
     }
   }

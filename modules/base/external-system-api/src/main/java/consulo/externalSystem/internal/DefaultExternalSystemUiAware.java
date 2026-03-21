@@ -15,13 +15,10 @@
  */
 package consulo.externalSystem.internal;
 
-import consulo.application.Application;
 import consulo.externalSystem.ui.ExternalSystemUiAware;
 import consulo.fileChooser.FileChooserDescriptor;
-import consulo.platform.base.icon.PlatformIconGroup;
-import consulo.ui.image.Image;
-
 import org.jspecify.annotations.Nullable;
+
 import java.io.File;
 
 /**
@@ -31,11 +28,8 @@ import java.io.File;
  * @since 5/15/13 12:45 PM
  */
 public class DefaultExternalSystemUiAware implements ExternalSystemUiAware {
-
-  
   public static final DefaultExternalSystemUiAware INSTANCE = new DefaultExternalSystemUiAware();
 
-  
   @Override
   public String getProjectRepresentationName(String targetProjectPath, @Nullable String rootProjectPath) {
     return new File(targetProjectPath).getParentFile().getName();
@@ -44,17 +38,5 @@ public class DefaultExternalSystemUiAware implements ExternalSystemUiAware {
   @Override
   public @Nullable FileChooserDescriptor getExternalProjectConfigDescriptor() {
     return null;
-  }
-
-  
-  @Override
-  public Image getProjectIcon() {
-    return Application.get().getIcon();
-  }
-
-  
-  @Override
-  public Image getTaskIcon() {
-    return PlatformIconGroup.nodesTask();
   }
 }

@@ -19,10 +19,12 @@ import consulo.dataContext.DataContext;
 import consulo.externalSystem.model.ExternalSystemDataKeys;
 import consulo.externalSystem.model.ProjectSystemId;
 import consulo.externalSystem.model.project.ExternalProjectPojo;
+import consulo.externalSystem.service.project.ProjectData;
 import consulo.externalSystem.setting.AbstractExternalSystemLocalSettings;
 import consulo.externalSystem.setting.AbstractExternalSystemSettings;
 import consulo.externalSystem.setting.ExternalProjectSettings;
 import consulo.externalSystem.util.ExternalSystemApiUtil;
+import consulo.externalSystem.view.ProjectNode;
 import consulo.project.Project;
 import org.jspecify.annotations.Nullable;
 
@@ -34,6 +36,21 @@ public class ExternalActionUtil {
   
   public static MyInfo getProcessingInfo(DataContext context) {
     ExternalProjectPojo externalProject = context.getData(ExternalSystemDataKeys.SELECTED_PROJECT);
+    if (externalProject == null) {
+      // Fall back to the new ExternalProjectsView-based selection (ProjectNode).
+      // DetachExternalProjectAction / RefreshExternalProjectAction use this util but the new view
+      // only populates SELECTED_PROJECT_NODE, not the legacy SELECTED_PROJECT key.
+      ProjectNode projectNode = context.getData(ExternalSystemDataKeys.SELECTED_PROJECT_NODE);
+      if (projectNode != null) {
+        ProjectData projectData = projectNode.getData();
+        if (projectData != null) {
+          externalProject = new ExternalProjectPojo(
+            projectData.getInternalName(),
+            projectData.getLinkedExternalProjectPath()
+          );
+        }
+      }
+    }
     if (externalProject == null) {
       return MyInfo.EMPTY;
     }
