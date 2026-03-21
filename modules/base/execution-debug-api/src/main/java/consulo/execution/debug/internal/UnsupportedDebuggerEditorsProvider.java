@@ -31,16 +31,19 @@ import org.jspecify.annotations.Nullable;
 public class UnsupportedDebuggerEditorsProvider extends XDebuggerEditorsProvider {
     public static final UnsupportedDebuggerEditorsProvider INSTANCE = new UnsupportedDebuggerEditorsProvider();
 
-    
     @Override
     public FileType getFileType() {
         throw new UnsupportedOperationException();
     }
 
     @RequiredReadAction
-    
     @Override
     public Document createDocument(Project project, String text, @Nullable XSourcePosition sourcePosition, EvaluationMode mode) {
         throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public boolean isEvaluateExpressionFieldEnabled() {
+        return false;
     }
 }
