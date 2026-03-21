@@ -15,14 +15,15 @@
  */
 package consulo.desktop.awt.startup.splash;
 
+import consulo.application.ApplicationProperties;
 import consulo.application.internal.StartupProgress;
+import consulo.desktop.awt.ui.impl.window.JDialogAsUIWindow;
 import consulo.platform.Platform;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.awt.util.ScreenUtil;
+import consulo.ui.ex.awt.JBDimension;
 import consulo.ui.ex.awt.JBUI;
-import consulo.application.ApplicationProperties;
-import consulo.desktop.awt.ui.impl.window.JDialogAsUIWindow;
-
+import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.awt.util.ScreenUtil;
 import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
@@ -61,26 +62,30 @@ public class DesktopSplash extends JDialogAsUIWindow implements StartupProgress 
 
         Container contentPane = getContentPane();
         contentPane.setBackground(Color.LIGHT_GRAY);
-        contentPane.setPreferredSize(JBUI.size(602, 294));
+        JBDimension dimension = JBUI.size(602, 294);
+        contentPane.setPreferredSize(dimension);
         contentPane.setLayout(new BorderLayout());
         contentPane.add(myLabel, BorderLayout.SOUTH);
         Dimension size = getPreferredSize();
         setSize(size);
         pack();
-        setLocationInTheCenterOfScreen();
+        setLocationInTheCenterOfScreen(dimension);
     }
 
-    private void setLocationInTheCenterOfScreen() {
-        Rectangle bounds = getGraphicsConfiguration().getBounds();
+    private void setLocationInTheCenterOfScreen(Dimension size) {
+        GraphicsConfiguration graphicsConfiguration = getGraphicsConfiguration();
+        Rectangle bounds = graphicsConfiguration.getBounds();
         if (Platform.current().os().isWindows()) {
-            Insets insets = ScreenUtil.getScreenInsets(getGraphicsConfiguration());
-            int x = insets.left + (bounds.width - insets.left - insets.right - getWidth()) / 2;
-            int y = insets.top + (bounds.height - insets.top - insets.bottom - getHeight()) / 2;
-            setLocation(x, y);
+            Insets insets = ScreenUtil.getScreenInsets(graphicsConfiguration);
+            if (insets != null) {
+                bounds.x += insets.left;
+                bounds.y += insets.top;
+                bounds.width -= insets.left + insets.right;
+                bounds.height -= insets.top + insets.bottom;
+            }
         }
-        else {
-            setLocation((bounds.width - getWidth()) / 2, (bounds.height - getHeight()) / 2);
-        }
+
+        setLocation(UIUtil.getCenterPoint(bounds, size));
     }
 
     @Override
