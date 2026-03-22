@@ -11,13 +11,13 @@ description: >
 ## Full project build
 
 ```
-cd "R:\consulo-claude-playgroud" && "T:\apache-maven-3.9.12\bin\mvn.cmd" package -Dmaven.test.skip=true
+mvn package -Dmaven.test.skip=true
 ```
 
 ## Run coroutine tests
 
 ```
-"T:\apache-maven-3.9.12\bin\mvn.cmd" test -pl modules/base/util/util-concurrent-coroutine -Dmaven.build.cache.enabled=false
+mvn test -pl modules/base/util/util-concurrent-coroutine -Dmaven.build.cache.enabled=false
 ```
 
 ## Strictly prohibited — never use these

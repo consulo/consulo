@@ -21,7 +21,7 @@ regularly adopts upstream improvements from JetBrains.
 **Before doing anything else**, ask the user:
 
 > "What is the path to your JetBrains intellij-community source directory?
-> (e.g. `/run/media/vistall/repositories/JetBrains/intellij-community`)"
+> (e.g. `/path/to/intellij-community`)"
 
 Wait for their answer. Store this as `$JB_ROOT`. Do not guess or assume a default path —
 the user must confirm it explicitly. This is important because the JetBrains source is the
