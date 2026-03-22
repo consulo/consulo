@@ -18,6 +18,7 @@ package consulo.externalSystem.view;
 import consulo.externalSystem.model.DataNode;
 import consulo.externalSystem.service.project.ProjectData;
 import consulo.ui.ex.tree.PresentationData;
+import consulo.util.collection.ContainerUtil;
 import org.jspecify.annotations.Nullable;
 
 import java.util.List;
@@ -29,6 +30,7 @@ import java.util.List;
  */
 public class ProjectNode extends ExternalSystemNode<ProjectData> {
     private String myTooltipCache;
+    private ModuleNode effectiveRoot = null;
 
     public ProjectNode(ExternalProjectsView externalProjectsView,
                        DataNode<ProjectData> projectDataNode) {
@@ -49,24 +51,34 @@ public class ProjectNode extends ExternalSystemNode<ProjectData> {
     }
 
     @Override
-   
     protected List<? extends ExternalSystemNode<?>> doBuildChildren() {
-        final List<? extends ExternalSystemNode<?>> children = super.doBuildChildren();
+        setIdeGrouping(null);
+        List<? extends ExternalSystemNode<?>> children = super.doBuildChildren();
+        List<ExternalSystemNode<?>> visibleChildren = ContainerUtil.filter(children, ExternalSystemNode::isVisible);
         if (getExternalProjectsView().getGroupModules()) {
-            List<ExternalSystemNode<?>> topLevel = new java.util.ArrayList<>();
-            for (ExternalSystemNode<?> node : children) {
-                if (!(node instanceof ModuleNode) || ((ModuleNode) node).getIdeParentGrouping() == null) {
-                    topLevel.add(node);
+            List<ExternalSystemNode<?>> topLevelChildren =
+                ContainerUtil.filter(visibleChildren, node -> !(node instanceof ModuleNode) || ((ModuleNode) node).getIdeParentGrouping() == null);
+            if (topLevelChildren.size() == 1) {
+                ExternalSystemNode<?> child = topLevelChildren.get(0);
+                if (child instanceof ModuleNode) {
+                    effectiveRoot = (ModuleNode) child;
+                    return effectiveRoot.doBuildChildren();
                 }
             }
-            if (topLevel.size() == 1 && topLevel.get(0) instanceof ModuleNode) {
-                return ((ModuleNode) topLevel.get(0)).doBuildChildren();
-            }
-            return topLevel;
+            return topLevelChildren;
         }
-        return children;
+
+        effectiveRoot = null;
+        return visibleChildren;
     }
 
+    private void setIdeGrouping(@Nullable String ideGrouping) {
+        ProjectData data = getData();
+        if (data != null) {
+            data.setIdeGrouping(ideGrouping);
+        }
+    }
+    
     void updateProject() {
         myTooltipCache = makeDescription();
         ExternalProjectsStructure structure = getStructure();
@@ -83,6 +95,10 @@ public class ProjectNode extends ExternalSystemNode<ProjectData> {
             desc.append("\n\rLocation: ").append(projectData.getLinkedExternalProjectPath());
         }
         return desc.toString();
+    }
+
+    public ModuleNode getEffectiveRoot() {
+        return effectiveRoot;
     }
 
     @Override

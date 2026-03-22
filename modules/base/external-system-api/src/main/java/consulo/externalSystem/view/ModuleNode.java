@@ -19,6 +19,7 @@ import consulo.externalSystem.model.DataNode;
 import consulo.externalSystem.model.project.ModuleData;
 import consulo.externalSystem.util.Order;
 import consulo.ui.ex.tree.PresentationData;
+import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.StringUtil;
 import org.jspecify.annotations.Nullable;
 
@@ -69,20 +70,18 @@ public class ModuleNode extends ExternalSystemNode<ModuleData> {
     @Override
 
     protected List<ExternalSystemNode<?>> doBuildChildren() {
-        List<ExternalSystemNode<?>> children = new ArrayList<>();
-        // Only add sub-modules when this module has a non-null grouping.
-        // If getIdeGrouping() is null all modules would match each other (null==null),
-        // creating a cycle A→B→A→B that causes StackOverflowError in doGetNodes().
-        if (getExternalProjectsView().getGroupModules() && getIdeGrouping() != null) {
-            for (ModuleNode module : myAllModules) {
-                if (module != this && StringUtil.equals(module.getIdeParentGrouping(), getIdeGrouping())) {
-                    children.add(module);
-                }
-            }
+        List<ExternalSystemNode<?>> myChildNodes = new ArrayList<>();
+        if (getExternalProjectsView().getGroupModules()) {
+            List<ModuleNode> childModules = ContainerUtil.findAll(
+                myAllModules,
+                module -> module != this && StringUtil.equals(module.getIdeParentGrouping(), getIdeGrouping())
+            );
+            myChildNodes.addAll(childModules);
         }
-        children.addAll(super.doBuildChildren());
-        children.add(myRunConfigurationsNode);
-        return children;
+        //noinspection unchecked
+        myChildNodes.addAll(super.doBuildChildren());
+        myChildNodes.add(myRunConfigurationsNode);
+        return myChildNodes;
     }
 
     @Override
