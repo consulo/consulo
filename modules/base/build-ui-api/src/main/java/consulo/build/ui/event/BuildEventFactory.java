@@ -35,33 +35,27 @@ import java.util.function.Supplier;
  */
 @ServiceAPI(ComponentScope.APPLICATION)
 public interface BuildEventFactory {
-    
+
     SkippedResult createSkippedResult();
 
-    
     default SuccessResult createSuccessResult() {
         return createSuccessResult(false);
     }
 
-    
     SuccessResult createSuccessResult(boolean isUpToDate);
 
-    
     default FailureResult createFailureResult() {
         return createFailureResult(null, null);
     }
 
-    
     default FailureResult createFailureResult(@Nullable Throwable error) {
         return createFailureResult(null, error);
     }
 
-    
     default FailureResult createFailureResult(@Nullable @BuildEventsNls.Message String message) {
         return createFailureResult(message, null);
     }
 
-    
     default FailureResult createFailureResult(@Nullable @BuildEventsNls.Message String message, @Nullable Throwable error) {
         List<Failure> failures = List.of();
         if (message != null || error != null) {
@@ -70,20 +64,16 @@ public interface BuildEventFactory {
         return createFailureResult(failures);
     }
 
-    
     default DerivedResult createDerivedResult() {
         return createDerivedResult(null, null);
     }
 
-    
     DerivedResult createDerivedResult(@Nullable Supplier<EventResult> onDefault, @Nullable Supplier<FailureResult> onFail);
 
-    
     default Failure createFailure(@BuildEventsNls.Message String message, Throwable error) {
         return createFailure(message, null, Collections.emptyList(), error, null, null);
     }
 
-    
     default Failure createFailure(@BuildEventsNls.Message String message,
                                   Throwable error,
                                   @Nullable Notification notification,
@@ -91,19 +81,16 @@ public interface BuildEventFactory {
         return createFailure(message, null, Collections.emptyList(), error, notification, navigatable);
     }
 
-    
     default Failure createFailure(@BuildEventsNls.Message String message, @BuildEventsNls.Description String description) {
         return createFailure(message, description, List.of(), null, null, null);
     }
 
-    
     default Failure createFailure(@BuildEventsNls.Message String message,
                                   @BuildEventsNls.Description String description,
                                   List<? extends Failure> causes) {
         return createFailure(message, description, causes, null, null, null);
     }
 
-    
     Failure createFailure(@BuildEventsNls.Message String message,
                           @BuildEventsNls.Description String description,
                           List<? extends Failure> causes,
@@ -111,10 +98,8 @@ public interface BuildEventFactory {
                           @Nullable Notification notification,
                           @Nullable Navigatable navigatable);
 
-    
     FailureResult createFailureResult(List<Failure> failures);
 
-    
     FileMessageEvent createFileMessageEvent(Object parentId,
                                             MessageEvent.Kind kind,
                                             NotificationGroup group,
@@ -122,21 +107,18 @@ public interface BuildEventFactory {
                                             @Nullable @BuildEventsNls.Description String detailedMessage,
                                             FilePosition filePosition);
 
-    
     FinishEvent createFinishEvent(Object eventId,
                                   @Nullable Object parentId,
                                   long eventTime,
                                   @BuildEventsNls.Message String message,
                                   EventResult result);
 
-    
     FinishBuildEvent createFinishBuildEvent(Object eventId,
                                             @Nullable Object parentId,
                                             long eventTime,
                                             @BuildEventsNls.Message String message,
                                             EventResult result);
 
-    
     default MessageEvent createMessageEvent(Object parentId,
                                             MessageEvent.Kind kind,
                                             NotificationGroup group,
@@ -145,7 +127,6 @@ public interface BuildEventFactory {
         return createMessageEvent(parentId, kind, group, message, detailedMessage, null);
     }
 
-    
     MessageEvent createMessageEvent(Object parentId,
                                     MessageEvent.Kind kind,
                                     NotificationGroup group,
@@ -153,27 +134,22 @@ public interface BuildEventFactory {
                                     @Nullable String detailedMessage,
                                     @Nullable Navigatable navigatable);
 
-    
     StartEvent createStartEvent(Object eventId,
                                 @Nullable Object parentId,
                                 long eventTime,
                                 @BuildEventsNls.Message String message);
 
-    
     BuildIssueEvent createBuildIssueEvent(
         Object parentId,
         BuildIssue buildIssue,
         MessageEvent.Kind kind
     );
 
-    
     StartBuildEvent createStartBuildEvent(BuildDescriptor descriptor, @BuildEventsNls.Message String message);
 
-    
     default OutputBuildEvent createOutputBuildEvent(@Nullable Object parentId, @BuildEventsNls.Message String message, boolean stdOut) {
         return createOutputBuildEvent(new Object(), parentId, message, stdOut);
     }
 
-    
     OutputBuildEvent createOutputBuildEvent(Object eventId, @Nullable Object parentId, @BuildEventsNls.Message String message, boolean stdOut);
 }
