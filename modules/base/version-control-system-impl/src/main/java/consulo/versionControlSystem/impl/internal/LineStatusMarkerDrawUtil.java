@@ -61,21 +61,32 @@ public final class LineStatusMarkerDrawUtil {
         ColorValue borderColor = getGutterBorderColor(editor);
 
         EditorGutterComponentEx gutter = ((EditorEx) editor).getGutterComponentEx();
-        // r.x == getLineMarkerFreePaintersAreaOffset() for RIGHT renderers; +1 px for brace highlighters.
-        // r.x + r.width == right edge of the right free painters area.
-        // Do NOT use getWhitespaceSeparatorOffset() — in Consulo that returns getWidth()-3
-        // (the full gutter right edge), whereas the VCS marker area ends much earlier
-        // (line numbers, icons and folding come after the free painters area in this layout).
-        int x = r.x + JBUI.scale(1);
-        int endX = r.x + r.width;
+        // RIGHT_FREE_PAINTERS_AREA is placed LAST in the Consulo gutter layout (after folding),
+        // matching JB's EXTRA_RIGHT_FREE_PAINTERS_AREA position (adjacent to editor content).
+        // Layout: [...folding][RIGHT_FREE(9px)][3px gap][editor content]
+        //
+        // Bar width: getRightFreePaintersAreaWidth() = scale(4) + scale(5) = 9px.
+        // The 4px is the actual bar; the 5px is the hover-expansion margin (to the left of the bar).
+        // The bar is RIGHT-aligned within the area.
+        //
+        // Equivalent to JB's getGutterArea() new-UI logic:
+        //   x = extraOffset+3, endX = extraOffset+7  →  4px bar
+        //   hovered: x1 = x - getHoveredMarkerExtraWidth() = x - 3  →  7px wide
+        // Consulo mapping (bar right-aligned within 9px area):
+        //   non-hovered: [r.x+5, r.x+9] = 4px
+        //   hovered:     [r.x+2, r.x+9] = 7px
+        int barWidth = JBUI.scale(JBUI.getInt("Gutter.VcsChanges.width", 4));
+        int hoverExtra = JBUI.scale(3);  // matches JB's getHoveredMarkerExtraWidth()
+        int endX = r.x + r.width;        // right edge (adjacent to line numbers)
+        int xBar = endX - barWidth;       // non-hovered left edge of bar
         int y = DiffImplUtil.lineToY(editor, range.getLine1());
         int endY = DiffImplUtil.lineToY(editor, range.getLine2());
 
         Graphics2D g2 = (Graphics2D) g;
 
-        // Hover: expand LEFT by 3 px only if the mouse is over THIS range (not any range).
+        // Hover: expand left by hoverExtra (endX stays fixed — same as JB's paintChangedLines).
         boolean isHovered = isRangeHovered(range, gutter);
-        int xPaint = isHovered ? x - JBUI.scale(3) : x;
+        int xPaint = isHovered ? xBar - hoverExtra : xBar;
 
         if (range.getInnerRanges() == null) {          // Mode.DEFAULT
             if (y != endY) {
@@ -138,8 +149,9 @@ public final class LineStatusMarkerDrawUtil {
      * at {@link EditorGutterComponentEx#getLineMarkerFreePaintersAreaOffset()}).
      */
     public static Rectangle getMarkerArea(Editor editor, Rectangle r, int line1, int line2) {
-        int x = r.x + JBUI.scale(1);  // 1 px gap for brace highlighters
-        int endX = r.x + r.width;     // right edge of the right free painters area
+        int barWidth = JBUI.scale(JBUI.getInt("Gutter.VcsChanges.width", 4));
+        int endX = r.x + r.width;   // right edge (adjacent to line numbers)
+        int x = endX - barWidth;     // bar left edge (right-aligned, same as non-hovered paintRange)
         int y = DiffImplUtil.lineToY(editor, line1);
         int endY = DiffImplUtil.lineToY(editor, line2);
         return new Rectangle(x, y, endX - x, endY - y);
@@ -214,7 +226,9 @@ public final class LineStatusMarkerDrawUtil {
     public static void paintTriangle(Graphics2D g, Editor editor,
                                       @Nullable ColorValue color, @Nullable ColorValue borderColor,
                                       int x1, int x2, int y) {
-        int size = (int) JBUIScale.scale(4 * getEditorScale(editor));
+        // JB uses 5 in new UI (getTriangleHeight: unscaled = isNewUI ? 5 : 4).
+        // Consulo always uses new UI.
+        int size = (int) JBUIScale.scale(5 * getEditorScale(editor));
         if (y < size) y = size;
 
         if (color != null) {

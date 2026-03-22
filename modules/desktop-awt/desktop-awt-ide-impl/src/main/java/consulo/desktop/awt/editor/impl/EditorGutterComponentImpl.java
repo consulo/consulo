@@ -1859,9 +1859,13 @@ public class EditorGutterComponentImpl extends JComponent implements EditorGutte
         Point point = e.getPoint();
         int x = convertX(point.x);
 
+        // RIGHT_FREE_PAINTERS_AREA is now at the end of the layout (after folding),
+        // matching JB's EXTRA_RIGHT_FREE_PAINTERS_AREA position. Use its actual offset.
+        // Equivalent to JB's isInsideMarkerArea() check: offset < x <= offset + width.
+        int rfpOffset = getLineMarkerFreePaintersAreaOffset();
+        int rfpWidth = myLayout.getAreaWidth(EditorGutterLayout.RIGHT_FREE_PAINTERS_AREA);
         int hoveredLine;
-        if (x >= getLineMarkerAreaOffset() &&
-            x <= getLineMarkerAreaOffset() + getLeftFreePaintersAreaWidth() + getRightFreePaintersAreaWidth()) {
+        if (x > rfpOffset && x <= rfpOffset + rfpWidth) {
             hoveredLine = getEditor().xyToLogicalPosition(point).line;
         }
         else {

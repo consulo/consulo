@@ -14,6 +14,7 @@ package consulo.versionControlSystem.internal;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
+import consulo.codeEditor.Editor;
 import consulo.document.Document;
 import consulo.project.Project;
 import org.jspecify.annotations.Nullable;
@@ -28,4 +29,12 @@ public interface LineStatusTrackerManagerI {
     }
 
     @Nullable LineStatusTrackerI getLineStatusTracker(Document document);
+
+    /**
+     * Convenience overload: resolves the document from the editor and delegates
+     * to {@link #getLineStatusTracker(Document)}.
+     */
+    default @Nullable LineStatusTrackerI getLineStatusTracker(Editor editor) {
+        return getLineStatusTracker(editor.getDocument());
+    }
 }
