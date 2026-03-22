@@ -88,12 +88,17 @@ public class ExternalProjectsViewImpl extends SimpleToolWindowPanel implements E
         myUiAware = ExternalSystemUiUtil.getUiAware(externalSystemId);
         myProjectsManager = ExternalProjectsManager.getInstance(project);
 
-        myViewContributors = new ArrayList<>(
-            ContainerUtil.filter(
-                project.getApplication().getExtensionList(ExternalSystemViewContributor.class),
-                c -> ProjectSystemId.IDE.equals(c.getSystemId()) || myExternalSystemId.equals(c.getSystemId())
-            )
-        );
+        // System-specific contributors must come before the IDE (catch-all) contributor
+        // so their getDisplayName() overrides take priority.
+        List<ExternalSystemViewContributor> allContributors =
+            project.getApplication().getExtensionList(ExternalSystemViewContributor.class);
+        myViewContributors = new ArrayList<>();
+        for (ExternalSystemViewContributor c : allContributors) {
+            if (myExternalSystemId.equals(c.getSystemId())) myViewContributors.add(c);
+        }
+        for (ExternalSystemViewContributor c : allContributors) {
+            if (ProjectSystemId.IDE.equals(c.getSystemId())) myViewContributors.add(c);
+        }
 
         Disposer.register(parentDisposable, () -> {
             myListeners.clear();

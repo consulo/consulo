@@ -15,11 +15,11 @@
  */
 package consulo.externalSystem.view;
 
-import consulo.externalSystem.ui.ExternalSystemUiAware;
 import consulo.externalSystem.model.DataNode;
 import consulo.externalSystem.service.project.manage.ExternalProjectsManager;
 import consulo.externalSystem.service.project.manage.ExternalSystemShortcutsManager;
 import consulo.externalSystem.service.project.manage.ExternalSystemTaskActivator;
+import consulo.externalSystem.ui.ExternalSystemUiAware;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.awt.tree.SimpleNode;
@@ -27,13 +27,13 @@ import consulo.ui.ex.awt.tree.SimpleTree;
 import consulo.ui.ex.tree.NodeDescriptor;
 import consulo.ui.ex.tree.PresentationData;
 import consulo.util.lang.StringUtil;
+import org.jspecify.annotations.Nullable;
 
 import java.awt.*;
 import java.awt.event.InputEvent;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
-import org.jspecify.annotations.Nullable;
 
 /**
  * Abstract base class for all nodes in the external system project tree.
@@ -194,9 +194,12 @@ public abstract class ExternalSystemNode<T> extends SimpleNode implements Compar
     }
 
     private ExternalSystemNode<?>[] buildChildren() {
+        // Copy doBuildChildren() result BEFORE resetting myChildrenList to avoid duplication
+        // when doBuildChildren() returns myChildrenList itself (e.g. for RootNode with no dataNode).
         List<? extends ExternalSystemNode<?>> newCandidates = new ArrayList<>(doBuildChildren());
         if (newCandidates.isEmpty()) return NO_CHILDREN;
 
+        myChildrenList = NO_CHILDREN_LIST;
         addAll(newCandidates, true);
         sort(myChildrenList);
         List<ExternalSystemNode<?>> visibleNodes = new ArrayList<>();

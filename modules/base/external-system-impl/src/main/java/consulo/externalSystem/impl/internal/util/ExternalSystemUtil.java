@@ -28,6 +28,7 @@ import consulo.execution.runner.ProgramRunner;
 import consulo.externalSystem.ExternalSystemManager;
 import consulo.externalSystem.impl.internal.service.ExternalSystemProcessingManager;
 import consulo.externalSystem.impl.internal.service.ExternalSystemResolveProjectTaskImpl;
+import consulo.externalSystem.impl.internal.service.ExternalSystemSyncViewListener;
 import consulo.externalSystem.impl.internal.service.ImportCanceledException;
 import consulo.externalSystem.impl.internal.service.project.ProjectStructureHelper;
 import consulo.externalSystem.impl.internal.service.project.manage.ModuleDataService;
@@ -392,7 +393,20 @@ public class ExternalSystemUtil {
             ExternalSystemResolveProjectTaskImpl task =
                 new ExternalSystemResolveProjectTaskImpl(externalSystemId, project, externalProjectPath, isPreviewMode);
 
-            task.execute(indicator, ExternalSystemTaskNotificationListener.EP_NAME.getExtensions());
+            // Build the notification listener list.  EP listeners are always included; for non-preview
+            // syncs we additionally route progress/output to the Sync tool window via SyncViewManager.
+            ExternalSystemTaskNotificationListener[] epListeners = ExternalSystemTaskNotificationListener.EP_NAME.getExtensions();
+            ExternalSystemTaskNotificationListener[] taskListeners;
+            if (!isPreviewMode) {
+                List<ExternalSystemTaskNotificationListener> listenerList = new ArrayList<>(Arrays.asList(epListeners));
+                listenerList.add(new ExternalSystemSyncViewListener(project, externalSystemId, externalProjectPath, projectName, task));
+                taskListeners = listenerList.toArray(new ExternalSystemTaskNotificationListener[0]);
+            }
+            else {
+                taskListeners = epListeners;
+            }
+
+            task.execute(indicator, taskListeners);
             if (project.isDisposed()) {
                 return;
             }

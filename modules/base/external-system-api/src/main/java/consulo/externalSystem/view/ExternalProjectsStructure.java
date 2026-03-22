@@ -71,7 +71,7 @@ public class ExternalProjectsStructure extends SimpleTreeStructure implements Di
     public void updateUpTo(SimpleNode node) {
         SimpleNode each = node;
         while (each != null) {
-            myTreeModel.invalidate(each, true);
+            myTreeModel.invalidate(each, false);
             each = each.getParent();
         }
     }
@@ -154,9 +154,6 @@ public class ExternalProjectsStructure extends SimpleTreeStructure implements Di
                 }
             }
         }
-
-        // Force full tree rebuild to make all structural changes visible
-        myTreeModel.invalidate();
     }
 
     @SuppressWarnings("unchecked")
