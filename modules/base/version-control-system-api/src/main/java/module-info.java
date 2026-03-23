@@ -15,11 +15,13 @@ module consulo.version.control.system.api {
   requires consulo.application.ui.api;
   requires consulo.code.editor.api;
   requires consulo.execution.api;
+  requires consulo.language.api;
   requires transitive consulo.diff.api;
 
   requires consulo.ui.ex.awt.api;
 
   exports consulo.versionControlSystem;
+  exports consulo.versionControlSystem.codeVision;
   exports consulo.versionControlSystem.checkin;
   exports consulo.versionControlSystem.checkout;
   exports consulo.versionControlSystem.localize;

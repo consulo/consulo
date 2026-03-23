@@ -1,3 +1,13 @@
+code.vision.author.label:
+    text: Code Author
+code.vision.label.new.code:
+    text: New code
+code.vision.label.single.author.modified:
+    text: "{0} (modified)"
+code.vision.label.multi.author.not.modified:
+    text: "{0} & {1} others"
+code.vision.label.multi.author.modified:
+    text: "{0} & {1} others (modified)"
 action.NotificationAction.VcsRootProblemNotifier.text.configure:
     text: Configure…
 action.NotificationAction.VcsRootProblemNotifier.text.enable.integration:
