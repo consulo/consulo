@@ -73,7 +73,6 @@ public class CompilerTask extends Task.Backgroundable {
         myBuildViewService = new BuildViewServiceImpl(project, mySessionId, contentName.get(), counters);
     }
 
-    
     public ProgressIndicator getIndicator() {
         return myIndicator;
     }
@@ -204,6 +203,9 @@ public class CompilerTask extends Task.Backgroundable {
 
     public void start(Consumer<BuildProgress<BuildProgressDescriptor>> compileWork) {
         myCompileWork = compileWork;
+
+        myBuildViewService.openBuildToolWindow();
+        
         queue();
     }
 }

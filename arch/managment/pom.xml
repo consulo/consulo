@@ -995,7 +995,7 @@
                 <plugin>
                     <groupId>consulo.maven</groupId>
                     <artifactId>maven-consulo-plugin</artifactId>
-                    <version>3.14</version>
+                    <version>3.15</version>
                     <extensions>true</extensions>
                 </plugin>
             </plugins>

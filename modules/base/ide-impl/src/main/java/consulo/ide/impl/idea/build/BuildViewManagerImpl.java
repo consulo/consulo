@@ -24,19 +24,16 @@ public class BuildViewManagerImpl extends AbstractViewManager implements BuildVi
         super(project, buildContentManager);
     }
 
-    
     @Override
     public String getViewId() {
         return "BuildOutput";
     }
 
-    
     @Override
     public LocalizeValue getViewName() {
         return BuildLocalize.tabTitleBuildOutput();
     }
 
-    
     @Override
     public BuildProgress<BuildProgressDescriptor> createBuildProgress() {
         BuildRootProgressImpl progress = new BuildRootProgressImpl();

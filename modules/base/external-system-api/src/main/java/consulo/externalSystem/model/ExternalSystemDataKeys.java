@@ -15,12 +15,19 @@
  */
 package consulo.externalSystem.model;
 
+import consulo.externalSystem.ui.ExternalSystemUiAware;
 import consulo.externalSystem.internal.ui.ExternalSystemRecentTasksList;
 import consulo.externalSystem.model.execution.ExternalTaskExecutionInfo;
 import consulo.externalSystem.model.project.ExternalProjectPojo;
 import consulo.externalSystem.ui.awt.ExternalSystemTasksTreeModel;
+import consulo.externalSystem.view.ExternalProjectsView;
+import consulo.externalSystem.view.ExternalSystemNode;
+import consulo.externalSystem.view.ProjectNode;
 import consulo.project.ui.notification.NotificationGroup;
+import consulo.ui.ex.awt.tree.SimpleTree;
 import consulo.util.dataholder.Key;
+
+import java.util.List;
 
 /**
  * @author Denis Zhdanov
@@ -36,4 +43,12 @@ public interface ExternalSystemDataKeys {
   Key<ExternalSystemRecentTasksList> RECENT_TASKS_LIST = Key.create("external.system.recent.tasks.list");
 
   Key<Boolean> NEWLY_IMPORTED_PROJECT = Key.create("external.system.newly.imported");
+
+  // Keys for ExternalProjectsView-based tool window
+  Key<ExternalProjectsView> VIEW = Key.create("external.system.view");
+  Key<SimpleTree> PROJECTS_TREE = Key.create("external.system.projects.tree");
+  @SuppressWarnings("rawtypes")
+  Key<List<ExternalSystemNode>> SELECTED_NODES = Key.create("external.system.selected.nodes");
+  Key<ProjectNode> SELECTED_PROJECT_NODE = Key.create("external.system.selected.project.node");
+  Key<ExternalSystemUiAware> UI_AWARE = Key.create("external.system.ui.aware");
 }

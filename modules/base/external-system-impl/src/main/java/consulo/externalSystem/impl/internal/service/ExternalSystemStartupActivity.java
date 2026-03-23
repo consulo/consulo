@@ -20,6 +20,7 @@ import consulo.application.Application;
 import consulo.externalSystem.ExternalSystemManager;
 import consulo.externalSystem.impl.internal.service.project.ProjectRenameAware;
 import consulo.externalSystem.impl.internal.service.project.autoimport.ExternalSystemAutoImporter;
+import consulo.externalSystem.impl.internal.service.project.manage.ExternalProjectsManagerImpl;
 import consulo.externalSystem.impl.internal.service.ui.ExternalToolWindowManager;
 import consulo.externalSystem.impl.internal.service.vcs.ExternalSystemVcsRegistrar;
 import consulo.externalSystem.impl.internal.util.ExternalSystemUtil;
@@ -42,6 +43,9 @@ public class ExternalSystemStartupActivity implements BackgroundStartupActivity 
         Application app = project.getApplication();
         app.invokeLater(
             () -> {
+                // Initialize ExternalProjectsManager so queued runWhenInitialized callbacks fire
+                ExternalProjectsManagerImpl.getInstance(project).init();
+
                 project.getApplication().getExtensionPoint(ExternalSystemManager.class).forEach(manager -> {
                     if (manager instanceof StartupActivity startupActivity) {
                         startupActivity.runActivity(project, uiAccess);

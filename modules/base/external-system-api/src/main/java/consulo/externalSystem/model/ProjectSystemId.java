@@ -21,22 +21,16 @@ public class ProjectSystemId implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    
     public static final ProjectSystemId IDE = new ProjectSystemId("IDE", LocalizeValue.localizeTODO("IDE"));
 
-    
     private final String myId;
 
-    
     private final String myCapitalizedId;
 
-    
     private final LocalizeValue myDisplayName;
 
-    
     private final Image myIcon;
 
-    
     private final Image myModuleIcon;
 
     @Deprecated
@@ -65,43 +59,35 @@ public class ProjectSystemId implements Serializable {
         myIcon = icon;
         myModuleIcon = moduleIcon;
     }
-
     
     public String getId() {
         return myId;
     }
-
     
     public final Image getIcon() {
         return myIcon;
     }
-
     
     public final Image getModuleIcon() {
         return myModuleIcon;
     }
-
     
     @Deprecated
     public LocalizeValue getReadableName() {
         return getDisplayName();
     }
-
     
     public LocalizeValue getDisplayName() {
         return myDisplayName;
     }
-
     
     public String getToolWindowId() {
         return myId;
     }
-
     
     public String getLibraryPrefix() {
         return myCapitalizedId;
     }
-
     
     public String getRunConfigurationId() {
         return myCapitalizedId + "RunConfiguration";

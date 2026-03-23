@@ -41,7 +41,7 @@ public class ChangesBrowserSpecificFilesNode extends ChangesBrowserNode {
   @Override
   public void render(ChangesBrowserNodeRenderer renderer, boolean selected, boolean expanded, boolean hasFocus) {
     super.render(renderer, selected, expanded, hasFocus);
-    if (isManyFiles()) {
+    if (isManyFiles() && myDialogShower != null) {
       renderer.append(" ", SimpleTextAttributes.REGULAR_ATTRIBUTES);
       renderer.append("browse", SimpleTextAttributes.LINK_ATTRIBUTES, myDialogShower);
     }

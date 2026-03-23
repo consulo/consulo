@@ -19,7 +19,24 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.versionControlSystem.FilePath;
 
+import java.util.Collections;
+import java.util.Set;
+
 @ExtensionAPI(ComponentScope.PROJECT)
 public interface IgnoredFileProvider {
   boolean isIgnoredFilePath(FilePath filePath);
+
+  /**
+   * Returns the set of files/masks/directories that this provider wants to add to VCS ignore files.
+   */
+  default Set<IgnoredFileDescriptor> getIgnoredFiles() {
+    return Collections.emptySet();
+  }
+
+  /**
+   * Returns a human-readable description of the group of ignored files provided by this extension.
+   */
+  default String getIgnoredGroupDescription() {
+    return "";
+  }
 }

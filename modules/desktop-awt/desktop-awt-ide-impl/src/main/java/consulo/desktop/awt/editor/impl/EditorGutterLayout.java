@@ -102,11 +102,12 @@ public class EditorGutterLayout {
       //  .showIf(() -> myEditorGutter.getLeftFreePaintersAreaWidth() + myEditorGutter.getRightFreePaintersAreaWidth() > 0 && myEditorGutter.isLineMarkersShown()),
       area(LEFT_FREE_PAINTERS_AREA, myEditorGutter::getLeftFreePaintersAreaWidth)
         .showIf(() -> myEditorGutter.isLineMarkersShown()),
-      area(RIGHT_FREE_PAINTERS_AREA, myEditorGutter::getRightFreePaintersAreaWidth)
-        .showIf(() -> myEditorGutter.isLineMarkersShown()),
+      // Gap between the left free painters area and line numbers.
+      // RIGHT_FREE_PAINTERS_AREA (VCS markers) is moved to the end of the layout (after FOLDING)
+      // to match JetBrains' EXTRA_RIGHT_FREE_PAINTERS_AREA position (adjacent to editor content).
       areaGap(4)
         .as(EditorMouseEventArea.LINE_MARKERS_AREA)
-        .showIf(() -> myEditorGutter.getLeftFreePaintersAreaWidth() + myEditorGutter.getRightFreePaintersAreaWidth() > 0 && myEditorGutter.isLineMarkersShown()),
+        .showIf(() -> myEditorGutter.isLineMarkersShown()),
 
       //areaGap(4).as(EditorMouseEventArea.LINE_NUMBERS_AREA).showIf(this::isLineNumbersShown),
       area(LINE_NUMBERS_AREA, () -> myEditorGutter.myLineNumberAreaWidth).showIf(this::isLineNumbersShown),
@@ -120,6 +121,10 @@ public class EditorGutterLayout {
       area(ICONS_AREA, myEditorGutter::getIconsAreaWidth).showIf(() -> myEditorGutter.isLineMarkersShown()),
       area(GAP_AFTER_ICONS_AREA, myEditorGutter::getGapAfterIconsArea),
       area(FOLDING_AREA, myEditorGutter::getFoldingAreaWidth),
+      // VCS change markers: placed LAST (adjacent to editor content), matching JB's EXTRA_RIGHT_FREE_PAINTERS_AREA.
+      // Equivalent to JB new-UI layout: [...folding][extra_right_free(8px)][1px gap].
+      area(RIGHT_FREE_PAINTERS_AREA, myEditorGutter::getRightFreePaintersAreaWidth)
+        .showIf(() -> myEditorGutter.isLineMarkersShown()),
       areaGap(3).showIf(() -> myEditorGutter.isLineMarkersShown())
     );
   }

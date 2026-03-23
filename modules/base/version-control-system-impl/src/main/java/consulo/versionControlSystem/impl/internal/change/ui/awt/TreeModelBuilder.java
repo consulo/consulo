@@ -144,7 +144,7 @@ public class TreeModelBuilder {
     int dirsCount = ContainerUtil.count(ignoredFiles, it -> it.isDirectory());
     int filesCount = ignoredFiles.size() - dirsCount;
     boolean manyFiles = ignoredFiles.size() > UNVERSIONED_MAX_SIZE;
-    ChangesBrowserIgnoredFilesNode node = new ChangesBrowserIgnoredFilesNode(myProject, filesCount, dirsCount, manyFiles, updatingMode);
+    ChangesBrowserIgnoredFilesNode node = new ChangesBrowserIgnoredFilesNode(filesCount, dirsCount, manyFiles, updatingMode);
     return insertSpecificNodeToModel(ignoredFiles, node);
   }
 

@@ -443,8 +443,6 @@ public class CompileDriverImpl implements CompileDriver {
     ) {
         UIAccess.assertIsUIThread();
 
-        ProblemsView.getInstance(myProject).clearOldMessages();
-
         CompileCounters counters = new CompileCounters();
         LocalizeValue contentName = forceCompile ? CompilerLocalize.compilerContentNameCompile() : CompilerLocalize.compilerContentNameMake();
         Application application = myProject.getApplication();

@@ -16,16 +16,21 @@
 package consulo.externalSystem.impl.internal.service.project;
 
 import consulo.annotation.component.ServiceImpl;
+import consulo.application.Application;
+import consulo.component.extension.ExtensionPoint;
 import consulo.content.OrderRootType;
 import consulo.content.base.BinariesOrderRootType;
 import consulo.content.base.DocumentationOrderRootType;
 import consulo.content.base.SourcesOrderRootType;
 import consulo.externalSystem.model.project.LibraryPathType;
 import consulo.externalSystem.service.project.ExternalLibraryPathTypeMapper;
+import jakarta.annotation.Nonnull;
+import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
 import java.util.EnumMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * @author Denis Zhdanov
@@ -34,19 +39,26 @@ import java.util.Map;
 @Singleton
 @ServiceImpl
 public class ExternalLibraryPathTypeMapperImpl implements ExternalLibraryPathTypeMapper {
+    private final Map<LibraryPathType, OrderRootType> myMapping = new EnumMap<>(LibraryPathType.class);
 
-  private static final Map<LibraryPathType, OrderRootType> MAPPINGS = new EnumMap<>(LibraryPathType.class);
+    @Inject
+    public ExternalLibraryPathTypeMapperImpl(@Nonnull Application application) {
+        ExtensionPoint<OrderRootType> point = application.getExtensionPoint(OrderRootType.class);
 
-  static {
-    MAPPINGS.put(LibraryPathType.BINARY, BinariesOrderRootType.getInstance());
-    MAPPINGS.put(LibraryPathType.SOURCE, SourcesOrderRootType.getInstance());
-    MAPPINGS.put(LibraryPathType.DOC, DocumentationOrderRootType.getInstance());
-    assert LibraryPathType.values().length == MAPPINGS.size();
-  }
+        for (LibraryPathType type : LibraryPathType.values()) {
+            // switch protects us for new rows
+            Class<? extends OrderRootType> orderRootType = switch (type) {
+                case BINARY -> BinariesOrderRootType.class;
+                case SOURCE -> SourcesOrderRootType.class;
+                case DOC -> DocumentationOrderRootType.class;
+            };
 
-  
-  @Override
-  public OrderRootType map(LibraryPathType type) {
-    return MAPPINGS.get(type);
-  }
+            myMapping.put(type, point.findExtensionOrFail(orderRootType));
+        }
+    }
+
+    @Override
+    public OrderRootType map(LibraryPathType type) {
+        return Objects.requireNonNull(myMapping.get(type));
+    }
 }

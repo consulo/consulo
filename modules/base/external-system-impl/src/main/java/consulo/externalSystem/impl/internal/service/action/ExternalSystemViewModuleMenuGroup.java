@@ -13,21 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.versionControlSystem.change;
+package consulo.externalSystem.impl.internal.service.action;
 
-import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.ExtensionAPI;
-import consulo.versionControlSystem.VcsKey;
+import consulo.annotation.component.ActionImpl;
+import consulo.annotation.component.ActionRef;
+import consulo.application.dumb.DumbAware;
+import consulo.ui.ex.action.DefaultActionGroup;
 
 /**
+ * Context menu for module nodes in the External System tool window.
+ *
  * @author VISTALL
- * @since 2025-08-31
  */
-@ExtensionAPI(ComponentScope.PROJECT)
-public interface VcsIgnoredFilesHolderProvider {
-    
-    VcsKey getVcsKey();
-
-    
-    VcsIgnoredFilesHolder create();
+@ActionImpl(
+    id = "ExternalSystemView.ModuleMenu",
+    children = {
+        @ActionRef(type = RefreshExternalProjectAction.class),
+        @ActionRef(type = OpenExternalConfigAction.class),
+    }
+)
+public class ExternalSystemViewModuleMenuGroup extends DefaultActionGroup implements DumbAware {
 }

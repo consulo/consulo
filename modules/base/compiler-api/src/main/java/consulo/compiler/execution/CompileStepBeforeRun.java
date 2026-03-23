@@ -60,19 +60,16 @@ public class CompileStepBeforeRun extends CompileStepBeforeRunBase<CompileStepBe
         super(project);
     }
 
-    
     @Override
     public Key<MakeBeforeRunTask> getId() {
         return ID;
     }
 
-    
     @Override
     public LocalizeValue getName() {
         return ExecutionLocalize.beforeLaunchCompileStep();
     }
 
-    
     @Override
     public LocalizeValue getDescription(MakeBeforeRunTask task) {
         return ExecutionLocalize.beforeLaunchCompileStep();
@@ -91,7 +88,6 @@ public class CompileStepBeforeRun extends CompileStepBeforeRunBase<CompileStepBe
         return task;
     }
 
-    
     @Override
     public AsyncResult<Void> executeTaskAsync(
         UIAccess uiAccess,

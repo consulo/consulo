@@ -19,6 +19,7 @@ import consulo.project.Project;
 import consulo.util.io.FileUtil;
 import consulo.util.lang.Comparing;
 import consulo.util.lang.PatternUtil;
+import consulo.versionControlSystem.FilePath;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.NullVirtualFile;
 import consulo.virtualFileSystem.VirtualFile;
@@ -32,7 +33,7 @@ import java.util.regex.Matcher;
  * @author yole
  * @since 2006-12-20
  */
-public class IgnoredFileBean {
+public class IgnoredFileBean implements IgnoredFileDescriptor {
   private final String myPath;
   private final String myFilenameIfFile;
   private final String myMask;
@@ -106,6 +107,8 @@ public class IgnoredFileBean {
     return result;
   }
 
+  @Override
+  @Deprecated
   public boolean matchesFile(VirtualFile file) {
     if (myType == IgnoreSettingsType.MASK) {
       myMatcher.reset(file.getName());
@@ -127,6 +130,29 @@ public class IgnoredFileBean {
         }
         return VirtualFileUtil.isAncestor(selector, file, false);
       }
+    }
+  }
+
+  @Override
+  public boolean matchesFile(FilePath filePath) {
+    VirtualFile virtualFile = filePath.getVirtualFile();
+    if (virtualFile != null) {
+      return matchesFile(virtualFile);
+    }
+    // Fallback for non-existing files
+    if (myType == IgnoreSettingsType.MASK) {
+      synchronized (myMatcher) {
+        myMatcher.reset(filePath.getName());
+        return myMatcher.matches();
+      }
+    }
+    else if (myType == IgnoreSettingsType.FILE) {
+      if (!myFilenameIfFile.equals(filePath.getName())) return false;
+      return myPath != null && FileUtil.pathsEqual(myPath, filePath.getPath());
+    }
+    else {
+      // UNDER_DIR
+      return myPath != null && FileUtil.isAncestor(myPath, filePath.getPath(), false);
     }
   }
 

@@ -29,7 +29,7 @@ import java.util.function.Supplier;
 public class SourcesOrderRootType extends OrderRootType {
   private static final Supplier<SourcesOrderRootType> INSTANCE = ExtensionInstance.from(OrderRootType.class);
 
-  
+  @Deprecated
   public static SourcesOrderRootType getInstance() {
     return INSTANCE.get();
   }

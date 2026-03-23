@@ -172,12 +172,20 @@ public abstract class ChangeListManager {
 
   public abstract List<CommitExecutor> getRegisteredExecutors();
 
+  @Deprecated
+  @DeprecationInfo("Not implemented - use IgnoredFileProvider")
   public abstract void addFilesToIgnore(IgnoredFileBean... ignoredFiles);
 
+  @Deprecated
+  @DeprecationInfo("Not implemented - use IgnoredFileProvider")
   public abstract void addDirectoryToIgnoreImplicitly(String path);
 
+  @Deprecated
+  @DeprecationInfo("Not implemented - use IgnoredFileProvider")
   public abstract void setFilesToIgnore(IgnoredFileBean... ignoredFiles);
 
+  @Deprecated
+  @DeprecationInfo("Not implemented - use IgnoredFileProvider")
   public abstract IgnoredFileBean[] getFilesToIgnore();
 
   public boolean isIgnoredFile(VirtualFile file) {

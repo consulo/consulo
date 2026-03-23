@@ -39,7 +39,6 @@ public final class ExcludedContentFolderTypeProvider extends ContentFolderTypePr
 
     private static final ColorValue EXCLUDED_COLOR = new LightDarkColorValue(new RGBColor(153, 46, 0), StandardColors.RED);
 
-    
     public static ExcludedContentFolderTypeProvider getInstance() {
         return INSTANCE.get();
     }

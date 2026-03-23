@@ -50,10 +50,20 @@ public class DataNode<T> implements Serializable {
 
   private final @Nullable DataNode<?> myParent;
 
+  private boolean myIgnored;
+
   public DataNode(Key<T> key, T data, @Nullable DataNode<?> parent) {
     myKey = key;
     myData = data;
     myParent = parent;
+  }
+
+  public boolean isIgnored() {
+    return myIgnored;
+  }
+
+  public void setIgnored(boolean ignored) {
+    myIgnored = ignored;
   }
 
   public @Nullable DataNode<?> getParent() {

@@ -47,18 +47,10 @@ public class DefaultBuildDescriptor implements BuildDescriptor {
   private boolean myActivateToolWindowWhenFailed = true;
   private boolean myAutoFocusContent = false;
 
-  private final
-  
-  List<AnAction> myActions = new SmartList<>();
-  private final
-  
-  List<AnAction> myRestartActions = new SmartList<>();
-  private final
-  
-  List<Filter> myExecutionFilters = new SmartList<>();
-  private final
-  
-  List<Function<? super ExecutionNode, ? extends AnAction>> myContextActions = new SmartList<>();
+  private final List<AnAction> myActions = new SmartList<>();
+  private final List<AnAction> myRestartActions = new SmartList<>();
+  private final List<Filter> myExecutionFilters = new SmartList<>();
+  private final List<Function<? super ExecutionNode, ? extends AnAction>> myContextActions = new SmartList<>();
 
   private
   @Nullable BuildProcessHandler myProcessHandler;

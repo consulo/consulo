@@ -33,6 +33,5 @@ public interface BuildViewManager extends ViewManager, BuildProgressListener, Bu
     return project.getInstance(BuildViewManager.class);
   }
 
-  
   BuildProgress<BuildProgressDescriptor> createBuildProgress();
 }

@@ -4,10 +4,9 @@ package consulo.compiler.impl.internal;
 
 import consulo.application.internal.ProgressIndicatorEx;
 import consulo.application.progress.ProgressIndicator;
-import consulo.build.ui.BuildDescriptor;
-import consulo.build.ui.BuildViewManager;
-import consulo.build.ui.DefaultBuildDescriptor;
-import consulo.build.ui.FilePosition;
+import consulo.build.ui.*;
+import consulo.build.ui.event.FailureResult;
+import consulo.build.ui.event.FinishEvent;
 import consulo.build.ui.event.MessageEvent;
 import consulo.build.ui.impl.internal.event.FileNavigatable;
 import consulo.build.ui.issue.BuildIssue;
@@ -30,6 +29,7 @@ import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.IdeActions;
+import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
@@ -113,11 +113,25 @@ public class BuildViewServiceImpl {
 
                     counters.addErrorFile(file);
 
-                    WolfTheProblemSolver wolf = WolfTheProblemSolver.getInstance((Project) myProject);
+                    WolfTheProblemSolver wolf = WolfTheProblemSolver.getInstance(myProject);
 
                     wolf.queue(file);
                 }
+            } else if (event instanceof FinishEvent finishEvent) {
+                if (finishEvent.getResult() instanceof FailureResult) {
+                    counters.inc(CompilerMessageCategory.ERROR);
+                }
             }
+        });
+    }
+
+    public void openBuildToolWindow() {
+        BuildContentManager contentManager = BuildContentManager.getInstance(myProject);
+
+        myProject.getUIAccess().execute(() -> {
+            ToolWindow toolWindow = contentManager.getOrCreateToolWindow();
+
+            toolWindow.activate(null);
         });
     }
 
@@ -338,7 +352,6 @@ public class BuildViewServiceImpl {
         return null;
     }
 
-    
     private static List<AnAction> getContextActions() {
         List<AnAction> contextActions = new ArrayList<>();
         ActionGroup compilerErrorsViewPopupGroup =
@@ -357,12 +370,5 @@ public class BuildViewServiceImpl {
             case INFORMATION -> MessageEvent.Kind.INFO;
             case STATISTICS -> MessageEvent.Kind.STATISTICS;
         };
-    }
-
-    public void onProgressChange(Object sessionId, ProgressIndicator indicator) {
-
-    }
-
-    public void registerCloseAction(Runnable onClose) {
     }
 }

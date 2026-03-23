@@ -7,8 +7,11 @@ import consulo.externalSystem.service.project.ExternalConfigPathAware;
 import consulo.externalSystem.service.project.Identifiable;
 import consulo.externalSystem.service.project.Named;
 import consulo.externalSystem.util.ExternalSystemApiUtil;
-
+import consulo.util.collection.ArrayUtil;
+import consulo.util.lang.StringUtil;
+import org.jetbrains.annotations.NotNull;
 import org.jspecify.annotations.Nullable;
+
 import java.io.File;
 import java.util.Collections;
 import java.util.HashMap;
@@ -21,133 +24,184 @@ import java.util.Map;
  */
 public class ModuleData extends AbstractNamedData implements Named, ExternalConfigPathAware, Identifiable {
 
-  private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-  
-  private final Map<ExternalSystemSourceType, String> myCompileOutputPaths = new HashMap<>();
-  
-  private final String myId;
-  
-  private final String myExternalConfigPath;
-  
-  private String myModuleDirPath;
-  private @Nullable String group;
-  private @Nullable String version;
-  
-  private List<File> myArtifacts;
+    private final Map<ExternalSystemSourceType, String> myCompileOutputPaths = new HashMap<>();
 
-  private boolean myInheritProjectCompileOutputPath = true;
+    private final String myId;
 
-  @Deprecated
-  public ModuleData(ProjectSystemId owner, String name, String moduleDir, String externalConfigPath) {
-    this("", owner, name, moduleDir, externalConfigPath);
-  }
+    private final String myExternalConfigPath;
 
-  public ModuleData(String id, ProjectSystemId owner, String name, String moduleFileDirectoryPath, String externalConfigPath) {
-    super(owner, name, name.replaceAll("(/|\\\\)", "_"));
-    myId = id;
-    myExternalConfigPath = externalConfigPath;
-    myArtifacts = Collections.emptyList();
-    setModuleDirPath(moduleFileDirectoryPath);
-  }
+    private String myModuleDirPath;
+    private @Nullable String group;
+    private @Nullable String version;
 
-  
-  @Override
-  public String getId() {
-    return myId;
-  }
+    private List<File> myArtifacts;
 
-  
-  @Override
-  public String getLinkedExternalProjectPath() {
-    return myExternalConfigPath;
-  }
+    private boolean myInheritProjectCompileOutputPath = true;
 
-  
-  public String getModuleDirPath() {
-    return myModuleDirPath;
-  }
+    private @Nullable String productionModuleId;
+    private String moduleName;
 
-  public void setModuleDirPath(String path) {
-    myModuleDirPath = path;
-  }
+    private String @Nullable [] ideModuleGroup;
 
-  public boolean isInheritProjectCompileOutputPath() {
-    return myInheritProjectCompileOutputPath;
-  }
-
-  public void setInheritProjectCompileOutputPath(boolean inheritProjectCompileOutputPath) {
-    myInheritProjectCompileOutputPath = inheritProjectCompileOutputPath;
-  }
-
-  /**
-   * Allows to get file system path of the compile output of the source of the target type.
-   *
-   * @param type target source type
-   * @return file system path to use for compile output for the target source type;
-   * {@link JavaProjectData#getCompileOutputPath() project compile output path} should be used if current module
-   * doesn't provide specific compile output path
-   */
-  public @Nullable String getCompileOutputPath(ExternalSystemSourceType type) {
-    return myCompileOutputPaths.get(type);
-  }
-
-  public void setCompileOutputPath(ExternalSystemSourceType type, @Nullable String path) {
-    if (path == null) {
-      myCompileOutputPaths.remove(type);
-      return;
+    @Deprecated
+    public ModuleData(ProjectSystemId owner, String name, String moduleDir, String externalConfigPath) {
+        this("", owner, name, moduleDir, externalConfigPath);
     }
-    myCompileOutputPaths.put(type, ExternalSystemApiUtil.toCanonicalPath(path));
-  }
 
-  public @Nullable String getGroup() {
-    return group;
-  }
+    public ModuleData(String id, ProjectSystemId owner, String externalName, String moduleFileDirectoryPath, String externalConfigPath) {
+        super(owner, externalName, externalName.replaceAll("(/|\\\\)", "_"));
+        myId = id;
+        myExternalConfigPath = externalConfigPath;
+        myArtifacts = Collections.emptyList();
+        setModuleDirPath(moduleFileDirectoryPath);
+        this.moduleName = externalName;
+    }
 
-  public void setGroup(@Nullable String group) {
-    this.group = group;
-  }
+    @Override
+    public String getId() {
+        return myId;
+    }
 
-  public @Nullable String getVersion() {
-    return version;
-  }
+    @Override
+    public String getLinkedExternalProjectPath() {
+        return myExternalConfigPath;
+    }
 
-  public void setVersion(@Nullable String version) {
-    this.version = version;
-  }
+    public String getModuleDirPath() {
+        return myModuleDirPath;
+    }
 
-  
-  public List<File> getArtifacts() {
-    return myArtifacts;
-  }
+    public void setModuleDirPath(String path) {
+        myModuleDirPath = path;
+    }
 
-  public void setArtifacts(List<File> artifacts) {
-    myArtifacts = artifacts;
-  }
+    public boolean isInheritProjectCompileOutputPath() {
+        return myInheritProjectCompileOutputPath;
+    }
 
-  @Override
-  public boolean equals(Object o) {
-    if (!(o instanceof ModuleData)) return false;
-    if (!super.equals(o)) return false;
+    public void setInheritProjectCompileOutputPath(boolean inheritProjectCompileOutputPath) {
+        myInheritProjectCompileOutputPath = inheritProjectCompileOutputPath;
+    }
 
-    ModuleData that = (ModuleData)o;
+    /**
+     * Allows to get file system path of the compile output of the source of the target type.
+     *
+     * @param type target source type
+     * @return file system path to use for compile output for the target source type;
+     * {@link JavaProjectData#getCompileOutputPath() project compile output path} should be used if current module
+     * doesn't provide specific compile output path
+     */
+    public @Nullable String getCompileOutputPath(ExternalSystemSourceType type) {
+        return myCompileOutputPaths.get(type);
+    }
 
-    if (group != null ? !group.equals(that.group) : that.group != null) return false;
-    if (version != null ? !version.equals(that.version) : that.version != null) return false;
+    public void setCompileOutputPath(ExternalSystemSourceType type, @Nullable String path) {
+        if (path == null) {
+            myCompileOutputPaths.remove(type);
+            return;
+        }
+        myCompileOutputPaths.put(type, ExternalSystemApiUtil.toCanonicalPath(path));
+    }
 
-    return true;
-  }
+    public @Nullable String getGroup() {
+        return group;
+    }
 
-  @Override
-  public int hashCode() {
-    int result = super.hashCode();
-    result = 31 * result + (group != null ? group.hashCode() : 0);
-    result = 31 * result + (version != null ? version.hashCode() : 0);
-    return result;
-  }
+    public void setGroup(@Nullable String group) {
+        this.group = group;
+    }
 
-  @Override
-  public String toString() {
-    return String.format("module '%s:%s:%s'", group == null ? "" : group, getExternalName(), version == null ? "" : version);
-  }
+    public @Nullable String getVersion() {
+        return version;
+    }
+
+    public void setVersion(@Nullable String version) {
+        this.version = version;
+    }
+
+    public List<File> getArtifacts() {
+        return myArtifacts;
+    }
+
+    public void setArtifacts(List<File> artifacts) {
+        myArtifacts = artifacts;
+    }
+
+    public @Nullable String getIdeGrouping() {
+        if (ideModuleGroup != null) {
+            return StringUtil.join(ideModuleGroup, ".");
+        }
+        else {
+            return getInternalName();
+        }
+    }
+
+    public String @Nullable [] getIdeModuleGroup() {
+        return ideModuleGroup;
+    }
+
+    /**
+     * Set or remove explicit module group for this module.
+     *
+     * @deprecated explicit module groups are replaced by automatic module grouping accordingly to qualified names of modules
+     * ([IDEA-166061](https://youtrack.jetbrains.com/issue/IDEA-166061) for details), so this method must not be used anymore, group names
+     * must be prepended to the module name, separated by dots, instead.
+     */
+    @SuppressWarnings("DeprecatedIsStillUsed")
+    @Deprecated
+    public void setIdeModuleGroup(String @Nullable [] ideModuleGroup) {
+        this.ideModuleGroup = ideModuleGroup;
+    }
+
+    public @Nullable String getIdeParentGrouping() {
+        if (ideModuleGroup != null) {
+            return StringUtil.nullize(StringUtil.join(ArrayUtil.remove(ideModuleGroup, ideModuleGroup.length - 1), "."));
+        }
+        else {
+            String name = getInternalName();
+            int i = name.lastIndexOf("." + moduleName);
+            if (i > -1) {
+                return name.substring(0, i);
+            }
+            else {
+                return null;
+            }
+        }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof ModuleData)) {
+            return false;
+        }
+        if (!super.equals(o)) {
+            return false;
+        }
+
+        ModuleData that = (ModuleData) o;
+
+        if (group != null ? !group.equals(that.group) : that.group != null) {
+            return false;
+        }
+        if (version != null ? !version.equals(that.version) : that.version != null) {
+            return false;
+        }
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = super.hashCode();
+        result = 31 * result + (group != null ? group.hashCode() : 0);
+        result = 31 * result + (version != null ? version.hashCode() : 0);
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("module '%s:%s:%s'", group == null ? "" : group, getExternalName(), version == null ? "" : version);
+    }
 }

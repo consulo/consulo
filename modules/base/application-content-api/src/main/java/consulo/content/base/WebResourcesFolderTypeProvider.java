@@ -39,7 +39,7 @@ import java.util.function.Supplier;
 public class WebResourcesFolderTypeProvider extends ContentFolderTypeProvider {
   private static final Supplier<WebResourcesFolderTypeProvider> INSTANCE = ExtensionInstance.from(ContentFolderTypeProvider.class);
 
-  
+  @Deprecated
   public static ContentFolderTypeProvider getInstance() {
     return INSTANCE.get();
   }
@@ -53,25 +53,25 @@ public class WebResourcesFolderTypeProvider extends ContentFolderTypeProvider {
     return 250;
   }
 
-  
+
   @Override
   public Image getIcon() {
     return PlatformIconGroup.modulesWebroot();
   }
 
-  
+
   @Override
   public Image getChildDirectoryIcon() {
     return PlatformIconGroup.modulesWebroot();
   }
 
-  
+
   @Override
   public LocalizeValue getName() {
     return ProjectLocalize.moduleToggleWebResourcesAction();
   }
 
-  
+
   @Override
   public ColorValue getGroupColor() {
     return new RGBColor(129, 45, 243);

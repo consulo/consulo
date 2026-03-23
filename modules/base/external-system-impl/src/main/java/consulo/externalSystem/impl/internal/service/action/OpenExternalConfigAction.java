@@ -9,7 +9,6 @@ import consulo.externalSystem.model.ExternalSystemDataKeys;
 import consulo.externalSystem.model.ProjectSystemId;
 import consulo.externalSystem.model.project.ExternalProjectPojo;
 import consulo.externalSystem.service.setting.ExternalSystemConfigLocator;
-import consulo.externalSystem.ui.awt.ExternalSystemUiUtil;
 import consulo.fileEditor.FileEditorManager;
 import consulo.localize.LocalizeValue;
 import consulo.navigation.OpenFileDescriptor;
@@ -40,7 +39,7 @@ public class OpenExternalConfigAction extends AnAction implements DumbAware {
             LocalizeValue displayName = externalSystemId.getDisplayName();
             e.getPresentation().setTextValue(ExternalSystemLocalize.actionOpenExternalConfig0Text(displayName));
             e.getPresentation().setDescriptionValue(ExternalSystemLocalize.actionOpenExternalConfig0Description(displayName));
-            e.getPresentation().setIcon(ExternalSystemUiUtil.getUiAware(externalSystemId).getProjectIcon());
+            e.getPresentation().setIcon(externalSystemId.getIcon());
 
             VirtualFile config = getExternalConfig(e.getDataContext());
             e.getPresentation().setEnabled(config != null);

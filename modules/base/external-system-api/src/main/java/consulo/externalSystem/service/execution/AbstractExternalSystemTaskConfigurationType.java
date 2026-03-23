@@ -10,15 +10,12 @@ import consulo.externalSystem.model.execution.ExternalSystemTaskExecutionSetting
 import consulo.externalSystem.model.execution.ExternalTaskPojo;
 import consulo.externalSystem.setting.AbstractExternalSystemSettings;
 import consulo.externalSystem.setting.ExternalProjectSettings;
-import consulo.externalSystem.ui.ExternalSystemUiAware;
 import consulo.externalSystem.util.ExternalSystemApiUtil;
 import consulo.localize.LocalizeValue;
-import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.ui.image.Image;
 import consulo.util.io.FileUtil;
 import consulo.util.lang.StringUtil;
-import consulo.util.lang.lazy.LazyValue;
 import org.jspecify.annotations.Nullable;
 
 import java.io.File;
@@ -40,16 +37,6 @@ public abstract class AbstractExternalSystemTaskConfigurationType implements Con
   
   private final ConfigurationFactory[] myFactories = new ConfigurationFactory[1];
 
-  
-  private final LazyValue<Image> myIcon = LazyValue.notNull(() -> {
-    ExternalSystemManager<?, ?, ?, ?, ?> manager = ExternalSystemApiUtil.getManager(getExternalSystemId());
-    Image result = null;
-    if (manager instanceof ExternalSystemUiAware) {
-      result = ((ExternalSystemUiAware)manager).getProjectIcon();
-    }
-    return result == null ? PlatformIconGroup.nodesTask() : result;
-  });
-
   protected AbstractExternalSystemTaskConfigurationType(ProjectSystemId externalSystemId) {
     myExternalSystemId = externalSystemId;
     myFactories[0] = new ConfigurationFactory(this) {
@@ -59,7 +46,6 @@ public abstract class AbstractExternalSystemTaskConfigurationType implements Con
       }
     };
   }
-
   
   public ProjectSystemId getExternalSystemId() {
     return myExternalSystemId;
@@ -81,23 +67,20 @@ public abstract class AbstractExternalSystemTaskConfigurationType implements Con
   }
 
   @Override
-  
   public LocalizeValue getDisplayName() {
     return myExternalSystemId.getDisplayName();
   }
 
   @Override
-  
   public LocalizeValue getConfigurationTypeDescription() {
     return ExternalSystemLocalize.runConfigurationDescription(myExternalSystemId.getDisplayName());
   }
 
   @Override
   public Image getIcon() {
-    return myIcon.get();
+    return myExternalSystemId.getIcon();
   }
 
-  
   @Override
   public String getId() {
     return myExternalSystemId.getRunConfigurationId();
@@ -108,17 +91,14 @@ public abstract class AbstractExternalSystemTaskConfigurationType implements Con
     return myFactories;
   }
 
-  
   public static String generateName(Project project, ExternalSystemTaskExecutionSettings settings) {
     return generateName(project, settings.getExternalSystemIdString(), settings.getExternalProjectPath(), settings.getTaskNames());
   }
 
-  
   public static String generateName(Project project, ExternalTaskPojo task, String externalSystemId) {
     return generateName(project, externalSystemId, task.getLinkedExternalProjectPath(), Collections.singletonList(task.getName()));
   }
 
-  
   public static String generateName(Project project,
                                     String externalSystemId,
                                     @Nullable String externalProjectPath,

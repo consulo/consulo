@@ -20,7 +20,6 @@ import consulo.configurable.*;
 import consulo.disposer.Disposable;
 import consulo.versionControlSystem.impl.internal.change.ChangeListManagerImpl;
 import consulo.versionControlSystem.impl.internal.change.conflict.ChangelistConflictConfigurable;
-import consulo.versionControlSystem.impl.internal.change.ui.awt.IgnoredSettingsPanel;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.Component;
@@ -129,10 +128,6 @@ public class VcsManagerConfigurable extends SearchableConfigurable.Parent.Abstra
 
     result.add(myGeneralPanel);
     result.add(new VcsBackgroundOperationsConfigurationPanel(myProject));
-
-    if (!myProject.isDefault()) {
-      result.add(new IgnoredSettingsPanel(myProject));
-    }
 
     result.add(new IssueNavigationConfigurationPanel(myProject));
     if (!myProject.isDefault()) {

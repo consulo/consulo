@@ -36,6 +36,9 @@ public class TaskData extends AbstractExternalEntityData implements ExternalConf
   private final String myLinkedExternalProjectPath;
 
   private final @Nullable String myDescription;
+  private @Nullable String myGroup;
+  private boolean myInherited;
+  private boolean myTest;
 
   public TaskData(ProjectSystemId owner, String name, String path, @Nullable String description) {
     super(owner);
@@ -57,6 +60,31 @@ public class TaskData extends AbstractExternalEntityData implements ExternalConf
 
   public @Nullable String getDescription() {
     return myDescription;
+  }
+
+  public @Nullable String getGroup() {
+    return myGroup;
+  }
+
+  public void setGroup(@Nullable String group) {
+    myGroup = group;
+  }
+
+  /** Whether this task is inherited from a parent project (not defined locally). */
+  public boolean isInherited() {
+    return myInherited;
+  }
+
+  public void setInherited(boolean inherited) {
+    myInherited = inherited;
+  }
+
+  public boolean isTest() {
+    return myTest;
+  }
+
+  public void setTest(boolean test) {
+    myTest = test;
   }
 
   @Override

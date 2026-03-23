@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 JetBrains s.r.o.
+ * Copyright 2000-2025 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,13 +15,18 @@
  */
 package consulo.versionControlSystem.change;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.versionControlSystem.AbstractVcs;
 
-public interface VcsIgnoredFilesHolder extends IgnoredFilesHolder {
-    default boolean isInUpdatingMode() {
-        return false;
-    }
+/**
+ * Extension point for providing VCS-specific resolved conflicts files holders.
+ *
+ * @see VcsManagedFilesHolder
+ */
+@ExtensionAPI(ComponentScope.PROJECT)
+public interface VcsManagedResolvedConflictsFilesHolderProvider {
+  AbstractVcs getVcs();
 
-    
-    AbstractVcs getVcs();
+  VcsManagedFilesHolder createHolder();
 }
