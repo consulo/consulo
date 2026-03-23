@@ -38,7 +38,6 @@ public abstract class CompileStepBeforeRunBase<T extends BeforeRunTask<T>> exten
         myProject = project;
     }
 
-    
     @RequiredUIAccess
     @Override
     public AsyncResult<Void> configureTask(RunConfiguration runConfiguration, T task) {

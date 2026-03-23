@@ -4,10 +4,7 @@ package consulo.compiler.impl.internal;
 
 import consulo.application.internal.ProgressIndicatorEx;
 import consulo.application.progress.ProgressIndicator;
-import consulo.build.ui.BuildDescriptor;
-import consulo.build.ui.BuildViewManager;
-import consulo.build.ui.DefaultBuildDescriptor;
-import consulo.build.ui.FilePosition;
+import consulo.build.ui.*;
 import consulo.build.ui.event.FailureResult;
 import consulo.build.ui.event.FinishEvent;
 import consulo.build.ui.event.MessageEvent;
@@ -32,6 +29,7 @@ import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.IdeActions;
+import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
@@ -124,6 +122,16 @@ public class BuildViewServiceImpl {
                     counters.inc(CompilerMessageCategory.ERROR);
                 }
             }
+        });
+    }
+
+    public void openBuildToolWindow() {
+        BuildContentManager contentManager = BuildContentManager.getInstance(myProject);
+
+        myProject.getUIAccess().execute(() -> {
+            ToolWindow toolWindow = contentManager.getOrCreateToolWindow();
+
+            toolWindow.activate(null);
         });
     }
 

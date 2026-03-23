@@ -24,10 +24,8 @@ public interface BuildDescriptor {
   
   Object getId();
 
-  
   @BuildEventsNls.Title
   String getTitle();
-
   
   String getWorkingDir();
 

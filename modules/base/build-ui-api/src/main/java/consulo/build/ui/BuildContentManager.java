@@ -27,7 +27,6 @@ public interface BuildContentManager {
 
   void addContent(Content content);
 
-  
   ToolWindow getOrCreateToolWindow();
 
   void removeContent(Content content);

@@ -62,7 +62,6 @@ public abstract class AbstractViewManager implements ViewManager, BuildProgressL
         myBuildContentManager = buildContentManager;
         myBuildsViewValue = new AtomicClearableLazyValue<>() {
             @Override
-            
             protected MultipleBuildsView compute() {
                 MultipleBuildsView buildsView = new MultipleBuildsView(myProject, myBuildContentManager, AbstractViewManager.this);
                 Disposer.register(AbstractViewManager.this, buildsView);
@@ -74,10 +73,8 @@ public abstract class AbstractViewManager implements ViewManager, BuildProgressL
         BuildProgressObservableListener.listen(myProject, this);
     }
 
-    
     public abstract String getViewId();
 
-    
     protected abstract LocalizeValue getViewName();
 
     @Override
@@ -127,8 +124,7 @@ public abstract class AbstractViewManager implements ViewManager, BuildProgressL
         }
     }
 
-    private
-    @Nullable MultipleBuildsView getMultipleBuildsView(Object buildId) {
+    private @Nullable MultipleBuildsView getMultipleBuildsView(Object buildId) {
         MultipleBuildsView buildsView = myBuildsViewValue.getValue();
         if (!buildsView.shouldConsume(buildId)) {
             buildsView = ContainerUtil.find(myPinnedViews, pinnedView -> pinnedView.shouldConsume(buildId));
@@ -136,7 +132,6 @@ public abstract class AbstractViewManager implements ViewManager, BuildProgressL
         return buildsView;
     }
 
-    //@ApiStatus.Internal
     public @Nullable BuildView getBuildView(Object buildId) {
         MultipleBuildsView buildsView = getMultipleBuildsView(buildId);
         if (buildsView == null) {
