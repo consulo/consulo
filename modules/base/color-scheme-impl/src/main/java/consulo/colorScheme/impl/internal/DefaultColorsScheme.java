@@ -68,7 +68,7 @@ public class DefaultColorsScheme extends AbstractColorsScheme implements ReadOnl
     if (fallbackColorKey != null) {
         return getColor(fallbackColorKey);
     }
-    return null;
+    return key.getDefaultColorValue();
   }
 
   @Override
