@@ -19,7 +19,6 @@ import consulo.application.ApplicationManager;
 import consulo.component.ProcessCanceledException;
 import consulo.language.file.FileTypeManager;
 import consulo.logging.Logger;
-import consulo.util.lang.ObjectUtil;
 import consulo.versionControlSystem.FilePath;
 import consulo.versionControlSystem.ProjectLevelVcsManager;
 import consulo.versionControlSystem.VcsKey;
@@ -132,18 +131,16 @@ class UpdatingChangeListBuilder implements ChangelistBuilder {
     if (file == null) return;
     checkIfDisposed();
     if (isIgnoredByVcs(file)) return;
-    if (myScope.belongsTo(VcsUtil.getFilePath(file))) {
+    FilePath filePath = VcsUtil.getFilePath(file);
+    if (myScope.belongsTo(filePath)) {
       if (myChangeListManager.isIgnoredFile(file)) {
-        myComposite.getIgnoredFileHolder().addFile(file);
-      }
-      else if (myComposite.getIgnoredFileHolder().containsFile(file)) {
-        // does not need to add: parent dir is already added
+        myComposite.getIgnoredFileHolder().addFile(myScope.getVcs(), filePath);
       }
       else {
-        myComposite.getVFHolder(FileHolder.HolderType.UNVERSIONED).addFile(file);
+        myComposite.getUnversionedFileHolder().addFile(myScope.getVcs(), filePath);
       }
       // if a file was previously marked as switched through recursion, remove it from switched list
-      myChangeListWorker.removeSwitched(file);
+      myComposite.getSwitchedFileHolder().removeFile(file);
     }
   }
 
@@ -158,7 +155,7 @@ class UpdatingChangeListBuilder implements ChangelistBuilder {
     FilePath file = locallyDeletedChange.getPath();
     if (FileTypeManager.getInstance().isFileIgnored(file.getName())) return;
     if (myScope.belongsTo(file)) {
-      myChangeListWorker.addLocallyDeleted(locallyDeletedChange);
+      myComposite.getDeletedFileHolder().addFile(locallyDeletedChange);
     }
   }
 
@@ -171,7 +168,7 @@ class UpdatingChangeListBuilder implements ChangelistBuilder {
       if (LOG.isDebugEnabled()) {
         LOG.debug("processModifiedWithoutCheckout " + file);
       }
-      myComposite.getVFHolder(FileHolder.HolderType.MODIFIED_WITHOUT_EDITING).addFile(file);
+      myComposite.getModifiedWithoutEditingFileHolder().addFile(file);
     }
   }
 
@@ -180,8 +177,9 @@ class UpdatingChangeListBuilder implements ChangelistBuilder {
     if (file == null) return;
     checkIfDisposed();
     if (isIgnoredByVcs(file)) return;
-    if (myScope.belongsTo(VcsUtil.getFilePath(file))) {
-      ObjectUtil.assertNotNull(myComposite.getIgnoredFileHolder().getActiveVcsHolder()).addFile(file);
+    FilePath filePath = VcsUtil.getFilePath(file);
+    if (myScope.belongsTo(filePath)) {
+      myComposite.getIgnoredFileHolder().addFile(myScope.getVcs(), filePath);
     }
   }
 
@@ -191,7 +189,7 @@ class UpdatingChangeListBuilder implements ChangelistBuilder {
     checkIfDisposed();
     if (myScope.belongsTo(VcsUtil.getFilePath(file))) {
       if (myFoldersCutDownWorker.addCurrent(file)) {
-        myComposite.getVFHolder(FileHolder.HolderType.LOCKED).addFile(file);
+        myComposite.getLockedFileHolder().addFile(file);
       }
     }
   }
@@ -201,7 +199,7 @@ class UpdatingChangeListBuilder implements ChangelistBuilder {
     if (file == null) return;
     checkIfDisposed();
     if (myScope.belongsTo(VcsUtil.getFilePath(file))) {
-      ((LogicallyLockedHolder)myComposite.get(FileHolder.HolderType.LOGICALLY_LOCKED)).add(file, logicalLock);
+      myComposite.getLogicallyLockedFileHolder().add(file, logicalLock);
     }
   }
 
@@ -211,7 +209,7 @@ class UpdatingChangeListBuilder implements ChangelistBuilder {
     checkIfDisposed();
     if (isIgnoredByVcs(file)) return;
     if (myScope.belongsTo(VcsUtil.getFilePath(file))) {
-      myChangeListWorker.addSwitched(file, branch, recursive);
+      myComposite.getSwitchedFileHolder().addFile(file, branch, recursive);
     }
   }
 
@@ -220,7 +218,7 @@ class UpdatingChangeListBuilder implements ChangelistBuilder {
     if (file == null) return;
     checkIfDisposed();
     if (myScope.belongsTo(VcsUtil.getFilePath(file))) {
-      ((SwitchedFileHolder)myComposite.get(FileHolder.HolderType.ROOT_SWITCH)).addFile(file, branch, false);
+      myComposite.getRootSwitchFileHolder().addFile(file, branch, false);
     }
   }
 

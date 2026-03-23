@@ -15,17 +15,13 @@
  */
 package consulo.versionControlSystem.impl.internal.change;
 
-import consulo.project.Project;
 import consulo.util.lang.Comparing;
 import consulo.util.lang.StringUtil;
 import consulo.versionControlSystem.change.*;
 import org.jdom.Element;
 
-import java.io.File;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 public class ChangeListManagerSerialization {
   static final String ATT_ID = "id";
@@ -37,19 +33,12 @@ public class ChangeListManagerSerialization {
   static final String ATT_CHANGE_TYPE = "type";
   static final String ATT_CHANGE_BEFORE_PATH = "beforePath";
   static final String ATT_CHANGE_AFTER_PATH = "afterPath";
-  static final String ATT_PATH = "path";
-  static final String ATT_MASK = "mask";
   static final String NODE_LIST = "list";
-  static final String NODE_IGNORED = "ignored";
   static final String NODE_CHANGE = "change";
-  static final String MANUALLY_REMOVED_FROM_IGNORED = "manually-removed-from-ignored";
-  static final String DIRECTORY_TAG = "directory";
 
-  private final IgnoredFilesComponent myIgnoredIdeaLevel;
   private final ChangeListWorker myWorker;
 
-  public ChangeListManagerSerialization(IgnoredFilesComponent ignoredIdeaLevel, ChangeListWorker worker) {
-    myIgnoredIdeaLevel = ignoredIdeaLevel;
+  public ChangeListManagerSerialization(ChangeListWorker worker) {
     myWorker = worker;
   }
 
@@ -59,18 +48,6 @@ public class ChangeListManagerSerialization {
     for (Element listNode : listNodes) {
       readChangeList(listNode);
     }
-    List<Element> ignoredNodes = element.getChildren(NODE_IGNORED);
-    for (Element ignoredNode : ignoredNodes) {
-      readFileToIgnore(ignoredNode);
-    }
-    Element manuallyRemovedFromIgnoredTag = element.getChild(MANUALLY_REMOVED_FROM_IGNORED);
-    Set<String> manuallyRemovedFromIgnoredPaths = new HashSet<>();
-    if (manuallyRemovedFromIgnoredTag != null) {
-      for (Element tag : manuallyRemovedFromIgnoredTag.getChildren(DIRECTORY_TAG)) {
-        manuallyRemovedFromIgnoredPaths.add(tag.getAttributeValue(ATT_PATH));
-      }
-    }
-    myIgnoredIdeaLevel.setDirectoriesManuallyRemovedFromIgnored(manuallyRemovedFromIgnoredPaths);
   }
 
   private void readChangeList(Element listNode) {
@@ -95,25 +72,7 @@ public class ChangeListManagerSerialization {
     }
   }
 
-  private void readFileToIgnore(Element ignoredNode) {
-    String path = ignoredNode.getAttributeValue(ATT_PATH);
-    if (path != null) {
-      Project project = myWorker.getProject();
-      IgnoredFileBean bean = path.endsWith("/") || path.endsWith(File.separator)
-        ? IgnoredBeanFactory.ignoreUnderDirectory(path, project)
-        : IgnoredBeanFactory.ignoreFile(path, project);
-      myIgnoredIdeaLevel.add(bean);
-    }
-    String mask = ignoredNode.getAttributeValue(ATT_MASK);
-    if (mask != null) {
-      IgnoredFileBean bean = IgnoredBeanFactory.withMask(mask);
-      myIgnoredIdeaLevel.add(bean);
-    }
-  }
-
-  public static void writeExternal(Element element,
-                                   IgnoredFilesComponent ignoredFilesComponent,
-                                   ChangeListWorker worker) {
+  public static void writeExternal(Element element, ChangeListWorker worker) {
     for (LocalChangeList list : worker.getListsCopy()) {
       Element listNode = new Element(NODE_LIST);
       element.addContent(listNode);
@@ -135,28 +94,6 @@ public class ChangeListManagerSerialization {
       for (Change change : changes) {
         writeChange(listNode, change);
       }
-    }
-
-    for (IgnoredFileBean bean : ignoredFilesComponent.getFilesToIgnore()) {
-      Element fileNode = new Element(NODE_IGNORED);
-      element.addContent(fileNode);
-      String path = bean.getPath();
-      if (path != null) {
-        fileNode.setAttribute("path", path);
-      }
-      String mask = bean.getMask();
-      if (mask != null) {
-        fileNode.setAttribute("mask", mask);
-      }
-    }
-
-    Set<String> manuallyRemovedFromIgnored = ignoredFilesComponent.getDirectoriesManuallyRemovedFromIgnored();
-    if (!manuallyRemovedFromIgnored.isEmpty()) {
-      Element list = new Element(MANUALLY_REMOVED_FROM_IGNORED);
-      for (String path : manuallyRemovedFromIgnored) {
-        list.addContent(new Element(DIRECTORY_TAG).setAttribute(ATT_PATH, path));
-      }
-      element.addContent(list);
     }
   }
 

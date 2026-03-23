@@ -53,7 +53,6 @@ import consulo.versionControlSystem.ProjectLevelVcsManager;
 import consulo.versionControlSystem.VcsConfiguration;
 import consulo.versionControlSystem.VcsException;
 import consulo.versionControlSystem.change.*;
-import consulo.versionControlSystem.impl.internal.change.action.IgnoredSettingsAction;
 import consulo.versionControlSystem.impl.internal.change.shelf.ShelveChangesManagerImpl;
 import consulo.versionControlSystem.impl.internal.change.ui.awt.*;
 import consulo.versionControlSystem.internal.*;
@@ -234,7 +233,6 @@ public class ChangesViewManagerImpl implements ChangesViewManager, Disposable, P
         visualActionsGroup.add(showFlattenAction);
         visualActionsGroup.add(ActionManager.getInstance().getAction(IdeActions.ACTION_COPY));
         visualActionsGroup.add(new ToggleShowIgnoredAction());
-        visualActionsGroup.add(new IgnoredSettingsAction());
         visualActionsGroup.add(new ToggleDetailsAction());
         visualActionsGroup.add(new ContextHelpAction(ChangesListViewImpl.HELP_ID));
         ActionToolbar actionToolbar =

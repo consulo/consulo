@@ -16,15 +16,12 @@
 
 package consulo.versionControlSystem.impl.internal.change.ui.awt;
 
-import consulo.project.Project;
-import consulo.versionControlSystem.impl.internal.change.ChangeListOwner;
-
 public class ChangesBrowserIgnoredFilesNode extends ChangesBrowserSpecificFilesNode {
 
   private final boolean myUpdatingMode;
 
-  protected ChangesBrowserIgnoredFilesNode(Project project, int filesSize, int dirsSize, boolean many, boolean updatingMode) {
-    super(IGNORED_FILES_TAG, filesSize, dirsSize, many, () -> new IgnoredViewDialog(project).show());
+  protected ChangesBrowserIgnoredFilesNode(int filesSize, int dirsSize, boolean many, boolean updatingMode) {
+    super(IGNORED_FILES_TAG, filesSize, dirsSize, many, null);
     myUpdatingMode = updatingMode;
   }
 
@@ -34,16 +31,6 @@ public class ChangesBrowserIgnoredFilesNode extends ChangesBrowserSpecificFilesN
     if (myUpdatingMode) {
       appendUpdatingState(renderer);
     }
-  }
-
-  @Override
-  public boolean canAcceptDrop(ChangeListDragBean dragBean) {
-    return dragBean.getUnversionedFiles().size() > 0;
-  }
-
-  @Override
-  public void acceptDrop(ChangeListOwner dragOwner, ChangeListDragBean dragBean) {
-    IgnoreUnversionedDialog.ignoreSelectedFiles(dragOwner.getProject(), dragBean.getUnversionedFiles(), null);
   }
 
   @Override

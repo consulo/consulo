@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 JetBrains s.r.o.
+ * Copyright 2000-2025 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,13 +15,19 @@
  */
 package consulo.versionControlSystem.change;
 
-import consulo.versionControlSystem.AbstractVcs;
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.TopicAPI;
 
-public interface VcsIgnoredFilesHolder extends IgnoredFilesHolder {
-    default boolean isInUpdatingMode() {
-        return false;
-    }
+import java.util.EventListener;
 
-    
-    AbstractVcs getVcs();
+/**
+ * Listener for {@link VcsManagedFilesHolder} updates.
+ * Published when the holder data changes.
+ */
+@TopicAPI(ComponentScope.PROJECT)
+public interface VcsManagedFilesHolderListener extends EventListener {
+  /**
+   * Notify that holder data was changed.
+   */
+  void updatingModeChanged();
 }

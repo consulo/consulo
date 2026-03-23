@@ -768,6 +768,8 @@ history.copy.revision.number:
     text: Copy Revision Number
 history.empty:
     text: History is empty
+ignored.group.description.default.ide.files:
+    text: Default IDE ignored files
 ignored.configure.item.directory:
     text: 'Directory: {0}'
 ignored.configure.item.file:

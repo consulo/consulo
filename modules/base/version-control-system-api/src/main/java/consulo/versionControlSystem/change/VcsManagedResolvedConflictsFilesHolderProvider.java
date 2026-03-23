@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2025 consulo.io
+ * Copyright 2000-2025 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,17 +17,16 @@ package consulo.versionControlSystem.change;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
-import consulo.versionControlSystem.VcsKey;
+import consulo.versionControlSystem.AbstractVcs;
 
 /**
- * @author VISTALL
- * @since 2025-08-31
+ * Extension point for providing VCS-specific resolved conflicts files holders.
+ *
+ * @see VcsManagedFilesHolder
  */
 @ExtensionAPI(ComponentScope.PROJECT)
-public interface VcsIgnoredFilesHolderProvider {
-    
-    VcsKey getVcsKey();
+public interface VcsManagedResolvedConflictsFilesHolderProvider {
+  AbstractVcs getVcs();
 
-    
-    VcsIgnoredFilesHolder create();
+  VcsManagedFilesHolder createHolder();
 }

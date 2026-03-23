@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 JetBrains s.r.o.
+ * Copyright 2000-2025 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,26 +17,16 @@ package consulo.versionControlSystem.change;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
-import consulo.versionControlSystem.FilePath;
+import consulo.versionControlSystem.AbstractVcs;
 
-import java.util.Collections;
-import java.util.Set;
-
+/**
+ * Extension point for providing VCS-specific unversioned files holders.
+ *
+ * @see VcsManagedFilesHolder
+ */
 @ExtensionAPI(ComponentScope.PROJECT)
-public interface IgnoredFileProvider {
-  boolean isIgnoredFilePath(FilePath filePath);
+public interface VcsManagedUnversionedFilesHolderProvider {
+  AbstractVcs getVcs();
 
-  /**
-   * Returns the set of files/masks/directories that this provider wants to add to VCS ignore files.
-   */
-  default Set<IgnoredFileDescriptor> getIgnoredFiles() {
-    return Collections.emptySet();
-  }
-
-  /**
-   * Returns a human-readable description of the group of ignored files provided by this extension.
-   */
-  default String getIgnoredGroupDescription() {
-    return "";
-  }
+  VcsManagedFilesHolder createHolder();
 }

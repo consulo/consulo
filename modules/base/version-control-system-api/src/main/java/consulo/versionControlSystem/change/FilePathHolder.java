@@ -18,6 +18,8 @@ package consulo.versionControlSystem.change;
 import consulo.versionControlSystem.FilePath;
 import consulo.virtualFileSystem.VirtualFile;
 
+import java.util.Collection;
+
 /**
  * @author VISTALL
  * @since 27-Jul-24
@@ -26,4 +28,6 @@ public interface FilePathHolder extends FileHolder {
   void addFile(FilePath file);
 
   boolean containsFile(FilePath file, VirtualFile vcsRoot);
+
+  Collection<FilePath> values();
 }

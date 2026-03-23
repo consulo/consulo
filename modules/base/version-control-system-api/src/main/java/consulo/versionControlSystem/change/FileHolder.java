@@ -37,6 +37,7 @@ public interface FileHolder {
     IGNORED,
     LOCKED,
     LOGICALLY_LOCKED,
-    ROOT_SWITCH
+    ROOT_SWITCH,
+    RESOLVED
   }
 }

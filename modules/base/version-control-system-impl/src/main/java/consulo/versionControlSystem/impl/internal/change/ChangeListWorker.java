@@ -47,9 +47,6 @@ public class ChangeListWorker implements ChangeListsWriteOperations {
 
   private final Project myProject;
   private final Map<String, LocalChangeList> myMap;
-  // in fact, a kind of local change
-  private final DeletedFilesHolder myLocallyDeleted;
-  private final SwitchedFileHolder mySwitchedHolder;
   private LocalChangeList myDefault;
 
   private ChangeListsIndexes myIdx;
@@ -60,8 +57,6 @@ public class ChangeListWorker implements ChangeListsWriteOperations {
     myProject = project;
     myMap = new LinkedHashMap<>();
     myIdx = new ChangeListsIndexes();
-    myLocallyDeleted = new DeletedFilesHolder();
-    mySwitchedHolder = new SwitchedFileHolder(project, FileHolder.HolderType.SWITCHED);
 
     myDelta = new ChangesDelta(deltaListener);
     myListsToDisappear = new LinkedHashSet<>();
@@ -71,8 +66,6 @@ public class ChangeListWorker implements ChangeListsWriteOperations {
     myProject = worker.myProject;
     myMap = new LinkedHashMap<>();
     myIdx = new ChangeListsIndexes(worker.myIdx);
-    myLocallyDeleted = worker.myLocallyDeleted.copy();
-    mySwitchedHolder = worker.mySwitchedHolder.copy();
     myDelta = worker.myDelta;
     myListsToDisappear = new LinkedHashSet<>(worker.myListsToDisappear);
 
@@ -354,8 +347,6 @@ public class ChangeListWorker implements ChangeListsWriteOperations {
     // scope should be modified for correct moves tracking
     correctScopeForMoves(scope, oldChanges);
 
-    myLocallyDeleted.cleanAndAdjustScope(scope);
-    mySwitchedHolder.cleanAndAdjustScope(scope);
   }
 
   private static void correctScopeForMoves(VcsModifiableDirtyScope scope, Collection<Change> changes) {
@@ -502,41 +493,7 @@ public class ChangeListWorker implements ChangeListsWriteOperations {
     return myIdx.getStatus(file);
   }
 
-  public DeletedFilesHolder getLocallyDeleted() {
-    return myLocallyDeleted.copy();
-  }
-
-  public SwitchedFileHolder getSwitchedHolder() {
-    return mySwitchedHolder.copy();
-  }
-
-  public void addSwitched(VirtualFile file, String branchName, boolean recursive) {
-    mySwitchedHolder.addFile(file, branchName, recursive);
-  }
-
-  public void removeSwitched(VirtualFile file) {
-    mySwitchedHolder.removeFile(file);
-  }
-
-  public String getBranchForFile(VirtualFile file) {
-    return mySwitchedHolder.getBranchForFile(file);
-  }
-
-  public boolean isSwitched(VirtualFile file) {
-    return mySwitchedHolder.containsFile(file);
-  }
-
-  public void addLocallyDeleted(LocallyDeletedChange change) {
-    myLocallyDeleted.addFile(change);
-  }
-
-  public boolean isContainedInLocallyDeleted(FilePath filePath) {
-    return myLocallyDeleted.isContainedInLocallyDeleted(filePath);
-  }
-
   public void notifyVcsStarted(AbstractVcs vcs) {
-    myLocallyDeleted.notifyVcsStarted(vcs);
-    mySwitchedHolder.notifyVcsStarted(vcs);
   }
 
   public Collection<Change> getAllChanges() {

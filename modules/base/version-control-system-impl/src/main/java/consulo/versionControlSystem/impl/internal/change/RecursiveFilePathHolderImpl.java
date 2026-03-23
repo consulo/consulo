@@ -4,15 +4,14 @@ package consulo.versionControlSystem.impl.internal.change;
 import consulo.project.Project;
 import consulo.versionControlSystem.FilePath;
 import consulo.versionControlSystem.change.FileHolder;
-import consulo.versionControlSystem.change.IgnoredFilesHolder;
+import consulo.versionControlSystem.change.FilePathHolder;
 import consulo.versionControlSystem.change.VcsDirtyScope;
 import consulo.versionControlSystem.change.VcsModifiableDirtyScope;
-import consulo.versionControlSystem.util.VcsUtil;
 import consulo.virtualFileSystem.VirtualFile;
 
 import java.util.*;
 
-public class RecursiveFilePathHolderImpl implements IgnoredFilesHolder {
+public class RecursiveFilePathHolderImpl implements FilePathHolder {
 
   private final Project myProject;
   private final HolderType myHolderType;
@@ -36,14 +35,9 @@ public class RecursiveFilePathHolderImpl implements IgnoredFilesHolder {
 
   @Override
   public void addFile(FilePath file) {
-    if (!containsFile(file)) {
+    if (!containsFileInternal(file)) {
       myMap.add(file);
     }
-  }
-
-  @Override
-  public boolean containsFile(VirtualFile file) {
-    return containsFile(VcsUtil.getFilePath(file));
   }
 
   @Override
@@ -55,10 +49,15 @@ public class RecursiveFilePathHolderImpl implements IgnoredFilesHolder {
 
   @Override
   public boolean containsFile(FilePath file, VirtualFile vcsRoot) {
-    return containsFile(file);
+    return containsFileInternal(file);
   }
 
-  private boolean containsFile(FilePath file) {
+  @Override
+  public Collection<FilePath> values() {
+    return new ArrayList<>(myMap);
+  }
+
+  private boolean containsFileInternal(FilePath file) {
     if (myMap.isEmpty()) return false;
     FilePath parent = file;
     while (parent != null) {
@@ -66,11 +65,6 @@ public class RecursiveFilePathHolderImpl implements IgnoredFilesHolder {
       parent = parent.getParentPath();
     }
     return false;
-  }
-
-  @Override
-  public Collection<VirtualFile> values() {
-    return myMap.stream().map(FilePath::getVirtualFile).filter(Objects::nonNull).toList();
   }
 
   @Override

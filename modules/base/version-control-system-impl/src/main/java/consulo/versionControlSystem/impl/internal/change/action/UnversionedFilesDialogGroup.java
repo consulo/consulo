@@ -31,7 +31,6 @@ import consulo.ui.ex.action.DefaultActionGroup;
         @ActionRef(type = AddUnversionedAction.class),
         @ActionRef(type = MoveChangesToAnotherListAction.class),
         @ActionRef(type = DeleteUnversionedFilesAction.class),
-        @ActionRef(type = IgnoreUnversionedAction.class)
     }
 )
 public class UnversionedFilesDialogGroup extends DefaultActionGroup implements DumbAware {
