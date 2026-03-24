@@ -18,14 +18,20 @@ package consulo.codeEditor.util;
 import consulo.application.ReadAction;
 import consulo.application.util.Dumpable;
 import consulo.codeEditor.*;
+import consulo.codeEditor.event.EditorFactoryAdapter;
+import consulo.codeEditor.event.EditorFactoryEvent;
 import consulo.colorScheme.TextAttributes;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
 import consulo.document.Document;
 import consulo.document.util.DocumentUtil;
 import consulo.logging.Logger;
 import consulo.logging.util.LoggerUtil;
 import consulo.project.Project;
+import consulo.ui.UIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.Pair;
 import org.jspecify.annotations.Nullable;
@@ -470,5 +476,30 @@ public class EditorUtil {
 
     public static boolean isCurrentCaretPrimary(Editor editor) {
         return editor.getCaretModel().getCurrentCaret() == editor.getCaretModel().getPrimaryCaret();
+    }
+
+    /**
+     * Arranges for {@code disposable} to be disposed when {@code editor} is released.
+     * If the editor is already disposed, the disposable is disposed immediately.
+     * If the disposable is already disposed, this method does nothing.
+     */
+    @RequiredUIAccess
+    public static void disposeWithEditor(Editor editor, Disposable disposable) {
+        UIAccess.assertIsUIThread();
+        if (Disposer.isDisposed(disposable)) {
+            return;
+        }
+        if (editor.isDisposed()) {
+            Disposer.dispose(disposable);
+            return;
+        }
+        EditorFactory.getInstance().addEditorFactoryListener(new EditorFactoryAdapter() {
+            @Override
+            public void editorReleased(EditorFactoryEvent event) {
+                if (event.getEditor() == editor) {
+                    Disposer.dispose(disposable);
+                }
+            }
+        }, disposable);
     }
 }

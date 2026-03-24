@@ -19,6 +19,7 @@ import consulo.annotation.component.ServiceImpl;
 import consulo.codeEditor.DocumentMarkupModel;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorColors;
+import consulo.codeEditor.EditorPopupHelper;
 import consulo.codeEditor.markup.MarkupModel;
 import consulo.codeEditor.markup.MarkupModelEx;
 import consulo.colorScheme.EditorColorsScheme;
@@ -27,6 +28,7 @@ import consulo.document.Document;
 import consulo.document.util.TextRange;
 import consulo.ide.impl.idea.codeInsight.editorActions.EnterHandler;
 import consulo.ide.impl.idea.codeInsight.highlighting.HighlightUsagesHandler;
+import consulo.ide.impl.idea.find.actions.ShowUsagesAction;
 import consulo.ide.impl.idea.profile.codeInspection.ui.ErrorsConfigurable;
 import consulo.ide.setting.ShowSettingsUtil;
 import consulo.language.Language;
@@ -46,19 +48,23 @@ import consulo.language.editor.refactoring.rename.inplace.InplaceRefactoring;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
+import consulo.localize.LocalizeValue;
+import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.ColoredTextContainer;
+import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.SimpleTextAttributes;
+import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.awt.JBLabel;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.SelectionAwareListCellRenderer;
 import consulo.ui.ex.awt.speedSearch.SpeedSearchUtil;
 import consulo.ui.image.Image;
 import consulo.util.lang.Pair;
-import org.jspecify.annotations.Nullable;
 import jakarta.inject.Singleton;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.util.ArrayList;
@@ -158,5 +164,18 @@ public class LanguageEditorInternalHelperImpl implements LanguageEditorInternalH
     public void highlightRanges(Project project, Editor editor, TextAttributesKey attributesKey, boolean clearHighlights, List<TextRange> textRanges) {
         HighlightManager manager = HighlightManager.getInstance(project);
         HighlightUsagesHandler.highlightRanges(manager, editor, EditorColors.SEARCH_RESULT_ATTRIBUTES, false, textRanges);
+    }
+
+    @Override
+    public void startFindUsages(Editor editor, Project project, PsiElement element, RelativePoint point) {
+        ShowUsagesAction action = (ShowUsagesAction) ActionManager.getInstance().getAction(ShowUsagesAction.ID);
+        if (DumbService.getInstance(project).isDumb()) {
+            LocalizeValue name = action.getTemplatePresentation().getTextValue();
+            DumbService.getInstance(project).showDumbModeNotification(LocalizeValue.localizeTODO("Usage search is not available until indices are ready"));
+        }
+        else {
+            RelativePoint popupPosition = point != null ? point : EditorPopupHelper.getInstance().guessBestPopupLocation(editor);
+            action.startFindUsages(element, popupPosition, editor, ShowUsagesAction.getUsagesPageSize());
+        }
     }
 }

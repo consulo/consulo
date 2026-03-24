@@ -33,6 +33,7 @@ import consulo.language.psi.PsiFile;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.ColoredTextContainer;
+import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.image.Image;
 import consulo.util.lang.Pair;
@@ -49,7 +50,7 @@ import java.util.function.Function;
  */
 @ServiceAPI(ComponentScope.APPLICATION)
 public interface LanguageEditorInternalHelper {
-    
+
     static LanguageEditorInternalHelper getInstance() {
         return Application.get().getInstance(LanguageEditorInternalHelper.class);
     }
@@ -78,7 +79,7 @@ public interface LanguageEditorInternalHelper {
     default void showInspectionsSettings(Project project) {
     }
 
-    
+
     default List<Annotation> runAnnotator(Language language,
                                           Annotator annotator,
                                           PsiFile file,
@@ -113,5 +114,11 @@ public interface LanguageEditorInternalHelper {
                                  boolean clearHighlights,
                                  List<TextRange> textRanges) {
 
+    }
+
+    default void startFindUsages(Editor editor,
+                                 Project project,
+                                 PsiElement element,
+                                 @Nullable RelativePoint point) {
     }
 }
