@@ -42,7 +42,8 @@ public interface VcsCodeVisionLanguageContext extends LanguageExtension {
     /**
      * Called when the user clicks on the code-author lens for the given element.
      */
-    void handleClick(MouseEvent mouseEvent, Editor editor, PsiElement element);
+    default void handleClick(MouseEvent mouseEvent, Editor editor, PsiElement element) {
+    }
 
     /**
      * When the file's language differs from the language of this extension, this method tells in which
