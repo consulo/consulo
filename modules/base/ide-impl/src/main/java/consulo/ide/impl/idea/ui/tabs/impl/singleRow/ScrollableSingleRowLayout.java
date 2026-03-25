@@ -132,6 +132,10 @@ public class ScrollableSingleRowLayout extends SingleRowLayout {
   protected void layoutMoreButton(SingleRowPassInfo data) {
     if (data.requiredLength > data.toFitLength) {
       data.moreRect = getStrategy().getMoreRect(data);
+      myTabs.layout(myMoreButton, data.moreRect);
+    }
+    else {
+      data.moreRect = null;
     }
   }
 

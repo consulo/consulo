@@ -15,10 +15,15 @@
  */
 package consulo.ide.impl.idea.ui.tabs.impl.singleRow;
 
+import consulo.application.AllIcons;
+import consulo.localize.LocalizeValue;
+import consulo.ui.Button;
+import consulo.ui.ButtonStyle;
 import consulo.ui.ex.awt.tab.JBTabsPosition;
 import consulo.ui.ex.awt.tab.TabInfo;
 import consulo.ide.impl.idea.ui.tabs.impl.*;
 import consulo.ui.ex.awt.JBUI;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 
 import org.jspecify.annotations.Nullable;
 import javax.swing.*;
@@ -37,12 +42,7 @@ public class SingleRowLayout extends TabLayout {
   private final SingleRowLayoutStrategy myBottom;
   private final SingleRowLayoutStrategy myRight;
 
-  public final MoreTabsIcon myMoreIcon = new MoreTabsIcon() {
-    @Override
-    protected @Nullable Rectangle getIconRec() {
-      return myLastSingRowLayout != null ? myLastSingRowLayout.moreRect : null;
-    }
-  };
+  public final JComponent myMoreButton;
   public JPopupMenu myMorePopup;
 
   public final GhostComponent myLeftGhost = new GhostComponent(RowDropPolicy.first, RowDropPolicy.first);
@@ -75,6 +75,14 @@ public class SingleRowLayout extends TabLayout {
     myLeft = new SingleRowLayoutStrategy.Left(this);
     myBottom = new SingleRowLayoutStrategy.Bottom(this);
     myRight = new SingleRowLayoutStrategy.Right(this);
+
+    Button moreBtn = Button.create(LocalizeValue.empty());
+    moreBtn.setIcon(AllIcons.Actions.FindAndShowNextMatchesSmall);
+    moreBtn.addStyle(ButtonStyle.TOOLBAR);
+    moreBtn.addClickListener(event -> myTabs.showMorePopup(null));
+    myMoreButton = (JComponent) TargetAWT.to(moreBtn);
+    myMoreButton.setOpaque(false);
+    myMoreButton.setVisible(false);
   }
 
   SingleRowLayoutStrategy getStrategy() {
@@ -152,6 +160,8 @@ public class SingleRowLayout extends TabLayout {
       layoutLabelsAndGhosts(data);
 
       layoutMoreButton(data);
+
+      layoutEntryPointButton(data);
     }
 
     if (selected != null) {
@@ -197,13 +207,28 @@ public class SingleRowLayout extends TabLayout {
     for (TabInfo tabInfo : data.myVisibleInfos) {
       if (isTabHidden(tabInfo)) counter++;
     }
-    myMoreIcon.updateCounter(counter);
+    myMoreButton.setVisible(counter > 0);
   }
 
   protected void layoutMoreButton(SingleRowPassInfo data) {
     if (data.toDrop.size() > 0) {
       data.moreRect = getStrategy().getMoreRect(data);
+      myTabs.layout(myMoreButton, data.moreRect);
     }
+    else {
+      data.moreRect = null;
+    }
+  }
+
+  protected void layoutEntryPointButton(SingleRowPassInfo data) {
+    JComponent entryPointButton = myTabs.getEntryPointButton();
+    if (entryPointButton == null) {
+      return;
+    }
+    Dimension size = entryPointButton.getPreferredSize();
+    int x = data.layoutSize.width - size.width - 1;
+    int y = data.insets.top + JBTabsImpl.getSelectionTabVShift();
+    myTabs.layout(entryPointButton, x, y, size.width, size.height);
   }
 
   protected void layoutLabelsAndGhosts(SingleRowPassInfo data) {

@@ -1,3 +1,7 @@
+action.ConfigureEditorTabs.description:
+    text: Configure the look, behavior, and order of editor tabs
+action.ConfigureEditorTabs.text:
+    text: Configure Editor Tabs…
 action.EditorGutterToggleGlobalStickyLines.description:
     text: Show the sticky lines panel
 action.EditorGutterToggleGlobalStickyLines.text:
