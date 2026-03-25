@@ -36,11 +36,11 @@
         <option name="WHITESPACES_MODIFIED_LINES_COLOR" value="52433d"/>
         <option name="WHITESPACES" value="505050"/>
 
-        <option name="VCS_ANNOTATIONS_COLOR_1" value="464c43"/>
-        <option name="VCS_ANNOTATIONS_COLOR_2" value="444342"/>
-        <option name="VCS_ANNOTATIONS_COLOR_3" value="41444a"/>
-        <option name="VCS_ANNOTATIONS_COLOR_4" value="484248"/>
-        <option name="VCS_ANNOTATIONS_COLOR_5" value="4c393a"/>
+        <option name="VCS_ANNOTATIONS_COLOR_1" value="2f5194"/>
+        <option name="VCS_ANNOTATIONS_COLOR_2" value="2d416b"/>
+        <option name="VCS_ANNOTATIONS_COLOR_3" value="283754"/>
+        <option name="VCS_ANNOTATIONS_COLOR_4" value="242d42"/>
+        <option name="VCS_ANNOTATIONS_COLOR_5" value="22252e"/>
 
         <option name="FILESTATUS_ADDED" value="73BD79"/>
         <option name="FILESTATUS_COPIED" value="73BD79"/>
