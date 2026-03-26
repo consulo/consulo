@@ -21,7 +21,6 @@ import consulo.dataContext.DataProvider;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.execution.executor.Executor;
-import consulo.execution.localize.ExecutionLocalize;
 import consulo.execution.ui.event.RunContentWithExecutorListener;
 import consulo.logging.Logger;
 import consulo.project.Project;
@@ -40,8 +39,8 @@ import consulo.ui.image.Image;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.ThreeState;
-import org.jspecify.annotations.Nullable;
 import jakarta.inject.Provider;
+import org.jspecify.annotations.Nullable;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -158,7 +157,6 @@ public class RunToolWindowManager {
             }
         });
 
-        toolWindow.setDisplayName(ExecutionLocalize.toolWindowNameRun());
         toolWindow.setIcon(toolWindowIcon);
         ContentManagerWatcher.watchContentManager(toolWindow, contentManager);
         initToolWindow(executor, toolWindowId, toolWindowIcon, contentManager);

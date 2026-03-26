@@ -41,7 +41,7 @@ public final class HeavyProcessLatch {
     private final LocalizeValue myDisplayName;
 
     Type(LocalizeValue displayName) {
-      this.myDisplayName = displayName;
+      myDisplayName = displayName;
     }
 
     @Override

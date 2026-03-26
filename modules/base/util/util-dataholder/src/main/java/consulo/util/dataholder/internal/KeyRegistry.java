@@ -21,6 +21,7 @@ import consulo.util.collection.primitive.ints.IntObjectMap;
 import consulo.util.dataholder.Key;
 import org.jspecify.annotations.Nullable;
 
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 
@@ -46,7 +47,7 @@ public class KeyRegistry {
 
     public @Nullable Key<?> findKeyByName(String name, Function<Key<?>, String> nameFunc) {
         for (IntObjectMap.IntObjectEntry<Key> key : myAllKeys.entrySet()) {
-            if (name.equals(nameFunc.apply(key.getValue()))) {
+            if (name.equals(nameFunc.apply(Objects.requireNonNull(key.getValue())))) {
                 return key.getValue();
             }
         }
@@ -56,5 +57,14 @@ public class KeyRegistry {
     @SuppressWarnings("unchecked")
     public <T> @Nullable Key<T> getKeyByIndex(int index) {
         return myAllKeys.get(index);
+    }
+
+    @SuppressWarnings("unchecked")
+    public <T> Key<T> getRequiredKeyByIndex(int index) {
+        @Nullable Key key = getKeyByIndex(index);
+        if (key == null) {
+            throw new IndexOutOfBoundsException(String.valueOf(index));
+        }
+        return key;
     }
 }
