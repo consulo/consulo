@@ -1,11 +1,15 @@
 // Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.application.util.matcher;
 
+import consulo.annotation.ReviewAfterIssueFix;
 import consulo.util.lang.StringUtil;
+import org.jetbrains.annotations.Contract;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -305,9 +309,12 @@ public final class NameUtil {
     return pattern.equals(fallbackPattern) ? buildMatcher(pattern, options) : new MatcherWithFallback(buildMatcher(pattern, options), buildMatcher(fallbackPattern, options));
   }
 
+  @ReviewAfterIssueFix(value = "github.com/uber/NullAway/issues/1502", todo = "Remove NullAway suppression")
   @SuppressWarnings("NullAway")
   public static String capitalizeAndUnderscore(String name) {
-    return splitWords(name, '_', StringUtil::toUpperCase);
+    // NullAway problem: StringUtil::toUpperCase is conditionally nullable: it returns null only if argument is null
+    // Static validator doesn't understand that this case is safe, so suppressing NullAway validation
+    return splitWords(name, '_', String::toUpperCase);
   }
 
   public static String splitWords(String text, char separator, Function<? super String, String> transformWord) {

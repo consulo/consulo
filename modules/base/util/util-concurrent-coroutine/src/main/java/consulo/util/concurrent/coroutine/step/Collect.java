@@ -220,6 +220,9 @@ public class Collect<I extends @Nullable Object, O extends @Nullable Object> ext
 	protected @Nullable Collection<O> execute(@Nullable I input, Continuation<?> continuation) {
 		// even if executed blocking the selection must happen asynchronously,
 		// so we just run this step as a new coroutine in the current scope
+
+		// NullAway problem: input and output are nullable by method contract but in actual usage input can be null only if I is nullable.
+		// We cannot explain this to the static validator, so suppressing NullAway validation.
 		return new Coroutine<>(this).runAsync(continuation.scope(), input)
 			.getResult();
 	}

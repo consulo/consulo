@@ -409,7 +409,7 @@ public abstract class JBIterable<E extends @Nullable Object> implements Iterable
   /**
    * Returns a {@code JBIterable} that applies {@code function} to each element of this iterable.
    */
-  public final <T> JBIterable<T> map(Function<? super E, T> function) {
+  public final <T extends @Nullable Object> JBIterable<T> map(Function<? super E, T> function) {
     return intercept(iterator -> JBIterator.from(iterator).map(Stateful.copy(function)));
   }
 
@@ -621,9 +621,8 @@ public abstract class JBIterable<E extends @Nullable Object> implements Iterable
    * @see JBIterable#map(Function)
    * @see JBIterable#filter(Predicate)
    */
-  @SuppressWarnings("NullAway")
   public final <T> JBIterable<T> filterMap(Function<? super E, @Nullable T> function) {
-    return map(function).filter(Predicates.<T>notNull());
+    return map(function).filter(Predicates.<@Nullable T>notNull());
   }
 
   /**
@@ -711,7 +710,6 @@ public abstract class JBIterable<E extends @Nullable Object> implements Iterable
         int st; // encode transitions: -2:sep->sep, -1:val->sep, 1:sep->val, 2:val->val
 
         @Override
-        @SuppressWarnings("NullAway")
         protected @Nullable JBIterable<E> nextImpl() {
           // iterate through the previous result fully before proceeding
           while (it != null && it.advance()) /* no-op */ ;

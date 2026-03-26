@@ -53,8 +53,7 @@ public class Pair<A extends @Nullable Object, B extends @Nullable Object> implem
     return pair != null ? pair.second : null;
   }
 
-  @SuppressWarnings({"NullAway", "unchecked"})
-  private static final Pair EMPTY = create(null, null);
+  private static final Pair<@Nullable Object, @Nullable Object> EMPTY = create(null, null);
 
   @SuppressWarnings("unchecked")
   public static <A extends @Nullable Object, B extends @Nullable Object> Pair<A, B> empty() {

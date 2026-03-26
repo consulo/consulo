@@ -570,9 +570,9 @@ public final class UnmodifiableHashMap<K, V extends @Nullable Object> extends Ab
                         }
 
                         @Override
-                        @SuppressWarnings({"NullAway", "unchecked"})
+                        @SuppressWarnings("unchecked")
                         K tableElement(int offset) {
-                            return (K)data[offset];
+                            return (K) Objects.requireNonNull(data[offset]);
                         }
                     };
                 }

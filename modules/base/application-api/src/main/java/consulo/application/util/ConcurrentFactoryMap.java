@@ -44,6 +44,8 @@ public abstract class ConcurrentFactoryMap<K extends @Nullable Object, V extends
 
   @SuppressWarnings("NullAway")
   private static <T extends @Nullable Object> T nullize(T value) {
+    // NullAway problem: this null can be returned only if T is nullable, if T is not-nullable, null would never be returned
+    // Static validator doesn't understand that this case is safe, so suppressing NullAway validation
     return value == FAKE_NULL() ? null : value;
   }
 
@@ -252,7 +254,6 @@ public abstract class ConcurrentFactoryMap<K extends @Nullable Object, V extends
       return notNull(val);
     }
 
-    @SuppressWarnings("NullAway")
     protected K unwrap(K val) {
       return nullize(val);
     }

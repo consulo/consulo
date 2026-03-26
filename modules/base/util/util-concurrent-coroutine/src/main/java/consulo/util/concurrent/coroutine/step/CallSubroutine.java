@@ -78,7 +78,8 @@ public class CallSubroutine<I, O> extends CoroutineStep<I, O> {
 	@Override
 	@SuppressWarnings("NullAway")
 	protected @Nullable O execute(@Nullable I input, Continuation<?> continuation) {
-		return new Subroutine<>(coroutine,
-			apply(Function.identity())).runBlocking(input, continuation);
+		// NullAway problem: input and output are nullable by method contract but in actual usage input can be null only if I is nullable.
+		// We cannot explain this to the static validator, so suppressing NullAway validation.
+		return new Subroutine<>(coroutine, apply(Function.identity())).runBlocking(input, continuation);
 	}
 }

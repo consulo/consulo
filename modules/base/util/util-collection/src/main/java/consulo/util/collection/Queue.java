@@ -50,9 +50,11 @@ public class Queue<T> {
     return result;
   }
 
-  @SuppressWarnings("NullAway")
+  @SuppressWarnings({"NullAway", "unchecked"})
   private T getRaw(int last) {
-    //noinspection unchecked
+    // NullAway problem: array is technically nullable: null is used for filling elements not used for user data storage.
+    // We cannot use Objects.requireNonNull to check value because T generic parameter also can be nullable.
+    // So there's no way to say to static validator that everything is OK. So we're suppressing NullAway validation here.
     return (T)myArray[last];
   }
 

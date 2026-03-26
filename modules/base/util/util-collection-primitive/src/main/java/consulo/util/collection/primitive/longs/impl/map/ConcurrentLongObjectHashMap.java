@@ -2434,6 +2434,8 @@ public class ConcurrentLongObjectHashMap<V> implements ConcurrentLongObjectMap<V
         r[i++] = (T)e;
       }
       if (a == r && i < n) {
+        // NullAway problem: technical usage of null for filling elements not used for user data storage.
+        // Static validator doesn't understand this. So we're suppressing NullAway validation here.
         r[i] = null; // null-terminate
         return r;
       }

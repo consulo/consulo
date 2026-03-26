@@ -291,6 +291,8 @@ public class LockFreeCopyOnWriteArrayList<E> implements List<E>, RandomAccess, C
     }
     System.arraycopy(elements, 0, a, 0, len);
     if (a.length > len) {
+      // NullAway problem: technical usage of null for filling elements not used for user data storage.
+      // Static validator doesn't understand this. So we're suppressing NullAway validation here.
       a[len] = null;
     }
     return a;

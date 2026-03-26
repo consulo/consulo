@@ -16,6 +16,7 @@
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 package consulo.util.concurrent.coroutine.step;
 
+import consulo.annotation.ReviewAfterIssueFix;
 import consulo.util.concurrent.coroutine.Continuation;
 import consulo.util.concurrent.coroutine.CoroutineScope;
 import consulo.util.concurrent.coroutine.CoroutineStep;
@@ -83,9 +84,9 @@ public class CodeExecution<I extends @Nullable Object, O extends @Nullable Objec
      * @param code The consumer to be executed
      * @return A new instance of this class
      */
-    @SuppressWarnings("NullAway")
-    public static <T> CodeExecution<T, T> consume(Consumer<T> code) {
-        return new CodeExecution<>(o -> {
+    @ReviewAfterIssueFix(value = "github.com/uber/NullAway/issues/1500", todo = "Remove explicit generics in new CodeExecution call")
+    public static <T extends @Nullable Object> CodeExecution<T, @Nullable T> consume(Consumer<T> code) {
+        return new CodeExecution<T, @Nullable T>(o -> {
             code.accept(o);
             return null;
         });

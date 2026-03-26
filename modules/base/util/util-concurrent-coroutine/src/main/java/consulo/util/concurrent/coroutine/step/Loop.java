@@ -121,6 +121,8 @@ public class Loop<T> extends CoroutineStep<T, T> {
 	@Override
 	@SuppressWarnings("NullAway")
 	protected @Nullable T execute(@Nullable T input, Continuation<?> continuation) {
+		// NullAway problem: input and output are nullable by method contract but in actual usage input can be null only if I is nullable.
+		// We cannot explain this to the static validator, so suppressing NullAway validation.
 		while (pCondition.test(input, continuation)) {
 			input = rLoopedStep.runBlocking(input, continuation);
 		}

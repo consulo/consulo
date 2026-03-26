@@ -44,6 +44,8 @@ public final class ReadLock<I extends @Nullable Object, O extends @Nullable Obje
     @SuppressWarnings("NullAway")
     protected @Nullable O execute(@Nullable I input, Continuation<?> continuation) {
         Application application = Objects.requireNonNull(continuation.getConfiguration(Application.KEY), "Application required");
+        // NullAway problem: input and output are nullable by method contract but in actual usage input can be null only if I is nullable
+        // We cannot explain this to the static validator, so suppressing NullAway validation
         return application.runReadAction((Supplier<O>) () -> myFunction.apply(input));
     }
 }

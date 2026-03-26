@@ -747,6 +747,9 @@ public class Continuation<T> extends UserDataHolderBase implements Executor {
                 throw new CancellationException();
             }
         }
+        // NullAway problem: technical usage of null for lazy computation of result.
+        // We cannot use Objects.requireNonNull to check value because T generic parameter also can be nullable.
+        // So there's no way to say to static validator that everything is OK. So we're suppressing NullAway validation here.
         return result;
     }
 

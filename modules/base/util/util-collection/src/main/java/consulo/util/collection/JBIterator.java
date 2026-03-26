@@ -234,7 +234,7 @@ public abstract class JBIterator<E> implements Iterator<E> {
     }
   };
 
-  private static class Op<T> {
+  private static class Op<T extends @Nullable Object> {
     final T impl;
 
     @Nullable Op nextOp = null;
@@ -274,6 +274,8 @@ public abstract class JBIterator<E> implements Iterator<E> {
     @Override
     @SuppressWarnings("NullAway")
     @Nullable Object apply(@Nullable Object o) {
+      // NullAway problem: parameter is nullable by method contract but in actual usage parameter can be null only if E is nullable.
+      // We cannot explain this to the static validator, so suppressing NullAway validation.
       return Objects.requireNonNull(impl).apply((E)o);
     }
   }
@@ -315,8 +317,7 @@ public abstract class JBIterator<E> implements Iterator<E> {
     }
   }
 
-  private static class NextOp extends Op<Void> {
-    @SuppressWarnings("NullAway")
+  private static class NextOp extends Op<@Nullable Void> {
     NextOp() {
       super(null);
     }
@@ -327,10 +328,9 @@ public abstract class JBIterator<E> implements Iterator<E> {
     }
   }
 
-  private class CursorOp extends Op<Void> {
+  private class CursorOp extends Op<@Nullable Void> {
     boolean advanced;
 
-    @SuppressWarnings("NullAway")
     CursorOp() {
       super(null);
     }

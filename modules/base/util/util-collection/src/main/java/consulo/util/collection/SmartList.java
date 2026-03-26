@@ -68,6 +68,9 @@ public class SmartList<E extends @Nullable Object> extends AbstractList<E> imple
             throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + mySize);
         }
         if (mySize == 1) {
+            // NullAway problem: myElem is technically nullable: null is used for zero-element list.
+            // In case of single-element list myElem can be null only if E generic is nullable.
+            // Static validator doesn't understand this. So we're suppressing NullAway validation here.
             return (E) myElem;
         }
         Object[] array = (Object[]) Objects.requireNonNull(myElem);
@@ -155,6 +158,9 @@ public class SmartList<E extends @Nullable Object> extends AbstractList<E> imple
 
         E oldValue;
         if (mySize == 1) {
+            // NullAway problem: myElem is technically nullable: null is used for zero-element list.
+            // In case of single-element list myElem can be null only if E generic is nullable.
+            // Static validator doesn't understand this. So we're suppressing NullAway validation here.
             oldValue = (E) myElem;
             myElem = element;
         }
@@ -175,6 +181,9 @@ public class SmartList<E extends @Nullable Object> extends AbstractList<E> imple
 
         E oldValue;
         if (mySize == 1) {
+            // NullAway problem: myElem is technically nullable: null is used for zero-element list.
+            // In case of single-element list myElem can be null only if E generic is nullable.
+            // Static validator doesn't understand this. So we're suppressing NullAway validation here.
             oldValue = (E) myElem;
             myElem = null;
         }
@@ -269,6 +278,8 @@ public class SmartList<E extends @Nullable Object> extends AbstractList<E> imple
         }
 
         if (aLength > mySize) {
+            // NullAway problem: technical usage of null for filling elements not used for user data storage.
+            // Static validator doesn't understand this. So we're suppressing NullAway validation here.
             a[mySize] = null;
         }
         return a;

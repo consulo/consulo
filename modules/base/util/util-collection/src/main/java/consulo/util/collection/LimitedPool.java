@@ -42,6 +42,8 @@ public class LimitedPool<T> {
     int i = --index;
     //noinspection unchecked
     T result = (T)storage[i];
+    // NullAway problem: technical usage of null for filling elements not used for user data storage.
+    // Static validator doesn't understand this. So we're suppressing NullAway validation here.
     storage[i] = null;
     return result;
   }

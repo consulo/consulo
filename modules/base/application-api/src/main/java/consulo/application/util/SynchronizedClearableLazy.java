@@ -23,6 +23,8 @@ public class SynchronizedClearableLazy<T extends @Nullable Object> implements Su
 
     @SuppressWarnings("NullAway")
     private static <T extends @Nullable Object> T nullize(T t) {
+        // NullAway problem: this null can be returned only if T is nullable, if T is not-nullable, null would never be returned
+        // Static validator doesn't understand that this case is safe, so suppressing NullAway validation
         return isInitialized(t) ? t : null;
     }
 

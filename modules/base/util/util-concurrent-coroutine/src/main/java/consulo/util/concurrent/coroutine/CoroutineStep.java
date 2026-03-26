@@ -115,6 +115,9 @@ public abstract class CoroutineStep<I extends @Nullable Object, O extends @Nulla
      */
     @SuppressWarnings("NullAway")
     public O runBlocking(I input, Continuation<?> continuation) {
+        // NullAway problem: execute's input and output are nullable by method contract
+        // but in actual usage input can be null only if I is nullable.
+        // We cannot explain this to the static validator, so suppressing NullAway validation.
         return execute(input, continuation);
     }
 

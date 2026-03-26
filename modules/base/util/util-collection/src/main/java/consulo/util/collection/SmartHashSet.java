@@ -176,6 +176,8 @@ public final class SmartHashSet<T> extends HashSet<T> {
     }
     a[0] = theElement;
     if (a.length > 1) {
+      // NullAway problem: array is technically nullable: null is used for filling elements not used for user data storage.
+      // Static validator doesn't understand this. So we're suppressing NullAway validation here.
       a[1] = null;
     }
     return a;

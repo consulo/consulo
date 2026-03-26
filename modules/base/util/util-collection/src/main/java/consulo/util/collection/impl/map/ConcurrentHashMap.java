@@ -1975,6 +1975,8 @@ public class ConcurrentHashMap<K, V> extends AbstractMap<K, V> implements Concur
 
     @SuppressWarnings("NullAway")
     ForwardingNode(Node<K, V>[] tab, HashingStrategy<K> hashingStrategy) {
+      // NullAway problem: strange design of this class requires passing nulls as key and value disregarding K/V nullability.
+      // This class is derived from Node but is not a normal node so this is OK. So we're suppressing NullAway validation here.
       super(MOVED, null, null, hashingStrategy);
       this.nextTable = tab;
     }
@@ -2009,6 +2011,8 @@ public class ConcurrentHashMap<K, V> extends AbstractMap<K, V> implements Concur
   static final class ReservationNode<K, V> extends Node<K, V> {
     @SuppressWarnings("NullAway")
     ReservationNode(HashingStrategy<K> hashingStrategy) {
+      // NullAway problem: strange design of this class requires passing nulls as key and value disregarding K/V nullability.
+      // This class is derived from Node but is not a normal node so this is OK. So we're suppressing NullAway validation here.
       super(RESERVED, null, null, hashingStrategy);
     }
 
@@ -2507,6 +2511,8 @@ public class ConcurrentHashMap<K, V> extends AbstractMap<K, V> implements Concur
      */
     @SuppressWarnings("NullAway")
     TreeBin(@Nullable TreeNode<K, V> b, HashingStrategy<K> hashingStrategy) {
+      // NullAway problem: strange design of this class requires passing nulls as key and value disregarding K/V nullability.
+      // This class is derived from Node but is not a normal node so this is OK. So we're suppressing NullAway validation here.
       super(TREEBIN, null, null, hashingStrategy);
       this.first = b;
       TreeNode<K, V> r = null;
@@ -3967,6 +3973,8 @@ public class ConcurrentHashMap<K, V> extends AbstractMap<K, V> implements Concur
         r[i++] = (T)e;
       }
       if (a == r && i < n) {
+        // NullAway problem: technical usage of null for filling elements not used for user data storage.
+        // Static validator doesn't understand this. So we're suppressing NullAway validation here.
         r[i] = null; // null-terminate
         return r;
       }

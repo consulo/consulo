@@ -215,7 +215,10 @@ public class ReusableLinkedHashtable<K, V extends @Nullable Object> implements R
         ReusableLinkedHashtable<K, V> newTable = blankOfSize(maxSize);
         if (mySize > 0) {
             for (int pos = getStartPos(), endPos = myEndPos; ; pos = myNextPosAndHash[pos]) {
-                newTable.insertByIdentity(myNextPosAndHash[pos + 1], (K) myData[pos], (V) myData[pos + 1]);
+                // NullAway problem: array is technically nullable: null is used for filling elements not used for user data storage.
+                // But we also cannot use Objects.requireNonNull to check values because V generic parameter also can be nullable.
+                // So there's no way to say to static validator that everything is OK. So we're suppressing NullAway validation here.
+                newTable.insertByIdentity(myNextPosAndHash[pos + 1], (K) Objects.requireNonNull(myData[pos]), (V) myData[pos + 1]);
                 if (pos == endPos) {
                     break;
                 }
@@ -243,6 +246,9 @@ public class ReusableLinkedHashtable<K, V extends @Nullable Object> implements R
             for (int pos = startPos, endPos = range.getEndPos(); ; pos = myNextPosAndHash[pos]) {
                 K key = (K) Objects.requireNonNull(myData[pos]);
                 if ((excludeKeys == null || !excludeKeys.contains(key)) && pos != excludePos) {
+                    // NullAway problem: array is technically nullable: null is used for filling elements not used for user data storage.
+                    // But we also cannot use Objects.requireNonNull to check values because V generic parameter also can be nullable.
+                    // So there's no way to say to static validator that everything is OK. So we're suppressing NullAway validation here.
                     newTable.insertByIdentity(myNextPosAndHash[pos + 1], key, (V) myData[pos + 1]);
                 }
                 if (pos == endPos) {
@@ -493,6 +499,9 @@ public class ReusableLinkedHashtable<K, V extends @Nullable Object> implements R
 
     @SuppressWarnings("NullAway")
     public Object getValue(int keyPos) {
+        // NullAway problem: array is technically nullable: null is used for filling elements not used for user data storage.
+        // But we also cannot use Objects.requireNonNull to check values because V generic parameter also can be nullable.
+        // So there's no way to say to static validator that everything is OK. So we're suppressing NullAway validation here.
         return myData[keyPos + 1];
     }
 
