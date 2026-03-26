@@ -47,7 +47,7 @@ public class Subroutine<I, T, O> extends Coroutine<I, O> {
 	 * @param continuation The continuation of the execution
 	 * @return The result of the execution
 	 */
-	public @Nullable O runBlocking(@Nullable I input, Continuation<?> continuation) {
+	public O runBlocking(I input, Continuation<?> continuation) {
 		continuation.subroutineStarted(this);
 
 		return getRequiredCode().runBlocking(input, continuation);
@@ -88,9 +88,8 @@ public class Subroutine<I, T, O> extends Coroutine<I, O> {
 		/**
 		 * {@inheritDoc}
 		 */
-		@Nullable
 		@Override
-		protected O execute(@Nullable I input, Continuation<?> continuation) {
+		protected @Nullable O execute(@Nullable I input, Continuation<?> continuation) {
 			continuation.subroutineFinished();
 
 			return returnStep.execute(input, continuation);

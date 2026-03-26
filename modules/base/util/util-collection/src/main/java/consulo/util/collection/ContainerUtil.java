@@ -1145,6 +1145,7 @@ public class ContainerUtil {
     }
 
     @Contract(pure = true)
+    @SuppressWarnings("NullAway")
     public static <T> T[] toArray(@Nullable Collection<T> c, IntFunction<? extends T[]> factory) {
         return c != null ? c.toArray(factory.apply(c.size())) : factory.apply(0);
     }

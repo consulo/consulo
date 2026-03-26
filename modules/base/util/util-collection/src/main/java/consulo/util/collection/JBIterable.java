@@ -119,12 +119,12 @@ public abstract class JBIterable<E> implements Iterable<E> {
    * the first element is produced by the supplied {@code first} value.
    * Iteration stops when {@code null} is encountered.
    */
-  public static <E> JBIterable<E> generate(final @Nullable E first, final Function<? super E, ? extends E> generator) {
+  public static <E> JBIterable<E> generate(final @Nullable E first, final Function<? super E, @Nullable ? extends E> generator) {
     if (first == null) return empty();
     return new JBIterable<E>() {
       @Override
       public Iterator<E> iterator() {
-        final Function<? super E, ? extends E> fun = Stateful.copy(generator);
+        final Function<@Nullable ? super E, @Nullable ? extends E> fun = Stateful.copy(generator);
         return new JBIterator<E>() {
           @Nullable E cur = first;
 
@@ -140,9 +140,9 @@ public abstract class JBIterable<E> implements Iterable<E> {
     };
   }
 
-  public static <E> JBIterable<E> generate(final @Nullable E first1,
-                                           final @Nullable E first2,
-                                           final BiFunction<? super E, ? super E, ? extends E> generator) {
+  public static <E> JBIterable<E> generate(final E first1,
+                                           final E first2,
+                                           final BiFunction<? super E, ? super E, @Nullable ? extends E> generator) {
     if (first1 == null) return empty();
     return new JBIterable<E>() {
       @Override
@@ -168,7 +168,7 @@ public abstract class JBIterable<E> implements Iterable<E> {
   /**
    * Returns a {@code JBIterable} containing the one {@code element} if is not null.
    */
-  public static <E> JBIterable<E> of(@Nullable E element) {
+  public static <E> JBIterable<E> of(E element) {
     if (element == null) return empty();
     return new Single(element);
   }
@@ -187,7 +187,7 @@ public abstract class JBIterable<E> implements Iterable<E> {
   /**
    * Returns a {@code JBIterable} containing {@code elements} in the specified order.
    */
-  public static <E> JBIterable<E> of(@Nullable E... elements) {
+  public static <E> JBIterable<E> of(E @Nullable ... elements) {
     return elements == null || elements.length == 0 ? JBIterable.<E>empty() : from(Arrays.asList(elements));
   }
 
@@ -622,7 +622,8 @@ public abstract class JBIterable<E> implements Iterable<E> {
    * @see JBIterable#map(Function)
    * @see JBIterable#filter(Predicate)
    */
-  public final <T> JBIterable<T> filterMap(Function<? super E, T> function) {
+  @SuppressWarnings("NullAway")
+  public final <T> JBIterable<T> filterMap(Function<? super E, @Nullable T> function) {
     return map(function).filter(Predicates.<T>notNull());
   }
 
@@ -711,6 +712,7 @@ public abstract class JBIterable<E> implements Iterable<E> {
         int st; // encode transitions: -2:sep->sep, -1:val->sep, 1:sep->val, 2:val->val
 
         @Override
+        @SuppressWarnings("NullAway")
         protected @Nullable JBIterable<E> nextImpl() {
           // iterate through the previous result fully before proceeding
           while (it != null && it.advance()) /* no-op */ ;
@@ -728,37 +730,21 @@ public abstract class JBIterable<E> implements Iterable<E> {
             st = -1;
             return empty();
           }
-          E tmp = stored;
+          @Nullable E tmp = stored;
           stored = null;
-          return of(tmp).append(once((it = JBIterator.wrap(orig)).takeWhile(new Predicate<E>() {
-            @Override
-            public @Nullable boolean test(E e) {
-              boolean sep = condition.test(e);
-              int st0 = st;
-              st = st0 < 0 && sep ? -2 : st0 > 0 && !sep ? 2 : sep ? -1 : 1;
-              boolean result;
-              switch (mode) {
-                case AFTER:
-                  result = st != -2 && (st != 1 || st0 == 0);
-                  break;
-                case BEFORE:
-                  result = st != -2 && st != -1;
-                  break;
-                case AROUND:
-                  result = st0 >= 0 && st > 0;
-                  break;
-                case GROUP:
-                  result = st0 >= 0 && st > 0 || st0 <= 0 && st < 0;
-                  break;
-                case OFF:
-                  result = st > 0;
-                  break;
-                default:
-                  throw new AssertionError(st);
-              }
-              stored = !result && mode != Split.OFF ? e : null;
-              return result;
-            }
+          return of(tmp).append(once((it = JBIterator.wrap(orig)).takeWhile(e -> {
+            boolean sep = condition.test(e);
+            int st0 = st;
+            st = st0 < 0 && sep ? -2 : st0 > 0 && !sep ? 2 : sep ? -1 : 1;
+            boolean result = switch (mode) {
+              case AFTER -> st != -2 && (st != 1 || st0 == 0);
+              case BEFORE -> st != -2 && st != -1;
+              case AROUND -> st0 >= 0 && st > 0;
+              case GROUP -> st0 >= 0 && st > 0 || st0 <= 0 && st < 0;
+              case OFF -> st > 0;
+            };
+            stored = !result && mode != Split.OFF ? e : null;
+            return result;
           })));
         }
       };

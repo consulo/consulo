@@ -17,12 +17,14 @@ package consulo.component.extension;
 
 import consulo.annotation.DeprecationInfo;
 import consulo.annotation.InheritCallerContext;
+import consulo.annotation.ReviewAfterIssueFix;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.component.internal.ExtensionLogger;
 import consulo.component.util.ModificationTracker;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginManager;
 import consulo.util.collection.ContainerUtil;
+import org.jetbrains.annotations.Contract;
 import org.jspecify.annotations.Nullable;
 
 import java.lang.reflect.Array;
@@ -42,33 +44,29 @@ public interface ExtensionPoint<E> extends ModificationTracker, Iterable<E> {
         BREAK
     }
 
-    
     default String getName() {
         return getClassName();
     }
 
-    
-    @SuppressWarnings("unchecked")
     @Deprecated
     @DeprecationInfo("Use #getExtensionList()")
+    @SuppressWarnings({"deprecation", "unchecked"})
     default E[] getExtensions() {
         List<E> list = getExtensionList();
         return list.toArray((E[])Array.newInstance(getExtensionClass(), list.size()));
     }
 
+    @SuppressWarnings("deprecation")
     default boolean hasAnyExtensions() {
         return !getExtensionList().isEmpty();
     }
 
-    
     @Deprecated
     @DeprecationInfo("Prefer safe iteration")
     List<E> getExtensionList();
 
-    
     Class<E> getExtensionClass();
 
-    
     default String getClassName() {
         return getExtensionClass().getName();
     }
@@ -94,7 +92,6 @@ public interface ExtensionPoint<E> extends ModificationTracker, Iterable<E> {
      */
     <K> K getOrBuildCache(ExtensionPointCacheKey<E, K> key);
 
-    
     default <V extends E> V findExtensionOrFail(Class<V> instanceOf) {
         V extension = findExtension(instanceOf);
         if (extension == null) {
@@ -103,6 +100,7 @@ public interface ExtensionPoint<E> extends ModificationTracker, Iterable<E> {
         return extension;
     }
 
+    @SuppressWarnings("deprecation")
     default void processWithPluginDescriptor(@InheritCallerContext BiConsumer<? super E, ? super PluginDescriptor> consumer) {
         for (E extension : getExtensionList()) {
             PluginDescriptor plugin = PluginManager.getPlugin(extension.getClass());
@@ -123,11 +121,14 @@ public interface ExtensionPoint<E> extends ModificationTracker, Iterable<E> {
         return findFirstSafe(predicate) == null;
     }
 
+    @ReviewAfterIssueFix(value = "github.com/uber/NullAway/issues/1500", comment = "Remove explicit casts")
     default @Nullable E findFirstSafe(@InheritCallerContext Predicate<E> predicate) {
-        return computeSafeIfAny(e -> predicate.test(e) ? e : null);
+        return computeSafeIfAny((Function<E, @Nullable E>) e -> predicate.test(e) ? e : null);
     }
 
-    default @Nullable <R> R computeSafeIfAny(@InheritCallerContext Function<? super E, ? extends R> processor) {
+    @SuppressWarnings("deprecation")
+    default <R extends @Nullable Object>
+    @Nullable R computeSafeIfAny(@InheritCallerContext Function<? super E, ? extends @Nullable R> processor) {
         for (E extension : getExtensionList()) {
             try {
                 R result = processor.apply(extension);
@@ -142,14 +143,14 @@ public interface ExtensionPoint<E> extends ModificationTracker, Iterable<E> {
         return null;
     }
 
-    
-    default <R> R computeSafeIfAny(@InheritCallerContext Function<? super E, ? extends R> processor, R defaultValue) {
+    @Contract("_,!null -> !null")
+    default <R extends @Nullable Object>
+    R computeSafeIfAny(@InheritCallerContext Function<? super E, ? extends R> processor, R defaultValue) {
         R result = computeSafeIfAny(processor);
         return result == null ? defaultValue : result;
     }
 
-    
-    default <R, CR extends Collection<? super R>> CR collectMapped(
+    default <R extends @Nullable Object, CR extends Collection<? super R>> CR collectMapped(
         CR results,
         @InheritCallerContext Function<? super E, ? extends R> processor
     ) {
@@ -162,13 +163,11 @@ public interface ExtensionPoint<E> extends ModificationTracker, Iterable<E> {
         return results;
     }
 
-    
-    default <R> List<R> collectMapped(@InheritCallerContext Function<? super E, ? extends R> processor) {
+    default <R extends @Nullable Object> List<R> collectMapped(@InheritCallerContext Function<? super E, ? extends R> processor) {
         return collectMapped(new ArrayList<R>(), processor);
     }
 
-    
-    default <K, V, M extends Map<? super K, ? super V>> M collectMapped(
+    default <K extends @Nullable Object, V extends @Nullable Object, M extends Map<? super K, ? super V>> M collectMapped(
         M results,
         @InheritCallerContext Function<? super E, ? extends K> keyMapper,
         @InheritCallerContext Function<? super E, ? extends V> valueMapper
@@ -183,16 +182,14 @@ public interface ExtensionPoint<E> extends ModificationTracker, Iterable<E> {
         return results;
     }
 
-    
     @SuppressWarnings("unchecked")
-    default <K, V, M extends Map<? super K, ? super V>> M collectMapped(
+    default <K extends @Nullable Object, V extends @Nullable Object, M extends Map<? super K, ? super V>> M collectMapped(
         @InheritCallerContext Function<? super E, ? extends K> keyMapper,
         @InheritCallerContext Function<? super E, ? extends V> valueMapper
     ) {
         return collectMapped((M) new LinkedHashMap<K, V>(), keyMapper, valueMapper);
     }
 
-    
     default <CE extends Collection<E>> CE collectFiltered(
         CE results,
         @InheritCallerContext Predicate<? super E> predicate
@@ -205,7 +202,6 @@ public interface ExtensionPoint<E> extends ModificationTracker, Iterable<E> {
         return results;
     }
 
-    
     default List<E> collectFiltered(@InheritCallerContext Predicate<? super E> predicate) {
         return collectFiltered(new ArrayList<>(), predicate);
     }
@@ -226,11 +222,13 @@ public interface ExtensionPoint<E> extends ModificationTracker, Iterable<E> {
         });
     }
 
+    @ReviewAfterIssueFix(value = "github.com/uber/NullAway/issues/1500", comment = "Remove explicit casts")
     default void forEachBreakable(@InheritCallerContext Function<? super E, Flow> breakableConsumer) {
-        computeSafeIfAny(value -> breakableConsumer.apply(value) != Flow.BREAK ? null : Flow.BREAK);
+        computeSafeIfAny((Function<E, @Nullable Flow>) value -> breakableConsumer.apply(value) != Flow.BREAK ? null : Flow.BREAK);
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     default Iterator<E> iterator() {
         return getExtensionList().iterator();
     }

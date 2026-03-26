@@ -15,6 +15,8 @@
  */
 package consulo.util.collection;
 
+import org.jspecify.annotations.Nullable;
+
 import java.util.Map;
 import java.util.Objects;
 
@@ -22,7 +24,7 @@ import java.util.Objects;
  * @author UNV
  * @since 2024-12-03
  */
-public abstract class AbstractImmutableMap<K, V> implements ImmutableMap<K, V> {
+public abstract class AbstractImmutableMap<K, V extends @Nullable Object> implements ImmutableMap<K, V> {
     @Override
     @SuppressWarnings("unchecked")
     public int hashCode() {

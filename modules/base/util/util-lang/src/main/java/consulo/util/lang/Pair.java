@@ -19,72 +19,73 @@ import org.jspecify.annotations.Nullable;
 
 import java.util.Comparator;
 import java.util.Map;
+import java.util.Objects;
 import java.util.function.Function;
 
-public class Pair<A, B> implements Map.Entry<A, B> {
-  public final @Nullable A first;
-  public final @Nullable B second;
+public class Pair<A extends @Nullable Object, B extends @Nullable Object> implements Map.Entry<A, B> {
+  public final A first;
+  public final B second;
 
-  public static <A, B> Pair<A, B> create(@Nullable A first, @Nullable B second) {
+  public static <A extends @Nullable Object, B extends @Nullable Object> Pair<A, B> create(A first, B second) {
     //noinspection DontUsePairConstructor
-    return new Pair<A, B>(first, second);
+    return new Pair<>(first, second);
   }
 
   public static <A, B> NonNull<A, B> createNonNull(A first, B second) {
-    return new NonNull<A, B>(first, second);
+    return new NonNull<>(first, second);
   }
 
   @SuppressWarnings("MethodNamesDifferingOnlyByCase")
-  public static <A, B> Pair<A, B> pair(A first, B second) {
+  public static <A extends @Nullable Object, B extends @Nullable Object> Pair<A, B> pair(A first, B second) {
     //noinspection DontUsePairConstructor
-    return new Pair<A, B>(first, second);
+    return new Pair<>(first, second);
   }
 
   public static <A, B> Function<A, Pair<A, B>> createFunction(B value) {
     return a -> create(a, value);
   }
 
-  public static @Nullable <T> T getFirst(Pair<T, ?> pair) {
+  public static <T> @Nullable T getFirst(@Nullable Pair<T, ?> pair) {
     return pair != null ? pair.first : null;
   }
 
-  public static @Nullable <T> T getSecond(Pair<?, T> pair) {
+  public static <T> @Nullable T getSecond(@Nullable Pair<?, T> pair) {
     return pair != null ? pair.second : null;
   }
 
-  @SuppressWarnings("unchecked")
+  @SuppressWarnings({"NullAway", "unchecked"})
   private static final Pair EMPTY = create(null, null);
 
   @SuppressWarnings("unchecked")
-  public static <A, B> Pair<A, B> empty() {
-    return EMPTY;
+  public static <A extends @Nullable Object, B extends @Nullable Object> Pair<A, B> empty() {
+    return (Pair) EMPTY;
   }
 
-  public Pair(@Nullable A first, @Nullable B second) {
+  public Pair(A first, B second) {
     this.first = first;
     this.second = second;
   }
 
-  public final @Nullable A getFirst() {
+  public final A getFirst() {
     return first;
   }
 
-  public final @Nullable B getSecond() {
+  public final B getSecond() {
     return second;
   }
 
   @Override
-  public @Nullable A getKey() {
+  public A getKey() {
     return getFirst();
   }
 
   @Override
-  public @Nullable B getValue() {
+  public B getValue() {
     return getSecond();
   }
 
   @Override
-  public @Nullable B setValue(@Nullable B value) {
+  public B setValue(B value) {
     throw new UnsupportedOperationException();
   }
 
@@ -95,9 +96,7 @@ public class Pair<A, B> implements Map.Entry<A, B> {
 
   @Override
   public int hashCode() {
-    int result = first != null ? first.hashCode() : 0;
-    result = 31 * result + (second != null ? second.hashCode() : 0);
-    return result;
+    return 31 * Objects.hashCode(first) + Objects.hashCode(second);
   }
 
   @Override

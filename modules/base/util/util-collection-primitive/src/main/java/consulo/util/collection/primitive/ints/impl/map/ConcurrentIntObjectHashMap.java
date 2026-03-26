@@ -2429,14 +2429,14 @@ public class ConcurrentIntObjectHashMap<V> implements ConcurrentIntObjectMap<V> 
     }
 
     @Override
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({"NullAway", "unchecked"})
     public final <T> T[] toArray(T[] a) {
       long sz = map.mappingCount();
       if (sz > MAX_ARRAY_SIZE) {
         throw new OutOfMemoryError(oomeMsg);
       }
       int m = (int)sz;
-      T[] r = (a.length >= m) ? a : (T[])java.lang.reflect.Array.newInstance(a.getClass().getComponentType(), m);
+      @Nullable T[] r = (a.length >= m) ? a : (T[])java.lang.reflect.Array.newInstance(a.getClass().getComponentType(), m);
       int n = r.length;
       int i = 0;
       for (E e : this) {

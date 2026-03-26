@@ -58,7 +58,7 @@ import java.util.concurrent.CompletableFuture;
  *
  * @author eso
  */
-public abstract class CoroutineStep<I, O> extends UserDataHolderBase {
+public abstract class CoroutineStep<I extends @Nullable Object, O extends @Nullable Object> extends UserDataHolderBase {
     private String name = getClass().getSimpleName();
 
     /**
@@ -102,8 +102,7 @@ public abstract class CoroutineStep<I, O> extends UserDataHolderBase {
      * @param continuation      The continuation of the execution
      */
     public void runAsync(CompletableFuture<I> previousExecution, @Nullable CoroutineStep<O, ?> nextStep, Continuation<?> continuation) {
-        continuation.continueApply(previousExecution,
-            i -> execute(i, continuation), nextStep);
+        continuation.continueApply(previousExecution, i -> execute(i, continuation), nextStep);
     }
 
     /**
@@ -114,7 +113,8 @@ public abstract class CoroutineStep<I, O> extends UserDataHolderBase {
      * @param continuation The continuation of the execution
      * @return The execution result
      */
-    public @Nullable O runBlocking(@Nullable I input, Continuation<?> continuation) {
+    @SuppressWarnings("NullAway")
+    public O runBlocking(I input, Continuation<?> continuation) {
         return execute(input, continuation);
     }
 

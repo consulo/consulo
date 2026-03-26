@@ -1,6 +1,7 @@
 // Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.util.collection.impl.set;
 
+import consulo.annotation.ReviewAfterIssueFix;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.Comparing;
 import org.jspecify.annotations.Nullable;
@@ -9,6 +10,7 @@ import java.lang.ref.Reference;
 import java.lang.ref.ReferenceQueue;
 import java.lang.ref.WeakReference;
 import java.util.*;
+import java.util.function.Function;
 
 /**
  * Weak hash set.
@@ -51,8 +53,12 @@ public final class WeakHashSet<T> extends AbstractSet<T> {
   }
 
   @Override
+  @ReviewAfterIssueFix(value = "github.com/uber/NullAway/issues/1500", comment = "Remove explicit casts")
   public Iterator<T> iterator() {
-    return ContainerUtil.filterIterator(ContainerUtil.mapIterator(set.iterator(), Reference::get), Objects::nonNull);
+    return ContainerUtil.filterIterator(
+      ContainerUtil.mapIterator(set.iterator(), (Function<MyRef<T>, @Nullable T>) Reference::get),
+      Objects::nonNull
+    );
   }
 
   @Override

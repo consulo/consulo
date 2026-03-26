@@ -68,6 +68,7 @@ import org.jspecify.annotations.Nullable;
 import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Objects;
 
 /**
  * This Walker implementation walks a list of Content in a Formatted form of
@@ -290,7 +291,6 @@ class CustomWalker implements Walker {
       mttext[mtsize] = null;
       mtdata[mtsize++] = c;
       mtbuffer.setLength(0);
-
     }
 
     /**
@@ -346,9 +346,9 @@ class CustomWalker implements Walker {
   private int mtsourcesize = 0;
   private @Nullable Content[] mtsource = new Content[8];
   // the location of the processed content.
-  private Content[] mtdata = new Content[8];
+  private @Nullable Content[] mtdata = new Content[8];
   // whether the mixed content should be returned as raw JDOM objects
-  private String[] mttext = new String[8];
+  private @Nullable String[] mttext = new String[8];
 
   // the current cursor in the mixed content.
   private int mtpos = -1;
@@ -584,7 +584,7 @@ class CustomWalker implements Walker {
    * @return the content at the index.
    */
   protected final Content get(int index) {
-    return mtsource[index];
+    return Objects.requireNonNull(mtsource[index]);
   }
 
   @Override

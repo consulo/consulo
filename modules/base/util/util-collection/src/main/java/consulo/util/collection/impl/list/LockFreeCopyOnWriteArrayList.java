@@ -282,7 +282,7 @@ public class LockFreeCopyOnWriteArrayList<E> implements List<E>, RandomAccess, C
    * @throws NullPointerException if the specified array is null
    */
   @Override
-  @SuppressWarnings("unchecked")
+  @SuppressWarnings({"NullAway", "unchecked"})
   public <T> T[] toArray(T[] a) {
     Object[] elements = array;
     int len = elements.length;

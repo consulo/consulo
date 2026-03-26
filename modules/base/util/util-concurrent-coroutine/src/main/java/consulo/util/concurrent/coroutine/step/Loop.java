@@ -118,9 +118,9 @@ public class Loop<T> extends CoroutineStep<T, T> {
 	/***************************************
 	 * {@inheritDoc}
 	 */
-	@Nullable
 	@Override
-	protected T execute(@Nullable T input, Continuation<?> continuation) {
+	@SuppressWarnings("NullAway")
+	protected @Nullable T execute(@Nullable T input, Continuation<?> continuation) {
 		while (pCondition.test(input, continuation)) {
 			input = rLoopedStep.runBlocking(input, continuation);
 		}

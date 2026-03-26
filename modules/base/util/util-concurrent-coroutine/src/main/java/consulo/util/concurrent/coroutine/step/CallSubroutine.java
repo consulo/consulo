@@ -75,9 +75,9 @@ public class CallSubroutine<I, O> extends CoroutineStep<I, O> {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Nullable
 	@Override
-	protected O execute(@Nullable I input, Continuation<?> continuation) {
+	@SuppressWarnings("NullAway")
+	protected @Nullable O execute(@Nullable I input, Continuation<?> continuation) {
 		return new Subroutine<>(coroutine,
 			apply(Function.identity())).runBlocking(input, continuation);
 	}

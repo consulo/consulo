@@ -137,7 +137,7 @@ public interface Component extends UserDataHolder {
     default <T> Disposable addUserDataProvider(Key<T> key, Supplier<T> supplier) {
         return addUserDataProvider(k -> k == key ? supplier.get() : null);
     }
-    Disposable addUserDataProvider(Function<Key<?>, Object> function);
+    Disposable addUserDataProvider(Function<Key<?>, @Nullable Object> function);
     Font getFont();
 
     void setFont(Font font);

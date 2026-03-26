@@ -1,6 +1,8 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.util.collection;
 
+import org.jspecify.annotations.Nullable;
+
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.Predicate;
@@ -10,7 +12,7 @@ import java.util.function.Predicate;
  */
 @Deprecated
 public class Queue<T> {
-  private Object[] myArray;
+  private @Nullable Object[] myArray;
   private int myFirst;
   private int myLast;
   // if true, elements are located at myFirst..myArray.length and 0..myLast
@@ -48,6 +50,7 @@ public class Queue<T> {
     return result;
   }
 
+  @SuppressWarnings("NullAway")
   private T getRaw(int last) {
     //noinspection unchecked
     return (T)myArray[last];

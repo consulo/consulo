@@ -194,9 +194,9 @@ public class Condition<I, O> extends CoroutineStep<I, O> {
 	/***************************************
 	 * {@inheritDoc}
 	 */
-	@Nullable
 	@Override
-	protected O execute(@Nullable I input, Continuation<?> continuation) {
+	@SuppressWarnings("NullAway")
+	protected @Nullable O execute(@Nullable I input, Continuation<?> continuation) {
 		if (pCondition.test(input, continuation)) {
 			return rRunIfTrue.runBlocking(input, continuation);
 		} else if (rRunIfFalse != null) {

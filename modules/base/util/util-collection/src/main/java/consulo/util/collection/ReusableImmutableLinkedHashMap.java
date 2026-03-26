@@ -42,7 +42,8 @@ import java.util.function.Consumer;
  * @author UNV
  * @since 2024-11-18
  */
-public class ReusableImmutableLinkedHashMap<K, V> extends AbstractImmutableMap<K, V> implements SequencedMap<K, V>, ReusableLinkedHashtableUser {
+public class ReusableImmutableLinkedHashMap<K, V extends @Nullable Object> extends AbstractImmutableMap<K, V>
+    implements SequencedMap<K, V>, ReusableLinkedHashtableUser {
     private static final ReusableImmutableLinkedHashMap<Object, Object> EMPTY = of(ReusableLinkedHashtable.empty());
 
     protected ReusableLinkedHashtable<K, V>.Range myRange;
@@ -165,7 +166,7 @@ public class ReusableImmutableLinkedHashMap<K, V> extends AbstractImmutableMap<K
      */
     @Contract(pure = true)
     @Override
-    public ReusableImmutableLinkedHashMap<K, V> with(K key, @Nullable V value) {
+    public ReusableImmutableLinkedHashMap<K, V> with(K key, V value) {
         ReusableLinkedHashtable<K, V>.Range range = myRange;
         if (range.mySize == 0) {
             return fromMap(Collections.singletonMap(key, value));
@@ -268,9 +269,10 @@ public class ReusableImmutableLinkedHashMap<K, V> extends AbstractImmutableMap<K
         return myRange.isValueInList(value);
     }
 
+    @Contract("_,!null -> !null")
     @Override
     @SuppressWarnings("unchecked")
-    public V getOrDefault(Object key, V defaultValue) {
+    public @Nullable V getOrDefault(Object key, @Nullable V defaultValue) {
         ReusableLinkedHashtable<K, V>.Range range = myRange;
         ReusableLinkedHashtable<K, V> table = range.getTable();
         int keyPos = table.getPos((K)key);

@@ -235,11 +235,11 @@ public abstract class JBIterator<E> implements Iterator<E> {
   };
 
   private static class Op<T> {
-    final @Nullable T impl;
+    final T impl;
 
     @Nullable Op nextOp = null;
 
-    public Op(@Nullable T impl) {
+    public Op(T impl) {
       this.impl = impl;
     }
 
@@ -272,6 +272,7 @@ public abstract class JBIterator<E> implements Iterator<E> {
     }
 
     @Override
+    @SuppressWarnings("NullAway")
     @Nullable Object apply(@Nullable Object o) {
       return Objects.requireNonNull(impl).apply((E)o);
     }
@@ -315,6 +316,7 @@ public abstract class JBIterator<E> implements Iterator<E> {
   }
 
   private static class NextOp extends Op<Void> {
+    @SuppressWarnings("NullAway")
     NextOp() {
       super(null);
     }
@@ -328,6 +330,7 @@ public abstract class JBIterator<E> implements Iterator<E> {
   private class CursorOp extends Op<Void> {
     boolean advanced;
 
+    @SuppressWarnings("NullAway")
     CursorOp() {
       super(null);
     }

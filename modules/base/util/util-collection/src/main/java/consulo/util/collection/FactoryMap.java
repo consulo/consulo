@@ -152,6 +152,7 @@ public abstract class FactoryMap<K, V> implements Map<K, V> {
   }
 
   @Override
+  @SuppressWarnings("NullAway")
   public Collection<V> values() {
     return ContainerUtil.map(getMap().values(), FactoryMap::nullize);
   }

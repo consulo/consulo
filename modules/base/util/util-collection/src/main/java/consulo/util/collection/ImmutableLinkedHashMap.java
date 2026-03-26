@@ -27,7 +27,7 @@ import java.util.function.Consumer;
  * @author UNV
  * @since 2024-12-03
  */
-public class ImmutableLinkedHashMap<K, V> extends AbstractImmutableMap<K, V> implements SequencedMap<K, V> {
+public class ImmutableLinkedHashMap<K, V extends @Nullable Object> extends AbstractImmutableMap<K, V> implements SequencedMap<K, V> {
     private static final ImmutableLinkedHashMap<Object, Object> EMPTY = of(ReusableLinkedHashtable.empty());
 
     protected ReusableLinkedHashtable<K, V> myTable;
@@ -143,7 +143,7 @@ public class ImmutableLinkedHashMap<K, V> extends AbstractImmutableMap<K, V> imp
      */
     @Contract(pure = true)
     @Override
-    public ImmutableLinkedHashMap<K, V> with(K key, @Nullable V value) {
+    public ImmutableLinkedHashMap<K, V> with(K key, V value) {
         if (isEmpty()) {
             return fromMap(Collections.singletonMap(key, value));
         }
@@ -219,9 +219,10 @@ public class ImmutableLinkedHashMap<K, V> extends AbstractImmutableMap<K, V> imp
         return myTable.isValueInList(myTable, value);
     }
 
+    @Contract("_,!null -> !null")
     @Override
     @SuppressWarnings("unchecked")
-    public V getOrDefault(Object key, V defaultValue) {
+    public @Nullable V getOrDefault(Object key, @Nullable V defaultValue) {
         ReusableLinkedHashtable<K, V> table = myTable;
         int keyPos = table.getPos((K)key);
         return keyPos < 0 ? defaultValue : (V)table.getValue(keyPos);

@@ -55,7 +55,7 @@ import static java.util.Arrays.asList;
  *
  * @author eso
  */
-public class Select<I, O> extends CoroutineStep<I, O> {
+public class Select<I extends @Nullable Object, O extends @Nullable Object> extends CoroutineStep<I, O> {
 	//~ Instance fields --------------------------------------------------------
 
 	private final List<Coroutine<? super I, ? extends O>> aCoroutines =
@@ -107,7 +107,7 @@ public class Select<I, O> extends CoroutineStep<I, O> {
 	 * @return A new step instance
 	 */
 	@SafeVarargs
-	public static <I, O> Select<I, O> select(
+	public static <I extends @Nullable Object, O> Select<I, O> select(
 		Coroutine<? super I, ? extends O>... rFromCoroutines) {
 		return new Select<I, O>(asList(rFromCoroutines));
 	}
@@ -122,8 +122,7 @@ public class Select<I, O> extends CoroutineStep<I, O> {
 	 * @return A new step instance
 	 */
 	@SafeVarargs
-	public static <I, O> Select<I, O> select(
-		CoroutineStep<? super I, ? extends O>... rFromSteps) {
+	public static <I extends @Nullable Object, O> Select<I, O> select(CoroutineStep<? super I, ? extends O>... rFromSteps) {
 		return new Select<>(asList(rFromSteps).stream()
 			.map(rStep -> new Coroutine<>(rStep))
 			.collect(Collectors.toList()));
@@ -197,9 +196,9 @@ public class Select<I, O> extends CoroutineStep<I, O> {
 	/***************************************
 	 * {@inheritDoc}
 	 */
-	@Nullable
 	@Override
-	protected O execute(@Nullable I input, Continuation<?> continuation) {
+	@SuppressWarnings("NullAway")
+	protected @Nullable O execute(@Nullable I input, Continuation<?> continuation) {
 		// even if executed blocking the selection must happen asynchronously,
 		// so we just run this step as a new coroutine in the current scope
 		return new Coroutine<>(this).runAsync(continuation.scope(), input)

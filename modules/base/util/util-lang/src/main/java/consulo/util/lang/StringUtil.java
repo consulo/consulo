@@ -750,7 +750,7 @@ public final class StringUtil {
         return out.toString();
     }
 
-    @Contract(value = "null -> null", pure = true)
+    @Contract(value = "null -> null; !null -> !null", pure = true)
     public static @Nullable String decapitalize(@Nullable String s) {
         if (isEmpty(s)) {
             return s;
@@ -1621,7 +1621,7 @@ public final class StringUtil {
     }
 
     @Contract(pure = true)
-    public static <T> String join(T[] items, Function<T, String> f, String separator) {
+    public static <T> String join(T[] items, Function<T, @Nullable String> f, String separator) {
         int length = items.length;
         if (length == 0) {
             return "";
@@ -1635,7 +1635,7 @@ public final class StringUtil {
     @Contract(mutates = "param4")
     public static <T> StringBuilder join(
         T[] items,
-        Function<T, String> f,
+        Function<T, @Nullable String> f,
         String separator,
         StringBuilder result
     ) {
@@ -1674,7 +1674,7 @@ public final class StringUtil {
     }
 
     @Contract(pure = true)
-    public static <T> String join(Collection<? extends T> items, Function<? super T, String> f, String separator) {
+    public static <T> String join(Collection<? extends T> items, Function<? super T, @Nullable String> f, String separator) {
         if (items.isEmpty()) {
             return "";
         }
@@ -1688,7 +1688,7 @@ public final class StringUtil {
     @Contract(mutates = "param4")
     public static <T> StringBuilder join(
         Collection<? extends T> items,
-        Function<? super T, String> f,
+        Function<? super T, @Nullable String> f,
         String separator,
         StringBuilder result
     ) {
@@ -1712,14 +1712,14 @@ public final class StringUtil {
     }
 
     @Contract(pure = true)
-    public static <T> String join(Iterable<? extends T> items, Function<? super T, String> f, String separator) {
+    public static <T> String join(Iterable<? extends T> items, Function<? super T, @Nullable String> f, String separator) {
         return join(items, f, separator, new StringBuilder()).toString();
     }
 
     @Contract(mutates = "param4")
     public static <T> StringBuilder join(
         Iterable<? extends T> items,
-        Function<? super T, String> f,
+        Function<? super T, @Nullable String> f,
         String separator,
         StringBuilder result
     ) {

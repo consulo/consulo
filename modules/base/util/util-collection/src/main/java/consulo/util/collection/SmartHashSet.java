@@ -163,6 +163,7 @@ public final class SmartHashSet<T> extends HashSet<T> {
   }
 
   @Override
+  @SuppressWarnings("NullAway")
   public <O> O[] toArray(O[] a) {
     @SuppressWarnings("unchecked") O theElement = (O)this.theElement;
     if (theElement == null) {

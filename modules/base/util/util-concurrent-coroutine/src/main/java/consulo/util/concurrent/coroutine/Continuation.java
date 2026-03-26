@@ -187,7 +187,7 @@ public class Continuation<T> extends UserDataHolderBase implements Executor {
      * @param rPreviousExecution The future to continue
      * @param fNext              The next code to execute
      */
-    public final <V> void continueAccept(
+    public final <V extends @Nullable Object> void continueAccept(
         CompletableFuture<V> rPreviousExecution, Consumer<V> fNext) {
         if (!cancelled) {
             currentExecution = rPreviousExecution.thenAcceptAsync(fNext, this)
@@ -211,7 +211,7 @@ public class Continuation<T> extends UserDataHolderBase implements Executor {
      */
     public final <I, O> void continueApply(
         CompletableFuture<I> previousExecution,
-        Function<I, O> next,
+        Function<I, @Nullable O> next,
         @Nullable CoroutineStep<O, ?> nextStep
     ) {
         if (!cancelled) {
@@ -391,7 +391,7 @@ public class Continuation<T> extends UserDataHolderBase implements Executor {
      *
      * @return The result
      */
-    public @Nullable T getResult() {
+    public T getResult() {
         try {
             finishSignal.await();
         }
@@ -586,7 +586,7 @@ public class Continuation<T> extends UserDataHolderBase implements Executor {
      * @param suspendedStep  The step to suspend
      * @return A new suspension object
      */
-    public <V> Suspension<V> suspend(CoroutineStep<?, V> suspendingStep, @Nullable CoroutineStep<V, ?> suspendedStep) {
+    public <V extends @Nullable Object> Suspension<V> suspend(CoroutineStep<?, V> suspendingStep, @Nullable CoroutineStep<V, ?> suspendedStep) {
         return suspendTo(new Suspension<>(suspendingStep, suspendedStep, this));
     }
 
@@ -732,7 +732,8 @@ public class Continuation<T> extends UserDataHolderBase implements Executor {
      *
      * @return The result
      */
-    private @Nullable T getResultImpl() {
+    @SuppressWarnings("NullAway")
+    private T getResultImpl() {
         if (cancelled) {
             if (error != null) {
                 if (error instanceof CoroutineException) {

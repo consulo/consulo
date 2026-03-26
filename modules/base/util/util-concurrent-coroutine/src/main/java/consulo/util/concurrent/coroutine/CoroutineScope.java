@@ -127,6 +127,7 @@ public class CoroutineScope extends CoroutineEnvironment {
         aScope.checkThrowErrors();
     }
 
+    @SuppressWarnings("NullAway")
     public static void launchAsync(CoroutineContext context, Supplier<Coroutine<?, ?>> supplier) {
         CoroutineScope aScope = new CoroutineScope(context);
 

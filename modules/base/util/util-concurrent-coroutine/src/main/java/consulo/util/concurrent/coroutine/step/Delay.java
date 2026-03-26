@@ -82,9 +82,8 @@ public class Delay<T> extends CoroutineStep<T, T> {
 		return new Delay<>(c -> Pair.create(duration, timeUnit));
 	}
 
-	@Nullable
 	@Override
-	public T execute(@Nullable T input, Continuation<?> continuation) {
+	public @Nullable T execute(@Nullable T input, Continuation<?> continuation) {
 		try {
 			Pair<Long, TimeUnit> duration = getDuration.apply(continuation);
 

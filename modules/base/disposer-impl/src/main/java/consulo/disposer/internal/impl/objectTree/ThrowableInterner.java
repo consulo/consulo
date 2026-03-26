@@ -57,7 +57,7 @@ public class ThrowableInterner {
     }
   });
 
-  private static @Nullable Function<Throwable, Object> ourBacktraceAccess = ThrowableHacking.getBacktraceAccess();
+  private static @Nullable Function<Throwable, @Nullable Object> ourBacktraceAccess = ThrowableHacking.getBacktraceAccess();
 
   private static Object @Nullable [] getBacktrace(Throwable throwable) {
     return ourBacktraceAccess == null ? null : (Object[])ourBacktraceAccess.apply(throwable);

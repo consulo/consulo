@@ -29,7 +29,7 @@ import java.util.function.*;
  *
  * @author eso
  */
-public class CodeExecution<I, O> extends CoroutineStep<I, O> {
+public class CodeExecution<I extends @Nullable Object, O extends @Nullable Object> extends CoroutineStep<I, O> {
 
     private final BiFunction<I, Continuation<?>, O> code;
 
@@ -83,6 +83,7 @@ public class CodeExecution<I, O> extends CoroutineStep<I, O> {
      * @param code The consumer to be executed
      * @return A new instance of this class
      */
+    @SuppressWarnings("NullAway")
     public static <T> CodeExecution<T, T> consume(Consumer<T> code) {
         return new CodeExecution<>(o -> {
             code.accept(o);
@@ -111,8 +112,8 @@ public class CodeExecution<I, O> extends CoroutineStep<I, O> {
      * @param rSource The relation type of the parameter
      * @return A new instance of this class
      */
-    public static <I, O> CodeExecution<I, O> getParameter(Key<O> rSource) {
-        return supply(c -> c.getUserData(rSource));
+    public static <I, O> CodeExecution<I, ? extends @Nullable O> getParameter(Key<O> rSource) {
+        return supply((Function<Continuation<?>, ? extends @Nullable O>) c -> c.getUserData(rSource));
     }
 
     /**
@@ -122,8 +123,8 @@ public class CodeExecution<I, O> extends CoroutineStep<I, O> {
      * @param rSource The relation type of the parameter
      * @return A new instance of this class
      */
-    public static <I, O> CodeExecution<I, O> getScopeParameter(Key<O> rSource) {
-        return supply(c -> c.scope().getUserData(rSource));
+    public static <I, O> CodeExecution<I, ? extends @Nullable O> getScopeParameter(Key<O> rSource) {
+        return supply((Function<Continuation<?>, ? extends @Nullable O>) c -> c.scope().getUserData(rSource));
     }
 
     /**
@@ -143,7 +144,7 @@ public class CodeExecution<I, O> extends CoroutineStep<I, O> {
      * @param code The runnable to be executed
      * @return A new instance of this class
      */
-    public static <T> CodeExecution<T, Void> run(Runnable code) {
+    public static <T extends @Nullable Object> CodeExecution<T, @Nullable Void> run(Runnable code) {
         return new CodeExecution<>((o, o2) -> {
             code.run();
             return null;

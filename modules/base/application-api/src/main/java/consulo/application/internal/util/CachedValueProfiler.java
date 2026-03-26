@@ -134,13 +134,13 @@ public final class CachedValueProfiler {
     return new ValueTracker(place, frame.timeConfigured, time);
   }
 
-  static EventPlace place(Function<Throwable, StackTraceElement> function) {
+  static EventPlace place(Function<Throwable, @Nullable StackTraceElement> function) {
     // Use async stack trace processing to reduce overhead.
     // Both plain Throwable#getStackTrace and StackWalker API are slower.
     Throwable throwable = new Throwable();
     return new EventPlace() {
       @Override
-      public StackTraceElement getStackFrame() {
+      public @Nullable StackTraceElement getStackFrame() {
         return function.apply(throwable);
       }
 

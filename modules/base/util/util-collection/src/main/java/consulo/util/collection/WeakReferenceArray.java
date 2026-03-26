@@ -262,7 +262,7 @@ public class WeakReferenceArray<T> {
       myIndex = index;
     }
 
-    public boolean removeFrom(MyWeakReference[] array) {
+    public boolean removeFrom(@Nullable MyWeakReference[] array) {
       LoggerAssert.assertTrue(LOG, array[myIndex] == this);
       clear();
       array[myIndex] = null;
@@ -270,7 +270,7 @@ public class WeakReferenceArray<T> {
       return enqueue();
     }
 
-    public void moveTo(MyWeakReference[] fromArray, MyWeakReference[] toArray, int newIndex) {
+    public void moveTo(@Nullable MyWeakReference[] fromArray, @Nullable MyWeakReference[] toArray, int newIndex) {
       LoggerAssert.assertTrue(LOG, fromArray[myIndex] == this);
       fromArray[myIndex] = null;
       LoggerAssert.assertTrue(LOG, toArray[newIndex] == null);
@@ -278,7 +278,7 @@ public class WeakReferenceArray<T> {
       myIndex = newIndex;
     }
 
-    public void setNull(MyWeakReference[] array) {
+    public void setNull(@Nullable MyWeakReference[] array) {
       LoggerAssert.assertTrue(LOG, get() == null);
       if (myIndex == -1) return;
       LoggerAssert.assertTrue(LOG, array[myIndex] == this);

@@ -34,7 +34,7 @@ import java.util.function.Function;
  *
  * @author eso
  */
-public class ChannelReceive<T> extends ChannelStep<Void, T> {
+public class ChannelReceive<T extends @Nullable Object> extends ChannelStep<@Nullable Void, T> {
 	//~ Constructors -----------------------------------------------------------
 
 	/***************************************
@@ -57,7 +57,7 @@ public class ChannelReceive<T> extends ChannelStep<Void, T> {
 	 *
 	 * @return A new instance of this class
 	 */
-	public static <T> ChannelReceive<T> receive(ChannelId<T> rId) {
+	public static <T extends @Nullable Object> ChannelReceive<T> receive(ChannelId<T> rId) {
 		return new ChannelReceive<>(c -> rId);
 	}
 
@@ -69,7 +69,7 @@ public class ChannelReceive<T> extends ChannelStep<Void, T> {
 	 *
 	 * @return A new step instance
 	 */
-	public static <T> ChannelReceive<T> receive(
+	public static <T extends @Nullable Object> ChannelReceive<T> receive(
 		Function<Continuation<?>, ChannelId<T>> fGetChannelId) {
 		return new ChannelReceive<>(fGetChannelId);
 	}
@@ -81,7 +81,7 @@ public class ChannelReceive<T> extends ChannelStep<Void, T> {
 	 */
 	@Override
 	public void runAsync(
-		CompletableFuture<Void> previousExecution,
+		CompletableFuture<@Nullable Void> previousExecution,
 		@Nullable CoroutineStep<T, ?> nextStep,
 		Continuation<?> continuation
 	) {
@@ -93,9 +93,8 @@ public class ChannelReceive<T> extends ChannelStep<Void, T> {
 	/***************************************
 	 * {@inheritDoc}
 	 */
-	@Nullable
 	@Override
-	protected T execute(@Nullable Void input, Continuation<?> continuation) {
+	protected @Nullable T execute(@Nullable Void input, Continuation<?> continuation) {
 		return getChannel(continuation).receiveBlocking();
 	}
 }

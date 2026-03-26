@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2014 JetBrains s.r.o.
+ * Copyright 2013-2026 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,25 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.util.lang;
+package consulo.annotation;
 
 /**
- * @author Konstantin Bulenkov
+ * @author UNV
+ * @since 2026-03-26
  */
-public class Couple<T> extends Pair<T, T> {
-  @SuppressWarnings("NullAway")
-  private static final Couple EMPTY_COUPLE = of(null, null);
+public @interface ReviewAfterIssueFix {
+    String value(); // URL to the issue
 
-  public Couple(T first, T second) {
-    super(first, second);
-  }
-
-  public static <T> Couple<T> of(T first, T second) {
-    return new Couple<>(first, second);
-  }
-
-  @SuppressWarnings("unchecked")
-  public static <T> Couple<T> of() {
-    return (Couple) EMPTY_COUPLE;
-  }
+    String comment() default "";
 }

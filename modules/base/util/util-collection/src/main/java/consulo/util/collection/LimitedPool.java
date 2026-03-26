@@ -36,6 +36,7 @@ public class LimitedPool<T> {
     void cleanup(T t);
   }
 
+  @SuppressWarnings("NullAway")
   public T alloc() {
     if (index == 0) return factory.create();
     int i = --index;

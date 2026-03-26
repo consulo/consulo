@@ -18,12 +18,12 @@ import java.util.function.Consumer;
  * and has exactly half empty entries, and up to three separate key/value pairs stored in the fields. This allows reusing the
  * same table when a new element is added. Thanks to this rehashing occurs only once in four additions.
  */
-public final class UnmodifiableHashMap<K, V> extends AbstractImmutableMap<K, V> {
+public final class UnmodifiableHashMap<K, V extends @Nullable Object> extends AbstractImmutableMap<K, V> {
     private static final UnmodifiableHashMap<Object, Object> EMPTY =
         new UnmodifiableHashMap<>(HashingStrategy.canonical(), ArrayUtil.EMPTY_OBJECT_ARRAY, null, null, null, null, null, null);
 
     private final HashingStrategy<K> strategy;
-    private final Object[] data;
+    private final @Nullable Object[] data;
     private final @Nullable K k1, k2, k3;
     private final @Nullable V v1, v2, v3;
     private final int size;
@@ -125,7 +125,7 @@ public final class UnmodifiableHashMap<K, V> extends AbstractImmutableMap<K, V> 
 
     private UnmodifiableHashMap(
         HashingStrategy<K> strategy,
-        Object[] data,
+        @Nullable Object[] data,
         @Nullable K k1,
         @Nullable V v1,
         @Nullable K k2,
@@ -138,7 +138,7 @@ public final class UnmodifiableHashMap<K, V> extends AbstractImmutableMap<K, V> 
 
     private UnmodifiableHashMap(
         HashingStrategy<K> strategy,
-        Object[] data,
+        @Nullable Object[] data,
         @Nullable K k1,
         @Nullable V v1,
         @Nullable K k2,
@@ -228,7 +228,7 @@ public final class UnmodifiableHashMap<K, V> extends AbstractImmutableMap<K, V> 
             if (data[pos + 1] == value) {
                 return this;
             }
-            Object[] copy = data.clone();
+            @Nullable Object[] copy = data.clone();
             copy[pos + 1] = value;
             return new UnmodifiableHashMap<>(strategy, copy, k1, v1, k2, v2, k3, v3);
         }
@@ -321,7 +321,7 @@ public final class UnmodifiableHashMap<K, V> extends AbstractImmutableMap<K, V> 
         return new UnmodifiableHashMap<>(strategy, newData, null, null, null, null, null, null, newSize);
     }
 
-    private static <K> void insert(HashingStrategy<K> strategy, Object[] data, K k, @Nullable Object v) {
+    private static <K> void insert(HashingStrategy<K> strategy, @Nullable Object[] data, K k, @Nullable Object v) {
         int insertPos = tablePos(strategy, data, k);
         insertPos = ~insertPos;
         assert insertPos >= 0;
@@ -329,7 +329,7 @@ public final class UnmodifiableHashMap<K, V> extends AbstractImmutableMap<K, V> 
         data[insertPos + 1] = v;
     }
 
-    private static <K> boolean replace(HashingStrategy<K> strategy, Object[] data, K k, @Nullable Object v) {
+    private static <K> boolean replace(HashingStrategy<K> strategy, @Nullable Object[] data, K k, @Nullable Object v) {
         int insertPos = tablePos(strategy, data, k);
         boolean replacing = insertPos >= 0;
         insertPos = replacing ? insertPos : ~insertPos;
@@ -398,8 +398,9 @@ public final class UnmodifiableHashMap<K, V> extends AbstractImmutableMap<K, V> 
         return false;
     }
 
+    @Contract("_,!null -> !null")
     @Override
-    public @Nullable V getOrDefault(Object key, V defaultValue) {
+    public @Nullable V getOrDefault(Object key, @Nullable V defaultValue) {
         @SuppressWarnings("unchecked") K typedKey = (K)key;
         if (k1 != null) {
             if (strategy.equals(k1, typedKey)) {
@@ -418,11 +419,12 @@ public final class UnmodifiableHashMap<K, V> extends AbstractImmutableMap<K, V> 
             return defaultValue;
         }
         int pos = tablePos(strategy, data, typedKey);
-        @SuppressWarnings("unchecked") V v = pos < 0 ? defaultValue : (V)data[pos + 1];
+        @SuppressWarnings("unchecked")
+        V v = pos < 0 ? defaultValue : (V)data[pos + 1];
         return v;
     }
 
-    private static <K> int tablePos(HashingStrategy<K> strategy, Object[] data, K key) {
+    private static <K> int tablePos(HashingStrategy<K> strategy, @Nullable Object[] data, K key) {
         int pos = Math.floorMod(strategy.hashCode(key), data.length >>> 1) << 1;
         while (true) {
             @SuppressWarnings("unchecked")
@@ -568,7 +570,7 @@ public final class UnmodifiableHashMap<K, V> extends AbstractImmutableMap<K, V> 
                         }
 
                         @Override
-                        @SuppressWarnings("unchecked")
+                        @SuppressWarnings({"NullAway", "unchecked"})
                         K tableElement(int offset) {
                             return (K)data[offset];
                         }
