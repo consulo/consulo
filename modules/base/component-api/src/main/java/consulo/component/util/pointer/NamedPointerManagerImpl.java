@@ -82,7 +82,7 @@ public abstract class NamedPointerManagerImpl<T extends Named> implements NamedP
   }
 
   @Override
-  @ReviewAfterIssueFix(value = "github.com/uber/NullAway/issues/1500", comment = "Remove explicit casts")
+  @ReviewAfterIssueFix(value = "github.com/uber/NullAway/issues/1500", todo = "Remove explicit casts")
   public NamedPointer<T> create(String name) {
     return create(name, (Function<String, @Nullable T>) this::findByName);
   }

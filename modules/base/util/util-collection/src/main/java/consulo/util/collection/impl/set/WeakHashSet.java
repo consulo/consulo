@@ -53,7 +53,7 @@ public final class WeakHashSet<T> extends AbstractSet<T> {
   }
 
   @Override
-  @ReviewAfterIssueFix(value = "github.com/uber/NullAway/issues/1500", comment = "Remove explicit casts")
+  @ReviewAfterIssueFix(value = "github.com/uber/NullAway/issues/1500", todo = "Remove explicit casts")
   public Iterator<T> iterator() {
     return ContainerUtil.filterIterator(
       ContainerUtil.mapIterator(set.iterator(), (Function<MyRef<T>, @Nullable T>) Reference::get),

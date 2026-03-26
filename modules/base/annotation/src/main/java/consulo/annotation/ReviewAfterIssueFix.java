@@ -15,12 +15,24 @@
  */
 package consulo.annotation;
 
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+
 /**
+ * Annotation-marker for elements which need review after corresponding issue fix.
+ *
  * @author UNV
  * @since 2026-03-26
  */
+@Retention(RetentionPolicy.SOURCE)
 public @interface ReviewAfterIssueFix {
-    String value(); // URL to the issue
+    /**
+     * URL to the issue.
+     */
+    String value();
 
-    String comment() default "";
+    /**
+     * Description what to do after issue is fixed.
+     */
+    String todo() default "";
 }

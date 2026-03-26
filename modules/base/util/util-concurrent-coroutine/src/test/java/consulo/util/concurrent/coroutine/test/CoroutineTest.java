@@ -151,7 +151,7 @@ public class CoroutineTest {
     public void testErrorHandling() {
         CoroutineContext context = TestCoroutineContext.newSilent();
 
-        @ReviewAfterIssueFix(value = "github.com/uber/NullAway/issues/1500", comment = "Remove explicit casts")
+        @ReviewAfterIssueFix(value = "github.com/uber/NullAway/issues/1500", todo = "Remove explicit casts")
         Coroutine<@Nullable ?, @Nullable ?> coroutine = Coroutine.first((CodeExecution<@Nullable Object, @Nullable Void>) run(() -> {
             throw new RuntimeException("TEST ERROR");
         }));
@@ -287,7 +287,7 @@ public class CoroutineTest {
             Coroutine.first(apply((String s) -> s.toUpperCase()))
                 .then(setScopeParameter(TEXT));
 
-        @ReviewAfterIssueFix(value = "github.com/uber/NullAway/issues/1500", comment = "Remove explicit casts")
+        @ReviewAfterIssueFix(value = "github.com/uber/NullAway/issues/1500", todo = "Remove explicit casts")
         CoroutineScope.ScopeFuture<? extends @Nullable String> result = produce(
             context,
             (Function<CoroutineScope, ? extends @Nullable String>) c -> c.getUserData(TEXT),
