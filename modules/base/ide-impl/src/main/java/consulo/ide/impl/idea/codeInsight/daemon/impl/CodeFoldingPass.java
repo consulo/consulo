@@ -74,6 +74,6 @@ class CodeFoldingPass extends EditorBoundHighlightingPass implements PossiblyDum
    */
   @Override
   public boolean isDumbAware() {
-    return FoldingUpdate.supportsDumbModeFolding(myEditor);
+    return FoldingUpdate.supportsDumbModeFolding(myFile);
   }
 }

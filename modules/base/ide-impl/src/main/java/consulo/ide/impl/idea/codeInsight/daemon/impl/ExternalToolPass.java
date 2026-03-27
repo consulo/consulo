@@ -139,7 +139,7 @@ public class ExternalToolPass extends TextEditorHighlightingPass {
             collectHighlighters();
             myDocument.removeDocumentListener(myDocumentListener);
             List<HighlightInfo> infos = getHighlights();
-            UpdateHighlightersUtil.setHighlightersToEditor(myProject, myDocument, myStartOffset, myEndOffset, infos, getColorsScheme(), getId());
+            UpdateHighlightersUtil.setHighlightersToEditor(myProject, myDocument, myFile, myStartOffset, myEndOffset, infos, getColorsScheme(), getId());
           }
         });
       }
@@ -185,7 +185,7 @@ public class ExternalToolPass extends TextEditorHighlightingPass {
     myDocument.removeDocumentListener(myDocumentListener);
     ApplicationManager.getApplication().runReadAction(() -> {
       if (!myProject.isDisposed()) {
-        UpdateHighlightersUtil.setHighlightersToEditor(myProject, myDocument, myStartOffset, myEndOffset, Collections.emptyList(), getColorsScheme(), getId());
+        UpdateHighlightersUtil.setHighlightersToEditor(myProject, myDocument, myFile, myStartOffset, myEndOffset, Collections.emptyList(), getColorsScheme(), getId());
       }
     });
   }

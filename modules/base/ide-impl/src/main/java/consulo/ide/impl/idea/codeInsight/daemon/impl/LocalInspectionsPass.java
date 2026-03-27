@@ -563,6 +563,7 @@ public class LocalInspectionsPass extends ProgressableTextEditorHighlightingPass
         UpdateHighlightersUtil.setHighlightersToEditor(
             myProject,
             myDocument,
+            myFile,
             myRestrictRange.getStartOffset(),
             myRestrictRange.getEndOffset(),
             myInfos,

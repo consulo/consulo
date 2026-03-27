@@ -290,11 +290,13 @@ public final class DaemonListeners implements Disposable {
                 // thus we can pass null here.
                 UpdateHighlightersUtil.setHighlightersToEditor(myProject,
                     document,
+                    psiFile,
                     0,
                     document.getTextLength(),
                     Collections.emptyList(),
                     null,
-                    Pass.UPDATE_ALL);
+                    Pass.UPDATE_ALL
+                );
             }
         });
         connection.subscribe(FileTypeListener.class, new FileTypeListener() {

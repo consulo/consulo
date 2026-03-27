@@ -96,6 +96,7 @@ public interface LanguageEditorInternalHelper {
     @RequiredUIAccess
     default void setHighlightersToEditor(Project project,
                                          Document document,
+                                         PsiFile psiFile,
                                          int startOffset,
                                          int endOffset,
                                          Collection<HighlightInfo> highlights,

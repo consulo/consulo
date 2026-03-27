@@ -232,7 +232,7 @@ public class IdentifierHighlighterPass extends TextEditorHighlightingPass {
     public void doApplyInformationToEditor() {
         boolean virtSpace = TargetElementUtil.inVirtualSpace(myEditor, myEditor.getCaretModel().getOffset());
         List<HighlightInfo> infos = virtSpace ? Collections.<HighlightInfo>emptyList() : getHighlights();
-        UpdateHighlightersUtil.setHighlightersToEditor(myProject, myDocument, 0, myFile.getTextLength(), infos, getColorsScheme(), getId());
+        UpdateHighlightersUtil.setHighlightersToEditor(myProject, myDocument, myFile, 0, myFile.getTextLength(), infos, getColorsScheme(), getId());
     }
 
     private List<HighlightInfo> getHighlights() {

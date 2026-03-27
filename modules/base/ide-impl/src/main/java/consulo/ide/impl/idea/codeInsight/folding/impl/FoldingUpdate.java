@@ -209,6 +209,7 @@ public class FoldingUpdate {
      * @param editor the editor that holds file view
      * @return true  if folding initialization available in the Dumb Mode
      */
+    @RequiredReadAction
     public static boolean supportsDumbModeFolding(Editor editor) {
         Project project = editor.getProject();
         if (project != null) {
@@ -226,7 +227,7 @@ public class FoldingUpdate {
      * @param file the file to test
      * @return true  if folding initialization available in the Dumb Mode
      */
-    private static boolean supportsDumbModeFolding(PsiFile file) {
+    public static boolean supportsDumbModeFolding(PsiFile file) {
         FileViewProvider viewProvider = file.getViewProvider();
         for (Language language : viewProvider.getLanguages()) {
             FoldingBuilder foldingBuilder = FoldingBuilder.forLanguageComposite(language);

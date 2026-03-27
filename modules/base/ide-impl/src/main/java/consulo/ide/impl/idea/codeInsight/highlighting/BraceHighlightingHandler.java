@@ -62,10 +62,8 @@ import consulo.virtualFileSystem.fileType.FileType;
 import org.jspecify.annotations.Nullable;
 
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.Collections;
+import java.util.*;
 import java.util.List;
-import java.util.Set;
 import java.util.function.Consumer;
 
 /**
@@ -125,10 +123,13 @@ public class BraceHighlightingHandler {
         int offset = editor.getCaretModel().getOffset();
         Project project = editor.getProject();
 
-        Application app = project.getApplication();
+        PsiUtilBase.SelectionSnapshot selectionSnapshot = PsiUtilBase.SelectionSnapshot.of(editor);
+
+        Application app = Objects.requireNonNull(project).getApplication();
         app.executeOnPooledThread(() -> {
             if (!app.tryRunReadAction(() -> {
-                PsiFile psiFile = PsiUtilBase.getPsiFileInEditor(editor, project);
+                PsiFile psiFile = PsiUtilBase.getPsiFileInEditor(selectionSnapshot, project);
+
                 if (!isValidFile(psiFile)) {
                     return;
                 }

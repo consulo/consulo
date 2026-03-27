@@ -43,7 +43,6 @@ import consulo.language.editor.internal.DaemonCodeAnalyzerInternal;
 import consulo.language.editor.internal.LanguageEditorInternalHelper;
 import consulo.language.editor.rawHighlight.HighlightInfo;
 import consulo.language.editor.refactoring.rename.inplace.InplaceRefactoring;
-import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.project.Project;
@@ -132,6 +131,7 @@ public class LanguageEditorInternalHelperImpl implements LanguageEditorInternalH
     @RequiredUIAccess
     public void setHighlightersToEditor(Project project,
                                         Document document,
+                                        PsiFile psiFile,
                                         int startOffset,
                                         int endOffset,
                                         Collection<HighlightInfo> highlights,
@@ -140,7 +140,6 @@ public class LanguageEditorInternalHelperImpl implements LanguageEditorInternalH
                                         int group) {
         TextRange range = new TextRange(startOffset, endOffset);
 
-        PsiFile psiFile = PsiDocumentManager.getInstance(project).getPsiFile(document);
         DaemonCodeAnalyzerInternal codeAnalyzer = DaemonCodeAnalyzerInternal.getInstanceEx(project);
         codeAnalyzer.cleanFileLevelHighlights(project, group, psiFile);
 
