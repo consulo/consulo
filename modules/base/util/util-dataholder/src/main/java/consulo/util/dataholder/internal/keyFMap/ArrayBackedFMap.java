@@ -148,7 +148,7 @@ public class ArrayBackedFMap implements KeyFMap {
         Key[] result = new Key[indexes.length];
 
         for (int i = 0; i < indexes.length; i++) {
-            result[i] = ourRegistry.getKeyByIndex(indexes[i]);
+            result[i] = ourRegistry.getRequiredKeyByIndex(indexes[i]);
         }
 
         return result;

@@ -15,12 +15,9 @@
  */
 package consulo.component.util.pointer;
 
-import consulo.component.util.pointer.Named;
-import consulo.component.util.pointer.NamedPointer;
-import consulo.component.util.pointer.NamedPointerImpl;
-import consulo.component.util.pointer.NamedPointerManager;
-
+import consulo.annotation.ReviewAfterIssueFix;
 import org.jspecify.annotations.Nullable;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -28,7 +25,7 @@ import java.util.function.Function;
 
 /**
  * @author VISTALL
- * @since 17:33/15.06.13
+ * @since 2013-06-15
  *
  * Main idea was get from ModulePointerManagerImpl by <b>nik</b>
  */
@@ -68,7 +65,6 @@ public abstract class NamedPointerManagerImpl<T extends Named> implements NamedP
     }
   }
 
-  
   @Override
   public NamedPointer<T> create(T value) {
     NamedPointerImpl<T> pointer = myPointers.get(value);
@@ -85,14 +81,13 @@ public abstract class NamedPointerManagerImpl<T extends Named> implements NamedP
     return pointer;
   }
 
-  
   @Override
+  @ReviewAfterIssueFix(value = "github.com/uber/NullAway/issues/1500", todo = "Remove explicit casts")
   public NamedPointer<T> create(String name) {
-    return create(name, this::findByName);
+    return create(name, (Function<String, @Nullable T>) this::findByName);
   }
 
-  
-  public NamedPointer<T> create(String name, Function<String, T> findByNameFunc) {
+  public NamedPointer<T> create(String name, Function<String, @Nullable T> findByNameFunc) {
     T value = findByNameFunc.apply(name);
     if (value != null) {
       return create(value);

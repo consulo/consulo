@@ -17,8 +17,7 @@
 package consulo.util.concurrent.coroutine.test;
 
 import consulo.util.concurrent.coroutine.*;
-import consulo.util.concurrent.coroutine.internal.Coroutines;
-import org.junit.jupiter.api.BeforeAll;
+import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.Test;
 
 import java.util.Objects;
@@ -45,7 +44,7 @@ public class ChannelTest {
             .then(send(TEST_CHANNEL))
             .withName("Send");
 
-    private static final Coroutine<?, String> RECEIVE =
+    private static final Coroutine<@Nullable ?, String> RECEIVE =
         Coroutine.first(receive(TEST_CHANNEL))
             .withName("Receive")
             .then(apply(s -> s.toUpperCase()));
@@ -57,7 +56,7 @@ public class ChannelTest {
     public void testChannel() {
         CoroutineContext context = TestCoroutineContext.newSilent();
 
-        Coroutine<?, String> receive2 =
+        Coroutine<@Nullable ?, String> receive2 =
             RECEIVE.then(apply((String s) -> s.toLowerCase()));
 
         launch(context, scope -> {

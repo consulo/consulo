@@ -22,14 +22,14 @@ import java.util.function.Supplier;
 
 /**
  * @author VISTALL
- * @since 17/01/2022
+ * @since 2022-01-17
  */
-public class NullableLazyValueImpl<T> implements LazyValue<T> {
+public class NullableLazyValueImpl<T extends @Nullable Object> implements LazyValue<T> {
   private final Supplier<T> myFactory;
 
   protected boolean myComputed;
 
-  protected volatile @Nullable T myValue;
+  protected volatile @Nullable T myValue = null;
 
   public NullableLazyValueImpl(Supplier<T> factory) {
     myFactory = factory;
@@ -41,11 +41,13 @@ public class NullableLazyValueImpl<T> implements LazyValue<T> {
   }
 
   @Override
-  public @Nullable T get() {
+  @SuppressWarnings("NullAway")
+  public T get() {
     if (!myComputed) {
       myValue = myFactory.get();
       myComputed = true;
     }
+    // Suppressing NullAway validation here, since annotation @EnsuresNonNullIf("value") on field myComputed doesn't work.
     return myValue;
   }
 }

@@ -31,7 +31,7 @@ import java.util.function.Consumer;
 /**
  * <p>Utility class which stores key/value pairs in open-addressed hash-table with linear probing and links them in a singly linked list
  * in the insertion order. So during iteration these key/value entries may be returned in the same order they were inserted.
- * Custom equals/hashCode strategy is supported.</p>
+ * Custom equals/hashCode strategy is supported. Keys are NON-NULL, values may be nullable.</p>
  *
  * <p>Hash-table is created 25%-50% full (hash-table size is power of 2 for efficiency) and grows up to 50% full, then it needs
  * to be recreated. Filling open-addressed hash-table above 50% limit may create long hash collisions and is undesirable. Linked list
@@ -59,14 +59,14 @@ import java.util.function.Consumer;
  * @see HashingStrategy
  * @since 2024-11-20
  */
-public class ReusableLinkedHashtable<K, V> implements ReusableLinkedHashtableRange {
+public class ReusableLinkedHashtable<K, V extends @Nullable Object> implements ReusableLinkedHashtableRange {
     protected static final ReferenceQueue<ReusableLinkedHashtableUser> QUEUE = new ReferenceQueue<>();
 
     protected static final ReusableLinkedHashtable<Object, Object> EMPTY =
         new ReusableLinkedHashtable<>(HashingStrategy.canonical(), ArrayUtil.EMPTY_OBJECT_ARRAY, ArrayUtil.EMPTY_INT_ARRAY, 0);
 
     protected final HashingStrategy<K> myStrategy;
-    protected final Object[] myData;
+    protected final @Nullable Object[] myData;
     protected final int[] myNextPosAndHash;
     private int mySize, myEndPos = -1;
 
@@ -117,7 +117,7 @@ public class ReusableLinkedHashtable<K, V> implements ReusableLinkedHashtableRan
         @Override
         @SuppressWarnings("unchecked")
         protected V get(int pos) {
-            return (V)ReusableLinkedHashtable.this.getValue(pos);
+            return (V) ReusableLinkedHashtable.this.getValue(pos);
         }
     }
 
@@ -131,7 +131,7 @@ public class ReusableLinkedHashtable<K, V> implements ReusableLinkedHashtableRan
             @Override
             @SuppressWarnings("unchecked")
             public V getValue() {
-                return (V)ReusableLinkedHashtable.this.getValue(pos);
+                return (V) ReusableLinkedHashtable.this.getValue(pos);
             }
 
             @Override
@@ -168,7 +168,7 @@ public class ReusableLinkedHashtable<K, V> implements ReusableLinkedHashtableRan
         }
     }
 
-    private ReusableLinkedHashtable(HashingStrategy<K> strategy, Object[] data, int[] nextPosAndHash, int size) {
+    private ReusableLinkedHashtable(HashingStrategy<K> strategy, @Nullable Object[] data, int[] nextPosAndHash, int size) {
         myStrategy = strategy;
         myData = data;
         myNextPosAndHash = nextPosAndHash;
@@ -177,7 +177,7 @@ public class ReusableLinkedHashtable<K, V> implements ReusableLinkedHashtableRan
 
     @SuppressWarnings("unchecked")
     public static <K, V> ReusableLinkedHashtable<K, V> empty() {
-        return (ReusableLinkedHashtable<K, V>)EMPTY;
+        return (ReusableLinkedHashtable<K, V>) EMPTY;
     }
 
     public static <K, V> ReusableLinkedHashtable<K, V> empty(HashingStrategy<K> strategy) {
@@ -206,7 +206,7 @@ public class ReusableLinkedHashtable<K, V> implements ReusableLinkedHashtableRan
         return newTable;
     }
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({"NullAway", "unchecked"})
     public ReusableLinkedHashtable<K, V> copyOfSize(int maxSize) {
         if (canResizeTableTo(maxSize)) {
             return copy();
@@ -215,7 +215,10 @@ public class ReusableLinkedHashtable<K, V> implements ReusableLinkedHashtableRan
         ReusableLinkedHashtable<K, V> newTable = blankOfSize(maxSize);
         if (mySize > 0) {
             for (int pos = getStartPos(), endPos = myEndPos; ; pos = myNextPosAndHash[pos]) {
-                newTable.insertByIdentity(myNextPosAndHash[pos + 1], (K)myData[pos], (V)myData[pos + 1]);
+                // NullAway problem: array is technically nullable: null is used for filling elements not used for user data storage.
+                // But we also cannot use Objects.requireNonNull to check values because V generic parameter also can be nullable.
+                // So there's no way to say to static validator that everything is OK. So we're suppressing NullAway validation here.
+                newTable.insertByIdentity(myNextPosAndHash[pos + 1], (K) Objects.requireNonNull(myData[pos]), (V) myData[pos + 1]);
                 if (pos == endPos) {
                     break;
                 }
@@ -230,7 +233,7 @@ public class ReusableLinkedHashtable<K, V> implements ReusableLinkedHashtableRan
         return newTable;
     }
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({"NullAway", "unchecked"})
     public ReusableLinkedHashtable<K, V> copyRangeWithout(
         int maxSize,
         ReusableLinkedHashtableRange range,
@@ -241,9 +244,12 @@ public class ReusableLinkedHashtable<K, V> implements ReusableLinkedHashtableRan
         int startPos = range.getStartPos();
         if (startPos >= 0) {
             for (int pos = startPos, endPos = range.getEndPos(); ; pos = myNextPosAndHash[pos]) {
-                K key = (K)myData[pos];
+                K key = (K) Objects.requireNonNull(myData[pos]);
                 if ((excludeKeys == null || !excludeKeys.contains(key)) && pos != excludePos) {
-                    newTable.insertByIdentity(myNextPosAndHash[pos + 1], key, (V)myData[pos + 1]);
+                    // NullAway problem: array is technically nullable: null is used for filling elements not used for user data storage.
+                    // But we also cannot use Objects.requireNonNull to check values because V generic parameter also can be nullable.
+                    // So there's no way to say to static validator that everything is OK. So we're suppressing NullAway validation here.
+                    newTable.insertByIdentity(myNextPosAndHash[pos + 1], key, (V) myData[pos + 1]);
                 }
                 if (pos == endPos) {
                     break;
@@ -312,7 +318,7 @@ public class ReusableLinkedHashtable<K, V> implements ReusableLinkedHashtableRan
 
     @SuppressWarnings("unchecked")
     public int getPos(int hashCode, K key) {
-        Object[] data = myData;
+        @Nullable Object[] data = myData;
         int length = data.length;
         if (length == 0) {
             return -1;
@@ -320,7 +326,7 @@ public class ReusableLinkedHashtable<K, V> implements ReusableLinkedHashtableRan
 
         HashingStrategy<K> strategy = myStrategy;
         for (int lengthMask = length - 1, pos = (hashCode << 1) & lengthMask; ; pos = (pos + 2) & lengthMask) {
-            K candidate = (K)data[pos];
+            K candidate = (K) data[pos];
             if (candidate == null) {
                 return ~pos;
             }
@@ -332,14 +338,14 @@ public class ReusableLinkedHashtable<K, V> implements ReusableLinkedHashtableRan
 
     @SuppressWarnings("unchecked")
     public int getPosByIdentity(int hashCode, K key) {
-        Object[] data = this.myData;
+        @Nullable Object[] data = this.myData;
         int length = data.length;
         if (length == 0) {
             return -1;
         }
 
         for (int lengthMask = length - 1, pos = (hashCode << 1) & lengthMask; ; pos = (pos + 2) & lengthMask) {
-            K candidate = (K)data[pos];
+            K candidate = (K) data[pos];
             if (candidate == null) {
                 return ~pos;
             }
@@ -352,7 +358,7 @@ public class ReusableLinkedHashtable<K, V> implements ReusableLinkedHashtableRan
     /**
      * Must be called only from hash-table recreation!
      */
-    public ReusableLinkedHashtable<K, V> insertNullable(@Nullable K key, @Nullable V value) {
+    public ReusableLinkedHashtable<K, V> insertNullable(K key, V value) {
         if (key == null) {
             throw new IllegalArgumentException("Null keys are not supported");
         }
@@ -362,21 +368,21 @@ public class ReusableLinkedHashtable<K, V> implements ReusableLinkedHashtableRan
     /**
      * Must be called only from hash-table recreation!
      */
-    public ReusableLinkedHashtable<K, V> insert(int hashCode, K key, @Nullable V value) {
+    public ReusableLinkedHashtable<K, V> insert(int hashCode, K key, V value) {
         return insertAtPos(~getPos(hashCode, key), hashCode, key, value);
     }
 
     /**
      * Must be called only from hash-table recreation!
      */
-    public ReusableLinkedHashtable<K, V> insertByIdentity(int hashCode, K key, @Nullable V value) {
+    public ReusableLinkedHashtable<K, V> insertByIdentity(int hashCode, K key, V value) {
         return insertAtPos(~getPosByIdentity(hashCode, key), hashCode, key, value);
     }
 
     /**
      * Must be called only from hash-table recreation!
      */
-    public ReusableLinkedHashtable<K, V> insertAtPos(int insertPos, int hashCode, K key, @Nullable V value) {
+    public ReusableLinkedHashtable<K, V> insertAtPos(int insertPos, int hashCode, K key, V value) {
         myData[insertPos] = key;
         myData[insertPos + 1] = value;
         if (myEndPos >= 0) {
@@ -488,10 +494,14 @@ public class ReusableLinkedHashtable<K, V> implements ReusableLinkedHashtableRan
 
     @SuppressWarnings("unchecked")
     public K getKey(int keyPos) {
-        return (K)myData[keyPos];
+        return (K) Objects.requireNonNull(myData[keyPos]);
     }
 
+    @SuppressWarnings("NullAway")
     public Object getValue(int keyPos) {
+        // NullAway problem: array is technically nullable: null is used for filling elements not used for user data storage.
+        // But we also cannot use Objects.requireNonNull to check values because V generic parameter also can be nullable.
+        // So there's no way to say to static validator that everything is OK. So we're suppressing NullAway validation here.
         return myData[keyPos + 1];
     }
 
@@ -499,7 +509,7 @@ public class ReusableLinkedHashtable<K, V> implements ReusableLinkedHashtableRan
     public void forEach(ReusableLinkedHashtableRange range, BiConsumer<? super K, ? super V> action) {
         if (mySize > 0) {
             for (int pos = range.getStartPos(), endPos = range.getEndPos(); ; pos = myNextPosAndHash[pos]) {
-                action.accept((K)myData[pos], (V)myData[pos + 1]);
+                action.accept((K) myData[pos], (V) myData[pos + 1]);
                 if (pos == endPos) {
                     break;
                 }
@@ -511,7 +521,7 @@ public class ReusableLinkedHashtable<K, V> implements ReusableLinkedHashtableRan
     public void forEachKey(ReusableLinkedHashtableRange range, Consumer<? super K> action) {
         if (mySize > 0) {
             for (int pos = range.getStartPos(), endPos = range.getEndPos(); ; pos = myNextPosAndHash[pos]) {
-                action.accept((K)myData[pos]);
+                action.accept((K) myData[pos]);
                 if (pos == endPos) {
                     break;
                 }
@@ -523,7 +533,7 @@ public class ReusableLinkedHashtable<K, V> implements ReusableLinkedHashtableRan
     public <V> void forEachValue(ReusableLinkedHashtableRange range, Consumer<? super V> action) {
         if (mySize > 0) {
             for (int pos = range.getStartPos(), endPos = range.getEndPos(); ; pos = myNextPosAndHash[pos]) {
-                action.accept((V)myData[pos + 1]);
+                action.accept((V) myData[pos + 1]);
                 if (pos == endPos) {
                     break;
                 }
@@ -713,7 +723,7 @@ public class ReusableLinkedHashtable<K, V> implements ReusableLinkedHashtableRan
                 //noinspection InfiniteLoopStatement
                 while (true) {
                     try {
-                        ReusableLinkedHashtable.Range range = (ReusableLinkedHashtable.Range)QUEUE.remove();
+                        ReusableLinkedHashtable.Range range = (ReusableLinkedHashtable.Range) QUEUE.remove();
                         range.preventMemoryLeaks();
                     }
                     catch (InterruptedException ignore) {

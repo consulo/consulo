@@ -28,6 +28,7 @@ import org.jdom.JDOMException;
 import java.io.IOException;
 import java.lang.reflect.Array;
 import java.net.URL;
+import java.util.Objects;
 import java.util.Set;
 
 public class XmlSerializer {
@@ -74,7 +75,7 @@ public class XmlSerializer {
     T[] result = (T[])Array.newInstance(aClass, elements.length);
 
     for (int i = 0; i < result.length; i++) {
-      result[i] = deserialize(elements[i], aClass);
+      result[i] = Objects.requireNonNull(deserialize(elements[i], aClass));
     }
 
     return result;

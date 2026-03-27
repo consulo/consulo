@@ -28,7 +28,7 @@ import java.util.function.Function;
  * @since 2022-06-28
  */
 public final class ByClassGrouper<E> implements Function<ExtensionWalker<E>, Function<Class, E>> {
-  private static class GetterImpl<S> implements Function<Class, S> {
+  private static class GetterImpl<S> implements Function<Class, @Nullable S> {
     private final Map<Class, S> myExtensionsByClass = new ConcurrentHashMap<>();
 
     public GetterImpl(ExtensionWalker<S> walker, Function<S, Class> getClassFunc) {
@@ -51,7 +51,7 @@ public final class ByClassGrouper<E> implements Function<ExtensionWalker<E>, Fun
       return null;
     }
 
-    protected @Nullable <S> S processUntil(Class baseClass, Set<Class> processed, Function<Class, S> getter) {
+    protected <S> @Nullable S processUntil(Class baseClass, Set<Class> processed, Function<Class, @Nullable S> getter) {
       if (!processed.add(baseClass)) {
         return null;
       }

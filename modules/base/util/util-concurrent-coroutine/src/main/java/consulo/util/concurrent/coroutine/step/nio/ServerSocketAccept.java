@@ -52,8 +52,7 @@ import java.util.function.Function;
  *
  * @author eso
  */
-public class ServerSocketAccept extends AsynchronousChannelStep<Void, Void> {
-
+public class ServerSocketAccept extends AsynchronousChannelStep<@Nullable Void, @Nullable Void> {
     /**
      * State: an {@link AsynchronousServerSocketChannel} that has been openened
      * and connected by an asynchronous execution.
@@ -106,12 +105,11 @@ public class ServerSocketAccept extends AsynchronousChannelStep<Void, Void> {
      */
     @Override
     public void runAsync(
-        CompletableFuture<Void> previousExecution,
-        @Nullable CoroutineStep<Void, ?> nextStep,
+        CompletableFuture<@Nullable Void> previousExecution,
+        @Nullable CoroutineStep<@Nullable Void, ?> nextStep,
         Continuation<?> continuation
     ) {
-        continuation.continueAccept(previousExecution,
-            v -> acceptAsync(continuation.suspend(this, nextStep)));
+        continuation.continueAccept(previousExecution, v -> acceptAsync(continuation.suspend(this, nextStep)));
     }
 
     /**
@@ -192,7 +190,7 @@ public class ServerSocketAccept extends AsynchronousChannelStep<Void, Void> {
      * @param suspension The coroutine suspension to be resumed when the
      *                   operation is complete
      */
-    private void acceptAsync(Suspension<Void> suspension) {
+    private void acceptAsync(Suspension<@Nullable Void> suspension) {
         try {
             AsynchronousServerSocketChannel channel =
                 getServerSocketChannel(suspension.continuation());
@@ -213,11 +211,11 @@ public class ServerSocketAccept extends AsynchronousChannelStep<Void, Void> {
      * @author eso
      */
     protected static class AcceptCallback
-        implements CompletionHandler<AsynchronousSocketChannel, Void> {
+        implements CompletionHandler<AsynchronousSocketChannel, @Nullable Void> {
 
         private final Coroutine<AsynchronousSocketChannel, ?> requestHandler;
 
-        private final Suspension<Void> suspension;
+        private final Suspension<@Nullable Void> suspension;
 
         /**
          * Creates a new instance.
@@ -227,14 +225,13 @@ public class ServerSocketAccept extends AsynchronousChannelStep<Void, Void> {
          */
         public AcceptCallback(
             Coroutine<AsynchronousSocketChannel, ?> requestHandler,
-            Suspension<Void> suspension) {
+            Suspension<@Nullable Void> suspension) {
             this.requestHandler = requestHandler;
             this.suspension = suspension;
         }
 
         @Override
-        public void completed(AsynchronousSocketChannel requestChannel,
-                              Void ignored) {
+        public void completed(AsynchronousSocketChannel requestChannel, @Nullable Void ignored) {
             requestHandler.runAsync(suspension.continuation().scope(),
                 requestChannel);
 
@@ -245,7 +242,7 @@ public class ServerSocketAccept extends AsynchronousChannelStep<Void, Void> {
          * {@inheritDoc}
          */
         @Override
-        public void failed(Throwable error, Void ignored) {
+        public void failed(Throwable error, @Nullable Void ignored) {
             suspension.fail(error);
         }
     }

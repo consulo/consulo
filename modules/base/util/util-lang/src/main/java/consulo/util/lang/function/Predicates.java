@@ -18,6 +18,7 @@ package consulo.util.lang.function;
 import consulo.util.lang.Comparing;
 import consulo.util.lang.Pair;
 import consulo.util.lang.ref.SoftReference;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -48,7 +49,7 @@ public class Predicates {
         return (Predicate<T>)FALSE;
     }
 
-    public static <T> Predicate<T> notNull() {
+    public static <T extends @Nullable Object> Predicate<T> notNull() {
         return Objects::nonNull;
     }
 

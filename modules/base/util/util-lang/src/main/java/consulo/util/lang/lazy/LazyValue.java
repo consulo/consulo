@@ -15,10 +15,12 @@
  */
 package consulo.util.lang.lazy;
 
+import consulo.annotation.ReviewAfterIssueFix;
 import consulo.util.lang.lazy.impl.AtomicLazyValueImpl;
 import consulo.util.lang.lazy.impl.DefaultLazyValueImpl;
 import consulo.util.lang.lazy.impl.NonNullLazyValueWithModCountImpl;
 import consulo.util.lang.lazy.impl.NullableLazyValueImpl;
+import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
 import java.util.function.LongSupplier;
@@ -26,9 +28,9 @@ import java.util.function.Supplier;
 
 /**
  * @author VISTALL
- * @since 03/01/2022
+ * @since 2022-01-03
  */
-public interface LazyValue<T> extends Supplier<T> {
+public interface LazyValue<T extends @Nullable Object> extends Supplier<T> {
   static <K> LazyValue<K> atomicNotNull(Supplier<K> factory) {
     return new AtomicLazyValueImpl<>(factory);
   }
@@ -41,9 +43,13 @@ public interface LazyValue<T> extends Supplier<T> {
     return new NonNullLazyValueWithModCountImpl<>(factory, modCount);
   }
 
-  static <K> LazyValue<K> nullable(Supplier<K> factory) {
-    return new NullableLazyValueImpl<>(factory);
+  @ReviewAfterIssueFix(value = "github.com/uber/NullAway/issues/1504", todo = "Remove explicit generics in new NullableLazyValueImpl call")
+  static <K> LazyValue<@Nullable K> nullable(Supplier<@Nullable K> factory) {
+    return new NullableLazyValueImpl<@Nullable K>(factory);
   }
+
+  @Override
+  T get();
 
   /**
    * @return value which was already stored, and do not try init it

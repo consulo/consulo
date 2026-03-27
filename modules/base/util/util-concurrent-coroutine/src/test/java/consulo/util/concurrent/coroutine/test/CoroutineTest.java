@@ -16,9 +16,11 @@
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 package consulo.util.concurrent.coroutine.test;
 
+import consulo.annotation.ReviewAfterIssueFix;
 import consulo.util.concurrent.coroutine.*;
 import consulo.util.concurrent.coroutine.internal.Coroutines;
 import consulo.util.concurrent.coroutine.step.ChannelReceive;
+import consulo.util.concurrent.coroutine.step.CodeExecution;
 import consulo.util.concurrent.coroutine.step.Iteration;
 import consulo.util.concurrent.coroutine.step.Loop;
 import consulo.util.dataholder.CopyableUserDataHolder;
@@ -29,6 +31,7 @@ import org.junit.jupiter.api.Test;
 import java.util.*;
 import java.util.concurrent.CancellationException;
 import java.util.function.Consumer;
+import java.util.function.Function;
 
 import static consulo.util.concurrent.coroutine.ChannelId.stringChannel;
 import static consulo.util.concurrent.coroutine.CoroutineScope.launch;
@@ -60,7 +63,7 @@ public class CoroutineTest {
 
         ChannelId<String> ch = stringChannel("TEST_SUSP");
 
-        Coroutine<?, ?> cr = Coroutine.first(ChannelReceive.receive(ch));
+        Coroutine<@Nullable ?, ?> cr = Coroutine.first(ChannelReceive.receive(ch));
 
         launch(context, scope -> {
             // this will block because the channel is never sent to
@@ -148,7 +151,8 @@ public class CoroutineTest {
     public void testErrorHandling() {
         CoroutineContext context = TestCoroutineContext.newSilent();
 
-        Coroutine<?, ?> coroutine = Coroutine.first(run(() -> {
+        @ReviewAfterIssueFix(value = "github.com/uber/NullAway/issues/1500", todo = "Remove explicit casts")
+        Coroutine<@Nullable ?, @Nullable ?> coroutine = Coroutine.first((CodeExecution<@Nullable Object, @Nullable Void>) run(() -> {
             throw new RuntimeException("TEST ERROR");
         }));
 
@@ -283,8 +287,12 @@ public class CoroutineTest {
             Coroutine.first(apply((String s) -> s.toUpperCase()))
                 .then(setScopeParameter(TEXT));
 
-        CoroutineScope.ScopeFuture<String> result =
-            produce(context, c -> c.getUserData(TEXT), scope -> cr.runAsync(scope, "test"));
+        @ReviewAfterIssueFix(value = "github.com/uber/NullAway/issues/1500", todo = "Remove explicit casts")
+        CoroutineScope.ScopeFuture<? extends @Nullable String> result = produce(
+            context,
+            (Function<CoroutineScope, ? extends @Nullable String>) c -> c.getUserData(TEXT),
+            scope -> cr.runAsync(scope, "test")
+        );
 
         assertEquals("TEST", result.get());
         assertTrue(result.isDone());

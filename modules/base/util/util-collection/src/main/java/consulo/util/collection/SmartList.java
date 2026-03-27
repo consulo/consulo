@@ -27,7 +27,7 @@ import java.util.*;
  * in which cases it would not allocate array at all.
  */
 @SuppressWarnings("unchecked")
-public class SmartList<E> extends AbstractList<E> implements RandomAccess {
+public class SmartList<E extends @Nullable Object> extends AbstractList<E> implements RandomAccess {
     private int mySize;
 
     private @Nullable Object myElem; // null if mySize==0, (E)elem if mySize==1, Object[] if mySize>=2
@@ -35,7 +35,7 @@ public class SmartList<E> extends AbstractList<E> implements RandomAccess {
     public SmartList() {
     }
 
-    public SmartList(@Nullable E element) {
+    public SmartList(E element) {
         add(element);
     }
 
@@ -51,7 +51,7 @@ public class SmartList<E> extends AbstractList<E> implements RandomAccess {
         }
     }
 
-    public SmartList(@Nullable E... elements) {
+    public SmartList(E... elements) {
         if (elements.length == 1) {
             add(elements[0]);
         }
@@ -62,11 +62,15 @@ public class SmartList<E> extends AbstractList<E> implements RandomAccess {
     }
 
     @Override
-    public @Nullable E get(int index) {
+    @SuppressWarnings("NullAway")
+    public E get(int index) {
         if (index < 0 || index >= mySize) {
             throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + mySize);
         }
         if (mySize == 1) {
+            // NullAway problem: myElem is technically nullable: null is used for zero-element list.
+            // In case of single-element list myElem can be null only if E generic is nullable.
+            // Static validator doesn't understand this. So we're suppressing NullAway validation here.
             return (E) myElem;
         }
         Object[] array = (Object[]) Objects.requireNonNull(myElem);
@@ -74,15 +78,12 @@ public class SmartList<E> extends AbstractList<E> implements RandomAccess {
     }
 
     @Override
-    public boolean add(@Nullable E e) {
+    public boolean add(E e) {
         if (mySize == 0) {
             myElem = e;
         }
         else if (mySize == 1) {
-            Object[] array = new Object[2];
-            array[0] = myElem;
-            array[1] = e;
-            myElem = array;
+            myElem = new Object[] {myElem, e};
         }
         else {
             Object[] array = (Object[]) Objects.requireNonNull(myElem);
@@ -107,7 +108,7 @@ public class SmartList<E> extends AbstractList<E> implements RandomAccess {
     }
 
     @Override
-    public void add(int index, @Nullable E e) {
+    public void add(int index, E e) {
         if (index < 0 || index > mySize) {
             throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + mySize);
         }
@@ -116,18 +117,15 @@ public class SmartList<E> extends AbstractList<E> implements RandomAccess {
             myElem = e;
         }
         else if (mySize == 1 && index == 0) {
-            Object[] array = new Object[2];
-            array[0] = e;
-            array[1] = myElem;
-            myElem = array;
+            myElem = new Object[] {e, myElem};
         }
         else {
-            Object[] array = new Object[mySize + 1];
+            @Nullable Object[] array = new Object[mySize + 1];
             if (mySize == 1) {
                 array[0] = myElem; // index == 1
             }
             else {
-                Object[] oldArray = (Object[]) myElem;
+                @Nullable Object[] oldArray = (@Nullable Object[]) myElem;
                 System.arraycopy(oldArray, 0, array, 0, index);
                 System.arraycopy(oldArray, index, array, index + 1, mySize - index);
             }
@@ -152,13 +150,17 @@ public class SmartList<E> extends AbstractList<E> implements RandomAccess {
     }
 
     @Override
-    public @Nullable E set(int index, @Nullable E element) {
+    @SuppressWarnings("NullAway")
+    public E set(int index, E element) {
         if (index < 0 || index >= mySize) {
             throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + mySize);
         }
 
         E oldValue;
         if (mySize == 1) {
+            // NullAway problem: myElem is technically nullable: null is used for zero-element list.
+            // In case of single-element list myElem can be null only if E generic is nullable.
+            // Static validator doesn't understand this. So we're suppressing NullAway validation here.
             oldValue = (E) myElem;
             myElem = element;
         }
@@ -171,13 +173,17 @@ public class SmartList<E> extends AbstractList<E> implements RandomAccess {
     }
 
     @Override
-    public @Nullable E remove(int index) {
+    @SuppressWarnings("NullAway")
+    public E remove(int index) {
         if (index < 0 || index >= mySize) {
             throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + mySize);
         }
 
         E oldValue;
         if (mySize == 1) {
+            // NullAway problem: myElem is technically nullable: null is used for zero-element list.
+            // In case of single-element list myElem can be null only if E generic is nullable.
+            // Static validator doesn't understand this. So we're suppressing NullAway validation here.
             oldValue = (E) myElem;
             myElem = null;
         }
@@ -250,6 +256,7 @@ public class SmartList<E> extends AbstractList<E> implements RandomAccess {
     }
 
     @Override
+    @SuppressWarnings("NullAway")
     public <T> T[] toArray(T[] a) {
         int aLength = a.length;
         if (mySize == 1) {
@@ -271,6 +278,8 @@ public class SmartList<E> extends AbstractList<E> implements RandomAccess {
         }
 
         if (aLength > mySize) {
+            // NullAway problem: technical usage of null for filling elements not used for user data storage.
+            // Static validator doesn't understand this. So we're suppressing NullAway validation here.
             a[mySize] = null;
         }
         return a;

@@ -331,7 +331,7 @@ public class NewExtensionPointImpl<T> implements ExtensionPoint<T> {
     }
 
     @Override
-    public <R> @Nullable R computeSafeIfAny(@InheritCallerContext Function<? super T, ? extends R> processor) {
+    public <R extends @Nullable Object> @Nullable R computeSafeIfAny(@InheritCallerContext Function<? super T, ? extends R> processor) {
         List<ExtensionValue<T>> extensionCache = buildOrGet();
 
         //noinspection ForLoopReplaceableByForEach
@@ -351,10 +351,8 @@ public class NewExtensionPointImpl<T> implements ExtensionPoint<T> {
     }
 
     @Override
-    public <R, CR extends Collection<? super R>> CR collectMapped(
-        CR results,
-        @InheritCallerContext Function<? super T, ? extends R> processor
-    ) {
+    public <R extends @Nullable Object, CR extends Collection<? super R>>
+    CR collectMapped(CR results, @InheritCallerContext Function<? super T, ? extends R> processor) {
         List<ExtensionValue<T>> extensionCache = buildOrGet();
 
         //noinspection ForLoopReplaceableByForEach
@@ -374,7 +372,7 @@ public class NewExtensionPointImpl<T> implements ExtensionPoint<T> {
     }
 
     @Override
-    public <K, V, M extends Map<? super K, ? super V>> M collectMapped(
+    public <K extends @Nullable Object, V extends @Nullable Object, M extends Map<? super K, ? super V>> M collectMapped(
         M results,
         @InheritCallerContext Function<? super T, ? extends K> keyMapper,
         @InheritCallerContext Function<? super T, ? extends V> valueMapper

@@ -23,7 +23,7 @@ import java.util.Map;
  * @author UNV
  * @since 2024-12-02
  */
-public interface ImmutableMap<K, V> extends Map<K, V> {
+public interface ImmutableMap<K, V extends @Nullable Object> extends Map<K, V> {
     /**
      * <p>Returns an {@code ImmutableMap} which contains all the entries as this map except the supplied key.</p>
      *
@@ -43,7 +43,7 @@ public interface ImmutableMap<K, V> extends Map<K, V> {
      * @param value a value to associate with the key
      * @return an {@code ImmutableMap} which contains all the entries as this map plus the supplied mapping.
      */
-    ImmutableMap<K, V> with(K key, @Nullable V value);
+    ImmutableMap<K, V> with(K key, V value);
 
     /**
      * <p>Returns an {@code ImmutableMap} which contains all the entries as this map plus all the mappings of the supplied map.</p>
@@ -70,7 +70,7 @@ public interface ImmutableMap<K, V> extends Map<K, V> {
      */
     @Deprecated
     @Override
-    default @Nullable V put(K key, @Nullable V value) {
+    default @Nullable V put(K key, V value) {
         throw new UnsupportedOperationException();
     }
 

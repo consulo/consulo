@@ -67,7 +67,7 @@ public class DonePromise<T> extends InternalPromiseUtil.BasePromise<T> {
   }
 
   @Override
-  public <SUB_RESULT> Promise<SUB_RESULT> then(Function<? super T, ? extends SUB_RESULT> done) {
+  public <SUB_RESULT> Promise<SUB_RESULT> then(Function<@Nullable ? super T, ? extends SUB_RESULT> done) {
     if (value.error != null) {
       //noinspection unchecked
       return (Promise<SUB_RESULT>)this;
@@ -82,7 +82,7 @@ public class DonePromise<T> extends InternalPromiseUtil.BasePromise<T> {
   }
 
   @Override
-  public <SUB_RESULT> Promise<SUB_RESULT> thenAsync(Function<? super T, Promise<SUB_RESULT>> done) {
+  public <SUB_RESULT> Promise<SUB_RESULT> thenAsync(Function<@Nullable ? super T, Promise<SUB_RESULT>> done) {
     if (value.error == null) {
       return done.apply(value.result);
     }
