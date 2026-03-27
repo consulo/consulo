@@ -30,7 +30,6 @@ import java.util.function.Supplier;
  * @author VISTALL
  * @since 2022-01-03
  */
-@NullMarked
 public interface LazyValue<T extends @Nullable Object> extends Supplier<T> {
   static <K> LazyValue<K> atomicNotNull(Supplier<K> factory) {
     return new AtomicLazyValueImpl<>(factory);
