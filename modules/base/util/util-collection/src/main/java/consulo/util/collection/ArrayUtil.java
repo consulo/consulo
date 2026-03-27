@@ -380,7 +380,7 @@ public class ArrayUtil {
      * @return new array
      */
     @Contract(pure = true)
-    public static <T> T[] append(T[] src, @Nullable T element) {
+    public static <T> T[] append(T[] src, T element) {
         //noinspection unchecked
         return append(src, element, (Class<T>)src.getClass().getComponentType());
     }
@@ -428,7 +428,7 @@ public class ArrayUtil {
     }
 
     @Contract(pure = true)
-    public static <T> T[] append(T[] src, @Nullable T element, Class<T> componentType) {
+    public static <T> T[] append(T[] src, T element, Class<T> componentType) {
         int length = src.length;
         T[] result = newArray(componentType, length + 1);
         System.arraycopy(src, 0, result, 0, length);

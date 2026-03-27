@@ -21,6 +21,7 @@ import consulo.util.concurrent.coroutine.ChannelId;
 import consulo.util.concurrent.coroutine.Continuation;
 import consulo.util.concurrent.coroutine.CoroutineException;
 import consulo.util.concurrent.coroutine.CoroutineStep;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Objects;
 import java.util.function.Function;
@@ -30,7 +31,7 @@ import java.util.function.Function;
  *
  * @author eso
  */
-public abstract class ChannelStep<I, O> extends CoroutineStep<I, O>
+public abstract class ChannelStep<I extends @Nullable Object, O extends @Nullable Object> extends CoroutineStep<I, O>
 {
 	//~ Instance fields --------------------------------------------------------
 

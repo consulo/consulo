@@ -38,44 +38,33 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
-                    <fork>true</fork>
                     <compilerArgs>
                         <arg>-XDcompilePolicy=simple</arg>
-                        <arg>-XDaddTypeAnnotationsToSymbol=true</arg>
+                        <arg>-XDaddTypeAnnotationsToSymbol=true</arg> <!-- Needed for JSpecifyMode in NullAway in JDK 21.0.8+ -->
                         <arg>--should-stop=ifError=FLOW</arg>
-                        <arg>-Xplugin:ErrorProne -XepDisableAllChecks -Xep:BoxedPrimitiveConstructor:ERROR -XepOpt:NullAway:AssertsEnabled=true -XepOpt:NullAway:OnlyNullMarked=true -Xep:NullAway:ERROR</arg>
-                        <arg>-J--add-exports=jdk.compiler/com.sun.tools.javac.api=ALL-UNNAMED</arg>
-                        <arg>-J--add-exports=jdk.compiler/com.sun.tools.javac.file=ALL-UNNAMED</arg>
-                        <arg>-J--add-exports=jdk.compiler/com.sun.tools.javac.main=ALL-UNNAMED</arg>
-                        <arg>-J--add-exports=jdk.compiler/com.sun.tools.javac.model=ALL-UNNAMED</arg>
-                        <arg>-J--add-exports=jdk.compiler/com.sun.tools.javac.parser=ALL-UNNAMED</arg>
-                        <arg>-J--add-exports=jdk.compiler/com.sun.tools.javac.processing=ALL-UNNAMED</arg>
-                        <arg>-J--add-exports=jdk.compiler/com.sun.tools.javac.tree=ALL-UNNAMED</arg>
-                        <arg>-J--add-exports=jdk.compiler/com.sun.tools.javac.util=ALL-UNNAMED</arg>
-                        <arg>-J--add-opens=jdk.compiler/com.sun.tools.javac.code=ALL-UNNAMED</arg>
-                        <arg>-J--add-opens=jdk.compiler/com.sun.tools.javac.comp=ALL-UNNAMED</arg>
+                        <arg>-Xplugin:ErrorProne -XepDisableAllChecks -Xep:BoxedPrimitiveConstructor:ERROR -XepOpt:NullAway:JSpecifyMode=true -XepOpt:NullAway:AssertsEnabled=true -XepOpt:NullAway:OnlyNullMarked=true -Xep:NullAway:ERROR</arg>
                     </compilerArgs>
                     <annotationProcessorPaths>
                         <path>
                             <groupId>com.google.errorprone</groupId>
                             <artifactId>error_prone_core</artifactId>
-                            <version>2.47.0</version>
+                            <version>2.48.0</version>
                         </path>
                         <path>
                             <groupId>com.uber.nullaway</groupId>
                             <artifactId>nullaway</artifactId>
                             <version>0.13.1</version>
                         </path>
-                        <annotationProcessorPath>
+                        <path>
                             <groupId>consulo.internal</groupId>
                             <artifactId>compiler.apt.java</artifactId>
                             <version>${compiler.apt.version}</version>
-                        </annotationProcessorPath>
-                        <annotationProcessorPath>
+                        </path>
+                        <path>
                             <groupId>consulo.internal</groupId>
                             <artifactId>compiler.apt.java.generation</artifactId>
                             <version>${compiler.apt.version}</version>
-                        </annotationProcessorPath>
+                        </path>
                     </annotationProcessorPaths>
                 </configuration>
             </plugin>

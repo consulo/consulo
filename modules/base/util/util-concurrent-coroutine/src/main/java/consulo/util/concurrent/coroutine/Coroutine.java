@@ -210,7 +210,7 @@ import java.util.function.Function;
  *
  * @author eso
  */
-public class Coroutine<I, O> extends UserDataHolderBase {
+public class Coroutine<I extends @Nullable Object, O extends @Nullable Object> extends UserDataHolderBase {
     private @Nullable StepChain<I, ?, O> code;
 
     private @Nullable String name;
@@ -262,7 +262,7 @@ public class Coroutine<I, O> extends UserDataHolderBase {
      *             coroutine
      * @return A new coroutine instance
      */
-    public static <I, O> Coroutine<I, O> first(CoroutineStep<I, O> step) {
+    public static <I extends @Nullable Object, O extends @Nullable Object> Coroutine<I, O> first(CoroutineStep<I, O> step) {
         return new Coroutine<>(step);
     }
 
@@ -274,8 +274,8 @@ public class Coroutine<I, O> extends UserDataHolderBase {
      * @param step     The step to execute
      * @return The new coroutine
      */
-    public static <I, O> Coroutine<I, O> first(String stepName,
-                                               CoroutineStep<I, O> step) {
+    public static <I extends @Nullable Object, O extends @Nullable Object>
+    Coroutine<I, O> first(String stepName, CoroutineStep<I, O> step) {
         return first(step.withName(stepName));
     }
 
@@ -305,7 +305,7 @@ public class Coroutine<I, O> extends UserDataHolderBase {
      * @return A {@link Continuation} that provides access to the execution
      * result
      */
-    public Continuation<O> runAsync(CoroutineScope scope, @Nullable I input) {
+    public Continuation<O> runAsync(CoroutineScope scope, I input) {
         Coroutine<I, O> aRunCoroutine = new Coroutine<>(this);
         Continuation<O> aContinuation = new Continuation<>(scope, aRunCoroutine);
 
@@ -334,7 +334,7 @@ public class Coroutine<I, O> extends UserDataHolderBase {
      * @return A {@link Continuation} that provides access to the execution
      * result
      */
-    public Continuation<O> runBlocking(CoroutineScope scope, @Nullable I input) {
+    public Continuation<O> runBlocking(CoroutineScope scope, I input) {
         Coroutine<I, O> aRunCoroutine = new Coroutine<>(this);
         Continuation<O> aContinuation = new Continuation<>(scope, aRunCoroutine);
 

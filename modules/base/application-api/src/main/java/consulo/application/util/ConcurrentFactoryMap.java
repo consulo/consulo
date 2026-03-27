@@ -17,17 +17,16 @@ import java.util.function.Supplier;
  * It's guaranteed that two {@link #get(Object)} method calls with the same key will return the same value (i.e. the created value stored atomically).
  * For not thread-safe (but possible faster and more memory-efficient) alternative please use {@link FactoryMap}
  */
-public abstract class ConcurrentFactoryMap<K, V> implements ConcurrentMap<K, V> {
+public abstract class ConcurrentFactoryMap<K extends @Nullable Object, V extends @Nullable Object> implements ConcurrentMap<K, V> {
   private final ConcurrentMap<K, V> myMap = createMap();
 
   private ConcurrentFactoryMap() {
-
   }
 
-  protected abstract @Nullable V create(K key);
+  protected abstract V create(K key);
 
   @Override
-  public V get(Object key) {
+  public @Nullable V get(Object key) {
     ConcurrentMap<K, V> map = myMap;
     K k = notNull(key);
     V value = map.get(k);
@@ -43,7 +42,10 @@ public abstract class ConcurrentFactoryMap<K, V> implements ConcurrentMap<K, V> 
     return nullize(value);
   }
 
-  private static @Nullable <T> T nullize(T value) {
+  @SuppressWarnings("NullAway")
+  private static <T extends @Nullable Object> T nullize(T value) {
+    // NullAway problem: this null can be returned only if T is nullable, if T is not-nullable, null would never be returned
+    // Static validator doesn't understand that this case is safe, so suppressing NullAway validation
     return value == FAKE_NULL() ? null : value;
   }
 
@@ -52,7 +54,7 @@ public abstract class ConcurrentFactoryMap<K, V> implements ConcurrentMap<K, V> 
     return (T)ObjectUtil.NULL;
   }
 
-  private static <T> T notNull(Object key) {
+  private static <T> T notNull(@Nullable Object key) {
     //noinspection unchecked
     return key == null ? FAKE_NULL() : (T)key;
   }
@@ -63,7 +65,7 @@ public abstract class ConcurrentFactoryMap<K, V> implements ConcurrentMap<K, V> 
   }
 
   @Override
-  public V put(K key, V value) {
+  public @Nullable V put(K key, V value) {
     K k = notNull(key);
     V v = notNull(value);
     v = myMap.put(k, v);
@@ -71,12 +73,11 @@ public abstract class ConcurrentFactoryMap<K, V> implements ConcurrentMap<K, V> 
   }
 
   @Override
-  public V remove(Object key) {
+  public @Nullable V remove(Object key) {
     V v = myMap.remove(notNull(key));
     return nullize(v);
   }
 
-  
   @Override
   public Set<K> keySet() {
     return new CollectionWrapper.Set<>(myMap.keySet());
@@ -115,13 +116,11 @@ public abstract class ConcurrentFactoryMap<K, V> implements ConcurrentMap<K, V> 
     }
   }
 
-  
   @Override
   public Collection<V> values() {
     return new CollectionWrapper<>(myMap.values());
   }
 
-  
   @Override
   public Set<Entry<K, V>> entrySet() {
     return new CollectionWrapper.Set<Entry<K, V>>(myMap.entrySet()) {
@@ -138,13 +137,12 @@ public abstract class ConcurrentFactoryMap<K, V> implements ConcurrentMap<K, V> 
     };
   }
 
-  
   protected ConcurrentMap<K, V> createMap() {
     return ContainerUtil.newConcurrentMap();
   }
 
   @Override
-  public V putIfAbsent(K key, V value) {
+  public @Nullable V putIfAbsent(K key, V value) {
     return nullize(myMap.putIfAbsent(notNull(key), notNull(value)));
   }
 
@@ -159,29 +157,28 @@ public abstract class ConcurrentFactoryMap<K, V> implements ConcurrentMap<K, V> 
   }
 
   @Override
-  public V replace(K key, V value) {
+  public @Nullable V replace(K key, V value) {
     return nullize(myMap.replace(notNull(key), notNull(value)));
   }
 
-  
-  public static <T, V> ConcurrentMap<T, V> createMap(final Function<? super T, ? extends V> computeValue) {
-    return new ConcurrentFactoryMap<T, V>() {
+  public static <T extends @Nullable Object, V extends @Nullable Object>
+  ConcurrentMap<T, V> createMap(Function<? super T, ? extends V> computeValue) {
+    return new ConcurrentFactoryMap<>() {
       @Override
-      protected @Nullable V create(T key) {
+      protected V create(T key) {
         return computeValue.apply(key);
       }
     };
   }
 
-  
-  public static <K, V> ConcurrentMap<K, V> create(Function<? super K, ? extends V> computeValue, Supplier<? extends ConcurrentMap<K, V>> mapCreator) {
-    return new ConcurrentFactoryMap<K, V>() {
+  public static <K extends @Nullable Object, V extends @Nullable Object>
+  ConcurrentMap<K, V> create(Function<? super K, ? extends V> computeValue, Supplier<? extends ConcurrentMap<K, V>> mapCreator) {
+    return new ConcurrentFactoryMap<>() {
       @Override
-      protected @Nullable V create(K key) {
+      protected V create(K key) {
         return computeValue.apply(key);
       }
 
-      
       @Override
       protected ConcurrentMap<K, V> createMap() {
         return mapCreator.get();
@@ -192,8 +189,9 @@ public abstract class ConcurrentFactoryMap<K, V> implements ConcurrentMap<K, V> 
   /**
    * @return Concurrent factory map with weak keys, strong values
    */
-  public static <T, V> ConcurrentMap<T, V> createWeakMap(Function<? super T, ? extends V> compute) {
-    return create(compute, ContainerUtil::createConcurrentWeakMap);
+  public static <T extends @Nullable Object, V extends @Nullable Object>
+  ConcurrentMap<T, V> createWeakMap(Function<? super T, ? extends V> compute) {
+    return create(compute, Maps::newConcurrentWeakHashMap);
   }
 
   /**
@@ -202,9 +200,10 @@ public abstract class ConcurrentFactoryMap<K, V> implements ConcurrentMap<K, V> 
    */
   //@ApiStatus.ScheduledForRemoval(inVersion = "2018")
   @Deprecated
+  @Override
   public V getOrDefault(Object key, V defaultValue) {
-    V v;
-    return (v = get(key)) != null ? v : defaultValue;
+    V v = get(key);
+    return v != null ? v : defaultValue;
   }
 
   private static class CollectionWrapper<K> extends AbstractCollection<K> {
@@ -214,10 +213,9 @@ public abstract class ConcurrentFactoryMap<K, V> implements ConcurrentMap<K, V> 
       myDelegate = delegate;
     }
 
-    
     @Override
     public Iterator<K> iterator() {
-      return new Iterator<K>() {
+      return new Iterator<>() {
         final Iterator<K> it = myDelegate.iterator();
 
         @Override
@@ -226,7 +224,7 @@ public abstract class ConcurrentFactoryMap<K, V> implements ConcurrentMap<K, V> 
         }
 
         @Override
-        public K next() {
+        public @Nullable K next() {
           return unwrap(it.next());
         }
 
@@ -266,7 +264,7 @@ public abstract class ConcurrentFactoryMap<K, V> implements ConcurrentMap<K, V> 
       }
     }
 
-    protected static class EntryWrapper<K, V> implements Entry<K, V> {
+    protected static class EntryWrapper<K extends @Nullable Object, V extends @Nullable Object> implements Entry<K, V> {
       final Entry<? extends K, ? extends V> myEntry;
 
       private EntryWrapper(Entry<? extends K, ? extends V> entry) {

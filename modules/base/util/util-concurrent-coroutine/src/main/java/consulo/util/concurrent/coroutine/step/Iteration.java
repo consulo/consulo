@@ -105,8 +105,8 @@ public class Iteration<T, R, I extends Iterable<T>, C extends Collection<R>>
 	 *
 	 * @return A new step instance
 	 */
-	@SuppressWarnings({ "rawtypes", "unchecked" })
-	public static <T, I extends Iterable<T>> CoroutineStep<I, Void> forEach(
+	@SuppressWarnings({"rawtypes", "unchecked"})
+	public static <T, I extends Iterable<T>> CoroutineStep<I, @Nullable Void> forEach(
 		CoroutineStep<T, ?> rProcessingStep) {
 		// needs to be raw as the actual return type of the processing step is
 		// not known; but as the processing results are discarded the type of
@@ -135,9 +135,8 @@ public class Iteration<T, R, I extends Iterable<T>, C extends Collection<R>>
 	/***************************************
 	 * {@inheritDoc}
 	 */
-	@Nullable
 	@Override
-	protected C execute(@Nullable I input, Continuation<?> continuation) {
+	protected @Nullable C execute(@Nullable I input, Continuation<?> continuation) {
 		C aResults =
 			fCollectionFactory != null ? fCollectionFactory.get() : null;
 

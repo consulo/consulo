@@ -584,18 +584,18 @@ public class ConcurrentHashMap<K, V> extends AbstractMap<K, V> implements Concur
    * are special, and contain null keys and values (but are never
    * exported).  Otherwise, keys and vals are never null.
    */
-  static class Node<K, V> implements Map.Entry<K, V> {
+  static class Node<K extends @Nullable Object, V extends @Nullable Object> implements Map.Entry<K, V> {
     final int hash;
-    final @Nullable K key;
-    volatile @Nullable V val;
+    final K key;
+    volatile V val;
     final HashingStrategy<K> hashingStrategy;
     volatile @Nullable Node<K, V> next;
 
-    Node(int hash, @Nullable K key, @Nullable V val, HashingStrategy<K> hashingStrategy) {
+    Node(int hash, K key, V val, HashingStrategy<K> hashingStrategy) {
       this(hash, key, val, null, hashingStrategy);
     }
 
-    Node(int hash, @Nullable K key, @Nullable V val, @Nullable Node<K, V> next, HashingStrategy<K> hashingStrategy) {
+    Node(int hash, K key, V val, @Nullable Node<K, V> next, HashingStrategy<K> hashingStrategy) {
       this.hash = hash;
       this.key = key;
       this.val = val;
@@ -603,11 +603,11 @@ public class ConcurrentHashMap<K, V> extends AbstractMap<K, V> implements Concur
       this.next = next;
     }
 
-    public final @Nullable K getKey() {
+    public final K getKey() {
       return key;
     }
 
-    public final @Nullable V getValue() {
+    public final V getValue() {
       return val;
     }
 
@@ -1973,7 +1973,10 @@ public class ConcurrentHashMap<K, V> extends AbstractMap<K, V> implements Concur
   static final class ForwardingNode<K, V> extends Node<K, V> {
     final Node<K, V>[] nextTable;
 
+    @SuppressWarnings("NullAway")
     ForwardingNode(Node<K, V>[] tab, HashingStrategy<K> hashingStrategy) {
+      // NullAway problem: strange design of this class requires passing nulls as key and value disregarding K/V nullability.
+      // This class is derived from Node but is not a normal node so this is OK. So we're suppressing NullAway validation here.
       super(MOVED, null, null, hashingStrategy);
       this.nextTable = tab;
     }
@@ -2006,7 +2009,10 @@ public class ConcurrentHashMap<K, V> extends AbstractMap<K, V> implements Concur
    * A place-holder node used in computeIfAbsent and compute.
    */
   static final class ReservationNode<K, V> extends Node<K, V> {
+    @SuppressWarnings("NullAway")
     ReservationNode(HashingStrategy<K> hashingStrategy) {
+      // NullAway problem: strange design of this class requires passing nulls as key and value disregarding K/V nullability.
+      // This class is derived from Node but is not a normal node so this is OK. So we're suppressing NullAway validation here.
       super(RESERVED, null, null, hashingStrategy);
     }
 
@@ -2431,7 +2437,7 @@ public class ConcurrentHashMap<K, V> extends AbstractMap<K, V> implements Concur
     @Nullable TreeNode<K, V> prev = null; // needed to unlink next upon deletion
     boolean red;
 
-    TreeNode(int hash, @Nullable K key, @Nullable V val, @Nullable Node<K, V> next, @Nullable TreeNode<K, V> parent, HashingStrategy<K> hashingStrategy) {
+    TreeNode(int hash, K key, V val, @Nullable Node<K, V> next, @Nullable TreeNode<K, V> parent, HashingStrategy<K> hashingStrategy) {
       super(hash, key, val, next, hashingStrategy);
       this.parent = parent;
     }
@@ -2503,7 +2509,10 @@ public class ConcurrentHashMap<K, V> extends AbstractMap<K, V> implements Concur
     /**
      * Creates bin with initial set of nodes headed by b.
      */
+    @SuppressWarnings("NullAway")
     TreeBin(@Nullable TreeNode<K, V> b, HashingStrategy<K> hashingStrategy) {
+      // NullAway problem: strange design of this class requires passing nulls as key and value disregarding K/V nullability.
+      // This class is derived from Node but is not a normal node so this is OK. So we're suppressing NullAway validation here.
       super(TREEBIN, null, null, hashingStrategy);
       this.first = b;
       TreeNode<K, V> r = null;
@@ -3370,7 +3379,7 @@ public class ConcurrentHashMap<K, V> extends AbstractMap<K, V> implements Concur
    */
   public <U> U search(long parallelismThreshold, BiFunction<? super K, ? super V, ? extends U> searchFunction) {
     if (searchFunction == null) throw new NullPointerException();
-    return new SearchMappingsTask<K, V, U>(null, batchFor(parallelismThreshold), 0, 0, table, searchFunction, new AtomicReference<U>()).invoke();
+    return new SearchMappingsTask<K, V, U>(null, batchFor(parallelismThreshold), 0, 0, table, searchFunction, new AtomicReference<@Nullable U>()).invoke();
   }
 
   /**
@@ -3496,7 +3505,7 @@ public class ConcurrentHashMap<K, V> extends AbstractMap<K, V> implements Concur
    */
   public <U> U searchKeys(long parallelismThreshold, Function<? super K, ? extends U> searchFunction) {
     if (searchFunction == null) throw new NullPointerException();
-    return new SearchKeysTask<K, V, U>(null, batchFor(parallelismThreshold), 0, 0, table, searchFunction, new AtomicReference<U>()).invoke();
+    return new SearchKeysTask<K, V, U>(null, batchFor(parallelismThreshold), 0, 0, table, searchFunction, new AtomicReference<@Nullable U>()).invoke();
   }
 
   /**
@@ -3637,7 +3646,7 @@ public class ConcurrentHashMap<K, V> extends AbstractMap<K, V> implements Concur
    */
   public <U> U searchValues(long parallelismThreshold, Function<? super V, ? extends U> searchFunction) {
     if (searchFunction == null) throw new NullPointerException();
-    return new SearchValuesTask<K, V, U>(null, batchFor(parallelismThreshold), 0, 0, table, searchFunction, new AtomicReference<U>()).invoke();
+    return new SearchValuesTask<K, V, U>(null, batchFor(parallelismThreshold), 0, 0, table, searchFunction, new AtomicReference<@Nullable U>()).invoke();
   }
 
   /**
@@ -3777,7 +3786,7 @@ public class ConcurrentHashMap<K, V> extends AbstractMap<K, V> implements Concur
    */
   public <U> U searchEntries(long parallelismThreshold, Function<Map.Entry<K, V>, ? extends U> searchFunction) {
     if (searchFunction == null) throw new NullPointerException();
-    return new SearchEntriesTask<K, V, U>(null, batchFor(parallelismThreshold), 0, 0, table, searchFunction, new AtomicReference<U>()).invoke();
+    return new SearchEntriesTask<K, V, U>(null, batchFor(parallelismThreshold), 0, 0, table, searchFunction, new AtomicReference<@Nullable U>()).invoke();
   }
 
   /**
@@ -3946,7 +3955,7 @@ public class ConcurrentHashMap<K, V> extends AbstractMap<K, V> implements Concur
       return (i == n) ? r : Arrays.copyOf(r, i);
     }
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({"NullAway", "unchecked"})
     public final <T> T[] toArray(T[] a) {
       long sz = map.mappingCount();
       if (sz > MAX_ARRAY_SIZE) throw new OutOfMemoryError(OOME_MSG);
@@ -3964,6 +3973,8 @@ public class ConcurrentHashMap<K, V> extends AbstractMap<K, V> implements Concur
         r[i++] = (T)e;
       }
       if (a == r && i < n) {
+        // NullAway problem: technical usage of null for filling elements not used for user data storage.
+        // Static validator doesn't understand this. So we're suppressing NullAway validation here.
         r[i] = null; // null-terminate
         return r;
       }
@@ -4652,7 +4663,7 @@ public class ConcurrentHashMap<K, V> extends AbstractMap<K, V> implements Concur
   @SuppressWarnings("serial")
   static final class SearchKeysTask<K, V, U> extends BulkTask<K, V, U> {
     final Function<? super K, ? extends U> searchFunction;
-    final AtomicReference<U> result;
+    final AtomicReference<@Nullable U> result;
 
     SearchKeysTask(
         @Nullable BulkTask<K, V, ?> p,
@@ -4661,7 +4672,7 @@ public class ConcurrentHashMap<K, V> extends AbstractMap<K, V> implements Concur
         int f,
         Node<K, V> @Nullable [] t,
         Function<? super K, ? extends U> searchFunction,
-        AtomicReference<U> result
+        AtomicReference<@Nullable U> result
     ) {
       super(p, b, i, f, t);
       this.searchFunction = searchFunction;
@@ -4673,9 +4684,9 @@ public class ConcurrentHashMap<K, V> extends AbstractMap<K, V> implements Concur
     }
 
     public final void compute() {
-      final Function<? super K, ? extends U> searchFunction;
-      final AtomicReference<U> result;
-      if ((searchFunction = this.searchFunction) != null && (result = this.result) != null) {
+      final Function<? super K, ? extends U> searchFunction = this.searchFunction;
+      final AtomicReference<@Nullable U> result = this.result;
+      if (searchFunction != null && result != null) {
         for (int i = baseIndex, f, h; batch > 0 && (h = ((f = baseLimit) + i) >>> 1) > i; ) {
           if (result.get() != null) return;
           addToPendingCount(1);
@@ -4700,7 +4711,7 @@ public class ConcurrentHashMap<K, V> extends AbstractMap<K, V> implements Concur
   @SuppressWarnings("serial")
   static final class SearchValuesTask<K, V, U> extends BulkTask<K, V, U> {
     final Function<? super V, ? extends U> searchFunction;
-    final AtomicReference<U> result;
+    final AtomicReference<@Nullable U> result;
 
     SearchValuesTask(
         @Nullable BulkTask<K, V, ?> p,
@@ -4709,7 +4720,7 @@ public class ConcurrentHashMap<K, V> extends AbstractMap<K, V> implements Concur
         int f,
         Node<K, V> @Nullable [] t,
         Function<? super V, ? extends U> searchFunction,
-        AtomicReference<U> result
+        AtomicReference<@Nullable U> result
     ) {
       super(p, b, i, f, t);
       this.searchFunction = searchFunction;
@@ -4722,7 +4733,7 @@ public class ConcurrentHashMap<K, V> extends AbstractMap<K, V> implements Concur
 
     public final void compute() {
       final Function<? super V, ? extends U> searchFunction;
-      final AtomicReference<U> result;
+      final AtomicReference<@Nullable U> result;
       if ((searchFunction = this.searchFunction) != null && (result = this.result) != null) {
         for (int i = baseIndex, f, h; batch > 0 && (h = ((f = baseLimit) + i) >>> 1) > i; ) {
           if (result.get() != null) return;
@@ -4748,7 +4759,7 @@ public class ConcurrentHashMap<K, V> extends AbstractMap<K, V> implements Concur
   @SuppressWarnings("serial")
   static final class SearchEntriesTask<K, V, U> extends BulkTask<K, V, U> {
     final Function<Entry<K, V>, ? extends U> searchFunction;
-    final AtomicReference<U> result;
+    final AtomicReference<@Nullable U> result;
 
     SearchEntriesTask(
         @Nullable BulkTask<K, V, ?> p,
@@ -4757,7 +4768,7 @@ public class ConcurrentHashMap<K, V> extends AbstractMap<K, V> implements Concur
         int f,
         Node<K, V> @Nullable [] t,
         Function<Entry<K, V>, ? extends U> searchFunction,
-        AtomicReference<U> result
+        AtomicReference<@Nullable U> result
     ) {
       super(p, b, i, f, t);
       this.searchFunction = searchFunction;
@@ -4770,7 +4781,7 @@ public class ConcurrentHashMap<K, V> extends AbstractMap<K, V> implements Concur
 
     public final void compute() {
       final Function<Entry<K, V>, ? extends U> searchFunction;
-      final AtomicReference<U> result;
+      final AtomicReference<@Nullable U> result;
       if ((searchFunction = this.searchFunction) != null && (result = this.result) != null) {
         for (int i = baseIndex, f, h; batch > 0 && (h = ((f = baseLimit) + i) >>> 1) > i; ) {
           if (result.get() != null) return;
@@ -4796,7 +4807,7 @@ public class ConcurrentHashMap<K, V> extends AbstractMap<K, V> implements Concur
   @SuppressWarnings("serial")
   static final class SearchMappingsTask<K, V, U> extends BulkTask<K, V, U> {
     final BiFunction<? super K, ? super V, ? extends U> searchFunction;
-    final AtomicReference<U> result;
+    final AtomicReference<@Nullable U> result;
 
     SearchMappingsTask(
         @Nullable BulkTask<K, V, ?> p,
@@ -4805,7 +4816,7 @@ public class ConcurrentHashMap<K, V> extends AbstractMap<K, V> implements Concur
         int f,
         Node<K, V> @Nullable [] t,
         BiFunction<? super K, ? super V, ? extends U> searchFunction,
-        AtomicReference<U> result
+        AtomicReference<@Nullable U> result
     ) {
       super(p, b, i, f, t);
       this.searchFunction = searchFunction;
@@ -4818,7 +4829,7 @@ public class ConcurrentHashMap<K, V> extends AbstractMap<K, V> implements Concur
 
     public final void compute() {
       final BiFunction<? super K, ? super V, ? extends U> searchFunction;
-      final AtomicReference<U> result;
+      final AtomicReference<@Nullable U> result;
       if ((searchFunction = this.searchFunction) != null && (result = this.result) != null) {
         for (int i = baseIndex, f, h; batch > 0 && (h = ((f = baseLimit) + i) >>> 1) > i; ) {
           if (result.get() != null) return;

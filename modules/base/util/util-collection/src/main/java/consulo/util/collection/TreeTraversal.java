@@ -211,7 +211,7 @@ public abstract class TreeTraversal {
 
         protected @Nullable T _transform(@Nullable Object original) {
             Object result = original;
-            for (Function<Object, ?> f : getTransformations()) {
+            for (Function<@Nullable Object, ?> f : getTransformations()) {
                 result = f.apply(result);
             }
             //noinspection unchecked
@@ -688,7 +688,7 @@ public abstract class TreeTraversal {
             return it;
         }
 
-        Iterable<? extends T> iterable(Function<? super T, ? extends Iterable<? extends T>> tree) {
+        Iterable<? extends T> iterable(Function<@Nullable ? super T, ? extends Iterable<? extends T>> tree) {
             return itle != null ? itle : JBIterable.from(itle = tree.apply(node));
         }
 
@@ -706,13 +706,13 @@ public abstract class TreeTraversal {
             return TO_PREV;
         }
 
-        static final Function TO_NODE = new Function<P<?, ?>, Object>() {
+        static final Function TO_NODE = new Function<P<?, ?>, @Nullable Object>() {
             @Override
             public @Nullable Object apply(P<?, ?> tp) {
                 return tp.node;
             }
         };
-        static final Function TO_PREV = new Function<P<?, ?>, P<?, ?>>() {
+        static final Function TO_PREV = new Function<P<?, ?>, @Nullable P<?, ?>>() {
             @Override
             public @Nullable P<?, ?> apply(P<?, ?> tp) {
                 return tp.parent;

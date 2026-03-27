@@ -61,7 +61,7 @@ public abstract class FactoryMap<K, V> implements Map<K, V> {
       V v = notNull(value);
       map.put(k, v);
     }
-    return nullize(value);
+    return value == null ? null : nullize(value);
   }
 
   private Map<K, V> getMap() {
@@ -82,7 +82,10 @@ public abstract class FactoryMap<K, V> implements Map<K, V> {
     return key == null ? FAKE_NULL() : (T)key;
   }
 
-  private static @Nullable <T> T nullize(@Nullable T value) {
+  @SuppressWarnings("NullAway")
+  private static <T> T nullize(T value) {
+    // NullAway problem: this null can be returned only if T is nullable, if T is not-nullable, null would never be returned
+    // Static validator doesn't understand that this case is safe, so suppressing NullAway validation
     return value == FAKE_NULL() ? null : value;
   }
 
@@ -152,6 +155,7 @@ public abstract class FactoryMap<K, V> implements Map<K, V> {
   }
 
   @Override
+  @SuppressWarnings("deprecation")
   public Collection<V> values() {
     return ContainerUtil.map(getMap().values(), FactoryMap::nullize);
   }

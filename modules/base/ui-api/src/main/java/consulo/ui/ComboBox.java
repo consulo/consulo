@@ -20,6 +20,7 @@ import consulo.localize.LocalizeValue;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.internal.UIInternal;
 import consulo.ui.model.ListModel;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -131,7 +132,7 @@ public interface ComboBox<E> extends ValueComponent<E> {
 
     void setRenderer(TextItemRenderer<E> renderer);
 
-    default void setTextRenderer(Function<E, LocalizeValue> localizeValueFunction) {
+    default void setTextRenderer(Function<@Nullable E, LocalizeValue> localizeValueFunction) {
         setRenderer((renderer, index, item) -> renderer.append(localizeValueFunction.apply(item)));
     }
 

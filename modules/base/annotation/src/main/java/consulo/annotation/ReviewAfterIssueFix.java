@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2019 consulo.io
+ * Copyright 2013-2026 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,14 +19,20 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
 /**
- * Annotation-marker for elements which need review after migration to target JRE.
+ * Annotation-marker for elements which need review after corresponding issue fix.
  *
- * @author VISTALL
- * @since 2019-11-19
+ * @author UNV
+ * @since 2026-03-26
  */
 @Retention(RetentionPolicy.SOURCE)
-public @interface ReviewAfterMigrationToJRE {
-  int value();
+public @interface ReviewAfterIssueFix {
+    /**
+     * URL to the issue.
+     */
+    String value();
 
-  String description() default "";
+    /**
+     * Description what to do after issue is fixed.
+     */
+    String todo() default "";
 }

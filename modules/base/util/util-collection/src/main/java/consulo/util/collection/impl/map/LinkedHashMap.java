@@ -20,8 +20,8 @@ import consulo.util.collection.HashingStrategy;
 import org.jspecify.annotations.Nullable;
 import java.util.*;
 
-public class LinkedHashMap<K, V> extends AbstractMap<K, V> implements Map<K, V> {
-  private Entry<K, V> @Nullable [] table = null;
+public class LinkedHashMap<K, V extends @Nullable Object> extends AbstractMap<K, V> implements Map<K, V> {
+  private @Nullable Entry<K, V> @Nullable [] table = null;
   private @Nullable Entry<K, V> top = null;
   private @Nullable Entry<K, V> back = null;
   private int capacity;
@@ -82,7 +82,7 @@ public class LinkedHashMap<K, V> extends AbstractMap<K, V> implements Map<K, V> 
 
   @Override
   public @Nullable V get(Object key) {
-    Entry<K, V>[] table = Objects.requireNonNull(this.table);
+    @Nullable Entry<K, V>[] table = Objects.requireNonNull(this.table);
     int hash = HashUtil.hash(key, hashingStrategy);
     int index = hash % table.length;
 
@@ -91,7 +91,6 @@ public class LinkedHashMap<K, V> extends AbstractMap<K, V> implements Map<K, V> 
       if (e.keyHash == hash && ((entryKey = e.key) == key || hashingStrategy.equals(entryKey, (K)key))) {
         moveToTop(e);
         return e.value;
-
       }
     }
     return null;
@@ -99,7 +98,7 @@ public class LinkedHashMap<K, V> extends AbstractMap<K, V> implements Map<K, V> 
 
   @Override
   public @Nullable V put(K key, V value) {
-    Entry<K, V>[] table = Objects.requireNonNull(this.table);
+    @Nullable Entry<K, V>[] table = Objects.requireNonNull(this.table);
     int hash = HashUtil.hash(key, hashingStrategy);
     int index = hash % table.length;
     for (Entry<K, V> e = table[index]; e != null; e = e.hashNext) {
@@ -144,7 +143,7 @@ public class LinkedHashMap<K, V> extends AbstractMap<K, V> implements Map<K, V> 
 
   @Override
   public @Nullable V remove(Object key) {
-    Entry<K, V>[] table = Objects.requireNonNull(this.table);
+    @Nullable Entry<K, V>[] table = Objects.requireNonNull(this.table);
     int hash = HashUtil.hash(key, hashingStrategy);
     int index = hash % table.length;
     Entry<K, V> e = table[index];
@@ -265,7 +264,7 @@ public class LinkedHashMap<K, V> extends AbstractMap<K, V> implements Map<K, V> 
   private void rehash(int capacity) {
     table = new Entry[HashUtil.adjustTableSize((int)(capacity / loadFactor))];
     this.capacity = capacity;
-    Entry<K, V>[] table = this.table;
+    @Nullable Entry<K, V>[] table = Objects.requireNonNull(this.table);
     int tableLen = table.length;
     for (Entry<K, V> e = back; e != null; e = e.previous) {
       int hash = e.keyHash % tableLen;
@@ -274,8 +273,7 @@ public class LinkedHashMap<K, V> extends AbstractMap<K, V> implements Map<K, V> 
     }
   }
 
-  private static class Entry<K, V> implements Map.Entry<K, V> {
-
+  private static class Entry<K, V extends @Nullable Object> implements Map.Entry<K, V> {
     private final K key;
     private final int keyHash;
     private V value;
@@ -333,7 +331,6 @@ public class LinkedHashMap<K, V> extends AbstractMap<K, V> implements Map<K, V> 
   }
 
   private final class EntrySet extends AbstractSet<Map.Entry<K, V>> {
-
     @Override
     public Iterator<Map.Entry<K, V>> iterator() {
       return new LinkedHashIterator<Map.Entry<K, V>>() {
@@ -408,7 +405,6 @@ public class LinkedHashMap<K, V> extends AbstractMap<K, V> implements Map<K, V> 
   }
 
   private final class Values extends AbstractCollection<V> {
-
     @Override
     public Iterator<V> iterator() {
       return new LinkedHashIterator<V>() {

@@ -127,10 +127,10 @@ public class CoroutineScope extends CoroutineEnvironment {
         aScope.checkThrowErrors();
     }
 
-    public static void launchAsync(CoroutineContext context, Supplier<Coroutine<?, ?>> supplier) {
+    public static void launchAsync(CoroutineContext context, Supplier<Coroutine<@Nullable ?, ?>> supplier) {
         CoroutineScope aScope = new CoroutineScope(context);
 
-        Coroutine<?, ?> coroutine = supplier.get();
+        Coroutine<@Nullable ?, ?> coroutine = supplier.get();
 
         coroutine.runAsync(aScope, null);
     }

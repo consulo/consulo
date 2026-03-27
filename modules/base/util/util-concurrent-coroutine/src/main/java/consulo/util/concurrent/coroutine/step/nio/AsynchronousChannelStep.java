@@ -47,7 +47,7 @@ import java.util.concurrent.ExecutorService;
  *
  * @author eso
  */
-public abstract class AsynchronousChannelStep<I, O> extends CoroutineStep<I, O> {
+public abstract class AsynchronousChannelStep<I extends @Nullable Object, O extends @Nullable Object> extends CoroutineStep<I, O> {
     /**
      * State: the {@link AsynchronousChannelGroup} to associate any new
      * asynchronous channels with.

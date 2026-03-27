@@ -27,7 +27,7 @@ import java.util.Optional;
  *
  * @author eso
  */
-public class Suspension<T> {
+public class Suspension<T extends @Nullable Object> {
 	private final CoroutineStep<?, T> suspendingStep;
 
 	private final @Nullable CoroutineStep<T, ?> resumeStep;
