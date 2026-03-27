@@ -84,7 +84,7 @@ public class CodeExecution<I extends @Nullable Object, O extends @Nullable Objec
      * @param code The consumer to be executed
      * @return A new instance of this class
      */
-    @ReviewAfterIssueFix(value = "github.com/uber/NullAway/issues/1500", todo = "Remove explicit generics in new CodeExecution call")
+    @ReviewAfterIssueFix(value = "github.com/uber/NullAway/issues/1504", todo = "Remove explicit generics in new CodeExecution call")
     public static <T extends @Nullable Object> CodeExecution<T, @Nullable T> consume(Consumer<T> code) {
         return new CodeExecution<T, @Nullable T>(o -> {
             code.accept(o);
