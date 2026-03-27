@@ -66,6 +66,7 @@ public abstract class PsiDocumentManager {
    * @param document the document for which the PSI file is requested.
    * @return the PSI file instance, or {@code null} if there is currently no cached PSI tree for the file.
    */
+  @RequiredReadAction
   public abstract @Nullable PsiFile getCachedPsiFile(Document document);
 
   /**

@@ -128,6 +128,7 @@ public interface Caret extends UserDataHolderEx, Disposable {
    *
    * @see #isValid()
    */
+  @RequiredUIAccess
   int getOffset();
 
   /**
@@ -146,6 +147,7 @@ public interface Caret extends UserDataHolderEx, Disposable {
    *
    * @return the selection start offset.
    */
+  @RequiredUIAccess
   int getSelectionStart();
 
   /**
@@ -159,6 +161,7 @@ public interface Caret extends UserDataHolderEx, Disposable {
    *
    * @return the selection end offset.
    */
+  @RequiredUIAccess
   int getSelectionEnd();
 
   /**

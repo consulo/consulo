@@ -194,7 +194,7 @@ public class ShowIntentionsPass extends TextEditorHighlightingPass {
             return;
         }
         getActionsToShow(editor, myFile, myIntentionsInfo, myPassIdToShowIntentionsFor, myQueryIntentionActions);
-        myCachedIntentions = IntentionsUI.getInstance(myProject).getCachedIntentions(editor, myFile);
+        myCachedIntentions = IntentionsUI.getInstance(myProject).getCachedIntentions(myEditor, myFile);
         myActionsChanged = myCachedIntentions.wrapAndUpdateActions(myIntentionsInfo, false);
     }
 

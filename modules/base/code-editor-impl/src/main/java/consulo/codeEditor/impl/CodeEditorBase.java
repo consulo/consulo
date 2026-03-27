@@ -1214,12 +1214,10 @@ public abstract class CodeEditorBase extends UserDataHolderBase implements RealE
     }
 
     @Override
-    
     public DocumentEx getDocument() {
         return myDocument;
     }
 
-    
     @Override
     public EditorHighlighter getHighlighter() {
         return myHighlighter;

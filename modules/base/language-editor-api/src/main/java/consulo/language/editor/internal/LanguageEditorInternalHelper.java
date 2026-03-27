@@ -27,7 +27,6 @@ import consulo.language.Language;
 import consulo.language.editor.annotation.Annotation;
 import consulo.language.editor.annotation.Annotator;
 import consulo.language.editor.gutter.LineMarkerInfo;
-import consulo.annotation.access.RequiredReadAction;
 import consulo.language.editor.rawHighlight.HighlightInfo;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
@@ -94,7 +93,7 @@ public interface LanguageEditorInternalHelper {
         return false;
     }
 
-    @RequiredReadAction
+    @RequiredUIAccess
     default void setHighlightersToEditor(Project project,
                                          Document document,
                                          int startOffset,

@@ -46,7 +46,6 @@ import consulo.language.editor.refactoring.rename.inplace.InplaceRefactoring;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
-import consulo.annotation.access.RequiredReadAction;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.ColoredTextContainer;
@@ -57,8 +56,8 @@ import consulo.ui.ex.awt.SelectionAwareListCellRenderer;
 import consulo.ui.ex.awt.speedSearch.SpeedSearchUtil;
 import consulo.ui.image.Image;
 import consulo.util.lang.Pair;
-import org.jspecify.annotations.Nullable;
 import jakarta.inject.Singleton;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.util.ArrayList;
@@ -130,7 +129,7 @@ public class LanguageEditorInternalHelperImpl implements LanguageEditorInternalH
     }
 
     @Override
-    @RequiredReadAction
+    @RequiredUIAccess
     public void setHighlightersToEditor(Project project,
                                         Document document,
                                         int startOffset,

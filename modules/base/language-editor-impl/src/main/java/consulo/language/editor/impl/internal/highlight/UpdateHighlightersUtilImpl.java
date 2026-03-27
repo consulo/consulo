@@ -27,12 +27,14 @@ import consulo.language.editor.rawHighlight.SeverityRegistrar;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.color.ColorValue;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.Lists;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.Comparing;
 import consulo.util.lang.Pair;
+import consulo.util.lang.ref.SimpleReference;
 import org.jspecify.annotations.Nullable;
 
 import java.util.*;
@@ -139,7 +141,7 @@ public class UpdateHighlightersUtilImpl {
         return o1.getDescription().compareTo(o2.getDescription());
     };
 
-    @RequiredReadAction
+    @RequiredUIAccess
     public static void setHighlightersInRange(
         Project project,
         Document document,
@@ -180,7 +182,9 @@ public class UpdateHighlightersUtilImpl {
 
         Lists.quickSort(infos, BY_START_OFFSET_NODUPS);
         Map<TextRange, RangeMarker> ranges2markersCache = new HashMap<>(10);
-        PsiFile psiFile = PsiDocumentManager.getInstance(project).getPsiFile(document);
+        SimpleReference<PsiFile> psiFileRef = new SimpleReference<>();
+        project.getApplication().tryRunReadAction(psiFileRef, () -> PsiDocumentManager.getInstance(project).getCachedPsiFile(document));
+        PsiFile psiFile = psiFileRef.get();
         DaemonCodeAnalyzerInternal codeAnalyzer = DaemonCodeAnalyzerInternal.getInstanceEx(project);
         boolean[] changed = {false};
         SweepProcessor.Generator<HighlightInfo> generator = (Predicate<HighlightInfo> processor) -> ContainerUtil.process(infos, processor);

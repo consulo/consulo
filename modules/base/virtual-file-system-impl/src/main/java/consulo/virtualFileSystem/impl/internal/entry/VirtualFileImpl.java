@@ -153,7 +153,6 @@ public class VirtualFileImpl extends VirtualFileSystemEntry {
     }
 
     @Override
-    
     public OutputStream getOutputStream(Object requestor, long modStamp, long timeStamp) throws IOException {
         return VirtualFileUtil.outputStreamAddingBOM(ourPersistence.getOutputStream(this, requestor, modStamp, timeStamp), this);
     }

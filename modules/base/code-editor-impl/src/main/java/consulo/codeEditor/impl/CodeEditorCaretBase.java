@@ -789,7 +789,7 @@ public class CodeEditorCaretBase extends UserDataHolderBase implements Caret, Du
     }
 
     @Override
-    @RequiredReadAction
+    @RequiredUIAccess
     public int getOffset() {
         validateCallContext();
         UIAccess.assertIsUIThread();
@@ -1074,7 +1074,7 @@ public class CodeEditorCaretBase extends UserDataHolderBase implements Caret, Du
     }
 
     @Override
-    @RequiredReadAction
+    @RequiredUIAccess
     public int getSelectionStart() {
         UIAccess.assertIsUIThread();
         if (hasSelection()) {
@@ -1135,7 +1135,7 @@ public class CodeEditorCaretBase extends UserDataHolderBase implements Caret, Du
     }
 
     @Override
-    @RequiredReadAction
+    @RequiredUIAccess
     public int getSelectionEnd() {
         UIAccess.assertIsUIThread();
         if (hasSelection()) {
