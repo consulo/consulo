@@ -15,7 +15,6 @@
  */
 package consulo.application.impl.internal;
 
-import consulo.application.AccessToken;
 import consulo.application.util.ApplicationUtil;
 import consulo.ui.UIAccess;
 
@@ -67,16 +66,6 @@ public final class StampedRWLock implements RWLock {
         myLock.unlockWrite(stamp);
     }
 
-    @Override
-    public AccessToken writeSuspend() {
-        writeUnlock();
-        return new AccessToken() {
-            @Override
-            public void finish() {
-                writeLock();
-            }
-        };
-    }
 
     // ── Read ──
 
