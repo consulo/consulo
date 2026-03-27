@@ -19,9 +19,9 @@ import consulo.language.impl.DebugUtil;
 import consulo.language.impl.internal.file.FileManagerImpl;
 import consulo.language.impl.internal.psi.PsiManagerImpl;
 import consulo.language.impl.internal.psi.PsiTreeChangeEventImpl;
+import consulo.language.internal.ExternalChangeActionUtil;
 import consulo.language.psi.*;
 import consulo.language.psi.event.PsiTreeChangeEvent;
-import consulo.language.psi.internal.ExternalChangeAction;
 import consulo.logging.Logger;
 import consulo.module.Module;
 import consulo.module.content.ModuleRootManager;
@@ -633,8 +633,8 @@ public class PsiVFSListener implements BulkFileListener {
     }
 
     @RequiredUIAccess
-    private static void runExternalAction(ExternalChangeAction runnable) {
-        Application.get().runWriteAction(runnable);
+    private static void runExternalAction(Runnable runnable) {
+        Application.get().runWriteAction(ExternalChangeActionUtil.externalChangeAction(runnable));
     }
 
     @Override

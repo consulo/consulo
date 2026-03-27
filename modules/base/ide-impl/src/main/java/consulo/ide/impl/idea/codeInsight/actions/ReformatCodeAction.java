@@ -18,7 +18,6 @@ package consulo.ide.impl.idea.codeInsight.actions;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ActionImpl;
 import consulo.application.Application;
-import consulo.application.concurrent.coroutine.OptionalReadLock;
 import consulo.application.dumb.DumbAware;
 import consulo.codeEditor.Editor;
 import consulo.content.scope.SearchScope;
@@ -41,13 +40,14 @@ import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.IdeActions;
 import consulo.ui.ex.action.Presentation;
+import consulo.ui.ex.action.coroutine.ActionSafeReadLock;
 import consulo.util.concurrent.coroutine.Coroutine;
 import consulo.util.lang.function.Predicates;
 import consulo.versionControlSystem.FormatChangedTextUtil;
 import consulo.virtualFileSystem.ReadonlyStatusHandler;
 import consulo.virtualFileSystem.VirtualFile;
-import org.jspecify.annotations.Nullable;
 import org.jetbrains.annotations.TestOnly;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.function.Predicate;
@@ -293,12 +293,12 @@ public class ReformatCodeAction extends AnAction implements DumbAware {
 
     @Override
     public Coroutine<?, ?> updateAsync(AnActionEvent e) {
-        return OptionalReadLock.apply(o -> {
+        return ActionSafeReadLock.apply(e, p -> {
             Presentation presentation = e.getPresentation();
             Project project = e.getData(Project.KEY);
             if (project == null) {
                 presentation.setEnabled(false);
-                return null;
+                return;
             }
 
             Editor editor = e.getData(Editor.KEY);
@@ -309,12 +309,12 @@ public class ReformatCodeAction extends AnAction implements DumbAware {
                 PsiFile file = PsiDocumentManager.getInstance(project).getPsiFile(editor.getDocument());
                 if (file == null || file.getVirtualFile() == null) {
                     presentation.setEnabled(false);
-                    return null;
+                    return;
                 }
 
                 if (FormattingModelBuilder.forContext(file) != null) {
                     presentation.setEnabled(true);
-                    return null;
+                    return;
                 }
             }
             else if (files != null && containsAtLeastOneFile(files)) {
@@ -322,12 +322,12 @@ public class ReformatCodeAction extends AnAction implements DumbAware {
                 for (VirtualFile virtualFile : files) {
                     if (virtualFile.isDirectory()) {
                         presentation.setEnabled(false);
-                        return null;
+                        return;
                     }
                     PsiFile psiFile = PsiManager.getInstance(project).findFile(virtualFile);
                     if (psiFile == null) {
                         presentation.setEnabled(false);
-                        return null;
+                        return;
                     }
                     FormattingModelBuilder builder = FormattingModelBuilder.forContext(psiFile);
                     if (builder != null) {
@@ -336,7 +336,7 @@ public class ReformatCodeAction extends AnAction implements DumbAware {
                 }
                 if (!anyFormatters) {
                     presentation.setEnabled(false);
-                    return null;
+                    return;
                 }
             }
             else if (files != null && files.length == 1) {
@@ -346,19 +346,18 @@ public class ReformatCodeAction extends AnAction implements DumbAware {
                 PsiElement element = e.getData(PsiElement.KEY);
                 if (element == null) {
                     presentation.setEnabled(false);
-                    return null;
+                    return;
                 }
                 if (!(element instanceof PsiDirectory)) {
                     PsiFile file = element.getContainingFile();
                     if (file == null || FormattingModelBuilder.forContext(file) == null) {
                         presentation.setEnabled(false);
-                        return null;
+                        return;
                     }
                 }
             }
             presentation.setEnabled(true);
-            return null;
-        }, () -> e.getPresentation().setEnabled(false)).toCoroutine();
+        }).toCoroutine();
     }
 
     @RequiredUIAccess

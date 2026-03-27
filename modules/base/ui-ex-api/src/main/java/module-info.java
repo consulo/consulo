@@ -24,6 +24,7 @@ module consulo.ui.ex.api {
     exports consulo.ui.ex.popup.event;
     exports consulo.ui.ex.action;
     exports consulo.ui.ex.action.event;
+    exports consulo.ui.ex.action.coroutine;
     exports consulo.ui.ex.action.touchBar;
     exports consulo.ui.ex.action.util;
     exports consulo.ui.ex.content;

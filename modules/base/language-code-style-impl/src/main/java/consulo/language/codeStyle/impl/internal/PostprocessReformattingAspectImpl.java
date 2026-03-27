@@ -8,6 +8,7 @@ import consulo.application.event.ApplicationListener;
 import consulo.application.progress.ProgressManager;
 import consulo.disposer.Disposable;
 import consulo.document.Document;
+import consulo.document.FileDocumentManager;
 import consulo.document.RangeMarker;
 import consulo.document.util.Segment;
 import consulo.document.util.TextRange;
@@ -308,6 +309,17 @@ public class PostprocessReformattingAspectImpl implements PostprocessReformattin
     @Override
     public boolean isViewProviderLocked(FileViewProvider fileViewProvider) {
         return getContext().myReformatElements.containsKey(fileViewProvider);
+    }
+
+    @Override
+    public boolean isDocumentLocked(Document document) {
+        VirtualFile file = FileDocumentManager.getInstance().getFile(document);
+        if (file != null && file.isValid()) {
+            for (FileViewProvider provider : getContext().myReformatElements.keySet()) {
+                if (file.equals(provider.getVirtualFile())) return true;
+            }
+        }
+        return false;
     }
 
     @Override

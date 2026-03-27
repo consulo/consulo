@@ -34,7 +34,7 @@ import consulo.index.io.EnumeratorLongDescriptor;
 import consulo.index.io.EnumeratorStringDescriptor;
 import consulo.index.io.PersistentHashMap;
 import consulo.language.file.light.LightVirtualFile;
-import consulo.language.psi.internal.ExternalChangeAction;
+import consulo.language.internal.ExternalChangeActionUtil;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.project.ui.wm.ToolWindowManager;
@@ -149,7 +149,7 @@ public class IdeDocumentHistoryImpl extends IdeDocumentHistory implements Dispos
             public void documentChanged(DocumentEvent e) {
                 Document document = e.getDocument();
                 VirtualFile file = getFileDocumentManager().getFile(document);
-                if (file != null && !(file instanceof LightVirtualFile) && !application.hasWriteAction(ExternalChangeAction.class)) {
+                if (file != null && !(file instanceof LightVirtualFile) && !ExternalChangeActionUtil.isExternalChangeInProgress()) {
                     if (!application.isDispatchThread()) {
                         LOG.error("Document update for physical file not in EDT: " + file);
                     }

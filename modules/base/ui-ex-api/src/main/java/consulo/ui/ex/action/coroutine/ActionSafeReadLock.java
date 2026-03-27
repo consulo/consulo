@@ -13,43 +13,49 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.application.concurrent.coroutine;
+package consulo.ui.ex.action.coroutine;
 
 import consulo.annotation.access.RequiredReadAction;
 import consulo.application.Application;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.Presentation;
 import consulo.util.concurrent.coroutine.Continuation;
 import consulo.util.concurrent.coroutine.CoroutineStep;
-import consulo.util.lang.ref.SimpleReference;
 
 import java.util.Objects;
-import java.util.function.Function;
+import java.util.function.Consumer;
 
 /**
  * @author VISTALL
- * @since 2026-03-06
+ * @since 2026-03-27
  */
-public final class OptionalReadLock<I, O> extends CoroutineStep<I, O> {
-    public static <I, O> CoroutineStep<I, O> apply(@RequiredReadAction Function<I, O> function,
-                                                   Runnable onFail) {
-        return new OptionalReadLock<>(function, onFail);
+public class ActionSafeReadLock<I, O> extends CoroutineStep<I, O> {
+    public static <I, O> CoroutineStep<I, O> apply(AnActionEvent event, @RequiredReadAction Consumer<Presentation> action) {
+        return new ActionSafeReadLock<>(event.getPresentation(), action);
     }
 
-    private final Function<I, O> myFunction;
-    private final Runnable myOnFail;
+    public static <I, O> CoroutineStep<I, O> apply(Presentation presentation, @RequiredReadAction Consumer<Presentation> action) {
+        return new ActionSafeReadLock<>(presentation, action);
+    }
 
-    private OptionalReadLock(Function<I, O> function, Runnable onFail) {
-        myFunction = function;
-        myOnFail = onFail;
+    private final Presentation myPresentation;
+    private final Consumer<Presentation> myAction;
+
+    private ActionSafeReadLock(Presentation presentation, @RequiredReadAction Consumer<Presentation> action) {
+        myPresentation = presentation;
+        myAction = action;
     }
 
     @Override
     protected O execute(I input, Continuation<?> continuation) {
         Application application = Objects.requireNonNull(continuation.getConfiguration(Application.KEY), "Application required");
-        SimpleReference<O> ref = new SimpleReference<>();
-        if (application.tryRunReadAction(ref, () -> myFunction.apply(input))) {
-            return ref.get();
+
+        boolean success = application.tryRunReadAction(() -> myAction.accept(myPresentation));
+
+        if (!success) {
+            myPresentation.setEnabled(false);
         }
-        myOnFail.run();
+
         return null;
     }
 }

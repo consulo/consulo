@@ -1,7 +1,6 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.codeEditor.impl;
 
-import consulo.application.ApplicationManager;
 import consulo.codeEditor.*;
 import consulo.codeEditor.event.SelectionEvent;
 import consulo.codeEditor.event.SelectionListener;
@@ -12,10 +11,11 @@ import consulo.colorScheme.TextAttributes;
 import consulo.document.Document;
 import consulo.document.util.TextRange;
 import consulo.logging.Logger;
+import consulo.ui.UIAccess;
 import consulo.util.collection.Lists;
 import consulo.util.lang.Pair;
-
 import org.jspecify.annotations.Nullable;
+
 import java.util.Collection;
 import java.util.List;
 
@@ -204,7 +204,7 @@ public abstract class CodeEditorSelectionModelBase implements SelectionModel {
 
   @Override
   public String getSelectedText(boolean allCarets) {
-    ApplicationManager.getApplication().assertReadAccessAllowed();
+    UIAccess.assertIsUIThread();
 
     if (myEditor.getCaretModel().supportsMultipleCarets() && allCarets) {
       StringBuilder buf = new StringBuilder();

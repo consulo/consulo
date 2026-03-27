@@ -148,9 +148,7 @@ public class CompletionProgressIndicator extends ProgressIndicatorBase implement
         myHostOffsets = hostOffsets;
         myLookup = lookup;
         myStartCaret = myEditor.getCaretModel().getOffset();
-        myThreading = Application.get().isWriteAccessAllowed() || myHandler.isTestingCompletionQualityMode()
-            ? new SyncCompletion()
-            : new AsyncCompletion();
+        myThreading = new AsyncCompletion();
 
         myAdvertiserChanges.offer(() -> myLookup.getAdvertiser().clearAdvertisements());
 

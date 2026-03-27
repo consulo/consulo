@@ -62,11 +62,6 @@ module consulo.language.api {
     exports consulo.language.version;
     exports consulo.language.util.proximity;
 
-    exports consulo.language.psi.internal to
-        consulo.ide.impl,
-        consulo.file.editor.impl,
-        consulo.language.impl;
-
     exports consulo.language.internal.psi.stub to
         consulo.ide.impl,
         consulo.language.impl,

@@ -231,7 +231,7 @@ public class CodeFoldingManagerImpl extends CodeFoldingManager implements Dispos
     return info;
   }
 
-  private static boolean isFoldingsInitializedInEditor(Editor editor) {
+  static boolean isFoldingsInitializedInEditor(Editor editor) {
     return Boolean.TRUE.equals(editor.getUserData(FOLDING_STATE_KEY));
   }
 }

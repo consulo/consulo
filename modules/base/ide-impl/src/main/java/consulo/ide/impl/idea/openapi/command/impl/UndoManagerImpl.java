@@ -26,8 +26,8 @@ import consulo.disposer.Disposable;
 import consulo.document.*;
 import consulo.fileEditor.*;
 import consulo.fileEditor.text.TextEditorProvider;
+import consulo.language.internal.ExternalChangeActionUtil;
 import consulo.language.psi.PsiDocumentManager;
-import consulo.language.psi.internal.ExternalChangeAction;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.platform.base.localize.ActionLocalize;
@@ -46,9 +46,9 @@ import consulo.undoRedo.event.CommandListener;
 import consulo.undoRedo.internal.UndoManagerInternal;
 import consulo.util.lang.*;
 import consulo.virtualFileSystem.VirtualFile;
-import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import org.jetbrains.annotations.TestOnly;
+import org.jspecify.annotations.Nullable;
 
 import java.awt.*;
 import java.util.List;
@@ -91,9 +91,8 @@ public abstract class UndoManagerImpl implements UndoManagerInternal, Disposable
 
     private DocumentReference myOriginatorReference;
 
-    @RequiredWriteAction
     public static boolean isRefresh() {
-        return Application.get().hasWriteAction(ExternalChangeAction.class);
+        return ExternalChangeActionUtil.isExternalChangeInProgress();
     }
 
     public static int getGlobalUndoLimit() {

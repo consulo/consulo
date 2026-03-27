@@ -15,7 +15,6 @@
  */
 package consulo.ide.impl.idea.ide.actions;
 
-import consulo.application.concurrent.coroutine.OptionalReadLock;
 import consulo.codeEditor.Editor;
 import consulo.dataContext.DataContext;
 import consulo.document.FileDocumentManager;
@@ -32,6 +31,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.ui.ex.action.Presentation;
+import consulo.ui.ex.action.coroutine.ActionSafeReadLock;
 import consulo.ui.ex.awt.CopyPasteManager;
 import consulo.ui.ex.awt.UIExAWTDataKey;
 import consulo.util.collection.ContainerUtil;
@@ -84,7 +84,7 @@ public class CopyPathProvider extends DumbAwareAction {
 
     @Override
     public Coroutine<?, ?> updateAsync(AnActionEvent e) {
-        return OptionalReadLock.apply(i -> {
+        return ActionSafeReadLock.apply(e, p -> {
             Editor editor = e.getData(Editor.KEY);
             Project project = e.getData(Project.KEY);
 
@@ -96,8 +96,7 @@ public class CopyPathProvider extends DumbAwareAction {
             Presentation presentation = e.getPresentation();
             presentation.putClientProperty(CopyPathProviderUtil.QUALIFIED_NAME, qualifiedName);
             presentation.setEnabledAndVisible(qualifiedName != null);
-            return null;
-        }, () -> e.getPresentation().setEnabled(false)).toCoroutine();
+        }).toCoroutine();
     }
 
     public @Nullable String getQualifiedName(Project project, List<PsiElement> elements, Editor editor, DataContext dataContext) {

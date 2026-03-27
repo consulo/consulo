@@ -28,7 +28,7 @@ import consulo.document.impl.DocumentImpl;
 import consulo.document.internal.DocumentEx;
 import consulo.document.internal.EditorDocumentPriorities;
 import consulo.document.internal.PrioritizedDocumentListener;
-import consulo.language.psi.PsiDocumentManager;
+import consulo.language.codeStyle.PostprocessReformattingAspect;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.ui.UIAccess;
@@ -752,7 +752,7 @@ public abstract class CodeEditorBase extends UserDataHolderBase implements RealE
 
     @Override
     public boolean shouldSoftWrapsBeForced() {
-        if (myProject != null && PsiDocumentManager.getInstance(myProject).isDocumentBlockedByPsi(myDocument)) {
+        if (myProject != null && PostprocessReformattingAspect.getInstance(myProject).isDocumentLocked(myDocument)) {
             // Disable checking for files in intermediate states - e.g. for files during refactoring.
             return false;
         }

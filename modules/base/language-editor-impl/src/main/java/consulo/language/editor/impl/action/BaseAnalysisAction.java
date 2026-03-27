@@ -17,7 +17,6 @@ package consulo.language.editor.impl.action;
 
 import consulo.annotation.access.RequiredReadAction;
 import consulo.application.HelpManager;
-import consulo.application.concurrent.coroutine.OptionalReadLock;
 import consulo.dataContext.DataContext;
 import consulo.document.FileDocumentManager;
 import consulo.language.editor.LangDataKeys;
@@ -43,7 +42,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.Presentation;
+import consulo.ui.ex.action.coroutine.ActionSafeReadLock;
 import consulo.ui.layout.VerticalLayout;
 import consulo.util.concurrent.coroutine.Coroutine;
 import consulo.virtualFileSystem.VirtualFile;
@@ -73,14 +72,12 @@ public abstract class BaseAnalysisAction extends AnAction {
 
     @Override
     public Coroutine<?, ?> updateAsync(AnActionEvent event) {
-        return OptionalReadLock.apply(o -> {
-            Presentation presentation = event.getPresentation();
+        return ActionSafeReadLock.apply(event, presentation -> {
             DataContext dataContext = event.getDataContext();
             Project project = event.getData(Project.KEY);
             boolean dumbMode = project == null || DumbService.getInstance(project).isDumb();
             presentation.setEnabled(!dumbMode && getInspectionScope(dataContext) != null);
-            return null;
-        }, () -> event.getPresentation().setEnabled(false)).toCoroutine();
+        }).toCoroutine();
     }
 
     @Override

@@ -17,7 +17,6 @@ package consulo.ide.impl.idea.openapi.vfs.encoding;
 
 import consulo.annotation.component.ActionImpl;
 import consulo.application.Application;
-import consulo.application.concurrent.coroutine.OptionalReadLock;
 import consulo.application.dumb.DumbAware;
 import consulo.codeEditor.Editor;
 import consulo.dataContext.DataContext;
@@ -33,14 +32,15 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DefaultActionGroup;
+import consulo.ui.ex.action.coroutine.ActionSafeReadLock;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.popup.ListPopup;
 import consulo.undoRedo.*;
 import consulo.util.concurrent.coroutine.Coroutine;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.encoding.ApplicationEncodingManager;
-import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.io.IOException;
@@ -77,14 +77,12 @@ public class ChangeFileEncodingAction extends AnAction implements DumbAware {
 
     @Override
     public Coroutine<?, ?> updateAsync(AnActionEvent e) {
-        return OptionalReadLock.apply(o -> {
+        return ActionSafeReadLock.apply(e, p -> {
             VirtualFile file = e.getData(VirtualFile.KEY);
             boolean enabled = file != null && checkEnabled(file);
-            e.getPresentation().setEnabled(enabled);
-            e.getPresentation().setVisible(file != null);
-
-            return null;
-        }, () -> e.getPresentation().setEnabled(false)).toCoroutine();
+            p.setEnabled(enabled);
+            p.setVisible(file != null);
+        }).toCoroutine();
     }
 
     @Override

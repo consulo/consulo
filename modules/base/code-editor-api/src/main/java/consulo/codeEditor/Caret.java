@@ -16,6 +16,7 @@
 package consulo.codeEditor;
 
 import consulo.disposer.Disposable;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolderEx;
 import org.jspecify.annotations.Nullable;
@@ -192,6 +193,7 @@ public interface Caret extends UserDataHolderEx, Disposable {
    *
    * @return true if a range of text is selected, false otherwise.
    */
+  @RequiredUIAccess
   boolean hasSelection();
 
   /**

@@ -18,7 +18,6 @@ package consulo.ide.impl.idea.codeInsight.actions;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ActionImpl;
 import consulo.application.Application;
-import consulo.application.concurrent.coroutine.OptionalReadLock;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.impl.EditorSettingsExternalizable;
 import consulo.dataContext.DataContext;
@@ -36,15 +35,16 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
+import consulo.ui.ex.action.coroutine.ActionSafeReadLock;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.util.concurrent.coroutine.Coroutine;
 import consulo.util.lang.StringUtil;
 import consulo.versionControlSystem.FormatChangedTextUtil;
 import consulo.virtualFileSystem.ReadonlyStatusHandler;
 import consulo.virtualFileSystem.VirtualFile;
-import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import org.jetbrains.annotations.TestOnly;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -223,18 +223,18 @@ public class OptimizeImportsAction extends AnAction {
 
     @Override
     public Coroutine<?, ?> updateAsync(AnActionEvent event) {
-        return OptionalReadLock.apply(i -> {
+        return ActionSafeReadLock.apply(event, p -> {
             Presentation presentation = event.getPresentation();
             if (!myApplication.getExtensionPoint(ImportOptimizer.class).hasAnyExtensions()) {
                 presentation.setVisible(false);
-                return null;
+                return;
             }
 
             DataContext dataContext = event.getDataContext();
             Project project = dataContext.getData(Project.KEY);
             if (project == null) {
                 updatePresentationForFiles(presentation, false, Collections.emptyList());
-                return null;
+                return;
             }
 
             VirtualFile[] files = dataContext.getData(VirtualFile.KEY_OF_ARRAY);
@@ -246,7 +246,7 @@ public class OptimizeImportsAction extends AnAction {
                 PsiFile file = PsiDocumentManager.getInstance(project).getPsiFile(editor.getDocument());
                 if (file == null || !isOptimizeImportsAvailable(file)) {
                     updatePresentationForFiles(presentation, false, Collections.emptyList());
-                    return null;
+                    return;
                 }
                 else {
                     psiFiles.add(file);
@@ -258,7 +258,7 @@ public class OptimizeImportsAction extends AnAction {
                     PsiFile file = PsiManager.getInstance(project).findFile(virtualFile);
                     if (file == null) {
                         updatePresentationForFiles(presentation, false, Collections.emptyList());
-                        return null;
+                        return;
                     }
                     psiFiles.add(file);
                     if (isOptimizeImportsAvailable(file)) {
@@ -267,7 +267,7 @@ public class OptimizeImportsAction extends AnAction {
                 }
                 if (!anyHasOptimizeImports) {
                     updatePresentationForFiles(presentation, false, psiFiles);
-                    return null;
+                    return;
                 }
             }
             else if (files != null && files.length == 1) {
@@ -278,21 +278,20 @@ public class OptimizeImportsAction extends AnAction {
                 PsiElement element = dataContext.getData(PsiElement.KEY);
                 if (element == null) {
                     updatePresentationForFiles(presentation, false, Collections.emptyList());
-                    return null;
+                    return;
                 }
 
                 if (!(element instanceof PsiDirectory)) {
                     PsiFile file = element.getContainingFile();
                     if (file == null || !isOptimizeImportsAvailable(file)) {
                         updatePresentationForFiles(presentation, false, Collections.emptyList());
-                        return null;
+                        return;
                     }
                 }
             }
 
             updatePresentationForFiles(presentation, true, psiFiles);
-            return null;
-        }, () -> event.getPresentation().setEnabled(false)).toCoroutine();
+        }).toCoroutine();
     }
 
     @RequiredReadAction

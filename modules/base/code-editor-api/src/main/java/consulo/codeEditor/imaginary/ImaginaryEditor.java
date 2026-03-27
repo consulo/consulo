@@ -53,6 +53,7 @@ public class ImaginaryEditor extends UserDataHolderBase implements Editor {
     private EditorColorsScheme myColorsScheme;
     private EditorHighlighter myHighlighter;
     private EditorSettings mySettings;
+    private ImaginaryFoldingModel myFoldingModel;
 
     public ImaginaryEditor(Project project, Document document) {
         myProject = project;
@@ -82,6 +83,7 @@ public class ImaginaryEditor extends UserDataHolderBase implements Editor {
         imaginary.myColorsScheme = realEditor.getColorsScheme();
         imaginary.myHighlighter = realEditor.getHighlighter();
         imaginary.mySettings = realEditor.getSettings();
+        imaginary.myFoldingModel = ImaginaryFoldingModel.create(realEditor.getFoldingModel());
 
         return imaginary;
     }
@@ -223,6 +225,9 @@ public class ImaginaryEditor extends UserDataHolderBase implements Editor {
 
     @Override
     public FoldingModel getFoldingModel() {
+        if (myFoldingModel != null) {
+            return myFoldingModel;
+        }
         throw notImplemented();
     }
 

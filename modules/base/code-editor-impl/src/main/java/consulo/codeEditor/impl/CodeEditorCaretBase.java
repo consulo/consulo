@@ -792,7 +792,7 @@ public class CodeEditorCaretBase extends UserDataHolderBase implements Caret, Du
     @RequiredReadAction
     public int getOffset() {
         validateCallContext();
-        assertReadContext();
+        UIAccess.assertIsUIThread();
         while (true) {
             PositionMarker marker = myPositionMarker;
             if (marker == null) {
@@ -1076,7 +1076,7 @@ public class CodeEditorCaretBase extends UserDataHolderBase implements Caret, Du
     @Override
     @RequiredReadAction
     public int getSelectionStart() {
-        assertReadContext();
+        UIAccess.assertIsUIThread();
         if (hasSelection()) {
             RangeMarker marker = mySelectionMarker;
             if (marker != null) {
@@ -1137,7 +1137,7 @@ public class CodeEditorCaretBase extends UserDataHolderBase implements Caret, Du
     @Override
     @RequiredReadAction
     public int getSelectionEnd() {
-        assertReadContext();
+        UIAccess.assertIsUIThread();
         if (hasSelection()) {
             RangeMarker marker = mySelectionMarker;
             if (marker != null) {
@@ -1195,9 +1195,9 @@ public class CodeEditorCaretBase extends UserDataHolderBase implements Caret, Du
     }
 
     @Override
-    @RequiredReadAction
+    @RequiredUIAccess
     public boolean hasSelection() {
-        assertReadContext();
+        UIAccess.assertIsUIThread();
         SelectionMarker marker = mySelectionMarker;
         return marker != null && marker.isValid()
             && (marker.getEndOffset() > marker.getStartOffset() || isVirtualSelectionEnabled() && marker.hasVirtualSelection());
@@ -1392,7 +1392,7 @@ public class CodeEditorCaretBase extends UserDataHolderBase implements Caret, Du
     @Override
     @RequiredReadAction
     public int getLeadSelectionOffset() {
-        assertReadContext();
+        UIAccess.assertIsUIThread();
         int caretOffset = getOffset();
         if (hasSelection()) {
             RangeMarker marker = mySelectionMarker;
@@ -1520,18 +1520,13 @@ public class CodeEditorCaretBase extends UserDataHolderBase implements Caret, Du
         }
     }
 
-    @RequiredUIAccess
-    private static void assertReadContext() {
-        UIAccess.assertIsUIThread();
-    }
-
     private boolean isVirtualSelectionEnabled() {
         return myEditor.isColumnMode();
     }
 
     @RequiredUIAccess
     boolean hasVirtualSelection() {
-        assertReadContext();
+        UIAccess.assertIsUIThread();
         SelectionMarker marker = mySelectionMarker;
         return marker != null && marker.isValid() && isVirtualSelectionEnabled() && marker.hasVirtualSelection();
     }

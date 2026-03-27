@@ -40,6 +40,19 @@ public final class ReadAction<T> {
     }
 
     /**
+     * Runs the given computation under a read lock, but only acquires the lock if not already holding read or write access.
+     * Use this instead of {@link #compute} when the call site may legitimately be reached from a write-action context
+     * (write access implies read access, so re-entering {@code runReadAction} would throw on the EDT in Consulo's lock model).
+     */
+    public static <T, E extends Throwable> T computeBlocking(@RequiredReadAction ThrowableSupplier<T, E> action) throws E {
+        Application app = Application.get();
+        if (app.isReadAccessAllowed()) {
+            return action.get();
+        }
+        return app.runReadAction(action);
+    }
+
+    /**
      * Create an {@link NonBlockingReadAction} builder to run the given Runnable in non-blocking read action on a background thread.
      */
     @Contract(pure = true)
