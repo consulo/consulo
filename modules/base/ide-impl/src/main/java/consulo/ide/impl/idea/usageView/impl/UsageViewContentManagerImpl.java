@@ -63,6 +63,7 @@ public class UsageViewContentManagerImpl extends UsageViewContentManager {
             }
 
             @Override
+            @RequiredUIAccess
             public void setSelected(AnActionEvent e, boolean state) {
                 FindSettings.getInstance().setShowResultsInSeparateView(state);
             }
@@ -97,6 +98,7 @@ public class UsageViewContentManagerImpl extends UsageViewContentManager {
             }
 
             @Override
+            @RequiredUIAccess
             public void setSelected(AnActionEvent e, boolean state) {
                 UsageViewSettings.getInstance().setAutoScrollToSource(state);
             }
@@ -117,7 +119,6 @@ public class UsageViewContentManagerImpl extends UsageViewContentManager {
         ContentManagerWatcher.watchContentManager(toolWindow, myFindContentManager);
     }
 
-    
     @Override
     public Content addContent(
         String contentName,
@@ -129,7 +130,6 @@ public class UsageViewContentManagerImpl extends UsageViewContentManager {
         return addContent(contentName, null, null, reusable, component, toOpenInNewTab, isLockable);
     }
 
-    
     @Override
     public Content addContent(
         String contentName,

@@ -17,6 +17,7 @@ package consulo.application.util.registry;
 
 import consulo.disposer.Disposable;
 
+import org.jetbrains.annotations.Contract;
 import org.jspecify.annotations.Nullable;
 import java.awt.*;
 import java.util.MissingResourceException;
@@ -28,16 +29,15 @@ import java.util.Properties;
  */
 @Deprecated
 public class RegistryValue {
-  
   private final String myKey;
   private @Nullable String myValue;
   
   private final Properties myProperties;
 
-  private String myStringCachedValue;
-  private Integer myIntCachedValue;
-  private Double myDoubleCachedValue;
-  private Boolean myBooleanCachedValue;
+  private @Nullable String myStringCachedValue = null;
+  private @Nullable Integer myIntCachedValue = null;
+  private @Nullable Double myDoubleCachedValue = null;
+  private @Nullable Boolean myBooleanCachedValue = null;
 
   RegistryValue(String key, @Nullable String value, Properties properties) {
     myKey = key;
@@ -45,7 +45,6 @@ public class RegistryValue {
     myProperties = properties;
   }
 
-  
   public String getKey() {
     return myKey;
   }
@@ -98,14 +97,15 @@ public class RegistryValue {
         try {
           return new Color(Integer.parseInt(rgb[0]), Integer.parseInt(rgb[1]), Integer.parseInt(rgb[2]));
         }
-        catch (Exception e) {//
+        catch (Exception ignore) {
         }
       }
     }
     return defaultValue;
   }
 
-  private String get(String key, String defaultValue) throws MissingResourceException {
+  @Contract("_,!null -> !null")
+  private @Nullable String get(String key, @Nullable String defaultValue) throws MissingResourceException {
     String systemProperty = myProperties.getProperty(key);
     if (systemProperty != null) {
       return systemProperty;

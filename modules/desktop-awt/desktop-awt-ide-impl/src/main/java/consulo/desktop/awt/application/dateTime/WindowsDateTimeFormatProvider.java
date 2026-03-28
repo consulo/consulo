@@ -24,6 +24,7 @@ import consulo.application.internal.dateTime.DateTimeFormatProvider;
 import consulo.platform.Platform;
 import consulo.util.jna.JnaLoader;
 import consulo.util.lang.StringUtil;
+import org.jspecify.annotations.Nullable;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -34,9 +35,8 @@ import java.text.SimpleDateFormat;
  */
 @ExtensionImpl
 public class WindowsDateTimeFormatProvider implements DateTimeFormatProvider {
-
     @Override
-    public DateFormat[] getFormats(Platform platform) {
+    public DateFormat @Nullable [] getFormats(Platform platform) {
         return platform.os().isWindows() && JnaLoader.isLoaded() ? getWindowsFormats() : null;
     }
 

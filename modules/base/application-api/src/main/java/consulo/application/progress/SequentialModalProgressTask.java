@@ -18,6 +18,7 @@ package consulo.application.progress;
 import consulo.application.Application;
 import consulo.component.ComponentManager;
 import consulo.logging.Logger;
+import consulo.ui.annotation.RequiredUIAccess;
 import org.jspecify.annotations.Nullable;
 
 import java.lang.reflect.InvocationTargetException;
@@ -42,8 +43,9 @@ public class SequentialModalProgressTask extends Task.Modal {
 
   private final String myTitle;
 
-  private ProgressIndicator myIndicator;
-  private SequentialTask myTask;
+  private @Nullable ProgressIndicator myIndicator;
+
+  private @Nullable SequentialTask myTask;
 
   public SequentialModalProgressTask(@Nullable ComponentManager project, String title) {
     this(project, title, true);
@@ -55,6 +57,7 @@ public class SequentialModalProgressTask extends Task.Modal {
   }
 
   @Override
+  @RequiredUIAccess
   public void run(ProgressIndicator indicator) {
     try {
       doRun(indicator);
@@ -67,8 +70,9 @@ public class SequentialModalProgressTask extends Task.Modal {
     }
   }
 
+  @RequiredUIAccess
   public void doRun(ProgressIndicator indicator) throws InvocationTargetException, InterruptedException {
-    final SequentialTask task = myTask;
+    SequentialTask task = myTask;
     if (task == null) {
       return;
     }

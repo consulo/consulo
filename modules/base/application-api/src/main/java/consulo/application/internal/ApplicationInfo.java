@@ -40,16 +40,18 @@ import java.util.jar.Manifest;
 public class ApplicationInfo {
   private static final Supplier<ApplicationInfo> ourValue = LazyValue.notNull(ApplicationInfo::new);
 
-  
   public static ApplicationInfo getInstance() {
     return ourValue.get();
   }
 
-  private BuildNumber myBuild;
-  private Calendar myBuildDate;
+  private final BuildNumber myBuild;
+  private final Calendar myBuildDate;
 
   private ApplicationInfo() {
     String jarPathForClass = ClassPathUtil.getJarPathForClass(Application.class);
+
+    BuildNumber build = null;
+    Calendar buildDate = null;
 
     try (JarFile jarFile = new JarFile(jarPathForClass)) {
       Manifest manifest = jarFile.getManifest();
@@ -58,32 +60,27 @@ public class ApplicationInfo {
 
       String buildNumberFromJvm = Platform.current().jvm().getRuntimeProperty("consulo.build.number");
       if (buildNumberFromJvm != null) {
-        myBuild = BuildNumber.fromString(buildNumberFromJvm);
+        build = BuildNumber.fromString(buildNumberFromJvm);
       }
       else {
         String buildNumber = attributes.getValue("Consulo-Build-Number");
         if (buildNumber != null) {
-          myBuild = BuildNumber.fromString(buildNumber);
+          build = BuildNumber.fromString(buildNumber);
         }
       }
 
       // yyyyMMddHHmm
-      String buildDate = attributes.getValue("Consulo-Build-Date");
-      if (buildDate != null) {
-        myBuildDate = parseDate(buildDate);
+      String rawBuildDate = attributes.getValue("Consulo-Build-Date");
+      if (rawBuildDate != null) {
+        buildDate = parseDate(rawBuildDate);
       }
     }
     catch (Throwable e) {
       Logger.getInstance(ApplicationInfo.class).error(e);
     }
 
-    if (myBuild == null) {
-      myBuild = BuildNumber.fallback();
-    }
-
-    if (myBuildDate == null) {
-      myBuildDate = Calendar.getInstance();
-    }
+    myBuild = build != null ? build : BuildNumber.fallback();
+    myBuildDate = buildDate != null ? buildDate : Calendar.getInstance();
   }
 
   private static GregorianCalendar parseDate(String dateString) {

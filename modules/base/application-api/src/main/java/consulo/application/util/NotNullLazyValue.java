@@ -16,6 +16,7 @@
 package consulo.application.util;
 
 import consulo.annotation.DeprecationInfo;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Objects;
 import java.util.function.Supplier;
@@ -30,12 +31,10 @@ import java.util.function.Supplier;
 @Deprecated
 @DeprecationInfo("Use LazyValue")
 public abstract class NotNullLazyValue<T> implements Supplier<T> {
-  private T myValue;
+  private @Nullable T myValue = null;
 
-  
   protected abstract T compute();
 
-  
   public T getValue() {
     T result = myValue;
     if (result == null) {
@@ -57,10 +56,8 @@ public abstract class NotNullLazyValue<T> implements Supplier<T> {
     return myValue != null;
   }
 
-  
-  public static <T> NotNullLazyValue<T> createConstantValue(final T value) {
-    return new NotNullLazyValue<T>() {
-      
+  public static <T> NotNullLazyValue<T> createConstantValue(T value) {
+    return new NotNullLazyValue<>() {
       @Override
       protected T compute() {
         return value;
@@ -68,7 +65,6 @@ public abstract class NotNullLazyValue<T> implements Supplier<T> {
     };
   }
 
-  
   public static <T> NotNullLazyValue<T> createValue(final Supplier<T> value) {
     return new NotNullLazyValue<T>() {
       

@@ -64,7 +64,6 @@ public interface ApplicationEx extends Application {
      */
     boolean isWriteActionPending();
 
-    
     default AccessToken startSaveBlock() {
         doNotSave();
 

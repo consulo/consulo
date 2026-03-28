@@ -27,7 +27,6 @@ import org.jspecify.annotations.Nullable;
 public class EmptyProgressIndicator implements StandardProgressIndicator {
   private static final Logger LOG = Logger.getInstance(EmptyProgressIndicator.class);
 
-  
   private final ModalityState myModalityState;
 
   private volatile boolean myIsRunning;
@@ -130,7 +129,7 @@ public class EmptyProgressIndicator implements StandardProgressIndicator {
   }
 
   @Override
-  public void setModalityProgress(ProgressIndicator modalityProgress) {
+  public void setModalityProgress(@Nullable ProgressIndicator modalityProgress) {
   }
 
   @Override
@@ -152,7 +151,6 @@ public class EmptyProgressIndicator implements StandardProgressIndicator {
     return false;
   }
 
-  
   public static ProgressIndicator notNullize(@Nullable ProgressIndicator indicator) {
     if (indicator != null) {
       return indicator;

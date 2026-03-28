@@ -3,6 +3,7 @@ package consulo.application.util;
 
 import consulo.annotation.DeprecationInfo;
 
+
 import org.jspecify.annotations.Nullable;
 import java.util.function.Supplier;
 
@@ -45,12 +46,10 @@ public abstract class VolatileNullableLazyValue<T> extends NullableLazyValue<T> 
   
   public static <T> VolatileNullableLazyValue<T> createValue(final Supplier<? extends T> value) {
     return new VolatileNullableLazyValue<T>() {
-
       @Override
       protected @Nullable T compute() {
         return value.get();
       }
     };
   }
-
 }

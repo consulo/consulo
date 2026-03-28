@@ -25,7 +25,7 @@ public interface CachedValueProvider<T> {
     @Nullable Result<T> compute();
 
     class Result<T> {
-        private final T myValue;
+        private final @Nullable T myValue;
         private final Object[] myDependencyItems;
 
         public Result(@Nullable T value, Object... dependencyItems) {
@@ -33,7 +33,7 @@ public interface CachedValueProvider<T> {
             myDependencyItems = dependencyItems;
         }
 
-        public T getValue() {
+        public @Nullable T getValue() {
             return myValue;
         }
 

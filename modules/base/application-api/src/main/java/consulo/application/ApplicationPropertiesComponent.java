@@ -25,7 +25,6 @@ import consulo.component.PropertiesComponent;
  */
 @ServiceAPI(ComponentScope.APPLICATION)
 public interface ApplicationPropertiesComponent extends PropertiesComponent {
-  
   static ApplicationPropertiesComponent getInstance() {
     return Application.get().getInstance(ApplicationPropertiesComponent.class);
   }

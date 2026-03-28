@@ -12,7 +12,6 @@ import org.jetbrains.annotations.Contract;
  * {@code AppUIExecutor.onUiThread().withDocumentsCommitted(project).inSmartMode(project)}.
  */
 public interface AppUIExecutor extends BaseExpirableExecutor<AppUIExecutor> {
-
   /**
    * Creates an executor working with the given modality state.
    *
