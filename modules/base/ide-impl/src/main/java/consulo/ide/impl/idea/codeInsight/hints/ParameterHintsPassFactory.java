@@ -5,6 +5,7 @@ import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorFactory;
+import consulo.codeEditor.EditorKind;
 import consulo.language.Language;
 import consulo.language.editor.Pass;
 import consulo.language.editor.highlight.TextEditorHighlightingPass;
@@ -29,13 +30,22 @@ public class ParameterHintsPassFactory implements TextEditorHighlightingPassFact
     @Override
     @RequiredReadAction
     public @Nullable TextEditorHighlightingPass createHighlightingPass(PsiFile psiFile, Editor editor) {
-        if (editor.isOneLineMode()) return null;
+        if (editor.isOneLineMode() || editor.getEditorKind() == EditorKind.DIFF) {
+            return null;
+        }
+
         long currentStamp = getCurrentModificationStamp(psiFile);
         Long savedStamp = editor.getUserData(PSI_MODIFICATION_STAMP);
-        if (savedStamp != null && savedStamp == currentStamp) return null;
+        if (savedStamp != null && savedStamp == currentStamp) {
+            return null;
+        }
+
         Language language = psiFile.getLanguage();
         InlayParameterHintsProvider provider = InlayParameterHintsProvider.forLanguage(language);
-        if (provider == null) return null;
+        if (provider == null) {
+            return null;
+        }
+
         return new ParameterHintsPass(psiFile, editor, MethodInfoExcludeListFilter.forLanguage(language), false);
     }
 
