@@ -3,6 +3,7 @@ package consulo.application;
 
 import consulo.util.lang.ExceptionUtil;
 import consulo.util.lang.function.ThrowableSupplier;
+import org.jspecify.annotations.Nullable;
 
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
@@ -19,7 +20,7 @@ public final class WriteThread {
    * @return a future representing the result of the scheduled computation
    */
   public static Future<Void> submit(Runnable runnable) {
-    return submit(() -> {
+    return submit((ThrowableSupplier<@Nullable Void, Throwable>) () -> {
       runnable.run();
       return null;
     });
@@ -32,7 +33,7 @@ public final class WriteThread {
    * @param <T>        return type of scheduled computation
    * @return a future representing the result of the scheduled computation
    */
-  public static <T> Future<T> submit(ThrowableSupplier<? extends T, ?> computable) {
+  public static <T extends @Nullable Object> Future<T> submit(ThrowableSupplier<? extends T, ?> computable) {
     CompletableFuture<T> future = new CompletableFuture<>();
     Application.get().invokeLaterOnWriteThread(() -> {
       try {

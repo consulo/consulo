@@ -97,7 +97,6 @@ public class PluginsLoader {
     };
   }
 
-  
   public static PluginsInitializeInfo initPlugins(@Nullable StartupProgress progress, boolean isHeadlessMode) {
     long start = System.currentTimeMillis();
     PluginsInitializeInfo info;

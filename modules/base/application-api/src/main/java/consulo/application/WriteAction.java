@@ -17,13 +17,13 @@ package consulo.application;
 
 import consulo.annotation.DeprecationInfo;
 import consulo.annotation.access.RequiredWriteAction;
-import consulo.application.util.function.ThrowableComputable;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.function.ThrowableRunnable;
 import consulo.util.lang.function.ThrowableSupplier;
 import consulo.util.lang.reflect.ReflectionUtil;
+import org.jspecify.annotations.Nullable;
 
 import java.util.function.Supplier;
 
@@ -76,7 +76,7 @@ public final class WriteAction {
     }
 
     @RequiredUIAccess
-    public static <T, E extends Throwable> T compute(ThrowableSupplier<T, E> action) throws E {
+    public static <T extends @Nullable Object, E extends Throwable> T compute(ThrowableSupplier<T, E> action) throws E {
         return Application.get().runWriteAction(action);
     }
 

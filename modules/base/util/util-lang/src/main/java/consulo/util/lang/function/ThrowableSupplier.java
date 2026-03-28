@@ -22,6 +22,6 @@ import org.jspecify.annotations.Nullable;
  * @since 2021-12-29
  */
 @FunctionalInterface
-public interface ThrowableSupplier<T, E extends Throwable> {
-  @Nullable T get() throws E;
+public interface ThrowableSupplier<T extends @Nullable Object, E extends Throwable> {
+  T get() throws E;
 }
