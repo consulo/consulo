@@ -22,11 +22,14 @@ import consulo.codeEditor.event.EditorMouseMotionListener;
 import consulo.codeEditor.markup.MarkupModel;
 import consulo.colorScheme.EditorColorsScheme;
 import consulo.dataContext.DataContext;
+import consulo.dataContext.DataManager;
 import consulo.document.Document;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.util.dataholder.UserDataHolderBase;
 import org.jspecify.annotations.Nullable;
+
+import javax.swing.*;
 
 /**
  * This class is intended to simplify implementation of dummy editors needed only to pass to place which expect {@link Editor}
@@ -54,6 +57,10 @@ public class ImaginaryEditor extends UserDataHolderBase implements Editor {
     private EditorHighlighter myHighlighter;
     private EditorSettings mySettings;
     private ImaginaryFoldingModel myFoldingModel;
+
+    private JComponent myContentComponent;
+
+    private EditorKind myEditorKind;
 
     public ImaginaryEditor(Project project, Document document) {
         myProject = project;
@@ -84,8 +91,14 @@ public class ImaginaryEditor extends UserDataHolderBase implements Editor {
         imaginary.myHighlighter = realEditor.getHighlighter();
         imaginary.mySettings = realEditor.getSettings();
         imaginary.myFoldingModel = ImaginaryFoldingModel.create(realEditor.getFoldingModel());
-
+        imaginary.myContentComponent = realEditor.getContentComponent();
+        imaginary.myEditorKind = realEditor.getEditorKind();
         return imaginary;
+    }
+
+    @Override
+    public JComponent getContentComponent() {
+        return myContentComponent;
     }
 
     protected RuntimeException notImplemented() {
@@ -134,7 +147,7 @@ public class ImaginaryEditor extends UserDataHolderBase implements Editor {
 
     @Override
     public EditorKind getEditorKind() {
-        return EditorKind.UNTYPED;
+        return myEditorKind;
     }
 
     @Override
@@ -263,7 +276,7 @@ public class ImaginaryEditor extends UserDataHolderBase implements Editor {
 
     @Override
     public DataContext getDataContext() {
-        throw notImplemented();
+        return DataManager.getInstance().getDataContext(myContentComponent);
     }
 
     @Override

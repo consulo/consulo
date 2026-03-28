@@ -245,7 +245,7 @@ public final class CachedValueProfiler {
   public interface EventPlace {
     @Nullable StackTraceElement getStackFrame();
 
-    @Nullable StackTraceElement[] getStackTrace();
+    StackTraceElement @Nullable [] getStackTrace();
   }
 
   private static class ThreadContext {
