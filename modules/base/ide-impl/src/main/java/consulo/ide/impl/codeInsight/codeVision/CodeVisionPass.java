@@ -114,6 +114,8 @@ public class CodeVisionPass extends EditorBoundHighlightingPass {
                 addAfterLineEndInlay(inlayModel, lineEndOffset, range, entries);
             }
         }
+
+        CodeVisionPassFactory.updateModificationStamp(myEditor, myProject);
     }
 
     // -------------------------------------------------------------------------

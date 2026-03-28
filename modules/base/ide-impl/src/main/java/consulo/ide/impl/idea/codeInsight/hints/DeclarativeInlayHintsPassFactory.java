@@ -6,13 +6,14 @@ import consulo.annotation.component.ExtensionImpl;
 import consulo.application.dumb.DumbAware;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorFactory;
-import consulo.language.editor.impl.internal.inlay.setting.DeclarativeInlayHintsSettings;
-import consulo.language.editor.internal.InlayHintsSettings;
+import consulo.codeEditor.EditorKind;
 import consulo.language.editor.Pass;
 import consulo.language.editor.highlight.HighlightingLevelManager;
 import consulo.language.editor.highlight.TextEditorHighlightingPassFactory;
-import consulo.language.editor.internal.DaemonCodeAnalyzerInternal;
+import consulo.language.editor.impl.internal.inlay.setting.DeclarativeInlayHintsSettings;
 import consulo.language.editor.inlay.DeclarativeInlayHintsProvider;
+import consulo.language.editor.internal.DaemonCodeAnalyzerInternal;
+import consulo.language.editor.internal.InlayHintsSettings;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiModificationTracker;
 import consulo.project.DumbService;
@@ -87,9 +88,10 @@ public class DeclarativeInlayHintsPassFactory
 
     @Override
     public DeclarativeInlayHintsPass createHighlightingPass(PsiFile psiFile, Editor editor) {
-        if (editor.isOneLineMode()) {
+        if (editor.isOneLineMode() || editor.getEditorKind() == EditorKind.DIFF) {
             return null;
         }
+
         if (!HighlightingLevelManager.getInstance(psiFile.getProject()).shouldHighlight(psiFile)) {
             return null;
         }
