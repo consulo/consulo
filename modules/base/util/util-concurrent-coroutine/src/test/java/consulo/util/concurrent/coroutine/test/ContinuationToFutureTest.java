@@ -21,6 +21,7 @@ import consulo.util.concurrent.coroutine.Coroutine;
 import consulo.util.concurrent.coroutine.CoroutineContext;
 import consulo.util.concurrent.coroutine.step.ChannelReceive;
 import consulo.util.concurrent.coroutine.step.CodeExecution;
+import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.Test;
 
 import java.util.concurrent.CancellationException;
@@ -40,13 +41,11 @@ import static org.junit.jupiter.api.Assertions.*;
  * @since 2026-03-07
  */
 public class ContinuationToFutureTest {
-
     @Test
     public void testToFutureSuccess() throws Exception {
         CoroutineContext context = TestCoroutineContext.newSilent();
 
-        Coroutine<String, String> cr =
-            Coroutine.first(apply((String s) -> s.toUpperCase()));
+        Coroutine<String, String> cr = Coroutine.first(apply((String s) -> s.toUpperCase()));
 
         launch(context, scope -> {
             Continuation<String> ca = cr.runAsync(scope, "hello");
@@ -63,7 +62,7 @@ public class ContinuationToFutureTest {
         CoroutineContext context = TestCoroutineContext.newSilent();
 
         ChannelId<String> ch = stringChannel("TEST_CANCEL");
-        Coroutine<?, ?> cr = Coroutine.first(ChannelReceive.receive(ch));
+        Coroutine<@Nullable Void, ?> cr = Coroutine.first(ChannelReceive.receive(ch));
 
         launch(context, scope -> {
             Continuation<?> ca = cr.runAsync(scope, null);
@@ -90,7 +89,7 @@ public class ContinuationToFutureTest {
     public void testToFutureError() {
         CoroutineContext context = TestCoroutineContext.newSilent();
 
-        Coroutine<?, ?> cr = Coroutine.first(apply(v -> {
+        Coroutine<@Nullable ?, ?> cr = Coroutine.first(apply(v -> {
             throw new RuntimeException("TEST_ERROR");
         }));
 
