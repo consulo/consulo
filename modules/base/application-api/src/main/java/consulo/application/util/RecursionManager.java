@@ -78,7 +78,7 @@ public class RecursionManager {
     public static <Key> RecursionGuard<Key> createGuard(final String id) {
         return new RecursionGuard<>() {
             @Override
-            public <T> T doPreventingRecursion(Key key, boolean memoize, Supplier<T> computation) {
+            public <T> @Nullable T doPreventingRecursion(Key key, boolean memoize, Supplier<T> computation) {
                 MyKey realKey = new MyKey(id, key, true);
                 CalculationStack stack = ourStack.get();
 
@@ -129,7 +129,6 @@ public class RecursionManager {
                 }
             }
 
-            
             @Override
             public List<Key> currentStack() {
                 List<Key> result = new ArrayList<>();
@@ -188,7 +187,7 @@ public class RecursionManager {
         }
 
         @Override
-        public boolean equals(Object obj) {
+        public boolean equals(@Nullable Object obj) {
             if (!(obj instanceof MyKey that && guardId.equals(that.guardId))) {
                 return false;
             }
@@ -316,10 +315,10 @@ public class RecursionManager {
     }
 
     private static class MemoizedValue {
-        final Object value;
+        final @Nullable Object value;
         final MyKey[] dependencies;
 
-        MemoizedValue(Object value, MyKey[] dependencies) {
+        MemoizedValue(@Nullable Object value, MyKey[] dependencies) {
             this.value = value;
             this.dependencies = dependencies;
         }

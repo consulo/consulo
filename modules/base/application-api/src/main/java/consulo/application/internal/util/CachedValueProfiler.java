@@ -2,10 +2,12 @@
 package consulo.application.internal.util;
 
 import consulo.application.util.CachedValueProvider;
-import consulo.logging.Logger;
 import consulo.util.lang.StringUtil;
 
 import org.jspecify.annotations.Nullable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.text.NumberFormat;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -15,7 +17,7 @@ import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Function;
 
 public final class CachedValueProfiler {
-  private static final Logger LOG = Logger.getInstance(CachedValueProfiler.class);
+  private static final Logger LOG = LoggerFactory.getLogger(CachedValueProfiler.class);
 
   public interface EventConsumer {
     void onFrameEnter(long frameId, EventPlace place, long parentId, long time);
@@ -36,7 +38,7 @@ public final class CachedValueProfiler {
   private static final Overhead ourFrameOverhead = new Overhead();
   private static final Overhead ourTrackerOverhead = new Overhead();
 
-  private static volatile EventConsumer ourEventConsumer;
+  private static volatile @Nullable EventConsumer ourEventConsumer = null;
 
   public static boolean isProfiling() {
     return ourEventConsumer != null;
@@ -53,24 +55,24 @@ public final class CachedValueProfiler {
   }
 
   public static final class Frame implements AutoCloseable {
-    final long start = currentTime();
-    final long id = ourFrameId.incrementAndGet();
-    final Frame parent;
+    final long myStart = currentTime();
+    final long myId = ourFrameId.incrementAndGet();
+    final @Nullable Frame myParent;
 
     private final Map<CachedValueProvider.Result<?>, EventPlace> places = new HashMap<>();
     private long timeConfigured, timeComputed;
 
     Frame() {
       ThreadContext context = ourContext.get();
-      parent = context.topFrame;
+      myParent = context.topFrame;
       context.topFrame = this;
       if (context.consumer == null || context.consumer != ourEventConsumer) return;
 
       EventPlace place = place(CachedValueProfiler::findCallerPlace);
-      context.consumer.onFrameEnter(id, place, parent == null ? 0 : parent.id, start);
+      context.consumer.onFrameEnter(myId, place, myParent == null ? 0 : myParent.myId, myStart);
       timeConfigured = currentTime();
       ourFrameOverhead.count.incrementAndGet();
-      ourFrameOverhead.overhead.addAndGet(timeConfigured - start);
+      ourFrameOverhead.overhead.addAndGet(timeConfigured - myStart);
     }
 
     @Override
@@ -78,29 +80,33 @@ public final class CachedValueProfiler {
       ThreadContext context = ourContext.get();
       places.clear();
       if (context.topFrame != this) {
-        LOG.warn("unexpected frame: " + (context.topFrame == null ? "null" : context.topFrame.id) + ", expected: " + id, new Throwable());
+        LOG.warn(
+          "unexpected frame: {}, expected: {}",
+          (context.topFrame == null ? "null" : context.topFrame.myId),
+          myId,
+          new Throwable()
+        );
       }
-      context.topFrame = parent;
-      if (parent == null) {
+      context.topFrame = myParent;
+      if (myParent == null) {
         ourContext.remove(); // also releases ThreadContext.consumer reference
       }
       if (context.consumer == null || context.consumer != ourEventConsumer) return;
 
-      context.consumer.onFrameExit(id, start, timeComputed, currentTime());
+      context.consumer.onFrameExit(myId, myStart, timeComputed, currentTime());
       long cur = currentTime();
-      ourFrameOverhead.total.addAndGet(cur - start);
+      ourFrameOverhead.total.addAndGet(cur - myStart);
       if (timeComputed != 0) {
         ourFrameOverhead.overhead.addAndGet(cur - timeComputed);
       }
     }
 
-    public ValueTracker newValueTracker(CachedValueProvider.@Nullable Result<?> result) {
+    public @Nullable ValueTracker newValueTracker(CachedValueProvider.@Nullable Result<?> result) {
       timeComputed = currentTime();
       return onResultReturned(this, result);
     }
   }
 
- 
   public static Frame newFrame() {
     return new Frame();
   }
@@ -113,16 +119,16 @@ public final class CachedValueProfiler {
     Frame frame = context.topFrame;
     if (frame == null) return;
 
-    EventPlace place = original == null
-                       ? place(CachedValueProfiler::findComputationPlace)
-                       : original instanceof CachedValueProvider.Result ? frame.places.get(original) : original instanceof Function ? place(CachedValueProfiler::findCallerPlace) : null;
+    EventPlace place = original == null ? place(CachedValueProfiler::findComputationPlace)
+        : original instanceof CachedValueProvider.Result ? frame.places.get(original)
+        : original instanceof Function ? place(CachedValueProfiler::findCallerPlace) : null;
     if (place == null) return;
 
     frame.places.put(result, place);
     ourFrameOverhead.overhead.addAndGet(currentTime() - time);
   }
 
-  static ValueTracker onResultReturned(Frame frame, CachedValueProvider.@Nullable Result<?> result) {
+  static @Nullable ValueTracker onResultReturned(Frame frame, CachedValueProvider.@Nullable Result<?> result) {
     long time = currentTime();
     ThreadContext context = ourContext.get();
     if (context.consumer == null) return null;
@@ -130,7 +136,7 @@ public final class CachedValueProfiler {
     EventPlace place = frame.places.get(result);
     if (place == null) place = place(CachedValueProfiler::findCallerPlace);
 
-    context.consumer.onValueComputed(frame.id, place, frame.timeConfigured, time);
+    context.consumer.onValueComputed(frame.myId, place, frame.timeConfigured, time);
     return new ValueTracker(place, frame.timeConfigured, time);
   }
 
@@ -145,7 +151,7 @@ public final class CachedValueProfiler {
       }
 
       @Override
-      public @Nullable StackTraceElement[] getStackTrace() {
+      public StackTraceElement @Nullable [] getStackTrace() {
         return throwable.getStackTrace();
       }
     };
@@ -179,7 +185,6 @@ public final class CachedValueProfiler {
     return null;
   }
 
- 
   static StackTraceElement findCallerPlace(Throwable stackTraceHolder) {
     StackTraceElement[] stackTrace = stackTraceHolder.getStackTrace();
     for (int idx = 2, len = stackTrace.length; idx < len; idx++) {
@@ -214,7 +219,7 @@ public final class CachedValueProfiler {
       long time = currentTime();
       ThreadContext context = ourContext.get();
       if (context.consumer == null || context.consumer != ourEventConsumer) return;
-      context.consumer.onValueInvalidated(context.topFrame == null ? 0 : context.topFrame.id, place, used, time);
+      context.consumer.onValueInvalidated(context.topFrame == null ? 0 : context.topFrame.myId, place, used, time);
       ourTrackerOverhead.overhead.addAndGet(currentTime() - time);
     }
 
@@ -223,7 +228,7 @@ public final class CachedValueProfiler {
       used = time;
       ThreadContext context = ourContext.get();
       if (context.consumer == null || context.consumer != ourEventConsumer) return;
-      context.consumer.onValueUsed(context.topFrame == null ? 0 : context.topFrame.id, place, computed, time);
+      context.consumer.onValueUsed(context.topFrame == null ? 0 : context.topFrame.myId, place, computed, time);
       ourTrackerOverhead.count.incrementAndGet();
       ourTrackerOverhead.overhead.addAndGet(currentTime() - time);
     }
@@ -232,7 +237,7 @@ public final class CachedValueProfiler {
       long time = currentTime();
       ThreadContext context = ourContext.get();
       if (context.consumer == null || context.consumer != ourEventConsumer) return;
-      context.consumer.onValueRejected(context.topFrame == null ? 0 : context.topFrame.id, place, start, computed, time);
+      context.consumer.onValueRejected(context.topFrame == null ? 0 : context.topFrame.myId, place, start, computed, time);
       ourTrackerOverhead.overhead.addAndGet(currentTime() - time);
     }
   }
@@ -272,5 +277,4 @@ public final class CachedValueProfiler {
                 ")");
     }
   }
-
 }

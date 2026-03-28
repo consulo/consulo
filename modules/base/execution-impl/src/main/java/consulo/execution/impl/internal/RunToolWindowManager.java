@@ -39,8 +39,8 @@ import consulo.ui.image.Image;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.ThreeState;
-import org.jspecify.annotations.Nullable;
 import jakarta.inject.Provider;
+import org.jspecify.annotations.Nullable;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -58,7 +58,7 @@ public class RunToolWindowManager {
     private final Map<String, ContentManager> myToolwindowIdToContentManagerMap = new ConcurrentHashMap<>();
     private final Map<String, Image> myToolwindowIdToBaseIconMap = new HashMap<>();
     private final LinkedList<String> myToolwindowIdZBuffer = new LinkedList<>();
-    
+
     private final Project myProject;
     private final Provider<ToolWindowManager> myToolWindowManager;
     private final Disposable myParentDisposable;

@@ -15,27 +15,29 @@
  */
 package consulo.application;
 
+import consulo.annotation.ReviewAfterIssueFix;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.util.lang.function.ThrowableRunnable;
 import consulo.util.lang.function.ThrowableSupplier;
 import org.jetbrains.annotations.Contract;
+import org.jspecify.annotations.Nullable;
 
 import java.util.concurrent.Callable;
 
 public final class ReadAction<T> {
     @Deprecated
     public static AccessToken start() {
-        return ApplicationManager.getApplication().acquireReadActionLock();
+        return Application.get().acquireReadActionLock();
     }
 
+    @ReviewAfterIssueFix(value = "github.com/uber/NullAway/issues/1500", todo = "Remove explicit casts")
     public static <E extends Throwable> void run(@RequiredReadAction ThrowableRunnable<E> action) throws E {
-        Application.get().runReadAction((ThrowableSupplier<Object, E>) () -> {
+        Application.get().runReadAction((ThrowableSupplier<@Nullable Void, E>) () -> {
             action.run();
             return null;
         });
     }
 
-    
     public static <T, E extends Throwable> T computeNotNull(@RequiredReadAction ThrowableSupplier<T, E> action) throws E {
         return Application.get().runReadAction(action);
     }

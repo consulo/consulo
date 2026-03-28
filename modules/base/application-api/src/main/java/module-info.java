@@ -1,7 +1,10 @@
+import org.jspecify.annotations.NullMarked;
+
 /**
  * @author VISTALL
- * @since 16/01/2022
+ * @since 2022-01-16
  */
+@NullMarked
 module consulo.application.api {
     // TODO [VISTALL] remove this dependency when we will ready. obsolete dep
     requires java.desktop;

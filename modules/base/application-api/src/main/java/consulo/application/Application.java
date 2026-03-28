@@ -35,6 +35,7 @@ import consulo.util.concurrent.coroutine.CoroutineContextOwner;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.SemVer;
 import consulo.util.lang.function.ThrowableSupplier;
+import org.jspecify.annotations.Nullable;
 
 import java.awt.*;
 import java.util.concurrent.Callable;
@@ -57,7 +58,6 @@ import java.util.function.Supplier;
 public interface Application extends ComponentManager, CoroutineContextOwner {
     Key<Application> KEY = Key.of(Application.class);
 
-    
     @SuppressWarnings("deprecation")
     @Deprecated
     @DeprecationInfo("Use injecting context")
@@ -119,7 +119,7 @@ public interface Application extends ComponentManager, CoroutineContextOwner {
      * @param computation the computation to perform.
      * @return the result returned by the computation.
      */
-    <T> T runReadAction(@RequiredReadAction Supplier<T> computation);
+    <T extends @Nullable Object> T runReadAction(@RequiredReadAction Supplier<T> computation);
 
     /**
      * Grab the lock and run the action, in a non-blocking fashion
@@ -137,7 +137,7 @@ public interface Application extends ComponentManager, CoroutineContextOwner {
      * @return the result returned by the computation.
      * @throws E re-frown from ThrowableComputable
      */
-    <T, E extends Throwable> T runReadAction(@RequiredReadAction ThrowableSupplier<T, E> computation) throws E;
+    <T extends @Nullable Object, E extends Throwable> T runReadAction(@RequiredReadAction ThrowableSupplier<T, E> computation) throws E;
 
     /**
      * Runs the specified write action. Must be called from the Swing dispatch thread. The action is executed
@@ -157,7 +157,7 @@ public interface Application extends ComponentManager, CoroutineContextOwner {
      * @return the result returned by the computation.
      */
     @RequiredUIAccess
-    <T> T runWriteAction(@RequiredWriteAction Supplier<T> computation);
+    <T extends @Nullable Object> T runWriteAction(@RequiredWriteAction Supplier<T> computation);
 
     /**
      * Runs the specified computation in a write action. Must be called from the Swing dispatch thread.
@@ -169,7 +169,7 @@ public interface Application extends ComponentManager, CoroutineContextOwner {
      * @throws E re-frown from ThrowableComputable
      */
     @RequiredUIAccess
-    <T, E extends Throwable> T runWriteAction(@RequiredWriteAction ThrowableSupplier<T, E> computation) throws E;
+    <T extends @Nullable Object, E extends Throwable> T runWriteAction(@RequiredWriteAction ThrowableSupplier<T, E> computation) throws E;
 
     /**
      * Returns {@code true} if there is currently executing write action of the specified class.
@@ -418,7 +418,6 @@ public interface Application extends ComponentManager, CoroutineContextOwner {
         return false;
     }
 
-    
     default ProgressIndicatorProvider getProgressManager() {
         return getComponent(ProgressIndicatorProvider.class);
     }
@@ -440,7 +439,7 @@ public interface Application extends ComponentManager, CoroutineContextOwner {
      * @param action to be executed
      * @return future result
      */
-    <T> Future<T> executeOnPooledThread(Callable<T> action);
+    <T extends @Nullable Object> Future<T> executeOnPooledThread(Callable<T> action);
 
     /**
      * @return true if application is currently disposing (but not yet disposed completely)
@@ -494,17 +493,14 @@ public interface Application extends ComponentManager, CoroutineContextOwner {
         return getIcon();
     }
 
-    
     default LocalizeValue getName() {
         return LocalizeValue.localizeTODO("Consulo");
     }
 
-    
     default SemVer getVersion() {
         return AppSemVer.STUB_VER;
     }
 
-    
     default BuildNumber getBuildNumber() {
         return BuildNumber.fallback();
     }
@@ -529,7 +525,6 @@ public interface Application extends ComponentManager, CoroutineContextOwner {
         return false;
     }
 
-    
     @Override
     default CoroutineContext coroutineContext() {
         throw new UnsupportedOperationException();

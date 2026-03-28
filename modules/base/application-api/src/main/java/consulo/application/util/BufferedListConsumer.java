@@ -15,7 +15,8 @@
  */
 package consulo.application.util;
 
-import consulo.application.ApplicationManager;
+import consulo.application.Application;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,7 +30,7 @@ public class BufferedListConsumer<T> implements Consumer<List<T>> {
     private final Object myFlushLock;
     private final Consumer<List<T>> myConsumer;
     private int myCnt;
-    private Runnable myFlushListener;
+    private @Nullable Runnable myFlushListener = null;
     private volatile boolean myPendingFlush;
 
     public BufferedListConsumer(int size, Consumer<List<T>> consumer, int interval) {
@@ -81,10 +82,9 @@ public class BufferedListConsumer<T> implements Consumer<List<T>> {
     }
 
     protected void invokeConsumer(Runnable consumerRunnable) {
-        ApplicationManager.getApplication().executeOnPooledThread(consumerRunnable);
+        Application.get().executeOnPooledThread(consumerRunnable);
     }
 
-    
     private Runnable createConsumerRunnable(long ts) {
         return () -> {
             myTs = ts;

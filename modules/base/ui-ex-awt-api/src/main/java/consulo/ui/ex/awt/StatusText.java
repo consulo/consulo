@@ -27,8 +27,8 @@ public abstract class StatusText {
 
     private static final int Y_GAP = 2;
 
-    public static String getDefaultEmptyText() {
-        return DEFAULT_EMPTY_TEXT_VALUE.get();
+    public static LocalizeValue getDefaultEmptyText() {
+        return DEFAULT_EMPTY_TEXT_VALUE;
     }
 
     private @Nullable Component myOwner;

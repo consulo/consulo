@@ -1,6 +1,8 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.application.util;
 
+import org.jspecify.annotations.Nullable;
+
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -162,7 +164,7 @@ public final class JavaVersion implements Comparable<JavaVersion> {
         return compose(feature, 0, 0, 0, false);
     }
 
-    private static JavaVersion current;
+    private static @Nullable JavaVersion current = null;
 
     /**
      * Returns the version of a Java runtime the class is loaded into.
@@ -185,17 +187,17 @@ public final class JavaVersion implements Comparable<JavaVersion> {
         return current;
     }
 
-    private static JavaVersion rtVersion() {
+    private static @Nullable JavaVersion rtVersion() {
         try {
             Runtime.Version version = Runtime.version();
-            int major = version.major();
-            int minor = version.minor();
-            int security = version.security();
+            int feature = version.feature();
+            int minor = version.interim();
+            int security = version.update();
             Optional<Integer> buildOpt = version.build();
             int build = buildOpt.orElse(0);
             Optional<String> preOpt = version.pre();
             boolean ea = preOpt.isPresent();
-            return new JavaVersion(major, minor, security, build, ea);
+            return new JavaVersion(feature, minor, security, build, ea);
         }
         catch (Throwable ignored) {
             return null;
@@ -325,7 +327,7 @@ public final class JavaVersion implements Comparable<JavaVersion> {
     /**
      * A safe version of {@link #parse(String)} - returns {@code null} if can't parse a version string.
      */
-    public static JavaVersion tryParse(String versionString) {
+    public static @Nullable JavaVersion tryParse(@Nullable String versionString) {
         if (versionString != null) {
             try {
                 return parse(versionString);

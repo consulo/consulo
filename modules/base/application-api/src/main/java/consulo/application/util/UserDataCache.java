@@ -13,13 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.application.util;
 
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolder;
-import consulo.util.dataholder.UserDataHolderEx;
 import org.jspecify.annotations.Nullable;
+
+import java.util.Objects;
 
 /**
  * @deprecated For recalculate-able caches, use {@link CachedValuesManager#getCachedValue},
@@ -29,16 +29,17 @@ import org.jspecify.annotations.Nullable;
  * or explicit {@link UserDataHolder#getUserData} and {@link UserDataHolder#putUserData} calls for less verbosity.
  */
 @Deprecated
-public abstract class UserDataCache<T, Owner extends UserDataHolder, Param> extends FieldCache<T, Owner, Key<T>, Param> {
+public abstract class UserDataCache<T, Owner extends UserDataHolder, Param extends @Nullable Object>
+    extends FieldCache<T, Owner, Key<T>, Param> {
   private static final RecursionGuard ourGuard = RecursionManager.createGuard("userDataCache");
-  private final @Nullable Key<T> myKey;
+  private final Key<T> myKey;
 
-  protected UserDataCache() {
-    myKey = null;
+  public UserDataCache(Key<T> key) {
+    myKey = key;
   }
 
   public UserDataCache(String keyName) {
-    myKey = Key.create(keyName);
+    this(Key.create(keyName));
   }
 
   public T get(Owner owner, Param parameter) {
@@ -50,13 +51,15 @@ public abstract class UserDataCache<T, Owner extends UserDataHolder, Param> exte
   }
 
   @Override
-  protected final T getValue(Owner owner, Key<T> key) {
-    return owner.getUserData(key);
+  protected final @Nullable T getValue(Owner owner, @Nullable Key<T> key) {
+    return owner.getUserData(Objects.requireNonNull(key));
   }
 
   @Override
-  protected final void putValue(T t, Owner owner, Key<T> key) {
-    owner.putUserData(key, t);
+  protected final void putValue(@Nullable T t, Owner owner, @Nullable Key<T> key) {
+    if (key != null) {
+      owner.putUserData(key, t);
+    }
   }
 
   @Override
@@ -66,7 +69,7 @@ public abstract class UserDataCache<T, Owner extends UserDataHolder, Param> exte
       RecursionGuard.StackStamp stamp = ourGuard.markStack();
       value = compute(owner, p);
       if (stamp.mayCacheNow()) {
-        value = ((UserDataHolderEx)owner).putUserDataIfAbsent(a, value);
+        value = owner.putUserDataIfAbsent(a, value);
       }
     }
     return value;

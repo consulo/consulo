@@ -67,26 +67,27 @@ public class MetaRegistryImpl implements MetaDataService, MetaDataRegistrar {
         return base != null ? base : null;
     }
 
-    private final UserDataCache<CachedValue<PsiMetaData>, PsiElement, Object> myCachedMetaCache = new UserDataCache<>() {
-        @Override
-        protected CachedValue<PsiMetaData> compute(PsiElement element, Object p) {
-            return CachedValuesManager.getManager(element.getProject()).createCachedValue(
-                () -> {
-                    ensureContributorsLoaded();
-                    for (MyBinding binding : myBindings) {
-                        if (binding.myFilter.isClassAcceptable(element.getClass())
-                            && binding.myFilter.isAcceptable(element, element.getParent())) {
-                            PsiMetaData data = binding.myFactory.get();
-                            data.init(element);
-                            return new CachedValueProvider.Result<>(data, data.getDependences());
+    private final UserDataCache<CachedValue<PsiMetaData>, PsiElement, @Nullable Void> myCachedMetaCache =
+        new UserDataCache<CachedValue<PsiMetaData>, PsiElement, @Nullable Void>(META_DATA_KEY) {
+            @Override
+            protected CachedValue<PsiMetaData> compute(PsiElement element, @Nullable Void p) {
+                return CachedValuesManager.getManager(element.getProject()).createCachedValue(
+                    () -> {
+                        ensureContributorsLoaded();
+                        for (MyBinding binding : myBindings) {
+                            if (binding.myFilter.isClassAcceptable(element.getClass())
+                                && binding.myFilter.isAcceptable(element, element.getParent())) {
+                                PsiMetaData data = binding.myFactory.get();
+                                data.init(element);
+                                return new CachedValueProvider.Result<>(data, data.getDependences());
+                            }
                         }
-                    }
-                    return new CachedValueProvider.Result<>(null, element);
-                },
-                false
-            );
-        }
-    };
+                        return new CachedValueProvider.Result<>(null, element);
+                    },
+                    false
+                );
+            }
+        };
 
     private void ensureContributorsLoaded() {
         if (!ourContributorsLoaded) {
@@ -103,7 +104,7 @@ public class MetaRegistryImpl implements MetaDataService, MetaDataRegistrar {
 
     public @Nullable PsiMetaData getMetaBase(PsiElement element) {
         ProgressIndicatorProvider.checkCanceled();
-        return myCachedMetaCache.get(META_DATA_KEY, element, null).getValue();
+        return myCachedMetaCache.get(element, null).getValue();
     }
 
     public <T extends PsiMetaData> void addMetadataBinding(ElementFilter filter, Supplier<T> aMetadataClass) {

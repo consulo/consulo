@@ -3,6 +3,7 @@ package consulo.application.util.query;
 
 import consulo.util.concurrent.AsyncFuture;
 import consulo.util.concurrent.AsyncUtil;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -16,13 +17,12 @@ public class EmptyQuery<R> implements Query<R> {
     private static final EmptyQuery EMPTY_QUERY_INSTANCE = new EmptyQuery();
 
     @Override
-    
     public Collection<R> findAll() {
         return Collections.emptyList();
     }
 
     @Override
-    public R findFirst() {
+    public @Nullable R findFirst() {
         return null;
     }
 
@@ -31,19 +31,16 @@ public class EmptyQuery<R> implements Query<R> {
         return true;
     }
 
-    
     @Override
     public AsyncFuture<Boolean> forEachAsync(Predicate<? super R> consumer) {
         return AsyncUtil.wrapBoolean(true);
     }
 
-    
     @Override
     public R[] toArray(R[] a) {
         return findAll().toArray(a);
     }
 
-    
     @Override
     public Iterator<R> iterator() {
         return findAll().iterator();

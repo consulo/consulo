@@ -16,11 +16,9 @@ import java.util.Iterator;
  * they are not abstract for binary compatibility.
  */
 abstract public class MinusculeMatcher implements Matcher {
-
   MinusculeMatcher() {
   }
 
-  
   abstract public String getPattern();
 
   @Override
@@ -28,7 +26,7 @@ abstract public class MinusculeMatcher implements Matcher {
     return matchingFragments(name) != null;
   }
 
-  public FList<MatcherTextRange> matchingFragments(String name) {
+  public @Nullable FList<MatcherTextRange> matchingFragments(String name) {
     throw new UnsupportedOperationException();
   }
 

@@ -16,6 +16,7 @@
 package consulo.application.internal;
 
 import consulo.application.ApplicationManager;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author max
@@ -23,7 +24,7 @@ import consulo.application.ApplicationManager;
 @Deprecated
 public class ApplicationManagerEx extends ApplicationManager {
   @Deprecated
-  public static ApplicationEx getApplicationEx() {
+  public static @Nullable ApplicationEx getApplicationEx() {
     return (ApplicationEx)ourApplication;
   }
 }
