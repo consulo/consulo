@@ -156,6 +156,7 @@ open module consulo.ide.impl {
     exports consulo.ide.impl.application;
     exports consulo.ide.impl.base;
     exports consulo.ide.impl.bundle;
+    exports consulo.ide.impl.codeInsight.codeVision;
     exports consulo.ide.impl.command;
     exports consulo.ide.impl.compiler;
     exports consulo.ide.impl.desktop;

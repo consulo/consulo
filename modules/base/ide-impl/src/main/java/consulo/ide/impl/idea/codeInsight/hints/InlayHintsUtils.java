@@ -2,6 +2,7 @@
 package consulo.ide.impl.idea.codeInsight.hints;
 
 import consulo.annotation.access.RequiredReadAction;
+import consulo.application.Application;
 import consulo.codeEditor.Editor;
 import consulo.document.util.TextRange;
 import consulo.language.editor.inlay.InlayPresentation;
@@ -15,6 +16,7 @@ import consulo.language.psi.util.PsiTreeUtil;
 import consulo.util.dataholder.Key;
 
 import java.awt.*;
+import java.util.function.Supplier;
 
 public class InlayHintsUtils {
     private InlayHintsUtils() {
@@ -88,4 +90,19 @@ public class InlayHintsUtils {
         return storage;
     }
 
+    /**
+     * Runs the given computation under a read action if one is not already held.
+     * <p>
+     * For {@link consulo.language.editor.codeVision.DaemonBoundCodeVisionProvider#computeForEditor},
+     * this is always called under {@link RequiredReadAction}, so the computation is invoked directly.
+     * This method exists as a utility for non-daemon-bound providers that need to acquire read access
+     * themselves before processing PSI.
+     */
+    public static <T> T computeCodeVisionUnderReadAction(Supplier<T> computable) {
+        Application app = Application.get();
+        if (app.isReadAccessAllowed()) {
+            return computable.get();
+        }
+        return app.runReadAction(computable);
+    }
 }

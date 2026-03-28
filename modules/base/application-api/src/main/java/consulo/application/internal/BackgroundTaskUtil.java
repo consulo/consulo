@@ -15,9 +15,8 @@
  */
 package consulo.application.internal;
 
-import consulo.application.AccessRule;
 import consulo.application.Application;
-import consulo.application.ApplicationManager;
+import consulo.application.ReadAction;
 import consulo.application.progress.EmptyProgressIndicator;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
@@ -30,7 +29,6 @@ import consulo.disposer.Disposer;
 import consulo.logging.Logger;
 import consulo.ui.ModalityState;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.util.lang.Pair;
 import org.jspecify.annotations.Nullable;
 
 import java.util.concurrent.*;
@@ -85,15 +83,15 @@ public class BackgroundTaskUtil {
       return indicator;
     }
     else {
-      Pair<Runnable, ProgressIndicator> pair =
-        computeInBackgroundAndTryWait(backgroundTask,
-                                      (callback, indicator) -> ApplicationManager.getApplication()
-                                                                                 .invokeLater(() -> finish(callback, indicator), modality),
-                                      modality,
-                                      waitMillis);
+      ProgressiveResult<Runnable> result = computeInBackgroundAndTryWait(
+        backgroundTask,
+        (callback, indicator) -> Application.get().invokeLater(() -> finish(callback, indicator), modality),
+        modality,
+        waitMillis
+      );
 
-      Runnable callback = pair.first;
-      ProgressIndicator indicator = pair.second;
+      Runnable callback = result.result();
+      ProgressIndicator indicator = result.progressIndicator();
 
       if (callback != null) {
         finish(callback, indicator);
@@ -120,23 +118,28 @@ public class BackgroundTaskUtil {
    */
   @RequiredUIAccess
   public static <T> @Nullable T tryComputeFast(Function<ProgressIndicator, T> backgroundTask, long waitMillis) {
-    Pair<T, ProgressIndicator> pair = computeInBackgroundAndTryWait(backgroundTask, (result, indicator) -> {
-    }, Application.get().getDefaultModalityState(), waitMillis);
+    ProgressiveResult<T> progressiveResult = computeInBackgroundAndTryWait(
+      backgroundTask,
+      (result, indicator) -> {
+      },
+      Application.get().getDefaultModalityState(),
+      waitMillis
+    );
 
-    T result = pair.first;
-    ProgressIndicator indicator = pair.second;
-
-    indicator.cancel();
-    return result;
+    progressiveResult.progressIndicator().cancel();
+    return progressiveResult.result();
   }
 
-  public static @Nullable <T> T computeInBackgroundAndTryWait(Supplier<T> computable, Consumer<T> asyncCallback, long waitMillis) {
-    Pair<T, ProgressIndicator> pair =
-      computeInBackgroundAndTryWait(indicator -> computable.get(),
-                                    (result, indicator) -> asyncCallback.accept(result),
-                                    Application.get().getDefaultModalityState(),
-                                    waitMillis);
-    return pair.first;
+  public static <T> @Nullable T computeInBackgroundAndTryWait(Supplier<T> computable, Consumer<T> asyncCallback, long waitMillis) {
+    return computeInBackgroundAndTryWait(
+      indicator -> computable.get(),
+      (result, indicator) -> asyncCallback.accept(result),
+      Application.get().getDefaultModalityState(),
+      waitMillis
+    ).result();
+  }
+
+  private record ProgressiveResult<T>(@Nullable T result, ProgressIndicator progressIndicator) {
   }
 
   /**
@@ -147,16 +150,18 @@ public class BackgroundTaskUtil {
    * </ul>
    * Callback will be executed on the same thread as the background task.
    */
-  private static <T> Pair<T, ProgressIndicator> computeInBackgroundAndTryWait(Function<ProgressIndicator, T> task,
-                                                                              BiConsumer<T, ProgressIndicator> asyncCallback,
-                                                                              ModalityState modality,
-                                                                              long waitMillis) {
+  private static <T> ProgressiveResult<T> computeInBackgroundAndTryWait(
+    Function<ProgressIndicator, T> task,
+    BiConsumer<T, ProgressIndicator> asyncCallback,
+    ModalityState modality,
+    long waitMillis
+  ) {
     ProgressIndicator indicator = new EmptyProgressIndicator(modality);
 
     Helper<T> helper = new Helper<>();
 
     indicator.start();
-    ApplicationManager.getApplication().executeOnPooledThread(() -> ProgressManager.getInstance().executeProcessUnderProgress(() -> {
+    Application.get().executeOnPooledThread(() -> ProgressManager.getInstance().executeProcessUnderProgress(() -> {
       try {
         T result = task.apply(indicator);
         if (!helper.setResult(result)) {
@@ -173,7 +178,7 @@ public class BackgroundTaskUtil {
       result = helper.getResult();
     }
 
-    return Pair.create(result, indicator);
+    return new ProgressiveResult<>(result, indicator);
   }
 
   /**
@@ -248,7 +253,7 @@ public class BackgroundTaskUtil {
   }
 
   private static boolean registerIfParentNotDisposed(Disposable parent, Disposable disposable) {
-    return AccessRule.read(() -> {
+    return ReadAction.compute(() -> {
       if (Disposer.isDisposed(parent)) return false;
       try {
         Disposer.register(parent, disposable);
@@ -269,7 +274,7 @@ public class BackgroundTaskUtil {
    * @see #syncPublisher(Class)
    */
   public static <L> L syncPublisher(ComponentManager project, Class<L> topic) throws ProcessCanceledException {
-    return AccessRule.read(() -> {
+    return ReadAction.compute(() -> {
       if (project.isDisposed()) throw new ProcessCanceledException();
       return project.getMessageBus().syncPublisher(topic);
     });
@@ -283,9 +288,10 @@ public class BackgroundTaskUtil {
    * @see #syncPublisher(ComponentManager, Class)
    */
   public static <L> L syncPublisher(Class<L> topic) throws ProcessCanceledException {
-    return AccessRule.read(() -> {
-      if (ApplicationManager.getApplication().isDisposed()) throw new ProcessCanceledException();
-      return ApplicationManager.getApplication().getMessageBus().syncPublisher(topic);
+    return ReadAction.compute(() -> {
+      Application application = Application.get();
+      if (application.isDisposed()) throw new ProcessCanceledException();
+      return application.getMessageBus().syncPublisher(topic);
     });
   }
 
@@ -318,11 +324,11 @@ public class BackgroundTaskUtil {
       return !myResultRef.compareAndSet(INITIAL_STATE, SLOW_OPERATION_STATE);
     }
 
-    public T getResult() {
+    public @Nullable T getResult() {
       Object result = myResultRef.get();
       assert result != INITIAL_STATE && result != SLOW_OPERATION_STATE;
       //noinspection unchecked
-      return (T)result;
+      return (T) result;
     }
   }
 }

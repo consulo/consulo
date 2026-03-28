@@ -31,8 +31,12 @@ import consulo.ide.impl.idea.ui.tabs.impl.singleRow.SingleRowPassInfo;
 import consulo.ide.impl.idea.ui.tabs.impl.table.TableLayout;
 import consulo.ide.impl.idea.util.ui.update.LazyUiDisposable;
 import consulo.ide.impl.ui.laf.JBEditorTabsUI;
+import consulo.localize.LocalizeValue;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.project.ui.internal.ProjectIdeFocusManager;
+import consulo.ui.Button;
+import consulo.ui.ButtonStyle;
 import consulo.ui.ModalityState;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -40,6 +44,7 @@ import consulo.ui.ex.IdeGlassPane;
 import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.*;
+import consulo.ui.ex.awt.accessibility.ScreenReader;
 import consulo.ui.ex.awt.action.ShadowAction;
 import consulo.ui.ex.awt.tab.*;
 import consulo.ui.ex.awt.util.IdeGlassPaneUtil;
@@ -50,17 +55,15 @@ import consulo.util.collection.Lists;
 import consulo.util.concurrent.ActionCallback;
 import consulo.util.concurrent.AsyncResult;
 import consulo.util.dataholder.Key;
-import org.jspecify.annotations.Nullable;
 import kava.beans.PropertyChangeEvent;
 import kava.beans.PropertyChangeListener;
-import org.jetbrains.annotations.NonNls;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.PopupMenuEvent;
 import javax.swing.event.PopupMenuListener;
 import javax.swing.plaf.ComponentUI;
 import java.awt.*;
-import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
@@ -95,6 +98,8 @@ public abstract class JBTabsImpl extends JComponent
     public final Map<TabInfo, TabLabel> myInfo2Label = new HashMap<>();
     public final Map<TabInfo, Toolbar> myInfo2Toolbar = new HashMap<>();
     public Dimension myHeaderFitSize;
+
+    private @Nullable JComponent myEntryPointButton;
 
     private Insets myInnerInsets = JBUI.emptyInsets();
 
@@ -154,9 +159,9 @@ public abstract class JBTabsImpl extends JComponent
     private Color myActiveTabFillIn;
 
     private IdeGlassPane myGlassPane;
-    @NonNls
+
     private static final String LAYOUT_DONE = "Layout.done";
-    @NonNls
+
     public static final String STRETCHED_BY_WIDTH = "Layout.stretchedByWidth";
 
     private TimedDeadzone.Length myTabActionsMouseDeadzone = TimedDeadzone.DEFAULT;
@@ -246,14 +251,6 @@ public abstract class JBTabsImpl extends JComponent
             }
         };
 
-        addMouseListener(new MouseAdapter() {
-            @Override
-            public void mousePressed(MouseEvent e) {
-                if (mySingleRowLayout.myLastSingRowLayout != null && mySingleRowLayout.myLastSingRowLayout.moreRect != null && mySingleRowLayout.myLastSingRowLayout.moreRect.contains(e.getPoint())) {
-                    showMorePopup(e);
-                }
-            }
-        });
         addMouseWheelListener(e -> {
             if (mySingleRowLayout.myLastSingRowLayout != null) {
                 mySingleRowLayout.scroll(e.getUnitsToScroll() * mySingleRowLayout.getScrollUnitIncrement());
@@ -278,6 +275,7 @@ public abstract class JBTabsImpl extends JComponent
 
         add(mySingleRowLayout.myLeftGhost);
         add(mySingleRowLayout.myRightGhost);
+        add(mySingleRowLayout.myMoreButton);
 
         if (parent != null) {
             Disposer.register(parent, this);
@@ -576,8 +574,7 @@ public abstract class JBTabsImpl extends JComponent
     }
 
     public boolean canShowMorePopup() {
-        SingleRowPassInfo lastLayout = mySingleRowLayout.myLastSingRowLayout;
-        return lastLayout != null && lastLayout.moreRect != null;
+        return mySingleRowLayout.myMoreButton.isVisible();
     }
 
     public void showMorePopup(@Nullable MouseEvent e) {
@@ -613,15 +610,40 @@ public abstract class JBTabsImpl extends JComponent
             }
         });
 
-        if (e != null) {
-            mySingleRowLayout.myMorePopup.show(this, e.getX(), e.getY());
+        JComponent moreButton = mySingleRowLayout.myMoreButton;
+        Rectangle rect = moreButton.getBounds();
+        mySingleRowLayout.myMorePopup.show(this, rect.x, rect.y + rect.height);
+    }
+
+    public void setEntryPointActionGroup(@Nullable ActionGroup group) {
+        if (myEntryPointButton != null) {
+            remove(myEntryPointButton);
+            myEntryPointButton = null;
         }
-        else {
-            Rectangle rect = lastLayout.moreRect;
-            if (rect != null) {
-                mySingleRowLayout.myMorePopup.show(this, rect.x, rect.y + rect.height);
-            }
+
+        if (group != null) {
+            Button entryBtn = Button.create(LocalizeValue.empty());
+            entryBtn.setIcon(PlatformIconGroup.actionsMorevertical());
+            entryBtn.addStyle(ButtonStyle.TOOLBAR);
+            entryBtn.setFocusable(ScreenReader.isActive());
+            entryBtn.addClickListener(event -> {
+                ActionPopupMenu popupMenu = myActionManager.createActionPopupMenu(ActionPlaces.EDITOR_TAB, group);
+                JPopupMenu component = popupMenu.getComponent();
+                Rectangle bounds = myEntryPointButton.getBounds();
+                component.show(this, bounds.x, bounds.y + bounds.height);
+            });
+            myEntryPointButton = (JComponent) TargetAWT.to(entryBtn);
+            myEntryPointButton.setOpaque(false);
+            add(myEntryPointButton);
         }
+    }
+
+    public int getEntryPointButtonWidth() {
+        return myEntryPointButton != null ? myEntryPointButton.getPreferredSize().width : 0;
+    }
+
+    public @Nullable JComponent getEntryPointButton() {
+        return myEntryPointButton;
     }
 
     private @Nullable JComponent getToFocus() {

@@ -13,10 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.application.util;
 
 import consulo.annotation.DeprecationInfo;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author peter
@@ -24,10 +24,8 @@ import consulo.annotation.DeprecationInfo;
 @Deprecated
 @DeprecationInfo("Use LazyValue")
 public abstract class VolatileNotNullLazyValue<T> extends NotNullLazyValue<T> {
+  private volatile @Nullable T myValue = null;
 
-  private volatile T myValue;
-
-  
   public final T getValue() {
     T value = myValue;
     if (value != null) {

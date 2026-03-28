@@ -88,7 +88,7 @@ public interface Application extends ComponentManager, CoroutineContextOwner {
      * @param computation the computation to perform.
      * @return the result returned by the computation.
      */
-    <T> T runReadAction(@RequiredReadAction Supplier<T> computation);
+    <T extends @Nullable Object> T runReadAction(@RequiredReadAction Supplier<T> computation);
 
     /**
      * Grab the lock and run the action, if write is not running
@@ -114,7 +114,7 @@ public interface Application extends ComponentManager, CoroutineContextOwner {
      * @return the result returned by the computation.
      * @throws E re-frown from ThrowableComputable
      */
-    <T, E extends Throwable> T runReadAction(@RequiredReadAction ThrowableSupplier<T, E> computation) throws E;
+    <T extends @Nullable Object, E extends Throwable> T runReadAction(@RequiredReadAction ThrowableSupplier<T, E> computation) throws E;
 
     /**
      * Runs the specified write action. Can be called from any thread. The action is executed
@@ -132,7 +132,7 @@ public interface Application extends ComponentManager, CoroutineContextOwner {
      * @param computation the computation to run
      * @return the result returned by the computation.
      */
-    <T> T runWriteAction(@RequiredWriteAction Supplier<T> computation);
+    <T extends @Nullable Object> T runWriteAction(@RequiredWriteAction Supplier<T> computation);
 
     /**
      * Runs the specified computation in a write action. Can be called from any thread.
@@ -143,7 +143,7 @@ public interface Application extends ComponentManager, CoroutineContextOwner {
      * @return the result returned by the computation.
      * @throws E re-frown from ThrowableComputable
      */
-    <T, E extends Throwable> T runWriteAction(@RequiredWriteAction ThrowableSupplier<T, E> computation) throws E;
+    <T extends @Nullable Object, E extends Throwable> T runWriteAction(@RequiredWriteAction ThrowableSupplier<T, E> computation) throws E;
 
     /**
      * Returns {@code true} if there is currently executing write action of the specified class.
@@ -430,7 +430,7 @@ public interface Application extends ComponentManager, CoroutineContextOwner {
      * @param action to be executed
      * @return future result
      */
-    <T> Future<T> executeOnPooledThread(Callable<T> action);
+    <T extends @Nullable Object> Future<T> executeOnPooledThread(Callable<T> action);
 
     /**
      * @return true if application is currently disposing (but not yet disposed completely)

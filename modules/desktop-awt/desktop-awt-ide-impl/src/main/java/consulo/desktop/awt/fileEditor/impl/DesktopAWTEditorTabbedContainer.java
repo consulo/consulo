@@ -108,6 +108,10 @@ public final class DesktopAWTEditorTabbedContainer implements FileEditorTabbedCo
                 return ToolWindowManager.getInstance(project).isEditorComponentActive();
             }
         };
+        AnAction entryPointGroup = actionManager.getAction("EditorTabsEntryPoint");
+        if (entryPointGroup instanceof ActionGroup actionGroup) {
+            myTabs.setEntryPointActionGroup(actionGroup);
+        }
         myTabs.setBorder(new CustomLineBorder(JBColor.border(), 1, 0, 0, 0) {
             @Override
             public Insets getBorderInsets(Component c) {

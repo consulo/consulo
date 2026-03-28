@@ -196,8 +196,6 @@ public class IntelliJEditorTabsUI extends JBEditorTabsUI {
                 selectedLabel.paintImage(g, false);
             }
 
-            tabs.getSingleRowLayoutInternal().myMoreIcon.paintIcon(tabs, g);
-
             if (tabs.isSideComponentVertical()) {
                 JBTabsImpl.Toolbar toolbarComp = tabs.myInfo2Toolbar.get(tabs.getSelectedInfoInternal());
                 if (toolbarComp != null && !toolbarComp.isEmpty()) {

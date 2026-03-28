@@ -27,7 +27,7 @@ import org.jspecify.annotations.Nullable;
 @ServiceAPI(ComponentScope.APPLICATION)
 public interface DataManager {
   public static DataManager getInstance() {
-    return RootComponentHolder.getRootComponent().getInstance(DataManager.class);
+    return RootComponentHolder.get().getInstance(DataManager.class);
   }
 
   /**

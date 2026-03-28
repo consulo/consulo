@@ -13,24 +13,18 @@ import org.jspecify.annotations.Nullable;
 @ServiceAPI(ComponentScope.APPLICATION)
 public interface VirtualFilePointerManager extends ModificationTracker {
   public static VirtualFilePointerManager getInstance() {
-    return RootComponentHolder.getRootComponent().getComponent(VirtualFilePointerManager.class);
+    return RootComponentHolder.get().getComponent(VirtualFilePointerManager.class);
   }
 
-  
   public abstract VirtualFilePointer create(String url, Disposable parent, @Nullable VirtualFilePointerListener listener);
 
-  
   public abstract VirtualFilePointer create(VirtualFile file, Disposable parent, @Nullable VirtualFilePointerListener listener);
 
-  
   public abstract VirtualFilePointer duplicate(VirtualFilePointer pointer, Disposable parent, @Nullable VirtualFilePointerListener listener);
 
-  
   public abstract VirtualFilePointerContainer createContainer(Disposable parent);
 
-  
   public abstract VirtualFilePointerContainer createContainer(Disposable parent, @Nullable VirtualFilePointerListener listener);
 
-  
   public abstract VirtualFilePointer createDirectoryPointer(String url, boolean recursively, Disposable parent, VirtualFilePointerListener listener);
 }

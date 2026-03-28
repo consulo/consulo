@@ -18,9 +18,9 @@ package consulo.application;
 import consulo.annotation.DeprecationInfo;
 import consulo.annotation.access.RequiredWriteAction;
 import consulo.application.concurrent.ApplicationConcurrency;
-import consulo.application.util.function.ThrowableComputable;
 import consulo.util.lang.function.ThrowableRunnable;
 import consulo.util.lang.function.ThrowableSupplier;
+import org.jspecify.annotations.Nullable;
 
 @Deprecated
 @DeprecationInfo("View WriteLock")
@@ -31,15 +31,14 @@ public final class WriteAction {
 
     public static <E extends Throwable> void run(ThrowableRunnable<E> action) throws E {
         Application application = Application.get();
-        application.runWriteAction((ThrowableSupplier<Object, E>) () -> {
+        application.runWriteAction((ThrowableSupplier<@Nullable Object, E>) () -> {
             action.run();
             return null;
         });
     }
 
-    public static <T, E extends Throwable> T compute(ThrowableComputable<T, E> action) throws E {
-        Application application = Application.get();
-        return application.runWriteAction(action);
+    public static <T extends @Nullable Object, E extends Throwable> T compute(ThrowableSupplier<T, E> action) throws E {
+        return Application.get().runWriteAction(action);
     }
 
     public static void runLater(@RequiredWriteAction Runnable runnable) {

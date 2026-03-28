@@ -21,6 +21,7 @@ import consulo.util.concurrent.coroutine.Continuation;
 import consulo.util.concurrent.coroutine.Coroutine;
 import consulo.util.concurrent.coroutine.CoroutineContext;
 import consulo.util.concurrent.coroutine.CoroutineScope;
+import org.jspecify.annotations.Nullable;
 
 import java.util.function.Supplier;
 
@@ -30,13 +31,13 @@ import java.util.function.Supplier;
  */
 public final class DisposableCoroutineScope {
     public static Continuation<?> launchAsync(CoroutineContext context,
-                                              Disposable parentDisposable,
-                                              Supplier<Coroutine<?, ?>> supplier) {
+                                   Disposable parentDisposable,
+                                   Supplier<Coroutine<@Nullable ?, ?>> supplier) {
         CoroutineScope aScope = new CoroutineScope(context);
 
         Disposer.register(parentDisposable, aScope::cancel);
 
-        Coroutine<?, ?> coroutine = supplier.get();
+        Coroutine<@Nullable ?, ?> coroutine = supplier.get();
 
         return coroutine.runAsync(aScope, null);
     }

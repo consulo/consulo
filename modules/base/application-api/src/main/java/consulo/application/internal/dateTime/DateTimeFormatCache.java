@@ -15,6 +15,7 @@
  */
 package consulo.application.internal.dateTime;
 
+import consulo.annotation.ReviewAfterIssueFix;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
@@ -23,11 +24,13 @@ import consulo.platform.Platform;
 import consulo.util.lang.SyncDateFormat;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
+import org.jspecify.annotations.Nullable;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
 import java.util.TimeZone;
+import java.util.function.Function;
 
 /**
  * @author VISTALL
@@ -68,7 +71,9 @@ public class DateTimeFormatCache {
     private SyncDateFormat[] getDateTimeFormats(Application application) {
         Platform platform = Platform.current();
 
-        DateFormat[] res = application.getExtensionPoint(DateTimeFormatProvider.class).computeSafeIfAny(it -> it.getFormats(platform));
+        @ReviewAfterIssueFix(value = "github.com/uber/NullAway/issues/1500", todo = "Remove explicit casts")
+        DateFormat[] res = application.getExtensionPoint(DateTimeFormatProvider.class)
+            .computeSafeIfAny((Function<DateTimeFormatProvider, DateFormat @Nullable []>) it -> it.getFormats(platform));
 
         if (res == null) {
             res = new DateFormat[4];

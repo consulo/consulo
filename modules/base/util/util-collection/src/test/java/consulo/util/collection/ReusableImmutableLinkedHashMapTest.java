@@ -133,7 +133,7 @@ public class ReusableImmutableLinkedHashMapTest {
         ReusableImmutableLinkedHashMap<Integer, String> superMap = map.with(5, "5");
         ReusableImmutableLinkedHashMap<Integer, String> subMap = superMap.without(5);
 
-        assertThat(subMap.with(4, map.get(4)))
+        assertThat(subMap.with(4, Objects.requireNonNull(map.get(4))))
             .isSameAs(subMap);
 
         assertThat(subMap.with(3, "3"))

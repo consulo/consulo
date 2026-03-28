@@ -1,7 +1,6 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.desktop.awt.ui.popup;
 
-import consulo.annotation.DeprecationInfo;
 import consulo.application.ApplicationManager;
 import consulo.application.ui.FrameStateManager;
 import consulo.application.ui.RemoteDesktopService;
@@ -12,23 +11,19 @@ import consulo.application.util.registry.Registry;
 import consulo.dataContext.DataContext;
 import consulo.desktop.awt.ui.ImmutableInsets;
 import consulo.desktop.awt.ui.popup.form.*;
+import consulo.desktop.awt.wm.impl.WeakFocusStackManager;
 import consulo.disposer.Disposer;
 import consulo.ide.impl.idea.codeInsight.hint.HintManagerImpl;
 import consulo.ide.impl.idea.ide.IdeTooltip;
 import consulo.ide.impl.idea.ide.ui.PopupLocationTracker;
 import consulo.ide.impl.idea.ide.ui.ScreenAreaConsumer;
-import consulo.desktop.awt.wm.impl.WeakFocusStackManager;
 import consulo.ide.impl.idea.ui.ComponentWithMnemonics;
-import consulo.ide.impl.idea.util.ui.BaseButtonBehavior;
-import consulo.ui.ex.awt.internal.IdeEventQueueProxy;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.platform.Platform;
 import consulo.platform.base.icon.PlatformIconGroup;
-import consulo.ui.Point2D;
-import consulo.ui.Rectangle2D;
-import consulo.ui.Size2D;
-import consulo.ui.ex.IdeGlassPane;
+import consulo.ui.Button;
+import consulo.ui.*;
 import consulo.ui.ex.PositionTracker;
 import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.action.AnAction;
@@ -37,10 +32,10 @@ import consulo.ui.ex.action.event.AnActionListener;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.accessibility.AccessibleContextUtil;
 import consulo.ui.ex.awt.accessibility.ScreenReader;
+import consulo.ui.ex.awt.internal.IdeEventQueueProxy;
 import consulo.ui.ex.awt.util.Alarm;
 import consulo.ui.ex.awt.util.ColorUtil;
 import consulo.ui.ex.awt.util.ScreenUtil;
-import consulo.ui.ex.awt.util.TimedDeadzone;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.popup.Balloon;
 import consulo.ui.ex.popup.event.JBPopupListener;
@@ -54,6 +49,8 @@ import org.jspecify.annotations.Nullable;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.HyperlinkEvent;
+import java.awt.Component;
+import java.awt.Window;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.geom.Area;
@@ -63,7 +60,6 @@ import java.awt.image.RGBImageFilter;
 import java.util.List;
 import java.util.*;
 import java.util.concurrent.CopyOnWriteArraySet;
-import java.util.function.Consumer;
 
 import static consulo.ui.ex.awt.UIUtil.useSafely;
 
@@ -101,7 +97,7 @@ public class BalloonImpl implements Balloon, IdeTooltip.Ui, ScreenAreaConsumer {
             }
 
             if (myClickHandler != null && id == MouseEvent.MOUSE_CLICKED) {
-                if (!(me.getComponent() instanceof CloseButton) && insideBalloon) {
+                if (!isActionButtonComponent(me.getComponent()) && insideBalloon) {
                     myClickHandler.actionPerformed(new ActionEvent(me, ActionEvent.ACTION_PERFORMED, "click", me.getModifiersEx()));
                     if (myCloseOnClick) {
                         hide();
@@ -250,10 +246,22 @@ public class BalloonImpl implements Balloon, IdeTooltip.Ui, ScreenAreaConsumer {
     private Rectangle2D myForcedBounds;
 
     private ActionProvider myActionProvider;
-    private List<ActionButton> myActionButtons;
+    private List<JComponent> myActionButtons;
     private boolean invalidateShadow;
 
     private final AWTEventListener myAwtActivityListener = new BalloonEventListener();
+
+    private boolean isActionButtonComponent(Component component) {
+        List<JComponent> buttons = myActionButtons;
+        if (buttons != null) {
+            for (JComponent button : buttons) {
+                if (SwingUtilities.isDescendingFrom(component, button)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 
     private boolean isWithinChildWindow(MouseEvent event) {
         Component owner = UIUtil.getWindow(myContent);
@@ -317,7 +325,7 @@ public class BalloonImpl implements Balloon, IdeTooltip.Ui, ScreenAreaConsumer {
             return false;
         }
         if (myActionButtons != null) {
-            for (ActionButton button : myActionButtons) {
+            for (JComponent button : myActionButtons) {
                 if (cmp == button) {
                     return true;
                 }
@@ -759,7 +767,7 @@ public class BalloonImpl implements Balloon, IdeTooltip.Ui, ScreenAreaConsumer {
         ));
     }
 
-    private void disposeButton(ActionButton button) {
+    private void disposeButton(JComponent button) {
         if (button != null && button.getParent() != null) {
             Container parent = button.getParent();
             parent.remove(button);
@@ -786,15 +794,18 @@ public class BalloonImpl implements Balloon, IdeTooltip.Ui, ScreenAreaConsumer {
         );
 
         if (myActionProvider == null) {
-            final Consumer<MouseEvent> listener = event -> SwingUtilities.invokeLater(this::hide);
-
             myActionProvider = new ActionProvider() {
-                private ActionButton myCloseButton;
+                private JComponent myCloseButton;
 
-               
                 @Override
-                public List<ActionButton> createActions() {
-                    myCloseButton = new CloseButton(listener);
+                public List<JComponent> createActions() {
+                    Button closeBtn = Button.create(LocalizeValue.empty());
+                    closeBtn.setIcon(getCloseButton());
+                    closeBtn.addStyle(ButtonStyle.INPLACE);
+                    closeBtn.addClickListener(event -> SwingUtilities.invokeLater(BalloonImpl.this::hide));
+                    myCloseButton = (JComponent) TargetAWT.to(closeBtn);
+                    myCloseButton.setOpaque(false);
+                    myCloseButton.setVisible(myEnableButtons);
                     return Collections.singletonList(myCloseButton);
                 }
 
@@ -804,16 +815,14 @@ public class BalloonImpl implements Balloon, IdeTooltip.Ui, ScreenAreaConsumer {
                         return;
                     }
 
-                    consulo.ui.image.Image icon = getCloseButton();
-                    int iconWidth = icon.getWidth();
-                    int iconHeight = icon.getHeight();
+                    Dimension size = myCloseButton.getPreferredSize();
                     ImmutableInsets borderInsets = getShadowBorderImmutableInsets();
 
                     myCloseButton.setBounds(
-                        lpBounds.minX() + lpBounds.width() - iconWidth - borderInsets.right() - JBUIScale.scale(8),
+                        lpBounds.minX() + lpBounds.width() - size.width - borderInsets.right() - JBUIScale.scale(8),
                         lpBounds.minY() + borderInsets.top() + JBUIScale.scale(6),
-                        iconWidth,
-                        iconHeight
+                        size.width,
+                        size.height
                     );
                 }
             };
@@ -1628,100 +1637,10 @@ public class BalloonImpl implements Balloon, IdeTooltip.Ui, ScreenAreaConsumer {
     }
 
     public interface ActionProvider {
-       
-        List<ActionButton> createActions();
+
+        List<JComponent> createActions();
 
         void layout(Rectangle2D bounds);
-    }
-
-    public class ActionButton extends NonOpaquePanel implements IdeGlassPane.TopComponent {
-        private final consulo.ui.image.Image myIcon;
-        private final consulo.ui.image.Image myHoverIcon;
-        private final Consumer<? super MouseEvent> myListener;
-        protected final BaseButtonBehavior myButton;
-
-        public ActionButton(
-            consulo.ui.image.Image icon,
-            consulo.ui.image.@Nullable Image hoverIcon,
-            LocalizeValue hint,
-            Consumer<? super MouseEvent> listener
-        ) {
-            myIcon = icon;
-            myHoverIcon = hoverIcon;
-            myListener = listener;
-
-            setToolTipText(hint.getNullIfEmpty());
-
-            myButton = new BaseButtonBehavior(this, TimedDeadzone.NULL) {
-                @Override
-                protected void execute(MouseEvent e) {
-                    myListener.accept(e);
-                }
-            };
-        }
-
-        @Deprecated
-        @DeprecationInfo("Use variant with LocalizeValue")
-        public ActionButton(
-            consulo.ui.image.Image icon,
-            consulo.ui.image.@Nullable Image hoverIcon,
-            @Nullable String hint,
-            Consumer<? super MouseEvent> listener
-        ) {
-            myIcon = icon;
-            myHoverIcon = hoverIcon;
-            myListener = listener;
-
-            setToolTipText(hint);
-
-            myButton = new BaseButtonBehavior(this, TimedDeadzone.NULL) {
-                @Override
-                protected void execute(MouseEvent e) {
-                    myListener.accept(e);
-                }
-            };
-        }
-
-        @Override
-        public Dimension getPreferredSize() {
-            return new Dimension(myIcon.getWidth(), myIcon.getHeight());
-        }
-
-        @Override
-        protected void paintComponent(Graphics g) {
-            super.paintComponent(g);
-            if (hasPaint()) {
-                paintIcon(g, myHoverIcon != null && myButton.isHovered() ? myHoverIcon : myIcon);
-            }
-        }
-
-        public boolean hasPaint() {
-            return getWidth() > 0 && myLastMoveWasInsideBalloon;
-        }
-
-        protected void paintIcon(Graphics g, consulo.ui.image.Image icon) {
-            TargetAWT.to(icon).paintIcon(this, g, 0, 0);
-        }
-
-        @Override
-        public boolean canBePreprocessed(MouseEvent e) {
-            return false;
-        }
-    }
-
-    private class CloseButton extends ActionButton {
-        private CloseButton(Consumer<? super MouseEvent> listener) {
-            super(getCloseButton(), null, LocalizeValue.empty(), listener);
-            setVisible(myEnableButtons);
-        }
-
-        @Override
-        protected void paintIcon(Graphics g, consulo.ui.image.Image icon) {
-            if (myEnableButtons) {
-                boolean pressed = myButton.isPressedByMouse();
-                TargetAWT.to(icon).paintIcon(this, g, pressed ? JBUIScale.scale(1) : 0, pressed ? JBUIScale.scale(1) : 0);
-            }
-        }
     }
 
     private class MyComponent extends JPanel implements ComponentWithMnemonics {
@@ -1962,12 +1881,12 @@ public class BalloonImpl implements Balloon, IdeTooltip.Ui, ScreenAreaConsumer {
                 return;
             }
 
-            List<ActionButton> buttons = myActionButtons;
+            List<JComponent> buttons = myActionButtons;
             myActionButtons = null;
             if (buttons != null) {
                 //noinspection SSBasedInspection
                 SwingUtilities.invokeLater(() -> {
-                    for (ActionButton button : buttons) {
+                    for (JComponent button : buttons) {
                         disposeButton(button);
                     }
                 });
@@ -1994,7 +1913,7 @@ public class BalloonImpl implements Balloon, IdeTooltip.Ui, ScreenAreaConsumer {
                     myActionButtons = myActionProvider.createActions();
                 }
 
-                for (ActionButton button : myActionButtons) {
+                for (JComponent button : myActionButtons) {
                     if (button.getParent() == null) {
                         myLayeredPane.add(button);
                         myLayeredPane.setLayer(button, JLayeredPane.DRAG_LAYER);
@@ -2021,7 +1940,7 @@ public class BalloonImpl implements Balloon, IdeTooltip.Ui, ScreenAreaConsumer {
 
         void repaintButton() {
             if (myActionButtons != null) {
-                for (ActionButton button : myActionButtons) {
+                for (JComponent button : myActionButtons) {
                     button.repaint();
                 }
             }

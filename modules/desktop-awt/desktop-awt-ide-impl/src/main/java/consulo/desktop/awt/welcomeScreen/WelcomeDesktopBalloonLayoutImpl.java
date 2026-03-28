@@ -21,9 +21,7 @@ import consulo.desktop.awt.ui.popup.BalloonImpl;
 import consulo.desktop.awt.uiOld.BalloonLayoutData;
 import consulo.desktop.awt.uiOld.DesktopBalloonLayoutImpl;
 import consulo.disposer.Disposer;
-import consulo.localize.LocalizeValue;
 import consulo.platform.Platform;
-import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.ui.notification.NotificationType;
 import consulo.ui.Rectangle2D;
 import consulo.ui.ex.JBColor;
@@ -120,18 +118,13 @@ public class WelcomeDesktopBalloonLayoutImpl extends DesktopBalloonLayoutImpl {
       myPopupBalloon.setShadowBorderProvider(new NotificationBalloonShadowBorderProvider(FILL_COLOR, BORDER_COLOR));
       myPopupBalloon.setHideListener(() -> myPopupBalloon.getComponent().setVisible(false));
       myPopupBalloon.setActionProvider(new BalloonImpl.ActionProvider() {
-        private BalloonImpl.ActionButton myAction;
-
-        
         @Override
-        public List<BalloonImpl.ActionButton> createActions() {
-          myAction = myPopupBalloon.new ActionButton(PlatformIconGroup.ideNotificationClose(), null, LocalizeValue.empty(), event -> {});
-          return Collections.singletonList(myAction);
+        public List<JComponent> createActions() {
+          return Collections.emptyList();
         }
 
         @Override
         public void layout(Rectangle2D bounds) {
-          myAction.setBounds(0, 0, 0, 0);
         }
       });
     }

@@ -50,11 +50,11 @@
         <option name="FILESTATUS_OBSOLETE" value=""/>
         <option name="FILESTATUS_SWITCHED" value=""/>
 
-        <option name="VCS_ANNOTATIONS_COLOR_1" value="eaffe2"/>
-        <option name="VCS_ANNOTATIONS_COLOR_2" value="d1d1d1"/>
-        <option name="VCS_ANNOTATIONS_COLOR_3" value="d9e4f9"/>
-        <option name="VCS_ANNOTATIONS_COLOR_4" value="fffbcf"/>
-        <option name="VCS_ANNOTATIONS_COLOR_5" value="ffbfc3"/>
+        <option name="VCS_ANNOTATIONS_COLOR_1" value="a1bef7"/>
+        <option name="VCS_ANNOTATIONS_COLOR_2" value="c9dafb"/>
+        <option name="VCS_ANNOTATIONS_COLOR_3" value="dee8fc"/>
+        <option name="VCS_ANNOTATIONS_COLOR_4" value="edf2fa"/>
+        <option name="VCS_ANNOTATIONS_COLOR_5" value="f7f8fa"/>
     </colors>
 
     <attributes>

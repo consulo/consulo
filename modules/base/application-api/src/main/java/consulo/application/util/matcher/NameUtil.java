@@ -1,11 +1,15 @@
 // Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.application.util.matcher;
 
+import consulo.annotation.ReviewAfterIssueFix;
 import consulo.util.lang.StringUtil;
+import org.jetbrains.annotations.Contract;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -15,17 +19,14 @@ public final class NameUtil {
   private NameUtil() {
   }
 
-  
   public static List<String> nameToWordsLowerCase(String name) {
     return Arrays.stream(NameUtilCore.nameToWords(name)).map(StringUtil::toLowerCase).collect(Collectors.toList());
   }
 
-  
   public static String buildRegexp(String pattern, int exactPrefixLen, boolean allowToUpper, boolean allowToLower) {
     return buildRegexp(pattern, exactPrefixLen, allowToUpper, allowToLower, false, false);
   }
 
-  
   public static String buildRegexp(String pattern, int exactPrefixLen, boolean allowToUpper, boolean allowToLower, boolean lowerCaseWords, boolean forCompletion) {
     int eol = pattern.indexOf('\n');
     if (eol != -1) {
@@ -162,7 +163,6 @@ public final class NameUtil {
     return buffer.toString();
   }
 
-  
   public static List<String> getSuggestionsByName(String name, String prefix, String suffix, boolean upperCaseStyle, boolean preferLongerNames, boolean isArray) {
     ArrayList<String> answer = new ArrayList<>();
     String[] words = NameUtilCore.nameToWords(name);
@@ -182,7 +182,6 @@ public final class NameUtil {
     return answer;
   }
 
-  
   private static String compoundSuggestion(String prefix, boolean upperCaseStyle, String[] words, int wordCount, String startWord, char c, boolean isArray, boolean skip_) {
     StringBuilder buffer = new StringBuilder();
 
@@ -235,12 +234,10 @@ public final class NameUtil {
     return suggestion;
   }
 
-  
   public static String[] splitNameIntoWords(String name) {
     return NameUtilCore.splitNameIntoWords(name);
   }
 
-  
   public static String[] nameToWords(String name) {
     return NameUtilCore.nameToWords(name);
   }
@@ -300,12 +297,10 @@ public final class NameUtil {
     }
   }
 
-  
   public static MatcherBuilder buildMatcher(String pattern) {
     return new MatcherBuilder(pattern);
   }
 
-  
   public static MinusculeMatcher buildMatcher(String pattern, MatchingCaseSensitivity options) {
     return buildMatcher(pattern).withCaseSensitivity(options).build();
   }
@@ -314,12 +309,14 @@ public final class NameUtil {
     return pattern.equals(fallbackPattern) ? buildMatcher(pattern, options) : new MatcherWithFallback(buildMatcher(pattern, options), buildMatcher(fallbackPattern, options));
   }
 
-  
+  @ReviewAfterIssueFix(value = "github.com/uber/NullAway/issues/1502", todo = "Remove NullAway suppression")
+  @SuppressWarnings("NullAway")
   public static String capitalizeAndUnderscore(String name) {
-    return splitWords(name, '_', StringUtil::toUpperCase);
+    // NullAway problem: StringUtil::toUpperCase is conditionally nullable: it returns null only if argument is null
+    // Static validator doesn't understand that this case is safe, so suppressing NullAway validation
+    return splitWords(name, '_', String::toUpperCase);
   }
 
-  
   public static String splitWords(String text, char separator, Function<? super String, String> transformWord) {
     String[] words = NameUtilCore.nameToWords(text);
     boolean insertSeparator = false;
@@ -339,7 +336,6 @@ public final class NameUtil {
       buf.append(transformWord.apply(word));
     }
     return buf.toString();
-
   }
 
   public enum MatchingCaseSensitivity {

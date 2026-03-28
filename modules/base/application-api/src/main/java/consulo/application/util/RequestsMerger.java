@@ -16,7 +16,6 @@
 package consulo.application.util;
 
 import consulo.logging.Logger;
-import consulo.util.lang.Couple;
 import consulo.util.lang.StringUtil;
 import org.jspecify.annotations.Nullable;
 
@@ -147,7 +146,6 @@ public class RequestsMerger {
   private enum MyState {
     empty() {
       @Override
-      
       public MyState transition(MyAction action) {
         if (MyAction.request.equals(action)) {
           return MyState.requestSubmitted;
@@ -158,7 +156,6 @@ public class RequestsMerger {
     },
     inProgress() {
       @Override
-      
       public MyState transition(MyAction action) {
         if (MyAction.finish.equals(action)) {
           return empty;
@@ -172,7 +169,6 @@ public class RequestsMerger {
     },
     inProgressRequestSubmitted() {
       @Override
-      
       public MyState transition(MyAction action) {
         if (MyAction.finish.equals(action)) {
           return MyState.requestSubmitted;
@@ -185,7 +181,6 @@ public class RequestsMerger {
     },
     requestSubmitted() {
       @Override
-      
       public MyState transition(MyAction action) {
         if (MyAction.start.equals(action)) {
           return inProgress;
@@ -208,8 +203,11 @@ public class RequestsMerger {
     }
   }
 
+  private record Transition(MyState from, MyState to) {
+  }
+
   private static class MyTransitionAction {
-    private static final Map<Couple<MyState>, MyExitAction[]> myMap = new HashMap<>();
+    private static final Map<Transition, MyExitAction[]> myMap = new HashMap<>();
 
     static {
       add(MyState.empty, MyState.requestSubmitted, MyExitAction.submitRequestToExecutor);
@@ -223,11 +221,11 @@ public class RequestsMerger {
     }
 
     private static void add(MyState from, MyState to, MyExitAction... action) {
-      myMap.put(Couple.of(from, to), action);
+      myMap.put(new Transition(from, to), action);
     }
 
-    public static @Nullable MyExitAction[] getExit(MyState from, MyState to) {
-      return myMap.get(Couple.of(from, to));
+    public static MyExitAction @Nullable [] getExit(MyState from, MyState to) {
+      return myMap.get(new Transition(from, to));
     }
   }
 

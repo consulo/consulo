@@ -52,7 +52,7 @@ public abstract class VirtualFileManager implements ModificationTracker {
     @Deprecated
     @DeprecationInfo("Use constructor injection")
     public static VirtualFileManager getInstance() {
-        return RootComponentHolder.getRootComponent().getInstance(VirtualFileManager.class);
+        return RootComponentHolder.get().getInstance(VirtualFileManager.class);
     }
 
     /**
@@ -241,7 +241,6 @@ public abstract class VirtualFileManager implements ModificationTracker {
 
     public abstract int storeName(String name);
 
-    
     public abstract CharSequence getVFileName(int nameId);
 
     public abstract Image getBaseFileIcon(VirtualFile file);

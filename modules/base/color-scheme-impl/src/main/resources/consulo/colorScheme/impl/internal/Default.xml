@@ -35,11 +35,11 @@
         <option name="WHITESPACES_MODIFIED_LINES_COLOR" value="f7e2cb"/>
         <option name="CONSOLE_BACKGROUND_KEY" value="ffffff"/>
 
-        <option name="VCS_ANNOTATIONS_COLOR_1" value="eaffe2"/>
-        <option name="VCS_ANNOTATIONS_COLOR_2" value="d1d1d1"/>
-        <option name="VCS_ANNOTATIONS_COLOR_3" value="d9e4f9"/>
-        <option name="VCS_ANNOTATIONS_COLOR_4" value="fffbcf"/>
-        <option name="VCS_ANNOTATIONS_COLOR_5" value="ffbfc3"/>
+        <option name="VCS_ANNOTATIONS_COLOR_1" value="a1bef7"/>
+        <option name="VCS_ANNOTATIONS_COLOR_2" value="c9dafb"/>
+        <option name="VCS_ANNOTATIONS_COLOR_3" value="dee8fc"/>
+        <option name="VCS_ANNOTATIONS_COLOR_4" value="edf2fa"/>
+        <option name="VCS_ANNOTATIONS_COLOR_5" value="f7f8fa"/>
         <option name="RECURSIVE_CALL_ATTRIBUTES" value="574300"/>
 
         <option name="FILESTATUS_ADDED" value="067D17"/>

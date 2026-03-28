@@ -6,8 +6,8 @@ import org.jspecify.annotations.Nullable;
 import java.util.concurrent.TimeUnit;
 
 final class ActivityImpl implements Activity {
-    private final String name;
-    private String description;
+    private final @Nullable String name;
+    private @Nullable String description = null;
 
     private final String threadName;
     private final long threadId;
@@ -16,7 +16,7 @@ final class ActivityImpl implements Activity {
     private long end;
 
     // null doesn't mean root - not obligated to set parent, only as hint
-    private final ActivityImpl parent;
+    private final @Nullable ActivityImpl parent;
 
     private @Nullable ActivityCategory category;
 
@@ -37,7 +37,6 @@ final class ActivityImpl implements Activity {
         threadName = thread.getName();
     }
 
-    
     public String getThreadName() {
         return threadName;
     }
@@ -61,15 +60,13 @@ final class ActivityImpl implements Activity {
     // and how do we can sort correctly, when parent item equals to child (start and end), also there is another child with start equals to end?
     // so, parent added to API but as it was not enough, decided to measure time in nanoseconds instead of ms to mitigate such situations
     @Override
-    
     public ActivityImpl startChild(String name) {
         ActivityImpl activity = new ActivityImpl(name, StartUpMeasurer.getCurrentTime(), this, pluginId);
         activity.category = category;
         return activity;
     }
 
-    
-    public String getName() {
+    public @Nullable String getName() {
         return name;
     }
 
@@ -107,7 +104,6 @@ final class ActivityImpl implements Activity {
     }
 
     @Override
-    
     public Activity endAndStart(String name) {
         end();
         ActivityImpl activity = new ActivityImpl(name, /* start = */end, parent, /* level = */ pluginId);

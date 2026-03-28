@@ -15,7 +15,6 @@
  */
 package consulo.ide.impl.idea.ui.tabs.impl.singleRow;
 
-import consulo.application.AllIcons;
 import consulo.ide.impl.idea.ui.tabs.impl.JBTabsImpl;
 import consulo.ide.impl.idea.ui.tabs.impl.ShapeTransform;
 import consulo.ide.impl.idea.ui.tabs.impl.TabLabel;
@@ -109,15 +108,16 @@ public abstract class SingleRowLayoutStrategy {
 
     @Override
     public int getMoreRectAxisSize() {
-      return AllIcons.Actions.FindAndShowNextMatchesSmall.getWidth() + 4;
+      return myLayout.myMoreButton.getPreferredSize().width;
     }
 
     @Override
     public int getToFitLength(SingleRowPassInfo data) {
+      int entryPointWidth = myTabs.getEntryPointButtonWidth();
       if (data.hToolbar != null) {
-        return myTabs.getWidth() - data.insets.left - data.insets.right - data.hToolbar.getMinimumSize().width;  
+        return myTabs.getWidth() - data.insets.left - data.insets.right - data.hToolbar.getMinimumSize().width - entryPointWidth;
       } else {
-        return myTabs.getWidth() - data.insets.left - data.insets.right;
+        return myTabs.getWidth() - data.insets.left - data.insets.right - entryPointWidth;
       }
     }
 
@@ -185,9 +185,11 @@ public abstract class SingleRowLayoutStrategy {
 
     @Override
     public Rectangle getMoreRect(SingleRowPassInfo data) {
-      int x = data.layoutSize.width - data.moreRectAxisSize - 1;
+      int entryPointWidth = myTabs.getEntryPointButtonWidth();
+      Dimension prefSize = myLayout.myMoreButton.getPreferredSize();
+      int x = data.layoutSize.width - prefSize.width - 1 - entryPointWidth;
       return new Rectangle(x, data.insets.top + JBTabsImpl.getSelectionTabVShift(),
-                                            data.moreRectAxisSize - 1, myTabs.myHeaderFitSize.height - 1);
+                                            prefSize.width, prefSize.height);
     }
 
     @Override
@@ -242,8 +244,10 @@ public abstract class SingleRowLayoutStrategy {
 
     @Override
     public Rectangle getMoreRect(SingleRowPassInfo data) {
-      return new Rectangle(myTabs.getWidth() - data.insets.right - data.moreRectAxisSize + 2, getFixedPosition(data),
-                                            data.moreRectAxisSize - 1, myTabs.myHeaderFitSize.height - 1);
+      int entryPointWidth = myTabs.getEntryPointButtonWidth();
+      Dimension prefSize = myLayout.myMoreButton.getPreferredSize();
+      return new Rectangle(myTabs.getWidth() - data.insets.right - prefSize.width + 2 - entryPointWidth, getFixedPosition(data),
+                                            prefSize.width, prefSize.height);
     }
 
     @Override
@@ -269,7 +273,7 @@ public abstract class SingleRowLayoutStrategy {
 
     @Override
     int getMoreRectAxisSize() {
-      return AllIcons.General.MoreTabs.getHeight() + 4;
+      return myLayout.myMoreButton.getPreferredSize().height;
     }
 
     @Override
@@ -350,10 +354,11 @@ public abstract class SingleRowLayoutStrategy {
 
     @Override
     public Rectangle getMoreRect(SingleRowPassInfo data) {
+      Dimension prefSize = myLayout.myMoreButton.getPreferredSize();
       return new Rectangle(data.insets.left + JBTabsImpl.getSelectionTabVShift(),
-                           myTabs.getHeight() - data.insets.bottom - data.moreRectAxisSize - 1,
-                           myTabs.myHeaderFitSize.width - 1,
-                           data.moreRectAxisSize - 1);
+                           myTabs.getHeight() - data.insets.bottom - prefSize.height - 1,
+                           prefSize.width,
+                           prefSize.height);
     }
 
   }
@@ -389,10 +394,11 @@ public abstract class SingleRowLayoutStrategy {
 
     @Override
     public Rectangle getMoreRect(SingleRowPassInfo data) {
+      Dimension prefSize = myLayout.myMoreButton.getPreferredSize();
       return new Rectangle(data.layoutSize.width - myTabs.myHeaderFitSize.width,
-                        myTabs.getHeight() - data.insets.bottom - data.moreRectAxisSize - 1,
-                        myTabs.myHeaderFitSize.width - 1,
-                        data.moreRectAxisSize - 1);
+                        myTabs.getHeight() - data.insets.bottom - prefSize.height - 1,
+                        prefSize.width,
+                        prefSize.height);
     }
   }
 

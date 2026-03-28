@@ -33,6 +33,7 @@ import consulo.language.psi.PsiFile;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.ColoredTextContainer;
+import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.image.Image;
 import consulo.util.lang.Pair;
@@ -112,5 +113,11 @@ public interface LanguageEditorInternalHelper {
                                  boolean clearHighlights,
                                  List<TextRange> textRanges) {
 
+    }
+
+    default void startFindUsages(Editor editor,
+                                 Project project,
+                                 PsiElement element,
+                                 @Nullable RelativePoint point) {
     }
 }

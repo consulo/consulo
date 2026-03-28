@@ -94,7 +94,7 @@ public class SocketReceive extends AsynchronousSocketStep {
 	/**
 	 * @see #receiveFrom(Function)
 	 */
-	public static SocketReceive receiveFrom(@Nullable SocketAddress socketAddress) {
+	public static SocketReceive receiveFrom(SocketAddress socketAddress) {
 		return receiveFrom(c -> socketAddress);
 	}
 
@@ -112,9 +112,10 @@ public class SocketReceive extends AsynchronousSocketStep {
 	 *                      received completely
 	 * @return A new step instance
 	 */
-	public static SocketReceive receiveUntil(
-		BiPredicate<Integer, ByteBuffer> checkFinished) {
-		return receiveFrom((SocketAddress) null).until(checkFinished);
+	public static SocketReceive receiveUntil(BiPredicate<Integer, ByteBuffer> checkFinished) {
+		return receiveFrom(continuation -> {
+			throw new IllegalStateException("Expecting to be already connected");
+		}).until(checkFinished);
 	}
 
 	/**

@@ -20,19 +20,19 @@ import org.jspecify.annotations.Nullable;
 /**
  * @author Konstantin Bulenkov
  */
-public class Couple<T> extends Pair<T, T> {
-  private static final Couple EMPTY_COUPLE = of(null, null);
+public class Couple<T extends @Nullable Object> extends Pair<T, T> {
+  private static final Couple<@Nullable Object> EMPTY_COUPLE = of(null, null);
 
-  public Couple(@Nullable T first, @Nullable T second) {
+  public Couple(T first, T second) {
     super(first, second);
   }
 
-  public static <T> Couple<T> of(@Nullable T first, @Nullable T second) {
+  public static <T extends @Nullable Object> Couple<T> of(T first, T second) {
     return new Couple<>(first, second);
   }
 
   @SuppressWarnings("unchecked")
-  public static <T> Couple<T> of() {
-    return EMPTY_COUPLE;
+  public static <T extends @Nullable Object> Couple<T> of() {
+    return (Couple) EMPTY_COUPLE;
   }
 }

@@ -47,6 +47,8 @@ import consulo.ui.ex.action.DefaultActionGroup;
         @ActionRef(type = PrevSplitAction.class),
         @ActionRef(type = TabsPlacementGroup.class),
         @ActionRef(type = TabsAlphabeticalModeSwitcher.class),
+        @ActionRef(type = AnSeparator.class),
+        @ActionRef(type = ConfigureEditorTabsAction.class)
     }
 )
 public class EditorTabsGroup extends DefaultActionGroup implements DumbAware {

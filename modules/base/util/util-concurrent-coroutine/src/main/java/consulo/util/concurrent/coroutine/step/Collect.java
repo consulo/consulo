@@ -46,15 +46,15 @@ import static java.util.Arrays.asList;
  *
  * @author eso
  */
-public class Collect<I, O> extends CoroutineStep<I, Collection<O>> {
+public class Collect<I extends @Nullable Object, O extends @Nullable Object> extends CoroutineStep<I, Collection<O>> {
 	//~ Instance fields --------------------------------------------------------
 
 	private final List<Coroutine<? super I, ? extends O>> aCoroutines =
 		new ArrayList<>();
 
-	private Predicate<Continuation<?>> pCollectCritiera = c -> true;
+	private Predicate<Continuation<?>> pCollectCriteria = c -> true;
 
-	private Predicate<Continuation<?>> pCompletionCritiera = c -> false;
+	private Predicate<Continuation<?>> pCompletionCriteria = c -> false;
 
 	//~ Constructors -----------------------------------------------------------
 
@@ -81,8 +81,8 @@ public class Collect<I, O> extends CoroutineStep<I, Collection<O>> {
 	private Collect(Collect<I, O> rOther) {
 		aCoroutines.addAll(rOther.aCoroutines);
 
-		pCollectCritiera = rOther.pCollectCritiera;
-		pCompletionCritiera = rOther.pCompletionCritiera;
+		pCollectCriteria = rOther.pCollectCriteria;
+		pCompletionCriteria = rOther.pCompletionCriteria;
 	}
 
 	//~ Static methods ---------------------------------------------------------
@@ -116,8 +116,8 @@ public class Collect<I, O> extends CoroutineStep<I, Collection<O>> {
 	 * @return A new step instance
 	 */
 	@SafeVarargs
-	public static <I, O> Collect<I, O> collect(
-		CoroutineStep<? super I, ? extends O>... rFromSteps) {
+	public static <I extends @Nullable Object, O extends @Nullable Object> Collect<I, O>
+	collect(CoroutineStep<? super I, ? extends O>... rFromSteps) {
 		return new Collect<>(asList(rFromSteps).stream()
 			.map(rStep -> new Coroutine<>(rStep))
 			.collect(Collectors.toList()));
@@ -189,7 +189,7 @@ public class Collect<I, O> extends CoroutineStep<I, Collection<O>> {
 	public Collect<I, O> until(Predicate<Continuation<?>> pCompletionCriteria) {
 		Collect<I, O> aCollect = new Collect<>(aCoroutines);
 
-		aCollect.pCompletionCritiera = pCompletionCriteria;
+		aCollect.pCompletionCriteria = pCompletionCriteria;
 
 		return aCollect;
 	}
@@ -207,7 +207,7 @@ public class Collect<I, O> extends CoroutineStep<I, Collection<O>> {
 	public Collect<I, O> when(Predicate<Continuation<?>> pCollectCriteria) {
 		Collect<I, O> aCollect = new Collect<>(aCoroutines);
 
-		aCollect.pCollectCritiera = pCollectCriteria;
+		aCollect.pCollectCriteria = pCollectCriteria;
 
 		return aCollect;
 	}
@@ -215,11 +215,14 @@ public class Collect<I, O> extends CoroutineStep<I, Collection<O>> {
 	/***************************************
 	 * {@inheritDoc}
 	 */
-	@Nullable
 	@Override
-	protected Collection<O> execute(@Nullable I input, Continuation<?> continuation) {
+	@SuppressWarnings("NullAway")
+	protected @Nullable Collection<O> execute(@Nullable I input, Continuation<?> continuation) {
 		// even if executed blocking the selection must happen asynchronously,
 		// so we just run this step as a new coroutine in the current scope
+
+		// NullAway problem: input and output are nullable by method contract but in actual usage input can be null only if I is nullable.
+		// We cannot explain this to the static validator, so suppressing NullAway validation.
 		return new Coroutine<>(this).runAsync(continuation.scope(), input)
 			.getResult();
 	}
@@ -234,7 +237,7 @@ public class Collect<I, O> extends CoroutineStep<I, Collection<O>> {
 	void collectAsync(I rInput, @Nullable CoroutineStep<Collection<O>, ?> rNextStep, Continuation<?> rContinuation) {
 		Selection<Collection<O>, O, Collection<O>> aSelection =
 			Selection.ofMultipleValues(this, rNextStep, rContinuation,
-				pCompletionCritiera, pCollectCritiera);
+				pCompletionCriteria, pCollectCriteria);
 
 		rContinuation.suspendTo(aSelection);
 

@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.application.util;
 
 import consulo.application.Application;
@@ -41,14 +40,12 @@ import static consulo.application.util.concurrent.QueueProcessor.ThreadToUse;
  * BackgroundTaskQueue may have a title - this title will be used if the task which is currently running doesn't have a title.
  */
 public class BackgroundTaskQueue {
-  
   private final Application myApplication;
   
   protected final String myTitle;
   
   protected final QueueProcessor<TaskData> myProcessor;
 
-  
   private final Object TEST_TASK_LOCK = new Object();
   private volatile boolean myForceAsyncInTests = false;
 
@@ -115,7 +112,6 @@ public class BackgroundTaskQueue {
   }
 
   protected class BackgroundableTaskData implements TaskData {
-    
     private final Task.Backgroundable myTask;
     private final @Nullable ModalityState myModalityState;
     private final @Nullable ProgressIndicator myIndicator;

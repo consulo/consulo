@@ -18,6 +18,7 @@ package consulo.application.progress;
 import consulo.component.ProcessCanceledException;
 import consulo.localize.LocalizeValue;
 import consulo.ui.ModalityState;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author Eugene Zhuravlev
@@ -122,7 +123,7 @@ public class DelegatingProgressIndicator implements WrappedProgressIndicator, St
   }
 
   @Override
-  public void setModalityProgress(ProgressIndicator modalityProgress) {
+  public void setModalityProgress(@Nullable ProgressIndicator modalityProgress) {
     myIndicator.setModalityProgress(modalityProgress);
   }
 

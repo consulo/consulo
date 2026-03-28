@@ -23,7 +23,7 @@ import org.jspecify.annotations.Nullable;
  * @since 2025-06-17
  */
 public class ProgressCancelHook {
-    private static CheckCanceledHook ourCheckCanceledHook;
+    private static @Nullable CheckCanceledHook ourCheckCanceledHook;
 
     public static boolean runCheckCanceledHooks(@Nullable ProgressIndicator indicator) {
         CheckCanceledHook hook = ourCheckCanceledHook;

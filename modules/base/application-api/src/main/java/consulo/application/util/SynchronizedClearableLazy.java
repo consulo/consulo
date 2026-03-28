@@ -1,38 +1,41 @@
 package consulo.application.util;
 
 import consulo.util.lang.ObjectUtil;
+import org.jspecify.annotations.Nullable;
 
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Supplier;
 
-public class SynchronizedClearableLazy<T> implements Supplier<T> {
+public class SynchronizedClearableLazy<T extends @Nullable Object> implements Supplier<T> {
     private final Supplier<T> initializer;
-    private final AtomicReference<T> computedValue;
+    private final AtomicReference<T> computedValue = new AtomicReference<>(notYetInitialized());
 
     private static final Object NOT_YET_INITIALIZED = ObjectUtil.sentinel("Not yet initialized");
 
     public SynchronizedClearableLazy(Supplier<T> initializer) {
         this.initializer = initializer;
-        this.computedValue = new AtomicReference<>(notYetInitialized());
     }
 
     @SuppressWarnings("unchecked")
-    private T notYetInitialized() {
+    private static <T> T notYetInitialized() {
         return (T) NOT_YET_INITIALIZED;
     }
 
-    private T nullize(T t) {
+    @SuppressWarnings("NullAway")
+    private static <T extends @Nullable Object> T nullize(T t) {
+        // NullAway problem: this null can be returned only if T is nullable, if T is not-nullable, null would never be returned
+        // Static validator doesn't understand that this case is safe, so suppressing NullAway validation
         return isInitialized(t) ? t : null;
     }
 
-    private boolean isInitialized(T t) {
+    private static <T> boolean isInitialized(T t) {
         return t != NOT_YET_INITIALIZED;
     }
 
     /**
      * Returns the computed value if it has been initialized; otherwise returns null.
      */
-    public T getValueIfInitialized() {
+    public @Nullable T getValueIfInitialized() {
         return nullize(computedValue.get());
     }
 
@@ -77,7 +80,7 @@ public class SynchronizedClearableLazy<T> implements Supplier<T> {
     /**
      * Resets the computed value to uninitialized state and returns the previous value if it was initialized.
      */
-    public T drop() {
+    public @Nullable T drop() {
         return nullize(computedValue.getAndSet(notYetInitialized()));
     }
 

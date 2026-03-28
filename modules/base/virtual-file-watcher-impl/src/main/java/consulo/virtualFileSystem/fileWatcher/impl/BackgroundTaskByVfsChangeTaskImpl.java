@@ -123,7 +123,7 @@ public class BackgroundTaskByVfsChangeTaskImpl implements BackgroundTaskByVfsCha
         this(project, pointer, parameters, provider, name, findProviderByName(provider), manager);
     }
 
-    private static @Nullable BackgroundTaskByVfsChangeProvider findProviderByName(String name) {
+    private static BackgroundTaskByVfsChangeProvider findProviderByName(String name) {
         BackgroundTaskByVfsChangeProvider temp = null;
         for (BackgroundTaskByVfsChangeProvider backgroundTaskByVfsChangeProvider : BackgroundTaskByVfsChangeProvider.EP_NAME.getExtensionList()) {
             if (Comparing.equal(name, backgroundTaskByVfsChangeProvider.getTemplateName())) {
@@ -131,7 +131,8 @@ public class BackgroundTaskByVfsChangeTaskImpl implements BackgroundTaskByVfsCha
                 break;
             }
         }
-        return temp;
+
+        return temp != null ? temp : new UnknownBackgroundTaskByVfsChangeProvider(name);
     }
 
     public void run(AsyncResult<Void> actionCallback, BuildProgress<BuildProgressDescriptor> buildProgress) {

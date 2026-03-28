@@ -16,12 +16,12 @@
 package consulo.util.lang.function;
 
 import consulo.util.lang.Pair;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Map;
 import java.util.function.Function;
-import java.util.function.Supplier;
 
 /**
  * @author gregsh
@@ -30,7 +30,7 @@ import java.util.function.Supplier;
 public class Functions {
     private static final Function ID = (MonoFunction) o -> o;
 
-    private static final Function NULL = o -> null;
+    private static final Function<Object, @Nullable Object> NULL = o -> null;
 
     private static final Function TO_STRING = String::valueOf;
 
@@ -58,7 +58,7 @@ public class Functions {
         return TO_STRING;
     }
 
-    public static <A, B> Function<A, B> fromMap(Map<A, B> map) {
+    public static <A, B> Function<A, @Nullable B> fromMap(Map<A, B> map) {
         return map::get;
     }
 
@@ -68,16 +68,16 @@ public class Functions {
         return (Function<T, Class>) TO_CLASS;
     }
 
-    private static final Function PAIR_FIRST = (Function<Pair<?, ?>, Object>) pair -> Pair.getFirst(pair);
+    private static final Function<@Nullable Pair<?, ?>, @Nullable Object> PAIR_FIRST = pair -> Pair.getFirst(pair);
 
-    private static final Function PAIR_SECOND = (Function<Pair<?, ?>, Object>) pair -> Pair.getSecond(pair);
+    private static final Function<@Nullable Pair<?, ?>, @Nullable Object> PAIR_SECOND = pair -> Pair.getSecond(pair);
 
-    public static <A> Function<Pair<A, ?>, A> pairFirst() {
-        return (Function<Pair<A, ?>, A>) PAIR_FIRST;
+    public static <A> Function<@Nullable Pair<A, ?>, @Nullable A> pairFirst() {
+        return (Function<@Nullable Pair<A, ?>, @Nullable A>) (Function) PAIR_FIRST;
     }
 
-    public static <B> Function<Pair<?, B>, B> pairSecond() {
-        return (Function<Pair<?, B>, B>) PAIR_SECOND;
+    public static <B> Function<@Nullable Pair<?, B>, @Nullable B> pairSecond() {
+        return (Function<@Nullable Pair<?, B>, @Nullable B>) (Function) PAIR_SECOND;
     }
 
     public static MonoFunction<Integer> intIncrement() {

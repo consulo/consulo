@@ -34,7 +34,7 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class XmlSerializerImpl {
-    private static @Nullable Reference<Map<Pair<Type, MutableAccessor>, Binding>> ourBindings;
+    private static @Nullable Reference<Map<Pair<Type, @Nullable MutableAccessor>, Binding>> ourBindings;
 
     public static @Nullable Element serialize(Object object, SerializationFilter filter) throws XmlSerializationException {
         try {
@@ -100,8 +100,8 @@ public class XmlSerializerImpl {
             return null;
         }
 
-        Pair<Type, MutableAccessor> key = Pair.create(originalType, accessor);
-        Map<Pair<Type, MutableAccessor>, Binding> map = getBindingCacheMap();
+        Pair<Type, @Nullable MutableAccessor> key = Pair.create(originalType, accessor);
+        Map<Pair<Type, @Nullable MutableAccessor>, Binding> map = getBindingCacheMap();
         Binding binding = map.get(key);
         if (binding == null) {
             binding = getNonCachedClassBinding(aClass, accessor, originalType);
@@ -117,8 +117,8 @@ public class XmlSerializerImpl {
         return binding;
     }
 
-    private static Map<Pair<Type, MutableAccessor>, Binding> getBindingCacheMap() {
-        Map<Pair<Type, MutableAccessor>, Binding> map = consulo.util.lang.ref.SoftReference.dereference(ourBindings);
+    private static Map<Pair<Type, @Nullable MutableAccessor>, Binding> getBindingCacheMap() {
+        Map<Pair<Type, @Nullable MutableAccessor>, Binding> map = consulo.util.lang.ref.SoftReference.dereference(ourBindings);
         if (map == null) {
             map = new ConcurrentHashMap<>();
             ourBindings = new SoftReference<>(map);

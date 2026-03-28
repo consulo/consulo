@@ -134,6 +134,7 @@ public class PluginAdvertiserImpl implements PluginAdvertiser {
         }
 
         myNotificationService.newInfo(ourGroup)
+            .title(ExternalServiceLocalize.messagePluginsSuggestion())
             .content(ExternalServiceLocalize.messagePluginsSuggestionNotification())
             .addClosingAction(
                 ExternalServiceLocalize.actionPluginsSuggestionInstallText(),

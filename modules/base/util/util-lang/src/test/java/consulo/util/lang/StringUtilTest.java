@@ -2,14 +2,17 @@
 package consulo.util.lang;
 
 import consulo.util.lang.internal.NaturalComparator;
+import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.StringTokenizer;
+import java.util.function.Function;
 import java.util.regex.Pattern;
 
+import static consulo.util.lang.StringUtil.notNullize;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -20,6 +23,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @author UNV
  */
 public class StringUtilTest {
+    @SuppressWarnings("deprecation")
     @Test
     void testAreSameInstance() {
         assertThat(StringUtil.areSameInstance(null, null)).isTrue();

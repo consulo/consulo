@@ -23,6 +23,7 @@ import consulo.versionControlSystem.FilePath;
 import consulo.versionControlSystem.ProjectLevelVcsManager;
 import consulo.versionControlSystem.VcsException;
 import consulo.versionControlSystem.annotate.AnnotationProvider;
+import consulo.versionControlSystem.annotate.CacheableAnnotationProvider;
 import consulo.versionControlSystem.annotate.FileAnnotation;
 import consulo.versionControlSystem.annotate.VcsAnnotation;
 import consulo.versionControlSystem.annotate.VcsCacheableAnnotationProvider;
@@ -39,7 +40,7 @@ import org.jspecify.annotations.Nullable;
  * @author irengrig
  * @since 2011-03-17
  */
-public class VcsAnnotationCachedProxy implements AnnotationProvider {
+public class VcsAnnotationCachedProxy implements AnnotationProvider, CacheableAnnotationProvider {
   private final VcsHistoryCache myCache;
   private final AbstractVcs myVcs;
   private final static Logger LOG = Logger.getInstance(VcsAnnotationCachedProxy.class);
@@ -78,6 +79,25 @@ public class VcsAnnotationCachedProxy implements AnnotationProvider {
   @Override
   public boolean isCaching() {
     return true;
+  }
+
+  /**
+   * Populates the cache by annotating the file if not already cached.
+   * Ported from JB {@code VcsAnnotationCachedProxy.populateCache}.
+   */
+  @Override
+  public void populateCache(VirtualFile file) throws VcsException {
+    annotate(file);
+  }
+
+  /**
+   * Always returns {@code null} — the annotation is accessed via {@link #annotate(VirtualFile)},
+   * which retrieves from the cache internally.
+   * Ported from JB {@code VcsAnnotationCachedProxy.getFromCache}.
+   */
+  @Override
+  public @Nullable FileAnnotation getFromCache(VirtualFile file) {
+    return null;
   }
 
   /**

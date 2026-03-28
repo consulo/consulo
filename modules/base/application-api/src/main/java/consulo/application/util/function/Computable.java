@@ -23,11 +23,10 @@ import java.util.function.Supplier;
 /**
  *  @author dsl
  */
-@FunctionalInterface
 @Deprecated
 @DeprecationInfo("Use Supplier")
-public interface Computable <T> extends Supplier<T> {
-
+@FunctionalInterface
+public interface Computable<T extends @Nullable Object> extends Supplier<T> {
   T compute();
 
   @Override
@@ -35,11 +34,10 @@ public interface Computable <T> extends Supplier<T> {
     return compute();
   }
 
-  class PredefinedValueComputable<T> implements Computable<T> {
-
+  class PredefinedValueComputable<T extends @Nullable Object> implements Computable<T> {
     private final T myValue;
 
-    public PredefinedValueComputable(@Nullable T value) {
+    public PredefinedValueComputable(T value) {
       myValue = value;
     }
 
@@ -50,12 +48,10 @@ public interface Computable <T> extends Supplier<T> {
   }
 
   abstract class NotNullCachedComputable<T> implements Computable<T> {
-    private T myValue;
+    private @Nullable T myValue;
 
-    
     protected abstract T internalCompute();
 
-    
     @Override
     public final T compute() {
       if (myValue == null) {
@@ -65,9 +61,9 @@ public interface Computable <T> extends Supplier<T> {
     }
   }
 
-  abstract class NullableCachedComputable<T> implements Computable<T> {
+  abstract class NullableCachedComputable<T> implements Computable<@Nullable T> {
     private static final Object NULL_VALUE = new Object();
-    private Object myValue;
+    private @Nullable Object myValue = null;
 
     protected abstract @Nullable T internalCompute();
 
@@ -77,7 +73,7 @@ public interface Computable <T> extends Supplier<T> {
         T value = internalCompute();
         myValue = value != null ? value : NULL_VALUE;
       }
-      return myValue != NULL_VALUE ? (T)myValue : null;
+      return myValue != NULL_VALUE ? (T) myValue : null;
     }
   }
 }

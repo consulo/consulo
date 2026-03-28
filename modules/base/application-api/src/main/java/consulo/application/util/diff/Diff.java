@@ -6,15 +6,12 @@ import consulo.application.util.Enumerator;
 import consulo.application.util.LineTokenizer;
 import consulo.logging.Logger;
 import consulo.util.collection.HashingStrategy;
-import consulo.util.lang.ref.Ref;
+import consulo.util.lang.ref.SimpleReference;
 import org.jspecify.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.BitSet;
+import java.util.*;
 
 public final class Diff {
-
     private Diff() {
     }
 
@@ -24,22 +21,23 @@ public final class Diff {
         return buildChanges(splitLines(before), splitLines(after));
     }
 
-    
     public static String[] splitLines(CharSequence s) {
         return s.length() == 0 ? new String[]{""} : LineTokenizer.tokenize(s, false, false);
     }
 
-    public static @Nullable <T> Change buildChanges(T[] objects1, T[] objects2) throws FilesTooBigForDiffException {
+    public static <T> @Nullable Change buildChanges(T[] objects1, T[] objects2) throws FilesTooBigForDiffException {
         return buildChanges(objects1, objects2, HashingStrategy.canonical());
     }
 
-    public static @Nullable <T> Change buildChanges(T[] objects1,
-                                                    T[] objects2,
-                                                    HashingStrategy<? super T> strategy) throws FilesTooBigForDiffException {
+    public static <T> @Nullable Change buildChanges(
+        T[] objects1,
+        T[] objects2,
+        HashingStrategy<? super T> strategy
+    ) throws FilesTooBigForDiffException {
         int startShift = getStartShift(objects1, objects2, strategy);
         int endCut = getEndCut(objects1, objects2, startShift, strategy);
 
-        Ref<Change> changeRef = doBuildChangesFast(objects1.length, objects2.length, startShift, endCut);
+        SimpleReference<Change> changeRef = doBuildChangesFast(objects1.length, objects2.length, startShift, endCut);
         if (changeRef != null) {
             return changeRef.get();
         }
@@ -55,7 +53,7 @@ public final class Diff {
         int startShift = getStartShift(array1, array2);
         int endCut = getEndCut(array1, array2, startShift);
 
-        Ref<Change> changeRef = doBuildChangesFast(array1.length, array2.length, startShift, endCut);
+        SimpleReference<Change> changeRef = doBuildChangesFast(array1.length, array2.length, startShift, endCut);
         if (changeRef != null) {
             return changeRef.get();
         }
@@ -66,19 +64,19 @@ public final class Diff {
         return doBuildChanges(ints1, ints2, new ChangeBuilder(startShift));
     }
 
-    private static @Nullable Ref<Change> doBuildChangesFast(int length1, int length2, int startShift, int endCut) {
+    private static @Nullable SimpleReference<Change> doBuildChangesFast(int length1, int length2, int startShift, int endCut) {
         int trimmedLength1 = length1 - startShift - endCut;
         int trimmedLength2 = length2 - startShift - endCut;
         if (trimmedLength1 != 0 && trimmedLength2 != 0) {
             return null;
         }
-        Change change = trimmedLength1 != 0 || trimmedLength2 != 0 ?
-            new Change(startShift, startShift, trimmedLength1, trimmedLength2, null) :
-            null;
-        return new Ref<>(change);
+        Change change = trimmedLength1 != 0 || trimmedLength2 != 0
+            ? new Change(startShift, startShift, trimmedLength1, trimmedLength2, null)
+            : null;
+        return new SimpleReference<>(change);
     }
 
-    private static Change doBuildChanges(int[] ints1, int[] ints2, ChangeBuilder builder)
+    private static @Nullable Change doBuildChanges(int[] ints1, int[] ints2, ChangeBuilder builder)
         throws FilesTooBigForDiffException {
         Reindexer reindexer = new Reindexer(); // discard unique elements, that have no chance to be matched
         int[][] discarded = reindexer.discardUnique(ints1, ints2);
@@ -86,7 +84,7 @@ public final class Diff {
         if (discarded[0].length == 0 && discarded[1].length == 0) {
             // assert trimmedLength > 0
             builder.addChange(ints1.length, ints2.length);
-            return builder.getFirstChange();
+            return Objects.requireNonNull(builder.getFirstChange());
         }
 
         BitSet[] changes;
@@ -175,7 +173,6 @@ public final class Diff {
         return translateLine(change, line, approximate);
     }
 
-    
     private static String[] trim(String[] lines) {
         String[] result = new String[lines.length];
         for (int i = 0; i < lines.length; i++) {
@@ -221,7 +218,7 @@ public final class Diff {
         /**
          * Previous or next edit command.
          */
-        public Change link;
+        public @Nullable Change link;
         /**
          * # lines of file 1 changed here.
          */
@@ -262,8 +259,8 @@ public final class Diff {
             return "change[" + "inserted=" + inserted + ", deleted=" + deleted + ", line0=" + line0 + ", line1=" + line1 + "]";
         }
 
-        public ArrayList<Change> toList() {
-            ArrayList<Change> result = new ArrayList<>();
+        public List<Change> toList() {
+            List<Change> result = new ArrayList<>();
             Change current = this;
             while (current != null) {
                 result.add(current);
@@ -276,8 +273,8 @@ public final class Diff {
     public static class ChangeBuilder implements LCSBuilder {
         private int myIndex1 = 0;
         private int myIndex2 = 0;
-        private Change myFirstChange;
-        private Change myLastChange;
+        private @Nullable Change myFirstChange = null;
+        private @Nullable Change myLastChange = null;
 
         public ChangeBuilder(int startShift) {
             skip(startShift, startShift);
@@ -306,15 +303,12 @@ public final class Diff {
             skip(length, length);
         }
 
-        public Change getFirstChange() {
+        public @Nullable Change getFirstChange() {
             return myFirstChange;
         }
     }
 
-    public static @Nullable CharSequence linesDiff(
-        CharSequence[] lines1,
-        CharSequence[] lines2
-    ) throws FilesTooBigForDiffException {
+    public static @Nullable CharSequence linesDiff(CharSequence[] lines1, CharSequence[] lines2) throws FilesTooBigForDiffException {
         Change ch = buildChanges(lines1, lines2);
         if (ch == null) {
             return null;

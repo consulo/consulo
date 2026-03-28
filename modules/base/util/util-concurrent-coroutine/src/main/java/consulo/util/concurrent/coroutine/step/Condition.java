@@ -194,9 +194,11 @@ public class Condition<I, O> extends CoroutineStep<I, O> {
 	/***************************************
 	 * {@inheritDoc}
 	 */
-	@Nullable
 	@Override
-	protected O execute(@Nullable I input, Continuation<?> continuation) {
+	@SuppressWarnings("NullAway")
+	protected @Nullable O execute(@Nullable I input, Continuation<?> continuation) {
+		// NullAway problem: input and output are nullable by method contract but in actual usage input can be null only if I is nullable.
+		// We cannot explain this to the static validator, so suppressing NullAway validation.
 		if (pCondition.test(input, continuation)) {
 			return rRunIfTrue.runBlocking(input, continuation);
 		} else if (rRunIfFalse != null) {

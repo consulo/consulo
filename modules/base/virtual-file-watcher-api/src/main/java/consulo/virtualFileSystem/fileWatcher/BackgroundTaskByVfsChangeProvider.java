@@ -65,7 +65,6 @@ public abstract class BackgroundTaskByVfsChangeProvider {
         return false;
     }
 
-    
     @RequiredReadAction
     public String[] getGeneratedFiles(Project project, VirtualFile virtualFile) {
         if (!containsGeneratedFiles()) {

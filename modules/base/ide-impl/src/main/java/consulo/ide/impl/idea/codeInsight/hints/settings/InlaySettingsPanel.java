@@ -5,6 +5,7 @@ import consulo.application.ApplicationManager;
 import consulo.application.ReadAction;
 import consulo.application.util.registry.Registry;
 import consulo.codeEditor.Editor;
+import consulo.ide.impl.codeInsight.codeVision.CodeVisionPassFactory;
 import consulo.ide.impl.idea.codeInsight.hints.DeclarativeInlayHintsPassFactory;
 import consulo.language.Language;
 import consulo.language.editor.impl.internal.inlay.setting.ImmediateConfigurable;
@@ -399,9 +400,12 @@ public class InlaySettingsPanel extends JPanel {
 
     public void apply() {
         apply((CheckedTreeNode) tree.getModel().getRoot(), InlayHintsSettings.getInstance());
+
         //FIXME this impls
         //FIXME ParameterHintsPassFactory.forceHintsUpdateOnNextPass();
         DeclarativeInlayHintsPassFactory.resetModificationStamp();
+        CodeVisionPassFactory.resetModificationStamp();
+
         //FIXME InlayHintsPassFactoryInternal.restartDaemonUpdatingHints(project, "InlaySettingsPanel.apply()");
     }
 

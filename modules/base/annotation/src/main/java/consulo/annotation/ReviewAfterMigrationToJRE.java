@@ -15,12 +15,16 @@
  */
 package consulo.annotation;
 
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+
 /**
+ * Annotation-marker for elements which need review after migration to target JRE.
+ *
  * @author VISTALL
  * @since 2019-11-19
- *
- * Annotation-marker for elements which need review after migration to target JRE
  */
+@Retention(RetentionPolicy.SOURCE)
 public @interface ReviewAfterMigrationToJRE {
   int value();
 

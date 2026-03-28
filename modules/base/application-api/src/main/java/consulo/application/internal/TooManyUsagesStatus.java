@@ -28,7 +28,6 @@ public class TooManyUsagesStatus {
   private static final Key<TooManyUsagesStatus> KEY = Key.create("TooManyUsagesStatus");
   private static final Null NULL = new Null();
 
-  
   public static TooManyUsagesStatus getFrom(@Nullable ProgressIndicator indicator) {
     TooManyUsagesStatus data = null;
     if (indicator instanceof UserDataHolder) {
@@ -37,7 +36,8 @@ public class TooManyUsagesStatus {
     if (data == null) data = NULL;
     return data;
   }
-  public static TooManyUsagesStatus createFor(ProgressIndicator indicator) {
+
+  public static @Nullable TooManyUsagesStatus createFor(ProgressIndicator indicator) {
     TooManyUsagesStatus data = null;
     if (indicator instanceof UserDataHolder) {
       data = new TooManyUsagesStatus();

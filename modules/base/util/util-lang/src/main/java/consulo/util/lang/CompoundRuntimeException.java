@@ -44,13 +44,13 @@ public class CompoundRuntimeException extends RuntimeException {
 
   @Override
   public String getMessage() {
-    return processAll(Throwable::getMessage, s -> {
+    return processAll((throwable) -> StringUtil.notNullize(throwable.getMessage()), s -> {
     });
   }
 
   @Override
   public String getLocalizedMessage() {
-    return processAll(Throwable::getLocalizedMessage, s -> {
+    return processAll((throwable) -> StringUtil.notNullize(throwable.getLocalizedMessage()), s -> {
     });
   }
 

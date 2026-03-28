@@ -25,22 +25,21 @@ import java.util.Map;
 @Deprecated
 @DeprecationInfo("Almost unused - drop later")
 public interface Queryable {
-
   void putInfo(Map<String, String> info);
 
   class PrintInfo {
-    private final String[] myIdKeys;
-    private final String[] myInfoKeys;
+    private final String @Nullable [] myIdKeys;
+    private final String @Nullable [] myInfoKeys;
 
     public PrintInfo() {
       this(null, null);
     }
 
-    public PrintInfo(@Nullable String[] idKeys) {
+    public PrintInfo(String @Nullable [] idKeys) {
       this(idKeys, null);
     }
 
-    public PrintInfo(@Nullable String[] idKeys, @Nullable String[] infoKeys) {
+    public PrintInfo(String @Nullable [] idKeys, String @Nullable [] infoKeys) {
       myIdKeys = idKeys;
       myInfoKeys = infoKeys;
     }
@@ -95,5 +94,4 @@ public interface Queryable {
   interface Contributor {
     void apply(Map<String, String> info);
   }
-
 }

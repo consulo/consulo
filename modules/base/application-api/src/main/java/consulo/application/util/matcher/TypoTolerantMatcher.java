@@ -1,18 +1,18 @@
 // Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.application.util.matcher;
 
-import consulo.application.util.function.Processor;
 import consulo.util.collection.FList;
 import consulo.util.collection.SmartList;
-import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
-import consulo.util.lang.ref.Ref;
+import consulo.util.lang.ref.SimpleReference;
 import org.jetbrains.annotations.Contract;
-
 import org.jspecify.annotations.Nullable;
+
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Objects;
+import java.util.function.Predicate;
 
 class TypoTolerantMatcher extends MinusculeMatcher {
   private final char[] myPattern;
@@ -101,7 +101,8 @@ class TypoTolerantMatcher extends MinusculeMatcher {
   private static FList<MatcherTextRange> prependRange(FList<MatcherTextRange> ranges, Range range) {
     Range head = ((Range)ranges.getHead());
     if (head != null && head.getStartOffset() == range.getEndOffset()) {
-      return ranges.getTail().prepend(new Range(range.getStartOffset(), head.getEndOffset(), range.getErrorCount() + head.getErrorCount()));
+      return Objects.requireNonNull(ranges.getTail())
+        .prepend(new Range(range.getStartOffset(), head.getEndOffset(), range.getErrorCount() + head.getErrorCount()));
     }
     return ranges.prepend(range);
   }
@@ -121,7 +122,7 @@ class TypoTolerantMatcher extends MinusculeMatcher {
     if (fragments == null) return Integer.MIN_VALUE;
     if (fragments.isEmpty()) return 0;
 
-    MatcherTextRange first = fragments.getHead();
+    MatcherTextRange first = Objects.requireNonNull(fragments.getHead());
     boolean startMatch = first.getStartOffset() == 0;
     boolean valuedStartMatch = startMatch && valueStartCaseMatch;
 
@@ -165,7 +166,7 @@ class TypoTolerantMatcher extends MinusculeMatcher {
     int startIndex = first.getStartOffset();
     boolean afterSeparator = StringUtil.indexOfAny(name, myHardSeparators, 0, startIndex) >= 0;
     boolean wordStart = startIndex == 0 || NameUtilCore.isWordStart(name, startIndex) && !NameUtilCore.isWordStart(name, startIndex - 1);
-    boolean finalMatch = fragments.get(fragments.size() - 1).getEndOffset() == name.length();
+    boolean finalMatch = Objects.requireNonNull(fragments.get(fragments.size() - 1)).getEndOffset() == name.length();
 
     return (wordStart ? 1000 : 0) + matchingCase + -fragments.size() + -skippedHumps * 10 + -errors + (afterSeparator ? 0 : 2) + (startMatch ? 1 : 0) + (finalMatch ? 1 : 0);
   }
@@ -220,7 +221,6 @@ class TypoTolerantMatcher extends MinusculeMatcher {
   }
 
   private class Session {
-    
     private final String myName;
     private final boolean isAsciiName;
 
@@ -651,7 +651,6 @@ class TypoTolerantMatcher extends MinusculeMatcher {
     return 'a' <= c && c <= 'z';
   }
 
-  
   @Override
   public String toString() {
     return "TypoTolerantMatcher{myPattern=" + new String(myPattern) + ", myOptions=" + myOptions + '}';
@@ -661,9 +660,9 @@ class TypoTolerantMatcher extends MinusculeMatcher {
     private final @Nullable ErrorState myBase;
     private final int myDeriveIndex;
 
-    private List<Pair<Integer, Error>> myErrors;
+    private @Nullable List<ErrorIndex> myErrors = null;
 
-    private char[] myPattern;
+    private char @Nullable [] myPattern;
 
     ErrorState(@Nullable ErrorState base, int deriveIndex) {
       myBase = base;
@@ -674,18 +673,17 @@ class TypoTolerantMatcher extends MinusculeMatcher {
       this(null, 0);
     }
 
-    
     ErrorState deriveFrom(int index) {
       return new ErrorState(this, index);
     }
 
     void addError(int index, Error error) {
       if (myErrors == null) myErrors = new SmartList<>();
-      Pair<Integer, Error> pair = Pair.create(index, error);
-      myErrors.add(pair);
+      ErrorIndex errorIndex = new ErrorIndex(index, error);
+      myErrors.add(errorIndex);
 
       if (myPattern != null) {
-        myPattern = applyError(myPattern, pair);
+        myPattern = applyError(myPattern, errorIndex);
       }
     }
 
@@ -696,8 +694,8 @@ class TypoTolerantMatcher extends MinusculeMatcher {
       }
 
       if (myErrors != null) {
-        for (Pair<Integer, Error> error : myErrors) {
-          if (start <= error.first && error.first < end) {
+        for (ErrorIndex error : myErrors) {
+          if (error.isBetween(start, end)) {
             errors++;
           }
         }
@@ -706,7 +704,7 @@ class TypoTolerantMatcher extends MinusculeMatcher {
       return errors;
     }
 
-    private boolean processErrors(int start, int end, Processor<? super Pair<Integer, Error>> processor) {
+    private boolean processErrors(int start, int end, Predicate<? super ErrorIndex> processor) {
       if (myBase != null && start < myDeriveIndex) {
         if (!myBase.processErrors(start, myDeriveIndex, processor)) {
           return false;
@@ -714,11 +712,9 @@ class TypoTolerantMatcher extends MinusculeMatcher {
       }
 
       if (myErrors != null) {
-        for (Pair<Integer, Error> error : myErrors) {
-          if (start <= error.first && error.first < end) {
-            if (!processor.process(error)) {
-              return false;
-            }
+        for (ErrorIndex error : myErrors) {
+          if (error.isBetween(start, end) && !processor.test(error)) {
+            return false;
           }
         }
       }
@@ -740,8 +736,8 @@ class TypoTolerantMatcher extends MinusculeMatcher {
       }
 
       if (myErrors != null) {
-        for (Pair<Integer, Error> error : myErrors) {
-          if (error.first < upToIndex) {
+        for (ErrorIndex error : myErrors) {
+          if (error.index() < upToIndex) {
             pattern = applyError(pattern, error);
           }
         }
@@ -750,40 +746,51 @@ class TypoTolerantMatcher extends MinusculeMatcher {
       return pattern;
     }
 
-    private static char[] applyError(char[] pattern, Pair<Integer, Error> error) {
-      if (error.second instanceof TypoError) {
-        pattern[error.first] = ((TypoError)error.second).myCorrectChar;
-        return pattern;
-      }
-      else if (error.second instanceof SwapError) {
-        char c = pattern[error.first];
-        pattern[error.first] = pattern[error.first + 1];
-        pattern[error.first + 1] = c;
-        return pattern;
-      }
-      else if (error.second instanceof MissError) {
-        return insert(pattern, error.first, ((MissError)error.second).myMissedChar);
-      }
-
-      return pattern;
+    private static char[] applyError(char[] pattern, ErrorIndex error) {
+      return switch (error.error()) {
+        case TypoError typoError -> {
+          pattern[error.index()] = typoError.myCorrectChar;
+          yield pattern;
+        }
+        case SwapError swapError -> {
+          char c = pattern[error.index()];
+          pattern[error.index()] = pattern[error.index() + 1];
+          pattern[error.index() + 1] = c;
+          yield pattern;
+        }
+        case MissError missError -> insert(pattern, error.index(), missError.myMissedChar);
+        default -> pattern;
+      };
     }
 
     public boolean affects(int index) {
-      return !processErrors(0, index + 1, error -> {
-        if (error.first == index) return false;
-        if (error.first == index - 1 && error.second == SwapError.instance) return false;
-        if (error.first < index) {
-          if (error.second instanceof MissError) return false;
-          //todo support extra
+      return !processErrors(
+        0,
+        index + 1,
+        error -> {
+          if (error.index() == index) {
+            return false;
+          }
+          if (error.index() == index - 1 && error.error() == SwapError.instance) {
+            return false;
+          }
+          if (error.index() < index) {
+            if (error.error() instanceof MissError) {
+              return false;
+            }
+            //todo support extra
+          }
+          return true;
         }
-        return true;
-      });
+      );
     }
 
-    public Error getError(int i) {
+    public @Nullable Error getError(int i) {
       if (myErrors != null) {
-        for (Pair<Integer, Error> error : myErrors) {
-          if (error.first == i) return error.second;
+        for (ErrorIndex error : myErrors) {
+          if (error.index() == i) {
+            return error.error();
+          }
         }
       }
 
@@ -795,14 +802,18 @@ class TypoTolerantMatcher extends MinusculeMatcher {
     }
 
     public int length(char[] pattern) {
-      Ref<Integer> ref = new Ref<>(pattern.length);
-      processErrors(0, Integer.MAX_VALUE, error -> {
-        if (error.second instanceof MissError) {
-          ref.set(ref.get() + 1);
+      SimpleReference<Integer> ref = new SimpleReference<>(pattern.length);
+      processErrors(
+        0,
+        Integer.MAX_VALUE,
+        error -> {
+          if (error.error() instanceof MissError) {
+            ref.set(Objects.requireNonNull(ref.get()) + 1);
+          }
+          return true;
         }
-        return true;
-      });
-      return ref.get();
+      );
+      return Objects.requireNonNull(ref.get());
     }
   }
 
@@ -829,6 +840,12 @@ class TypoTolerantMatcher extends MinusculeMatcher {
     }
   }
 
+  private record ErrorIndex(int index, Error error) {
+    boolean isBetween(int startIndex, int endIndex) {
+      return startIndex <= index && index < endIndex;
+    }
+  }
+
   private static class Fragment {
     private final int myLength;
     private final ErrorState myErrorState;
@@ -842,7 +859,6 @@ class TypoTolerantMatcher extends MinusculeMatcher {
       return myLength;
     }
 
-    
     ErrorState getErrorState() {
       return myErrorState;
     }
@@ -861,7 +877,6 @@ class TypoTolerantMatcher extends MinusculeMatcher {
     }
 
     @Override
-    
     public Range shiftRight(int delta) {
       if (delta == 0) return this;
       return new Range(getStartOffset() + delta, getEndOffset() + delta, getErrorCount());
@@ -873,7 +888,6 @@ class TypoTolerantMatcher extends MinusculeMatcher {
   }
 
   @Contract(pure = true)
-  
   public static char [] insert(char [] array, int index, char value) {
     char[] result = new char[array.length + 1];
     System.arraycopy(array, 0, result, 0, index);

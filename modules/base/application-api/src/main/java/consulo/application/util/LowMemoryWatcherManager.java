@@ -6,6 +6,7 @@ import consulo.disposer.Disposable;
 import consulo.logging.Logger;
 import consulo.util.concurrent.ConcurrencyUtil;
 import consulo.util.lang.SystemProperties;
+import org.jspecify.annotations.Nullable;
 
 import javax.management.Notification;
 import javax.management.NotificationEmitter;
@@ -28,7 +29,7 @@ public final class LowMemoryWatcherManager implements Disposable {
   
   private final ExecutorService myExecutorService;
 
-  private Future<?> mySubmitted; // guarded by ourJanitor
+  private @Nullable Future<?> mySubmitted = null; // guarded by ourJanitor
   private final Future<?> myMemoryPoolMXBeansFuture;
   private final Consumer<Boolean> myJanitor = new Consumer<>() {
     @Override

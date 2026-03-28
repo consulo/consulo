@@ -117,13 +117,14 @@ public class ArrayBackedFMap implements KeyFMap {
 
     @Override
     public String toString() {
-        String s = "";
-        for (int i = 0; i < keys.length; i++) {
-            int key = keys[i];
-            Object value = values[i];
-            s += (s.isEmpty() ? "" : ", ") + ourRegistry.getKeyByIndex(key) + " -> " + value;
+        StringBuilder s = new StringBuilder("(");
+        for (int i = 0, n = keys.length; i < n; i++) {
+            if (i > 0) {
+                s.append(", ");
+            }
+            s.append(ourRegistry.getKeyByIndex(keys[i])).append(" -> ").append(values[i]);
         }
-        return "(" + s + ")";
+        return s.append(")").toString();
     }
 
     @Override
@@ -148,7 +149,7 @@ public class ArrayBackedFMap implements KeyFMap {
         Key[] result = new Key[indexes.length];
 
         for (int i = 0; i < indexes.length; i++) {
-            result[i] = ourRegistry.getKeyByIndex(indexes[i]);
+            result[i] = ourRegistry.getRequiredKeyByIndex(indexes[i]);
         }
 
         return result;

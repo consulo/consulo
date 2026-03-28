@@ -25,6 +25,7 @@ import org.jdom.input.SAXBuilder;
 import org.jdom.input.sax.XMLReaders;
 import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.io.*;
@@ -45,14 +46,14 @@ public class StartupActionScriptManager {
     private static final String action = "unzip";
 
     private File mySource;
-    private FilenameFilter myFilenameFilter;
+    private @Nullable FilenameFilter myFilenameFilter;
     private File myDestination;
 
     public UnzipCommand(File source, File destination) {
       this(source, destination, null);
     }
 
-    public UnzipCommand(File source, File destination, FilenameFilter filenameFilter) {
+    public UnzipCommand(File source, File destination, @Nullable FilenameFilter filenameFilter) {
       myDestination = destination;
       mySource = source;
       myFilenameFilter = filenameFilter;
@@ -66,7 +67,7 @@ public class StartupActionScriptManager {
       return myDestination;
     }
 
-    public FilenameFilter getFilenameFilter() {
+    public @Nullable FilenameFilter getFilenameFilter() {
       return myFilenameFilter;
     }
 

@@ -95,9 +95,8 @@ public class ChannelSend<T> extends ChannelStep<T, T> {
 	/***************************************
 	 * {@inheritDoc}
 	 */
-	@Nullable
 	@Override
-	protected T execute(@Nullable T input, Continuation<?> continuation) {
+	protected @Nullable T execute(@Nullable T input, Continuation<?> continuation) {
 		getChannel(continuation).sendBlocking(input);
 
 		return input;

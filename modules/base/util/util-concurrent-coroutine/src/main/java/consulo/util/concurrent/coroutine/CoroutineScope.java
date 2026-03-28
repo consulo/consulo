@@ -17,6 +17,7 @@
 package consulo.util.concurrent.coroutine;
 
 import consulo.util.concurrent.coroutine.internal.RunLock;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.LinkedHashSet;
@@ -111,10 +112,10 @@ public class CoroutineScope extends CoroutineEnvironment {
         aScope.checkThrowErrors();
     }
 
-    public static Continuation<?> launchAsync(CoroutineContext context, Supplier<Coroutine<?, ?>> supplier) {
+    public static Continuation<?> launchAsync(CoroutineContext context, Supplier<Coroutine<@Nullable ?, ?>> supplier) {
         CoroutineScope aScope = new CoroutineScope(context);
 
-        Coroutine<?, ?> coroutine = supplier.get();
+        Coroutine<@Nullable ?, ?> coroutine = supplier.get();
 
         return coroutine.runAsync(aScope, null);
     }

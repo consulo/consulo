@@ -18,6 +18,7 @@ package consulo.container.internal;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginDescriptorVersionValidator;
 import consulo.container.plugin.PluginId;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -30,7 +31,6 @@ import java.util.function.Predicate;
  * @since 2020-05-23
  */
 public class PluginValidator {
-
     public static PluginDescriptorVersionValidator VALIDATOR = new PluginDescriptorVersionValidator() {
         @Override
         public boolean validateVersion(PluginDescriptor pluginDescriptor) {
@@ -42,14 +42,20 @@ public class PluginValidator {
         return !VALIDATOR.validateVersion(descriptor);
     }
 
-    public static void checkDependants(PluginDescriptor pluginDescriptor, Function<PluginId, PluginDescriptor> pluginId2Descriptor, Predicate<PluginId> check) {
+    public static void checkDependants(
+        PluginDescriptor pluginDescriptor,
+        Function<PluginId, ? extends @Nullable PluginDescriptor> pluginId2Descriptor,
+        Predicate<PluginId> check
+    ) {
         checkDependants(pluginDescriptor, pluginId2Descriptor, check, new HashSet<>());
     }
 
-    private static boolean checkDependants(PluginDescriptor pluginDescriptor,
-                                           Function<PluginId, PluginDescriptor> pluginId2Descriptor,
-                                           Predicate<PluginId> check,
-                                           Set<PluginId> processed) {
+    private static boolean checkDependants(
+        PluginDescriptor pluginDescriptor,
+        Function<PluginId, ? extends @Nullable PluginDescriptor> pluginId2Descriptor,
+        Predicate<PluginId> check,
+        Set<PluginId> processed
+    ) {
         processed.add(pluginDescriptor.getPluginId());
         PluginId[] dependentPluginIds = pluginDescriptor.getDependentPluginIds();
         Set<PluginId> optionalDependencies = new HashSet<PluginId>(Arrays.asList(pluginDescriptor.getOptionalDependentPluginIds()));

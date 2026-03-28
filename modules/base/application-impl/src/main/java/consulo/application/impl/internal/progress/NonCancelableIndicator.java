@@ -22,6 +22,7 @@ import consulo.application.progress.ProgressManager;
 import consulo.application.progress.StandardProgressIndicator;
 import consulo.localize.LocalizeValue;
 import consulo.ui.ModalityState;
+import org.jspecify.annotations.Nullable;
 
 class NonCancelableIndicator implements NonCancelableSection, StandardProgressIndicator {
   static final NonCancelableIndicator INSTANCE = new NonCancelableIndicator() {
@@ -49,12 +50,10 @@ class NonCancelableIndicator implements NonCancelableSection, StandardProgressIn
 
   @Override
   public void start() {
-
   }
 
   @Override
   public void stop() {
-
   }
 
   @Override
@@ -64,7 +63,6 @@ class NonCancelableIndicator implements NonCancelableSection, StandardProgressIn
 
   @Override
   public final void cancel() {
-
   }
 
   @Override
@@ -74,10 +72,8 @@ class NonCancelableIndicator implements NonCancelableSection, StandardProgressIn
 
   @Override
   public void setTextValue(LocalizeValue text) {
-
   }
 
-  
   @Override
   public LocalizeValue getTextValue() {
     return LocalizeValue.empty();
@@ -85,10 +81,8 @@ class NonCancelableIndicator implements NonCancelableSection, StandardProgressIn
 
   @Override
   public void setText2Value(LocalizeValue text) {
-
   }
 
-  
   @Override
   public LocalizeValue getText2Value() {
     return LocalizeValue.empty();
@@ -101,27 +95,22 @@ class NonCancelableIndicator implements NonCancelableSection, StandardProgressIn
 
   @Override
   public void setFraction(double fraction) {
-
   }
 
   @Override
   public void pushState() {
-
   }
 
   @Override
   public void popState() {
-
   }
 
   @Override
   public void startNonCancelableSection() {
-
   }
 
   @Override
   public void finishNonCancelableSection() {
-
   }
 
   @Override
@@ -129,15 +118,13 @@ class NonCancelableIndicator implements NonCancelableSection, StandardProgressIn
     return false;
   }
 
-  
   @Override
   public ModalityState getModalityState() {
     return ModalityState.nonModal();
   }
 
   @Override
-  public void setModalityProgress(ProgressIndicator modalityProgress) {
-
+  public void setModalityProgress(@Nullable ProgressIndicator modalityProgress) {
   }
 
   @Override
@@ -147,7 +134,6 @@ class NonCancelableIndicator implements NonCancelableSection, StandardProgressIn
 
   @Override
   public void setIndeterminate(boolean indeterminate) {
-
   }
 
   @Override

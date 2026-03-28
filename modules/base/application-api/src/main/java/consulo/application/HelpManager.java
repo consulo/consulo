@@ -28,7 +28,6 @@ public interface HelpManager {
    */
   Key<String> HELP_ID = Key.create("helpId");
 
-  
   public static HelpManager getInstance() {
     return Application.get().getInstance(HelpManager.class);
   }

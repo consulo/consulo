@@ -29,7 +29,7 @@ import org.jspecify.annotations.Nullable;
  * @author VISTALL
  * @since 13-Sep-17
  */
-public interface Button extends Component, HasComponentStyle<ButtonStyle> {
+public interface Button extends Component, HasComponentStyle<ButtonStyle>, HasFocus {
     @Deprecated
     @DeprecationInfo("Use #create(LocalizeValue)")
     static Button create(String text) {

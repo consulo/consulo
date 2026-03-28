@@ -15,17 +15,18 @@
  */
 package consulo.application.util;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.application.Application;
-import consulo.application.ApplicationManager;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
 import consulo.application.util.concurrent.PooledThreadExecutor;
 import consulo.component.ProcessCanceledException;
 import consulo.logging.Logger;
 import consulo.ui.UIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.lang.ExceptionUtil;
-import consulo.util.lang.ref.Ref;
 import consulo.util.lang.ref.SimpleReference;
+import org.jspecify.annotations.Nullable;
 
 import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
@@ -36,15 +37,15 @@ import java.util.function.Supplier;
 public class ApplicationUtil {
   // throws exception if can't grab read action right now
   @Deprecated
-  public static <T> T tryRunReadAction(Supplier<T> computable) throws CannotRunReadActionException {
+  public static <T> @Nullable T tryRunReadAction(@RequiredReadAction Supplier<T> computable) throws CannotRunReadActionException {
     SimpleReference<T> result = new SimpleReference<>();
     tryRunReadAction(() -> result.set(computable.get()));
     return result.get();
   }
 
   @Deprecated
-  public static void tryRunReadAction(Runnable computable) throws CannotRunReadActionException {
-    if (!ApplicationManager.getApplication().tryRunReadAction(computable)) {
+  public static void tryRunReadAction(@RequiredReadAction Runnable computable) throws CannotRunReadActionException {
+    if (!Application.get().tryRunReadAction(computable)) {
       throw CannotRunReadActionException.create();
     }
   }
@@ -53,10 +54,9 @@ public class ApplicationUtil {
    * Allows to interrupt a process which does not performs checkCancelled() calls by itself.
    * Note that the process may continue to run in background indefinitely - so <b>avoid using this method unless absolutely needed</b>.
    */
-  public static <T> T runWithCheckCanceled(Callable<T> callable,
-                                           ProgressIndicator indicator) throws Exception {
-    Ref<T> result = Ref.create();
-    Ref<Throwable> error = Ref.create();
+  public static <T> @Nullable T runWithCheckCanceled(Callable<T> callable, ProgressIndicator indicator) throws Exception {
+    SimpleReference<T> result = SimpleReference.create();
+    SimpleReference<Throwable> error = SimpleReference.create();
 
     Future<?> future = PooledThreadExecutor.getInstance().submit(() -> ProgressManager.getInstance().executeProcessUnderProgress(() -> {
       try {
@@ -86,13 +86,11 @@ public class ApplicationUtil {
     }
   }
 
-  public static void invokeLaterSomewhere(Application application,
-                                          Runnable r) {
+  public static void invokeLaterSomewhere(Application application, @RequiredUIAccess Runnable r) {
     application.getLastUIAccess().give(r);
   }
 
-  public static void invokeAndWaitSomewhere(Application application,
-                                            Runnable r) {
+  public static void invokeAndWaitSomewhere(Application application, @RequiredUIAccess Runnable r) {
     if (!UIAccess.isUIThread() && application.isWriteThread()) {
       Logger.getInstance(ApplicationUtil.class).error("Can't invokeAndWait from WT to EDT: probably leads to deadlock");
     }

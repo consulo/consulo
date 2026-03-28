@@ -1,6 +1,8 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.util.collection;
 
+import org.jspecify.annotations.Nullable;
+
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.Predicate;
@@ -10,7 +12,7 @@ import java.util.function.Predicate;
  */
 @Deprecated
 public class Queue<T> {
-  private Object[] myArray;
+  private @Nullable Object[] myArray;
   private int myFirst;
   private int myLast;
   // if true, elements are located at myFirst..myArray.length and 0..myLast
@@ -48,8 +50,11 @@ public class Queue<T> {
     return result;
   }
 
+  @SuppressWarnings({"NullAway", "unchecked"})
   private T getRaw(int last) {
-    //noinspection unchecked
+    // NullAway problem: array is technically nullable: null is used for filling elements not used for user data storage.
+    // We cannot use Objects.requireNonNull to check value because T generic parameter also can be nullable.
+    // So there's no way to say to static validator that everything is OK. So we're suppressing NullAway validation here.
     return (T)myArray[last];
   }
 
