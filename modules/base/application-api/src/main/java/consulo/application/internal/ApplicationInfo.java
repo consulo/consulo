@@ -100,7 +100,6 @@ public class ApplicationInfo {
     return new GregorianCalendar(year, month, day, hour, minute);
   }
 
-  
   public Calendar getBuildDate() {
     return myBuildDate;
   }
@@ -111,17 +110,14 @@ public class ApplicationInfo {
     return getBuild().asString();
   }
 
-  
   public BuildNumber getBuild() {
     return myBuild;
   }
 
-  
   public final String getMajorVersion() {
     return String.valueOf(myBuildDate.get(Calendar.YEAR));
   }
 
-  
   public final String getMinorVersion() {
     return String.valueOf(myBuildDate.get(Calendar.MONTH) + 1);
   }
@@ -132,7 +128,6 @@ public class ApplicationInfo {
     return getName();
   }
 
-  
   public final String getFullApplicationName() {
     StringBuilder buffer = new StringBuilder();
     buffer.append(getName());
@@ -148,12 +143,10 @@ public class ApplicationInfo {
     return buffer.toString();
   }
 
-  
   public final String getName() {
     return "Consulo";
   }
 
-  
   public final String getCompanyName() {
     return "consulo.io";
   }

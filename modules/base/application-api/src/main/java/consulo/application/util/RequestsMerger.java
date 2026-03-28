@@ -49,17 +49,17 @@ public class RequestsMerger {
     myAlarm = alarm;
     myWorker = new MyWorker(runnable);
 
-    myState = MyState.empty;
+    myState = MyState.EMPTY;
   }
 
   public void request() {
     LOG.debug("ext: request");
-    doAction(MyAction.request);
+    doAction(MyAction.REQUEST);
   }
 
   public boolean isEmpty() {
     synchronized (myLock) {
-      return MyState.empty.equals(myState);
+      return MyState.EMPTY.equals(myState);
     }
   }
 
@@ -83,12 +83,12 @@ public class RequestsMerger {
     public void run() {
       LOG.debug("worker: started refresh");
       try {
-        doAction(MyAction.start);
+        doAction(MyAction.START);
         myRunnable.run();
         myInitialized = true;
       }
       finally {
-        doAction(MyAction.finish);
+        doAction(MyAction.FINISH);
       }
     }
 
@@ -104,22 +104,24 @@ public class RequestsMerger {
     synchronized (myLock) {
       MyState oldState = myState;
       myState = myState.transition(action);
-      if (oldState.equals(myState)) return;
+      if (oldState.equals(myState)) {
+        return;
+      }
       exitActions = MyTransitionAction.getExit(oldState, myState);
 
       LOG.debug("doAction: oldState: " + oldState.name() + ", newState: " + myState.name());
 
       if (LOG.isDebugEnabled() && exitActions != null) {
-        String debugExitActions = StringUtil.join(exitActions, exitAction -> exitAction.name(), " ");
+        String debugExitActions = StringUtil.join(exitActions, Enum::name, " ");
         LOG.debug("exit actions: " + debugExitActions);
       }
       if (exitActions != null) {
         for (MyExitAction exitAction : exitActions) {
-          if (MyExitAction.markStart.equals(exitAction)) {
+          if (MyExitAction.MARK_START.equals(exitAction)) {
             myWaitingFinishListeners.addAll(myWaitingStartListeners);
             myWaitingStartListeners.clear();
           }
-          else if (MyExitAction.markEnd.equals(exitAction)) {
+          else if (MyExitAction.MARK_END.equals(exitAction)) {
             toBeCalled = new ArrayList<>(myWaitingFinishListeners);
             myWaitingFinishListeners.clear();
           }
@@ -128,7 +130,7 @@ public class RequestsMerger {
     }
     if (exitActions != null) {
       for (MyExitAction exitAction : exitActions) {
-        if (MyExitAction.submitRequestToExecutor.equals(exitAction)) {
+        if (MyExitAction.SUBMIT_REQUEST_TO_EXECUTOR.equals(exitAction)) {
           myAlarm.accept(myWorker);
           //myAlarm.addRequest(myWorker, ourDelay);
           //ApplicationManager.getApplication().executeOnPooledThread(myWorker);
@@ -144,51 +146,51 @@ public class RequestsMerger {
   }
 
   private enum MyState {
-    empty() {
+    EMPTY() {
       @Override
       public MyState transition(MyAction action) {
-        if (MyAction.request.equals(action)) {
-          return MyState.requestSubmitted;
+        if (MyAction.REQUEST.equals(action)) {
+          return MyState.REQUEST_SUBMITTED;
         }
         logWrongAction(this, action);
         return this;
       }
     },
-    inProgress() {
+    IN_PROGRESS() {
       @Override
       public MyState transition(MyAction action) {
-        if (MyAction.finish.equals(action)) {
-          return empty;
+        if (MyAction.FINISH.equals(action)) {
+          return EMPTY;
         }
-        else if (MyAction.request.equals(action)) {
-          return MyState.inProgressRequestSubmitted;
+        else if (MyAction.REQUEST.equals(action)) {
+          return MyState.IN_PROGRESS_REQUEST_SUBMITTED;
         }
         logWrongAction(this, action);
         return this;
       }
     },
-    inProgressRequestSubmitted() {
+    IN_PROGRESS_REQUEST_SUBMITTED() {
       @Override
       public MyState transition(MyAction action) {
-        if (MyAction.finish.equals(action)) {
-          return MyState.requestSubmitted;
+        if (MyAction.FINISH.equals(action)) {
+          return MyState.REQUEST_SUBMITTED;
         }
-        if (MyAction.start.equals(action)) {
+        if (MyAction.START.equals(action)) {
           logWrongAction(this, action);
         }
         return this;
       }
     },
-    requestSubmitted() {
+    REQUEST_SUBMITTED() {
       @Override
       public MyState transition(MyAction action) {
-        if (MyAction.start.equals(action)) {
-          return inProgress;
+        if (MyAction.START.equals(action)) {
+          return IN_PROGRESS;
         }
-        else if (MyAction.finish.equals(action)) {
+        else if (MyAction.FINISH.equals(action)) {
           // to be able to be started by another request
           logWrongAction(this, action);
-          return empty;
+          return EMPTY;
         }
         return this;
       }
@@ -210,14 +212,14 @@ public class RequestsMerger {
     private static final Map<Transition, MyExitAction[]> myMap = new HashMap<>();
 
     static {
-      add(MyState.empty, MyState.requestSubmitted, MyExitAction.submitRequestToExecutor);
-      add(MyState.requestSubmitted, MyState.inProgress, MyExitAction.markStart);
-      add(MyState.inProgress, MyState.empty, MyExitAction.markEnd);
-      add(MyState.inProgressRequestSubmitted, MyState.requestSubmitted, MyExitAction.submitRequestToExecutor, MyExitAction.markEnd);
+      add(MyState.EMPTY, MyState.REQUEST_SUBMITTED, MyExitAction.SUBMIT_REQUEST_TO_EXECUTOR);
+      add(MyState.REQUEST_SUBMITTED, MyState.IN_PROGRESS, MyExitAction.MARK_START);
+      add(MyState.IN_PROGRESS, MyState.EMPTY, MyExitAction.MARK_END);
+      add(MyState.IN_PROGRESS_REQUEST_SUBMITTED, MyState.REQUEST_SUBMITTED, MyExitAction.SUBMIT_REQUEST_TO_EXECUTOR, MyExitAction.MARK_END);
 
       //... and not real but to be safe:
-      add(MyState.inProgressRequestSubmitted, MyState.empty, MyExitAction.markEnd);
-      add(MyState.inProgress, MyState.requestSubmitted, MyExitAction.markEnd);
+      add(MyState.IN_PROGRESS_REQUEST_SUBMITTED, MyState.EMPTY, MyExitAction.MARK_END);
+      add(MyState.IN_PROGRESS, MyState.REQUEST_SUBMITTED, MyExitAction.MARK_END);
     }
 
     private static void add(MyState from, MyState to, MyExitAction... action) {
@@ -230,15 +232,15 @@ public class RequestsMerger {
   }
 
   private enum MyExitAction {
-    empty,
-    submitRequestToExecutor,
-    markStart,
-    markEnd
+    EMPTY,
+    SUBMIT_REQUEST_TO_EXECUTOR,
+    MARK_START,
+    MARK_END
   }
 
   private enum MyAction {
-    request,
-    start,
-    finish
+    REQUEST,
+    START,
+    FINISH
   }
 }

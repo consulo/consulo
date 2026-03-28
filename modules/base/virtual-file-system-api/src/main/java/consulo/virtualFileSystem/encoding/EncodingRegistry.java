@@ -56,13 +56,18 @@ public interface EncodingRegistry {
 
   @Deprecated
   @DeprecationInfo("Use method with registry inside")
-  public static <E extends Throwable> VirtualFile doActionAndRestoreEncoding(VirtualFile fileBefore, ThrowableSupplier<? extends VirtualFile, E> action) throws E {
+  public static <E extends Throwable> VirtualFile doActionAndRestoreEncoding(
+    VirtualFile fileBefore,
+    ThrowableSupplier<? extends VirtualFile, E> action
+  ) throws E {
     return doActionAndRestoreEncoding(getInstance(), fileBefore, action);
   }
 
-  public static <E extends Throwable> @Nullable VirtualFile doActionAndRestoreEncoding(EncodingRegistry registry,
-                                                                             VirtualFile fileBefore,
-                                                                             ThrowableSupplier<? extends VirtualFile, E> action) throws E {
+  public static <E extends Throwable> @Nullable VirtualFile doActionAndRestoreEncoding(
+    EncodingRegistry registry,
+    VirtualFile fileBefore,
+    ThrowableSupplier<? extends VirtualFile, E> action
+  ) throws E {
     Charset charsetBefore = registry.getEncoding(fileBefore, true);
     VirtualFile fileAfter = null;
     try {

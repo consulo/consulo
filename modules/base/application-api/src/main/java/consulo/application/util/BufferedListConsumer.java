@@ -36,7 +36,7 @@ public class BufferedListConsumer<T> implements Consumer<List<T>> {
     public BufferedListConsumer(int size, Consumer<List<T>> consumer, int interval) {
         mySize = size;
         myFlushLock = new Object();
-        myBuffer = new ArrayList<T>(size);
+        myBuffer = new ArrayList<>(size);
         myConsumer = consumer;
         myInterval = interval;
         myTs = System.currentTimeMillis();
@@ -63,7 +63,7 @@ public class BufferedListConsumer<T> implements Consumer<List<T>> {
 
     private void flushCheck() {
         long ts = System.currentTimeMillis();
-        if ((myBuffer.size() >= mySize) || (myInterval > 0) && ((ts - myInterval) > myTs)) {
+        if (myBuffer.size() >= mySize || myInterval > 0 && ts - myInterval > myTs) {
             flushImpl(ts);
         }
     }
@@ -95,7 +95,7 @@ public class BufferedListConsumer<T> implements Consumer<List<T>> {
                     return;
                 }
                 list = myBuffer;
-                myBuffer = new ArrayList<T>(mySize);
+                myBuffer = new ArrayList<>(mySize);
             }
             myConsumer.accept(list);
         };

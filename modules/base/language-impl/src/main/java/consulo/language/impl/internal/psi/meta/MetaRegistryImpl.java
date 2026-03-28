@@ -71,23 +71,23 @@ public class MetaRegistryImpl implements MetaDataService, MetaDataRegistrar {
         new UserDataCache<CachedValue<PsiMetaData>, PsiElement, @Nullable Void>(META_DATA_KEY) {
             @Override
             protected CachedValue<PsiMetaData> compute(PsiElement element, @Nullable Void p) {
-                return CachedValuesManager.getManager(element.getProject()).createCachedValue(
-                    () -> {
-                        ensureContributorsLoaded();
-                        for (MyBinding binding : myBindings) {
-                            if (binding.myFilter.isClassAcceptable(element.getClass())
-                                && binding.myFilter.isAcceptable(element, element.getParent())) {
-                                PsiMetaData data = binding.myFactory.get();
-                                data.init(element);
-                                return new CachedValueProvider.Result<>(data, data.getDependences());
-                            }
+            return CachedValuesManager.getManager(element.getProject()).createCachedValue(
+                () -> {
+                    ensureContributorsLoaded();
+                    for (MyBinding binding : myBindings) {
+                        if (binding.myFilter.isClassAcceptable(element.getClass())
+                            && binding.myFilter.isAcceptable(element, element.getParent())) {
+                            PsiMetaData data = binding.myFactory.get();
+                            data.init(element);
+                            return new CachedValueProvider.Result<>(data, data.getDependences());
                         }
-                        return new CachedValueProvider.Result<>(null, element);
-                    },
-                    false
-                );
-            }
-        };
+                    }
+                    return new CachedValueProvider.Result<>(null, element);
+                },
+                false
+            );
+        }
+    };
 
     private void ensureContributorsLoaded() {
         if (!ourContributorsLoaded) {

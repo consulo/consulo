@@ -45,13 +45,13 @@ public class RunResult<T> extends Result<T> {
     catch (Throwable throwable) {
       myThrowable = throwable;
       if (!myActionRunnable.isSilentExecution()) {
-        if (throwable instanceof RuntimeException) throw (RuntimeException)throwable;
-        if (throwable instanceof Error) {
-          throw (Error)throwable;
+        if (throwable instanceof RuntimeException re) {
+          throw re;
         }
-        else {
-          throw new RuntimeException(myThrowable);
+        else if (throwable instanceof Error error) {
+          throw error;
         }
+        throw new RuntimeException(myThrowable);
       }
     }
     finally {
@@ -75,13 +75,12 @@ public class RunResult<T> extends Result<T> {
 
   public RunResult<T> throwException() throws RuntimeException, Error {
     if (hasException()) {
-      if (myThrowable instanceof RuntimeException) {
-        throw (RuntimeException)myThrowable;
+      if (myThrowable instanceof RuntimeException re) {
+        throw re;
       }
-      if (myThrowable instanceof Error) {
-        throw (Error)myThrowable;
+      else if (myThrowable instanceof Error error) {
+        throw error;
       }
-
       throw new RuntimeException(myThrowable);
     }
     return this;

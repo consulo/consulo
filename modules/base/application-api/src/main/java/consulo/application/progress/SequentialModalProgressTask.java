@@ -87,19 +87,16 @@ public class SequentialModalProgressTask extends Task.Modal {
         task.stop();
         break;
       }
-      Application.get().invokeAndWait(new Runnable() {
-        @Override
-        public void run() {
-          long start = System.currentTimeMillis();
-          try {
-            while (!task.isDone() && System.currentTimeMillis() - start < myMinIterationTime) {
-              task.iteration();
-            }
+      Application.get().invokeAndWait(() -> {
+        long start = System.currentTimeMillis();
+        try {
+          while (!task.isDone() && System.currentTimeMillis() - start < myMinIterationTime) {
+            task.iteration();
           }
-          catch (RuntimeException e) {
-            task.stop();
-            throw e;
-          }
+        }
+        catch (RuntimeException e) {
+          task.stop();
+          throw e;
         }
       });
       //if (ApplicationManager.getApplication().isDispatchThread()) {

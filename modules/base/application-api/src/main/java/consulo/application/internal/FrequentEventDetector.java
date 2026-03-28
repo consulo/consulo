@@ -86,8 +86,7 @@ public class FrequentEventDetector {
           }
         }
 
-        String message = "Too many events posted, #" + traceId  + ". Event: "+event +
-                         (logTrace ? "\n" + trace : "");
+        String message = "Too many events posted, #" + traceId + ". Event: " + event + (logTrace ? "\n" + trace : "");
         if (myLevel == Level.INFO) {
           LOG.info(message);
         }
