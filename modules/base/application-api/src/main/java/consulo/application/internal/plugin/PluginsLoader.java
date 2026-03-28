@@ -217,9 +217,11 @@ public class PluginsLoader {
           PluginId[] dependentPluginIds = pluginDescriptor.getDependentPluginIds();
           ClassLoader[] parentLoaders = getParentLoaders(idToDescriptorMap, dependentPluginIds);
 
-          ClassLoader pluginClassLoader = createPluginClassLoader(idToDescriptorMap.keySet(),
-                                                                        parentLoaders.length > 0 ? parentLoaders : new ClassLoader[]{parentLoader},
-                                                                        pluginDescriptor);
+          ClassLoader pluginClassLoader = Objects.requireNonNull(createPluginClassLoader(
+            idToDescriptorMap.keySet(),
+            parentLoaders.length > 0 ? parentLoaders : new ClassLoader[]{parentLoader},
+            pluginDescriptor
+          ));
 
           if (System.getProperty("jdk.module.path") != null) {
             List<ModuleLayer> parentModuleLayer = getParentModuleLayer(idToDescriptorMap, dependentPluginIds);
@@ -286,7 +288,6 @@ public class PluginsLoader {
     return PluginDescriptorLoader.loadDescriptor(file, false, PluginsLoader.C_LOG);
   }
 
-  
   public static List<PluginDescriptorImpl> loadDescriptorsFromPluginsPath(@Nullable StartupProgress progress,
                                                                           boolean isHeadlessMode,
                                                                           StatCollector stat) {
@@ -334,7 +335,7 @@ public class PluginsLoader {
         }
 
         if (progress != null) {
-          progress.showProgress(descriptor.getName(), PLUGINS_PROGRESS_MAX_VALUE * ((float)++i / pluginsCount));
+          progress.showProgress(StringUtil.notNullize(descriptor.getName()), PLUGINS_PROGRESS_MAX_VALUE * ((float)++i / pluginsCount));
         }
         int oldIndex = result.indexOf(descriptor);
         if (oldIndex >= 0) {
@@ -384,38 +385,44 @@ public class PluginsLoader {
 
     for (Iterator<PluginDescriptorImpl> it = result.iterator(); it.hasNext(); ) {
       PluginDescriptorImpl pluginDescriptor = it.next();
-      PluginValidator.checkDependants(pluginDescriptor, idToDescriptorMap::get, pluginId -> {
-        if (!idToDescriptorMap.containsKey(pluginId)) {
-          pluginDescriptor.setStatus(PluginIds.isPlatformImplementationPlugin(pluginId) ? PluginDescriptorStatus.WRONG_PLATFORM : PluginDescriptorStatus.DEPENDENCY_NOT_LOADED);
+      PluginValidator.checkDependants(
+        pluginDescriptor,
+        idToDescriptorMap::get,
+        pluginId -> {
+          if (!idToDescriptorMap.containsKey(pluginId)) {
+            pluginDescriptor.setStatus(
+                PluginIds.isPlatformImplementationPlugin(pluginId)
+                    ? PluginDescriptorStatus.WRONG_PLATFORM
+                    : PluginDescriptorStatus.DEPENDENCY_NOT_LOADED
+            );
 
-          // if dependent plugin is platform - do not show error, just disable it
-          if (!PluginIds.isPlatformImplementationPlugin(pluginId)) {
-            message.append("<br>");
-            String name = pluginDescriptor.getName();
-            PluginDescriptor descriptor = idToDescriptorMap.get(pluginId);
+            // if dependent plugin is platform - do not show error, just disable it
+            if (!PluginIds.isPlatformImplementationPlugin(pluginId)) {
+              message.append("<br>");
+              String name = Objects.requireNonNull(pluginDescriptor.getName());
+              PluginDescriptor descriptor = idToDescriptorMap.get(pluginId);
 
-            String pluginName;
-            if (descriptor == null) {
-              pluginName = pluginId.getIdString();
-              if (disabledPluginNames.containsKey(pluginId)) {
-                pluginName = disabledPluginNames.get(pluginId);
+              String pluginName;
+              if (descriptor != null) {
+                pluginName = Objects.requireNonNull(descriptor.getName());
               }
-            }
-            else {
-              pluginName = descriptor.getName();
+              else if (disabledPluginNames.containsKey(pluginId)) {
+                pluginName = Objects.requireNonNull(disabledPluginNames.get(pluginId));
+              }
+              else {
+                pluginName = pluginId.getIdString();
+              }
+
+              message.append(ApplicationLocalize.errorRequiredPluginNotInstalled(name, pluginName));
             }
 
-            message.append(ApplicationLocalize.errorRequiredPluginNotInstalled(
-                name,
-                pluginName));
+            it.remove();
+
+            return false;
           }
-
-          it.remove();
-
-          return false;
+          return true;
         }
-        return true;
-      });
+      );
     }
 
     if (!message.isEmpty()) {
@@ -450,7 +457,7 @@ public class PluginsLoader {
 
       @Override
       public Iterator<PluginId> getIn(PluginId pluginId) {
-        PluginDescriptor descriptor = idToDescriptorMap.get(pluginId);
+        PluginDescriptor descriptor = Objects.requireNonNull(idToDescriptorMap.get(pluginId));
         List<PluginId> plugins = new ArrayList<>();
         for (PluginId dependentPluginId : descriptor.getDependentPluginIds()) {
           // check for missing optional dependency

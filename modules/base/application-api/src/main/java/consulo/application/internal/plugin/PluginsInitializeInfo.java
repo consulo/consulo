@@ -15,6 +15,8 @@
  */
 package consulo.application.internal.plugin;
 
+import org.jspecify.annotations.Nullable;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,7 +27,7 @@ import java.util.List;
 public class PluginsInitializeInfo {
   public static final String EDIT = "edit";
 
-  private List<CompositeMessage> myPluginErrors = null;
+  private @Nullable List<CompositeMessage> myPluginErrors = null;
 
   public void addPluginErrors(List<CompositeMessage> problems) {
     if (myPluginErrors == null) {
@@ -36,7 +38,7 @@ public class PluginsInitializeInfo {
     }
   }
 
-  public List<CompositeMessage> getPluginErrors() {
+  public @Nullable List<CompositeMessage> getPluginErrors() {
     return myPluginErrors;
   }
 }

@@ -23,14 +23,12 @@ public class ThreadDumper {
   private ThreadDumper() {
   }
 
-  
   public static String dumpThreadsToString() {
     StringWriter writer = new StringWriter();
     dumpThreadInfos(getThreadInfos(ManagementFactory.getThreadMXBean(), true), writer);
     return writer.toString();
   }
 
-  
   public static String dumpEdtStackTrace(ThreadInfo[] threadInfos) {
     StringWriter writer = new StringWriter();
     if (threadInfos.length > 0) {
@@ -40,12 +38,10 @@ public class ThreadDumper {
     return writer.toString();
   }
 
-  
   public static ThreadInfo[] getThreadInfos() {
     return getThreadInfos(ManagementFactory.getThreadMXBean(), true);
   }
 
-  
   public static ThreadDump getThreadDumpInfo(ThreadInfo[] threadInfos) {
     sort(threadInfos);
     StringWriter writer = new StringWriter();
@@ -53,7 +49,6 @@ public class ThreadDumper {
     return new ThreadDump(writer.toString(), edtStack, threadInfos);
   }
 
-  
   public static ThreadInfo[] getThreadInfos(ThreadMXBean threadMXBean, boolean sort) {
     ThreadInfo[] threads;
     try {
@@ -76,7 +71,7 @@ public class ThreadDumper {
     return threadName != null && threadName.startsWith("AWT-EventQueue");
   }
 
-  private static StackTraceElement[] dumpThreadInfos(ThreadInfo[] threadInfo, Writer f) {
+  private static StackTraceElement @Nullable [] dumpThreadInfos(ThreadInfo[] threadInfo, Writer f) {
     StackTraceElement[] edtStack = null;
     for (ThreadInfo info : threadInfo) {
       if (info != null) {
@@ -89,7 +84,6 @@ public class ThreadDumper {
     return edtStack;
   }
 
-  
   public static ThreadInfo[] sort(ThreadInfo[] threads) {
     Arrays.sort(threads, THREAD_INFO_COMPARATOR);
     return threads;
@@ -117,7 +111,7 @@ public class ThreadDumper {
         sb.append(" (in native)");
       }
 
-      f.write(sb + "\n");
+      f.write(sb.append('\n').toString());
       printStackTrace(f, stackTraceElements);
       f.write("\n");
     }
@@ -173,7 +167,7 @@ public class ThreadDumper {
     }
 
     StringBuilder sb = new StringBuilder(200);
-    sb.append(exceptionType + ": ");
+    sb.append(exceptionType).append(": ");
     sb.append(line.substring(1, i)); // append thread name (e.g. AWT-EventQueue-0)
 
     line = threadDump.get(1); // e.g. " java.lang.Thread.State: RUNNABLE"
@@ -209,19 +203,12 @@ public class ThreadDumper {
   }
 
   private static String getReadableState(Thread.State state) {
-    switch (state) {
-      case BLOCKED:
-        return "blocked";
-      case TIMED_WAITING:
-      case WAITING:
-        return "waiting on condition";
-      case RUNNABLE:
-        return "runnable";
-      case NEW:
-        return "new";
-      case TERMINATED:
-        return "terminated";
-    }
-    return null;
+    return switch (state) {
+      case BLOCKED -> "blocked";
+      case TIMED_WAITING, WAITING -> "waiting on condition";
+      case RUNNABLE -> "runnable";
+      case NEW -> "new";
+      case TERMINATED -> "terminated";
+    };
   }
 }

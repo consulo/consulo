@@ -25,7 +25,7 @@ import java.util.concurrent.Callable;
 public final class ReadAction<T> {
     @Deprecated
     public static AccessToken start() {
-        return ApplicationManager.getApplication().acquireReadActionLock();
+        return Application.get().acquireReadActionLock();
     }
 
     public static <E extends Throwable> void run(@RequiredReadAction ThrowableRunnable<E> action) throws E {
@@ -35,7 +35,6 @@ public final class ReadAction<T> {
         });
     }
 
-    
     public static <T, E extends Throwable> T computeNotNull(@RequiredReadAction ThrowableSupplier<T, E> action) throws E {
         return Application.get().runReadAction(action);
     }

@@ -60,7 +60,7 @@ public abstract class JobLauncher {
   @Deprecated
   public <T> boolean invokeConcurrentlyUnderProgress(List<? extends T> things, ProgressIndicator progress, boolean failFastOnAcquireReadAction, Predicate<? super T> thingProcessor)
           throws ProcessCanceledException {
-    return invokeConcurrentlyUnderProgress(things, progress, ApplicationManager.getApplication().isReadAccessAllowed(), failFastOnAcquireReadAction, thingProcessor);
+    return invokeConcurrentlyUnderProgress(things, progress, Application.get().isReadAccessAllowed(), failFastOnAcquireReadAction, thingProcessor);
   }
 
   public abstract <T> boolean invokeConcurrentlyUnderProgress(List<? extends T> things,

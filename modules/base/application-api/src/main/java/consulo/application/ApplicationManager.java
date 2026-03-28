@@ -26,7 +26,7 @@ import org.jspecify.annotations.Nullable;
  * Provides access to the <code>Application</code>.
  */
 public class ApplicationManager {
-  protected static Application ourApplication = null;
+  protected static @Nullable Application ourApplication = null;
 
   /**
    * Gets Application.

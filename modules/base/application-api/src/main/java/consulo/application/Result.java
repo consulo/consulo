@@ -15,8 +15,10 @@
  */
 package consulo.application;
 
+import org.jspecify.annotations.Nullable;
+
 public class Result<T> {
-  protected T myResult;
+  protected @Nullable T myResult = null;
 
   public final void setResult(T result) {
     myResult = result;

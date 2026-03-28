@@ -24,7 +24,6 @@ import java.util.function.Function;
  * @see ReadAction#nonBlocking
  */
 public interface NonBlockingReadAction<T> {
-
   /**
    * @return a copy of this builder that runs read actions only when index is available in the given project.
    * The operation is canceled if the project is closed before either the background computation or {@link #finishOnUiThread} runnable
@@ -98,7 +97,6 @@ public interface NonBlockingReadAction<T> {
    */
   CancellablePromise<T> submit(Executor backgroundThreadExecutor);
 
-  
   default CancellablePromise<T> submitDefault() {
       return submit(NonUrgentExecutor.getInstance());
   }

@@ -40,15 +40,13 @@ public final class AccessRule {
         return ReadAction.compute(action);
     }
 
-    
-    public static CompletableFuture<Void> writeAsync(@RequiredWriteAction ThrowableRunnable<Throwable> action) {
+    public static @Nullable CompletableFuture<Void> writeAsync(@RequiredWriteAction ThrowableRunnable<Throwable> action) {
         return writeAsync(() -> {
             action.run();
             return null;
         });
     }
 
-    
     public static <T> CompletableFuture<T> writeAsync(@RequiredWriteAction ThrowableSupplier<T, Throwable> action) {
         CompletableFuture<T> result = new CompletableFuture<>();
         AppUIExecutor.onWriteThread().later().execute(() -> {

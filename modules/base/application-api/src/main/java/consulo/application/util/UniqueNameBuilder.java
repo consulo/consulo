@@ -16,11 +16,9 @@
 package consulo.application.util;
 
 import consulo.util.lang.StringUtil;
+import org.jspecify.annotations.Nullable;
 
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.NoSuchElementException;
+import java.util.*;
 
 /**
  * @author yole
@@ -44,14 +42,13 @@ public class UniqueNameBuilder<T> {
 
   private static class Node {
     final String myText;
-    final Map<String, Node> myChildren;
-    final Node myParentNode;
+    final Map<String, Node> myChildren = new HashMap<>(1);
+    final @Nullable Node myParentNode;
     int myNestedChildrenCount;
 
-    Node(String text, Node parentNode) {
+    Node(String text, @Nullable Node parentNode) {
       myText = text;
       myParentNode = parentNode;
-      myChildren = new HashMap<String, Node>(1);
     }
 
     Node findOrAddChild(String word) {
@@ -100,12 +97,12 @@ public class UniqueNameBuilder<T> {
       current = current.findOrAddChild(pathComponent);
 
       if (fileNameNode == null) fileNameNode = current;
-      if (firstNodeBeforeNodeWithBranches == null &&
-          firstNodeWithBranches != null &&
-          current.myChildren.size() <= 1) {
-        if(current.myParentNode.myNestedChildrenCount - current.myParentNode.myChildren.size() < 1) {
-          firstNodeBeforeNodeWithBranches = current;
-        }
+
+      if (firstNodeBeforeNodeWithBranches == null
+          && firstNodeWithBranches != null
+          && current.myChildren.size() <= 1
+          && Objects.requireNonNull(current.myParentNode).myNestedChildrenCount - current.myParentNode.myChildren.size() < 1) {
+        firstNodeBeforeNodeWithBranches = current;
       }
 
       if (current.myChildren.size() != 1 && firstNodeWithBranches == null) {
@@ -119,20 +116,23 @@ public class UniqueNameBuilder<T> {
     }
 
     boolean skipFirstSeparator = true;
-    for(Node c = firstNodeBeforeNodeWithBranches; c!= myRootNode; c = c.myParentNode) {
-      if (c != fileNameNode && c != firstNodeBeforeNodeWithBranches && c.myParentNode.myChildren.size() == 1) {
+    for(Node c = firstNodeBeforeNodeWithBranches; c != myRootNode && c != null; c = c.myParentNode) {
+      if (c != fileNameNode && c != firstNodeBeforeNodeWithBranches && Objects.requireNonNull(c.myParentNode).myChildren.size() == 1) {
         b.append(mySeparator);
         b.append("\u2026");
 
-        while(c.myParentNode != fileNameNode && c.myParentNode.myChildren.size() == 1) c = c.myParentNode;
-      } else {
-        if (c.myText.startsWith(VFS_SEPARATOR)) {
-          if (!skipFirstSeparator) b.append(mySeparator);
-          skipFirstSeparator = false;
-          b.append(c.myText, VFS_SEPARATOR.length(), c.myText.length());
-        } else {
-          b.append(c.myText);
+        while (c.myParentNode != fileNameNode && Objects.requireNonNull(c.myParentNode).myChildren.size() == 1) {
+          c = c.myParentNode;
         }
+      } else if (c.myText.startsWith(VFS_SEPARATOR)) {
+        if (!skipFirstSeparator) {
+          b.append(mySeparator);
+        }
+        skipFirstSeparator = false;
+        b.append(c.myText, VFS_SEPARATOR.length(), c.myText.length());
+      }
+      else {
+        b.append(c.myText);
       }
     }
     return b.toString();

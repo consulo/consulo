@@ -19,6 +19,7 @@ import consulo.annotation.DeprecationInfo;
 import consulo.application.Application;
 import consulo.disposer.Disposer;
 import jakarta.inject.Provider;
+import org.jspecify.annotations.Nullable;
 
 import java.util.function.Supplier;
 
@@ -34,7 +35,7 @@ public final class PerApplicationInstance<V> implements Provider<V>, Supplier<V>
     return new PerApplicationInstance<>(clazz);
   }
 
-  private volatile V myValue;
+  private volatile @Nullable V myValue;
 
   private final Class<V> myTargetClass;
 

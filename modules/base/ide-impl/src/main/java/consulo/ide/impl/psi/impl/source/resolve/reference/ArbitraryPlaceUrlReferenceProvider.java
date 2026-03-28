@@ -26,6 +26,7 @@ import consulo.language.psi.ReferenceProviderType;
 import consulo.language.psi.path.PathReferenceManager;
 import consulo.language.util.ProcessingContext;
 import consulo.util.collection.SmartList;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
@@ -36,7 +37,7 @@ public class ArbitraryPlaceUrlReferenceProvider extends PsiReferenceProviderByTy
     private final AtomicReference<GlobalPathReferenceProvider> myReferenceProvider = new AtomicReference<>();
 
     @Override
-    protected CachedValue<PsiReference[]> compute(PsiElement element, Object p) {
+    protected CachedValue<PsiReference[]> compute(PsiElement element, @Nullable Object p) {
       return CachedValuesManager.getManager(element.getProject()).createCachedValue(() -> {
         IssueNavigationConfiguration navigationConfiguration = IssueNavigationConfiguration.getInstance(element.getProject());
 
@@ -57,7 +58,6 @@ public class ArbitraryPlaceUrlReferenceProvider extends PsiReferenceProviderByTy
     }
   };
 
-  
   @Override
   public PsiReference[] getReferencesByElement(PsiElement element, ProcessingContext context) {
     return ourRefsCache.get(element, null).getValue();

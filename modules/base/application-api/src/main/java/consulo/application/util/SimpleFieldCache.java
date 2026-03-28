@@ -13,23 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.application.util;
 
-public abstract class SimpleFieldCache<T, Owner> extends FieldCache<T, Owner, Object, Object> {
-  public final T get(Owner owner) {
+import org.jspecify.annotations.Nullable;
+
+public abstract class SimpleFieldCache<T, Owner> extends FieldCache<T, Owner, @Nullable Void, @Nullable Void> {
+  public final @Nullable T get(Owner owner) {
     return get(null, owner, null);
   }
 
-  protected final T compute(Owner owner, Object p) {
+  protected final T compute(Owner owner, @Nullable Void p) {
     return compute(owner);
   }
 
-  protected final T getValue(Owner owner, Object p) {
+  protected final @Nullable T getValue(Owner owner, @Nullable Void p) {
     return getValue(owner);
   }
 
-  protected final void putValue(T t, Owner owner, Object p) {
+  protected final void putValue(@Nullable T t, Owner owner, @Nullable Void p) {
     putValue(t, owner);
   }
 
@@ -37,5 +38,5 @@ public abstract class SimpleFieldCache<T, Owner> extends FieldCache<T, Owner, Ob
 
   protected abstract T getValue(Owner owner);
 
-  protected abstract void putValue(T t, Owner owner);
+  protected abstract void putValue(@Nullable T t, Owner owner);
 }
