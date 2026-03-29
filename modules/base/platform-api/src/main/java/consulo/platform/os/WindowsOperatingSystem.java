@@ -22,11 +22,10 @@ import java.nio.file.Path;
 
 /**
  * @author VISTALL
- * @since 25/04/2023
+ * @since 2023-04-25
  */
 public interface WindowsOperatingSystem extends PlatformOperatingSystem {
   @Override
-  
   default LineSeparator lineSeparator() {
     return LineSeparator.CRLF;
   }
@@ -39,7 +38,6 @@ public interface WindowsOperatingSystem extends PlatformOperatingSystem {
 
   boolean isWindows11OrNewer();
 
-  
   default String getWindowsFileVersion(Path path) {
     // 1.1 - 2
     // 1.1.1 - 3

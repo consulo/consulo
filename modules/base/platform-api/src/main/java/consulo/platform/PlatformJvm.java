@@ -20,19 +20,15 @@ import java.util.Map;
 
 /**
  * @author VISTALL
- * @since 25/04/2023
+ * @since 2023-04-25
  */
 public interface PlatformJvm {
-  
   String version();
 
-  
   String runtimeVersion();
 
-  
   String vendor();
 
-  
   String name();
 
   @Nullable String getRuntimeProperty(String key);
@@ -42,13 +38,11 @@ public interface PlatformJvm {
     return runtimeProperty == null ? defaultValue : runtimeProperty;
   }
 
-  
   Map<String, String> getRuntimeProperties();
 
   default boolean isAny64Bit() {
     return arch().width() == 64;
   }
 
-  
   CpuArchitecture arch();
 }

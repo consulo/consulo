@@ -23,7 +23,7 @@ import java.nio.file.Path;
 
 /**
  * @author VISTALL
- * @since 25/04/2023
+ * @since 2023-04-25
  */
 public interface PlatformFileSystem {
     boolean isCaseSensitive();
@@ -37,9 +37,7 @@ public interface PlatformFileSystem {
         return null;
     }
 
-    
     Path getPath(String path);
 
-    
     Path getPath(String path, String... more);
 }

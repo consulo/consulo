@@ -19,7 +19,7 @@ import consulo.platform.PlatformOperatingSystem;
 
 /**
  * @author VISTALL
- * @since 25/04/2023
+ * @since 2023-04-25
  */
 public interface MacOperatingSystem extends PlatformOperatingSystem {
   boolean isMacMojave();
