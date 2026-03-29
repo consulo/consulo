@@ -15,11 +15,13 @@
  */
 package consulo.platform;
 
+import org.jspecify.annotations.Nullable;
+
 import java.util.Objects;
 
 /**
  * @author VISTALL
- * @since 25-Feb-22
+ * @since 2022-02-25
  */
 public final class CpuArchitecture {
     public static final CpuArchitecture X86 = new CpuArchitecture("X86", 32, "");
@@ -29,10 +31,9 @@ public final class CpuArchitecture {
     public static final CpuArchitecture LOONG64 = new CpuArchitecture("LOONG64", 64, "-loong64");
     public static final CpuArchitecture E2K = new CpuArchitecture("E2K", 64, "-e2k");
 
-    
     private final String myName;
     private final int myWidth;
-    
+
     private final String mySuffix;
 
     public CpuArchitecture(String name, int width, String suffix) {
@@ -49,13 +50,12 @@ public final class CpuArchitecture {
         return myWidth;
     }
 
-    
     public String fileNameSuffix() {
         return mySuffix;
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(@Nullable Object o) {
         if (this == o) {
             return true;
         }
@@ -76,4 +76,3 @@ public final class CpuArchitecture {
         return "CpuArchitecture{" + "myName='" + myName + '\'' + ", myWidth=" + myWidth + '}';
     }
 }
-
