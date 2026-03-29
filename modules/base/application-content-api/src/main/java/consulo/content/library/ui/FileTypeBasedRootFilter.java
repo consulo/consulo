@@ -43,7 +43,7 @@ public class FileTypeBasedRootFilter extends RootFilter {
       if (!rootCandidate.isDirectory() || !rootCandidate.isInLocalFileSystem()) {
         return false;
       }
-      for (VirtualFile child : rootCandidate.getChildren()) {
+      for (VirtualFile child : rootCandidate.getRequiredChildren()) {
         if (!child.isDirectory() && child.getFileType() instanceof ArchiveFileType) {
           VirtualFile archiveRoot = ArchiveVfsUtil.getArchiveRootForLocalFile(child);
           if (archiveRoot != null && containsFileOfType(archiveRoot, progressIndicator)) {

@@ -15,6 +15,8 @@
  */
 package consulo.ide.impl.idea.ide.scratch;
 
+import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.access.RequiredWriteAction;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
@@ -61,6 +63,7 @@ import org.jdom.Element;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Objects;
 
 @Singleton
 @State(name = "ScratchFileService", storages = @Storage(value = "scratches.xml", roamingType = RoamingType.DISABLED))
@@ -198,8 +201,9 @@ public class ScratchFileServiceImpl extends ScratchFileService implements Persis
   }
 
   @Override
+  @RequiredReadAction
   public VirtualFile findFile(RootType rootType, String pathName, Option option) throws IOException {
-    ApplicationManager.getApplication().assertReadAccessAllowed();
+    Application.get().assertReadAccessAllowed();
 
     String fullPath = getRootPath(rootType) + "/" + pathName;
     if (option != Option.create_new_always) {
@@ -211,7 +215,7 @@ public class ScratchFileServiceImpl extends ScratchFileService implements Persis
     String fileNameExt = PathUtil.getFileName(pathName);
     String fileName = StringUtil.trimEnd(fileNameExt, ext == null ? "" : "." + ext);
     return WriteAction.compute(() -> {
-      VirtualFile dir = VirtualFileUtil.createDirectories(PathUtil.getParentPath(fullPath));
+      VirtualFile dir = Objects.requireNonNull(VirtualFileUtil.createDirectories(PathUtil.getParentPath(fullPath)));
       if (option == Option.create_new_always) {
         return VfsUtil.createChildSequent(LocalFileSystem.getInstance(), dir, fileName, StringUtil.notNullize(ext));
       }

@@ -35,7 +35,7 @@ public abstract class HandleType {
     public static final HandleType USE_FILE_SYSTEM = new HandleType(VirtualFileSystemLocalize.handleRoFileStatusTypeUsingFileSystem(), false) {
         @Override
         @RequiredUIAccess
-        public void processFiles(Collection<VirtualFile> virtualFiles, String changelist) {
+        public void processFiles(Collection<VirtualFile> virtualFiles, @Nullable String changelist) {
             Application.get().runWriteAction(() -> {
                 try {
                     for (VirtualFile file : virtualFiles) {
@@ -55,7 +55,6 @@ public abstract class HandleType {
         myUseVcs = useVcs;
     }
 
-    
     public LocalizeValue getName() {
         return myName;
     }
@@ -71,7 +70,7 @@ public abstract class HandleType {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(@Nullable Object o) {
         if (this == o) {
             return true;
         }

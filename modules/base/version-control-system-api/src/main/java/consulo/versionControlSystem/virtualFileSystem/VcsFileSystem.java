@@ -15,11 +15,13 @@
  */
 package consulo.versionControlSystem.virtualFileSystem;
 
+import consulo.annotation.access.RequiredWriteAction;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.virtualFileSystem.BaseVirtualFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
+import org.jspecify.annotations.Nullable;
 
 import java.io.IOException;
 
@@ -32,7 +34,6 @@ public class VcsFileSystem extends BaseVirtualFileSystem {
     }
 
     @Override
-    
     public String getProtocol() {
         return PROTOCOL;
     }
@@ -52,55 +53,62 @@ public class VcsFileSystem extends BaseVirtualFileSystem {
     }
 
     @Override
-    public void fireContentsChanged(Object requestor, VirtualFile file, long oldModificationStamp) {
+    @RequiredWriteAction
+    public void fireContentsChanged(@Nullable Object requestor, VirtualFile file, long oldModificationStamp) {
         super.fireContentsChanged(requestor, file, oldModificationStamp);
     }
 
     @Override
-    protected void fireBeforeFileDeletion(Object requestor, VirtualFile file) {
+    @RequiredWriteAction
+    protected void fireBeforeFileDeletion(@Nullable Object requestor, VirtualFile file) {
         super.fireBeforeFileDeletion(requestor, file);
     }
 
     @Override
-    protected void fireFileDeleted(Object requestor, VirtualFile file, String fileName, VirtualFile parent) {
+    @RequiredWriteAction
+    protected void fireFileDeleted(@Nullable Object requestor, VirtualFile file, String fileName, VirtualFile parent) {
         super.fireFileDeleted(requestor, file, fileName, parent);
     }
 
     @Override
+    @RequiredWriteAction
     protected void fireBeforeContentsChange(Object requestor, VirtualFile file) {
         super.fireBeforeContentsChange(requestor, file);
     }
 
     @Override
-    public void deleteFile(Object requestor, VirtualFile vFile) throws IOException {
+    @RequiredWriteAction
+    public void deleteFile(@Nullable Object requestor, VirtualFile vFile) throws IOException {
         throw new RuntimeException(VcsLocalize.exceptionTextInternalErrrorCouldNotImplementMethod().get());
     }
 
     @Override
-    public void moveFile(Object requestor, VirtualFile vFile, VirtualFile newParent) throws IOException {
-        throw new RuntimeException(VcsLocalize.exceptionTextInternalErrrorCouldNotImplementMethod().get());
-    }
-
-    
-    @Override
-    public VirtualFile copyFile(Object requestor, VirtualFile vFile, VirtualFile newParent, String copyName) throws IOException {
+    @RequiredWriteAction
+    public void moveFile(@Nullable Object requestor, VirtualFile vFile, VirtualFile newParent) throws IOException {
         throw new RuntimeException(VcsLocalize.exceptionTextInternalErrrorCouldNotImplementMethod().get());
     }
 
     @Override
-    public void renameFile(Object requestor, VirtualFile vFile, String newName) throws IOException {
-        throw new RuntimeException(VcsLocalize.exceptionTextInternalErrrorCouldNotImplementMethod().get());
-    }
-
-    
-    @Override
-    public VirtualFile createChildFile(Object requestor, VirtualFile vDir, String fileName) throws IOException {
+    @RequiredWriteAction
+    public VirtualFile copyFile(@Nullable Object requestor, VirtualFile vFile, VirtualFile newParent, String copyName) throws IOException {
         throw new RuntimeException(VcsLocalize.exceptionTextInternalErrrorCouldNotImplementMethod().get());
     }
 
     @Override
-    
-    public VirtualFile createChildDirectory(Object requestor, VirtualFile vDir, String dirName) throws IOException {
+    @RequiredWriteAction
+    public void renameFile(@Nullable Object requestor, VirtualFile vFile, String newName) throws IOException {
+        throw new RuntimeException(VcsLocalize.exceptionTextInternalErrrorCouldNotImplementMethod().get());
+    }
+
+    @Override
+    @RequiredWriteAction
+    public VirtualFile createChildFile(@Nullable Object requestor, VirtualFile vDir, String fileName) throws IOException {
+        throw new RuntimeException(VcsLocalize.exceptionTextInternalErrrorCouldNotImplementMethod().get());
+    }
+
+    @Override
+    @RequiredWriteAction
+    public VirtualFile createChildDirectory(@Nullable Object requestor, VirtualFile vDir, String dirName) throws IOException {
         throw new RuntimeException(VcsLocalize.exceptionTextInternalErrrorCouldNotImplementMethod().get());
     }
 }

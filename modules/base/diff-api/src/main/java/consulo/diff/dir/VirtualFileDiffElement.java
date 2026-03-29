@@ -94,9 +94,8 @@ public class VirtualFileDiffElement extends DiffElement<VirtualFile> {
     if (myFile.is(VFileProperty.SYMLINK)) {
       return new VirtualFileDiffElement[0];
     }
-    VirtualFile[] files = myFile.getChildren();
-    ArrayList<VirtualFileDiffElement> elements = new ArrayList<>();
-    for (VirtualFile file : files) {
+    List<VirtualFileDiffElement> elements = new ArrayList<>();
+    for (VirtualFile file : myFile.getRequiredChildren()) {
       if (!FileTypeRegistry.getInstance().isFileIgnored(file) && file.isValid()) {
         elements.add(new VirtualFileDiffElement(file));
       }

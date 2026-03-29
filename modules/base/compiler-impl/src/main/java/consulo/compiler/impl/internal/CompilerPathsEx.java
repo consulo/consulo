@@ -55,8 +55,7 @@ public class CompilerPathsEx extends CompilerPaths {
 
         protected void acceptDirectory(VirtualFile file, String fileRoot, String filePath) {
             ProgressManager.checkCanceled();
-            VirtualFile[] children = file.getChildren();
-            for (VirtualFile child : children) {
+            for (VirtualFile child : file.getRequiredChildren()) {
                 String name = child.getName();
                 String _filePath;
                 StringBuilder buf = new StringBuilder();

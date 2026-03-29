@@ -46,8 +46,8 @@ public class PackageNodeUtil {
    *                      otherwise the package is considered as empty if all direct children that it has are directories
    */
   public static boolean isEmptyMiddlePackage(PsiDirectory dir, @Nullable Class<? extends ModuleExtension> moduleExtensionClass, boolean strictlyEmpty) {
-    VirtualFile[] files = dir.getVirtualFile().getChildren();
-    if (files.length == 0) {
+    List<VirtualFile> files = dir.getVirtualFile().getRequiredChildren();
+    if (files.isEmpty()) {
       return false;
     }
     PsiManager manager = dir.getManager();

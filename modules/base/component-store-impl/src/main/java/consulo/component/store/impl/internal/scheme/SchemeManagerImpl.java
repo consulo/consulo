@@ -570,7 +570,7 @@ public class SchemeManagerImpl<T, E extends ExternalizableScheme> extends Abstra
     VirtualFile dir = getVirtualDir();
     if (dir != null) {
       WriteAction.run(() -> {
-        for (VirtualFile file : dir.getChildren()) {
+        for (VirtualFile file : dir.getRequiredChildren()) {
           if (myFilesToDelete.contains(file.getNameWithoutExtension())) {
             VfsDirectoryBasedStorage.deleteFile(file, this);
           }

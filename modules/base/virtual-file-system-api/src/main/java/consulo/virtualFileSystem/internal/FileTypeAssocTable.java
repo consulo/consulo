@@ -143,12 +143,11 @@ public class FileTypeAssocTable<T> {
     return null;
   }
 
-  public T findByExtension(CharSequence extension) {
+  public @Nullable T findByExtension(CharSequence extension) {
     return myExtensionMappings.get(extension);
   }
 
   @Deprecated
-  
   public String[] getAssociatedExtensions(T type) {
     List<String> exts = new ArrayList<>();
     for (Map.Entry<CharSequence, T> entry : myExtensionMappings.entrySet()) {
@@ -159,12 +158,10 @@ public class FileTypeAssocTable<T> {
     return ArrayUtil.toStringArray(exts);
   }
 
-  
   public FileTypeAssocTable<T> copy() {
     return new FileTypeAssocTable<>(myExtensionMappings, myExactFileNameMappings, myExactFileNameAnyCaseMappings, myMatchingMappings);
   }
 
-  
   public List<FileNameMatcher> getAssociations(T type) {
     List<FileNameMatcher> result = new ArrayList<>();
     for (Pair<FileNameMatcher, T> mapping : myMatchingMappings) {
@@ -204,7 +201,6 @@ public class FileTypeAssocTable<T> {
     return false;
   }
 
-  
   public Map<FileNameMatcher, T> getRemovedMappings(FileTypeAssocTable<T> newTable, Collection<? extends T> keys) {
     Map<FileNameMatcher, T> map = new HashMap<>();
     for (T key : keys) {
@@ -218,7 +214,7 @@ public class FileTypeAssocTable<T> {
   }
 
   @Override
-  public boolean equals(Object o) {
+  public boolean equals(@Nullable Object o) {
     if (this == o) {
       return true;
     }

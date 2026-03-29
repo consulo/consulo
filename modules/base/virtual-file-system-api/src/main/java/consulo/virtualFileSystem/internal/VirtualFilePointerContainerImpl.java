@@ -1,7 +1,7 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.virtualFileSystem.internal;
 
-import consulo.application.ApplicationManager;
+import consulo.application.Application;
 import consulo.disposer.Disposable;
 import consulo.disposer.TraceableDisposable;
 import consulo.logging.Logger;
@@ -13,11 +13,9 @@ import consulo.util.io.FileUtil;
 import consulo.util.io.URLUtil;
 import consulo.util.jdom.JDOMUtil;
 import consulo.util.lang.Pair;
-import consulo.util.lang.Trinity;
 import consulo.util.xml.serializer.InvalidDataException;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.archive.ArchiveFileType;
-import consulo.virtualFileSystem.fileType.FileType;
 import consulo.virtualFileSystem.fileType.FileTypeRegistry;
 import consulo.virtualFileSystem.pointer.VirtualFilePointer;
 import consulo.virtualFileSystem.pointer.VirtualFilePointerContainer;
@@ -26,8 +24,8 @@ import consulo.virtualFileSystem.pointer.VirtualFilePointerManager;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
 import consulo.virtualFileSystem.util.VirtualFileVisitor;
 import org.jdom.Element;
-
 import org.jspecify.annotations.Nullable;
+
 import java.util.*;
 import java.util.function.Predicate;
 
@@ -35,6 +33,10 @@ import java.util.function.Predicate;
  * @author dsl
  */
 public class VirtualFilePointerContainerImpl implements VirtualFilePointerContainer, Disposable {
+  private record MyCache(String[] urls, VirtualFile[] files, VirtualFile[] directories) {
+    public static final MyCache EMPTY = new MyCache(ArrayUtil.EMPTY_STRING_ARRAY, VirtualFile.EMPTY_ARRAY, VirtualFile.EMPTY_ARRAY);
+  }
+
   private static final Logger LOG = Logger.getInstance(VirtualFilePointerContainerImpl.class);
   private static final int UNINITIALIZED = -1;
   
@@ -47,12 +49,12 @@ public class VirtualFilePointerContainerImpl implements VirtualFilePointerContai
   private final VirtualFilePointerManager myVirtualFilePointerManager;
   
   private final Disposable myParent;
-  private final VirtualFilePointerListener myListener;
-  private volatile Trinity<String[], VirtualFile[], VirtualFile[]> myCachedThings;
+  private final @Nullable VirtualFilePointerListener myListener;
+  private volatile MyCache myCachedThings = MyCache.EMPTY;
   private volatile long myTimeStampOfCachedThings = UNINITIALIZED;
   public static final String URL_ATTR = "url";
   private boolean myDisposed;
-  private static final boolean TRACE_CREATION = LOG.isDebugEnabled() || ApplicationManager.getApplication().isUnitTestMode();
+  private static final boolean TRACE_CREATION = LOG.isDebugEnabled() || Application.get().isUnitTestMode();
   public static final String JAR_DIRECTORY_ELEMENT = "jarDirectory";
   public static final String RECURSIVE_ATTR = "recursive";
 
@@ -167,7 +169,6 @@ public class VirtualFilePointerContainerImpl implements VirtualFilePointerContai
   }
 
   @Override
-  
   public List<VirtualFilePointer> getList() {
     checkDisposed();
     return Collections.unmodifiableList(myList);
@@ -193,34 +194,29 @@ public class VirtualFilePointerContainerImpl implements VirtualFilePointerContai
 
   private void dropCaches() {
     myTimeStampOfCachedThings = -1; // make it never equal to myVirtualFilePointerManager.getModificationCount()
-    myCachedThings = EMPTY;
+    myCachedThings = MyCache.EMPTY;
   }
 
   @Override
-  
   public String[] getUrls() {
     if (myTimeStampOfCachedThings == UNINITIALIZED) {
       // optimization: when querying urls, and nothing was cached yet, do not access disk (in cacheThings()) - can be expensive
       return myList.stream().map(VirtualFilePointer::getUrl).toArray(String[]::new);
     }
-    return getOrCache().first;
+    return getOrCache().urls();
   }
 
-  
-  private Trinity<String[], VirtualFile[], VirtualFile[]> getOrCache() {
+  private MyCache getOrCache() {
     checkDisposed();
     long timeStamp = myTimeStampOfCachedThings;
-    Trinity<String[], VirtualFile[], VirtualFile[]> cached = myCachedThings;
+    MyCache cached = myCachedThings;
     return timeStamp == myVirtualFilePointerManager.getModificationCount() ? cached : cacheThings();
   }
 
-  private static final Trinity<String[], VirtualFile[], VirtualFile[]> EMPTY = Trinity.create(ArrayUtil.EMPTY_STRING_ARRAY, VirtualFile.EMPTY_ARRAY, VirtualFile.EMPTY_ARRAY);
-
-  
-  private Trinity<String[], VirtualFile[], VirtualFile[]> cacheThings() {
-    Trinity<String[], VirtualFile[], VirtualFile[]> result;
+  private MyCache cacheThings() {
+    MyCache result;
     if (isEmpty()) {
-      result = EMPTY;
+      result = MyCache.EMPTY;
     }
     else {
       List<VirtualFile> cachedFiles = new ArrayList<>(myList.size());
@@ -247,11 +243,10 @@ public class VirtualFilePointerContainerImpl implements VirtualFilePointerContai
           // getFiles() must return files under jar directories but must not return jarDirectories themselves
           cachedDirectories.remove(jarDirectory);
 
-          VirtualFile[] children = jarDirectory.getChildren();
-          for (VirtualFile file : children) {
-            FileType type;
-            if (!file.isDirectory() && (type = FileTypeRegistry.getInstance().getFileTypeByFileName(file.getNameSequence())) instanceof ArchiveFileType) {
-              VirtualFile jarRoot = ((ArchiveFileType)type).getFileSystem().findFileByPath(file.getPath() + URLUtil.JAR_SEPARATOR);
+          for (VirtualFile file : jarDirectory.getRequiredChildren()) {
+            if (!file.isDirectory()
+                && FileTypeRegistry.getInstance().getFileTypeByFileName(file.getNameSequence()) instanceof ArchiveFileType archiveFileType) {
+              VirtualFile jarRoot = archiveFileType.getFileSystem().findFileByPath(file.getPath() + URLUtil.JAR_SEPARATOR);
               if (jarRoot != null) {
                 cachedFiles.add(jarRoot);
                 cachedDirectories.add(jarRoot);
@@ -269,9 +264,8 @@ public class VirtualFilePointerContainerImpl implements VirtualFilePointerContai
           VirtualFileUtil.visitChildrenRecursively(jarDirectory, new VirtualFileVisitor() {
             @Override
             public boolean visitFile(VirtualFile file) {
-              FileType type;
-              if (!file.isDirectory() && (type = FileTypeRegistry.getInstance().getFileTypeByFileName(file.getNameSequence())) instanceof ArchiveFileType) {
-                VirtualFile jarRoot = ((ArchiveFileType)type).getFileSystem().findFileByPath(file.getPath() + URLUtil.JAR_SEPARATOR);
+              if (!file.isDirectory() && FileTypeRegistry.getInstance().getFileTypeByFileName(file.getNameSequence()) instanceof ArchiveFileType archiveFileType) {
+                VirtualFile jarRoot = archiveFileType.getFileSystem().findFileByPath(file.getPath() + URLUtil.JAR_SEPARATOR);
                 if (jarRoot != null) {
                   cachedFiles.add(jarRoot);
                   cachedDirectories.add(jarRoot);
@@ -283,10 +277,11 @@ public class VirtualFilePointerContainerImpl implements VirtualFilePointerContai
           });
         }
       }
-      String[] urlsArray = ArrayUtil.toStringArray(cachedUrls);
-      VirtualFile[] directories = VirtualFileUtil.toVirtualFileArray(cachedDirectories);
-      VirtualFile[] files = allFilesAreDirs ? directories : VirtualFileUtil.toVirtualFileArray(cachedFiles);
-      result = Trinity.create(urlsArray, files, directories);
+      result = new MyCache(
+        ArrayUtil.toStringArray(cachedUrls),
+        allFilesAreDirs ? VirtualFileUtil.toVirtualFileArray(cachedDirectories) : VirtualFileUtil.toVirtualFileArray(cachedFiles),
+        VirtualFileUtil.toVirtualFileArray(cachedDirectories)
+      );
     }
     myCachedThings = result;
     myTimeStampOfCachedThings = myVirtualFilePointerManager.getModificationCount();
@@ -299,15 +294,13 @@ public class VirtualFilePointerContainerImpl implements VirtualFilePointerContai
   }
 
   @Override
-  
   public VirtualFile[] getFiles() {
-    return getOrCache().second;
+    return getOrCache().files();
   }
 
   @Override
-  
   public VirtualFile[] getDirectories() {
-    return getOrCache().third;
+    return getOrCache().directories();
   }
 
   @Override
@@ -345,23 +338,18 @@ public class VirtualFilePointerContainerImpl implements VirtualFilePointerContai
     return myList.hashCode();
   }
 
-  
   private VirtualFilePointer create(VirtualFile file) {
     return myVirtualFilePointerManager.create(file, myParent, myListener);
   }
 
-  
   private VirtualFilePointer create(String url) {
     return myVirtualFilePointerManager.create(url, myParent, myListener);
   }
 
-  
   private VirtualFilePointer duplicate(VirtualFilePointer virtualFilePointer) {
     return myVirtualFilePointerManager.duplicate(virtualFilePointer, myParent, myListener);
   }
 
-  
-  
   @Override
   public String toString() {
     return "VFPContainer: " +
@@ -371,13 +359,11 @@ public class VirtualFilePointerContainerImpl implements VirtualFilePointerContai
   }
 
   @Override
-  
   public VirtualFilePointerContainer clone(Disposable parent) {
     return clone(parent, null);
   }
 
   @Override
-  
   public VirtualFilePointerContainer clone(Disposable parent, @Nullable VirtualFilePointerListener listener) {
     checkDisposed();
     VirtualFilePointerContainerImpl clone = (VirtualFilePointerContainerImpl)myVirtualFilePointerManager.createContainer(parent, listener);
@@ -433,7 +419,6 @@ public class VirtualFilePointerContainerImpl implements VirtualFilePointerContai
     return removed0 || removed1 || removed2;
   }
 
-  
   @Override
   public List<Pair<String, Boolean>> getJarDirectories() {
     List<Pair<String, Boolean>> jars = ContainerUtil.map(myJarDirectories, ptr -> Pair.create(ptr.getUrl(), false));

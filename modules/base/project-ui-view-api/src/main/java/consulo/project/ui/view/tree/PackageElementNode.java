@@ -217,7 +217,7 @@ public class PackageElementNode extends ProjectViewNode<PackageElement> {
     @Override
     public boolean isAlwaysShowPlus() {
         for (VirtualFile dir : getVirtualFiles()) {
-            if (dir.getChildren().length > 0) {
+            if (!dir.getRequiredChildren().isEmpty()) {
                 return true;
             }
         }

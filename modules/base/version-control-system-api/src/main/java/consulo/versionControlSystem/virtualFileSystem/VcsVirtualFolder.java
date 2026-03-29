@@ -18,6 +18,7 @@ package consulo.versionControlSystem.virtualFileSystem;
 import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileSystem;
+import org.jspecify.annotations.Nullable;
 
 import java.io.IOException;
 
@@ -29,7 +30,7 @@ public class VcsVirtualFolder extends AbstractVcsVirtualFile {
   }
 
   @Override
-  public VirtualFile[] getChildren() {
+  public VirtualFile @Nullable [] getChildren() {
     return new VirtualFile[]{myChild};
   }
 

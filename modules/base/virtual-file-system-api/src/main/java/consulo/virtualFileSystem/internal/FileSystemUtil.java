@@ -34,10 +34,8 @@ import java.util.Set;
  * @version 11.1
  */
 public final class FileSystemUtil {
-
   private static final Logger LOG = Logger.getInstance(FileSystemUtil.class);
 
-  
   private static FileSystemMediator ourMediator = Nio2MediatorImpl.ourInstance;
 
   private static boolean ourLocked;
@@ -144,7 +142,7 @@ public final class FileSystemUtil {
     private final PosixFilePermission[] myExecPermissions = {PosixFilePermission.OWNER_EXECUTE, PosixFilePermission.GROUP_EXECUTE, PosixFilePermission.OTHERS_EXECUTE};
 
     @Override
-    public FileAttributes getAttributes(String pathStr) {
+    public @Nullable FileAttributes getAttributes(String pathStr) {
       try {
         Path path = Paths.get(pathStr);
         boolean isWindows = Platform.current().os().isWindows();
@@ -182,7 +180,7 @@ public final class FileSystemUtil {
     }
 
     @Override
-    public String resolveSymLink(String path) throws IOException {
+    public @Nullable String resolveSymLink(String path) throws IOException {
       try {
         return Paths.get(path).toRealPath().toString();
       }
@@ -224,12 +222,10 @@ public final class FileSystemUtil {
     ourLocked = false;
   }
 
-  
   static String getMediatorName() {
     return getMediatorName(ourMediator);
   }
 
-  
   private static String getMediatorName(FileSystemMediator mediator) {
     return mediator.getClass().getSimpleName().replace("MediatorImpl", "");
   }

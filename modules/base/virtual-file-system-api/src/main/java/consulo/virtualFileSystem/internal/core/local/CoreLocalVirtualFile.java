@@ -20,6 +20,7 @@ import consulo.virtualFileSystem.RawFileLoader;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileSystem;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
+import org.jspecify.annotations.Nullable;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -31,7 +32,7 @@ import java.util.List;
 public class CoreLocalVirtualFile extends VirtualFile {
   private final VirtualFileSystem myFileSystem;
   private final File myIoFile;
-  private VirtualFile[] myChildren;
+  private VirtualFile @Nullable [] myChildren = null;
   private final boolean isDirectory;
 
   public CoreLocalVirtualFile(VirtualFileSystem fileSystem, File ioFile) {
@@ -40,19 +41,16 @@ public class CoreLocalVirtualFile extends VirtualFile {
     isDirectory = ioFile.isDirectory();
   }
 
-  
   @Override
   public String getName() {
     return myIoFile.getName();
   }
 
-  
   @Override
   public VirtualFileSystem getFileSystem() {
     return myFileSystem;
   }
 
-  
   @Override
   public String getPath() {
     return FileUtil.toSystemIndependentName(myIoFile.getAbsolutePath());
@@ -74,13 +72,13 @@ public class CoreLocalVirtualFile extends VirtualFile {
   }
 
   @Override
-  public VirtualFile getParent() {
+  public @Nullable VirtualFile getParent() {
     File parentFile = myIoFile.getParentFile();
     return parentFile != null ? new CoreLocalVirtualFile(myFileSystem, parentFile) : null;
   }
 
   @Override
-  public VirtualFile[] getChildren() {
+  public VirtualFile @Nullable [] getChildren() {
     VirtualFile[] answer = myChildren;
     if (answer == null) {
       List<VirtualFile> result = new ArrayList<VirtualFile>();
@@ -104,13 +102,11 @@ public class CoreLocalVirtualFile extends VirtualFile {
     return true;
   }
 
-  
   @Override
   public OutputStream getOutputStream(Object requestor, long newModificationStamp, long newTimeStamp) throws IOException {
     return new FileOutputStream(myIoFile);
   }
 
-  
   @Override
   public byte[] contentsToByteArray() throws IOException {
     return RawFileLoader.getInstance().loadFileBytes(myIoFile);
@@ -127,7 +123,7 @@ public class CoreLocalVirtualFile extends VirtualFile {
   }
 
   @Override
-  public void refresh(boolean asynchronous, boolean recursive, Runnable postRunnable) {
+  public void refresh(boolean asynchronous, boolean recursive, @Nullable Runnable postRunnable) {
   }
 
   @Override

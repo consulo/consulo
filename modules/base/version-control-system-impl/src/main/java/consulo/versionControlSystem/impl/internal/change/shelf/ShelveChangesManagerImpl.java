@@ -467,12 +467,12 @@ public class ShelveChangesManagerImpl implements ShelveChangesManager, JDOMExter
     public List<VirtualFile> gatherPatchFiles(Collection<VirtualFile> files) {
         List<VirtualFile> result = new ArrayList<>();
 
-        LinkedList<VirtualFile> filesQueue = new LinkedList<>(files);
+        Deque<VirtualFile> filesQueue = new ArrayDeque<>(files);
         while (!filesQueue.isEmpty()) {
             ProgressManager.checkCanceled();
             VirtualFile file = filesQueue.removeFirst();
             if (file.isDirectory()) {
-                filesQueue.addAll(Arrays.asList(file.getChildren()));
+                filesQueue.addAll(file.getRequiredChildren());
                 continue;
             }
             if (PatchFileType.isPatchFile(file)) {

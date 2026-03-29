@@ -28,8 +28,8 @@ import java.util.EventObject;
  */
 public class VirtualFileEvent extends EventObject {
   private final VirtualFile myFile;
-  private final VirtualFile myParent;
-  private final Object myRequestor;
+  private final @Nullable VirtualFile myParent;
+  private final @Nullable Object myRequestor;
   private final String myFileName;
 
   private final long myOldModificationStamp;

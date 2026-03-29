@@ -17,16 +17,15 @@ public abstract class LocalFileSystem extends NewVirtualFileSystem implements Vi
   public static final String PROTOCOL_PREFIX = StandardFileSystems.FILE_PROTOCOL_PREFIX;
 
   private static class LocalFileSystemHolder {
-    private static final LocalFileSystem ourInstance = (LocalFileSystem)VirtualFileManager.getInstance().getFileSystem(PROTOCOL);
+    private static final LocalFileSystem ourInstance = LocalFileSystem.get(VirtualFileManager.getInstance());
   }
 
   public static LocalFileSystem getInstance() {
     return LocalFileSystemHolder.ourInstance;
   }
 
-  
   public static LocalFileSystem get(VirtualFileManager manager) {
-    return (LocalFileSystem)manager.getFileSystem(PROTOCOL);
+    return (LocalFileSystem)manager.getRequiredFileSystem(PROTOCOL);
   }
 
   public @Nullable VirtualFile findFileByIoFile(File file) {
@@ -64,7 +63,6 @@ public abstract class LocalFileSystem extends NewVirtualFileSystem implements Vi
   public abstract void refreshFiles(Iterable<? extends VirtualFile> files, boolean async, boolean recursive, @Nullable Runnable onFinish);
 
   public interface WatchRequest {
-    
     @SystemIndependent String getRootPath();
 
     boolean isToWatchRecursively();
@@ -75,7 +73,6 @@ public abstract class LocalFileSystem extends NewVirtualFileSystem implements Vi
     return result.size() == 1 ? result.iterator().next() : null;
   }
 
-  
   public Set<WatchRequest> addRootsToWatch(Collection<String> rootPaths, boolean watchRecursively) {
     if (rootPaths.isEmpty()) {
       return Collections.emptySet();
@@ -109,7 +106,11 @@ public abstract class LocalFileSystem extends NewVirtualFileSystem implements Vi
    * Stops watching given watch requests and starts watching new paths.
    * May do nothing and return the same set of requests when it contains exactly the same paths.
    */
-  public abstract Set<WatchRequest> replaceWatchedRoots(Collection<WatchRequest> watchRequests, @Nullable Collection<String> recursiveRoots, @Nullable Collection<String> flatRoots);
+  public abstract Set<WatchRequest> replaceWatchedRoots(
+    Collection<WatchRequest> watchRequests,
+    @Nullable Collection<String> recursiveRoots,
+    @Nullable Collection<String> flatRoots
+  );
 
   /**
    * Registers a handler that allows a version control system plugin to intercept file operations in the local file system

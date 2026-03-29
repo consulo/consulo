@@ -16,6 +16,7 @@
 
 package consulo.virtualFileSystem.impl.internal.temp;
 
+import consulo.annotation.access.RequiredWriteAction;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.io.BufferExposingByteArrayInputStream;
@@ -63,14 +64,14 @@ public class TempFileSystemImpl extends TempFileSystem implements RefreshableFil
   }
 
   @Override
-  public VirtualFile copyFile(Object requestor, VirtualFile file, VirtualFile newParent, String copyName)
-      throws IOException {
+  @RequiredWriteAction
+  public VirtualFile copyFile(@Nullable Object requestor, VirtualFile file, VirtualFile newParent, String copyName) throws IOException {
     return VirtualFileUtil.copyFile(requestor, file, newParent, copyName);
   }
 
   @Override
-  
-  public VirtualFile createChildDirectory(Object requestor, VirtualFile parent, String dir) throws IOException {
+  @RequiredWriteAction
+  public VirtualFile createChildDirectory(@Nullable Object requestor, VirtualFile parent, String dir) throws IOException {
     FSItem fsItem = convert(parent);
     assert fsItem != null && fsItem.isDirectory();
 
@@ -87,7 +88,8 @@ public class TempFileSystemImpl extends TempFileSystem implements RefreshableFil
   }
 
   @Override
-  public VirtualFile createChildFile(Object requestor, VirtualFile parent, String file) throws IOException {
+  @RequiredWriteAction
+  public VirtualFile createChildFile(@Nullable Object requestor, VirtualFile parent, String file) throws IOException {
     FSItem fsItem = convert(parent);
     if (fsItem == null) {
       FSRecords.invalidateCaches();
@@ -104,7 +106,8 @@ public class TempFileSystemImpl extends TempFileSystem implements RefreshableFil
   }
 
   @Override
-  public void deleteFile(Object requestor, VirtualFile file) throws IOException {
+  @RequiredWriteAction
+  public void deleteFile(@Nullable Object requestor, VirtualFile file) throws IOException {
     FSItem fsItem = convert(file);
     if (fsItem == null) {
       FSRecords.invalidateCaches();
@@ -114,7 +117,8 @@ public class TempFileSystemImpl extends TempFileSystem implements RefreshableFil
   }
 
   @Override
-  public void moveFile(Object requestor, VirtualFile file, VirtualFile newParent) throws IOException {
+  @RequiredWriteAction
+  public void moveFile(@Nullable Object requestor, VirtualFile file, VirtualFile newParent) throws IOException {
     FSItem fsItem = convert(file);
     assert fsItem != null: "failed to move file " + file.getPath();
     FSItem newParentItem = convert(newParent);
@@ -129,7 +133,8 @@ public class TempFileSystemImpl extends TempFileSystem implements RefreshableFil
   }
 
   @Override
-  public void renameFile(Object requestor, VirtualFile file, String newName) throws IOException {
+  @RequiredWriteAction
+  public void renameFile(@Nullable Object requestor, VirtualFile file, String newName) throws IOException {
     FSItem fsItem = convert(file);
     assert fsItem != null;
 
@@ -137,7 +142,6 @@ public class TempFileSystemImpl extends TempFileSystem implements RefreshableFil
   }
 
   @Override
-  
   public String getProtocol() {
     return PROTOCOL;
   }
@@ -148,7 +152,6 @@ public class TempFileSystemImpl extends TempFileSystem implements RefreshableFil
   }
 
   @Override
-  
   public String[] list(VirtualFile file) {
     FSItem fsItem = convert(file);
     assert fsItem != null;
@@ -194,7 +197,6 @@ public class TempFileSystemImpl extends TempFileSystem implements RefreshableFil
   }
 
   @Override
-  
   public byte[] contentsToByteArray(VirtualFile file) throws IOException {
     FSItem fsItem = convert(file);
     if (fsItem == null) throw new FileNotFoundException("Cannot find temp for " + file.getPath());
@@ -205,13 +207,11 @@ public class TempFileSystemImpl extends TempFileSystem implements RefreshableFil
   }
 
   @Override
-  
   public InputStream getInputStream(VirtualFile file) throws IOException {
     return new BufferExposingByteArrayInputStream(contentsToByteArray(file));
   }
 
   @Override
-  
   public OutputStream getOutputStream(final VirtualFile file, Object requestor, final long modStamp, long timeStamp)
       throws IOException {
     return new ByteArrayOutputStream() {

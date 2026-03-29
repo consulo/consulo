@@ -40,7 +40,6 @@ public abstract class WritingAccessProvider {
 
     public abstract boolean isPotentiallyWritable(VirtualFile file);
 
-    
     public static List<WritingAccessProvider> getProvidersForProject(@Nullable ComponentManager project) {
         return project == null ? List.of() : EP_NAME.getExtensionList(project);
     }

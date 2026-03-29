@@ -17,17 +17,16 @@ package consulo.virtualFileSystem;
 
 /**
  * @author VISTALL
- * @since 21-Jul-22
+ * @since 2022-07-21
  */
 public abstract class TempFileSystem extends NewVirtualFileSystem {
   public static final String PROTOCOL = "temp";
 
-  
   public static TempFileSystem get(VirtualFileManager manager) {
-    return (TempFileSystem)manager.getFileSystem(PROTOCOL);
+    return (TempFileSystem)manager.getRequiredFileSystem(PROTOCOL);
   }
 
   public static TempFileSystem getInstance() {
-    return (TempFileSystem)VirtualFileManager.getInstance().getFileSystem(PROTOCOL);
+    return get(VirtualFileManager.getInstance());
   }
 }

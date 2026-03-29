@@ -28,7 +28,7 @@ import java.util.function.Supplier;
  * @author max
  */
 @SuppressWarnings("ClassNameSameAsAncestorName")
-public class SoftReference<T> extends java.lang.ref.SoftReference<T> implements Supplier<T> {
+public class SoftReference<T extends @Nullable Object> extends java.lang.ref.SoftReference<T> implements Supplier<T> {
   //private final T myReferent;
 
   public SoftReference(T referent) {

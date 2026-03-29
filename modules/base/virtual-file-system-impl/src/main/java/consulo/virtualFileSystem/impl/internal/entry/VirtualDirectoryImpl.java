@@ -54,7 +54,6 @@ public class VirtualDirectoryImpl extends VirtualFileSystemEntry {
   }
 
   @Override
-  
   public NewVirtualFileSystem getFileSystem() {
     return myFs;
   }
@@ -199,12 +198,10 @@ public class VirtualDirectoryImpl extends VirtualFileSystemEntry {
     return c == '/' || c == '\\';
   }
 
-  
   private VirtualFileSystemEntry[] getArraySafely() {
     return myData.getFileChildren(this);
   }
 
-  
   public VirtualFileSystemEntry createChild(String name, int id, NewVirtualFileSystem delegate, FileAttributes attributes, boolean isEmptyDirectory) {
     int nameId = FileNameCache.storeName(name);
     synchronized (myData) {
@@ -212,7 +209,6 @@ public class VirtualDirectoryImpl extends VirtualFileSystemEntry {
     }
   }
 
-  
   private VirtualFileSystemEntry createChild(int id, int nameId, NewVirtualFileSystem delegate, FileAttributes attributes, boolean isEmptyDirectory) {
     FileLoadingTracker.fileLoaded(this, nameId);
 
@@ -275,14 +271,13 @@ public class VirtualDirectoryImpl extends VirtualFileSystemEntry {
   }
 
   @Override
-  
   public Iterable<VirtualFile> iterInDbChildren() {
     if (!ourPersistence.wereChildrenAccessed(this)) {
       return Collections.emptyList();
     }
 
     if (ourPersistence.areChildrenLoaded(this)) {
-      return Arrays.asList(getChildren()); // may load vfs from other projects
+      return getRequiredChildren(); // may load vfs from other projects
     }
 
     loadPersistedChildren();
@@ -290,7 +285,6 @@ public class VirtualDirectoryImpl extends VirtualFileSystemEntry {
     return getCachedChildren();
   }
 
-  
   @Override
   public Iterable<VirtualFile> iterInDbChildrenWithoutLoadingVfsFromOtherProjects() {
     if (!ourPersistence.wereChildrenAccessed(this)) {
@@ -312,8 +306,7 @@ public class VirtualDirectoryImpl extends VirtualFileSystemEntry {
   }
 
   @Override
-  
-  public VirtualFile[] getChildren() {
+  public VirtualFile @Nullable [] getChildren() {
     if (!isValid()) {
       throw new InvalidVirtualFileAccessException(this);
     }
@@ -324,7 +317,6 @@ public class VirtualDirectoryImpl extends VirtualFileSystemEntry {
     return loadAllChildren();
   }
 
-  
   private VirtualFile[] loadAllChildren() {
     NewVirtualFileSystem delegate = getFileSystem();
     boolean caseSensitive = delegate.isCaseSensitive();
@@ -418,7 +410,6 @@ public class VirtualDirectoryImpl extends VirtualFileSystemEntry {
     }
   }
 
-  
   private static String verboseToString(VirtualFileSystemEntry file) {
     if (file == null) return "null";
     return file +
@@ -465,7 +456,6 @@ public class VirtualDirectoryImpl extends VirtualFileSystemEntry {
     return findChild(name, false, false, getFileSystem());
   }
 
-  
   @Override
   public byte[] contentsToByteArray() throws IOException {
     throw new IOException("Cannot get content of directory: " + this);
@@ -668,7 +658,6 @@ public class VirtualDirectoryImpl extends VirtualFileSystemEntry {
     setFlagInt(CHILDREN_CACHED, true);
   }
 
-  
   public List<String> getSuspiciousNames() {
     return myData.getAdoptedNames();
   }
@@ -694,7 +683,6 @@ public class VirtualDirectoryImpl extends VirtualFileSystemEntry {
   }
 
   @Override
-  
   public List<VirtualFile> getCachedChildren() {
     return Arrays.asList(getArraySafely());
   }
@@ -705,7 +693,6 @@ public class VirtualDirectoryImpl extends VirtualFileSystemEntry {
   }
 
   @Override
-  
   public OutputStream getOutputStream(Object requestor, long newModificationStamp, long newTimeStamp) throws IOException {
     throw new IOException("getOutputStream() must not be called against a directory: " + getUrl());
   }
@@ -731,7 +718,6 @@ public class VirtualDirectoryImpl extends VirtualFileSystemEntry {
     myData.myUserMap = map;
   }
 
-  
   @Override
   protected KeyFMap getUserMap() {
     return myData.myUserMap;
