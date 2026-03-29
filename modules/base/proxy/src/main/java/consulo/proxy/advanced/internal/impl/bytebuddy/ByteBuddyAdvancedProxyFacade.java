@@ -30,6 +30,7 @@ import net.bytebuddy.dynamic.scaffold.TypeValidation;
 import net.bytebuddy.implementation.InvocationHandlerAdapter;
 import net.bytebuddy.matcher.ElementMatcher;
 import net.bytebuddy.matcher.ElementMatchers;
+import org.jspecify.annotations.Nullable;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationHandler;
@@ -51,11 +52,13 @@ public class ByteBuddyAdvancedProxyFacade implements AdvancedProxyFacade {
   
   @Override
   @SuppressWarnings("unchecked")
-  public <T> T create(Class<T> superClass,
-                      Class[] interfaces,
-                      InvocationHandler invocationHandler,
-                      boolean interceptObjectMethods,
-                      Object[] superConstructorArguments) {
+  public <T> T create(
+      Class<T> superClass,
+      Class[] interfaces,
+      InvocationHandler invocationHandler,
+      boolean interceptObjectMethods,
+      Object[] superConstructorArguments
+  ) {
     try {
       ClassLoader classLoader = ProxyHelper.preferClassLoader(superClass, interfaces);
 

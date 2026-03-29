@@ -14,18 +14,18 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
 public class MemoryResource extends Resource {
-  protected final URL myUrl;
+  protected final @Nullable URL myUrl;
   private final byte[] myContent;
   private final Map<Resource.Attribute, String> myAttributes;
 
-  public MemoryResource(URL url, byte[] content, Map<Resource.Attribute, String> attributes) {
+  public MemoryResource(@Nullable URL url, byte[] content, Map<Resource.Attribute, String> attributes) {
     myUrl = url;
     myContent = content;
     myAttributes = attributes;
   }
 
   @Override
-  public URL getURL() {
+  public @Nullable URL getURL() {
     return myUrl;
   }
 
