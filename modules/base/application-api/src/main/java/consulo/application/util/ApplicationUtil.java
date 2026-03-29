@@ -58,14 +58,17 @@ public class ApplicationUtil {
     SimpleReference<T> result = SimpleReference.create();
     SimpleReference<Throwable> error = SimpleReference.create();
 
-    Future<?> future = PooledThreadExecutor.getInstance().submit(() -> ProgressManager.getInstance().executeProcessUnderProgress(() -> {
-      try {
-        result.set(callable.call());
-      }
-      catch (Throwable t) {
-        error.set(t);
-      }
-    }, indicator));
+    Future<?> future = PooledThreadExecutor.getInstance().submit(() -> ProgressManager.getInstance().executeProcessUnderProgress(
+      () -> {
+        try {
+          result.set(callable.call());
+        }
+        catch (Throwable t) {
+          error.set(t);
+        }
+      },
+      indicator
+    ));
 
     while (true) {
       try {

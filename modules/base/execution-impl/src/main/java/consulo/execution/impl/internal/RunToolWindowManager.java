@@ -19,6 +19,7 @@ import consulo.application.HelpManager;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.execution.executor.Executor;
+import consulo.execution.localize.ExecutionLocalize;
 import consulo.execution.ui.event.RunContentWithExecutorListener;
 import consulo.logging.Logger;
 import consulo.project.Project;
@@ -63,26 +64,27 @@ public class RunToolWindowManager {
         myProject = project;
         myToolWindowManager = toolWindowManager;
         myParentDisposable = parentDisposable;
-        project.getMessageBus().connect().subscribe(ToolWindowManagerListener.class, new ToolWindowManagerListener() {
-            @RequiredUIAccess
-            @Override
-            public void stateChanged(ToolWindowManager tw) {
-                if (project.isDisposed()) {
-                    return;
-                }
+        project.getMessageBus().connect().subscribe(
+            ToolWindowManagerListener.class,
+            new ToolWindowManagerListener() {
+                @Override
+                @RequiredUIAccess
+                public void stateChanged(ToolWindowManager tw) {
+                    if (project.isDisposed()) {
+                        return;
+                    }
 
-                Set<String> currentWindows = new HashSet<>();
-                ContainerUtil.addAll(currentWindows, tw.getToolWindowIds());
-                myToolwindowIdZBuffer.retainAll(currentWindows);
+                    Set<String> currentWindows = new HashSet<>();
+                    ContainerUtil.addAll(currentWindows, tw.getToolWindowIds());
+                    myToolwindowIdZBuffer.retainAll(currentWindows);
 
-                String activeToolWindowId = tw.getActiveToolWindowId();
-                if (activeToolWindowId != null) {
-                    if (myToolwindowIdZBuffer.remove(activeToolWindowId)) {
+                    String activeToolWindowId = tw.getActiveToolWindowId();
+                    if (activeToolWindowId != null && myToolwindowIdZBuffer.remove(activeToolWindowId)) {
                         myToolwindowIdZBuffer.addFirst(activeToolWindowId);
                     }
                 }
             }
-        });
+        );
     }
 
     public Image getImage(String toolWindowId) {
@@ -107,7 +109,8 @@ public class RunToolWindowManager {
             //noinspection RequiredXAction
             UIAccess.assertIsUIThread();
             return myToolwindowIdToContentManagerMap.computeIfAbsent(toolWindowId, this::createToolWindow);
-        } else {
+        }
+        else {
             return myToolwindowIdToContentManagerMap.get(toolWindowId);
         }
     }
@@ -136,19 +139,16 @@ public class RunToolWindowManager {
             }
         });
 
+        toolWindow.setDisplayName(ExecutionLocalize.toolWindowNameRun());
         toolWindow.setIcon(toolWindowIcon);
         ContentManagerWatcher.watchContentManager(toolWindow, contentManager);
+
         initToolWindow(executor, toolWindowId, toolWindowIcon, contentManager);
 
         return contentManager;
     }
 
-    private void initToolWindow(
-        @Nullable Executor executor,
-        String toolWindowId,
-        Image toolWindowIcon,
-        ContentManager contentManager
-    ) {
+    private void initToolWindow(@Nullable Executor executor, String toolWindowId, Image toolWindowIcon, ContentManager contentManager) {
         myToolwindowIdToBaseIconMap.put(toolWindowId, toolWindowIcon);
         contentManager.addContentManagerListener(new ContentManagerAdapter() {
             @Override
@@ -169,11 +169,14 @@ public class RunToolWindowManager {
                 }
             }
         });
-        Disposer.register(contentManager, () -> {
-            myToolwindowIdToContentManagerMap.remove(toolWindowId).removeAllContents(true);
-            myToolwindowIdZBuffer.remove(toolWindowId);
-            myToolwindowIdToBaseIconMap.remove(toolWindowId);
-        });
+        Disposer.register(
+            contentManager,
+            () -> {
+                myToolwindowIdToContentManagerMap.remove(toolWindowId).removeAllContents(true);
+                myToolwindowIdZBuffer.remove(toolWindowId);
+                myToolwindowIdToBaseIconMap.remove(toolWindowId);
+            }
+        );
         myToolwindowIdZBuffer.addLast(toolWindowId);
     }
 }

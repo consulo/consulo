@@ -25,7 +25,7 @@ import java.util.*;
  */
 public class UniqueNameBuilder<T> {
   private static final String VFS_SEPARATOR = "/";
-  private final Map<T, String> myPaths = new HashMap<T, String>();
+  private final Map<T, String> myPaths = new HashMap<>();
   private final String mySeparator;
   private final int myMaxLength;
   private final String myRoot;

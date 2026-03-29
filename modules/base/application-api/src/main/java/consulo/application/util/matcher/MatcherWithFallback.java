@@ -43,6 +43,9 @@ class MatcherWithFallback extends MinusculeMatcher {
 
   @Override
   public String toString() {
-    return "MatcherWithFallback{" + "myMainMatcher=" + myMainMatcher + ", myFallbackMatcher=" + myFallbackMatcher + '}';
+    return "MatcherWithFallback{" +
+      "myMainMatcher=" + myMainMatcher +
+      ", myFallbackMatcher=" + myFallbackMatcher +
+      '}';
   }
 }

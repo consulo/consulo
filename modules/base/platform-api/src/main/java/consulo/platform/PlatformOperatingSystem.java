@@ -23,10 +23,9 @@ import java.util.Map;
 
 /**
  * @author VISTALL
- * @since 25/04/2023
+ * @since 2023-04-25
  */
 public interface PlatformOperatingSystem {
-    
     Collection<ProcessInfo> processes();
 
     boolean isWindows();
@@ -44,26 +43,20 @@ public interface PlatformOperatingSystem {
         return this instanceof UnixOperationSystem linux && linux.isXWindow();
     }
 
-    
     default LineSeparator lineSeparator() {
         return LineSeparator.LF;
     }
 
-    
     String name();
 
-    
     String version();
 
-    
     String arch();
 
-    
     Map<String, String> environmentVariables();
 
     @Nullable String getEnvironmentVariable(String key);
 
-    
     String fileNamePrefix();
 
     default @Nullable String getEnvironmentVariable(String key, String defaultValue) {

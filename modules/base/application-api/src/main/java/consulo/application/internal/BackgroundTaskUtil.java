@@ -63,10 +63,12 @@ public class BackgroundTaskUtil {
    * This period can be very short and looks like 'jumping' if background operation is fast.
    */
   @RequiredUIAccess
-  public static ProgressIndicator executeAndTryWait(Function<ProgressIndicator, /*@NotNull*/ Runnable> backgroundTask,
-                                                    @Nullable Runnable onSlowAction,
-                                                    long waitMillis,
-                                                    boolean forceEDT) {
+  public static ProgressIndicator executeAndTryWait(
+    Function<ProgressIndicator, Runnable> backgroundTask,
+    @Nullable Runnable onSlowAction,
+    long waitMillis,
+    boolean forceEDT
+  ) {
     ModalityState modality = Application.get().getCurrentModalityState();
 
     if (forceEDT) {
@@ -152,8 +154,8 @@ public class BackgroundTaskUtil {
    */
   private static <T> ProgressiveResult<T> computeInBackgroundAndTryWait(
     Function<ProgressIndicator, T> task,
-    BiConsumer<T, ProgressIndicator> asyncCallback,
-    ModalityState modality,
+                                                                              BiConsumer<T, ProgressIndicator> asyncCallback,
+                                                                              ModalityState modality,
     long waitMillis
   ) {
     ProgressIndicator indicator = new EmptyProgressIndicator(modality);
@@ -161,17 +163,20 @@ public class BackgroundTaskUtil {
     Helper<T> helper = new Helper<>();
 
     indicator.start();
-    Application.get().executeOnPooledThread(() -> ProgressManager.getInstance().executeProcessUnderProgress(() -> {
-      try {
-        T result = task.apply(indicator);
-        if (!helper.setResult(result)) {
-          asyncCallback.accept(result, indicator);
+    Application.get().executeOnPooledThread(() -> ProgressManager.getInstance().executeProcessUnderProgress(
+      () -> {
+        try {
+          T result = task.apply(indicator);
+          if (!helper.setResult(result)) {
+            asyncCallback.accept(result, indicator);
+          }
         }
-      }
-      finally {
-        indicator.stop();
-      }
-    }, indicator));
+        finally {
+          indicator.stop();
+        }
+      },
+      indicator
+    ));
 
     T result = null;
     if (helper.await(waitMillis)) {
@@ -192,9 +197,10 @@ public class BackgroundTaskUtil {
     ProgressIndicator indicator = new EmptyProgressIndicator();
     indicator.start();
 
-    CompletableFuture<?> future = CompletableFuture.runAsync(() -> {
-      ProgressManager.getInstance().runProcess(runnable, indicator);
-    }, AppExecutorUtil.getAppExecutorService());
+    CompletableFuture<?> future = CompletableFuture.runAsync(
+      () -> ProgressManager.getInstance().runProcess(runnable, indicator),
+      AppExecutorUtil.getAppExecutorService()
+    );
 
     Disposable disposable = () -> {
       if (indicator.isRunning()) indicator.cancel();
@@ -225,10 +231,13 @@ public class BackgroundTaskUtil {
   }
 
   public static void runUnderDisposeAwareIndicator(Disposable parent, Runnable task) {
-    runUnderDisposeAwareIndicator(parent, () -> {
-      task.run();
-      return null;
-    });
+    runUnderDisposeAwareIndicator(
+      parent,
+      () -> {
+        task.run();
+        return null;
+      }
+    );
   }
 
   public static <T> T runUnderDisposeAwareIndicator(Disposable parent, Supplier<T> task) {
@@ -236,7 +245,9 @@ public class BackgroundTaskUtil {
     indicator.start();
 
     Disposable disposable = () -> {
-      if (indicator.isRunning()) indicator.cancel();
+      if (indicator.isRunning()) {
+        indicator.cancel();
+      }
     };
 
     if (!registerIfParentNotDisposed(parent, disposable)) {
@@ -254,7 +265,9 @@ public class BackgroundTaskUtil {
 
   private static boolean registerIfParentNotDisposed(Disposable parent, Disposable disposable) {
     return ReadAction.compute(() -> {
-      if (Disposer.isDisposed(parent)) return false;
+      if (Disposer.isDisposed(parent)) {
+        return false;
+      }
       try {
         Disposer.register(parent, disposable);
         return true;
@@ -275,7 +288,9 @@ public class BackgroundTaskUtil {
    */
   public static <L> L syncPublisher(ComponentManager project, Class<L> topic) throws ProcessCanceledException {
     return ReadAction.compute(() -> {
-      if (project.isDisposed()) throw new ProcessCanceledException();
+      if (project.isDisposed()) {
+        throw new ProcessCanceledException();
+      }
       return project.getMessageBus().syncPublisher(topic);
     });
   }
@@ -290,7 +305,9 @@ public class BackgroundTaskUtil {
   public static <L> L syncPublisher(Class<L> topic) throws ProcessCanceledException {
     return ReadAction.compute(() -> {
       Application application = Application.get();
-      if (application.isDisposed()) throw new ProcessCanceledException();
+      if (application.isDisposed()) {
+        throw new ProcessCanceledException();
+      }
       return application.getMessageBus().syncPublisher(topic);
     });
   }

@@ -66,7 +66,9 @@ public final class CachedValueProfiler {
       ThreadContext context = ourContext.get();
       myParent = context.topFrame;
       context.topFrame = this;
-      if (context.consumer == null || context.consumer != ourEventConsumer) return;
+      if (context.consumer == null || context.consumer != ourEventConsumer) {
+        return;
+      }
 
       EventPlace place = place(CachedValueProfiler::findCallerPlace);
       context.consumer.onFrameEnter(myId, place, myParent == null ? 0 : myParent.myId, myStart);
@@ -131,10 +133,14 @@ public final class CachedValueProfiler {
   static @Nullable ValueTracker onResultReturned(Frame frame, CachedValueProvider.@Nullable Result<?> result) {
     long time = currentTime();
     ThreadContext context = ourContext.get();
-    if (context.consumer == null) return null;
+    if (context.consumer == null) {
+      return null;
+    }
 
     EventPlace place = frame.places.get(result);
-    if (place == null) place = place(CachedValueProfiler::findCallerPlace);
+    if (place == null) {
+      place = place(CachedValueProfiler::findCallerPlace);
+    }
 
     context.consumer.onValueComputed(frame.myId, place, frame.timeConfigured, time);
     return new ValueTracker(place, frame.timeConfigured, time);

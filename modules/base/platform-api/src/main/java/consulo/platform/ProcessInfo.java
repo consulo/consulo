@@ -35,22 +35,11 @@ public final class ProcessInfo {
   
   private final String myArgs;
 
-  public ProcessInfo(int pid,
-                     String commandLine,
-                     String executableName,
-                     String args) {
-    myPid = pid;
-    myCommandLine = commandLine;
-    myExecutablePath = Optional.empty();
-    myExecutableName = executableName;
-    myArgs = args;
+  public ProcessInfo(int pid, String commandLine, String executableName, String args) {
+    this(pid, commandLine, executableName, args, null);
   }
 
-  public ProcessInfo(int pid,
-                     String commandLine,
-                     String executableName,
-                     String args,
-                     @Nullable String executablePath) {
+  public ProcessInfo(int pid, String commandLine, String executableName, String args, @Nullable String executablePath) {
     myPid = pid;
     myCommandLine = commandLine;
     myExecutableName = executableName;
@@ -62,17 +51,14 @@ public final class ProcessInfo {
     return myPid;
   }
 
-  
   public String getCommandLine() {
     return myCommandLine;
   }
 
-  
   public String getExecutableName() {
     return myExecutableName;
   }
 
-  
   public Optional<String> getExecutableCannonicalPath() {
     return myExecutablePath.map(s -> {
       try {
@@ -84,12 +70,10 @@ public final class ProcessInfo {
     });
   }
 
-  
   public String getExecutableDisplayName() {
     return StringUtil.trimEnd(myExecutableName, ".exe", true);
   }
 
-  
   public String getArgs() {
     return myArgs;
   }
@@ -101,7 +85,7 @@ public final class ProcessInfo {
   }
 
   @Override
-  public boolean equals(Object o) {
+  public boolean equals(@Nullable Object o) {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
 

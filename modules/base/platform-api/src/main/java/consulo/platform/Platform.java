@@ -26,32 +26,25 @@ import java.nio.file.Path;
 
 /**
  * @author VISTALL
- * @since 16-May-17
+ * @since 2017-05-16
  */
 public interface Platform extends UserDataHolder {
     static String LOCAL = "local";
 
-    
     static Platform current() {
         return PlatformInternal.current();
     }
 
-    
     String getId();
 
-    
     String getName();
 
-    
     PlatformFileSystem fs();
 
-    
     PlatformOperatingSystem os();
 
-    
     PlatformJvm jvm();
 
-    
     PlatformUser user();
 
     default boolean supportsFeature(PlatformFeature feature) {
@@ -70,7 +63,6 @@ public interface Platform extends UserDataHolder {
 
     void openInBrowser(URL url);
 
-    
     default String fileManagerName() {
         return "File Manager";
     }
@@ -87,13 +79,11 @@ public interface Platform extends UserDataHolder {
 
     void openDirectoryInFileManager(File file, UIAccess uiAccess);
 
-    
     default String mapExecutableName(String baseName) {
         String archSuffix = jvm().arch().fileNameSuffix();
         return !archSuffix.isEmpty() ? baseName + archSuffix : baseName;
     }
 
-    
     default String mapAnyExecutableName(String baseName) {
         if (os().isWindows()) {
             return mapWindowsExecutable(baseName, "exe");
@@ -102,7 +92,6 @@ public interface Platform extends UserDataHolder {
         return mapExecutableName(baseName);
     }
 
-    
     default String mapWindowsExecutable(String baseName, String extension) {
         if (!os().isWindows()) {
             throw new IllegalArgumentException("Must be Windows");
@@ -111,7 +100,6 @@ public interface Platform extends UserDataHolder {
         return mapExecutableName(baseName) + "." + extension;
     }
 
-    
     default String mapLibraryName(String libName) {
         String baseName = libName;
         String archSuffix = jvm().arch().fileNameSuffix();

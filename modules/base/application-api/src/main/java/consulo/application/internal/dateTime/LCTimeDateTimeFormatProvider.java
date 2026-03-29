@@ -31,13 +31,19 @@ public class LCTimeDateTimeFormatProvider implements DateTimeFormatProvider {
     @Override
     public DateFormat @Nullable [] getFormats(Platform platform) {
         String localeStr = platform.os().getEnvironmentVariable("LC_TIME");
-        if (localeStr == null) return null;
+        if (localeStr == null) {
+            return null;
+        }
 
         localeStr = localeStr.trim();
         int p = localeStr.indexOf('.');
-        if (p > 0) localeStr = localeStr.substring(0, p);
+        if (p > 0) {
+            localeStr = localeStr.substring(0, p);
+        }
         p = localeStr.indexOf('@');
-        if (p > 0) localeStr = localeStr.substring(0, p);
+        if (p > 0) {
+            localeStr = localeStr.substring(0, p);
+        }
 
         Locale locale;
         p = localeStr.indexOf('_');

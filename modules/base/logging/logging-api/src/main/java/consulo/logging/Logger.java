@@ -26,12 +26,10 @@ import org.jspecify.annotations.Nullable;
 public interface Logger {
     static final String[] EMPTY_STRING_ARRAY = new String[0];
 
-    
     public static Logger getInstance(String category) {
         return LoggerFactoryInitializer.getFactory().getLoggerInstance(category);
     }
 
-    
     public static Logger getInstance(Class clazz) {
         return LoggerFactoryInitializer.getFactory().getLoggerInstance(clazz);
     }
