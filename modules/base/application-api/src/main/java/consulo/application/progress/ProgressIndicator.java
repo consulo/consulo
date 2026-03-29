@@ -59,7 +59,6 @@ import java.util.Objects;
 public interface ProgressIndicator {
     Key<ProgressIndicator> KEY = Key.of(ProgressIndicator.class);
 
-    
     static ProgressIndicator from(Continuation<?> continuation) {
         ProgressIndicator indicator = continuation.scope().getCopyableUserData(KEY);
         return Objects.requireNonNull(indicator, "ProgressIndicator must be set");
@@ -123,7 +122,6 @@ public interface ProgressIndicator {
         return getTextValue().getNullIfEmpty();
     }
 
-    
     LocalizeValue getTextValue();
 
     /**
@@ -153,7 +151,6 @@ public interface ProgressIndicator {
         return getText2Value().getNullIfEmpty();
     }
 
-    
     LocalizeValue getText2Value();
 
     /**

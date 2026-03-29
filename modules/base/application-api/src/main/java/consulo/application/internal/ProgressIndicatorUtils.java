@@ -42,10 +42,14 @@ public class ProgressIndicatorUtils {
         ProgressIndicator outer = ProgressIndicatorProvider.getGlobalProgressIndicator();
         ProgressIndicator inner = outer != null ? new SensitiveProgressWrapper(outer) : new ProgressIndicatorBase(false, false);
         AtomicBoolean canceledByTimeout = new AtomicBoolean();
-        ScheduledFuture<?> cancelProgress = AppExecutorUtil.getAppScheduledExecutorService().schedule(() -> {
-            canceledByTimeout.set(true);
-            inner.cancel();
-        }, timeoutMs, TimeUnit.MILLISECONDS);
+        ScheduledFuture<?> cancelProgress = AppExecutorUtil.getAppScheduledExecutorService().schedule(
+            () -> {
+                canceledByTimeout.set(true);
+                inner.cancel();
+            },
+            timeoutMs,
+            TimeUnit.MILLISECONDS
+        );
         try {
             return ProgressManager.getInstance().runProcess(computation, inner);
         }
@@ -60,8 +64,12 @@ public class ProgressIndicatorUtils {
         }
     }
 
-    public static <T, E extends Throwable> T computeWithLockAndCheckingCanceled(Lock lock, int timeout, TimeUnit timeUnit, ThrowableComputable<T, E> computable)
-        throws E, ProcessCanceledException {
+    public static <T, E extends Throwable> T computeWithLockAndCheckingCanceled(
+        Lock lock,
+        int timeout,
+        TimeUnit timeUnit,
+        ThrowableComputable<T, E> computable
+    ) throws E, ProcessCanceledException {
         awaitWithCheckCanceled(lock, timeout, timeUnit);
 
         try {
@@ -94,8 +102,8 @@ public class ProgressIndicatorUtils {
             }
             catch (Throwable e) {
                 Throwable cause = e.getCause();
-                if (cause instanceof ProcessCanceledException) {
-                    throw (ProcessCanceledException) cause;
+                if (cause instanceof ProcessCanceledException pce) {
+                    throw pce;
                 }
                 if (cause instanceof CancellationException) {
                     throw new ProcessCanceledException(cause);

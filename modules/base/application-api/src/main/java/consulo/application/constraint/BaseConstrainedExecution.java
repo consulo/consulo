@@ -109,7 +109,6 @@ public abstract class BaseConstrainedExecution<E extends ConstrainedExecution<E>
     return null;
   }
 
-  
   public ContextConstraint[] getConstraints() {
     return constraints;
   }

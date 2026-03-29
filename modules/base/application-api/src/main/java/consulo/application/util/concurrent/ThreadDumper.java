@@ -18,7 +18,10 @@ import java.util.List;
  */
 public class ThreadDumper {
   private static final Comparator<ThreadInfo> THREAD_INFO_COMPARATOR =
-          Comparator.comparing((ThreadInfo o1) -> isEDT(o1.getThreadName())).thenComparing(o -> o.getThreadState() == Thread.State.RUNNABLE).thenComparingInt(o -> o.getStackTrace().length).reversed();
+    Comparator.comparing((ThreadInfo o1) -> isEDT(o1.getThreadName()))
+      .thenComparing(o -> o.getThreadState() == Thread.State.RUNNABLE)
+      .thenComparingInt(o -> o.getStackTrace().length)
+      .reversed();
 
   private ThreadDumper() {
   }

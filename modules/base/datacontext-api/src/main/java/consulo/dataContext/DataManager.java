@@ -70,10 +70,8 @@ public interface DataManager {
 
   /**
    * @return {@link DataContext} constructed be the specified <code>component</code>
-   * and the point specified by <code>x</code> and <code>y</code> coordinate inside the
-   * component.
-   * @throws java.lang.IllegalArgumentException if point <code>(x, y)</code> is not inside
-   *                                            component's bounds
+   * and the point specified by <code>x</code> and <code>y</code> coordinate inside the component.
+   * @throws java.lang.IllegalArgumentException if point <code>(x, y)</code> is not inside component's bounds
    */
   default DataContext getDataContext(java.awt.Component component, int x, int y) {
     throw new UnsupportedOperationException();

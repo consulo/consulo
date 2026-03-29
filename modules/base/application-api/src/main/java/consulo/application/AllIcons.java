@@ -23,7 +23,6 @@ import consulo.ui.image.Image;
  */
 @Deprecated
 public class AllIcons {
-
     public static class Actions {
         public static final Image AddMulticaret = PlatformIconGroup.actionsAddmulticaret(); // 16x16
         public static final Image AllLeft = PlatformIconGroup.actionsAllleft(); // 16x16
@@ -196,7 +195,6 @@ public class AllIcons {
         public static final Image MagicResolve = PlatformIconGroup.diffMagicresolve(); // 12x12
         public static final Image Remove = PlatformIconGroup.diffRemove(); // 11x11
         public static final Image RightDiff = PlatformIconGroup.diffRightdiff(); // 16x16
-
     }
 
     public static class Duplicates {
@@ -204,7 +202,6 @@ public class AllIcons {
         public static final Image SendToTheLeftGrayed = PlatformIconGroup.duplicatesSendtotheleftgrayed(); // 16x16
         public static final Image SendToTheRight = PlatformIconGroup.duplicatesSendtotheright(); // 16x16
         public static final Image SendToTheRightGrayed = PlatformIconGroup.duplicatesSendtotherightgrayed(); // 16x16
-
     }
 
     public static class FileTypes {
@@ -225,7 +222,6 @@ public class AllIcons {
         public static final Image Xhtml = PlatformIconGroup.filetypesXhtml(); // 16x16
         public static final Image Xml = PlatformIconGroup.filetypesXml(); // 16x16
         public static final Image XsdFile = PlatformIconGroup.filetypesXsdfile(); // 16x16
-
     }
 
     public static class General {
@@ -299,7 +295,6 @@ public class AllIcons {
         public static final Image Warning = PlatformIconGroup.generalWarning(); // 16x16
         public static final Image WarningDecorator = PlatformIconGroup.generalWarningdecorator(); // 16x16
         public static final Image WarningDialog = PlatformIconGroup.generalWarningdialog(); // 32x32
-
     }
 
     public static class Graph {
@@ -312,7 +307,6 @@ public class AllIcons {
         public static final Image SnapToGrid = PlatformIconGroup.graphSnaptogrid(); // 16x16
         public static final Image ZoomIn = PlatformIconGroup.graphZoomin(); // 16x16
         public static final Image ZoomOut = PlatformIconGroup.graphZoomout(); // 16x16
-
     }
 
     public static class Gutter {
@@ -341,7 +335,6 @@ public class AllIcons {
         public static final Image ShouldDefineMethod = PlatformIconGroup.hierarchyShoulddefinemethod(); // 9x9
         public static final Image Subtypes = PlatformIconGroup.hierarchySubtypes(); // 16x16
         public static final Image Supertypes = PlatformIconGroup.hierarchySupertypes(); // 16x16
-
     }
 
     public static final Image Icon16 = PlatformIconGroup.icon16(); // 16x16
@@ -349,7 +342,6 @@ public class AllIcons {
     public static final Image Icon32 = PlatformIconGroup.icon32(); // 32x32
 
     public static class Ide {
-
         public static class Dnd {
             public static final Image Bottom = PlatformIconGroup.ideDndBottom(); // 16x16
             public static final Image Left = PlatformIconGroup.ideDndLeft(); // 16x16
@@ -372,7 +364,6 @@ public class AllIcons {
             public static final Image Recording_2 = PlatformIconGroup.ideMacroRecording_2(); // 16x16
             public static final Image Recording_3 = PlatformIconGroup.ideMacroRecording_3(); // 16x16
             public static final Image Recording_4 = PlatformIconGroup.ideMacroRecording_4(); // 16x16
-
         }
 
         public static class Notification {
@@ -406,7 +397,6 @@ public class AllIcons {
 
         public static final Image SharedScope = PlatformIconGroup.ideSharedscope(); // 16x16
         public static final Image UpDown = PlatformIconGroup.ideUpdown(); // 16x16
-
     }
 
     public static class Mac {
@@ -422,7 +412,6 @@ public class AllIcons {
         public static final Image TestResourcesRoot = PlatformIconGroup.modulesTestresourcesroot(); // 16x16
         public static final Image TestRoot = PlatformIconGroup.modulesTestroot(); // 16x16
         public static final Image WebRoot = PlatformIconGroup.modulesWebroot(); // 16x16
-
     }
 
     public static class Nodes {
@@ -518,7 +507,6 @@ public class AllIcons {
         public static final Image WebFolder = PlatformIconGroup.nodesWebfolder(); // 16x16
         public static final Image Write_access = PlatformIconGroup.nodesWrite_access(); // 13x9
         public static final Image CustomRegion = PlatformIconGroup.nodesCustomregion();
-
     }
 
     public static class ObjectBrowser {
@@ -531,11 +519,9 @@ public class AllIcons {
         public static final Image Sorted = PlatformIconGroup.objectbrowserSorted(); // 16x16
         public static final Image SortedByUsage = PlatformIconGroup.objectbrowserSortedbyusage(); // 16x16
         public static final Image VisibilitySort = PlatformIconGroup.objectbrowserVisibilitysort(); // 16x16
-
     }
 
     public static class Process {
-
         public static class Big {
             public static final Image Step_1 = PlatformIconGroup.processBigStep_1(); // 32x32
             public static final Image Step_2 = PlatformIconGroup.processBigStep_2(); // 32x32
@@ -546,7 +532,6 @@ public class AllIcons {
             public static final Image Step_7 = PlatformIconGroup.processBigStep_7(); // 32x32
             public static final Image Step_8 = PlatformIconGroup.processBigStep_8(); // 32x32
             public static final Image Step_passive = PlatformIconGroup.processBigStep_passive(); // 32x32
-
         }
 
         public static final Image Step_1 = PlatformIconGroup.processStep_1(); // 16x16
@@ -563,7 +548,6 @@ public class AllIcons {
         public static final Image StopSmall = PlatformIconGroup.processStopsmall(); // 16x16
         public static final Image StopHovered = PlatformIconGroup.processStophovered(); // 16x16
         public static final Image StopSmallHovered = PlatformIconGroup.processStopsmallhovered(); // 16x16
-
     }
 
     public static class RunConfigurations {
@@ -586,13 +570,11 @@ public class AllIcons {
         public static final Image TestSkipped = PlatformIconGroup.runconfigurationsTestskipped(); // 16x16
         public static final Image TestTerminated = PlatformIconGroup.runconfigurationsTestterminated(); // 16x16
         public static final Image Web_app = PlatformIconGroup.runconfigurationsWeb_app(); // 16x16
-
     }
 
     public static class Toolbar {
         public static final Image Filterdups = PlatformIconGroup.toolbarFilterdups(); // 16x16
         public static final Image Unknown = PlatformIconGroup.toolbarUnknown(); // 16x16
-
     }
 
     public static class Toolwindows {
@@ -623,7 +605,6 @@ public class AllIcons {
         public static final Image StripDown = PlatformIconGroup.vcsStripdown(); // 16x16
         public static final Image StripNull = PlatformIconGroup.vcsStripnull(); // 16x16
         public static final Image StripUp = PlatformIconGroup.vcsStripup(); // 16x16
-
     }
 
     public static class Welcome {
@@ -634,7 +615,6 @@ public class AllIcons {
 
     public static class Webreferences {
         public static final Image Server = PlatformIconGroup.webreferencesServer(); // 16x16
-
     }
 
     public static final class Scope {

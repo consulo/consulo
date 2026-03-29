@@ -69,23 +69,23 @@ public class UsageViewContentManagerImpl extends UsageViewContentManager {
             }
         };
 
-        DumbAwareToggleAction toggleSortAction =
-            new DumbAwareToggleAction(
-                UsageLocalize.sortAlphabeticallyActionText(),
-                LocalizeValue.empty(),
-                PlatformIconGroup.objectbrowserSorted()
-            ) {
-                @Override
-                public boolean isSelected(AnActionEvent e) {
-                    return UsageViewSettings.getInstance().isSortAlphabetically();
-                }
+        DumbAwareToggleAction toggleSortAction = new DumbAwareToggleAction(
+            UsageLocalize.sortAlphabeticallyActionText(),
+            LocalizeValue.empty(),
+            PlatformIconGroup.objectbrowserSorted()
+        ) {
+            @Override
+            public boolean isSelected(AnActionEvent e) {
+                return UsageViewSettings.getInstance().isSortAlphabetically();
+            }
 
-                @Override
-                public void setSelected(AnActionEvent e, boolean state) {
-                    UsageViewSettings.getInstance().setSortAlphabetically(state);
-                    project.getMessageBus().syncPublisher(UsageFilteringRuleListener.class).rulesChanged();
-                }
-            };
+            @Override
+            @RequiredUIAccess
+            public void setSelected(AnActionEvent e, boolean state) {
+                UsageViewSettings.getInstance().setSortAlphabetically(state);
+                project.getMessageBus().syncPublisher(UsageFilteringRuleListener.class).rulesChanged();
+            }
+        };
 
         DumbAwareToggleAction toggleAutoscrollAction = new DumbAwareToggleAction(
             UILocalize.autoscrollToSourceActionName(),

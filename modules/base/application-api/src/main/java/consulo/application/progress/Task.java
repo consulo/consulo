@@ -203,34 +203,26 @@ public abstract class Task implements TaskInfo, Progressive {
 
     public final Modal asModal() {
         if (isModal()) {
-            return (Modal)this;
+            return (Modal) this;
         }
         throw new IllegalStateException("Not a modal task");
     }
 
     public final Backgroundable asBackgroundable() {
         if (!isModal()) {
-            return (Backgroundable)this;
+            return (Backgroundable) this;
         }
         throw new IllegalStateException("Not a backgroundable task");
     }
 
     public abstract static class Backgroundable extends Task implements PerformInBackgroundOption {
-        public static void queue(
-            @Nullable ComponentManager project,
-            LocalizeValue title,
-            Consumer<ProgressIndicator> consumer
-        ) {
+        public static void queue(@Nullable ComponentManager project, LocalizeValue title, Consumer<ProgressIndicator> consumer) {
             queue(project, title, true, consumer);
         }
 
         @Deprecated
         @DeprecationInfo("Use variant with LocalizeValue")
-        public static void queue(
-            @Nullable ComponentManager project,
-             String title,
-            Consumer<ProgressIndicator> consumer
-        ) {
+        public static void queue(@Nullable ComponentManager project, String title, Consumer<ProgressIndicator> consumer) {
             queue(project, title, true, consumer);
         }
 
@@ -456,8 +448,8 @@ public abstract class Task implements TaskInfo, Progressive {
                     }
                 }
 
-                @RequiredUIAccess
                 @Override
+                @RequiredUIAccess
                 public void onSuccess() {
                     onSuccess.run();
                 }

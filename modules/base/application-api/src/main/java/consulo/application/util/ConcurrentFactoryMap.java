@@ -12,7 +12,7 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 /**
- * a ConcurrentMap which computes the value associated with the key (via {@link #create(Object)} method) on first {@link #get(Object)} access.
+ * A ConcurrentMap which computes the value associated with the key (via {@link #create(Object)} method) on first {@link #get(Object)} access.
  * THREAD SAFE.
  * It's guaranteed that two {@link #get(Object)} method calls with the same key will return the same value (i.e. the created value stored atomically).
  * For not thread-safe (but possible faster and more memory-efficient) alternative please use {@link FactoryMap}
@@ -33,7 +33,7 @@ public abstract class ConcurrentFactoryMap<K extends @Nullable Object, V extends
     if (value == null) {
       RecursionGuard.StackStamp stamp = RecursionManager.markStack();
       //noinspection unchecked
-      value = create((K)key);
+      value = create((K) key);
       if (stamp.mayCacheNow()) {
         V v = notNull(value);
         value = Maps.cacheOrGet(map, k, v);
@@ -123,7 +123,7 @@ public abstract class ConcurrentFactoryMap<K extends @Nullable Object, V extends
 
   @Override
   public Set<Entry<K, V>> entrySet() {
-    return new CollectionWrapper.Set<Entry<K, V>>(myMap.entrySet()) {
+    return new CollectionWrapper.Set<>(myMap.entrySet()) {
       @Override
       public Object wrap(Object val) {
         //noinspection unchecked

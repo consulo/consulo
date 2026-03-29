@@ -6,47 +6,47 @@ import org.jspecify.annotations.Nullable;
 import java.util.concurrent.TimeUnit;
 
 final class ActivityImpl implements Activity {
-    private final @Nullable String name;
-    private @Nullable String description = null;
+    private final @Nullable String myName;
+    private @Nullable String myDescription = null;
 
-    private final String threadName;
-    private final long threadId;
+    private final String myThreadName;
+    private final long myThreadId;
 
-    private final long start;
-    private long end;
+    private final long myStart;
+    private long myEnd;
 
     // null doesn't mean root - not obligated to set parent, only as hint
-    private final @Nullable ActivityImpl parent;
+    private final @Nullable ActivityImpl myParent;
 
     private @Nullable ActivityCategory category;
 
-    private final @Nullable String pluginId;
+    private final @Nullable String myPluginId;
 
     ActivityImpl(@Nullable String name, @Nullable String pluginId) {
         this(name, StartUpMeasurer.getCurrentTime(), null, pluginId);
     }
 
     ActivityImpl(@Nullable String name, long start, @Nullable ActivityImpl parent, @Nullable String pluginId) {
-        this.name = name;
-        this.start = start;
-        this.parent = parent;
-        this.pluginId = pluginId;
+        myName = name;
+        myStart = start;
+        myParent = parent;
+        myPluginId = pluginId;
 
         Thread thread = Thread.currentThread();
-        threadId = thread.getId();
-        threadName = thread.getName();
+        myThreadId = thread.getId();
+        myThreadName = thread.getName();
     }
 
     public String getThreadName() {
-        return threadName;
+        return myThreadName;
     }
 
     public long getThreadId() {
-        return threadId;
+        return myThreadId;
     }
 
     public @Nullable ActivityImpl getParent() {
-        return parent;
+        return myParent;
     }
 
     public @Nullable ActivityCategory getCategory() {
@@ -57,56 +57,57 @@ final class ActivityImpl implements Activity {
         category = value;
     }
 
-    // and how do we can sort correctly, when parent item equals to child (start and end), also there is another child with start equals to end?
+    // and how do we can sort correctly, when parent item equals to child (start and end),
+    // also there is another child with start equals to end?
     // so, parent added to API but as it was not enough, decided to measure time in nanoseconds instead of ms to mitigate such situations
     @Override
     public ActivityImpl startChild(String name) {
-        ActivityImpl activity = new ActivityImpl(name, StartUpMeasurer.getCurrentTime(), this, pluginId);
+        ActivityImpl activity = new ActivityImpl(name, StartUpMeasurer.getCurrentTime(), this, myPluginId);
         activity.category = category;
         return activity;
     }
 
     public @Nullable String getName() {
-        return name;
+        return myName;
     }
 
     public @Nullable String getDescription() {
-        return description;
+        return myDescription;
     }
 
     public @Nullable String getPluginId() {
-        return pluginId;
+        return myPluginId;
     }
 
     public long getStart() {
-        return start;
+        return myStart;
     }
 
     public long getEnd() {
-        return end;
+        return myEnd;
     }
 
     void setEnd(long end) {
-        assert this.end == 0;
-        this.end = end;
+        assert this.myEnd == 0;
+        this.myEnd = end;
     }
 
     @Override
     public void end() {
-        assert end == 0 : "not started or already ended";
-        end = StartUpMeasurer.getCurrentTime();
+        assert myEnd == 0 : "not started or already ended";
+        myEnd = StartUpMeasurer.getCurrentTime();
         StartUpMeasurer.addActivity(this);
     }
 
     @Override
     public void setDescription(String value) {
-        description = value;
+        myDescription = value;
     }
 
     @Override
     public Activity endAndStart(String name) {
         end();
-        ActivityImpl activity = new ActivityImpl(name, /* start = */end, parent, /* level = */ pluginId);
+        ActivityImpl activity = new ActivityImpl(name, /* start = */myEnd, myParent, /* level = */ myPluginId);
         activity.setCategory(category);
         return activity;
     }
@@ -114,15 +115,16 @@ final class ActivityImpl implements Activity {
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
-        builder.append("ActivityImpl(name=").append(name).append(", start=");
-        nanoToString(start, builder);
+        builder.append("ActivityImpl(name=").append(myName).append(", start=");
+        nanoToString(myStart, builder);
         builder.append(", end=");
-        nanoToString(end, builder);
+        nanoToString(myEnd, builder);
         builder.append(", category=").append(category).append(")");
         return builder.toString();
     }
 
     private static void nanoToString(long start, StringBuilder builder) {
-        builder.append(TimeUnit.NANOSECONDS.toMillis(start - StartUpMeasurer.getStartTime())).append("ms (").append(TimeUnit.NANOSECONDS.toMicros(start - StartUpMeasurer.getStartTime())).append("μs)");
+        builder.append(TimeUnit.NANOSECONDS.toMillis(start - StartUpMeasurer.getStartTime()))
+            .append("ms (").append(TimeUnit.NANOSECONDS.toMicros(start - StartUpMeasurer.getStartTime())).append("μs)");
     }
 }

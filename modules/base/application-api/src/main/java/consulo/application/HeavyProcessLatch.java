@@ -121,7 +121,8 @@ public final class HeavyProcessLatch {
     return ContainerUtil.exists(myHeavyProcesses, op -> op.getType() != type);
   }
 
-  /**heavyProcessIsRunning
+  /**
+   * heavyProcessIsRunning
    * @return heavy operation currently running, if any, in undefined order
    */
   public @Nullable Operation getAnyRunningOperation() {

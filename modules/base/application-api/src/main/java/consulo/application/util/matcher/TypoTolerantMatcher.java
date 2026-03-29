@@ -34,7 +34,8 @@ class TypoTolerantMatcher extends MinusculeMatcher {
    *
    * @param pattern        the pattern
    * @param options        case sensitivity settings
-   * @param hardSeparators A string of characters (empty by default). Lowercase humps don't work for parts separated by any of these characters.
+   * @param hardSeparators A string of characters (empty by default).
+   *                       Lowercase humps don't work for parts separated by any of these characters.
    *                       Need either an explicit uppercase letter or the same separator character in prefix
    */
   TypoTolerantMatcher(String pattern, NameUtil.MatchingCaseSensitivity options, String hardSeparators) {
@@ -119,8 +120,12 @@ class TypoTolerantMatcher extends MinusculeMatcher {
 
   @Override
   public int matchingDegree(String name, boolean valueStartCaseMatch, @Nullable FList<? extends MatcherTextRange> fragments) {
-    if (fragments == null) return Integer.MIN_VALUE;
-    if (fragments.isEmpty()) return 0;
+    if (fragments == null) {
+      return Integer.MIN_VALUE;
+    }
+    if (fragments.isEmpty()) {
+      return 0;
+    }
 
     MatcherTextRange first = Objects.requireNonNull(fragments.getHead());
     boolean startMatch = first.getStartOffset() == 0;
@@ -168,10 +173,19 @@ class TypoTolerantMatcher extends MinusculeMatcher {
     boolean wordStart = startIndex == 0 || NameUtilCore.isWordStart(name, startIndex) && !NameUtilCore.isWordStart(name, startIndex - 1);
     boolean finalMatch = Objects.requireNonNull(fragments.get(fragments.size() - 1)).getEndOffset() == name.length();
 
-    return (wordStart ? 1000 : 0) + matchingCase + -fragments.size() + -skippedHumps * 10 + -errors + (afterSeparator ? 0 : 2) + (startMatch ? 1 : 0) + (finalMatch ? 1 : 0);
+    return (wordStart ? 1000 : 0) + matchingCase + -fragments.size() + -skippedHumps * 10 + -errors +
+      (afterSeparator ? 0 : 2) + (startMatch ? 1 : 0) + (finalMatch ? 1 : 0);
   }
 
-  private int evaluateCaseMatching(boolean valuedStartMatch, int patternIndex, boolean humpStartMatchedUpperCase, int nameIndex, boolean afterGap, boolean isHumpStart, char nameChar) {
+  private int evaluateCaseMatching(
+    boolean valuedStartMatch,
+    int patternIndex,
+    boolean humpStartMatchedUpperCase,
+    int nameIndex,
+    boolean afterGap,
+    boolean isHumpStart,
+    char nameChar
+  ) {
     if (afterGap && isHumpStart && isLowerCase[patternIndex]) {
       return -10; // disprefer when there's a hump but nothing in the pattern indicates the user meant it to be hump
     }
@@ -216,7 +230,9 @@ class TypoTolerantMatcher extends MinusculeMatcher {
   @Override
   public @Nullable FList<MatcherTextRange> matchingFragments(String name) {
     FList<MatcherTextRange> ranges = new Session(name, false).matchingFragments();
-    if (ranges != null) return ranges;
+    if (ranges != null) {
+      return ranges;
+    }
     return new Session(name, true).matchingFragments();
   }
 
@@ -286,7 +302,8 @@ class TypoTolerantMatcher extends MinusculeMatcher {
         int patternIndex = 0;
         for (int i = 0; i < length; ++i) {
           char c = myName.charAt(i);
-          if (patternIndex < myMeaningfulCharacters.length && (c == myMeaningfulCharacters[patternIndex] || c == myMeaningfulCharacters[patternIndex + 1])) {
+          if (patternIndex < myMeaningfulCharacters.length && (c == myMeaningfulCharacters[patternIndex]
+              || c == myMeaningfulCharacters[patternIndex + 1])) {
             patternIndex += 2;
           }
         }
@@ -320,7 +337,8 @@ class TypoTolerantMatcher extends MinusculeMatcher {
 
       if (patternIndex == patternLength(errorState)) {
         // the trailing space should match if the pattern ends with the last word part, or only its first hump character
-        if (isTrailingSpacePattern(errorState) && nameIndex != myName.length() && (patternIndex < 2 || !isUpperCaseOrDigit(charAt(patternIndex - 2, errorState)))) {
+        if (isTrailingSpacePattern(errorState) && nameIndex != myName.length() && (patternIndex < 2
+            || !isUpperCaseOrDigit(charAt(patternIndex - 2, errorState)))) {
           int spaceIndex = myName.indexOf(' ', nameIndex);
           if (spaceIndex >= 0) {
             return FList.<MatcherTextRange>emptyList().prepend(new Range(spaceIndex, spaceIndex + 1, 0));
@@ -359,7 +377,8 @@ class TypoTolerantMatcher extends MinusculeMatcher {
         if (nameIndex < 0) {
           return null;
         }
-        Fragment fragment = seemsLikeFragmentStart(patternIndex, nameIndex, errorState) ? maxMatchingFragment(patternIndex, nameIndex, errorState) : null;
+        Fragment fragment =
+          seemsLikeFragmentStart(patternIndex, nameIndex, errorState) ? maxMatchingFragment(patternIndex, nameIndex, errorState) : null;
         if (fragment == null) continue;
 
         // match the remaining pattern only if we haven't already seen fragment of the same (or bigger) length
@@ -378,8 +397,16 @@ class TypoTolerantMatcher extends MinusculeMatcher {
       }
     }
 
-    private int findNextPatternCharOccurrence(int startAt, int patternIndex, boolean allowSpecialChars, boolean wordStartsOnly, ErrorState errorState) {
-      int next = wordStartsOnly ? indexOfWordStart(patternIndex, startAt, errorState) : indexOfIgnoreCase(startAt + 1, patternIndex, errorState);
+    private int findNextPatternCharOccurrence(
+      int startAt,
+      int patternIndex,
+      boolean allowSpecialChars,
+      boolean wordStartsOnly,
+      ErrorState errorState
+    ) {
+      int next = wordStartsOnly
+        ? indexOfWordStart(patternIndex, startAt, errorState)
+        : indexOfIgnoreCase(startAt + 1, patternIndex, errorState);
 
       // pattern humps are allowed to match in words separated by " ()", lowercase characters aren't
       if (!allowSpecialChars && !myHasSeparators && !myHasHumps && StringUtil.containsAnyChar(myName, myHardSeparators, startAt, next)) {
@@ -387,7 +414,10 @@ class TypoTolerantMatcher extends MinusculeMatcher {
       }
       // if the user has typed a dot, don't skip other dots between humps
       // but one pattern dot may match several name dots
-      if (!allowSpecialChars && myHasDots && !isPatternChar(patternIndex - 1, '.', errorState) && StringUtil.contains(myName, startAt, next, '.')) {
+      if (!allowSpecialChars
+          && myHasDots
+          && !isPatternChar(patternIndex - 1, '.', errorState)
+          && StringUtil.contains(myName, startAt, next, '.')) {
         return -1;
       }
 
@@ -396,9 +426,11 @@ class TypoTolerantMatcher extends MinusculeMatcher {
 
     private boolean seemsLikeFragmentStart(int patternIndex, int nextOccurrence, ErrorState errorState) {
       // uppercase should match either uppercase or a word start
-      return !isUpperCase(patternIndex, errorState) || Character.isUpperCase(myName.charAt(nextOccurrence)) || NameUtilCore.isWordStart(myName, nextOccurrence) ||
-             // accept uppercase matching lowercase if the whole prefix is uppercase and case sensitivity allows that
-             !myHasHumps && myOptions != NameUtil.MatchingCaseSensitivity.ALL;
+      return !isUpperCase(patternIndex, errorState)
+        || Character.isUpperCase(myName.charAt(nextOccurrence))
+        || NameUtilCore.isWordStart(myName, nextOccurrence)
+        // accept uppercase matching lowercase if the whole prefix is uppercase and case sensitivity allows that
+        || !myHasHumps && myOptions != NameUtil.MatchingCaseSensitivity.ALL;
     }
 
     private boolean charEquals(int patternIndex, int nameIndex, boolean isIgnoreCase, boolean allowTypos, ErrorState errorState) {
@@ -447,7 +479,8 @@ class TypoTolerantMatcher extends MinusculeMatcher {
       if (myName.length() > nameIndex + 1) {
         char nextNameChar = myName.charAt(nameIndex + 1);
 
-        if (patternChar == nextNameChar || isIgnoreCase && (toLowerCase(patternIndex, errorState) == nextNameChar || toUpperCase(patternIndex, errorState) == nextNameChar)) {
+        if (patternChar == nextNameChar
+          || isIgnoreCase && (toLowerCase(patternIndex, errorState) == nextNameChar || toUpperCase(patternIndex, errorState) == nextNameChar)) {
           errorState.addError(patternIndex, new MissError(nameChar));
           return true;
         }
@@ -487,7 +520,8 @@ class TypoTolerantMatcher extends MinusculeMatcher {
       // exact middle matches have to be at least of length 3, to prevent too many irrelevant matches
       int minFragment = isMiddleMatch(patternIndex, nameIndex, fragment.getErrorState()) ? 3 : 1;
 
-      FList<MatcherTextRange> camelHumpRanges = improveCamelHumps(patternIndex, nameIndex, fragment.getLength(), minFragment, fragment.getErrorState());
+      FList<MatcherTextRange> camelHumpRanges =
+        improveCamelHumps(patternIndex, nameIndex, fragment.getLength(), minFragment, fragment.getErrorState());
       if (camelHumpRanges != null) {
         return camelHumpRanges;
       }
@@ -496,10 +530,19 @@ class TypoTolerantMatcher extends MinusculeMatcher {
     }
 
     private boolean isMiddleMatch(int patternIndex, int nameIndex, ErrorState errorState) {
-      return isPatternChar(patternIndex - 1, '*', errorState) && !isWildcard(patternIndex + 1) && Character.isLetterOrDigit(myName.charAt(nameIndex)) && !NameUtilCore.isWordStart(myName, nameIndex);
+      return isPatternChar(patternIndex - 1, '*', errorState)
+        && !isWildcard(patternIndex + 1)
+        && Character.isLetterOrDigit(myName.charAt(nameIndex))
+        && !NameUtilCore.isWordStart(myName, nameIndex);
     }
 
-    private @Nullable FList<MatcherTextRange> findLongestMatchingPrefix(int patternIndex, int nameIndex, int fragmentLength, int minFragment, ErrorState errorState) {
+    private @Nullable FList<MatcherTextRange> findLongestMatchingPrefix(
+      int patternIndex,
+      int nameIndex,
+      int fragmentLength,
+      int minFragment,
+      ErrorState errorState
+    ) {
       if (patternIndex + fragmentLength >= patternLength(errorState)) {
         int errors = errorState.countErrors(patternIndex, patternIndex + fragmentLength);
         if (errors == fragmentLength) return null;
@@ -510,8 +553,9 @@ class TypoTolerantMatcher extends MinusculeMatcher {
       // it may not succeed with the longest matching fragment, then try shorter matches
       for (int i = fragmentLength; i >= minFragment || isWildcard(patternIndex + i); i--) {
         ErrorState derivedErrorState = errorState.deriveFrom(patternIndex + i);
-        FList<MatcherTextRange> ranges =
-                isWildcard(patternIndex + i) ? matchWildcards(patternIndex + i, nameIndex + i, derivedErrorState) : matchSkippingWords(patternIndex + i, nameIndex + i, false, derivedErrorState);
+        FList<MatcherTextRange> ranges = isWildcard(patternIndex + i)
+          ? matchWildcards(patternIndex + i, nameIndex + i, derivedErrorState)
+          : matchSkippingWords(patternIndex + i, nameIndex + i, false, derivedErrorState);
         if (ranges != null) {
           int errors = errorState.countErrors(patternIndex, patternIndex + i);
           if (errors == i) return null;
@@ -525,10 +569,17 @@ class TypoTolerantMatcher extends MinusculeMatcher {
      * When pattern is "CU" and the name is "CurrentUser", we already have a prefix "Cu" that matches,
      * but we try to find uppercase "U" later in name for better matching degree
      */
-    private @Nullable FList<MatcherTextRange> improveCamelHumps(int patternIndex, int nameIndex, int maxFragment, int minFragment, ErrorState errorState) {
+    private @Nullable FList<MatcherTextRange> improveCamelHumps(
+      int patternIndex,
+      int nameIndex,
+      int maxFragment,
+      int minFragment,
+      ErrorState errorState
+    ) {
       for (int i = minFragment; i < maxFragment; i++) {
         if (isUppercasePatternVsLowercaseNameChar(patternIndex + i, nameIndex + i, errorState)) {
-          FList<MatcherTextRange> ranges = findUppercaseMatchFurther(patternIndex + i, nameIndex + i, errorState.deriveFrom(patternIndex + i));
+          FList<MatcherTextRange> ranges =
+            findUppercaseMatchFurther(patternIndex + i, nameIndex + i, errorState.deriveFrom(patternIndex + i));
           if (ranges != null) {
             int errors = errorState.countErrors(patternIndex, patternIndex + i);
             if (errors == i) return null;
@@ -556,13 +607,11 @@ class TypoTolerantMatcher extends MinusculeMatcher {
 
       char patternChar = charAt(patternIndex, errorState);
 
-      if (myOptions == NameUtil.MatchingCaseSensitivity.FIRST_LETTER &&
-          (patternIndex == 0 || patternIndex == 1 && isWildcard(0)) &&
-          hasCase(patternChar) &&
-          Character.isUpperCase(patternChar) != Character.isUpperCase(myName.charAt(0))) {
-        return false;
-      }
-      return true;
+      return myOptions != NameUtil.MatchingCaseSensitivity.FIRST_LETTER
+        || (patternIndex != 0 && patternIndex != 1
+        || !isWildcard(0))
+        || !hasCase(patternChar)
+        || Character.isUpperCase(patternChar) == Character.isUpperCase(myName.charAt(0));
     }
 
     private boolean hasCase(char patternChar) {
@@ -574,7 +623,8 @@ class TypoTolerantMatcher extends MinusculeMatcher {
     }
 
     private int indexOfWordStart(int patternIndex, int startFrom, ErrorState errorState) {
-      if (startFrom >= myName.length() || myHasHumps && isLowerCase(patternIndex, errorState) && !(patternIndex > 0 && isWordSeparator(patternIndex - 1, errorState))) {
+      if (startFrom >= myName.length()
+        || myHasHumps && isLowerCase(patternIndex, errorState) && !(patternIndex > 0 && isWordSeparator(patternIndex - 1, errorState))) {
         return -1;
       }
       int nextWordStart = startFrom;
@@ -896,13 +946,17 @@ class TypoTolerantMatcher extends MinusculeMatcher {
     return result;
   }
 
-  private static final char[][] keyboard = {{'q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p'}, {'a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l'}, {'z', 'x', 'c', 'v', 'b', 'n', 'm'}};
+  private static final char[][] KEYBOARD = {
+    {'q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p'},
+    {'a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l'},
+    {'z', 'x', 'c', 'v', 'b', 'n', 'm'}
+  };
 
   private static char leftMiss(char aChar) {
     boolean isUpperCase = isUpperAscii(aChar);
     char lc = isUpperCase ? toLowerAscii(aChar) : aChar;
 
-    for (char[] line : keyboard) {
+    for (char[] line : KEYBOARD) {
       for (int j = 0; j < line.length; j++) {
         char c = line[j];
         if (c == lc) {
@@ -922,7 +976,7 @@ class TypoTolerantMatcher extends MinusculeMatcher {
     boolean isUpperCase = isUpperAscii(aChar);
     char lc = isUpperCase ? toLowerAscii(aChar) : aChar;
 
-    for (char[] line : keyboard) {
+    for (char[] line : KEYBOARD) {
       for (int j = 0; j < line.length; j++) {
         char c = line[j];
         if (c == lc) {

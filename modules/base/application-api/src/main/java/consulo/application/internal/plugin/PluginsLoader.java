@@ -225,9 +225,11 @@ public class PluginsLoader {
           if (System.getProperty("jdk.module.path") != null) {
             List<ModuleLayer> parentModuleLayer = getParentModuleLayer(idToDescriptorMap, dependentPluginIds);
 
-            pluginDescriptor.setModuleLayer(Java9ModuleInitializer.initializeEtcModules(parentModuleLayer,
-                                                                                        pluginDescriptor.getClassPathFiles(idToDescriptorMap.keySet()),
-                                                                                        pluginClassLoader));
+            pluginDescriptor.setModuleLayer(Java9ModuleInitializer.initializeEtcModules(
+              parentModuleLayer,
+              pluginDescriptor.getClassPathFiles(idToDescriptorMap.keySet()),
+              pluginClassLoader
+            ));
           }
 
           pluginDescriptor.setLoader(pluginClassLoader);
@@ -362,9 +364,11 @@ public class PluginsLoader {
     return 0;
   }
 
-  static @Nullable CompositeMessage filterBadPlugins(PluginsInitializeInfo info,
-                                           List<PluginDescriptorImpl> result,
-                                           Map<PluginId, String> disabledPluginNames) {
+  static @Nullable CompositeMessage filterBadPlugins(
+    PluginsInitializeInfo info,
+    List<PluginDescriptorImpl> result,
+    Map<PluginId, String> disabledPluginNames
+  ) {
     Map<PluginId, PluginDescriptor> idToDescriptorMap = new HashMap<>();
     CompositeMessage message = new CompositeMessage();
     for (Iterator<? extends PluginDescriptor> it = result.iterator(); it.hasNext(); ) {
@@ -493,9 +497,11 @@ public class PluginsLoader {
     return result;
   }
 
-  static @Nullable ClassLoader createPluginClassLoader(Set<PluginId> enabledPluginIds,
+  static @Nullable ClassLoader createPluginClassLoader(
+    Set<PluginId> enabledPluginIds,
                                              ClassLoader[] parentLoaders,
-                                             PluginDescriptor pluginDescriptor) {
+    PluginDescriptor pluginDescriptor
+  ) {
     try {
       return PluginClassLoaderFactory.create(enabledPluginIds, parentLoaders, pluginDescriptor);
     }
