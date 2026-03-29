@@ -46,24 +46,16 @@ public abstract class ToolWindowManager {
 
     @Deprecated
     @DeprecationInfo("Use extension ToolWindowFactory")
-    
     @RequiredUIAccess
     public abstract ToolWindow registerToolWindow(String id, boolean canCloseContent, ToolWindowAnchor anchor);
 
     @Deprecated
     @DeprecationInfo("Use extension ToolWindowFactory")
-    
     @RequiredUIAccess
-    public abstract ToolWindow registerToolWindow(
-        String id,
-        boolean canCloseContent,
-        ToolWindowAnchor anchor,
-        boolean secondary
-    );
+    public abstract ToolWindow registerToolWindow(String id, boolean canCloseContent, ToolWindowAnchor anchor, boolean secondary);
 
     @Deprecated
     @DeprecationInfo("Use extension ToolWindowFactory")
-    
     @RequiredUIAccess
     public abstract ToolWindow registerToolWindow(
         String id,
@@ -73,10 +65,9 @@ public abstract class ToolWindowManager {
         boolean canWorkInDumbMode
     );
 
-    
-    @RequiredUIAccess
     @Deprecated
     @DeprecationInfo("Use extension ToolWindowFactory")
+    @RequiredUIAccess
     public abstract ToolWindow registerToolWindow(
         String id,
         boolean canCloseContent,
@@ -88,14 +79,8 @@ public abstract class ToolWindowManager {
 
     @Deprecated
     @DeprecationInfo("Use extension ToolWindowFactory")
-    
     @RequiredUIAccess
-    public ToolWindow registerToolWindow(
-        String id,
-        boolean canCloseContent,
-        ToolWindowAnchor anchor,
-        Disposable parentDisposable
-    ) {
+    public ToolWindow registerToolWindow(String id, boolean canCloseContent, ToolWindowAnchor anchor, Disposable parentDisposable) {
         return registerToolWindow(id, canCloseContent, anchor, parentDisposable, false);
     }
 
@@ -148,7 +133,6 @@ public abstract class ToolWindowManager {
 
     public abstract void setMaximized(ToolWindow wnd, boolean maximized);
 
-    
     public Image getLocationIcon(String toolWindowId, Image fallbackImage) {
         return fallbackImage;
     }
@@ -171,25 +155,14 @@ public abstract class ToolWindowManager {
      * @deprecated {@link ToolWindowManager#registerToolWindow(String, boolean, ToolWindowAnchor)}
      */
     @Deprecated
-    
-    public abstract ToolWindow registerToolWindow(
-        String id,
-        JComponent component,
-        ToolWindowAnchor anchor
-    );
+    public abstract ToolWindow registerToolWindow(String id, JComponent component, ToolWindowAnchor anchor);
 
     /**
      * @deprecated {@link ToolWindowManager#registerToolWindow(String, boolean, ToolWindowAnchor)}
      */
     @Deprecated
-    
     @RequiredUIAccess
-    public ToolWindow registerToolWindow(
-        String id,
-        JComponent component,
-        ToolWindowAnchor anchor,
-        Disposable parentDisposable
-    ) {
+    public ToolWindow registerToolWindow(String id, JComponent component, ToolWindowAnchor anchor, Disposable parentDisposable) {
         return registerToolWindow(id, component, anchor, parentDisposable, false, false);
     }
 
@@ -197,7 +170,6 @@ public abstract class ToolWindowManager {
      * @deprecated {@link ToolWindowManager#registerToolWindow(String, boolean, ToolWindowAnchor)}
      */
     @Deprecated
-    
     @RequiredUIAccess
     public ToolWindow registerToolWindow(
         String id,
@@ -213,7 +185,6 @@ public abstract class ToolWindowManager {
      * @deprecated {@link ToolWindowManager#registerToolWindow(String, boolean, ToolWindowAnchor)}
      */
     @Deprecated
-    
     @RequiredUIAccess
     public abstract ToolWindow registerToolWindow(
         String id,
