@@ -86,9 +86,13 @@ public class ClassesTable extends JBTable implements DataProvider, Disposable {
     private MouseListener myMouseListener = null;
 
     @SuppressWarnings("WeakerAccess")
-    public ClassesTable(Project project, ClassesFilteredViewBase parent, boolean onlyWithDiff,
-                        boolean onlyWithInstances,
-                        boolean onlyTracked) {
+    public ClassesTable(
+        Project project,
+        ClassesFilteredViewBase parent,
+        boolean onlyWithDiff,
+        boolean onlyWithInstances,
+        boolean onlyTracked
+    ) {
         myModel = getTableModel();
         setModel(myModel);
 
@@ -378,8 +382,7 @@ public class ClassesTable extends JBTable implements DataProvider, Disposable {
 
         if (newSelectedIndex != -1 && !myModel.isHidden()) {
             int ix = convertRowIndexToView(newSelectedIndex);
-            changeSelection(ix,
-                DiffViewTableModel.CLASSNAME_COLUMN_INDEX, false, false);
+            changeSelection(ix, DiffViewTableModel.CLASSNAME_COLUMN_INDEX, false, false);
         }
 
         fireTableDataChanged();
@@ -566,9 +569,14 @@ public class ClassesTable extends JBTable implements DataProvider, Disposable {
 
     public abstract static class MyTableCellRenderer extends ColoredTableCellRenderer {
         @Override
-        protected void customizeCellRenderer(JTable table, @Nullable Object value, boolean isSelected,
-                                             boolean hasFocus, int row, int column) {
-
+        protected void customizeCellRenderer(
+            JTable table,
+            @Nullable Object value,
+            boolean isSelected,
+            boolean hasFocus,
+            int row,
+            int column
+        ) {
             if (hasFocus) {
                 setBorder(new EmptyBorder(getBorder().getBorderInsets(this)));
             }
@@ -583,17 +591,21 @@ public class ClassesTable extends JBTable implements DataProvider, Disposable {
 
     private class MyClassColumnRenderer extends MyTableCellRenderer {
         @Override
-        protected void addText(Object value, boolean isSelected,
-                               int row) {
+        protected void addText(Object value, boolean isSelected, int row) {
             String presentation = ((TypeInfo) value).name();
             append(" ");
             if (isSelected) {
                 FList<MatcherTextRange> textRanges = myMatcher.matchingFragments(presentation);
                 if (textRanges != null) {
-                    SimpleTextAttributes attributes = new SimpleTextAttributes(getBackground(), getForeground(), null,
-                        SimpleTextAttributes.STYLE_SEARCH_MATCH);
-                    SpeedSearchUtil.appendColoredFragments(this, presentation, textRanges,
-                        SimpleTextAttributes.REGULAR_ATTRIBUTES, attributes);
+                    SimpleTextAttributes attributes =
+                        new SimpleTextAttributes(getBackground(), getForeground(), null, SimpleTextAttributes.STYLE_SEARCH_MATCH);
+                    SpeedSearchUtil.appendColoredFragments(
+                        this,
+                        presentation,
+                        textRanges,
+                        SimpleTextAttributes.REGULAR_ATTRIBUTES,
+                        attributes
+                    );
                 }
             }
             else {

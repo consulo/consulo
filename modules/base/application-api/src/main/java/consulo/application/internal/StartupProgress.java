@@ -23,7 +23,6 @@ import consulo.ui.annotation.RequiredUIAccess;
  * @since 2011-07-21
  */
 public interface StartupProgress extends Disposable {
-
   /**
    * Displays new progress state.
    *

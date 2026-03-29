@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.execution.executor;
 
 import consulo.annotation.component.ExtensionImpl;
@@ -31,13 +30,11 @@ import consulo.ui.image.Image;
 public class DefaultRunExecutor extends Executor implements RunCurrentFileExecutor {
     public static final String EXECUTOR_ID = ToolWindowId.RUN;
 
-    
     @Override
     public LocalizeValue getStartActionText() {
         return ExecutionLocalize.defaultRunnerStartActionText();
     }
 
-    
     @Override
     public LocalizeValue getStartActiveText(String configurationName) {
         return ExecutionLocalize.defaultRunnerStartActionText0(configurationName);
@@ -54,30 +51,25 @@ public class DefaultRunExecutor extends Executor implements RunCurrentFileExecut
     }
 
     @Override
-    
     public Image getIcon() {
         return PlatformIconGroup.actionsExecute();
     }
 
-    
     @Override
     public LocalizeValue getDescription() {
         return ExecutionLocalize.standardRunnerDescription();
     }
 
     @Override
-    
     public LocalizeValue getActionName() {
         return ExecutionLocalize.toolWindowNameRun();
     }
 
     @Override
-    
     public String getId() {
         return EXECUTOR_ID;
     }
 
-    
     @Override
     public String getContextActionId() {
         return "RunClass";

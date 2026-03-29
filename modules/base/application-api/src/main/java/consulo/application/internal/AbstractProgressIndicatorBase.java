@@ -37,7 +37,8 @@ public class AbstractProgressIndicatorBase extends UserDataHolderBase implements
   private volatile boolean myRunning;
   private volatile boolean myFinished;
 
-  private volatile boolean myIndeterminate = Boolean.parseBoolean(System.getProperty("consulo.ide.impl.progress.indeterminate.by.default", "true"));
+  private volatile boolean myIndeterminate =
+    Boolean.parseBoolean(System.getProperty("consulo.ide.impl.progress.indeterminate.by.default", "true"));
   private volatile @Nullable Runnable myActivity = null;
   private volatile boolean myShouldStartActivity = true;
 
@@ -171,8 +172,11 @@ public class AbstractProgressIndicatorBase extends UserDataHolderBase implements
   public void setFraction(double fraction) {
     if (isIndeterminate()) {
       StackTraceElement[] trace = new Throwable().getStackTrace();
-      Optional<StackTraceElement> first = Arrays.stream(trace).filter(element -> !element.getClassName().startsWith("consulo.ide.impl.idea.openapi.progress.util")).findFirst();
-      String message = "This progress indicator is indeterminate, this may lead to visual inconsistency. " + "Please call setIndeterminate(false) before you start progress.";
+      Optional<StackTraceElement> first = Arrays.stream(trace)
+        .filter(element -> !element.getClassName().startsWith("consulo.ide.impl.idea.openapi.progress.util"))
+        .findFirst();
+      String message = "This progress indicator is indeterminate, this may lead to visual inconsistency. " +
+        "Please call setIndeterminate(false) before you start progress.";
       if (first.isPresent()) {
         message += "\n" + first.get();
       }
@@ -250,7 +254,7 @@ public class AbstractProgressIndicatorBase extends UserDataHolderBase implements
 
     if (modalityProgress != null) {
       UIAccess.assertIsUIThread();
-      modalityState = ((ModalityStateWithProgress)modalityState).appendProgress(modalityProgress);
+      modalityState = ((ModalityStateWithProgress) modalityState).appendProgress(modalityProgress);
     }
 
     myModalityState = modalityState;
@@ -309,19 +313,25 @@ public class AbstractProgressIndicatorBase extends UserDataHolderBase implements
 
   private Stack<LocalizeValue> getTextStack() {
     Stack<LocalizeValue> stack = myTextStack;
-    if (stack == null) myTextStack = stack = new Stack<>(2);
+   if (stack == null) {
+    myTextStack = stack = new Stack<>(2);
+   }
     return stack;
   }
 
   private DoubleList getFractionStack() {
     DoubleList stack = myFractionStack;
-    if (stack == null) myFractionStack = stack = DoubleLists.newArrayList(2);
+    if (stack == null) {
+      myFractionStack = stack = DoubleLists.newArrayList(2);
+    }
     return stack;
   }
 
   private Stack<LocalizeValue> getText2Stack() {
     Stack<LocalizeValue> stack = myText2Stack;
-    if (stack == null) myText2Stack = stack = new Stack<>(2);
+    if (stack == null) {
+      myText2Stack = stack = new Stack<>(2);
+    }
     return stack;
   }
 

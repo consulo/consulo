@@ -29,11 +29,9 @@ public final class Diff {
         return buildChanges(objects1, objects2, HashingStrategy.canonical());
     }
 
-    public static <T> @Nullable Change buildChanges(
-        T[] objects1,
-        T[] objects2,
-        HashingStrategy<? super T> strategy
-    ) throws FilesTooBigForDiffException {
+    public static <T> @Nullable Change buildChanges(T[] objects1, T[] objects2, HashingStrategy<? super T> strategy)
+        throws FilesTooBigForDiffException {
+
         int startShift = getStartShift(objects1, objects2, strategy);
         int endCut = getEndCut(objects1, objects2, startShift, strategy);
 

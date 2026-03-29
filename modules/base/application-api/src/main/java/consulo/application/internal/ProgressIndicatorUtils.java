@@ -42,14 +42,17 @@ public class ProgressIndicatorUtils {
     private static final Logger LOG = Logger.getInstance(ProgressIndicatorUtils.class);
 
     public static ProgressIndicator forceWriteActionPriority(ProgressIndicator progress, Disposable parentDisposable) {
-        Application.get().addApplicationListener(new ApplicationListener() {
-            @Override
-            public void beforeWriteActionStart(Object action) {
-                if (progress.isRunning()) {
-                    progress.cancel();
+        Application.get().addApplicationListener(
+            new ApplicationListener() {
+                @Override
+                public void beforeWriteActionStart(Object action) {
+                    if (progress.isRunning()) {
+                        progress.cancel();
+                    }
                 }
-            }
-        }, parentDisposable);
+            },
+            parentDisposable
+        );
         return progress;
     }
 
@@ -103,15 +106,18 @@ public class ProgressIndicatorUtils {
             cancellation.run();
             return false;
         }
-        return ProgressManager.getInstance().runProcess(() -> {
-            try {
-                // add listener inside runProcess to avoid cancelling indicator before even starting the progress
-                return runActionAndCancelBeforeWrite(application, cancellation, action);
-            }
-            catch (ProcessCanceledException ignore) {
-                return false;
-            }
-        }, progressIndicator);
+        return ProgressManager.getInstance().runProcess(
+            () -> {
+                try {
+                    // add listener inside runProcess to avoid cancelling indicator before even starting the progress
+                    return runActionAndCancelBeforeWrite(application, cancellation, action);
+                }
+                catch (ProcessCanceledException ignore) {
+                    return false;
+                }
+            },
+            progressIndicator
+        );
     }
 
     private static final List<Runnable> ourWACancellations = Lists.newLockFreeCopyOnWriteList();
@@ -167,7 +173,11 @@ public class ProgressIndicatorUtils {
         return application.isWriteActionPending() || application.isWriteActionInProgress();
     }
 
-    public static CompletableFuture<?> scheduleWithWriteActionPriority(final ProgressIndicator progressIndicator, Executor executor, final ReadTask readTask) {
+    public static CompletableFuture<?> scheduleWithWriteActionPriority(
+        final ProgressIndicator progressIndicator,
+        Executor executor,
+        final ReadTask readTask
+    ) {
         // invoke later even if on EDT
         // to avoid tasks eagerly restarting immediately, allocating many pooled threads
         // which get cancelled too soon when a next write action arrives in the same EDT batch
@@ -175,89 +185,98 @@ public class ProgressIndicatorUtils {
 
         CompletableFuture<?> future = new CompletableFuture<>();
         Application application = Application.get();
-        application.invokeLater(() -> {
-            if (application.isDisposed() || progressIndicator.isCanceled() || future.isCancelled()) {
-                future.complete(null);
-                return;
-            }
-            Disposable listenerDisposable = Disposable.newDisposable();
-            ApplicationListener listener = new ApplicationListener() {
-                @Override
-                public void beforeWriteActionStart(Object action) {
-                    if (!progressIndicator.isCanceled()) {
-                        progressIndicator.cancel();
-                        readTask.onCanceled(progressIndicator);
-                    }
+        application.invokeLater(
+            () -> {
+                if (application.isDisposed() || progressIndicator.isCanceled() || future.isCancelled()) {
+                    future.complete(null);
+                    return;
                 }
-            };
-            application.addApplicationListener(listener, listenerDisposable);
-            future.whenComplete((BiConsumer<Object, Throwable>) (o, throwable) -> Disposer.dispose(listenerDisposable));
-            try {
-                executor.execute(new Runnable() {
+                Disposable listenerDisposable = Disposable.newDisposable();
+                ApplicationListener listener = new ApplicationListener() {
                     @Override
-                    public void run() {
-                        final ReadTask.Continuation continuation;
-                        try {
-                            continuation = runUnderProgress(progressIndicator, readTask);
+                    public void beforeWriteActionStart(Object action) {
+                        if (!progressIndicator.isCanceled()) {
+                            progressIndicator.cancel();
+                            readTask.onCanceled(progressIndicator);
                         }
-                        catch (Throwable e) {
-                            future.completeExceptionally(e);
-                            throw e;
-                        }
-                        if (continuation == null) {
-                            future.complete(null);
-                        }
-                        else if (!future.isCancelled()) {
-                            application.invokeLater(new Runnable() {
-                                @Override
-                                public void run() {
-                                    if (future.isCancelled()) {
-                                        return;
-                                    }
+                    }
+                };
+                application.addApplicationListener(listener, listenerDisposable);
+                future.whenComplete((BiConsumer<Object, Throwable>) (o, throwable) -> Disposer.dispose(listenerDisposable));
+                try {
+                    executor.execute(new Runnable() {
+                        @Override
+                        public void run() {
+                            final ReadTask.Continuation continuation;
+                            try {
+                                continuation = runUnderProgress(progressIndicator, readTask);
+                            }
+                            catch (Throwable e) {
+                                future.completeExceptionally(e);
+                                throw e;
+                            }
+                            if (continuation == null) {
+                                future.complete(null);
+                            }
+                            else if (!future.isCancelled()) {
+                                application.invokeLater(
+                                    new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            if (future.isCancelled()) {
+                                                return;
+                                            }
 
-                                    Disposer.dispose(listenerDisposable); // remove listener early to prevent firing it during continuation execution
-                                    try {
-                                        if (!progressIndicator.isCanceled()) {
-                                            continuation.getAction().run();
+                                            // remove listener early to prevent firing it during continuation execution
+                                            Disposer.dispose(listenerDisposable);
+                                            try {
+                                                if (!progressIndicator.isCanceled()) {
+                                                    continuation.getAction().run();
+                                                }
+                                            }
+                                            finally {
+                                                future.complete(null);
+                                            }
                                         }
-                                    }
-                                    finally {
-                                        future.complete(null);
-                                    }
-                                }
 
-                                @Override
-                                public String toString() {
-                                    return "continuation of " + readTask;
-                                }
-                            }, continuation.getModalityState());
+                                        @Override
+                                        public String toString() {
+                                            return "continuation of " + readTask;
+                                        }
+                                    },
+                                    continuation.getModalityState()
+                                );
+                            }
                         }
 
-                    }
-
-                    @Override
-                    public String toString() {
-                        return readTask.toString();
-                    }
-                });
-            }
-            catch (Throwable e) {
-                future.completeExceptionally(e);
-                throw e;
-            }
-        }, ModalityState.any()); // 'any' to tolerate immediate modality changes (e.g. https://youtrack.jetbrains.com/issue/IDEA-135180)
+                        @Override
+                        public String toString() {
+                            return readTask.toString();
+                        }
+                    });
+                }
+                catch (Throwable e) {
+                    future.completeExceptionally(e);
+                    throw e;
+                }
+            },
+            ModalityState.any() // 'any' to tolerate immediate modality changes (e.g. https://youtrack.jetbrains.com/issue/IDEA-135180)
+        );
         return future;
     }
 
     private static ReadTask.@Nullable Continuation runUnderProgress(ProgressIndicator progressIndicator, ReadTask task) {
-        return ProgressManager.getInstance().runProcess(() -> {
-            try {
-                return task.runBackgroundProcess(progressIndicator);
-            }
-            catch (ProcessCanceledException ignore) {
-                return null;
-            }
-        }, progressIndicator);
+        return ProgressManager.getInstance().runProcess(
+            () -> {
+                try {
+                    return task.runBackgroundProcess(progressIndicator);
+                }
+                catch (ProcessCanceledException ignore) {
+                    return null;
+                }
+            },
+            progressIndicator
+        );
     }
 
     /**
@@ -294,10 +313,14 @@ public class ProgressIndicatorUtils {
         ProgressIndicator outer = ProgressIndicatorProvider.getGlobalProgressIndicator();
         ProgressIndicator inner = outer != null ? new SensitiveProgressWrapper(outer) : new ProgressIndicatorBase(false, false);
         AtomicBoolean canceledByTimeout = new AtomicBoolean();
-        ScheduledFuture<?> cancelProgress = AppExecutorUtil.getAppScheduledExecutorService().schedule(() -> {
-            canceledByTimeout.set(true);
-            inner.cancel();
-        }, timeoutMs, TimeUnit.MILLISECONDS);
+        ScheduledFuture<?> cancelProgress = AppExecutorUtil.getAppScheduledExecutorService().schedule(
+            () -> {
+                canceledByTimeout.set(true);
+                inner.cancel();
+            },
+            timeoutMs,
+            TimeUnit.MILLISECONDS
+        );
         try {
             return ProgressManager.getInstance().runProcess(computation, inner);
         }
@@ -312,8 +335,12 @@ public class ProgressIndicatorUtils {
         }
     }
 
-    public static <T, E extends Throwable> T computeWithLockAndCheckingCanceled(Lock lock, int timeout, TimeUnit timeUnit, ThrowableComputable<T, E> computable)
-        throws E, ProcessCanceledException {
+    public static <T, E extends Throwable> T computeWithLockAndCheckingCanceled(
+        Lock lock,
+        int timeout,
+        TimeUnit timeUnit,
+        ThrowableComputable<T, E> computable
+    ) throws E, ProcessCanceledException {
         awaitWithCheckCanceled(lock, timeout, timeUnit);
 
         try {
@@ -346,8 +373,8 @@ public class ProgressIndicatorUtils {
             }
             catch (Throwable e) {
                 Throwable cause = e.getCause();
-                if (cause instanceof ProcessCanceledException) {
-                    throw (ProcessCanceledException) cause;
+                if (cause instanceof ProcessCanceledException pce) {
+                    throw pce;
                 }
                 if (cause instanceof CancellationException) {
                     throw new ProcessCanceledException(cause);

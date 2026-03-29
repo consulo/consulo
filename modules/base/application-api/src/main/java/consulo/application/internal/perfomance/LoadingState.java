@@ -78,14 +78,19 @@ public enum LoadingState {
         return;
       }
 
-      getLogger().error("Should be called at least in the state " + this + ", the current state is: " + currentState + "\n" + "Current violators count: " + stackTraces.size() + "\n\n", t);
+      getLogger().error(
+          "Should be called at least in the state " + this + ", the current state is: " + currentState + "\n" +
+              "Current violators count: " + stackTraces.size() + "\n\n",
+          t
+      );
     }
   }
 
   private static boolean isKnownViolator() {
     for (StackTraceElement element : Thread.currentThread().getStackTrace()) {
       String className = element.getClassName();
-      if (className.contains("consulo.ide.impl.idea.util.indexing.IndexInfrastructure") || className.contains("com.intellij.psi.impl.search.IndexPatternSearcher")) {
+      if (className.contains("consulo.ide.impl.idea.util.indexing.IndexInfrastructure")
+          || className.contains("com.intellij.psi.impl.search.IndexPatternSearcher")) {
         return true;
       }
     }

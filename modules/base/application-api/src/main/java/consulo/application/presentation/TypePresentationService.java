@@ -42,7 +42,6 @@ public abstract class TypePresentationService {
 
   public abstract @Nullable String getTypeName(Object o);
 
-  
   public String getTypeNameOrStub(Object o) {
     String typeName = getTypeName(o);
     return typeName != null ? typeName : getDefaultTypeName(o.getClass());

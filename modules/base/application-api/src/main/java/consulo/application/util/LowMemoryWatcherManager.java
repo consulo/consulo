@@ -46,8 +46,8 @@ public final class LowMemoryWatcherManager implements Disposable {
   public LowMemoryWatcherManager(ExecutorService backendExecutorService, ApplicationConcurrency applicationConcurrency) {
     // whether LowMemoryWatcher runnables should be executed on the same thread that the low memory events come
     myExecutorService = Boolean.getBoolean("low.memory.watcher.sync")
-                        ? ConcurrencyUtil.newSameThreadExecutorService()
-                        : applicationConcurrency.createBoundedApplicationPoolExecutor("LowMemoryWatcherManager", backendExecutorService, 1);
+      ? ConcurrencyUtil.newSameThreadExecutorService()
+      : applicationConcurrency.createBoundedApplicationPoolExecutor("LowMemoryWatcherManager", backendExecutorService, 1);
 
     myMemoryPoolMXBeansFuture = initializeMXBeanListenersLater(backendExecutorService);
   }

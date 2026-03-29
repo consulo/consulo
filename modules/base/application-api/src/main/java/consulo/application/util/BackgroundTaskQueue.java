@@ -116,9 +116,11 @@ public class BackgroundTaskQueue {
     private final @Nullable ModalityState myModalityState;
     private final @Nullable ProgressIndicator myIndicator;
 
-    public BackgroundableTaskData(Task.Backgroundable task,
-                                  @Nullable ModalityState modalityState,
-                                  @Nullable ProgressIndicator indicator) {
+    public BackgroundableTaskData(
+      Task.Backgroundable task,
+      @Nullable ModalityState modalityState,
+      @Nullable ProgressIndicator indicator
+    ) {
       myTask = task;
       myModalityState = modalityState;
       myIndicator = indicator;
