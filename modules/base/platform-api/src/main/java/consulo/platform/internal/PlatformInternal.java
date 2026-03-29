@@ -22,17 +22,16 @@ import java.util.ServiceLoader;
 
 /**
  * @author VISTALL
- * @since 15-Sep-17
+ * @since 2017-09-15
  */
 public abstract class PlatformInternal {
-  private static final PlatformInternal ourPlatformInternal = PlatformServiceLoader.findImplementation(PlatformInternal.class, ServiceLoader::load);
+  private static final PlatformInternal ourPlatformInternal =
+    PlatformServiceLoader.findImplementation(PlatformInternal.class, ServiceLoader::load);
   private static final Platform ourCurrentPlatform = ourPlatformInternal.createCurrent();
 
-  
   public static Platform current() {
     return ourCurrentPlatform;
   }
 
-  
   public abstract Platform createCurrent();
 }

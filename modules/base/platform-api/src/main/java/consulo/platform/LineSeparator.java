@@ -41,7 +41,6 @@ public enum LineSeparator {
     myBytes = separatorString.getBytes(StandardCharsets.UTF_8);
   }
 
-  
   public static LineSeparator fromString(String string) {
     for (LineSeparator separator : values()) {
       if (separator.getSeparatorString().equals(string)) {
@@ -52,12 +51,10 @@ public enum LineSeparator {
     return Platform.current().os().lineSeparator();
   }
 
-  
   public String getSeparatorString() {
     return mySeparatorString;
   }
 
-  
   public byte[] getSeparatorBytes() {
     return myBytes;
   }
