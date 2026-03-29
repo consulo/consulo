@@ -19,6 +19,7 @@ import consulo.application.HelpManager;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.execution.executor.Executor;
+import consulo.execution.localize.ExecutionLocalize;
 import consulo.execution.ui.event.RunContentWithExecutorListener;
 import consulo.logging.Logger;
 import consulo.project.Project;
@@ -135,21 +136,13 @@ public class RunToolWindowManager {
         contentManager.addUiDataProvider(sink -> {
             if (executor != null) {
                 sink.set(HelpManager.HELP_ID, executor.getHelpId());
-                    }
-                    else {
-                        return myInsideGetData == 1
-                            ? DataManager.getInstance().getDataContext(contentManager.getComponent()).getData(dataId)
-                            : null;
-                    }
-                }
-                finally {
-                    myInsideGetData--;
-                }
             }
         });
 
+        toolWindow.setDisplayName(ExecutionLocalize.toolWindowNameRun());
         toolWindow.setIcon(toolWindowIcon);
         ContentManagerWatcher.watchContentManager(toolWindow, contentManager);
+
         initToolWindow(executor, toolWindowId, toolWindowIcon, contentManager);
 
         return contentManager;

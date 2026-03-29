@@ -51,12 +51,7 @@ public abstract class ToolWindowManager {
     @Deprecated
     @DeprecationInfo("Use extension ToolWindowFactory")
     @RequiredUIAccess
-    public abstract ToolWindow registerToolWindow(
-        String id,
-        boolean canCloseContent,
-        ToolWindowAnchor anchor,
-        boolean secondary
-    );
+    public abstract ToolWindow registerToolWindow(String id, boolean canCloseContent, ToolWindowAnchor anchor, boolean secondary);
 
     @Deprecated
     @DeprecationInfo("Use extension ToolWindowFactory")
@@ -69,9 +64,9 @@ public abstract class ToolWindowManager {
         boolean canWorkInDumbMode
     );
 
-    @RequiredUIAccess
     @Deprecated
     @DeprecationInfo("Use extension ToolWindowFactory")
+    @RequiredUIAccess
     public abstract ToolWindow registerToolWindow(
         String id,
         boolean canCloseContent,
@@ -84,12 +79,7 @@ public abstract class ToolWindowManager {
     @Deprecated
     @DeprecationInfo("Use extension ToolWindowFactory")
     @RequiredUIAccess
-    public ToolWindow registerToolWindow(
-        String id,
-        boolean canCloseContent,
-        ToolWindowAnchor anchor,
-        Disposable parentDisposable
-    ) {
+    public ToolWindow registerToolWindow(String id, boolean canCloseContent, ToolWindowAnchor anchor, Disposable parentDisposable) {
         return registerToolWindow(id, canCloseContent, anchor, parentDisposable, false);
     }
 
