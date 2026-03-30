@@ -252,18 +252,16 @@ public abstract class NamedItemsListEditor<T> extends MasterDetailsComponent {
         }
 
         @Override
-        public String getBannerSlogan() {
-            return myNamer.getName(myItem);
+        public LocalizeValue getBannerSlogan() {
+            return LocalizeValue.of(myNamer.getName(myItem));
         }
 
-        
         @Override
         @RequiredUIAccess
         public Component createOptionsPanel(Disposable uiDisposable) {
             return TargetAWT.wrap(myConfigurable.createComponent(uiDisposable));
         }
 
-        
         @Override
         public LocalizeValue getDisplayName() {
             return LocalizeValue.ofNullable(myNamer.getName(myItem));

@@ -482,7 +482,7 @@ public class ModuleStructureConfigurable extends BaseStructureConfigurable imple
         return new TextConfigurable<>(
             moduleGroup,
             LocalizeValue.ofNullable(moduleGroup.toString()),
-            ProjectLocalize.moduleGroupBannerText(moduleGroup.toString()).get(),
+            ProjectLocalize.moduleGroupBannerText(moduleGroup.toString()),
             ProjectLocalize.projectRootsModuleGroupsText().get(),
             PlatformIconGroup.nodesModulegroup()
         );

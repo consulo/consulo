@@ -56,12 +56,12 @@ public interface SearchableConfigurable extends Configurable {
     boolean isVisible();
 
     abstract class Abstract implements Parent {
-      private Configurable[] myKids;
+      private Configurable @Nullable [] myKids = null;
 
       @RequiredUIAccess
       @Override
       @Deprecated
-      public JComponent createComponent() {
+      public @Nullable JComponent createComponent() {
         return null;
       }
 
@@ -111,7 +111,7 @@ public interface SearchableConfigurable extends Configurable {
       }
 
       @Override
-      public Runnable enableSearch(String option) {
+      public @Nullable Runnable enableSearch(String option) {
         return null;
       }
 

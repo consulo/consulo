@@ -23,6 +23,7 @@ import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.layout.VerticalLayout;
 import consulo.util.lang.StringUtil;
+import org.jspecify.annotations.Nullable;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -40,7 +41,7 @@ public abstract class BeanConfigurable<T> implements UnnamedConfigurable {
 
   private static abstract class BeanField<T extends Component> {
     String myFieldName;
-    T myComponent;
+    @Nullable T myComponent = null;
 
     private BeanField(String fieldName) {
       myFieldName = fieldName;
