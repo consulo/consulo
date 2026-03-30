@@ -1,7 +1,10 @@
+import org.jspecify.annotations.NullMarked;
+
 /**
  * @author VISTALL
  * @since 2022-01-20
  */
+@NullMarked
 module consulo.module.api {
     // TODO [VISTALL] remove in future. Used in SwingMutableModuleExtension
     requires static java.desktop;
