@@ -32,7 +32,7 @@ public class FileNodeDescriptor extends NodeDescriptor {
 
   public FileNodeDescriptor(
     FileElement element,
-    NodeDescriptor parentDescriptor,
+    @Nullable NodeDescriptor parentDescriptor,
     @Nullable Image icon,
     @Nullable String name,
     @Nullable String comment
