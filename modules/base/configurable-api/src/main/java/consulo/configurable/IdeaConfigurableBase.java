@@ -27,9 +27,9 @@ import javax.swing.*;
 public abstract class IdeaConfigurableBase<UI extends IdeaConfigurableUi<S>, S> implements SearchableConfigurable {
     private final String id;
     private final LocalizeValue displayName;
-    private final String helpTopic;
+    private final @Nullable String helpTopic;
 
-    private UI ui;
+    private @Nullable UI ui = null;
 
     protected IdeaConfigurableBase(String id, LocalizeValue displayName, @Nullable String helpTopic) {
         this.id = id;
@@ -37,13 +37,11 @@ public abstract class IdeaConfigurableBase<UI extends IdeaConfigurableUi<S>, S> 
         this.helpTopic = helpTopic;
     }
 
-    
     @Override
     public final String getId() {
         return id;
     }
 
-    
     @Override
     public final LocalizeValue getDisplayName() {
         return displayName;
@@ -59,7 +57,6 @@ public abstract class IdeaConfigurableBase<UI extends IdeaConfigurableUi<S>, S> 
         return null;
     }
 
-    
     protected abstract S getSettings();
 
     @Override

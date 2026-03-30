@@ -1,11 +1,15 @@
+import org.jspecify.annotations.NullMarked;
+
 /**
  * @author VISTALL
- * @since 20/01/2022
+ * @since 2022-01-20
  */
+@NullMarked
 module consulo.configurable.api {
     // TODO [VISTALL] obsolete dep
     requires java.desktop;
 
+    requires transitive consulo.annotation;
     requires transitive consulo.project.api;
     requires transitive consulo.ui.api;
     requires transitive consulo.base.localize.library;

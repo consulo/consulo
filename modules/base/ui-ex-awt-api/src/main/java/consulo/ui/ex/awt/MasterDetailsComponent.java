@@ -864,7 +864,6 @@ public abstract class MasterDetailsComponent implements Configurable, MasterDeta
             myDisplayInBold = displayInBold;
         }
 
-        
         public LocalizeValue getDisplayName() {
             Configurable configurable = ((Configurable)getUserObject());
             LOG.assertTrue(configurable != null, "Tree was already disposed");
@@ -914,16 +913,14 @@ public abstract class MasterDetailsComponent implements Configurable, MasterDeta
 
                 @Override
                 public String getBannerSlogan() {
-                    return null;
+                    return "";
                 }
 
-                
                 @Override
                 public LocalizeValue getDisplayName() {
                     return LocalizeValue.empty();
                 }
 
-                
                 @Override
                 @RequiredUIAccess
                 public consulo.ui.Component createOptionsPanel(Disposable uiDisposable) {

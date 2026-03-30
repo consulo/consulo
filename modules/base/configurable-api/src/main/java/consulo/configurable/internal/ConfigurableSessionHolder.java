@@ -18,17 +18,17 @@ package consulo.configurable.internal;
 import consulo.configurable.ConfigurableSession;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Objects;
 
 /**
  * @author VISTALL
- * @since 20/01/2022
+ * @since 2022-01-20
  */
 public class ConfigurableSessionHolder {
-  public static ConfigurableSession ourCurrentSession;
+  public static @Nullable ConfigurableSession ourCurrentSession = null;
 
-  
   @RequiredUIAccess
   public static ConfigurableSession get() {
     UIAccess.assertIsUIThread();

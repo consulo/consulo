@@ -20,6 +20,7 @@ import consulo.disposer.Disposable;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 
@@ -29,7 +30,7 @@ import javax.swing.*;
  */
 public class ConfigurableUIMigrationUtil {
     @RequiredUIAccess
-    public static JComponent createComponent(UnnamedConfigurable configurable, Disposable parentUIDisposable) {
+    public static @Nullable JComponent createComponent(UnnamedConfigurable configurable, Disposable parentUIDisposable) {
         JComponent component = configurable.createComponent(parentUIDisposable);
         if (component != null) {
             return component;
@@ -43,7 +44,7 @@ public class ConfigurableUIMigrationUtil {
     }
 
     @RequiredUIAccess
-    public static JComponent getPreferredFocusedComponent(UnnamedConfigurable component) {
+    public static @Nullable JComponent getPreferredFocusedComponent(UnnamedConfigurable component) {
         JComponent preferredFocusedComponent = component.getPreferredFocusedComponent();
         if (preferredFocusedComponent != null) {
             return preferredFocusedComponent;

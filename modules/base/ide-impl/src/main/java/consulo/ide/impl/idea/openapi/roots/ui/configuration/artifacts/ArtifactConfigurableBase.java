@@ -59,7 +59,6 @@ public abstract class ArtifactConfigurableBase extends ProjectStructureElementCo
     return ProjectLocalize.bannerSloganArtifact0(getArtifact().getName()).get();
   }
 
-  
   @Override
   public LocalizeValue getDisplayName() {
     return LocalizeValue.of(getArtifact().getName());

@@ -256,14 +256,12 @@ public abstract class NamedItemsListEditor<T> extends MasterDetailsComponent {
             return myNamer.getName(myItem);
         }
 
-        
         @Override
         @RequiredUIAccess
         public Component createOptionsPanel(Disposable uiDisposable) {
             return TargetAWT.wrap(myConfigurable.createComponent(uiDisposable));
         }
 
-        
         @Override
         public LocalizeValue getDisplayName() {
             return LocalizeValue.ofNullable(myNamer.getName(myItem));

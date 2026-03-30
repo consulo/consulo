@@ -85,9 +85,9 @@ public abstract class NamedConfigurable<T> implements Configurable, MasterDetail
 
   private boolean myNameVisible = true;
 
-  private UIPanel myUIPanel;
+  private @Nullable UIPanel myUIPanel = null;
 
-  private Component myOptionsComponent;
+  private @Nullable Component myOptionsComponent = null;
 
   @RequiredUIAccess
   protected NamedConfigurable() {
@@ -116,7 +116,7 @@ public abstract class NamedConfigurable<T> implements Configurable, MasterDetail
 
   @Override
   public String getBannerSlogan() {
-    return null;
+    return "";
   }
 
   @RequiredUIAccess

@@ -18,6 +18,7 @@ package consulo.configurable;
 import consulo.annotation.DeprecationInfo;
 import consulo.component.util.localize.AbstractBundle;
 import org.jetbrains.annotations.PropertyKey;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author lesya
@@ -33,7 +34,7 @@ public class OptionsBundle extends AbstractBundle {
     super(PATH_TO_BUNDLE);
   }
 
-  public static String message(@PropertyKey(resourceBundle = PATH_TO_BUNDLE) String key, Object... params) {
+  public static @Nullable String message(@PropertyKey(resourceBundle = PATH_TO_BUNDLE) String key, Object... params) {
     return INSTANCE.getMessage(key, params);
   }
 }

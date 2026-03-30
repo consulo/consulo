@@ -68,7 +68,7 @@ public class ConfigurableExtensionPointUtil {
         for (Iterator<String> iterator = idToConfigurable.keySet().iterator(); iterator.hasNext(); ) {
             String key = iterator.next();
             ConfigurableWrapper wrapper = idToConfigurable.get(key);
-            if (wrapper.getParentId() != null) {
+            if (wrapper != null && wrapper.getParentId() != null) {
                 iterator.remove();
             }
         }

@@ -141,7 +141,6 @@ public class LibraryConfigurable extends ProjectStructureElementConfigurable<Lib
         return ProjectLocalize.projectRootsLibraryBannerText(getDisplayName(), libraryType).get();
     }
 
-    
     @Override
     public LocalizeValue getDisplayName() {
         if (((LibrariesModifiableModel) myModel.getModifiableModel()).hasLibraryEditor(myLibrary)) {

@@ -80,7 +80,6 @@ public class TextConfigurable<T> extends NamedConfigurable<T> {
     return myBannerSlogan;
   }
 
-  
   @Override
   public LocalizeValue getDisplayName() {
     return myDisplayName;

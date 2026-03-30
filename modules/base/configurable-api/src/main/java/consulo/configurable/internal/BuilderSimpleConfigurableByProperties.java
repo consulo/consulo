@@ -22,31 +22,30 @@ import consulo.ui.Component;
 import consulo.ui.ValueComponent;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.layout.VerticalLayout;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 import java.util.function.Supplier;
 
 /**
  * @author VISTALL
- * @since 05/03/2023
+ * @since 2023-03-05
  */
 public class BuilderSimpleConfigurableByProperties<Instance extends ConfigurableBuilderState> extends SimpleConfigurableByProperties {
   private final List<Object> myEntries;
   private final Supplier<Instance> myInstanceFactory;
 
-  private Instance myInstance;
+  private @Nullable Instance myInstance = null;
 
   public BuilderSimpleConfigurableByProperties(Supplier<Instance> instanceFactory, List<Object> entries) {
     myEntries = entries;
     myInstanceFactory = instanceFactory;
   }
 
-  @RequiredUIAccess
-  
   @Override
+  @RequiredUIAccess
   @SuppressWarnings("unchecked")
-  protected Component createLayout(PropertyBuilder propertyBuilder,
-                                   Disposable uiDisposable) {
+  protected Component createLayout(PropertyBuilder propertyBuilder, Disposable uiDisposable) {
     myInstance = myInstanceFactory.get();
 
     VerticalLayout layout = VerticalLayout.create();
@@ -69,8 +68,8 @@ public class BuilderSimpleConfigurableByProperties<Instance extends Configurable
     return layout;
   }
 
-  @RequiredUIAccess
   @Override
+  @RequiredUIAccess
   protected void disposeUIResources(LayoutWrapper component) {
     myInstance = null;
   }
