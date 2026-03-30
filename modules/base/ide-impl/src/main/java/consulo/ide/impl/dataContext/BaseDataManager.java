@@ -177,7 +177,7 @@ public abstract class BaseDataManager implements DataManagerEx, DataRuleHoler {
     }
 
     @Override
-    public @Nullable <T> GetDataRule<T> getDataRule(Key<T> dataId) {
+    public <T> @Nullable GetDataRule<T> getDataRule(Key<T> dataId) {
         GetDataRule<T> rule = getRuleFromMap(dataId);
         if (rule != null) {
             return rule;
@@ -186,7 +186,6 @@ public abstract class BaseDataManager implements DataManagerEx, DataRuleHoler {
         final GetDataRule<T> plainRule = getRuleFromMap(AnActionEvent.uninjectedId(dataId));
         if (plainRule != null) {
             return new GetDataRule<>() {
-               
                 @Override
                 public Key<T> getKey() {
                     return plainRule.getKey();
@@ -202,7 +201,6 @@ public abstract class BaseDataManager implements DataManagerEx, DataRuleHoler {
         return null;
     }
 
-   
     @Override
     public AsyncResult<DataContext> getDataContextFromFocus() {
         AsyncResult<DataContext> context = AsyncResult.undefined();
@@ -210,7 +208,6 @@ public abstract class BaseDataManager implements DataManagerEx, DataRuleHoler {
         return context;
     }
 
-   
     @Override
     public Promise<DataContext> getDataContextFromFocusAsync() {
         AsyncPromise<DataContext> result = new AsyncPromise<>();
@@ -296,7 +293,6 @@ public abstract class BaseDataManager implements DataManagerEx, DataRuleHoler {
         return null;
     }
 
-   
     @Override
     public DataContext getDataContext(consulo.ui.@Nullable Component component) {
         return new MyUIDataContext(this, component);

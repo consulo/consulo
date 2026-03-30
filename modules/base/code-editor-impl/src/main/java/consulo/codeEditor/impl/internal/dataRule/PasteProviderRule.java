@@ -22,17 +22,17 @@ import consulo.dataContext.DataProvider;
 import consulo.dataContext.GetDataRule;
 import consulo.ui.ex.PasteProvider;
 import consulo.util.dataholder.Key;
+import org.jspecify.annotations.Nullable;
 
 @ExtensionImpl
 public class PasteProviderRule implements GetDataRule<PasteProvider> {
-  
   @Override
   public Key<PasteProvider> getKey() {
     return PasteProvider.KEY;
   }
 
   @Override
-  public PasteProvider getData(DataProvider dataProvider) {
+  public @Nullable PasteProvider getData(DataProvider dataProvider) {
     Editor editor = dataProvider.getDataUnchecked(Editor.KEY);
     return editor instanceof EditorEx editorEx ? editorEx.getPasteProvider() : null;
   }

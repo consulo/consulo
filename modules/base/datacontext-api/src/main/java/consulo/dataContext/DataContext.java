@@ -33,7 +33,7 @@ import java.util.Map;
 public interface DataContext {
     DataContext EMPTY_CONTEXT = new DataContext() {
         @Override
-        public <T> T getData(Key<T> key) {
+        public <T> @Nullable T getData(Key<T> key) {
             return null;
         }
     };
@@ -76,10 +76,10 @@ public interface DataContext {
     }
 
     public final static class Builder {
-        private DataContext myParent;
-        private Map<Key, Object> myMap;
+        private @Nullable DataContext myParent = null;
+        private @Nullable Map<Key, Object> myMap = null;
 
-        Builder(DataContext parent) {
+        Builder(@Nullable DataContext parent) {
             myParent = parent;
         }
 
@@ -88,7 +88,6 @@ public interface DataContext {
             return this;
         }
 
-        
         public <T> Builder add(Key<? super T> dataKey, @Nullable T value) {
             if (value != null) {
                 if (myMap == null) {
@@ -99,7 +98,6 @@ public interface DataContext {
             return this;
         }
 
-        
         public Builder addAll(DataContext dataContext, Key<?>... keys) {
             for (Key<?> key : keys) {
                 //noinspection unchecked
@@ -108,7 +106,6 @@ public interface DataContext {
             return this;
         }
 
-        
         public DataContext build() {
             if (myMap == null && myParent == null) {
                 return EMPTY_CONTEXT;

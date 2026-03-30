@@ -28,6 +28,7 @@ import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.PsiElement;
 import consulo.ide.impl.dataContext.BaseDataManager;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author Eugene Zhuravlev
@@ -35,14 +36,13 @@ import consulo.ide.impl.dataContext.BaseDataManager;
  */
 @ExtensionImpl
 public class ModuleRule implements GetDataRule<Module> {
-  
   @Override
   public Key<Module> getKey() {
     return Module.KEY;
   }
 
   @Override
-  public Module getData(DataProvider dataProvider) {
+  public @Nullable Module getData(DataProvider dataProvider) {
     Module moduleContext = dataProvider.getDataUnchecked(LangDataKeys.MODULE_CONTEXT);
     if (moduleContext != null) {
       return moduleContext;

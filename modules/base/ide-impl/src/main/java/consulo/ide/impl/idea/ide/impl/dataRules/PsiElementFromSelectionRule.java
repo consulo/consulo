@@ -22,17 +22,17 @@ import consulo.dataContext.GetDataRule;
 import consulo.language.editor.PlatformDataKeys;
 import consulo.language.psi.PsiElement;
 import consulo.util.dataholder.Key;
+import org.jspecify.annotations.Nullable;
 
 @ExtensionImpl
 public class PsiElementFromSelectionRule implements GetDataRule<PsiElement> {
-  
   @Override
   public Key<PsiElement> getKey() {
     return PsiElement.KEY;
   }
 
   @Override
-  public PsiElement getData(DataProvider dataProvider) {
+  public @Nullable PsiElement getData(DataProvider dataProvider) {
     Object element = dataProvider.getDataUnchecked(PlatformDataKeys.SELECTED_ITEM);
     return element instanceof PsiElement psiElement && psiElement.isValid() ? psiElement : null;
   }

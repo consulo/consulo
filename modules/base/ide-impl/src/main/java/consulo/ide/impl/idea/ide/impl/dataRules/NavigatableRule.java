@@ -26,6 +26,7 @@ import consulo.navigation.Navigatable;
 import consulo.navigation.OpenFileDescriptor;
 import consulo.util.dataholder.Key;
 import jakarta.inject.Inject;
+import org.jspecify.annotations.Nullable;
 
 @ExtensionImpl
 public class NavigatableRule implements GetDataRule<Navigatable> {
@@ -36,14 +37,13 @@ public class NavigatableRule implements GetDataRule<Navigatable> {
         myPsiNavigationSupport = psiNavigationSupport;
     }
 
-    
     @Override
     public Key<Navigatable> getKey() {
         return Navigatable.KEY;
     }
 
     @Override
-    public Navigatable getData(DataProvider dataProvider) {
+    public @Nullable Navigatable getData(DataProvider dataProvider) {
         Navigatable navigatable = dataProvider.getDataUnchecked(Navigatable.KEY);
         if (navigatable != null && navigatable instanceof OpenFileDescriptor openFileDescriptor) {
             if (openFileDescriptor.getFile().isValid()) {

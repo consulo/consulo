@@ -26,20 +26,20 @@ import consulo.virtualFileSystem.fileType.FileType;
 import consulo.project.Project;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author mike
  */
 @ExtensionImpl
 public class FileTextRule implements GetDataRule<String> {
-  
   @Override
   public Key<String> getKey() {
     return PlatformDataKeys.FILE_TEXT;
   }
 
   @Override
-  public String getData(DataProvider dataProvider) {
+  public @Nullable String getData(DataProvider dataProvider) {
     VirtualFile virtualFile = dataProvider.getDataUnchecked(VirtualFile.KEY);
     if (virtualFile == null) {
       return null;

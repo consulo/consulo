@@ -23,7 +23,6 @@ import consulo.util.dataholder.Key;
 
 @ExtensionImpl
 public class NavigatableArrayRule implements GetDataRule<Navigatable[]> {
-  
   @Override
   public Key<Navigatable[]> getKey() {
     return Navigatable.KEY_OF_ARRAY;
