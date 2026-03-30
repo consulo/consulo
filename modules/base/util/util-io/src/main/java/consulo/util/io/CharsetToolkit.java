@@ -581,15 +581,14 @@ public final class CharsetToolkit {
   }
 
   public static @Nullable Charset forName(@Nullable String name) {
-    Charset charset = null;
     if (name != null) {
       try {
-        charset = Charset.forName(name);
+        return Charset.forName(name);
       }
       catch (IllegalCharsetNameException | UnsupportedCharsetException ignored) {
       }
     }
 
-    return charset;
+    return null;
   }
 }

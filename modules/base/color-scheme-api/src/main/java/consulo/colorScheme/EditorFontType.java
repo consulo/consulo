@@ -15,7 +15,9 @@
  */
 package consulo.colorScheme;
 
-import java.util.HashMap;
+import org.jspecify.annotations.Nullable;
+
+import java.util.EnumMap;
 import java.util.Map;
 
 public enum EditorFontType {
@@ -28,7 +30,7 @@ public enum EditorFontType {
     CONSOLE_ITALIC,
     CONSOLE_BOLD_ITALIC;
 
-    private static final Map<EditorFontType, EditorFontType> ourConsoleTypes = new HashMap<>();
+    private static final Map<EditorFontType, EditorFontType> ourConsoleTypes = new EnumMap<>(EditorFontType.class);
 
     static {
         ourConsoleTypes.put(PLAIN, CONSOLE_PLAIN);
@@ -37,7 +39,7 @@ public enum EditorFontType {
         ourConsoleTypes.put(BOLD, CONSOLE_BOLD);
     }
 
-    public static EditorFontType getConsoleType(EditorFontType fontType) {
+    public static @Nullable EditorFontType getConsoleType(EditorFontType fontType) {
         return ourConsoleTypes.get(fontType);
     }
 }

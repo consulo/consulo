@@ -13,10 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.impl.idea.openapi.ui;
 
 import consulo.configurable.Configurable;
+import consulo.localize.LocalizeValue;
 import consulo.ui.ex.awt.event.DocumentAdapter;
 import consulo.ui.ex.awt.JBUI;
 import consulo.disposer.Disposable;
@@ -85,7 +85,7 @@ public abstract class NamedConfigurable<T> implements Configurable, MasterDetail
 
   public abstract T getEditableObject();
 
-  public abstract String getBannerSlogan();
+  public abstract LocalizeValue getBannerSlogan();
 
   @RequiredUIAccess
   @Override

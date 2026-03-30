@@ -16,6 +16,7 @@
 package consulo.virtualFileSystem.event;
 
 import consulo.virtualFileSystem.VirtualFile;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Provides data for event which is fired when the name or writable status of a virtual file is changed.
@@ -25,10 +26,10 @@ import consulo.virtualFileSystem.VirtualFile;
  */
 public class VirtualFilePropertyEvent extends VirtualFileEvent {
   private final String myPropertyName;
-  private final Object myOldValue;
-  private final Object myNewValue;
+  private final @Nullable Object myOldValue;
+  private final @Nullable Object myNewValue;
 
-  public VirtualFilePropertyEvent(Object requestor, VirtualFile file, String propertyName, Object oldValue, Object newValue){
+  public VirtualFilePropertyEvent(@Nullable Object requestor, VirtualFile file, String propertyName, @Nullable Object oldValue, @Nullable Object newValue){
     super(requestor, file, file.getName(), file.getParent());
     myPropertyName = propertyName;
     myOldValue = oldValue;
@@ -52,7 +53,7 @@ public class VirtualFilePropertyEvent extends VirtualFileEvent {
    * @return the old value of the property (String for {@link VirtualFile#PROP_NAME}, Boolean for
    * {@link VirtualFile#PROP_WRITABLE}).
    */
-  public Object getOldValue() {
+  public @Nullable Object getOldValue() {
     return myOldValue;
   }
 
@@ -62,7 +63,7 @@ public class VirtualFilePropertyEvent extends VirtualFileEvent {
    * @return the new value of the property (String for {@link VirtualFile#PROP_NAME}, Boolean for
    * {@link VirtualFile#PROP_WRITABLE}).
    */
-  public Object getNewValue() {
+  public @Nullable Object getNewValue() {
     return myNewValue;
   }
 }

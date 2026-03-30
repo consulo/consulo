@@ -18,12 +18,13 @@ package consulo.configurable;
 import consulo.annotation.DeprecationInfo;
 import consulo.configurable.localize.ConfigurableLocalize;
 import consulo.localize.LocalizeValue;
+import org.jspecify.annotations.Nullable;
 
 public class ConfigurationException extends Exception {
     public static final LocalizeValue DEFAULT_TITLE = ConfigurableLocalize.cannotSaveSettingsDefaultDialogTitle();
     
     private LocalizeValue myTitle = DEFAULT_TITLE;
-    private Runnable myQuickFix;
+    private @Nullable Runnable myQuickFix = null;
 
     public ConfigurationException(LocalizeValue message) {
         this(message, LocalizeValue.empty());
@@ -42,7 +43,7 @@ public class ConfigurationException extends Exception {
 
     @Deprecated
     @DeprecationInfo("Use variant with LocalizeValue")
-    public ConfigurationException(String message, String title) {
+    public ConfigurationException(String message, @Nullable String title) {
         this(LocalizeValue.ofNullable(message), LocalizeValue.ofNullable(title));
     }
 
@@ -54,7 +55,7 @@ public class ConfigurationException extends Exception {
 
     @Deprecated
     @DeprecationInfo("Use getTitleValue()")
-    public String getTitle() {
+    public @Nullable String getTitle() {
         return getTitleValue().getNullIfEmpty();
     }
 
@@ -62,7 +63,7 @@ public class ConfigurationException extends Exception {
         myQuickFix = quickFix;
     }
 
-    public Runnable getQuickFix() {
+    public @Nullable Runnable getQuickFix() {
         return myQuickFix;
     }
 }

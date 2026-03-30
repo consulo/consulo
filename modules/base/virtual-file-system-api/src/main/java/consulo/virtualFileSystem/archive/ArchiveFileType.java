@@ -28,42 +28,31 @@ import java.util.function.Supplier;
 
 /**
  * @author VISTALL
- * @since 19:19/13.07.13
+ * @since 2013-07-13
  */
 public abstract class ArchiveFileType implements FileType {
   private final Supplier<ArchiveFileSystem> myFileSystemLazyValue;
 
   protected ArchiveFileType(VirtualFileManager virtualFileManager) {
-    myFileSystemLazyValue = LazyValue.notNull(() -> {
-      VirtualFileSystem fileSystem = virtualFileManager.getFileSystem(getProtocol());
-      if (fileSystem == null) {
-        throw new IllegalArgumentException("VirtualFileSystem with protocol: " + getProtocol() + " is not registered");
-      }
-      return (ArchiveFileSystem)fileSystem;
-    });
+    myFileSystemLazyValue = LazyValue.notNull(() -> (ArchiveFileSystem) virtualFileManager.getRequiredFileSystem(getProtocol()));
   }
 
-  
   public abstract String getProtocol();
 
-  
   public ArchiveFileSystem getFileSystem() {
     return myFileSystemLazyValue.get();
   }
 
   @Override
-  
   public LocalizeValue getDescription() {
     return FileTypeLocalize.filetypeDescriptionArchiveFiles();
   }
 
   @Override
-  
   public String getDefaultExtension() {
     return "";
   }
 
-  
   @Override
   public Image getIcon() {
     return PlatformIconGroup.filetypesArchive();

@@ -114,8 +114,8 @@ public class SingleRemoteServerConfigurable extends NamedConfigurable<RemoteServ
     }
 
     @Override
-    public String getBannerSlogan() {
-        return myServer.getName();
+    public LocalizeValue getBannerSlogan() {
+        return LocalizeValue.of(myServer.getName());
     }
 
     @RequiredUIAccess

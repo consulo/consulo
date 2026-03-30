@@ -26,5 +26,5 @@ public interface VirtualFilePointerManager extends ModificationTracker {
 
   public abstract VirtualFilePointerContainer createContainer(Disposable parent, @Nullable VirtualFilePointerListener listener);
 
-  public abstract VirtualFilePointer createDirectoryPointer(String url, boolean recursively, Disposable parent, VirtualFilePointerListener listener);
+  public abstract VirtualFilePointer createDirectoryPointer(String url, boolean recursively, Disposable parent, @Nullable VirtualFilePointerListener listener);
 }

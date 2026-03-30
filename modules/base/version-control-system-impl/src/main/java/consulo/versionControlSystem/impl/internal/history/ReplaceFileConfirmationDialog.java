@@ -27,10 +27,12 @@ import consulo.versionControlSystem.VcsBundle;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.status.FileStatus;
 import consulo.virtualFileSystem.status.FileStatusManager;
+import org.jspecify.annotations.Nullable;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 public class ReplaceFileConfirmationDialog {
   private final FileStatusManager myFileStatusManager;
@@ -93,9 +95,8 @@ public class ReplaceFileConfirmationDialog {
     }
   }
 
-  public Collection<VirtualFile> collectModifiedFiles(VirtualFile[] files) {
-
-    ArrayList<VirtualFile> result = new ArrayList<VirtualFile>();
+  public Collection<VirtualFile> collectModifiedFiles(VirtualFile @Nullable [] files) {
+    List<VirtualFile> result = new ArrayList<VirtualFile>();
 
     if (files == null) return result;
 

@@ -71,7 +71,7 @@ public class PruneEmptyDirectoriesAction extends AnAction {
             @Override
             @RequiredUIAccess
             public void afterChildrenVisited(VirtualFile file) {
-                if (file.isDirectory() && file.getChildren().length == 0) {
+                if (file.isDirectory() && file.getRequiredChildren().isEmpty()) {
                     delete(file);
                 }
             }

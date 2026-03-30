@@ -45,15 +45,12 @@ public class StandardFileSystems {
   @DeprecationInfo("use consulo.util.io.URLUtil#HTTP_PROTOCOL")
   public static final String HTTP_PROTOCOL = URLUtil.HTTP_PROTOCOL;
 
-  private static final Supplier<VirtualFileSystem> ourLocal = LazyValue.notNull(() -> {
-    return VirtualFileManager.getInstance().getFileSystem(FILE_PROTOCOL);
-  });
+  private static final Supplier<VirtualFileSystem> ourLocal =
+      LazyValue.notNull(() -> VirtualFileManager.getInstance().getRequiredFileSystem(FILE_PROTOCOL));
 
-  private static final Supplier<VirtualFileSystem> ourZip = LazyValue.notNull(() -> {
-    return VirtualFileManager.getInstance().getFileSystem(ZIP_PROTOCOL);
-  });
+  private static final Supplier<VirtualFileSystem> ourZip =
+      LazyValue.notNull(() -> VirtualFileManager.getInstance().getRequiredFileSystem(ZIP_PROTOCOL));
 
-  
   public static VirtualFileSystem local() {
     return ourLocal.get();
   }
@@ -67,7 +64,6 @@ public class StandardFileSystems {
     return zip();
   }
 
-  
   public static ArchiveFileSystem zip() {
     return (ArchiveFileSystem)ourZip.get();
   }

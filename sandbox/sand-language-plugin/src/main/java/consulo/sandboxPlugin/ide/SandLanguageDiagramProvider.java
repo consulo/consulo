@@ -38,13 +38,11 @@ import org.jspecify.annotations.Nullable;
  */
 @ExtensionImpl
 public class SandLanguageDiagramProvider implements LanguageGraphProvider<SandFile> {
-    
     @Override
     public String getId() {
         return "sand";
     }
 
-    
     @Override
     public String getName(SandFile element) {
         return element.getVirtualFile().getName();
@@ -55,15 +53,14 @@ public class SandLanguageDiagramProvider implements LanguageGraphProvider<SandFi
         return element instanceof SandFile;
     }
 
-    @RequiredReadAction
-    
     @Override
+    @RequiredReadAction
     public String getURL(SandFile element) {
         return element.getVirtualFile().getPath();
     }
 
-    @RequiredReadAction
     @Override
+    @RequiredReadAction
     public @Nullable PsiElement restoreFromURL(Project project, String url) {
         VirtualFile file = LocalFileSystem.getInstance().findFileByPath(url);
         if (file == null || !file.isValid()) {
@@ -77,16 +74,15 @@ public class SandLanguageDiagramProvider implements LanguageGraphProvider<SandFi
         return null;
     }
 
-    @RequiredReadAction
-    
     @Override
+    @RequiredReadAction
     public GraphBuilder createBuilder(SandFile element) {
         GraphBuilderFactory graphBuilderFactory = GraphBuilderFactory.getInstance();
 
         GraphBuilder builder = graphBuilderFactory.createBuilder();
 
-        GraphNode<?> testNode1 = builder.createNode("Test Node1", AllIcons.Nodes.Class, null, GraphPositionStrategy.CENTER);
-        GraphNode<?> testNode2 = builder.createNode("Test Node2", AllIcons.Nodes.Class, null, GraphPositionStrategy.BOTTOM);
+        GraphNode<@Nullable Void> testNode1 = builder.createNode("Test Node1", AllIcons.Nodes.Class, null, GraphPositionStrategy.CENTER);
+        GraphNode<@Nullable Void> testNode2 = builder.createNode("Test Node2", AllIcons.Nodes.Class, null, GraphPositionStrategy.BOTTOM);
 
         testNode1.makeArrow(testNode2);
 

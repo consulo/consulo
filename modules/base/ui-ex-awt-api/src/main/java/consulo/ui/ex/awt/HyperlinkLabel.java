@@ -243,33 +243,36 @@ public class HyperlinkLabel extends HighlightableComponent {
 
     @Override
     public ColorValue getForegroundColor() {
-      return TargetAWT.from(!isEnabled()
-                            ? UIManager.getColor("Label.disabledForeground")
-                            : myMousePressed ? JBCurrentTheme.Link.linkPressedColor() : myMouseHover ? JBCurrentTheme.Link.linkHoverColor() : JBCurrentTheme.Link.linkColor());
+      return TargetAWT.from(
+          !isEnabled() ? UIManager.getColor("Label.disabledForeground")
+              : myMousePressed ? JBCurrentTheme.Link.linkPressedColor()
+              : myMouseHover ? JBCurrentTheme.Link.linkHoverColor()
+              : JBCurrentTheme.Link.linkColor()
+      );
     }
 
     @Override
-    public ColorValue getEffectColor() {
+    public @Nullable ColorValue getEffectColor() {
       return getForegroundColor();
     }
 
     @Override
-    public EffectType getEffectType() {
+    public @Nullable EffectType getEffectType() {
       return !isEnabled() || myMouseHover || myMousePressed ? EffectType.LINE_UNDERSCORE : null;
     }
 
     @Override
-    public void setForegroundColor(ColorValue color) {
+    public void setForegroundColor(@Nullable ColorValue color) {
       throw new UnsupportedOperationException();
     }
 
     @Override
-    public void setEffectColor(ColorValue color) {
+    public void setEffectColor(@Nullable ColorValue color) {
       throw new UnsupportedOperationException();
     }
 
     @Override
-    public void setEffectType(EffectType effectType) {
+    public void setEffectType(@Nullable EffectType effectType) {
       throw new UnsupportedOperationException();
     }
   }

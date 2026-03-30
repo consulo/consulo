@@ -22,11 +22,10 @@ import consulo.colorScheme.TextAttributesKey;
 import consulo.colorScheme.TextAttributes;
 import consulo.component.persist.scheme.ExternalInfo;
 import consulo.component.persist.scheme.ExternalizableScheme;
-import consulo.util.lang.Comparing;
 import consulo.ui.color.ColorValue;
 
 import org.jspecify.annotations.Nullable;
-import java.util.Map;
+import java.util.Objects;
 
 /**
  * @author Yura Cangea
@@ -46,14 +45,14 @@ public class EditorColorsSchemeImpl extends AbstractColorsScheme implements Exte
   }
 
   @Override
-  public void setColor(EditorColorKey key, ColorValue color) {
-    if (!Comparing.equal(color, getColor(key))) {
+  public void setColor(EditorColorKey key, @Nullable ColorValue color) {
+    if (!Objects.equals(color, getColor(key))) {
       myColorsMap.put(key, color);
     }
   }
 
   @Override
-  public TextAttributes getAttributes(TextAttributesKey key) {
+  public TextAttributes getAttributes(@Nullable TextAttributesKey key) {
     if (key != null) {
       TextAttributesKey fallbackKey = key.getFallbackAttributeKey();
       TextAttributes attributes = myAttributesMap.get(key);

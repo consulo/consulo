@@ -31,15 +31,15 @@ public final class ProxyHelper {
   /**
    * @return base {@link ClassLoader} based on superclass and interfaces
    */
-  public static ClassLoader preferClassLoader(@Nullable Class<?> superclass, @Nullable Class<?>... interfaces) {
+  public static ClassLoader preferClassLoader(@Nullable Class<?> superclass, Class<?> @Nullable ... interfaces) {
     int maxIndex = -1;
     ClassLoader bestLoader = null;
     ClassLoader nonPluginLoader = null;
     if (interfaces != null && interfaces.length > 0) {
-      for (Class anInterface : interfaces) {
+      for (Class<?> anInterface : interfaces) {
         ClassLoader loader = anInterface.getClassLoader();
-        if (loader instanceof PluginClassLoader) {
-          int order = PluginHolderModificator.getPluginLoadOrder(((PluginClassLoader)loader).getPluginId());
+        if (loader instanceof PluginClassLoader pluginClassLoader) {
+          int order = PluginHolderModificator.getPluginLoadOrder(pluginClassLoader.getPluginId());
           if (maxIndex < order) {
             maxIndex = order;
             bestLoader = loader;
@@ -53,7 +53,8 @@ public final class ProxyHelper {
     ClassLoader superLoader = null;
     if (superclass != null) {
       superLoader = superclass.getClassLoader();
-      if (superLoader instanceof PluginClassLoader && maxIndex < PluginHolderModificator.getPluginLoadOrder(((PluginClassLoader)superLoader).getPluginId())) {
+      if (superLoader instanceof PluginClassLoader pluginClassLoader
+          && maxIndex < PluginHolderModificator.getPluginLoadOrder(pluginClassLoader.getPluginId())) {
         return superLoader;
       }
     }

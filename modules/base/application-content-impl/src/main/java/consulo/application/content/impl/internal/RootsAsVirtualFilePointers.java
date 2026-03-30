@@ -125,8 +125,8 @@ public class RootsAsVirtualFilePointers implements RootProvider {
     }
 
     VirtualFileSystem fs = VirtualFileManager.getInstance().getFileSystem(protocol);
-    if (fs instanceof ArchiveFileSystem) {
-      ((ArchiveFileSystem)fs).addNoCopyArchiveForPath(url);
+    if (fs instanceof ArchiveFileSystem archiveFileSystem) {
+      archiveFileSystem.addNoCopyArchiveForPath(url);
     }
   }
 

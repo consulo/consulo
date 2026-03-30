@@ -15,13 +15,13 @@
  */
 package consulo.virtualFileSystem.http;
 
-import consulo.virtualFileSystem.StandardFileSystems;
+import consulo.util.io.URLUtil;
 import consulo.virtualFileSystem.VirtualFileManager;
 
 public interface HttpFileSystem extends BaseHttpFileSystem {
-    public static final String PROTOCOL = StandardFileSystems.HTTP_PROTOCOL;
+    public static final String PROTOCOL = URLUtil.HTTP_PROTOCOL;
 
     public static HttpFileSystem getInstance() {
-        return (HttpFileSystem) VirtualFileManager.getInstance().getFileSystem(PROTOCOL);
+        return VirtualFileManager.getInstance().getRequiredFileSystem(PROTOCOL);
     }
 }

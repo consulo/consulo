@@ -29,7 +29,7 @@ import java.util.Map;
  */
 public class BuilderDataContext implements DataContext {
   private final Map<Key, Object> myDataId2Data;
-  private final DataContext myParent;
+  private final @Nullable DataContext myParent;
 
   public BuilderDataContext(Map<Key, Object> dataId2data, @Nullable DataContext parent) {
     myDataId2Data = dataId2data;
@@ -38,7 +38,7 @@ public class BuilderDataContext implements DataContext {
 
   @Override
   @SuppressWarnings("unchecked")
-  public <T> T getData(Key<T> dataId) {
+  public <T> @Nullable T getData(Key<T> dataId) {
     Object result = getDataFromSelfOrParent(dataId);
 
     if (result == null) {
@@ -51,7 +51,8 @@ public class BuilderDataContext implements DataContext {
     return (T)result;
   }
 
-  private Object getDataFromSelfOrParent(Key dataId) {
-    return myDataId2Data.containsKey(dataId) ? myDataId2Data.get(dataId) : myParent == null ? null : myParent.getData(dataId);
+  private @Nullable Object getDataFromSelfOrParent(Key dataId) {
+    return myDataId2Data.containsKey(dataId) ? myDataId2Data.get(dataId)
+        : myParent == null ? null : myParent.getData(dataId);
   }
 }

@@ -24,13 +24,12 @@ import java.util.function.Supplier;
 
 /**
  * @author VISTALL
- * @since 22-Sep-16
+ * @since 2016-09-22
  */
 public abstract class SimpleConfigurable<T extends Supplier<? extends Component>> implements UnnamedConfigurable {
-  private T myComponent;
+  private @Nullable T myComponent = null;
 
   @RequiredUIAccess
-  
   protected abstract T createPanel(Disposable uiDisposable);
 
   @RequiredUIAccess
@@ -59,8 +58,8 @@ public abstract class SimpleConfigurable<T extends Supplier<? extends Component>
     return null;
   }
 
-  @RequiredUIAccess
   @Override
+  @RequiredUIAccess
   public @Nullable Component createUIComponent(Disposable uiDisposable) {
     if (myComponent == null) {
       myComponent = createPanel(uiDisposable);

@@ -535,11 +535,11 @@ public class AnalyzeDependenciesComponent extends MasterDetailsComponent {
          * {@inheritDoc}
          */
         @Override
-        public String getBannerSlogan() {
+        public LocalizeValue getBannerSlogan() {
             VirtualFile f = myExplanation.getLocalFile();
             String p = f == null ? myExplanation.url() : f.getPath();
             p = suffixForBanner(p);
-            return p;
+            return LocalizeValue.of(p);
         }
 
         /**
@@ -589,14 +589,13 @@ public class AnalyzeDependenciesComponent extends MasterDetailsComponent {
          * {@inheritDoc}
          */
         @Override
-        public String getBannerSlogan() {
+        public LocalizeValue getBannerSlogan() {
             if (myExplanation.entry() instanceof ModuleSourceOrderEntry e) {
-                return prefixForBanner("Module " + e.getOwnerModule().getName());
+                return LocalizeValue.localizeTODO(prefixForBanner("Module " + e.getOwnerModule().getName()));
             }
             else {
-                String p =
-                    myExplanation.entry().getPresentableName() + " in module " + myExplanation.entry().getOwnerModule().getName();
-                return suffixForBanner(p);
+                String p = myExplanation.entry().getPresentableName() + " in module " + myExplanation.entry().getOwnerModule().getName();
+                return LocalizeValue.localizeTODO(suffixForBanner(p));
             }
         }
 

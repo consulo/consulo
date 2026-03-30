@@ -28,7 +28,6 @@ import org.jspecify.annotations.Nullable;
  */
 @ExtensionImpl
 public class InactiveEditorRule implements GetDataRule<Editor> {
-    
     @Override
     public Key<Editor> getKey() {
         return EditorKeys.EDITOR_EVEN_IF_INACTIVE;

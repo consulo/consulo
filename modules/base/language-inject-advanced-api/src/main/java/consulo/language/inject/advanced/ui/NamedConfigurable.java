@@ -23,6 +23,7 @@ import consulo.application.CommonBundle;
 import consulo.configurable.Configurable;
 import consulo.configurable.MasterDetailsConfigurable;
 import consulo.disposer.Disposable;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.JBUI;
@@ -90,7 +91,7 @@ public abstract class NamedConfigurable<T> implements Configurable, MasterDetail
     public abstract T getEditableObject();
 
     @Override
-    public abstract String getBannerSlogan();
+    public abstract LocalizeValue getBannerSlogan();
 
     @RequiredUIAccess
     @Override

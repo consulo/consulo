@@ -62,12 +62,11 @@ public class FileAttribute {
     return ManagingFS.getInstance().readAttribute(file, this);
   }
 
-  
   public DataOutputStream writeAttribute(VirtualFile file) {
     return ManagingFS.getInstance().writeAttribute(file, this);
   }
 
-  public @Nullable byte[] readAttributeBytes(VirtualFile file) throws IOException {
+  public byte @Nullable [] readAttributeBytes(VirtualFile file) throws IOException {
     DataInputStream stream = readAttribute(file);
     if (stream == null) return null;
 
@@ -91,7 +90,6 @@ public class FileAttribute {
     }
   }
 
-  
   public String getId() {
     return myId;
   }
@@ -100,7 +98,6 @@ public class FileAttribute {
     return myFixedSize;
   }
 
-  
   public FileAttribute newVersion(int newVersion) {
     return new FileAttribute(newVersion, myFixedSize, myId);
   }

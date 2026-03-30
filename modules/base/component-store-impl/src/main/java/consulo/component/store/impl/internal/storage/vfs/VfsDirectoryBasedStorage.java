@@ -136,7 +136,7 @@ public final class VfsDirectoryBasedStorage extends StateStorageBase<DirectorySt
         }
 
         Interner<String> interner = Interner.createStringInterner();
-        for (VirtualFile file : dir.getChildren()) {
+        for (VirtualFile file : dir.getRequiredChildren()) {
             if (!isStorageFile(file)) {
                 continue;
             }
@@ -367,7 +367,7 @@ public final class VfsDirectoryBasedStorage extends StateStorageBase<DirectorySt
 
         private void deleteFiles(VirtualFile dir) {
             Application.get().runWriteAction(() -> {
-                for (VirtualFile file : dir.getChildren()) {
+                for (VirtualFile file : dir.getRequiredChildren()) {
                     if (removedFileNames.contains(file.getName())) {
                         deleteFile(file, this);
                     }

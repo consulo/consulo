@@ -64,9 +64,8 @@ public class VirtualFileSystemInternalHelperImpl implements VirtualFileSystemInt
         return VfsIconUtil.getIcon(file, flags, (Project) project);
     }
 
-    @RequiredReadAction
-    
     @Override
+    @RequiredReadAction
     public Image getFileIconNoDefer(VirtualFile file, @Nullable ComponentManager project, @Iconable.IconFlags int flags) {
         return VfsIconUtil.getIconNoDefer(file, flags, project);
     }

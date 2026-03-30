@@ -9,22 +9,21 @@ import consulo.virtualFileSystem.VirtualFileSystem;
 
 import org.jspecify.annotations.Nullable;
 
+import java.util.Objects;
+
 /**
  * @author max
  */
 public class VFileCreateEvent extends VFileEvent {
-  private final
-  
-  VirtualFile myParent;
+  private final VirtualFile myParent;
   private final boolean myDirectory;
-  private final FileAttributes myAttributes;
-  private final String mySymlinkTarget;
-  private final ChildInfo[] myChildren;
+  private final @Nullable FileAttributes myAttributes;
+  private final @Nullable String mySymlinkTarget;
+  private final ChildInfo @Nullable [] myChildren;
   private final int myChildNameId;
-  private VirtualFile myCreatedFile;
+  private @Nullable VirtualFile myCreatedFile = null;
 
   /**
-   *
    * @param requestor
    * @param parent
    * @param childName
@@ -41,7 +40,7 @@ public class VFileCreateEvent extends VFileEvent {
                           @Nullable FileAttributes attributes,
                           @Nullable String symlinkTarget,
                           boolean isFromRefresh,
-                          @Nullable ChildInfo[] children) {
+                          ChildInfo @Nullable [] children) {
     super(requestor, isFromRefresh);
     myParent = parent;
     myDirectory = isDirectory;
@@ -51,7 +50,6 @@ public class VFileCreateEvent extends VFileEvent {
     myChildNameId = VirtualFileManager.getInstance().storeName(childName);
   }
 
-  
   public String getChildName() {
     return VirtualFileManager.getInstance().getVFileName(myChildNameId).toString();
   }
@@ -60,7 +58,6 @@ public class VFileCreateEvent extends VFileEvent {
     return myDirectory;
   }
 
-  
   public VirtualFile getParent() {
     return myParent;
   }
@@ -80,7 +77,6 @@ public class VFileCreateEvent extends VFileEvent {
     return isDirectory() && myChildren != null && myChildren.length == 0;
   }
 
-  
   @Override
   protected String computePath() {
     String parentPath = myParent.getPath();
@@ -91,17 +87,21 @@ public class VFileCreateEvent extends VFileEvent {
   @Override
   public VirtualFile getFile() {
     VirtualFile createdFile = myCreatedFile;
-    if (createdFile == null && myParent.isValid()) {
-      myCreatedFile = createdFile = myParent.findChild(getChildName());
+    if (createdFile == null) {
+      if (myParent.isValid()) {
+        myCreatedFile = createdFile = Objects.requireNonNull(myParent.findChild(getChildName()));
+      }
+      else {
+        throw new IllegalStateException("Parent file is invalid: " + myParent);
+      }
     }
     return createdFile;
   }
 
   /**
-   *
    * @return null means children not available (e.g. the created file is not a directory) or unknown
    */
-  public @Nullable ChildInfo[] getChildren() {
+  public ChildInfo @Nullable [] getChildren() {
     return myChildren;
   }
 
@@ -109,7 +109,6 @@ public class VFileCreateEvent extends VFileEvent {
     myCreatedFile = null;
   }
 
-  
   @Override
   public VirtualFileSystem getFileSystem() {
     return myParent.getFileSystem();
@@ -121,7 +120,7 @@ public class VFileCreateEvent extends VFileEvent {
   }
 
   @Override
-  public boolean equals(Object o) {
+  public boolean equals(@Nullable Object o) {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
 

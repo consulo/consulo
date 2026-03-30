@@ -18,7 +18,7 @@ abstract class Resource {
     IMPL_VENDOR
   }
 
-  public abstract URL getURL();
+  public abstract @Nullable URL getURL();
 
   public abstract InputStream getInputStream() throws IOException;
 
@@ -34,6 +34,6 @@ abstract class Resource {
 
   @Override
   public String toString() {
-    return getURL().toString();
+    return String.valueOf(getURL());
   }
 }

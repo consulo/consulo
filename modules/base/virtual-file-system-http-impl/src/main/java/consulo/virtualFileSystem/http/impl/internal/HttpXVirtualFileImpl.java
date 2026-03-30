@@ -147,7 +147,7 @@ class HttpXVirtualFileImpl extends HttpVirtualFile {
     }
 
     @Override
-    public VirtualFile[] getChildren() {
+    public VirtualFile @Nullable [] getChildren() {
         if (myFileInfo == null) {
             return EMPTY_ARRAY;
         }

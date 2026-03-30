@@ -373,8 +373,7 @@ public class CopyFilesOrDirectoriesHandler extends CopyHandlerDelegateBase {
             PsiFile firstFile = null;
             Project project = directory.getProject();
             PsiManager manager = PsiManager.getInstance(project);
-            VirtualFile[] children = directory.getVirtualFile().getChildren();
-            for (VirtualFile file : children) {
+            for (VirtualFile file : directory.getVirtualFile().getRequiredChildren()) {
                 PsiFileSystemItem item = file.isDirectory() ? manager.findDirectory(file) : manager.findFile(file);
                 if (item == null) {
                     LOG.info("Invalidated item: " + file.getExtension());

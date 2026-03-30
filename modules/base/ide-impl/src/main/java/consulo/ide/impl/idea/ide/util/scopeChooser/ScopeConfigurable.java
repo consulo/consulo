@@ -69,8 +69,8 @@ public class ScopeConfigurable extends NamedConfigurable<NamedScope> {
   }
 
   @Override
-  public String getBannerSlogan() {
-    return IdeLocalize.scopeBannerText(myScope.getName()).get();
+  public LocalizeValue getBannerSlogan() {
+    return IdeLocalize.scopeBannerText(myScope.getPresentableName());
   }
 
   @Override

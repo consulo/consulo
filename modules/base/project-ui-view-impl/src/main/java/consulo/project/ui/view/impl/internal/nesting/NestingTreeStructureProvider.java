@@ -121,8 +121,8 @@ public final class NestingTreeStructureProvider implements TreeStructureProvider
         if (dir == null) {
             return Collections.emptyList();
         }
-        VirtualFile[] children = dir.getChildren();
-        if (children.length <= 1) {
+        List<VirtualFile> children = dir.getRequiredChildren();
+        if (children.isEmpty()) {
             return Collections.emptyList();
         }
 

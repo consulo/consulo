@@ -37,7 +37,7 @@ public abstract class ArchiveHandler {
   public static final long DEFAULT_TIMESTAMP = -1L;
 
   public static class EntryInfo {
-    public final EntryInfo parent;
+    public final @Nullable EntryInfo parent;
     public final CharSequence shortName;
     public final boolean isDirectory;
     public final long length;
@@ -60,14 +60,13 @@ public abstract class ArchiveHandler {
 
   private final File myPath;
   private final Object myLock = new Object();
-  private volatile Reference<Map<String, EntryInfo>> myEntries = new SoftReference<Map<String, EntryInfo>>(null);
+  private volatile @Nullable Reference<Map<String, EntryInfo>> myEntries = null;
   private boolean myCorrupted;
 
   protected ArchiveHandler(String path) {
     myPath = new File(path);
   }
 
-  
   public File getFile() {
     return myPath;
   }
@@ -83,7 +82,6 @@ public abstract class ArchiveHandler {
     }
   }
 
-  
   public String[] list(String relativePath) {
     EntryInfo entry = getEntryInfo(relativePath);
     if (entry == null || !entry.isDirectory) return ArrayUtil.EMPTY_STRING_ARRAY;
@@ -98,14 +96,16 @@ public abstract class ArchiveHandler {
   }
 
   public void dispose() {
-    myEntries.clear();
+    Map<String, EntryInfo> entries = SoftReference.dereference(myEntries);
+    if (entries != null) {
+      entries.clear();
+    }
   }
 
   protected @Nullable EntryInfo getEntryInfo(String relativePath) {
     return getEntriesMap().get(relativePath);
   }
 
-  
   protected Map<String, EntryInfo> getEntriesMap() {
     Map<String, EntryInfo> map = SoftReference.dereference(myEntries);
     if (map == null) {
@@ -134,15 +134,12 @@ public abstract class ArchiveHandler {
     return map;
   }
 
-  
   protected abstract Map<String, EntryInfo> createEntriesMap() throws IOException;
 
-  
   protected EntryInfo createRootEntry() {
     return new EntryInfo("", true, DEFAULT_LENGTH, DEFAULT_TIMESTAMP, null);
   }
 
-  
   protected EntryInfo getOrCreate(Map<String, EntryInfo> map, String entryName) {
     EntryInfo entry = map.get(entryName);
     if (entry == null) {
@@ -155,7 +152,6 @@ public abstract class ArchiveHandler {
     return entry;
   }
 
-  
   protected Pair<String, String> splitPath(String entryName) {
     int p = entryName.lastIndexOf('/');
     String parentName = p > 0 ? entryName.substring(0, p) : "";
@@ -163,6 +159,5 @@ public abstract class ArchiveHandler {
     return Pair.create(parentName, shortName);
   }
 
-  
   public abstract byte[] contentsToByteArray(String relativePath) throws IOException;
 }

@@ -47,7 +47,7 @@ public class ConfigurableWrapper implements SearchableConfigurable {
     return asParent != null && asParent.hasOwnContent();
   }
 
-  public static <T> T cast(Configurable configurable, Class<T> clazz) {
+  public static <T> @Nullable T cast(@Nullable Configurable configurable, Class<T> clazz) {
     if (configurable == null) {
       return null;
     }
@@ -82,7 +82,6 @@ public class ConfigurableWrapper implements SearchableConfigurable {
     return myConfigurable;
   }
 
-  
   @Override
   public LocalizeValue getDisplayName() {
     return myConfigurable.getDisplayName();
@@ -147,14 +146,13 @@ public class ConfigurableWrapper implements SearchableConfigurable {
     getConfigurable().disposeUIResources();
   }
 
-  
   @Override
   public String getId() {
     return myConfigurable.getId();
   }
 
   @Override
-  public String getParentId() {
+  public @Nullable String getParentId() {
     return myConfigurable.getParentId();
   }
 
@@ -162,7 +160,6 @@ public class ConfigurableWrapper implements SearchableConfigurable {
     return new CompositeWrapper(myConfigurable, configurable);
   }
 
-  
   @Override
   public Class<?> getOriginalClass() {
     UnnamedConfigurable configurable = getConfigurable();
@@ -191,7 +188,6 @@ public class ConfigurableWrapper implements SearchableConfigurable {
       myKids = kids;
     }
 
-    
     @Override
     public Configurable[] getConfigurables() {
       return myKids;

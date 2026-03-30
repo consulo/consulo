@@ -520,7 +520,7 @@ public class PathsVerifier<BinaryType extends FilePatch> {
 
       VirtualFile nextChild = child.findChild(piece);
       if (nextChild == null) {
-        nextChild = VirtualFileUtil.createDirectories(child.getPath() + '/' + piece);
+        nextChild = Objects.requireNonNull(VirtualFileUtil.createDirectories(child.getPath() + '/' + piece));
         myCreatedDirectories.add(nextChild);
       }
       child = nextChild;

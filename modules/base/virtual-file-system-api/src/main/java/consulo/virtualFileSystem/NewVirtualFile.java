@@ -15,10 +15,11 @@
  */
 package consulo.virtualFileSystem;
 
-import consulo.application.ApplicationManager;
+import consulo.annotation.access.RequiredReadAction;
+import consulo.application.Application;
 import consulo.virtualFileSystem.encoding.EncodingRegistry;
-
 import org.jspecify.annotations.Nullable;
+
 import java.io.IOException;
 import java.util.Collection;
 
@@ -26,21 +27,19 @@ import java.util.Collection;
  * @author max
  */
 public abstract class NewVirtualFile extends VirtualFile implements VirtualFileWithId {
-
   @Override
+  @RequiredReadAction
   public boolean isValid() {
-    ApplicationManager.getApplication().assertReadAccessAllowed();
+    Application.get().assertReadAccessAllowed();
     return exists();
   }
 
   @Override
-  
   public byte[] contentsToByteArray() throws IOException {
     throw new IOException("Cannot get content of " + this);
   }
 
   @Override
-  
   public abstract NewVirtualFileSystem getFileSystem();
 
   @Override
@@ -59,14 +58,13 @@ public abstract class NewVirtualFile extends VirtualFile implements VirtualFileW
   public abstract void setTimeStamp(long time) throws IOException;
 
   @Override
-  
   public abstract CharSequence getNameSequence();
 
   @Override
   public abstract int getId();
 
   @Override
-  public void refresh(boolean asynchronous, boolean recursive, Runnable postRunnable) {
+  public void refresh(boolean asynchronous, boolean recursive, @Nullable Runnable postRunnable) {
     RefreshQueue.getInstance().refresh(asynchronous, recursive, postRunnable, this);
   }
 
@@ -82,7 +80,7 @@ public abstract class NewVirtualFile extends VirtualFile implements VirtualFileW
   public abstract void markClean();
 
   @Override
-  public void move(Object requestor, VirtualFile newParent) throws IOException {
+  public void move(@Nullable Object requestor, VirtualFile newParent) throws IOException {
     if (!exists()) {
       throw new IOException("File to move does not exist: " + getPath());
     }
@@ -106,7 +104,6 @@ public abstract class NewVirtualFile extends VirtualFile implements VirtualFileW
     });
   }
 
-  
   public abstract Collection<VirtualFile> getCachedChildren();
 
   /**
@@ -114,7 +111,6 @@ public abstract class NewVirtualFile extends VirtualFile implements VirtualFileW
    */
   public abstract Iterable<VirtualFile> iterInDbChildren();
 
-  
   @Deprecated
   //@ApiStatus.Experimental
   public Iterable<VirtualFile> iterInDbChildrenWithoutLoadingVfsFromOtherProjects() {

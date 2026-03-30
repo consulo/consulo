@@ -31,29 +31,26 @@ import java.util.Map;
  * @since 2025-03-17
  */
 public class AttributesFlyweightBuilderImpl implements AttributesFlyweightBuilder {
-    private ColorValue myForeground;
-    private ColorValue myBackground;
+    private @Nullable ColorValue myForeground;
+    private @Nullable ColorValue myBackground;
     private int myFontType;
-    private ColorValue myEffectColor;
-    private EffectType myEffectType;
+    private @Nullable ColorValue myEffectColor;
+    private @Nullable EffectType myEffectType;
     private Map<EffectType, ColorValue> myAdditionalEffects = Map.of();
-    private ColorValue myErrorStripeColor;
+    private @Nullable ColorValue myErrorStripeColor;
 
-    
     @Override
     public AttributesFlyweightBuilder withForeground(ColorValue foreground) {
         myForeground = foreground;
         return this;
     }
 
-    
     @Override
     public AttributesFlyweightBuilder withBackground(ColorValue background) {
         myBackground = background;
         return this;
     }
 
-    
     @Override
     public AttributesFlyweightBuilder withEffect(EffectType effectType, @Nullable ColorValue effectColor) {
         myEffectColor = effectColor;
@@ -61,39 +58,39 @@ public class AttributesFlyweightBuilderImpl implements AttributesFlyweightBuilde
         return this;
     }
 
-    
     @Override
     public AttributesFlyweightBuilder withAdditionalEffect(EffectType effectType, @Nullable ColorValue effectColor) {
-        if (myAdditionalEffects.isEmpty()) {
+        if (myAdditionalEffects.isEmpty() && effectColor != null) {
             myAdditionalEffects = new LinkedHashMap<>();
         }
 
-        myAdditionalEffects.put(effectType, effectColor);
+        if (effectColor != null) {
+            myAdditionalEffects.put(effectType, effectColor);
+        }
+        else {
+            myAdditionalEffects.remove(effectType);
+        }
         return this;
     }
 
-    
     @Override
     public AttributesFlyweightBuilder withErrorStripeColor(ColorValue errorStripeColor) {
         myErrorStripeColor = errorStripeColor;
         return this;
     }
 
-    
     @Override
     public AttributesFlyweightBuilder withBoldFont() {
         myFontType = BitUtil.set(myFontType, Font.BOLD, true);
         return this;
     }
 
-    
     @Override
     public AttributesFlyweightBuilder withItalicFont() {
         myFontType = BitUtil.set(myFontType, Font.ITALIC, true);
         return this;
     }
 
-    
     @Override
     public AttributesFlyweight build() {
         return AttributesFlyweight.create(myForeground,

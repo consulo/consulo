@@ -18,6 +18,7 @@ package consulo.ide.impl.idea.openapi.vfs.ex.dummy;
 
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.localize.VirtualFileSystemLocalize;
+import org.jspecify.annotations.Nullable;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -42,7 +43,7 @@ class VirtualFileDirectoryImpl extends VirtualFileImpl {
   }
 
   @Override
-  public VirtualFile[] getChildren() {
+  public VirtualFile @Nullable [] getChildren() {
     return myChildren.size() == 0 ? EMPTY_ARRAY : myChildren.toArray(new VirtualFile[myChildren.size()]);
   }
 

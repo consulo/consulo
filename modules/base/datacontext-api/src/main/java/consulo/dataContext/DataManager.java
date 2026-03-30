@@ -91,7 +91,7 @@ public interface DataManager {
     throw new UnsupportedOperationException();
   }
 
-  public static DataProvider getDataProvider(javax.swing.@Nullable JComponent component) {
+  public static DataProvider getDataProvider(javax.swing.JComponent component) {
     return (DataProvider)component.getClientProperty(CLIENT_PROPERTY_DATA_PROVIDER);
   }
 

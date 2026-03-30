@@ -45,7 +45,7 @@ public class PlatformVirtualFileManager extends BaseVirtualFileManager {
     }
 
     @Override
-    public Image getFileIcon(VirtualFile file, @Nullable ComponentManager project, @Iconable.IconFlags int flags) {
+    public @Nullable Image getFileIcon(VirtualFile file, @Nullable ComponentManager project, @Iconable.IconFlags int flags) {
         return VirtualFileSystemInternalHelper.getInstance().getFileIcon(file, project, flags);
     }
 
@@ -84,11 +84,10 @@ public class PlatformVirtualFileManager extends BaseVirtualFileManager {
     }
 
     @Override
-    public VirtualFile findFileById(int id) {
+    public @Nullable VirtualFile findFileById(int id) {
         return myManagingFS.findFileById(id);
     }
 
-    
     @Override
     public CharSequence getVFileName(int nameId) {
         return FileNameCache.getVFileName(nameId);

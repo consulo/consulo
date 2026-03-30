@@ -304,7 +304,7 @@ public class JBTerminalSystemSettingsProvider extends DefaultSettingsProvider {
         }
 
         @Override
-        public TextAttributes getAttributes(TextAttributesKey key) {
+        public @Nullable TextAttributes getAttributes(@Nullable TextAttributesKey key) {
             if (myOwnAttributes.containsKey(key)) {
                 return myOwnAttributes.get(key);
             }

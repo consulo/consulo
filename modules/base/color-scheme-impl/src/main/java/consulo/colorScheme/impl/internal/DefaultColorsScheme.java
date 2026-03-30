@@ -88,7 +88,7 @@ public class DefaultColorsScheme extends AbstractColorsScheme implements ReadOnl
   }
 
   @Override
-  public void setColor(EditorColorKey key, ColorValue color) {
+  public void setColor(EditorColorKey key, @Nullable ColorValue color) {
   }
 
   @Override

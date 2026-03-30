@@ -190,8 +190,8 @@ public class CopyrightConfigurable extends NamedConfigurable<CopyrightProfile> i
     }
 
     @Override
-    public String getBannerSlogan() {
-        return myCopyrightProfile.getName();
+    public LocalizeValue getBannerSlogan() {
+        return LocalizeValue.of(myCopyrightProfile.getName());
     }
 
     @Override

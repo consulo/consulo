@@ -22,17 +22,17 @@ import consulo.dataContext.DataProvider;
 import consulo.dataContext.GetDataRule;
 import consulo.ui.ex.CopyProvider;
 import consulo.util.dataholder.Key;
+import org.jspecify.annotations.Nullable;
 
 @ExtensionImpl
 public class CopyProviderRule implements GetDataRule<CopyProvider> {
-  
   @Override
   public Key<CopyProvider> getKey() {
     return CopyProvider.KEY;
   }
 
   @Override
-  public CopyProvider getData(DataProvider dataProvider) {
+  public @Nullable CopyProvider getData(DataProvider dataProvider) {
     Editor editor = dataProvider.getDataUnchecked(Editor.KEY);
     return editor instanceof EditorEx editorEx ? editorEx.getCopyProvider() : null;
   }

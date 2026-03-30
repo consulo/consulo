@@ -1,6 +1,8 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.virtualFileSystem.impl.internal.entry;
 
+import consulo.annotation.access.RequiredWriteAction;
+import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.util.lang.CharArrayUtil;
 import consulo.util.lang.LocalTimeCounter;
@@ -77,12 +79,10 @@ public abstract class VirtualFileSystemEntry extends InternalNewVirtualFile {
   }
 
   @Override
-  
   public String getName() {
     return getNameSequence().toString();
   }
 
-  
   @Override
   public CharSequence getNameSequence() {
     return FileNameCache.getVFileName(getNameId());
@@ -158,7 +158,6 @@ public abstract class VirtualFileSystemEntry extends InternalNewVirtualFile {
     }
   }
 
-  
   protected char[] appendPathOnFileSystem(int accumulatedPathLength, int[] positionRef) {
     CharSequence name = getNameSequence();
 
@@ -177,7 +176,6 @@ public abstract class VirtualFileSystemEntry extends InternalNewVirtualFile {
   }
 
   @Override
-  
   public String getUrl() {
     String protocol = getFileSystem().getProtocol();
     int prefixLen = protocol.length() + "://".length();
@@ -187,28 +185,28 @@ public abstract class VirtualFileSystemEntry extends InternalNewVirtualFile {
   }
 
   @Override
-  
   public String getPath() {
     return new String(appendPathOnFileSystem(0, new int[]{0}));
   }
 
   @Override
-  public void delete(Object requestor) throws IOException {
-    ApplicationManager.getApplication().assertWriteAccessAllowed();
+  @RequiredWriteAction
+  public void delete(@Nullable Object requestor) throws IOException {
+    Application.get().assertWriteAccessAllowed();
     ourPersistence.deleteFile(requestor, this);
   }
 
   @Override
-  public void rename(Object requestor, String newName) throws IOException {
-    ApplicationManager.getApplication().assertWriteAccessAllowed();
+  @RequiredWriteAction
+  public void rename(@Nullable Object requestor, String newName) throws IOException {
+    Application.get().assertWriteAccessAllowed();
     if (getName().equals(newName)) return;
     validateName(newName);
     ourPersistence.renameFile(requestor, this, newName);
   }
 
   @Override
-  
-  public VirtualFile createChildData(Object requestor, String name) throws IOException {
+  public VirtualFile createChildData(@Nullable Object requestor, String name) throws IOException {
     validateName(name);
     return ourPersistence.createChildFile(requestor, this, name);
   }
@@ -238,9 +236,9 @@ public abstract class VirtualFileSystemEntry extends InternalNewVirtualFile {
     return ourPersistence.getLength(this);
   }
 
-  
   @Override
-  public VirtualFile copy(Object requestor, VirtualFile newParent, String copyName) throws IOException {
+  @RequiredWriteAction
+  public VirtualFile copy(@Nullable Object requestor, VirtualFile newParent, String copyName) throws IOException {
     if (getFileSystem() != newParent.getFileSystem()) {
       throw new IOException(VirtualFileSystemLocalize.fileCopyError(newParent.getPresentableUrl()).get());
     }
@@ -253,8 +251,9 @@ public abstract class VirtualFileSystemEntry extends InternalNewVirtualFile {
   }
 
   @Override
-  public void move(Object requestor, VirtualFile newParent) throws IOException {
-    ApplicationManager.getApplication().assertWriteAccessAllowed();
+  @RequiredWriteAction
+  public void move(@Nullable Object requestor, VirtualFile newParent) throws IOException {
+    Application.get().assertWriteAccessAllowed();
 
     if (getFileSystem() != newParent.getFileSystem()) {
       throw new IOException(VirtualFileSystemLocalize.fileMoveError(newParent.getPresentableUrl()).get());
@@ -282,8 +281,8 @@ public abstract class VirtualFileSystemEntry extends InternalNewVirtualFile {
   }
 
   @Override
-  
-  public VirtualFile createChildDirectory(Object requestor, String name) throws IOException {
+  @RequiredWriteAction
+  public VirtualFile createChildDirectory(@Nullable Object requestor, String name) throws IOException {
     validateName(name);
     return ourPersistence.createChildDirectory(requestor, this, name);
   }
@@ -321,8 +320,9 @@ public abstract class VirtualFileSystemEntry extends InternalNewVirtualFile {
     ((PersistentFSImpl)PersistentFS.getInstance()).incStructuralModificationCount();
   }
 
+  @RequiredWriteAction
   public void setParent(VirtualFile newParent) {
-    ApplicationManager.getApplication().assertWriteAccessAllowed();
+    Application.get().assertWriteAccessAllowed();
 
     VirtualDirectoryImpl parent = getParent();
     parent.removeChild(this);
@@ -343,13 +343,11 @@ public abstract class VirtualFileSystemEntry extends InternalNewVirtualFile {
     mySegment.vfsData.invalidateFile(myId);
   }
 
-  
   @Override
   public Charset getCharset() {
     return isCharsetSet() ? super.getCharset() : computeCharset();
   }
 
-  
   private Charset computeCharset() {
     Charset charset;
     if (isDirectory()) {
@@ -443,7 +441,6 @@ public abstract class VirtualFileSystemEntry extends InternalNewVirtualFile {
     return false;
   }
 
-  
   @Override
   public FileType getFileType() {
     CachedFileType cache = myFileType;
@@ -461,7 +458,6 @@ public abstract class VirtualFileSystemEntry extends InternalNewVirtualFile {
       return "NULL";
     }
 
-    
     @Override
     public NewVirtualFileSystem getFileSystem() {
       throw new UnsupportedOperationException();
@@ -482,13 +478,11 @@ public abstract class VirtualFileSystemEntry extends InternalNewVirtualFile {
       throw new UnsupportedOperationException();
     }
 
-    
     @Override
     public Collection<VirtualFile> getCachedChildren() {
       throw new UnsupportedOperationException();
     }
 
-    
     @Override
     public Iterable<VirtualFile> iterInDbChildren() {
       throw new UnsupportedOperationException();

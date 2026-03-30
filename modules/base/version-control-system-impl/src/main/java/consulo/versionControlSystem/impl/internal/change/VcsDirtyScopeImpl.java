@@ -74,7 +74,7 @@ public final class VcsDirtyScopeImpl extends VcsModifiableDirtyScope implements 
       for (FilePath filePath : paths) {
         VirtualFile vFile = filePath.getVirtualFile();
         if (vFile != null && vFile.isValid() && vFile.isDirectory()) {
-          for (VirtualFile child : vFile.getChildren()) {
+          for (VirtualFile child : vFile.getRequiredChildren()) {
             result.add(VcsUtil.getFilePath(child));
           }
         }

@@ -60,10 +60,7 @@ import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 
 import javax.swing.*;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Supplier;
 
 /**
@@ -115,7 +112,7 @@ public class ViewOfflineResultsAction extends AnAction implements DumbAware {
         Map<String, Map<String, Set<OfflineProblemDescriptor>>> resMap = new HashMap<>();
         String[] profileName = new String[1];
         Runnable process = () -> {
-            VirtualFile[] files = virtualFile.getChildren();
+            List<VirtualFile> files = virtualFile.getRequiredChildren();
             try {
                 for (final VirtualFile inspectionFile : files) {
                     if (inspectionFile.isDirectory()) {

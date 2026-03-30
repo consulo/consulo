@@ -27,44 +27,37 @@ import org.jspecify.annotations.Nullable;
  * @author yole
  */
 public class CoreVirtualFilePointerManager extends SimpleModificationTracker implements VirtualFilePointerManager, Disposable {
-  
   @Override
   public VirtualFilePointer create(String url, Disposable parent, @Nullable VirtualFilePointerListener listener) {
     return new LightFilePointer(url);
   }
 
-  
   @Override
   public VirtualFilePointer create(VirtualFile file, Disposable parent, @Nullable VirtualFilePointerListener listener) {
     return new LightFilePointer(file);
   }
 
-  
   @Override
   public VirtualFilePointer duplicate(VirtualFilePointer pointer, Disposable parent, @Nullable VirtualFilePointerListener listener) {
     return new LightFilePointer(pointer.getUrl());
   }
 
-  
   @Override
   public VirtualFilePointerContainer createContainer(Disposable parent) {
     return createContainer(parent, null);
   }
 
-  
   @Override
   public VirtualFilePointerContainer createContainer(Disposable parent, @Nullable VirtualFilePointerListener listener) {
     return new VirtualFilePointerContainerImpl(this, parent, listener);
   }
 
-  
   @Override
-  public VirtualFilePointer createDirectoryPointer(String url, boolean recursively, Disposable parent, VirtualFilePointerListener listener) {
+  public VirtualFilePointer createDirectoryPointer(String url, boolean recursively, Disposable parent, @Nullable VirtualFilePointerListener listener) {
     return create(url, parent, listener);
   }
 
   @Override
   public void dispose() {
-
   }
 }
