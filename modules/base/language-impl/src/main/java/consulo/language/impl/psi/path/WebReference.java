@@ -59,7 +59,6 @@ public class WebReference extends PsiReferenceBase<PsiElement> {
         return myUrl != null ? myUrl : getValue();
     }
 
-    
     @Override
     @RequiredReadAction
     public Object[] getVariants() {
@@ -88,7 +87,6 @@ public class WebReference extends PsiReferenceBase<PsiElement> {
             return getUrl();
         }
 
-        
         @Override
         @RequiredReadAction
         public TextRange getTextRange() {

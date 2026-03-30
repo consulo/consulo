@@ -42,6 +42,7 @@ import consulo.application.progress.ProgressIndicatorProvider;
 import consulo.project.Project;
 import consulo.project.internal.SingleProjectHolder;
 import org.jetbrains.annotations.Contract;
+import org.jspecify.annotations.Nullable;
 
 public class LeafPsiElement extends LeafElement implements consulo.language.psi.LeafPsiElement, NavigationItem {
   private static final Logger LOG = Logger.getInstance(LeafPsiElement.class);
@@ -307,7 +308,7 @@ public class LeafPsiElement extends LeafElement implements consulo.language.psi.
   }
 
   @Override
-  public String getName() {
+  public @Nullable String getName() {
     return null;
   }
 

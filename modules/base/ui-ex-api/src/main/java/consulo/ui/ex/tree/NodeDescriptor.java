@@ -26,7 +26,7 @@ import java.util.Comparator;
 public abstract class NodeDescriptor<E> {
   private final NodeDescriptor myParentDescriptor;
 
-  protected String myName;
+  protected @Nullable String myName;
   protected Image myIcon;
 
   protected ColorValue myColor;
@@ -60,10 +60,10 @@ public abstract class NodeDescriptor<E> {
   public abstract E getElement();
 
   public String toString() {
-    return myName;
+    return String.valueOf(myName);
   }
 
-  public String getName() {
+  public @Nullable String getName() {
     return myName;
   }
 

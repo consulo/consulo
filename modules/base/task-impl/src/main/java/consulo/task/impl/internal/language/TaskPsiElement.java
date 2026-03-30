@@ -50,7 +50,6 @@ public class TaskPsiElement extends FakePsiElement {
         return true;
     }
 
-    
     @Override
     public PsiManager getManager() {
         return myPsiManager;
@@ -61,7 +60,6 @@ public class TaskPsiElement extends FakePsiElement {
         return PsiFileFactory.getInstance(getProject()).createFileFromText("foo.txt", "");
     }
 
-    
     @Override
     @RequiredReadAction
     public String getName() {
