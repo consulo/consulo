@@ -217,9 +217,8 @@
                 <include>org.jdom:jdom-xpath-jaxen</include>
                 <include>consulo.internal:forms_rt</include>
                 <include>consulo.internal:pty4j</include>
-                <include>consulo.internal:jediterm</include>
+                <include>consulo.internal:jediterm-core</include>
                 <include>consulo.internal:build.serviceMessages</include>
-                <include>consulo.internal:purejavacomm</include>
                 <include>consulo:kava.beans</include>
                 <!--External libraries-->
                 <include>net.java.dev.jna:jna-jpms</include>

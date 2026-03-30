@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2023 consulo.io
+ * Copyright 2013-2026 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -46,7 +46,6 @@ public class DesktopAWTTerminalConsoleFactory implements TerminalConsoleFactory 
     }
 
     @Override
-    
     public JediTerminalConsole create(TerminalSession session, TerminalConsoleSettings settings, Disposable parentDisposable) {
         JBTerminalSystemSettingsProvider provider = new JBTerminalSystemSettingsProvider(myApplication, settings, parentDisposable);
 
@@ -58,7 +57,6 @@ public class DesktopAWTTerminalConsoleFactory implements TerminalConsoleFactory 
         return widget;
     }
 
-    
     @Override
     public JediTerminalConsole createCustom(Disposable parentDisposable,
                                             BiFunction<TerminalDataStream, Terminal, JediEmulator> jediEmulatorFactory,
@@ -68,8 +66,14 @@ public class DesktopAWTTerminalConsoleFactory implements TerminalConsoleFactory 
 
         JBTerminalWidget widget = new JBTerminalWidget(provider) {
             @Override
-            protected TerminalStarter createTerminalStarter(JediTerminal terminal, TtyConnector connector) {
-                return new TerminalStarter(terminal, connector, new TtyBasedArrayDataStream(connector)) {
+            protected TerminalStarter createTerminalStarter(JediTerminal terminal, TtyConnector conn) {
+                return new TerminalStarter(
+                    terminal,
+                    conn,
+                    new TtyBasedArrayDataStream(conn, getTypeAheadManager()::onTerminalStateChanged),
+                    getTypeAheadManager(),
+                    getExecutorServiceManager()
+                ) {
                     @Override
                     protected JediEmulator createEmulator(TerminalDataStream dataStream, Terminal terminal) {
                         return jediEmulatorFactory.apply(dataStream, terminal);

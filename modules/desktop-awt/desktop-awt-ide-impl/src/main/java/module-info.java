@@ -49,7 +49,8 @@ open module consulo.desktop.awt.ide.impl {
     requires gnu.trove;
 
     requires pty4j;
-    requires jediterm;
+    requires jediterm.core;
+    requires jediterm.ui;
 
     requires com.formdev.flatlaf;
     requires com.formdev.flatlaf.swingx;
