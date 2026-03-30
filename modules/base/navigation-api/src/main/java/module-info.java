@@ -1,7 +1,10 @@
+import org.jspecify.annotations.NullMarked;
+
 /**
  * @author VISTALL
- * @since 03/02/2022
+ * @since 2022-02-03
  */
+@NullMarked
 module consulo.navigation.api {
     requires transitive consulo.application.api;
     requires transitive consulo.virtual.file.system.api;
