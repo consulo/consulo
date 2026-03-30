@@ -15,6 +15,7 @@
  */
 package consulo.fileChooser;
 
+import consulo.fileChooser.localize.FileChooserLocalize;
 import consulo.platform.Platform;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.virtualFileSystem.VirtualFile;
@@ -74,13 +75,13 @@ public class FileChooserDescriptorFactory {
 
   public static FileChooserDescriptor getDirectoryChooserDescriptor(String aSearchedObjectName) {
     FileChooserDescriptor singleFolderDescriptor = createSingleFolderDescriptor();
-    singleFolderDescriptor.setTitle(FileChooserBundle.message("file.chooser.select.object.title", aSearchedObjectName));
+    singleFolderDescriptor.withTitleValue(FileChooserLocalize.fileChooserSelectObjectTitle(aSearchedObjectName));
     return singleFolderDescriptor;
   }
 
   public static FileChooserDescriptor getFileChooserDescriptor(String aSearchedObjectName) {
     FileChooserDescriptor fileChooserDescriptor = createSingleFileNoJarsDescriptor();
-    fileChooserDescriptor.setTitle(FileChooserBundle.message("file.chooser.select.object.title", aSearchedObjectName));
+    fileChooserDescriptor.withTitleValue(FileChooserLocalize.fileChooserSelectObjectTitle(aSearchedObjectName));
     return fileChooserDescriptor;
   }
 

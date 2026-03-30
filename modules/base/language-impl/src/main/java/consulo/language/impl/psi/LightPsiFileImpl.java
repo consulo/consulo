@@ -115,7 +115,6 @@ public abstract class LightPsiFileImpl extends PsiElementBase implements PsiFile
         return clone;
     }
 
-    
     @Override
     @RequiredReadAction
     public String getName() {

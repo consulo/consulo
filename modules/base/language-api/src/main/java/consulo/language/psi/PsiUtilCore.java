@@ -65,19 +65,16 @@ public class PsiUtilCore {
 
     private static class NullPsiElement implements PsiElement {
         @Override
-        
         public Project getProject() {
             throw createException();
         }
 
-        
         @Override
         @RequiredReadAction
         public Language getLanguage() {
             throw createException();
         }
 
-        
         @Override
         @RequiredReadAction
         public LanguageVersion getLanguageVersion() {
@@ -89,7 +86,6 @@ public class PsiUtilCore {
             throw createException();
         }
 
-        
         @Override
         @RequiredReadAction
         public PsiElement[] getChildren() {
@@ -130,7 +126,6 @@ public class PsiUtilCore {
             throw createException();
         }
 
-        
         @Override
         @RequiredReadAction
         public TextRange getTextRange() {
@@ -172,7 +167,6 @@ public class PsiUtilCore {
             throw createException();
         }
 
-        
         @Override
         @RequiredReadAction
         public char[] textToCharArray() {
@@ -304,7 +298,6 @@ public class PsiUtilCore {
         }
 
         @Override
-        
         public PsiReference[] getReferences() {
             throw createException();
         }
@@ -340,13 +333,11 @@ public class PsiUtilCore {
         }
 
         @Override
-        
         public GlobalSearchScope getResolveScope() {
             throw createException();
         }
 
         @Override
-        
         public SearchScope getUseScope() {
             throw createException();
         }
@@ -405,25 +396,21 @@ public class PsiUtilCore {
             throw createException();
         }
 
-        
         @Override
         public PsiFile getOriginalFile() {
             throw createException();
         }
 
-        
         @Override
         public FileType getFileType() {
             throw createException();
         }
 
-        
         @Override
         public PsiFile[] getPsiRoots() {
             throw createException();
         }
 
-        
         @Override
         public FileViewProvider getViewProvider() {
             throw createException();
@@ -439,7 +426,6 @@ public class PsiUtilCore {
             throw createException();
         }
 
-        
         @Override
         @RequiredReadAction
         public String getName() {
@@ -490,7 +476,6 @@ public class PsiUtilCore {
         }
     }
 
-    
     public static PsiElement[] toPsiElementArray(Collection<? extends PsiElement> collection) {
         if (collection.isEmpty()) {
             return PsiElement.EMPTY_ARRAY;
@@ -559,7 +544,6 @@ public class PsiUtilCore {
         return false;
     }
 
-    
     @RequiredReadAction
     public static PsiElement getElementAtOffset(PsiFile file, int offset) {
         PsiElement elt = file.findElementAt(offset);
@@ -585,7 +569,6 @@ public class PsiUtilCore {
         return viewProvider.getPsi(viewProvider.getBaseLanguage());
     }
 
-    
     public static PsiFile[] toPsiFileArray(Collection<? extends PsiFile> collection) {
         if (collection.isEmpty()) {
             return PsiFile.EMPTY_ARRAY;
@@ -711,7 +694,6 @@ public class PsiUtilCore {
         return parent;
     }
 
-    
     public static Project getProjectInReadAction(PsiElement element) {
         return Application.get().runReadAction((Supplier<Project>) element::getProject);
     }
@@ -726,7 +708,6 @@ public class PsiUtilCore {
         return element == null ? null : getElementType(element.getNode());
     }
 
-    
     @RequiredReadAction
     public static Language getLanguageAtOffset(PsiFile file, int offset) {
         PsiElement elt = file.findElementAt(offset);
@@ -742,7 +723,6 @@ public class PsiUtilCore {
         return findLanguageFromElement(elt);
     }
 
-    
     @RequiredReadAction
     public static Language findLanguageFromElement(PsiElement elt) {
         if (elt.getFirstChild() == null) { //is leaf
@@ -755,7 +735,6 @@ public class PsiUtilCore {
         return elt.getLanguage();
     }
 
-    
     @RequiredReadAction
     public static LanguageVersion findLanguageVersionFromElement(PsiElement elt) {
         if (elt.getFirstChild() == null) { //is leaf
@@ -768,7 +747,6 @@ public class PsiUtilCore {
         return elt.getLanguageVersion();
     }
 
-    
     @RequiredReadAction
     public static PsiFile[] virtualToPsiFiles(VirtualFile[] files, Project project) {
         PsiManager manager = PsiManager.getInstance(project);
@@ -782,7 +760,6 @@ public class PsiUtilCore {
         return PsiUtilCore.toPsiFileArray(result);
     }
 
-    
     @RequiredReadAction
     public static PsiFile[] virtualToPsiFiles(List<VirtualFile> files, Project project) {
         PsiManager manager = PsiManager.getInstance(project);

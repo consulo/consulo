@@ -64,19 +64,17 @@ public final class FileChooserTextBoxBuilder {
 
             String text = myController.myAccessor.getValue(myController.myTextBox);
 
-            FileChooser.chooseFile(fileChooserDescriptor, myController.myProject, myController.mySelectedFileMapper.apply(text)).
-                doWhenDone((f) -> {
-                    myController.myAccessor.setValue(myController.myTextBox, f.getPresentableUrl());
-                });
+            FileChooser.chooseFile(fileChooserDescriptor, myController.myProject, myController.mySelectedFileMapper.apply(text))
+                .doWhenDone((f) -> myController.myAccessor.setValue(myController.myTextBox, f.getPresentableUrl()));
         }
     }
 
     public static class Controller implements PseudoComponent {
         private final TextBox myTextBox;
         private final TextComponentAccessor<TextBox> myAccessor;
-        private final ComponentManager myProject;
+        private final @Nullable ComponentManager myProject;
         private final FileChooserDescriptor myFileChooserDescriptor;
-        private final Function<String, VirtualFile> mySelectedFileMapper;
+        private final Function<String, @Nullable VirtualFile> mySelectedFileMapper;
         private final LocalizeValue myDialogTitle;
         private final LocalizeValue myDialogDescription;
 
@@ -121,25 +119,22 @@ public final class FileChooserTextBoxBuilder {
         }
 
         @RequiredUIAccess
-        
         public String getValue() {
             return StringUtil.notNullize(myAccessor.getValue(myTextBox));
         }
 
         @RequiredUIAccess
-        
         @Override
         public TextBox getComponent() {
             return myTextBox;
         }
     }
 
-    
     public static FileChooserTextBoxBuilder create(@Nullable ComponentManager project) {
         return new FileChooserTextBoxBuilder(project);
     }
 
-    private final ComponentManager myProject;
+    private final @Nullable ComponentManager myProject;
 
     private LocalizeValue myDialogTitle = UILocalize.fileChooserDefaultTitle();
 
@@ -153,14 +148,14 @@ public final class FileChooserTextBoxBuilder {
 
     private boolean myDisableCompletion;
 
-    private Disposable myDisposable;
+    private @Nullable Disposable myDisposable = null;
 
-    private FileChooserTextBoxBuilder(ComponentManager project) {
+    private FileChooserTextBoxBuilder(@Nullable ComponentManager project) {
         myProject = project;
         myActions.add(STUB);
     }
 
-    private Function<String, VirtualFile> mySelectedFileMapper = directoryName -> {
+    private Function<String, @Nullable VirtualFile> mySelectedFileMapper = directoryName -> {
         if (StringUtil.isEmptyOrSpaces(directoryName)) {
             return null;
         }
@@ -178,33 +173,28 @@ public final class FileChooserTextBoxBuilder {
         return path;
     };
 
-    
     public FileChooserTextBoxBuilder dialogTitle(LocalizeValue dialogTitle) {
         myDialogTitle = dialogTitle;
         return this;
     }
 
-    
     @Deprecated
     @DeprecationInfo("Use #dialogTitle(LocalizeValue)")
     public FileChooserTextBoxBuilder dialogTitle(String dialogTitle) {
         return dialogTitle(LocalizeValue.of(dialogTitle));
     }
 
-    
     public FileChooserTextBoxBuilder dialogDescription(LocalizeValue dialogDescription) {
         myDialogDescription = dialogDescription;
         return this;
     }
 
-    
     @Deprecated
     @DeprecationInfo("Use #dialogDescription(LocalizeValue)")
     public FileChooserTextBoxBuilder dialogDescription(String dialogDescription) {
         return dialogTitle(LocalizeValue.of(dialogDescription));
     }
 
-    
     public FileChooserTextBoxBuilder fileChooserDescriptor(FileChooserDescriptor chooserDescriptor) {
         myFileChooserDescriptor = chooserDescriptor;
         return this;
@@ -215,7 +205,6 @@ public final class FileChooserTextBoxBuilder {
         return this;
     }
 
-    
     public FileChooserTextBoxBuilder firstActions(AnAction... actions) {
         for (AnAction action : actions) {
             myActions.addFirst(action);
@@ -223,7 +212,6 @@ public final class FileChooserTextBoxBuilder {
         return this;
     }
 
-    
     public FileChooserTextBoxBuilder lastActions(AnAction... actions) {
         for (AnAction action : actions) {
             myActions.addLast(action);
@@ -231,20 +219,17 @@ public final class FileChooserTextBoxBuilder {
         return this;
     }
 
-    
     public FileChooserTextBoxBuilder disableCompletion() {
         myDisableCompletion = true;
         return this;
     }
 
-    
     public FileChooserTextBoxBuilder uiDisposable(Disposable disposable) {
         myDisposable = disposable;
         return this;
     }
 
     @RequiredUIAccess
-    
     public Controller build() {
         return new Controller(this);
     }

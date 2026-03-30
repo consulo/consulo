@@ -23,10 +23,10 @@ import org.jspecify.annotations.Nullable;
 import java.io.File;
 
 public class FileElement {
-  private final VirtualFile myFile;
+  private final @Nullable VirtualFile myFile;
   private final String myName;
-  private String myPath;
-  private FileElement myParent;
+  private @Nullable String myPath = null;
+  private @Nullable FileElement myParent = null;
 
   public FileElement(@Nullable VirtualFile file, String name) {
     myFile = file;
@@ -37,11 +37,11 @@ public class FileElement {
     myParent = parent;
   }
 
-  public FileElement getParent() {
+  public @Nullable FileElement getParent() {
     return myParent;
   }
 
-  public final VirtualFile getFile() {
+  public final @Nullable VirtualFile getFile() {
     return myFile;
   }
 
@@ -49,7 +49,6 @@ public class FileElement {
     return myName;
   }
 
-  
   public final String getPath() {
     if (myPath == null) {
       StringBuilder sb = new StringBuilder();
@@ -83,7 +82,7 @@ public class FileElement {
 
   @Override
   public final String toString() {
-    return myName != null ? myName : "";
+    return myName;
   }
 
   public final boolean isHidden() {

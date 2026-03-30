@@ -20,6 +20,7 @@ import consulo.annotation.internal.MigratedExtensionsTo;
 import consulo.component.util.localize.AbstractBundle;
 import consulo.fileChooser.localize.FileChooserLocalize;
 import org.jetbrains.annotations.PropertyKey;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -36,8 +37,7 @@ public class FileChooserBundle extends AbstractBundle {
     super(BUNDLE);
   }
 
-  
-  public static String message(@PropertyKey(resourceBundle = BUNDLE) String key, Object... params) {
+  public static @Nullable String message(@PropertyKey(resourceBundle = BUNDLE) String key, Object... params) {
     return INSTANCE.getMessage(key, params);
   }
 }

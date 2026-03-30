@@ -26,7 +26,7 @@ import java.util.Comparator;
 public abstract class NodeDescriptor<E> {
   private final NodeDescriptor myParentDescriptor;
 
-  protected String myName;
+  protected @Nullable String myName;
   protected Image myIcon;
 
   protected ColorValue myColor;
