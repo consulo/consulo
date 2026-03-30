@@ -36,17 +36,15 @@ import java.util.Map;
 
 /**
  * @author VISTALL
- * @since 22:38/15.10.13
+ * @since 2013-10-15
  */
 public class DesktopGraphBuilderImpl implements GraphBuilder {
   private List<GraphNode<?>> myGraphNodes = new ArrayList<GraphNode<?>>();
 
   public DesktopGraphBuilderImpl() {
-
   }
 
   @Override
-  
   public Component getComponent() {
     mxGraph graph = new mxGraph();
     graph.setCellsResizable(false);
@@ -99,9 +97,8 @@ public class DesktopGraphBuilderImpl implements GraphBuilder {
     }
   }
 
-  
   @Override
-  public <E> GraphNode<E> createNode(String name, @Nullable Image icon, @Nullable E value, GraphPositionStrategy strategy) {
+  public <E extends @Nullable Object> GraphNode<E> createNode(String name, @Nullable Image icon, E value, GraphPositionStrategy strategy) {
     GraphNodeImpl<E> graphNode = new GraphNodeImpl<>(name, icon, value, strategy);
     myGraphNodes.add(graphNode);
     return graphNode;

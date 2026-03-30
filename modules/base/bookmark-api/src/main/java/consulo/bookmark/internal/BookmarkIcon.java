@@ -26,22 +26,22 @@ import consulo.ui.image.ImageEffects;
 import consulo.ui.image.ImageKey;
 import consulo.ui.image.canvas.Canvas2D;
 import consulo.ui.style.ComponentColors;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
  * @since 2025-07-19
  */
 public class BookmarkIcon {
-    private record MyCache(Image gutterImage, Image normalImage) {
+    private record MyCache(Image gutterImage, Image actionImage) {
         public Image getImage(boolean gutter) {
-            return gutter ? gutterImage : normalImage;
+            return gutter ? gutterImage : actionImage;
         }
     }
 
     //0..9  + A..Z
     // Gutter + Action icon
-    @SuppressWarnings("unchecked")
-    private static final MyCache[] ourMnemonicImageCache = new MyCache[36];
+    private static final @Nullable MyCache[] ourMnemonicImageCache = new MyCache[36];
 
     public static Image getDefaultIcon(boolean gutter) {
         return gutter ? BookmarkIconGroup.gutterBookmark() : BookmarkIconGroup.actionBookmark();

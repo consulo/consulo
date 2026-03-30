@@ -6,6 +6,7 @@ import org.jspecify.annotations.NullMarked;
  */
 @NullMarked
 module consulo.bookmark.api {
+    requires transitive consulo.annotation;
     requires transitive consulo.document.api;
     requires transitive consulo.project.api;
     requires transitive consulo.navigation.api;
