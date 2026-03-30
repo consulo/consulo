@@ -4,7 +4,10 @@ package consulo.project;
 import consulo.annotation.DeprecationInfo;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
-import consulo.application.*;
+import consulo.application.AccessToken;
+import consulo.application.Application;
+import consulo.application.NonBlockingReadAction;
+import consulo.application.ReadAction;
 import consulo.application.dumb.DumbAware;
 import consulo.application.dumb.IndexNotReadyException;
 import consulo.application.dumb.PossiblyDumbAware;
@@ -130,14 +133,14 @@ public abstract class DumbService {
      *
      * @throws ProcessCanceledException if the project is closed during dumb mode
      */
-    public <T> T runReadActionInSmartMode(Supplier<T> r) {
+    public <T> @Nullable T runReadActionInSmartMode(Supplier<T> r) {
         SimpleReference<T> result = SimpleReference.create();
         runReadActionInSmartMode(() -> result.set(r.get()));
         return result.get();
     }
 
     public @Nullable <T> T tryRunReadActionInSmartMode(Supplier<T> task, @Nullable String notification) {
-        if (ApplicationManager.getApplication().isReadAccessAllowed()) {
+        if (Application.get().isReadAccessAllowed()) {
             try {
                 return task.get();
             }
@@ -169,7 +172,7 @@ public abstract class DumbService {
 
         while (true) {
             waitForSmartMode();
-            boolean success = AccessRule.read(() -> {
+            boolean success = ReadAction.compute(() -> {
                 if (getProject().isDisposed()) {
                     throw new ProcessCanceledException();
                 }
@@ -404,7 +407,7 @@ public abstract class DumbService {
      *
      * @see #setAlternativeResolveEnabled(boolean)
      */
-    public <V, E extends Throwable> V runWithAlternativeResolveEnabled(ThrowableSupplier<V, E> runnable) throws E {
+    public <V, E extends Throwable> @Nullable V runWithAlternativeResolveEnabled(ThrowableSupplier<V, E> runnable) throws E {
         setAlternativeResolveEnabled(true);
         try {
             return runnable.get();
