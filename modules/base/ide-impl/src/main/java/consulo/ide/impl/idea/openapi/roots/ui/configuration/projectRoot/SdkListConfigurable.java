@@ -168,7 +168,6 @@ public class SdkListConfigurable extends BaseStructureConfigurable implements Ap
         return false;
     }
 
-    
     @Override
     public LocalizeValue getDisplayName() {
         return ProjectLocalize.globalBundlesDisplayName();
@@ -180,7 +179,6 @@ public class SdkListConfigurable extends BaseStructureConfigurable implements Ap
     }
 
     @Override
-    
     public String getId() {
         return ID;
     }
@@ -235,12 +233,10 @@ public class SdkListConfigurable extends BaseStructureConfigurable implements Ap
         TreeUtil.expandAll(getTree());
     }
 
-    
     private static MyNode createSdkGroupNode(SdkType key) {
-        return new MyNode(new TextConfigurable<>(key, key.getDisplayName(), "", "", key.getGroupIcon()), true);
+        return new MyNode(new TextConfigurable<>(key, key.getDisplayName(), LocalizeValue.empty(), "", key.getGroupIcon()), true);
     }
 
-    
     @Override
     protected Collection<? extends ProjectStructureElement> getProjectStructureElements() {
         SettingsSdksModel sdksModel = myShowSettingsUtil.getSdksModel();
@@ -360,7 +356,6 @@ public class SdkListConfigurable extends BaseStructureConfigurable implements Ap
         return super.isModified() || sdksModel.isModified();
     }
 
-    
     @Override
     protected List<? extends AnAction> createCopyActions(boolean fromPopup) {
         return Collections.singletonList(new CopySdkAction());

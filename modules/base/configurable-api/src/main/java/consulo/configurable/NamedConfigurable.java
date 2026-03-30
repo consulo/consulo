@@ -13,10 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.configurable;
 
 import consulo.disposer.Disposable;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.platform.base.localize.CommonLocalize;
 import consulo.ui.Component;
@@ -115,8 +115,8 @@ public abstract class NamedConfigurable<T> implements Configurable, MasterDetail
   public abstract T getEditableObject();
 
   @Override
-  public String getBannerSlogan() {
-    return "";
+  public LocalizeValue getBannerSlogan() {
+    return LocalizeValue.empty();
   }
 
   @RequiredUIAccess

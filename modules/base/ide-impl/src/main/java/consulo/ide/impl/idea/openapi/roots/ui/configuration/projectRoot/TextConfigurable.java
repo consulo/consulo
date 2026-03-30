@@ -28,16 +28,12 @@ import javax.swing.*;
  */
 public class TextConfigurable<T> extends NamedConfigurable<T> {
   private final T myObject;
-  private final String myBannerSlogan;
+  private final LocalizeValue myBannerSlogan;
   private final LocalizeValue myDisplayName;
   private final Image myClosedIcon;
   private final String myDescriptionText;
 
-  public TextConfigurable(T object,
-                          LocalizeValue displayName,
-                          String bannerSlogan,
-                          String descriptionText,
-                          Image closedIcon) {
+  public TextConfigurable(T object, LocalizeValue displayName, LocalizeValue bannerSlogan, String descriptionText, Image closedIcon) {
     myDisplayName = displayName;
     myBannerSlogan = bannerSlogan;
     myDescriptionText = descriptionText;
@@ -76,7 +72,7 @@ public class TextConfigurable<T> extends NamedConfigurable<T> {
   }
 
   @Override
-  public String getBannerSlogan() {
+  public LocalizeValue getBannerSlogan() {
     return myBannerSlogan;
   }
 

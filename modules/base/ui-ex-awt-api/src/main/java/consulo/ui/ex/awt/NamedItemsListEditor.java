@@ -252,8 +252,8 @@ public abstract class NamedItemsListEditor<T> extends MasterDetailsComponent {
         }
 
         @Override
-        public String getBannerSlogan() {
-            return myNamer.getName(myItem);
+        public LocalizeValue getBannerSlogan() {
+            return LocalizeValue.of(myNamer.getName(myItem));
         }
 
         @Override

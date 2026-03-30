@@ -146,8 +146,8 @@ public class ModuleConfigurable extends ProjectStructureElementConfigurable<Modu
     }
 
     @Override
-    public String getBannerSlogan() {
-        return ProjectLocalize.projectRootsModuleBannerText(myModuleName).get();
+    public LocalizeValue getBannerSlogan() {
+        return ProjectLocalize.projectRootsModuleBannerText(myModuleName);
     }
 
     @Override

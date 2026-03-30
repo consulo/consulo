@@ -133,12 +133,12 @@ public class LibraryConfigurable extends ProjectStructureElementConfigurable<Lib
     }
 
     @Override
-    public String getBannerSlogan() {
+    public LocalizeValue getBannerSlogan() {
         LibraryTable libraryTable = myLibrary.getTable();
         String libraryType = libraryTable == null
             ? ProjectLocalize.moduleLibraryDisplayName(1).get()
             : libraryTable.getPresentation().getDisplayName(false);
-        return ProjectLocalize.projectRootsLibraryBannerText(getDisplayName(), libraryType).get();
+        return ProjectLocalize.projectRootsLibraryBannerText(getDisplayName(), libraryType);
     }
 
     @Override

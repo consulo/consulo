@@ -92,7 +92,7 @@ public abstract class MasterDetailsComponent implements Configurable, MasterDeta
                 }
 
                 myState.setLastEditedConfigurable(getNodePathString(node)); //survive after rename;
-                myDetails.setText(node.getConfigurable().getBannerSlogan());
+                myDetails.setText(node.getConfigurable().getBannerSlogan().getNullIfEmpty());
                 ((DefaultTreeModel)myTree.getModel()).reload(node);
                 fireItemsChangedExternally(MasterDetailsComponent.this);
             }
@@ -672,7 +672,7 @@ public abstract class MasterDetailsComponent implements Configurable, MasterDeta
 
     @RequiredUIAccess
     protected void updateSelection(@Nullable MasterDetailsConfigurable configurable) {
-        myDetails.setText(configurable != null ? configurable.getBannerSlogan() : null);
+        myDetails.setText(configurable != null ? configurable.getBannerSlogan().getNullIfEmpty() : null);
 
         myCurrentConfigurable = configurable;
 
@@ -912,8 +912,8 @@ public abstract class MasterDetailsComponent implements Configurable, MasterDeta
                 }
 
                 @Override
-                public String getBannerSlogan() {
-                    return "";
+                public LocalizeValue getBannerSlogan() {
+                    return LocalizeValue.empty();
                 }
 
                 @Override
