@@ -25,19 +25,17 @@ import java.util.function.Supplier;
 public class EventDispatcher<T extends EventListener> {
     private static final Logger LOG = Logger.getInstance(EventDispatcher.class);
 
-    private T myMulticaster;
+    private @Nullable T myMulticaster = null;
 
     private final DisposableList<T> myListeners = DisposableList.create();
     
     private final Class<T> myListenerClass;
     private final @Nullable Map<String, Object> myMethodReturnValues;
 
-    
     public static <T extends EventListener> EventDispatcher<T> create(Class<T> listenerClass) {
         return new EventDispatcher<>(listenerClass, null);
     }
 
-    
     public static <T extends EventListener> EventDispatcher<T> create(Class<T> listenerClass, Map<String, Object> methodReturnValues) {
         assertNonVoidMethodReturnValuesAreDeclared(methodReturnValues, listenerClass);
         return new EventDispatcher<>(listenerClass, methodReturnValues);
@@ -71,7 +69,6 @@ public class EventDispatcher<T extends EventListener> {
         myMethodReturnValues = methodReturnValues;
     }
 
-    
     public static <T> T createMulticaster(Class<T> listenerClass, @Nullable Map<String, Object> methodReturnValues, Supplier<? extends Iterable<T>> listeners) {
         LOG.assertTrue(listenerClass.isInterface(), "listenerClass must be an interface");
         InvocationHandler handler = (proxy, method, args) -> {
@@ -106,7 +103,6 @@ public class EventDispatcher<T extends EventListener> {
         }
     }
 
-    
     public T getMulticaster() {
         T multicaster = myMulticaster;
         if (multicaster == null) {
@@ -161,7 +157,6 @@ public class EventDispatcher<T extends EventListener> {
         return !myListeners.isEmpty();
     }
 
-    
     public List<T> getListeners() {
         return myListeners;
     }

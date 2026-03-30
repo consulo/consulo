@@ -22,6 +22,11 @@ import java.lang.reflect.InvocationHandler;
  * @since 2020-09-10
  */
 public interface AdvancedProxyFacade {
-  
-  <T> T create(Class<T> superClass, Class[] interfaces, InvocationHandler invocationHandler, boolean interceptObjectMethods, Object[] superConstructorArguments);
+    <T> T create(
+        Class<T> superClass,
+        Class[] interfaces,
+        InvocationHandler invocationHandler,
+        boolean interceptObjectMethods,
+        Object[] superConstructorArguments
+    );
 }
