@@ -60,11 +60,16 @@ public class AttributesFlyweightBuilderImpl implements AttributesFlyweightBuilde
 
     @Override
     public AttributesFlyweightBuilder withAdditionalEffect(EffectType effectType, @Nullable ColorValue effectColor) {
-        if (myAdditionalEffects.isEmpty()) {
+        if (myAdditionalEffects.isEmpty() && effectColor != null) {
             myAdditionalEffects = new LinkedHashMap<>();
         }
 
-        myAdditionalEffects.put(effectType, effectColor);
+        if (effectColor != null) {
+            myAdditionalEffects.put(effectType, effectColor);
+        }
+        else {
+            myAdditionalEffects.remove(effectType);
+        }
         return this;
     }
 

@@ -2,7 +2,6 @@
 package consulo.execution.ui.console;
 
 import consulo.application.Application;
-import consulo.application.ApplicationManager;
 import consulo.application.ui.UISettings;
 import consulo.application.util.ConcurrentFactoryMap;
 import consulo.codeEditor.*;
@@ -23,11 +22,11 @@ import consulo.util.collection.ContainerUtil;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.text.StringTokenizer;
 import consulo.virtualFileSystem.fileType.FileType;
-
 import org.jspecify.annotations.Nullable;
+
 import java.awt.*;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
