@@ -21,12 +21,10 @@ import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
- * @since 22:36/15.10.13
+ * @since 2013-10-15
  */
 public interface GraphBuilder {
-    
-    <E> GraphNode<E> createNode(String name, @Nullable Image icon, @Nullable E value, GraphPositionStrategy strategy);
+    <E extends @Nullable Object> GraphNode<E> createNode(String name, @Nullable Image icon, E value, GraphPositionStrategy strategy);
 
-    
     Component getComponent();
 }
