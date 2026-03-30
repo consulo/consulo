@@ -30,14 +30,13 @@ import org.jspecify.annotations.Nullable;
  */
 @ExtensionImpl
 public class UsageTargetsRule implements GetDataRule<UsageTarget[]> {
-  
   @Override
   public Key<UsageTarget[]> getKey() {
     return UsageView.USAGE_TARGETS_KEY;
   }
 
   @Override
-  public @Nullable UsageTarget[] getData(DataProvider dataProvider) {
+  public UsageTarget @Nullable [] getData(DataProvider dataProvider) {
     return UsageTargetUtil.findUsageTargets(dataProvider);
   }
 }

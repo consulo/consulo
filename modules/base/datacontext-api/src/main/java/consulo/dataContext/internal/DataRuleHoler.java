@@ -17,11 +17,12 @@ package consulo.dataContext.internal;
 
 import consulo.dataContext.GetDataRule;
 import consulo.util.dataholder.Key;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
- * @since 03/02/2022
+ * @since 2022-02-03
  */
 public interface DataRuleHoler {
-  <T> GetDataRule<T> getDataRule(Key<T> dataId);
+  <T> @Nullable GetDataRule<T> getDataRule(Key<T> dataId);
 }

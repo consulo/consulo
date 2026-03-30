@@ -1,7 +1,10 @@
+import org.jspecify.annotations.NullMarked;
+
 /**
  * @author VISTALL
- * @since 29/01/2022
+ * @since 2022-01-29
  */
+@NullMarked
 module consulo.datacontext.api {
   // todo obsolete dependency
   requires java.desktop;

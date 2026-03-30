@@ -22,7 +22,6 @@ import org.jspecify.annotations.Nullable;
 
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface GetDataRule<T> {
-    
     Key<T> getKey();
 
     @Nullable T getData(DataProvider dataProvider);

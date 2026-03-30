@@ -23,17 +23,17 @@ import consulo.dataContext.GetDataRule;
 import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.text.TextEditorProvider;
 import consulo.util.dataholder.Key;
+import org.jspecify.annotations.Nullable;
 
 @ExtensionImpl
 public class FileEditorRule implements GetDataRule<FileEditor> {
-  
   @Override
   public Key<FileEditor> getKey() {
     return FileEditor.KEY;
   }
 
   @Override
-  public FileEditor getData(DataProvider dataProvider) {
+  public @Nullable FileEditor getData(DataProvider dataProvider) {
     Editor editor = dataProvider.getDataUnchecked(Editor.KEY);
     if (editor == null) {
       return null;

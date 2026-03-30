@@ -24,8 +24,8 @@ import org.jspecify.annotations.Nullable;
  */
 public class TypeSafeDataProviderAdapter implements DataProvider, DataSink {
   private final TypeSafeDataProvider myProvider;
-  private Key<?> myLastKey = null;
-  private Object myValue = null;
+  private @Nullable Key<?> myLastKey = null;
+  private @Nullable Object myValue = null;
 
   public TypeSafeDataProviderAdapter(TypeSafeDataProvider provider) {
     myProvider = provider;
