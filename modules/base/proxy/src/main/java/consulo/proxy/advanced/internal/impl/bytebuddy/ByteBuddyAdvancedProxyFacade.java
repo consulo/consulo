@@ -30,7 +30,6 @@ import net.bytebuddy.dynamic.scaffold.TypeValidation;
 import net.bytebuddy.implementation.InvocationHandlerAdapter;
 import net.bytebuddy.matcher.ElementMatcher;
 import net.bytebuddy.matcher.ElementMatchers;
-import org.jspecify.annotations.Nullable;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationHandler;
@@ -49,7 +48,6 @@ public class ByteBuddyAdvancedProxyFacade implements AdvancedProxyFacade {
     myBuddy = new ByteBuddy().with(ClassFileVersion.JAVA_V11).with(TypeValidation.DISABLED);
   }
 
-  
   @Override
   @SuppressWarnings("unchecked")
   public <T> T create(

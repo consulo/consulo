@@ -36,7 +36,7 @@ public final class ProxyHelper {
     ClassLoader bestLoader = null;
     ClassLoader nonPluginLoader = null;
     if (interfaces != null && interfaces.length > 0) {
-      for (Class anInterface : interfaces) {
+      for (Class<?> anInterface : interfaces) {
         ClassLoader loader = anInterface.getClassLoader();
         if (loader instanceof PluginClassLoader pluginClassLoader) {
           int order = PluginHolderModificator.getPluginLoadOrder(pluginClassLoader.getPluginId());
