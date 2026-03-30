@@ -22,7 +22,9 @@ import consulo.application.Application;
 import consulo.util.collection.Maps;
 import consulo.util.lang.lazy.LazyValue;
 import org.jdom.Element;
+import org.jspecify.annotations.Nullable;
 
+import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.function.Supplier;
@@ -126,8 +128,8 @@ public final class TextAttributesKey implements Comparable<TextAttributesKey> {
         LazyValue.notNull(() -> Application.get().getInstance(TextAttributeKeyDefaultsProvider.class));
 
     private final String myExternalName;
-    private TextAttributes myDefaultAttributes = NULL_ATTRIBUTES;
-    private TextAttributesKey myFallbackAttributeKey;
+    private @Nullable TextAttributes myDefaultAttributes = NULL_ATTRIBUTES;
+    private @Nullable TextAttributesKey myFallbackAttributeKey = null;
 
     private TextAttributesKey(String externalName) {
         myExternalName = externalName;
@@ -135,14 +137,13 @@ public final class TextAttributesKey implements Comparable<TextAttributesKey> {
 
     //read external only
     public TextAttributesKey(Element element) {
-        this(JDOMExternalizerUtil.readField(element, "myExternalName"));
+        this(Objects.requireNonNull(JDOMExternalizerUtil.readField(element, "myExternalName")));
         Element myDefaultAttributesElement = JDOMExternalizerUtil.getOption(element, "myDefaultAttributes");
         if (myDefaultAttributesElement != null) {
             myDefaultAttributes = new TextAttributes(myDefaultAttributesElement);
         }
     }
 
-    
     public static TextAttributesKey find(String externalName) {
         return Maps.cacheOrGet(ourRegistry, externalName, new TextAttributesKey(externalName));
     }
@@ -166,12 +167,12 @@ public final class TextAttributesKey implements Comparable<TextAttributesKey> {
 
         if (myDefaultAttributes != NULL_ATTRIBUTES) {
             Element option = JDOMExternalizerUtil.writeOption(element, "myDefaultAttributes");
-            myDefaultAttributes.writeExternal(option);
+            Objects.requireNonNull(myDefaultAttributes).writeExternal(option);
         }
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(@Nullable Object o) {
         if (this == o) {
             return true;
         }
@@ -194,7 +195,7 @@ public final class TextAttributesKey implements Comparable<TextAttributesKey> {
      *
      * @return the text attributes.
      */
-    public TextAttributes getDefaultAttributes() {
+    public @Nullable TextAttributes getDefaultAttributes() {
         if (myDefaultAttributes == NULL_ATTRIBUTES) {
             myDefaultAttributes = null;
             TextAttributeKeyDefaultsProvider provider = ourDefaultsProvider.get();
@@ -208,7 +209,7 @@ public final class TextAttributesKey implements Comparable<TextAttributesKey> {
         return myDefaultAttributes;
     }
 
-    public TextAttributesKey getFallbackAttributeKey() {
+    public @Nullable TextAttributesKey getFallbackAttributeKey() {
         return myFallbackAttributeKey;
     }
 

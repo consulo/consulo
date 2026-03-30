@@ -15,10 +15,12 @@
  */
 package consulo.colorScheme;
 
+import org.jspecify.annotations.Nullable;
+
 import java.util.Map;
 
 public interface TextAttributesScheme {
-    TextAttributes getAttributes(TextAttributesKey key);
+    @Nullable TextAttributes getAttributes(@Nullable TextAttributesKey key);
 
     default Map<String, Object> getMetaProperties() {
         return Map.of();

@@ -1,7 +1,10 @@
+import org.jspecify.annotations.NullMarked;
+
 /**
  * @author VISTALL
- * @since 19-Feb-22
+ * @since 2022-02-19
  */
+@NullMarked
 module consulo.color.scheme.api {
     // TODO obsolete dep
     requires java.desktop;

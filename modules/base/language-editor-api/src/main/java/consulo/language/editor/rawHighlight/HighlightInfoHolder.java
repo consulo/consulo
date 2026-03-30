@@ -41,7 +41,6 @@ public class HighlightInfoHolder {
         myFilters = filters;
     }
 
-    
     public AnnotationSession getAnnotationSession() {
         return myAnnotationSession;
     }
@@ -80,17 +79,14 @@ public class HighlightInfoHolder {
         return myInfos.size();
     }
 
-    
     public HighlightInfo get(int i) {
         return myInfos.get(i);
     }
 
-    
     public Project getProject() {
         return myContextFile.getProject();
     }
 
-    
     public PsiFile getContextFile() {
         return myContextFile;
     }
@@ -104,7 +100,6 @@ public class HighlightInfoHolder {
         return true;
     }
 
-    
     public TextAttributesScheme getColorsScheme() {
         return TextAttributesKey::getDefaultAttributes;
     }

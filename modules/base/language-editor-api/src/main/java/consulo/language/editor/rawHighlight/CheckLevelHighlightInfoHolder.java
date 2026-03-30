@@ -36,19 +36,16 @@ public class CheckLevelHighlightInfoHolder extends HighlightInfoHolder {
         myHolder = holder;
     }
 
-    
     @Override
     public TextAttributesScheme getColorsScheme() {
         return myHolder.getColorsScheme();
     }
 
-    
     @Override
     public PsiFile getContextFile() {
         return myHolder.getContextFile();
     }
 
-    
     @Override
     public Project getProject() {
         return myHolder.getProject();
@@ -89,13 +86,11 @@ public class CheckLevelHighlightInfoHolder extends HighlightInfoHolder {
         return myHolder.size();
     }
 
-    
     @Override
     public HighlightInfo get(int i) {
         return myHolder.get(i);
     }
 
-    
     @Override
     public AnnotationSession getAnnotationSession() {
         return myHolder.getAnnotationSession();

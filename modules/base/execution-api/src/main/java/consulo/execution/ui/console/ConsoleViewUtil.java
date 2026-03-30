@@ -1,6 +1,7 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.execution.ui.console;
 
+import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.application.ui.UISettings;
 import consulo.application.util.ConcurrentFactoryMap;
@@ -33,12 +34,10 @@ import java.util.concurrent.ConcurrentHashMap;
  * @author peter
  */
 public class ConsoleViewUtil {
-
   public static final Key<Boolean> EDITOR_IS_CONSOLE_HISTORY_VIEW = Key.create("EDITOR_IS_CONSOLE_HISTORY_VIEW");
 
   private static final Key<Boolean> REPLACE_ACTION_ENABLED = Key.create("REPLACE_ACTION_ENABLED");
 
-  
   public static EditorEx setupConsoleEditor(Project project, boolean foldingOutlineShown, boolean lineMarkerAreaShown) {
     EditorFactory editorFactory = EditorFactory.getInstance();
     Document document = ((InternalEditorFactory)editorFactory).createDocument(true);
@@ -49,8 +48,7 @@ public class ConsoleViewUtil {
   }
 
   public static void setupConsoleEditor(EditorEx editor, boolean foldingOutlineShown, boolean lineMarkerAreaShown) {
-    ApplicationManager.getApplication().runReadAction(() -> {
-
+    Application.get().runReadAction(() -> {
       EditorSettings editorSettings = editor.getSettings();
       editorSettings.setLineMarkerAreaShown(lineMarkerAreaShown);
       editorSettings.setIndentGuidesShown(false);
@@ -84,17 +82,14 @@ public class ConsoleViewUtil {
     }
   }
 
-  
   public static DelegateColorScheme updateConsoleColorScheme(EditorColorsScheme scheme) {
     return new DelegateColorScheme(scheme) {
-      
       @Override
       public ColorValue getDefaultBackground() {
         ColorValue color = getColor(ConsoleViewContentType.CONSOLE_BACKGROUND_KEY);
         return color == null ? super.getDefaultBackground() : color;
       }
 
-      
       @Override
       public FontPreferences getFontPreferences() {
         return getConsoleFontPreferences();
@@ -115,7 +110,6 @@ public class ConsoleViewUtil {
         return getConsoleLineSpacing();
       }
 
-      
       @Override
       public Font getFont(EditorFontType key) {
         return super.getFont(EditorFontType.getConsoleType(key));
@@ -203,7 +197,6 @@ public class ConsoleViewUtil {
     }
   }
 
-  
   public static ConsoleViewContentType getContentTypeForToken(IElementType tokenType, SyntaxHighlighter highlighter) {
     TextAttributesKey[] keys = highlighter.getTokenHighlights(tokenType);
     if (keys.length == 0) {
@@ -222,7 +215,6 @@ public class ConsoleViewUtil {
     }
   }
 
-  
   public static List<Filter> computeConsoleFilters(Project project, @Nullable ConsoleView consoleView, SearchScope searchScope) {
     List<Filter> result = new ArrayList<>();
     ConsoleFilterProvider.FILTER_PROVIDERS.forEachExtensionSafe(eachProvider -> {

@@ -268,7 +268,6 @@ public class JBTerminalSystemSettingsProvider extends DefaultTabbedSettingsProvi
             return myGlobalScheme;
         }
 
-        
         @Override
         public String getName() {
             return getGlobal().getName();
@@ -299,7 +298,7 @@ public class JBTerminalSystemSettingsProvider extends DefaultTabbedSettingsProvi
         }
 
         @Override
-        public TextAttributes getAttributes(TextAttributesKey key) {
+        public @Nullable TextAttributes getAttributes(@Nullable TextAttributesKey key) {
             if (myOwnAttributes.containsKey(key)) {
                 return myOwnAttributes.get(key);
             }
@@ -311,7 +310,6 @@ public class JBTerminalSystemSettingsProvider extends DefaultTabbedSettingsProvi
             myOwnAttributes.put(key, attributes);
         }
 
-        
         @Override
         public ColorValue getDefaultBackground() {
             ColorValue color = getGlobal().getColor(ConsoleViewContentType.CONSOLE_BACKGROUND_KEY);
@@ -428,7 +426,6 @@ public class JBTerminalSystemSettingsProvider extends DefaultTabbedSettingsProvi
             myGlobalScheme = scheme == null ? EditorColorsManager.getInstance().getGlobalScheme() : scheme;
         }
 
-        
         @Override
         public FontPreferences getConsoleFontPreferences() {
             return myFontPreferences;
