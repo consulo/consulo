@@ -21,6 +21,7 @@ import consulo.annotation.internal.MigratedExtensionsTo;
 import consulo.component.util.localize.AbstractBundle;
 import consulo.virtualFileSystem.localize.VirtualFileSystemLocalize;
 import org.jetbrains.annotations.PropertyKey;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author yole
@@ -35,11 +36,11 @@ public class VfsBundle extends AbstractBundle {
     super("consulo.virtualFileSystem.VfsBundle");
   }
 
-  public static String message(@PropertyKey(resourceBundle = "consulo.virtualFileSystem.VfsBundle") String key) {
+  public static @Nullable String message(@PropertyKey(resourceBundle = "consulo.virtualFileSystem.VfsBundle") String key) {
     return ourInstance.getMessage(key);
   }
 
-  public static String message(@PropertyKey(resourceBundle = "consulo.virtualFileSystem.VfsBundle") String key, Object... params) {
+  public static @Nullable String message(@PropertyKey(resourceBundle = "consulo.virtualFileSystem.VfsBundle") String key, Object... params) {
     return ourInstance.getMessage(key, params);
   }
 }

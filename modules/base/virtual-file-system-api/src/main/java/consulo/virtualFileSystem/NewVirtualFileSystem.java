@@ -1,6 +1,7 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.virtualFileSystem;
 
+import consulo.annotation.access.RequiredWriteAction;
 import consulo.util.io.FileAttributes;
 import consulo.virtualFileSystem.event.VirtualFileListener;
 
@@ -37,11 +38,10 @@ public abstract class NewVirtualFileSystem implements FileSystemInterface, Cachi
   }
 
   @Override
-  public String resolveSymLink(VirtualFile file) {
+  public @Nullable String resolveSymLink(VirtualFile file) {
     return null;
   }
 
-  
   public abstract String extractRootPath(String path);
 
   @Override
@@ -61,32 +61,34 @@ public abstract class NewVirtualFileSystem implements FileSystemInterface, Cachi
 
   public abstract int getRank();
 
-  
   @Override
-  public abstract VirtualFile copyFile(Object requestor, VirtualFile file, VirtualFile newParent, String copyName) throws IOException;
+  @RequiredWriteAction
+  public abstract VirtualFile copyFile(@Nullable Object requestor, VirtualFile file, VirtualFile newParent, String copyName) throws IOException;
 
   @Override
-  
-  public abstract VirtualFile createChildDirectory(Object requestor, VirtualFile parent, String dir) throws IOException;
-
-  
-  @Override
-  public abstract VirtualFile createChildFile(Object requestor, VirtualFile parent, String file) throws IOException;
+  @RequiredWriteAction
+  public abstract VirtualFile createChildDirectory(@Nullable Object requestor, VirtualFile parent, String dir) throws IOException;
 
   @Override
-  public abstract void deleteFile(Object requestor, VirtualFile file) throws IOException;
+  @RequiredWriteAction
+  public abstract VirtualFile createChildFile(@Nullable Object requestor, VirtualFile parent, String file) throws IOException;
 
   @Override
-  public abstract void moveFile(Object requestor, VirtualFile file, VirtualFile newParent) throws IOException;
+  @RequiredWriteAction
+  public abstract void deleteFile(@Nullable Object requestor, VirtualFile file) throws IOException;
 
   @Override
-  public abstract void renameFile(Object requestor, VirtualFile file, String newName) throws IOException;
+  @RequiredWriteAction
+  public abstract void moveFile(@Nullable Object requestor, VirtualFile file, VirtualFile newParent) throws IOException;
+
+  @Override
+  @RequiredWriteAction
+  public abstract void renameFile(@Nullable Object requestor, VirtualFile file, String newName) throws IOException;
 
   public boolean markNewFilesAsDirty() {
     return false;
   }
 
-  
   public String getCanonicallyCasedName(VirtualFile file) {
     return file.getName();
   }

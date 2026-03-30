@@ -15,6 +15,7 @@
  */
 package consulo.virtualFileSystem;
 
+import consulo.annotation.access.RequiredWriteAction;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.proxy.EventDispatcher;
@@ -53,40 +54,48 @@ public abstract class BaseVirtualFileSystem implements VirtualFileSystem {
     myEventDispatcher.removeListener(listener);
   }
 
-  protected void firePropertyChanged(Object requestor,
-                                     VirtualFile file,
-                                     String propertyName,
-                                     Object oldValue,
-                                     Object newValue) {
+  @RequiredWriteAction
+  protected void firePropertyChanged(
+    @Nullable Object requestor,
+    VirtualFile file,
+    String propertyName,
+    Object oldValue,
+    Object newValue
+  ) {
     assertWriteAccessAllowed();
     VirtualFilePropertyEvent event = new VirtualFilePropertyEvent(requestor, file, propertyName, oldValue, newValue);
     myEventDispatcher.getMulticaster().propertyChanged(event);
   }
 
-  protected void fireContentsChanged(Object requestor, VirtualFile file, long oldModificationStamp) {
+  @RequiredWriteAction
+  protected void fireContentsChanged(@Nullable Object requestor, VirtualFile file, long oldModificationStamp) {
     assertWriteAccessAllowed();
     VirtualFileEvent event = new VirtualFileEvent(requestor, file, file.getParent(), oldModificationStamp, file.getModificationStamp());
     myEventDispatcher.getMulticaster().contentsChanged(event);
   }
 
+  @RequiredWriteAction
   protected void fireFileCreated(@Nullable Object requestor, VirtualFile file) {
     assertWriteAccessAllowed();
     VirtualFileEvent event = new VirtualFileEvent(requestor, file, file.getName(), file.getParent());
     myEventDispatcher.getMulticaster().fileCreated(event);
   }
 
-  protected void fireFileDeleted(Object requestor, VirtualFile file, String fileName, VirtualFile parent) {
+  @RequiredWriteAction
+  protected void fireFileDeleted(@Nullable Object requestor, VirtualFile file, String fileName, VirtualFile parent) {
     assertWriteAccessAllowed();
     VirtualFileEvent event = new VirtualFileEvent(requestor, file, fileName, parent);
     myEventDispatcher.getMulticaster().fileDeleted(event);
   }
 
-  protected void fireFileMoved(Object requestor, VirtualFile file, VirtualFile oldParent) {
+  @RequiredWriteAction
+  protected void fireFileMoved(@Nullable Object requestor, VirtualFile file, VirtualFile oldParent) {
     assertWriteAccessAllowed();
     VirtualFileMoveEvent event = new VirtualFileMoveEvent(requestor, file, oldParent, file.getParent());
     myEventDispatcher.getMulticaster().fileMoved(event);
   }
 
+  @RequiredWriteAction
   protected void fireFileCopied(@Nullable Object requestor, VirtualFile originalFile, VirtualFile createdFile) {
     assertWriteAccessAllowed();
     VirtualFileCopyEvent event = new VirtualFileCopyEvent(requestor, originalFile, createdFile);
@@ -98,36 +107,43 @@ public abstract class BaseVirtualFileSystem implements VirtualFileSystem {
     }
   }
 
-  protected void fireBeforePropertyChange(Object requestor,
-                                          VirtualFile file,
-                                          String propertyName,
-                                          Object oldValue,
-                                          Object newValue) {
+  @RequiredWriteAction
+  protected void fireBeforePropertyChange(
+    @Nullable Object requestor,
+    VirtualFile file,
+    String propertyName,
+    Object oldValue,
+    Object newValue
+  ) {
     assertWriteAccessAllowed();
     VirtualFilePropertyEvent event = new VirtualFilePropertyEvent(requestor, file, propertyName, oldValue, newValue);
     myEventDispatcher.getMulticaster().beforePropertyChange(event);
   }
 
-  protected void fireBeforeContentsChange(Object requestor, VirtualFile file) {
+  @RequiredWriteAction
+  protected void fireBeforeContentsChange(@Nullable Object requestor, VirtualFile file) {
     assertWriteAccessAllowed();
     VirtualFileEvent event = new VirtualFileEvent(requestor, file, file.getName(), file.getParent());
     myEventDispatcher.getMulticaster().beforeContentsChange(event);
   }
 
-  protected void fireBeforeFileDeletion(Object requestor, VirtualFile file) {
+  @RequiredWriteAction
+  protected void fireBeforeFileDeletion(@Nullable Object requestor, VirtualFile file) {
     assertWriteAccessAllowed();
     VirtualFileEvent event = new VirtualFileEvent(requestor, file, file.getName(), file.getParent());
     myEventDispatcher.getMulticaster().beforeFileDeletion(event);
   }
 
-  protected void fireBeforeFileMovement(Object requestor, VirtualFile file, VirtualFile newParent) {
+  @RequiredWriteAction
+  protected void fireBeforeFileMovement(@Nullable Object requestor, VirtualFile file, VirtualFile newParent) {
     assertWriteAccessAllowed();
     VirtualFileMoveEvent event = new VirtualFileMoveEvent(requestor, file, file.getParent(), newParent);
     myEventDispatcher.getMulticaster().beforeFileMovement(event);
   }
 
+  @RequiredWriteAction
   protected void assertWriteAccessAllowed() {
-    ApplicationManager.getApplication().assertWriteAccessAllowed();
+    Application.get().assertWriteAccessAllowed();
   }
 
   @Override
@@ -136,38 +152,39 @@ public abstract class BaseVirtualFileSystem implements VirtualFileSystem {
   }
 
   @Override
-  public void deleteFile(Object requestor, VirtualFile vFile) throws IOException {
+  @RequiredWriteAction
+  public void deleteFile(@Nullable Object requestor, VirtualFile vFile) throws IOException {
     throw new UnsupportedOperationException("deleteFile() not supported");
   }
 
   @Override
-  public void moveFile(Object requestor, VirtualFile vFile, VirtualFile newParent) throws IOException {
+  @RequiredWriteAction
+  public void moveFile(@Nullable Object requestor, VirtualFile vFile, VirtualFile newParent) throws IOException {
     throw new UnsupportedOperationException("move() not supported");
   }
 
   @Override
-  public void renameFile(Object requestor, VirtualFile vFile, String newName) throws IOException {
+  @RequiredWriteAction
+  public void renameFile(@Nullable Object requestor, VirtualFile vFile, String newName) throws IOException {
     throw new UnsupportedOperationException("renameFile() not supported");
   }
 
-  
   @Override
-  public VirtualFile createChildFile(Object requestor, VirtualFile vDir, String fileName) throws IOException {
+  @RequiredWriteAction
+  public VirtualFile createChildFile(@Nullable Object requestor, VirtualFile vDir, String fileName) throws IOException {
     throw new UnsupportedOperationException("createChildFile() not supported");
   }
 
-  
   @Override
-  public VirtualFile createChildDirectory(Object requestor, VirtualFile vDir, String dirName) throws IOException {
+  @RequiredWriteAction
+  public VirtualFile createChildDirectory(@Nullable Object requestor, VirtualFile vDir, String dirName) throws IOException {
     throw new UnsupportedOperationException("createChildDirectory() not supported");
   }
 
-  
   @Override
-  public VirtualFile copyFile(Object requestor,
-                              VirtualFile virtualFile,
-                              VirtualFile newParent,
-                              String copyName) throws IOException {
+  @RequiredWriteAction
+  public VirtualFile copyFile(@Nullable Object requestor, VirtualFile virtualFile, VirtualFile newParent, String copyName)
+      throws IOException {
     throw new UnsupportedOperationException("copyFile() not supported");
   }
 }

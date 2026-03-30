@@ -467,9 +467,8 @@ public abstract class AbstractFileTreeTable<T> extends TreeTable {
 
         @Override
         protected void appendChildrenTo(Collection<ConvenientNode> children) {
-            VirtualFile[] childrenf = getObject().getChildren();
             ProjectFileIndex fileIndex = ProjectRootManager.getInstance(myProject).getFileIndex();
-            for (VirtualFile child : childrenf) {
+            for (VirtualFile child : getObject().getRequiredChildren()) {
                 if (myFilter.accept(child) && fileIndex.isInContent(child)) {
                     children.add(new FileNode(child, myProject, myFilter));
                 }

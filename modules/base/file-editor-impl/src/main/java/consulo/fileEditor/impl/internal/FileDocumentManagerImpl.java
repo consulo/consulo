@@ -247,7 +247,6 @@ public class FileDocumentManagerImpl implements FileDocumentManagerEx, SafeWrite
         return false;
     }
 
-    
     private static Document createDocument(CharSequence text, VirtualFile file) {
         boolean acceptSlashR = file instanceof LightVirtualFile && StringUtil.indexOf(text, '\r') >= 0;
         boolean freeThreaded = Boolean.TRUE.equals(file.getUserData(FileViewProviderInternal.FREE_THREADED));
@@ -532,7 +531,6 @@ public class FileDocumentManagerImpl implements FileDocumentManagerEx, SafeWrite
         return fs instanceof NewVirtualFileSystem vfs && file.getTimeStamp() != vfs.getTimeStamp(file);
     }
 
-    
     public static String getLineSeparator(Document document, VirtualFile file) {
         String lineSeparator = LoadTextUtil.getDetectedLineSeparator(file);
         if (lineSeparator == null) {
@@ -543,7 +541,6 @@ public class FileDocumentManagerImpl implements FileDocumentManagerEx, SafeWrite
     }
 
     @Override
-    
     public String getLineSeparator(@Nullable VirtualFile file, @Nullable ComponentManager project) {
         String lineSeparator = file == null ? null : LoadTextUtil.getDetectedLineSeparator(file);
         if (lineSeparator == null) {
@@ -557,7 +554,6 @@ public class FileDocumentManagerImpl implements FileDocumentManagerEx, SafeWrite
         return requestWritingStatus(document, project).hasWriteAccess();
     }
 
-    
     @Override
     public WriteAccessStatus requestWritingStatus(Document document, @Nullable ComponentManager project) {
         VirtualFile file = FileDocumentManager.getInstance().getFile(document);
@@ -593,7 +589,6 @@ public class FileDocumentManagerImpl implements FileDocumentManagerEx, SafeWrite
     }
 
     @Override
-    
     public Document[] getUnsavedDocuments() {
         if (myUnsavedDocuments.isEmpty()) {
             return Document.EMPTY_ARRAY;

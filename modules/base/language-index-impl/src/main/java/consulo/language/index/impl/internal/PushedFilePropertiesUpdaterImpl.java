@@ -226,7 +226,7 @@ public final class PushedFilePropertiesUpdaterImpl implements PushedFileProperti
     @RequiredReadAction
     public void filePropertiesChanged(VirtualFile fileOrDir, Predicate<? super VirtualFile> acceptFileCondition) {
         if (fileOrDir.isDirectory()) {
-            for (VirtualFile child : fileOrDir.getChildren()) {
+            for (VirtualFile child : fileOrDir.getRequiredChildren()) {
                 if (!child.isDirectory() && acceptFileCondition.test(child)) {
                     filePropertiesChanged(child);
                 }

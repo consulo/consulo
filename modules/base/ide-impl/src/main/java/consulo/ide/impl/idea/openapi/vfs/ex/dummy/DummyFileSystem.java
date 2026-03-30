@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.vfs.ex.dummy;
 
+import consulo.annotation.access.RequiredWriteAction;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.virtualFileSystem.*;
 import consulo.virtualFileSystem.localize.VirtualFileSystemLocalize;
@@ -35,6 +36,7 @@ public class DummyFileSystem extends BaseVirtualFileSystem implements NonPhysica
     startEventPropagation();
   }
 
+  @RequiredWriteAction
   public VirtualFile createRoot(String name) {
     myRoot = new VirtualFileDirectoryImpl(this, null, name);
     fireFileCreated(null, myRoot);
@@ -59,7 +61,6 @@ public class DummyFileSystem extends BaseVirtualFileSystem implements NonPhysica
   }
 
   @Override
-  
   public String getProtocol() {
     return PROTOCOL;
   }
@@ -70,7 +71,6 @@ public class DummyFileSystem extends BaseVirtualFileSystem implements NonPhysica
     return null;
   }
 
-  
   @Override
   public String extractPresentableUrl(String path) {
     return path;
@@ -86,7 +86,8 @@ public class DummyFileSystem extends BaseVirtualFileSystem implements NonPhysica
   }
 
   @Override
-  public void deleteFile(Object requestor, VirtualFile vFile) throws IOException {
+  @RequiredWriteAction
+  public void deleteFile(@Nullable Object requestor, VirtualFile vFile) throws IOException {
     fireBeforeFileDeletion(requestor, vFile);
     VirtualFileDirectoryImpl parent = (VirtualFileDirectoryImpl)vFile.getParent();
     if (parent == null) {
@@ -98,21 +99,19 @@ public class DummyFileSystem extends BaseVirtualFileSystem implements NonPhysica
   }
 
   @Override
+  @RequiredWriteAction
   public void moveFile(Object requestor, VirtualFile vFile, VirtualFile newParent) throws IOException {
     throw new UnsupportedOperationException();
   }
 
   @Override
-  public VirtualFile copyFile(
-    Object requestor,
-    VirtualFile vFile,
-    VirtualFile newParent,
-    String copyName
-  ) throws IOException {
+  @RequiredWriteAction
+  public VirtualFile copyFile(Object requestor, VirtualFile vFile, VirtualFile newParent, String copyName) throws IOException {
     throw new UnsupportedOperationException();
   }
 
   @Override
+  @RequiredWriteAction
   public void renameFile(Object requestor, VirtualFile vFile, String newName) throws IOException {
     String oldName = vFile.getName();
     fireBeforePropertyChange(requestor, vFile, VirtualFile.PROP_NAME, oldName, newName);
@@ -121,6 +120,7 @@ public class DummyFileSystem extends BaseVirtualFileSystem implements NonPhysica
   }
 
   @Override
+  @RequiredWriteAction
   public VirtualFile createChildFile(Object requestor, VirtualFile vDir, String fileName) throws IOException {
     VirtualFileDirectoryImpl dir = ((VirtualFileDirectoryImpl)vDir);
     VirtualFileImpl child = new VirtualFileDataImpl(this, dir, fileName);
@@ -130,17 +130,19 @@ public class DummyFileSystem extends BaseVirtualFileSystem implements NonPhysica
   }
 
   @Override
+  @RequiredWriteAction
   public void fireBeforeContentsChange(Object requestor, VirtualFile file) {
     super.fireBeforeContentsChange(requestor, file);
   }
 
   @Override
+  @RequiredWriteAction
   public void fireContentsChanged(Object requestor, VirtualFile file, long oldModificationStamp) {
     super.fireContentsChanged(requestor, file, oldModificationStamp);
   }
 
   @Override
-  
+  @RequiredWriteAction
   public VirtualFile createChildDirectory(Object requestor, VirtualFile vDir, String dirName) throws IOException {
     VirtualFileDirectoryImpl dir = ((VirtualFileDirectoryImpl)vDir);
     VirtualFileImpl child = new VirtualFileDirectoryImpl(this, dir, dirName);

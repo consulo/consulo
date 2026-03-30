@@ -51,6 +51,7 @@ import org.jspecify.annotations.Nullable;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -66,7 +67,6 @@ public class PsiDirectoryImpl extends PsiElementBase implements PsiDirectory, Qu
     }
 
     @Override
-    
     public VirtualFile getVirtualFile() {
         return myFile;
     }
@@ -82,20 +82,17 @@ public class PsiDirectoryImpl extends PsiElementBase implements PsiDirectory, Qu
         return myFile.isValid() && !getProject().isDisposed();
     }
 
-    @RequiredReadAction
     @Override
-    
+    @RequiredReadAction
     public Language getLanguage() {
         return Language.ANY;
     }
 
-    
     @Override
     public PsiManager getManager() {
         return myManager;
     }
 
-    
     @Override
     @RequiredReadAction
     public String getName() {
@@ -177,13 +174,11 @@ public class PsiDirectoryImpl extends PsiElementBase implements PsiDirectory, Qu
         return myManager.findDirectory(parentFile);
     }
 
-    
     @Override
     @RequiredReadAction
     public PsiDirectory[] getSubdirectories() {
-        VirtualFile[] files = myFile.getChildren();
-        ArrayList<PsiDirectory> dirs = new ArrayList<>();
-        for (VirtualFile file : files) {
+        List<PsiDirectory> dirs = new ArrayList<>();
+        for (VirtualFile file : myFile.getRequiredChildren()) {
             PsiDirectory dir = myManager.findDirectory(file);
             if (dir != null) {
                 dirs.add(dir);
@@ -192,14 +187,12 @@ public class PsiDirectoryImpl extends PsiElementBase implements PsiDirectory, Qu
         return dirs.toArray(new PsiDirectory[dirs.size()]);
     }
 
-    
     @Override
     @RequiredReadAction
     public PsiFile[] getFiles() {
         LOG.assertTrue(myFile.isValid());
-        VirtualFile[] files = myFile.getChildren();
-        ArrayList<PsiFile> psiFiles = new ArrayList<>();
-        for (VirtualFile file : files) {
+        List<PsiFile> psiFiles = new ArrayList<>();
+        for (VirtualFile file : myFile.getRequiredChildren()) {
             PsiFile psiFile = myManager.findFile(file);
             if (psiFile != null) {
                 psiFiles.add(psiFile);
@@ -234,7 +227,7 @@ public class PsiDirectoryImpl extends PsiElementBase implements PsiDirectory, Qu
         checkValid();
         ProgressIndicatorProvider.checkCanceled();
 
-        for (VirtualFile vFile : myFile.getChildren()) {
+        for (VirtualFile vFile : myFile.getRequiredChildren()) {
             boolean isDir = vFile.isDirectory();
             if (processor instanceof PsiFileSystemItemProcessor fileSystemItemProcessor
                 && !fileSystemItemProcessor.acceptItem(vFile.getName(), isDir)) {
@@ -256,14 +249,13 @@ public class PsiDirectoryImpl extends PsiElementBase implements PsiDirectory, Qu
         return true;
     }
 
-    
     @Override
     @RequiredReadAction
     public PsiElement[] getChildren() {
         checkValid();
 
-        VirtualFile[] files = myFile.getChildren();
-        ArrayList<PsiElement> children = new ArrayList<>(files.length);
+        List<VirtualFile> files = myFile.getRequiredChildren();
+        List<PsiElement> children = new ArrayList<>(files.size());
         processChildren(element -> {
             children.add(element);
             return true;
@@ -290,7 +282,6 @@ public class PsiDirectoryImpl extends PsiElementBase implements PsiDirectory, Qu
         return null;
     }
 
-    
     @Override
     @RequiredReadAction
     public TextRange getTextRange() {
@@ -326,7 +317,6 @@ public class PsiDirectoryImpl extends PsiElementBase implements PsiDirectory, Qu
         return ""; // TODO throw new UnsupportedOperationException()
     }
 
-    
     @Override
     @RequiredReadAction
     public char[] textToCharArray() {
@@ -364,7 +354,6 @@ public class PsiDirectoryImpl extends PsiElementBase implements PsiDirectory, Qu
         return null;
     }
 
-    
     @Override
     @RequiredWriteAction
     public PsiDirectory createSubdirectory(String name) throws IncorrectOperationException {
@@ -394,7 +383,6 @@ public class PsiDirectoryImpl extends PsiElementBase implements PsiDirectory, Qu
         CheckUtil.checkWritable(this);
     }
 
-    
     @Override
     @RequiredReadAction
     public PsiFile createFile(String name) throws IncorrectOperationException {
@@ -409,7 +397,6 @@ public class PsiDirectoryImpl extends PsiElementBase implements PsiDirectory, Qu
         }
     }
 
-    
     @Override
     @RequiredReadAction
     public PsiFile copyFileFrom(String newName, PsiFile originalFile) throws IncorrectOperationException {

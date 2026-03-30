@@ -67,7 +67,7 @@ public class VfsUtil extends VfsUtilCore {
         VirtualFile toDir,
         @Nullable VirtualFileFilter filter
     ) throws IOException {
-        @SuppressWarnings("UnsafeVfsRecursion") VirtualFile[] children = fromDir.getChildren();
+        @SuppressWarnings("UnsafeVfsRecursion") List<VirtualFile> children = fromDir.getRequiredChildren();
         for (VirtualFile child : children) {
             if (!child.is(VFileProperty.SYMLINK) && !child.is(VFileProperty.SPECIAL) && (filter == null || filter.accept(child))) {
                 if (!child.isDirectory()) {
@@ -238,7 +238,6 @@ public class VfsUtil extends VfsUtilCore {
         }
     }
 
-    
     public static String toIdeaUrl(String url) {
         return toIdeaUrl(url, true);
     }
@@ -313,7 +312,6 @@ public class VfsUtil extends VfsUtilCore {
         return dir.createChildData(requestor, fileName);
     }
 
-    
     public static String[] filterNames(String[] names) {
         return VirtualFileUtil.filterNames(names);
     }
@@ -323,7 +321,7 @@ public class VfsUtil extends VfsUtilCore {
     }
 
     public static VirtualFile createDirectories(String directoryPath) throws IOException {
-        return VirtualFileUtil.createDirectories(directoryPath);
+        return Objects.requireNonNull(VirtualFileUtil.createDirectories(directoryPath));
     }
 
     public static VirtualFile createDirectoryIfMissing(VirtualFile parent, String relativePath) throws IOException {
@@ -376,7 +374,6 @@ public class VfsUtil extends VfsUtilCore {
         return null;
     }
 
-    
     public static String getReadableUrl(VirtualFile file) {
         String url = null;
         if (file.isInLocalFileSystem()) {
@@ -393,13 +390,11 @@ public class VfsUtil extends VfsUtilCore {
         return LocalFileSystem.getInstance().findFileByPath(FileUtil.toSystemIndependentName(path));
     }
 
-    
     public static VirtualFile[] getChildren(VirtualFile dir) {
         VirtualFile[] children = dir.getChildren();
         return children == null ? VirtualFile.EMPTY_ARRAY : children;
     }
 
-    
     public static List<VirtualFile> getChildren(VirtualFile dir, VirtualFileFilter filter) {
         return VirtualFileUtil.getChildren(dir, filter);
     }
@@ -424,7 +419,6 @@ public class VfsUtil extends VfsUtilCore {
         return VirtualFileUtil.extractFileName(urlOrPath);
     }
 
-    
     public static List<VirtualFile> markDirty(boolean recursive, boolean reloadChildren, VirtualFile... files) {
         return VirtualFileUtil.markDirty(recursive, reloadChildren, files);
     }
@@ -433,7 +427,6 @@ public class VfsUtil extends VfsUtilCore {
         VirtualFileUtil.markDirtyAndRefresh(async, recursive, reloadChildren, files);
     }
 
-    
     public static VirtualFile getRootFile(VirtualFile file) {
         while (true) {
             VirtualFile parent = file.getParent();
@@ -445,12 +438,10 @@ public class VfsUtil extends VfsUtilCore {
         return file;
     }
 
-    
     public static Url newLocalFileUrl(VirtualFile file) {
         return Urls.newLocalFileUrl(file.getPath());
     }
 
-    
     public static Url newFromVirtualFile(VirtualFile file) {
         if (file.isInLocalFileSystem()) {
             return Urls.newUri(file.getFileSystem().getProtocol(), file.getPath());

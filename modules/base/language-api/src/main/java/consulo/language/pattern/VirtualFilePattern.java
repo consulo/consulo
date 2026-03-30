@@ -19,6 +19,7 @@ package consulo.language.pattern;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.util.ProcessingContext;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author nik
@@ -89,7 +90,7 @@ public class VirtualFilePattern extends TreeElementPattern<VirtualFile, VirtualF
   }
 
   @Override
-  protected VirtualFile[] getChildren(VirtualFile file) {
+  protected VirtualFile @Nullable [] getChildren(VirtualFile file) {
     return file.getChildren();
   }
 }

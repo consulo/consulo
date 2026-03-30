@@ -19,6 +19,8 @@ import consulo.virtualFileSystem.VirtualFile;
 
 import org.jspecify.annotations.Nullable;
 
+import java.util.Objects;
+
 /**
  * Provides data for event which is fired when a virtual file is moved.
  *
@@ -26,13 +28,13 @@ import org.jspecify.annotations.Nullable;
  * @see VirtualFileListener#propertyChanged(VirtualFilePropertyEvent)
  */
 public class VirtualFileMoveEvent extends VirtualFileEvent {
-  private final VirtualFile myOldParent;
-  private final VirtualFile myNewParent;
+  private final @Nullable VirtualFile myOldParent;
+  private final @Nullable VirtualFile myNewParent;
 
   public VirtualFileMoveEvent(@Nullable Object requestor,
                               VirtualFile file,
-                              VirtualFile oldParent,
-                              VirtualFile newParent) {
+                              @Nullable VirtualFile oldParent,
+                              @Nullable VirtualFile newParent) {
     super(requestor, file, file.getName(), file.getParent());
     myOldParent = oldParent;
     myNewParent = newParent;
@@ -43,8 +45,17 @@ public class VirtualFileMoveEvent extends VirtualFileEvent {
    *
    * @return the parent of the file before the move.
    */
-  public VirtualFile getOldParent() {
+  public @Nullable VirtualFile getOldParent() {
     return myOldParent;
+  }
+
+  /**
+   * Returns the parent of the file before the move or throws NPE if old parent is null.
+   *
+   * @return the parent of the file before the move.
+   */
+  public VirtualFile getRequiredOldParent() {
+    return Objects.requireNonNull(myOldParent);
   }
 
   /**
@@ -52,7 +63,16 @@ public class VirtualFileMoveEvent extends VirtualFileEvent {
    *
    * @return the parent of the file after the move.
    */
-  public VirtualFile getNewParent() {
+  public @Nullable VirtualFile getNewParent() {
     return myNewParent;
+  }
+
+  /**
+   * Returns the parent of the file after the move or throws NPE if old parent is null.
+   *
+   * @return the parent of the file after the move.
+   */
+  public VirtualFile getRequiredNewParent() {
+    return Objects.requireNonNull(myNewParent);
   }
 }

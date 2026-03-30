@@ -69,8 +69,8 @@ public class ArtifactVirtualFileListener implements VirtualFileListener {
 
   @Override
   public void fileMoved(VirtualFileMoveEvent event) {
-    String oldPath = event.getOldParent().getPath() + "/" + event.getFileName();
-    filePathChanged(oldPath, event.getNewParent().getPath() + "/" + event.getFileName());
+    String oldPath = event.getRequiredOldParent().getPath() + "/" + event.getFileName();
+    filePathChanged(oldPath, event.getRequiredNewParent().getPath() + "/" + event.getFileName());
   }
 
   private void filePathChanged(final String oldPath, final String newPath) {

@@ -15,6 +15,8 @@
  */
 package consulo.virtualFileSystem;
 
+import org.jspecify.annotations.Nullable;
+
 /**
  * @author max
  */
@@ -42,7 +44,7 @@ public class InvalidVirtualFileAccessException extends RuntimeException {
     return message;
   }
 
-  private static String hashCode(Object o) {
+  private static String hashCode(@Nullable Object o) {
     return o != null ? String.valueOf(o.hashCode()) : "-";
   }
 }

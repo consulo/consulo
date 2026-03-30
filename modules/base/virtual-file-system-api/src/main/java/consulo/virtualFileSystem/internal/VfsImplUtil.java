@@ -80,8 +80,7 @@ public class VfsImplUtil {
         return findCachedFileByPath(vfs, path).first;
     }
 
-    
-    public static Couple<NewVirtualFile> findCachedFileByPath(NewVirtualFileSystem vfs, String path) {
+    public static Couple<@Nullable NewVirtualFile> findCachedFileByPath(NewVirtualFileSystem vfs, String path) {
         Pair<NewVirtualFile, Iterable<String>> data = prepare(vfs, path);
         if (data == null) {
             return Couple.of();
@@ -186,7 +185,6 @@ public class VfsImplUtil {
     private static final Map<String, Pair<BaseArchiveFileSystem, ArchiveHandler>> ourHandlers = Maps.newHashMap(FileUtil.PATH_HASHING_STRATEGY);
     private static final Map<String, Set<String>> ourDominatorsMap = Maps.newHashMap(FileUtil.PATH_HASHING_STRATEGY);
 
-    
     public static <T extends ArchiveHandler, S extends BaseArchiveFileSystem> T getHandler(
         S vfs,
         VirtualFile entryFile,
@@ -196,7 +194,6 @@ public class VfsImplUtil {
         return getHandler(vfs, localPath, producer);
     }
 
-    
     public static <T extends ArchiveHandler, S extends BaseArchiveFileSystem> T getHandler(
         S vfs,
         String localPath,
@@ -258,11 +255,11 @@ public class VfsImplUtil {
                         }
 
                         String path = event.getPath();
-                        if (event instanceof VFilePropertyChangeEvent vFilePropertyChangeEvent) {
-                            path = vFilePropertyChangeEvent.getOldPath();
+                        if (event instanceof VFilePropertyChangeEvent pce) {
+                            path = pce.getOldPath();
                         }
-                        else if (event instanceof VFileMoveEvent vFileMoveEvent) {
-                            path = vFileMoveEvent.getOldPath();
+                        else if (event instanceof VFileMoveEvent me) {
+                            path = me.getOldPath();
                         }
 
                         VirtualFile file = event.getFile();
@@ -272,7 +269,8 @@ public class VfsImplUtil {
                         else {
                             Collection<String> affectedPaths = ourDominatorsMap.get(path);
                             if (affectedPaths != null) {
-                                affectedPaths = ContainerUtil.newArrayList(affectedPaths);  // defensive copying; original may be updated on invalidation
+                                // defensive copying; original may be updated on invalidation
+                                affectedPaths = new ArrayList<>(affectedPaths);
                                 for (String affectedPath : affectedPaths) {
                                     state = InvalidationState.invalidate(state, affectedPath);
                                 }
@@ -289,7 +287,7 @@ public class VfsImplUtil {
     }
 
     private static class InvalidationState {
-        private Set<NewVirtualFile> myRootsToRefresh;
+        private @Nullable Set<NewVirtualFile> myRootsToRefresh = null;
 
         static @Nullable InvalidationState invalidate(@Nullable InvalidationState state, String path) {
             Pair<BaseArchiveFileSystem, ArchiveHandler> handlerPair = ourHandlers.remove(path);
@@ -332,7 +330,6 @@ public class VfsImplUtil {
         }
     }
 
-    
     public static byte[] loadBytes(VirtualFile file) throws IOException {
         return RawFileLoader.getInstance().isTooLarge(file.getLength())
             ? FileUtil.loadFirstAndClose(file.getInputStream(), RawFileLoader.getInstance().getLargeFilePreviewSize())

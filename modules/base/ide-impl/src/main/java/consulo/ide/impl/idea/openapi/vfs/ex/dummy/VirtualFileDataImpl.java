@@ -19,6 +19,7 @@ import consulo.util.collection.ArrayUtil;
 import consulo.util.lang.LocalTimeCounter;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
+import org.jspecify.annotations.Nullable;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -44,7 +45,7 @@ class VirtualFileDataImpl extends VirtualFileImpl {
     }
 
     @Override
-    public VirtualFile[] getChildren() {
+    public VirtualFile @Nullable [] getChildren() {
         return null;
     }
 

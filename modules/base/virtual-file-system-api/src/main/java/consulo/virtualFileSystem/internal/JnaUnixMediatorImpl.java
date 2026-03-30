@@ -24,6 +24,7 @@ import consulo.platform.Platform;
 import consulo.platform.PlatformOperatingSystem;
 import consulo.util.io.FileAttributes;
 import consulo.util.lang.SystemProperties;
+import org.jspecify.annotations.Nullable;
 
 import java.io.File;
 import java.io.IOException;
@@ -97,7 +98,7 @@ public class JnaUnixMediatorImpl implements FileSystemMediator {
   }
 
   @Override
-  public FileAttributes getAttributes(String path) {
+  public @Nullable FileAttributes getAttributes(String path) {
     Memory buffer = new Memory(256);
     int res = Platform.current().os().isLinux() ? myLibC.__lxstat64(STAT_VER, path, buffer) : myLibC.lstat(path, buffer);
     if (res != 0) return null;
@@ -128,7 +129,7 @@ public class JnaUnixMediatorImpl implements FileSystemMediator {
   }
 
   @Override
-  public String resolveSymLink(String path) throws IOException {
+  public @Nullable String resolveSymLink(String path) throws IOException {
     try {
       return new File(path).getCanonicalPath();
     }

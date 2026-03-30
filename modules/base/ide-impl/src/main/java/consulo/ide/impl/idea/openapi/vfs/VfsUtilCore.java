@@ -328,19 +328,16 @@ public class VfsUtilCore {
         }
 
         if (root.isDirectory()) {
-            LinkedList<VirtualFile[]> queue = new LinkedList<>();
-
-            queue.add(root.getChildren());
+            Deque<List<VirtualFile>> queue = new ArrayDeque<>();
+            queue.add(root.getRequiredChildren());
 
             do {
-                VirtualFile[] files = queue.removeFirst();
-
-                for (VirtualFile file : files) {
+                for (VirtualFile file : queue.removeFirst()) {
                     if (!processor.test(file)) {
                         return false;
                     }
                     if (file.isDirectory()) {
-                        queue.add(file.getChildren());
+                        queue.add(file.getRequiredChildren());
                     }
                 }
             }
@@ -449,19 +446,17 @@ public class VfsUtilCore {
         }
 
         if (root.isDirectory() && directoryFilter.apply(root)) {
-            List<VirtualFile[]> queue = new LinkedList<>();
+            Deque<List<VirtualFile>> queue = new ArrayDeque<>();
 
-            queue.add(root.getChildren());
+            queue.add(root.getRequiredChildren());
 
             do {
-                VirtualFile[] files = queue.removeFirst();
-
-                for (VirtualFile file : files) {
+                for (VirtualFile file : queue.removeFirst()) {
                     if (!processor.test(file)) {
                         return;
                     }
                     if (file.isDirectory() && directoryFilter.apply(file)) {
-                        queue.add(file.getChildren());
+                        queue.add(file.getRequiredChildren());
                     }
                 }
             }

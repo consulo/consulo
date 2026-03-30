@@ -15,9 +15,11 @@
  */
 package consulo.virtualFileSystem.util;
 
+import consulo.annotation.access.RequiredWriteAction;
 import consulo.application.WriteAction;
 import consulo.logging.Logger;
 import consulo.platform.Platform;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.SmartList;
@@ -82,7 +84,6 @@ public final class VirtualFileUtil {
         return virtualFileManager.findFileByUrl(vfUrl);
     }
 
-    
     public static String convertFromUrl(URL url) {
         String protocol = url.getProtocol();
         String path = url.getPath();
@@ -218,7 +219,6 @@ public final class VirtualFileUtil {
         return index < 0 ? null : urlOrPath.substring(index + 1);
     }
 
-    
     public static String urlToPath(@Nullable String url) {
         if (url == null) {
             return "";
@@ -324,11 +324,9 @@ public final class VirtualFileUtil {
         return virtualFile;
     }
 
-    public static VirtualFile createDirectories(String directoryPath) throws IOException {
-        return WriteAction.compute(() -> {
-            VirtualFile res = createDirectoryIfMissing(directoryPath);
-            return res;
-        });
+    @RequiredUIAccess
+    public static @Nullable VirtualFile createDirectories(String directoryPath) throws IOException {
+        return WriteAction.compute(() -> createDirectoryIfMissing(directoryPath));
     }
 
     public static VirtualFile createDirectoryIfMissing(VirtualFile parent, String relativePath) throws IOException {
@@ -342,6 +340,7 @@ public final class VirtualFileUtil {
         return parent;
     }
 
+    @RequiredWriteAction
     public static @Nullable VirtualFile createDirectoryIfMissing(String directoryPath) throws IOException {
         String path = FileUtil.toSystemIndependentName(directoryPath);
         VirtualFile file = LocalFileSystem.getInstance().refreshAndFindFileByPath(path);
@@ -533,7 +532,7 @@ public final class VirtualFileUtil {
         int index = chars.length;
         parent = file;
         while (true) {
-            if (parent.equals(ancestor)) {
+            if (parent == null || parent.equals(ancestor)) {
                 break;
             }
             if (index < length) {
@@ -767,19 +766,17 @@ public final class VirtualFileUtil {
         }
 
         if (root.isDirectory()) {
-            LinkedList<VirtualFile[]> queue = new LinkedList<>();
+            Deque<List<VirtualFile>> queue = new ArrayDeque<>();
 
-            queue.add(root.getChildren());
+            queue.add(root.getRequiredChildren());
 
             do {
-                VirtualFile[] files = queue.removeFirst();
-
-                for (VirtualFile file : files) {
+                for (VirtualFile file : queue.removeFirst()) {
                     if (!processor.test(file)) {
                         return false;
                     }
                     if (file.isDirectory()) {
-                        queue.add(file.getChildren());
+                        queue.add(file.getRequiredChildren());
                     }
                 }
             }
@@ -795,19 +792,17 @@ public final class VirtualFileUtil {
         }
 
         if (root.isDirectory() && directoryFilter.apply(root)) {
-            LinkedList<VirtualFile[]> queue = new LinkedList<>();
+            Deque<List<VirtualFile>> queue = new ArrayDeque<>();
 
-            queue.add(root.getChildren());
+            queue.add(root.getRequiredChildren());
 
             do {
-                VirtualFile[] files = queue.removeFirst();
-
-                for (VirtualFile file : files) {
+                for (VirtualFile file : queue.removeFirst()) {
                     if (!processor.test(file)) {
                         return;
                     }
                     if (file.isDirectory() && directoryFilter.apply(file)) {
-                        queue.add(file.getChildren());
+                        queue.add(file.getRequiredChildren());
                     }
                 }
             }
@@ -815,17 +810,14 @@ public final class VirtualFileUtil {
         }
     }
 
-    
     public static File virtualToIoFile(VirtualFile file) {
         return new File(VirtualFilePathUtil.toPresentableUrl(file.getUrl()));
     }
 
-    
     public static List<File> virtualToIoFiles(Collection<VirtualFile> scope) {
         return ContainerUtil.map2List(scope, file -> virtualToIoFile(file));
     }
 
-    
     public static List<VirtualFile> markDirty(boolean recursive, boolean reloadChildren, VirtualFile... files) {
         List<VirtualFile> list = ContainerUtil.filter(files, Objects::nonNull);
         if (list.isEmpty()) {
@@ -884,10 +876,9 @@ public final class VirtualFileUtil {
         }
     }
 
-    
     public static List<VirtualFile> getChildren(VirtualFile dir, VirtualFileFilter filter) {
         List<VirtualFile> result = null;
-        for (VirtualFile child : dir.getChildren()) {
+        for (VirtualFile child : dir.getRequiredChildren()) {
             if (filter.accept(child)) {
                 if (result == null) {
                     result = new SmartList<>();
@@ -1009,7 +1000,6 @@ public final class VirtualFileUtil {
         return components;
     }
 
-    
     public static Url newFromVirtualFile(VirtualFile file) {
         if (file.isInLocalFileSystem()) {
             return Urls.newUri(file.getFileSystem().getProtocol(), file.getPath());
@@ -1020,7 +1010,6 @@ public final class VirtualFileUtil {
         }
     }
 
-    
     public static String[] filterNames(String[] names) {
         int filteredCount = 0;
         for (String string : names) {
@@ -1048,7 +1037,6 @@ public final class VirtualFileUtil {
         return name == null || name.isEmpty() || "/".equals(name) || "\\".equals(name);
     }
 
-    
     public static VirtualFile getRootFile(VirtualFile file) {
         while (true) {
             VirtualFile parent = file.getParent();

@@ -17,6 +17,7 @@ package consulo.virtualFileSystem.event;
 
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileSystem;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Objects;
 
@@ -25,28 +26,26 @@ import java.util.Objects;
  */
 public class VFileMoveEvent extends VFileEvent {
   private final VirtualFile myFile;
-  private final VirtualFile myOldParent;
-  private final VirtualFile myNewParent;
+  private final @Nullable VirtualFile myOldParent;
+  private final @Nullable VirtualFile myNewParent;
 
-  public VFileMoveEvent(Object requestor, VirtualFile file, VirtualFile newParent) {
+  public VFileMoveEvent(Object requestor, VirtualFile file, @Nullable VirtualFile newParent) {
     super(requestor, false);
     myFile = file;
     myNewParent = newParent;
     myOldParent = file.getParent();
   }
 
-  
   @Override
   public VirtualFile getFile() {
     return myFile;
   }
 
-  
-  public VirtualFile getNewParent() {
+  public @Nullable VirtualFile getNewParent() {
     return myNewParent;
   }
 
-  public VirtualFile getOldParent() {
+  public @Nullable VirtualFile getOldParent() {
     return myOldParent;
   }
 
@@ -55,19 +54,16 @@ public class VFileMoveEvent extends VFileEvent {
     return "VfsEvent[move " + myFile.getName() + " from " + myOldParent + " to " + myNewParent + "]";
   }
 
-  
   @Override
   public String getPath() {
     return computePath();
   }
 
-  
   @Override
   protected String computePath() {
     return myFile.getPath();
   }
 
-  
   @Override
   public VirtualFileSystem getFileSystem() {
     return myFile.getFileSystem();
@@ -75,38 +71,36 @@ public class VFileMoveEvent extends VFileEvent {
 
   @Override
   public boolean isValid() {
-    return myFile.isValid() && Objects.equals(myFile.getParent(), myOldParent) && myOldParent.isValid();
+    return myFile.isValid()
+        && Objects.equals(myFile.getParent(), myOldParent)
+        && (myOldParent == null || myOldParent.isValid());
   }
 
   @Override
-  public boolean equals(Object o) {
+  public boolean equals(@Nullable Object o) {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
 
-    VFileMoveEvent event = (VFileMoveEvent)o;
+    VFileMoveEvent that = (VFileMoveEvent)o;
 
-    if (!myFile.equals(event.myFile)) return false;
-    if (!myNewParent.equals(event.myNewParent)) return false;
-    if (!myOldParent.equals(event.myOldParent)) return false;
-
-    return true;
+    return myFile.equals(that.myFile)
+        && Objects.equals(myNewParent, that.myNewParent)
+        && Objects.equals(myOldParent, that.myOldParent);
   }
 
   @Override
   public int hashCode() {
     int result = myFile.hashCode();
-    result = 31 * result + myOldParent.hashCode();
-    result = 31 * result + myNewParent.hashCode();
+    result = 31 * result + Objects.hashCode(myOldParent);
+    result = 31 * result + Objects.hashCode(myNewParent);
     return result;
   }
 
-  
   public String getOldPath() {
-    return myOldParent.getPath() + "/" + myFile.getName();
+    return (myOldParent == null ? "" : myOldParent.getPath()) + "/" + myFile.getName();
   }
 
-  
   public String getNewPath() {
-    return myNewParent.getPath() + "/" + myFile.getName();
+    return (myNewParent == null ? "" : myNewParent.getPath()) + "/" + myFile.getName();
   }
 }

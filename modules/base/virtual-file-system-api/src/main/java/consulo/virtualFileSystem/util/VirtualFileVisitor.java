@@ -1,10 +1,11 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.virtualFileSystem.util;
 
+import consulo.annotation.ReviewAfterIssueFix;
 import consulo.virtualFileSystem.VFileProperty;
 import consulo.virtualFileSystem.VirtualFile;
-
 import org.jspecify.annotations.Nullable;
+
 import java.util.ArrayDeque;
 import java.util.Deque;
 
@@ -31,14 +32,13 @@ public abstract class VirtualFileVisitor<T> {
   public static final Option SKIP_ROOT = new Option();
   public static final Option ONE_LEVEL_DEEP = limit(1);
 
-  
   public static Option limit(int maxDepth) {
     return new Option.LimitOption(maxDepth);
   }
 
   public static class Result {
     public final boolean skipChildren;
-    public final VirtualFile skipToParent;
+    public final @Nullable VirtualFile skipToParent;
 
     private Result(boolean skipChildren, @Nullable VirtualFile skipToParent) {
       this.skipChildren = skipChildren;
@@ -69,8 +69,8 @@ public abstract class VirtualFileVisitor<T> {
   private int myDepthLimit = -1;
 
   private int myLevel;
-  private Deque<T> myValueStack;
-  private T myValue;
+  private @Nullable Deque<@Nullable T> myValueStack = null;
+  private @Nullable T myValue = null;
 
   protected VirtualFileVisitor(Option... options) {
     for (Option option : options) {
@@ -139,11 +139,11 @@ public abstract class VirtualFileVisitor<T> {
   public final void setValueForChildren(@Nullable T value) {
     myValue = value;
     if (myValueStack == null) {
-      myValueStack = new ArrayDeque<T>();
+      myValueStack = new ArrayDeque<>();
     }
   }
 
-  public final T getCurrentValue() {
+  public final @Nullable T getCurrentValue() {
     return myValue;
   }
 
@@ -168,6 +168,8 @@ public abstract class VirtualFileVisitor<T> {
     return myDepthLimit >= 0 && myLevel >= myDepthLimit;
   }
 
+  @ReviewAfterIssueFix(value = "github.com/uber/NullAway/issues/1506", todo = "Remove NullAway suppression")
+  @SuppressWarnings("NullAway")
   final void saveValue() {
     ++myLevel;
     if (myValueStack != null) {

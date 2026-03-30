@@ -134,7 +134,7 @@ public class BaseVirtualFileManager extends VirtualFileManagerEx {
     }
 
     @Override
-    public VirtualFile findFileByUrl(String url) {
+    public @Nullable VirtualFile findFileByUrl(String url) {
         VirtualFileSystem fileSystem = getFileSystemForUrl(url);
         if (fileSystem == null) {
             return null;
@@ -143,7 +143,7 @@ public class BaseVirtualFileManager extends VirtualFileManagerEx {
     }
 
     @Override
-    public VirtualFile refreshAndFindFileByUrl(String url) {
+    public @Nullable VirtualFile refreshAndFindFileByUrl(String url) {
         VirtualFileSystem fileSystem = getFileSystemForUrl(url);
         if (fileSystem == null) {
             return null;
@@ -375,7 +375,7 @@ public class BaseVirtualFileManager extends VirtualFileManagerEx {
     }
 
     @Override
-    public Image getFileIcon(VirtualFile file, @Nullable ComponentManager project, @Iconable.IconFlags int flags) {
+    public @Nullable Image getFileIcon(VirtualFile file, @Nullable ComponentManager project, @Iconable.IconFlags int flags) {
         return null;
     }
 

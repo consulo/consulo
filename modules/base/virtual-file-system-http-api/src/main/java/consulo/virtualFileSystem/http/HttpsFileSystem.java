@@ -25,7 +25,7 @@ public interface HttpsFileSystem extends BaseHttpFileSystem {
     String HTTPS_PROTOCOL = "https";
 
     static HttpsFileSystem getInstance() {
-        return (HttpsFileSystem) VirtualFileManager.getInstance().getFileSystem(HTTPS_PROTOCOL);
+        return VirtualFileManager.getInstance().getRequiredFileSystem(HTTPS_PROTOCOL);
     }
 
     @Deprecated

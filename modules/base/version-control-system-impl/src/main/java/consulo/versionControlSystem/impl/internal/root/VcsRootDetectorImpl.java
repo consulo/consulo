@@ -117,7 +117,7 @@ public class VcsRootDetectorImpl implements VcsRootDetector {
     for (AbstractVcs vcs : vcsList) {
       roots.add(new VcsRoot(vcs, dir));
     }
-    for (VirtualFile child : dir.getChildren()) {
+    for (VirtualFile child : dir.getRequiredChildren()) {
       roots.addAll(scanForRootsInsideDir(child, depth + 1));
     }
     return roots;

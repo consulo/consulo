@@ -33,6 +33,7 @@ import consulo.virtualFileSystem.event.VirtualFileManagerListener;
 import org.jspecify.annotations.Nullable;
 
 import java.nio.file.Path;
+import java.util.Objects;
 
 /**
  * Manages virtual file systems.
@@ -41,7 +42,6 @@ import java.nio.file.Path;
  */
 @ServiceAPI(ComponentScope.APPLICATION)
 public abstract class VirtualFileManager implements ModificationTracker {
-
     public static final ModificationTracker VFS_STRUCTURE_MODIFICATIONS = () -> getInstance().getStructureModificationCount();
 
     /**
@@ -62,7 +62,23 @@ public abstract class VirtualFileManager implements ModificationTracker {
      * @return {@link VirtualFileSystem}
      * @see VirtualFileSystem#getProtocol
      */
-    public abstract VirtualFileSystem getFileSystem(String protocol);
+    public abstract @Nullable VirtualFileSystem getFileSystem(String protocol);
+
+    /**
+     * Gets VirtualFileSystem with the specified protocol.
+     *
+     * @param protocol String representing the protocol
+     * @return {@link VirtualFileSystem}
+     * @see VirtualFileSystem#getProtocol
+     */
+    @SuppressWarnings("unchecked")
+    public <VFS extends VirtualFileSystem> VFS getRequiredFileSystem(String protocol) {
+        VirtualFileSystem fileSystem = getFileSystem(protocol);
+        if (fileSystem == null) {
+            throw new IllegalArgumentException("VirtualFileSystem with protocol \"" + protocol + "\" is not registered");
+        }
+        return (VFS) fileSystem;
+    }
 
     /**
      * <p>Refreshes the cached file systems information from the physical file systems synchronously.<p/>
@@ -235,7 +251,7 @@ public abstract class VirtualFileManager implements ModificationTracker {
      */
     public abstract long getStructureModificationCount();
 
-    public VirtualFile findFileById(int id) {
+    public @Nullable VirtualFile findFileById(int id) {
         return null;
     }
 
@@ -245,7 +261,7 @@ public abstract class VirtualFileManager implements ModificationTracker {
 
     public abstract Image getBaseFileIcon(VirtualFile file);
 
-    public abstract Image getFileIcon(VirtualFile file, @Nullable ComponentManager project, @Iconable.IconFlags int flags);
+    public abstract @Nullable Image getFileIcon(VirtualFile file, @Nullable ComponentManager project, @Iconable.IconFlags int flags);
 
     /**
      * Return icon without proxing to lazy icon. Must be called from not UI thread

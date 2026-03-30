@@ -15,6 +15,7 @@
  */
 package consulo.language.scratch;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
@@ -39,9 +40,9 @@ public abstract class ScratchFileService {
 
   public abstract @Nullable RootType getRootType(@Nullable VirtualFile file);
 
+  @RequiredReadAction
   public abstract VirtualFile findFile(RootType rootType, String pathName, Option option) throws IOException;
 
-  
   public abstract PerFileMappings<Language> getScratchesMapping();
 
   public static @Nullable RootType findRootType(@Nullable VirtualFile file) {

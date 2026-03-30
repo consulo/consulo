@@ -15,6 +15,7 @@
  */
 package consulo.virtualFileSystem.http.impl.internal;
 
+import consulo.annotation.access.RequiredWriteAction;
 import consulo.disposer.Disposable;
 import consulo.virtualFileSystem.BaseVirtualFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
@@ -24,6 +25,7 @@ import consulo.virtualFileSystem.http.HttpVirtualFile;
 import consulo.virtualFileSystem.http.RemoteFileManager;
 import consulo.virtualFileSystem.http.RemoteFileState;
 import consulo.virtualFileSystem.http.event.HttpVirtualFileListener;
+import org.jspecify.annotations.Nullable;
 
 import java.io.IOException;
 
@@ -74,37 +76,41 @@ public abstract class HttpXFileSystemImpl extends BaseVirtualFileSystem implemen
     }
 
     @Override
-    
-    public VirtualFile createChildDirectory(Object requestor, VirtualFile vDir, String dirName) throws IOException {
+    @RequiredWriteAction
+    public VirtualFile createChildDirectory(@Nullable Object requestor, VirtualFile vDir, String dirName) throws IOException {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public VirtualFile createChildFile(Object requestor, VirtualFile vDir, String fileName) throws IOException {
+    @RequiredWriteAction
+    public VirtualFile createChildFile(@Nullable Object requestor, VirtualFile vDir, String fileName) throws IOException {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public void deleteFile(Object requestor, VirtualFile vFile) throws IOException {
+    @RequiredWriteAction
+    public void deleteFile(@Nullable Object requestor, VirtualFile vFile) throws IOException {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public void moveFile(Object requestor, VirtualFile vFile, VirtualFile newParent) throws IOException {
+    @RequiredWriteAction
+    public void moveFile(@Nullable Object requestor, VirtualFile vFile, VirtualFile newParent) throws IOException {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public VirtualFile copyFile(Object requestor, VirtualFile vFile, VirtualFile newParent, String copyName) throws IOException {
+    @RequiredWriteAction
+    public VirtualFile copyFile(@Nullable Object requestor, VirtualFile vFile, VirtualFile newParent, String copyName) throws IOException {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public void renameFile(Object requestor, VirtualFile vFile, String newName) throws IOException {
+    @RequiredWriteAction
+    public void renameFile(@Nullable Object requestor, VirtualFile vFile, String newName) throws IOException {
         throw new UnsupportedOperationException();
     }
 
-    
     @Override
     public String extractPresentableUrl(String path) {
         return VirtualFileManager.constructUrl(myProtocol, path);
@@ -119,7 +125,6 @@ public abstract class HttpXFileSystemImpl extends BaseVirtualFileSystem implemen
     public void refresh(boolean asynchronous) {
     }
 
-    
     @Override
     public String getProtocol() {
         return myProtocol;
