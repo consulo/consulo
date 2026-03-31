@@ -16,11 +16,12 @@
  */
 package consulo.ide.impl.idea.openapi.vfs.ex.dummy;
 
+import consulo.virtualFileSystem.BaseVirtualFile;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileSystem;
 import consulo.virtualFileSystem.VirtualFileWithId;
 
-abstract class VirtualFileImpl extends VirtualFile implements VirtualFileWithId {
+abstract class VirtualFileImpl extends BaseVirtualFile implements VirtualFileWithId {
   private final DummyFileSystem myFileSystem;
   private final VirtualFileDirectoryImpl myParent;
   private String myName;

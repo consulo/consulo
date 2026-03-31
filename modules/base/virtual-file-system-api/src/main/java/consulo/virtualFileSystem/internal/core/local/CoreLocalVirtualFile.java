@@ -16,6 +16,7 @@
 package consulo.virtualFileSystem.internal.core.local;
 
 import consulo.util.io.FileUtil;
+import consulo.virtualFileSystem.BaseVirtualFile;
 import consulo.virtualFileSystem.RawFileLoader;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileSystem;
@@ -29,7 +30,7 @@ import java.util.List;
 /**
  * @author yole
  */
-public class CoreLocalVirtualFile extends VirtualFile {
+public class CoreLocalVirtualFile extends BaseVirtualFile {
   private final VirtualFileSystem myFileSystem;
   private final File myIoFile;
   private VirtualFile @Nullable [] myChildren = null;
