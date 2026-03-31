@@ -15,14 +15,15 @@
  */
 package consulo.ide.impl.idea.build;
 
-import consulo.ide.impl.idea.ide.util.PropertiesComponent;
-import consulo.language.LangBundle;
+import consulo.application.ApplicationPropertiesComponent;
+import consulo.application.dumb.DumbAware;
+import consulo.build.ui.localize.BuildLocalize;
+import consulo.localize.LocalizeValue;
+import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DefaultActionGroup;
-import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.action.ToggleAction;
-import consulo.application.dumb.DumbAware;
-import consulo.platform.base.icon.PlatformIconGroup;
 
 import java.util.function.Predicate;
 
@@ -34,7 +35,7 @@ public class BuildTreeFilters {
     private static final Predicate<ExecutionNodeImpl> WARNINGS_FILTER = (node) -> node.hasWarnings() || node.hasInfos();
 
     public static DefaultActionGroup createFilteringActionsGroup(Filterable<ExecutionNodeImpl> filterable) {
-        DefaultActionGroup actionGroup = new DefaultActionGroup(LangBundle.message("action.filters.text"), true);
+        DefaultActionGroup actionGroup = new DefaultActionGroup(BuildLocalize.actionFiltersText(), true);
         actionGroup.getTemplatePresentation().setIcon(PlatformIconGroup.actionsShow());
         actionGroup.add(new WarningsToggleAction(filterable));
         actionGroup.add(new SuccessfulStepsToggleAction(filterable));
@@ -58,7 +59,7 @@ public class BuildTreeFilters {
         private static final String STATE_KEY = "build.toolwindow.show.warnings.selection.state";
 
         WarningsToggleAction(Filterable<ExecutionNodeImpl> filterable) {
-            super(LangBundle.message("build.tree.filters.show.warnings"), STATE_KEY, filterable, WARNINGS_FILTER, true);
+            super(BuildLocalize.buildTreeFiltersShowWarnings(), STATE_KEY, filterable, WARNINGS_FILTER, true);
         }
     }
 
@@ -70,7 +71,7 @@ public class BuildTreeFilters {
         private static final String STATE_KEY = "build.toolwindow.show.successful.steps.selection.state";
 
         SuccessfulStepsToggleAction(Filterable<ExecutionNodeImpl> filterable) {
-            super(LangBundle.message("build.tree.filters.show.succesful"), STATE_KEY, filterable, SUCCESSFUL_STEPS_FILTER, false);
+            super(BuildLocalize.buildTreeFiltersShowSuccessful(), STATE_KEY, filterable, SUCCESSFUL_STEPS_FILTER, false);
         }
     }
 
@@ -81,7 +82,7 @@ public class BuildTreeFilters {
             String stateKey,
             boolean defaultState
         ) {
-            if (PropertiesComponent.getInstance().getBoolean(stateKey, defaultState) && !filterable.contains(filter)) {
+            if (ApplicationPropertiesComponent.getInstance().getBoolean(stateKey, defaultState) && !filterable.contains(filter)) {
                 filterable.addFilter(filter);
             }
         }
@@ -92,7 +93,7 @@ public class BuildTreeFilters {
         private final boolean defaultState;
 
         FilterToggleAction(
-            String text,
+            LocalizeValue text,
             String stateKey,
             Filterable<ExecutionNodeImpl> filterable,
             Predicate<ExecutionNodeImpl> filter,
@@ -107,11 +108,12 @@ public class BuildTreeFilters {
 
         @Override
         public boolean isSelected(AnActionEvent e) {
-            Presentation presentation = e.getPresentation();
             boolean filteringEnabled = filterable.isFilteringEnabled();
-            presentation.setEnabledAndVisible(filteringEnabled);
-            if (filteringEnabled && stateKey != null && PropertiesComponent.getInstance()
-                .getBoolean(stateKey, defaultState) && !filterable.contains(filter)) {
+            e.getPresentation().setEnabledAndVisible(filteringEnabled);
+            if (filteringEnabled
+                && stateKey != null
+                && ApplicationPropertiesComponent.getInstance().getBoolean(stateKey, defaultState)
+                && !filterable.contains(filter)) {
                 setSelected(e, true);
             }
 
@@ -119,6 +121,7 @@ public class BuildTreeFilters {
         }
 
         @Override
+        @RequiredUIAccess
         public void setSelected(AnActionEvent e, boolean state) {
             if (state) {
                 filterable.addFilter(filter);
@@ -127,7 +130,7 @@ public class BuildTreeFilters {
                 filterable.removeFilter(filter);
             }
             if (stateKey != null) {
-                PropertiesComponent.getInstance().setValue(stateKey, state, defaultState);
+                ApplicationPropertiesComponent.getInstance().setValue(stateKey, state, defaultState);
             }
         }
     }

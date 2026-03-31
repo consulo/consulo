@@ -19,14 +19,13 @@ import consulo.build.ui.event.BuildEventsNls;
 import consulo.build.ui.event.EventResult;
 import consulo.build.ui.event.FinishEvent;
 import consulo.build.ui.event.SuccessResult;
-import consulo.language.LangBundle;
+import consulo.build.ui.localize.BuildLocalize;
 import org.jspecify.annotations.Nullable;
 
 /**
  * @author Vladislav.Soroka
  */
 public class FinishEventImpl extends AbstractBuildEvent implements FinishEvent {
-
   private final EventResult myResult;
 
   public FinishEventImpl(Object eventId,
@@ -36,8 +35,8 @@ public class FinishEventImpl extends AbstractBuildEvent implements FinishEvent {
                          EventResult result) {
     super(eventId, parentId, eventTime, message);
     myResult = result;
-    if(myResult instanceof SuccessResult && ((SuccessResult)myResult).isUpToDate()) {
-      setHint(LangBundle.message("build.event.message.up.to.date"));
+    if (myResult instanceof SuccessResult successResult && successResult.isUpToDate()) {
+      setHint(BuildLocalize.buildEventMessageUpToDate().get());
     }
   }
 
