@@ -49,7 +49,12 @@ public class DesktopAWTTerminalConsoleFactory implements TerminalConsoleFactory 
     public JediTerminalConsole create(TerminalSession session, TerminalConsoleSettings settings, Disposable parentDisposable) {
         JBTerminalSystemSettingsProvider provider = new JBTerminalSystemSettingsProvider(myApplication, settings, parentDisposable);
 
-        JBTerminalWidget widget = new JBTerminalWidget(provider);
+        JBTerminalWidget widget = new JBTerminalWidget(provider) {
+            @Override
+            public String getSessionName() {
+                return session.getConnectorName();
+            }
+        };
         Disposer.register(parentDisposable, widget);
 
         ((AbstractTerminalRunner) session).openSessionInDirectory(widget);

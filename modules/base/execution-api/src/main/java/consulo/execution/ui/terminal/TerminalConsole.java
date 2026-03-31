@@ -23,9 +23,7 @@ import consulo.ui.Component;
  * @since 15/04/2023
  */
 public interface TerminalConsole extends Disposable {
-    
     String getSessionName();
 
-    
     Component getUIComponent();
 }

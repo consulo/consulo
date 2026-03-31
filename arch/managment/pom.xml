@@ -220,7 +220,7 @@
             <dependency>
                 <groupId>consulo.internal</groupId>
                 <artifactId>jediterm-core</artifactId>
-                <version>3.64</version>
+                <version>3.64.1</version>
                 <exclusions>
                     <exclusion>
                         <groupId>org.slf4j</groupId>
@@ -235,7 +235,7 @@
             <dependency>
                 <groupId>consulo.internal</groupId>
                 <artifactId>jediterm-ui</artifactId>
-                <version>3.64</version>
+                <version>3.64.1</version>
                 <exclusions>
                     <exclusion>
                         <groupId>org.slf4j</groupId>

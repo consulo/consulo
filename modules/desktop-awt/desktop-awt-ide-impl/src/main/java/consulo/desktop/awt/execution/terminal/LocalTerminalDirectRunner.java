@@ -17,7 +17,6 @@ package consulo.desktop.awt.execution.terminal;
 
 import com.jediterm.terminal.TtyConnector;
 import com.pty4j.PtyProcess;
-import com.pty4j.util.PtyUtil;
 import consulo.logging.Logger;
 import consulo.platform.Platform;
 
@@ -34,87 +33,93 @@ import java.util.function.Supplier;
  * @author traff
  */
 public class LocalTerminalDirectRunner extends AbstractTerminalRunner<PtyProcess> {
-  private static final Logger LOG = Logger.getInstance(LocalTerminalDirectRunner.class);
+    private static final Logger LOG = Logger.getInstance(LocalTerminalDirectRunner.class);
 
-  private final Charset myDefaultCharset;
-  private final String myConnectorName;
-  private final Supplier<String> myShellPathGetter;
-  private final String myWorkingDirectory;
+    private final Charset myDefaultCharset;
+    private final String myConnectorName;
+    private final Supplier<String> myShellPathGetter;
+    private final String myWorkingDirectory;
 
-  public LocalTerminalDirectRunner(String connectorName, String workDirectory, Supplier<String> shellPathGetter) {
-    myConnectorName = connectorName;
-    myDefaultCharset = StandardCharsets.UTF_8;
-    myShellPathGetter = shellPathGetter;
-    myWorkingDirectory = workDirectory;
-  }
-
-  public String getWorkingDirectory() {
-    return myWorkingDirectory;
-  }
-
-  private static boolean hasLoginArgument(String name) {
-    return name.equals("bash") || name.equals("sh") || name.equals("zsh");
-  }
-
-  private static String getShellName(String path) {
-    return new File(path).getName();
-  }
-
-  private static File findRCFile() {
-    // TODO 
-    return null;
-  }
-
-  @Override
-  protected PtyProcess createProcess(String directory) throws ExecutionException {
-    Map<String, String> envs = new HashMap<>(Platform.current().os().environmentVariables());
-    envs.put("TERM", "xterm-256color");
-    //EncodingEnvironmentUtil.setLocaleEnvironmentIfMac(envs, myDefaultCharset);
-    try {
-      return PtyProcess.exec(getCommand(), envs, directory);
-    }
-    catch (IOException e) {
-      throw new ExecutionException(e);
-    }
-  }
-
-  @Override
-  protected TtyConnector createTtyConnector(PtyProcess process) {
-    return new PtyProcessTtyConnector(process, myDefaultCharset, myConnectorName);
-  }
-
-  public String[] getCommand() {
-    String[] command;
-    String shellPath = myShellPathGetter.get();
-
-    if (Platform.current().os().isUnix()) {
-      File rcFile = findRCFile();
-
-      String shellName = getShellName(shellPath);
-
-      if (rcFile != null && (shellName.equals("bash") || shellName.equals("sh"))) {
-        command = new String[]{
-          shellPath,
-          "--rcfile",
-          rcFile.getAbsolutePath(),
-          "-i"
-        };
-      }
-      else if (hasLoginArgument(shellName)) {
-        command = new String[]{
-          shellPath,
-          "--login"
-        };
-      }
-      else {
-        command = shellPath.split(" ");
-      }
-    }
-    else {
-      command = new String[]{shellPath};
+    public LocalTerminalDirectRunner(String connectorName, String workDirectory, Supplier<String> shellPathGetter) {
+        myConnectorName = connectorName;
+        myDefaultCharset = StandardCharsets.UTF_8;
+        myShellPathGetter = shellPathGetter;
+        myWorkingDirectory = workDirectory;
     }
 
-    return command;
-  }
+    @Override
+    public String getConnectorName() {
+        return myConnectorName;
+    }
+
+    @Override
+    public String getWorkingDirectory() {
+        return myWorkingDirectory;
+    }
+
+    private static boolean hasLoginArgument(String name) {
+        return name.equals("bash") || name.equals("sh") || name.equals("zsh");
+    }
+
+    private static String getShellName(String path) {
+        return new File(path).getName();
+    }
+
+    private static File findRCFile() {
+        // TODO
+        return null;
+    }
+
+    @Override
+    protected PtyProcess createProcess(String directory) throws ExecutionException {
+        Map<String, String> envs = new HashMap<>(Platform.current().os().environmentVariables());
+        envs.put("TERM", "xterm-256color");
+        //EncodingEnvironmentUtil.setLocaleEnvironmentIfMac(envs, myDefaultCharset);
+        try {
+            return PtyProcess.exec(getCommand(), envs, directory);
+        }
+        catch (IOException e) {
+            throw new ExecutionException(e);
+        }
+    }
+
+    @Override
+    protected TtyConnector createTtyConnector(PtyProcess process) {
+        return new PtyProcessTtyConnector(process, myDefaultCharset, myConnectorName);
+    }
+
+    public String[] getCommand() {
+        String[] command;
+        String shellPath = myShellPathGetter.get();
+
+        if (Platform.current().os().isUnix()) {
+            File rcFile = findRCFile();
+
+            String shellName = getShellName(shellPath);
+
+            if (rcFile != null && (shellName.equals("bash") || shellName.equals("sh"))) {
+                command = new String[]{
+                    shellPath,
+                    "--rcfile",
+                    rcFile.getAbsolutePath(),
+                    "-i"
+                };
+            }
+            else if (hasLoginArgument(shellName)) {
+                command = new String[]{
+                    shellPath,
+                    "--login"
+                };
+            }
+            else {
+                command = shellPath.split(" ");
+            }
+        }
+        else {
+            command = new String[]{shellPath};
+        }
+
+        return command;
+    }
 
 }
