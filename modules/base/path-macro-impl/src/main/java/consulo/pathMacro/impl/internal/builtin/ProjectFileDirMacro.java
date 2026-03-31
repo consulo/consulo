@@ -13,16 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.pathMacro.impl.internal.builtin;
 
 import consulo.dataContext.DataContext;
+import consulo.localize.LocalizeValue;
 import consulo.pathMacro.Macro;
-import consulo.pathMacro.PathMacroBundle;
+import consulo.pathMacro.localize.PathMacroLocalize;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
-
 import org.jspecify.annotations.Nullable;
 
 public final class ProjectFileDirMacro extends Macro {
@@ -32,8 +31,8 @@ public final class ProjectFileDirMacro extends Macro {
   }
 
   @Override
-  public String getDescription() {
-    return PathMacroBundle.message("macro.project.file.directory");
+  public LocalizeValue getDescription() {
+    return PathMacroLocalize.macroProjectFileDirectory();
   }
 
   @Override
@@ -44,5 +43,4 @@ public final class ProjectFileDirMacro extends Macro {
     }
     return VirtualFileUtil.virtualToIoFile(baseDir).getPath();
   }
-
 }

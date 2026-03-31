@@ -13,14 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.pathMacro.impl.internal.builtin;
 
 import consulo.dataContext.DataContext;
+import consulo.localize.LocalizeValue;
 import consulo.module.Module;
 import consulo.module.content.layer.OrderEnumerator;
 import consulo.pathMacro.Macro;
-import consulo.pathMacro.PathMacroBundle;
+import consulo.pathMacro.localize.PathMacroLocalize;
 
 public final class ModulePathMacro extends Macro {
   @Override
@@ -29,8 +29,8 @@ public final class ModulePathMacro extends Macro {
   }
 
   @Override
-  public String getDescription() {
-    return PathMacroBundle.message("macro.module.source.path");
+  public LocalizeValue getDescription() {
+    return PathMacroLocalize.macroModuleSourcePath();
   }
 
   @Override

@@ -1,7 +1,10 @@
+import org.jspecify.annotations.NullMarked;
+
 /**
  * @author VISTALL
- * @since 10-Apr-22
+ * @since 2022-04-10
  */
+@NullMarked
 module consulo.path.macro.api {
   requires transitive consulo.application.api;
   requires transitive consulo.virtual.file.system.api;
@@ -10,4 +13,5 @@ module consulo.path.macro.api {
   requires transitive consulo.module.api;
 
   exports consulo.pathMacro;
+  exports consulo.pathMacro.localize;
 }

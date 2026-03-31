@@ -13,11 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.pathMacro.impl.internal.builtin;
 
 import consulo.dataContext.DataContext;
-import consulo.pathMacro.PathMacroBundle;
+import consulo.localize.LocalizeValue;
+import consulo.pathMacro.localize.PathMacroLocalize;
 
 import java.io.File;
 
@@ -28,8 +28,8 @@ public final class FileDirRelativeToProjectRootMacro2 extends FileDirRelativeToP
   }
 
   @Override
-  public String getDescription() {
-    return PathMacroBundle.message("macro.file.dir.relative.to.root.fwd.slash");
+  public LocalizeValue getDescription() {
+    return PathMacroLocalize.macroFileDirRelativeToRootFwdSlash();
   }
 
   @Override

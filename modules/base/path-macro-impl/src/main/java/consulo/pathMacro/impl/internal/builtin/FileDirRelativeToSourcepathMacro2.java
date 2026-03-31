@@ -13,12 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.pathMacro.impl.internal.builtin;
 
-import consulo.pathMacro.PathMacroBundle;
 import consulo.dataContext.DataContext;
-import consulo.pathMacro.impl.internal.builtin.FileDirRelativeToSourcepathMacro;
+import consulo.localize.LocalizeValue;
+import consulo.pathMacro.localize.PathMacroLocalize;
 
 import java.io.File;
 
@@ -29,8 +28,8 @@ public final class FileDirRelativeToSourcepathMacro2 extends FileDirRelativeToSo
   }
 
   @Override
-  public String getDescription() {
-    return PathMacroBundle.message("macro.file.dir.relative.to.sourcepath.root.fwd.slash");
+  public LocalizeValue getDescription() {
+    return PathMacroLocalize.macroFileDirRelativeToSourcepathRootFwdSlash();
   }
 
   @Override

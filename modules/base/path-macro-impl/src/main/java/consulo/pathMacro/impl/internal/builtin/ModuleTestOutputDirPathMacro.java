@@ -17,14 +17,14 @@ package consulo.pathMacro.impl.internal.builtin;
 
 import consulo.content.ContentFolderTypeProvider;
 import consulo.language.content.TestContentFolderTypeProvider;
-import consulo.pathMacro.PathMacroBundle;
+import consulo.localize.LocalizeValue;
+import consulo.pathMacro.localize.PathMacroLocalize;
 
 /**
  * @author VISTALL
- * @since 18.08.14
+ * @since 2014-08-18
  */
 public class ModuleTestOutputDirPathMacro extends ModuleOutputDirPathMacro {
-  
   @Override
   public ContentFolderTypeProvider getContentFolderTypeProvider() {
     return TestContentFolderTypeProvider.getInstance();
@@ -36,7 +36,7 @@ public class ModuleTestOutputDirPathMacro extends ModuleOutputDirPathMacro {
   }
 
   @Override
-  public String getDescription() {
-    return PathMacroBundle.message("macro.module.test.output.dir.path");
+  public LocalizeValue getDescription() {
+    return PathMacroLocalize.macroModuleTestOutputDirPath();
   }
 }

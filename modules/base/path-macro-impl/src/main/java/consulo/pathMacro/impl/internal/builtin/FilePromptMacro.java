@@ -19,9 +19,10 @@ import consulo.dataContext.DataContext;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.fileChooser.FileChooserDescriptorFactory;
 import consulo.fileChooser.IdeaFileChooser;
-import consulo.pathMacro.PathMacroBundle;
+import consulo.localize.LocalizeValue;
 import consulo.pathMacro.PromptingMacro;
 import consulo.pathMacro.SecondQueueExpandMacro;
+import consulo.pathMacro.localize.PathMacroLocalize;
 import consulo.project.Project;
 import consulo.util.io.FileUtil;
 import consulo.virtualFileSystem.VirtualFile;
@@ -36,8 +37,8 @@ public class FilePromptMacro extends PromptingMacro implements SecondQueueExpand
   }
 
   @Override
-  public String getDescription() {
-    return "Shows a file chooser dialog";
+  public LocalizeValue getDescription() {
+    return LocalizeValue.localizeTODO("Shows a file chooser dialog");
   }
 
   @Override
@@ -50,6 +51,6 @@ public class FilePromptMacro extends PromptingMacro implements SecondQueueExpand
 
   @Override
   public void cachePreview(DataContext dataContext) {
-    myCachedPreview = PathMacroBundle.message("macro.fileprompt.preview");
+    myCachedPreview = PathMacroLocalize.macroFilepromptPreview().get();
   }
 }

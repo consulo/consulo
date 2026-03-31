@@ -13,12 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.pathMacro.impl.internal.builtin;
 
 import consulo.dataContext.DataContext;
+import consulo.localize.LocalizeValue;
 import consulo.pathMacro.Macro;
-import consulo.pathMacro.PathMacroBundle;
+import consulo.pathMacro.localize.PathMacroLocalize;
 import consulo.virtualFileSystem.VirtualFile;
 
 public final class FileEncodingMacro extends Macro {
@@ -28,8 +28,8 @@ public final class FileEncodingMacro extends Macro {
   }
 
   @Override
-  public String getDescription() {
-    return PathMacroBundle.message("macro.file.encoding");
+  public LocalizeValue getDescription() {
+    return PathMacroLocalize.macroFileEncoding();
   }
 
   @Override

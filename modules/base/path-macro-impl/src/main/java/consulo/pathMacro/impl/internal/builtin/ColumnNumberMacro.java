@@ -13,15 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.pathMacro.impl.internal.builtin;
 
 import consulo.codeEditor.Editor;
-import consulo.pathMacro.PathMacroBundle;
+import consulo.pathMacro.localize.PathMacroLocalize;
 
 public final class ColumnNumberMacro extends EditorMacro {
   public ColumnNumberMacro() {
-    super("ColumnNumber", PathMacroBundle.message("macro.column.number"));
+    super("ColumnNumber", PathMacroLocalize.macroColumnNumber());
   }
 
   @Override

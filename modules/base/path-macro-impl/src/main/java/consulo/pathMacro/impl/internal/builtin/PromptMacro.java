@@ -13,14 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.pathMacro.impl.internal.builtin;
 
-import consulo.pathMacro.PathMacroBundle;
 import consulo.dataContext.DataContext;
+import consulo.localize.LocalizeValue;
 import consulo.pathMacro.PromptingMacro;
 import consulo.pathMacro.SecondQueueExpandMacro;
+import consulo.pathMacro.localize.PathMacroLocalize;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.Messages;
+import consulo.ui.ex.awt.UIUtil;
 import org.jspecify.annotations.Nullable;
 
 public final class PromptMacro extends PromptingMacro implements SecondQueueExpandMacro {
@@ -30,17 +32,22 @@ public final class PromptMacro extends PromptingMacro implements SecondQueueExpa
   }
 
   @Override
-  public String getDescription() {
-    return PathMacroBundle.message("macro.prompt");
+  public LocalizeValue getDescription() {
+    return PathMacroLocalize.macroPrompt();
   }
 
   @Override
+  @RequiredUIAccess
   protected @Nullable String promptUser(DataContext dataContext) {
-    return Messages.showInputDialog(PathMacroBundle.message("prompt.enter.parameters"), PathMacroBundle.message("title.input"), Messages.getQuestionIcon());
+    return Messages.showInputDialog(
+      PathMacroLocalize.promptEnterParameters().get(),
+      PathMacroLocalize.titleInput().get(),
+      UIUtil.getQuestionIcon()
+    );
   }
 
   @Override
   public void cachePreview(DataContext dataContext) {
-    myCachedPreview = PathMacroBundle.message("macro.prompt.preview");
+    myCachedPreview = PathMacroLocalize.macroPromptPreview().get();
   }
 }

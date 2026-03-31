@@ -16,20 +16,24 @@
 package consulo.pathMacro.impl.internal.builtin;
 
 import consulo.dataContext.DataContext;
+import consulo.localize.LocalizeValue;
 import consulo.module.content.layer.OrderEnumerator;
 import consulo.pathMacro.Macro;
-import consulo.pathMacro.PathMacroBundle;
+import consulo.pathMacro.localize.PathMacroLocalize;
 import consulo.project.Project;
 
 public final class ClasspathMacro extends Macro {
+  @Override
   public String getName() {
     return "Classpath";
   }
 
-  public String getDescription() {
-    return PathMacroBundle.message("macro.project.classpath");
+  @Override
+  public LocalizeValue getDescription() {
+    return PathMacroLocalize.macroProjectClasspath();
   }
 
+  @Override
   public String expand(DataContext dataContext) {
     Project project = dataContext.getData(Project.KEY);
     if (project == null) return null;
