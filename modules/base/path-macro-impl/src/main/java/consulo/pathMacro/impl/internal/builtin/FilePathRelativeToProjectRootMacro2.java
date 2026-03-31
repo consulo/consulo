@@ -17,7 +17,8 @@
 package consulo.pathMacro.impl.internal.builtin;
 
 import consulo.dataContext.DataContext;
-import consulo.pathMacro.PathMacroBundle;
+import consulo.localize.LocalizeValue;
+import consulo.pathMacro.localize.PathMacroLocalize;
 
 import java.io.File;
 
@@ -28,8 +29,8 @@ public final class FilePathRelativeToProjectRootMacro2 extends FilePathRelativeT
   }
 
   @Override
-  public String getDescription() {
-    return PathMacroBundle.message("macro.file.path.relative.to.root.fwd.slash");
+  public LocalizeValue getDescription() {
+    return PathMacroLocalize.macroFilePathRelativeToRootFwdSlash();
   }
 
   @Override

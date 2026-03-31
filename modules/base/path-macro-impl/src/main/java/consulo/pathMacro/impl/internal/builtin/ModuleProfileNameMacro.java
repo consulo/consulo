@@ -16,14 +16,15 @@
 package consulo.pathMacro.impl.internal.builtin;
 
 import consulo.dataContext.DataContext;
+import consulo.localize.LocalizeValue;
 import consulo.module.Module;
 import consulo.module.content.ModuleRootManager;
 import consulo.pathMacro.Macro;
-import consulo.pathMacro.PathMacroBundle;
+import consulo.pathMacro.localize.PathMacroLocalize;
 
 /**
  * @author VISTALL
- * @since 18.08.14
+ * @since 2014-08-18
  */
 public class ModuleProfileNameMacro extends Macro {
   @Override
@@ -32,8 +33,8 @@ public class ModuleProfileNameMacro extends Macro {
   }
 
   @Override
-  public String getDescription() {
-    return PathMacroBundle.message("macro.module.profile.name");
+  public LocalizeValue getDescription() {
+    return PathMacroLocalize.macroModuleProfileName();
   }
 
   @Override

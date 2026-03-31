@@ -23,6 +23,7 @@ import consulo.dataContext.DataContext;
 import consulo.ide.localize.IdeLocalize;
 import consulo.language.content.ProductionContentFolderTypeProvider;
 import consulo.language.content.TestContentFolderTypeProvider;
+import consulo.localize.LocalizeValue;
 import consulo.module.Module;
 import consulo.module.ModuleManager;
 import consulo.module.content.ProjectFileIndex;
@@ -42,8 +43,8 @@ public final class OutputPathMacro extends Macro {
   }
 
   @Override
-  public String getDescription() {
-    return IdeLocalize.macroOutputPath().get();
+  public LocalizeValue getDescription() {
+    return IdeLocalize.macroOutputPath();
   }
 
   @Override

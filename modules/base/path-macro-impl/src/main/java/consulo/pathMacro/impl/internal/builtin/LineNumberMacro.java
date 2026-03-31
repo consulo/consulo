@@ -17,11 +17,11 @@
 package consulo.pathMacro.impl.internal.builtin;
 
 import consulo.codeEditor.Editor;
-import consulo.pathMacro.PathMacroBundle;
+import consulo.pathMacro.localize.PathMacroLocalize;
 
 public final class LineNumberMacro extends EditorMacro {
   public LineNumberMacro() {
-    super("LineNumber", PathMacroBundle.message("macro.line.number"));
+    super("LineNumber", PathMacroLocalize.macroLineNumber());
   }
 
   @Override

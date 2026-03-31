@@ -16,9 +16,10 @@
 package consulo.pathMacro.impl.internal.builtin;
 
 import consulo.dataContext.DataContext;
+import consulo.localize.LocalizeValue;
 import consulo.module.content.ProjectRootManager;
 import consulo.pathMacro.Macro;
-import consulo.pathMacro.PathMacroBundle;
+import consulo.pathMacro.localize.PathMacroLocalize;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 
@@ -30,8 +31,8 @@ public final class ClasspathEntryMacro extends Macro {
     return "ClasspathEntry";
   }
 
-  public String getDescription() {
-    return PathMacroBundle.message("macro.classpath.entry");
+  public LocalizeValue getDescription() {
+    return PathMacroLocalize.macroClasspathEntry();
   }
 
   public String expand(DataContext dataContext) {

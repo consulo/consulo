@@ -15,13 +15,20 @@
  */
 package consulo.pathMacro;
 
+import consulo.annotation.DeprecationInfo;
+import consulo.annotation.internal.MigratedExtensionsTo;
 import consulo.component.util.localize.AbstractBundle;
+import consulo.pathMacro.localize.PathMacroLocalize;
 import org.jetbrains.annotations.PropertyKey;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
  * @since 10-Apr-22
  */
+@Deprecated
+@DeprecationInfo("Use PathMacroLocalize")
+@MigratedExtensionsTo(PathMacroLocalize.class)
 public class PathMacroBundle extends AbstractBundle {
   public static final String BUNDLE = "consulo.pathMacro.PathMacroBundle";
 
@@ -31,11 +38,11 @@ public class PathMacroBundle extends AbstractBundle {
     super(BUNDLE);
   }
 
-  public static String message(@PropertyKey(resourceBundle = BUNDLE) String key) {
+  public static @Nullable String message(@PropertyKey(resourceBundle = BUNDLE) String key) {
     return ourInstance.getMessage(key);
   }
 
-  public static String message(@PropertyKey(resourceBundle = BUNDLE) String key, Object... params) {
+  public static @Nullable String message(@PropertyKey(resourceBundle = BUNDLE) String key, Object... params) {
     return ourInstance.getMessage(key, params);
   }
 }
