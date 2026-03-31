@@ -82,11 +82,12 @@ public class PathMacroListEditor {
     private Collection<String> parseIgnoredVariables() {
         String s = myIgnoredVariables.getValue();
         List<String> ignored = new ArrayList<>();
-        StringTokenizer st = new StringTokenizer(s, ";");
-        while (st.hasMoreElements()) {
-            ignored.add(st.nextToken().trim());
+        if (StringUtil.isNotEmpty(s)) {
+            StringTokenizer st = new StringTokenizer(s, ";");
+            while (st.hasMoreElements()) {
+                ignored.add(st.nextToken().trim());
+            }
         }
-
         return ignored;
     }
 
