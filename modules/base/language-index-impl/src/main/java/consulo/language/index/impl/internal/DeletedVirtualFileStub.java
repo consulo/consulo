@@ -20,7 +20,8 @@ import consulo.virtualFileSystem.VirtualFileWithId;
 import consulo.language.file.light.LightVirtualFile;
 
 /**
- * @author Maxim.Mossienko on 11/18/2015.
+ * @author Maxim.Mossienko
+ * @since 2015-11-18
  */
 class DeletedVirtualFileStub extends LightVirtualFile implements VirtualFileWithId {
   private final int myFileId;

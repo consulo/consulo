@@ -23,7 +23,7 @@ import java.io.OutputStream;
 /**
  * @author max
  */
-public class StubVirtualFile extends VirtualFile {
+public class StubVirtualFile extends BaseVirtualFile {
   @Override
   public byte[] contentsToByteArray() throws IOException {
     throw new UnsupportedOperationException("contentsToByteArray is not implemented");
@@ -87,7 +87,7 @@ public class StubVirtualFile extends VirtualFile {
 
   @Override
   public boolean isValid() {
-    throw new UnsupportedOperationException("isValid is not implemented");
+    return false;
   }
 
   @Override

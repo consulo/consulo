@@ -17,10 +17,7 @@ package consulo.virtualFileSystem.light;
 
 import consulo.annotation.access.RequiredWriteAction;
 import consulo.util.lang.LocalTimeCounter;
-import consulo.virtualFileSystem.BaseVirtualFileSystem;
-import consulo.virtualFileSystem.NonPhysicalFileSystem;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.virtualFileSystem.VirtualFileSystem;
+import consulo.virtualFileSystem.*;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.virtualFileSystem.internal.FakeVirtualFile;
 import org.jspecify.annotations.Nullable;
@@ -30,7 +27,7 @@ import java.io.IOException;
 /**
  * In-memory implementation of {@link VirtualFile}.
  */
-public abstract class LightVirtualFileBase extends VirtualFile {
+public abstract class LightVirtualFileBase extends BaseVirtualFile {
     private FileType myFileType;
     private String myName = "";
     private long myModStamp = LocalTimeCounter.currentTime();
