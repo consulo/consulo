@@ -84,6 +84,7 @@
     <module>modules/base/test-junit-impl</module>
     <module>modules/base/virtual-file-system-api</module>
     <module>modules/base/virtual-file-system-http-api</module>
+    <module>modules/base/virtual-file-system-native-file-type-impl</module>
     <module>modules/base/document-api</module>
     <module>modules/base/project-api</module>
     <module>modules/base/project-content-api</module>

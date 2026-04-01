@@ -39,7 +39,6 @@ public interface FileType {
      * @return The file type id.
      */
     String getId();
-
     
     default LocalizeValue getDisplayName() {
         return LocalizeValue.of(getId());

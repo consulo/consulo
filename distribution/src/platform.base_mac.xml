@@ -123,6 +123,7 @@
                 <include>consulo:consulo-find-api</include>
                 <include>consulo:consulo-virtual-file-status-api</include>
                 <include>consulo:consulo-virtual-file-status-impl</include>
+                <include>consulo:consulo-virtual-file-system-native-file-type-impl</include>
                 <include>consulo:consulo-usage-api</include>
                 <include>consulo:consulo-usage-impl</include>
                 <include>consulo:consulo-language-editor-refactoring-api</include>
@@ -274,6 +275,8 @@
                 <include>org.bouncycastle:bcpkix-jdk18on</include>
                 <include>org.bouncycastle:bcutil-jdk18on</include>
                 <include>org.bouncycastle:bcprov-jdk18on</include>
+
+                <include>consulo.internal:format-ripper-jvm-file-type-detector</include>
             </includes>
         </dependencySet>
     </dependencySets>
