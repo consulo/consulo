@@ -107,7 +107,7 @@ class LocalHistoryEventDispatcher implements VirtualFileManagerListener, Command
   }
 
   private void beforeContentsChange(VFileContentChangeEvent e) {
-    VirtualFile f = e.getFile();
+    VirtualFile f = e.getRequiredFile();
     if (!myGateway.areContentChangesVersioned(f)) return;
 
     Pair<StoredContent, Long> content = myGateway.acquireAndUpdateActualContent(f, null);
@@ -117,21 +117,21 @@ class LocalHistoryEventDispatcher implements VirtualFileManagerListener, Command
   }
 
   private void handleBeforeEvent(VFileEvent event) {
-    if (event instanceof VFileContentChangeEvent) {
-      beforeContentsChange((VFileContentChangeEvent)event);
+    if (event instanceof VFileContentChangeEvent cce) {
+      beforeContentsChange(cce);
     }
-    else if (event instanceof VFilePropertyChangeEvent && ((VFilePropertyChangeEvent)event).isRename() || event instanceof VFileMoveEvent) {
-      VirtualFile f = Objects.requireNonNull(event.getFile());
+    else if (event instanceof VFilePropertyChangeEvent pce && pce.isRename() || event instanceof VFileMoveEvent) {
+      VirtualFile f = ((VFileNonnullFileEvent) event).getRequiredFile();
       f.putUserData(WAS_VERSIONED_KEY, myGateway.isVersioned(f));
     }
-    else if (event instanceof VFileDeleteEvent) {
-      beforeFileDeletion((VFileDeleteEvent)event);
+    else if (event instanceof VFileDeleteEvent de) {
+      beforeFileDeletion(de);
     }
   }
 
   private void propertyChanged(VFilePropertyChangeEvent e) {
     if (e.isRename()) {
-      VirtualFile f = e.getFile();
+      VirtualFile f = e.getRequiredFile();
 
       boolean isVersioned = myGateway.isVersioned(f);
       Boolean wasVersioned = f.getUserData(WAS_VERSIONED_KEY);
@@ -144,8 +144,8 @@ class LocalHistoryEventDispatcher implements VirtualFileManagerListener, Command
       myVcs.renamed(f.getPath(), oldName);
     }
     else if (VirtualFile.PROP_WRITABLE.equals(e.getPropertyName())) {
-      if (!isVersioned(e.getFile())) return;
-      VirtualFile f = e.getFile();
+      if (!isVersioned(e.getRequiredFile())) return;
+      VirtualFile f = e.getRequiredFile();
       if (!f.isDirectory()) {
         myVcs.readOnlyStatusChanged(f.getPath(), !(Boolean)e.getOldValue());
       }
@@ -153,7 +153,7 @@ class LocalHistoryEventDispatcher implements VirtualFileManagerListener, Command
   }
 
   private void fileMoved(VFileMoveEvent e) {
-    VirtualFile f = e.getFile();
+    VirtualFile f = e.getRequiredFile();
 
     boolean isVersioned = myGateway.isVersioned(f);
     Boolean wasVersioned = f.getUserData(WAS_VERSIONED_KEY);
@@ -166,7 +166,7 @@ class LocalHistoryEventDispatcher implements VirtualFileManagerListener, Command
   }
 
   private void beforeFileDeletion(VFileDeleteEvent e) {
-    VirtualFile f = e.getFile();
+    VirtualFile f = e.getRequiredFile();
     Entry entry = myGateway.createEntryForDeletion(f);
     if (entry != null) {
       myVcs.deleted(f.getPath(), entry);
@@ -209,11 +209,11 @@ class LocalHistoryEventDispatcher implements VirtualFileManagerListener, Command
         fileCreated(file);
       }
     }
-    else if (event instanceof VFilePropertyChangeEvent) {
-      propertyChanged((VFilePropertyChangeEvent)event);
+    else if (event instanceof VFilePropertyChangeEvent pce) {
+      propertyChanged(pce);
     }
-    else if (event instanceof VFileMoveEvent) {
-      fileMoved((VFileMoveEvent)event);
+    else if (event instanceof VFileMoveEvent me) {
+      fileMoved(me);
     }
   }
 

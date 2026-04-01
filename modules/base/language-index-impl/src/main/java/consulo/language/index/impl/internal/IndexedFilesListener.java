@@ -72,23 +72,22 @@ abstract class IndexedFilesListener implements AsyncFileListener {
   public ChangeApplier prepareChange(List<? extends VFileEvent> events) {
     VfsEventsMerger tempMerger = new VfsEventsMerger();
     for (VFileEvent event : events) {
-      if (event instanceof VFileContentChangeEvent) {
-        invalidateIndicesRecursively(((VFileContentChangeEvent)event).getFile(), true, tempMerger);
+      if (event instanceof VFileContentChangeEvent cce) {
+        invalidateIndicesRecursively(cce.getRequiredFile(), true, tempMerger);
       }
-      else if (event instanceof VFileDeleteEvent) {
-        invalidateIndicesRecursively(((VFileDeleteEvent)event).getFile(), false, tempMerger);
+      else if (event instanceof VFileDeleteEvent de) {
+        invalidateIndicesRecursively(de.getRequiredFile(), false, tempMerger);
       }
-      else if (event instanceof VFilePropertyChangeEvent) {
-        VFilePropertyChangeEvent pce = (VFilePropertyChangeEvent)event;
+      else if (event instanceof VFilePropertyChangeEvent pce) {
         String propertyName = pce.getPropertyName();
         if (propertyName.equals(VirtualFile.PROP_NAME)) {
           // indexes may depend on file name
           // name change may lead to filetype change so the file might become not indexable
           // in general case have to 'unindex' the file and index it again if needed after the name has been changed
-          invalidateIndicesRecursively(pce.getFile(), false, tempMerger);
+          invalidateIndicesRecursively(pce.getRequiredFile(), false, tempMerger);
         }
         else if (propertyName.equals(VirtualFile.PROP_ENCODING)) {
-          invalidateIndicesRecursively(pce.getFile(), true, tempMerger);
+          invalidateIndicesRecursively(pce.getRequiredFile(), true, tempMerger);
         }
       }
     }
@@ -107,34 +106,32 @@ abstract class IndexedFilesListener implements AsyncFileListener {
 
   private void processAfterEvents(List<? extends VFileEvent> events) {
     for (VFileEvent event : events) {
-      if (event instanceof VFileContentChangeEvent) {
-        buildIndicesForFileRecursively(((VFileContentChangeEvent)event).getFile(), true);
+      if (event instanceof VFileContentChangeEvent cce) {
+        buildIndicesForFileRecursively(cce.getRequiredFile(), true);
       }
-      else if (event instanceof VFileCopyEvent) {
-        VFileCopyEvent ce = (VFileCopyEvent)event;
-        VirtualFile copy = ce.getNewParent().findChild(ce.getNewChildName());
+      else if (event instanceof VFileCopyEvent ce) {
+        VirtualFile copy = ce.findCreatedFile();
         if (copy != null) {
           buildIndicesForFileRecursively(copy, false);
         }
       }
-      else if (event instanceof VFileCreateEvent) {
-        VirtualFile newChild = event.getFile();
+      else if (event instanceof VFileCreateEvent ce) {
+        VirtualFile newChild = ce.getFile();
         if (newChild != null) {
           buildIndicesForFileRecursively(newChild, false);
         }
       }
-      else if (event instanceof VFileMoveEvent) {
-        buildIndicesForFileRecursively(((VFileMoveEvent)event).getFile(), false);
+      else if (event instanceof VFileMoveEvent me) {
+        buildIndicesForFileRecursively(me.getRequiredFile(), false);
       }
-      else if (event instanceof VFilePropertyChangeEvent) {
-        VFilePropertyChangeEvent pce = (VFilePropertyChangeEvent)event;
+      else if (event instanceof VFilePropertyChangeEvent pce) {
         String propertyName = pce.getPropertyName();
         if (propertyName.equals(VirtualFile.PROP_NAME)) {
           // indexes may depend on file name
-          buildIndicesForFileRecursively(pce.getFile(), false);
+          buildIndicesForFileRecursively(pce.getRequiredFile(), false);
         }
         else if (propertyName.equals(VirtualFile.PROP_ENCODING)) {
-          buildIndicesForFileRecursively(pce.getFile(), true);
+          buildIndicesForFileRecursively(pce.getRequiredFile(), true);
         }
       }
     }

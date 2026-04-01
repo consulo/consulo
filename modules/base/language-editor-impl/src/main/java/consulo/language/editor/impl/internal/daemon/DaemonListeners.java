@@ -248,14 +248,14 @@ public final class DaemonListeners implements Disposable {
         connection.subscribe(AnActionListener.class, new MyAnActionListener());
         connection.subscribe(BulkFileListener.class, new BulkFileListener() {
             @Override
+            @RequiredReadAction
             public void after(List<? extends VFileEvent> events) {
                 boolean isDaemonShouldBeStopped = false;
                 for (VFileEvent event : events) {
-                    if (event instanceof VFilePropertyChangeEvent) {
-                        VFilePropertyChangeEvent e = (VFilePropertyChangeEvent) event;
-                        String propertyName = e.getPropertyName();
+                    if (event instanceof VFilePropertyChangeEvent pce) {
+                        String propertyName = pce.getPropertyName();
                         if (VirtualFile.PROP_NAME.equals(propertyName)) {
-                            fileRenamed(e);
+                            fileRenamed(pce);
                         }
                         if (!isDaemonShouldBeStopped && !propertyName.equals(PsiTreeChangeEvent.PROP_WRITABLE)) {
                             isDaemonShouldBeStopped = true;
@@ -271,7 +271,7 @@ public final class DaemonListeners implements Disposable {
             @RequiredReadAction
             private void fileRenamed(VFilePropertyChangeEvent event) {
                 stopDaemonAndRestartAllFiles("Virtual file name changed");
-                VirtualFile virtualFile = event.getFile();
+                VirtualFile virtualFile = event.getRequiredFile();
                 PsiFile psiFile =
                     !virtualFile.isValid() ? null : PsiManagerEx.getInstanceEx(myProject).getCachedPsiFile(virtualFile);
                 if (psiFile == null || myDaemonCodeAnalyzer.isHighlightingAvailable(psiFile)) {

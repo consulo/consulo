@@ -39,12 +39,9 @@ final class IgnoredFileCache {
 
       private void clearCacheForChangedFiles(List<? extends VFileEvent> events) {
         for (VFileEvent event : events) {
-          if (event instanceof VFilePropertyChangeEvent && ((VFilePropertyChangeEvent)event).isRename()) {
-            VirtualFile file = event.getFile();
-            if (file instanceof NewVirtualFile) {
-              int id = ((NewVirtualFile)file).getId();
-              myNonIgnoredIds.clear(id);
-            }
+          if (event instanceof VFilePropertyChangeEvent pce && pce.isRename()
+              && event.getFile() instanceof NewVirtualFile newVirtualFile) {
+            myNonIgnoredIds.clear(newVirtualFile.getId());
           }
         }
       }

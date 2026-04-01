@@ -35,20 +35,18 @@ import consulo.util.lang.Comparing;
 import consulo.util.lang.ref.SimpleReference;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.NewVirtualFile;
+import consulo.virtualFileSystem.NullVirtualFile;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.event.*;
 import consulo.virtualFileSystem.internal.CompactVirtualFileSet;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
 import consulo.virtualFileSystem.util.VirtualFileVisitor;
-import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
+import org.jspecify.annotations.Nullable;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
@@ -140,8 +138,7 @@ public class TranslationCompilerFilesMonitorVfsListener implements AsyncFileList
     private void propertyChanged(VFilePropertyChangeEvent event) {
         if (VirtualFile.PROP_NAME.equals(event.getPropertyName())) {
             final VirtualFile eventFile = event.getFile();
-            VirtualFile file = event.getFile();
-            VirtualFile parent = file.getParent();
+            VirtualFile parent = eventFile.getParent();
             if (parent != null) {
                 String oldName = (String) event.getOldValue();
                 final String root = parent.getPath() + "/" + oldName;
@@ -153,13 +150,13 @@ public class TranslationCompilerFilesMonitorVfsListener implements AsyncFileList
                         @Override
                         public boolean visitFile(VirtualFile child) {
                             if (child.isDirectory()) {
-                                if (!Comparing.equal(child, eventFile)) {
+                                if (!Objects.equals(child, eventFile)) {
                                     filePath.append("/").append(child.getName());
                                 }
                             }
                             else {
                                 String childPath = filePath.toString();
-                                if (!Comparing.equal(child, eventFile)) {
+                                if (!Objects.equals(child, eventFile)) {
                                     childPath += "/" + child.getName();
                                 }
                                 toMark.add(new File(childPath));
@@ -313,10 +310,8 @@ public class TranslationCompilerFilesMonitorVfsListener implements AsyncFileList
                         else {
                             monitor.addSourceForRecompilation(projectId, thisFile, srcInfo);
                             // when the file is moved to a new location, we should 'forget' previous associations
-                            if (fromMove) {
-                                if (srcInfo.clearPaths(projectId)) {
-                                    TranslationSourceFileInfo.saveSourceInfo(thisFile, srcInfo);
-                                }
+                            if (fromMove && srcInfo.clearPaths(projectId)) {
+                                TranslationSourceFileInfo.saveSourceInfo(thisFile, srcInfo);
                             }
                         }
                     }

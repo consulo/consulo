@@ -12,17 +12,16 @@ import consulo.platform.Platform;
 import consulo.util.collection.*;
 import consulo.util.io.FileUtil;
 import consulo.util.io.URLUtil;
-import consulo.util.lang.Comparing;
 import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.*;
 import consulo.virtualFileSystem.archive.ArchiveFileType;
+import consulo.virtualFileSystem.archive.BaseArchiveFileSystem;
 import consulo.virtualFileSystem.event.AsyncFileListener.ChangeApplier;
 import consulo.virtualFileSystem.event.*;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.virtualFileSystem.fileType.FileTypeRegistry;
-import consulo.virtualFileSystem.archive.BaseArchiveFileSystem;
 import consulo.virtualFileSystem.impl.internal.entry.VirtualFileSystemEntry;
 import consulo.virtualFileSystem.internal.PersistentFS;
 import consulo.virtualFileSystem.internal.VirtualFilePointerContainerImpl;
@@ -30,10 +29,10 @@ import consulo.virtualFileSystem.pointer.*;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
 import gnu.trove.TObjectHashingStrategy;
 import gnu.trove.TObjectIntHashMap;
-import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jetbrains.annotations.TestOnly;
+import org.jspecify.annotations.Nullable;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentMap;
@@ -492,7 +491,7 @@ public final class VirtualFilePointerManagerImpl extends SimpleModificationTrack
                     continue;
                 }
                 if (event instanceof VFileDeleteEvent deleteEvent) {
-                    VirtualFile file = deleteEvent.getFile();
+                    VirtualFile file = deleteEvent.getRequiredFile();
                     addRelevantPointers(file.getParent(), ((VirtualFileSystemEntry) file).getNameId(), toFireEvents, true, fs);
                 }
                 else if (event instanceof VFileCreateEvent createEvent) {
@@ -517,7 +516,7 @@ public final class VirtualFilePointerManagerImpl extends SimpleModificationTrack
                     addRelevantPointers(copyEvent.getNewParent(), toNameId(copyEvent.getNewChildName()), toFireEvents, true, fs);
                 }
                 else if (event instanceof VFileMoveEvent moveEvent) {
-                    VirtualFile eventFile = moveEvent.getFile();
+                    VirtualFile eventFile = moveEvent.getRequiredFile();
                     int newNameId = ((VirtualFileSystemEntry) eventFile).getNameId();
                     addRelevantPointers(moveEvent.getNewParent(), newNameId, toFireEvents, true, fs);
 
@@ -527,8 +526,8 @@ public final class VirtualFilePointerManagerImpl extends SimpleModificationTrack
                     collectNodes(nodes, toUpdateUrl);
                 }
                 else if (event instanceof VFilePropertyChangeEvent change) {
-                    if (VirtualFile.PROP_NAME.equals(change.getPropertyName()) && !Comparing.equal(change.getOldValue(), change.getNewValue())) {
-                        VirtualFile eventFile = change.getFile();
+                    if (VirtualFile.PROP_NAME.equals(change.getPropertyName()) && !Objects.equals(change.getOldValue(), change.getNewValue())) {
+                        VirtualFile eventFile = change.getRequiredFile();
                         VirtualFile parent = eventFile.getParent(); // e.g. for LightVirtualFiles
                         int newNameId = toNameId(change.getNewValue().toString());
                         addRelevantPointers(parent, newNameId, toFireEvents, true, fs);

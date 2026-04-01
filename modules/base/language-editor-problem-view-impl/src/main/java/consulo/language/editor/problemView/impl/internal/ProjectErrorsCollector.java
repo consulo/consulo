@@ -10,6 +10,7 @@ import consulo.virtualFileSystem.VirtualFileManager;
 import consulo.virtualFileSystem.event.VFileDeleteEvent;
 import consulo.virtualFileSystem.event.VFileEvent;
 import consulo.virtualFileSystem.event.VFileMoveEvent;
+import consulo.virtualFileSystem.event.VFileNonnullFileEvent;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -210,7 +211,7 @@ public final class ProjectErrorsCollector implements ProblemsCollector {
         Set<VirtualFile> files = new LinkedHashSet<>();
         for (VFileEvent event : events) {
             if (event instanceof VFileDeleteEvent || event instanceof VFileMoveEvent) {
-                VirtualFile file = event.getFile();
+                VirtualFile file = ((VFileNonnullFileEvent) event).getRequiredFile();
                 if (file != null) {
                     files.add(file);
                 }

@@ -781,18 +781,17 @@ public final class PersistentFSImpl extends PersistentFS implements Disposable {
 
     private static @Nullable String getAlternativePath(VFileEvent event) {
         String path2 = null;
-        if (event instanceof VFilePropertyChangeEvent vFilePropertyChangeEvent
-            && vFilePropertyChangeEvent.getPropertyName().equals(VirtualFile.PROP_NAME)) {
-            VFilePropertyChangeEvent pce = (VFilePropertyChangeEvent) event;
-            VirtualFile parent = pce.getFile().getParent();
+        if (event instanceof VFilePropertyChangeEvent pce
+            && pce.getPropertyName().equals(VirtualFile.PROP_NAME)) {
+            VirtualFile parent = pce.getRequiredFile().getParent();
             String newName = (String) pce.getNewValue();
             path2 = parent == null ? newName : parent.getPath() + "/" + newName;
         }
-        else if (event instanceof VFileCopyEvent) {
-            path2 = event.getFile().getPath();
+        else if (event instanceof VFileCopyEvent ce) {
+            path2 = ce.getRequiredFile().getPath();
         }
         else if (event instanceof VFileMoveEvent vme) {
-            String newName = vme.getFile().getName();
+            String newName = vme.getRequiredFile().getName();
             path2 = vme.getNewParent().getPath() + "/" + newName;
         }
         return path2;
@@ -866,10 +865,8 @@ public final class PersistentFSImpl extends PersistentFS implements Disposable {
 
     private static boolean isContentChangeLikeHarmlessEvent(VFileEvent event1) {
         return event1 instanceof VFileContentChangeEvent
-            || event1 instanceof VFilePropertyChangeEvent vFilePrpChgEvt && (
-            vFilePrpChgEvt.getPropertyName().equals(VirtualFile.PROP_WRITABLE)
-                || vFilePrpChgEvt.getPropertyName().equals(VirtualFile.PROP_ENCODING
-            )
+            || event1 instanceof VFilePropertyChangeEvent pce
+            && (pce.getPropertyName().equals(VirtualFile.PROP_WRITABLE) || pce.getPropertyName().equals(VirtualFile.PROP_ENCODING)
         );
     }
 
@@ -970,7 +967,7 @@ public final class PersistentFSImpl extends PersistentFS implements Disposable {
                 continue;
             }
             VFileDeleteEvent de = (VFileDeleteEvent) event;
-            @Nullable VirtualDirectoryImpl parent = (VirtualDirectoryImpl) de.getFile().getParent();
+            @Nullable VirtualDirectoryImpl parent = (VirtualDirectoryImpl) de.getRequiredFile().getParent();
             if (grouped == null) {
                 grouped = new MultiMap<>(new HashMap<>(end - start));
             }
@@ -1071,7 +1068,7 @@ public final class PersistentFSImpl extends PersistentFS implements Disposable {
             IntSet childrenIdsDeleted = IntSets.newHashSet(deleteEvents.size());
 
             for (VFileDeleteEvent event : deleteEvents) {
-                VirtualFile file = event.getFile();
+                VirtualFile file = event.getRequiredFile();
                 int id = getFileId(file);
                 childrenNamesDeleted.add(file.getNameSequence());
                 childrenIdsDeleted.add(id);
@@ -1418,39 +1415,39 @@ public final class PersistentFSImpl extends PersistentFS implements Disposable {
             if (event instanceof VFileCreateEvent ce) {
                 executeCreateChild(ce.getParent(), ce.getChildName(), ce.getAttributes(), ce.getSymlinkTarget(), ce.isEmptyDirectory());
             }
-            else if (event instanceof VFileDeleteEvent deleteEvent) {
-                executeDelete(deleteEvent.getFile());
+            else if (event instanceof VFileDeleteEvent de) {
+                executeDelete(de.getRequiredFile());
             }
-            else if (event instanceof VFileContentChangeEvent contentUpdateEvent) {
-                VirtualFile file = contentUpdateEvent.getFile();
-                long length = contentUpdateEvent.getNewLength();
-                long timestamp = contentUpdateEvent.getNewTimestamp();
+            else if (event instanceof VFileContentChangeEvent cce) {
+                VirtualFile file = cce.getRequiredFile();
+                long length = cce.getNewLength();
+                long timestamp = cce.getNewTimestamp();
 
-                if (!contentUpdateEvent.isLengthAndTimestampDiffProvided()) {
+                if (!cce.isLengthAndTimestampDiffProvided()) {
                     NewVirtualFileSystem delegate = getDelegate(file);
                     FileAttributes attributes = delegate.getAttributes(file);
                     length = attributes != null ? attributes.length : DEFAULT_LENGTH;
                     timestamp = attributes != null ? attributes.lastModified : DEFAULT_TIMESTAMP;
                 }
 
-                executeTouch(file, contentUpdateEvent.isFromRefresh(), contentUpdateEvent.getModificationStamp(), length, timestamp);
+                executeTouch(file, cce.isFromRefresh(), cce.getModificationStamp(), length, timestamp);
             }
-            else if (event instanceof VFileCopyEvent copyEvent) {
+            else if (event instanceof VFileCopyEvent ce) {
                 executeCreateChild(
-                    copyEvent.getNewParent(),
-                    copyEvent.getNewChildName(),
+                    ce.getNewParent(),
+                    ce.getNewChildName(),
                     null,
                     null,
-                    copyEvent.getFile().getRequiredChildren().isEmpty()
+                    ce.getRequiredFile().getRequiredChildren().isEmpty()
                 );
             }
-            else if (event instanceof VFileMoveEvent moveEvent) {
-                executeMove(moveEvent.getFile(), moveEvent.getNewParent());
+            else if (event instanceof VFileMoveEvent me) {
+                executeMove(me.getRequiredFile(), me.getNewParent());
             }
-            else if (event instanceof VFilePropertyChangeEvent propertyChangeEvent) {
-                VirtualFile file = propertyChangeEvent.getFile();
-                Object newValue = propertyChangeEvent.getNewValue();
-                switch (propertyChangeEvent.getPropertyName()) {
+            else if (event instanceof VFilePropertyChangeEvent pce) {
+                VirtualFile file = pce.getRequiredFile();
+                Object newValue = pce.getNewValue();
+                switch (pce.getPropertyName()) {
                     case VirtualFile.PROP_NAME:
                         executeRename(file, (String) newValue);
                         break;

@@ -38,10 +38,7 @@ import consulo.project.Project;
 import consulo.util.lang.Comparing;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.virtualFileSystem.event.BulkFileListener;
-import consulo.virtualFileSystem.event.VFileDeleteEvent;
-import consulo.virtualFileSystem.event.VFileEvent;
-import consulo.virtualFileSystem.event.VFileMoveEvent;
+import consulo.virtualFileSystem.event.*;
 import consulo.virtualFileSystem.status.FileStatusListener;
 import consulo.virtualFileSystem.status.FileStatusManager;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
@@ -146,7 +143,7 @@ public class WolfTheProblemSolverImpl extends WolfTheProblemSolver {
         Set<VirtualFile> toRemove = new HashSet<>();
         for (VFileEvent event : events) {
           if (event instanceof VFileDeleteEvent || event instanceof VFileMoveEvent) {
-            VirtualFile file = event.getFile();
+            VirtualFile file = ((VFileNonnullFileEvent) event).getRequiredFile();
             if (file.isDirectory()) {
               dirChanged = true;
             }

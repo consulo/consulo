@@ -12,7 +12,7 @@ import java.util.Objects;
 /**
  * @author max
  */
-public class VFilePropertyChangeEvent extends VFileEvent {
+public class VFilePropertyChangeEvent extends VFileNonnullFileEvent {
   private final VirtualFile myFile;
   private final String myPropertyName;
   private final @Nullable Object myOldValue;
@@ -81,7 +81,7 @@ public class VFilePropertyChangeEvent extends VFileEvent {
   }
 
   @Override
-  public VirtualFile getFile() {
+  public @Nullable VirtualFile getFile() {
     return myFile;
   }
 

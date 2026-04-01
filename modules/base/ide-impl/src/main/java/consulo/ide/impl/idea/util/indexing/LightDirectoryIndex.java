@@ -15,19 +15,19 @@
  */
 package consulo.ide.impl.idea.util.indexing;
 
-import consulo.application.ApplicationManager;
+import consulo.application.Application;
 import consulo.component.messagebus.MessageBusConnection;
 import consulo.disposer.Disposable;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.virtualFileSystem.fileType.FileTypeEvent;
-import consulo.virtualFileSystem.fileType.FileTypeListener;
 import consulo.util.collection.primitive.ints.ConcurrentIntObjectMap;
+import consulo.util.collection.primitive.ints.IntMaps;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileWithId;
 import consulo.virtualFileSystem.event.BulkFileListener;
 import consulo.virtualFileSystem.event.VFileEvent;
-
+import consulo.virtualFileSystem.fileType.FileTypeEvent;
+import consulo.virtualFileSystem.fileType.FileTypeListener;
 import org.jspecify.annotations.Nullable;
+
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -37,7 +37,7 @@ import java.util.function.Consumer;
  * @author gregsh
  */
 public final class LightDirectoryIndex<T> {
-  private final ConcurrentIntObjectMap<T> myInfoCache = ContainerUtil.createConcurrentIntObjectMap();
+  private final ConcurrentIntObjectMap<T> myInfoCache = IntMaps.newConcurrentIntObjectHashMap();
   private final T myDefValue;
   private final Consumer<LightDirectoryIndex<T>> myInitializer;
 
@@ -45,7 +45,7 @@ public final class LightDirectoryIndex<T> {
     myDefValue = defValue;
     myInitializer = initializer;
     resetIndex();
-    MessageBusConnection connection = ApplicationManager.getApplication().getMessageBus().connect(parentDisposable);
+    MessageBusConnection connection = Application.get().getMessageBus().connect(parentDisposable);
     connection.subscribe(FileTypeListener.class, new FileTypeListener() {
       @Override
       public void fileTypesChanged(FileTypeEvent event) {

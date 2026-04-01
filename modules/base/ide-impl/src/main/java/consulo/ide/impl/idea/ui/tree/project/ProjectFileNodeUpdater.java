@@ -15,6 +15,7 @@ import consulo.project.Project;
 import consulo.ui.ex.util.Invoker;
 import consulo.util.collection.SmartHashSet;
 import consulo.util.lang.ref.Ref;
+import consulo.virtualFileSystem.NullVirtualFile;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.event.*;
 import org.jspecify.annotations.Nullable;
@@ -53,11 +54,10 @@ public abstract class ProjectFileNodeUpdater {
             VFileCopyEvent copy = (VFileCopyEvent)event;
             updateFromFile(copy.getNewParent());
           }
-          else if (event instanceof VFileMoveEvent) {
-            VFileMoveEvent move = (VFileMoveEvent)event;
-            updateFromFile(move.getNewParent());
-            updateFromFile(move.getOldParent());
-            updateFromFile(move.getFile());
+          else if (event instanceof VFileMoveEvent me) {
+            updateFromFile(me.getNewParent());
+            updateFromFile(me.getOldParent());
+            updateFromFile(me.getRequiredFile());
           }
           else {
             VirtualFile file = event.getFile();

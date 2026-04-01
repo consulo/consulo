@@ -91,6 +91,7 @@ public abstract class ListenerDiffViewerBase extends DiffViewerBase {
 
     return new VirtualFileAdapter() {
       @Override
+      @RequiredUIAccess
       public void contentsChanged(VirtualFileEvent event) {
         if (files.contains(event.getFile())) {
           onFileChange(event);
@@ -98,6 +99,7 @@ public abstract class ListenerDiffViewerBase extends DiffViewerBase {
       }
 
       @Override
+      @RequiredUIAccess
       public void propertyChanged(VirtualFilePropertyEvent event) {
         if (files.contains(event.getFile())) {
           onFileChange(event);

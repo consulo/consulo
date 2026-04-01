@@ -85,15 +85,10 @@ public class VFileCreateEvent extends VFileEvent {
   }
 
   @Override
-  public VirtualFile getFile() {
+  public @Nullable VirtualFile getFile() {
     VirtualFile createdFile = myCreatedFile;
-    if (createdFile == null) {
-      if (myParent.isValid()) {
-        myCreatedFile = createdFile = Objects.requireNonNull(myParent.findChild(getChildName()));
-      }
-      else {
-        throw new IllegalStateException("Parent file is invalid: " + myParent);
-      }
+    if (createdFile == null && myParent.isValid()) {
+      myCreatedFile = createdFile = myParent.findChild(getChildName());
     }
     return createdFile;
   }

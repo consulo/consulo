@@ -119,7 +119,7 @@ public final class PushedFilePropertiesUpdaterImpl implements PushedFileProperti
     private static VirtualFile getFile(VFileEvent event) {
         VirtualFile file = event.getFile();
         if (event instanceof VFileCopyEvent fileCopyEvent) {
-            file = fileCopyEvent.getNewParent().findChild(fileCopyEvent.getNewChildName());
+            file = fileCopyEvent.findCreatedFile();
         }
         return file;
     }

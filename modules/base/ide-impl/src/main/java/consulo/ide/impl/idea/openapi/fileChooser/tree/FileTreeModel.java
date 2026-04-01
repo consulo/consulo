@@ -229,9 +229,9 @@ public final class FileTreeModel extends AbstractTreeModel implements Identifiab
         HashSet<VirtualFile> files = new HashSet<>();
         HashSet<VirtualFile> parents = new HashSet<>();
         for (VFileEvent event : events) {
-            if (event instanceof VFilePropertyChangeEvent) {
-                if (hasEntry(event.getFile())) {
-                    files.add(event.getFile());
+            if (event instanceof VFilePropertyChangeEvent pce) {
+                if (hasEntry(pce.getRequiredFile())) {
+                    files.add(pce.getRequiredFile());
                 }
             }
             else if (event instanceof VFileCreateEvent create) {
@@ -252,8 +252,8 @@ public final class FileTreeModel extends AbstractTreeModel implements Identifiab
                     parents.add(move.getOldParent());
                 }
             }
-            else if (event instanceof VFileDeleteEvent) {
-                VirtualFile file = event.getFile();
+            else if (event instanceof VFileDeleteEvent de) {
+                VirtualFile file = de.getRequiredFile();
                 if (hasEntry(file)) {
                     files.add(file);
                     //TODO:for all roots

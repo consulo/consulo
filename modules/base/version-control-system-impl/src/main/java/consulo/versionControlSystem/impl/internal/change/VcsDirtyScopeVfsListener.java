@@ -72,23 +72,23 @@ public class VcsDirtyScopeVfsListener implements AsyncVfsEventsListener, Disposa
       ProgressManager.checkCanceled();
 
       boolean isDirectory;
-      if (event instanceof VFileCreateEvent) {
-        if (!((VFileCreateEvent)event).getParent().isInLocalFileSystem()) {
+      if (event instanceof VFileCreateEvent ce) {
+        if (!ce.getParent().isInLocalFileSystem()) {
           continue;
         }
-        isDirectory = ((VFileCreateEvent)event).isDirectory();
+        isDirectory = ce.isDirectory();
       }
       else {
-        VirtualFile file = Objects.requireNonNull(event.getFile(), "All events but VFileCreateEvent have @NotNull getFile()");
+        VirtualFile file = ((VFileNonnullFileEvent) event).getRequiredFile();
         if (!file.isInLocalFileSystem()) {
           continue;
         }
         isDirectory = file.isDirectory();
       }
 
-      if (event instanceof VFileMoveEvent) {
-        add(vcsManager, dirtyFilesAndDirs, VcsUtil.getFilePath(((VFileMoveEvent)event).getOldPath(), isDirectory));
-        add(vcsManager, dirtyFilesAndDirs, VcsUtil.getFilePath(((VFileMoveEvent)event).getNewPath(), isDirectory));
+      if (event instanceof VFileMoveEvent me) {
+        add(vcsManager, dirtyFilesAndDirs, VcsUtil.getFilePath(me.getOldPath(), isDirectory));
+        add(vcsManager, dirtyFilesAndDirs, VcsUtil.getFilePath(me.getNewPath(), isDirectory));
       }
       else if (event instanceof VFilePropertyChangeEvent pce && pce.isRename()) {
         // if a file was renamed, then the file is dirty and its parent directory is dirty too;
