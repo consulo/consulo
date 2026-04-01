@@ -112,7 +112,7 @@ public abstract class VcsVFSListener implements Disposable {
             for (VFileEvent event : events) {
                 ProgressManager.checkCanceled();
                 if (event instanceof VFileContentChangeEvent cce) {
-                    if (processBeforeContentsChange() && isUnderMyVcs(cce.getRequiredFile())) {
+                    if (processBeforeContentsChange() && isUnderMyVcs(cce.getFile())) {
                         contentChangedEvents.add(cce);
                     }
                 }

@@ -783,15 +783,15 @@ public final class PersistentFSImpl extends PersistentFS implements Disposable {
         String path2 = null;
         if (event instanceof VFilePropertyChangeEvent pce
             && pce.getPropertyName().equals(VirtualFile.PROP_NAME)) {
-            VirtualFile parent = pce.getRequiredFile().getParent();
+            VirtualFile parent = pce.getFile().getParent();
             String newName = (String) pce.getNewValue();
             path2 = parent == null ? newName : parent.getPath() + "/" + newName;
         }
         else if (event instanceof VFileCopyEvent ce) {
-            path2 = ce.getRequiredFile().getPath();
+            path2 = ce.getFile().getPath();
         }
         else if (event instanceof VFileMoveEvent vme) {
-            String newName = vme.getRequiredFile().getName();
+            String newName = vme.getFile().getName();
             path2 = vme.getNewParent().getPath() + "/" + newName;
         }
         return path2;
@@ -967,7 +967,7 @@ public final class PersistentFSImpl extends PersistentFS implements Disposable {
                 continue;
             }
             VFileDeleteEvent de = (VFileDeleteEvent) event;
-            @Nullable VirtualDirectoryImpl parent = (VirtualDirectoryImpl) de.getRequiredFile().getParent();
+            @Nullable VirtualDirectoryImpl parent = (VirtualDirectoryImpl) de.getFile().getParent();
             if (grouped == null) {
                 grouped = new MultiMap<>(new HashMap<>(end - start));
             }
@@ -1068,7 +1068,7 @@ public final class PersistentFSImpl extends PersistentFS implements Disposable {
             IntSet childrenIdsDeleted = IntSets.newHashSet(deleteEvents.size());
 
             for (VFileDeleteEvent event : deleteEvents) {
-                VirtualFile file = event.getRequiredFile();
+                VirtualFile file = event.getFile();
                 int id = getFileId(file);
                 childrenNamesDeleted.add(file.getNameSequence());
                 childrenIdsDeleted.add(id);
@@ -1416,10 +1416,10 @@ public final class PersistentFSImpl extends PersistentFS implements Disposable {
                 executeCreateChild(ce.getParent(), ce.getChildName(), ce.getAttributes(), ce.getSymlinkTarget(), ce.isEmptyDirectory());
             }
             else if (event instanceof VFileDeleteEvent de) {
-                executeDelete(de.getRequiredFile());
+                executeDelete(de.getFile());
             }
             else if (event instanceof VFileContentChangeEvent cce) {
-                VirtualFile file = cce.getRequiredFile();
+                VirtualFile file = cce.getFile();
                 long length = cce.getNewLength();
                 long timestamp = cce.getNewTimestamp();
 
@@ -1438,14 +1438,14 @@ public final class PersistentFSImpl extends PersistentFS implements Disposable {
                     ce.getNewChildName(),
                     null,
                     null,
-                    ce.getRequiredFile().getRequiredChildren().isEmpty()
+                    ce.getFile().getRequiredChildren().isEmpty()
                 );
             }
             else if (event instanceof VFileMoveEvent me) {
-                executeMove(me.getRequiredFile(), me.getNewParent());
+                executeMove(me.getFile(), me.getNewParent());
             }
             else if (event instanceof VFilePropertyChangeEvent pce) {
-                VirtualFile file = pce.getRequiredFile();
+                VirtualFile file = pce.getFile();
                 Object newValue = pce.getNewValue();
                 switch (pce.getPropertyName()) {
                     case VirtualFile.PROP_NAME:

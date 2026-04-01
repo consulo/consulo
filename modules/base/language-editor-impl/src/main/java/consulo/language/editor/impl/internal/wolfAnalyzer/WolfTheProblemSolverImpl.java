@@ -143,7 +143,7 @@ public class WolfTheProblemSolverImpl extends WolfTheProblemSolver {
         Set<VirtualFile> toRemove = new HashSet<>();
         for (VFileEvent event : events) {
           if (event instanceof VFileDeleteEvent || event instanceof VFileMoveEvent) {
-            VirtualFile file = ((VFileExistingFileEvent) event).getRequiredFile();
+            VirtualFile file = ((VFileExistingFileEvent) event).getFile();
             if (file.isDirectory()) {
               dirChanged = true;
             }

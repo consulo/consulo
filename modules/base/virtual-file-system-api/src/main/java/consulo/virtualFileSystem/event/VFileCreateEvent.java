@@ -14,7 +14,7 @@ import java.util.Objects;
 /**
  * @author max
  */
-public class VFileCreateEvent extends VFileEvent {
+public final class VFileCreateEvent extends VFileEvent {
   private final VirtualFile myParent;
   private final boolean myDirectory;
   private final @Nullable FileAttributes myAttributes;

@@ -23,7 +23,7 @@ import org.jspecify.annotations.Nullable;
 /**
  * @author max
  */
-public abstract class VFileEvent {
+public abstract sealed class VFileEvent permits VFileCreateEvent, VFileExistingFileEvent {
   private final boolean myIsFromRefresh;
   private final @Nullable Object myRequestor;
   private @Nullable String myCachedPath = null;

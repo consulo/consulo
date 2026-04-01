@@ -85,13 +85,13 @@ public final class FileDocumentAsyncFileListener implements AsyncFileListener {
             @RequiredUIAccess
             public void afterVfsChange() {
                 for (VFileEvent event : events) {
-                    if (event instanceof VFileContentChangeEvent cce && cce.getRequiredFile().isValid()) {
+                    if (event instanceof VFileContentChangeEvent cce && cce.getFile().isValid()) {
                         myFileDocumentManager.contentsChanged(cce);
                     }
-                    else if (event instanceof VFileDeleteEvent de && de.getRequiredFile().isValid()) {
+                    else if (event instanceof VFileDeleteEvent de && de.getFile().isValid()) {
                         myFileDocumentManager.fileDeleted(de);
                     }
-                    else if (event instanceof VFilePropertyChangeEvent pce && pce.getRequiredFile().isValid()) {
+                    else if (event instanceof VFilePropertyChangeEvent pce && pce.getFile().isValid()) {
                         myFileDocumentManager.propertyChanged(pce);
                     }
                 }

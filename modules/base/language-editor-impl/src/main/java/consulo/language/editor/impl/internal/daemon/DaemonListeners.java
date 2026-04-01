@@ -78,6 +78,7 @@ import consulo.util.lang.ThreeState;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.event.BulkFileListener;
 import consulo.virtualFileSystem.event.VFileEvent;
+import consulo.virtualFileSystem.event.VFileExistingFileEvent;
 import consulo.virtualFileSystem.event.VFilePropertyChangeEvent;
 import consulo.virtualFileSystem.fileType.FileTypeEvent;
 import consulo.virtualFileSystem.fileType.FileTypeListener;
@@ -271,7 +272,7 @@ public final class DaemonListeners implements Disposable {
             @RequiredReadAction
             private void fileRenamed(VFilePropertyChangeEvent event) {
                 stopDaemonAndRestartAllFiles("Virtual file name changed");
-                VirtualFile virtualFile = event.getRequiredFile();
+                VirtualFile virtualFile = event.getFile();
                 PsiFile psiFile =
                     !virtualFile.isValid() ? null : PsiManagerEx.getInstanceEx(myProject).getCachedPsiFile(virtualFile);
                 if (psiFile == null || myDaemonCodeAnalyzer.isHighlightingAvailable(psiFile)) {

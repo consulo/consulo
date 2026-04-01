@@ -71,18 +71,21 @@ public class VcsDirtyScopeVfsListener implements AsyncVfsEventsListener, Disposa
       ProgressManager.checkCanceled();
 
       boolean isDirectory;
-      if (event instanceof VFileCreateEvent ce) {
-        if (!ce.getParent().isInLocalFileSystem()) {
-          continue;
+      switch (event) {
+        case VFileCreateEvent ce -> {
+          if (!ce.getParent().isInLocalFileSystem()) {
+            continue;
+          }
+          isDirectory = ce.isDirectory();
         }
-        isDirectory = ce.isDirectory();
-      }
-      else {
-        VirtualFile file = ((VFileExistingFileEvent) event).getRequiredFile();
-        if (!file.isInLocalFileSystem()) {
-          continue;
+
+        case VFileExistingFileEvent efe -> {
+          VirtualFile file = efe.getFile();
+          if (!file.isInLocalFileSystem()) {
+            continue;
+          }
+          isDirectory = file.isDirectory();
         }
-        isDirectory = file.isDirectory();
       }
 
       if (event instanceof VFileMoveEvent me) {

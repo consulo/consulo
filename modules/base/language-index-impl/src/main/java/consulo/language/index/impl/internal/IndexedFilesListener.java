@@ -73,10 +73,10 @@ abstract class IndexedFilesListener implements AsyncFileListener {
     VfsEventsMerger tempMerger = new VfsEventsMerger();
     for (VFileEvent event : events) {
       if (event instanceof VFileContentChangeEvent cce) {
-        invalidateIndicesRecursively(cce.getRequiredFile(), true, tempMerger);
+          invalidateIndicesRecursively(cce.getFile(), true, tempMerger);
       }
       else if (event instanceof VFileDeleteEvent de) {
-        invalidateIndicesRecursively(de.getRequiredFile(), false, tempMerger);
+          invalidateIndicesRecursively(de.getFile(), false, tempMerger);
       }
       else if (event instanceof VFilePropertyChangeEvent pce) {
         String propertyName = pce.getPropertyName();
@@ -84,10 +84,10 @@ abstract class IndexedFilesListener implements AsyncFileListener {
           // indexes may depend on file name
           // name change may lead to filetype change so the file might become not indexable
           // in general case have to 'unindex' the file and index it again if needed after the name has been changed
-          invalidateIndicesRecursively(pce.getRequiredFile(), false, tempMerger);
+            invalidateIndicesRecursively(pce.getFile(), false, tempMerger);
         }
         else if (propertyName.equals(VirtualFile.PROP_ENCODING)) {
-          invalidateIndicesRecursively(pce.getRequiredFile(), true, tempMerger);
+            invalidateIndicesRecursively(pce.getFile(), true, tempMerger);
         }
       }
     }
@@ -107,7 +107,7 @@ abstract class IndexedFilesListener implements AsyncFileListener {
   private void processAfterEvents(List<? extends VFileEvent> events) {
     for (VFileEvent event : events) {
       if (event instanceof VFileContentChangeEvent cce) {
-        buildIndicesForFileRecursively(cce.getRequiredFile(), true);
+          buildIndicesForFileRecursively(cce.getFile(), true);
       }
       else if (event instanceof VFileCopyEvent ce) {
         VirtualFile copy = ce.findCreatedFile();
@@ -122,16 +122,16 @@ abstract class IndexedFilesListener implements AsyncFileListener {
         }
       }
       else if (event instanceof VFileMoveEvent me) {
-        buildIndicesForFileRecursively(me.getRequiredFile(), false);
+          buildIndicesForFileRecursively(me.getFile(), false);
       }
       else if (event instanceof VFilePropertyChangeEvent pce) {
         String propertyName = pce.getPropertyName();
         if (propertyName.equals(VirtualFile.PROP_NAME)) {
           // indexes may depend on file name
-          buildIndicesForFileRecursively(pce.getRequiredFile(), false);
+            buildIndicesForFileRecursively(pce.getFile(), false);
         }
         else if (propertyName.equals(VirtualFile.PROP_ENCODING)) {
-          buildIndicesForFileRecursively(pce.getRequiredFile(), true);
+            buildIndicesForFileRecursively(pce.getFile(), true);
         }
       }
     }

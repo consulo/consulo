@@ -18,18 +18,16 @@ package consulo.virtualFileSystem.event;
 import consulo.virtualFileSystem.VirtualFile;
 import org.jspecify.annotations.Nullable;
 
-import java.util.Objects;
-
 /**
  * @author UNV
  * @since 2026-04-01
  */
-public abstract class VFileExistingFileEvent extends VFileEvent {
+public abstract sealed class VFileExistingFileEvent extends VFileEvent
+    permits VFileContentChangeEvent, VFileCopyEvent, VFileDeleteEvent, VFileMoveEvent, VFilePropertyChangeEvent {
     protected VFileExistingFileEvent(@Nullable Object requestor, boolean isFromRefresh) {
         super(requestor, isFromRefresh);
     }
 
-    public VirtualFile getRequiredFile() {
-        return Objects.requireNonNull(getFile());
-    }
+    @Override
+    public abstract VirtualFile getFile();
 }

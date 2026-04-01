@@ -491,7 +491,7 @@ public final class VirtualFilePointerManagerImpl extends SimpleModificationTrack
                     continue;
                 }
                 if (event instanceof VFileDeleteEvent deleteEvent) {
-                    VirtualFile file = deleteEvent.getRequiredFile();
+                    VirtualFile file = deleteEvent.getFile();
                     addRelevantPointers(file.getParent(), ((VirtualFileSystemEntry) file).getNameId(), toFireEvents, true, fs);
                 }
                 else if (event instanceof VFileCreateEvent createEvent) {
@@ -516,7 +516,7 @@ public final class VirtualFilePointerManagerImpl extends SimpleModificationTrack
                     addRelevantPointers(copyEvent.getNewParent(), toNameId(copyEvent.getNewChildName()), toFireEvents, true, fs);
                 }
                 else if (event instanceof VFileMoveEvent moveEvent) {
-                    VirtualFile eventFile = moveEvent.getRequiredFile();
+                    VirtualFile eventFile = moveEvent.getFile();
                     int newNameId = ((VirtualFileSystemEntry) eventFile).getNameId();
                     addRelevantPointers(moveEvent.getNewParent(), newNameId, toFireEvents, true, fs);
 
@@ -527,7 +527,7 @@ public final class VirtualFilePointerManagerImpl extends SimpleModificationTrack
                 }
                 else if (event instanceof VFilePropertyChangeEvent change) {
                     if (VirtualFile.PROP_NAME.equals(change.getPropertyName()) && !Objects.equals(change.getOldValue(), change.getNewValue())) {
-                        VirtualFile eventFile = change.getRequiredFile();
+                        VirtualFile eventFile = change.getFile();
                         VirtualFile parent = eventFile.getParent(); // e.g. for LightVirtualFiles
                         int newNameId = toNameId(change.getNewValue().toString());
                         addRelevantPointers(parent, newNameId, toFireEvents, true, fs);

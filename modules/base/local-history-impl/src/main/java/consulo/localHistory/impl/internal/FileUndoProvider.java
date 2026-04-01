@@ -119,7 +119,7 @@ public class FileUndoProvider implements UndoProvider, BulkFileListener {
     }
 
     private void beforeContentsChange(VFileContentChangeEvent e) {
-        VirtualFile file = e.getRequiredFile();
+        VirtualFile file = e.getFile();
         if (!shouldProcess(e, file)) {
             return;
         }
@@ -130,7 +130,7 @@ public class FileUndoProvider implements UndoProvider, BulkFileListener {
     }
 
     private void beforeFileDeletion(VFileDeleteEvent e) {
-        VirtualFile file = e.getRequiredFile();
+        VirtualFile file = e.getFile();
         if (!shouldProcess(e, file)) {
             invalidateActionsFor(file);
             return;
@@ -144,7 +144,7 @@ public class FileUndoProvider implements UndoProvider, BulkFileListener {
     }
 
     private void fileDeleted(VFileDeleteEvent e) {
-        VirtualFile f = e.getRequiredFile();
+        VirtualFile f = e.getFile();
         if (!shouldProcess(e, f)) {
             return;
         }

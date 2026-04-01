@@ -211,7 +211,7 @@ public final class ProjectErrorsCollector implements ProblemsCollector {
         Set<VirtualFile> files = new LinkedHashSet<>();
         for (VFileEvent event : events) {
             if (event instanceof VFileDeleteEvent || event instanceof VFileMoveEvent) {
-                VirtualFile file = ((VFileExistingFileEvent) event).getRequiredFile();
+                VirtualFile file = ((VFileExistingFileEvent) event).getFile();
                 files.add(file);
             }
         }

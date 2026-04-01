@@ -24,7 +24,7 @@ import java.util.Objects;
 /**
  * @author max
  */
-public class VFileMoveEvent extends VFileExistingFileEvent {
+public final class VFileMoveEvent extends VFileExistingFileEvent {
   private final VirtualFile myFile;
   private final @Nullable VirtualFile myOldParent;
   private final @Nullable VirtualFile myNewParent;
@@ -37,7 +37,7 @@ public class VFileMoveEvent extends VFileExistingFileEvent {
   }
 
   @Override
-  public @Nullable VirtualFile getFile() {
+  public VirtualFile getFile() {
     return myFile;
   }
 

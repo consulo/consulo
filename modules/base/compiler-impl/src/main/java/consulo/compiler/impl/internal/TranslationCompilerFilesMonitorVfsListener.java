@@ -136,7 +136,7 @@ public class TranslationCompilerFilesMonitorVfsListener implements AsyncFileList
 
     private void propertyChanged(VFilePropertyChangeEvent event) {
         if (VirtualFile.PROP_NAME.equals(event.getPropertyName())) {
-            final VirtualFile eventFile = event.getRequiredFile();
+            final VirtualFile eventFile = event.getFile();
             VirtualFile parent = eventFile.getParent();
             if (parent != null) {
                 String oldName = (String) event.getOldValue();

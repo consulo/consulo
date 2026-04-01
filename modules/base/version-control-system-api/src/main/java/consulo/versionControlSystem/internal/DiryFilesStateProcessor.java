@@ -180,7 +180,7 @@ public abstract class DiryFilesStateProcessor {
   }
 
   private void processFileMoved(VFileMoveEvent event) {
-    VirtualFile file = event.getRequiredFile();
+    VirtualFile file = event.getFile();
     VirtualFile oldParent = event.getOldParent();
     if (!isUnderMyVcs(oldParent)) {
       ConcurrencyUtil.withLock(PROCESSING_LOCK.writeLock(), () -> myAddedFiles.add(file));
@@ -190,7 +190,7 @@ public abstract class DiryFilesStateProcessor {
   private void processFileCopied(VFileCopyEvent event) {
     VirtualFile newFile = event.findCreatedFile();
     if (newFile == null || myChangeListManager.isIgnoredFile(newFile)) return;
-    VirtualFile originalFile = event.getRequiredFile();
+    VirtualFile originalFile = event.getFile();
     if (isFileCopyingFromTrackingSupported() && isUnderMyVcs(originalFile)) {
       ConcurrencyUtil.withLock(PROCESSING_LOCK.writeLock(), () -> {
         myAddedFiles.add(newFile);
@@ -203,7 +203,7 @@ public abstract class DiryFilesStateProcessor {
   }
 
   private void processBeforeDeletedFile(VFileDeleteEvent event) {
-    processBeforeDeletedFile(event.getRequiredFile());
+    processBeforeDeletedFile(event.getFile());
   }
 
   private void processBeforeDeletedFile(VirtualFile file) {
@@ -256,7 +256,7 @@ public abstract class DiryFilesStateProcessor {
   }
 
   private void processBeforeFileMovement(VFileMoveEvent event) {
-    VirtualFile file = event.getRequiredFile();
+    VirtualFile file = event.getFile();
     if (isUnderMyVcs(event.getNewParent())) {
       LOG.debug("beforeFileMovement ", event, " into same vcs");
       addFileToMove(file, event.getNewParent().getPath(), file.getName());
@@ -271,7 +271,7 @@ public abstract class DiryFilesStateProcessor {
     if (event.isRename()) {
       LOG.debug("before file rename ", event);
       String newName = (String)event.getNewValue();
-      VirtualFile file = event.getRequiredFile();
+      VirtualFile file = event.getFile();
       VirtualFile parent = file.getParent();
       if (parent != null) {
         addFileToMove(file, parent.getPath(), newName);

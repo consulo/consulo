@@ -57,7 +57,7 @@ public class BulkVirtualFileListenerAdapter implements BulkFileListener {
 
   public static void fireAfter(VirtualFileListener adapted, VFileEvent event) {
     if (event instanceof VFileContentChangeEvent ce) {
-      VirtualFile file = ce.getRequiredFile();
+      VirtualFile file = ce.getFile();
       adapted.contentsChanged(new VirtualFileEvent(
           ce.getRequestor(),
           file,
@@ -67,7 +67,7 @@ public class BulkVirtualFileListenerAdapter implements BulkFileListener {
       ));
     }
     else if (event instanceof VFileCopyEvent ce) {
-      VirtualFile original = ce.getRequiredFile();
+      VirtualFile original = ce.getFile();
       VirtualFile copy = ce.findCreatedFile();
       if (copy != null) {
         adapted.fileCopied(new VirtualFileCopyEvent(ce.getRequestor(), original, copy));
@@ -80,16 +80,16 @@ public class BulkVirtualFileListenerAdapter implements BulkFileListener {
       }
     }
     else if (event instanceof VFileDeleteEvent de) {
-      VirtualFile file = de.getRequiredFile();
+      VirtualFile file = de.getFile();
       adapted.fileDeleted(new VirtualFileEvent(de.getRequestor(), file, file.getParent(), 0, 0));
     }
     else if (event instanceof VFileMoveEvent me) {
-      adapted.fileMoved(new VirtualFileMoveEvent(me.getRequestor(), me.getRequiredFile(), me.getOldParent(), me.getNewParent()));
+      adapted.fileMoved(new VirtualFileMoveEvent(me.getRequestor(), me.getFile(), me.getOldParent(), me.getNewParent()));
     }
     else if (event instanceof VFilePropertyChangeEvent pce) {
-      adapted.propertyChanged(new VirtualFilePropertyEvent(
+        adapted.propertyChanged(new VirtualFilePropertyEvent(
           pce.getRequestor(),
-          pce.getRequiredFile(),
+          pce.getFile(),
           pce.getPropertyName(),
           pce.getOldValue(),
           pce.getNewValue()
@@ -99,7 +99,7 @@ public class BulkVirtualFileListenerAdapter implements BulkFileListener {
 
   public static void fireBefore(VirtualFileListener adapted, VFileEvent event) {
     if (event instanceof VFileContentChangeEvent ce) {
-      VirtualFile file = ce.getRequiredFile();
+      VirtualFile file = ce.getFile();
       adapted.beforeContentsChange(new VirtualFileEvent(
           ce.getRequestor(),
           file,
@@ -109,16 +109,16 @@ public class BulkVirtualFileListenerAdapter implements BulkFileListener {
       ));
     }
     else if (event instanceof VFileDeleteEvent de) {
-      VirtualFile file = de.getRequiredFile();
+      VirtualFile file = de.getFile();
       adapted.beforeFileDeletion(new VirtualFileEvent(de.getRequestor(), file, file.getParent(), 0, 0));
     }
     else if (event instanceof VFileMoveEvent me) {
-      adapted.beforeFileMovement(new VirtualFileMoveEvent(me.getRequestor(), me.getRequiredFile(), me.getOldParent(), me.getNewParent()));
+      adapted.beforeFileMovement(new VirtualFileMoveEvent(me.getRequestor(), me.getFile(), me.getOldParent(), me.getNewParent()));
     }
     else if (event instanceof VFilePropertyChangeEvent pce) {
-      adapted.beforePropertyChange(new VirtualFilePropertyEvent(
+        adapted.beforePropertyChange(new VirtualFilePropertyEvent(
           pce.getRequestor(),
-          pce.getRequiredFile(),
+          pce.getFile(),
           pce.getPropertyName(),
           pce.getOldValue(),
           pce.getNewValue()

@@ -56,7 +56,7 @@ public abstract class ProjectFileNodeUpdater {
           else if (event instanceof VFileMoveEvent me) {
             updateFromFile(me.getNewParent());
             updateFromFile(me.getOldParent());
-            updateFromFile(me.getRequiredFile());
+            updateFromFile(me.getFile());
           }
           else {
             VirtualFile file = event.getFile();
