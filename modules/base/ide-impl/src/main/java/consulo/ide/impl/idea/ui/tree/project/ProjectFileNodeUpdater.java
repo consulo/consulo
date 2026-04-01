@@ -15,7 +15,6 @@ import consulo.project.Project;
 import consulo.ui.ex.util.Invoker;
 import consulo.util.collection.SmartHashSet;
 import consulo.util.lang.ref.Ref;
-import consulo.virtualFileSystem.NullVirtualFile;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.event.*;
 import org.jspecify.annotations.Nullable;

@@ -67,7 +67,7 @@ public abstract class VFileEvent {
 
   /**
    * Returns the VirtualFile which this event belongs to.
-   * In some cases it may be fake file - it is not guaranteed that there is such a file.
+   * In some cases it may be null - it is not guaranteed that there is such a file.
    * <p/>
    * NB: Use this method with caution, because {@link VFileCreateEvent#getFile()} needs
    * {@link VirtualFile#findChild(String)} which may be a performance leak.

@@ -20,6 +20,7 @@ import consulo.application.progress.ProgressManager;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
 import consulo.document.impl.DocumentImpl;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.ObjectUtil;
 import consulo.virtualFileSystem.VirtualFile;
@@ -81,15 +82,16 @@ public final class FileDocumentAsyncFileListener implements AsyncFileListener {
             }
 
             @Override
+            @RequiredUIAccess
             public void afterVfsChange() {
                 for (VFileEvent event : events) {
-                    if (event instanceof VFileContentChangeEvent cce && cce.getFile().isValid()) {
+                    if (event instanceof VFileContentChangeEvent cce && cce.getRequiredFile().isValid()) {
                         myFileDocumentManager.contentsChanged(cce);
                     }
-                    else if (event instanceof VFileDeleteEvent de && de.getFile().isValid()) {
+                    else if (event instanceof VFileDeleteEvent de && de.getRequiredFile().isValid()) {
                         myFileDocumentManager.fileDeleted(de);
                     }
-                    else if (event instanceof VFilePropertyChangeEvent pce && pce.getFile().isValid()) {
+                    else if (event instanceof VFilePropertyChangeEvent pce && pce.getRequiredFile().isValid()) {
                         myFileDocumentManager.propertyChanged(pce);
                     }
                 }

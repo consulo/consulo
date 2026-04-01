@@ -35,7 +35,6 @@ import consulo.util.lang.Comparing;
 import consulo.util.lang.ref.SimpleReference;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.NewVirtualFile;
-import consulo.virtualFileSystem.NullVirtualFile;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.event.*;
 import consulo.virtualFileSystem.internal.CompactVirtualFileSet;
@@ -137,7 +136,7 @@ public class TranslationCompilerFilesMonitorVfsListener implements AsyncFileList
 
     private void propertyChanged(VFilePropertyChangeEvent event) {
         if (VirtualFile.PROP_NAME.equals(event.getPropertyName())) {
-            final VirtualFile eventFile = event.getFile();
+            final VirtualFile eventFile = event.getRequiredFile();
             VirtualFile parent = eventFile.getParent();
             if (parent != null) {
                 String oldName = (String) event.getOldValue();
