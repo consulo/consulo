@@ -23,7 +23,7 @@ import org.jspecify.annotations.Nullable;
 /**
  * @author max
  */
-public class VFileContentChangeEvent extends VFileNonnullFileEvent {
+public class VFileContentChangeEvent extends VFileExistingFileEvent {
   private final VirtualFile myFile;
   private final long myOldModificationStamp;
   private final long myNewModificationStamp;

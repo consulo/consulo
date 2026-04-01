@@ -29,7 +29,6 @@ import consulo.virtualFileSystem.util.VirtualFileUtil;
 import consulo.virtualFileSystem.util.VirtualFileVisitor;
 
 import java.util.List;
-import java.util.Objects;
 
 class LocalHistoryEventDispatcher implements VirtualFileManagerListener, CommandListener, BulkFileListener {
   private static final Key<Boolean> WAS_VERSIONED_KEY = Key.create(LocalHistoryEventDispatcher.class.getSimpleName() + ".WAS_VERSIONED_KEY");
@@ -121,7 +120,7 @@ class LocalHistoryEventDispatcher implements VirtualFileManagerListener, Command
       beforeContentsChange(cce);
     }
     else if (event instanceof VFilePropertyChangeEvent pce && pce.isRename() || event instanceof VFileMoveEvent) {
-      VirtualFile f = ((VFileNonnullFileEvent) event).getRequiredFile();
+      VirtualFile f = ((VFileExistingFileEvent) event).getRequiredFile();
       f.putUserData(WAS_VERSIONED_KEY, myGateway.isVersioned(f));
     }
     else if (event instanceof VFileDeleteEvent de) {

@@ -121,7 +121,7 @@ public class ScratchTreeStructureProvider implements TreeStructureProvider, Dumb
       return ce.isDirectory();
     }
     else {
-      return ((VFileNonnullFileEvent) e).getRequiredFile().isDirectory();
+      return ((VFileExistingFileEvent) e).getRequiredFile().isDirectory();
     }
   }
 

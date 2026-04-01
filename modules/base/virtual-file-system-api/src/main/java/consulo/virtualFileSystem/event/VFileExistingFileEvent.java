@@ -24,8 +24,8 @@ import java.util.Objects;
  * @author UNV
  * @since 2026-04-01
  */
-public abstract class VFileNonnullFileEvent extends VFileEvent {
-    protected VFileNonnullFileEvent(@Nullable Object requestor, boolean isFromRefresh) {
+public abstract class VFileExistingFileEvent extends VFileEvent {
+    protected VFileExistingFileEvent(@Nullable Object requestor, boolean isFromRefresh) {
         super(requestor, isFromRefresh);
     }
 

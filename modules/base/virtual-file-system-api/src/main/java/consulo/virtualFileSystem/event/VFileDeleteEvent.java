@@ -23,7 +23,7 @@ import org.jspecify.annotations.Nullable;
 /**
  * @author max
  */
-public class VFileDeleteEvent extends VFileNonnullFileEvent {
+public class VFileDeleteEvent extends VFileExistingFileEvent {
   private final VirtualFile myFile;
   private int myDepth = -1;
 

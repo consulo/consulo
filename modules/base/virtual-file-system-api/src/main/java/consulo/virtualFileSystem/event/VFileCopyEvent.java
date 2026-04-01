@@ -22,7 +22,7 @@ import org.jspecify.annotations.Nullable;
 /**
  * @author max
  */
-public class VFileCopyEvent extends VFileNonnullFileEvent {
+public class VFileCopyEvent extends VFileExistingFileEvent {
   private final VirtualFile myFile;
   private final VirtualFile myNewParent;
   private final String myNewChildName;

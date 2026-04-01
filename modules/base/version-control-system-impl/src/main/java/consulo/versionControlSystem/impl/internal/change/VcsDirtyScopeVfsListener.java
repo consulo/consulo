@@ -19,7 +19,6 @@ import jakarta.inject.Singleton;
 import org.jetbrains.annotations.TestOnly;
 
 import java.util.List;
-import java.util.Objects;
 
 /**
  * Listens to file system events and notifies VcsDirtyScopeManagers responsible for changed files to mark these files dirty.
@@ -79,7 +78,7 @@ public class VcsDirtyScopeVfsListener implements AsyncVfsEventsListener, Disposa
         isDirectory = ce.isDirectory();
       }
       else {
-        VirtualFile file = ((VFileNonnullFileEvent) event).getRequiredFile();
+        VirtualFile file = ((VFileExistingFileEvent) event).getRequiredFile();
         if (!file.isInLocalFileSystem()) {
           continue;
         }
