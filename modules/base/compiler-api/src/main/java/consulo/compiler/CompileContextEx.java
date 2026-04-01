@@ -31,7 +31,6 @@ public interface CompileContextEx extends CompileContext {
 
     void addMessage(CompilerMessage message);
 
-    
     Set<VirtualFile> getTestOutputDirectories();
 
     /**
