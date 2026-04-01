@@ -24,7 +24,7 @@ import java.util.Objects;
 /**
  * @author max
  */
-public class VFileMoveEvent extends VFileEvent {
+public final class VFileMoveEvent extends VFileExistingFileEvent {
   private final VirtualFile myFile;
   private final @Nullable VirtualFile myOldParent;
   private final @Nullable VirtualFile myNewParent;

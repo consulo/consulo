@@ -82,11 +82,11 @@ public class FileUndoProvider implements UndoProvider, BulkFileListener {
     @Override
     public void before(List<? extends VFileEvent> events) {
         for (VFileEvent e : events) {
-            if (e instanceof VFileContentChangeEvent) {
-                beforeContentsChange((VFileContentChangeEvent) e);
+            if (e instanceof VFileContentChangeEvent cce) {
+                beforeContentsChange(cce);
             }
-            else if (e instanceof VFileDeleteEvent) {
-                beforeFileDeletion((VFileDeleteEvent) e);
+            else if (e instanceof VFileDeleteEvent de) {
+                beforeFileDeletion(de);
             }
         }
     }
@@ -94,14 +94,14 @@ public class FileUndoProvider implements UndoProvider, BulkFileListener {
     @Override
     public void after(List<? extends VFileEvent> events) {
         for (VFileEvent e : events) {
-            if (e instanceof VFileCreateEvent || e instanceof VFileMoveEvent || e instanceof VFilePropertyChangeEvent && ((VFilePropertyChangeEvent) e).isRename()) {
+            if (e instanceof VFileCreateEvent || e instanceof VFileMoveEvent || e instanceof VFilePropertyChangeEvent pce && pce.isRename()) {
                 VirtualFile file = e.getFile();
                 if (file != null) {
                     processEvent(e, file);
                 }
             }
-            else if (e instanceof VFileDeleteEvent) {
-                fileDeleted((VFileDeleteEvent) e);
+            else if (e instanceof VFileDeleteEvent de) {
+                fileDeleted(de);
             }
         }
     }

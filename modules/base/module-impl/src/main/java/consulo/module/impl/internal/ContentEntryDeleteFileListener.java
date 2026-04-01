@@ -65,7 +65,7 @@ public class ContentEntryDeleteFileListener implements AsyncFileListener {
 
                 Module moduleForFile = ModuleUtilCore.findModuleForFile(fileToDelete, project);
 
-                // if module have dir url - dont need check
+                // if module have dir url - don't need check
                 if (moduleForFile == null || moduleForFile.getModuleDirUrl() != null) {
                     continue;
                 }

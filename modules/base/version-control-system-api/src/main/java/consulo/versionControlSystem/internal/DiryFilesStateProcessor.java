@@ -188,7 +188,7 @@ public abstract class DiryFilesStateProcessor {
   }
 
   private void processFileCopied(VFileCopyEvent event) {
-    VirtualFile newFile = event.getNewParent().findChild(event.getNewChildName());
+    VirtualFile newFile = event.findCreatedFile();
     if (newFile == null || myChangeListManager.isIgnoredFile(newFile)) return;
     VirtualFile originalFile = event.getFile();
     if (isFileCopyingFromTrackingSupported() && isUnderMyVcs(originalFile)) {
@@ -207,8 +207,8 @@ public abstract class DiryFilesStateProcessor {
   }
 
   private void processBeforeDeletedFile(VirtualFile file) {
-    if (file.isDirectory() && file instanceof NewVirtualFile && !isRecursiveDeleteSupported()) {
-      for (VirtualFile child : ((NewVirtualFile)file).getCachedChildren()) {
+    if (file.isDirectory() && file instanceof NewVirtualFile newVirtualFile && !isRecursiveDeleteSupported()) {
+      for (VirtualFile child : newVirtualFile.getCachedChildren()) {
         ProgressManager.checkCanceled();
         FileStatus status = myChangeListManager.getStatus(child);
         if (!filterOutByStatus(status)) {
@@ -298,14 +298,14 @@ public abstract class DiryFilesStateProcessor {
     for (VFileEvent event : events) {
       if (isEventIgnored(event)) continue;
 
-      if (event instanceof VFileDeleteEvent && allowedDeletion(event)) {
-        processBeforeDeletedFile((VFileDeleteEvent)event);
+      if (event instanceof VFileDeleteEvent de && allowedDeletion(de)) {
+        processBeforeDeletedFile(de);
       }
-      else if (event instanceof VFileMoveEvent) {
-        processBeforeFileMovement((VFileMoveEvent)event);
+      else if (event instanceof VFileMoveEvent me) {
+        processBeforeFileMovement(me);
       }
-      else if (event instanceof VFilePropertyChangeEvent) {
-        processBeforePropertyChange((VFilePropertyChangeEvent)event);
+      else if (event instanceof VFilePropertyChangeEvent pce) {
+        processBeforePropertyChange(pce);
       }
     }
   }

@@ -117,12 +117,10 @@ public class ScratchTreeStructureProvider implements TreeStructureProvider, Dumb
   }
 
   private static boolean isDirectory(VFileEvent e) {
-    if (e instanceof VFileCreateEvent vfce) {
-      return vfce.isDirectory();
-    }
-    else {
-      return Objects.requireNonNull(e.getFile()).isDirectory();
-    }
+    return switch (e) {
+      case VFileCreateEvent ce -> ce.isDirectory();
+      case VFileExistingFileEvent efe -> efe.getFile().isDirectory();
+    };
   }
 
   @RequiredReadAction

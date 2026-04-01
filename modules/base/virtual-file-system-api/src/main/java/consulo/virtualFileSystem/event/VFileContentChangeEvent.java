@@ -23,7 +23,7 @@ import org.jspecify.annotations.Nullable;
 /**
  * @author max
  */
-public class VFileContentChangeEvent extends VFileEvent {
+public final class VFileContentChangeEvent extends VFileExistingFileEvent {
   private final VirtualFile myFile;
   private final long myOldModificationStamp;
   private final long myNewModificationStamp;
@@ -123,19 +123,19 @@ public class VFileContentChangeEvent extends VFileEvent {
     return myFile.isValid() && myFile.getModificationStamp() == myOldModificationStamp;
   }
 
+  @Override
   public boolean equals(@Nullable Object o) {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
 
-    VFileContentChangeEvent event = (VFileContentChangeEvent)o;
+    VFileContentChangeEvent that = (VFileContentChangeEvent) o;
 
-    if (myNewModificationStamp != event.myNewModificationStamp) return false;
-    if (myOldModificationStamp != event.myOldModificationStamp) return false;
-    if (!myFile.equals(event.myFile)) return false;
-
-    return true;
+    return myNewModificationStamp == that.myNewModificationStamp
+        && myOldModificationStamp == that.myOldModificationStamp
+        && myFile.equals(that.myFile);
   }
 
+  @Override
   public int hashCode() {
     int result = myFile.hashCode();
     result = 31 * result + (int)(myOldModificationStamp ^ (myOldModificationStamp >>> 32));

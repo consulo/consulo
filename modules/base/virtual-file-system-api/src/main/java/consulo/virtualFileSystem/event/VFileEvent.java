@@ -23,7 +23,7 @@ import org.jspecify.annotations.Nullable;
 /**
  * @author max
  */
-public abstract class VFileEvent {
+public abstract sealed class VFileEvent permits VFileCreateEvent, VFileExistingFileEvent {
   private final boolean myIsFromRefresh;
   private final @Nullable Object myRequestor;
   private @Nullable String myCachedPath = null;
@@ -67,12 +67,12 @@ public abstract class VFileEvent {
 
   /**
    * Returns the VirtualFile which this event belongs to.
-   * In some cases it may be fake file - it is not guaranteed that there is such a file.
+   * In some cases it may be null - it is not guaranteed that there is such a file.
    * <p/>
    * NB: Use this method with caution, because {@link VFileCreateEvent#getFile()} needs
    * {@link VirtualFile#findChild(String)} which may be a performance leak.
    */
-  public abstract VirtualFile getFile();
+  public abstract @Nullable VirtualFile getFile();
 
   public abstract VirtualFileSystem getFileSystem();
 
