@@ -19,6 +19,7 @@ import consulo.compiler.CompileContextEx;
 import consulo.compiler.IntermediateOutputCompiler;
 import consulo.compiler.TranslatingCompiler;
 import consulo.compiler.TranslatingCompilerFilesMonitor;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
@@ -141,7 +142,7 @@ class TranslatorsOutputSink implements TranslatingCompiler.OutputSink {
         }
         catch (IOException e) {
             LOG.info(e);
-            myContext.requestRebuildNextTime(e.getMessage());
+            myContext.requestRebuildNextTime(LocalizeValue.ofNullable(e.getMessage()));
         }
     }
 
@@ -169,7 +170,7 @@ class TranslatorsOutputSink implements TranslatingCompiler.OutputSink {
         }
         catch (IOException e) {
             LOG.info(e);
-            myContext.requestRebuildNextTime(e.getMessage());
+            myContext.requestRebuildNextTime(LocalizeValue.ofNullable(e.getMessage()));
         }
     }
 }

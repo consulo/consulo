@@ -26,7 +26,7 @@ import java.util.Collection;
 /**
  * @author max
  */
-public abstract class NewVirtualFile extends VirtualFile implements VirtualFileWithId {
+public abstract class NewVirtualFile extends BaseVirtualFile implements VirtualFileWithId {
   @Override
   @RequiredReadAction
   public boolean isValid() {

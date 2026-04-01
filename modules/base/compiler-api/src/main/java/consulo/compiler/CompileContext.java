@@ -15,9 +15,11 @@
  */
 package consulo.compiler;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.application.progress.ProgressIndicator;
 import consulo.compiler.scope.CompileScope;
 import consulo.content.ContentFolderTypeProvider;
+import consulo.localize.LocalizeValue;
 import consulo.module.Module;
 import consulo.navigation.Navigatable;
 import consulo.project.Project;
@@ -40,6 +42,8 @@ public interface CompileContext extends UserDataHolder {
      * @param lineNum   a line number, -1 if not available.
      * @param columnNum a column number, -1 if not available.
      */
+    @Deprecated
+    @DeprecationInfo("Use newError/newWarning/newInfo()...add()")
     void addMessage(CompilerMessageCategory category, String message, @Nullable String url, int lineNum, int columnNum);
 
     /**
@@ -53,8 +57,14 @@ public interface CompileContext extends UserDataHolder {
      * @param columnNum   a column number, -1 if not available.
      * @param navigatable the navigatable pointing to the error location.
      */
+    @Deprecated
+    @DeprecationInfo("Use newError/newWarning/newInfo()...add()")
     void addMessage(
-        CompilerMessageCategory category, String message, @Nullable String url, int lineNum, int columnNum,
+        CompilerMessageCategory category,
+        String message,
+        @Nullable String url,
+        int lineNum,
+        int columnNum,
         Navigatable navigatable
     );
 
@@ -84,6 +94,16 @@ public interface CompileContext extends UserDataHolder {
      * A compiler may call this method in order to request complete project rebuild.
      * This may be necessary, for example, when compiler caches are corrupted.
      */
+    default void requestRebuildNextTime(LocalizeValue message) {
+        requestRebuildNextTime(message.get());
+    }
+
+    /**
+     * A compiler may call this method in order to request complete project rebuild.
+     * This may be necessary, for example, when compiler caches are corrupted.
+     */
+    @Deprecated
+    @DeprecationInfo("Use variant with LocalizeValue")
     void requestRebuildNextTime(String message);
 
     /**

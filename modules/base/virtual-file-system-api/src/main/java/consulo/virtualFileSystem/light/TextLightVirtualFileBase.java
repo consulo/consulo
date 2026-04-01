@@ -24,7 +24,7 @@ import java.nio.charset.Charset;
 
 /**
  * @author VISTALL
- * @since 16-Apr-22
+ * @since 2022-04-16
  */
 public abstract class TextLightVirtualFileBase extends LightVirtualFileBase {
   protected CharSequence myContent = "";

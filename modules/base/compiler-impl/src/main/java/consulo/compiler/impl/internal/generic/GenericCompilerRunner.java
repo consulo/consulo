@@ -70,7 +70,7 @@ public class GenericCompilerRunner {
         }
         catch (IOException e) {
             LOG.info(e);
-            myContext.requestRebuildNextTime(e.getMessage());
+            myContext.requestRebuildNextTime(LocalizeValue.ofNullable(e.getMessage()));
             throw new ExitException(ExitStatus.ERRORS);
         }
         catch (ExitException | ProcessCanceledException e) {

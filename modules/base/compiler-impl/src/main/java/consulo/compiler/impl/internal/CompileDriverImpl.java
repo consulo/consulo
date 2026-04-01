@@ -194,7 +194,7 @@ public class CompileDriverImpl implements CompileDriver {
         CompileCounters counters = new CompileCounters();
         CompilerTask task = new CompilerTask(
             myProject,
-            LocalizeValue.localizeTODO("Classes up-to-date check"),
+            CompilerLocalize.classesUpToDateCheck(),
             false,
             isCompilationStartedAutomatically(scope),
             counters
@@ -245,7 +245,6 @@ public class CompileDriverImpl implements CompileDriver {
         return ExitStatus.UP_TO_DATE.equals(result.get());
     }
 
-    
     private CompositeDependencyCache createDependencyCache() {
         return new CompositeDependencyCache(myProject, myCachesDirectoryPath);
     }
@@ -501,6 +500,7 @@ public class CompileDriverImpl implements CompileDriver {
         compileTask.start(compileWork);
     }
 
+    @RequiredReadAction
     private ExitStatus doCompile(
         CompileContextImpl compileContext,
         BuildProgress<BuildProgressDescriptor> buildProgress,
@@ -597,7 +597,7 @@ public class CompileDriverImpl implements CompileDriver {
             LocalFileSystem lfs = LocalFileSystem.getInstance();
             if (!outputs.isEmpty()) {
                 ProgressIndicator indicator = compileContext.getProgressIndicator();
-                indicator.setTextValue(LocalizeValue.localizeTODO("Synchronizing output directories..."));
+                indicator.setTextValue(CompilerLocalize.progressSynchronizingOutputDirectories());
                 lfs.refreshIoFiles(outputs, _status == ExitStatus.CANCELLED, false, null);
                 indicator.setTextValue(LocalizeValue.empty());
             }
@@ -626,21 +626,21 @@ public class CompileDriverImpl implements CompileDriver {
                 errorCount = compileContext.getMessageCount(CompilerMessageCategory.ERROR);
                 warningCount = compileContext.getMessageCount(CompilerMessageCategory.WARNING);
                 if (!myProject.isDisposed()) {
-                    String statusMessage = createStatusMessage(_status, warningCount, errorCount, duration);
+                    LocalizeValue statusMessage = createStatusMessage(_status, warningCount, errorCount, duration);
                     NotificationType messageType =
                         errorCount > 0 ? NotificationType.ERROR : warningCount > 0 ? NotificationType.WARNING : NotificationType.INFORMATION;
                     if (duration > ONE_MINUTE_MS) {
                         ToolWindowManager.getInstance(myProject)
-                            .notifyByBalloon(BuildContentManager.TOOL_WINDOW_ID, messageType.toUI(), statusMessage);
+                            .notifyByBalloon(BuildContentManager.TOOL_WINDOW_ID, messageType.toUI(), statusMessage.get());
                     }
 
                     NotificationService.getInstance()
                         .newOfType(CompilerManager.NOTIFICATION_GROUP, messageType)
-                        .content(LocalizeValue.localizeTODO(statusMessage))
+                        .content(statusMessage)
                         .notify(myProject);
 
                     if (_status != ExitStatus.UP_TO_DATE && compileContext.getMessageCount(null) > 0) {
-                        compileContext.addMessage(CompilerMessageCategory.INFORMATION, statusMessage, null, -1, -1);
+                        compileContext.addMessage(CompilerMessageCategory.INFORMATION, statusMessage.get(), null, -1, -1);
                     }
                 }
             }
@@ -655,46 +655,44 @@ public class CompileDriverImpl implements CompileDriver {
 
     private void checkCachesVersion(CompileContextImpl compileContext, long currentVFSTimestamp) {
         if (CompilerPaths.getRebuildMarkerFile(compileContext.getProject()).exists()) {
-            compileContext.requestRebuildNextTime("Compiler caches are out of date, project rebuild is required");
+            compileContext.requestRebuildNextTime(CompilerLocalize.errorCompilerCachesExpired());
             return;
         }
         CompileStatus compileStatus = readStatus();
         if (compileStatus == null) {
-            compileContext.requestRebuildNextTime(CompilerLocalize.errorCompilerCachesCorrupted().get());
+            compileContext.requestRebuildNextTime(CompilerLocalize.errorCompilerCachesCorrupted());
         }
         else if (compileStatus.CACHE_FORMAT_VERSION != -1 && compileStatus.CACHE_FORMAT_VERSION != DEPENDENCY_FORMAT_VERSION) {
-            compileContext.requestRebuildNextTime(CompilerLocalize.errorCachesOldFormat().get());
+            compileContext.requestRebuildNextTime(CompilerLocalize.errorCachesOldFormat());
         }
         else if (compileStatus.COMPILATION_IN_PROGRESS) {
-            compileContext.requestRebuildNextTime(CompilerLocalize.errorPreviousCompilationFailed().get());
+            compileContext.requestRebuildNextTime(CompilerLocalize.errorPreviousCompilationFailed());
         }
         else if (compileStatus.VFS_CREATION_STAMP >= 0L) {
             if (currentVFSTimestamp != compileStatus.VFS_CREATION_STAMP) {
-                compileContext.requestRebuildNextTime(CompilerLocalize.errorVfsWasRebuilt().get());
+                compileContext.requestRebuildNextTime(CompilerLocalize.errorVfsWasRebuilt());
             }
         }
     }
 
-    private static String createStatusMessage(ExitStatus status, int warningCount, int errorCount, long duration) {
-        String message;
+    private static LocalizeValue createStatusMessage(ExitStatus status, int warningCount, int errorCount, long duration) {
         if (status == ExitStatus.CANCELLED) {
-            message = CompilerLocalize.statusCompilationAborted().get();
+            return CompilerLocalize.statusCompilationAborted();
         }
         else if (status == ExitStatus.UP_TO_DATE) {
-            message = CompilerLocalize.statusAllUpToDate().get();
+            return CompilerLocalize.statusAllUpToDate();
         }
         else {
+            String d = StringUtil.formatDuration(duration);
             if (status == ExitStatus.SUCCESS) {
-                message = warningCount > 0
-                    ? CompilerLocalize.statusCompilationCompletedSuccessfullyWithWarnings(warningCount).get()
-                    : CompilerLocalize.statusCompilationCompletedSuccessfully().get();
+                return warningCount > 0
+                    ? CompilerLocalize.statusCompilationCompletedSuccessfullyWithWarnings(warningCount, d)
+                    : CompilerLocalize.statusCompilationCompletedSuccessfully(d);
             }
             else {
-                message = CompilerLocalize.statusCompilationCompletedSuccessfullyWithWarningsAndErrors(errorCount, warningCount).get();
+                return CompilerLocalize.statusCompilationCompletedSuccessfullyWithWarningsAndErrors(errorCount, warningCount, d);
             }
-            message = message + " in " + StringUtil.formatDuration(duration);
         }
-        return message;
     }
 
     private ExitStatus doCompile(
@@ -748,7 +746,7 @@ public class CompileDriverImpl implements CompileDriver {
 
                 //int totalCount = all.length + myGenerationCompilerModuleToOutputDirMap.size() * 2;
                 progressIndicator.pushState();
-                progressIndicator.setTextValue(LocalizeValue.localizeTODO("Inspecting output directories..."));
+                progressIndicator.setTextValue(CompilerLocalize.progressInspectingOutputDirectories());
                 try {
                     for (VirtualFile output : all) {
                         if (output.isValid()) {
@@ -762,7 +760,7 @@ public class CompileDriverImpl implements CompileDriver {
                                 if (!created) {
                                     context.addMessage(
                                         CompilerMessageCategory.ERROR,
-                                        "Failed to create output directory " + file.getPath(),
+                                        CompilerLocalize.errorFailedToCreateOutputDirectory(file.getPath()).get(),
                                         null,
                                         0,
                                         0
@@ -774,7 +772,7 @@ public class CompileDriverImpl implements CompileDriver {
                             if (output == null) {
                                 context.addMessage(
                                     CompilerMessageCategory.ERROR,
-                                    "Failed to locate output directory " + file.getPath(),
+                                    CompilerLocalize.errorFailedToLocateOutputDirectory(file.getPath()).get(),
                                     null,
                                     0,
                                     0
@@ -844,15 +842,18 @@ public class CompileDriverImpl implements CompileDriver {
                 VirtualFile[] allOutputDirs = context.getAllOutputDirectories();
 
                 if (didSomething && GENERATE_CLASSPATH_INDEX) {
-                    CompilerUtil.runInContext(context, LocalizeValue.localizeTODO("Generating classpath index..."), () -> {
-                        int count = 0;
-                        for (VirtualFile file : allOutputDirs) {
-                            context.getProgressIndicator().setFraction((double) ++count / allOutputDirs.length);
-                            createClasspathIndex(file);
+                    CompilerUtil.runInContext(
+                        context,
+                        CompilerLocalize.progressGeneratingClasspathIndex(),
+                        () -> {
+                            int count = 0;
+                            for (VirtualFile file : allOutputDirs) {
+                                context.getProgressIndicator().setFraction((double) ++count / allOutputDirs.length);
+                                createClasspathIndex(file);
+                            }
                         }
-                    });
+                    );
                 }
-
             }
 
             if (!onlyCheckStatus) {
@@ -922,7 +923,6 @@ public class CompileDriverImpl implements CompileDriver {
     }
 
     private static void logErrorMessages(CompileContext context) {
-
     }
 
     private static void walkChildren(VirtualFile from, CompileContext context) {
