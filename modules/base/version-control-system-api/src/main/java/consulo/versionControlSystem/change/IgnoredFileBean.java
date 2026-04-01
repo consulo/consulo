@@ -40,7 +40,6 @@ public class IgnoredFileBean implements IgnoredFileDescriptor {
   private final Matcher myMatcher;
   private final IgnoreSettingsType myType;
   private final Project myProject;
-  private volatile VirtualFile myCachedResolved;
 
   IgnoredFileBean(String path, IgnoreSettingsType type, Project project) {
     myPath = path;
@@ -108,37 +107,7 @@ public class IgnoredFileBean implements IgnoredFileDescriptor {
   }
 
   @Override
-  @Deprecated
-  public boolean matchesFile(VirtualFile file) {
-    if (myType == IgnoreSettingsType.MASK) {
-      myMatcher.reset(file.getName());
-      return myMatcher.matches();
-    } else {
-      // quick check for 'file' == exact match pattern
-      if (IgnoreSettingsType.FILE.equals(myType) && ! myFilenameIfFile.equals(file.getName())) return false;
-
-      VirtualFile selector = resolve();
-      if (Comparing.equal(selector, NullVirtualFile.INSTANCE)) return false;
-
-      if (myType == IgnoreSettingsType.FILE) {
-        return Comparing.equal(selector, file);
-      }
-      else {
-        if ("./".equals(myPath)) {
-          // special case for ignoring the project base dir (IDEADEV-16056)
-          return !file.isDirectory() && Comparing.equal(file.getParent(), selector);
-        }
-        return VirtualFileUtil.isAncestor(selector, file, false);
-      }
-    }
-  }
-
-  @Override
   public boolean matchesFile(FilePath filePath) {
-    VirtualFile virtualFile = filePath.getVirtualFile();
-    if (virtualFile != null) {
-      return matchesFile(virtualFile);
-    }
     // Fallback for non-existing files
     if (myType == IgnoreSettingsType.MASK) {
       synchronized (myMatcher) {
@@ -154,33 +123,5 @@ public class IgnoredFileBean implements IgnoredFileDescriptor {
       // UNDER_DIR
       return myPath != null && FileUtil.isAncestor(myPath, filePath.getPath(), false);
     }
-  }
-
-  private VirtualFile resolve() {
-    if (myCachedResolved == null) {
-      VirtualFile resolved = doResolve();
-      myCachedResolved = resolved != null ? resolved : NullVirtualFile.INSTANCE;
-    }
-
-    return myCachedResolved;
-  }
-
-  private @Nullable VirtualFile doResolve() {
-    if (myProject == null || myProject.isDisposed()) { return null; }
-    VirtualFile baseDir = myProject.getBaseDir();
-
-    String path = FileUtil.toSystemIndependentName(myPath);
-    if (baseDir == null) {
-      return LocalFileSystem.getInstance().findFileByPath(path);
-    }
-
-    VirtualFile resolvedRelative = baseDir.findFileByRelativePath(path);
-    if (resolvedRelative != null) return resolvedRelative;
-
-    return LocalFileSystem.getInstance().findFileByPath(path);
-  }
-
-  public void resetCache() {
-    myCachedResolved = null;
   }
 }
