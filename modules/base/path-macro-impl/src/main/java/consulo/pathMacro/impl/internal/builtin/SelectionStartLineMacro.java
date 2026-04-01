@@ -17,13 +17,14 @@ package consulo.pathMacro.impl.internal.builtin;
 
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.VisualPosition;
+import consulo.localize.LocalizeValue;
 
 /**
  * @author yole
  */
 public class SelectionStartLineMacro extends EditorMacro {
   public SelectionStartLineMacro() {
-    super("SelectionStartLine", "Selected text start line number");
+    super("SelectionStartLine", LocalizeValue.localizeTODO("Selected text start line number"));
   }
 
   @Override

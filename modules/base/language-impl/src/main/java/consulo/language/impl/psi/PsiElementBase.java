@@ -91,7 +91,6 @@ public abstract class PsiElementBase extends UserDataHolderBase implements Navig
     }
 
     @Override
-    
     public PsiReference[] getReferences() {
         return SharedPsiElementImplUtil.getReferences(this);
     }
@@ -193,7 +192,6 @@ public abstract class PsiElementBase extends UserDataHolderBase implements Navig
     }
 
     @Override
-    
     public PsiElement getNavigationElement() {
         return this;
     }
@@ -204,13 +202,11 @@ public abstract class PsiElementBase extends UserDataHolderBase implements Navig
     }
 
     @Override
-    
     public GlobalSearchScope getResolveScope() {
         return ResolveScopeManager.getElementResolveScope(this);
     }
 
     @Override
-    
     public SearchScope getUseScope() {
         return ResolveScopeManager.getElementUseScope(this);
     }
@@ -237,7 +233,6 @@ public abstract class PsiElementBase extends UserDataHolderBase implements Navig
     }
 
     @Override
-    
     public Project getProject() {
         PsiManager manager = getManager();
         return manager.getProject();
@@ -309,7 +304,6 @@ public abstract class PsiElementBase extends UserDataHolderBase implements Navig
         return null;
     }
 
-    
     @RequiredReadAction
     protected <T> T notNullChild(T child) {
         if (child == null) {
@@ -318,7 +312,6 @@ public abstract class PsiElementBase extends UserDataHolderBase implements Navig
         return child;
     }
 
-    
     @RequiredReadAction
     @SuppressWarnings("unchecked")
     protected <T> T[] findChildrenByClass(Class<T> aClass) {
@@ -342,7 +335,6 @@ public abstract class PsiElementBase extends UserDataHolderBase implements Navig
         return null;
     }
 
-    
     @RequiredReadAction
     protected <T> T findNotNullChildByClass(Class<T> aClass) {
         return notNullChild(findChildByClass(aClass));
@@ -355,7 +347,6 @@ public abstract class PsiElementBase extends UserDataHolderBase implements Navig
         return PsiTreeUtil.getLanguageVersion(this);
     }
 
-    
     @Override
     public PsiManager getManager() {
         try {

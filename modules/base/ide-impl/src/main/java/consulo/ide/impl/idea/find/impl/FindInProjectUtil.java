@@ -162,7 +162,7 @@ public class FindInProjectUtil {
             for (LocalFileProvider provider : ((VirtualFileManagerEx)VirtualFileManager.getInstance()).getLocalFileProviders()) {
                 VirtualFile file = provider.findLocalVirtualFileByPath(path);
                 if (file != null && file.isDirectory()) {
-                    if (file.getChildren().length > 0) {
+                    if (!file.getRequiredChildren().isEmpty()) {
                         virtualFile = file;
                         break;
                     }

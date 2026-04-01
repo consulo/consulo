@@ -48,6 +48,7 @@ import consulo.usage.*;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFilePresentation;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -80,7 +81,7 @@ public class PsiElement2UsageTargetAdapter implements PsiElementUsageTarget, UiD
 
     @Override
     @RequiredReadAction
-    public String getName() {
+    public @Nullable String getName() {
         PsiElement element = getElement();
         return element instanceof NavigationItem navigationItem ? navigationItem.getName() : null;
     }

@@ -23,20 +23,18 @@ import java.io.OutputStream;
 /**
  * @author max
  */
-public class StubVirtualFile extends VirtualFile {
+public class StubVirtualFile extends BaseVirtualFile {
   @Override
-  
   public byte[] contentsToByteArray() throws IOException {
     throw new UnsupportedOperationException("contentsToByteArray is not implemented");
   }
 
   @Override
-  public VirtualFile[] getChildren() {
+  public VirtualFile @Nullable [] getChildren() {
     throw new UnsupportedOperationException("getChildren is not implemented");
   }
 
   @Override
-  
   public VirtualFileSystem getFileSystem() {
     throw new UnsupportedOperationException("getFileSystem is not implemented");
   }
@@ -58,7 +56,6 @@ public class StubVirtualFile extends VirtualFile {
   }
 
   @Override
-  
   public OutputStream getOutputStream(Object requestor, long newModificationStamp, long newTimeStamp) throws IOException {
     throw new UnsupportedOperationException("getOutputStream is not implemented");
   }
@@ -69,7 +66,6 @@ public class StubVirtualFile extends VirtualFile {
   }
 
   @Override
-  
   public String getPath() {
     throw new UnsupportedOperationException("getPath is not implemented");
   }
@@ -80,7 +76,6 @@ public class StubVirtualFile extends VirtualFile {
   }
 
   @Override
-  
   public String getUrl() {
     throw new UnsupportedOperationException("getUrl is not implemented");
   }
@@ -92,7 +87,7 @@ public class StubVirtualFile extends VirtualFile {
 
   @Override
   public boolean isValid() {
-    throw new UnsupportedOperationException("isValid is not implemented");
+    return false;
   }
 
   @Override
@@ -101,7 +96,7 @@ public class StubVirtualFile extends VirtualFile {
   }
 
   @Override
-  public void refresh(boolean asynchronous, boolean recursive, Runnable postRunnable) {
+  public void refresh(boolean asynchronous, boolean recursive, @Nullable Runnable postRunnable) {
     throw new UnsupportedOperationException("refresh is not implemented");
   }
 }

@@ -252,7 +252,7 @@ public class ScratchTreeStructureProvider implements TreeStructureProvider, Dumb
       if (root == null) return true;
       RootType rootType = getRootType();
       Project project = Objects.requireNonNull(getProject());
-      for (VirtualFile f : root.getChildren()) {
+      for (VirtualFile f : root.getRequiredChildren()) {
         if (!rootType.isIgnored(project, f)) return false;
       }
       return true;

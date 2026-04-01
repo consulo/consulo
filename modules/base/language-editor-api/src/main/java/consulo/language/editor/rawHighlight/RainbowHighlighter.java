@@ -170,7 +170,7 @@ public class RainbowHighlighter {
         for (int i = 0; i < myRainbowColors.length; ++i) {
             //noinspection deprecation
             TextAttributesKey key = TextAttributesKey.createTextAttributesKey(RAINBOW_TEMP_PREF + i, new TextAttributes());
-            key.getDefaultAttributes().setForegroundColor(myRainbowColors[i]);
+            Objects.requireNonNull(key.getDefaultAttributes()).setForegroundColor(myRainbowColors[i]);
             keys[i] = key;
         }
         return keys;

@@ -305,7 +305,7 @@ public abstract class CompositePsiElement extends CompositeElement implements Ps
     }
 
     @Override
-    public String getName() {
+    public @Nullable String getName() {
         return null;
     }
 

@@ -15,7 +15,9 @@
  */
 package consulo.versionControlSystem.change;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.versionControlSystem.FilePath;
+import consulo.versionControlSystem.util.VcsUtil;
 import consulo.virtualFileSystem.VirtualFile;
 
 import org.jspecify.annotations.Nullable;
@@ -45,7 +47,10 @@ public interface IgnoredFileDescriptor {
    * @deprecated use {@link #matchesFile(FilePath)}
    */
   @Deprecated
-  boolean matchesFile(VirtualFile file);
+  @DeprecationInfo("Use #matchesFile(FilePath)")
+  default boolean matchesFile(VirtualFile file) {
+    return matchesFile(VcsUtil.getFilePath(file));
+  }
 
   boolean matchesFile(FilePath filePath);
 }

@@ -32,7 +32,6 @@ public class FakeVirtualFile extends StubVirtualFile {
   }
 
   @Override
-  
   public VirtualFile getParent() {
     return myParent;
   }
@@ -42,7 +41,6 @@ public class FakeVirtualFile extends StubVirtualFile {
     return false;
   }
 
-  
   @Override
   public String getPath() {
     String basePath = myParent.getPath();
@@ -50,8 +48,6 @@ public class FakeVirtualFile extends StubVirtualFile {
   }
 
   @Override
-  
-  
   public String getName() {
     return myName;
   }

@@ -48,14 +48,15 @@ public class ByteBuddyAdvancedProxyFacade implements AdvancedProxyFacade {
     myBuddy = new ByteBuddy().with(ClassFileVersion.JAVA_V11).with(TypeValidation.DISABLED);
   }
 
-  
   @Override
   @SuppressWarnings("unchecked")
-  public <T> T create(Class<T> superClass,
-                      Class[] interfaces,
-                      InvocationHandler invocationHandler,
-                      boolean interceptObjectMethods,
-                      Object[] superConstructorArguments) {
+  public <T> T create(
+      Class<T> superClass,
+      Class[] interfaces,
+      InvocationHandler invocationHandler,
+      boolean interceptObjectMethods,
+      Object[] superConstructorArguments
+  ) {
     try {
       ClassLoader classLoader = ProxyHelper.preferClassLoader(superClass, interfaces);
 

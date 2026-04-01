@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.colorScheme.ui;
 
 import consulo.colorScheme.EditorColorsScheme;
@@ -54,12 +53,10 @@ public abstract class ColorAndFontDescription extends TextAttributes implements 
         return myName.get();
     }
 
-    
     public LocalizeValue getName() {
         return myName;
     }
 
-    
     @Override
     public LocalizeValue getGroup() {
         return myGroup;
@@ -116,7 +113,7 @@ public abstract class ColorAndFontDescription extends TextAttributes implements 
     public abstract void setExternalEffectType(EffectType type);
 
     @Override
-    public final void setForegroundColor(ColorValue col) {
+    public final void setForegroundColor(@Nullable ColorValue col) {
         super.setForegroundColor(col);
         if (isForegroundChecked) {
             setExternalForeground(col);
@@ -127,7 +124,7 @@ public abstract class ColorAndFontDescription extends TextAttributes implements 
     }
 
     @Override
-    public final void setBackgroundColor(ColorValue col) {
+    public final void setBackgroundColor(@Nullable ColorValue col) {
         super.setBackgroundColor(col);
         if (isBackgroundChecked) {
             setExternalBackground(col);
@@ -138,7 +135,7 @@ public abstract class ColorAndFontDescription extends TextAttributes implements 
     }
 
     @Override
-    public void setErrorStripeColor(ColorValue color) {
+    public void setErrorStripeColor(@Nullable ColorValue color) {
         super.setErrorStripeColor(color);
         if (isErrorStripeChecked) {
             setExternalErrorStripe(color);
@@ -149,7 +146,7 @@ public abstract class ColorAndFontDescription extends TextAttributes implements 
     }
 
     @Override
-    public final void setEffectColor(ColorValue col) {
+    public final void setEffectColor(@Nullable ColorValue col) {
         super.setEffectColor(col);
         if (isEffectsColorChecked) {
             setExternalEffectColor(col);
@@ -160,7 +157,7 @@ public abstract class ColorAndFontDescription extends TextAttributes implements 
     }
 
     @Override
-    public final void setEffectType(EffectType effectType) {
+    public final void setEffectType(@Nullable EffectType effectType) {
         super.setEffectType(effectType);
         setExternalEffectType(effectType);
     }

@@ -115,7 +115,7 @@ public class PatchProjectUtil {
       VirtualFile parent = file.getParent();
       if (parent == null || parents.contains(parent)) continue;
       parents.add(parent);
-      for (VirtualFile toExclude : parent.getChildren()) {  // if it will ever dead-loop on symlink blame anna.kozlova
+      for (VirtualFile toExclude : parent.getRequiredChildren()) {  // if it will ever dead-loop on symlink blame anna.kozlova
         boolean toExcludeSibling = true;
         for (VirtualFile includeRoot : included) {
           if (VirtualFileUtil.isAncestor(toExclude, includeRoot, false)) {

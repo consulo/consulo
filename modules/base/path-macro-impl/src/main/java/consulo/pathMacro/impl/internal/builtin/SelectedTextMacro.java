@@ -16,13 +16,14 @@
 package consulo.pathMacro.impl.internal.builtin;
 
 import consulo.codeEditor.Editor;
+import consulo.localize.LocalizeValue;
 
 /**
  * @author yole
  */
 public class SelectedTextMacro extends EditorMacro {
   public SelectedTextMacro() {
-    super("SelectedText", "Text selected in the editor");
+    super("SelectedText", LocalizeValue.localizeTODO("Text selected in the editor"));
   }
 
   @Override

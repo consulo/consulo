@@ -33,12 +33,17 @@ public class FileChooserUtil {
   }
 
   public static boolean isArchive(@Nullable VirtualFile file) {
-    if (file == null) return false;
-    if (isArchiveFileSystem(file) && file.getParent() == null) return true;
-    return !file.isDirectory() && file.getFileType() instanceof ArchiveFileType && !isArchiveFileSystem(file.getParent());
+    if (file == null) {
+      return false;
+    }
+    VirtualFile parent = file.getParent();
+    if (isArchiveFileSystem(file) && parent == null) {
+      return true;
+    }
+    return !file.isDirectory() && file.getFileType() instanceof ArchiveFileType && !isArchiveFileSystem(parent);
   }
 
-  private static boolean isArchiveFileSystem(VirtualFile file) {
-    return file.getFileSystem() instanceof ArchiveFileSystem;
+  private static boolean isArchiveFileSystem(@Nullable VirtualFile file) {
+    return file != null && file.getFileSystem() instanceof ArchiveFileSystem;
   }
 }

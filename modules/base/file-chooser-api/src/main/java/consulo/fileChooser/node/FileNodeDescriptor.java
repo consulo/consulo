@@ -21,15 +21,22 @@ import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.tree.NodeDescriptor;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
+import consulo.virtualFileSystem.StubVirtualFile;
 import consulo.virtualFileSystem.VirtualFile;
+import org.jspecify.annotations.Nullable;
 
 public class FileNodeDescriptor extends NodeDescriptor {
-
   private FileElement myFileElement;
-  private final Image myOriginalIcon;
-  private final String myComment;
+  private final @Nullable Image myOriginalIcon;
+  private final @Nullable String myComment;
 
-  public FileNodeDescriptor(FileElement element, NodeDescriptor parentDescriptor, Image icon, String name, String comment) {
+  public FileNodeDescriptor(
+    FileElement element,
+    @Nullable NodeDescriptor parentDescriptor,
+    @Nullable Image icon,
+    @Nullable String name,
+    @Nullable String comment
+  ) {
     super(parentDescriptor);
     myOriginalIcon = icon;
     myComment = comment;
@@ -37,7 +44,7 @@ public class FileNodeDescriptor extends NodeDescriptor {
     myName = name;
   }
 
-  public String getName() {
+  public @Nullable String getName() {
     return myName;
   }
 
@@ -55,12 +62,17 @@ public class FileNodeDescriptor extends NodeDescriptor {
 
     VirtualFile file = myFileElement.getFile();
 
-    if (file == null) return true;
+    if (file instanceof StubVirtualFile) {
+      return true;
+    }
 
     setIcon(myOriginalIcon);
 
     if (myFileElement.isHidden()) {
-      setIcon(ImageEffects.transparent(getIcon()));
+      Image icon = getIcon();
+      if (icon != null) {
+        setIcon(ImageEffects.transparent(icon));
+      }
     }
 
     myColor = myFileElement.isHidden() ? TargetAWT.from(SimpleTextAttributes.DARK_TEXT.getFgColor()) : null;
@@ -77,7 +89,7 @@ public class FileNodeDescriptor extends NodeDescriptor {
     myFileElement = descriptor;
   }
 
-  public String getComment() {
+  public @Nullable String getComment() {
     return myComment;
   }
 }

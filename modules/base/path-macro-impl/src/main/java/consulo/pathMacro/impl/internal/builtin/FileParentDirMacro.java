@@ -16,11 +16,11 @@
 package consulo.pathMacro.impl.internal.builtin;
 
 import consulo.dataContext.DataContext;
+import consulo.localize.LocalizeValue;
 import consulo.pathMacro.Macro;
-import consulo.pathMacro.PathMacroBundle;
+import consulo.pathMacro.localize.PathMacroLocalize;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
-
 import org.jspecify.annotations.Nullable;
 
 public class FileParentDirMacro extends Macro {
@@ -30,8 +30,8 @@ public class FileParentDirMacro extends Macro {
   }
 
   @Override
-  public String getDescription() {
-    return PathMacroBundle.message("macro.file.parent.directory");
+  public LocalizeValue getDescription() {
+    return PathMacroLocalize.macroFileParentDirectory();
   }
 
   @Override

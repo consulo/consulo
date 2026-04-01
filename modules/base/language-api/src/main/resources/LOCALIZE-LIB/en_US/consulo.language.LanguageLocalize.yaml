@@ -10,26 +10,8 @@ PerFileConfigurableBase.project.mapping:
     text: Project {0}
 PerFileConfigurableBase.target.title:
     text: Path
-action.filters.text:
-    text: Filters
 action.set.system.default.encoding.text:
     text: <System Default>
-build.event.message.errors:
-    text: '{0} {0,choice, 1#error|2#errors}'
-build.event.message.up.to.date:
-    text: UP-TO-DATE
-build.event.message.warnings:
-    text: '{0} {0,choice, 1#warning|2#warnings}'
-build.event.message.with:
-    text: '{0} with {1}'
-build.event.title.build.issues:
-    text: Build Issues
-build.event.title.other.messages:
-    text: Other Messages
-build.tree.filters.show.succesful:
-    text: Show Successful Steps
-build.tree.filters.show.warnings:
-    text: Show Warnings
 button.do.not.override:
     text: Do Not Override
 button.override:

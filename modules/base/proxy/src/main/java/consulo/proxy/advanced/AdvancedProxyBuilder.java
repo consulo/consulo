@@ -35,8 +35,7 @@ public final class AdvancedProxyBuilder<T> {
     ourAdvancedProxyFacade = new ByteBuddyAdvancedProxyFacade();
   }
 
-  
-  public static <K> AdvancedProxyBuilder<K> create(@Nullable Class<K> superClass) {
+  public static <K> AdvancedProxyBuilder<K> create(Class<K> superClass) {
     return new AdvancedProxyBuilder<>(superClass);
   }
 
@@ -44,44 +43,38 @@ public final class AdvancedProxyBuilder<T> {
   private Object[] mySuperConstructorArguments = ArrayUtil.EMPTY_OBJECT_ARRAY;
 
   private Class[] myInterfaces = ArrayUtil.EMPTY_CLASS_ARRAY;
-  private InvocationHandler myInvocationHandler;
+  private @Nullable InvocationHandler myInvocationHandler = null;
 
   private boolean myInterceptObjectMethods = true;
 
-  private AdvancedProxyBuilder(@Nullable Class<T> superClass) {
+  private AdvancedProxyBuilder(Class<T> superClass) {
     mySuperClass = superClass;
   }
 
-  
   public AdvancedProxyBuilder<T> withSuperConstructorArguments(Object... args) {
     mySuperConstructorArguments = args;
     return this;
   }
 
-  
   public AdvancedProxyBuilder<T> withInterfaces(Class... interfaces) {
     myInterfaces = interfaces;
     return this;
   }
 
-  
   public AdvancedProxyBuilder<T> withInterfaces(Collection<Class> interfaces) {
     return withInterfaces(interfaces.toArray(ArrayUtil.EMPTY_CLASS_ARRAY));
   }
 
-  
   public AdvancedProxyBuilder<T> withInvocationHandler(InvocationHandler invocationHandler) {
     myInvocationHandler = invocationHandler;
     return this;
   }
 
-  
   public AdvancedProxyBuilder<T> withInterceptObjectMethods(boolean interceptObjectMethods) {
     myInterceptObjectMethods = interceptObjectMethods;
     return this;
   }
 
-  
   public T build() {
     Objects.requireNonNull(myInvocationHandler, "invocation handler must be set");
     return ourAdvancedProxyFacade.create(mySuperClass, myInterfaces, myInvocationHandler, myInterceptObjectMethods, mySuperConstructorArguments);

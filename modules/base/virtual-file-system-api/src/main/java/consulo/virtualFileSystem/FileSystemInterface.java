@@ -15,6 +15,7 @@
  */
 package consulo.virtualFileSystem;
 
+import consulo.annotation.access.RequiredWriteAction;
 import org.jspecify.annotations.Nullable;
 import java.io.IOException;
 import java.io.InputStream;
@@ -30,7 +31,6 @@ public interface FileSystemInterface {
 
   boolean exists(VirtualFile file);
 
-  
   String[] list(VirtualFile file);
 
   boolean isDirectory(VirtualFile file);
@@ -47,19 +47,24 @@ public interface FileSystemInterface {
 
   @Nullable String resolveSymLink(VirtualFile file);
 
+  @RequiredWriteAction
   VirtualFile createChildDirectory(@Nullable Object requestor, VirtualFile parent, String dir) throws IOException;
 
+  @RequiredWriteAction
   VirtualFile createChildFile(@Nullable Object requestor, VirtualFile parent, String file) throws IOException;
 
-  void deleteFile(Object requestor, VirtualFile file) throws IOException;
+  @RequiredWriteAction
+  void deleteFile(@Nullable Object requestor, VirtualFile file) throws IOException;
 
-  void moveFile(Object requestor, VirtualFile file, VirtualFile newParent) throws IOException;
+  @RequiredWriteAction
+  void moveFile(@Nullable Object requestor, VirtualFile file, VirtualFile newParent) throws IOException;
 
-  void renameFile(Object requestor, VirtualFile file, String newName) throws IOException;
+  @RequiredWriteAction
+  void renameFile(@Nullable Object requestor, VirtualFile file, String newName) throws IOException;
 
-  VirtualFile copyFile(Object requestor, VirtualFile file, VirtualFile newParent, String copyName) throws IOException;
+  @RequiredWriteAction
+  VirtualFile copyFile(@Nullable Object requestor, VirtualFile file, VirtualFile newParent, String copyName) throws IOException;
 
-  
   byte[] contentsToByteArray(VirtualFile file) throws IOException;
 
   /**

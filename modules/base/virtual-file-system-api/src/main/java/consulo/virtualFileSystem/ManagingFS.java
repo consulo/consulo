@@ -26,7 +26,6 @@ public abstract class ManagingFS implements FileSystemInterface {
 
   public abstract @Nullable DataInputStream readAttribute(VirtualFile file, FileAttribute att);
 
-  
   public abstract DataOutputStream writeAttribute(VirtualFile file, FileAttribute att);
 
   /**
@@ -65,17 +64,13 @@ public abstract class ManagingFS implements FileSystemInterface {
 
   public abstract @Nullable NewVirtualFile findRoot(String path, NewVirtualFileSystem fs);
 
-  
   public abstract VirtualFile[] getRoots();
 
-  
   public abstract VirtualFile[] getRoots(NewVirtualFileSystem fs);
 
-  
   public abstract VirtualFile[] getLocalRoots();
 
   public abstract @Nullable VirtualFile findFileById(int id);
 
-  
-  public abstract <P, R> Function<P, R> accessDiskWithCheckCanceled(Function<? super P, ? extends R> function);
+  public abstract <P, R extends @Nullable Object> Function<P, R> accessDiskWithCheckCanceled(Function<? super P, ? extends R> function);
 }

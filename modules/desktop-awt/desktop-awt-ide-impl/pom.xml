@@ -145,7 +145,11 @@
         </dependency>
         <dependency>
             <groupId>consulo.internal</groupId>
-            <artifactId>jediterm</artifactId>
+            <artifactId>jediterm-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>consulo.internal</groupId>
+            <artifactId>jediterm-ui</artifactId>
         </dependency>
         <!-- Test -->
         <dependency>

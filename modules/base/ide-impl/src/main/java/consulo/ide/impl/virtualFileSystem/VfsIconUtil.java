@@ -38,7 +38,7 @@ import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
- * @since 20-Nov-16.
+ * @since 2016-11-20
  */
 public class VfsIconUtil {
     private static final Key<Boolean> PROJECT_WAS_EVER_INITIALIZED = Key.create("iconDeferrer:projectWasEverInitialized");
@@ -107,7 +107,6 @@ public class VfsIconUtil {
         );
     }
 
-   
     @RequiredReadAction
     public static Image getIconNoDefer(VirtualFile file, @Iconable.IconFlags int flags, @Nullable ComponentManager project) {
         UIAccess.assetIsNotUIThread();

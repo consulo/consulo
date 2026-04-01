@@ -26,8 +26,6 @@ import consulo.virtualFileSystem.VirtualFileSystem;
 import org.jspecify.annotations.Nullable;
 
 public class LightFilePointer implements VirtualFilePointer {
-
-  
   private final String myUrl;
   private volatile @Nullable VirtualFile myFile;
   private volatile boolean myRefreshed = false;
@@ -48,13 +46,11 @@ public class LightFilePointer implements VirtualFilePointer {
   }
 
   @Override
-  
   public String getUrl() {
     return myUrl;
   }
 
   @Override
-  
   public String getFileName() {
     VirtualFile file = myFile;
     if (file != null) {
@@ -65,18 +61,16 @@ public class LightFilePointer implements VirtualFilePointer {
   }
 
   @Override
-  
   public String getPresentableUrl() {
     VirtualFile file = getFile();
     if (file != null) return file.getPresentableUrl();
     return toPresentableUrl(myUrl);
   }
 
-  
   private static String toPresentableUrl(String url) {
     String path = VirtualFileManager.extractPath(url);
     String protocol = VirtualFileManager.extractProtocol(url);
-    VirtualFileSystem fileSystem = VirtualFileManager.getInstance().getFileSystem(protocol);
+    VirtualFileSystem fileSystem = protocol != null ? VirtualFileManager.getInstance().getFileSystem(protocol) : null;
     return ObjectUtil.notNull(fileSystem, StandardFileSystems.local()).extractPresentableUrl(path);
   }
 
@@ -92,7 +86,7 @@ public class LightFilePointer implements VirtualFilePointer {
     VirtualFile virtualFile = vfManager.findFileByUrl(myUrl);
     if (virtualFile == null && !myRefreshed) {
       myRefreshed = true;
-      Application application = ApplicationManager.getApplication();
+      Application application = Application.get();
       if (application.isDispatchThread() || !application.isReadAccessAllowed()) {
         virtualFile = vfManager.refreshAndFindFileByUrl(myUrl);
       }
@@ -105,12 +99,10 @@ public class LightFilePointer implements VirtualFilePointer {
   }
 
   @Override
-  public boolean equals(Object o) {
-    if (this == o) return true;
-    if (!(o instanceof LightFilePointer)) return false;
-
-    return myUrl.equals(((LightFilePointer)o).myUrl);
-
+  public boolean equals(@Nullable Object o) {
+    return this == o
+        || o instanceof LightFilePointer that
+        && myUrl.equals(that.myUrl);
   }
 
   @Override

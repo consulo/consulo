@@ -24,7 +24,7 @@ module consulo.execution.api {
 
     requires static com.google.common;
 
-    requires static jediterm;
+    requires static jediterm.core;
 
     exports consulo.execution;
     exports consulo.execution.action;

@@ -38,7 +38,7 @@ build.status.finished:
     text: finished
 build.status.running:
     text: running...
-build.tree.filters.show.succesful:
+build.tree.filters.show.successful:
     text: Show Successful Steps
 build.tree.filters.show.warnings:
     text: Show Warnings

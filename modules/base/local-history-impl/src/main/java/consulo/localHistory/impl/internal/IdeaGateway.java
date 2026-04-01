@@ -223,7 +223,7 @@ public class IdeaGateway {
   public static Iterable<VirtualFile> loadAndIterateChildren(VirtualFile f) {
     if (!(f instanceof NewVirtualFile)) return Collections.emptyList();
     NewVirtualFile nf = (NewVirtualFile)f;
-    return Arrays.asList(nf.getChildren());
+    return nf.getRequiredChildren();
   }
 
   

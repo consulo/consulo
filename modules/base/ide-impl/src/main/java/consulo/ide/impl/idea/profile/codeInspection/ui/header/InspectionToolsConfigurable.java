@@ -378,14 +378,14 @@ public abstract class InspectionToolsConfigurable implements ErrorsConfigurable,
                 UIUtil.getWarningIcon()
               );
               if (buttonPressed == Messages.YES) {
+                TextAttributes textAttributes = Objects.requireNonNull(CodeInsightColors.WARNINGS_ATTRIBUTES.getDefaultAttributes());
                 for (String level : levels) {
-                  TextAttributes textAttributes = CodeInsightColors.WARNINGS_ATTRIBUTES.getDefaultAttributes();
                   HighlightInfoTypeImpl info =
-                    new HighlightInfoTypeImpl(new HighlightSeverity(level, 50),
-                                                                TextAttributesKey.createTextAttributesKey(level));
-                  ((SeverityRegistrarImpl)myProfileManager.getOwnSeverityRegistrar()).registerSeverity(new SeverityRegistrarImpl.SeverityBasedTextAttributes(
-                    textAttributes.clone(),
-                    info), textAttributes.getErrorStripeColor());
+                    new HighlightInfoTypeImpl(new HighlightSeverity(level, 50), TextAttributesKey.of(level));
+                  ((SeverityRegistrarImpl)myProfileManager.getOwnSeverityRegistrar()).registerSeverity(
+                    new SeverityRegistrarImpl.SeverityBasedTextAttributes(textAttributes.clone(), info),
+                    textAttributes.getErrorStripeColor()
+                  );
                 }
               }
             }

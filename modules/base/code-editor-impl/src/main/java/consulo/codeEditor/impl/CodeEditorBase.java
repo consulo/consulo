@@ -132,7 +132,7 @@ public abstract class CodeEditorBase extends UserDataHolderBase implements RealE
         }
 
         @Override
-        public TextAttributes getAttributes(TextAttributesKey key) {
+        public @Nullable TextAttributes getAttributes(@Nullable TextAttributesKey key) {
             if (myOwnAttributes.containsKey(key)) {
                 return myOwnAttributes.get(key);
             }
@@ -153,7 +153,7 @@ public abstract class CodeEditorBase extends UserDataHolderBase implements RealE
         }
 
         @Override
-        public void setColor(EditorColorKey key, ColorValue color) {
+        public void setColor(EditorColorKey key, @Nullable ColorValue color) {
             myOwnColors.put(key, color);
 
             // These two are here because those attributes are cached and I do not whant the clients to call editor's reinit

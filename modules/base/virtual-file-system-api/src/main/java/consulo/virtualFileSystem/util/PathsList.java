@@ -23,6 +23,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.archive.ArchiveFileType;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.virtualFileSystem.fileType.FileTypeRegistry;
+import org.jspecify.annotations.Nullable;
 
 import java.io.File;
 import java.util.*;
@@ -35,11 +36,12 @@ public class PathsList {
   private final List<String> myPathTail = new ArrayList<>();
   private final Set<String> myPathSet = new HashSet<>();
 
-  private static final Function<String, VirtualFile> PATH_TO_LOCAL_VFILE = path -> StandardFileSystems.local().findFileByPath(path.replace(File.separatorChar, '/'));
+  private static final Function<String, @Nullable VirtualFile> PATH_TO_LOCAL_VFILE =
+      path -> StandardFileSystems.local().findFileByPath(path.replace(File.separatorChar, '/'));
 
-  private static final Function<VirtualFile, String> LOCAL_PATH = VirtualFilePathUtil::getLocalPath;
+  private static final Function<VirtualFile, @Nullable String> LOCAL_PATH = VirtualFilePathUtil::getLocalPath;
 
-  private static final Function<String, VirtualFile> PATH_TO_DIR = s -> {
+  private static final Function<String, @Nullable VirtualFile> PATH_TO_DIR = s -> {
     VirtualFile file = PATH_TO_LOCAL_VFILE.apply(s);
     if (file == null) return null;
     FileType fileType = !file.isDirectory() ? FileTypeRegistry.getInstance().getFileTypeByFileName(file.getName()) : null;
@@ -53,7 +55,7 @@ public class PathsList {
     return myPathSet.isEmpty();
   }
 
-  public void add(String path) {
+  public void add(@Nullable String path) {
     addAllLast(chooseFirstTimeItems(path), myPath);
   }
 
@@ -86,7 +88,7 @@ public class PathsList {
     addAllLast(chooseFirstTimeItems(path), myPathTail);
   }
 
-  private Iterable<String> chooseFirstTimeItems(String path) {
+  private Iterable<String> chooseFirstTimeItems(@Nullable String path) {
     if (path == null) {
       return Collections.emptyList();
     }
@@ -105,12 +107,10 @@ public class PathsList {
     }
   }
 
-  
   public String getPathsString() {
     return StringUtil.join(getPathList(), File.pathSeparator);
   }
 
-  
   public List<String> getPathList() {
     List<String> result = new ArrayList<>();
     result.addAll(myPath);

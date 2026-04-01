@@ -1,5 +1,8 @@
 /*
- * Copyright 2000-2014 JetBrains s.r.o.
+ * Copyright 2000-2025 JetBrains s.r.o. and contributors. Use of this source code is governed by the Apache 2.0 license.
+ */
+/*
+ * Copyright 2013-2026 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,6 +18,7 @@
  */
 package consulo.desktop.awt.execution.terminal;
 
+import com.jediterm.terminal.ui.TerminalCopyPasteHandler;
 import com.jediterm.terminal.TextStyle;
 import com.jediterm.terminal.model.StyleState;
 import com.jediterm.terminal.model.TerminalTextBuffer;
@@ -31,11 +35,9 @@ import consulo.ui.ex.awt.CopyPasteManager;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.internal.JBHiDPIScaledImage;
 import consulo.ui.ex.awt.util.UISettingsUtil;
-import org.intellij.lang.annotations.JdkConstants;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.StringSelection;
 import java.awt.datatransfer.UnsupportedFlavorException;
@@ -49,21 +51,36 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Predicate;
 
-/* -*-mode:java; c-basic-offset:2; -*- */
-public class JBTerminalPanel extends TerminalPanel implements FocusListener, TerminalSettingsListener, Disposable, Predicate<AWTEvent> {
+/**
+ * Consulo terminal panel adapted from JetBrains JBTerminalPanel.
+ */
+public class JBTerminalPanel extends TerminalPanel implements FocusListener, TerminalSettingsListener, Disposable {
     private static final String[] ACTIONS_TO_SKIP = new String[]{
         "ActivateTerminalToolWindow",
-        "ActivateMessagesToolWindow",
+        "ActivateProjectToolWindow",
         "ActivateFavoritesToolWindow",
+        "ActivateBookmarksToolWindow",
         "ActivateFindToolWindow",
         "ActivateRunToolWindow",
         "ActivateDebugToolWindow",
+        "ActivateProblemsViewToolWindow",
         "ActivateTODOToolWindow",
         "ActivateStructureToolWindow",
         "ActivateHierarchyToolWindow",
-        "ActivateChangesToolWindow",
+        "ActivateServicesToolWindow",
+        "ActivateCommitToolWindow",
+        "ActivateVersionControlToolWindow",
+        "HideActiveWindow",
+        "HideAllWindows",
+
+        "NextWindow",
+        "PreviousWindow",
+        "NextProjectWindow",
+        "PreviousProjectWindow",
 
         "ShowBookmarks",
+        "ShowTypeBookmarks",
+        "FindInPath",
         "GotoBookmark0",
         "GotoBookmark1",
         "GotoBookmark2",
@@ -80,8 +97,25 @@ public class JBTerminalPanel extends TerminalPanel implements FocusListener, Ter
         "GotoClass",
         "GotoSymbol",
 
-        "ShowSettings"
+        "Vcs.Push",
+
+        "ShowSettings",
+        "RecentFiles",
+        "Switcher",
+
+        "ResizeToolWindowLeft",
+        "ResizeToolWindowRight",
+        "ResizeToolWindowUp",
+        "ResizeToolWindowDown",
+        "MaximizeToolWindow",
+
+        "TerminalIncreaseFontSize",
+        "TerminalDecreaseFontSize",
+        "TerminalResetFontSize"
     };
+
+    private final TerminalEventDispatcher myEventDispatcher = new TerminalEventDispatcher();
+    private final JBTerminalSystemSettingsProvider mySettingsProvider;
 
     private List<AnAction> myActionsToSkip;
 
@@ -92,71 +126,15 @@ public class JBTerminalPanel extends TerminalPanel implements FocusListener, Ter
     ) {
         super(settingsProvider, backBuffer, styleState);
 
-        JBTerminalWidget.convertActions(this, getActions(), input ->
-        {
-            JBTerminalPanel.this.handleKeyEvent(input);
-            return true;
-        });
-
-        registerKeymapActions(this);
+        mySettingsProvider = settingsProvider;
 
         addFocusListener(this);
 
-        ((JBTerminalSystemSettingsProvider) mySettingsProvider).addListener(this);
-    }
-
-    private static void registerKeymapActions(final TerminalPanel terminalPanel) {
-
-        ActionManager actionManager = ActionManager.getInstance();
-        for (String actionId : ACTIONS_TO_SKIP) {
-            final AnAction action = actionManager.getAction(actionId);
-            if (action != null) {
-                AnAction a = new DumbAwareAction() {
-                    @Override
-                    public void actionPerformed(AnActionEvent e) {
-                        if (e.getInputEvent() instanceof KeyEvent) {
-                            AnActionEvent event = new AnActionEvent(e.getInputEvent(), e.getDataContext(),
-                                e.getPlace(), new Presentation(), e.getActionManager(), e.getModifiers()
-                            );
-                            action.update(event);
-                            if (event.getPresentation().isEnabled()) {
-                                action.actionPerformed(event);
-                            }
-                            else {
-                                terminalPanel.handleKeyEvent((KeyEvent) event.getInputEvent());
-                            }
-
-                            event.getInputEvent().consume();
-                        }
-                    }
-                };
-                for (Shortcut sc : action.getShortcutSet().getShortcuts()) {
-                    if (sc.isKeyboard() && sc instanceof KeyboardShortcut) {
-                        KeyboardShortcut ksc = (KeyboardShortcut) sc;
-                        a.registerCustomShortcutSet(ksc.getFirstKeyStroke().getKeyCode(),
-                            ksc.getFirstKeyStroke().getModifiers(), terminalPanel
-                        );
-                    }
-                }
-            }
-        }
-    }
-
-    @Override
-    public boolean test(AWTEvent e) {
-        if (e instanceof KeyEvent && !skipKeyEvent((KeyEvent) e)) {
-            dispatchEvent(e);
-            return true;
-        }
-        return false;
+        mySettingsProvider.addListener(this);
     }
 
     private boolean skipKeyEvent(KeyEvent e) {
-        if (myActionsToSkip == null) {
-            return false;
-        }
-        int kc = e.getKeyCode();
-        return kc == KeyEvent.VK_ESCAPE || skipAction(e, myActionsToSkip);
+        return skipAction(e, myActionsToSkip);
     }
 
     private static boolean skipAction(KeyEvent e, List<AnAction> actionsToSkip) {
@@ -180,8 +158,18 @@ public class JBTerminalPanel extends TerminalPanel implements FocusListener, Ter
     }
 
     @Override
-    protected void setCopyContents(StringSelection selection) {
-        CopyPasteManager.getInstance().setContents(selection);
+    protected TerminalCopyPasteHandler createCopyPasteHandler() {
+        return new TerminalCopyPasteHandler() {
+            @Override
+            public void setContents(String text, boolean useSystemSelectionClipboardIfAvailable) {
+                CopyPasteManager.getInstance().setContents(new StringSelection(text));
+            }
+
+            @Override
+            public String getContents(boolean useSystemSelectionClipboardIfAvailable) {
+                return CopyPasteManager.getInstance().getContents(DataFlavor.stringFlavor);
+            }
+        };
     }
 
     @Override
@@ -235,37 +223,23 @@ public class JBTerminalPanel extends TerminalPanel implements FocusListener, Ter
     }
 
     @Override
-    protected boolean isRetina() {
-        return UIUtil.isRetina();
-    }
-
-    @Override
-    protected String getClipboardContent(Clipboard clipboard) throws IOException, UnsupportedFlavorException {
-        return CopyPasteManager.getInstance().getContents(DataFlavor.stringFlavor);
-    }
-
-    @Override
     protected BufferedImage createBufferedImage(int width, int height) {
         return UIUtil.createImage(width, height, BufferedImage.TYPE_INT_ARGB);
     }
 
     @Override
     public void focusGained(FocusEvent event) {
-        installKeyDispatcher();
-
-        if (GeneralSettings.getInstance().isSaveOnFrameDeactivation()) {
-            FileDocumentManager.getInstance().saveAllDocuments(UIAccess.current());
-        }
-    }
-
-    private void installKeyDispatcher() {
-        JBTerminalSystemSettingsProvider settingsProvider = (JBTerminalSystemSettingsProvider) mySettingsProvider;
-        if (settingsProvider.getTerminalConsoleSettings().isOverrideIdeShortcuts()) {
+        if (mySettingsProvider.overrideIdeShortcuts()) {
             myActionsToSkip = setupActionsToSkip();
-            IdeEventQueue.getInstance().addDispatcher(this, this);
+            myEventDispatcher.register();
         }
         else {
             myActionsToSkip = null;
+            myEventDispatcher.unregister();
+        }
+
+        if (GeneralSettings.getInstance().isSaveOnFrameDeactivation()) {
+            FileDocumentManager.getInstance().saveAllDocuments(UIAccess.current());
         }
     }
 
@@ -283,27 +257,24 @@ public class JBTerminalPanel extends TerminalPanel implements FocusListener, Ter
 
     @Override
     public void focusLost(FocusEvent event) {
-        if (myActionsToSkip != null) {
-            myActionsToSkip = null;
-            IdeEventQueue.getInstance().removeDispatcher(this);
-        }
-
-        JBTerminalStarter.refreshAfterExecution();
+        myActionsToSkip = null;
+        myEventDispatcher.unregister();
     }
 
     @Override
-    protected Font getFontToDisplay(char c, TextStyle style) {
-        FontInfo fontInfo = fontForChar(c, style.hasOption(TextStyle.Option.BOLD) ? Font.BOLD : Font.PLAIN);
-        return fontInfo.getFont();
-    }
-
-    public FontInfo fontForChar(char c, @JdkConstants.FontStyle int style) {
-        return ComplementaryFontsRegistry.getFontAbleToDisplay(
-            c,
-            style,
-            ((JBTerminalSystemSettingsProvider) mySettingsProvider).getColorScheme()
-                .getConsoleFontPreferences()
-        );
+    protected Font getFontToDisplay(char[] text, int start, int end, TextStyle style) {
+        int fontStyle = Font.PLAIN;
+        if (style.hasOption(TextStyle.Option.BOLD)) {
+            fontStyle |= Font.BOLD;
+        }
+        if (style.hasOption(TextStyle.Option.ITALIC)) {
+            fontStyle |= Font.ITALIC;
+        }
+        FontInfo fontInfo = ComplementaryFontsRegistry.getFontAbleToDisplay(
+            text, start, end, fontStyle,
+            mySettingsProvider.getFontPreferences(),
+            null);
+        return fontInfo.getFont().deriveFont(mySettingsProvider.getTerminalFontSize());
     }
 
     @Override
@@ -313,6 +284,49 @@ public class JBTerminalPanel extends TerminalPanel implements FocusListener, Ter
 
     @Override
     public void dispose() {
-        ((JBTerminalSystemSettingsProvider) mySettingsProvider).removeListener(this);
+        mySettingsProvider.removeListener(this);
+    }
+
+    /**
+     * Adds "Override IDE shortcuts" terminal feature allowing terminal to process all the key events.
+     * Without own event dispatcher, terminal won't receive key events corresponding to IDE action shortcuts.
+     */
+    private final class TerminalEventDispatcher implements Predicate<AWTEvent> {
+
+        private boolean myRegistered = false;
+
+        @Override
+        public boolean test(AWTEvent e) {
+            if (e instanceof KeyEvent keyEvent) {
+                return dispatchKeyEvent(keyEvent);
+            }
+            return false;
+        }
+
+        private boolean dispatchKeyEvent(KeyEvent e) {
+            if (e.getID() == KeyEvent.KEY_PRESSED && !skipKeyEvent(e)) {
+                if (!JBTerminalPanel.this.isFocusOwner()) {
+                    unregister();
+                    return false;
+                }
+                JBTerminalPanel.this.dispatchEvent(e);
+                return true;
+            }
+            return false;
+        }
+
+        void register() {
+            if (!myRegistered) {
+                IdeEventQueue.getInstance().addDispatcher(this, JBTerminalPanel.this);
+                myRegistered = true;
+            }
+        }
+
+        void unregister() {
+            if (myRegistered) {
+                IdeEventQueue.getInstance().removeDispatcher(this);
+            }
+            myRegistered = false;
+        }
     }
 }

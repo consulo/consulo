@@ -38,7 +38,7 @@ public interface EditorColorsScheme extends Cloneable, TextAttributesScheme, Nam
 
     @Nullable ColorValue getColor(EditorColorKey key);
 
-    void setColor(EditorColorKey key, ColorValue color);
+    void setColor(EditorColorKey key, @Nullable ColorValue color);
 
     /**
      * The IDE has allowed to configure only a single font family for a while. However, that doesn't handle a situation when

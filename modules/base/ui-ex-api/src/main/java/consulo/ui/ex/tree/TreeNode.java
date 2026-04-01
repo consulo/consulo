@@ -177,7 +177,7 @@ public abstract class TreeNode<T> extends PresentableNodeDescriptor<TreeNode<T>>
   }
 
   @Override
-  public String getName() {
+  public @Nullable String getName() {
     return myName;
   }
 

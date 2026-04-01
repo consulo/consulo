@@ -130,7 +130,7 @@
 
         <dependency>
             <groupId>consulo.internal</groupId>
-            <artifactId>jediterm</artifactId>
+            <artifactId>jediterm-core</artifactId>
             <optional>true</optional>
         </dependency>
 

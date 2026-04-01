@@ -34,7 +34,6 @@ public interface PsiFileSystemItem extends PsiCheckedRenameElement, NavigatableP
 
     @Nullable VirtualFile getVirtualFile();
 
-    
     @Override
     @RequiredReadAction
     String getName();

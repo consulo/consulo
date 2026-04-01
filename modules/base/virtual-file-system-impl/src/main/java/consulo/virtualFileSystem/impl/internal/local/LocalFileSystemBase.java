@@ -1,6 +1,7 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.virtualFileSystem.impl.internal.local;
 
+import consulo.annotation.access.RequiredWriteAction;
 import consulo.application.Application;
 import consulo.application.io.SafeOutputStreamFactory;
 import consulo.logging.Logger;
@@ -58,12 +59,10 @@ public abstract class LocalFileSystemBase extends LocalFileSystem {
         return VfsImplUtil.refreshAndFindFileByPath(this, path);
     }
 
-    
     private static File convertToIOFile(VirtualFile file) {
         return new File(toIoPath(file));
     }
 
-    
     protected static String toIoPath(VirtualFile file) {
         String path = file.getPath();
         if (path.length() == 2 && Platform.current().os().isWindows() && consulo.util.io.PathUtil.startsWithWindowsDrive(path)) {
@@ -73,7 +72,6 @@ public abstract class LocalFileSystemBase extends LocalFileSystem {
         return path;
     }
 
-    
     private static File convertToIOFileAndCheck(VirtualFile file) throws FileNotFoundException {
         File ioFile = convertToIOFile(file);
 
@@ -124,7 +122,6 @@ public abstract class LocalFileSystemBase extends LocalFileSystem {
         return FileSystemUtil.resolveSymLink(file.getPath());
     }
 
-    
     @Override
     public String[] list(VirtualFile file) {
         Path path = getNioPath(file);
@@ -133,7 +130,6 @@ public abstract class LocalFileSystemBase extends LocalFileSystem {
     }
 
     @Override
-    
     public String getProtocol() {
         return PROTOCOL;
     }
@@ -306,8 +302,8 @@ public abstract class LocalFileSystemBase extends LocalFileSystem {
     }
 
     @Override
-    
-    public VirtualFile createChildDirectory(Object requestor, VirtualFile parent, String dir) throws IOException {
+    @RequiredWriteAction
+    public VirtualFile createChildDirectory(@Nullable Object requestor, VirtualFile parent, String dir) throws IOException {
         if (!isValidName(dir)) {
             throw new IOException(VirtualFileSystemLocalize.directoryInvalidNameError(dir).get());
         }
@@ -336,9 +332,9 @@ public abstract class LocalFileSystemBase extends LocalFileSystem {
         return new FakeVirtualFile(parent, dir);
     }
 
-    
     @Override
-    public VirtualFile createChildFile(Object requestor, VirtualFile parent, String file) throws IOException {
+    @RequiredWriteAction
+    public VirtualFile createChildFile(@Nullable Object requestor, VirtualFile parent, String file) throws IOException {
         if (!isValidName(file)) {
             throw new IOException(VirtualFileSystemLocalize.fileInvalidNameError(file).get());
         }
@@ -368,7 +364,8 @@ public abstract class LocalFileSystemBase extends LocalFileSystem {
     }
 
     @Override
-    public void deleteFile(Object requestor, VirtualFile file) throws IOException {
+    @RequiredWriteAction
+    public void deleteFile(@Nullable Object requestor, VirtualFile file) throws IOException {
         if (file.getParent() == null) {
             throw new IOException(VirtualFileSystemLocalize.cannotDeleteRootDirectory(file.getPath()).get());
         }
@@ -394,13 +391,11 @@ public abstract class LocalFileSystemBase extends LocalFileSystem {
     }
 
     @Override
-    
     public InputStream getInputStream(VirtualFile file) throws IOException {
         return new BufferedInputStream(new FileInputStream(convertToIOFileAndCheck(file)));
     }
 
     @Override
-    
     public byte[] contentsToByteArray(VirtualFile file) throws IOException {
         try (InputStream stream = new FileInputStream(convertToIOFileAndCheck(file))) {
             long l = file.getLength();
@@ -538,7 +533,6 @@ public abstract class LocalFileSystemBase extends LocalFileSystem {
         auxNotifyCompleted(handler -> handler.rename(file, newName));
     }
 
-    
     @Override
     public VirtualFile copyFile(
         Object requestor,
@@ -620,7 +614,6 @@ public abstract class LocalFileSystemBase extends LocalFileSystem {
         ourRootPaths = ArrayUtil.toStringArray(roots);
     }
 
-    
     @Override
     public String extractRootPath(String path) {
         if (path.isEmpty()) {
@@ -683,7 +676,6 @@ public abstract class LocalFileSystemBase extends LocalFileSystem {
         return true;
     }
 
-    
     @Override
     public String getCanonicallyCasedName(VirtualFile file) {
         if (isCaseSensitive()) {

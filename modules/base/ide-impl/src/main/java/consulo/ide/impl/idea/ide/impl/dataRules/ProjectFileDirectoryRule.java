@@ -18,6 +18,7 @@ package consulo.ide.impl.idea.ide.impl.dataRules;
 import consulo.dataContext.DataSnapshot;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author Eugene Zhuravlev

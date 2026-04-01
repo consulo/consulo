@@ -17,7 +17,6 @@ package consulo.compiler.impl.internal;
 
 import consulo.application.progress.ProgressIndicator;
 import consulo.compiler.CompileContext;
-import consulo.compiler.CompilerMessage;
 import consulo.compiler.CompilerMessageCategory;
 import consulo.compiler.ModuleCompilerPathsManager;
 import consulo.compiler.scope.CompileScope;

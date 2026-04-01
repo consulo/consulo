@@ -29,7 +29,6 @@ import java.util.Collections;
  * @since 2005-06-23
  */
 public class TopLevelNode extends AbstractTreeNode {
-
   public TopLevelNode(Project project, Object value) {
     super(project, value);
     myName = "[ .. ]";
@@ -38,7 +37,6 @@ public class TopLevelNode extends AbstractTreeNode {
 
   @RequiredReadAction
   @Override
-  
   public Collection<AbstractTreeNode> getChildren() {
     return Collections.emptyList();
   }
@@ -51,5 +49,4 @@ public class TopLevelNode extends AbstractTreeNode {
   @Override
   protected void update(PresentationData presentation) {
   }
-
 }

@@ -23,8 +23,8 @@ import consulo.virtualFileSystem.VirtualFile;
 public abstract class VirtualFileUrlChangeAdapter extends VirtualFileAdapter {
   @Override
   public void fileMoved(VirtualFileMoveEvent event) {
-    String oldUrl = event.getOldParent().getUrl() + "/" + event.getFileName();
-    String newUrl = event.getNewParent().getUrl() + "/" + event.getFileName();
+    String oldUrl = event.getRequiredOldParent().getUrl() + "/" + event.getFileName();
+    String newUrl = event.getRequiredNewParent().getUrl() + "/" + event.getFileName();
     fileUrlChanged(oldUrl, newUrl);
   }
 

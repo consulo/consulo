@@ -61,8 +61,8 @@ public class FileChooserDescriptor extends UserDataHolderBase implements Cloneab
   private boolean myShowFileSystemRoots = true;
   private boolean myTreeRootVisible = false;
   private boolean myShowHiddenFiles = false;
-  private Predicate<VirtualFile> myFileFilter = null;
-  private String myForceOperateDialogProviderId = null;
+  private @Nullable Predicate<VirtualFile> myFileFilter = null;
+  private @Nullable String myForceOperateDialogProviderId = null;
 
   /**
    * Creates new instance. Use methods from {@link FileChooserDescriptorFactory} for most used descriptors.

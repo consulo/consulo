@@ -295,7 +295,7 @@ public class LazyParseablePsiElement extends LazyParseableElement implements Psi
   }
 
   @Override
-  public String getName() {
+  public @Nullable String getName() {
     return null;
   }
 

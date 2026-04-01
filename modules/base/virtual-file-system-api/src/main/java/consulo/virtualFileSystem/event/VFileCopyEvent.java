@@ -17,6 +17,7 @@ package consulo.virtualFileSystem.event;
 
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileSystem;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author max
@@ -34,17 +35,14 @@ public class VFileCopyEvent extends VFileEvent {
   }
 
   @Override
-  
   public VirtualFile getFile() {
     return myFile;
   }
 
-  
   public VirtualFile getNewParent() {
     return myNewParent;
   }
 
-  
   public String getNewChildName() {
     return myNewChildName;
   }
@@ -54,13 +52,11 @@ public class VFileCopyEvent extends VFileEvent {
     return "VfsEvent[copy " + myFile + " to " + myNewParent + " as " + myNewChildName + "]";
   }
 
-  
   @Override
   protected String computePath() {
     return myNewParent.getPath() + "/" + myNewChildName;
   }
 
-  
   @Override
   public VirtualFileSystem getFileSystem() {
     return myFile.getFileSystem();
@@ -72,7 +68,7 @@ public class VFileCopyEvent extends VFileEvent {
   }
 
   @Override
-  public boolean equals(Object o) {
+  public boolean equals(@Nullable Object o) {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
 

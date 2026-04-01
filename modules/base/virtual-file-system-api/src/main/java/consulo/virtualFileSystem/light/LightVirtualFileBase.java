@@ -15,13 +15,11 @@
  */
 package consulo.virtualFileSystem.light;
 
+import consulo.annotation.access.RequiredWriteAction;
 import consulo.util.lang.LocalTimeCounter;
-import consulo.virtualFileSystem.BaseVirtualFileSystem;
-import consulo.virtualFileSystem.NonPhysicalFileSystem;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.virtualFileSystem.VirtualFileSystem;
+import consulo.virtualFileSystem.*;
 import consulo.virtualFileSystem.fileType.FileType;
-import consulo.virtualFileSystem.fileType.UnknownFileType;
+import consulo.virtualFileSystem.internal.FakeVirtualFile;
 import org.jspecify.annotations.Nullable;
 
 import java.io.IOException;
@@ -29,13 +27,13 @@ import java.io.IOException;
 /**
  * In-memory implementation of {@link VirtualFile}.
  */
-public abstract class LightVirtualFileBase extends VirtualFile {
+public abstract class LightVirtualFileBase extends BaseVirtualFile {
     private FileType myFileType;
     private String myName = "";
     private long myModStamp = LocalTimeCounter.currentTime();
     private boolean myIsWritable = true;
     private boolean myValid = true;
-    private VirtualFile myOriginalFile;
+    private @Nullable VirtualFile myOriginalFile = null;
 
     public LightVirtualFileBase(String name, FileType fileType, long modificationStamp) {
         myName = name;
@@ -47,16 +45,12 @@ public abstract class LightVirtualFileBase extends VirtualFile {
         myFileType = fileType;
     }
 
-    
     @Override
     public FileType getFileType() {
-        if (myFileType == null) {
-            return UnknownFileType.INSTANCE;
-        }
         return myFileType;
     }
 
-    public VirtualFile getOriginalFile() {
+    public @Nullable VirtualFile getOriginalFile() {
         return myOriginalFile;
     }
 
@@ -72,42 +66,39 @@ public abstract class LightVirtualFileBase extends VirtualFile {
         }
 
         @Override
-        public void deleteFile(Object requestor, VirtualFile vFile) throws IOException {
-
+        @RequiredWriteAction
+        public void deleteFile(@Nullable Object requestor, VirtualFile vFile) throws IOException {
         }
 
         @Override
-        public void moveFile(Object requestor, VirtualFile vFile, VirtualFile newParent) throws IOException {
-
+        @RequiredWriteAction
+        public void moveFile(@Nullable Object requestor, VirtualFile vFile, VirtualFile newParent) throws IOException {
         }
 
         @Override
-        public void renameFile(Object requestor, VirtualFile vFile, String newName) throws IOException {
-
+        @RequiredWriteAction
+        public void renameFile(@Nullable Object requestor, VirtualFile vFile, String newName) throws IOException {
         }
 
         @Override
-        public VirtualFile createChildFile(Object requestor, VirtualFile vDir, String fileName) throws IOException {
-            return null;
-        }
-
-        
-        @Override
-        public VirtualFile createChildDirectory(Object requestor, VirtualFile vDir, String dirName) throws IOException {
-            return null;
+        @RequiredWriteAction
+        public VirtualFile createChildFile(@Nullable Object requestor, VirtualFile vDir, String fileName) throws IOException {
+            return new FakeVirtualFile(vDir, fileName);
         }
 
         @Override
-        public VirtualFile copyFile(Object requestor,
-                                    VirtualFile virtualFile,
-                                    VirtualFile newParent,
-                                    String copyName)
-            throws IOException {
-            return null;
+        @RequiredWriteAction
+        public VirtualFile createChildDirectory(@Nullable Object requestor, VirtualFile vDir, String dirName) throws IOException {
+            return new FakeVirtualFile(vDir, dirName);
         }
 
         @Override
-        
+        @RequiredWriteAction
+        public VirtualFile copyFile(@Nullable Object requestor, VirtualFile virtualFile, VirtualFile newParent, String copyName) throws IOException {
+            return new FakeVirtualFile(newParent, copyName);
+        }
+
+        @Override
         public String getProtocol() {
             return PROTOCOL;
         }
@@ -130,7 +121,6 @@ public abstract class LightVirtualFileBase extends VirtualFile {
     private static final MyVirtualFileSystem ourFileSystem = new MyVirtualFileSystem();
 
     @Override
-    
     public VirtualFileSystem getFileSystem() {
         return ourFileSystem;
     }
@@ -139,14 +129,12 @@ public abstract class LightVirtualFileBase extends VirtualFile {
         return myFileType;
     }
 
-    
     @Override
     public String getPath() {
         return "/" + getName();
     }
 
     @Override
-    
     public String getName() {
         return myName;
     }
@@ -171,12 +159,12 @@ public abstract class LightVirtualFileBase extends VirtualFile {
     }
 
     @Override
-    public VirtualFile getParent() {
+    public @Nullable VirtualFile getParent() {
         return null;
     }
 
     @Override
-    public VirtualFile[] getChildren() {
+    public VirtualFile @Nullable [] getChildren() {
         return EMPTY_ARRAY;
     }
 
@@ -208,7 +196,7 @@ public abstract class LightVirtualFileBase extends VirtualFile {
     }
 
     @Override
-    public void refresh(boolean asynchronous, boolean recursive, Runnable postRunnable) {
+    public void refresh(boolean asynchronous, boolean recursive, @Nullable Runnable postRunnable) {
     }
 
     @Override
@@ -217,7 +205,7 @@ public abstract class LightVirtualFileBase extends VirtualFile {
     }
 
     @Override
-    public void rename(Object requestor, String newName) throws IOException {
+    public void rename(@Nullable Object requestor, String newName) throws IOException {
         myName = newName;
     }
 }

@@ -421,7 +421,12 @@
             <artifactId>consulo-language-editor-problem-view-impl</artifactId>
             <version>${project.version}</version>
         </dependency>
- 
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>consulo-virtual-file-system-native-file-type-impl</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        
         <dependency>
             <groupId>org.antlr</groupId>
             <artifactId>antlr4-runtime</artifactId>
@@ -571,6 +576,10 @@
         <dependency>
             <groupId>org.jspecify</groupId>
             <artifactId>jspecify</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>consulo.internal</groupId>
+            <artifactId>format-ripper-jvm-file-type-detector</artifactId>
         </dependency>
     </dependencies>
 </project>

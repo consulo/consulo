@@ -15,7 +15,8 @@
  */
 package consulo.virtualFileSystem;
 
-import consulo.application.ApplicationManager;
+import consulo.annotation.access.RequiredWriteAction;
+import consulo.application.Application;
 import consulo.component.util.ModificationTracker;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
@@ -24,7 +25,6 @@ import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolder;
 import consulo.util.dataholder.UserDataHolderBase;
 import consulo.util.io.CharsetToolkit;
-import consulo.util.lang.Comparing;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.encoding.EncodingRegistry;
 import consulo.virtualFileSystem.event.VirtualFileEvent;
@@ -42,6 +42,9 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.charset.Charset;
 import java.nio.file.Path;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
 
 /**
  * Represents a file in <code>{@link VirtualFileSystem}</code>. A particular file is represented by equal
@@ -61,7 +64,6 @@ import java.nio.file.Path;
  * @see VirtualFileManager
  */
 public abstract class VirtualFile extends UserDataHolderBase implements ModificationTracker {
-
   public static final Key<Object> REQUESTOR_MARKER = Key.create("REQUESTOR_MARKER");
   public static final VirtualFile[] EMPTY_ARRAY = new VirtualFile[0];
   public static final ArrayFactory<VirtualFile> ARRAY_FACTORY = count -> count == 0 ? EMPTY_ARRAY : new VirtualFile[count];
@@ -128,7 +130,6 @@ public abstract class VirtualFile extends UserDataHolderBase implements Modifica
   protected VirtualFile() {
   }
 
-  
   public LocalizeValue getLocalizedName() {
     return LocalizeValue.of(getName());
   }
@@ -140,7 +141,6 @@ public abstract class VirtualFile extends UserDataHolderBase implements Modifica
    */
   public abstract String getName();
 
-  
   public CharSequence getNameSequence() {
     return getName();
   }
@@ -161,7 +161,6 @@ public abstract class VirtualFile extends UserDataHolderBase implements Modifica
    * @return the path
    */
   @SuppressWarnings("JavadocReference")
-  
   public abstract String getPath();
 
   /**
@@ -227,7 +226,7 @@ public abstract class VirtualFile extends UserDataHolderBase implements Modifica
    * @param newName   the new file name
    * @throws IOException if file failed to be renamed
    */
-  public void rename(Object requestor, String newName) throws IOException {
+  public void rename(@Nullable Object requestor, String newName) throws IOException {
     if (getName().equals(newName)) return;
     if (!getFileSystem().isValidName(newName)) {
       throw new IOException(VirtualFileSystemLocalize.fileInvalidNameError(newName).get());
@@ -311,14 +310,23 @@ public abstract class VirtualFile extends UserDataHolderBase implements Modifica
    *
    * @return the parent file or <code>null</code> if this file is a root directory
    */
-  public abstract VirtualFile getParent();
+  public abstract @Nullable VirtualFile getParent();
 
   /**
    * Gets the child files.
    *
    * @return array of the child files or <code>null</code> if this file is not a directory
    */
-  public abstract VirtualFile[] getChildren();
+  public abstract VirtualFile @Nullable [] getChildren();
+
+  /**
+   * Gets the child files or throws NPE if this file is not a directory.
+   *
+   * @return array of the child files
+   */
+  public List<VirtualFile> getRequiredChildren() {
+    return List.of(Objects.requireNonNull(getChildren()));
+  }
 
   /**
    * Finds child of this file with the given name.
@@ -337,8 +345,8 @@ public abstract class VirtualFile extends UserDataHolderBase implements Modifica
     return null;
   }
 
-  
-  public VirtualFile findOrCreateChildData(Object requestor, String name) throws IOException {
+  @RequiredWriteAction
+  public VirtualFile findOrCreateChildData(@Nullable Object requestor, String name) throws IOException {
     VirtualFile child = findChild(name);
     if (child != null) return child;
     return createChildData(requestor, name);
@@ -350,7 +358,6 @@ public abstract class VirtualFile extends UserDataHolderBase implements Modifica
    * it returns {@link consulo.ide.impl.idea.openapi.fileTypes.FileTypes#UNKNOWN}
    */
   @SuppressWarnings("JavadocReference")
-  
   public FileType getFileType() {
     return FileTypeRegistry.getInstance().getFileTypeByFile(this);
   }
@@ -405,7 +412,8 @@ public abstract class VirtualFile extends UserDataHolderBase implements Modifica
    * @return <code>VirtualFile</code> representing the created directory
    * @throws IOException if directory failed to be created
    */
-  public VirtualFile createChildDirectory(Object requestor, String name) throws IOException {
+  @RequiredWriteAction
+  public VirtualFile createChildDirectory(@Nullable Object requestor, String name) throws IOException {
     if (!isDirectory()) {
       throw new IOException(VirtualFileSystemLocalize.directoryCreateWrongParentError().get());
     }
@@ -435,7 +443,8 @@ public abstract class VirtualFile extends UserDataHolderBase implements Modifica
    * @return <code>VirtualFile</code> representing the created file
    * @throws IOException if file failed to be created
    */
-  public VirtualFile createChildData(Object requestor, String name) throws IOException {
+  @RequiredWriteAction
+  public VirtualFile createChildData(@Nullable Object requestor, String name) throws IOException {
     if (!isDirectory()) {
       throw new IOException(VirtualFileSystemLocalize.fileCreateWrongParentError().get());
     }
@@ -464,7 +473,8 @@ public abstract class VirtualFile extends UserDataHolderBase implements Modifica
    *                  See {@link VirtualFileEvent#getRequestor}
    * @throws IOException if file failed to be deleted
    */
-  public void delete(Object requestor) throws IOException {
+  @RequiredWriteAction
+  public void delete(@Nullable Object requestor) throws IOException {
     LOG.assertTrue(isValid(), "Deleting invalid file");
     getFileSystem().deleteFile(requestor, this);
   }
@@ -479,7 +489,8 @@ public abstract class VirtualFile extends UserDataHolderBase implements Modifica
    * @param newParent the directory to move this file to
    * @throws IOException if file failed to be moved
    */
-  public void move(Object requestor, VirtualFile newParent) throws IOException {
+  @RequiredWriteAction
+  public void move(@Nullable Object requestor, VirtualFile newParent) throws IOException {
     if (getFileSystem() != newParent.getFileSystem()) {
       throw new IOException(VirtualFileSystemLocalize.fileMoveError(newParent.getPresentableUrl()).get());
     }
@@ -490,7 +501,8 @@ public abstract class VirtualFile extends UserDataHolderBase implements Modifica
     });
   }
 
-  public VirtualFile copy(Object requestor, VirtualFile newParent, String copyName) throws IOException {
+  @RequiredWriteAction
+  public VirtualFile copy(@Nullable Object requestor, VirtualFile newParent, String copyName) throws IOException {
     if (getFileSystem() != newParent.getFileSystem()) {
       throw new IOException(VirtualFileSystemLocalize.fileCopyError(newParent.getPresentableUrl()).get());
     }
@@ -536,7 +548,7 @@ public abstract class VirtualFile extends UserDataHolderBase implements Modifica
   public void setCharset(Charset charset, @Nullable Runnable whenChanged, boolean fireEventsWhenChanged) {
     Charset old = getStoredCharset();
     storeCharset(charset);
-    if (Comparing.equal(charset, old)) return;
+    if (Objects.equals(charset, old)) return;
     byte[] bom = charset == null ? null : CharsetToolkit.getMandatoryBom(charset);
     byte[] existingBOM = getBOM();
     if (bom == null && charset != null && existingBOM != null) {
@@ -564,8 +576,9 @@ public abstract class VirtualFile extends UserDataHolderBase implements Modifica
     setBinaryContent(content, newModificationStamp, newTimeStamp, this);
   }
 
+  @RequiredWriteAction
   public void setBinaryContent(byte[] content, long newModificationStamp, long newTimeStamp, Object requestor) throws IOException {
-    ApplicationManager.getApplication().assertWriteAccessAllowed();
+    Application.get().assertWriteAccessAllowed();
     try (OutputStream outputStream = getOutputStream(requestor, newModificationStamp, newTimeStamp)) {
       outputStream.write(content);
       outputStream.flush();
@@ -628,7 +641,6 @@ public abstract class VirtualFile extends UserDataHolderBase implements Modifica
     return contentsToByteArray();
   }
 
-  
   public CharSequence loadText() {
     try {
       return new String(contentsToByteArray(), getCharset());
@@ -718,11 +730,11 @@ public abstract class VirtualFile extends UserDataHolderBase implements Modifica
    */
   public abstract InputStream getInputStream() throws IOException;
 
-  public @Nullable byte[] getBOM() {
+  public byte @Nullable [] getBOM() {
     return getUserData(BOM_KEY);
   }
 
-  public void setBOM(@Nullable byte[] BOM) {
+  public void setBOM(byte @Nullable [] BOM) {
     putUserData(BOM_KEY, BOM);
   }
 
@@ -754,7 +766,7 @@ public abstract class VirtualFile extends UserDataHolderBase implements Modifica
    * It is always null for directories and binaries, and possibly null if a separator isn't yet known.
    * @see LineSeparator
    */
-  public String getDetectedLineSeparator() {
+  public @Nullable String getDetectedLineSeparator() {
     return getUserData(DETECTED_LINE_SEPARATOR_KEY);
   }
 
@@ -787,7 +799,6 @@ public abstract class VirtualFile extends UserDataHolderBase implements Modifica
     return false;
   }
 
-  
   public Path toNioPath() {
     VirtualFileSystem fileSystem = getFileSystem();
     if (StandardFileSystems.FILE_PROTOCOL.equals(fileSystem.getProtocol())) {

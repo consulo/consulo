@@ -71,8 +71,8 @@ public class SdkConfigurable extends ProjectStructureElementConfigurable<Sdk> {
   }
 
   @Override
-  public String getBannerSlogan() {
-    return ProjectLocalize.sdkBannerText(((SdkType) mySdk.getSdkType()).getDisplayName(), mySdk.getName()).get();
+  public LocalizeValue getBannerSlogan() {
+    return ProjectLocalize.sdkBannerText(((SdkType) mySdk.getSdkType()).getDisplayName(), mySdk.getName());
   }
 
   @Override

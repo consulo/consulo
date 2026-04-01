@@ -192,7 +192,7 @@ public class VcsRootIterator {
       iterator.test(file);
       VirtualFile vFile = file.getVirtualFile();
       if (vFile != null && vFile.isValid() && vFile.isDirectory()) {
-        for (VirtualFile child : vFile.getChildren()) {
+        for (VirtualFile child : vFile.getRequiredChildren()) {
           iterator.test(VcsUtil.getFilePath(child));
         }
       }
@@ -216,7 +216,7 @@ public class VcsRootIterator {
       if (vFile != null && vFile.isValid()) {
         iterator.test(vFile);
         if (vFile.isDirectory()) {
-          for (VirtualFile child : vFile.getChildren()) {
+          for (VirtualFile child : vFile.getRequiredChildren()) {
             iterator.test(child);
           }
         }

@@ -17,6 +17,7 @@ package consulo.pathMacro.impl.internal.builtin;
 
 import consulo.codeEditor.Editor;
 import consulo.dataContext.DataContext;
+import consulo.localize.LocalizeValue;
 import consulo.pathMacro.Macro;
 import consulo.project.Project;
 import consulo.project.ui.wm.ToolWindowManager;
@@ -28,9 +29,9 @@ import org.jspecify.annotations.Nullable;
  */
 public abstract class EditorMacro extends Macro {
   private final String myName;
-  private final String myDescription;
+  private final LocalizeValue myDescription;
 
-  public EditorMacro(String name, String description) {
+  public EditorMacro(String name, LocalizeValue description) {
     myName = name;
     myDescription = description;
   }
@@ -41,7 +42,7 @@ public abstract class EditorMacro extends Macro {
   }
 
   @Override
-  public String getDescription() {
+  public LocalizeValue getDescription() {
     return myDescription;
   }
 

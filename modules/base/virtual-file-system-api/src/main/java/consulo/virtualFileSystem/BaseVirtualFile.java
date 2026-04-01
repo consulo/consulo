@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2013-2026 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,17 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.codeEditor.impl.internal.dataRule;
-
-import consulo.codeEditor.Editor;
-import consulo.dataContext.DataSnapshot;
-import org.jspecify.annotations.Nullable;
+package consulo.virtualFileSystem;
 
 /**
- * @author max
+ * @author UNV
+ * @since 2026-03-31
  */
-public final class InactiveEditorRule {
-    static @Nullable Editor getData(DataSnapshot dataProvider) {
-        return dataProvider.get(Editor.KEY);
-    }
+public abstract class BaseVirtualFile extends VirtualFile {
 }

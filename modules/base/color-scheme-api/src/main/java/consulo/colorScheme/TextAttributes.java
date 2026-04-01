@@ -40,8 +40,6 @@ public class TextAttributes implements Cloneable {
 
     private boolean myEnforceEmpty;
 
-    @SuppressWarnings({"NullableProblems", "NotNullFieldNotInitialized"})
-    
     private AttributesFlyweight myAttrs;
 
     /**
@@ -52,7 +50,7 @@ public class TextAttributes implements Cloneable {
      * @return Merged attributes instance.
      */
     @Contract("!null, !null -> !null")
-    public static TextAttributes merge(@Nullable TextAttributes under, @Nullable TextAttributes above) {
+    public static @Nullable TextAttributes merge(@Nullable TextAttributes under, @Nullable TextAttributes above) {
         if (under == null) {
             return above;
         }
@@ -83,7 +81,11 @@ public class TextAttributes implements Cloneable {
     }
 
     public TextAttributes(Element element) {
-        readExternal(element);
+        myAttrs = AttributesFlyweight.create(element);
+
+        if (isEmpty()) {
+            myEnforceEmpty = true;
+        }
     }
 
     private TextAttributes(AttributesFlyweight attributesFlyweight, boolean enforced) {
@@ -95,10 +97,10 @@ public class TextAttributes implements Cloneable {
         @Nullable ColorValue foregroundColor,
         @Nullable ColorValue backgroundColor,
         @Nullable ColorValue effectColor,
-        EffectType effectType,
+        @Nullable EffectType effectType,
         @JdkConstants.FontStyle int fontType
     ) {
-        setAttributes(foregroundColor, backgroundColor, effectColor, null, effectType, fontType);
+        myAttrs = AttributesFlyweight.create(foregroundColor, backgroundColor, fontType, effectColor, effectType, null);
     }
 
     public void copyFrom(TextAttributes other) {
@@ -106,22 +108,22 @@ public class TextAttributes implements Cloneable {
     }
 
     public void setAttributes(
-        ColorValue foregroundColor,
-        ColorValue backgroundColor,
-        ColorValue effectColor,
-        ColorValue errorStripeColor,
-        EffectType effectType,
+        @Nullable ColorValue foregroundColor,
+        @Nullable ColorValue backgroundColor,
+        @Nullable ColorValue effectColor,
+        @Nullable ColorValue errorStripeColor,
+        @Nullable EffectType effectType,
         @JdkConstants.FontStyle int fontType
     ) {
         setAttributes(foregroundColor, backgroundColor, effectColor, errorStripeColor, effectType, Collections.emptyMap(), fontType);
     }
 
     public void setAttributes(
-        ColorValue foregroundColor,
-        ColorValue backgroundColor,
-        ColorValue effectColor,
-        ColorValue errorStripeColor,
-        EffectType effectType,
+        @Nullable ColorValue foregroundColor,
+        @Nullable ColorValue backgroundColor,
+        @Nullable ColorValue effectColor,
+        @Nullable ColorValue errorStripeColor,
+        @Nullable EffectType effectType,
         Map<EffectType, ColorValue> additionalEffects,
         @JdkConstants.FontStyle int fontType
     ) {
@@ -136,12 +138,14 @@ public class TextAttributes implements Cloneable {
         );
     }
 
-    public void setAttributesNoCache(ColorValue foregroundColor,
-                                     ColorValue backgroundColor,
-                                     ColorValue effectColor,
-                                     ColorValue errorStripeColor,
-                                     EffectType effectType,
-                                     @JdkConstants.FontStyle int fontType) {
+    public void setAttributesNoCache(
+        @Nullable ColorValue foregroundColor,
+        @Nullable ColorValue backgroundColor,
+        @Nullable ColorValue effectColor,
+        @Nullable ColorValue errorStripeColor,
+        @Nullable EffectType effectType,
+        @JdkConstants.FontStyle int fontType
+    ) {
         myAttrs = AttributesFlyweight.createNoCache(
             foregroundColor,
             backgroundColor,
@@ -161,45 +165,43 @@ public class TextAttributes implements Cloneable {
         return getForegroundColor() == null && getBackgroundColor() == null && getEffectColor() == null && getFontType() == Font.PLAIN;
     }
 
-    
     public AttributesFlyweight getFlyweight() {
         return myAttrs;
     }
 
-    
     public static TextAttributes fromFlyweight(AttributesFlyweight flyweight) {
         return new TextAttributes(flyweight);
     }
 
-    public ColorValue getForegroundColor() {
+    public @Nullable ColorValue getForegroundColor() {
         return myAttrs.getForeground();
     }
 
-    public void setForegroundColor(ColorValue color) {
+    public void setForegroundColor(@Nullable ColorValue color) {
         myAttrs = myAttrs.withForeground(color);
     }
 
-    public ColorValue getBackgroundColor() {
+    public @Nullable ColorValue getBackgroundColor() {
         return myAttrs.getBackground();
     }
 
-    public void setBackgroundColor(ColorValue color) {
+    public void setBackgroundColor(@Nullable ColorValue color) {
         myAttrs = myAttrs.withBackground(color);
     }
 
-    public ColorValue getEffectColor() {
+    public @Nullable ColorValue getEffectColor() {
         return myAttrs.getEffectColor();
     }
 
-    public void setEffectColor(ColorValue color) {
+    public void setEffectColor(@Nullable ColorValue color) {
         myAttrs = myAttrs.withEffectColor(color);
     }
 
-    public ColorValue getErrorStripeColor() {
+    public @Nullable ColorValue getErrorStripeColor() {
         return myAttrs.getErrorStripeColor();
     }
 
-    public void setErrorStripeColor(ColorValue color) {
+    public void setErrorStripeColor(@Nullable ColorValue color) {
         myAttrs = myAttrs.withErrorStripeColor(color);
     }
 
@@ -243,7 +245,7 @@ public class TextAttributes implements Cloneable {
         effectsBuilder.applyTo(this);
     }
 
-    public EffectType getEffectType() {
+    public @Nullable EffectType getEffectType() {
         return myAttrs.getEffectType();
     }
 
@@ -255,7 +257,7 @@ public class TextAttributes implements Cloneable {
         myAttrs.getAllEffects().forEach(consumer);
     }
 
-    public void setEffectType(EffectType effectType) {
+    public void setEffectType(@Nullable EffectType effectType) {
         myAttrs = myAttrs.withEffectType(effectType);
     }
 
@@ -281,12 +283,12 @@ public class TextAttributes implements Cloneable {
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if (!(obj instanceof TextAttributes)) {
+    public boolean equals(@Nullable Object obj) {
+        if (!(obj instanceof TextAttributes that)) {
             return false;
         }
         // myAttrs are interned, see consulo.ide.impl.idea.openapi.editor.markup.AttributesFlyweight.create()
-        return myAttrs == ((TextAttributes)obj).myAttrs;
+        return myAttrs == that.myAttrs;
     }
 
     @Override

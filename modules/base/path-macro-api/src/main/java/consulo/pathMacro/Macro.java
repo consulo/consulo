@@ -13,15 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.pathMacro;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.dataContext.DataContext;
+import consulo.localize.LocalizeValue;
 import consulo.virtualFileSystem.VirtualFile;
-
 import org.jspecify.annotations.Nullable;
+
 import java.io.File;
 
 @ExtensionAPI(ComponentScope.APPLICATION)
@@ -29,16 +29,15 @@ public abstract class Macro {
   public static final class ExecutionCancelledException extends Exception {
   }
 
-  protected String myCachedPreview;
+  protected @Nullable String myCachedPreview;
 
   public abstract String getName();
 
-  
   public String getDecoratedName() {
     return "$" + getName() + "$";
   }
 
-  public abstract String getDescription();
+  public abstract LocalizeValue getDescription();
 
   public abstract @Nullable String expand(DataContext dataContext) throws ExecutionCancelledException;
 
@@ -55,7 +54,7 @@ public abstract class Macro {
     }
   }
 
-  public final String preview() {
+  public final @Nullable String preview() {
     return myCachedPreview;
   }
 
@@ -93,7 +92,7 @@ public abstract class Macro {
     }
 
     @Override
-    public String getDescription() {
+    public LocalizeValue getDescription() {
       return myDelegate.getDescription();
     }
 

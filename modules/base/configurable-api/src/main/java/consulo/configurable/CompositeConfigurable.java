@@ -16,11 +16,12 @@
 package consulo.configurable;
 
 import consulo.ui.annotation.RequiredUIAccess;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 
 public abstract class CompositeConfigurable<T extends UnnamedConfigurable> implements Configurable {
-  private List<T> myConfigurables;
+  private @Nullable List<T> myConfigurables = null;
 
   @RequiredUIAccess
   @Override

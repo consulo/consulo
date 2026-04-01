@@ -25,6 +25,7 @@ import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.table.JBTable;
 import consulo.util.lang.Couple;
 import consulo.util.lang.Pair;
+import consulo.util.lang.StringUtil;
 
 import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
@@ -277,13 +278,13 @@ public class PathMacroTable extends JBTable {
 
         @Override
         public boolean checkName(String name) {
-            return name.length() != 0 && PathMacrosService.MACRO_PATTERN.matcher("$" + name + "$").matches();
+            return StringUtil.isNotEmpty(name) && PathMacrosService.MACRO_PATTERN.matcher("$" + name + "$").matches();
         }
 
         @Override
         @RequiredUIAccess
         public boolean isOK(String name, String value) {
-            if (name.length() == 0) {
+            if (StringUtil.isEmpty(name)) {
                 return false;
             }
             if (hasMacroWithName(name)) {
@@ -301,7 +302,7 @@ public class PathMacroTable extends JBTable {
     private static class EditValidator implements PathMacroEditor.Validator {
         @Override
         public boolean checkName(String name) {
-            if (name.length() == 0) {
+            if (StringUtil.isEmpty(name)) {
                 return false;
             }
             if (PathMacros.getInstance().getSystemMacroNames().contains(name)) {

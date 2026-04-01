@@ -91,7 +91,7 @@ public abstract class MasterDetailsComponent implements Configurable, MasterDeta
                 }
 
                 myState.setLastEditedConfigurable(getNodePathString(node)); //survive after rename;
-                myDetails.setText(node.getConfigurable().getBannerSlogan());
+                myDetails.setText(node.getConfigurable().getBannerSlogan().getNullIfEmpty());
                 ((DefaultTreeModel)myTree.getModel()).reload(node);
                 fireItemsChangedExternally(MasterDetailsComponent.this);
             }
@@ -671,7 +671,7 @@ public abstract class MasterDetailsComponent implements Configurable, MasterDeta
 
     @RequiredUIAccess
     protected void updateSelection(@Nullable MasterDetailsConfigurable configurable) {
-        myDetails.setText(configurable != null ? configurable.getBannerSlogan() : null);
+        myDetails.setText(configurable != null ? configurable.getBannerSlogan().getNullIfEmpty() : null);
 
         myCurrentConfigurable = configurable;
 
@@ -863,7 +863,6 @@ public abstract class MasterDetailsComponent implements Configurable, MasterDeta
             myDisplayInBold = displayInBold;
         }
 
-        
         public LocalizeValue getDisplayName() {
             Configurable configurable = ((Configurable)getUserObject());
             LOG.assertTrue(configurable != null, "Tree was already disposed");
@@ -912,17 +911,15 @@ public abstract class MasterDetailsComponent implements Configurable, MasterDeta
                 }
 
                 @Override
-                public String getBannerSlogan() {
-                    return null;
+                public LocalizeValue getBannerSlogan() {
+                    return LocalizeValue.empty();
                 }
 
-                
                 @Override
                 public LocalizeValue getDisplayName() {
                     return LocalizeValue.empty();
                 }
 
-                
                 @Override
                 @RequiredUIAccess
                 public consulo.ui.Component createOptionsPanel(Disposable uiDisposable) {

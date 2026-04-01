@@ -1,0 +1,102 @@
+macro.classpath.entry:
+    text: Entry in the classpath the element belongs to
+macro.project.classpath:
+    text: Project's classpath
+macro.column.number:
+    text: Column number
+macro.class.name:
+    text: Class name
+macro.file.directory:
+    text: File directory
+macro.file.directory.from.parent:
+    text: Path to $FileDir$ from parent directory with name passed as a parameter
+macro.file.directory.name:
+    text: File directory name
+macro.file.parent.directory:
+    text: File parent directory. Takes an optional parameter(name) to find the parent directory
+macro.file.dir.relative.to.root:
+    text: File dir relative to the module content root the file belongs to
+macro.file.dir.relative.to.root.fwd.slash:
+    text: File dir relative to the module content root the file belongs to (with forward slashes)
+macro.file.dir.relative.to.sourcepath.root:
+    text: File dir relative to the sourcepath root the file belongs to
+macro.file.dir.relative.to.sourcepath.root.fwd.slash:
+    text: File dir relative to the sourcepath root the file belongs to (with forward slashes)
+macro.file.extension:
+    text: File extension
+macro.file.fully.qualified.package:
+    text: File fully qualified package
+macro.file.name:
+    text: File name
+macro.file.name.without.extension:
+    text: File name without extension
+macro.file.name.without.all.extensions:
+    text: File name without all extensions
+macro.file.package:
+    text: File package
+macro.file.path:
+    text: File path
+macro.file.path.relative.to.root:
+    text: File path relative to the module content root the file belongs to
+macro.file.path.relative.to.root.fwd.slash:
+    text: File path relative to the module content root the file belongs to (with forward slashes)
+macro.file.path.relative.to.sourcepath.root:
+    text: File path relative to the sourcepath root the file belongs to
+macro.file.path.relative.to.sourcepath.root.fwd.slash:
+    text: File path relative to the sourcepath root the file belongs to (with forward slashes)
+macro.file.directory.relative:
+    text: File directory relative to the project file
+macro.file.directory.relative.fwd.slash:
+    text: File directory relative to the project file (with forward slashes)
+macro.file.path.relative:
+    text: File path relative to the project file
+macro.file.path.relative.fwd.slash:
+    text: File path relative to the project file (with forward slashes)
+macro.file.encoding:
+    text: File encoding
+macro.javadoc.output.directory:
+    text: JavaDoc output directory
+macro.line.number:
+    text: Line number
+label.macros:
+    text: Macros
+label.macro.preview:
+    text: Macro preview
+macro.module.file.directory:
+    text: The directory of the module
+macro.module.profile.name:
+    text: The name of current profile of module
+macro.module.file.path:
+    text: The path of the module file
+macro.module.production.output.dir.path:
+    text: The path of the module production output directory
+macro.module.test.output.dir.path:
+    text: The path of the module test output directory
+macro.module.file.name:
+    text: The name of the module file without extension
+macro.module.source.path:
+    text: Module source path
+macro.output.path:
+    text: Output path
+macro.project.file.directory:
+    text: The directory of the project file
+macro.project.file.path:
+    text: The path of the project file
+macro.project.file.name:
+    text: The name of the project file without extension
+macro.project.source.path:
+    text: Project source path
+macro.prompt:
+    text: Displays a string input dialog
+prompt.enter.parameters:
+    text: 'Enter parameters:'
+macro.prompt.preview:
+    text: <params>
+macro.fileprompt.preview:
+    text: <filename>
+macro.sourcepath.entry:
+    text: Entry in the sourcepath the element belongs to
+macro.project.sourcepath:
+    text: Project's sourcepath
+title.input:
+    text: Input

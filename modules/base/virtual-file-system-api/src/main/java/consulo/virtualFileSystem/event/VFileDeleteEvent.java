@@ -24,7 +24,6 @@ import org.jspecify.annotations.Nullable;
  * @author max
  */
 public class VFileDeleteEvent extends VFileEvent {
-  
   private final VirtualFile myFile;
   private int myDepth = -1;
 
@@ -34,7 +33,6 @@ public class VFileDeleteEvent extends VFileEvent {
   }
 
   @Override
-  
   public VirtualFile getFile() {
     return myFile;
   }
@@ -44,13 +42,11 @@ public class VFileDeleteEvent extends VFileEvent {
     return "VfsEvent[deleted: " + myFile.getUrl() + "]";
   }
 
-  
   @Override
   protected String computePath() {
     return myFile.getPath();
   }
 
-  
   @Override
   public VirtualFileSystem getFileSystem() {
     return myFile.getFileSystem();
@@ -62,7 +58,7 @@ public class VFileDeleteEvent extends VFileEvent {
   }
 
   @Override
-  public boolean equals(Object o) {
+  public boolean equals(@Nullable Object o) {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
 

@@ -182,7 +182,7 @@ public class FileTreeStructure extends AbstractTreeStructure {
 
     @Override
     
-    public NodeDescriptor createDescriptor(Object element, NodeDescriptor parentDescriptor) {
+    public NodeDescriptor createDescriptor(Object element, @Nullable NodeDescriptor parentDescriptor) {
         LOG.assertTrue(element instanceof FileElement, element.getClass().getName());
         VirtualFile file = ((FileElement) element).getFile();
         Image icon = file == null ? null : myChooserDescriptor.getIcon(file);

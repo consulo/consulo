@@ -85,11 +85,11 @@ public class VcsDirtyScopeVfsListener implements AsyncVfsEventsListener, Disposa
         add(vcsManager, dirtyFilesAndDirs, VcsUtil.getFilePath(((VFileMoveEvent)event).getOldPath(), isDirectory));
         add(vcsManager, dirtyFilesAndDirs, VcsUtil.getFilePath(((VFileMoveEvent)event).getNewPath(), isDirectory));
       }
-      else if (event instanceof VFilePropertyChangeEvent && ((VFilePropertyChangeEvent)event).isRename()) {
+      else if (event instanceof VFilePropertyChangeEvent pce && pce.isRename()) {
         // if a file was renamed, then the file is dirty and its parent directory is dirty too;
         // if a directory was renamed, all its children are recursively dirty, the parent dir is also dirty but not recursively.
-        FilePath oldPath = VcsUtil.getFilePath(((VFilePropertyChangeEvent)event).getOldPath(), isDirectory);
-        FilePath newPath = VcsUtil.getFilePath(((VFilePropertyChangeEvent)event).getNewPath(), isDirectory);
+        FilePath oldPath = VcsUtil.getFilePath(pce.getOldPath(), isDirectory);
+        FilePath newPath = VcsUtil.getFilePath(pce.getNewPath(), isDirectory);
         // the file is dirty recursively, its old directory is dirty alone
         addWithParentDirectory(vcsManager, dirtyFilesAndDirs, oldPath);
         add(vcsManager, dirtyFilesAndDirs, newPath);

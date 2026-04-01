@@ -106,7 +106,7 @@ public class PackageDirectoryCache {
       mySubPackages = LazyValue.notNull(() -> {
         MultiMap<String, VirtualFile> result = MultiMap.createLinked();
         for (VirtualFile directory : myPackageDirectories) {
-          for (VirtualFile child : directory.getChildren()) {
+          for (VirtualFile child : directory.getRequiredChildren()) {
             String childName = child.getName();
             String packageName = myQname.isEmpty() ? childName : myQname + "." + childName;
             if (child.isDirectory() && isPackageDirectory(child, packageName)) {

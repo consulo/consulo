@@ -1,13 +1,12 @@
 // Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.build;
 
-import consulo.build.ui.BuildBundle;
+import consulo.application.util.NullableLazyValue;
 import consulo.build.ui.ExecutionNode;
 import consulo.build.ui.event.*;
-import consulo.application.util.NullableLazyValue;
-import consulo.platform.base.icon.PlatformIconGroup;
-import consulo.util.lang.StringUtil;
+import consulo.build.ui.localize.BuildLocalize;
 import consulo.navigation.Navigatable;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.awt.AnimatedIcon;
@@ -15,8 +14,8 @@ import consulo.ui.ex.tree.PresentationData;
 import consulo.ui.image.Image;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.SmartList;
+import consulo.util.lang.StringUtil;
 import org.jetbrains.annotations.Nls;
-
 import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -363,8 +362,8 @@ public class ExecutionNodeImpl extends ExecutionNode<ExecutionNodeImpl> {
         int warnings = myWarnings.get();
         int errors = myErrors.get();
         if (warnings > 0 || errors > 0) {
-            String errorHint = errors > 0 ? BuildBundle.message("build.event.message.errors", errors) : "";
-            String warningHint = warnings > 0 ? BuildBundle.message("build.event.message.warnings", warnings) : "";
+            String errorHint = errors > 0 ? BuildLocalize.buildEventMessageErrors(errors).get() : "";
+            String warningHint = warnings > 0 ? BuildLocalize.buildEventMessageWarnings(warnings).get() : "";
             String issuesHint = !errorHint.isEmpty() && !warningHint.isEmpty() ? errorHint + ", " + warningHint : errorHint + warningHint;
             ExecutionNodeImpl parent = getParent();
             if (parent == null || parent.getParent() == null) {
@@ -372,7 +371,7 @@ public class ExecutionNodeImpl extends ExecutionNode<ExecutionNodeImpl> {
                     return StringUtil.notNullize(myHint) + "  " + issuesHint;
                 }
                 else {
-                    return BuildBundle.message("build.event.message.with", StringUtil.notNullize(myHint), issuesHint);
+                    return BuildLocalize.buildEventMessageWith(StringUtil.notNullize(myHint), issuesHint).get();
                 }
             }
             else {

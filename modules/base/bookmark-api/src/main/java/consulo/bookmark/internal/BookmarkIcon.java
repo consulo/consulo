@@ -26,25 +26,27 @@ import consulo.ui.image.ImageEffects;
 import consulo.ui.image.ImageKey;
 import consulo.ui.image.canvas.Canvas2D;
 import consulo.ui.style.ComponentColors;
-import consulo.util.lang.Couple;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
  * @since 2025-07-19
  */
 public class BookmarkIcon {
+    private record MyCache(Image gutterImage, Image actionImage) {
+        public Image getImage(boolean gutter) {
+            return gutter ? gutterImage : actionImage;
+        }
+    }
 
     //0..9  + A..Z
     // Gutter + Action icon
-    @SuppressWarnings("unchecked")
-    private static final Couple<Image>[] ourMnemonicImageCache = new Couple[36];
+    private static final @Nullable MyCache[] ourMnemonicImageCache = new MyCache[36];
 
-    
     public static Image getDefaultIcon(boolean gutter) {
         return gutter ? BookmarkIconGroup.gutterBookmark() : BookmarkIconGroup.actionBookmark();
     }
 
-    
     public static Image getMnemonicIcon(char mnemonic, boolean gutter) {
         int index = mnemonic - 48;
         if (index > 9) {
@@ -54,16 +56,16 @@ public class BookmarkIcon {
             return createMnemonicIcon(mnemonic, gutter);
         }
 
-        if (ourMnemonicImageCache[index] == null) {
+        MyCache cachedImages = ourMnemonicImageCache[index];
+        if (cachedImages == null) {
             // its not mistake about using gutter icon as default icon for named bookmarks, too big icon
-            ourMnemonicImageCache[index] = Couple.of(createMnemonicIcon(mnemonic, true), createMnemonicIcon(mnemonic, true));
+            Image mnemonicIcon = createMnemonicIcon(mnemonic, true);
+            ourMnemonicImageCache[index] = cachedImages = new MyCache(mnemonicIcon, mnemonicIcon);
         }
-        Couple<Image> couple = ourMnemonicImageCache[index];
-        return gutter ? couple.getFirst() : couple.getSecond();
+        return cachedImages.getImage(gutter);
     }
 
-    
-    private static Image createMnemonicIcon(char cha, boolean gutter) {
+    private static Image createMnemonicIcon(char ch, boolean gutter) {
         ImageKey base = PlatformIconGroup.gutterMnemonic();
 
         return ImageEffects.layered(base, ImageEffects.canvas(base.getWidth(), base.getHeight(), c -> {
@@ -76,7 +78,7 @@ public class BookmarkIcon {
             c.setTextAlign(Canvas2D.TextAlign.center);
             c.setTextBaseline(Canvas2D.TextBaseline.middle);
 
-            c.fillText(Character.toString(cha), base.getWidth() / 2 - 1, base.getHeight() / 2 - 2);
+            c.fillText(Character.toString(ch), base.getWidth() / 2 - 1, base.getHeight() / 2 - 2);
         }));
     }
 }

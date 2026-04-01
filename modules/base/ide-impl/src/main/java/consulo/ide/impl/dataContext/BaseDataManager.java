@@ -25,6 +25,7 @@ import consulo.language.editor.PlatformDataKeys;
 import consulo.project.Project;
 import consulo.project.ui.wm.WindowManager;
 import consulo.ui.ModalityState;
+import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.awt.UIExAWTDataKey;
 import consulo.util.collection.Maps;
 import consulo.util.concurrent.AsyncPromise;

@@ -35,6 +35,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.archive.ArchiveVfsUtil;
 import consulo.virtualFileSystem.event.*;
 import consulo.virtualFileSystem.internal.InternalNewVirtualFile;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.tree.TreePath;
 import java.io.File;
@@ -359,7 +360,7 @@ public final class FileTreeModel extends AbstractTreeModel implements Identifiab
             return !descriptor.isChooseJarContents() || !FileElement.isArchive(file);
         }
 
-        private VirtualFile[] getChildren(VirtualFile file) {
+        private VirtualFile @Nullable [] getChildren(VirtualFile file) {
             if (file.isDirectory()) {
                 return file.getChildren();
             }

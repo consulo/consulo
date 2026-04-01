@@ -13,13 +13,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+/*
+ * Copyright 2013-2026 consulo.io
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package consulo.desktop.awt.execution.terminal;
 
 import com.jediterm.terminal.TerminalColor;
 import com.jediterm.terminal.TextStyle;
-import com.jediterm.terminal.TtyConnector;
 import com.jediterm.terminal.emulator.ColorPalette;
-import com.jediterm.terminal.ui.settings.DefaultTabbedSettingsProvider;
+import com.jediterm.terminal.ui.TerminalActionPresentation;
+import com.jediterm.terminal.ui.settings.DefaultSettingsProvider;
 import consulo.application.Application;
 import consulo.application.ui.UISettings;
 import consulo.application.ui.event.UISettingsListener;
@@ -39,19 +54,21 @@ import consulo.ui.ex.action.Shortcut;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.keymap.KeymapManager;
-import org.jspecify.annotations.Nullable;
 import org.jdom.Element;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
 import java.util.List;
 import java.util.*;
 
+import static com.jediterm.terminal.ui.AwtTransformers.fromAwtToTerminalColor;
+
 /**
  * @author traff
  */
-public class JBTerminalSystemSettingsProvider extends DefaultTabbedSettingsProvider {
-    private Set<TerminalSettingsListener> myListeners = new HashSet<>();
+public class JBTerminalSystemSettingsProvider extends DefaultSettingsProvider {
+    private final Set<TerminalSettingsListener> myListeners = new HashSet<>();
 
     private final MyColorSchemeDelegate myColorScheme;
 
@@ -88,23 +105,13 @@ public class JBTerminalSystemSettingsProvider extends DefaultTabbedSettingsProvi
     }
 
     @Override
-    public KeyStroke[] getCopyKeyStrokes() {
-        return getKeyStrokesByActionId(IdeActions.ACTION_COPY);
+    public TerminalActionPresentation getCopyActionPresentation() {
+        return new TerminalActionPresentation("Copy", getKeyStrokesByActionId(IdeActions.ACTION_COPY));
     }
 
     @Override
-    public KeyStroke[] getPasteKeyStrokes() {
-        return getKeyStrokesByActionId(IdeActions.ACTION_PASTE);
-    }
-
-    @Override
-    public KeyStroke[] getNextTabKeyStrokes() {
-        return getKeyStrokesByActionId(IdeActions.ACTION_NEXT_TAB);
-    }
-
-    @Override
-    public KeyStroke[] getPreviousTabKeyStrokes() {
-        return getKeyStrokesByActionId(IdeActions.ACTION_PREVIOUS_TAB);
+    public TerminalActionPresentation getPasteActionPresentation() {
+        return new TerminalActionPresentation("Paste", getKeyStrokesByActionId(IdeActions.ACTION_PASTE));
     }
 
     @Override
@@ -112,37 +119,19 @@ public class JBTerminalSystemSettingsProvider extends DefaultTabbedSettingsProvi
         return new JBTerminalSchemeColorPalette(myColorScheme);
     }
 
-    private KeyStroke[] getKeyStrokesByActionId(String actionId) {
+    private static List<KeyStroke> getKeyStrokesByActionId(String actionId) {
         List<KeyStroke> keyStrokes = new ArrayList<>();
         Shortcut[] shortcuts = KeymapManager.getInstance().getActiveKeymap().getShortcuts(actionId);
         for (Shortcut sc : shortcuts) {
-            if (sc instanceof KeyboardShortcut) {
-                KeyStroke ks = ((KeyboardShortcut) sc).getFirstKeyStroke();
-                keyStrokes.add(ks);
+            if (sc instanceof KeyboardShortcut ksc) {
+                keyStrokes.add(ksc.getFirstKeyStroke());
             }
         }
-
-        return keyStrokes.toArray(new KeyStroke[keyStrokes.size()]);
+        return keyStrokes;
     }
 
     @Override
-    public boolean shouldCloseTabOnLogout(TtyConnector ttyConnector) {
-        return myTerminalConsoleSettings.closeSessionOnLogout();
-    }
-
-    @Override
-    public String tabName(TtyConnector ttyConnector, String sessionName) {
-        //for local terminal use name from settings
-        if (ttyConnector instanceof PtyProcessTtyConnector) {
-            return myTerminalConsoleSettings.getTabNameOrDefault();
-        }
-        else {
-            return sessionName;
-        }
-    }
-
-    @Override
-    public float getLineSpace() {
+    public float getLineSpacing() {
         return myColorScheme.getConsoleLineSpacing();
     }
 
@@ -153,14 +142,26 @@ public class JBTerminalSystemSettingsProvider extends DefaultTabbedSettingsProvi
 
     @Override
     public TextStyle getSelectionColor() {
-        return new TextStyle(TerminalColor.awt(TargetAWT.to(myColorScheme.getColor(EditorColors.SELECTION_FOREGROUND_COLOR))),
-            TerminalColor.awt(TargetAWT.to(myColorScheme.getColor(EditorColors.SELECTION_BACKGROUND_COLOR))));
+        return new TextStyle(
+            fromAwtToTerminalColor(TargetAWT.to(myColorScheme.getColor(EditorColors.SELECTION_FOREGROUND_COLOR))),
+            fromAwtToTerminalColor(TargetAWT.to(myColorScheme.getColor(EditorColors.SELECTION_BACKGROUND_COLOR))));
+    }
+
+    @Override
+    public TerminalColor getDefaultForeground() {
+        return new TerminalColor(() -> getTerminalColorPalette()
+            .getForeground(new TerminalColor(() -> new JBTerminalSchemeColorPalette(myColorScheme).getDefaultForeground())));
+    }
+
+    @Override
+    public TerminalColor getDefaultBackground() {
+        return new TerminalColor(() -> getTerminalColorPalette()
+            .getBackground(new TerminalColor(() -> new JBTerminalSchemeColorPalette(myColorScheme).getDefaultBackground())));
     }
 
     @Override
     public TextStyle getDefaultStyle() {
-        return new TextStyle(TerminalColor.awt(TargetAWT.to(myColorScheme.getDefaultForeground())),
-            TerminalColor.awt(TargetAWT.to(myColorScheme.getDefaultBackground())));
+        return new TextStyle(getDefaultForeground(), getDefaultBackground());
     }
 
     @Override
@@ -179,7 +180,7 @@ public class JBTerminalSystemSettingsProvider extends DefaultTabbedSettingsProvi
     public String getFontName() {
         List<String> fonts = myColorScheme.getConsoleFontPreferences().getEffectiveFontFamilies();
 
-        if (fonts.size() > 0) {
+        if (!fonts.isEmpty()) {
             return fonts.get(0);
         }
 
@@ -198,10 +199,8 @@ public class JBTerminalSystemSettingsProvider extends DefaultTabbedSettingsProvi
 
     @Override
     public int caretBlinkingMs() {
-        if (!EditorSettingsExternalizable.getInstance().isBlinkCaret()) {
-            return 0;
-        }
-        return EditorSettingsExternalizable.getInstance().getBlinkPeriod();
+        EditorSettingsExternalizable instance = EditorSettingsExternalizable.getInstance();
+        return instance.isBlinkCaret() ? instance.getBlinkPeriod() : 0;
     }
 
     @Override
@@ -217,6 +216,10 @@ public class JBTerminalSystemSettingsProvider extends DefaultTabbedSettingsProvi
 
     public EditorColorsScheme getColorScheme() {
         return myColorScheme;
+    }
+
+    public FontPreferences getFontPreferences() {
+        return myColorScheme.getConsoleFontPreferences();
     }
 
     @Override
@@ -239,7 +242,10 @@ public class JBTerminalSystemSettingsProvider extends DefaultTabbedSettingsProvi
         return myTerminalConsoleSettings.isPasteOnMiddleMouseButton();
     }
 
-    
+    public boolean overrideIdeShortcuts() {
+        return myTerminalConsoleSettings.isOverrideIdeShortcuts();
+    }
+
     private static MyColorSchemeDelegate createBoundColorSchemeDelegate(@Nullable EditorColorsScheme customGlobalScheme) {
         return new MyColorSchemeDelegate(customGlobalScheme);
     }
@@ -268,7 +274,6 @@ public class JBTerminalSystemSettingsProvider extends DefaultTabbedSettingsProvi
             return myGlobalScheme;
         }
 
-        
         @Override
         public String getName() {
             return getGlobal().getName();
@@ -299,7 +304,7 @@ public class JBTerminalSystemSettingsProvider extends DefaultTabbedSettingsProvi
         }
 
         @Override
-        public TextAttributes getAttributes(TextAttributesKey key) {
+        public @Nullable TextAttributes getAttributes(@Nullable TextAttributesKey key) {
             if (myOwnAttributes.containsKey(key)) {
                 return myOwnAttributes.get(key);
             }
@@ -311,14 +316,12 @@ public class JBTerminalSystemSettingsProvider extends DefaultTabbedSettingsProvi
             myOwnAttributes.put(key, attributes);
         }
 
-        
         @Override
         public ColorValue getDefaultBackground() {
             ColorValue color = getGlobal().getColor(ConsoleViewContentType.CONSOLE_BACKGROUND_KEY);
             return color != null ? color : getGlobal().getDefaultBackground();
         }
 
-        
         @Override
         public ColorValue getDefaultForeground() {
             ColorValue foregroundColor = getGlobal().getAttributes(ConsoleViewContentType.NORMAL_OUTPUT_KEY)
@@ -339,7 +342,6 @@ public class JBTerminalSystemSettingsProvider extends DefaultTabbedSettingsProvi
             myOwnColors.put(key, color);
         }
 
-        
         @Override
         public FontPreferences getFontPreferences() {
             return myGlobalScheme.getFontPreferences();
@@ -362,7 +364,6 @@ public class JBTerminalSystemSettingsProvider extends DefaultTabbedSettingsProvi
 
         @Override
         public void setEditorFontSize(int fontSize) {
-
         }
 
         @Override
@@ -428,7 +429,6 @@ public class JBTerminalSystemSettingsProvider extends DefaultTabbedSettingsProvi
             myGlobalScheme = scheme == null ? EditorColorsManager.getInstance().getGlobalScheme() : scheme;
         }
 
-        
         @Override
         public FontPreferences getConsoleFontPreferences() {
             return myFontPreferences;

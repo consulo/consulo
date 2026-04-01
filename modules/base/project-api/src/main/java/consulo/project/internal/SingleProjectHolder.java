@@ -21,7 +21,7 @@ import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
- * @since 19/01/2022
+ * @since 2022-01-19
  */
 public class SingleProjectHolder {
   /**
@@ -31,5 +31,5 @@ public class SingleProjectHolder {
     return theProject;
   }
 
-  public static volatile Project theProject;
+  public static volatile @Nullable Project theProject = null;
 }

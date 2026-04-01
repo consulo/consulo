@@ -18,6 +18,7 @@ package consulo.virtualFileSystem.event;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileSystem;
 import consulo.util.lang.LocalTimeCounter;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author max
@@ -33,20 +34,28 @@ public class VFileContentChangeEvent extends VFileEvent {
 
   private static final int UNDEFINED_TIMESTAMP_OR_LENGTH = -1;
 
-  public VFileContentChangeEvent(Object requestor, VirtualFile file, long oldModificationStamp, long newModificationStamp, boolean isFromRefresh) {
+  public VFileContentChangeEvent(
+    @Nullable Object requestor,
+    VirtualFile file,
+    long oldModificationStamp,
+    long newModificationStamp,
+    boolean isFromRefresh
+  ) {
     this(requestor, file, oldModificationStamp, newModificationStamp, UNDEFINED_TIMESTAMP_OR_LENGTH, UNDEFINED_TIMESTAMP_OR_LENGTH, UNDEFINED_TIMESTAMP_OR_LENGTH, UNDEFINED_TIMESTAMP_OR_LENGTH,
          isFromRefresh);
   }
 
-  public VFileContentChangeEvent(Object requestor,
-                                 VirtualFile file,
-                                 long oldModificationStamp,
-                                 long newModificationStamp,
-                                 long oldTimestamp,
-                                 long newTimestamp,
-                                 long oldLength,
-                                 long newLength,
-                                 boolean isFromRefresh) {
+  public VFileContentChangeEvent(
+    @Nullable Object requestor,
+    VirtualFile file,
+    long oldModificationStamp,
+    long newModificationStamp,
+    long oldTimestamp,
+    long newTimestamp,
+    long oldLength,
+    long newLength,
+    boolean isFromRefresh
+  ) {
     super(requestor, isFromRefresh);
     myFile = file;
     myOldModificationStamp = oldModificationStamp;
@@ -57,7 +66,6 @@ public class VFileContentChangeEvent extends VFileEvent {
     myNewLength = newLength;
   }
 
-  
   @Override
   public VirtualFile getFile() {
     return myFile;
@@ -100,13 +108,11 @@ public class VFileContentChangeEvent extends VFileEvent {
            "]";
   }
 
-  
   @Override
   protected String computePath() {
     return myFile.getPath();
   }
 
-  
   @Override
   public VirtualFileSystem getFileSystem() {
     return myFile.getFileSystem();
@@ -117,7 +123,7 @@ public class VFileContentChangeEvent extends VFileEvent {
     return myFile.isValid() && myFile.getModificationStamp() == myOldModificationStamp;
   }
 
-  public boolean equals(Object o) {
+  public boolean equals(@Nullable Object o) {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
 

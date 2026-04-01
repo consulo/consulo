@@ -17,13 +17,14 @@ package consulo.pathMacro.impl.internal.builtin;
 
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.VisualPosition;
+import consulo.localize.LocalizeValue;
 
 /**
  * @author yole
  */
 public class SelectionStartColumnMacro extends EditorMacro {
   public SelectionStartColumnMacro() {
-    super("SelectionStartColumn", "Selected text start column number");
+    super("SelectionStartColumn", LocalizeValue.localizeTODO("Selected text start column number"));
   }
 
   @Override

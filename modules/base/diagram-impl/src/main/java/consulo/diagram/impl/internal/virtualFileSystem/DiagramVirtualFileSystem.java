@@ -39,7 +39,6 @@ public class DiagramVirtualFileSystem extends BaseVirtualFileSystem {
         return (DiagramVirtualFileSystem) VirtualFileManager.getInstance().getFileSystem(PROTOCOL);
     }
 
-    
     @Override
     public String getProtocol() {
         return PROTOCOL;
@@ -62,6 +61,5 @@ public class DiagramVirtualFileSystem extends BaseVirtualFileSystem {
 
     @Override
     public void refresh(boolean asynchronous) {
-
     }
 }

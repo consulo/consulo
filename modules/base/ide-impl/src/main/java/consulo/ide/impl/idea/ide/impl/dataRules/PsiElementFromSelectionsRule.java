@@ -19,10 +19,12 @@ package consulo.ide.impl.idea.ide.impl.dataRules;
 import consulo.dataContext.DataSnapshot;
 import consulo.language.editor.PlatformDataKeys;
 import consulo.language.psi.PsiElement;
+import org.jspecify.annotations.Nullable;
 
 public final class PsiElementFromSelectionsRule {
-  static PsiElement[] getData(DataSnapshot dataProvider) {
+  static PsiElement @Nullable [] getData(DataSnapshot dataProvider) {
     Object[] objects = dataProvider.get(PlatformDataKeys.SELECTED_ITEMS);
+
     if (objects != null) {
       PsiElement[] elements = new PsiElement[objects.length];
       for (int i = 0, objectsLength = objects.length; i < objectsLength; i++) {

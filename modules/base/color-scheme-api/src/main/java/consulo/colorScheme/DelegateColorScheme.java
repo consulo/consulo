@@ -46,7 +46,7 @@ public abstract class DelegateColorScheme implements EditorColorsScheme {
     }
 
     @Override
-    public TextAttributes getAttributes(TextAttributesKey key) {
+    public @Nullable TextAttributes getAttributes(@Nullable TextAttributesKey key) {
         return myDelegate.getAttributes(key);
     }
 
@@ -55,13 +55,11 @@ public abstract class DelegateColorScheme implements EditorColorsScheme {
         myDelegate.setAttributes(key, attributes);
     }
 
-    
     @Override
     public ColorValue getDefaultBackground() {
         return myDelegate.getDefaultBackground();
     }
 
-    
     @Override
     public ColorValue getDefaultForeground() {
         return myDelegate.getDefaultForeground();
@@ -77,7 +75,6 @@ public abstract class DelegateColorScheme implements EditorColorsScheme {
         myDelegate.setColor(key, color);
     }
 
-    
     @Override
     public FontPreferences getFontPreferences() {
         return myDelegate.getFontPreferences();
@@ -147,7 +144,6 @@ public abstract class DelegateColorScheme implements EditorColorsScheme {
     public void readExternal(Element element) {
     }
 
-    
     @Override
     public String getName() {
         return myDelegate.getName();
@@ -158,7 +154,6 @@ public abstract class DelegateColorScheme implements EditorColorsScheme {
         return myDelegate.clone();
     }
 
-    
     @Override
     public FontPreferences getConsoleFontPreferences() {
         return myDelegate.getConsoleFontPreferences();

@@ -15,6 +15,7 @@
  */
 package consulo.virtualFileSystem;
 
+import consulo.annotation.access.RequiredWriteAction;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.application.Application;
@@ -114,45 +115,48 @@ public interface VirtualFileSystem {
    *
    * @see VirtualFile#delete(Object)
    */
-  void deleteFile(Object requestor, VirtualFile vFile) throws IOException;
+  @RequiredWriteAction
+  void deleteFile(@Nullable Object requestor, VirtualFile vFile) throws IOException;
 
   /**
    * Implementation of moving files in this file system
    *
    * @see VirtualFile#move(Object, VirtualFile)
    */
-  void moveFile(Object requestor, VirtualFile vFile, VirtualFile newParent) throws IOException;
+  @RequiredWriteAction
+  void moveFile(@Nullable Object requestor, VirtualFile vFile, VirtualFile newParent) throws IOException;
 
   /**
    * Implementation of renaming files in this file system
    *
    * @see VirtualFile#rename(Object, String)
    */
-  void renameFile(Object requestor, VirtualFile vFile, String newName) throws IOException;
+  @RequiredWriteAction
+  void renameFile(@Nullable Object requestor, VirtualFile vFile, String newName) throws IOException;
 
   /**
    * Implementation of adding files in this file system
    *
    * @see VirtualFile#createChildData(Object, String)
    */
-  VirtualFile createChildFile(Object requestor, VirtualFile vDir, String fileName) throws IOException;
+  @RequiredWriteAction
+  VirtualFile createChildFile(@Nullable Object requestor, VirtualFile vDir, String fileName) throws IOException;
 
   /**
    * Implementation of adding directories in this file system
    *
    * @see VirtualFile#createChildDirectory(Object, String)
    */
-  VirtualFile createChildDirectory(Object requestor, VirtualFile vDir, String dirName) throws IOException;
+  @RequiredWriteAction
+  VirtualFile createChildDirectory(@Nullable Object requestor, VirtualFile vDir, String dirName) throws IOException;
 
   /**
    * Implementation of copying files in this file system
    *
    * @see VirtualFile#copy(Object, VirtualFile, String)
    */
-  VirtualFile copyFile(Object requestor,
-                       VirtualFile virtualFile,
-                       VirtualFile newParent,
-                       String copyName) throws IOException;
+  @RequiredWriteAction
+  VirtualFile copyFile(@Nullable Object requestor, VirtualFile virtualFile, VirtualFile newParent, String copyName) throws IOException;
 
   boolean isReadOnly();
 

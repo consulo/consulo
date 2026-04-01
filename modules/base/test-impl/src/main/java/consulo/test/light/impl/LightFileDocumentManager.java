@@ -99,7 +99,6 @@ public class LightFileDocumentManager implements FileDocumentManager {
   }
 
   @Override
-  
   public Document[] getUnsavedDocuments() {
     return Document.EMPTY_ARRAY;
   }
@@ -128,8 +127,7 @@ public class LightFileDocumentManager implements FileDocumentManager {
   }
 
   @Override
-  
-  public String getLineSeparator(VirtualFile file, ComponentManager project) {
+  public @Nullable String getLineSeparator(VirtualFile file, ComponentManager project) {
     return LoadTextUtil.getDetectedLineSeparator(file);
   }
 

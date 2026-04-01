@@ -40,15 +40,12 @@ public interface PsiDirectory extends PsiFileSystemItem {
      * @return the virtual file instance.
      */
     @Override
-    
     VirtualFile getVirtualFile();
 
-    
     @Override
     @RequiredReadAction
     String getName();
 
-    
     @Override
     @RequiredWriteAction
     PsiElement setName(String name) throws IncorrectOperationException;
@@ -122,7 +119,6 @@ public interface PsiDirectory extends PsiFileSystemItem {
      */
     PsiFile createFile(String name) throws IncorrectOperationException;
 
-    
     PsiFile copyFileFrom(String newName, PsiFile originalFile) throws IncorrectOperationException;
 
     /**

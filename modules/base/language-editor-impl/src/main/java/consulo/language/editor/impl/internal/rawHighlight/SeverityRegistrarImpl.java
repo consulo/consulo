@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.language.editor.impl.internal.rawHighlight;
 
 import consulo.colorScheme.TextAttributes;
@@ -213,7 +212,6 @@ public class SeverityRegistrarImpl implements JDOMExternalizable, Comparator<Hig
         }
     }
 
-    
     private static List<HighlightSeverity> getOrderAsList(ObjectIntMap<HighlightSeverity> orderMap) {
         List<HighlightSeverity> list = new ArrayList<>();
         for (HighlightSeverity o : orderMap.keySet()) {
@@ -262,7 +260,6 @@ public class SeverityRegistrarImpl implements JDOMExternalizable, Comparator<Hig
         return null;
     }
 
-    
     private List<String> createCurrentSeverityNames() {
         List<String> list = new ArrayList<>();
         list.addAll(STANDARD_SEVERITIES.keySet());
@@ -297,7 +294,6 @@ public class SeverityRegistrarImpl implements JDOMExternalizable, Comparator<Hig
         return o1 - o2;
     }
 
-    
     private ObjectIntMap<HighlightSeverity> getOrderMap() {
         ObjectIntMap<HighlightSeverity> orderMap;
         ObjectIntMap<HighlightSeverity> defaultOrder = null;
@@ -325,7 +321,6 @@ public class SeverityRegistrarImpl implements JDOMExternalizable, Comparator<Hig
         }
     }
 
-    
     private static ObjectIntMap<HighlightSeverity> fromList(List<HighlightSeverity> orderList) {
         ObjectIntMap<HighlightSeverity> map = ObjectMaps.newObjectIntHashMap(orderList.size());
         for (int i = 0; i < orderList.size(); i++) {
@@ -335,7 +330,6 @@ public class SeverityRegistrarImpl implements JDOMExternalizable, Comparator<Hig
         return ObjectMaps.unmodified(map);
     }
 
-    
     private List<HighlightSeverity> getDefaultOrder() {
         Collection<SeverityBasedTextAttributes> values = myMap.values();
         List<HighlightSeverity> order = new ArrayList<>(STANDARD_SEVERITIES.size() + values.size());
@@ -386,12 +380,10 @@ public class SeverityRegistrarImpl implements JDOMExternalizable, Comparator<Hig
             myType = type;
         }
 
-        
         public TextAttributes getAttributes() {
             return myAttributes;
         }
 
-        
         public HighlightInfoTypeImpl getType() {
             return myType;
         }
@@ -401,7 +393,6 @@ public class SeverityRegistrarImpl implements JDOMExternalizable, Comparator<Hig
             myType.writeExternal(element);
         }
 
-        
         public HighlightSeverity getSeverity() {
             return myType.getSeverity(null);
         }
@@ -422,12 +413,10 @@ public class SeverityRegistrarImpl implements JDOMExternalizable, Comparator<Hig
         }
     }
 
-    
     public Collection<SeverityBasedTextAttributes> allRegisteredAttributes() {
         return new ArrayList<>(myMap.values());
     }
 
-    
     public Collection<HighlightInfoType> standardSeverities() {
         return STANDARD_SEVERITIES.values();
     }

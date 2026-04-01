@@ -26,7 +26,7 @@ import java.util.Map;
 
 /**
  * @author VISTALL
- * @since 10/03/2021
+ * @since 2021-03-10
  */
 class UrlClassLoaderStrategy implements ClassLoadingStrategy<ClassLoader> {
   private UrlClassLoader myUrlClassLoader;
@@ -41,7 +41,10 @@ class UrlClassLoaderStrategy implements ClassLoadingStrategy<ClassLoader> {
 
     for (Map.Entry<TypeDescription, byte[]> entry : types.entrySet()) {
       try {
-        Class proxyClass = myUrlClassLoader.defineClass(entry.getKey().getCanonicalName(), new MemoryResource(null, entry.getValue(), Map.of()));
+        Class proxyClass = myUrlClassLoader.defineClass(
+          entry.getKey().getCanonicalName(),
+          new MemoryResource(null, entry.getValue(), Map.of())
+        );
         result.put(entry.getKey(), proxyClass);
       }
       catch (IOException e) {

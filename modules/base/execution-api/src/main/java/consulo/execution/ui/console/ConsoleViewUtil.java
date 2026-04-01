@@ -19,7 +19,6 @@ import consulo.ui.style.StyleManager;
 import consulo.undoRedo.util.UndoUtil;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.dataholder.Key;
-import consulo.util.lang.text.StringTokenizer;
 import consulo.virtualFileSystem.fileType.FileType;
 import org.jspecify.annotations.Nullable;
 
@@ -181,7 +180,7 @@ public class ConsoleViewUtil {
         IElementType tokenType;
         while ((tokenType = lexer.getTokenType()) != null) {
             ConsoleViewContentType contentType = getContentTypeForToken(tokenType, highlighter);
-            StringTokenizer eolTokenizer = new StringTokenizer(lexer.getTokenText(), "\n", true);
+            java.util.StringTokenizer eolTokenizer = new StringTokenizer(lexer.getTokenText(), "\n", true);
             while (eolTokenizer.hasMoreTokens()) {
                 String tok = eolTokenizer.nextToken();
                 console.print(tok, contentType);

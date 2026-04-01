@@ -296,8 +296,8 @@ public class NavBarPanel extends JPanel implements UiDataProvider, PopupOwner, D
         }
         if (target instanceof PsiDirectory directory) {
             for (VirtualFile file = directory.getVirtualFile(), next; ; file = next) {
-                VirtualFile[] children = file.getChildren();
-                VirtualFile child = children.length == 1 ? children[0] : null;
+                List<VirtualFile> children = file.getRequiredChildren();
+                VirtualFile child = children.size() == 1 ? children.get(0) : null;
                 //noinspection AssignmentToForLoopParameter
                 next = child != null && child.isDirectory() && !child.is(VFileProperty.SYMLINK) ? child : null;
                 if (next == null) {

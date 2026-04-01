@@ -15,13 +15,14 @@
  */
 package consulo.configurable;
 
+import consulo.localize.LocalizeValue;
 import consulo.ui.image.Image;
 
 import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
- * @since 25/12/2021
+ * @since 2021-12-25
  */
 public interface MasterDetailsConfigurable<T> extends Configurable  {
   @Nullable Image getIcon();
@@ -30,5 +31,5 @@ public interface MasterDetailsConfigurable<T> extends Configurable  {
 
   void updateName();
 
-  String getBannerSlogan();
+  LocalizeValue getBannerSlogan();
 }

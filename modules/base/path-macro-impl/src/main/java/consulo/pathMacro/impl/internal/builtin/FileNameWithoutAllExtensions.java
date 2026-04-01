@@ -16,7 +16,8 @@
 package consulo.pathMacro.impl.internal.builtin;
 
 import consulo.dataContext.DataContext;
-import consulo.pathMacro.PathMacroBundle;
+import consulo.localize.LocalizeValue;
+import consulo.pathMacro.localize.PathMacroLocalize;
 import consulo.virtualFileSystem.VirtualFile;
 
 public class FileNameWithoutAllExtensions extends FileNameMacro {
@@ -26,8 +27,8 @@ public class FileNameWithoutAllExtensions extends FileNameMacro {
   }
 
   @Override
-  public String getDescription() {
-    return PathMacroBundle.message("macro.file.name.without.all.extensions");
+  public LocalizeValue getDescription() {
+    return PathMacroLocalize.macroFileNameWithoutAllExtensions();
   }
 
   @Override

@@ -123,6 +123,7 @@
                 <include>consulo:consulo-find-api</include>
                 <include>consulo:consulo-virtual-file-status-api</include>
                 <include>consulo:consulo-virtual-file-status-impl</include>
+                <include>consulo:consulo-virtual-file-system-native-file-type-impl</include>
                 <include>consulo:consulo-usage-api</include>
                 <include>consulo:consulo-usage-impl</include>
                 <include>consulo:consulo-language-editor-refactoring-api</include>
@@ -217,9 +218,8 @@
                 <include>org.jdom:jdom-xpath-jaxen</include>
                 <include>consulo.internal:forms_rt</include>
                 <include>consulo.internal:pty4j</include>
-                <include>consulo.internal:jediterm</include>
+                <include>consulo.internal:jediterm-core</include>
                 <include>consulo.internal:build.serviceMessages</include>
-                <include>consulo.internal:purejavacomm</include>
                 <include>consulo:kava.beans</include>
                 <!--External libraries-->
                 <include>net.java.dev.jna:jna-jpms</include>
@@ -275,6 +275,8 @@
                 <include>org.bouncycastle:bcpkix-jdk18on</include>
                 <include>org.bouncycastle:bcutil-jdk18on</include>
                 <include>org.bouncycastle:bcprov-jdk18on</include>
+
+                <include>consulo.internal:format-ripper-jvm-file-type-detector</include>
             </includes>
         </dependencySet>
     </dependencySets>

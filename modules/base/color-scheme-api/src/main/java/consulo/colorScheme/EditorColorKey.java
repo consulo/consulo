@@ -39,8 +39,8 @@ public final class EditorColorKey implements ColorValue, Comparable<EditorColorK
 
     private final String myExternalName;
 
-    private ColorValue myDefaultColorValue;
-    private EditorColorKey myFallbackColorKey;
+    private @Nullable ColorValue myDefaultColorValue = null;
+    private @Nullable EditorColorKey myFallbackColorKey = null;
 
     private EditorColorKey(String externalName) {
         myExternalName = externalName;
@@ -58,7 +58,6 @@ public final class EditorColorKey implements ColorValue, Comparable<EditorColorK
     }
 
     @Override
-    
     public String toString() {
         return myExternalName;
     }
@@ -67,7 +66,6 @@ public final class EditorColorKey implements ColorValue, Comparable<EditorColorK
         return myFallbackColorKey;
     }
 
-    
     public String getExternalName() {
         return myExternalName;
     }
@@ -107,7 +105,6 @@ public final class EditorColorKey implements ColorValue, Comparable<EditorColorK
         return key;
     }
 
-    
     @Override
     public RGBColor toRGB() {
         EditorColorsScheme currentScheme = EditorColorsManager.getInstance().getCurrentScheme();

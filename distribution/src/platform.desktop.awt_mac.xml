@@ -31,6 +31,7 @@
                 <include>com.formdev:flatlaf</include>
                 <include>com.formdev:flatlaf-swingx</include>
                 <include>org.swinglabs.swingx:swingx-all</include>
+                <include>consulo.internal:jediterm-ui</include>
             </includes>
         </dependencySet>
 

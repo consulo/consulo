@@ -63,8 +63,7 @@ public class ProjectViewProjectNode extends AbstractProjectNode implements PathE
             return nodes;
         }
 
-        VirtualFile[] files = baseDir.getChildren();
-        for (VirtualFile file : files) {
+        for (VirtualFile file : baseDir.getRequiredChildren()) {
             if (ModuleContentUtil.findModuleForFile(file, project) == null && !file.isDirectory()) {
                 PsiFile psiFile = psiManager.findFile(file);
                 if (psiFile != null) {

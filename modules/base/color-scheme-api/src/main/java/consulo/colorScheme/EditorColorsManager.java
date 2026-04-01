@@ -18,7 +18,6 @@ package consulo.colorScheme;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
-import consulo.application.ApplicationManager;
 import consulo.colorScheme.event.EditorColorsListener;
 import consulo.colorScheme.internal.EditorColorsManagerInternal;
 import consulo.disposer.Disposable;
@@ -38,18 +37,14 @@ public sealed interface EditorColorsManager permits EditorColorsManagerInternal 
 
     void removeAllSchemes();
 
-    
     EditorColorsScheme[] getAllSchemes();
 
-    
     Map<String, EditorColorsScheme> getBundledSchemes();
 
     void setGlobalScheme(EditorColorsScheme scheme);
 
-    
     EditorColorsScheme getGlobalScheme();
 
-    
     default EditorColorsScheme getCurrentScheme() {
         return getGlobalScheme();
     }
@@ -64,7 +59,7 @@ public sealed interface EditorColorsManager permits EditorColorsManagerInternal 
     @SuppressWarnings("MethodMayBeStatic")
     @Deprecated
     default void addEditorColorsListener(EditorColorsListener listener) {
-        ApplicationManager.getApplication().getMessageBus().connect().subscribe(EditorColorsListener.class, listener);
+        Application.get().getMessageBus().connect().subscribe(EditorColorsListener.class, listener);
     }
 
     /**
@@ -73,10 +68,9 @@ public sealed interface EditorColorsManager permits EditorColorsManagerInternal 
     @SuppressWarnings("MethodMayBeStatic")
     @Deprecated
     default void addEditorColorsListener(EditorColorsListener listener, Disposable disposable) {
-        ApplicationManager.getApplication().getMessageBus().connect(disposable).subscribe(EditorColorsListener.class, listener);
+        Application.get().getMessageBus().connect(disposable).subscribe(EditorColorsListener.class, listener);
     }
 
-    
     default EditorColorsScheme getSchemeForCurrentUITheme() {
         return getGlobalScheme();
     }

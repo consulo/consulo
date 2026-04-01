@@ -30,14 +30,12 @@ public enum CompilerMessageCategory {
     INFORMATION(CompilerLocalize.messageCategoryInformation()),
     STATISTICS(CompilerLocalize.messageCategoryStatistics());
 
-    
     private final LocalizeValue myPresentableText;
 
     CompilerMessageCategory(LocalizeValue presentableText) {
         myPresentableText = presentableText;
     }
 
-    
     public LocalizeValue getPresentableText() {
         return myPresentableText;
     }

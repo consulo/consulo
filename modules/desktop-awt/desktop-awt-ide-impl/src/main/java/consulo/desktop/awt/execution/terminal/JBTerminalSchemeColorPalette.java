@@ -1,5 +1,8 @@
 /*
- * Copyright 2000-2013 JetBrains s.r.o.
+ * Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
+ */
+/*
+ * Copyright 2013-2026 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,30 +18,73 @@
  */
 package consulo.desktop.awt.execution.terminal;
 
+import com.jediterm.core.Color;
 import com.jediterm.terminal.emulator.ColorPalette;
+import com.jediterm.terminal.ui.AwtTransformers;
 import consulo.colorScheme.EditorColorsScheme;
+import consulo.colorScheme.TextAttributes;
 import consulo.execution.process.ColoredOutputTypeRegistry;
+import consulo.execution.ui.console.ConsoleViewContentType;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
-
-import java.awt.*;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author traff
  */
 public class JBTerminalSchemeColorPalette extends ColorPalette {
-  private final EditorColorsScheme myColorsScheme;
+    private final EditorColorsScheme myColorsScheme;
 
-  protected JBTerminalSchemeColorPalette(EditorColorsScheme scheme) {
-    super();
-    myColorsScheme = scheme;
-  }
-
-  @Override
-  public Color[] getIndexColors() {
-    Color[] result = XTERM_PALETTE.getIndexColors();
-    for (int i = 1; i < 7; i++) {
-      result[i] = TargetAWT.to(myColorsScheme.getAttributes(ColoredOutputTypeRegistry.getAnsiColorKey(i)).getForegroundColor());
+    protected JBTerminalSchemeColorPalette(EditorColorsScheme scheme) {
+        super();
+        myColorsScheme = scheme;
     }
-    return result;
-  }
+
+    public Color getDefaultForeground() {
+        java.awt.Color foregroundColor =
+            TargetAWT.to(myColorsScheme.getAttributes(ConsoleViewContentType.NORMAL_OUTPUT_KEY).getForegroundColor());
+        return AwtTransformers.fromAwtColor(
+            foregroundColor != null ? foregroundColor : TargetAWT.to(myColorsScheme.getDefaultForeground()));
+    }
+
+    public Color getDefaultBackground() {
+        java.awt.Color backgroundColor = TargetAWT.to(myColorsScheme.getColor(ConsoleViewContentType.CONSOLE_BACKGROUND_KEY));
+        return AwtTransformers.fromAwtColor(
+            backgroundColor != null ? backgroundColor : TargetAWT.to(myColorsScheme.getDefaultBackground()));
+    }
+
+    private @Nullable TextAttributes getAttributesByColorIndex(int index) {
+        return myColorsScheme.getAttributes(ColoredOutputTypeRegistry.getAnsiColorKey(index));
+    }
+
+    @Override
+    protected Color getForegroundByColorIndex(int colorIndex) {
+        TextAttributes attributes = getAttributesByColorIndex(colorIndex);
+        java.awt.Color color = null;
+        if (attributes != null) {
+            color = TargetAWT.to(attributes.getForegroundColor());
+            if (color == null) {
+                color = TargetAWT.to(attributes.getBackgroundColor());
+            }
+        }
+        if (color != null) {
+            return AwtTransformers.fromAwtColor(color);
+        }
+        return getDefaultForeground();
+    }
+
+    @Override
+    protected Color getBackgroundByColorIndex(int colorIndex) {
+        TextAttributes attributes = getAttributesByColorIndex(colorIndex);
+        java.awt.Color color = null;
+        if (attributes != null) {
+            color = TargetAWT.to(attributes.getBackgroundColor());
+            if (color == null) {
+                color = TargetAWT.to(attributes.getForegroundColor());
+            }
+        }
+        if (color != null) {
+            return AwtTransformers.fromAwtColor(color);
+        }
+        return getDefaultBackground();
+    }
 }

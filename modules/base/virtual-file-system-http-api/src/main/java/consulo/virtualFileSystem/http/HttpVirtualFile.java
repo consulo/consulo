@@ -15,11 +15,11 @@
  */
 package consulo.virtualFileSystem.http;
 
-import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.BaseVirtualFile;
 
 /**
  * @author nik
  */
-public abstract class HttpVirtualFile extends VirtualFile {
+public abstract class HttpVirtualFile extends BaseVirtualFile {
   public abstract RemoteFileInfo getFileInfo();
 }

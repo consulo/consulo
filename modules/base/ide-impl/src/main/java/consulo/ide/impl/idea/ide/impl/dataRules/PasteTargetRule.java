@@ -20,7 +20,7 @@ import consulo.dataContext.DataSnapshot;
 import consulo.language.psi.PsiElement;
 
 public final class PasteTargetRule {
-  static PsiElement getData(DataSnapshot dataProvider) {
-    return dataProvider.get(PsiElement.KEY);
-  }
+    static PsiElement getData(DataSnapshot dataProvider) {
+        return dataProvider.get(PsiElement.KEY);
+    }
 }

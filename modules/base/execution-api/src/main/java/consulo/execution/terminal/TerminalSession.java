@@ -20,4 +20,5 @@ package consulo.execution.terminal;
  * @since 15/04/2023
  */
 public interface TerminalSession {
+    String getConnectorName();
 }
