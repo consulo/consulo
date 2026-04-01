@@ -25,6 +25,7 @@ import consulo.language.content.LanguageContentFolderScopes;
 import consulo.language.content.ProductionContentFolderTypeProvider;
 import consulo.language.content.TestContentFolderTypeProvider;
 import consulo.language.psi.stub.FileBasedIndex;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.module.Module;
 import consulo.module.ModuleManager;
@@ -167,7 +168,6 @@ public class CompileContextImpl extends UserDataHolderBase implements CompileCon
         }) != null;
     }
 
-    
     @Override
     public Project getProject() {
         return myProject;
@@ -185,6 +185,7 @@ public class CompileContextImpl extends UserDataHolderBase implements CompileCon
         addMessage(msg);
     }
 
+    @Deprecated
     @Override
     public void addMessage(
         CompilerMessageCategory category,
@@ -265,7 +266,6 @@ public class CompileContextImpl extends UserDataHolderBase implements CompileCon
         return myRebuildReason;
     }
 
-    
     @Override
     public ProgressIndicator getProgressIndicator() {
         //if (myProgressIndicatorProxy != null) {

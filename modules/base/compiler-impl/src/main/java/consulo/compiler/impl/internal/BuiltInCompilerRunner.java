@@ -466,7 +466,7 @@ public class BuiltInCompilerRunner implements CompilerRunner {
                 }
                 catch (CacheCorruptedException e) {
                     LOG.info(e);
-                    context.requestRebuildNextTime(e.getMessage());
+                    context.requestRebuildNextTime(LocalizeValue.ofNullable(e.getMessage()));
                 }
                 finally {
                     int errorCount = context.getMessageCount(CompilerMessageCategory.ERROR);
@@ -604,7 +604,7 @@ public class BuiltInCompilerRunner implements CompilerRunner {
                 }
                 catch (CacheCorruptedException e) {
                     LOG.info(e);
-                    context.requestRebuildNextTime(e.getMessage());
+                    context.requestRebuildNextTime(LocalizeValue.ofNullable(e.getMessage()));
                 }
             }
 
@@ -713,7 +713,7 @@ public class BuiltInCompilerRunner implements CompilerRunner {
             }
             catch (IOException e) {
                 LOG.info(e);
-                context.requestRebuildNextTime(e.getMessage());
+                context.requestRebuildNextTime(LocalizeValue.ofNullable(e.getMessage()));
                 throw new ExitException(ExitStatus.ERRORS);
             }
             catch (ProcessCanceledException | ExitException e) {
@@ -859,7 +859,7 @@ public class BuiltInCompilerRunner implements CompilerRunner {
         }
         catch (IOException e) {
             LOG.info(e);
-            context.requestRebuildNextTime(e.getMessage());
+            context.requestRebuildNextTime(LocalizeValue.ofNullable(e.getMessage()));
             throw new ExitException(ExitStatus.ERRORS);
         }
         finally {

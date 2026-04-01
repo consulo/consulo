@@ -17,8 +17,8 @@ package consulo.sandboxPlugin.ide.compiler;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.compiler.CompileContext;
-import consulo.compiler.scope.CompileScope;
 import consulo.compiler.CompilerMessageCategory;
+import consulo.compiler.scope.CompileScope;
 import consulo.compiler.TranslatingCompiler;
 import consulo.sandboxPlugin.ide.bundle.SandBundleType;
 import consulo.virtualFileSystem.fileType.FileType;
@@ -29,7 +29,7 @@ import consulo.sandboxPlugin.lang.SandFileType;
 
 /**
  * @author VISTALL
- * @since 17.05.14
+ * @since 2014-05-17
  */
 @ExtensionImpl
 public class SandCompiler implements TranslatingCompiler {
@@ -58,19 +58,16 @@ public class SandCompiler implements TranslatingCompiler {
     myAddError = !myAddError;
   }
 
-  
   @Override
   public FileType[] getInputFileTypes() {
     return new FileType[0];
   }
 
-  
   @Override
   public FileType[] getOutputFileTypes() {
     return new FileType[0];
   }
 
-  
   @Override
   public String getDescription() {
     return "test";

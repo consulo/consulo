@@ -42,6 +42,7 @@ import consulo.util.io.FileUtil;
 import consulo.util.io.URLUtil;
 import consulo.util.lang.ExceptionUtil;
 import consulo.util.lang.Pair;
+import consulo.util.lang.StringUtil;
 import consulo.util.lang.ref.SimpleReference;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
@@ -132,7 +133,7 @@ public class ArtifactsCompilerInstance extends GenericCompilerInstance<ArtifactB
         }
 
         String outputPath = artifact.getOutputPath();
-        if (outputPath == null || outputPath.length() == 0) {
+        if (StringUtil.isEmpty(outputPath)) {
             myContext.addMessage(
                 CompilerMessageCategory.ERROR,
                 "Cannot build '" + artifact.getName() + "' artifact: output path is not specified",

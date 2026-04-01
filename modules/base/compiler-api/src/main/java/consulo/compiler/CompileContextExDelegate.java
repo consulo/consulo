@@ -18,6 +18,7 @@ package consulo.compiler;
 import consulo.application.progress.ProgressIndicator;
 import consulo.compiler.scope.CompileScope;
 import consulo.content.ContentFolderTypeProvider;
+import consulo.localize.LocalizeValue;
 import consulo.module.Module;
 import consulo.navigation.Navigatable;
 import consulo.project.Project;
@@ -81,17 +82,13 @@ public class CompileContextExDelegate implements CompileContextEx {
         myDelegate.addScope(additionalScope);
     }
 
+    @Deprecated
     @Override
-    public void addMessage(
-        CompilerMessageCategory category,
-        String message,
-        @Nullable String url,
-        int lineNum,
-        int columnNum
-    ) {
+    public void addMessage(CompilerMessageCategory category, String message, @Nullable String url, int lineNum, int columnNum) {
         myDelegate.addMessage(category, message, url, lineNum, columnNum);
     }
 
+    @Deprecated
     @Override
     public void addMessage(
         CompilerMessageCategory category,
@@ -118,6 +115,11 @@ public class CompileContextExDelegate implements CompileContextEx {
     @Override
     public CompileScope getCompileScope() {
         return myDelegate.getCompileScope();
+    }
+
+    @Override
+    public void requestRebuildNextTime(LocalizeValue message) {
+        myDelegate.requestRebuildNextTime(message);
     }
 
     @Override
