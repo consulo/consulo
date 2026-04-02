@@ -2,18 +2,27 @@ name: Claude PR Review
 
 on:
     pull_request:
-        types: [opened, synchronize]
-
-permissions:
-    contents: read
-    pull-requests: write
-    issues: write
+        types: [opened]
 
 jobs:
     review:
         runs-on: ubuntu-latest
+        permissions:
+            contents: read
+            pull-requests: write
+            id-token: write
         steps:
-            -   uses: drillan/claude-pr-reviewer@v1
+            -   name: Checkout repository
+                uses: actions/checkout@v6
+                with:
+                    fetch-depth: 1
+
+            -   name: PR Review with Progress Tracking
+                uses: anthropics/claude-code-action@v1
                 with:
                     anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
-                    anthropic_model: claude-opus-4-6
+
+                    prompt: "/review-pr REPO: ${{ github.repository }} PR_NUMBER: ${{ github.event.pull_request.number }}"
+                    claude_args: |
+                        --allowedTools "mcp__github_inline_comment__create_inline_comment"
+                        --model "claude-opus-4-6"
