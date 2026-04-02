@@ -201,10 +201,12 @@ public class BaseVirtualFileManager extends VirtualFileManagerEx {
     }
 
     @Override
-    public void notifyPropertyChanged(final VirtualFile virtualFile,
-                                      final String property,
-                                      final Object oldValue,
-                                      final Object newValue) {
+    public void notifyPropertyChanged(
+        final VirtualFile virtualFile,
+        final String property,
+        final @Nullable Object oldValue,
+        final @Nullable Object newValue
+    ) {
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
