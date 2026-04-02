@@ -18,9 +18,10 @@ package consulo.ide.impl.idea.ide.impl.dataRules;
 
 import consulo.dataContext.DataSnapshot;
 import consulo.language.psi.PsiElement;
+import org.jspecify.annotations.Nullable;
 
 public final class PasteTargetRule {
-    static PsiElement getData(DataSnapshot dataProvider) {
+    static @Nullable PsiElement getData(DataSnapshot dataProvider) {
         return dataProvider.get(PsiElement.KEY);
     }
 }

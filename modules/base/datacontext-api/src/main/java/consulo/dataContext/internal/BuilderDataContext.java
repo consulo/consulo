@@ -36,7 +36,7 @@ public class BuilderDataContext implements DataContext {
 
   @Override
   @SuppressWarnings("unchecked")
-  public <T> T getData(Key<T> dataId) {
+  public <T> @Nullable T getData(Key<T> dataId) {
     return (T) getDataFromSelfOrParent(dataId);
   }
 

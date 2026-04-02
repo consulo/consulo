@@ -102,7 +102,6 @@ public abstract class DaemonCodeAnalyzer {
      * @param processor
      * @return
      */
-    @RequiredReadAction
     public static boolean processHighlights(
         Document document,
         Project project,
@@ -111,8 +110,6 @@ public abstract class DaemonCodeAnalyzer {
         int endOffset,
         Predicate<HighlightInfo> processor
     ) {
-        Application.get().assertReadAccessAllowed();
-
         SeverityRegistrar severityRegistrar = SeverityRegistrar.getSeverityRegistrar(project);
         MarkupModelEx model = DocumentMarkupModel.forDocument(document, project, true);
         return model.processRangeHighlightersOverlappingWith(

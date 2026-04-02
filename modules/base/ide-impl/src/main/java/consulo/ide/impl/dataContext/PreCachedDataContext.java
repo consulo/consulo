@@ -16,6 +16,7 @@
 package consulo.ide.impl.dataContext;
 
 import consulo.application.Application;
+import consulo.component.extension.ExtensionPoint;
 import consulo.dataContext.AsyncDataContext;
 import consulo.dataContext.DataProvider;
 import consulo.dataContext.UiDataProvider;
@@ -103,8 +104,7 @@ public class PreCachedDataContext implements AsyncDataContext, UserDataHolder {
         // but for async context we want to pre-collect the sink on EDT
         if (provider instanceof UiDataProviderAdapter uiAdapter) {
             DataSinkImpl sink = new DataSinkImpl();
-            List<UiDataRule> rules = Application.get().getExtensionPoint(UiDataRule.class).getExtensionList();
-            sink.collectFromProvider(uiAdapter.getProvider(), rules);
+            sink.collectFromProvider(uiAdapter.getProvider(), Application.get().getExtensionPoint(UiDataRule.class));
             return sink::resolve;
         }
 

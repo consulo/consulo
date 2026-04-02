@@ -47,8 +47,7 @@ public class UiDataProviderAdapter implements DataProvider {
     @Override
     public @Nullable Object getData(Key<?> dataId) {
         DataSinkImpl sink = new DataSinkImpl();
-        List<UiDataRule> rules = Application.get().getExtensionPoint(UiDataRule.class).getExtensionList();
-        sink.collectFromProvider(myProvider, rules);
+        sink.collectFromProvider(myProvider, Application.get().getExtensionPoint(UiDataRule.class));
         return sink.resolve(dataId);
     }
 }

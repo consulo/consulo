@@ -16,6 +16,7 @@
 package consulo.ide.impl.dataContext;
 
 import consulo.application.Application;
+import consulo.component.extension.ExtensionPoint;
 import consulo.dataContext.DataSink;
 import consulo.dataContext.DataSnapshot;
 import consulo.dataContext.UiDataProvider;
@@ -73,12 +74,10 @@ public class DataSinkImpl implements DataSink, DataSnapshot {
     /**
      * Collects data from the provider and applies all registered {@link UiDataRule}s.
      */
-    public void collectFromProvider(UiDataProvider provider, List<UiDataRule> rules) {
+    public void collectFromProvider(UiDataProvider provider, Iterable<UiDataRule> rules) {
         if (!mySnapshotCollected) {
             provider.uiDataSnapshot(this);
-            for (UiDataRule rule : rules) {
-                rule.uiDataSnapshot(this, this);
-            }
+            rules.forEach(rule -> rule.uiDataSnapshot(this, this));
             mySnapshotCollected = true;
         }
     }

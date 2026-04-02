@@ -25,7 +25,7 @@ import org.jspecify.annotations.Nullable;
  * @since 2004-02-10
  */
 public final class ProjectFileDirectoryRule {
-  static VirtualFile getData(DataSnapshot dataProvider) {
+  static @Nullable VirtualFile getData(DataSnapshot dataProvider) {
     VirtualFile dir = dataProvider.get(Project.PROJECT_FILE_DIRECTORY);
     if (dir == null) {
       Project project = dataProvider.get(Project.KEY);
