@@ -76,6 +76,7 @@ import consulo.util.lang.lazy.LazyValue;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.event.BulkFileListener;
 import consulo.virtualFileSystem.event.VFileEvent;
+import consulo.virtualFileSystem.event.VFileExistingFileEvent;
 import consulo.virtualFileSystem.event.VFilePropertyChangeEvent;
 import consulo.virtualFileSystem.fileType.FileTypeEvent;
 import consulo.virtualFileSystem.fileType.FileTypeListener;
@@ -247,14 +248,14 @@ public final class DaemonListeners implements Disposable {
         connection.subscribe(AnActionListener.class, new MyAnActionListener());
         connection.subscribe(BulkFileListener.class, new BulkFileListener() {
             @Override
+            @RequiredReadAction
             public void after(List<? extends VFileEvent> events) {
                 boolean isDaemonShouldBeStopped = false;
                 for (VFileEvent event : events) {
-                    if (event instanceof VFilePropertyChangeEvent) {
-                        VFilePropertyChangeEvent e = (VFilePropertyChangeEvent) event;
-                        String propertyName = e.getPropertyName();
+                    if (event instanceof VFilePropertyChangeEvent pce) {
+                        String propertyName = pce.getPropertyName();
                         if (VirtualFile.PROP_NAME.equals(propertyName)) {
-                            fileRenamed(e);
+                            fileRenamed(pce);
                         }
                         if (!isDaemonShouldBeStopped && !propertyName.equals(PsiTreeChangeEvent.PROP_WRITABLE)) {
                             isDaemonShouldBeStopped = true;

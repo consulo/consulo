@@ -1,7 +1,10 @@
+import org.jspecify.annotations.NullMarked;
+
 /**
  * @author VISTALL
- * @since 13/01/2022
+ * @since 2022-01-13
  */
+@NullMarked
 module consulo.base.localize.library {
   requires consulo.localize.api;
 

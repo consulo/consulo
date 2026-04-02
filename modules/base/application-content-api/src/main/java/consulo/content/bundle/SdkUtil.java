@@ -16,11 +16,10 @@
 package consulo.content.bundle;
 
 import consulo.annotation.DeprecationInfo;
-import consulo.application.ApplicationManager;
+import consulo.application.Application;
 import consulo.component.util.pointer.NamedPointer;
 import consulo.fileChooser.FileChooser;
 import consulo.fileChooser.FileChooserDescriptor;
-import consulo.localize.LocalizeValue;
 import consulo.platform.Platform;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.Alerts;
@@ -43,20 +42,17 @@ import java.util.function.Supplier;
 
 /**
  * @author VISTALL
- * @since 21.08.14
+ * @since 2014-08-21
  */
 public class SdkUtil {
-  
   public static String createUniqueSdkName(Platform platform, BundleType type, Path home, Sdk[] sdks) {
     return createUniqueSdkName(type.suggestSdkName(platform, null, home), sdks);
   }
 
-  
   public static String createUniqueSdkName(SdkType type, String home, Sdk[] sdks) {
     return createUniqueSdkName(type.suggestSdkName(null, home), sdks);
   }
 
-  
   public static String createUniqueSdkName(String suggestedName, Sdk[] sdks) {
     Set<String> names = new HashSet<>();
     for (Sdk sdk : sdks) {
@@ -70,19 +66,16 @@ public class SdkUtil {
     return newSdkName;
   }
 
-  
   @DeprecationInfo(value = "Use SdkPointerManager.getInstance()")
   public static NamedPointer<Sdk> createPointer(Sdk sdk) {
     return SdkPointerManager.getInstance().create(sdk);
   }
 
-  
   @DeprecationInfo(value = "Use SdkPointerManager.getInstance()")
   public static NamedPointer<Sdk> createPointer(String name) {
     return SdkPointerManager.getInstance().create(name);
   }
 
-  
   public static Image getIcon(@Nullable Sdk sdk) {
     if (sdk == null) {
       return PlatformIconGroup.actionsHelp();
@@ -105,13 +98,15 @@ public class SdkUtil {
    * @param predefined
    * @return newly created SDK, or null.
    */
+  @RequiredUIAccess
   public static @Nullable Sdk createAndAddSDK(String path, SdkType sdkType, UIAccess uiAccess) {
-    VirtualFile sdkHome = ApplicationManager.getApplication()
-      .runWriteAction((Supplier<VirtualFile>)() -> LocalFileSystem.getInstance().refreshAndFindFileByPath(path));
+    Application app = Application.get();
+    VirtualFile sdkHome = app.runWriteAction((Supplier<VirtualFile>)() -> LocalFileSystem.getInstance().refreshAndFindFileByPath(path));
     if (sdkHome != null) {
-      Sdk newSdk = setupSdk(SdkTable.getInstance().getAllSdks(), sdkHome, sdkType, true, null, null, uiAccess);
+      SdkTable sdkTable = SdkTable.getInstance();
+      Sdk newSdk = setupSdk(sdkTable.getAllSdks(), sdkHome, sdkType, true, null, null, uiAccess);
       if (newSdk != null) {
-        ApplicationManager.getApplication().runWriteAction(() -> SdkTable.getInstance().addSdk(newSdk));
+        app.runWriteAction(() -> sdkTable.addSdk(newSdk));
       }
       return newSdk;
     }
@@ -167,9 +162,12 @@ public class SdkUtil {
     catch (Exception e) {
       if (!silent) {
         uiAccess.give(() -> {
-          Alerts.okError("Error configuring SDK: " + e.getMessage() + ".\nPlease make sure that " + FileUtil.toSystemDependentName(homeDir.getPath()) + " is a valid home path for this SDK type.")
-                .title("Error Configuring SDK")
-                .showAsync();
+          Alerts.okError(
+              "Error configuring SDK: " + e.getMessage() + ".\n" +
+                  "Please make sure that " + FileUtil.toSystemDependentName(homeDir.getPath()) + " is a valid home path for this SDK type."
+            )
+            .title("Error Configuring SDK")
+            .showAsync();
         });
       }
       return null;
@@ -213,9 +211,12 @@ public class SdkUtil {
     catch (Exception e) {
       if (!silent) {
         uiAccess.give(() -> {
-          Alerts.okError("Error configuring SDK: " + e.getMessage() + ".\nPlease make sure that " + FileUtil.toSystemDependentName(homeDir.getPath()) + " is a valid home path for this SDK type.")
-                .title("Error Configuring SDK")
-                .showAsync();
+          Alerts.okError(
+              "Error configuring SDK: " + e.getMessage() + ".\n" +
+                "Please make sure that " + FileUtil.toSystemDependentName(homeDir.getPath()) + " is a valid home path for this SDK type."
+            )
+            .title("Error Configuring SDK")
+            .showAsync();
         });
       }
       return null;

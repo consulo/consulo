@@ -103,7 +103,6 @@ public class CompileDriverImpl implements CompileDriver {
     // to be used in tests only for debug output
     public static volatile boolean ourDebugMode = false;
 
-    
     private final Project myProject;
     private final Map<Pair<IntermediateOutputCompiler, Module>, Couple<VirtualFile>> myGenerationCompilerModuleToOutputDirMap;
     // [IntermediateOutputCompiler, Module] -> [ProductionSources, TestSources]
@@ -695,6 +694,7 @@ public class CompileDriverImpl implements CompileDriver {
         }
     }
 
+    @RequiredReadAction
     private ExitStatus doCompile(
         CompileContextEx context,
         BuildProgress<BuildProgressDescriptor> buildProgress,
@@ -706,23 +706,19 @@ public class CompileDriverImpl implements CompileDriver {
             if (isRebuild) {
                 deleteAll(context);
             }
-            else if (forceCompile) {
-                if (myShouldClearOutputDirectory) {
-                    clearAffectedOutputPathsIfPossible(context);
-                }
+            else if (forceCompile && myShouldClearOutputDirectory) {
+                clearAffectedOutputPathsIfPossible(context);
             }
 
             if (context.getMessageCount(CompilerMessageCategory.ERROR) > 0) {
                 return ExitStatus.ERRORS;
             }
 
-            if (!onlyCheckStatus) {
-                if (!executeCompileTasks(context, true)) {
-                    if (LOG.isDebugEnabled()) {
-                        LOG.debug("Compilation cancelled");
-                    }
-                    return ExitStatus.CANCELLED;
+            if (!onlyCheckStatus && !executeCompileTasks(context, true)) {
+                if (LOG.isDebugEnabled()) {
+                    LOG.debug("Compilation cancelled");
                 }
+                return ExitStatus.CANCELLED;
             }
 
             if (context.getMessageCount(CompilerMessageCategory.ERROR) > 0) {

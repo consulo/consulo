@@ -19,7 +19,6 @@ import jakarta.inject.Singleton;
 import org.jetbrains.annotations.TestOnly;
 
 import java.util.List;
-import java.util.Objects;
 
 /**
  * Listens to file system events and notifies VcsDirtyScopeManagers responsible for changed files to mark these files dirty.
@@ -67,23 +66,26 @@ public class VcsDirtyScopeVfsListener implements AsyncVfsEventsListener, Disposa
       ProgressManager.checkCanceled();
 
       boolean isDirectory;
-      if (event instanceof VFileCreateEvent) {
-        if (!((VFileCreateEvent)event).getParent().isInLocalFileSystem()) {
-          continue;
+      switch (event) {
+        case VFileCreateEvent ce -> {
+          if (!ce.getParent().isInLocalFileSystem()) {
+            continue;
+          }
+          isDirectory = ce.isDirectory();
         }
-        isDirectory = ((VFileCreateEvent)event).isDirectory();
-      }
-      else {
-        VirtualFile file = Objects.requireNonNull(event.getFile(), "All events but VFileCreateEvent have @NotNull getFile()");
-        if (!file.isInLocalFileSystem()) {
-          continue;
+
+        case VFileExistingFileEvent efe -> {
+          VirtualFile file = efe.getFile();
+          if (!file.isInLocalFileSystem()) {
+            continue;
+          }
+          isDirectory = file.isDirectory();
         }
-        isDirectory = file.isDirectory();
       }
 
-      if (event instanceof VFileMoveEvent) {
-        add(vcsManager, dirtyFilesAndDirs, VcsUtil.getFilePath(((VFileMoveEvent)event).getOldPath(), isDirectory));
-        add(vcsManager, dirtyFilesAndDirs, VcsUtil.getFilePath(((VFileMoveEvent)event).getNewPath(), isDirectory));
+      if (event instanceof VFileMoveEvent me) {
+        add(vcsManager, dirtyFilesAndDirs, VcsUtil.getFilePath(me.getOldPath(), isDirectory));
+        add(vcsManager, dirtyFilesAndDirs, VcsUtil.getFilePath(me.getNewPath(), isDirectory));
       }
       else if (event instanceof VFilePropertyChangeEvent pce && pce.isRename()) {
         // if a file was renamed, then the file is dirty and its parent directory is dirty too;

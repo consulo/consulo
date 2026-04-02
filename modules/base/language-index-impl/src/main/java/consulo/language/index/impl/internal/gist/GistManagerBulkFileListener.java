@@ -48,9 +48,9 @@ final class GistManagerBulkFileListener implements BulkFileListener {
   }
 
   private static boolean shouldDropCache(VFileEvent e) {
-    if (!(e instanceof VFilePropertyChangeEvent)) return false;
+    if (!(e instanceof VFilePropertyChangeEvent pce)) return false;
 
-    String propertyName = ((VFilePropertyChangeEvent)e).getPropertyName();
+    String propertyName = pce.getPropertyName();
     return propertyName.equals(VirtualFile.PROP_NAME) || propertyName.equals(VirtualFile.PROP_ENCODING);
   }
 }

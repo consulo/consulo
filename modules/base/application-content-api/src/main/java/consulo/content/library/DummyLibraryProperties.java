@@ -15,6 +15,8 @@
  */
 package consulo.content.library;
 
+import org.jspecify.annotations.Nullable;
+
 /**
 * @author nik
 */
@@ -22,7 +24,7 @@ public class DummyLibraryProperties extends LibraryProperties<Object> {
   public static final DummyLibraryProperties INSTANCE = new DummyLibraryProperties();
 
   @Override
-  public Object getState() {
+  public @Nullable Object getState() {
     return null;
   }
 

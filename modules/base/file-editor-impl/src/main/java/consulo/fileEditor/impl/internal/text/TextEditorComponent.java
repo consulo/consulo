@@ -40,7 +40,6 @@ import consulo.project.ui.wm.WindowManager;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.IdeActions;
-import consulo.util.lang.Comparing;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.event.VirtualFileEvent;
 import consulo.virtualFileSystem.event.VirtualFileListener;
@@ -48,6 +47,8 @@ import consulo.virtualFileSystem.event.VirtualFilePropertyEvent;
 import consulo.virtualFileSystem.fileType.FileTypeEvent;
 import consulo.virtualFileSystem.fileType.FileTypeListener;
 import org.jspecify.annotations.Nullable;
+
+import java.util.Objects;
 
 /**
  * @author Anton Katilin
@@ -296,8 +297,8 @@ public class TextEditorComponent implements UiDataProvider, Disposable {
         // File can be invalidated after file changes name (extension also
         // can changes). The editor should be removed if it's invalid.
         updateValidProperty();
-        if (Comparing.equal(e.getFile(), myFile) &&
-            (FileContentUtilCore.FORCE_RELOAD_REQUESTOR.equals(e.getRequestor()) || !Comparing.equal(e.getOldValue(), e.getNewValue()))) {
+        if (Objects.equals(e.getFile(), myFile) &&
+            (FileContentUtilCore.FORCE_RELOAD_REQUESTOR.equals(e.getRequestor()) || !Objects.equals(e.getOldValue(), e.getNewValue()))) {
           myEditorHighlighterUpdater.updateHighlighters();
         }
       }

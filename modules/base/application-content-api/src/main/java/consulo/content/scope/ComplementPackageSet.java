@@ -17,6 +17,7 @@ package consulo.content.scope;
 
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
+import org.jspecify.annotations.Nullable;
 
 public class ComplementPackageSet extends PackageSetBase {
     private final PackageSet myComplementarySet;
@@ -26,18 +27,16 @@ public class ComplementPackageSet extends PackageSetBase {
     }
 
     @Override
-    public boolean contains(VirtualFile file, Project project, NamedScopesHolder holder) {
+    public boolean contains(VirtualFile file, Project project, @Nullable NamedScopesHolder holder) {
         return !myComplementarySet.contains(file, project, holder);
     }
 
     @Override
-    
     public PackageSet createCopy() {
         return new ComplementPackageSet(myComplementarySet.createCopy());
     }
 
     @Override
-    
     public String getText() {
         StringBuilder buf = new StringBuilder();
         boolean needParen = myComplementarySet.getNodePriority() > getNodePriority();

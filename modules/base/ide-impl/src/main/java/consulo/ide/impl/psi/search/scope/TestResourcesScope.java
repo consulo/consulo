@@ -24,6 +24,7 @@ import consulo.module.content.ProjectRootManager;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -37,7 +38,7 @@ public class TestResourcesScope extends NamedScope {
     public TestResourcesScope() {
         super(ID, IdeLocalize.predefinedScopeTestResourcesName(), PlatformIconGroup.modulesTestresourcesroot(), new AbstractPackageSet("test-rsc:*..*") {
             @Override
-            public boolean contains(VirtualFile file, Project project, NamedScopesHolder holder) {
+            public boolean contains(VirtualFile file, Project project, @Nullable NamedScopesHolder holder) {
                 ProjectFileIndex index = ProjectRootManager.getInstance(project).getFileIndex();
                 return file != null && index.isInTestResource(file);
             }
