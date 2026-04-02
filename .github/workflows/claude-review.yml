@@ -13,7 +13,7 @@ jobs:
     claude-review:
         if: >
             github.event.issue.pull_request &&
-            github.actor == 'vistall' &&
+            contains(fromJson('["OWNER","MEMBER","COLLABORATOR"]'), github.event.comment.author_association) &&
             startsWith(github.event.comment.body, '/claude-review')
         runs-on: ubuntu-latest
 
@@ -33,13 +33,18 @@ jobs:
                       > pr.json
 
                     echo "number=$(jq -r '.number' pr.json)" >> "$GITHUB_OUTPUT"
-                    echo "title<<EOF" >> "$GITHUB_OUTPUT"
-                    jq -r '.title' pr.json >> "$GITHUB_OUTPUT"
-                    echo "EOF" >> "$GITHUB_OUTPUT"
 
-                    echo "body<<EOF" >> "$GITHUB_OUTPUT"
-                    jq -r '.body // ""' pr.json >> "$GITHUB_OUTPUT"
-                    echo "EOF" >> "$GITHUB_OUTPUT"
+                    {
+                      echo "title<<EOF"
+                      jq -r '.title' pr.json
+                      echo "EOF"
+                    } >> "$GITHUB_OUTPUT"
+
+                    {
+                      echo "body<<EOF"
+                      jq -r '.body // ""' pr.json
+                      echo "EOF"
+                    } >> "$GITHUB_OUTPUT"
 
                     echo "url=$(jq -r '.url' pr.json)" >> "$GITHUB_OUTPUT"
                     echo "base_ref=$(jq -r '.baseRefName' pr.json)" >> "$GITHUB_OUTPUT"
@@ -61,7 +66,6 @@ jobs:
                     PR_NUMBER: ${{ github.event.issue.number }}
                 run: |
                     gh pr diff "$PR_NUMBER" --repo "$REPO" > pr.diff
-
                     jq -r '.files[].path' pr.json > changed_files.txt
 
                     mkdir -p review_payload/files
@@ -154,15 +158,15 @@ jobs:
                     printf '%s' "$CLAUDE_OUTPUT" > claude_raw.txt
 
                     python3 - <<'PY'
-                    import json, re, sys
+                    import json
+                    import re
+                    import sys
 
                     raw = open("claude_raw.txt", "r", encoding="utf-8").read().strip()
 
-                    # Try raw JSON first
                     try:
                         data = json.loads(raw)
                     except Exception:
-                        # Fallback: extract first JSON object
                         m = re.search(r'\{.*\}', raw, re.S)
                         if not m:
                             print("Could not parse Claude output as JSON", file=sys.stderr)
