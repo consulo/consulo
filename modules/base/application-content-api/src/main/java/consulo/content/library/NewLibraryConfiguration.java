@@ -24,8 +24,8 @@ import org.jspecify.annotations.Nullable;
 */
 public abstract class NewLibraryConfiguration {
   private final String myDefaultLibraryName;
-  private final LibraryType<?> myLibraryType;
-  private final LibraryProperties myProperties;
+  private final @Nullable LibraryType<?> myLibraryType;
+  private final @Nullable LibraryProperties myProperties;
 
   protected NewLibraryConfiguration(String defaultLibraryName) {
     this(defaultLibraryName, null, null);
@@ -37,11 +37,11 @@ public abstract class NewLibraryConfiguration {
     myProperties = properties;
   }
 
-  public LibraryType<?> getLibraryType() {
+  public @Nullable LibraryType<?> getLibraryType() {
     return myLibraryType;
   }
 
-  public LibraryProperties getProperties() {
+  public @Nullable LibraryProperties getProperties() {
     return myProperties;
   }
 

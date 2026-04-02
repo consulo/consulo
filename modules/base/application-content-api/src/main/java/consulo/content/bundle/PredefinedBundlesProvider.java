@@ -23,23 +23,19 @@ import java.nio.file.Path;
 
 /**
  * @author VISTALL
- * @since 17:00/30.06.13
+ * @since 2013-06-30
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class PredefinedBundlesProvider {
   public interface Context {
-    
     Sdk createSdkWithName(SdkType sdkType, String suggestName);
 
-    
     Sdk createSdkWithName(BundleType bundleType, Path homePath, String suggestName);
 
-    
     default Sdk createSdk(SdkType sdkType, String sdkHome) {
       return createSdkWithName(sdkType, sdkType.suggestSdkName(null, sdkHome));
     }
 
-    
     default Sdk createSdk(Platform platform, BundleType sdkType, Path homePath) {
       return createSdkWithName(sdkType, homePath, sdkType.suggestSdkName(platform, null, homePath));
     }

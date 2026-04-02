@@ -34,12 +34,10 @@ public interface Sdk extends UserDataHolder, Named {
 
   public static ArrayFactory<Sdk> ARRAY_FACTORY = count -> count == 0 ? EMPTY_ARRAY : new Sdk[count];
 
-  
   SdkTypeId getSdkType();
 
   boolean isPredefined();
 
-  
   @Override
   String getName();
 
@@ -47,22 +45,17 @@ public interface Sdk extends UserDataHolder, Named {
 
   @Nullable String getHomePath();
 
-  
   Path getHomeNioPath();
 
-  
   Platform getPlatform();
 
   @Nullable VirtualFile getHomeDirectory();
 
-  
   RootProvider getRootProvider();
 
-  
   SdkModificator getSdkModificator();
 
   @Nullable SdkAdditionalData getSdkAdditionalData();
 
-  
   Object clone() throws CloneNotSupportedException;
 }

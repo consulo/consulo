@@ -23,10 +23,8 @@ import org.jspecify.annotations.Nullable;
 public interface PackageSet {
     boolean contains(VirtualFile file, Project project, @Nullable NamedScopesHolder holder);
 
-    
     PackageSet createCopy();
 
-    
     String getText();
 
     int getNodePriority();

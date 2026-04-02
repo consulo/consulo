@@ -20,6 +20,7 @@ import consulo.content.scope.PackageSet;
 import consulo.content.scope.PackageSetBase;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
+import org.jspecify.annotations.Nullable;
 
 public class IntersectionPackageSet extends PackageSetBase {
   private final PackageSet myFirstSet;
@@ -31,7 +32,7 @@ public class IntersectionPackageSet extends PackageSetBase {
   }
 
   @Override
-  public boolean contains(VirtualFile file, Project project, NamedScopesHolder holder) {
+  public boolean contains(VirtualFile file, Project project, @Nullable NamedScopesHolder holder) {
     if (myFirstSet instanceof PackageSetBase ? myFirstSet.contains(file, project, holder) : myFirstSet.contains(file, project, holder)) {
       if (mySecondSet instanceof PackageSetBase ? mySecondSet.contains(file, project, holder) : mySecondSet.contains(file, project, holder)) {
         return true;

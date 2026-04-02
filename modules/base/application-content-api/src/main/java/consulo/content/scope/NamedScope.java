@@ -26,7 +26,7 @@ public class NamedScope {
     private final LocalizeValue myPresentableName;
     
     private final Image myIcon;
-    private final PackageSet myValue;
+    private final @Nullable PackageSet myValue;
 
     @Deprecated
     public NamedScope(String scopeId, Image icon, @Nullable PackageSet value) {
@@ -49,17 +49,14 @@ public class NamedScope {
         this(scopeId, presentableName, PlatformIconGroup.ideLocalscope(), value);
     }
 
-    
     public Image getIcon() {
         return myIcon;
     }
 
-    
     public String getScopeId() {
         return myScopeId;
     }
 
-    
     public LocalizeValue getPresentableName() {
         return myPresentableName;
     }
