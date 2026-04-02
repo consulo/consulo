@@ -19,6 +19,7 @@ import consulo.application.Application;
 import consulo.content.internal.ContentInternalHelper;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 
@@ -27,12 +28,11 @@ import javax.swing.*;
  * @since 2002-10-29
  */
 public class DocumentationUtil {
-
-  public static VirtualFile showSpecifyJavadocUrlDialog(JComponent parent) {
+  public static @Nullable VirtualFile showSpecifyJavadocUrlDialog(JComponent parent) {
     return showSpecifyJavadocUrlDialog(parent, "");
   }
 
-  public static VirtualFile showSpecifyJavadocUrlDialog(JComponent parent, String initialValue) {
+  public static @Nullable VirtualFile showSpecifyJavadocUrlDialog(JComponent parent, String initialValue) {
     String url = Application.get().getInstance(ContentInternalHelper.class).showSpecifyJavadocUrlDialog(parent, initialValue);
     if (url == null) {
       return null;

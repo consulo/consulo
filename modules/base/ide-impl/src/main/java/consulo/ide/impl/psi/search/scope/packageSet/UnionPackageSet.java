@@ -20,6 +20,7 @@ import consulo.content.scope.PackageSet;
 import consulo.content.scope.PackageSetBase;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
+import org.jspecify.annotations.Nullable;
 
 public class UnionPackageSet extends PackageSetBase {
   private final PackageSet myFirstSet;
@@ -31,7 +32,7 @@ public class UnionPackageSet extends PackageSetBase {
   }
 
   @Override
-  public boolean contains(VirtualFile file, Project project, NamedScopesHolder holder) {
+  public boolean contains(VirtualFile file, Project project, @Nullable NamedScopesHolder holder) {
     return myFirstSet.contains(file, project, holder) || mySecondSet.contains(file, project, holder);
   }
 

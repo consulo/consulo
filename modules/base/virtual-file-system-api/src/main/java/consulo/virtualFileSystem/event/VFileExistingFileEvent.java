@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2013-2026 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,19 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.content.scope;
+package consulo.virtualFileSystem.event;
 
-import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
-
 import org.jspecify.annotations.Nullable;
 
-public interface PackageSet {
-    boolean contains(VirtualFile file, Project project, @Nullable NamedScopesHolder holder);
+/**
+ * @author UNV
+ * @since 2026-04-01
+ */
+public abstract sealed class VFileExistingFileEvent extends VFileEvent
+    permits VFileContentChangeEvent, VFileCopyEvent, VFileDeleteEvent, VFileMoveEvent, VFilePropertyChangeEvent {
+    protected VFileExistingFileEvent(@Nullable Object requestor, boolean isFromRefresh) {
+        super(requestor, isFromRefresh);
+    }
 
-    PackageSet createCopy();
-
-    String getText();
-
-    int getNodePriority();
+    @Override
+    public abstract VirtualFile getFile();
 }

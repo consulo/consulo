@@ -22,7 +22,7 @@ import org.jspecify.annotations.Nullable;
 /**
  * @author max
  */
-public class VFileCopyEvent extends VFileEvent {
+public final class VFileCopyEvent extends VFileExistingFileEvent {
   private final VirtualFile myFile;
   private final VirtualFile myNewParent;
   private final String myNewChildName;
@@ -37,6 +37,10 @@ public class VFileCopyEvent extends VFileEvent {
   @Override
   public VirtualFile getFile() {
     return myFile;
+  }
+
+  public @Nullable VirtualFile findCreatedFile() {
+    return myNewParent.isValid() ? myNewParent.findChild(myNewChildName) : null;
   }
 
   public VirtualFile getNewParent() {
@@ -72,13 +76,11 @@ public class VFileCopyEvent extends VFileEvent {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
 
-    VFileCopyEvent event = (VFileCopyEvent)o;
+    VFileCopyEvent that = (VFileCopyEvent) o;
 
-    if (!myFile.equals(event.myFile)) return false;
-    if (!myNewChildName.equals(event.myNewChildName)) return false;
-    if (!myNewParent.equals(event.myNewParent)) return false;
-
-    return true;
+    return myFile.equals(that.myFile)
+        && myNewChildName.equals(that.myNewChildName)
+        && myNewParent.equals(that.myNewParent);
   }
 
   @Override

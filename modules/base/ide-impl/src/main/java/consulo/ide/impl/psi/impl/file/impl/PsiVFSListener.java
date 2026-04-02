@@ -682,9 +682,8 @@ public class PsiVFSListener implements BulkFileListener {
         }
         else {
             assert subList.size() == 1;
-            if (event instanceof VFileCopyEvent) {
-                VFileCopyEvent ce = (VFileCopyEvent) event;
-                VirtualFile copy = ce.getNewParent().findChild(ce.getNewChildName());
+            if (event instanceof VFileCopyEvent ce) {
+                VirtualFile copy = ce.findCreatedFile();
                 if (copy != null) {
                     fileCreated(copy); // no need to group creation
                 }
@@ -695,8 +694,8 @@ public class PsiVFSListener implements BulkFileListener {
                     fileCreated(file); // no need to group creation
                 }
             }
-            else if (event instanceof VFilePropertyChangeEvent propertyChangeEvent) {
-                propertyChanged(propertyChangeEvent);
+            else if (event instanceof VFilePropertyChangeEvent pce) {
+                propertyChanged(pce);
             }
         }
     }

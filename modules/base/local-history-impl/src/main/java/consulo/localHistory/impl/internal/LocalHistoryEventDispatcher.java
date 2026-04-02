@@ -29,7 +29,6 @@ import consulo.virtualFileSystem.util.VirtualFileUtil;
 import consulo.virtualFileSystem.util.VirtualFileVisitor;
 
 import java.util.List;
-import java.util.Objects;
 
 class LocalHistoryEventDispatcher implements VirtualFileManagerListener, CommandListener, BulkFileListener {
   private static final Key<Boolean> WAS_VERSIONED_KEY = Key.create(LocalHistoryEventDispatcher.class.getSimpleName() + ".WAS_VERSIONED_KEY");
@@ -117,15 +116,15 @@ class LocalHistoryEventDispatcher implements VirtualFileManagerListener, Command
   }
 
   private void handleBeforeEvent(VFileEvent event) {
-    if (event instanceof VFileContentChangeEvent) {
-      beforeContentsChange((VFileContentChangeEvent)event);
+    if (event instanceof VFileContentChangeEvent cce) {
+      beforeContentsChange(cce);
     }
-    else if (event instanceof VFilePropertyChangeEvent && ((VFilePropertyChangeEvent)event).isRename() || event instanceof VFileMoveEvent) {
-      VirtualFile f = Objects.requireNonNull(event.getFile());
+    else if (event instanceof VFilePropertyChangeEvent pce && pce.isRename() || event instanceof VFileMoveEvent) {
+      VirtualFile f = ((VFileExistingFileEvent) event).getFile();
       f.putUserData(WAS_VERSIONED_KEY, myGateway.isVersioned(f));
     }
-    else if (event instanceof VFileDeleteEvent) {
-      beforeFileDeletion((VFileDeleteEvent)event);
+    else if (event instanceof VFileDeleteEvent de) {
+      beforeFileDeletion(de);
     }
   }
 
@@ -209,11 +208,11 @@ class LocalHistoryEventDispatcher implements VirtualFileManagerListener, Command
         fileCreated(file);
       }
     }
-    else if (event instanceof VFilePropertyChangeEvent) {
-      propertyChanged((VFilePropertyChangeEvent)event);
+    else if (event instanceof VFilePropertyChangeEvent pce) {
+      propertyChanged(pce);
     }
-    else if (event instanceof VFileMoveEvent) {
-      fileMoved((VFileMoveEvent)event);
+    else if (event instanceof VFileMoveEvent me) {
+      fileMoved(me);
     }
   }
 

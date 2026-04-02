@@ -11,13 +11,13 @@ import org.jspecify.annotations.Nullable;
  * @author anna
  */
 public class ScopeDescriptor implements ColoredItem {
-    private final SearchScope myScope;
+    private final @Nullable SearchScope myScope;
 
     public ScopeDescriptor(@Nullable SearchScope scope) {
         myScope = scope;
     }
 
-    public String getDisplayName() {
+    public @Nullable String getDisplayName() {
         return myScope == null ? null : myScope.getDisplayName();
     }
 

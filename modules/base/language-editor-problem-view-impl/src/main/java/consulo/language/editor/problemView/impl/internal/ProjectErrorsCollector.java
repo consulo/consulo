@@ -1,7 +1,7 @@
 package consulo.language.editor.problemView.impl.internal;
 
 import consulo.annotation.component.ServiceImpl;
-import consulo.application.ApplicationManager;
+import consulo.application.Application;
 import consulo.application.util.registry.Registry;
 import consulo.language.editor.problemView.*;
 import consulo.project.Project;
@@ -10,6 +10,7 @@ import consulo.virtualFileSystem.VirtualFileManager;
 import consulo.virtualFileSystem.event.VFileDeleteEvent;
 import consulo.virtualFileSystem.event.VFileEvent;
 import consulo.virtualFileSystem.event.VFileMoveEvent;
+import consulo.virtualFileSystem.event.VFileExistingFileEvent;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -185,7 +186,7 @@ public final class ProjectErrorsCollector implements ProblemsCollector {
         if (state == SetUpdateState.IGNORED || myProject.isDisposed()) return;
 
         if (later && Registry.is("ide.problems.view.notify.later", true)) {
-            ApplicationManager.getApplication().invokeLater(() -> notify(problem, state, false));
+            Application.get().invokeLater(() -> notify(problem, state, false));
             return;
         }
 
@@ -210,10 +211,8 @@ public final class ProjectErrorsCollector implements ProblemsCollector {
         Set<VirtualFile> files = new LinkedHashSet<>();
         for (VFileEvent event : events) {
             if (event instanceof VFileDeleteEvent || event instanceof VFileMoveEvent) {
-                VirtualFile file = event.getFile();
-                if (file != null) {
-                    files.add(file);
-                }
+                VirtualFile file = ((VFileExistingFileEvent) event).getFile();
+                files.add(file);
             }
         }
 

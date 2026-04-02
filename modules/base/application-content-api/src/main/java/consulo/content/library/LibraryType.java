@@ -36,7 +36,6 @@ import java.util.List;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class LibraryType<P extends LibraryProperties> implements LibraryPresentation<P> {
-    
     public static OrderRootType[] getDefaultExternalRootTypes() {
         return new OrderRootType[]{BinariesOrderRootType.getInstance()};
     }
@@ -47,7 +46,6 @@ public abstract class LibraryType<P extends LibraryProperties> implements Librar
         myKind = libraryKind;
     }
 
-    
     @Override
     public final PersistentLibraryKind<P> getKind() {
         return myKind;
@@ -89,7 +87,7 @@ public abstract class LibraryType<P extends LibraryProperties> implements Librar
     public abstract @Nullable LibraryPropertiesEditor createPropertiesEditor(LibraryEditorComponent<P> editorComponent);
 
     @Override
-    public P detect(List<VirtualFile> classesRoots) {
+    public @Nullable P detect(List<VirtualFile> classesRoots) {
         return null;
     }
 

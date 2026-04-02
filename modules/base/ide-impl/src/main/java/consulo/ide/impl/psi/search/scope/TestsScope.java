@@ -23,6 +23,7 @@ import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.project.content.TestSourcesFilter;
 import consulo.virtualFileSystem.VirtualFile;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author Konstantin Bulenkov
@@ -36,7 +37,7 @@ public class TestsScope extends NamedScope {
     public TestsScope() {
         super(ID, IdeLocalize.predefinedScopeTestsName(), PlatformIconGroup.modulesTestroot(), new AbstractPackageSet("test:*..*") {
             @Override
-            public boolean contains(VirtualFile file, Project project, NamedScopesHolder holder) {
+            public boolean contains(VirtualFile file, Project project, @Nullable NamedScopesHolder holder) {
                 return file != null && TestSourcesFilter.isTestSources(file, project);
             }
         });

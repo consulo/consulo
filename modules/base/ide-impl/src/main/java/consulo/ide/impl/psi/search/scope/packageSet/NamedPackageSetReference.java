@@ -21,6 +21,7 @@ import consulo.content.scope.PackageSet;
 import consulo.content.scope.PackageSetBase;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
+import org.jspecify.annotations.Nullable;
 
 public class NamedPackageSetReference extends PackageSetBase {
   private final String myName;
@@ -30,7 +31,10 @@ public class NamedPackageSetReference extends PackageSetBase {
   }
 
   @Override
-  public boolean contains(VirtualFile file, Project project, NamedScopesHolder holder) {
+  public boolean contains(VirtualFile file, Project project, @Nullable NamedScopesHolder holder) {
+    if (holder == null) {
+      return false;
+    }
     NamedScope scope = holder.getScope(myName);
     if (scope != null) {
       PackageSet packageSet = scope.getValue();
@@ -42,13 +46,11 @@ public class NamedPackageSetReference extends PackageSetBase {
   }
 
   @Override
-  
   public PackageSet createCopy() {
     return new NamedPackageSetReference(myName);
   }
 
   @Override
-  
   public String getText() {
     return "$" + myName;
   }

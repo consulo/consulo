@@ -24,6 +24,7 @@ import consulo.module.content.ProjectRootManager;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -37,7 +38,7 @@ public class SourcesScope extends NamedScope {
     public SourcesScope() {
         super(ID, IdeLocalize.predefinedScopeSourcesName(), PlatformIconGroup.modulesSourceroot(), new AbstractPackageSet("src:*..*") {
             @Override
-            public boolean contains(VirtualFile file, Project project, NamedScopesHolder holder) {
+            public boolean contains(VirtualFile file, Project project, @Nullable NamedScopesHolder holder) {
                 ProjectFileIndex index = ProjectRootManager.getInstance(project).getFileIndex();
                 return file != null && index.isInSource(file);
             }

@@ -18,6 +18,7 @@ package consulo.content.library.ui;
 import consulo.content.library.LibraryRootType;
 import consulo.application.progress.ProgressIndicator;
 import consulo.virtualFileSystem.VirtualFile;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -35,7 +36,7 @@ class LibraryRootsDetectorImpl extends LibraryRootsDetector {
 
   @Override
   public Collection<DetectedLibraryRoot> detectRoots(VirtualFile rootCandidate, ProgressIndicator progressIndicator) {
-    List<DetectedLibraryRoot> result = new ArrayList<DetectedLibraryRoot>();
+    List<DetectedLibraryRoot> result = new ArrayList<>();
     for (RootDetector detector : myDetectors) {
       Collection<VirtualFile> files = detector.detectRoots(rootCandidate, progressIndicator);
       for (VirtualFile file : files) {
@@ -46,7 +47,7 @@ class LibraryRootsDetectorImpl extends LibraryRootsDetector {
   }
 
   @Override
-  public String getRootTypeName(LibraryRootType rootType) {
+  public @Nullable String getRootTypeName(LibraryRootType rootType) {
     for (RootDetector detector : myDetectors) {
       if (detector.getRootType().equals(rootType.getType()) && detector.isJarDirectory() == rootType.isJarDirectory()) {
         return detector.getPresentableRootTypeName();

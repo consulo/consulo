@@ -39,7 +39,7 @@ public abstract class NamedScopesHolder implements PersistentStateComponent<Elem
     private static final String PATTERN_ATT = "pattern";
 
     protected final Project myProject;
-    private VirtualFile myProjectBaseDir;
+    private @Nullable VirtualFile myProjectBaseDir = null;
 
     public NamedScopesHolder(Project project) {
         myProject = project;
@@ -53,7 +53,7 @@ public abstract class NamedScopesHolder implements PersistentStateComponent<Elem
         void scopesChanged();
     }
 
-    public VirtualFile getProjectBaseDir() {
+    public @Nullable VirtualFile getProjectBaseDir() {
         if (myProjectBaseDir == null) {
             myProjectBaseDir = myProject.getBaseDir();
         }
@@ -86,7 +86,6 @@ public abstract class NamedScopesHolder implements PersistentStateComponent<Elem
         }
     }
 
-    
     public NamedScope[] getScopes() {
         List<NamedScope> scopes = new ArrayList<>();
         List<NamedScope> list = getPredefinedScopes();
@@ -136,7 +135,6 @@ public abstract class NamedScopesHolder implements PersistentStateComponent<Elem
         return null;
     }
 
-    
     public static NamedScopesHolder[] getAllNamedScopeHolders(Project project) {
         List<NamedScopesHolder> holders = new ArrayList<>();
         NamedScopesHolderProvider.EP.forEachExtensionSafe(project, namedScopesHolderProvider -> {
@@ -211,7 +209,6 @@ public abstract class NamedScopesHolder implements PersistentStateComponent<Elem
         return getPredefinedScope(name);
     }
 
-    
     public List<NamedScope> getPredefinedScopes() {
         return Collections.emptyList();
     }
@@ -220,12 +217,10 @@ public abstract class NamedScopesHolder implements PersistentStateComponent<Elem
         return null;
     }
 
-    
     public Project getProject() {
         return myProject;
     }
 
-    
     public final NamedScope createScope(String name, @Nullable PackageSet value) {
         return new NamedScope(name, value);
     }

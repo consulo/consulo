@@ -17,6 +17,7 @@ package consulo.content.scope;
 
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author anna
@@ -27,7 +28,7 @@ public class InvalidPackageSet extends AbstractPackageSet {
     }
 
     @Override
-    public boolean contains(VirtualFile file, Project project, NamedScopesHolder holder) {
+    public boolean contains(VirtualFile file, Project project, @Nullable NamedScopesHolder holder) {
         return false;
     }
 }

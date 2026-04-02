@@ -161,7 +161,7 @@ public class RefreshQueueImpl extends RefreshQueue implements Disposable {
 
   protected void tryProcessingEvents(RefreshSessionImpl session, ModalityState modality) {
     List<? extends VFileEvent> events = ContainerUtil.filter(session.getEvents(), e -> {
-      VirtualFile file = e instanceof VFileCreateEvent vFileCreateEvent ? vFileCreateEvent.getParent() : e.getFile();
+      VirtualFile file = e instanceof VFileCreateEvent ce ? ce.getParent() : e.getFile();
       return file == null || file.isValid();
     });
 

@@ -60,6 +60,14 @@ public abstract class SdkType implements SdkTypeId {
     /**
      * @return env variables which will be checked while creating predefined sdks
      */
+    public Set<String> getEnvironmentVariables(Platform platform) {
+        return getEnviromentVariables(platform);
+    }
+
+    /**
+     * @return env variables which will be checked while creating predefined sdks
+     */
+    @Deprecated(forRemoval = true)
     public Set<String> getEnviromentVariables(Platform platform) {
         return Set.of();
     }
@@ -83,13 +91,13 @@ public abstract class SdkType implements SdkTypeId {
         if (sdkType instanceof BundleType bundleType) {
             return bundleType.getVersionString(sdk.getPlatform(), sdk.getHomeNioPath());
         }
-        return getVersionString(sdk.getHomePath());
+        String homePath = sdk.getHomePath();
+        return homePath != null ? getVersionString(homePath) : null;
     }
 
     public abstract @Nullable String getVersionString(String sdkHome);
 
-    
-    public String suggestSdkName(String currentSdkName, String sdkHome) {
+    public String suggestSdkName(@Nullable String currentSdkName, String sdkHome) {
         return getDisplayName().get() + " " + getVersionString(sdkHome);
     }
 
@@ -111,7 +119,6 @@ public abstract class SdkType implements SdkTypeId {
 
     @Override
     public void saveAdditionalData(SdkAdditionalData additionalData, Element additional) {
-
     }
 
     @Override
@@ -119,28 +126,23 @@ public abstract class SdkType implements SdkTypeId {
         return null;
     }
 
-    
     @Override
     public final String getId() {
         return myId;
     }
 
-    
     public final LocalizeValue getDisplayName() {
         return myDisplayName;
     }
 
-    
     public final Image getIcon() {
         return myIcon;
     }
 
-    
     public Image getGroupIcon() {
         return ImageEffects.transparent(getIcon(), 0.5f);
     }
 
-    
     public String getHelpTopic() {
         return "bundle";
     }
@@ -162,7 +164,6 @@ public abstract class SdkType implements SdkTypeId {
         return getId();
     }
 
-    
     public FileChooserDescriptor getHomeChooserDescriptor() {
         FileChooserDescriptor descriptor = new FileChooserDescriptor(false, true, false, false, false, false) {
             @Override
