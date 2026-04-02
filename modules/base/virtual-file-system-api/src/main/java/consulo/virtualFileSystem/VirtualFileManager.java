@@ -234,7 +234,12 @@ public abstract class VirtualFileManager implements ModificationTracker {
      */
     public abstract void addAsyncFileListener(AsyncFileListener listener, Disposable parentDisposable);
 
-    public abstract void notifyPropertyChanged(VirtualFile virtualFile, String property, Object oldValue, Object newValue);
+    public abstract void notifyPropertyChanged(
+        VirtualFile virtualFile,
+        String property,
+        @Nullable Object oldValue,
+        @Nullable Object newValue
+    );
 
     /**
      * @return a number that's incremented every time something changes in the VFS, i.e. file hierarchy, names, flags, attributes, contents.

@@ -17,6 +17,7 @@ package consulo.versionControlSystem.virtualFileSystem;
 
 import consulo.application.ApplicationManager;
 import consulo.versionControlSystem.localize.VcsLocalize;
+import consulo.virtualFileSystem.BaseVirtualFile;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileSystem;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
@@ -27,8 +28,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-public abstract class AbstractVcsVirtualFile extends VirtualFile {
-
+public abstract class AbstractVcsVirtualFile extends BaseVirtualFile {
   protected final String myName;
   protected final String myPath;
   protected String myRevision;

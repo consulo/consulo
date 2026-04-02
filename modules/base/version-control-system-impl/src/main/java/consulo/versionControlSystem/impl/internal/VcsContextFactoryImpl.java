@@ -35,25 +35,21 @@ import java.util.function.Function;
 @ServiceImpl
 public class VcsContextFactoryImpl implements VcsContextFactory {
   @Override
-  
   public VcsContext createCachedContextOn(AnActionEvent event) {
     return VcsContextWrapper.createCachedInstanceOn(event);
   }
 
   @Override
-  
   public VcsContext createContextOn(AnActionEvent event) {
     return new VcsContextWrapper(event.getDataContext(), event.getModifiers(), event.getPlace(), event.getPresentation().getText());
   }
 
   @Override
-  
   public FilePath createFilePathOn(VirtualFile virtualFile) {
     return createFilePath(virtualFile.getPath(), virtualFile.isDirectory());
   }
 
   @Override
-  
   public FilePath createFilePathOn(File file) {
     String path = file.getPath();
     VirtualFile vf = LocalFileSystem.getInstance().findFileByPath(path);
@@ -61,7 +57,6 @@ public class VcsContextFactoryImpl implements VcsContextFactory {
   }
 
   @Override
-  
   public FilePath createFilePathOn(File file, Function<File, Boolean> detector) {
     VirtualFile virtualFile = LocalFileSystem.getInstance().findFileByIoFile(file);
     if (virtualFile != null) {
@@ -71,42 +66,35 @@ public class VcsContextFactoryImpl implements VcsContextFactory {
   }
 
   @Override
-  
   public FilePath createFilePathOn(File file, boolean isDirectory) {
     return createFilePath(file.getPath(), isDirectory);
   }
 
   @Override
-  
   public FilePath createFilePathOnNonLocal(String path, boolean isDirectory) {
     return new RemoteFilePath(path, isDirectory);
   }
 
   @Override
-  
   public FilePath createFilePathOnDeleted(File file, boolean isDirectory) {
     return createFilePathOn(file, isDirectory);
   }
 
   @Override
-  
   public FilePath createFilePathOn(VirtualFile parent, String name) {
     return createFilePath(parent, name, false);
   }
 
-  
   @Override
   public FilePath createFilePath(VirtualFile parent, String fileName, boolean isDirectory) {
     return createFilePath(parent.getPath() + "/" + fileName, isDirectory);
   }
 
   @Override
-  
   public LocalChangeList createLocalChangeList(Project project, String name) {
     return LocalChangeListImpl.createEmptyChangeListImpl(project, name);
   }
 
-  
   @Override
   public FilePath createFilePath(String path, boolean isDirectory) {
     return new LocalFilePath(path, isDirectory);
