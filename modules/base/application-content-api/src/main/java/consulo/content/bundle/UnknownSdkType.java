@@ -17,6 +17,7 @@ package consulo.content.bundle;
 
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.localize.ProjectLocalize;
+import consulo.util.lang.StringUtil;
 import org.jspecify.annotations.Nullable;
 
 import java.util.Map;
@@ -54,6 +55,6 @@ public class UnknownSdkType extends SdkType {
 
     @Override
     public String suggestSdkName(@Nullable String currentSdkName, String sdkHome) {
-        return String.valueOf(currentSdkName);
+        return currentSdkName != null ? currentSdkName : getDisplayName().get();
     }
 }
