@@ -61,14 +61,6 @@ public abstract class SdkType implements SdkTypeId {
      * @return env variables which will be checked while creating predefined sdks
      */
     public Set<String> getEnvironmentVariables(Platform platform) {
-        return getEnviromentVariables(platform);
-    }
-
-    /**
-     * @return env variables which will be checked while creating predefined sdks
-     */
-    @Deprecated(forRemoval = true)
-    public Set<String> getEnviromentVariables(Platform platform) {
         return Set.of();
     }
 
