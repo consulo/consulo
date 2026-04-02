@@ -40,8 +40,6 @@ import java.util.List;
  */
 @ExtensionImpl
 public class PredefinedBundlesLoader extends PreloadingActivity {
-    private static final Logger LOG = Logger.getInstance(PredefinedBundlesLoader.class);
-
     private static class ContextImpl implements PredefinedBundlesProvider.Context {
         private final List<Sdk> myBundles = new ArrayList<>();
         private final SdkTable mySdkTable;
@@ -50,13 +48,8 @@ public class PredefinedBundlesLoader extends PreloadingActivity {
             mySdkTable = sdkTable;
         }
 
-        
         @Override
-        public Sdk createSdkWithName(
-            BundleType sdkType,
-            Path homePath,
-            String suggestName
-        ) {
+        public Sdk createSdkWithName(BundleType sdkType, Path homePath, String suggestName) {
             // TODO [VISTALL] path can be remote - handle it
 
             Sdk[] sdks = ArrayUtil.mergeArrayAndCollection(mySdkTable.getAllSdks(), myBundles, Sdk.ARRAY_FACTORY);
@@ -67,7 +60,6 @@ public class PredefinedBundlesLoader extends PreloadingActivity {
         }
 
         @Override
-        
         @SuppressWarnings("deprecation")
         public Sdk createSdkWithName(SdkType sdkType, String suggestName) {
             Sdk[] sdks = ArrayUtil.mergeArrayAndCollection(mySdkTable.getAllSdks(), myBundles, Sdk.ARRAY_FACTORY);
@@ -78,7 +70,6 @@ public class PredefinedBundlesLoader extends PreloadingActivity {
         }
 
         @Override
-        
         public Sdk createSdk(SdkType sdkType, String sdkHome) {
             return createSdkWithName(sdkType, sdkType.suggestSdkName(null, sdkHome));
         }

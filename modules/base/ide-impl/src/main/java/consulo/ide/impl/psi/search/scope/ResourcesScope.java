@@ -15,19 +15,20 @@
  */
 package consulo.ide.impl.psi.search.scope;
 
-import consulo.application.AllIcons;
 import consulo.content.scope.AbstractPackageSet;
 import consulo.content.scope.NamedScope;
 import consulo.content.scope.NamedScopesHolder;
 import consulo.ide.localize.IdeLocalize;
 import consulo.module.content.ProjectFileIndex;
 import consulo.module.content.ProjectRootManager;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
- * @since 18:03/17.06.13
+ * @since 2013-06-17
  */
 public class ResourcesScope extends NamedScope {
     public static final String ID = "Resources";
@@ -36,9 +37,9 @@ public class ResourcesScope extends NamedScope {
     public static final String NAME = ID;
 
     public ResourcesScope() {
-        super(ID, IdeLocalize.predefinedScopeResourcesName(), AllIcons.Modules.ResourcesRoot, new AbstractPackageSet("rsc:*..*") {
+        super(ID, IdeLocalize.predefinedScopeResourcesName(), PlatformIconGroup.modulesResourcesroot(), new AbstractPackageSet("rsc:*..*") {
             @Override
-            public boolean contains(VirtualFile file, Project project, NamedScopesHolder holder) {
+            public boolean contains(VirtualFile file, Project project, @Nullable NamedScopesHolder holder) {
                 ProjectFileIndex index = ProjectRootManager.getInstance(project).getFileIndex();
                 return file != null && index.isInResource(file);
             }

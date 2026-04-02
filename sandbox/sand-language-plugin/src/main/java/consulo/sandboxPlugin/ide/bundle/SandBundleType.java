@@ -50,7 +50,12 @@ public class SandBundleType extends BundleType {
         return true;
     }
 
-    
+    @Override
+    public Set<String> getEnvironmentVariables(Platform platform) {
+        return Set.of("TEMP");
+    }
+
+    @Deprecated(forRemoval = true)
     @Override
     public Set<String> getEnviromentVariables(Platform platform) {
         return Set.of("TEMP");

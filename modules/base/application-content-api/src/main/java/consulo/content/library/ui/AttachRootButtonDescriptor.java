@@ -29,7 +29,7 @@ import javax.swing.*;
 public abstract class AttachRootButtonDescriptor {
   private final OrderRootType myOrderRootType;
   protected final String myButtonText;
-  private final Image myToolbarIcon;
+  private final @Nullable Image myToolbarIcon;
 
   /**
    * Creates a descriptor for 'attach' button shown in popup when user click on '+' button.
@@ -64,7 +64,6 @@ public abstract class AttachRootButtonDescriptor {
     return false;
   }
 
-  
   public VirtualFile[] scanForActualRoots(VirtualFile[] rootCandidates, JComponent parent) {
     return rootCandidates;
   }

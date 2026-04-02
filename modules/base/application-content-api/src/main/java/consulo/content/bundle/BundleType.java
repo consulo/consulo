@@ -29,7 +29,7 @@ import java.util.function.Consumer;
 
 /**
  * @author VISTALL
- * @since 25/04/2023
+ * @since 2023-04-25
  */
 public abstract class BundleType extends SdkType {
     public BundleType(String id, LocalizeValue displayName, Image icon) {
@@ -64,7 +64,6 @@ public abstract class BundleType extends SdkType {
         return homePath;
     }
 
-    
     public FileChooserDescriptor getHomeChooserDescriptor(Platform platform) {
         FileChooserDescriptor descriptor = new FileChooserDescriptor(false, true, false, false, false, false) {
             @Override
@@ -90,17 +89,15 @@ public abstract class BundleType extends SdkType {
 
     // region obsolete stuff
 
-    
     @Override
     @Deprecated
     public final FileChooserDescriptor getHomeChooserDescriptor() {
         throw new UnsupportedOperationException();
     }
 
-    
     @Override
     @Deprecated
-    public final String suggestSdkName(String currentSdkName, String sdkHome) {
+    public final String suggestSdkName(@Nullable String currentSdkName, String sdkHome) {
         throw new UnsupportedOperationException();
     }
 
@@ -116,7 +113,6 @@ public abstract class BundleType extends SdkType {
         throw new UnsupportedOperationException();
     }
 
-    
     @Override
     @Deprecated
     public final Collection<String> suggestHomePaths() {

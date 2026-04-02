@@ -27,6 +27,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -43,7 +44,7 @@ public class ProblemScopeHolderImpl implements ProblemScopeHolder {
 
         myProblemsScope = new NamedScope(AnalysisScopeLocalize.predefinedScopeProblemsName().get(), new AbstractPackageSet(text) {
             @Override
-            public boolean contains(VirtualFile file, Project project, NamedScopesHolder holder) {
+            public boolean contains(VirtualFile file, Project project, @Nullable NamedScopesHolder holder) {
                 return project == thisProject && wolfTheProblemSolverProvider.get().isProblemFile(file);
             }
         });
