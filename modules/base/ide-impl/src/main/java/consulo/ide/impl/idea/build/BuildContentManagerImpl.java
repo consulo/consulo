@@ -296,7 +296,9 @@ public final class BuildContentManagerImpl implements BuildContentManager {
                 @RequiredUIAccess
                 public void onCancel() {
                     // stop waiting for the process
-                    myProcessHandler.forceProcessDetach();
+                    if (myProcessHandler != null) {
+                        myProcessHandler.forceProcessDetach();
+                    }
                 }
             };
             return askUserAndWait(myProcessHandler, sessionName, task);
