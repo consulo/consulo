@@ -20,6 +20,5 @@ package consulo.component.util.pointer;
  * @since 2013-06-15
  */
 public interface Named {
-    
     String getName();
 }

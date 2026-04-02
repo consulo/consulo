@@ -24,17 +24,14 @@ import consulo.project.Project;
 
 @ServiceAPI(ComponentScope.PROJECT)
 public interface ModulePointerManager extends NamedPointerManager<Module> {
-  
   static ModulePointerManager getInstance(Project project) {
     return project.getInstance(ModulePointerManager.class);
   }
 
-  
   @Override
   @RequiredReadAction
   NamedPointer<Module> create(String name);
 
-  
   @Override
   @RequiredReadAction
   NamedPointer<Module> create(Module value);

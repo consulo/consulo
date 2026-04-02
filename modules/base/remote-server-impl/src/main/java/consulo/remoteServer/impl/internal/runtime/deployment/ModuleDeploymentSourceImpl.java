@@ -41,7 +41,6 @@ public class ModuleDeploymentSourceImpl implements ModuleDeploymentSource {
     }
 
     @Override
-    
     public NamedPointer<Module> getModulePointer() {
         return myPointer;
     }
@@ -78,10 +77,9 @@ public class ModuleDeploymentSourceImpl implements ModuleDeploymentSource {
         return file.getAbsolutePath();
     }
 
-    
     @Override
     public LocalizeValue getPresentableName() {
-        return LocalizeValue.of(myPointer.getName());
+        return LocalizeValue.ofNullable(myPointer.getName());
     }
 
     @Override
@@ -111,7 +109,6 @@ public class ModuleDeploymentSourceImpl implements ModuleDeploymentSource {
         return myPointer.hashCode();
     }
 
-    
     @Override
     public DeploymentSourceType<?> getType() {
         return DeploymentSourceType.EP_NAME.findExtensionOrFail(ModuleDeploymentSourceType.class);

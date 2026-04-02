@@ -22,7 +22,6 @@ public class ArtifactDeploymentSourceImpl implements ArtifactDeploymentSource {
         myPointer = pointer;
     }
 
-    
     @Override
     public ArtifactPointer getArtifactPointer() {
         return myPointer;
@@ -55,7 +54,6 @@ public class ArtifactDeploymentSourceImpl implements ArtifactDeploymentSource {
         return null;
     }
 
-    
     @Override
     public LocalizeValue getPresentableName() {
         return LocalizeValue.of(myPointer.getName());
@@ -90,7 +88,6 @@ public class ArtifactDeploymentSourceImpl implements ArtifactDeploymentSource {
         return myPointer.hashCode();
     }
 
-    
     @Override
     public DeploymentSourceType<?> getType() {
         return DeploymentSourceType.EP_NAME.findExtensionOrFail(ArtifactDeploymentSourceType.class);

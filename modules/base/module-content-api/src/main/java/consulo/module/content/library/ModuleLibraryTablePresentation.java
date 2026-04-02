@@ -17,10 +17,11 @@ package consulo.module.content.library;
 
 import consulo.content.library.LibraryTablePresentation;
 import consulo.project.ProjectBundle;
+import consulo.project.localize.ProjectLocalize;
 
 /**
  * @author VISTALL
- * @since 04-Sep-22
+ * @since 2022-09-04
  */
 public class ModuleLibraryTablePresentation extends LibraryTablePresentation {
   public static final ModuleLibraryTablePresentation INSTANCE = new ModuleLibraryTablePresentation();
@@ -30,16 +31,16 @@ public class ModuleLibraryTablePresentation extends LibraryTablePresentation {
 
   @Override
   public String getDisplayName(boolean plural) {
-    return ProjectBundle.message("module.library.display.name", plural ? 2 : 1);
+    return ProjectLocalize.moduleLibraryDisplayName(plural ? 2 : 1).get();
   }
 
   @Override
   public String getDescription() {
-    return ProjectBundle.message("libraries.node.text.module");
+    return ProjectLocalize.librariesNodeTextModule().get();
   }
 
   @Override
   public String getLibraryTableEditorTitle() {
-    return ProjectBundle.message("library.configure.module.title");
+    return ProjectLocalize.libraryConfigureModuleTitle().get();
   }
 }

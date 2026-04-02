@@ -28,21 +28,17 @@ import java.util.Collection;
 
 /**
  * @author VISTALL
- * @since 19/04/2021
+ * @since 2021-04-19
  */
 public interface LibrariesConfigurator extends LibraryEditorListener, Disposable {
-  
   VirtualFile[] getLibraryFiles(Library library, OrderRootType type);
 
-  
   LibraryTable.ModifiableModel getModifiableLibraryTable(LibraryTable table);
 
   @Nullable Library getLibrary(String libraryName, String libraryLevel);
 
-  
   LibraryTableModifiableModelProvider createModifiableModelProvider(String level);
 
-  
   LibraryTableModifiableModelProvider getProjectLibrariesProvider();
 
   @Nullable Library getLibraryModel(Library library);

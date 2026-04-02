@@ -26,16 +26,14 @@ import java.util.Iterator;
  * @see consulo.project.content.library.ProjectLibraryTable
  */
 public interface LibraryTable {
-  
   Library[] getLibraries();
 
   Library createLibrary();
 
-  Library createLibrary(String name);
+  Library createLibrary(@Nullable String name);
 
   void removeLibrary(Library library);
 
-  
   Iterator<Library> getLibraryIterator();
 
   @Nullable Library getLibraryByName(String name);
@@ -59,18 +57,16 @@ public interface LibraryTable {
       return createLibrary(name, null);
     }
 
-    Library createLibrary(String name, @Nullable PersistentLibraryKind type);
+    Library createLibrary(@Nullable String name, @Nullable PersistentLibraryKind type);
 
     void removeLibrary(Library library);
 
     void commit();
 
-    
     Iterator<Library> getLibraryIterator();
 
     @Nullable Library getLibraryByName(String name);
 
-    
     Library[] getLibraries();
 
     boolean isChanged();

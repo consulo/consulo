@@ -41,7 +41,7 @@ public final class AccessRule {
         return ReadAction.compute(action);
     }
 
-    @ReviewAfterIssueFix(value = "github.com/uber/NullAway/issues/1500", todo = "Remove explicit casts")
+    @ReviewAfterIssueFix(value = "github.com/uber/NullAway/issues/1504", todo = "Remove explicit casts")
     public static CompletableFuture<@Nullable Void> writeAsync(@RequiredWriteAction ThrowableRunnable<Throwable> action) {
         return writeAsync((ThrowableSupplier<@Nullable Void, Throwable>) () -> {
             action.run();

@@ -33,6 +33,7 @@ import consulo.module.impl.internal.layer.library.LibraryTableImplUtil;
 import consulo.module.impl.internal.layer.library.ModuleRootLayerLibraryOwner;
 import consulo.project.ProjectBundle;
 import consulo.virtualFileSystem.util.VirtualFilePathUtil;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Library entry for module ("in-place") libraries
@@ -54,7 +55,7 @@ public class ModuleLibraryOrderEntryImpl extends LibraryOrderEntryBaseImpl imple
         }
     }
 
-    public ModuleLibraryOrderEntryImpl(String name, PersistentLibraryKind kind, ModuleRootLayerImpl moduleRootLayer) {
+    public ModuleLibraryOrderEntryImpl(@Nullable String name, PersistentLibraryKind kind, ModuleRootLayerImpl moduleRootLayer) {
         super(ModuleLibraryOrderEntryType.getInstance(), moduleRootLayer, ProjectRootManagerImpl.getInstanceImpl(moduleRootLayer.getProject()));
         myLibrary = LibraryTableImplUtil.createModuleLevelLibrary(name, kind, moduleRootLayer);
         Disposer.register(this, myLibrary);

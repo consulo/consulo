@@ -222,18 +222,17 @@ public class ExtensionEditor extends ModuleElementsEditor {
             updateSecondComponent(!extension.isEnabled() ? null : extension);
         }
 
-        if (extension instanceof ModuleExtensionWithSdk) {
-            // we using module layer, dont use modifiable model - it ill proxy, and methods 'addModuleExtensionSdkEntry' && 'removeOrderEntry'
+        if (extension instanceof ModuleExtensionWithSdk sdkExtension) {
+            // we using module layer, don't use modifiable model - it ill proxy, and methods 'addModuleExtensionSdkEntry' && 'removeOrderEntry'
             // ill call this method again
-            ModifiableModuleRootLayer moduleRootLayer = (ModifiableModuleRootLayer)((ModuleExtensionBase)extension).getModuleRootLayer();
+            ModifiableModuleRootLayer moduleRootLayer = (ModifiableModuleRootLayer)((ModuleExtensionBase)sdkExtension).getModuleRootLayer();
 
-            ModuleExtensionWithSdkOrderEntry sdkOrderEntry = moduleRootLayer.findModuleExtensionSdkEntry(extension);
-            if (!extension.isEnabled() && sdkOrderEntry != null) {
+            ModuleExtensionWithSdkOrderEntry sdkOrderEntry = moduleRootLayer.findModuleExtensionSdkEntry(sdkExtension);
+            if (!sdkExtension.isEnabled() && sdkOrderEntry != null) {
                 moduleRootLayer.removeOrderEntry(sdkOrderEntry);
             }
 
-            if (extension.isEnabled()) {
-                ModuleExtensionWithSdk sdkExtension = (ModuleExtensionWithSdk)extension;
+            if (sdkExtension.isEnabled()) {
                 if (!sdkExtension.getInheritableSdk().isNull()) {
                     if (sdkOrderEntry == null) {
                         moduleRootLayer.addModuleExtensionSdkEntry(sdkExtension);
@@ -241,7 +240,7 @@ public class ExtensionEditor extends ModuleElementsEditor {
                     else {
                         ModuleExtensionWithSdk<?> moduleExtension = sdkOrderEntry.getModuleExtension();
                         if (moduleExtension != null
-                            && !Comparing.equal(sdkExtension.getInheritableSdk(), moduleExtension.getInheritableSdk())) {
+                            && !Objects.equals(sdkExtension.getInheritableSdk(), moduleExtension.getInheritableSdk())) {
                             moduleRootLayer.addModuleExtensionSdkEntry(sdkExtension);
                         }
                     }

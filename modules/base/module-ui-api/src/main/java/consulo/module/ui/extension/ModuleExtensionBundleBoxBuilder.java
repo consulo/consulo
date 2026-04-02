@@ -20,20 +20,21 @@ import consulo.content.bundle.Sdk;
 import consulo.content.bundle.SdkType;
 import consulo.content.bundle.SdkTypeId;
 import consulo.disposer.Disposable;
+import consulo.localize.LocalizeValue;
 import consulo.module.Module;
 import consulo.module.extension.MutableModuleExtension;
 import consulo.module.extension.MutableModuleExtensionWithSdk;
 import consulo.module.extension.MutableModuleInheritableNamedPointer;
 import consulo.module.ui.BundleBox;
 import consulo.module.ui.BundleBoxBuilder;
-import consulo.project.ProjectBundle;
+import consulo.project.localize.ProjectLocalize;
 import consulo.ui.Component;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 import consulo.ui.util.LabeledComponents;
-
 import org.jspecify.annotations.Nullable;
+
 import java.util.Collections;
 import java.util.Set;
 import java.util.function.BiConsumer;
@@ -42,23 +43,22 @@ import java.util.function.Predicate;
 
 /**
  * @author VISTALL
- * @since 15.03.2015
+ * @since 2015-03-15
  */
 public class ModuleExtensionBundleBoxBuilder<T extends MutableModuleExtension<?>> {
-  
-  public static <T extends MutableModuleExtensionWithSdk<?>> ModuleExtensionBundleBoxBuilder createAndDefine(T extension, Disposable uiDisposable, @Nullable Runnable updater) {
+  public static <T extends MutableModuleExtensionWithSdk<?>>
+  ModuleExtensionBundleBoxBuilder createAndDefine(T extension, Disposable uiDisposable, @Nullable Runnable updater) {
     ModuleExtensionBundleBoxBuilder<T> builder = create(extension, uiDisposable, updater);
     builder.sdkTypeClass(extension.getSdkTypeClass());
     builder.sdkPointerFunc(dom -> dom.getInheritableSdk());
     return builder;
   }
 
-  
-  public static <T extends MutableModuleExtension<?>> ModuleExtensionBundleBoxBuilder<T> create(T extension, Disposable uiDisposable, @Nullable Runnable updater) {
+  public static <T extends MutableModuleExtension<?>>
+  ModuleExtensionBundleBoxBuilder<T> create(T extension, Disposable uiDisposable, @Nullable Runnable updater) {
     return new ModuleExtensionBundleBoxBuilder<>(extension).laterUpdater(updater).uiDisposable(uiDisposable);
   }
 
-  
   private Function<T, MutableModuleInheritableNamedPointer<Sdk>> mySdkPointerFunction;
   
   private Predicate<SdkTypeId> mySdkFilter = sdkTypeId -> true;
@@ -69,7 +69,7 @@ public class ModuleExtensionBundleBoxBuilder<T extends MutableModuleExtension<?>
 
   private Image myNullItemIcon = null;
 
-  private String myNullItemName = ProjectBundle.message("sdk.combo.box.item");
+  private LocalizeValue myNullItemName = ProjectLocalize.sdkComboBoxItem();
 
   private Runnable myLaterUpdater;
 
@@ -81,70 +81,60 @@ public class ModuleExtensionBundleBoxBuilder<T extends MutableModuleExtension<?>
     myMutableModuleExtension = mutableModuleExtension;
   }
 
-  
   @UsedInPlugin
   public ModuleExtensionBundleBoxBuilder<T> sdkTypeClass(Class<? extends SdkTypeId> clazz) {
     mySdkFilter = sdkTypeId -> clazz.isAssignableFrom(sdkTypeId.getClass());
     return this;
   }
 
-  
   @UsedInPlugin
   public ModuleExtensionBundleBoxBuilder<T> sdkTypes(Set<SdkType> sdkTypes) {
     mySdkFilter = sdkTypes::contains;
     return this;
   }
 
-  
   @UsedInPlugin
   public ModuleExtensionBundleBoxBuilder<T> sdkType(SdkType sdkType) {
     return sdkTypes(Collections.singleton(sdkType));
   }
 
-  
   @UsedInPlugin
   public ModuleExtensionBundleBoxBuilder<T> sdkPointerFunc(Function<T, MutableModuleInheritableNamedPointer<Sdk>> function) {
     mySdkPointerFunction = function;
     return this;
   }
 
-  
   @UsedInPlugin
   public ModuleExtensionBundleBoxBuilder<T> labelText(String labelText) {
     myLabelText = labelText;
     return this;
   }
 
-  
   @UsedInPlugin
   public ModuleExtensionBundleBoxBuilder<T> laterUpdater(@Nullable Runnable runnable) {
     myLaterUpdater = runnable;
     return this;
   }
 
-  
   @UsedInPlugin
   public ModuleExtensionBundleBoxBuilder<T> postConsumer(BiConsumer<Sdk, Sdk> consumer) {
     myPostConsumer = consumer;
     return this;
   }
 
-  
   @UsedInPlugin
-  public ModuleExtensionBundleBoxBuilder<T> nullItem(@Nullable String name, @Nullable Image icon) {
+  public ModuleExtensionBundleBoxBuilder<T> nullItem(LocalizeValue name, @Nullable Image icon) {
     myNullItemName = name;
     myNullItemIcon = icon;
     return this;
   }
 
-  
   @UsedInPlugin
   public ModuleExtensionBundleBoxBuilder<T> uiDisposable(Disposable disposable) {
     myUIDisposable = disposable;
     return this;
   }
 
-  
   @RequiredUIAccess
   public Component build() {
     BundleBoxBuilder builder = BundleBox.builder(myUIDisposable);

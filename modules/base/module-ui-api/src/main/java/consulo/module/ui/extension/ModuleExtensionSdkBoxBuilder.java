@@ -18,12 +18,13 @@ package consulo.module.ui.extension;
 import consulo.annotation.UsedInPlugin;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.content.bundle.*;
+import consulo.localize.LocalizeValue;
 import consulo.module.Module;
 import consulo.module.extension.MutableModuleExtension;
 import consulo.module.extension.MutableModuleExtensionWithSdk;
 import consulo.module.extension.MutableModuleInheritableNamedPointer;
 import consulo.module.ui.awt.SdkComboBox;
-import consulo.project.ProjectBundle;
+import consulo.project.localize.ProjectLocalize;
 import consulo.ui.ex.awt.LabeledComponent;
 import consulo.ui.image.Image;
 import consulo.util.lang.function.Predicates;
@@ -42,26 +43,19 @@ import java.util.function.Predicate;
  * @since 2015-03-15
  */
 public class ModuleExtensionSdkBoxBuilder<T extends MutableModuleExtension<?>> {
-    
-    public static <T extends MutableModuleExtensionWithSdk<?>> ModuleExtensionSdkBoxBuilder createAndDefine(
-        T extension,
-        @Nullable Runnable updater
-    ) {
+    public static <T extends MutableModuleExtensionWithSdk<?>>
+    ModuleExtensionSdkBoxBuilder createAndDefine(T extension, @Nullable Runnable updater) {
         ModuleExtensionSdkBoxBuilder<T> builder = create(extension, updater);
         builder.sdkTypeClass(extension.getSdkTypeClass());
         builder.sdkPointerFunc(dom -> dom.getInheritableSdk());
         return builder;
     }
 
-    
-    public static <T extends MutableModuleExtension<?>> ModuleExtensionSdkBoxBuilder<T> create(
-        T extension,
-        @Nullable Runnable updater
-    ) {
+    public static <T extends MutableModuleExtension<?>>
+    ModuleExtensionSdkBoxBuilder<T> create(T extension, @Nullable Runnable updater) {
         return new ModuleExtensionSdkBoxBuilder<>(extension).laterUpdater(updater);
     }
 
-    
     private Function<T, MutableModuleInheritableNamedPointer<Sdk>> mySdkPointerFunction;
     
     private Predicate<SdkTypeId> mySdkFilter = Predicates.alwaysTrue();
@@ -72,7 +66,7 @@ public class ModuleExtensionSdkBoxBuilder<T extends MutableModuleExtension<?>> {
 
     private Image myNullItemIcon = null;
 
-    private String myNullItemName = ProjectBundle.message("sdk.combo.box.item");
+    private LocalizeValue myNullItemName = ProjectLocalize.sdkComboBoxItem();
 
     private Runnable myLaterUpdater;
 
@@ -82,63 +76,54 @@ public class ModuleExtensionSdkBoxBuilder<T extends MutableModuleExtension<?>> {
         myMutableModuleExtension = mutableModuleExtension;
     }
 
-    
     @UsedInPlugin
     public ModuleExtensionSdkBoxBuilder<T> sdkTypeClass(Class<? extends SdkTypeId> clazz) {
         mySdkFilter = sdkTypeId -> clazz.isAssignableFrom(sdkTypeId.getClass());
         return this;
     }
 
-    
     @UsedInPlugin
     public ModuleExtensionSdkBoxBuilder<T> sdkTypes(Set<SdkType> sdkTypes) {
         mySdkFilter = sdkTypes::contains;
         return this;
     }
 
-    
     @UsedInPlugin
     public ModuleExtensionSdkBoxBuilder<T> sdkType(SdkType sdkType) {
         return sdkTypes(Collections.singleton(sdkType));
     }
 
-    
     @UsedInPlugin
     public ModuleExtensionSdkBoxBuilder<T> sdkPointerFunc(Function<T, MutableModuleInheritableNamedPointer<Sdk>> function) {
         mySdkPointerFunction = function;
         return this;
     }
 
-    
     @UsedInPlugin
     public ModuleExtensionSdkBoxBuilder<T> labelText(String labelText) {
         myLabelText = labelText;
         return this;
     }
 
-    
     @UsedInPlugin
     public ModuleExtensionSdkBoxBuilder<T> laterUpdater(@Nullable Runnable runnable) {
         myLaterUpdater = runnable;
         return this;
     }
 
-    
     @UsedInPlugin
     public ModuleExtensionSdkBoxBuilder<T> postConsumer(BiConsumer<Sdk, Sdk> consumer) {
         myPostConsumer = consumer;
         return this;
     }
 
-    
     @UsedInPlugin
-    public ModuleExtensionSdkBoxBuilder<T> nullItem(@Nullable String name, @Nullable Image icon) {
+    public ModuleExtensionSdkBoxBuilder<T> nullItem(LocalizeValue name, @Nullable Image icon) {
         myNullItemName = name;
         myNullItemIcon = icon;
         return this;
     }
 
-    
     @RequiredReadAction
     public JComponent build() {
         SdkModel projectSdksModel = SdkModelFactory.getInstance().getOrCreateModel();

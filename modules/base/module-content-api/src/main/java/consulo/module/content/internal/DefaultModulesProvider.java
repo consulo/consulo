@@ -16,6 +16,7 @@
 
 package consulo.module.content.internal;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.module.Module;
 import consulo.module.ModuleManager;
 import consulo.module.content.layer.ModulesProvider;
@@ -28,7 +29,6 @@ import org.jspecify.annotations.Nullable;
  * @author nik
  */
 public class DefaultModulesProvider implements ModulesProvider {
-  
   public static ModulesProvider of(@Nullable Project project) {
     return project == null ? EMPTY_MODULES_PROVIDER : new DefaultModulesProvider(project);
   }
@@ -40,13 +40,13 @@ public class DefaultModulesProvider implements ModulesProvider {
   }
 
   @Override
-  
   public Module[] getModules() {
     return ModuleManager.getInstance(myProject).getModules();
   }
 
   @Override
-  public Module getModule(String name) {
+  @RequiredReadAction
+  public @Nullable Module getModule(String name) {
     return ModuleManager.getInstance(myProject).findModuleByName(name);
   }
 

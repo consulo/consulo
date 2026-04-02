@@ -16,16 +16,16 @@
 package consulo.module.extension;
 
 import consulo.component.util.pointer.Named;
-import consulo.component.util.pointer.NamedPointer;
+import consulo.component.util.pointer.NullableNamedPointer;
 import consulo.module.Module;
 
 import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
- * @since 19:58/15.06.13
+ * @since 2013-06-15
  */
-public interface ModuleInheritableNamedPointer<T extends Named> extends NamedPointer<T> {
+public interface ModuleInheritableNamedPointer<T extends Named> extends NullableNamedPointer<T> {
   @Nullable Module getModule();
 
   @Nullable String getModuleName();

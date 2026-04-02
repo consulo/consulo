@@ -23,20 +23,19 @@ import consulo.module.content.internal.ModuleRootLayerEx;
 import consulo.module.content.layer.ModuleRootLayer;
 import consulo.module.extension.ModuleInheritableNamedPointer;
 import consulo.module.extension.MutableModuleInheritableNamedPointer;
-import consulo.util.lang.Comparing;
 import consulo.util.lang.StringUtil;
-import org.jspecify.annotations.Nullable;
 import org.jdom.Element;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Objects;
 
 /**
  * @author VISTALL
- * @since 19:31/15.06.13
+ * @since 2013-06-15
  */
 public abstract class ModuleInheritableNamedPointerImpl<T extends Named> implements MutableModuleInheritableNamedPointer<T> {
-    private NamedPointer<Module> myModulePointer;
-    private NamedPointer<T> myTargetPointer;
+    private @Nullable NamedPointer<Module> myModulePointer;
+    private @Nullable NamedPointer<T> myTargetPointer;
     private final ModuleRootLayer myRootLayer;
     private final String myXmlPrefix;
 
@@ -49,7 +48,6 @@ public abstract class ModuleInheritableNamedPointerImpl<T extends Named> impleme
 
     public abstract @Nullable T getItemFromModule(Module module);
 
-    
     public abstract NamedPointer<T> getPointer(ModuleRootLayer layer, String name);
 
     @Override
@@ -77,14 +75,10 @@ public abstract class ModuleInheritableNamedPointerImpl<T extends Named> impleme
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if (obj instanceof ModuleInheritableNamedPointerImpl) {
-            ModuleInheritableNamedPointerImpl another = (ModuleInheritableNamedPointerImpl) obj;
-            return Comparing.equal(myModulePointer, another.myModulePointer) && Comparing.equal(myTargetPointer, another.myTargetPointer);
-        }
-        else {
-            return false;
-        }
+    public boolean equals(@Nullable Object obj) {
+        return obj instanceof ModuleInheritableNamedPointerImpl that
+            && Objects.equals(myModulePointer, that.myModulePointer)
+            && Objects.equals(myTargetPointer, that.myTargetPointer);
     }
 
     @Override
@@ -92,26 +86,20 @@ public abstract class ModuleInheritableNamedPointerImpl<T extends Named> impleme
         return Objects.hash(myModulePointer, myTargetPointer);
     }
 
-    @RequiredReadAction
     @Override
+    @RequiredReadAction
     public void set(ModuleInheritableNamedPointer<T> anotherItem) {
         if (anotherItem.isNull()) {
             myModulePointer = null;
             myTargetPointer = null;
         }
         else {
-            String moduleName = anotherItem.getModuleName();
-            myModulePointer = moduleName == null ? null : createModulePointer(moduleName);
-
-            if (myModulePointer == null) {
-                String targetName = anotherItem.getName();
-                myTargetPointer = getPointer(myRootLayer, targetName);
-            }
+            set(anotherItem.getModuleName(), anotherItem.getName());
         }
     }
 
-    @RequiredReadAction
     @Override
+    @RequiredReadAction
     public void set(@Nullable String moduleName, @Nullable String name) {
         if (moduleName != null) {
             myModulePointer = createModulePointer(moduleName);
@@ -127,8 +115,8 @@ public abstract class ModuleInheritableNamedPointerImpl<T extends Named> impleme
         }
     }
 
-    @RequiredReadAction
     @Override
+    @RequiredReadAction
     public void set(@Nullable Module module, @Nullable T named) {
         if (module != null) {
             myModulePointer = createModulePointer(module.getName());
@@ -165,7 +153,6 @@ public abstract class ModuleInheritableNamedPointerImpl<T extends Named> impleme
         }
     }
 
-    
     @RequiredReadAction
     private NamedPointer<Module> createModulePointer(String name) {
         return ((ModuleRootLayerEx) myRootLayer).getConfigurationAccessor().getModulePointer(myRootLayer.getProject(), name);

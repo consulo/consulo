@@ -20,12 +20,12 @@ import consulo.content.bundle.Sdk;
 import consulo.module.Module;
 import consulo.module.content.internal.ModuleRootLayerEx;
 import consulo.module.content.layer.ModuleRootLayer;
-import consulo.module.content.util.ModuleContentUtil;
 import consulo.module.extension.ModuleExtensionWithSdk;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
- * @since 19:35/15.06.13
+ * @since 2013-06-15
  */
 public class SdkModuleInheritableNamedPointerImpl extends ModuleInheritableNamedPointerImpl<Sdk> {
   private final String myExtensionId;
@@ -36,7 +36,7 @@ public class SdkModuleInheritableNamedPointerImpl extends ModuleInheritableNamed
   }
 
   @Override
-  public String getItemNameFromModule(Module module) {
+  public @Nullable String getItemNameFromModule(Module module) {
     ModuleExtensionWithSdk<?> extension = (ModuleExtensionWithSdk)module.getExtension(myExtensionId);
     if (extension != null) {
       return extension.getInheritableSdk().getName();
@@ -45,7 +45,7 @@ public class SdkModuleInheritableNamedPointerImpl extends ModuleInheritableNamed
   }
 
   @Override
-  public Sdk getItemFromModule(Module module) {
+  public @Nullable Sdk getItemFromModule(Module module) {
     ModuleExtensionWithSdk<?> extension = (ModuleExtensionWithSdk)module.getExtension(myExtensionId);
     if (extension != null) {
       return extension.getInheritableSdk().get();
@@ -53,7 +53,6 @@ public class SdkModuleInheritableNamedPointerImpl extends ModuleInheritableNamed
     return null;
   }
 
-  
   @Override
   public NamedPointer<Sdk> getPointer(ModuleRootLayer layer, String name) {
     return ((ModuleRootLayerEx)layer).getConfigurationAccessor().getSdkPointer(name);

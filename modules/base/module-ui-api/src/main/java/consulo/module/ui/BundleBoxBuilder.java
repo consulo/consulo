@@ -17,14 +17,15 @@ package consulo.module.ui;
 
 import consulo.content.bundle.*;
 import consulo.disposer.Disposable;
-import consulo.project.ProjectBundle;
+import consulo.localize.LocalizeValue;
+import consulo.project.localize.ProjectLocalize;
 import consulo.ui.ComboBox;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 import consulo.ui.model.MutableListModel;
-
 import org.jspecify.annotations.Nullable;
+
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
@@ -35,13 +36,10 @@ import java.util.function.Predicate;
  * @since 2020-01-20
  */
 public final class BundleBoxBuilder {
-
-  
   public static BundleBoxBuilder create(@Nullable Disposable uiDisposable) {
     return create(null, uiDisposable);
   }
 
-  
   public static BundleBoxBuilder create(@Nullable SdkModel sdkModel, @Nullable Disposable uiDisposable) {
     return new BundleBoxBuilder(sdkModel, uiDisposable);
   }
@@ -52,7 +50,7 @@ public final class BundleBoxBuilder {
 
   private boolean myWithNoneItem;
 
-  private String myNoneItemName = ProjectBundle.message("sdk.combo.box.item");
+  private LocalizeValue myNoneItemName = ProjectLocalize.sdkComboBoxItem();
 
   private Image myNoneItemImage;
 
@@ -63,57 +61,48 @@ public final class BundleBoxBuilder {
     myUIDisposable = uiDisposable;
   }
 
-  
   public BundleBoxBuilder withSdkTypeFilterByClass(Class<? extends SdkTypeId> clazz) {
     mySdkFilter = sdkTypeId -> clazz.isAssignableFrom(sdkTypeId.getClass());
     return this;
   }
 
-  
   public BundleBoxBuilder withSdkTypeFilter(Predicate<SdkTypeId> sdkFilter) {
     mySdkFilter = sdkFilter;
     return this;
   }
 
-  
   public BundleBoxBuilder withSdkTypeFilterBySet(Set<? extends SdkType> sdkTypes) {
     mySdkFilter = sdkTypes::contains;
     return this;
   }
 
-  
   public BundleBoxBuilder withSdkTypeFilterByType(SdkType sdkType) {
     return withSdkTypeFilterBySet(Collections.singleton(sdkType));
   }
 
-  
   public BundleBoxBuilder withNoneItem() {
     myWithNoneItem = true;
     return this;
   }
 
-  
-  public BundleBoxBuilder withNoneItem(String noneItemName) {
+  public BundleBoxBuilder withNoneItem(LocalizeValue noneItemName) {
     myWithNoneItem = true;
     myNoneItemName = noneItemName;
     return this;
   }
 
-  
   public BundleBoxBuilder withNoneItemImage(Image noneItemImage) {
     myNoneItemImage = noneItemImage;
     return this;
   }
 
-  
-  public BundleBoxBuilder withNoneItem(String noneItemName, Image noneItemImage) {
+  public BundleBoxBuilder withNoneItem(LocalizeValue noneItemName, Image noneItemImage) {
     myWithNoneItem = true;
     myNoneItemName = noneItemName;
     myNoneItemImage = noneItemImage;
     return this;
   }
 
-  
   private static SdkModel effectiveModel(@Nullable SdkModel sdkModel) {
     if (sdkModel == null) {
       return SdkModelFactory.getInstance().getOrCreateModel();
@@ -123,11 +112,15 @@ public final class BundleBoxBuilder {
     }
   }
 
-  
+  @RequiredUIAccess
   public BundleBox build() {
     final SdkModel sdkModel = effectiveModel(mySdkModel);
 
-    BundleBox box = new BundleBox(sdkModel, mySdkFilter, myWithNoneItem ? myNoneItemName : null, myWithNoneItem ? myNoneItemImage : null);
+    BundleBox box = new BundleBox(sdkModel,
+        mySdkFilter,
+        myWithNoneItem ? myNoneItemName : LocalizeValue.empty(),
+        myWithNoneItem ? myNoneItemImage : null
+    );
 
     if (myUIDisposable != null) {
       sdkModel.addListener(new SdkModel.Listener() {

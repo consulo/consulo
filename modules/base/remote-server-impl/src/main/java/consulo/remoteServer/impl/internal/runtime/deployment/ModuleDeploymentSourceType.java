@@ -34,7 +34,6 @@ public class ModuleDeploymentSourceType extends DeploymentSourceType<ModuleDeplo
     super("module");
   }
 
-  
   @Override
   public ModuleDeploymentSource load(Element tag, Project project) {
     return new ModuleDeploymentSourceImpl(ReadAction.compute(() -> ModuleUtilCore.createPointer(project, tag.getAttributeValue(NAME_ATTRIBUTE))));
