@@ -38,6 +38,7 @@ import consulo.ui.image.Image;
 import consulo.virtualFileSystem.VFileProperty;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.archive.ArchiveFileSystem;
+import consulo.virtualFileSystem.archive.ArchiveVfsUtil;
 import jakarta.inject.Inject;
 
 /**
@@ -74,7 +75,13 @@ public class PsiDirectoryIconDescriptorUpdater implements IconDescriptorUpdater 
             Image symbolIcon;
             if (virtualFile.getFileSystem() instanceof ArchiveFileSystem) {
                 if (virtualFile.getParent() == null) {
-                    symbolIcon = PlatformIconGroup.filetypesArchive();
+                    VirtualFile archiveLocal = ArchiveVfsUtil.getVirtualFileForArchive(virtualFile);
+                    if (archiveLocal != null) {
+                        symbolIcon = archiveLocal.getFileType().getIcon();
+                    }
+                    else {
+                        symbolIcon = PlatformIconGroup.filetypesArchive();
+                    }
                 }
                 else {
                     PsiPackage psiPackage = myPsiPackageManager.findAnyPackage(virtualFile);

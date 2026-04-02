@@ -40,7 +40,6 @@ public class ZipFileSystemImpl extends ArchiveFileSystemViaArchiveFile implement
     return super.isCorrectFileType(local) || Comparing.equal(local.getExtension(), "jar");
   }
 
-  
   @Override
   public ArchiveFile createArchiveFile(String filePath) throws IOException {
     return new ZipArchiveFile(filePath);
