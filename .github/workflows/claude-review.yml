@@ -1,28 +1,222 @@
-name: Claude PR Review
+name: Claude Review On Command
 
 on:
-    pull_request:
-        types: [opened]
+    issue_comment:
+        types: [created]
+
+permissions:
+    contents: read
+    pull-requests: write
+    issues: write
 
 jobs:
-    review:
+    claude-review:
+        if: >
+            github.event.issue.pull_request &&
+            github.actor == 'vistall' &&
+            startsWith(github.event.comment.body, '/claude-review')
         runs-on: ubuntu-latest
-        permissions:
-            contents: read
-            pull-requests: write
-            id-token: write
+
         steps:
-            -   name: Checkout repository
-                uses: actions/checkout@v6
+            -   name: Install jq
+                run: sudo apt-get update && sudo apt-get install -y jq
+
+            -   name: Read PR metadata
+                id: pr
+                env:
+                    GH_TOKEN: ${{ github.token }}
+                    REPO: ${{ github.repository }}
+                    PR_NUMBER: ${{ github.event.issue.number }}
+                run: |
+                    gh pr view "$PR_NUMBER" --repo "$REPO" \
+                      --json number,title,body,url,baseRefName,headRefName,headRefOid,headRepository,files \
+                      > pr.json
+
+                    echo "number=$(jq -r '.number' pr.json)" >> "$GITHUB_OUTPUT"
+                    echo "title<<EOF" >> "$GITHUB_OUTPUT"
+                    jq -r '.title' pr.json >> "$GITHUB_OUTPUT"
+                    echo "EOF" >> "$GITHUB_OUTPUT"
+
+                    echo "body<<EOF" >> "$GITHUB_OUTPUT"
+                    jq -r '.body // ""' pr.json >> "$GITHUB_OUTPUT"
+                    echo "EOF" >> "$GITHUB_OUTPUT"
+
+                    echo "url=$(jq -r '.url' pr.json)" >> "$GITHUB_OUTPUT"
+                    echo "base_ref=$(jq -r '.baseRefName' pr.json)" >> "$GITHUB_OUTPUT"
+                    echo "head_ref=$(jq -r '.headRefName' pr.json)" >> "$GITHUB_OUTPUT"
+                    echo "head_sha=$(jq -r '.headRefOid' pr.json)" >> "$GITHUB_OUTPUT"
+                    echo "head_repo=$(jq -r '.headRepository.owner.login + "/" + .headRepository.name' pr.json)" >> "$GITHUB_OUTPUT"
+
+            -   name: Checkout PR HEAD
+                uses: actions/checkout@v4
                 with:
+                    repository: ${{ steps.pr.outputs.head_repo }}
+                    ref: ${{ steps.pr.outputs.head_sha }}
                     fetch-depth: 1
 
-            -   name: PR Review with Progress Tracking
+            -   name: Get diff and changed files
+                env:
+                    GH_TOKEN: ${{ github.token }}
+                    REPO: ${{ github.repository }}
+                    PR_NUMBER: ${{ github.event.issue.number }}
+                run: |
+                    gh pr diff "$PR_NUMBER" --repo "$REPO" > pr.diff
+
+                    jq -r '.files[].path' pr.json > changed_files.txt
+
+                    mkdir -p review_payload/files
+                    while IFS= read -r file; do
+                      if [ -f "$file" ]; then
+                        mkdir -p "review_payload/files/$(dirname "$file")"
+                        cp "$file" "review_payload/files/$file"
+                      fi
+                    done < changed_files.txt
+
+            -   name: Build Claude prompt
+                run: |
+                    cat > claude_prompt.txt <<'PROMPT'
+                    You are reviewing a GitHub pull request for consulo/consulo.
+
+                    Hard rules:
+                    - Review only.
+                    - Do NOT build the project.
+                    - Do NOT run tests.
+                    - Do NOT execute scripts, gradle, maven, java, node, docker, git hooks, or any project command.
+                    - Do NOT modify files.
+                    - Use only the checked out source files and the unified diff as reading material.
+                    - Only create inline findings for lines that are part of the PR diff.
+                    - If a concern is outside the diff, put it only in the summary.
+                    - Prefer real bugs/regressions over style nits.
+                    - Be conservative: do not invent problems if evidence is weak.
+
+                    Review priorities:
+                    1. correctness / bugs
+                    2. regressions
+                    3. API/behavior compatibility
+                    4. nullability / edge cases
+                    5. concurrency / threading
+                    6. performance traps
+                    7. security issues
+                    8. missing tests worth calling out
+
+                    Output format:
+                    Return ONLY valid JSON with this exact shape:
+
+                    {
+                      "summary_markdown": "short markdown summary for the PR conversation tab",
+                      "inline_comments": [
+                        {
+                          "path": "relative/path/File.java",
+                          "line": 123,
+                          "severity": "critical|major|minor",
+                          "body": "GitHub review comment text"
+                        }
+                      ]
+                    }
+
+                    Rules for inline_comments:
+                    - path must exactly match a changed file path
+                    - line must be a line on the RIGHT side of the diff
+                    - keep comments concise and actionable
+                    - maximum 15 inline comments
+                    - if there are no valid inline comments, return an empty array
+                    - do not wrap JSON in markdown fences
+                    PROMPT
+
+                    {
+                      echo
+                      echo "PR title: ${{ steps.pr.outputs.title }}"
+                      echo "PR URL: ${{ steps.pr.outputs.url }}"
+                      echo "Base branch: ${{ steps.pr.outputs.base_ref }}"
+                      echo "Head: ${{ steps.pr.outputs.head_repo }} @ ${{ steps.pr.outputs.head_ref }}"
+                      echo
+                      echo "PR body:"
+                      printf '%s\n' '${{ steps.pr.outputs.body }}'
+                      echo
+                      echo "Changed files:"
+                      cat changed_files.txt
+                      echo
+                      echo "Unified diff:"
+                      cat pr.diff
+                    } >> claude_prompt.txt
+
+            -   name: Run Claude
+                id: claude
                 uses: anthropics/claude-code-action@v1
                 with:
                     anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+                    prompt_file: claude_prompt.txt
 
-                    prompt: "/review-pr REPO: ${{ github.repository }} PR_NUMBER: ${{ github.event.pull_request.number }}"
-                    claude_args: |
-                        --allowedTools "mcp__github_inline_comment__create_inline_comment"
-                        --model "claude-opus-4-6"
+            -   name: Extract Claude JSON
+                env:
+                    CLAUDE_OUTPUT: ${{ steps.claude.outputs.response }}
+                run: |
+                    printf '%s' "$CLAUDE_OUTPUT" > claude_raw.txt
+
+                    python3 - <<'PY'
+                    import json, re, sys
+
+                    raw = open("claude_raw.txt", "r", encoding="utf-8").read().strip()
+
+                    # Try raw JSON first
+                    try:
+                        data = json.loads(raw)
+                    except Exception:
+                        # Fallback: extract first JSON object
+                        m = re.search(r'\{.*\}', raw, re.S)
+                        if not m:
+                            print("Could not parse Claude output as JSON", file=sys.stderr)
+                            print(raw[:4000], file=sys.stderr)
+                            sys.exit(1)
+                        data = json.loads(m.group(0))
+
+                    if "summary_markdown" not in data:
+                        data["summary_markdown"] = "Claude review completed, but no summary was returned."
+
+                    if "inline_comments" not in data or not isinstance(data["inline_comments"], list):
+                        data["inline_comments"] = []
+
+                    with open("claude_review.json", "w", encoding="utf-8") as f:
+                        json.dump(data, f, ensure_ascii=False, indent=2)
+                    PY
+
+                    cat claude_review.json
+
+            -   name: Post inline review comments
+                env:
+                    GH_TOKEN: ${{ github.token }}
+                    REPO: ${{ github.repository }}
+                    PR_NUMBER: ${{ github.event.issue.number }}
+                run: |
+                    jq -c '.inline_comments[]?' claude_review.json | while IFS= read -r row; do
+                      path=$(printf '%s' "$row" | jq -r '.path')
+                      line=$(printf '%s' "$row" | jq -r '.line')
+                      severity=$(printf '%s' "$row" | jq -r '.severity')
+                      body=$(printf '%s' "$row" | jq -r '.body')
+
+                      comment_body="**${severity^^}**"$'\n\n'"$body"
+
+                      gh api \
+                        --method POST \
+                        -H "Accept: application/vnd.github+json" \
+                        "/repos/$REPO/pulls/$PR_NUMBER/comments" \
+                        -f body="$comment_body" \
+                        -f path="$path" \
+                        -F line="$line" \
+                        -f side="RIGHT" \
+                      || echo "Skipping invalid inline comment for $path:$line"
+                    done
+
+            -   name: Post summary comment
+                env:
+                    GH_TOKEN: ${{ github.token }}
+                    REPO: ${{ github.repository }}
+                    PR_NUMBER: ${{ github.event.issue.number }}
+                run: |
+                    jq -r '.summary_markdown' claude_review.json > summary.md
+
+                    gh api \
+                      --method POST \
+                      -H "Accept: application/vnd.github+json" \
+                      "/repos/$REPO/issues/$PR_NUMBER/comments" \
+                      -f body="$(cat summary.md)"
