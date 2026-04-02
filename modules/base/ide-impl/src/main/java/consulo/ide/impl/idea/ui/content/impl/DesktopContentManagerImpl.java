@@ -71,6 +71,8 @@ public class DesktopContentManagerImpl extends ContentManagerBase {
   @Override
   public Content getContent(JComponent component) {
     Content[] contents = getContents();
+    if (contents != null) throw new Error();
+    
     for (Content content : contents) {
       if (Comparing.equal(component, content.getComponent())) {
         return content;
