@@ -17,8 +17,10 @@ package consulo.ide.impl.idea.usages.impl;
 
 import consulo.colorScheme.EditorColorsScheme;
 import consulo.document.util.TextRange;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.navigation.ItemPresentation;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.DarculaColors;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.awt.FontUtil;
@@ -29,6 +31,7 @@ import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.util.TextAttributesUtil;
 import consulo.ui.style.StyleManager;
 import consulo.usage.*;
+import consulo.usage.localize.UsageLocalize;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.status.FileStatus;
 
@@ -62,12 +65,15 @@ class UsageViewTreeCellRenderer extends ColoredTreeCellRenderer {
 
   @Override
   public void customizeCellRenderer(JTree tree, Object value, boolean selected, boolean expanded, boolean leaf, int row, boolean hasFocus) {
+    if (myView.isDisposed()) {
+      return;
+    }
+
     boolean showAsReadOnly = false;
-    if (value instanceof Node && value != tree.getModel().getRoot()) {
-      Node node = (Node)value;
+    if (value instanceof Node node && value != tree.getModel().getRoot()) {
       if (!node.isValid()) {
         append(
-          UsageViewBundle.message("node.invalid") + " ",
+          LocalizeValue.join(UsageLocalize.nodeInvalid(), LocalizeValue.space()),
           StyleManager.get().getCurrentStyle().isDark() ? ourInvalidAttributesDarcula : ourInvalidAttributes
         );
       }
@@ -76,12 +82,10 @@ class UsageViewTreeCellRenderer extends ColoredTreeCellRenderer {
       }
     }
 
-    if (value instanceof DefaultMutableTreeNode) {
-      DefaultMutableTreeNode treeNode = (DefaultMutableTreeNode)value;
+    if (value instanceof DefaultMutableTreeNode treeNode) {
       Object userObject = treeNode.getUserObject();
 
-      if (userObject instanceof UsageTarget) {
-        UsageTarget usageTarget = (UsageTarget)userObject;
+      if (userObject instanceof UsageTarget usageTarget) {
         if (!usageTarget.isValid()) {
           if (!getCharSequence(false).toString().contains(UsageViewBundle.message("node.invalid"))) {
             append(UsageViewBundle.message("node.invalid"), ourInvalidAttributes);
@@ -92,15 +96,13 @@ class UsageViewTreeCellRenderer extends ColoredTreeCellRenderer {
         ItemPresentation presentation = usageTarget.getPresentation();
         LOG.assertTrue(presentation != null);
         if (showAsReadOnly) {
-          append(UsageViewBundle.message("node.readonly") + " ", ourReadOnlyAttributes);
+          append(LocalizeValue.join(UsageLocalize.nodeReadonly(), LocalizeValue.space()), ourReadOnlyAttributes);
         }
         String text = presentation.getPresentableText();
         append(text == null ? "" : text, SimpleTextAttributes.REGULAR_ATTRIBUTES);
         setIcon(presentation.getIcon());
       }
-      else if (treeNode instanceof GroupNode) {
-        GroupNode node = (GroupNode)treeNode;
-
+      else if (treeNode instanceof GroupNode node) {
         if (node.isRoot()) {
           append(StringUtil.capitalize(myPresentation.getUsagesWord()), patchAttrs(node, SimpleTextAttributes.REGULAR_BOLD_ATTRIBUTES));
         }
@@ -111,14 +113,15 @@ class UsageViewTreeCellRenderer extends ColoredTreeCellRenderer {
 
         int count = node.getRecursiveUsageCount();
         SimpleTextAttributes attributes = patchAttrs(node, ourNumberOfUsagesAttribute);
-        append(FontUtil.spaceAndThinSpace() + StringUtil.pluralize(count + " " + myPresentation.getUsagesWord(), count),
-               SimpleTextAttributes.GRAYED_ATTRIBUTES.derive(attributes.getStyle(), null, null, null));
+        append(
+          LocalizeValue.join(LocalizeValue.of(FontUtil.spaceAndThinSpace()), UsageLocalize.usageViewCounter(count)),
+          SimpleTextAttributes.GRAYED_ATTRIBUTES.derive(attributes.getStyle(), null, null, null)
+        );
       }
-      else if (treeNode instanceof UsageNode) {
-        UsageNode node = (UsageNode)treeNode;
+      else if (treeNode instanceof UsageNode node) {
         setIcon(node.getUsage().getPresentation().getIcon());
         if (showAsReadOnly) {
-          append(UsageViewBundle.message("node.readonly") + " ", patchAttrs(node, ourReadOnlyAttributes));
+          append(LocalizeValue.join(UsageLocalize.nodeReadonly(), LocalizeValue.space()), patchAttrs(node, ourReadOnlyAttributes));
         }
 
         if (node.isValid()) {
@@ -145,41 +148,38 @@ class UsageViewTreeCellRenderer extends ColoredTreeCellRenderer {
 
   // computes the node text regardless of the node visibility
   
+  @RequiredUIAccess
   String getPlainTextForNode(Object value) {
     boolean showAsReadOnly = false;
     StringBuilder result = new StringBuilder();
-    if (value instanceof Node) {
-      Node node = (Node)value;
+    if (value instanceof Node node) {
       if (!node.isValid()) {
-        result.append(UsageViewBundle.message("node.invalid")).append(" ");
+        result.append(UsageLocalize.nodeInvalid()).append(" ");
       }
       if (myPresentation.isShowReadOnlyStatusAsRed() && node.isReadOnly()) {
         showAsReadOnly = true;
       }
     }
 
-    if (value instanceof DefaultMutableTreeNode) {
-      DefaultMutableTreeNode treeNode = (DefaultMutableTreeNode)value;
+    if (value instanceof DefaultMutableTreeNode treeNode) {
       Object userObject = treeNode.getUserObject();
 
-      if (userObject instanceof UsageTarget) {
-        UsageTarget usageTarget = (UsageTarget)userObject;
+      if (userObject instanceof UsageTarget usageTarget) {
         if (usageTarget.isValid()) {
           ItemPresentation presentation = usageTarget.getPresentation();
+
           LOG.assertTrue(presentation != null);
           if (showAsReadOnly) {
-            result.append(UsageViewBundle.message("node.readonly")).append(" ");
+            result.append(UsageLocalize.nodeReadonly()).append(" ");
           }
           String text = presentation.getPresentableText();
           result.append(text == null ? "" : text);
         }
         else {
-          result.append(UsageViewBundle.message("node.invalid"));
+          result.append(UsageLocalize.nodeInvalid());
         }
       }
-      else if (treeNode instanceof GroupNode) {
-        GroupNode node = (GroupNode)treeNode;
-
+      else if (treeNode instanceof GroupNode node) {
         if (node.isRoot()) {
           result.append(StringUtil.capitalize(myPresentation.getUsagesWord()));
         }
@@ -188,13 +188,11 @@ class UsageViewTreeCellRenderer extends ColoredTreeCellRenderer {
         }
 
         int count = node.getRecursiveUsageCount();
-        result.append(" (").append(StringUtil.pluralize(count + " " + myPresentation.getUsagesWord(), count)).append(")");
+        result.append(" (").append(UsageLocalize.usageViewCounter(count)).append(")");
       }
-      else if (treeNode instanceof UsageNode) {
-        UsageNode node = (UsageNode)treeNode;
-
+      else if (treeNode instanceof UsageNode node) {
         if (showAsReadOnly) {
-          result.append(UsageViewBundle.message("node.readonly")).append(" ");
+          result.append(UsageLocalize.nodeReadonly()).append(" ");
         }
 
         if (node.isValid()) {
@@ -204,8 +202,8 @@ class UsageViewTreeCellRenderer extends ColoredTreeCellRenderer {
           }
         }
       }
-      else if (userObject instanceof String) {
-        result.append((String)userObject);
+      else if (userObject instanceof String userString) {
+        result.append(userString);
       }
       else {
         result.append(userObject == null ? "" : userObject.toString());
@@ -223,7 +221,6 @@ class UsageViewTreeCellRenderer extends ColoredTreeCellRenderer {
     AFTER_VISIBLE_RECT
   }
 
-  
   RowLocation isRowVisible(int row, Rectangle visibleRect) {
     Dimension pref;
     if (cachedPreferredSize == null) {
@@ -249,8 +246,8 @@ class UsageViewTreeCellRenderer extends ColoredTreeCellRenderer {
     if (node.isExcluded()) {
       original = new SimpleTextAttributes(original.getStyle() | SimpleTextAttributes.STYLE_STRIKEOUT, original.getFgColor(), original.getWaveColor());
     }
-    if (node instanceof GroupNode) {
-      UsageGroup group = ((GroupNode)node).getGroup();
+    if (node instanceof GroupNode groupNode) {
+      UsageGroup group = groupNode.getGroup();
       FileStatus fileStatus = group != null ? group.getFileStatus() : null;
       if (fileStatus != null && fileStatus != FileStatus.NOT_CHANGED) {
         original = new SimpleTextAttributes(original.getStyle(), TargetAWT.to(fileStatus.getColor()), original.getWaveColor());
@@ -265,12 +262,8 @@ class UsageViewTreeCellRenderer extends ColoredTreeCellRenderer {
   }
 
   static String getTooltipFromPresentation(Object value) {
-    if (value instanceof DefaultMutableTreeNode) {
-      DefaultMutableTreeNode treeNode = (DefaultMutableTreeNode)value;
-      if (treeNode instanceof UsageNode) {
-        UsageNode node = (UsageNode)treeNode;
-        return node.getUsage().getPresentation().getTooltipText();
-      }
+    if (value instanceof DefaultMutableTreeNode treeNode && treeNode instanceof UsageNode node) {
+      return node.getUsage().getPresentation().getTooltipText();
     }
     return null;
   }

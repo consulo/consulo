@@ -99,25 +99,18 @@ public interface UsageView extends Disposable {
         boolean checkReadOnlyStatus
     );
 
-    
     UsageViewPresentation getPresentation();
 
-    
     Set<Usage> getExcludedUsages();
 
-    
     Set<Usage> getSelectedUsages();
 
-    
     Set<Usage> getUsages();
 
-    
     List<Usage> getSortedUsages();
 
-    
     JComponent getComponent();
 
-    
     default JComponent getPreferredFocusableComponent() {
         return getComponent();
     }
@@ -149,6 +142,5 @@ public interface UsageView extends Disposable {
     @RequiredUIAccess
     void select();
 
-    
     Project getProject();
 }

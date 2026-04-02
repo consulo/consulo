@@ -66,7 +66,6 @@ public class UsageViewPresentation {
         myTabText = tabText;
     }
 
-    
     public String getScopeText() {
         return myScopeText;
     }
@@ -80,7 +79,6 @@ public class UsageViewPresentation {
         myScopeText = scopeText;
     }
 
-    
     public String getContextText() {
         return myContextText;
     }
@@ -138,7 +136,6 @@ public class UsageViewPresentation {
         myShowCancelButton = showCancelButton;
     }
 
-    
     public String getNonCodeUsagesString() {
         return myNonCodeUsagesString;
     }
@@ -152,7 +149,6 @@ public class UsageViewPresentation {
         myNonCodeUsagesString = nonCodeUsagesString;
     }
 
-    
     public String getCodeUsagesString() {
         return myCodeUsagesString;
     }
@@ -182,7 +178,6 @@ public class UsageViewPresentation {
         myCodeUsages = codeUsages;
     }
 
-    
     public String getUsagesWord() {
         return myUsagesWord;
     }
@@ -238,7 +233,6 @@ public class UsageViewPresentation {
         return myDynamicCodeUsagesString;
     }
 
-    
     public String getUsagesInGeneratedCodeString() {
         return myUsagesInGeneratedCodeString;
     }

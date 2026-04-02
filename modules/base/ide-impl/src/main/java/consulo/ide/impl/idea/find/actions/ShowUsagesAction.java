@@ -931,7 +931,6 @@ public class ShowUsagesAction extends AnAction implements PopupAction {
         return "<html><nobr>" + s + "</nobr></html>";
     }
 
-    
     private static String suggestSecondInvocation(
         FindUsagesOptions options,
         FindUsagesHandler handler,
