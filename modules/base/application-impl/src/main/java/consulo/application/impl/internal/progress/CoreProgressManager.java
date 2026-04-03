@@ -219,10 +219,10 @@ public class CoreProgressManager extends ProgressManager implements ProgressMana
     }
 
     @Override
-    public <T> T runProcess(Supplier<T> process, ProgressIndicator progress) throws ProcessCanceledException {
+    public <T extends @Nullable Object> T runProcess(Supplier<T> process, ProgressIndicator progress) throws ProcessCanceledException {
         SimpleReference<T> ref = new SimpleReference<>();
         runProcess(() -> ref.set(process.get()), progress);
-        return ref.get();
+        return ref.getIfInitialized();
     }
 
     @Override
@@ -568,7 +568,7 @@ public class CoreProgressManager extends ProgressManager implements ProgressMana
 
     @Override
     public boolean runProcessWithProgressSynchronously(Task task) {
-        SimpleReference<Throwable> exceptionRef = new SimpleReference<>();
+        SimpleReference<@Nullable Throwable> exceptionRef = new SimpleReference<>();
         Runnable taskContainer = () -> {
             try {
                 startTask(task, getProgressIndicator(), null);

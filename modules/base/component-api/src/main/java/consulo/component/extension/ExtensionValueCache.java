@@ -15,6 +15,7 @@
  */
 package consulo.component.extension;
 
+import consulo.annotation.ReviewAfterIssueFix;
 import consulo.util.lang.ref.SimpleReference;
 import org.jspecify.annotations.Nullable;
 
@@ -26,13 +27,14 @@ import java.util.function.Supplier;
  */
 public class ExtensionValueCache<E> implements Supplier<E> {
     private final ExtensionPoint<E> myExtensionPoint;
-    private final SimpleReference<E> myValueRef;
+    private final SimpleReference<@Nullable E> myValueRef;
 
     private final long myCachedModificationCount;
 
+    @ReviewAfterIssueFix(value = "github.com/uber/NullAway/issues/1504", todo = "Remove explicit casts")
     public ExtensionValueCache(ExtensionPoint<E> extensionPoint, @Nullable E definition) {
         myExtensionPoint = extensionPoint;
-        myValueRef = new SimpleReference<>(definition);
+        myValueRef = new SimpleReference<@Nullable E>( definition);
 
         myCachedModificationCount = extensionPoint.getModificationCount();
     }

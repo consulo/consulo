@@ -1,6 +1,7 @@
 // Copyright 2000-2024 JetBrains s.r.o. and contributors. Use of this source code is governed by the Apache 2.0 license.
 package consulo.application.util.diff;
 
+import consulo.annotation.ReviewAfterIssueFix;
 import consulo.application.internal.DiffConfig;
 import consulo.application.util.Enumerator;
 import consulo.application.util.LineTokenizer;
@@ -35,7 +36,7 @@ public final class Diff {
         int startShift = getStartShift(objects1, objects2, strategy);
         int endCut = getEndCut(objects1, objects2, startShift, strategy);
 
-        SimpleReference<Change> changeRef = doBuildChangesFast(objects1.length, objects2.length, startShift, endCut);
+        SimpleReference<@Nullable Change> changeRef = doBuildChangesFast(objects1.length, objects2.length, startShift, endCut);
         if (changeRef != null) {
             return changeRef.get();
         }
@@ -51,7 +52,7 @@ public final class Diff {
         int startShift = getStartShift(array1, array2);
         int endCut = getEndCut(array1, array2, startShift);
 
-        SimpleReference<Change> changeRef = doBuildChangesFast(array1.length, array2.length, startShift, endCut);
+        SimpleReference<@Nullable Change> changeRef = doBuildChangesFast(array1.length, array2.length, startShift, endCut);
         if (changeRef != null) {
             return changeRef.get();
         }
@@ -62,7 +63,8 @@ public final class Diff {
         return doBuildChanges(ints1, ints2, new ChangeBuilder(startShift));
     }
 
-    private static @Nullable SimpleReference<Change> doBuildChangesFast(int length1, int length2, int startShift, int endCut) {
+    @ReviewAfterIssueFix(value = "github.com/uber/NullAway/issues/1504", todo = "Remove explicit casts")
+    private static @Nullable SimpleReference<@Nullable Change> doBuildChangesFast(int length1, int length2, int startShift, int endCut) {
         int trimmedLength1 = length1 - startShift - endCut;
         int trimmedLength2 = length2 - startShift - endCut;
         if (trimmedLength1 != 0 && trimmedLength2 != 0) {
@@ -71,7 +73,7 @@ public final class Diff {
         Change change = trimmedLength1 != 0 || trimmedLength2 != 0
             ? new Change(startShift, startShift, trimmedLength1, trimmedLength2, null)
             : null;
-        return new SimpleReference<>(change);
+        return new SimpleReference<@Nullable Change>(change);
     }
 
     private static @Nullable Change doBuildChanges(int[] ints1, int[] ints2, ChangeBuilder builder)

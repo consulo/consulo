@@ -24,44 +24,21 @@ import org.jspecify.annotations.Nullable;
  */
 @Deprecated
 @DeprecationInfo("Use consulo.util.lang.ref.SimpleReference")
-public class Ref<T> extends SimpleReference<T> {
+public class Ref<T extends @Nullable Object> extends SimpleReference<T> {
   public Ref() {
   }
 
-  public Ref(@Nullable T value) {
+  public Ref(T value) {
     super(value);
   }
 
-  @Override
-  public boolean isNull() {
-    return super.isNull();
+  @SuppressWarnings("deprecation")
+  public static <T> Ref<@Nullable T> create() {
+    return new Ref<>();
   }
 
-  @Override
-  public @Nullable T get() {
-    return super.get();
-  }
-
-  @Override
-  public void set(@Nullable T value) {
-    super.set(value);
-  }
-
-  @Override
-  public boolean setIfNull(@Nullable T value) {
-    return super.setIfNull(value);
-  }
-
-  public static <T> Ref<T> create() {
-    return new Ref<T>();
-  }
-
-  public static <T> Ref<T> create(@Nullable T value) {
-    return new Ref<T>(value);
-  }
-
-  @Override
-  public String toString() {
-    return super.toString();
+  @SuppressWarnings("deprecation")
+  public static <T extends @Nullable Object> Ref<T> create(T value) {
+    return new Ref<>(value);
   }
 }

@@ -98,12 +98,10 @@ public class CommandEvent extends EventObject {
         );
     }
 
-    
     public CommandProcessor getCommandProcessor() {
         return (CommandProcessor)getSource();
     }
 
-    
     public Runnable getCommand() {
         return myCommand;
     }
@@ -127,7 +125,6 @@ public class CommandEvent extends EventObject {
         return myCommandGroupId;
     }
 
-    
     public UndoConfirmationPolicy getUndoConfirmationPolicy() {
         return myUndoConfirmationPolicy;
     }

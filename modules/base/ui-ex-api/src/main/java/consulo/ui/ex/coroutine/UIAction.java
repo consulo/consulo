@@ -49,9 +49,7 @@ public class UIAction<I, O> extends CoroutineStep<I, O> {
     protected @Nullable O execute(@Nullable I input, Continuation<?> continuation) {
         UIAccess uiAccess = Objects.requireNonNull(continuation.getConfiguration(UIAccess.KEY), "UIAccess required");
         SimpleReference<O> ref = new SimpleReference<>();
-        uiAccess.giveAndWait(() -> {
-            ref.set(myFunction.apply(input, continuation));
-        });
-        return ref.get();
+        uiAccess.giveAndWait(() -> ref.set(myFunction.apply(input, continuation)));
+        return ref.getIfInitialized();
     }
 }

@@ -15,24 +15,41 @@
  */
 package consulo.util.lang.ref;
 
+import consulo.annotation.EnsuresNonNullIf;
 import org.jspecify.annotations.Nullable;
 import java.util.function.Supplier;
 
 /**
  * @author ven
+ * @author VISTALL
+ * @author UNV
  */
-public class SimpleReference<T> implements Supplier<T> {
+public class SimpleReference<T extends @Nullable Object> implements Supplier<T> {
+  private boolean myInitialized = false;
   private @Nullable T myValue;
 
   public SimpleReference() {
+    myInitialized = false;
+    myValue = null;
   }
 
-  public SimpleReference(@Nullable T value) {
+  public SimpleReference(T value) {
+    myInitialized = true;
     myValue = value;
   }
 
+  public boolean isInitialized() {
+    return myInitialized;
+  }
+
+  @EnsuresNonNullIf(expression = "get()", result = false)
   public boolean isNull() {
     return myValue == null;
+  }
+
+  @EnsuresNonNullIf(expression = "get()")
+  public boolean isNotNull() {
+    return myValue != null;
   }
 
   @Override
@@ -40,23 +57,36 @@ public class SimpleReference<T> implements Supplier<T> {
     return myValue;
   }
 
-  public void set(@Nullable T value) {
+  @SuppressWarnings("NullAway")
+  public T getIfInitialized() {
+    if (!myInitialized) {
+      throw new IllegalStateException("Reference is not initialized");
+    }
+    // Field myValue before initialization can contain technical null value.
+    // If initialized, myValue nullability is the same as T nullability.
+    // But we cannot describe it to a static validation, so disabling NullAway validation here.
+    return myValue;
+  }
+
+  public void set(T value) {
+    myInitialized = true;
     myValue = value;
   }
 
-  public boolean setIfNull(@Nullable T value) {
+  public boolean setIfNull(T value) {
     if (myValue == null) {
+      myInitialized = true;
       myValue = value;
       return true;
     }
     return false;
   }
 
-  public static <T> SimpleReference<T> create() {
+  public static <T extends @Nullable Object> SimpleReference<T> create() {
     return new SimpleReference<>();
   }
 
-  public static <T> SimpleReference<T> create(@Nullable T value) {
+  public static <T extends @Nullable Object> SimpleReference<T> create(T value) {
     return new SimpleReference<>(value);
   }
 

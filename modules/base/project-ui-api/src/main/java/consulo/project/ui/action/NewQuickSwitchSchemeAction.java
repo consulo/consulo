@@ -78,8 +78,8 @@ public abstract class NewQuickSwitchSchemeAction<T> extends AnAction implements 
         builder.withTitle(getPopupTitle(e));
         builder.withFinishAction(tItem -> changeSchemeTo(tItem.value()));
 
-        if (!defaultValue.isNull()) {
-            builder.withDefaultValue(defaultValue.get());
+        if (!defaultValue.isInitialized()) {
+            builder.withDefaultValue(defaultValue.getIfInitialized());
         }
 
         ListPopup listPopup = JBPopupFactory.getInstance().createListPopup(project, builder.build());
