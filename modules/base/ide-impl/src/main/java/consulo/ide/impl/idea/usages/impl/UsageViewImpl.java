@@ -411,7 +411,6 @@ public class UsageViewImpl implements UsageViewEx {
         };
     }
 
-    
     UsageViewSettings getUsageViewSettings() {
         return UsageViewSettings.getInstance();
     }
@@ -652,7 +651,6 @@ public class UsageViewImpl implements UsageViewEx {
         }
     }
 
-    
     private static UsageFilteringRule[] getActiveFilteringRules(Project project) {
         List<UsageFilteringRule> list = new ArrayList<>();
         project.getApplication().getExtensionPoint(UsageFilteringRuleProvider.class)
@@ -660,7 +658,6 @@ public class UsageViewImpl implements UsageViewEx {
         return list.toArray(UsageFilteringRule.EMPTY_ARRAY);
     }
 
-    
     private static UsageGroupingRule[] getActiveGroupingRules(Project project, UsageViewSettings usageViewSettings) {
         List<UsageGroupingRule> list = new ArrayList<>();
         project.getApplication().getExtensionPoint(UsageGroupingRuleProvider.class)
@@ -739,7 +736,6 @@ public class UsageViewImpl implements UsageViewEx {
         );
     }
 
-    
     @RequiredUIAccess
     private JComponent createActionsToolbar() {
         UIAccess.assertIsUIThread();
@@ -760,7 +756,6 @@ public class UsageViewImpl implements UsageViewEx {
         return toUsageViewToolbar(group);
     }
 
-    
     @RequiredUIAccess
     private JComponent toUsageViewToolbar(DefaultActionGroup group) {
         UIAccess.assertIsUIThread();
@@ -802,7 +797,6 @@ public class UsageViewImpl implements UsageViewEx {
         });
     }
 
-    
     @RequiredUIAccess
     protected AnAction[] createActions() {
         UIAccess.assertIsUIThread();
@@ -887,7 +881,6 @@ public class UsageViewImpl implements UsageViewEx {
         return target instanceof ConfigurableUsageTarget;
     }
 
-    
     private AnAction[] createGroupingActions() {
         List<AnAction> list = new ArrayList<>();
         myProject.getApplication().getExtensionPoint(UsageGroupingRuleProvider.class)
@@ -1033,7 +1026,6 @@ public class UsageViewImpl implements UsageViewEx {
         expandTree(1);
     }
 
-    
     @RequiredUIAccess
     DefaultMutableTreeNode getModelRoot() {
         UIAccess.assertIsUIThread();
@@ -1050,7 +1042,6 @@ public class UsageViewImpl implements UsageViewEx {
         }
     }
 
-    
     @Override
     public Project getProject() {
         return myProject;
@@ -1192,7 +1183,6 @@ public class UsageViewImpl implements UsageViewEx {
         }
     }
 
-    
     @Override
     public CompletableFuture<?> appendUsagesInBulk(Collection<? extends Usage> usages) {
         CompletableFuture<Object> result = new CompletableFuture<>();
@@ -1311,7 +1301,6 @@ public class UsageViewImpl implements UsageViewEx {
         }
     }
 
-    
     @Override
     @RequiredUIAccess
     public JComponent getPreferredFocusableComponent() {
@@ -1320,7 +1309,6 @@ public class UsageViewImpl implements UsageViewEx {
     }
 
     @Override
-    
     @RequiredUIAccess
     public JComponent getComponent() {
         UIAccess.assertIsUIThread();
@@ -1619,8 +1607,7 @@ public class UsageViewImpl implements UsageViewEx {
         LocalizeValue actionText,
         boolean checkReadOnlyStatus
     ) {
-        Runnable runnable =
-            new MyPerformOperationRunnable(processRunnable, commandName, cannotMakeString, checkReadOnlyStatus);
+        Runnable runnable = new MyPerformOperationRunnable(processRunnable, commandName, cannotMakeString, checkReadOnlyStatus);
         addButtonToLowerPane(runnable, actionText);
     }
 
@@ -1635,14 +1622,13 @@ public class UsageViewImpl implements UsageViewEx {
         return true;
     }
 
-    
     @Override
     public UsageViewPresentation getPresentation() {
         return myPresentation;
     }
 
-    @RequiredReadAction
     @Override
+    @RequiredReadAction
     public boolean canPerformReRun() {
         if (myRerunAction != null && myRerunAction.isEnabled()) {
             return allTargetsAreValid();
@@ -1662,7 +1648,6 @@ public class UsageViewImpl implements UsageViewEx {
             || !ReadonlyStatusHandler.getInstance(myProject).ensureFilesWritable(readOnlyUsages).hasReadonlyFiles();
     }
 
-    
     private Set<Usage> getReadOnlyUsages() {
         Set<Usage> result = new HashSet<>();
         Set<Map.Entry<Usage, UsageNode>> usages = myUsageNodes.entrySet();
@@ -1676,7 +1661,6 @@ public class UsageViewImpl implements UsageViewEx {
         return result;
     }
 
-    
     private Set<VirtualFile> getReadOnlyUsagesFiles() {
         Set<Usage> usages = getReadOnlyUsages();
         Set<VirtualFile> result = new HashSet<>();
@@ -1703,7 +1687,6 @@ public class UsageViewImpl implements UsageViewEx {
     }
 
     @Override
-    
     public Set<Usage> getExcludedUsages() {
         Set<Usage> result = new HashSet<>();
         for (Map.Entry<Usage, UsageNode> entry : myUsageNodes.entrySet()) {
@@ -1751,7 +1734,6 @@ public class UsageViewImpl implements UsageViewEx {
     }
 
     @Override
-    
     @RequiredUIAccess
     public Set<Usage> getSelectedUsages() {
         UIAccess.assertIsUIThread();
@@ -1770,13 +1752,11 @@ public class UsageViewImpl implements UsageViewEx {
     }
 
     @Override
-    
     public Set<Usage> getUsages() {
         return myUsageNodes.keySet();
     }
 
     @Override
-    
     public List<Usage> getSortedUsages() {
         List<Usage> usages = new ArrayList<>(getUsages());
         Collections.sort(usages, USAGE_COMPARATOR);
@@ -1961,13 +1941,11 @@ public class UsageViewImpl implements UsageViewEx {
             return mySupport != null ? mySupport.goPreviousOccurence() : null;
         }
 
-        
         @Override
         public String getNextOccurenceActionName() {
             return mySupport != null ? mySupport.getNextOccurenceActionName() : "";
         }
 
-        
         @Override
         public String getPreviousOccurenceActionName() {
             return mySupport != null ? mySupport.getPreviousOccurenceActionName() : "";
@@ -2117,7 +2095,6 @@ public class UsageViewImpl implements UsageViewEx {
     }
 
     private class MyPerformOperationRunnable implements Runnable {
-        
         private final LocalizeValue myCannotMakeString;
         private final Runnable myProcessRunnable;
         
@@ -2202,7 +2179,6 @@ public class UsageViewImpl implements UsageViewEx {
         return myBuilder != null && myBuilder.isVisible(usage);
     }
 
-    
     public UsageTarget[] getTargets() {
         return myTargets;
     }

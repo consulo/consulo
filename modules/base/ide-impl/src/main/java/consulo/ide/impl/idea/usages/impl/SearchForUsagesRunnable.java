@@ -114,7 +114,6 @@ class SearchForUsagesRunnable implements Runnable {
         myUsageViewManager = usageViewManager;
     }
 
-   
     private static String createOptionsHtml(UsageTarget[] searchFor) {
         KeyboardShortcut shortcut = UsageViewUtil.getShowUsagesWithSettingsShortcut(searchFor);
         String shortcutText = "";
@@ -124,7 +123,6 @@ class SearchForUsagesRunnable implements Runnable {
         return "<a href='" + FIND_OPTIONS_HREF_TARGET + "'>" + UsageLocalize.linkDisplayNameFindOptions() + "</a>" + shortcutText;
     }
 
-   
     private static String createSearchInProjectHtml() {
         return "<a href='" + SEARCH_IN_PROJECT_HREF_TARGET + "'>" + UsageLocalize.linkDisplayNameSearchInProject() + "</a>";
     }
@@ -171,11 +169,7 @@ class SearchForUsagesRunnable implements Runnable {
             .notifyByBalloon(ToolWindowId.FIND, info, wrapInHtml(resultLines), PlatformIconGroup.actionsFind(), resultListener);
     }
 
-    private static HyperlinkListener addHrefHandling(
-        final @Nullable HyperlinkListener listener,
-        final String hrefTarget,
-        final Runnable handler
-    ) {
+    private static HyperlinkListener addHrefHandling(@Nullable HyperlinkListener listener, String hrefTarget, Runnable handler) {
         return new HyperlinkAdapter() {
             @Override
             protected void hyperlinkActivated(HyperlinkEvent e) {
@@ -189,12 +183,10 @@ class SearchForUsagesRunnable implements Runnable {
         };
     }
 
-   
     private static String wrapInHtml(List<String> strings) {
         return XmlStringUtil.wrapInHtml(StringUtil.join(strings, "<br>"));
     }
 
-   
     private static LocalizeValue detailedLargeFilesMessage(Collection<VirtualFile> largeFiles) {
         return UsageLocalize.filesAreTooLargeLargeAndCannotBeScanned(
             largeFiles.size(),
@@ -206,17 +198,14 @@ class SearchForUsagesRunnable implements Runnable {
         );
     }
 
-   
     private static String presentableFileInfo(VirtualFile vFile) {
         return getPresentablePath(vFile) + "&nbsp;(" + UsageViewManagerImpl.presentableSize(UsageViewManagerImpl.getFileLength(vFile)) + ")";
     }
 
-   
     private static String getPresentablePath(VirtualFile virtualFile) {
         return "'" + ReadAction.compute(virtualFile::getPresentableUrl) + "'";
     }
 
-   
     private HyperlinkListener createGotToOptionsListener(final UsageTarget[] targets) {
         return new HyperlinkAdapter() {
             @Override
@@ -228,7 +217,6 @@ class SearchForUsagesRunnable implements Runnable {
         };
     }
 
-   
     private HyperlinkListener createSearchInProjectListener() {
         return new HyperlinkAdapter() {
             @Override

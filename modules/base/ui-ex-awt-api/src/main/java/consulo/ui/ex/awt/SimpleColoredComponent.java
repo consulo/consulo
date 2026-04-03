@@ -124,7 +124,6 @@ public class SimpleColoredComponent extends JComponent implements Accessible, Co
     }
 
     @Override
-    
     public ColoredIterator iterator() {
         return new MyIterator();
     }
@@ -264,11 +263,12 @@ public class SimpleColoredComponent extends JComponent implements Accessible, Co
         myFragmentTags.add(tag);
     }
 
-    @Deprecated
     /**
      * fragment width isn't a right name, it is actually a padding
      * @deprecated remove in IDEA 16
-     */ public synchronized void appendFixedTextFragmentWidth(int width) {
+     */
+    @Deprecated
+    public synchronized void appendFixedTextFragmentWidth(int width) {
         appendTextPadding(width);
     }
 
@@ -412,13 +412,11 @@ public class SimpleColoredComponent extends JComponent implements Accessible, Co
     }
 
     @Override
-    
     public Dimension getPreferredSize() {
         return computePreferredSize(false);
     }
 
     @Override
-    
     public Dimension getMinimumSize() {
         return computePreferredSize(false);
     }
@@ -430,7 +428,6 @@ public class SimpleColoredComponent extends JComponent implements Accessible, Co
         return null;
     }
 
-    
     public final synchronized Dimension computePreferredSize(boolean mainTextOnly) {
         // Calculate width
         int width = myIpad.left;
@@ -615,7 +612,6 @@ public class SimpleColoredComponent extends JComponent implements Accessible, Co
         return index < 0 ? null : getFragmentTag(index);
     }
 
-    
     protected JLabel formatToLabel(JLabel label) {
         label.setIcon(TargetAWT.to(myIcon));
 
@@ -650,12 +646,7 @@ public class SimpleColoredComponent extends JComponent implements Accessible, Co
         }
     }
 
-    static void formatLink(
-        StringBuilder builder,
-        String fragment,
-        SimpleTextAttributes attributes,
-        String url
-    ) {
+    static void formatLink(StringBuilder builder, String fragment, SimpleTextAttributes attributes, String url) {
         if (!fragment.isEmpty()) {
             builder.append("<a href=\"").append(StringUtil.replace(url, "\"", "%22")).append("\"");
             formatStyle(builder, attributes);
@@ -919,7 +910,6 @@ public class SimpleColoredComponent extends JComponent implements Accessible, Co
         return (height - metrics.getHeight()) / 2 + metrics.getAscent();
     }
 
-    
     private String logSwingPath() {
         //noinspection HardCodedStringLiteral
         StringBuilder buffer = new StringBuilder("Components hierarchy:\n");
@@ -933,10 +923,9 @@ public class SimpleColoredComponent extends JComponent implements Accessible, Co
     @Override
     
     public CharSequence getCharSequence(boolean mainOnly) {
-        List<String> fragments = mainOnly && myMainTextLastIndex > -1 && myMainTextLastIndex + 1 < myFragments.size() ? myFragments.subList(
-            0,
-            myMainTextLastIndex + 1
-        ) : myFragments;
+        List<String> fragments = mainOnly && 0 <= myMainTextLastIndex && myMainTextLastIndex + 1 < myFragments.size()
+            ? myFragments.subList(0, myMainTextLastIndex + 1)
+            : myFragments;
         return StringUtil.join(fragments, "");
     }
 
@@ -1021,13 +1010,11 @@ public class SimpleColoredComponent extends JComponent implements Accessible, Co
             return myEndOffset;
         }
 
-        
         @Override
         public String getFragment() {
             return myFragments.get(myIndex);
         }
 
-        
         @Override
         public SimpleTextAttributes getTextAttributes() {
             return myAttributes.get(myIndex);

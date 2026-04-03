@@ -200,6 +200,8 @@ usage.type.write:
     text: Value write
 usage.view.cancel.button:
     text: '&Cancel'
+usage.view.counter:
+    text: '{0} {0, choice, 1#result|2#results}'
 usages.n:
     text: '{0,choice, 0#no usages|1#1 usage|2#{0,number} usages} found'
 usages.title:
