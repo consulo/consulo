@@ -40,10 +40,15 @@ public abstract class CommandProcessorEx extends CommandProcessor {
         @Nullable Object groupId,
         UndoConfirmationPolicy undoConfirmationPolicy
     ) {
-        return newCommand()
-            .project(project)
+        StartableCommandBuilder<?, ?> builder = newCommand();
+        if (project != null) {
+            builder = builder.project(project);
+        }
+        if (groupId != null) {
+            builder = builder.groupId(groupId);
+        }
+        return builder
             .name(LocalizeValue.ofNullable(name))
-            .groupId(groupId)
             .undoConfirmationPolicy(undoConfirmationPolicy)
             .start();
     }

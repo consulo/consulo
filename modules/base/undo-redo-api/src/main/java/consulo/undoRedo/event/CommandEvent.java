@@ -16,10 +16,10 @@ public class CommandEvent extends EventObject {
     private final Runnable myCommand;
     private final Project myProject;
     private final LocalizeValue myCommandName;
-    private final Object myCommandGroupId;
+    private final @Nullable Object myCommandGroupId;
     private final UndoConfirmationPolicy myUndoConfirmationPolicy;
     private final boolean myShouldRecordActionForActiveDocument;
-    private final Document myDocument;
+    private final @Nullable Document myDocument;
 
     public CommandEvent(
         CommandProcessor processor,
@@ -34,7 +34,7 @@ public class CommandEvent extends EventObject {
         CommandProcessor processor,
         Runnable command,
         LocalizeValue commandName,
-        Object commandGroupId,
+        @Nullable Object commandGroupId,
         Project project,
         UndoConfirmationPolicy undoConfirmationPolicy
     ) {
@@ -58,11 +58,11 @@ public class CommandEvent extends EventObject {
         CommandProcessor processor,
         Runnable command,
         LocalizeValue commandName,
-        Object commandGroupId,
+        @Nullable Object commandGroupId,
         Project project,
         UndoConfirmationPolicy undoConfirmationPolicy,
         boolean shouldRecordActionForActiveDocument,
-        Document document
+        @Nullable Document document
     ) {
         super(processor);
         myCommand = command;
@@ -80,11 +80,11 @@ public class CommandEvent extends EventObject {
         CommandProcessor processor,
         Runnable command,
         String commandName,
-        Object commandGroupId,
+        @Nullable Object commandGroupId,
         Project project,
         UndoConfirmationPolicy undoConfirmationPolicy,
         boolean shouldRecordActionForActiveDocument,
-        Document document
+        @Nullable Document document
     ) {
         this(
             processor,
@@ -121,7 +121,7 @@ public class CommandEvent extends EventObject {
         return myCommandName.get();
     }
 
-    public Object getCommandGroupId() {
+    public @Nullable Object getCommandGroupId() {
         return myCommandGroupId;
     }
 

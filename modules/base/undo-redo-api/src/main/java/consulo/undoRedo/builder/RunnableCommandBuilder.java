@@ -16,6 +16,8 @@
 package consulo.undoRedo.builder;
 
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.util.lang.function.ThrowableSupplier;
+import org.jspecify.annotations.Nullable;
 
 import java.util.function.Supplier;
 
@@ -27,9 +29,11 @@ public interface RunnableCommandBuilder<R, THIS extends RunnableCommandBuilder<R
     <E extends Exception, PRX extends ThrowableRunnableCommandBuilder<R, E, PRX>>
     PRX canThrow(Class<E> exceptionClass);
 
+    @SuppressWarnings("NullAway")
     default void run(@RequiredUIAccess Runnable runnable) {
         execute(() -> {
             runnable.run();
+            // Technical null. Disabling NullAway checks here
             return null;
         }).checkException();
     }

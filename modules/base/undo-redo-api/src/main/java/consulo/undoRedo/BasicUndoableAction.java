@@ -24,13 +24,13 @@ import consulo.virtualFileSystem.VirtualFile;
 import org.jspecify.annotations.Nullable;
 
 public abstract class BasicUndoableAction implements UndoableAction {
-  private final DocumentReference[] myRefs;
+  private final DocumentReference @Nullable [] myRefs;
 
   public BasicUndoableAction() {
     myRefs = null;
   }
 
-  public BasicUndoableAction(@Nullable DocumentReference... refs) {
+  public BasicUndoableAction(DocumentReference @Nullable ... refs) {
     myRefs = refs;
   }
 
@@ -49,7 +49,7 @@ public abstract class BasicUndoableAction implements UndoableAction {
   }
 
   @Override
-  public DocumentReference[] getAffectedDocuments() {
+  public DocumentReference @Nullable [] getAffectedDocuments() {
     return myRefs;
   }
 

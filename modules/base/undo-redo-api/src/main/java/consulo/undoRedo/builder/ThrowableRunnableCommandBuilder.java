@@ -18,6 +18,7 @@ package consulo.undoRedo.builder;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.lang.function.ThrowableRunnable;
 import consulo.util.lang.function.ThrowableSupplier;
+import org.jspecify.annotations.Nullable;
 
 import java.util.function.Consumer;
 
@@ -25,14 +26,17 @@ import java.util.function.Consumer;
  * @author UNV
  * @since 2024-10-28
  */
-public interface ThrowableRunnableCommandBuilder<R, E extends Throwable, THIS extends ThrowableRunnableCommandBuilder<R, E, THIS>>
+public interface ThrowableRunnableCommandBuilder<R extends @Nullable Object, E extends Throwable, THIS extends ThrowableRunnableCommandBuilder<R, E, THIS>>
     extends ExecutableCommandBuilder<R, THIS> {
 
     Class<E> getExceptionClass();
 
+    @SuppressWarnings("NullAway")
     default void run(@RequiredUIAccess ThrowableRunnable<E> runnable) throws E {
         execute(() -> {
             runnable.run();
+            // This is a technical null. If we're here R and it's nullability has no meaning. We're not returning
+            // any result to the user anyway. But we cannot describe this to static validator, so disabling NullAway here.
             return null;
         });
     }

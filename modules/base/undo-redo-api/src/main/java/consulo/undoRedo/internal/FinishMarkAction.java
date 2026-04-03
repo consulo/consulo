@@ -35,7 +35,7 @@ public class FinishMarkAction extends BasicUndoableAction {
     
     private final StartMarkAction myStartAction;
     private boolean myGlobal = false;
-    private String myCommandName;
+    private @Nullable String myCommandName = null;
     private DocumentReference myReference;
 
     private FinishMarkAction(DocumentReference reference, StartMarkAction action) {
@@ -67,7 +67,7 @@ public class FinishMarkAction extends BasicUndoableAction {
         myCommandName = commandName;
     }
 
-    public String getCommandName() {
+    public @Nullable String getCommandName() {
         return myCommandName;
     }
 
