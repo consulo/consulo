@@ -68,7 +68,7 @@ public class DefaultPredefinedBundlesProvider extends PredefinedBundlesProvider 
 
         List<BundlePath> paths = new ArrayList<>();
         sdkType.collectHomePaths(platform, path -> paths.add(new BundlePath(path, null)));
-        for (String envVar : sdkType.getEnviromentVariables(platform)) {
+        for (String envVar : sdkType.getEnvironmentVariables(platform)) {
             String varValue = platform.os().getEnvironmentVariable(envVar);
             if (!StringUtil.isEmptyOrSpaces(varValue)) {
                 paths.add(new BundlePath(platform.fs().getPath(varValue), envVar));
@@ -113,7 +113,7 @@ public class DefaultPredefinedBundlesProvider extends PredefinedBundlesProvider 
             paths.add(new LegacySDKPath(path, null));
         }
 
-        for (String envVar : sdkType.getEnviromentVariables(platform)) {
+        for (String envVar : sdkType.getEnvironmentVariables(platform)) {
             String varValue = platform.os().getEnvironmentVariable(envVar);
             if (!StringUtil.isEmptyOrSpaces(varValue)) {
                 paths.add(new LegacySDKPath(varValue, envVar));
