@@ -264,42 +264,7 @@ public class DumbServiceImpl extends DumbServiceInternal implements Disposable, 
             LOG.error("No indexing tasks should be created for default project: " + task);
         }
 
-        ModuleManagerInternal moduleManager = (ModuleManagerInternal) ModuleManager.getInstance(myProject);
-        if (!moduleManager.isReady()) {
-            LOG.error("Queue task for not ready project: " + task);
-        }
-
-        if (myApplication.isUnitTestMode() || myApplication.isHeadlessEnvironment() || myApplication.isUnifiedApplication()) {
-            runTaskSynchronously(task);
-        }
-        else {
-            queueAsynchronousTask(task);
-        }
-    }
-
-    private static void runTaskSynchronously(DumbModeTask task) {
-        ProgressIndicator indicator = ProgressManager.getInstance().getProgressIndicator();
-        if (indicator == null) {
-            indicator = new EmptyProgressIndicator();
-        }
-
-        Exception trace = new Exception();
-
-        indicator.pushState();
-        ((CoreProgressManager) ProgressManager.getInstance()).suppressPrioritizing();
-        try {
-            ProgressIndicator finalIndicator = indicator;
-            HeavyProcessLatch.INSTANCE.performOperation(
-                HeavyProcessLatch.Type.Indexing,
-                ProjectLocalize.progressPerformingIndexingTasks().get(),
-                () -> task.performInDumbMode(finalIndicator, trace)
-            );
-        }
-        finally {
-            ((CoreProgressManager) ProgressManager.getInstance()).restorePrioritizing();
-            indicator.popState();
-            Disposer.dispose(task);
-        }
+        queueAsynchronousTask(task);
     }
 
     void queueAsynchronousTask(DumbModeTask task) {

@@ -186,32 +186,20 @@ final class ChangedFilesCollector extends IndexedFilesListener {
       myVfsEventsExecutor.execute(() -> {
         try {
           processFilesInReadActionWithYieldingToWriteAction();
-        }
-        finally {
-          myScheduledVfsEventsWorkers.decrementAndGet();
-        }
-      });
 
-      if (Registry.is("try.starting.dumb.mode.where.many.files.changed")) {
-        Runnable startDumbMode = () -> {
           for (Project project : ProjectManager.getInstance().getOpenProjects()) {
             DumbService dumbService = DumbService.getInstance(project);
             DumbModeTask task = FileBasedIndexProjectHandler.createChangedFilesIndexingTask(project);
 
             if (task != null) {
-              dumbService.queueTask(task);
+                dumbService.queueTask(task);
             }
           }
-        };
-
-        Application app = ApplicationManager.getApplication();
-        if (!app.isHeadlessEnvironment()  /*avoid synchronous ensureUpToDate to prevent deadlock*/ && app.isDispatchThread()) {
-          startDumbMode.run();
         }
-        else {
-          app.invokeLater(startDumbMode, ModalityState.nonModal());
+        finally {
+          myScheduledVfsEventsWorkers.decrementAndGet();
         }
-      }
+      });
     }
   }
 
