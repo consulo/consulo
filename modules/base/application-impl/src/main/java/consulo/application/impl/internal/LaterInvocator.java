@@ -53,7 +53,6 @@ public final class LaterInvocator {
 
   private static final ConcurrentMap<Window, IdeaModalityStateEx> ourWindowModalities = Maps.newConcurrentWeakHashMap();
 
-  
   public static IdeaModalityStateEx modalityStateForWindow(Window window) {
     return ourWindowModalities.computeIfAbsent(window, __ -> {
       synchronized (ourModalityStack) {
@@ -80,12 +79,10 @@ public final class LaterInvocator {
     return invokeLater(runnable, modalityState, expired);
   }
 
-  
   public static AsyncResult<Void> invokeLater(Runnable runnable, ModalityState modalityState) {
     return invokeLater(runnable, modalityState, () -> false);
   }
 
-  
   public static AsyncResult<Void> invokeLater(Runnable runnable, ModalityState modalityState, BooleanSupplier expired) {
     AsyncResult<Void> callback = AsyncResult.undefined();
     invokeLaterWithCallback(runnable, modalityState, expired, callback);
@@ -128,14 +125,13 @@ public final class LaterInvocator {
       }
 
       @Override
-      
       public String toString() {
         return "InvokeAndWait[" + runnable + "]";
       }
     };
     invokeLaterWithCallback(runnable1, modalityState, () -> false, null);
     semaphore.waitFor();
-    if (!exception.isNull()) {
+    if (exception.isNotNull()) {
       Throwable cause = exception.get();
       if (SystemProperties.getBooleanProperty("invoke.later.wrap.error", true)) {
         // wrap everything to keep the current thread stacktrace
@@ -264,14 +260,12 @@ public final class LaterInvocator {
     reincludeSkippedItemsAndRequestFlush();
   }
 
-  
   public static Object [] getCurrentModalEntities() {
     assertIsDispatchThread();
 
     return ArrayUtil.toObjectArray(ourModalEntities);
   }
 
-  
   public static IdeaModalityStateEx getCurrentModalityState() {
     assertIsDispatchThread();
 
@@ -299,7 +293,6 @@ public final class LaterInvocator {
     UIAccess.assertIsUIThread();
   }
 
-  
   private static FlushQueue getRunnableQueue() {
     return ourEdtQueue;
   }
