@@ -26,8 +26,10 @@ import consulo.ide.impl.idea.ui.LightweightHintImpl;
 import consulo.language.editor.hint.HintManager;
 import consulo.language.editor.ui.awt.HintUtil;
 import consulo.language.psi.PsiFile;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.AnAction;
@@ -62,9 +64,7 @@ class FileInEditorProcessor {
   private final PsiFile myFile;
   private AbstractLayoutCodeProcessor myProcessor;
 
-  public FileInEditorProcessor(PsiFile file,
-                               Editor editor,
-                               LayoutCodeOptions runOptions)
+  public FileInEditorProcessor(PsiFile file, Editor editor, LayoutCodeOptions runOptions)
   {
     myFile = file;
     myProject = file.getProject();
@@ -93,17 +93,16 @@ class FileInEditorProcessor {
     if (shouldNotify()) {
       myProcessor.setCollectInfo(true);
       myProcessor.setPostRunnable(()-> {
-          String message = prepareMessage();
+          LocalizeValue message = prepareMessage();
           if (!myEditor.isDisposed() && myEditor.getComponent().isShowing()) {
             HyperlinkListener hyperlinkListener = new HyperlinkAdapter() {
               @Override
+              @RequiredUIAccess
               protected void hyperlinkActivated(HyperlinkEvent e) {
                 AnAction action = ActionManager.getInstance().getAction("ShowReformatFileDialog");
                 DataManager manager = DataManager.getInstance();
-                if (manager != null) {
-                  DataContext context = manager.getDataContext(myEditor.getContentComponent());
-                  action.actionPerformed(AnActionEvent.createFromAnAction(action, null, "", context));
-                }
+                DataContext context = manager.getDataContext(myEditor.getContentComponent());
+                action.actionPerformed(AnActionEvent.createFromAnAction(action, null, "", context));
               }
             };
             showHint(myEditor, message, hyperlinkListener);
@@ -124,7 +123,6 @@ class FileInEditorProcessor {
     return processor;
   }
 
-  
   private AbstractLayoutCodeProcessor mixWithReformatProcessor(@Nullable AbstractLayoutCodeProcessor processor) {
     if (processor != null) {
       if (myProcessSelectedText) {
@@ -145,8 +143,7 @@ class FileInEditorProcessor {
     return processor;
   }
 
-  
-  private String prepareMessage() {
+  private LocalizeValue prepareMessage() {
     StringBuilder builder = new StringBuilder("<html>");
     LayoutCodeInfoCollector notifications = myProcessor.getInfoCollector();
     LOG.assertTrue(notifications != null);
@@ -176,9 +173,9 @@ class FileInEditorProcessor {
         builder.append("No lines changed: no changes since last revision").append("<br>");
       }
 
-      String optimizeImportsNotification = notifications.getOptimizeImportsNotification();
-      if (optimizeImportsNotification != null) {
-        builder.append(StringUtil.capitalize(optimizeImportsNotification)).append("<br>");
+      LocalizeValue optimizeImportsNotification = notifications.getOptimizeImportsNotification();
+      if (optimizeImportsNotification.isNotEmpty()) {
+        builder.append(optimizeImportsNotification).append("<br>");
       }
     }
 
@@ -189,7 +186,7 @@ class FileInEditorProcessor {
             .append("<a href=''>Show</a> reformat dialog: ").append(shortcutText).append("</span>")
             .append("</html>");
 
-    return builder.toString();
+    return LocalizeValue.localizeTODO(builder.toString());
   }
 
   
@@ -202,8 +199,9 @@ class FileInEditorProcessor {
     return firstNotificationLine;
   }
 
-  public static void showHint(Editor editor, String info, @Nullable HyperlinkListener hyperlinkListener) {
-    JComponent component = HintUtil.createInformationLabel(info, hyperlinkListener, null, null);
+  @RequiredUIAccess
+  public static void showHint(Editor editor, LocalizeValue info, @Nullable HyperlinkListener hyperlinkListener) {
+    JComponent component = HintUtil.createInformationLabel(info.get(), hyperlinkListener, null, null);
     LightweightHintImpl hint = new LightweightHintImpl(component);
     HintManagerImpl.getInstanceImpl().showEditorHint(hint, editor, HintManager.UNDER,
                                                      HintManager.HIDE_BY_ANY_KEY |

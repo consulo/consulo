@@ -21,6 +21,7 @@ import consulo.language.ast.IElementType;
 import consulo.language.ast.TokenSet;
 import consulo.language.ast.TokenType;
 import consulo.language.codeStyle.internal.CodeStyleInternalHelper;
+import consulo.localize.LocalizeValue;
 import consulo.undoRedo.CommandProcessor;
 
 import org.jspecify.annotations.Nullable;
@@ -29,10 +30,10 @@ import java.util.Set;
 
 public class FormatterUtil {
     // TODO [VISTALL] change it. make it more localize friendly
-    public static final String REFORMAT_COMMAND_NAME = "Reformat Code";
-    public static final String REFORMAT_BEFORE_COMMIT_COMMAND_NAME = "Reformat Code Before Commit";
+    public static final LocalizeValue REFORMAT_COMMAND_NAME = LocalizeValue.localizeTODO("Reformat Code");
+    public static final LocalizeValue REFORMAT_BEFORE_COMMIT_COMMAND_NAME = LocalizeValue.localizeTODO("Reformat Code Before Commit");
 
-    public static final Set<String> FORMATTER_ACTION_NAMES = Set.of(REFORMAT_COMMAND_NAME, REFORMAT_BEFORE_COMMIT_COMMAND_NAME);
+    public static final Set<LocalizeValue> FORMATTER_ACTION_NAMES = Set.of(REFORMAT_COMMAND_NAME, REFORMAT_BEFORE_COMMIT_COMMAND_NAME);
 
     private FormatterUtil() {
     }
@@ -246,7 +247,7 @@ public class FormatterUtil {
      * @return <code>true</code> explicitly called 'reformat' is in  progress at the moment; <code>false</code> otherwise
      */
     public static boolean isFormatterCalledExplicitly() {
-        String commandName = CommandProcessor.getInstance().getCurrentCommandName();
+        LocalizeValue commandName = CommandProcessor.getInstance().getCurrentCommandNameValue();
         return commandName != null && FORMATTER_ACTION_NAMES.contains(commandName);
     }
 }

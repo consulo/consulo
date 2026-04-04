@@ -13,21 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.impl.idea.codeInsight.actions;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.language.codeStyle.internal.CoreCodeStyleUtil;
-import consulo.language.editor.CodeInsightBundle;
 import consulo.language.editor.localize.CodeInsightLocalize;
 import consulo.language.editor.refactoring.ImportOptimizer;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiFile;
+import consulo.localize.LocalizeValue;
 import consulo.module.Module;
 import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.util.collection.SmartList;
 import consulo.util.lang.EmptyRunnable;
-import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,44 +37,46 @@ import static consulo.ide.impl.idea.codeInsight.actions.OptimizeImportsProcessor
 import static consulo.ide.impl.idea.codeInsight.actions.OptimizeImportsProcessor.NotificationInfo.SOMETHING_CHANGED_WITHOUT_MESSAGE_NOTIFICATION;
 
 public class OptimizeImportsProcessor extends AbstractLayoutCodeProcessor {
-  public static final String COMMAND_NAME = CodeInsightBundle.message("process.optimize.imports");
+  public static final LocalizeValue COMMAND_NAME = CodeInsightLocalize.processOptimizeImports();
   private final List<NotificationInfo> myOptimizerNotifications = new SmartList<>();
 
   public OptimizeImportsProcessor(Project project) {
-    super(project, COMMAND_NAME, CodeInsightLocalize.progressTextOptimizingImports().get(), false);
+    super(project, COMMAND_NAME, CodeInsightLocalize.progressTextOptimizingImports(), false);
   }
 
   public OptimizeImportsProcessor(Project project, Module module) {
-    super(project, module, COMMAND_NAME, CodeInsightLocalize.progressTextOptimizingImports().get(), false);
+    super(project, module, COMMAND_NAME, CodeInsightLocalize.progressTextOptimizingImports(), false);
   }
 
   public OptimizeImportsProcessor(Project project, PsiDirectory directory, boolean includeSubdirs) {
-    super(project, directory, includeSubdirs, CodeInsightLocalize.progressTextOptimizingImports().get(), COMMAND_NAME, false);
+    super(project, directory, includeSubdirs, CodeInsightLocalize.progressTextOptimizingImports(), COMMAND_NAME, false);
   }
 
   public OptimizeImportsProcessor(Project project, PsiDirectory directory, boolean includeSubdirs, boolean processOnlyVcsChangedFiles) {
     super(project, directory, includeSubdirs,
-      CodeInsightLocalize.progressTextOptimizingImports().get(), COMMAND_NAME, processOnlyVcsChangedFiles);
+      CodeInsightLocalize.progressTextOptimizingImports(), COMMAND_NAME, processOnlyVcsChangedFiles);
   }
 
   public OptimizeImportsProcessor(Project project, PsiFile file) {
-    super(project, file, CodeInsightLocalize.progressTextOptimizingImports().get(), COMMAND_NAME, false);
+    super(project, file, CodeInsightLocalize.progressTextOptimizingImports(), COMMAND_NAME, false);
   }
 
+  @RequiredReadAction
   public OptimizeImportsProcessor(Project project, PsiFile[] files, Runnable postRunnable) {
     this(project, files, COMMAND_NAME, postRunnable);
   }
 
-  public OptimizeImportsProcessor(Project project, PsiFile[] files, String commandName, Runnable postRunnable) {
-    super(project, files, CodeInsightLocalize.progressTextOptimizingImports().get(), commandName, postRunnable, false);
+  @RequiredReadAction
+  public OptimizeImportsProcessor(Project project, PsiFile[] files, LocalizeValue commandName, Runnable postRunnable) {
+    super(project, files, CodeInsightLocalize.progressTextOptimizingImports(), commandName, postRunnable, false);
   }
 
   public OptimizeImportsProcessor(AbstractLayoutCodeProcessor processor) {
-    super(processor, COMMAND_NAME, CodeInsightLocalize.progressTextOptimizingImports().get());
+    super(processor, COMMAND_NAME, CodeInsightLocalize.progressTextOptimizingImports());
   }
 
   @Override
-  
+  @RequiredReadAction
   protected FutureTask<Boolean> prepareTask(PsiFile file, boolean processChangedTextOnly) {
     if (DumbService.isDumb(file.getProject())) {
       return new FutureTask<>(EmptyRunnable.INSTANCE, true);
@@ -111,7 +112,7 @@ public class OptimizeImportsProcessor extends AbstractLayoutCodeProcessor {
 
   private void retrieveAndStoreNotificationInfo(Runnable runnable) {
     if (runnable instanceof ImportOptimizer.CollectingInfoRunnable collectingInfoRunnable) {
-      String optimizerMessage = collectingInfoRunnable.getUserNotificationInfo();
+      LocalizeValue optimizerMessage = collectingInfoRunnable.getUserNotificationInfo();
       myOptimizerNotifications.add(optimizerMessage != null ? new NotificationInfo(optimizerMessage) : NOTHING_CHANGED_NOTIFICATION);
     }
     else if (runnable == EmptyRunnable.getInstance()) {
@@ -137,17 +138,19 @@ public class OptimizeImportsProcessor extends AbstractLayoutCodeProcessor {
       }
     }
 
-    collector.setOptimizeImportsNotification(atLeastOneOptimizerChangedSomething ? "imports optimized" : null);
+    collector.setOptimizeImportsNotification(
+        atLeastOneOptimizerChangedSomething ? CodeInsightLocalize.hintTextImportsOptimized() : LocalizeValue.empty()
+    );
   }
 
   static class NotificationInfo {
-    public static final NotificationInfo NOTHING_CHANGED_NOTIFICATION = new NotificationInfo(false, null);
-    public static final NotificationInfo SOMETHING_CHANGED_WITHOUT_MESSAGE_NOTIFICATION = new NotificationInfo(true, null);
+    public static final NotificationInfo NOTHING_CHANGED_NOTIFICATION = new NotificationInfo(false, LocalizeValue.empty());
+    public static final NotificationInfo SOMETHING_CHANGED_WITHOUT_MESSAGE_NOTIFICATION = new NotificationInfo(true, LocalizeValue.empty());
 
     private final boolean mySomethingChanged;
-    private final String myMessage;
+    private final LocalizeValue myMessage;
 
-    NotificationInfo(String message) {
+    NotificationInfo(LocalizeValue message) {
       this(true, message);
     }
 
@@ -155,11 +158,11 @@ public class OptimizeImportsProcessor extends AbstractLayoutCodeProcessor {
       return mySomethingChanged;
     }
 
-    public String getMessage() {
+    public LocalizeValue getMessage() {
       return myMessage;
     }
 
-    private NotificationInfo(boolean isSomethingChanged, @Nullable String message) {
+    private NotificationInfo(boolean isSomethingChanged, LocalizeValue message) {
       mySomethingChanged = isSomethingChanged;
       myMessage = message;
     }

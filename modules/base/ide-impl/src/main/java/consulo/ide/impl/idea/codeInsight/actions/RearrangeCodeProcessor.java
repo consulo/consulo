@@ -45,34 +45,28 @@ public class RearrangeCodeProcessor extends AbstractLayoutCodeProcessor {
     private SelectionModel mySelectionModel;
 
     public RearrangeCodeProcessor(AbstractLayoutCodeProcessor previousProcessor) {
-        super(previousProcessor, COMMAND_NAME.get(), PROGRESS_TEXT.get());
+        super(previousProcessor, COMMAND_NAME, PROGRESS_TEXT);
     }
 
     public RearrangeCodeProcessor(AbstractLayoutCodeProcessor previousProcessor, SelectionModel selectionModel) {
-        super(previousProcessor, COMMAND_NAME.get(), PROGRESS_TEXT.get());
+        super(previousProcessor, COMMAND_NAME, PROGRESS_TEXT);
         mySelectionModel = selectionModel;
     }
 
     public RearrangeCodeProcessor(PsiFile file, SelectionModel selectionModel) {
-        super(file.getProject(), file, PROGRESS_TEXT.get(), COMMAND_NAME.get(), false);
+        super(file.getProject(), file, PROGRESS_TEXT, COMMAND_NAME, false);
         mySelectionModel = selectionModel;
     }
 
     public RearrangeCodeProcessor(PsiFile file) {
-        super(file.getProject(), file, PROGRESS_TEXT.get(), COMMAND_NAME.get(), false);
+        super(file.getProject(), file, PROGRESS_TEXT, COMMAND_NAME, false);
     }
 
     @RequiredReadAction
-    public RearrangeCodeProcessor(
-        Project project,
-        PsiFile[] files,
-        String commandName,
-        @Nullable Runnable postRunnable
-    ) {
-        super(project, files, PROGRESS_TEXT.get(), commandName, postRunnable, false);
+    public RearrangeCodeProcessor(Project project, PsiFile[] files, LocalizeValue commandName, @Nullable Runnable postRunnable) {
+        super(project, files, PROGRESS_TEXT, commandName, postRunnable, false);
     }
 
-    
     @Override
     protected FutureTask<Boolean> prepareTask(PsiFile file, boolean processChangedTextOnly) {
         return new FutureTask<>(() -> {
@@ -103,7 +97,6 @@ public class RearrangeCodeProcessor extends AbstractLayoutCodeProcessor {
         });
     }
 
-    
     private Runnable prepareRearrangeCommand(PsiFile file, Collection<TextRange> ranges) {
         ArrangementEngine engine = ServiceManager.getService(myProject, ArrangementEngine.class);
         return () -> {

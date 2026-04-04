@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.internal.language.editor;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ServiceImpl;
 import consulo.ide.impl.idea.codeInsight.actions.OptimizeImportsProcessor;
 import consulo.ide.impl.idea.codeInsight.actions.RearrangeCodeProcessor;
@@ -24,6 +25,7 @@ import consulo.language.editor.internal.LayoutCodeProcessor;
 import consulo.language.editor.internal.SharedLayoutProcessors;
 import consulo.language.editor.scope.AnalysisScope;
 import consulo.language.psi.PsiFile;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
@@ -44,24 +46,25 @@ public class SharedLayoutProcessorsImpl implements SharedLayoutProcessors {
     }
 
     @Override
-    public LayoutCodeProcessor createOptimizeImportsProcessor(PsiFile[] files, String commandName, Runnable postRunnable) {
+    @RequiredReadAction
+    public LayoutCodeProcessor createOptimizeImportsProcessor(PsiFile[] files, LocalizeValue commandName, Runnable postRunnable) {
         return new OptimizeImportsProcessor(myProject, files, commandName, postRunnable);
     }
 
     @Override
-    public LayoutCodeProcessor createRearrangeCodeProcessor(PsiFile[] files, String commandName, Runnable postRunnable) {
+    @RequiredReadAction
+    public LayoutCodeProcessor createRearrangeCodeProcessor(PsiFile[] files, LocalizeValue commandName, Runnable postRunnable) {
         return new RearrangeCodeProcessor(myProject, files, commandName, postRunnable);
     }
 
     @Override
-    public LayoutCodeProcessor createReformatCodeProcessor(PsiFile[] files, String commandName, Runnable postRunnable) {
+    @RequiredReadAction
+    public LayoutCodeProcessor createReformatCodeProcessor(PsiFile[] files, LocalizeValue commandName, Runnable postRunnable) {
         return new ReformatCodeProcessor(myProject, files, commandName, postRunnable, true);
     }
 
     @Override
     public LayoutCodeProcessor createCodeCleanupProcessor(AnalysisScope scope, @Nullable Runnable postRunnable) {
-        return () -> {
-            GlobalInspectionContextBase.codeCleanup(myProject, scope, postRunnable);
-        };
+        return () -> GlobalInspectionContextBase.codeCleanup(myProject, scope, postRunnable);
     }
 }

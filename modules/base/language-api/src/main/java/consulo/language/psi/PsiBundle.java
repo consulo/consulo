@@ -15,12 +15,18 @@
  */
 package consulo.language.psi;
 
+import consulo.annotation.DeprecationInfo;
+import consulo.annotation.internal.MigratedExtensionsTo;
 import consulo.component.util.localize.AbstractBundle;
+import consulo.language.localize.LanguageLocalize;
 import org.jetbrains.annotations.PropertyKey;
 
 /**
  * @author max
  */
+@Deprecated
+@DeprecationInfo("Use LanguageLocalize")
+@MigratedExtensionsTo(LanguageLocalize.class)
 public class PsiBundle extends AbstractBundle{
   private static final PsiBundle ourInstance = new PsiBundle();
 

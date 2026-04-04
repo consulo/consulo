@@ -27,6 +27,7 @@ import consulo.language.editor.impl.action.BaseCodeInsightAction;
 import consulo.language.editor.localize.CodeInsightLocalize;
 import consulo.language.editor.refactoring.ImportOptimizer;
 import consulo.language.psi.*;
+import consulo.localize.LocalizeValue;
 import consulo.module.Module;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
@@ -35,7 +36,6 @@ import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.awt.DialogWrapper;
-import consulo.util.lang.StringUtil;
 import consulo.versionControlSystem.FormatChangedTextUtil;
 import consulo.virtualFileSystem.ReadonlyStatusHandler;
 import consulo.virtualFileSystem.VirtualFile;
@@ -54,7 +54,6 @@ public class OptimizeImportsAction extends AnAction {
     private static final String NO_IMPORTS_OPTIMIZED = "Unused imports not found";
     private static boolean myProcessVcsChangedFilesInTests;
 
-    
     private final Application myApplication;
 
     @Inject
@@ -66,16 +65,16 @@ public class OptimizeImportsAction extends AnAction {
     }
 
     private void updatePresentation(Presentation presentation, List<ImportOptimizer> importOptimizers) {
-        Set<String> actionNames = new LinkedHashSet<>();
-        Set<String> actionDescriptions = new LinkedHashSet<>();
+        Set<LocalizeValue> actionNames = new LinkedHashSet<>();
+        Set<LocalizeValue> actionDescriptions = new LinkedHashSet<>();
         for (ImportOptimizer importOptimizer : importOptimizers) {
             actionNames.add(importOptimizer.getActionName());
             actionDescriptions.add(importOptimizer.getActionDescription());
         }
 
         if (!actionNames.isEmpty() && !actionDescriptions.isEmpty()) {
-            presentation.setText(StringUtil.join(actionNames, " | "));
-            presentation.setDescription(StringUtil.join(actionDescriptions, " | "));
+            presentation.setTextValue(LocalizeValue.join(" | ", actionNames.toArray(LocalizeValue[]::new)));
+            presentation.setDescriptionValue(LocalizeValue.join(" | ", actionDescriptions.toArray(LocalizeValue[]::new)));
         }
         else {
             presentation.setTextValue(ActionLocalize.notActionOptimizeimportsText());
@@ -84,11 +83,7 @@ public class OptimizeImportsAction extends AnAction {
     }
 
     @RequiredUIAccess
-    private void updatePresentationForFiles(
-        Presentation presentation,
-        boolean enabled,
-        List<PsiFile> files
-    ) {
+    private void updatePresentationForFiles(Presentation presentation, boolean enabled, List<PsiFile> files) {
         presentation.setEnabled(enabled);
 
         List<ImportOptimizer> importOptimizers = new ArrayList<>(files.size());
@@ -139,14 +134,14 @@ public class OptimizeImportsAction extends AnAction {
             Module moduleContext = dataContext.getData(LangDataKeys.MODULE_CONTEXT);
 
             if (projectContext != null || moduleContext != null) {
-                String text;
+                LocalizeValue text;
                 boolean hasChanges;
                 if (moduleContext != null) {
-                    text = CodeInsightLocalize.processScopeModule(moduleContext.getName()).get();
+                    text = CodeInsightLocalize.processScopeModule(moduleContext.getName());
                     hasChanges = FormatChangedTextUtil.hasChanges(moduleContext);
                 }
                 else {
-                    text = CodeInsightLocalize.processScopeProject(projectContext.getPresentableUrl()).get();
+                    text = CodeInsightLocalize.processScopeProject(projectContext.getPresentableUrl());
                     hasChanges = FormatChangedTextUtil.hasChanges(projectContext);
                 }
                 Boolean isProcessVcsChangedText = isProcessVcsChangedText(project, text, hasChanges);
@@ -168,11 +163,11 @@ public class OptimizeImportsAction extends AnAction {
             if (element == null) {
                 return;
             }
-            if (element instanceof PsiDirectoryContainer) {
-                dir = ((PsiDirectoryContainer) element).getDirectories()[0];
+            if (element instanceof PsiDirectoryContainer directoryContainer) {
+                dir = directoryContainer.getDirectories()[0];
             }
-            else if (element instanceof PsiDirectory) {
-                dir = (PsiDirectory) element;
+            else if (element instanceof PsiDirectory directory) {
+                dir = directory;
             }
             else {
                 file = element.getContainingFile();
@@ -186,7 +181,7 @@ public class OptimizeImportsAction extends AnAction {
         boolean processDirectory = false;
         boolean processOnlyVcsChangedFiles = false;
         if (!Application.get().isUnitTestMode() && file == null && dir != null) {
-            String message = CodeInsightLocalize.processScopeDirectory(dir.getName()).get();
+            LocalizeValue message = CodeInsightLocalize.processScopeDirectory(dir.getName());
             OptimizeImportsDialog dialog = new OptimizeImportsDialog(project, message, FormatChangedTextUtil.hasChanges(dir));
             dialog.show();
             if (!dialog.isOK()) {
@@ -207,10 +202,10 @@ public class OptimizeImportsAction extends AnAction {
                 optimizer.setPostRunnable(() -> {
                     LayoutCodeInfoCollector collector = optimizer.getInfoCollector();
                     if (collector != null) {
-                        String info = collector.getOptimizeImportsNotification();
+                        LocalizeValue info = collector.getOptimizeImportsNotification();
                         if (!editor.isDisposed() && editor.getComponent().isShowing()) {
-                            String message = info != null ? info : NO_IMPORTS_OPTIMIZED;
-                            FileInEditorProcessor.showHint(editor, StringUtil.capitalize(message), null);
+                            LocalizeValue message = info.orIfEmpty(CodeInsightLocalize.notificationTextUnusedImportsNotFound());
+                            FileInEditorProcessor.showHint(editor, message, null);
                         }
                     }
                 });
@@ -237,8 +232,7 @@ public class OptimizeImportsAction extends AnAction {
         VirtualFile[] files = dataContext.getData(VirtualFile.KEY_OF_ARRAY);
         List<PsiFile> psiFiles = new ArrayList<>();
 
-        Editor editor =
-            BaseCodeInsightAction.getInjectedEditor(project, dataContext.getData(Editor.KEY), false);
+        Editor editor = BaseCodeInsightAction.getInjectedEditor(project, dataContext.getData(Editor.KEY), false);
         if (editor != null) {
             PsiFile file = PsiDocumentManager.getInstance(project).getPsiFile(editor.getDocument());
             if (file == null || !isOptimizeImportsAvailable(file)) {
@@ -270,8 +264,8 @@ public class OptimizeImportsAction extends AnAction {
         else if (files != null && files.length == 1) {
             // skip. Both directories and single files are supported.
         }
-        else if (dataContext.getData(LangDataKeys.MODULE_CONTEXT) == null
-            && dataContext.getData(PlatformDataKeys.PROJECT_CONTEXT) == null) {
+        else if (!dataContext.hasData(LangDataKeys.MODULE_CONTEXT)
+            && !dataContext.hasData(PlatformDataKeys.PROJECT_CONTEXT)) {
             PsiElement element = dataContext.getData(PsiElement.KEY);
             if (element == null) {
                 updatePresentationForFiles(presentation, false, Collections.emptyList());
@@ -296,7 +290,7 @@ public class OptimizeImportsAction extends AnAction {
     }
 
     @RequiredUIAccess
-    private static Boolean isProcessVcsChangedText(Project project, String text, boolean hasChanges) {
+    private static Boolean isProcessVcsChangedText(Project project, LocalizeValue text, boolean hasChanges) {
         if (Application.get().isUnitTestMode()) {
             return myProcessVcsChangedFilesInTests;
         }
@@ -317,11 +311,11 @@ public class OptimizeImportsAction extends AnAction {
     private static class OptimizeImportsDialog extends DialogWrapper {
         private final boolean myContextHasChanges;
 
-        private final String myText;
+        private final LocalizeValue myText;
         private JCheckBox myOnlyVcsCheckBox;
         private final LastRunReformatCodeOptionsProvider myLastRunOptions;
 
-        OptimizeImportsDialog(Project project, String text, boolean hasChanges) {
+        OptimizeImportsDialog(Project project, LocalizeValue text, boolean hasChanges) {
             super(project, false);
             myText = text;
             myContextHasChanges = hasChanges;
@@ -341,7 +335,7 @@ public class OptimizeImportsAction extends AnAction {
             BoxLayout layout = new BoxLayout(panel, BoxLayout.Y_AXIS);
             panel.setLayout(layout);
 
-            panel.add(new JLabel(myText));
+            panel.add(new JLabel(myText.get()));
             myOnlyVcsCheckBox = new JCheckBox(CodeInsightLocalize.processScopeChangedFiles().get());
             boolean lastRunVcsChangedTextEnabled = myLastRunOptions.getLastTextRangeType() == TextRangeType.VCS_CHANGED_TEXT;
 
