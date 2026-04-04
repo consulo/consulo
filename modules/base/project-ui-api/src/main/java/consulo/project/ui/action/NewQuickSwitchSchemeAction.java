@@ -78,7 +78,7 @@ public abstract class NewQuickSwitchSchemeAction<T> extends AnAction implements 
         builder.withTitle(getPopupTitle(e));
         builder.withFinishAction(tItem -> changeSchemeTo(tItem.value()));
 
-        if (!defaultValue.isNull()) {
+        if (defaultValue.isNotNull()) {
             builder.withDefaultValue(defaultValue.get());
         }
 

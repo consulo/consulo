@@ -15,13 +15,17 @@
  */
 package consulo.util.lang.ref;
 
+import consulo.annotation.EnsuresNonNullIf;
 import org.jspecify.annotations.Nullable;
+
+import java.util.Objects;
 import java.util.function.Supplier;
 
 /**
  * @author ven
+ * @author VISTALL
  */
-public class SimpleReference<T> implements Supplier<T> {
+public class SimpleReference<T> implements Supplier<@Nullable T> {
   private @Nullable T myValue;
 
   public SimpleReference() {
@@ -31,13 +35,23 @@ public class SimpleReference<T> implements Supplier<T> {
     myValue = value;
   }
 
+  @EnsuresNonNullIf(expression = "get()", result = false)
   public boolean isNull() {
     return myValue == null;
+  }
+
+  @EnsuresNonNullIf(expression = "get()")
+  public boolean isNotNull() {
+    return myValue != null;
   }
 
   @Override
   public @Nullable T get() {
     return myValue;
+  }
+
+  public T requiredGet() {
+    return Objects.requireNonNull(myValue);
   }
 
   public void set(@Nullable T value) {

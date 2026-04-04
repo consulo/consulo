@@ -204,13 +204,14 @@ public abstract class JBIterable<E extends @Nullable Object> implements Iterable
   }
 
   public static <E> JBIterable<E> once(Iterator<E> iterator) {
-    return of(SimpleReference.create(iterator)).intercept(iterator1 -> {
-      SimpleReference<Iterator<E>> ref = iterator1.next();
-      Iterator<E> result = ref.get();
-      if (result == null) throw new UnsupportedOperationException();
-      ref.set(null);
-      return result;
-    });
+    return of(SimpleReference.create(iterator))
+        .intercept(refIterator -> {
+          SimpleReference<Iterator<E>> ref = refIterator.next();
+          Iterator<E> result = ref.get();
+          if (result == null) throw new UnsupportedOperationException();
+          ref.set(null);
+          return result;
+        });
   }
 
   /**

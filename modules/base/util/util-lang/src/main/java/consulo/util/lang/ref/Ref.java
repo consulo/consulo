@@ -32,36 +32,13 @@ public class Ref<T> extends SimpleReference<T> {
     super(value);
   }
 
-  @Override
-  public boolean isNull() {
-    return super.isNull();
-  }
-
-  @Override
-  public @Nullable T get() {
-    return super.get();
-  }
-
-  @Override
-  public void set(@Nullable T value) {
-    super.set(value);
-  }
-
-  @Override
-  public boolean setIfNull(@Nullable T value) {
-    return super.setIfNull(value);
-  }
-
+  @SuppressWarnings("deprecation")
   public static <T> Ref<T> create() {
-    return new Ref<T>();
+    return new Ref<>();
   }
 
+  @SuppressWarnings("deprecation")
   public static <T> Ref<T> create(@Nullable T value) {
-    return new Ref<T>(value);
-  }
-
-  @Override
-  public String toString() {
-    return super.toString();
+    return new Ref<>(value);
   }
 }
