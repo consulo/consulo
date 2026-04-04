@@ -1,7 +1,6 @@
 // Copyright 2000-2024 JetBrains s.r.o. and contributors. Use of this source code is governed by the Apache 2.0 license.
 package consulo.application.util.diff;
 
-import consulo.annotation.ReviewAfterIssueFix;
 import consulo.application.internal.DiffConfig;
 import consulo.application.util.Enumerator;
 import consulo.application.util.LineTokenizer;
