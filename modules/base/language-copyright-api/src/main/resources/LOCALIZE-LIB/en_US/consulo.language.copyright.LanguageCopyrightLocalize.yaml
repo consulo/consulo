@@ -163,7 +163,7 @@ settings.copyright.formatting.use.line.comment:
 share.profile.checkbox.title:
     text: Share through VCS
 share.profile.context.help:
-    text: <html>Shared profiles are stored in <code>.idea</code> directory<br>and are available to other team members through VCS.<br><br>When not shared, profiles are stored<br> on the IDE level and are applied to all projects.</html>
+    text: <html>Shared profiles are stored in <code>.consulo</code> directory<br>and are available to other team members through VCS.<br><br>When not shared, profiles are stored<br> on the IDE level and are applied to all projects.</html>
 task.title.prepare.copyright:
     text: Prepare copyright…
 update.copyright.progress.title:

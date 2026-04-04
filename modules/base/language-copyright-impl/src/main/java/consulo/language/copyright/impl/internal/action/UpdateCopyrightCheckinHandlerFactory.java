@@ -18,10 +18,10 @@ package consulo.language.copyright.impl.internal.action;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.document.FileDocumentManager;
+import consulo.language.copyright.localize.LanguageCopyrightLocalize;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiManager;
 import consulo.language.psi.PsiUtilCore;
-import consulo.localize.LocalizeValue;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.versionControlSystem.change.CommitContext;
 import consulo.versionControlSystem.change.CommitExecutor;
@@ -45,14 +45,13 @@ import java.util.function.BiConsumer;
 @ExtensionImpl(id = "copyright", order = "after code-cleanup")
 public class UpdateCopyrightCheckinHandlerFactory extends CheckinHandlerFactory {
     @Override
-    
     public CheckinHandler createHandler(final CheckinProjectPanel panel, CommitContext commitContext) {
         return new CheckinHandler() {
-            @RequiredUIAccess
             @Override
+            @RequiredUIAccess
             public RefreshableOnComponent getBeforeCheckinConfigurationPanel() {
                 return new CheckBoxRefreshableOnComponent(
-                    LocalizeValue.localizeTODO("Update copyright"),
+                    LanguageCopyrightLocalize.beforeCheckinUpdateCopyright(),
                     () -> UpdateCopyrightCheckinHandlerState.getInstance(panel.getProject()).UPDATE_COPYRIGHT,
                     value -> UpdateCopyrightCheckinHandlerState.getInstance(panel.getProject()).UPDATE_COPYRIGHT = value
                 );
