@@ -23,6 +23,7 @@ import consulo.component.ProcessCanceledException;
 import consulo.logging.Logger;
 import consulo.ui.UIAccess;
 import consulo.util.lang.ExceptionUtil;
+import consulo.util.lang.ref.InitializedSimpleReference;
 import consulo.util.lang.ref.SimpleReference;
 import org.jspecify.annotations.Nullable;
 
@@ -33,9 +34,11 @@ import java.util.concurrent.TimeoutException;
 import java.util.function.Supplier;
 
 public class ApplicationUtil {
-  // throws exception if can't grab read action right now
-  public static <T> @Nullable T tryRunReadAction(Supplier<T> computable) throws CannotRunReadActionException {
-    SimpleReference<T> result = new SimpleReference<>();
+  /**
+   * @throws CannotRunReadActionException if can't grab read action right now
+   */
+  public static <T extends @Nullable Object> T tryRunReadAction(Supplier<T> computable) throws CannotRunReadActionException {
+    InitializedSimpleReference<T> result = InitializedSimpleReference.empty();
     tryRunReadAction(() -> result.set(computable.get()));
     return result.get();
   }

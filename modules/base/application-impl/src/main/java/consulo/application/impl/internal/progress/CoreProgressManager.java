@@ -34,9 +34,10 @@ import consulo.util.concurrent.coroutine.step.CodeExecution;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.ExceptionUtil;
 import consulo.util.lang.ObjectUtil;
+import consulo.util.lang.ref.InitializedSimpleReference;
 import consulo.util.lang.ref.SimpleReference;
-import org.jspecify.annotations.Nullable;
 import org.jetbrains.annotations.TestOnly;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.util.*;
@@ -219,8 +220,8 @@ public class CoreProgressManager extends ProgressManager implements ProgressMana
     }
 
     @Override
-    public <T> T runProcess(Supplier<T> process, ProgressIndicator progress) throws ProcessCanceledException {
-        SimpleReference<T> ref = new SimpleReference<>();
+    public <T extends @Nullable Object> T runProcess(Supplier<T> process, ProgressIndicator progress) throws ProcessCanceledException {
+        InitializedSimpleReference<T> ref = InitializedSimpleReference.empty();
         runProcess(() -> ref.set(process.get()), progress);
         return ref.get();
     }
@@ -568,7 +569,7 @@ public class CoreProgressManager extends ProgressManager implements ProgressMana
 
     @Override
     public boolean runProcessWithProgressSynchronously(Task task) {
-        SimpleReference<Throwable> exceptionRef = new SimpleReference<>();
+        SimpleReference<@Nullable Throwable> exceptionRef = new SimpleReference<>();
         Runnable taskContainer = () -> {
             try {
                 startTask(task, getProgressIndicator(), null);

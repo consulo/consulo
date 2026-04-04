@@ -15,24 +15,33 @@
  */
 package consulo.util.lang.ref;
 
+import consulo.annotation.EnsuresNonNullIf;
 import org.jspecify.annotations.Nullable;
 import java.util.function.Supplier;
 
 /**
  * @author ven
+ * @author VISTALL
  */
-public class SimpleReference<T> implements Supplier<T> {
+public class SimpleReference<T> implements Supplier<@Nullable T> {
   private @Nullable T myValue;
 
   public SimpleReference() {
+    myValue = null;
   }
 
   public SimpleReference(@Nullable T value) {
     myValue = value;
   }
 
+  @EnsuresNonNullIf(expression = "get()", result = false)
   public boolean isNull() {
     return myValue == null;
+  }
+
+  @EnsuresNonNullIf(expression = "get()")
+  public boolean isNotNull() {
+    return myValue != null;
   }
 
   @Override

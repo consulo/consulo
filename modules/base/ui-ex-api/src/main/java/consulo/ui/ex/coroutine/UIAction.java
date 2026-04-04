@@ -19,7 +19,7 @@ import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.concurrent.coroutine.Continuation;
 import consulo.util.concurrent.coroutine.CoroutineStep;
-import consulo.util.lang.ref.SimpleReference;
+import consulo.util.lang.ref.InitializedSimpleReference;
 import org.jspecify.annotations.Nullable;
 
 import java.util.Objects;
@@ -48,10 +48,8 @@ public class UIAction<I, O> extends CoroutineStep<I, O> {
     @Override
     protected @Nullable O execute(@Nullable I input, Continuation<?> continuation) {
         UIAccess uiAccess = Objects.requireNonNull(continuation.getConfiguration(UIAccess.KEY), "UIAccess required");
-        SimpleReference<O> ref = new SimpleReference<>();
-        uiAccess.giveAndWait(() -> {
-            ref.set(myFunction.apply(input, continuation));
-        });
+        InitializedSimpleReference<O> ref = InitializedSimpleReference.empty();
+        uiAccess.giveAndWait(() -> ref.set(myFunction.apply(input, continuation)));
         return ref.get();
     }
 }

@@ -26,7 +26,7 @@ import consulo.ui.ex.popup.ListPopup;
 import consulo.ui.ex.popup.SimpleListPopupStepBuilder;
 import consulo.ui.ex.popup.event.JBPopupListener;
 import consulo.ui.ex.popup.event.LightweightWindowEvent;
-import consulo.util.lang.ref.SimpleReference;
+import consulo.util.lang.ref.InitializedSimpleReference;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -60,7 +60,7 @@ public abstract class NewQuickSwitchSchemeAction<T> extends AnAction implements 
 
         Project project = e.getRequiredData(Project.KEY);
 
-        SimpleReference<Item<T>> defaultValue = new SimpleReference<>();
+        InitializedSimpleReference<Item<T>> defaultValue = InitializedSimpleReference.empty();
 
         List<Item<T>> items = new ArrayList<>();
         fill((s, t) -> {
@@ -78,7 +78,7 @@ public abstract class NewQuickSwitchSchemeAction<T> extends AnAction implements 
         builder.withTitle(getPopupTitle(e));
         builder.withFinishAction(tItem -> changeSchemeTo(tItem.value()));
 
-        if (!defaultValue.isNull()) {
+        if (!defaultValue.isInitialized()) {
             builder.withDefaultValue(defaultValue.get());
         }
 
