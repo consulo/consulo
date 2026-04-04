@@ -26,8 +26,6 @@ import java.util.function.Supplier;
 
 /**
  * A computation that needs to be run in background and inside a read action, and canceled whenever a write action is about to occur.
- *
- * @see ProgressIndicatorUtils#scheduleWithWriteActionPriority(ReadTask)
  */
 public abstract class ReadTask {
     /**
@@ -80,7 +78,7 @@ public abstract class ReadTask {
 
         /**
          * @param action code to be executed in Swing thread in default modality state
-         * @see IdeaModalityState#defaultModalityState()
+         * @see ModalityState#nonModal()
          */
         public Continuation(Runnable action) {
             this(action, Application.get().getDefaultModalityState());

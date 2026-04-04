@@ -3,6 +3,7 @@ package consulo.ui.ex.tree;
 
 import consulo.application.util.Queryable;
 import consulo.logging.Logger;
+import consulo.navigation.NavigateOptions;
 import consulo.navigation.NavigationItem;
 import consulo.util.lang.Comparing;
 import consulo.util.lang.ObjectUtil;
@@ -181,17 +182,12 @@ public abstract class TreeNode<T> extends PresentableNodeDescriptor<TreeNode<T>>
   }
 
   @Override
+  public NavigateOptions getNavigateOptions() {
+    return NavigateOptions.CANT_NAVIGATE;
+  }
+
+  @Override
   public void navigate(boolean requestFocus) {
-  }
-
-  @Override
-  public boolean canNavigate() {
-    return false;
-  }
-
-  @Override
-  public boolean canNavigateToSource() {
-    return false;
   }
 
   protected final @Nullable Object getParentValue() {

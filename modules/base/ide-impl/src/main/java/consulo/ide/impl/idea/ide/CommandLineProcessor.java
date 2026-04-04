@@ -19,16 +19,16 @@ import consulo.application.Application;
 import consulo.application.impl.internal.start.CommandLineArgs;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.container.internal.ShowErrorCaller;
-import consulo.project.impl.internal.ProjectImplUtil;
 import consulo.module.content.ProjectRootManager;
 import consulo.navigation.OpenFileDescriptorFactory;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
+import consulo.project.ProjectOpenContext;
 import consulo.project.internal.ProjectOpenProcessor;
 import consulo.project.internal.ProjectOpenProcessors;
+import consulo.project.internal.ProjectOpenService;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.ui.UIAccess;
-import consulo.util.concurrent.AsyncResult;
 import consulo.util.io.FileUtil;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.LocalFileSystem;
@@ -36,6 +36,8 @@ import consulo.virtualFileSystem.VirtualFile;
 import org.jspecify.annotations.Nullable;
 
 import java.io.File;
+import java.nio.file.Path;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * @author yole
@@ -44,12 +46,11 @@ public class CommandLineProcessor {
   private CommandLineProcessor() {
   }
 
-  
-  public static AsyncResult<Project> processExternalCommandLine(CommandLineArgs commandLineArgs,
-                                                                @Nullable String currentDirectory) {
+  public static CompletableFuture<Project> processExternalCommandLine(CommandLineArgs commandLineArgs,
+                                                                      @Nullable String currentDirectory) {
     String file = commandLineArgs.getFile();
     if (file == null) {
-      return AsyncResult.rejected();
+      return CompletableFuture.completedFuture(null);
     }
     int line = commandLineArgs.getLine();
 
@@ -67,27 +68,34 @@ public class CommandLineProcessor {
 
     UIAccess uiAccess = Application.get().getLastUIAccess();
     if (projectFile != null) {
-      return ProjectImplUtil.openAsync(projectFile.getPath(), null, true, uiAccess).doWhenDone(project -> {
-        if (!FileUtil.filesEqual(projectFile, targetFile) && !targetFile.isDirectory()) {
-          VirtualFile virtualFile = LocalFileSystem.getInstance().refreshAndFindFileByIoFile(targetFile);
-          if (virtualFile != null) {
-            openFile(uiAccess, project, virtualFile, line);
-          }
-        }
-      });
+      ProjectOpenContext context = new ProjectOpenContext();
+      context.putUserData(ProjectOpenContext.FORCE_OPEN_IN_NEW_FRAME, true);
+
+      return Application.get().getInstance(ProjectOpenService.class)
+          .openProjectAsync(projectFile.toPath(), uiAccess, context)
+          .whenComplete((project, error) -> {
+            if (error == null && project != null) {
+              if (!FileUtil.filesEqual(projectFile, targetFile) && !targetFile.isDirectory()) {
+                VirtualFile virtualFile = LocalFileSystem.getInstance().refreshAndFindFileByIoFile(targetFile);
+                if (virtualFile != null) {
+                  openFile(uiAccess, project, virtualFile, line);
+                }
+              }
+            }
+          });
     }
     else {
       VirtualFile targetVFile = LocalFileSystem.getInstance().refreshAndFindFileByIoFile(targetFile);
       if (targetVFile == null) {
         ShowErrorCaller.showErrorDialog("Cannot find file", "Cannot find file '" + file + "'", null);
-        return AsyncResult.rejected();
+        return CompletableFuture.completedFuture(null);
       }
 
       Project bestProject = findBestProject(targetVFile);
 
       openFile(uiAccess, bestProject, targetVFile, line);
 
-      return AsyncResult.resolved(bestProject);
+      return CompletableFuture.completedFuture(bestProject);
     }
   }
 
@@ -102,7 +110,6 @@ public class CommandLineProcessor {
     });
   }
 
-  
   private static Project findBestProject(VirtualFile virtualFile) {
     Project[] projects = ProjectManager.getInstance().getOpenProjects();
     for (Project aProject : projects) {

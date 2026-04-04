@@ -6,7 +6,6 @@ import consulo.fileEditor.impl.internal.largeFileEditor.search.RangeSearch;
 import consulo.fileEditor.localize.FileEditorLocalize;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
-import consulo.ui.ex.action.ActionUpdateThread;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.image.Image;
@@ -43,11 +42,6 @@ public final class FindFurtherAction extends AnAction implements DumbAware {
     public void update(AnActionEvent e) {
         boolean enabled = myRangeSearch.isButtonFindFurtherEnabled(directionForward);
         e.getPresentation().setEnabled(enabled);
-    }
-
-    @Override
-    public ActionUpdateThread getActionUpdateThread() {
-        return ActionUpdateThread.BGT;
     }
 
     @Override

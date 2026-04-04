@@ -6,6 +6,7 @@ import com.intellij.rt.coverage.data.LineData;
 import com.intellij.rt.coverage.data.ProjectData;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ServiceImpl;
+import consulo.application.ReadAction;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorFactory;
 import consulo.codeEditor.event.EditorFactoryEvent;
@@ -352,13 +353,13 @@ public class CoverageDataManagerImpl extends CoverageDataManager implements JDOM
                     : new String[]{REPLACE_ACTIVE_SUITES.get(), DO_NOT_APPLY_COLLECTED_COVERAGE.get()};
                 int answer = doNotAskOption.isToBeShown()
                     ? Messages.showDialog(
-                        message.get(),
-                        CodeInsightLocalize.codeCoverage().get(),
-                        options,
-                        1,
-                        UIUtil.getQuestionIcon(),
-                        doNotAskOption
-                    )
+                    message.get(),
+                    CodeInsightLocalize.codeCoverage().get(),
+                    options,
+                    1,
+                    UIUtil.getQuestionIcon(),
+                    doNotAskOption
+                )
                     : coverageOptionsProvider.getOptionToReplace();
                 if (answer == DialogWrapper.OK_EXIT_CODE) {
                     chooseSuitesBundle(new CoverageSuitesBundle(suite));
@@ -416,7 +417,7 @@ public class CoverageDataManagerImpl extends CoverageDataManager implements JDOM
         //noinspection ConstantConditions
         CoverageSuite coverageSuite = coverageEnabledConfiguration.getCurrentCoverageSuite();
         if (coverageSuite != null) {
-            ((BaseCoverageSuite)coverageSuite).setConfiguration(configuration);
+            ((BaseCoverageSuite) coverageSuite).setConfiguration(configuration);
             coverageDataManager.coverageGathered(coverageSuite);
         }
     }
@@ -654,17 +655,17 @@ public class CoverageDataManagerImpl extends CoverageDataManager implements JDOM
         CoverageSuite suite = myProject.getApplication().getExtensionPoint(CoverageEngine.class).computeSafeIfAny(
             engine -> coverageRunner.acceptsCoverageEngine(engine)
                 ? engine.createCoverageSuite(
-                    coverageRunner,
-                    name,
-                    fileProvider,
-                    filters,
-                    lastCoverageTimeStamp,
-                    suiteToMergeWith,
-                    collectLineInfo,
-                    tracingEnabled,
-                    false,
-                    myProject
-                )
+                coverageRunner,
+                name,
+                fileProvider,
+                filters,
+                lastCoverageTimeStamp,
+                suiteToMergeWith,
+                collectLineInfo,
+                tracingEnabled,
+                false,
+                myProject
+            )
                 : null
         );
         LOG.assertTrue(suite != null, "Cannot create coverage suite for runner: " + coverageRunner.getPresentableName());
@@ -687,48 +688,50 @@ public class CoverageDataManagerImpl extends CoverageDataManager implements JDOM
             if (editor.getProject() != myProject) {
                 return;
             }
-            PsiFile psiFile = myProject.getApplication().runReadAction(new Supplier<PsiFile>() {
-                @Override
-                public @Nullable PsiFile get() {
-                    if (myProject.isDisposed()) {
-                        return null;
-                    }
+
+            ReadAction.nonBlocking(() -> {
                     PsiDocumentManager documentManager = PsiDocumentManager.getInstance(myProject);
                     Document document = editor.getDocument();
                     return documentManager.getPsiFile(document);
-                }
-            });
-
-            if (psiFile != null && myCurrentSuitesBundle != null && psiFile.isPhysical()) {
-                CoverageEngine engine = myCurrentSuitesBundle.getCoverageEngine();
-                if (!engine.coverageEditorHighlightingApplicableTo(psiFile)) {
-                    return;
-                }
-
-                SrcFileAnnotator annotator = getAnnotator(editor);
-                if (annotator == null) {
-                    annotator = new SrcFileAnnotator(psiFile, editor);
-                }
-
-                SrcFileAnnotator finalAnnotator = annotator;
-
-                synchronized (ANNOTATORS_LOCK) {
-                    myAnnotators.put(editor, finalAnnotator);
-                }
-
-                Runnable request = () -> {
-                    if (myProject.isDisposed()) {
+                })
+                .expireWith(myAlarm)
+                .finishOnUiThread(psiFile -> {
+                    if (psiFile == null) {
                         return;
                     }
-                    if (myCurrentSuitesBundle != null) {
-                        if (engine.acceptedByFilters(psiFile, myCurrentSuitesBundle)) {
-                            finalAnnotator.showCoverageInformation(myCurrentSuitesBundle);
+
+                    if (myCurrentSuitesBundle != null && psiFile.isPhysical()) {
+                        CoverageEngine engine = myCurrentSuitesBundle.getCoverageEngine();
+                        if (!engine.coverageEditorHighlightingApplicableTo(psiFile)) {
+                            return;
                         }
+
+                        SrcFileAnnotator annotator = getAnnotator(editor);
+                        if (annotator == null) {
+                            annotator = new SrcFileAnnotator(psiFile, editor);
+                        }
+
+                        SrcFileAnnotator finalAnnotator = annotator;
+
+                        synchronized (ANNOTATORS_LOCK) {
+                            myAnnotators.put(editor, finalAnnotator);
+                        }
+
+                        Runnable request = () -> {
+                            if (myProject.isDisposed()) {
+                                return;
+                            }
+                            if (myCurrentSuitesBundle != null) {
+                                if (engine.acceptedByFilters(psiFile, myCurrentSuitesBundle)) {
+                                    finalAnnotator.showCoverageInformation(myCurrentSuitesBundle);
+                                }
+                            }
+                        };
+                        myCurrentEditors.put(editor, request);
+                        myAlarm.addRequest(request, 100);
                     }
-                };
-                myCurrentEditors.put(editor, request);
-                myAlarm.addRequest(request, 100);
-            }
+                })
+            .submitDefault();
         }
 
         @Override

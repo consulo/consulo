@@ -26,7 +26,6 @@ import consulo.document.Document;
 import consulo.codeEditor.Editor;
 import consulo.document.util.ProperTextRange;
 import consulo.document.util.TextRange;
-import consulo.language.editor.impl.highlight.VisibleHighlightingPassFactory;
 import consulo.language.editor.impl.internal.daemon.FileStatusMapImpl;
 import consulo.language.psi.PsiFile;
 
@@ -46,7 +45,7 @@ public class GeneralHighlightingPassFactory implements MainHighlightingPassFacto
   public @Nullable TextEditorHighlightingPass createHighlightingPass(PsiFile file, Editor editor) {
     TextRange textRange = FileStatusMapImpl.getDirtyTextRange(editor, Pass.UPDATE_ALL);
     if (textRange == null) return new EmptyPass(file.getProject(), editor.getDocument());
-    ProperTextRange visibleRange = VisibleHighlightingPassFactory.calculateVisibleRange(editor);
+    ProperTextRange visibleRange = HighlightingSessionImpl.getFromCurrentIndicator(file).getVisibleRange();
     return new GeneralHighlightingPass(file.getProject(), file, editor.getDocument(), textRange.getStartOffset(), textRange.getEndOffset(), true, visibleRange, editor, new DefaultHighlightInfoProcessor());
   }
 

@@ -17,9 +17,8 @@ package consulo.component.util;
 
 import consulo.util.concurrent.ActionCallback;
 import consulo.util.concurrent.AsyncResult;
-import consulo.util.lang.Pair;
-
 import org.jspecify.annotations.Nullable;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;

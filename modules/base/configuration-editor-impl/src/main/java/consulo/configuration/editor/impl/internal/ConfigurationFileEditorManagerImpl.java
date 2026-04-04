@@ -24,6 +24,7 @@ import consulo.configuration.editor.impl.internal.file.ConfigurationEditorFileIm
 import consulo.configuration.editor.impl.internal.file.ConfigurationEditorFileSystemImpl;
 import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.FileEditorManager;
+import consulo.fileEditor.FileEditorOpenOptions;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.virtualFileSystem.VirtualFile;
@@ -89,13 +90,16 @@ public class ConfigurationFileEditorManagerImpl implements ConfigurationFileEdit
         VirtualFile file = fs.findFileByPath(path);
 
         if (file instanceof ConfigurationEditorFileImpl configurationEditorFile) {
-            FileEditor[] fileEditors = FileEditorManager.getInstance(project).openFile(configurationEditorFile, true);
+            FileEditorManager.getInstance(project).openFileAsync(file, new FileEditorOpenOptions().withFocusEditor(true))
+                .whenComplete((fileEditorOpenResult, throwable) -> {
+                    if (fileEditorOpenResult != null) {
+                        FileEditor editor = fileEditorOpenResult.getFirstEditor();
 
-            for (FileEditor fileEditor : fileEditors) {
-                if (fileEditor instanceof ConfigurationFileEditor configurationFileEditor) {
-                    configurationFileEditor.onUpdateRequestParams(configurationEditorFile.getRequestedParams());
-                }
-            }
+                        if (editor instanceof ConfigurationFileEditor configurationFileEditor) {
+                            configurationFileEditor.onUpdateRequestParams(configurationEditorFile.getRequestedParams());
+                        }
+                    }
+                });
         }
     }
 }

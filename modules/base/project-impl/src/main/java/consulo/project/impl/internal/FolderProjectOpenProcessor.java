@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2025 consulo.io
+ * Copyright 2013-2026 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,8 +15,10 @@
  */
 package consulo.project.impl.internal;
 
-import consulo.application.WriteAction;
+import consulo.application.concurrent.coroutine.ReadLock;
+import consulo.application.concurrent.coroutine.WriteLock;
 import consulo.content.base.ExcludedContentFolderTypeProvider;
+import consulo.disposer.Disposer;
 import consulo.module.ModifiableModuleModel;
 import consulo.module.Module;
 import consulo.module.ModuleManager;
@@ -30,7 +32,8 @@ import consulo.project.ProjectOpenContext;
 import consulo.project.internal.ProjectOpenProcessor;
 import consulo.ui.UIAccess;
 import consulo.ui.image.Image;
-import consulo.util.concurrent.AsyncResult;
+import consulo.util.concurrent.coroutine.Coroutine;
+import consulo.util.concurrent.coroutine.step.CodeExecution;
 import consulo.util.io.FileUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import org.jspecify.annotations.Nullable;
@@ -45,6 +48,20 @@ import java.io.IOException;
 public class FolderProjectOpenProcessor extends ProjectOpenProcessor {
     public static final FolderProjectOpenProcessor INSTANCE = new FolderProjectOpenProcessor();
 
+    private record ProjectContext(
+        VirtualFile virtualFile,
+        Project project
+    ) {
+    }
+
+    private record FolderSetupContext(
+        VirtualFile virtualFile,
+        Project project,
+        ModifiableModuleModel modifiableModel,
+        ModifiableRootModel modifiableModelForModule
+    ) {
+    }
+
     @Override
     public @Nullable Image getIcon(VirtualFile file) {
         return PlatformIconGroup.nodesFolder();
@@ -55,57 +72,58 @@ public class FolderProjectOpenProcessor extends ProjectOpenProcessor {
         return true;
     }
 
-    // TODO unify with NewOrImportModuleUtil ?
-    
     @Override
-    public AsyncResult<Project> doOpenProjectAsync(VirtualFile virtualFile, UIAccess uiAccess, ProjectOpenContext context) {
-        ProjectManager projectManager = ProjectManager.getInstance();
-        String projectFilePath = virtualFile.getPath();
-        String projectName = virtualFile.getName();
+    public <I> Coroutine<I, VirtualFile> prepareSteps(UIAccess uiAccess,
+                                                       ProjectOpenContext context,
+                                                       Coroutine<I, VirtualFile> in) {
+        return in
+            // Create directories + temp project
+            .then(CodeExecution.<VirtualFile, ProjectContext>apply(virtualFile -> {
+                String projectFilePath = virtualFile.getPath();
+                String projectName = virtualFile.getName();
 
-        AsyncResult<Project> result = AsyncResult.undefined();
-
-        uiAccess.give(() -> {
-            try {
                 File projectDir = new File(projectFilePath);
-                FileUtil.ensureExists(projectDir);
-                File projectConfigDir = new File(projectDir, Project.DIRECTORY_STORE_FOLDER);
-                FileUtil.ensureExists(projectConfigDir);
+                try {
+                    FileUtil.ensureExists(projectDir);
+                    FileUtil.ensureExists(new File(projectDir, Project.DIRECTORY_STORE_FOLDER));
+                }
+                catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
 
+                ProjectManager projectManager = ProjectManager.getInstance();
                 Project newProject = projectManager.createProject(projectName, projectFilePath);
 
                 if (newProject == null) {
-                    result.rejectWithThrowable(new IllegalArgumentException("Project not initialized"));
-                    return;
+                    throw new IllegalStateException("Project not initialized");
                 }
 
-                newProject.save();
+                newProject.save(uiAccess);
 
-                ModifiableModuleModel modifiableModel = ModuleManager.getInstance(newProject).getModifiableModel();
+                return new ProjectContext(virtualFile, newProject);
+            }))
+            // Get modifiable models under read lock
+            .then(ReadLock.<ProjectContext, FolderSetupContext>apply(ctx -> {
+                ModifiableModuleModel modifiableModel = ModuleManager.getInstance(ctx.project()).getModifiableModel();
+                Module newModule = modifiableModel.newModule(ctx.virtualFile().getName(), ctx.virtualFile().getPath());
 
-                Module newModule = modifiableModel.newModule(projectName, virtualFile.getPath());
-
-                ModuleRootManager moduleRootManager = ModuleRootManager.getInstance(newModule);
-                ModifiableRootModel modifiableModelForModule = moduleRootManager.getModifiableModel();
-                ContentEntry contentEntry = modifiableModelForModule.addContentEntry(virtualFile);
-
+                ModifiableRootModel modifiableModelForModule = ModuleRootManager.getInstance(newModule).getModifiableModel();
+                ContentEntry contentEntry = modifiableModelForModule.addContentEntry(ctx.virtualFile());
                 contentEntry.addFolder(contentEntry.getUrl() + "/" + Project.DIRECTORY_STORE_FOLDER, ExcludedContentFolderTypeProvider.getInstance());
 
-                WriteAction.runAndWait(() -> {
-                    modifiableModelForModule.commit();
-
-                    modifiableModel.commit();
-                });
-
-                newProject.save();
-
-                ProjectManager.getInstance().openProjectAsync(newProject, uiAccess).notify(result);
-            }
-            catch (IOException e) {
-                result.rejectWithThrowable(e);
-            }
-        });
-
-        return result;
+                return new FolderSetupContext(ctx.virtualFile(), ctx.project(), modifiableModel, modifiableModelForModule);
+            }))
+            // Commit models under write lock
+            .then(WriteLock.<FolderSetupContext, FolderSetupContext>apply(ctx -> {
+                ctx.modifiableModelForModule().commit();
+                ctx.modifiableModel().commit();
+                return ctx;
+            }))
+            // Save and cleanup, return original VirtualFile
+            .then(CodeExecution.<FolderSetupContext, VirtualFile>apply(ctx -> {
+                ctx.project().save(uiAccess);
+                Disposer.dispose(ctx.project());
+                return ctx.virtualFile();
+            }));
     }
 }

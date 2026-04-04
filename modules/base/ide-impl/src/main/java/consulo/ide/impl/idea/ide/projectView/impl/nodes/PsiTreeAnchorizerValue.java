@@ -21,6 +21,7 @@ import consulo.language.psi.SmartPointerManager;
 import consulo.language.psi.SmartPsiElementPointer;
 import consulo.project.Project;
 import consulo.ui.ex.tree.TreeAnchorizerValue;
+import consulo.util.lang.ref.SimpleReference;
 import org.jspecify.annotations.Nullable;
 
 import java.util.Objects;
@@ -41,7 +42,23 @@ public class PsiTreeAnchorizerValue implements TreeAnchorizerValue<PsiElement> {
 
     @Override
     public @Nullable PsiElement extractValue() {
+        if (myApplication.isReadAccessAllowed()) {
+            //noinspection RequiredXAction
+            return myPointer.getElement();
+        }
+
         return myApplication.runReadAction((Supplier<PsiElement>) myPointer::getElement);
+    }
+
+    @Override
+    public @Nullable PsiElement tryExtractValue() {
+        if (myApplication.isReadAccessAllowed()) {
+            //noinspection RequiredXAction
+            return myPointer.getElement();
+        }
+        SimpleReference<PsiElement> ref = new SimpleReference<>();
+        myApplication.tryRunReadAction(ref, myPointer::getElement);
+        return ref.get();
     }
 
     @Override

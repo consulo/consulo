@@ -36,6 +36,8 @@ node.module.dependencies.text:
     text: Module Dependencies
 parent.file.suffix.column.name:
     text: Parent File Suffix
+scratches:
+    text: Scratches
 select.in.aspects:
     text: Aspects
 select.in.commander:

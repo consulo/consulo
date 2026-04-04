@@ -109,8 +109,8 @@ public class StartBuildEventImpl extends StartEventImpl implements StartBuildEve
     return this;
   }
 
-  //@ApiStatus.Experimental
-  public @Nullable BuildViewSettingsProvider getBuildViewSettingsProvider() {
+  @Nullable //@ApiStatus.Experimental
+  public BuildViewSettingsProvider getBuildViewSettingsProvider() {
     return myBuildViewSettingsProvider;
   }
 

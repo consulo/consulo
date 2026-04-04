@@ -79,7 +79,6 @@ public class StorageUtil {
     }
   }
 
-  
   @RequiredUIAccess
   public static VirtualFile writeFile(@Nullable File file,
                                       Object requestor,
@@ -134,30 +133,6 @@ public class StorageUtil {
     }
   }
 
-  
-  public static CompletableFuture<VirtualFile> writeFileAsync(@Nullable File file,
-                                                              Object requestor,
-                                                              @Nullable VirtualFile fileRef,
-                                                              byte[] content,
-                                                              @Nullable LineSeparator lineSeparatorIfPrependXmlProlog) {
-    return AccessRule.writeAsync(() -> {
-      VirtualFile virtualFile = fileRef;
-
-      if (file != null && (virtualFile == null || !virtualFile.isValid())) {
-        virtualFile = getOrCreateVirtualFile(requestor, file);
-      }
-      assert virtualFile != null;
-      try (OutputStream out = virtualFile.getOutputStream(requestor)) {
-        if (lineSeparatorIfPrependXmlProlog != null) {
-          out.write(XML_PROLOG);
-          out.write(lineSeparatorIfPrependXmlProlog.getSeparatorBytes());
-        }
-        out.write(content);
-      }
-      return virtualFile;
-    });
-  }
-
   public static void deleteFile(File file, Object requestor, @Nullable VirtualFile virtualFile) throws IOException {
     if (virtualFile == null) {
       LOG.warn("Cannot find virtual file " + file.getAbsolutePath());
@@ -192,20 +167,17 @@ public class StorageUtil {
     }
   }
 
-  
   @Deprecated
   public static byte[] writeToBytes(Parent element, String lineSeparator) throws IOException {
     return writeToBytes(element);
   }
 
-  
   public static byte[] writeToBytes(Parent element) throws IOException {
     UnsyncByteArrayOutputStream out = new UnsyncByteArrayOutputStream(256);
     JDOMUtil.writeParent(element, out, "\n");
     return out.toByteArray();
   }
 
-  
   private static VirtualFile getOrCreateVirtualFile(@Nullable Object requestor, File ioFile) throws IOException {
     VirtualFile virtualFile = LocalFileSystem.getInstance().refreshAndFindFileByIoFile(ioFile);
     if (virtualFile == null) {
@@ -220,7 +192,6 @@ public class StorageUtil {
     return virtualFile;
   }
 
-  
   public static LineSeparator detectLineSeparators(CharSequence chars, @Nullable LineSeparator defaultSeparator) {
     for (int i = 0, n = chars.length(); i < n; i++) {
       char c = chars.charAt(i);
@@ -235,7 +206,6 @@ public class StorageUtil {
     return defaultSeparator == null ? Platform.current().os().lineSeparator() : defaultSeparator;
   }
 
-  
   public static byte[] elementToBytes(Parent element, boolean useSystemLineSeparator) throws IOException {
     return writeToBytes(element);
   }

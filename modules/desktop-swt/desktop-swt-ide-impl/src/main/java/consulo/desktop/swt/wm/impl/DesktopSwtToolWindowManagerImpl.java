@@ -15,7 +15,6 @@
  */
 package consulo.desktop.swt.wm.impl;
 
-import consulo.annotation.access.RequiredWriteAction;
 import consulo.annotation.component.ServiceImpl;
 import consulo.component.messagebus.MessageBusConnection;
 import consulo.component.persist.RoamingType;
@@ -24,11 +23,11 @@ import consulo.component.persist.Storage;
 import consulo.component.persist.StoragePathMacros;
 import consulo.dataContext.DataContext;
 import consulo.fileEditor.FileEditorManager;
-import consulo.project.ui.impl.internal.wm.ToolWindowManagerBase;
-import consulo.project.ui.impl.internal.wm.UnifiedToolWindowImpl;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.project.event.ProjectManagerListener;
+import consulo.project.ui.impl.internal.wm.ToolWindowManagerBase;
+import consulo.project.ui.impl.internal.wm.UnifiedToolWindowImpl;
 import consulo.project.ui.internal.IdeFrameEx;
 import consulo.project.ui.internal.WindowInfoImpl;
 import consulo.project.ui.internal.WindowManagerEx;
@@ -111,7 +110,7 @@ public class DesktopSwtToolWindowManagerImpl extends ToolWindowManagerBase {
 
     @RequiredUIAccess
     @Override
-    protected void initializeEditorComponent() {
+    public void initializeEditorComponent() {
         Component editorComponent = getEditorComponent(myProject);
 
         setEditorComponent(editorComponent);
@@ -212,16 +211,10 @@ public class DesktopSwtToolWindowManagerImpl extends ToolWindowManagerBase {
     protected void updateToolWindowsPane() {
     }
 
+    @Override
     @RequiredUIAccess
-    @Override
-    public @Nullable Element getStateFromUI() {
+    protected Element readStateFromUI() {
         return new Element("state");
-    }
-
-    @RequiredWriteAction
-    @Override
-    public @Nullable Element getState(Element element) {
-        return element;
     }
 
     @Override

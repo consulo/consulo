@@ -18,12 +18,14 @@ package consulo.project.ui.view.impl.internal;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.application.dumb.DumbAware;
+import consulo.project.ProjectType;
 import consulo.project.ui.view.internal.ProjectViewEx;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.project.ui.localize.ProjectUILocalize;
 import consulo.project.ui.view.ProjectView;
+import consulo.project.ui.view.localize.ProjectUIViewLocalize;
 import consulo.project.ui.wm.ToolWindowFactory;
 import consulo.project.ui.wm.ToolWindowId;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -36,10 +38,17 @@ import consulo.ui.image.Image;
  */
 @ExtensionImpl
 public class ProjectViewToolWindowFactory implements ToolWindowFactory, DumbAware {
-    
     @Override
     public String getId() {
         return ToolWindowId.PROJECT_VIEW;
+    }
+
+    @RequiredUIAccess
+    @Override
+    public void init(Project project, ToolWindow toolWindow) {
+        if (project.getProjectType() == ProjectType.WELCOME) {
+            toolWindow.setDisplayName(ProjectUIViewLocalize.scratches());
+        }
     }
 
     @RequiredUIAccess
@@ -53,19 +62,16 @@ public class ProjectViewToolWindowFactory implements ToolWindowFactory, DumbAwar
         return true;
     }
 
-    
     @Override
     public ToolWindowAnchor getAnchor() {
         return ToolWindowAnchor.LEFT;
     }
 
-    
     @Override
     public Image getIcon() {
         return PlatformIconGroup.toolwindowsToolwindowproject();
     }
 
-    
     @Override
     public LocalizeValue getDisplayName() {
         return ProjectUILocalize.toolwindowProjectDisplayName();

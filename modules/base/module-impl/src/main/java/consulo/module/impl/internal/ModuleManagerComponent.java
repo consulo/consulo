@@ -47,11 +47,8 @@ import java.util.concurrent.CompletableFuture;
 public class ModuleManagerComponent extends ModuleManagerImpl {
     public static final Logger LOG = Logger.getInstance(ModuleManagerComponent.class);
 
-    
     private final ProgressManager myProgressManager;
-    
     private final MessageBusConnection myConnection;
-    
     private final ComponentBinding myComponentBinding;
 
     @Inject
@@ -72,36 +69,27 @@ public class ModuleManagerComponent extends ModuleManagerImpl {
                 cleanCachedStuff();
             }
         });
-
-        if (project.isDefault()) {
-            myReady = true;
-        }
     }
 
-    
     @Override
     protected ModuleEx createModule(String name, @Nullable String dirUrl, ProgressIndicator progressIndicator) {
         return new ModuleImpl(name, dirUrl, myProject, myComponentBinding);
     }
 
-    
-    public CompletableFuture<?> loadModules(ProgressIndicator indicator) {
+    public void loadModulesNew(ProgressIndicator indicator) {
         StatCollector stat = new StatCollector();
 
         stat.markWith("load modules", () -> loadModules(myModuleModel, indicator, true));
 
         indicator.setIndeterminate(true);
 
-        return AccessRule.writeAsync(() -> {
-            stat.markWith("fire modules add", () -> {
-                for (Module module : myModuleModel.myModules) {
-                    fireModuleAdded(module);
-                }
-            });
-
-            myReady = true;
-            stat.dump("ModulesManager", LOG::info);
+        stat.markWith("fire modules add", () -> {
+            for (Module module : myModuleModel.myModules) {
+                fireModuleAdded(module);
+            }
         });
+
+        stat.dump("ModulesManager", LOG::info);
     }
 
     @Override

@@ -15,32 +15,31 @@
  */
 package consulo.ide.impl.psi.impl.file.impl;
 
-import consulo.annotation.component.ExtensionImpl;
-import consulo.application.dumb.DumbAware;
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.TopicImpl;
 import consulo.component.messagebus.MessageBusConnection;
 import consulo.document.event.FileDocumentManagerListener;
-import consulo.virtualFileSystem.fileType.FileTypeEvent;
-import consulo.virtualFileSystem.fileType.FileTypeListener;
 import consulo.module.content.layer.event.ModuleRootListener;
 import consulo.project.Project;
-import consulo.project.startup.PostStartupActivity;
+import consulo.project.event.ProjectManagerListener;
 import consulo.ui.UIAccess;
+import consulo.virtualFileSystem.fileType.FileTypeEvent;
+import consulo.virtualFileSystem.fileType.FileTypeListener;
 
-@ExtensionImpl(order = "first")
-public class PsiVFSListenerStartUpActivity implements PostStartupActivity, DumbAware {
+@TopicImpl(ComponentScope.APPLICATION)
+public class PsiVFSListenerStartUpActivity implements ProjectManagerListener {
+    @Override
+    public void projectOpened(Project project, UIAccess uiAccess) {
+        PsiVFSListener psiVFSListener = project.getInstance(PsiVFSListener.class);
 
-  @Override
-  public void runActivity(Project project, UIAccess uiAccess) {
-    PsiVFSListener psiVFSListener = project.getInstance(PsiVFSListener.class);
-
-    MessageBusConnection connection = project.getMessageBus().connect();
-    connection.subscribe(ModuleRootListener.class, psiVFSListener.new MyModuleRootListener());
-    connection.subscribe(FileTypeListener.class, new FileTypeListener() {
-      @Override
-      public void fileTypesChanged(FileTypeEvent e) {
-        psiVFSListener.myFileManager.processFileTypesChanged(e.getRemovedFileType() != null);
-      }
-    });
-    connection.subscribe(FileDocumentManagerListener.class, psiVFSListener.new MyFileDocumentManagerAdapter());
-  }
+        MessageBusConnection connection = project.getMessageBus().connect();
+        connection.subscribe(ModuleRootListener.class, psiVFSListener.new MyModuleRootListener());
+        connection.subscribe(FileTypeListener.class, new FileTypeListener() {
+            @Override
+            public void fileTypesChanged(FileTypeEvent e) {
+                psiVFSListener.myFileManager.processFileTypesChanged(e.getRemovedFileType() != null);
+            }
+        });
+        connection.subscribe(FileDocumentManagerListener.class, psiVFSListener.new MyFileDocumentManagerAdapter());
+    }
 }

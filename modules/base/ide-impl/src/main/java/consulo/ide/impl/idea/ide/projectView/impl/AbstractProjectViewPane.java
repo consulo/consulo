@@ -2,7 +2,6 @@
 
 package consulo.ide.impl.idea.ide.projectView.impl;
 
-import consulo.annotation.DeprecationInfo;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
@@ -12,16 +11,19 @@ import consulo.component.extension.ExtensionPointName;
 import consulo.component.util.BusyObject;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
+import consulo.dataContext.DataSink;
+import consulo.dataContext.UiDataProvider;
 import consulo.disposer.Disposer;
 import consulo.ide.impl.idea.ide.dnd.TransferableWrapper;
 import consulo.ide.impl.idea.ide.projectView.BaseProjectTreeBuilder;
 import consulo.ide.impl.idea.ide.projectView.impl.nodes.AbstractModuleNode;
 import consulo.ide.impl.idea.ide.projectView.impl.nodes.AbstractProjectNode;
 import consulo.ide.impl.idea.ide.projectView.impl.nodes.ModuleGroupNode;
+import consulo.ide.impl.idea.openapi.roots.ui.configuration.actions.ModuleDeleteProvider;
 import consulo.ide.impl.idea.ui.tree.project.ProjectFileNode;
-import consulo.util.collection.ArrayUtil;
-import consulo.util.collection.ContainerUtil;
 import consulo.ide.localize.IdeLocalize;
+import consulo.language.editor.CommonDataKeys;
+import consulo.language.editor.LangDataKeys;
 import consulo.language.editor.PlatformDataKeys;
 import consulo.language.editor.PsiCopyPasteManager;
 import consulo.language.editor.refactoring.move.MoveHandler;
@@ -33,16 +35,21 @@ import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.module.Module;
 import consulo.module.content.ModuleRootManager;
+import consulo.module.content.layer.orderEntry.LibraryOrderEntry;
+import consulo.module.content.layer.orderEntry.OrderEntry;
 import consulo.navigation.Navigatable;
 import consulo.project.Project;
 import consulo.project.ui.view.ProjectView;
 import consulo.project.ui.view.ProjectViewPane;
 import consulo.project.ui.view.ProjectViewPaneOptionProvider;
 import consulo.project.ui.view.SelectInTarget;
+import consulo.project.ui.view.internal.node.LibraryGroupElement;
+import consulo.project.ui.view.internal.node.NamedLibraryElement;
 import consulo.project.ui.view.tree.*;
 import consulo.project.ui.wm.ToolWindowId;
 import consulo.project.ui.wm.ToolWindowManager;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.DeleteProvider;
 import consulo.ui.ex.TreeExpander;
 import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.awt.UIUtil;
@@ -51,6 +58,8 @@ import consulo.ui.ex.awt.tree.*;
 import consulo.ui.ex.tree.AbstractTreeStructure;
 import consulo.ui.ex.tree.NodeDescriptor;
 import consulo.ui.ex.util.InvokerSupplier;
+import consulo.util.collection.ArrayUtil;
+import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.JBIterable;
 import consulo.util.concurrent.ActionCallback;
 import consulo.util.concurrent.AsyncResult;
@@ -66,6 +75,7 @@ import consulo.util.xml.serializer.JDOMExternalizerUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import org.jspecify.annotations.Nullable;
 import org.jdom.Element;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.TestOnly;
 
 import javax.swing.*;
@@ -83,11 +93,10 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Predicate;
 
 @ExtensionAPI(ComponentScope.PROJECT)
-public abstract class AbstractProjectViewPane extends UserDataHolderBase implements ProjectViewPane, BusyObject {
+public abstract class AbstractProjectViewPane extends UserDataHolderBase implements ProjectViewPane, UiDataProvider, BusyObject {
     private static final Logger LOG = Logger.getInstance(AbstractProjectViewPane.class);
     public static final ExtensionPointName<AbstractProjectViewPane> EP_NAME = ExtensionPointName.create(AbstractProjectViewPane.class);
 
-    
     protected final Project myProject;
     protected DnDAwareTree myTree;
     protected AbstractTreeStructure myTreeStructure;
@@ -104,6 +113,34 @@ public abstract class AbstractProjectViewPane extends UserDataHolderBase impleme
     private DnDTarget myDropTarget;
     private DnDSource myDragSource;
     private DnDManager myDndManager;
+
+    private final DeleteProvider myDeletePSIElementProvider = new DeleteProvider() {
+        @Override
+        public boolean canDeleteElement(DataContext dataContext) {
+            PsiElement[] elements = getSelectedPSIElements();
+            return consulo.ide.impl.idea.ide.util.DeleteHandler.shouldEnableDeleteAction(elements);
+        }
+
+        @Override
+        public void deleteElement(DataContext dataContext) {
+            List<PsiElement> validElements = new ArrayList<>();
+            for (PsiElement psiElement : getSelectedPSIElements()) {
+                if (psiElement != null && psiElement.isValid()) {
+                    validElements.add(psiElement);
+                }
+            }
+            PsiElement[] elements = PsiUtilCore.toPsiElementArray(validElements);
+            consulo.localHistory.LocalHistoryAction a =
+                consulo.localHistory.LocalHistory.getInstance().startAction(
+                    consulo.ide.localize.IdeLocalize.progressDeleting());
+            try {
+                consulo.ide.impl.idea.ide.util.DeleteHandler.deletePsiElement(elements, myProject);
+            }
+            finally {
+                a.finish();
+            }
+        }
+    };
 
     protected AbstractProjectViewPane(Project project) {
         myProject = project;
@@ -127,11 +164,9 @@ public abstract class AbstractProjectViewPane extends UserDataHolderBase impleme
         Disposer.register(project, this);
     }
 
-    
     public abstract LocalizeValue getTitle();
 
     @Override
-    
     public abstract String getId();
 
     @Override
@@ -159,7 +194,6 @@ public abstract class AbstractProjectViewPane extends UserDataHolderBase impleme
         return false;
     }
 
-    
     protected String getManualOrderOptionText() {
         return IdeLocalize.actionManualOrder().get();
     }
@@ -169,25 +203,21 @@ public abstract class AbstractProjectViewPane extends UserDataHolderBase impleme
      * should return empty array if there is no subViews as in Project/Packages view.
      */
     @Override
-    
     public String[] getSubIds() {
         return ArrayUtil.EMPTY_STRING_ARRAY;
     }
 
     @Override
-    
     public LocalizeValue getPresentableSubIdName(String subId) {
         throw new IllegalStateException("should not call");
     }
 
-    
     public abstract JComponent createComponent();
 
     public JComponent getComponentToFocus() {
         return myTree;
     }
 
-    
     private TreeExpander getTreeExpander() {
         TreeExpander expander = myTreeExpander;
         if (expander == null) {
@@ -197,7 +227,6 @@ public abstract class AbstractProjectViewPane extends UserDataHolderBase impleme
         return expander;
     }
 
-    
     protected TreeExpander createTreeExpander() {
         return new DefaultTreeExpander(this::getTree) {
             private boolean isExpandAllAllowed() {
@@ -264,7 +293,6 @@ public abstract class AbstractProjectViewPane extends UserDataHolderBase impleme
     }
 
     @Override
-    
     public abstract ActionCallback updateFromRoot(boolean restoreExpandedPaths);
 
     public void updateFrom(Object element, boolean forceResort, boolean updateStructure) {
@@ -298,7 +326,7 @@ public abstract class AbstractProjectViewPane extends UserDataHolderBase impleme
                     projectView.changeView(getId(), getSubId());
                 }
             }
-            BaseProjectTreeBuilder builder = (BaseProjectTreeBuilder)getTreeBuilder();
+            BaseProjectTreeBuilder builder = (BaseProjectTreeBuilder) getTreeBuilder();
             if (builder != null) {
                 builder.selectInWidth(
                     toSelect,
@@ -335,7 +363,6 @@ public abstract class AbstractProjectViewPane extends UserDataHolderBase impleme
         }
     }
 
-    
     protected <T extends NodeDescriptor> List<T> getSelectedNodes(Class<T> nodeClass) {
         TreePath[] paths = getSelectionPaths();
         if (paths == null) {
@@ -352,55 +379,206 @@ public abstract class AbstractProjectViewPane extends UserDataHolderBase impleme
     }
 
     @Override
-    public Object getData(Key<?> dataId) {
-        if (PlatformDataKeys.TREE_EXPANDER == dataId) {
-            return getTreeExpander();
-        }
+    public void uiDataSnapshot(DataSink sink) {
+        TreePath[] paths = getSelectionPaths();
+        Object[] selectedUserObjects =
+            paths == null ? ArrayUtil.EMPTY_OBJECT_ARRAY :
+                ArrayUtil.toObjectArray(ContainerUtil.mapNotNull(paths, TreeUtil::getLastUserObject));
+        Object[] singleSelectedPathUserObjects =
+            paths == null || paths.length != 1 ? null :
+                ArrayUtil.toObjectArray(ContainerUtil.map(paths[0].getPath(), TreeUtil::getUserObject));
 
-        Object data = myTreeStructure instanceof AbstractTreeStructureBase treeStructureBase
-            ? treeStructureBase.getDataFromProviders(getSelectedNodes(AbstractTreeNode.class), dataId) : null;
-        if (data != null) {
-            return data;
-        }
-
-        if (Navigatable.KEY_OF_ARRAY == dataId) {
-            TreePath[] paths = getSelectionPaths();
-            if (paths == null) {
-                return null;
-            }
+        if (paths != null) {
             ArrayList<Navigatable> navigatables = new ArrayList<>();
             for (TreePath path : paths) {
                 Object node = path.getLastPathComponent();
                 Object userObject = TreeUtil.getUserObject(node);
-                if (userObject instanceof Navigatable navigatableUserObject) {
-                    navigatables.add(navigatableUserObject);
+                if (userObject instanceof Navigatable o) {
+                    navigatables.add(o);
                 }
-                else if (node instanceof Navigatable navigatableNode) {
-                    navigatables.add(navigatableNode);
+                else if (node instanceof Navigatable o) {
+                    navigatables.add(o);
                 }
             }
-            return navigatables.isEmpty() ? null : navigatables.toArray(Navigatable[]::new);
+            Navigatable[] cachedNavigatables = getCachedNavigatablesFromSelectedPaths(paths);
+            navigatables.addAll(Arrays.asList(cachedNavigatables));
+            sink.set(CommonDataKeys.NAVIGATABLE_ARRAY,
+                navigatables.isEmpty() ? null : navigatables.toArray(Navigatable.EMPTY_ARRAY));
         }
+        uiDataSnapshotForSelection(sink, selectedUserObjects, singleSelectedPathUserObjects);
 
-        if (PlatformDataKeys.SELECTED_ITEMS == dataId) {
-            TreePath[] paths = getSelectionPaths();
-            if (paths == null) {
-                return null;
+        if (myTreeStructure instanceof AbstractTreeStructureBase treeStructure) {
+            List<TreeStructureProvider> providers = treeStructure.getProviders();
+            if (providers != null && !providers.isEmpty()) {
+                //noinspection unchecked
+                List<AbstractTreeNode<?>> selection = (List) ContainerUtil.filterIsInstance(
+                    selectedUserObjects, AbstractTreeNode.class);
+                for (TreeStructureProvider provider : ContainerUtil.reverse(providers)) {
+                    provider.uiDataSnapshot(sink, selection);
+                }
             }
-            return Arrays.stream(paths)
-                .map(TreeUtil::getUserObject)
-                .filter(Objects::nonNull)
-                .toArray();
         }
+        sink.set(CommonDataKeys.PROJECT, myProject);
+        sink.set(PlatformDataKeys.SELECTED_ITEMS, selectedUserObjects);
+        sink.set(PlatformDataKeys.TREE_EXPANDER, getTreeExpander());
+    }
 
+    protected void uiDataSnapshotForSelection(DataSink sink, Object[] selectedUserObjects,
+                                              @Nullable Object[] singleSelectedPathUserObjects) {
+        sink.lazy(CommonDataKeys.PSI_ELEMENT, () -> {
+            PsiElement[] elements = getPsiElements(selectedUserObjects);
+            return elements.length == 1 ? elements[0] : null;
+        });
+        sink.lazy(CommonDataKeys.PSI_ELEMENT_ARRAY, () -> {
+            PsiElement[] elements = getPsiElements(selectedUserObjects);
+            return elements.length > 0 ? elements : null;
+        });
+        sink.lazy(PlatformDataKeys.PROJECT_CONTEXT, () -> {
+            Object selected = getSingleNodeElement(selectedUserObjects);
+            return selected instanceof Project o ? o : null;
+        });
+        sink.lazy(LangDataKeys.MODULE_CONTEXT, () -> {
+            Object selected = getSingleNodeElement(selectedUserObjects);
+            return moduleContext(myProject, selected);
+        });
+        sink.lazy(LangDataKeys.MODULE_CONTEXT_ARRAY, () -> {
+            return getSelectedModules(selectedUserObjects);
+        });
+//        sink.lazy(ProjectView.UNLOADED_MODULES_CONTEXT_KEY, () -> {
+//            return Collections.unmodifiableList(getSelectedUnloadedModules(selectedUserObjects));
+//        });
+        sink.lazy(PlatformDataKeys.DELETE_ELEMENT_PROVIDER, () -> {
+            Module[] modules = getSelectedModules(selectedUserObjects);
+            if (modules != null || !getSelectedUnloadedModules(selectedUserObjects).isEmpty()) {
+                return ModuleDeleteProvider.getInstance();
+            }
+            LibraryOrderEntry orderEntry = getSelectedLibrary(singleSelectedPathUserObjects);
+            if (orderEntry != null) {
+                return new DetachLibraryDeleteProvider(myProject, orderEntry);
+            }
+            return myDeletePSIElementProvider;
+        });
+        sink.lazy(ModuleGroup.ARRAY_DATA_KEY, () -> {
+            List<ModuleGroup> selectedElements = getSelectedValues(selectedUserObjects, ModuleGroup.class);
+            return selectedElements.isEmpty() ? null : selectedElements.toArray(new ModuleGroup[0]);
+        });
+        sink.lazy(LibraryGroupElement.ARRAY_DATA_KEY, () -> {
+            List<LibraryGroupElement> selectedElements = getSelectedValues(selectedUserObjects, LibraryGroupElement.class);
+            return selectedElements.isEmpty() ? null : selectedElements.toArray(new LibraryGroupElement[0]);
+        });
+        sink.lazy(NamedLibraryElement.ARRAY_DATA_KEY, () -> {
+            List<NamedLibraryElement> selectedElements = getSelectedValues(selectedUserObjects, NamedLibraryElement.class);
+            return selectedElements.isEmpty() ? null : selectedElements.toArray(new NamedLibraryElement[0]);
+        });
+    }
+
+    @RequiredReadAction
+    @NotNull
+    private PsiElement[] getPsiElements(Object[] selectedUserObjects) {
+        List<PsiElement> result = new ArrayList<>();
+        for (Object userObject : selectedUserObjects) {
+            ContainerUtil.addAllNotNull(result, getElementsFromNode(userObject));
+        }
+        return PsiUtilCore.toPsiElementArray(result);
+    }
+
+    private static @Nullable Object getSingleNodeElement(@Nullable Object[] selectedUserObjects) {
+        if (selectedUserObjects.length != 1) {
+            return null;
+        }
+        return getNodeElement(selectedUserObjects[0]);
+    }
+
+    private static @Nullable Object getNodeElement(@Nullable Object userObject) {
+        if (userObject instanceof AbstractTreeNode<?> node) {
+            return node.getValue();
+        }
+        if (userObject instanceof NodeDescriptor<?> descriptor) {
+            return descriptor.getElement();
+        }
         return null;
+    }
+
+    static @Nullable Module moduleContext(Project project, @Nullable Object element) {
+        if (element instanceof Module module) {
+            return module.isDisposed() ? null : module;
+        }
+        if (element instanceof PsiDirectory directory) {
+            return ModuleUtilCore.findModuleForFile(directory.getVirtualFile(), project);
+        }
+        if (element instanceof VirtualFile file) {
+            return ModuleUtilCore.findModuleForFile(file, project);
+        }
+        return null;
+    }
+
+    private @Nullable Module[] getSelectedModules(Object[] selectedUserObjects) {
+        List<Module> result = new ArrayList<>();
+        for (Object value : getSelectedValues(selectedUserObjects)) {
+            Module module = moduleContext(myProject, value);
+            if (module != null) {
+                result.add(module);
+            }
+            else if (value instanceof ModuleGroup moduleGroup) {
+                result.addAll(moduleGroup.modulesInGroup(myProject, true));
+            }
+        }
+        return result.isEmpty() ? null : result.toArray(Module.EMPTY_ARRAY);
+    }
+
+    private List<Object> getSelectedUnloadedModules(Object[] selectedUserObjects) {
+        // Consulo does not support unloaded modules
+        return Collections.emptyList();
+    }
+
+    private static @Nullable LibraryOrderEntry getSelectedLibrary(@Nullable Object[] userObjectsPath) {
+        if (userObjectsPath == null) {
+            return null;
+        }
+        // Check if parent node is a library group node and current node is a named library element node
+        Object parentObject = userObjectsPath.length >= 2 ? userObjectsPath[userObjectsPath.length - 2] : null;
+        if (!(parentObject instanceof AbstractTreeNode<?> parentNode
+            && parentNode.getValue() instanceof LibraryGroupElement)) {
+            return null;
+        }
+        Object userObject = userObjectsPath[userObjectsPath.length - 1];
+        if (userObject instanceof AbstractTreeNode<?> node && node.getValue() instanceof NamedLibraryElement namedLib) {
+            OrderEntry orderEntry = namedLib.getOrderEntry();
+            return orderEntry instanceof LibraryOrderEntry libraryEntry ? libraryEntry : null;
+        }
+        return null;
+    }
+
+    protected Navigatable[] getCachedNavigatablesFromSelectedPaths(TreePath[] paths) {
+        return Navigatable.EMPTY_ARRAY;
+    }
+
+    private <T> List<T> getSelectedValues(@Nullable Object[] selectedUserObjects, Class<T> aClass) {
+        return ContainerUtil.filterIsInstance(getSelectedValues(selectedUserObjects), aClass);
+    }
+
+    public final Object[] getSelectedValues(@Nullable Object[] selectedUserObjects) {
+        List<Object> result = new ArrayList<>(selectedUserObjects.length);
+        for (Object userObject : selectedUserObjects) {
+            Object valueFromNode = getValueFromNode(userObject);
+            if (valueFromNode instanceof Object[]) {
+                for (Object value : (Object[]) valueFromNode) {
+                    if (value != null) {
+                        result.add(value);
+                    }
+                }
+            }
+            else if (valueFromNode != null) {
+                result.add(valueFromNode);
+            }
+        }
+        return ArrayUtil.toObjectArray(result);
     }
 
     // used for sorting tabs in the tabbed pane
     public abstract int getWeight();
 
     @Override
-    
     public abstract SelectInTarget createSelectInTarget();
 
     public final TreePath getSelectedPath() {
@@ -427,7 +605,6 @@ public abstract class AbstractProjectViewPane extends UserDataHolderBase impleme
         return elements.length == 1 ? elements[0] : null;
     }
 
-    
     public final PsiElement[] getSelectedPSIElements() {
         TreePath[] paths = getSelectionPaths();
         if (paths == null) {
@@ -440,7 +617,6 @@ public abstract class AbstractProjectViewPane extends UserDataHolderBase impleme
         return PsiUtilCore.toPsiElementArray(result);
     }
 
-    
     public List<PsiElement> getElementsFromNode(@Nullable Object node) {
         Object value = getValueFromNode(node);
         JBIterable<?> it = value instanceof PsiElement || value instanceof VirtualFile
@@ -448,7 +624,7 @@ public abstract class AbstractProjectViewPane extends UserDataHolderBase impleme
             : value instanceof Object[] objArr
             ? JBIterable.of(objArr)
             : value instanceof Iterable
-            ? JBIterable.from((Iterable<?>)value)
+            ? JBIterable.from((Iterable<?>) value)
             : JBIterable.of(TreeUtil.getUserObject(node));
         return it
             .flatten(o -> o instanceof RootsProvider rootsProvider ? rootsProvider.getRoots() : Collections.singleton(o))
@@ -474,7 +650,6 @@ public abstract class AbstractProjectViewPane extends UserDataHolderBase impleme
         return null;
     }
 
-    
     public final Object[] getSelectedElements() {
         TreePath[] paths = getSelectionPaths();
         if (paths == null) {
@@ -581,7 +756,7 @@ public abstract class AbstractProjectViewPane extends UserDataHolderBase impleme
     public <T> T getUserData(Key<T> key) {
         T value = super.getUserData(key);
         if (value == null && key instanceof KeyWithDefaultValue keyWithDefaultValue) {
-            return (T)keyWithDefaultValue.getDefaultValue();
+            return (T) keyWithDefaultValue.getDefaultValue();
         }
         return value;
     }
@@ -612,13 +787,6 @@ public abstract class AbstractProjectViewPane extends UserDataHolderBase impleme
         }
     }
 
-    @Deprecated
-    @DeprecationInfo("Don't use this method. Use project from AnEvent")
-    public Project getProject() {
-        return myProject;
-    }
-
-    
     protected Comparator<NodeDescriptor> createComparator() {
         return new GroupByTypeComparator(ProjectView.getInstance(myProject), getId());
     }
@@ -646,7 +814,6 @@ public abstract class AbstractProjectViewPane extends UserDataHolderBase impleme
         return myTree;
     }
 
-    
     public PsiDirectory[] getSelectedDirectories() {
         List<PsiDirectory> directories = new ArrayList<>();
         for (PsiDirectoryNode node : getSelectedNodes(PsiDirectoryNode.class)) {
@@ -710,7 +877,6 @@ public abstract class AbstractProjectViewPane extends UserDataHolderBase impleme
         return PsiDirectory.EMPTY_ARRAY;
     }
 
-    
     protected PsiDirectory[] getSelectedDirectoriesInAmbiguousCase(Object userObject) {
         if (userObject instanceof AbstractModuleNode moduleNode) {
             Module module = moduleNode.getValue();
@@ -854,7 +1020,7 @@ public abstract class AbstractProjectViewPane extends UserDataHolderBase impleme
             label.setSize(label.getPreferredSize());
             BufferedImage image = UIUtil.createImage(label.getWidth(), label.getHeight(), BufferedImage.TYPE_INT_ARGB);
 
-            Graphics2D g2 = (Graphics2D)image.getGraphics();
+            Graphics2D g2 = (Graphics2D) image.getGraphics();
             g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.7f));
             label.paint(g2);
             g2.dispose();
@@ -880,7 +1046,6 @@ public abstract class AbstractProjectViewPane extends UserDataHolderBase impleme
         return dragAction == DnDConstants.ACTION_MOVE && MoveHandler.canMove(dataContext);
     }
 
-    
     @Override
     public AsyncResult<Void> getReady(Object requestor) {
         if (myTreeBuilder == null) {
@@ -898,7 +1063,6 @@ public abstract class AbstractProjectViewPane extends UserDataHolderBase impleme
 
     @TestOnly
     @Deprecated
-    
     public Promise<TreePath> promisePathToElement(Object element) {
         AbstractTreeBuilder builder = getTreeBuilder();
         if (builder != null) {
@@ -927,7 +1091,6 @@ public abstract class AbstractProjectViewPane extends UserDataHolderBase impleme
         }
     }
 
-    
     static List<TreeVisitor> createVisitors(Object... objects) {
         List<TreeVisitor> list = new ArrayList<>();
         for (Object object : objects) {
@@ -954,7 +1117,6 @@ public abstract class AbstractProjectViewPane extends UserDataHolderBase impleme
         return null;
     }
 
-    
     public static TreeVisitor createVisitor(VirtualFile file) {
         return createVisitor(null, file);
     }

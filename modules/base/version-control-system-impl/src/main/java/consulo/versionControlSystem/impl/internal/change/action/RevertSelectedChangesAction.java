@@ -16,7 +16,6 @@
 package consulo.versionControlSystem.impl.internal.change.action;
 
 import consulo.platform.base.icon.PlatformIconGroup;
-import consulo.ui.ex.action.ActionUpdateThread;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
 import consulo.versionControlSystem.VcsDataKeys;
@@ -32,12 +31,6 @@ public class RevertSelectedChangesAction extends RevertCommittedStuffAbstractAct
         presentation.setTextValue(VcsLocalize.actionRevertSelectedChangesText());
         super.update(e);
         presentation.setEnabled(allSelectedChangeListsAreRevertable(e));
-    }
-
-    
-    @Override
-    public ActionUpdateThread getActionUpdateThread() {
-        return ActionUpdateThread.EDT;
     }
 
     private static boolean allSelectedChangeListsAreRevertable(AnActionEvent e) {

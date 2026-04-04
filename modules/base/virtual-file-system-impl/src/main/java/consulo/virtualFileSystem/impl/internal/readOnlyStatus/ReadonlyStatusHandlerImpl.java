@@ -117,17 +117,12 @@ public class ReadonlyStatusHandlerImpl implements ReadonlyStatusHandlerInternal,
             return createResultStatus(files);
         }
 
-        // This event count hack is necessary to allow actions that called this stuff could still get data from their data contexts.
-        // Otherwise data manager stuff will fire up an assertion saying that event count has been changed (due to modal dialog show-up)
-        // The hack itself is safe since we guarantee that focus will return to the same component had it before modal dialog have been shown.
-        Runnable markEventCount = UIAccess.current().markEventCount();
         if (myState.SHOW_DIALOG) {
             new ReadOnlyStatusDialog(myProject, fileInfos).show();
         }
         else {
             processFiles(new ArrayList<>(Arrays.asList(fileInfos)), null); // the collection passed is modified
         }
-        markEventCount.run();
         return createResultStatus(files);
     }
 

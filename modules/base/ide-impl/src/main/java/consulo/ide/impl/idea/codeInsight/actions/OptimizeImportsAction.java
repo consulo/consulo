@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.codeInsight.actions;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ActionImpl;
 import consulo.application.Application;
 import consulo.codeEditor.Editor;
@@ -34,14 +35,16 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
+import consulo.ui.ex.action.coroutine.ActionSafeReadLock;
 import consulo.ui.ex.awt.DialogWrapper;
+import consulo.util.concurrent.coroutine.Coroutine;
 import consulo.util.lang.StringUtil;
 import consulo.versionControlSystem.FormatChangedTextUtil;
 import consulo.virtualFileSystem.ReadonlyStatusHandler;
 import consulo.virtualFileSystem.VirtualFile;
-import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import org.jetbrains.annotations.TestOnly;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -54,7 +57,6 @@ public class OptimizeImportsAction extends AnAction {
     private static final String NO_IMPORTS_OPTIMIZED = "Unused imports not found";
     private static boolean myProcessVcsChangedFilesInTests;
 
-    
     private final Application myApplication;
 
     @Inject
@@ -83,7 +85,7 @@ public class OptimizeImportsAction extends AnAction {
         }
     }
 
-    @RequiredUIAccess
+    @RequiredReadAction
     private void updatePresentationForFiles(
         Presentation presentation,
         boolean enabled,
@@ -220,77 +222,79 @@ public class OptimizeImportsAction extends AnAction {
     }
 
     @Override
-    public void update(AnActionEvent event) {
-        Presentation presentation = event.getPresentation();
-        if (!myApplication.getExtensionPoint(ImportOptimizer.class).hasAnyExtensions()) {
-            presentation.setVisible(false);
-            return;
-        }
-
-        DataContext dataContext = event.getDataContext();
-        Project project = dataContext.getData(Project.KEY);
-        if (project == null) {
-            updatePresentationForFiles(presentation, false, Collections.emptyList());
-            return;
-        }
-
-        VirtualFile[] files = dataContext.getData(VirtualFile.KEY_OF_ARRAY);
-        List<PsiFile> psiFiles = new ArrayList<>();
-
-        Editor editor =
-            BaseCodeInsightAction.getInjectedEditor(project, dataContext.getData(Editor.KEY), false);
-        if (editor != null) {
-            PsiFile file = PsiDocumentManager.getInstance(project).getPsiFile(editor.getDocument());
-            if (file == null || !isOptimizeImportsAvailable(file)) {
-                updatePresentationForFiles(presentation, false, Collections.emptyList());
+    public Coroutine<?, ?> updateAsync(AnActionEvent event) {
+        return ActionSafeReadLock.apply(event, p -> {
+            Presentation presentation = event.getPresentation();
+            if (!myApplication.getExtensionPoint(ImportOptimizer.class).hasAnyExtensions()) {
+                presentation.setVisible(false);
                 return;
             }
-            else {
-                psiFiles.add(file);
-            }
-        }
-        else if (files != null && ReformatCodeAction.containsAtLeastOneFile(files)) {
-            boolean anyHasOptimizeImports = false;
-            for (VirtualFile virtualFile : files) {
-                PsiFile file = PsiManager.getInstance(project).findFile(virtualFile);
-                if (file == null) {
-                    updatePresentationForFiles(presentation, false, Collections.emptyList());
-                    return;
-                }
-                psiFiles.add(file);
-                if (isOptimizeImportsAvailable(file)) {
-                    anyHasOptimizeImports = true;
-                }
-            }
-            if (!anyHasOptimizeImports) {
-                updatePresentationForFiles(presentation, false, psiFiles);
-                return;
-            }
-        }
-        else if (files != null && files.length == 1) {
-            // skip. Both directories and single files are supported.
-        }
-        else if (dataContext.getData(LangDataKeys.MODULE_CONTEXT) == null
-            && dataContext.getData(PlatformDataKeys.PROJECT_CONTEXT) == null) {
-            PsiElement element = dataContext.getData(PsiElement.KEY);
-            if (element == null) {
+
+            DataContext dataContext = event.getDataContext();
+            Project project = dataContext.getData(Project.KEY);
+            if (project == null) {
                 updatePresentationForFiles(presentation, false, Collections.emptyList());
                 return;
             }
 
-            if (!(element instanceof PsiDirectory)) {
-                PsiFile file = element.getContainingFile();
+            VirtualFile[] files = dataContext.getData(VirtualFile.KEY_OF_ARRAY);
+            List<PsiFile> psiFiles = new ArrayList<>();
+
+            Editor editor =
+                BaseCodeInsightAction.getInjectedEditor(project, dataContext.getData(Editor.KEY), false);
+            if (editor != null) {
+                PsiFile file = PsiDocumentManager.getInstance(project).getPsiFile(editor.getDocument());
                 if (file == null || !isOptimizeImportsAvailable(file)) {
                     updatePresentationForFiles(presentation, false, Collections.emptyList());
                     return;
                 }
+                else {
+                    psiFiles.add(file);
+                }
             }
-        }
+            else if (files != null && ReformatCodeAction.containsAtLeastOneFile(files)) {
+                boolean anyHasOptimizeImports = false;
+                for (VirtualFile virtualFile : files) {
+                    PsiFile file = PsiManager.getInstance(project).findFile(virtualFile);
+                    if (file == null) {
+                        updatePresentationForFiles(presentation, false, Collections.emptyList());
+                        return;
+                    }
+                    psiFiles.add(file);
+                    if (isOptimizeImportsAvailable(file)) {
+                        anyHasOptimizeImports = true;
+                    }
+                }
+                if (!anyHasOptimizeImports) {
+                    updatePresentationForFiles(presentation, false, psiFiles);
+                    return;
+                }
+            }
+            else if (files != null && files.length == 1) {
+                // skip. Both directories and single files are supported.
+            }
+            else if (dataContext.getData(LangDataKeys.MODULE_CONTEXT) == null
+                && dataContext.getData(PlatformDataKeys.PROJECT_CONTEXT) == null) {
+                PsiElement element = dataContext.getData(PsiElement.KEY);
+                if (element == null) {
+                    updatePresentationForFiles(presentation, false, Collections.emptyList());
+                    return;
+                }
 
-        updatePresentationForFiles(presentation, true, psiFiles);
+                if (!(element instanceof PsiDirectory)) {
+                    PsiFile file = element.getContainingFile();
+                    if (file == null || !isOptimizeImportsAvailable(file)) {
+                        updatePresentationForFiles(presentation, false, Collections.emptyList());
+                        return;
+                    }
+                }
+            }
+
+            updatePresentationForFiles(presentation, true, psiFiles);
+        }).toCoroutine();
     }
 
-    @RequiredUIAccess
+    @RequiredReadAction
     private static boolean isOptimizeImportsAvailable(PsiFile file) {
         return !ImportOptimizer.forFile(file).isEmpty();
     }

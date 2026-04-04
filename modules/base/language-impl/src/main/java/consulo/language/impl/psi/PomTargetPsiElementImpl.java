@@ -28,6 +28,7 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiTarget;
 import consulo.language.util.IncorrectOperationException;
+import consulo.navigation.NavigateOptions;
 import consulo.project.Project;
 import consulo.ui.image.Image;
 
@@ -164,14 +165,8 @@ public class PomTargetPsiElementImpl extends RenameableFakePsiElement implements
 
     @Override
     @RequiredReadAction
-    public boolean canNavigate() {
-        return myTarget.canNavigate();
-    }
-
-    @Override
-    @RequiredReadAction
-    public boolean canNavigateToSource() {
-        return myTarget.canNavigateToSource();
+    public NavigateOptions getNavigateOptions() {
+        return myTarget.getNavigateOptions();
     }
 
     @Override

@@ -23,12 +23,12 @@
     <parent>
         <groupId>consulo</groupId>
         <artifactId>arch.managment</artifactId>
-        <version>3-SNAPSHOT</version>
+        <version>4-SNAPSHOT</version>
         <relativePath>../managment/pom.xml</relativePath>
     </parent>
 
     <artifactId>arch.managment.nullaway.java</artifactId>
-    <version>3-SNAPSHOT</version>
+    <version>4-SNAPSHOT</version>
 
     <packaging>pom</packaging>
 

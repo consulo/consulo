@@ -16,6 +16,7 @@
 package consulo.usage;
 
 import consulo.fileEditor.FileEditorLocation;
+import consulo.navigation.NavigateOptions;
 
 public class UsageAdapter implements Usage {
     @Override
@@ -48,16 +49,11 @@ public class UsageAdapter implements Usage {
     }
 
     @Override
+    public NavigateOptions getNavigateOptions() {
+        return NavigateOptions.CANT_NAVIGATE;
+    }
+
+    @Override
     public void navigate(boolean requestFocus) {
-    }
-
-    @Override
-    public boolean canNavigate() {
-        return false;
-    }
-
-    @Override
-    public boolean canNavigateToSource() {
-        return false;
     }
 }

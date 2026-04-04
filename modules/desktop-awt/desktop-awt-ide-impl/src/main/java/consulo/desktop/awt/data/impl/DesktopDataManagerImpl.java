@@ -18,7 +18,6 @@ package consulo.desktop.awt.data.impl;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.AccessToken;
 import consulo.application.Application;
-import consulo.application.impl.internal.IdeaModalityState;
 import consulo.application.ui.wm.FocusableFrame;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.codeEditor.Editor;
@@ -26,26 +25,24 @@ import consulo.codeEditor.EditorKeys;
 import consulo.dataContext.*;
 import consulo.desktop.awt.facade.FromSwingComponentWrapper;
 import consulo.desktop.awt.facade.FromSwingWindowWrapper;
-import consulo.ide.impl.dataContext.BaseDataManager;
-import consulo.desktop.awt.ui.IdeEventQueue;
 import consulo.desktop.awt.ui.ProhibitAWTEvents;
-import consulo.dataContext.TypeSafeDataProviderAdapter;
 import consulo.desktop.awt.ui.keymap.IdeKeyEventDispatcher;
-import consulo.project.ui.internal.WindowManagerEx;
+import consulo.ide.impl.dataContext.BaseDataManager;
+import consulo.ide.impl.dataContext.UiDataProviderAdapter;
 import consulo.language.editor.PlatformDataKeys;
 import consulo.logging.Logger;
-import consulo.project.Project;
+import consulo.project.ui.internal.WindowManagerEx;
 import consulo.project.ui.wm.WindowManager;
 import consulo.ui.ModalityState;
 import consulo.ui.ex.awt.UIExAWTDataKey;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.toolWindow.ToolWindowFloatingDecorator;
 import consulo.util.dataholder.Key;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
 
-import org.jspecify.annotations.Nullable;
 import javax.swing.*;
 import java.awt.*;
 
@@ -54,31 +51,9 @@ import java.awt.*;
 public class DesktopDataManagerImpl extends BaseDataManager {
   private static final Logger LOG = Logger.getInstance(DesktopDataManagerImpl.class);
 
-  public static class MyDataContext extends BaseDataContext<DesktopDataManagerImpl, Component> implements DataContextWithEventCount {
-    private int myEventCount;
-
+  public static class MyDataContext extends BaseDataContext<DesktopDataManagerImpl, Component> {
     public MyDataContext(DesktopDataManagerImpl dataManager, Component component) {
       super(dataManager, component);
-      myEventCount = -1;
-    }
-
-    @Override
-    public void setEventCount(int eventCount, Object caller) {
-      assert caller instanceof IdeKeyEventDispatcher : "This method might be accessible from " + IdeKeyEventDispatcher.class.getName() + " only";
-      clearCacheData();
-      myEventCount = eventCount;
-    }
-
-    @Override
-    @SuppressWarnings("unchecked")
-    public <T> T getData(Key<T> dataId) {
-      int currentEventCount = IdeEventQueue.getInstance().getEventCount();
-      if (myEventCount != -1 && myEventCount != currentEventCount) {
-        LOG.error("cannot share data context between Swing events; initial event count = " + myEventCount + "; current event count = " + currentEventCount);
-        return doGetData(dataId);
-      }
-
-      return super.getData(dataId);
     }
 
     @Override
@@ -104,7 +79,7 @@ public class DesktopDataManagerImpl extends BaseDataManager {
       }
 
       if (ModalityState.KEY == dataId) {
-        return (T)(component != null ? IdeaModalityState.stateForComponent(component) : IdeaModalityState.nonModal());
+        return (T)(component != null ? ModalityState.nonModal() : ModalityState.nonModal());
       }
 
       Object data = calcData(dataId, component);
@@ -143,15 +118,21 @@ public class DesktopDataManagerImpl extends BaseDataManager {
   @Override
   @SuppressWarnings("deprecation")
   public @Nullable DataProvider getDataProviderEx(Component component) {
+    // UiDataProvider takes priority over DataProvider
+    if (component instanceof UiDataProvider uiProvider) {
+      return new UiDataProviderAdapter(uiProvider);
+    }
+
     DataProvider dataProvider = null;
     if (component instanceof DataProvider) {
       dataProvider = (DataProvider)component;
     }
-    else if (component instanceof TypeSafeDataProvider) {
-      dataProvider = new TypeSafeDataProviderAdapter((TypeSafeDataProvider)component);
-    }
-    else if (component instanceof JComponent) {
-      dataProvider = DataManager.getDataProvider((JComponent)component);
+    else if (component instanceof JComponent jComponent) {
+      // Check for registered UiDataProvider first (via DataManager.registerUiDataProvider)
+      Object uiDataObj = jComponent.getClientProperty(UiDataProvider.KEY);
+      if (uiDataObj instanceof UiDataProvider uiProvider) {
+        return new UiDataProviderAdapter(uiProvider);
+      }
     }
     // special case for desktop impl. Later removed since we don't want use AWT
     else if (component instanceof FromSwingComponentWrapper) {
@@ -167,7 +148,6 @@ public class DesktopDataManagerImpl extends BaseDataManager {
     return dataProvider;
   }
 
- 
   @Override
   public AsyncDataContext createAsyncDataContext(DataContext dataContext) {
     return new DesktopAsyncDataContext(this, dataContext);
@@ -197,7 +177,6 @@ public class DesktopDataManagerImpl extends BaseDataManager {
   }
 
   @Override
- 
   public DataContext getDataContext() {
     return getDataContext(getFocusedComponent());
   }
@@ -245,8 +224,8 @@ public class DesktopDataManagerImpl extends BaseDataManager {
   }
 
   @Override
-  @Nullable // FIXME [VISTALL] hack until not all UI code will return consulo.ui.Component
-  protected <T> T getData(Key<T> dataId, consulo.ui.Component focusedComponent) {
+  // FIXME [VISTALL] hack until not all UI code will return consulo.ui.Component
+  protected <T> T getData(Key<T> dataId, consulo.ui.@Nullable Component focusedComponent) {
     return getData(dataId, TargetAWT.to(focusedComponent));
   }
 

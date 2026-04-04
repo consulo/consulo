@@ -15,12 +15,9 @@
  */
 package consulo.versionControlSystem.impl.internal.dataRule;
 
-import consulo.annotation.component.ExtensionImpl;
-import consulo.dataContext.DataProvider;
-import consulo.dataContext.GetDataRule;
+import consulo.dataContext.DataSnapshot;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.ContainerUtil;
-import consulo.util.dataholder.Key;
 import consulo.versionControlSystem.VcsDataKeys;
 import consulo.versionControlSystem.change.ChangeList;
 import consulo.versionControlSystem.history.VcsFileRevision;
@@ -37,29 +34,21 @@ import java.util.function.Function;
 /**
  * @author Konstantin Kolosovsky.
  */
-@ExtensionImpl
-public class VcsRevisionNumberArrayRule implements GetDataRule<VcsRevisionNumber[]> {
+public final class VcsRevisionNumberArrayRule {
 
-  
-  @Override
-  public Key<VcsRevisionNumber[]> getKey() {
-    return VcsDataKeys.VCS_REVISION_NUMBERS;
-  }
-
-  @Override
-  public @Nullable VcsRevisionNumber[] getData(DataProvider dataProvider) {
+  public static @Nullable VcsRevisionNumber[] getData(DataSnapshot dataProvider) {
     List<VcsRevisionNumber> revisionNumbers = getRevisionNumbers(dataProvider);
 
     return !ContainerUtil.isEmpty(revisionNumbers) ? ArrayUtil.toObjectArray(revisionNumbers, VcsRevisionNumber.class) : null;
   }
 
-  public @Nullable List<VcsRevisionNumber> getRevisionNumbers(DataProvider dataProvider) {
-    VcsRevisionNumber revisionNumber = dataProvider.getDataUnchecked(VcsDataKeys.VCS_REVISION_NUMBER);
+  public static @Nullable List<VcsRevisionNumber> getRevisionNumbers(DataSnapshot dataProvider) {
+    VcsRevisionNumber revisionNumber = dataProvider.get(VcsDataKeys.VCS_REVISION_NUMBER);
     if (revisionNumber != null) {
       return Collections.singletonList(revisionNumber);
     }
 
-    ChangeList[] changeLists = dataProvider.getDataUnchecked(VcsDataKeys.CHANGE_LISTS);
+    ChangeList[] changeLists = dataProvider.get(VcsDataKeys.CHANGE_LISTS);
     if (changeLists != null && changeLists.length > 0) {
       List<CommittedChangeList> committedChangeLists = ContainerUtil.findAll(changeLists, CommittedChangeList.class);
 
@@ -70,7 +59,7 @@ public class VcsRevisionNumberArrayRule implements GetDataRule<VcsRevisionNumber
       }
     }
 
-    VcsFileRevision[] fileRevisions = dataProvider.getDataUnchecked(VcsDataKeys.VCS_FILE_REVISIONS);
+    VcsFileRevision[] fileRevisions = dataProvider.get(VcsDataKeys.VCS_FILE_REVISIONS);
     if (fileRevisions != null && fileRevisions.length > 0) {
       return ContainerUtil.mapNotNull(fileRevisions, FileRevisionToRevisionNumberFunction.INSTANCE);
     }

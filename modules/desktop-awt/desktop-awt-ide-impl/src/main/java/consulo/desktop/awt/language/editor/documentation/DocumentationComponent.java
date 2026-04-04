@@ -18,7 +18,8 @@ import consulo.colorScheme.EditorColorsManager;
 import consulo.colorScheme.FontSize;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
-import consulo.dataContext.DataProvider;
+import consulo.dataContext.DataSink;
+import consulo.dataContext.UiDataProvider;
 import consulo.desktop.awt.action.toolbar.AdvancedActionToolbarImpl;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
@@ -84,7 +85,6 @@ import consulo.util.lang.xml.XmlStringUtil;
 import consulo.util.xml.serializer.InvalidDataException;
 import consulo.virtualFileSystem.VirtualFile;
 import org.jspecify.annotations.Nullable;
-import org.jetbrains.annotations.NonNls;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -112,7 +112,7 @@ import java.net.URL;
 import java.util.List;
 import java.util.*;
 
-public class DocumentationComponent extends JPanel implements Disposable, DataProvider, WidthBasedLayout {
+public class DocumentationComponent extends JPanel implements Disposable, UiDataProvider, WidthBasedLayout {
 
     private static final Logger LOG = Logger.getInstance(DocumentationComponent.class);
     private static final String DOCUMENTATION_TOPIC_ID = "reference.toolWindows.Documentation";
@@ -173,7 +173,6 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
 
     private final Map<KeyStroke, ActionListener> myKeyboardActions = new HashMap<>();
 
-   
     public static DocumentationComponent createAndFetch(
         Project project,
         PsiElement element,
@@ -274,8 +273,8 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
             }
         };
         boolean newLayout = true;
-        DataProvider helpDataProvider = dataId -> HelpManager.HELP_ID == dataId ? DOCUMENTATION_TOPIC_ID : null;
-        myEditorPane.putClientProperty(DataManager.CLIENT_PROPERTY_DATA_PROVIDER, helpDataProvider);
+        UiDataProvider helpDataProvider = sink -> sink.set(HelpManager.HELP_ID, DOCUMENTATION_TOPIC_ID);
+        myEditorPane.putClientProperty(UiDataProvider.KEY, helpDataProvider);
         myText = "";
         myDecoratedText = "";
         myEditorPane.setEditable(false);
@@ -296,7 +295,7 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
         myEditorPane.setEditorKit(editorKit);
         myEditorPane.setBorder(JBUI.Borders.empty());
         myScrollPane = new MyScrollPane();
-        myScrollPane.putClientProperty(DataManager.CLIENT_PROPERTY_DATA_PROVIDER, helpDataProvider);
+        myScrollPane.putClientProperty(UiDataProvider.KEY, helpDataProvider);
 
         FocusListener focusAdapter = new FocusAdapter() {
             @Override
@@ -591,15 +590,13 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
     }
 
     @Override
-    public Object getData(@NonNls Key dataId) {
-        if (DocumentationManagerHelper.SELECTED_QUICK_DOC_TEXT == dataId) {
-            // Javadocs often contain &nbsp; symbols (non-breakable white space). We don't want to copy them as is and replace
-            // with raw white spaces. See IDEA-86633 for more details.
+    public void uiDataSnapshot(DataSink sink) {
+        // Javadocs often contain &nbsp; symbols (non-breakable white space). We don't want to copy them as is and replace
+        // with raw white spaces. See IDEA-86633 for more details.
+        sink.lazy(DocumentationManagerHelper.SELECTED_QUICK_DOC_TEXT, () -> {
             String selectedText = myEditorPane.getSelectedText();
             return selectedText == null ? null : selectedText.replace((char) 160, ' ');
-        }
-
-        return null;
+        });
     }
 
     private JComponent createSettingsPanel() {
@@ -635,7 +632,6 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
         return result;
     }
 
-   
     public static FontSize getQuickDocFontSize() {
         String strValue = PropertiesComponent.getInstance().getValue(QUICK_DOC_FONT_SIZE_PROPERTY);
         if (strValue != null) {
@@ -1130,7 +1126,6 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
         return -1;
     }
 
-   
     private static String getBottom(boolean hasContent) {
         return "<div class='" + (hasContent ? "bottom" : "bottom-no-content") + "'>";
     }
@@ -1367,7 +1362,6 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
             myActions = actions;
         }
 
-       
         @Override
         public AnAction[] getChildren(@Nullable AnActionEvent e) {
             return myActions;
@@ -1676,7 +1670,6 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
             this.highlightedLink = highlightedLink;
         }
 
-       
         Context withText(String text) {
             return new Context(element, text, externalUrl, provider, viewRect, highlightedLink);
         }

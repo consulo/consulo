@@ -16,7 +16,6 @@
 package consulo.desktop.swt.starter;
 
 import consulo.application.Application;
-import consulo.application.impl.internal.IdeaModalityState;
 import consulo.application.impl.internal.start.ApplicationStarter;
 import consulo.application.impl.internal.start.CommandLineArgs;
 import consulo.application.internal.StartupProgress;
@@ -26,6 +25,7 @@ import consulo.container.util.StatCollector;
 import consulo.desktop.swt.application.impl.DesktopSwtApplicationImpl;
 import consulo.logging.Logger;
 import consulo.project.ui.wm.WelcomeFrameManager;
+import consulo.ui.ModalityState;
 import consulo.util.lang.ref.SimpleReference;
 
 import org.jspecify.annotations.Nullable;
@@ -77,6 +77,6 @@ public class DesktopSwtApplicationStarter extends ApplicationStarter {
     //  }
     //});
 
-    app.invokeLater(() -> WelcomeFrameManager.getInstance().showFrame(), IdeaModalityState.any());
+    app.invokeLater(() -> WelcomeFrameManager.getInstance().showFrame(), ModalityState.any());
   }
 }

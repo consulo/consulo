@@ -24,7 +24,6 @@ import consulo.util.concurrent.coroutine.step.CodeExecution;
 import consulo.util.concurrent.coroutine.step.Iteration;
 import consulo.util.concurrent.coroutine.step.Loop;
 import consulo.util.dataholder.CopyableUserDataHolder;
-import consulo.util.dataholder.Key;
 import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.Test;
 
@@ -35,7 +34,6 @@ import java.util.function.Function;
 
 import static consulo.util.concurrent.coroutine.ChannelId.stringChannel;
 import static consulo.util.concurrent.coroutine.CoroutineScope.launch;
-import static consulo.util.concurrent.coroutine.CoroutineScope.produce;
 import static consulo.util.concurrent.coroutine.step.CodeExecution.*;
 import static consulo.util.concurrent.coroutine.step.Condition.doIf;
 import static consulo.util.concurrent.coroutine.step.Condition.doIfElse;
@@ -47,8 +45,6 @@ import static org.junit.jupiter.api.Assertions.*;
  * @author eso
  */
 public class CoroutineTest {
-    private static final Key<String> TEXT = Key.create("TEXT");
-
     static Coroutine<String, Integer> CONVERT_INT =
         Coroutine.first(apply((String s) -> s + 5))
             .then(apply(s -> s.replaceAll("\\D", "")))
@@ -275,27 +271,22 @@ public class CoroutineTest {
     }
 
     /**
-     * Test of
-     * {@link CoroutineScope#produce(java.util.function.Function,
-     * CoroutineScope.ScopeCode)}.
+     * Test of {@link Continuation#toFuture()}.
      */
     @Test
-    public void testProduce() {
+    public void testToFuture() throws Exception {
         CoroutineContext context = TestCoroutineContext.newSilent();
 
         Coroutine<String, String> cr =
-            Coroutine.first(apply((String s) -> s.toUpperCase()))
-                .then(setScopeParameter(TEXT));
+            Coroutine.first(apply((String s) -> s.toUpperCase()));
 
-        @ReviewAfterIssueFix(value = "github.com/uber/NullAway/issues/1500", todo = "Remove explicit casts")
-        CoroutineScope.ScopeFuture<? extends @Nullable String> result = produce(
-            context,
-            (Function<CoroutineScope, ? extends @Nullable String>) c -> c.getUserData(TEXT),
-            scope -> cr.runAsync(scope, "test")
-        );
+        launch(context, scope -> {
+            Continuation<String> ca = cr.runAsync(scope, "test");
+            java.util.concurrent.CompletableFuture<? extends @Nullable String> future = ca.toFuture();
 
-        assertEquals("TEST", result.get());
-        assertTrue(result.isDone());
+            assertEquals("TEST", future.get());
+            assertTrue(future.isDone());
+        });
     }
 
     /**

@@ -18,7 +18,6 @@ package consulo.language.index.impl.internal.stub;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.ApplicationManager;
-import consulo.application.impl.internal.IdeaModalityState;
 import consulo.application.internal.NoAccessDuringPsiEventsService;
 import consulo.application.util.RecursionManager;
 import consulo.document.Document;
@@ -39,6 +38,7 @@ import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.project.ProjectLocator;
 import consulo.project.ProjectManager;
+import consulo.ui.ModalityState;
 import consulo.util.collection.ContainerUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import org.jspecify.annotations.Nullable;
@@ -245,7 +245,7 @@ public class StubTreeLoaderImpl extends StubTreeLoader {
       // avoid deadlock by requesting reindex later.
       // processError may be invoked under stub index's read action and requestReindex in EDT starts dumb mode in writeAction (IDEA-197296)
       FileBasedIndex.getInstance().requestReindex(vFile);
-    }, IdeaModalityState.nonModal());
+    }, ModalityState.nonModal());
 
     return null;
   }

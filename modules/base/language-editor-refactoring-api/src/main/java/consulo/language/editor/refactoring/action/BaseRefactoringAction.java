@@ -36,11 +36,13 @@ import consulo.language.editor.refactoring.util.CommonRefactoringUtil;
 import consulo.language.psi.*;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
-import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.*;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.coroutine.ActionSafeReadLock;
 import consulo.undoRedo.CommandProcessor;
 import consulo.util.collection.ContainerUtil;
+import consulo.util.concurrent.coroutine.Coroutine;
 import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -71,12 +73,6 @@ public abstract class BaseRefactoringAction extends AnAction {
         return true;
     }
 
-    
-    @Override
-    public ActionUpdateThread getActionUpdateThread() {
-        return ActionUpdateThread.BGT;
-    }
-
     public boolean hasAvailableHandler(DataContext dataContext) {
         RefactoringActionHandler handler = getHandler(dataContext);
         if (handler != null) {
@@ -103,7 +99,6 @@ public abstract class BaseRefactoringAction extends AnAction {
         Editor editor = e.getData(Editor.KEY);
         PsiElement[] elements = getPsiElementArray(dataContext);
 
-        Runnable markEventCount = UIAccess.current().markEventCount();
         RefactoringActionHandler handler;
         try {
             handler = getHandler(dataContext);
@@ -142,8 +137,6 @@ public abstract class BaseRefactoringAction extends AnAction {
             }
         }
 
-        markEventCount.run();
-
         if (editor != null) {
             PsiFile file = PsiDocumentManager.getInstance(project).getPsiFile(editor.getDocument());
             if (file == null) {
@@ -162,7 +155,12 @@ public abstract class BaseRefactoringAction extends AnAction {
     }
 
     @Override
-    public void update(AnActionEvent e) {
+    public Coroutine<?, ?> updateAsync(AnActionEvent e) {
+        return ActionSafeReadLock.apply(e, p -> updateInRead(e)).toCoroutine();
+    }
+
+    @RequiredReadAction
+    protected void updateInRead(AnActionEvent e) {
         e.getPresentation().setEnabledAndVisible(true);
         DataContext dataContext = e.getDataContext();
         Project project = e.getData(Project.KEY);
@@ -264,7 +262,6 @@ public abstract class BaseRefactoringAction extends AnAction {
         return true;
     }
 
-    
     public static PsiElement[] getPsiElementArray(DataContext dataContext) {
         PsiElement[] psiElements = dataContext.getData(PsiElement.KEY_OF_ARRAY);
         if (psiElements == null || psiElements.length == 0) {

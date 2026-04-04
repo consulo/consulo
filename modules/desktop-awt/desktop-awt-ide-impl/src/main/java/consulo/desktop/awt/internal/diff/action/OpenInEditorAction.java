@@ -64,7 +64,7 @@ public class OpenInEditorAction extends EditSourceAction implements DumbAware {
     }
 
     Navigatable[] navigatables = ReadAction.compute(() -> e.getData(DiffDataKeys.NAVIGATABLE_ARRAY));
-    if (navigatables == null || !ContainerUtil.exists(navigatables, Navigatable::canNavigate)) {
+    if (navigatables == null || !ContainerUtil.exists(navigatables, n -> n.getNavigateOptions().canNavigate())) {
       e.getPresentation().setVisible(true);
       e.getPresentation().setEnabled(false);
       return;
@@ -92,7 +92,7 @@ public class OpenInEditorAction extends EditSourceAction implements DumbAware {
   public void openEditor(Project project, Navigatable[] navigatables) {
     boolean success = false;
     for (Navigatable navigatable : navigatables) {
-      if (navigatable.canNavigate()) {
+      if (navigatable.getNavigateOptions().canNavigate()) {
         navigatable.navigate(true);
         success = true;
       }

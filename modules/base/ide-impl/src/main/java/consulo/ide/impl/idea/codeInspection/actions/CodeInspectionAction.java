@@ -33,6 +33,7 @@ import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
+import consulo.ui.UIAccess;
 import consulo.ui.ComboBox;
 import consulo.ui.Hyperlink;
 import consulo.ui.Label;
@@ -82,7 +83,7 @@ public class CodeInspectionAction extends BaseAnalysisAction {
 
     protected void runInspections(Project project, AnalysisScope scope) {
         scope.setSearchInLibraries(false);
-        FileDocumentManager.getInstance().saveAllDocuments();
+        FileDocumentManager.getInstance().saveAllDocuments(UIAccess.current());
         GlobalInspectionContextImpl inspectionContext = getGlobalInspectionContext(project);
         inspectionContext.setExternalProfile(myExternalProfile);
         inspectionContext.setCurrentScope(scope);

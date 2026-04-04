@@ -21,6 +21,7 @@ import consulo.application.progress.Task;
 import consulo.compiler.TranslatingCompilerFilesMonitor;
 import consulo.compiler.localize.CompilerLocalize;
 import consulo.project.Project;
+import consulo.project.internal.ProjectEx;
 import consulo.project.startup.PostStartupActivity;
 import consulo.ui.UIAccess;
 
@@ -28,7 +29,7 @@ import consulo.ui.UIAccess;
  * @author VISTALL
  * @since 2023-04-17
  */
-@ExtensionImpl
+@ExtensionImpl(profiles = ProjectEx.DEFAULT_PROJECT)
 public class TranslationCompilerPostStartupActivity implements PostStartupActivity, DumbAware {
     @Override
     public void runActivity(Project project, UIAccess uiAccess) {

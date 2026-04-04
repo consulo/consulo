@@ -25,7 +25,6 @@ import consulo.localize.LocalizeValue;
 import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.ActionUpdateThread;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.image.Image;
@@ -54,18 +53,15 @@ public abstract class CompileActionBase extends AnAction implements DumbAware {
         doAction(e.getDataContext(), project);
     }
 
-    
-    @Override
-    public ActionUpdateThread getActionUpdateThread() {
-        return ActionUpdateThread.BGT;
-    }
-
     @RequiredUIAccess
     protected abstract void doAction(DataContext dataContext, Project project);
 
     @Override
     public void update(AnActionEvent e) {
-        super.update(e);
+        regularUpdate(e);
+    }
+
+    protected void regularUpdate(AnActionEvent e) {
         Project project = e.getData(Project.KEY);
         if (project == null || !project.isInitialized()) {
             e.getPresentation().setEnabled(false);

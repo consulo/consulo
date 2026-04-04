@@ -22,6 +22,7 @@ import consulo.fileEditor.FileEditorManager;
 import consulo.fileEditor.impl.internal.OpenFileDescriptorImpl;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
+import consulo.navigation.NavigateOptions;
 import consulo.navigation.Navigatable;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
@@ -137,7 +138,7 @@ public class PackageDependenciesNode extends DefaultMutableTreeNode implements N
 
   @Override
   public void navigate(boolean focus) {
-    if (canNavigate()) {
+    if (getNavigateOptions().canNavigate()) {
       openTextEditor(focus);
     }
   }
@@ -151,17 +152,12 @@ public class PackageDependenciesNode extends DefaultMutableTreeNode implements N
   }
 
   @Override
-  public boolean canNavigate() {
-    if (getProject() == null) return false;
+  public NavigateOptions getNavigateOptions() {
+    if (getProject() == null) return NavigateOptions.CANT_NAVIGATE;
     PsiElement psiElement = getPsiElement();
-    if (psiElement == null) return false;
+    if (psiElement == null) return NavigateOptions.CANT_NAVIGATE;
     VirtualFile virtualFile = psiElement.getContainingFile().getVirtualFile();
-    return virtualFile != null && virtualFile.isValid();
-  }
-
-  @Override
-  public boolean canNavigateToSource() {
-    return canNavigate();
+    return virtualFile != null && virtualFile.isValid() ? NavigateOptions.CAN_NAVIGATE_FULL : NavigateOptions.CANT_NAVIGATE;
   }
 
   private @Nullable Project getProject() {

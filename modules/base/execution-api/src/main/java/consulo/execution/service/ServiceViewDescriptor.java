@@ -42,10 +42,6 @@ public interface ServiceViewDescriptor {
     return getToolbarActions();
   }
 
-  default @Nullable DataProvider getDataProvider() {
-    return null;
-  }
-
   default void onNodeSelected(List<Object> selectedServices) {
   }
 
@@ -54,7 +50,7 @@ public interface ServiceViewDescriptor {
 
   default boolean handleDoubleClick(MouseEvent event) {
     Navigatable navigatable = getNavigatable();
-    if (navigatable != null && navigatable.canNavigateToSource()) {
+    if (navigatable != null && navigatable.getNavigateOptions().canNavigateToSource()) {
       navigatable.navigate(true);
       return true;
     }

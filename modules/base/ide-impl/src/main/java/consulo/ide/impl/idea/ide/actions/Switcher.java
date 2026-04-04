@@ -12,7 +12,8 @@ import consulo.colorScheme.TextAttributes;
 import consulo.component.util.Iconable;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
-import consulo.dataContext.DataProvider;
+import consulo.dataContext.DataSink;
+import consulo.dataContext.UiDataProvider;
 import consulo.externalService.statistic.FeatureUsageTracker;
 import consulo.fileEditor.EditorTabPresentationUtil;
 import consulo.fileEditor.FileEditorManager;
@@ -193,7 +194,6 @@ public class Switcher extends AnAction implements DumbAware {
         return createAndShowSwitcher(project, title, actionId, onlyEdited, pinned);
     }
 
-    
     @RequiredUIAccess
     private static SwitcherPanel createAndShowSwitcher(
         Project project,
@@ -236,7 +236,7 @@ public class Switcher extends AnAction implements DumbAware {
         }
     }
 
-    public static class SwitcherPanel extends JPanel implements KeyListener, MouseListener, MouseMotionListener, DataProvider, QuickSearchComponent {
+    public static class SwitcherPanel extends JPanel implements KeyListener, MouseListener, MouseMotionListener, UiDataProvider, QuickSearchComponent {
         static final Object RECENT_LOCATIONS = new Object();
         final JBPopup myPopup;
         final JBList<Object> toolWindows;
@@ -256,16 +256,14 @@ public class Switcher extends AnAction implements DumbAware {
         private JBPopup myHint;
 
         @Override
-        public @Nullable Object getData(Key dataId) {
-            if (Project.KEY == dataId) {
-                return this.project;
-            }
-            if (PlatformDataKeys.SELECTED_ITEM == dataId) {
+        public void uiDataSnapshot(DataSink sink) {
+            sink.set(Project.KEY, this.project);
+            sink.lazy(PlatformDataKeys.SELECTED_ITEM, () -> {
                 List list = getSelectedList().getSelectedValuesList();
                 Object o = ContainerUtil.getOnlyItem(list);
                 return o instanceof FileInfo fileInfo ? fileInfo.first : null;
-            }
-            if (VirtualFile.KEY_OF_ARRAY == dataId) {
+            });
+            sink.lazy(VirtualFile.KEY_OF_ARRAY, () -> {
                 List list = getSelectedList().getSelectedValuesList();
                 if (!list.isEmpty()) {
                     List<VirtualFile> vFiles = new ArrayList<>();
@@ -276,8 +274,8 @@ public class Switcher extends AnAction implements DumbAware {
                     }
                     return vFiles.isEmpty() ? null : vFiles.toArray(VirtualFile.EMPTY_ARRAY);
                 }
-            }
-            return null;
+                return null;
+            });
         }
 
         private class MyFocusTraversalPolicy extends FocusTraversalPolicy {
@@ -398,7 +396,6 @@ public class Switcher extends AnAction implements DumbAware {
             toolWindows.setBorder(JBUI.Borders.empty(5, 5, 5, 20));
             toolWindows.setSelectionMode(pinned ? ListSelectionModel.MULTIPLE_INTERVAL_SELECTION : ListSelectionModel.SINGLE_SELECTION);
             toolWindows.setCellRenderer(new SwitcherToolWindowsListRenderer(mySpeedSearch, map, myPinned, showEdited()) {
-                
                 @Override
                 public Component getListCellRendererComponent(
                     JList<?> list,
@@ -448,7 +445,6 @@ public class Switcher extends AnAction implements DumbAware {
                     myPanel.setBackground(UIUtil.getListBackground());
                 }
 
-                
                 @Override
                 public Component getListCellRendererComponent(
                     JList<? extends FileInfo> list,
@@ -659,12 +655,10 @@ public class Switcher extends AnAction implements DumbAware {
             );
         }
 
-        
         private Supplier<Boolean> showEdited() {
             return () -> myShowOnlyEditedFilesCheckBox != null && myShowOnlyEditedFilesCheckBox.isSelected();
         }
 
-        
         private Function<? super Object, String> getNamer() {
             return value -> {
                 if (value instanceof ToolWindow toolWindow) {
@@ -720,7 +714,6 @@ public class Switcher extends AnAction implements DumbAware {
             myHint = null;
         }
 
-        
         private static <T> JBList<T> createList(
             CollectionListModel<T> baseModel,
             Function<? super T, String> namer,
@@ -760,12 +753,10 @@ public class Switcher extends AnAction implements DumbAware {
             return myPopup.isDisposed() ? null : myPopup.getContent().getFocusCycleRootAncestor();
         }
 
-        
         static List<VirtualFile> collectFiles(Project project, boolean onlyEdited) {
             return onlyEdited ? Arrays.asList(IdeDocumentHistory.getInstance(project).getChangedFiles()) : getRecentFiles(project);
         }
 
-        
         @RequiredUIAccess
         static Pair<List<FileInfo>, Integer> getFilesToShowAndSelectionIndex(
             Project project,
@@ -827,7 +818,6 @@ public class Switcher extends AnAction implements DumbAware {
             return Pair.create(filesData, selectionIndex);
         }
 
-        
         private static CaptionPanel createTopPanel(
             JBCheckBox showOnlyEditedFilesCheckBox,
             String title,
@@ -863,7 +853,6 @@ public class Switcher extends AnAction implements DumbAware {
             focusCycleRoot.setFocusTraversalKeys(focusTraversalType, set);
         }
 
-        
         private static List<VirtualFile> getRecentFiles(Project project) {
             List<VirtualFile> recentFiles = EditorHistoryManagerImpl.getInstance(project).getFileList();
             VirtualFile[] openFiles = FileEditorManager.getInstance(project).getOpenFiles();
@@ -885,7 +874,6 @@ public class Switcher extends AnAction implements DumbAware {
             return result;
         }
 
-        
         @RequiredUIAccess
         private static Map<String, ToolWindow> createShortcuts(List<ToolWindow> windows) {
             Map<String, ToolWindow> keymap = new HashMap<>(windows.size());
@@ -1316,7 +1304,6 @@ public class Switcher extends AnAction implements DumbAware {
                     .getSize() + myComponent.toolWindows.getSelectedIndex();
             }
 
-            
             @Override
             protected Object[] getAllElements() {
                 ListModel filesModel = myComponent.files.getModel();

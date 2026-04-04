@@ -20,6 +20,7 @@ import consulo.project.Project;
 public interface ProjectEx extends Project {
     int REGULAR_PROJECT = 1 << 30;
     int DEFAULT_PROJECT = 1 << 31;
+    int WELCOME_PROJECT = 1 << 29;
 
     void setProjectName(String name);
 }

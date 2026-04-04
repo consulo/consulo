@@ -45,7 +45,6 @@ public abstract class CheckboxAction extends ToggleAction implements CustomUICom
     }
 
     @RequiredUIAccess
-    
     @Override
     public CheckBox createCustomComponent(Presentation presentation, String place) {
         LocalizeValue textValue = presentation.getTextValue();
@@ -77,12 +76,6 @@ public abstract class CheckboxAction extends ToggleAction implements CustomUICom
         });
 
         return checkBox;
-    }
-
-    
-    @Override
-    public ActionUpdateThread getActionUpdateThread() {
-        return ActionUpdateThread.EDT;
     }
 
     @Override

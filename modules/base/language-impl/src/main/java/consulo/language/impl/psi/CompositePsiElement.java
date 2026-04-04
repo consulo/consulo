@@ -38,6 +38,7 @@ import consulo.language.version.LanguageVersion;
 import consulo.logging.Logger;
 import consulo.module.Module;
 import consulo.navigation.ItemPresentation;
+import consulo.navigation.NavigateOptions;
 import consulo.navigation.Navigatable;
 import consulo.navigation.NavigationItem;
 import consulo.project.Project;
@@ -317,15 +318,9 @@ public abstract class CompositePsiElement extends CompositeElement implements Ps
     }
 
     @Override
-    @RequiredWriteAction
-    public boolean canNavigate() {
-        return PsiNavigationSupport.getInstance().canNavigate(this);
-    }
-
-    @Override
-    @RequiredWriteAction
-    public boolean canNavigateToSource() {
-        return canNavigate();
+    @RequiredReadAction
+    public NavigateOptions getNavigateOptions() {
+        return PsiNavigationSupport.getInstance().canNavigate(this) ? NavigateOptions.CAN_NAVIGATE_FULL : NavigateOptions.CANT_NAVIGATE;
     }
 
     @Override

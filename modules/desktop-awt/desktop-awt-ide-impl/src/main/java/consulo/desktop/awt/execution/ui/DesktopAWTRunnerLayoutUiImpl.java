@@ -16,6 +16,7 @@
 
 package consulo.desktop.awt.execution.ui;
 
+import consulo.dataContext.DataSink;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.execution.impl.internal.ui.layout.RunnerLayoutImpl;
@@ -65,31 +66,27 @@ public class DesktopAWTRunnerLayoutUiImpl implements RunnerLayoutUiImpl {
         Disposer.register(this, myContentUI);
 
         myViewsContentManager = getContentFactory().createContentManager(myContentUI.getContentUI(), true, project);
-        myViewsContentManager.addDataProvider(this);
+        myViewsContentManager.addUiDataProvider(this);
         Disposer.register(this, myViewsContentManager);
     }
 
     @Override
-    
     public LayoutViewOptions setTopToolbar(ActionGroup actions, String place) {
         myContentUI.setTopActions(actions, place);
         return this;
     }
 
-    
     @Override
     public LayoutStateDefaults initTabDefaults(int id, String text, Image icon) {
         getLayout().setDefault(id, text, icon);
         return this;
     }
 
-    
     @Override
     public LayoutStateDefaults initFocusContent(String id, String condition) {
         return initFocusContent(id, condition, new LayoutAttractionPolicy.FocusOnce());
     }
 
-    
     @Override
     public LayoutStateDefaults initFocusContent(String id,
                                                 String condition,
@@ -99,13 +96,11 @@ public class DesktopAWTRunnerLayoutUiImpl implements RunnerLayoutUiImpl {
     }
 
     @Override
-    
     public Content addContent(Content content) {
         return addContent(content, false, -1, PlaceInGrid.center, false);
     }
 
     @Override
-    
     public Content addContent(Content content, int defaultTabId, PlaceInGrid defaultPlace, boolean defaultIsMinimized) {
         return addContent(content, true, defaultTabId, defaultPlace, defaultIsMinimized);
     }
@@ -128,7 +123,6 @@ public class DesktopAWTRunnerLayoutUiImpl implements RunnerLayoutUiImpl {
     }
 
     @Override
-    
     public Content createContent(String id,
                                  JComponent component,
                                  String displayName,
@@ -138,7 +132,6 @@ public class DesktopAWTRunnerLayoutUiImpl implements RunnerLayoutUiImpl {
     }
 
     @Override
-    
     public Content createContent(String contentId,
                                  ComponentWithActions withActions,
                                  String displayName,
@@ -161,7 +154,6 @@ public class DesktopAWTRunnerLayoutUiImpl implements RunnerLayoutUiImpl {
     }
 
     @Override
-    
     public JComponent getComponent() {
         return myViewsContentManager.getComponent();
     }
@@ -189,18 +181,15 @@ public class DesktopAWTRunnerLayoutUiImpl implements RunnerLayoutUiImpl {
     }
 
     @Override
-    
     public ContentManager getContentManager() {
         return myViewsContentManager;
     }
 
-    
     @Override
     public ActionCallback selectAndFocus(@Nullable Content content, boolean requestFocus, boolean forced) {
         return selectAndFocus(content, requestFocus, forced, false);
     }
 
-    
     @Override
     public ActionCallback selectAndFocus(@Nullable Content content, boolean requestFocus, boolean forced, boolean implicit) {
         if (content == null) {
@@ -229,7 +218,6 @@ public class DesktopAWTRunnerLayoutUiImpl implements RunnerLayoutUiImpl {
         return getLayout().isToFocus(id, condition);
     }
 
-    
     @Override
     public LayoutViewOptions setToFocus(@Nullable Content content, String condition) {
         getLayout().setToFocus(content != null ? content.getUserData(ViewImpl.ID) : null, condition);
@@ -258,21 +246,18 @@ public class DesktopAWTRunnerLayoutUiImpl implements RunnerLayoutUiImpl {
         return myContentUI.getLayoutActions();
     }
 
-    
     @Override
     public AnAction[] getLayoutActionsList() {
         ActionGroup group = (ActionGroup) getLayoutActions();
         return group.getChildren(null);
     }
 
-    
     @Override
     public LayoutViewOptions setTabPopupActions(ActionGroup group) {
         myContentUI.setTabPopupActions(group);
         return this;
     }
 
-    
     @Override
     public LayoutViewOptions setLeftToolbar(ActionGroup leftToolbar, String place) {
         myContentUI.setLeftToolbar(leftToolbar, place);
@@ -284,7 +269,6 @@ public class DesktopAWTRunnerLayoutUiImpl implements RunnerLayoutUiImpl {
         return myContentUI.findContent(key);
     }
 
-    
     @Override
     public RunnerLayoutUi addListener(ContentManagerListener listener, Disposable parent) {
         ContentManager mgr = getContentManager();
@@ -303,13 +287,13 @@ public class DesktopAWTRunnerLayoutUiImpl implements RunnerLayoutUiImpl {
         myContentUI.processBounce(content, activate);
     }
 
+
     @Override
     public boolean isDisposed() {
         return getContentManager().isDisposed();
     }
 
     @Override
-    
     public LayoutViewOptions setMinimizeActionEnabled(boolean enabled) {
         myContentUI.setMinimizeActionEnabled(enabled);
         return this;
@@ -321,20 +305,17 @@ public class DesktopAWTRunnerLayoutUiImpl implements RunnerLayoutUiImpl {
     }
 
     @Override
-    
     public LayoutViewOptions setMoveToGridActionEnabled(boolean enabled) {
         myContentUI.setMovetoGridActionEnabled(enabled);
         return this;
     }
 
     @Override
-    
     public LayoutViewOptions setAttractionPolicy(String contentId, LayoutAttractionPolicy policy) {
         myContentUI.setPolicy(contentId, policy);
         return this;
     }
 
-    
     @Override
     public LayoutViewOptions setConditionAttractionPolicy(String condition, LayoutAttractionPolicy policy) {
         myContentUI.setConditionPolicy(condition, policy);
@@ -342,18 +323,15 @@ public class DesktopAWTRunnerLayoutUiImpl implements RunnerLayoutUiImpl {
     }
 
     @Override
-    
     public LayoutStateDefaults getDefaults() {
         return this;
     }
 
     @Override
-    
     public LayoutViewOptions getOptions() {
         return this;
     }
 
-    
     @Override
     public LayoutViewOptions setAdditionalFocusActions(ActionGroup group) {
         myContentUI.setAdditionalFocusActions(group);
@@ -365,14 +343,12 @@ public class DesktopAWTRunnerLayoutUiImpl implements RunnerLayoutUiImpl {
         return myContentUI.getSettingsActions();
     }
 
-    
     @Override
     public AnAction[] getSettingsActionsList() {
         ActionGroup group = (ActionGroup) getSettingsActions();
         return group.getChildren(null);
     }
 
-    
     @Override
     public Content[] getContents() {
         Content[] contents = new Content[getContentManager().getContentCount()];
@@ -383,11 +359,9 @@ public class DesktopAWTRunnerLayoutUiImpl implements RunnerLayoutUiImpl {
     }
 
     @Override
-    public @Nullable Object getData(Key dataId) {
-        if (QuickActionProvider.KEY == dataId || RunnerContentUi.KEY == dataId) {
-            return myContentUI;
-        }
-        return null;
+    public void uiDataSnapshot(DataSink sink) {
+        sink.set(QuickActionProvider.KEY, myContentUI);
+        sink.set(RunnerContentUi.KEY, myContentUI);
     }
 
     @Override

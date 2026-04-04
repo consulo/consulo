@@ -29,7 +29,6 @@ import consulo.ui.ex.toolWindow.ToolWindowAnchor;
 import consulo.ui.image.Image;
 import org.jspecify.annotations.Nullable;
 
-import javax.swing.JComponent;
 import javax.swing.event.HyperlinkListener;
 
 /**
@@ -140,61 +139,8 @@ public abstract class ToolWindowManager {
     // region AWT & Swing dependency
 
     /**
-     * Register specified tool window into IDE window system.
-     *
-     * @param id        <code>id</code> of tool window to be registered.
-     * @param component <code>component</code> which represents tool window content.
-     *                  May be null. Content can be further added via content manager for this tool window (See {@link ToolWindow#getContentManager()})
-     * @param anchor    the default anchor for first registration. It uses only first time the
-     *                  tool window with the specified <code>id</code> is being registered into the window system.
-     *                  After the first registration window's anchor is stored in project file
-     *                  and <code>anchor</code> is ignored.
-     * @return tool window
-     * @throws IllegalArgumentException if the same window is already installed or one
-     *                                  of the parameters is <code>null</code>.
      * @deprecated {@link ToolWindowManager#registerToolWindow(String, boolean, ToolWindowAnchor)}
      */
-    @Deprecated
-    public abstract ToolWindow registerToolWindow(String id, JComponent component, ToolWindowAnchor anchor);
-
-    /**
-     * @deprecated {@link ToolWindowManager#registerToolWindow(String, boolean, ToolWindowAnchor)}
-     */
-    @Deprecated
-    @RequiredUIAccess
-    public ToolWindow registerToolWindow(String id, JComponent component, ToolWindowAnchor anchor, Disposable parentDisposable) {
-        return registerToolWindow(id, component, anchor, parentDisposable, false, false);
-    }
-
-    /**
-     * @deprecated {@link ToolWindowManager#registerToolWindow(String, boolean, ToolWindowAnchor)}
-     */
-    @Deprecated
-    @RequiredUIAccess
-    public ToolWindow registerToolWindow(
-        String id,
-        JComponent component,
-        ToolWindowAnchor anchor,
-        Disposable parentDisposable,
-        boolean canWorkInDumbMode
-    ) {
-        return registerToolWindow(id, component, anchor, parentDisposable, canWorkInDumbMode, false);
-    }
-
-    /**
-     * @deprecated {@link ToolWindowManager#registerToolWindow(String, boolean, ToolWindowAnchor)}
-     */
-    @Deprecated
-    @RequiredUIAccess
-    public abstract ToolWindow registerToolWindow(
-        String id,
-        JComponent component,
-        ToolWindowAnchor anchor,
-        Disposable parentDisposable,
-        boolean canWorkInDumbMode,
-        boolean canCloseContents
-    );
-
     @Deprecated
     public void notifyByBalloon(
         String toolWindowId,

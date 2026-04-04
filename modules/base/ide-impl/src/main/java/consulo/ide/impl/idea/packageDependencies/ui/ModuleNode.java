@@ -16,6 +16,7 @@
 package consulo.ide.impl.idea.packageDependencies.ui;
 
 import consulo.language.editor.scope.localize.AnalysisScopeLocalize;
+import consulo.navigation.NavigateOptions;
 import consulo.navigation.NavigatableWithText;
 import consulo.language.psi.PsiFile;
 import consulo.localize.LocalizeValue;
@@ -48,13 +49,8 @@ public class ModuleNode extends PackageDependenciesNode implements NavigatableWi
     }
 
     @Override
-    public boolean canNavigate() {
-        return myModule != null && !myModule.isDisposed();
-    }
-
-    @Override
-    public boolean canNavigateToSource() {
-        return false;
+    public NavigateOptions getNavigateOptions() {
+        return myModule != null && !myModule.isDisposed() ? NavigateOptions.CAN_NAVIGATE_NO_SOURCE : NavigateOptions.CANT_NAVIGATE;
     }
 
     @Override

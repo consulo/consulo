@@ -1,5 +1,6 @@
 package consulo.usage;
 
+import consulo.navigation.NavigateOptions;
 import consulo.ui.image.Image;
 import consulo.virtualFileSystem.status.FileStatus;
 import org.jspecify.annotations.Nullable;
@@ -28,16 +29,11 @@ public abstract class UsageGroupBase implements UsageGroup {
   }
 
   @Override
+  public NavigateOptions getNavigateOptions() {
+    return NavigateOptions.CANT_NAVIGATE;
+  }
+
+  @Override
   public void navigate(boolean focus) {
-  }
-
-  @Override
-  public boolean canNavigate() {
-    return false;
-  }
-
-  @Override
-  public boolean canNavigateToSource() {
-    return false;
   }
 }

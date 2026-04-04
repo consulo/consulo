@@ -3,6 +3,7 @@ package consulo.language.editor.highlight;
 
 import consulo.annotation.access.RequiredReadAction;
 import consulo.application.progress.ProgressIndicator;
+import consulo.codeEditor.imaginary.ImaginaryEditor;
 import consulo.colorScheme.EditorColorsScheme;
 import consulo.document.Document;
 import consulo.fileEditor.highlight.HighlightingPass;
@@ -15,16 +16,18 @@ import consulo.language.psi.PsiModificationTracker;
 import consulo.language.util.IncorrectOperationException;
 import consulo.project.DumbService;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.collection.ArrayUtil;
+import consulo.util.lang.ref.SimpleReference;
 import org.jspecify.annotations.Nullable;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.function.BooleanSupplier;
 
 public abstract class TextEditorHighlightingPass implements HighlightingPass {
     public static final TextEditorHighlightingPass[] EMPTY_ARRAY = new TextEditorHighlightingPass[0];
     protected final @Nullable Document myDocument;
-    
     protected final Project myProject;
     private final boolean myRunIntentionPassAfter;
     private final long myInitialDocStamp;
@@ -34,6 +37,7 @@ public abstract class TextEditorHighlightingPass implements HighlightingPass {
     private volatile int myId;
     private volatile boolean myDumb;
     private EditorColorsScheme myColorsScheme;
+    private ImaginaryEditor myImaginaryEditor;
 
     protected TextEditorHighlightingPass(Project project, @Nullable Document document, boolean runIntentionPassAfter) {
         myDocument = document;
@@ -61,6 +65,9 @@ public abstract class TextEditorHighlightingPass implements HighlightingPass {
     }
 
     public @Nullable EditorColorsScheme getColorsScheme() {
+        if (myImaginaryEditor != null) {
+            return myImaginaryEditor.getColorsScheme();
+        }
         return myColorsScheme;
     }
 
@@ -68,12 +75,38 @@ public abstract class TextEditorHighlightingPass implements HighlightingPass {
         myColorsScheme = colorsScheme;
     }
 
+    public @Nullable ImaginaryEditor getImaginaryEditor() {
+        return myImaginaryEditor;
+    }
+
+    public void setImaginaryEditor(@Nullable ImaginaryEditor imaginaryEditor) {
+        myImaginaryEditor = imaginaryEditor;
+    }
+
     protected boolean isDumbMode() {
         return myDumb;
     }
 
-    @RequiredReadAction
+    @Override
+    public BooleanSupplier getExpiredCondition() {
+        return () -> {
+            SimpleReference<Boolean> ref = new SimpleReference<>(Boolean.TRUE);
+            myProject.getApplication().tryRunReadAction(ref, () -> !isValid());
+            return Boolean.TRUE.equals(ref.get());
+        };
+    }
+
+    @RequiredUIAccess
+    public void markUpToDateIfStillValid(DaemonProgressIndicator updateProgress) {
+        if (myDocument != null && isValid()) {
+            DaemonCodeAnalyzerInternal.getInstanceEx(myProject).getFileStatusMap().markFileUpToDate(myDocument, getId());
+        }
+    }
+
     protected boolean isValid() {
+        if (myProject.isDisposed()) {
+            return false;
+        }
         if (isDumbMode() && !DumbService.isDumbAware(this)) {
             return false;
         }
@@ -86,25 +119,26 @@ public abstract class TextEditorHighlightingPass implements HighlightingPass {
             if (myDocument.getModificationStamp() != myInitialDocStamp) {
                 return false;
             }
-            PsiFile file = PsiDocumentManager.getInstance(myProject).getPsiFile(myDocument);
-            return file != null && file.isValid();
+
+            SimpleReference<Boolean> isValidRef = new SimpleReference<>();
+            myProject.getApplication().tryRunReadAction(isValidRef, () -> {
+                PsiFile file = PsiDocumentManager.getInstance(myProject).getPsiFile(myDocument);
+                return file != null && file.isValid();
+            });
+
+            return Boolean.TRUE.equals(isValidRef.get());
         }
 
         return true;
     }
 
+    @RequiredUIAccess
     @Override
-    @RequiredReadAction
     public final void applyInformationToEditor() {
         if (!isValid()) {
             return; // Document has changed.
         }
         if (DumbService.getInstance(myProject).isDumb() && !DumbService.isDumbAware(this)) {
-            Document document = getDocument();
-            PsiFile file = document == null ? null : PsiDocumentManager.getInstance(myProject).getPsiFile(document);
-            if (file != null) {
-                DaemonCodeAnalyzerInternal.getInstanceEx(myProject).getFileStatusMap().markFileUpToDate(getDocument(), getId());
-            }
             return;
         }
         doApplyInformationToEditor();
@@ -122,12 +156,10 @@ public abstract class TextEditorHighlightingPass implements HighlightingPass {
         myId = id;
     }
 
-    
     public List<HighlightInfo> getInfos() {
         return Collections.emptyList();
     }
 
-    
     public final int[] getCompletionPredecessorIds() {
         return myCompletionPredecessorIds;
     }
@@ -140,7 +172,6 @@ public abstract class TextEditorHighlightingPass implements HighlightingPass {
         return myDocument;
     }
 
-    
     public final int[] getStartingPredecessorIds() {
         return myStartingPredecessorIds;
     }

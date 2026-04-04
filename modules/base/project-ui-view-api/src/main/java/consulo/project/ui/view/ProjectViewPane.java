@@ -15,7 +15,6 @@
  */
 package consulo.project.ui.view;
 
-import consulo.dataContext.DataProvider;
 import consulo.disposer.Disposable;
 import consulo.localize.LocalizeValue;
 import consulo.module.Module;
@@ -31,16 +30,13 @@ import org.jspecify.annotations.Nullable;
  * @author VISTALL
  * @since 10-Aug-22
  */
-public interface ProjectViewPane extends UserDataHolder, DataProvider, Disposable {
-  
+public interface ProjectViewPane extends UserDataHolder, Disposable {
   String getId();
 
   @Nullable String getSubId();
 
-  
   SelectInTarget createSelectInTarget();
 
-  
   ActionCallback updateFromRoot(boolean restoreExpandedPaths);
 
   void select(Object element, VirtualFile file, boolean requestFocus);
@@ -49,7 +45,6 @@ public interface ProjectViewPane extends UserDataHolder, DataProvider, Disposabl
 
   void selectModuleGroup(ModuleGroup moduleGroup, boolean requestFocus);
 
-  
   default AsyncResult<Void> selectCB(Object element, VirtualFile file, boolean requestFocus) {
     select(element, file, requestFocus);
     return AsyncResult.resolved();
@@ -57,10 +52,8 @@ public interface ProjectViewPane extends UserDataHolder, DataProvider, Disposabl
 
   @Nullable NodeDescriptor getSelectedDescriptor();
 
-  
   String[] getSubIds();
 
-  
   LocalizeValue getPresentableSubIdName(String subId);
 
   default void queueUpdate() {

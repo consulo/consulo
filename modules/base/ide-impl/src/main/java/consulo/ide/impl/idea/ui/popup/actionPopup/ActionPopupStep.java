@@ -1,6 +1,8 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.ui.popup.actionPopup;
 
+import consulo.application.progress.EmptyProgressIndicator;
+import consulo.application.progress.ProgressIndicator;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
 import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionImplUtil;
@@ -11,10 +13,7 @@ import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.StatusText;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.popup.ListPopupStepEx;
-import consulo.ui.ex.popup.ListPopupStep;
-import consulo.ui.ex.popup.MnemonicNavigationFilter;
-import consulo.ui.ex.popup.PopupStep;
-import consulo.ui.ex.popup.SpeedSearchFilter;
+import consulo.ui.ex.popup.*;
 import consulo.ui.image.Image;
 import consulo.ui.util.TextWithMnemonic;
 import consulo.util.collection.ContainerUtil;
@@ -24,6 +23,7 @@ import org.jspecify.annotations.Nullable;
 import javax.swing.*;
 import java.awt.event.InputEvent;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.BiFunction;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
@@ -34,14 +34,12 @@ public class ActionPopupStep implements ListPopupStepEx<ActionPopupItem>, Mnemon
     private final Supplier<? extends DataContext> myContext;
     private final String myActionPlace;
     private final boolean myEnableMnemonics;
-    
     private final PresentationFactory myPresentationFactory;
     private final int myDefaultOptionIndex;
     private final boolean myAutoSelectionEnabled;
     private final boolean myShowDisabledActions;
     private Runnable myFinalRunnable;
     private final Predicate<? super AnAction> myPreselectActionCondition;
-    
     private BiFunction<DataContext, AnAction, DataContext> mySubStepContextAdjuster = (c, a) -> c;
 
     public ActionPopupStep(
@@ -84,8 +82,7 @@ public class ActionPopupStep implements ListPopupStepEx<ActionPopupItem>, Mnemon
         return defaultOptionIndex;
     }
 
-    
-    public static ListPopupStep<ActionPopupItem> createActionsStep(
+    public static CompletableFuture<ListPopupStep<ActionPopupItem>> createActionsStep(
         ActionGroup actionGroup,
         DataContext dataContext,
         boolean showNumbers,
@@ -100,7 +97,29 @@ public class ActionPopupStep implements ListPopupStepEx<ActionPopupItem>, Mnemon
         int defaultOptionIndex,
         PresentationFactory presentationFactory
     ) {
-        List<ActionPopupItem> items = createActionItems(
+        return createActionsStep(actionGroup, dataContext, showNumbers, useAlphaAsNumbers,
+            showDisabledActions, title, honorActionMnemonics, autoSelectionEnabled,
+            contextSupplier, actionPlace, preselectCondition, defaultOptionIndex,
+            presentationFactory, new EmptyProgressIndicator());
+    }
+
+    public static CompletableFuture<ListPopupStep<ActionPopupItem>> createActionsStep(
+        ActionGroup actionGroup,
+        DataContext dataContext,
+        boolean showNumbers,
+        boolean useAlphaAsNumbers,
+        boolean showDisabledActions,
+        String title,
+        boolean honorActionMnemonics,
+        boolean autoSelectionEnabled,
+        Supplier<? extends DataContext> contextSupplier,
+        @Nullable String actionPlace,
+        Predicate<? super AnAction> preselectCondition,
+        int defaultOptionIndex,
+        PresentationFactory presentationFactory,
+        ProgressIndicator indicator
+    ) {
+        return createActionItems(
             actionGroup,
             dataContext,
             showNumbers,
@@ -108,30 +127,31 @@ public class ActionPopupStep implements ListPopupStepEx<ActionPopupItem>, Mnemon
             showDisabledActions,
             honorActionMnemonics,
             actionPlace,
-            presentationFactory
-        );
-        boolean enableMnemonics = showNumbers || honorActionMnemonics && items.stream().anyMatch(
-            actionItem -> TextWithMnemonic.parse(actionItem.getAction().getTemplatePresentation().getTextWithMnemonic()).getMnemonic() != 0
-        );
+            presentationFactory,
+            indicator
+        ).thenApply(items -> {
+            boolean enableMnemonics = showNumbers || honorActionMnemonics && items.stream().anyMatch(
+                actionItem -> TextWithMnemonic.parse(actionItem.getAction().getTemplatePresentation().getTextWithMnemonic()).getMnemonic() != 0
+            );
 
-        return new ActionPopupStep(
-            items,
-            title,
-            contextSupplier,
-            actionPlace,
-            enableMnemonics,
-            preselectCondition != null
-                ? preselectCondition
-                : action -> defaultOptionIndex >= 0 && defaultOptionIndex < items.size()
-                && items.get(defaultOptionIndex).getAction().equals(action),
-            autoSelectionEnabled,
-            showDisabledActions,
-            presentationFactory
-        );
+            return new ActionPopupStep(
+                items,
+                title,
+                contextSupplier,
+                actionPlace,
+                enableMnemonics,
+                preselectCondition != null
+                    ? preselectCondition
+                    : action -> defaultOptionIndex >= 0 && defaultOptionIndex < items.size()
+                    && items.get(defaultOptionIndex).getAction().equals(action),
+                autoSelectionEnabled,
+                showDisabledActions,
+                presentationFactory
+            );
+        });
     }
 
-    
-    public static List<ActionPopupItem> createActionItems(
+    public static CompletableFuture<List<ActionPopupItem>> createActionItems(
         ActionGroup actionGroup,
         DataContext dataContext,
         boolean showNumbers,
@@ -141,6 +161,22 @@ public class ActionPopupStep implements ListPopupStepEx<ActionPopupItem>, Mnemon
         @Nullable String actionPlace,
         PresentationFactory presentationFactory
     ) {
+        return createActionItems(actionGroup, dataContext, showNumbers, useAlphaAsNumbers,
+            showDisabledActions, honorActionMnemonics, actionPlace, presentationFactory,
+            new EmptyProgressIndicator());
+    }
+
+    public static CompletableFuture<List<ActionPopupItem>> createActionItems(
+        ActionGroup actionGroup,
+        DataContext dataContext,
+        boolean showNumbers,
+        boolean useAlphaAsNumbers,
+        boolean showDisabledActions,
+        boolean honorActionMnemonics,
+        @Nullable String actionPlace,
+        PresentationFactory presentationFactory,
+        ProgressIndicator indicator
+    ) {
         ActionStepBuilder builder = new ActionStepBuilder(
             dataContext,
             showNumbers,
@@ -148,28 +184,34 @@ public class ActionPopupStep implements ListPopupStepEx<ActionPopupItem>, Mnemon
             showDisabledActions,
             honorActionMnemonics,
             actionPlace,
-            presentationFactory
+            presentationFactory,
+            indicator
         );
-        builder.buildGroup(actionGroup);
-        return builder.getItems();
+        return builder.buildGroup(actionGroup);
     }
 
     public void setSubStepContextAdjuster(BiFunction<DataContext, AnAction, DataContext> subStepContextAdjuster) {
         mySubStepContextAdjuster = subStepContextAdjuster;
     }
 
-    
     public BiFunction<DataContext, AnAction, DataContext> getSubStepContextAdjuster() {
         return mySubStepContextAdjuster;
     }
 
+    /**
+     * Replaces the current items with the given list.
+     * Typically called when async expansion completes to populate the step with actual action items.
+     */
+    public void setItems(List<ActionPopupItem> items) {
+        myItems.clear();
+        myItems.addAll(items);
+    }
+
     @Override
-    
     public List<ActionPopupItem> getValues() {
         return myItems;
     }
 
-    
     public List<ActionPopupItem> getInlineItems(ActionPopupItem value) {
         return value.getInlineItems();
     }
@@ -203,7 +245,6 @@ public class ActionPopupStep implements ListPopupStepEx<ActionPopupItem>, Mnemon
     }
 
     @Override
-    
     public String getTextFor(ActionPopupItem value) {
         return value.getText().getValue();
     }
@@ -215,6 +256,7 @@ public class ActionPopupStep implements ListPopupStepEx<ActionPopupItem>, Mnemon
 
     @Override
     public void setEmptyText(StatusText emptyText) {
+        emptyText.setText("Loading...");
     }
 
     @Override
@@ -237,6 +279,7 @@ public class ActionPopupStep implements ListPopupStepEx<ActionPopupItem>, Mnemon
         return onChosen(actionChoice, finalChoice, null);
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public PopupStep<ActionPopupItem> onChosen(
         ActionPopupItem item,
@@ -249,7 +292,8 @@ public class ActionPopupStep implements ListPopupStepEx<ActionPopupItem>, Mnemon
         AnAction action = item.getAction();
         DataContext dataContext = myContext.get();
         if (action instanceof ActionGroup subGroup && (!finalChoice || !item.isPerformGroup())) {
-            return createActionsStep(
+            ProgressIndicator indicator = new EmptyProgressIndicator();
+            CompletableFuture<ListPopupStep<ActionPopupItem>> stepFuture = createActionsStep(
                 subGroup,
                 dataContext,
                 myEnableMnemonics,
@@ -262,8 +306,20 @@ public class ActionPopupStep implements ListPopupStepEx<ActionPopupItem>, Mnemon
                 myActionPlace,
                 myPreselectActionCondition,
                 -1,
-                myPresentationFactory
+                myPresentationFactory,
+                indicator
             );
+            return new AsyncPopupStep<>() {
+                @Override
+                public PopupStep call() throws Exception {
+                    return stepFuture.get();
+                }
+
+                @Override
+                public void cancelBackgroundWork() {
+                    indicator.cancel();
+                }
+            };
         }
         else if (ActionImplUtil.isKeepPopupOpen(item.getKeepPopupOnPerform(), event)) {
             performActionItem(item, event);
@@ -299,7 +355,6 @@ public class ActionPopupStep implements ListPopupStepEx<ActionPopupItem>, Mnemon
         ActionImplUtil.performActionDumbAware(action, event);
     }
 
-    
     public AnActionEvent createAnActionEvent(ActionPopupItem item, @Nullable InputEvent inputEvent) {
         DataContext dataContext = myContext.get();
         Presentation presentation = item.clonePresentation();

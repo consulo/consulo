@@ -15,7 +15,6 @@ import consulo.util.collection.Sets;
 import consulo.util.concurrent.AsyncPromise;
 import consulo.util.concurrent.CancellablePromise;
 import consulo.util.concurrent.Obsolescent;
-import consulo.util.lang.ThreeState;
 
 import java.util.Map;
 import java.util.Set;
@@ -25,10 +24,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Supplier;
 
-import static consulo.application.ApplicationManager.getApplication;
-import static consulo.application.internal.ProgressIndicatorUtils.runInReadActionWithWriteActionPriority;
 import static consulo.disposer.Disposer.register;
-import static java.awt.EventQueue.isDispatchThread;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 
 public abstract class InvokerImpl implements Disposable, Invoker {
@@ -37,14 +33,11 @@ public abstract class InvokerImpl implements Disposable, Invoker {
     private static final AtomicInteger UID = new AtomicInteger();
     private final Map<AsyncPromise<?>, ProgressIndicatorBase> indicators = new ConcurrentHashMap<>();
     private final AtomicInteger count = new AtomicInteger();
-    private final ThreeState useReadAction;
     private final String description;
     private volatile boolean disposed;
 
-    private InvokerImpl(String prefix, Disposable parent, ThreeState useReadAction) {
-        description =
-            "Invoker." + UID.getAndIncrement() + "." + prefix + (useReadAction != ThreeState.UNSURE ? ".ReadAction=" + useReadAction : "") + ": " + parent;
-        this.useReadAction = useReadAction;
+    private InvokerImpl(String prefix, Disposable parent) {
+        description = "Invoker." + UID.getAndIncrement() + "." + prefix + ": " + parent;
         register(parent, this);
     }
 
@@ -59,20 +52,6 @@ public abstract class InvokerImpl implements Disposable, Invoker {
         while (!indicators.isEmpty()) {
             indicators.keySet().forEach(AsyncPromise::cancel);
         }
-    }
-
-    /**
-     * Returns {@code true} if the current thread allows to process a task.
-     *
-     * @return {@code true} if the current thread is valid, or {@code false} otherwise
-     */
-    @Override
-    public boolean isValidThread() {
-        if (useReadAction != ThreeState.NO) {
-            return true;
-        }
-        Application application = getApplication();
-        return application == null || !application.isReadAccessAllowed();
     }
 
     /**
@@ -157,7 +136,6 @@ public abstract class InvokerImpl implements Disposable, Invoker {
      * @deprecated use {@link #invoke(Runnable)} or {@link #compute(Supplier)} instead
      */
     @Deprecated
-    
     @Override
     public final CancellablePromise<?> runOrInvokeLater(Runnable task) {
         return invoke(task);
@@ -201,16 +179,8 @@ public abstract class InvokerImpl implements Disposable, Invoker {
     private void invokeSafely(Task<?> task, int attempt) {
         try {
             if (task.canInvoke(disposed)) {
-                if (getApplication() == null) {
-                    task.run(); // is not interruptible in tests without application
-                }
-                else if (useReadAction != ThreeState.YES || isDispatchThread()) {
-                    ProgressManager.getInstance().runProcess(task, indicator(task.promise));
-                }
-                else if (!runInReadActionWithWriteActionPriority(task, indicator(task.promise))) {
-                    offerRestart(task, attempt);
-                    return;
-                }
+                ProgressManager.getInstance().runProcess(task, indicator(task.promise));
+
                 task.setResult();
             }
         }
@@ -342,6 +312,7 @@ public abstract class InvokerImpl implements Disposable, Invoker {
         }
     }
 
+
     /**
      * This wrapping class is intended to convert a developer's runnable to the obsolescent supplier.
      */
@@ -369,7 +340,7 @@ public abstract class InvokerImpl implements Disposable, Invoker {
         }
     }
 
-    
+
     private ProgressIndicatorBase indicator(AsyncPromise<?> promise) {
         ProgressIndicatorBase indicator = indicators.get(promise);
         if (indicator == null) {
@@ -387,8 +358,7 @@ public abstract class InvokerImpl implements Disposable, Invoker {
      * This class is the {@code Invoker} in the Event Dispatch Thread,
      * which is the only one valid thread for this invoker.
      */
-    public static final class EDT extends InvokerImpl {
-        
+    public static final class UIAccessInvoker extends InvokerImpl {
         private final UIAccess myUiAccess;
 
         /**
@@ -396,14 +366,14 @@ public abstract class InvokerImpl implements Disposable, Invoker {
          *
          * @param parent a disposable parent object
          */
-        public EDT(UIAccess uiAccess, Disposable parent) {
-            super("UI", parent, ThreeState.UNSURE);
+        public UIAccessInvoker(UIAccess uiAccess, Disposable parent) {
+            super("UI", parent);
             myUiAccess = uiAccess;
         }
 
         @Override
         public boolean isValidThread() {
-            return isDispatchThread();
+            return UIAccess.isUIThread();
         }
 
         @Override
@@ -415,140 +385,36 @@ public abstract class InvokerImpl implements Disposable, Invoker {
                 myUiAccess.execute(runnable);
             }
         }
-    }
-
-    /**
-     * This class is the {@code Invoker} in a single background thread.
-     * This invoker does not need additional synchronization.
-     *
-     * @deprecated use {@link Background#Background(Disposable)} instead
-     */
-    @Deprecated
-    public static final class BackgroundThread extends InvokerImpl {
-        private final ScheduledExecutorService executor;
-        private volatile Thread thread;
-
-        public BackgroundThread(Disposable parent) {
-            super("Background.Thread", parent, ThreeState.YES);
-            executor = AppExecutorUtil.createBoundedScheduledExecutorService(toString(), 1);
-        }
 
         @Override
-        public void dispose() {
-            super.dispose();
-            executor.shutdown();
-        }
-
-        @Override
-        public boolean isValidThread() {
-            return thread == Thread.currentThread();
-        }
-
-        @Override
-        void offer(Runnable runnable, int delay) {
-            schedule(executor, () -> {
-                if (thread != null) {
-                    LOG.error("unexpected thread: " + thread);
-                }
-                try {
-                    thread = Thread.currentThread();
-                    runnable.run(); // may throw an assertion error
-                }
-                finally {
-                    thread = null;
-                }
-            }, delay);
+        public String toString() {
+            return "UIAccessInvoker";
         }
     }
 
     public static final class Background extends InvokerImpl {
         private final Set<Thread> threads = Sets.newConcurrentHashSet();
-        private final ScheduledExecutorService executor;
+        private final ScheduledExecutorService myExecutor;
 
-        /**
-         * Creates the invoker of user read actions on a background thread.
-         *
-         * @param parent a disposable parent object
-         * @deprecated use {@link #forBackgroundThreadWithReadAction} instead
-         */
-        @Deprecated
         public Background(Disposable parent) {
-            this(parent, true);
-        }
-
-        /**
-         * Creates the invoker of user read actions on background threads.
-         *
-         * @param parent     a disposable parent object
-         * @param maxThreads the number of threads used for parallel calculation,
-         *                   where 1 guarantees sequential calculation,
-         *                   which allows not to use additional synchronization
-         * @deprecated use {@link #forBackgroundPoolWithReadAction} instead
-         */
-        @Deprecated
-        public Background(Disposable parent, int maxThreads) {
-            this(parent, ThreeState.YES, maxThreads);
-        }
-
-        /**
-         * Creates the invoker of user tasks on a background thread.
-         *
-         * @param parent        a disposable parent object
-         * @param useReadAction {@code true} to run user tasks as read actions with write action priority,
-         *                      {@code false} to run user tasks without read locks
-         * @deprecated use {@link #forBackgroundThreadWithReadAction} or {@link #forBackgroundThreadWithoutReadAction} instead
-         */
-        @Deprecated
-        public Background(Disposable parent, boolean useReadAction) {
-            this(parent, ThreeState.fromBoolean(useReadAction));
-        }
-
-        /**
-         * Creates the invoker of user tasks on a background thread.
-         *
-         * @param parent        a disposable parent object
-         * @param useReadAction {@code YES} to run user tasks as read actions with write action priority,
-         *                      {@code NO} to run user tasks without read locks,
-         *                      {@code UNSURE} does not guarantee that read action is allowed
-         * @deprecated use {@link #forBackgroundThreadWithReadAction} or {@link #forBackgroundThreadWithoutReadAction} instead
-         */
-        @Deprecated
-        public Background(Disposable parent, ThreeState useReadAction) {
-            this(parent, useReadAction, 1);
-        }
-
-        /**
-         * Creates the invoker of user tasks on background threads.
-         *
-         * @param parent        a disposable parent object
-         * @param useReadAction {@code YES} to run user tasks as read actions with write action priority,
-         *                      {@code NO} to run user tasks without read locks,
-         *                      {@code UNSURE} does not guarantee that read action is allowed
-         * @param maxThreads    the number of threads used for parallel calculation,
-         *                      where 1 guarantees sequential calculation,
-         *                      which allows not to use additional synchronization
-         * @deprecated use {@link #forBackgroundThreadWithReadAction} or {@link #forBackgroundThreadWithoutReadAction} instead
-         */
-        @Deprecated
-        public Background(Disposable parent, ThreeState useReadAction, int maxThreads) {
-            super(maxThreads != 1 ? "Pool(" + maxThreads + ")" : "Thread", parent, useReadAction);
-            executor = AppExecutorUtil.createBoundedScheduledExecutorService(toString(), maxThreads);
+            super("Background", parent);
+            myExecutor = AppExecutorUtil.createBoundedScheduledExecutorService(toString(), 1);
         }
 
         @Override
         public void dispose() {
             super.dispose();
-            executor.shutdown();
+            myExecutor.shutdown();
         }
 
         @Override
         public boolean isValidThread() {
-            return threads.contains(Thread.currentThread()) && super.isValidThread();
+            return threads.contains(Thread.currentThread());
         }
 
         @Override
         void offer(Runnable runnable, int delay) {
-            schedule(executor, () -> {
+            schedule(myExecutor, () -> {
                 Thread thread = Thread.currentThread();
                 if (!threads.add(thread)) {
                     LOG.error("current thread is already used");
@@ -556,6 +422,49 @@ public abstract class InvokerImpl implements Disposable, Invoker {
                 else {
                     try {
                         runnable.run(); // may throw an assertion error
+                    }
+                    finally {
+                        if (!threads.remove(thread)) {
+                            LOG.error("current thread is already removed");
+                        }
+                    }
+                }
+            }, delay);
+        }
+    }
+
+    public static final class BackgroundRead extends InvokerImpl {
+        private final Set<Thread> threads = Sets.newConcurrentHashSet();
+        private final ScheduledExecutorService myExecutor;
+        private final Application myApplication;
+
+        public BackgroundRead(Application application, Disposable parent) {
+            super("Read", parent);
+            myApplication = application;
+            myExecutor = AppExecutorUtil.createBoundedScheduledExecutorService(toString(), 1);
+        }
+
+        @Override
+        public void dispose() {
+            super.dispose();
+            myExecutor.shutdown();
+        }
+
+        @Override
+        public boolean isValidThread() {
+            return threads.contains(Thread.currentThread()) && myApplication.isReadAccessAllowed();
+        }
+
+        @Override
+        void offer(Runnable runnable, int delay) {
+            schedule(myExecutor, () -> {
+                Thread thread = Thread.currentThread();
+                if (!threads.add(thread)) {
+                    LOG.error("current thread is already used");
+                }
+                else {
+                    try {
+                        myApplication.runReadAction(runnable);
                     }
                     finally {
                         if (!threads.remove(thread)) {
@@ -576,23 +485,15 @@ public abstract class InvokerImpl implements Disposable, Invoker {
         }
     }
 
-    
     public static InvokerImpl forEventDispatchThread(UIAccess uiAccess, Disposable parent) {
-        return new EDT(uiAccess, parent);
+        return new UIAccessInvoker(uiAccess, parent);
     }
 
-    
-    public static InvokerImpl forBackgroundPoolWithReadAction(Disposable parent) {
-        return new Background(parent, ThreeState.YES, 8);
-    }
-
-    
     public static InvokerImpl forBackgroundThreadWithReadAction(Disposable parent) {
-        return new Background(parent, ThreeState.YES, 1);
+        return new BackgroundRead(Application.get(), parent);
     }
 
-    
     public static InvokerImpl forBackgroundThreadWithoutReadAction(Disposable parent) {
-        return new Background(parent, ThreeState.NO, 1);
+        return new Background(parent);
     }
 }

@@ -16,7 +16,8 @@
 package consulo.versionControlSystem.distributed.impl.internal.push;
 
 import consulo.application.Application;
-import consulo.dataContext.DataProvider;
+import consulo.dataContext.DataSink;
+import consulo.dataContext.UiDataProvider;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
@@ -30,7 +31,6 @@ import consulo.ui.ex.awt.tree.TreeUtil;
 import consulo.ui.ex.keymap.util.KeymapUtil;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.ContainerUtil;
-import consulo.util.dataholder.Key;
 import consulo.versionControlSystem.VcsDataKeys;
 import consulo.versionControlSystem.change.Change;
 import consulo.versionControlSystem.change.ChangesBrowser;
@@ -57,7 +57,7 @@ import java.util.List;
 import java.util.*;
 import java.util.function.Function;
 
-public class PushLog extends JPanel implements DataProvider {
+public class PushLog extends JPanel implements UiDataProvider {
     private static final String START_EDITING = "startEditing";
     private final ChangesBrowser<Change> myChangesBrowser;
     private final CheckboxTree myTree;
@@ -327,12 +327,10 @@ public class PushLog extends JPanel implements DataProvider {
         }
     }
 
-    
     private static List<Change> collectAllChanges(List<CommitNode> commitNodes) {
         return ChangesBrowserUtil.zipChanges(collectChanges(commitNodes));
     }
 
-    
     private static List<CommitNode> collectSelectedCommitNodes(List<DefaultMutableTreeNode> selectedNodes) {
         List<CommitNode> nodes = new ArrayList<>();
         for (DefaultMutableTreeNode node : selectedNodes) {
@@ -346,7 +344,6 @@ public class PushLog extends JPanel implements DataProvider {
         return nodes;
     }
 
-    
     private static List<Change> collectChanges(List<CommitNode> commitNodes) {
         List<Change> changes = new ArrayList<>();
         for (CommitNode node : commitNodes) {
@@ -355,7 +352,6 @@ public class PushLog extends JPanel implements DataProvider {
         return changes;
     }
 
-    
     private static <T> List<T> getChildNodesByType(DefaultMutableTreeNode node, Class<T> type, boolean reverseOrder) {
         List<T> nodes = new ArrayList<>();
         if (node.getChildCount() < 1) {
@@ -378,7 +374,6 @@ public class PushLog extends JPanel implements DataProvider {
         return nodes;
     }
 
-    
     private static List<Integer> getSortedRows(int[] rows) {
         List<Integer> sorted = new ArrayList<>();
         for (int row : rows) {
@@ -405,12 +400,12 @@ public class PushLog extends JPanel implements DataProvider {
 
     // Make changes available for diff action; revisionNumber for create patch and copy revision number actions
     @Override
-    public @Nullable Object getData(Key<?> dataId) {
-        if (VcsDataKeys.CHANGES == dataId) {
+    public void uiDataSnapshot(DataSink sink) {
+        sink.lazy(VcsDataKeys.CHANGES, () -> {
             List<CommitNode> commitNodes = getSelectedCommitNodes();
             return ArrayUtil.toObjectArray(collectAllChanges(commitNodes), Change.class);
-        }
-        else if (VcsDataKeys.VCS_REVISION_NUMBERS == dataId) {
+        });
+        sink.lazy(VcsDataKeys.VCS_REVISION_NUMBERS, () -> {
             List<CommitNode> commitNodes = getSelectedCommitNodes();
             return ArrayUtil.toObjectArray(
                 ContainerUtil.map(
@@ -422,11 +417,9 @@ public class PushLog extends JPanel implements DataProvider {
                 ),
                 VcsRevisionNumber.class
             );
-        }
-        return null;
+        });
     }
 
-    
     private List<CommitNode> getSelectedCommitNodes() {
         int[] rows = myTree.getSelectionRows();
         if (rows != null && rows.length != 0) {
@@ -436,7 +429,6 @@ public class PushLog extends JPanel implements DataProvider {
         return List.of();
     }
 
-    
     private List<DefaultMutableTreeNode> getNodesForRows(List<Integer> rows) {
         List<DefaultMutableTreeNode> nodes = new ArrayList<>();
         for (Integer row : rows) {
@@ -494,7 +486,6 @@ public class PushLog extends JPanel implements DataProvider {
         return myTree;
     }
 
-    
     public CheckboxTree getTree() {
         return myTree;
     }
@@ -690,6 +681,7 @@ public class PushLog extends JPanel implements DataProvider {
             tree.addComponentListener(myTreeSizeListener);
             tree.addAncestorListener(myTreeAncestorListener);
         }
+
 
         @Override
         protected void uninstallListeners() {

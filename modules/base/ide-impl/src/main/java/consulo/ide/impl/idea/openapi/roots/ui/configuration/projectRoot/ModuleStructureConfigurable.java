@@ -23,7 +23,8 @@ import consulo.configurable.*;
 import consulo.configurable.internal.ConfigurableWeight;
 import consulo.configurable.internal.FullContentConfigurable;
 import consulo.content.library.Library;
-import consulo.dataContext.DataProvider;
+import consulo.dataContext.DataSink;
+import consulo.dataContext.UiDataProvider;
 import consulo.disposer.Disposable;
 import consulo.ide.impl.idea.ide.projectView.impl.ModuleGroupUtil;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.ModuleEditor;
@@ -56,7 +57,6 @@ import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.tree.TreeUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
-import consulo.util.dataholder.Key;
 import consulo.util.lang.Comparing;
 import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
@@ -156,7 +156,6 @@ public class ModuleStructureConfigurable extends BaseStructureConfigurable imple
     }
 
     @Override
-    
     protected List<AnAction> createActions(boolean fromPopup) {
         List<AnAction> result = super.createActions(fromPopup);
         result.add(AnSeparator.getInstance());
@@ -174,7 +173,6 @@ public class ModuleStructureConfigurable extends BaseStructureConfigurable imple
         myUiDisposed = false;
     }
 
-    
     @Override
     @RequiredReadAction
     protected Collection<? extends ProjectStructureElement> getProjectStructureElements() {
@@ -338,7 +336,6 @@ public class ModuleStructureConfigurable extends BaseStructureConfigurable imple
         return false;
     }
 
-    
     @Override
     public LocalizeValue getDisplayName() {
         return ProjectLocalize.projectRootsDisplayName();
@@ -463,7 +460,6 @@ public class ModuleStructureConfigurable extends BaseStructureConfigurable imple
     }
 
     @Override
-    
     public String getId() {
         return ID;
     }
@@ -498,15 +494,15 @@ public class ModuleStructureConfigurable extends BaseStructureConfigurable imple
         myNorthPanel.add(bannerComponent, BorderLayout.NORTH);
     }
 
-    private class MyDataProviderWrapper extends JPanel implements DataProvider {
+    private class MyDataProviderWrapper extends JPanel implements UiDataProvider {
         public MyDataProviderWrapper(JComponent component) {
             super(new BorderLayout());
             add(component, BorderLayout.CENTER);
         }
 
         @Override
-        public @Nullable Object getData(Key<?> dataId) {
-            if (LangDataKeys.MODULE_CONTEXT_ARRAY == dataId) {
+        public void uiDataSnapshot(DataSink sink) {
+            sink.lazy(LangDataKeys.MODULE_CONTEXT_ARRAY, () -> {
                 TreePath[] paths = myTree.getSelectionPaths();
                 if (paths != null) {
                     ArrayList<Module> modules = new ArrayList<>();
@@ -521,15 +517,10 @@ public class ModuleStructureConfigurable extends BaseStructureConfigurable imple
                     }
                     return !modules.isEmpty() ? modules.toArray(new Module[modules.size()]) : null;
                 }
-            }
-            if (LangDataKeys.MODULE_CONTEXT == dataId) {
-                return getSelectedModule();
-            }
-            if (LangDataKeys.MODIFIABLE_MODULE_MODEL == dataId) {
-                return getModulesConfigurator().getModuleModel();
-            }
-
-            return null;
+                return null;
+            });
+            sink.lazy(LangDataKeys.MODULE_CONTEXT, ModuleStructureConfigurable.this::getSelectedModule);
+            sink.lazy(LangDataKeys.MODIFIABLE_MODULE_MODEL, () -> getModulesConfigurator().getModuleModel());
         }
     }
 
@@ -600,7 +591,6 @@ public class ModuleStructureConfigurable extends BaseStructureConfigurable imple
     protected AbstractAddGroup createAddAction() {
         return new AbstractAddGroup(ProjectLocalize.addNewHeaderText()) {
             @Override
-            
             public AnAction[] getChildren(@Nullable AnActionEvent e) {
 
                 ArrayList<AnAction> result = new ArrayList<>();

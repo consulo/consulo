@@ -27,7 +27,8 @@ import consulo.component.messagebus.MessageBusConnection;
 import consulo.content.scope.SearchScope;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
-import consulo.dataContext.DataProvider;
+import consulo.dataContext.DataSink;
+import consulo.dataContext.UiDataProvider;
 import consulo.disposer.Disposer;
 import consulo.externalService.statistic.FeatureUsageTracker;
 import consulo.fileEditor.FileEditor;
@@ -93,7 +94,6 @@ import consulo.usage.internal.NullUsage;
 import consulo.usage.localize.UsageLocalize;
 import consulo.usage.rule.UsageFilteringRuleListener;
 import consulo.util.collection.ArrayUtil;
-import consulo.util.dataholder.Key;
 import consulo.util.lang.Comparing;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.xml.XmlStringUtil;
@@ -498,7 +498,6 @@ public class ShowUsagesAction extends AnAction implements PopupAction {
         Disposer.register(popup, indicator::cancel);
     }
 
-    
     private static UsageNode createStringNode(Object string) {
         return new StringNode(string);
     }
@@ -508,7 +507,6 @@ public class ShowUsagesAction extends AnAction implements PopupAction {
             super(cols(cols), data, 0);
         }
 
-        
         private static ColumnInfo[] cols(int cols) {
             ColumnInfo<UsageNode, UsageNode> o = new ColumnInfo<UsageNode, UsageNode>(LocalizeValue.empty()) {
                 @Override
@@ -550,7 +548,7 @@ public class ShowUsagesAction extends AnAction implements PopupAction {
         }
     }
 
-    
+
     private JComponent createHintComponent(
         LocalizeValue text,
         final FindUsagesHandler handler,
@@ -595,7 +593,6 @@ public class ShowUsagesAction extends AnAction implements PopupAction {
         return panel;
     }
 
-    
     private AnAction createSettingsAction(
         final FindUsagesHandler handler,
         final RelativePoint popupPosition,
@@ -680,12 +677,10 @@ public class ShowUsagesAction extends AnAction implements PopupAction {
         });
     }
 
-    
     private static String searchScopePresentableName(FindUsagesOptions options) {
         return options.searchScope.getDisplayName();
     }
 
-    
     private Runnable prepareTable(
         MyTable table,
         Editor editor,
@@ -795,7 +790,6 @@ public class ShowUsagesAction extends AnAction implements PopupAction {
     }
 
     @RequiredUIAccess
-    
     private JBPopup createUsagePopup(
         List<Usage> usages,
         Set<UsageNode> visibleNodes,
@@ -912,7 +906,6 @@ public class ShowUsagesAction extends AnAction implements PopupAction {
         }
     }
 
-    
     private static String getFullTitle(
         List<Usage> usages,
         String title,
@@ -1016,7 +1009,6 @@ public class ShowUsagesAction extends AnAction implements PopupAction {
         return true;
     }
 
-    
     @RequiredUIAccess
     private static MyModel setTableModel(
         JTable table,
@@ -1046,7 +1038,6 @@ public class ShowUsagesAction extends AnAction implements PopupAction {
         return data.isEmpty() || data.get(0) instanceof StringNode ? 1 : 3;
     }
 
-    
     private static List<UsageNode> collectData(
         List<Usage> usages,
         Collection<UsageNode> visibleNodes,
@@ -1219,6 +1210,7 @@ public class ShowUsagesAction extends AnAction implements PopupAction {
         //table.setMaximumSize(dimension);
         //table.setPreferredScrollableViewportSize(dimension);
 
+
         Dimension footerSize = ((AbstractPopup) popup).getFooterPreferredSize();
 
         int footer = footerSize.height;
@@ -1362,7 +1354,7 @@ public class ShowUsagesAction extends AnAction implements PopupAction {
         return newFileEditor instanceof TextEditor textEditor ? textEditor.getEditor() : null;
     }
 
-    private static class MyTable extends JBTable implements DataProvider {
+    private static class MyTable extends JBTable implements UiDataProvider {
         private static final int MARGIN = 2;
 
         public MyTable() {
@@ -1376,18 +1368,15 @@ public class ShowUsagesAction extends AnAction implements PopupAction {
         }
 
         @Override
-        @RequiredReadAction
-        public Object getData(Key<?> dataId) {
-            if (PsiElement.KEY == dataId) {
+        public void uiDataSnapshot(DataSink sink) {
+            sink.lazy(PsiElement.KEY, () -> {
                 int[] selected = getSelectedRows();
                 if (selected.length == 1) {
                     return getPsiElementForHint(getValueAt(selected[0], 0));
                 }
-            }
-            else if (LangDataKeys.POSITION_ADJUSTER_POPUP == dataId) {
-                return PopupUtil.getPopupContainerFor(this);
-            }
-            return null;
+                return null;
+            });
+            sink.set(LangDataKeys.POSITION_ADJUSTER_POPUP, PopupUtil.getPopupContainerFor(this));
         }
 
         @Override
@@ -1395,7 +1384,6 @@ public class ShowUsagesAction extends AnAction implements PopupAction {
             return super.getRowHeight() + 2 * MARGIN;
         }
 
-        
         @Override
         public Component prepareRenderer(TableCellRenderer renderer, int row, int column) {
             Component component = super.prepareRenderer(renderer, row, column);
@@ -1420,7 +1408,6 @@ public class ShowUsagesAction extends AnAction implements PopupAction {
     }
 
     static class StringNode extends UsageNode {
-        
         private final Object myString;
 
         StringNode(Object string) {
@@ -1449,7 +1436,6 @@ public class ShowUsagesAction extends AnAction implements PopupAction {
             return getTable().convertRowIndexToModel(viewIndex);
         }
 
-        
         @Override
         protected Object[] getAllElements() {
             return ((MyModel) getTable().getModel()).getItems().toArray();

@@ -52,9 +52,11 @@ public class DefaultBuildDescriptor implements BuildDescriptor {
   private final List<Filter> myExecutionFilters = new SmartList<>();
   private final List<Function<? super ExecutionNode, ? extends AnAction>> myContextActions = new SmartList<>();
 
-  private @Nullable BuildProcessHandler myProcessHandler;
+  private
+  @Nullable BuildProcessHandler myProcessHandler;
   private Consumer<? super ConsoleView> myAttachedConsoleConsumer;
-  private @Nullable ExecutionEnvironment myExecutionEnvironment;
+  private
+  @Nullable ExecutionEnvironment myExecutionEnvironment;
   private Supplier<? extends RunContentDescriptor> myContentDescriptorSupplier;
 
   public DefaultBuildDescriptor(Object id, @BuildEventsNls.Title String title, String workingDir, long startTime) {

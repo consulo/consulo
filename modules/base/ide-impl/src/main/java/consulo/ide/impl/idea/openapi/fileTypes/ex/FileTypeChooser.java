@@ -190,9 +190,6 @@ public class FileTypeChooser extends DialogWrapper {
      */
     @RequiredUIAccess
     public static @Nullable FileType getKnownFileTypeOrAssociate(VirtualFile file, @Nullable Project project) {
-        if (project != null && !(file instanceof FakeVirtualFile)) {
-            PsiManagerEx.getInstanceEx(project).getFileManager().findFile(file); // autodetect text file if needed
-        }
         FileType type = file.getFileType();
         if (type == UnknownFileType.INSTANCE) {
             type = getKnownFileTypeOrAssociate(file.getName());
@@ -231,7 +228,6 @@ public class FileTypeChooser extends DialogWrapper {
         return type;
     }
 
-    
     static List<String> suggestPatterns(String fileName) {
         List<String> patterns = new LinkedList<>();
         patterns.add(fileName);

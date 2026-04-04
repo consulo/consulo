@@ -99,7 +99,7 @@ public class GotoFileAction extends GotoActionBase implements DumbAware {
                     n = descriptor.setUseCurrentWindow(popup.isOpenInCurrentWindowRequested());
                 }
 
-                if (n.canNavigate()) {
+                if (n.getNavigateOptions().canNavigate()) {
                     n.navigate(true);
                 }
             }

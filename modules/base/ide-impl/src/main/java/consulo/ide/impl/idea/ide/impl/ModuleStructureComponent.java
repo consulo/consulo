@@ -15,17 +15,17 @@
  */
 package consulo.ide.impl.idea.ide.impl;
 
-import consulo.dataContext.DataProvider;
+import consulo.dataContext.DataSink;
+import consulo.dataContext.UiDataProvider;
 import consulo.module.Module;
 import consulo.ui.ex.awt.SimpleToolWindowPanel;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.util.dataholder.Key;
 
 /**
  * @author max
  */
-public class ModuleStructureComponent extends SimpleToolWindowPanel implements Disposable, DataProvider {
+public class ModuleStructureComponent extends SimpleToolWindowPanel implements Disposable, UiDataProvider {
   private final ModuleStructurePane myStructurePane;
 
   public ModuleStructureComponent(Module module) {
@@ -38,8 +38,8 @@ public class ModuleStructureComponent extends SimpleToolWindowPanel implements D
   }
 
   @Override
-  public Object getData(Key<?> dataId) {
-    return myStructurePane.getData(dataId);
+  public void uiDataSnapshot(DataSink sink) {
+    myStructurePane.uiDataSnapshot(sink);
   }
 
   @Override

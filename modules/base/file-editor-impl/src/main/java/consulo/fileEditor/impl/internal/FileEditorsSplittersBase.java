@@ -17,6 +17,7 @@ package consulo.fileEditor.impl.internal;
 
 import consulo.application.*;
 import consulo.application.concurrent.ApplicationConcurrency;
+import consulo.application.concurrent.MergingProcessingQueue;
 import consulo.application.ui.UISettings;
 import consulo.application.ui.event.UISettingsListener;
 import consulo.disposer.Disposable;
@@ -27,6 +28,7 @@ import consulo.project.Project;
 import consulo.project.ui.internal.WindowManagerEx;
 import consulo.project.ui.wm.FrameTitleBuilder;
 import consulo.project.ui.wm.IdeFrame;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
@@ -56,7 +58,6 @@ public abstract class FileEditorsSplittersBase<W extends FileEditorWindowBase> i
 
     private static final Logger LOG = Logger.getInstance(FileEditorsSplittersBase.class);
 
-    
     protected final Project myProject;
     protected final FileEditorManagerImpl myManager;
     private int myInsideChange;
@@ -65,8 +66,8 @@ public abstract class FileEditorsSplittersBase<W extends FileEditorWindowBase> i
     protected final Set<W> myWindows = new CopyOnWriteArraySet<>();
     protected Element mySplittersElement;  // temporarily used during initialization
 
-    private final MergingProcessingQueue<VirtualFile, Pair<W, Image>> myIconUpdater;
-    private final MergingProcessingQueue<VirtualFile, EditorTablInfo> myFileNameUpdater;
+    private final MergingProcessingQueue<VirtualFile, Pair<W, Image>, Project> myIconUpdater;
+    private final MergingProcessingQueue<VirtualFile, EditorTablInfo, Project> myFileNameUpdater;
 
     protected FileEditorsSplittersBase(ApplicationConcurrency applicationConcurrency,
                                        Project project,
@@ -75,6 +76,11 @@ public abstract class FileEditorsSplittersBase<W extends FileEditorWindowBase> i
         myManager = manager;
 
         myIconUpdater = new MergingProcessingQueue<>(applicationConcurrency, project, 200) {
+            @Override
+            protected UIAccess getUIAccess(Project project) {
+                return project.getUIAccess();
+            }
+
             @Override
             protected void calculateValue(Project project,
                                           VirtualFile key,
@@ -91,6 +97,11 @@ public abstract class FileEditorsSplittersBase<W extends FileEditorWindowBase> i
         };
 
         myFileNameUpdater = new MergingProcessingQueue<>(applicationConcurrency, project, 200) {
+            @Override
+            protected UIAccess getUIAccess(Project project) {
+                return project.getUIAccess();
+            }
+
             @Override
             protected void calculateValue(Project project, VirtualFile key, Consumer<EditorTablInfo> consumer) {
                 String title = EditorTabPresentationUtil.getEditorTabTitle(myProject, key);
@@ -124,7 +135,6 @@ public abstract class FileEditorsSplittersBase<W extends FileEditorWindowBase> i
         });
     }
 
-    
     protected abstract W[] createArray(int size);
 
     @RequiredUIAccess
@@ -251,7 +261,6 @@ public abstract class FileEditorsSplittersBase<W extends FileEditorWindowBase> i
         return null;
     }
 
-    
     @Override
     public FileEditorWindow getOrCreateCurrentWindow(VirtualFile file) {
         List<W> windows = findWindows(file);
@@ -382,7 +391,6 @@ public abstract class FileEditorsSplittersBase<W extends FileEditorWindowBase> i
     }
 
     @Override
-    
     public VirtualFile[] getOpenFiles() {
         Set<VirtualFile> files = new LinkedHashSet<>();
         for (W myWindow : myWindows) {
@@ -400,7 +408,6 @@ public abstract class FileEditorsSplittersBase<W extends FileEditorWindowBase> i
     }
 
     @Override
-    
     public VirtualFile[] getSelectedFiles() {
         Set<VirtualFile> files = new LinkedHashSet<>();
         for (W window : myWindows) {
@@ -424,7 +431,6 @@ public abstract class FileEditorsSplittersBase<W extends FileEditorWindowBase> i
     }
 
     @Override
-    
     @SuppressWarnings("unchecked")
     public FileEditor[] getSelectedEditors() {
         Set<W> windows = new HashSet<>(myWindows);
@@ -473,7 +479,6 @@ public abstract class FileEditorsSplittersBase<W extends FileEditorWindowBase> i
     //---------------------------------------------------------
 
     @Override
-    
     public List<FileEditorWithProviderComposite> findEditorComposites(VirtualFile file) {
         List<FileEditorWithProviderComposite> res = new ArrayList<>();
         for (FileEditorWindow window : myWindows) {
@@ -485,7 +490,6 @@ public abstract class FileEditorsSplittersBase<W extends FileEditorWindowBase> i
         return res;
     }
 
-    
     protected List<W> findWindows(VirtualFile file) {
         List<W> res = new ArrayList<>();
         for (W window : myWindows) {
@@ -497,7 +501,6 @@ public abstract class FileEditorsSplittersBase<W extends FileEditorWindowBase> i
     }
 
     @Override
-    
     public W[] getWindows() {
         return myWindows.toArray(createArray(myWindows.size()));
     }

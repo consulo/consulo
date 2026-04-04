@@ -28,12 +28,16 @@ import consulo.fileEditor.impl.internal.NonProjectFileWritingAccessProvider;
 import consulo.fileEditor.impl.internal.OpenFileDescriptorImpl;
 import consulo.ide.impl.idea.openapi.fileChooser.impl.FileChooserUtil;
 import consulo.ide.impl.idea.openapi.fileTypes.ex.FileTypeChooser;
+import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
 import consulo.ide.localize.IdeLocalize;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.platform.base.localize.ActionLocalize;
+import consulo.application.Application;
 import consulo.project.Project;
-import consulo.project.impl.internal.ProjectImplUtil;
+import consulo.project.ProjectManager;
+import consulo.project.ProjectOpenContext;
+import consulo.project.internal.ProjectOpenService;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
@@ -44,19 +48,24 @@ import consulo.ui.image.Image;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
-import consulo.virtualFileSystem.util.VirtualFileUtil;
 import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 
 @ActionImpl(id = "OpenFile")
 public class OpenFileAction extends AnAction implements DumbAware {
+    private final ProjectManager myProjectManager;
+
     @Inject
-    public OpenFileAction() {
-        this(ActionLocalize.actionOpenfileText(), ActionLocalize.actionOpenfileDescription(), PlatformIconGroup.nodesFolderopened());
+    public OpenFileAction(ProjectManager projectManager) {
+        this(ActionLocalize.actionOpenfileText(), ActionLocalize.actionOpenfileDescription(), PlatformIconGroup.nodesFolderopened(), projectManager);
     }
 
-    public OpenFileAction(LocalizeValue text, LocalizeValue description, @Nullable Image icon) {
+    public OpenFileAction(LocalizeValue text,
+                          LocalizeValue description,
+                          @Nullable Image icon,
+                          ProjectManager projectManager) {
         super(text, description, icon);
+        myProjectManager = projectManager;
     }
 
     @Override
@@ -93,7 +102,7 @@ public class OpenFileAction extends AnAction implements DumbAware {
 
         descriptor.putUserData(PathChooserDialog.PREFER_LAST_OVER_EXPLICIT, Boolean.TRUE);
 
-        FileChooser.chooseFiles(descriptor, project, VirtualFileUtil.getUserHomeDir()).doWhenDone(files -> {
+        FileChooser.chooseFiles(descriptor, project, VfsUtil.getUserHomeDir()).doWhenDone(files -> {
             for (VirtualFile file : files) {
                 if (!descriptor.isFileSelectable(file)) { // on Mac, it could be selected anyway
                     Messages.showInfoMessage(
@@ -109,11 +118,20 @@ public class OpenFileAction extends AnAction implements DumbAware {
     }
 
     @RequiredUIAccess
-    private static void doOpenFile(@Nullable Project project, VirtualFile[] result) {
+    private void doOpenFile(@Nullable Project project, VirtualFile[] result) {
         for (VirtualFile file : result) {
             if (file.isDirectory()) {
-                ProjectImplUtil.openAsync(file.getPath(), project, false, UIAccess.current())
-                    .doWhenDone(openedProject -> FileChooserUtil.setLastOpenedFile(openedProject, file));
+                ProjectOpenContext openContext = new ProjectOpenContext();
+                if (project != null) {
+                    openContext.putUserData(ProjectOpenContext.ACTIVE_PROJECT, project);
+                }
+
+                myProjectManager.openProjectAsync(file.toNioPath(), UIAccess.current(), openContext)
+                    .whenComplete((successOpenedProject, throwable) -> {
+                        if (successOpenedProject != null) {
+                            FileChooserUtil.setLastOpenedFile(successOpenedProject, file);
+                        }
+                    });
                 return;
             }
 
@@ -125,12 +143,17 @@ public class OpenFileAction extends AnAction implements DumbAware {
                     UIUtil.getQuestionIcon()
                 );
                 if (answer == 0) {
-                    ProjectImplUtil.openAsync(
-                        file.getPath(),
-                        project,
-                        false,
-                        UIAccess.current()
-                    ).doWhenDone(openedProject -> FileChooserUtil.setLastOpenedFile(openedProject, file));
+                    ProjectOpenContext openContext = new ProjectOpenContext();
+                    if (project != null) {
+                        openContext.putUserData(ProjectOpenContext.ACTIVE_PROJECT, project);
+                    }
+                    Application.get().getInstance(ProjectOpenService.class)
+                        .openProjectAsync(file.toNioPath(), UIAccess.current(), openContext)
+                        .whenComplete((openedProject, error) -> {
+                            if (error == null && openedProject != null) {
+                                FileChooserUtil.setLastOpenedFile(openedProject, file);
+                            }
+                        });
                     return;
                 }
             }

@@ -2,8 +2,8 @@
 package consulo.language.index.impl.internal.stub;
 
 import consulo.application.Application;
-import consulo.application.impl.internal.IdeaModalityState;
 import consulo.language.psi.stub.FileBasedIndex;
+import consulo.ui.ModalityState;
 import consulo.virtualFileSystem.VirtualFile;
 import org.jspecify.annotations.Nullable;
 
@@ -23,7 +23,7 @@ public final class StubProcessingHelper extends StubProcessingHelperBase {
     set.add(file);
     // requestReindex() may want to acquire write lock (for indices not requiring content loading)
     // thus, because here we are under read lock, need to use invoke later
-    Application.get().invokeLater(() -> FileBasedIndex.getInstance().requestReindex(file), IdeaModalityState.nonModal());
+    Application.get().invokeLater(() -> FileBasedIndex.getInstance().requestReindex(file), ModalityState.nonModal());
   }
 
   @Nullable Set<VirtualFile> takeAccumulatedFilesWithIndexProblems() {

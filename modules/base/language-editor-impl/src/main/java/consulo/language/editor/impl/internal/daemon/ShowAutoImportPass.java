@@ -15,7 +15,7 @@ import consulo.language.editor.Pass;
 import consulo.language.editor.ReferenceImporter;
 import consulo.language.editor.annotation.HighlightSeverity;
 import consulo.language.editor.highlight.TextEditorHighlightingPass;
-import consulo.language.editor.impl.highlight.VisibleHighlightingPassFactory;
+import consulo.language.editor.impl.internal.highlight.HighlightingSessionImpl;
 import consulo.language.editor.impl.internal.rawHighlight.HighlightInfoImpl;
 import consulo.language.editor.inject.EditorWindow;
 import consulo.language.editor.intention.HintAction;
@@ -44,17 +44,14 @@ public class ShowAutoImportPass extends TextEditorHighlightingPass {
     private final int myEndOffset;
     private final boolean hasDirtyTextRange;
 
-    @RequiredUIAccess
     ShowAutoImportPass(Project project, PsiFile file, Editor editor) {
         super(project, editor.getDocument(), false);
-        UIAccess.assertIsUIThread();
 
-        myEditor = editor;
-
-        TextRange range = VisibleHighlightingPassFactory.calculateVisibleRange(myEditor);
+        TextRange range = HighlightingSessionImpl.getFromCurrentIndicator(file).getVisibleRange();
         myStartOffset = range.getStartOffset();
         myEndOffset = range.getEndOffset();
 
+        myEditor = editor;
         myFile = file;
 
         hasDirtyTextRange = FileStatusMapImpl.getDirtyTextRange(editor, Pass.UPDATE_ALL) != null;
@@ -145,7 +142,6 @@ public class ShowAutoImportPass extends TextEditorHighlightingPass {
         }
     }
 
-    
     @RequiredReadAction
     private static List<HighlightInfoImpl> getVisibleHighlights(
         int startOffset,
@@ -198,7 +194,6 @@ public class ShowAutoImportPass extends TextEditorHighlightingPass {
         return false;
     }
 
-    
     private static List<HintAction> extractHints(HighlightInfoImpl info) {
         List<Pair<IntentionActionDescriptor, TextRange>> list = info.myQuickFixActionRanges;
         if (list == null) {

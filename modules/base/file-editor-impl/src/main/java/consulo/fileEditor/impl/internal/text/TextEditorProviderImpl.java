@@ -16,7 +16,9 @@
 package consulo.fileEditor.impl.internal.text;
 
 import consulo.annotation.access.RequiredReadAction;
+import consulo.application.Application;
 import consulo.codeEditor.*;
+import consulo.document.Document;
 import consulo.document.FileDocumentManager;
 import consulo.fileEditor.*;
 import consulo.fileEditor.highlight.BackgroundEditorHighlighter;
@@ -46,7 +48,7 @@ import java.util.List;
  * @author Anton Katilin
  * @author Vladimir Kondratyev
  */
-public class TextEditorProviderImpl extends TextEditorProvider {
+public class TextEditorProviderImpl extends TextEditorProvider implements AsyncFileEditorProvider {
     private static final Logger LOG = Logger.getInstance(TextEditorProviderImpl.class);
 
     protected final TextEditorComponentContainerFactory myTextEditorComponentContainerFactory;
@@ -61,12 +63,33 @@ public class TextEditorProviderImpl extends TextEditorProvider {
         return isTextFile(file) && !RawFileLoaderHelper.isTooLargeForContentLoading(file);
     }
 
+    @Override
+    public Builder createEditorAsync(Project project, VirtualFile file) {
+        // This method is called under read lock (AccessRule.read in openFileImpl4)
+        Document document = FileDocumentManager.getInstance().getDocument(file);
+        LOG.assertTrue(document != null);
+        return new Builder() {
+            @Override
+            public FileEditor build() {
+                // Called on EDT — document is already loaded
+                return createEditorImpl(project, file, document);
+            }
+        };
+    }
+
+    protected FileEditor createEditorImpl(Project project, VirtualFile file, Document document) {
+        return new TextEditorImpl(project, file, document, this);
+    }
+
     @RequiredUIAccess
     @Override
     
     public FileEditor createEditor(Project project, VirtualFile file) {
         LOG.assertTrue(accept(project, file));
-        return new TextEditorImpl(project, file, this);
+        // Fallback: load document under read action (works on EDT when no write lock is held)
+        Document document = Application.get().runReadAction(
+            (java.util.function.Supplier<Document>) () -> FileDocumentManager.getInstance().getDocument(file));
+        return new TextEditorImpl(project, file, document, this);
     }
 
     @Override

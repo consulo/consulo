@@ -263,10 +263,10 @@ public abstract class UIInternal {
         throw new UnsupportedOperationException();
     }
     public ModalityState _ModalityState_any() {
-        throw new UnsupportedOperationException();
+        return StubModalityState.INSTANCE;
     }
     public ModalityState _ModalityState_nonModal() {
-        throw new UnsupportedOperationException();
+        return StubModalityState.INSTANCE;
     }
     public DatePicker _Components_datePicker(@Nullable String datePattern) {
         throw new UnsupportedOperationException();

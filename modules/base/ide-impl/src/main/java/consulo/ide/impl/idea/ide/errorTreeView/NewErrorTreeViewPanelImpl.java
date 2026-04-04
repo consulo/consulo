@@ -17,9 +17,10 @@ package consulo.ide.impl.idea.ide.errorTreeView;
 
 import consulo.application.AllIcons;
 import consulo.application.HelpManager;
-import consulo.application.impl.internal.IdeaModalityState;
+import consulo.ui.ModalityState;
 import consulo.dataContext.DataContext;
-import consulo.dataContext.DataProvider;
+import consulo.dataContext.DataSink;
+import consulo.dataContext.UiDataProvider;
 import consulo.disposer.Disposer;
 import consulo.fileEditor.impl.internal.OpenFileDescriptorImpl;
 import consulo.ide.impl.idea.ide.OccurenceNavigatorSupport;
@@ -63,7 +64,7 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.util.List;
 
-public class NewErrorTreeViewPanelImpl extends JPanel implements DataProvider, NewErrorTreeViewPanel, CopyProvider {
+public class NewErrorTreeViewPanelImpl extends JPanel implements UiDataProvider, NewErrorTreeViewPanel, CopyProvider {
     protected static final Logger LOG = Logger.getInstance(NewErrorTreeViewPanelImpl.class);
     private volatile String myProgressText = "";
     private volatile float myFraction = 0.0f;
@@ -209,28 +210,19 @@ public class NewErrorTreeViewPanelImpl extends JPanel implements DataProvider, N
     }
 
     @Override
-    public Object getData(Key<?> dataId) {
-        if (KEY == dataId) {
-            return this;
-        }
-        if (Navigatable.KEY == dataId) {
+    public void uiDataSnapshot(DataSink sink) {
+        sink.set(CopyProvider.KEY, this);
+        sink.lazy(Navigatable.KEY, () -> {
             NavigatableMessageElement selectedMessageElement = getSelectedMessageElement();
             return selectedMessageElement != null ? selectedMessageElement.getNavigatable() : null;
-        }
-        else if (HelpManager.HELP_ID == dataId) {
-            return myHelpId;
-        }
-        else if (PlatformDataKeys.TREE_EXPANDER == dataId) {
-            return myTreeExpander;
-        }
-        else if (PlatformDataKeys.EXPORTER_TO_TEXT_FILE == dataId) {
-            return myExporterToTextFile;
-        }
-        else if (CURRENT_EXCEPTION_DATA_KEY == dataId) {
+        });
+        sink.set(HelpManager.HELP_ID, myHelpId);
+        sink.set(PlatformDataKeys.TREE_EXPANDER, myTreeExpander);
+        sink.set(PlatformDataKeys.EXPORTER_TO_TEXT_FILE, myExporterToTextFile);
+        sink.lazy(CURRENT_EXCEPTION_DATA_KEY, () -> {
             NavigatableMessageElement selectedMessageElement = getSelectedMessageElement();
             return selectedMessageElement != null ? selectedMessageElement.getData() : null;
-        }
-        return null;
+        });
     }
 
     public void selectFirstMessage() {
@@ -341,7 +333,6 @@ public class NewErrorTreeViewPanelImpl extends JPanel implements DataProvider, N
     }
 
     @Override
-    
     public JComponent getComponent() {
         return this;
     }
@@ -375,7 +366,7 @@ public class NewErrorTreeViewPanelImpl extends JPanel implements DataProvider, N
             return;
         }
         Navigatable navigatable = element.getNavigatable();
-        if (navigatable.canNavigate()) {
+        if (navigatable.getNavigateOptions().canNavigate()) {
             navigatable.navigate(focusEditor);
         }
     }
@@ -390,7 +381,7 @@ public class NewErrorTreeViewPanelImpl extends JPanel implements DataProvider, N
             return;
         }
         ActionGroup.Builder group = ActionGroup.newImmutableBuilder();
-        if (getData(Navigatable.KEY) != null) {
+        if (getSelectedMessageElement() != null && getSelectedMessageElement().getNavigatable() != null) {
             group.add(ActionManager.getInstance().getAction(IdeActions.ACTION_EDIT_SOURCE));
         }
         group.add(ActionManager.getInstance().getAction(IdeActions.ACTION_COPY));
@@ -475,7 +466,7 @@ public class NewErrorTreeViewPanelImpl extends JPanel implements DataProvider, N
                 }
             },
             50,
-            IdeaModalityState.nonModal()
+            ModalityState.nonModal()
         );
     }
 

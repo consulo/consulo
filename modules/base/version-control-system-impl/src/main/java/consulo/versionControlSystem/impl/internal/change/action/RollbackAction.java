@@ -31,6 +31,7 @@ import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnAction;
@@ -118,7 +119,7 @@ public class RollbackAction extends AnAction implements DumbAware {
         if (ChangeListManager.getInstance(project).isFreezedWithNotification(title)) {
             return;
         }
-        FileDocumentManager.getInstance().saveAllDocuments();
+        FileDocumentManager.getInstance().saveAllDocuments(UIAccess.current());
 
         List<FilePath> missingFiles = e.getData(ChangesListViewImpl.MISSING_FILES_DATA_KEY);
         boolean hasChanges = false;

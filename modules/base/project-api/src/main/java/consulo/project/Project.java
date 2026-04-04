@@ -25,8 +25,6 @@ import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
 import org.jspecify.annotations.Nullable;
 
-import java.util.concurrent.CompletableFuture;
-
 /**
  * Project interface class.
  */
@@ -108,15 +106,9 @@ public interface Project extends ComponentManager, WindowOwner, CoroutineContext
    */
   @Nullable VirtualFile getWorkspaceFile();
 
-  
   String getLocationHash();
 
-  void save();
-
-  
-  default CompletableFuture<Void> saveAsync(UIAccess uiAccess) {
-    return CompletableFuture.completedFuture(null);
-  }
+  void save(UIAccess uiAccess);
 
   boolean isOpen();
 
@@ -126,8 +118,16 @@ public interface Project extends ComponentManager, WindowOwner, CoroutineContext
     return true;
   }
 
+  default ProjectType getProjectType() {
+    return ProjectType.REGULAR;
+  }
+
   default boolean isDefault() {
-    return false;
+    return getProjectType() == ProjectType.DEFAULT;
+  }
+
+  default boolean isWelcomeProject() {
+    return getProjectType() == ProjectType.WELCOME;
   }
 
   /**
@@ -138,7 +138,6 @@ public interface Project extends ComponentManager, WindowOwner, CoroutineContext
     return null;
   }
 
-  
   default UIAccess getUIAccess() {
     return getApplication().getLastUIAccess();
   }

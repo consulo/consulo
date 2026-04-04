@@ -25,6 +25,7 @@ import consulo.versionControlSystem.impl.internal.change.shelf.ShelvedChangesVie
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.project.ui.notification.NotificationType;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
@@ -52,7 +53,7 @@ public class UnshelveWithDialogAction extends AnAction {
     ShelvedChangeListImpl[] changeLists = e.getRequiredData(ShelvedChangesViewManagerImpl.SHELVED_CHANGELIST_KEY);
     if (changeLists.length != 1) return;
 
-    FileDocumentManager.getInstance().saveAllDocuments();
+    FileDocumentManager.getInstance().saveAllDocuments(UIAccess.current());
 
     VirtualFile virtualFile = LocalFileSystem.getInstance().refreshAndFindFileByIoFile(new File(changeLists[0].PATH));
     if (virtualFile == null) {

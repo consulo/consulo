@@ -35,7 +35,8 @@ public class SafeFileOutputStreamImpl extends SafeOutputStream {
 
     private final Path myTarget;
     private final String myBackupName;
-    private final @Nullable Future<Path> myBackupFuture;
+    private final
+    @Nullable Future<Path> myBackupFuture;
     private final BufferExposingByteArrayOutputStream myBuffer;
     private boolean myClosed = false;
 

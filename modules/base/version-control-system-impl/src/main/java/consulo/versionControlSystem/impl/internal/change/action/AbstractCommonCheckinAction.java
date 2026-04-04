@@ -19,6 +19,7 @@ import consulo.application.Application;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.project.Project;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.Presentation;
 import consulo.ui.image.Image;
@@ -86,15 +87,13 @@ public abstract class AbstractCommonCheckinAction extends AbstractVcsAction {
         }
     }
 
-    
     @RequiredUIAccess
     protected FilePath[] prepareRootsForCommit(FilePath[] roots, Project project) {
-        project.getApplication().saveAll();
+        Application.get().saveAllWithProgress(UIAccess.current());
 
         return DescindingFilesFilter.filterDescindingFiles(roots, project);
     }
 
-    
     protected LocalizeValue getMnemonicsFreeActionName(VcsContext context) {
         return getActionName(context);
     }
@@ -120,10 +119,8 @@ public abstract class AbstractCommonCheckinAction extends AbstractVcsAction {
         return result;
     }
 
-    
     protected abstract LocalizeValue getActionName(VcsContext dataContext);
 
-    
     protected abstract FilePath[] getRoots(VcsContext dataContext);
 
     protected abstract boolean approximatelyHasRoots(VcsContext dataContext);
@@ -145,7 +142,6 @@ public abstract class AbstractCommonCheckinAction extends AbstractVcsAction {
         }
     }
 
-    
     protected static FilePath[] getAllContentRoots(VcsContext context) {
         return Stream.of(ProjectLevelVcsManager.getInstance(context.getProject()).getAllVersionedRoots())
             .map(VcsUtil::getFilePath)

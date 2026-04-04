@@ -16,18 +16,17 @@
 package consulo.execution.impl.internal.ui;
 
 import consulo.application.Application;
-import consulo.application.ApplicationManager;
 import consulo.application.CommonBundle;
 import consulo.application.HelpManager;
 import consulo.application.dumb.IndexNotReadyException;
 import consulo.configurable.Configurable;
 import consulo.configurable.ConfigurationException;
 import consulo.configurable.internal.ConfigurableUIMigrationUtil;
-import consulo.localize.LocalizeKey;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.platform.base.localize.CommonLocalize;
 import consulo.project.Project;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.IdeFocusTraversalPolicy;
 import consulo.ui.ex.awt.Messages;
@@ -178,7 +177,7 @@ public abstract class WholeWestSingleConfigurableEditor extends WholeWestDialogW
     @Override
     public void doCancelAction() {
         if (myChangesWereApplied) {
-            ApplicationManager.getApplication().saveAll();
+            Application.get().saveAllWithProgress(UIAccess.current());
         }
         super.doCancelAction();
     }
@@ -190,7 +189,7 @@ public abstract class WholeWestSingleConfigurableEditor extends WholeWestDialogW
                 myConfigurable.apply();
             }
 
-            ApplicationManager.getApplication().saveAll();
+            Application.get().saveAllWithProgress(UIAccess.current());
         }
         catch (ConfigurationException e) {
             if (e.getMessage() != null) {

@@ -18,8 +18,7 @@ package consulo.language.index.impl.internal;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
-import consulo.application.impl.internal.LaterInvocator;
-import consulo.application.internal.ProgressIndicatorUtils;
+import consulo.application.ReadAction;
 import consulo.application.progress.ProgressManager;
 import consulo.application.util.concurrent.SequentialTaskExecutor;
 import consulo.application.util.registry.Registry;
@@ -187,32 +186,20 @@ final class ChangedFilesCollector extends IndexedFilesListener {
       myVfsEventsExecutor.execute(() -> {
         try {
           processFilesInReadActionWithYieldingToWriteAction();
-        }
-        finally {
-          myScheduledVfsEventsWorkers.decrementAndGet();
-        }
-      });
 
-      if (Registry.is("try.starting.dumb.mode.where.many.files.changed")) {
-        Runnable startDumbMode = () -> {
           for (Project project : ProjectManager.getInstance().getOpenProjects()) {
             DumbService dumbService = DumbService.getInstance(project);
             DumbModeTask task = FileBasedIndexProjectHandler.createChangedFilesIndexingTask(project);
 
             if (task != null) {
-              dumbService.queueTask(task);
+                dumbService.queueTask(task);
             }
           }
-        };
-
-        Application app = ApplicationManager.getApplication();
-        if (!app.isHeadlessEnvironment()  /*avoid synchronous ensureUpToDate to prevent deadlock*/ && app.isDispatchThread() && !LaterInvocator.isInModalContext()) {
-          startDumbMode.run();
         }
-        else {
-          app.invokeLater(startDumbMode, ModalityState.nonModal());
+        finally {
+          myScheduledVfsEventsWorkers.decrementAndGet();
         }
-      }
+      });
     }
   }
 
@@ -259,9 +246,8 @@ final class ChangedFilesCollector extends IndexedFilesListener {
 
   private void processFilesInReadActionWithYieldingToWriteAction() {
     while (getEventMerger().hasChanges()) {
-      if (!ProgressIndicatorUtils.runInReadActionWithWriteActionPriority(() -> processFilesInReadAction(null))) {
-        ProgressIndicatorUtils.yieldToPendingWriteActions();
-      }
+      ReadAction.nonBlocking(() -> processFilesInReadAction(null))
+               .executeSynchronously();
     }
   }
 }

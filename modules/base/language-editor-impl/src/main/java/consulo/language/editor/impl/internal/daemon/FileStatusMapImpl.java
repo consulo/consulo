@@ -1,6 +1,7 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.language.editor.impl.internal.daemon;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.codeEditor.Editor;
 import consulo.disposer.Disposable;
 import consulo.document.Document;
@@ -261,7 +262,6 @@ public final class FileStatusMapImpl implements Disposable, FileStatusMap {
         }
     }
 
-    
     private static RangeMarker combineScopes(RangeMarker old, TextRange scope, int textLength, Document document) {
         if (old == null) {
             if (scope.equalsToRange(0, textLength)) {
@@ -284,14 +284,15 @@ public final class FileStatusMapImpl implements Disposable, FileStatusMap {
         return document.createRangeMarker(union);
     }
 
+    @RequiredReadAction
     @Override
     public boolean allDirtyScopesAreNull(Document document) {
-        synchronized (myDocumentToStatusMap) {
-            PsiFile file = PsiDocumentManager.getInstance(myProject).getPsiFile(document);
-            if (!ProblemHighlightFilter.shouldHighlightFile(file)) {
-                return true;
-            }
+        PsiFile file = PsiDocumentManager.getInstance(myProject).getPsiFile(document);
+        if (!ProblemHighlightFilter.shouldHighlightFile(file)) {
+            return true;
+        }
 
+        synchronized (myDocumentToStatusMap) {
             FileStatus status = myDocumentToStatusMap.get(document);
             return status != null && !status.defensivelyMarked && status.wolfPassFinished && status.allDirtyScopesAreNull();
         }
@@ -315,7 +316,6 @@ public final class FileStatusMapImpl implements Disposable, FileStatusMap {
             throw new UnsupportedOperationException();
         }
 
-        
         @Override
         public Document getDocument() {
             throw new UnsupportedOperationException();

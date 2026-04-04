@@ -3,8 +3,6 @@ package consulo.application.impl.internal.progress;
 
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
-import consulo.application.impl.internal.IdeaModalityStateEx;
-import consulo.application.impl.internal.LaterInvocator;
 import consulo.application.internal.BlockingProgressIndicator;
 import consulo.application.internal.ProgressIndicatorEx;
 import consulo.application.progress.EmptyProgressIndicator;
@@ -18,7 +16,6 @@ import consulo.component.ProcessCanceledException;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.logging.Logger;
-import consulo.ui.ModalityState;
 import consulo.ui.UIAccess;
 import consulo.util.lang.ref.Ref;
 import org.jspecify.annotations.Nullable;
@@ -241,27 +238,18 @@ public final class ProgressRunner<R> {
         });
     }
 
-    // The case of sync exec from the EDT without the ability to poll events (no BlockingProgressIndicator#startBlocking or presence of Write Action)
-    // must be handled by very synchronous direct call (alt: use proper progress indicator, i.e. PotemkinProgress or ProgressWindow).
-    // Note: running sync task on pooled thread from EDT can lead to deadlock if pooled thread will try to invokeAndWait.
     private boolean checkIfForceDirectExecNeeded() {
         Application application = ApplicationManager.getApplication();
-        if (isSync && UIAccess.isUIThread() && !application.isWriteThread() && !application.isUnifiedApplication()) {
-            throw new IllegalStateException("Running sync tasks on pure EDT (w/o IW lock) is dangerous for several reasons.");
+        if (application.isWriteAccessAllowed()) {
+            throw new IllegalStateException("Cannot run ProgressRunner under write action — would deadlock on read access");
         }
         if (!isSync && isModal && UIAccess.isUIThread()) {
             throw new IllegalStateException("Running async modal tasks from EDT is impossible: modal implies sync dialog show + polling events");
         }
 
-        boolean forceDirectExec = isSync && application.isDispatchThread() && (application.isWriteAccessAllowed() || !isModal);
+        boolean forceDirectExec = isSync && application.isDispatchThread() && !isModal;
         if (forceDirectExec) {
-            String reason = application.isWriteAccessAllowed() ? "inside Write Action" : "not modal execution";
-            String failedConstraints = "";
-            if (isModal) {
-                failedConstraints += "Use Modal execution; ";
-            }
-            failedConstraints += "Use pooled thread; ";
-            Logger.getInstance(ProgressRunner.class).warn("Forced to sync exec on EDT. Reason: " + reason + ". Failed constraints: " + failedConstraints, new Throwable());
+            Logger.getInstance(ProgressRunner.class).warn("Forced to sync exec on EDT. Reason: not modal execution. Failed constraints: Use pooled thread; ", new Throwable());
         }
         return forceDirectExec;
     }
@@ -313,38 +301,21 @@ public final class ProgressRunner<R> {
     private CompletableFuture<R> normalExec(CompletableFuture<? extends ProgressIndicator> progressFuture, Semaphore modalityEntered, Supplier<R> onThreadCallable) {
 
         if (isModal) {
-            Function<ProgressIndicator, ProgressIndicator> modalityRunnable = progressIndicator -> {
-                LaterInvocator.enterModal(progressIndicator, (IdeaModalityStateEx) progressIndicator.getModalityState());
+            // Modality enter is now a no-op, just signal that modality is "entered"
+            progressFuture = progressFuture.thenApplyAsync(progressIndicator -> {
                 modalityEntered.up();
                 return progressIndicator;
-            };
-            // If a progress indicator has not been calculated yet, grabbing IW lock might lead to deadlock, as progress might need it for init
-            progressFuture = progressFuture.thenApplyAsync(modalityRunnable, r -> {
-                if (ApplicationManager.getApplication().isWriteThread()) {
+            }, r -> {
+                if (ApplicationManager.getApplication().isDispatchThread()) {
                     r.run();
                 }
                 else {
-                    ApplicationManager.getApplication().invokeLaterOnWriteThread(r);
+                    ApplicationManager.getApplication().invokeLater(r);
                 }
             });
         }
 
         CompletableFuture<R> resultFuture = launchTask(onThreadCallable);
-
-        if (isModal) {
-            CompletableFuture<Void> modalityExitFuture = resultFuture.handle((r, throwable) -> r) // ignore result computation exception
-                .thenAcceptBoth(progressFuture, (r, progressIndicator) -> {
-                    if (ApplicationManager.getApplication().isWriteThread()) {
-                        LaterInvocator.leaveModal(progressIndicator);
-                    }
-                    else {
-                        ApplicationManager.getApplication().invokeLaterOnWriteThread(() -> LaterInvocator.leaveModal(progressIndicator), (ModalityState) progressIndicator.getModalityState());
-                    }
-                });
-
-            // It's better to associate task future with modality exit so that future finish will lead to expected state (modality exit)
-            resultFuture = resultFuture.thenCombine(modalityExitFuture, (r, __) -> r);
-        }
 
         if (isSync) {
             waitForFutureUnlockingThread(resultFuture);

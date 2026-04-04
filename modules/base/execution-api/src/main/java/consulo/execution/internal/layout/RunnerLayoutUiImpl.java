@@ -15,9 +15,8 @@
  */
 package consulo.execution.internal.layout;
 
-import consulo.dataContext.DataProvider;
+import consulo.dataContext.UiDataProvider;
 import consulo.disposer.Disposable;
-import consulo.execution.internal.layout.RunnerContentUi;
 import consulo.execution.ui.layout.LayoutStateDefaults;
 import consulo.execution.ui.layout.LayoutViewOptions;
 import consulo.execution.ui.layout.RunnerLayoutUi;
@@ -29,7 +28,7 @@ import java.util.List;
  * @author VISTALL
  * @since 12.05.2024
  */
-public interface RunnerLayoutUiImpl extends Disposable.Parent, RunnerLayoutUi, LayoutStateDefaults, LayoutViewOptions, DataProvider {
+public interface RunnerLayoutUiImpl extends Disposable.Parent, RunnerLayoutUi, LayoutStateDefaults, LayoutViewOptions, UiDataProvider {
     void setLeftToolbarVisible(boolean value);
 
     void setTopLeftActionsBefore(boolean value);

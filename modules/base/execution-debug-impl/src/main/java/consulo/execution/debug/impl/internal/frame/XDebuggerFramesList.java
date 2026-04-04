@@ -15,8 +15,7 @@
  */
 package consulo.execution.debug.impl.internal.frame;
 
-import consulo.annotation.access.RequiredReadAction;
-import consulo.dataContext.DataProvider;
+import consulo.dataContext.DataManager;
 import consulo.execution.debug.XDebuggerBundle;
 import consulo.execution.debug.XSourcePosition;
 import consulo.execution.debug.frame.XStackFrame;
@@ -38,7 +37,6 @@ import consulo.ui.ex.awt.popup.ListItemDescriptorAdapter;
 import consulo.ui.ex.awt.transferable.TextTransferable;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
-import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
 import org.jspecify.annotations.Nullable;
 
@@ -109,22 +107,16 @@ public class XDebuggerFramesList extends DebuggerFramesList {
 
         doInit();
         setTransferHandler(DEFAULT_TRANSFER_HANDLER);
-        setDataProvider(new DataProvider() {
-            @Override
-            @RequiredReadAction
-            public @Nullable Object getData(Key dataId) {
-                if (mySelectedFrame != null) {
-                    if (VirtualFile.KEY == dataId) {
-                        return getFile(mySelectedFrame);
-                    }
-                    else if (PsiFile.KEY == dataId) {
-                        VirtualFile file = getFile(mySelectedFrame);
-                        if (file != null && file.isValid()) {
-                            return PsiManager.getInstance(myProject).findFile(file);
-                        }
+        DataManager.registerUiDataProvider(this, sink -> {
+            if (mySelectedFrame != null) {
+                VirtualFile file = getFile(mySelectedFrame);
+                if (file != null) {
+                    sink.set(VirtualFile.KEY, file);
+
+                    if (file.isValid()) {
+                        sink.lazy(PsiFile.KEY, () -> PsiManager.getInstance(myProject).findFile(file));
                     }
                 }
-                return null;
             }
         });
     }
@@ -149,7 +141,7 @@ public class XDebuggerFramesList extends DebuggerFramesList {
     protected void onFrameChanged(Object selectedValue) {
         if (mySelectedFrame != selectedValue) {
             SwingUtilities.invokeLater(() -> repaint());
-            
+
             if (selectedValue instanceof XStackFrame) {
                 mySelectedFrame = (XStackFrame) selectedValue;
             }

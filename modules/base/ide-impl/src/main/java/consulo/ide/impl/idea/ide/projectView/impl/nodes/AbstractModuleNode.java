@@ -15,10 +15,12 @@
  */
 package consulo.ide.impl.idea.ide.projectView.impl.nodes;
 
+import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
+import consulo.navigation.NavigateOptions;
+import consulo.navigation.NavigatableWithText;
 import consulo.localize.LocalizeValue;
 import consulo.module.Module;
 import consulo.module.content.ModuleRootManager;
-import consulo.navigation.NavigatableWithText;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.project.ui.view.internal.ProjectSettingsService;
@@ -30,7 +32,6 @@ import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.tree.PresentationData;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.archive.ArchiveFileSystem;
-import consulo.virtualFileSystem.util.VirtualFileUtil;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -86,7 +87,7 @@ public abstract class AbstractModuleNode extends ProjectViewNode<Module> impleme
             testee = file;
         }
         for (VirtualFile root : ModuleRootManager.getInstance(module).getContentRoots()) {
-            if (VirtualFileUtil.isAncestor(root, testee, false)) {
+            if (VfsUtilCore.isAncestor(root, testee, false)) {
                 return true;
             }
         }
@@ -107,14 +108,15 @@ public abstract class AbstractModuleNode extends ProjectViewNode<Module> impleme
         }
     }
 
-    
     @Override
     public LocalizeValue getNavigateActionText(boolean focusEditor) {
         return ProjectUIViewLocalize.actionOpenModuleSettingsText();
     }
 
     @Override
-    public boolean canNavigate() {
-        return ProjectSettingsService.getInstance(myProject).canOpenModuleSettings() && getValue() != null;
+    public NavigateOptions getNavigateOptions() {
+        return ProjectSettingsService.getInstance(myProject).canOpenModuleSettings() && getValue() != null
+            ? NavigateOptions.CAN_NAVIGATE_FULL
+            : NavigateOptions.CANT_NAVIGATE;
     }
 }

@@ -39,7 +39,6 @@ import consulo.project.ProjectGroup;
 import consulo.project.ProjectManager;
 import consulo.project.ProjectOpenContext;
 import consulo.project.event.ProjectManagerListener;
-import consulo.project.impl.internal.ProjectImplUtil;
 import consulo.project.impl.internal.store.ProjectStoreImpl;
 import consulo.project.internal.RecentProjectsManager;
 import consulo.project.ui.impl.internal.action.SimpleProjectGroupActionGroup;
@@ -61,6 +60,7 @@ import jakarta.inject.Singleton;
 import org.intellij.lang.annotations.MagicConstant;
 
 import java.io.File;
+import java.nio.file.Path;
 import java.util.*;
 
 /**
@@ -114,15 +114,16 @@ public class RecentProjectsManagerImpl implements RecentProjectsManager, Persist
                     frameStates.remove(projectPath);
 
                     additionalInfo.remove(projectPath);
-                    
+
                     names.remove(projectPath);
-                } else {
+                }
+                else {
                     break;
                 }
             }
         }
     }
-    
+
     private final Object myStateLock = new Object();
     private State myState = new State();
 
@@ -137,7 +138,6 @@ public class RecentProjectsManagerImpl implements RecentProjectsManager, Persist
     }
 
     @Override
-    
     public State getState() {
         synchronized (myStateLock) {
             myState.validateRecentProjects();
@@ -248,23 +248,22 @@ public class RecentProjectsManagerImpl implements RecentProjectsManager, Persist
         Project[] openProjects = ProjectManager.getInstance().getOpenProjects();
         synchronized (myStateLock) {
             myState.openPaths.clear();
-            if (openProjects.length == 0) {
-                myState.lastPath = null;
-            }
-            else {
-                myState.lastPath = getProjectPath(openProjects[openProjects.length - 1]);
-                for (Project openProject : openProjects) {
-                    String path = getProjectPath(openProject);
-                    if (path != null) {
-                        myState.openPaths.add(path);
-                        myState.names.put(path, getProjectDisplayName(openProject));
-                    }
+            String lastPath = null;
+            for (Project openProject : openProjects) {
+                if (openProject.isWelcomeProject()) {
+                    continue;
+                }
+                String path = getProjectPath(openProject);
+                if (path != null) {
+                    myState.openPaths.add(path);
+                    myState.names.put(path, getProjectDisplayName(openProject));
+                    lastPath = path;
                 }
             }
+            myState.lastPath = lastPath;
         }
     }
 
-    
     protected String getProjectDisplayName(Project project) {
         return "";
     }
@@ -291,7 +290,6 @@ public class RecentProjectsManagerImpl implements RecentProjectsManager, Persist
         return new HashSet<>();
     }
 
-    
     @Override
     public AnAction[] getRecentProjectsActions(@MagicConstant(flags = {RECENT_ACTIONS_USE_GROUPS_WELCOME_MENU, RECENT_ACTIONS_USE_GROUPS_CONTEXT_MENU}) int flags) {
         Set<String> paths;
@@ -377,7 +375,6 @@ public class RecentProjectsManagerImpl implements RecentProjectsManager, Persist
         return consulo.util.collection.ContainerUtil.toArray(actions, AnAction.ARRAY_FACTORY);
     }
 
-    
     private AnAction createOpenAction(String path, Set<String> duplicates, Collection<String> openedPaths) {
         String projectName = getProjectName(path);
         String displayName;
@@ -452,6 +449,10 @@ public class RecentProjectsManagerImpl implements RecentProjectsManager, Persist
         @Override
         @RequiredReadAction
         public void projectOpened(final Project project, UIAccess uiAccess) {
+            if (project.isWelcomeProject()) {
+                return;
+            }
+
             String path = getProjectPath(project);
             if (path != null) {
                 markPathRecent(path, project);
@@ -469,6 +470,10 @@ public class RecentProjectsManagerImpl implements RecentProjectsManager, Persist
 
         @Override
         public void projectClosing(Project project) {
+            if (project.isWelcomeProject()) {
+                return;
+            }
+
             synchronized (myStateLock) {
                 String projectPath = getProjectPath(project);
 
@@ -487,6 +492,10 @@ public class RecentProjectsManagerImpl implements RecentProjectsManager, Persist
         @Override
         @RequiredReadAction
         public void projectClosed(Project project, UIAccess uiAccess) {
+            if (project.isWelcomeProject()) {
+                return;
+            }
+
             Project[] openProjects = ProjectManager.getInstance().getOpenProjects();
             if (openProjects.length > 0) {
                 String path = getProjectPath(openProjects[openProjects.length - 1]);
@@ -498,7 +507,6 @@ public class RecentProjectsManagerImpl implements RecentProjectsManager, Persist
         }
     }
 
-    
     public String getProjectName(String path) {
         return ProjectStoreImpl.readProjectName(new File(path));
     }
@@ -542,6 +550,9 @@ public class RecentProjectsManagerImpl implements RecentProjectsManager, Persist
                 }
             }
 
+            ProjectManager projectManager = ProjectManager.getInstance();
+            UIAccess uiAccess = UIAccess.current();
+
             for (String openPath : openPaths) {
                 if (isValidProjectPath(openPath)) {
                     ProjectOpenContext context = new ProjectOpenContext();
@@ -550,13 +561,14 @@ public class RecentProjectsManagerImpl implements RecentProjectsManager, Persist
                         context.putUserData(IdeFrameState.KEY, state);
                     }
 
-                    ProjectImplUtil.openAsync(openPath, null, forceNewFrame, UIAccess.current(), context);
+                    context.putUserData(ProjectOpenContext.FORCE_OPEN_IN_NEW_FRAME, forceNewFrame);
+
+                    projectManager.openProjectAsync(Path.of(openPath), uiAccess, context);
                 }
             }
         }
     }
 
-    
     @Override
     public List<ProjectGroup> getGroups() {
         return Collections.unmodifiableList(myState.groups);

@@ -18,6 +18,7 @@ package consulo.execution.debug.impl.internal.frame;
 import consulo.codeEditor.EditorEx;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
+import consulo.dataContext.DataSink;
 import consulo.disposer.CompositeDisposable;
 import consulo.disposer.Disposer;
 import consulo.execution.debug.XDebugSession;
@@ -51,7 +52,6 @@ import consulo.ui.ex.awt.tree.TreeUtil;
 import consulo.ui.ex.awt.util.Alarm;
 import consulo.ui.ex.awt.util.ListenerUtil;
 import consulo.ui.ex.keymap.util.KeymapUtil;
-import consulo.util.dataholder.Key;
 import consulo.util.lang.EmptyRunnable;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.ref.Ref;
@@ -217,11 +217,6 @@ public class XWatchesViewImpl extends XVariablesView implements DnDNativeTarget,
                             e.getPresentation().setEnabled(expression != null && !StringUtil.isEmptyOrSpaces(expression.getExpression()));
                         }
 
-                        @Override
-                        
-                        public ActionUpdateThread getActionUpdateThread() {
-                            return ActionUpdateThread.BGT;
-                        }
                     };
 
                 super.addActions(builder, showMultiline);
@@ -338,7 +333,6 @@ public class XWatchesViewImpl extends XVariablesView implements DnDNativeTarget,
         }
     }
 
-    
     private XExpression[] getExpressions() {
         XDebuggerTree tree = getTree();
         XDebugSession session = XDebugView.getSession(tree);
@@ -360,11 +354,9 @@ public class XWatchesViewImpl extends XVariablesView implements DnDNativeTarget,
     }
 
     @Override
-    public @Nullable Object getData(Key<?> dataId) {
-        if (XWatchesView.DATA_KEY == dataId) {
-            return this;
-        }
-        return super.getData(dataId);
+    public void uiDataSnapshot(DataSink sink) {
+        super.uiDataSnapshot(sink);
+        sink.set(XWatchesView.DATA_KEY, this);
     }
 
     @Override
@@ -421,7 +413,7 @@ public class XWatchesViewImpl extends XVariablesView implements DnDNativeTarget,
             ((XDebugSessionImpl) session).setWatchExpressions(expressions);
         }
         else {
-            XDebugSessionData data = XDebugView.getData(XDebugSessionData.DATA_KEY, getTree());
+            XDebugSessionData data = DataManager.getInstance().getDataContext(getTree()).getData(XDebugSessionData.DATA_KEY);
             if (data != null) {
                 data.setWatchExpressions(expressions);
             }

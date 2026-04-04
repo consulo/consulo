@@ -18,12 +18,18 @@ package consulo.sandboxPlugin.ide.action;
 import consulo.annotation.component.ActionImpl;
 import consulo.annotation.component.ActionParentRef;
 import consulo.annotation.component.ActionRef;
-import consulo.application.DataLockService;
+import consulo.application.concurrent.coroutine.WriteLock;
+import consulo.application.progress.ProgressBuilderFactory;
+import consulo.util.concurrent.coroutine.Coroutine;
+import consulo.application.progress.ProgressIndicator;
 import consulo.localize.LocalizeValue;
+import consulo.project.Project;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.ui.ex.action.IdeActions;
+import consulo.util.lang.TimeoutUtil;
 import jakarta.inject.Inject;
 
 /**
@@ -32,19 +38,31 @@ import jakarta.inject.Inject;
  */
 @ActionImpl(id = "ShowUITesterAction", parents = @ActionParentRef(@ActionRef(id = IdeActions.TOOLS_MENU)))
 public class TestModalWriteAction extends DumbAwareAction {
-    private final DataLockService myDataLockService;
+    private final ProgressBuilderFactory myProgressBuilderFactory;
 
     @Inject
-    public TestModalWriteAction(DataLockService dataLockService) {
+    public TestModalWriteAction(ProgressBuilderFactory progressBuilderFactory) {
         super(LocalizeValue.localizeTODO("Test Modal Write"));
-        myDataLockService = dataLockService;
+        myProgressBuilderFactory = progressBuilderFactory;
     }
+
     @RequiredUIAccess
     @Override
     public void actionPerformed(AnActionEvent e) {
-        myDataLockService.modalWrite(LocalizeValue.localizeTODO("Test Write"), () -> {
-            Thread.sleep(5000L);
-            return null;
-        });
+        myProgressBuilderFactory.newProgressBuilder(e.getData(Project.KEY), LocalizeValue.localizeTODO("Test Write"))
+            .cancelable()
+            .execute(UIAccess.current(), () -> Coroutine.first(WriteLock.apply((o, c) -> {
+                    ProgressIndicator indicator = ProgressIndicator.from(c);
+                    indicator.setIndeterminate(false);
+                    
+                    for (int i = 0; i < 100; i++) {
+                        indicator.setFraction(i / 100f);
+
+                        indicator.checkCanceled();
+
+                        TimeoutUtil.sleep(1000L);
+                    }
+                    return null;
+                })));
     }
 }

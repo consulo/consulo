@@ -15,7 +15,6 @@
  */
 package consulo.component.store.internal;
 
-import consulo.annotation.access.RequiredWriteAction;
 import consulo.ui.UIAccess;
 import consulo.util.lang.Pair;
 import org.jspecify.annotations.Nullable;
@@ -34,10 +33,7 @@ public interface IComponentStore {
 
   void load() throws IOException, StateStorageException;
 
-  void save(boolean force, List<Pair<StateStorage.SaveSession, File>> readonlyFiles);
-
-  @RequiredWriteAction
-  void saveAsync(UIAccess uiAccess, List<Pair<StateStorage.SaveSession, File>> readonlyFiles);
+  void save(UIAccess uiAccess, boolean force, List<Pair<StateStorage.SaveSession, File>> readonlyFiles);
 
   /**
    * Return storable info about component
@@ -46,7 +42,6 @@ public interface IComponentStore {
 
   void reinitComponents(Set<String> componentNames, boolean reloadData);
 
-  
   StateStorageManager getStateStorageManager();
 
   /**

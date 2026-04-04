@@ -21,6 +21,7 @@ import consulo.module.content.layer.orderEntry.LibraryOrderEntry;
 import consulo.module.content.ModuleRootManager;
 import consulo.module.content.layer.orderEntry.OrderEntry;
 import consulo.project.ui.view.internal.ProjectSettingsService;
+import consulo.navigation.NavigateOptions;
 import consulo.navigation.Navigatable;
 
 /**
@@ -47,12 +48,7 @@ public class LibraryNavigatable implements Navigatable {
   }
 
   @Override
-  public boolean canNavigate() {
-    return !module.isDisposed() && element != null;
-  }
-
-  @Override
-  public boolean canNavigateToSource() {
-    return false;
+  public NavigateOptions getNavigateOptions() {
+    return !module.isDisposed() && element != null ? NavigateOptions.CAN_NAVIGATE_NO_SOURCE : NavigateOptions.CANT_NAVIGATE;
   }
 }

@@ -7,10 +7,11 @@ import consulo.component.ComponentManager;
 import consulo.component.ProcessCanceledException;
 import consulo.disposer.Disposable;
 import consulo.ui.ModalityState;
-import consulo.util.concurrent.CancellablePromise;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.dataholder.Key;
 import org.jetbrains.annotations.Contract;
 
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
 import java.util.function.BooleanSupplier;
 import java.util.function.Consumer;
@@ -62,16 +63,24 @@ public interface NonBlockingReadAction<T> {
    * and the visual changes (e.g. {@link ProgressIndicator#setText}) are propagated from the inner to the outer indicator.
    */
   @Contract(pure = true)
-  
   NonBlockingReadAction<T> wrapProgress(ProgressIndicator progressIndicator);
 
   /**
-   * @return a copy of this builder that completes submitted read actions on UI thread with the given modality state.
+   * @return a copy of this builder that completes submitted read actions on UI thread.
    * The read actions are still executed on background thread, but the callbacks on their completion
    * are invoked on UI thread, and no write action is allowed to interfere before that and possibly invalidate the result.
    */
   @Contract(pure = true)
-  NonBlockingReadAction<T> finishOnUiThread(Function<Application, ModalityState> modalityGetter, Consumer<? super T> uiThreadAction);
+  NonBlockingReadAction<T> finishOnUiThread(@RequiredUIAccess Consumer<? super T> uiThreadAction);
+
+  /**
+   * @deprecated Use {@link #finishOnUiThread(Consumer)} instead. Modality state is no longer used.
+   */
+  @Deprecated
+  @Contract(pure = true)
+  default NonBlockingReadAction<T> finishOnUiThread(Function<Application, ModalityState> modalityGetter, Consumer<? super T> uiThreadAction) {
+    return finishOnUiThread(uiThreadAction);
+  }
 
   /**
    * Merges together similar computations by cancelling the previous ones when a new one is submitted.
@@ -95,9 +104,9 @@ public interface NonBlockingReadAction<T> {
    *                                 {@link AppExecutorUtil#getAppExecutorService()} or
    *                                 {@link BoundedTaskExecutor} on top of that.
    */
-  CancellablePromise<T> submit(Executor backgroundThreadExecutor);
+  CompletableFuture<T> submit(Executor backgroundThreadExecutor);
 
-  default CancellablePromise<T> submitDefault() {
+  default CompletableFuture<T> submitDefault() {
       return submit(NonUrgentExecutor.getInstance());
   }
 

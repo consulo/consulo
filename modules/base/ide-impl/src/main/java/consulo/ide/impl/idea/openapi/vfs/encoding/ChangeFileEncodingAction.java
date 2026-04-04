@@ -18,7 +18,6 @@ package consulo.ide.impl.idea.openapi.vfs.encoding;
 import consulo.annotation.component.ActionImpl;
 import consulo.application.Application;
 import consulo.application.dumb.DumbAware;
-import consulo.application.impl.internal.IdeaModalityState;
 import consulo.codeEditor.Editor;
 import consulo.dataContext.DataContext;
 import consulo.document.Document;
@@ -28,17 +27,20 @@ import consulo.ide.localize.IdeLocalize;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.project.ProjectLocator;
+import consulo.ui.ModalityState;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DefaultActionGroup;
+import consulo.ui.ex.action.coroutine.ActionSafeReadLock;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.popup.ListPopup;
 import consulo.undoRedo.*;
+import consulo.util.concurrent.coroutine.Coroutine;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.encoding.ApplicationEncodingManager;
-import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.io.IOException;
@@ -49,7 +51,6 @@ import java.nio.charset.Charset;
  */
 @ActionImpl(id = "ChangeFileEncodingAction")
 public class ChangeFileEncodingAction extends AnAction implements DumbAware {
-    
     private final Application myApplication;
     private final boolean myAllowDirectories;
 
@@ -75,11 +76,13 @@ public class ChangeFileEncodingAction extends AnAction implements DumbAware {
     }
 
     @Override
-    public void update(AnActionEvent e) {
-        VirtualFile myFile = e.getData(VirtualFile.KEY);
-        boolean enabled = myFile != null && checkEnabled(myFile);
-        e.getPresentation().setEnabled(enabled);
-        e.getPresentation().setVisible(myFile != null);
+    public Coroutine<?, ?> updateAsync(AnActionEvent e) {
+        return ActionSafeReadLock.apply(e, p -> {
+            VirtualFile file = e.getData(VirtualFile.KEY);
+            boolean enabled = file != null && checkEnabled(file);
+            p.setEnabled(enabled);
+            p.setVisible(file != null);
+        }).toCoroutine();
     }
 
     @Override
@@ -139,7 +142,6 @@ public class ChangeFileEncodingAction extends AnAction implements DumbAware {
             public void update(AnActionEvent e) {
             }
 
-            
             @Override
             protected DefaultActionGroup createPopupActionGroup(JComponent button) {
                 return createCharsetsActionGroup(
@@ -220,13 +222,13 @@ public class ChangeFileEncodingAction extends AnAction implements DumbAware {
             @Override
             public void undo() {
                 // invoke later because changing document inside undo/redo is not allowed
-                application.invokeLater(undo, IdeaModalityState.nonModal(), (project == null ? application : project).getDisposed());
+                application.invokeLater(undo, ModalityState.nonModal(), (project == null ? application : project).getDisposed());
             }
 
             @Override
             public void redo() {
                 // invoke later because changing document inside undo/redo is not allowed
-                application.invokeLater(redo, IdeaModalityState.nonModal(), (project == null ? application : project).getDisposed());
+                application.invokeLater(redo, ModalityState.nonModal(), (project == null ? application : project).getDisposed());
             }
         };
 

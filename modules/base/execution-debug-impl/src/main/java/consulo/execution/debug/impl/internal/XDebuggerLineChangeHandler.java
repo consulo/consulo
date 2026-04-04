@@ -23,6 +23,7 @@ import consulo.execution.debug.impl.internal.breakpoint.XBreakpointUtil;
 import consulo.util.lang.TriConsumer;
 
 import java.util.List;
+import java.util.concurrent.Future;
 
 /**
  * from kotlin
@@ -33,18 +34,21 @@ import java.util.List;
 public class XDebuggerLineChangeHandler {
   private final TriConsumer<EditorGutterComponentEx, XSourcePositionImpl, List<XLineBreakpointType>> handler;
 
+  private Future<?> myFuture;
+
   public XDebuggerLineChangeHandler(TriConsumer<EditorGutterComponentEx, XSourcePositionImpl, List<XLineBreakpointType>> handler) {
     this.handler = handler;
   }
 
   public void lineChanged(Editor editor, XSourcePositionImpl position) {
-    List<XLineBreakpointType> types =
-      ReadAction.compute(() -> XBreakpointUtil.getAvailableLineBreakpointTypes(editor.getProject(), position, editor));
-
-    handler.accept((EditorGutterComponentEx)editor.getGutter(), position, types);
+    myFuture = ReadAction.nonBlocking(() -> XBreakpointUtil.getAvailableLineBreakpointTypes(editor.getProject(), position, editor))
+        .finishOnUiThread(types -> handler.accept((EditorGutterComponentEx) editor.getGutter(), position, types))
+        .submitDefault();
   }
 
   public void exitedGutter() {
-    // TODO cancel run lineChanged??
+    if (myFuture != null) {
+      myFuture.cancel(false);
+    }
   }
 }

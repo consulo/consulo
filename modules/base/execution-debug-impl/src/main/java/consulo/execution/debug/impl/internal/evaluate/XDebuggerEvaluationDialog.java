@@ -18,7 +18,8 @@ package consulo.execution.debug.impl.internal.evaluate;
 import consulo.application.ApplicationManager;
 import consulo.application.ui.wm.ApplicationIdeFocusManager;
 import consulo.codeEditor.Editor;
-import consulo.dataContext.DataProvider;
+import consulo.dataContext.DataSink;
+import consulo.dataContext.UiDataProvider;
 import consulo.execution.debug.*;
 import consulo.execution.debug.breakpoint.XExpression;
 import consulo.execution.debug.evaluation.EvaluationMode;
@@ -48,6 +49,7 @@ import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.StringUtil;
 import org.jspecify.annotations.Nullable;
+import org.jetbrains.annotations.NonNls;
 
 import javax.swing.*;
 import javax.swing.tree.TreeNode;
@@ -204,7 +206,6 @@ public class XDebuggerEvaluationDialog extends DialogWrapper {
         }
     }
 
-    
     @Override
     protected Action[] createActions() {
         if (myIsCodeFragmentEvaluationSupported) {
@@ -366,13 +367,10 @@ public class XDebuggerEvaluationDialog extends DialogWrapper {
         }
     }
 
-    private class EvaluationMainPanel extends BorderLayoutPanel implements DataProvider {
+    private class EvaluationMainPanel extends BorderLayoutPanel implements UiDataProvider {
         @Override
-        public @Nullable Object getData(Key<?> dataId) {
-            if (KEY == dataId) {
-                return XDebuggerEvaluationDialog.this;
-            }
-            return null;
+        public void uiDataSnapshot(DataSink sink) {
+            sink.set(XDebuggerEvaluationDialog.KEY, XDebuggerEvaluationDialog.this);
         }
     }
 }

@@ -22,6 +22,7 @@ import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiManager;
 import consulo.language.psi.PsiUtilCore;
 import consulo.localize.LocalizeValue;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.versionControlSystem.change.CommitContext;
 import consulo.versionControlSystem.change.CommitExecutor;
@@ -63,7 +64,7 @@ public class UpdateCopyrightCheckinHandlerFactory extends CheckinHandlerFactory 
             public ReturnResult beforeCheckin(@Nullable CommitExecutor executor, BiConsumer<Object, Object> additionalDataConsumer) {
                 if (UpdateCopyrightCheckinHandlerState.getInstance(panel.getProject()).UPDATE_COPYRIGHT) {
                     new UpdateCopyrightProcessor(panel.getProject(), null, getPsiFiles()).run();
-                    FileDocumentManager.getInstance().saveAllDocuments();
+                    FileDocumentManager.getInstance().saveAllDocuments(UIAccess.current());
                 }
                 return super.beforeCheckin();
             }

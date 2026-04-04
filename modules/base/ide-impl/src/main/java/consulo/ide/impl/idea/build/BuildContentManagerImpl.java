@@ -2,7 +2,6 @@
 package consulo.ide.impl.idea.build;
 
 import consulo.annotation.component.ServiceImpl;
-import consulo.application.impl.internal.IdeaModalityState;
 import consulo.build.ui.BuildContentManager;
 import consulo.build.ui.BuildDescriptor;
 import consulo.build.ui.localize.BuildLocalize;
@@ -17,6 +16,7 @@ import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.project.internal.StartupManagerEx;
 import consulo.project.ui.wm.ToolWindowManager;
+import consulo.ui.ModalityState;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.internal.GuiUtils;
 import consulo.ui.ex.content.Content;
@@ -95,7 +95,7 @@ public final class BuildContentManagerImpl implements BuildContentManager {
             return;
         }
         StartupManagerEx.getInstanceEx(myProject).runAfterOpened(
-            () -> GuiUtils.invokeLaterIfNeeded(runnable, IdeaModalityState.defaultModalityState(), myProject.getDisposed())
+            () -> GuiUtils.invokeLaterIfNeeded(runnable, ModalityState.nonModal(), myProject.getDisposed())
         );
     }
 

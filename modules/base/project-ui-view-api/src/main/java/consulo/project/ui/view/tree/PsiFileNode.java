@@ -21,18 +21,22 @@ import consulo.codeEditor.CodeInsightColors;
 import consulo.component.util.Iconable;
 import consulo.language.content.ProjectRootsUtil;
 import consulo.language.icon.IconDescriptorUpdaters;
-import consulo.navigation.NavigatableWithText;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiManager;
 import consulo.localize.LocalizeValue;
 import consulo.module.content.layer.orderEntry.OrderEntry;
 import consulo.module.content.library.util.ModuleContentLibraryUtil;
+import consulo.navigation.NavigatableWithText;
+import consulo.navigation.NavigateOptions;
 import consulo.platform.base.localize.CommonLocalize;
 import consulo.project.Project;
 import consulo.project.ui.view.internal.ProjectSettingsService;
 import consulo.project.ui.view.localize.ProjectUIViewLocalize;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.awt.tree.TreeState;
+import consulo.ui.ex.tree.PathElementIdProvider;
 import consulo.ui.ex.tree.PresentationData;
 import consulo.util.io.FileUtil;
 import consulo.util.lang.Comparing;
@@ -45,8 +49,9 @@ import org.jspecify.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
-public class PsiFileNode extends BasePsiNode<PsiFile> implements NavigatableWithText {
+public class PsiFileNode extends BasePsiNode<PsiFile> implements NavigatableWithText, PathElementIdProvider {
     public PsiFileNode(Project project, PsiFile value, ViewSettings viewSettings) {
         super(project, value, viewSettings);
     }
@@ -92,8 +97,11 @@ public class PsiFileNode extends BasePsiNode<PsiFile> implements NavigatableWith
     }
 
     @Override
-    public boolean canNavigate() {
-        return isNavigatableLibraryRoot() || super.canNavigate();
+    public NavigateOptions getNavigateOptions() {
+        if (isNavigatableLibraryRoot()) {
+            return NavigateOptions.CAN_NAVIGATE_NO_SOURCE;
+        }
+        return super.getNavigateOptions();
     }
 
     private boolean isNavigatableLibraryRoot() {
@@ -128,7 +136,20 @@ public class PsiFileNode extends BasePsiNode<PsiFile> implements NavigatableWith
         super.navigate(requestFocus);
     }
 
-    
+    @Override
+    public CompletableFuture<?> navigateAsync(UIAccess uiAccess, boolean requestFocus) {
+        VirtualFile jarRoot = getArchiveRoot();
+        Project project = getProject();
+        if (requestFocus && jarRoot != null && ProjectRootsUtil.isLibraryRoot(jarRoot, project)) {
+            OrderEntry orderEntry = ModuleContentLibraryUtil.findLibraryEntry(jarRoot, project);
+            if (orderEntry != null) {
+                return uiAccess.giveAsync(() -> ProjectSettingsService.getInstance(project).openLibraryOrSdkSettings(orderEntry));
+            }
+        }
+
+        return super.navigateAsync(uiAccess, requestFocus);
+    }
+
     @Override
     public LocalizeValue getNavigateActionText(boolean focusEditor) {
         if (isNavigatableLibraryRoot()) {
@@ -200,5 +221,10 @@ public class PsiFileNode extends BasePsiNode<PsiFile> implements NavigatableWith
     @Override
     public boolean contains(VirtualFile file) {
         return super.contains(file) || isArchive() && Comparing.equal(VirtualFilePathUtil.getLocalFile(file), getVirtualFile());
+    }
+
+    @Override
+    public String getPathElementId() {
+        return TreeState.defaultPathElementId(this);
     }
 }

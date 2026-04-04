@@ -4,11 +4,12 @@ package consulo.ide.impl.idea.openapi.application.impl;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.*;
 import consulo.application.event.ApplicationListener;
-import consulo.ui.ModalityState;
+import consulo.application.internal.AsyncExecutionService;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
 import java.util.concurrent.Callable;
+import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * @author peter
@@ -16,48 +17,32 @@ import java.util.concurrent.Callable;
 @Singleton
 @ServiceImpl
 public class AsyncExecutionServiceImpl extends AsyncExecutionService {
-  private static long ourWriteActionCounter = 0;
+    private static AtomicLong ourWriteActionCounter = new AtomicLong();
 
-  private final Application myApplication;
+    private final Application myApplication;
 
-  @Inject
-  public AsyncExecutionServiceImpl(Application app) {
-    myApplication = app;
-    app.addApplicationListener(new ApplicationListener() {
-      @Override
-      public void writeActionStarted(Object action) {
-        //noinspection AssignmentToStaticFieldFromInstanceMethod
-        ourWriteActionCounter++;
-      }
-    }, app);
-  }
+    @Inject
+    public AsyncExecutionServiceImpl(Application app) {
+        myApplication = app;
+        app.addApplicationListener(new ApplicationListener() {
+            @Override
+            public void writeActionStarted(Object action) {
+                ourWriteActionCounter.incrementAndGet();
+            }
+        }, app);
+    }
 
-  //@NotNull
-  //@Override
-  //protected ExpirableExecutor createExecutor(@NotNull Executor executor) {
-  //  return new ExpirableExecutorImpl(executor);
-  //}
-  //
-  
-  @Override
-  protected AppUIExecutor createUIExecutor(ModalityState modalityState) {
-    return new AppUIExecutorImpl(modalityState, ExecutionThread.EDT);
-  }
+    @Override
+    public AppUIExecutor createUIExecutor() {
+        return new AppUIExecutorImpl();
+    }
 
-  
-  @Override
-  protected AppUIExecutor createWriteThreadExecutor(ModalityState modalityState) {
-    return new AppUIExecutorImpl(modalityState, ExecutionThread.WT);
-  }
+    @Override
+    public <T> NonBlockingReadAction<T> buildNonBlockingReadAction(Callable<T> computation) {
+        return new NonBlockingReadActionImpl<>(myApplication, computation);
+    }
 
-  
-  @Override
-  public <T> NonBlockingReadAction<T> buildNonBlockingReadAction(Callable<T> computation) {
-    return new NonBlockingReadActionImpl<>(myApplication, computation);
-  }
-
-  static long getWriteActionCounter() {
-    ApplicationManager.getApplication().assertReadAccessAllowed();
-    return ourWriteActionCounter;
-  }
+    static long getWriteActionCounter() {
+        return ourWriteActionCounter.get();
+    }
 }

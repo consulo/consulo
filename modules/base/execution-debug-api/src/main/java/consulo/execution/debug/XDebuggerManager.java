@@ -56,6 +56,7 @@ public interface XDebuggerManager {
 
     @Nullable XDebugSession getCurrentSession();
 
+
     /**
      * Start a new debugging session and open 'Debug' tool window
      *
@@ -68,6 +69,7 @@ public interface XDebuggerManager {
                                                          @Nullable RunContentDescriptor contentToReuse,
                                                          boolean showToolWindowOnSuspendOnly,
                                                          XDebugProcessStarter starter) throws ExecutionException;
+
 
     /**
      * Start a new debugging session. Use this method only if debugging is started by using standard 'Debug' action i.e. this methods is called

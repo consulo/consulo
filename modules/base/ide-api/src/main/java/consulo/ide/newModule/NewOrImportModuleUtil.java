@@ -29,6 +29,7 @@ import consulo.module.content.layer.ContentEntry;
 import consulo.module.content.layer.ModifiableRootModel;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.concurrent.AsyncResult;
 import consulo.util.io.FileUtil;
@@ -98,7 +99,7 @@ public class NewOrImportModuleUtil {
 
       if (newProject == null) return AsyncResult.rejected();
 
-      newProject.save();
+      newProject.save(UIAccess.current());
 
       ModifiableModuleModel modifiableModel = ModuleManager.getInstance(newProject).getModifiableModel();
 
@@ -107,7 +108,7 @@ public class NewOrImportModuleUtil {
 
       WriteAction.runAndWait(modifiableModel::commit);
 
-      newProject.save();
+      newProject.save(UIAccess.current());
 
       context.dispose();
 

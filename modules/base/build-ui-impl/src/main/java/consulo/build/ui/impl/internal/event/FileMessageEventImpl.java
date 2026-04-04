@@ -55,7 +55,8 @@ public class FileMessageEventImpl extends MessageEventImpl implements FileMessag
   }
 
   @Override
-  public @Nullable String getHint() {
+  public
+  @Nullable String getHint() {
     String hint = super.getHint();
     if (hint == null && myFilePosition.getStartLine() >= 0) {
       hint = ":" + (myFilePosition.getStartLine() + 1);

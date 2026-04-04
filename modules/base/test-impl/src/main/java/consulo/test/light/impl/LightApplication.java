@@ -19,7 +19,6 @@ import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.access.RequiredWriteAction;
 import consulo.annotation.component.ComponentProfiles;
 import consulo.annotation.component.ComponentScope;
-import consulo.application.AccessToken;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.application.event.ApplicationListener;
@@ -37,13 +36,15 @@ import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 import consulo.util.collection.MultiMap;
-import consulo.util.concurrent.coroutine.CoroutineContext;
+import consulo.util.concurrent.coroutine.Continuation;
 import consulo.util.lang.function.ThrowableSupplier;
+import consulo.util.lang.ref.SimpleReference;
 import consulo.virtualFileSystem.encoding.ApplicationEncodingManager;
 import consulo.virtualFileSystem.encoding.EncodingRegistry;
 import consulo.virtualFileSystem.fileType.FileTypeRegistry;
 
 import java.util.concurrent.Callable;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Future;
 import java.util.function.BooleanSupplier;
 import java.util.function.Supplier;
@@ -78,7 +79,6 @@ public class LightApplication extends BaseComponentManager implements Applicatio
         return myComponentBinding;
     }
 
-    
     @Override
     public ProgressManager getProgressManager() {
         return myProgressManager;
@@ -98,7 +98,6 @@ public class LightApplication extends BaseComponentManager implements Applicatio
         return this;
     }
 
-    
     @Override
     protected InjectingContainer findRootContainer() {
         return InjectingContainer.root(getClass().getClassLoader());
@@ -132,6 +131,12 @@ public class LightApplication extends BaseComponentManager implements Applicatio
     @Override
     public boolean tryRunReadAction(Runnable action) {
         action.run();
+        return true;
+    }
+
+    @Override
+    public <T, E extends Throwable> boolean tryRunReadAction(SimpleReference<T> ref, ThrowableSupplier<T, E> computation) throws E {
+        ref.set(computation.get());
         return true;
     }
 
@@ -182,8 +187,13 @@ public class LightApplication extends BaseComponentManager implements Applicatio
 
     @RequiredUIAccess
     @Override
-    public void saveAll() {
+    public Continuation<Void> saveAll() {
+        throw new UnsupportedOperationException();
+    }
 
+    @Override
+    public CompletableFuture<Void> saveAllWithProgress(UIAccess uiAccess) {
+        return CompletableFuture.completedFuture(null);
     }
 
     @Override
@@ -236,30 +246,6 @@ public class LightApplication extends BaseComponentManager implements Applicatio
         throw new UnsupportedOperationException();
     }
 
-    
-    @Override
-    public ModalityState getCurrentModalityState() {
-        return ModalityState.nonModal();
-    }
-
-    
-    @Override
-    public ModalityState getDefaultModalityState() {
-        return getNoneModalityState();
-    }
-
-    
-    @Override
-    public ModalityState getNoneModalityState() {
-        return ModalityState.nonModal();
-    }
-
-    
-    @Override
-    public ModalityState getAnyModalityState() {
-        throw new UnsupportedOperationException();
-    }
-
     @Override
     public long getStartTime() {
         return 0;
@@ -276,13 +262,11 @@ public class LightApplication extends BaseComponentManager implements Applicatio
         return true;
     }
 
-    
     @Override
     public Future<?> executeOnPooledThread(Runnable action) {
         throw new UnsupportedOperationException();
     }
 
-    
     @Override
     public <T> Future<T> executeOnPooledThread(Callable<T> action) {
         throw new UnsupportedOperationException();
@@ -303,29 +287,14 @@ public class LightApplication extends BaseComponentManager implements Applicatio
         return true;
     }
 
-    
     @Override
     public Image getIcon() {
         throw new UnsupportedOperationException();
     }
 
-    
     @Override
     public UIAccess getLastUIAccess() {
         throw new UnsupportedOperationException();
-    }
-
-    
-    @Override
-    public AccessToken acquireReadActionLock() {
-        throw new UnsupportedOperationException();
-    }
-
-    @RequiredUIAccess
-    
-    @Override
-    public AccessToken acquireWriteActionLock(Class marker) {
-        return AccessToken.EMPTY_ACCESS_TOKEN;
     }
 
     @RequiredUIAccess

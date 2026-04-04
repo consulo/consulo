@@ -103,10 +103,9 @@ public class JoinLinesHandler extends EditorActionHandler implements ExtensionEd
         int lineCount = endLine - startLine;
         int line = startLine;
 
-        ((ApplicationEx) Application.get()).runWriteActionWithCancellableProgressInDispatchThread(
+        ((ApplicationEx) Application.get()).runWriteActionWithCancellableProgress(
             LocalizeValue.localizeTODO("Join Lines"),
             project,
-            null,
             indicator -> {
                 indicator.setIndeterminate(false);
                 JoinLineProcessor processor = new JoinLineProcessor(doc, psiFile, line, indicator);

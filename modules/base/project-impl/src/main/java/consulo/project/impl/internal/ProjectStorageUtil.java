@@ -27,6 +27,7 @@ import consulo.project.ui.notification.Notification;
 import consulo.project.ui.notification.NotificationService;
 import consulo.project.ui.notification.Notifications;
 import consulo.project.ui.notification.NotificationsManager;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.collection.ContainerUtil;
 
@@ -50,7 +51,7 @@ public class ProjectStorageUtil {
                         notification.expire();
 
                         if (_project != null && !_project.isDisposed()) {
-                            _project.save();
+                            _project.save(UIAccess.current());
                         }
                     })
             );

@@ -6,8 +6,9 @@ import consulo.annotation.access.RequiredReadAction;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.util.function.CommonProcessors;
 import consulo.codeEditor.Editor;
+import consulo.codeEditor.imaginary.ImaginaryEditor;
 import consulo.document.Document;
-import consulo.document.FileDocumentManager;
+
 import consulo.document.RangeMarker;
 import consulo.document.util.Segment;
 import consulo.ide.impl.idea.codeInsight.intention.impl.EditIntentionSettingsAction;
@@ -25,14 +26,12 @@ import consulo.language.editor.intention.IntentionManager;
 import consulo.language.editor.internal.intention.*;
 import consulo.language.editor.rawHighlight.HighlightInfo;
 import consulo.language.inject.InjectedLanguageManager;
-import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiUtilCore;
 import consulo.localize.LocalizeValue;
 import consulo.project.DumbService;
 import consulo.project.Project;
-import consulo.ui.HasFocus;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.lang.Pair;
@@ -55,22 +54,14 @@ public class ShowIntentionsPass extends TextEditorHighlightingPass {
      *                              and {@link IntentionAction#isAvailable(Project, Editor, PsiFile)} must be called on each
      *                              Usually, this expensive process should be executed only once per highlighting session
      */
-    @RequiredUIAccess
-    ShowIntentionsPass(Project project, Editor editor, boolean queryIntentionActions) {
-        super(project, editor.getDocument(), false);
+    ShowIntentionsPass(PsiFile psiFile, Editor editor, boolean queryIntentionActions) {
+        super(psiFile.getProject(), editor.getDocument(), false);
         myQueryIntentionActions = queryIntentionActions;
         myPassIdToShowIntentionsFor = -1;
-        UIAccess.assertIsUIThread();
-
         myEditor = editor;
-
-        PsiDocumentManager documentManager = PsiDocumentManager.getInstance(project);
-
-        myFile = documentManager.getPsiFile(myEditor.getDocument());
-        assert myFile != null : FileDocumentManager.getInstance().getFile(myEditor.getDocument());
+        myFile = psiFile;
     }
 
-    
     @RequiredReadAction
     public static List<IntentionActionDescriptor> getAvailableFixes(
         Editor editor,
@@ -185,16 +176,15 @@ public class ShowIntentionsPass extends TextEditorHighlightingPass {
     @Override
     @RequiredReadAction
     public void doCollectInformation(ProgressIndicator progress) {
-        if (!myProject.getApplication().isHeadlessEnvironment() && !HasFocus.hasFocus(myEditor.getContentUIComponent())) {
-            return;
-        }
         TemplateStateImpl state = TemplateManagerImpl.getTemplateStateImpl(myEditor);
         if (state != null && !state.isFinished()) {
             return;
         }
-        getActionsToShow(myEditor, myFile, myIntentionsInfo, myPassIdToShowIntentionsFor, myQueryIntentionActions);
+        ImaginaryEditor imaginary = getImaginaryEditor();
+        Editor editor = imaginary != null ? imaginary : myEditor;
+        getActionsToShow(editor, myFile, myIntentionsInfo, myPassIdToShowIntentionsFor, myQueryIntentionActions);
         myCachedIntentions = IntentionsUI.getInstance(myProject).getCachedIntentions(myEditor, myFile);
-        myActionsChanged = myCachedIntentions.wrapAndUpdateActions(myIntentionsInfo, false);
+        myActionsChanged = myCachedIntentions.wrapAndUpdateActions(myIntentionsInfo, false, editor.getCaretModel().getOffset());
     }
 
     @Override

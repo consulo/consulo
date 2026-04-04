@@ -21,6 +21,7 @@ import consulo.application.util.SystemInfo;
 import consulo.awt.hacking.AWTAccessorHacking;
 import consulo.awt.hacking.WindowHacking;
 import consulo.dataContext.DataManager;
+import consulo.dataContext.UiDataProvider;
 import consulo.desktop.awt.ui.impl.window.JFrameAsUIWindow;
 import consulo.desktop.awt.ui.util.AppIconUtil;
 import consulo.desktop.awt.uiOld.DesktopBalloonLayoutImpl;
@@ -36,12 +37,12 @@ import consulo.logging.Logger;
 import consulo.platform.Platform;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
-import consulo.project.internal.ProjectManagerEx;
 import consulo.project.ui.internal.IdeFrameEx;
 import consulo.project.ui.wm.*;
 import consulo.proxy.EventDispatcher;
 import consulo.ui.ModalityState;
 import consulo.ui.Rectangle2D;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.action.ActionManager;
@@ -91,7 +92,6 @@ public final class DesktopIdeFrameImpl implements IdeFrameEx, AccessibleContextA
             super.setRootPane(root);
         }
 
-        
         @Override
         public Insets getInsets() {
             if (Platform.current().os().isMac() && isInFullScreen()) {
@@ -249,7 +249,12 @@ public final class DesktopIdeFrameImpl implements IdeFrameEx, AccessibleContextA
     public DesktopIdeFrameImpl(ActionManager actionManager, DataManager dataManager, Application application) {
         myJFrame = new MyFrame();
         myJFrame.toUIWindow().putUserData(IdeFrame.KEY, this);
-        myJFrame.toUIWindow().addUserDataProvider(key -> getData(key));
+        myJFrame.toUIWindow().putUserData(UiDataProvider.KEY, sink -> {
+            if (myProject != null && myProject.isInitialized()) {
+                sink.set(Project.KEY, myProject);
+            }
+            sink.set(IdeFrame.KEY, this);
+        });
 
         myJFrame.setTitle(FrameTitleUtil.buildTitle());
         myRootPane = new IdeRootPane(actionManager, dataManager, application, this);
@@ -349,7 +354,6 @@ public final class DesktopIdeFrameImpl implements IdeFrameEx, AccessibleContextA
         return myJFrame.getRootPane();
     }
 
-    
     @Override
     public consulo.ui.Window getWindow() {
         return myJFrame.toUIWindow();
@@ -365,12 +369,24 @@ public final class DesktopIdeFrameImpl implements IdeFrameEx, AccessibleContextA
                     return;
                 }
 
-                ProjectManagerEx projectManager = (ProjectManagerEx) ProjectManager.getInstance();
+                // Closing the welcome project frame means exiting the app
+                if (myProject != null && myProject.isWelcomeProject()) {
+                    Application.get().exit();
+                    return;
+                }
+
+                ProjectManager projectManager = ProjectManager.getInstance();
 
                 Project[] openProjects = projectManager.getOpenProjects();
                 if (openProjects.length > 1 || openProjects.length == 1 && TopApplicationMenuUtil.isMacSystemMenu) {
                     if (myProject != null && myProject.isOpen()) {
-                        projectManager.closeAndDispose(myProject);
+                        ProjectManager.getInstance().closeProjectAsync(myProject, UIAccess.current()).whenComplete((closed, error) -> {
+                            if (error == null && closed) {
+                                Application.get().getMessageBus().syncPublisher(AppLifecycleListener.class).projectFrameClosed();
+                                WelcomeFrameManager.getInstance().showIfNoProjectOpened();
+                            }
+                        });
+                        return;
                     }
 
                     Application.get().getMessageBus().syncPublisher(AppLifecycleListener.class).projectFrameClosed();
@@ -422,22 +438,12 @@ public final class DesktopIdeFrameImpl implements IdeFrameEx, AccessibleContextA
             frame.getRootPane().putClientProperty("Window.documentFile", currentFile);
 
             String applicationName = FrameTitleUtil.buildTitle();
+
             TitleBuilder titleBuilder = new TitleBuilder();
-            if (Platform.current().os().isMac()) {
-                boolean addAppName = StringUtil.isEmpty(title) || ProjectManager.getInstance().getOpenProjects().length == 0;
-                titleBuilder.append(fileTitle).append(title).append(addAppName ? applicationName : null);
-            }
-            else {
-                titleBuilder.append(title).append(fileTitle);
 
-                // set title without app name to custom title panel
-                frame.getRootPane().putClientProperty(ClientProperties.CUSTOM_WINDOW_TITLE, titleBuilder.sb.toString());
+            boolean addAppName = StringUtil.isEmpty(title) || ProjectManager.getInstance().getOpenProjects().length == 0;
 
-                // only append if title not equal app name
-                if (!Objects.equals(title, applicationName)) {
-                    titleBuilder.append(applicationName);
-                }
-            }
+            titleBuilder.append(fileTitle).append(title).append(addAppName ? applicationName : null);
 
             frame.setTitle(titleBuilder.sb.toString());
         }
@@ -458,19 +464,6 @@ public final class DesktopIdeFrameImpl implements IdeFrameEx, AccessibleContextA
         return myJFrame.getAccessibleContextWithoutInitialization();
     }
 
-    private Object getData(Key<?> dataId) {
-        if (Project.KEY == dataId) {
-            if (myProject != null) {
-                return myProject.isInitialized() ? myProject : null;
-            }
-        }
-
-        if (IdeFrame.KEY == dataId) {
-            return this;
-        }
-
-        return null;
-    }
 
     public void setProject(Project project) {
         if (WindowManager.getInstance().isFullScreenSupportedInCurrentOS() && myProject != project && project != null) {
@@ -548,7 +541,6 @@ public final class DesktopIdeFrameImpl implements IdeFrameEx, AccessibleContextA
             (SHOULD_OPEN_IN_FULL_SCREEN.get(project) == Boolean.TRUE || PropertiesComponent.getInstance(project).getBoolean(FULL_SCREEN));
     }
 
-    
     @Override
     public IdeFrameState getFrameState() {
         Window window = TargetAWT.to(getWindow());
@@ -593,7 +585,6 @@ public final class DesktopIdeFrameImpl implements IdeFrameEx, AccessibleContextA
         myFullScreenListenerDispatcher.addListener(listener, disposable);
     }
 
-    
     @Override
     public ActionCallback toggleFullScreen(boolean state) {
         if (temporaryFixForIdea156004(state)) {

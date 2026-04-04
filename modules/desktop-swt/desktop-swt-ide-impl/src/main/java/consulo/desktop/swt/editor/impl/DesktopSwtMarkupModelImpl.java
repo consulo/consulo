@@ -15,53 +15,23 @@
  */
 package consulo.desktop.swt.editor.impl;
 
-import consulo.codeEditor.Editor;
+import consulo.codeEditor.impl.EditorMarkupModelImpl;
 import consulo.language.editor.impl.internal.markup.EditorMarkupModel;
 import consulo.language.editor.impl.internal.markup.ErrorStripTooltipRendererProvider;
-import consulo.codeEditor.internal.ErrorStripeListener;
-import consulo.codeEditor.impl.MarkupModelImpl;
-import consulo.language.editor.impl.internal.markup.ErrorStripeRenderer;
-import consulo.ui.ex.awt.PopupHandler;
-import consulo.disposer.Disposable;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.awt.PopupHandler;
 
 /**
  * @author VISTALL
  * @since 18/12/2021
  */
-public class DesktopSwtMarkupModelImpl extends MarkupModelImpl implements EditorMarkupModel {
-  
-  private final DesktopSwtEditorImpl myWebEditor;
-
-  public DesktopSwtMarkupModelImpl(DesktopSwtEditorImpl webEditor) {
-    super(webEditor.getDocument());
-    myWebEditor = webEditor;
-  }
-
-  
-  @Override
-  public Editor getEditor() {
-    return myWebEditor;
+public class DesktopSwtMarkupModelImpl extends EditorMarkupModelImpl<DesktopSwtEditorImpl> implements EditorMarkupModel {
+  public DesktopSwtMarkupModelImpl(DesktopSwtEditorImpl editor) {
+    super(editor);
   }
 
   @Override
   public void setErrorStripeVisible(boolean val) {
-
-  }
-
-  @RequiredUIAccess
-  @Override
-  public void setErrorStripeRenderer(ErrorStripeRenderer renderer) {
-
-  }
-
-  @Override
-  public ErrorStripeRenderer getErrorStripeRenderer() {
-    return null;
-  }
-
-  @Override
-  public void addErrorMarkerListener(ErrorStripeListener listener, Disposable parent) {
 
   }
 
@@ -76,7 +46,6 @@ public class DesktopSwtMarkupModelImpl extends MarkupModelImpl implements Editor
 
   }
 
-  
   @Override
   public ErrorStripTooltipRendererProvider getErrorStripTooltipRendererProvider() {
     return null;

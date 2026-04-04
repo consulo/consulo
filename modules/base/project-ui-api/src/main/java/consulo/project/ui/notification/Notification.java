@@ -83,18 +83,12 @@ import java.util.function.Function;
  */
 public class Notification {
     public static class Builder {
-        
         final NotificationService myService;
-        
         final NotificationGroup myGroup;
-        
         final NotificationType myType;
 
-        
         private LocalizeValue myTitle = LocalizeValue.empty();
-        
         private LocalizeValue mySubtitle = LocalizeValue.empty();
-        
         private LocalizeValue myContent = LocalizeValue.empty();
         private @Nullable Image myIcon = null;
         private @Nullable Boolean myImportant = null;
@@ -290,20 +284,14 @@ public class Notification {
         KEEP_RIGHTMOST
     }
 
-    
     public final String id;
-    
     private final String myGroupId;
 
-    
     private final NotificationType myType;
 
     private @Nullable Image myIcon;
-    
     private LocalizeValue myTitle = LocalizeValue.empty();
-    
     private LocalizeValue mySubtitle = LocalizeValue.empty();
-    
     private LocalizeValue myContent = LocalizeValue.empty();
 
     private NotificationListener myListener;
@@ -444,13 +432,11 @@ public class Notification {
         return myIcon;
     }
 
-    
     public Notification setIcon(@Nullable Image icon) {
         myIcon = icon;
         return this;
     }
 
-    
     public String getGroupId() {
         return myGroupId;
     }
@@ -459,12 +445,10 @@ public class Notification {
         return myTitle.isNotEmpty() || mySubtitle.isNotEmpty();
     }
 
-    
     public String getTitle() {
         return myTitle.get();
     }
 
-    
     public Notification setTitle(LocalizeValue title) {
         myTitle = title;
         return this;
@@ -472,7 +456,6 @@ public class Notification {
 
     @Deprecated
     @DeprecationInfo("Use variant with LocalizeValue")
-    
     public Notification setTitle(@Nullable String title) {
         myTitle = LocalizeValue.ofNullable(title);
         return this;
@@ -482,7 +465,6 @@ public class Notification {
         return mySubtitle.get();
     }
 
-    
     public Notification setSubtitle(LocalizeValue subtitle) {
         mySubtitle = subtitle;
         return this;
@@ -490,7 +472,6 @@ public class Notification {
 
     @Deprecated
     @DeprecationInfo("Use variant with LocalizeValue")
-    
     public Notification setSubtitle(@Nullable String subtitle) {
         mySubtitle = LocalizeValue.ofNullable(subtitle);
         return this;
@@ -500,12 +481,10 @@ public class Notification {
         return myContent.isNotEmpty();
     }
 
-    
     public String getContent() {
         return myContent.get();
     }
 
-    
     public Notification setContent(LocalizeValue content) {
         myContent = content;
         return this;
@@ -513,7 +492,6 @@ public class Notification {
 
     @Deprecated
     @DeprecationInfo("Use variant with LocalizeValue")
-    
     public Notification setContent(@Nullable String content) {
         myContent = LocalizeValue.ofNullable(content);
         return this;
@@ -523,18 +501,15 @@ public class Notification {
         return myListener;
     }
 
-    
     public Notification setListener(NotificationListener listener) {
         myListener = listener;
         return this;
     }
 
-    
     public List<AnAction> getActions() {
         return Lists.notNullize(myActions);
     }
 
-    
     public static Notification get(AnActionEvent e) {
         //noinspection ConstantConditions
         return e.getData(KEY);
@@ -560,10 +535,9 @@ public class Notification {
     }
 
     public static void setDataProvider(Notification notification, JComponent component) {
-        DataManager.registerDataProvider(component, dataId -> KEY == dataId ? notification : null);
+        DataManager.registerUiDataProvider(component, sink -> sink.set(KEY, notification));
     }
 
-    
     public String getDropDownText() {
         if (myDropDownText == null) {
             myDropDownText = "Actions";
@@ -579,7 +553,6 @@ public class Notification {
         return this;
     }
 
-    
     public CollapseActionsDirection getCollapseActionsDirection() {
         return myCollapseActionsDirection;
     }
@@ -588,7 +561,6 @@ public class Notification {
         myCollapseActionsDirection = collapseActionsDirection;
     }
 
-    
     public Notification addActions(AnAction... actions) {
         for (AnAction action : actions) {
             addAction(action);
@@ -596,7 +568,6 @@ public class Notification {
         return this;
     }
 
-    
     public Notification addAction(AnAction action) {
         if (myActions == null) {
             myActions = new ArrayList<>();
@@ -605,7 +576,6 @@ public class Notification {
         return this;
     }
 
-    
     public NotificationType getType() {
         return myType;
     }
@@ -679,7 +649,6 @@ public class Notification {
         return getListener() != null || !ContainerUtil.isEmpty(myActions);
     }
 
-    
     private String calculateId() {
         return myTimestamp + "." + System.identityHashCode(this);
     }

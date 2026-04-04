@@ -16,11 +16,13 @@
 package consulo.ide.impl.ui.ex.impl.util;
 
 import consulo.annotation.component.ServiceImpl;
+import consulo.application.Application;
 import consulo.disposer.Disposable;
 import consulo.ide.impl.idea.util.concurrency.InvokerImpl;
 import consulo.ui.UIAccess;
 import consulo.ui.ex.util.Invoker;
 import consulo.ui.ex.util.InvokerFactory;
+import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
 /**
@@ -30,27 +32,25 @@ import jakarta.inject.Singleton;
 @Singleton
 @ServiceImpl
 public class InvokerFactoryImpl implements InvokerFactory {
-  
-  @Override
-  public Invoker forEventDispatchThread(UIAccess uiAccess, Disposable parent) {
-    return InvokerImpl.forEventDispatchThread(uiAccess, parent);
-  }
+    private final Application myApplication;
 
-  
-  @Override
-  public Invoker forBackgroundPoolWithReadAction(Disposable parent) {
-    return InvokerImpl.forBackgroundPoolWithReadAction(parent);
-  }
+    @Inject
+    public InvokerFactoryImpl(Application application) {
+        myApplication = application;
+    }
 
-  
-  @Override
-  public Invoker forBackgroundThreadWithReadAction(Disposable parent) {
-    return InvokerImpl.forBackgroundThreadWithReadAction(parent);
-  }
+    @Override
+    public Invoker forEventDispatchThread(UIAccess uiAccess, Disposable parent) {
+        return InvokerImpl.forEventDispatchThread(uiAccess, parent);
+    }
 
-  
-  @Override
-  public Invoker forBackgroundThreadWithoutReadAction(Disposable parent) {
-    return InvokerImpl.forBackgroundThreadWithoutReadAction(parent);
-  }
+    @Override
+    public Invoker forBackgroundThreadWithReadAction(Disposable parent) {
+        return InvokerImpl.forBackgroundThreadWithReadAction(parent);
+    }
+
+    @Override
+    public Invoker forBackgroundThreadWithoutReadAction(Disposable parent) {
+        return InvokerImpl.forBackgroundThreadWithoutReadAction(parent);
+    }
 }

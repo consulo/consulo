@@ -16,8 +16,8 @@
 package consulo.ide.impl.idea.execution.console;
 
 import consulo.annotation.access.RequiredReadAction;
-import consulo.application.AccessToken;
 import consulo.application.Application;
+import consulo.application.WriteAction;
 import consulo.codeEditor.*;
 import consulo.container.boot.ContainerPathManager;
 import consulo.disposer.Disposer;
@@ -31,6 +31,7 @@ import consulo.execution.ui.console.language.LanguageConsoleView;
 import consulo.ide.impl.idea.openapi.editor.actions.ContentChooser;
 import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
+import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.language.Language;
 import consulo.language.editor.completion.lookup.LookupManager;
@@ -56,7 +57,6 @@ import consulo.util.io.PathUtil;
 import consulo.util.jdom.JDOMUtil;
 import consulo.util.lang.*;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.virtualFileSystem.util.VirtualFileUtil;
 import org.jspecify.annotations.Nullable;
 import org.jdom.Element;
 
@@ -119,7 +119,6 @@ public class ConsoleHistoryControllerImpl implements ConsoleHistoryController {
         return !getModel().isEmpty();
     }
 
-    
     private static String fixNullPersistenceId(@Nullable String persistenceId, LanguageConsoleView console) {
         if (StringUtil.isNotEmpty(persistenceId)) {
             return persistenceId;
@@ -292,7 +291,6 @@ public class ConsoleHistoryControllerImpl implements ConsoleHistoryController {
     private class MyAction extends DumbAwareAction {
         private final boolean myNext;
 
-        
         private final Collection<KeyStroke> myUpDownKeystrokes;
 
         public MyAction(boolean next, Collection<KeyStroke> upDownKeystrokes) {
@@ -452,7 +450,6 @@ public class ConsoleHistoryControllerImpl implements ConsoleHistoryController {
             return myContent;
         }
 
-        
         private String getOldHistoryFilePath(String id) {
             String pathName = myRootType.getConsoleTypeId() + Long.toHexString(StringHash.calc(id));
             return ContainerPathManager.get().getSystemPath() + File.separator + "userHistory" + File.separator + pathName + ".hist.xml";
@@ -469,13 +466,9 @@ public class ConsoleHistoryControllerImpl implements ConsoleHistoryController {
                     if (loadHistoryOld(id)) {
                         if (!myRootType.isHidden()) {
                             // migrate content
-                            AccessToken token = Application.get().acquireWriteActionLock(getClass());
-                            try {
-                                VirtualFileUtil.saveText(consoleFile, myContent);
-                            }
-                            finally {
-                                token.finish();
-                            }
+                            WriteAction.run(() -> {
+                                VfsUtil.saveText(consoleFile, myContent);
+                            });
                         }
                         return true;
                     }
@@ -547,7 +540,7 @@ public class ConsoleHistoryControllerImpl implements ConsoleHistoryController {
                 try {
                     VirtualFile file = HistoryRootType.getInstance()
                         .findFile(null, getHistoryName(myRootType, myId), ScratchFileService.Option.create_if_missing);
-                    VirtualFileUtil.saveText(file, StringUtil.join(getModel().getEntries(), myRootType.getEntrySeparator()));
+                    VfsUtil.saveText(file, StringUtil.join(getModel().getEntries(), myRootType.getEntrySeparator()));
                 }
                 catch (IOException e) {
                     LOG.error(e);
@@ -597,7 +590,6 @@ public class ConsoleHistoryControllerImpl implements ConsoleHistoryController {
         }
     }
 
-    
     private static String getHistoryName(ConsoleRootType rootType, String id) {
         return rootType.getConsoleTypeId() + "/" +
             PathUtil.makeFileName(rootType.getHistoryPathName(id), rootType.getDefaultFileExtension());

@@ -16,6 +16,7 @@
 package consulo.desktop.awt.internal.diff.simple;
 
 import consulo.application.progress.ProgressIndicator;
+import consulo.dataContext.DataSink;
 import consulo.codeEditor.LogicalPosition;
 import consulo.codeEditor.markup.RangeHighlighter;
 import consulo.desktop.awt.internal.diff.util.AWTDiffUtil;
@@ -49,10 +50,8 @@ import static consulo.diff.internal.DiffImplUtil.getLineCount;
 public class SimpleOnesideDiffViewer extends OnesideTextDiffViewer {
     public static final Logger LOG = Logger.getInstance(SimpleOnesideDiffViewer.class);
 
-    
     private final MyInitialScrollHelper myInitialScrollHelper = new MyInitialScrollHelper();
 
-    
     private final List<RangeHighlighter> myHighlighters = new ArrayList<>();
 
     public SimpleOnesideDiffViewer(DiffContext context, DiffRequest request) {
@@ -69,7 +68,6 @@ public class SimpleOnesideDiffViewer extends OnesideTextDiffViewer {
         super.onDispose();
     }
 
-    
     @Override
     protected List<AnAction> createToolbarActions() {
         List<AnAction> group = new ArrayList<>();
@@ -85,7 +83,6 @@ public class SimpleOnesideDiffViewer extends OnesideTextDiffViewer {
         return group;
     }
 
-    
     @Override
     protected List<AnAction> createPopupActions() {
         List<AnAction> group = new ArrayList<>();
@@ -120,7 +117,6 @@ public class SimpleOnesideDiffViewer extends OnesideTextDiffViewer {
     //
 
     @Override
-    
     protected Runnable performRediff(ProgressIndicator indicator) {
         return () -> {
             clearDiffPresentation();
@@ -138,6 +134,7 @@ public class SimpleOnesideDiffViewer extends OnesideTextDiffViewer {
             myInitialScrollHelper.onRediff();
         };
     }
+
 
     private void clearDiffPresentation() {
         myPanel.resetNotifications();
@@ -225,12 +222,12 @@ public class SimpleOnesideDiffViewer extends OnesideTextDiffViewer {
     //
 
     @Override
-    public @Nullable Object getData(Key<?> dataId) {
-        if (DiffDataKeys.CURRENT_CHANGE_RANGE == dataId) {
+    public void uiDataSnapshot(DataSink sink) {
+        super.uiDataSnapshot(sink);
+        sink.lazy(DiffDataKeys.CURRENT_CHANGE_RANGE, () -> {
             int lineCount = getLineCount(getEditor().getDocument());
             return new LineRange(0, lineCount);
-        }
-        return super.getData(dataId);
+        });
     }
 
     private class MyInitialScrollHelper extends MyInitialScrollPositionHelper {

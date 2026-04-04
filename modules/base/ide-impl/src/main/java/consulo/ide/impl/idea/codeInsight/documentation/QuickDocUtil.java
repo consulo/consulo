@@ -1,22 +1,19 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.codeInsight.documentation;
 
-import consulo.application.internal.SensitiveProgressWrapper;
+import consulo.application.Application;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressIndicatorProvider;
-import consulo.application.progress.ProgressManager;
+import consulo.component.ProcessCanceledException;
 import consulo.ide.impl.idea.codeInsight.navigation.DocPreviewUtil;
 import consulo.language.editor.documentation.DocumentationProvider;
 import consulo.language.editor.ui.awt.HintUtil;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiQualifiedNamedElement;
-import consulo.ui.annotation.RequiredUIAccess;
 import org.jspecify.annotations.Nullable;
 import org.jetbrains.annotations.Contract;
 
 import java.util.concurrent.TimeUnit;
-
-import static consulo.application.internal.ProgressIndicatorUtils.runInReadActionWithWriteActionPriority;
 
 /**
  * @author gregsh
@@ -38,12 +35,11 @@ public class QuickDocUtil {
         long pauseBetweenRetries,
         @Nullable ProgressIndicator progressIndicator
     ) {
-        boolean result;
+        Application application = Application.get();
         long deadline = System.currentTimeMillis() + timeout;
-        while (!(result = runInReadActionWithWriteActionPriority(
-            action,
-            progressIndicator == null ? null : new SensitiveProgressWrapper(progressIndicator)
-        )) && (progressIndicator == null || !progressIndicator.isCanceled())
+        boolean result;
+        while (!(result = tryReadAction(application, action))
+            && (progressIndicator == null || !progressIndicator.isCanceled())
             && System.currentTimeMillis() < deadline) {
             try {
                 TimeUnit.MILLISECONDS.sleep(pauseBetweenRetries);
@@ -58,10 +54,10 @@ public class QuickDocUtil {
 
     /**
      * Same as {@link #runInReadActionWithWriteActionPriorityWithRetries(Runnable, long, long, ProgressIndicator)} using current thread's
-     * progress indicator ({@link ProgressManager#getProgressIndicator()}).
+     * progress indicator ({@link ProgressIndicatorProvider#getGlobalProgressIndicator()}).
      */
     public static boolean runInReadActionWithWriteActionPriorityWithRetries(
-        @RequiredUIAccess Runnable action,
+        Runnable action,
         long timeout,
         long pauseBetweenRetries
     ) {
@@ -71,6 +67,15 @@ public class QuickDocUtil {
             pauseBetweenRetries,
             ProgressIndicatorProvider.getGlobalProgressIndicator()
         );
+    }
+
+    private static boolean tryReadAction(Application application, Runnable action) {
+        try {
+            return application.tryRunReadAction(action);
+        }
+        catch (ProcessCanceledException e) {
+            return false;
+        }
     }
 
     @Contract("_, _, _, null -> null")

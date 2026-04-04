@@ -17,7 +17,6 @@ package consulo.versionControlSystem.impl.internal.change.conflict;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.project.Project;
-import consulo.ui.UIAccess;
 import consulo.versionControlSystem.change.Change;
 import consulo.versionControlSystem.change.ChangeList;
 import consulo.versionControlSystem.change.ChangeListManager;
@@ -69,12 +68,10 @@ public class ChangelistConflictAccessProvider extends WritingAccessProvider {
       }
 
       ChangelistConflictDialog dialog;
-      Runnable markEventCount = UIAccess.current().markEventCount();
       do {
         dialog = new ChangelistConflictDialog(myProject, new ArrayList<>(changeLists), denied);
         dialog.show();
       } while (dialog.isOK() && !dialog.getResolution().resolveConflict(myProject, changes, null));
-      markEventCount.run();
 
       if (dialog.isOK()) {
         options.LAST_RESOLUTION = dialog.getResolution();

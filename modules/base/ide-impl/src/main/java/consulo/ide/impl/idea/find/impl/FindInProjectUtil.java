@@ -19,7 +19,7 @@ import consulo.content.scope.SearchScope;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
 import consulo.dataContext.DataSink;
-import consulo.dataContext.TypeSafeDataProvider;
+import consulo.dataContext.UiDataProvider;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
 import consulo.document.util.TextRange;
@@ -30,6 +30,8 @@ import consulo.find.localize.FindLocalize;
 import consulo.ide.impl.idea.find.FindProgressIndicator;
 import consulo.ide.impl.idea.find.FindUtil;
 import consulo.ide.impl.idea.find.findInProject.FindInProjectManager;
+import consulo.project.impl.internal.DumbServiceImpl;
+import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.language.editor.LangDataKeys;
 import consulo.language.psi.*;
 import consulo.language.psi.scope.GlobalSearchScope;
@@ -42,16 +44,15 @@ import consulo.module.content.ProjectFileIndex;
 import consulo.module.content.layer.orderEntry.LibraryOrderEntry;
 import consulo.module.content.layer.orderEntry.OrderEntry;
 import consulo.navigation.ItemPresentation;
+import consulo.navigation.NavigateOptions;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.project.content.scope.ProjectScopes;
-import consulo.project.impl.internal.DumbServiceImpl;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.KeyboardShortcut;
 import consulo.ui.ex.content.Content;
 import consulo.ui.image.Image;
 import consulo.usage.*;
-import consulo.util.dataholder.Key;
 import consulo.util.io.FileUtil;
 import consulo.util.lang.PatternUtil;
 import consulo.util.lang.StringUtil;
@@ -61,7 +62,6 @@ import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
 import consulo.virtualFileSystem.internal.VirtualFileManagerEx;
-import consulo.virtualFileSystem.util.VirtualFileUtil;
 import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
@@ -176,7 +176,6 @@ public class FindInProjectUtil {
     }
 
     /* filter can have form "*.js, !*_min.js", latter means except matched by *_min.js */
-    
     public static Predicate<CharSequence> createFileMaskCondition(@Nullable String filter) throws PatternSyntaxException {
         if (filter == null) {
             return Predicates.alwaysTrue();
@@ -336,7 +335,6 @@ public class FindInProjectUtil {
         return true;
     }
 
-    
     private static LocalizeValue getTitleForScope(FindModel findModel) {
         LocalizeValue scopeName;
         if (findModel.isProjectScope()) {
@@ -360,12 +358,10 @@ public class FindInProjectUtil {
         return result;
     }
 
-    
     public static UsageViewPresentation setupViewPresentation(FindModel findModel) {
         return setupViewPresentation(FindSettings.getInstance().isShowResultsInSeparateView(), findModel);
     }
 
-    
     public static UsageViewPresentation setupViewPresentation(boolean toOpenInNewTab, FindModel findModel) {
         UsageViewPresentation presentation = new UsageViewPresentation();
         setupViewPresentation(presentation, toOpenInNewTab, findModel);
@@ -418,7 +414,6 @@ public class FindInProjectUtil {
         presentation.setReplaceMode(findModel.isReplaceState());
     }
 
-    
     public static FindUsagesProcessPresentation setupProcessPresentation(
         Project project,
         UsageViewPresentation presentation
@@ -426,7 +421,6 @@ public class FindInProjectUtil {
         return setupProcessPresentation(project, !FindSettings.getInstance().isSkipResultsWithOneUsage(), presentation);
     }
 
-    
     public static FindUsagesProcessPresentation setupProcessPresentation(
         Project project,
         boolean showPanelIfOnlyOneUsage,
@@ -461,7 +455,6 @@ public class FindInProjectUtil {
         return result != null ? result : Collections.emptyList();
     }
 
-    
     public static String buildStringToFindForIndicesFromRegExp(String stringToFind, Project project) {
         if (!Registry.is("idea.regexp.search.uses.indices")) {
             return "";
@@ -503,10 +496,8 @@ public class FindInProjectUtil {
         }
     }
 
-    public static class StringUsageTarget implements ConfigurableUsageTarget, ItemPresentation, TypeSafeDataProvider {
-        
+    public static class StringUsageTarget implements ConfigurableUsageTarget, ItemPresentation, UiDataProvider {
         protected final Project myProject;
-        
         protected final FindModel myFindModel;
 
         public StringUsageTarget(Project project, FindModel findModel) {
@@ -515,13 +506,11 @@ public class FindInProjectUtil {
         }
 
         @Override
-        
         public String getPresentableText() {
             UsageViewPresentation presentation = setupViewPresentation(false, myFindModel);
             return presentation.getToolwindowTitle();
         }
 
-        
         @Override
         public String getLongDescriptiveName() {
             return getPresentableText();
@@ -580,18 +569,13 @@ public class FindInProjectUtil {
         }
 
         @Override
+        public NavigateOptions getNavigateOptions() {
+            return NavigateOptions.CANT_NAVIGATE;
+        }
+
+        @Override
         public void navigate(boolean requestFocus) {
             throw new UnsupportedOperationException();
-        }
-
-        @Override
-        public boolean canNavigate() {
-            return false;
-        }
-
-        @Override
-        public boolean canNavigateToSource() {
-            return false;
         }
 
         @Override
@@ -608,12 +592,8 @@ public class FindInProjectUtil {
         }
 
         @Override
-        @RequiredReadAction
-        public void calcData(Key key, DataSink sink) {
-            if (UsageView.USAGE_SCOPE == key) {
-                SearchScope scope = getScopeFromModel(myProject, myFindModel);
-                sink.put(UsageView.USAGE_SCOPE, scope);
-            }
+        public void uiDataSnapshot(DataSink sink) {
+            sink.lazy(UsageView.USAGE_SCOPE, () -> getScopeFromModel(myProject, myFindModel));
         }
     }
 
@@ -631,7 +611,7 @@ public class FindInProjectUtil {
         if (classRoot == null) {
             return;
         }
-        String relativePath = VirtualFileUtil.getRelativePath(directory, classRoot);
+        String relativePath = VfsUtilCore.getRelativePath(directory, classRoot);
         if (relativePath == null) {
             return;
         }
@@ -650,7 +630,7 @@ public class FindInProjectUtil {
                 // note: getUrls() returns jar directories too
                 String[] sourceUrls = library.getUrls(SourcesOrderRootType.getInstance());
                 for (String sourceUrl : sourceUrls) {
-                    if (VirtualFileUtil.isEqualOrAncestor(sourceUrl, directory.getUrl())) {
+                    if (VfsUtilCore.isEqualOrAncestor(sourceUrl, directory.getUrl())) {
                         // already in this library sources, no need to look for another source root
                         otherSourceRoots.clear();
                         break searchForOtherSourceDirs;
@@ -669,7 +649,6 @@ public class FindInProjectUtil {
         outSourceRoots.addAll(otherSourceRoots);
     }
 
-    
     @RequiredReadAction
     public static SearchScope getScopeFromModel(Project project, FindModel findModel) {
         SearchScope customScope = findModel.isCustomScope() ? findModel.getCustomScope() : null;
@@ -689,7 +668,6 @@ public class FindInProjectUtil {
                 : GlobalSearchScope.allScope(project);
     }
 
-    
     private static GlobalSearchScope forDirectory(Project project, boolean withSubdirectories, VirtualFile directory) {
         Set<VirtualFile> result = new LinkedHashSet<>();
         result.add(directory);

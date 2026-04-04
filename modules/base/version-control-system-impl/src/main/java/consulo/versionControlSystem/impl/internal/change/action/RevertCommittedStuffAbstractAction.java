@@ -22,6 +22,7 @@ import consulo.application.progress.Task;
 import consulo.document.FileDocumentManager;
 import consulo.project.Project;
 import consulo.project.util.WaitForProgressToShow;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
@@ -70,7 +71,7 @@ abstract class RevertCommittedStuffAbstractAction extends AnAction implements Du
         }
         final List<Change> changesList = new ArrayList<>();
         Collections.addAll(changesList, changes);
-        FileDocumentManager.getInstance().saveAllDocuments();
+        FileDocumentManager.getInstance().saveAllDocuments(UIAccess.current());
 
         String defaultName = null;
         ChangeList[] changeLists = e.getData(VcsDataKeys.CHANGE_LISTS);

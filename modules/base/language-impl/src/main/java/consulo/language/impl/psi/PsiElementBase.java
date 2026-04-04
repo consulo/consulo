@@ -29,6 +29,7 @@ import consulo.language.version.LanguageVersion;
 import consulo.logging.Logger;
 import consulo.module.Module;
 import consulo.navigation.ItemPresentation;
+import consulo.navigation.NavigateOptions;
 import consulo.navigation.Navigatable;
 import consulo.project.Project;
 import consulo.util.dataholder.UserDataHolderBase;
@@ -220,14 +221,8 @@ public abstract class PsiElementBase extends UserDataHolderBase implements Navig
 
     @Override
     @RequiredReadAction
-    public boolean canNavigate() {
-        return PsiNavigationSupport.getInstance().canNavigate(this);
-    }
-
-    @Override
-    @RequiredReadAction
-    public boolean canNavigateToSource() {
-        return canNavigate();
+    public NavigateOptions getNavigateOptions() {
+        return PsiNavigationSupport.getInstance().canNavigate(this) ? NavigateOptions.CAN_NAVIGATE_FULL : NavigateOptions.CANT_NAVIGATE;
     }
 
     @RequiredReadAction

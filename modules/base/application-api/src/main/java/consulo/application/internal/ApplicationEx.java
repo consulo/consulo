@@ -110,10 +110,6 @@ public interface ApplicationEx extends Application {
         return runProcessWithProgressSynchronously(process, progressTitle, canBeCanceled, true, project, null, LocalizeValue.empty());
     }
 
-    default void executeSuspendingWriteAction(@Nullable ComponentManager project, String title, Runnable runnable) {
-        runnable.run();
-    }
-
     /**
      * Runs modal process. For internal use only, see {@link Task}
      */
@@ -148,33 +144,23 @@ public interface ApplicationEx extends Application {
 
     void assertTimeConsuming();
 
-    /**
-     * Grab the lock and run the action, in a non-blocking fashion
-     *
-     * @return true if action was run while holding the lock, false if was unable to get the lock and action was not run
-     */
-    @Override
-    boolean tryRunReadAction(Runnable action);
-
     boolean isInImpatientReader();
 
     default void executeByImpatientReader(@RequiredReadAction Runnable runnable) throws ApplicationUtil.CannotRunReadActionException {
         throw new UnsupportedOperationException();
     }
 
-    default boolean runWriteActionWithCancellableProgressInDispatchThread(
+    default boolean runWriteActionWithCancellableProgress(
         LocalizeValue title,
         @Nullable ComponentManager project,
-        @Nullable JComponent parentComponent,
         Consumer<? super ProgressIndicator> action
     ) {
         throw new UnsupportedOperationException();
     }
 
-    default boolean runWriteActionWithNonCancellableProgressInDispatchThread(
+    default boolean runWriteActionWithNonCancellableProgress(
         LocalizeValue title,
         @Nullable ComponentManager project,
-        @Nullable JComponent parentComponent,
         Consumer<? super ProgressIndicator> action
     ) {
         throw new UnsupportedOperationException();

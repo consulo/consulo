@@ -37,7 +37,6 @@ import org.jspecify.annotations.Nullable;
 import javax.swing.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.util.function.Function;
 
 /**
  * @author VISTALL
@@ -62,7 +61,6 @@ public abstract class WindowOverAWTWindow implements Window, ToSwingWindowWrappe
         myWindow.dispose();
     }
 
-    
     @Override
     public java.awt.Window toAWTWindow() {
         return myWindow;
@@ -114,7 +112,6 @@ public abstract class WindowOverAWTWindow implements Window, ToSwingWindowWrappe
         return myWindow.isVisible();
     }
 
-    
     @Override
     public Font getFont() {
         return new DesktopFontImpl(myWindow.getFont());
@@ -152,24 +149,16 @@ public abstract class WindowOverAWTWindow implements Window, ToSwingWindowWrappe
         throw new UnsupportedOperationException();
     }
 
-    
-    @Override
-    public Disposable addUserDataProvider(Function<Key<?>, Object> function) {
-        return myUIDataObject.addUserDataProvider(function);
-    }
-
     @Override
     public <T> void putUserData(Key<T> key, @Nullable T value) {
         myUIDataObject.putUserData(key, value);
     }
 
-    
     @Override
     public <C extends Component, E extends ComponentEvent<C>> ComponentEventListener<C, E> getListenerDispatcher(Class<E> eventClass) {
         return myUIDataObject.getDispatcher(eventClass);
     }
 
-    
     @Override
     public <C extends Component, E extends ComponentEvent<C>> Disposable addListener(Class<? extends E> eventClass, ComponentEventListener<C, E> listener) {
         return myUIDataObject.addListener(eventClass, listener);

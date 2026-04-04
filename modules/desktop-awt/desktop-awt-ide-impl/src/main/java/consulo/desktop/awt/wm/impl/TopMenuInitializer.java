@@ -83,8 +83,10 @@ public class TopMenuInitializer {
           CommandLineArgs args = new CommandLineArgs();
           args.setFile(file.getPath());
 
-          CommandLineProcessor.processExternalCommandLine(args, null).doWhenDone(project1 -> {
-            ApplicationStarter.getInstance().setPerformProjectLoad(false);
+          CommandLineProcessor.processExternalCommandLine(args, null).whenComplete((project1, error) -> {
+            if (error == null && project1 != null) {
+              ApplicationStarter.getInstance().setPerformProjectLoad(false);
+            }
           });
         }
       });

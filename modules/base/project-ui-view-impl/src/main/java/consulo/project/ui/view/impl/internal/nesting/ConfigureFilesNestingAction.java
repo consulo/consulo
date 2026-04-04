@@ -8,7 +8,6 @@ import consulo.project.ui.view.ProjectViewPane;
 import consulo.project.ui.view.internal.ProjectViewSharedSettings;
 import consulo.project.ui.view.localize.ProjectUIViewLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.ActionUpdateThread;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DumbAwareAction;
 import jakarta.inject.Inject;
@@ -22,12 +21,6 @@ public class ConfigureFilesNestingAction extends DumbAwareAction {
     public ConfigureFilesNestingAction(Provider<ProjectViewSharedSettings> projectViewSharedSettings) {
         super(ProjectUIViewLocalize.actionProjectviewFilenestingText(), ProjectUIViewLocalize.actionProjectviewFilenestingDescription());
         myProjectViewSharedSettings = projectViewSharedSettings;
-    }
-
-    
-    @Override
-    public ActionUpdateThread getActionUpdateThread() {
-        return ActionUpdateThread.BGT;
     }
 
     @Override

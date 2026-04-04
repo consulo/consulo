@@ -17,17 +17,14 @@ package consulo.desktop.awt.editor.impl;
 
 import consulo.application.ui.UISettings;
 import consulo.codeEditor.*;
-import consulo.codeEditor.impl.MarkupModelImpl;
-import consulo.codeEditor.internal.ErrorStripeEvent;
-import consulo.codeEditor.internal.ErrorStripeListener;
+import consulo.codeEditor.impl.EditorMarkupModelImpl;
+import consulo.codeEditor.internal.EditorAnalyzeStatus;
 import consulo.codeEditor.markup.MarkupModelEx;
 import consulo.codeEditor.markup.RangeHighlighter;
 import consulo.codeEditor.markup.RangeHighlighterEx;
 import consulo.colorScheme.EditorFontType;
 import consulo.desktop.awt.ui.popup.BalloonImpl;
-import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.disposer.util.DisposerUtil;
 import consulo.document.Document;
 import consulo.document.util.ProperTextRange;
 import consulo.fileEditor.internal.EditorWindowHolder;
@@ -38,9 +35,9 @@ import consulo.ide.impl.idea.ui.LightweightHintImpl;
 import consulo.language.editor.hint.HintManager;
 import consulo.language.editor.impl.internal.hint.TooltipGroup;
 import consulo.language.editor.impl.internal.hint.TooltipRenderer;
+import consulo.language.editor.impl.internal.markup.AnalyzerStatus;
 import consulo.language.editor.impl.internal.markup.EditorMarkupModel;
 import consulo.language.editor.impl.internal.markup.ErrorStripTooltipRendererProvider;
-import consulo.language.editor.impl.internal.markup.ErrorStripeRenderer;
 import consulo.language.editor.impl.internal.markup.TrafficTooltipRenderer;
 import consulo.language.editor.rawHighlight.HighlightInfo;
 import consulo.project.ui.internal.ToolWindowManagerEx;
@@ -60,7 +57,6 @@ import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.popup.Balloon;
 import consulo.ui.ex.toolWindow.ToolWindowAnchor;
 import consulo.ui.style.StyleManager;
-import consulo.util.collection.Lists;
 import consulo.util.collection.primitive.ints.IntIntMap;
 import consulo.util.collection.primitive.ints.IntMaps;
 import consulo.util.lang.StringUtil;
@@ -83,19 +79,12 @@ import java.util.concurrent.atomic.AtomicReference;
  * @author max
  * @since 2002-04-19
  */
-public class DesktopEditorMarkupModelImpl extends MarkupModelImpl implements EditorMarkupModel {
+public class DesktopEditorMarkupModelImpl extends EditorMarkupModelImpl<DesktopEditorImpl> implements EditorMarkupModel {
     private static final int myPreviewLines = 5;// Actually preview has myPreviewLines * 2 + 1 lines (above + below + current one)
-    private static final int myCachePreviewLines = 100;
-// Actually cache image has myCachePreviewLines * 2 + 1 lines (above + below + current one)
-
-    private final DesktopEditorImpl myEditor;
-    // null renderer means we should not show traffic light icon
-    private ErrorStripeRenderer myErrorStripeRenderer;
-    private final List<ErrorStripeListener> myErrorMarkerListeners = Lists.newLockFreeCopyOnWriteList();
+    private static final int myCachePreviewLines = 100; // Actually cache image has myCachePreviewLines * 2 + 1 lines (above + below + current one)
 
     private final DesktopEditorErrorPanel myErrorPanel;
 
-    
     private ErrorStripTooltipRendererProvider myTooltipRendererProvider = new BasicTooltipRendererProvider();
 
     private int myMinMarkHeight = JBUI.scale(2);
@@ -108,8 +97,7 @@ public class DesktopEditorMarkupModelImpl extends MarkupModelImpl implements Edi
     private DesktopEditorAnalyzeStatusPanel myStatusPanel;
 
     DesktopEditorMarkupModelImpl(DesktopEditorImpl editor) {
-        super(editor.getDocument());
-        myEditor = editor;
+        super(editor);
         myEditorFragmentRenderer = new EditorFragmentRenderer();
         myStatusPanel = new DesktopEditorAnalyzeStatusPanel(this);
         myErrorPanel = new DesktopEditorErrorPanel(editor, myStatusPanel, this);
@@ -131,8 +119,18 @@ public class DesktopEditorMarkupModelImpl extends MarkupModelImpl implements Edi
     }
 
     @Override
-    public void repaintTrafficLightIcon() {
-        myStatusPanel.repaintTrafficLightIcon();
+    protected boolean tryToUpdateStatus(EditorAnalyzeStatus status) {
+        if (myStatusPanel != null) {
+            return myStatusPanel.tryToUpdateStatus((AnalyzerStatus) status);
+        }
+        return false;
+    }
+
+    @Override
+    protected void repaintErrorPanel() {
+        if (myErrorPanel != null) {
+            myErrorPanel.repaint();
+        }
     }
 
     @RequiredUIAccess
@@ -407,32 +405,8 @@ public class DesktopEditorMarkupModelImpl extends MarkupModelImpl implements Edi
     }
 
     @Override
-    
     public ErrorStripTooltipRendererProvider getErrorStripTooltipRendererProvider() {
         return myTooltipRendererProvider;
-    }
-
-    @Override
-    
-    public Editor getEditor() {
-        return myEditor;
-    }
-
-    @Override
-    @RequiredUIAccess
-    public void setErrorStripeRenderer(ErrorStripeRenderer renderer) {
-        UIAccess.assertIsUIThread();
-        if (myErrorStripeRenderer instanceof Disposable disposable) {
-            Disposer.dispose(disposable);
-        }
-        myErrorStripeRenderer = renderer;
-        //try to not cancel tooltips here, since it is being called after every writeAction, even to the console
-        //HintManager.getInstance().getTooltipController().cancelTooltips();
-    }
-
-    @Override
-    public ErrorStripeRenderer getErrorStripeRenderer() {
-        return myErrorStripeRenderer;
     }
 
     @Override
@@ -442,13 +416,8 @@ public class DesktopEditorMarkupModelImpl extends MarkupModelImpl implements Edi
             panel.setPopupHandler(null);
         }
 
-        if (myErrorStripeRenderer instanceof Disposable disposable) {
-            Disposer.dispose(disposable);
-        }
-
         Disposer.dispose(myStatusPanel);
 
-        myErrorStripeRenderer = null;
         super.dispose();
     }
 
@@ -463,19 +432,6 @@ public class DesktopEditorMarkupModelImpl extends MarkupModelImpl implements Edi
         return myEditor.isMirrored();
     }
 
-    @RequiredUIAccess
-    private void fireErrorMarkerClicked(RangeHighlighter marker, MouseEvent e) {
-        UIAccess.assertIsUIThread();
-        ErrorStripeEvent event = new ErrorStripeEvent(getEditor(), e, marker);
-        for (ErrorStripeListener listener : myErrorMarkerListeners) {
-            listener.errorMarkerClicked(event);
-        }
-    }
-
-    @Override
-    public void addErrorMarkerListener(ErrorStripeListener listener, Disposable parent) {
-        DisposerUtil.add(listener, myErrorMarkerListeners, parent);
-    }
 
     @Override
     public void setMinMarkHeight(int minMarkHeight) {
@@ -521,19 +477,16 @@ public class DesktopEditorMarkupModelImpl extends MarkupModelImpl implements Edi
             return bigRenderer;
         }
 
-        
         @Override
         public TooltipRenderer calcTooltipRenderer(String text) {
             return new LineTooltipRenderer(text, new Object[]{text});
         }
 
-        
         @Override
         public TooltipRenderer calcTooltipRenderer(String text, int width) {
             return new LineTooltipRenderer(text, width, new Object[]{text});
         }
 
-        
         @Override
         public TrafficTooltipRenderer createTrafficTooltipRenderer(final Runnable onHide, Editor editor) {
             return new TrafficTooltipRenderer() {
@@ -562,7 +515,6 @@ public class DesktopEditorMarkupModelImpl extends MarkupModelImpl implements Edi
         }
     }
 
-    
     public ProperTextRange offsetsToYPositions(int start, int end) {
         return myErrorPanel.offsetsToYPositions(start, end);
     }

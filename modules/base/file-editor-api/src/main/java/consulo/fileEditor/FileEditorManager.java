@@ -18,7 +18,6 @@ package consulo.fileEditor;
 import consulo.annotation.DeprecationInfo;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
-import consulo.codeEditor.Caret;
 import consulo.codeEditor.Editor;
 import consulo.disposer.Disposable;
 import consulo.fileEditor.event.FileEditorManagerListener;
@@ -32,11 +31,12 @@ import consulo.util.concurrent.AsyncResult;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.Pair;
 import consulo.virtualFileSystem.VirtualFile;
-
 import org.jspecify.annotations.Nullable;
+
 import javax.swing.*;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.CompletableFuture;
 
 @ServiceAPI(ComponentScope.PROJECT)
 public abstract class FileEditorManager {
@@ -136,6 +136,7 @@ public abstract class FileEditorManager {
   /**
    * @return all open editors
    */
+  @RequiredUIAccess
   public abstract FileEditor[] getAllEditors();
 
   /**
@@ -173,7 +174,8 @@ public abstract class FileEditorManager {
    */
   public abstract void addFileEditorManagerListener(FileEditorManagerListener listener, Disposable parentDisposable);
 
- 
+  @Deprecated
+  @DeprecationInfo("Use async version")
   public abstract List<FileEditor> openEditor(OpenFileDescriptor descriptor, boolean focusEditor);
 
   /**
@@ -183,14 +185,6 @@ public abstract class FileEditorManager {
    * @since 5.0.1
    */
   public abstract Project getProject();
-
-  public abstract void registerExtraEditorDataProvider(EditorDataProvider provider, Disposable parentDisposable);
-
-  /**
-   * Returns data associated with given editor/caret context. Data providers are registered via
-   * {@link #registerExtraEditorDataProvider(EditorDataProvider, Disposable)} method.
-   */
-  public abstract @Nullable Object getData(Key<?> dataId, Editor editor, Caret caret);
 
   /**
    * Selects a specified file editor tab for the specified editor.
@@ -208,7 +202,6 @@ public abstract class FileEditorManager {
     throw new UnsupportedOperationException("Not supported at this platform");
   }
 
- 
   public Component getUIComponent() {
     throw new UnsupportedOperationException("Not supported at this platform");
   }
@@ -221,7 +214,6 @@ public abstract class FileEditorManager {
    */
   public abstract javax.swing.@Nullable JComponent getPreferredFocusedComponent();
 
- 
   public abstract Pair<FileEditor[], FileEditorProvider[]> getEditorsWithProviders(VirtualFile file);
 
   public abstract @Nullable VirtualFile getFile(FileEditor editor);
@@ -233,7 +225,6 @@ public abstract class FileEditorManager {
    */
   public abstract FileEditorWindow getCurrentWindow();
 
- 
   public abstract AsyncResult<FileEditorWindow> getActiveWindow();
 
   public abstract void setCurrentWindow(FileEditorWindow window);
@@ -253,7 +244,6 @@ public abstract class FileEditorManager {
 
   public abstract boolean hasSplitOrUndockedWindows();
 
- 
   public abstract FileEditorWindow[] getWindows();
 
   /**
@@ -279,20 +269,31 @@ public abstract class FileEditorManager {
   /**
    * Closes all files IN ACTIVE SPLITTER (window).
    *
-   * @see consulo.ide.impl.idea.ui.docking.DockManager#getContainers()
-   * @see consulo.ide.impl.idea.ui.docking.DockContainer#closeAll()
+   * @see DockManager#getContainers()
+   * @see DockContainer#closeAll()
    */
   public abstract void closeAllFiles();
 
- 
   public abstract FileEditorsSplitters getSplitters();
 
- 
+  @Deprecated
+  @DeprecationInfo("Use async version")
   public abstract Pair<FileEditor[], FileEditorProvider[]> openFileWithProviders(VirtualFile file, boolean focusEditor, boolean searchForSplitter);
 
- 
   @RequiredUIAccess
+  @Deprecated
+  @DeprecationInfo("Use async version")
   public abstract Pair<FileEditor[], FileEditorProvider[]> openFileWithProviders(VirtualFile file, boolean focusEditor, FileEditorWindow window);
+
+  /**
+   * Asynchronously opens a file and returns a future with the result.
+   * Unlike {@link #openFileWithProviders}, this method does not block the calling thread.
+   *
+   * @param file    file to open. Must be valid.
+   * @param options options for opening the file
+   * @return a future that completes with the opened editors and providers
+   */
+  public abstract CompletableFuture<FileEditorOpenResult> openFileAsync(VirtualFile file, FileEditorOpenOptions options);
 
   public abstract boolean isChanged(FileEditorComposite editor);
 
@@ -315,6 +316,5 @@ public abstract class FileEditorManager {
 
   public abstract FileEditorsSplitters getSplittersFor(java.awt.Component c);
 
- 
   public abstract ActionCallback notifyPublisher(Runnable runnable);
 }

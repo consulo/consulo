@@ -37,6 +37,7 @@ import consulo.module.content.layer.orderEntry.ModuleExtensionWithSdkOrderEntry;
 import consulo.module.content.layer.orderEntry.OrderEntry;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
+import consulo.navigation.NavigateOptions;
 import consulo.project.ui.view.internal.ProjectSettingsService;
 import consulo.project.ui.view.internal.node.LibraryGroupElement;
 import consulo.project.ui.view.internal.node.NamedLibraryElement;
@@ -146,8 +147,10 @@ public class LibraryGroupNode extends ProjectViewNode<LibraryGroupElement> {
     }
 
     @Override
-    public boolean canNavigate() {
-        return ProjectSettingsService.getInstance(myProject).canOpenModuleLibrarySettings();
+    public NavigateOptions getNavigateOptions() {
+        return ProjectSettingsService.getInstance(myProject).canOpenModuleLibrarySettings()
+            ? NavigateOptions.CAN_NAVIGATE_FULL
+            : NavigateOptions.CANT_NAVIGATE;
     }
 
     @Override

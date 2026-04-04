@@ -17,6 +17,7 @@ package consulo.application.concurrent.coroutine;
 
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
+import consulo.util.concurrent.coroutine.Continuation;
 import consulo.util.concurrent.coroutine.Coroutine;
 import consulo.util.concurrent.coroutine.CoroutineContext;
 import consulo.util.concurrent.coroutine.CoroutineScope;
@@ -29,7 +30,7 @@ import java.util.function.Supplier;
  * @since 2026-02-02
  */
 public final class DisposableCoroutineScope {
-    public static void launchAsync(CoroutineContext context,
+    public static Continuation<?> launchAsync(CoroutineContext context,
                                    Disposable parentDisposable,
                                    Supplier<Coroutine<@Nullable ?, ?>> supplier) {
         CoroutineScope aScope = new CoroutineScope(context);
@@ -38,6 +39,6 @@ public final class DisposableCoroutineScope {
 
         Coroutine<@Nullable ?, ?> coroutine = supplier.get();
 
-        coroutine.runAsync(aScope, null);
+        return coroutine.runAsync(aScope, null);
     }
 }

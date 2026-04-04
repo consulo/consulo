@@ -30,15 +30,18 @@ public interface ListBox<E> extends ValueComponent<E> {
     static <E> ListBox<E> create(E... elements) {
         return UIInternal.get()._Components_listBox(ListModel.create(Arrays.asList(elements)));
     }
+
     static <E> ListBox<E> create(Collection<E> elements) {
         return UIInternal.get()._Components_listBox(ListModel.create(elements));
     }
+
     static <E> ListBox<E> create(ListModel<E> model) {
         return UIInternal.get()._Components_listBox(model);
     }
+
     ListModel<E> getListModel();
 
-    void setRenderer(TextItemRenderer<E> renderer);
+    void setRenderer(ItemRenderer<E> renderer);
 
     void setValueByIndex(int index);
 }

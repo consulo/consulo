@@ -15,8 +15,6 @@
  */
 package consulo.application.impl.internal;
 
-import consulo.application.AccessToken;
-
 /**
  * @author VISTALL
  * @since 2025-03-10
@@ -42,13 +40,7 @@ public interface RWLock {
 
     boolean isInImpatientReader();
 
-    AccessToken writeSuspend();
-
     void writeLock();
 
     void writeUnlock();
-
-    void writeIntentLock();
-
-    void writeIntentUnlock();
 }

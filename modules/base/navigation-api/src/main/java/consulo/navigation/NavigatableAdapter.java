@@ -27,21 +27,11 @@ import consulo.virtualFileSystem.VirtualFile;
  */
 @Deprecated
 public abstract class NavigatableAdapter implements Navigatable {
-  @Override
-  public boolean canNavigate() {
-    return true;
-  }
-
-  @Override
-  public boolean canNavigateToSource() {
-    return true;
-  }
-
   public static void navigate(ComponentManager project, VirtualFile file, boolean requestFocus) {
     navigate(project, file, 0, requestFocus);
   }
 
   public static void navigate(ComponentManager project, VirtualFile file, int offset, boolean requestFocus) {
-    OpenFileDescriptorFactory.getInstance(project).builder(file).offset(offset).build().navigate(requestFocus);
+    OpenFileDescriptorFactory.getInstance(project).newBuilder(file).offset(offset).build().navigate(requestFocus);
   }
 }

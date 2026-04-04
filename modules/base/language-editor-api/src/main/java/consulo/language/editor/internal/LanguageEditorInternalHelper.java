@@ -50,7 +50,6 @@ import java.util.function.Function;
  */
 @ServiceAPI(ComponentScope.APPLICATION)
 public interface LanguageEditorInternalHelper {
-
     static LanguageEditorInternalHelper getInstance() {
         return Application.get().getInstance(LanguageEditorInternalHelper.class);
     }
@@ -79,7 +78,6 @@ public interface LanguageEditorInternalHelper {
     default void showInspectionsSettings(Project project) {
     }
 
-
     default List<Annotation> runAnnotator(Language language,
                                           Annotator annotator,
                                           PsiFile file,
@@ -99,6 +97,7 @@ public interface LanguageEditorInternalHelper {
     @RequiredUIAccess
     default void setHighlightersToEditor(Project project,
                                          Document document,
+                                         PsiFile psiFile,
                                          int startOffset,
                                          int endOffset,
                                          Collection<HighlightInfo> highlights,

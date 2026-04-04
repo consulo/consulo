@@ -15,9 +15,10 @@
  */
 package consulo.document.internal;
 
+import consulo.annotation.access.RequiredWriteAction;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
-import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.UIAccess;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
 
@@ -32,14 +33,15 @@ public interface FileDocumentManagerEx extends FileDocumentManager {
     void registerDocument(Document document, VirtualFile virtualFile);
 
     @Override
-    @RequiredUIAccess
-    default void saveAllDocuments() {
-        saveAllDocuments(true);
+    @RequiredWriteAction
+    default void saveAllDocuments(UIAccess uiAccess) {
+        saveAllDocuments(uiAccess, true);
     }
 
     /**
+     * @param uiAccess   the UIAccess instance
      * @param isExplicit caused by user directly (Save action) or indirectly (e.g. Compile)
      */
-    @RequiredUIAccess
-    void saveAllDocuments(boolean isExplicit);
+    @RequiredWriteAction
+    void saveAllDocuments(UIAccess uiAccess, boolean isExplicit);
 }

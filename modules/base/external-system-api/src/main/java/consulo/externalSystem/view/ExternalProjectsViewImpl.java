@@ -15,21 +15,29 @@
  */
 package consulo.externalSystem.view;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.dataContext.DataContext;
+import consulo.dataContext.DataSink;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
+import consulo.execution.action.Location;
 import consulo.execution.event.RunManagerListener;
 import consulo.execution.event.RunManagerListenerEvent;
-import consulo.externalSystem.ui.ExternalSystemUiAware;
 import consulo.externalSystem.model.DataNode;
 import consulo.externalSystem.model.ExternalSystemDataKeys;
 import consulo.externalSystem.model.ProjectSystemId;
+import consulo.externalSystem.model.execution.ExternalTaskExecutionInfo;
+import consulo.externalSystem.model.task.TaskData;
 import consulo.externalSystem.service.project.ProjectData;
 import consulo.externalSystem.service.project.manage.ExternalProjectsManager;
 import consulo.externalSystem.service.project.manage.ExternalSystemShortcutsManager;
 import consulo.externalSystem.service.project.manage.ExternalSystemTaskActivator;
+import consulo.externalSystem.task.ExternalSystemTaskLocation;
+import consulo.externalSystem.ui.ExternalSystemUiAware;
 import consulo.externalSystem.ui.awt.ExternalSystemUiUtil;
+import consulo.language.editor.CommonDataKeys;
 import consulo.localize.LocalizeValue;
+import consulo.navigation.Navigatable;
 import consulo.project.Project;
 import consulo.project.ui.wm.ToolWindowManager;
 import consulo.project.ui.wm.ToolWindowManagerListener;
@@ -41,15 +49,18 @@ import consulo.ui.ex.awt.SimpleToolWindowPanel;
 import consulo.ui.ex.awt.tree.SimpleTree;
 import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.util.collection.ContainerUtil;
+import consulo.util.collection.JBIterable;
 import consulo.util.collection.MultiMap;
 import consulo.util.collection.SmartList;
+import consulo.util.lang.ObjectUtil;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
 import org.jspecify.annotations.Nullable;
 
 import javax.swing.tree.TreeSelectionModel;
 import java.awt.*;
 import java.awt.event.InputEvent;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 import java.util.function.Consumer;
 
 /**
@@ -109,21 +120,63 @@ public class ExternalProjectsViewImpl extends SimpleToolWindowPanel implements E
     }
 
     @Override
-    @Nullable
-    public Object getData(consulo.util.dataholder.Key<?> dataId) {
-        if (ExternalSystemDataKeys.VIEW == dataId) return this;
-        if (ExternalSystemDataKeys.EXTERNAL_SYSTEM_ID == dataId) return myExternalSystemId;
-        if (ExternalSystemDataKeys.UI_AWARE == dataId) return myUiAware;
-        if (ExternalSystemDataKeys.PROJECTS_TREE == dataId) return myTree;
-        if (ExternalSystemDataKeys.SELECTED_NODES == dataId) {
-            return getSelectedNodes(ExternalSystemNode.class);
+    public void uiDataSnapshot(DataSink sink) {
+        super.uiDataSnapshot(sink);
+        sink.set(ExternalSystemDataKeys.VIEW, this);
+        sink.set(CommonDataKeys.PROJECT, myProject);
+        sink.set(ExternalSystemDataKeys.EXTERNAL_SYSTEM_ID, myExternalSystemId);
+        sink.set(ExternalSystemDataKeys.UI_AWARE, myUiAware);
+        sink.set(ExternalSystemDataKeys.PROJECTS_TREE, myTree);
+        //sink.set(ExternalSystemDataKeys.NOTIFICATION_GROUP, myNotificationGroup);
+
+        //noinspection rawtypes
+        List<ExternalSystemNode> selection = getSelectedNodes(ExternalSystemNode.class);
+        ProjectNode projectNode = ObjectUtil.tryCast(ContainerUtil.getOnlyItem(selection), ProjectNode.class);
+
+        sink.set(ExternalSystemDataKeys.SELECTED_NODES, selection);
+        sink.set(ExternalSystemDataKeys.SELECTED_PROJECT_NODE, projectNode);
+
+        sink.set(CommonDataKeys.VIRTUAL_FILE, selection.isEmpty() ? null : selection.get(0).getVirtualFile());
+        sink.set(CommonDataKeys.VIRTUAL_FILE_ARRAY, VirtualFileUtil.toVirtualFileArray(
+            JBIterable.from(selection).filterMap(ExternalSystemNode::getVirtualFile).toList()));
+        sink.set(CommonDataKeys.NAVIGATABLE_ARRAY, JBIterable.from(selection)
+            .filterMap(ExternalSystemNode::getNavigatable).toArray(Navigatable.EMPTY_ARRAY));
+
+        sink.lazy(Location.DATA_KEY, () -> extractLocation(selection));
+    }
+
+    @RequiredReadAction
+    private @Nullable ExternalSystemTaskLocation extractLocation(List<ExternalSystemNode> selectedNodes) {
+        if (selectedNodes.isEmpty()) return null;
+
+        List<TaskData> tasks = new SmartList<>();
+
+        ExternalTaskExecutionInfo taskExecutionInfo = new ExternalTaskExecutionInfo();
+
+        String projectPath = null;
+
+        for (ExternalSystemNode<?> node : selectedNodes) {
+            Object data = node.getData();
+            if (data instanceof TaskData taskData) {
+                if (projectPath == null) {
+                    projectPath = taskData.getLinkedExternalProjectPath();
+                }
+                else if (!taskData.getLinkedExternalProjectPath().equals(projectPath)) {
+                    return null;
+                }
+
+                taskExecutionInfo.getSettings().getTaskNames().add(taskData.getName());
+                taskExecutionInfo.getSettings().getTaskDescriptions().add(taskData.getDescription());
+                tasks.add(taskData);
+            }
         }
-        if (ExternalSystemDataKeys.SELECTED_PROJECT_NODE == dataId) {
-            @SuppressWarnings("rawtypes")
-            List<ExternalSystemNode> selection = getSelectedNodes(ExternalSystemNode.class);
-            return ContainerUtil.getOnlyItem(ContainerUtil.filterIsInstance(selection, ProjectNode.class));
-        }
-        return super.getData(dataId);
+
+        if (tasks.isEmpty()) return null;
+
+        taskExecutionInfo.getSettings().setExternalSystemIdString(myExternalSystemId.toString());
+        taskExecutionInfo.getSettings().setExternalProjectPath(projectPath);
+
+        return ExternalSystemTaskLocation.create(myProject, myExternalSystemId, projectPath, taskExecutionInfo);
     }
 
     @RequiredUIAccess

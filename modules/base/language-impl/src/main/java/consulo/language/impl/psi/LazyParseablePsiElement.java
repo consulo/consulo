@@ -36,6 +36,7 @@ import consulo.language.util.IncorrectOperationException;
 import consulo.language.version.LanguageVersion;
 import consulo.logging.Logger;
 import consulo.navigation.ItemPresentation;
+import consulo.navigation.NavigateOptions;
 import consulo.navigation.NavigationItem;
 import consulo.project.Project;
 import consulo.util.collection.ArrayUtil;
@@ -304,13 +305,8 @@ public class LazyParseablePsiElement extends LazyParseableElement implements Psi
   }
 
   @Override
-  public boolean canNavigate() {
-    return PsiNavigationSupport.getInstance().canNavigate(this);
-  }
-
-  @Override
-  public boolean canNavigateToSource() {
-    return canNavigate();
+  public NavigateOptions getNavigateOptions() {
+    return PsiNavigationSupport.getInstance().canNavigate(this) ? NavigateOptions.CAN_NAVIGATE_FULL : NavigateOptions.CANT_NAVIGATE;
   }
 
   @Override

@@ -1,7 +1,7 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.openapi.fileChooser.ex;
 
-import consulo.application.impl.internal.IdeaModalityState;
+import consulo.ui.ModalityState;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.fileChooser.FileChooserDescriptor;
@@ -76,7 +76,7 @@ public class FileSystemTreeImpl implements FileSystemTree {
             renderer = createFileRender();
             myFileTreeModel = new FileTreeModel(
                 descriptor,
-                new FileRefresher(true, 3, () -> IdeaModalityState.stateForComponent(tree))
+                new FileRefresher(true, 3, () -> ModalityState.nonModal())
             );
         }
         else {

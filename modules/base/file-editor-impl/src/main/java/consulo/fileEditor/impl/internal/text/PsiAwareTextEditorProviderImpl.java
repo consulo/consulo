@@ -17,6 +17,7 @@ package consulo.fileEditor.impl.internal.text;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.codeEditor.Editor;
+import consulo.application.Application;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
 import consulo.fileEditor.FileEditor;
@@ -51,15 +52,20 @@ public class PsiAwareTextEditorProviderImpl extends TextEditorProviderImpl {
     super(textEditorComponentContainerFactory);
   }
 
+  @Override
+  protected FileEditor createEditorImpl(Project project, VirtualFile file, Document document) {
+    return new PsiAwareTextEditorImpl(project, file, document, this);
+  }
+
   @RequiredUIAccess
   @Override
-  
   public FileEditor createEditor(Project project, VirtualFile file) {
-    return new PsiAwareTextEditorImpl(project, file, this);
+    Document document = Application.get().runReadAction(
+        (java.util.function.Supplier<Document>) () -> FileDocumentManager.getInstance().getDocument(file));
+    return new PsiAwareTextEditorImpl(project, file, document, this);
   }
 
   @Override
-  
   public FileEditorState readState(Element element, Project project, VirtualFile file) {
     TextEditorState state = (TextEditorState)super.readState(element, project, file);
 
@@ -102,7 +108,6 @@ public class PsiAwareTextEditorProviderImpl extends TextEditorProviderImpl {
     }
   }
 
-  
   @Override
   public TextEditorState getStateImpl(Project project, Editor editor, FileEditorStateLevel level) {
     TextEditorState state = super.getStateImpl(project, editor, level);
@@ -135,7 +140,6 @@ public class PsiAwareTextEditorProviderImpl extends TextEditorProviderImpl {
     }
   }
 
-  
   @Override
   protected EditorWrapper createWrapperForEditor(Editor editor) {
     return new PsiAwareEditorWrapper(editor);

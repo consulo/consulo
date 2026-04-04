@@ -19,7 +19,8 @@ import consulo.application.Application;
 import consulo.application.HelpManager;
 import consulo.configurable.Configurable;
 import consulo.configurable.ConfigurationException;
-import consulo.dataContext.DataProvider;
+import consulo.dataContext.DataSink;
+import consulo.dataContext.UiDataProvider;
 import consulo.disposer.Disposer;
 import consulo.ide.impl.configurable.ConfigurablePreselectStrategy;
 import consulo.ide.impl.configurable.ProjectStructureSelectorOverSettings;
@@ -29,13 +30,13 @@ import consulo.platform.Platform;
 import consulo.platform.base.localize.CommonLocalize;
 import consulo.project.Project;
 import consulo.ui.Size2D;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.BorderLayoutPanel;
 import consulo.ui.ex.awt.CustomLineBorder;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.WholeWestDialogWrapper;
 import consulo.util.concurrent.AsyncResult;
-import consulo.util.dataholder.Key;
 import consulo.util.lang.Couple;
 import org.jspecify.annotations.Nullable;
 
@@ -49,7 +50,7 @@ import java.util.Map;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
-public class DesktopSettingsDialog extends WholeWestDialogWrapper implements DataProvider {
+public class DesktopSettingsDialog extends WholeWestDialogWrapper implements UiDataProvider {
 
     private Project myProject;
     private final Function<Project, Configurable[]> myConfigurablesBuilder;
@@ -94,7 +95,6 @@ public class DesktopSettingsDialog extends WholeWestDialogWrapper implements Dat
         init();
     }
 
-    
     @Override
     public String getSplitterKey() {
         return OptionsEditor.MAIN_SPLITTER_PROPORTION;
@@ -123,7 +123,6 @@ public class DesktopSettingsDialog extends WholeWestDialogWrapper implements Dat
     }
 
     @RequiredUIAccess
-    
     @Override
     public Couple<JComponent> createSplitterComponents(JPanel rootPanel) {
         myEditor = new OptionsEditor(myProject, myConfigurablesBuilder, myPreselectStrategy, rootPanel, () -> myAfteLoad.accept(this));
@@ -199,7 +198,7 @@ public class DesktopSettingsDialog extends WholeWestDialogWrapper implements Dat
 
         saveCurrentConfigurable();
 
-        Application.get().saveAll();
+        Application.get().saveAllWithProgress(UIAccess.current());
 
         super.doOKAction();
     }
@@ -235,7 +234,6 @@ public class DesktopSettingsDialog extends WholeWestDialogWrapper implements Dat
         super.doCancelAction();
     }
 
-    
     @Override
     protected Action[] createActions() {
         myApplyAction = new ApplyAction();
@@ -256,14 +254,9 @@ public class DesktopSettingsDialog extends WholeWestDialogWrapper implements Dat
     }
 
     @Override
-    public Object getData(Key<?> dataId) {
-        if (Settings.KEY == dataId) {
-            return myEditor;
-        }
-        else if (ProjectStructureSelector.KEY == dataId) {
-            return new ProjectStructureSelectorOverSettings(myEditor);
-        }
-        return null;
+    public void uiDataSnapshot(DataSink sink) {
+        sink.set(Settings.KEY, myEditor);
+        sink.lazy(ProjectStructureSelector.KEY, () -> new ProjectStructureSelectorOverSettings(myEditor));
     }
 
     private class ApplyAction extends DialogWrapperAction {

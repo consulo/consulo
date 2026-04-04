@@ -5,6 +5,7 @@ import consulo.colorScheme.EditorColorsScheme;
 import consulo.document.Document;
 import consulo.language.editor.internal.LanguageEditorInternalHelper;
 import consulo.language.editor.rawHighlight.HighlightInfo;
+import consulo.language.psi.PsiFile;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import org.jspecify.annotations.Nullable;
@@ -19,18 +20,13 @@ public class UpdateHighlightersUtil {
     @RequiredUIAccess
     public static void setHighlightersToEditor(Project project,
                                                Document document,
+                                               PsiFile psiFile,
                                                int startOffset,
                                                int endOffset,
                                                Collection<HighlightInfo> highlights,
                                                // if null global scheme will be used
                                                @Nullable EditorColorsScheme colorsScheme,
                                                int group) {
-        LanguageEditorInternalHelper.getInstance().setHighlightersToEditor(project, document, startOffset, endOffset, highlights, colorsScheme, group);
-    }
-
-    @Deprecated //for teamcity
-    @RequiredUIAccess
-    public static void setHighlightersToEditor(Project project, Document document, int startOffset, int endOffset, Collection<HighlightInfo> highlights, int group) {
-        setHighlightersToEditor(project, document, startOffset, endOffset, highlights, null, group);
+        LanguageEditorInternalHelper.getInstance().setHighlightersToEditor(project, document, psiFile, startOffset, endOffset, highlights, colorsScheme, group);
     }
 }

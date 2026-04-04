@@ -18,7 +18,8 @@ package consulo.desktop.awt.internal.diff.util;
 import consulo.application.Application;
 import consulo.application.impl.internal.progress.ProgressWindow;
 import consulo.application.progress.ProgressIndicator;
-import consulo.dataContext.DataProvider;
+import consulo.dataContext.DataSink;
+import consulo.dataContext.UiDataProvider;
 import consulo.diff.DiffContext;
 import consulo.diff.DiffDataKeys;
 import consulo.diff.FrameDiffTool;
@@ -40,28 +41,22 @@ import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.util.Alarm;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.SmartList;
-import consulo.util.dataholder.Key;
 import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class DiffViewerBase implements DiffViewer, DataProvider {
+public abstract class DiffViewerBase implements DiffViewer, UiDataProvider {
     protected static final Logger LOG = Logger.getInstance(DiffViewerBase.class);
 
-    
     private final List<DiffViewerListener> myListeners = new SmartList<>();
 
     protected final @Nullable Project myProject;
-    
     protected final DiffContext myContext;
-    
     protected final ContentDiffRequest myRequest;
 
-    
     private final DiffTaskQueue myTaskExecutor = new DiffTaskQueue();
-    
     private final Alarm myTaskAlarm = new Alarm();
     private volatile boolean myDisposed;
 
@@ -71,7 +66,6 @@ public abstract class DiffViewerBase implements DiffViewer, DataProvider {
         myRequest = request;
     }
 
-    
     @Override
     @RequiredUIAccess
     public final FrameDiffTool.ToolbarComponents init() {
@@ -180,12 +174,10 @@ public abstract class DiffViewerBase implements DiffViewer, DataProvider {
         return myProject;
     }
 
-    
     public ContentDiffRequest getRequest() {
         return myRequest;
     }
 
-    
     public DiffContext getContext() {
         return myContext;
     }
@@ -246,7 +238,6 @@ public abstract class DiffViewerBase implements DiffViewer, DataProvider {
     }
 
     @CalledInBackground
-    
     protected abstract Runnable performRediff(ProgressIndicator indicator);
 
     @RequiredUIAccess
@@ -272,7 +263,6 @@ public abstract class DiffViewerBase implements DiffViewer, DataProvider {
         myListeners.remove(listener);
     }
 
-    
     @RequiredUIAccess
     protected List<DiffViewerListener> getListeners() {
         return myListeners;
@@ -306,16 +296,9 @@ public abstract class DiffViewerBase implements DiffViewer, DataProvider {
     //
 
     @Override
-    public @Nullable Object getData(Key<?> dataId) {
-        if (DiffDataKeys.NAVIGATABLE == dataId) {
-            return getNavigatable();
-        }
-        else if (Project.KEY == dataId) {
-            return myProject;
-        }
-        else {
-            return null;
-        }
+    public void uiDataSnapshot(DataSink sink) {
+        sink.lazy(DiffDataKeys.NAVIGATABLE, this::getNavigatable);
+        sink.set(Project.KEY, myProject);
     }
 
     private enum EventType {

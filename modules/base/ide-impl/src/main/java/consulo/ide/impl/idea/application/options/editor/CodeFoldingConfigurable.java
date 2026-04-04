@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.application.options.editor;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.application.ApplicationManager;
-import consulo.application.impl.internal.IdeaModalityState;
+import consulo.ui.ModalityState;
 import consulo.application.localize.ApplicationLocalize;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorFactory;
@@ -105,6 +105,6 @@ public class CodeFoldingConfigurable extends SimpleConfigurableByProperties impl
         }
       }
       EditorGeneralConfigurable.reinitAllEditors();
-    }, IdeaModalityState.nonModal());
+    }, ModalityState.nonModal());
   }
 }

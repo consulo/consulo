@@ -2,6 +2,9 @@
 package consulo.ide.impl.idea.openapi.wm.impl.status;
 
 import consulo.annotation.DeprecationInfo;
+import consulo.annotation.access.RequiredReadAction;
+import consulo.application.concurrent.coroutine.DisposableCoroutineScope;
+import consulo.application.concurrent.coroutine.ReadLock;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorFactory;
 import consulo.dataContext.DataContext;
@@ -29,12 +32,14 @@ import consulo.project.ui.wm.StatusBarWidgetFactory;
 import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.awt.ClickListener;
 import consulo.ui.ex.awt.UIExAWTDataKey;
-import consulo.ui.ex.awt.UIUtil;
-import consulo.ui.ex.awt.util.Alarm;
+import consulo.ui.ex.coroutine.UIAction;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.ui.ex.popup.ListPopup;
 import consulo.ui.image.Image;
 import consulo.util.collection.ImmutableMapBuilder;
+import consulo.util.concurrent.coroutine.Continuation;
+import consulo.util.concurrent.coroutine.Coroutine;
+import consulo.util.concurrent.coroutine.step.Delay;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.StringUtil;
@@ -44,7 +49,6 @@ import consulo.virtualFileSystem.event.BulkVirtualFileListenerAdapter;
 import consulo.virtualFileSystem.event.VirtualFileListener;
 import consulo.virtualFileSystem.event.VirtualFilePropertyEvent;
 import org.jspecify.annotations.Nullable;
-import org.jetbrains.annotations.TestOnly;
 
 import javax.swing.*;
 import java.awt.*;
@@ -57,14 +61,13 @@ public abstract class EditorBasedStatusBarPopup extends EditorBasedWidget implem
     private final JPanel myComponent;
     private final boolean myWriteableFileRequired;
     private boolean actionEnabled;
-    private final Alarm update;
+    private Continuation<?> myUpdateContinuation;
     // store editor here to avoid expensive and EDT-only getSelectedEditor() retrievals
     private volatile Reference<Editor> myEditor = new WeakReference<>(null);
 
     public EditorBasedStatusBarPopup(Project project, StatusBarWidgetFactory factory, boolean writeableFileRequired) {
         super(project, factory);
         myWriteableFileRequired = writeableFileRequired;
-        update = new Alarm(this);
         myComponent = createComponent();
         myComponent.setVisible(false);
 
@@ -77,6 +80,16 @@ public abstract class EditorBasedStatusBarPopup extends EditorBasedWidget implem
             }
         }.installOn(myComponent, true);
         myComponent.setBorder(StatusWidgetBorders.WIDE);
+    }
+
+    @Override
+    public void dispose() {
+        super.dispose();
+
+        if (myUpdateContinuation != null) {
+            myUpdateContinuation.cancel();
+            myUpdateContinuation = null;
+        }
     }
 
     protected JPanel createComponent() {
@@ -211,7 +224,6 @@ public abstract class EditorBasedStatusBarPopup extends EditorBasedWidget implem
         }
     }
 
-    
     protected DataContext getContext() {
         Editor editor = getEditor();
         DataContext parent = DataManager.getInstance().getDataContext((Component) myStatusBar);
@@ -223,7 +235,6 @@ public abstract class EditorBasedStatusBarPopup extends EditorBasedWidget implem
             .put(UIExAWTDataKey.CONTEXT_COMPONENT, editor == null ? null : editor.getComponent()).build(), parent);
     }
 
-    
     @Override
     public JComponent getComponent() {
         return myComponent;
@@ -256,75 +267,55 @@ public abstract class EditorBasedStatusBarPopup extends EditorBasedWidget implem
         });
     }
 
-    @TestOnly
-    public void updateInTests(boolean immediately) {
-        update();
-        update.drainRequestsInTest();
-        UIUtil.dispatchAllInvocationEvents();
-        if (immediately) {
-            // for widgets with background activities, the first flush() adds handlers to be called
-            update.drainRequestsInTest();
-            UIUtil.dispatchAllInvocationEvents();
-        }
-    }
-
-    @TestOnly
-    public void flushUpdateInTests() {
-        update.drainRequestsInTest();
-    }
-
     public void update() {
-        update(null);
-    }
-
-    public void update(@Nullable Runnable finishUpdate) {
-        if (update.isDisposed()) {
+        if (isDisposed()) {
             return;
         }
 
-        update.cancelAllRequests();
-        update.addRequest(
-            () -> {
-                if (isDisposed()) {
-                    return;
-                }
+        myUpdateContinuation = DisposableCoroutineScope.launchAsync(myProject.coroutineContext(), this, () -> {
+            return Coroutine.first(Delay.sleep(200))
+                .then(UIAction.apply((o, continuation) -> {
+                    Editor editor = getEditor();
+                    if (editor == null) {
+                        continuation.cancel();
+                    }
+                    return editor;
+                }))
+                .then(ReadLock.apply((editor) -> {
+                    VirtualFile file = getSelectedFile(editor);
 
-                VirtualFile file = getSelectedFile();
+                    return getWidgetState(file);
+                }))
+                .then(UIAction.apply((state, continuation) -> {
+                    if (state == WidgetState.NO_CHANGE) {
+                        return null;
+                    }
 
-                WidgetState state = getWidgetState(file);
-                if (state == WidgetState.NO_CHANGE) {
-                    return;
-                }
+                    if (state == WidgetState.NO_CHANGE_MAKE_VISIBLE) {
+                        myComponent.setVisible(true);
+                        return null;
+                    }
 
-                if (state == WidgetState.NO_CHANGE_MAKE_VISIBLE) {
+                    if (state == WidgetState.HIDDEN) {
+                        myComponent.setVisible(false);
+                        return null;
+                    }
+
                     myComponent.setVisible(true);
-                    return;
-                }
 
-                if (state == WidgetState.HIDDEN) {
-                    myComponent.setVisible(false);
-                    return;
-                }
+                    actionEnabled = state.actionEnabled && isEnabledForFile(state.myFile);
 
-                myComponent.setVisible(true);
+                    myComponent.setEnabled(actionEnabled);
+                    updateComponent(state);
 
-                actionEnabled = state.actionEnabled && isEnabledForFile(file);
+                    if (myStatusBar != null && !myComponent.isValid()) {
+                        myStatusBar.updateWidget(getId());
+                    }
 
-                myComponent.setEnabled(actionEnabled);
-                updateComponent(state);
-
-                if (myStatusBar != null && !myComponent.isValid()) {
-                    myStatusBar.updateWidget(getId());
-                }
-
-                if (finishUpdate != null) {
-                    finishUpdate.run();
-                }
-                afterVisibleUpdate(state);
-            },
-            200,
-            myProject.getApplication().getAnyModalityState()
-        );
+                    afterVisibleUpdate(state);
+                    return null;
+                }));
+        });
     }
 
     protected void afterVisibleUpdate(WidgetState state) {
@@ -347,20 +338,20 @@ public abstract class EditorBasedStatusBarPopup extends EditorBasedWidget implem
          */
         public static final WidgetState NO_CHANGE_MAKE_VISIBLE = new WidgetState();
 
-        
+        private final @Nullable VirtualFile myFile;
         protected final LocalizeValue toolTip;
         protected String shortcutText;
 
-        
         private final LocalizeValue text;
         private final boolean actionEnabled;
         private Image icon;
 
         private WidgetState() {
-            this(LocalizeValue.empty(), LocalizeValue.empty(), false);
+            this(null,LocalizeValue.empty(), LocalizeValue.empty(), false);
         }
 
-        public WidgetState(LocalizeValue toolTip, LocalizeValue text, boolean actionEnabled) {
+        public WidgetState(@Nullable VirtualFile file, LocalizeValue toolTip, LocalizeValue text, boolean actionEnabled) {
+            myFile = file;
             this.toolTip = toolTip;
             this.text = text;
             this.actionEnabled = actionEnabled;
@@ -368,8 +359,12 @@ public abstract class EditorBasedStatusBarPopup extends EditorBasedWidget implem
 
         @Deprecated
         @DeprecationInfo("Use variant with LocalizeValue")
-        public WidgetState(String toolTip, String text, boolean actionEnabled) {
-            this(LocalizeValue.ofNullable(toolTip), LocalizeValue.ofNullable(text), actionEnabled);
+        public WidgetState(@Nullable VirtualFile file, String toolTip, String text, boolean actionEnabled) {
+            this(file, LocalizeValue.ofNullable(toolTip), LocalizeValue.ofNullable(text), actionEnabled);
+        }
+
+        public @Nullable VirtualFile getFile() {
+            return myFile;
         }
 
         public void setIcon(Image icon) {
@@ -388,7 +383,6 @@ public abstract class EditorBasedStatusBarPopup extends EditorBasedWidget implem
             return text.get();
         }
 
-        
         public LocalizeValue getToolTip() {
             return toolTip;
         }
@@ -398,7 +392,7 @@ public abstract class EditorBasedStatusBarPopup extends EditorBasedWidget implem
         }
     }
 
-    
+    @RequiredReadAction
     protected abstract WidgetState getWidgetState(@Nullable VirtualFile file);
 
     /**
@@ -415,6 +409,5 @@ public abstract class EditorBasedStatusBarPopup extends EditorBasedWidget implem
     protected void registerCustomListeners() {
     }
 
-    
     protected abstract StatusBarWidget createInstance(Project project);
 }

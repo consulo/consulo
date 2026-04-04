@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.codeInsight.highlighting;
 
 import consulo.annotation.access.RequiredReadAction;
 import consulo.application.Application;
-import consulo.application.impl.internal.IdeaModalityState;
+import consulo.ui.ModalityState;
 import consulo.codeEditor.*;
 import consulo.codeEditor.markup.HighlighterLayer;
 import consulo.codeEditor.markup.HighlighterTargetArea;
@@ -62,10 +62,8 @@ import consulo.virtualFileSystem.fileType.FileType;
 import org.jspecify.annotations.Nullable;
 
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.Collections;
+import java.util.*;
 import java.util.List;
-import java.util.Set;
 import java.util.function.Consumer;
 
 /**
@@ -124,13 +122,18 @@ public class BraceHighlightingHandler {
         }
         int offset = editor.getCaretModel().getOffset();
         Project project = editor.getProject();
-        PsiFile psiFile = PsiUtilBase.getPsiFileInEditor(editor, project);
-        if (!isValidFile(psiFile)) {
-            return;
-        }
-        Application app = project.getApplication();
+
+        PsiUtilBase.SelectionSnapshot selectionSnapshot = PsiUtilBase.SelectionSnapshot.of(editor);
+
+        Application app = Objects.requireNonNull(project).getApplication();
         app.executeOnPooledThread(() -> {
             if (!app.tryRunReadAction(() -> {
+                PsiFile psiFile = PsiUtilBase.getPsiFileInEditor(selectionSnapshot, project);
+
+                if (!isValidFile(psiFile)) {
+                    return;
+                }
+
                 PsiFile injected;
                 try {
                     if (psiFile instanceof PsiBinaryFile || !isValidEditor(editor) || !isValidFile(psiFile)) {
@@ -619,7 +622,7 @@ public class BraceHighlightingHandler {
                 });
             },
             300,
-            IdeaModalityState.stateForComponent(myEditor.getComponent())
+            ModalityState.nonModal()
         );
     }
 

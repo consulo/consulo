@@ -21,10 +21,10 @@ import consulo.ui.ex.awt.ValidationInfo;
 import consulo.util.lang.Pair;
 import consulo.localize.LocalizeValue;
 
-import jakarta.annotation.*;
+import org.jspecify.annotations.Nullable;
+
 import javax.swing.*;
 import java.util.List;
-import org.jspecify.annotations.Nullable;
 
 public interface FindPopupScopeUI {
  

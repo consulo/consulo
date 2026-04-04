@@ -2,36 +2,36 @@
 package consulo.ide.impl.idea.openapi.actionSystem.impl;
 
 import consulo.application.Application;
-import consulo.application.internal.ProgressIndicatorUtils;
-import consulo.application.internal.ProgressWrapper;
+import consulo.application.dumb.IndexNotReadyException;
 import consulo.application.internal.SensitiveProgressWrapper;
 import consulo.application.progress.EmptyProgressIndicator;
 import consulo.application.progress.ProgressIndicator;
+import consulo.application.progress.ProgressIndicatorListener;
 import consulo.application.progress.ProgressManager;
 import consulo.application.util.concurrent.AppExecutorUtil;
-import consulo.application.util.registry.Registry;
 import consulo.component.ProcessCanceledException;
 import consulo.dataContext.DataContext;
 import consulo.ide.impl.idea.openapi.actionSystem.AlwaysPerformingActionGroup;
 import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionImplUtil;
 import consulo.logging.Logger;
-import consulo.project.DumbService;
+import consulo.project.internal.DumbInternalUtil;
 import consulo.project.Project;
 import consulo.ui.UIAccess;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.internal.XmlActionGroupStub;
 import consulo.util.collection.*;
+import consulo.util.concurrent.coroutine.Coroutine;
+import consulo.util.concurrent.coroutine.CoroutineContext;
+import consulo.util.concurrent.coroutine.CoroutineContextOwner;
+import consulo.util.concurrent.coroutine.CoroutineScope;
+import consulo.util.concurrent.coroutine.CoroutineException;
 import consulo.util.lang.function.Predicates;
 import org.jspecify.annotations.Nullable;
 
 import java.util.*;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.Executor;
-import java.util.concurrent.Future;
+import java.util.concurrent.*;
 import java.util.function.Function;
 import java.util.function.Predicate;
-import java.util.function.Supplier;
 
 public class ActionUpdater {
     private static final Logger LOG = Logger.getInstance(ActionUpdater.class);
@@ -44,16 +44,13 @@ public class ActionUpdater {
     private final boolean myToolbarAction;
     private final Project myProject;
 
+    private final boolean myDumbMode;
     private final Map<AnAction, Presentation> myUpdatedPresentations = new ConcurrentHashMap<>();
     private final Map<ActionGroup, List<AnAction>> myGroupChildren = new ConcurrentHashMap<>();
     private final Map<ActionGroup, Boolean> myCanBePerformedCache = new ConcurrentHashMap<>();
     private final UpdateStrategy myRealUpdateStrategy;
-    private final UpdateStrategy myCheapStrategy;
     private final ActionManager myActionManager;
-    
     private final UIAccess myUiAccess;
-
-    private boolean myAllowPartialExpand = true;
 
     public ActionUpdater(
         ActionManager actionManager,
@@ -66,6 +63,7 @@ public class ActionUpdater {
     ) {
         myUiAccess = uiAccess;
         myProject = dataContext.getData(Project.KEY);
+        myDumbMode = DumbInternalUtil.isDumbMode(myProject);
         myActionManager = actionManager;
         myFactory = presentationFactory;
         myDataContext = dataContext;
@@ -77,32 +75,20 @@ public class ActionUpdater {
                 // clone the presentation to avoid partially changing the cached one if update is interrupted
                 Presentation presentation = myFactory.getPresentation(action).clone();
                 presentation.setEnabledAndVisible(true);
-                Supplier<Boolean> doUpdate = () -> doUpdate(action, createActionEvent(action, presentation));
-                boolean success = callAction(uiAccess, action, "update", doUpdate);
+                AnActionEvent event = createActionEvent(action, presentation);
+                boolean success = updateAction(action, event);
                 return success ? presentation : null;
             },
-            group -> callAction(
-                uiAccess,
+            group -> group.getChildren(createActionEvent(
                 group,
-                "getChildren",
-                () -> group.getChildren(createActionEvent(
+                orDefault(
                     group,
-                    orDefault(
-                        group,
-                        myUpdatedPresentations
-                            .get(group)
-                    )
-                ))
-            ),
-            group -> callAction(
-                uiAccess,
-                group,
-                "canBePerformed",
-                () -> myUpdatedPresentations.get(group).isPerformGroup()
-            )
+                    myUpdatedPresentations
+                        .get(group)
+                )
+            )),
+            group -> myUpdatedPresentations.get(group).isPerformGroup()
         );
-        myCheapStrategy =
-            new UpdateStrategy(myFactory::getPresentation, group -> group.getChildren(null), group -> true);
     }
 
     private void applyPresentationChanges() {
@@ -118,133 +104,52 @@ public class ActionUpdater {
         return myDataContext;
     }
 
-    @SuppressWarnings("deprecation")
-    private static boolean isUpdateInBackground(AnAction action) {
-        return action instanceof UpdateInBackground || action.getActionUpdateThread() == ActionUpdateThread.BGT;
-    }
-
-    private static <T> T callAction(UIAccess uiAccess, AnAction action, String operation, Supplier<T> call) {
-        if (isUpdateInBackground(action) || UIAccess.isUIThread()) {
-            return call.get();
-        }
-
-        ProgressIndicator progress = Objects.requireNonNull(ProgressManager.getInstance().getProgressIndicator());
-
-        return ActionUIActionRunner.compute(
-            uiAccess,
-            () -> {
-                long start = System.currentTimeMillis();
-                try {
-                    return ProgressManager.getInstance().runProcess(call, ProgressWrapper.wrap(progress));
-                }
-                finally {
-                    long elapsed = System.currentTimeMillis() - start;
-                    if (elapsed > 100) {
-                        LOG.warn(
-                            "Slow (" + elapsed + "ms) '" + operation + "' on action " + action + " of " + action.getClass() + ". " +
-                                "Consider speeding it up and/or implementing UpdateInBackground."
-                        );
-                    }
-                }
-            }
-        );
-    }
-
-    /**
-     * @return actions from the given and nested non-popup groups that are visible after updating
-     */
-    public List<AnAction> expandActionGroup(ActionGroup group, boolean hideDisabled) {
-        try {
-            return expandActionGroup(group, hideDisabled, myRealUpdateStrategy);
-        }
-        finally {
-            applyPresentationChanges();
-        }
-    }
-
-    /**
-     * @return actions from the given and nested non-popup groups that are visible after updating
-     * don't check progress.isCanceled (to obtain full list of actions)
-     */
-    public List<AnAction> expandActionGroupFull(ActionGroup group, boolean hideDisabled) {
-        try {
-            myAllowPartialExpand = false;
-            return expandActionGroup(group, hideDisabled, myRealUpdateStrategy);
-        }
-        finally {
-            myAllowPartialExpand = true;
-            applyPresentationChanges();
-        }
-    }
 
     private List<AnAction> expandActionGroup(ActionGroup group, boolean hideDisabled, UpdateStrategy strategy) {
         return removeUnnecessarySeparators(doExpandActionGroup(group, hideDisabled, strategy));
     }
 
-    /**
-     * @return actions from the given and nested non-popup groups that are visible after updating
-     */
-    public List<AnAction> expandActionGroupWithTimeout(ActionGroup group, boolean hideDisabled) {
-        return expandActionGroupWithTimeout(group, hideDisabled, Registry.intValue("actionSystem.update.timeout.ms"));
-    }
-
-    /**
-     * @return actions from the given and nested non-popup groups that are visible after updating
-     */
-    public List<AnAction> expandActionGroupWithTimeout(ActionGroup group, boolean hideDisabled, int timeoutMs) {
-        List<AnAction> result = ProgressIndicatorUtils.withTimeout(timeoutMs, () -> expandActionGroup(group, hideDisabled));
-        try {
-            return result != null ? result : expandActionGroup(group, hideDisabled, myCheapStrategy);
-        }
-        finally {
-            applyPresentationChanges();
-        }
-    }
-
-    
     public CompletableFuture<List<? extends AnAction>> expandActionGroupAsync(
         ActionGroup group,
         boolean hideDisabled
     ) {
+        return expandActionGroupAsync(group, hideDisabled, new EmptyProgressIndicator());
+    }
+
+    public CompletableFuture<List<? extends AnAction>> expandActionGroupAsync(
+        ActionGroup group,
+        boolean hideDisabled,
+        ProgressIndicator indicator
+    ) {
         CompletableFuture<List<? extends AnAction>> future = new CompletableFuture<>();
-        ProgressIndicator indicator = new EmptyProgressIndicator();
 
         future.whenComplete((anActions, throwable) -> {
             if (throwable != null) {
                 indicator.cancel();
 
-                ActionUIActionRunner.compute(myUiAccess, () -> {
-                    applyPresentationChanges();
-                    return null;
-                });
+                myUiAccess.execute(this::applyPresentationChanges);
             }
         });
 
         ourExecutor.execute(() -> {
-            while (future.state() == Future.State.RUNNING) {
-                try {
-                    ProgressManager.getInstance().runProcess(
-                        () -> {
-                            List<AnAction> result = expandActionGroup(group, hideDisabled, myRealUpdateStrategy);
+            try {
+                ProgressManager.getInstance().runProcess(
+                    () -> {
+                        List<AnAction> result = expandActionGroup(group, hideDisabled, myRealUpdateStrategy);
 
-                            ActionUIActionRunner.compute(
-                                myUiAccess,
-                                () -> {
-                                    applyPresentationChanges();
-                                    future.complete(result);
-                                    return null;
-                                }
-                            );
-                        },
-                        new SensitiveProgressWrapper(indicator)
-                    );
-                }
-                catch (ProcessCanceledException e) {
-                    future.cancel(false);
-                }
-                catch (Throwable e) {
-                    future.completeExceptionally(e);
-                }
+                        myUiAccess.execute(() -> {
+                            applyPresentationChanges();
+                            future.complete(result);
+                        });
+                    },
+                    new SensitiveProgressWrapper(indicator)
+                );
+            }
+            catch (ProcessCanceledException e) {
+                future.cancel(false);
+            }
+            catch (Throwable e) {
+                future.completeExceptionally(e);
             }
         });
         return future;
@@ -254,9 +159,7 @@ public class ActionUpdater {
         if (group instanceof XmlActionGroupStub) {
             throw new IllegalStateException("Trying to expand non-unstubbed group");
         }
-        if (myAllowPartialExpand) {
-            ProgressManager.checkCanceled();
-        }
+        ProgressManager.checkCanceled();
 
         Presentation presentation = update(group, strategy);
         if (presentation == null || !presentation.isVisible()) { // don't process invisible groups
@@ -351,9 +254,8 @@ public class ActionUpdater {
         return Collections.singletonList(child);
     }
 
-    
+
     private JBIterable<AnAction> iterateGroupChildren(ActionGroup group, UpdateStrategy strategy) {
-        boolean isDumb = myProject != null && DumbService.getInstance(myProject).isDumb();
         return JBTreeTraverser.<AnAction>from(o -> {
                 if (o == group) {
                     return null;
@@ -361,7 +263,7 @@ public class ActionUpdater {
                 if (o instanceof AlwaysVisibleActionGroup) {
                     return null;
                 }
-                if (isDumb && !o.isDumbAware()) {
+                if (myDumbMode && !o.isDumbAware()) {
                     return null;
                 }
                 if (!(o instanceof ActionGroup oo)) {
@@ -379,7 +281,7 @@ public class ActionUpdater {
             .withRoots(getGroupChildren(group, strategy))
             .unique()
             .traverse(TreeTraversal.LEAVES_DFS)
-            .filter(o -> !(o instanceof AnSeparator) && !(isDumb && !o.isDumbAware()))
+            .filter(o -> !(o instanceof AnSeparator) && !(myDumbMode && !o.isDumbAware()))
             .take(1000);
     }
 
@@ -448,8 +350,7 @@ public class ActionUpdater {
             if (anAction instanceof AnSeparator) {
                 continue;
             }
-            Project project = getDataContext(anAction).getData(Project.KEY);
-            if (project != null && DumbService.getInstance(project).isDumb() && !anAction.isDumbAware()) {
+            if (myDumbMode && !anAction.isDumbAware()) {
                 continue;
             }
 
@@ -497,8 +398,14 @@ public class ActionUpdater {
         return presentation;
     }
 
-    // returns false if exception was thrown and handled
-    boolean doUpdate(AnAction action, AnActionEvent e) {
+    /**
+     * Executes the action update using the coroutine-based {@link AnAction#updateAsync(AnActionEvent)} method.
+     * <p>
+     * On a background thread, builds a coroutine chain that runs the action's update logic.
+     *
+     * @return true if update succeeded, false if exception was thrown and handled
+     */
+    private boolean updateAction(AnAction action, AnActionEvent e) {
         if (Application.get().isDisposed()) {
             return false;
         }
@@ -506,7 +413,7 @@ public class ActionUpdater {
         long startTime = System.currentTimeMillis();
         boolean result;
         try {
-            result = !ActionImplUtil.performDumbAwareUpdate(action, e, false);
+            result = !performDumbAwareUpdateViaCoroutine(action, e);
         }
         catch (ProcessCanceledException ex) {
             throw ex;
@@ -520,6 +427,98 @@ public class ActionUpdater {
             LOG.debug("Action " + action + ": updated in " + (endTime - startTime) + " ms");
         }
         return result;
+    }
+
+    /**
+     * Performs a dumb-aware action update, using the coroutine-based update path for thread routing.
+     *
+     * @return true if IndexNotReadyException was thrown and handled (dumb mode), false otherwise
+     */
+    private boolean performDumbAwareUpdateViaCoroutine(AnAction action, AnActionEvent e) {
+        Presentation presentation = e.getPresentation();
+        Boolean wasEnabledBefore = (Boolean) presentation.getClientProperty(ActionImplUtil.WAS_ENABLED_BEFORE_DUMB);
+        if (wasEnabledBefore != null && !myDumbMode) {
+            presentation.putClientProperty(ActionImplUtil.WAS_ENABLED_BEFORE_DUMB, null);
+            presentation.setEnabled(wasEnabledBefore);
+            presentation.setVisible(true);
+        }
+        boolean enabledBeforeUpdate = presentation.isEnabled();
+        boolean notAllowed = myDumbMode && !action.isDumbAware();
+
+        try {
+            executeActionUpdate(action, e);
+
+            presentation.putClientProperty(ActionImplUtil.WOULD_BE_ENABLED_IF_NOT_DUMB_MODE, notAllowed && presentation.isEnabled());
+            presentation.putClientProperty(ActionImplUtil.WOULD_BE_VISIBLE_IF_NOT_DUMB_MODE, notAllowed && presentation.isVisible());
+        }
+        catch (IndexNotReadyException e1) {
+            if (notAllowed) {
+                return true;
+            }
+            throw e1;
+        }
+        finally {
+            if (notAllowed) {
+                if (wasEnabledBefore == null) {
+                    presentation.putClientProperty(ActionImplUtil.WAS_ENABLED_BEFORE_DUMB, enabledBeforeUpdate);
+                }
+                presentation.setEnabled(false);
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Executes the action update using the coroutine-based {@code action.updateAsync(e)}.
+     * <p>
+     * Must be called from a background thread. The coroutine runs inside a {@link CoroutineScope#launch}
+     * which blocks until completion. A {@link ProgressIndicatorListener} is registered on the current
+     * {@link ProgressIndicator} to cancel the coroutine scope when the indicator is cancelled.
+     */
+    private void executeActionUpdate(AnAction action, AnActionEvent e) {
+        LOG.assertTrue(!UIAccess.isUIThread(), "executeActionUpdate must not be called from EDT — CoroutineScope would deadlock");
+
+        Coroutine<?, ?> coroutine = action.updateAsync(e);
+
+        CoroutineContext context = myProject instanceof CoroutineContextOwner owner
+            ? owner.coroutineContext()
+            : Application.get().coroutineContext();
+
+        ProgressIndicator indicator = ProgressManager.getInstance().getProgressIndicator();
+
+        try {
+            CoroutineScope.launch(context, rScope -> {
+                rScope.putCopyableUserData(UIAccess.KEY, myUiAccess);
+
+                if (indicator != null) {
+                    indicator.addListener(new ProgressIndicatorListener() {
+                        @Override
+                        public void canceled() {
+                            rScope.cancel();
+                        }
+                    });
+                }
+                coroutine.runAsync(rScope, null);
+            });
+        }
+        catch (CoroutineException ex) {
+            // Unwrap the original exception from the coroutine scope.
+            // CoroutineScope may throw CoroutineScopeException (from catch block)
+            // or CoroutineException (from checkThrowErrors when single continuation failed with CoroutineException).
+            // Both wrap the original exception as the cause.
+            Throwable cause = ex.getCause();
+            if (cause instanceof ProcessCanceledException pce) {
+                throw pce;
+            }
+            if (cause instanceof RuntimeException re) {
+                throw re;
+            }
+            if (cause instanceof Error err) {
+                throw err;
+            }
+            throw ex;
+        }
     }
 
     private static class UpdateStrategy {

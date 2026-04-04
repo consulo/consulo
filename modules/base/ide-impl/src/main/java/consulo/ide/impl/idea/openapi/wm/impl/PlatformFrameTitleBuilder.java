@@ -49,10 +49,13 @@ public class PlatformFrameTitleBuilder extends FrameTitleBuilder {
         myProjectManager = projectManager;
     }
 
-    
     @Override
     @RequiredReadAction
     public String getProjectTitle(Project project) {
+        if (project.isWelcomeProject()) {
+            return project.getApplication().getName().get();
+        }
+
         String basePath = project.getBasePath();
         if (basePath == null) {
             return project.getName();
@@ -73,7 +76,6 @@ public class PlatformFrameTitleBuilder extends FrameTitleBuilder {
         }
     }
 
-    
     @Override
     @RequiredReadAction
     public String getFileTitle(Project project, VirtualFile file) {

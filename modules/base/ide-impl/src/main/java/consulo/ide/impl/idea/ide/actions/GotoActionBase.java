@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.ide.actions;
 
-import consulo.application.impl.internal.IdeaModalityState;
+import consulo.ui.ModalityState;
 import consulo.codeEditor.Editor;
 import consulo.dataContext.DataContext;
 import consulo.document.Document;
@@ -319,7 +319,7 @@ public abstract class GotoActionBase extends AnAction {
                     callback.elementChosen(popup, element);
                 }
             },
-            IdeaModalityState.current(),
+            ModalityState.nonModal(),
             allowMultipleSelection
         );
 

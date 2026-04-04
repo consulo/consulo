@@ -18,8 +18,6 @@ package consulo.desktop.awt.ui.impl;
 import com.github.weisj.jsvg.SVGDocument;
 import com.github.weisj.jsvg.geometry.size.FloatSize;
 import com.github.weisj.jsvg.parser.SVGLoader;
-import consulo.application.impl.internal.LaterInvocator;
-import consulo.application.impl.internal.ModalityStateImpl;
 import consulo.desktop.awt.ui.impl.alert.DesktopAlertFactory;
 import consulo.desktop.awt.ui.impl.htmlView.DesktopAWTHtmlViewImpl;
 import consulo.desktop.awt.ui.impl.image.*;
@@ -82,7 +80,6 @@ import java.util.function.Supplier;
 public class DesktopUIInternalImpl extends UIInternal {
     @Override
     public void addModalityStateListener(ModalityStateListener listener, Disposable parentDisposable) {
-        LaterInvocator.addModalityStateListener(listener, parentDisposable);
     }
 
     @Override
@@ -233,19 +230,16 @@ public class DesktopUIInternalImpl extends UIInternal {
         return new DesktopMenuBarImpl();
     }
 
-    
     @Override
     public StyleManager _StyleManager_get() {
         return DesktopStyleManagerImpl.ourInstance;
     }
 
-    
     @Override
     public FontManager _FontManager_get() {
         return DesktopFontManagerImpl.ourInstance;
     }
 
-    
     @Override
     public Window _Window_create(String title, WindowOptions options) {
         return new DesktopWindowWrapper(title, options);
@@ -358,7 +352,6 @@ public class DesktopUIInternalImpl extends UIInternal {
         return new DesktopProgressBarImpl();
     }
 
-    
     @Override
     public IntBox _Components_intBox(int value) {
         return new DesktopIntBoxImpl(value);
@@ -405,7 +398,6 @@ public class DesktopUIInternalImpl extends UIInternal {
     }
 
     @RequiredUIAccess
-    
     @Override
     public UIAccess _UIAccess_get() {
         return AWTUIAccessImpl.ourInstance;
@@ -439,7 +431,6 @@ public class DesktopUIInternalImpl extends UIInternal {
         return new DesktopFoldoutLayoutImpl(titleValue, component, show);
     }
 
-    
     @Override
     public <S> Image _Image_stated(ImageState<S> state, Function<S, Image> funcCall) {
         return new DesktopStatedImageImpl<>(state, funcCall);
@@ -450,7 +441,6 @@ public class DesktopUIInternalImpl extends UIInternal {
         return new DesktopTableColumnInfo<>(name, converter);
     }
 
-    
     @Override
     public IconLibraryManager _IconLibraryManager_get() {
         return DesktopIconLibraryManagerImpl.ourInstance;
@@ -461,7 +451,6 @@ public class DesktopUIInternalImpl extends UIInternal {
         return new DesktopAWTImageKey(null, groupId, imageId, width, height);
     }
 
-    
     @Override
     public TaskBar _TaskBar_get() {
         return DesktopTaskBarImpl.ourInstance;
@@ -487,7 +476,6 @@ public class DesktopUIInternalImpl extends UIInternal {
         return new DesktopToggleSwitchImpl(selected);
     }
 
-    
     @Override
     public PasswordBox _Components_passwordBox(@Nullable String passwordText) {
         return new DesktopPasswordBoxImpl(passwordText);
@@ -500,37 +488,21 @@ public class DesktopUIInternalImpl extends UIInternal {
         UiNotifyConnector.doWhenFirstShown(awtComponent, action);
     }
 
-    
     @Override
     public AdvancedLabel _Components_advancedLabel() {
         return new DesktopAdvancedLabelImpl();
     }
 
-    
     @Override
     public HtmlView _Components_htmlView() {
         return new DesktopAWTHtmlViewImpl();
     }
 
-    
     @Override
     public <L extends Layout> LoadingLayout<L> _Layouts_LoadingLayout(L innerLayout, Disposable parent) {
         return new DesktopAWTLoadingLayout<>(innerLayout, parent);
     }
 
-    
-    @Override
-    public ModalityState _ModalityState_any() {
-        return ModalityStateImpl.ANY;
-    }
-
-    
-    @Override
-    public ModalityState _ModalityState_nonModal() {
-        return ModalityStateImpl.NON_MODAL;
-    }
-
-    
     @Override
     public DatePicker _Components_datePicker(@Nullable String datePattern) {
         return new DesktopDatePickerImpl(datePattern);

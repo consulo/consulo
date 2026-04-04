@@ -68,7 +68,7 @@ import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.wm.WelcomeFrameManager;
 import consulo.project.ui.wm.WindowManager;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.util.concurrent.AsyncResult;
+import java.util.concurrent.CompletableFuture;
 import consulo.util.lang.ref.SimpleReference;
 import org.jspecify.annotations.Nullable;
 
@@ -245,13 +245,22 @@ public class DesktopApplicationStarter extends ApplicationStarter {
             app.invokeLater(
                 () -> {
                     if (!args.isNoRecentProjects()) {
-                        AsyncResult<Project> projectFromCommandLine = AsyncResult.rejected();
+                        CompletableFuture<Project> projectFromCommandLine = null;
 
                         if (isPerformProjectLoad()) {
                             projectFromCommandLine = CommandLineProcessor.processExternalCommandLine(args, null);
                         }
 
-                        projectFromCommandLine.doWhenRejected(recentProjectsManager::doReopenLastProject);
+                        if (projectFromCommandLine != null) {
+                            projectFromCommandLine.whenComplete((project, error) -> {
+                                if (error != null || project == null) {
+                                    recentProjectsManager.doReopenLastProject();
+                                }
+                            });
+                        }
+                        else {
+                            recentProjectsManager.doReopenLastProject();
+                        }
                     }
 
                     if (args.getJson() != null) {

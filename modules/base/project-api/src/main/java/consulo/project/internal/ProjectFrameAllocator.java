@@ -17,18 +17,23 @@ package consulo.project.internal;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
+import consulo.project.Project;
 import consulo.project.ProjectOpenContext;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.util.concurrent.coroutine.Coroutine;
 
 /**
  * @author VISTALL
  * @since 2024-08-04
  */
-@ServiceAPI(ComponentScope.PROJECT)
+@ServiceAPI(ComponentScope.APPLICATION)
 public interface ProjectFrameAllocator {
     @RequiredUIAccess
-    Object allocateFrame(ProjectOpenContext context);
+    Object allocateFrame(Project project, ProjectOpenContext context);
 
-    @RequiredUIAccess
-    void initializeFrame();
+    <I, O extends Project> Coroutine<I, O> allocateFrame(ProjectOpenContext context, Coroutine<I, O> in);
+
+    <I, O> Coroutine<I, O> initializeSteps(Project project, Coroutine<I, O> in);
+
+    <I, O> Coroutine<I, O> postSteps(Project project, Coroutine<I, O> in);
 }

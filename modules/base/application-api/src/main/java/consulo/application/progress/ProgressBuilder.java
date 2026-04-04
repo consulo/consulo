@@ -19,21 +19,18 @@ import consulo.ui.UIAccess;
 import consulo.util.concurrent.coroutine.Coroutine;
 
 import java.util.concurrent.CompletableFuture;
-import java.util.function.Function;
+import java.util.function.Supplier;
 
 /**
  * @author VISTALL
  * @since 2025-05-06
  */
 public interface ProgressBuilder {
-    
     ProgressBuilder cancelable();
 
-    
     ProgressBuilder modal();
 
-    
     <V> CompletableFuture<V> execute(UIAccess uiAccess,
-                                     Function<Coroutine<?, V>, Coroutine<?, V>> pipelineBuilder);
+                                     Supplier<Coroutine<?, V>> supplier);
 
 }

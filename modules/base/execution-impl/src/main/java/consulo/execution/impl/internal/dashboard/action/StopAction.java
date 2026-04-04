@@ -28,11 +28,6 @@ public final class StopAction extends DumbAwareAction {
     super(ActionLocalize.actionRundashboardStopText(), LocalizeValue.empty(), PlatformIconGroup.actionsSuspend());
   }
 
-//  @Override
-//  public @NotNull ActionUpdateThread getActionUpdateThread() {
-//    return ActionUpdateThread.BGT;
-//  }
-
   @Override
   public void update(AnActionEvent e) {
     Project project = e.getData(Project.KEY);

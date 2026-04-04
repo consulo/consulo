@@ -18,6 +18,7 @@ package consulo.versionControlSystem.impl.internal.change.action;
 import consulo.application.dumb.DumbAware;
 import consulo.document.FileDocumentManager;
 import consulo.project.Project;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
@@ -42,7 +43,7 @@ public class RollbackDialogAction extends AnAction implements DumbAware {
   @Override
   @RequiredUIAccess
   public void actionPerformed(AnActionEvent e) {
-    FileDocumentManager.getInstance().saveAllDocuments();
+    FileDocumentManager.getInstance().saveAllDocuments(UIAccess.current());
     Change[] changes = e.getRequiredData(VcsDataKeys.CHANGES);
     Project project = e.getRequiredData(Project.KEY);
     ChangesBrowser browser = e.getData(ChangesBrowser.DATA_KEY);

@@ -6,7 +6,6 @@ import consulo.application.ui.UISettings;
 import consulo.codeEditor.EditorFactory;
 import consulo.codeEditor.PersistentEditorSettings;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.ActionUpdateThread;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.ToggleAction;
 
@@ -38,9 +37,4 @@ public class ShowBreakpointsOverLineNumbersAction extends ToggleAction implement
         }
     }
 
-    @Override
-    
-    public ActionUpdateThread getActionUpdateThread() {
-        return ActionUpdateThread.BGT;
-    }
 }

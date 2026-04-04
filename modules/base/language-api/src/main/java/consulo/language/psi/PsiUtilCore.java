@@ -41,6 +41,7 @@ import consulo.language.version.LanguageVersion;
 import consulo.logging.Logger;
 import consulo.logging.attachment.AttachmentFactory;
 import consulo.navigation.ItemPresentation;
+import consulo.navigation.NavigateOptions;
 import consulo.project.Project;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.TimeoutUtil;
@@ -449,13 +450,7 @@ public class PsiUtilCore {
 
         @Override
         @RequiredReadAction
-        public boolean canNavigate() {
-            throw createException();
-        }
-
-        @Override
-        @RequiredReadAction
-        public boolean canNavigateToSource() {
+        public NavigateOptions getNavigateOptions() {
             throw createException();
         }
 

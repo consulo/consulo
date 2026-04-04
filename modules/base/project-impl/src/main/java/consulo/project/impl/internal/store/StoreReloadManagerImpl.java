@@ -109,10 +109,10 @@ public class StoreReloadManagerImpl implements StoreReloadManager, Disposable {
         }
 
         if (myDialogShow.compareAndSet(false, true)) {
-            shouldReloadProject(myProject).thenAccept(restart -> {
+            shouldReloadProject(myProject).whenComplete((restart, error) -> {
                 myDialogShow.set(false);
 
-                if (restart) {
+                if (error == null && restart) {
                     myProjectManager.reloadProject(myProject, myProject.getUIAccess());
                 }
             });

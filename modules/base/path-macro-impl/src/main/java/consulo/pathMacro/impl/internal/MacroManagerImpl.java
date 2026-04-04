@@ -149,11 +149,6 @@ public final class MacroManagerImpl implements MacroManager {
       String macroNameWithParamStart = "$" + macro.getName() + "(";
       if (str.contains(name)) {
         String expanded = macro.expand(dataContext);
-        //if (dataContext instanceof DataManagerImpl.MyDataContext) {
-        //  // hack: macro.expand() can cause UI events such as showing dialogs ('Prompt' macro) which may 'invalidate' the datacontext
-        //  // since we know exactly that context is valid, we need to update its event count
-        //  ((DataManagerImpl.MyDataContext)dataContext).setEventCount(IdeEventQueue.getInstance().getEventCount());
-        //}
         if (expanded == null) {
           expanded = "";
         }

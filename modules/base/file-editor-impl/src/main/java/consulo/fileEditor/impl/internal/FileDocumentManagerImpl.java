@@ -1,6 +1,7 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.fileEditor.impl.internal;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.access.RequiredWriteAction;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
@@ -30,7 +31,7 @@ import consulo.language.internal.PomAspectGuard;
 import consulo.language.internal.PsiFileInternal;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
-import consulo.language.psi.internal.ExternalChangeAction;
+import consulo.language.internal.ExternalChangeActionUtil;
 import consulo.logging.Logger;
 import consulo.platform.base.localize.CommonLocalize;
 import consulo.project.Project;
@@ -106,7 +107,7 @@ public class FileDocumentManagerImpl implements FileDocumentManagerEx, SafeWrite
         @Override
         public void documentChanged(DocumentEvent e) {
             Document document = e.getDocument();
-            if (!Application.get().hasWriteAction(ExternalChangeAction.ExternalDocumentChange.class)) {
+            if (!ExternalChangeActionUtil.isExternalDocumentChangeInProgress()) {
                 myUnsavedDocuments.add(document);
             }
             Project project = CommandProcessor.getInstance().getCurrentCommandProject();
@@ -146,7 +147,7 @@ public class FileDocumentManagerImpl implements FileDocumentManagerEx, SafeWrite
             if (!manager.myUnsavedDocuments.isEmpty()) {
                 manager.myOnClose = true;
                 try {
-                    manager.saveAllDocuments();
+                    manager.saveAllDocuments(UIAccess.current());
                 }
                 finally {
                     manager.myOnClose = false;
@@ -186,8 +187,8 @@ public class FileDocumentManagerImpl implements FileDocumentManagerEx, SafeWrite
         }
     }
 
+    @RequiredReadAction
     @Override
-    @RequiredUIAccess
     public @Nullable Document getDocument(VirtualFile file) {
         Application.get().assertReadAccessAllowed();
         DocumentEx document = (DocumentEx) getCachedDocument(file);
@@ -323,13 +324,10 @@ public class FileDocumentManagerImpl implements FileDocumentManagerEx, SafeWrite
         });
     }
 
-    /**
-     * @param isExplicit caused by user directly (Save action) or indirectly (e.g. Compile)
-     */
     @Override
-    @RequiredUIAccess
-    public void saveAllDocuments(boolean isExplicit) {
-        UIAccess.assertIsUIThread();
+    @RequiredWriteAction
+    public void saveAllDocuments(UIAccess uiAccess, boolean isExplicit) {
+        Application.get().assertWriteAccessAllowed();
 
         myMultiCaster.beforeAllDocumentsSaving();
         if (myUnsavedDocuments.isEmpty()) {
@@ -363,7 +361,7 @@ public class FileDocumentManagerImpl implements FileDocumentManagerEx, SafeWrite
         }
 
         if (!failedToSave.isEmpty()) {
-            handleErrorsOnSave(failedToSave);
+            uiAccess.give(() -> handleErrorsOnSave(failedToSave));
         }
     }
 
@@ -688,28 +686,25 @@ public class FileDocumentManagerImpl implements FileDocumentManagerEx, SafeWrite
                 .name(UILocalize.fileCacheConflictAction())
                 .undoConfirmationPolicy(UndoConfirmationPolicy.REQUEST_CONFIRMATION)
                 .inWriteAction()
-                .run(new ExternalChangeAction.ExternalDocumentChange(document, project) {
-                    @Override
-                    public void run() {
-                        if (!isBinaryWithoutDecompiler(file)) {
-                            LoadTextUtil.clearCharsetAutoDetectionReason(file);
-                            file.setBOM(null); // reset BOM in case we had one and the external change stripped it away
-                            file.setCharset(null, null, false);
-                            boolean wasWritable = document.isWritable();
-                            document.setReadOnly(false);
-                            boolean tooLarge = RawFileLoader.getInstance().isTooLarge(file.getLength());
-                            isReloadable.set(isReloadable(file, document, project));
-                            if (isReloadable.get()) {
-                                CharSequence reloaded = tooLarge
-                                    ? LoadTextUtil.loadText(file, getPreviewCharCount(file))
-                                    : LoadTextUtil.loadText(file);
-                                ((DocumentEx) document).replaceText(reloaded, file.getModificationStamp());
-                                document.putUserData(BIG_FILE_PREVIEW, tooLarge ? Boolean.TRUE : null);
-                            }
-                            document.setReadOnly(!wasWritable);
+                .run(ExternalChangeActionUtil.externalDocumentChangeAction(() -> {
+                    if (!isBinaryWithoutDecompiler(file)) {
+                        LoadTextUtil.clearCharsetAutoDetectionReason(file);
+                        file.setBOM(null); // reset BOM in case we had one and the external change stripped it away
+                        file.setCharset(null, null, false);
+                        boolean wasWritable = document.isWritable();
+                        document.setReadOnly(false);
+                        boolean tooLarge = RawFileLoader.getInstance().isTooLarge(file.getLength());
+                        isReloadable.set(isReloadable(file, document, project));
+                        if (isReloadable.get()) {
+                            CharSequence reloaded = tooLarge
+                                ? LoadTextUtil.loadText(file, getPreviewCharCount(file))
+                                : LoadTextUtil.loadText(file);
+                            ((DocumentEx) document).replaceText(reloaded, file.getModificationStamp());
+                            document.putUserData(BIG_FILE_PREVIEW, tooLarge ? Boolean.TRUE : null);
                         }
+                        document.setReadOnly(!wasWritable);
                     }
-                });
+                }));
         }
         if (isReloadable.get()) {
             myMultiCaster.fileContentReloaded(file, document);

@@ -16,6 +16,7 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiUtilCore;
 import consulo.language.util.LanguageUtil;
 import consulo.localize.LocalizeValue;
+import consulo.navigation.NavigateOptions;
 import consulo.navigation.Navigatable;
 import consulo.project.Project;
 import consulo.ui.ex.action.AnAction;
@@ -132,13 +133,8 @@ public class ClassSearchEverywhereContributor extends AbstractGotoSEContributor 
                     }
 
                     @Override
-                    public boolean canNavigate() {
-                        return delegate.canNavigate();
-                    }
-
-                    @Override
-                    public boolean canNavigateToSource() {
-                        return delegate.canNavigateToSource();
+                    public NavigateOptions getNavigateOptions() {
+                        return delegate.getNavigateOptions();
                     }
                 };
             }

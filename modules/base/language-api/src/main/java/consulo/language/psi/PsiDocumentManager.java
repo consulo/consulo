@@ -1,6 +1,7 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.language.psi;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.document.Document;
@@ -30,7 +31,6 @@ public abstract class PsiDocumentManager {
     return project.getComponent(PsiDocumentManager.class);
   }
 
-  
   public static ActionCallback asyncCommitDocuments(Project project) {
     if (project.isDisposed()) return ActionCallback.DONE;
     PsiDocumentManager documentManager = PsiDocumentManager.getInstance(project);
@@ -57,6 +57,7 @@ public abstract class PsiDocumentManager {
    * @param document the document for which the PSI file is requested.
    * @return the PSI file instance.
    */
+  @RequiredReadAction
   public abstract @Nullable PsiFile getPsiFile(Document document);
 
   /**
@@ -65,6 +66,7 @@ public abstract class PsiDocumentManager {
    * @param document the document for which the PSI file is requested.
    * @return the PSI file instance, or {@code null} if there is currently no cached PSI tree for the file.
    */
+  @RequiredReadAction
   public abstract @Nullable PsiFile getCachedPsiFile(Document document);
 
   /**

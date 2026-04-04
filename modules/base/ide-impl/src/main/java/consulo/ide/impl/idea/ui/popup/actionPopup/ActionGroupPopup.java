@@ -1,6 +1,8 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.ui.popup.actionPopup;
 
+import consulo.application.progress.EmptyProgressIndicator;
+import consulo.application.progress.ProgressIndicator;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
 import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionImplUtil;
@@ -25,6 +27,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.BiPredicate;
 import java.util.function.Predicate;
 
@@ -34,6 +37,7 @@ public class ActionGroupPopup extends ListPopupImpl {
     private final Runnable myDisposeCallback;
     private final Component myComponent;
     private final String myActionPlace;
+    private final ProgressIndicator myExpansionIndicator = new EmptyProgressIndicator();
 
     public ActionGroupPopup(
         String title,
@@ -125,10 +129,8 @@ public class ActionGroupPopup extends ListPopupImpl {
             null,
             createStep(
                 title,
-                actionGroup,
                 dataContext,
                 showNumbers,
-                useAlphaAsNumbers,
                 showDisabledActions,
                 honorActionMnemonics,
                 preselectActionCondition,
@@ -143,6 +145,28 @@ public class ActionGroupPopup extends ListPopupImpl {
             forceHeavyPopup,
             customFilter
         );
+
+        // Start async population of action items — refresh list model on EDT when complete
+        ActionPopupStep.createActionItems(
+            actionGroup,
+            dataContext,
+            showNumbers,
+            useAlphaAsNumbers,
+            showDisabledActions,
+            honorActionMnemonics,
+            actionPlace,
+            presentationFactory,
+            myExpansionIndicator
+        ).thenAccept(items -> SwingUtilities.invokeLater(() -> {
+            if (isDisposed()) return;
+            ActionPopupStep step = (ActionPopupStep) getListStep();
+            step.setItems(items);
+            getListModel().syncModel();
+            // Update visible row count and resize popup to fit new items
+            int effectiveMaxRows = maxRowCount <= 0 ? 30 : maxRowCount;
+            getList().setVisibleRowCount(Math.min(effectiveMaxRows, getListModel().getSize()));
+            pack(true, true);
+        }));
     }
 
     public ActionGroupPopup(
@@ -179,7 +203,6 @@ public class ActionGroupPopup extends ListPopupImpl {
         });
     }
 
-    
     private Presentation updateActionItem(ActionPopupItem actionItem) {
         AnAction action = actionItem.getAction();
         Presentation presentation = new Presentation();
@@ -200,10 +223,8 @@ public class ActionGroupPopup extends ListPopupImpl {
 
     private static ListPopupStep<ActionPopupItem> createStep(
         String title,
-        ActionGroup actionGroup,
         DataContext dataContext,
         boolean showNumbers,
-        boolean useAlphaAsNumbers,
         boolean showDisabledActions,
         boolean honorActionMnemonics,
         Predicate<? super AnAction> preselectActionCondition,
@@ -219,23 +240,13 @@ public class ActionGroupPopup extends ListPopupImpl {
 
         LOG.assertTrue(component != null, "dataContext has no component for new ListPopupStep");
 
-        java.util.List<ActionPopupItem> items = ActionPopupStep.createActionItems(
-            actionGroup,
-            dataContext,
-            showNumbers,
-            useAlphaAsNumbers,
-            showDisabledActions,
-            honorActionMnemonics,
-            actionPlace,
-            presentationFactory
-        );
-
+        // Create step with empty items — async expansion is started by the calling constructor
         return new ActionPopupStep(
-            items,
+            new java.util.ArrayList<>(),
             title,
             PopupFactoryImpl.getComponentContextSupplier(component),
             actionPlace,
-            showNumbers || honorActionMnemonics && itemsHaveMnemonics(items),
+            showNumbers || honorActionMnemonics,
             preselectActionCondition,
             autoSelection,
             showDisabledActions,
@@ -244,11 +255,10 @@ public class ActionGroupPopup extends ListPopupImpl {
     }
 
     /**
-     * @deprecated Use {@link ActionPopupStep#createActionItems(ActionGroup, DataContext, boolean, boolean, boolean, boolean, String, BasePresentationFactory)} instead.
+     * @deprecated Use {@link ActionPopupStep#createActionItems(ActionGroup, DataContext, boolean, boolean, boolean, boolean, String, PresentationFactory)} instead.
      */
     @Deprecated
-    
-    public static java.util.List<ActionPopupItem> getActionItems(
+    public static CompletableFuture<java.util.List<ActionPopupItem>> getActionItems(
         ActionGroup actionGroup,
         DataContext dataContext,
         boolean showNumbers,
@@ -271,6 +281,7 @@ public class ActionGroupPopup extends ListPopupImpl {
 
     @Override
     public void dispose() {
+        myExpansionIndicator.cancel();
         if (myDisposeCallback != null) {
             myDisposeCallback.run();
         }

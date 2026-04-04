@@ -18,12 +18,12 @@ package consulo.desktop.awt.fileChooser.impl;
 import consulo.application.Application;
 import consulo.application.ApplicationPropertiesComponent;
 import consulo.application.SaveAndSyncHandler;
-import consulo.application.impl.internal.IdeaModalityState;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.application.util.registry.Registry;
 import consulo.component.ComponentManager;
 import consulo.component.util.Iconable;
-import consulo.dataContext.DataProvider;
+import consulo.dataContext.DataSink;
+import consulo.dataContext.UiDataProvider;
 import consulo.desktop.awt.application.DesktopSaveAndSyncHandlerImpl;
 import consulo.disposer.Disposer;
 import consulo.fileChooser.*;
@@ -33,10 +33,12 @@ import consulo.ide.impl.idea.openapi.fileChooser.ex.FileSystemTreeImpl;
 import consulo.ide.impl.idea.openapi.fileChooser.ex.PathField;
 import consulo.ide.impl.idea.openapi.fileChooser.impl.FileChooserUtil;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
+import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.wm.event.ApplicationActivationListener;
+import consulo.ui.ModalityState;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.action.*;
@@ -50,12 +52,10 @@ import consulo.ui.ex.localize.UILocalize;
 import consulo.ui.image.Image;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.concurrent.AsyncResult;
-import consulo.util.dataholder.Key;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
-import consulo.virtualFileSystem.util.VirtualFileUtil;
 import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
@@ -111,7 +111,6 @@ public class FileChooserDialogImpl extends DialogWrapper implements FileChooserD
     }
 
     @Override
-    
     @RequiredUIAccess
     public VirtualFile[] choose(@Nullable ComponentManager project, VirtualFile... toSelect) {
         init();
@@ -147,7 +146,6 @@ public class FileChooserDialogImpl extends DialogWrapper implements FileChooserD
         }
     }
 
-    
     @RequiredUIAccess
     @Override
     public AsyncResult<VirtualFile[]> chooseAsync(@Nullable ComponentManager project, VirtualFile[] toSelect) {
@@ -180,7 +178,6 @@ public class FileChooserDialogImpl extends DialogWrapper implements FileChooserD
     }
 
     @RequiredUIAccess
-    
     @Override
     public AsyncResult<VirtualFile[]> chooseAsync(@Nullable VirtualFile toSelect) {
         init();
@@ -239,7 +236,6 @@ public class FileChooserDialogImpl extends DialogWrapper implements FileChooserD
         ApplicationPropertiesComponent.getInstance().setValues(RECENT_FILES_KEY, ArrayUtil.toStringArray(files));
     }
 
-    
     private String[] getRecentFiles() {
         String[] array = ApplicationPropertiesComponent.getInstance().getValues(RECENT_FILES_KEY);
         if (array == null) {
@@ -367,7 +363,7 @@ public class FileChooserDialogImpl extends DialogWrapper implements FileChooserD
                 new ApplicationActivationListener() {
                     @Override
                     public void applicationActivated(IdeFrame ideFrame) {
-                        ((DesktopSaveAndSyncHandlerImpl)SaveAndSyncHandler.getInstance()).maybeRefresh(IdeaModalityState.current());
+                        ((DesktopSaveAndSyncHandlerImpl)SaveAndSyncHandler.getInstance()).maybeRefresh(ModalityState.nonModal());
                     }
                 }
             );
@@ -417,7 +413,7 @@ public class FileChooserDialogImpl extends DialogWrapper implements FileChooserD
         }
 
         List<VirtualFile> selectedFiles = Arrays.asList(getSelectedFilesInt());
-        VirtualFile[] files = VirtualFileUtil.toVirtualFileArray(FileChooserUtil.getChosenFiles(myChooserDescriptor, selectedFiles));
+        VirtualFile[] files = VfsUtilCore.toVirtualFileArray(FileChooserUtil.getChosenFiles(myChooserDescriptor, selectedFiles));
         if (files.length == 0) {
             myChosenFiles = VirtualFile.EMPTY_ARRAY;
             close(CANCEL_EXIT_CODE);
@@ -479,7 +475,7 @@ public class FileChooserDialogImpl extends DialogWrapper implements FileChooserD
                     selectInTree(new VirtualFile[]{files.get(0)}, true);
                 }
                 else {
-                    selectInTree(VirtualFileUtil.toVirtualFileArray(files), true);
+                    selectInTree(VfsUtilCore.toVirtualFileArray(files), true);
                 }
             }
         });
@@ -487,7 +483,6 @@ public class FileChooserDialogImpl extends DialogWrapper implements FileChooserD
         return tree;
     }
 
-    
     protected Tree createInternalTree() {
         return new Tree();
     }
@@ -565,23 +560,16 @@ public class FileChooserDialogImpl extends DialogWrapper implements FileChooserD
         }
     }
 
-    protected final class MyPanel extends JPanel implements DataProvider {
+    protected final class MyPanel extends JPanel implements UiDataProvider {
         public MyPanel() {
             super(new BorderLayout(0, 0));
         }
 
         @Override
-        public Object getData(Key<?> dataId) {
-            if (VirtualFile.KEY_OF_ARRAY == dataId) {
-                return myFileSystemTree.getSelectedFiles();
-            }
-            else if (PathField.PATH_FIELD == dataId) {
-                return (PathField)FileChooserDialogImpl.this::toggleShowTextField;
-            }
-            else if (FileSystemTree.DATA_KEY == dataId) {
-                return myFileSystemTree;
-            }
-            return myChooserDescriptor.getUserData(dataId);
+        public void uiDataSnapshot(DataSink sink) {
+            sink.lazy(VirtualFile.KEY_OF_ARRAY, () -> myFileSystemTree.getSelectedFiles());
+            sink.set(PathField.PATH_FIELD, (PathField)FileChooserDialogImpl.this::toggleShowTextField);
+            sink.set(FileSystemTree.DATA_KEY, myFileSystemTree);
         }
     }
 

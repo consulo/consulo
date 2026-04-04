@@ -15,12 +15,12 @@
  */
 package consulo.ide.impl.idea.openapi.actionSystem.impl;
 
-import consulo.application.Application;
+import consulo.application.progress.EmptyProgressIndicator;
+import consulo.application.progress.ProgressIndicator;
 import consulo.dataContext.AsyncDataContext;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
 import consulo.ui.UIAccess;
-import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
 
 import java.util.ArrayList;
@@ -36,63 +36,84 @@ import java.util.function.Predicate;
 public class ActionGroupExpander {
 
     /**
-     * @return actions from the given and nested non-popup groups that are visible after updating
+     * Asynchronously expands the action group, applying the filter and cleaning up separators.
+     *
+     * @return future with actions from the given and nested non-popup groups that are visible after updating
      */
-    @RequiredUIAccess
-    public static List<AnAction> expandActionGroup(ActionGroup group,
-                                                   PresentationFactory presentationFactory,
-                                                   DataContext context,
-                                                   String place,
-                                                   Predicate<AnAction> filter) {
-        List<AnAction> actions = new ActionUpdater(ActionManager.getInstance(),
+    public static CompletableFuture<List<AnAction>> expandActionGroup(ActionGroup group,
+                                                                      PresentationFactory presentationFactory,
+                                                                      DataContext context,
+                                                                      String place,
+                                                                      Predicate<AnAction> filter) {
+        return expandActionGroup(group, presentationFactory, context, place, filter, new EmptyProgressIndicator());
+    }
+
+    public static CompletableFuture<List<AnAction>> expandActionGroup(ActionGroup group,
+                                                                      PresentationFactory presentationFactory,
+                                                                      DataContext context,
+                                                                      String place,
+                                                                      Predicate<AnAction> filter,
+                                                                      ProgressIndicator indicator) {
+        DataContext asyncContext = context instanceof AsyncDataContext
+            ? context
+            : DataManager.getInstance().createAsyncDataContext(context);
+
+        return new ActionUpdater(ActionManager.getInstance(),
             presentationFactory,
-            context,
+            asyncContext,
             place,
             false,
             false,
             UIAccess.current()
-        ).expandActionGroup(group, group instanceof CompactActionGroup);
+        ).expandActionGroupAsync(group, group instanceof CompactActionGroup, indicator).thenApply(rawActions -> {
+            List<AnAction> actions = new ArrayList<>(rawActions);
+            actions.removeIf(filter.negate());
 
-        actions = new ArrayList<>(actions);
-        actions.removeIf(filter.negate());
-
-        while (!actions.isEmpty() && actions.getFirst() instanceof AnSeparator) {
-            actions.removeFirst();
-        }
-
-        while (!actions.isEmpty() && actions.getLast() instanceof AnSeparator) {
-            actions.removeLast();
-        }
-
-        // remove separators if
-        // item
-        // separator="" <-- remove this separator
-        // separator="some"
-        // item
-        ListIterator<AnAction> listed = actions.listIterator();
-        while (listed.hasNext()) {
-            AnAction action = listed.next();
-
-            if (action instanceof AnSeparator separator
-                && separator.getTextValue().isEmpty()
-                && listed.nextIndex() < actions.size()
-                && actions.get(listed.nextIndex()) instanceof AnSeparator) {
-                listed.remove();
+            while (!actions.isEmpty() && actions.getFirst() instanceof AnSeparator) {
+                actions.removeFirst();
             }
-        }
-        
-        return actions;
+
+            while (!actions.isEmpty() && actions.getLast() instanceof AnSeparator) {
+                actions.removeLast();
+            }
+
+            // remove separators if
+            // item
+            // separator="" <-- remove this separator
+            // separator="some"
+            // item
+            ListIterator<AnAction> listed = actions.listIterator();
+            while (listed.hasNext()) {
+                AnAction action = listed.next();
+
+                if (action instanceof AnSeparator separator
+                    && separator.getTextValue().isEmpty()
+                    && listed.nextIndex() < actions.size()
+                    && actions.get(listed.nextIndex()) instanceof AnSeparator) {
+                    listed.remove();
+                }
+            }
+
+            return actions;
+        });
     }
 
-    
     public static CompletableFuture<List<? extends AnAction>> expandActionGroupAsync(ActionGroup group,
                                                                                      PresentationFactory presentationFactory,
                                                                                      DataContext context,
                                                                                      String place) {
+        return expandActionGroupAsync(group, presentationFactory, context, place, new EmptyProgressIndicator());
+    }
+
+    public static CompletableFuture<List<? extends AnAction>> expandActionGroupAsync(ActionGroup group,
+                                                                                     PresentationFactory presentationFactory,
+                                                                                     DataContext context,
+                                                                                     String place,
+                                                                                     ProgressIndicator indicator) {
         if (!(context instanceof AsyncDataContext)) {
             context = DataManager.getInstance().createAsyncDataContext(context);
         }
-        return new ActionUpdater(ActionManager.getInstance(), presentationFactory, context, place, false, false, Application.get().getLastUIAccess())
-            .expandActionGroupAsync(group, group instanceof CompactActionGroup);
+        return new ActionUpdater(ActionManager.getInstance(), presentationFactory, context, place, false, false, UIAccess.current())
+            .expandActionGroupAsync(group, group instanceof CompactActionGroup, indicator);
     }
 }

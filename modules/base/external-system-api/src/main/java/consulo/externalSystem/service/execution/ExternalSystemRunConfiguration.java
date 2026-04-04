@@ -179,7 +179,7 @@ public class ExternalSystemRunConfiguration extends LocatableConfigurationBase {
       }
 
       UIAccess.assertIsUIThread();
-      FileDocumentManager.getInstance().saveAllDocuments();
+      FileDocumentManager.getInstance().saveAllDocuments(UIAccess.current());
 
       ExternalSystemInternalHelper helper = Application.get().getInstance(ExternalSystemInternalHelper.class);
       ExternalSystemTask task = helper.createExecuteSystemTask(myExternalSystemId, myProject, tasks, mySettings.getVmOptions(), mySettings.getScriptParameters(), debuggerSetup);

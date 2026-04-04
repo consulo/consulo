@@ -21,11 +21,8 @@ import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.application.ApplicationProperties;
 import consulo.application.impl.internal.BaseApplication;
-import consulo.application.impl.internal.IdeaModalityState;
-import consulo.application.impl.internal.LaterInvocator;
-import consulo.application.impl.internal.ReadMostlyRWLock;
+import consulo.application.impl.internal.StampedRWLock;
 import consulo.application.impl.internal.concurent.AppScheduledExecutorService;
-import consulo.application.impl.internal.progress.CoreProgressManager;
 import consulo.application.impl.internal.start.CommandLineArgs;
 import consulo.application.impl.internal.start.StartupUtil;
 import consulo.application.internal.AppLifecycleListener;
@@ -41,7 +38,6 @@ import consulo.component.ComponentManager;
 import consulo.component.internal.ComponentBinding;
 import consulo.component.internal.inject.InjectingContainerBuilder;
 import consulo.desktop.application.util.Restarter;
-import consulo.desktop.awt.progress.PotemkinProgress;
 import consulo.desktop.awt.ui.IdeEventQueue;
 import consulo.desktop.awt.ui.impl.AWTUIAccessImpl;
 import consulo.desktop.boot.main.windows.WindowsCommandLineProcessor;
@@ -50,7 +46,6 @@ import consulo.disposer.Disposer;
 import consulo.ide.impl.idea.ide.ApplicationActivationStateManager;
 import consulo.ide.impl.idea.ide.CommandLineProcessor;
 import consulo.ide.impl.idea.ide.GeneralSettings;
-import consulo.ide.localize.IdeLocalize;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.logging.attachment.Attachment;
@@ -59,10 +54,9 @@ import consulo.logging.internal.LogEventException;
 import consulo.platform.base.localize.CommonLocalize;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
-import consulo.project.internal.ProjectManagerEx;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.wm.WindowManager;
-import consulo.ui.ModalityState;
+import consulo.application.concurrent.coroutine.WriteLock;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.AppIcon;
@@ -70,9 +64,15 @@ import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.MessageDialogBuilder;
 import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.UIUtil;
-import consulo.ui.ex.awt.internal.EDT;
+import consulo.ui.ex.coroutine.UIAction;
 import consulo.undoRedo.CommandProcessor;
 import consulo.util.collection.ArrayUtil;
+import consulo.util.concurrent.coroutine.Continuation;
+import consulo.util.concurrent.coroutine.Coroutine;
+import consulo.util.concurrent.coroutine.CoroutineContext;
+import consulo.util.concurrent.coroutine.CoroutineScope;
+import consulo.util.concurrent.coroutine.step.CodeExecution;
+import consulo.util.concurrent.coroutine.step.CompletableFutureStep;
 import consulo.util.lang.ShutDownTracker;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.ref.SimpleReference;
@@ -83,13 +83,10 @@ import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
 import java.util.List;
-import java.util.function.BooleanSupplier;
-import java.util.function.Consumer;
+import java.util.concurrent.CompletableFuture;
 
 public class DesktopApplicationImpl extends BaseApplication {
     private static final Logger LOG = Logger.getInstance(DesktopApplicationImpl.class);
-
-    private final ModalityInvokator myInvokator = new ModalityInvokatorImpl();
 
     private final boolean myHeadlessMode;
     private final boolean myIsInternal;
@@ -121,11 +118,13 @@ public class DesktopApplicationImpl extends BaseApplication {
             StartupUtil.addExternalInstanceListener(commandLineArgs -> {
                 LOG.info("ApplicationImpl.externalInstanceListener invocation");
 
-                CommandLineProcessor.processExternalCommandLine(commandLineArgs, null).doWhenDone(project -> {
-                    IdeFrame frame = WindowManager.getInstance().getIdeFrame(project);
+                CommandLineProcessor.processExternalCommandLine(commandLineArgs, null).whenComplete((project, error) -> {
+                    if (error == null && project != null) {
+                        IdeFrame frame = WindowManager.getInstance().getIdeFrame(project);
 
-                    if (frame != null) {
-                        AppIcon.getInstance().requestFocus(frame.getWindow());
+                        if (frame != null) {
+                            AppIcon.getInstance().requestFocus(frame.getWindow());
+                        }
                     }
                 });
             });
@@ -140,7 +139,7 @@ public class DesktopApplicationImpl extends BaseApplication {
             };
         }
 
-        Thread edt = UIUtil.invokeAndWaitIfNeeded(() -> {
+        UIUtil.invokeAndWaitIfNeeded(() -> {
             // instantiate AppDelayQueue which starts "Periodic task thread" which we'll mark busy to prevent this EDT to die
             // that thread was chosen because we know for sure it's running
             AppScheduledExecutorService service = (AppScheduledExecutorService)AppExecutorUtil.getAppScheduledExecutorService();
@@ -149,12 +148,10 @@ public class DesktopApplicationImpl extends BaseApplication {
             Disposer.register(this, () -> {
                 AWTAutoShutdownHacking.notifyThreadFree(thread); // allow for EDT to exit - needed for Upsource
             });
-            return Thread.currentThread();
+            return null;
         });
 
-        myLock = new ReadMostlyRWLock(edt);
-
-        UIUtil.invokeAndWaitIfNeeded((Runnable)() -> acquireWriteIntentLock(getClass().getName()));
+        myLock = new StampedRWLock();
 
         NoSwingUnderWriteAction.watchForEvents(this);
     }
@@ -174,39 +171,21 @@ public class DesktopApplicationImpl extends BaseApplication {
         super.bootstrapInjectingContainer(builder);
     }
 
-    @RequiredUIAccess
-    private boolean disposeSelf(boolean checkCanCloseProject) {
-        ProjectManagerEx manager = ProjectManagerEx.getInstanceEx();
-        boolean[] canClose = {true};
-        boolean wantSaveSettingsAgain = false;
-        for (Project project : manager.getOpenProjects()) {
-            try {
-                CommandProcessor.getInstance().newCommand()
-                    .project(project)
-                    .name(ApplicationLocalize.commandExit())
-                    .run(() -> {
-                        if (!manager.closeProject(project, true, true, checkCanCloseProject)) {
-                            canClose[0] = false;
-                        }
-                    });
-                wantSaveSettingsAgain = true;
-            }
-            catch (Throwable e) {
-                LOG.error(e);
-            }
-            if (!canClose[0]) {
-                return false;
-            }
+    private CompletableFuture<Boolean> disposeAllProjectsAsync(boolean checkCanClose, UIAccess uiAccess) {
+        ProjectManager manager = ProjectManager.getInstance();
+        Project[] projects = manager.getOpenProjects();
+
+        // Close projects sequentially - if any vetoes, stop
+        CompletableFuture<Boolean> chain = CompletableFuture.completedFuture(true);
+        for (Project project : projects) {
+            chain = chain.thenCompose(allClosed -> {
+                if (!allClosed) {
+                    return CompletableFuture.completedFuture(false);
+                }
+                return manager.closeProjectAsync(project, uiAccess, checkCanClose, true, true);
+            });
         }
-
-        if (wantSaveSettingsAgain) {
-            saveSettings();
-        }
-
-        runWriteAction(() -> Disposer.dispose(DesktopApplicationImpl.this));
-
-        Disposer.assertIsEmpty();
-        return true;
+        return chain;
     }
 
     @Override
@@ -217,79 +196,6 @@ public class DesktopApplicationImpl extends BaseApplication {
     @Override
     public boolean isHeadlessEnvironment() {
         return myHeadlessMode;
-    }
-
-    
-    public ModalityInvokator getInvokator() {
-        return myInvokator;
-    }
-
-    @Override
-    public void invokeLater(Runnable runnable) {
-        invokeLater(runnable, getDisposed());
-    }
-
-    @Override
-    public void invokeLater(Runnable runnable, BooleanSupplier expired) {
-        invokeLater(runnable, IdeaModalityState.defaultModalityState(), expired);
-    }
-
-    @Override
-    public void invokeLater(Runnable runnable, ModalityState state) {
-        invokeLater(runnable, state, getDisposed());
-    }
-
-    @Override
-    public void invokeLater(
-        Runnable runnable,
-        ModalityState state,
-        BooleanSupplier expired
-    ) {
-        LaterInvocator.invokeLaterWithCallback(() -> runIntendedWriteActionOnCurrentThread(runnable), state, expired, null);
-    }
-
-    @RequiredUIAccess
-    @Override
-    public void invokeAndWait(Runnable runnable, ModalityState modalityState) {
-        if (isDispatchThread()) {
-            runnable.run();
-            return;
-        }
-        if (SwingUtilities.isEventDispatchThread()) {
-            runIntendedWriteActionOnCurrentThread(runnable);
-            return;
-        }
-
-        if (holdsReadLock()) {
-            throw new IllegalStateException("Calling invokeAndWait from read-action leads to possible deadlock.");
-        }
-
-        LaterInvocator.invokeAndWait(() -> runIntendedWriteActionOnCurrentThread(runnable), modalityState);
-    }
-
-    @Override
-    
-    public ModalityState getCurrentModalityState() {
-        return LaterInvocator.getCurrentModalityState();
-    }
-
-    @Override
-    
-    public ModalityState getModalityStateForComponent(Component c) {
-        if (!isDispatchThread()) {
-            LOG.debug("please, use application dispatch thread to get a modality state");
-        }
-        Window window = UIUtil.getWindow(c);
-        if (window == null) {
-            return getNoneModalityState();
-        }
-        return LaterInvocator.modalityStateForWindow(window);
-    }
-
-    @Override
-    
-    public ModalityState getDefaultModalityState() {
-        return isDispatchThread() ? getCurrentModalityState() : CoreProgressManager.getCurrentThreadProgressModality();
     }
 
     @RequiredUIAccess
@@ -337,9 +243,8 @@ public class DesktopApplicationImpl extends BaseApplication {
 
         exiting = true;
         try {
-            if (!force && !exitConfirmed && getDefaultModalityState() != IdeaModalityState.nonModal()) {
-                return;
-            }
+            // modality state is always nonModal now — this check is always false
+            // keeping the structure for potential future use
 
             Runnable runnable = new Runnable() {
                 @Override
@@ -353,7 +258,6 @@ public class DesktopApplicationImpl extends BaseApplication {
                     getMessageBus().syncPublisher(AppLifecycleListener.class).appClosing();
                     myDisposeInProgress = true;
                     doExit(allowListenersToCancel, restart);
-                    myDisposeInProgress = false;
                 }
             };
 
@@ -370,29 +274,57 @@ public class DesktopApplicationImpl extends BaseApplication {
     }
 
     @RequiredUIAccess
-    private boolean doExit(boolean allowListenersToCancel, boolean restart) {
-        saveSettings();
+    private void doExit(boolean allowListenersToCancel, boolean restart) {
+        UIAccess uiAccess = UIAccess.current();
 
-        if (allowListenersToCancel && !canExit()) {
-            return false;
-        }
+        CoroutineContext ctx = coroutineContext().copy();
+        ctx.putCopyableUserData(UIAccess.KEY, uiAccess);
+        CoroutineScope scope = new CoroutineScope(ctx);
 
-        boolean success = disposeSelf(allowListenersToCancel);
-        if (!success || isUnitTestMode()) {
-            return false;
-        }
-
-        int exitCode = 0;
-        if (restart && Restarter.isSupported()) {
-            try {
-                exitCode = Restarter.scheduleRestart();
+        Coroutine.<Void, Void>first(UIAction.<Void, Void>apply((input, continuation) -> {
+            // Step 1 (UIAction): Check canExit veto (may show dialogs)
+            if (allowListenersToCancel && !canExit()) {
+                myDisposeInProgress = false;
+                @SuppressWarnings("unchecked")
+                Continuation<Void> typed = (Continuation<Void>) continuation;
+                typed.finishEarly(null);
+                return null;
             }
-            catch (IOException e) {
-                LOG.warn("Cannot restart", e);
+            return null;
+        })).then(CompletableFutureStep.<Void, Boolean>await(ignored -> {
+            // Step 2 (CompletableFutureStep): Close all projects asynchronously
+            return disposeAllProjectsAsync(allowListenersToCancel, uiAccess);
+        })).then(CodeExecution.<Boolean, Boolean>apply((allClosed, continuation) -> {
+            // Step 3 (CodeExecution): Check result and save settings from background
+            if (!allClosed || isUnitTestMode()) {
+                myDisposeInProgress = false;
+                @SuppressWarnings("unchecked")
+                Continuation<Boolean> typed = (Continuation<Boolean>) continuation;
+                typed.finishEarly(Boolean.FALSE);
+                return null;
             }
-        }
-        System.exit(exitCode);
-        return true;
+            saveSettings(uiAccess);
+            return Boolean.TRUE;
+        })).then(WriteLock.<Boolean, Boolean>apply(proceed -> {
+            // Step 4 (WriteLock): Dispose application under write lock (off EDT)
+            Disposer.dispose(DesktopApplicationImpl.this);
+            return proceed;
+        })).then(CodeExecution.<Boolean, Void>apply(proceed -> {
+            // Step 5 (CodeExecution): Assert disposer empty and exit
+            Disposer.assertIsEmpty();
+
+            int exitCode = 0;
+            if (restart && Restarter.isSupported()) {
+                try {
+                    exitCode = Restarter.scheduleRestart();
+                }
+                catch (IOException e) {
+                    LOG.warn("Cannot restart", e);
+                }
+            }
+            System.exit(exitCode);
+            return null;
+        })).runAsync(scope, null);
     }
 
     private static boolean confirmExitIfNeeded(boolean exitConfirmed) {
@@ -422,7 +354,6 @@ public class DesktopApplicationImpl extends BaseApplication {
                 return false;
             }
 
-            
             @Override
             public LocalizeValue getDoNotShowMessage() {
                 return LocalizeValue.localizeTODO("Do not ask me again");
@@ -447,48 +378,12 @@ public class DesktopApplicationImpl extends BaseApplication {
         return true;
     }
 
-    @Override
-    public boolean runWriteActionWithNonCancellableProgressInDispatchThread(
-        LocalizeValue title,
-        @Nullable ComponentManager project,
-        @Nullable JComponent parentComponent,
-        Consumer<? super ProgressIndicator> action
-    ) {
-        return runEdtProgressWriteAction(title, project, parentComponent, LocalizeValue.empty(), action);
-    }
-
-    @Override
-    public boolean runWriteActionWithCancellableProgressInDispatchThread(
-        LocalizeValue title,
-        @Nullable ComponentManager project,
-        @Nullable JComponent parentComponent,
-        Consumer<? super ProgressIndicator> action
-    ) {
-        return runEdtProgressWriteAction(title, project, parentComponent, IdeLocalize.actionStop(), action);
-    }
-
-    private boolean runEdtProgressWriteAction(
-        LocalizeValue title,
-        @Nullable ComponentManager project,
-        @Nullable JComponent parentComponent,
-        LocalizeValue cancelText,
-        Consumer<? super ProgressIndicator> action
-    ) {
-        // Use Potemkin progress in legacy mode; in the new model such execution will always move to a separate thread.
-        return runWriteActionWithClass(action.getClass(), () -> {
-            PotemkinProgress indicator = new PotemkinProgress(title.get(), (Project)project, parentComponent, cancelText);
-            indicator.runInSwingThread(() -> action.accept(indicator));
-            return !indicator.isCanceled();
-        });
-    }
-
     @RequiredReadAction
     @Override
     public void assertReadAccessAllowed() {
         if (!isReadAccessAllowed()) {
             LOG.error(
-                "Read access is allowed from event dispatch thread or inside read-action only" +
-                    " (see consulo.ide.impl.idea.openapi.application.Application.runReadAction())",
+                "Read access is allowed inside read-action only (see Application.runReadAction())",
                 "Current thread: " + describe(Thread.currentThread()),
                 "; dispatch thread: " + EventQueue.isDispatchThread() + "; isDispatchThread(): " + isDispatchThread(),
                 "SystemEventQueueThread: " + describe(getEventQueueThread())
@@ -535,29 +430,21 @@ public class DesktopApplicationImpl extends BaseApplication {
         );
     }
 
-    @RequiredUIAccess
+    @Deprecated
     @Override
     public void assertIsWriteThread() {
-        if (isWriteThread()) {
+        if (isWriteAccessAllowed()) {
             return;
         }
         if (ShutDownTracker.isShutdownHookRunning()) {
             return;
         }
-        assertIsIsWriteThread("Access is allowed from write thread only.");
-    }
-
-    private void assertIsIsWriteThread(String message) {
-        if (isWriteThread()) {
-            return;
-        }
         Attachment dump = AttachmentFactory.get().create("threadDump.txt", ThreadDumper.dumpThreadsToString());
         throw new LogEventException(
-            message,
+            "Write access is allowed inside write-action only.",
             " EventQueue.isDispatchThread()=" + EventQueue.isDispatchThread() +
                 " isDispatchThread()=" + isDispatchThread() +
                 " Toolkit.getEventQueue()=" + Toolkit.getDefaultToolkit().getSystemEventQueue() +
-                " Write Thread=" + ((ReadMostlyRWLock) myLock).writeThread +
                 " Current thread: " + describe(Thread.currentThread()) +
                 " SystemEventQueueThread: " + describe(getEventQueueThread()),
             dump
@@ -572,7 +459,6 @@ public class DesktopApplicationImpl extends BaseApplication {
         LOG.assertTrue(!isDispatchThread(), "This operation is time consuming and must not be called on EDT");
     }
 
-    
     @Override
     public UIAccess getLastUIAccess() {
         return AWTUIAccessImpl.ourInstance;
@@ -606,7 +492,7 @@ public class DesktopApplicationImpl extends BaseApplication {
 
     @Override
     public boolean isCurrentWriteOnUIThread() {
-        return EDT.isEdt(((ReadMostlyRWLock) myLock).writeThread);
+        return myLock.isWriteThread() && isDispatchThread();
     }
 
     @TestOnly

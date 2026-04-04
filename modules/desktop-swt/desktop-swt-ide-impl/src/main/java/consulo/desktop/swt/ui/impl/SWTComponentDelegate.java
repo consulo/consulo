@@ -34,8 +34,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Widget;
 
-import java.util.function.Function;
-
 /**
  * @author VISTALL
  * @since 2021-04-29
@@ -172,13 +170,6 @@ public abstract class SWTComponentDelegate<SWT extends Widget> implements Compon
         }
     }
 
-    
-    @Override
-    public Disposable addUserDataProvider(Function<Key<?>, Object> function) {
-        return myDataObject.addUserDataProvider(function);
-    }
-
-    
     @Override
     public Font getFont() {
         return null;
@@ -189,13 +180,11 @@ public abstract class SWTComponentDelegate<SWT extends Widget> implements Compon
 
     }
 
-    
     @Override
     public <C extends Component, E extends ComponentEvent<C>> ComponentEventListener<C, E> getListenerDispatcher(Class<E> eventClass) {
         return myDataObject.getDispatcher(eventClass);
     }
 
-    
     @Override
     public <C extends Component, E extends ComponentEvent<C>> Disposable addListener(Class<? extends E> eventClass,
                                                                                      ComponentEventListener<C, E> listener) {

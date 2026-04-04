@@ -87,9 +87,14 @@ public class IndentsPass extends TextEditorHighlightingPass implements DumbAware
   }
 
   private long nowStamp() {
-    if (!myEditor.getSettings().isIndentGuidesShown()) return -1;
+    if (!getEditorForRead().getSettings().isIndentGuidesShown()) return -1;
     assert myDocument != null;
     return myDocument.getModificationStamp();
+  }
+
+  private Editor getEditorForRead() {
+    consulo.codeEditor.imaginary.ImaginaryEditor imaginary = getImaginaryEditor();
+    return imaginary != null ? imaginary : myEditor;
   }
 
   @Override
@@ -145,7 +150,7 @@ public class IndentsPass extends TextEditorHighlightingPass implements DumbAware
   }
 
   private List<IndentGuideDescriptor> buildDescriptors() {
-    if (!myEditor.getSettings().isIndentGuidesShown()) return Collections.emptyList();
+    if (!getEditorForRead().getSettings().isIndentGuidesShown()) return Collections.emptyList();
 
     IndentsCalculator calculator = new IndentsCalculator();
     calculator.calculate();
@@ -235,7 +240,7 @@ public class IndentsPass extends TextEditorHighlightingPass implements DumbAware
     void calculate() {
       assert myDocument != null;
       FileType fileType = myFile.getFileType();
-      int tabSize = EditorUtil.getTabSize(myEditor);
+      int tabSize = EditorUtil.getTabSize(getEditorForRead());
 
       for (int line = 0; line < lineIndents.length; line++) {
         ProgressManager.checkCanceled();
@@ -282,7 +287,7 @@ public class IndentsPass extends TextEditorHighlightingPass implements DumbAware
             int lineStart = myDocument.getLineStartOffset(line);
             int lineEnd = myDocument.getLineEndOffset(line);
             int nonWhitespaceOffset = CharArrayUtil.shiftForward(myChars, lineStart, lineEnd, " \t");
-            HighlighterIterator iterator = myEditor.getHighlighter().createIterator(nonWhitespaceOffset);
+            HighlighterIterator iterator = getEditorForRead().getHighlighter().createIterator(nonWhitespaceOffset);
             if (BraceMatchingUtil.isRBraceToken(iterator, myChars, fileType)) {
               indent = topIndent;
             }
@@ -301,7 +306,7 @@ public class IndentsPass extends TextEditorHighlightingPass implements DumbAware
 
     @RequiredReadAction
     private boolean isComment(int offset) {
-      HighlighterIterator it = myEditor.getHighlighter().createIterator(offset);
+      HighlighterIterator it = getEditorForRead().getHighlighter().createIterator(offset);
       IElementType tokenType = (IElementType)it.getTokenType();
       Language language = tokenType.getLanguage();
       return myComments.computeIfAbsent(language, l -> {

@@ -17,6 +17,7 @@ import consulo.project.ui.wm.StatusBarWidgetFactory;
 import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.localize.UILocalize;
+import consulo.ui.UIAccess;
 import consulo.ui.image.Image;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.ReadOnlyAttributeUtil;
@@ -98,7 +99,7 @@ public final class ToggleReadOnlyAttributePanel implements StatusBarWidget.Multi
             if (!isReadOnlyApplicableForFile(file)) {
                 return;
             }
-            FileDocumentManager.getInstance().saveAllDocuments();
+            FileDocumentManager.getInstance().saveAllDocuments(UIAccess.current());
 
             try {
                 WriteAction.run(() -> ReadOnlyAttributeUtil.setReadOnlyAttribute(file, file.isWritable()));

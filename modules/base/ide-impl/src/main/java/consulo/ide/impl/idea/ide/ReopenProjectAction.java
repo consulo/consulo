@@ -20,9 +20,10 @@ import consulo.application.util.UserHomeFileUtil;
 import consulo.ui.ex.awt.internal.IdeEventQueueProxy;
 import consulo.localize.LocalizeValue;
 import consulo.module.content.layer.ModuleExtensionProvider;
+import consulo.application.Application;
 import consulo.project.Project;
 import consulo.project.ProjectOpenContext;
-import consulo.project.impl.internal.ProjectImplUtil;
+import consulo.project.internal.ProjectOpenService;
 import consulo.project.internal.RecentProjectsManager;
 import consulo.project.localize.ProjectLocalize;
 import consulo.project.ui.wm.IdeFrame;
@@ -43,6 +44,7 @@ import org.jspecify.annotations.Nullable;
 
 import java.awt.event.InputEvent;
 import java.io.File;
+import java.nio.file.Path;
 import java.util.List;
 
 /**
@@ -122,6 +124,12 @@ public class ReopenProjectAction extends AnAction implements DumbAware {
         }
 
         ProjectOpenContext context = new ProjectOpenContext();
+        if (forceOpenInNewFrame) {
+            context.putUserData(ProjectOpenContext.FORCE_OPEN_IN_NEW_FRAME, true);
+        }
+        if (project != null) {
+            context.putUserData(ProjectOpenContext.ACTIVE_PROJECT, project);
+        }
         if (myFrameState != null) {
             context.putUserData(IdeFrameState.KEY, myFrameState);
         } else {
@@ -132,7 +140,8 @@ public class ReopenProjectAction extends AnAction implements DumbAware {
             }
         }
 
-        ProjectImplUtil.openAsync(myProjectPath, project, forceOpenInNewFrame, UIAccess.current(), context);
+        Application.get().getInstance(ProjectOpenService.class)
+            .openProjectAsync(Path.of(myProjectPath), UIAccess.current(), context);
     }
 
     public boolean isRemoved() {

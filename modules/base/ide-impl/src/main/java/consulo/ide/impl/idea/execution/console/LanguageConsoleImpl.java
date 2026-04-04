@@ -9,6 +9,7 @@ import consulo.codeEditor.markup.RangeHighlighter;
 import consulo.colorScheme.EditorColorsManager;
 import consulo.dataContext.DataManager;
 import consulo.dataContext.DataProvider;
+import consulo.dataContext.UiDataProvider;
 import consulo.disposer.Disposer;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
@@ -44,17 +45,15 @@ import consulo.project.Project;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.EmptyAction;
-import consulo.ui.ex.awt.AbstractLayoutManager;
-import consulo.ui.ex.awt.JBScrollBar;
+import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.JBScrollPane.Alignment;
-import consulo.ui.ex.awt.JBUI;
-import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.undoRedo.util.UndoUtil;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import org.jspecify.annotations.Nullable;
+import org.jetbrains.annotations.NonNls;
 
 import javax.swing.*;
 import java.awt.*;
@@ -66,7 +65,7 @@ import java.util.Collections;
  * @author Gregory.Shrago
  * In case of REPL consider to use {@link LanguageConsoleBuilder}
  */
-public class LanguageConsoleImpl extends ConsoleViewImpl implements LanguageConsoleViewEx, DataProvider {
+public class LanguageConsoleImpl extends ConsoleViewImpl implements LanguageConsoleViewEx {
     private final Helper myHelper;
 
     private final ConsoleExecutionEditor myConsoleExecutionEditor;
@@ -103,7 +102,6 @@ public class LanguageConsoleImpl extends ConsoleViewImpl implements LanguageCons
         myScrollBar.putClientProperty(Alignment.class, Alignment.BOTTOM);
     }
 
-    
     @Override
     protected final EditorEx doCreateConsoleEditor() {
         return myHistoryViewer;
@@ -113,7 +111,6 @@ public class LanguageConsoleImpl extends ConsoleViewImpl implements LanguageCons
     protected final void disposeEditor() {
     }
 
-    
     @Override
     protected JComponent createCenterComponent() {
         initComponents();
@@ -132,7 +129,7 @@ public class LanguageConsoleImpl extends ConsoleViewImpl implements LanguageCons
         myPanel.add(myConsoleExecutionEditor.getComponent());
         myPanel.add(myScrollBar);
         myPanel.setBackground(TargetAWT.to(myConsoleExecutionEditor.getEditor().getBackgroundColor()));
-        DataManager.registerDataProvider(myPanel, this);
+        ClientProperty.put(myPanel, UiDataProvider.KEY, this);
     }
 
     @Override
@@ -190,7 +187,7 @@ public class LanguageConsoleImpl extends ConsoleViewImpl implements LanguageCons
         return myConsoleExecutionEditor.getPromptAttributes();
     }
 
-    
+
     public ConsolePromptDecorator getConsolePromptDecorator() {
         return myConsoleExecutionEditor.getConsolePromptDecorator();
     }
@@ -216,37 +213,31 @@ public class LanguageConsoleImpl extends ConsoleViewImpl implements LanguageCons
     }
 
     @Override
-    
     public final PsiFile getFile() {
         return myHelper.getFileSafe();
     }
 
     @Override
-    
     public final VirtualFile getVirtualFile() {
         return myConsoleExecutionEditor.getVirtualFile();
     }
 
     @Override
-    
     public final EditorEx getHistoryViewer() {
         return myHistoryViewer;
     }
 
     @Override
-    
     public final Document getEditorDocument() {
         return myConsoleExecutionEditor.getDocument();
     }
 
     @Override
-    
     public final EditorEx getConsoleEditor() {
         return myConsoleExecutionEditor.getEditor();
     }
 
     @Override
-    
     public String getTitle() {
         return myHelper.title;
     }
@@ -271,7 +262,6 @@ public class LanguageConsoleImpl extends ConsoleViewImpl implements LanguageCons
     }
 
     @Override
-    
     public String prepareExecuteAction(boolean addToHistory, boolean preserveMarkup, boolean clearInput) {
         EditorEx editor = getCurrentEditor();
         Document document = editor.getDocument();
@@ -290,7 +280,6 @@ public class LanguageConsoleImpl extends ConsoleViewImpl implements LanguageCons
         return text;
     }
 
-    
     @RequiredUIAccess
     protected String addToHistoryInner(TextRange textRange, EditorEx editor, boolean erase, boolean preserveMarkup) {
         UIAccess.assertIsUIThread();
@@ -341,9 +330,9 @@ public class LanguageConsoleImpl extends ConsoleViewImpl implements LanguageCons
     }
 
     @Override
-    
     public String addTextRangeToHistory(TextRange textRange, EditorEx inputEditor, boolean preserveMarkup) {
         return printWithHighlighting(this, inputEditor, textRange);
+
 
         //if (preserveMarkup) {
         //  duplicateHighlighters(markupModel, DocumentMarkupModel.forDocument(inputEditor.getDocument(), myProject, true), offset, textRange);
@@ -414,18 +403,11 @@ public class LanguageConsoleImpl extends ConsoleViewImpl implements LanguageCons
     }
 
     @Override
-    public @Nullable Object getData(Key<?> dataId) {
-        return super.getData(dataId);
-    }
-
-    @Override
-    
     public EditorEx getCurrentEditor() {
         return myConsoleExecutionEditor.getCurrentEditor();
     }
 
     @Override
-    
     public Language getLanguage() {
         return getFile().getLanguage();
     }
@@ -477,12 +459,10 @@ public class LanguageConsoleImpl extends ConsoleViewImpl implements LanguageCons
             return this;
         }
 
-        
         public PsiFile getFile() {
             return ReadAction.compute(() -> PsiUtilCore.getPsiFile(project, virtualFile));
         }
 
-        
         public Document getDocument() {
             Document document = FileDocumentManager.getInstance().getDocument(virtualFile);
             if (document == null) {
@@ -513,23 +493,13 @@ public class LanguageConsoleImpl extends ConsoleViewImpl implements LanguageCons
             editorSettings.setAdditionalLinesCount(1);
             editorSettings.setAdditionalColumnsCount(1);
 
-            DataManager.registerDataProvider(editor.getComponent(), (dataId) -> getEditorData(editor, dataId));
+            ClientProperty.put(editor.getComponent(), UiDataProvider.KEY, sink -> {
+                sink.set(OpenFileDescriptorImpl.NAVIGATE_IN_EDITOR, editor);
+            });
         }
 
-        
         public PsiFile getFileSafe() {
             return file == null || !file.isValid() ? file = getFile() : file;
-        }
-
-        protected @Nullable Object getEditorData(EditorEx editor, Key dataId) {
-            if (OpenFileDescriptorImpl.NAVIGATE_IN_EDITOR == dataId) {
-                return editor;
-            }
-            else if (project.isInitialized()) {
-                Caret caret = editor.getCaretModel().getCurrentCaret();
-                return FileEditorManagerEx.getInstanceEx(project).getData(dataId, editor, caret);
-            }
-            return null;
         }
     }
 

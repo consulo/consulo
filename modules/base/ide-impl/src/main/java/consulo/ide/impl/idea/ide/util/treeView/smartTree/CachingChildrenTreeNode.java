@@ -21,6 +21,7 @@ import consulo.project.ui.view.tree.AbstractTreeNode;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.fileEditor.structureView.tree.*;
 import consulo.project.Project;
+import consulo.navigation.NavigateOptions;
 import consulo.navigation.Navigatable;
 
 import java.util.*;
@@ -237,13 +238,8 @@ public abstract class CachingChildrenTreeNode <Value> extends AbstractTreeNode<V
   }
 
   @Override
-  public boolean canNavigate() {
-    return getValue() instanceof Navigatable && ((Navigatable)getValue()).canNavigate();
-  }
-
-  @Override
-  public boolean canNavigateToSource() {
-    return getValue() instanceof Navigatable && ((Navigatable)getValue()).canNavigateToSource();
+  public NavigateOptions getNavigateOptions() {
+    return getValue() instanceof Navigatable n ? n.getNavigateOptions() : NavigateOptions.CANT_NAVIGATE;
   }
 
   protected void clearChildren() {

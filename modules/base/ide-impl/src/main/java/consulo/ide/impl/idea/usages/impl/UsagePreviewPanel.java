@@ -26,7 +26,8 @@ import consulo.codeEditor.markup.RangeHighlighter;
 import consulo.colorScheme.EditorColorsManager;
 import consulo.colorScheme.EffectType;
 import consulo.colorScheme.TextAttributes;
-import consulo.dataContext.DataProvider;
+import consulo.dataContext.DataSink;
+import consulo.dataContext.UiDataProvider;
 import consulo.disposer.Disposer;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
@@ -58,7 +59,6 @@ import consulo.util.dataholder.Key;
 import consulo.util.lang.Comparing;
 import consulo.virtualFileSystem.VirtualFile;
 import org.jspecify.annotations.Nullable;
-
 import javax.swing.*;
 import java.awt.*;
 import java.util.List;
@@ -67,7 +67,7 @@ import java.util.regex.Pattern;
 /**
  * @author cdr
  */
-public class UsagePreviewPanel extends UsageContextPanelBase implements DataProvider, consulo.usage.UsagePreviewPanel {
+public class UsagePreviewPanel extends UsageContextPanelBase implements UiDataProvider, consulo.usage.UsagePreviewPanel {
   private static final Logger LOG = Logger.getInstance(UsagePreviewPanel.class);
   private Editor myEditor;
   private final boolean myIsEditor;
@@ -86,18 +86,20 @@ public class UsagePreviewPanel extends UsageContextPanelBase implements DataProv
   }
 
   @Override
-  public @Nullable Object getData(Key dataId) {
-    if (Editor.KEY == dataId && myEditor != null) {
-      return myEditor;
+  public void uiDataSnapshot(DataSink sink) {
+    if (myEditor != null) {
+      sink.set(Editor.KEY, myEditor);
     }
-    if (Registry.is("ide.find.preview.navigate.to.caret") && Navigatable.KEY_OF_ARRAY == dataId && myEditor instanceof EditorEx) {
-      LogicalPosition position = myEditor.getCaretModel().getLogicalPosition();
-      VirtualFile file = FileDocumentManager.getInstance().getFile(myEditor.getDocument());
-      if (file != null) {
-        return new Navigatable[]{new OpenFileDescriptorImpl(myProject, file, position.line, position.column)};
+    sink.lazy(Navigatable.KEY_OF_ARRAY, () -> {
+      if (Registry.is("ide.find.preview.navigate.to.caret") && myEditor instanceof EditorEx) {
+        LogicalPosition position = myEditor.getCaretModel().getLogicalPosition();
+        VirtualFile file = FileDocumentManager.getInstance().getFile(myEditor.getDocument());
+        if (file != null) {
+          return new Navigatable[]{new OpenFileDescriptorImpl(myProject, file, position.line, position.column)};
+        }
       }
-    }
-    return null;
+      return null;
+    });
   }
 
   @RequiredUIAccess
@@ -142,6 +144,7 @@ public class UsagePreviewPanel extends UsageContextPanelBase implements DataProv
   public int getLineHeight() {
     return myLineHeight;
   }
+
 
   private static final Key<Boolean> IN_PREVIEW_USAGE_FLAG = Key.create("IN_PREVIEW_USAGE_FLAG");
 
@@ -268,7 +271,6 @@ public class UsagePreviewPanel extends UsageContextPanelBase implements DataProv
     return editor;
   }
 
-  
   protected EditorKind getEditorKind() {
     return EditorKind.PREVIEW;
   }

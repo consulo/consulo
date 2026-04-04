@@ -16,6 +16,7 @@
 package consulo.desktop.awt.internal.diff.util.side;
 
 import consulo.codeEditor.Editor;
+import consulo.dataContext.DataSink;
 import consulo.codeEditor.EditorEx;
 import consulo.codeEditor.ScrollType;
 import consulo.codeEditor.event.VisibleAreaEvent;
@@ -55,14 +56,11 @@ import java.util.List;
 public abstract class TwosideTextDiffViewer extends TwosideDiffViewer<TextEditorHolder> {
     public static final Logger LOG = Logger.getInstance(TwosideTextDiffViewer.class);
 
-   
     private final List<? extends EditorEx> myEditableEditors;
     private @Nullable List<? extends EditorEx> myEditors;
 
-   
     protected final SetEditorSettingsAction myEditorSettingsAction;
 
-   
     private final MyVisibleAreaListener myVisibleAreaListener = new MyVisibleAreaListener();
 
     private SyncScrollSupport.@Nullable TwosideSyncScrollSupport mySyncScrollSupport;
@@ -103,7 +101,6 @@ public abstract class TwosideTextDiffViewer extends TwosideDiffViewer<TextEditor
         super.onDispose();
     }
 
-   
     @Override
     protected List<TextEditorHolder> createEditorHolders(EditorHolderFactory<TextEditorHolder> factory) {
         List<TextEditorHolder> holders = super.createEditorHolders(factory);
@@ -124,7 +121,6 @@ public abstract class TwosideTextDiffViewer extends TwosideDiffViewer<TextEditor
         return holders;
     }
 
-   
     @Override
     protected List<JComponent> createTitles() {
         return AWTDiffUtil.createSyncHeightComponents(AWTDiffUtil.createTextTitles(myRequest, getEditors()));
@@ -134,12 +130,10 @@ public abstract class TwosideTextDiffViewer extends TwosideDiffViewer<TextEditor
     // Diff
     //
 
-   
     public TextDiffSettingsHolder.TextDiffSettings getTextSettings() {
         return TextDiffViewerUtil.getTextSettings(myContext);
     }
 
-   
     protected List<AnAction> createEditorPopupActions() {
         return TextDiffViewerUtil.createEditorPopupActions();
     }
@@ -160,6 +154,7 @@ public abstract class TwosideTextDiffViewer extends TwosideDiffViewer<TextEditor
         new TextDiffViewerUtil.EditorActionsPopup(createEditorPopupActions()).install(getEditors(), myPanel);
 
         new TextDiffViewerUtil.EditorFontSizeSynchronizer(getEditors()).install(this);
+
 
         getEditor(Side.LEFT).getScrollingModel().addVisibleAreaListener(myVisibleAreaListener);
         getEditor(Side.RIGHT).getScrollingModel().addVisibleAreaListener(myVisibleAreaListener);
@@ -194,13 +189,12 @@ public abstract class TwosideTextDiffViewer extends TwosideDiffViewer<TextEditor
     // Getters
     //
 
-   
+
     protected List<? extends DocumentContent> getContents() {
         //noinspection unchecked
         return (List) myRequest.getContents();
     }
 
-   
     public List<? extends EditorEx> getEditors() {
         if (myEditors == null) {
             myEditors = ContainerUtil.map(getEditorHolders(), holder -> holder.getEditor());
@@ -208,47 +202,39 @@ public abstract class TwosideTextDiffViewer extends TwosideDiffViewer<TextEditor
         return myEditors;
     }
 
-   
     protected List<? extends EditorEx> getEditableEditors() {
         return myEditableEditors;
     }
 
-   
     public EditorEx getCurrentEditor() {
         return getEditor(getCurrentSide());
     }
 
-   
     public DocumentContent getCurrentContent() {
         return getContent(getCurrentSide());
     }
 
-   
     public EditorEx getEditor1() {
         return getEditor(Side.LEFT);
     }
 
-   
     public EditorEx getEditor2() {
         return getEditor(Side.RIGHT);
     }
 
-   
+
     public EditorEx getEditor(Side side) {
         return side.select(getEditors());
     }
 
-   
     public DocumentContent getContent(Side side) {
         return side.select(getContents());
     }
 
-   
     public DocumentContent getContent1() {
         return getContent(Side.LEFT);
     }
 
-   
     public DocumentContent getContent2() {
         return getContent(Side.RIGHT);
     }
@@ -262,7 +248,6 @@ public abstract class TwosideTextDiffViewer extends TwosideDiffViewer<TextEditor
     //
 
     @RequiredUIAccess
-   
     protected LineCol transferPosition(Side baseSide, LineCol position) {
         if (mySyncScrollSupport == null) {
             return position;
@@ -355,11 +340,9 @@ public abstract class TwosideTextDiffViewer extends TwosideDiffViewer<TextEditor
     //
 
     @Override
-    public @Nullable Object getData(Key<?> dataId) {
-        if (DiffDataKeys.CURRENT_EDITOR == dataId) {
-            return getCurrentEditor();
-        }
-        return super.getData(dataId);
+    public void uiDataSnapshot(DataSink sink) {
+        super.uiDataSnapshot(sink);
+        sink.set(DiffDataKeys.CURRENT_EDITOR, getCurrentEditor());
     }
 
     private class MyVisibleAreaListener implements VisibleAreaListener {
@@ -374,7 +357,6 @@ public abstract class TwosideTextDiffViewer extends TwosideDiffViewer<TextEditor
     }
 
     protected abstract class MyInitialScrollPositionHelper extends InitialScrollPositionSupport.TwosideInitialScrollHelper {
-       
         @Override
         protected List<? extends Editor> getEditors() {
             return TwosideTextDiffViewer.this.getEditors();

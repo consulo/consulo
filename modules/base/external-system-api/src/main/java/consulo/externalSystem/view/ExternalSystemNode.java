@@ -20,6 +20,7 @@ import consulo.externalSystem.service.project.manage.ExternalProjectsManager;
 import consulo.externalSystem.service.project.manage.ExternalSystemShortcutsManager;
 import consulo.externalSystem.service.project.manage.ExternalSystemTaskActivator;
 import consulo.externalSystem.ui.ExternalSystemUiAware;
+import consulo.navigation.Navigatable;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.awt.tree.SimpleNode;
@@ -27,6 +28,7 @@ import consulo.ui.ex.awt.tree.SimpleTree;
 import consulo.ui.ex.tree.NodeDescriptor;
 import consulo.ui.ex.tree.PresentationData;
 import consulo.util.lang.StringUtil;
+import consulo.virtualFileSystem.VirtualFile;
 import org.jspecify.annotations.Nullable;
 
 import java.awt.*;
@@ -112,12 +114,12 @@ public abstract class ExternalSystemNode<T> extends SimpleNode implements Compar
         return displayName == null ? super.getName() : displayName;
     }
 
-   
+
     protected ExternalProjectsView getExternalProjectsView() {
         return myExternalProjectsView;
     }
 
-   
+
     protected ExternalSystemUiAware getUiAware() {
         return myExternalProjectsView.getUiAware();
     }
@@ -127,12 +129,12 @@ public abstract class ExternalSystemNode<T> extends SimpleNode implements Compar
         return myExternalProjectsView.getStructure();
     }
 
-   
+
     protected ExternalSystemShortcutsManager getShortcutsManager() {
         return myExternalProjectsView.getShortcutsManager();
     }
 
-   
+
     protected ExternalSystemTaskActivator getTaskActivator() {
         return myExternalProjectsView.getTaskActivator();
     }
@@ -287,7 +289,7 @@ public abstract class ExternalSystemNode<T> extends SimpleNode implements Compar
         return getChildren().length > 0;
     }
 
-   
+
     protected List<? extends ExternalSystemNode<?>> doBuildChildren() {
         if (myDataNode != null && !myDataNode.getChildren().isEmpty()) {
             return myExternalProjectsView.createNodes(myExternalProjectsView, this, myDataNode);
@@ -299,7 +301,7 @@ public abstract class ExternalSystemNode<T> extends SimpleNode implements Compar
         myDataNode = dataNode;
     }
 
-   
+
     private ExternalProjectsStructure.ErrorLevel getTotalErrorLevel() {
         ExternalProjectsStructure.ErrorLevel level = myTotalErrorLevel;
         if (level == null) {
@@ -308,13 +310,13 @@ public abstract class ExternalSystemNode<T> extends SimpleNode implements Compar
         return level;
     }
 
-   
+
     private ExternalProjectsStructure.ErrorLevel calcTotalErrorLevel() {
         ExternalProjectsStructure.ErrorLevel childrenLevel = getChildrenErrorLevel();
         return childrenLevel.compareTo(myErrorLevel) > 0 ? childrenLevel : myErrorLevel;
     }
 
-   
+
     public ExternalProjectsStructure.ErrorLevel getChildrenErrorLevel() {
         if (myChildren == null && myDataNode != null) {
             return myExternalProjectsView.getErrorLevelRecursively(myDataNode);
@@ -378,8 +380,15 @@ public abstract class ExternalSystemNode<T> extends SimpleNode implements Compar
         return new SimpleTextAttributes(from.getBgColor(), from.getFgColor(), waveColor, style);
     }
 
-    @Nullable
-    protected String getActionId() {
+    public @Nullable VirtualFile getVirtualFile() {
+        return null;
+    }
+
+    protected @Nullable String getActionId() {
+        return null;
+    }
+
+    public @Nullable Navigatable getNavigatable() {
         return null;
     }
 

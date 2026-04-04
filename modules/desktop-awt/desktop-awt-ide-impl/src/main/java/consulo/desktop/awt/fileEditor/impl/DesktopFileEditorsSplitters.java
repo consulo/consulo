@@ -26,6 +26,7 @@ import consulo.desktop.awt.uiOld.AWTComponentProviderUtil;
 import consulo.disposer.Disposer;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
+import consulo.fileEditor.FileEditorOpenOptions;
 import consulo.fileEditor.FileEditorWindow;
 import consulo.fileEditor.FileEditorWithProviderComposite;
 import consulo.fileEditor.impl.internal.*;
@@ -103,11 +104,8 @@ public class DesktopFileEditorsSplitters extends FileEditorsSplittersBase<Deskto
         };
         myComponent.setFocusTraversalPolicy(new MyFocusTraversalPolicy());
         myComponent.setTransferHandler(new MyTransferHandler());
-        DataManager.registerDataProvider(myComponent, dataId -> {
-            if (dataId == KEY) {
-                return this;
-            }
-            return null;
+        DataManager.registerUiDataProvider(myComponent, sink -> {
+            sink.set(KEY, this);
         });
 
         AWTComponentProviderUtil.putMark(myComponent, this);

@@ -16,11 +16,6 @@ public final class GroupByServiceGroupsAction extends ToggleAction implements Du
     super(ActionLocalize.actionServiceviewGroupbyservicegroupsText());
   }
 
-//  @Override
-//  public @NotNull ActionUpdateThread getActionUpdateThread() {
-//    return ActionUpdateThread.BGT;
-//  }
-
   @Override
   public void update(AnActionEvent e) {
     super.update(e);

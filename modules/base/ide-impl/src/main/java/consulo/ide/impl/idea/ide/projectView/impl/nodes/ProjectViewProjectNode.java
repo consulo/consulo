@@ -25,11 +25,13 @@ import consulo.module.content.ModuleRootManager;
 import consulo.module.content.util.ModuleContentUtil;
 import consulo.project.Project;
 import consulo.project.ui.view.tree.*;
+import consulo.ui.ex.awt.tree.TreeState;
+import consulo.ui.ex.tree.PathElementIdProvider;
 import consulo.virtualFileSystem.VirtualFile;
 
 import java.util.*;
 
-public class ProjectViewProjectNode extends AbstractProjectNode {
+public class ProjectViewProjectNode extends AbstractProjectNode implements PathElementIdProvider {
     public ProjectViewProjectNode(Project project, ViewSettings viewSettings) {
         super(project, project, viewSettings);
     }
@@ -94,5 +96,10 @@ public class ProjectViewProjectNode extends AbstractProjectNode {
     @Override
     protected AbstractTreeNode createModuleGroupNode(ModuleGroup moduleGroup) {
         return new ProjectViewModuleGroupNode(getProject(), moduleGroup, getSettings());
+    }
+
+    @Override
+    public  String getPathElementId() {
+        return TreeState.defaultPathElementId(this);
     }
 }

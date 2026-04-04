@@ -2,7 +2,6 @@ package consulo.execution.impl.internal.ui.layout.action;
 
 import consulo.application.dumb.DumbAware;
 import consulo.execution.ExecutionBundle;
-import consulo.ui.ex.action.ActionUpdateThread;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.action.DumbAwareToggleAction;
@@ -53,11 +52,6 @@ public final class ViewLayoutModeActionGroup extends DefaultActionGroup implemen
         @Override
         public boolean isSelected(AnActionEvent e) {
             return myOption.isSelected();
-        }
-
-        @Override
-        public ActionUpdateThread getActionUpdateThread() {
-            return ActionUpdateThread.EDT;
         }
 
         @Override

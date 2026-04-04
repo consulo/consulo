@@ -16,13 +16,16 @@
 package consulo.web.internal.ui;
 
 import com.vaadin.flow.component.Tag;
+import consulo.ui.ItemRenderer;
 import consulo.ui.ListBox;
-import consulo.ui.TextItemRenderer;
+import consulo.ui.Size2D;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.model.ListModel;
 import consulo.web.internal.ui.base.FromVaadinComponentWrapper;
 import consulo.web.internal.ui.base.VaadinComponentDelegate;
 import org.jspecify.annotations.Nullable;
+
+import java.util.function.Function;
 
 /**
  * @author VISTALL
@@ -43,14 +46,13 @@ public class WebListBoxImpl<E> extends VaadinComponentDelegate<WebListBoxImpl.Va
         myModel = model;
     }
 
-    
     @Override
     public ListModel<E> getListModel() {
         return myModel;
     }
 
     @Override
-    public void setRenderer(TextItemRenderer renderer) {
+    public void setRenderer(ItemRenderer<E> renderer) {
     }
 
     @Override
@@ -67,7 +69,6 @@ public class WebListBoxImpl<E> extends VaadinComponentDelegate<WebListBoxImpl.Va
     public void setValue(Object value, boolean fireListeners) {
     }
 
-    
     @Override
     public WebListBoxImpl.Vaadin createVaadinComponent() {
         return new Vaadin();

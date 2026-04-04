@@ -39,6 +39,9 @@ import java.util.function.Supplier;
 public interface Component extends UserDataHolder {
     Key<Component> KEY = Key.of(Component.class);
 
+    @Override
+    <T> void putUserData(Key<T> key, @Nullable T value);
+
     @RequiredUIAccess
     default void addBorder(BorderPosition borderPosition) {
         addBorder(borderPosition, BorderStyle.LINE, ComponentColors.BORDER, 1);
@@ -129,18 +132,17 @@ public interface Component extends UserDataHolder {
 
     @RequiredUIAccess
     void setSize(Size2D size);
+
     @RequiredUIAccess
     default Component withSize(Size2D size) {
         setSize(size);
         return this;
     }
-    default <T> Disposable addUserDataProvider(Key<T> key, Supplier<T> supplier) {
-        return addUserDataProvider(k -> k == key ? supplier.get() : null);
-    }
-    Disposable addUserDataProvider(Function<Key<?>, @Nullable Object> function);
+
     Font getFont();
 
     void setFont(Font font);
+
     @RequiredUIAccess
     default Component withFont(Font font) {
         setFont(font);
@@ -154,6 +156,7 @@ public interface Component extends UserDataHolder {
     default void setForegroundColor(@Nullable ColorValue foreground) {
         throw new AbstractMethodError("not supported");
     }
+
     default Component withForegroundColor(@Nullable ColorValue foreground) {
         setForegroundColor(foreground);
         return this;
@@ -166,6 +169,7 @@ public interface Component extends UserDataHolder {
     default void setCursor(@Nullable Cursor cursor) {
         throw new AbstractMethodError("not supported");
     }
+
     default Component withCursor(@Nullable Cursor cursor) {
         setCursor(cursor);
         return this;
@@ -174,9 +178,11 @@ public interface Component extends UserDataHolder {
     default void setToolTipText(LocalizeValue value) {
         throw new AbstractMethodError("not supported");
     }
+
     default LocalizeValue getToolTipText() {
         return LocalizeValue.empty();
     }
+
     default Component withToolTipText(LocalizeValue value) {
         setToolTipText(value);
         return this;
@@ -189,19 +195,25 @@ public interface Component extends UserDataHolder {
         Class<? extends E> eventClass,
         ComponentEventListener<C, E> listener
     );
+
     <C extends Component, E extends ComponentEvent<C>> ComponentEventListener<C, E> getListenerDispatcher(Class<E> eventClass);
+
     default Disposable addKeyPressedListener(ComponentEventListener<Component, KeyPressedEvent> keyListener) {
         return addListener(KeyPressedEvent.class, keyListener);
     }
+
     default Disposable addKeyReleasedListener(ComponentEventListener<Component, KeyReleasedEvent> keyListener) {
         return addListener(KeyReleasedEvent.class, keyListener);
     }
+
     default Disposable addAttachListener(ComponentEventListener<Component, AttachEvent> attachListener) {
         return addListener(AttachEvent.class, attachListener);
     }
+
     default Disposable addDetachListener(ComponentEventListener<Component, DetachEvent> detachListener) {
         return addListener(DetachEvent.class, detachListener);
     }
+
     default Disposable addClickListener(ComponentEventListener<Component, ClickEvent> clickListener) {
         return addListener(ClickEvent.class, clickListener);
     }

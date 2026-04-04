@@ -17,11 +17,17 @@ package consulo.codeEditor.internal;
 
 import consulo.codeEditor.markup.MarkupModel;
 import consulo.disposer.Disposable;
+import consulo.ui.annotation.RequiredUIAccess;
 
 /**
  * @author VISTALL
  * @since 2025-08-05
  */
 public interface ErrorStripeMarkupModel extends MarkupModel {
+    @RequiredUIAccess
+    void setErrorStripeRenderer(ErrorStripeRenderer renderer);
+
+    ErrorStripeRenderer getErrorStripeRenderer();
+
     void addErrorMarkerListener(ErrorStripeListener listener, Disposable parent);
 }

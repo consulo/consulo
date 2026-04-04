@@ -6,16 +6,18 @@ import consulo.application.AllIcons;
 import consulo.application.Application;
 import consulo.application.HelpManager;
 import consulo.application.dumb.DumbAware;
+import consulo.application.event.ApplicationListener;
 import consulo.application.internal.ProgressIndicatorBase;
-import consulo.application.internal.ProgressIndicatorUtils;
-import consulo.application.internal.ReadTask;
 import consulo.application.progress.ProgressIndicator;
+import consulo.application.progress.ProgressManager;
+import consulo.application.util.concurrent.PooledThreadExecutor;
 import consulo.application.ui.DimensionService;
 import consulo.application.ui.UISettings;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.application.util.UserHomeFileUtil;
 import consulo.application.util.registry.Registry;
 import consulo.codeEditor.Editor;
+import consulo.component.ProcessCanceledException;
 import consulo.desktop.awt.ui.IdeEventQueue;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
@@ -29,6 +31,8 @@ import consulo.ide.impl.idea.find.impl.*;
 import consulo.ide.impl.idea.find.replaceInProject.ReplaceInProjectManager;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
 import consulo.ide.impl.idea.openapi.ui.ComponentValidator;
+import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
+import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.ide.impl.idea.openapi.wm.impl.IdeGlassPaneImpl;
 import consulo.ide.impl.idea.reference.SoftReference;
 import consulo.ide.impl.idea.ui.ListFocusTraversalPolicy;
@@ -90,7 +94,6 @@ import consulo.util.dataholder.Key;
 import consulo.util.io.PathUtil;
 import consulo.util.lang.*;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.virtualFileSystem.util.VirtualFileUtil;
 import org.jspecify.annotations.Nullable;
 import net.miginfocom.swing.MigLayout;
 import org.jetbrains.annotations.Contract;
@@ -133,14 +136,10 @@ public class FindPopupPanel extends JBPanel<FindPopupPanel> implements FindUI {
     private static final String SERVICE_KEY = "find.popup";
     private static final String SPLITTER_SERVICE_KEY = "find.popup.splitter";
     private static final Key<Boolean> DONT_REQUEST_FOCUS = Key.create("dontRequestFocus");
-    
     private final FindUIHelper myHelper;
-    
     private final Project myProject;
-    
     private final Disposable myDisposable;
     private final Alarm myPreviewUpdater;
-    
     private final FindPopupScopeUI myScopeUI;
     private JComponent myCodePreviewComponent;
     private SearchTextArea mySearchTextArea;
@@ -449,7 +448,6 @@ public class FindPopupPanel extends JBPanel<FindPopupPanel> implements FindUI {
         applyTo(FindManager.getInstance(myProject).getFindInProjectModel());
     }
 
-    
     @Override
     public Disposable getDisposable() {
         return myDisposable;
@@ -460,17 +458,14 @@ public class FindPopupPanel extends JBPanel<FindPopupPanel> implements FindUI {
         return this;
     }
 
-    
     public Project getProject() {
         return myProject;
     }
 
-    
     public FindUIHelper getHelper() {
         return myHelper;
     }
 
-    
     public AtomicBoolean getCanClose() {
         return myCanClose;
     }
@@ -766,7 +761,7 @@ public class FindPopupPanel extends JBPanel<FindPopupPanel> implements FindUI {
             myUsagePreviewTitle.clear();
             if (myUsagePreviewPanel.getCannotPreviewMessage(selection) == null && file != null) {
                 myUsagePreviewTitle.append(PathUtil.getFileName(file), SimpleTextAttributes.REGULAR_ATTRIBUTES);
-                VirtualFile virtualFile = VirtualFileUtil.findFileByIoFile(new File(file), true);
+                VirtualFile virtualFile = VfsUtil.findFileByIoFile(new File(file), true);
                 String locationPath = virtualFile == null ? null : getPresentablePath(myProject, virtualFile.getParent(), 120);
                 if (locationPath != null) {
                     myUsagePreviewTitle.append(
@@ -922,8 +917,8 @@ public class FindPopupPanel extends JBPanel<FindPopupPanel> implements FindUI {
         }
         String path = ScratchUtil.isScratch(virtualFile)
             ? ScratchUtil.getRelativePath(project, virtualFile)
-            : VirtualFileUtil.isAncestor(project.getBaseDir(), virtualFile, true)
-            ? VirtualFileUtil.getRelativeLocation(virtualFile, project.getBaseDir())
+            : VfsUtilCore.isAncestor(project.getBaseDir(), virtualFile, true)
+            ? VfsUtilCore.getRelativeLocation(virtualFile, project.getBaseDir())
             : UserHomeFileUtil.getLocationRelativeToUserHome(virtualFile.getPath());
         return path == null ? null : maxChars < 0 ? path : StringUtil.trimMiddle(path, maxChars);
     }
@@ -1337,121 +1332,152 @@ public class FindPopupPanel extends JBPanel<FindPopupPanel> implements FindUI {
         final AtomicInteger resultsFilesCount = new AtomicInteger();
         FindInProjectUtil.setupViewPresentation(myUsageViewPresentation, findModel);
 
-        ProgressIndicatorUtils.scheduleWithWriteActionPriority(
-            myResultsPreviewSearchProgress,
-            new ReadTask() {
-                @Override
-                @RequiredReadAction
-                public Continuation performInReadAction(ProgressIndicator indicator) {
-                    FindUsagesProcessPresentation processPresentation =
-                        FindInProjectUtil.setupProcessPresentation(myProject, myUsageViewPresentation);
-                    ThreadLocal<String> lastUsageFileRef = new ThreadLocal<>();
-                    ThreadLocal<Reference<Usage>> recentUsageRef = new ThreadLocal<>();
+        Disposable listenerDisposable = Disposable.newDisposable();
+        application.addApplicationListener(new ApplicationListener() {
+            @Override
+            public void beforeWriteActionStart(Object action) {
+                if (!progressIndicatorWhenSearchStarted.isCanceled()) {
+                    progressIndicatorWhenSearchStarted.cancel();
+                }
+            }
+        }, listenerDisposable);
 
-                    projectExecutor.findUsages(
-                        myProject,
-                        myResultsPreviewSearchProgress,
-                        processPresentation,
-                        findModel,
-                        filesToScanInitially,
-                        usage -> {
-                            if (isCancelled()) {
-                                onStop(hash);
-                                return false;
-                            }
+        PooledThreadExecutor.getInstance().execute(() -> {
+            Runnable uiContinuation;
+            try {
+                uiContinuation = ProgressManager.getInstance().runProcess(() -> {
+                    try {
+                        return application.runReadAction((Supplier<Runnable>) () -> {
+                            FindUsagesProcessPresentation processPresentation =
+                                FindInProjectUtil.setupProcessPresentation(myProject, myUsageViewPresentation);
+                            ThreadLocal<String> lastUsageFileRef = new ThreadLocal<>();
+                            ThreadLocal<Reference<Usage>> recentUsageRef = new ThreadLocal<>();
 
-                            String file = lastUsageFileRef.get();
-                            String usageFile = PathUtil.toSystemIndependentName(usage.getPath());
-                            if (file == null || !file.equals(usageFile)) {
-                                resultsFilesCount.incrementAndGet();
-                                lastUsageFileRef.set(usageFile);
-                            }
-
-                            Usage recent = SoftReference.dereference(recentUsageRef.get());
-                            UsageInfoAdapter recentAdapter = recent instanceof UsageInfoAdapter usageInfoAdapter ? usageInfoAdapter : null;
-                            boolean merged = !myHelper.isReplaceState() && recentAdapter != null && recentAdapter.merge(usage);
-                            if (!merged) {
-                                recentUsageRef.set(new WeakReference<>(usage));
-                            }
-
-                            application.invokeLater(
-                                () -> {
-                                    if (isCancelled()) {
+                            projectExecutor.findUsages(
+                                myProject,
+                                myResultsPreviewSearchProgress,
+                                processPresentation,
+                                findModel,
+                                filesToScanInitially,
+                                usage -> {
+                                    boolean isCancelled = progressIndicatorWhenSearchStarted != myResultsPreviewSearchProgress
+                                        || progressIndicatorWhenSearchStarted.isCanceled();
+                                    if (isCancelled) {
                                         onStop(hash);
-                                        return;
+                                        return false;
                                     }
-                                    DefaultTableModel model = (DefaultTableModel) myResultsPreviewTable.getModel();
-                                    if (!merged) {
-                                        model.addRow(new Object[]{usage});
-                                    }
-                                    else {
-                                        model.fireTableRowsUpdated(model.getRowCount() - 1, model.getRowCount() - 1);
-                                    }
-                                    myCodePreviewComponent.setVisible(true);
-                                    if (model.getRowCount() == 1) {
-                                        myResultsPreviewTable.setRowSelectionInterval(0, 0);
-                                    }
-                                    int occurrences = resultsCount.get();
-                                    int filesWithOccurrences = resultsFilesCount.get();
-                                    myCodePreviewComponent.setVisible(occurrences > 0);
-                                    myReplaceAllButton.setEnabled(occurrences > 0);
-                                    myReplaceSelectedButton.setEnabled(occurrences > 0);
 
-                                    StringBuilder stringBuilder = new StringBuilder();
-                                    if (occurrences > 0) {
-                                        stringBuilder.append(Math.min(ShowUsagesAction.getUsagesPageSize(), occurrences));
-                                        boolean foundAllUsages = occurrences < ShowUsagesAction.getUsagesPageSize();
-                                        myUsagesCount = String.valueOf(occurrences);
-                                        if (!foundAllUsages) {
-                                            stringBuilder.append("+");
-                                            myUsagesCount += "+";
-                                        }
-                                        stringBuilder.append(UILocalize.messageMatches(occurrences).get());
-                                        stringBuilder.append(" in ");
-                                        stringBuilder.append(filesWithOccurrences);
-                                        myFilesCount = String.valueOf(filesWithOccurrences);
-                                        if (!foundAllUsages) {
-                                            stringBuilder.append("+");
-                                            myFilesCount += "+";
-                                        }
-                                        stringBuilder.append(UILocalize.messageFiles(filesWithOccurrences));
+                                    String file = lastUsageFileRef.get();
+                                    String usageFile = PathUtil.toSystemIndependentName(usage.getPath());
+                                    if (file == null || !file.equals(usageFile)) {
+                                        resultsFilesCount.incrementAndGet();
+                                        lastUsageFileRef.set(usageFile);
                                     }
-                                    myInfoLabel.setText(stringBuilder.toString());
-                                },
-                                state
+
+                                    Usage recent = SoftReference.dereference(recentUsageRef.get());
+                                    UsageInfoAdapter recentAdapter =
+                                        recent instanceof UsageInfoAdapter usageInfoAdapter ? usageInfoAdapter : null;
+                                    boolean merged =
+                                        !myHelper.isReplaceState() && recentAdapter != null && recentAdapter.merge(usage);
+                                    if (!merged) {
+                                        recentUsageRef.set(new WeakReference<>(usage));
+                                    }
+
+                                    application.invokeLater(
+                                        () -> {
+                                            boolean cancelled =
+                                                progressIndicatorWhenSearchStarted != myResultsPreviewSearchProgress
+                                                    || progressIndicatorWhenSearchStarted.isCanceled();
+                                            if (cancelled) {
+                                                onStop(hash);
+                                                return;
+                                            }
+                                            DefaultTableModel model =
+                                                (DefaultTableModel) myResultsPreviewTable.getModel();
+                                            if (!merged) {
+                                                model.addRow(new Object[]{usage});
+                                            }
+                                            else {
+                                                model.fireTableRowsUpdated(
+                                                    model.getRowCount() - 1, model.getRowCount() - 1);
+                                            }
+                                            myCodePreviewComponent.setVisible(true);
+                                            if (model.getRowCount() == 1) {
+                                                myResultsPreviewTable.setRowSelectionInterval(0, 0);
+                                            }
+                                            int occurrences = resultsCount.get();
+                                            int filesWithOccurrences = resultsFilesCount.get();
+                                            myCodePreviewComponent.setVisible(occurrences > 0);
+                                            myReplaceAllButton.setEnabled(occurrences > 0);
+                                            myReplaceSelectedButton.setEnabled(occurrences > 0);
+
+                                            StringBuilder stringBuilder = new StringBuilder();
+                                            if (occurrences > 0) {
+                                                stringBuilder.append(
+                                                    Math.min(ShowUsagesAction.getUsagesPageSize(), occurrences));
+                                                boolean foundAllUsages =
+                                                    occurrences < ShowUsagesAction.getUsagesPageSize();
+                                                myUsagesCount = String.valueOf(occurrences);
+                                                if (!foundAllUsages) {
+                                                    stringBuilder.append("+");
+                                                    myUsagesCount += "+";
+                                                }
+                                                stringBuilder.append(
+                                                    UILocalize.messageMatches(occurrences).get());
+                                                stringBuilder.append(" in ");
+                                                stringBuilder.append(filesWithOccurrences);
+                                                myFilesCount = String.valueOf(filesWithOccurrences);
+                                                if (!foundAllUsages) {
+                                                    stringBuilder.append("+");
+                                                    myFilesCount += "+";
+                                                }
+                                                stringBuilder.append(
+                                                    UILocalize.messageFiles(filesWithOccurrences));
+                                            }
+                                            myInfoLabel.setText(stringBuilder.toString());
+                                        },
+                                        state
+                                    );
+
+                                    boolean continueSearch =
+                                        resultsCount.incrementAndGet() < ShowUsagesAction.getUsagesPageSize();
+                                    if (!continueSearch) {
+                                        onStop(hash);
+                                    }
+                                    return continueSearch;
+                                }
                             );
 
-                            boolean continueSearch = resultsCount.incrementAndGet() < ShowUsagesAction.getUsagesPageSize();
-                            if (!continueSearch) {
+                            boolean isCancelled = progressIndicatorWhenSearchStarted != myResultsPreviewSearchProgress
+                                || progressIndicatorWhenSearchStarted.isCanceled();
+                            return () -> {
+                                if (!isCancelled && resultsCount.get() == 0) {
+                                    showEmptyText(LocalizeValue.empty());
+                                }
                                 onStop(hash);
-                            }
-                            return continueSearch;
-                        }
-                    );
+                            };
+                        });
+                    }
+                    catch (ProcessCanceledException e) {
+                        return null;
+                    }
+                }, progressIndicatorWhenSearchStarted);
+            }
+            finally {
+                Disposer.dispose(listenerDisposable);
+            }
 
-                    return new Continuation(
-                        () -> {
-                            if (!isCancelled() && resultsCount.get() == 0) {
-                                showEmptyText(LocalizeValue.empty());
-                            }
-                            onStop(hash);
-                        },
-                        state
-                    );
-                }
-
-                boolean isCancelled() {
-                    return progressIndicatorWhenSearchStarted != myResultsPreviewSearchProgress || progressIndicatorWhenSearchStarted.isCanceled();
-                }
-
-                @Override
-                public void onCanceled(ProgressIndicator indicator) {
+            if (uiContinuation != null && !progressIndicatorWhenSearchStarted.isCanceled()) {
+                application.invokeLater(uiContinuation, state);
+            }
+            else if (progressIndicatorWhenSearchStarted.isCanceled()) {
+                application.invokeLater(() -> {
                     if (isShowing() && progressIndicatorWhenSearchStarted == myResultsPreviewSearchProgress) {
                         scheduleResultsUpdate();
                     }
-                }
+                });
             }
-        );
+        });
     }
 
     private void reset() {
@@ -1586,12 +1612,10 @@ public class FindPopupPanel extends JBPanel<FindPopupPanel> implements FindUI {
     }
 
     @Override
-    
     public String getStringToFind() {
         return mySearchComponent.getText();
     }
 
-    
     private String getStringToReplace() {
         return myReplaceComponent.getText();
     }
@@ -1699,7 +1723,6 @@ public class FindPopupPanel extends JBPanel<FindPopupPanel> implements FindUI {
         Pattern.compile(pattern, Pattern.CASE_INSENSITIVE);
     }
 
-    
     private static JBIterable<Component> focusableComponents(Component component) {
         return UIUtil.uiTraverser(component)
             .bfsTraversal()
@@ -1816,7 +1839,6 @@ public class FindPopupPanel extends JBPanel<FindPopupPanel> implements FindUI {
                 setBorder(null);
             }
 
-            
             private SimpleTextAttributes getAttributes(TextChunk textChunk) {
                 SimpleTextAttributes at = textChunk.getSimpleAttributesIgnoreBackground();
                 boolean highlighted = textChunk.getType() != null || at.getFontStyle() == Font.BOLD;
@@ -1851,7 +1873,6 @@ public class FindPopupPanel extends JBPanel<FindPopupPanel> implements FindUI {
                 setBorder(null);
             }
 
-            
             private String getFilePath(UsageInfo2UsageAdapter ua) {
                 VirtualFile file = ua.getFile();
                 if (ScratchUtil.isScratch(file)) {

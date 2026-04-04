@@ -32,6 +32,7 @@ import consulo.util.lang.Comparing;
 import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
+import consulo.ui.UIAccess;
 import consulo.virtualFileSystem.encoding.ApplicationEncodingManager;
 import consulo.virtualFileSystem.encoding.EncodingManager;
 import consulo.virtualFileSystem.encoding.EncodingProjectManager;
@@ -283,7 +284,7 @@ public final class EncodingProjectManagerImpl implements EncodingProjectManager,
     public void setMapping(Map<? extends VirtualFile, ? extends Charset> mapping) {
         Application app = myProject.getApplication();
         app.assertIsWriteThread();
-        FileDocumentManager.getInstance().saveAllDocuments();  // consider all files as unmodified
+        FileDocumentManager.getInstance().saveAllDocuments(UIAccess.current());  // consider all files as unmodified
         Map<VirtualFilePointer, Charset> newMap = new HashMap<>(mapping.size());
         Map<VirtualFilePointer, Charset> oldMap = new HashMap<>(myMapping);
 
@@ -453,7 +454,7 @@ public final class EncodingProjectManagerImpl implements EncodingProjectManager,
         if (Objects.equals(suppress, Boolean.TRUE)) {
             return;
         }
-        FileDocumentManager.getInstance().saveAllDocuments();  // consider all files as unmodified
+        FileDocumentManager.getInstance().saveAllDocuments(UIAccess.current());  // consider all files as unmodified
         ProgressManager.getInstance().runProcessWithProgressSynchronously(
             () -> suppressReloadDuring(reloadAction),
             IdeLocalize.progressTitleReloadFiles().get(),

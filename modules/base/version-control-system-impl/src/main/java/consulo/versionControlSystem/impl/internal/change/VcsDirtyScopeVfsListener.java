@@ -55,11 +55,6 @@ public class VcsDirtyScopeVfsListener implements AsyncVfsEventsListener, Disposa
   public void dispose() {
   }
 
-  @TestOnly
-  public void waitForAsyncTaskCompletion() {
-    // AsyncVfsEventsPostProcessorImpl.waitEventsProcessed();
-  }
-
   @Override
   public void filesChanged(List<? extends VFileEvent> events) {
     ProjectLevelVcsManager vcsManager = ProjectLevelVcsManager.getInstance(myProject);

@@ -17,7 +17,7 @@
 package consulo.ide.impl.idea.ide.projectView.impl;
 
 import consulo.annotation.access.RequiredReadAction;
-import consulo.application.impl.internal.IdeaModalityState;
+import consulo.ui.ModalityState;
 import consulo.component.messagebus.MessageBusConnection;
 import consulo.ide.impl.idea.ide.CopyPasteUtil;
 import consulo.bookmark.Bookmark;
@@ -183,7 +183,7 @@ public class ProjectTreeBuilder extends BaseProjectTreeBuilder {
             synchronized (myFilesToRefresh) {
               myFilesToRefresh.removeAll(filesToRefresh);
             }
-          }, 200, IdeaModalityState.nonModal());
+          }, 200, ModalityState.nonModal());
         }
       }
     }

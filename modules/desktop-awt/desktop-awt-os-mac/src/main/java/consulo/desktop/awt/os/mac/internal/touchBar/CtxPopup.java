@@ -2,7 +2,6 @@
 package consulo.desktop.awt.os.mac.internal.touchBar;
 
 import consulo.application.ApplicationManager;
-import consulo.application.impl.internal.LaterInvocator;
 import consulo.disposer.Disposable;
 import consulo.ide.impl.idea.ui.popup.list.ListPopupImpl;
 import consulo.ui.ModalityState;
@@ -40,7 +39,7 @@ final class CtxPopup {
     private static TBPanel createScrubberBarFromPopup(ListPopupImpl listPopup) {
         TBPanel result = new TBPanel("popup_scrubber_bar_" + listPopup.hashCode(), new TBPanel.CrossEscInfo(true, false), false);
 
-        ModalityState ms = LaterInvocator.getCurrentModalityState();
+        ModalityState ms = ModalityState.nonModal();
 
         final TBItemScrubber scrub = result.addScrubber();
         ListPopupStep<Object> listPopupStep = listPopup.getListStep();

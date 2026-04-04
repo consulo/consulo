@@ -113,6 +113,7 @@ public class ChangeSignaturePassFactory implements TextEditorHighlightingPassFac
             UpdateHighlightersUtil.setHighlightersToEditor(
                 myProject,
                 myDocument,
+                myFile, 
                 0,
                 myFile.getTextLength(),
                 info != null ? Collections.singletonList(info) : Collections.emptyList(),

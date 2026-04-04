@@ -467,6 +467,7 @@ public class ImplementationViewComponentImpl extends JPanel implements Implement
         }));
     }
 
+
     @RequiredReadAction
     public static @Nullable String getNewText(PsiElement elt) {
         Project project = elt.getProject();

@@ -553,10 +553,9 @@ public abstract class BaseRefactoringProcessor implements Runnable {
                 }
             };
             if (Registry.is("run.refactorings.under.progress")) {
-                app.runWriteActionWithNonCancellableProgressInDispatchThread(
+                app.runWriteActionWithNonCancellableProgress(
                     commandName,
                     myProject,
-                    null,
                     indicator -> performRefactoringRunnable.run()
                 );
             }
@@ -572,10 +571,9 @@ public abstract class BaseRefactoringProcessor implements Runnable {
             }
             myTransaction.commit();
             if (Registry.is("run.refactorings.under.progress")) {
-                app.runWriteActionWithNonCancellableProgressInDispatchThread(
+                app.runWriteActionWithNonCancellableProgress(
                     commandName,
                     myProject,
-                    null,
                     indicator -> performPsiSpoilingRefactoring()
                 );
             }

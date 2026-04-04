@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.ide.favoritesTreeView;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.application.ApplicationManager;
-import consulo.application.impl.internal.IdeaModalityState;
+import consulo.ui.ModalityState;
 import consulo.bookmark.ui.view.AbstractFavoritesListProvider;
 import consulo.bookmark.ui.view.FavoritesListNode;
 import consulo.bookmark.ui.view.ProjectViewNodeWithChildrenList;
@@ -219,7 +219,7 @@ public class TaskDefaultFavoriteListProvider extends AbstractFavoritesListProvid
             public void run() {
                 popup.showInCenterOf(tree);
             }
-        }, IdeaModalityState.nonModal(), project.getDisposed());
+        }, ModalityState.nonModal(), project.getDisposed());
     }
 
     //private Operation getCustomEditOperation() {

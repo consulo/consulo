@@ -147,7 +147,6 @@ public class WebUIInternalImpl extends UIInternal {
     return new WebProgressBarImpl();
   }
 
-  
   @Override
   public IntBox _Components_intBox(int value) {
     return new WebIntBoxImpl(value);
@@ -158,7 +157,6 @@ public class WebUIInternalImpl extends UIInternal {
     return new WebListBoxImpl<>(model);
   }
 
-  
   @Override
   public RadioButton _Components_radioButton(LocalizeValue text, boolean selected) {
     return new WebRadioButtonImpl(selected, text);
@@ -277,7 +275,6 @@ public class WebUIInternalImpl extends UIInternal {
 
       }
 
-      
       @Override
       public ValueGroup<Boolean> add(ValueComponent<Boolean> component) {
         return this;
@@ -290,19 +287,16 @@ public class WebUIInternalImpl extends UIInternal {
     return new WebMenuBarImpl();
   }
 
-  
   @Override
   public StyleManager _StyleManager_get() {
     return WebStyleManagerImpl.ourInstance;
   }
 
-  
   @Override
   public FontManager _FontManager_get() {
     return WebFontManagerImpl.ourInstance;
   }
 
-  
   @Override
   public Window _Window_create(String title, WindowOptions options) {
     WebWindowImpl window = new WebWindowImpl(true, options);
@@ -336,7 +330,6 @@ public class WebUIInternalImpl extends UIInternal {
   }
 
   @RequiredUIAccess
-  
   @Override
   public UIAccess _UIAccess_get() {
     UI ui = UI.getCurrent();
@@ -357,7 +350,6 @@ public class WebUIInternalImpl extends UIInternal {
     return UI.getCurrent() != null;
   }
 
-  
   @Override
   public IconLibraryManager _IconLibraryManager_get() {
     return WebIconLibraryManagerImpl.ourInstance;
@@ -394,7 +386,6 @@ public class WebUIInternalImpl extends UIInternal {
     //return new WebToggleSwitchImpl(selected);
   }
 
-  
   @Override
   public PasswordBox _Components_passwordBox(@Nullable String passwordText) {
     throw notSupported();
@@ -430,7 +421,6 @@ public class WebUIInternalImpl extends UIInternal {
     return WebFocusManagerImpl.ourInstance;
   }
 
-  
   @Override
   public PopupMenu _PopupMenu_create(Component target) {
     throw notSupported();
@@ -458,18 +448,6 @@ public class WebUIInternalImpl extends UIInternal {
 //    ref.set(registration);
 //
 //    action.run();
-  }
-
-  
-  @Override
-  public ModalityState _ModalityState_any() {
-    return WebModalityState.INSTANCE;
-  }
-
-  
-  @Override
-  public ModalityState _ModalityState_nonModal() {
-    return WebModalityState.INSTANCE;
   }
 
   private RuntimeException notSupported() {

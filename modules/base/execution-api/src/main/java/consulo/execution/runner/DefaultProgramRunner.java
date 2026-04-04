@@ -17,6 +17,7 @@
 package consulo.execution.runner;
 
 import consulo.document.FileDocumentManager;
+import consulo.ui.UIAccess;
 import consulo.execution.ExecutionResult;
 import consulo.execution.configuration.RunProfileState;
 import consulo.execution.ui.RunContentDescriptor;
@@ -28,7 +29,7 @@ import consulo.process.ExecutionException;
 public abstract class DefaultProgramRunner extends GenericProgramRunner {
   @Override
   protected RunContentDescriptor doExecute(RunProfileState state, ExecutionEnvironment env) throws ExecutionException {
-    FileDocumentManager.getInstance().saveAllDocuments();
+    FileDocumentManager.getInstance().saveAllDocuments(UIAccess.current());
     ExecutionResult executionResult = state.execute(env.getExecutor(), this);
     if (executionResult == null) {
       return null;

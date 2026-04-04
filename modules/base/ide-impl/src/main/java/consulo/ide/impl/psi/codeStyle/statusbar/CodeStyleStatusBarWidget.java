@@ -200,7 +200,7 @@ public class CodeStyleStatusBarWidget extends EditorBasedStatusBarPopup implemen
             IndentOptions indentOptions,
             @Nullable CodeStyleStatusBarUIContributor uiContributor
         ) {
-            super(toolTip, text, true);
+            super(psiFile.getVirtualFile(), toolTip, text, true);
             myIndentOptions = indentOptions;
             myContributor = uiContributor;
             myPsiFile = psiFile;

@@ -4,7 +4,8 @@ package consulo.desktop.awt.action.toolbar;
 import consulo.application.Application;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
-import consulo.dataContext.DataProvider;
+import consulo.dataContext.DataSink;
+import consulo.dataContext.UiDataProvider;
 import consulo.desktop.awt.ui.animation.AlphaAnimated;
 import consulo.desktop.awt.ui.animation.AlphaAnimationContext;
 import consulo.desktop.awt.ui.plaf2.flat.InplaceComponent;
@@ -21,7 +22,6 @@ import consulo.ui.ex.awt.action.CustomComponentAction;
 import consulo.ui.ex.awt.util.ColorUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.keymap.KeymapManager;
-import consulo.util.dataholder.Key;
 import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
@@ -30,12 +30,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
-public class SimpleActionToolbarImpl extends JToolBar implements DesktopAWTActionToolbar, QuickActionProvider, AlphaAnimated, DataProvider {
+public class SimpleActionToolbarImpl extends JToolBar implements DesktopAWTActionToolbar, QuickActionProvider, AlphaAnimated, UiDataProvider {
     private static final Logger LOG = Logger.getInstance(SimpleActionToolbarImpl.class);
 
     protected static final String RIGHT_ALIGN_KEY = "RIGHT_ALIGN";
 
-    
     private final Style myStyle;
 
     private final Throwable myCreationTrace = new Throwable("toolbar creation trace");
@@ -92,15 +91,11 @@ public class SimpleActionToolbarImpl extends JToolBar implements DesktopAWTActio
     }
 
     @Override
-    public @Nullable Object getData(Key<?> dataId) {
-        if (dataId == ActionToolbar.KEY) {
-            return this;
-        }
-        return null;
+    public void uiDataSnapshot(DataSink sink) {
+        sink.set(ActionToolbar.KEY, this);
     }
 
     @Override
-    
     public Style getStyle() {
         return myStyle;
     }
@@ -113,7 +108,6 @@ public class SimpleActionToolbarImpl extends JToolBar implements DesktopAWTActio
         }
     }
 
-    
     public String getPlace() {
         return myEngine.getPlace();
     }
@@ -136,13 +130,11 @@ public class SimpleActionToolbarImpl extends JToolBar implements DesktopAWTActio
         return ActionPlaces.NAVIGATION_BAR_TOOLBAR.equals(myEngine.getPlace());
     }
 
-    
     @Override
     public JComponent getComponent() {
         return this;
     }
 
-    
     @Override
     public consulo.ui.Component getUIComponent() {
         return TargetAWT.wrap(this);
@@ -158,7 +150,6 @@ public class SimpleActionToolbarImpl extends JToolBar implements DesktopAWTActio
         throw new UnsupportedOperationException("Not supported");
     }
 
-    
     @Override
     public AlphaAnimationContext getAlphaContext() {
         return myAlphaContext;
@@ -252,7 +243,6 @@ public class SimpleActionToolbarImpl extends JToolBar implements DesktopAWTActio
         }
     }
 
-    
     @RequiredUIAccess
     private JComponent getCustomUIComponent(AnAction action) {
         Presentation presentation = myEngine.getPresentation(action);
@@ -272,7 +262,6 @@ public class SimpleActionToolbarImpl extends JToolBar implements DesktopAWTActio
         return (JComponent) TargetAWT.to(customComponent);
     }
 
-    
     @RequiredUIAccess
     private JComponent getCustomComponent(AnAction action) {
         Presentation presentation = myEngine.getPresentation(action);
@@ -300,7 +289,6 @@ public class SimpleActionToolbarImpl extends JToolBar implements DesktopAWTActio
         }
     }
 
-    
     protected ActionButton createToolbarButton(AnAction action,
                                                String place,
                                                Presentation presentation) {
@@ -327,7 +315,6 @@ public class SimpleActionToolbarImpl extends JToolBar implements DesktopAWTActio
         return actionButton;
     }
 
-    
     private ActionButton createToolbarButton(AnAction action) {
         return createToolbarButton(action, getPlace(), myEngine.getPresentation(action));
     }
@@ -339,7 +326,6 @@ public class SimpleActionToolbarImpl extends JToolBar implements DesktopAWTActio
     }
 
     @RequiredUIAccess
-    
     @Override
     public CompletableFuture<List<? extends AnAction>> updateActionsAsync() {
         return myEngine.updateActionsAsync();
@@ -359,13 +345,11 @@ public class SimpleActionToolbarImpl extends JToolBar implements DesktopAWTActio
         }
     }
 
-    
     @Override
     public DataContext getToolbarDataContext() {
         return getDataContext();
     }
 
-    
     protected DataContext getDataContext() {
         if (myTargetComponent == null && getClientProperty(SUPPRESS_TARGET_COMPONENT_WARNING) == null) {
             putClientProperty(SUPPRESS_TARGET_COMPONENT_WARNING, true);
@@ -377,13 +361,11 @@ public class SimpleActionToolbarImpl extends JToolBar implements DesktopAWTActio
         return myDataManager.getDataContext(target);
     }
 
-    
     @Override
     public List<AnAction> getActions(boolean originalProvider) {
         return getActions();
     }
 
-    
     @Override
     public List<AnAction> getActions() {
         return myEngine.getActions();

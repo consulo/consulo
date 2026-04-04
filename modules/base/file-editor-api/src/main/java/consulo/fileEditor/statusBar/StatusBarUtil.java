@@ -22,12 +22,11 @@ import consulo.fileEditor.*;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.project.ui.wm.StatusBar;
-import consulo.project.ui.wm.WindowManager;
 import consulo.project.ui.wm.dock.DockContainer;
 import consulo.project.ui.wm.dock.DockManager;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.collection.ArrayUtil;
 import consulo.virtualFileSystem.VirtualFile;
-
 import org.jspecify.annotations.Nullable;
 
 /**
@@ -39,6 +38,7 @@ public class StatusBarUtil {
   private StatusBarUtil() {
   }
 
+  @RequiredUIAccess
   public static @Nullable Editor getCurrentTextEditor(@Nullable StatusBar statusBar) {
     if (statusBar == null) return null;
 
@@ -53,6 +53,7 @@ public class StatusBarUtil {
   /**
    * Finds the current file editor.
    */
+  @RequiredUIAccess
   public static @Nullable FileEditor getCurrentFileEditor(@Nullable StatusBar statusBar) {
     if (statusBar == null) {
       return null;
@@ -72,8 +73,8 @@ public class StatusBarUtil {
     }
     
     FileEditorsSplitters splitters = null;
-    if (c instanceof DockableEditorTabbedContainer) {
-      splitters = ((DockableEditorTabbedContainer)c).getSplitters();
+    if (c instanceof DockableEditorTabbedContainer dockableEditorTabbedContainer) {
+      splitters = dockableEditorTabbedContainer.getSplitters();
     }
 
     if (splitters != null && splitters.getCurrentWindow() != null) {

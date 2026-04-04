@@ -72,22 +72,6 @@ public interface UIAccess extends Executor {
         UIInternal.get().addModalityStateListener(listener, parentDisposable);
     }
 
-    @RequiredUIAccess
-    default int getEventCount() {
-        assertIsUIThread();
-        return -1;
-    }
-
-    /**
-     * Calling Runnable#run() will restore event count from initial method call
-     */
-    @RequiredUIAccess
-    default Runnable markEventCount() {
-        assertIsUIThread();
-        return () -> {
-        };
-    }
-
     default boolean isValid() {
         return true;
     }

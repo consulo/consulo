@@ -20,6 +20,7 @@ import consulo.annotation.access.RequiredReadAction;
 import consulo.application.progress.ProgressIndicator;
 import consulo.codeEditor.DocumentMarkupModel;
 import consulo.codeEditor.Editor;
+import consulo.codeEditor.imaginary.ImaginaryEditor;
 import consulo.codeEditor.markup.MarkupModel;
 import consulo.codeEditor.markup.RangeHighlighter;
 import consulo.document.Document;
@@ -62,19 +63,24 @@ public class IdentifierHighlighterPass extends TextEditorHighlightingPass {
     private final Editor myEditor;
     private final Collection<TextRange> myReadAccessRanges = Collections.synchronizedList(new ArrayList<TextRange>());
     private final Collection<TextRange> myWriteAccessRanges = Collections.synchronizedList(new ArrayList<TextRange>());
-    private final int myCaretOffset;
 
     IdentifierHighlighterPass(Project project, PsiFile file, Editor editor) {
         super(project, editor.getDocument(), false);
         myFile = file;
         myEditor = editor;
-        myCaretOffset = myEditor.getCaretModel().getOffset();
+    }
+
+    private Editor getEditorForRead() {
+        ImaginaryEditor imaginary = getImaginaryEditor();
+        return imaginary != null ? imaginary : myEditor;
     }
 
     @Override
     @RequiredReadAction
     public void doCollectInformation(ProgressIndicator progress) {
-        HighlightUsagesHandlerBase<PsiElement> highlightUsagesHandler = HighlightUsagesHandler.createCustomHandler(myEditor, myFile);
+        Editor editor = getEditorForRead();
+        int caretOffset = editor.getCaretModel().getOffset();
+        HighlightUsagesHandlerBase<PsiElement> highlightUsagesHandler = HighlightUsagesHandler.createCustomHandler(editor, myFile);
         if (highlightUsagesHandler != null) {
             List<PsiElement> targets = highlightUsagesHandler.getTargets();
             highlightUsagesHandler.computeUsages(targets);
@@ -97,13 +103,13 @@ public class IdentifierHighlighterPass extends TextEditorHighlightingPass {
             TargetElementUtilExtender.ELEMENT_NAME_ACCEPTED,
             TargetElementUtilExtender.REFERENCED_ELEMENT_ACCEPTED
         ));
-        PsiElement myTarget = TargetElementUtil.findTargetElement(myEditor, flags, myCaretOffset);
+        PsiElement myTarget = TargetElementUtil.findTargetElement(editor, flags, caretOffset);
 
         if (myTarget == null) {
-            if (!PsiDocumentManager.getInstance(myProject).isUncommited(myEditor.getDocument())) {
+            if (!PsiDocumentManager.getInstance(myProject).isUncommited(editor.getDocument())) {
                 // when document is committed, try to check injected stuff - it's fast
                 Editor injectedEditor =
-                    InjectedEditorManager.getInstance(myProject).getEditorForInjectedLanguageNoCommit(myEditor, myFile, myCaretOffset);
+                    InjectedEditorManager.getInstance(myProject).getEditorForInjectedLanguageNoCommit(editor, myFile, caretOffset);
                 myTarget = TargetElementUtil.findTargetElement(injectedEditor, flags, injectedEditor.getCaretModel().getOffset());
             }
         }
@@ -112,12 +118,12 @@ public class IdentifierHighlighterPass extends TextEditorHighlightingPass {
             highlightTargetUsages(myTarget);
         }
         else {
-            PsiReference ref = TargetElementUtil.findReference(myEditor);
+            PsiReference ref = TargetElementUtil.findReference(editor);
             if (ref instanceof PsiPolyVariantReference) {
                 if (!ref.getElement().isValid()) {
                     throw new PsiInvalidElementAccessException(
                         ref.getElement(),
-                        "Invalid element in " + ref + " of " + ref.getClass() + "; editor=" + myEditor
+                        "Invalid element in " + ref + " of " + ref.getClass() + "; editor=" + editor
                     );
                 }
                 ResolveResult[] results = ((PsiPolyVariantReference) ref).multiResolve(false);
@@ -128,7 +134,7 @@ public class IdentifierHighlighterPass extends TextEditorHighlightingPass {
                             if (!target.isValid()) {
                                 throw new PsiInvalidElementAccessException(
                                     target,
-                                    "Invalid element returned from " + ref + " of " + ref.getClass() + "; editor=" + myEditor
+                                    "Invalid element returned from " + ref + " of " + ref.getClass() + "; editor=" + editor
                                 );
                             }
                             highlightTargetUsages(target);
@@ -167,7 +173,6 @@ public class IdentifierHighlighterPass extends TextEditorHighlightingPass {
         return getUsages(target, psiElement, withDeclarations, false).first;
     }
 
-    
     @RequiredReadAction
     private static Couple<Collection<TextRange>> getUsages(
         PsiElement target,
@@ -226,7 +231,7 @@ public class IdentifierHighlighterPass extends TextEditorHighlightingPass {
     public void doApplyInformationToEditor() {
         boolean virtSpace = TargetElementUtil.inVirtualSpace(myEditor, myEditor.getCaretModel().getOffset());
         List<HighlightInfo> infos = virtSpace ? Collections.<HighlightInfo>emptyList() : getHighlights();
-        UpdateHighlightersUtil.setHighlightersToEditor(myProject, myDocument, 0, myFile.getTextLength(), infos, getColorsScheme(), getId());
+        UpdateHighlightersUtil.setHighlightersToEditor(myProject, myDocument, myFile, 0, myFile.getTextLength(), infos, getColorsScheme(), getId());
     }
 
     private List<HighlightInfo> getHighlights() {

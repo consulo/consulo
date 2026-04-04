@@ -24,9 +24,9 @@ import consulo.language.editor.Pass;
 import consulo.language.editor.highlight.TextEditorHighlightingPass;
 import consulo.language.editor.impl.highlight.HighlightInfoProcessor;
 import consulo.language.editor.impl.highlight.MainHighlightingPassFactory;
-import consulo.language.editor.impl.highlight.VisibleHighlightingPassFactory;
 import consulo.language.editor.impl.internal.daemon.FileStatusMapImpl;
 import consulo.language.editor.impl.internal.highlight.DefaultHighlightInfoProcessor;
+import consulo.language.editor.impl.internal.highlight.HighlightingSessionImpl;
 import consulo.language.editor.impl.internal.highlight.ProgressableTextEditorHighlightingPass;
 import consulo.language.editor.impl.internal.inspection.InspectionProjectProfileManager;
 import consulo.language.editor.inspection.scheme.InspectionProfileWrapper;
@@ -63,7 +63,7 @@ public class LocalInspectionsPassFactory implements MainHighlightingPassFactory 
         if (textRange == null || !InspectionProjectProfileManager.getInstance(file.getProject()).isProfileLoaded()) {
             return new ProgressableTextEditorHighlightingPass.EmptyPass(file.getProject(), editor.getDocument());
         }
-        TextRange visibleRange = VisibleHighlightingPassFactory.calculateVisibleRange(editor);
+        TextRange visibleRange = HighlightingSessionImpl.getFromCurrentIndicator(file).getVisibleRange();
         return new MyLocalInspectionsPass(file, editor.getDocument(), textRange, visibleRange, new DefaultHighlightInfoProcessor());
     }
 

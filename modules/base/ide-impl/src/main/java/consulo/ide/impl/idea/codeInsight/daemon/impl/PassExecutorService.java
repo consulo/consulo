@@ -21,13 +21,14 @@ import consulo.fileEditor.FileEditorManager;
 import consulo.fileEditor.TextEditor;
 import consulo.fileEditor.highlight.HighlightingPass;
 import consulo.ide.impl.idea.openapi.application.impl.ApplicationInfoImpl;
-import consulo.language.editor.FileStatusMap;
 import consulo.language.editor.highlight.TextEditorHighlightingPass;
 import consulo.language.editor.impl.highlight.EditorBoundHighlightingPass;
+import consulo.language.editor.impl.highlight.HighlightingSession;
 import consulo.language.editor.impl.internal.highlight.DefaultHighlightInfoProcessor;
 import consulo.language.editor.impl.internal.highlight.HighlightingSessionImpl;
 import consulo.language.editor.inject.EditorWindow;
-import consulo.language.editor.internal.DaemonCodeAnalyzerInternal;
+import consulo.language.psi.PsiDocumentManager;
+import consulo.language.psi.PsiFile;
 import consulo.language.editor.internal.DaemonProgressIndicator;
 import consulo.logging.Logger;
 import consulo.project.DumbService;
@@ -40,6 +41,7 @@ import consulo.util.collection.primitive.ints.IntMaps;
 import consulo.util.collection.primitive.ints.IntObjectMap;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.Pair;
+import consulo.util.lang.ref.SimpleReference;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
@@ -98,7 +100,6 @@ final class PassExecutorService implements Disposable {
         mySubmittedPasses.clear();
     }
 
-    @RequiredUIAccess
     void submitPasses(Map<FileEditor, HighlightingPass[]> passesMap, DaemonProgressIndicator updateProgress) {
         if (isDisposed()) {
             return;
@@ -266,7 +267,6 @@ final class PassExecutorService implements Disposable {
         }
     }
 
-    
     private TextEditorHighlightingPass convertToTextHighlightingPass(
         final HighlightingPass pass,
         final Document document,
@@ -307,7 +307,6 @@ final class PassExecutorService implements Disposable {
         return textEditorHighlightingPass;
     }
 
-    
     private FileEditor getPreferredFileEditor(Document document, Collection<? extends FileEditor> fileEditors) {
         assert !fileEditors.isEmpty();
         if (document != null) {
@@ -322,8 +321,6 @@ final class PassExecutorService implements Disposable {
         return fileEditors.iterator().next();
     }
 
-    
-    @RequiredUIAccess
     private ScheduledPass createScheduledPass(
         FileEditor fileEditor,
         TextEditorHighlightingPass pass,
@@ -382,26 +379,37 @@ final class PassExecutorService implements Disposable {
 
         if (pass.isRunIntentionPassAfter() && fileEditor instanceof TextEditor) {
             Editor editor = ((TextEditor) fileEditor).getEditor();
-            ShowIntentionsPass ip = new ShowIntentionsPass(myProject, editor, false);
-            ip.setId(nextPassId.incrementAndGet());
-            ip.setCompletionPredecessorIds(new int[]{scheduledPass.myPass.getId()});
+            SimpleReference<PsiFile> psiFileRef = SimpleReference.create();
+            if (Application.get().tryRunReadAction(
+                () -> psiFileRef.set(PsiDocumentManager.getInstance(myProject).getPsiFile(editor.getDocument())))) {
+                PsiFile psiFile = psiFileRef.get();
+                if (psiFile != null) {
+                    ShowIntentionsPass ip = new ShowIntentionsPass(psiFile, editor, false);
+                    HighlightingSession ipSession =
+                        HighlightingSessionImpl.getHighlightingSession(psiFile, updateProgress);
+                    if (ipSession != null) {
+                        ip.setImaginaryEditor(ipSession.getImaginaryEditor());
+                    }
+                    ip.setId(nextPassId.incrementAndGet());
+                    ip.setCompletionPredecessorIds(new int[]{scheduledPass.myPass.getId()});
 
-            createScheduledPass(
-                fileEditor,
-                ip,
-                toBeSubmitted,
-                textEditorHighlightingPasses,
-                freePasses,
-                dependentPasses,
-                updateProgress,
-                threadsToStartCountdown
-            );
+                    createScheduledPass(
+                        fileEditor,
+                        ip,
+                        toBeSubmitted,
+                        textEditorHighlightingPasses,
+                        freePasses,
+                        dependentPasses,
+                        updateProgress,
+                        threadsToStartCountdown
+                    );
+                }
+            }
         }
 
         return scheduledPass;
     }
 
-    @RequiredUIAccess
     private ScheduledPass findOrCreatePredecessorPass(
         FileEditor fileEditor,
         Map<Pair<FileEditor, Integer>, ScheduledPass> toBeSubmitted,
@@ -464,7 +472,6 @@ final class PassExecutorService implements Disposable {
         private final AtomicInteger myRunningPredecessorsCount = new AtomicInteger(0);
         private final List<ScheduledPass> mySuccessorsOnCompletion = new ArrayList<>();
         private final List<ScheduledPass> mySuccessorsOnSubmit = new ArrayList<>();
-        
         private final DaemonProgressIndicator myUpdateProgress;
 
         private ScheduledPass(
@@ -585,49 +592,51 @@ final class PassExecutorService implements Disposable {
         AtomicInteger threadsToStartCountdown,
         Runnable callbackOnApplied
     ) {
-        Application.get().invokeLater(() -> {
-            if (isDisposed() || !fileEditor.isValid()) {
-                updateProgress.cancel();
-            }
-            if (updateProgress.isCanceled()) {
-                log(updateProgress, pass, " is canceled during apply, sorry");
-                return;
-            }
-            Document document = pass.getDocument();
-            try {
-                if (Application.get().isUnifiedApplication()
-                    || fileEditor.getComponent().isDisplayable()
-                    || Application.get().isHeadlessEnvironment()) {
-                    pass.applyInformationToEditor();
-                    repaintErrorStripeAndIcon(fileEditor);
-                    FileStatusMap fileStatusMap = DaemonCodeAnalyzerInternal.getInstanceEx(myProject).getFileStatusMap();
-                    if (document != null) {
-                        fileStatusMap.markFileUpToDate(document, pass.getId());
-                    }
-                    log(updateProgress, pass, " Applied");
+        try {
+            Application.get().invokeLater(() -> {
+                if (isDisposed() || !fileEditor.isValid()) {
+                    updateProgress.cancel();
                 }
-            }
-            catch (ProcessCanceledException e) {
-                log(updateProgress, pass, "Error " + e);
-                throw e;
-            }
-            catch (RuntimeException e) {
-                VirtualFile file = document == null ? null : FileDocumentManager.getInstance().getFile(document);
-                FileType fileType = file == null ? null : file.getFileType();
-                String message = "Exception while applying information to " + fileEditor + "(" + fileType + ")";
-                log(updateProgress, pass, message + e);
-                throw new RuntimeException(message, e);
-            }
-            if (threadsToStartCountdown.decrementAndGet() == 0) {
-                HighlightingSessionImpl.waitForAllSessionsHighlightInfosApplied(updateProgress);
-                log(updateProgress, pass, "Stopping ");
-                updateProgress.stopIfRunning();
-            }
-            else {
-                log(updateProgress, pass, "Finished but there are passes in the queue: " + threadsToStartCountdown.get());
-            }
-            callbackOnApplied.run();
-        }, updateProgress.getModalityState());
+                if (updateProgress.isCanceled()) {
+                    log(updateProgress, pass, " is canceled during apply, sorry");
+                    return;
+                }
+                Document document = pass.getDocument();
+                try {
+                    if (Application.get().isUnifiedApplication()
+                        || fileEditor.getComponent().isDisplayable()
+                        || Application.get().isHeadlessEnvironment()) {
+                        pass.applyInformationToEditor();
+                        repaintErrorStripeAndIcon(fileEditor);
+                        pass.markUpToDateIfStillValid(updateProgress);
+                        log(updateProgress, pass, " Applied");
+                    }
+                }
+                catch (ProcessCanceledException e) {
+                    log(updateProgress, pass, "Error " + e);
+                    throw e;
+                }
+                catch (RuntimeException e) {
+                    VirtualFile file = document == null ? null : FileDocumentManager.getInstance().getFile(document);
+                    FileType fileType = file == null ? null : file.getFileType();
+                    String message = "Exception while applying information to " + fileEditor + "(" + fileType + ")";
+                    log(updateProgress, pass, message + e);
+                    throw new RuntimeException(message, e);
+                }
+                if (threadsToStartCountdown.decrementAndGet() == 0) {
+                    HighlightingSessionImpl.waitForAllSessionsHighlightInfosApplied(updateProgress);
+                    log(updateProgress, pass, "Stopping ");
+                    updateProgress.stopIfRunning();
+                }
+                else {
+                    log(updateProgress, pass, "Finished but there are passes in the queue: " + threadsToStartCountdown.get());
+                }
+                callbackOnApplied.run();
+            }, updateProgress.getModalityState(), pass.getExpiredCondition());
+        }
+        catch (ProcessCanceledException ignored) {
+            // pass.getExpiredCondition() computation could throw PCE
+        }
     }
 
     @RequiredUIAccess
@@ -641,7 +650,6 @@ final class PassExecutorService implements Disposable {
         return isDisposed || myProject.isDisposedOrDisposeInProgress();
     }
 
-    
     List<HighlightingPass> getAllSubmittedPasses() {
         List<HighlightingPass> result = new ArrayList<>(mySubmittedPasses.size());
         for (ScheduledPass scheduledPass : mySubmittedPasses.keySet()) {

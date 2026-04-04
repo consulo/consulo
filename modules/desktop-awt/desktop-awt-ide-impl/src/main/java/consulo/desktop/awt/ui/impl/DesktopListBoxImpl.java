@@ -25,6 +25,8 @@ import consulo.ui.event.ValueComponentEvent;
 import consulo.ui.ex.awt.JBList;
 import consulo.ui.model.ListModel;
 
+import java.util.function.Function;
+
 /**
  * @author VISTALL
  * @since 2017-09-12
@@ -35,14 +37,11 @@ class DesktopListBoxImpl<E> extends SwingComponentDelegate<JBList<E>> implements
             super(dataModel);
         }
 
-        
         @Override
         public Component toUIComponent() {
             return DesktopListBoxImpl.this;
         }
     }
-
-    private TextItemRenderer<E> myRenderer = ListItemRenderers.defaultRenderer();
 
     private ListModel<E> myModel;
 
@@ -51,23 +50,26 @@ class DesktopListBoxImpl<E> extends SwingComponentDelegate<JBList<E>> implements
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     protected JBList<E> createComponent() {
         DesktopComboBoxModelWrapper<E> wrapper = new DesktopComboBoxModelWrapper<>(myModel);
 
         MyJBList<E> component = new MyJBList<>(wrapper);
-        component.setCellRenderer(new DesktopListRender<>(() -> myRenderer));
-        return  component;
+        component.setCellRenderer(new DesktopListRender<>(ListItemRenderers::defaultRenderer));
+        return component;
     }
 
-    
     @Override
     public ListModel<E> getListModel() {
         return myModel;
     }
 
     @Override
-    public void setRenderer(TextItemRenderer<E> renderer) {
-        myRenderer = renderer;
+    @SuppressWarnings("unchecked")
+    public void setRenderer(ItemRenderer<E> renderer) {
+        if (renderer instanceof TextItemRenderer textItemRenderer) {
+            toAWTComponent().setCellRenderer(new DesktopListRender<>(() -> textItemRenderer));
+        }
     }
 
     @Override
@@ -81,7 +83,6 @@ class DesktopListBoxImpl<E> extends SwingComponentDelegate<JBList<E>> implements
         toAWTComponent().setSelectedValue(value, true);
     }
 
-    
     @Override
     public Disposable addValueListener(ComponentEventListener<ValueComponent<E>, ValueComponentEvent<E>> valueListener) {
         DesktopValueListenerAsListSelectionListener<E> listener = new DesktopValueListenerAsListSelectionListener<>(this, toAWTComponent(), valueListener);
@@ -90,7 +91,6 @@ class DesktopListBoxImpl<E> extends SwingComponentDelegate<JBList<E>> implements
     }
 
     @SuppressWarnings("unchecked")
-    
     @Override
     public E getValue() {
         return toAWTComponent().getSelectedValue();

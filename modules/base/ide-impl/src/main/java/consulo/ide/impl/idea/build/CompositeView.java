@@ -4,7 +4,8 @@ package consulo.ide.impl.idea.build;
 import consulo.application.Application;
 import consulo.application.dumb.DumbAware;
 import consulo.application.ui.wm.IdeFocusManager;
-import consulo.dataContext.DataProvider;
+import consulo.dataContext.DataSink;
+import consulo.dataContext.UiDataProvider;
 import consulo.disposer.Disposer;
 import consulo.ide.impl.idea.ide.util.PropertiesComponent;
 import consulo.localize.LocalizeValue;
@@ -12,9 +13,9 @@ import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ide.localize.IdeLocalize;
 import consulo.ui.ex.ComponentContainer;
 import consulo.ui.ex.action.*;
-import consulo.util.dataholder.Key;
 import consulo.util.lang.StringUtil;
 import org.jspecify.annotations.Nullable;
+import org.jetbrains.annotations.NonNls;
 
 import javax.swing.*;
 import java.awt.*;
@@ -29,15 +30,14 @@ import java.util.concurrent.atomic.AtomicReference;
  * @author Vladislav.Soroka
  */
 //@ApiStatus.Experimental
-public class CompositeView<T extends ComponentContainer> extends JPanel implements ComponentContainer, DataProvider {
+public class CompositeView<T extends ComponentContainer> extends JPanel implements ComponentContainer, UiDataProvider {
   private final Map<String, T> myViewMap = new ConcurrentHashMap<>();
   private final String mySelectionStateKey;
   private final AtomicReference<String> myVisibleViewRef = new AtomicReference<>();
   private final
-  
   SwitchViewAction mySwitchViewAction;
 
-  public CompositeView(String selectionStateKey) {
+  public CompositeView(@NonNls String selectionStateKey) {
     super(new CardLayout());
     mySelectionStateKey = selectionStateKey;
     mySwitchViewAction = new SwitchViewAction();
@@ -97,12 +97,10 @@ public class CompositeView<T extends ComponentContainer> extends JPanel implemen
     return viewClass.isInstance(view) ? viewClass.cast(view) : null;
   }
 
-  
   public AnAction[] createConsoleActions() {
     return AnAction.EMPTY_ARRAY;
   }
 
-  
   public AnAction[] getSwitchActions() {
     DefaultActionGroup actionGroup = new DefaultActionGroup();
     actionGroup.addSeparator();
@@ -112,7 +110,6 @@ public class CompositeView<T extends ComponentContainer> extends JPanel implemen
 
   @Override
   public
-  
   JComponent getComponent() {
     return this;
   }
@@ -127,16 +124,14 @@ public class CompositeView<T extends ComponentContainer> extends JPanel implemen
   }
 
   @Override
-  public @Nullable Object getData(Key dataId) {
+  public void uiDataSnapshot(DataSink sink) {
     String visibleViewName = myVisibleViewRef.get();
     if (visibleViewName != null) {
       T visibleView = getView(visibleViewName);
-      if (visibleView instanceof DataProvider) {
-        Object data = ((DataProvider)visibleView).getData(dataId);
-        if (data != null) return data;
+      if (visibleView instanceof UiDataProvider uiDataProvider) {
+        sink.uiDataSnapshot(uiDataProvider);
       }
     }
-    return null;
   }
 
   private void setStoredState(String viewName) {

@@ -16,7 +16,7 @@
 package consulo.fileEditor.internal;
 
 import consulo.application.Application;
-import consulo.dataContext.DataProvider;
+import consulo.dataContext.UiDataProvider;
 import consulo.project.Project;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.DefaultActionGroup;
@@ -29,7 +29,7 @@ public class SearchReplaceComponentBuilder {
   private final Project myProject;
   private final JComponent myTargetComponent;
 
-  private DataProvider myDataProvider;
+  private UiDataProvider myDataProvider;
 
   private Runnable myReplaceAction;
   private Runnable myCloseAction;
@@ -48,43 +48,36 @@ public class SearchReplaceComponentBuilder {
     myTargetComponent = component;
   }
 
-  
-  public SearchReplaceComponentBuilder withDataProvider(DataProvider provider) {
+  public SearchReplaceComponentBuilder withDataProvider(UiDataProvider provider) {
     myDataProvider = provider;
     return this;
   }
 
-  
   public SearchReplaceComponentBuilder withReplaceAction(Runnable action) {
     myReplaceAction = action;
     return this;
   }
 
-  
   public SearchReplaceComponentBuilder withCloseAction(Runnable action) {
     myCloseAction = action;
     return this;
   }
 
-  
   public SearchReplaceComponentBuilder addSearchFieldActions(AnAction... actions) {
     mySearchFieldActions.addAll(actions);
     return this;
   }
 
-  
   public SearchReplaceComponentBuilder addReplaceFieldActions(AnAction... actions) {
     myReplaceFieldActions.addAll(actions);
     return this;
   }
 
-  
   public SearchReplaceComponentBuilder addPrimarySearchActions(AnAction... actions) {
     mySearchActions.addAll(actions);
     return this;
   }
 
-  
   public SearchReplaceComponentBuilder addSecondarySearchActions(AnAction... actions) {
     for (AnAction action : actions) {
       mySearchActions.addAction(action).setAsSecondary(true);
@@ -92,31 +85,26 @@ public class SearchReplaceComponentBuilder {
     return this;
   }
 
-  
   public SearchReplaceComponentBuilder withSecondarySearchActionsIsModifiedGetter(BooleanSupplier getter) {
     mySearchToolbarModifiedFlagGetter = getter;
     return this;
   }
 
-  
   public SearchReplaceComponentBuilder addExtraSearchActions(AnAction... actions) {
     myExtraSearchActions.addAll(actions);
     return this;
   }
 
-  
   public SearchReplaceComponentBuilder addPrimaryReplaceActions(AnAction... actions) {
     myReplaceActions.addAll(actions);
     return this;
   }
 
-  
   public SearchReplaceComponentBuilder addExtraReplaceAction(AnAction... actions) {
     myExtraReplaceActions.addAll(actions);
     return this;
   }
 
-  
   public SearchReplaceComponent build() {
     SearchReplaceComponentFactory factory = Application.get().getInstance(SearchReplaceComponentFactory.class);
     return factory.create(myProject,

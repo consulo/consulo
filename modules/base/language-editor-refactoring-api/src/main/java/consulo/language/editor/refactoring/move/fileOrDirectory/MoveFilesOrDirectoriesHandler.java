@@ -73,6 +73,7 @@ public class MoveFilesOrDirectoriesHandler extends MoveHandlerDelegate {
     doMove(project, elements, targetContainer, null);
   }
 
+
   @Override
   public @Nullable PsiElement[] adjustForMove(Project project, PsiElement[] sourceElements, PsiElement targetElement) {
     return PsiTreeUtil.filterAncestors(sourceElements);

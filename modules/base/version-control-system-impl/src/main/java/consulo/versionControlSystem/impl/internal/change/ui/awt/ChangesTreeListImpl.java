@@ -18,7 +18,7 @@ package consulo.versionControlSystem.impl.internal.change.ui.awt;
 import consulo.application.AllIcons;
 import consulo.application.dumb.DumbAware;
 import consulo.dataContext.DataSink;
-import consulo.dataContext.TypeSafeDataProvider;
+import consulo.dataContext.UiDataProvider;
 import consulo.diff.localize.DiffLocalize;
 import consulo.language.editor.FileColorManager;
 import consulo.platform.Platform;
@@ -39,7 +39,6 @@ import consulo.ui.ex.awt.tree.action.CollapseAllAction;
 import consulo.ui.ex.awt.tree.action.ExpandAllAction;
 import consulo.ui.ex.keymap.KeymapManager;
 import consulo.util.collection.ContainerUtil;
-import consulo.util.dataholder.Key;
 import consulo.util.io.FileUtil;
 import consulo.util.lang.EmptyRunnable;
 import consulo.util.lang.ObjectUtil;
@@ -70,8 +69,7 @@ import java.util.*;
 /**
  * @author max
  */
-public abstract class ChangesTreeListImpl<T> extends Tree implements TypeSafeDataProvider, ChangesBrowserTree<T> {
-    
+public abstract class ChangesTreeListImpl<T> extends Tree implements UiDataProvider, ChangesBrowserTree<T> {
     protected final Project myProject;
     private final boolean myShowCheckboxes;
     private final int myCheckboxWidth;
@@ -79,13 +77,10 @@ public abstract class ChangesTreeListImpl<T> extends Tree implements TypeSafeDat
     private boolean myShowFlatten;
     private boolean myIsModelFlat;
 
-    
     private final Set<T> myIncludedChanges;
-    
     private Runnable myDoubleClickHandler = EmptyRunnable.getInstance();
     private boolean myAlwaysExpandList;
 
-    
     private final MyTreeCellRenderer myNodeRenderer;
 
     private static final String ROOT = "root";
@@ -95,7 +90,6 @@ public abstract class ChangesTreeListImpl<T> extends Tree implements TypeSafeDat
     private final @Nullable Runnable myInclusionListener;
     private @Nullable ChangeNodeDecorator myChangeDecorator;
     private Runnable myGenericSelectionListener;
-    
     private final CopyProvider myTreeCopyProvider;
     private TreeState myNonFlatTreeState;
     private final ApplicationFileColorManager myApplicationFileColorManager;
@@ -386,7 +380,6 @@ public abstract class ChangesTreeListImpl<T> extends Tree implements TypeSafeDat
         return ((ChangesBrowserNode) getRoot()).getAllChangesUnder();
     }
 
-    
     public List<T> getSelectedChanges() {
         TreePath[] paths = getSelectionPaths();
         if (paths == null) {
@@ -402,7 +395,6 @@ public abstract class ChangesTreeListImpl<T> extends Tree implements TypeSafeDat
         }
     }
 
-    
     private List<T> getSelectedChangesOrAllIfNone() {
         List<T> changes = getSelectedChanges();
         if (!changes.isEmpty()) {
@@ -430,7 +422,6 @@ public abstract class ChangesTreeListImpl<T> extends Tree implements TypeSafeDat
         return path == null ? null : ContainerUtil.getFirstItem(getSelectedObjects(((ChangesBrowserNode<T>) path.getLastPathComponent())));
     }
 
-    
     public ChangesBrowserNode<?> getRoot() {
         return (ChangesBrowserNode<?>) getModel().getRoot();
     }
@@ -493,7 +484,6 @@ public abstract class ChangesTreeListImpl<T> extends Tree implements TypeSafeDat
     }
 
     @Override
-    
     public Collection<T> getIncludedChanges() {
         return myIncludedChanges;
     }
@@ -502,7 +492,6 @@ public abstract class ChangesTreeListImpl<T> extends Tree implements TypeSafeDat
         TreeUtil.expandAll(this);
     }
 
-    
     @Override
     public AnAction[] getTreeActions() {
         ToggleShowDirectoriesAction directoriesAction = new ToggleShowDirectoriesAction();
@@ -680,10 +669,8 @@ public abstract class ChangesTreeListImpl<T> extends Tree implements TypeSafeDat
     }
 
     @Override
-    public void calcData(Key<?> key, DataSink sink) {
-        if (CopyProvider.KEY == key) {
-            sink.put(CopyProvider.KEY, myTreeCopyProvider);
-        }
+    public void uiDataSnapshot(DataSink sink) {
+        sink.set(CopyProvider.KEY, myTreeCopyProvider);
     }
 
     @Override

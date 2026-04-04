@@ -17,7 +17,7 @@ package consulo.versionControlSystem.impl.internal.ui.awt;
 
 import consulo.application.Application;
 import consulo.dataContext.DataSink;
-import consulo.dataContext.TypeSafeDataProvider;
+import consulo.dataContext.UiDataProvider;
 import consulo.diff.DiffDialogHints;
 import consulo.diff.internal.DiffUserDataKeysEx;
 import consulo.disposer.Disposable;
@@ -65,7 +65,7 @@ import static consulo.versionControlSystem.change.ChangesUtil.getNavigatableArra
 import static consulo.versionControlSystem.impl.internal.change.ui.awt.ChangesBrowserNode.UNVERSIONED_FILES_TAG;
 import static consulo.versionControlSystem.impl.internal.change.ui.awt.ChangesListViewImpl.*;
 
-public abstract class InternalChangesBrowserBase<T> extends JPanel implements TypeSafeDataProvider, ChangesBrowser<T>, Disposable {
+public abstract class InternalChangesBrowserBase<T> extends JPanel implements UiDataProvider, ChangesBrowser<T>, Disposable {
     // for backgroundable rollback to mark
     private boolean myDataIsDirty;
     protected final Class<T> myClass;
@@ -211,46 +211,24 @@ public abstract class InternalChangesBrowserBase<T> extends JPanel implements Ty
     }
 
     @Override
-    public void calcData(Key<?> key, DataSink sink) {
-        if (key == VcsDataKeys.CHANGES) {
-            List<Change> list = getSelectedChanges();
-            if (list.isEmpty()) {
-                list = getAllChanges();
-            }
-            sink.put(VcsDataKeys.CHANGES, list.toArray(new Change[list.size()]));
+    public void uiDataSnapshot(DataSink sink) {
+        List<Change> list = getSelectedChanges();
+        if (list.isEmpty()) {
+            list = getAllChanges();
         }
-        else if (key == VcsDataKeys.CHANGES_SELECTION) {
-            sink.put(VcsDataKeys.CHANGES_SELECTION, getChangesSelection());
-        }
-        else if (key == VcsDataKeys.CHANGE_LISTS) {
-            sink.put(VcsDataKeys.CHANGE_LISTS, getSelectedChangeLists());
-        }
-        else if (key == VcsDataKeys.CHANGE_LEAD_SELECTION) {
-            Change highestSelection = ObjectUtil.tryCast(myViewer.getHighestLeadSelection(), Change.class);
-            sink.put(VcsDataKeys.CHANGE_LEAD_SELECTION, (highestSelection == null) ? new Change[]{} : new Change[]{highestSelection});
-        }
-        else if (key == VirtualFile.KEY_OF_ARRAY) {
-            sink.put(VirtualFile.KEY_OF_ARRAY, getSelectedFiles().toArray(VirtualFile[]::new));
-        }
-        else if (key == Navigatable.KEY_OF_ARRAY) {
-            sink.put(Navigatable.KEY_OF_ARRAY, getNavigatableArray(myProject, getSelectedFiles()));
-        }
-        else if (VcsDataKeys.IO_FILE_ARRAY.equals(key)) {
-            sink.put(VcsDataKeys.IO_FILE_ARRAY, getSelectedIoFiles());
-        }
-        else if (key == DATA_KEY) {
-            sink.put(DATA_KEY, this);
-        }
-        else if (VcsDataKeys.SELECTED_CHANGES_IN_DETAILS.equals(key)) {
-            List<Change> selectedChanges = getSelectedChanges();
-            sink.put(VcsDataKeys.SELECTED_CHANGES_IN_DETAILS, selectedChanges.toArray(new Change[selectedChanges.size()]));
-        }
-        else if (UNVERSIONED_FILES_DATA_KEY.equals(key)) {
-            sink.put(UNVERSIONED_FILES_DATA_KEY, getVirtualFiles(myViewer.getSelectionPaths(), UNVERSIONED_FILES_TAG));
-        }
-        else if (DeleteProvider.KEY.equals(key)) {
-            sink.put(DeleteProvider.KEY, myDeleteProvider);
-        }
+        sink.set(VcsDataKeys.CHANGES, list.toArray(new Change[list.size()]));
+        sink.set(VcsDataKeys.CHANGES_SELECTION, getChangesSelection());
+        sink.set(VcsDataKeys.CHANGE_LISTS, getSelectedChangeLists());
+        Change highestSelection = ObjectUtil.tryCast(myViewer.getHighestLeadSelection(), Change.class);
+        sink.set(VcsDataKeys.CHANGE_LEAD_SELECTION, (highestSelection == null) ? new Change[]{} : new Change[]{highestSelection});
+        sink.set(VirtualFile.KEY_OF_ARRAY, getSelectedFiles().toArray(VirtualFile[]::new));
+        sink.set(Navigatable.KEY_OF_ARRAY, getNavigatableArray(myProject, getSelectedFiles()));
+        sink.set(VcsDataKeys.IO_FILE_ARRAY, getSelectedIoFiles());
+        sink.set(DATA_KEY, this);
+        List<Change> selectedChanges = getSelectedChanges();
+        sink.set(VcsDataKeys.SELECTED_CHANGES_IN_DETAILS, selectedChanges.toArray(new Change[selectedChanges.size()]));
+        sink.set(UNVERSIONED_FILES_DATA_KEY, getVirtualFiles(myViewer.getSelectionPaths(), UNVERSIONED_FILES_TAG));
+        sink.set(DeleteProvider.KEY, myDeleteProvider);
     }
 
     public void select(List<T> changes) {

@@ -18,18 +18,16 @@ package consulo.language.editor.impl.internal.highlight;
 import consulo.application.progress.ProgressIndicator;
 import consulo.codeEditor.Editor;
 import consulo.document.Document;
+import consulo.document.util.ProperTextRange;
 import consulo.document.util.TextRange;
-import consulo.language.editor.FileStatusMap;
 import consulo.language.editor.highlight.TextEditorHighlightingPass;
 import consulo.language.editor.impl.highlight.HighlightInfoProcessor;
 import consulo.language.editor.impl.highlight.HighlightingSession;
-import consulo.language.editor.internal.DaemonCodeAnalyzerInternal;
 import consulo.language.editor.internal.DaemonProgressIndicator;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.language.psi.PsiFile;
 import consulo.language.util.IncorrectOperationException;
 import consulo.project.Project;
-import consulo.ui.UIAccess;
-import consulo.ui.annotation.RequiredUIAccess;
 import org.jspecify.annotations.Nullable;
 
 import java.util.concurrent.atomic.AtomicLong;
@@ -45,9 +43,7 @@ public abstract class ProgressableTextEditorHighlightingPass extends TextEditorH
   private final String myPresentableName;
   protected final PsiFile myFile;
   private final @Nullable Editor myEditor;
-  
   protected final TextRange myRestrictRange;
-  
   protected final HighlightInfoProcessor myHighlightInfoProcessor;
   protected HighlightingSession myHighlightingSession;
 
@@ -83,7 +79,11 @@ public abstract class ProgressableTextEditorHighlightingPass extends TextEditorH
     }
     myFinished = false;
     if (myFile != null) {
-      myHighlightingSession = HighlightingSessionImpl.getOrCreateHighlightingSession(myFile, (DaemonProgressIndicator)progress, getColorsScheme());
+      // Session may already exist (pre-created on EDT with visible range).
+      // Fallback visibleRange covers the entire document for edge cases (e.g., injected files).
+      myHighlightingSession = HighlightingSessionImpl.getOrCreateHighlightingSession(
+          myFile, (DaemonProgressIndicator)progress, getColorsScheme(),
+          new ProperTextRange(0, myDocument.getTextLength()));
     }
     try {
       collectInformationWithProgress(progress);
@@ -101,8 +101,14 @@ public abstract class ProgressableTextEditorHighlightingPass extends TextEditorH
   public final void doApplyInformationToEditor() {
     myFinished = true;
     applyInformationWithProgress();
-    DaemonCodeAnalyzerInternal daemonCodeAnalyzer = DaemonCodeAnalyzerInternal.getInstanceEx(myProject);
-    daemonCodeAnalyzer.getFileStatusMap().markFileUpToDate(myDocument, getId());
+  }
+
+  @RequiredUIAccess
+  @Override
+  public void markUpToDateIfStillValid(DaemonProgressIndicator progress) {
+    if (myHighlightingSession != null && myHighlightingSession.getProgressIndicator() == progress) {
+      super.markUpToDateIfStillValid(progress);
+    }
   }
 
   protected abstract void applyInformationWithProgress();
@@ -156,9 +162,7 @@ public abstract class ProgressableTextEditorHighlightingPass extends TextEditorH
     }
   }
 
-  @RequiredUIAccess
   void waitForHighlightInfosApplied() {
-    UIAccess.assertIsUIThread();
     HighlightingSessionImpl session = (HighlightingSessionImpl)myHighlightingSession;
     if (session != null) {
       session.waitForHighlightInfosApplied();
@@ -176,8 +180,6 @@ public abstract class ProgressableTextEditorHighlightingPass extends TextEditorH
 
     @Override
     public void doApplyInformationToEditor() {
-      FileStatusMap statusMap = DaemonCodeAnalyzerInternal.getInstanceEx(myProject).getFileStatusMap();
-      statusMap.markFileUpToDate(getDocument(), getId());
     }
   }
 }

@@ -17,7 +17,6 @@ package consulo.desktop.awt.fileChooser.impl.system;
 
 import com.formdev.flatlaf.util.SystemFileChooser;
 import consulo.application.ApplicationManager;
-import consulo.application.impl.internal.LaterInvocator;
 import consulo.component.ComponentManager;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.fileChooser.FileChooserDialog;
@@ -133,7 +132,6 @@ public class NativeFileChooseDialog implements PathChooserDialog, FileChooserDia
 
         if (appStarted) {
             commandProcessor.enterModal();
-            LaterInvocator.enterModal(fileChooser);
         }
 
         Component parent = myParent.get();
@@ -143,7 +141,6 @@ public class NativeFileChooseDialog implements PathChooserDialog, FileChooserDia
         finally {
             if (appStarted) {
                 commandProcessor.leaveModal();
-                LaterInvocator.leaveModal(fileChooser);
                 if (parent != null) {
                     parent.requestFocus();
                 }
@@ -229,7 +226,6 @@ public class NativeFileChooseDialog implements PathChooserDialog, FileChooserDia
 
             if (appStarted) {
                 commandProcessor.enterModal();
-                LaterInvocator.enterModal(fileChooser);
             }
 
             Component parent = myParent.get();
@@ -239,7 +235,6 @@ public class NativeFileChooseDialog implements PathChooserDialog, FileChooserDia
             finally {
                 if (appStarted) {
                     commandProcessor.leaveModal();
-                    LaterInvocator.leaveModal(fileChooser);
                     if (parent != null) {
                         parent.requestFocus();
                     }

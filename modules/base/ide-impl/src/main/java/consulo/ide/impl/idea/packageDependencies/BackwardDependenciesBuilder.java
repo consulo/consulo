@@ -28,7 +28,7 @@ import consulo.language.psi.PsiManager;
 import consulo.language.psi.PsiRecursiveElementVisitor;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.HashSet;
 import java.util.Map;

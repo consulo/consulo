@@ -17,8 +17,6 @@ package consulo.desktop.awt.editor.impl;
 
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
-import consulo.application.impl.internal.LaterInvocator;
-import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorKind;
 import consulo.codeEditor.RealEditor;
 import consulo.document.Document;
@@ -38,12 +36,6 @@ public class DesktopEditorFactoryImpl extends EditorFactoryImpl {
     @Inject
     public DesktopEditorFactoryImpl(Application application, DocumentFactory documentFactory) {
         super(application, documentFactory);
-
-        LaterInvocator.addModalityStateListener((entering, modalEntity) -> {
-            for (Editor editor : myEditors) {
-                ((DesktopEditorImpl) editor).beforeModalityStateChanged();
-            }
-        }, application);
     }
 
     

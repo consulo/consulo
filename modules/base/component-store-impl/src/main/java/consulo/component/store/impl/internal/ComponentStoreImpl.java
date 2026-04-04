@@ -15,7 +15,7 @@
  */
 package consulo.component.store.impl.internal;
 
-import consulo.annotation.access.RequiredWriteAction;
+import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.application.util.ConcurrentFactoryMap;
 import consulo.component.ComponentManager;
@@ -29,6 +29,9 @@ import consulo.logging.Logger;
 import consulo.ui.UIAccess;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.SmartHashSet;
+import consulo.util.concurrent.coroutine.Continuation;
+import consulo.util.concurrent.coroutine.CoroutineContext;
+import consulo.util.concurrent.coroutine.CoroutineScope;
 import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
 import org.jspecify.annotations.Nullable;
@@ -85,7 +88,7 @@ public abstract class ComponentStoreImpl implements IComponentStore {
   }
 
   @Override
-  public final void save(boolean force, List<Pair<StateStorage.SaveSession, File>> readonlyFiles) {
+  public final void save(UIAccess uiAccess, boolean force, List<Pair<StateStorage.SaveSession, File>> readonlyFiles) {
     StateStorageManager.ExternalizationSession externalizationSession = myComponents.isEmpty() ? null : getStateStorageManager().startExternalization();
     if (externalizationSession != null) {
       String[] names = ArrayUtil.toStringArray(myComponents.keySet());
@@ -93,35 +96,7 @@ public abstract class ComponentStoreImpl implements IComponentStore {
       for (String name : names) {
         StateComponentInfo<?> componentInfo = myComponents.get(name);
 
-        commitComponentInsideSingleUIWriteThread(componentInfo, externalizationSession, force);
-      }
-    }
-
-    for (SettingsSavingComponent settingsSavingComponent : mySettingsSavingComponents) {
-      try {
-        settingsSavingComponent.save();
-      }
-      catch (Throwable e) {
-        LOG.error(e);
-      }
-    }
-
-    doSave(force, externalizationSession == null ? null : externalizationSession.createSaveSessions(force), readonlyFiles);
-  }
-
-  @RequiredWriteAction
-  @Override
-  public void saveAsync(UIAccess uiAccess, List<Pair<StateStorage.SaveSession, File>> readonlyFiles) {
-    boolean force = false;
-
-    StateStorageManager.ExternalizationSession externalizationSession = myComponents.isEmpty() ? null : getStateStorageManager().startExternalization();
-    if (externalizationSession != null) {
-      String[] names = ArrayUtil.toStringArray(myComponents.keySet());
-      Arrays.sort(names);
-      for (String name : names) {
-        StateComponentInfo<?> componentInfo = myComponents.get(name);
-
-        commitComponentInsideSingleUIWriteThread(componentInfo, externalizationSession, force);
+        commitComponent(componentInfo, externalizationSession, uiAccess, force);
       }
     }
 
@@ -154,8 +129,8 @@ public abstract class ComponentStoreImpl implements IComponentStore {
     }
   }
 
-  @SuppressWarnings({"unchecked", "RequiredXAction"})
-  private <T> void commitComponentInsideSingleUIWriteThread(StateComponentInfo<T> componentInfo, StateStorageManager.ExternalizationSession session, boolean force) {
+  @SuppressWarnings("unchecked")
+  private <T> void commitComponent(StateComponentInfo<T> componentInfo, StateStorageManager.ExternalizationSession session, UIAccess uiAccess, boolean force) {
     PersistentStateComponent<T> component = componentInfo.getComponent();
 
     long countToSet = -1;
@@ -172,10 +147,13 @@ public abstract class ComponentStoreImpl implements IComponentStore {
     }
 
     T state;
-    if(component instanceof PersistentStateComponentWithUIState) {
-      PersistentStateComponentWithUIState<T, Object> uiComponent = (PersistentStateComponentWithUIState<T, Object>)component;
-      Object uiState = uiComponent.getStateFromUI();
-      state = uiComponent.getState(uiState);
+    if (component instanceof PersistentStateComponentAsync) {
+      PersistentStateComponentAsync<T> asyncComponent = (PersistentStateComponentAsync<T>) component;
+      CoroutineContext ctx = Application.get().coroutineContext().copy();
+      ctx.putCopyableUserData(UIAccess.KEY, uiAccess);
+      CoroutineScope scope = new CoroutineScope(ctx);
+      Continuation<T> continuation = asyncComponent.getStateAsync().runBlocking(scope, null);
+      state = continuation.getResult();
     }
     else {
       state = component.getState();
@@ -295,7 +273,6 @@ public abstract class ComponentStoreImpl implements IComponentStore {
     return DefaultStateSerializer.deserializeState(documentElement, stateClass);
   }
 
-  
   protected <T> Storage[] getComponentStorageSpecs(PersistentStateComponent<T> persistentStateComponent, State stateSpec, StateStorageOperation operation) {
     Storage[] storages = stateSpec.storages();
     if (storages.length == 1) {
@@ -353,7 +330,6 @@ public abstract class ComponentStoreImpl implements IComponentStore {
     return true;
   }
 
-  
   protected abstract MessageBus getMessageBus();
 
   @Override

@@ -18,8 +18,6 @@ package consulo.project.internal;
 import consulo.disposer.Disposable;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
-import consulo.ui.UIAccess;
-import consulo.ui.annotation.RequiredUIAccess;
 import org.jspecify.annotations.Nullable;
 
 import java.util.function.Predicate;
@@ -34,10 +32,6 @@ public interface ProjectManagerEx extends ProjectManager {
      */
     @Nullable Project newProject(String projectName, String dirPath, boolean useDefaultProjectSettings);
 
-    // returns true on success
-    @RequiredUIAccess
-    boolean closeAndDispose(Project project);
-
     @Override
     default @Nullable Project createProject(String name, String path) {
         return newProject(name, path, true);
@@ -45,13 +39,8 @@ public interface ProjectManagerEx extends ProjectManager {
 
     boolean canClose(Project project);
 
-    @RequiredUIAccess
-    boolean closeProject(Project project, boolean save, boolean dispose, boolean checkCanClose);
-
-    
     Disposable registerCloseProjectVeto(Predicate<Project> projectVeto);
 
-    
         //@ApiStatus.Internal
     String[] getAllExcludedUrls();
 }

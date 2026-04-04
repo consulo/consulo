@@ -9,6 +9,7 @@ import consulo.document.FileDocumentManager;
 import consulo.module.content.ProjectFileIndex;
 import consulo.module.content.ProjectRootManager;
 import consulo.project.Project;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
@@ -82,7 +83,7 @@ public class PackageFileAction extends AnAction {
     @RequiredUIAccess
     public void actionPerformed(AnActionEvent event) {
         Project project = event.getRequiredData(Project.KEY);
-        FileDocumentManager.getInstance().saveAllDocuments();
+        FileDocumentManager.getInstance().saveAllDocuments(UIAccess.current());
         List<VirtualFile> files = getFilesToPackage(event, project);
         Artifact[] allArtifacts = ArtifactManager.getInstance(project).getArtifacts();
         PackageFileWorker.startPackagingFiles(project, files, allArtifacts, EmptyRunnable.getInstance());

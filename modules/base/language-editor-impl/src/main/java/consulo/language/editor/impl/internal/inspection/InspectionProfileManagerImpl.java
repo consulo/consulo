@@ -17,7 +17,6 @@ package consulo.language.editor.impl.internal.inspection;
 
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
-import consulo.application.impl.internal.IdeaModalityState;
 import consulo.colorScheme.TextAttributesKey;
 import consulo.component.persist.*;
 import consulo.component.persist.scheme.BaseSchemeProcessor;
@@ -41,6 +40,7 @@ import consulo.language.editor.rawHighlight.SeverityProvider;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
+import consulo.ui.ModalityState;
 import consulo.ui.ex.awt.Messages;
 import consulo.ui.image.Image;
 import consulo.util.collection.ArrayUtil;
@@ -107,7 +107,7 @@ public class InspectionProfileManagerImpl extends InspectionProfileManager imple
                                 InspectionsBundle.message("inspection.error.loading.message", 0, profile.getName()),
                                 InspectionLocalize.inspectionErrorsOccurredDialogTitle().get()
                             ),
-                            IdeaModalityState.nonModal()
+                            ModalityState.nonModal()
                         );
                     }
                     return profile;
@@ -213,7 +213,7 @@ public class InspectionProfileManagerImpl extends InspectionProfileManager imple
                         InspectionsBundle.message("inspection.error.loading.message", 0, file),
                         InspectionLocalize.inspectionErrorsOccurredDialogTitle().get()
                     ),
-                    IdeaModalityState.nonModal()
+                    ModalityState.nonModal()
                 );
             }
         }

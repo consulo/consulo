@@ -17,11 +17,12 @@ package consulo.ui.ex.tree;
 
 import consulo.annotation.access.RequiredReadAction;
 import consulo.application.ApplicationManager;
+import consulo.application.NonBlockingReadAction;
+import consulo.application.ReadAction;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
 import consulo.application.util.registry.Registry;
 import consulo.component.ProcessCanceledException;
-import consulo.util.lang.ref.Ref;
 
 import java.util.function.Supplier;
 
@@ -35,12 +36,10 @@ public class TreeHelper {
       return producer.get();
     }
 
-    Ref<T> result = new Ref<>();
-    boolean succeeded = ProgressManager.getInstance().runInReadActionWithWriteActionPriority(() -> result.set(producer.get()), indicator);
-
-    if (!succeeded || indicator != null && indicator.isCanceled()) {
-      throw new ProcessCanceledException();
+    NonBlockingReadAction<T> action = ReadAction.nonBlocking(() -> producer.get());
+    if (indicator != null) {
+      action = action.wrapProgress(indicator);
     }
-    return result.get();
+    return action.executeSynchronously();
   }
 }

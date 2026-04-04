@@ -41,6 +41,7 @@ import consulo.project.startup.StartupManager;
 import consulo.project.ui.notification.NotificationType;
 import consulo.proxy.EventDispatcher;
 import consulo.ui.ModalityState;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.Messages;
 import consulo.util.collection.ContainerUtil;
@@ -1436,7 +1437,7 @@ public class ChangeListManagerImpl extends ChangeListManagerEx implements Change
     }
 
     private boolean doCommit(LocalChangeList changeList, List<Change> changes, boolean synchronously) {
-        FileDocumentManager.getInstance().saveAllDocuments();
+        FileDocumentManager.getInstance().saveAllDocuments(UIAccess.current());
         return new CommitHelper(
             myProject,
             changeList,
@@ -1627,13 +1628,6 @@ public class ChangeListManagerImpl extends ChangeListManagerEx implements Change
         });
     }
 
-    @TestOnly
-    public void waitUntilRefreshed() {
-        VcsDirtyScopeVfsListener.getInstance(myProject).waitForAsyncTaskCompletion();
-        myUpdater.waitUntilRefreshed();
-        waitUpdateAlarm();
-    }
-
     // this is for perforce tests to ensure that LastSuccessfulUpdateTracker receives the event it needs
     private void waitUpdateAlarm() {
         Semaphore semaphore = new Semaphore();
@@ -1653,7 +1647,6 @@ public class ChangeListManagerImpl extends ChangeListManagerEx implements Change
             updateImmediately();
             return true;
         }
-        VcsDirtyScopeVfsListener.getInstance(myProject).waitForAsyncTaskCompletion();
         myUpdater.waitUntilRefreshed();
         waitUpdateAlarm();
         return true;

@@ -16,7 +16,6 @@
 package consulo.document.impl;
 
 import consulo.annotation.access.RequiredWriteAction;
-import consulo.application.AccessRule;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.component.ComponentManager;
@@ -120,7 +119,6 @@ public class DocumentImpl extends UserDataHolderBase implements DocumentEx {
             return myText.subSequence(start, end);
         }
 
-        
         @Override
         public String toString() {
             return doGetText();
@@ -198,7 +196,6 @@ public class DocumentImpl extends UserDataHolderBase implements DocumentEx {
     private static final ReferenceQueue<RangeMarkerTree<RangeMarkerEx>> rmTreeQueue = new ReferenceQueue<>();
 
     private static class RMTreeReference extends WeakReference<RangeMarkerTree<RangeMarkerEx>> {
-        
         private final VirtualFile virtualFile;
 
         RMTreeReference(RangeMarkerTree<RangeMarkerEx> referent, VirtualFile virtualFile) {
@@ -471,7 +468,6 @@ public class DocumentImpl extends UserDataHolderBase implements DocumentEx {
     }
 
     @Override
-    
     public RangeMarker createGuardedBlock(int startOffset, int endOffset) {
         LOG.assertTrue(startOffset <= endOffset, "Should be startOffset <= endOffset");
         RangeMarker block = createRangeMarker(startOffset, endOffset, true);
@@ -485,7 +481,6 @@ public class DocumentImpl extends UserDataHolderBase implements DocumentEx {
     }
 
     @Override
-    
     public List<RangeMarker> getGuardedBlocks() {
         return myGuardedBlocks;
     }
@@ -562,7 +557,6 @@ public class DocumentImpl extends UserDataHolderBase implements DocumentEx {
     }
 
     @Override
-    
     public RangeMarker createRangeMarker(int startOffset, int endOffset, boolean surviveOnExternalChange) {
         if (!(0 <= startOffset && startOffset <= endOffset && endOffset <= getTextLength())) {
             LOG.error("Incorrect offsets: startOffset=" + startOffset + ", endOffset=" + endOffset + ", text length=" + getTextLength());
@@ -1028,13 +1022,12 @@ public class DocumentImpl extends UserDataHolderBase implements DocumentEx {
         }
     }
 
-    
     @Override
     public String getText() {
-        return AccessRule.read(this::doGetText);
+        Application.get().assertReadAccessAllowed();
+        return doGetText();
     }
 
-    
     private String doGetText() {
         String s = SoftReference.dereference(myTextString);
         if (s == null) {
@@ -1043,10 +1036,10 @@ public class DocumentImpl extends UserDataHolderBase implements DocumentEx {
         return s;
     }
 
-    
     @Override
     public String getText(TextRange range) {
-        return AccessRule.read(() -> myText.subSequence(range.getStartOffset(), range.getEndOffset()).toString());
+        Application.get().assertReadAccessAllowed();
+        return myText.subSequence(range.getStartOffset(), range.getEndOffset()).toString();
     }
 
     @Override
@@ -1055,12 +1048,10 @@ public class DocumentImpl extends UserDataHolderBase implements DocumentEx {
     }
 
     @Override
-    
     public CharSequence getCharsSequence() {
         return myMutableCharSequence;
     }
 
-    
     @Override
     public CharSequence getImmutableCharSequence() {
         return myText;
@@ -1082,9 +1073,7 @@ public class DocumentImpl extends UserDataHolderBase implements DocumentEx {
 
     // this contortion is for avoiding document leak when the listener is leaked
     private static class DocumentListenerDisposable implements Disposable {
-        
         private final LockFreeCOWSortedArray<? super DocumentListener> myList;
-        
         private final DocumentListener myListener;
 
         DocumentListenerDisposable(LockFreeCOWSortedArray<? super DocumentListener> list, DocumentListener listener) {
@@ -1112,7 +1101,6 @@ public class DocumentImpl extends UserDataHolderBase implements DocumentEx {
     }
 
     @Override
-    
     public LineIterator createLineIterator() {
         return getLineSet().createIterator();
     }
@@ -1149,7 +1137,6 @@ public class DocumentImpl extends UserDataHolderBase implements DocumentEx {
         return lineCount;
     }
 
-    
     private DocumentListener[] getListeners() {
         return myDocumentListeners.getArray();
     }
@@ -1274,7 +1261,6 @@ public class DocumentImpl extends UserDataHolderBase implements DocumentEx {
             Application.get().getMessageBus().syncPublisher(DocumentBulkUpdateListener.class);
     }
 
-    
     private static DocumentBulkUpdateListener getPublisher() {
         return DocumentBulkUpdateListenerHolder.ourBulkChangePublisher;
     }
@@ -1302,7 +1288,6 @@ public class DocumentImpl extends UserDataHolderBase implements DocumentEx {
         }
     }
 
-    
     public String dumpState() {
         StringBuilder result = new StringBuilder();
         result.append(", intervals:\n");
@@ -1320,7 +1305,6 @@ public class DocumentImpl extends UserDataHolderBase implements DocumentEx {
         return "DocumentImpl[" + FileDocumentManager.getInstance().getFile(this) + (isInEventsHandling() ? ",inEventHandling" : "") + "]";
     }
 
-    
     public FrozenDocument freeze() {
         FrozenDocument frozen = myFrozen;
         if (frozen == null) {
@@ -1349,7 +1333,6 @@ public class DocumentImpl extends UserDataHolderBase implements DocumentEx {
                 : new Attachment[]{AttachmentFactory.get().create("enteringTrace.txt", enteringTrace)};
         }
 
-        
         @Override
         public Attachment[] getAttachments() {
             return myAttachments;

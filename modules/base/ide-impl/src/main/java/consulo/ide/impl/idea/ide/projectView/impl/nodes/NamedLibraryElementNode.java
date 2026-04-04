@@ -21,12 +21,14 @@ import consulo.content.bundle.Sdk;
 import consulo.content.bundle.SdkUtil;
 import consulo.content.library.Library;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.libraries.LibraryPresentationManager;
+import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.ide.localize.IdeLocalize;
 import consulo.ide.setting.module.OrderEntryTypeEditor;
 import consulo.ide.ui.OrderEntryAppearanceService;
+import consulo.navigation.NavigateOptions;
+import consulo.navigation.NavigatableWithText;
 import consulo.localize.LocalizeValue;
 import consulo.module.content.layer.orderEntry.*;
-import consulo.navigation.NavigatableWithText;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.project.ui.view.internal.node.NamedLibraryElement;
@@ -42,7 +44,6 @@ import consulo.ui.image.Image;
 import consulo.util.io.FileUtil;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.virtualFileSystem.util.VirtualFileUtil;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -54,7 +55,6 @@ public class NamedLibraryElementNode extends ProjectViewNode<NamedLibraryElement
         super(project, value, viewSettings);
     }
 
-    
     @Override
     @RequiredReadAction
     public Collection<AbstractTreeNode> getChildren() {
@@ -93,7 +93,7 @@ public class NamedLibraryElementNode extends ProjectViewNode<NamedLibraryElement
         }
         VirtualFile[] files = orderEntry.getFiles(orderType);
         for (VirtualFile virtualFile : files) {
-            boolean ancestor = VirtualFileUtil.isAncestor(virtualFile, file, false);
+            boolean ancestor = VfsUtilCore.isAncestor(virtualFile, file, false);
             if (ancestor) {
                 return true;
             }
@@ -152,11 +152,10 @@ public class NamedLibraryElementNode extends ProjectViewNode<NamedLibraryElement
     }
 
     @Override
-    public boolean canNavigate() {
-        return true;
+    public NavigateOptions getNavigateOptions() {
+        return NavigateOptions.CAN_NAVIGATE_FULL;
     }
 
-    
     @Override
     public LocalizeValue getNavigateActionText(boolean focusEditor) {
         return ProjectUIViewLocalize.actionOpenLibrarySettingsText();

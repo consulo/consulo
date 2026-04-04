@@ -15,7 +15,6 @@
  */
 package consulo.desktop.swt.ui.impl;
 
-import consulo.application.impl.internal.ModalityStateImpl;
 import consulo.desktop.swt.ui.impl.font.DesktopSwtFontManagerImpl;
 import consulo.desktop.swt.ui.impl.image.*;
 import consulo.desktop.swt.ui.impl.layout.*;
@@ -52,7 +51,6 @@ import java.util.function.Supplier;
  * @since 29/04/2021
  */
 public class DesktopSwtUIInternalImpl extends UIInternal {
-  
   @Override
   public IconLibraryManager _IconLibraryManager_get() {
     return DesktopSwtIconLibraryManager.INSTANCE;
@@ -159,7 +157,6 @@ public class DesktopSwtUIInternalImpl extends UIInternal {
     return new DesktopSwtProgressBarImpl();
   }
 
-  
   @Override
   public IntBox _Components_intBox(int value) {
     return new DesktopSwtIntBoxImpl(value);
@@ -260,13 +257,11 @@ public class DesktopSwtUIInternalImpl extends UIInternal {
     return new DesktopSwtMenuBar();
   }
 
-  
   @Override
   public StyleManager _StyleManager_get() {
     return DesktopSwtStyleManagerImpl.INSTANCE;
   }
 
-  
   @Override
   public FontManager _FontManager_get() {
     return DesktopSwtFontManagerImpl.INSTANCE;
@@ -277,7 +272,6 @@ public class DesktopSwtUIInternalImpl extends UIInternal {
     return DesktopSwtFocusManagerImpl.INSTANCE;
   }
 
-  
   @Override
   public Window _Window_create(String title, WindowOptions options) {
     return new DesktopSwtWindowImpl(title, options);
@@ -311,7 +305,6 @@ public class DesktopSwtUIInternalImpl extends UIInternal {
   }
 
   @RequiredUIAccess
-  
   @Override
   public UIAccess _UIAccess_get() {
     return DesktopSwtUIAccess.INSTANCE;
@@ -342,15 +335,4 @@ public class DesktopSwtUIInternalImpl extends UIInternal {
     return new DesktopSwtTreeImpl<E>(rootValue, model);
   }
 
-  
-  @Override
-  public ModalityState _ModalityState_any() {
-    return ModalityStateImpl.ANY;
-  }
-
-  
-  @Override
-  public ModalityState _ModalityState_nonModal() {
-    return ModalityStateImpl.NON_MODAL;
-  }
 }

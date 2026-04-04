@@ -23,6 +23,7 @@ import consulo.document.FileDocumentManager;
 import consulo.document.impl.DocumentImpl;
 import consulo.virtualFileSystem.internal.LoadTextUtil;
 import consulo.util.dataholder.Key;
+import consulo.ui.UIAccess;
 import consulo.virtualFileSystem.BinaryFileDecompiler;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
@@ -82,7 +83,7 @@ public class LightFileDocumentManager implements FileDocumentManager {
   }
 
   @Override
-  public void saveAllDocuments() {
+  public void saveAllDocuments(UIAccess uiAccess) {
   }
 
   @Override

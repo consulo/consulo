@@ -65,12 +65,6 @@ public class DeepCompareAction extends ToggleAction implements DumbAware {
         return null; // TODO
     }
 
-    
-    @Override
-    public ActionUpdateThread getActionUpdateThread() {
-        return ActionUpdateThread.EDT;
-    }
-
     @Override
     @RequiredUIAccess
     public void setSelected(AnActionEvent e, boolean selected) {
@@ -118,7 +112,6 @@ public class DeepCompareAction extends ToggleAction implements DumbAware {
         Collection<VirtualFile> visibleRoots
     ) {
         ActionGroup actionGroup = new BranchPopupBuilder(dataPack, visibleRoots, null) {
-            
             @Override
             protected AnAction createAction(String name) {
                 return new DumbAwareAction(LocalizeValue.of(name)) {
@@ -166,7 +159,6 @@ public class DeepCompareAction extends ToggleAction implements DumbAware {
 //        return ContainerUtil.exists(roots, root -> manager.getRepositoryForRoot(root) != null);
     }
 
-    
     private static Set<VirtualFile> getAllVisibleRoots(VcsLogUi ui) {
         return VcsLogUtil.getAllVisibleRoots(
             ui.getDataPack().getLogProviders().keySet(),

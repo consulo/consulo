@@ -16,6 +16,8 @@
 
 package consulo.language.editor.util;
 
+import consulo.annotation.DeprecationInfo;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.codeEditor.Caret;
 import consulo.codeEditor.Editor;
 import consulo.document.util.TextRange;
@@ -26,6 +28,7 @@ import consulo.language.inject.InjectedLanguageManager;
 import consulo.language.psi.*;
 import consulo.logging.Logger;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.virtualFileSystem.VFileProperty;
 import consulo.virtualFileSystem.VirtualFile;
 
@@ -33,6 +36,22 @@ import org.jspecify.annotations.Nullable;
 import java.util.*;
 
 public class PsiUtilBase extends PsiUtilCore {
+  public record SelectionSnapshot(Editor editor, int caretOffset, boolean hasSelection, int selectionStart, int selectionEnd) {
+      @RequiredUIAccess
+      public static SelectionSnapshot of(Editor editor) {
+          Caret caret = editor.getCaretModel().getCurrentCaret();
+
+          int offset = caret.getOffset();
+          boolean hasSelection = caret.hasSelection();
+          int selectionStart = 0, selectionEnd = 0;
+          if (hasSelection) {
+              selectionStart = caret.getSelectionStart();
+              selectionEnd = caret.getSelectionEnd();
+          }
+          return new SelectionSnapshot(editor, offset, hasSelection, selectionStart, selectionEnd);
+      }
+  }
+
   private static final Logger LOG = Logger.getInstance(PsiUtilBase.class);
   public static final Comparator<Language> LANGUAGE_COMPARATOR = (o1, o2) -> o1.getID().compareTo(o2.getID());
 
@@ -48,7 +67,7 @@ public class PsiUtilBase extends PsiUtilCore {
     if (languages.size() == 1) {
       return 0;
     }
-    List<Language> array = new ArrayList<Language>(languages);
+    List<Language> array = new ArrayList<>(languages);
     Collections.sort(array, LANGUAGE_COMPARATOR);
     for (int i = 0; i < array.size(); i++) {
       Language language = array.get(i);
@@ -67,10 +86,18 @@ public class PsiUtilBase extends PsiUtilCore {
     return host != null && isUnderPsiRoot(root, host);
   }
 
+  @RequiredReadAction
+  @Deprecated
+  @DeprecationInfo("Use with SelectionSnapshot")
+  @SuppressWarnings("ALL")
   public static @Nullable Language getLanguageInEditor(Editor editor, Project project) {
     return getLanguageInEditor(editor.getCaretModel().getCurrentCaret(), project);
   }
 
+  @RequiredReadAction
+  @Deprecated
+  @DeprecationInfo("Use with SelectionSnapshot")
+  @SuppressWarnings("ALL")
   public static @Nullable Language getLanguageInEditor(Caret caret, Project project) {
     Editor editor = caret.getEditor();
     PsiFile file = PsiDocumentManager.getInstance(project).getPsiFile(editor.getDocument());
@@ -91,6 +118,28 @@ public class PsiUtilBase extends PsiUtilCore {
     return narrowLanguage(lang, file.getLanguage());
   }
 
+  @RequiredReadAction
+  public static @Nullable Language getLanguageInEditor(SelectionSnapshot snapshot, Project project) {
+    Editor editor = snapshot.editor();
+    PsiFile file = PsiDocumentManager.getInstance(project).getPsiFile(editor.getDocument());
+    if (file == null) return null;
+
+    int caretOffset = snapshot.caretOffset();
+    int mostProbablyCorrectLanguageOffset = caretOffset == snapshot.selectionEnd() ? snapshot.selectionStart() : caretOffset;
+    PsiElement elt = getElementAtOffset(file, mostProbablyCorrectLanguageOffset);
+    Language lang = findLanguageFromElement(elt);
+
+    if (snapshot.hasSelection()) {
+      Language rangeLanguage = evaluateLanguageInRange(snapshot.selectionStart(), snapshot.selectionEnd(), file);
+      if (rangeLanguage == null) return file.getLanguage();
+
+      lang = rangeLanguage;
+    }
+
+    return narrowLanguage(lang, file.getLanguage());
+  }
+
+  @RequiredReadAction
   public static @Nullable PsiElement getElementAtCaret(Editor editor) {
     Project project = editor.getProject();
     if (project == null) return null;
@@ -98,10 +147,18 @@ public class PsiUtilBase extends PsiUtilCore {
     return file == null ? null : file.findElementAt(editor.getCaretModel().getOffset());
   }
 
+  @RequiredReadAction
+  @Deprecated
+  @DeprecationInfo("Use with SelectionSnapshot")
+  @SuppressWarnings("ALL")
   public static @Nullable PsiFile getPsiFileInEditor(Editor editor, Project project) {
     return getPsiFileInEditor(editor.getCaretModel().getCurrentCaret(), project);
   }
 
+  @RequiredReadAction
+  @Deprecated
+  @DeprecationInfo("Use with SelectionSnapshot")
+  @SuppressWarnings("ALL")
   public static @Nullable PsiFile getPsiFileInEditor(Caret caret, Project project) {
     Editor editor = caret.getEditor();
     PsiFile file = PsiDocumentManager.getInstance(project).getPsiFile(editor.getDocument());
@@ -119,6 +176,25 @@ public class PsiUtilBase extends PsiUtilCore {
     return getPsiFileAtOffset(file, mostProbablyCorrectLanguageOffset);
   }
 
+  @RequiredReadAction
+  public static @Nullable PsiFile getPsiFileInEditor(SelectionSnapshot snapshot, Project project) {
+    Editor editor = snapshot.editor();
+    PsiFile file = PsiDocumentManager.getInstance(project).getPsiFile(editor.getDocument());
+    if (file == null) return null;
+
+    PsiUtilCore.ensureValid(file);
+
+    Language language = getLanguageInEditor(snapshot, project);
+    if (language == null) return file;
+
+    if (language == file.getLanguage()) return file;
+
+    int caretOffset = snapshot.caretOffset();
+    int mostProbablyCorrectLanguageOffset = caretOffset == snapshot.selectionEnd() ? snapshot.selectionStart() : caretOffset;
+    return getPsiFileAtOffset(file, mostProbablyCorrectLanguageOffset);
+  }
+
+  @RequiredReadAction
   public static PsiFile getPsiFileAtOffset(PsiFile file, int offset) {
     PsiElement elt = getElementAtOffset(file, offset);
 
@@ -126,6 +202,7 @@ public class PsiUtilBase extends PsiUtilCore {
     return elt.getContainingFile();
   }
 
+  @RequiredReadAction
   public static @Nullable Language reallyEvaluateLanguageInRange(int start, int end, PsiFile file) {
     if (file instanceof PsiBinaryFile) {
       return file.getLanguage();
@@ -156,6 +233,7 @@ public class PsiUtilBase extends PsiUtilCore {
     return narrowLanguage(lang, file.getLanguage());
   }
 
+  @RequiredReadAction
   public static @Nullable Language evaluateLanguageInRange(int start, int end, PsiFile file) {
     PsiElement elt = getElementAtOffset(file, start);
 
@@ -214,9 +292,9 @@ public class PsiUtilBase extends PsiUtilCore {
     return virtualFile != null && virtualFile.is(VFileProperty.SYMLINK);
   }
 
+  @RequiredReadAction
   public static @Nullable VirtualFile asVirtualFile(@Nullable PsiElement element) {
-    if (element instanceof PsiFileSystemItem) {
-      PsiFileSystemItem psiFileSystemItem = (PsiFileSystemItem)element;
+    if (element instanceof PsiFileSystemItem psiFileSystemItem) {
       return psiFileSystemItem.isValid() ? psiFileSystemItem.getVirtualFile() : null;
     }
     return null;

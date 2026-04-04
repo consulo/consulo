@@ -20,6 +20,7 @@ import consulo.application.dumb.DumbAware;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
+import consulo.project.ProjectType;
 import consulo.project.ui.wm.ToolWindowFactory;
 import consulo.project.ui.wm.ToolWindowId;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -32,7 +33,11 @@ import consulo.ui.image.Image;
  */
 @ExtensionImpl
 public class TodoToolWindowFactory implements ToolWindowFactory, DumbAware {
-    
+    @Override
+    public boolean validate(Project project) {
+        return project.getProjectType() == ProjectType.REGULAR;
+    }
+
     @Override
     public String getId() {
         return ToolWindowId.TODO_VIEW;
@@ -44,19 +49,16 @@ public class TodoToolWindowFactory implements ToolWindowFactory, DumbAware {
         project.getInstance(TodoView.class).initToolWindow(toolWindow);
     }
 
-    
     @Override
     public ToolWindowAnchor getAnchor() {
         return ToolWindowAnchor.BOTTOM;
     }
 
-    
     @Override
     public Image getIcon() {
         return PlatformIconGroup.toolwindowsToolwindowtodo();
     }
 
-    
     @Override
     public LocalizeValue getDisplayName() {
         return LocalizeValue.localizeTODO("TODO");

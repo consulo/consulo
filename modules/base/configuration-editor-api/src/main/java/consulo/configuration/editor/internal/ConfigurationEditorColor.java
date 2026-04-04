@@ -24,5 +24,5 @@ import consulo.ui.util.LightDarkColorValue;
  * @since 2025-01-12
  */
 public interface ConfigurationEditorColor {
-    ColorValue DEFAULT_COLOR = new LightDarkColorValue(new RGBColor(199, 200, 247), new RGBColor(48, 42, 84));
+    ColorValue DEFAULT_COLOR = new LightDarkColorValue(new RGBColor(228, 229, 255), new RGBColor(48, 42, 84));
 }

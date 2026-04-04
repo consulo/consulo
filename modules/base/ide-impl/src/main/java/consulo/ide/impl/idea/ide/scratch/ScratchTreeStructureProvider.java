@@ -13,7 +13,6 @@ import consulo.disposer.Disposer;
 import consulo.ide.impl.idea.ide.projectView.impl.ProjectViewPaneImpl;
 import consulo.ide.impl.idea.ide.projectView.impl.nodes.ProjectViewProjectNode;
 import consulo.language.Language;
-import consulo.language.editor.LangDataKeys;
 import consulo.language.editor.scratch.ScratchUtil;
 import consulo.language.file.LanguageFileType;
 import consulo.language.psi.*;
@@ -29,7 +28,6 @@ import consulo.ui.ex.tree.PresentationData;
 import consulo.ui.ex.tree.TreeHelper;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.JBIterable;
-import consulo.util.dataholder.Key;
 import consulo.util.io.FileUtil;
 import consulo.util.lang.Comparing;
 import consulo.virtualFileSystem.LocalFileSystem;
@@ -145,7 +143,6 @@ public class ScratchTreeStructureProvider implements TreeStructureProvider, Dumb
   }
 
   @Override
-  
   public Collection<AbstractTreeNode> modify(
     AbstractTreeNode parent,
     Collection<AbstractTreeNode> children,
@@ -154,35 +151,15 @@ public class ScratchTreeStructureProvider implements TreeStructureProvider, Dumb
     Project project = parent instanceof ProjectViewProjectNode ? parent.getProject() : null;
     if (project == null) return children;
     if (project.getApplication().isUnitTestMode()) return children;
-    if (children.isEmpty()
-      && JBIterable.from(RootType.getAllRootTypes()).filterMap(o -> createRootTypeNode(project, o, settings)).isEmpty()) {
+    if (!project.isWelcomeProject()
+        && children.isEmpty()
+        && JBIterable.from(RootType.getAllRootTypes()).filterMap(o -> createRootTypeNode(project, o, settings)).isEmpty()) {
       return children;
     }
     List<AbstractTreeNode> list = new ArrayList<>(children.size() + 1);
     list.addAll(children);
     list.add(new MyProjectNode(project, settings));
     return list;
-  }
-
-  /**
-   * @deprecated Use modify method instead
-   */
-  @Deprecated
-  public static AbstractTreeNode<?> createRootNode(Project project, ViewSettings settings) {
-    return new MyProjectNode(project, settings);
-  }
-
-  @Override
-  public @Nullable Object getData(Collection<AbstractTreeNode> selected, Key<?> dataId) {
-    if (LangDataKeys.PASTE_TARGET_PSI_ELEMENT == dataId) {
-      AbstractTreeNode<?> single = JBIterable.from(selected).single();
-      if (single instanceof MyRootNode myRootNode) {
-        VirtualFile file = myRootNode.getVirtualFile();
-        Project project = single.getProject();
-        return file == null || project == null ? null : PsiManager.getInstance(project).findDirectory(file);
-      }
-    }
-    return null;
   }
 
   private static final class MyProjectNode extends ProjectViewNode<String> {
@@ -196,7 +173,6 @@ public class ScratchTreeStructureProvider implements TreeStructureProvider, Dumb
     }
 
     @RequiredReadAction
-    
     @Override
     public Collection<? extends AbstractTreeNode<?>> getChildren() {
       List<AbstractTreeNode<?>> list = new ArrayList<>();
@@ -222,12 +198,11 @@ public class ScratchTreeStructureProvider implements TreeStructureProvider, Dumb
     }
   }
 
-  private static class MyRootNode extends ProjectViewNode<RootType> implements PsiFileSystemItemFilter {
+  public static class MyRootNode extends ProjectViewNode<RootType> implements PsiFileSystemItemFilter {
     MyRootNode(Project project, RootType type, ViewSettings settings) {
       super(project, type, settings);
     }
 
-    
     public RootType getRootType() {
       return Objects.requireNonNull(getValue());
     }
@@ -242,14 +217,12 @@ public class ScratchTreeStructureProvider implements TreeStructureProvider, Dumb
       return ScratchTreeStructureProvider.getVirtualFile(getRootType());
     }
 
-    
     @Override
     public Collection<VirtualFile> getRoots() {
       return getDefaultRootsFor(getVirtualFile());
     }
 
     @RequiredReadAction
-    
     @Override
     public Collection<? extends AbstractTreeNode> getChildren() {
       //noinspection ConstantConditions
@@ -289,7 +262,6 @@ public class ScratchTreeStructureProvider implements TreeStructureProvider, Dumb
       return !getRootType().isIgnored(getProject(), item.getVirtualFile());
     }
 
-    
     static Collection<AbstractTreeNode> getDirectoryChildrenImpl(
       Project project,
       @Nullable PsiDirectory directory,

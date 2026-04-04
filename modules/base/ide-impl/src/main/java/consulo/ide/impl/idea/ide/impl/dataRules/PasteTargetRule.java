@@ -16,23 +16,12 @@
 
 package consulo.ide.impl.idea.ide.impl.dataRules;
 
-import consulo.annotation.component.ExtensionImpl;
-import consulo.dataContext.DataProvider;
-import consulo.language.editor.LangDataKeys;
-import consulo.dataContext.GetDataRule;
-import consulo.util.dataholder.Key;
+import consulo.dataContext.DataSnapshot;
 import consulo.language.psi.PsiElement;
 import org.jspecify.annotations.Nullable;
 
-@ExtensionImpl
-public class PasteTargetRule implements GetDataRule<PsiElement> {
-  @Override
-  public Key<PsiElement> getKey() {
-    return LangDataKeys.PASTE_TARGET_PSI_ELEMENT;
-  }
-
-  @Override
-  public @Nullable PsiElement getData(DataProvider dataProvider) {
-    return dataProvider.getDataUnchecked(PsiElement.KEY);
-  }
+public final class PasteTargetRule {
+    static @Nullable PsiElement getData(DataSnapshot dataProvider) {
+        return dataProvider.get(PsiElement.KEY);
+    }
 }

@@ -19,6 +19,10 @@ import consulo.application.progress.ProgressIndicator;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.component.ProcessCanceledException;
 
+import consulo.ui.annotation.RequiredUIAccess;
+
+import java.util.function.BooleanSupplier;
+
 public interface HighlightingPass {
   HighlightingPass[] EMPTY_ARRAY = new HighlightingPass[0];
   /**
@@ -35,6 +39,16 @@ public interface HighlightingPass {
   /**
    * Called to apply information collected by {@linkplain #collectInformation(ProgressIndicator)} to the editor.
    * This method is called from the event dispatch thread.
-   */ 
+   */
+  @RequiredUIAccess
   void applyInformationToEditor();
+
+  /**
+   * @return a condition which, when becomes true, means the pass results are no longer valid
+   * and should not be applied to the editor. Used by {@code PassExecutorService} as the expired
+   * condition for {@code Application.invokeLater()}.
+   */
+  default BooleanSupplier getExpiredCondition() {
+    return () -> false;
+  }
 }

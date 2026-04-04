@@ -5,7 +5,7 @@ import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.*;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
-import consulo.application.impl.internal.IdeaModalityState;
+import consulo.ui.ModalityState;
 import consulo.application.impl.internal.performance.ActivityTracker;
 import consulo.application.internal.LastActionTracker;
 import consulo.application.progress.ProgressIndicator;
@@ -35,6 +35,7 @@ import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionImplUtil;
 import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionPopupMenuListener;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
 import consulo.ide.impl.idea.openapi.keymap.ex.KeymapManagerEx;
+import consulo.ide.impl.idea.util.ReflectionUtil;
 import consulo.language.Language;
 import consulo.language.psi.PsiFile;
 import consulo.localize.LocalizeValue;
@@ -61,7 +62,6 @@ import consulo.util.concurrent.ActionCallback;
 import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
-import consulo.util.lang.reflect.ReflectionUtil;
 import consulo.util.nodep.xml.node.SimpleXmlElement;
 import gnu.trove.TObjectIntHashMap;
 import org.jspecify.annotations.Nullable;
@@ -367,7 +367,6 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
         return new Constraints(anchor, relatedToAction == null ? null : relatedToAction.getSecond());
     }
 
-    
     private static AnActionListener publisher() {
         return ApplicationManager.getApplication().getMessageBus().syncPublisher(AnActionListener.class);
     }
@@ -384,7 +383,6 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
         return "true".equalsIgnoreCase(element.getAttributeValue(SECONDARY));
     }
 
-    
     private static LocalizeValue computeDescription(LocalizeHelper localizeHelper, String id, String elementType, String descriptionValue) {
         if (!StringUtil.isEmpty(descriptionValue)) {
             return LocalizeValue.of(descriptionValue);
@@ -394,7 +392,6 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
         return localizeHelper.getValue(key);
     }
 
-    
     private static LocalizeValue computeActionText(LocalizeHelper localizeHelper, String id, String elementType, String textValue) {
         if (!StringUtil.isEmptyOrSpaces(textValue)) {
             return LocalizeValue.of(textValue);
@@ -517,7 +514,6 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
         return "";
     }
 
-    
     private static DataContext getContextBy(Component contextComponent) {
         DataManager dataManager = DataManager.getInstance();
         return contextComponent != null ? dataManager.getDataContext(contextComponent) : dataManager.getDataContext();
@@ -570,7 +566,6 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
     }
 
     @Override
-    
     public ActionPopupMenu createActionPopupMenu(
         String place,
         ActionGroup group,
@@ -579,7 +574,6 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
         return myPopupMenuFactory.get().createActionPopupMenu(place, group, presentationFactory);
     }
 
-    
     @Override
     public ActionPopupMenu createActionPopupMenu(String place, ActionGroup group) {
         if (Application.get().isUnifiedApplication()) {
@@ -588,7 +582,6 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
         return myPopupMenuFactory.get().createActionPopupMenu(place, group);
     }
 
-    
     @Override
     public ActionToolbar createActionToolbar(String place, ActionGroup group, boolean horizontal) {
         return myToolbarFactory.get()
@@ -641,7 +634,6 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
         }
     }
 
-    
     private AnAction replaceStub(ActionStubBase stub, AnAction anAction) {
         LOG.assertTrue(myAction2Id.containsKey(stub));
         myAction2Id.remove(stub);
@@ -667,7 +659,6 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
         }
     }
 
-    
     @Override
     public String[] getActionIds(String idPrefix) {
         synchronized (myLock) {
@@ -1269,13 +1260,11 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
         }
     }
 
-    
     @Override
     public Comparator<String> getRegistrationOrderComparator() {
         return Comparator.comparingInt(myId2Index::get);
     }
 
-    
     @Override
     public String[] getPluginActions(PluginId pluginName) {
         return ArrayUtil.toStringArray(myPlugin2Id.get(pluginName));
@@ -1464,7 +1453,6 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
         }
     }
 
-    
     @Override
     @RequiredUIAccess
     public ActionCallback tryToExecute(
@@ -1542,7 +1530,7 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
                             if (!result.isProcessed()) {
                                 WindowEvent we = (WindowEvent) event1;
                                 IdeFocusManager.findInstanceByComponent(we.getWindow())
-                                    .doWhenFocusSettlesDown(result.createSetDoneRunnable(), IdeaModalityState.defaultModalityState());
+                                    .doWhenFocusSettlesDown(result.createSetDoneRunnable(), ModalityState.nonModal());
                             }
                         }
                     },
@@ -1554,7 +1542,7 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
                 result.setDone();
                 queueActionPerformedEvent(action, context, event);
             },
-            IdeaModalityState.defaultModalityState()
+            ModalityState.nonModal()
         );
     }
 
@@ -1635,12 +1623,12 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
         }
 
         private void runListenerAction(TimerListener listener) {
-            IdeaModalityState modalityState = (IdeaModalityState) listener.getModalityState();
+            ModalityState modalityState = (ModalityState) listener.getModalityState();
             if (modalityState == null) {
                 return;
             }
             LOG.debug("notify ", listener);
-            if (!IdeaModalityState.current().dominates(modalityState)) {
+            if (!ModalityState.nonModal().dominates(modalityState)) {
                 try {
                     listener.run();
                 }

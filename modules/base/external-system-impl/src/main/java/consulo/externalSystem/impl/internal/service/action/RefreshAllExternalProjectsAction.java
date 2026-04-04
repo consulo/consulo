@@ -15,6 +15,7 @@ import consulo.externalSystem.model.task.ExternalSystemTaskType;
 import consulo.externalSystem.model.task.ProgressExecutionMode;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
@@ -73,7 +74,7 @@ public class RefreshAllExternalProjectsAction extends AnAction implements DumbAw
         }
 
         // We save all documents because there is a possible case that there is an external system config file changed inside the ide.
-        FileDocumentManager.getInstance().saveAllDocuments();
+        FileDocumentManager.getInstance().saveAllDocuments(UIAccess.current());
 
         for (ProjectSystemId externalSystemId : systemIds) {
             ExternalSystemUtil.refreshProjects(

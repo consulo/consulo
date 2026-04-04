@@ -81,7 +81,9 @@ public class BranchActionGroupPopup extends FlatSpeedSearchPopup implements Bran
             true
         );
         myProject = project;
-        DataManager.registerDataProvider(getList(), dataId -> BranchListPopup.POPUP_MODEL == dataId ? getListModel() : null);
+        DataManager.registerUiDataProvider(getList(), sink -> {
+            sink.set(BranchListPopup.POPUP_MODEL, getListModel());
+        });
         myKey = dimensionKey;
         if (myKey != null) {
             Size2D storedSize = ProjectWindowStateService.getInstance(myProject).getSizeFor(myProject, myKey);
@@ -151,7 +153,9 @@ public class BranchActionGroupPopup extends FlatSpeedSearchPopup implements Bran
         super(aParent, aStep, DataContext.EMPTY_CONTEXT, parentValue);
         // don't store children popup userSize;
         myKey = null;
-        DataManager.registerDataProvider(getList(), dataId -> BranchListPopup.POPUP_MODEL == dataId ? getListModel() : null);
+        DataManager.registerUiDataProvider(getList(), sink -> {
+            sink.set(BranchListPopup.POPUP_MODEL, getListModel());
+        });
     }
 
     private void trackDimensions(@Nullable String dimensionKey) {

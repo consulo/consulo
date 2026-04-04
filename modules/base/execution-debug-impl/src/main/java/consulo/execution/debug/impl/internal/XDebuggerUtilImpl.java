@@ -125,7 +125,6 @@ public class XDebuggerUtilImpl extends XDebuggerUtil {
         }
     }
 
-    
     public static <P extends XBreakpointProperties> AsyncResult<XLineBreakpoint> toggleAndReturnLineBreakpoint(
         final Project project,
         final XLineBreakpointType<P> type,
@@ -203,7 +202,6 @@ public class XDebuggerUtilImpl extends XDebuggerUtil {
                             "Create breakpoint for",
                             variants
                         ) {
-                            
                             @Override
                             public String getTextFor(XLineBreakpointType.XLineBreakpointVariant value) {
                                 return value.getText();
@@ -321,7 +319,6 @@ public class XDebuggerUtilImpl extends XDebuggerUtil {
         return XSourcePositionImpl.create(file, line);
     }
 
-    
     public static Collection<XSourcePosition> getAllCaretsPositions(Project project, DataContext context) {
         Editor editor = getEditor(project, context);
         if (editor == null) {
@@ -465,11 +462,10 @@ public class XDebuggerUtilImpl extends XDebuggerUtil {
     }
 
     public static @Nullable Editor createEditor(OpenFileDescriptor descriptor) {
-        return descriptor.canNavigate()
+        return descriptor.getNavigateOptions().canNavigate()
             ? FileEditorManager.getInstance((Project) descriptor.getProject()).openTextEditor(descriptor, false) : null;
     }
 
-    
     @Override
     public XExpression createExpression(String text, Language language, String custom, EvaluationMode mode) {
         return new XExpressionImpl(text, language, custom, mode);

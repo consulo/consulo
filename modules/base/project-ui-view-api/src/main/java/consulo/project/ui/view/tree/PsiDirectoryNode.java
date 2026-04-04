@@ -18,7 +18,6 @@ package consulo.project.ui.view.tree;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.application.util.UserHomeFileUtil;
 import consulo.language.content.ProjectRootsUtil;
-import consulo.navigation.NavigatableWithText;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiPackageHelper;
 import consulo.language.util.ModuleUtilCore;
@@ -28,12 +27,15 @@ import consulo.module.content.ProjectFileIndex;
 import consulo.module.content.ProjectRootManager;
 import consulo.module.content.layer.orderEntry.OrderEntry;
 import consulo.module.content.library.util.ModuleContentLibraryUtil;
+import consulo.navigation.NavigatableWithText;
+import consulo.navigation.NavigateOptions;
 import consulo.project.Project;
 import consulo.project.ui.view.ProjectView;
 import consulo.project.ui.view.internal.ProjectSettingsService;
 import consulo.project.ui.view.localize.ProjectUIViewLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.SimpleTextAttributes;
+import consulo.ui.ex.tree.PathElementIdProvider;
 import consulo.ui.ex.tree.PresentationData;
 import consulo.util.lang.Comparing;
 import consulo.virtualFileSystem.LocalFileSystem;
@@ -45,7 +47,7 @@ import org.jspecify.annotations.Nullable;
 
 import java.util.Collection;
 
-public class PsiDirectoryNode extends BasePsiNode<PsiDirectory> implements NavigatableWithText {
+public class PsiDirectoryNode extends BasePsiNode<PsiDirectory> implements NavigatableWithText, PathElementIdProvider {
     private final PsiFileSystemItemFilter myFilter;
 
     public PsiDirectoryNode(Project project, PsiDirectory value, ViewSettings viewSettings) {
@@ -172,20 +174,16 @@ public class PsiDirectoryNode extends BasePsiNode<PsiDirectory> implements Navig
     }
 
     @Override
-    public boolean canNavigate() {
+    public NavigateOptions getNavigateOptions() {
         VirtualFile file = getVirtualFile();
         Project project = getProject();
 
         ProjectSettingsService service = ProjectSettingsService.getInstance(myProject);
-        return file != null &&
+        boolean canNavigate = file != null &&
             ((ProjectRootsUtil.isModuleContentRoot(file, project) && service.canOpenModuleSettings())
                 || (ProjectRootsUtil.isModuleSourceRoot(file, project) && service.canOpenContentEntriesSettings())
                 || (ProjectRootsUtil.isLibraryRoot(file, project) && service.canOpenModuleLibrarySettings()));
-    }
-
-    @Override
-    public boolean canNavigateToSource() {
-        return false;
+        return canNavigate ? NavigateOptions.CAN_NAVIGATE_NO_SOURCE : NavigateOptions.CANT_NAVIGATE;
     }
 
     @Override
@@ -268,5 +266,11 @@ public class PsiDirectoryNode extends BasePsiNode<PsiDirectory> implements Navig
     public boolean isAlwaysShowPlus() {
         VirtualFile file = getVirtualFile();
         return file == null || !file.getRequiredChildren().isEmpty();
+    }
+
+    @Override
+    public  String getPathElementId() {
+        var value = getEqualityObject();
+        return value == null ? "" : value.toString();
     }
 }

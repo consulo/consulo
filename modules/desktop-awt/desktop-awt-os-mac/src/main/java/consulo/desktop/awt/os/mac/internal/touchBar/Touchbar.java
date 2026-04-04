@@ -180,11 +180,6 @@ public final class Touchbar {
         }
 
         @Override
-        public ActionUpdateThread getActionUpdateThread() {
-            return ActionUpdateThread.EDT;
-        }
-
-        @Override
         @RequiredUIAccess
         public void actionPerformed(AnActionEvent e) {
             if (action == null) {

@@ -29,7 +29,9 @@ import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.content.ContentManager;
+import consulo.ui.ex.coroutine.UIAction;
 import consulo.util.collection.ArrayUtil;
+import consulo.util.concurrent.coroutine.Coroutine;
 import consulo.virtualFileSystem.VirtualFile;
 
 abstract class TabNavigationActionBase extends AnAction implements DumbAware {
@@ -68,29 +70,35 @@ abstract class TabNavigationActionBase extends AnAction implements DumbAware {
     }
 
     @Override
-    public void update(AnActionEvent e) {
-        Presentation presentation = e.getPresentation();
-        Project project = e.getData(Project.KEY);
-        presentation.setEnabled(false);
-        if (project == null) {
-            return;
-        }
-        ToolWindowManager windowManager = ToolWindowManager.getInstance(project);
-        if (windowManager.isEditorComponentActive()) {
-            FileEditorManagerEx editorManager = FileEditorManagerEx.getInstanceEx(project);
-            FileEditorWindow currentWindow = e.getData(FileEditorWindow.DATA_KEY);
-            if (currentWindow == null) {
-                editorManager.getCurrentWindow();
-            }
-            if (currentWindow != null) {
-                VirtualFile[] files = currentWindow.getFiles();
-                presentation.setEnabled(files.length > 1);
-            }
-            return;
-        }
+    public Coroutine<?, ?> updateAsync(AnActionEvent e) {
+        return Coroutine.first(UIAction.apply(o -> {
+            Project project = e.getData(Project.KEY);
+            Presentation presentation = e.getPresentation();
+            presentation.setEnabled(false);
 
-        ContentManager contentManager = e.getData(PlatformDataKeys.NONEMPTY_CONTENT_MANAGER);
-        presentation.setEnabled(contentManager != null && contentManager.getContentCount() > 1 && contentManager.isSingleSelection());
+            if (project == null) {
+                return null;
+            }
+
+            ToolWindowManager windowManager = ToolWindowManager.getInstance(project);
+            if (windowManager.isEditorComponentActive()) {
+                FileEditorManagerEx editorManager = FileEditorManagerEx.getInstanceEx(project);
+                FileEditorWindow currentWindow = e.getData(FileEditorWindow.DATA_KEY);
+                if (currentWindow == null) {
+                    editorManager.getCurrentWindow();
+                }
+                if (currentWindow != null) {
+                    VirtualFile[] files = currentWindow.getFiles();
+                    presentation.setEnabled(files.length > 1);
+                }
+                return null;
+            }
+
+            ContentManager contentManager = e.getData(PlatformDataKeys.NONEMPTY_CONTENT_MANAGER);
+            presentation.setEnabled(contentManager != null && contentManager.getContentCount() > 1 && contentManager.isSingleSelection());
+
+            return null;
+        }));
     }
 
     private void doNavigate(ContentManager contentManager) {

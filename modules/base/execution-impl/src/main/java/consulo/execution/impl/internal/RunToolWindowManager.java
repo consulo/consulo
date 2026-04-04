@@ -16,8 +16,6 @@
 package consulo.execution.impl.internal;
 
 import consulo.application.HelpManager;
-import consulo.dataContext.DataManager;
-import consulo.dataContext.DataProvider;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.execution.executor.Executor;
@@ -38,7 +36,6 @@ import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.ui.ex.toolWindow.ToolWindowAnchor;
 import consulo.ui.image.Image;
 import consulo.util.collection.ContainerUtil;
-import consulo.util.dataholder.Key;
 import consulo.util.lang.ThreeState;
 import jakarta.inject.Provider;
 import org.jspecify.annotations.Nullable;
@@ -59,7 +56,6 @@ public class RunToolWindowManager {
     private final Map<String, ContentManager> myToolwindowIdToContentManagerMap = new ConcurrentHashMap<>();
     private final Map<String, Image> myToolwindowIdToBaseIconMap = new HashMap<>();
     private final LinkedList<String> myToolwindowIdZBuffer = new LinkedList<>();
-
     private final Project myProject;
     private final Provider<ToolWindowManager> myToolWindowManager;
     private final Disposable myParentDisposable;
@@ -135,34 +131,18 @@ public class RunToolWindowManager {
             throw new IllegalArgumentException("Already registered: " + toolWindowId);
         }
 
-        ToolWindow toolWindow =
-            toolWindowManager.registerToolWindow(toolWindowId, true, ToolWindowAnchor.BOTTOM, myParentDisposable, true);
+        ToolWindow toolWindow = toolWindowManager.registerToolWindow(toolWindowId, true, ToolWindowAnchor.BOTTOM, myParentDisposable, true);
         ContentManager contentManager = toolWindow.getContentManager();
-        contentManager.addDataProvider(new DataProvider() {
-            private int myInsideGetData = 0;
-
-            @Override
-            public Object getData(Key<?> dataId) {
-                myInsideGetData++;
-                try {
-                    if (HelpManager.HELP_ID == dataId) {
-                        return executor != null ? executor.getHelpId() : null;
-                    }
-                    else {
-                        return myInsideGetData == 1
-                            ? DataManager.getInstance().getDataContext(contentManager.getComponent()).getData(dataId)
-                            : null;
-                    }
-                }
-                finally {
-                    myInsideGetData--;
-                }
+        contentManager.addUiDataProvider(sink -> {
+            if (executor != null) {
+                sink.set(HelpManager.HELP_ID, executor.getHelpId());
             }
         });
 
         toolWindow.setDisplayName(ExecutionLocalize.toolWindowNameRun());
         toolWindow.setIcon(toolWindowIcon);
         ContentManagerWatcher.watchContentManager(toolWindow, contentManager);
+
         initToolWindow(executor, toolWindowId, toolWindowIcon, contentManager);
 
         return contentManager;

@@ -17,7 +17,7 @@ package consulo.versionControlSystem.impl.internal.change.ui.awt;
 
 import consulo.application.HelpManager;
 import consulo.dataContext.DataSink;
-import consulo.dataContext.TypeSafeDataProvider;
+import consulo.dataContext.UiDataProvider;
 import consulo.navigation.Navigatable;
 import consulo.navigation.OpenFileDescriptorFactory;
 import consulo.project.Project;
@@ -59,7 +59,7 @@ import static consulo.versionControlSystem.impl.internal.change.ui.awt.ChangesBr
 import static java.util.stream.Collectors.toList;
 
 // TODO: Check if we could extend DnDAwareTree here instead of directly implementing DnDAware
-public class ChangesListViewImpl extends Tree implements ChangesListView, TypeSafeDataProvider, DnDAware {
+public class ChangesListViewImpl extends Tree implements ChangesListView, UiDataProvider, DnDAware {
   private final Project myProject;
   private boolean myShowFlatten = false;
   private final CopyProvider myCopyProvider;
@@ -135,73 +135,35 @@ public class ChangesListViewImpl extends Tree implements ChangesListView, TypeSa
   }
 
   @Override
-  public void calcData(Key<?> key, DataSink sink) {
-    if (key == VcsDataKeys.CHANGES) {
-      sink.put(VcsDataKeys.CHANGES, getSelectedChanges().toArray(Change[]::new));
+  public void uiDataSnapshot(DataSink sink) {
+    sink.set(VcsDataKeys.CHANGES, getSelectedChanges().toArray(Change[]::new));
+    sink.set(VcsDataKeys.CHANGE_LEAD_SELECTION, getLeadSelection().toArray(Change[]::new));
+    sink.set(VcsDataKeys.CHANGE_LISTS, getSelectedChangeLists().toArray(ChangeList[]::new));
+    sink.set(VirtualFile.KEY_OF_ARRAY, getSelectedFiles().toArray(VirtualFile[]::new));
+    sink.set(VcsDataKeys.VIRTUAL_FILE_STREAM, getSelectedFiles());
+    VirtualFile file = Streams.getIfSingle(getSelectedFiles());
+    if (file != null && !file.isDirectory()) {
+      sink.set(Navigatable.KEY, OpenFileDescriptorFactory.getInstance(myProject).newBuilder(file).build());
     }
-    else if (key == VcsDataKeys.CHANGE_LEAD_SELECTION) {
-      sink.put(VcsDataKeys.CHANGE_LEAD_SELECTION, getLeadSelection().toArray(Change[]::new));
+    sink.set(Navigatable.KEY_OF_ARRAY, ChangesUtil.getNavigatableArray(myProject, getSelectedFiles()));
+    if (getSelectionObjectsStream().anyMatch(userObject -> !(userObject instanceof ChangeList))) {
+      sink.set(DeleteProvider.KEY, new VirtualFileDeleteProvider());
     }
-    else if (key == VcsDataKeys.CHANGE_LISTS) {
-      sink.put(VcsDataKeys.CHANGE_LISTS, getSelectedChangeLists().toArray(ChangeList[]::new));
-    }
-    else if (key == VirtualFile.KEY_OF_ARRAY) {
-      sink.put(VirtualFile.KEY_OF_ARRAY, getSelectedFiles().toArray(VirtualFile[]::new));
-    }
-    else if (key == VcsDataKeys.VIRTUAL_FILE_STREAM) {
-      sink.put(VcsDataKeys.VIRTUAL_FILE_STREAM, getSelectedFiles());
-    }
-    else if (key == Navigatable.KEY) {
-      VirtualFile file = Streams.getIfSingle(getSelectedFiles());
-      if (file != null && !file.isDirectory()) {
-        sink.put(Navigatable.KEY, OpenFileDescriptorFactory.getInstance(myProject).newBuilder(file).build());
-      }
-    }
-    else if (key == Navigatable.KEY_OF_ARRAY) {
-      sink.put(Navigatable.KEY_OF_ARRAY, ChangesUtil.getNavigatableArray(myProject, getSelectedFiles()));
-    }
-    else if (key == DeleteProvider.KEY) {
-      if (getSelectionObjectsStream().anyMatch(userObject -> !(userObject instanceof ChangeList))) {
-        sink.put(DeleteProvider.KEY, new VirtualFileDeleteProvider());
-      }
-    }
-    else if (key == CopyProvider.KEY) {
-      sink.put(CopyProvider.KEY, myCopyProvider);
-    }
-    else if (key == UNVERSIONED_FILES_DATA_KEY) {
-      sink.put(UNVERSIONED_FILES_DATA_KEY, getSelectedUnversionedFiles());
-    }
-    else if (key == IGNORED_FILES_DATA_KEY) {
-      sink.put(IGNORED_FILES_DATA_KEY, getSelectedIgnoredFiles());
-    }
-    else if (key == VcsDataKeys.MODIFIED_WITHOUT_EDITING_DATA_KEY) {
-      sink.put(VcsDataKeys.MODIFIED_WITHOUT_EDITING_DATA_KEY, getSelectedModifiedWithoutEditing().collect(toList()));
-    }
-    else if (key == LOCALLY_DELETED_CHANGES) {
-      sink.put(LOCALLY_DELETED_CHANGES, getSelectedLocallyDeletedChanges().collect(toList()));
-    }
-    else if (key == MISSING_FILES_DATA_KEY) {
-      sink.put(MISSING_FILES_DATA_KEY, getSelectedMissingFiles().collect(toList()));
-    }
-    else if (VcsDataKeys.HAVE_LOCALLY_DELETED == key) {
-      sink.put(VcsDataKeys.HAVE_LOCALLY_DELETED, getSelectedMissingFiles().findAny().isPresent());
-    }
-    else if (VcsDataKeys.HAVE_MODIFIED_WITHOUT_EDITING == key) {
-      sink.put(VcsDataKeys.HAVE_MODIFIED_WITHOUT_EDITING, getSelectedModifiedWithoutEditing().findAny().isPresent());
-    }
-    else if (VcsDataKeys.HAVE_SELECTED_CHANGES == key) {
-      sink.put(VcsDataKeys.HAVE_SELECTED_CHANGES, haveSelectedChanges());
-    }
-    else if (key == HelpManager.HELP_ID) {
-      sink.put(HelpManager.HELP_ID, HELP_ID);
-    }
-    else if (key == VcsDataKeys.CHANGES_IN_LIST_KEY) {
-      TreePath selectionPath = getSelectionPath();
-      if (selectionPath != null && selectionPath.getPathCount() > 1) {
-        ChangesBrowserNode<?> firstNode = (ChangesBrowserNode)selectionPath.getPathComponent(1);
-        if (firstNode instanceof ChangesBrowserChangeListNode) {
-          sink.put(VcsDataKeys.CHANGES_IN_LIST_KEY, firstNode.getAllChangesUnder());
-        }
+    sink.set(CopyProvider.KEY, myCopyProvider);
+    sink.set(UNVERSIONED_FILES_DATA_KEY, getSelectedUnversionedFiles());
+    sink.set(IGNORED_FILES_DATA_KEY, getSelectedIgnoredFiles());
+    sink.set(VcsDataKeys.MODIFIED_WITHOUT_EDITING_DATA_KEY, getSelectedModifiedWithoutEditing().collect(toList()));
+    sink.set(LOCALLY_DELETED_CHANGES, getSelectedLocallyDeletedChanges().collect(toList()));
+    sink.set(MISSING_FILES_DATA_KEY, getSelectedMissingFiles().collect(toList()));
+    sink.set(VcsDataKeys.HAVE_LOCALLY_DELETED, getSelectedMissingFiles().findAny().isPresent());
+    sink.set(VcsDataKeys.HAVE_MODIFIED_WITHOUT_EDITING, getSelectedModifiedWithoutEditing().findAny().isPresent());
+    sink.set(VcsDataKeys.HAVE_SELECTED_CHANGES, haveSelectedChanges());
+    sink.set(HelpManager.HELP_ID, HELP_ID);
+    TreePath selectionPath = getSelectionPath();
+    if (selectionPath != null && selectionPath.getPathCount() > 1) {
+      ChangesBrowserNode<?> firstNode = (ChangesBrowserNode)selectionPath.getPathComponent(1);
+      if (firstNode instanceof ChangesBrowserChangeListNode) {
+        sink.set(VcsDataKeys.CHANGES_IN_LIST_KEY, firstNode.getAllChangesUnder());
       }
     }
   }

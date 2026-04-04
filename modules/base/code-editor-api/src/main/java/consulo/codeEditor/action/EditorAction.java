@@ -110,12 +110,6 @@ public abstract class EditorAction extends AnAction implements DumbAware {
         actionPerformed(editor, dataContext);
     }
 
-    
-    @Override
-    public ActionUpdateThread getActionUpdateThread() {
-        return ActionUpdateThread.BGT;
-    }
-
     protected @Nullable Editor getEditor(DataContext dataContext) {
         return dataContext.getData(Editor.KEY);
     }

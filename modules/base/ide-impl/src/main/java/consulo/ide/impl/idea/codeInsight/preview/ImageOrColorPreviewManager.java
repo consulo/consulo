@@ -20,6 +20,9 @@ import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
+import consulo.application.Application;
+import consulo.application.ReadAction;
+import consulo.application.concurrent.coroutine.ReadLock;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.event.EditorMouseEvent;
 import consulo.codeEditor.event.EditorMouseMotionListener;
@@ -34,7 +37,11 @@ import consulo.logging.Logger;
 import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.coroutine.UIAction;
 import consulo.util.collection.ContainerUtil;
+import consulo.util.concurrent.coroutine.Continuation;
+import consulo.util.concurrent.coroutine.Coroutine;
+import consulo.util.concurrent.coroutine.CoroutineScope;
 import consulo.util.dataholder.Key;
 import org.jspecify.annotations.Nullable;
 import jakarta.inject.Singleton;
@@ -46,6 +53,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Future;
@@ -58,6 +66,7 @@ public class ImageOrColorPreviewManager implements Disposable {
     private static final Logger LOG = Logger.getInstance(ImageOrColorPreviewManager.class);
 
     private static final Key<KeyListener> EDITOR_LISTENER_ADDED = Key.create("previewManagerListenerAdded");
+    private static final Key<Continuation<?>> EDITOR_ATTACH_CONTINUATION = Key.create("previewManagerAttachContinuation");
 
     private Future<?> executeFuture = CompletableFuture.completedFuture(null);
 
@@ -90,24 +99,29 @@ public class ImageOrColorPreviewManager implements Disposable {
             }
             else {
                 Collection<PsiElement> elements = myElements;
-                if (!getPsiElementsAt(point, editor).equals(elements)) {
-                    myElements = null;
-                    for (ElementPreviewProvider provider : ElementPreviewProvider.EP_NAME.getExtensionList()) {
-                        try {
-                            if (elements != null) {
-                                for (PsiElement element : elements) {
-                                    provider.hide(element, editor);
+                ReadAction.nonBlocking(() -> getPsiElementsAt(point, editor))
+                    .finishOnUiThread(Application::getNoneModalityState, newElements -> {
+                        if (Objects.equals(elements, newElements)) {
+                            return;
+                        }
+
+                        myElements = null;
+                        for (ElementPreviewProvider provider : ElementPreviewProvider.EP_NAME.getExtensionList()) {
+                            try {
+                                if (elements != null) {
+                                    for (PsiElement element : elements) {
+                                        provider.hide(element, editor);
+                                    }
+                                }
+                                else {
+                                    provider.hide(null, editor);
                                 }
                             }
-                            else {
-                                provider.hide(null, editor);
+                            catch (Exception e) {
+                                LOG.error(e);
                             }
                         }
-                        catch (Exception e) {
-                            LOG.error(e);
-                        }
-                    }
-                }
+                    });
             }
         }
     };
@@ -115,6 +129,12 @@ public class ImageOrColorPreviewManager implements Disposable {
     public void unregisterEditor(Editor editor) {
         if (editor.isOneLineMode()) {
             return;
+        }
+
+        Continuation<?> attachContinuation = EDITOR_ATTACH_CONTINUATION.get(editor);
+        if (attachContinuation != null) {
+            attachContinuation.cancel();
+            EDITOR_ATTACH_CONTINUATION.set(editor, null);
         }
 
         KeyListener keyListener = EDITOR_LISTENER_ADDED.get(editor);
@@ -135,34 +155,56 @@ public class ImageOrColorPreviewManager implements Disposable {
             return;
         }
 
-        PsiFile psiFile = PsiDocumentManager.getInstance(project).getPsiFile(editor.getDocument());
-        if (psiFile == null || psiFile instanceof PsiCompiledElement || !isSupportedFile(psiFile)) {
-            return;
-        }
-
-        editor.addEditorMouseMotionListener(myEditorMouseMotionListener);
-
-        KeyListener keyListener = new KeyAdapter() {
-            @Override
-            public void keyPressed(KeyEvent e) {
-                if (e.getKeyCode() == KeyEvent.VK_SHIFT && !editor.isOneLineMode()) {
-                    PointerInfo pointerInfo = MouseInfo.getPointerInfo();
-                    if (pointerInfo != null) {
-                        Point location = pointerInfo.getLocation();
-                        SwingUtilities.convertPointFromScreen(location, editor.getContentComponent());
-
-                        executeFuture.cancel(false);
-                        executeFuture =
-                            project.getUIAccess()
-                                .getScheduler()
-                                .schedule(new PreviewRequest(location, editor, true), 100, TimeUnit.MILLISECONDS);
+        Continuation<?> continuation = CoroutineScope.launchAsync(project.coroutineContext(), () -> {
+            return Coroutine
+                .first(ReadLock.<Void, Boolean>apply(ignored -> {
+                    if (project.isDisposed()) {
+                        return Boolean.FALSE;
                     }
-                }
-            }
-        };
-        editor.getContentComponent().addKeyListener(keyListener);
+                    PsiFile psiFile = PsiDocumentManager.getInstance(project).getPsiFile(editor.getDocument());
+                    if (psiFile == null || psiFile instanceof PsiCompiledElement || !isSupportedFile(psiFile)) {
+                        return Boolean.FALSE;
+                    }
+                    return Boolean.TRUE;
+                }))
+                .then(UIAction.<Boolean, Void>apply((supported, cont) -> {
+                    EDITOR_ATTACH_CONTINUATION.set(editor, null);
 
-        EDITOR_LISTENER_ADDED.set(editor, keyListener);
+                    if (!Boolean.TRUE.equals(supported) || editor.isDisposed()) {
+                        @SuppressWarnings("unchecked")
+                        Continuation<Void> typed = (Continuation<Void>) cont;
+                        typed.finishEarly(null);
+                        return null;
+                    }
+
+                    editor.addEditorMouseMotionListener(myEditorMouseMotionListener);
+
+                    KeyListener keyListener = new KeyAdapter() {
+                        @Override
+                        public void keyPressed(KeyEvent e) {
+                            if (e.getKeyCode() == KeyEvent.VK_SHIFT && !editor.isOneLineMode()) {
+                                PointerInfo pointerInfo = MouseInfo.getPointerInfo();
+                                if (pointerInfo != null) {
+                                    Point location = pointerInfo.getLocation();
+                                    SwingUtilities.convertPointFromScreen(location, editor.getContentComponent());
+
+                                    executeFuture.cancel(false);
+                                    executeFuture =
+                                        project.getUIAccess()
+                                            .getScheduler()
+                                            .schedule(new PreviewRequest(location, editor, true), 100, TimeUnit.MILLISECONDS);
+                                }
+                            }
+                        }
+                    };
+                    editor.getContentComponent().addKeyListener(keyListener);
+
+                    EDITOR_LISTENER_ADDED.set(editor, keyListener);
+                    return null;
+                }));
+        });
+
+        EDITOR_ATTACH_CONTINUATION.set(editor, continuation);
     }
 
     private static boolean isSupportedFile(PsiFile psiFile) {

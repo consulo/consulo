@@ -15,6 +15,7 @@
  */
 package consulo.language.psi.search;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.language.psi.PsiFile;
@@ -26,7 +27,6 @@ import consulo.project.Project;
  */
 @ServiceAPI(ComponentScope.PROJECT)
 public abstract class PsiTodoSearchHelper {
-  
   public static PsiTodoSearchHelper getInstance(Project project) {
     return project.getInstance(PsiTodoSearchHelper.class);
   }
@@ -36,6 +36,7 @@ public abstract class PsiTodoSearchHelper {
    *
    * @return the list of files with to do items.
    */
+  @RequiredReadAction
   public abstract PsiFile[] findFilesWithTodoItems();
 
   /**
@@ -56,9 +57,7 @@ public abstract class PsiTodoSearchHelper {
    */
   public abstract TodoItem[] findTodoItems(PsiFile file, int startOffset, int endOffset);
 
-  
   public abstract TodoItem[] findTodoItemsLight(PsiFile file);
-  
   public abstract TodoItem[] findTodoItemsLight(PsiFile file, int startOffset, int endOffset);
 
   /**

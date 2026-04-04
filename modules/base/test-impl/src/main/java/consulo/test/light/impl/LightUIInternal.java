@@ -116,7 +116,6 @@ public class LightUIInternal extends UIInternal {
     return null;
   }
 
-  
   @Override
   public IntBox _Components_intBox(int value) {
     return null;
@@ -197,19 +196,16 @@ public class LightUIInternal extends UIInternal {
     return null;
   }
 
-  
   @Override
   public StyleManager _StyleManager_get() {
     return null;
   }
 
-  
   @Override
   public FontManager _FontManager_get() {
     return null;
   }
 
-  
   @Override
   public Window _Window_create(String title, WindowOptions options) {
     return null;
@@ -236,7 +232,6 @@ public class LightUIInternal extends UIInternal {
   }
 
   @RequiredUIAccess
-  
   @Override
   public UIAccess _UIAccess_get() {
     return null;
@@ -265,15 +260,4 @@ public class LightUIInternal extends UIInternal {
     return null;
   }
 
-  
-  @Override
-  public ModalityState _ModalityState_any() {
-    return LightModalityState.INSTANCE;
-  }
-
-  
-  @Override
-  public ModalityState _ModalityState_nonModal() {
-    return LightModalityState.INSTANCE;
-  }
 }

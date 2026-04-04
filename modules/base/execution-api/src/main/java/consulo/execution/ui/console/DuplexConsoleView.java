@@ -20,7 +20,8 @@ import consulo.application.ApplicationPropertiesComponent;
 import consulo.application.dumb.DumbAware;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.codeEditor.action.ToggleUseSoftWrapsToolbarAction;
-import consulo.dataContext.DataProvider;
+import consulo.dataContext.DataSink;
+import consulo.dataContext.UiDataProvider;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.execution.action.ScrollToTheEndToolbarAction;
@@ -47,19 +48,16 @@ import java.util.Collection;
 import java.util.List;
 import java.util.function.BiPredicate;
 
-public class DuplexConsoleView<S extends ConsoleView, T extends ConsoleView> extends JPanel implements ConsoleView, ObservableConsoleView, DataProvider {
+public class DuplexConsoleView<S extends ConsoleView, T extends ConsoleView> extends JPanel implements ConsoleView, ObservableConsoleView, UiDataProvider {
     private final static String PRIMARY_CONSOLE_PANEL = "PRIMARY_CONSOLE_PANEL";
     private final static String SECONDARY_CONSOLE_PANEL = "SECONDARY_CONSOLE_PANEL";
 
-    
     private final S myPrimaryConsoleView;
-    
     private final T mySecondaryConsoleView;
     private final @Nullable String myStateStorageKey;
 
     private boolean myPrimary;
     private @Nullable ProcessHandler myProcessHandler;
-    
     private final SwitchDuplexConsoleViewAction mySwitchConsoleAction;
     private boolean myDisableSwitchConsoleActionOnProcessEnd = true;
 
@@ -133,12 +131,10 @@ public class DuplexConsoleView<S extends ConsoleView, T extends ConsoleView> ext
         return myPrimary;
     }
 
-    
     public S getPrimaryConsoleView() {
         return myPrimaryConsoleView;
     }
 
-    
     public T getSecondaryConsoleView() {
         return mySecondaryConsoleView;
     }
@@ -232,7 +228,6 @@ public class DuplexConsoleView<S extends ConsoleView, T extends ConsoleView> ext
         return false;
     }
 
-    
     @Override
     public AnAction[] createConsoleActions() {
         List<AnAction> actions = new ArrayList<>();
@@ -280,12 +275,13 @@ public class DuplexConsoleView<S extends ConsoleView, T extends ConsoleView> ext
     }
 
     @Override
-    public @Nullable Object getData(Key<?> dataId) {
+    public void uiDataSnapshot(DataSink sink) {
         ConsoleView consoleView = getSubConsoleView(isPrimaryConsoleEnabled());
-        return consoleView instanceof DataProvider dataProvider ? dataProvider.getData(dataId) : null;
+        if (consoleView instanceof UiDataProvider uiDataProvider) {
+            sink.uiDataSnapshot(uiDataProvider);
+        }
     }
 
-    
     public Presentation getSwitchConsoleActionPresentation() {
         return mySwitchConsoleAction.getTemplatePresentation();
     }
@@ -294,7 +290,6 @@ public class DuplexConsoleView<S extends ConsoleView, T extends ConsoleView> ext
         myDisableSwitchConsoleActionOnProcessEnd = disableSwitchConsoleActionOnProcessEnd;
     }
 
-    
     private List<AnAction> mergeConsoleActions(List<AnAction> actions1, Collection<AnAction> actions2) {
         return ContainerUtil.map(actions1, action1 -> {
             AnAction action2 = ContainerUtil.find(actions2, action -> action1.getClass() == action.getClass() &&
@@ -369,9 +364,7 @@ public class DuplexConsoleView<S extends ConsoleView, T extends ConsoleView> ext
     }
 
     private static class MergedToggleAction extends ToggleAction implements DumbAware {
-        
         private final ToggleAction myAction1;
-        
         private final ToggleAction myAction2;
 
         private MergedToggleAction(ToggleAction action1, ToggleAction action2) {
@@ -394,9 +387,7 @@ public class DuplexConsoleView<S extends ConsoleView, T extends ConsoleView> ext
     }
 
     private static class MergedAction extends AnAction implements DumbAware {
-        
         private final AnAction myAction1;
-        
         private final AnAction myAction2;
 
         private MergedAction(AnAction action1, AnAction action2) {

@@ -171,7 +171,7 @@ public class GotoDeclarationAction extends BaseCodeInsightAction implements Code
 
     private static void gotoTargetElement(PsiElement element) {
         Navigatable navigatable = element instanceof Navigatable nav ? nav : EditSourceUtil.getDescriptor(element);
-        if (navigatable != null && navigatable.canNavigate()) {
+        if (navigatable != null && navigatable.getNavigateOptions().canNavigate()) {
             navigatable.navigate(true);
         }
     }

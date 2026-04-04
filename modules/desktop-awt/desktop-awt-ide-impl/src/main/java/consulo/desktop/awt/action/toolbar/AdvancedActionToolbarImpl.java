@@ -19,7 +19,8 @@ import consulo.application.Application;
 import consulo.application.ui.wm.ApplicationIdeFocusManager;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
-import consulo.dataContext.DataProvider;
+import consulo.dataContext.DataSink;
+import consulo.dataContext.UiDataProvider;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.localize.LocalizeValue;
@@ -40,7 +41,6 @@ import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.popup.event.JBPopupListener;
 import consulo.ui.ex.popup.event.LightweightWindowEvent;
 import consulo.ui.image.Image;
-import consulo.util.dataholder.Key;
 import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
@@ -65,11 +65,8 @@ public class AdvancedActionToolbarImpl extends SimpleActionToolbarImpl {
      */
     private final List<Rectangle> myComponentBounds = new ArrayList<>();
 
-    
     private final DataManager myDataManager;
-    
     private final Application myApplication;
-    
     private final KeymapManager myKeymapManager;
 
     private Size2D myMinimumButtonSize = Size2D.ZERO;
@@ -177,7 +174,6 @@ public class AdvancedActionToolbarImpl extends SimpleActionToolbarImpl {
                 hidePopup();
             }
 
-            
             @Override
             protected DataContext getDataContext() {
                 return AdvancedActionToolbarImpl.this.getDataContext();
@@ -261,6 +257,7 @@ public class AdvancedActionToolbarImpl extends SimpleActionToolbarImpl {
         }
     }
 
+
     private boolean isPopupShowing() {
         return myPopup != null && !myPopup.isDisposed();
     }
@@ -287,7 +284,7 @@ public class AdvancedActionToolbarImpl extends SimpleActionToolbarImpl {
         myEngine.updateActionsAsync();
     }
 
-    abstract static class PopupToolbar extends AdvancedActionToolbarImpl implements AnActionListener, DataProvider, Disposable {
+    abstract static class PopupToolbar extends AdvancedActionToolbarImpl implements AnActionListener, UiDataProvider, Disposable {
         private final JComponent myParent;
 
         PopupToolbar(
@@ -306,12 +303,8 @@ public class AdvancedActionToolbarImpl extends SimpleActionToolbarImpl {
         }
 
         @Override
-        public @Nullable Object getData(Key dataId) {
-            Object data = super.getData(dataId);
-            if (data != null) {
-                return data;
-            }
-            return getDataContext().getData(dataId);
+        public void uiDataSnapshot(DataSink sink) {
+            super.uiDataSnapshot(sink);
         }
 
         @Override
@@ -391,7 +384,6 @@ public class AdvancedActionToolbarImpl extends SimpleActionToolbarImpl {
     }
 
     @Override
-    
     public Dimension getPreferredSize() {
         ArrayList<Rectangle> bounds = new ArrayList<>();
         calculateBounds(new Dimension(Integer.MAX_VALUE, Integer.MAX_VALUE), bounds);//it doesn't take into account wrapping
@@ -464,6 +456,7 @@ public class AdvancedActionToolbarImpl extends SimpleActionToolbarImpl {
         else {
             throw new IllegalStateException("unknown layoutPolicy: " + myLayoutPolicy);
         }
+
 
         if (getComponentCount() > 0 && size2Fit.width < Integer.MAX_VALUE) {
             int maxHeight = 0;
@@ -607,6 +600,7 @@ public class AdvancedActionToolbarImpl extends SimpleActionToolbarImpl {
             }
         }
     }
+
 
     private void calculateBoundsWrapImpl(Dimension sizeToFit, List<? extends Rectangle> bounds) {
         // We have to graceful handle case when toolbar was not laid out yet.

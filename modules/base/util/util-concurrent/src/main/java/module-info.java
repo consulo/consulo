@@ -13,5 +13,5 @@ module consulo.util.concurrent {
 
   exports consulo.util.concurrent;
 
-  exports consulo.util.concurrent.internal to consulo.ui.api;
+  exports consulo.util.concurrent.internal to consulo.ui.api, consulo.application.impl;
 }

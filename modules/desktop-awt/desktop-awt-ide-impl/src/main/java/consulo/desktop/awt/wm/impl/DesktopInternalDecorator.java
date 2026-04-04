@@ -18,7 +18,8 @@ package consulo.desktop.awt.wm.impl;
 import consulo.application.dumb.DumbAware;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.application.util.Queryable;
-import consulo.dataContext.DataProvider;
+import consulo.dataContext.DataSink;
+import consulo.dataContext.UiDataProvider;
 import consulo.desktop.awt.internal.project.DumbUnawareHider;
 import consulo.desktop.awt.ui.animation.AlphaAnimated;
 import consulo.disposer.Disposable;
@@ -71,7 +72,7 @@ import java.util.Map;
  * @author Eugene Belyaev
  * @author Vladimir Kondratyev
  */
-public final class DesktopInternalDecorator extends JPanel implements Queryable, DataProvider, ToolWindowInternalDecorator {
+public final class DesktopInternalDecorator extends JPanel implements Queryable, UiDataProvider, ToolWindowInternalDecorator {
     private static final HoverStateListener HOVER_STATE_LISTENER = new HoverStateListener() {
         @Override
         @RequiredUIAccess
@@ -209,6 +210,7 @@ public final class DesktopInternalDecorator extends JPanel implements Queryable,
         validate();
         repaint();
 
+
         // Push "apply" request forward
 
         if (myInfo.isFloating() && myInfo.isVisible()) {
@@ -223,11 +225,8 @@ public final class DesktopInternalDecorator extends JPanel implements Queryable,
     }
 
     @Override
-    public @Nullable Object getData(Key<?> dataId) {
-        if (ToolWindow.KEY == dataId) {
-            return myToolWindow;
-        }
-        return null;
+    public void uiDataSnapshot(DataSink sink) {
+        sink.set(ToolWindow.KEY, myToolWindow);
     }
 
     @Override
@@ -504,7 +503,6 @@ public final class DesktopInternalDecorator extends JPanel implements Queryable,
      * @return last window info applied to the decorator.
      */
     @Override
-    
     public WindowInfoImpl getWindowInfo() {
         return myInfo;
     }
@@ -527,7 +525,6 @@ public final class DesktopInternalDecorator extends JPanel implements Queryable,
     }
 
     private final class ChangeAnchorAction extends AnAction implements DumbAware {
-        
         private final ToolWindowAnchor myAnchor;
 
         public ChangeAnchorAction(LocalizeValue title, ToolWindowAnchor anchor) {
@@ -698,6 +695,7 @@ public final class DesktopInternalDecorator extends JPanel implements Queryable,
         }
     }
 
+
     private final class ToggleContentUiTypeAction extends ToggleAction implements DumbAware {
         private boolean myHadSeveralContents;
 
@@ -772,6 +770,7 @@ public final class DesktopInternalDecorator extends JPanel implements Queryable,
             return Math.abs(myInfo.getAnchor().isHorizontal() ? p.y : p.x) < 6;
         }
 
+
         private class MyMouseAdapter extends MouseAdapter {
 
             private void updateCursor(MouseEvent e) {
@@ -834,7 +833,6 @@ public final class DesktopInternalDecorator extends JPanel implements Queryable,
             }
         }
 
-        
         @Override
         public Cursor getCursor() {
             boolean isVerticalCursor =

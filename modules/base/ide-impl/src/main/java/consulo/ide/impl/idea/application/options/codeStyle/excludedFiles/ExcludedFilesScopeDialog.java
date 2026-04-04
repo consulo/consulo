@@ -35,6 +35,7 @@ public class ExcludedFilesScopeDialog extends ExcludedFilesDialogBase {
     fillScopesList(availableScopes);
   }
 
+
   private void fillScopesList(List<NamedScope> availableScopes) {
     myScopeListModel = new DefaultComboBoxModel<>();
     for (NamedScope scope : availableScopes) {
@@ -42,6 +43,7 @@ public class ExcludedFilesScopeDialog extends ExcludedFilesDialogBase {
     }
     myForm.getScopesList().setModel(myScopeListModel);
   }
+
 
   @Override
   public @Nullable FileSetDescriptor getDescriptor() {

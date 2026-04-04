@@ -147,4 +147,8 @@ public abstract class CoroutineStep<I extends @Nullable Object, O extends @Nulla
     protected void terminateCoroutine(Continuation<?> continuation) {
         continuation.getCurrentCoroutine().terminate(continuation);
     }
+
+    public Coroutine<I, O> toCoroutine() {
+        return Coroutine.first(this);
+    }
 }

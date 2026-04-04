@@ -46,7 +46,7 @@ public class CurrentFileTodosTreeBuilder extends TodoTreeBuilder {
     if (treeStructure.accept(psiFile)) {
       files.add(psiFile.getVirtualFile());
     }
-    super.rebuildCache(files);
+    rebuildCache(files);
   }
 
   /**

@@ -21,7 +21,6 @@ import consulo.application.ApplicationManager;
 import consulo.application.constraint.Expiration;
 import consulo.component.ComponentManager;
 import consulo.project.Project;
-import consulo.ui.ModalityState;
 import consulo.ui.UIAccess;
 
 import java.util.Collections;
@@ -29,138 +28,67 @@ import java.util.Set;
 import java.util.concurrent.Executor;
 import java.util.function.BooleanSupplier;
 
-/**
- * from kotlin
- */
 public class AppUIExecutorImpl extends BaseExpirableExecutorMixinImpl<AppUIExecutorImpl> implements AppUIExecutor {
-  private static class MyEdtExecutor implements Executor {
-    private final ModalityState modality;
-
-    private MyEdtExecutor(ModalityState modalityState) {
-      modality = modalityState;
-    }
-
-    @Override
-    public void execute(Runnable command) {
-      Application application = Application.get();
-      if (application.isDispatchThread() && !application.getCurrentModalityState().dominates(modality)) {
-        command.run();
-      }
-      else {
-        application.invokeLater(command, modality);
-      }
-    }
-  }
-
-  private static class MyWtExecutor implements Executor {
-    private final ModalityState modality;
-
-    private MyWtExecutor(ModalityState modalityState) {
-      modality = modalityState;
-    }
-
-    @Override
-    public void execute(Runnable command) {
-      Application application = Application.get();
-      if (application.isWriteThread() && !application.getCurrentModalityState().dominates(modality)) {
-        command.run();
-      }
-      else {
-        application.invokeLaterOnWriteThread(command, modality);
-      }
-    }
-  }
-
-  private static Executor getExecutorForThread(ExecutionThread thread, ModalityState modality) {
-    switch (thread) {
-      case EDT:
-        return new MyEdtExecutor(modality);
-      case WT:
-        return new MyWtExecutor(modality);
-      default:
-        throw new UnsupportedOperationException(thread.name());
-    }
-  }
-
-  private final ModalityState modality;
-  private final ExecutionThread thread;
-
-  public AppUIExecutorImpl(ModalityState modalityState, ExecutionThread thread) {
-    super(new ContextConstraint[0], new BooleanSupplier[0], Collections.emptySet(), getExecutorForThread(thread, modalityState));
-    modality = modalityState;
-    this.thread = thread;
-  }
-
-  public AppUIExecutorImpl(ModalityState modalityState, ExecutionThread thread, ContextConstraint[] constraints, BooleanSupplier[] cancellationConditions, Set<? extends Expiration> expirableHandles) {
-    super(constraints, cancellationConditions, expirableHandles, getExecutorForThread(thread, modalityState));
-    this.thread = thread;
-    this.modality = modalityState;
-  }
-
-  
-  @Override
-  protected AppUIExecutorImpl cloneWith(ContextConstraint[] constraints, BooleanSupplier[] cancellationConditions, Set<? extends Expiration> expirationSet) {
-    return new AppUIExecutorImpl(modality, thread, constraints, cancellationConditions, expirationSet);
-  }
-
-  
-  @Override
-  public AppUIExecutor later() {
-    int edtEventCount = UIAccess.isUIThread() ? UIAccess.current().getEventCount() : -1;
-    return withConstraint(new ContextConstraint() {
-      private volatile boolean usedOnce;
-
-      @Override
-      public boolean isCorrectContext() {
-        switch (thread) {
-          case EDT:
-            if (edtEventCount == -1) {
-              return UIAccess.isUIThread();
-            }
-            return usedOnce || edtEventCount != UIAccess.current().getEventCount();
-          case WT:
-            return usedOnce;
-          default:
-            throw new UnsupportedOperationException();
+    private static final Executor EDT_EXECUTOR = command -> {
+        Application application = Application.get();
+        if (application.isDispatchThread()) {
+            command.run();
         }
-      }
+        else {
+            application.invokeLater(command);
+        }
+    };
 
-      @Override
-      public void schedule(Runnable runnable) {
-        dispatchLaterUnconstrained(() -> {
-          usedOnce = true;
-          runnable.run();
-        });
-      }
-
-      @Override
-      public String toString() {
-        return "later";
-      }
-    });
-  }
-
-  
-  @Override
-  public AppUIExecutor withDocumentsCommitted(ComponentManager project) {
-    return withConstraint(new WithDocumentsCommitted((Project)project, modality), project);
-  }
-
-  
-  @Override
-  public AppUIExecutor inSmartMode(ComponentManager project) {
-    return withConstraint(new InSmartMode((Project)project), project);
-  }
-
-  @Override
-  public void dispatchLaterUnconstrained(Runnable runnable) {
-    switch (thread) {
-      case EDT:
-        ApplicationManager.getApplication().invokeLater(runnable, modality);
-        break;
-      case WT:
-        ApplicationManager.getApplication().invokeLaterOnWriteThread(runnable, modality);
-        break;
+    public AppUIExecutorImpl() {
+        super(new ContextConstraint[0], new BooleanSupplier[0], Collections.emptySet(), EDT_EXECUTOR);
     }
-  }
+
+    private AppUIExecutorImpl(ContextConstraint[] constraints, BooleanSupplier[] cancellationConditions, Set<? extends Expiration> expirableHandles) {
+        super(constraints, cancellationConditions, expirableHandles, EDT_EXECUTOR);
+    }
+
+    @Override
+    protected AppUIExecutorImpl cloneWith(ContextConstraint[] constraints, BooleanSupplier[] cancellationConditions, Set<? extends Expiration> expirationSet) {
+        return new AppUIExecutorImpl(constraints, cancellationConditions, expirationSet);
+    }
+
+    @Override
+    public AppUIExecutor later() {
+        return withConstraint(new ContextConstraint() {
+            private volatile boolean scheduled;
+
+            @Override
+            public boolean isCorrectContext() {
+                return scheduled && UIAccess.isUIThread();
+            }
+
+            @Override
+            public void schedule(Runnable runnable) {
+                dispatchLaterUnconstrained(() -> {
+                    scheduled = true;
+                    runnable.run();
+                });
+            }
+
+            @Override
+            public String toString() {
+                return "later";
+            }
+        });
+    }
+
+    @Override
+    public AppUIExecutor withDocumentsCommitted(ComponentManager project) {
+        return withConstraint(new WithDocumentsCommitted((Project) project), project);
+    }
+
+    @Override
+    public AppUIExecutor inSmartMode(ComponentManager project) {
+        return withConstraint(new InSmartMode((Project) project), project);
+    }
+
+    @Override
+    public void dispatchLaterUnconstrained(Runnable runnable) {
+        ApplicationManager.getApplication().invokeLater(runnable);
+    }
 }

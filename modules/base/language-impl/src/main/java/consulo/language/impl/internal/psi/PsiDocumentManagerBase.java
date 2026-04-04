@@ -41,9 +41,9 @@ import consulo.language.impl.internal.psi.diff.DiffLog;
 import consulo.language.impl.internal.psi.pointer.SmartPointerManagerImpl;
 import consulo.language.impl.psi.PsiFileImpl;
 import consulo.language.inject.InjectedLanguageManager;
+import consulo.language.internal.ExternalChangeActionUtil;
 import consulo.language.psi.*;
 import consulo.language.psi.event.PsiDocumentListener;
-import consulo.language.psi.internal.ExternalChangeAction;
 import consulo.language.util.IncorrectOperationException;
 import consulo.logging.Logger;
 import consulo.project.Project;
@@ -592,7 +592,7 @@ public abstract class PsiDocumentManagerBase extends PsiDocumentManager implemen
 
             ModalityState modality = myProject.getApplication().getDefaultModalityState();
             Semaphore semaphore = new Semaphore(1);
-            AppUIExecutor.onWriteThread(ModalityState.any()).submit(() -> {
+            AppUIExecutor.onUiThread(ModalityState.any()).submit(() -> {
                 if (myProject.isDisposed()) {
                     // committedness doesn't matter anymore; give clients a chance to do checkCanceled
                     semaphore.up();
@@ -968,7 +968,7 @@ public abstract class PsiDocumentManagerBase extends PsiDocumentManager implemen
         boolean commitNecessary =
             files.stream().noneMatch(file -> PsiToDocumentSynchronizer.isInsideAtomicChange(file) || !(file instanceof PsiFileImpl));
 
-        boolean forceCommit = Application.get().hasWriteAction(ExternalChangeAction.class)
+        boolean forceCommit = ExternalChangeActionUtil.isExternalChangeInProgress()
             && (SystemProperties.getBooleanProperty("idea.force.commit.on.external.change", false)
             || Application.get().isHeadlessEnvironment() && !Application.get().isUnitTestMode());
 

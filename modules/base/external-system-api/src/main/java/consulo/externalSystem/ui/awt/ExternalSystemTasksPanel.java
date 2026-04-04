@@ -15,7 +15,8 @@
  */
 package consulo.externalSystem.ui.awt;
 
-import consulo.dataContext.DataProvider;
+import consulo.dataContext.DataSink;
+import consulo.dataContext.UiDataProvider;
 import consulo.execution.action.Location;
 import consulo.execution.executor.DefaultRunExecutor;
 import consulo.externalSystem.ExternalSystemBundle;
@@ -39,7 +40,6 @@ import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.ActionToolbar;
 import consulo.ui.ex.awt.*;
-import consulo.util.dataholder.Key;
 import consulo.util.lang.StringUtil;
 import org.jspecify.annotations.Nullable;
 
@@ -55,19 +55,13 @@ import static consulo.externalSystem.util.ExternalSystemConstants.*;
  * @author Denis Zhdanov
  * @since 5/12/13 10:18 PM
  */
-public class ExternalSystemTasksPanel extends SimpleToolWindowPanel implements DataProvider {
+public class ExternalSystemTasksPanel extends SimpleToolWindowPanel implements UiDataProvider {
 
-  
   private final ExternalSystemRecentTasksList myRecentTasksList;
-  
   private final ExternalSystemTasksTreeModel myAllTasksModel;
-  
   private final ExternalSystemTasksTree myAllTasksTree;
-  
   private final ProjectSystemId               myExternalSystemId;
-  
   private final NotificationGroup             myNotificationGroup;
-  
   private final Project                       myProject;
 
   private @Nullable Supplier<ExternalTaskExecutionInfo> mySelectedTaskProvider;
@@ -148,39 +142,25 @@ public class ExternalSystemTasksPanel extends SimpleToolWindowPanel implements D
   }
 
   @Override
-  public @Nullable Object getData(Key<?> dataId) {
-    if (ExternalSystemDataKeys.RECENT_TASKS_LIST == dataId) {
-      return myRecentTasksList;
-    }
-    else if (ExternalSystemDataKeys.ALL_TASKS_MODEL == dataId) {
-      return myAllTasksModel;
-    }
-    else if (ExternalSystemDataKeys.EXTERNAL_SYSTEM_ID == dataId) {
-      return myExternalSystemId;
-    }
-    else if (ExternalSystemDataKeys.NOTIFICATION_GROUP == dataId) {
-      return myNotificationGroup;
-    }
-    else if (ExternalSystemDataKeys.SELECTED_TASK == dataId) {
-      return mySelectedTaskProvider == null ? null : mySelectedTaskProvider.get();
-    }
-    else if (ExternalSystemDataKeys.SELECTED_PROJECT == dataId) {
+  public void uiDataSnapshot(DataSink sink) {
+    super.uiDataSnapshot(sink);
+    sink.set(ExternalSystemDataKeys.RECENT_TASKS_LIST, myRecentTasksList);
+    sink.set(ExternalSystemDataKeys.ALL_TASKS_MODEL, myAllTasksModel);
+    sink.set(ExternalSystemDataKeys.EXTERNAL_SYSTEM_ID, myExternalSystemId);
+    sink.set(ExternalSystemDataKeys.NOTIFICATION_GROUP, myNotificationGroup);
+    sink.lazy(ExternalSystemDataKeys.SELECTED_TASK, () -> mySelectedTaskProvider == null ? null : mySelectedTaskProvider.get());
+    sink.lazy(ExternalSystemDataKeys.SELECTED_PROJECT, () -> {
       if (mySelectedTaskProvider != myAllTasksTree) {
         return null;
       }
-      else {
-        Object component = myAllTasksTree.getLastSelectedPathComponent();
-        if (component instanceof ExternalSystemNode) {
-          Object element = ((ExternalSystemNode)component).getDescriptor().getElement();
-          return element instanceof ExternalProjectPojo ? element : null;
-        }
+      Object component = myAllTasksTree.getLastSelectedPathComponent();
+      if (component instanceof ExternalSystemNode) {
+        Object element = ((ExternalSystemNode)component).getDescriptor().getElement();
+        return element instanceof ExternalProjectPojo pojo ? pojo : null;
       }
-    }
-    else if (Location.DATA_KEY == dataId) {
-      Location location = buildLocation();
-      return location == null ? super.getData(dataId) : location;
-    }
-    return null;
+      return null;
+    });
+    sink.lazy(Location.DATA_KEY, () -> buildLocation());
   }
 
   private @Nullable Location buildLocation() {

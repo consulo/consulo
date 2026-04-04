@@ -16,7 +16,6 @@
 package consulo.ide.impl.idea.ide.util;
 
 import consulo.annotation.access.RequiredReadAction;
-import consulo.application.impl.internal.IdeaModalityState;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.disposer.Disposer;
@@ -390,8 +389,8 @@ public abstract class AbstractTreeClassChooserDialog<T extends PsiNamedElement> 
         );
     }
 
-    private IdeaModalityState getModalityState() {
-        return IdeaModalityState.stateForComponent(getRootPane());
+    private ModalityState getModalityState() {
+        return ModalityState.nonModal();
     }
 
     @SuppressWarnings("unchecked")

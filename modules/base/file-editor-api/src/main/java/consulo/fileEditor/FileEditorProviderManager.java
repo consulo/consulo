@@ -15,6 +15,7 @@
  */
 package consulo.fileEditor;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
@@ -40,6 +41,7 @@ public abstract class FileEditorProviderManager {
    * an empty array if there are no such providers. Please note that returned array
    * is constructed with respect to editor policies.
    */
+  @RequiredReadAction
   public abstract FileEditorProvider[] getProviders(Project project, VirtualFile file);
 
   /**

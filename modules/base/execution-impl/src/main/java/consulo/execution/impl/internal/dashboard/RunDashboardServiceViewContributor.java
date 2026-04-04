@@ -5,9 +5,9 @@ import consulo.annotation.component.ExtensionImpl;
 import consulo.application.Application;
 import consulo.application.ReadAction;
 import consulo.component.util.WeighedItem;
-import consulo.dataContext.DataManager;
 import consulo.dataContext.DataProvider;
-import consulo.dataContext.internal.DataManagerEx;
+import consulo.dataContext.DataSink;
+import consulo.dataContext.UiDataProvider;
 import consulo.execution.RunManager;
 import consulo.execution.RunnerAndConfigurationSettings;
 import consulo.execution.configuration.ConfigurationType;
@@ -26,6 +26,7 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiUtilCore;
 import consulo.language.psi.util.PsiNavigateUtil;
 import consulo.navigation.ItemPresentation;
+import consulo.navigation.NavigateOptions;
 import consulo.navigation.Navigatable;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.process.ProcessHandler;
@@ -287,20 +288,6 @@ public final class RunDashboardServiceViewContributor
         }
 
         @Override
-        public @Nullable DataProvider getDataProvider() {
-            Content content = myNode.getContent();
-            if (content == null) {
-                return null;
-            }
-
-            // Try to get data provider from content's component itself.
-            // No need to search for data providers in content's component swing hierarchy,
-            // because it is inside service view component for which data is provided.
-            DataManagerEx dataManager = (DataManagerEx)DataManager.getInstance();
-            return dataManager.getDataProviderEx(content.getComponent());
-        }
-
-        @Override
         public void onNodeSelected(List<Object> selectedServices) {
             Content content = myNode.getContent();
             if (content == null) {
@@ -338,14 +325,10 @@ public final class RunDashboardServiceViewContributor
                 }
 
                 @Override
-                public boolean canNavigate() {
-                    return value.get() != null;
+                public NavigateOptions getNavigateOptions() {
+                    return value.get() != null ? NavigateOptions.CAN_NAVIGATE_FULL : NavigateOptions.CANT_NAVIGATE;
                 }
 
-                @Override
-                public boolean canNavigateToSource() {
-                    return canNavigate();
-                }
             };
 
         }
@@ -659,7 +642,7 @@ public final class RunDashboardServiceViewContributor
     }
 
     private static final class RunDashboardContributorViewDescriptor extends SimpleServiceViewDescriptor
-        implements ServiceViewToolWindowDescriptor {
+        implements ServiceViewToolWindowDescriptor, UiDataProvider {
         private final Project myProject;
 
         RunDashboardContributorViewDescriptor(Project project) {
@@ -675,11 +658,6 @@ public final class RunDashboardServiceViewContributor
         @Override
         public ActionGroup getPopupActions() {
             return RunDashboardServiceViewContributor.getPopupActions();
-        }
-
-        @Override
-        public DataProvider getDataProvider() {
-            return id -> DeleteProvider.KEY == id ? new RunDashboardServiceViewDeleteProvider() : null;
         }
 
         @Override
@@ -706,6 +684,11 @@ public final class RunDashboardServiceViewContributor
         @Override
         public boolean isExclusionAllowed() {
             return false;
+        }
+
+        @Override
+        public void uiDataSnapshot(DataSink sink) {
+            sink.set(DeleteProvider.KEY, new RunDashboardServiceViewDeleteProvider());
         }
     }
 }

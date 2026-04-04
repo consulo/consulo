@@ -36,7 +36,7 @@ public final class LineSeparatorPanel extends EditorBasedStatusBarPopup {
         }
         LocalizeValue toolTipText = IdeLocalize.tooltipLineSeparator(StringUtil.escapeLineBreak(lineSeparator));
         LocalizeValue panelText = LocalizeValue.of(LineSeparator.fromString(lineSeparator).toString());
-        return new WidgetState(toolTipText, panelText, true);
+        return new WidgetState(file, toolTipText, panelText, true);
     }
 
     @Override

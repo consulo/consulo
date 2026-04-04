@@ -15,9 +15,8 @@
  */
 package consulo.ide.impl.idea.ide.impl.dataRules;
 
-import consulo.annotation.component.ExtensionImpl;
-import consulo.dataContext.DataProvider;
-import consulo.dataContext.GetDataRule;
+import consulo.dataContext.DataSnapshot;
+import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
 import consulo.language.editor.LangDataKeys;
 import consulo.language.editor.PlatformDataKeys;
 import consulo.language.psi.PsiDirectory;
@@ -33,66 +32,57 @@ import consulo.usage.UsageTarget;
 import consulo.usage.UsageView;
 import consulo.usage.internal.UsageDataUtil;
 import consulo.util.collection.ContainerUtil;
-import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.virtualFileSystem.util.VirtualFileUtil;
 import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
-@ExtensionImpl
-public class VirtualFileArrayRule implements GetDataRule<VirtualFile[]> {
-    @Override
-    public Key<VirtualFile[]> getKey() {
-        return VirtualFile.KEY_OF_ARRAY;
-    }
-
-    @Override
-    public VirtualFile @Nullable [] getData(DataProvider dataProvider) {
+public final class VirtualFileArrayRule {
+    static VirtualFile @Nullable [] getData(DataSnapshot dataProvider) {
         // Try to detect multi-selection.
 
-        Project project = dataProvider.getDataUnchecked(PlatformDataKeys.PROJECT_CONTEXT);
+        Project project = dataProvider.get(PlatformDataKeys.PROJECT_CONTEXT);
         if (project != null && !project.isDisposed()) {
             return ProjectRootManager.getInstance(project).getContentRoots();
         }
 
-        Module[] selectedModules = dataProvider.getDataUnchecked(LangDataKeys.MODULE_CONTEXT_ARRAY);
+        Module[] selectedModules = dataProvider.get(LangDataKeys.MODULE_CONTEXT_ARRAY);
         if (selectedModules != null && selectedModules.length > 0) {
             return getFilesFromModules(selectedModules);
         }
 
-        Module selectedModule = dataProvider.getDataUnchecked(LangDataKeys.MODULE_CONTEXT);
+        Module selectedModule = dataProvider.get(LangDataKeys.MODULE_CONTEXT);
         if (selectedModule != null && !selectedModule.isDisposed()) {
             return ModuleRootManager.getInstance(selectedModule).getContentRoots();
         }
 
-        PsiElement[] psiElements = dataProvider.getDataUnchecked(PsiElement.KEY_OF_ARRAY);
+        PsiElement[] psiElements = dataProvider.get(PsiElement.KEY_OF_ARRAY);
         if (psiElements != null && psiElements.length != 0) {
             return getFilesFromPsiElements(psiElements);
         }
 
         // VirtualFile -> VirtualFile[]
-        VirtualFile vFile = dataProvider.getDataUnchecked(VirtualFile.KEY);
+        VirtualFile vFile = dataProvider.get(VirtualFile.KEY);
         if (vFile != null) {
             return new VirtualFile[]{vFile};
         }
 
         //
 
-        PsiFile psiFile = dataProvider.getDataUnchecked(PsiFile.KEY);
+        PsiFile psiFile = dataProvider.get(PsiFile.KEY);
         if (psiFile != null && psiFile.getVirtualFile() != null) {
             return new VirtualFile[]{psiFile.getVirtualFile()};
         }
 
-        PsiElement elem = dataProvider.getDataUnchecked(PsiElement.KEY);
+        PsiElement elem = dataProvider.get(PsiElement.KEY);
         if (elem != null) {
             return getFilesFromPsiElement(elem);
         }
 
-        Usage[] usages = dataProvider.getDataUnchecked(UsageView.USAGES_KEY);
-        UsageTarget[] usageTargets = dataProvider.getDataUnchecked(UsageView.USAGE_TARGETS_KEY);
+        Usage[] usages = dataProvider.get(UsageView.USAGES_KEY);
+        UsageTarget[] usageTargets = dataProvider.get(UsageView.USAGE_TARGETS_KEY);
         if (usages != null || usageTargets != null) {
             return UsageDataUtil.provideVirtualFileArray(usages, usageTargets);
         }
@@ -142,7 +132,7 @@ public class VirtualFileArrayRule implements GetDataRule<VirtualFile[]> {
                 }
             }
         }
-        VirtualFile[] result = VirtualFileUtil.toVirtualFileArray(files);
+        VirtualFile[] result = VfsUtil.toVirtualFileArray(files);
         files.clear();
         return result;
     }
@@ -152,6 +142,6 @@ public class VirtualFileArrayRule implements GetDataRule<VirtualFile[]> {
         for (Module selectedModule : selectedModules) {
             ContainerUtil.addAll(result, ModuleRootManager.getInstance(selectedModule).getContentRoots());
         }
-        return VirtualFileUtil.toVirtualFileArray(result);
+        return VfsUtil.toVirtualFileArray(result);
     }
 }

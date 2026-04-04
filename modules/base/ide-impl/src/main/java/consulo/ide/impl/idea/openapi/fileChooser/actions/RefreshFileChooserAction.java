@@ -21,7 +21,7 @@ import consulo.platform.base.localize.ActionLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.application.impl.internal.IdeaModalityState;
+import consulo.ui.ModalityState;
 import consulo.application.dumb.DumbAware;
 import consulo.virtualFileSystem.ManagingFS;
 import consulo.virtualFileSystem.RefreshQueue;
@@ -42,6 +42,6 @@ public class RefreshFileChooserAction extends AnAction implements DumbAware {
     @Override
     @RequiredUIAccess
     public void actionPerformed(AnActionEvent e) {
-        RefreshQueue.getInstance().refresh(true, true, null, IdeaModalityState.current(), ManagingFS.getInstance().getLocalRoots());
+        RefreshQueue.getInstance().refresh(true, true, null, ModalityState.nonModal(), ManagingFS.getInstance().getLocalRoots());
     }
 }

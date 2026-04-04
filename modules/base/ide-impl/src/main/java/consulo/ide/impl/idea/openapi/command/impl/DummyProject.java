@@ -18,10 +18,12 @@ package consulo.ide.impl.idea.openapi.command.impl;
 import consulo.application.Application;
 import consulo.component.messagebus.MessageBus;
 import consulo.project.Project;
+import consulo.ui.UIAccess;
 import consulo.util.concurrent.coroutine.CoroutineContext;
 import consulo.util.dataholder.UserDataHolderBase;
 import consulo.virtualFileSystem.VirtualFile;
 import org.jspecify.annotations.Nullable;
+import org.jetbrains.annotations.NonNls;
 
 import java.util.function.BooleanSupplier;
 
@@ -33,7 +35,6 @@ public class DummyProject extends UserDataHolderBase implements Project {
         private static final DummyProject ourInstance = new DummyProject();
     }
 
-    
     public static Project getInstance() {
         return DummyProjectHolder.ourInstance;
     }
@@ -46,32 +47,33 @@ public class DummyProject extends UserDataHolderBase implements Project {
         return null;
     }
 
-    
     @Override
     public Application getApplication() {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    
     public String getName() {
         return "";
     }
 
     @Override
+    @NonNls
     public @Nullable String getPresentableUrl() {
         return null;
     }
 
     @Override
-    
-    
+    @NonNls
     public String getLocationHash() {
         return "dummy";
     }
 
     @Override
-    
+    public void save(UIAccess uiAccess) {
+    }
+
+    @Override
     public String getProjectFilePath() {
         return "";
     }
@@ -92,16 +94,11 @@ public class DummyProject extends UserDataHolderBase implements Project {
     }
 
     @Override
-    public void save() {
-    }
-
-    @Override
     public boolean isDisposed() {
         return false;
     }
 
     @Override
-    
     public BooleanSupplier getDisposed() {
         return this::isDisposed;
     }
@@ -126,7 +123,6 @@ public class DummyProject extends UserDataHolderBase implements Project {
         return null;
     }
 
-    
     @Override
     public CoroutineContext coroutineContext() {
         throw new UnsupportedOperationException();

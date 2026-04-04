@@ -27,20 +27,13 @@ import consulo.ui.UIAccess;
  */
 @ServiceAPI(ComponentScope.APPLICATION)
 public interface InvokerFactory {
-  
-  static InvokerFactory getInstance() {
-    return Application.get().getInstance(InvokerFactory.class);
-  }
+    static InvokerFactory getInstance() {
+        return Application.get().getInstance(InvokerFactory.class);
+    }
 
-  
-  Invoker forEventDispatchThread(UIAccess uiAccess, Disposable parent);
+    Invoker forEventDispatchThread(UIAccess uiAccess, Disposable parent);
 
-  
-  Invoker forBackgroundPoolWithReadAction(Disposable parent);
+    Invoker forBackgroundThreadWithReadAction(Disposable parent);
 
-  
-  Invoker forBackgroundThreadWithReadAction(Disposable parent);
-
-  
-  Invoker forBackgroundThreadWithoutReadAction(Disposable parent);
+    Invoker forBackgroundThreadWithoutReadAction(Disposable parent);
 }

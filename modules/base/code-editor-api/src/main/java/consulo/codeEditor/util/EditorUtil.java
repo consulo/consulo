@@ -15,7 +15,6 @@
  */
 package consulo.codeEditor.util;
 
-import consulo.application.ReadAction;
 import consulo.application.util.Dumpable;
 import consulo.codeEditor.*;
 import consulo.codeEditor.event.EditorFactoryAdapter;
@@ -84,24 +83,22 @@ public class EditorUtil {
      * @see Inlay#isRelatedToPrecedingText()
      */
     public static VisualPosition inlayAwareOffsetToVisualPosition(Editor editor, int offset) {
-        return ReadAction.compute(() -> {
-            Editor e = editor;
-            LogicalPosition logicalPosition = e.offsetToLogicalPosition(offset);
-            if (e instanceof InjectedEditor) {
-                logicalPosition = ((InjectedEditor) e).injectedToHost(logicalPosition);
-                e = ((InjectedEditor) e).getDelegate();
-            }
+        Editor e = editor;
+        LogicalPosition logicalPosition = e.offsetToLogicalPosition(offset);
+        if (e instanceof InjectedEditor) {
+            logicalPosition = ((InjectedEditor) e).injectedToHost(logicalPosition);
+            e = ((InjectedEditor) e).getDelegate();
+        }
 
-            VisualPosition pos = e.logicalToVisualPosition(logicalPosition);
-            Inlay inlay;
-            while ((inlay = e.getInlayModel().getInlineElementAt(pos)) != null) {
-                if (inlay.isRelatedToPrecedingText()) {
-                    break;
-                }
-                pos = new VisualPosition(pos.line, pos.column + 1);
+        VisualPosition pos = e.logicalToVisualPosition(logicalPosition);
+        Inlay inlay;
+        while ((inlay = e.getInlayModel().getInlineElementAt(pos)) != null) {
+            if (inlay.isRelatedToPrecedingText()) {
+                break;
             }
-            return pos;
-        });
+            pos = new VisualPosition(pos.line, pos.column + 1);
+        }
+        return pos;
     }
 
     public static boolean attributesImpactFontStyle(@Nullable TextAttributes attributes) {
@@ -201,6 +198,7 @@ public class EditorUtil {
             line = foldEndLine;
         }
 
+
         LogicalPosition second = editor.visualToLogicalPosition(new VisualPosition(end.line, 0));
         for (int line = second.line, offset = document.getLineEndOffset(line); offset <= document.getTextLength();
              offset = document.getLineEndOffset(line)) {
@@ -222,6 +220,7 @@ public class EditorUtil {
         }
         return Pair.create(first, second);
     }
+
 
     /**
      * Finds the end offset of visual line at which given offset is located, not taking soft wraps into account.
@@ -398,15 +397,15 @@ public class EditorUtil {
     /**
      * Tells whether maximum allowed number of carets is reached in editor. If it's the case, notification is shown
      */
+    @RequiredUIAccess
     public static boolean checkMaxCarets(Editor editor) {
-        return ReadAction.compute(() -> {
-            CaretModel caretModel = editor.getCaretModel();
-            if (caretModel.getCaretCount() >= caretModel.getMaxCaretCount()) {
-                notifyMaxCarets(editor);
-                return true;
-            }
-            return false;
-        });
+        UIAccess.assertIsUIThread();
+        CaretModel caretModel = editor.getCaretModel();
+        if (caretModel.getCaretCount() >= caretModel.getMaxCaretCount()) {
+            notifyMaxCarets(editor);
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -424,7 +423,7 @@ public class EditorUtil {
 //            .notify(editor.getProject());
     }
 
-    
+
     public static DataContext getEditorDataContext(Editor editor) {
         DataContext context = DataManager.getInstance().getDataContext(editor.getContentComponent());
         if (context.getData(Project.KEY) == editor.getProject()) {

@@ -16,139 +16,136 @@
 
 package consulo.ide.impl.idea.application.options.colors;
 
-import consulo.application.AllIcons;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.application.Application;
 import consulo.codeEditor.*;
+import consulo.codeEditor.internal.ErrorStripeRenderer;
 import consulo.colorScheme.EditorColorsScheme;
 import consulo.document.Document;
 import consulo.ide.impl.idea.util.EventDispatcher;
+import consulo.language.editor.impl.internal.markup.AnalyzerStatus;
+import consulo.language.editor.impl.internal.markup.DummyUIController;
 import consulo.language.editor.impl.internal.markup.EditorMarkupModel;
-import consulo.language.editor.impl.internal.markup.ErrorStripeRenderer;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.ex.awt.JBUI;
-import consulo.ui.ex.awtUnsafe.TargetAWT;
-import consulo.ui.image.Image;
+import org.jetbrains.annotations.Nls;
 
 import java.awt.*;
 
-public class FontEditorPreview implements PreviewPanel{
-  private final EditorEx myEditor;
+public class FontEditorPreview implements PreviewPanel {
+    private final EditorEx myEditor;
 
-  private final ColorAndFontOptions myOptions;
+    private final ColorAndFontOptions myOptions;
 
-  private final EventDispatcher<ColorAndFontSettingsListener> myDispatcher =
-    EventDispatcher.create(ColorAndFontSettingsListener.class);
+    private final EventDispatcher<ColorAndFontSettingsListener> myDispatcher =
+        EventDispatcher.create(ColorAndFontSettingsListener.class);
 
-  FontEditorPreview(ColorAndFontOptions options, boolean editable) {
-    myOptions = options;
+    FontEditorPreview(ColorAndFontOptions options, boolean editable) {
+        myOptions = options;
 
-    String text = getIDEDemoText();
+        @Nls String text = getIDEDemoText();
 
-    myEditor = (EditorEx)createPreviewEditor(text, 10, 3, -1, myOptions, editable);
+        myEditor = (EditorEx) createPreviewEditor(text, 10, 3, -1, myOptions, editable);
 
-    installTrafficLights(myEditor);
-  }
+        installTrafficLights(myEditor);
+    }
 
-  public static String getIDEDemoText() {
-    return Application.get().getName() +
-      " is a full-featured IDE\n" +
-      "with a high level of usability and outstanding\n" +
-      "advanced code editing and refactoring support.\n" +
-      "\n" +
-      "abcdefghijklmnopqrstuvwxyz 0123456789 (){}[]\n" +
-      "ABCDEFGHIJKLMNOPQRSTUVWXYZ +-*/= .,;:!? #&$%@|^\n" +
-      // Create empty lines in order to make the gutter wide enough to display two-digits line numbers
-      // (other previews use long text and we don't want different gutter widths on color pages switching).
-      "\n" +
-      "\n" +
-      "\n";
-  }
+    public static String getIDEDemoText() {
+        return Application.get().getName() +
+            " is a full-featured IDE\n" +
+            "with a high level of usability and outstanding\n" +
+            "advanced code editing and refactoring support.\n" +
+            "\n" +
+            "abcdefghijklmnopqrstuvwxyz 0123456789 (){}[]\n" +
+            "ABCDEFGHIJKLMNOPQRSTUVWXYZ +-*/= .,;:!? #&$%@|^\n" +
+            // Create empty lines in order to make the gutter wide enough to display two-digits line numbers
+            // (other previews use long text and we don't want different gutter widths on color pages switching).
+            "\n" +
+            "\n" +
+            "\n";
+    }
 
-  static void installTrafficLights(EditorEx editor) {
-    ((EditorMarkupModel)editor.getMarkupModel()).setErrorStripeRenderer(new DumbTrafficLightRenderer());
-    ((EditorMarkupModel)editor.getMarkupModel()).setErrorStripeVisible(true);
-  }
+    static void installTrafficLights(EditorEx editor) {
+        ((EditorMarkupModel) editor.getMarkupModel()).setErrorStripeRenderer(new DumbTrafficLightRenderer());
+        ((EditorMarkupModel) editor.getMarkupModel()).setErrorStripeVisible(true);
+    }
 
-  private static class DumbTrafficLightRenderer implements ErrorStripeRenderer {
-    @Override
-    public void paint(Component c, Graphics g, Rectangle r) {
-      Image icon = AllIcons.General.InspectionsOK;
-      TargetAWT.to(icon).paintIcon(c, g, r.x, r.y);
+    private static class DumbTrafficLightRenderer implements ErrorStripeRenderer {
+        @RequiredReadAction
+        @Override
+        public AnalyzerStatus getStatus(Editor editor) {
+            return new AnalyzerStatus(PlatformIconGroup.generalInspectionsok(), null, null, DummyUIController.INSTANCE);
+        }
+    }
+
+    static Editor createPreviewEditor(
+        String text,
+        int column,
+        int line,
+        int selectedLine,
+        ColorAndFontOptions options,
+        boolean editable
+    ) {
+        EditorFactory editorFactory = EditorFactory.getInstance();
+        Document editorDocument = editorFactory.createDocument(text);
+        EditorEx editor = (EditorEx) (
+            editable ? editorFactory.createEditor(editorDocument) : editorFactory.createViewer(editorDocument)
+        );
+        editor.setColorsScheme(options.getSelectedScheme());
+        EditorSettings settings = editor.getSettings();
+        settings.setLineNumbersShown(true);
+        settings.setWhitespacesShown(true);
+        settings.setLineMarkerAreaShown(false);
+        settings.setIndentGuidesShown(false);
+        settings.setFoldingOutlineShown(false);
+        settings.setAdditionalColumnsCount(0);
+        settings.setAdditionalLinesCount(0);
+        settings.setRightMarginShown(true);
+        settings.setRightMargin(60);
+
+        LogicalPosition pos = new LogicalPosition(line, column);
+        editor.getCaretModel().moveToLogicalPosition(pos);
+        if (selectedLine >= 0) {
+            editor.getSelectionModel().setSelection(
+                editorDocument.getLineStartOffset(selectedLine),
+                editorDocument.getLineEndOffset(selectedLine)
+            );
+        }
+        editor.setBorder(JBUI.Borders.empty());
+
+        return editor;
     }
 
     @Override
-    public int getSquareSize() {
-      return AllIcons.General.InspectionsOK.getHeight();
+    public Component getPanel() {
+        return myEditor.getComponent();
     }
-  }
 
-  static Editor createPreviewEditor(
-    String text,
-    int column,
-    int line,
-    int selectedLine,
-    ColorAndFontOptions options,
-    boolean editable
-  ) {
-    EditorFactory editorFactory = EditorFactory.getInstance();
-    Document editorDocument = editorFactory.createDocument(text);
-    EditorEx editor = (EditorEx) (
-      editable ? editorFactory.createEditor(editorDocument) : editorFactory.createViewer(editorDocument)
-    );
-    editor.setColorsScheme(options.getSelectedScheme());
-    EditorSettings settings = editor.getSettings();
-    settings.setLineNumbersShown(true);
-    settings.setWhitespacesShown(true);
-    settings.setLineMarkerAreaShown(false);
-    settings.setIndentGuidesShown(false);
-    settings.setFoldingOutlineShown(false);
-    settings.setAdditionalColumnsCount(0);
-    settings.setAdditionalLinesCount(0);
-    settings.setRightMarginShown(true);
-    settings.setRightMargin(60);
+    @Override
+    public void updateView() {
+        EditorColorsScheme scheme = updateOptionsScheme(myOptions.getSelectedScheme());
 
-    LogicalPosition pos = new LogicalPosition(line, column);
-    editor.getCaretModel().moveToLogicalPosition(pos);
-    if (selectedLine >= 0) {
-      editor.getSelectionModel().setSelection(
-        editorDocument.getLineStartOffset(selectedLine),
-        editorDocument.getLineEndOffset(selectedLine)
-      );
+        myEditor.setColorsScheme(scheme);
+        myEditor.reinitSettings();
+
     }
-    editor.setBorder(JBUI.Borders.empty());
 
-    return editor;
-  }
+    protected EditorColorsScheme updateOptionsScheme(EditorColorsScheme selectedScheme) {
+        return selectedScheme;
+    }
 
-  @Override
-  public Component getPanel() {
-    return myEditor.getComponent();
-  }
+    @Override
+    public void blinkSelectedHighlightType(Object description) {
+    }
 
-  @Override
-  public void updateView() {
-    EditorColorsScheme scheme = updateOptionsScheme(myOptions.getSelectedScheme());
+    @Override
+    public void addListener(ColorAndFontSettingsListener listener) {
+        myDispatcher.addListener(listener);
+    }
 
-    myEditor.setColorsScheme(scheme);
-    myEditor.reinitSettings();
-
-  }
-
-  protected EditorColorsScheme updateOptionsScheme(EditorColorsScheme selectedScheme) {
-    return selectedScheme;
-  }
-
-  @Override
-  public void blinkSelectedHighlightType(Object description) {
-  }
-
-  @Override
-  public void addListener(ColorAndFontSettingsListener listener) {
-    myDispatcher.addListener(listener);
-  }
-
-  @Override
-  public void disposeUIResources() {
-    EditorFactory editorFactory = EditorFactory.getInstance();
-    editorFactory.releaseEditor(myEditor);
-  }
+    @Override
+    public void disposeUIResources() {
+        EditorFactory editorFactory = EditorFactory.getInstance();
+        editorFactory.releaseEditor(myEditor);
+    }
 }

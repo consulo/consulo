@@ -14,6 +14,7 @@ import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.image.Image;
 import org.jspecify.annotations.Nullable;
+import org.jetbrains.annotations.Nls;
 
 import javax.swing.*;
 import javax.swing.event.HyperlinkListener;
@@ -90,7 +91,6 @@ public abstract class JBPopupFactory {
         return Application.get().getInstance(JBPopupFactory.class);
     }
 
-    
     public abstract <T> IPopupChooserBuilder<T> createPopupChooserBuilder(List<? extends T> list);
 
     /**
@@ -145,8 +145,7 @@ public abstract class JBPopupFactory {
      * @deprecated use {@link #createActionsStep(ActionGroup, DataContext, String, boolean, boolean, String, Component, boolean, int, boolean)}
      */
     @Deprecated
-    
-    public ListPopupStep createActionsStep(
+    public PopupStep createActionsStep(
         ActionGroup actionGroup,
         DataContext dataContext,
         boolean showNumbers,
@@ -173,8 +172,7 @@ public abstract class JBPopupFactory {
      * @deprecated use {@link #createActionsStep(ActionGroup, DataContext, String, boolean, boolean, String, Component, boolean, int, boolean)}
      */
     @Deprecated
-    
-    public ListPopupStep createActionsStep(
+    public PopupStep createActionsStep(
         ActionGroup actionGroup,
         DataContext dataContext,
         boolean showNumbers,
@@ -199,8 +197,7 @@ public abstract class JBPopupFactory {
         );
     }
 
-    
-    public abstract ListPopupStep createActionsStep(
+    public abstract PopupStep createActionsStep(
         ActionGroup actionGroup,
         DataContext dataContext,
         @Nullable String actionPlace,
@@ -213,7 +210,6 @@ public abstract class JBPopupFactory {
         boolean autoSelectionEnabled
     );
 
-    
     public abstract RelativePoint guessBestPopupLocation(JComponent component);
 
     public boolean isChildPopupFocused(@Nullable Component parent) {
@@ -277,7 +273,7 @@ public abstract class JBPopupFactory {
      * @return the popup instance.
      */
     public ListPopup createActionGroupPopup(
-        @Nullable  String title,
+        @Nullable @Nls(capitalization = Nls.Capitalization.Title) String title,
         ActionGroup actionGroup,
         DataContext dataContext,
         ActionSelectionAid selectionAidMethod,
@@ -298,7 +294,7 @@ public abstract class JBPopupFactory {
      * @return the popup instance.
      */
     public ListPopup createActionGroupPopup(
-         String title,
+        @Nls(capitalization = Nls.Capitalization.Title) String title,
         ActionGroup actionGroup,
         DataContext dataContext,
         ActionSelectionAid selectionAidMethod,
@@ -332,7 +328,7 @@ public abstract class JBPopupFactory {
      * @return the popup instance.
      */
     public ListPopup createActionGroupPopup(
-         String title,
+        @Nls(capitalization = Nls.Capitalization.Title) String title,
         ActionGroup actionGroup,
         DataContext dataContext,
         ActionSelectionAid selectionAidMethod,
@@ -353,9 +349,8 @@ public abstract class JBPopupFactory {
         );
     }
 
-    
     public ListPopup createActionGroupPopup(
-         String title,
+        @Nls(capitalization = Nls.Capitalization.Title) String title,
         ActionGroup actionGroup,
         DataContext dataContext,
         boolean showDisabledActions,
@@ -373,9 +368,8 @@ public abstract class JBPopupFactory {
         );
     }
 
-    
     public ListPopup createActionGroupPopup(
-         String title,
+        @Nls(capitalization = Nls.Capitalization.Title) String title,
         ActionGroup actionGroup,
         DataContext dataContext,
         boolean showNumbers,
@@ -388,9 +382,8 @@ public abstract class JBPopupFactory {
         return createActionGroupPopup(title, actionGroup, dataContext, showNumbers, showDisabledActions, honorActionMnemonics, disposeCallback, maxRowCount, preselectActionCondition, true);
     }
 
-    
     public abstract ListPopup createActionGroupPopup(
-         String title,
+        @Nls(capitalization = Nls.Capitalization.Title) String title,
         ActionGroup actionGroup,
         DataContext dataContext,
         boolean showNumbers,
@@ -402,7 +395,6 @@ public abstract class JBPopupFactory {
         boolean forceHeavyPopup
     );
 
-    
     public ListPopup createActionGroupPopup(
         @Nullable String title,
         ActionGroup actionGroup,
@@ -428,7 +420,6 @@ public abstract class JBPopupFactory {
         );
     }
 
-    
     public abstract ListPopup createActionGroupPopup(
         @Nullable String title,
         ActionGroup actionGroup,
@@ -469,13 +460,10 @@ public abstract class JBPopupFactory {
      */
     public abstract ListPopup createListPopup(ListPopupStep step, int maxRowCount);
 
-    
     public abstract TreePopup createTree(JBPopup parent, TreePopupStep step, Object parentValue);
 
-    
     public abstract TreePopup createTree(TreePopupStep step);
 
-    
     public abstract ComponentPopupBuilder createComponentPopupBuilder(
         JComponent content,
         @Nullable JComponent preferableFocusComponent
@@ -495,18 +483,14 @@ public abstract class JBPopupFactory {
 
     public abstract Point getCenterOf(JComponent container, JComponent content);
 
-    
     public abstract List<JBPopup> getChildPopups(Component parent);
 
     public abstract boolean isPopupActive();
 
-    
     public abstract BalloonBuilder createBalloonBuilder(JComponent content);
 
-    
     public abstract BalloonBuilder createDialogBalloonBuilder(JComponent content, String title);
 
-    
     public BalloonBuilder createHtmlTextBalloonBuilder(
         String htmlContent,
         @Nullable Image icon,
@@ -516,7 +500,6 @@ public abstract class JBPopupFactory {
         return createHtmlTextBalloonBuilder(htmlContent, icon, null, fillColor, listener);
     }
 
-    
     public abstract BalloonBuilder createHtmlTextBalloonBuilder(
         String htmlContent,
         @Nullable Image icon,
@@ -525,14 +508,12 @@ public abstract class JBPopupFactory {
         @Nullable HyperlinkListener listener
     );
 
-    
     public abstract BalloonBuilder createHtmlTextBalloonBuilder(
         String htmlContent,
         NotificationType messageType,
         @Nullable HyperlinkListener listener
     );
 
-    
     public abstract JBPopup createMessage(String text);
 
     public abstract @Nullable Balloon getParentBalloonFor(@Nullable Component c);

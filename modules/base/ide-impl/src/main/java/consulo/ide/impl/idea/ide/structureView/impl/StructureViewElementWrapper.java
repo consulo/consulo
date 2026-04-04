@@ -20,6 +20,7 @@ import consulo.fileEditor.structureView.StructureViewTreeElement;
 import consulo.fileEditor.structureView.tree.TreeElement;
 import consulo.language.Language;
 import consulo.navigation.ItemPresentation;
+import consulo.navigation.NavigateOptions;
 import consulo.navigation.Navigatable;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
@@ -96,12 +97,8 @@ public class StructureViewElementWrapper<V extends PsiElement> implements Struct
   }
 
   @Override
-  public boolean canNavigate() {
-    return getNavigatableInTemplateLanguageFile() != null;
+  public NavigateOptions getNavigateOptions() {
+    return getNavigatableInTemplateLanguageFile() != null ? NavigateOptions.CAN_NAVIGATE_FULL : NavigateOptions.CANT_NAVIGATE;
   }
 
-  @Override
-  public boolean canNavigateToSource() {
-    return canNavigate();
-  }
 }

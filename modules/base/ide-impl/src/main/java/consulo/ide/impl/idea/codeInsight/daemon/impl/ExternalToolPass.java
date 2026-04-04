@@ -19,7 +19,6 @@ package consulo.ide.impl.idea.codeInsight.daemon.impl;
 import consulo.language.editor.highlight.TextEditorHighlightingPass;
 import consulo.language.editor.highlight.HighlightingLevelManager;
 import consulo.language.editor.annotation.ExternalLanguageAnnotators;
-import consulo.application.impl.internal.IdeaModalityState;
 import consulo.language.editor.highlight.UpdateHighlightersUtil;
 import consulo.language.editor.internal.DaemonCodeAnalyzerInternal;
 import consulo.language.editor.impl.internal.highlight.AnnotationHolderImpl;
@@ -109,9 +108,6 @@ public class ExternalToolPass extends TextEditorHighlightingPass {
 
   @Override
   public void doApplyInformationToEditor() {
-    DaemonCodeAnalyzerInternal daemonCodeAnalyzer = DaemonCodeAnalyzerInternal.getInstanceEx(myProject);
-    daemonCodeAnalyzer.getFileStatusMap().markFileUpToDate(myDocument, getId());
-
     myDocumentListener = new DocumentListener() {
       @Override
       public void beforeDocumentChange(DocumentEvent event) {
@@ -141,20 +137,9 @@ public class ExternalToolPass extends TextEditorHighlightingPass {
               return;
             }
             collectHighlighters();
-
-            ApplicationManager.getApplication().invokeLater(new Runnable() {
-              @Override
-              public void run() {
-                if (myDocumentChanged || myProject.isDisposed()) {
-                  doFinish();
-                  return;
-                }
-
-                myDocument.removeDocumentListener(myDocumentListener);
-                List<HighlightInfo> infos = getHighlights();
-                UpdateHighlightersUtil.setHighlightersToEditor(myProject, myDocument, myStartOffset, myEndOffset, infos, getColorsScheme(), getId());
-              }
-            }, IdeaModalityState.stateForComponent(myEditor.getComponent()));
+            myDocument.removeDocumentListener(myDocumentListener);
+            List<HighlightInfo> infos = getHighlights();
+            UpdateHighlightersUtil.setHighlightersToEditor(myProject, myDocument, myFile, myStartOffset, myEndOffset, infos, getColorsScheme(), getId());
           }
         });
       }
@@ -198,20 +183,11 @@ public class ExternalToolPass extends TextEditorHighlightingPass {
 
   private void doFinish() {
     myDocument.removeDocumentListener(myDocumentListener);
-    Runnable r = new Runnable() {
-      @Override
-      public void run() {
-        if (!myProject.isDisposed()) {
-          UpdateHighlightersUtil.setHighlightersToEditor(myProject, myDocument, myStartOffset, myEndOffset, Collections.<HighlightInfo>emptyList(), getColorsScheme(), getId());
-        }
+    ApplicationManager.getApplication().runReadAction(() -> {
+      if (!myProject.isDisposed()) {
+        UpdateHighlightersUtil.setHighlightersToEditor(myProject, myDocument, myFile, myStartOffset, myEndOffset, Collections.emptyList(), getColorsScheme(), getId());
       }
-    };
-    if (ApplicationManager.getApplication().isDispatchThread()) {
-      r.run();
-    }
-    else {
-      ApplicationManager.getApplication().invokeLater(r);
-    }
+    });
   }
 
   private void doAnnotate() {

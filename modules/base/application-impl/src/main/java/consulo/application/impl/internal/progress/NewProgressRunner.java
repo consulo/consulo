@@ -7,8 +7,6 @@ import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
 import consulo.application.util.ClientId;
 import consulo.application.util.concurrent.AppExecutorUtil;
-import consulo.disposer.Disposable;
-import consulo.disposer.Disposer;
 import consulo.logging.Logger;
 import consulo.util.lang.EmptyRunnable;
 import consulo.util.lang.ref.SimpleReference;
@@ -44,22 +42,13 @@ public final class NewProgressRunner<R> {
             throw new IllegalArgumentException("Can't start task under read lock");
         }
 
-        CompletableFuture<? extends ProgressIndicator> progressFuture = myProgressIndicatorFuture.thenApply(progress -> {
-            // in case of abrupt application exit when 'ProgressManager.getInstance().runProcess(process, progress)' below
-            // does not have a chance to run, and as a result the progress won't be disposed
-            if (progress instanceof Disposable) {
-                Disposer.register(application, (Disposable) progress);
-            }
-            return progress;
-        });
-
         Supplier<R> onThreadCallable = () -> {
             SimpleReference<R> result = SimpleReference.create();
 
             // runProcess handles starting/stopping progress and setting thread's current progress
             ProgressIndicator progressIndicator;
             try {
-                progressIndicator = progressFuture.join();
+                progressIndicator = myProgressIndicatorFuture.join();
             }
             catch (Throwable e) {
                 throw new RuntimeException("Can't get progress", e);
@@ -73,7 +62,7 @@ public final class NewProgressRunner<R> {
             return result.get();
         };
 
-        return exec(progressFuture, onThreadCallable);
+        return exec(myProgressIndicatorFuture, onThreadCallable);
     }
 
     

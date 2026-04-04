@@ -17,9 +17,9 @@ import consulo.build.ui.localize.BuildLocalize;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.LogicalPosition;
 import consulo.codeEditor.SoftWrapAppliancePlaces;
-import consulo.codeEditor.action.ToggleUseSoftWrapsToolbarAction;
 import consulo.compiler.internal.CompilerWorkspaceConfiguration;
-import consulo.dataContext.DataProvider;
+import consulo.dataContext.DataSink;
+import consulo.dataContext.UiDataProvider;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.document.Document;
@@ -33,7 +33,10 @@ import consulo.ide.impl.idea.execution.impl.ConsoleViewImpl;
 import consulo.ide.impl.idea.ide.OccurenceNavigatorSupport;
 import consulo.ide.impl.idea.ide.actions.EditSourceAction;
 import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionImplUtil;
+import consulo.codeEditor.action.ToggleUseSoftWrapsToolbarAction;
 import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
+import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
+import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.ide.impl.idea.util.concurrency.InvokerImpl;
 import consulo.ide.localize.IdeLocalize;
 import consulo.language.psi.scope.GlobalSearchScope;
@@ -66,7 +69,6 @@ import consulo.util.dataholder.Key;
 import consulo.util.io.FileUtil;
 import consulo.util.lang.ObjectUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.virtualFileSystem.util.VirtualFileUtil;
 import org.jspecify.annotations.Nullable;
 import org.jetbrains.annotations.TestOnly;
 
@@ -91,18 +93,18 @@ import java.util.function.Supplier;
 
 import static consulo.ide.impl.idea.build.BuildConsoleUtils.getMessageTitle;
 import static consulo.ide.impl.idea.build.BuildView.CONSOLE_VIEW_NAME;
+import static consulo.util.collection.ContainerUtil.addIfNotNull;
 import static consulo.ui.ex.SimpleTextAttributes.GRAYED_ATTRIBUTES;
 import static consulo.ui.ex.awt.AnimatedIcon.ANIMATION_IN_RENDERER_ALLOWED;
 import static consulo.ui.ex.awt.UIUtil.*;
 import static consulo.ui.ex.awt.util.RenderingHelper.SHRINK_LONG_RENDERER;
-import static consulo.util.collection.ContainerUtil.addIfNotNull;
 import static consulo.util.lang.ObjectUtil.chooseNotNull;
 import static consulo.util.lang.StringUtil.isEmpty;
 
 /**
  * @author Vladislav.Soroka
  */
-public class BuildTreeConsoleView implements ConsoleView, DataProvider, BuildConsoleView, Filterable<ExecutionNodeImpl>, OccurenceNavigator {
+public class BuildTreeConsoleView implements ConsoleView, UiDataProvider, BuildConsoleView, Filterable<ExecutionNodeImpl>, OccurenceNavigator {
     private static final Logger LOG = Logger.getInstance(BuildTreeConsoleView.class);
 
     private static final String TREE = "tree";
@@ -111,13 +113,10 @@ public class BuildTreeConsoleView implements ConsoleView, DataProvider, BuildCon
     private final Map<Object, ExecutionNodeImpl> nodesMap = new ConcurrentHashMap<>();
 
     private final
-    
     Project myProject;
     private final
-    
     DefaultBuildDescriptor myBuildDescriptor;
     private final
-    
     String myWorkingDir;
     private final ConsoleViewHandler myConsoleViewHandler;
     private final AtomicBoolean myFinishedBuildEventReceived = new AtomicBoolean();
@@ -255,7 +254,6 @@ public class BuildTreeConsoleView implements ConsoleView, DataProvider, BuildCon
 
     @Override
     public
-    
     Predicate<ExecutionNodeImpl> getFilter() {
         return executionNode -> executionNode == getBuildProgressRootNode()
             || executionNode.isRunning()
@@ -493,7 +491,6 @@ public class BuildTreeConsoleView implements ConsoleView, DataProvider, BuildCon
         }
     }
 
-    
     private ExecutionNodeImpl addAsPresentableEventNode(
         PresentableBuildEvent event,
         Set<ExecutionNodeImpl> structureChanged,
@@ -596,19 +593,16 @@ public class BuildTreeConsoleView implements ConsoleView, DataProvider, BuildCon
         return myOccurrenceNavigatorSupport.goPreviousOccurence();
     }
 
-    
     @Override
     public String getNextOccurenceActionName() {
         return myOccurrenceNavigatorSupport.getNextOccurenceActionName();
     }
 
-    
     @Override
     public String getPreviousOccurenceActionName() {
         return myOccurrenceNavigatorSupport.getPreviousOccurenceActionName();
     }
 
-    
     private static TreeVisitor visitor(ExecutionNodeImpl executionNode) {
         TreePath treePath = TreePathUtil.pathToCustomNode(executionNode, ExecutionNodeImpl::getParent);
         return new TreeVisitor.ByTreePath<>(treePath, o -> (ExecutionNodeImpl)TreeUtil.getUserObject(o));
@@ -630,7 +624,7 @@ public class BuildTreeConsoleView implements ConsoleView, DataProvider, BuildCon
         Navigatable failureNavigatable = failure.getNavigatable();
         FilePosition filePosition = null;
         if (failureNavigatable instanceof OpenFileDescriptorImpl fileDescriptor) {
-            File file = VirtualFileUtil.virtualToIoFile(fileDescriptor.getFile());
+            File file = VfsUtilCore.virtualToIoFile(fileDescriptor.getFile());
             filePosition = new FilePosition(file, fileDescriptor.getLine(), fileDescriptor.getColumn());
             parentNode = createMessageParentNodes(eventTime, filePosition, failureNavigatable, parentNode);
         }
@@ -749,7 +743,6 @@ public class BuildTreeConsoleView implements ConsoleView, DataProvider, BuildCon
     }
 
     @Override
-    
     public AnAction[] createConsoleActions() {
         return AnAction.EMPTY_ARRAY;
     }
@@ -758,7 +751,6 @@ public class BuildTreeConsoleView implements ConsoleView, DataProvider, BuildCon
     public void allowHeavyFilters() {
     }
 
-    
     @Override
     public JComponent getComponent() {
         return myPanel;
@@ -848,7 +840,7 @@ public class BuildTreeConsoleView implements ConsoleView, DataProvider, BuildCon
             nodeName,
             pathHint,
             () -> {
-                VirtualFile file = VirtualFileUtil.findFileByIoFile(filePosition.getFile(), false);
+                VirtualFile file = VfsUtil.findFileByIoFile(filePosition.getFile(), false);
                 if (file != null) {
                     return file.getFileType().getIcon();
                 }
@@ -880,20 +872,11 @@ public class BuildTreeConsoleView implements ConsoleView, DataProvider, BuildCon
     }
 
     @Override
-    public @Nullable Object getData(Key dataId) {
-        if (HelpManager.HELP_ID == dataId) {
-            return "reference.build.tool.window";
-        }
-        if (Project.KEY == dataId) {
-            return myProject;
-        }
-        if (Navigatable.KEY_OF_ARRAY == dataId) {
-            return extractSelectedNodesNavigatables();
-        }
-        if (Navigatable.KEY == dataId) {
-            return extractSelectedNodeNavigatable();
-        }
-        return null;
+    public void uiDataSnapshot(DataSink sink) {
+        sink.set(HelpManager.HELP_ID, "reference.build.tool.window");
+        sink.set(Project.KEY, myProject);
+        sink.lazy(Navigatable.KEY_OF_ARRAY, () -> (Navigatable[]) extractSelectedNodesNavigatables());
+        sink.lazy(Navigatable.KEY, () -> (Navigatable) extractSelectedNodeNavigatable());
     }
 
     private
@@ -957,7 +940,6 @@ public class BuildTreeConsoleView implements ConsoleView, DataProvider, BuildCon
     }
 
     private
-    
     ExecutionNodeImpl getOrCreateMessagesNode(
         long eventTime,
         String nodeId,
@@ -1002,10 +984,8 @@ public class BuildTreeConsoleView implements ConsoleView, DataProvider, BuildCon
         private final CompositeView<ExecutionConsole> myView;
         private final AtomicReference<String> myNodeConsoleViewName = new AtomicReference<>();
         private final Map<String, List<Consumer<? super BuildTextConsoleView>>> deferredNodeOutput = new ConcurrentHashMap<>();
-        
         private final BuildViewSettingsProvider myViewSettingsProvider;
         private @Nullable ExecutionNodeImpl myExecutionNode;
-        
         private final List<Filter> myExecutionConsoleFilters;
         private final BuildProgressStripe myPanelWithProgress;
         private final DefaultActionGroup myConsoleToolbarActionGroup;
@@ -1085,7 +1065,6 @@ public class BuildTreeConsoleView implements ConsoleView, DataProvider, BuildCon
             invokeLaterIfNeeded(myToolbar::updateActionsImmediately);
         }
 
-        
         private DefaultActionGroup createDefaultTextConsoleToolbar() {
             DefaultActionGroup textConsoleToolbarActionGroup = new DefaultActionGroup();
             textConsoleToolbarActionGroup.add(new ToggleUseSoftWrapsToolbarAction(SoftWrapAppliancePlaces.CONSOLE) {
@@ -1205,7 +1184,6 @@ public class BuildTreeConsoleView implements ConsoleView, DataProvider, BuildCon
         }
 
         private static
-        
         String getNodeConsoleViewName(ExecutionNodeImpl node) {
             return String.valueOf(System.identityHashCode(node));
         }
@@ -1254,7 +1232,6 @@ public class BuildTreeConsoleView implements ConsoleView, DataProvider, BuildCon
                 myActions = toolbarActions;
             }
 
-            
             @Override
             public JComponent getComponent() {
                 return myExecutionConsole.getComponent();
@@ -1294,13 +1271,11 @@ public class BuildTreeConsoleView implements ConsoleView, DataProvider, BuildCon
         }
 
         @Override
-        
         public String getNextOccurenceActionName() {
             return IdeLocalize.actionNextProblem().get();
         }
 
         @Override
-        
         public String getPreviousOccurenceActionName() {
             return IdeLocalize.actionPreviousProblem().get();
         }
@@ -1308,7 +1283,6 @@ public class BuildTreeConsoleView implements ConsoleView, DataProvider, BuildCon
 
     private static class ScrollEditorToTheEndAction extends ToggleAction implements DumbAware {
         private final
-        
         ConsoleViewHandler myConsoleViewHandler;
 
         ScrollEditorToTheEndAction(ConsoleViewHandler handler) {
@@ -1418,14 +1392,12 @@ public class BuildTreeConsoleView implements ConsoleView, DataProvider, BuildCon
     private class MyTreeStructure extends AbstractTreeStructure {
         @Override
         public
-        
         Object getRootElement() {
             return myRootNode;
         }
 
         @Override
         public
-        
         Object[] getChildElements(Object element) {
             // This .toArray() is still slow but it is called less frequently because of batching in AsyncTreeModel and process less data if
             // filters are applied.
@@ -1440,7 +1412,6 @@ public class BuildTreeConsoleView implements ConsoleView, DataProvider, BuildCon
 
         @Override
         public
-        
         NodeDescriptor createDescriptor(Object element, @Nullable NodeDescriptor parentDescriptor) {
             return ((NodeDescriptor)element);
         }

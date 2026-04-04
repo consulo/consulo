@@ -23,12 +23,12 @@ import consulo.ui.ex.popup.ComponentPopupBuilder;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.image.Image;
-import consulo.util.concurrent.CancellablePromise;
 import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
 import java.util.Objects;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
@@ -42,7 +42,7 @@ class ParameterInfoTaskRunnerUtil {
    * @param progressTitle null means no loading panel should be shown
    */
   static <T> void runTask(Project project, NonBlockingReadAction<T> nonBlockingReadAction, Consumer<T> continuationConsumer, @Nullable String progressTitle, Editor editor) {
-    AtomicReference<CancellablePromise<?>> cancellablePromiseRef = new AtomicReference<>();
+    AtomicReference<CompletableFuture<?>> cancellablePromiseRef = new AtomicReference<>();
     Consumer<Boolean> stopAction = startProgressAndCreateStopAction(editor.getProject(), progressTitle, cancellablePromiseRef, editor);
 
     VisibleAreaListener visibleAreaListener = new CancelProgressOnScrolling(cancellablePromiseRef);
@@ -51,23 +51,24 @@ class ParameterInfoTaskRunnerUtil {
 
     Component focusOwner = getFocusOwner(project);
 
-    cancellablePromiseRef.set(nonBlockingReadAction.finishOnUiThread(Application::getDefaultModalityState, continuation -> {
-      CancellablePromise<?> promise = cancellablePromiseRef.get();
-      if (promise != null && promise.isSucceeded() && Objects.equals(focusOwner, getFocusOwner(project))) {
+    CompletableFuture<T> future = nonBlockingReadAction.finishOnUiThread(Application::getDefaultModalityState, continuation -> {
+      CompletableFuture<?> promise = cancellablePromiseRef.get();
+      if (promise != null && promise.isDone() && !promise.isCompletedExceptionally() && Objects.equals(focusOwner, getFocusOwner(project))) {
         continuationConsumer.accept(continuation);
       }
-    }).expireWith(editor instanceof RealEditor ? ((RealEditor)editor).getDisposable() : project).submit(AppExecutorUtil.getAppExecutorService()).onProcessed(ignore -> {
+    }).expireWith(editor instanceof RealEditor ? ((RealEditor)editor).getDisposable() : project).submit(AppExecutorUtil.getAppExecutorService());
+    future.whenComplete((result, error) -> {
       stopAction.accept(false);
       editor.getScrollingModel().removeVisibleAreaListener(visibleAreaListener);
-    }));
+    });
+    cancellablePromiseRef.set(future);
   }
 
   private static Component getFocusOwner(Project project) {
     return ProjectIdeFocusManager.getInstance(project).getFocusOwner();
   }
 
-  
-  private static Consumer<Boolean> startProgressAndCreateStopAction(Project project, String progressTitle, AtomicReference<CancellablePromise<?>> promiseRef, Editor editor) {
+  private static Consumer<Boolean> startProgressAndCreateStopAction(Project project, String progressTitle, AtomicReference<CompletableFuture<?>> promiseRef, Editor editor) {
     AtomicReference<Consumer<Boolean>> stopActionRef = new AtomicReference<>();
 
     UIAccess uiAccess = project.getUIAccess();
@@ -75,9 +76,9 @@ class ParameterInfoTaskRunnerUtil {
     Consumer<Boolean> originalStopAction = (cancel) -> {
       stopActionRef.set(null);
       if (cancel) {
-        CancellablePromise<?> promise = promiseRef.get();
+        CompletableFuture<?> promise = promiseRef.get();
         if (promise != null) {
-          promise.cancel();
+          promise.cancel(false);
         }
       }
     };

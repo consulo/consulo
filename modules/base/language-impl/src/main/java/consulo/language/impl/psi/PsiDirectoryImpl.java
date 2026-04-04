@@ -37,6 +37,7 @@ import consulo.module.Module;
 import consulo.module.content.util.ModuleContentUtil;
 import consulo.navigation.ItemPresentation;
 import consulo.navigation.ItemPresentationProvider;
+import consulo.navigation.NavigateOptions;
 import consulo.platform.Platform;
 import consulo.project.DumbService;
 import consulo.util.collection.ArrayUtil;
@@ -631,8 +632,8 @@ public class PsiDirectoryImpl extends PsiElementBase implements PsiDirectory, Qu
 
     @Override
     @RequiredReadAction
-    public boolean canNavigateToSource() {
-        return false;
+    public NavigateOptions getNavigateOptions() {
+        return NavigateOptions.CAN_NAVIGATE_NO_SOURCE;
     }
 
     @Override

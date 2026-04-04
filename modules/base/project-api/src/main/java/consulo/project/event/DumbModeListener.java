@@ -22,13 +22,13 @@ import consulo.annotation.component.TopicAPI;
 public interface DumbModeListener {
 
   /**
-   * The event arrives on EDT.
+   * May be called from any thread.
    */
   default void enteredDumbMode() {
   }
 
   /**
-   * The event arrives on EDT.
+   * May be called from any thread.
    */
   default void exitDumbMode() {
   }

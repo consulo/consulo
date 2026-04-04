@@ -85,8 +85,10 @@ public abstract class EditorTracker implements Disposable {
     if (LOG.isDebugEnabled()) {
       LOG.debug("active editors changed:");
       for (Editor editor : editors) {
-        PsiFile psiFile = PsiDocumentManager.getInstance(myProject).getPsiFile(editor.getDocument());
-        LOG.debug("    " + psiFile);
+        myProject.getApplication().tryRunReadAction(() -> {
+          PsiFile psiFile = PsiDocumentManager.getInstance(myProject).getPsiFile(editor.getDocument());
+          LOG.debug("    " + psiFile);
+        });
       }
     }
 

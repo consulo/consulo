@@ -24,8 +24,6 @@ import consulo.fileEditor.event.FileEditorManagerListener;
 import consulo.project.Project;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.wm.WindowManager;
-import consulo.language.psi.PsiDocumentManager;
-import consulo.language.psi.PsiFile;
 import consulo.ui.UIAccess;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.logging.Logger;
@@ -82,9 +80,6 @@ public class DesktopEditorTrackerImpl extends EditorTracker {
     if ((editor.getProject() != null && editor.getProject() != myProject) || myProject.isDisposedOrDisposeInProgress()) {
       return;
     }
-
-    PsiFile psiFile = PsiDocumentManager.getInstance(myProject).getPsiFile(editor.getDocument());
-    if (psiFile == null) return;
 
     JComponent component = editor.getComponent();
     JComponent contentComponent = editor.getContentComponent();

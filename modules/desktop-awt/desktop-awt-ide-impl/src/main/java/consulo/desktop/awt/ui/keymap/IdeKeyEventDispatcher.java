@@ -18,7 +18,6 @@ package consulo.desktop.awt.ui.keymap;
 import consulo.application.AccessToken;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
-import consulo.application.impl.internal.ModalityStateImpl;
 import consulo.application.util.registry.Registry;
 import consulo.awt.hacking.AWTKeyStrokeHacking;
 import consulo.dataContext.DataContext;
@@ -29,7 +28,6 @@ import consulo.desktop.awt.ui.impl.event.DesktopAWTInputDetails;
 import consulo.desktop.awt.ui.keymap.keyGesture.KeyboardGestureProcessor;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.ide.impl.dataContext.BaseDataManager;
 import consulo.ui.ex.action.ActionPromoter;
 import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionImplUtil;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
@@ -646,10 +644,6 @@ public final class IdeKeyEventDispatcher implements Disposable {
 
             processor.onUpdatePassed(e, action, actionEvent);
 
-            if (myContext.getDataContext() instanceof BaseDataManager.DataContextWithEventCount dataContextWithEventCount) {
-                // this is not true for test data contexts
-                dataContextWithEventCount.setEventCount(IdeEventQueue.getInstance().getEventCount(), this);
-            }
             actionManager.fireBeforeActionPerformed(action, actionEvent.getDataContext(), actionEvent);
             Component component = actionEvent.getData(UIExAWTDataKey.CONTEXT_COMPONENT);
             if (component != null && !component.isShowing()) {
@@ -669,16 +663,13 @@ public final class IdeKeyEventDispatcher implements Disposable {
     }
 
     private static void showDumbModeWarningLaterIfNobodyConsumesEvent(InputEvent e, AnActionEvent... actionEvents) {
-        Application application = Application.get();
-        if (application.getCurrentModalityState() == ModalityStateImpl.NON_MODAL) {
-            application.invokeLater(() -> {
-                if (e.isConsumed()) {
-                    return;
-                }
+        Application.get().invokeLater(() -> {
+            if (e.isConsumed()) {
+                return;
+            }
 
-                ActionImplUtil.showDumbModeWarning(actionEvents);
-            });
-        }
+            ActionImplUtil.showDumbModeWarning(actionEvents);
+        });
     }
 
     /**

@@ -26,7 +26,7 @@ import org.jspecify.annotations.Nullable;
 
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Future;
-import java.util.function.Function;
+import java.util.function.Supplier;
 
 /**
  * @author VISTALL
@@ -50,11 +50,10 @@ public interface ProgressManagerEx {
 
     ProgressIndicator newBackgroundableProcessIndicator(Task.Backgroundable backgroundable);
 
-    
     <V> CompletableFuture<V> executeTask(UIAccess uiAccess,
                                          @Nullable ComponentManager project,
                                          LocalizeValue titleText,
                                          boolean modal,
                                          boolean cancelable,
-                                         Function<Coroutine<?, V>, Coroutine<?, V>> pipelineBuilder);
+                                         Supplier<Coroutine<?, V>> supplier);
 }

@@ -12,6 +12,14 @@ import java.util.concurrent.Callable;
  * When real popup step is obtained from the background task, mock item would be automatically replaced with it.
  */
 public abstract class AsyncPopupStep<T> implements PopupStep<T>, Callable<PopupStep> {
+
+  /**
+   * Called when the async popup is disposed to cancel any background work.
+   * Subclasses should override to cancel progress indicators or other resources.
+   */
+  public void cancelBackgroundWork() {
+  }
+
   @Override
   public @Nullable String getTitle() {
     return null;

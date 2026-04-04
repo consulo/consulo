@@ -39,7 +39,10 @@ import consulo.language.version.LanguageVersion;
 import consulo.logging.Logger;
 import consulo.module.Module;
 import consulo.navigation.ItemPresentation;
+import consulo.navigation.Navigatable;
+import consulo.navigation.NavigateOptions;
 import consulo.project.Project;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 import consulo.util.collection.ArrayUtil;
@@ -59,6 +62,7 @@ import org.jspecify.annotations.Nullable;
 import java.lang.invoke.MethodHandles;
 import java.lang.invoke.VarHandle;
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
@@ -1022,21 +1026,24 @@ public abstract class PsiFileImpl extends UserDataHolderBase
     @Override
     @RequiredReadAction
     public void navigate(boolean requestFocus) {
-        assert canNavigate() : this;
+        assert getNavigateOptions().canNavigate() : this;
         //noinspection ConstantConditions
         PsiNavigationSupport.getInstance().getDescriptor(this).navigate(requestFocus);
     }
 
     @Override
-    @RequiredReadAction
-    public boolean canNavigate() {
-        return PsiNavigationSupport.getInstance().canNavigate(this);
+    public CompletableFuture<?> navigateAsync(UIAccess uiAccess, boolean requestFocus) {
+        Navigatable descriptor = PsiNavigationSupport.getInstance().getDescriptor(this);
+        if (descriptor == null || !descriptor.getNavigateOptions().canNavigate()) {
+            return CompletableFuture.completedFuture(null);
+        }
+        return descriptor.navigateAsync(uiAccess, requestFocus);
     }
 
     @Override
     @RequiredReadAction
-    public boolean canNavigateToSource() {
-        return canNavigate();
+    public NavigateOptions getNavigateOptions() {
+        return PsiNavigationSupport.getInstance().canNavigate(this) ? NavigateOptions.CAN_NAVIGATE_FULL : NavigateOptions.CANT_NAVIGATE;
     }
 
     @Override

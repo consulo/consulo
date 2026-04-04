@@ -17,7 +17,8 @@ package consulo.execution.debug.impl.internal.frame;
 
 import consulo.application.ApplicationManager;
 import consulo.dataContext.DataManager;
-import consulo.dataContext.DataProvider;
+import consulo.dataContext.DataSink;
+import consulo.dataContext.UiDataProvider;
 import consulo.execution.debug.XDebugProcess;
 import consulo.execution.debug.XDebugSession;
 import consulo.execution.debug.XSourcePosition;
@@ -46,11 +47,10 @@ import java.util.*;
 /**
  * @author nik
  */
-public class XVariablesView extends XVariablesViewBase implements DataProvider {
+public class XVariablesView extends XVariablesViewBase implements UiDataProvider {
     public static final Key<InlineVariablesInfo> DEBUG_VARIABLES = Key.create("debug.variables");
     public static final Key<Object2LongMap<VirtualFile>> DEBUG_VARIABLES_TIMESTAMPS = Key.create("debug.variables.timestamps");
     private final JPanel myComponent;
-    
     protected final XDebugSessionImpl mySession;
 
     public XVariablesView(XDebugSessionImpl session) {
@@ -58,7 +58,8 @@ public class XVariablesView extends XVariablesViewBase implements DataProvider {
         mySession = session;
         myComponent = new BorderLayoutPanel();
         myComponent.add(super.getPanel());
-        DataManager.registerDataProvider(myComponent, this);
+
+        DataManager.registerUiDataProvider(myComponent, this);
 
         JComponent topPanel = createTopPanel();
         if (topPanel != null) {
@@ -66,8 +67,8 @@ public class XVariablesView extends XVariablesViewBase implements DataProvider {
         }
     }
 
-    
-    public XDebugSessionImpl getSession() {
+    @Override
+    public @Nullable XDebugSessionImpl getSession() {
         return mySession;
     }
 
@@ -150,8 +151,11 @@ public class XVariablesView extends XVariablesViewBase implements DataProvider {
     }
 
     @Override
-    public @Nullable Object getData(Key<?> dataId) {
-        return VirtualFile.KEY == dataId ? getCurrentFile(getTree()) : null;
+    public void uiDataSnapshot(DataSink sink) {
+        VirtualFile file = getCurrentFile();
+        if (file != null) {
+            sink.set(VirtualFile.KEY, file);
+        }
     }
 
     public static class InlineVariablesInfo {

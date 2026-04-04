@@ -19,6 +19,8 @@ import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ComponentProfiles;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.HelpManager;
+import consulo.dataContext.DataSink;
+import consulo.dataContext.UiDataProvider;
 import consulo.disposer.Disposable;
 import consulo.ide.impl.idea.ide.projectView.HelpID;
 import consulo.ide.impl.idea.ide.projectView.impl.AbstractProjectViewPane;
@@ -26,13 +28,12 @@ import consulo.ide.impl.idea.ide.projectView.impl.ProjectAbstractTreeStructureBa
 import consulo.ide.impl.idea.ide.projectView.impl.ProjectViewPaneImpl;
 import consulo.ide.impl.idea.ide.projectView.impl.nodes.LibraryGroupNode;
 import consulo.ide.impl.idea.ide.projectView.impl.nodes.NamedLibraryElementNode;
-import consulo.ui.ex.tree.TreeStructureWrappenModel;
+import consulo.ide.localize.IdeLocalize;
 import consulo.language.content.ProjectRootsUtil;
 import consulo.language.editor.LangDataKeys;
 import consulo.language.editor.PlatformDataKeys;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiElement;
-import consulo.language.util.ModuleUtilCore;
 import consulo.localize.LocalizeValue;
 import consulo.module.Module;
 import consulo.module.content.ModuleFileIndex;
@@ -41,7 +42,6 @@ import consulo.module.content.ProjectRootManager;
 import consulo.module.content.layer.ModifiableRootModel;
 import consulo.module.content.layer.orderEntry.LibraryOrderEntry;
 import consulo.module.content.layer.orderEntry.OrderEntry;
-import consulo.ide.localize.IdeLocalize;
 import consulo.project.Project;
 import consulo.project.ui.view.ProjectViewPane;
 import consulo.project.ui.view.SelectInTarget;
@@ -61,10 +61,10 @@ import consulo.ui.ex.content.Content;
 import consulo.ui.ex.content.ContentFactory;
 import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.ui.ex.tree.NodeDescriptor;
+import consulo.ui.ex.tree.TreeStructureWrappenModel;
 import consulo.ui.layout.WrappedLayout;
 import consulo.undoRedo.CommandProcessor;
 import consulo.util.concurrent.AsyncResult;
-import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
 import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
@@ -72,7 +72,6 @@ import jakarta.inject.Singleton;
 
 import javax.swing.tree.DefaultMutableTreeNode;
 import java.util.*;
-import java.util.function.Function;
 
 /**
  * @author VISTALL
@@ -81,7 +80,7 @@ import java.util.function.Function;
 @Singleton
 @ServiceImpl(profiles = ComponentProfiles.UNIFIED)
 public class UnifiedProjectViewImpl implements ProjectViewEx, Disposable {
-    private final class MyDataProvider implements Function<Key<?>, Object> {
+    private final class MyDataProvider implements UiDataProvider {
         private @Nullable Object getSelectedNodeElement() {
             AbstractProjectViewPane currentProjectViewPane = getCurrentProjectViewPane();
             if (currentProjectViewPane == null) { // can happen if not initialized yet
@@ -97,98 +96,44 @@ public class UnifiedProjectViewImpl implements ProjectViewEx, Disposable {
         }
 
         @Override
-        @RequiredReadAction
-        public Object apply(Key<?> dataId) {
+        public void uiDataSnapshot(DataSink sink) {
             AbstractProjectViewPane currentProjectViewPane = getCurrentProjectViewPane();
             if (currentProjectViewPane != null) {
-                Object paneSpecificData = currentProjectViewPane.getData(dataId);
-                if (paneSpecificData != null) {
-                    return paneSpecificData;
-                }
+                currentProjectViewPane.uiDataSnapshot(sink);
             }
 
-            if (PsiElement.KEY == dataId) {
-                if (currentProjectViewPane == null) {
+            sink.set(HelpManager.HELP_ID, HelpID.PROJECT_VIEWS);
+
+            sink.lazy(PsiElement.KEY, () -> {
+                AbstractProjectViewPane pane = getCurrentProjectViewPane();
+                if (pane == null) {
                     return null;
                 }
-
                 TreeNode<AbstractTreeNode> selectedNode = myTree.getSelectedNode();
                 if (selectedNode != null) {
                     AbstractTreeNode value = selectedNode.getValue();
                     if (value instanceof AbstractPsiBasedNode) {
-                        return value.getValue();
+                        return (PsiElement)value.getValue();
                     }
                 }
                 return null;
-            }
-            if (PsiElement.KEY_OF_ARRAY == dataId) {
-                if (currentProjectViewPane == null) {
+            });
+            sink.lazy(PsiElement.KEY_OF_ARRAY, () -> {
+                AbstractProjectViewPane pane = getCurrentProjectViewPane();
+                if (pane == null) {
                     return null;
                 }
-                PsiElement[] elements = currentProjectViewPane.getSelectedPSIElements();
+                PsiElement[] elements = pane.getSelectedPSIElements();
                 return elements.length == 0 ? null : elements;
-            }
-            if (Module.KEY == dataId) {
-                VirtualFile[] virtualFiles = (VirtualFile[])apply(VirtualFile.KEY_OF_ARRAY);
-                if (virtualFiles == null || virtualFiles.length <= 1) {
-                    return null;
-                }
-                Set<Module> modules = new HashSet<>();
-                for (VirtualFile virtualFile : virtualFiles) {
-                    modules.add(ModuleUtilCore.findModuleForFile(virtualFile, myProject));
-                }
-                return modules.size() == 1 ? modules.iterator().next() : null;
-            }
-            if (LangDataKeys.TARGET_PSI_ELEMENT == dataId) {
-                return null;
-            }
-            //if (PlatformDataKeys.CUT_PROVIDER == dataId) {
-            //    return myCopyPasteDelegator.getCutProvider();
-            //}
-            //if (PlatformDataKeys.COPY_PROVIDER == dataId) {
-            //    return myCopyPasteDelegator.getCopyProvider();
-            //}
-            //if (PlatformDataKeys.PASTE_PROVIDER == dataId) {
-            //    return myCopyPasteDelegator.getPasteProvider();
-            //}
-            //if (LangDataKeys.IDE_VIEW == dataId) {
-            //    return myIdeView;
-            //}
-            //if (PlatformDataKeys.DELETE_ELEMENT_PROVIDER == dataId) {
-            //    Module[] modules = getSelectedModules();
-            //    if (modules != null) {
-            //        return myDeleteModuleProvider;
-            //    }
-            //    LibraryOrderEntry orderEntry = getSelectedLibrary();
-            //    if (orderEntry != null) {
-            //        return new DeleteProvider() {
-            //            @Override
-            //            public void deleteElement(@NotNull DataContext dataContext) {
-            //                detachLibrary(orderEntry, myProject);
-            //            }
-            //
-            //            @Override
-            //            public boolean canDeleteElement(@NotNull DataContext dataContext) {
-            //                return true;
-            //            }
-            //        };
-            //    }
-            //    return myDeletePSIElementProvider;
-            //}
-            if (HelpManager.HELP_ID == dataId) {
-                return HelpID.PROJECT_VIEWS;
-            }
-            //if (ProjectViewImpl.DATA_KEY == dataId) {
-            //    return ProjectViewImpl.this;
-            //}
-            if (PlatformDataKeys.PROJECT_CONTEXT == dataId) {
+            });
+            sink.lazy(PlatformDataKeys.PROJECT_CONTEXT, () -> {
                 Object selected = getSelectedNodeElement();
-                return selected instanceof Project ? selected : null;
-            }
-            if (LangDataKeys.MODULE_CONTEXT == dataId) {
+                return selected instanceof Project ? (Project)selected : null;
+            });
+            sink.lazy(LangDataKeys.MODULE_CONTEXT, () -> {
                 Object selected = getSelectedNodeElement();
                 if (selected instanceof Module module) {
-                    return !module.isDisposed() ? selected : null;
+                    return !module.isDisposed() ? module : null;
                 }
                 else if (selected instanceof PsiDirectory directory) {
                     return moduleBySingleContentRoot(directory.getVirtualFile());
@@ -199,29 +144,20 @@ public class UnifiedProjectViewImpl implements ProjectViewEx, Disposable {
                 else {
                     return null;
                 }
-            }
-
-            if (LangDataKeys.MODULE_CONTEXT_ARRAY == dataId) {
-                return getSelectedModules();
-            }
-            if (ModuleGroup.ARRAY_DATA_KEY == dataId) {
+            });
+            sink.lazy(LangDataKeys.MODULE_CONTEXT_ARRAY, () -> getSelectedModules());
+            sink.lazy(ModuleGroup.ARRAY_DATA_KEY, () -> {
                 List<ModuleGroup> selectedElements = getSelectedElements(ModuleGroup.class);
                 return selectedElements.isEmpty() ? null : selectedElements.toArray(new ModuleGroup[selectedElements.size()]);
-            }
-            if (LibraryGroupElement.ARRAY_DATA_KEY == dataId) {
+            });
+            sink.lazy(LibraryGroupElement.ARRAY_DATA_KEY, () -> {
                 List<LibraryGroupElement> selectedElements = getSelectedElements(LibraryGroupElement.class);
                 return selectedElements.isEmpty() ? null : selectedElements.toArray(new LibraryGroupElement[selectedElements.size()]);
-            }
-            if (NamedLibraryElement.ARRAY_DATA_KEY == dataId) {
+            });
+            sink.lazy(NamedLibraryElement.ARRAY_DATA_KEY, () -> {
                 List<NamedLibraryElement> selectedElements = getSelectedElements(NamedLibraryElement.class);
                 return selectedElements.isEmpty() ? null : selectedElements.toArray(new NamedLibraryElement[selectedElements.size()]);
-            }
-
-            //if (QuickActionProvider.KEY == dataId) {
-            //    return ProjectViewImpl.this;
-            //}
-
-            return null;
+            });
         }
 
         private @Nullable LibraryOrderEntry getSelectedLibrary() {
@@ -359,7 +295,6 @@ public class UnifiedProjectViewImpl implements ProjectViewEx, Disposable {
         return null;
     }
 
-    
     @Override
     public AsyncResult<Void> selectCB(Object element, VirtualFile file, boolean requestFocus) {
         return AsyncResult.resolved(null);
@@ -403,14 +338,13 @@ public class UnifiedProjectViewImpl implements ProjectViewEx, Disposable {
 
         myTree = Tree.create((AbstractTreeNode)structure.getRootElement(), model, this);
         WrappedLayout wrappedLayout = WrappedLayout.create(myTree);
-        wrappedLayout.addUserDataProvider(new MyDataProvider());
+        wrappedLayout.putUserData(UiDataProvider.KEY, new MyDataProvider());
 
         Content content = ContentFactory.getInstance().createUIContent(wrappedLayout, "Project", true);
 
         toolWindow.getContentManager().addContent(content);
     }
 
-    
     @SuppressWarnings("unchecked")
     private <T> List<T> getSelectedElements(Class<T> klass) {
         List<T> result = new ArrayList<>();
@@ -428,7 +362,6 @@ public class UnifiedProjectViewImpl implements ProjectViewEx, Disposable {
         return result;
     }
 
-    
     @Override
     public AsyncResult<Void> changeViewCB(String viewId, String subId) {
         return AsyncResult.done(null);
@@ -561,7 +494,6 @@ public class UnifiedProjectViewImpl implements ProjectViewEx, Disposable {
         return null;
     }
 
-    
     @Override
     public Collection<SelectInTarget> getSelectInTargets() {
         return mySelectInTargets.values();

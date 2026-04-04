@@ -17,7 +17,6 @@ package consulo.ide.impl.idea.ide.util;
 
 import consulo.annotation.access.RequiredReadAction;
 import consulo.application.Application;
-import consulo.application.impl.internal.IdeaModalityState;
 import consulo.disposer.Disposer;
 import consulo.ide.impl.idea.ide.projectView.BaseProjectTreeBuilder;
 import consulo.ide.impl.idea.ide.projectView.impl.AbstractProjectTreeStructure;
@@ -254,7 +253,7 @@ public final class TreeFileChooserDialog extends DialogWrapper implements TreeFi
 
         SwingUtilities.invokeLater(() -> myGotoByNamePanel.invoke(
             new MyCallback(),
-            IdeaModalityState.stateForComponent(getRootPane()),
+            ModalityState.nonModal(),
             false
         ));
 
@@ -303,7 +302,7 @@ public final class TreeFileChooserDialog extends DialogWrapper implements TreeFi
                     myBuilder.select(file, file.getVirtualFile(), true);
                 }
             },
-            IdeaModalityState.stateForComponent(getWindow())
+            ModalityState.nonModal()
         );
     }
 

@@ -15,6 +15,7 @@
  */
 package consulo.language.editor.todo.impl.internal;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.document.util.TextRange;
 import consulo.language.editor.todo.TodoFilter;
 import consulo.language.editor.todo.impl.internal.versionSystemControl.TodoCheckinHandlerWorker;
@@ -69,7 +70,7 @@ public class CustomChangelistTodosTreeBuilder extends TodoTreeBuilder {
 
   private void initHelper() {
     myPsiTodoSearchHelper = new PsiTodoSearchHelper() {
-      
+      @RequiredReadAction
       @Override
       public PsiFile[] findFilesWithTodoItems() {
         List<Change> changes = new ArrayList<>();
@@ -98,25 +99,21 @@ public class CustomChangelistTodosTreeBuilder extends TodoTreeBuilder {
         return files.toArray(PsiFile.EMPTY_ARRAY);
       }
 
-      
       @Override
       public TodoItem[] findTodoItems(PsiFile file) {
         return findPatternedTodoItems(file, getTodoTreeStructure().getTodoFilter());
       }
 
-      
       @Override
       public TodoItem[] findTodoItemsLight(PsiFile file) {
         return findTodoItems(file);
       }
 
-      
       @Override
       public TodoItem[] findTodoItemsLight(PsiFile file, int startOffset, int endOffset) {
         return findTodoItems(file, startOffset, endOffset);
       }
 
-      
       @Override
       public TodoItem[] findTodoItems(PsiFile file, int startOffset, int endOffset) {
         TodoItem[] todoItems = findTodoItems(file);
@@ -167,7 +164,6 @@ public class CustomChangelistTodosTreeBuilder extends TodoTreeBuilder {
     return todoItems.isEmpty() ? EMPTY_ITEMS : todoItems.toArray(new TodoItem[0]);
   }
 
-  
   @Override
   protected TodoTreeStructure createTreeStructure() {
     return new CustomChangelistTodoTreeStructure(myProject, myPsiTodoSearchHelper);
@@ -184,6 +180,6 @@ public class CustomChangelistTodosTreeBuilder extends TodoTreeBuilder {
       }
     }
 
-    super.rebuildCache(files);
+    rebuildCache(files);
   }
 }

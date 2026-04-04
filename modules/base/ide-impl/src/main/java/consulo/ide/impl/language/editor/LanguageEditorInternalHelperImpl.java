@@ -45,13 +45,11 @@ import consulo.language.editor.internal.DaemonCodeAnalyzerInternal;
 import consulo.language.editor.internal.LanguageEditorInternalHelper;
 import consulo.language.editor.rawHighlight.HighlightInfo;
 import consulo.language.editor.refactoring.rename.inplace.InplaceRefactoring;
-import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.localize.LocalizeValue;
 import consulo.project.DumbService;
 import consulo.project.Project;
-import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.ColoredTextContainer;
 import consulo.ui.ex.RelativePoint;
@@ -119,7 +117,6 @@ public class LanguageEditorInternalHelperImpl implements LanguageEditorInternalH
     }
 
     @Override
-    
     public List<Annotation> runAnnotator(Language language, Annotator annotator, PsiFile file, PsiElement context, boolean batchMode) {
         AnnotationHolderImpl holder = new AnnotationHolderImpl(language, new AnnotationSession(file), batchMode);
         holder.runAnnotatorWithContext(context, annotator);
@@ -140,6 +137,7 @@ public class LanguageEditorInternalHelperImpl implements LanguageEditorInternalH
     @RequiredUIAccess
     public void setHighlightersToEditor(Project project,
                                         Document document,
+                                        PsiFile psiFile,
                                         int startOffset,
                                         int endOffset,
                                         Collection<HighlightInfo> highlights,
@@ -147,9 +145,7 @@ public class LanguageEditorInternalHelperImpl implements LanguageEditorInternalH
                                         @Nullable EditorColorsScheme colorsScheme,
                                         int group) {
         TextRange range = new TextRange(startOffset, endOffset);
-        UIAccess.assertIsUIThread();
 
-        PsiFile psiFile = PsiDocumentManager.getInstance(project).getPsiFile(document);
         DaemonCodeAnalyzerInternal codeAnalyzer = DaemonCodeAnalyzerInternal.getInstanceEx(project);
         codeAnalyzer.cleanFileLevelHighlights(project, group, psiFile);
 

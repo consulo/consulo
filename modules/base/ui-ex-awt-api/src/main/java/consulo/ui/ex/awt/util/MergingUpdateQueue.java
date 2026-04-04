@@ -23,12 +23,12 @@ import consulo.disposer.Disposer;
 import consulo.ui.ModalityState;
 import consulo.ui.ex.UiActivity;
 import consulo.ui.ex.UiActivityMonitor;
-import consulo.ui.ex.awt.UIUtil;
-import consulo.ui.ex.update.Activatable;
 import consulo.ui.ex.awt.update.UiNotifyConnector;
+import consulo.ui.ex.update.Activatable;
 import consulo.util.collection.ContainerUtil;
-
 import org.jspecify.annotations.Nullable;
+import org.jetbrains.annotations.NonNls;
+
 import javax.swing.*;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -69,15 +69,15 @@ public class MergingUpdateQueue implements Runnable, Disposable, Activatable {
   private boolean myTrackUiActivity;
   private UiActivity myUiActivity;
 
-  public MergingUpdateQueue(String name, int mergingTimeSpan, boolean isActive, @Nullable JComponent modalityStateComponent) {
+  public MergingUpdateQueue(@NonNls String name, int mergingTimeSpan, boolean isActive, @Nullable JComponent modalityStateComponent) {
     this(name, mergingTimeSpan, isActive, modalityStateComponent, null);
   }
 
-  public MergingUpdateQueue(String name, int mergingTimeSpan, boolean isActive, @Nullable JComponent modalityStateComponent, @Nullable Disposable parent) {
+  public MergingUpdateQueue(@NonNls String name, int mergingTimeSpan, boolean isActive, @Nullable JComponent modalityStateComponent, @Nullable Disposable parent) {
     this(name, mergingTimeSpan, isActive, modalityStateComponent, parent, null);
   }
 
-  public MergingUpdateQueue(String name,
+  public MergingUpdateQueue(@NonNls String name,
                             int mergingTimeSpan,
                             boolean isActive,
                             @Nullable JComponent modalityStateComponent,
@@ -86,7 +86,7 @@ public class MergingUpdateQueue implements Runnable, Disposable, Activatable {
     this(name, mergingTimeSpan, isActive, modalityStateComponent, parent, activationComponent, true);
   }
 
-  public MergingUpdateQueue(String name,
+  public MergingUpdateQueue(@NonNls String name,
                             int mergingTimeSpan,
                             boolean isActive,
                             @Nullable JComponent modalityStateComponent,
@@ -106,7 +106,7 @@ public class MergingUpdateQueue implements Runnable, Disposable, Activatable {
    * @param activationComponent    if not {@code null} the tasks will be processing only when the given component is showing
    * @param thread                 specifies on which thread the tasks are executed
    */
-  public MergingUpdateQueue(String name,
+  public MergingUpdateQueue(@NonNls String name,
                             int mergingTimeSpan,
                             boolean isActive,
                             @Nullable JComponent modalityStateComponent,
@@ -160,7 +160,6 @@ public class MergingUpdateQueue implements Runnable, Disposable, Activatable {
     }
   }
 
-  
   private List<Update> getAllScheduledUpdates() {
     return ContainerUtil.concat(myScheduledUpdates.values(), map -> map.keySet());
   }
@@ -280,12 +279,7 @@ public class MergingUpdateQueue implements Runnable, Disposable, Activatable {
 
     if (myExecuteInDispatchThread) {
       Application application = Application.get();
-      if(application.isUnifiedApplication()) {
-        application.getLastUIAccess().giveAndWaitIfNeed(toRun);
-      }
-      else {
-        UIUtil.invokeAndWaitIfNeeded(toRun);
-      }
+      application.getLastUIAccess().execute(toRun);
     }
     else {
       toRun.run();
@@ -437,7 +431,6 @@ public class MergingUpdateQueue implements Runnable, Disposable, Activatable {
     return myModalityStateComponent == ANY_COMPONENT ? null : getModalityState();
   }
 
-  
   public ModalityState getModalityState() {
     if (myModalityStateComponent == null) {
       return Application.get().getNoneModalityState();
@@ -494,7 +487,6 @@ public class MergingUpdateQueue implements Runnable, Disposable, Activatable {
     UiActivityMonitor.getInstance().removeActivity(getActivityId());
   }
 
-  
   private UiActivity getActivityId() {
     if (myUiActivity == null) {
       myUiActivity = new UiActivity.AsyncBgOperation("UpdateQueue:" + myName + hashCode());

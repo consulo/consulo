@@ -21,9 +21,7 @@ import consulo.language.editor.DaemonCodeAnalyzer;
 import consulo.language.editor.FileStatusMap;
 import consulo.language.editor.rawHighlight.HighlightInfo;
 import consulo.language.psi.PsiFile;
-import consulo.logging.Logger;
 import consulo.project.Project;
-import org.jetbrains.annotations.TestOnly;
 
 import java.util.List;
 
@@ -32,19 +30,13 @@ public abstract class DaemonCodeAnalyzerInternal extends DaemonCodeAnalyzer {
         return (DaemonCodeAnalyzerInternal) DaemonCodeAnalyzer.getInstance(project);
     }
 
-    
     public abstract List<HighlightInfo> runMainPasses(PsiFile psiFile, Document document, ProgressIndicator progress);
 
     public abstract boolean isErrorAnalyzingFinished(PsiFile file);
 
-    
     public abstract FileStatusMap getFileStatusMap();
 
     public abstract boolean isRunning();
-
-    
-    @TestOnly
-    public abstract List<HighlightInfo> getFileLevelHighlights(Project project, PsiFile file);
 
     public abstract void cleanFileLevelHighlights(Project project, int group, PsiFile psiFile);
 

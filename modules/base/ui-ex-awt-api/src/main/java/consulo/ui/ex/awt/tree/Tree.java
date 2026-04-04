@@ -16,7 +16,6 @@
 package consulo.ui.ex.awt.tree;
 
 import consulo.annotation.DeprecationInfo;
-import consulo.application.AccessRule;
 import consulo.application.util.Queryable;
 import consulo.disposer.Disposer;
 import consulo.platform.Platform;
@@ -353,7 +352,7 @@ public class Tree extends JTree implements ComponentWithEmptyText, ComponentWith
         if (path != null) {
             Object node = path.getLastPathComponent();
             if (node instanceof DefaultMutableTreeNode defMutableTreeNode) {
-                return AccessRule.read(() -> getFileColorFor(defMutableTreeNode.getUserObject()));
+                return getFileColorFor(defMutableTreeNode.getUserObject());
             }
         }
         return null;

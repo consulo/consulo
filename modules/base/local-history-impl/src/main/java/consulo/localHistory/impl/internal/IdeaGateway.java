@@ -18,6 +18,7 @@ package consulo.localHistory.impl.internal;
 import consulo.application.ApplicationManager;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
+import consulo.ui.UIAccess;
 import consulo.localHistory.impl.internal.tree.DirectoryEntry;
 import consulo.localHistory.impl.internal.tree.Entry;
 import consulo.localHistory.impl.internal.tree.FileEntry;
@@ -440,7 +441,7 @@ public class IdeaGateway {
   }
 
   public void saveAllUnsavedDocuments() {
-    FileDocumentManager.getInstance().saveAllDocuments();
+    FileDocumentManager.getInstance().saveAllDocuments(UIAccess.current());
   }
 
   private static @Nullable VirtualFile getFile(Document d) {

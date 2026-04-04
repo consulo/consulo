@@ -52,7 +52,18 @@ public class TreeAnchorizer {
         return new SimpleTreeAnchorizerValue(element);
     }
 
+    public TreeAnchorizerValue<?> tryCreateAnchorValue(Object element) {
+        return new SimpleTreeAnchorizerValue(element);
+    }
+
     public @Nullable Object retrieveElement(Object anchor) {
+        if (anchor instanceof TreeAnchorizerValue treeAnchorizerValue) {
+            return treeAnchorizerValue.extractValue();
+        }
+        return anchor;
+    }
+
+    public @Nullable Object tryToRetrieveElement(Object anchor) {
         if (anchor instanceof TreeAnchorizerValue treeAnchorizerValue) {
             return treeAnchorizerValue.extractValue();
         }

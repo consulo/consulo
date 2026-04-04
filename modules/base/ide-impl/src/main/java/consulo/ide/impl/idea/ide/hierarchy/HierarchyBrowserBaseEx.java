@@ -19,6 +19,7 @@ import consulo.annotation.access.RequiredReadAction;
 import consulo.application.HelpManager;
 import consulo.application.ReadAction;
 import consulo.application.ui.wm.IdeFocusManager;
+import consulo.dataContext.DataSink;
 import consulo.content.scope.NamedScope;
 import consulo.content.scope.NamedScopesHolder;
 import consulo.disposer.Disposer;
@@ -194,10 +195,8 @@ public abstract class HierarchyBrowserBaseEx extends HierarchyBrowserBase implem
     @Override
     protected abstract @Nullable PsiElement getElementFromDescriptor(HierarchyNodeDescriptor descriptor);
 
-    
     protected abstract LocalizeValue getPrevOccurrenceActionNameImpl();
 
-    
     protected abstract LocalizeValue getNextOccurrenceActionNameImpl();
 
     protected abstract void createTrees(Map<String, JTree> trees);
@@ -210,10 +209,8 @@ public abstract class HierarchyBrowserBaseEx extends HierarchyBrowserBase implem
 
     protected abstract @Nullable Comparator<NodeDescriptor> getComparator();
 
-    
     protected abstract String getActionPlace();
 
-    
     protected abstract Key<?> getBrowserDataKey();
 
     protected final JTree createTree(boolean dndAware) {
@@ -474,15 +471,12 @@ public abstract class HierarchyBrowserBaseEx extends HierarchyBrowserBase implem
         return myCurrentViewType;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
-    public Object getData(Key<?> dataId) {
-        if (getBrowserDataKey() == dataId) {
-            return this;
-        }
-        if (HelpManager.HELP_ID == dataId) {
-            return HELP_ID;
-        }
-        return super.getData(dataId);
+    public void uiDataSnapshot(DataSink sink) {
+        super.uiDataSnapshot(sink);
+        sink.set((Key)getBrowserDataKey(), this);
+        sink.set(HelpManager.HELP_ID, HELP_ID);
     }
 
     private void disposeBuilders() {
@@ -534,7 +528,6 @@ public abstract class HierarchyBrowserBaseEx extends HierarchyBrowserBase implem
         });
     }
 
-    
     protected LocalizeValue getCurrentScopeName() {
         if (myCurrentViewType == null) {
             return LocalizeValue.empty();
@@ -588,7 +581,6 @@ public abstract class HierarchyBrowserBaseEx extends HierarchyBrowserBase implem
     static class BaseOnThisElementAction<H extends HierarchyProvider> extends AnAction {
         private final String myActionId;
         private final Key<?> myBrowserDataKey;
-        
         private final Class<H> myHierarchyProviderClass;
 
         BaseOnThisElementAction(
@@ -671,7 +663,6 @@ public abstract class HierarchyBrowserBaseEx extends HierarchyBrowserBase implem
             return !element.equals(browser.mySmartPsiElementPointer.getElement()) && element.isValid();
         }
 
-        
         protected LocalizeValue getNonDefaultText(HierarchyBrowserBaseEx browser, PsiElement element) {
             return LocalizeValue.empty();
         }
@@ -711,7 +702,6 @@ public abstract class HierarchyBrowserBaseEx extends HierarchyBrowserBase implem
         }
 
         @Override
-        
         public final DefaultActionGroup createPopupActionGroup(JComponent component) {
             DefaultActionGroup group = new DefaultActionGroup();
 
@@ -753,7 +743,6 @@ public abstract class HierarchyBrowserBaseEx extends HierarchyBrowserBase implem
             });
         }
 
-        
         @Override
         public final JComponent createCustomComponent(Presentation presentation, String place) {
             JPanel panel = new JPanel(new GridBagLayout());
@@ -775,7 +764,6 @@ public abstract class HierarchyBrowserBaseEx extends HierarchyBrowserBase implem
         }
 
         private final class MenuAction extends AnAction {
-            
             private final HierarchyScope myScope;
 
             public MenuAction(HierarchyScope scope) {

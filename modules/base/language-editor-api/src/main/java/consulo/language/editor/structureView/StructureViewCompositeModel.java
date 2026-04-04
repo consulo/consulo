@@ -25,6 +25,7 @@ import consulo.fileEditor.structureView.tree.ProvidingTreeModel;
 import consulo.fileEditor.structureView.tree.TreeElement;
 import consulo.language.psi.PsiFile;
 import consulo.navigation.ItemPresentation;
+import consulo.navigation.NavigateOptions;
 import consulo.ui.image.Image;
 import consulo.util.collection.JBIterable;
 
@@ -69,13 +70,8 @@ public class StructureViewCompositeModel extends StructureViewModelBase implemen
       }
 
       @Override
-      public boolean canNavigate() {
-        return file.canNavigate();
-      }
-
-      @Override
-      public boolean canNavigateToSource() {
-        return file.canNavigateToSource();
+      public NavigateOptions getNavigateOptions() {
+        return file.getNavigateOptions();
       }
 
       
@@ -155,13 +151,8 @@ public class StructureViewCompositeModel extends StructureViewModelBase implemen
       }
 
       @Override
-      public boolean canNavigate() {
-        return file.canNavigate();
-      }
-
-      @Override
-      public boolean canNavigateToSource() {
-        return file.canNavigateToSource();
+      public NavigateOptions getNavigateOptions() {
+        return file.getNavigateOptions();
       }
 
       

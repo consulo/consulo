@@ -365,10 +365,9 @@ public class ReplaceInProjectManager {
         int[] replacedCount = {0};
         boolean[] success = {true};
 
-        success[0] &= ((ApplicationEx)Application.get()).runWriteActionWithCancellableProgressInDispatchThread(
+        success[0] &= ((ApplicationEx)Application.get()).runWriteActionWithCancellableProgress(
             FindLocalize.findReplaceAllConfirmationTitle(),
             myProject,
-            null,
             indicator -> {
                 indicator.setIndeterminate(false);
                 int processed = 0;

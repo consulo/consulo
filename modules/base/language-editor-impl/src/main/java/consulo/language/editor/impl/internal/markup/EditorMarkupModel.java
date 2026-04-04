@@ -21,22 +21,15 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.PopupHandler;
 
 public interface EditorMarkupModel extends ErrorStripeMarkupModel {
-  
   Editor getEditor();
 
   void setErrorStripeVisible(boolean val);
-
-  @RequiredUIAccess
-  void setErrorStripeRenderer(ErrorStripeRenderer renderer);
-
-  ErrorStripeRenderer getErrorStripeRenderer();
 
   @RequiredUIAccess
   void setErrorPanelPopupHandler(PopupHandler handler);
 
   void setErrorStripTooltipRendererProvider(ErrorStripTooltipRendererProvider provider);
 
-  
   ErrorStripTooltipRendererProvider getErrorStripTooltipRendererProvider();
 
   void setMinMarkHeight(int minMarkHeight);

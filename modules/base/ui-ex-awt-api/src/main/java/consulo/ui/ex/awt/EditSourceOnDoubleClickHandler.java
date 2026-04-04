@@ -5,6 +5,7 @@ import consulo.application.Application;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
 import consulo.project.Project;
+import consulo.ui.UIAccess;
 import consulo.ui.ex.OpenSourceUtil;
 import consulo.ui.ex.awt.event.DoubleClickListener;
 import consulo.ui.ex.awt.tree.table.TreeTable;
@@ -37,7 +38,7 @@ public final class EditSourceOnDoubleClickHandler {
         DataContext dataContext = DataManager.getInstance().getDataContext(treeTable);
         Project project = dataContext.getData(Project.KEY);
         if (project == null) return false;
-        OpenSourceUtil.openSourcesFrom(dataContext, true);
+        OpenSourceUtil.openSourcesFromAsync(UIAccess.current(), dataContext, true);
         return true;
       }
     }.installOn(treeTable);
@@ -53,7 +54,7 @@ public final class EditSourceOnDoubleClickHandler {
         DataContext dataContext = DataManager.getInstance().getDataContext(table);
         Project project = dataContext.getData(Project.KEY);
         if (project == null) return false;
-        OpenSourceUtil.openSourcesFrom(dataContext, true);
+        OpenSourceUtil.openSourcesFromAsync(UIAccess.current(), dataContext, true);
         return true;
       }
     }.installOn(table);
@@ -68,7 +69,7 @@ public final class EditSourceOnDoubleClickHandler {
         if (index == -1) return false;
         if (!list.getCellBounds(index, index).contains(point)) return false;
         DataContext dataContext = DataManager.getInstance().getDataContext(list);
-        OpenSourceUtil.openSourcesFrom(dataContext, true);
+        OpenSourceUtil.openSourcesFromAsync(UIAccess.current(), dataContext, true);
         whenPerformed.run();
         return true;
       }
@@ -135,7 +136,7 @@ public final class EditSourceOnDoubleClickHandler {
 
     @SuppressWarnings("UnusedParameters")
     protected void processDoubleClick(MouseEvent e, DataContext dataContext, TreePath treePath) {
-      OpenSourceUtil.openSourcesFrom(dataContext, true);
+      OpenSourceUtil.openSourcesFromAsync(UIAccess.current(), dataContext, true);
       if (myWhenPerformed != null) myWhenPerformed.run();
     }
   }

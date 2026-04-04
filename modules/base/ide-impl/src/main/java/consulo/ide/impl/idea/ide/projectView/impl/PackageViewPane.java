@@ -50,7 +50,7 @@ import consulo.ui.ex.awt.tree.AbstractTreeBuilder;
 import consulo.ui.ex.awt.tree.AbstractTreeUpdater;
 import consulo.ui.ex.tree.AbstractTreeStructure;
 import consulo.util.collection.ContainerUtil;
-import consulo.util.dataholder.Key;
+import consulo.dataContext.DataSink;
 import consulo.virtualFileSystem.VirtualFile;
 import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
@@ -72,14 +72,12 @@ public final class PackageViewPane extends AbstractProjectViewPSIPane {
         super(project);
     }
 
-    
     @Override
     public LocalizeValue getTitle() {
         return IdeLocalize.titlePackages();
     }
 
     @Override
-    
     public String getId() {
         return ID;
     }
@@ -94,7 +92,6 @@ public final class PackageViewPane extends AbstractProjectViewPSIPane {
         return null;
     }
 
-    
     @Override
     @RequiredReadAction
     public List<PsiElement> getElementsFromNode(@Nullable Object node) {
@@ -113,23 +110,20 @@ public final class PackageViewPane extends AbstractProjectViewPSIPane {
     }
 
     @Override
-    public Object getData(Key<?> dataId) {
-        if (DeleteProvider.KEY == dataId) {
+    public void uiDataSnapshot(DataSink sink) {
+        super.uiDataSnapshot(sink);
+        sink.lazy(PackageElement.DATA_KEY, this::getSelectedPackageElement);
+        sink.lazy(DeleteProvider.KEY, () -> {
             PackageElement selectedPackageElement = getSelectedPackageElement();
             if (selectedPackageElement != null) {
                 return myDeletePSIElementProvider;
             }
-        }
-        if (PackageElement.DATA_KEY == dataId) {
-            return getSelectedPackageElement();
-        }
-        if (Module.KEY == dataId) {
+            return null;
+        });
+        sink.lazy(Module.KEY, () -> {
             PackageElement packageElement = getSelectedPackageElement();
-            if (packageElement != null) {
-                return packageElement.getModule();
-            }
-        }
-        return super.getData(dataId);
+            return packageElement != null ? packageElement.getModule() : null;
+        });
     }
 
     private @Nullable PackageElement getSelectedPackageElement() {
@@ -145,7 +139,6 @@ public final class PackageViewPane extends AbstractProjectViewPSIPane {
         return result;
     }
 
-    
     @Override
     public PsiDirectory[] getSelectedDirectories() {
         PackageElement packageElement = getSelectedPackageElement();
@@ -231,7 +224,6 @@ public final class PackageViewPane extends AbstractProjectViewPSIPane {
         };
     }
 
-    
     public String getComponentName() {
         return "PackagesPane";
     }

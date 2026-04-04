@@ -28,8 +28,10 @@ import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.platform.base.localize.CommonLocalize;
+import consulo.application.Application;
 import consulo.project.Project;
-import consulo.project.ProjectManager;
+import consulo.project.ProjectOpenContext;
+import consulo.project.internal.ProjectOpenService;
 import consulo.project.internal.RecentProjectsManager;
 import consulo.ui.Button;
 import consulo.ui.ButtonStyle;
@@ -212,13 +214,19 @@ public class NewProjectAction extends DumbAwareAction {
         RecentProjectsManager.getInstance().setLastProjectCreationLocation(location.getParent());
 
         UIAccess uiAccess = UIAccess.current();
-        ProjectManager.getInstance()
-            .openProjectAsync(baseDir, uiAccess)
-            .doWhenDone((openedProject) -> uiAccess.give(() -> NewOrImportModuleUtil.doCreate(
-                panel.getProcessor(),
-                panel.getWizardContext(),
-                openedProject,
-                baseDir
-            )));
+        ProjectOpenContext openContext = new ProjectOpenContext();
+        openContext.putUserData(ProjectOpenContext.FORCE_OPEN_IN_NEW_FRAME, true);
+        Application.get().getInstance(ProjectOpenService.class)
+            .openProjectAsync(baseDir.toNioPath(), uiAccess, openContext)
+            .whenComplete((openedProject, error) -> {
+                if (error == null && openedProject != null) {
+                    uiAccess.give(() -> NewOrImportModuleUtil.doCreate(
+                        panel.getProcessor(),
+                        panel.getWizardContext(),
+                        openedProject,
+                        baseDir
+                    ));
+                }
+            });
     }
 }

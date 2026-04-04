@@ -23,12 +23,9 @@ import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.Objects;
 import java.util.SequencedSet;
-import java.util.concurrent.CancellationException;
 import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
-import java.util.function.Function;
 import java.util.function.Supplier;
 
 import static consulo.util.concurrent.coroutine.internal.Coroutines.EXCEPTION_HANDLER;
@@ -40,18 +37,6 @@ import static consulo.util.concurrent.coroutine.internal.Coroutines.closeManaged
  * executes an instance of the functional interface {@link ScopeCode} and blocks
  * the invoking thread until the code and all coroutines by it have finished
  * execution (either successfully or with an exception).
- *
- * <p>
- * An alternative way to launch a scope is by using the method
- * {@link #produce(CoroutineContext, Function, ScopeCode)}. It also executes the
- * given code (which in turn may start coroutines) but returns immediately after
- * the code finished with a {@link ScopeFuture} instance. This sub-interface of
- * {@link Future} can then be used to wait for the started coroutines to finish
- * or to cancel the execution. As the name indicates, this method is mainly
- * intended for scope executions that produce result. But it can also be used to
- * just wrap a scope execution to handle it as a future and then ignore the
- * result.
- * </p>
  *
  * <p>
  * A scope will also automatically close all ({@link AutoCloseable}) resources
@@ -127,31 +112,12 @@ public class CoroutineScope extends CoroutineEnvironment {
         aScope.checkThrowErrors();
     }
 
-    public static void launchAsync(CoroutineContext context, Supplier<Coroutine<@Nullable ?, ?>> supplier) {
+    public static Continuation<?> launchAsync(CoroutineContext context, Supplier<Coroutine<@Nullable ?, ?>> supplier) {
         CoroutineScope aScope = new CoroutineScope(context);
 
         Coroutine<@Nullable ?, ?> coroutine = supplier.get();
 
-        coroutine.runAsync(aScope, null);
-    }
-
-    /**
-     * Launches a new scope that is expected to produce a result and returns a
-     * {@link Future} instance that can be used to query the result. The result
-     * will be retrieved after the coroutine execution finished from the scope
-     * by applying the result function. If the future object is only needed to
-     * wrap a scope execution this function
-     *
-     * @param context   The coroutine context for the scope
-     * @param getResult A function that retrieves the result from the scope or
-     *                  NULL to always return NULL
-     * @param code      The producing code to execute in the scope
-     * @return A future that provides access to the result of the scope
-     * execution
-     */
-    public static <T> ScopeFuture<T> produce(CoroutineContext context,
-                                             Function<? super CoroutineScope, T> getResult, ScopeCode code) {
-        return new ScopeFuture<>(new CoroutineScope(context), getResult, code);
+        return coroutine.runAsync(aScope, null);
     }
 
     /**
@@ -359,7 +325,7 @@ public class CoroutineScope extends CoroutineEnvironment {
      * Throws an exception if errors occurred during the coroutine executions in
      * this scope.
      */
-    void checkThrowErrors() {
+    public void checkThrowErrors() {
         if (failedContinuations.size() > 0) {
             if (failedContinuations.size() == 1) {
                 Throwable eError = failedContinuations.getFirst().getError();
@@ -463,93 +429,5 @@ public class CoroutineScope extends CoroutineEnvironment {
          *                   will be handled by the scope
          */
         void runIn(CoroutineScope rScope) throws Exception;
-    }
-
-    /**
-     * An implementation of the future interface that wraps a scope execution.
-     *
-     * @author eso
-     */
-    public static class ScopeFuture<T> implements Future<T> {
-
-        private final CoroutineScope scope;
-
-        private final Function<? super CoroutineScope, T> getResult;
-
-        private @Nullable Exception scopeCodeError = null;
-
-        /**
-         * Creates a new instance for a certain scope.
-         *
-         * @param scope     The scope to await for the result
-         * @param getResult A function that retrieves the result from the scope
-         *                  or NULL to always return NULL
-         * @param code      The code to be executed in the scope
-         */
-        public ScopeFuture(CoroutineScope scope,
-                           Function<? super CoroutineScope, T> getResult, ScopeCode code) {
-            this.scope = scope;
-            this.getResult = getResult;
-
-            try {
-                code.runIn(scope);
-            }
-            catch (Exception e) {
-                scopeCodeError = e;
-            }
-        }
-
-        @Override
-        public boolean cancel(boolean mayInterruptIfRunning) {
-            boolean terminated = scope.isFinished() || scope.isCancelled();
-
-            if (!terminated) {
-                scope.cancel();
-                terminated = true;
-            }
-            return terminated;
-        }
-
-        @Override
-        public @Nullable T get() {
-            scope.await();
-
-            return getImpl();
-        }
-
-        @Override
-        public @Nullable T get(long timeout, TimeUnit unit) {
-            scope.await(timeout, unit);
-
-            return getImpl();
-        }
-
-        @Override
-        public boolean isCancelled() {
-            return scope.isCancelled();
-        }
-
-        @Override
-        public boolean isDone() {
-            return scope.isFinished();
-        }
-
-        /**
-         * Implements getting the scope result (without awaiting).
-         *
-         * @return The scope result
-         */
-        private @Nullable T getImpl() {
-            if (scopeCodeError != null) {
-                throw new CoroutineScopeException(scopeCodeError,
-                    scope.failedContinuations);
-            }
-            scope.checkThrowErrors();
-
-            if (isCancelled()) {
-                throw new CancellationException("Scope is cancelled");
-            }
-            return getResult != null ? getResult.apply(scope) : null;
-        }
     }
 }

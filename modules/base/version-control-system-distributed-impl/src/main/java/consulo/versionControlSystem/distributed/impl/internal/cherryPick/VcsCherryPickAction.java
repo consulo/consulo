@@ -18,6 +18,7 @@ package consulo.versionControlSystem.distributed.impl.internal.cherryPick;
 import consulo.annotation.component.ActionImpl;
 import consulo.document.FileDocumentManager;
 import consulo.project.Project;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DumbAwareAction;
@@ -48,7 +49,7 @@ public class VcsCherryPickAction extends DumbAwareAction {
     @Override
     @RequiredUIAccess
     public void actionPerformed(AnActionEvent e) {
-        FileDocumentManager.getInstance().saveAllDocuments();
+        FileDocumentManager.getInstance().saveAllDocuments(UIAccess.current());
 
         Project project = e.getRequiredData(Project.KEY);
         VcsLog log = e.getRequiredData(VcsLog.KEY);
@@ -97,7 +98,6 @@ public class VcsCherryPickAction extends DumbAwareAction {
         return ContainerUtil.find(cherryPickers, picker -> picker.canHandleForRoots(roots));
     }
 
-    
     private static Map<VirtualFile, List<Hash>> groupByRoot(List<CommitId> details) {
         Map<VirtualFile, List<Hash>> result = new HashMap<>();
         for (CommitId commit : details) {
@@ -111,12 +111,10 @@ public class VcsCherryPickAction extends DumbAwareAction {
         return result;
     }
 
-    
     private static String concatActionNamesForAllAvailable(List<VcsCherryPicker> pickers) {
         return StringUtil.join(pickers, VcsCherryPicker::getActionTitle, "/");
     }
 
-    
     private static List<VcsCherryPicker> getActiveCherryPickersForProject(@Nullable Project project) {
         if (project != null) {
             ProjectLevelVcsManager projectLevelVcsManager = ProjectLevelVcsManager.getInstance(project);

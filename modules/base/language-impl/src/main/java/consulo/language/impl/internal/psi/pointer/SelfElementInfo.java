@@ -137,7 +137,7 @@ public class SelfElementInfo extends SmartPointerElementInfo {
   }
 
   public static @Nullable PsiFile restoreFileFromVirtual(VirtualFile virtualFile, Project project, Language language) {
-    return ReadAction.compute(() -> {
+    return ReadAction.computeBlocking(() -> {
       if (project.isDisposed()) return null;
       VirtualFile child = restoreVFile(virtualFile);
       if (child == null || !child.isValid()) return null;
@@ -151,7 +151,7 @@ public class SelfElementInfo extends SmartPointerElementInfo {
   }
 
   public static @Nullable PsiDirectory restoreDirectoryFromVirtual(VirtualFile virtualFile, Project project) {
-    return ReadAction.compute(() -> {
+    return ReadAction.computeBlocking(() -> {
       if (project.isDisposed()) return null;
       VirtualFile child = restoreVFile(virtualFile);
       if (child == null || !child.isValid()) return null;
@@ -186,11 +186,9 @@ public class SelfElementInfo extends SmartPointerElementInfo {
       SelfElementInfo otherInfo = (SelfElementInfo)other;
       if (!getVirtualFile().equals(other.getVirtualFile()) || myIdentikit != otherInfo.myIdentikit) return false;
 
-      return ReadAction.compute(() -> {
-        Segment range1 = getPsiRange(manager);
-        Segment range2 = otherInfo.getPsiRange(manager);
-        return range1 != null && range2 != null && range1.getStartOffset() == range2.getStartOffset() && range1.getEndOffset() == range2.getEndOffset();
-      });
+      Segment range1 = getPsiRange(manager);
+      Segment range2 = otherInfo.getPsiRange(manager);
+      return range1 != null && range2 != null && range1.getStartOffset() == range2.getStartOffset() && range1.getEndOffset() == range2.getEndOffset();
     }
     return false;
   }

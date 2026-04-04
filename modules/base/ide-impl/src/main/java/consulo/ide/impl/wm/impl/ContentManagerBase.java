@@ -19,7 +19,7 @@ import consulo.application.ApplicationManager;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.component.util.ActiveRunnable;
 import consulo.component.util.BusyObject;
-import consulo.dataContext.DataProvider;
+import consulo.dataContext.UiDataProvider;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.logging.Logger;
@@ -42,6 +42,7 @@ import consulo.util.lang.Comparing;
 import org.jspecify.annotations.Nullable;
 import kava.beans.PropertyChangeEvent;
 import kava.beans.PropertyChangeListener;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -68,7 +69,7 @@ public abstract class ContentManagerBase implements ContentManager, PropertyChan
     private boolean myDisposed;
     protected final Project myProject;
 
-    protected final List<DataProvider> myDataProviders = new SmartList<>();
+    protected final List<UiDataProvider> myDataProviders = new SmartList<>();
     private List<Content> mySelectionHistory = new ArrayList<>();
 
     /**
@@ -90,7 +91,6 @@ public abstract class ContentManagerBase implements ContentManager, PropertyChan
         return myCanCloseContents;
     }
 
-    
     @Override
     public AsyncResult<Void> getReady(Object requestor) {
         Content selected = getSelectedContent();
@@ -147,7 +147,6 @@ public abstract class ContentManagerBase implements ContentManager, PropertyChan
         return removeContent(content, true, dispose).isDone();
     }
 
-    
     @Override
     public AsyncResult<Void> removeContent(Content content, boolean dispose, boolean trackFocus, boolean forcedFocus) {
         AsyncResult<Void> result = new AsyncResult<Void>();
@@ -169,7 +168,6 @@ public abstract class ContentManagerBase implements ContentManager, PropertyChan
         return result;
     }
 
-    
     private ActionCallback removeContent(Content content, boolean trackSelection, boolean dispose) {
         UIAccess.assertIsUIThread();
         int indexToBeRemoved = getIndexOfContent(content);
@@ -266,7 +264,6 @@ public abstract class ContentManagerBase implements ContentManager, PropertyChan
     }
 
     @Override
-    
     public Content[] getContents() {
         return myContents.toArray(new Content[myContents.size()]);
     }
@@ -303,25 +300,21 @@ public abstract class ContentManagerBase implements ContentManager, PropertyChan
         return myContents.indexOf(content);
     }
 
-    
     @Override
     public String getCloseActionName() {
         return myUI.getCloseActionName();
     }
 
-    
     @Override
     public String getCloseAllButThisActionName() {
         return myUI.getCloseAllButThisActionName();
     }
 
-    
     @Override
     public String getPreviousContentActionName() {
         return myUI.getPreviousContentActionName();
     }
 
-    
     @Override
     public String getNextContentActionName() {
         return myUI.getNextContentActionName();
@@ -386,7 +379,6 @@ public abstract class ContentManagerBase implements ContentManager, PropertyChan
     }
 
     @Override
-    
     public Content[] getSelectedContents() {
         return mySelection.toArray(new Content[mySelection.size()]);
     }
@@ -401,7 +393,6 @@ public abstract class ContentManagerBase implements ContentManager, PropertyChan
         setSelectedContentCB(content, requestFocus);
     }
 
-    
     @Override
     public AsyncResult<Void> setSelectedContentCB(Content content, boolean requestFocus) {
         return setSelectedContentCB(content, requestFocus, true);
@@ -412,13 +403,11 @@ public abstract class ContentManagerBase implements ContentManager, PropertyChan
         setSelectedContentCB(content, requestFocus, forcedFocus);
     }
 
-    
     @Override
     public AsyncResult<Void> setSelectedContentCB(Content content, boolean requestFocus, boolean forcedFocus) {
         return setSelectedContent(content, requestFocus, forcedFocus, false);
     }
 
-    
     @Override
     public AsyncResult<Void> setSelectedContent(final Content content, final boolean requestFocus, final boolean forcedFocus, boolean implicit) {
         mySelectionHistory.remove(content);
@@ -439,7 +428,6 @@ public abstract class ContentManagerBase implements ContentManager, PropertyChan
         final Content[] old = getSelectedContents();
 
         ActiveRunnable selection = new ActiveRunnable() {
-            
             @Override
             public AsyncResult<Void> run() {
                 if (myDisposed || getIndexOfContent(content) == -1) {
@@ -472,12 +460,10 @@ public abstract class ContentManagerBase implements ContentManager, PropertyChan
         }
     }
 
-    
     protected abstract AsyncResult<Void> requestFocusForComponent();
 
     protected abstract boolean isSelectionHoldsFocus();
 
-    
     @Override
     public AsyncResult<Void> setSelectedContentCB(Content content) {
         return setSelectedContentCB(content, false);
@@ -562,7 +548,7 @@ public abstract class ContentManagerBase implements ContentManager, PropertyChan
     }
 
     @Override
-    public void addDataProvider(DataProvider provider) {
+    public void addUiDataProvider(@NotNull UiDataProvider provider) {
         myDataProviders.add(provider);
     }
 

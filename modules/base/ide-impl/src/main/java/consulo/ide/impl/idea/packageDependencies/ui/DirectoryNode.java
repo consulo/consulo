@@ -17,23 +17,25 @@
 package consulo.ide.impl.idea.packageDependencies.ui;
 
 import consulo.application.AllIcons;
-import consulo.ide.impl.psi.search.scope.packageSet.FilePatternPackageSet;
 import consulo.language.content.ProjectRootsUtil;
-import consulo.language.icon.IconDescriptorUpdaters;
+import consulo.project.ui.view.tree.BaseProjectViewDirectoryHelper;
+import consulo.project.Project;
+import consulo.module.content.ProjectFileIndex;
+import consulo.module.content.ProjectRootManager;
+import consulo.util.lang.Comparing;
+import consulo.navigation.NavigateOptions;
+import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
+import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
+import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiManager;
-import consulo.module.content.ProjectFileIndex;
-import consulo.module.content.ProjectRootManager;
-import consulo.project.Project;
-import consulo.project.ui.view.tree.BaseProjectViewDirectoryHelper;
+import consulo.ide.impl.psi.search.scope.packageSet.FilePatternPackageSet;
+import consulo.language.icon.IconDescriptorUpdaters;
 import consulo.ui.image.Image;
-import consulo.util.lang.Comparing;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.virtualFileSystem.util.VirtualFileUtil;
-import org.jspecify.annotations.Nullable;
 
+import org.jspecify.annotations.Nullable;
 import java.util.Map;
 import java.util.Set;
 
@@ -68,13 +70,13 @@ public class DirectoryNode extends PackageDependenciesNode {
         else {
           VirtualFile sourceRoot = index.getSourceRootForFile(myVDirectory);
           if (Comparing.equal(myVDirectory, sourceRoot)) {
-            myFQName = VirtualFileUtil.getRelativePath(myVDirectory, contentRoot, '/');
+            myFQName = VfsUtilCore.getRelativePath(myVDirectory, contentRoot, '/');
           }
           else if (sourceRoot != null) {
-            myFQName = VirtualFileUtil.getRelativePath(myVDirectory, sourceRoot, '/');
+            myFQName = VfsUtilCore.getRelativePath(myVDirectory, sourceRoot, '/');
           }
           else {
-            myFQName = VirtualFileUtil.getRelativePath(myVDirectory, contentRoot, '/');
+            myFQName = VfsUtilCore.getRelativePath(myVDirectory, contentRoot, '/');
           }
         }
 
@@ -98,8 +100,8 @@ public class DirectoryNode extends PackageDependenciesNode {
   private String getContentRootName(VirtualFile baseDir, String dirName) {
     if (baseDir != null) {
       if (!Comparing.equal(myVDirectory, baseDir)) {
-        if (VirtualFileUtil.isAncestor(baseDir, myVDirectory, false)) {
-          return VirtualFileUtil.getRelativePath(myVDirectory, baseDir, '/');
+        if (VfsUtil.isAncestor(baseDir, myVDirectory, false)) {
+          return VfsUtilCore.getRelativePath(myVDirectory, baseDir, '/');
         }
         else {
           return myVDirectory.getPresentableUrl();
@@ -149,7 +151,7 @@ public class DirectoryNode extends PackageDependenciesNode {
     if (contentRoot == null) {
       return "";
     }
-    return VirtualFileUtil.getRelativePath(directory, contentRoot, '/');
+    return VfsUtilCore.getRelativePath(directory, contentRoot, '/');
   }
 
   @Override
@@ -235,8 +237,8 @@ public class DirectoryNode extends PackageDependenciesNode {
   }
 
   @Override
-  public boolean canNavigate() {
-    return false;
+  public NavigateOptions getNavigateOptions() {
+    return NavigateOptions.CANT_NAVIGATE;
   }
 
   @Override

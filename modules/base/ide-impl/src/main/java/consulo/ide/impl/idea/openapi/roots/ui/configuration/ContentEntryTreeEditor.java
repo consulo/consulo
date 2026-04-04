@@ -19,16 +19,19 @@ package consulo.ide.impl.idea.openapi.roots.ui.configuration;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.content.ContentFolderTypeProvider;
-import consulo.dataContext.DataProvider;
+import consulo.dataContext.DataSink;
+import consulo.dataContext.UiDataProvider;
 import consulo.disposer.Disposer;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.fileChooser.FileChooserDescriptorFactory;
+import consulo.ui.ex.awt.action.ToolbarLabelAction;
 import consulo.fileChooser.FileSystemTree;
 import consulo.ide.impl.idea.openapi.fileChooser.actions.NewFolderAction;
 import consulo.ide.impl.idea.openapi.fileChooser.ex.FileSystemTreeImpl;
 import consulo.ide.impl.idea.openapi.fileChooser.tree.FileNode;
 import consulo.ide.impl.idea.openapi.fileChooser.tree.FileRenderer;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.actions.ToggleFolderStateAction;
+import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.ide.setting.module.ModuleConfigurationState;
 import consulo.language.content.ContentFoldersSupportUtil;
 import consulo.language.content.LanguageContentFolderScopes;
@@ -45,16 +48,13 @@ import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.awt.ScrollPaneFactory;
 import consulo.ui.ex.awt.SimpleColoredComponent;
-import consulo.ui.ex.awt.action.ToolbarLabelAction;
 import consulo.ui.ex.awt.speedSearch.TreeSpeedSearch;
 import consulo.ui.ex.awt.tree.Tree;
 import consulo.ui.ex.awt.tree.TreeUtil;
 import consulo.ui.image.Image;
-import consulo.util.dataholder.Key;
 import consulo.util.io.FileUtil;
 import consulo.util.lang.ComparatorUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.virtualFileSystem.util.VirtualFileUtil;
 import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
@@ -142,7 +142,7 @@ public class ContentEntryTreeEditor {
         VirtualFile file = entry.getFile();
         myDescriptor.setRoots(file);
         if (file == null) {
-            String path = VirtualFileUtil.urlToPath(entry.getUrl());
+            String path = VfsUtilCore.urlToPath(entry.getUrl());
             myDescriptor.setTitle(FileUtil.toSystemDependentName(path));
         }
 
@@ -199,8 +199,8 @@ public class ContentEntryTreeEditor {
             if (file.equals(contentPath)) {
                 icon = ContentFoldersSupportUtil.getContentFolderIcon(contentFolder.getType(), contentFolder.getProperties());
             }
-            else if (contentPath != null && VirtualFileUtil.isAncestor(contentPath, file, true)) {
-                if (currentRoot != null && VirtualFileUtil.isAncestor(contentPath, currentRoot, false)) {
+            else if (contentPath != null && VfsUtilCore.isAncestor(contentPath, file, true)) {
+                if (currentRoot != null && VfsUtilCore.isAncestor(contentPath, currentRoot, false)) {
                     continue;
                 }
 
@@ -264,17 +264,14 @@ public class ContentEntryTreeEditor {
         }
     }
 
-    private class MyPanel extends JPanel implements DataProvider {
+    private class MyPanel extends JPanel implements UiDataProvider {
         private MyPanel(LayoutManager layout) {
             super(layout);
         }
 
         @Override
-        public @Nullable Object getData(Key<?> dataId) {
-            if (FileSystemTree.DATA_KEY == dataId) {
-                return myFileSystemTree;
-            }
-            return null;
+        public void uiDataSnapshot(DataSink sink) {
+            sink.set(FileSystemTree.DATA_KEY, myFileSystemTree);
         }
     }
 

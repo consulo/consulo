@@ -108,7 +108,7 @@ public interface BookmarkNodeProvider {
    * @return the path of objects to be added to the tree, or null if it was not possible to locate an object with the
    * specified URL.
    */
-  Object @Nullable [] createPathFromUrl(Project project, String url, String moduleName);
+  @Nullable Object[] createPathFromUrl(Project project, String url, String moduleName);
 
   default @Nullable PsiElement getPsiElement(Object element) {
     if (element instanceof PsiElement) {

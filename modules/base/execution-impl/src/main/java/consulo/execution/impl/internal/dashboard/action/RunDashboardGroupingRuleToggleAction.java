@@ -17,11 +17,6 @@ import consulo.ui.ex.action.ToggleAction;
 import java.util.Set;
 
 abstract class RunDashboardGroupingRuleToggleAction extends ToggleAction implements DumbAware {
-//  @Override
-//  public @NotNull ActionUpdateThread getActionUpdateThread() {
-//    return ActionUpdateThread.BGT;
-//  }
-
   @Override
   public void update(AnActionEvent e) {
     super.update(e);

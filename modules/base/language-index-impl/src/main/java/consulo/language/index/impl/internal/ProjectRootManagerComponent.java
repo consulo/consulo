@@ -42,6 +42,7 @@ import consulo.module.content.scope.ModuleScopeProvider;
 import consulo.project.DumbModeTask;
 import consulo.project.DumbService;
 import consulo.project.Project;
+import consulo.project.ProjectType;
 import consulo.project.content.WatchedRootsProvider;
 import consulo.util.collection.Sets;
 import consulo.util.io.FileUtil;
@@ -182,7 +183,7 @@ public class ProjectRootManagerComponent extends ProjectRootManagerImpl implemen
 
     @RequiredReadAction
     private @Nullable Couple<Set<String>> getAllRoots(boolean includeSourceRoots) {
-        if (myProject.isDefault()) {
+        if (myProject.getProjectType() != ProjectType.REGULAR) {
             return null;
         }
 

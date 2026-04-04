@@ -21,7 +21,7 @@ import org.jspecify.annotations.Nullable;
  * @author VISTALL
  * @since 2016-06-12
  */
-public interface TextItemRenderer<E> {
+public interface TextItemRenderer<E> extends ItemRenderer<E> {
     static <V> TextItemRenderer<V> defaultRenderer() {
         return (renderer, index, item) -> renderer.append(item == null ? "" : item.toString());
     }

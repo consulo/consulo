@@ -2,6 +2,7 @@
 package consulo.build.ui.impl.internal.event;
 
 import consulo.build.ui.FilePosition;
+import consulo.navigation.NavigateOptions;
 import consulo.navigation.Navigatable;
 import consulo.navigation.OpenFileDescriptor;
 import consulo.navigation.OpenFileDescriptorFactory;
@@ -36,21 +37,9 @@ public class FileNavigatable implements Navigatable {
   }
 
   @Override
-  public boolean canNavigate() {
+  public NavigateOptions getNavigateOptions() {
     Navigatable descriptor = getFileDescriptor();
-    if (descriptor != null) {
-      return descriptor.canNavigate();
-    }
-    return false;
-  }
-
-  @Override
-  public boolean canNavigateToSource() {
-    Navigatable descriptor = getFileDescriptor();
-    if (descriptor != null) {
-      return descriptor.canNavigateToSource();
-    }
-    return false;
+    return descriptor != null ? descriptor.getNavigateOptions() : NavigateOptions.CANT_NAVIGATE;
   }
 
   public @Nullable OpenFileDescriptor getFileDescriptor() {

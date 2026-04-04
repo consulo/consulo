@@ -3,7 +3,7 @@ package consulo.ide.impl.idea.execution.impl;
 
 import consulo.execution.ui.console.Filter;
 import consulo.application.ApplicationManager;
-import consulo.application.impl.internal.IdeaModalityState;
+import consulo.ui.ModalityState;
 import consulo.application.ReadAction;
 import consulo.logging.Logger;
 import consulo.document.Document;
@@ -18,15 +18,10 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.lang.TimeoutUtil;
 import consulo.application.util.concurrent.SequentialTaskExecutor;
 import org.jspecify.annotations.Nullable;
-import consulo.util.concurrent.Promise;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Queue;
-import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
+import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -38,7 +33,6 @@ class AsyncFilterRunner {
   private final EditorHyperlinkSupport myHyperlinks;
   private final Editor myEditor;
   private final Queue<HighlighterJob> myQueue = new ConcurrentLinkedQueue<>();
- 
   private List<FilterResult> myResults = new ArrayList<>();
 
   AsyncFilterRunner(EditorHyperlinkSupport hyperlinks, Editor editor) {
@@ -56,23 +50,23 @@ class AsyncFilterRunner {
       return;
     }
 
-    Promise<?> promise = ReadAction.nonBlocking(this::runTasks).submit(ourExecutor);
+    CompletableFuture<?> promise = ReadAction.nonBlocking(this::runTasks).submit(ourExecutor);
 
     if (isQuick(promise)) {
       highlightAvailableResults();
     }
     else {
-      promise.onSuccess(__ -> {
-        if (hasResults()) {
-          ApplicationManager.getApplication().invokeLater(this::highlightAvailableResults, IdeaModalityState.any());
+      promise.whenComplete((result, error) -> {
+        if (error == null && hasResults()) {
+          ApplicationManager.getApplication().invokeLater(this::highlightAvailableResults, ModalityState.any());
         }
       });
     }
   }
 
-  private static boolean isQuick(Promise<?> future) {
+  private static boolean isQuick(CompletableFuture<?> future) {
     try {
-      future.blockingGet(5, TimeUnit.MILLISECONDS);
+      future.get(5, TimeUnit.MILLISECONDS);
       return true;
     }
     catch (TimeoutException ignored) {
@@ -95,7 +89,6 @@ class AsyncFilterRunner {
     }
   }
 
- 
   private List<FilterResult> takeAvailableResults() {
     synchronized (myQueue) {
       List<FilterResult> results = myResults;
@@ -186,14 +179,11 @@ class AsyncFilterRunner {
   }
 
   private class HighlighterJob {
-   
     private final Project myProject;
     private final AtomicInteger startLine;
     private final int endLine;
     private final DeltaTracker delta;
-   
     private final Filter filter;
-   
     private final Document snapshot;
 
     HighlighterJob(Project project, Filter filter, int startLine, int endLine, Document document) {

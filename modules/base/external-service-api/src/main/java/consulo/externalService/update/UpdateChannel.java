@@ -28,6 +28,6 @@ public enum UpdateChannel {
   valhalla;
 
   public boolean isObsolete() {
-    return this == valhalla;
+    return false;
   }
 }

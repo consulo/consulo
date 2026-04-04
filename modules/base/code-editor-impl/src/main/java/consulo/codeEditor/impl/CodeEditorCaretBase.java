@@ -2,7 +2,6 @@
 package consulo.codeEditor.impl;
 
 import consulo.annotation.access.RequiredReadAction;
-import consulo.application.Application;
 import consulo.application.util.Dumpable;
 import consulo.application.util.diff.FilesTooBigForDiffException;
 import consulo.codeEditor.*;
@@ -790,10 +789,10 @@ public class CodeEditorCaretBase extends UserDataHolderBase implements Caret, Du
     }
 
     @Override
-    @RequiredReadAction
+    @RequiredUIAccess
     public int getOffset() {
         validateCallContext();
-        assertReadContext();
+        UIAccess.assertIsUIThread();
         while (true) {
             PositionMarker marker = myPositionMarker;
             if (marker == null) {
@@ -815,7 +814,6 @@ public class CodeEditorCaretBase extends UserDataHolderBase implements Caret, Du
     }
 
     @Override
-    @RequiredReadAction
     public int getVisualLineEnd() {
         updateCachedStateIfNeeded();
         return myVisualLineEnd;
@@ -824,7 +822,6 @@ public class CodeEditorCaretBase extends UserDataHolderBase implements Caret, Du
     /**
      * Recalculates caret visual position without changing its logical position (called when soft wraps are changing)
      */
-    @RequiredReadAction
     public void updateVisualPosition() {
         updateCachedStateIfNeeded();
         VerticalInfo oldVerticalInfo = myVerticalInfo;
@@ -838,7 +835,6 @@ public class CodeEditorCaretBase extends UserDataHolderBase implements Caret, Du
         requestRepaint(oldVerticalInfo);
     }
 
-    @RequiredReadAction
     private void updateVisualLineInfo() {
         myVisualLineStart = myEditor.logicalPositionToOffset(myEditor.visualToLogicalPosition(new VisualPosition(myVisibleCaret.line, 0)));
         myVisualLineEnd =
@@ -1078,9 +1074,9 @@ public class CodeEditorCaretBase extends UserDataHolderBase implements Caret, Du
     }
 
     @Override
-    @RequiredReadAction
+    @RequiredUIAccess
     public int getSelectionStart() {
-        assertReadContext();
+        UIAccess.assertIsUIThread();
         if (hasSelection()) {
             RangeMarker marker = mySelectionMarker;
             if (marker != null) {
@@ -1139,9 +1135,9 @@ public class CodeEditorCaretBase extends UserDataHolderBase implements Caret, Du
     }
 
     @Override
-    @RequiredReadAction
+    @RequiredUIAccess
     public int getSelectionEnd() {
-        assertReadContext();
+        UIAccess.assertIsUIThread();
         if (hasSelection()) {
             RangeMarker marker = mySelectionMarker;
             if (marker != null) {
@@ -1199,9 +1195,9 @@ public class CodeEditorCaretBase extends UserDataHolderBase implements Caret, Du
     }
 
     @Override
-    @RequiredReadAction
+    @RequiredUIAccess
     public boolean hasSelection() {
-        assertReadContext();
+        UIAccess.assertIsUIThread();
         SelectionMarker marker = mySelectionMarker;
         return marker != null && marker.isValid()
             && (marker.getEndOffset() > marker.getStartOffset() || isVirtualSelectionEnabled() && marker.hasVirtualSelection());
@@ -1396,7 +1392,7 @@ public class CodeEditorCaretBase extends UserDataHolderBase implements Caret, Du
     @Override
     @RequiredReadAction
     public int getLeadSelectionOffset() {
-        assertReadContext();
+        UIAccess.assertIsUIThread();
         int caretOffset = getOffset();
         if (hasSelection()) {
             RangeMarker marker = mySelectionMarker;
@@ -1524,18 +1520,13 @@ public class CodeEditorCaretBase extends UserDataHolderBase implements Caret, Du
         }
     }
 
-    @RequiredReadAction
-    private static void assertReadContext() {
-        Application.get().assertReadAccessAllowed();
-    }
-
     private boolean isVirtualSelectionEnabled() {
         return myEditor.isColumnMode();
     }
 
-    @RequiredReadAction
+    @RequiredUIAccess
     boolean hasVirtualSelection() {
-        assertReadContext();
+        UIAccess.assertIsUIThread();
         SelectionMarker marker = mySelectionMarker;
         return marker != null && marker.isValid() && isVirtualSelectionEnabled() && marker.hasVirtualSelection();
     }

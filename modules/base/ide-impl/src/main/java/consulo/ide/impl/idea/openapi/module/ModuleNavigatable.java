@@ -16,6 +16,7 @@
 package consulo.ide.impl.idea.openapi.module;
 
 import consulo.project.ui.view.internal.ProjectSettingsService;
+import consulo.navigation.NavigateOptions;
 import consulo.navigation.Navigatable;
 import consulo.module.Module;
 
@@ -35,12 +36,7 @@ public class ModuleNavigatable implements Navigatable {
   }
 
   @Override
-  public boolean canNavigate() {
-    return !module.isDisposed();
-  }
-
-  @Override
-  public boolean canNavigateToSource() {
-    return false;
+  public NavigateOptions getNavigateOptions() {
+    return !module.isDisposed() ? NavigateOptions.CAN_NAVIGATE_NO_SOURCE : NavigateOptions.CANT_NAVIGATE;
   }
 }

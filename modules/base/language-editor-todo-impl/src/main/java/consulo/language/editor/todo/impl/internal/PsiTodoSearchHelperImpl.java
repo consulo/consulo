@@ -16,6 +16,7 @@
 
 package consulo.language.editor.todo.impl.internal;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ServiceImpl;
 import consulo.document.util.TextRange;
 import consulo.language.editor.todo.impl.internal.node.TodoIndexPatternProvider;
@@ -42,6 +43,7 @@ public class PsiTodoSearchHelperImpl extends PsiTodoSearchHelper {
     myManager = manager;
   }
 
+  @RequiredReadAction
   @Override
   
   public PsiFile[] findFilesWithTodoItems() {

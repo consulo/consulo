@@ -29,6 +29,7 @@ import consulo.navigation.Navigatable;
 import consulo.project.event.DumbModeListener;
 import consulo.project.DumbService;
 import consulo.project.Project;
+import consulo.ui.UIAccess;
 import consulo.ui.ex.popup.IPopupChooserBuilder;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.ui.ex.popup.JBPopupFactory;
@@ -37,6 +38,7 @@ import consulo.util.lang.StringUtil;
 import org.jspecify.annotations.Nullable;
 
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * @author ven
@@ -45,12 +47,10 @@ public final class PopupNavigationUtil {
     private PopupNavigationUtil() {
     }
 
-    
     public static JBPopup getPsiElementPopup(PsiElement[] elements, String title) {
         return getPsiElementPopup(elements, new DefaultPsiElementCellRenderer(), title);
     }
 
-    
     public static JBPopup getPsiElementPopup(
         PsiElement[] elements,
         PsiElementListCellRenderer<PsiElement> renderer,
@@ -58,14 +58,13 @@ public final class PopupNavigationUtil {
     ) {
         return getPsiElementPopup(elements, renderer, title, element -> {
             Navigatable descriptor = EditSourceUtil.getDescriptor(element);
-            if (descriptor != null && descriptor.canNavigate()) {
+            if (descriptor != null && descriptor.getNavigateOptions().canNavigate()) {
                 descriptor.navigate(true);
             }
             return true;
         });
     }
 
-    
     public static <T extends PsiElement> JBPopup getPsiElementPopup(
         T[] elements,
         PsiElementListCellRenderer<T> renderer,
@@ -75,7 +74,6 @@ public final class PopupNavigationUtil {
         return getPsiElementPopup(elements, renderer, title, processor, null);
     }
 
-    
     public static <T extends PsiElement> JBPopup getPsiElementPopup(
         T[] elements,
         PsiElementListCellRenderer<T> renderer,
@@ -133,7 +131,15 @@ public final class PopupNavigationUtil {
         return LanguageEditorNavigationUtil.openFileWithPsiElement(element, searchForOpen, requestFocus);
     }
 
-    
+    public static CompletableFuture<?> openFileWithPsiElementAsync(
+        UIAccess uiAccess,
+        PsiElement element,
+        boolean searchForOpen,
+        boolean requestFocus
+    ) {
+        return LanguageEditorNavigationUtil.openFileWithPsiElementAsync(uiAccess, element, searchForOpen, requestFocus);
+    }
+
     public static JBPopup getRelatedItemsPopup(List<? extends GotoRelatedItem> items, String title) {
         return getRelatedItemsPopup(items, title, false);
     }
@@ -169,7 +175,6 @@ public final class PopupNavigationUtil {
         });
     }
 
-    
     public static List<GotoRelatedItem> collectRelatedItems(PsiElement contextElement, @Nullable DataContext dataContext) {
         Set<GotoRelatedItem> items = new LinkedHashSet<>();
         contextElement.getApplication().getExtensionPoint(GotoRelatedProvider.class).forEachExtensionSafe(provider -> {

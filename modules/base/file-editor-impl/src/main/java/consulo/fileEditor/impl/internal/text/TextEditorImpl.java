@@ -56,10 +56,8 @@ public class TextEditorImpl extends UserDataHolderBase implements RealTextEditor
     public final Project myProject;
 
     private final PropertyChangeSupport myChangeSupport;
-    
     private final TextEditorComponent myComponent;
 
-    
     public final VirtualFile myFile;
 
     private final AsyncEditorLoaderImpl myAsyncLoader;
@@ -67,19 +65,18 @@ public class TextEditorImpl extends UserDataHolderBase implements RealTextEditor
     protected final TextEditorComponentContainerFactory myTextEditorComponentContainerFactory;
 
     @RequiredUIAccess
-    public TextEditorImpl(Project project, VirtualFile file, TextEditorProviderImpl provider) {
+    public TextEditorImpl(Project project, VirtualFile file, Document document, TextEditorProviderImpl provider) {
         myProject = project;
         myFile = file;
         myChangeSupport = new PropertyChangeSupport(this);
         myTextEditorComponentContainerFactory = provider.myTextEditorComponentContainerFactory;
-        myComponent = createEditorComponent(project, file);
+        myComponent = createEditorComponent(project, file, document);
         Disposer.register(this, myComponent);
 
         myAsyncLoader = new AsyncEditorLoaderImpl(this, myComponent, provider);
         myAsyncLoader.start();
     }
 
-    
     public Runnable loadEditorInBackground() {
         EditorColorsScheme scheme = EditorColorsManager.getInstance().getGlobalScheme();
         EditorHighlighter highlighter = EditorHighlighterFactory.getInstance().createEditorHighlighter(myFile, scheme, myProject);
@@ -88,9 +85,8 @@ public class TextEditorImpl extends UserDataHolderBase implements RealTextEditor
         return () -> editor.setHighlighter(highlighter);
     }
 
-    
-    protected TextEditorComponent createEditorComponent(Project project, VirtualFile file) {
-        return new TextEditorComponent(project, file, this, myTextEditorComponentContainerFactory);
+    protected TextEditorComponent createEditorComponent(Project project, VirtualFile file, Document document) {
+        return new TextEditorComponent(project, file, document, this, myTextEditorComponentContainerFactory);
     }
 
     @Override
@@ -98,7 +94,6 @@ public class TextEditorImpl extends UserDataHolderBase implements RealTextEditor
     }
 
     @Override
-    
     public JComponent getComponent() {
         return myComponent.getComponentContainer().getComponent();
     }
@@ -114,13 +109,11 @@ public class TextEditorImpl extends UserDataHolderBase implements RealTextEditor
     }
 
     @Override
-    
     public JComponent getPreferredFocusedComponent() {
         return getActiveEditor().getContentComponent();
     }
 
     @Override
-    
     public Editor getEditor() {
         return getActiveEditor();
     }
@@ -133,13 +126,11 @@ public class TextEditorImpl extends UserDataHolderBase implements RealTextEditor
     }
 
     @Override
-    
     public String getName() {
         return "Text";
     }
 
     @Override
-    
     public FileEditorState getState(FileEditorStateLevel level) {
         return myAsyncLoader.getEditorState(level);
     }

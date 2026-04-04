@@ -19,7 +19,8 @@ import consulo.application.progress.ProgressIndicator;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.component.ProcessCanceledException;
 import consulo.dataContext.DataManager;
-import consulo.dataContext.DataProvider;
+import consulo.dataContext.DataSink;
+import consulo.dataContext.UiDataProvider;
 import consulo.desktop.awt.internal.diff.CacheDiffRequestProcessor;
 import consulo.diff.DiffContentFactory;
 import consulo.diff.DiffDataKeys;
@@ -56,6 +57,7 @@ import consulo.util.dataholder.Key;
 import consulo.util.lang.StringUtil;
 import org.jspecify.annotations.Nullable;
 
+
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -75,7 +77,7 @@ import static consulo.util.collection.ArrayUtil.toObjectArray;
  * @author Konstantin Bulenkov
  */
 @SuppressWarnings({"unchecked"})
-public class DirDiffPanel implements Disposable, DataProvider {
+public class DirDiffPanel implements Disposable, UiDataProvider {
     private static final Logger LOG = Logger.getInstance(DirDiffPanel.class);
 
     public static final String DIVIDER_PROPERTY = "dir.diff.panel.divider.location";
@@ -221,7 +223,7 @@ public class DirDiffPanel implements Disposable, DataProvider {
             " Enter to perform.", SwingConstants.CENTER);
         label.setForeground(UIUtil.getInactiveTextColor());
         UIUtil.applyStyle(UIUtil.ComponentStyle.MINI, label);
-        DataManager.registerDataProvider(myFilesPanel, this);
+        DataManager.registerUiDataProvider(myFilesPanel, this);
         myTable.addMouseListener(new PopupHandler() {
             @Override
             public void invokePopup(Component comp, int x, int y) {
@@ -520,23 +522,12 @@ public class DirDiffPanel implements Disposable, DataProvider {
     }
 
     @Override
-    public Object getData(Key<?> dataId) {
-        if (Project.KEY == dataId) {
-            return myModel.getProject();
-        }
-        else if (DIR_DIFF_MODEL == dataId) {
-            return myModel;
-        }
-        else if (DIR_DIFF_TABLE == dataId) {
-            return myTable;
-        }
-        else if (DiffDataKeys.NAVIGATABLE_ARRAY == dataId) {
-            return getNavigatableArray();
-        }
-        else if (DiffDataKeys.PREV_NEXT_DIFFERENCE_ITERABLE == dataId) {
-            return myPrevNextDifferenceIterable;
-        }
-        return null;
+    public void uiDataSnapshot(DataSink sink) {
+        sink.set(Project.KEY, myModel.getProject());
+        sink.set(DIR_DIFF_MODEL, myModel);
+        sink.set(DIR_DIFF_TABLE, myTable);
+        sink.lazy(DiffDataKeys.NAVIGATABLE_ARRAY, this::getNavigatableArray);
+        sink.set(DiffDataKeys.PREV_NEXT_DIFFERENCE_ITERABLE, myPrevNextDifferenceIterable);
     }
 
     private @Nullable Navigatable[] getNavigatableArray() {
@@ -596,7 +587,6 @@ public class DirDiffPanel implements Disposable, DataProvider {
             return element != null ? new ElementWrapper(element) : null;
         }
 
-        
         @Override
         protected DiffRequest loadRequest(ElementWrapper element, ProgressIndicator indicator)
             throws ProcessCanceledException, DiffRequestProducerException {

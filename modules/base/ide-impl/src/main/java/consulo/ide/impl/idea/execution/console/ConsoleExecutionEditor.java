@@ -19,6 +19,7 @@ import consulo.fileEditor.impl.internal.FileEditorManagerImpl;
 import consulo.ide.impl.idea.ide.GeneralSettings;
 import consulo.language.editor.highlight.EditorHighlighterFactory;
 import consulo.project.Project;
+import consulo.ui.UIAccess;
 import consulo.ui.ex.action.EmptyAction;
 import consulo.ui.ex.action.IdeActions;
 import consulo.undoRedo.util.UndoUtil;
@@ -64,7 +65,7 @@ public class ConsoleExecutionEditor implements Disposable {
     public void focusGained(Editor editor) {
       myCurrentEditor = (EditorEx)editor;
       if (GeneralSettings.getInstance().isSaveOnFrameDeactivation()) {
-        FileDocumentManager.getInstance().saveAllDocuments();
+        FileDocumentManager.getInstance().saveAllDocuments(UIAccess.current());
       }
     }
 

@@ -17,6 +17,7 @@ package consulo.ide.impl.idea.internal;
 
 import consulo.application.progress.ProgressBuilderFactory;
 import consulo.application.progress.ProgressIndicator;
+import consulo.util.concurrent.coroutine.Coroutine;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.Alerts;
@@ -56,19 +57,17 @@ public class TestModalTaskAction extends DumbAwareAction {
         CompletableFuture<String> future = myProgressBuilderFactory.newProgressBuilder(project, LocalizeValue.of("Modal Action..."))
             .cancelable()
             .modal()
-            .execute(uiAccess, coroutine -> {
-                return coroutine
-                    .then(CodeExecution.run((c) -> {
-                        started.set(Boolean.TRUE);
-                        ProgressIndicator.from(c).setIndeterminate(true);
-                    }))
-                    .then(Delay.sleep(5000L))
-                    .then(CodeExecution.run((c) -> ProgressIndicator.from(c).setTextValue(LocalizeValue.of("After 5 seconds"))))
-                    .then(Delay.sleep(5000L))
-                    .then(CodeExecution.run((c) -> ProgressIndicator.from(c).setTextValue(LocalizeValue.of("After 10 seconds"))))
-                    .then(Delay.sleep(5000L))
-                    .then(CodeExecution.supply(() -> "Success Result"));
-            });
+            .execute(uiAccess, () -> Coroutine
+                .first(CodeExecution.run((c) -> {
+                    started.set(Boolean.TRUE);
+                    ProgressIndicator.from(c).setIndeterminate(true);
+                }))
+                .then(Delay.sleep(5000L))
+                .then(CodeExecution.run((c) -> ProgressIndicator.from(c).setTextValue(LocalizeValue.of("After 5 seconds"))))
+                .then(Delay.sleep(5000L))
+                .then(CodeExecution.run((c) -> ProgressIndicator.from(c).setTextValue(LocalizeValue.of("After 10 seconds"))))
+                .then(Delay.sleep(5000L))
+                .then(CodeExecution.supply(() -> "Success Result")));
 
         future.whenCompleteAsync((s, throwable) -> {
             if (throwable != null) {

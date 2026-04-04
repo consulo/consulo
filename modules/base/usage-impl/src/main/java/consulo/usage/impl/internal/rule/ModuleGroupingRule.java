@@ -17,11 +17,11 @@ package consulo.usage.impl.internal.rule;
 
 import consulo.application.AllIcons;
 import consulo.dataContext.DataSink;
+import consulo.dataContext.UiDataProvider;
 import consulo.language.editor.LangDataKeys;
-import consulo.dataContext.TypeSafeDataProvider;
 import consulo.module.Module;
+import consulo.navigation.NavigateOptions;
 import consulo.module.content.layer.orderEntry.OrderEntry;
-import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.status.FileStatus;
 import consulo.usage.UsageViewBundle;
 import consulo.usage.Usage;
@@ -93,17 +93,12 @@ public class ModuleGroupingRule implements UsageGroupingRule {
     }
 
     @Override
+    public NavigateOptions getNavigateOptions() {
+      return NavigateOptions.CANT_NAVIGATE;
+    }
+
+    @Override
     public void navigate(boolean requestFocus) {
-    }
-
-    @Override
-    public boolean canNavigate() {
-      return false;
-    }
-
-    @Override
-    public boolean canNavigateToSource() {
-      return canNavigate();
     }
 
     public boolean equals(Object o) {
@@ -118,7 +113,7 @@ public class ModuleGroupingRule implements UsageGroupingRule {
     }
   }
 
-  private static class ModuleUsageGroup implements UsageGroup, TypeSafeDataProvider {
+  private static class ModuleUsageGroup implements UsageGroup, UiDataProvider {
     private final Module myModule;
 
     public ModuleUsageGroup(Module module) {
@@ -164,17 +159,12 @@ public class ModuleGroupingRule implements UsageGroupingRule {
     }
 
     @Override
+    public NavigateOptions getNavigateOptions() {
+      return NavigateOptions.CANT_NAVIGATE;
+    }
+
+    @Override
     public void navigate(boolean focus) throws UnsupportedOperationException {
-    }
-
-    @Override
-    public boolean canNavigate() {
-      return false;
-    }
-
-    @Override
-    public boolean canNavigateToSource() {
-      return false;
     }
 
     @Override
@@ -188,11 +178,9 @@ public class ModuleGroupingRule implements UsageGroupingRule {
     }
 
     @Override
-    public void calcData(Key<?> key, DataSink sink) {
+    public void uiDataSnapshot(DataSink sink) {
       if (!isValid()) return;
-      if (LangDataKeys.MODULE_CONTEXT == key) {
-        sink.put(LangDataKeys.MODULE_CONTEXT, myModule);
-      }
+      sink.set(LangDataKeys.MODULE_CONTEXT, myModule);
     }
   }
 }

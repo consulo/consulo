@@ -16,7 +16,6 @@ import consulo.language.psi.util.LanguageCachedValueUtil;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.util.collection.ArrayUtil;
-import consulo.util.concurrent.CancellablePromise;
 import consulo.util.lang.ObjectUtil;
 
 import org.jspecify.annotations.Nullable;
@@ -25,6 +24,7 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.locks.Lock;
@@ -134,7 +134,7 @@ class CodeStyleCachedValueProvider implements CachedValueProvider<CodeStyleSetti
         CodeStyleSettingsManager mySettingsManager;
         private final SimpleModificationTracker myTracker = new SimpleModificationTracker();
         private final Project myProject;
-        private CancellablePromise<Void> myPromise;
+        private CompletableFuture<Void> myPromise;
         private final List<Runnable> myScheduledRunnables = new ArrayList<>();
 
         private AsyncComputation() {
@@ -160,7 +160,7 @@ class CodeStyleCachedValueProvider implements CachedValueProvider<CodeStyleSetti
 
         public void cancel() {
             if (myPromise != null && !myPromise.isDone()) {
-                myPromise.cancel();
+                myPromise.cancel(false);
             }
             myCurrResult = null;
         }

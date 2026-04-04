@@ -32,11 +32,6 @@ final class RunDashboardServiceViewDeleteProvider implements ServiceViewContribu
     myDelegate = provider;
   }
 
-//  @Override
-//  public @NotNull ActionUpdateThread getActionUpdateThread() {
-//    return ActionUpdateThread.EDT;
-//  }
-
   @Override
   public void deleteElement(DataContext dataContext) {
     List<ConfigurationType> targetTypes = getTargetTypes(dataContext);

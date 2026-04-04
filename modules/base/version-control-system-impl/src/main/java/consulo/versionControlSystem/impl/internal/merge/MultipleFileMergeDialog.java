@@ -29,6 +29,7 @@ import consulo.logging.Logger;
 import consulo.platform.base.localize.CommonLocalize;
 import consulo.project.Project;
 import consulo.project.StoreReloadManager;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.action.Presentation;
@@ -207,7 +208,7 @@ public class MultipleFileMergeDialog extends DialogWrapper {
 
     @RequiredUIAccess
     private void acceptRevision(boolean isCurrent) {
-        FileDocumentManager.getInstance().saveAllDocuments();
+        FileDocumentManager.getInstance().saveAllDocuments(UIAccess.current());
         Collection<VirtualFile> files = myTable.getSelection();
         if (!beforeResolve(files)) {
             return;

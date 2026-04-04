@@ -23,7 +23,6 @@ import consulo.ide.impl.idea.notification.impl.NotificationsConfigurationImpl;
 import consulo.project.Project;
 import consulo.project.startup.StartupManager;
 import consulo.project.ui.notification.Notification;
-import consulo.project.ui.wm.StatusBar;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.util.collection.Lists;
@@ -96,7 +95,7 @@ public class NotificationProjectTracker implements Disposable {
     private void doPrintNotification(Notification notification, EventLogConsole console) {
         StartupManager.getInstance(myProject).runWhenProjectIsInitialized(() -> {
             if (!ShutDownTracker.isShutdownHookRunning() && !myProject.isDisposed()) {
-                myProject.getApplication().runReadAction(() -> console.doPrintNotification(notification));
+                console.doPrintNotification(notification);
             }
         });
     }

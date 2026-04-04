@@ -15,7 +15,8 @@
  */
 package consulo.ide.impl.idea.ui.content;
 
-import consulo.dataContext.DataProvider;
+import consulo.dataContext.DataSink;
+import consulo.dataContext.UiDataProvider;
 import consulo.ide.impl.internal.TabFactoryBuilderImpl;
 import consulo.ide.impl.idea.ui.TabbedPaneImpl;
 import consulo.ide.impl.idea.ui.content.tabs.PinToolwindowTabAction;
@@ -38,7 +39,6 @@ import consulo.ui.ex.content.event.ContentManagerAdapter;
 import consulo.ui.ex.content.event.ContentManagerEvent;
 import consulo.ui.ex.localize.UILocalize;
 import consulo.ui.image.Image;
-import consulo.util.dataholder.Key;
 import kava.beans.PropertyChangeEvent;
 import kava.beans.PropertyChangeListener;
 
@@ -284,21 +284,18 @@ public class TabbedPaneContentUI implements ContentUI, PropertyChangeListener {
       }
     }
 
-    private class MyTabbedPaneHolder extends TabbedPaneHolder implements DataProvider {
+    private class MyTabbedPaneHolder extends TabbedPaneHolder implements UiDataProvider {
 
       private MyTabbedPaneHolder(TabbedPaneWrapper wrapper) {
         super(wrapper);
       }
 
       @Override
-      public Object getData(Key<?> dataId) {
-        if (PlatformDataKeys.CONTENT_MANAGER == dataId) {
-          return myManager;
+      public void uiDataSnapshot(DataSink sink) {
+        sink.set(PlatformDataKeys.CONTENT_MANAGER, myManager);
+        if (myManager.getContentCount() > 1) {
+          sink.set(PlatformDataKeys.NONEMPTY_CONTENT_MANAGER, myManager);
         }
-        if (PlatformDataKeys.NONEMPTY_CONTENT_MANAGER == dataId && myManager.getContentCount() > 1) {
-          return myManager;
-        }
-        return null;
       }
     }
   }
@@ -350,25 +347,21 @@ public class TabbedPaneContentUI implements ContentUI, PropertyChangeListener {
     return true;
   }
 
-  
   @Override
   public String getCloseActionName() {
     return UILocalize.tabbedPaneCloseTabActionName().get();
   }
 
-  
   @Override
   public String getCloseAllButThisActionName() {
     return UILocalize.tabbedPaneCloseAllTabsButThisActionName().get();
   }
 
-  
   @Override
   public String getPreviousContentActionName() {
     return "Select Previous Tab";
   }
 
-  
   @Override
   public String getNextContentActionName() {
     return "Select Next Tab";

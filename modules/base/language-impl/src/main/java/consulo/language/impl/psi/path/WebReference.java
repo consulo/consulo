@@ -81,6 +81,7 @@ public class WebReference extends PsiReferenceBase<PsiElement> {
             return getUrl();
         }
 
+
         @Override
         @RequiredReadAction
         public @Nullable String getName() {

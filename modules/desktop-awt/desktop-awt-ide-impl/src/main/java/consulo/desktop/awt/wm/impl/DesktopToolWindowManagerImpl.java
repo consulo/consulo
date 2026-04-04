@@ -250,6 +250,7 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
         });
     }
 
+
     
     @Override
     protected InternalDecoratorListener createInternalDecoratorListener() {
@@ -348,6 +349,7 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
                 }
             }
         }
+
 
         return false;
     }
@@ -504,7 +506,7 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
 
     @RequiredUIAccess
     @Override
-    protected void initializeEditorComponent() {
+    public void initializeEditorComponent() {
         JComponent editorComponent = getEditorComponent(myProject);
         editorComponent.setFocusable(false);
 
@@ -944,7 +946,7 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
 
     @Override
     @RequiredUIAccess
-    public Element getStateFromUI() {
+    protected Element readStateFromUI() {
         if (myFrame == null) {
             // do nothing if the project was not opened
             return null;
@@ -994,12 +996,6 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
         return element;
     }
 
-    @RequiredWriteAction
-    @Override
-    public @Nullable Element getState(Element element) {
-        return element;
-    }
-
     public void stretchWidth(DesktopToolWindowImpl toolWindow, int value) {
         getToolWindowPanel().stretchWidth(toolWindow, value);
     }
@@ -1036,6 +1032,7 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
             }
         }
     }
+
 
     /**
      * This command creates and shows <code>FloatingDecorator</code>.
@@ -1142,6 +1139,7 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
             Disposer.dispose(myWindowedDecorator);
         }
     }
+
 
     /**
      * Notifies window manager about focus traversal in tool window

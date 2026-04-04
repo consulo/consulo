@@ -33,8 +33,8 @@ import consulo.project.StoreReloadManager;
 import consulo.project.ui.notification.Notification;
 import consulo.project.ui.notification.NotificationService;
 import consulo.project.util.WaitForProgressToShow;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.ActionUpdateThread;
 import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.awt.OptionsDialog;
 import consulo.ui.ex.errorTreeView.HotfixData;
@@ -81,12 +81,6 @@ public abstract class AbstractCommonUpdateAction extends AbstractVcsAction {
         myAlwaysVisible = alwaysVisible;
     }
 
-    
-    @Override
-    public ActionUpdateThread getActionUpdateThread() {
-        return ActionUpdateThread.BGT;
-    }
-
     private String getCompleteActionName(VcsContext dataContext) {
         return myActionInfo.getActionName(myScopeInfo.getScopeName(dataContext, myActionInfo));
     }
@@ -126,7 +120,7 @@ public abstract class AbstractCommonUpdateAction extends AbstractVcsAction {
 
                 Application application = project.getApplication();
                 if (application.isDispatchThread()) {
-                    application.saveAll();
+                    Application.get().saveAllWithProgress(UIAccess.current());
                 }
                 Task.Backgroundable task = new Updater(project, roots, vcsToVirtualFiles);
                 if (application.isUnitTestMode()) {
@@ -220,7 +214,6 @@ public abstract class AbstractCommonUpdateAction extends AbstractVcsAction {
         return result;
     }
 
-    
     private FilePath[] filterRoots(FilePath[] roots, VcsContext vcsContext) {
         List<FilePath> result = new ArrayList<>();
         Project project = vcsContext.getProject();
@@ -310,7 +303,6 @@ public abstract class AbstractCommonUpdateAction extends AbstractVcsAction {
     private class Updater extends Task.Backgroundable {
         private final LocalizeValue LOCAL_HISTORY_ACTION = VcsLocalize.localHistoryUpdateFromVcs();
 
-        
         private final Project myProject;
         private final ProjectLevelVcsManagerImpl myProjectLevelVcsManager;
         private UpdatedFiles myUpdatedFiles;
@@ -452,7 +444,6 @@ public abstract class AbstractCommonUpdateAction extends AbstractVcsAction {
             UpdateFilesHelper.iterateFileGroupFilesDeletedOnServerFirst(myUpdatedFiles, (filePath, groupId) -> refresher.dirty(filePath));
         }
 
-        
         private Notification.Builder prepareNotification(UpdateInfoTreeImpl tree, boolean someSessionWasCancelled) {
             int allFiles = getUpdatedFilesCount();
 
@@ -632,7 +623,6 @@ public abstract class AbstractCommonUpdateAction extends AbstractVcsAction {
             }
         }
 
-        
         @RequiredUIAccess
         private UpdateInfoTreeImpl showUpdateTree(boolean willBeContinued, boolean wasCanceled) {
             RestoreUpdateTree restoreUpdateTree = RestoreUpdateTree.getInstance(myProject);

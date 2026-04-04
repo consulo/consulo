@@ -15,20 +15,15 @@
  */
 package consulo.desktop.awt.ui;
 
-import consulo.application.AccessToken;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
-import consulo.application.impl.internal.LaterInvocator;
 import consulo.application.impl.internal.performance.ActivityTracker;
 import consulo.application.impl.internal.start.ApplicationStarter;
-import consulo.application.internal.ApplicationWithIntentWriteLock;
 import consulo.application.internal.FrequentEventDetector;
-import consulo.application.progress.ProgressManager;
 import consulo.application.ui.UISettings;
 import consulo.application.ui.wm.ExpirableRunnable;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.application.util.registry.Registry;
-import consulo.awt.hacking.InvocationUtil;
 import consulo.awt.hacking.PostEventQueueHacking;
 import consulo.awt.hacking.SequencedEventNestedFieldHolder;
 import consulo.desktop.awt.ui.keymap.IdeKeyEventDispatcher;
@@ -37,11 +32,11 @@ import consulo.desktop.awt.wm.FocusManagerImpl;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.disposer.util.DisposerUtil;
-import consulo.ide.ServiceManager;
 import consulo.ide.impl.idea.ide.ApplicationActivationStateManager;
 import consulo.desktop.awt.ui.dnd.DnDManagerImpl;
 import consulo.ide.impl.idea.openapi.keymap.KeyboardSettingsExternalizable;
 import consulo.ide.impl.idea.openapi.keymap.impl.KeyState;
+import consulo.ide.impl.idea.util.ReflectionUtil;
 import consulo.logging.Logger;
 import consulo.platform.Platform;
 import consulo.project.ui.internal.WindowManagerEx;
@@ -59,7 +54,6 @@ import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.Lists;
 import consulo.util.lang.EmptyRunnable;
 import consulo.util.lang.StringUtil;
-import consulo.util.lang.reflect.ReflectionUtil;
 import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
@@ -88,11 +82,6 @@ public class IdeEventQueue extends EventQueue {
 
     private static final Logger FOCUS_AWARE_RUNNABLES_LOG = Logger.getInstance(IdeEventQueue.class.getName() + ".runnables");
 
-    private static final Set<Class<? extends Runnable>> ourRunnablesWoWrite = Set.of(InvocationUtil.REPAINT_PROCESSING_CLASS);
-    private static final Set<Class<? extends Runnable>> ourRunnablesWithWrite = Set.of(InvocationUtil2.FLUSH_NOW_CLASS);
-    private static final boolean ourDefaultEventWithWrite = true;
-
-    private static ProgressManager ourProgressManager;
 
     private final List<Runnable> myActivityListeners = Lists.newLockFreeCopyOnWriteList();
 
@@ -100,15 +89,8 @@ public class IdeEventQueue extends EventQueue {
     private final IdeMouseEventDispatcher myMouseEventDispatcher = new IdeMouseEventDispatcher();
     private final IdePopupManager myPopupManager = new IdePopupManager();
 
-    /**
-     * Counter of processed events. It is used to assert that data context lives only inside single
-     * <p/>
-     * Swing event.
-     */
-    private int myEventCount;
     final AtomicInteger myKeyboardEventsPosted = new AtomicInteger();
     final AtomicInteger myKeyboardEventsDispatched = new AtomicInteger();
-    private boolean myIsInInputEvent;
     private AWTEvent myCurrentEvent = new InvocationEvent(this, EmptyRunnable.getInstance());
     private @Nullable AWTEvent myCurrentSequencedEvent;
 
@@ -146,7 +128,6 @@ public class IdeEventQueue extends EventQueue {
         }, runnable);
     }
 
-    
     public String runnablesWaitingForFocusChangeState() {
         return StringUtil.join(
             focusEventsList,
@@ -299,14 +280,6 @@ public class IdeEventQueue extends EventQueue {
         }
     }
 
-    public int getEventCount() {
-        return myEventCount;
-    }
-
-    public void setEventCount(int evCount) {
-        myEventCount = evCount;
-    }
-
     public AWTEvent getTrueCurrentEvent() {
         return myCurrentEvent;
     }
@@ -365,79 +338,33 @@ public class IdeEventQueue extends EventQueue {
             e = metaEvent;
         }
 
-        boolean wasInputEvent = myIsInInputEvent;
-        myIsInInputEvent = isInputEvent(e);
         AWTEvent oldEvent = myCurrentEvent;
         myCurrentEvent = e;
 
-        AWTEvent finalE1 = e;
-        Runnable runnable = InvocationUtil.extractRunnable(e);
-        Class<? extends Runnable> runnableClass = runnable != null ? runnable.getClass() : Runnable.class;
+        try {
+            _dispatchEvent(myCurrentEvent);
+        }
+        catch (Throwable t) {
+            processException(t);
+        }
+        finally {
+            myCurrentEvent = oldEvent;
 
-        @RequiredUIAccess
-        Runnable processEventRunnable = () -> {
-            Application application = ApplicationManager.getApplication();
-            ProgressManager progressManager = application != null && !application.isDisposed() ? ProgressManager.getInstance() : null;
-
-            try (AccessToken ignored = startActivity(finalE1)) {
-                if (progressManager != null) {
-                    progressManager.computePrioritized(() -> {
-                        _dispatchEvent(myCurrentEvent);
-                        return null;
-                    });
-                }
-                else {
-                    _dispatchEvent(myCurrentEvent);
-                }
-            }
-            catch (Throwable t) {
-                processException(t);
-            }
-            finally {
-                myIsInInputEvent = wasInputEvent;
-                myCurrentEvent = oldEvent;
-
-                if (myCurrentSequencedEvent == finalE1) {
-                    myCurrentSequencedEvent = null;
-                }
-
-                for (Predicate<AWTEvent> each : myPostProcessors) {
-                    each.test(finalE1);
-                }
-
-                if (finalE1 instanceof KeyEvent) {
-                    maybeReady();
-                }
-                //if (eventWatcher != null && runnableClass != InvocationUtil.FLUSH_NOW_CLASS) {
-                //    eventWatcher.logTimeMillis(
-                //        runnableClass != Runnable.class ? runnableClass.getName() : finalE1.toString(),
-                //        startedAt,
-                //        runnableClass
-                //    );
-                //}
+            if (myCurrentSequencedEvent == e) {
+                myCurrentSequencedEvent = null;
             }
 
-            if (isFocusEvent(finalE1)) {
-                onFocusEvent(finalE1);
+            for (Predicate<AWTEvent> each : myPostProcessors) {
+                each.test(e);
             }
-        };
 
-        if (runnableClass != Runnable.class) {
-            if (ourRunnablesWoWrite.contains(runnableClass)) {
-                processEventRunnable.run();
-                return;
-            }
-            if (ourRunnablesWithWrite.contains(runnableClass)) {
-                ((ApplicationWithIntentWriteLock) Application.get()).runIntendedWriteActionOnCurrentThread(processEventRunnable);
-                return;
+            if (e instanceof KeyEvent) {
+                maybeReady();
             }
         }
 
-        if (ourDefaultEventWithWrite) {
-            ((ApplicationWithIntentWriteLock) Application.get()).runIntendedWriteActionOnCurrentThread(processEventRunnable);
-        }
-        else {
-            processEventRunnable.run();
+        if (isFocusEvent(e)) {
+            onFocusEvent(e);
         }
     }
 
@@ -462,27 +389,9 @@ public class IdeEventQueue extends EventQueue {
         myLastEventTime = now;
     }
 
-    private static boolean isInputEvent(AWTEvent e) {
-        return e instanceof InputEvent || e instanceof InputMethodEvent || e instanceof WindowEvent || e instanceof ActionEvent;
-    }
-
-    private static @Nullable ProgressManager obtainProgressManager() {
-        ProgressManager manager = ourProgressManager;
-        if (manager == null) {
-            Application app = ApplicationManager.getApplication();
-            if (app != null && !app.isDisposed()) {
-                ourProgressManager = manager = ServiceManager.getService(ProgressManager.class);
-            }
-        }
-        return manager;
-    }
-
     @Override
-    
     public AWTEvent getNextEvent() throws InterruptedException {
-        AWTEvent event = appIsLoaded()
-            ? ((ApplicationWithIntentWriteLock) Application.get()).runUnlockingIntendedWrite(() -> super.getNextEvent())
-            : super.getNextEvent();
+        AWTEvent event = super.getNextEvent();
 
         if (isKeyboardEvent(event) && myKeyboardEventsDispatched.incrementAndGet() > myKeyboardEventsPosted.get()) {
             throw new RuntimeException(event + "; posted: " + myKeyboardEventsPosted + "; dispatched: " + myKeyboardEventsDispatched);
@@ -490,15 +399,10 @@ public class IdeEventQueue extends EventQueue {
         return event;
     }
 
-    static @Nullable AccessToken startActivity(AWTEvent e) {
-        return AccessToken.EMPTY_ACCESS_TOKEN;
-    }
-
     private void processException(Throwable t) {
         ApplicationStarter.processException(() -> LOG, t);
     }
 
-    
     private static AWTEvent fixNonEnglishKeyboardLayouts(AWTEvent e) {
         if (!(e instanceof KeyEvent)) {
             return e;
@@ -555,12 +459,10 @@ public class IdeEventQueue extends EventQueue {
         return ke;
     }
 
-    
     private static AWTEvent mapEvent(AWTEvent e) {
         return Platform.current().os().isXWindow() && e instanceof MouseEvent me && me.getButton() > 3 ? mapXWindowMouseEvent(me) : e;
     }
 
-    
     private static AWTEvent mapXWindowMouseEvent(MouseEvent src) {
         if (src.getButton() < 6) {
             // Convert these events(buttons 4&5 in are produced by touchpad, they must be converted to horizontal scrolling events
@@ -662,8 +564,6 @@ public class IdeEventQueue extends EventQueue {
             DnDManagerImpl dndManager = (DnDManagerImpl) DnDManager.getInstance();
             dndManager.setLastDropHandler(null);
         }
-
-        myEventCount++;
 
         if (processAppActivationEvents(e)) {
             return;
@@ -916,12 +816,10 @@ public class IdeEventQueue extends EventQueue {
         return myIdleHolder.getIdleTime();
     }
 
-    
     public IdePopupManager getPopupManager() {
         return myPopupManager;
     }
 
-    
     public IdeKeyEventDispatcher getKeyEventDispatcher() {
         return myKeyEventDispatcher;
     }
@@ -1147,14 +1045,7 @@ public class IdeEventQueue extends EventQueue {
 
     @Override
     public AWTEvent peekEvent() {
-        AWTEvent event = super.peekEvent();
-        if (event != null) {
-            return event;
-        }
-        if (LaterInvocator.ensureFlushRequested()) {
-            return super.peekEvent();
-        }
-        return null;
+        return super.peekEvent();
     }
 
     /**

@@ -22,6 +22,7 @@ import consulo.project.ui.wm.StatusBar;
 import consulo.project.ui.wm.StatusBarWidget;
 import consulo.project.ui.wm.StatusBarWidgetFactory;
 import consulo.project.ui.wm.WindowManager;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.collection.ArrayUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import org.jspecify.annotations.Nullable;
@@ -31,7 +32,6 @@ import java.awt.*;
 public abstract class EditorBasedWidget implements StatusBarWidget, FileEditorManagerListener {
   private static final Logger LOG = Logger.getInstance(EditorBasedWidget.class);
 
-  
   protected final Project myProject;
 
   protected StatusBar myStatusBar;
@@ -44,20 +44,20 @@ public abstract class EditorBasedWidget implements StatusBarWidget, FileEditorMa
     myFactory = factory;
   }
 
-  
   @Override
   public String getId() {
     return myFactory.getId();
   }
 
+  @RequiredUIAccess
   protected final @Nullable Editor getEditor() {
     Project project = getProject();
     if (project.isDisposed()) return null;
 
     FileEditor fileEditor = StatusBarUtil.getCurrentFileEditor(myStatusBar);
     Editor result = null;
-    if (fileEditor instanceof TextEditor) {
-      Editor editor = ((TextEditor)fileEditor).getEditor();
+    if (fileEditor instanceof TextEditor textEditor) {
+      Editor editor = textEditor.getEditor();
       if (ensureValidEditorFile(editor)) {
         result = editor;
       }
@@ -120,6 +120,7 @@ public abstract class EditorBasedWidget implements StatusBarWidget, FileEditorMa
     return editor != null && !editor.isDisposed() ? editor : null;
   }
 
+  @Deprecated
   protected @Nullable VirtualFile getSelectedFile() {
     Editor editor = getEditor();
     if (editor == null) return null;
@@ -127,7 +128,12 @@ public abstract class EditorBasedWidget implements StatusBarWidget, FileEditorMa
     return FileDocumentManager.getInstance().getFile(document);
   }
 
-  
+  protected @Nullable VirtualFile getSelectedFile(@Nullable Editor editor) {
+    if (editor == null) return null;
+    Document document = editor.getDocument();
+    return FileDocumentManager.getInstance().getFile(document);
+  }
+
   protected final Project getProject() {
     return myProject;
   }

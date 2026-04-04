@@ -18,6 +18,7 @@ package consulo.execution.test.sm.ui;
 import consulo.execution.test.TestConsoleProperties;
 import consulo.execution.test.sm.runner.SMTestProxy;
 import consulo.execution.test.ui.TestTreeView;
+import consulo.dataContext.DataSink;
 import consulo.util.dataholder.Key;
 
 import org.jspecify.annotations.Nullable;
@@ -65,10 +66,8 @@ public class SMTRunnerTestTreeView extends TestTreeView {
     }
 
     @Override
-    public Object getData(Key<?> dataId) {
-        if (SM_TEST_RUNNER_VIEW == dataId) {
-            return this;
-        }
-        return super.getData(dataId);
+    public void uiDataSnapshot(DataSink sink) {
+        super.uiDataSnapshot(sink);
+        sink.set(SM_TEST_RUNNER_VIEW, this);
     }
 }

@@ -185,9 +185,7 @@ public abstract class CodeEditorSoftWrapModelBase extends InlayModel.SimpleAdapt
     }
 
     @Override
-    @RequiredUIAccess
     public boolean isSoftWrappingEnabled() {
-        UIAccess.assertIsUIThread();
         return myUseSoftWraps && !myEditor.isPurePaintingMode();
     }
 

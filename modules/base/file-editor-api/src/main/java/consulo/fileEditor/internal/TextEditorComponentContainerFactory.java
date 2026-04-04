@@ -18,7 +18,7 @@ package consulo.fileEditor.internal;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.codeEditor.Editor;
-import consulo.dataContext.DataProvider;
+import consulo.dataContext.UiDataProvider;
 import consulo.disposer.Disposable;
 
 /**
@@ -29,5 +29,5 @@ import consulo.disposer.Disposable;
  */
 @ServiceAPI(ComponentScope.APPLICATION)
 public interface TextEditorComponentContainerFactory {
-  TextEditorComponentContainer createTextComponentContainer(Editor editor, Disposable parentDisposable, DataProvider dataProvider);
+  TextEditorComponentContainer createTextComponentContainer(Editor editor, Disposable parentDisposable, UiDataProvider uiDataProvider);
 }

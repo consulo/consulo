@@ -56,7 +56,6 @@ import javax.swing.*;
 import java.awt.event.InputEvent;
 import java.awt.event.MouseEvent;
 import java.util.List;
-import java.util.Objects;
 
 /**
  * @author VISTALL
@@ -148,7 +147,7 @@ public class RunCurrentFileService {
         VirtualFile[] files = FileEditorManager.getInstance(project).getSelectedFiles();
         if (files.length == 1) {
             // There's only one visible editor, let's use the file from this editor, even if the editor is not in focus.
-            PsiFile psiFile = ReadAction.compute(() -> PsiManager.getInstance(project).findFile(files[0]));
+            PsiFile psiFile = PsiManager.getInstance(project).findFile(files[0]);
             if (psiFile == null) {
                 LocalizeValue tooltip = ExecutionLocalize.runButtonOnToolbarTooltipCurrentFileNotRunnable();
                 return RunCurrentFileActionStatus.createDisabled(tooltip, executor.getIcon());

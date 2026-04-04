@@ -22,7 +22,8 @@ import consulo.application.util.registry.Registry;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.ScrollType;
 import consulo.codeEditor.ScrollingModel;
-import consulo.dataContext.DataProvider;
+import consulo.dataContext.DataSink;
+import consulo.dataContext.UiDataProvider;
 import consulo.desktop.awt.uiOld.AWTComponentProviderUtil;
 import consulo.disposer.Disposer;
 import consulo.fileEditor.*;
@@ -48,7 +49,6 @@ import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.tab.JBTabs;
 import consulo.ui.image.Image;
 import consulo.util.collection.Stack;
-import consulo.util.dataholder.Key;
 import consulo.util.lang.Pair;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
@@ -71,7 +71,6 @@ public class DesktopFileEditorWindow extends FileEditorWindowBase implements Fil
     private static final Logger LOG = Logger.getInstance(DesktopFileEditorWindow.class);
 
     protected JPanel myPanel;
-    
     private final DesktopAWTEditorTabbedContainer myTabbedPane;
     private final DesktopFileEditorsSplitters myOwner;
 
@@ -137,7 +136,6 @@ public class DesktopFileEditorWindow extends FileEditorWindowBase implements Fil
         myPanel.revalidate();
     }
 
-    
     @Override
     public FileEditorTabbedContainer getContainer() {
         return myTabbedPane;
@@ -325,7 +323,6 @@ public class DesktopFileEditorWindow extends FileEditorWindowBase implements Fil
         return -1;
     }
 
-    
     @Override
     public FileEditorManagerImpl getManager() {
         return myOwner.getManager();
@@ -381,7 +378,6 @@ public class DesktopFileEditorWindow extends FileEditorWindowBase implements Fil
         myOwner.setCurrentWindow(this, requestFocus);
     }
 
-    
     @Override
     public DesktopFileEditorsSplitters getOwner() {
         return myOwner;
@@ -395,7 +391,6 @@ public class DesktopFileEditorWindow extends FileEditorWindowBase implements Fil
         return myPanel.getSize();
     }
 
-    
     public DesktopAWTEditorTabbedContainer getTabbedPane() {
         return myTabbedPane;
     }
@@ -414,8 +409,7 @@ public class DesktopFileEditorWindow extends FileEditorWindowBase implements Fil
         myTabbedPane.setPaintBlocked(blocked);
     }
 
-    protected static class TComp extends JPanel implements DataProvider, EditorWindowHolder, IdeFocusTraversalPolicy.PassThroughComponent {
-        
+    protected static class TComp extends JPanel implements UiDataProvider, EditorWindowHolder, IdeFocusTraversalPolicy.PassThroughComponent {
         DesktopFileEditorWithProviderComposite myEditor;
         protected final FileEditorWindow myWindow;
 
@@ -440,22 +434,18 @@ public class DesktopFileEditorWindow extends FileEditorWindowBase implements Fil
             });
         }
 
-        
         @Override
         public FileEditorWindow getEditorWindow() {
             return myWindow;
         }
 
         @Override
-        public Object getData(Key<?> dataId) {
-            if (VirtualFile.KEY == dataId) {
+        public void uiDataSnapshot(DataSink sink) {
+            sink.lazy(VirtualFile.KEY, () -> {
                 VirtualFile virtualFile = myEditor.getFile();
                 return virtualFile.isValid() ? virtualFile : null;
-            }
-            if (Project.KEY == dataId) {
-                return myEditor.getFileEditorManager().getProject();
-            }
-            return null;
+            });
+            sink.lazy(Project.KEY, () -> myEditor.getFileEditorManager().getProject());
         }
     }
 
@@ -477,7 +467,7 @@ public class DesktopFileEditorWindow extends FileEditorWindowBase implements Fil
         if (editor != null) {
             int index = findFileIndex(editor.getFile());
             if (index != -1) {
-                UIUtil.invokeLaterIfNeeded(() -> myTabbedPane.setSelectedIndex(index, focusEditor));
+                myTabbedPane.setSelectedIndex(index, focusEditor);
             }
         }
     }
@@ -653,7 +643,6 @@ public class DesktopFileEditorWindow extends FileEditorWindowBase implements Fil
         }
     }
 
-    
     @Override
     public DesktopFileEditorWindow[] findSiblings() {
         checkConsistency();

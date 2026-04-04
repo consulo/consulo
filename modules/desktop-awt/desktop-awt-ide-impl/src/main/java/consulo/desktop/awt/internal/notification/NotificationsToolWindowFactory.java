@@ -42,7 +42,7 @@ import consulo.ui.ex.content.ContentManager;
 import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.ui.ex.toolWindow.ToolWindowAnchor;
 import consulo.ui.image.Image;
-import consulo.util.dataholder.Key;
+import consulo.dataContext.DataSink;
 
 import javax.swing.event.AncestorEvent;
 
@@ -51,7 +51,6 @@ import javax.swing.event.AncestorEvent;
  */
 @ExtensionImpl
 public class NotificationsToolWindowFactory implements ToolWindowFactory, DumbAware {
-    
     @Override
     public String getId() {
         return EventLog.NOTIFICATIONS_TOOLWINDOW_ID;
@@ -65,7 +64,6 @@ public class NotificationsToolWindowFactory implements ToolWindowFactory, DumbAw
         tracker.initDefaultContent();
     }
 
-    
     @Override
     public ToolWindowAnchor getAnchor() {
         return ToolWindowAnchor.RIGHT;
@@ -76,13 +74,11 @@ public class NotificationsToolWindowFactory implements ToolWindowFactory, DumbAw
         return true;
     }
 
-    
     @Override
     public Image getIcon() {
         return PlatformIconGroup.toolwindowsNotifications();
     }
 
-    
     @Override
     public LocalizeValue getDisplayName() {
         return ProjectUILocalize.toolwindowNotificationsDisplayName();
@@ -94,8 +90,9 @@ public class NotificationsToolWindowFactory implements ToolWindowFactory, DumbAw
 
         SimpleToolWindowPanel panel = new SimpleToolWindowPanel(false, true) {
             @Override
-            public Object getData(Key dataId) {
-                return (HelpManager.HELP_ID == dataId) ? EventLog.HELP_ID : super.getData(dataId);
+            public void uiDataSnapshot(DataSink sink) {
+                super.uiDataSnapshot(sink);
+                sink.set(HelpManager.HELP_ID, EventLog.HELP_ID);
             }
         };
         panel.setContent(editor.getComponent());

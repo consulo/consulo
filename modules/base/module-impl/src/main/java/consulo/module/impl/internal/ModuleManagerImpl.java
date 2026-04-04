@@ -103,12 +103,10 @@ public abstract class ModuleManagerImpl extends ModuleManagerInternal implements
             return myDirUrl;
         }
 
-        
         public String getName() {
             return myName;
         }
 
-        
         public Element getElement() {
             return myElement;
         }
@@ -155,8 +153,6 @@ public abstract class ModuleManagerImpl extends ModuleManagerInternal implements
 
     private boolean myFirstLoad = true;
 
-    protected boolean myReady = false;
-
     public static final String ELEMENT_MODULES = "modules";
     public static final String ELEMENT_MODULE = "module";
 
@@ -177,15 +173,6 @@ public abstract class ModuleManagerImpl extends ModuleManagerInternal implements
     public ModuleManagerImpl(Project project) {
         myProject = project;
         myMessageBus = project.getMessageBus();
-    }
-
-    public void setReady(boolean ready) {
-        myReady = ready;
-    }
-
-    @Override
-    public boolean isReady() {
-        return myReady;
     }
 
     @Override
@@ -283,7 +270,6 @@ public abstract class ModuleManagerImpl extends ModuleManagerInternal implements
         return null;
     }
 
-    @RequiredUIAccess
     protected void loadModules(ModuleModelImpl moduleModel, @Nullable ProgressIndicator indicator, boolean firstLoad) {
         if (myModuleLoadItems.isEmpty()) {
             return;
@@ -404,7 +390,6 @@ public abstract class ModuleManagerImpl extends ModuleManagerInternal implements
         myFailedModulePaths.remove(modulePath);
     }
 
-    
     @Override
     @RequiredReadAction
     public ModifiableModuleModel getModifiableModel() {
@@ -462,7 +447,6 @@ public abstract class ModuleManagerImpl extends ModuleManagerInternal implements
         }
     }
 
-    
     @Override
     @RequiredWriteAction
     public Module newModule(String name, String dirPath) {
@@ -481,20 +465,8 @@ public abstract class ModuleManagerImpl extends ModuleManagerInternal implements
         modifiableModel.commit();
     }
 
-    
     @Override
     public Module[] getModules() {
-        if (!myReady) {
-            Exception trace = DebugStackTrace.getTrace();
-            if (trace != null) {
-                LOG.error("Modules not initialized at current moment", trace);
-            }
-            else {
-                LOG.error("Modules not initialized at current moment");
-            }
-            return Module.EMPTY_ARRAY;
-        }
-
         if (myModuleModel.myIsWritable) {
             myProject.getApplication().assertReadAccessAllowed();
         }
@@ -503,15 +475,9 @@ public abstract class ModuleManagerImpl extends ModuleManagerInternal implements
 
     private Module[] myCachedSortedModules = null;
 
-    
     @Override
     @RequiredReadAction
     public Module[] getSortedModules() {
-        if (!myReady) {
-            LOG.error("Modules not initialized at current moment");
-            return Module.EMPTY_ARRAY;
-        }
-
         myProject.getApplication().assertReadAccessAllowed();
         deliverPendingEvents();
         if (myCachedSortedModules == null) {
@@ -523,17 +489,12 @@ public abstract class ModuleManagerImpl extends ModuleManagerInternal implements
     @Override
     @RequiredReadAction
     public Module findModuleByName(String name) {
-        if (!myReady) {
-            throw new IllegalArgumentException("Modules not initialized at current moment");
-        }
-
         myProject.getApplication().assertReadAccessAllowed();
         return myModuleModel.findModuleByName(name);
     }
 
     private Comparator<Module> myCachedModuleComparator = null;
 
-    
     @Override
     @RequiredReadAction
     public Comparator<Module> moduleDependencyComparator() {
@@ -548,14 +509,12 @@ public abstract class ModuleManagerImpl extends ModuleManagerInternal implements
     protected void deliverPendingEvents() {
     }
 
-    
     @Override
     @RequiredReadAction
     public Graph<Module> moduleGraph() {
         return moduleGraph(true);
     }
 
-    
     @Override
     @RequiredReadAction
     public Graph<Module> moduleGraph(boolean includeTests) {
@@ -565,7 +524,6 @@ public abstract class ModuleManagerImpl extends ModuleManagerInternal implements
 
     @RequiredReadAction
     @Override
-    
     public List<Module> getModuleDependentModules(Module module) {
         myProject.getApplication().assertReadAccessAllowed();
         return myModuleModel.getModuleDependentModules(module);
@@ -603,10 +561,8 @@ public abstract class ModuleManagerImpl extends ModuleManagerInternal implements
         ((ModuleModelImpl) model).commitWithRunnable(runnable);
     }
 
-    
     protected abstract ModuleEx createModule(String name, @Nullable String dirUrl, ProgressIndicator progressIndicator);
 
-    
     protected ModuleEx createAndLoadModule(
         ModuleLoadItem moduleLoadItem,
         ModuleModelImpl moduleModel,
@@ -652,7 +608,6 @@ public abstract class ModuleManagerImpl extends ModuleManagerInternal implements
         }
 
         @Override
-        
         public Module[] getModules() {
             if (myModulesCache == null) {
                 myModulesCache = ContainerUtil.toArray(myModules, Module.ARRAY_FACTORY);
@@ -703,7 +658,6 @@ public abstract class ModuleManagerImpl extends ModuleManagerInternal implements
             return myModuleToNewName.get(module);
         }
 
-        
         @Override
         public Module newModule(String name, @Nullable String dirPath) {
             assertWritable();
@@ -742,7 +696,6 @@ public abstract class ModuleManagerImpl extends ModuleManagerInternal implements
             return toRemove;
         }
 
-        
         @RequiredUIAccess
         private Module loadModuleInternal(ModuleLoadItem item, boolean firstLoad, @Nullable ProgressIndicator progressIndicator)
             throws ModuleWithNameAlreadyExistsException, ModuleDirIsNotExistsException, StateStorageException {
@@ -842,7 +795,6 @@ public abstract class ModuleManagerImpl extends ModuleManagerInternal implements
             }));
         }
 
-        
         private List<Module> getModuleDependentModules(Module module) {
             List<Module> result = new ArrayList<>();
             for (Module aModule : myModules) {
@@ -1011,7 +963,6 @@ public abstract class ModuleManagerImpl extends ModuleManagerInternal implements
         return myModuleModel.getModuleGroupPath(module);
     }
 
-    
     @Override
     public Image getModuleIcon(@Nullable Module module) {
         if (module == null) {

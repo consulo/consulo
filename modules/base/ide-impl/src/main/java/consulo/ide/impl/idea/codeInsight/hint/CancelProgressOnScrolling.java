@@ -3,15 +3,15 @@ package consulo.ide.impl.idea.codeInsight.hint;
 
 import consulo.codeEditor.event.VisibleAreaEvent;
 import consulo.codeEditor.event.VisibleAreaListener;
-import consulo.util.concurrent.CancellablePromise;
 
 import java.awt.*;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicReference;
 
 class CancelProgressOnScrolling implements VisibleAreaListener {
-  private final AtomicReference<CancellablePromise<?>> myCancellablePromiseRef;
+  private final AtomicReference<CompletableFuture<?>> myCancellablePromiseRef;
 
-  CancelProgressOnScrolling(AtomicReference<CancellablePromise<?>> cancellablePromiseRef) {
+  CancelProgressOnScrolling(AtomicReference<CompletableFuture<?>> cancellablePromiseRef) {
     myCancellablePromiseRef = cancellablePromiseRef;
   }
 
@@ -19,9 +19,9 @@ class CancelProgressOnScrolling implements VisibleAreaListener {
   public void visibleAreaChanged(VisibleAreaEvent e) {
     Rectangle oldRect = e.getOldRectangle();
     Rectangle newRect = e.getNewRectangle();
-    CancellablePromise<?> promise = myCancellablePromiseRef.get();
+    CompletableFuture<?> promise = myCancellablePromiseRef.get();
     if (oldRect != null && (oldRect.x != newRect.x || oldRect.y != newRect.y) && promise != null) {
-      promise.cancel();
+      promise.cancel(false);
     }
   }
 }

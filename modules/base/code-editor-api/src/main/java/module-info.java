@@ -15,6 +15,7 @@ module consulo.code.editor.api {
     requires transitive consulo.undo.redo.api;
 
     exports consulo.codeEditor;
+    exports consulo.codeEditor.imaginary;
     exports consulo.codeEditor.action;
     exports consulo.codeEditor.event;
     exports consulo.codeEditor.localize;

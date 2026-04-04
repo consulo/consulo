@@ -25,6 +25,8 @@ import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.coroutine.ActionSafeReadLock;
+import consulo.util.concurrent.coroutine.Coroutine;
 import consulo.virtualFileSystem.VirtualFile;
 
 import java.util.ArrayList;
@@ -69,6 +71,14 @@ public class AddAllOpenFilesToFavorites extends AnAction {
             }
         }
         return result;
+    }
+
+    @Override
+    public Coroutine<?, ?> updateAsync(AnActionEvent e) {
+        return ActionSafeReadLock.apply(e, presentation -> {
+            Project project = e.getData(Project.KEY);
+            presentation.setEnabled(project != null && !getFilesToAdd(project).isEmpty());
+        }).toCoroutine();
     }
 
     @Override

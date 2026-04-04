@@ -98,7 +98,7 @@ public class DaemonTooltipActionProvider implements TooltipActionProvider {
         Project project = psiFile.getProject();
 
         //sort the actions
-        CachedIntentions cachedIntentions = CachedIntentions.createAndUpdateActions(project, psiFile, editor, intentionsInfo);
+        CachedIntentions cachedIntentions = CachedIntentions.createAndUpdateActions(project, psiFile, editor, intentionsInfo, editor.getCaretModel().getOffset());
 
         List<IntentionActionWithTextCaching> allActions = cachedIntentions.getAllActions();
 

@@ -1,12 +1,14 @@
 // Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.codeInsight.daemon.impl;
 
+import consulo.annotation.access.RequiredReadAction;
+import consulo.application.Application;
 import consulo.application.HeavyProcessLatch;
 import consulo.application.PowerSaveMode;
-import consulo.application.ReadAction;
 import consulo.codeEditor.DocumentMarkupModel;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorKind;
+import consulo.codeEditor.internal.ErrorStripeRenderer;
 import consulo.codeEditor.localize.CodeEditorLocalize;
 import consulo.codeEditor.markup.MarkupModelEx;
 import consulo.codeEditor.markup.MarkupModelListener;
@@ -35,7 +37,6 @@ import consulo.language.editor.impl.internal.rawHighlight.HighlightInfoImpl;
 import consulo.language.editor.impl.internal.rawHighlight.SeverityRegistrarImpl;
 import consulo.language.editor.internal.HighlightingSettingsPerFile;
 import consulo.language.editor.localize.DaemonLocalize;
-import consulo.language.editor.rawHighlight.HighlightDisplayLevel;
 import consulo.language.editor.rawHighlight.SeverityRegistrar;
 import consulo.language.file.FileViewProvider;
 import consulo.language.inject.InjectedLanguageManager;
@@ -49,6 +50,7 @@ import consulo.module.content.ProjectRootManager;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.DumbService;
 import consulo.project.Project;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
@@ -64,6 +66,7 @@ import consulo.util.collection.primitive.ints.IntLists;
 import consulo.util.lang.DeprecatedMethodException;
 import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
+import consulo.util.lang.ref.SimpleReference;
 import consulo.util.lang.xml.XmlStringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
@@ -76,9 +79,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class TrafficLightRenderer implements ErrorStripeRenderer, Disposable {
-    
     private final Project myProject;
-    
     private final Document myDocument;
     private final DaemonCodeAnalyzerImpl myDaemonCodeAnalyzer;
     private final SeverityRegistrarImpl mySeverityRegistrar;
@@ -135,11 +136,11 @@ public class TrafficLightRenderer implements ErrorStripeRenderer, Disposable {
         });
     }
 
+    @RequiredReadAction
     private PsiFile getPsiFile() {
-        return ReadAction.compute(() -> PsiDocumentManager.getInstance(myProject).getPsiFile(myDocument));
+        return PsiDocumentManager.getInstance(myProject).getPsiFile(myDocument);
     }
 
-    
     public SeverityRegistrar getSeverityRegistrar() {
         return mySeverityRegistrar;
     }
@@ -172,7 +173,9 @@ public class TrafficLightRenderer implements ErrorStripeRenderer, Disposable {
     }
 
     public boolean isValid() {
-        return getPsiFile() != null;
+        SimpleReference<Boolean> ref = new SimpleReference<>();
+        Application.get().tryRunReadAction(ref, () -> getPsiFile() != null);
+        return Boolean.TRUE.equals(ref.get());
     }
 
     protected static final class DaemonCodeAnalyzerStatus {
@@ -206,7 +209,6 @@ public class TrafficLightRenderer implements ErrorStripeRenderer, Disposable {
         }
     }
 
-    
     protected DaemonCodeAnalyzerStatus getDaemonCodeAnalyzerStatus(SeverityRegistrar severityRegistrar) {
         DaemonCodeAnalyzerStatus status = new DaemonCodeAnalyzerStatus();
         PsiFile psiFile = getPsiFile();
@@ -291,24 +293,10 @@ public class TrafficLightRenderer implements ErrorStripeRenderer, Disposable {
     ) {
     }
 
-    
     protected final Project getProject() {
         return myProject;
     }
 
-    @Override
-    public void paint(Component c, Graphics g, Rectangle r) {
-        DaemonCodeAnalyzerStatus status = getDaemonCodeAnalyzerStatus(mySeverityRegistrar);
-        Icon icon = TargetAWT.to(getIcon(status));
-        icon.paintIcon(c, g, r.x, r.y);
-    }
-
-    @Override
-    public int getSquareSize() {
-        return HighlightDisplayLevel.getEmptyIconDim();
-    }
-
-    
     private Image getIcon(DaemonCodeAnalyzerStatus status) {
         updatePanel(status);
         Image icon = this.icon;
@@ -422,15 +410,17 @@ public class TrafficLightRenderer implements ErrorStripeRenderer, Disposable {
         }
     }
 
+    @RequiredReadAction
     @Override
-    
     public AnalyzerStatus getStatus(Editor editor) {
+        UIAccess.assetIsNotUIThread();
+
         if (PowerSaveMode.isEnabled()) {
             return new AnalyzerStatus(
                 PlatformIconGroup.generalInspectionspowersavemode(),
                 "Code analysis is disabled in power save mode",
                 "",
-                () -> createUIController(editor)
+                createUIController(editor)
             );
         }
         else {
@@ -474,7 +464,7 @@ public class TrafficLightRenderer implements ErrorStripeRenderer, Disposable {
                 if (mainIcon == null) {
                     mainIcon = PlatformIconGroup.generalInspectionsok();
                 }
-                AnalyzerStatus result = new AnalyzerStatus(mainIcon, title, "", () -> createUIController(editor)).
+                AnalyzerStatus result = new AnalyzerStatus(mainIcon, title, "", createUIController(editor)).
                     withNavigation().
                     withExpandedStatus(statusItems);
 
@@ -490,7 +480,7 @@ public class TrafficLightRenderer implements ErrorStripeRenderer, Disposable {
                     PlatformIconGroup.generalInspectionstrafficoff(),
                     DaemonLocalize.noAnalysisPerformed().get(),
                     status.reasonWhyDisabled,
-                    () -> createUIController(editor)
+                    createUIController(editor)
                 ).withTextStatus(DaemonLocalize.iwStatusOff().get());
             }
             if (StringUtil.isNotEmpty(status.reasonWhySuspended)) {
@@ -498,7 +488,7 @@ public class TrafficLightRenderer implements ErrorStripeRenderer, Disposable {
                     PlatformIconGroup.generalInspectionspause(),
                     DaemonLocalize.analysisSuspended().get(),
                     status.reasonWhySuspended,
-                    () -> createUIController(editor)
+                    createUIController(editor)
                 ).withTextStatus(
                     status.heavyProcessType != null ? status.heavyProcessType.toString() : DaemonLocalize.iwStatusPaused().get()
                 );
@@ -509,18 +499,18 @@ public class TrafficLightRenderer implements ErrorStripeRenderer, Disposable {
                     PlatformIconGroup.generalInspectionspause(),
                     title,
                     details,
-                    () -> createUIController(editor)
+                    createUIController(editor)
                 ).withTextStatus(DaemonLocalize.heavyprocessTypeIndexing().get())
                     : new AnalyzerStatus(
                     PlatformIconGroup.generalInspectionsok(),
                     DaemonLocalize.noErrorsOrWarningsFound().get(),
                     details,
-                    () -> createUIController(editor)
+                    createUIController(editor)
                 );
             }
 
             //noinspection ConstantConditions
-            return new AnalyzerStatus(PlatformIconGroup.generalInspectionseye(), title, details, () -> createUIController(editor))
+            return new AnalyzerStatus(PlatformIconGroup.generalInspectionseye(), title, details, createUIController(editor))
                 .withTextStatus(DaemonLocalize.iwStatusAnalyzing().get())
                 .withAnalyzingType(AnalyzingType.EMPTY)
                 .withPasses(ContainerUtil.map(
@@ -530,7 +520,6 @@ public class TrafficLightRenderer implements ErrorStripeRenderer, Disposable {
         }
     }
 
-    
     protected UIController createUIController(Editor editor) {
         boolean mergeEditor = Objects.equals(editor.getUserData(DiffUserDataKeys.MERGE_EDITOR_FLAG), Boolean.TRUE);
         return editor.getEditorKind() == EditorKind.DIFF && !mergeEditor ? new SimplifiedUIController() : new DefaultUIController();
@@ -557,7 +546,6 @@ public class TrafficLightRenderer implements ErrorStripeRenderer, Disposable {
         }
 
         private
-        
         List<LanguageHighlightLevel> initLevels() {
             List<LanguageHighlightLevel> result = new ArrayList<>();
             PsiFile psiFile = getPsiFile();
@@ -576,12 +564,10 @@ public class TrafficLightRenderer implements ErrorStripeRenderer, Disposable {
         }
 
         @Override
-        
         public List<InspectionsLevel> getAvailableLevels() {
             return inLibrary ? Arrays.asList(InspectionsLevel.NONE, InspectionsLevel.ERRORS) : Arrays.asList(InspectionsLevel.values());
         }
 
-        
         @Override
         public List<LanguageHighlightLevel> getHighlightLevels() {
             return Collections.unmodifiableList(myLevelsList);
@@ -687,7 +673,6 @@ public class TrafficLightRenderer implements ErrorStripeRenderer, Disposable {
         }
     }
 
-    
     private static InspectionsLevel getHighlightLevel(boolean highlight, boolean inspect) {
         if (!highlight && !inspect) {
             return InspectionsLevel.NONE;
@@ -704,7 +689,6 @@ public class TrafficLightRenderer implements ErrorStripeRenderer, Disposable {
         private final List<AnAction> myMenuActions = initActions();
 
         private
-        
         List<AnAction> initActions() {
             List<AnAction> result = new ArrayList<>();
             result.add(new ConfigureInspectionsAction());
@@ -744,7 +728,6 @@ public class TrafficLightRenderer implements ErrorStripeRenderer, Disposable {
 
         @Override
         public
-        
         List<AnAction> getActions() {
             return myMenuActions;
         }
@@ -761,7 +744,6 @@ public class TrafficLightRenderer implements ErrorStripeRenderer, Disposable {
             return false;
         }
 
-        
         @Override
         public List<AnAction> getActions() {
             return Collections.emptyList();

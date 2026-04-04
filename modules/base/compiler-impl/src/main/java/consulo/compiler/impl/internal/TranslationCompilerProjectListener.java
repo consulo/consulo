@@ -27,6 +27,7 @@ import consulo.logging.Logger;
 import consulo.module.content.layer.event.ModuleRootEvent;
 import consulo.module.content.layer.event.ModuleRootListener;
 import consulo.project.Project;
+import consulo.project.ProjectType;
 import consulo.project.event.ProjectManagerListener;
 import consulo.ui.ModalityState;
 import consulo.ui.UIAccess;
@@ -57,6 +58,10 @@ class TranslationCompilerProjectListener implements ProjectManagerListener {
 
     @Override
     public void projectOpened(Project project, UIAccess uiAccess) {
+        if (project.getProjectType() != ProjectType.REGULAR) {
+            return;
+        }
+
         TranslatingCompilerFilesMonitorImpl monitor = getMonitor();
 
         MessageBusConnection conn = project.getMessageBus().connect();
@@ -159,6 +164,10 @@ class TranslationCompilerProjectListener implements ProjectManagerListener {
 
     @Override
     public void projectClosed(Project project, UIAccess uiAccess) {
+        if (project.getProjectType() != ProjectType.REGULAR) {
+            return;
+        }
+
         TranslatingCompilerFilesMonitorImpl monitor = getMonitor();
 
         int projectId = monitor.getProjectId(project);
@@ -169,7 +178,6 @@ class TranslationCompilerProjectListener implements ProjectManagerListener {
         }
     }
 
-    
     TranslatingCompilerFilesMonitorImpl getMonitor() {
         return (TranslatingCompilerFilesMonitorImpl) myMonitorProvider.get();
     }

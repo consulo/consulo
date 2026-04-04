@@ -15,6 +15,7 @@
  */
 package consulo.language.editor;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.document.Document;
 import consulo.document.util.TextRange;
 import consulo.language.psi.PsiFile;
@@ -43,5 +44,6 @@ public interface FileStatusMap {
 
     void markFileScopeDirty(Document document, TextRange scope, int fileLength, Object reason);
 
+    @RequiredReadAction
     boolean allDirtyScopesAreNull(Document document);
 }

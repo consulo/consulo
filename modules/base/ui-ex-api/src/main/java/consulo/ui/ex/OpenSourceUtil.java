@@ -15,10 +15,20 @@
  */
 package consulo.ui.ex;
 
+import consulo.application.Application;
 import consulo.dataContext.DataContext;
-import consulo.dataContext.DataProvider;
 import consulo.navigation.Navigatable;
 import consulo.navigation.StatePreservingNavigatable;
+import consulo.ui.UIAccess;
+import consulo.util.concurrent.coroutine.Coroutine;
+import consulo.util.concurrent.coroutine.CoroutineScope;
+import consulo.util.concurrent.coroutine.step.CodeExecution;
+import consulo.util.concurrent.coroutine.step.CompletableFutureStep;
+import consulo.util.concurrent.coroutine.step.Iteration;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 public class OpenSourceUtil {
 
@@ -29,8 +39,8 @@ public class OpenSourceUtil {
     navigate(requestFocus, context.getData(Navigatable.KEY_OF_ARRAY));
   }
 
-  public static void openSourcesFrom(DataProvider context, boolean requestFocus) {
-    navigate(requestFocus, context.getDataUnchecked(Navigatable.KEY_OF_ARRAY));
+  public static CompletableFuture<?> openSourcesFromAsync(UIAccess uiAccess, DataContext context, boolean requestFocus) {
+    return navigateAsync(uiAccess, requestFocus, context.getData(Navigatable.KEY_OF_ARRAY));
   }
 
   /**
@@ -47,7 +57,7 @@ public class OpenSourceUtil {
   public static void navigate(boolean requestFocus, Navigatable...navigatables) {
     if (navigatables == null) return;
     for (Navigatable navigatable : navigatables) {
-      if (navigatable.canNavigate()) {
+      if (navigatable.getNavigateOptions().canNavigate()) {
         navigatable.navigate(requestFocus);
       }
     }
@@ -56,7 +66,7 @@ public class OpenSourceUtil {
   public static void navigate(boolean requestFocus, boolean tryNotToScroll, Navigatable...navigatables) {
     if (navigatables == null) return;
     for (Navigatable navigatable : navigatables) {
-      if (navigatable.canNavigate()) {
+      if (navigatable.getNavigateOptions().canNavigate()) {
         if (tryNotToScroll && navigatable instanceof StatePreservingNavigatable) {
           ((StatePreservingNavigatable)navigatable).navigate(requestFocus, true);
         } else {
@@ -64,5 +74,27 @@ public class OpenSourceUtil {
         }
       }
     }
+  }
+
+  public static CompletableFuture<?> navigateAsync(UIAccess uiAccess, Navigatable... navigatables) {
+    return navigateAsync(uiAccess, true, navigatables);
+  }
+
+  @SuppressWarnings("unchecked")
+  public static CompletableFuture<?> navigateAsync(UIAccess uiAccess, boolean requestFocus, Navigatable... navigatables) {
+    if (navigatables == null || navigatables.length == 0) {
+      return CompletableFuture.completedFuture(null);
+    }
+
+    return CoroutineScope.launchAsync(Application.get().coroutineContext(), () -> {
+      return Coroutine
+          .first(CodeExecution.<Void, List<Navigatable>>supply(() ->
+              Arrays.stream(navigatables)
+                  .filter(n -> n.getNavigateOptions().canNavigate())
+                  .toList()))
+          .then(Iteration.forEach(
+              CompletableFutureStep.<Navigatable, Object>await(nav ->
+                  (CompletableFuture<Object>) nav.navigateAsync(uiAccess, requestFocus))));
+    }).toFuture();
   }
 }

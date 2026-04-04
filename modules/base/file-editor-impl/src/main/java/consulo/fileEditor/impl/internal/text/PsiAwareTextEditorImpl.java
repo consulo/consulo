@@ -15,6 +15,7 @@
  */
 package consulo.fileEditor.impl.internal.text;
 
+import consulo.dataContext.DataSink;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
 import consulo.fileEditor.EditorNotifications;
@@ -33,7 +34,6 @@ import consulo.language.util.ModuleUtilCore;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.UIExAWTDataKey;
-import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
 
 /**
@@ -43,11 +43,10 @@ public class PsiAwareTextEditorImpl extends TextEditorImpl {
   private TextEditorBackgroundHighlighter myBackgroundHighlighter;
 
   @RequiredUIAccess
-  public PsiAwareTextEditorImpl(Project project, VirtualFile file, TextEditorProviderImpl provider) {
-    super(project, file, provider);
+  public PsiAwareTextEditorImpl(Project project, VirtualFile file, Document document, TextEditorProviderImpl provider) {
+    super(project, file, document, provider);
   }
 
-  
   @Override
   public Runnable loadEditorInBackground() {
     Runnable baseAction = super.loadEditorInBackground();
@@ -68,10 +67,9 @@ public class PsiAwareTextEditorImpl extends TextEditorImpl {
     };
   }
 
-  
   @Override
-  protected TextEditorComponent createEditorComponent(Project project, VirtualFile file) {
-    return new PsiAwareTextEditorComponent(project, file, this, myTextEditorComponentContainerFactory);
+  protected TextEditorComponent createEditorComponent(Project project, VirtualFile file, Document document) {
+    return new PsiAwareTextEditorComponent(project, file, document, this, myTextEditorComponentContainerFactory);
   }
 
   @Override
@@ -92,9 +90,10 @@ public class PsiAwareTextEditorImpl extends TextEditorImpl {
 
     private PsiAwareTextEditorComponent(Project project,
                                         VirtualFile file,
+                                        Document document,
                                         TextEditorImpl textEditor,
                                         TextEditorComponentContainerFactory factory) {
-      super(project, file, textEditor, factory);
+      super(project, file, document, textEditor, factory);
       myProject = project;
       myFile = file;
     }
@@ -109,17 +108,17 @@ public class PsiAwareTextEditorImpl extends TextEditorImpl {
     }
 
     @Override
-    public Object getData(Key<?> dataId) {
-      if (UIExAWTDataKey.DOMINANT_HINT_AREA_RECTANGLE == dataId) {
-        LookupEx lookup = LookupManager.getInstance(myProject).getActiveLookup();
-        if (lookup != null && lookup.isVisible()) {
-          return lookup.getBounds();
-        }
+    public void uiDataSnapshot(DataSink sink) {
+      super.uiDataSnapshot(sink);
+
+      // Lookup bounds — EDT-safe, just UI state
+      LookupEx lookup = LookupManager.getInstance(myProject).getActiveLookup();
+      if (lookup != null && lookup.isVisible()) {
+        sink.set(UIExAWTDataKey.DOMINANT_HINT_AREA_RECTANGLE, lookup.getBounds());
       }
-      if (LangDataKeys.MODULE == dataId) {
-        return ModuleUtilCore.findModuleForFile(myFile, myProject);
-      }
-      return super.getData(dataId);
+
+      // Module — may need read access for index lookups
+      sink.lazy(LangDataKeys.MODULE, () -> ModuleUtilCore.findModuleForFile(myFile, myProject));
     }
   }
 }

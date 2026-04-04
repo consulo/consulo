@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.codeInspection.export;
 
 import consulo.application.Application;
-import consulo.application.impl.internal.IdeaModalityState;
+import consulo.ui.ModalityState;
 import consulo.component.ProcessCanceledException;
 import consulo.language.editor.inspection.HTMLExporter;
 import consulo.language.editor.inspection.localize.InspectionLocalize;
@@ -43,7 +43,7 @@ public class HTMLExportUtil {
           UIUtil.getErrorIcon()
         );
       };
-      Application.get().invokeLater(showError, IdeaModalityState.nonModal());
+      Application.get().invokeLater(showError, ModalityState.nonModal());
       throw new ProcessCanceledException();
     }
   }
@@ -59,7 +59,7 @@ public class HTMLExportUtil {
         InspectionLocalize.inspectionExportResultsErrorTitle().get(),
         UIUtil.getErrorIcon()
       );
-      Application.get().invokeLater(showError, IdeaModalityState.nonModal());
+      Application.get().invokeLater(showError, ModalityState.nonModal());
       throw new ProcessCanceledException();
     }
   }

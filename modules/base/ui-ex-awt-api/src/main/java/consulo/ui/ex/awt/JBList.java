@@ -1,8 +1,6 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ui.ex.awt;
 
-import consulo.dataContext.DataManager;
-import consulo.dataContext.DataProvider;
 import consulo.disposer.Disposer;
 import consulo.localize.LocalizeValue;
 import consulo.ui.ex.ComponentWithExpandableItems;
@@ -52,12 +50,10 @@ public class JBList<E> extends JList<E> implements ComponentWithEmptyText, Compo
     init();
   }
 
-  
   public static <T> DefaultListModel<T> createDefaultListModel(T... items) {
     return createDefaultListModel(Arrays.asList(items));
   }
 
-  
   public static <T> DefaultListModel<T> createDefaultListModel(Iterable<? extends T> items) {
     DefaultListModel<T> model = new DefaultListModel<>();
     for (T item : items) {
@@ -227,7 +223,6 @@ public class JBList<E> extends JList<E> implements ComponentWithEmptyText, Compo
     return model == null ? 0 : model.getSize();
   }
 
-  
   @Override
   public StatusText getEmptyText() {
     return myEmptyText;
@@ -238,12 +233,10 @@ public class JBList<E> extends JList<E> implements ComponentWithEmptyText, Compo
   }
 
   @Override
-  
   public ExpandableItemsHandler<Integer> getExpandableItemsHandler() {
     return myExpandableItemsHandler;
   }
 
-  
   protected ExpandableItemsHandler<Integer> createExpandableItemsHandler() {
     return ExpandableItemsHandlerFactory.install(this);
   }
@@ -265,10 +258,6 @@ public class JBList<E> extends JList<E> implements ComponentWithEmptyText, Compo
 
   public void installCellRenderer(Function<? super E, ? extends JComponent> fun) {
     setCellRenderer(new SelectionAwareListCellRenderer<>(fun));
-  }
-
-  public void setDataProvider(DataProvider provider) {
-    DataManager.registerDataProvider(this, provider);
   }
 
   public void disableEmptyText() {

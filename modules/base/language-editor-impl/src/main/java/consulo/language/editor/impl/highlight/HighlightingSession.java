@@ -15,24 +15,28 @@
  */
 package consulo.language.editor.impl.highlight;
 
-import consulo.document.Document;
-import consulo.colorScheme.EditorColorsScheme;
 import consulo.application.progress.ProgressIndicator;
-import consulo.project.Project;
+import consulo.codeEditor.imaginary.ImaginaryEditor;
+import consulo.colorScheme.EditorColorsScheme;
+import consulo.document.Document;
+import consulo.document.util.ProperTextRange;
 import consulo.language.psi.PsiFile;
+import consulo.project.Project;
+
+import org.jspecify.annotations.Nullable;
 
 public interface HighlightingSession {
-  
   Project getProject();
 
-  
   PsiFile getPsiFile();
 
-  
   Document getDocument();
 
-  
   ProgressIndicator getProgressIndicator();
 
   EditorColorsScheme getColorsScheme();
+
+  ProperTextRange getVisibleRange();
+
+  @Nullable ImaginaryEditor getImaginaryEditor();
 }

@@ -28,8 +28,7 @@ import consulo.compiler.localize.CompilerLocalize;
 import consulo.content.library.Library;
 import consulo.dataContext.DataManager;
 import consulo.dataContext.DataSink;
-import consulo.dataContext.TypeSafeDataProvider;
-import consulo.dataContext.TypeSafeDataProviderAdapter;
+import consulo.dataContext.UiDataProvider;
 import consulo.disposer.Disposer;
 import consulo.fileChooser.FileChooserDescriptorFactory;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.actions.*;
@@ -48,7 +47,6 @@ import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.tree.DefaultTreeExpander;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
-import consulo.util.dataholder.Key;
 import consulo.util.io.FileUtil;
 import consulo.util.lang.Comparing;
 import consulo.util.lang.StringUtil;
@@ -186,7 +184,7 @@ public class ArtifactEditorImpl implements ArtifactEditorEx {
     public JComponent createMainComponent() {
         mySourceItemsTree.initTree();
         myLayoutTreeComponent.initTree();
-        DataManager.registerDataProvider(myMainPanel, new TypeSafeDataProviderAdapter(new MyDataProvider()));
+        DataManager.registerUiDataProvider(myMainPanel, new MyDataProvider());
 
         myErrorPanelPlace.add(myValidationManager.getMainErrorPanel(), BorderLayout.CENTER);
 
@@ -604,12 +602,10 @@ public class ArtifactEditorImpl implements ArtifactEditorEx {
         return myMainPanel;
     }
 
-    private class MyDataProvider implements TypeSafeDataProvider {
+    private class MyDataProvider implements UiDataProvider {
         @Override
-        public void calcData(Key<?> key, DataSink sink) {
-            if (ArtifactEditorEx.ARTIFACTS_EDITOR_KEY.equals(key)) {
-                sink.put(ArtifactEditorEx.ARTIFACTS_EDITOR_KEY, ArtifactEditorImpl.this);
-            }
+        public void uiDataSnapshot(DataSink sink) {
+            sink.set(ArtifactEditorEx.ARTIFACTS_EDITOR_KEY, ArtifactEditorImpl.this);
         }
     }
 

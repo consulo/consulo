@@ -41,7 +41,6 @@ import org.jspecify.annotations.Nullable;
 
 import java.util.Locale;
 import java.util.Optional;
-import java.util.function.Function;
 
 /**
  * @author VISTALL
@@ -79,7 +78,6 @@ public abstract class VaadinComponentDelegate<T extends com.vaadin.flow.componen
         return myClassNamePrefix;
     }
 
-    
     public abstract T createVaadinComponent();
 
     @Override
@@ -96,25 +94,21 @@ public abstract class VaadinComponentDelegate<T extends com.vaadin.flow.componen
         myFont = font;
     }
 
-    
     @Override
     public Font getFont() {
         return myFont;
     }
 
-    
     protected T getVaadinComponent() {
         return myVaadinComponent;
     }
 
-    
     @Override
     public T toVaadinComponent() {
         return myVaadinComponent;
     }
 
     @Override
-    
     public UIDataObject dataObject() {
         UIDataObject data = ComponentUtil.getData(myVaadinComponent, UIDataObject.class);
         if (data == null) {
@@ -173,19 +167,11 @@ public abstract class VaadinComponentDelegate<T extends com.vaadin.flow.componen
     }
 
     @Override
-    
-    public Disposable addUserDataProvider(Function<Key<?>, Object> function) {
-        return dataObject().addUserDataProvider(function);
-    }
-
-    
-    @Override
     public <C extends Component, E extends ComponentEvent<C>> Disposable addListener(Class<? extends E> eventClass,
                                                                                      ComponentEventListener<C, E> listener) {
         return dataObject().addListener(eventClass, listener);
     }
 
-    
     @Override
     public <C extends Component, E extends ComponentEvent<C>> ComponentEventListener<C, E> getListenerDispatcher(Class<E> eventClass) {
         return dataObject().getDispatcher(eventClass);

@@ -15,8 +15,8 @@
  */
 package consulo.fileEditor.impl.internal;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ServiceImpl;
-import consulo.application.AccessRule;
 import consulo.application.Application;
 import consulo.application.util.function.ThrowableComputable;
 import consulo.component.persist.PersistentStateComponent;
@@ -31,11 +31,14 @@ import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.StringUtil;
 import consulo.util.xml.serializer.XmlSerializerUtil;
 import consulo.virtualFileSystem.VirtualFile;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
-import org.jspecify.annotations.Nullable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
 /**
  * @author Anton Katilin
@@ -56,19 +59,20 @@ public final class FileEditorProviderManagerImpl extends FileEditorProviderManag
   }
 
   @Override
-  
+  @RequiredReadAction
   public FileEditorProvider[] getProviders(Project project, VirtualFile file) {
     // Collect all possible editors
     List<FileEditorProvider> sharedProviders = new ArrayList<>();
     boolean doNotShowTextEditor = false;
+    boolean projectIsDumb = DumbService.isDumb(project);
     for (FileEditorProvider provider : myApplication.getExtensionList(FileEditorProvider.class)) {
       ThrowableComputable<Boolean, RuntimeException> action = () -> {
-        if (DumbService.isDumb(project) && !DumbService.isDumbAware(provider)) {
+        if (projectIsDumb && !DumbService.isDumbAware(provider)) {
           return false;
         }
         return provider.accept(project, file);
       };
-      if (AccessRule.read(action)) {
+      if (action.get()) {
         sharedProviders.add(provider);
         doNotShowTextEditor |= provider.getPolicy() == FileEditorPolicy.HIDE_DEFAULT_EDITOR;
       }
@@ -95,7 +99,6 @@ public final class FileEditorProviderManagerImpl extends FileEditorProviderManag
     return null;
   }
 
-  
   @Override
   public FileEditorProviderManagerState getState() {
     return myState;

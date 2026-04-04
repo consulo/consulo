@@ -19,11 +19,6 @@ final class ServiceViewCopyProvider implements CopyProvider {
     myServiceView = serviceView;
   }
 
-//  @Override
-//  public @NotNull ActionUpdateThread getActionUpdateThread() {
-//    return ActionUpdateThread.EDT;
-//  }
-
   @Override
   public void performCopy(DataContext dataContext) {
     List<ServiceViewItem> items = ServiceViewActionProvider.getSelectedItems(dataContext);

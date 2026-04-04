@@ -2,7 +2,8 @@
 package consulo.execution.debug.impl.internal.memory.ui;
 
 import consulo.application.ui.wm.ApplicationIdeFocusManager;
-import consulo.dataContext.DataProvider;
+import consulo.dataContext.DataSink;
+import consulo.dataContext.UiDataProvider;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.execution.debug.XDebugSession;
@@ -34,13 +35,12 @@ import java.awt.event.KeyEvent;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public abstract class ClassesFilteredViewBase extends BorderLayoutPanel implements DataProvider, Disposable {
+public abstract class ClassesFilteredViewBase extends BorderLayoutPanel implements UiDataProvider, Disposable {
     protected static final double DELAY_BEFORE_INSTANCES_QUERY_COEFFICIENT = 0.5;
     protected static final double MAX_DELAY_MILLIS = TimeUnit.SECONDS.toMillis(2);
     protected static final int DEFAULT_BATCH_SIZE = Integer.MAX_VALUE;
     private static final int INITIAL_TIME = 0;
 
-    
     protected final Project myProject;
     protected final SingleAlarmWithMutableDelay mySingleAlarm;
 
@@ -73,6 +73,7 @@ public abstract class ClassesFilteredViewBase extends BorderLayoutPanel implemen
         myTable = createClassesTable(memoryViewManagerState);
         myTable.getEmptyText().setText(XDebuggerLocalize.memoryViewEmptyRunning());
         Disposer.register(this, myTable);
+
 
         myTable.addKeyListener(new KeyAdapter() {
             @Override
@@ -171,7 +172,6 @@ public abstract class ClassesFilteredViewBase extends BorderLayoutPanel implemen
         return myFilterTextField;
     }
 
-    
     protected ClassesTable createClassesTable(MemoryViewManagerState memoryViewManagerState) {
         return new ClassesTable(myProject, this, memoryViewManagerState.isShowWithDiffOnly,
             memoryViewManagerState.isShowWithInstancesOnly, memoryViewManagerState.isShowTrackedOnly
@@ -267,8 +267,7 @@ public abstract class ClassesFilteredViewBase extends BorderLayoutPanel implemen
     }
 
     @Override
-    public @Nullable Object getData(Key<?> dataId) {
-        return null;
+    public void uiDataSnapshot(DataSink sink) {
     }
 
     private static class FilterTextField extends SearchTextField {

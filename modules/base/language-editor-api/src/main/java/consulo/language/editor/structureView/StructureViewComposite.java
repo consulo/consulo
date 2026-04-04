@@ -23,6 +23,7 @@ import consulo.fileEditor.structureView.StructureViewModel;
 import consulo.fileEditor.structureView.StructureViewTreeElement;
 import consulo.fileEditor.structureView.tree.TreeElement;
 import consulo.navigation.ItemPresentation;
+import consulo.navigation.NavigateOptions;
 import consulo.ui.image.Image;
 import consulo.util.collection.ArrayUtil;
 
@@ -169,17 +170,12 @@ public class StructureViewComposite implements StructureView {
       }
 
       @Override
+      public NavigateOptions getNavigateOptions() {
+        return NavigateOptions.CANT_NAVIGATE;
+      }
+
+      @Override
       public void navigate(boolean requestFocus) {
-      }
-
-      @Override
-      public boolean canNavigate() {
-        return false;
-      }
-
-      @Override
-      public boolean canNavigateToSource() {
-        return false;
       }
     }
     return new M();

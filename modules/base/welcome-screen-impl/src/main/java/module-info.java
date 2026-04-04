@@ -5,4 +5,6 @@
 module consulo.welcome.screen.impl {
     requires consulo.project.api;
     requires consulo.configuration.editor.api;
+    requires consulo.ui.ex.api;
+    requires consulo.datacontext.api;
 }

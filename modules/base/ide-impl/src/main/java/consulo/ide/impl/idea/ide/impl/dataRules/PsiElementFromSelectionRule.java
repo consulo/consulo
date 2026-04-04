@@ -16,24 +16,14 @@
 
 package consulo.ide.impl.idea.ide.impl.dataRules;
 
-import consulo.annotation.component.ExtensionImpl;
-import consulo.dataContext.DataProvider;
-import consulo.dataContext.GetDataRule;
+import consulo.dataContext.DataSnapshot;
 import consulo.language.editor.PlatformDataKeys;
 import consulo.language.psi.PsiElement;
-import consulo.util.dataholder.Key;
 import org.jspecify.annotations.Nullable;
 
-@ExtensionImpl
-public class PsiElementFromSelectionRule implements GetDataRule<PsiElement> {
-  @Override
-  public Key<PsiElement> getKey() {
-    return PsiElement.KEY;
-  }
-
-  @Override
-  public @Nullable PsiElement getData(DataProvider dataProvider) {
-    Object element = dataProvider.getDataUnchecked(PlatformDataKeys.SELECTED_ITEM);
+public final class PsiElementFromSelectionRule {
+  static @Nullable PsiElement getData(DataSnapshot dataProvider) {
+    Object element = dataProvider.get(PlatformDataKeys.SELECTED_ITEM);
     return element instanceof PsiElement psiElement && psiElement.isValid() ? psiElement : null;
   }
 }

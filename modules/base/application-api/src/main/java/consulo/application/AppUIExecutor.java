@@ -1,6 +1,7 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.application;
 
+import consulo.application.internal.AsyncExecutionService;
 import consulo.component.ComponentManager;
 import consulo.ui.ModalityState;
 import org.jetbrains.annotations.Contract;
@@ -13,39 +14,18 @@ import org.jetbrains.annotations.Contract;
  */
 public interface AppUIExecutor extends BaseExpirableExecutor<AppUIExecutor> {
   /**
-   * Creates an executor working with the given modality state.
-   *
-   * @see ModalityState
-   */
-  static AppUIExecutor onUiThread(ModalityState modality) {
-    return AsyncExecutionService.getService().createUIExecutor(modality);
-  }
-
-  /**
-   * Creates an executor working with the default modality state.
-   *
-   * @see Application#getDefaultModalityState()
+   * Creates an executor working on UI thread.
    */
   static AppUIExecutor onUiThread() {
-    return onUiThread(Application.get().getDefaultModalityState());
+    return AsyncExecutionService.getService().createUIExecutor();
   }
 
   /**
-   * Creates a Write-thread-based executor working with the given modality state.
-   *
-   * @see ModalityState
+   * @deprecated Modality state is no longer used. Use {@link #onUiThread()} instead.
    */
-  static AppUIExecutor onWriteThread(ModalityState modality) {
-    return AsyncExecutionService.getService().createWriteThreadExecutor(modality);
-  }
-
-  /**
-   * Creates a Write-thread-based executor working with the default modality state.
-   *
-   * @see Application#getDefaultModalityState()
-   */
-  static AppUIExecutor onWriteThread() {
-    return onWriteThread(Application.get().getDefaultModalityState());
+  @Deprecated
+  static AppUIExecutor onUiThread(ModalityState modality) {
+    return onUiThread();
   }
 
   /**

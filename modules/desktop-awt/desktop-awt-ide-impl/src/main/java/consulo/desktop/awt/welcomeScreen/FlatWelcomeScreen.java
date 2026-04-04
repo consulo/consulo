@@ -65,11 +65,8 @@ public class FlatWelcomeScreen extends JPanel implements WelcomeScreenSlider {
     public FlatWelcomeScreen(FlatWelcomeFrame welcomeFrame, TitlelessDecorator titlelessDecorator) {
         super(new JBCardLayout());
         myTitlelessDecorator = titlelessDecorator;
-        DataManager.registerDataProvider(this, dataId -> {
-            if (KEY == dataId) {
-                return this;
-            }
-            return null;
+        DataManager.registerUiDataProvider(this, sink -> {
+            sink.set(KEY, this);
         });
 
         myWelcomeFrame = welcomeFrame;

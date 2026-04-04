@@ -29,6 +29,7 @@ import consulo.execution.process.ExecutionMode;
 import consulo.execution.ui.RunContentDescriptor;
 import consulo.execution.ui.RunContentManager;
 import consulo.logging.Logger;
+import consulo.navigation.NavigateOptions;
 import consulo.navigation.Navigatable;
 import consulo.process.ProcessHandler;
 import consulo.process.cmd.GeneralCommandLine;
@@ -545,18 +546,13 @@ public class ExecutionHelper {
 
     public static class FakeNavigatable implements Navigatable {
         @Override
+        public NavigateOptions getNavigateOptions() {
+            return NavigateOptions.CANT_NAVIGATE;
+        }
+
+        @Override
         public void navigate(boolean requestFocus) {
             // Do nothing
-        }
-
-        @Override
-        public boolean canNavigate() {
-            return false;
-        }
-
-        @Override
-        public boolean canNavigateToSource() {
-            return false;
         }
     }
 }

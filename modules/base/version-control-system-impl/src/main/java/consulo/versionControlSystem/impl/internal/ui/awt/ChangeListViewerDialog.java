@@ -16,7 +16,8 @@
 package consulo.versionControlSystem.impl.internal.ui.awt;
 
 import consulo.application.CommonBundle;
-import consulo.dataContext.DataProvider;
+import consulo.dataContext.DataSink;
+import consulo.dataContext.UiDataProvider;
 import consulo.project.Project;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.DefaultActionGroup;
@@ -36,6 +37,7 @@ import consulo.versionControlSystem.versionBrowser.CommittedChangeList;
 import consulo.versionControlSystem.versionBrowser.VcsRevisionNumberAware;
 import consulo.virtualFileSystem.VirtualFile;
 import org.jspecify.annotations.Nullable;
+import org.jetbrains.annotations.NonNls;
 
 import javax.swing.*;
 import java.awt.*;
@@ -50,7 +52,7 @@ import java.util.function.Function;
  * @author max
  * @since 2006-07-20
  */
-public class ChangeListViewerDialog extends DialogWrapper implements DataProvider, LegacyDialog {
+public class ChangeListViewerDialog extends DialogWrapper implements UiDataProvider, LegacyDialog {
   private Project myProject;
   private CommittedChangeList myChangeList;
   private InternalRepositoryChangesBrowser myChangesBrowser;
@@ -106,7 +108,7 @@ public class ChangeListViewerDialog extends DialogWrapper implements DataProvide
     myCommitMessageArea = new JEditorPane(UIUtil.HTML_MIME, "");
     myCommitMessageArea.setBorder(BorderFactory.createEmptyBorder(3, 3, 3, 3));
     myCommitMessageArea.setEditable(false);
-    String text = IssueLinkHtmlRenderer.formatTextIntoHtml(project, changeList.getComment().trim());
+    @NonNls String text = IssueLinkHtmlRenderer.formatTextIntoHtml(project, changeList.getComment().trim());
     myCommitMessageArea.setBackground(UIUtil.getComboBoxDisabledBackground());
     myCommitMessageArea.addHyperlinkListener(BrowserHyperlinkListener.INSTANCE);
     commitMessageScroll = ScrollPaneFactory.createScrollPane(myCommitMessageArea);
@@ -118,16 +120,12 @@ public class ChangeListViewerDialog extends DialogWrapper implements DataProvide
     return "VCS.ChangeListViewerDialog";
   }
 
-  public Object getData(Key<?> dataId) {
-    if (VcsDataKeys.CHANGES == dataId) {
-      return myChanges;
+  @Override
+  public void uiDataSnapshot(DataSink sink) {
+    sink.set(VcsDataKeys.CHANGES, myChanges);
+    if (myChangeList instanceof VcsRevisionNumberAware) {
+      sink.set(VcsDataKeys.VCS_REVISION_NUMBER, ((VcsRevisionNumberAware)myChangeList).getRevisionNumber());
     }
-    else if (VcsDataKeys.VCS_REVISION_NUMBER == dataId) {
-      if (myChangeList instanceof VcsRevisionNumberAware) {
-        return ((VcsRevisionNumberAware)myChangeList).getRevisionNumber();
-      }
-    }
-    return null;
   }
 
   public void setConvertor(Function<Change, Change> convertor) {
@@ -149,12 +147,9 @@ public class ChangeListViewerDialog extends DialogWrapper implements DataProvide
       }
 
       @Override
-      public Object getData(Key dataId) {
-        Object data = super.getData(dataId);
-        if (data != null) {
-          return data;
-        }
-        return ChangeListViewerDialog.this.getData(dataId);
+      public void uiDataSnapshot(DataSink sink) {
+        super.uiDataSnapshot(sink);
+        ChangeListViewerDialog.this.uiDataSnapshot(sink);
       }
 
       @Override
@@ -200,7 +195,6 @@ public class ChangeListViewerDialog extends DialogWrapper implements DataProvide
     super.dispose();
   }
 
-  
   @Override
   protected Action[] createActions() {
     Action cancelAction = getCancelAction();

@@ -249,6 +249,7 @@ public class CopyrightProfilesPanel extends MasterDetailsComponent
         return result;
     }
 
+
     @RequiredUIAccess
     private @Nullable String askForProfileName(String title, String initialName) {
         return Messages.showInputDialog(

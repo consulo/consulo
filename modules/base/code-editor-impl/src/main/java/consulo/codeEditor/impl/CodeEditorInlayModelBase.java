@@ -1,7 +1,6 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.codeEditor.impl;
 
-import consulo.application.ReadAction;
 import consulo.application.util.Dumpable;
 import consulo.codeEditor.*;
 import consulo.codeEditor.impl.util.EditorImplUtil;
@@ -163,7 +162,6 @@ public class CodeEditorInlayModelBase implements InlayModel, Disposable, Dumpabl
     }
 
     @Override
-    
     public <T extends EditorCustomElementRenderer> Inlay<T> addBlockElement(int offset,
                                                                             boolean relatesToPrecedingText,
                                                                             boolean showAbove,
@@ -198,7 +196,6 @@ public class CodeEditorInlayModelBase implements InlayModel, Disposable, Dumpabl
     }
 
     @Override
-    
     public <T extends EditorCustomElementRenderer> Inlay<T> addAfterLineEndElement(int offset,
                                                                                    boolean relatesToPrecedingText,
                                                                                    T renderer) {
@@ -213,7 +210,6 @@ public class CodeEditorInlayModelBase implements InlayModel, Disposable, Dumpabl
             properties.getPriority(), renderer);
     }
 
-    
     private <T extends EditorCustomElementRenderer> Inlay<T> addAfterLineEndElement(int offset,
                                                                                     boolean relatesToPrecedingText,
                                                                                     boolean softWrappable,
@@ -229,7 +225,6 @@ public class CodeEditorInlayModelBase implements InlayModel, Disposable, Dumpabl
         return inlay;
     }
 
-    
     @Override
     public List<Inlay<?>> getInlineElementsInRange(int startOffset, int endOffset) {
         List<InlineInlayImpl> range = getElementsInRange(myInlineElementsTree, startOffset, endOffset, inlay -> true, INLINE_ELEMENTS_COMPARATOR);
@@ -237,7 +232,6 @@ public class CodeEditorInlayModelBase implements InlayModel, Disposable, Dumpabl
         return (List) range;
     }
 
-    
     @Override
     public <T> List<Inlay<? extends T>> getInlineElementsInRange(int startOffset, int endOffset, Class<T> type) {
         List<InlineInlayImpl> range = getElementsInRange(myInlineElementsTree, startOffset, endOffset, inlay -> type.isInstance(inlay.myRenderer), INLINE_ELEMENTS_COMPARATOR);
@@ -245,7 +239,6 @@ public class CodeEditorInlayModelBase implements InlayModel, Disposable, Dumpabl
         return (List) range;
     }
 
-    
     @Override
     public List<Inlay<?>> getBlockElementsInRange(int startOffset, int endOffset) {
         List<BlockInlayImpl> range = getElementsInRange(myBlockElementsTree, startOffset, endOffset, inlay -> true, BLOCK_ELEMENTS_PRIORITY_COMPARATOR);
@@ -253,7 +246,6 @@ public class CodeEditorInlayModelBase implements InlayModel, Disposable, Dumpabl
         return (List) range;
     }
 
-    
     @Override
     public <T> List<Inlay<? extends T>> getBlockElementsInRange(int startOffset, int endOffset, Class<T> type) {
         List<BlockInlayImpl> range = getElementsInRange(myBlockElementsTree, startOffset, endOffset, inlay -> type.isInstance(inlay.myRenderer), BLOCK_ELEMENTS_PRIORITY_COMPARATOR);
@@ -277,7 +269,6 @@ public class CodeEditorInlayModelBase implements InlayModel, Disposable, Dumpabl
         return result;
     }
 
-    
     @Override
     public List<Inlay<?>> getBlockElementsForVisualLine(int visualLine, boolean above) {
         int visibleLineCount = myEditor.getVisibleLineCount();
@@ -380,96 +371,94 @@ public class CodeEditorInlayModelBase implements InlayModel, Disposable, Dumpabl
     }
 
     public Inlay getElementAt(EditorLocation location, boolean ignoreBlockElementWidth) {
-        return ReadAction.compute(() -> {
-            Insets insets = myEditor.getContentComponent().getInsets();
-            Point point = location.getPoint();
-            if (point.y < insets.top) {
-                return null; // can happen for mouse drag events
-            }
-            int relX = point.x - insets.left;
-            if (relX < 0) {
+        Insets insets = myEditor.getContentComponent().getInsets();
+        Point point = location.getPoint();
+        if (point.y < insets.top) {
+            return null; // can happen for mouse drag events
+        }
+        int relX = point.x - insets.left;
+        if (relX < 0) {
+            return null;
+        }
+
+        boolean hasInlineElements = hasInlineElements();
+        boolean hasBlockElements = hasBlockElements();
+        boolean hasAfterLineEndElements = hasAfterLineEndElements();
+        if (!hasInlineElements && !hasBlockElements && !hasAfterLineEndElements) {
+            return null;
+        }
+
+        VisualPosition visualPosition = location.getVisualPosition();
+        if (hasBlockElements) {
+            int visualLine = visualPosition.line;
+            int baseY = location.getVisualLineStartY();
+            if (point.y < baseY) {
+                List<Inlay<?>> inlays = getBlockElementsForVisualLine(visualLine, true);
+                int yDiff = baseY - point.y;
+                for (int i = inlays.size() - 1; i >= 0; i--) {
+                    Inlay inlay = inlays.get(i);
+                    yDiff -= inlay.getHeightInPixels();
+                    if (yDiff <= 0) {
+                        return ignoreBlockElementWidth || relX < inlay.getWidthInPixels() ? inlay : null;
+                    }
+                }
+                LOG.error("Inconsistent state: " + point + ", " + visualPosition + ", baseY=" + baseY + ", " + inlays,
+                    AttachmentFactory.get().create("editorState.txt", myEditor.dumpState()));
                 return null;
             }
-
-            boolean hasInlineElements = hasInlineElements();
-            boolean hasBlockElements = hasBlockElements();
-            boolean hasAfterLineEndElements = hasAfterLineEndElements();
-            if (!hasInlineElements && !hasBlockElements && !hasAfterLineEndElements) {
-                return null;
-            }
-
-            VisualPosition visualPosition = location.getVisualPosition();
-            if (hasBlockElements) {
-                int visualLine = visualPosition.line;
-                int baseY = location.getVisualLineStartY();
-                if (point.y < baseY) {
-                    List<Inlay<?>> inlays = getBlockElementsForVisualLine(visualLine, true);
-                    int yDiff = baseY - point.y;
-                    for (int i = inlays.size() - 1; i >= 0; i--) {
-                        Inlay inlay = inlays.get(i);
+            else {
+                int lineBottom = location.getVisualLineEndY();
+                if (point.y >= lineBottom) {
+                    List<Inlay<?>> inlays = getBlockElementsForVisualLine(visualLine, false);
+                    int yDiff = point.y - lineBottom;
+                    for (Inlay inlay : inlays) {
                         yDiff -= inlay.getHeightInPixels();
-                        if (yDiff <= 0) {
-                            return ignoreBlockElementWidth || relX < inlay.getWidthInPixels() ? inlay : null;
+                        if (yDiff < 0) {
+                            return relX < inlay.getWidthInPixels() ? inlay : null;
                         }
                     }
-                    LOG.error("Inconsistent state: " + point + ", " + visualPosition + ", baseY=" + baseY + ", " + inlays,
+                    LOG.error("Inconsistent state: " + point + ", " + visualPosition + ", lineBottom=" + lineBottom + ", " + inlays,
                         AttachmentFactory.get().create("editorState.txt", myEditor.dumpState()));
                     return null;
                 }
-                else {
-                    int lineBottom = location.getVisualLineEndY();
-                    if (point.y >= lineBottom) {
-                        List<Inlay<?>> inlays = getBlockElementsForVisualLine(visualLine, false);
-                        int yDiff = point.y - lineBottom;
-                        for (Inlay inlay : inlays) {
-                            yDiff -= inlay.getHeightInPixels();
-                            if (yDiff < 0) {
-                                return relX < inlay.getWidthInPixels() ? inlay : null;
-                            }
-                        }
-                        LOG.error("Inconsistent state: " + point + ", " + visualPosition + ", lineBottom=" + lineBottom + ", " + inlays,
-                            AttachmentFactory.get().create("editorState.txt", myEditor.dumpState()));
+            }
+        }
+        if (hasInlineElements) {
+            if (location.getCollapsedRegion() == null) {
+                int offset = location.getOffset();
+                List<Inlay<?>> inlays = getInlineElementsInRange(offset, offset);
+                if (!inlays.isEmpty()) {
+                    VisualPosition startVisualPosition = myEditor.offsetToVisualPosition(offset);
+                    Point inlayPoint = myEditor.visualPositionToXY(startVisualPosition);
+                    if (point.y < inlayPoint.y || point.y >= inlayPoint.y + myEditor.getLineHeight()) {
                         return null;
                     }
-                }
-            }
-            if (hasInlineElements) {
-                if (location.getCollapsedRegion() == null) {
-                    int offset = location.getOffset();
-                    List<Inlay<?>> inlays = getInlineElementsInRange(offset, offset);
-                    if (!inlays.isEmpty()) {
-                        VisualPosition startVisualPosition = myEditor.offsetToVisualPosition(offset);
-                        Point inlayPoint = myEditor.visualPositionToXY(startVisualPosition);
-                        if (point.y < inlayPoint.y || point.y >= inlayPoint.y + myEditor.getLineHeight()) {
-                            return null;
-                        }
-                        Inlay<?> inlay = findInlay(inlays, point.x, inlayPoint.x);
-                        if (inlay != null) {
-                            return inlay;
-                        }
+                    Inlay<?> inlay = findInlay(inlays, point.x, inlayPoint.x);
+                    if (inlay != null) {
+                        return inlay;
                     }
                 }
             }
-            if (hasAfterLineEndElements) {
-                int offset = location.getOffset();
-                int logicalLine = myEditor.getDocument().getLineNumber(offset);
-                if (offset == myEditor.getDocument().getLineEndOffset(logicalLine) && location.getCollapsedRegion() == null) {
-                    List<Inlay<?>> inlays = myEditor.getInlayModel().getAfterLineEndElementsForLogicalLine(logicalLine);
-                    if (!inlays.isEmpty()) {
-                        Rectangle bounds = inlays.get(0).getBounds();
-                        assert bounds != null;
-                        if (point.y < bounds.y || point.y >= bounds.y + bounds.height) {
-                            return null;
-                        }
-                        Inlay<?> inlay = findInlay(inlays, point.x, bounds.x);
-                        if (inlay != null) {
-                            return inlay;
-                        }
+        }
+        if (hasAfterLineEndElements) {
+            int offset = location.getOffset();
+            int logicalLine = myEditor.getDocument().getLineNumber(offset);
+            if (offset == myEditor.getDocument().getLineEndOffset(logicalLine) && location.getCollapsedRegion() == null) {
+                List<Inlay<?>> inlays = myEditor.getInlayModel().getAfterLineEndElementsForLogicalLine(logicalLine);
+                if (!inlays.isEmpty()) {
+                    Rectangle bounds = inlays.get(0).getBounds();
+                    assert bounds != null;
+                    if (point.y < bounds.y || point.y >= bounds.y + bounds.height) {
+                        return null;
+                    }
+                    Inlay<?> inlay = findInlay(inlays, point.x, bounds.x);
+                    if (inlay != null) {
+                        return inlay;
                     }
                 }
             }
-            return null;
-        });
+        }
+        return null;
     }
 
     private static Inlay<?> findInlay(List<? extends Inlay<?>> inlays, int x, int startX) {
@@ -483,7 +472,6 @@ public class CodeEditorInlayModelBase implements InlayModel, Disposable, Dumpabl
         return null;
     }
 
-    
     @Override
     public List<Inlay<?>> getAfterLineEndElementsInRange(int startOffset, int endOffset) {
         if (!hasAfterLineEndElements()) {
@@ -494,7 +482,6 @@ public class CodeEditorInlayModelBase implements InlayModel, Disposable, Dumpabl
         return (List) range;
     }
 
-    
     @Override
     public <T> List<Inlay<? extends T>> getAfterLineEndElementsInRange(int startOffset, int endOffset, Class<T> type) {
         if (!hasAfterLineEndElements()) {
@@ -505,7 +492,6 @@ public class CodeEditorInlayModelBase implements InlayModel, Disposable, Dumpabl
         return (List) range;
     }
 
-    
     @Override
     public List<Inlay<?>> getAfterLineEndElementsForLogicalLine(int logicalLine) {
         DocumentEx document = myEditor.getDocument();
@@ -587,7 +573,6 @@ public class CodeEditorInlayModelBase implements InlayModel, Disposable, Dumpabl
         }
     }
 
-    
     @Override
     public String dumpState() {
         return "Inline elements: " + dumpInlays(myInlineElementsTree) + ", after-line-end elements: " + dumpInlays(myAfterLineEndElementsTree) + ", block elements: " + dumpInlays(myBlockElementsTree);
@@ -626,7 +611,6 @@ public class CodeEditorInlayModelBase implements InlayModel, Disposable, Dumpabl
         }
 
         @Override
-        
         protected RMNode<InlineInlayImpl<?>> createNewNode(InlineInlayImpl key, int start, int end,
                                                            boolean greedyToLeft, boolean greedyToRight, boolean stickingToRight, int layer) {
             return new RMNode<InlineInlayImpl<?>>(this, key, start, end, greedyToLeft, greedyToRight, stickingToRight) {

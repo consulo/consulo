@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2017 consulo.io
+ * Copyright 2013-2026 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,6 +15,8 @@
  */
 package consulo.ide.impl.moduleImport;
 
+import consulo.disposer.Disposer;
+import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
 import consulo.ide.localize.IdeLocalize;
 import consulo.ide.moduleImport.ModuleImportContext;
 import consulo.ide.moduleImport.ModuleImportProcessor;
@@ -22,137 +24,174 @@ import consulo.ide.moduleImport.ModuleImportProvider;
 import consulo.ide.moduleImport.ModuleImportProviders;
 import consulo.ide.newModule.NewOrImportModuleUtil;
 import consulo.project.Project;
-import consulo.project.ProjectManager;
 import consulo.project.ProjectOpenContext;
 import consulo.project.impl.internal.DefaultProjectOpenProcessor;
-import consulo.project.impl.internal.ProjectImplUtil;
 import consulo.project.internal.ProjectOpenProcessor;
 import consulo.ui.Alert;
 import consulo.ui.UIAccess;
 import consulo.ui.image.Image;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.concurrent.AsyncResult;
+import consulo.util.concurrent.coroutine.Coroutine;
+import consulo.util.concurrent.coroutine.step.CodeExecution;
+import consulo.util.concurrent.coroutine.step.CompletableFutureStep;
 import consulo.util.io.FileUtil;
 import consulo.util.lang.Pair;
 import consulo.util.lang.ThreeState;
+import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.virtualFileSystem.util.VirtualFileUtil;
 import org.jspecify.annotations.Nullable;
 
 import java.io.File;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * @author VISTALL
  * @since 31-Jan-17
  */
 public class ImportProjectOpenProcessor extends ProjectOpenProcessor {
-  private final List<ModuleImportProvider> myProviders;
+    private final List<ModuleImportProvider> myProviders;
 
-  public ImportProjectOpenProcessor() {
-    myProviders = ModuleImportProviders.getExtensions(false);
-  }
-
-  @Override
-  public @Nullable Image getIcon(VirtualFile file) {
-    File ioFile = VirtualFileUtil.virtualToIoFile(file);
-    for (ModuleImportProvider provider : myProviders) {
-      if (provider.canImport(ioFile)) {
-        return provider.getIcon();
-      }
-    }
-    return null;
-  }
-
-  @Override
-  public boolean canOpenProject(File file) {
-    for (ModuleImportProvider provider : myProviders) {
-      if (provider.canImport(file)) {
-        return true;
-      }
+    public ImportProjectOpenProcessor() {
+        myProviders = ModuleImportProviders.getExtensions(false);
     }
 
-    return false;
-  }
-
-  
-  @Override
-  public AsyncResult<Project> doOpenProjectAsync(VirtualFile virtualFile, UIAccess uiAccess, ProjectOpenContext openContext) {
-    File ioPath = VirtualFileUtil.virtualToIoFile(virtualFile);
-
-    List<ModuleImportProvider> targetProviders =
-      ContainerUtil.filter(myProviders, moduleImportProvider -> moduleImportProvider.canImport(ioPath));
-
-    if (targetProviders.size() == 0) {
-      throw new IllegalArgumentException("must be not empty");
+    @Override
+    public @Nullable Image getIcon(VirtualFile file) {
+        File ioFile = VfsUtil.virtualToIoFile(file);
+        for (ModuleImportProvider provider : myProviders) {
+            if (provider.canImport(ioFile)) {
+                return provider.getIcon();
+            }
+        }
+        return null;
     }
 
-    String expectedProjectPath = ModuleImportProvider.getDefaultPath(virtualFile);
+    @Override
+    public boolean canOpenProject(File file) {
+        for (ModuleImportProvider provider : myProviders) {
+            if (provider.canImport(file)) {
+                return true;
+            }
+        }
 
-    AsyncResult<ThreeState> askDialogResult = AsyncResult.undefined();
-    if (!uiAccess.isHeadless() && DefaultProjectOpenProcessor.getInstance().canOpenProject(new File(expectedProjectPath))) {
-      Alert<ThreeState> alert = Alert.create();
-      alert.title(IdeLocalize.titleOpenProject());
-      alert.text(IdeLocalize.projectImportOpenExisting(
-        "an existing project",
-        FileUtil.toSystemDependentName(ioPath.getPath()),
-        virtualFile.getName()
-      ));
-      alert.asQuestion();
-
-      alert.button(IdeLocalize.projectImportOpenExistingOpenexisting().get(), ThreeState.YES);
-      alert.asDefaultButton();
-
-      alert.button(IdeLocalize.projectImportOpenExistingReimport().get(), ThreeState.NO);
-
-      alert.button(Alert.CANCEL, ThreeState.UNSURE);
-      alert.asExitButton();
-
-      uiAccess.give(() -> alert.showAsync().notify(askDialogResult));
-    }
-    else {
-      askDialogResult.setDone(ThreeState.NO);
+        return false;
     }
 
-    AsyncResult<Project> projectResult = AsyncResult.undefined();
+    @Override
+    public <I> Coroutine<I, VirtualFile> prepareSteps(UIAccess uiAccess,
+                                                       ProjectOpenContext openContext,
+                                                       Coroutine<I, VirtualFile> in) {
+        return in
+            // Show "open existing or reimport?" dialog + run import if needed
+            .then(CompletableFutureStep.<VirtualFile, VirtualFile>await(virtualFile -> {
+                File ioPath = VfsUtil.virtualToIoFile(virtualFile);
 
-    askDialogResult.doWhenDone(threeState -> {
-      switch (threeState) {
-        case YES:
-          ProjectManager.getInstance().openProjectAsync(virtualFile, uiAccess, openContext).notify(projectResult);
-          break;
-        case NO:
-          uiAccess.give(() -> {
+                List<ModuleImportProvider> targetProviders =
+                    ContainerUtil.filter(myProviders, moduleImportProvider -> moduleImportProvider.canImport(ioPath));
+
+                if (targetProviders.isEmpty()) {
+                    throw new IllegalArgumentException("must be not empty");
+                }
+
+                String expectedProjectPath = ModuleImportProvider.getDefaultPath(virtualFile);
+
+                CompletableFuture<VirtualFile> future = new CompletableFuture<>();
+
+                // If existing project and not headless — ask what to do
+                if (!uiAccess.isHeadless() && DefaultProjectOpenProcessor.getInstance().canOpenProject(new File(expectedProjectPath))) {
+                    askOpenOrReimport(virtualFile, ioPath, expectedProjectPath, targetProviders, uiAccess, future);
+                }
+                else {
+                    // Headless or no existing project — go straight to import
+                    runImport(virtualFile, targetProviders, uiAccess, future);
+                }
+
+                return future;
+            }))
+            // Cancel check (null means user cancelled)
+            .then(CodeExecution.<VirtualFile, VirtualFile>apply((vf, continuation) -> {
+                if (vf == null) {
+                    continuation.cancel();
+                    return null;
+                }
+                return vf;
+            }));
+    }
+
+    private void askOpenOrReimport(VirtualFile virtualFile,
+                                   File ioPath,
+                                   String expectedProjectPath,
+                                   List<ModuleImportProvider> targetProviders,
+                                   UIAccess uiAccess,
+                                   CompletableFuture<VirtualFile> future) {
+        Alert<ThreeState> alert = Alert.create();
+        alert.title(IdeLocalize.titleOpenProject());
+        alert.text(IdeLocalize.projectImportOpenExisting(
+            "an existing project",
+            FileUtil.toSystemDependentName(ioPath.getPath()),
+            virtualFile.getName()
+        ));
+        alert.asQuestion();
+
+        alert.button(IdeLocalize.projectImportOpenExistingOpenexisting().get(), ThreeState.YES);
+        alert.asDefaultButton();
+
+        alert.button(IdeLocalize.projectImportOpenExistingReimport().get(), ThreeState.NO);
+
+        alert.button(Alert.CANCEL, ThreeState.UNSURE);
+        alert.asExitButton();
+
+        uiAccess.give(() -> alert.showAsync().doWhenDone(threeState -> {
+            switch (threeState) {
+                case YES:
+                    // Open existing project — resolve VirtualFile for the project directory
+                    VirtualFile projectDir = LocalFileSystem.getInstance().refreshAndFindFileByPath(expectedProjectPath);
+                    future.complete(projectDir);
+                    break;
+                case NO:
+                    runImport(virtualFile, targetProviders, uiAccess, future);
+                    break;
+                case UNSURE:
+                    future.complete(null);
+                    break;
+            }
+        }));
+    }
+
+    private void runImport(VirtualFile virtualFile,
+                           List<ModuleImportProvider> targetProviders,
+                           UIAccess uiAccess,
+                           CompletableFuture<VirtualFile> future) {
+        uiAccess.give(() -> {
             AsyncResult<Pair<ModuleImportContext, ModuleImportProvider<ModuleImportContext>>> result = AsyncResult.undefined();
             ModuleImportProcessor.showImportChooser(null, virtualFile, targetProviders, result);
 
             result.doWhenDone(pair -> {
-              ModuleImportContext context = pair.getFirst();
+                ModuleImportContext context = pair.getFirst();
 
-              ModuleImportProvider<ModuleImportContext> provider = pair.getSecond();
-              AsyncResult<Project> importProjectAsync = NewOrImportModuleUtil.importProject(context, provider);
-              importProjectAsync.doWhenDone((newProject) -> {
-                ProjectImplUtil.updateLastProjectLocation(expectedProjectPath);
+                ModuleImportProvider<ModuleImportContext> provider = pair.getSecond();
+                AsyncResult<Project> importProjectAsync = NewOrImportModuleUtil.importProject(context, provider);
+                importProjectAsync.doWhenDone((newProject) -> {
+                    VirtualFile projectDir = LocalFileSystem.getInstance().refreshAndFindFileByPath(newProject.getBasePath());
 
-                ProjectManager.getInstance().openProjectAsync(newProject, uiAccess, openContext).notify(projectResult);
-              });
+                    // Dispose the temp project — ProjectOpenService will create a real one
+                    Disposer.dispose(newProject);
 
-              importProjectAsync.doWhenRejected((Runnable)projectResult::setRejected);
+                    future.complete(projectDir);
+                });
+
+                importProjectAsync.doWhenRejected((Runnable) () -> future.complete(null));
             });
 
             result.doWhenRejected((pair, error) -> {
-              pair.getFirst().dispose();
+                if (pair != null) {
+                    pair.getFirst().dispose();
+                }
 
-              projectResult.setRejected();
+                future.complete(null);
             });
-          });
-          break;
-        case UNSURE:
-          projectResult.setRejected();
-          break;
-      }
-    });
-
-    return projectResult;
-  }
+        });
+    }
 }

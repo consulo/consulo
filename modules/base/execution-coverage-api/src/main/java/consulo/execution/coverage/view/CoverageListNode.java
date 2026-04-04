@@ -6,6 +6,7 @@ import consulo.execution.coverage.CoverageViewManager;
 import consulo.language.editor.util.LanguageEditorNavigationUtil;
 import consulo.language.icon.IconDescriptorUpdaters;
 import consulo.language.psi.*;
+import consulo.navigation.NavigateOptions;
 import consulo.navigation.NavigationItem;
 import consulo.project.Project;
 import consulo.project.ui.view.tree.AbstractTreeNode;
@@ -86,19 +87,16 @@ public class CoverageListNode extends AbstractTreeNode<PsiNamedElement> {
     }
 
     @Override
-    public boolean canNavigate() {
-        return getValue() instanceof PsiElement element && element.isValid() && element.getContainingFile() != null;
-    }
-
-    @Override
-    public boolean canNavigateToSource() {
-        return canNavigate();
+    public NavigateOptions getNavigateOptions() {
+        return getValue() instanceof PsiElement element && element.isValid() && element.getContainingFile() != null
+            ? NavigateOptions.CAN_NAVIGATE_FULL
+            : NavigateOptions.CANT_NAVIGATE;
     }
 
     @Override
     @RequiredUIAccess
     public void navigate(boolean requestFocus) {
-        if (canNavigate()) {
+        if (getNavigateOptions().canNavigate()) {
             PsiNamedElement value = getValue();
             if (requestFocus) {
                 LanguageEditorNavigationUtil.activateFileWithPsiElement(value, true);

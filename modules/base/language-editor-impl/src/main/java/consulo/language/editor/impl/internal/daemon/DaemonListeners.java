@@ -8,9 +8,7 @@ import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
 import consulo.application.PowerSaveModeListener;
 import consulo.application.event.ApplicationListener;
-import consulo.application.impl.internal.LaterInvocator;
 import consulo.application.internal.AppLifecycleListener;
-import consulo.application.util.registry.Registry;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorFactory;
 import consulo.codeEditor.event.CaretEvent;
@@ -55,16 +53,15 @@ import consulo.language.psi.*;
 import consulo.language.psi.event.PsiTreeChangeEvent;
 import consulo.language.psi.resolve.RefResolveService;
 import consulo.language.util.ModuleUtilCore;
-import consulo.localize.LocalizeKey;
 import consulo.logging.Logger;
 import consulo.module.content.layer.event.ModuleRootEvent;
 import consulo.module.content.layer.event.ModuleRootListener;
 import consulo.project.Project;
 import consulo.project.ProjectLocator;
+import consulo.project.ProjectType;
 import consulo.project.event.DumbModeListener;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.event.ModalityStateListener;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
@@ -75,6 +72,7 @@ import consulo.undoRedo.UndoManager;
 import consulo.undoRedo.event.CommandEvent;
 import consulo.undoRedo.event.CommandListener;
 import consulo.util.lang.ThreeState;
+import consulo.util.lang.lazy.LazyValue;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.event.BulkFileListener;
 import consulo.virtualFileSystem.event.VFileEvent;
@@ -89,6 +87,7 @@ import jakarta.inject.Singleton;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.function.Supplier;
 
 @Singleton
 @ServiceAPI(value = ComponentScope.PROJECT, lazy = false)
@@ -123,7 +122,8 @@ public final class DaemonListeners implements Disposable {
 
         MessageBus messageBus = myProject.getMessageBus();
         myDaemonEventPublisher = messageBus.syncPublisher(DaemonListener.class);
-        if (project.isDefault()) {
+
+        if (project.getProjectType() == ProjectType.DEFAULT) {
             return;
         }
 
@@ -292,11 +292,13 @@ public final class DaemonListeners implements Disposable {
                 // thus we can pass null here.
                 UpdateHighlightersUtil.setHighlightersToEditor(myProject,
                     document,
+                    psiFile,
                     0,
                     document.getTextLength(),
                     Collections.emptyList(),
                     null,
-                    Pass.UPDATE_ALL);
+                    Pass.UPDATE_ALL
+                );
             }
         });
         connection.subscribe(FileTypeListener.class, new FileTypeListener() {
@@ -314,16 +316,6 @@ public final class DaemonListeners implements Disposable {
             HighlightInfoImpl info = HighlightInfoImpl.fromRangeHighlighter(highlighter);
             if (info != null) {
                 GotoNextErrorHandler.navigateToError(myProject, e.getEditor(), info);
-            }
-        }, this);
-
-        LaterInvocator.addModalityStateListener(new ModalityStateListener() {
-            @Override
-            public void beforeModalityStateChanged(boolean __1, Object modalEntity) {
-                // before showing dialog we are in non-modal context yet, and before closing dialog we are still in modal context
-                boolean inModalContext = Registry.is("ide.perProjectModality") || LaterInvocator.isInModalContext();
-                DaemonListeners.this.stopDaemon(inModalContext, "Modality change. Was modal: " + inModalContext);
-                myDaemonCodeAnalyzer.setUpdateByTimerEnabled(inModalContext);
             }
         }, this);
 
@@ -429,14 +421,14 @@ public final class DaemonListeners implements Disposable {
     }
 
     private class MyCommandListener implements CommandListener {
-        private final String myCutActionId;
+        private final Supplier<String> myCutActionIdValue;
 
         private MyCommandListener(ActionManager actionManager) {
-            myCutActionId = actionManager
+            myCutActionIdValue = LazyValue.notNull(() -> actionManager
                 .getAction(IdeActions.ACTION_EDITOR_CUT)
                 .getTemplatePresentation()
                 .getTextValue()
-                .getId();
+                .getId());
         }
 
         @Override
@@ -448,7 +440,9 @@ public final class DaemonListeners implements Disposable {
 
             String commandId = event.getCommandNameValue().getId();
 
-            cutOperationJustHappened = myCutActionId.equals(commandId);
+            String cutActionId = myCutActionIdValue.get();
+
+            cutOperationJustHappened = cutActionId.equals(commandId);
             if (!myDaemonCodeAnalyzer.isRunning()) {
                 return;
             }

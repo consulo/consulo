@@ -40,12 +40,14 @@ import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.IdeActions;
 import consulo.ui.ex.action.Presentation;
+import consulo.ui.ex.action.coroutine.ActionSafeReadLock;
+import consulo.util.concurrent.coroutine.Coroutine;
 import consulo.util.lang.function.Predicates;
 import consulo.versionControlSystem.FormatChangedTextUtil;
 import consulo.virtualFileSystem.ReadonlyStatusHandler;
 import consulo.virtualFileSystem.VirtualFile;
-import org.jspecify.annotations.Nullable;
 import org.jetbrains.annotations.TestOnly;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.function.Predicate;
@@ -290,70 +292,72 @@ public class ReformatCodeAction extends AnAction implements DumbAware {
     }
 
     @Override
-    public void update(AnActionEvent e) {
-        Presentation presentation = e.getPresentation();
-        Project project = e.getData(Project.KEY);
-        if (project == null) {
-            presentation.setEnabled(false);
-            return;
-        }
-
-        Editor editor = e.getData(Editor.KEY);
-
-        VirtualFile[] files = e.getData(VirtualFile.KEY_OF_ARRAY);
-
-        if (editor != null) {
-            PsiFile file = PsiDocumentManager.getInstance(project).getPsiFile(editor.getDocument());
-            if (file == null || file.getVirtualFile() == null) {
+    public Coroutine<?, ?> updateAsync(AnActionEvent e) {
+        return ActionSafeReadLock.apply(e, p -> {
+            Presentation presentation = e.getPresentation();
+            Project project = e.getData(Project.KEY);
+            if (project == null) {
                 presentation.setEnabled(false);
                 return;
             }
 
-            if (FormattingModelBuilder.forContext(file) != null) {
-                presentation.setEnabled(true);
-                return;
-            }
-        }
-        else if (files != null && containsAtLeastOneFile(files)) {
-            boolean anyFormatters = false;
-            for (VirtualFile virtualFile : files) {
-                if (virtualFile.isDirectory()) {
+            Editor editor = e.getData(Editor.KEY);
+
+            VirtualFile[] files = e.getData(VirtualFile.KEY_OF_ARRAY);
+
+            if (editor != null) {
+                PsiFile file = PsiDocumentManager.getInstance(project).getPsiFile(editor.getDocument());
+                if (file == null || file.getVirtualFile() == null) {
                     presentation.setEnabled(false);
                     return;
                 }
-                PsiFile psiFile = PsiManager.getInstance(project).findFile(virtualFile);
-                if (psiFile == null) {
-                    presentation.setEnabled(false);
+
+                if (FormattingModelBuilder.forContext(file) != null) {
+                    presentation.setEnabled(true);
                     return;
                 }
-                FormattingModelBuilder builder = FormattingModelBuilder.forContext(psiFile);
-                if (builder != null) {
-                    anyFormatters = true;
+            }
+            else if (files != null && containsAtLeastOneFile(files)) {
+                boolean anyFormatters = false;
+                for (VirtualFile virtualFile : files) {
+                    if (virtualFile.isDirectory()) {
+                        presentation.setEnabled(false);
+                        return;
+                    }
+                    PsiFile psiFile = PsiManager.getInstance(project).findFile(virtualFile);
+                    if (psiFile == null) {
+                        presentation.setEnabled(false);
+                        return;
+                    }
+                    FormattingModelBuilder builder = FormattingModelBuilder.forContext(psiFile);
+                    if (builder != null) {
+                        anyFormatters = true;
+                    }
                 }
-            }
-            if (!anyFormatters) {
-                presentation.setEnabled(false);
-                return;
-            }
-        }
-        else if (files != null && files.length == 1) {
-            // skip. Both directories and single files are supported.
-        }
-        else if (!e.hasData(LangDataKeys.MODULE_CONTEXT) && !e.hasData(PlatformDataKeys.PROJECT_CONTEXT)) {
-            PsiElement element = e.getData(PsiElement.KEY);
-            if (element == null) {
-                presentation.setEnabled(false);
-                return;
-            }
-            if (!(element instanceof PsiDirectory)) {
-                PsiFile file = element.getContainingFile();
-                if (file == null || FormattingModelBuilder.forContext(file) == null) {
+                if (!anyFormatters) {
                     presentation.setEnabled(false);
                     return;
                 }
             }
-        }
-        presentation.setEnabled(true);
+            else if (files != null && files.length == 1) {
+                // skip. Both directories and single files are supported.
+            }
+            else if (!e.hasData(LangDataKeys.MODULE_CONTEXT) && !e.hasData(PlatformDataKeys.PROJECT_CONTEXT)) {
+                PsiElement element = e.getData(PsiElement.KEY);
+                if (element == null) {
+                    presentation.setEnabled(false);
+                    return;
+                }
+                if (!(element instanceof PsiDirectory)) {
+                    PsiFile file = element.getContainingFile();
+                    if (file == null || FormattingModelBuilder.forContext(file) == null) {
+                        presentation.setEnabled(false);
+                        return;
+                    }
+                }
+            }
+            presentation.setEnabled(true);
+        }).toCoroutine();
     }
 
     @RequiredUIAccess

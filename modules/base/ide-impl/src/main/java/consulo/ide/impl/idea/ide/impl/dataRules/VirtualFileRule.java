@@ -16,27 +16,17 @@
 
 package consulo.ide.impl.idea.ide.impl.dataRules;
 
-import consulo.annotation.component.ExtensionImpl;
-import consulo.dataContext.DataProvider;
-import consulo.dataContext.GetDataRule;
+import consulo.dataContext.DataSnapshot;
 import consulo.language.editor.util.PsiUtilBase;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
-import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
 
-@ExtensionImpl
-public class VirtualFileRule implements GetDataRule<VirtualFile> {
-  
-  @Override
-  public Key<VirtualFile> getKey() {
-    return VirtualFile.KEY;
-  }
 
-  @Override
-  public VirtualFile getData(DataProvider dataProvider) {
+public final class VirtualFileRule {
+  static VirtualFile getData(DataSnapshot dataProvider) {
     // Try to detect multiselection.
-    PsiElement[] psiElements = dataProvider.getDataUnchecked(PsiElement.KEY_OF_ARRAY);
+    PsiElement[] psiElements = dataProvider.get(PsiElement.KEY_OF_ARRAY);
     if (psiElements != null) {
       for (PsiElement elem : psiElements) {
         VirtualFile virtualFile = PsiUtilBase.getVirtualFile(elem);
@@ -44,16 +34,16 @@ public class VirtualFileRule implements GetDataRule<VirtualFile> {
       }
     }
 
-    VirtualFile[] virtualFiles = dataProvider.getDataUnchecked(VirtualFile.KEY_OF_ARRAY);
+    VirtualFile[] virtualFiles = dataProvider.get(VirtualFile.KEY_OF_ARRAY);
     if (virtualFiles != null && virtualFiles.length == 1) {
       return virtualFiles[0];
     }
 
-    PsiFile psiFile = dataProvider.getDataUnchecked(PsiFile.KEY);
+    PsiFile psiFile = dataProvider.get(PsiFile.KEY);
     if (psiFile != null) {
       return psiFile.getVirtualFile();
     }
-    PsiElement elem = dataProvider.getDataUnchecked(PsiElement.KEY);
+    PsiElement elem = dataProvider.get(PsiElement.KEY);
     if (elem == null) {
       return null;
     }

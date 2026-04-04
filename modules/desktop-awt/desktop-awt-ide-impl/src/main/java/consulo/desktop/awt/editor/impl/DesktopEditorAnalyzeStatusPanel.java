@@ -35,7 +35,6 @@ import consulo.desktop.awt.ui.impl.event.DesktopAWTInputDetails;
 import consulo.disposer.Disposable;
 import consulo.ide.impl.idea.codeInsight.hint.HintManagerImpl;
 import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionImplUtil;
-import consulo.ui.ex.awt.event.AncestorListenerAdapter;
 import consulo.ide.impl.idea.ui.components.labels.DropDownLink;
 import consulo.ide.impl.idea.ui.popup.util.PopupState;
 import consulo.language.editor.impl.internal.markup.*;
@@ -49,6 +48,7 @@ import consulo.ui.ex.action.*;
 import consulo.ui.ex.action.event.AnActionListener;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.action.CustomComponentAction;
+import consulo.ui.ex.awt.event.AncestorListenerAdapter;
 import consulo.ui.ex.awt.util.ComponentUtil;
 import consulo.ui.ex.awt.util.MergingUpdateQueue;
 import consulo.ui.ex.awt.util.Update;
@@ -519,7 +519,7 @@ public class DesktopEditorAnalyzeStatusPanel implements Disposable {
         }
     }
 
-    private class WrapperGroup extends DumbAwareActionGroup implements  HintManagerImpl.ActionToIgnore {
+    private class WrapperGroup extends DumbAwareActionGroup implements HintManagerImpl.ActionToIgnore {
         private final ActionGroup[] myActions;
 
         public WrapperGroup(List<? extends AnAction> actions) {
@@ -751,27 +751,6 @@ public class DesktopEditorAnalyzeStatusPanel implements Disposable {
         }
     }
 
-    public void repaintTrafficLightIcon() {
-        ErrorStripeRenderer errorStripeRenderer = myModel.getErrorStripeRenderer();
-
-        if (errorStripeRenderer == null) {
-            return;
-        }
-
-        myStatusUpdates.queue(Update.create("icon", () -> {
-            if (errorStripeRenderer != null) {
-                AnalyzerStatus newStatus = errorStripeRenderer.getStatus(myEditor);
-                if (!AnalyzerStatus.equals(newStatus, analyzerStatus)) {
-                    changeStatus(newStatus);
-                }
-
-                if (myErrorPanel != null) {
-                    myErrorPanel.repaint();
-                }
-            }
-        }));
-    }
-
     public void setTrafficLightIconVisible(boolean value) {
         if (value != trafficLightVisible) {
             trafficLightVisible = value;
@@ -779,7 +758,15 @@ public class DesktopEditorAnalyzeStatusPanel implements Disposable {
         }
     }
 
-    private void changeStatus(AnalyzerStatus newStatus) {
+    public boolean tryToUpdateStatus(AnalyzerStatus newStatus) {
+        if (!AnalyzerStatus.equals(newStatus, this.analyzerStatus)) {
+            changeStatus(newStatus);
+            return true;
+        }
+        return false;
+    }
+
+    public void changeStatus(AnalyzerStatus newStatus) {
         boolean resetAnalyzingStatus = analyzerStatus != null && analyzerStatus.isTextStatus() && analyzerStatus.getAnalyzingType() == AnalyzingType.COMPLETE;
         analyzerStatus = newStatus;
         //smallIconLabel.setIcon(analyzerStatus.getIcon());
