@@ -23,6 +23,7 @@ import consulo.fileEditor.highlight.HighlightingPass;
 import consulo.ide.impl.idea.openapi.application.impl.ApplicationInfoImpl;
 import consulo.language.editor.highlight.TextEditorHighlightingPass;
 import consulo.language.editor.impl.highlight.EditorBoundHighlightingPass;
+import consulo.language.editor.impl.highlight.HighlightingSession;
 import consulo.language.editor.impl.internal.highlight.DefaultHighlightInfoProcessor;
 import consulo.language.editor.impl.internal.highlight.HighlightingSessionImpl;
 import consulo.language.editor.inject.EditorWindow;
@@ -384,6 +385,11 @@ final class PassExecutorService implements Disposable {
                 PsiFile psiFile = psiFileRef.get();
                 if (psiFile != null) {
                     ShowIntentionsPass ip = new ShowIntentionsPass(psiFile, editor, false);
+                    HighlightingSession ipSession =
+                        HighlightingSessionImpl.getHighlightingSession(psiFile, updateProgress);
+                    if (ipSession != null) {
+                        ip.setImaginaryEditor(ipSession.getImaginaryEditor());
+                    }
                     ip.setId(nextPassId.incrementAndGet());
                     ip.setCompletionPredecessorIds(new int[]{scheduledPass.myPass.getId()});
 

@@ -79,7 +79,7 @@ public class IntentionListStep implements ListPopupStep<IntentionActionWithTextC
         }
 
         if (hasSubstep(action)) {
-            return getSubStep(action, action.getToolName());
+            return getSubStep(action, action.getToolName(), myEditor.getCaretModel().getOffset());
         }
 
         return FINAL_CHOICE;
@@ -124,7 +124,7 @@ public class IntentionListStep implements ListPopupStep<IntentionActionWithTextC
     }
 
     
-    IntentionListStep getSubStep(IntentionActionWithTextCaching action, final LocalizeValue title) {
+    IntentionListStep getSubStep(IntentionActionWithTextCaching action, final LocalizeValue title, int caretOffset) {
         IntentionsInfo intentions = new IntentionsInfo();
         for (IntentionAction optionIntention : action.getOptionIntentions()) {
             intentions.intentionsToShow.add(new IntentionActionDescriptor(optionIntention, getIcon(optionIntention)));
@@ -136,7 +136,7 @@ public class IntentionListStep implements ListPopupStep<IntentionActionWithTextC
             intentions.inspectionFixesToShow.add(new IntentionActionDescriptor(optionFix, getIcon(optionFix)));
         }
 
-        return new IntentionListStep(myIntentionHintComponent, myEditor, myFile, myProject, CachedIntentions.create(myProject, myFile, myEditor, intentions)) {
+        return new IntentionListStep(myIntentionHintComponent, myEditor, myFile, myProject, CachedIntentions.create(myProject, myFile, myEditor, intentions, caretOffset)) {
             @Override
             public String getTitle() {
                 return title.get();
@@ -146,24 +146,6 @@ public class IntentionListStep implements ListPopupStep<IntentionActionWithTextC
 
     private static Image getIcon(IntentionAction optionIntention) {
         return optionIntention instanceof Iconable ? ((Iconable) optionIntention).getIcon(0) : null;
-    }
-
-    @TestOnly
-    public Map<IntentionAction, List<IntentionAction>> getActionsWithSubActions() {
-        Map<IntentionAction, List<IntentionAction>> result = new LinkedHashMap<>();
-
-        for (IntentionActionWithTextCaching cached : getValues()) {
-            IntentionAction action = cached.getAction();
-            if (ShowIntentionActionsHandler.chooseFileForAction(myFile, myEditor, action) == null) {
-                continue;
-            }
-
-            List<IntentionActionWithTextCaching> subActions = getSubStep(cached, cached.getToolName()).getValues();
-            List<IntentionAction> options =
-                subActions.stream().map(IntentionActionWithTextCaching::getAction).filter(option -> ShowIntentionActionsHandler.chooseFileForAction(myFile, myEditor, option) != null).collect(Collectors.toList());
-            result.put(action, options);
-        }
-        return result;
     }
 
     @Override

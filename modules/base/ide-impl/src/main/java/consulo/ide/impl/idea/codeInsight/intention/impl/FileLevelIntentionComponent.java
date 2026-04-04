@@ -89,7 +89,7 @@ public class FileLevelIntentionComponent extends EditorNotificationPanel {
                 IntentionActionDescriptor descriptor = intentions.get(0).getFirst();
                 IntentionActionWithTextCaching actionWithTextCaching = cachedIntentions.wrapAction(descriptor, psiFile, psiFile, editor);
                 if (step.hasSubstep(actionWithTextCaching)) {
-                    step = step.getSubStep(actionWithTextCaching, null);
+                    step = step.getSubStep(actionWithTextCaching, null, editor.getCaretModel().getOffset());
                 }
 
                 ListPopup popup = JBPopupFactory.getInstance().createListPopup(step);

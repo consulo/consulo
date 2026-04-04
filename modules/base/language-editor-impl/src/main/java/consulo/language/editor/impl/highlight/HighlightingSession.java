@@ -16,11 +16,14 @@
 package consulo.language.editor.impl.highlight;
 
 import consulo.application.progress.ProgressIndicator;
+import consulo.codeEditor.imaginary.ImaginaryEditor;
 import consulo.colorScheme.EditorColorsScheme;
 import consulo.document.Document;
 import consulo.document.util.ProperTextRange;
 import consulo.language.psi.PsiFile;
 import consulo.project.Project;
+
+import org.jspecify.annotations.Nullable;
 
 public interface HighlightingSession {
   Project getProject();
@@ -34,4 +37,6 @@ public interface HighlightingSession {
   EditorColorsScheme getColorsScheme();
 
   ProperTextRange getVisibleRange();
+
+  @Nullable ImaginaryEditor getImaginaryEditor();
 }

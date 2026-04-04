@@ -62,7 +62,7 @@ public class ErrorStripeUpdateManagerImpl extends ErrorStripeUpdateManager {
     ReadAction.nonBlocking(() -> myPsiDocumentManager.getPsiFile(editor.getDocument()))
         .expireWith(myProject)
         .expireWhen(() -> editor.isDisposed())
-        .finishOnUiThread(Application::getDefaultModalityState, psiFile -> {
+        .finishOnUiThread(psiFile -> {
             if (!editor.isDisposed() && !myProject.isDisposed()) {
                 repaintErrorStripePanel(editor, psiFile);
             }

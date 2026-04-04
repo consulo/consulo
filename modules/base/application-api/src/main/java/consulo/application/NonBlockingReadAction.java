@@ -7,6 +7,7 @@ import consulo.component.ComponentManager;
 import consulo.component.ProcessCanceledException;
 import consulo.disposer.Disposable;
 import consulo.ui.ModalityState;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.dataholder.Key;
 import org.jetbrains.annotations.Contract;
 
@@ -70,7 +71,7 @@ public interface NonBlockingReadAction<T> {
    * are invoked on UI thread, and no write action is allowed to interfere before that and possibly invalidate the result.
    */
   @Contract(pure = true)
-  NonBlockingReadAction<T> finishOnUiThread(Consumer<? super T> uiThreadAction);
+  NonBlockingReadAction<T> finishOnUiThread(@RequiredUIAccess Consumer<? super T> uiThreadAction);
 
   /**
    * @deprecated Use {@link #finishOnUiThread(Consumer)} instead. Modality state is no longer used.

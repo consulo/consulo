@@ -63,13 +63,11 @@ public class IdentifierHighlighterPass extends TextEditorHighlightingPass {
     private final Editor myEditor;
     private final Collection<TextRange> myReadAccessRanges = Collections.synchronizedList(new ArrayList<TextRange>());
     private final Collection<TextRange> myWriteAccessRanges = Collections.synchronizedList(new ArrayList<TextRange>());
-    private final int myCaretOffset;
 
     IdentifierHighlighterPass(Project project, PsiFile file, Editor editor) {
         super(project, editor.getDocument(), false);
         myFile = file;
         myEditor = editor;
-        myCaretOffset = myEditor.getCaretModel().getOffset();
     }
 
     private Editor getEditorForRead() {
@@ -81,6 +79,7 @@ public class IdentifierHighlighterPass extends TextEditorHighlightingPass {
     @RequiredReadAction
     public void doCollectInformation(ProgressIndicator progress) {
         Editor editor = getEditorForRead();
+        int caretOffset = editor.getCaretModel().getOffset();
         HighlightUsagesHandlerBase<PsiElement> highlightUsagesHandler = HighlightUsagesHandler.createCustomHandler(editor, myFile);
         if (highlightUsagesHandler != null) {
             List<PsiElement> targets = highlightUsagesHandler.getTargets();
@@ -104,13 +103,13 @@ public class IdentifierHighlighterPass extends TextEditorHighlightingPass {
             TargetElementUtilExtender.ELEMENT_NAME_ACCEPTED,
             TargetElementUtilExtender.REFERENCED_ELEMENT_ACCEPTED
         ));
-        PsiElement myTarget = TargetElementUtil.findTargetElement(editor, flags, myCaretOffset);
+        PsiElement myTarget = TargetElementUtil.findTargetElement(editor, flags, caretOffset);
 
         if (myTarget == null) {
             if (!PsiDocumentManager.getInstance(myProject).isUncommited(editor.getDocument())) {
                 // when document is committed, try to check injected stuff - it's fast
                 Editor injectedEditor =
-                    InjectedEditorManager.getInstance(myProject).getEditorForInjectedLanguageNoCommit(editor, myFile, myCaretOffset);
+                    InjectedEditorManager.getInstance(myProject).getEditorForInjectedLanguageNoCommit(editor, myFile, caretOffset);
                 myTarget = TargetElementUtil.findTargetElement(injectedEditor, flags, injectedEditor.getCaretModel().getOffset());
             }
         }

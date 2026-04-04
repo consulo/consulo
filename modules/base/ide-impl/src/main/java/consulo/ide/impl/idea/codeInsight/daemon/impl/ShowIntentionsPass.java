@@ -8,6 +8,7 @@ import consulo.application.util.function.CommonProcessors;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.imaginary.ImaginaryEditor;
 import consulo.document.Document;
+
 import consulo.document.RangeMarker;
 import consulo.document.util.Segment;
 import consulo.ide.impl.idea.codeInsight.intention.impl.EditIntentionSettingsAction;
@@ -31,7 +32,6 @@ import consulo.language.psi.PsiUtilCore;
 import consulo.localize.LocalizeValue;
 import consulo.project.DumbService;
 import consulo.project.Project;
-import consulo.ui.HasFocus;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.lang.Pair;
@@ -60,11 +60,6 @@ public class ShowIntentionsPass extends TextEditorHighlightingPass {
         myPassIdToShowIntentionsFor = -1;
         myEditor = editor;
         myFile = psiFile;
-    }
-
-    private Editor getEditorForRead() {
-        ImaginaryEditor imaginary = getImaginaryEditor();
-        return imaginary != null ? imaginary : myEditor;
     }
 
     @RequiredReadAction
@@ -181,21 +176,15 @@ public class ShowIntentionsPass extends TextEditorHighlightingPass {
     @Override
     @RequiredReadAction
     public void doCollectInformation(ProgressIndicator progress) {
-        Editor editor = getEditorForRead();
-        // Skip focus check when using ImaginaryEditor (focus was valid at capture time)
-        if (!(editor instanceof ImaginaryEditor)) {
-            if (!myProject.getApplication().isHeadlessEnvironment() && !HasFocus.hasFocus(myEditor.getContentUIComponent())) {
-                return;
-            }
-        }
-        // Template state is stored in real editor's UserData, check real editor
         TemplateStateImpl state = TemplateManagerImpl.getTemplateStateImpl(myEditor);
         if (state != null && !state.isFinished()) {
             return;
         }
+        ImaginaryEditor imaginary = getImaginaryEditor();
+        Editor editor = imaginary != null ? imaginary : myEditor;
         getActionsToShow(editor, myFile, myIntentionsInfo, myPassIdToShowIntentionsFor, myQueryIntentionActions);
         myCachedIntentions = IntentionsUI.getInstance(myProject).getCachedIntentions(myEditor, myFile);
-        myActionsChanged = myCachedIntentions.wrapAndUpdateActions(myIntentionsInfo, false);
+        myActionsChanged = myCachedIntentions.wrapAndUpdateActions(myIntentionsInfo, false, editor.getCaretModel().getOffset());
     }
 
     @Override

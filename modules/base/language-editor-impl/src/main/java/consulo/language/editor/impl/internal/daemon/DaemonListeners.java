@@ -122,7 +122,8 @@ public final class DaemonListeners implements Disposable {
 
         MessageBus messageBus = myProject.getMessageBus();
         myDaemonEventPublisher = messageBus.syncPublisher(DaemonListener.class);
-        if (project.getProjectType() != ProjectType.REGULAR) {
+
+        if (project.getProjectType() == ProjectType.DEFAULT) {
             return;
         }
 

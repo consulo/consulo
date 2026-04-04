@@ -18,6 +18,7 @@ package consulo.language.editor.impl.internal.highlight;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
+import consulo.codeEditor.imaginary.ImaginaryEditor;
 import consulo.codeEditor.markup.RangeHighlighterEx;
 import consulo.colorScheme.EditorColorsScheme;
 import consulo.document.Document;
@@ -47,13 +48,16 @@ public class HighlightingSessionImpl implements HighlightingSession {
   private final Project myProject;
   private final Document myDocument;
   private final ProperTextRange myVisibleRange;
+  @Nullable
+  private final ImaginaryEditor myImaginaryEditor;
   private final Map<TextRange, RangeMarker> myRanges2markersCache = new HashMap<>();
 
   private HighlightingSessionImpl(
       PsiFile psiFile,
       DaemonProgressIndicator progressIndicator,
       EditorColorsScheme editorColorsScheme,
-      ProperTextRange visibleRange
+      ProperTextRange visibleRange,
+      @Nullable ImaginaryEditor imaginaryEditor
   ) {
     myPsiFile = psiFile;
     myProgressIndicator = progressIndicator;
@@ -61,6 +65,7 @@ public class HighlightingSessionImpl implements HighlightingSession {
     myProject = psiFile.getProject();
     myDocument = PsiDocumentManager.getInstance(myProject).getDocument(psiFile);
     myVisibleRange = visibleRange;
+    myImaginaryEditor = imaginaryEditor;
   }
 
   private static final Key<ConcurrentMap<PsiFile, HighlightingSession>> HIGHLIGHTING_SESSION = Key.create("HIGHLIGHTING_SESSION");
@@ -76,6 +81,16 @@ public class HighlightingSessionImpl implements HighlightingSession {
       @Nullable EditorColorsScheme editorColorsScheme,
       ProperTextRange visibleRange
   ) {
+    return getOrCreateHighlightingSession(psiFile, progressIndicator, editorColorsScheme, visibleRange, null);
+  }
+
+  public static HighlightingSession getOrCreateHighlightingSession(
+      PsiFile psiFile,
+      DaemonProgressIndicator progressIndicator,
+      @Nullable EditorColorsScheme editorColorsScheme,
+      ProperTextRange visibleRange,
+      @Nullable ImaginaryEditor imaginaryEditor
+  ) {
     HighlightingSession session = getHighlightingSession(psiFile, progressIndicator);
     if (session == null) {
       ConcurrentMap<PsiFile, HighlightingSession> map = progressIndicator.getUserData(HIGHLIGHTING_SESSION);
@@ -83,7 +98,7 @@ public class HighlightingSessionImpl implements HighlightingSession {
         map = progressIndicator.putUserDataIfAbsent(HIGHLIGHTING_SESSION, new ConcurrentHashMap<>());
       }
       session = Maps.cacheOrGet(map, psiFile,
-          new HighlightingSessionImpl(psiFile, progressIndicator, editorColorsScheme, visibleRange));
+          new HighlightingSessionImpl(psiFile, progressIndicator, editorColorsScheme, visibleRange, imaginaryEditor));
     }
     return session;
   }
@@ -147,6 +162,11 @@ public class HighlightingSessionImpl implements HighlightingSession {
   @Override
   public ProperTextRange getVisibleRange() {
     return myVisibleRange;
+  }
+
+  @Override
+  public @Nullable ImaginaryEditor getImaginaryEditor() {
+    return myImaginaryEditor;
   }
 
   @RequiredReadAction

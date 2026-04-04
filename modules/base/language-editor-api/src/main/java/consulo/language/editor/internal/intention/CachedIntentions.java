@@ -99,17 +99,17 @@ public class CachedIntentions {
         return myOffset;
     }
 
-    
-    public static CachedIntentions create(Project project, PsiFile file, @Nullable Editor editor, IntentionsInfo intentions) {
+    @RequiredReadAction
+    public static CachedIntentions create(Project project, PsiFile file, @Nullable Editor editor, IntentionsInfo intentions, int caretOffset) {
         CachedIntentions res = new CachedIntentions(project, file, editor);
-        res.wrapAndUpdateActions(intentions, false);
+        res.wrapAndUpdateActions(intentions, false, caretOffset);
         return res;
     }
 
-    
-    public static CachedIntentions createAndUpdateActions(Project project, PsiFile file, @Nullable Editor editor, IntentionsInfo intentions) {
+    @RequiredReadAction
+    public static CachedIntentions createAndUpdateActions(Project project, PsiFile file, @Nullable Editor editor, IntentionsInfo intentions, int caretOffset) {
         CachedIntentions res = new CachedIntentions(project, file, editor);
-        res.wrapAndUpdateActions(intentions, true);
+        res.wrapAndUpdateActions(intentions, true, caretOffset);
         return res;
     }
 
@@ -130,13 +130,13 @@ public class CachedIntentions {
     };
 
     @RequiredReadAction
-    public boolean wrapAndUpdateActions(IntentionsInfo newInfo, boolean callUpdate) {
+    public boolean wrapAndUpdateActions(IntentionsInfo newInfo, boolean callUpdate, int caretOffset) {
         myOffset = newInfo.getOffset();
-        boolean changed = wrapActionsTo(newInfo.errorFixesToShow, myErrorFixes, callUpdate);
-        changed |= wrapActionsTo(newInfo.inspectionFixesToShow, myInspectionFixes, callUpdate);
-        changed |= wrapActionsTo(newInfo.intentionsToShow, myIntentions, callUpdate);
-        changed |= wrapActionsTo(newInfo.guttersToShow, myGutters, callUpdate);
-        changed |= wrapActionsTo(newInfo.notificationActionsToShow, myNotifications, callUpdate);
+        boolean changed = wrapActionsTo(newInfo.errorFixesToShow, myErrorFixes, callUpdate, caretOffset);
+        changed |= wrapActionsTo(newInfo.inspectionFixesToShow, myInspectionFixes, callUpdate, caretOffset);
+        changed |= wrapActionsTo(newInfo.intentionsToShow, myIntentions, callUpdate, caretOffset);
+        changed |= wrapActionsTo(newInfo.guttersToShow, myGutters, callUpdate, caretOffset);
+        changed |= wrapActionsTo(newInfo.notificationActionsToShow, myNotifications, callUpdate, caretOffset);
         return changed;
     }
 
@@ -160,7 +160,8 @@ public class CachedIntentions {
     @RequiredReadAction
     private boolean wrapActionsTo(List<? extends IntentionActionDescriptor> newDescriptors,
                                   Set<IntentionActionWithTextCaching> cachedActions,
-                                  boolean shouldCallIsAvailable) {
+                                  boolean shouldCallIsAvailable,
+                                  int caretOffset) {
         if (cachedActions.isEmpty() && newDescriptors.isEmpty()) {
             return false;
         }
@@ -172,7 +173,6 @@ public class CachedIntentions {
             }
             return changed;
         }
-        int caretOffset = myEditor.getCaretModel().getOffset();
         int fileOffset = caretOffset > 0 && caretOffset == myFile.getTextLength() ? caretOffset - 1 : caretOffset;
         PsiElement element;
         PsiElement hostElement;

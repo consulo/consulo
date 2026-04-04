@@ -11,6 +11,7 @@ import consulo.application.progress.ProgressManager;
 import consulo.application.util.concurrent.JobLauncher;
 import consulo.application.util.function.CommonProcessors;
 import consulo.codeEditor.Editor;
+import consulo.codeEditor.imaginary.ImaginaryEditor;
 import consulo.codeEditor.markup.RangeHighlighterEx;
 import consulo.component.ProcessCanceledException;
 import consulo.component.persist.PersistentStateComponent;
@@ -720,9 +721,11 @@ public class DaemonCodeAnalyzerImpl extends DaemonCodeAnalyzerInternal implement
             dca.myUpdateRunnableFuture.cancel(false);
             DaemonProgressIndicator progress = dca.createUpdateProgress(editorsWithHighlighters.keySet());
 
-            // Pre-create HighlightingSessions on EDT with visibleRange (JetBrains pattern).
-            // This makes visibleRange available to background factories via
+            // Pre-create HighlightingSessions on EDT with visibleRange and ImaginaryEditor
+            // (JetBrains pattern). This makes visibleRange available to background factories via
             // HighlightingSessionImpl.getFromCurrentIndicator(psiFile).getVisibleRange().
+            // ImaginaryEditor captures EDT-bound editor state (caret, selection, etc.) safely
+            // for use by intention passes running on background threads.
             for (Map.Entry<FileEditor, BackgroundEditorHighlighter> entry : editorsWithHighlighters.entrySet()) {
                 FileEditor fileEditor = entry.getKey();
                 if (fileEditor instanceof TextEditor textEditor) {
@@ -731,8 +734,9 @@ public class DaemonCodeAnalyzerImpl extends DaemonCodeAnalyzerInternal implement
                     PsiFile psiFile = dca.myPsiDocumentManager.getPsiFile(document);
                     if (psiFile != null) {
                         ProperTextRange visibleRange = VisibleHighlightingPassFactory.calculateVisibleRange(editor);
+                        ImaginaryEditor imaginaryEditor = ImaginaryEditor.create(editor);
                         HighlightingSessionImpl.getOrCreateHighlightingSession(
-                            psiFile, progress, editor.getColorsScheme(), visibleRange);
+                            psiFile, progress, editor.getColorsScheme(), visibleRange, imaginaryEditor);
                     }
                 }
             }
