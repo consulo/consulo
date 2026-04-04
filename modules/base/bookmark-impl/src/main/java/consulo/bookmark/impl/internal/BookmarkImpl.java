@@ -137,12 +137,11 @@ public class BookmarkImpl implements Bookmark {
                 return true;
             }
         );
-        if (!found.isNull()) {
+        if (found.isNotNull()) {
             found.get().dispose();
         }
     }
 
-    
     @Override
     public Image getIcon(boolean gutter) {
         if (myMnemonic == 0) {
@@ -170,7 +169,6 @@ public class BookmarkImpl implements Bookmark {
     }
 
     @Override
-    
     public VirtualFile getFile() {
         return myFile;
     }
@@ -223,7 +221,6 @@ public class BookmarkImpl implements Bookmark {
 
     @Override
     @RequiredReadAction
-    
     public String getQualifiedName() {
         String presentableUrl = myFile.getPresentableUrl();
         if (myFile.isDirectory()) {
@@ -279,12 +276,10 @@ public class BookmarkImpl implements Bookmark {
         }
 
         @Override
-        
         public Image getIcon() {
             return myBookmark.getIcon(true);
         }
 
-        
         @Override
         public LocalizeValue getTooltipValue() {
             return myBookmark.getBookmarkTooltip();
