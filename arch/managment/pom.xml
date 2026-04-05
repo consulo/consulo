@@ -829,7 +829,7 @@
             <dependency>
                 <groupId>consulo.internal.org.cobraparser</groupId>
                 <artifactId>cobra-core</artifactId>
-                <version>3.1</version>
+                <version>3.2</version>
                 <exclusions>
                     <exclusion>
                         <groupId>org.slf4j</groupId>
@@ -840,7 +840,7 @@
             <dependency>
                 <groupId>consulo.internal.org.cobraparser</groupId>
                 <artifactId>cobra-jstyleparser</artifactId>
-                <version>3.1</version>
+                <version>3.2</version>
                 <exclusions>
                     <exclusion>
                         <groupId>org.slf4j</groupId>
