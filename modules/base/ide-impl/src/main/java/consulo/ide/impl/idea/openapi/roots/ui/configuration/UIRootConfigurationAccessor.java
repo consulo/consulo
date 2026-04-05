@@ -58,7 +58,7 @@ public class UIRootConfigurationAccessor extends RootConfigurationAccessor {
   }
 
   @Override
-  public @Nullable Sdk getSdk(Sdk sdk, @Nullable String sdkName) {
+  public @Nullable Sdk getSdk(@Nullable Sdk sdk, @Nullable String sdkName) {
     SdkModel model = ShowSettingsUtil.getInstance().getSdksModel();
     return sdkName != null ? model.findSdk(sdkName) : sdk;
   }

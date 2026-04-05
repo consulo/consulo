@@ -40,7 +40,7 @@ public class RootConfigurationAccessor {
     return library;
   }
 
-  public @Nullable Sdk getSdk(Sdk sdk, @Nullable String sdkName) {
+  public @Nullable Sdk getSdk(@Nullable Sdk sdk, @Nullable String sdkName) {
     return sdk;
   }
 
@@ -48,7 +48,7 @@ public class RootConfigurationAccessor {
     return SdkPointerManager.getInstance().create(sdkName);
   }
 
-  public Module getModule(Module module, String moduleName) {
+  public Module getModule(@Nullable Module module, String moduleName) {
     return module;
   }
 

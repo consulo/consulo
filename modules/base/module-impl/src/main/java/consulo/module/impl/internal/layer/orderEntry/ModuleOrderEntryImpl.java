@@ -34,6 +34,8 @@ import consulo.virtualFileSystem.VirtualFile;
 
 import org.jspecify.annotations.Nullable;
 
+import java.util.Objects;
+
 /**
  * @author dsl
  */
@@ -50,6 +52,7 @@ public class ModuleOrderEntryImpl extends OrderEntryBaseImpl implements ModuleOr
     myModulePointer = ModuleUtilCore.createPointer(module);
   }
 
+  @RequiredReadAction
   public ModuleOrderEntryImpl(String moduleName, ModuleRootLayerImpl rootLayer) {
     this(moduleName, rootLayer, DependencyScope.COMPILE, false, false);
   }
@@ -135,7 +138,7 @@ public class ModuleOrderEntryImpl extends OrderEntryBaseImpl implements ModuleOr
 
   @Override
   public @Nullable Module getModule() {
-    return getRootModel().getConfigurationAccessor().getModule(myModulePointer.get(), myModulePointer.getName());
+    return getRootModel().getConfigurationAccessor().getModule(Objects.requireNonNull(myModulePointer.get()), myModulePointer.getName());
   }
 
   @Override
