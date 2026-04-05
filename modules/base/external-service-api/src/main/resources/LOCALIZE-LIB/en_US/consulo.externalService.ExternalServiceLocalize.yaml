@@ -230,6 +230,8 @@ log.monitor.no.files:
     text: No log files attached
 log.monitor.remove.button:
     text: '&Remove'
+lower.jre.versions.0.message:
+    text: Java versions lower {0} will be not supported in near future. Please migrate to JRE {0}+ or use bundled jre (at next update)
 message.idea.few.plugins.will.be.not.updated:
     text: Few plugins will be not updated. Those plugins will be disabled after update. Are you sure?
 message.idea.restart.required:

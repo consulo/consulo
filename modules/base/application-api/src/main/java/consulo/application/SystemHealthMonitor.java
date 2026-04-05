@@ -26,6 +26,8 @@ import consulo.annotation.component.ExtensionAPI;
 public interface SystemHealthMonitor {
     interface Reporter {
         void warning(String notificationText, String actionText, Runnable actionListener);
+
+        void warning(String notificationText, String[] actionsText, Runnable[] actionsListener);
     }
 
     void check(Reporter reporter);

@@ -20,7 +20,10 @@ import com.sun.jna.Memory;
 import com.sun.jna.Native;
 import com.sun.jna.Pointer;
 import consulo.annotation.component.ExtensionImpl;
-import consulo.application.*;
+import consulo.application.AccessRule;
+import consulo.application.Application;
+import consulo.application.ApplicationPropertiesComponent;
+import consulo.application.SystemHealthMonitor;
 import consulo.application.internal.JobScheduler;
 import consulo.application.internal.PreloadingActivity;
 import consulo.application.progress.ProgressIndicator;
@@ -61,11 +64,11 @@ public class SystemHealthMonitorImpl extends PreloadingActivity {
     public static final NotificationGroup GROUP =
         new NotificationGroup("systemHealth", LocalizeValue.localizeTODO("System Health"), NotificationDisplayType.STICKY_BALLOON, false);
 
-    
+
     private final Application myApplication;
-    
+
     private final ApplicationPropertiesComponent myProperties;
-    
+
     private final NotificationService myNotificationService;
 
     @Inject
@@ -83,13 +86,35 @@ public class SystemHealthMonitorImpl extends PreloadingActivity {
     public void preload(ProgressIndicator indicator) {
         checkEARuntime();
 
-        SystemHealthMonitor.Reporter reporter = (notificationText, actionText, actionListener) -> myApplication.invokeLater(
-            () -> myNotificationService.newWarn(GROUP)
-                .content(LocalizeValue.localizeTODO(notificationText))
-                .important()
-                .addAction(LocalizeValue.localizeTODO(actionText), actionListener)
-                .notify(null)
-        );
+        SystemHealthMonitor.Reporter reporter = new SystemHealthMonitor.Reporter() {
+            @Override
+            public void warning(String notificationText, String actionText, Runnable actionListener) {
+                myApplication.invokeLater(() -> myNotificationService.newWarn(GROUP)
+                    .content(LocalizeValue.localizeTODO(notificationText))
+                    .important()
+                    .addAction(LocalizeValue.localizeTODO(actionText), actionListener)
+                    .notify(null)
+                );
+            }
+
+            @Override
+            public void warning(String notificationText, String[] actionsText, Runnable[] actionsListener) {
+                myApplication.invokeLater(() -> {
+                        Notification.Builder builder = myNotificationService.newWarn(GROUP)
+                            .content(LocalizeValue.localizeTODO(notificationText))
+                            .important();
+                        for (int i = 0; i < actionsText.length; i++) {
+                            String actionText = actionsText[i];
+                            Runnable actionListener = actionsListener[i];
+
+                            builder = builder.addAction(LocalizeValue.localizeTODO(actionText), actionListener);
+                        }
+
+                        builder.notify(null);
+                    }
+                );
+            }
+        };
 
         myApplication.getExtensionPoint(SystemHealthMonitor.class).forEach(it -> it.check(reporter));
 
