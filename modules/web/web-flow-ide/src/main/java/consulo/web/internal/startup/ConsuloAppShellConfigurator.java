@@ -21,6 +21,7 @@ import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.contextmenu.ContextMenu;
 import com.vaadin.flow.component.contextmenu.MenuItem;
+import com.vaadin.flow.component.dependency.StyleSheet;
 import com.vaadin.flow.component.dependency.Uses;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.grid.Grid;
@@ -45,13 +46,16 @@ import com.vaadin.flow.component.treegrid.TreeGrid;
 import com.vaadin.flow.server.AppShellSettings;
 import com.vaadin.flow.shared.communication.PushMode;
 import com.vaadin.flow.theme.Theme;
+import com.vaadin.flow.theme.aura.Aura;
 import org.vaadin.stefan.table.Table;
 
 /**
  * @author VISTALL
  * @since 28/05/2023
  */
-@Theme("consulo")
+@StyleSheet(Aura.STYLESHEET)
+@StyleSheet("./themes/consulo/styles.css")
+@StyleSheet("./themes/consulo/scrollbar.css")
 @Push(PushMode.AUTOMATIC)
 @Uses(Dialog.class)
 @Uses(HorizontalLayout.class)

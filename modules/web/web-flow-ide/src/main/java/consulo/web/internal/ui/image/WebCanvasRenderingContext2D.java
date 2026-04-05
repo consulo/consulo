@@ -28,6 +28,6 @@ public class WebCanvasRenderingContext2D extends CanvasRenderingContext2D {
   }
 
   public void setGlobalAlpha(float value) {
-    setProperty("globalAlpha", String.valueOf(value));
+    // TODO unsupported setProperty("globalAlpha", String.valueOf(value));
   }
 }

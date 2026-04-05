@@ -15,6 +15,7 @@
  */
 package consulo.web.internal.ui;
 
+import com.vaadin.flow.component.page.ColorScheme;
 import consulo.ui.color.ColorValue;
 import consulo.ui.color.RGBColor;
 import consulo.ui.style.ComponentColors;
@@ -34,13 +35,13 @@ public class WebStyleImpl implements Style {
     private final String myId;
     private final String myName;
     private final boolean myIsDark;
-    private final String myVaadinThemeId;
+    private final ColorScheme.Value myVaadinThemeId;
 
-    public WebStyleImpl(String id, String name, boolean isDark, String vaadinThemeId) {
+    public WebStyleImpl(String id, String name, boolean isDark, ColorScheme.Value value) {
         myId = id;
         myName = name;
         myIsDark = isDark;
-        myVaadinThemeId = vaadinThemeId;
+        myVaadinThemeId = value;
 
         for (StandardColors color : StandardColors.values()) {
             myColors.put(color, color.getStaticValue());
@@ -52,7 +53,7 @@ public class WebStyleImpl implements Style {
         myColors.put(ComponentColors.LAYOUT, StandardColors.WHITE.getStaticValue());
     }
 
-    public String getVaadinThemeId() {
+    public ColorScheme.Value getVaadinThemeId() {
         return myVaadinThemeId;
     }
 

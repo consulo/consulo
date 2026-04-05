@@ -160,10 +160,6 @@
         </dependency>
         <dependency>
             <groupId>com.vaadin</groupId>
-            <artifactId>vaadin-lumo-theme</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.vaadin</groupId>
             <artifactId>vaadin-core-internal</artifactId>
         </dependency>
         <dependency>
@@ -217,6 +213,14 @@
         <dependency>
             <groupId>com.vaadin</groupId>
             <artifactId>vaadin-dev-bundle</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>tools.jackson.core</groupId>
+            <artifactId>jackson-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>tools.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
         </dependency>
         <dependency>
             <groupId>com.github.weisj</groupId>

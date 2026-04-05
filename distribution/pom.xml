@@ -624,10 +624,6 @@
             <artifactId>commons-io</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.vaadin.external.gwt</groupId>
-            <artifactId>gwt-elemental</artifactId>
-        </dependency>
-        <dependency>
             <groupId>com.vaadin</groupId>
             <artifactId>vaadin-core-internal</artifactId>
         </dependency>
@@ -746,10 +742,6 @@
         <dependency>
             <groupId>com.vaadin</groupId>
             <artifactId>vaadin-dev-bundle</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.vaadin</groupId>
-            <artifactId>vaadin-lumo-theme</artifactId>
         </dependency>
         <dependency>
             <groupId>com.vaadin</groupId>

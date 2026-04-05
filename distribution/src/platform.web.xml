@@ -43,7 +43,6 @@
         <include>jakarta.websocket:jakarta.websocket-api</include>
 
         <include>commons-io:commons-io</include>
-        <include>com.vaadin.external.gwt:gwt-elemental</include>
         <include>com.vaadin:flow-server</include>
         <include>com.vaadin:flow-client</include>
         <include>com.vaadin:flow-push</include>
@@ -61,7 +60,7 @@
         <include>com.vaadin:vaadin-grid-flow</include>
         <include>com.vaadin:vaadin-context-menu-flow</include>
         <include>com.vaadin:flow-data</include>
-        <include>com.vaadin:vaadin-lumo-theme</include>
+        <include>com.vaadin:vaadin-aura-theme</include>
         <include>com.vaadin:vaadin-ordered-layout-flow</include>
         <include>com.vaadin:vaadin-icons-flow</include>
         <include>com.vaadin:vaadin-split-layout-flow</include>
@@ -86,6 +85,9 @@
         <include>com.fasterxml.jackson.core:jackson-annotations</include>
         <include>com.fasterxml.jackson.core:jackson-databind</include>
         <include>com.fasterxml.jackson.datatype:jackson-datatype-jsr310</include>
+
+        <include>tools.jackson.core:jackson-core</include>
+        <include>tools.jackson.core:jackson-databind</include>
       </includes>
     </dependencySet>
 

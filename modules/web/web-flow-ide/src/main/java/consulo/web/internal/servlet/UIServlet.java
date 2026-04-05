@@ -103,11 +103,7 @@ public class UIServlet extends VaadinServlet {
             StyleManager styleManager = StyleManager.get();
 
             Disposable listenerDisposer = styleManager.addChangeListener((oldStyle, newStyle) -> {
-                ThemeList themeList = ui.getElement().getThemeList();
-
-                themeList.remove(((WebStyleImpl) oldStyle).getVaadinThemeId());
-
-                themeList.add(((WebStyleImpl) newStyle).getVaadinThemeId());
+                ui.getPage().setColorScheme(((WebStyleImpl) newStyle).getVaadinThemeId());
             });
 
             Disposer.register(vaadinUiDisposable, listenerDisposer);

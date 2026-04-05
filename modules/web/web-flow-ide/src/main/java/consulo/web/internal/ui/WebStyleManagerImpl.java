@@ -15,7 +15,7 @@
  */
 package consulo.web.internal.ui;
 
-import com.vaadin.flow.theme.lumo.Lumo;
+import com.vaadin.flow.component.page.ColorScheme;
 import consulo.ui.impl.style.StyleManagerImpl;
 import consulo.ui.style.Style;
 
@@ -26,8 +26,8 @@ import java.util.List;
  * @since 15-Sep-17
  */
 public class WebStyleManagerImpl extends StyleManagerImpl {
-    private static final WebStyleImpl LIGHT = new WebStyleImpl("light", "Light", false, Lumo.LIGHT);
-    private static final WebStyleImpl DARK = new WebStyleImpl("dark", "Dark", true, Lumo.DARK);
+    private static final WebStyleImpl LIGHT = new WebStyleImpl("light", "Light", false, ColorScheme.Value.LIGHT);
+    private static final WebStyleImpl DARK = new WebStyleImpl("dark", "Dark", true, ColorScheme.Value.DARK);
 
     private List<Style> myStyles = List.of(LIGHT, DARK);
 

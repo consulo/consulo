@@ -1,5 +1,3 @@
-@import url('./scrollbar.css');
-
 /* Use a stronger selector so that imports added later do not override the property values */
 html:not(div)
 {

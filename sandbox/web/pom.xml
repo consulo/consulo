@@ -558,11 +558,6 @@
             <scope>compile</scope>
         </dependency>
         <dependency>
-            <artifactId>gwt-elemental</artifactId>
-            <groupId>com.vaadin.external.gwt</groupId>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
             <groupId>jakarta.websocket</groupId>
             <artifactId>jakarta.websocket-api</artifactId>
             <scope>compile</scope>
@@ -634,10 +629,6 @@
         <dependency>
             <groupId>com.vaadin</groupId>
             <artifactId>vaadin-ordered-layout-flow</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.vaadin</groupId>
-            <artifactId>vaadin-lumo-theme</artifactId>
         </dependency>
         <dependency>
             <groupId>org.parttio</groupId>

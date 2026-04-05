@@ -58,7 +58,7 @@ public class WebButtonImpl extends VaadinComponentDelegate<WebButtonImpl.Vaadin>
     public void addStyle(ButtonStyle style) {
         switch (style) {
             case PRIMARY:
-                toVaadinComponent().addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+                toVaadinComponent().addThemeVariants(ButtonVariant.PRIMARY);
                 break;
             case BORDERLESS:
                 break;
