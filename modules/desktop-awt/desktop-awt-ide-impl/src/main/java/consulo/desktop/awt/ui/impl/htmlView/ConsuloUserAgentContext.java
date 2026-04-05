@@ -11,16 +11,12 @@ class ConsuloUserAgentContext implements UserAgentContext {
 
     @Override
     public boolean isRequestPermitted(Request request) {
-        return false;
+        return true;
     }
 
     @Override
     public NetworkRequest createHttpRequest() {
-        if (ConsuloHtmlRendererContext.ENABLE_IMAGE_LOADING) {
-            return new ConsuloNetworkRequest();
-        }
-        
-        return null;
+        return new ConsuloNetworkRequest();
     }
 
     @Override
@@ -64,11 +60,6 @@ class ConsuloUserAgentContext implements UserAgentContext {
     }
 
     @Override
-    public boolean isInternalCSSEnabled() {
-        return true;
-    }
-
-    @Override
     public String getPlatform() {
         return "";
     }
@@ -86,11 +77,6 @@ class ConsuloUserAgentContext implements UserAgentContext {
     @Override
     public void setCookie(URL url, String s) {
 
-    }
-
-    @Override
-    public Policy getSecurityPolicy() {
-        return null;
     }
 
     @Override

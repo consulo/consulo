@@ -15,27 +15,27 @@
  */
 package consulo.desktop.awt.ui.impl.htmlView;
 
-import consulo.logging.Logger;
-import consulo.proxy.EventDispatcher;
-import consulo.util.collection.impl.map.LinkedHashMap;
-import consulo.util.io.StreamUtil;
-import consulo.util.io.URLUtil;
-import consulo.util.io.UnsyncByteArrayInputStream;
-import org.cobraparser.ua.*;
+import com.github.weisj.jsvg.SVGDocument;
+import com.github.weisj.jsvg.attributes.ViewBox;
+import com.github.weisj.jsvg.geometry.size.FloatSize;
+import com.github.weisj.jsvg.parser.SVGLoader;
+import org.cobraparser.ua.ImageResponse;
+import org.cobraparser.ua.NetworkRequest;
+import org.cobraparser.ua.NetworkRequestListener;
+import org.cobraparser.ua.UserAgentContext;
 import org.w3c.dom.Document;
 
 import javax.imageio.ImageIO;
+import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.net.URL;
-import java.nio.charset.StandardCharsets;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ForkJoinPool;
 
 /**
@@ -43,35 +43,24 @@ import java.util.concurrent.ForkJoinPool;
  * @since 2025-01-21
  */
 public class ConsuloNetworkRequest implements NetworkRequest {
-    private static final Logger LOG = Logger.getInstance(ConsuloNetworkRequest.class);
+    private final List<NetworkRequestListener> listeners = new CopyOnWriteArrayList<>();
 
-    private String myMethod;
-    private URL myURL;
-    private boolean myAsyncFlag;
-    private String myUserName;
-    private String myPassword;
-
-    private byte[] myBytes;
-
-    private ImageResponse myImageResponse;
-
-    private EventDispatcher<NetworkRequestListener> myListenerDispatcher = EventDispatcher.create(NetworkRequestListener.class);
-
-    private Map<String, String> myHeaders = new LinkedHashMap<>();
-
-    private int myState = NetworkRequest.STATE_UNINITIALIZED;
+    private volatile int readyState = STATE_UNINITIALIZED;
+    private volatile int status = 0;
+    private volatile byte[] responseBytes;
+    private volatile URL requestUrl;
+    private volatile String classpathResource;
+    private volatile boolean async;
 
     @Override
     public int getReadyState() {
-        return myState;
+        return readyState;
     }
 
     @Override
     public String getResponseText() {
-        if (myBytes != null) {
-            return new String(myBytes, StandardCharsets.UTF_8);
-        }
-        return null;
+        byte[] b = responseBytes;
+        return b == null ? null : new String(b);
     }
 
     @Override
@@ -81,57 +70,91 @@ public class ConsuloNetworkRequest implements NetworkRequest {
 
     @Override
     public ImageResponse getResponseImage() {
-        return myImageResponse;
+        byte[] b = responseBytes;
+        if (b == null) {
+            return new ImageResponse(ImageResponse.State.error, null);
+        }
+        if (isSvgContent(b)) {
+            return renderSvg(b);
+        }
+        try {
+            Image img = ImageIO.read(new ByteArrayInputStream(b));
+            if (img == null) {
+                return new ImageResponse(ImageResponse.State.error, null);
+            }
+            return new ImageResponse(ImageResponse.State.loaded, img);
+        }
+        catch (IOException e) {
+            return new ImageResponse(ImageResponse.State.error, null);
+        }
+    }
+
+    private static boolean isSvgContent(byte[] bytes) {
+        int checkLen = Math.min(bytes.length, 512);
+        String head = new String(bytes, 0, checkLen, java.nio.charset.StandardCharsets.UTF_8);
+        return head.contains("<svg");
+    }
+
+    private static ImageResponse renderSvg(byte[] bytes) {
+        try {
+            SVGDocument doc = new SVGLoader().load(new ByteArrayInputStream(bytes));
+            if (doc == null) {
+                return new ImageResponse(ImageResponse.State.error, null);
+            }
+            FloatSize size = doc.size();
+            int w = Math.max(1, (int) Math.ceil(size.width));
+            int h = Math.max(1, (int) Math.ceil(size.height));
+            BufferedImage img = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
+            var g = img.createGraphics();
+            g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+            g.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
+            doc.render(null, g, new ViewBox(0, 0, w, h));
+            g.dispose();
+            return new ImageResponse(ImageResponse.State.loaded, img);
+        }
+        catch (Exception e) {
+            return new ImageResponse(ImageResponse.State.error, null);
+        }
     }
 
     @Override
     public byte[] getResponseBytes() {
-        return myBytes;
+        return responseBytes;
     }
 
     @Override
     public int getStatus() {
-        if (myBytes != null) {
-            return HttpURLConnection.HTTP_OK;
-        }
-
-        return 0;
+        return status;
     }
 
     @Override
     public String getStatusText() {
-        if (myBytes != null) {
-            return "OK";
-        }
-        return null;
+        return status == 200 ? "OK" : String.valueOf(status);
     }
 
     @Override
     public void abort() {
+        setReadyState(STATE_ABORTED);
     }
 
     @Override
     public String getAllResponseHeaders(List<String> excludedHeadersLowerCase) {
-        return null;
+        return "";
     }
 
     @Override
     public String getResponseHeader(String headerName) {
-        return myHeaders.get(headerName);
-    }
-
-    private URL toURL(String url) throws IOException {
-        try {
-            return new URI(url).toURL();
-        }
-        catch (URISyntaxException e) {
-            throw new IOException(e);
-        }
+        return null;
     }
 
     @Override
     public void open(String method, String url) throws IOException {
-        open(method, toURL(url));
+        if (url.startsWith("classpath:")) {
+            this.classpathResource = url.substring("classpath:".length());
+            setReadyState(STATE_LOADING);
+            return;
+        }
+        open(method, new URL(url), true);
     }
 
     @Override
@@ -140,105 +163,109 @@ public class ConsuloNetworkRequest implements NetworkRequest {
     }
 
     @Override
-    public void open(String method, String url, boolean asyncFlag) throws IOException {
-        open(method, toURL(url), true);
+    public void open(String method, URL url, boolean asyncFlag) throws IOException {
+        this.requestUrl = url;
+        this.async = asyncFlag;
+        setReadyState(STATE_LOADING);
     }
 
     @Override
-    public void open(String method, URL url, boolean asyncFlag) throws IOException {
-        open(method, url, asyncFlag, null);
+    public void open(String method, String url, boolean asyncFlag) throws IOException {
+        if (url.startsWith("classpath:")) {
+            this.classpathResource = url.substring("classpath:".length());
+            this.async = asyncFlag;
+            setReadyState(STATE_LOADING);
+            return;
+        }
+        open(method, new URL(url), asyncFlag);
     }
 
     @Override
     public void open(String method, URL url, boolean asyncFlag, String userName) throws IOException {
-        open(method, url, asyncFlag, null, null);
+        open(method, url, asyncFlag);
     }
 
     @Override
     public void open(String method, URL url, boolean asyncFlag, String userName, String password) throws IOException {
-        myMethod = method;
-        myURL = url;
-        myAsyncFlag = asyncFlag;
-        myUserName = userName;
-        myPassword = password;
+        open(method, url, asyncFlag);
     }
 
     @Override
     public void send(String content, UserAgentContext.Request requestType) throws IOException {
-        if (URLUtil.FILE_PROTOCOL.equals(myURL.getProtocol())) {
-            if (myAsyncFlag) {
-                ForkJoinPool.commonPool().execute(() -> loadFile(requestType));
-            }
-            else {
-                loadFile(requestType);
-            }
+        if (classpathResource != null || !async) {
+            execute();
+        }
+        else {
+            ForkJoinPool.commonPool().execute(this::execute);
         }
     }
 
-    private void loadFile(UserAgentContext.Request requestType) {
-        myState = NetworkRequest.STATE_LOADING;
-
-        myListenerDispatcher.getMulticaster().readyStateChanged(new NetworkRequestEvent(this, myState));
-
-        if (requestType.kind == UserAgentContext.RequestKind.Image) {
-            myImageResponse = new ImageResponse(ImageResponse.State.loading, null);
-        }
-
-        try (InputStream inputStream = URLUtil.openStream(myURL)) {
-            byte[] bytes = StreamUtil.loadFromStream(inputStream);
-
-            myBytes = bytes;
-
-            myState = NetworkRequest.STATE_LOADED;
-
-            myListenerDispatcher.getMulticaster().readyStateChanged(new NetworkRequestEvent(this, myState));
-
-            if (requestType.kind == UserAgentContext.RequestKind.Image) {
-                try {
-                    BufferedImage image = ImageIO.read(new UnsyncByteArrayInputStream(myBytes));
-                    if (image != null) {
-                        myImageResponse = new ImageResponse(ImageResponse.State.loaded, image);
-                    } else {
-                        myImageResponse = new ImageResponse(ImageResponse.State.error, null);
-                    }
+    private void execute() {
+        String cp = classpathResource;
+        if (cp != null) {
+            try (InputStream in = getClass().getResourceAsStream(cp)) {
+                if (in != null) {
+                    responseBytes = in.readAllBytes();
+                    status = 200;
                 }
-                catch (IOException e) {
-                    myImageResponse = new ImageResponse(ImageResponse.State.error, null);
-                    
-                    LOG.warn(e);
+                else {
+                    status = 404;
                 }
             }
-
-            myState = NetworkRequest.STATE_COMPLETE;
-
-            myListenerDispatcher.getMulticaster().readyStateChanged(new NetworkRequestEvent(this, myState));
-        }
-        catch (IOException e) {
-            if (requestType.kind == UserAgentContext.RequestKind.Image) {
-                myImageResponse = new ImageResponse(ImageResponse.State.error, null);
+            catch (Exception e) {
+                status = 0;
+                responseBytes = null;
             }
-
-            LOG.warn(e);
+            setReadyState(STATE_COMPLETE);
+            return;
         }
+        try {
+            URL url = requestUrl;
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setRequestProperty("User-Agent", "Mozilla/5.0 Cobra/1.0");
+            conn.setConnectTimeout(10_000);
+            conn.setReadTimeout(15_000);
+            conn.connect();
+            status = conn.getResponseCode();
+            try (InputStream in = conn.getInputStream()) {
+                responseBytes = in.readAllBytes();
+            }
+        }
+        catch (Exception e) {
+            status = 0;
+            responseBytes = null;
+        }
+        setReadyState(STATE_COMPLETE);
     }
 
     @Override
     public void addNetworkRequestListener(NetworkRequestListener listener) {
-        myListenerDispatcher.addListener(listener);
+        listeners.add(listener);
     }
 
     @Override
     public Optional<URL> getURL() {
-        return Optional.ofNullable(myURL);
+        if (classpathResource != null) {
+            URL u = getClass().getResource(classpathResource);
+            return Optional.ofNullable(u);
+        }
+        return Optional.ofNullable(requestUrl);
     }
 
     @Override
     public boolean isAsnyc() {
-        return myAsyncFlag;
+        return async;
     }
 
     @Override
     public void addRequestedHeader(String header, String value) {
-        myHeaders.put(header, value);
+        // Not needed for test purposes
+    }
+
+    private void setReadyState(int state) {
+        this.readyState = state;
+        for (NetworkRequestListener l : listeners) {
+            l.readyStateChanged(null);
+        }
     }
 }

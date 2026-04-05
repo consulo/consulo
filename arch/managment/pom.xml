@@ -807,7 +807,7 @@
             <dependency>
                 <groupId>org.antlr</groupId>
                 <artifactId>antlr4-runtime</artifactId>
-                <version>4.5.3</version>
+                <version>4.13.2</version>
                 <exclusions>
                     <exclusion>
                         <groupId>org.slf4j</groupId>
@@ -829,7 +829,7 @@
             <dependency>
                 <groupId>consulo.internal.org.cobraparser</groupId>
                 <artifactId>cobra-core</artifactId>
-                <version>2.7</version>
+                <version>3.1</version>
                 <exclusions>
                     <exclusion>
                         <groupId>org.slf4j</groupId>
@@ -838,9 +838,9 @@
                 </exclusions>
             </dependency>
             <dependency>
-                <groupId>net.sf.cssbox</groupId>
-                <artifactId>jstyleparser</artifactId>
-                <version>4.0.0</version>
+                <groupId>consulo.internal.org.cobraparser</groupId>
+                <artifactId>cobra-jstyleparser</artifactId>
+                <version>3.1</version>
                 <exclusions>
                     <exclusion>
                         <groupId>org.slf4j</groupId>

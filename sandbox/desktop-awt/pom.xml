@@ -440,8 +440,8 @@
             <artifactId>cobra-core</artifactId>
         </dependency>
         <dependency>
-            <groupId>net.sf.cssbox</groupId>
-            <artifactId>jstyleparser</artifactId>
+            <groupId>consulo.internal.org.cobraparser</groupId>
+            <artifactId>cobra-jstyleparser</artifactId>
         </dependency>
         <dependency>
             <groupId>xml-apis</groupId>
