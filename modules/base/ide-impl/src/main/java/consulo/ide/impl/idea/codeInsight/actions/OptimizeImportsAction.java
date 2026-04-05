@@ -36,6 +36,7 @@ import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.awt.DialogWrapper;
+import consulo.util.lang.StringUtil;
 import consulo.versionControlSystem.FormatChangedTextUtil;
 import consulo.virtualFileSystem.ReadonlyStatusHandler;
 import consulo.virtualFileSystem.VirtualFile;
@@ -51,7 +52,6 @@ import java.util.*;
 public class OptimizeImportsAction extends AnAction {
     private static final String HELP_ID = "editing.manageImports";
 
-    private static final String NO_IMPORTS_OPTIMIZED = "Unused imports not found";
     private static boolean myProcessVcsChangedFilesInTests;
 
     private final Application myApplication;
@@ -141,7 +141,7 @@ public class OptimizeImportsAction extends AnAction {
                     hasChanges = FormatChangedTextUtil.hasChanges(moduleContext);
                 }
                 else {
-                    text = CodeInsightLocalize.processScopeProject(projectContext.getPresentableUrl());
+                    text = CodeInsightLocalize.processScopeProject(StringUtil.notNullize(projectContext.getPresentableUrl()));
                     hasChanges = FormatChangedTextUtil.hasChanges(projectContext);
                 }
                 Boolean isProcessVcsChangedText = isProcessVcsChangedText(project, text, hasChanges);
@@ -181,7 +181,7 @@ public class OptimizeImportsAction extends AnAction {
         boolean processDirectory = false;
         boolean processOnlyVcsChangedFiles = false;
         if (!Application.get().isUnitTestMode() && file == null && dir != null) {
-            LocalizeValue message = CodeInsightLocalize.processScopeDirectory(dir.getName());
+            LocalizeValue message = CodeInsightLocalize.processScopeDirectory(StringUtil.notNullize(dir.getName()));
             OptimizeImportsDialog dialog = new OptimizeImportsDialog(project, message, FormatChangedTextUtil.hasChanges(dir));
             dialog.show();
             if (!dialog.isOK()) {

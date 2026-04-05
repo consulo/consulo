@@ -52,7 +52,7 @@ public class LayoutCodeInfoCollector {
   }
 
   public boolean isEmpty() {
-    return optimizeImportsNotification == null
+    return optimizeImportsNotification.isEmpty()
            && rearrangeCodeNotification == null
            && reformatCodeNotification == null;
   }

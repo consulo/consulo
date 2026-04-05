@@ -132,7 +132,7 @@ public class OptimizeImportsProcessor extends AbstractLayoutCodeProcessor {
     boolean atLeastOneOptimizerChangedSomething = false;
     for (NotificationInfo info : myOptimizerNotifications) {
       atLeastOneOptimizerChangedSomething |= info.isSomethingChanged();
-      if (info.getMessage() != null) {
+      if (info.getMessage().isNotEmpty()) {
         collector.setOptimizeImportsNotification(info.getMessage());
         return;
       }
