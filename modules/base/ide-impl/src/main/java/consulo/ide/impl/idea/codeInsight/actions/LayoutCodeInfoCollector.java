@@ -15,17 +15,18 @@
  */
 package consulo.ide.impl.idea.codeInsight.actions;
 
-public class LayoutCodeInfoCollector {
+import consulo.localize.LocalizeValue;
 
-  private String optimizeImportsNotification = null;
+public class LayoutCodeInfoCollector {
+  private LocalizeValue optimizeImportsNotification = LocalizeValue.empty();
   private String reformatCodeNotification = null;
   private String rearrangeCodeNotification = null;
 
-  public String getOptimizeImportsNotification() {
+  public LocalizeValue getOptimizeImportsNotification() {
     return optimizeImportsNotification;
   }
 
-  public void setOptimizeImportsNotification(String optimizeImportsNotification) {
+  public void setOptimizeImportsNotification(LocalizeValue optimizeImportsNotification) {
     this.optimizeImportsNotification = optimizeImportsNotification;
   }
 
@@ -51,7 +52,7 @@ public class LayoutCodeInfoCollector {
   }
 
   public boolean isEmpty() {
-    return optimizeImportsNotification == null
+    return optimizeImportsNotification.isEmpty()
            && rearrangeCodeNotification == null
            && reformatCodeNotification == null;
   }

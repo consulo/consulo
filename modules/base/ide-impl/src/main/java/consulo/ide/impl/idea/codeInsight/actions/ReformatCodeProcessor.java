@@ -31,6 +31,7 @@ import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
 import consulo.language.util.IncorrectOperationException;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.module.Module;
 import consulo.project.Project;
@@ -43,12 +44,11 @@ import java.util.*;
 import java.util.concurrent.FutureTask;
 
 public class ReformatCodeProcessor extends AbstractLayoutCodeProcessor {
-
-  public static final String COMMAND_NAME = FormatterUtil.REFORMAT_COMMAND_NAME;
+  public static final LocalizeValue COMMAND_NAME = FormatterUtil.REFORMAT_COMMAND_NAME;
 
   private static final Logger LOG = Logger.getInstance(ReformatCodeProcessor.class);
 
-  private static final String PROGRESS_TEXT = CodeInsightLocalize.reformatProgressCommonText().get();
+  private static final LocalizeValue PROGRESS_TEXT = CodeInsightLocalize.reformatProgressCommonText();
   private final Collection<TextRange> myRanges = new ArrayList<>();
   private SelectionModel mySelectionModel;
 
@@ -90,13 +90,15 @@ public class ReformatCodeProcessor extends AbstractLayoutCodeProcessor {
     super(file.getProject(), file, PROGRESS_TEXT, COMMAND_NAME, processChangedTextOnly);
   }
 
+  @RequiredReadAction
   public ReformatCodeProcessor(Project project, PsiFile[] files, @Nullable Runnable postRunnable, boolean processChangedTextOnly) {
     this(project, files, COMMAND_NAME, postRunnable, processChangedTextOnly);
   }
 
+  @RequiredReadAction
   public ReformatCodeProcessor(Project project,
                                PsiFile[] files,
-                               String commandName,
+                               LocalizeValue commandName,
                                @Nullable Runnable postRunnable,
                                boolean processChangedTextOnly)
   {

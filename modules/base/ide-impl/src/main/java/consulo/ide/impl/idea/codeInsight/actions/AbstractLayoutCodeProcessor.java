@@ -22,7 +22,7 @@ import consulo.ide.impl.idea.openapi.project.ProjectUtil;
 import consulo.language.codeStyle.FormattingModelBuilder;
 import consulo.language.editor.internal.LayoutCodeProcessor;
 import consulo.language.editor.localize.CodeInsightLocalize;
-import consulo.language.psi.PsiBundle;
+import consulo.language.localize.LanguageLocalize;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
@@ -66,7 +66,6 @@ public abstract class AbstractLayoutCodeProcessor implements LayoutCodeProcessor
 
     private static final Logger LOG = Logger.getInstance(AbstractLayoutCodeProcessor.class);
 
-    
     protected final Project myProject;
     private final Module myModule;
 
@@ -75,8 +74,8 @@ public abstract class AbstractLayoutCodeProcessor implements LayoutCodeProcessor
     private List<PsiFile> myFiles;
     private boolean myIncludeSubdirs;
 
-    private final String myProgressText;
-    private final String myCommandName;
+    private final LocalizeValue myProgressText;
+    private final LocalizeValue myCommandName;
     private Runnable myPostRunnable;
     private boolean myProcessChangedTextOnly;
 
@@ -87,18 +86,14 @@ public abstract class AbstractLayoutCodeProcessor implements LayoutCodeProcessor
 
     protected AbstractLayoutCodeProcessor(
         Project project,
-        String commandName,
-        String progressText,
+        LocalizeValue commandName,
+        LocalizeValue progressText,
         boolean processChangedTextOnly
     ) {
         this(project, (Module)null, commandName, progressText, processChangedTextOnly);
     }
 
-    protected AbstractLayoutCodeProcessor(
-        AbstractLayoutCodeProcessor previous,
-        String commandName,
-        String progressText
-    ) {
+    protected AbstractLayoutCodeProcessor(AbstractLayoutCodeProcessor previous, LocalizeValue commandName, LocalizeValue progressText) {
         myProject = previous.myProject;
         myModule = previous.myModule;
         myDirectory = previous.myDirectory;
@@ -118,8 +113,8 @@ public abstract class AbstractLayoutCodeProcessor implements LayoutCodeProcessor
     protected AbstractLayoutCodeProcessor(
         Project project,
         @Nullable Module module,
-        String commandName,
-        String progressText,
+        LocalizeValue commandName,
+        LocalizeValue progressText,
         boolean processChangedTextOnly
     ) {
         myProject = project;
@@ -136,8 +131,8 @@ public abstract class AbstractLayoutCodeProcessor implements LayoutCodeProcessor
         Project project,
         PsiDirectory directory,
         boolean includeSubdirs,
-        String progressText,
-        String commandName,
+        LocalizeValue progressText,
+        LocalizeValue commandName,
         boolean processChangedTextOnly
     ) {
         myProject = project;
@@ -153,8 +148,8 @@ public abstract class AbstractLayoutCodeProcessor implements LayoutCodeProcessor
     protected AbstractLayoutCodeProcessor(
         Project project,
         PsiFile file,
-        String progressText,
-        String commandName,
+        LocalizeValue progressText,
+        LocalizeValue commandName,
         boolean processChangedTextOnly
     ) {
         myProject = project;
@@ -170,8 +165,8 @@ public abstract class AbstractLayoutCodeProcessor implements LayoutCodeProcessor
     protected AbstractLayoutCodeProcessor(
         Project project,
         PsiFile[] files,
-        String progressText,
-        String commandName,
+        LocalizeValue progressText,
+        LocalizeValue commandName,
         @Nullable Runnable postRunnable,
         boolean processChangedTextOnly
     ) {
@@ -248,6 +243,7 @@ public abstract class AbstractLayoutCodeProcessor implements LayoutCodeProcessor
         });
     }
 
+    @Override
     @RequiredUIAccess
     public void run() {
         if (myFile != null) {
@@ -258,7 +254,6 @@ public abstract class AbstractLayoutCodeProcessor implements LayoutCodeProcessor
         runProcessFiles();
     }
 
-    
     private FileRecursiveIterator build() {
         if (myFiles != null) {
             return new FileRecursiveIterator(myProject, myFiles);
@@ -275,13 +270,11 @@ public abstract class AbstractLayoutCodeProcessor implements LayoutCodeProcessor
         return new FileRecursiveIterator(myProject);
     }
 
-    
     private FileRecursiveIterator buildChangedFilesIterator() {
         List<PsiFile> files = getChangedFilesFromContext();
         return new FileRecursiveIterator(myProject, files);
     }
 
-    
     private List<PsiFile> getChangedFilesFromContext() {
         List<PsiDirectory> dirs = getAllSearchableDirsFromContext();
         return FormatChangedTextUtil.getChangedFilesFromDirs(myProject, dirs);
@@ -316,7 +309,7 @@ public abstract class AbstractLayoutCodeProcessor implements LayoutCodeProcessor
         if (!FileDocumentManager.getInstance().requestWriting(document, myProject)) {
             Messages.showMessageDialog(
                 myProject,
-                PsiBundle.message("cannot.modify.a.read.only.file", file.getName()),
+                LanguageLocalize.cannotModifyAReadOnlyFile(file.getName()).get(),
                 CodeInsightLocalize.errorDialogReadonlyFileTitle().get(),
                 UIUtil.getErrorIcon()
             );
@@ -412,8 +405,8 @@ public abstract class AbstractLayoutCodeProcessor implements LayoutCodeProcessor
 
     private void runLayoutCodeProcess(Runnable readAction, Runnable writeAction) {
         ProgressWindow progressWindow = new ProgressWindow(true, myProject);
-        progressWindow.setTitle(myCommandName);
-        progressWindow.setText(myProgressText);
+        progressWindow.setTitle(myCommandName.get());
+        progressWindow.setTextValue(myProgressText);
 
         Application app = myProject.getApplication();
         ModalityState modalityState = app.getCurrentModalityState();
@@ -434,7 +427,7 @@ public abstract class AbstractLayoutCodeProcessor implements LayoutCodeProcessor
 
             Runnable writeRunnable = () -> CommandProcessor.getInstance().newCommand()
                 .project(myProject)
-                .name(LocalizeValue.ofNullable(myCommandName))
+                .name(myCommandName)
                 .run(() -> {
                     try {
                         writeAction.run();
@@ -545,7 +538,7 @@ public abstract class AbstractLayoutCodeProcessor implements LayoutCodeProcessor
                 myProject.getApplication().invokeAndWait(
                     () -> CommandProcessor.getInstance().newCommand()
                         .project(myProject)
-                        .name(LocalizeValue.ofNullable(myCommandName))
+                        .name(myCommandName)
                         .inWriteAction()
                         .run(writeTask)
                 );

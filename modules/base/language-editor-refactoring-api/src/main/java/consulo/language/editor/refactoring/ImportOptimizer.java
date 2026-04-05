@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.language.editor.refactoring;
 
 import consulo.annotation.access.RequiredReadAction;
@@ -22,13 +21,13 @@ import consulo.annotation.component.ExtensionAPI;
 import consulo.application.Application;
 import consulo.component.extension.ExtensionPointCacheKey;
 import consulo.language.Language;
-import consulo.language.editor.CodeInsightBundle;
+import consulo.language.editor.localize.CodeInsightLocalize;
 import consulo.language.extension.ByLanguageValue;
 import consulo.language.extension.LanguageExtension;
 import consulo.language.extension.LanguageOneToMany;
 import consulo.language.psi.PsiFile;
 
-import org.jspecify.annotations.Nullable;
+import consulo.localize.LocalizeValue;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -40,14 +39,13 @@ import java.util.Set;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface ImportOptimizer extends LanguageExtension {
-  ExtensionPointCacheKey<ImportOptimizer, ByLanguageValue<List<ImportOptimizer>>> KEY = ExtensionPointCacheKey.create("ImportOptimizer", LanguageOneToMany.build(false));
+  ExtensionPointCacheKey<ImportOptimizer, ByLanguageValue<List<ImportOptimizer>>> KEY =
+    ExtensionPointCacheKey.create("ImportOptimizer", LanguageOneToMany.build(false));
 
-  
   public static List<ImportOptimizer> forLanguage(Language language) {
     return Application.get().getExtensionPoint(ImportOptimizer.class).getOrBuildCache(KEY).requiredGet(language);
   }
 
-  
   @RequiredReadAction
   public static Set<ImportOptimizer> forFile(PsiFile file) {
     Set<ImportOptimizer> optimizers = new HashSet<>();
@@ -89,15 +87,15 @@ public interface ImportOptimizer extends LanguageExtension {
   /**
    * @return action text, it will be displayed for user, default 'Optimize Imports...'
    */
-  default String getActionName() {
-    return CodeInsightBundle.message("not.action.OptimizeImports.text");
+  default LocalizeValue getActionName() {
+    return CodeInsightLocalize.notActionOptimizeimportsText();
   }
 
   /**
    * @return action description, it will be displayed for user, default 'Remove unused imports and reorder/reorganize imports.'
    */
-  default String getActionDescription() {
-    return CodeInsightBundle.message("not.action.OptimizeImports.description");
+  default LocalizeValue getActionDescription() {
+    return CodeInsightLocalize.notActionOptimizeimportsDescription();
   }
 
   /**
@@ -105,6 +103,6 @@ public interface ImportOptimizer extends LanguageExtension {
    * by default "imports optimized" is shown.
    */
   interface CollectingInfoRunnable extends Runnable {
-    @Nullable String getUserNotificationInfo();
+    LocalizeValue getUserNotificationInfo();
   }
 }

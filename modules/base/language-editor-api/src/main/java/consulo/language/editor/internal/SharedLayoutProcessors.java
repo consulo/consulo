@@ -19,6 +19,7 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.language.editor.scope.AnalysisScope;
 import consulo.language.psi.PsiFile;
+import consulo.localize.LocalizeValue;
 import org.jspecify.annotations.Nullable;
 
 /**
@@ -27,11 +28,11 @@ import org.jspecify.annotations.Nullable;
  */
 @ServiceAPI(ComponentScope.PROJECT)
 public interface SharedLayoutProcessors {
-    LayoutCodeProcessor createOptimizeImportsProcessor(PsiFile[] files, String commandName, Runnable postRunnable);
+    LayoutCodeProcessor createOptimizeImportsProcessor(PsiFile[] files, LocalizeValue commandName, Runnable postRunnable);
 
-    LayoutCodeProcessor createRearrangeCodeProcessor(PsiFile[] files, String commandName, Runnable postRunnable);
+    LayoutCodeProcessor createRearrangeCodeProcessor(PsiFile[] files, LocalizeValue commandName, Runnable postRunnable);
 
-    LayoutCodeProcessor createReformatCodeProcessor(PsiFile[] files, String commandName, Runnable postRunnable);
+    LayoutCodeProcessor createReformatCodeProcessor(PsiFile[] files, LocalizeValue commandName, Runnable postRunnable);
 
     LayoutCodeProcessor createCodeCleanupProcessor(AnalysisScope scope, @Nullable Runnable postRunnable);
 }

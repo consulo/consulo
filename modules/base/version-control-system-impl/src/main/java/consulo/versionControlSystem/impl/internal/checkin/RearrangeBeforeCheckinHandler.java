@@ -16,13 +16,12 @@
 package consulo.versionControlSystem.impl.internal.checkin;
 
 import consulo.document.FileDocumentManager;
-import consulo.language.editor.CodeInsightBundle;
 import consulo.language.editor.internal.SharedLayoutProcessors;
+import consulo.language.editor.localize.CodeInsightLocalize;
 import consulo.localize.LocalizeValue;
 import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.awt.NonFocusableCheckBox;
 import consulo.versionControlSystem.VcsConfiguration;
 import consulo.versionControlSystem.checkin.CheckinHandler;
 import consulo.versionControlSystem.checkin.CheckinHandlerUtil;
@@ -32,11 +31,8 @@ import consulo.versionControlSystem.ui.CheckBoxRefreshableOnComponent;
 import consulo.versionControlSystem.ui.RefreshableOnComponent;
 import org.jspecify.annotations.Nullable;
 
-import javax.swing.*;
-import java.awt.*;
-
 public class RearrangeBeforeCheckinHandler extends CheckinHandler implements CheckinMetaHandler {
-    public static final String COMMAND_NAME = CodeInsightBundle.message("process.rearrange.code.before.commit");
+    public static final LocalizeValue COMMAND_NAME = CodeInsightLocalize.processRearrangeCodeBeforeCommit();
 
     private final Project myProject;
     private final CheckinProjectPanel myPanel;
@@ -46,8 +42,8 @@ public class RearrangeBeforeCheckinHandler extends CheckinHandler implements Che
         myPanel = panel;
     }
 
-    @RequiredUIAccess
     @Override
+    @RequiredUIAccess
     public @Nullable RefreshableOnComponent getBeforeCheckinConfigurationPanel() {
         VcsConfiguration configuration = VcsConfiguration.getInstance(myProject);
 

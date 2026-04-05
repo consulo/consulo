@@ -15,6 +15,7 @@
  */
 package consulo.versionControlSystem.impl.internal.checkin;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.document.FileDocumentManager;
 import consulo.language.editor.internal.SharedLayoutProcessors;
 import consulo.language.editor.localize.CodeInsightLocalize;
@@ -50,14 +51,13 @@ public class OptimizeImportsBeforeCheckinHandler extends CheckinHandler implemen
                 VcsLocalize.checkboxCheckinOptionsOptimizeImports(),
                 myProject,
                 LocalizeValue.localizeTODO("Impossible until indices are up-to-date"),
-                () -> {
-                    return settings.OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT;
-                },
+                () -> settings.OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT,
                 value -> settings.OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT = value
         );
     }
 
     @Override
+    @RequiredReadAction
     public void runCheckinHandlers(Runnable finishAction) {
         VcsConfiguration configuration = VcsConfiguration.getInstance(myProject);
         Collection<VirtualFile> files = myPanel.getVirtualFiles();
@@ -72,7 +72,7 @@ public class OptimizeImportsBeforeCheckinHandler extends CheckinHandler implemen
 
             processors.createOptimizeImportsProcessor(
                 CheckinHandlerUtil.getPsiFiles(myProject, files),
-                CodeInsightLocalize.processOptimizeImportsBeforeCommit().get(),
+                CodeInsightLocalize.processOptimizeImportsBeforeCommit(),
                 performCheckoutAction
             ).run();
         }

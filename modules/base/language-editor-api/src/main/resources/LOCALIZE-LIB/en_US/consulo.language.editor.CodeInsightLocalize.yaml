@@ -1,7 +1,3 @@
-code.vision.inheritors.name:
-    text: Inheritors
-code.vision.usages.name:
-    text: Usages
 action.AnActionButton.Template.list.text.duplicate:
     text: Duplicate
 action.ToggleInlineHintsAction.description:
@@ -36,6 +32,10 @@ code.coverage:
     text: Code Coverage
 code.coverage.is.not.supported:
     text: Code coverage is supported for jre 5.0 or higher
+code.vision.inheritors.name:
+    text: Inheritors
+code.vision.usages.name:
+    text: Usages
 codeinsight.settings:
     text: CodeInsight settings
 command.expand.postfix.template:
@@ -813,6 +813,8 @@ not.action.OptimizeImports.description:
     text: Remove unused imports and reorder/reorganize imports
 not.action.OptimizeImports.text:
     text: Optimi_ze Imports...
+notification.text.unused.imports.not.found:
+    text: Unused imports not found
 override.implement.broken.file.template.message:
     text: Please Correct "Overridden/Implemented Method Body" Template
 override.implement.broken.file.template.title:
@@ -847,6 +849,8 @@ process.optimize.imports.before.commit:
     text: Optimize Imports Before Commit
 process.rearrange.code:
     text: Rearranging code...
+process.rearrange.code.before.commit:
+    text: Rearrange Code Before Commit
 process.reformat.code:
     text: Reformat Code
 process.reformat.code.before.commit:
@@ -1075,3 +1079,5 @@ unwrap.with.placeholder:
     text: Unwrap ''{0}''
 xml.tag.info.no.attributes:
     text: <no attributes>
+hint.text.imports.optimized:
+    text: Imports optimized

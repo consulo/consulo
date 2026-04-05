@@ -1,3 +1,7 @@
+0.expected:
+    text: '{0} expected'
+0.is.not.an.identifier:
+    text: '''''{0}'''' is not an identifier.'
 PerFileConfigurableBase.empty.text:
     text: New Mapping $addShortcut
 PerFileConfigurableBase.label.project:
@@ -10,12 +14,44 @@ PerFileConfigurableBase.project.mapping:
     text: Project {0}
 PerFileConfigurableBase.target.title:
     text: Path
+abstract.visibility.presentation:
+    text: abstract
 action.set.system.default.encoding.text:
     text: <System Default>
+anonymous.class.context.display:
+    text: Anonymous in {0}
+anonymous.class.derived.display:
+    text: Anonymous class derived from {0}
+anonymous.class.display:
+    text: Anonymous class
+aux.context.display:
+    text: (in {0})
 button.do.not.override:
     text: Do Not Override
 button.override:
     text: Override
+cannot.delete.a.read.only.file:
+    text: Cannot delete a read-only file ''{0}''.
+cannot.modify.a.read.only.directory:
+    text: Cannot modify a read-only directory ''{0}''.
+cannot.modify.a.read.only.file:
+    text: Cannot modify a read-only file ''{0}''.
+cannot.resolve.symbol:
+    text: Cannot resolve symbol ''{0}''
+class.context.display:
+    text: '{0} in {1}'
+code.display:
+    text: Code
+code.from.context.display:
+    text: Code from {0}
+codestyle.cannot.save.scheme.file:
+    text: Can''t save code style scheme {0}. {1}
+codestyle.cannot.save.settings.directory.cant.be.created.message:
+    text: Cannot save code style schemes. Directory {0} cannot be created.
+codestyle.cannot.save.settings.directory.cant.be.created.title:
+    text: Cannot Save Settings
+codestyle.export.display.name:
+    text: Code style schemes
 color.name:
     text: Color name:\&nbsp; {0}
 color.preview:
@@ -40,6 +76,12 @@ completion.smart.enter.ad:
     text: 'Use {0} to syntactically correct your code after completing (balance parentheses etc.)    '
 compound.run.configuration.cycle:
     text: '{0} ''''{1}'''' causes dependency cycle and cannot be added'
+default.package.presentation:
+    text: <default>
+default.path.evaluator.option:
+    text: Tells reference provider how evaluate default path for given file
+default.visibility.presentation:
+    text: default
 dialog.message.duplicate.live.templates.in.group:
     text: Duplicate ''{0}'' live templates in {1} group
 dialog.message.live.template.with.empty.abbreviation:
@@ -52,8 +94,48 @@ dialog.message.valid.identifier:
     text: '''''{0}'''' is not a valid identifier'
 dialog.template.data.language.caption:
     text: <html><body>Template data languages are the underlying languages in template files like those of FreeMarker/Velocity frameworks.<br>To change template data language settings {0} uses for a file, directory, or an entire project, click an item and then select a language from the Template Data Language list.<br><br>Note:<br>If not specified, files and directories inherit Template Data Language settings from parent.<br></body></html>
+el.cannot.resolve.function:
+    text: 'Cannot resolve function ''''{0}'''' #loc'
+el.cannot.resolve.method:
+    text: 'Cannot resolve method ''''{0}''''() #loc'
+el.cannot.resolve.namespace:
+    text: 'Cannot resolve namespace ''''{0}'''' #loc'
+el.cannot.resolve.property:
+    text: 'Cannot resolve property or method ''''{0}'''' (dynamic property?) #loc'
+el.cannot.resolve.variable:
+    text: 'Cannot resolve variable ''''{0}'''' #loc'
+el.colon.expected:
+    text: ': expected'
+el.declare.variable.find.acceptable.class:
+    text: Find acceptable class
+el.declare.variable.intention.family:
+    text: Declare Variable As External Data
+el.declare.variable.via.comment.annotation.intention.name:
+    text: Declare external variable in comment annotation
+el.declare.variable.via.usebean.intention.name:
+    text: Declare external variable as <jsp:useBean />
+el.expression.expected:
+    text: expression expected
+el.identifier.expected:
+    text: Identifier expected
+el.lparen.expected:
+    text: ( expected
+el.mismatched.parameters.count:
+    text: Different number of formal and actual parameters
+el.rbracket.expected:
+    text: '] expected'
+el.rparen.expected:
+    text: ) expected
+el.unexpected.end.of.file:
+    text: Unexpected end of file
+el.value.expected:
+    text: Value expected
+enum.constant.context:
+    text: Enum constant ''{0}'' in ''{1}''
 error.cannot.resolve:
     text: Cannot resolve
+final.visibility.presentation:
+    text: final
 hint.text.can.t.modify.decompiled.code:
     text: Can't modify decompiled code
 hint.text.couldn.t.find.surround:
@@ -68,6 +150,8 @@ indent.status.bar.spaces:
     text: '{0, choice, 1#{0} space|2#{0} spaces}'
 indent.status.bar.tab:
     text: Tab
+invalid.regular.expression.message:
+    text: Invalid regular expression {0}
 java.terms.annotation.interface:
     text: '@interface'
 java.terms.anonymous.class:
@@ -114,14 +198,108 @@ java.terms.variable:
     text: variable
 java.terms.variable.of.method:
     text: '{0} of {1}'
+jsf.el.out.of.attribute:
+    text: 'JSF EL out of attribute #loc'
+jsf.method.call.is.nonstd.extension:
+    text: 'Method call is nonstandard extension #loc'
+jsp.documentation.message.can.have.runtime.value:
+    text: Can have runtime value:\&nbsp;{0}
+jsp.documentation.message.custom.attribute.name:
+    text: Custom attribute name
+jsp.documentation.message.custom.function.name:
+    text: Custom function name
+jsp.documentation.message.custom.tag.name:
+    text: Custom tag name
+jsp.documentation.message.description:
+    text: Description:\&nbsp;{0}
+jsp.documentation.message.example.of.use:
+    text: Example\&nbsp;of\&nbsp;use:<br><pre>{0}</pre>
+jsp.documentation.message.fragment:
+    text: Fragment:\&nbsp;{0}
+jsp.documentation.message.required:
+    text: Required:\&nbsp;{0}
+jsp.documentation.message.type:
+    text: Type:\&nbsp;{0}
+jsp.taglib.method.reference.error.class.is.not.public:
+    text: Class is not public
+jsp.taglib.method.reference.error.class.is.not.valid:
+    text: Class is not valid
+jsp.taglib.method.reference.error.different.return.type:
+    text: Different return type
+jsp.taglib.method.reference.error.method.should.be.public.or.static:
+    text: Method should be public or static
+jsp.taglib.method.reference.error.no.such.method:
+    text: No such method
+jsp.taglib.method.reference.error.signature.is.different:
+    text: Signature is different
+local.class.preposition:
+    text: local
+method.context.display:
+    text: '{0}() in {1}'
+native.visibility.presentation:
+    text: native
 package.component.installing.suffix:
     text: (installing)
+packageLocal.visibility.presentation:
+    text: package local
 popup.title.copy:
     text: Copy
+private.visibility.presentation:
+    text: private
+protected.visibility.presentation:
+    text: protected
+psi.decompiled.text.header:
+    text: |-
+        // Consulo API Decompiler stub source generated from bytecode
+        // Implementation of methods is not available
+psi.error.incorroect.class.template.message:
+    text: Cannot create {0} - incorrect {1} template.
+psi.scanning.files.in.folder.progress:
+    text: Scanning files in {0}...
+psi.scanning.files.progress:
+    text: Scanning files...
+psi.search.for.word.progress:
+    text: Searching for {0}...
+psi.search.in.non.java.files.progress:
+    text: Analyzing non-code usages...
+psi.search.inheritors.of.class.progress:
+    text: Searching for inheritors of {0}...
+psi.search.inheritors.progress:
+    text: Searching for inheritors...
+psi.search.scope.intersection:
+    text: Intersection of {0} and {1}
+psi.search.scope.libraries:
+    text: Libraries
+psi.search.scope.production.files:
+    text: Project Production Files
+psi.search.scope.project:
+    text: Project Files
+psi.search.scope.project.and.libraries:
+    text: Project and Libraries
+psi.search.scope.test.files:
+    text: Project Test Files
+psi.search.scope.union:
+    text: Union of {0} and {1}
+public.visibility.presentation:
+    text: public
+qualified.resolve.class.reference.provider.option:
+    text: Tells reference provider to process only qualified class references (e.g. not resolve String as java.lang.String)
 quickfix.change.template.data.language.text:
     text: Change {0} template data language to...
+search.scope.module:
+    text: Module ''{0}''
+search.scope.module.runtime:
+    text: Module ''{0}'' runtime scope
+search.scope.unknown:
+    text: <unknown scope>
+static.visibility.presentation:
+    text: static
 status.bar.text.reference.has.been.copied:
     text: '{0} has been copied'
+strictfp.visibility.presentation:
+    text: strictfp
+synchronized.visibility.presentation:
+    text: synchronized
 tab.title.build.output:
     text: Build Output
 tab.title.more:
@@ -140,10 +318,14 @@ terms.file:
     text: file
 terms.property:
     text: property
+transient.visibility.presentation:
+    text: transient
 unexpected.eof:
     text: Unexpected end of file
 unexpected.token:
     text: Unexpected token
+volatile.visibility.presentation:
+    text: volatile
 xml.terms.attribute:
     text: attribute
 xml.terms.attribute.value:

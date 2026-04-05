@@ -19,10 +19,9 @@ import consulo.annotation.component.ExtensionImpl;
 import consulo.language.Language;
 import consulo.language.editor.refactoring.ImportOptimizer;
 import consulo.language.psi.PsiFile;
+import consulo.localize.LocalizeValue;
 import consulo.sandboxPlugin.lang.SandLanguage;
 import consulo.sandboxPlugin.lang.psi.SandFile;
-
-import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -35,29 +34,25 @@ public class SandImportOptimizer implements ImportOptimizer {
     return file instanceof SandFile;
   }
 
-  
   @Override
-  public String getActionName() {
-    return "Optimize 'using'";
+  public LocalizeValue getActionName() {
+    return LocalizeValue.of("Optimize 'using'");
   }
 
-  
   @Override
   public Runnable processFile(PsiFile file) {
     return new CollectingInfoRunnable() {
       @Override
-      public @Nullable String getUserNotificationInfo() {
-        return "test";
+      public LocalizeValue getUserNotificationInfo() {
+        return LocalizeValue.of("test");
       }
 
       @Override
       public void run() {
-
       }
     };
   }
 
-  
   @Override
   public Language getLanguage() {
     return SandLanguage.INSTANCE;

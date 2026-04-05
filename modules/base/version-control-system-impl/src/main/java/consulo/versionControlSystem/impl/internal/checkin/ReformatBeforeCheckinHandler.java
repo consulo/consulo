@@ -15,9 +15,11 @@
  */
 package consulo.versionControlSystem.impl.internal.checkin;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.document.FileDocumentManager;
 import consulo.language.codeStyle.FormatterUtil;
 import consulo.language.editor.internal.SharedLayoutProcessors;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.versionControlSystem.VcsConfiguration;
@@ -33,7 +35,7 @@ import org.jspecify.annotations.Nullable;
 import java.util.Collection;
 
 public class ReformatBeforeCheckinHandler extends CheckinHandler implements CheckinMetaHandler {
-    public static final String COMMAND_NAME = FormatterUtil.REFORMAT_BEFORE_COMMIT_COMMAND_NAME;
+    public static final LocalizeValue COMMAND_NAME = FormatterUtil.REFORMAT_BEFORE_COMMIT_COMMAND_NAME;
 
     protected final Project myProject;
     private final CheckinProjectPanel myPanel;
@@ -56,6 +58,7 @@ public class ReformatBeforeCheckinHandler extends CheckinHandler implements Chec
     }
 
     @Override
+    @RequiredReadAction
     public void runCheckinHandlers(Runnable finishAction) {
         VcsConfiguration configuration = VcsConfiguration.getInstance(myProject);
         Collection<VirtualFile> files = myPanel.getVirtualFiles();
@@ -70,13 +73,13 @@ public class ReformatBeforeCheckinHandler extends CheckinHandler implements Chec
 
             processors.createReformatCodeProcessor(
                 CheckinHandlerUtil.getPsiFiles(myProject, files),
-                COMMAND_NAME, performCheckoutAction
+                COMMAND_NAME,
+                performCheckoutAction
             ).run();
         }
         else {
             performCheckoutAction.run();
         }
-
     }
 
     private static boolean reformat(VcsConfiguration configuration, boolean checkinProject) {
