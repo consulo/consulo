@@ -17,12 +17,14 @@ If you can't describe the issue, you can use our [forum](https://github.com/orgs
 | Java 21       | ![jdk21](https://github.com/consulo/consulo/workflows/jdk21/badge.svg) |
 | Java 22       | ![jdk22](https://github.com/consulo/consulo/workflows/jdk22/badge.svg) |
 | Java 23       | ![jdk23](https://github.com/consulo/consulo/workflows/jdk23/badge.svg) |
-| Java 24       | ![jdk23](https://github.com/consulo/consulo/workflows/jdk24/badge.svg) |
+| Java 24       | ![jdk24](https://github.com/consulo/consulo/workflows/jdk24/badge.svg) |
+| Java 25       | ![jdk25](https://github.com/consulo/consulo/workflows/jdk25/badge.svg) |
+| Java 26       | ![jdk25](https://github.com/consulo/consulo/workflows/jdk26/badge.svg) |
 
 First of all, you need these tools:
 
  * Maven 3.9+
- * JDK 21+
+ * JDK 25+
 
 Then execute from command line:
 
