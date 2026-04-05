@@ -49,7 +49,6 @@ import java.util.List;
  * @author nik
  */
 public class ModuleOutputPackagingElementImpl extends PackagingElement<ModuleOutputPackagingElementImpl.ModuleOutputPackagingElementState> implements ModuleOutputPackagingElement {
-  
   public static final String MODULE_NAME_ATTRIBUTE = "name";
 
   protected NamedPointer<Module> myModulePointer;
@@ -83,7 +82,6 @@ public class ModuleOutputPackagingElementImpl extends PackagingElement<ModuleOut
     }
   }
 
-  
   @Override
   public Collection<VirtualFile> getSourceRoots(PackagingElementResolvingContext context) {
     Module module = NamedPointerUtil.get(myModulePointer);
@@ -101,13 +99,11 @@ public class ModuleOutputPackagingElementImpl extends PackagingElement<ModuleOut
     return roots;
   }
 
-  
   @Override
   public String toString() {
     return "module:" + getModuleName();
   }
 
-  
   @Override
   public PackagingElementOutputKind getFilesKind(PackagingElementResolvingContext context) {
     return PackagingElementOutputKind.DIRECTORIES_WITH_CLASSES;
@@ -141,7 +137,6 @@ public class ModuleOutputPackagingElementImpl extends PackagingElement<ModuleOut
     return NamedPointerUtil.getName(myModulePointer);
   }
 
-  
   @Override
   public ContentFolderTypeProvider getContentFolderType() {
     return myContentFolderType;

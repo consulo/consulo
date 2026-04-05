@@ -3,7 +3,8 @@
  */
 package consulo.execution.configuration;
 
-import consulo.application.AccessRule;
+import consulo.annotation.access.RequiredReadAction;
+import consulo.application.ReadAction;
 import consulo.component.util.pointer.NamedPointer;
 import consulo.execution.RuntimeConfigurationException;
 import consulo.execution.localize.ExecutionLocalize;
@@ -17,8 +18,8 @@ import consulo.util.xml.serializer.JDOMExternalizable;
 import consulo.util.xml.serializer.annotation.Attribute;
 import consulo.util.xml.serializer.annotation.Tag;
 import consulo.util.xml.serializer.annotation.Transient;
-import org.jspecify.annotations.Nullable;
 import org.jdom.Element;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 
@@ -26,7 +27,6 @@ import java.util.List;
 public class RunConfigurationModule implements JDOMExternalizable {
   private static final Logger LOG = Logger.getInstance(RunConfigurationModule.class);
 
-  
   private static final String ELEMENT = "module";
   
   private static final String ATTRIBUTE = "name";
@@ -49,7 +49,7 @@ public class RunConfigurationModule implements JDOMExternalizable {
       // we are unable to set 'null' module from 'not null' one
       String moduleName = modules.get(0).getAttributeValue(ATTRIBUTE);
       if (!StringUtil.isEmpty(moduleName)) {
-        myModulePointer = AccessRule.read(() -> ModulePointerManager.getInstance(myProject).create(moduleName));
+        myModulePointer = ReadAction.compute(() -> ModulePointerManager.getInstance(myProject).create(moduleName));
       }
     }
   }
@@ -64,6 +64,7 @@ public class RunConfigurationModule implements JDOMExternalizable {
     prev.setAttribute(ATTRIBUTE, getModuleName());
   }
 
+  @RequiredReadAction
   public void init() {
     if (StringUtil.isEmptyOrSpaces(getModuleName())) {
       Module[] modules = getModuleManager().getModules();
@@ -73,7 +74,6 @@ public class RunConfigurationModule implements JDOMExternalizable {
     }
   }
 
-  
   public Project getProject() {
     return myProject;
   }
@@ -83,6 +83,7 @@ public class RunConfigurationModule implements JDOMExternalizable {
     return myModulePointer != null ? myModulePointer.get() : null;
   }
 
+  @RequiredReadAction
   public @Nullable Module findModule(String moduleName) {
     if (myProject.isDisposed()) {
       return null;
@@ -90,10 +91,12 @@ public class RunConfigurationModule implements JDOMExternalizable {
     return getModuleManager().findModuleByName(moduleName);
   }
 
+  @RequiredReadAction
   public void setModule(Module module) {
     myModulePointer = module != null ? ModulePointerManager.getInstance(myProject).create(module) : null;
   }
 
+  @RequiredReadAction
   public void setModuleName(@Nullable String moduleName) {
     if (myModulePointer != null && !myModulePointer.getName().equals(moduleName) || myModulePointer == null && moduleName != null) {
       myModulePointer = moduleName != null ? ModulePointerManager.getInstance(myProject).create(moduleName) : null;
@@ -101,7 +104,6 @@ public class RunConfigurationModule implements JDOMExternalizable {
   }
 
   @Attribute("name")
-  
   public String getModuleName() {
     return myModulePointer != null ? myModulePointer.getName() : "";
   }
@@ -116,11 +118,11 @@ public class RunConfigurationModule implements JDOMExternalizable {
       if (myModulePointer != null) {
         String moduleName = myModulePointer.getName();
         if (ModuleManager.getInstance(myProject).getUnloadedModuleDescription(moduleName) != null) {
-          throw new RuntimeConfigurationError(ExecutionLocalize.moduleIsUnloadedFromProjectErrorText(moduleName).get());
+          throw new RuntimeConfigurationError(ExecutionLocalize.moduleIsUnloadedFromProjectErrorText(moduleName));
         }
-        throw new RuntimeConfigurationError(ExecutionLocalize.moduleDoesnTExistInProjectErrorText(moduleName).get());
+        throw new RuntimeConfigurationError(ExecutionLocalize.moduleDoesnTExistInProjectErrorText(moduleName));
       }
-      throw new RuntimeConfigurationError(ExecutionLocalize.moduleNotSpecifiedErrorText().get());
+      throw new RuntimeConfigurationError(ExecutionLocalize.moduleNotSpecifiedErrorText());
     }
   }
 }

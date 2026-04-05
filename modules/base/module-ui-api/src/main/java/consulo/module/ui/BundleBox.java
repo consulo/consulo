@@ -18,13 +18,14 @@ package consulo.module.ui;
 import consulo.annotation.UsedInPlugin;
 import consulo.content.bundle.*;
 import consulo.disposer.Disposable;
+import consulo.localize.LocalizeValue;
 import consulo.module.Module;
 import consulo.module.ModuleManager;
 import consulo.module.extension.ModuleExtension;
 import consulo.module.extension.MutableModuleExtension;
 import consulo.module.extension.MutableModuleInheritableNamedPointer;
 import consulo.platform.base.icon.PlatformIconGroup;
-import consulo.project.ProjectBundle;
+import consulo.project.localize.ProjectLocalize;
 import consulo.ui.ComboBox;
 import consulo.ui.PseudoComponent;
 import consulo.ui.TextAttribute;
@@ -42,10 +43,10 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 
 /**
+ * Cross-Platform version of {@link consulo.ide.impl.roots.ui.configuration.SdkComboBox}
+ *
  * @author VISTALL
  * @since 2017-02-05
- * <p>
- * Cross-Platform version of {@link consulo.ide.impl.roots.ui.configuration.SdkComboBox}
  */
 public class BundleBox implements PseudoComponent {
     /**
@@ -55,7 +56,6 @@ public class BundleBox implements PseudoComponent {
         return BundleBoxBuilder.create(uiDisposable);
     }
 
-    
     public static BundleBoxBuilder builder(SdkModel sdkModel, Disposable uiDisposable) {
         return BundleBoxBuilder.create(sdkModel, uiDisposable);
     }
@@ -70,6 +70,7 @@ public class BundleBox implements PseudoComponent {
             return bundle != null ? bundle.getName() : null;
         }
 
+        @Override
         @SuppressWarnings("EqualsHashCode")
         public abstract boolean equals(Object o);
     }
@@ -87,7 +88,7 @@ public class BundleBox implements PseudoComponent {
         }
 
         @Override
-        public boolean equals(Object o) {
+        public boolean equals(@Nullable Object o) {
             if (this == o) {
                 return true;
             }
@@ -123,13 +124,12 @@ public class BundleBox implements PseudoComponent {
             return mySdkPointer.getName();
         }
 
-        
         public Module getModule() {
             return myModuleExtension.getModule();
         }
 
         @Override
-        public boolean equals(Object o) {
+        public boolean equals(@Nullable Object o) {
             if (this == o) {
                 return true;
             }
@@ -157,12 +157,10 @@ public class BundleBox implements PseudoComponent {
             myIcon = icon;
         }
 
-        
         public Image getIcon() {
             return myIcon;
         }
 
-        
         public String getPresentableName() {
             return myPresentableName;
         }
@@ -173,7 +171,7 @@ public class BundleBox implements PseudoComponent {
         }
 
         @Override
-        public boolean equals(Object o) {
+        public boolean equals(@Nullable Object o) {
             if (this == o) {
                 return true;
             }
@@ -197,13 +195,12 @@ public class BundleBox implements PseudoComponent {
             myModuleName = moduleName;
         }
 
-        
         public String getModuleName() {
             return myModuleName;
         }
 
         @Override
-        public boolean equals(Object o) {
+        public boolean equals(@Nullable Object o) {
             if (this == o) {
                 return true;
             }
@@ -226,7 +223,7 @@ public class BundleBox implements PseudoComponent {
 
         @Override
         @SuppressWarnings("EqualsHashCode")
-        public boolean equals(Object o) {
+        public boolean equals(@Nullable Object o) {
             return o instanceof NullBundleBoxItem;
         }
     }
@@ -244,7 +241,7 @@ public class BundleBox implements PseudoComponent {
         }
 
         @Override
-        public boolean equals(Object o) {
+        public boolean equals(@Nullable Object o) {
             if (this == o) {
                 return true;
             }
@@ -275,11 +272,11 @@ public class BundleBox implements PseudoComponent {
 
     @RequiredUIAccess
     public BundleBox(BundleHolder bundleHolder, @Nullable Predicate<SdkTypeId> filter, boolean withNoneItem) {
-        this(bundleHolder, filter, withNoneItem ? ProjectBundle.message("sdk.combo.box.item") : null, null);
+        this(bundleHolder, filter, withNoneItem ? ProjectLocalize.sdkComboBoxItem() : LocalizeValue.empty(), null);
     }
 
     @RequiredUIAccess
-    public BundleBox(BundleHolder bundleHolder, @Nullable Predicate<SdkTypeId> filter, @Nullable String nullItemName) {
+    public BundleBox(BundleHolder bundleHolder, @Nullable Predicate<SdkTypeId> filter, LocalizeValue nullItemName) {
         this(bundleHolder, filter, nullItemName, null);
     }
 
@@ -287,7 +284,7 @@ public class BundleBox implements PseudoComponent {
     public BundleBox(
         BundleHolder bundleHolder,
         @Nullable Predicate<SdkTypeId> filter,
-        @Nullable String nullItemName,
+        LocalizeValue nullItemName,
         @Nullable Image nullIcon
     ) {
         myOriginalComboBox = ComboBox.create(model(bundleHolder, filter, nullItemName));
@@ -316,7 +313,7 @@ public class BundleBox implements PseudoComponent {
             }
             else if (value == null || value instanceof NullBundleBoxItem) {
                 renderer.withIcon(ObjectUtil.notNull(nullIcon, Image.empty(Image.DEFAULT_ICON_SIZE)));
-                String name = ObjectUtil.notNull(nullItemName, ProjectBundle.message("sdk.combo.box.item"));
+                LocalizeValue name = nullItemName.orIfEmpty(ProjectLocalize.sdkComboBoxItem());
                 renderer.append(name, TextAttribute.REGULAR);
             }
             else {
@@ -335,7 +332,6 @@ public class BundleBox implements PseudoComponent {
         });
     }
 
-    
     static List<BundleBoxItem> buildItems(BundleHolder holder, @Nullable Predicate<SdkTypeId> filter, boolean withNullItem) {
         List<BundleBoxItem> list = new ArrayList<>();
 
@@ -358,14 +354,9 @@ public class BundleBox implements PseudoComponent {
         return list;
     }
 
-    
     @RequiredUIAccess
-    private static ListModel<BundleBoxItem> model(
-        BundleHolder holder,
-        @Nullable Predicate<SdkTypeId> filter,
-        String nullItemName
-    ) {
-        return MutableListModel.create(buildItems(holder, filter, nullItemName != null));
+    private static ListModel<BundleBoxItem> model(BundleHolder holder, @Nullable Predicate<SdkTypeId> filter, LocalizeValue nullItemName) {
+        return MutableListModel.of(buildItems(holder, filter, nullItemName.isNotEmpty()));
     }
 
     @RequiredUIAccess
@@ -377,10 +368,8 @@ public class BundleBox implements PseudoComponent {
 
     @RequiredUIAccess
     @SuppressWarnings("unchecked")
-    public <T extends MutableModuleExtension<?>> void addModuleExtensionItems(
-        T moduleExtension,
-        Function<T, MutableModuleInheritableNamedPointer<Sdk>> sdkPointerFunction
-    ) {
+    public <T extends MutableModuleExtension<?>>
+    void addModuleExtensionItems(T moduleExtension, Function<T, MutableModuleInheritableNamedPointer<Sdk>> sdkPointerFunction) {
         MutableListModel<BundleBoxItem> listModel = (MutableListModel<BundleBoxItem>) myOriginalComboBox.getListModel();
 
         for (Module module : ModuleManager.getInstance(moduleExtension.getModule().getProject()).getModules()) {
@@ -436,6 +425,7 @@ public class BundleBox implements PseudoComponent {
         }
     }
 
+    @RequiredUIAccess
     public void setSelectedModule(String name) {
         int index = indexOfModuleItems(name);
         if (index >= 0) {
@@ -459,13 +449,11 @@ public class BundleBox implements PseudoComponent {
 
             setInvalidBundle(name);
         }
+        else if (model.getSize() > 0 && model.get(0) instanceof NullBundleBoxItem) {
+            myOriginalComboBox.setValueByIndex(0);
+        }
         else {
-            if (model.getSize() > 0 && model.get(0) instanceof NullBundleBoxItem) {
-                myOriginalComboBox.setValueByIndex(0);
-            }
-            else {
-                setInvalidBundle("null");
-            }
+            setInvalidBundle("null");
         }
     }
 
@@ -498,14 +486,14 @@ public class BundleBox implements PseudoComponent {
         int count = model.getSize();
         for (int idx = 0; idx < count; idx++) {
             BundleBoxItem elementAt = model.get(idx);
-            if (elementAt instanceof ModuleExtensionBundleBoxItem) {
-                String name = ((ModuleExtensionBundleBoxItem) elementAt).getModule().getName();
+            if (elementAt instanceof ModuleExtensionBundleBoxItem bundleBoxItem) {
+                String name = bundleBoxItem.getModule().getName();
                 if (name.equals(moduleName)) {
                     return idx;
                 }
             }
-            else if (elementAt instanceof InvalidModuleBundleBoxItem) {
-                if (((InvalidModuleBundleBoxItem) elementAt).getModuleName().equals(moduleName)) {
+            else if (elementAt instanceof InvalidModuleBundleBoxItem bundleBoxItem) {
+                if (bundleBoxItem.getModuleName().equals(moduleName)) {
                     return idx;
                 }
             }
@@ -513,6 +501,7 @@ public class BundleBox implements PseudoComponent {
         return -1;
     }
 
+    @RequiredUIAccess
     public void setSelectedNoneBundle() {
         ListModel<BundleBoxItem> listModel = myOriginalComboBox.getListModel();
         if (listModel.getSize() > 0 && listModel.get(0) instanceof NullBundleBoxItem) {
@@ -539,7 +528,6 @@ public class BundleBox implements PseudoComponent {
         return null;
     }
 
-    
     @Override
     @RequiredUIAccess
     public ComboBox<BundleBoxItem> getComponent() {

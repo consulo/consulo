@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.module.content.internal;
 
 import consulo.annotation.access.RequiredReadAction;
@@ -31,15 +30,20 @@ import org.jspecify.annotations.Nullable;
  * @author yole
  */
 public class RootConfigurationAccessor {
-  public @Nullable Library getLibrary(Library library, String libraryName, String libraryLevel) {
+  /**
+   * @param library
+   * @param libraryName is non-null if library == null
+   * @param libraryLevel is non-null if library == null
+   * @return
+   */
+  public @Nullable Library getLibrary(@Nullable Library library, @Nullable String libraryName, @Nullable String libraryLevel) {
     return library;
   }
 
-  public @Nullable Sdk getSdk(Sdk sdk, String sdkName) {
+  public @Nullable Sdk getSdk(@Nullable Sdk sdk, @Nullable String sdkName) {
     return sdk;
   }
 
-  
   public NamedPointer<Sdk> getSdkPointer(String sdkName) {
     return SdkPointerManager.getInstance().create(sdkName);
   }
@@ -48,7 +52,6 @@ public class RootConfigurationAccessor {
     return module;
   }
 
-  
   @RequiredReadAction
   public NamedPointer<Module> getModulePointer(Project project, String name) {
     return ModulePointerManager.getInstance(project).create(name);

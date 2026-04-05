@@ -13,11 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.application.content.impl.internal.library;
 
 import consulo.annotation.DeprecationInfo;
-import consulo.application.ApplicationManager;
+import consulo.annotation.access.RequiredWriteAction;
+import consulo.application.Application;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.content.base.BinariesOrderRootType;
 import consulo.content.library.Library;
@@ -32,8 +32,8 @@ import consulo.util.lang.Comparing;
 import consulo.util.xml.serializer.InvalidDataException;
 import consulo.util.xml.serializer.WriteExternalException;
 import org.jdom.Element;
-
 import org.jspecify.annotations.Nullable;
+
 import java.util.*;
 
 public abstract class LibraryTableBase implements PersistentStateComponent<Element>, LibraryTable, Disposable {
@@ -79,13 +79,11 @@ public abstract class LibraryTableBase implements PersistentStateComponent<Eleme
   }
 
   @Override
-  
   public Library[] getLibraries() {
     return myModel.getLibraries();
   }
 
   @Override
-  
   public Iterator<Library> getLibraryIterator() {
     return myModel.getLibraryIterator();
   }
@@ -132,8 +130,9 @@ public abstract class LibraryTableBase implements PersistentStateComponent<Eleme
   }
 
   @Override
+  @RequiredWriteAction
   public Library createLibrary() {
-    ApplicationManager.getApplication().assertWriteAccessAllowed();
+    Application.get().assertWriteAccessAllowed();
     return createLibrary(null);
   }
 
@@ -142,7 +141,8 @@ public abstract class LibraryTableBase implements PersistentStateComponent<Eleme
   }
 
   @Override
-  public Library createLibrary(String name) {
+  @RequiredWriteAction
+  public Library createLibrary(@Nullable String name) {
     ModifiableModel modifiableModel = getModifiableModel();
     Library library = modifiableModel.createLibrary(name);
     modifiableModel.commit();
@@ -156,8 +156,9 @@ public abstract class LibraryTableBase implements PersistentStateComponent<Eleme
     modifiableModel.commit();
   }
 
+  @RequiredWriteAction
   private void commit(LibraryModel model) {
-    ApplicationManager.getApplication().assertWriteAccessAllowed();
+    Application.get().assertWriteAccessAllowed();
     //todo[nik] remove LibraryImpl#equals method instead of using identity sets
     Set<Library> addedLibraries = ContainerUtil.newIdentityTroveSet(model.myLibraries);
     addedLibraries.removeAll(myModel.myLibraries);
@@ -191,7 +192,6 @@ public abstract class LibraryTableBase implements PersistentStateComponent<Eleme
     myModel.writeExternal(element);
   }
 
-  
   protected abstract LibraryOwner getLibraryOwner();
 
   @Deprecated
@@ -213,13 +213,13 @@ public abstract class LibraryTableBase implements PersistentStateComponent<Eleme
     }
 
     @Override
+    @RequiredWriteAction
     public void commit() {
       myWritable = false;
       LibraryTableBase.this.commit(this);
     }
 
     @Override
-    
     public Iterator<Library> getLibraryIterator() {
       return Collections.unmodifiableList(myLibraries).iterator();
     }

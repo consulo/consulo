@@ -17,12 +17,10 @@ package consulo.component.util.pointer;
 
 /**
  * @author VISTALL
- * @since 17:19/15.06.13
+ * @since 2013-06-15
  */
 public interface NamedPointerManager<T extends Named> {
-  
   NamedPointer<T> create(String name);
 
-  
   NamedPointer<T> create(T value);
 }

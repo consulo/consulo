@@ -19,7 +19,7 @@ import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
- * @since 22.06.14
+ * @since 2014-06-22
  */
 public class NamedPointerUtil {
   public static @Nullable <T extends Named> T get(@Nullable NamedPointer<T> pointer) {

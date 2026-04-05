@@ -30,7 +30,7 @@ public final class ReadAction<T> {
         return Application.get().acquireReadActionLock();
     }
 
-    @ReviewAfterIssueFix(value = "github.com/uber/NullAway/issues/1500", todo = "Remove explicit casts")
+    @ReviewAfterIssueFix(value = "github.com/uber/NullAway/issues/1504", todo = "Remove explicit casts")
     public static <E extends Throwable> void run(@RequiredReadAction ThrowableRunnable<E> action) throws E {
         Application.get().runReadAction((ThrowableSupplier<@Nullable Void, E>) () -> {
             action.run();

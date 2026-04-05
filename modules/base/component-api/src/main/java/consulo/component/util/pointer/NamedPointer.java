@@ -16,15 +16,15 @@
 package consulo.component.util.pointer;
 
 import org.jspecify.annotations.Nullable;
+
 import java.util.function.Supplier;
 
 /**
  * @author VISTALL
- * @since 17:17/15.06.13
+ * @since 2013-06-15
  */
-public interface NamedPointer<T> extends Supplier<T> {
-  
-  String getName();
+public interface NamedPointer<T> extends Supplier<@Nullable T> {
+    String getName();
 
-  @Nullable T get();
+    @Nullable T get();
 }

@@ -15,19 +15,17 @@
  */
 package consulo.ide.impl.idea.openapi.roots.ui.configuration;
 
-import consulo.module.Module;
-import consulo.ide.setting.ShowSettingsUtil;
-import consulo.project.Project;
+import consulo.annotation.access.RequiredReadAction;
+import consulo.component.util.pointer.NamedPointer;
 import consulo.content.bundle.Sdk;
 import consulo.content.bundle.SdkModel;
-import consulo.module.content.internal.RootConfigurationAccessor;
 import consulo.content.library.Library;
-import consulo.annotation.access.RequiredReadAction;
-import consulo.ide.setting.ProjectStructureSettingsUtil;
+import consulo.ide.setting.ShowSettingsUtil;
 import consulo.ide.setting.module.LibrariesConfigurator;
 import consulo.ide.setting.module.ModulesConfigurator;
-import consulo.component.util.pointer.NamedPointer;
-
+import consulo.module.Module;
+import consulo.module.content.internal.RootConfigurationAccessor;
+import consulo.project.Project;
 import org.jspecify.annotations.Nullable;
 
 /**
@@ -43,7 +41,7 @@ public class UIRootConfigurationAccessor extends RootConfigurationAccessor {
   }
 
   @Override
-  public @Nullable Library getLibrary(Library library, String libraryName, String libraryLevel) {
+  public @Nullable Library getLibrary(@Nullable Library library, @Nullable String libraryName, @Nullable String libraryLevel) {
     if (library == null) {
       if (libraryName != null) {
         library = myLibrariesConfigurator.getLibrary(libraryName, libraryLevel);
@@ -60,21 +58,19 @@ public class UIRootConfigurationAccessor extends RootConfigurationAccessor {
   }
 
   @Override
-  public @Nullable Sdk getSdk(Sdk sdk, String sdkName) {
-    SdkModel model = ((ProjectStructureSettingsUtil)ShowSettingsUtil.getInstance()).getSdksModel();
+  public @Nullable Sdk getSdk(@Nullable Sdk sdk, @Nullable String sdkName) {
+    SdkModel model = ShowSettingsUtil.getInstance().getSdksModel();
     return sdkName != null ? model.findSdk(sdkName) : sdk;
   }
 
-  
   @Override
   public NamedPointer<Sdk> getSdkPointer(String sdkName) {
     return new NamedPointer<>() {
       @Override
       public @Nullable Sdk get() {
-        return ((ProjectStructureSettingsUtil)ShowSettingsUtil.getInstance()).getSdksModel().findSdk(sdkName);
+        return ShowSettingsUtil.getInstance().getSdksModel().findSdk(sdkName);
       }
 
-      
       @Override
       public String getName() {
         return sdkName;
@@ -83,24 +79,24 @@ public class UIRootConfigurationAccessor extends RootConfigurationAccessor {
   }
 
   @Override
-  public Module getModule(Module module, String moduleName) {
+  @RequiredReadAction
+  public Module getModule(@Nullable Module module, String moduleName) {
     if (module == null) {
       return myModulesConfigurator.getModule(moduleName);
     }
     return module;
   }
 
-  @RequiredReadAction
-  
   @Override
+  @RequiredReadAction
   public NamedPointer<Module> getModulePointer(Project project, String name) {
     return new NamedPointer<>() {
       @Override
+      @RequiredReadAction
       public @Nullable Module get() {
         return myModulesConfigurator.getModule(name);
       }
 
-      
       @Override
       public String getName() {
         return name;

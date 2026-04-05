@@ -23,7 +23,7 @@ import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
- * @since 20:06/15.06.13
+ * @since 2013-06-15
  */
 public interface MutableModuleInheritableNamedPointer<T extends Named> extends ModuleInheritableNamedPointer<T> {
   @RequiredReadAction

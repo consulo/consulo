@@ -20,16 +20,16 @@ import consulo.content.bundle.Sdk;
 import consulo.module.content.layer.ModuleRootLayer;
 import consulo.module.extension.ModuleExtensionWithSdk;
 import consulo.module.extension.ModuleInheritableNamedPointer;
+import consulo.util.lang.StringUtil;
 import org.jdom.Element;
 
 import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
- * @since 12:42/19.05.13
+ * @since 2013-05-19
  */
 public abstract class ModuleExtensionWithSdkBase<T extends ModuleExtensionWithSdk<T>> extends ModuleExtensionBase<T> implements ModuleExtensionWithSdk<T> {
-
   private ModuleInheritableNamedPointerImpl<Sdk> mySdkPointer;
 
   public ModuleExtensionWithSdkBase(String id, ModuleRootLayer rootLayer) {
@@ -38,15 +38,14 @@ public abstract class ModuleExtensionWithSdkBase<T extends ModuleExtensionWithSd
     mySdkPointer = new SdkModuleInheritableNamedPointerImpl(rootLayer, id);
   }
 
-  @RequiredReadAction
   @Override
+  @RequiredReadAction
   public void commit(T mutableModuleExtension) {
     super.commit(mutableModuleExtension);
 
     mySdkPointer.set(mutableModuleExtension.getInheritableSdk());
   }
 
-  
   @Override
   public ModuleInheritableNamedPointer<Sdk> getInheritableSdk() {
     return mySdkPointer;
@@ -59,7 +58,7 @@ public abstract class ModuleExtensionWithSdkBase<T extends ModuleExtensionWithSd
 
   @Override
   public @Nullable String getSdkName() {
-    return getInheritableSdk().getName();
+    return StringUtil.nullize(getInheritableSdk().getName());
   }
 
   public boolean isModifiedImpl(ModuleExtensionWithSdk<T> originExtension) {

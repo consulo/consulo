@@ -18,6 +18,7 @@ package consulo.module.ui.awt;
 import consulo.annotation.UsedInPlugin;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.content.bundle.*;
+import consulo.localize.LocalizeValue;
 import consulo.module.Module;
 import consulo.module.ModuleManager;
 import consulo.module.extension.ModuleExtension;
@@ -45,8 +46,6 @@ import java.util.List;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
-;
-
 /**
  * @author Eugene Zhuravlev
  * @author VISTALL
@@ -60,19 +59,11 @@ public class SdkComboBox extends ComboBoxWithWidePopup {
         this(sdksModel, null, false);
     }
 
-    public SdkComboBox(
-        BundleHolder sdksModel,
-        @Nullable Predicate<SdkTypeId> filter,
-        boolean withNoneItem
-    ) {
+    public SdkComboBox(BundleHolder sdksModel, @Nullable Predicate<SdkTypeId> filter, boolean withNoneItem) {
         this(sdksModel, filter, filter, withNoneItem);
     }
 
-    public SdkComboBox(
-        BundleHolder sdksModel,
-        @Nullable Predicate<SdkTypeId> filter,
-        @Nullable String nullItemName
-    ) {
+    public SdkComboBox(BundleHolder sdksModel, @Nullable Predicate<SdkTypeId> filter, LocalizeValue nullItemName) {
         this(sdksModel, filter, filter, nullItemName, null);
     }
 
@@ -82,14 +73,14 @@ public class SdkComboBox extends ComboBoxWithWidePopup {
         @Nullable Predicate<SdkTypeId> creationFilter,
         boolean withNoneItem
     ) {
-        this(sdksModel, filter, creationFilter, withNoneItem ? ProjectLocalize.sdkComboBoxItem().get() : null, null);
+        this(sdksModel, filter, creationFilter, withNoneItem ? ProjectLocalize.sdkComboBoxItem() : LocalizeValue.empty(), null);
     }
 
     public SdkComboBox(
         BundleHolder sdksModel,
         @Nullable Predicate<SdkTypeId> filter,
         @Nullable Predicate<SdkTypeId> creationFilter,
-        @Nullable String nullItemName
+        LocalizeValue nullItemName
     ) {
         this(sdksModel, filter, creationFilter, nullItemName, null);
     }
@@ -98,7 +89,7 @@ public class SdkComboBox extends ComboBoxWithWidePopup {
         BundleHolder sdksModel,
         @Nullable Predicate<SdkTypeId> filter,
         @Nullable Predicate<SdkTypeId> creationFilter,
-        @Nullable String nullItemName,
+        LocalizeValue nullItemName,
         @Nullable Image nullIcon
     ) {
         super(new SdkComboBoxModel(sdksModel, getSdkFilter(filter), nullItemName));
@@ -131,7 +122,7 @@ public class SdkComboBox extends ComboBoxWithWidePopup {
                 }
                 else if (value == null || value instanceof NullSdkComboBoxItem) {
                     setIcon(ObjectUtil.notNull(nullIcon, Image.empty(Image.DEFAULT_ICON_SIZE)));
-                    String name = ObjectUtil.notNull(nullItemName, ProjectLocalize.sdkComboBoxItem().get());
+                    LocalizeValue name = nullItemName.orIfEmpty(ProjectLocalize.sdkComboBoxItem());
                     append(name, SimpleTextAttributes.REGULAR_ATTRIBUTES);
                 }
                 else {
@@ -374,13 +365,11 @@ public class SdkComboBox extends ComboBoxWithWidePopup {
 
             setInvalidSdk(name);
         }
+        else if (getItemCount() > 0 && getItemAt(0) instanceof NullSdkComboBoxItem) {
+            setSelectedIndex(0);
+        }
         else {
-            if (getItemCount() > 0 && getItemAt(0) instanceof NullSdkComboBoxItem) {
-                setSelectedIndex(0);
-            }
-            else {
-                setInvalidSdk("null");
-            }
+            setInvalidSdk("null");
         }
     }
 
@@ -458,11 +447,7 @@ public class SdkComboBox extends ComboBoxWithWidePopup {
     }
 
     private static class SdkComboBoxModel extends DefaultComboBoxModel<SdkComboBoxItem> {
-        public SdkComboBoxModel(
-            BundleHolder sdksModel,
-            @Nullable Predicate<Sdk> sdkFilter,
-            @Nullable String noneItemName
-        ) {
+        public SdkComboBoxModel(BundleHolder sdksModel, @Nullable Predicate<Sdk> sdkFilter, LocalizeValue noneItemName) {
             Sdk[] sdks = sdksModel.getBundles();
             if (sdkFilter != null) {
                 List<Sdk> filtered = ContainerUtil.filter(sdks, sdkFilter);
@@ -470,7 +455,7 @@ public class SdkComboBox extends ComboBoxWithWidePopup {
             }
             Arrays.sort(sdks, (s1, s2) -> s1.getName().compareToIgnoreCase(s2.getName()));
 
-            if (noneItemName != null) {
+            if (noneItemName.isNotEmpty()) {
                 addElement(new NullSdkComboBoxItem());
             }
 
@@ -510,10 +495,7 @@ public class SdkComboBox extends ComboBoxWithWidePopup {
         private final ModuleExtension<?> myModuleExtension;
         private final MutableModuleInheritableNamedPointer<Sdk> mySdkPointer;
 
-        public ModuleExtensionSdkComboBoxItem(
-            ModuleExtension<?> moduleExtension,
-            MutableModuleInheritableNamedPointer<Sdk> sdkPointer
-        ) {
+        public ModuleExtensionSdkComboBoxItem(ModuleExtension<?> moduleExtension, MutableModuleInheritableNamedPointer<Sdk> sdkPointer) {
             super(null);
             myModuleExtension = moduleExtension;
             mySdkPointer = sdkPointer;
@@ -529,7 +511,6 @@ public class SdkComboBox extends ComboBoxWithWidePopup {
             return mySdkPointer.getName();
         }
 
-        
         public Module getModule() {
             return myModuleExtension.getModule();
         }
@@ -547,12 +528,10 @@ public class SdkComboBox extends ComboBoxWithWidePopup {
             myIcon = icon;
         }
 
-        
         public Image getIcon() {
             return myIcon;
         }
 
-        
         public String getPresentableName() {
             return myPresentableName;
         }
@@ -571,7 +550,6 @@ public class SdkComboBox extends ComboBoxWithWidePopup {
             myModuleName = moduleName;
         }
 
-        
         public String getModuleName() {
             return myModuleName;
         }

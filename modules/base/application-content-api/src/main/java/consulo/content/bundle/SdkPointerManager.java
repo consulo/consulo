@@ -22,11 +22,10 @@ import consulo.component.util.pointer.NamedPointerManager;
 
 /**
  * @author VISTALL
- * @since 17:17/15.06.13
+ * @since 2013-06-15
  */
 @ServiceAPI(ComponentScope.APPLICATION)
 public interface SdkPointerManager extends NamedPointerManager<Sdk> {
-  
   static SdkPointerManager getInstance() {
     return Application.get().getInstance(SdkPointerManager.class);
   }

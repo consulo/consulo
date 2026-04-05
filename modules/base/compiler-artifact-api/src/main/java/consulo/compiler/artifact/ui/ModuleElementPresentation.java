@@ -83,8 +83,10 @@ public class ModuleElementPresentation extends TreeNodePresentation {
       moduleName = "<unknown>";
     }
 
-    presentationData.addText(CompilerLocalize.nodeText01CompileOutput(moduleName, myContentFolderType.getName().toLowerCase()).get(),
-                             module != null ? mainAttributes : SimpleTextAttributes.ERROR_ATTRIBUTES);
+    presentationData.addText(
+      CompilerLocalize.nodeText01CompileOutput(moduleName, myContentFolderType.getName().toLowerCase()),
+      module != null ? mainAttributes : SimpleTextAttributes.ERROR_ATTRIBUTES
+    );
   }
 
   @Override

@@ -16,6 +16,7 @@
 
 package consulo.module.impl.internal.layer.orderEntry;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.component.util.pointer.NamedPointer;
 import consulo.content.OrderRootType;
 import consulo.language.util.ModuleUtilCore;
@@ -33,6 +34,8 @@ import consulo.virtualFileSystem.VirtualFile;
 
 import org.jspecify.annotations.Nullable;
 
+import java.util.Objects;
+
 /**
  * @author dsl
  */
@@ -43,15 +46,18 @@ public class ModuleOrderEntryImpl extends OrderEntryBaseImpl implements ModuleOr
   private DependencyScope myScope = DependencyScope.COMPILE;
   private boolean myProductionOnTestDependency;
 
+  @RequiredReadAction
   public ModuleOrderEntryImpl(Module module, ModuleRootLayerImpl rootLayer) {
     super(ModuleOrderEntryType.getInstance(), rootLayer);
     myModulePointer = ModuleUtilCore.createPointer(module);
   }
 
+  @RequiredReadAction
   public ModuleOrderEntryImpl(String moduleName, ModuleRootLayerImpl rootLayer) {
     this(moduleName, rootLayer, DependencyScope.COMPILE, false, false);
   }
 
+  @RequiredReadAction
   public ModuleOrderEntryImpl(String moduleName, ModuleRootLayerImpl rootLayer, DependencyScope dependencyScope, boolean exported,
                               boolean productionOnTestDependency) {
     super(ModuleOrderEntryType.getInstance(), rootLayer);
@@ -61,6 +67,7 @@ public class ModuleOrderEntryImpl extends OrderEntryBaseImpl implements ModuleOr
     myProductionOnTestDependency = productionOnTestDependency;
   }
 
+  @RequiredReadAction
   private ModuleOrderEntryImpl(ModuleOrderEntryImpl that, ModuleRootLayerImpl rootLayer) {
     super(ModuleOrderEntryType.getInstance(), rootLayer);
     NamedPointer<Module> thatModule = that.myModulePointer;
@@ -71,7 +78,6 @@ public class ModuleOrderEntryImpl extends OrderEntryBaseImpl implements ModuleOr
   }
 
   @Override
-  
   public Module getOwnerModule() {
     return getRootModel().getModule();
   }
@@ -87,7 +93,6 @@ public class ModuleOrderEntryImpl extends OrderEntryBaseImpl implements ModuleOr
   }
 
   @Override
-  
   public VirtualFile[] getFiles(OrderRootType type) {
     OrderRootsEnumerator enumerator = getEnumerator(type);
     return enumerator != null ? enumerator.getRoots() : VirtualFile.EMPTY_ARRAY;
@@ -101,7 +106,6 @@ public class ModuleOrderEntryImpl extends OrderEntryBaseImpl implements ModuleOr
   }
 
   @Override
-  
   public String[] getUrls(OrderRootType rootType) {
     OrderRootsEnumerator enumerator = getEnumerator(rootType);
     return enumerator != null ? enumerator.getUrls() : ArrayUtil.EMPTY_STRING_ARRAY;
@@ -123,7 +127,6 @@ public class ModuleOrderEntryImpl extends OrderEntryBaseImpl implements ModuleOr
   }
 
   @Override
-  
   public String getPresentableName() {
     return getModuleName();
   }
@@ -135,7 +138,7 @@ public class ModuleOrderEntryImpl extends OrderEntryBaseImpl implements ModuleOr
 
   @Override
   public @Nullable Module getModule() {
-    return getRootModel().getConfigurationAccessor().getModule(myModulePointer.get(), myModulePointer.getName());
+    return getRootModel().getConfigurationAccessor().getModule(Objects.requireNonNull(myModulePointer.get()), myModulePointer.getName());
   }
 
   @Override
@@ -160,7 +163,6 @@ public class ModuleOrderEntryImpl extends OrderEntryBaseImpl implements ModuleOr
   }
 
   @Override
-  
   public DependencyScope getScope() {
     return myScope;
   }

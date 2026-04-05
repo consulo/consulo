@@ -23,7 +23,7 @@ import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
- * @since 26/12/2025
+ * @since 2025-12-26
  */
 @ExtensionAPI(ComponentScope.PROJECT)
 public interface ModuleIconProvider {

@@ -22,16 +22,14 @@ import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
- * @since 23:26/18.05.13
+ * @since 2013-05-18
  */
 public interface ModuleExtensionWithSdk<T extends ModuleExtensionWithSdk<T>> extends ModuleExtension<T> {
-  
   ModuleInheritableNamedPointer<Sdk> getInheritableSdk();
 
   @Nullable Sdk getSdk();
 
   @Nullable String getSdkName();
 
-  
   Class<? extends SdkType> getSdkTypeClass();
 }

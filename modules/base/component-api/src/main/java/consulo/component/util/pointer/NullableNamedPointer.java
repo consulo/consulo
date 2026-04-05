@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2016 consulo.io
+ * Copyright 2013-2026 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,15 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.module.extension;
+package consulo.component.util.pointer;
 
-import consulo.content.bundle.Sdk;
+import org.jspecify.annotations.Nullable;
+
+import java.util.function.Supplier;
 
 /**
- * @author VISTALL
- * @since 2013-05-19
+ * @author UNV
+ * @since 2026-04-05
  */
-public interface MutableModuleExtensionWithSdk<T extends ModuleExtensionWithSdk<T>> extends ModuleExtensionWithSdk<T>, MutableModuleExtension<T> {
-  @Override
-  MutableModuleInheritableNamedPointer<Sdk> getInheritableSdk();
+public interface NullableNamedPointer<T> extends Supplier<@Nullable T> {
+    @Nullable String getName();
+
+    @Nullable T get();
 }

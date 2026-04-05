@@ -13,11 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.module.content.internal;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.access.RequiredWriteAction;
-import consulo.application.ApplicationManager;
 import consulo.content.ContentFolderTypeProvider;
 import consulo.content.RootProvider;
 import consulo.content.library.Library;
@@ -116,6 +115,7 @@ public class ProjectRootManagerImpl extends ProjectRootManagerEx {
         private boolean myInsideRootsChange;
 
         @Override
+        @RequiredWriteAction
         public void rootSetChanged(RootProvider wrapper) {
             if (myInsideRootsChange) {
                 return;
@@ -143,13 +143,11 @@ public class ProjectRootManagerImpl extends ProjectRootManagerEx {
     }
 
     @Override
-    
     public ProjectFileIndex getFileIndex() {
         return ProjectFileIndex.getInstance(myProject);
     }
 
     @Override
-    
     public List<String> getContentRootUrls() {
         List<String> result = new ArrayList<>();
         for (Module module : getModuleManager().getModules()) {
@@ -160,7 +158,6 @@ public class ProjectRootManagerImpl extends ProjectRootManagerEx {
     }
 
     @Override
-    
     public VirtualFile[] getContentRoots() {
         List<VirtualFile> result = new ArrayList<>();
         for (Module module : getModuleManager().getModules()) {
@@ -180,19 +177,18 @@ public class ProjectRootManagerImpl extends ProjectRootManagerEx {
         return VirtualFileUtil.toVirtualFileArray(result);
     }
 
-    
     @Override
     public OrderEnumerator orderEntries() {
         return new ProjectOrderEnumerator(myProject, myRootsCache);
     }
 
-    
     @Override
     public OrderEnumerator orderEntries(Collection<? extends Module> modules) {
         return new ModulesOrderEnumerator(myProject, modules);
     }
 
     @Override
+    @RequiredReadAction
     public VirtualFile[] getContentRootsFromAllModules() {
         List<VirtualFile> result = new ArrayList<>();
         Module[] modules = getModuleManager().getSortedModules();
@@ -209,6 +205,7 @@ public class ProjectRootManagerImpl extends ProjectRootManagerEx {
     private int myRootsChangesDepth = 0;
 
     @Override
+    @RequiredWriteAction
     public void mergeRootsChangesDuring(Runnable runnable) {
         if (getBatchSession(false).myBatchLevel == 0 && !myMergedCallStarted) {
             LOG.assertTrue(myRootsChangesDepth == 0, "Merged rootsChanged not allowed inside rootsChanged, rootsChanged level == " + myRootsChangesDepth);
@@ -248,6 +245,7 @@ public class ProjectRootManagerImpl extends ProjectRootManagerEx {
     }
 
     @Override
+    @RequiredWriteAction
     public void makeRootsChange(Runnable runnable, boolean filetypes, boolean fireEvents) {
         if (myProject.isDisposed()) {
             return;
@@ -274,7 +272,7 @@ public class ProjectRootManagerImpl extends ProjectRootManagerEx {
 
     @RequiredWriteAction
     private boolean fireBeforeRootsChanged(boolean filetypes) {
-        ApplicationManager.getApplication().assertWriteAccessAllowed();
+        myProject.getApplication().assertWriteAccessAllowed();
 
         LOG.assertTrue(!myFiringEvent, "Do not use API that changes roots from roots events. Try using invoke later or something else.");
 
@@ -312,7 +310,7 @@ public class ProjectRootManagerImpl extends ProjectRootManagerEx {
             return false;
         }
 
-        ApplicationManager.getApplication().assertWriteAccessAllowed();
+        myProject.getApplication().assertWriteAccessAllowed();
 
         LOG.assertTrue(!myFiringEvent, "Do not use API that changes roots from roots events. Try using invoke later or something else.");
 
@@ -438,59 +436,50 @@ public class ProjectRootManagerImpl extends ProjectRootManagerEx {
         }
 
         @Override
-        public void afterLibraryAdded(final Library newLibrary) {
+        @RequiredWriteAction
+        public void afterLibraryAdded(Library newLibrary) {
             incModificationCount();
-            mergeRootsChangesDuring(new Runnable() {
-                @Override
-                public void run() {
-                    for (LibraryTable.Listener listener : myListeners) {
-                        listener.afterLibraryAdded(newLibrary);
-                    }
+            mergeRootsChangesDuring(() -> {
+                for (LibraryTable.Listener listener : myListeners) {
+                    listener.afterLibraryAdded(newLibrary);
                 }
             });
         }
 
         @Override
-        public void afterLibraryRenamed(final Library library) {
+        @RequiredWriteAction
+        public void afterLibraryRenamed(Library library) {
             incModificationCount();
-            mergeRootsChangesDuring(new Runnable() {
-                @Override
-                public void run() {
-                    for (LibraryTable.Listener listener : myListeners) {
-                        listener.afterLibraryRenamed(library);
-                    }
+            mergeRootsChangesDuring(() -> {
+                for (LibraryTable.Listener listener : myListeners) {
+                    listener.afterLibraryRenamed(library);
                 }
             });
         }
 
         @Override
-        public void beforeLibraryRemoved(final Library library) {
+        @RequiredWriteAction
+        public void beforeLibraryRemoved(Library library) {
             incModificationCount();
-            mergeRootsChangesDuring(new Runnable() {
-                @Override
-                public void run() {
-                    for (LibraryTable.Listener listener : myListeners) {
-                        listener.beforeLibraryRemoved(library);
-                    }
+            mergeRootsChangesDuring(() -> {
+                for (LibraryTable.Listener listener : myListeners) {
+                    listener.beforeLibraryRemoved(library);
                 }
             });
         }
 
         @Override
-        public void afterLibraryRemoved(final Library library) {
+        @RequiredWriteAction
+        public void afterLibraryRemoved(Library library) {
             incModificationCount();
-            mergeRootsChangesDuring(new Runnable() {
-                @Override
-                public void run() {
-                    for (LibraryTable.Listener listener : myListeners) {
-                        listener.afterLibraryRemoved(library);
-                    }
+            mergeRootsChangesDuring(() -> {
+                for (LibraryTable.Listener listener : myListeners) {
+                    listener.afterLibraryRemoved(library);
                 }
             });
         }
     }
 
-    
     public VirtualFilePointerListener getRootsValidityChangedListener() {
         return myRootsValidityChangedListener;
     }

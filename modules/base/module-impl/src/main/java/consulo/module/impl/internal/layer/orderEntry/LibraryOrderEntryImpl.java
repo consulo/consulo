@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.module.impl.internal.layer.orderEntry;
 
 import consulo.content.RootProvider;
@@ -37,9 +36,9 @@ import org.jspecify.annotations.Nullable;
 public class LibraryOrderEntryImpl extends LibraryOrderEntryBaseImpl implements LibraryOrderEntry, ClonableOrderEntry {
   private static final Logger LOG = Logger.getInstance(LibraryOrderEntryImpl.class);
 
-  private Library myLibrary;
+  private @Nullable Library myLibrary;
   private @Nullable String myLibraryName; // is non-null if myLibrary == null
-  private @Nullable String myLibraryLevel; // is non-null if myLibraryLevel == null
+  private @Nullable String myLibraryLevel; // is non-null if myLibrary == null
 
   private boolean myExported;
 

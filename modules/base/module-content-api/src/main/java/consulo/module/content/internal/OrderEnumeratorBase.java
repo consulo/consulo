@@ -50,23 +50,20 @@ public  abstract class OrderEnumeratorBase extends OrderEnumerator implements Or
   protected boolean myRecursively;
   protected boolean myRecursivelyExportedOnly;
   private boolean myExportedOnly;
-  private Predicate<OrderEntry> myCondition;
+  private @Nullable Predicate<OrderEntry> myCondition = null;
   private final List<OrderEnumerationPolicy> myPolicies;
-  protected RootModelProvider myModulesProvider;
-  private final OrderRootsCache myCache;
+  protected @Nullable RootModelProvider myModulesProvider = null;
+  private final @Nullable OrderRootsCache myCache;
 
   public OrderEnumeratorBase(@Nullable Module module, Project project, @Nullable OrderRootsCache cache) {
     myCache = cache;
-    List<OrderEnumerationPolicy> customHandlers = null;
-    for (OrderEnumerationPolicy policy : project.getApplication().getExtensionList(OrderEnumerationPolicy.class)) {
+    List<OrderEnumerationPolicy> customHandlers = new SmartList<>();
+    project.getApplication().getExtensionPoint(OrderEnumerationPolicy.class).forEach(policy -> {
       if (policy.isApplicable(project) && (module == null || policy.isApplicable(module))) {
-        if (customHandlers == null) {
-          customHandlers = new SmartList<>();
-        }
         customHandlers.add(policy);
       }
-    }
-    this.myPolicies = customHandlers == null ? Collections.<OrderEnumerationPolicy>emptyList() : customHandlers;
+    });
+    this.myPolicies = customHandlers.isEmpty() ? Collections.<OrderEnumerationPolicy>emptyList() : customHandlers;
   }
 
   @Override
@@ -167,7 +164,7 @@ public  abstract class OrderEnumeratorBase extends OrderEnumerator implements Or
     return ModuleRootManager.getInstance(module);
   }
 
-  public OrderRootsCache getCache() {
+  public @Nullable OrderRootsCache getCache() {
     LOG.assertTrue(myCache != null, "Caching is not supported for ModifiableRootModel");
     LOG.assertTrue(myCondition == null, "Caching not supported for OrderEnumerator with 'satisfying(Condition)' option");
     LOG.assertTrue(myModulesProvider == null, "Caching not supported for OrderEnumerator with 'using(ModulesProvider)' option");

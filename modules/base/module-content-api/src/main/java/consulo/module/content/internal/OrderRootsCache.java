@@ -46,12 +46,12 @@ public class OrderRootsCache {
     return container;
   }
 
-  public @Nullable VirtualFile[] getCachedRoots(OrderRootType rootType, int flags) {
+  public VirtualFile @Nullable [] getCachedRoots(OrderRootType rootType, int flags) {
     VirtualFilePointerContainer cached = myRoots.get(new CacheKey(rootType, flags));
     return cached == null ? null : cached.getFiles();
   }
 
-  public @Nullable String[] getCachedUrls(OrderRootType rootType, int flags) {
+  public String @Nullable [] getCachedUrls(OrderRootType rootType, int flags) {
     VirtualFilePointerContainer cached = myRoots.get(new CacheKey(rootType, flags));
     return cached != null ? cached.getUrls() : null;
   }
@@ -73,13 +73,12 @@ public class OrderRootsCache {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(@Nullable Object o) {
       if (this == o) return true;
       if (o == null || getClass() != o.getClass()) return false;
 
-      CacheKey cacheKey = (CacheKey)o;
-      return myFlags == cacheKey.myFlags && myRootType.equals(cacheKey.myRootType);
-
+      CacheKey that = (CacheKey)o;
+      return myFlags == that.myFlags && myRootType.equals(that.myRootType);
     }
 
     @Override

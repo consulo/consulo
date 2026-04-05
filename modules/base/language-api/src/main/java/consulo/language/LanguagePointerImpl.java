@@ -22,7 +22,7 @@ import java.util.function.Supplier;
 
 /**
  * @author VISTALL
- * @since 18:32/31.08.13
+ * @since 2013-08-31
  */
 class LanguagePointerImpl implements NamedPointer<Language> {
   private String myId;
@@ -34,7 +34,6 @@ class LanguagePointerImpl implements NamedPointer<Language> {
     myValue = LazyValue.nullable(() -> Language.findLanguageByID(myId));
   }
 
-  
   @Override
   public String getName() {
     return myId;

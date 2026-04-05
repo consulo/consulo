@@ -66,13 +66,11 @@ public class BuildArtifactsBeforeRunTaskProvider extends AbstractArtifactsBefore
         return new BuildArtifactsBeforeRunTask(myProject);
     }
 
-    
     @Override
     public LocalizeValue getName() {
         return CompilerLocalize.buildArtifactsBeforeRunDescriptionEmpty();
     }
 
-    
     @Override
     public LocalizeValue getDescription(BuildArtifactsBeforeRunTask task) {
         List<ArtifactPointer> pointers = task.getArtifactPointers();
@@ -85,7 +83,6 @@ public class BuildArtifactsBeforeRunTaskProvider extends AbstractArtifactsBefore
         return CompilerLocalize.buildArtifactsBeforeRunDescriptionMultiple(pointers.size());
     }
 
-    
     @Override
     public AsyncResult<Void> executeTaskAsync(
         UIAccess uiAccess,
@@ -123,12 +120,7 @@ public class BuildArtifactsBeforeRunTaskProvider extends AbstractArtifactsBefore
         return result;
     }
 
-    public static void setBuildArtifactBeforeRunOption(
-        DataContext dataContext,
-        Project project,
-        Artifact artifact,
-        boolean enable
-    ) {
+    public static void setBuildArtifactBeforeRunOption(DataContext dataContext, Project project, Artifact artifact, boolean enable) {
         ConfigurationSettingsEditorWrapper editor = dataContext.getData(ConfigurationSettingsEditorWrapper.CONFIGURATION_EDITOR_KEY);
         if (editor != null) {
             List<BeforeRunTask> tasks = editor.getStepsBeforeLaunch();
@@ -161,11 +153,7 @@ public class BuildArtifactsBeforeRunTaskProvider extends AbstractArtifactsBefore
         }
     }
 
-    public static void setBuildArtifactBeforeRun(
-        Project project,
-        RunConfiguration configuration,
-        Artifact artifact
-    ) {
+    public static void setBuildArtifactBeforeRun(Project project, RunConfiguration configuration, Artifact artifact) {
         RunManager runManager = RunManager.getInstance(project);
         List<BuildArtifactsBeforeRunTask> buildArtifactsTasks = runManager.getBeforeRunTasks(configuration, ID);
         if (buildArtifactsTasks.isEmpty()) { //Add new task if absent
@@ -179,7 +167,6 @@ public class BuildArtifactsBeforeRunTaskProvider extends AbstractArtifactsBefore
         for (AbstractArtifactsBeforeRunTask task : buildArtifactsTasks) {
             task.setEnabled(true);
             task.addArtifact(artifact);
-
         }
     }
 }
