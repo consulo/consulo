@@ -16,7 +16,10 @@
 package consulo.ui.ex.awt.tree.action;
 
 import consulo.application.dumb.DumbAware;
+import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.platform.base.localize.ActionLocalize;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 
@@ -26,15 +29,16 @@ public class CollapseAllAction extends AnAction implements DumbAware {
     protected JTree myTree;
 
     public CollapseAllAction(JTree tree) {
-        super("Collapse All", "", PlatformIconGroup.actionsCollapseall());
+        super(ActionLocalize.actionCollapseallText(), LocalizeValue.empty(), PlatformIconGroup.actionsCollapseall());
         myTree = tree;
     }
 
+    @Override
+    @RequiredUIAccess
     public void actionPerformed(AnActionEvent e) {
-        int row = getTree().getRowCount() - 1;
-        while (row >= 0) {
-            getTree().collapseRow(row);
-            row--;
+        JTree tree = getTree();
+        for (int row = tree.getRowCount(); --row >= 0; ) {
+            tree.collapseRow(row);
         }
     }
 

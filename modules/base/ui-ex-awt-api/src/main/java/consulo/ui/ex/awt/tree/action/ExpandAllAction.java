@@ -15,7 +15,10 @@
  */
 package consulo.ui.ex.awt.tree.action;
 
+import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.platform.base.localize.ActionLocalize;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 
@@ -25,13 +28,16 @@ public class ExpandAllAction extends AnAction {
     protected JTree myTree;
 
     public ExpandAllAction(JTree tree) {
-        super("Expand All", "", PlatformIconGroup.actionsExpandall());
+        super(ActionLocalize.actionExpandallText(), LocalizeValue.empty(), PlatformIconGroup.actionsExpandall());
         myTree = tree;
     }
 
+    @Override
+    @RequiredUIAccess
     public void actionPerformed(AnActionEvent e) {
-        for (int i = 0; i < getTree().getRowCount(); i++) {
-            getTree().expandRow(i);
+        JTree tree = getTree();
+        for (int i = 0, n = tree.getRowCount(); i < n; i++) {
+            tree.expandRow(i);
         }
     }
 
