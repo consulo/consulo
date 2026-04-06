@@ -70,7 +70,6 @@ public class DesktopAWTProgressDialogImpl implements ProgressDialog {
         }
     };
 
-    
     private static String fitTextToLabel(@Nullable String fullText, JLabel label) {
         if (fullText == null || fullText.isEmpty()) {
             return " ";
@@ -352,7 +351,6 @@ public class DesktopAWTProgressDialogImpl implements ProgressDialog {
             }
         }
 
-        
         @Override
         protected DialogWrapperPeer createPeer(Component parent, boolean canBeParent) {
             if (useLightPopup()) {
@@ -368,7 +366,6 @@ public class DesktopAWTProgressDialogImpl implements ProgressDialog {
             }
         }
 
-        
         @Override
         protected DialogWrapperPeer createPeer(ComponentManager project, boolean canBeParent, boolean applicationModalIfPossible) {
             if (useLightPopup()) {
@@ -388,7 +385,6 @@ public class DesktopAWTProgressDialogImpl implements ProgressDialog {
             return System.getProperty("vintage.progress") == null && !isWriteActionProgress();
         }
 
-        
         @Override
         protected DialogWrapperPeer createPeer(ComponentManager project, boolean canBeParent) {
             if (System.getProperty("vintage.progress") == null) {

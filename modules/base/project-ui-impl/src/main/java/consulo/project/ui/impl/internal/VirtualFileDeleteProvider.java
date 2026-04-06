@@ -82,7 +82,7 @@ public final class VirtualFileDeleteProvider implements DeleteProvider {
                     int i = 0;
                     for (VirtualFile file : files) {
                         indicator.checkCanceled();
-                        indicator.setText2Value(LocalizeValue.of(file.getPresentableUrl()));
+                        indicator.setText2(LocalizeValue.of(file.getPresentableUrl()));
                         indicator.setFraction((double)i / files.length);
                         i++;
 

@@ -200,8 +200,8 @@ public class AbstractProgressIndicatorBase extends UserDataHolderBase implements
     synchronized (getLock()) {
       LocalizeValue oldText = Objects.requireNonNull(myTextStack).pop();
       LocalizeValue oldText2 = Objects.requireNonNull(myText2Stack).pop();
-      setTextValue(oldText);
-      setText2Value(oldText2);
+      setText(oldText);
+      setText2(oldText2);
 
       double oldFraction = Objects.requireNonNull(myFractionStack).removeByIndex(myFractionStack.size() - 1);
       if (!isIndeterminate()) {

@@ -129,7 +129,7 @@ public class ExternalStorageManager {
         try {
             boolean wantRestart = myPluginManager.updatePlugins(indicator);
 
-            indicator.setTextValue(LocalizeValue.localizeTODO("Checking external storage for modifications..."));
+            indicator.setText(LocalizeValue.localizeTODO("Checking external storage for modifications..."));
 
             InfoAllBeanResponse response = WebServiceApiSender.doGet(WebServiceApi.STORAGE_API, "infoAll", InfoAllBeanResponse.class);
 
@@ -206,7 +206,7 @@ public class ExternalStorageManager {
     }
 
     private void runRefresher(Set<String> fetchNewFileSpecs, Set<String> reloadComponentNames, ProgressIndicator indicator) {
-        indicator.setTextValue(LocalizeValue.localizeTODO("Refreshing from external storage..."));
+        indicator.setText(LocalizeValue.localizeTODO("Refreshing from external storage..."));
 
         try (AccessToken unused = myApplication.startSaveBlock()) {
             // fist of all we need download changed or new files

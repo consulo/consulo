@@ -214,7 +214,7 @@ public class JarHandler extends ZipHandler {
     ProgressIndicator progress = ProgressManager.getInstance().getProgressIndicator();
     if (progress != null) {
       progress.pushState();
-      progress.setTextValue(VirtualFileSystemLocalize.jarCopyProgress(original.getPath()));
+      progress.setText(VirtualFileSystemLocalize.jarCopyProgress(original.getPath()));
       progress.setFraction(0);
     }
 

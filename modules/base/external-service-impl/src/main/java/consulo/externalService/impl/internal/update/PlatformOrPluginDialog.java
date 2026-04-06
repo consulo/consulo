@@ -254,7 +254,7 @@ public class PlatformOrPluginDialog extends DialogWrapper {
                 }
             }
 
-            indicator.setTextValue(ExternalServiceLocalize.progressInstallingPlugins());
+            indicator.setText(ExternalServiceLocalize.progressInstallingPlugins());
 
             UpdateHistory updateHistory = application.getInstance(UpdateHistory.class);
 

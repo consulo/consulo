@@ -405,8 +405,8 @@ public abstract class AbstractLayoutCodeProcessor implements LayoutCodeProcessor
 
     private void runLayoutCodeProcess(Runnable readAction, Runnable writeAction) {
         ProgressWindow progressWindow = new ProgressWindow(true, myProject);
-        progressWindow.setTitle(myCommandName.get());
-        progressWindow.setTextValue(myProgressText);
+        progressWindow.setTitle(myCommandName);
+        progressWindow.setText(myProgressText);
 
         Application app = myProject.getApplication();
         ModalityState modalityState = app.getCurrentModalityState();
@@ -564,8 +564,8 @@ public abstract class AbstractLayoutCodeProcessor implements LayoutCodeProcessor
         }
 
         private void updateIndicatorText(LocalizeValue upperLabel, LocalizeValue downLabel) {
-            myProgressIndicator.setTextValue(upperLabel);
-            myProgressIndicator.setText2Value(downLabel);
+            myProgressIndicator.setText(upperLabel);
+            myProgressIndicator.setText2(downLabel);
         }
 
         @RequiredReadAction

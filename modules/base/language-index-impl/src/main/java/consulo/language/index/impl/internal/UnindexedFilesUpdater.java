@@ -62,7 +62,7 @@ public class UnindexedFilesUpdater extends DumbModeTask {
         }
 
         indicator.setIndeterminate(true);
-        indicator.setTextValue(IndexingLocalize.progressIndexingScanning());
+        indicator.setText(IndexingLocalize.progressIndexingScanning());
 
         myIndex.clearIndicesIfNecessary();
 
@@ -91,7 +91,7 @@ public class UnindexedFilesUpdater extends DumbModeTask {
         }
 
         indicator.setIndeterminate(false);
-        indicator.setTextValue(IndexingLocalize.progressIndexingUpdating());
+        indicator.setText(IndexingLocalize.progressIndexingUpdating());
 
         indexFiles(indicator, files);
 

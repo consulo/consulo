@@ -99,20 +99,20 @@ public interface ProgressIndicator {
      * Sets text above the progress bar
      *
      * @param text Text to set
-     * @see #setText2(String)
+     * @see #setText2(LocalizeValue)
      */
+    default void setText(LocalizeValue text) {
+        setTextValue(text);
+    }
+
     @Deprecated
-    @DeprecationInfo("Use setTextValue(LocalizeValue) instead")
+    @DeprecationInfo("Use #setText(LocalizeValue)")
     default void setText(String text) {
         setTextValue(StringUtil.isEmpty(text) ? LocalizeValue.empty() : LocalizeValue.of(text));
     }
 
-    /**
-     * Sets text above the progress bar
-     *
-     * @param text Text to set
-     * @see #setTextValue2(LocalizeValue)
-     */
+    @Deprecated
+    @DeprecationInfo("Use #setText(LocalizeValue)")
     void setTextValue(LocalizeValue textValue);
 
     /**
@@ -128,20 +128,20 @@ public interface ProgressIndicator {
      * Sets text under the progress bar
      *
      * @param text Text to set
-     * @see #setText(String)
+     * @see #setText(LocalizeValue)
      */
+    default void setText2(LocalizeValue text) {
+        setText2Value(text);
+    }
+
     @Deprecated
-    @DeprecationInfo("Use setText2Value(LocalizeValue) instead")
+    @DeprecationInfo("Use #setText2(LocalizeValue)")
     default void setText2(String text) {
         setText2Value(StringUtil.isEmpty(text) ? LocalizeValue.empty() : LocalizeValue.of(text));
     }
 
-    /**
-     * Sets text under the progress bar
-     *
-     * @param text Text to set
-     * @see #setText(String)
-     */
+    @Deprecated
+    @DeprecationInfo("Use #setText2(LocalizeValue)")
     void setText2Value(LocalizeValue text);
 
     /**

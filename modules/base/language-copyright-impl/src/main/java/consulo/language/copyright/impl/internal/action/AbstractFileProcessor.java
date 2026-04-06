@@ -169,7 +169,7 @@ public abstract class AbstractFileProcessor {
         if (indicator != null) {
             msg = indicator.getText();
             fraction = indicator.getFraction();
-            indicator.setTextValue(message);
+            indicator.setText(message);
         }
 
         Runnable[] runnables = new Runnable[files.size()];
@@ -211,7 +211,7 @@ public abstract class AbstractFileProcessor {
             if (indicator1 != null) {
                 msg1 = indicator1.getText();
                 fraction1 = indicator1.getFraction();
-                indicator1.setTextValue(message);
+                indicator1.setText(message);
             }
 
             for (int j = 0; j < runnables.length; j++) {

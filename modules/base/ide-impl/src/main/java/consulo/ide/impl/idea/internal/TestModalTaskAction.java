@@ -63,9 +63,9 @@ public class TestModalTaskAction extends DumbAwareAction {
                         ProgressIndicator.from(c).setIndeterminate(true);
                     }))
                     .then(Delay.sleep(5000L))
-                    .then(CodeExecution.run((c) -> ProgressIndicator.from(c).setTextValue(LocalizeValue.of("After 5 seconds"))))
+                    .then(CodeExecution.run((c) -> ProgressIndicator.from(c).setText(LocalizeValue.of("After 5 seconds"))))
                     .then(Delay.sleep(5000L))
-                    .then(CodeExecution.run((c) -> ProgressIndicator.from(c).setTextValue(LocalizeValue.of("After 10 seconds"))))
+                    .then(CodeExecution.run((c) -> ProgressIndicator.from(c).setText(LocalizeValue.of("After 10 seconds"))))
                     .then(Delay.sleep(5000L))
                     .then(CodeExecution.supply(() -> "Success Result"));
             });

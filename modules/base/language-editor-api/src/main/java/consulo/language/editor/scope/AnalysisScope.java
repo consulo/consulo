@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.language.editor.scope;
 
 import consulo.annotation.access.RequiredReadAction;
@@ -85,7 +84,6 @@ public class AnalysisScope {
   @MagicConstant(intValues = {PROJECT, DIRECTORY, FILE, MODULE, INVALID, MODULES, CUSTOM, VIRTUAL_FILES, UNCOMMITTED_FILES})
   public @interface Type { }
 
-  
   private final Project myProject;
   protected List<Module> myModules;
   protected Module myModule;
@@ -190,12 +188,11 @@ public class AnalysisScope {
     myAnalyzeInjectedCode = analyzeInjectedCode;
   }
 
-  
   protected PsiElementVisitor createFileSearcher() {
     final FileIndex fileIndex = getFileIndex();
     ProgressIndicator indicator = ProgressManager.getInstance().getProgressIndicator();
     if (indicator != null) {
-      indicator.setTextValue(AnalysisScopeLocalize.scanningScopeProgressTitle());
+      indicator.setText(AnalysisScopeLocalize.scanningScopeProgressTitle());
     }
 
     return new PsiElementVisitor() {
@@ -216,7 +213,6 @@ public class AnalysisScope {
     };
   }
 
-  
   private FileIndex getFileIndex() {
     FileIndex fileIndex;
     if (myModule != null) {
@@ -473,7 +469,6 @@ public class AnalysisScope {
     return myType;
   }
 
-  
   public String getDisplayName() {
     switch (myType) {
       case CUSTOM:
@@ -503,14 +498,12 @@ public class AnalysisScope {
     return "";
   }
 
-  
   private static String getPresentableUrl(PsiFileSystemItem element) {
     VirtualFile virtualFile = element.getVirtualFile();
     assert virtualFile != null : element;
     return virtualFile.getPresentableUrl();
   }
 
-  
   public String getShortenName(){
     switch (myType) {
       case CUSTOM:
@@ -555,7 +548,6 @@ public class AnalysisScope {
     return relativePath;
   }
 
-  
   private static String pathToName(String path) {
     File file = new File(path);
     return FileUtil.getNameWithoutExtension(file);
@@ -565,8 +557,8 @@ public class AnalysisScope {
     if (myFilesSet == null) initFilesSet();
     ProgressIndicator indicator = ProgressManager.getInstance().getProgressIndicator();
     if (indicator != null) { //clear text after building analysis scope set
-      indicator.setTextValue(LocalizeValue.empty());
-      indicator.setText2Value(LocalizeValue.empty());
+      indicator.setText(LocalizeValue.empty());
+      indicator.setText2(LocalizeValue.empty());
     }
     return myFilesSet.size();
   }
@@ -612,7 +604,6 @@ public class AnalysisScope {
     }
     return true;
   }
-
   
   public AnalysisScope getNarrowedComplementaryScope(Project defaultProject) {
     ProjectFileIndex fileIndex = ProjectRootManager.getInstance(defaultProject).getFileIndex();
@@ -629,7 +620,6 @@ public class AnalysisScope {
     }
     return collectScopes(defaultProject, modules);
   }
-
   
   protected static AnalysisScope collectScopes(Project defaultProject, Set<Module> modules) {
     if (modules.isEmpty()) {
@@ -644,7 +634,6 @@ public class AnalysisScope {
     }
     return new AnalysisScope(modulesToAnalyze.toArray(new Module[modulesToAnalyze.size()]));
   }
-
   
   private static Set<Module> getExportBackwardDependencies(Module fromModule, Module[] allModules) {
     Set<Module> result = new HashSet<>();
@@ -661,7 +650,6 @@ public class AnalysisScope {
     return result;
   }
 
-  
   private static Set<Module> getDirectBackwardDependencies(Module module, Module[] allModules) {
     Set<Module> result = new HashSet<>();
     for (Module dependency : allModules) {
@@ -672,7 +660,7 @@ public class AnalysisScope {
     return result;
   }
 
-  
+
   protected static Set<Module> getAllInterestingModules(ProjectFileIndex fileIndex, VirtualFile vFile) {
     Set<Module> modules = new HashSet<>();
     if (fileIndex.isInLibrarySource(vFile) || fileIndex.isInLibraryClasses(vFile)) {
@@ -686,7 +674,6 @@ public class AnalysisScope {
     return modules;
   }
 
-  
   public SearchScope toSearchScope() {
     switch (myType) {
       case CUSTOM:

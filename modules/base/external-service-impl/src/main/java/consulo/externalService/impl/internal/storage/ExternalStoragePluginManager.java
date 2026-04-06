@@ -113,7 +113,7 @@ public class ExternalStoragePluginManager implements PluginActionListener {
      */
     public boolean updatePlugins(ProgressIndicator indicator) {
         try {
-            indicator.setTextValue(LocalizeValue.localizeTODO("Checking plugins state..."));
+            indicator.setText(LocalizeValue.localizeTODO("Checking plugins state..."));
 
             List<PluginDescriptor> plugins = PluginManager.getPlugins();
             List<StoragePlugin> inPlugins = new ArrayList<>();
@@ -222,7 +222,7 @@ public class ExternalStoragePluginManager implements PluginActionListener {
                             assert repositoryPlugin != null;
 
                             PluginDownloader downloader = PluginDownloader.createDownloader(repositoryPlugin, false);
-                            indicator.setTextValue(LocalizeValue.localizeTODO("Downloading new plugin '" + repositoryPlugin.getName() + "'..."));
+                            indicator.setText(LocalizeValue.localizeTODO("Downloading new plugin '" + repositoryPlugin.getName() + "'..."));
                             downloader.download(indicator);
 
                             InstalledPluginsState.getInstance().getInstalledPlugins().add(pluginId);

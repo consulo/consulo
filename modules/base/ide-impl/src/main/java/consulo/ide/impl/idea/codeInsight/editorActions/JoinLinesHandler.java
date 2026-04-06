@@ -159,14 +159,14 @@ public class JoinLinesHandler extends EditorActionHandler implements ExtensionEd
         private void doProcess(int lineCount) {
             List<RangeMarker> markers = new ArrayList<>();
             try {
-                myIndicator.setText2Value(LocalizeValue.localizeTODO("Converting end-of-line comments"));
+                myIndicator.setText2(LocalizeValue.localizeTODO("Converting end-of-line comments"));
                 convertEndComments(lineCount);
-                myIndicator.setText2Value(LocalizeValue.localizeTODO("Removing line-breaks"));
+                myIndicator.setText2(LocalizeValue.localizeTODO("Removing line-breaks"));
                 int newCount = processRawJoiners(lineCount);
                 DocumentUtil.executeInBulk(myDoc, newCount > 100, () -> removeLineBreaks(newCount, markers));
-                myIndicator.setText2Value(LocalizeValue.localizeTODO("Postprocessing"));
+                myIndicator.setText2(LocalizeValue.localizeTODO("Postprocessing"));
                 List<RangeMarker> unprocessed = processNonRawJoiners(markers);
-                myIndicator.setText2Value(LocalizeValue.localizeTODO("Adjusting white-space"));
+                myIndicator.setText2(LocalizeValue.localizeTODO("Adjusting white-space"));
                 adjustWhiteSpace(unprocessed);
             }
             finally {

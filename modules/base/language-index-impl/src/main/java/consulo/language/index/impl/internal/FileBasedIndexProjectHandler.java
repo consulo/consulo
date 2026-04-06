@@ -59,7 +59,7 @@ public class FileBasedIndexProjectHandler {
                 long calcDuration = System.currentTimeMillis() - start;
 
                 indicator.setIndeterminate(false);
-                indicator.setTextValue(IndexingLocalize.progressIndexingUpdating());
+                indicator.setText(IndexingLocalize.progressIndexingUpdating());
 
                 LOG.info("Reindexing refreshed files: " + files.size() + " to update, calculated in " + calcDuration + "ms");
                 if (!files.isEmpty()) {

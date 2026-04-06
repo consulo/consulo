@@ -199,7 +199,7 @@ public class ProjectManagerImpl implements ProjectManagerEx, Disposable {
     private void initProject(ProjectImpl project, @Nullable ProjectImpl template) throws IOException {
         ProgressIndicator indicator = myProgressManager.getProgressIndicator();
         if (indicator != null && !project.isDefault()) {
-            indicator.setTextValue(ProjectLocalize.loadingComponentsFor(project.getName()));
+            indicator.setText(ProjectLocalize.loadingComponentsFor(project.getName()));
             indicator.setIndeterminate(true);
         }
 
@@ -600,15 +600,15 @@ public class ProjectManagerImpl implements ProjectManagerEx, Disposable {
                         initProjectAsync(project, null, indicator);
                     }
 
-                    indicator.setTextValue(ProjectLocalize.progressTitleLoadingModules());
-                    indicator.setText2Value(LocalizeValue.empty());
+                    indicator.setText(ProjectLocalize.progressTitleLoadingModules());
+                    indicator.setText2(LocalizeValue.empty());
 
                     ModuleManagerComponent moduleManager = (ModuleManagerComponent) ModuleManager.getInstance(project);
 
                     moduleManager.loadModules(indicator).get();
 
-                    indicator.setTextValue(ProjectLocalize.progressTitlePreparingWorkspace());
-                    indicator.setText2Value(LocalizeValue.empty());
+                    indicator.setText(ProjectLocalize.progressTitlePreparingWorkspace());
+                    indicator.setText2(LocalizeValue.empty());
 
                     openProjectRequireBackgroundTask(project, uiAccess);
 
@@ -664,12 +664,9 @@ public class ProjectManagerImpl implements ProjectManagerEx, Disposable {
         }
     }
 
-    private void initProjectAsync(
-        ProjectImpl project,
-        @Nullable ProjectImpl template,
-        ProgressIndicator progressIndicator
-    ) throws IOException {
-        progressIndicator.setTextValue(ProjectLocalize.loadingComponentsFor(project.getName()));
+    private void initProjectAsync(ProjectImpl project, @Nullable ProjectImpl template, ProgressIndicator progressIndicator)
+        throws IOException {
+        progressIndicator.setText(ProjectLocalize.loadingComponentsFor(project.getName()));
 
         boolean succeed = false;
         try {

@@ -18,13 +18,10 @@ package consulo.application.progress;
 import consulo.localize.LocalizeValue;
 
 public interface TaskInfo {
-  
   String getTitle();
 
-  
   LocalizeValue getCancelTextValue();
 
-  
   LocalizeValue getCancelTooltipTextValue();
 
   boolean isCancellable();

@@ -157,7 +157,7 @@ public class CodeSmellDetectorImpl extends CodeSmellDetector {
 
                         VirtualFile file = filesToCheck.get(i);
 
-                        progress.setTextValue(VcsLocalize.searchingForCodeSmellsProcessingFileProgressText(file.getPresentableUrl()));
+                        progress.setText(VcsLocalize.searchingForCodeSmellsProcessingFileProgressText(file.getPresentableUrl()));
                         progress.setFraction((double) i / (double) filesToCheck.size());
 
                         result.addAll(findCodeSmells(file, progress));

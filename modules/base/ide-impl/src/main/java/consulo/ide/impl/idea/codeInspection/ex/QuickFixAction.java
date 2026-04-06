@@ -368,7 +368,7 @@ public class QuickFixAction extends AnAction {
                 if (descriptor instanceof ProblemDescriptor problemDescriptor) {
                     PsiElement psiElement = problemDescriptor.getPsiElement();
                     if (psiElement != null) {
-                        indicator.setTextValue(
+                        indicator.setText(
                             InspectionLocalize.processingProgressText(SymbolPresentationUtil.getSymbolPresentableText(psiElement))
                         );
                     }

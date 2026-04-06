@@ -96,7 +96,7 @@ public class ResourceCompilerImpl implements ResourceCompiler {
     @Override
     public void compile(CompileContext context, Chunk<Module> moduleChunk, VirtualFile[] files, OutputSink sink) {
         context.getProgressIndicator().pushState();
-        context.getProgressIndicator().setTextValue(CompilerLocalize.progressCopyingResources());
+        context.getProgressIndicator().setText(CompilerLocalize.progressCopyingResources());
 
         Map<String, Collection<OutputItem>> processed = new HashMap<>();
         LinkedList<CopyCommand> copyCommands = new LinkedList<>();
@@ -147,7 +147,7 @@ public class ResourceCompilerImpl implements ResourceCompiler {
                 break;
             }
             //context.getProgressIndicator().setFraction((idx++) * 1.0 / total);
-            context.getProgressIndicator().setText2Value(LocalizeValue.localizeTODO("Copying " + command.getFromPath() + "..."));
+            context.getProgressIndicator().setText2(LocalizeValue.localizeTODO("Copying " + command.getFromPath() + "..."));
             try {
                 MyOutputItem outputItem = command.copy(filesToRefresh);
                 addToMap(processed, command.getOutputPath(), outputItem);

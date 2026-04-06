@@ -322,8 +322,8 @@ public class ArtifactsCompilerInstance extends GenericCompilerInstance<ArtifactB
             return;
         }
 
-        myContext.getProgressIndicator().setTextValue(CompilerLocalize.packagingCompilerMessageUpdatingCaches());
-        myContext.getProgressIndicator().setText2Value(LocalizeValue.empty());
+        myContext.getProgressIndicator().setText(CompilerLocalize.packagingCompilerMessageUpdatingCaches());
+        myContext.getProgressIndicator().setText2(LocalizeValue.empty());
         for (String path : writtenPaths) {
             consumer.addFileToRefresh(new File(path));
         }
@@ -338,7 +338,7 @@ public class ArtifactsCompilerInstance extends GenericCompilerInstance<ArtifactB
         List<GenericCompilerCacheState<String, VirtualFilePersistentState, ArtifactPackagingItemOutputState>> obsoleteItems,
         List<GenericCompilerProcessingItem<ArtifactCompilerCompileItem, VirtualFilePersistentState, ArtifactPackagingItemOutputState>> changedItems
     ) {
-        myContext.getProgressIndicator().setTextValue(CompilerLocalize.packagingCompilerMessageDeletingOutdatedFiles());
+        myContext.getProgressIndicator().setText(CompilerLocalize.packagingCompilerMessageDeletingOutdatedFiles());
 
         boolean testMode = Application.get().isUnitTestMode();
         Set<String> deletedJars = new HashSet<>();
