@@ -54,6 +54,7 @@ import org.vaadin.stefan.table.Table;
  * @since 28/05/2023
  */
 @StyleSheet(Aura.STYLESHEET)
+@StyleSheet("./themes/consulo/aura-utility.css")
 @StyleSheet("./themes/consulo/styles.css")
 @StyleSheet("./themes/consulo/scrollbar.css")
 @Push(PushMode.AUTOMATIC)

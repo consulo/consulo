@@ -17,7 +17,7 @@ package consulo.web.internal.ui;
 
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.HasComponents;
-import com.vaadin.flow.theme.lumo.LumoUtility;
+import consulo.web.internal.ui.vaadin.AuraUtility;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.border.BorderPosition;
 import consulo.ui.impl.BorderInfo;
@@ -88,20 +88,20 @@ public abstract class WebLayoutImpl<C extends Component & HasComponents & FromVa
 
         switch (info.getBorderStyle()) {
             case LINE: {
-                c.addClassName(LumoUtility.BorderColor.CONTRAST_10); // TODO support color
+                c.addClassName(AuraUtility.BorderColor.CONTRAST_10); // TODO support color
                 
                 switch (info.getBorderPosition()) {
                     case TOP:
-                        c.addClassName(LumoUtility.Border.TOP);
+                        c.addClassName(AuraUtility.Border.TOP);
                         break;
                     case BOTTOM:
-                        c.addClassName(LumoUtility.Border.BOTTOM);
+                        c.addClassName(AuraUtility.Border.BOTTOM);
                         break;
                     case LEFT:
-                        c.addClassName(LumoUtility.Border.LEFT);
+                        c.addClassName(AuraUtility.Border.LEFT);
                         break;
                     case RIGHT:
-                        c.addClassName(LumoUtility.Border.RIGHT);
+                        c.addClassName(AuraUtility.Border.RIGHT);
                         break;
                 }
                 break;
@@ -109,16 +109,16 @@ public abstract class WebLayoutImpl<C extends Component & HasComponents & FromVa
             case EMPTY: {
                 switch (info.getBorderPosition()) {
                     case TOP:
-                        c.addClassName(LumoUtility.Padding.Top.SMALL);
+                        c.addClassName(AuraUtility.Padding.Top.SMALL);
                         break;
                     case BOTTOM:
-                        c.addClassName(LumoUtility.Padding.Bottom.SMALL);
+                        c.addClassName(AuraUtility.Padding.Bottom.SMALL);
                         break;
                     case LEFT:
-                        c.addClassName(LumoUtility.Padding.Left.SMALL);
+                        c.addClassName(AuraUtility.Padding.Left.SMALL);
                         break;
                     case RIGHT:
-                        c.addClassName(LumoUtility.Padding.Right.SMALL);
+                        c.addClassName(AuraUtility.Padding.Right.SMALL);
                         break;
                 }
                 break;

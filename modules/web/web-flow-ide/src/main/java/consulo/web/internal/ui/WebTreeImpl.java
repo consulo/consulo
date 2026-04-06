@@ -58,7 +58,7 @@ public class WebTreeImpl<NODE> extends VaadinComponentDelegate<WebTreeImpl.Vaadi
         public Vaadin() {
             setAllRowsVisible(true);
 
-            addThemeVariants(GridVariant.LUMO_NO_ROW_BORDERS, GridVariant.LUMO_COLUMN_BORDERS, GridVariant.LUMO_NO_BORDER);
+            addThemeVariants(GridVariant.NO_ROW_BORDERS, GridVariant.COLUMN_BORDERS, GridVariant.NO_BORDER);
 
             setSelectionMode(SelectionMode.SINGLE);
 

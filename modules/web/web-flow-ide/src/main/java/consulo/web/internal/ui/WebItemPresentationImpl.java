@@ -17,7 +17,7 @@ package consulo.web.internal.ui;
 
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.html.Span;
-import com.vaadin.flow.theme.lumo.LumoUtility;
+import consulo.web.internal.ui.vaadin.AuraUtility;
 import consulo.localize.LocalizeValue;
 import consulo.ui.TextAttribute;
 import consulo.ui.TextItemPresentation;
@@ -65,7 +65,7 @@ public class WebItemPresentationImpl implements TextItemPresentation {
     span.addClassName("web-icon");
     if (myIcon != null) {
       Component image = WebImageConverter.getImageCanvas(myIcon);
-      image.addClassName(LumoUtility.Margin.Right.SMALL);
+      image.addClassName(AuraUtility.Margin.Right.SMALL);
       span.add(image);
     }
     span.add(myFragments.toArray(Component[]::new));

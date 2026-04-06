@@ -18,7 +18,7 @@ package consulo.web.internal.ui;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.orderedlayout.ThemableLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.theme.lumo.LumoUtility;
+import consulo.web.internal.ui.vaadin.AuraUtility;
 import consulo.localize.LocalizeValue;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -42,13 +42,13 @@ public class WebLabeledLayoutImpl extends VaadinComponentDelegate<WebLabeledLayo
         public Vaadin() {
             setMargin(false);
             myCaption = new Span("");
-            myCaption.addClassName(LumoUtility.FontWeight.BOLD);
+            myCaption.addClassName(AuraUtility.FontWeight.BOLD);
             myCaption.setWidthFull();
             add(myCaption);
 
-            addClassName(LumoUtility.Border.ALL);
-            addClassName(LumoUtility.BorderRadius.SMALL);
-            addClassName(LumoUtility.BorderColor.CONTRAST_10);
+            addClassName(AuraUtility.Border.ALL);
+            addClassName(AuraUtility.BorderRadius.SMALL);
+            addClassName(AuraUtility.BorderColor.CONTRAST_10);
         }
 
         public void setLabelValue(LocalizeValue labelValue) {
