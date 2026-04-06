@@ -52,7 +52,7 @@ public class AllRunConfigurationsToggle extends DumbAwareToggleAction {
 
         Toggleable.setSelected(presentation, selected);
 
-        presentation.setTextValue(ExecutionLocalize.runToolbarWidgetAllConfigurations(10));
+        presentation.setText(ExecutionLocalize.runToolbarWidgetAllConfigurations(10));
 
         presentation.setIcon(selected ? PlatformIconGroup.generalArrowdown() : PlatformIconGroup.generalArrowright());
     }

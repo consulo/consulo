@@ -40,8 +40,8 @@ public class SelectTargetAction extends AnAction {
         String name = target.getDisplayName();
         Presentation presentation = getTemplatePresentation();
         presentation.setDisabledMnemonic(true);
-        presentation.setTextValue(LocalizeValue.of(name));
-        presentation.setDescriptionValue(LocalizeValue.localizeTODO("Select " + name));
+        presentation.setText(LocalizeValue.of(name));
+        presentation.setDescription(LocalizeValue.localizeTODO("Select " + name));
 
         presentation.setIcon(
             selected

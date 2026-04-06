@@ -61,10 +61,10 @@ public class AddCloudConnectionActionGroup extends ActionGroup implements DumbAw
         public void update(AnActionEvent e) {
             if (e.getPlace().equals(ActionPlaces.ACTION_SEARCH)) {
                 e.getPresentation()
-                    .setTextValue(RemoteServerLocalize.newCloudConnectionConfigurableTitle(myServerType.getPresentableName()));
+                    .setText(RemoteServerLocalize.newCloudConnectionConfigurableTitle(myServerType.getPresentableName()));
             }
             else {
-                e.getPresentation().setTextValue(myServerType.getPresentableName());
+                e.getPresentation().setText(myServerType.getPresentableName());
             }
         }
 

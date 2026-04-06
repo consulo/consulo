@@ -76,8 +76,8 @@ public class ReopenProjectAction extends AnAction implements DumbAware {
         myProjectText = LocalizeValue.of(text);
 
         presentation.setDisabledMnemonic(true);
-        presentation.setTextValue(myProjectText);
-        presentation.setDescriptionValue(LocalizeValue.of(projectPath));
+        presentation.setText(myProjectText);
+        presentation.setDescription(LocalizeValue.of(projectPath));
         presentation.setIcon(getExtensionIcon());
     }
 
@@ -86,10 +86,11 @@ public class ReopenProjectAction extends AnAction implements DumbAware {
         Presentation presentation = e.getPresentation();
         if (myOpened) {
             presentation.setEnabled(false);
-            presentation.setTextValue(ProjectLocalize.recentProject0OpenedActionText(myProjectText));
-        } else {
+            presentation.setText(ProjectLocalize.recentProject0OpenedActionText(myProjectText));
+        }
+        else {
             presentation.setEnabled(true);
-            presentation.setTextValue(myProjectText);
+            presentation.setText(myProjectText);
         }
     }
 

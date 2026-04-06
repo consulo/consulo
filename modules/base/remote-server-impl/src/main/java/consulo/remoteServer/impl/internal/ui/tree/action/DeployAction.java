@@ -32,12 +32,12 @@ public class DeployAction extends DumbAwareAction {
         presentation.setVisible(visible);
         presentation.setEnabled(visible && node.isDeployActionEnabled());
         if (node != null && node.isDeployed()) {
-            presentation.setTextValue(RemoteServerLocalize.actionPresentationDeployactionText());
-            presentation.setDescriptionValue(RemoteServerLocalize.actionPresentationDeployactionDescription());
+            presentation.setText(RemoteServerLocalize.actionPresentationDeployactionText());
+            presentation.setDescription(RemoteServerLocalize.actionPresentationDeployactionDescription());
         }
         else {
-            presentation.setTextValue(getTemplatePresentation().getTextValue());
-            presentation.setDescriptionValue(getTemplatePresentation().getDescriptionValue());
+            presentation.setText(getTemplatePresentation().getTextValue());
+            presentation.setDescription(getTemplatePresentation().getDescriptionValue());
         }
     }
 

@@ -44,13 +44,13 @@ public final class DebugAction extends ExecutorAction {
     protected void update(AnActionEvent e, boolean running) {
         Presentation presentation = e.getPresentation();
         if (running) {
-            presentation.setTextValue(ExecutionLocalize.runDashboardRestartDebuggerActionName());
-            presentation.setDescriptionValue(ExecutionLocalize.runDashboardRestartDebuggerActionDescription());
+            presentation.setText(ExecutionLocalize.runDashboardRestartDebuggerActionName());
+            presentation.setDescription(ExecutionLocalize.runDashboardRestartDebuggerActionDescription());
             presentation.setIcon(ExecutionDebugIconGroup.actionRestartdebugger());
         }
         else {
-            presentation.setTextValue(ExecutionLocalize.runDashboardDebugActionName());
-            presentation.setDescriptionValue(ExecutionLocalize.runDashboardDebugActionDescription());
+            presentation.setText(ExecutionLocalize.runDashboardDebugActionName());
+            presentation.setDescription(ExecutionLocalize.runDashboardDebugActionDescription());
             presentation.setIcon(ExecutionDebugIconGroup.actionStartdebugger());
         }
     }

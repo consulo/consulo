@@ -83,6 +83,6 @@ public class ToggleBookmarkWithMnemonicAction extends ToggleBookmarkAction {
     public void update(AnActionEvent event) {
         super.update(event);
 
-        event.getPresentation().setTextValue(BookmarkLocalize.actionBookmarkToggleWithMnemonicText());
+        event.getPresentation().setText(BookmarkLocalize.actionBookmarkToggleWithMnemonicText());
     }
 }

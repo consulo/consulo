@@ -35,9 +35,9 @@ public class EditSourceForDialogAction extends CommonEditSourceAction {
     public EditSourceForDialogAction(Component component) {
         super();
         Presentation presentation = getTemplatePresentation();
-        presentation.setTextValue(ActionLocalize.actionEditsourceText());
+        presentation.setText(ActionLocalize.actionEditsourceText());
         presentation.setIcon(PlatformIconGroup.actionsEditsource());
-        presentation.setDescriptionValue(ActionLocalize.actionEditsourceDescription());
+        presentation.setDescription(ActionLocalize.actionEditsourceDescription());
         mySourceComponent = component;
     }
 

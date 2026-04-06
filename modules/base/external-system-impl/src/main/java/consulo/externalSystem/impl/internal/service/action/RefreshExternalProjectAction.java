@@ -49,12 +49,12 @@ public class RefreshExternalProjectAction extends AnAction implements DumbAware 
         e.getPresentation().setEnabled(info.externalProject != null);
         if (info.externalSystemId != null) {
             LocalizeValue displayName = info.externalSystemId.getDisplayName();
-            e.getPresentation().setTextValue(ExternalSystemLocalize.actionRefreshExternalProject0Text(displayName));
-            e.getPresentation().setDescriptionValue(ExternalSystemLocalize.actionRefreshExternalProject0Description(displayName));
+            e.getPresentation().setText(ExternalSystemLocalize.actionRefreshExternalProject0Text(displayName));
+            e.getPresentation().setDescription(ExternalSystemLocalize.actionRefreshExternalProject0Description(displayName));
         }
         else {
-            e.getPresentation().setTextValue(ExternalSystemLocalize.actionRefreshExternalProjectText());
-            e.getPresentation().setDescriptionValue(ExternalSystemLocalize.actionRefreshExternalProjectDescription());
+            e.getPresentation().setText(ExternalSystemLocalize.actionRefreshExternalProjectText());
+            e.getPresentation().setDescription(ExternalSystemLocalize.actionRefreshExternalProjectDescription());
         }
     }
 

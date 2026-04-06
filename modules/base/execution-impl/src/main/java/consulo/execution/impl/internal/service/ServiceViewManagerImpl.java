@@ -1423,11 +1423,11 @@ public final class ServiceViewManagerImpl implements ServiceViewManager, Persist
         ActivateToolWindowByContributorAction(ServiceViewContributor<?> contributor, ItemPresentation contributorPresentation) {
             myContributor = contributor;
             Presentation templatePresentation = getTemplatePresentation();
-            templatePresentation.setTextValue(
+            templatePresentation.setText(
                 ExecutionLocalize.serviceViewActivateToolWindowActionName(ServiceViewDragHelper.getDisplayName(contributorPresentation))
             );
+            templatePresentation.setDescription(ExecutionLocalize.serviceViewActivateToolWindowActionDescription());
             templatePresentation.setIcon(contributorPresentation.getIcon(false));
-            templatePresentation.setDescriptionValue(ExecutionLocalize.serviceViewActivateToolWindowActionDescription());
         }
 
         @Override

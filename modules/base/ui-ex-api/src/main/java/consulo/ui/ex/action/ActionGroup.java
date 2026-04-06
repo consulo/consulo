@@ -93,7 +93,7 @@ public abstract class ActionGroup extends AnAction {
             myPopup = popup;
 
             if (actionText.isNotEmpty()) {
-                getTemplatePresentation().setTextValue(actionText);
+                getTemplatePresentation().setText(actionText);
             }
         }
 

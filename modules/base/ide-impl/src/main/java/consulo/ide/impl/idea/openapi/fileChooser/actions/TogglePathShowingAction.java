@@ -33,7 +33,7 @@ public class TogglePathShowingAction extends AnAction implements DumbAware {
 
     @Override
     public void update(AnActionEvent e) {
-        e.getPresentation().setTextValue(IdeLocalize.fileChooserHidePathTooltipText());
+        e.getPresentation().setText(IdeLocalize.fileChooserHidePathTooltipText());
         e.getPresentation().setEnabled(e.hasData(PathField.PATH_FIELD));
     }
 

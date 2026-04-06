@@ -25,7 +25,7 @@ import consulo.execution.impl.internal.ui.layout.action.AbstractFocusOnAction;
 public class FocusOnBreakpointAction extends AbstractFocusOnAction {
     public FocusOnBreakpointAction() {
         super(XDebuggerUIConstants.LAYOUT_VIEW_BREAKPOINT_CONDITION);
-        getTemplatePresentation().setTextValue(XDebuggerLocalize.actionFocusOnBreakpointText());
-        getTemplatePresentation().setDescriptionValue(XDebuggerLocalize.actionFocusOnBreakpointDescription());
+        getTemplatePresentation().setText(XDebuggerLocalize.actionFocusOnBreakpointText());
+        getTemplatePresentation().setDescription(XDebuggerLocalize.actionFocusOnBreakpointDescription());
     }
 }

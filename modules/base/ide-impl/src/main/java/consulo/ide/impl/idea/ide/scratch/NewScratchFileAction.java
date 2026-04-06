@@ -41,7 +41,7 @@ public class NewScratchFileAction extends DumbAwareAction {
 
     @Override
     public void update(AnActionEvent e) {
-        getTemplatePresentation().setTextValue(myActionText.getValue());
+        getTemplatePresentation().setText(myActionText.getValue());
 
         Project project = e.getData(Project.KEY);
         String place = e.getPlace();
@@ -76,7 +76,7 @@ public class NewScratchFileAction extends DumbAwareAction {
     }
 
     private void updatePresentationTextAndIcon(AnActionEvent e, Presentation presentation) {
-        presentation.setTextValue(myActionText.getValue());
+        presentation.setText(myActionText.getValue());
         presentation.setIcon(ICON);
         if (ActionPlaces.MAIN_MENU.equals(e.getPlace()) && !NewActionGroup.isActionInNewPopupMenu(this)) {
             presentation.setIcon(null);

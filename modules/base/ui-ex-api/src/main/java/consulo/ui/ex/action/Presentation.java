@@ -17,7 +17,6 @@ package consulo.ui.ex.action;
 
 import consulo.annotation.DeprecationInfo;
 import consulo.component.util.localize.BundleBase;
-import consulo.localize.LocalizeManager;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.ui.image.Image;
@@ -26,15 +25,13 @@ import consulo.util.collection.SmartFMap;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.BitUtil;
 import consulo.util.lang.Comparing;
-import consulo.util.lang.StringUtil;
-import org.jspecify.annotations.Nullable;
 import kava.beans.PropertyChangeListener;
 import kava.beans.PropertyChangeSupport;
+import org.jspecify.annotations.Nullable;
 
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
-import java.util.function.BiFunction;
 import java.util.function.Function;
 
 /**
@@ -48,7 +45,6 @@ public final class Presentation implements Cloneable {
 
     public static final Function<String, String> NO_MNEMONIC = text -> TextWithMnemonic.parse(text).getText();
 
-    
     public static Presentation newTemplatePresentation() {
         Presentation presentation = new Presentation();
         presentation.myFlags = BitUtil.set(presentation.myFlags, IS_TEMPLATE, true);
@@ -113,8 +109,8 @@ public final class Presentation implements Cloneable {
 
     private @Nullable PropertyChangeSupport myChangeSupport;
 
-    private LocalizeValue myTextValue = LocalizeValue.empty();
-    private LocalizeValue myDescriptionValue = LocalizeValue.empty();
+    private LocalizeValue myText = LocalizeValue.empty();
+    private LocalizeValue myDescription = LocalizeValue.empty();
 
     private int myFlags = IS_ENABLED | IS_VISIBLE | IS_DISABLE_GROUP_IF_EMPTY | IS_DEFAULT_ICON;
 
@@ -126,8 +122,8 @@ public final class Presentation implements Cloneable {
     public Presentation() {
     }
 
-    public Presentation(LocalizeValue textValue) {
-        myTextValue = textValue;
+    public Presentation(LocalizeValue text) {
+        myText = text;
     }
 
     @Deprecated
@@ -171,31 +167,36 @@ public final class Presentation implements Cloneable {
     @DeprecationInfo("Use #getTextValue()")
     public @Nullable String getText() {
         if (BitUtil.isSet(myFlags, IS_DISABLE_MNEMONIC)) {
-            return StringUtil.nullize(myTextValue.getValue());
+            return myText.getNullIfEmpty();
         }
-        return StringUtil.nullize(myTextValue.map(NO_MNEMONIC).getValue());
+        return myText.map(NO_MNEMONIC).getNullIfEmpty();
     }
 
     public @Nullable String getTextWithMnemonic() {
-        return StringUtil.nullize(myTextValue.getValue());
+        return myText.getNullIfEmpty();
     }
 
-    public void setTextValue(LocalizeValue newTextValue) {
-        LocalizeValue oldValue = myTextValue;
-        myTextValue = newTextValue;
+    public void setText(LocalizeValue text) {
+        LocalizeValue oldText = myText;
+        myText = text;
 
-        if (!Objects.equals(oldValue, newTextValue)) {
-            fireObjectPropertyChange(PROP_TEXT, oldValue, newTextValue);
+        if (!oldText.equals(text)) {
+            fireObjectPropertyChange(PROP_TEXT, oldText, text);
         }
     }
 
-    
+    @Deprecated
+    @DeprecationInfo("Use #setText(LocalizeValue)")
+    public void setTextValue(LocalizeValue newTextValue) {
+        setText(newTextValue);
+    }
+
     public LocalizeValue getTextValue() {
-        return myTextValue;
+        return myText;
     }
 
     @Deprecated
-    @DeprecationInfo("Use #setTextValue() with localize value parameter")
+    @DeprecationInfo("Use #setText(LocalizeValue)")
     public void setText(@Nullable String text, boolean mayContainMnemonic) {
         if (text != null) {
             if (text.indexOf(BundleBase.MNEMONIC) >= 0) {
@@ -204,48 +205,51 @@ public final class Presentation implements Cloneable {
 
             LocalizeValue value = LocalizeValue.of(text);
             if (mayContainMnemonic) {
-                setTextValue(value);
+                setText(value);
             }
             else {
-                setTextValue(value.map(NO_MNEMONIC));
+                setText(value.map(NO_MNEMONIC));
             }
         }
         else {
-            setTextValue(LocalizeValue.empty());
+            setText(LocalizeValue.empty());
         }
     }
 
     @Deprecated
-    @DeprecationInfo("Use #setTextValue() with localize value parameter")
+    @DeprecationInfo("Use #setText(LocalizeValue)")
     public void setText(String text) {
         setText(text, true);
     }
 
-    
     @DeprecationInfo("see #getDescriptionValue")
     public String getDescription() {
-        return myDescriptionValue.getValue();
+        return myDescription.getValue();
     }
 
-    
     public LocalizeValue getDescriptionValue() {
-        return myDescriptionValue;
+        return myDescription;
+    }
+
+    public void setDescription(LocalizeValue description) {
+        LocalizeValue oldDescription = myDescription;
+        myDescription = description;
+
+        if (!oldDescription.equals(description)) {
+            fireObjectPropertyChange(PROP_DESCRIPTION, oldDescription, myDescription);
+        }
     }
 
     @Deprecated
-    @DeprecationInfo("Use #setDescriptionValue() with localize value parameter")
-    public void setDescription(@Nullable String description) {
-        LocalizeValue value = StringUtil.isEmpty(description) ? LocalizeValue.empty() : LocalizeValue.of(description);
-        setDescriptionValue(value);
+    @DeprecationInfo("Use #setDescription(LocalizeValue)")
+    public void setDescriptionValue(LocalizeValue newDescriptionValue) {
+        setDescription(newDescriptionValue);
     }
 
-    public void setDescriptionValue(LocalizeValue newDescriptionValue) {
-        LocalizeValue oldDescription = myDescriptionValue;
-        myDescriptionValue = newDescriptionValue;
-
-        if (!Objects.equals(oldDescription, newDescriptionValue)) {
-            fireObjectPropertyChange(PROP_DESCRIPTION, oldDescription, myDescriptionValue);
-        }
+    @Deprecated
+    @DeprecationInfo("Use #setDescription(LocalizeValue)")
+    public void setDescription(@Nullable String description) {
+        setDescription(LocalizeValue.ofNullable(description));
     }
 
     public @Nullable Image getIcon() {
@@ -388,10 +392,7 @@ public final class Presentation implements Cloneable {
         copyFrom(presentation, customComponent, true, allFlags);
     }
 
-    private void copyFrom(Presentation presentation,
-                          @Nullable Object customComponent,
-                          boolean forceNullComponent,
-                          boolean allFlags) {
+    private void copyFrom(Presentation presentation, @Nullable Object customComponent, boolean forceNullComponent, boolean allFlags) {
         if (presentation == this) {
             return;
         }
@@ -407,8 +408,8 @@ public final class Presentation implements Cloneable {
         fireBooleanPropertyChange(PROP_ENABLED, oldEnabled, isEnabled());
         fireBooleanPropertyChange(PROP_VISIBLE, oldVisible, isVisible());
 
-        setTextValue(presentation.getTextValue());
-        setDescriptionValue(presentation.getDescriptionValue());
+        setText(presentation.getTextValue());
+        setDescription(presentation.getDescriptionValue());
 
         setIcon(presentation.getIcon());
         setSelectedIcon(presentation.getSelectedIcon());
@@ -497,10 +498,10 @@ public final class Presentation implements Cloneable {
      */
     public KeepPopupOnPerform getKeepPopupOnPerform() {
         boolean requestedBit = BitUtil.isSet(myFlags, IS_KEEP_POPUP_IF_REQUESTED);
-        boolean preferedBit = BitUtil.isSet(myFlags, IS_KEEP_POPUP_IF_PREFERRED);
-        return requestedBit && preferedBit ? KeepPopupOnPerform.Always :
+        boolean preferredBit = BitUtil.isSet(myFlags, IS_KEEP_POPUP_IF_PREFERRED);
+        return requestedBit && preferredBit ? KeepPopupOnPerform.Always :
             requestedBit ? KeepPopupOnPerform.IfRequested :
-                preferedBit ? KeepPopupOnPerform.IfPreferred :
+                preferredBit ? KeepPopupOnPerform.IfPreferred :
                     KeepPopupOnPerform.Never;
     }
 
@@ -577,6 +578,6 @@ public final class Presentation implements Cloneable {
 
     @Override
     public String toString() {
-        return myTextValue + " (" + myDescriptionValue + ")";
+        return myText + " (" + myDescription + ")";
     }
 }

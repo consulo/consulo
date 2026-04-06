@@ -321,7 +321,7 @@ class LookupUi {
             AnAction showIntentionAction = ActionManager.getInstance().getAction(IdeActions.ACTION_SHOW_INTENTION_ACTIONS);
             if (showIntentionAction != null) {
                 copyShortcutFrom(showIntentionAction);
-                getTemplatePresentation().setTextValue(LocalizeValue.localizeTODO("Click or Press"));
+                getTemplatePresentation().setText(LocalizeValue.localizeTODO("Click or Press"));
             }
         }
 
@@ -391,7 +391,7 @@ class LookupUi {
 
         private DelegatedAction(AnAction action) {
             delegateAction = action;
-            getTemplatePresentation().setTextValue(delegateAction.getTemplatePresentation().getTextValue());
+            getTemplatePresentation().setText(delegateAction.getTemplatePresentation().getTextValue());
             copyShortcutFrom(delegateAction);
         }
 

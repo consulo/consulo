@@ -24,10 +24,9 @@ public class VcsToolbarLabelAction extends ToolbarLabelAction implements CustomC
 
         Project project = e.getData(Project.KEY);
         e.getPresentation().setVisible(project != null && ProjectLevelVcsManager.getInstance(project).hasActiveVcss());
-        e.getPresentation().setTextValue(getConsolidatedVcsName(project));
+        e.getPresentation().setText(getConsolidatedVcsName(project));
     }
 
-    
     private static LocalizeValue getConsolidatedVcsName(@Nullable Project project) {
         if (project != null) {
             return ProjectLevelVcsManager.getInstance(project)

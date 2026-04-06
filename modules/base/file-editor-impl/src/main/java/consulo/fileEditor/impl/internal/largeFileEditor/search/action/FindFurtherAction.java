@@ -34,8 +34,8 @@ public final class FindFurtherAction extends AnAction implements DumbAware {
             icon = PlatformIconGroup.actionsFindandshowprevmatches();
         }
 
-        getTemplatePresentation().setTextValue(text);
-        getTemplatePresentation().setDescriptionValue(description);
+        getTemplatePresentation().setText(text);
+        getTemplatePresentation().setDescription(description);
         getTemplatePresentation().setIcon(icon);
     }
 

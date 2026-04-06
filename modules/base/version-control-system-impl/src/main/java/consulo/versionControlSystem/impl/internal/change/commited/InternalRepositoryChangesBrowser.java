@@ -111,7 +111,7 @@ public class InternalRepositoryChangesBrowser extends InternalChangesBrowser imp
 
     private class MyEditSourceAction extends CommonEditSourceAction {
         private MyEditSourceAction() {
-            getTemplatePresentation().setTextValue(LocalizeValue.localizeTODO("Edit Source"));
+            getTemplatePresentation().setText(LocalizeValue.localizeTODO("Edit Source"));
             getTemplatePresentation().setIcon(PlatformIconGroup.actionsEditsource());
         }
 

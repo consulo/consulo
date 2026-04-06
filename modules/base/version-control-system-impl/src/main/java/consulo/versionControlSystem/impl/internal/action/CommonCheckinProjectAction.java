@@ -47,15 +47,10 @@ public class CommonCheckinProjectAction extends AbstractCommonCheckinAction {
         );
     }
 
-    protected CommonCheckinProjectAction(
-        LocalizeValue text,
-        LocalizeValue description,
-        @Nullable Image icon
-    ) {
+    protected CommonCheckinProjectAction(LocalizeValue text, LocalizeValue description, @Nullable Image icon) {
         super(text, description, icon);
     }
 
-    
     @Override
     protected FilePath[] getRoots(VcsContext context) {
         Project project = context.getProject();
@@ -92,19 +87,17 @@ public class CommonCheckinProjectAction extends AbstractCommonCheckinAction {
         }
 
         LocalizeValue actionName = getActionName(vcsContext).map(text -> text + "...");
-        presentation.setTextValue(actionName);
+        presentation.setText(actionName);
 
         presentation.setEnabled(!plVcsManager.isBackgroundVcsOperationRunning());
         presentation.setVisible(true);
     }
 
-    
     @Override
     protected LocalizeValue getActionName(VcsContext dataContext) {
         return VcsLocalize.actionNameCommitProject();
     }
 
-    
     @Override
     protected LocalizeValue getMnemonicsFreeActionName(VcsContext context) {
         return VcsLocalize.vcsCommandNameCheckinNoMnemonics();

@@ -76,12 +76,12 @@ public class IntelliSortChooserToggleAction extends ToggleAction implements Dumb
             };
             LocalizeValue description =
                 VersionControlSystemLogLocalize.actionIntelliSortChooserParametrized(sortTypeFlag, sortType.getDescription());
-            e.getPresentation().setTextValue(description);
-            e.getPresentation().setDescriptionValue(description);
+            e.getPresentation().setText(description);
+            e.getPresentation().setDescription(description);
         }
         else {
-            e.getPresentation().setTextValue(VersionControlSystemLogLocalize.actionIntelliSortChooserText());
-            e.getPresentation().setDescriptionValue(VersionControlSystemLogLocalize.actionIntelliSortChooserDescription());
+            e.getPresentation().setText(VersionControlSystemLogLocalize.actionIntelliSortChooserText());
+            e.getPresentation().setDescription(VersionControlSystemLogLocalize.actionIntelliSortChooserDescription());
         }
     }
 }

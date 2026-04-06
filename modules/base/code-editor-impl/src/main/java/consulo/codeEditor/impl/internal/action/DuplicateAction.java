@@ -116,7 +116,7 @@ public class DuplicateAction extends EditorAction {
     @Override
     public void update(Editor editor, Presentation presentation, DataContext dataContext) {
         super.update(editor, presentation, dataContext);
-        presentation.setTextValue(
+        presentation.setText(
             editor.getSelectionModel().hasSelection()
                 ? CodeEditorLocalize.actionDuplicateSelectionText()
                 : CodeEditorLocalize.actionDuplicateLineText()

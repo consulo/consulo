@@ -82,11 +82,10 @@ public class InspectionsOptionsToolbarAction extends AnAction {
         }
         e.getPresentation().setEnabled(true);
         LocalizeValue text = getToolOptions(toolWrapper);
-        e.getPresentation().setTextValue(text);
-        e.getPresentation().setDescriptionValue(text);
+        e.getPresentation().setText(text);
+        e.getPresentation().setDescription(text);
     }
 
-    
     private static LocalizeValue getToolOptions(@Nullable InspectionToolWrapper toolWrapper) {
         return InspectionLocalize.inspectionsViewOptionsTitle(toolWrapper != null ? toolWrapper.getDisplayName() : "");
     }

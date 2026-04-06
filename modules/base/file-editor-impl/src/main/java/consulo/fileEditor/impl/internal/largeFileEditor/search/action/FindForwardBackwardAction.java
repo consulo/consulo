@@ -20,13 +20,19 @@ public final class FindForwardBackwardAction extends AnAction implements DumbAwa
         this.directionForward = directionForward;
         this.searchManager = searchManager;
 
-        getTemplatePresentation().setDescriptionValue(directionForward ?
-            FileEditorLocalize.largeFileEditorFindForwardActionDescription() :
-            FileEditorLocalize.largeFileEditorFindBackwardActionDescription());
-        getTemplatePresentation().setTextValue(directionForward ?
-            FileEditorLocalize.largeFileEditorFindForwardActionText() :
-            FileEditorLocalize.largeFileEditorFindBackwardActionText());
-        getTemplatePresentation().setIcon(directionForward ? PlatformIconGroup.actionsFindforward() : PlatformIconGroup.actionsFindbackward());
+        getTemplatePresentation().setDescription(
+            directionForward
+                ? FileEditorLocalize.largeFileEditorFindForwardActionDescription()
+                : FileEditorLocalize.largeFileEditorFindBackwardActionDescription()
+        );
+        getTemplatePresentation().setText(
+            directionForward
+                ? FileEditorLocalize.largeFileEditorFindForwardActionText()
+                : FileEditorLocalize.largeFileEditorFindBackwardActionText()
+        );
+        getTemplatePresentation().setIcon(
+            directionForward ? PlatformIconGroup.actionsFindforward() : PlatformIconGroup.actionsFindbackward()
+        );
     }
 
     @RequiredUIAccess

@@ -70,7 +70,7 @@ public class CloseAllEditorsAction extends AnAction implements DumbAware {
         LocalizeValue text = editorWindow != null && editorWindow.inSplitter()
             ? IdeLocalize.actionCloseAllEditorsInTabGroup()
             : IdeLocalize.actionCloseAllEditors();
-        presentation.setTextValue(text);
+        presentation.setText(text);
         Project project = event.getData(Project.KEY);
         if (project == null) {
             presentation.setEnabled(false);

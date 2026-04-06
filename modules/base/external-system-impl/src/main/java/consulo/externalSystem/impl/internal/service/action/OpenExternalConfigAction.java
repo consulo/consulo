@@ -37,16 +37,16 @@ public class OpenExternalConfigAction extends AnAction implements DumbAware {
         ProjectSystemId externalSystemId = e.getData(ExternalSystemDataKeys.EXTERNAL_SYSTEM_ID);
         if (externalSystemId != null) {
             LocalizeValue displayName = externalSystemId.getDisplayName();
-            e.getPresentation().setTextValue(ExternalSystemLocalize.actionOpenExternalConfig0Text(displayName));
-            e.getPresentation().setDescriptionValue(ExternalSystemLocalize.actionOpenExternalConfig0Description(displayName));
+            e.getPresentation().setText(ExternalSystemLocalize.actionOpenExternalConfig0Text(displayName));
+            e.getPresentation().setDescription(ExternalSystemLocalize.actionOpenExternalConfig0Description(displayName));
             e.getPresentation().setIcon(externalSystemId.getIcon());
 
             VirtualFile config = getExternalConfig(e.getDataContext());
             e.getPresentation().setEnabled(config != null);
         }
         else {
-            e.getPresentation().setTextValue(ExternalSystemLocalize.actionOpenExternalConfigText());
-            e.getPresentation().setDescriptionValue(ExternalSystemLocalize.actionOpenExternalConfigDescription());
+            e.getPresentation().setText(ExternalSystemLocalize.actionOpenExternalConfigText());
+            e.getPresentation().setDescription(ExternalSystemLocalize.actionOpenExternalConfigDescription());
             e.getPresentation().setIcon(null);
             e.getPresentation().setEnabled(false);
         }

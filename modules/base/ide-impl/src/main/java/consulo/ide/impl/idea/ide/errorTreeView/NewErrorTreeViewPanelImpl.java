@@ -661,7 +661,7 @@ public class NewErrorTreeViewPanelImpl extends JPanel implements DataProvider, N
         @Override
         public void update(AnActionEvent e) {
             super.update(e);
-            e.getPresentation().setTextValue(isSelected(e) ? IdeLocalize.actionHideInfos() : IdeLocalize.actionShowInfos());
+            e.getPresentation().setText(isSelected(e) ? IdeLocalize.actionHideInfos() : IdeLocalize.actionShowInfos());
         }
     }
 
@@ -687,7 +687,7 @@ public class NewErrorTreeViewPanelImpl extends JPanel implements DataProvider, N
         @Override
         public void update(AnActionEvent e) {
             super.update(e);
-            e.getPresentation().setTextValue(isSelected(e) ? IdeLocalize.actionHideWarnings() : IdeLocalize.actionShowWarnings());
+            e.getPresentation().setText(isSelected(e) ? IdeLocalize.actionHideWarnings() : IdeLocalize.actionShowWarnings());
         }
     }
 

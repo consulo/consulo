@@ -111,7 +111,7 @@ public class StatusBarWidgetsActionGroup extends ActionGroup {
             StatusBarWidgetFactory factory = getFactory(e);
             e.getPresentation().setEnabledAndVisible(factory != null && factory.isConfigurable());
             if (factory != null) {
-                e.getPresentation().setTextValue(UILocalize.statusBarHideWidgetActionName(factory.getDisplayName()));
+                e.getPresentation().setText(UILocalize.statusBarHideWidgetActionName(factory.getDisplayName()));
             }
         }
 

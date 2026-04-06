@@ -90,7 +90,7 @@ public class ShowFilePathAction extends AnAction {
         if (visible) {
             VirtualFile file = e.getData(VirtualFile.KEY);
             e.getPresentation().setEnabled(file != null);
-            e.getPresentation().setTextValue(ActionLocalize.actionShowfilepathTuned(file != null && file.isDirectory() ? 1 : 0));
+            e.getPresentation().setText(ActionLocalize.actionShowfilepathTuned(file != null && file.isDirectory() ? 1 : 0));
         }
     }
 

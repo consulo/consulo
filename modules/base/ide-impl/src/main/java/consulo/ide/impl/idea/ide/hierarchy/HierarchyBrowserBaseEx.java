@@ -194,10 +194,8 @@ public abstract class HierarchyBrowserBaseEx extends HierarchyBrowserBase implem
     @Override
     protected abstract @Nullable PsiElement getElementFromDescriptor(HierarchyNodeDescriptor descriptor);
 
-    
     protected abstract LocalizeValue getPrevOccurrenceActionNameImpl();
 
-    
     protected abstract LocalizeValue getNextOccurrenceActionNameImpl();
 
     protected abstract void createTrees(Map<String, JTree> trees);
@@ -210,10 +208,8 @@ public abstract class HierarchyBrowserBaseEx extends HierarchyBrowserBase implem
 
     protected abstract @Nullable Comparator<NodeDescriptor> getComparator();
 
-    
     protected abstract String getActionPlace();
 
-    
     protected abstract Key<?> getBrowserDataKey();
 
     protected final JTree createTree(boolean dndAware) {
@@ -534,7 +530,6 @@ public abstract class HierarchyBrowserBaseEx extends HierarchyBrowserBase implem
         });
     }
 
-    
     protected LocalizeValue getCurrentScopeName() {
         if (myCurrentViewType == null) {
             return LocalizeValue.empty();
@@ -662,7 +657,7 @@ public abstract class HierarchyBrowserBaseEx extends HierarchyBrowserBase implem
 
             LocalizeValue nonDefaultText = getNonDefaultText(browser, selectedElement);
             if (nonDefaultText.isNotEmpty()) {
-                presentation.setTextValue(nonDefaultText);
+                presentation.setText(nonDefaultText);
             }
         }
 
@@ -671,7 +666,6 @@ public abstract class HierarchyBrowserBaseEx extends HierarchyBrowserBase implem
             return !element.equals(browser.mySmartPsiElementPointer.getElement()) && element.isValid();
         }
 
-        
         protected LocalizeValue getNonDefaultText(HierarchyBrowserBaseEx browser, PsiElement element) {
             return LocalizeValue.empty();
         }
@@ -703,7 +697,7 @@ public abstract class HierarchyBrowserBaseEx extends HierarchyBrowserBase implem
                 return;
             }
             presentation.setEnabled(isEnabled());
-            presentation.setTextValue(getCurrentScopeName());
+            presentation.setText(getCurrentScopeName());
         }
 
         protected boolean isEnabled() {
@@ -711,7 +705,6 @@ public abstract class HierarchyBrowserBaseEx extends HierarchyBrowserBase implem
         }
 
         @Override
-        
         public final DefaultActionGroup createPopupActionGroup(JComponent component) {
             DefaultActionGroup group = new DefaultActionGroup();
 
@@ -753,7 +746,6 @@ public abstract class HierarchyBrowserBaseEx extends HierarchyBrowserBase implem
             });
         }
 
-        
         @Override
         public final JComponent createCustomComponent(Presentation presentation, String place) {
             JPanel panel = new JPanel(new GridBagLayout());
@@ -775,7 +767,6 @@ public abstract class HierarchyBrowserBaseEx extends HierarchyBrowserBase implem
         }
 
         private final class MenuAction extends AnAction {
-            
             private final HierarchyScope myScope;
 
             public MenuAction(HierarchyScope scope) {

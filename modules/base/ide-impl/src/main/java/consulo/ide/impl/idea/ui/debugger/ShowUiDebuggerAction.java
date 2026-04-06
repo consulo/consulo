@@ -26,7 +26,7 @@ public class ShowUiDebuggerAction extends AnAction {
 
   @Override
   public void update(AnActionEvent e) {
-    e.getPresentation().setTextValue(LocalizeValue.localizeTODO("UI Debugger"));
+    e.getPresentation().setText(LocalizeValue.localizeTODO("UI Debugger"));
   }
 
   @Override

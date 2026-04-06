@@ -89,7 +89,7 @@ public class HideAllToolWindowsAction extends AnAction implements DumbAware {
         for (String id : ids) {
             if (toolWindowManager.getToolWindow(id).isVisible()) {
                 presentation.setEnabled(true);
-                presentation.setTextValue(ProjectUILocalize.actionHideAllWindows());
+                presentation.setText(ProjectUILocalize.actionHideAllWindows());
                 return;
             }
         }
@@ -97,7 +97,7 @@ public class HideAllToolWindowsAction extends AnAction implements DumbAware {
         ToolWindowLayout layout = toolWindowManager.getLayoutToRestoreLater();
         if (layout != null) {
             presentation.setEnabled(true);
-            presentation.setTextValue(ProjectUILocalize.actionRestoreWindows());
+            presentation.setText(ProjectUILocalize.actionRestoreWindows());
             return;
         }
 

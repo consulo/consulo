@@ -65,11 +65,10 @@ public class RunConfigurationsComboBoxAction extends ComboBoxAction implements D
     public RunConfigurationsComboBoxAction(Application application, RunCurrentFileService runCurrentFileService) {
         myApplication = application;
         myRunCurrentFileService = runCurrentFileService;
-        getTemplatePresentation().setTextValue(ActionLocalize.actionRunconfigurationText());
-        getTemplatePresentation().setTextValue(ActionLocalize.actionRunconfigurationDescription());
+        getTemplatePresentation().setText(ActionLocalize.actionRunconfigurationText());
+        getTemplatePresentation().setDescription(ActionLocalize.actionRunconfigurationDescription());
     }
 
-    
     @Override
     public String getPopupActionPlace() {
         return ActionPlaces.RUN_CONFIGURATIONS_COMBOBOX;
@@ -80,7 +79,7 @@ public class RunConfigurationsComboBoxAction extends ComboBoxAction implements D
         Presentation presentation = e.getPresentation();
         Project project = e.getData(Project.KEY);
         if (ActionPlaces.isMainMenuOrActionSearch(e.getPlace())) {
-            presentation.setDescriptionValue(ExecutionLocalize.chooseRunConfigurationActionDescription());
+            presentation.setDescription(ExecutionLocalize.chooseRunConfigurationActionDescription());
         }
         try {
             if (project == null || project.isDisposed() || !project.isInitialized()) {
@@ -135,24 +134,24 @@ public class RunConfigurationsComboBoxAction extends ComboBoxAction implements D
                 }
             }
             presentation.setDisabledMnemonic(true);
-            presentation.setTextValue(LocalizeValue.localizeTODO(name));
+            presentation.setText(LocalizeValue.localizeTODO(name));
             presentation.putClientProperty(ComboBoxButton.LIKE_BUTTON, null);
             setConfigurationIcon(presentation, settings, project);
         }
         else {
             if (project != null) {
-                presentation.setTextValue(ExecutionLocalize.runConfigurationsComboRunCurrentFileSelected());
+                presentation.setText(ExecutionLocalize.runConfigurationsComboRunCurrentFileSelected());
                 presentation.setIcon(Image.empty(Image.DEFAULT_ICON_SIZE));
                 return;
             }
 
-            presentation.setTextValue(ExecutionLocalize.runComboBoxAddConfiguration());
+            presentation.setText(ExecutionLocalize.runComboBoxAddConfiguration());
             presentation.putClientProperty(
                 ComboBoxButton.LIKE_BUTTON,
                 (Runnable) () -> ActionManager.getInstance().getAction(IdeActions.ACTION_EDIT_RUN_CONFIGURATIONS)
                     .actionPerformed(AnActionEvent.createFromDataContext("", null, DataManager.getInstance().getDataContext()))
             );
-            presentation.setDescriptionValue(ActionLocalize.actionEditrunconfigurationsDescription());
+            presentation.setDescription(ActionLocalize.actionEditrunconfigurationsDescription());
 
             if (ActionPlaces.TOUCHBAR_GENERAL.equals(actionPlace)) {
                 presentation.setIcon(PlatformIconGroup.generalAdd());
@@ -185,7 +184,6 @@ public class RunConfigurationsComboBoxAction extends ComboBoxAction implements D
         return true;
     }
 
-    
     @Override
     public ActionGroup createPopupActionGroup(JComponent button) {
         Project project = DataManager.getInstance().getDataContext(button).getData(Project.KEY);
@@ -281,7 +279,6 @@ public class RunConfigurationsComboBoxAction extends ComboBoxAction implements D
         return separator;
     }
 
-    
     @Override
     public JBPopup createPopup(JComponent component, DataContext context, Runnable onDispose) {
         ActionGroup group = createPopupActionGroup(component, context);

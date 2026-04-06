@@ -57,7 +57,7 @@ public class VcsMainMenuActionGroup extends DefaultActionGroup implements DumbAw
         if (vcs != null) {
             Presentation presentation = e.getPresentation();
 
-            presentation.setTextValue(vcs.getShortNameWithMnemonic());
+            presentation.setText(vcs.getShortNameWithMnemonic());
             presentation.setEnabledAndVisible(!vcs.isWithCustomMenu());
         }
     }

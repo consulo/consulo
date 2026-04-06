@@ -76,8 +76,8 @@ public class IntelliSortChooserPopupAction extends DumbAwareAction {
             LocalizeValue description = VersionControlSystemLogLocalize.actionIntelliSortChooserPopupParametrized(
                 properties.get(MainVcsLogUiProperties.BEK_SORT_TYPE).getName()
             );
-            e.getPresentation().setTextValue(description);
-            e.getPresentation().setDescriptionValue(description);
+            e.getPresentation().setText(description);
+            e.getPresentation().setDescription(description);
         }
     }
 

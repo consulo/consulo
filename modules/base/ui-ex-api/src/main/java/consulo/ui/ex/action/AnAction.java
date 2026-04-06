@@ -166,8 +166,8 @@ public abstract class AnAction implements PossiblyDumbAware {
 
     public AnAction(LocalizeValue text, LocalizeValue description, @Nullable Image icon) {
         Presentation presentation = getTemplatePresentation();
-        presentation.setTextValue(text);
-        presentation.setDescriptionValue(description);
+        presentation.setText(text);
+        presentation.setDescription(description);
         presentation.setIcon(icon);
     }
 

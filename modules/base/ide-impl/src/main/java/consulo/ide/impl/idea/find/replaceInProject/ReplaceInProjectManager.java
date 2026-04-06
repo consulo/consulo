@@ -350,7 +350,7 @@ public class ReplaceInProjectManager {
             @Override
             public void update(AnActionEvent e) {
                 Presentation presentation = e.getPresentation();
-                presentation.setTextValue(FindLocalize.findReplaceSelectedAction(replaceContext.getUsageView().getSelectedUsages().size()));
+                presentation.setText(FindLocalize.findReplaceSelectedAction(replaceContext.getUsageView().getSelectedUsages().size()));
                 presentation.setEnabled(!replaceContext.getUsageView().getSelectedUsages().isEmpty());
             }
         });

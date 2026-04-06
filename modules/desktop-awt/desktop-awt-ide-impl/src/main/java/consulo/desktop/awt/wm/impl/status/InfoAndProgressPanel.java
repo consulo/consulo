@@ -513,7 +513,7 @@ public class InfoAndProgressPanel extends JPanel implements Disposable, CustomSt
                 presentation.setEnabledAndVisible(suspender != null);
                 if (suspender != null) {
                     presentation.setIcon(suspender.isSuspended() ? PlatformIconGroup.actionsResume() : PlatformIconGroup.actionsPause());
-                    presentation.setTextValue(
+                    presentation.setText(
                         suspender.isSuspended()
                             ? ApplicationLocalize.actionResumeText()
                             : ApplicationLocalize.actionPauseText()

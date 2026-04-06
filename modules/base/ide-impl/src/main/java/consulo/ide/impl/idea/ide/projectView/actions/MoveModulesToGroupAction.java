@@ -50,7 +50,7 @@ public class MoveModulesToGroupAction extends AnAction {
         Module[] modules = e.getData(LangDataKeys.MODULE_CONTEXT_ARRAY);
 
         LocalizeValue description = IdeLocalize.messageMoveModulesToGroup(whatToMove(modules), myModuleGroup.presentableText());
-        getTemplatePresentation().setDescriptionValue(description);
+        getTemplatePresentation().setDescription(description);
     }
 
     protected static String whatToMove(Module[] modules) {

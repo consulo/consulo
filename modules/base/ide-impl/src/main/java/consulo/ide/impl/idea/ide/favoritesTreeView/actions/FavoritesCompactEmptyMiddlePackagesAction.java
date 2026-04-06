@@ -35,12 +35,12 @@ public class FavoritesCompactEmptyMiddlePackagesAction extends FavoritesToolbarB
         super.updateButton(e);
         Presentation presentation = e.getPresentation();
         if (getViewSettings().isFlattenPackages()) {
-            presentation.setTextValue(IdeLocalize.actionHideEmptyMiddlePackages());
-            presentation.setDescriptionValue(IdeLocalize.actionShowHideEmptyMiddlePackages());
+            presentation.setText(IdeLocalize.actionHideEmptyMiddlePackages());
+            presentation.setDescription(IdeLocalize.actionShowHideEmptyMiddlePackages());
         }
         else {
-            presentation.setTextValue(IdeLocalize.actionCompactEmptyMiddlePackages());
-            presentation.setDescriptionValue(IdeLocalize.actionShowCompactEmptyMiddlePackages());
+            presentation.setText(IdeLocalize.actionCompactEmptyMiddlePackages());
+            presentation.setDescription(IdeLocalize.actionShowCompactEmptyMiddlePackages());
         }
     }
 

@@ -73,12 +73,12 @@ public class OptimizeImportsAction extends AnAction {
         }
 
         if (!actionNames.isEmpty() && !actionDescriptions.isEmpty()) {
-            presentation.setTextValue(LocalizeValue.join(" | ", actionNames.toArray(LocalizeValue[]::new)));
-            presentation.setDescriptionValue(LocalizeValue.join(" | ", actionDescriptions.toArray(LocalizeValue[]::new)));
+            presentation.setText(LocalizeValue.join(" | ", actionNames.toArray(LocalizeValue[]::new)));
+            presentation.setDescription(LocalizeValue.join(" | ", actionDescriptions.toArray(LocalizeValue[]::new)));
         }
         else {
-            presentation.setTextValue(ActionLocalize.notActionOptimizeimportsText());
-            presentation.setDescriptionValue(ActionLocalize.notActionOptimizeimportsDescription());
+            presentation.setText(ActionLocalize.notActionOptimizeimportsText());
+            presentation.setDescription(ActionLocalize.notActionOptimizeimportsDescription());
         }
     }
 

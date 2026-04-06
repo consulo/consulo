@@ -78,13 +78,13 @@ public class ToggleReadOnlyAttributeAction extends AnAction implements DumbAware
                 }
             }
             if (allReadOnly) {
-                e.getPresentation().setTextValue(ActionLocalize.actionTogglereadonlyattributeFiles(1, files.length));
+                e.getPresentation().setText(ActionLocalize.actionTogglereadonlyattributeFiles(1, files.length));
             }
             else if (allWritable) {
-                e.getPresentation().setTextValue(ActionLocalize.actionTogglereadonlyattributeFiles(0, files.length));
+                e.getPresentation().setText(ActionLocalize.actionTogglereadonlyattributeFiles(0, files.length));
             }
             else {
-                e.getPresentation().setTextValue(ActionLocalize.actionTogglereadonlyattributeText());
+                e.getPresentation().setText(ActionLocalize.actionTogglereadonlyattributeText());
             }
         }
     }

@@ -52,10 +52,10 @@ public class OpenTaskInBrowserAction extends BaseTaskAction {
             presentation.setEnabled(url != null);
             Project project = e.getData(Project.KEY);
             if (project == null || !TaskManager.getManager(project).getActiveTask().isIssue()) {
-                presentation.setTextValue(getTemplatePresentation().getTextValue());
+                presentation.setText(getTemplatePresentation().getTextValue());
             }
             else {
-                presentation.setTextValue(
+                presentation.setText(
                     TaskLocalize.actionOpenInBrowserText(TaskManager.getManager(project).getActiveTask().getPresentableName())
                 );
             }

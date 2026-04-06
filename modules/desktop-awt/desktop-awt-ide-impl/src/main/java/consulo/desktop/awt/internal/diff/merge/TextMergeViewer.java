@@ -1078,7 +1078,7 @@ public class TextMergeViewer implements MergeTool.MergeViewer {
                     return;
                 }
 
-                presentation.setTextValue(getTextValue(side));
+                presentation.setText(getTextValue(side));
 
                 presentation.setVisible(true);
                 presentation.setEnabled(isSomeChangeSelected(side));

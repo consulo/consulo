@@ -129,7 +129,7 @@ public class TodoView implements PersistentStateComponent<TodoView.State>, Dispo
         Disposer.register(this, myAllTodos);
         DefaultActionGroup group = new DefaultActionGroup() {
             {
-                getTemplatePresentation().setTextValue(LanguageTodoLocalize.groupViewOptions());
+                getTemplatePresentation().setText(LanguageTodoLocalize.groupViewOptions());
                 setPopup(true);
                 add(myAllTodos.createAutoScrollToSourceAction());
                 addSeparator();

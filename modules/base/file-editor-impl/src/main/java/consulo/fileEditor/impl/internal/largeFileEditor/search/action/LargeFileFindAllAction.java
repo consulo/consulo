@@ -17,8 +17,8 @@ public final class LargeFileFindAllAction extends AnAction implements DumbAware 
     public LargeFileFindAllAction(LfeSearchManager searchManager) {
         this.searchManager = searchManager;
 
-        getTemplatePresentation().setDescriptionValue(FileEditorLocalize.largeFileEditorActionDescriptionSearchEntireFileAndShowToolwindow());
-        getTemplatePresentation().setTextValue(FileEditorLocalize.largeFileActionPresentationFindallactionText());
+        getTemplatePresentation().setDescription(FileEditorLocalize.largeFileEditorActionDescriptionSearchEntireFileAndShowToolwindow());
+        getTemplatePresentation().setText(FileEditorLocalize.largeFileActionPresentationFindallactionText());
         getTemplatePresentation().setIcon(PlatformIconGroup.actionsFindentirefile());
     }
 

@@ -1691,7 +1691,7 @@ public class RunConfigurable extends BaseConfigurable {
                     toMove = true;
                 }
             }
-            e.getPresentation().setTextValue(
+            e.getPresentation().setText(
                 toMove
                     ? ExecutionLocalize.runConfigurationCreateFolderDescriptionMove()
                     : ExecutionLocalize.runConfigurationCreateFolderDescription()

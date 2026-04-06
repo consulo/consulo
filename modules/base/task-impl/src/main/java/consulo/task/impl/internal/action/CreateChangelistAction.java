@@ -44,16 +44,16 @@ public class CreateChangelistAction extends BaseTaskAction {
             Presentation presentation = event.getPresentation();
 
             if (manager == null || !manager.isVcsEnabled()) {
-                presentation.setTextValue(getTemplatePresentation().getTextValue());
+                presentation.setText(getTemplatePresentation().getTextValue());
                 presentation.setEnabled(false);
             }
             else {
                 presentation.setEnabled(true);
                 if (manager.getActiveTask().getChangeLists().size() == 0) {
-                    presentation.setTextValue(TaskLocalize.actionCreateChangelistForText(TaskUtil.getTrimmedSummary(manager.getActiveTask())));
+                    presentation.setText(TaskLocalize.actionCreateChangelistForText(TaskUtil.getTrimmedSummary(manager.getActiveTask())));
                 }
                 else {
-                    presentation.setTextValue(TaskLocalize.actionAddChangelistForText(TaskUtil.getTrimmedSummary(manager.getActiveTask())));
+                    presentation.setText(TaskLocalize.actionAddChangelistForText(TaskUtil.getTrimmedSummary(manager.getActiveTask())));
                 }
             }
         }

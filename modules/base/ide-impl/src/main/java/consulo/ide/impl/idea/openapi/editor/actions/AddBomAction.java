@@ -38,7 +38,7 @@ public class AddBomAction extends AnAction implements DumbAware {
 
         e.getPresentation().setEnabled(enabled);
         e.getPresentation().setVisible(enabled || ActionPlaces.isMainMenuOrActionSearch(e.getPlace()));
-        e.getPresentation().setDescriptionValue(
+        e.getPresentation().setDescription(
             IdeLocalize.addByteOrderMarkTo(enabled ? file.getName() : LocalizeValue.localizeTODO("<N/A>"))
         );
     }
