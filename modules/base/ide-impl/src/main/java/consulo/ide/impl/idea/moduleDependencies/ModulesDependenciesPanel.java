@@ -245,7 +245,7 @@ public class ModulesDependenciesPanel extends JPanel implements ModuleRootListen
                         if (progressIndicator.isCanceled()) {
                             return;
                         }
-                        progressIndicator.setTextValue(AnalysisScopeLocalize.updateModuleTreeProgressText(module.getName()));
+                        progressIndicator.setText(AnalysisScopeLocalize.updateModuleTreeProgressText(module.getName()));
                     }
                     if (!module.isDisposed()) {
                         Boolean isInCycle = inCycle.get(module);

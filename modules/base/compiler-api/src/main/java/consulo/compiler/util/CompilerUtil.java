@@ -158,7 +158,7 @@ public class CompilerUtil {
     public static <T extends Throwable> void runInContext(CompileContext context, LocalizeValue title, ThrowableRunnable<T> action) throws T {
         if (title != null) {
             context.getProgressIndicator().pushState();
-            context.getProgressIndicator().setText2Value(title);
+            context.getProgressIndicator().setText2(title);
         }
         try {
             action.run();

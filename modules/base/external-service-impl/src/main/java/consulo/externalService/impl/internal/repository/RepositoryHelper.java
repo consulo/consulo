@@ -139,13 +139,13 @@ public class RepositoryHelper {
         String url = buildUrlForList(channel, buildNumber, withObsoletePlatforms);
 
         if (indicator != null) {
-            indicator.setText2Value(ExternalServiceLocalize.progressConnectingToPluginManager(WebServiceApi.REPOSITORY_API.buildUrl()));
+            indicator.setText2(ExternalServiceLocalize.progressConnectingToPluginManager(WebServiceApi.REPOSITORY_API.buildUrl()));
         }
 
         try {
             byte[] bytes = HttpRequests.request(url).connect(request -> {
                 if (indicator != null) {
-                    indicator.setText2Value(ExternalServiceLocalize.progressDownloadingListOfPlugins());
+                    indicator.setText2(ExternalServiceLocalize.progressDownloadingListOfPlugins());
                 }
 
                 return request.readBytes(indicator);

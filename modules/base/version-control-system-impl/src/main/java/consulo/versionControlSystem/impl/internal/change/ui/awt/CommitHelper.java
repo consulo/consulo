@@ -494,7 +494,7 @@ public class CommitHelper {
 
             ProgressIndicator indicator = ProgressManager.getInstance().getProgressIndicator();
             if (indicator != null) {
-                indicator.setTextValue(VcsLocalize.commitDialogRefreshFiles());
+                indicator.setText(VcsLocalize.commitDialogRefreshFiles());
             }
             RefreshVFsSynchronously.updateChanges(toRefresh);
         }
@@ -622,7 +622,7 @@ public class CommitHelper {
         if (errorsSize == 0 && warningsSize == 0) {
             ProgressIndicator indicator = ProgressManager.getInstance().getProgressIndicator();
             if (indicator != null) {
-                indicator.setTextValue(VcsLocalize.commitDialogCompletedSuccessfully());
+                indicator.setText(VcsLocalize.commitDialogCompletedSuccessfully());
             }
         }
         else if (myCustomResultHandler == null) {

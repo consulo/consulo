@@ -86,8 +86,8 @@ public class DeploymentUtilImpl {
             }
             return;
         }
-        context.getProgressIndicator().setTextValue(LocalizeValue.localizeTODO("Copying files"));
-        context.getProgressIndicator().setText2Value(LocalizeValue.of(fromFile.getPath()));
+        context.getProgressIndicator().setText(LocalizeValue.localizeTODO("Copying files"));
+        context.getProgressIndicator().setText2(LocalizeValue.of(fromFile.getPath()));
         try {
             if (LOG.isDebugEnabled()) {
                 LOG.debug("Copy file '" + fromFile + "' to '" + toFile + "'");

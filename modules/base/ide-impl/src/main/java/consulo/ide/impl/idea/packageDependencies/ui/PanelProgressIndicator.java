@@ -64,7 +64,7 @@ public class PanelProgressIndicator extends ProgressIndicatorBase {
   @Override
   public void setTextValue(LocalizeValue text) {
     if (!text.equals(getTextValue())) {
-      super.setTextValue(text);
+      super.setText(text);
     }
   }
 

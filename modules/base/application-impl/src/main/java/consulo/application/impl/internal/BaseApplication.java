@@ -699,7 +699,6 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
         return !result.isCanceled();
     }
 
-    
     public final CompletableFuture<ProgressWindow> createProgressWindowAsyncIfNeeded(
         String progressTitle,
         boolean canBeCanceled,
@@ -731,7 +730,6 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
         );
     }
 
-    
     public ProgressWindow createProgressWindow(
         String progressTitle,
         boolean canBeCanceled,
@@ -744,7 +742,7 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
         // in case of abrupt application exit when 'ProgressManager.getInstance().runProcess(process, progress)' below
         // does not have a chance to run, and as a result the progress won't be disposed
         Disposer.register(this, progress);
-        progress.setTitle(progressTitle);
+        progress.setTitle(LocalizeValue.ofNullable(progressTitle));
         return progress;
     }
 

@@ -63,7 +63,7 @@ public class DelegatingProgressIndicator implements WrappedProgressIndicator, St
 
   @Override
   public void setTextValue(LocalizeValue text) {
-    myIndicator.setTextValue(text);
+    myIndicator.setText(text);
   }
 
   @Override
@@ -73,7 +73,7 @@ public class DelegatingProgressIndicator implements WrappedProgressIndicator, St
 
   @Override
   public void setText2Value(LocalizeValue text) {
-    myIndicator.setText2Value(text);
+    myIndicator.setText2(text);
   }
 
   @Override

@@ -61,7 +61,7 @@ public class UrlConnectionUtil {
         }
 
         pi.setIndeterminate(true);
-        pi.setTextValue(pi.getTextValue());
+        pi.setText(pi.getTextValue());
         if (getterFuture.isDone()) break;
       }
       catch (Exception e) {
