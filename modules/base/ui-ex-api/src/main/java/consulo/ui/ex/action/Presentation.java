@@ -231,23 +231,23 @@ public final class Presentation implements Cloneable {
         return myDescription;
     }
 
-    public void setDescription(LocalizeValue newDescriptionValue) {
+    public void setDescription(LocalizeValue description) {
         LocalizeValue oldDescription = myDescription;
-        myDescription = newDescriptionValue;
+        myDescription = description;
 
-        if (!Objects.equals(oldDescription, newDescriptionValue)) {
+        if (!oldDescription.equals(description)) {
             fireObjectPropertyChange(PROP_DESCRIPTION, oldDescription, myDescription);
         }
     }
 
     @Deprecated
-    @DeprecationInfo("Use #setDescriptionValue(LocalizeValue)")
+    @DeprecationInfo("Use #setDescription(LocalizeValue)")
     public void setDescriptionValue(LocalizeValue newDescriptionValue) {
         setDescription(newDescriptionValue);
     }
 
     @Deprecated
-    @DeprecationInfo("Use #setDescriptionValue(LocalizeValue)")
+    @DeprecationInfo("Use #setDescription(LocalizeValue)")
     public void setDescription(@Nullable String description) {
         setDescription(LocalizeValue.ofNullable(description));
     }
