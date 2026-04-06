@@ -71,7 +71,6 @@ public class CoreProgressManager extends ProgressManager implements ProgressMana
     // THashSet is avoided here because of possible tombstones overhead
     protected static final Set<Thread> threadsUnderCanceledIndicator = new HashSet<>(); // guarded by threadsUnderIndicator
 
-    
     private static volatile CheckCanceledBehavior ourCheckCanceledBehavior = CheckCanceledBehavior.NONE;
 
     private enum CheckCanceledBehavior {
@@ -167,7 +166,6 @@ public class CoreProgressManager extends ProgressManager implements ProgressMana
         throw new UnsupportedOperationException();
     }
 
-    
     public ProgressIndicator newBackgroundableProcessIndicator(@Nullable ComponentManager project,
                                                                TaskInfo info,
                                                                PerformInBackgroundOption option) {
@@ -392,7 +390,6 @@ public class CoreProgressManager extends ProgressManager implements ProgressMana
         }
     }
 
-    
     @Override
     @SuppressWarnings("unchecked")
     public <V> CompletableFuture<V> executeTask(UIAccess uiAccess,
@@ -481,13 +478,11 @@ public class CoreProgressManager extends ProgressManager implements ProgressMana
         return future;
     }
 
-    
     public Future<?> runProcessWithProgressAsynchronously(Task.Backgroundable task) {
         ProgressIndicator indicator = newBackgroundableProcessIndicator(task);
         return runProcessWithProgressAsynchronously(task, indicator, null);
     }
 
-    
     public Future<?> runProcessWithProgressAsynchronously(Task.Backgroundable task,
                                                           ProgressIndicator progressIndicator,
                                                           @Nullable Runnable continuation) {
@@ -510,7 +505,6 @@ public class CoreProgressManager extends ProgressManager implements ProgressMana
     }
 
     @Override
-    
     public Future<?> runProcessWithProgressAsynchronously(Task.Backgroundable task,
                                                           ProgressIndicator progressIndicator,
                                                           @Nullable Runnable continuation,
@@ -532,7 +526,6 @@ public class CoreProgressManager extends ProgressManager implements ProgressMana
         );
     }
 
-    
     protected Future<?> runProcessWithProgressAsync(Task.Backgroundable task,
                                                     CompletableFuture<? extends ProgressIndicator> progressIndicator,
                                                     @Nullable Runnable continuation,
@@ -670,7 +663,7 @@ public class CoreProgressManager extends ProgressManager implements ProgressMana
     }
 
     @Override
-    public ProgressIndicator getProgressIndicator() {
+    public @Nullable ProgressIndicator getProgressIndicator() {
         return getCurrentIndicator(Thread.currentThread());
     }
 
@@ -1003,7 +996,6 @@ public class CoreProgressManager extends ProgressManager implements ProgressMana
         return false;
     }
 
-    
     public static ModalityState getCurrentThreadProgressModality() {
         ProgressIndicator indicator = threadTopLevelIndicators.get(Thread.currentThread().threadId());
         ModalityState modality = indicator == null ? null : indicator.getModalityState();
@@ -1023,7 +1015,7 @@ public class CoreProgressManager extends ProgressManager implements ProgressMana
         }
     }
 
-    private static ProgressIndicator getCurrentIndicator(Thread thread) {
+    private static @Nullable ProgressIndicator getCurrentIndicator(Thread thread) {
         return currentIndicators.get(thread.threadId());
     }
 
