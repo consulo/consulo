@@ -25,8 +25,8 @@ import consulo.versionControlSystem.update.ActionInfo;
 public class CommonIntegrateProjectAction extends AbstractCommonUpdateAction {
     public CommonIntegrateProjectAction() {
         super(ActionInfo.INTEGRATE, ScopeInfo.PROJECT, true);
-        getTemplatePresentation().setTextValue(VcsLocalize.actionIncludeText());
-        getTemplatePresentation().setDescriptionValue(VcsLocalize.actionIncludeDescription());
+        getTemplatePresentation().setText(VcsLocalize.actionIncludeText());
+        getTemplatePresentation().setDescription(VcsLocalize.actionIncludeDescription());
     }
 
     @Override

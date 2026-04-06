@@ -54,13 +54,13 @@ public class SelectConfigAction extends DumbAwareActionGroup implements AlwaysVi
 
         Presentation presentation = getTemplatePresentation();
         presentation.setDisabledMnemonic(true);
-        presentation.setTextValue(LocalizeValue.of(name));
+        presentation.setText(LocalizeValue.of(name));
         presentation.setPopupGroup(true);
         presentation.setPerformGroup(true);
 
         ConfigurationType type = configuration.getType();
         if (type != null) {
-            presentation.setDescriptionValue(ExecutionLocalize.select01(type.getConfigurationTypeDescription(), name));
+            presentation.setDescription(ExecutionLocalize.select01(type.getConfigurationTypeDescription(), name));
         }
         updateIcon(presentation);
     }

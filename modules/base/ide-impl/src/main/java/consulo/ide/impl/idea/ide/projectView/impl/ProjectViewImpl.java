@@ -357,7 +357,7 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<
         @Override
         public void update(AnActionEvent e) {
             AbstractProjectViewPane pane = getProjectViewPaneById(myId);
-            e.getPresentation().setTextValue(mySubId != null ? pane.getPresentableSubIdName(mySubId) : pane.getTitle());
+            e.getPresentation().setText(mySubId != null ? pane.getPresentableSubIdName(mySubId) : pane.getTitle());
         }
 
         @RequiredUIAccess
@@ -1709,12 +1709,12 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<
                 return;
             }
             if (isHideEmptyMiddlePackages(myCurrentViewId)) {
-                presentation.setTextValue(IdeLocalize.actionHideEmptyMiddlePackages());
-                presentation.setDescriptionValue(IdeLocalize.actionShowHideEmptyMiddlePackages());
+                presentation.setText(IdeLocalize.actionHideEmptyMiddlePackages());
+                presentation.setDescription(IdeLocalize.actionShowHideEmptyMiddlePackages());
             }
             else {
-                presentation.setTextValue(IdeLocalize.actionCompactEmptyMiddlePackages());
-                presentation.setDescriptionValue(IdeLocalize.actionShowCompactEmptyMiddlePackages());
+                presentation.setText(IdeLocalize.actionCompactEmptyMiddlePackages());
+                presentation.setDescription(IdeLocalize.actionShowCompactEmptyMiddlePackages());
             }
         }
     }

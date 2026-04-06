@@ -55,7 +55,7 @@ public abstract class OpenInBrowserBaseGroupAction extends ComputableActionGroup
         if (addDefaultBrowser) {
             if (myDefaultBrowserAction == null) {
                 myDefaultBrowserAction = new OpenFileInDefaultBrowserAction();
-                myDefaultBrowserAction.getTemplatePresentation().setTextValue(LocalizeValue.localizeTODO("Default"));
+                myDefaultBrowserAction.getTemplatePresentation().setText(LocalizeValue.localizeTODO("Default"));
                 myDefaultBrowserAction.getTemplatePresentation().setIcon(PlatformIconGroup.nodesPpweb());
             }
             actions[0] = myDefaultBrowserAction;
@@ -77,10 +77,10 @@ public abstract class OpenInBrowserBaseGroupAction extends ComputableActionGroup
             String place = e.getPlace();
 
             if (ActionPlaces.PROJECT_VIEW_POPUP.equals(place)) {
-                e.getPresentation().setTextValue(WebBrowserLocalize.actionOpenInBrowserActionGroupShortText());
+                e.getPresentation().setText(WebBrowserLocalize.actionOpenInBrowserActionGroupShortText());
             }
             else {
-                e.getPresentation().setTextValue(WebBrowserLocalize.actionOpenInBrowserActionGroupText());
+                e.getPresentation().setText(WebBrowserLocalize.actionOpenInBrowserActionGroupText());
             }
         }
     }

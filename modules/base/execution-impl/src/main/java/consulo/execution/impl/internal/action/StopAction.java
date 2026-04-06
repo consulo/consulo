@@ -74,7 +74,7 @@ public class StopAction extends DumbAwareAction {
                 icon = ImageEffects.withText(icon, String.valueOf(stopCount));
             }
             else if (stopCount == 1) {
-                presentation.setTextValue(ExecutionLocalize.stopConfigurationActionName(
+                presentation.setText(ExecutionLocalize.stopConfigurationActionName(
                     StringUtil.escapeMnemonics(StringUtil.notNullize(stoppableDescriptors.get(0).getDisplayName()))
                 ));
             }
@@ -95,10 +95,10 @@ public class StopAction extends DumbAwareAction {
 
             RunProfile runProfile = e.getData(RunProfile.KEY);
             if (runProfile == null && contentDescriptor == null) {
-                presentation.setTextValue(getTemplatePresentation().getTextValue());
+                presentation.setText(getTemplatePresentation().getTextValue());
             }
             else {
-                presentation.setTextValue(ExecutionLocalize.stopConfigurationActionName(
+                presentation.setText(ExecutionLocalize.stopConfigurationActionName(
                     StringUtil.escapeMnemonics(runProfile == null ? StringUtil.notNullize(contentDescriptor.getDisplayName()) : runProfile.getName())
                 ));
             }
@@ -106,7 +106,7 @@ public class StopAction extends DumbAwareAction {
 
         presentation.setEnabled(enable);
         presentation.setIcon(icon);
-        presentation.setDescriptionValue(description);
+        presentation.setDescription(description);
     }
 
     @Override

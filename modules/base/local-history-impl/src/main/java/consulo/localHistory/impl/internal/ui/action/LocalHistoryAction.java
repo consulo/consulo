@@ -49,7 +49,7 @@ public abstract class LocalHistoryAction extends AnAction implements DumbAware {
         }
         else {
             p.setVisible(true);
-            p.setTextValue(getTextValue(e));
+            p.setText(getTextValue(e));
 
             LocalHistoryFacade vcs = getVcs();
             IdeaGateway gateway = getGateway();

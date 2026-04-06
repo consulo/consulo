@@ -44,7 +44,7 @@ public abstract class NewBranchAction<T extends Repository> extends DumbAwareAct
     public void update(AnActionEvent e) {
         if (DvcsUtil.anyRepositoryIsFresh(myRepositories)) {
             e.getPresentation().setEnabled(false);
-            e.getPresentation().setDescriptionValue(DistributedVcsLocalize.actionNewBranchNoCommitsDescription());
+            e.getPresentation().setDescription(DistributedVcsLocalize.actionNewBranchNoCommitsDescription());
         }
     }
 

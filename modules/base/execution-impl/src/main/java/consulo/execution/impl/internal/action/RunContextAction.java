@@ -69,7 +69,7 @@ public class RunContextAction extends BaseRunConfigurationAction {
 
   @Override
   protected void updatePresentation(Presentation presentation, String actionText, ConfigurationContext context) {
-    presentation.setTextValue(ExecutionActionValue.buildWithConfiguration(myExecutor::getStartActiveText, actionText));
+    presentation.setText(ExecutionActionValue.buildWithConfiguration(myExecutor::getStartActiveText, actionText));
 
     Pair<Boolean, Boolean> b = isEnabledAndVisible(context);
 

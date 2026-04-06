@@ -294,7 +294,7 @@ public abstract class AbstractViewManager implements ViewManager, BuildProgressL
             else {
                 text = selected ? IdeLocalize.actionUnpinTab() : IdeLocalize.actionPinTab();
             }
-            e.getPresentation().setTextValue(text);
+            e.getPresentation().setText(text);
             e.getPresentation().setEnabledAndVisible(true);
         }
     }

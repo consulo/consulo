@@ -79,7 +79,7 @@ public class AnnotateToggleAction extends ToggleAction implements DumbAware {
         Presentation presentation = e.getPresentation();
         presentation.setEnabled(provider != null && !provider.isSuspended(e));
         if (provider != null) {
-            presentation.setTextValue(provider.getActionName(e));
+            presentation.setText(provider.getActionName(e));
         }
     }
 

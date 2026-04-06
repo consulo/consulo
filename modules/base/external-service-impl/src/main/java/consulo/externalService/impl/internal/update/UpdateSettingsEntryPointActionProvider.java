@@ -41,7 +41,7 @@ public class UpdateSettingsEntryPointActionProvider implements SettingsEntryPoin
 
         public IconifiedCheckForUpdateAction(Provider<UpdateSettings> updateSettingsProvider, boolean isPlatform) {
             super(updateSettingsProvider);
-            getTemplatePresentation().setTextValue(
+            getTemplatePresentation().setText(
                 isPlatform
                     ? ExternalServiceLocalize.actionUpdatePlatformAndPluginsText(Application.get().getName())
                     : ExternalServiceLocalize.actionUpdatePluginsText()

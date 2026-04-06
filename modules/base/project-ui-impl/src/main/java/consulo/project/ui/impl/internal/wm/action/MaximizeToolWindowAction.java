@@ -50,7 +50,7 @@ public class MaximizeToolWindowAction extends AnAction implements DumbAware {
             return;
         }
         ToolWindowManager manager = ToolWindowManager.getInstance(project);
-        e.getPresentation().setTextValue(
+        e.getPresentation().setText(
             manager.isMaximized(toolWindow)
                 ? ActionLocalize.actionResizetoolwindowmaximizeTextAlternative()
                 : ActionLocalize.actionResizetoolwindowmaximizeText()

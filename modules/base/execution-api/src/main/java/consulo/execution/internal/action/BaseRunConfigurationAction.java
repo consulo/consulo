@@ -92,7 +92,7 @@ public abstract class BaseRunConfigurationAction extends ActionGroup {
                             perform(fromContext, context);
                         }
                     };
-                    anAction.getTemplatePresentation().setTextValue(actionName.map(Presentation.NO_MNEMONIC));
+                    anAction.getTemplatePresentation().setText(actionName.map(Presentation.NO_MNEMONIC));
                     children[chldIdx++] = anAction;
                 }
                 return children;

@@ -55,7 +55,7 @@ public class ShowContentAction extends AnAction implements DumbAware {
     public void update(AnActionEvent e) {
         ToolWindow window = getWindow(e);
         e.getPresentation().setEnabled(window != null && window.getContentManager().getContentCount() > 1);
-        e.getPresentation().setTextValue(
+        e.getPresentation().setText(
             window == null || window.getContentUiType() == ToolWindowContentUiType.TABBED
                 ? ActionLocalize.actionShowcontentText()
                 : ActionLocalize.actionShowcontentViewsText()

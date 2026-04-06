@@ -61,10 +61,10 @@ public class ExtractIncludeAction extends BasePlatformRefactoringAction {
         super.update(e);
         RefactoringActionHandler handler = ReadAction.compute(() -> getHandler(e.getDataContext()));
         if (handler instanceof TitledHandler titledHandler) {
-            e.getPresentation().setTextValue(titledHandler.getActionTitleValue());
+            e.getPresentation().setText(titledHandler.getActionTitleValue());
         }
         else {
-            e.getPresentation().setTextValue(LocalizeValue.localizeTODO("Include File..."));
+            e.getPresentation().setText(LocalizeValue.localizeTODO("Include File..."));
         }
     }
 

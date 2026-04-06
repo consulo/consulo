@@ -41,8 +41,8 @@ import java.util.*;
 public class GetCommittedChangelistAction extends AbstractCommonUpdateAction {
     public GetCommittedChangelistAction() {
         super(ActionInfo.UPDATE, CHANGELIST, false);
-        getTemplatePresentation().setTextValue(ActionLocalize.actionIncomingchangesGetText());
-        getTemplatePresentation().setDescriptionValue(ActionLocalize.actionIncomingchangesGetDescription());
+        getTemplatePresentation().setText(ActionLocalize.actionIncomingchangesGetText());
+        getTemplatePresentation().setDescription(ActionLocalize.actionIncomingchangesGetDescription());
     }
 
     @Override

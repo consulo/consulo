@@ -19,7 +19,7 @@ public class ReverteOverrideFileTypeAction extends AnAction {
       OverrideFileTypeAction.getContextFiles(e, file -> OverrideFileTypeManager.getInstance().getFileValue(file) != null);
     Presentation presentation = e.getPresentation();
     boolean enabled = files.length != 0;
-    presentation.setDescriptionValue(
+    presentation.setDescription(
       enabled
         ? ActionLocalize.actionReverteoverridefiletypeactionVerboseDescription(files[0].getName(), files.length - 1)
         : ActionLocalize.actionReverteoverridefiletypeactionDescription()

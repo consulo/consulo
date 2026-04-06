@@ -31,14 +31,14 @@ import org.jspecify.annotations.Nullable;
 @ActionImpl(id = "RevealIn")
 public class RevealFileAction extends DumbAwareAction {
     public RevealFileAction() {
-        getTemplatePresentation().setTextValue(getActionName(null));
+        getTemplatePresentation().setText(getActionName(null));
     }
 
     @Override
     public void update(AnActionEvent e) {
         VirtualFile file = ShowFilePathAction.findLocalFile(e.getData(VirtualFile.KEY));
         Presentation presentation = e.getPresentation();
-        presentation.setTextValue(getActionName(e.getPlace()));
+        presentation.setText(getActionName(e.getPlace()));
         presentation.setEnabled(file != null);
     }
 

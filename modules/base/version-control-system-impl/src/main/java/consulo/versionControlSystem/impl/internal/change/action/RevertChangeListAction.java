@@ -27,8 +27,8 @@ import consulo.versionControlSystem.VcsDataKeys;
 public class RevertChangeListAction extends RevertCommittedStuffAbstractAction {
     public RevertChangeListAction() {
         super(e -> e.getData(VcsDataKeys.CHANGES), e -> e.getData(VcsDataKeys.CHANGES_WITH_MOVED_CHILDREN));
-        getTemplatePresentation().setTextValue(ActionLocalize.actionCommittedchangesRevertText());
-        getTemplatePresentation().setDescriptionValue(ActionLocalize.actionCommittedchangesRevertDescription());
+        getTemplatePresentation().setText(ActionLocalize.actionCommittedchangesRevertText());
+        getTemplatePresentation().setDescription(ActionLocalize.actionCommittedchangesRevertDescription());
         getTemplatePresentation().setIcon(PlatformIconGroup.actionsRollback());
     }
 }

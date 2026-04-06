@@ -67,7 +67,7 @@ public class CloseEditorAction extends AnAction implements DumbAware {
             return;
         }
         if (ActionPlaces.EDITOR_POPUP.equals(event.getPlace()) || ActionPlaces.EDITOR_TAB_POPUP.equals(event.getPlace())) {
-            presentation.setTextValue(IdeLocalize.actionClose());
+            presentation.setText(IdeLocalize.actionClose());
         }
         FileEditorWindow window = event.getData(FileEditorWindow.DATA_KEY);
         if (window == null) {

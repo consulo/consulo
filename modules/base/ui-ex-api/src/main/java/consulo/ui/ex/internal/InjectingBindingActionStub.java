@@ -31,7 +31,7 @@ import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
- * @since 25-Jun-22
+ * @since 2022-06-25
  */
 public class InjectingBindingActionStub extends AnAction implements InjectingBindingActionStubBase {
   private final ActionImpl myActionImpl;
@@ -42,7 +42,6 @@ public class InjectingBindingActionStub extends AnAction implements InjectingBin
     myInjectingBinding = binding;
   }
 
-  
   @Override
   protected Presentation createTemplatePresentation() {
     Presentation presentation = super.createTemplatePresentation();
@@ -50,12 +49,11 @@ public class InjectingBindingActionStub extends AnAction implements InjectingBin
     PluginDescriptor plugin = PluginManager.getPlugin(myInjectingBinding.getClass());
     LocalizeHelper helper = LocalizeHelper.build(plugin);
 
-    presentation.setTextValue(helper.getValue("action." + myActionImpl.id() + ".text"));
-    presentation.setDescriptionValue(helper.getValue("action." + myActionImpl.id() + ".description"));
+    presentation.setText(helper.getValue("action." + myActionImpl.id() + ".text"));
+    presentation.setDescription(helper.getValue("action." + myActionImpl.id() + ".description"));
     return presentation;
   }
 
-  
   @Override
   public ActionImpl getActionImpl() {
     return myActionImpl;
@@ -86,8 +84,8 @@ public class InjectingBindingActionStub extends AnAction implements InjectingBin
     return target;
   }
 
-  @RequiredUIAccess
   @Override
+  @RequiredUIAccess
   public void actionPerformed(AnActionEvent e) {
     throw new UnsupportedOperationException();
   }

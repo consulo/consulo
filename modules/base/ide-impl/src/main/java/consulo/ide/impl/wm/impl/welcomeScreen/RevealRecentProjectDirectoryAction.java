@@ -42,7 +42,7 @@ public class RevealRecentProjectDirectoryAction extends RecentProjectsWelcomeScr
     @Override
     public void update(AnActionEvent e) {
         Presentation presentation = e.getPresentation();
-        presentation.setTextValue(RevealFileAction.getActionName(e.getPlace()));
+        presentation.setText(RevealFileAction.getActionName(e.getPlace()));
 
         List<AnAction> elements = getSelectedElements(e);
         boolean enable = elements.size() == 1 && elements.get(0) instanceof ReopenProjectAction;

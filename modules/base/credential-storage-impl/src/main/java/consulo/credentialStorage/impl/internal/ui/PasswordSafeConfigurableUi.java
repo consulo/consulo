@@ -496,7 +496,7 @@ public class PasswordSafeConfigurableUi implements IdeaConfigurableUi<PasswordSa
             mgr.askAndSetMainKey(
                 event,
                 LocalizeValue.empty(),
-                () -> getTemplatePresentation().setTextValue(CredentialStorageLocalize.settingsPasswordChangeMasterPassword())
+                () -> getTemplatePresentation().setText(CredentialStorageLocalize.settingsPasswordChangeMasterPassword())
             );
         }
 

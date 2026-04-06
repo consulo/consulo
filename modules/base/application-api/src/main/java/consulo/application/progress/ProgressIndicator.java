@@ -108,7 +108,7 @@ public interface ProgressIndicator {
     @Deprecated
     @DeprecationInfo("Use #setText(LocalizeValue)")
     default void setText(String text) {
-        setTextValue(StringUtil.isEmpty(text) ? LocalizeValue.empty() : LocalizeValue.of(text));
+        setTextValue(LocalizeValue.ofNullable(text));
     }
 
     @Deprecated
@@ -137,7 +137,7 @@ public interface ProgressIndicator {
     @Deprecated
     @DeprecationInfo("Use #setText2(LocalizeValue)")
     default void setText2(String text) {
-        setText2Value(StringUtil.isEmpty(text) ? LocalizeValue.empty() : LocalizeValue.of(text));
+        setText2Value(LocalizeValue.ofNullable(text));
     }
 
     @Deprecated

@@ -79,10 +79,10 @@ public class DeleteAction extends AnAction implements DumbAware {
         String place = event.getPlace();
         Presentation presentation = event.getPresentation();
         if (ActionPlaces.PROJECT_VIEW_POPUP.equals(place) || ActionPlaces.COMMANDER_POPUP.equals(place)) {
-            presentation.setTextValue(IdeLocalize.actionDeleteEllipsis());
+            presentation.setText(IdeLocalize.actionDeleteEllipsis());
         }
         else {
-            presentation.setTextValue(IdeLocalize.actionDelete());
+            presentation.setText(IdeLocalize.actionDelete());
         }
 
         DataContext dataContext = event.getDataContext();
@@ -113,7 +113,7 @@ public class DeleteAction extends AnAction implements DumbAware {
             }
         }
         if (provider instanceof TitledHandler titledHandler) {
-            presentation.setTextValue(titledHandler.getActionTitleValue());
+            presentation.setText(titledHandler.getActionTitleValue());
         }
         boolean canDelete = provider != null && provider.canDeleteElement(dataContext);
         if (ActionPlaces.isPopupPlace(event.getPlace())) {

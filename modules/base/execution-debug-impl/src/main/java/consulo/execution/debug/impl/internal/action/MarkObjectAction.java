@@ -45,7 +45,7 @@ public class MarkObjectAction extends XDebuggerActionBase {
             hidden = myHandler.isHidden(project, e);
             if (myHandler.isEnabled(project, e)) {
                 enabled = true;
-                presentation.setTextValue(
+                presentation.setText(
                     myHandler.isMarked(project, e)
                         ? XDebuggerLocalize.actionMarkObjectUnmarkText()
                         : XDebuggerLocalize.actionMarkObjectText()

@@ -56,7 +56,7 @@ public class DesktopTabImpl implements Tab {
         @Override
         public void update(AnActionEvent e) {
             e.getPresentation().setIcon(PlatformIconGroup.actionsCancel());
-            e.getPresentation().setTextValue(LocalizeValue.localizeTODO("Close"));
+            e.getPresentation().setText(LocalizeValue.localizeTODO("Close"));
         }
     }
 

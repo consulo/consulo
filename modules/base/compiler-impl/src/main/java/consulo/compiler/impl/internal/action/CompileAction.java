@@ -77,7 +77,7 @@ public class CompileAction extends CompileActionBase {
         }
         DataContext dataContext = event.getDataContext();
 
-        presentation.setTextValue(CompilerLocalize.actionCompileText().map(NO_MNEMONIC));
+        presentation.setText(CompilerLocalize.actionCompileText().map(NO_MNEMONIC));
         presentation.setEnabledAndVisible(true);
 
         Project project = dataContext.getData(Project.KEY);
@@ -96,7 +96,7 @@ public class CompileAction extends CompileActionBase {
         }
 
         if (module != null) {
-            presentation.setTextValue(CompilerLocalize.actionCompileModuleText(trimName(module.getName())));
+            presentation.setText(CompilerLocalize.actionCompileModuleText(trimName(module.getName())));
         }
         else {
             PsiPackage aPackage = null;
@@ -112,7 +112,7 @@ public class CompileAction extends CompileActionBase {
 
             if (aPackage != null) {
                 String name = aPackage.getQualifiedName();
-                presentation.setTextValue(
+                presentation.setText(
                     StringUtil.isNotEmpty(name)
                         ? CompilerLocalize.actionCompile0Text(trimName(name))
                         : CompilerLocalize.actionCompileDefaultText()
@@ -122,7 +122,7 @@ public class CompileAction extends CompileActionBase {
                 VirtualFile file = files[0];
                 FileType fileType = file.getFileType();
                 if (CompilerManager.getInstance(project).isCompilableFileType(fileType) || isCompilableResourceFile(project, file)) {
-                    presentation.setTextValue(CompilerLocalize.actionCompile0Text(trimName(file.getName())));
+                    presentation.setText(CompilerLocalize.actionCompile0Text(trimName(file.getName())));
                 }
                 else {
                     presentation.setEnabled(false);
@@ -131,7 +131,7 @@ public class CompileAction extends CompileActionBase {
                 }
             }
             else {
-                presentation.setTextValue(CompilerLocalize.actionCompileSelectedFilesText());
+                presentation.setText(CompilerLocalize.actionCompileSelectedFilesText());
             }
         }
     }

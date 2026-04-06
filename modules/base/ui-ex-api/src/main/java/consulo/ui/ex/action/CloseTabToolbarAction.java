@@ -24,6 +24,6 @@ public abstract class CloseTabToolbarAction extends AnAction implements DumbAwar
         copyFrom(ActionManager.getInstance().getAction(IdeActions.ACTION_CLOSE_ACTIVE_TAB));
         Presentation presentation = getTemplatePresentation();
         presentation.setIcon(PlatformIconGroup.actionsCancel());
-        presentation.setTextValue(CommonLocalize.buttonClose());
+        presentation.setText(CommonLocalize.buttonClose());
     }
 }

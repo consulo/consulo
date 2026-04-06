@@ -55,8 +55,8 @@ public class RefreshAllExternalProjectsAction extends AnAction implements DumbAw
         }
 
         String name = StringUtil.join(systemIds, projectSystemId -> projectSystemId.getDisplayName().get(), ",");
-        e.getPresentation().setTextValue(ExternalSystemLocalize.actionRefreshAllExternalProjects0Text(name));
-        e.getPresentation().setDescriptionValue(ExternalSystemLocalize.actionRefreshAllExternalProjects0Description(name));
+        e.getPresentation().setText(ExternalSystemLocalize.actionRefreshAllExternalProjects0Text(name));
+        e.getPresentation().setDescription(ExternalSystemLocalize.actionRefreshAllExternalProjects0Description(name));
 
         ExternalSystemProcessingManager processingManager = Application.get().getInstance(ExternalSystemProcessingManager.class);
         e.getPresentation().setEnabled(!processingManager.hasTaskOfTypeInProgress(ExternalSystemTaskType.RESOLVE_PROJECT, project));

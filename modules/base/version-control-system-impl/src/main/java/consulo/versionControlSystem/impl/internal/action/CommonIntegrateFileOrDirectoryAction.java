@@ -25,8 +25,8 @@ import consulo.versionControlSystem.update.ActionInfo;
 public class CommonIntegrateFileOrDirectoryAction extends AbstractCommonUpdateAction {
     public CommonIntegrateFileOrDirectoryAction() {
         super(ActionInfo.INTEGRATE, ScopeInfo.FILES, true);
-        getTemplatePresentation().setTextValue(VcsLocalize.actionIntegrateFilesText());
-        getTemplatePresentation().setDescriptionValue(VcsLocalize.actionIntegrateFilesDescription());
+        getTemplatePresentation().setText(VcsLocalize.actionIntegrateFilesText());
+        getTemplatePresentation().setDescription(VcsLocalize.actionIntegrateFilesDescription());
     }
 
     @Override

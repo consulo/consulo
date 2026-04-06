@@ -139,7 +139,7 @@ public abstract class AbstractCommonCheckinAction extends AbstractVcsAction {
             presentation.setEnabled(false);
         }
         else {
-            presentation.setTextValue(getActionName(vcsContext).map(string -> string + "..."));
+            presentation.setText(getActionName(vcsContext).map(string -> string + "..."));
             presentation.setEnabled(!ProjectLevelVcsManager.getInstance(project).isBackgroundVcsOperationRunning());
             presentation.setVisible(true);
         }

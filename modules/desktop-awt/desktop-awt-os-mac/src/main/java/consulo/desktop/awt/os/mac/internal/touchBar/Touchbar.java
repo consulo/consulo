@@ -199,7 +199,7 @@ public final class Touchbar {
         public void update(AnActionEvent e) {
             e.getPresentation().setEnabled(action == null ? button.isEnabled() : action.isEnabled());
             if (!useTextFromAction) {
-                e.getPresentation().setTextValue(LocalizeValue.of(TextWithMnemonic.parse(button.getText()).getText()));
+                e.getPresentation().setText(LocalizeValue.of(TextWithMnemonic.parse(button.getText()).getText()));
             }
         }
     }

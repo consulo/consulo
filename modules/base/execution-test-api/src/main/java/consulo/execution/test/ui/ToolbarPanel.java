@@ -83,11 +83,11 @@ public class ToolbarPanel extends JPanel implements OccurenceNavigator, Disposab
         actionGroup.addSeparator();
 
         AnAction action = CommonActionsManager.getInstance().createExpandAllAction(myTreeExpander, parent);
-        action.getTemplatePresentation().setDescriptionValue(ExecutionTestLocalize.actionExpandTestText());
+        action.getTemplatePresentation().setDescription(ExecutionTestLocalize.actionExpandTestText());
         actionGroup.add(action);
 
         action = CommonActionsManager.getInstance().createCollapseAllAction(myTreeExpander, parent);
-        action.getTemplatePresentation().setDescriptionValue(ExecutionTestLocalize.actionCollapseTestText());
+        action.getTemplatePresentation().setDescription(ExecutionTestLocalize.actionCollapseTestText());
         actionGroup.add(action);
 
         actionGroup.addSeparator();

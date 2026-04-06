@@ -19,6 +19,7 @@ import consulo.annotation.component.ActionImpl;
 import consulo.externalService.statistic.FeatureUsageTracker;
 import consulo.language.editor.documentation.DocumentationManager;
 import consulo.language.psi.PsiManager;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.task.LocalTask;
 import consulo.task.impl.internal.language.TaskPsiElement;
@@ -45,10 +46,10 @@ public class ShowTaskDescription extends BaseTaskAction {
             LocalTask activeTask = getActiveTask(event);
             presentation.setEnabled(activeTask != null && activeTask.isIssue() && activeTask.getDescription() != null);
             if (activeTask == null || !activeTask.isIssue()) {
-                presentation.setTextValue(getTemplatePresentation().getTextValue());
+                presentation.setText(getTemplatePresentation().getTextValue());
             }
             else {
-                presentation.setText("Show '" + activeTask.getPresentableName() + "' _Description");
+                presentation.setText(LocalizeValue.localizeTODO("Show '" + activeTask.getPresentableName() + "' _Description"));
             }
         }
     }

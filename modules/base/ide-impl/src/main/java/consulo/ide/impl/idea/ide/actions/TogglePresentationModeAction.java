@@ -65,7 +65,7 @@ public class TogglePresentationModeAction extends AnAction implements DumbAware 
     @RequiredUIAccess
     public void update(AnActionEvent e) {
         boolean selected = UISettings.getInstance().PRESENTATION_MODE;
-        e.getPresentation().setTextValue(
+        e.getPresentation().setText(
             selected
                 ? ActionLocalize.actionTogglepresentationmodeTextExit()
                 : ActionLocalize.actionTogglepresentationmodeTextEnter()

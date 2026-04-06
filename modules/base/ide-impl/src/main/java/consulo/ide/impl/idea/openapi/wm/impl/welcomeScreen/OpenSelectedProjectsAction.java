@@ -83,10 +83,10 @@ public class OpenSelectedProjectsAction extends RecentProjectsWelcomeScreenActio
         if (ActionPlaces.WELCOME_SCREEN.equals(e.getPlace())) {
             presentation.setEnabledAndVisible(true);
             if (selectedElements.size() == 1 && selectedElements.get(0) instanceof PopupProjectGroupActionGroup) {
-                presentation.setTextValue(ProjectUILocalize.actionRecentProjectsOpenSelectedProjectsText());
+                presentation.setText(ProjectUILocalize.actionRecentProjectsOpenSelectedProjectsText());
             }
             else {
-                presentation.setTextValue(ProjectUILocalize.actionRecentProjectsOpenSelectedProjectText());
+                presentation.setText(ProjectUILocalize.actionRecentProjectsOpenSelectedProjectText());
             }
         }
         else {

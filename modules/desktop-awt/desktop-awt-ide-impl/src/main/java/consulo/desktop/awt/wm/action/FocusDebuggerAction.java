@@ -61,10 +61,10 @@ public class FocusDebuggerAction extends AnAction implements DumbAware {
     public void update(AnActionEvent e) {
         Presentation presentation = e.getPresentation();
         if (myFocusDrawer == null) {
-            presentation.setTextValue(LocalizeValue.localizeTODO("Start Focus Debugger"));
+            presentation.setText(LocalizeValue.localizeTODO("Start Focus Debugger"));
         }
         else {
-            presentation.setTextValue(LocalizeValue.localizeTODO("Stop Focus Debugger"));
+            presentation.setText(LocalizeValue.localizeTODO("Stop Focus Debugger"));
         }
     }
 

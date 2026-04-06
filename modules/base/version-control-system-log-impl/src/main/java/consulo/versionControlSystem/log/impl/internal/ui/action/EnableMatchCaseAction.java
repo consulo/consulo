@@ -57,7 +57,7 @@ public class EnableMatchCaseAction extends BooleanPropertyToggleAction {
             boolean regexEnabled = properties.exists(MainVcsLogUiProperties.TEXT_FILTER_REGEX)
                 && properties.get(MainVcsLogUiProperties.TEXT_FILTER_REGEX);
             if (!regexEnabled) {
-                e.getPresentation().setTextValue(VersionControlSystemLogLocalize.actionMatchCaseText());
+                e.getPresentation().setText(VersionControlSystemLogLocalize.actionMatchCaseText());
             }
             else {
                 Collection<VcsLogProvider> providers = new LinkedHashSet<>(ui.getDataPack().getLogProviders().values());
@@ -66,14 +66,14 @@ public class EnableMatchCaseAction extends BooleanPropertyToggleAction {
                 e.getPresentation().setVisible(true);
                 e.getPresentation().setEnabled(!supported.isEmpty());
                 if (providers.size() == supported.size() || supported.isEmpty()) {
-                    e.getPresentation().setTextValue(VersionControlSystemLogLocalize.actionMatchCaseText());
+                    e.getPresentation().setText(VersionControlSystemLogLocalize.actionMatchCaseText());
                 }
                 else {
                     String supportedText = StringUtil.join(
                         ContainerUtil.map(supported, p -> p.getSupportedVcs().getName().toLowerCase()),
                         ", "
                     );
-                    e.getPresentation().setTextValue(VersionControlSystemLogLocalize.actionMatchCaseOnlySupported(supportedText));
+                    e.getPresentation().setText(VersionControlSystemLogLocalize.actionMatchCaseOnlySupported(supportedText));
                 }
             }
         }

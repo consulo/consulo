@@ -68,13 +68,13 @@ abstract class CollapseOrExpandGraphAction extends DumbAwareAction {
             e.getPresentation().setEnabled(ui.getFilterUi().getFilters().getDetailsFilters().isEmpty());
 
             boolean isMerges = properties.get(MainVcsLogUiProperties.BEK_SORT_TYPE) == PermanentGraph.SortType.LinearBek;
-            e.getPresentation().setTextValue(isMerges ? myMergesText : myLinearBranchesText);
-            e.getPresentation().setDescriptionValue(isMerges ? myMergesDescription : myLinearBranchesDescription);
+            e.getPresentation().setText(isMerges ? myMergesText : myLinearBranchesText);
+            e.getPresentation().setDescription(isMerges ? myMergesDescription : myLinearBranchesDescription);
         }
         else {
             e.getPresentation().setEnabled(false);
-            e.getPresentation().setTextValue(myLinearBranchesText);
-            e.getPresentation().setDescriptionValue(myLinearBranchesDescription);
+            e.getPresentation().setText(myLinearBranchesText);
+            e.getPresentation().setDescription(myLinearBranchesDescription);
         }
     }
 

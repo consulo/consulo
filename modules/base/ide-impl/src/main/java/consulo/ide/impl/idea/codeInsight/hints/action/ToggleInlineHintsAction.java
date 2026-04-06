@@ -49,7 +49,9 @@ public class ToggleInlineHintsAction extends DumbAwareAction {
         Language language = file.getLanguage();
 
         boolean isHintsShownNow = HintUtils.isParameterHintsEnabledForLanguage(language);
-        presentation.setTextValue(isHintsShownNow ? CodeInsightLocalize.inlayHintsDisableActionText() : CodeInsightLocalize.inlayHintsEnableActionText());
+        presentation.setText(
+            isHintsShownNow ? CodeInsightLocalize.inlayHintsDisableActionText() : CodeInsightLocalize.inlayHintsEnableActionText()
+        );
         presentation.setEnabledAndVisible(true);
     }
 

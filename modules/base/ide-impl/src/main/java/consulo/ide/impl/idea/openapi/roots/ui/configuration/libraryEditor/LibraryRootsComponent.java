@@ -35,6 +35,7 @@ import consulo.fileChooser.IdeaFileChooser;
 import consulo.ide.impl.idea.openapi.roots.libraries.ui.impl.RootDetectionUtil;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.libraries.LibraryPresentationManager;
 import consulo.language.editor.LangDataKeys;
+import consulo.localize.LocalizeValue;
 import consulo.module.Module;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
@@ -230,10 +231,10 @@ public class LibraryRootsComponent implements Disposable, LibraryEditorComponent
                 Object[] elements = getSelectedElements();
                 Presentation presentation = e.getPresentation();
                 if (ContainerUtil.and(elements, new FilteringIterator.InstanceOf<>(ExcludedRootElement.class))) {
-                    presentation.setText("Cancel Exclusion");
+                    presentation.setText(LocalizeValue.localizeTODO("Cancel Exclusion"));
                 }
                 else {
-                    presentation.setTextValue(getTemplatePresentation().getTextValue());
+                    presentation.setText(getTemplatePresentation().getTextValue());
                 }
             }
         });

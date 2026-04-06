@@ -33,7 +33,7 @@ public final class BrowseTypeHierarchyAction extends BrowseHierarchyActionBase<T
     @RequiredUIAccess
     public final void update(AnActionEvent e) {
         if (!ActionPlaces.MAIN_MENU.equals(e.getPlace())) {
-            e.getPresentation().setTextValue(IdeLocalize.actionBrowseTypeHierarchy());
+            e.getPresentation().setText(IdeLocalize.actionBrowseTypeHierarchy());
         }
         super.update(e);
     }

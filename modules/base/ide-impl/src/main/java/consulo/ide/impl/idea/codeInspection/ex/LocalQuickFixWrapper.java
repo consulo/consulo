@@ -57,8 +57,8 @@ public class LocalQuickFixWrapper extends QuickFixAction {
     @Override
     public void update(AnActionEvent e) {
         super.update(e);
-        getTemplatePresentation().setTextValue(myText);
-        e.getPresentation().setTextValue(myText);
+        getTemplatePresentation().setText(myText);
+        e.getPresentation().setText(myText);
     }
 
     @Override

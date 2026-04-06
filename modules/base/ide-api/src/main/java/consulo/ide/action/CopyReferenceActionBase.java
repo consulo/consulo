@@ -79,7 +79,7 @@ public abstract class CopyReferenceActionBase extends DumbAwareAction {
         else {
             e.getPresentation().setVisible(true);
         }
-        e.getPresentation().setTextValue(
+        e.getPresentation().setText(
             paths
                 ? plural
                 ? IdeLocalize.copyRelativePaths()

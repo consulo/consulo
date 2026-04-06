@@ -26,7 +26,7 @@ public class ImplementMethodsAction extends MethodsBasedAction<ImplementMethodHa
     @Inject
     public ImplementMethodsAction(Application application) {
         super(application, ImplementMethodHandler.class, ImplementMethodHandler.KEY);
-        getTemplatePresentation().setTextValue(ActionLocalize.actionImplementmethodsText());
-        getTemplatePresentation().setDescriptionValue(ActionLocalize.actionImplementmethodsDescription());
+        getTemplatePresentation().setText(ActionLocalize.actionImplementmethodsText());
+        getTemplatePresentation().setDescription(ActionLocalize.actionImplementmethodsDescription());
     }
 }

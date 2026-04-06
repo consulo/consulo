@@ -22,7 +22,7 @@ import consulo.bookmark.localize.BookmarkLocalize;
 public class PreviousBookmarkAction extends GotoBookmarkActionBase {
     public PreviousBookmarkAction() {
         super(false);
-        getTemplatePresentation().setTextValue(BookmarkLocalize.actionBookmarkGotoPreviousText());
-        getTemplatePresentation().setDescriptionValue(BookmarkLocalize.actionBookmarkGotoPreviousDescription());
+        getTemplatePresentation().setText(BookmarkLocalize.actionBookmarkGotoPreviousText());
+        getTemplatePresentation().setDescription(BookmarkLocalize.actionBookmarkGotoPreviousDescription());
     }
 }

@@ -67,12 +67,12 @@ public class GotoTestOrCodeAction extends BaseCodeInsightAction {
 
         p.setEnabled(true);
         if (TestFinderHelper.isTest(element)) {
-            p.setTextValue(ActionLocalize.actionGototestsubjectText());
-            p.setDescriptionValue(ActionLocalize.actionGototestsubjectDescription());
+            p.setText(ActionLocalize.actionGototestsubjectText());
+            p.setDescription(ActionLocalize.actionGototestsubjectDescription());
         }
         else {
-            p.setTextValue(ActionLocalize.actionGototestText());
-            p.setDescriptionValue(ActionLocalize.actionGototestDescription());
+            p.setText(ActionLocalize.actionGototestText());
+            p.setDescription(ActionLocalize.actionGototestDescription());
         }
     }
 }

@@ -26,8 +26,8 @@ import consulo.versionControlSystem.update.ActionInfo;
 public class CommonUpdateProjectAction extends AbstractCommonUpdateAction {
     public CommonUpdateProjectAction() {
         super(ActionInfo.UPDATE, ScopeInfo.PROJECT, true);
-        getTemplatePresentation().setTextValue(ActionLocalize.actionVcsUpdateprojectText());
-        getTemplatePresentation().setDescriptionValue(ActionLocalize.actionVcsUpdateprojectText());
+        getTemplatePresentation().setText(ActionLocalize.actionVcsUpdateprojectText());
+        getTemplatePresentation().setDescription(ActionLocalize.actionVcsUpdateprojectText());
         getTemplatePresentation().setIcon(VersionControlSystemIconGroup.checkout());
     }
 

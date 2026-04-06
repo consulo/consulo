@@ -74,9 +74,9 @@ public class ActionUtil {
         p1.setSelectedIcon(ObjectUtil.chooseNotNull(p1.getSelectedIcon(), p2.getSelectedIcon()));
         p1.setHoveredIcon(ObjectUtil.chooseNotNull(p1.getHoveredIcon(), p2.getHoveredIcon()));
         if (StringUtil.isEmpty(p1.getText())) {
-            p1.setTextValue(p2.getTextValue());
+            p1.setText(p2.getTextValue());
         }
-        p1.setDescriptionValue(p1.getDescriptionValue().orIfEmpty(p2.getDescriptionValue()));
+        p1.setDescription(p1.getDescriptionValue().orIfEmpty(p2.getDescriptionValue()));
         ShortcutSet ss1 = a1.getShortcutSet();
         if (ss1 == null || ss1 == CustomShortcutSet.EMPTY) {
             a1.copyShortcutFrom(a2);

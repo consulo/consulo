@@ -29,7 +29,7 @@ public class RevertSelectedChangesAction extends RevertCommittedStuffAbstractAct
     public void update(AnActionEvent e) {
         Presentation presentation = e.getPresentation();
         presentation.setIcon(PlatformIconGroup.actionsRollback());
-        presentation.setTextValue(VcsLocalize.actionRevertSelectedChangesText());
+        presentation.setText(VcsLocalize.actionRevertSelectedChangesText());
         super.update(e);
         presentation.setEnabled(allSelectedChangeListsAreRevertable(e));
     }
