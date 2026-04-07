@@ -18,6 +18,7 @@ package consulo.undoRedo;
 import consulo.document.Document;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author UNV
@@ -26,9 +27,9 @@ import consulo.project.Project;
 public record CommandDescriptor(
     Runnable command,
     LocalizeValue name,
-    Object groupId,
-    Project project,
-    Document document,
+    @Nullable Object groupId,
+    @Nullable Project project,
+    @Nullable Document document,
     UndoConfirmationPolicy undoConfirmationPolicy,
     boolean shouldRecordActionForActiveDocument
 ) {

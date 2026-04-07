@@ -24,21 +24,22 @@ import org.jspecify.annotations.Nullable;
  */
 @ServiceAPI(ComponentScope.APPLICATION)
 public abstract class CommandProcessor {
-    
     public static CommandProcessor getInstance() {
         return Application.get().getInstance(CommandProcessor.class);
     }
 
-    
     public abstract <T> RunnableCommandBuilder<T, ? extends RunnableCommandBuilder<T, ?>> newCommand();
 
     @Deprecated
     @DeprecationInfo("Use #newCommand().run(Runnable)")
     @RequiredUIAccess
     public void executeCommand(@RequiredUIAccess Runnable runnable, @Nullable String name, @Nullable Object groupId) {
-        newCommand()
+        RunnableCommandBuilder<?, ?> builder = newCommand();
+        if (groupId != null) {
+            builder = builder.groupId(groupId);
+        }
+        builder
             .name(LocalizeValue.ofNullable(name))
-            .groupId(groupId)
             .run(runnable);
     }
 
@@ -51,10 +52,15 @@ public abstract class CommandProcessor {
         @Nullable String name,
         @Nullable Object groupId
     ) {
-        newCommand()
-            .project(project)
+        RunnableCommandBuilder<?, ?> builder = newCommand();
+        if (project != null) {
+            builder = builder.project(project);
+        }
+        if (groupId != null) {
+            builder = builder.groupId(groupId);
+        }
+        builder
             .name(LocalizeValue.ofNullable(name))
-            .groupId(groupId)
             .run(runnable);
     }
 
@@ -68,11 +74,18 @@ public abstract class CommandProcessor {
         @Nullable Object groupId,
         @Nullable Document document
     ) {
-        newCommand()
-            .project(project)
+        RunnableCommandBuilder<?, ?> builder = newCommand();
+        if (project != null) {
+            builder = builder.project(project);
+        }
+        if (groupId != null) {
+            builder = builder.groupId(groupId);
+        }
+        if (document != null) {
+            builder = builder.document(document);
+        }
+        builder
             .name(LocalizeValue.ofNullable(name))
-            .groupId(groupId)
-            .document(document)
             .run(runnable);
     }
 
@@ -86,10 +99,15 @@ public abstract class CommandProcessor {
         @Nullable Object groupId,
         UndoConfirmationPolicy confirmationPolicy
     ) {
-        newCommand()
-            .project(project)
+        RunnableCommandBuilder<?, ?> builder = newCommand();
+        if (project != null) {
+            builder = builder.project(project);
+        }
+        if (groupId != null) {
+            builder = builder.groupId(groupId);
+        }
+        builder
             .name(LocalizeValue.ofNullable(name))
-            .groupId(groupId)
             .undoConfirmationPolicy(confirmationPolicy)
             .run(runnable);
     }
@@ -105,12 +123,19 @@ public abstract class CommandProcessor {
         UndoConfirmationPolicy confirmationPolicy,
         @Nullable Document document
     ) {
-        newCommand()
-            .project(project)
+        RunnableCommandBuilder<?, ?> builder = newCommand();
+        if (project != null) {
+            builder = builder.project(project);
+        }
+        if (groupId != null) {
+            builder = builder.groupId(groupId);
+        }
+        if (document != null) {
+            builder = builder.document(document);
+        }
+        builder
             .name(LocalizeValue.ofNullable(name))
-            .groupId(groupId)
             .undoConfirmationPolicy(confirmationPolicy)
-            .document(document)
             .run(command);
     }
 
@@ -131,10 +156,15 @@ public abstract class CommandProcessor {
         UndoConfirmationPolicy confirmationPolicy,
         boolean shouldRecordCommandForActiveDocument
     ) {
-        newCommand()
-            .project(project)
+        RunnableCommandBuilder<?, ?> builder = newCommand();
+        if (project != null) {
+            builder = builder.project(project);
+        }
+        if (groupId != null) {
+            builder = builder.groupId(groupId);
+        }
+        builder
             .name(LocalizeValue.ofNullable(name))
-            .groupId(groupId)
             .undoConfirmationPolicy(confirmationPolicy)
             .shouldRecordActionForActiveDocument(shouldRecordCommandForActiveDocument)
             .run(command);

@@ -1,7 +1,10 @@
+import org.jspecify.annotations.NullMarked;
+
 /**
  * @author VISTALL
  * @since 2022-02-16
  */
+@NullMarked
 module consulo.undo.redo.api {
     requires transitive consulo.document.api;
     requires transitive consulo.project.api;

@@ -22,9 +22,11 @@ import consulo.project.Project;
 import consulo.undoRedo.BasicUndoableAction;
 import consulo.undoRedo.ProjectUndoManager;
 import org.jetbrains.annotations.TestOnly;
+import org.jspecify.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * @author anna
@@ -34,7 +36,7 @@ public class StartMarkAction extends BasicUndoableAction {
   private static final Map<Project, StartMarkAction> ourCurrentMarks = new HashMap<>();
   private String myCommandName;
   private boolean myGlobal;
-  private Document myDocument;
+  private @Nullable Document myDocument;
 
   private StartMarkAction(Document document, String commandName) {
     super(DocumentReferenceManager.getInstance().create(document));
@@ -68,7 +70,7 @@ public class StartMarkAction extends BasicUndoableAction {
   }
 
   public Document getDocument() {
-    return myDocument;
+    return Objects.requireNonNull(myDocument);
   }
 
   @TestOnly
@@ -84,7 +86,7 @@ public class StartMarkAction extends BasicUndoableAction {
   public static StartMarkAction start(Document document, Project project, String commandName) throws AlreadyStartedException {
     StartMarkAction existingMark = ourCurrentMarks.get(project);
     if (existingMark != null) {
-      throw new AlreadyStartedException(existingMark.myCommandName, existingMark.myDocument, existingMark.getAffectedDocuments());
+      throw new AlreadyStartedException(existingMark.getCommandName(), existingMark.getDocument(), existingMark.getAffectedDocuments());
     }
     StartMarkAction markAction = new StartMarkAction(document, commandName);
     ProjectUndoManager.getInstance(project).undoableActionPerformed(markAction);
@@ -92,7 +94,7 @@ public class StartMarkAction extends BasicUndoableAction {
     return markAction;
   }
 
-  public static StartMarkAction canStart(Project project) {
+  public static @Nullable StartMarkAction canStart(Project project) {
     return ourCurrentMarks.get(project);
   }
 
@@ -104,16 +106,16 @@ public class StartMarkAction extends BasicUndoableAction {
   }
 
   public static class AlreadyStartedException extends Exception {
-    private final DocumentReference[] myAffectedDocuments;
+    private final DocumentReference @Nullable [] myAffectedDocuments;
     private Document myDocument;
 
-    public AlreadyStartedException(String commandName, Document document, DocumentReference[] documentRefs) {
+    public AlreadyStartedException(String commandName, Document document, DocumentReference @Nullable [] documentRefs) {
       super("Unable to start inplace refactoring:\n" + commandName + " is not finished yet.");
       myAffectedDocuments = documentRefs;
       myDocument = document;
     }
 
-    public DocumentReference[] getAffectedDocuments() {
+    public DocumentReference @Nullable [] getAffectedDocuments() {
       return myAffectedDocuments;
     }
 
