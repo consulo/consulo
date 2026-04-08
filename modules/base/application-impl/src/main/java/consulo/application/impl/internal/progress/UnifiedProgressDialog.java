@@ -83,7 +83,7 @@ public class UnifiedProgressDialog implements ProgressDialog {
                 );
                 myTextLabel.setText(myProgressWindow.getText());
                 myTextLabel2.setText(myProgressWindow.getText2());
-                myProgressBar.setValue((int) myProgressWindow.getFraction() * 100);
+                myProgressBar.setValue((int) (myProgressWindow.getFraction() * 100));
             });
         }
     }
