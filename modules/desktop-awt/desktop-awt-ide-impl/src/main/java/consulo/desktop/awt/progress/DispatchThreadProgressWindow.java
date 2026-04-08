@@ -15,17 +15,14 @@
  */
 package consulo.desktop.awt.progress;
 
-import consulo.application.ApplicationManager;
-import consulo.desktop.awt.ui.IdeEventQueue;
+import consulo.application.Application;
 import consulo.application.impl.internal.progress.ProgressWindow;
+import consulo.desktop.awt.ui.IdeEventQueue;
 import consulo.localize.LocalizeValue;
-import consulo.logging.Logger;
 import consulo.platform.Platform;
 import consulo.project.Project;
 
 public class DispatchThreadProgressWindow extends ProgressWindow {
-  private static final Logger LOG = Logger.getInstance(DispatchThreadProgressWindow.class);
-
   private long myLastPumpEventsTime = 0;
   private static final int PUMP_INTERVAL = Platform.current().os().isWindows() ? 100 : 500;
   private Runnable myRunnable;
@@ -35,8 +32,8 @@ public class DispatchThreadProgressWindow extends ProgressWindow {
   }
 
   @Override
-  public void setTextValue(LocalizeValue text) {
-    super.setText2Value(text);
+  public void setText(LocalizeValue text) {
+    super.setText2(text);
     pumpEvents();
   }
 
@@ -47,8 +44,8 @@ public class DispatchThreadProgressWindow extends ProgressWindow {
   }
 
   @Override
-  public void setText2Value(LocalizeValue text) {
-    super.setText2Value(text);
+  public void setText2(LocalizeValue text) {
+    super.setText2(text);
     pumpEvents();
   }
 
@@ -63,7 +60,7 @@ public class DispatchThreadProgressWindow extends ProgressWindow {
   @Override
   protected void prepareShowDialog() {
     if (myRunnable != null) {
-      ApplicationManager.getApplication().invokeLater(myRunnable, getModalityState());
+      Application.get().invokeLater(myRunnable, getModalityState());
     }
     showDialog();
   }

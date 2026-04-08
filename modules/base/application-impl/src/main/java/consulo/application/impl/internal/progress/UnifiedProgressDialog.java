@@ -79,10 +79,10 @@ public class UnifiedProgressDialog implements ProgressDialog {
             myProject.getApplication().getLastUIAccess().give(() -> {
                 System.out.println(
                     "update " + myProgressWindow.getText() + " " +
-                        myProgressWindow.getText2() + " " + myProgressWindow.getFraction()
+                        myProgressWindow.getText2Value() + " " + myProgressWindow.getFraction()
                 );
-                myTextLabel.setText(LocalizeValue.of(StringUtil.notNullize(myProgressWindow.getText())));
-                myTextLabel2.setText(LocalizeValue.of(StringUtil.notNullize(myProgressWindow.getText2())));
+                myTextLabel.setText(myProgressWindow.getTextValue());
+                myTextLabel2.setText(myProgressWindow.getText2Value());
                 myProgressBar.setValue((int) myProgressWindow.getFraction() * 100);
             });
         }

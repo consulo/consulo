@@ -44,7 +44,6 @@ public abstract class WebLabelBase<V extends VaadinLabelComponentBase> extends V
         getVaadinComponent().setForegroundColor(foreground);
     }
 
-    
     @Override
     public LocalizeValue getText() {
         return getVaadinComponent().getTextValue();
@@ -54,10 +53,10 @@ public abstract class WebLabelBase<V extends VaadinLabelComponentBase> extends V
     public void addStyle(LabelStyle style) {
     }
 
-    @RequiredUIAccess
     @Override
+    @RequiredUIAccess
     public void setText(LocalizeValue text) {
-        getVaadinComponent().setTextValue(text);
+        getVaadinComponent().setText(text);
     }
 
     @Override

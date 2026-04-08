@@ -103,17 +103,17 @@ public class AbstractProgressIndicatorExBase extends AbstractProgressIndicatorBa
   }
 
   @Override
-  public void setTextValue(LocalizeValue text) {
-    super.setTextValue(text);
+  public void setText(LocalizeValue text) {
+    super.setText(text);
 
-    delegateProgressChange(each -> each.setTextValue(text));
+    delegateProgressChange(each -> each.setText(text));
   }
 
   @Override
-  public void setText2Value(LocalizeValue text) {
-    super.setText2Value(text);
+  public void setText2(LocalizeValue text) {
+    super.setText2(text);
 
-    delegateProgressChange(each -> each.setText2Value(text));
+    delegateProgressChange(each -> each.setText2(text));
   }
 
   @Override

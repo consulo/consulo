@@ -115,7 +115,7 @@ public class ActionImplUtil {
         DumbService.getInstance(project).showDumbModeNotification(getActionUnavailableMessage(actionNames));
     }
 
-    
+
     private static String getActionUnavailableMessage(List<String> actionNames) {
         String message;
         String beAvailableUntil = " available while " + Application.get().getName() + " is updating indices";
@@ -131,7 +131,6 @@ public class ActionImplUtil {
         return message;
     }
 
-    
     public static String getUnavailableMessage(String action, boolean plural) {
         return action + (plural ? " are" : " is") + " not available while " + Application.get().getName() + " is updating indices";
     }

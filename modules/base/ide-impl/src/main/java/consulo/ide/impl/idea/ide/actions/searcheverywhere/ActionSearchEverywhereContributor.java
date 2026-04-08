@@ -159,11 +159,11 @@ public class ActionSearchEverywhereContributor implements SearchEverywhereContri
         if (SearchEverywhereDataKeys.ITEM_STRING_DESCRIPTION == dataId) {
             AnAction action = getAction(element);
             if (action != null) {
-                String description = action.getTemplatePresentation().getDescription();
+                LocalizeValue description = action.getTemplatePresentation().getDescriptionValue();
                 if (UISettings.getInstance().getShowInplaceCommentsInternal()) {
                     String presentableId =
                         StringUtil.notNullize(ActionManager.getInstance().getId(action), "class: " + action.getClass().getName());
-                    return String.format("[%s] %s", presentableId, StringUtil.notNullize(description));
+                    return String.format("[%s] %s", presentableId, description);
                 }
                 return description;
             }

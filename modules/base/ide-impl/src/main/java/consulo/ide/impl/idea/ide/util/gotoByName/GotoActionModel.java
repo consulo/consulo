@@ -121,7 +121,6 @@ public class GotoActionModel implements ChooseByNameModel, Comparator<Object>, D
         keymapActionGroups.forEach(myActionGroups::putIfAbsent);
     }
 
-    
     Map<String, ApplyIntentionAction> getAvailableIntentions() {
         Map<String, ApplyIntentionAction> map = new TreeMap<>();
         if (myProject != null && !myProject.isDisposed() && !DumbService.isDumb(myProject) && myEditor != null && !myEditor.isDisposed()) {
@@ -146,13 +145,11 @@ public class GotoActionModel implements ChooseByNameModel, Comparator<Object>, D
         return IdeLocalize.checkboxDisabledIncluded();
     }
 
-    
     @Override
     public String getNotInMessage() {
         return IdeLocalize.labelNoEnabledActionsFound().get();
     }
 
-    
     @Override
     public String getNotFoundMessage() {
         return IdeLocalize.labelNoActionsFound().get();
@@ -168,7 +165,6 @@ public class GotoActionModel implements ChooseByNameModel, Comparator<Object>, D
     }
 
     public static class MatchedValue {
-        
         public final Object value;
         
         final String pattern;
@@ -284,7 +280,6 @@ public class GotoActionModel implements ChooseByNameModel, Comparator<Object>, D
         }
     }
 
-    
     @Override
     public ListCellRenderer getListCellRenderer() {
         return new GotoActionListCellRenderer(this::getGroupName);
@@ -294,7 +289,6 @@ public class GotoActionModel implements ChooseByNameModel, Comparator<Object>, D
         return myActionManager.getId(anAction);
     }
 
-    
     private static JLabel createIconLabel(@Nullable Image icon, boolean disabled) {
         if (icon == null) {
             return new JBLabel(Image.empty(Image.DEFAULT_ICON_SIZE));
@@ -320,7 +314,6 @@ public class GotoActionModel implements ChooseByNameModel, Comparator<Object>, D
         return ((MatchedValue)o1).compareWeights((MatchedValue)o2);
     }
 
-    
     public static AnActionEvent updateActionBeforeShow(AnAction anAction, DataContext dataContext) {
         Presentation presentation = new Presentation();
         presentation.copyFrom(anAction.getTemplatePresentation());
@@ -349,18 +342,15 @@ public class GotoActionModel implements ChooseByNameModel, Comparator<Object>, D
     }
 
     @Override
-    
     public String[] getNames(boolean checkBoxState) {
         return ArrayUtil.EMPTY_STRING_ARRAY;
     }
 
     @Override
-    
     public Object[] getElementsByName(String id, boolean checkBoxState, String pattern) {
         return ArrayUtil.EMPTY_OBJECT_ARRAY;
     }
 
-    
     public String getGroupName(OptionDescription description) {
         //if (description instanceof RegistryTextOptionDescriptor) return "Registry";
         String groupName = description.getGroupName();
@@ -371,7 +361,6 @@ public class GotoActionModel implements ChooseByNameModel, Comparator<Object>, D
         return settings + " > " + groupName;
     }
 
-    
     Map<String, String> getConfigurablesNames() {
         return myConfigurablesNames.getValue();
     }
@@ -447,6 +436,7 @@ public class GotoActionModel implements ChooseByNameModel, Comparator<Object>, D
         if (text == null) {
             return MatchMode.NONE;
         }
+
         GroupMapping groupMapping = myActionGroups.get(anAction);
         if (groupMapping != null) {
             for (String groupName : groupMapping.getAllGroupNames()) {
@@ -475,7 +465,6 @@ public class GotoActionModel implements ChooseByNameModel, Comparator<Object>, D
         return myContextComponent;
     }
 
-    
     public SortedSet<Object> sortItems(Set<Object> elements) {
         TreeSet<Object> objects = new TreeSet<>(this);
         objects.addAll(elements);

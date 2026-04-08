@@ -337,7 +337,7 @@ public class InfoAndProgressPanel extends JPanel implements Disposable, CustomSt
     
     private String getMultiProgressLinkText() {
         ProgressIndicatorEx latest = getLatestProgress();
-        String latestText = latest == null ? null : latest.getText();
+        String latestText = latest == null ? null : latest.getTextValue().getNullIfEmpty();
         if (StringUtil.isEmptyOrSpaces(latestText) || myPopup.isShowing()) {
             return myOriginals.size() + pluralizeProcess(myOriginals.size()) + " running…";
         }
