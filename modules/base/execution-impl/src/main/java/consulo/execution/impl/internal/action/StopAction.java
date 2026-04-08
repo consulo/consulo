@@ -63,7 +63,7 @@ public class StopAction extends DumbAwareAction {
     public void update(AnActionEvent e) {
         boolean enable = false;
         Image icon = getTemplatePresentation().getIcon();
-        LocalizeValue description = getTemplatePresentation().getDescriptionValue();
+        LocalizeValue description = getTemplatePresentation().getDescription();
         Presentation presentation = e.getPresentation();
         if (isPlaceGlobal(e)) {
             List<RunContentDescriptor> stoppableDescriptors = getActiveStoppableDescriptors(e.getDataContext());

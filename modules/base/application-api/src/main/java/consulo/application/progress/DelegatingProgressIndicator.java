@@ -67,8 +67,8 @@ public class DelegatingProgressIndicator implements WrappedProgressIndicator, St
   }
 
   @Override
-  public LocalizeValue getTextValue() {
-    return myIndicator.getTextValue();
+  public LocalizeValue getText() {
+    return myIndicator.getText();
   }
 
   @Override
@@ -77,8 +77,8 @@ public class DelegatingProgressIndicator implements WrappedProgressIndicator, St
   }
 
   @Override
-  public LocalizeValue getText2Value() {
-    return myIndicator.getText2Value();
+  public LocalizeValue getText2() {
+    return myIndicator.getText2();
   }
 
   @Override

@@ -337,7 +337,7 @@ public class InfoAndProgressPanel extends JPanel implements Disposable, CustomSt
     
     private String getMultiProgressLinkText() {
         ProgressIndicatorEx latest = getLatestProgress();
-        String latestText = latest == null ? null : latest.getTextValue().getNullIfEmpty();
+        String latestText = latest == null ? null : latest.getText().getNullIfEmpty();
         if (StringUtil.isEmptyOrSpaces(latestText) || myPopup.isShowing()) {
             return myOriginals.size() + pluralizeProcess(myOriginals.size()) + " running…";
         }
@@ -542,8 +542,8 @@ public class InfoAndProgressPanel extends JPanel implements Disposable, CustomSt
 
         
         @Override
-        public LocalizeValue getTextValue() {
-            LocalizeValue textValue = super.getTextValue();
+        public LocalizeValue getText() {
+            LocalizeValue textValue = super.getText();
             ProgressSuspender suspender = getSuspender();
             return suspender != null && suspender.isSuspended() ? suspender.getSuspendedText() : textValue;
         }

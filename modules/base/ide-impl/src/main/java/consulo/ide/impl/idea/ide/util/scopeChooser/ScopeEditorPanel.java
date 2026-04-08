@@ -744,15 +744,13 @@ public class ScopeEditorPanel {
             setToComponent(myMatchingCountLabel, myRequestFocus);
         }
 
-        
         @Override
-        public LocalizeValue getTextValue() { //just show non-blocking progress
+        public LocalizeValue getText() { //just show non-blocking progress
             return LocalizeValue.empty();
         }
 
-        
         @Override
-        public LocalizeValue getText2Value() {
+        public LocalizeValue getText2() {
             return LocalizeValue.empty();
         }
     }

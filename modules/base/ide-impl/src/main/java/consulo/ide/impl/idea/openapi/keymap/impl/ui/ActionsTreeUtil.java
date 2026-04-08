@@ -416,8 +416,7 @@ public class ActionsTreeUtil {
                     return true;
                 }
             }
-            String description = action.getTemplatePresentation().getDescription();
-            String insensitiveDescription = description.toLowerCase();
+            String insensitiveDescription = action.getTemplatePresentation().getDescription().get().toLowerCase();
             if (SearchUtil.isComponentHighlighted(insensitiveDescription, insensitiveFilter, force, null)) {
                 return true;
             }

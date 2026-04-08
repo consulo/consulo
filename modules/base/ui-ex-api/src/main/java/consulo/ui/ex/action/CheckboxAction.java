@@ -52,7 +52,7 @@ public abstract class CheckboxAction extends ToggleAction implements CustomUICom
 
         CheckBox checkBox = CheckBox.create(textValue);
         checkBox.addStyle(CheckBoxStyle.TRANSPARENT_BACKGROUND);
-        checkBox.setToolTipText(presentation.getDescriptionValue());
+        checkBox.setToolTipText(presentation.getDescription());
 
         checkBox.addClickListener(e -> {
             Component component = e.getComponent();

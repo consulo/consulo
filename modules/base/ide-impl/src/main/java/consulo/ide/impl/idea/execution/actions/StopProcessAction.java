@@ -50,7 +50,7 @@ public class StopProcessAction extends DumbAwareAction {
                             @Nullable ProcessHandler processHandler) {
     boolean enable = false;
     Image icon = templatePresentation.getIcon();
-    String description = templatePresentation.getDescription();
+    LocalizeValue description = templatePresentation.getDescription();
     if (processHandler != null && !processHandler.isProcessTerminated()) {
       enable = true;
       if (processHandler.isProcessTerminating() && processHandler instanceof KillableProcessHandler) {
@@ -58,7 +58,7 @@ public class StopProcessAction extends DumbAwareAction {
         if (killableProcess.canKillProcess()) {
           // 'force quite' action presentation
           icon = ExecutionIconGroup.actionKillprocess();
-          description = "Kill process";
+          description = LocalizeValue.localizeTODO("Kill process");
         }
       }
     }

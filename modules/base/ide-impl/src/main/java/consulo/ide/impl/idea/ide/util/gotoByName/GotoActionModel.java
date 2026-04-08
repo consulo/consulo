@@ -426,7 +426,7 @@ public class GotoActionModel implements ChooseByNameModel, Comparator<Object>, D
     ) {
         Presentation presentation = anAction.getTemplatePresentation();
         String text = presentation.getText();
-        String description = presentation.getDescription();
+        String description = presentation.getDescription().getNullIfEmpty();
         if (text != null && matcher.matches(text)) {
             return MatchMode.NAME;
         }
@@ -678,7 +678,7 @@ public class GotoActionModel implements ChooseByNameModel, Comparator<Object>, D
             if (byGroup != 0) {
                 return byGroup;
             }
-            int byDesc = StringUtil.compare(myPresentation.getDescription(), oPresentation.getDescription(), true);
+            int byDesc = myPresentation.getDescription().compareTo(oPresentation.getDescription());
             if (byDesc != 0) {
                 return byDesc;
             }
@@ -842,7 +842,7 @@ public class GotoActionModel implements ChooseByNameModel, Comparator<Object>, D
                     }
                 }
 
-                panel.setToolTipText(presentation.getDescription());
+                panel.setToolTipText(presentation.getDescription().getNullIfEmpty());
                 Shortcut[] shortcuts = getActiveKeymapShortcuts(ActionManager.getInstance().getId(anAction)).getShortcuts();
                 String shortcutText = KeymapUtil.getPreferredShortcutText(shortcuts);
                 String name = getName(presentation.getText(), groupName, toggle);

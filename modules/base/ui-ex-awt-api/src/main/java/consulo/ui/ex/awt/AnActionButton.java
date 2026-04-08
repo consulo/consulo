@@ -36,7 +36,7 @@ public abstract class AnActionButton extends AnAction implements ShortcutProvide
         private final AnAction myAction;
 
         public AnActionButtonWrapper(Presentation presentation, AnAction action) {
-            super(presentation.getText(), presentation.getDescription(), presentation.getIcon());
+            super(presentation.getTextValue(), presentation.getDescription(), presentation.getIcon());
             myAction = action;
         }
 

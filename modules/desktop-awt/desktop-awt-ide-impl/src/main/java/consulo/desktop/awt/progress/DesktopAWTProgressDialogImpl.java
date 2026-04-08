@@ -48,9 +48,9 @@ public class DesktopAWTProgressDialogImpl implements ProgressDialog {
     final Runnable myRepaintRunnable = new Runnable() {
         @Override
         public void run() {
-            String text = myProgressWindow.getTextValue().getNullIfEmpty();
+            String text = myProgressWindow.getText().getNullIfEmpty();
             double fraction = myProgressWindow.getFraction();
-            String text2 = myProgressWindow.getText2Value().getNullIfEmpty();
+            String text2 = myProgressWindow.getText2().getNullIfEmpty();
 
             if (myProgressBar.isShowing()) {
                 int perc = (int) (fraction * 100);

@@ -167,7 +167,7 @@ public abstract class AbstractFileProcessor {
         LocalizeValue msg = LocalizeValue.empty();
         double fraction = 0.0D;
         if (indicator != null) {
-            msg = indicator.getTextValue();
+            msg = indicator.getText();
             fraction = indicator.getFraction();
             indicator.setText(message);
         }
@@ -209,7 +209,7 @@ public abstract class AbstractFileProcessor {
             LocalizeValue msg1 = LocalizeValue.empty();
             double fraction1 = 0.0D;
             if (indicator1 != null) {
-                msg1 = indicator1.getTextValue();
+                msg1 = indicator1.getText();
                 fraction1 = indicator1.getFraction();
                 indicator1.setText(message);
             }

@@ -82,7 +82,7 @@ public class DummyProgressIndicator implements ProgressIndicatorEx {
     }
 
     @Override
-    public LocalizeValue getTextValue() {
+    public LocalizeValue getText() {
         return LocalizeValue.empty();
     }
 
@@ -91,7 +91,7 @@ public class DummyProgressIndicator implements ProgressIndicatorEx {
     }
 
     @Override
-    public LocalizeValue getText2Value() {
+    public LocalizeValue getText2() {
         return LocalizeValue.empty();
     }
 

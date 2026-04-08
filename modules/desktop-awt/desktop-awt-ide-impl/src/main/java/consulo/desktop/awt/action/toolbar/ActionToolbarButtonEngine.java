@@ -93,7 +93,7 @@ public class ActionToolbarButtonEngine {
 
     public void updateToolTipText() {
         LocalizeValue textValue = myPresentation.getTextValue();
-        LocalizeValue descriptionValue = myPresentation.getDescriptionValue();
+        LocalizeValue descriptionValue = myPresentation.getDescription();
         HelpTooltipImpl.dispose(myButton);
 
         if (textValue.isNotEmpty() || descriptionValue.isNotEmpty()) {

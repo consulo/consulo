@@ -37,7 +37,7 @@ public class DeployAction extends DumbAwareAction {
         }
         else {
             presentation.setText(getTemplatePresentation().getTextValue());
-            presentation.setDescription(getTemplatePresentation().getDescriptionValue());
+            presentation.setDescription(getTemplatePresentation().getDescription());
         }
     }
 
