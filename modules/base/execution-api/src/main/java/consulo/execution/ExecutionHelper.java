@@ -494,7 +494,7 @@ public class ExecutionHelper {
             @Override
             public void run() {
                 myProgressIndicator = ProgressManager.getInstance().getProgressIndicator();
-                if (myProgressIndicator != null && myProgressIndicator.getTextValue().isEmpty()) {
+                if (myProgressIndicator != null && myProgressIndicator.getText().isEmpty()) {
                     myProgressIndicator.setText("Please wait...");
                 }
 

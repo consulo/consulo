@@ -112,11 +112,12 @@ public interface ProgressIndicator {
     /**
      * @return text above the progress bar, set by {@link #setText(String)}
      */
-    default @Nullable String getText() {
-        return getTextValue().getNullIfEmpty();
-    }
+    LocalizeValue getText();
 
-    LocalizeValue getTextValue();
+    @Deprecated(forRemoval = true)
+    default LocalizeValue getTextValue() {
+        return getText();
+    }
 
     /**
      * Sets text under the progress bar
@@ -135,11 +136,12 @@ public interface ProgressIndicator {
     /**
      * @return text under the progress bar, set by {@link #setText2(String)}
      */
-    default @Nullable String getText2() {
-        return getText2Value().getNullIfEmpty();
-    }
+    LocalizeValue getText2();
 
-    LocalizeValue getText2Value();
+    @Deprecated(forRemoval = true)
+    default LocalizeValue getText2Value() {
+        return getText2();
+    }
 
     /**
      * @return current fraction, set by {@link #setFraction(double)}

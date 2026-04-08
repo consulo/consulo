@@ -216,11 +216,11 @@ public final class Presentation implements Cloneable {
         setText(text, true);
     }
 
-    @DeprecationInfo("see #getDescriptionValue")
-    public String getDescription() {
-        return myDescription.getValue();
+    public LocalizeValue getDescription() {
+        return myDescription;
     }
 
+    @Deprecated(forRemoval = true)
     public LocalizeValue getDescriptionValue() {
         return myDescription;
     }
@@ -397,7 +397,7 @@ public final class Presentation implements Cloneable {
         fireBooleanPropertyChange(PROP_VISIBLE, oldVisible, isVisible());
 
         setText(presentation.getTextValue());
-        setDescription(presentation.getDescriptionValue());
+        setDescription(presentation.getDescription());
 
         setIcon(presentation.getIcon());
         setSelectedIcon(presentation.getSelectedIcon());

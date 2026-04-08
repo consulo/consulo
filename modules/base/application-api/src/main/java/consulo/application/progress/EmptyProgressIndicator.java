@@ -78,7 +78,7 @@ public class EmptyProgressIndicator implements StandardProgressIndicator {
   }
 
   @Override
-  public LocalizeValue getTextValue() {
+  public LocalizeValue getText() {
     return LocalizeValue.empty();
   }
 
@@ -87,7 +87,7 @@ public class EmptyProgressIndicator implements StandardProgressIndicator {
   }
 
   @Override
-  public LocalizeValue getText2Value() {
+  public LocalizeValue getText2() {
     return LocalizeValue.empty();
   }
 

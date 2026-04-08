@@ -214,7 +214,7 @@ public class BuildViewServiceImpl {
 
             @Override
             public void pushState() {
-                getTextStack().push(indicator.getTextValue());
+                getTextStack().push(indicator.getText());
             }
 
             @Override

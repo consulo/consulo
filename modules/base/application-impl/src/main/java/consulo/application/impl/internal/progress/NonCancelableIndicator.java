@@ -75,7 +75,7 @@ class NonCancelableIndicator implements NonCancelableSection, StandardProgressIn
   }
 
   @Override
-  public LocalizeValue getTextValue() {
+  public LocalizeValue getText() {
     return LocalizeValue.empty();
   }
 
@@ -84,7 +84,7 @@ class NonCancelableIndicator implements NonCancelableSection, StandardProgressIn
   }
 
   @Override
-  public LocalizeValue getText2Value() {
+  public LocalizeValue getText2() {
     return LocalizeValue.empty();
   }
 

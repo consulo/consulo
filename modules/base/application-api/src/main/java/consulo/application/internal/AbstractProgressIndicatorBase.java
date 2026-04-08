@@ -149,7 +149,7 @@ public class AbstractProgressIndicatorBase extends UserDataHolderBase implements
   }
 
   @Override
-  public LocalizeValue getTextValue() {
+  public LocalizeValue getText() {
     return myText;
   }
 
@@ -159,7 +159,7 @@ public class AbstractProgressIndicatorBase extends UserDataHolderBase implements
   }
 
   @Override
-  public LocalizeValue getText2Value() {
+  public LocalizeValue getText2() {
     return myText2;
   }
 
@@ -291,8 +291,8 @@ public class AbstractProgressIndicatorBase extends UserDataHolderBase implements
       myCanceled = indicator.isCanceled();
       myFraction = indicator.getFraction();
       myIndeterminate = indicator.isIndeterminate();
-      myText = indicator.getTextValue();
-      myText2 = indicator.getText2Value();
+      myText = indicator.getText();
+      myText2 = indicator.getText2();
 
       myFraction = indicator.getFraction();
 

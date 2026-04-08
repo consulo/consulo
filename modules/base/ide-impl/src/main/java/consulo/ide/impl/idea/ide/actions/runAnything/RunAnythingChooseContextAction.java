@@ -172,7 +172,7 @@ public abstract class RunAnythingChooseContextAction extends ActionGroup impleme
                     AnActionEvent event = ActionImplUtil.createEmptyEvent();
                     ActionImplUtil.performDumbAwareUpdate(actionItem.getAction(), event, false);
 
-                    LocalizeValue description = event.getPresentation().getDescriptionValue();
+                    LocalizeValue description = event.getPresentation().getDescription();
                     if (description.isNotEmpty()) {
                         myInfoLabel.setText(description.get());
                     }

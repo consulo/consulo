@@ -172,8 +172,8 @@ public class XmlActionStub extends AnAction implements ActionStubBase {
             targetPresentation.setText(sourcePresentation.getTextValue());
         }
 
-        if (targetPresentation.getDescriptionValue().isEmpty() && sourcePresentation.getDescriptionValue().isNotEmpty()) {
-            targetPresentation.setDescription(sourcePresentation.getDescriptionValue());
+        if (targetPresentation.getDescription().isEmpty() && sourcePresentation.getDescription().isNotEmpty()) {
+            targetPresentation.setDescription(sourcePresentation.getDescription());
         }
     }
 }

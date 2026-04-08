@@ -65,7 +65,7 @@ public final class ComboBoxButtonImpl extends JComboBox<Object> implements Combo
         // add and select one value
         revalidateValue();
         updateSize();
-        updateTooltipText(presentation.getDescriptionValue());
+        updateTooltipText(presentation.getDescription());
     }
 
     private void revalidateValue() {
