@@ -23,7 +23,8 @@ import consulo.localize.LocalizeValue;
 import org.jspecify.annotations.Nullable;
 
 /**
- * @author Maxim.Mossienko on 11/30/2015.
+ * @author Maxim.Mossienko
+ * @since 2015-11-30
  */
 class SilentProgressIndicator extends DelegatingProgressIndicator {
   // suppress verbose messages
@@ -38,20 +39,18 @@ class SilentProgressIndicator extends DelegatingProgressIndicator {
   }
 
   @Override
-  public void setTextValue(LocalizeValue text) {
+  public void setText(LocalizeValue text) {
   }
 
-  
   @Override
   public LocalizeValue getTextValue() {
     return LocalizeValue.empty();
   }
 
   @Override
-  public void setText2Value(LocalizeValue text) {
+  public void setText2(LocalizeValue text) {
   }
 
-  
   @Override
   public LocalizeValue getText2Value() {
     return LocalizeValue.empty();

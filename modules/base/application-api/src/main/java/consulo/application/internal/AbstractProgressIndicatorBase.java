@@ -144,7 +144,7 @@ public class AbstractProgressIndicatorBase extends UserDataHolderBase implements
   }
 
   @Override
-  public void setTextValue(LocalizeValue text) {
+  public void setText(LocalizeValue text) {
     myText = text;
   }
 
@@ -154,7 +154,7 @@ public class AbstractProgressIndicatorBase extends UserDataHolderBase implements
   }
 
   @Override
-  public void setText2Value(LocalizeValue text) {
+  public void setText2(LocalizeValue text) {
     myText2 = text;
   }
 

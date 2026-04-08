@@ -52,7 +52,7 @@ public class CustomizeDownloadAndStartStepPanel extends AbstractCustomizeWizardS
         }
 
         @Override
-        public void setText2Value(LocalizeValue text) {
+        public void setText2(LocalizeValue text) {
             UIUtil.invokeLaterIfNeeded(() -> myLabel.setText(text.get()));
         }
 

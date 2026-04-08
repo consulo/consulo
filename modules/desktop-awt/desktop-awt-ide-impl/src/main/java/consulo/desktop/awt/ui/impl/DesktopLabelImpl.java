@@ -38,7 +38,7 @@ import javax.swing.*;
 
 /**
  * @author VISTALL
- * @since 12-Jun-16
+ * @since 2016-06-12
  */
 class DesktopLabelImpl extends SwingComponentDelegate<DesktopLabelImpl.MyJLabel> implements Label {
     public class MyJLabel extends JBLabel implements FromSwingComponentWrapper {
@@ -46,7 +46,7 @@ class DesktopLabelImpl extends SwingComponentDelegate<DesktopLabelImpl.MyJLabel>
 
         private HorizontalAlignment myHorizontalAlignment2 = HorizontalAlignment.LEFT;
 
-        private ColorValue myForegroudColor;
+        private ColorValue myForegroundColor;
 
         MyJLabel(LocalizeValue text, LabelOptions options) {
             super("");
@@ -72,7 +72,7 @@ class DesktopLabelImpl extends SwingComponentDelegate<DesktopLabelImpl.MyJLabel>
         }
 
         public void setForegroundColor(ColorValue foregroundColor) {
-            myForegroudColor = foregroundColor;
+            myForegroundColor = foregroundColor;
 
             updateForegroundColor();
         }
@@ -96,23 +96,22 @@ class DesktopLabelImpl extends SwingComponentDelegate<DesktopLabelImpl.MyJLabel>
             return myHorizontalAlignment2;
         }
 
-        
         public LocalizeValue getTextValue() {
             return myTextValue;
         }
 
-        public void setTextValue(LocalizeValue textValue) {
+        public void setText(LocalizeValue textValue) {
             myTextValue = textValue;
 
             updateText();
         }
 
         private void updateForegroundColor() {
-            if (myForegroudColor == null) {
+            if (myForegroundColor == null) {
                 setForeground(null);
             }
             else {
-                setForeground(TargetAWT.to(myForegroudColor));
+                setForeground(TargetAWT.to(myForegroundColor));
             }
         }
 
@@ -171,10 +170,9 @@ class DesktopLabelImpl extends SwingComponentDelegate<DesktopLabelImpl.MyJLabel>
     @RequiredUIAccess
     @Override
     public void setText(LocalizeValue text) {
-        toAWTComponent().setTextValue(text);
+        toAWTComponent().setText(text);
     }
 
-    
     @Override
     public LocalizeValue getText() {
         return toAWTComponent().getTextValue();
@@ -185,7 +183,6 @@ class DesktopLabelImpl extends SwingComponentDelegate<DesktopLabelImpl.MyJLabel>
         toAWTComponent().setForegroundColor(colorValue);
     }
 
-    
     @Override
     public Disposable addFocusListener(ComponentEventListener<HasFocus, FocusEvent> listener) {
         AWTFocusAdapterAsFocusListener adapter = new AWTFocusAdapterAsFocusListener(this, listener);
@@ -193,7 +190,6 @@ class DesktopLabelImpl extends SwingComponentDelegate<DesktopLabelImpl.MyJLabel>
         return () -> toAWTComponent().removeFocusListener(adapter);
     }
 
-    
     @Override
     public Disposable addBlurListener(ComponentEventListener<HasFocus, BlurEvent> listener) {
         AWTFocusAdapterAsBlurListener adapter = new AWTFocusAdapterAsBlurListener(this, listener);
@@ -203,7 +199,7 @@ class DesktopLabelImpl extends SwingComponentDelegate<DesktopLabelImpl.MyJLabel>
 
     @Override
     public @Nullable ColorValue getForegroundColor() {
-        return toAWTComponent().myForegroudColor;
+        return toAWTComponent().myForegroundColor;
     }
 
     @Override

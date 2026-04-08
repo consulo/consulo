@@ -283,9 +283,9 @@ public class ProgressWindow extends ProgressIndicatorBase implements UnsafeProgr
     }
 
     @Override
-    public void setTextValue(LocalizeValue text) {
+    public void setText(LocalizeValue text) {
         if (!text.equals(getTextValue())) {
-            super.setTextValue(text);
+            super.setText(text);
             update();
         }
     }
@@ -299,9 +299,9 @@ public class ProgressWindow extends ProgressIndicatorBase implements UnsafeProgr
     }
 
     @Override
-    public void setText2Value(LocalizeValue text) {
+    public void setText2(LocalizeValue text) {
         if (!text.equals(getText2Value())) {
-            super.setText2Value(text);
+            super.setText2(text);
             update();
         }
     }

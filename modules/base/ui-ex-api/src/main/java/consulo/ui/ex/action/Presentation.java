@@ -185,12 +185,6 @@ public final class Presentation implements Cloneable {
         }
     }
 
-    @Deprecated
-    @DeprecationInfo("Use #setText(LocalizeValue)")
-    public void setTextValue(LocalizeValue newTextValue) {
-        setText(newTextValue);
-    }
-
     public LocalizeValue getTextValue() {
         return myText;
     }
@@ -238,12 +232,6 @@ public final class Presentation implements Cloneable {
         if (!oldDescription.equals(description)) {
             fireObjectPropertyChange(PROP_DESCRIPTION, oldDescription, myDescription);
         }
-    }
-
-    @Deprecated
-    @DeprecationInfo("Use #setDescription(LocalizeValue)")
-    public void setDescriptionValue(LocalizeValue newDescriptionValue) {
-        setDescription(newDescriptionValue);
     }
 
     @Deprecated

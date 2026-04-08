@@ -34,7 +34,7 @@ public abstract class VaadinLabelComponentBase extends VaadinComponent {
   private ColorValue myForegroundColor;
   private Image myImage;
 
-  public void setTextValue(LocalizeValue textValue) {
+  public void setText(LocalizeValue textValue) {
     myTextValue = textValue;
     markAsDirty();
   }

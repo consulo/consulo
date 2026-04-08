@@ -54,7 +54,7 @@ public abstract class ToolbarLabelAction extends DumbAwareAction implements Cust
 
         private void updatePresentation() {
             setText(StringUtil.notNullize(myPresentation.getText()));
-            setToolTipText(StringUtil.nullize(myPresentation.getDescription()));
+            setToolTipText(myPresentation.getDescriptionValue().getNullIfEmpty());
             setIcon(myPresentation.getIcon());
         }
     }

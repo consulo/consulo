@@ -74,7 +74,7 @@ public class EmptyProgressIndicator implements StandardProgressIndicator {
   }
 
   @Override
-  public void setTextValue(LocalizeValue text) {
+  public void setText(LocalizeValue text) {
   }
 
   @Override
@@ -83,7 +83,7 @@ public class EmptyProgressIndicator implements StandardProgressIndicator {
   }
 
   @Override
-  public void setText2Value(LocalizeValue text) {
+  public void setText2(LocalizeValue text) {
   }
 
   @Override
