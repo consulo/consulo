@@ -59,16 +59,16 @@ public enum KeepPopupOnPerform {
 
     public static KeepPopupOnPerform of(boolean requested, boolean preferred) {
         if (requested && preferred) {
-            return KeepPopupOnPerform.ALWAYS;
+            return ALWAYS;
         }
         else if (requested) {
-            return KeepPopupOnPerform.IF_REQUESTED;
+            return IF_REQUESTED;
         }
         else if (preferred) {
-            return KeepPopupOnPerform.IF_PREFERRED;
+            return IF_PREFERRED;
         }
         else {
-            return KeepPopupOnPerform.NEVER;
+            return NEVER;
         }
     }
 }
