@@ -329,6 +329,7 @@ public class ProgressWindow extends ProgressIndicatorBase implements UnsafeProgr
         return myTitle.getNullIfEmpty();
     }
 
+    @Deprecated(forRemoval = true)
     public LocalizeValue getTitleValue() {
         return myTitle;
     }

@@ -182,9 +182,9 @@ public class ChooseComponentsToExportDialog extends DialogWrapper {
         LocalizeValue description
     ) {
         FileChooserDescriptor chooserDescriptor = FileChooserDescriptorFactory.createSingleLocalFileDescriptor();
-        chooserDescriptor.withDescriptionValue(description);
+        chooserDescriptor.withDescription(description);
         chooserDescriptor.setHideIgnored(false);
-        chooserDescriptor.withTitleValue(title);
+        chooserDescriptor.withTitle(title);
 
         VirtualFile initialDir;
         if (oldPath != null) {

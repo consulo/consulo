@@ -251,10 +251,10 @@ public class SingleConfigurableEditor extends DialogWrapper {
         catch (ConfigurationException e) {
             if (e.getMessage() != null) {
                 if (myProject != null) {
-                    Messages.showMessageDialog(myProject, e.getMessage(), e.getTitleValue().get(), UIUtil.getErrorIcon());
+                    Messages.showMessageDialog(myProject, e.getMessage(), e.getTitle().get(), UIUtil.getErrorIcon());
                 }
                 else {
-                    Messages.showMessageDialog(myParentComponent, e.getMessage(), e.getTitleValue().get(), UIUtil.getErrorIcon());
+                    Messages.showMessageDialog(myParentComponent, e.getMessage(), e.getTitle().get(), UIUtil.getErrorIcon());
                 }
             }
             return;
@@ -311,10 +311,10 @@ public class SingleConfigurableEditor extends DialogWrapper {
             }
             catch (ConfigurationException e) {
                 if (myProject != null) {
-                    Messages.showMessageDialog(myProject, e.getMessage(), e.getTitleValue().get(), UIUtil.getErrorIcon());
+                    Messages.showMessageDialog(myProject, e.getMessage(), e.getTitle().get(), UIUtil.getErrorIcon());
                 }
                 else {
-                    Messages.showMessageDialog(myParentComponent, e.getMessage(), e.getTitleValue().get(), UIUtil.getErrorIcon());
+                    Messages.showMessageDialog(myParentComponent, e.getMessage(), e.getTitle().get(), UIUtil.getErrorIcon());
                 }
             }
             finally {

@@ -59,8 +59,8 @@ public final class FileChooserTextBoxBuilder {
         @Override
         public void actionPerformed(AnActionEvent e) {
             FileChooserDescriptor fileChooserDescriptor = (FileChooserDescriptor) myController.myFileChooserDescriptor.clone();
-            fileChooserDescriptor.withTitleValue(myController.myDialogTitle);
-            fileChooserDescriptor.withDescriptionValue(myController.myDialogDescription);
+            fileChooserDescriptor.withTitle(myController.myDialogTitle);
+            fileChooserDescriptor.withDescription(myController.myDialogDescription);
 
             String text = myController.myAccessor.getValue(myController.myTextBox);
 

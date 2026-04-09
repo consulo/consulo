@@ -86,7 +86,7 @@ public class OpenFileAction extends AnAction implements DumbAware {
                 return showFiles;
             }
         };
-        descriptor.withTitleValue(
+        descriptor.withTitle(
             showFiles ? LocalizeValue.localizeTODO("Open File or Project") : LocalizeValue.localizeTODO("Open Project")
         );
         // FIXME [VISTALL] we need this? descriptor.setDescription(getFileChooserDescription());

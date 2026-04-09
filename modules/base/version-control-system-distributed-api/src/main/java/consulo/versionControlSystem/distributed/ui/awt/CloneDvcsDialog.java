@@ -152,13 +152,13 @@ public abstract class CloneDvcsDialog extends DialogWrapper {
     private void initListeners() {
         FileChooserDescriptor fcd = FileChooserDescriptorFactory.createSingleFolderDescriptor()
             .withShowFileSystemRoots(true)
-            .withTitleValue(DistributedVcsLocalize.cloneDestinationDirectoryTitle())
-            .withDescriptionValue(DistributedVcsLocalize.cloneDestinationDirectoryDescription())
+            .withTitle(DistributedVcsLocalize.cloneDestinationDirectoryTitle())
+            .withDescription(DistributedVcsLocalize.cloneDestinationDirectoryDescription())
             .withHideIgnored(false);
         myParentDirectory.addActionListener(
             new ComponentWithBrowseButton.BrowseFolderActionListener<JTextField>(
-                fcd.getTitleValue(),
-                fcd.getDescriptionValue(),
+                fcd.getTitle(),
+                fcd.getDescription(),
                 myParentDirectory,
                 myProject,
                 fcd,

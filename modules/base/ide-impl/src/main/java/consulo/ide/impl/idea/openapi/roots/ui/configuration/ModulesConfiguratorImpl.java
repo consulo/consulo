@@ -376,7 +376,7 @@ public class ModulesConfiguratorImpl implements ModulesConfigurator, ModuleEdito
                     return true;
                 }
             };
-            fileChooserDescriptor.withTitleValue(ProjectLocalize.chooseModuleHome());
+            fileChooserDescriptor.withTitle(ProjectLocalize.chooseModuleHome());
 
             AsyncPromise<List<Module>> promise = new AsyncPromise<>();
 

@@ -1459,7 +1459,7 @@ public class RunConfigurable extends BaseConfigurable {
                 configurable.getNameTextField().setSelectionEnd(copyName.length());
             }
             catch (ConfigurationException e1) {
-                Messages.showErrorDialog(myTree, e1.getMessage(), e1.getTitle());
+                Messages.showErrorDialog(myTree, e1.getMessage(), e1.getTitle().get());
             }
         }
 

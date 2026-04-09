@@ -72,12 +72,10 @@ public class MacPathChooserDialog implements PathChooserDialog, FileChooserDialo
         OwnerOptional.fromComponent(parent).ifDialog(dialogConsumer).ifFrame(frameConsumer).ifNull(frameConsumer);
     }
 
-    
     private static LocalizeValue getChooserTitle(FileChooserDescriptor descriptor) {
-        return descriptor.getTitleValue().orIfEmpty(UILocalize.fileChooserDefaultTitle());
+        return descriptor.getTitle().orIfEmpty(UILocalize.fileChooserDefaultTitle());
     }
 
-    
     private List<VirtualFile> getChosenFiles(Stream<File> streamOfFiles) {
         List<VirtualFile> virtualFiles = new ArrayList<>();
 
@@ -177,7 +175,6 @@ public class MacPathChooserDialog implements PathChooserDialog, FileChooserDialo
         }
     }
 
-    
     @Override
     @RequiredUIAccess
     public VirtualFile[] choose(@Nullable ComponentManager project, VirtualFile... toSelectFiles) {
@@ -187,17 +184,15 @@ public class MacPathChooserDialog implements PathChooserDialog, FileChooserDialo
         return virtualFiles;
     }
 
-    
-    @RequiredUIAccess
     @Override
+    @RequiredUIAccess
     public AsyncResult<VirtualFile[]> chooseAsync(@Nullable ComponentManager project, VirtualFile[] toSelectFiles) {
         VirtualFile toSelect = toSelectFiles.length > 0 ? toSelectFiles[0] : null;
         return chooseAsync(toSelect);
     }
 
-    @RequiredUIAccess
-    
     @Override
+    @RequiredUIAccess
     public AsyncResult<VirtualFile[]> chooseAsync(@Nullable VirtualFile toSelect) {
         if (toSelect != null && toSelect.getParent() != null) {
             String directoryName;

@@ -107,11 +107,10 @@ public class FileChooserDialogImpl extends DialogWrapper implements FileChooserD
     }
 
     private static LocalizeValue getChooserTitle(FileChooserDescriptor descriptor) {
-        return descriptor.getTitleValue().orIfEmpty(UILocalize.fileChooserDefaultTitle());
+        return descriptor.getTitle().orIfEmpty(UILocalize.fileChooserDefaultTitle());
     }
 
     @Override
-    
     @RequiredUIAccess
     public VirtualFile[] choose(@Nullable ComponentManager project, VirtualFile... toSelect) {
         init();
@@ -147,9 +146,8 @@ public class FileChooserDialogImpl extends DialogWrapper implements FileChooserD
         }
     }
 
-    
-    @RequiredUIAccess
     @Override
+    @RequiredUIAccess
     public AsyncResult<VirtualFile[]> chooseAsync(@Nullable ComponentManager project, VirtualFile[] toSelect) {
         init();
         if ((myProject == null) && (project != null)) {
@@ -179,9 +177,8 @@ public class FileChooserDialogImpl extends DialogWrapper implements FileChooserD
         return result;
     }
 
-    @RequiredUIAccess
-    
     @Override
+    @RequiredUIAccess
     public AsyncResult<VirtualFile[]> chooseAsync(@Nullable VirtualFile toSelect) {
         init();
         restoreSelection(toSelect);
@@ -239,7 +236,6 @@ public class FileChooserDialogImpl extends DialogWrapper implements FileChooserD
         ApplicationPropertiesComponent.getInstance().setValues(RECENT_FILES_KEY, ArrayUtil.toStringArray(files));
     }
 
-    
     private String[] getRecentFiles() {
         String[] array = ApplicationPropertiesComponent.getInstance().getValues(RECENT_FILES_KEY);
         if (array == null) {
@@ -269,12 +265,12 @@ public class FileChooserDialogImpl extends DialogWrapper implements FileChooserD
 
     @Override
     protected final @Nullable JComponent createTitlePane() {
-        String description = myChooserDescriptor.getDescription();
-        if (StringUtil.isEmptyOrSpaces(description)) {
+        LocalizeValue description = myChooserDescriptor.getDescription();
+        if (description.isEmpty()) {
             return null;
         }
 
-        JLabel label = new JLabel(description);
+        JLabel label = new JLabel(description.get());
         label.setBorder(BorderFactory.createCompoundBorder(
             new SideBorder(UIUtil.getPanelBackground().darker(), SideBorder.BOTTOM),
             JBUI.Borders.empty(0, 5, 10, 5)
@@ -487,7 +483,6 @@ public class FileChooserDialogImpl extends DialogWrapper implements FileChooserD
         return tree;
     }
 
-    
     protected Tree createInternalTree() {
         return new Tree();
     }

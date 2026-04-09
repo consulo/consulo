@@ -50,7 +50,7 @@ import java.util.stream.Stream;
 
 /**
  * @author VISTALL
- * @since 21/12/2025
+ * @since 2025-12-21
  */
 public class NativeFileChooseDialog implements PathChooserDialog, FileChooserDialog {
     private final FileChooserDescriptor myFileChooserDescriptor;
@@ -60,7 +60,6 @@ public class NativeFileChooseDialog implements PathChooserDialog, FileChooserDia
     private VirtualFile[] virtualFiles;
 
     public NativeFileChooseDialog(FileChooserDescriptor descriptor, Component parent, Project project) {
-
         myFileChooserDescriptor = descriptor;
         myParent = new WeakReference<>(parent);
         myProject = project;
@@ -68,10 +67,9 @@ public class NativeFileChooseDialog implements PathChooserDialog, FileChooserDia
     }
 
     private static LocalizeValue getChooserTitle(FileChooserDescriptor descriptor) {
-        return descriptor.getTitleValue().orIfEmpty(UILocalize.fileChooserDefaultTitle());
+        return descriptor.getTitle().orIfEmpty(UILocalize.fileChooserDefaultTitle());
     }
 
-    
     private java.util.List<VirtualFile> getChosenFiles(Stream<File> streamOfFiles) {
         java.util.List<VirtualFile> virtualFiles = new ArrayList<>();
 
@@ -181,7 +179,6 @@ public class NativeFileChooseDialog implements PathChooserDialog, FileChooserDia
         }
     }
 
-    
     @Override
     @RequiredUIAccess
     public AsyncResult<VirtualFile[]> chooseAsync(@Nullable VirtualFile toSelect) {
@@ -280,7 +277,6 @@ public class NativeFileChooseDialog implements PathChooserDialog, FileChooserDia
         return result;
     }
 
-    
     @Override
     @RequiredUIAccess
     public AsyncResult<VirtualFile[]> chooseAsync(@Nullable ComponentManager project, VirtualFile[] toSelectFiles) {
@@ -288,7 +284,6 @@ public class NativeFileChooseDialog implements PathChooserDialog, FileChooserDia
         return chooseAsync(toSelect);
     }
 
-    
     @Override
     @RequiredUIAccess
     public VirtualFile[] choose(@Nullable ComponentManager project, VirtualFile... toSelectFiles) {

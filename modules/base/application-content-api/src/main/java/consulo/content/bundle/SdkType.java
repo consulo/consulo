@@ -175,7 +175,7 @@ public abstract class SdkType implements SdkTypeId {
                 }
             }
         };
-        descriptor.withTitleValue(ProjectLocalize.sdkConfigureHomeTitle(getDisplayName()));
+        descriptor.withTitle(ProjectLocalize.sdkConfigureHomeTitle(getDisplayName()));
         return descriptor;
     }
 
