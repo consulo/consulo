@@ -65,7 +65,7 @@ public class NewModuleAction extends AnAction implements DumbAware {
                 return true;
             }
         };
-        fileChooserDescriptor.withTitleValue(ProjectLocalize.chooseModuleHome());
+        fileChooserDescriptor.withTitle(ProjectLocalize.chooseModuleHome());
 
         AsyncResult<VirtualFile> chooseAsync =
             FileChooser.chooseFile(fileChooserDescriptor, project, virtualFile != null && virtualFile.isDirectory() ? virtualFile : null);

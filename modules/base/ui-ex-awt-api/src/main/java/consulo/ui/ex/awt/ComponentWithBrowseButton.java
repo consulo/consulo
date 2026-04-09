@@ -342,10 +342,10 @@ public class ComponentWithBrowseButton<Comp extends JComponent> extends JPanel i
             if (myTitle.isNotEmpty() || myDescription.isNotEmpty()) {
                 fileChooserDescriptor = (FileChooserDescriptor) myFileChooserDescriptor.clone();
                 if (myTitle.isNotEmpty()) {
-                    fileChooserDescriptor.withTitleValue(myTitle);
+                    fileChooserDescriptor.withTitle(myTitle);
                 }
                 if (myDescription.isNotEmpty()) {
-                    fileChooserDescriptor.withDescriptionValue(myDescription);
+                    fileChooserDescriptor.withDescription(myDescription);
                 }
             }
 

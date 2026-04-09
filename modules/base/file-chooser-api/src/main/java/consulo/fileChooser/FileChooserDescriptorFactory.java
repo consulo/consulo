@@ -75,13 +75,13 @@ public class FileChooserDescriptorFactory {
 
   public static FileChooserDescriptor getDirectoryChooserDescriptor(String aSearchedObjectName) {
     FileChooserDescriptor singleFolderDescriptor = createSingleFolderDescriptor();
-    singleFolderDescriptor.withTitleValue(FileChooserLocalize.fileChooserSelectObjectTitle(aSearchedObjectName));
+    singleFolderDescriptor.withTitle(FileChooserLocalize.fileChooserSelectObjectTitle(aSearchedObjectName));
     return singleFolderDescriptor;
   }
 
   public static FileChooserDescriptor getFileChooserDescriptor(String aSearchedObjectName) {
     FileChooserDescriptor fileChooserDescriptor = createSingleFileNoJarsDescriptor();
-    fileChooserDescriptor.withTitleValue(FileChooserLocalize.fileChooserSelectObjectTitle(aSearchedObjectName));
+    fileChooserDescriptor.withTitle(FileChooserLocalize.fileChooserSelectObjectTitle(aSearchedObjectName));
     return fileChooserDescriptor;
   }
 

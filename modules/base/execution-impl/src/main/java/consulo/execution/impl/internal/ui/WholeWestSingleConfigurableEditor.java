@@ -16,14 +16,11 @@
 package consulo.execution.impl.internal.ui;
 
 import consulo.application.Application;
-import consulo.application.ApplicationManager;
-import consulo.application.CommonBundle;
 import consulo.application.HelpManager;
 import consulo.application.dumb.IndexNotReadyException;
 import consulo.configurable.Configurable;
 import consulo.configurable.ConfigurationException;
 import consulo.configurable.internal.ConfigurableUIMigrationUtil;
-import consulo.localize.LocalizeKey;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.platform.base.localize.CommonLocalize;
@@ -31,6 +28,7 @@ import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.IdeFocusTraversalPolicy;
 import consulo.ui.ex.awt.Messages;
+import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.WholeWestDialogWrapper;
 import consulo.ui.ex.awt.util.Alarm;
 import org.jspecify.annotations.Nullable;
@@ -66,6 +64,7 @@ public abstract class WholeWestSingleConfigurableEditor extends WholeWestDialogW
         myConfigurable = configurable;
     }
 
+    @RequiredUIAccess
     public WholeWestSingleConfigurableEditor(@Nullable Project project,
                                              Configurable configurable,
                                              String dimensionKey,
@@ -82,6 +81,7 @@ public abstract class WholeWestSingleConfigurableEditor extends WholeWestDialogW
         myConfigurable.reset();
     }
 
+    @RequiredUIAccess
     public WholeWestSingleConfigurableEditor(Component parent,
                                              Configurable configurable,
                                              String dimensionServiceKey,
@@ -98,34 +98,42 @@ public abstract class WholeWestSingleConfigurableEditor extends WholeWestDialogW
         myConfigurable.reset();
     }
 
+    @RequiredUIAccess
     public WholeWestSingleConfigurableEditor(@Nullable Project project, Configurable configurable, String dimensionKey, boolean showApplyButton) {
         this(project, configurable, dimensionKey, showApplyButton, IdeModalityType.IDE);
     }
 
+    @RequiredUIAccess
     public WholeWestSingleConfigurableEditor(Component parent, Configurable configurable, String dimensionServiceKey, boolean showApplyButton) {
         this(parent, configurable, dimensionServiceKey, showApplyButton, IdeModalityType.IDE);
     }
 
+    @RequiredUIAccess
     public WholeWestSingleConfigurableEditor(@Nullable Project project, Configurable configurable, String dimensionKey, IdeModalityType ideModalityType) {
         this(project, configurable, dimensionKey, true, ideModalityType);
     }
 
+    @RequiredUIAccess
     public WholeWestSingleConfigurableEditor(@Nullable Project project, Configurable configurable, String dimensionKey) {
         this(project, configurable, dimensionKey, true);
     }
 
+    @RequiredUIAccess
     public WholeWestSingleConfigurableEditor(Component parent, Configurable configurable, String dimensionServiceKey) {
         this(parent, configurable, dimensionServiceKey, true);
     }
 
+    @RequiredUIAccess
     public WholeWestSingleConfigurableEditor(@Nullable Project project, Configurable configurable, IdeModalityType ideModalityType) {
         this(project, configurable, createDimensionKey(configurable), ideModalityType);
     }
 
+    @RequiredUIAccess
     public WholeWestSingleConfigurableEditor(@Nullable Project project, Configurable configurable) {
         this(project, configurable, createDimensionKey(configurable));
     }
 
+    @RequiredUIAccess
     public WholeWestSingleConfigurableEditor(Component parent, Configurable configurable) {
         this(parent, configurable, createDimensionKey(configurable));
     }
@@ -155,9 +163,8 @@ public abstract class WholeWestSingleConfigurableEditor extends WholeWestDialogW
     }
 
     @Override
-    
     protected Action[] createActions() {
-        List<Action> actions = new ArrayList<Action>();
+        List<Action> actions = new ArrayList<>();
         actions.add(getOKAction());
         actions.add(getCancelAction());
         if (myShowApplyButton) {
@@ -169,36 +176,38 @@ public abstract class WholeWestSingleConfigurableEditor extends WholeWestDialogW
         return actions.toArray(new Action[actions.size()]);
     }
 
-    @RequiredUIAccess
     @Override
+    @RequiredUIAccess
     protected void doHelpAction() {
         HelpManager.getInstance().invokeHelp(myConfigurable.getHelpTopic());
     }
 
     @Override
+    @RequiredUIAccess
     public void doCancelAction() {
         if (myChangesWereApplied) {
-            ApplicationManager.getApplication().saveAll();
+            Application.get().saveAll();
         }
         super.doCancelAction();
     }
 
     @Override
+    @RequiredUIAccess
     protected void doOKAction() {
         try {
             if (myConfigurable.isModified()) {
                 myConfigurable.apply();
             }
 
-            ApplicationManager.getApplication().saveAll();
+            Application.get().saveAll();
         }
         catch (ConfigurationException e) {
             if (e.getMessage() != null) {
                 if (myProject != null) {
-                    Messages.showMessageDialog(myProject, e.getMessage(), e.getTitle(), Messages.getErrorIcon());
+                    Messages.showMessageDialog(myProject, e.getMessage(), e.getTitle().get(), UIUtil.getErrorIcon());
                 }
                 else {
-                    Messages.showMessageDialog(myParentComponent, e.getMessage(), e.getTitle(), Messages.getErrorIcon());
+                    Messages.showMessageDialog(myParentComponent, e.getMessage(), e.getTitle().get(), UIUtil.getErrorIcon());
                 }
             }
             return;
@@ -217,6 +226,7 @@ public abstract class WholeWestSingleConfigurableEditor extends WholeWestDialogW
             super(CommonLocalize.buttonApply());
             Runnable updateRequest = new Runnable() {
                 @Override
+                @RequiredUIAccess
                 public void run() {
                     if (!WholeWestSingleConfigurableEditor.this.isShowing()) {
                         return;
@@ -245,15 +255,15 @@ public abstract class WholeWestSingleConfigurableEditor extends WholeWestDialogW
                 if (myConfigurable.isModified()) {
                     myConfigurable.apply();
                     myChangesWereApplied = true;
-                    setCancelButtonText(CommonBundle.getCloseButtonText());
+                    setCancelButtonText(CommonLocalize.buttonClose());
                 }
             }
             catch (ConfigurationException ex) {
                 if (myProject != null) {
-                    Messages.showMessageDialog(myProject, ex.getMessage(), ex.getTitle(), Messages.getErrorIcon());
+                    Messages.showMessageDialog(myProject, ex.getMessage(), ex.getTitle().get(), UIUtil.getErrorIcon());
                 }
                 else {
-                    Messages.showMessageDialog(myParentComponent, ex.getMessage(), ex.getTitle(), Messages.getErrorIcon());
+                    Messages.showMessageDialog(myParentComponent, ex.getMessage(), ex.getTitle().get(), UIUtil.getErrorIcon());
                 }
             }
         }
@@ -281,6 +291,7 @@ public abstract class WholeWestSingleConfigurableEditor extends WholeWestDialogW
     }
 
     @Override
+    @RequiredUIAccess
     public void dispose() {
         super.dispose();
         myConfigurable.disposeUIResources();
