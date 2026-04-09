@@ -464,29 +464,25 @@ public final class Presentation implements Cloneable {
      * For an action presentation in a popup sets whether a popup is closed or kept open
      * when the action is performed.
      * <p>
-     * {@link ToggleAction} use {@link KeepPopupOnPerform#Always} by default.
+     * {@link ToggleAction} use {@link KeepPopupOnPerform#ALWAYS} by default.
      * The behavior is controlled by the {@link UISettings#getKeepPopupsForToggles} property.
      *
      * @see KeepPopupOnPerform
      * @see UISettings#getKeepPopupsForToggles
      */
     public void setKeepPopupOnPerform(KeepPopupOnPerform mode) {
-        boolean requestedBit = mode == KeepPopupOnPerform.IfRequested || mode == KeepPopupOnPerform.Always;
-        boolean preferredBit = mode == KeepPopupOnPerform.IfPreferred || mode == KeepPopupOnPerform.Always;
-        myFlags = BitUtil.set(myFlags, IS_KEEP_POPUP_IF_REQUESTED, requestedBit);
-        myFlags = BitUtil.set(myFlags, IS_KEEP_POPUP_IF_PREFERRED, preferredBit);
+        myFlags = BitUtil.set(myFlags, IS_KEEP_POPUP_IF_REQUESTED, mode.isRequested());
+        myFlags = BitUtil.set(myFlags, IS_KEEP_POPUP_IF_PREFERRED, mode.isPreferred());
     }
 
     /**
      * @see Presentation#setKeepPopupOnPerform(KeepPopupOnPerform)
      */
     public KeepPopupOnPerform getKeepPopupOnPerform() {
-        boolean requestedBit = BitUtil.isSet(myFlags, IS_KEEP_POPUP_IF_REQUESTED);
-        boolean preferredBit = BitUtil.isSet(myFlags, IS_KEEP_POPUP_IF_PREFERRED);
-        return requestedBit && preferredBit ? KeepPopupOnPerform.Always
-            : requestedBit ? KeepPopupOnPerform.IfRequested
-            : preferredBit ? KeepPopupOnPerform.IfPreferred
-            : KeepPopupOnPerform.Never;
+        return KeepPopupOnPerform.of(
+            BitUtil.isSet(myFlags, IS_KEEP_POPUP_IF_REQUESTED),
+            BitUtil.isSet(myFlags, IS_KEEP_POPUP_IF_PREFERRED)
+        );
     }
 
     /**

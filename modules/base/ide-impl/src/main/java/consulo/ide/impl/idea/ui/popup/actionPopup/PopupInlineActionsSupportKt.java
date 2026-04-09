@@ -47,7 +47,7 @@ public class PopupInlineActionsSupportKt {
 
         @Override
         public KeepPopupOnPerform getKeepPopupOnPerform(Object element, int index) {
-            return KeepPopupOnPerform.Always;
+            return KeepPopupOnPerform.ALWAYS;
         }
 
         @Override
