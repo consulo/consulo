@@ -47,11 +47,6 @@ public class ConfigurationException extends Exception {
         this(LocalizeValue.ofNullable(message), LocalizeValue.ofNullable(title));
     }
 
-    @Deprecated(forRemoval = true)
-    public LocalizeValue getTitleValue() {
-        return myTitle;
-    }
-
     public LocalizeValue getTitle() {
         return myTitle;
     }
