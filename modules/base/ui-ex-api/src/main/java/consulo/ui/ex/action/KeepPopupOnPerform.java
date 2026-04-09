@@ -42,29 +42,29 @@ public enum KeepPopupOnPerform {
      */
     ALWAYS(true, true);
 
-    private final boolean myRequested, myPreferred;
+    private final boolean myKeepPopupIfRequested, myKeepPopupIfPreferred;
 
-    KeepPopupOnPerform(boolean requested, boolean preferred) {
-        myRequested = requested;
-        myPreferred = preferred;
+    KeepPopupOnPerform(boolean keepPopupIfRequested, boolean keepPopupIfPreferred) {
+        myKeepPopupIfRequested = keepPopupIfRequested;
+        myKeepPopupIfPreferred = keepPopupIfPreferred;
     }
 
-    public boolean isRequested() {
-        return myRequested;
+    public boolean isKeepPopupIfRequested() {
+        return myKeepPopupIfRequested;
     }
 
-    public boolean isPreferred() {
-        return myPreferred;
+    public boolean isKeepPopupIfPreferred() {
+        return myKeepPopupIfPreferred;
     }
 
-    public static KeepPopupOnPerform of(boolean requested, boolean preferred) {
-        if (requested && preferred) {
+    public static KeepPopupOnPerform of(boolean keepPopupIfRequested, boolean keepPopupIfPreferred) {
+        if (keepPopupIfRequested && keepPopupIfPreferred) {
             return ALWAYS;
         }
-        else if (requested) {
+        else if (keepPopupIfRequested) {
             return IF_REQUESTED;
         }
-        else if (preferred) {
+        else if (keepPopupIfPreferred) {
             return IF_PREFERRED;
         }
         else {

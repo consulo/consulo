@@ -471,8 +471,8 @@ public final class Presentation implements Cloneable {
      * @see UISettings#getKeepPopupsForToggles
      */
     public void setKeepPopupOnPerform(KeepPopupOnPerform mode) {
-        myFlags = BitUtil.set(myFlags, IS_KEEP_POPUP_IF_REQUESTED, mode.isRequested());
-        myFlags = BitUtil.set(myFlags, IS_KEEP_POPUP_IF_PREFERRED, mode.isPreferred());
+        myFlags = BitUtil.set(myFlags, IS_KEEP_POPUP_IF_REQUESTED, mode.isKeepPopupIfRequested());
+        myFlags = BitUtil.set(myFlags, IS_KEEP_POPUP_IF_PREFERRED, mode.isKeepPopupIfPreferred());
     }
 
     /**
