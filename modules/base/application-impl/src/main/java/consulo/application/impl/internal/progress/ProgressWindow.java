@@ -329,11 +329,6 @@ public class ProgressWindow extends ProgressIndicatorBase implements UnsafeProgr
         return myTitle.getNullIfEmpty();
     }
 
-    @Deprecated(forRemoval = true)
-    public LocalizeValue getTitleValue() {
-        return myTitle;
-    }
-
     public void setCancelButtonText(LocalizeValue text) {
         if (myDialog != null) {
             myDialog.changeCancelButtonText(text);
