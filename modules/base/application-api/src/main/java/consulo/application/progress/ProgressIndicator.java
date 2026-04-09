@@ -114,11 +114,6 @@ public interface ProgressIndicator {
      */
     LocalizeValue getText();
 
-    @Deprecated(forRemoval = true)
-    default LocalizeValue getTextValue() {
-        return getText();
-    }
-
     /**
      * Sets text under the progress bar
      *
@@ -137,11 +132,6 @@ public interface ProgressIndicator {
      * @return text under the progress bar, set by {@link #setText2(String)}
      */
     LocalizeValue getText2();
-
-    @Deprecated(forRemoval = true)
-    default LocalizeValue getText2Value() {
-        return getText2();
-    }
 
     /**
      * @return current fraction, set by {@link #setFraction(double)}
