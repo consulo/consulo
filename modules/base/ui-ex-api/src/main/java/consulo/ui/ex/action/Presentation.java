@@ -212,6 +212,7 @@ public final class Presentation implements Cloneable {
 
     @Deprecated
     @DeprecationInfo("Use #setText(LocalizeValue)")
+    @SuppressWarnings("deprecation")
     public void setText(String text) {
         setText(text, true);
     }
@@ -404,12 +405,12 @@ public final class Presentation implements Cloneable {
             allKeys.addAll(myUserMap.keySet());
             if (!allKeys.isEmpty()) {
                 for (String key : allKeys) {
-//                    if (key.equals(CustomComponentAction.COMPONENT_KEY.toString()) && (customComponent != null || forceNullComponent)) {
-//                        putClientProperty(key, customComponent);
-//                    }
-//                    else {
+                    //if (key.equals(CustomComponentAction.COMPONENT_KEY.toString()) && (customComponent != null || forceNullComponent)) {
+                    //    putClientProperty(key, customComponent);
+                    //}
+                    //else {
                     putClientProperty(key, presentation.getClientProperty(key));
-//                    }
+                    //}
                 }
             }
         }
@@ -482,10 +483,10 @@ public final class Presentation implements Cloneable {
     public KeepPopupOnPerform getKeepPopupOnPerform() {
         boolean requestedBit = BitUtil.isSet(myFlags, IS_KEEP_POPUP_IF_REQUESTED);
         boolean preferredBit = BitUtil.isSet(myFlags, IS_KEEP_POPUP_IF_PREFERRED);
-        return requestedBit && preferredBit ? KeepPopupOnPerform.Always :
-            requestedBit ? KeepPopupOnPerform.IfRequested :
-                preferredBit ? KeepPopupOnPerform.IfPreferred :
-                    KeepPopupOnPerform.Never;
+        return requestedBit && preferredBit ? KeepPopupOnPerform.Always
+            : requestedBit ? KeepPopupOnPerform.IfRequested
+            : preferredBit ? KeepPopupOnPerform.IfPreferred
+            : KeepPopupOnPerform.Never;
     }
 
     /**
