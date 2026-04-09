@@ -26,7 +26,6 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
 import consulo.util.dataholder.UserDataHolderBase;
-import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VFileProperty;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
@@ -129,14 +128,9 @@ public class FileChooserDescriptor extends UserDataHolderBase implements Cloneab
     return myTitle;
   }
 
-  @Deprecated(forRemoval = true)
-  @DeprecationInfo("See #getTitle()")
-  public LocalizeValue getTitleValue() {
-    return myTitle;
-  }
-
   @Deprecated
-  @DeprecationInfo("Use #withTitleValue(LocalizeValue)")
+  @DeprecationInfo("Use #withTitle(LocalizeValue)")
+  @SuppressWarnings("deprecation")
   public void setTitle(String title) {
     withTitle(title);
   }
@@ -152,15 +146,9 @@ public class FileChooserDescriptor extends UserDataHolderBase implements Cloneab
     return withTitle(LocalizeValue.ofNullable(title));
   }
 
-  @Deprecated(forRemoval = true)
-  @DeprecationInfo("Use #withTitle(LocalizeValue)")
-  public FileChooserDescriptor withTitleValue(LocalizeValue title) {
-    myTitle = title;
-    return this;
-  }
-
   @Deprecated
   @DeprecationInfo("Use #withDescription(LocalizeValue)")
+  @SuppressWarnings("deprecation")
   public void setDescription(String description) {
     withDescription(description);
   }
@@ -177,19 +165,7 @@ public class FileChooserDescriptor extends UserDataHolderBase implements Cloneab
     return this;
   }
 
-  @Deprecated(forRemoval = true)
-  @DeprecationInfo("Use #withDescription(LocalizeValue)")
-  public FileChooserDescriptor withDescriptionValue(LocalizeValue description) {
-    myDescription = description;
-    return this;
-  }
-
   public LocalizeValue getDescription() {
-    return myDescription;
-  }
-
-  @Deprecated(forRemoval = true)
-  public LocalizeValue getDescriptionValue() {
     return myDescription;
   }
 
@@ -334,7 +310,6 @@ public class FileChooserDescriptor extends UserDataHolderBase implements Cloneab
     return VirtualFileManager.getInstance().getFileIcon(file, null, Iconable.ICON_FLAG_READ_STATUS);
   }
 
-  
   protected static Image dressIcon(VirtualFile file, Image baseIcon) {
     return file.isValid() && file.is(VFileProperty.SYMLINK) ? ImageEffects.layered(baseIcon, PlatformIconGroup.nodesSymlink()) : baseIcon;
   }
@@ -378,6 +353,7 @@ public class FileChooserDescriptor extends UserDataHolderBase implements Cloneab
     return myChooseJars && FileChooserUtil.isArchive(file);
   }
 
+  @RequiredUIAccess
   public final @Nullable VirtualFile getFileToSelect(VirtualFile file) {
     if (file.isDirectory() && (myChooseFolders || isFileSelectable(file))) {
       return file;

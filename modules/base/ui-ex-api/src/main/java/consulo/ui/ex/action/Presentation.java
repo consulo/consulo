@@ -220,11 +220,6 @@ public final class Presentation implements Cloneable {
         return myDescription;
     }
 
-    @Deprecated(forRemoval = true)
-    public LocalizeValue getDescriptionValue() {
-        return myDescription;
-    }
-
     public void setDescription(LocalizeValue description) {
         LocalizeValue oldDescription = myDescription;
         myDescription = description;
