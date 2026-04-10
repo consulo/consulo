@@ -64,7 +64,11 @@ public abstract class JBIterator<E> implements Iterator<E> {
     };
   }
 
-  private enum Do {INIT, STOP, SKIP}
+  private enum Do {
+    INIT,
+    STOP,
+    SKIP
+  }
   private Object myCurrent = Do.INIT;
   private Object myNext = Do.INIT;
 
@@ -146,7 +150,7 @@ public abstract class JBIterator<E> implements Iterator<E> {
         if (op.impl == null) {
           // rollback all prepended takeWhile conditions if nextImpl() votes SKIP
           for (Op op2 = myFirstOp; op2 != null && op2.impl instanceof CountDown; op2 = op2.nextOp) {
-            ((CountDown)op2.impl).cur ++;
+            ((CountDown)op2.impl).cur++;
           }
         }
         op = null;

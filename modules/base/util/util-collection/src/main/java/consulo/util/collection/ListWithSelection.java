@@ -36,14 +36,14 @@ public class ListWithSelection<E> extends ArrayList<E> {
     this(new ArrayList<E>());
   }
 
-  public boolean select(E object){
+  public boolean select(E object) {
     if (!contains(object))
       return false;
     mySelection = object;
     return true;
   }
 
-  public @Nullable E getSelection(){
+  public @Nullable E getSelection() {
     return mySelection;
   }
 

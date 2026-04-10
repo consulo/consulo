@@ -37,7 +37,8 @@ public class ConcurrentBitSet {
    * An array of 32 longword vectors.
    * Vector at index "i" has length of (1 << i) long words.
    * Each long word stores next 64 bits part of the set.
-   * Therefore the i-th bit of the set is stored in {@code arrays.get(arrayIndex(i)).get(wordIndexInArray(i))} word in the {@code 1L << i} position.
+   * Therefore the i-th bit of the set is stored in {@code arrays.get(arrayIndex(i)).get(wordIndexInArray(i))} word
+   * in the {@code 1L << i} position.
    */
   private final AtomicReferenceArray<AtomicLongArray> arrays = new AtomicReferenceArray<AtomicLongArray>(32);
   private static int arrayIndex(int bitIndex) {
@@ -146,7 +147,7 @@ public class ConcurrentBitSet {
 
     // while loop is here because of clear() method
     while ((array = arrays.get(arrayIndex)) == null) {
-      arrays.compareAndSet(arrayIndex, null, new AtomicLongArray(1<<arrayIndex));
+      arrays.compareAndSet(arrayIndex, null, new AtomicLongArray(1 << arrayIndex));
     }
     return array;
   }
@@ -156,7 +157,7 @@ public class ConcurrentBitSet {
    * PLEASE REWRITE EVERY OTHER METHOD IF EVER DECIDE TO IMPLEMENT THIS
    */
   public void clear() {
-    for (int i=0; i<arrays.length();i++) {
+    for (int i = 0; i < arrays.length(); i++) {
       arrays.set(i, null);
     }
   }
@@ -171,7 +172,7 @@ public class ConcurrentBitSet {
    * @throws IndexOutOfBoundsException if the specified index is negative
    */
   public boolean get(int bitIndex) {
-    return (getWord(bitIndex) & (1L<<bitIndex)) != 0;
+    return (getWord(bitIndex) & (1L << bitIndex)) != 0;
   }
 
   long getWord(int bitIndex) {
@@ -225,7 +226,7 @@ public class ConcurrentBitSet {
 
     while (true) {
       if (word != 0) {
-        return ((1<<arrayIndex)-1 + wordIndexInArray) * BITS_PER_WORD + Long.numberOfTrailingZeros(word);
+        return ((1 << arrayIndex) - 1 + wordIndexInArray) * BITS_PER_WORD + Long.numberOfTrailingZeros(word);
       }
       if (++wordIndexInArray == array.length()) {
         wordIndexInArray = 0;
@@ -256,21 +257,21 @@ public class ConcurrentBitSet {
     AtomicLongArray array = arrays.get(arrayIndex);
     int wordIndexInArray = wordIndexInArray(fromIndex);
     if (array == null) {
-      return ((1<<arrayIndex)-1+wordIndexInArray) * BITS_PER_WORD+(fromIndex%BITS_PER_WORD);
+      return ((1 << arrayIndex) - 1 + wordIndexInArray) * BITS_PER_WORD + (fromIndex % BITS_PER_WORD);
     }
 
     long word = ~array.get(wordIndexInArray) & (WORD_MASK << fromIndex);
 
     while (true) {
       if (word != 0) {
-        return ((1<<arrayIndex)-1 + wordIndexInArray) * BITS_PER_WORD + Long.numberOfTrailingZeros(word);
+        return ((1 << arrayIndex) - 1 + wordIndexInArray) * BITS_PER_WORD + Long.numberOfTrailingZeros(word);
       }
       if (++wordIndexInArray == array.length()) {
         wordIndexInArray = 0;
         if (++arrayIndex == arrays.length()) return -1;
         array = arrays.get(arrayIndex);
         if (array == null) {
-          return ((1<<arrayIndex)-1+wordIndexInArray) * BITS_PER_WORD;
+          return ((1 << arrayIndex) - 1 + wordIndexInArray) * BITS_PER_WORD;
         }
       }
 
@@ -298,12 +299,12 @@ public class ConcurrentBitSet {
   @Override
   public int hashCode() {
     long h = 1234;
-    for (int a = 0; a<arrays.length();a++) {
+    for (int a = 0; a < arrays.length(); a++) {
       AtomicLongArray array = arrays.get(a);
       if (array == null) continue;
-      for (int i=0;i<array.length();i++) {
+      for (int i = 0; i < array.length(); i++) {
         long word = array.get(i);
-        h ^= word * ((1<<a)+ i);
+        h ^= word * ((1 << a) + i);
       }
     }
 
@@ -321,7 +322,7 @@ public class ConcurrentBitSet {
       AtomicLongArray array = arrays.get(a);
       if (array != null) break;
     }
-    return ((1<<a+1)-1)*BITS_PER_WORD;
+    return ((1 << a + 1) - 1) * BITS_PER_WORD;
   }
 
   /**
@@ -354,7 +355,7 @@ public class ConcurrentBitSet {
       AtomicLongArray array2 = set.arrays.get(i);
       if (array1 == null && array2 == null) continue;
       int size = array1 == null ? array2.length() : array1.length();
-      for (int k=0; k<size;k++) {
+      for (int k = 0; k < size; k++) {
         long word1 = array1 == null ? 0 : array1.get(k);
         long word2 = array2 == null ? 0 : array2.get(k);
         if (word1 != word2) return false;
@@ -386,7 +387,7 @@ public class ConcurrentBitSet {
         if (b.length() != 1) {
           b.append(", ");
         }
-        b.append(i).append("...").append(endOfRun-1);
+        b.append(i).append("...").append(endOfRun - 1);
         i = endOfRun;
       }
       else {
@@ -406,9 +407,9 @@ public class ConcurrentBitSet {
 
   public long[] toLongArray() {
     int bits = size();
-    long[] result = new long[bits/BITS_PER_WORD];
+    long[] result = new long[bits / BITS_PER_WORD];
     int i = 0;
-    for (int b=0; b<bits;b += BITS_PER_WORD){
+    for (int b = 0; b < bits; b += BITS_PER_WORD) {
       AtomicLongArray array = arrays.get(arrayIndex(b));
       long word = array == null ? 0 : array.get(wordIndexInArray(b));
       result[i++] = word;
@@ -436,8 +437,8 @@ public class ConcurrentBitSet {
     DataInputStream bitSetStorage = new DataInputStream(new BufferedInputStream(new FileInputStream(file)));
     try {
       long length = file.length();
-      long[] words = new long[(int)(length/8)];
-      for (int i=0; i<words.length;i++) {
+      long[] words = new long[(int) (length / 8)];
+      for (int i = 0; i < words.length; i++) {
         words[i] = bitSetStorage.readLong();
       }
       return new ConcurrentBitSet(words);
@@ -450,11 +451,10 @@ public class ConcurrentBitSet {
   private ConcurrentBitSet(long[] words) {
     for (int i = 0; i < words.length; i++) {
       long word = words[i];
-      for (int b=0;b<BITS_PER_WORD;b++) {
+      for (int b = 0;b < BITS_PER_WORD;b++) {
         boolean bit = (word & (1L << b)) != 0;
         set(i * BITS_PER_WORD + b, bit);
       }
     }
   }
-
 }

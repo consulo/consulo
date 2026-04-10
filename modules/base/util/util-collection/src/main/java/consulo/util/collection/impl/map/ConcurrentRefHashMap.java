@@ -20,7 +20,8 @@ abstract class ConcurrentRefHashMap<K, V> extends AbstractMap<K, V> implements C
   interface KeyReference<K> {
     @Nullable K get();
 
-    // In case of gced reference, equality must be identity-based (to be able to remove stale key in processQueue), otherwise it's myHashingStrategy-based
+    // In case of gced reference, equality must be identity-based (to be able to remove stale key in processQueue),
+    // otherwise it's myHashingStrategy-based
     @Override
     boolean equals(Object o);
 
@@ -29,7 +30,8 @@ abstract class ConcurrentRefHashMap<K, V> extends AbstractMap<K, V> implements C
   }
 
   final ReferenceQueue<K> myReferenceQueue = new ReferenceQueue<>();
-  private final ConcurrentMap<KeyReference<K>, V> myMap; // hashing strategy must be canonical, we compute corresponding hash codes using our own myHashingStrategy
+  // hashing strategy must be canonical, we compute corresponding hash codes using our own myHashingStrategy
+  private final ConcurrentMap<KeyReference<K>, V> myMap;
   private final HashingStrategy<? super K> myHashingStrategy;
 
   static final float DEFAULT_LOAD_FACTOR = 0.75f;

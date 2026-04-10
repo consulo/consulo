@@ -251,7 +251,7 @@ public class SmartFMap<K,V> implements Map<K,V> {
   // copied from AbstractMap
   public String toString() {
     Iterator<Entry<K,V>> i = entrySet().iterator();
-    if (! i.hasNext())
+    if (!i.hasNext())
       return "{}";
 
     StringBuilder sb = new StringBuilder();
