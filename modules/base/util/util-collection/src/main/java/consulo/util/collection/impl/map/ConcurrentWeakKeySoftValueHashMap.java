@@ -100,7 +100,8 @@ public class ConcurrentWeakKeySoftValueHashMap<K, V> implements ConcurrentMap<K,
   }
 
   static final class SoftValue<K, V> extends SoftReference<V> implements ValueReference<K, V> {
-    volatile @Nullable KeyReference<K, V> myKeyReference = null; // can't make it final because of circular dependency of KeyReference to ValueReference
+    // can't make it final because of circular dependency of KeyReference to ValueReference
+    volatile @Nullable KeyReference<K, V> myKeyReference = null;
 
     private SoftValue(V value, ReferenceQueue<? super V> queue) {
       super(Objects.requireNonNull(value), queue);

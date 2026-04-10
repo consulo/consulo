@@ -59,6 +59,7 @@
 
         <maven.assembly.plugin>3.6.0</maven.assembly.plugin>
         <maven.jar.plugin>3.3.0</maven.jar.plugin>
+        <maven.checkstyle.plugin>3.6.0</maven.checkstyle.plugin>
         <maven.compiler.plugin>3.15.0</maven.compiler.plugin>
         <maven.surefire.plugin>3.1.0</maven.surefire.plugin>
         <maven.source.plugin>3.2.1</maven.source.plugin>
@@ -69,6 +70,8 @@
         <maven.build.timestamp.format>yyyyMMddHHmm</maven.build.timestamp.format>
 
         <compiler.apt.version>2.0</compiler.apt.version>
+
+        <checkstyle.skip>true</checkstyle.skip>
     </properties>
 
     <dependencyManagement>
@@ -959,6 +962,7 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
+
     <profiles>
         <profile>
             <id>build-number-is-set</id>
@@ -1036,6 +1040,34 @@
         </pluginManagement>
 
         <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-checkstyle-plugin</artifactId>
+                <version>${maven.checkstyle.plugin}</version>
+                <configuration>
+                    <configLocation>checkstyle.xml</configLocation>
+                    <inputEncoding>UTF-8</inputEncoding>
+                    <consoleOutput>true</consoleOutput>
+                    <failsOnError>false</failsOnError>
+                    <violationSeverity>error</violationSeverity>
+                    <linkXRef>false</linkXRef>
+                    <sourceDirectories>
+                        <sourceDirectory>src/main/java</sourceDirectory>
+                        <sourceDirectory>src/test/java</sourceDirectory>
+                    </sourceDirectories>
+                    <excludes>**/module-info.java</excludes>
+                    <skip>${checkstyle.skip}</skip>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>validate</id>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>

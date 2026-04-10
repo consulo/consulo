@@ -162,7 +162,10 @@ public abstract class FactoryMap<K, V> implements Map<K, V> {
 
   @Override
   public Set<Entry<K, V>> entrySet() {
-    return ContainerUtil.map2Set(getMap().entrySet(), entry -> new AbstractMap.SimpleEntry<>(nullize(entry.getKey()), nullize(entry.getValue())));
+    return ContainerUtil.map2Set(
+      getMap().entrySet(),
+      entry -> new AbstractMap.SimpleEntry<>(nullize(entry.getKey()), nullize(entry.getValue()))
+    );
   }
 
   public static <K, V> Map<K, V> create(final Function<? super K, ? extends V> computeValue) {
@@ -174,7 +177,8 @@ public abstract class FactoryMap<K, V> implements Map<K, V> {
     };
   }
 
-  public static <K, V> Map<K, V> createMap(final Function<? super K, ? extends V> computeValue, final Supplier<? extends Map<K, V>> mapCreator) {
+  public static <K, V>
+  Map<K, V> createMap(final Function<? super K, ? extends V> computeValue, final Supplier<? extends Map<K, V>> mapCreator) {
     return new FactoryMap<K, V>(true) {
       @Override
       protected @Nullable V create(K key) {

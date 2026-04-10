@@ -28,7 +28,7 @@ public class ConcurrentPackedBitsArray {
 
   public ConcurrentPackedBitsArray(int bitsPerChunk) {
     if (bitsPerChunk <= 0 || bitsPerChunk > 64) {
-      throw new IllegalArgumentException("Bits-to-pack number must be between 1 and 64, but got: "+bitsPerChunk);
+      throw new IllegalArgumentException("Bits-to-pack number must be between 1 and 64, but got: " + bitsPerChunk);
     }
     this.bitsPerChunk = bitsPerChunk;
     mask = (1 << bitsPerChunk) - 1;
@@ -37,7 +37,7 @@ public class ConcurrentPackedBitsArray {
 
   // returns chunk bits
   public long get(int id) {
-    int bitIndex = id/chunksPerWord * 64 + (id%chunksPerWord)*bitsPerChunk;
+    int bitIndex = id / chunksPerWord * 64 + (id % chunksPerWord) * bitsPerChunk;
     long word = bits.getWord(bitIndex) >> bitIndex;
     return word & mask;
   }
@@ -45,9 +45,9 @@ public class ConcurrentPackedBitsArray {
   // stores chunk atomically, returns previous chunk
   public long set(int id, long flags) {
     if ((flags & ~mask) != 0) {
-      throw new IllegalArgumentException("Flags must be between 0 and "+ mask +" but got:"+flags);
+      throw new IllegalArgumentException("Flags must be between 0 and " + mask + " but got:" + flags);
     }
-    int bitIndex = id/chunksPerWord * 64 + (id%chunksPerWord)*bitsPerChunk;
+    int bitIndex = id / chunksPerWord * 64 + (id % chunksPerWord) * bitsPerChunk;
 
     long prevChunk = bits.changeWord(bitIndex, word -> word & ~(mask << bitIndex) | (flags << bitIndex)) >> bitIndex;
 

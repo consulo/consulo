@@ -21,7 +21,7 @@ import java.util.function.Function;
 /**
  * @author dsl
  */
-public class ConvertingIterator <Domain, Range> implements Iterator<Range> {
+public class ConvertingIterator<Domain, Range> implements Iterator<Range> {
   private final Iterator<Domain> myBaseIterator;
   private final Function<Domain, Range> myConverter;
 

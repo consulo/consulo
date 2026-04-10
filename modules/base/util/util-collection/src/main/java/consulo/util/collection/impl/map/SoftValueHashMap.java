@@ -16,7 +16,6 @@
 package consulo.util.collection.impl.map;
 
 import consulo.util.collection.HashingStrategy;
-import consulo.util.collection.impl.map.RefValueHashMap;
 import consulo.util.lang.ref.SoftReference;
 
 import java.lang.ref.ReferenceQueue;
