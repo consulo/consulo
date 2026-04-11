@@ -4189,7 +4189,6 @@ public class ConcurrentHashMap<K, V> extends AbstractMap<K, V> implements Concur
       }
       return modified;
     }
-
   }
 
   /**
@@ -4475,7 +4474,6 @@ public class ConcurrentHashMap<K, V> extends AbstractMap<K, V> implements Concur
           action.accept(new MapEntry<K, V>(Objects.requireNonNull(p.key), Objects.requireNonNull(p.val), map));
       }
     }
-
   }
 
   // -------------------------------------------------------

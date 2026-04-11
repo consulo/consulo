@@ -68,7 +68,8 @@ public class ILazyParseableElementType extends IElementType implements ILazyPars
     Language languageForParser = getLanguageForParser(psi);
     LanguageVersion tempLanguageVersion = chameleon.getUserData(LanguageVersion.KEY);
     LanguageVersion languageVersion = tempLanguageVersion == null ? psi.getLanguageVersion() : tempLanguageVersion;
-    PsiBuilder builder = PsiBuilderFactory.getInstance().createBuilder(project, chameleon, null, languageForParser, languageVersion, chameleon.getChars());
+    PsiBuilder builder =
+        PsiBuilderFactory.getInstance().createBuilder(project, chameleon, null, languageForParser, languageVersion, chameleon.getChars());
     PsiParser parser = ParserDefinition.forLanguage(languageForParser).createParser(languageVersion);
     return parser.parse(this, builder, languageVersion).getFirstChildNode();
   }

@@ -13,7 +13,6 @@ import org.jspecify.annotations.Nullable;
 public class TokenSequence implements TokenList {
     private static final Logger LOG = Logger.getInstance(TokenSequence.class);
 
-    
     public static TokenSequence performLexing(CharSequence text, Lexer lexer) {
         if (lexer instanceof WrappingLexer) {
             TokenList existing = ((WrappingLexer) lexer).getTokens();
@@ -96,7 +95,6 @@ public class TokenSequence implements TokenList {
             myLexTypes = new IElementType[approxLexCount];
         }
 
-        
         TokenSequence performLexing() {
             myLexer.start(myText);
             int i = 0;
@@ -112,7 +110,6 @@ public class TokenSequence implements TokenList {
                 }
 
                 if (i >= myLexTypes.length - 1) {
-                    resizeLexemes(i * 3 / 2);
                 }
                 int tokenStart = myLexer.getTokenStart();
                 if (tokenStart < offset) {
@@ -138,7 +135,8 @@ public class TokenSequence implements TokenList {
                 .append(myLexer.getTokenEnd());
             if (tokenIndex > 0) {
                 int prevStart = myLexStarts[tokenIndex - 1];
-                sb.append("\n  prev: '").append(myText.subSequence(prevStart, offset)).append("' (").append(myLexTypes[tokenIndex - 1]).append(':')
+                sb.append("\n  prev: '").append(myText.subSequence(prevStart, offset))
+                    .append("' (").append(myLexTypes[tokenIndex - 1]).append(':')
                     .append(myLexTypes[tokenIndex - 1].getLanguage()).append(") ").append(prevStart).append(":").append(offset);
             }
             int quoteStart = Math.max(tokenStart - 256, 0);
@@ -152,6 +150,5 @@ public class TokenSequence implements TokenList {
             myLexStarts = ArrayUtil.realloc(myLexStarts, newSize);
             myLexTypes = ArrayUtil.realloc(myLexTypes, newSize, IElementType.ARRAY_FACTORY);
         }
-
     }
 }

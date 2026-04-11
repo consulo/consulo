@@ -66,17 +66,16 @@ public class IconDescriptor {
     myRightIcon = rightIcon;
   }
 
-  
   public Image toIcon() {
     Image mainIcon;
-    if(myLayerIcons.length == 0) {
+    if (myLayerIcons.length == 0) {
       mainIcon = myMainIcon;
     }
     else {
       mainIcon = ImageEffects.layered(ArrayUtil.mergeArrays(new Image[]{myMainIcon}, myLayerIcons));
     }
 
-    if(myRightIcon == null) {
+    if (myRightIcon == null) {
       return mainIcon == null ? Image.empty(16) : mainIcon;
     }
     else {

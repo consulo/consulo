@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.language.inject;
 
 import consulo.annotation.access.RequiredReadAction;
@@ -36,7 +35,6 @@ import java.util.List;
 
 @ServiceAPI(ComponentScope.PROJECT)
 public interface InjectedLanguageManager {
-   
     static InjectedLanguageManager getInstance(Project project) {
         return InjectedLanguageManagerHolder.LAZY_INJECT.apply(project);
     }
@@ -47,7 +45,6 @@ public interface InjectedLanguageManager {
 
     @Nullable PsiLanguageInjectionHost getInjectionHost(PsiElement injectedElement);
 
-   
     TextRange injectedToHost(PsiElement injectedContext, TextRange injectedTextRange);
 
     int injectedToHost(PsiElement injectedContext, int injectedOffset);
@@ -56,10 +53,8 @@ public interface InjectedLanguageManager {
 
     @Nullable String getUnescapedLeafText(PsiElement element, boolean strict);
 
-   
     String getUnescapedText(PsiElement injectedNode);
 
-   
     List<TextRange> intersectWithAllEditableFragments(PsiFile injectedPsi, TextRange rangeToEdit);
 
     boolean isInjectedFragment(PsiFile injectedFile);
@@ -68,8 +63,8 @@ public interface InjectedLanguageManager {
 
     /**
      * Finds PSI element in injected fragment (if any) at the given offset in the host file.<p/>
-     * E.g. if you injected XML {@code "<xxx/>"} into Java string literal {@code "String s = "<xxx/>";"} and the caret is at {@code "xxx"} then
-     * this method will return XmlToken(XML_TAG_START) with the text {@code "xxx"}.<br/>
+     * E.g. if you injected XML {@code "<xxx/>"} into Java string literal {@code "String s = "<xxx/>";"} and the caret is at {@code "xxx"}
+     * then this method will return XmlToken(XML_TAG_START) with the text {@code "xxx"}.<br/>
      * Invocation of this method on uncommitted {@code hostFile} can lead to unexpected results, including throwing an exception!
      */
     @Nullable PsiElement findInjectedElementAt(PsiFile hostFile, int hostDocumentOffset);
@@ -85,7 +80,6 @@ public interface InjectedLanguageManager {
 
     PsiFile getTopLevelFile(PsiElement element);
 
-   
     List<DocumentWindow> getCachedInjectedDocumentsInRange(PsiFile hostPsiFile, TextRange range);
 
     void enumerate(PsiElement host, PsiLanguageInjectionHost.InjectedPsiVisitor visitor);
@@ -99,7 +93,8 @@ public interface InjectedLanguageManager {
                      @RequiredReadAction PsiLanguageInjectionHost.InjectedPsiVisitor visitor);
 
     /**
-     * @return the ranges in this document window that correspond to prefix/suffix injected text fragments and thus can't be edited and are not visible in the editor.
+     * @return the ranges in this document window that correspond to prefix/suffix injected text fragments and thus can't be edited
+     *         and are not visible in the editor.
      */
     List<TextRange> getNonEditableFragments(DocumentWindow window);
 
@@ -109,16 +104,13 @@ public interface InjectedLanguageManager {
      */
     boolean mightHaveInjectedFragmentAtOffset(Document hostDocument, int hostOffset);
 
-   
     DocumentWindow freezeWindow(DocumentWindow document);
 
     PsiLanguageInjectionHost.@Nullable Place getShreds(PsiFile injectedFile);
 
     PsiLanguageInjectionHost.@Nullable Place getShreds(FileViewProvider viewProvider);
 
-   
     PsiLanguageInjectionHost.Place getShreds(DocumentWindow documentWindow);
-
     @RequiredReadAction
    
     default String getUnescapedText(PsiFile file, @Nullable PsiElement startElement, @Nullable PsiElement endElement) {

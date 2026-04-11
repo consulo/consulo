@@ -33,7 +33,6 @@ public abstract class IndentationParser implements PsiParser {
     }
 
     @Override
-    
     public final ASTNode parse(IElementType root, PsiBuilder builder, LanguageVersion languageVersion) {
         PsiBuilder.Marker fileMarker = builder.mark();
         PsiBuilder.Marker documentMarker = myDocumentType == null ? null : builder.mark();
@@ -143,7 +142,6 @@ public abstract class IndentationParser implements PsiParser {
             return myIndent;
         }
 
-        
         public PsiBuilder.Marker getMarker() {
             return myMarker;
         }

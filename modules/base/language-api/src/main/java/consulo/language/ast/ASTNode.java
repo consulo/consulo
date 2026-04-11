@@ -35,7 +35,8 @@ public interface ASTNode extends UserDataHolder {
   String getText();
 
   /**
-   * Returns same text getText() returns but might be more effective eliminating toString() transformation from internal CharSequence representation
+   * Returns same text getText() returns but might be more effective eliminating toString() transformation
+   * from internal CharSequence representation
    * <p></p>
    * Note: This call requires traversing whole subtree, so it can be expensive for composite nodes, and should be avoided if possible.
    *

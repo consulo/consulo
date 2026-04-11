@@ -93,7 +93,6 @@ public final class IconDescriptorUpdaters {
         }
     }
 
-    
     @RequiredReadAction
     public static Image getIcon(PsiElement element, @Iconable.IconFlags int flags) {
         if (!element.isValid()) {
@@ -107,7 +106,6 @@ public final class IconDescriptorUpdaters {
         return IconDeferrer.getInstance().defer(baseIcon, new ElementIconRequest(element, flags), ourIconCompute);
     }
 
-    
     private static Image computeBaseIcon(PsiElement element, int flags) {
         Image icon = computeBaseIcon(element);
         if ((flags & Iconable.ICON_FLAG_VISIBILITY) > 0) {
@@ -116,7 +114,6 @@ public final class IconDescriptorUpdaters {
         return icon;
     }
 
-    
     private static Image computeBaseIcon(PsiElement element) {
         if (element instanceof PsiFileSystemItem) {
             VirtualFile file = ((PsiFileSystemItem) element).getVirtualFile();
@@ -136,7 +133,6 @@ public final class IconDescriptorUpdaters {
         return PlatformIconGroup.nodesNodeplaceholder();
     }
 
-    
     @RequiredReadAction
     public static Image getIconWithoutCache(PsiElement element, int flags) {
         IconDescriptor iconDescriptor = new IconDescriptor(null);

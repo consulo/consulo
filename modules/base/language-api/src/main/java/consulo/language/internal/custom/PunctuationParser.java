@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.language.internal.custom;
 
 /**
@@ -24,7 +23,7 @@ public class PunctuationParser extends TokenParser {
   public boolean hasToken(int position) {
     char c = myBuffer.charAt(position);
     if (".,:;".indexOf(c) >= 0) {
-      myTokenInfo.updateData(position, position+1, CustomHighlighterTokenType.PUNCTUATION);
+      myTokenInfo.updateData(position, position + 1, CustomHighlighterTokenType.PUNCTUATION);
       return true;
     }
     return false;

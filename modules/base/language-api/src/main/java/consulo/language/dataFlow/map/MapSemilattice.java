@@ -16,7 +16,7 @@ package consulo.language.dataFlow.map;
 
 import consulo.language.dataFlow.Semilattice;
 
-public interface MapSemilattice<E> extends Semilattice<DFAMap<E>>{
+public interface MapSemilattice<E> extends Semilattice<DFAMap<E>> {
   // Invariant: join can return unmodified ins(0) or empty DFAMap
   // DfaInstance must create new one before modifying
 }

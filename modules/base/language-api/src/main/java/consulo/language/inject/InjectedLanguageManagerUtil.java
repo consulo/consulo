@@ -63,7 +63,8 @@ public class InjectedLanguageManagerUtil {
 
   public static @Nullable PsiElement findElementInInjected(PsiLanguageInjectionHost injectionHost, int offset) {
     SimpleReference<PsiElement> ref = SimpleReference.create();
-    InjectedLanguageManager.getInstance(injectionHost.getProject()).enumerate(injectionHost, (injectedPsi, places) -> ref.set(injectedPsi.findElementAt(offset - getInjectedStart(places))));
+    InjectedLanguageManager.getInstance(injectionHost.getProject())
+      .enumerate(injectionHost, (injectedPsi, places) -> ref.set(injectedPsi.findElementAt(offset - getInjectedStart(places))));
     return ref.get();
   }
 

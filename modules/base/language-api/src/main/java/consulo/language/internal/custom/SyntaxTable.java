@@ -16,6 +16,7 @@
 package consulo.language.internal.custom;
 
 import java.util.Arrays;
+import java.util.Objects;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -182,15 +183,15 @@ public class SyntaxTable implements Cloneable {
     SyntaxTable syntaxTable = (SyntaxTable)o;
 
     if (myIgnoreCase != syntaxTable.myIgnoreCase) return false;
-    if (myEndComment != null ? !myEndComment.equals(syntaxTable.myEndComment) : syntaxTable.myEndComment != null) return false;
-    if (myHexPrefix != null ? !myHexPrefix.equals(syntaxTable.myHexPrefix) : syntaxTable.myHexPrefix != null) return false;
+    if (!Objects.equals(myEndComment, syntaxTable.myEndComment)) return false;
+    if (!Objects.equals(myHexPrefix, syntaxTable.myHexPrefix)) return false;
     if (!myKeywords1.equals(syntaxTable.myKeywords1)) return false;
     if (!myKeywords2.equals(syntaxTable.myKeywords2)) return false;
     if (!myKeywords3.equals(syntaxTable.myKeywords3)) return false;
     if (!myKeywords4.equals(syntaxTable.myKeywords4)) return false;
-    if (myLineComment != null ? !myLineComment.equals(syntaxTable.myLineComment) : syntaxTable.myLineComment != null) return false;
-    if (myNumPostfixChars != null ? !myNumPostfixChars.equals(syntaxTable.myNumPostfixChars) : syntaxTable.myNumPostfixChars != null) return false;
-    if (myStartComment != null ? !myStartComment.equals(syntaxTable.myStartComment) : syntaxTable.myStartComment != null) return false;
+    if (!Objects.equals(myLineComment, syntaxTable.myLineComment)) return false;
+    if (!Objects.equals(myNumPostfixChars, syntaxTable.myNumPostfixChars)) return false;
+    if (!Objects.equals(myStartComment, syntaxTable.myStartComment)) return false;
 
     if (myHasBraces != syntaxTable.myHasBraces) return false;
     if (myHasBrackets != syntaxTable.myHasBrackets) return false;

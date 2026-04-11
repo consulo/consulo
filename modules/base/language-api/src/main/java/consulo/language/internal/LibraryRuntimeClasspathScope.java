@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.language.internal;
 
 import consulo.application.util.function.CommonProcessors;
@@ -128,7 +127,11 @@ public class LibraryRuntimeClasspathScope extends GlobalSearchScope {
 
         ModuleRootsProcessor rootsProcessor = ModuleRootsProcessor.findRootsProcessor(moduleRootManager);
         if (rootsProcessor != null) {
-          rootsProcessor.processFiles(moduleRootManager, LanguageContentFolderScopes.productionAndTest(), new CommonProcessors.CollectProcessor<>(set));
+          rootsProcessor.processFiles(
+            moduleRootManager,
+            LanguageContentFolderScopes.productionAndTest(),
+            new CommonProcessors.CollectProcessor<>(set)
+          );
         }
         else {
           Collections.addAll(set, moduleRootManager.getContentFolderFiles(LanguageContentFolderScopes.productionAndTest()));

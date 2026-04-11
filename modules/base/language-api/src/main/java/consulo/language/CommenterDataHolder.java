@@ -21,4 +21,5 @@ import consulo.util.dataholder.UserDataHolderBase;
  * @author Maxim.Mossienko
  * @since 2010-06-18
  */
-public abstract class CommenterDataHolder extends UserDataHolderBase {}
+public abstract class CommenterDataHolder extends UserDataHolderBase {
+}

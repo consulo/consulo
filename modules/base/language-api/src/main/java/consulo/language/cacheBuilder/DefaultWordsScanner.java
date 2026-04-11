@@ -80,13 +80,35 @@ public class DefaultWordsScanner implements WordsScanner {
         if (!processor.process(occurrence)) return;
       }
       else if (myCommentTokenSet.contains(type)) {
-        if (!stripWords(processor, fileText,myLexer.getTokenStart(),myLexer.getTokenEnd(), WordOccurrence.Kind.COMMENTS,occurrence, false)) return;
+        if (!stripWords(
+          processor,
+          fileText,
+          myLexer.getTokenStart(),
+          myLexer.getTokenEnd(),
+          WordOccurrence.Kind.COMMENTS,
+          occurrence,
+          false
+        )) {
+          return;
+        }
       }
       else if (myLiteralTokenSet.contains(type)) {
-        if (!stripWords(processor, fileText, myLexer.getTokenStart(),myLexer.getTokenEnd(),WordOccurrence.Kind.LITERALS,occurrence, myMayHaveFileRefsInLiterals)) return;
+        if (!stripWords(
+          processor,
+          fileText,
+          myLexer.getTokenStart(),
+          myLexer.getTokenEnd(),
+          WordOccurrence.Kind.LITERALS,
+          occurrence,
+          myMayHaveFileRefsInLiterals
+        )) {
+          return;
+        }
       }
       else if (!mySkipCodeContextTokenSet.contains(type)) {
-        if (!stripWords(processor, fileText, myLexer.getTokenStart(), myLexer.getTokenEnd(), WordOccurrence.Kind.CODE, occurrence, false)) return;
+        if (!stripWords(processor, fileText, myLexer.getTokenStart(), myLexer.getTokenEnd(), WordOccurrence.Kind.CODE, occurrence, false)) {
+          return;
+        }
       }
       myLexer.advance();
     }

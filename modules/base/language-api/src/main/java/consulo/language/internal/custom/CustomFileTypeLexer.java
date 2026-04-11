@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.language.internal.custom;
 
 import consulo.util.lang.StringUtil;
@@ -34,7 +33,8 @@ public final class CustomFileTypeLexer extends AbstractCustomLexer {
   }
 
   private static List<TokenParser> buildTokenParsers(SyntaxTable table, boolean forHighlighting) {
-    LineCommentParser lineCommentParser = StringUtil.isEmpty(table.getLineComment()) ? null : new LineCommentParser(table.getLineComment(), table.lineCommentOnlyAtStart);
+    LineCommentParser lineCommentParser =
+      StringUtil.isEmpty(table.getLineComment()) ? null : new LineCommentParser(table.getLineComment(), table.lineCommentOnlyAtStart);
     MultilineCommentParser multilineCommentParser = MultilineCommentParser.create(table.getStartComment(), table.getEndComment());
     NumberParser numberParser = new NumberParser(table.getNumPostfixChars(), table.isIgnoreCase());
     HexNumberParser hexNumberParser = HexNumberParser.create(table.getHexPrefix());
@@ -51,8 +51,11 @@ public final class CustomFileTypeLexer extends AbstractCustomLexer {
 
     QuotedStringParser quotedStringParser = new QuotedStringParser("\"", CustomHighlighterTokenType.STRING, table.isHasStringEscapes());
 
-    QuotedStringParser quotedStringParser2 =
-            new QuotedStringParser("\'", forHighlighting ? CustomHighlighterTokenType.SINGLE_QUOTED_STRING : CustomHighlighterTokenType.STRING, table.isHasStringEscapes());
+    QuotedStringParser quotedStringParser2 = new QuotedStringParser(
+      "\'",
+      forHighlighting ? CustomHighlighterTokenType.SINGLE_QUOTED_STRING : CustomHighlighterTokenType.STRING,
+      table.isHasStringEscapes()
+    );
 
     ArrayList<TokenParser> tokenParsers = new ArrayList<TokenParser>();
     tokenParsers.add(new WhitespaceParser());
@@ -86,5 +89,4 @@ public final class CustomFileTypeLexer extends AbstractCustomLexer {
 
     return tokenParsers;
   }
-
 }

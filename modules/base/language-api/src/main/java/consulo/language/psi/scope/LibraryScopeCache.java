@@ -61,12 +61,10 @@ public class LibraryScopeCache {
         mySdkScopes.clear();
     }
 
-    
     public GlobalSearchScope getLibrariesOnlyScope() {
         return myLibrariesOnlyScope;
     }
 
-    
     public GlobalSearchScope getScopeForLibraryUsedIn(List<Module> modulesLibraryIsUsedIn) {
         GlobalSearchScope scope = myLibraryScopes.get(modulesLibraryIsUsedIn);
         if (scope != null) {
@@ -78,7 +76,6 @@ public class LibraryScopeCache {
         return Maps.cacheOrGet(myLibraryScopes, modulesLibraryIsUsedIn, newScope);
     }
 
-    
     public GlobalSearchScope getScopeForSdk(ModuleExtensionWithSdkOrderEntry sdkOrderEntry) {
         String jdkName = sdkOrderEntry.getSdkName();
         if (jdkName == null) {
@@ -127,5 +124,4 @@ public class LibraryScopeCache {
             return true;
         }
     }
-
 }

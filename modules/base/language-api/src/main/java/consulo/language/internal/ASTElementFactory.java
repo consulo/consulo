@@ -27,15 +27,20 @@ import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
- * @since 11-Jul-22
+ * @since 2022-07-11
  */
 @ServiceAPI(ComponentScope.PROJECT)
 public interface ASTElementFactory {
-  
   static ASTElementFactory getInstance(Project project) {
     return project.getInstance(ASTElementFactory.class);
   }
 
-  
-  ASTNode createSingleLeafElement(IElementType type, CharSequence buffer, int startOffset, int endOffset, @Nullable CharTable table, PsiManager manager);
+  ASTNode createSingleLeafElement(
+    IElementType type,
+    CharSequence buffer,
+    int startOffset,
+    int endOffset,
+    @Nullable CharTable table,
+    PsiManager manager
+  );
 }

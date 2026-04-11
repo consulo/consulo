@@ -37,7 +37,6 @@ public class FileTypeIndex {
   @Deprecated
   public static final ID<FileType, Void> NAME = ID.create("filetypes");
 
-  
   public static Collection<VirtualFile> getFiles(FileType fileType, SearchScope scope) {
     return FilenameIndex.getService().getFilesWithFileType(fileType, scope);
   }

@@ -31,7 +31,6 @@ public class FCTSBackedLighterAST extends LighterAST {
     myTreeStructure = treeStructure;
   }
 
-  
   @Override
   public LighterASTNode getRoot() {
     return myTreeStructure.getRoot();
@@ -42,7 +41,6 @@ public class FCTSBackedLighterAST extends LighterAST {
     return myTreeStructure.getParent(node);
   }
 
-  
   @Override
   public List<LighterASTNode> getChildren(LighterASTNode parent) {
     SimpleReference<LighterASTNode[]> into = SimpleReference.create();

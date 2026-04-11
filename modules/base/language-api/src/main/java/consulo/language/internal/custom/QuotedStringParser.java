@@ -36,7 +36,7 @@ public class QuotedStringParser extends PrefixedTokenParser {
 
   protected int getTokenEnd(int position) {
     boolean escaped = false;
-    for(; position < myEndOffset; position++) {
+    for (; position < myEndOffset; position++) {
       char c = myBuffer.charAt(position);
       boolean escapedStatus = escaped;
 
@@ -44,8 +44,12 @@ public class QuotedStringParser extends PrefixedTokenParser {
         escaped = !escaped;
       }
 
-      if(!escaped && c == myQuote) return position + 1;
-      if(c == '\n') return position;
+      if (!escaped && c == myQuote) {
+        return position + 1;
+      }
+      if (c == '\n') {
+        return position;
+      }
       if (escapedStatus && escaped) {
         escaped = false;
       }

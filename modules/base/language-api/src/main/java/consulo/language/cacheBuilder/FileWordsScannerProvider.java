@@ -25,19 +25,20 @@ import java.util.Map;
 
 /**
  * @author VISTALL
- * @since 24-Jun-22
+ * @since 2022-06-24
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface FileWordsScannerProvider {
-  ExtensionPointCacheKey<FileWordsScannerProvider, Map<FileType, WordsScanner>> SCANNERS = ExtensionPointCacheKey.create("FileWordsScannerProvider", walker -> {
-    Map<FileType, WordsScanner> scannerMap = new HashMap<>();
-    walker.walk(provider -> scannerMap.put(provider.getFileType(), provider.createWordsScanner()));
-    return scannerMap;
-  });
+  ExtensionPointCacheKey<FileWordsScannerProvider, Map<FileType, WordsScanner>> SCANNERS = ExtensionPointCacheKey.create(
+    "FileWordsScannerProvider",
+    walker -> {
+      Map<FileType, WordsScanner> scannerMap = new HashMap<>();
+      walker.walk(provider -> scannerMap.put(provider.getFileType(), provider.createWordsScanner()));
+      return scannerMap;
+    }
+  );
 
-  
   FileType getFileType();
 
-  
   WordsScanner createWordsScanner();
 }

@@ -47,7 +47,6 @@ public class IndexPattern {
     compilePattern();
   }
 
-  
   public String getPatternString() {
     return myPatternString;
   }

@@ -28,9 +28,9 @@ import org.jspecify.annotations.Nullable;
 /**
  * Provides ability to inject languages inside other PSI elements.<br/>
  * E.g. inject SQL inside XML tag text or inject RegExp into Java string literals.<br/>
- * These injected fragments are treated by IDE as separate tiny files in a specific language and corresponding code insight features,<br/>
+ * These injected fragments are treated by IDE as separate tiny files in a specific language and corresponding code insight features,
  * like completion, highlighting, navigation become available there.<br/>
- * You can get hold of an instance of {@link MultiHostRegistrar} by registering your own implementation of {@link MultiHostInjector} and<br/>
+ * You can get hold of an instance of {@link MultiHostRegistrar} by registering your own implementation of {@link MultiHostInjector} and
  * implementing its {@link MultiHostInjector#getLanguagesToInject(MultiHostRegistrar, PsiElement)} method.<br/>
  */
 public interface MultiHostRegistrar {
@@ -56,13 +56,13 @@ public interface MultiHostRegistrar {
     return startInjecting(LanguageVersionUtil.findDefaultVersion(language));
   }
 
-  
   MultiHostRegistrar startInjecting(LanguageVersion languageVersion);
 
   /**
    * The variant of {@link #startInjecting(Language)} with explicitly specified file extension.
    *
-   * @param extension the created injected file name will have. Some parsers require specific extension. By default the extension is taken from the host file.
+   * @param extension the created injected file name will have. Some parsers require specific extension.
+   *                  By default the extension is taken from the host file.
    */
   default MultiHostRegistrar startInjecting(Language language, @Nullable String extension) {
     return startInjecting(LanguageVersionUtil.findDefaultVersion(language), extension);
@@ -84,7 +84,8 @@ public interface MultiHostRegistrar {
    * @param host            the text range of which the language will be injected into.<p/>
    * @param rangeInsideHost into which the language will be injected.<br/>
    *                        For example, to inject something inside Java string literal {@code String s = "xyz";}<br/>
-   *                        you will have to call {@code addPlace(prefix, suffix, literal, new TextRange(1, 4));} to inject inside double quotes.<br/>
+   *                        you will have to call {@code addPlace(prefix, suffix, literal, new TextRange(1, 4));}
+   *                        to inject inside double quotes.<br/>
    *                        Injected file document text will be of length = 3 and equals to 'xyz'.<br/>
    *                        If, however, you called {@code addPlace(prefix, suffix, literal, new TextRange(0, 5));} instead,<br/>
    *                        the injected file text would consist of five characters '"', 'x', 'y', 'z', '"'.<p/>
@@ -100,5 +101,4 @@ public interface MultiHostRegistrar {
    * @see #startInjecting(Language) for a required workflow.
    */
   void doneInjecting();
-
 }

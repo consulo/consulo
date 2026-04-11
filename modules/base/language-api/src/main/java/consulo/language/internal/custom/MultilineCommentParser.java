@@ -41,7 +41,9 @@ public class MultilineCommentParser extends PrefixedTokenParser {
   }
 
   public static MultilineCommentParser create(String startDelimiter, String endDelimiter) {
-    if(startDelimiter == null || endDelimiter == null) return null;
+    if (startDelimiter == null || endDelimiter == null) {
+      return null;
+    }
     String trimmedStart = startDelimiter.trim();
     String trimmedEnd = endDelimiter.trim();
     if (trimmedStart.length() > 0 && trimmedEnd.length() > 0) {

@@ -23,7 +23,6 @@ import consulo.content.TestLikeContentFolderTypeProvider;
 import consulo.content.base.BuiltInGeneratedIconOwner;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
-import consulo.project.ProjectBundle;
 import consulo.project.localize.ProjectLocalize;
 import consulo.ui.color.ColorValue;
 import consulo.ui.color.RGBColor;
@@ -34,15 +33,14 @@ import java.util.function.Supplier;
 
 /**
  * @author VISTALL
- * @since 22:44/31.10.13
+ * @since 2013-10-31
  */
 @ExtensionImpl(id = "test")
-public class TestContentFolderTypeProvider extends PackageBasedContentFolderTypeProvider implements TestLikeContentFolderTypeProvider, BuiltInGeneratedIconOwner {
+public class TestContentFolderTypeProvider extends PackageBasedContentFolderTypeProvider
+    implements TestLikeContentFolderTypeProvider, BuiltInGeneratedIconOwner {
     private static final ColorValue TESTS_COLOR = new LightDarkColorValue(new RGBColor(0, 140, 46), new RGBColor(73, 140, 101));
-    private static final Supplier<TestContentFolderTypeProvider> INSTANCE = ExtensionInstance.from(ContentFolderTypeProvider.class
-    );
+    private static final Supplier<TestContentFolderTypeProvider> INSTANCE = ExtensionInstance.from(ContentFolderTypeProvider.class);
 
-    
     public static TestContentFolderTypeProvider getInstance() {
         return INSTANCE.get();
     }
@@ -56,13 +54,11 @@ public class TestContentFolderTypeProvider extends PackageBasedContentFolderType
         return 150;
     }
 
-    
     @Override
     public Image getIcon() {
         return AllIcons.Modules.TestRoot;
     }
 
-    
     @Override
     public Image getGeneratedIcon() {
         return PlatformIconGroup.modulesGeneratedtestroot();
@@ -73,13 +69,11 @@ public class TestContentFolderTypeProvider extends PackageBasedContentFolderType
         return PlatformIconGroup.nodesPackage();
     }
 
-    
     @Override
     public LocalizeValue getName() {
         return ProjectLocalize.moduleToggleTestSourcesAction();
     }
 
-    
     @Override
     public ColorValue getGroupColor() {
         return TESTS_COLOR;

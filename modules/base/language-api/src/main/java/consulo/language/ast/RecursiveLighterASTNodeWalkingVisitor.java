@@ -54,13 +54,14 @@ public abstract class RecursiveLighterASTNodeWalkingVisitor extends LighterASTNo
     @Override
     public IndexedLighterASTNode getFirstChild(IndexedLighterASTNode element) {
       List<LighterASTNode> children = ast.getChildren(element.node);
-      IndexedLighterASTNode[] indexedChildren = children.isEmpty() ? IndexedLighterASTNode.EMPTY_ARRAY : new IndexedLighterASTNode[children.size()];
+      IndexedLighterASTNode[] indexedChildren =
+        children.isEmpty() ? IndexedLighterASTNode.EMPTY_ARRAY : new IndexedLighterASTNode[children.size()];
       for (int i = 0; i < children.size(); i++) {
         LighterASTNode child = children.get(i);
         IndexedLighterASTNode indexedNode = new IndexedLighterASTNode(child, i == 0 ? null : indexedChildren[i - 1]);
         indexedChildren[i] = indexedNode;
         if (i != 0) {
-          indexedChildren[i-1].next = indexedNode;
+          indexedChildren[i - 1].next = indexedNode;
         }
       }
       childrenStack.push(indexedChildren);
@@ -82,7 +83,8 @@ public abstract class RecursiveLighterASTNodeWalkingVisitor extends LighterASTNo
       public void elementFinished(IndexedLighterASTNode element) {
         RecursiveLighterASTNodeWalkingVisitor.this.elementFinished(element.node);
 
-        if (parentStack.peek() == element) { // getFirstChild returned nothing. otherwise getFirstChild() was not called, i.e. super.visitNode() was not called i.e. just ignore
+        // getFirstChild returned nothing. otherwise getFirstChild() was not called, i.e. super.visitNode() was not called i.e. just ignore
+        if (parentStack.peek() == element) {
           childrenStack.pop();
           parentStack.pop();
         }

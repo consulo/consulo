@@ -176,20 +176,20 @@ public class DFAMap<V> {
 
   @Override
   public String toString() {
-    if (this == ourEmptyMap){
+    if (this == ourEmptyMap) {
       return "Empty Map";
     }
-    if (myAll != null){
+    if (myAll != null) {
       return myAll.toString();
     }
-    if (myK != null){
+    if (myK != null) {
       return "{" + myK + "=" + myV + "}";
     }
     return "Empty";
   }
 
   public Set<String> keySet() {
-    if (myAll != null){
+    if (myAll != null) {
       return myAll.keySet();
     }
     return myK != null ? Collections.singleton(myK) : Collections.<String>emptySet();

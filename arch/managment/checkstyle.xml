@@ -44,6 +44,25 @@
         <!-- Checks that there are no tab characters in the file. -->
     </module>
 
+    <module name="RegexpMultiline">
+        <property name="fileExtensions" value="java"/>
+        <!--<property name="format" value="(?>\r\n?|\n)[ \t]*+(?>\r\n?|\n)[ \t]*+(?>\r\n?|\n)"/>-->
+        <property name="format" value="(?&lt;=(?>\r\n?|\n))[ \t]*+(?>\r\n?|\n)[ \t]*+(?>\r\n?|\n)"/>
+        <property name="message" value="Multiple blank lines are not allowed."/>
+    </module>
+
+    <module name="RegexpMultiline">
+        <property name="fileExtensions" value="java"/>
+        <property name="format" value="(?&lt;=(?>\r\n?|\n))[ \t]*+@\w+(?>\r\n?|\n)[ \t]*+(?>\r\n?|\n)"/>
+        <property name="message" value="Blank line between annotation and field/method is not allowed."/>
+    </module>
+
+    <module name="RegexpMultiline">
+        <property name="fileExtensions" value="java"/>
+        <property name="format" value="(?>\r\n?|\n)[ \t]*+(?>\r\n?|\n)[ \t]*+\}"/>
+        <property name="message" value="Blank line before closing curly brace is not allowed."/>
+    </module>
+
     <!--LENGTH and CODING CHECKS-->
     <module name="LineLength">
         <!-- Checks if a line is too long. -->

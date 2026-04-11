@@ -98,7 +98,6 @@ public class TokenSet {
     return doCreate(types);
   }
 
-  
   private static TokenSet doCreate(IElementType... types) {
     short min = Short.MAX_VALUE;
     short max = 0;
@@ -178,7 +177,8 @@ public class TokenSet {
     for (int i = 0; i < newSet.myWords.length; i++) {
       int ai = newSet.myShift - a.myShift + i;
       int bi = newSet.myShift - b.myShift + i;
-      newSet.myWords[i] = (0 <= ai && ai < a.myWords.length ? a.myWords[ai] : 0L) & ~(0 <= bi && bi < b.myWords.length ? b.myWords[bi] : 0L);
+      newSet.myWords[i] = (0 <= ai && ai < a.myWords.length ? a.myWords[ai] : 0L)
+          & ~(0 <= bi && bi < b.myWords.length ? b.myWords[bi] : 0L);
     }
     return newSet;
   }

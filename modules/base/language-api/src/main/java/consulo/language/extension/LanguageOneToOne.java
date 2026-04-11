@@ -57,12 +57,10 @@ public final class LanguageOneToOne<E extends LanguageExtension> implements Func
     }
   }
 
-  
   public static <E1 extends LanguageExtension> Function<ExtensionWalker<E1>, ByLanguageValue<E1>> build() {
     return build(null);
   }
 
-  
   public static <E1 extends LanguageExtension> Function<ExtensionWalker<E1>, ByLanguageValue<E1>> build(@Nullable E1 defaultImpl) {
     return new LanguageOneToOne<>(defaultImpl);
   }

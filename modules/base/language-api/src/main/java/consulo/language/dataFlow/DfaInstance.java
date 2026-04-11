@@ -22,7 +22,6 @@ public interface DfaInstance<E> {
   // Invariant: fun must create new instance of DFAMap if modifies it
   E fun(E e, Instruction instruction);
 
-  
   E initial();
 
   boolean isForward();

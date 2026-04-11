@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.language.internal.custom;
 
 import consulo.language.ast.IElementType;
@@ -95,5 +94,4 @@ public class AbstractCustomLexer extends LexerBase {
   public int getBufferEnd() {
     return myEndOffset;
   }
-
 }

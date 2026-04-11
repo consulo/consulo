@@ -39,17 +39,14 @@ public class FindSymbolParameters {
     return new FindSymbolParameters(myCompletePattern, myLocalPatternName, scope, myIdFilter);
   }
 
-  
   public String getCompletePattern() {
     return myCompletePattern;
   }
 
-  
   public String getLocalPatternName() {
     return myLocalPatternName;
   }
 
-  
   public ProjectAwareSearchScope getSearchScope() {
     return mySearchScope;
   }
@@ -58,7 +55,6 @@ public class FindSymbolParameters {
     return myIdFilter;
   }
 
-  
   public Project getProject() {
     return ObjectUtil.notNull(mySearchScope.getProject());
   }
@@ -68,7 +64,12 @@ public class FindSymbolParameters {
   }
 
   public static FindSymbolParameters wrap(String pattern, Project project, boolean searchInLibraries) {
-    return new FindSymbolParameters(pattern, pattern, searchScopeFor(project, searchInLibraries), FileBasedIndex.getInstance().createProjectIndexableFiles(project));
+    return new FindSymbolParameters(
+      pattern,
+      pattern,
+      searchScopeFor(project, searchInLibraries),
+      FileBasedIndex.getInstance().createProjectIndexableFiles(project)
+    );
   }
 
   public static FindSymbolParameters wrap(String pattern, GlobalSearchScope scope) {
@@ -76,12 +77,17 @@ public class FindSymbolParameters {
   }
 
   public static FindSymbolParameters simple(Project project, boolean searchInLibraries) {
-    return new FindSymbolParameters("", "", searchScopeFor(project, searchInLibraries), FileBasedIndex.getInstance().createProjectIndexableFiles(project));
+    return new FindSymbolParameters(
+      "",
+      "",
+      searchScopeFor(project, searchInLibraries),
+      FileBasedIndex.getInstance().createProjectIndexableFiles(project)
+    );
   }
 
-  
   public static ProjectAwareSearchScope searchScopeFor(@Nullable Project project, boolean searchInLibraries) {
-    ProjectAwareSearchScope baseScope = project == null ? new EverythingGlobalScope() : searchInLibraries ? ProjectScopes.getAllScope(project) : ProjectScopes.getProjectScope(project);
+    ProjectAwareSearchScope baseScope = project == null ? new EverythingGlobalScope()
+      : searchInLibraries ? ProjectScopes.getAllScope(project) : ProjectScopes.getProjectScope(project);
 
     return (ProjectAwareSearchScope)baseScope.intersectWith(new EverythingGlobalScope(project) {
       @Override

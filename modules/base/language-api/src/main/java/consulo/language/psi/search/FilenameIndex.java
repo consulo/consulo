@@ -1,5 +1,4 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
-
 package consulo.language.psi.search;
 
 import consulo.annotation.access.RequiredReadAction;
@@ -34,7 +33,6 @@ public class FilenameIndex {
     @Deprecated
     public static final ID<String, Void> NAME = ID.create("FilenameIndex");
 
-    
     public static String[] getAllFilenames(@Nullable Project project) {
         Set<String> names = new HashSet<>();
         getService().processAllFileNames(
@@ -56,12 +54,10 @@ public class FilenameIndex {
         getService().processAllFileNames(processor, scope, filter);
     }
 
-    
     public static Collection<VirtualFile> getVirtualFilesByName(Project project, String name, SearchScope scope) {
         return getService().getVirtualFilesByName(project, name, scope, null);
     }
 
-    
     public static Collection<VirtualFile> getVirtualFilesByName(
         Project project,
         String name,
@@ -74,7 +70,6 @@ public class FilenameIndex {
         return getVirtualFilesByNameIgnoringCase(name, scope, project, null);
     }
 
-    
     @RequiredReadAction
     public static PsiFile[] getFilesByName(Project project, String name, SearchScope scope) {
         return (PsiFile[])getFilesByName(project, name, scope, false);
@@ -143,7 +138,6 @@ public class FilenameIndex {
         return processedFiles > 0;
     }
 
-    
     private static Set<VirtualFile> getVirtualFilesByNameIgnoringCase(
         String name,
         SearchScope scope,
@@ -167,7 +161,6 @@ public class FilenameIndex {
         return files;
     }
 
-    
     @RequiredReadAction
     public static PsiFileSystemItem[] getFilesByName(
         Project project,
@@ -198,12 +191,7 @@ public class FilenameIndex {
         return getAllFilesByExt(project, ext, GlobalSearchScope.allScope(project));
     }
 
-    
-    public static Collection<VirtualFile> getAllFilesByExt(
-        Project project,
-        String ext,
-        GlobalSearchScope searchScope
-    ) {
+    public static Collection<VirtualFile> getAllFilesByExt(Project project, String ext, GlobalSearchScope searchScope) {
         int len = ext.length();
 
         if (len == 0) {

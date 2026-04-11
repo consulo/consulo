@@ -37,7 +37,9 @@ public final class NumberParser extends TokenParser {
   public boolean hasToken(int position) {
     int start = position;
     char startChar = myBuffer.charAt(start);
-    if(!isDigit(startChar)) return false;
+    if (!isDigit(startChar)) {
+      return false;
+    }
     for (position++; position < myEndOffset; position++) {
       if (!isDigit(myBuffer.charAt(position))) break;
     }
@@ -61,7 +63,7 @@ public final class NumberParser extends TokenParser {
         }
       }
     }
-    while(position < myEndOffset && isNumberTail(myBuffer.charAt(position))) {
+    while (position < myEndOffset && isNumberTail(myBuffer.charAt(position))) {
       position++;
     }
 

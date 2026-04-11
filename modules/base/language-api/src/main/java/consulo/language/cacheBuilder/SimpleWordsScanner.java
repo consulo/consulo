@@ -36,7 +36,7 @@ public class SimpleWordsScanner implements WordsScanner {
     while (true) {
       while (true) {
         if (index == fileText.length()) break ScanWordsLoop;
-        char c = fileTextArray != null ? fileTextArray[index]:fileText.charAt(index);
+        char c = fileTextArray != null ? fileTextArray[index] : fileText.charAt(index);
         if ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || (c >= '0' && c <= '9') ||
             (Character.isJavaIdentifierStart(c) && c != '$')) {
           break;
@@ -47,7 +47,7 @@ public class SimpleWordsScanner implements WordsScanner {
       while (true) {
         index++;
         if (index == fileText.length()) break;
-        char c = fileTextArray != null ? fileTextArray[index]:fileText.charAt(index);
+        char c = fileTextArray != null ? fileTextArray[index] : fileText.charAt(index);
         if ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || (c >= '0' && c <= '9')) continue;
         if (!Character.isJavaIdentifierPart(c) || c == '$') break;
       }

@@ -68,7 +68,6 @@ public abstract class IndexPatternSearch extends QueryFactory<IndexPatternOccurr
       myMultiLine = multiLine;
     }
 
-    
     public PsiFile getFile() {
       return myFile;
     }

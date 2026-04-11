@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.language;
 
 import consulo.annotation.DeprecationInfo;
@@ -45,7 +44,6 @@ public class LangBundle extends AbstractBundle{
     return ourInstance.getMessage(key, params);
   }
 
-  
   public static Supplier<String> messagePointer(String key) {
     return () -> message(key);
   }

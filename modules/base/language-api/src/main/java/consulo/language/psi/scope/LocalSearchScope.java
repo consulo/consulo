@@ -118,7 +118,6 @@ public class LocalSearchScope extends BaseSearchScope {
     return result;
   }
 
-  
   public LocalSearchScope intersectWith(LocalSearchScope scope2){
     if (equals(scope2)) return this;
     return intersection(this, scope2);
@@ -139,7 +138,6 @@ public class LocalSearchScope extends BaseSearchScope {
     return new LocalSearchScope(PsiUtilCore.toPsiElementArray(result), null, scope1.myIgnoreInjectedPsi || scope2.myIgnoreInjectedPsi);
   }
 
-  
   @Override
   public SearchScope intersectWith(SearchScope scope2) {
     if (scope2 instanceof LocalSearchScope) {

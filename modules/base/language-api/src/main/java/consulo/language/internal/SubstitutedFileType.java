@@ -39,7 +39,6 @@ public class SubstitutedFileType extends LanguageFileType {
         myFileType = substitutionFileType;
     }
 
-    
     public static FileType substituteFileType(VirtualFile file, FileType fileType, Project project) {
         if (project == null) {
             return fileType;
@@ -56,31 +55,26 @@ public class SubstitutedFileType extends LanguageFileType {
         return fileType;
     }
 
-    
     @Override
     public String getId() {
         return myFileType.getId();
     }
 
-    
     @Override
     public LocalizeValue getDescription() {
         return myFileType.getDescription();
     }
 
-    
     @Override
     public LocalizeValue getDisplayName() {
         return myFileType.getDisplayName();
     }
 
-    
     @Override
     public String getDefaultExtension() {
         return myFileType.getDefaultExtension();
     }
 
-    
     @Override
     public Image getIcon() {
         return myFileType.getIcon();
@@ -91,12 +85,10 @@ public class SubstitutedFileType extends LanguageFileType {
         return myFileType.getCharset(file, content);
     }
 
-    
     public FileType getOriginalFileType() {
         return myOriginalFileType;
     }
 
-    
     public FileType getFileType() {
         return myFileType;
     }

@@ -26,7 +26,6 @@ import consulo.util.lang.StringUtil;
 public class DescriptiveNameUtil {
   private static final Logger LOG = Logger.getInstance(DescriptiveNameUtil.class);
 
-  
   public static String getMetaDataName(PsiMetaData metaData) {
     String name = metaData.getName();
     return StringUtil.isEmpty(name) ? "''" : name;

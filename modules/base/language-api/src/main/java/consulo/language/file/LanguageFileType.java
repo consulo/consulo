@@ -76,7 +76,6 @@ public abstract class LanguageFileType implements FileType {
         return mySecondary;
     }
 
-    
     @Override
     public LocalizeValue getDisplayName() {
         return myLanguage.getDisplayName();

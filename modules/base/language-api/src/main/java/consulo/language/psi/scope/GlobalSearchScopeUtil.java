@@ -15,7 +15,7 @@
  */
 package consulo.language.psi.scope;
 
-import consulo.application.ApplicationManager;
+import consulo.application.Application;
 import consulo.content.scope.SearchScope;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
@@ -33,14 +33,13 @@ public class GlobalSearchScopeUtil {
     if (scope instanceof GlobalSearchScope) {
       return (GlobalSearchScope)scope;
     }
-    return ApplicationManager.getApplication()
-                             .runReadAction((Supplier<GlobalSearchScope>)() -> GlobalSearchScope.filesScope(project,
-                                                                                                            getLocalScopeFiles((LocalSearchScope)scope)));
+    return Application.get().runReadAction(
+        (Supplier<GlobalSearchScope>)() -> GlobalSearchScope.filesScope(project, getLocalScopeFiles((LocalSearchScope)scope))
+    );
   }
 
-  
   public static Set<VirtualFile> getLocalScopeFiles(LocalSearchScope scope) {
-    return ApplicationManager.getApplication().runReadAction((Supplier<Set<VirtualFile>>)() -> {
+    return Application.get().runReadAction((Supplier<Set<VirtualFile>>)() -> {
       Set<VirtualFile> files = new LinkedHashSet<>();
       for (PsiElement element : scope.getScope()) {
         PsiFile file = element.getContainingFile();
