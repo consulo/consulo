@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.util.collection;
 
 import org.jspecify.annotations.Nullable;
@@ -24,7 +23,6 @@ import java.util.Collection;
 import java.util.LinkedHashMap;
 
 public class MutualMap<Key, Value> {
-
   private final Map<Key, Value> myKey2Value;
   private final Map<Value, Key> myValue2Key;
 
@@ -89,7 +87,6 @@ public class MutualMap<Key, Value> {
 
     MutualMap mutualMap = (MutualMap)o;
     return myKey2Value.equals(mutualMap.myKey2Value) && myValue2Key.equals(mutualMap.myValue2Key);
-
   }
 
   @Override

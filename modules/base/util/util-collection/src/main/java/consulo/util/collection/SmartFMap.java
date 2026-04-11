@@ -269,5 +269,4 @@ public class SmartFMap<K,V> implements Map<K,V> {
       sb.append(", ");
     }
   }
-
 }

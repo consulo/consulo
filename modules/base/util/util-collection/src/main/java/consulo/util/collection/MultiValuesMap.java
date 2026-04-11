@@ -112,5 +112,4 @@ public class MultiValuesMap<K, V> {
     Collection<V> values = myBaseMap.get(key);
     return values == null || values.isEmpty() ? null : values.iterator().next();
   }
-
 }

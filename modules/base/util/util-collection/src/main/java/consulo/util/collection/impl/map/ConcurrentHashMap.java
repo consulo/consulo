@@ -4189,7 +4189,6 @@ public class ConcurrentHashMap<K, V> extends AbstractMap<K, V> implements Concur
       }
       return modified;
     }
-
   }
 
   /**
@@ -4299,8 +4298,7 @@ public class ConcurrentHashMap<K, V> extends AbstractMap<K, V> implements Concur
     }
 
     public boolean equals(Object o) {
-      Set<?> c;
-      return ((o instanceof Set) && ((c = (Set<?>)o) == this || (containsAll(c) && c.containsAll(this))));
+      return o instanceof Set c && (c == this || containsAll(c) && c.containsAll(this));
     }
 
     public Spliterator<K> spliterator() {
@@ -4475,7 +4473,6 @@ public class ConcurrentHashMap<K, V> extends AbstractMap<K, V> implements Concur
           action.accept(new MapEntry<K, V>(Objects.requireNonNull(p.key), Objects.requireNonNull(p.val), map));
       }
     }
-
   }
 
   // -------------------------------------------------------
