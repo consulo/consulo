@@ -115,6 +115,10 @@ public class EditorAppearanceConfigurable extends SimpleConfigurableByProperties
         propertyBuilder.add(showVerticalIndents, editorSettings::isIndentGuidesShown, editorSettings::setIndentGuidesShown);
         root.add(showVerticalIndents);
 
+        CheckBox highlightSelectionOccurrences = CheckBox.create(LocalizeValue.localizeTODO("Highlight occurrences of selected text"));
+        propertyBuilder.add(highlightSelectionOccurrences, editorSettings::isHighlightSelectionOccurrences, editorSettings::setHighlightSelectionOccurrences);
+        root.add(highlightSelectionOccurrences);
+
         List<AdditionalEditorAppearanceSettingProvider> providers = new ArrayList<>(myApplication.getExtensionList(AdditionalEditorAppearanceSettingProvider.class));
         providers.sort(APPEARANCE_SETTING_PROVIDER_LABEL_NAME_COMPARATOR);
 

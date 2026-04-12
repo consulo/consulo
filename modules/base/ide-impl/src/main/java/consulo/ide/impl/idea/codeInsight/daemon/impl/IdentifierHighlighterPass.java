@@ -74,6 +74,13 @@ public class IdentifierHighlighterPass extends TextEditorHighlightingPass {
     @Override
     @RequiredReadAction
     public void doCollectInformation(ProgressIndicator progress) {
+        // When selection highlighting is enabled and there is an active selection,
+        // skip identifier highlighting to avoid visual conflict with selection highlights.
+        if (myEditor.getSettings().isHighlightSelectionOccurrences()
+            && myEditor.getCaretModel().getPrimaryCaret().hasSelection()) {
+            return;
+        }
+
         HighlightUsagesHandlerBase<PsiElement> highlightUsagesHandler = HighlightUsagesHandler.createCustomHandler(myEditor, myFile);
         if (highlightUsagesHandler != null) {
             List<PsiElement> targets = highlightUsagesHandler.getTargets();

@@ -5,10 +5,10 @@ package consulo.ide.impl.idea.codeInsight.highlighting;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.application.Application;
 import consulo.application.ReadAction;
-import consulo.application.eap.EarlyAccessProgramManager;
 import consulo.application.util.registry.Registry;
 import consulo.codeEditor.*;
 import consulo.codeEditor.event.*;
+import consulo.codeEditor.markup.HighlighterLayer;
 import consulo.codeEditor.markup.HighlighterTargetArea;
 import consulo.codeEditor.markup.MarkupModel;
 import consulo.codeEditor.markup.RangeHighlighter;
@@ -31,7 +31,6 @@ import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.util.Alarm;
 import consulo.util.dataholder.Key;
-import jakarta.inject.Inject;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -40,13 +39,6 @@ import java.util.List;
 @ExtensionImpl
 public class BackgroundHighlighter implements PostStartupActivity {
     public static final Key<SelectionHighlights> SELECTION_HIGHLIGHTS = SelectionHighlights.KEY;
-
-    private final EarlyAccessProgramManager myEarlyAccessProgramManager;
-
-    @Inject
-    public BackgroundHighlighter(EarlyAccessProgramManager earlyAccessProgramManager) {
-        myEarlyAccessProgramManager = earlyAccessProgramManager;
-    }
 
     @Override
     public void runActivity(final Project project, UIAccess uiAccess) {
@@ -145,12 +137,8 @@ public class BackgroundHighlighter implements PostStartupActivity {
     }
 
     @RequiredUIAccess
-    private boolean highlightSelection(Project project, Editor editor, Alarm alarm) {
+    private static boolean highlightSelection(Project project, Editor editor, Alarm alarm) {
         UIAccess.assertIsUIThread();
-
-        if (!myEarlyAccessProgramManager.getState(HighlightSelectionEarlyAccessProgramDescriptor.class)) {
-            return false;
-        }
 
         Document document = editor.getDocument();
         long stamp = document.getModificationStamp();
@@ -158,17 +146,21 @@ public class BackgroundHighlighter implements PostStartupActivity {
             return false;
         }
         if (!editor.getSettings().isHighlightSelectionOccurrences()) {
+            removeSelectionHighlights(editor);
             return false;
         }
         if (TemplateManager.getInstance(project).getTemplateState(editor) != null) {
+            removeSelectionHighlights(editor);
             return false;
         }
         CaretModel caretModel = editor.getCaretModel();
         if (caretModel.getCaretCount() > 1) {
+            removeSelectionHighlights(editor);
             return false;
         }
         Caret caret = caretModel.getPrimaryCaret();
         if (!caret.hasSelection()) {
+            removeSelectionHighlights(editor);
             return false;
         }
         int start = caret.getSelectionStart();
@@ -176,6 +168,7 @@ public class BackgroundHighlighter implements PostStartupActivity {
         CharSequence sequence = document.getCharsSequence();
         String toFind = sequence.subSequence(start, end).toString();
         if (toFind.isBlank() || toFind.contains("\n")) {
+            removeSelectionHighlights(editor);
             return false;
         }
         SelectionHighlights previous = editor.getUserData(SELECTION_HIGHLIGHTS);
@@ -229,7 +222,7 @@ public class BackgroundHighlighter implements PostStartupActivity {
                             EditorColors.IDENTIFIER_UNDER_CARET_ATTRIBUTES,
                             startOffset,
                             endOffset,
-                            HighlightManagerImpl.OCCURRENCE_LAYER,
+                            HighlighterLayer.ELEMENT_UNDER_CARET,
                             HighlighterTargetArea.EXACT_RANGE
                         )
                     );
@@ -240,7 +233,7 @@ public class BackgroundHighlighter implements PostStartupActivity {
         return true;
     }
 
-    private static void removeSelectionHighlights(Editor editor) {
+    public static void removeSelectionHighlights(Editor editor) {
         SelectionHighlights highlights = editor.getUserData(SELECTION_HIGHLIGHTS);
         if (highlights == null) {
             return;
