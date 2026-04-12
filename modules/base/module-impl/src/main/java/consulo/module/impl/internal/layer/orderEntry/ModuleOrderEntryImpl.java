@@ -138,7 +138,7 @@ public class ModuleOrderEntryImpl extends OrderEntryBaseImpl implements ModuleOr
 
   @Override
   public @Nullable Module getModule() {
-    return getRootModel().getConfigurationAccessor().getModule(Objects.requireNonNull(myModulePointer.get()), myModulePointer.getName());
+    return getRootModel().getConfigurationAccessor().getModule(myModulePointer.get(), myModulePointer.getName());
   }
 
   @Override

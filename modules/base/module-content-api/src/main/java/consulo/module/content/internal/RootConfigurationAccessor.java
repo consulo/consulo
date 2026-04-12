@@ -48,7 +48,7 @@ public class RootConfigurationAccessor {
     return SdkPointerManager.getInstance().create(sdkName);
   }
 
-  public Module getModule(Module module, String moduleName) {
+  public @Nullable Module getModule(@Nullable Module module, String moduleName) {
     return module;
   }
 
