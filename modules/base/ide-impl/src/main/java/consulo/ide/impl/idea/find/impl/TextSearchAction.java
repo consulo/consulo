@@ -15,8 +15,8 @@ package consulo.ide.impl.idea.find.impl;
 
 import consulo.annotation.component.ActionImpl;
 import consulo.application.dumb.DumbAware;
+import consulo.find.localize.FindLocalize;
 import consulo.ide.impl.idea.ide.actions.GotoActionBase;
-import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
@@ -28,8 +28,7 @@ import consulo.ui.ex.action.AnActionEvent;
 @ActionImpl(id = "TextSearchAction")
 public class TextSearchAction extends GotoActionBase implements DumbAware {
     public TextSearchAction() {
-        super(LocalizeValue.localizeTODO("Search Text in Everywhere..."),
-            LocalizeValue.localizeTODO("Search for text across the project in Search Everywhere"));
+        super(FindLocalize.textSearchActionText(), FindLocalize.textSearchActionDescription());
     }
 
     @Override

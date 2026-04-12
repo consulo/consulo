@@ -21,6 +21,9 @@ import consulo.disposer.Disposer;
 import consulo.find.FindManager;
 import consulo.find.FindModel;
 import consulo.find.FindSettings;
+import consulo.find.localize.FindLocalize;
+import consulo.localization.LocalizedValue;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.ex.action.ActionToolbar;
 import consulo.ui.ex.action.AnAction;
@@ -45,7 +48,7 @@ import java.util.function.Consumer;
  * Action providing a combobox for file mask/filter selection in the SE text search toolbar.
  */
 class JComboboxAction extends AnAction implements CustomComponentAction {
-    private static final String EMPTY_TEXT = "All file types";
+    private static final LocalizeValue EMPTY_TEXT = FindLocalize.seTextHeaderActionAllFiletypes();
 
     private final Project myProject;
     private final Disposable myDisposable;
@@ -90,11 +93,11 @@ class JComboboxAction extends AnAction implements CustomComponentAction {
             myFindModel = FindManager.getInstance(project).getFindInProjectModel();
             setEditor(new BasicComboBoxEditor());
             setMaximumRowCount(12);
-            setPrototypeDisplayValue(EMPTY_TEXT);
+            setPrototypeDisplayValue(EMPTY_TEXT.get());
             setOpaque(false);
             setEditable(true);
 
-            insertItemAt(EMPTY_TEXT, 0);
+            insertItemAt(EMPTY_TEXT.get(), 0);
 
             String initialMask = FindSettings.getInstance().getFileMask();
             setSelectedItem(initialMask != null ? initialMask : EMPTY_TEXT);
@@ -137,7 +140,7 @@ class JComboboxAction extends AnAction implements CustomComponentAction {
                 @Override
                 public void focusLost(FocusEvent e) {
                     if (myTextField != null && myTextField.getText().isEmpty()) {
-                        myTextField.setText(EMPTY_TEXT);
+                        myTextField.setText(EMPTY_TEXT.get());
                         setSelectedIndex(0);
                     }
                 }

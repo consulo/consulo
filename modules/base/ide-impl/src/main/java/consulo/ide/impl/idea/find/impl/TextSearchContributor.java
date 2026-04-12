@@ -125,7 +125,7 @@ public class TextSearchContributor implements WeightedSearchEverywhereContributo
 
     @Override
     public String getGroupName() {
-        return "Text";
+        return FindLocalize.searchEverywhereGroupName().get();
     }
 
     @Override
@@ -300,14 +300,14 @@ public class TextSearchContributor implements WeightedSearchEverywhereContributo
 
     @Override
     public void updateEmptyStatus(StatusText statusText, Runnable rebuild) {
-        statusText.appendText("Nothing found.");
+        statusText.appendText(FindLocalize.messageNothingfound());
 
         if (!(myModel.isCaseSensitive() || myModel.isWholeWordsOnly() || myModel.isRegularExpressions()
             || (myModel.getFileFilter() != null && !myModel.getFileFilter().isBlank()))) {
             return;
         }
 
-        statusText.appendSecondaryText(" Used options:", SimpleTextAttributes.GRAYED_ATTRIBUTES, null);
+        statusText.appendSecondaryText(" " + FindLocalize.messageNothingfoundUsedOptions().get(), SimpleTextAttributes.GRAYED_ATTRIBUTES, null);
 
         if (myModel.isCaseSensitive()) {
             statusText.appendSecondaryText(" " + FindLocalize.findPopupCaseSensitive().get(), SimpleTextAttributes.GRAYED_ATTRIBUTES, null);
@@ -323,7 +323,7 @@ public class TextSearchContributor implements WeightedSearchEverywhereContributo
         }
 
         statusText.appendSecondaryText(
-            " Clear all options",
+            " " + FindLocalize.messageNothingfoundClearall().get(),
             SimpleTextAttributes.LINK_PLAIN_ATTRIBUTES,
             e -> {
                 myModel.setCaseSensitive(false);

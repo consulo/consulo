@@ -53,6 +53,7 @@ import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.action.event.AnActionListener;
 import consulo.ui.ex.awt.*;
+import consulo.ui.ex.awt.internal.AWTHasSuffixComponent;
 import consulo.ui.ex.awt.internal.GuiUtils;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.internal.QuickSearchComponent;
@@ -112,6 +113,7 @@ public class SearchEverywhereUI extends BigPopupUI implements DataProvider, Quic
     private final SEListSelectionTracker mySelectionTracker;
     private final PersistentSearchEverywhereContributorFilter<String> myContributorsFilter;
     private ActionToolbar myToolbar;
+    private @Nullable ActionToolbar myRightActionsToolbar;
 
     @RequiredUIAccess
     public SearchEverywhereUI(Project project, List<? extends SearchEverywhereContributor<?>> contributors) {
@@ -252,8 +254,46 @@ public class SearchEverywhereUI extends BigPopupUI implements DataProvider, Quic
         if (myToolbar != null) {
             myToolbar.updateActionsAsync();
         }
+        updateRightActions();
         repaint();
         rebuildList();
+    }
+
+    private void updateRightActions() {
+        JComponent searchFieldAWT = (JComponent) TargetAWT.to(mySearchField);
+
+        // Remove previous right actions toolbar
+        if (myRightActionsToolbar != null) {
+            myRightActionsToolbar = null;
+            AWTHasSuffixComponent.setSuffixComponent(searchFieldAWT, null);
+        }
+
+        // Add right actions for the current contributor if it supports them
+        SearchEverywhereContributor<?> contributor = mySelectedTab.getContributor().orElse(null);
+        if (contributor instanceof SearchFieldActionsContributor actionsContributor) {
+            Runnable onChanged = this::rebuildList;
+            Consumer<AnAction> registerShortcut = action -> {
+                action.registerCustomShortcutSet(action.getShortcutSet(), searchFieldAWT);
+            };
+
+            List<AnAction> rightActions = actionsContributor.createRightActions(registerShortcut, onChanged);
+            if (!rightActions.isEmpty()) {
+                ActionGroup.Builder groupBuilder = ActionGroup.newImmutableBuilder();
+                for (AnAction action : rightActions) {
+                    groupBuilder.add(action);
+                }
+
+                myRightActionsToolbar = ActionToolbarFactory.getInstance().createActionToolbar(
+                    "search.everywhere.right.actions", groupBuilder.build(), ActionToolbar.Style.HORIZONTAL
+                );
+                myRightActionsToolbar.setTargetComponent(searchFieldAWT);
+
+                JComponent toolbarComponent = myRightActionsToolbar.getComponent();
+                toolbarComponent.setOpaque(false);
+
+                AWTHasSuffixComponent.setSuffixComponent(searchFieldAWT, toolbarComponent);
+            }
+        }
     }
 
     public String getSelectedContributorID() {
