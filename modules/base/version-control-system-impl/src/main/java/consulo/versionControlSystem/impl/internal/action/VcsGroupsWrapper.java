@@ -124,8 +124,8 @@ public class VcsGroupsWrapper extends DefaultActionGroup implements DumbAware {
 
     private void updateFromAction(AnAction action, Presentation presentation) {
         Presentation wrappedActionPresentation = myPresentationFactory.getPresentation(action);
-        presentation.setDescriptionValue(wrappedActionPresentation.getDescriptionValue());
-        presentation.setTextValue(wrappedActionPresentation.getTextValue());
+        presentation.setText(wrappedActionPresentation.getTextValue());
+        presentation.setDescription(wrappedActionPresentation.getDescription());
         presentation.setVisible(wrappedActionPresentation.isVisible());
         presentation.setEnabled(wrappedActionPresentation.isEnabled());
         removeAll();

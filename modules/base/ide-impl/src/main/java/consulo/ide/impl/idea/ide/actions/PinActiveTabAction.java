@@ -84,7 +84,7 @@ public class PinActiveTabAction extends DumbAwareAction implements Toggleable {
         else {
             text = selected ? IdeLocalize.actionUnpinTab() : IdeLocalize.actionPinTab();
         }
-        e.getPresentation().setTextValue(text);
+        e.getPresentation().setText(text);
         e.getPresentation().setEnabledAndVisible(enabled);
     }
 

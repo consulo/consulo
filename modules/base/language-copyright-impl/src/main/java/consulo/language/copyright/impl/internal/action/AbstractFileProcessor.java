@@ -164,12 +164,12 @@ public abstract class AbstractFileProcessor {
 
     private Runnable prepareFiles(List<PsiFile> files) {
         ProgressIndicator indicator = ProgressManager.getInstance().getProgressIndicator();
-        String msg = null;
+        LocalizeValue msg = LocalizeValue.empty();
         double fraction = 0.0D;
         if (indicator != null) {
             msg = indicator.getText();
             fraction = indicator.getFraction();
-            indicator.setTextValue(message);
+            indicator.setText(message);
         }
 
         Runnable[] runnables = new Runnable[files.size()];
@@ -206,12 +206,12 @@ public abstract class AbstractFileProcessor {
 
         return () -> {
             ProgressIndicator indicator1 = ProgressManager.getInstance().getProgressIndicator();
-            String msg1 = null;
+            LocalizeValue msg1 = LocalizeValue.empty();
             double fraction1 = 0.0D;
             if (indicator1 != null) {
                 msg1 = indicator1.getText();
                 fraction1 = indicator1.getFraction();
-                indicator1.setTextValue(message);
+                indicator1.setText(message);
             }
 
             for (int j = 0; j < runnables.length; j++) {

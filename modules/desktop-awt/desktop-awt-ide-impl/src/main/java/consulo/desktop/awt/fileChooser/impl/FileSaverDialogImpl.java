@@ -18,8 +18,10 @@ package consulo.desktop.awt.fileChooser.impl;
 import consulo.fileChooser.FileSaverDescriptor;
 import consulo.fileChooser.FileSaverDialog;
 import consulo.fileChooser.FileSystemTree;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.ex.awt.Messages;
+import consulo.ui.ex.localize.UILocalize;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileWrapper;
 import consulo.ui.ex.awt.event.DocumentAdapter;
@@ -58,9 +60,8 @@ public class FileSaverDialogImpl extends FileChooserDialogImpl implements FileSa
     setTitle(getChooserTitle(descriptor));
   }
 
-  private static String getChooserTitle(FileSaverDescriptor descriptor) {
-    String title = descriptor.getTitle();
-    return title != null ? title : UIBundle.message("file.chooser.save.dialog.default.title");
+  private static LocalizeValue getChooserTitle(FileSaverDescriptor descriptor) {
+    return descriptor.getTitle().orIfEmpty(UILocalize.fileChooserSaveDialogDefaultTitle());
   }
 
   public @Nullable VirtualFileWrapper save(@Nullable VirtualFile baseDir, @Nullable String filename) {

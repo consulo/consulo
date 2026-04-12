@@ -23,17 +23,17 @@ import consulo.undoRedo.CommandDescriptor;
 import consulo.undoRedo.UndoConfirmationPolicy;
 import consulo.undoRedo.builder.CommandBuilder;
 import consulo.util.lang.ref.Ref;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author UNV
  * @since 2024-10-21
  */
 public class BaseCommandBuilder<THIS extends CommandBuilder<THIS>> implements CommandBuilder<THIS> {
-    
     private LocalizeValue myName = LocalizeValue.empty();
-    private Object myGroupId = null;
-    private Project myProject = null;
-    private Document myDocument = null;
+    private @Nullable Object myGroupId = null;
+    private @Nullable Project myProject = null;
+    private @Nullable Document myDocument = null;
     
     private UndoConfirmationPolicy myUndoConfirmationPolicy = UndoConfirmationPolicy.DEFAULT;
     private boolean myShouldRecordActionForActiveDocument = true;
@@ -57,7 +57,7 @@ public class BaseCommandBuilder<THIS extends CommandBuilder<THIS>> implements Co
     }
 
     @Override
-    public THIS groupId(Object groupId) {
+    public THIS groupId(@Nullable Object groupId) {
         myGroupId = groupId;
 
         if (groupId instanceof Document docGroupId) {
@@ -71,13 +71,13 @@ public class BaseCommandBuilder<THIS extends CommandBuilder<THIS>> implements Co
     }
 
     @Override
-    public THIS project(Project project) {
+    public THIS project(@Nullable Project project) {
         myProject = project;
         return self();
     }
 
     @Override
-    public THIS document(Document document) {
+    public THIS document(@Nullable Document document) {
         myDocument = document;
         return self();
     }

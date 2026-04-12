@@ -35,20 +35,20 @@ public class DumbProgressIndicator implements StandardProgressIndicator {
   }
 
   @Override
-  public void setTextValue(LocalizeValue text) {
+  public void setText(LocalizeValue text) {
   }
 
   @Override
-  public LocalizeValue getTextValue() {
+  public LocalizeValue getText() {
     return LocalizeValue.empty();
   }
 
   @Override
-  public void setText2Value(LocalizeValue text) {
+  public void setText2(LocalizeValue text) {
   }
 
   @Override
-  public LocalizeValue getText2Value() {
+  public LocalizeValue getText2() {
     return LocalizeValue.empty();
   }
 

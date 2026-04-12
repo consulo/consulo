@@ -26,7 +26,6 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
 import consulo.util.dataholder.UserDataHolderBase;
-import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VFileProperty;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
@@ -51,10 +50,9 @@ public class FileChooserDescriptor extends UserDataHolderBase implements Cloneab
   private final boolean myChooseJarContents;
   private final boolean myChooseMultiple;
 
+  private LocalizeValue myTitle = FileChooserLocalize.fileChooserDefaultTitle();
   
-  private LocalizeValue myTitleValue = FileChooserLocalize.fileChooserDefaultTitle();
-  
-  private LocalizeValue myDescriptionValue = LocalizeValue.empty();
+  private LocalizeValue myDescription = LocalizeValue.empty();
 
   private boolean myHideIgnored = true;
   private final List<VirtualFile> myRoots = new ArrayList<>();
@@ -85,8 +83,8 @@ public class FileChooserDescriptor extends UserDataHolderBase implements Cloneab
 
   public FileChooserDescriptor(FileChooserDescriptor d) {
     this(d.isChooseFiles(), d.isChooseFolders(), d.isChooseJars(), d.isChooseJarsAsFiles(), d.isChooseJarContents(), d.isChooseMultiple());
-    withTitleValue(d.getTitleValue());
-    withDescriptionValue(d.getDescriptionValue());
+    withTitle(d.getTitle());
+    withDescription(d.getDescription());
     withHideIgnored(d.isHideIgnored());
     withRoots(d.getRoots());
     withShowFileSystemRoots(d.isShowFileSystemRoots());
@@ -126,66 +124,49 @@ public class FileChooserDescriptor extends UserDataHolderBase implements Cloneab
     return isChooseMultiple();
   }
 
-  
-  public LocalizeValue getTitleValue() {
-    return myTitleValue;
+  public LocalizeValue getTitle() {
+    return myTitle;
   }
 
   @Deprecated
-  @DeprecationInfo("See #getTitleValue()")
-  public @Nullable String getTitle() {
-    return StringUtil.nullize(myTitleValue.getValue());
-  }
-
-  @Deprecated
-  @DeprecationInfo("Use #withTitleValue(LocalizeValue)")
+  @DeprecationInfo("Use #withTitle(LocalizeValue)")
+  @SuppressWarnings("deprecation")
   public void setTitle(String title) {
     withTitle(title);
   }
 
-  
-  @Deprecated
-  @DeprecationInfo("Use #withTitleValue(LocalizeValue)")
-  public FileChooserDescriptor withTitle(@Nullable String title) {
-    myTitleValue = LocalizeValue.ofNullable(title);
+  public FileChooserDescriptor withTitle(LocalizeValue title) {
+    myTitle = title;
     return this;
   }
 
-  
-  public FileChooserDescriptor withTitleValue(LocalizeValue title) {
-    myTitleValue = title;
-    return this;
+  @Deprecated
+  @DeprecationInfo("Use #withTitle(LocalizeValue)")
+  public FileChooserDescriptor withTitle(@Nullable String title) {
+    return withTitle(LocalizeValue.ofNullable(title));
   }
 
   @Deprecated
   @DeprecationInfo("Use #withDescription(LocalizeValue)")
+  @SuppressWarnings("deprecation")
   public void setDescription(String description) {
     withDescription(description);
   }
 
-  
+  public FileChooserDescriptor withDescription(LocalizeValue description) {
+    myDescription = description;
+    return this;
+  }
+
   @Deprecated
   @DeprecationInfo("Use #withDescription(LocalizeValue)")
   public FileChooserDescriptor withDescription(@Nullable String description) {
-    myDescriptionValue = LocalizeValue.ofNullable(description);
+    myDescription = LocalizeValue.ofNullable(description);
     return this;
   }
 
-  
-  public FileChooserDescriptor withDescriptionValue(LocalizeValue description) {
-    myDescriptionValue = description;
-    return this;
-  }
-
-  @Deprecated
-  @DeprecationInfo("See #getDescriptionValue()")
-  public @Nullable String getDescription() {
-    return StringUtil.nullize(myDescriptionValue.get());
-  }
-
-  
-  public LocalizeValue getDescriptionValue() {
-    return myDescriptionValue;
+  public LocalizeValue getDescription() {
+    return myDescription;
   }
 
   public boolean isHideIgnored() {
@@ -201,7 +182,6 @@ public class FileChooserDescriptor extends UserDataHolderBase implements Cloneab
     return this;
   }
 
-  
   public List<VirtualFile> getRoots() {
     return Collections.unmodifiableList(myRoots);
   }
@@ -330,7 +310,6 @@ public class FileChooserDescriptor extends UserDataHolderBase implements Cloneab
     return VirtualFileManager.getInstance().getFileIcon(file, null, Iconable.ICON_FLAG_READ_STATUS);
   }
 
-  
   protected static Image dressIcon(VirtualFile file, Image baseIcon) {
     return file.isValid() && file.is(VFileProperty.SYMLINK) ? ImageEffects.layered(baseIcon, PlatformIconGroup.nodesSymlink()) : baseIcon;
   }
@@ -374,6 +353,7 @@ public class FileChooserDescriptor extends UserDataHolderBase implements Cloneab
     return myChooseJars && FileChooserUtil.isArchive(file);
   }
 
+  @RequiredUIAccess
   public final @Nullable VirtualFile getFileToSelect(VirtualFile file) {
     if (file.isDirectory() && (myChooseFolders || isFileSelectable(file))) {
       return file;
@@ -399,6 +379,6 @@ public class FileChooserDescriptor extends UserDataHolderBase implements Cloneab
 
   @Override
   public String toString() {
-    return "FileChooserDescriptor [" + myTitleValue + "]";
+    return "FileChooserDescriptor [" + myTitle + "]";
   }
 }

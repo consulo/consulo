@@ -385,7 +385,6 @@ public abstract class FilteredTraverserBase<T, Self extends FilteredTraverserBas
         public static <T> Meta<T> empty() {
             return (Meta<T>)EMPTY;
         }
-
     }
 
     private static class Cond<T> {
@@ -438,5 +437,4 @@ public abstract class FilteredTraverserBase<T, Self extends FilteredTraverserBas
             return sb.append("}").toString();
         }
     }
-
 }

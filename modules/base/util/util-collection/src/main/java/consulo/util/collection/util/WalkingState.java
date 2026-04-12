@@ -45,7 +45,7 @@ public class WalkingState<T> {
     elementStarted(element);
   }
 
-  public void elementStarted(T element){
+  public void elementStarted(T element) {
     isDown = true;
     if (!startedWalking) {
       stopped = false;
@@ -65,8 +65,11 @@ public class WalkingState<T> {
       T parent = myWalker.getParent(element);
       T next = myWalker.getNextSibling(element);
       visit(element);
-      assert myWalker.getNextSibling(element) == next : "Next sibling of the element '"+element+"' changed. Was: "+next+"; Now:"+myWalker.getNextSibling(element)+"; Root:"+root;
-      assert myWalker.getParent(element) == parent : "Parent of the element '"+element+"' changed. Was: "+parent+"; Now:"+myWalker.getParent(element)+"; Root:"+root;
+      assert myWalker.getNextSibling(element) == next
+          : "Next sibling of the element '" + element + "' changed. Was: " + next + "; " +
+          "Now:" + myWalker.getNextSibling(element) + "; Root:" + root;
+      assert myWalker.getParent(element) == parent
+          : "Parent of the element '" + element + "' changed. Was: " + parent + "; Now:" + myWalker.getParent(element) + "; Root:" + root;
     }
   }
 
@@ -76,20 +79,20 @@ public class WalkingState<T> {
       if (child != null) return child;
     }
     // up
-    while (element != root && element!=null) {
+    while (element != root && element != null) {
       T next = myWalker.getNextSibling(element);
 
       elementFinished(element);
       if (next != null) {
         Object nextPrev = myWalker.getPrevSibling(next);
         if (nextPrev != element) {
-          String msg = "Element: " + element + "; next: "+next+"; next.prev: " + nextPrev;
+          String msg = "Element: " + element + "; next: " + next + "; next.prev: " + nextPrev;
           while (true) {
             T top = myWalker.getParent(element);
             if (top == null) break;
             element = top;
           }
-          assert false : msg+" Top:"+element;
+          assert false : msg + " Top:" + element;
         }
         return next;
       }
@@ -114,7 +117,7 @@ public class WalkingState<T> {
    */
   public static <T> boolean processAll(T root, TreeGuide<T> treeGuide, final Predicate<T> processor) {
     final boolean[] result = {true};
-    new WalkingState<T>(treeGuide){
+    new WalkingState<T>(treeGuide) {
       @Override
       public void visit(T element) {
         if (!processor.test(element)) {

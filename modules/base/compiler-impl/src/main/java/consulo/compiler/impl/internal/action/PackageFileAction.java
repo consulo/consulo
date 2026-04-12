@@ -41,7 +41,7 @@ public class PackageFileAction extends AnAction {
             List<VirtualFile> files = getFilesToPackage(e, project);
             if (!files.isEmpty()) {
                 visible = true;
-                e.getPresentation().setTextValue(
+                e.getPresentation().setText(
                     files.size() == 1
                         ? CompilerLocalize.actionNamePackageFile()
                         : CompilerLocalize.actionNamePackageFiles()

@@ -19,6 +19,7 @@ import consulo.desktop.awt.ui.OwnerOptional;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.fileChooser.FileSaverDescriptor;
 import consulo.fileChooser.FileSaverDialog;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.project.ui.internal.ProjectIdeFocusManager;
 import consulo.ui.ex.localize.UILocalize;
@@ -39,9 +40,8 @@ public class MacFileSaverDialog implements FileSaverDialog {
   private FileDialog myFileDialog;
   private FileSaverDescriptor myDescriptor;
 
-  private static String getChooserTitle(FileChooserDescriptor descriptor) {
-    String title = descriptor.getTitle();
-    return title != null ? title : UILocalize.fileChooserDefaultTitle().get();
+  private static LocalizeValue getChooserTitle(FileChooserDescriptor descriptor) {
+    return descriptor.getTitle().orIfEmpty(UILocalize.fileChooserDefaultTitle());
   }
 
   public MacFileSaverDialog(FileSaverDescriptor descriptor, Project project) {
@@ -49,10 +49,9 @@ public class MacFileSaverDialog implements FileSaverDialog {
   }
 
   public MacFileSaverDialog(FileSaverDescriptor descriptor, Component parent) {
-
-    String title = getChooserTitle(descriptor);
-    Consumer<Dialog> dialogConsumer = owner -> myFileDialog = new FileDialog(owner, title, FileDialog.SAVE);
-    Consumer<Frame> frameConsumer = owner -> myFileDialog = new FileDialog(owner, title, FileDialog.SAVE);
+    LocalizeValue title = getChooserTitle(descriptor);
+    Consumer<Dialog> dialogConsumer = owner -> myFileDialog = new FileDialog(owner, title.get(), FileDialog.SAVE);
+    Consumer<Frame> frameConsumer = owner -> myFileDialog = new FileDialog(owner, title.get(), FileDialog.SAVE);
 
     myDescriptor = descriptor;
 

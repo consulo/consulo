@@ -19,7 +19,7 @@ import org.jspecify.annotations.Nullable;
 
 import java.util.*;
 
-public class MultiValuesMap<K, V>{
+public class MultiValuesMap<K, V> {
   private final Map<K, Collection<V>> myBaseMap;
   private final boolean myOrdered;
 
@@ -53,7 +53,7 @@ public class MultiValuesMap<K, V>{
     myBaseMap.get(key).add(value);
   }
 
-  public @Nullable Collection<V> get(K key){
+  public @Nullable Collection<V> get(K key) {
     return myBaseMap.get(key);
   }
 
@@ -112,5 +112,4 @@ public class MultiValuesMap<K, V>{
     Collection<V> values = myBaseMap.get(key);
     return values == null || values.isEmpty() ? null : values.iterator().next();
   }
-
 }

@@ -596,9 +596,9 @@ public class CompileDriverImpl implements CompileDriver {
             LocalFileSystem lfs = LocalFileSystem.getInstance();
             if (!outputs.isEmpty()) {
                 ProgressIndicator indicator = compileContext.getProgressIndicator();
-                indicator.setTextValue(CompilerLocalize.progressSynchronizingOutputDirectories());
+                indicator.setText(CompilerLocalize.progressSynchronizingOutputDirectories());
                 lfs.refreshIoFiles(outputs, _status == ExitStatus.CANCELLED, false, null);
-                indicator.setTextValue(LocalizeValue.empty());
+                indicator.setText(LocalizeValue.empty());
             }
 
             Set<File> genSourceRoots = Sets.newHashSet(FileUtil.FILE_HASHING_STRATEGY);
@@ -742,7 +742,7 @@ public class CompileDriverImpl implements CompileDriver {
 
                 //int totalCount = all.length + myGenerationCompilerModuleToOutputDirMap.size() * 2;
                 progressIndicator.pushState();
-                progressIndicator.setTextValue(CompilerLocalize.progressInspectingOutputDirectories());
+                progressIndicator.setText(CompilerLocalize.progressInspectingOutputDirectories());
                 try {
                     for (VirtualFile output : all) {
                         if (output.isValid()) {
@@ -927,7 +927,7 @@ public class CompileDriverImpl implements CompileDriver {
             public boolean visitFile(VirtualFile file) {
                 if (file.isDirectory()) {
                     context.getProgressIndicator().checkCanceled();
-                    context.getProgressIndicator().setText2Value(LocalizeValue.of(file.getPresentableUrl()));
+                    context.getProgressIndicator().setText2(LocalizeValue.of(file.getPresentableUrl()));
                 }
                 return true;
             }
@@ -1201,7 +1201,7 @@ public class CompileDriverImpl implements CompileDriver {
         try {
             List<? extends CompileTask> tasks = beforeTasks ? manager.getBeforeTasks() : manager.getAfterTasks();
             if (!tasks.isEmpty()) {
-                progressIndicator.setTextValue(
+                progressIndicator.setText(
                     beforeTasks ? CompilerLocalize.progressExecutingPrecompileTasks() : CompilerLocalize.progressExecutingPostcompileTasks()
                 );
                 for (CompileTask task : tasks) {

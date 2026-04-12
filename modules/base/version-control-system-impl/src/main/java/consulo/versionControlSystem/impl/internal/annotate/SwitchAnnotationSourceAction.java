@@ -47,7 +47,7 @@ class SwitchAnnotationSourceAction extends AnAction {
 
   @Override
   public void update(AnActionEvent e) {
-    e.getPresentation().setTextValue(
+    e.getPresentation().setText(
       myShowMerged
         ? VcsLocalize.annotationSwitchToOriginalText()
         : VcsLocalize.annotationSwitchToMergedText()

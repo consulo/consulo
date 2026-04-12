@@ -149,13 +149,13 @@ public class CreateDirectoryOrPackageAction extends AnAction implements DumbAwar
 
         // is more that one directories not show package support
         if (directories.length > 1) {
-            presentation.setTextValue(CreateDirectoryOrPackageType.Directory.getName());
+            presentation.setText(CreateDirectoryOrPackageType.Directory.getName());
             presentation.setIcon(PlatformIconGroup.nodesTreeclosed());
         }
         else {
             Trinity<ContentFolderTypeProvider, PsiDirectory, CreateDirectoryOrPackageType> info = getInfo(directories[0]);
 
-            presentation.setTextValue(info.getThird().getName());
+            presentation.setText(info.getThird().getName());
 
             ContentFolderTypeProvider first = info.getFirst();
             Image childIcon;

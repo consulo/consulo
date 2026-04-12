@@ -91,7 +91,7 @@ public class ExecutorAction extends AnAction implements DumbAware {
                 && runner != null && !myExecutorRegistry.isStarting(project, myExecutor.getId(), runner.getRunnerId());
 
             if (enabled) {
-                presentation.setDescriptionValue(myExecutor.getDescription());
+                presentation.setDescription(myExecutor.getDescription());
             }
             text = ExecutionActionValue.buildWithConfiguration(myExecutor::getStartActiveText, selectedConfiguration.getName());
         }
@@ -109,16 +109,14 @@ public class ExecutorAction extends AnAction implements DumbAware {
         }
 
         presentation.setEnabled(enabled);
-        presentation.setTextValue(text);
+        presentation.setText(text);
     }
 
-    
     @Override
     public ActionUpdateThread getActionUpdateThread() {
         return ActionUpdateThread.BGT;
     }
 
-    
     public static Image getInformativeIcon(Project project,
                                            Executor executor,
                                            RunnerAndConfigurationSettings selectedConfiguration) {

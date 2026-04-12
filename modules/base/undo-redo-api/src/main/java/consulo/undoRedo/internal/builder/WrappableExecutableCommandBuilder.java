@@ -72,7 +72,6 @@ interface WrappableExecutableCommandBuilder<R, THIS extends WrappableExecutableC
     public class OuterWrapper<R, THIS extends WrappableExecutableCommandBuilder<R, THIS>, THAT extends WrappableExecutableCommandBuilder<R, THAT>>
         extends BaseCommandBuilderWrapper<THIS, THAT> implements WrappableExecutableCommandBuilder<R, THIS> {
 
-        
         protected final Consumer<Runnable> myRunner;
 
         public OuterWrapper(THAT subBuilder, @RequiredUIAccess Consumer<Runnable> runner) {
@@ -85,7 +84,7 @@ interface WrappableExecutableCommandBuilder<R, THIS extends WrappableExecutableC
         public ExecutionResult<R> execute(ThrowableSupplier<R, ? extends Throwable> executable) {
             SimpleReference<ExecutionResult<R>> result = SimpleReference.create();
             myRunner.accept(() -> result.set(mySubBuilder.execute(executable)));
-            return result.isNull() ? new ExecutionResult((R)null) : result.get();
+            return result.requiredGet();
         }
     }
 
@@ -101,7 +100,7 @@ interface WrappableExecutableCommandBuilder<R, THIS extends WrappableExecutableC
             return mySubBuilder.execute(() -> {
                 SimpleReference<ExecutionResult<R>> result = SimpleReference.create();
                 myRunner.accept(() -> result.set(ExecutionResult.execute(executable)));
-                return result.get().get();
+                return result.requiredGet().get();
             });
         }
     }

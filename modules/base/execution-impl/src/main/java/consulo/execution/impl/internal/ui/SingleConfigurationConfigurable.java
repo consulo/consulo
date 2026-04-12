@@ -165,8 +165,9 @@ public final class SingleConfigurationConfigurable<Config extends RunConfigurati
         }
       }
       catch (RuntimeConfigurationException exception) {
-        myLastValidationResult =
-          exception != null ? new ValidationResult(exception.getLocalizedMessage(), exception.getTitle(), exception.getQuickFix()) : null;
+        myLastValidationResult = exception != null
+            ? new ValidationResult(exception.getLocalizedMessage(), exception.getTitle().get(), exception.getQuickFix())
+            : null;
       }
       catch (ConfigurationException e) {
         myLastValidationResult = new ValidationResult(

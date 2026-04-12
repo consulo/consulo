@@ -62,14 +62,14 @@ public class CloseTab extends AnAction implements DumbAware {
         presentation.setVisible(UISettings.getInstance().getShowCloseButton() || pinned);
 
         if (pinned) {
-            presentation.setTextValue(IdeLocalize.actionUnpinTab());
-            presentation.setDescriptionValue(IdeLocalize.actionUnpinTab());
+            presentation.setText(IdeLocalize.actionUnpinTab());
+            presentation.setDescription(IdeLocalize.actionUnpinTab());
         }
         else {
             LocalizeValue actionText = LocalizeValue.localizeTODO("Close. Alt-click to close others.");
 
-            presentation.setTextValue(actionText);
-            presentation.setDescriptionValue(actionText);
+            presentation.setText(actionText);
+            presentation.setDescription(actionText);
         }
     }
 

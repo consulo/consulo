@@ -47,6 +47,7 @@ import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Predicate;
 
 public class ActionImplUtil {
@@ -80,11 +81,7 @@ public class ActionImplUtil {
         return false;
     }
 
-    public static void recursiveRegisterShortcutSet(
-        ActionGroup group,
-        JComponent component,
-        @Nullable Disposable parentDisposable
-    ) {
+    public static void recursiveRegisterShortcutSet(ActionGroup group, JComponent component, @Nullable Disposable parentDisposable) {
         for (AnAction action : group.getChildren(null)) {
             if (action instanceof ActionGroup childGroup) {
                 recursiveRegisterShortcutSet(childGroup, component, parentDisposable);
@@ -115,7 +112,6 @@ public class ActionImplUtil {
         DumbService.getInstance(project).showDumbModeNotification(getActionUnavailableMessage(actionNames));
     }
 
-    
     private static String getActionUnavailableMessage(List<String> actionNames) {
         String message;
         String beAvailableUntil = " available while " + Application.get().getName() + " is updating indices";
@@ -131,7 +127,6 @@ public class ActionImplUtil {
         return message;
     }
 
-    
     public static String getUnavailableMessage(String action, boolean plural) {
         return action + (plural ? " are" : " is") + " not available while " + Application.get().getName() + " is updating indices";
     }
@@ -225,11 +220,7 @@ public class ActionImplUtil {
     }
 
     @RequiredUIAccess
-    public static void performActionDumbAwareWithCallbacks(
-        AnAction action,
-        AnActionEvent e,
-        DataContext context
-    ) {
+    public static void performActionDumbAwareWithCallbacks(AnAction action, AnActionEvent e, DataContext context) {
         ActionManagerEx manager = ActionManagerEx.getInstanceEx();
         manager.fireBeforeActionPerformed(action, context, e);
         performActionDumbAware(action, e);
@@ -248,16 +239,15 @@ public class ActionImplUtil {
 
     public static boolean isKeepPopupOpen(KeepPopupOnPerform mode, InputEvent event) {
         return switch (mode) {
-            case Never -> false;
-            case Always -> true;
-            case IfRequested -> event instanceof MouseEvent && UIUtil.isControlKeyDown((MouseEvent) event);
-            case IfPreferred -> UISettings.getInstance().getKeepPopupsForToggles() ||
-                (event instanceof MouseEvent && UIUtil.isControlKeyDown((MouseEvent) event));
+            case NEVER -> false;
+            case ALWAYS -> true;
+            case IF_REQUESTED -> event instanceof MouseEvent me && UIUtil.isControlKeyDown(me);
+            case IF_PREFERRED -> UISettings.getInstance().getKeepPopupsForToggles()
+                || (event instanceof MouseEvent me && UIUtil.isControlKeyDown(me));
             default -> false;
         };
     }
 
-    
     public static List<AnAction> getActions(JComponent component) {
         return ObjectUtil.notNull(UIUtil.getClientProperty(component, AnAction.ACTIONS_KEY), Collections.emptyList());
     }
@@ -270,11 +260,7 @@ public class ActionImplUtil {
         ActionUtil.copyRegisteredShortcuts(to, from);
     }
 
-    public static void registerForEveryKeyboardShortcut(
-        JComponent component,
-        ActionListener action,
-        ShortcutSet shortcuts
-    ) {
+    public static void registerForEveryKeyboardShortcut(JComponent component, ActionListener action, ShortcutSet shortcuts) {
         ActionUtil.registerForEveryKeyboardShortcut(component, action, shortcuts);
     }
 
@@ -330,7 +316,6 @@ public class ActionImplUtil {
         invokeAction(action, DataManager.getInstance().getDataContext(component), place, inputEvent, onDone);
     }
 
-    
     public static ActionListener createActionListener(String actionId, Component component, String place) {
         return e -> {
             AnAction action = ActionManager.getInstance().getAction(actionId);
@@ -342,7 +327,6 @@ public class ActionImplUtil {
         };
     }
 
-    
     public static AnActionEvent createEmptyEvent() {
         return AnActionEvent.createFromDataContext(ActionPlaces.UNKNOWN, null, DataContext.EMPTY_CONTEXT);
     }
@@ -354,12 +338,7 @@ public class ActionImplUtil {
     /**
      * Tries to find an 'action' and 'target action' by text and put the 'action' just before of after the 'target action'
      */
-    public static void moveActionTo(
-        List<AnAction> list,
-        String actionText,
-        String targetActionText,
-        boolean before
-    ) {
+    public static void moveActionTo(List<AnAction> list, String actionText, String targetActionText, boolean before) {
         if (Comparing.equal(actionText, targetActionText)) {
             return;
         }
@@ -368,10 +347,10 @@ public class ActionImplUtil {
         int targetIndex = -1;
         for (int i = 0; i < list.size(); i++) {
             AnAction action = list.get(i);
-            if (actionIndex == -1 && Comparing.equal(actionText, action.getTemplateText())) {
+            if (actionIndex == -1 && Objects.equals(actionText, action.getTemplateText())) {
                 actionIndex = i;
             }
-            if (targetIndex == -1 && Comparing.equal(targetActionText, action.getTemplateText())) {
+            if (targetIndex == -1 && Objects.equals(targetActionText, action.getTemplateText())) {
                 targetIndex = i;
             }
             if (actionIndex != -1 && targetIndex != -1) {
@@ -412,7 +391,6 @@ public class ActionImplUtil {
         return null;
     }
 
-    
     public static ActionListener createActionListener(AnAction action, Component component, String place) {
         return e -> invokeAction(action, component, place, null, null);
     }

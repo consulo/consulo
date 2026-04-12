@@ -30,7 +30,7 @@ public class WeighingNewActionGroup extends WeighingActionGroup {
     protected ActionGroup getDelegate() {
         if (myDelegate == null) {
             myDelegate = (ActionGroup)ActionManager.getInstance().getAction(IdeActions.GROUP_NEW);
-            getTemplatePresentation().setTextValue(myDelegate.getTemplatePresentation().getTextValue());
+            getTemplatePresentation().setText(myDelegate.getTemplatePresentation().getTextValue());
             setPopup(myDelegate.isPopup());
         }
         return myDelegate;
@@ -44,7 +44,7 @@ public class WeighingNewActionGroup extends WeighingActionGroup {
     @Override
     public void update(AnActionEvent e) {
         super.update(e);
-        e.getPresentation().setTextValue(getTemplatePresentation().getTextValue());
+        e.getPresentation().setText(getTemplatePresentation().getTextValue());
     }
 
     @Override

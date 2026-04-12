@@ -49,8 +49,8 @@ public class InjectingBindingActionGroupStub extends DefaultActionGroup implemen
     PluginDescriptor plugin = PluginManager.getPlugin(myInjectingBinding.getClass());
     LocalizeHelper helper = LocalizeHelper.build(plugin);
 
-    presentation.setTextValue(helper.getValue("group." + myActionImpl.id() + ".text"));
-    presentation.setDescriptionValue(helper.getValue("group." + myActionImpl.id() + ".description"));
+    presentation.setText(helper.getValue("group." + myActionImpl.id() + ".text"));
+    presentation.setDescription(helper.getValue("group." + myActionImpl.id() + ".description"));
     return presentation;
   }
 

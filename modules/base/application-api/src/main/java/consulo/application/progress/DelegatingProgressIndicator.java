@@ -62,23 +62,23 @@ public class DelegatingProgressIndicator implements WrappedProgressIndicator, St
   }
 
   @Override
-  public void setTextValue(LocalizeValue text) {
-    myIndicator.setTextValue(text);
+  public void setText(LocalizeValue text) {
+    myIndicator.setText(text);
   }
 
   @Override
-  public LocalizeValue getTextValue() {
-    return myIndicator.getTextValue();
+  public LocalizeValue getText() {
+    return myIndicator.getText();
   }
 
   @Override
-  public void setText2Value(LocalizeValue text) {
-    myIndicator.setText2Value(text);
+  public void setText2(LocalizeValue text) {
+    myIndicator.setText2(text);
   }
 
   @Override
-  public LocalizeValue getText2Value() {
-    return myIndicator.getText2Value();
+  public LocalizeValue getText2() {
+    return myIndicator.getText2();
   }
 
   @Override

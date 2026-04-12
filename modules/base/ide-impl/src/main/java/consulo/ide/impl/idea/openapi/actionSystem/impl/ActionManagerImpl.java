@@ -721,8 +721,8 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
 
         XmlActionStub stub = new XmlActionStub(className, id, plugin, iconPath, () -> {
             Presentation presentation = new Presentation();
-            presentation.setTextValue(computeActionText(localizeHelper, id, ACTION_ELEMENT_NAME, textValue));
-            presentation.setDescriptionValue(computeDescription(localizeHelper, id, ACTION_ELEMENT_NAME, descriptionValue));
+            presentation.setText(computeActionText(localizeHelper, id, ACTION_ELEMENT_NAME, textValue));
+            presentation.setDescription(computeDescription(localizeHelper, id, ACTION_ELEMENT_NAME, descriptionValue));
             return presentation;
         });
 
@@ -861,14 +861,14 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
             LocalizeValue textValue = computeActionText(localizeHelper, id, GROUP_ELEMENT_NAME, element.getAttributeValue(TEXT_ATTR_NAME));
             // don't override value which was set in API with empty value from xml descriptor
             if (textValue.isNotEmpty() || presentation.getText() == null) {
-                presentation.setTextValue(textValue);
+                presentation.setText(textValue);
             }
 
             // description
             LocalizeValue description = computeDescription(localizeHelper, id, GROUP_ELEMENT_NAME, element.getAttributeValue(DESCRIPTION));
             // don't override value which was set in API with empty value from xml descriptor
-            if (description.isNotEmpty() || presentation.getDescriptionValue().isEmpty()) {
-                presentation.setDescriptionValue(description);
+            if (description.isNotEmpty() || presentation.getDescription().isEmpty()) {
+                presentation.setDescription(description);
             }
 
             // icon

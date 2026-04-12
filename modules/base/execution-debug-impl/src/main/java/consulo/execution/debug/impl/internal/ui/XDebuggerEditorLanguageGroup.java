@@ -82,7 +82,7 @@ public class XDebuggerEditorLanguageGroup extends ActionGroup implements DumbAwa
     public void update(AnActionEvent e) {
         Presentation presentation = e.getPresentation();
 
-        presentation.setTextValue(XDebuggerLocalize.xdebuggerEvaluateLanguageHint());
+        presentation.setText(XDebuggerLocalize.xdebuggerEvaluateLanguageHint());
 
         Language language = myLanguageGetter.get();
         LanguageFileType associatedFileType = language == null ? null : language.getAssociatedFileType();

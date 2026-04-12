@@ -166,12 +166,11 @@ public class GotoActionAction extends GotoActionBase implements DumbAware {
                     if (value instanceof GotoActionModel.MatchedValue mv
                         && mv.value instanceof GotoActionModel.ActionWrapper actionWrapper) {
                         AnAction action = actionWrapper.getAction();
-                        return action.getTemplatePresentation().getDescription();
+                        return action.getTemplatePresentation().getDescription().getNullIfEmpty();
                     }
                     return null;
                 }
 
-                
                 @Override
                 protected Set<Object> filter(Set<Object> elements) {
                     return super.filter(model.sortItems(elements));

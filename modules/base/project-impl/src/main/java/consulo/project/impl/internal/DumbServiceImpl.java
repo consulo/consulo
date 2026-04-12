@@ -620,7 +620,7 @@ public class DumbServiceImpl extends DumbServiceInternal implements Disposable, 
                     taskIndicator.checkCanceled();
 
                     taskIndicator.setIndeterminate(true);
-                    taskIndicator.setTextValue(ProjectLocalize.progressIndexingScanning());
+                    taskIndicator.setText(ProjectLocalize.progressIndexingScanning());
 
                     task.performInDumbMode(taskIndicator, trace);
                 }

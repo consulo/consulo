@@ -79,7 +79,7 @@ public class FocusTracesAction extends AnAction implements DumbAware {
     @Override
     public void update(AnActionEvent e) {
         Presentation presentation = e.getPresentation();
-        presentation.setTextValue(
+        presentation.setText(
             myActive
                 ? LocalizeValue.localizeTODO("Stop Focus Tracing")
                 : LocalizeValue.localizeTODO("Start Focus Tracing")

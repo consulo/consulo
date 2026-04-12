@@ -98,7 +98,7 @@ public class DeleteFromFavoritesAction extends AnAction implements DumbAware {
 
     @Override
     public void update(AnActionEvent e) {
-        e.getPresentation().setTextValue(getTemplatePresentation().getTextValue());
+        e.getPresentation().setText(getTemplatePresentation().getTextValue());
         Project project = e.getData(Project.KEY);
         FavoritesViewTreeBuilder builder = e.getData(FavoritesTreeViewPanel.FAVORITES_TREE_BUILDER_KEY);
         if (project == null || builder == null) {
@@ -114,7 +114,7 @@ public class DeleteFromFavoritesAction extends AnAction implements DumbAware {
             boolean willHandle = provider.willHandle(CommonActionsPanel.Buttons.REMOVE, project, selection);
             e.getPresentation().setEnabled(willHandle);
             if (willHandle) {
-                e.getPresentation().setTextValue(provider.getCustomName(CommonActionsPanel.Buttons.REMOVE));
+                e.getPresentation().setText(provider.getCustomName(CommonActionsPanel.Buttons.REMOVE));
             }
             return;
         }

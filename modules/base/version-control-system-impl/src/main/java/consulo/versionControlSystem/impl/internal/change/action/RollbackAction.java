@@ -229,7 +229,7 @@ public class RollbackAction extends AnAction implements DumbAware {
                             new RollbackProgressModifier(items.size(), indicator)
                         );
                         if (indicator != null) {
-                            indicator.setText2Value(LocalizeValue.empty());
+                            indicator.setText2(LocalizeValue.empty());
                         }
                     }
                 });

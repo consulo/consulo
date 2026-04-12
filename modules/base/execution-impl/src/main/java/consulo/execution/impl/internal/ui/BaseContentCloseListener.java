@@ -1,7 +1,7 @@
 // Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.execution.impl.internal.ui;
 
-import consulo.application.ApplicationManager;
+import consulo.application.Application;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
 import consulo.application.progress.Task;
@@ -47,8 +47,8 @@ public abstract class BaseContentCloseListener implements ProjectManagerListener
     Disposer.register(myProject, vetoDisposable);
   }
 
-  @RequiredUIAccess
   @Override
+  @RequiredUIAccess
   public void contentRemoved(ContentManagerEvent event) {
     Content content = event.getContent();
     if (content == myContent) {
@@ -71,8 +71,8 @@ public abstract class BaseContentCloseListener implements ProjectManagerListener
 
   protected abstract void disposeContent(Content content);
 
-  @RequiredUIAccess
   @Override
+  @RequiredUIAccess
   public void contentRemoveQuery(ContentManagerEvent event) {
     if (event.getContent() == myContent) {
       boolean canClose = closeQuery(myContent, Boolean.TRUE.equals(myProject.getUserData(PROJECT_DISPOSING)));
@@ -118,7 +118,7 @@ public abstract class BaseContentCloseListener implements ProjectManagerListener
   }
 
   protected boolean askUserAndWait(ProcessHandler processHandler, String sessionName, WaitForProcessTask task) {
-    if (ApplicationManager.getApplication().isWriteAccessAllowed()) {
+    if (Application.get().isWriteAccessAllowed()) {
       // This might happens from Application.exit(force=true, ...) call.
       // Do not show any UI, destroy the process silently, do not wait for process termination.
       processHandler.destroyProcess();
@@ -154,7 +154,7 @@ public abstract class BaseContentCloseListener implements ProjectManagerListener
     final boolean myModal;
 
     protected WaitForProcessTask(ProcessHandler processHandler, String processName, boolean modal, @Nullable Project project) {
-      super(project, ExecutionLocalize.terminatingProcessProgressTitle(processName).get());
+      super(project, ExecutionLocalize.terminatingProcessProgressTitle(processName));
       myProcessHandler = processHandler;
       myModal = modal;
     }
@@ -174,7 +174,8 @@ public abstract class BaseContentCloseListener implements ProjectManagerListener
       final Semaphore semaphore = new Semaphore();
       semaphore.down();
 
-      ApplicationManager.getApplication().executeOnPooledThread(() -> {
+      Application app = Application.get();
+      app.executeOnPooledThread(() -> {
         try {
           myProcessHandler.waitFor();
         }
@@ -182,8 +183,8 @@ public abstract class BaseContentCloseListener implements ProjectManagerListener
           semaphore.up();
         }
       });
-      progressIndicator.setTextValue(ExecutionLocalize.waitingForVmDetachProgressText());
-      ApplicationManager.getApplication().executeOnPooledThread(new Runnable() {
+      progressIndicator.setText(ExecutionLocalize.waitingForVmDetachProgressText());
+      app.executeOnPooledThread(new Runnable() {
         @Override
         public void run() {
           while (true) {

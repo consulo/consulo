@@ -61,7 +61,7 @@ public class ArchivesBuilder {
     }
 
     public boolean buildArchives(Set<String> writtenPaths) throws IOException {
-        myContext.getProgressIndicator().setTextValue(CompilerLocalize.packagingCompilerMessageBuildingArchives());
+        myContext.getProgressIndicator().setText(CompilerLocalize.packagingCompilerMessageBuildingArchives());
 
         ArchivePackageInfo[] sortedArchives = sortArchives();
         if (sortedArchives == null) {
@@ -75,7 +75,7 @@ public class ArchivesBuilder {
                 buildArchive(archivePackageInfo);
             }
 
-            myContext.getProgressIndicator().setTextValue(CompilerLocalize.packagingCompilerMessageCopyingArchives());
+            myContext.getProgressIndicator().setText(CompilerLocalize.packagingCompilerMessageCopyingArchives());
             copyJars(writtenPaths);
         }
         finally {
@@ -155,7 +155,7 @@ public class ArchivesBuilder {
         }
 
         myContext.getProgressIndicator()
-            .setTextValue(CompilerLocalize.packagingCompilerMessageBuilding0(archive.getPresentableDestination()));
+            .setText(CompilerLocalize.packagingCompilerMessageBuilding0(archive.getPresentableDestination()));
         File tempFile = File.createTempFile("artifactCompiler", "tmp");
 
         myBuiltArchives.put(archive, tempFile);
@@ -212,7 +212,7 @@ public class ArchivesBuilder {
         Set<String> writtenPaths
     ) throws IOException {
         relativePath = addParentDirectories(archiveObject, writer, writtenPaths, relativePath);
-        myContext.getProgressIndicator().setText2Value(LocalizeValue.of(relativePath));
+        myContext.getProgressIndicator().setText2(LocalizeValue.of(relativePath));
         if (!writtenPaths.add(relativePath)) {
             return;
         }
@@ -258,7 +258,7 @@ public class ArchivesBuilder {
 
         relativePath = addParentDirectories(archiveObject, writer, writtenPaths, relativePath);
 
-        myContext.getProgressIndicator().setText2Value(LocalizeValue.of(relativePath));
+        myContext.getProgressIndicator().setText2(LocalizeValue.of(relativePath));
 
         try (FileInputStream fileOutputStream = new FileInputStream(file)) {
             writer.addFile(archiveObject, fileOutputStream, relativePath, file.length(), file.lastModified());

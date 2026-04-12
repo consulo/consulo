@@ -904,7 +904,6 @@ public abstract class JBIterable<E extends @Nullable Object> implements Iterable
   }
 
   public abstract static class Stateful<Self extends Stateful> implements Cloneable {
-
     static <T> T copy(T o) {
       if (!(o instanceof Stateful)) return o;
       return (T)((Stateful)o).clone();
@@ -931,5 +930,4 @@ public abstract class JBIterable<E extends @Nullable Object> implements Iterable
    */
   public abstract static class SFun<S, T> extends Stateful<SFun> implements Function<S, T> {
   }
-
 }

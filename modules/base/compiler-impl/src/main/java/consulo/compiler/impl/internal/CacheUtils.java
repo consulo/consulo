@@ -41,14 +41,14 @@ public class CacheUtils {
         Set<VirtualFile> compiledWithErrors,
         @Nullable Function<Pair<int[], Set<VirtualFile>>, Pair<int[], Set<VirtualFile>>> filter
     ) throws CacheCorruptedException, ExitException {
-        context.getProgressIndicator().setTextValue(CompilerLocalize.progressCheckingDependencies());
+        context.getProgressIndicator().setText(CompilerLocalize.progressCheckingDependencies());
 
         DependencyCache dependencyCache = context.getDependencyCache();
         Set<VirtualFile> dependentFiles = new HashSet<>();
 
         dependencyCache.findDependentFiles(context, new SimpleReference<>(), filter, dependentFiles, compiledWithErrors);
 
-        context.getProgressIndicator().setTextValue(
+        context.getProgressIndicator().setText(
             dependentFiles.size() > 0 ? CompilerLocalize.progressFoundDependentFiles(dependentFiles.size()) : LocalizeValue.empty()
         );
 

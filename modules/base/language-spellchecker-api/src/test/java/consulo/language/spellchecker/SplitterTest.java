@@ -21,6 +21,7 @@ import consulo.component.ProcessCanceledException;
 import consulo.document.util.TextRange;
 import consulo.language.spellcheker.tokenizer.splitter.*;
 import consulo.util.io.StreamUtil;
+import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -406,7 +407,7 @@ public class SplitterTest {
             textRange -> words.add(textRange.substring(text)),
             new ProgressIndicatorProvider() {
                 @Override
-                public ProgressIndicator getProgressIndicator() {
+                public @Nullable ProgressIndicator getProgressIndicator() {
                     return null;
                 }
 

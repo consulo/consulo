@@ -15,6 +15,7 @@
  */
 package consulo.application.impl.internal.progress;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.application.impl.internal.IdeaModalityStateEx;
@@ -30,7 +31,6 @@ import consulo.project.Project;
 import consulo.project.internal.ProjectWindowFocuser;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.util.lang.Comparing;
 import consulo.util.lang.EmptyRunnable;
 import org.jspecify.annotations.Nullable;
 
@@ -56,7 +56,7 @@ public class ProgressWindow extends ProgressIndicatorBase implements UnsafeProgr
     public final boolean myShouldShowCancel;
     public LocalizeValue myCancelText = LocalizeValue.empty();
 
-    private String myTitle;
+    private LocalizeValue myTitle = LocalizeValue.empty();
 
     private boolean myStoppedAlready;
     private boolean myStarted;
@@ -110,7 +110,7 @@ public class ProgressWindow extends ProgressIndicatorBase implements UnsafeProgr
         LOG.assertTrue(!myStoppedAlready);
 
         super.start();
-        if (!ApplicationManager.getApplication().isUnitTestMode()) {
+        if (!Application.get().isUnitTestMode()) {
             prepareShowDialog();
         }
 
@@ -283,9 +283,9 @@ public class ProgressWindow extends ProgressIndicatorBase implements UnsafeProgr
     }
 
     @Override
-    public void setTextValue(LocalizeValue text) {
-        if (!Comparing.equal(text, getTextValue())) {
-            super.setTextValue(text);
+    public void setText(LocalizeValue text) {
+        if (!text.equals(getText())) {
+            super.setText(text);
             update();
         }
     }
@@ -299,9 +299,9 @@ public class ProgressWindow extends ProgressIndicatorBase implements UnsafeProgr
     }
 
     @Override
-    public void setText2Value(LocalizeValue text) {
-        if (!Comparing.equal(text, getText2Value())) {
-            super.setText2Value(text);
+    public void setText2(LocalizeValue text) {
+        if (!text.equals(getText2())) {
+            super.setText2(text);
             update();
         }
     }
@@ -312,15 +312,21 @@ public class ProgressWindow extends ProgressIndicatorBase implements UnsafeProgr
         }
     }
 
-    public void setTitle(String title) {
-        if (!Comparing.equal(title, myTitle)) {
+    public void setTitle(LocalizeValue title) {
+        if (!title.equals(myTitle)) {
             myTitle = title;
             update();
         }
     }
 
+    @Deprecated
+    @DeprecationInfo("Use variant with LocalizeValue")
+    public void setTitle(String title) {
+        setTitle(LocalizeValue.ofNullable(title));
+    }
+
     public String getTitle() {
-        return myTitle;
+        return myTitle.getNullIfEmpty();
     }
 
     public void setCancelButtonText(LocalizeValue text) {

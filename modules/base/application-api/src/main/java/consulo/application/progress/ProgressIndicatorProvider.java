@@ -28,7 +28,7 @@ public abstract class ProgressIndicatorProvider {
     return Application.get().getProgressManager();
   }
 
-  public abstract ProgressIndicator getProgressIndicator();
+  public abstract @Nullable ProgressIndicator getProgressIndicator();
 
   protected abstract void doCheckCanceled() throws ProcessCanceledException;
 

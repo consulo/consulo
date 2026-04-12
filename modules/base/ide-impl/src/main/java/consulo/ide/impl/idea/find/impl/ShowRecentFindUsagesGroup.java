@@ -67,7 +67,7 @@ public class ShowRecentFindUsagesGroup extends ActionGroup {
         LocalizeValue description = ActionManager.getInstance()
             .getAction(UsageViewImpl.SHOW_RECENT_FIND_USAGES_ACTION_ID)
             .getTemplatePresentation()
-            .getDescriptionValue();
+            .getDescription();
 
         List<AnAction> children = new ArrayList<>(history.size());
         for (final ConfigurableUsageTarget usageTarget : history) {

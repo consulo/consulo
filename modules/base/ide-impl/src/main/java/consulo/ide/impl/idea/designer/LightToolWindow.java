@@ -15,7 +15,6 @@
  */
 package consulo.ide.impl.idea.designer;
 
-import consulo.application.AllIcons;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.component.PropertiesComponent;
 import consulo.ide.impl.idea.openapi.actionSystem.impl.MenuItemPresentationFactory;
@@ -371,8 +370,8 @@ public class LightToolWindow extends JPanel {
     private class HideAction extends DumbAwareAction {
         public HideAction() {
             Presentation presentation = getTemplatePresentation();
-            presentation.setTextValue(UILocalize.toolWindowHideActionName());
-            presentation.setIcon(AllIcons.General.HideToolWindow);
+            presentation.setText(UILocalize.toolWindowHideActionName());
+            presentation.setIcon(PlatformIconGroup.generalHidetoolwindow());
         }
 
         @RequiredUIAccess

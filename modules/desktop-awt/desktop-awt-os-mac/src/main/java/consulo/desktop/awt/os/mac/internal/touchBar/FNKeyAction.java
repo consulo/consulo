@@ -68,7 +68,7 @@ final class FNKeyAction extends DumbAwareAction {
     @Override
     public void update(AnActionEvent e) {
         e.getPresentation().setEnabledAndVisible(true); // FN-keys are always enabled and visible
-        e.getPresentation().setTextValue(LocalizeValue.empty());
+        e.getPresentation().setText(LocalizeValue.empty());
         myIsActionDisabled = false;
         myAction = null;
 

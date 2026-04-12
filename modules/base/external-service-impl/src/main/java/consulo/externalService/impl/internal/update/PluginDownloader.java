@@ -188,7 +188,7 @@ public class PluginDownloader {
 
         if (myIsPlatform) {
             if (indicator != null) {
-                indicator.setText2Value(ExternalServiceLocalize.progressExtractingPlatform());
+                indicator.setText2(ExternalServiceLocalize.progressExtractingPlatform());
             }
 
             String prefix = Platform.current().os().isMac() ? "Consulo.app/Contents/platform/" : "Consulo/platform/";
@@ -279,7 +279,7 @@ public class PluginDownloader {
         File file = FileUtil.createTempFile(pluginsTemp, "plugin_", "_download", true, false);
 
         indicator.checkCanceled();
-        indicator.setText2Value(
+        indicator.setText2(
             myIsPlatform
                 ? ExternalServiceLocalize.progressDownloadingPlatform()
                 : ExternalServiceLocalize.progressDownloadingPlugin(getPluginName())

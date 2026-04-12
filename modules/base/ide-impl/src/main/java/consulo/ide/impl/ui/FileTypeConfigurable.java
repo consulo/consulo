@@ -328,7 +328,7 @@ public class FileTypeConfigurable implements SearchableConfigurable, Configurabl
                 myEditor.applyTo(myFileType);
             }
             catch (ConfigurationException e) {
-                Messages.showErrorDialog(getContentPane(), e.getMessage(), e.getTitle());
+                Messages.showErrorDialog(getContentPane(), e.getMessage(), e.getTitle().get());
                 return;
             }
             super.doOKAction();

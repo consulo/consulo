@@ -26,7 +26,7 @@ public class OverrideMethodsAction extends MethodsBasedAction<OverrideMethodHand
     @Inject
     public OverrideMethodsAction(Application application) {
         super(application, OverrideMethodHandler.class, OverrideMethodHandler.KEY);
-        getTemplatePresentation().setTextValue(ActionLocalize.actionOverridemethodsText());
-        getTemplatePresentation().setDescriptionValue(ActionLocalize.actionOverridemethodsDescription());
+        getTemplatePresentation().setText(ActionLocalize.actionOverridemethodsText());
+        getTemplatePresentation().setDescription(ActionLocalize.actionOverridemethodsDescription());
     }
 }

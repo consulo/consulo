@@ -30,6 +30,7 @@ import consulo.ui.border.BorderStyle;
 import consulo.ui.ex.action.CommonShortcuts;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.ui.ex.awt.Messages;
+import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.update.UiNotifyConnector;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.layout.DockLayout;
@@ -102,7 +103,7 @@ public abstract class ConfigurableFileEditor<U extends UnnamedConfigurable> exte
             }
             catch (ConfigurationException e) {
                 if (e.getMessage() != null) {
-                    Messages.showMessageDialog(myProject, e.getMessage(), e.getTitle(), Messages.getErrorIcon());
+                    Messages.showMessageDialog(myProject, e.getMessage(), e.getTitle().get(), UIUtil.getErrorIcon());
                 }
             }
         }

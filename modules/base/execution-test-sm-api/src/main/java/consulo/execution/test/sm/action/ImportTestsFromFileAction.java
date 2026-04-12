@@ -40,7 +40,7 @@ public class ImportTestsFromFileAction extends AbstractImportTestsAction {
     public @Nullable VirtualFile getFile(Project project) {
         FileChooserDescriptor xmlDescriptor = FileChooserDescriptorFactory.createSingleFileNoJarsDescriptor()
             .withFileFilter(virtualFile -> "xml".equals(virtualFile.getExtension()));
-        xmlDescriptor.withTitleValue(SMTestLocalize.smTestRunnerImportTestChooseTestFileTitle());
+        xmlDescriptor.withTitle(SMTestLocalize.smTestRunnerImportTestChooseTestFileTitle());
         return IdeaFileChooser.chooseFile(xmlDescriptor, project, null);
     }
 }

@@ -1,5 +1,4 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
-
 package consulo.ui.ex.popup;
 
 import consulo.annotation.component.ComponentScope;
@@ -277,7 +276,7 @@ public abstract class JBPopupFactory {
      * @return the popup instance.
      */
     public ListPopup createActionGroupPopup(
-        @Nullable  String title,
+        @Nullable String title,
         ActionGroup actionGroup,
         DataContext dataContext,
         ActionSelectionAid selectionAidMethod,

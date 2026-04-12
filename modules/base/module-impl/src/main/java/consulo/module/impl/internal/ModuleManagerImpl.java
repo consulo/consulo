@@ -296,13 +296,13 @@ public abstract class ModuleManagerImpl extends ModuleManagerInternal implements
                 myProject.isDefault() ? null : ProgressIndicatorProvider.getGlobalProgressIndicator();
             targetIndicator = progressIndicator;
             if (progressIndicator != null) {
-                progressIndicator.setTextValue(ModuleLocalize.messageLoadingModules());
-                progressIndicator.setText2Value(LocalizeValue.empty());
+                progressIndicator.setText(ModuleLocalize.messageLoadingModules());
+                progressIndicator.setText2(LocalizeValue.empty());
             }
         }
         else {
-            indicator.setTextValue(ModuleLocalize.messageLoadingModules());
-            indicator.setText2Value(LocalizeValue.empty());
+            indicator.setText(ModuleLocalize.messageLoadingModules());
+            indicator.setText2(LocalizeValue.empty());
 
             indicator.setFraction(0);
             indicator.setIndeterminate(false);

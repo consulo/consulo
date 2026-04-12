@@ -169,7 +169,7 @@ public class ApplyPatchDifferentiatedDialog extends DialogWrapper {
         setTitle(applyPatchMode.getTitle());
 
         FileChooserDescriptor descriptor = createSelectPatchDescriptor();
-        descriptor.withTitleValue(VcsLocalize.patchApplySelectTitle());
+        descriptor.withTitle(VcsLocalize.patchApplySelectTitle());
 
         myProject = project;
         myPatches = new LinkedList<>();

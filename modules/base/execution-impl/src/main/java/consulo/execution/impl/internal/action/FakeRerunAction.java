@@ -50,7 +50,7 @@ public class FakeRerunAction extends AnAction implements DumbAware {
         Presentation presentation = event.getPresentation();
         ExecutionEnvironment environment = getEnvironment(event);
         if (environment != null) {
-            presentation.setTextValue(ExecutionLocalize.rerunConfigurationActionName(environment.getRunProfile().getName()));
+            presentation.setText(ExecutionLocalize.rerunConfigurationActionName(environment.getRunProfile().getName()));
             presentation.setIcon(
                 ExecutionManagerImpl.isProcessRunning(getDescriptor(event))
                     ? PlatformIconGroup.actionsRestart()

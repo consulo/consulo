@@ -62,12 +62,12 @@ public abstract class LibraryRootsComponentDescriptor {
    */
   public FileChooserDescriptor createAttachFilesChooserDescriptor(@Nullable String libraryName) {
     return new FileChooserDescriptor(true, true, true, false, true, true)
-      .withTitleValue(
+      .withTitle(
         StringUtil.isEmpty(libraryName)
           ? ProjectLocalize.libraryAttachFilesAction()
           : ProjectLocalize.libraryAttachFilesToLibraryAction(libraryName)
       )
-      .withDescriptionValue(ProjectLocalize.libraryAttachFilesDescription());
+      .withDescription(ProjectLocalize.libraryAttachFilesDescription());
   }
 
   /**

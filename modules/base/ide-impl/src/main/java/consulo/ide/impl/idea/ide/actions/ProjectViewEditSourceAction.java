@@ -32,7 +32,7 @@ import java.util.Objects;
 public class ProjectViewEditSourceAction extends BaseNavigateToSourceAction {
     public ProjectViewEditSourceAction() {
         super(true);
-        getTemplatePresentation().setTextValue(ActionLocalize.actionProjectvieweditsourceText());
+        getTemplatePresentation().setText(ActionLocalize.actionProjectvieweditsourceText());
     }
 
     @Override

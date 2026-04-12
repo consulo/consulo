@@ -2,7 +2,6 @@
 package consulo.execution.impl.internal.dashboard.action;
 
 import consulo.annotation.component.ActionImpl;
-import consulo.application.AllIcons;
 import consulo.execution.executor.DefaultRunExecutor;
 import consulo.execution.executor.Executor;
 import consulo.execution.localize.ExecutionLocalize;
@@ -31,14 +30,14 @@ public final class RunAction extends ExecutorAction {
   protected void update(AnActionEvent e, boolean running) {
     Presentation presentation = e.getPresentation();
     if (running) {
-      presentation.setTextValue(ExecutionLocalize.runDashboardRerunActionName());
-      presentation.setDescriptionValue(ExecutionLocalize.runDashboardRerunActionDescription());
-      presentation.setIcon( AllIcons.Actions.Restart);
+      presentation.setText(ExecutionLocalize.runDashboardRerunActionName());
+      presentation.setDescription(ExecutionLocalize.runDashboardRerunActionDescription());
+      presentation.setIcon(PlatformIconGroup.actionsRestart());
     }
     else {
-      presentation.setTextValue(ExecutionLocalize.runDashboardRunActionName());
-      presentation.setDescriptionValue(ExecutionLocalize.runDashboardRunActionDescription());
-      presentation.setIcon(AllIcons.Actions.Execute);
+      presentation.setText(ExecutionLocalize.runDashboardRunActionName());
+      presentation.setDescription(ExecutionLocalize.runDashboardRunActionDescription());
+      presentation.setIcon(PlatformIconGroup.actionsExecute());
     }
   }
 }

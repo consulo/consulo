@@ -56,7 +56,6 @@ import java.util.function.Function;
 public class TextDiffViewerUtil {
     public static final Logger LOG = Logger.getInstance(TextDiffViewerUtil.class);
 
-    
     public static List<AnAction> createEditorPopupActions() {
         List<AnAction> result = new ArrayList<>();
         result.add(ActionManager.getInstance().getAction("CompareClipboardWithSelection"));
@@ -70,13 +69,11 @@ public class TextDiffViewerUtil {
         return result;
     }
 
-    
     public static FoldingModelSupport.Settings getFoldingModelSettings(DiffContext context) {
         TextDiffSettings settings = getTextSettings(context);
         return new FoldingModelSupport.Settings(settings.getContextRange(), settings.isExpandByDefault());
     }
 
-    
     public static TextDiffSettings getTextSettings(DiffContext context) {
         TextDiffSettings settings = context.getUserData(TextDiffSettingsHolder.KEY);
         if (settings == null) {
@@ -89,7 +86,6 @@ public class TextDiffViewerUtil {
         return settings;
     }
 
-    
     public static boolean[] checkForceReadOnly(DiffContext context, ContentDiffRequest request) {
         int contentCount = request.getContents().size();
         boolean[] result = new boolean[contentCount];
@@ -167,16 +163,14 @@ public class TextDiffViewerUtil {
         @Override
         public void update(AnActionEvent e) {
             Presentation presentation = e.getPresentation();
-            presentation.setTextValue(getText(getCurrentSetting()));
+            presentation.setText(getText(getCurrentSetting()));
         }
 
-        
         public ActionGroup getPopupGroup() {
             initChildren();
             return myChildren;
         }
 
-        
         @Override
         public ActionGroup createPopupActionGroup(JComponent c) {
             initChildren();
@@ -194,13 +188,10 @@ public class TextDiffViewerUtil {
             }
         }
 
-        
         protected abstract List<T> getAvailableSettings();
 
-        
         protected abstract LocalizeValue getText(T setting);
 
-        
         protected abstract T getCurrentSetting();
 
         protected abstract void applySetting(T setting, AnActionEvent e);
@@ -224,7 +215,6 @@ public class TextDiffViewerUtil {
     }
 
     public static abstract class HighlightPolicySettingAction extends ComboBoxSettingAction<HighlightPolicy> {
-        
         protected final TextDiffSettings mySettings;
 
         public HighlightPolicySettingAction(TextDiffSettings settings) {
@@ -243,19 +233,16 @@ public class TextDiffViewerUtil {
             onSettingsChanged();
         }
 
-        
         @Override
         protected HighlightPolicy getCurrentSetting() {
             return mySettings.getHighlightPolicy();
         }
 
-        
         @Override
         protected LocalizeValue getText(HighlightPolicy setting) {
             return setting.getText();
         }
 
-        
         @Override
         protected List<HighlightPolicy> getAvailableSettings() {
             return Arrays.asList(HighlightPolicy.values());
@@ -265,7 +252,6 @@ public class TextDiffViewerUtil {
     }
 
     public static abstract class IgnorePolicySettingAction extends ComboBoxSettingAction<IgnorePolicy> {
-        
         protected final TextDiffSettings mySettings;
 
         public IgnorePolicySettingAction(TextDiffSettings settings) {
@@ -284,19 +270,16 @@ public class TextDiffViewerUtil {
             onSettingsChanged();
         }
 
-        
         @Override
         protected IgnorePolicy getCurrentSetting() {
             return mySettings.getIgnorePolicy();
         }
 
-        
         @Override
         protected LocalizeValue getText(IgnorePolicy setting) {
             return setting.getText();
         }
 
-        
         @Override
         protected List<IgnorePolicy> getAvailableSettings() {
             return Arrays.asList(IgnorePolicy.values());
@@ -306,7 +289,6 @@ public class TextDiffViewerUtil {
     }
 
     public static class ToggleAutoScrollAction extends ToggleActionButton implements DumbAware {
-        
         protected final TextDiffSettings mySettings;
 
         public ToggleAutoScrollAction(TextDiffSettings settings) {
@@ -327,7 +309,6 @@ public class TextDiffViewerUtil {
     }
 
     public static abstract class ToggleExpandByDefaultAction extends ToggleActionButton implements DumbAware {
-        
         protected final TextDiffSettings mySettings;
 
         public ToggleExpandByDefaultAction(TextDiffSettings settings) {
@@ -360,7 +341,6 @@ public class TextDiffViewerUtil {
     }
 
     public static abstract class ReadOnlyLockAction extends ToggleAction implements DumbAware {
-        
         protected final DiffContext myContext;
         
         protected final TextDiffSettings mySettings;
@@ -435,13 +415,11 @@ public class TextDiffViewerUtil {
         }
     }
 
-    
     public static List<? extends EditorEx> getEditableEditors(List<? extends EditorEx> editors) {
         return ContainerUtil.filter(editors, editor -> !editor.isViewer());
     }
 
     public static class EditorFontSizeSynchronizer implements PropertyChangeListener {
-        
         private final List<? extends EditorEx> myEditors;
 
         private boolean myDuringUpdate = false;
@@ -492,7 +470,6 @@ public class TextDiffViewerUtil {
     }
 
     public static class EditorActionsPopup {
-        
         private final List<? extends AnAction> myEditorPopupActions;
 
         public EditorActionsPopup(List<? extends AnAction> editorPopupActions) {

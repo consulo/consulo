@@ -91,15 +91,15 @@ public class CreateDesktopEntryAction extends DumbAwareAction {
         double step = (1.0 - indicator.getFraction()) / 3.0;
 
         try {
-            indicator.setTextValue(ApplicationLocalize.desktopEntryChecking());
+            indicator.setText(ApplicationLocalize.desktopEntryChecking());
             check();
             indicator.setFraction(indicator.getFraction() + step);
 
-            indicator.setTextValue(ApplicationLocalize.desktopEntryPreparing());
+            indicator.setText(ApplicationLocalize.desktopEntryPreparing());
             File entry = prepare();
             indicator.setFraction(indicator.getFraction() + step);
 
-            indicator.setTextValue(ApplicationLocalize.desktopEntryInstalling());
+            indicator.setText(ApplicationLocalize.desktopEntryInstalling());
             install(entry, globalEntry);
             indicator.setFraction(indicator.getFraction() + step);
 

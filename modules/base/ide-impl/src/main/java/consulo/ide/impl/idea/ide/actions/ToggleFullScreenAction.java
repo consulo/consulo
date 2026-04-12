@@ -62,7 +62,7 @@ public class ToggleFullScreenAction extends AnAction implements DumbAware {
         p.setEnabledAndVisible(isApplicable);
 
         if (isApplicable) {
-            p.setTextValue(
+            p.setText(
                 frame.isInFullScreen() ? ActionLocalize.actionTogglefullscreenTextExit() : ActionLocalize.actionTogglefullscreenTextEnter()
             );
         }

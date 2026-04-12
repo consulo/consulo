@@ -99,59 +99,39 @@ public interface ProgressIndicator {
      * Sets text above the progress bar
      *
      * @param text Text to set
-     * @see #setText2(String)
+     * @see #setText2(LocalizeValue)
      */
-    @Deprecated
-    @DeprecationInfo("Use setTextValue(LocalizeValue) instead")
-    default void setText(String text) {
-        setTextValue(StringUtil.isEmpty(text) ? LocalizeValue.empty() : LocalizeValue.of(text));
-    }
+    void setText(LocalizeValue text);
 
-    /**
-     * Sets text above the progress bar
-     *
-     * @param text Text to set
-     * @see #setTextValue2(LocalizeValue)
-     */
-    void setTextValue(LocalizeValue textValue);
+    @Deprecated
+    @DeprecationInfo("Use #setText(LocalizeValue)")
+    default void setText(String text) {
+        setText(LocalizeValue.ofNullable(text));
+    }
 
     /**
      * @return text above the progress bar, set by {@link #setText(String)}
      */
-    default @Nullable String getText() {
-        return getTextValue().getNullIfEmpty();
-    }
-
-    LocalizeValue getTextValue();
+    LocalizeValue getText();
 
     /**
      * Sets text under the progress bar
      *
      * @param text Text to set
-     * @see #setText(String)
+     * @see #setText(LocalizeValue)
      */
+    void setText2(LocalizeValue text);
+
     @Deprecated
-    @DeprecationInfo("Use setText2Value(LocalizeValue) instead")
+    @DeprecationInfo("Use #setText2(LocalizeValue)")
     default void setText2(String text) {
-        setText2Value(StringUtil.isEmpty(text) ? LocalizeValue.empty() : LocalizeValue.of(text));
+        setText2(LocalizeValue.ofNullable(text));
     }
-
-    /**
-     * Sets text under the progress bar
-     *
-     * @param text Text to set
-     * @see #setText(String)
-     */
-    void setText2Value(LocalizeValue text);
 
     /**
      * @return text under the progress bar, set by {@link #setText2(String)}
      */
-    default @Nullable String getText2() {
-        return getText2Value().getNullIfEmpty();
-    }
-
-    LocalizeValue getText2Value();
+    LocalizeValue getText2();
 
     /**
      * @return current fraction, set by {@link #setFraction(double)}

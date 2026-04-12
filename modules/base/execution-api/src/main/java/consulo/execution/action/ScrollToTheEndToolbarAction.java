@@ -15,7 +15,6 @@
  */
 package consulo.execution.action;
 
-import consulo.application.AllIcons;
 import consulo.application.ReadAction;
 import consulo.application.dumb.DumbAware;
 import consulo.codeEditor.Editor;
@@ -23,7 +22,9 @@ import consulo.codeEditor.LogicalPosition;
 import consulo.codeEditor.util.EditorUtil;
 import consulo.document.Document;
 import consulo.localize.LocalizeValue;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.platform.base.localize.ActionLocalize;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.ToggleAction;
 
@@ -37,9 +38,9 @@ public class ScrollToTheEndToolbarAction extends ToggleAction implements DumbAwa
     super();
     myEditor = editor;
     LocalizeValue message = ActionLocalize.actionEditorconsolescrolltotheendText();
-    getTemplatePresentation().setDescriptionValue(message);
-    getTemplatePresentation().setTextValue(message);
-    getTemplatePresentation().setIcon(AllIcons.RunConfigurations.Scroll_down);
+    getTemplatePresentation().setText(message);
+    getTemplatePresentation().setDescription(message);
+    getTemplatePresentation().setIcon(PlatformIconGroup.runconfigurationsScroll_down());
   }
 
   @Override
@@ -58,6 +59,7 @@ public class ScrollToTheEndToolbarAction extends ToggleAction implements DumbAwa
   }
 
   @Override
+  @RequiredUIAccess
   public void setSelected(AnActionEvent e, boolean state) {
     if (state) {
       EditorUtil.scrollToTheEnd(myEditor);

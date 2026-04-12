@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.application.progress;
 
 import consulo.application.Application;
@@ -75,20 +74,20 @@ public class EmptyProgressIndicator implements StandardProgressIndicator {
   }
 
   @Override
-  public void setTextValue(LocalizeValue text) {
+  public void setText(LocalizeValue text) {
   }
 
   @Override
-  public LocalizeValue getTextValue() {
+  public LocalizeValue getText() {
     return LocalizeValue.empty();
   }
 
   @Override
-  public void setText2Value(LocalizeValue text) {
+  public void setText2(LocalizeValue text) {
   }
 
   @Override
-  public LocalizeValue getText2Value() {
+  public LocalizeValue getText2() {
     return LocalizeValue.empty();
   }
 
@@ -123,7 +122,6 @@ public class EmptyProgressIndicator implements StandardProgressIndicator {
   }
 
   @Override
-  
   public ModalityState getModalityState() {
     return myModalityState;
   }

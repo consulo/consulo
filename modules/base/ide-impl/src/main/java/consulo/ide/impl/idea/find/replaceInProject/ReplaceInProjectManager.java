@@ -350,7 +350,7 @@ public class ReplaceInProjectManager {
             @Override
             public void update(AnActionEvent e) {
                 Presentation presentation = e.getPresentation();
-                presentation.setTextValue(FindLocalize.findReplaceSelectedAction(replaceContext.getUsageView().getSelectedUsages().size()));
+                presentation.setText(FindLocalize.findReplaceSelectedAction(replaceContext.getUsageView().getSelectedUsages().size()));
                 presentation.setEnabled(!replaceContext.getUsageView().getSelectedUsages().isEmpty());
             }
         });
@@ -382,7 +382,7 @@ public class ReplaceInProjectManager {
                     if (usage instanceof UsageInFile usageInFile) {
                         VirtualFile virtualFile = usageInFile.getFile();
                         if (virtualFile != null && !virtualFile.equals(lastFile)) {
-                            indicator.setText2Value(LocalizeValue.of(virtualFile.getPresentableUrl()));
+                            indicator.setText2(LocalizeValue.of(virtualFile.getPresentableUrl()));
                             lastFile = virtualFile;
                         }
                     }

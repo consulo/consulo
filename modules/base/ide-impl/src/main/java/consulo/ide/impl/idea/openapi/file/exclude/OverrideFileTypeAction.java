@@ -36,7 +36,7 @@ public class OverrideFileTypeAction extends AnAction {
         VirtualFile[] files = getContextFiles(e, file -> OverrideFileTypeManager.getInstance().getFileValue(file) == null);
         boolean enabled = files.length != 0;
         Presentation presentation = e.getPresentation();
-        presentation.setDescriptionValue(
+        presentation.setDescription(
             enabled
                 ? ActionLocalize.actionOverridefiletypeactionVerboseDescription(files[0].getName(), files.length - 1)
                 : ActionLocalize.actionOverridefiletypeactionDescription()

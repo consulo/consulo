@@ -72,7 +72,7 @@ public class ExecutorAction extends AnAction {
     public void update(AnActionEvent e) {
         LocalizeValue activeText = getActionText(e.getDataContext(), myExecutor);
         e.getPresentation().setVisible(activeText.isNotEmpty());
-        e.getPresentation().setTextValue(activeText);
+        e.getPresentation().setText(activeText);
     }
 
     @Override

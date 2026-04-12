@@ -290,7 +290,7 @@ public class CoverageLineMarkerRenderer implements LineMarkerRenderer, ActiveGut
         public GotoPreviousCoveredLineAction(Editor editor, int lineNumber) {
             super(editor, lineNumber);
             copyFrom(ActionManager.getInstance().getAction(IdeActions.ACTION_PREVIOUS_OCCURENCE));
-            getTemplatePresentation().setTextValue(ExecutionCoverageLocalize.coveragePreviousMark());
+            getTemplatePresentation().setText(ExecutionCoverageLocalize.coveragePreviousMark());
         }
 
         @Override
@@ -308,7 +308,7 @@ public class CoverageLineMarkerRenderer implements LineMarkerRenderer, ActiveGut
             super.update(e);
             LocalizeValue nextChange = getNextChange();
             if (nextChange.isNotEmpty()) {
-                e.getPresentation().setTextValue(ExecutionCoverageLocalize.coveragePreviousPlace(nextChange));
+                e.getPresentation().setText(ExecutionCoverageLocalize.coveragePreviousPlace(nextChange));
             }
         }
     }
@@ -317,7 +317,7 @@ public class CoverageLineMarkerRenderer implements LineMarkerRenderer, ActiveGut
         public GotoNextCoveredLineAction(Editor editor, int lineNumber) {
             super(editor, lineNumber);
             copyFrom(ActionManager.getInstance().getAction(IdeActions.ACTION_NEXT_OCCURENCE));
-            getTemplatePresentation().setTextValue(ExecutionCoverageLocalize.coverageNextMark());
+            getTemplatePresentation().setText(ExecutionCoverageLocalize.coverageNextMark());
         }
 
         @Override
@@ -335,7 +335,7 @@ public class CoverageLineMarkerRenderer implements LineMarkerRenderer, ActiveGut
             super.update(e);
             LocalizeValue nextChange = getNextChange();
             if (nextChange.isNotEmpty()) {
-                e.getPresentation().setTextValue(ExecutionCoverageLocalize.coverageNextPlace(nextChange));
+                e.getPresentation().setText(ExecutionCoverageLocalize.coverageNextPlace(nextChange));
             }
         }
     }

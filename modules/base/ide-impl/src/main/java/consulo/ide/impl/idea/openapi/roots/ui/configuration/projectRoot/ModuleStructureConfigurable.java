@@ -156,7 +156,6 @@ public class ModuleStructureConfigurable extends BaseStructureConfigurable imple
     }
 
     @Override
-    
     protected List<AnAction> createActions(boolean fromPopup) {
         List<AnAction> result = super.createActions(fromPopup);
         result.add(AnSeparator.getInstance());
@@ -338,7 +337,6 @@ public class ModuleStructureConfigurable extends BaseStructureConfigurable imple
         return false;
     }
 
-    
     @Override
     public LocalizeValue getDisplayName() {
         return ProjectLocalize.projectRootsDisplayName();
@@ -548,8 +546,8 @@ public class ModuleStructureConfigurable extends BaseStructureConfigurable imple
             if (myPlainMode) {
                 text = ProjectLocalize.projectRootsPlainModeActionTextEnabled();
             }
-            presentation.setTextValue(text);
-            presentation.setDescriptionValue(text);
+            presentation.setText(text);
+            presentation.setDescription(text);
 
             ModulesConfiguratorImpl modulesConfigurator = ReadAction.compute(ModuleStructureConfigurable.this::getModulesConfigurator);
             if (modulesConfigurator != null) {
@@ -600,17 +598,15 @@ public class ModuleStructureConfigurable extends BaseStructureConfigurable imple
     protected AbstractAddGroup createAddAction() {
         return new AbstractAddGroup(ProjectLocalize.addNewHeaderText()) {
             @Override
-            
             public AnAction[] getChildren(@Nullable AnActionEvent e) {
-
-                ArrayList<AnAction> result = new ArrayList<>();
+                List<AnAction> result = new ArrayList<>();
 
                 AnAction addModuleAction = new AddModuleAction(false);
-                addModuleAction.getTemplatePresentation().setTextValue(LocalizeValue.localizeTODO("New Module"));
+                addModuleAction.getTemplatePresentation().setText(LocalizeValue.localizeTODO("New Module"));
                 result.add(addModuleAction);
 
                 AnAction importModuleAction = new AddModuleAction(true);
-                importModuleAction.getTemplatePresentation().setTextValue(LocalizeValue.localizeTODO("Import Module"));
+                importModuleAction.getTemplatePresentation().setText(LocalizeValue.localizeTODO("Import Module"));
                 importModuleAction.getTemplatePresentation().setIcon(PlatformIconGroup.actionsImport());
                 result.add(importModuleAction);
 
@@ -654,7 +650,6 @@ public class ModuleStructureConfigurable extends BaseStructureConfigurable imple
     }
 
     private class AddModuleAction extends AnAction implements DumbAware {
-
         private final boolean myImport;
 
         public AddModuleAction(boolean anImport) {

@@ -29,6 +29,7 @@ import consulo.ide.impl.idea.ui.popup.actionPopup.ActionPopupItem;
 import consulo.ide.impl.idea.ui.popup.actionPopup.ActionPopupStep;
 import consulo.ide.localize.IdeLocalize;
 import consulo.ide.runAnything.RunAnythingContext;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
@@ -68,8 +69,8 @@ public abstract class RunAnythingChooseContextAction extends ActionGroup impleme
         @RequiredUIAccess
         @Override
         public void update(AnActionEvent e) {
-            e.getPresentation().setTextValue(context.getLabel());
-            e.getPresentation().setDescriptionValue(context.getDescription());
+            e.getPresentation().setText(context.getLabel());
+            e.getPresentation().setDescription(context.getDescription());
             e.getPresentation().setIcon(context.getIcon());
         }
     }
@@ -171,9 +172,9 @@ public abstract class RunAnythingChooseContextAction extends ActionGroup impleme
                     AnActionEvent event = ActionImplUtil.createEmptyEvent();
                     ActionImplUtil.performDumbAwareUpdate(actionItem.getAction(), event, false);
 
-                    String description = event.getPresentation().getDescription();
-                    if (description != null) {
-                        myInfoLabel.setText(description);
+                    LocalizeValue description = event.getPresentation().getDescription();
+                    if (description.isNotEmpty()) {
+                        myInfoLabel.setText(description.get());
                     }
 
                     myTextLabel.setText(event.getPresentation().getText());
@@ -248,7 +249,7 @@ public abstract class RunAnythingChooseContextAction extends ActionGroup impleme
     @Override
     public void update(AnActionEvent e) {
         Presentation presentation = e.getPresentation();
-        presentation.setDescriptionValue(IdeLocalize.runAnythingContextTooltip());
+        presentation.setDescription(IdeLocalize.runAnythingContextTooltip());
 
         if (getAvailableContexts().isEmpty()) {
             presentation.setEnabledAndVisible(false);
@@ -262,7 +263,7 @@ public abstract class RunAnythingChooseContextAction extends ActionGroup impleme
         setSelectedContext(getSelectedContext() == null ? getAvailableContexts().get(0) : getSelectedContext());
 
         presentation.setEnabledAndVisible(true);
-        presentation.setTextValue(getSelectedContext().getLabel());
+        presentation.setText(getSelectedContext().getLabel());
         presentation.setIcon(getSelectedContext().getIcon());
 
         containingPanel.revalidate();

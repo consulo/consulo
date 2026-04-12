@@ -394,7 +394,7 @@ public final class FileTreeModel extends AbstractTreeModel implements Identifiab
 
         @Override
         public String toString() {
-            return descriptor.getTitle();
+            return descriptor.getTitle().getNullIfEmpty();
         }
     }
 
@@ -412,7 +412,7 @@ public final class FileTreeModel extends AbstractTreeModel implements Identifiab
         private boolean updateContent(State state) {
             VirtualFile file = getFile();
             if (file == null) {
-                return updateName(state.descriptor.getTitle());
+                return updateName(state.descriptor.getTitle().getNullIfEmpty());
             }
 
             Image icon = state.descriptor.getIcon(file);

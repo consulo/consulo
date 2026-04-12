@@ -31,7 +31,7 @@ public class DisableDeclarativeInlayAction extends AnAction implements DumbAware
     public void update(AnActionEvent e) {
         LocalizeValue providerName = e.getData(DeclarativeInlayHintsProvider.PROVIDER_NAME);
         e.getPresentation().setEnabledAndVisible(providerName != null);
-        e.getPresentation().setTextValue(
+        e.getPresentation().setText(
             providerName != null
                 ? CodeEditorLocalize.inlayHintsDeclarativeDisableActionText(providerName)
                 : CodeEditorLocalize.inlayHintsDeclarativeDisableActionNoProviderText()

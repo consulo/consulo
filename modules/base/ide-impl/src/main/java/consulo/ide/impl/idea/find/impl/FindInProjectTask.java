@@ -122,7 +122,7 @@ class FindInProjectTask {
 
         try {
             myProgress.setIndeterminate(true);
-            myProgress.setTextValue(FindLocalize.progressTextScanningIndexedFiles());
+            myProgress.setText(FindLocalize.progressTextScanningIndexedFiles());
             Set<VirtualFile> filesForFastWordSearch = ReadAction.compute(this::getFilesForFastWordSearch);
             myProgress.setIndeterminate(false);
             if (LOG.isDebugEnabled()) {
@@ -132,7 +132,7 @@ class FindInProjectTask {
             searchInFiles(filesForFastWordSearch, processPresentation, consumer);
 
             myProgress.setIndeterminate(true);
-            myProgress.setTextValue(FindLocalize.progressTextScanningNonIndexedFiles());
+            myProgress.setText(FindLocalize.progressTextScanningNonIndexedFiles());
             boolean canRelyOnIndices = canRelyOnSearchers();
             Collection<VirtualFile> otherFiles = collectFilesInScope(filesForFastWordSearch, canRelyOnIndices);
             myProgress.setIndeterminate(false);
@@ -160,7 +160,7 @@ class FindInProjectTask {
         }
 
         if (!myProgress.isCanceled()) {
-            myProgress.setTextValue(FindLocalize.findProgressSearchCompleted());
+            myProgress.setText(FindLocalize.findProgressSearchCompleted());
         }
     }
 
@@ -215,11 +215,11 @@ class FindInProjectTask {
                 double fraction = (double)processedFileCount.incrementAndGet() / virtualFiles.size();
                 myProgress.setFraction(fraction);
             }
-            myProgress.setTextValue(FindLocalize.findSearchingForStringInFileProgress(
+            myProgress.setText(FindLocalize.findSearchingForStringInFileProgress(
                 myFindModel.getStringToFind(),
                 virtualFile.getPresentableUrl()
             ));
-            myProgress.setText2Value(FindLocalize.findSearchingForStringInFileOccurrencesProgress(occurrenceCount));
+            myProgress.setText2(FindLocalize.findSearchingForStringInFileOccurrencesProgress(occurrenceCount));
 
             Pair.NonNull<PsiFile, VirtualFile> pair = ReadAction.compute(() -> findFile(virtualFile));
             if (pair == null) {

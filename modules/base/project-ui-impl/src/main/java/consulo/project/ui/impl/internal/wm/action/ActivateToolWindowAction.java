@@ -89,8 +89,8 @@ public class ActivateToolWindowAction extends DumbAwareAction {
 
     private void updatePresentation(Presentation presentation, ToolWindow toolWindow) {
         LocalizeValue title = toolWindow.getDisplayName();
-        presentation.setTextValue(title);
-        presentation.setDescriptionValue(ProjectUILocalize.actionActivateToolWindow(title));
+        presentation.setText(title);
+        presentation.setDescription(ProjectUILocalize.actionActivateToolWindow(title));
         presentation.setIcon(toolWindow.getIcon());
     }
 

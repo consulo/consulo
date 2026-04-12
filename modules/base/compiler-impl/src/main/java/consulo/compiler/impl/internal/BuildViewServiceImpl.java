@@ -208,13 +208,13 @@ public class BuildViewServiceImpl {
             private Stack<LocalizeValue> myTextStack;
 
             @Override
-            public void setTextValue(LocalizeValue text) {
+            public void setText(LocalizeValue text) {
                 addIndicatorNewMessagesAsBuildOutput(text);
             }
 
             @Override
             public void pushState() {
-                getTextStack().push(indicator.getTextValue());
+                getTextStack().push(indicator.getText());
             }
 
             @Override
@@ -222,7 +222,6 @@ public class BuildViewServiceImpl {
                 myBuildProgress.progress(lastMessage.get(), 100, (long) (fraction * 100), "%");
             }
 
-            
             private Stack<LocalizeValue> getTextStack() {
                 Stack<LocalizeValue> stack = myTextStack;
                 if (stack == null) {

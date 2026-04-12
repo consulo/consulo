@@ -54,13 +54,12 @@ public class LightProgressManager extends ProgressManager {
   }
 
   @Override
-  public ProgressIndicator getProgressIndicator() {
+  public @Nullable ProgressIndicator getProgressIndicator() {
     return null;
   }
 
   @Override
   protected void doCheckCanceled() throws ProcessCanceledException {
-
   }
 
   @Override

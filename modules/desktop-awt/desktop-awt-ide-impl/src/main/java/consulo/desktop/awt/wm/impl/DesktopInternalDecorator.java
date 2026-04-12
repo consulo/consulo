@@ -659,8 +659,8 @@ public final class DesktopInternalDecorator extends JPanel implements Queryable,
     private final class RemoveStripeButtonAction extends AnAction implements DumbAware {
         public RemoveStripeButtonAction() {
             Presentation presentation = getTemplatePresentation();
-            presentation.setTextValue(ActionLocalize.actionRemovestripebuttonText());
-            presentation.setDescriptionValue(ActionLocalize.actionRemovestripebuttonDescription());
+            presentation.setText(ActionLocalize.actionRemovestripebuttonText());
+            presentation.setDescription(ActionLocalize.actionRemovestripebuttonDescription());
         }
 
         @Override
@@ -683,7 +683,7 @@ public final class DesktopInternalDecorator extends JPanel implements Queryable,
 
         public HideAction() {
             copyFrom(ActionManager.getInstance().getAction(HIDE_ACTIVE_WINDOW_ACTION_ID));
-            getTemplatePresentation().setTextValue(UILocalize.toolWindowHideActionName());
+            getTemplatePresentation().setText(UILocalize.toolWindowHideActionName());
         }
 
         @Override

@@ -46,7 +46,7 @@ public class VcsGroupsActionGroup extends DefaultActionGroup implements DumbAwar
     public void update(AnActionEvent e) {
         Project project = e.getData(Project.KEY);
         if (project != null) {
-            e.getPresentation().setTextValue(project.getInstance(ProjectLevelVcsManager.class).getConsolidatedVcsName());
+            e.getPresentation().setText(project.getInstance(ProjectLevelVcsManager.class).getConsolidatedVcsName());
         }
     }
 }

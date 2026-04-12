@@ -63,7 +63,7 @@ public class LoginAction extends AnAction implements RightAlignedToolbarAction, 
       presentation.setIcon(PlatformIconGroup.actionsLoginavatar());
     }
     else {
-      presentation.setTextValue(LocalizeValue.of(email));
+      presentation.setText(LocalizeValue.of(email));
 
       Image userIcon = configuration.getUserIcon();
       presentation.setIcon(ObjectUtil.notNull(userIcon, PlatformIconGroup.actionsLoginavatar()));

@@ -15,16 +15,9 @@
  */
 package consulo.undoRedo.builder;
 
-import consulo.application.Application;
 import consulo.component.ProcessCanceledException;
-import consulo.document.util.DocumentUtil;
-import consulo.ui.annotation.RequiredUIAccess;
-import consulo.undoRedo.CommandProcessor;
-import consulo.util.lang.EmptyRunnable;
 import consulo.util.lang.function.ThrowableSupplier;
 import org.jspecify.annotations.Nullable;
-
-import java.util.function.Consumer;
 
 /**
  * @author UNV
@@ -63,11 +56,11 @@ public interface ExecutableCommandBuilder<R, THIS extends ExecutableCommandBuild
 
     ExecutionResult<R> execute(ThrowableSupplier<R, ? extends Throwable> executable);
 
-    static class ExecutionResult<R> {
-        private final R myResult;
-        private final Throwable myThrowable;
+    static class ExecutionResult<R extends @Nullable Object> {
+        private final @Nullable R myResult;
+        private final @Nullable Throwable myThrowable;
 
-        private ExecutionResult(R result, Throwable throwable) {
+        private ExecutionResult(@Nullable R result, @Nullable Throwable throwable) {
             myResult = result;
             myThrowable = throwable;
         }
@@ -80,12 +73,12 @@ public interface ExecutableCommandBuilder<R, THIS extends ExecutableCommandBuild
             this(null, throwable);
         }
 
-        public static <R> ExecutionResult<R> execute(ThrowableSupplier<R, ? extends Throwable> executable) {
+        public static <R extends @Nullable Object> ExecutionResult<R> execute(ThrowableSupplier<R, ? extends Throwable> executable) {
             try {
                 return new ExecutionResult<>(executable.get());
             }
             catch (ProcessCanceledException | Error e) {
-                // ProcessCanceledException may occur from time to time and it shouldn't be catched
+                // ProcessCanceledException may occur from time to time and it shouldn't be caught
                 throw e;
             }
             catch (Throwable throwable) {
@@ -97,8 +90,11 @@ public interface ExecutableCommandBuilder<R, THIS extends ExecutableCommandBuild
             return get(null);
         }
 
+        @SuppressWarnings("NullAway")
         public <E extends Throwable> R get(@Nullable Class<E> exceptionClass) throws E {
             checkException(exceptionClass);
+            // myResult may contain technical null when myThrowable is non-null. In this case checkException() has already thrown it.
+            // We cannot describe this to static validation, so disabling NullAway here.
             return myResult;
         }
 
@@ -129,7 +125,7 @@ public interface ExecutableCommandBuilder<R, THIS extends ExecutableCommandBuild
             return myThrowable != null;
         }
 
-        public Throwable getThrowable() {
+        public @Nullable Throwable getThrowable() {
             return myThrowable;
         }
     }

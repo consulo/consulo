@@ -123,11 +123,9 @@ class HashUtil {
     25002389, 50004791, 100009607, 200019221, 400038451, 800076929, 1600153859,
 
     Integer.MAX_VALUE,
-
   };
 
   static {
     Arrays.sort(tableSizes);
   }
 }
-

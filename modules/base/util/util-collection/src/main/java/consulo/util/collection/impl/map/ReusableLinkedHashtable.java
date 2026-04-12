@@ -40,9 +40,9 @@ import java.util.function.Consumer;
  * hash-table resize. Also during resize we don't compare keys by .equals() but only by ==. This prevents calling any methods
  * on key objects which could produce exceptions during resize (which is undesirable since resize may occur asynchronously after GC).</p>
  *
- * <p>This class is intended to work in pair with {@link ReusableImmutableLinkedHashMap}. There may be several {@code ImmutableLinkedHashMap}s
- * pointing to the same {@code ReusableLinkedHashtable}. Only one of {@code ImmutableLinkedHashMap}s would have all the key/value
- * entries of the whole hash-table. This map is called master-map. Other maps are sattelites.</p>
+ * <p>This class is intended to work in pair with {@link ReusableImmutableLinkedHashMap}. There may be several
+ * {@code ImmutableLinkedHashMap}s pointing to the same {@code ReusableLinkedHashtable}. Only one of {@code ImmutableLinkedHashMap}s
+ * would have all the key/value entries of the whole hash-table. This map is called master-map. Other maps are sattelites.</p>
  *
  * <p>If master-map is garbage-collected but some of sattelite maps remain in memory, some of the key/value entries become unreachable
  * but still referenced from hash-table. This creates memory leak and one of this hash-table purposes is to resolve such leaks.

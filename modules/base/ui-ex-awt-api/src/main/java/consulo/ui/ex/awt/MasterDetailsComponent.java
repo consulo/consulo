@@ -979,7 +979,7 @@ public abstract class MasterDetailsComponent implements Configurable, MasterDeta
         public MyActionGroupWrapper(ActionGroup actionGroup) {
             super(
                 actionGroup.getTemplatePresentation().getTextValue(),
-                actionGroup.getTemplatePresentation().getDescriptionValue(),
+                actionGroup.getTemplatePresentation().getDescription(),
                 actionGroup.getTemplatePresentation().getIcon()
             );
             myActionGroup = actionGroup;

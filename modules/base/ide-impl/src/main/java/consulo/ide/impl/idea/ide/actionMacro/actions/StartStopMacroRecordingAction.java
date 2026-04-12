@@ -57,7 +57,7 @@ public class StartStopMacroRecordingAction extends AnAction implements DumbAware
     public void update(AnActionEvent e) {
         e.getPresentation().setEnabledAndVisible(e.hasData(Project.KEY));
 
-        e.getPresentation().setTextValue(
+        e.getPresentation().setText(
             ActionMacroManager.getInstance().isRecording()
                 ? IdeLocalize.actionStopMacroRecording()
                 : IdeLocalize.actionStartMacroRecording()

@@ -34,14 +34,14 @@ import java.awt.event.InputEvent;
  */
 public class AllRunConfigurationsToggle extends DumbAwareToggleAction {
     public AllRunConfigurationsToggle() {
-        getTemplatePresentation().setKeepPopupOnPerform(KeepPopupOnPerform.Always);
+        getTemplatePresentation().setKeepPopupOnPerform(KeepPopupOnPerform.ALWAYS);
     }
 
     @Override
     public void update(AnActionEvent e) {
         Project project = e.getData(Project.KEY);
         Presentation presentation = e.getPresentation();
-        presentation.setKeepPopupOnPerform(KeepPopupOnPerform.Always);
+        presentation.setKeepPopupOnPerform(KeepPopupOnPerform.ALWAYS);
 
         if (project == null) {
             presentation.setEnabledAndVisible(false);
@@ -52,7 +52,7 @@ public class AllRunConfigurationsToggle extends DumbAwareToggleAction {
 
         Toggleable.setSelected(presentation, selected);
 
-        presentation.setTextValue(ExecutionLocalize.runToolbarWidgetAllConfigurations(10));
+        presentation.setText(ExecutionLocalize.runToolbarWidgetAllConfigurations(10));
 
         presentation.setIcon(selected ? PlatformIconGroup.generalArrowdown() : PlatformIconGroup.generalArrowright());
     }

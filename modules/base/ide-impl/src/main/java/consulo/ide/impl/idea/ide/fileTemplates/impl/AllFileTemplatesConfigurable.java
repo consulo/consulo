@@ -666,7 +666,7 @@ public class AllFileTemplatesConfigurable implements SearchableConfigurable, Con
                 myEditor.apply();
             }
             catch (ConfigurationException e) {
-                Messages.showErrorDialog(myEditorComponent, e.getMessage(), e.getTitleValue().get());
+                Messages.showErrorDialog(myEditorComponent, e.getMessage(), e.getTitle().get());
                 return;
             }
         }

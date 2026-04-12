@@ -168,7 +168,7 @@ public class RollbackWorker {
                         changesToRefresh.addAll(changes);
 
                         if (myIndicator != null) {
-                            myIndicator.setTextValue(LocalizeValue.localizeTODO(
+                            myIndicator.setText(LocalizeValue.localizeTODO(
                                 vcs.getDisplayName() + ": performing " + StringUtil.toLowerCase(myOperationName) + "..."
                             ));
                             myIndicator.setIndeterminate(false);
@@ -176,7 +176,7 @@ public class RollbackWorker {
                         }
                         environment.rollbackChanges(changes, myExceptions, new RollbackProgressModifier(changes.size(), myIndicator));
                         if (myIndicator != null) {
-                            myIndicator.setText2Value(LocalizeValue.empty());
+                            myIndicator.setText2(LocalizeValue.empty());
                             myIndicator.checkCanceled();
                         }
 
@@ -193,8 +193,8 @@ public class RollbackWorker {
             if (myIndicator != null) {
                 myIndicator.startNonCancelableSection();
                 myIndicator.setIndeterminate(true);
-                myIndicator.setText2Value(LocalizeValue.empty());
-                myIndicator.setTextValue(VcsLocalize.progressTextSynchronizingFiles());
+                myIndicator.setText2(LocalizeValue.empty());
+                myIndicator.setText(VcsLocalize.progressTextSynchronizingFiles());
             }
 
             doRefresh(myProject, changesToRefresh);
@@ -270,7 +270,7 @@ public class RollbackWorker {
                 }
             }
             if (myIndicator != null) {
-                myIndicator.setText2Value(LocalizeValue.empty());
+                myIndicator.setText2(LocalizeValue.empty());
             }
         }
     }

@@ -144,7 +144,7 @@ public class FileTreeModelBuilder {
         final Runnable buildingRunnable = () -> {
             ProgressIndicator indicator = ProgressManager.getInstance().getProgressIndicator();
             if (indicator != null) {
-                indicator.setTextValue(AnalysisScopeLocalize.packageDependenciesBuildProgressText());
+                indicator.setText(AnalysisScopeLocalize.packageDependenciesBuildProgressText());
                 indicator.setIndeterminate(true);
             }
             countFiles(project);

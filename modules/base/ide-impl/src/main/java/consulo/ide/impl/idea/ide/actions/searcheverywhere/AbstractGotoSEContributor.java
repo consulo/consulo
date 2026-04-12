@@ -478,7 +478,7 @@ public abstract class AbstractGotoSEContributor implements WeightedSearchEverywh
             ScopeDescriptor selection = getSelectedScope();
             String name = StringUtil.trimMiddle(selection.getDisplayName(), 30);
             String text = StringUtil.escapeMnemonics(name).replaceFirst("(?i)([" + TOGGLE + CHOOSE + "])", "_$1");
-            e.getPresentation().setTextValue(LocalizeValue.of(text));
+            e.getPresentation().setText(LocalizeValue.of(text));
             e.getPresentation().setIcon(selection.getIcon());
             String shortcutText =
                 KeymapUtil.getKeystrokeText(KeyStroke.getKeyStroke(CHOOSE, MnemonicHelper.getFocusAcceleratorKeyMask(), true));

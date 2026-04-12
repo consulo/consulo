@@ -84,7 +84,7 @@ public class UpdateCopyrightProcessor extends AbstractFileProcessor {
         }
         ProgressIndicator progressIndicator = ProgressManager.getInstance().getProgressIndicator();
         if (progressIndicator != null) {
-            progressIndicator.setText2Value(LocalizeValue.of(vfile.getPresentableUrl()));
+            progressIndicator.setText2(LocalizeValue.of(vfile.getPresentableUrl()));
         }
         Module mod = myModule;
         if (myModule == null) {

@@ -78,22 +78,20 @@ public class DummyProgressIndicator implements ProgressIndicatorEx {
     }
 
     @Override
-    public void setTextValue(LocalizeValue textValue) {
+    public void setText(LocalizeValue textValue) {
     }
 
-    
     @Override
-    public LocalizeValue getTextValue() {
+    public LocalizeValue getText() {
         return LocalizeValue.empty();
     }
 
     @Override
-    public void setText2Value(LocalizeValue text) {
+    public void setText2(LocalizeValue text) {
     }
 
-    
     @Override
-    public LocalizeValue getText2Value() {
+    public LocalizeValue getText2() {
         return LocalizeValue.empty();
     }
 
@@ -119,7 +117,6 @@ public class DummyProgressIndicator implements ProgressIndicatorEx {
         return false;
     }
 
-    
     @Override
     public ModalityState getModalityState() {
         return Application.get().getDefaultModalityState();

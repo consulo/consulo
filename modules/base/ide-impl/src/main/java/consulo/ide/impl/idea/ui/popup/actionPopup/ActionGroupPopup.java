@@ -183,7 +183,7 @@ public class ActionGroupPopup extends ListPopupImpl {
     private Presentation updateActionItem(ActionPopupItem actionItem) {
         AnAction action = actionItem.getAction();
         Presentation presentation = new Presentation();
-        presentation.setDescriptionValue(action.getTemplatePresentation().getDescriptionValue());
+        presentation.setDescription(action.getTemplatePresentation().getDescription());
 
         AnActionEvent actionEvent = new AnActionEvent(
             null,

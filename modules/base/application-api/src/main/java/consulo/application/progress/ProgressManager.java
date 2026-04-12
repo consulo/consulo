@@ -64,7 +64,7 @@ public abstract class ProgressManager extends ProgressIndicatorProvider {
     public abstract <T> T runProcess(Supplier<T> process, @Nullable ProgressIndicator progress) throws ProcessCanceledException;
 
     @Override
-    public abstract ProgressIndicator getProgressIndicator();
+    public abstract @Nullable ProgressIndicator getProgressIndicator();
 
     public static void progress(LocalizeValue text) throws ProcessCanceledException {
         progress(text, LocalizeValue.empty());
@@ -74,7 +74,7 @@ public abstract class ProgressManager extends ProgressIndicatorProvider {
         ProgressIndicator pi = getInstance().getProgressIndicator();
         if (pi != null) {
             pi.checkCanceled();
-            pi.setText2Value(text);
+            pi.setText2(text);
         }
     }
 
@@ -82,8 +82,8 @@ public abstract class ProgressManager extends ProgressIndicatorProvider {
         ProgressIndicator pi = getInstance().getProgressIndicator();
         if (pi != null) {
             pi.checkCanceled();
-            pi.setTextValue(text);
-            pi.setText2Value(text2);
+            pi.setText(text);
+            pi.setText2(text2);
         }
     }
 

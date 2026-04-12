@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.fileChooser;
 
 import consulo.util.collection.ArrayUtil;
@@ -31,7 +30,7 @@ import java.util.List;
  * @since 9.0
  */
 public class FileSaverDescriptor extends FileChooserDescriptor implements Cloneable {
-  private final List<String> extensions;
+  private final List<String> myExtensions;
 
   /**
    * Constructs save dialog properties
@@ -44,15 +43,14 @@ public class FileSaverDescriptor extends FileChooserDescriptor implements Clonea
     super(true, true, true, true, false, false);
     setTitle(title);
     setDescription(description);
-    this.extensions = Arrays.asList(extensions);
+    myExtensions = Arrays.asList(extensions);
   }
 
   @Override
   public boolean isFileVisible(VirtualFile file, boolean showHiddenFiles) {
-    return extensions.isEmpty() || file.isDirectory() ?
-           super.isFileVisible(file, showHiddenFiles)
-           :
-           extensions.contains(file.getExtension());
+    return myExtensions.isEmpty() || file.isDirectory()
+      ? super.isFileVisible(file, showHiddenFiles)
+      : myExtensions.contains(file.getExtension());
   }
 
   /**
@@ -61,6 +59,6 @@ public class FileSaverDescriptor extends FileChooserDescriptor implements Clonea
    * @return accepted file extensions
    */
   public String[] getFileExtensions() {
-    return ArrayUtil.toStringArray(extensions);
+    return ArrayUtil.toStringArray(myExtensions);
   }
 }

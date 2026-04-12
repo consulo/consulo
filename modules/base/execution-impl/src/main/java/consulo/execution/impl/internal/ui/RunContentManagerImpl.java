@@ -650,7 +650,7 @@ public class RunContentManagerImpl implements RunContentManager, Disposable {
                     }
                 });
 
-                progressIndicator.setTextValue(ExecutionLocalize.waitingForVmDetachProgressText());
+                progressIndicator.setText(ExecutionLocalize.waitingForVmDetachProgressText());
                 Application.get().executeOnPooledThread(new Runnable() {
                     @Override
                     public void run() {

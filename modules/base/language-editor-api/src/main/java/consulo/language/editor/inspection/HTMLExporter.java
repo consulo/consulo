@@ -77,7 +77,7 @@ public class HTMLExporter {
 
     if (indicator != null) {
       ProgressManager.checkCanceled();
-      indicator.setTextValue(InspectionLocalize.inspectionExportGeneratingHtmlFor(fullPath));
+      indicator.setText(InspectionLocalize.inspectionExportGeneratingHtmlFor(fullPath));
     }
 
     FileWriter writer = null;

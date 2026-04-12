@@ -447,12 +447,12 @@ public class BuiltInCompilerRunner implements CompilerRunner {
                             DependencyCache cache = context.getDependencyCache();
 
                             indicator.pushState();
-                            indicator.setTextValue(CompilerLocalize.progressUpdatingCaches());
-                            indicator.setText2Value(LocalizeValue.empty());
+                            indicator.setText(CompilerLocalize.progressUpdatingCaches());
+                            indicator.setText2(LocalizeValue.empty());
 
                             cache.update();
 
-                            indicator.setTextValue(CompilerLocalize.progressSavingCaches());
+                            indicator.setText(CompilerLocalize.progressSavingCaches());
                             cache.resetState();
                             processedModules.addAll(currentChunk.getNodes());
                             indicator.popState();
@@ -637,7 +637,7 @@ public class BuiltInCompilerRunner implements CompilerRunner {
                     for (Trinity<File, String, Boolean> trinity : toDelete) {
                         File outputPath = trinity.getFirst();
                         context.getProgressIndicator().checkCanceled();
-                        context.getProgressIndicator().setText2Value(LocalizeValue.ofNullable(outputPath.getPath()));
+                        context.getProgressIndicator().setText2(LocalizeValue.ofNullable(outputPath.getPath()));
                         filesToRefresh.add(outputPath);
                         if (isTestMode) {
                             LOG.assertTrue(outputPath.exists());
@@ -848,7 +848,7 @@ public class BuiltInCompilerRunner implements CompilerRunner {
                                         cache.update(file, item.getValidityState());
                                         filesToRefresh.add(file);
                                         generatedFiles.add(file);
-                                        context.getProgressIndicator().setText2Value(LocalizeValue.ofNullable(file.getPath()));
+                                        context.getProgressIndicator().setText2(LocalizeValue.ofNullable(file.getPath()));
                                     }
                                 }
                             );

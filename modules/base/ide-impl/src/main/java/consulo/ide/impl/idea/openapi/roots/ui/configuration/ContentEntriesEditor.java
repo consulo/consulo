@@ -354,8 +354,8 @@ public class ContentEntriesEditor extends ModuleElementsEditor {
                 }
             };
             myDescriptor.putUserData(LangDataKeys.MODULE_CONTEXT, getModule());
-            myDescriptor.withTitleValue(ProjectLocalize.modulePathsAddContentTitle());
-            myDescriptor.withDescriptionValue(ProjectLocalize.modulePathsAddContentPrompt());
+            myDescriptor.withTitle(ProjectLocalize.modulePathsAddContentTitle());
+            myDescriptor.withDescription(ProjectLocalize.modulePathsAddContentPrompt());
             myDescriptor.putUserData(FileChooserKeys.DELETE_ACTION_AVAILABLE, false);
         }
 

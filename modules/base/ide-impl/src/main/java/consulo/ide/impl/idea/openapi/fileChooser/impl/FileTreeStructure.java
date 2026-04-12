@@ -50,7 +50,9 @@ public class FileTreeStructure extends AbstractTreeStructure {
     public FileTreeStructure(Project project, FileChooserDescriptor chooserDescriptor) {
         myProject = project;
         List<VirtualFile> rootFiles = chooserDescriptor.getRoots();
-        String name = rootFiles.size() == 1 && rootFiles.get(0) != null ? rootFiles.get(0).getPresentableUrl() : chooserDescriptor.getTitle();
+        String name = rootFiles.size() == 1 && rootFiles.get(0) != null
+            ? rootFiles.get(0).getPresentableUrl()
+            : chooserDescriptor.getTitle().getNullIfEmpty();
         myRootElement = new RootFileElement(rootFiles, name, chooserDescriptor.isShowFileSystemRoots());
         myChooserDescriptor = chooserDescriptor;
         myShowHidden = myChooserDescriptor.isShowHiddenFiles();

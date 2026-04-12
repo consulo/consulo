@@ -65,7 +65,7 @@ public class EditFavoritesAction extends AnAction {
         Set<Object> selection = treeBuilder.getSelectedElements();
         if (provider != null) {
             e.getPresentation().setEnabled(provider.willHandle(button, project, selection));
-            e.getPresentation().setTextValue(provider.getCustomName(button));
+            e.getPresentation().setText(provider.getCustomName(button));
         }
     }
 }

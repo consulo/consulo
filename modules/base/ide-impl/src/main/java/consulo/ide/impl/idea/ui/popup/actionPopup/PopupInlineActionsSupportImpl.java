@@ -4,6 +4,7 @@ package consulo.ide.impl.idea.ui.popup.actionPopup;
 import consulo.ide.impl.idea.ui.popup.list.ListPopupImpl;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.platform.base.localize.ActionLocalize;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.KeepPopupOnPerform;
 import consulo.ui.ex.action.util.ActionUtil;
 import consulo.ui.ex.awt.internal.PopupInlineActionsSupport;
@@ -27,12 +28,12 @@ class PopupInlineActionsSupportImpl implements PopupInlineActionsSupport {
 
     @Override
     public int calcExtraButtonsCount(Object element) {
-        if (!(element instanceof ActionPopupItem)) {
+        if (!(element instanceof ActionPopupItem actionPopupItem)) {
             return 0;
         }
         int res = 0;
-        res += myStep.getInlineItems((ActionPopupItem) element).size();
-        if (hasMoreButton((ActionPopupItem) element)) {
+        res += myStep.getInlineItems(actionPopupItem).size();
+        if (hasMoreButton(actionPopupItem)) {
             res++;
         }
         return res;
@@ -66,26 +67,25 @@ class PopupInlineActionsSupportImpl implements PopupInlineActionsSupport {
     @Override
     public KeepPopupOnPerform getKeepPopupOnPerform(Object element, int index) {
         if (!(element instanceof ActionPopupItem)) {
-            return KeepPopupOnPerform.Always;
+            return KeepPopupOnPerform.ALWAYS;
         }
         if (isMoreButton(element, index)) {
-            return KeepPopupOnPerform.Always;
+            return KeepPopupOnPerform.ALWAYS;
         }
         return myStep.getInlineItems((ActionPopupItem) element).get(index).getKeepPopupOnPerform();
     }
 
     @Override
+    @RequiredUIAccess
     public void performAction(Object element, int index, InputEvent event) {
-        if (!(element instanceof ActionPopupItem)) {
+        if (!(element instanceof ActionPopupItem actionPopupItem)) {
             return;
         }
         if (isMoreButton(element, index)) {
-            myListPopup.showNextStepPopup(myStep.onChosen((ActionPopupItem) element, false),
-                (ActionPopupItem) element);
+            myListPopup.showNextStepPopup(myStep.onChosen(actionPopupItem, false), element);
         }
         else {
-            ActionPopupItem item =
-                myStep.getInlineItems((ActionPopupItem) element).get(index);
+            ActionPopupItem item = myStep.getInlineItems(actionPopupItem).get(index);
             myStep.performActionItem(item, event);
             myStep.updateStepItems(myListPopup.getList());
         }
@@ -93,11 +93,11 @@ class PopupInlineActionsSupportImpl implements PopupInlineActionsSupport {
 
     @Override
     public List<JComponent> createExtraButtons(Object value, boolean isSelected, int activeIndex) {
-        if (!(value instanceof ActionPopupItem)) {
+        if (!(value instanceof ActionPopupItem actionPopupItem)) {
             return Collections.emptyList();
         }
         List<ActionPopupItem> inlineItems =
-            myStep.getInlineItems((ActionPopupItem) value);
+            myStep.getInlineItems(actionPopupItem);
 
         ArrayList<JComponent> buttons = new ArrayList<>();
 
@@ -108,8 +108,8 @@ class PopupInlineActionsSupportImpl implements PopupInlineActionsSupport {
             }
         }
 
-        if ((isSelected || !buttons.isEmpty()) && hasMoreButton((ActionPopupItem) value)) {
-            Image icon = myStep.isFinal((ActionPopupItem) value)
+        if ((isSelected || !buttons.isEmpty()) && hasMoreButton(actionPopupItem)) {
+            Image icon = myStep.isFinal(actionPopupItem)
                 ? PlatformIconGroup.actionsMorevertical()
                 : PlatformIconGroup.ideMenuarrow();
             buttons.add(PopupInlineActionsSupportKt.createExtraButton(icon, buttons.size() == activeIndex));

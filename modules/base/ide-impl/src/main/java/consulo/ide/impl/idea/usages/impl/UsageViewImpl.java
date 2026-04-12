@@ -844,8 +844,8 @@ public class UsageViewImpl implements UsageViewEx {
         DefaultActionGroup group = new DefaultActionGroup();
         group.setPopup(true);
         group.getTemplatePresentation().setIcon(PlatformIconGroup.actionsGroupby());
-        group.getTemplatePresentation().setTextValue(UsageLocalize.actionGroupByTitle());
-        group.getTemplatePresentation().setDescriptionValue(UsageLocalize.actionGroupByTitle());
+        group.getTemplatePresentation().setText(UsageLocalize.actionGroupByTitle());
+        group.getTemplatePresentation().setDescription(UsageLocalize.actionGroupByTitle());
         AnAction[] groupingActions = createGroupingActions();
         if (groupingActions.length > 0) {
             group.add(AnSeparator.create(UsageLocalize.actionGroupByTitle()));
@@ -1090,7 +1090,7 @@ public class UsageViewImpl implements UsageViewEx {
             if (description == null) {
                 description = UsageLocalize.actionShowsettingsShowFindUsagesSettingsDialogDescription();
             }
-            getTemplatePresentation().setDescriptionValue(description);
+            getTemplatePresentation().setDescription(description);
             KeyboardShortcut shortcut = configurableUsageTarget == null
                 ? UsageViewUtil.getShowUsagesWithSettingsShortcut()
                 : configurableUsageTarget.getShortcut();

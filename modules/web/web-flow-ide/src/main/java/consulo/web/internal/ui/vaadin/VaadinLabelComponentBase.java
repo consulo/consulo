@@ -28,12 +28,12 @@ import consulo.web.internal.ui.base.FromVaadinComponentWrapper;
 
 /**
  * @author VISTALL
- * @since 27/05/2023
+ * @since 2023-05-27
  */
 @Tag("span")
 public abstract class VaadinLabelComponentBase extends SimpleComponent implements FromVaadinComponentWrapper, HasText, HasEnabled, HasSize {
     private Image myImage;
-    private LocalizeValue myTextValue;
+    private LocalizeValue myText;
     private HorizontalAlignment myHorizontalAlignment;
     private ColorValue myForegroundColor;
 
@@ -45,16 +45,16 @@ public abstract class VaadinLabelComponentBase extends SimpleComponent implement
         return myImage;
     }
 
-    public void setTextValue(LocalizeValue textValue) {
-        myTextValue = textValue;
+    public void setText(LocalizeValue text) {
+        myText = text;
 
-        TextWithMnemonic textWithMnemonic = TextWithMnemonic.parse(textValue.get());
+        TextWithMnemonic textWithMnemonic = TextWithMnemonic.parse(text.get());
 
         setText(textWithMnemonic.getText());
     }
 
     public LocalizeValue getTextValue() {
-        return myTextValue;
+        return myText;
     }
 
     public void setHorizontalAlignment(HorizontalAlignment horizontalAlignment) {

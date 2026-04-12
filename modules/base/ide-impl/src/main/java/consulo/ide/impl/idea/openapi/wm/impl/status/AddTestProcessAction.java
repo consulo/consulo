@@ -20,6 +20,7 @@ import consulo.application.progress.PerformInBackgroundOption;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.Task;
 import consulo.component.ProcessCanceledException;
+import consulo.localize.LocalizeValue;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.project.Project;
@@ -37,7 +38,7 @@ import java.awt.*;
 @SuppressWarnings({"HardCodedStringLiteral"})
 public class AddTestProcessAction extends AnAction implements DumbAware {
     public AddTestProcessAction() {
-        super("Add Test Process");
+        super(LocalizeValue.of("Add Test Process"));
     }
 
     @Override
@@ -89,9 +90,9 @@ public class AddTestProcessAction extends AnAction implements DumbAware {
             @Override
             public void run(ProgressIndicator indicator) {
                 try {
-                    indicator.setText("welcome!");
+                    indicator.setText(LocalizeValue.of("welcome!"));
 
-                    Thread.currentThread().sleep(6000);
+                    Thread.sleep(6000);
 
                     countTo(
                         1000,
@@ -100,28 +101,28 @@ public class AddTestProcessAction extends AnAction implements DumbAware {
                             //    createAnotherProgress(project);
                             //}
 
-                            indicator.setText("Found: " + each / 20 + 1);
+                            indicator.setText(LocalizeValue.of("Found: " + each / 20 + 1));
                             if (each / 10.0 == Math.round(each / 10.0)) {
-                                indicator.setText(null);
+                                indicator.setText(LocalizeValue.empty());
                             }
                             indicator.setFraction(each / 1000.0);
 
                             try {
-                                Thread.currentThread().sleep(100);
+                                Thread.sleep(100);
                             }
                             catch (InterruptedException e1) {
                                 e1.printStackTrace();
                             }
 
                             indicator.checkCanceled();
-                            indicator.setText2("bla bla bla");
+                            indicator.setText2(LocalizeValue.of("bla bla bla"));
                         }
                     );
                     indicator.stop();
                 }
                 catch (ProcessCanceledException e1) {
                     try {
-                        Thread.currentThread().sleep(2000);
+                        Thread.sleep(2000);
                         indicator.stop();
                     }
                     catch (InterruptedException e2) {
@@ -141,27 +142,27 @@ public class AddTestProcessAction extends AnAction implements DumbAware {
             public void run(ProgressIndicator indicator) {
                 try {
                     countTo(1000, each -> {
-                        indicator.setText("Found: " + each / 20 + 1);
+                        indicator.setText(LocalizeValue.of("Found: " + each / 20 + 1));
                         if (each / 10.0 == Math.round(each / 10.0)) {
-                            indicator.setText(null);
+                            indicator.setText(LocalizeValue.empty());
                         }
                         indicator.setFraction(each / 1000.0);
 
                         try {
-                            Thread.currentThread().sleep(100);
+                            Thread.sleep(100);
                         }
                         catch (InterruptedException e1) {
                             e1.printStackTrace();
                         }
 
                         indicator.checkCanceled();
-                        indicator.setText2("bla bla bla");
+                        indicator.setText2(LocalizeValue.of("bla bla bla"));
                     });
                     indicator.stop();
                 }
                 catch (ProcessCanceledException e1) {
                     try {
-                        Thread.currentThread().sleep(2000);
+                        Thread.sleep(2000);
                         indicator.stop();
                     }
                     catch (InterruptedException e2) {

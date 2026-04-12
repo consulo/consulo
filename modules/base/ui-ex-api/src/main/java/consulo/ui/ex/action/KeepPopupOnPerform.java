@@ -11,7 +11,7 @@ public enum KeepPopupOnPerform {
      * <p>
      * Use it explicitly for slow and heavy toggles or toggles that open windows or destroy menus.
      */
-    Never,
+    NEVER(false, false),
 
     /**
      * Keep a popup open only if the user explicitly requests that via a keyboard modifier.
@@ -23,7 +23,7 @@ public enum KeepPopupOnPerform {
      *
      * @see UISettings#getKeepPopupsForToggles()
      */
-    IfRequested,
+    IF_REQUESTED(true, false),
 
     /**
      * Keep a popup if the user explicitly requests that via a keyboard modifier,
@@ -34,11 +34,41 @@ public enum KeepPopupOnPerform {
      *
      * @see ToggleAction
      */
-    IfPreferred,
+    IF_PREFERRED(false, true),
 
     /**
      * Keep a popup when an action is performed in all circumstances.
      * That is for toggles that modify their popups in some way.
      */
-    Always
+    ALWAYS(true, true);
+
+    private final boolean myKeepPopupIfRequested, myKeepPopupIfPreferred;
+
+    KeepPopupOnPerform(boolean keepPopupIfRequested, boolean keepPopupIfPreferred) {
+        myKeepPopupIfRequested = keepPopupIfRequested;
+        myKeepPopupIfPreferred = keepPopupIfPreferred;
+    }
+
+    public boolean isKeepPopupIfRequested() {
+        return myKeepPopupIfRequested;
+    }
+
+    public boolean isKeepPopupIfPreferred() {
+        return myKeepPopupIfPreferred;
+    }
+
+    public static KeepPopupOnPerform of(boolean keepPopupIfRequested, boolean keepPopupIfPreferred) {
+        if (keepPopupIfRequested && keepPopupIfPreferred) {
+            return ALWAYS;
+        }
+        else if (keepPopupIfRequested) {
+            return IF_REQUESTED;
+        }
+        else if (keepPopupIfPreferred) {
+            return IF_PREFERRED;
+        }
+        else {
+            return NEVER;
+        }
+    }
 }

@@ -64,7 +64,7 @@ public class ContextHelpAction extends AnAction implements DumbAware {
         }
         else {
             presentation.setIcon(PlatformIconGroup.actionsHelp());
-            presentation.setTextValue(CommonLocalize.buttonHelp());
+            presentation.setText(CommonLocalize.buttonHelp());
         }
     }
 }

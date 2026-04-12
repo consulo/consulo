@@ -83,7 +83,7 @@ public abstract class BundleType extends SdkType {
                 }
             }
         };
-        descriptor.withTitleValue(ProjectLocalize.sdkConfigureHomeTitle(getDisplayName()));
+        descriptor.withTitle(ProjectLocalize.sdkConfigureHomeTitle(getDisplayName()));
         return descriptor;
     }
 

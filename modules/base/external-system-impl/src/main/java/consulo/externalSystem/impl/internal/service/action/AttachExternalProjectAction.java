@@ -54,12 +54,12 @@ public class AttachExternalProjectAction extends AnAction implements DumbAware {
         ProjectSystemId externalSystemId = e.getData(ExternalSystemDataKeys.EXTERNAL_SYSTEM_ID);
         if (externalSystemId != null) {
             LocalizeValue displayName = externalSystemId.getDisplayName();
-            e.getPresentation().setTextValue(ExternalSystemLocalize.actionAttachExternalProject0Text(displayName));
-            e.getPresentation().setDescriptionValue(ExternalSystemLocalize.actionAttachExternalProject0Description(displayName));
+            e.getPresentation().setText(ExternalSystemLocalize.actionAttachExternalProject0Text(displayName));
+            e.getPresentation().setDescription(ExternalSystemLocalize.actionAttachExternalProject0Description(displayName));
         }
         else {
-            e.getPresentation().setTextValue(ExternalSystemLocalize.actionAttachExternalProjectText());
-            e.getPresentation().setDescriptionValue(ExternalSystemLocalize.actionAttachExternalProjectDescription());
+            e.getPresentation().setText(ExternalSystemLocalize.actionAttachExternalProjectText());
+            e.getPresentation().setDescription(ExternalSystemLocalize.actionAttachExternalProjectDescription());
         }
     }
 

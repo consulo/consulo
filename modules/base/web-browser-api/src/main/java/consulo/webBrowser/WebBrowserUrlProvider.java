@@ -58,7 +58,6 @@ public abstract class WebBrowserUrlProvider {
         return null;
     }
 
-    
     public Collection<Url> getUrls(OpenInBrowserRequest request) throws BrowserException {
         return ContainerUtil.createMaybeSingletonList(getUrl(request, request.getVirtualFile()));
     }

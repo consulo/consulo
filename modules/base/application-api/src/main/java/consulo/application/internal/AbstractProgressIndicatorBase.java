@@ -144,22 +144,22 @@ public class AbstractProgressIndicatorBase extends UserDataHolderBase implements
   }
 
   @Override
-  public void setTextValue(LocalizeValue text) {
+  public void setText(LocalizeValue text) {
     myText = text;
   }
 
   @Override
-  public LocalizeValue getTextValue() {
+  public LocalizeValue getText() {
     return myText;
   }
 
   @Override
-  public void setText2Value(LocalizeValue text) {
+  public void setText2(LocalizeValue text) {
     myText2 = text;
   }
 
   @Override
-  public LocalizeValue getText2Value() {
+  public LocalizeValue getText2() {
     return myText2;
   }
 
@@ -200,8 +200,8 @@ public class AbstractProgressIndicatorBase extends UserDataHolderBase implements
     synchronized (getLock()) {
       LocalizeValue oldText = Objects.requireNonNull(myTextStack).pop();
       LocalizeValue oldText2 = Objects.requireNonNull(myText2Stack).pop();
-      setTextValue(oldText);
-      setText2Value(oldText2);
+      setText(oldText);
+      setText2(oldText2);
 
       double oldFraction = Objects.requireNonNull(myFractionStack).removeByIndex(myFractionStack.size() - 1);
       if (!isIndeterminate()) {
@@ -291,8 +291,8 @@ public class AbstractProgressIndicatorBase extends UserDataHolderBase implements
       myCanceled = indicator.isCanceled();
       myFraction = indicator.getFraction();
       myIndeterminate = indicator.isIndeterminate();
-      myText = indicator.getTextValue();
-      myText2 = indicator.getText2Value();
+      myText = indicator.getText();
+      myText2 = indicator.getText2();
 
       myFraction = indicator.getFraction();
 

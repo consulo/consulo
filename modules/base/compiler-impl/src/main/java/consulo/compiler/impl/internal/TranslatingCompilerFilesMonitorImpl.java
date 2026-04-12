@@ -610,7 +610,7 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
         for (VirtualFile srcRoot : roots) {
             if (indicator != null) {
                 projRef.get();
-                indicator.setText2Value(LocalizeValue.ofNullable(srcRoot.getPresentableUrl()));
+                indicator.setText2(LocalizeValue.ofNullable(srcRoot.getPresentableUrl()));
                 indicator.setFraction(++processed / (double) totalRootCount);
             }
             if (isNewRoots) {
@@ -799,7 +799,7 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
                 int processed = projectRoots.size();
                 for (VirtualFile root : intermediateRoots) {
                     projRef.get();
-                    indicator.setText2Value(LocalizeValue.ofNullable(root.getPresentableUrl()));
+                    indicator.setText2(LocalizeValue.ofNullable(root.getPresentableUrl()));
                     indicator.setFraction(++processed / (double) totalRootsCount);
 
                     TranslationCompilerFilesMonitorVfsListener.processRecursively(root, false, processor);

@@ -53,9 +53,7 @@ public class AnalyzeDependenciesOnSpecifiedTargetAction extends AnAction {
         Presentation presentation = e.getPresentation();
         if (module != null && scope != null) {
             presentation.setVisible(true);
-            presentation.setTextValue(
-                CodeInsightLocalize.actionShowDependenciesOnTargetOnScopeText(module.getName(), scope.getDisplayName())
-            );
+            presentation.setText(CodeInsightLocalize.actionShowDependenciesOnTargetOnScopeText(module.getName(), scope.getDisplayName()));
         }
         else {
             presentation.setVisible(false);

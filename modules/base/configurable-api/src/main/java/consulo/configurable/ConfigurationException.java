@@ -47,16 +47,8 @@ public class ConfigurationException extends Exception {
         this(LocalizeValue.ofNullable(message), LocalizeValue.ofNullable(title));
     }
 
-    //TODO: rename into getTitle after deprecation removal
-    
-    public LocalizeValue getTitleValue() {
+    public LocalizeValue getTitle() {
         return myTitle;
-    }
-
-    @Deprecated
-    @DeprecationInfo("Use getTitleValue()")
-    public @Nullable String getTitle() {
-        return getTitleValue().getNullIfEmpty();
     }
 
     public void setQuickFix(Runnable quickFix) {
