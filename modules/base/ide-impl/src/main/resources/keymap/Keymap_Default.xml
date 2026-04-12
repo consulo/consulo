@@ -268,6 +268,9 @@
   <action id="GotoAction">
     <keyboard-shortcut first-keystroke="control shift A"/>
   </action>
+  <action id="TextSearchAction">
+    <keyboard-shortcut first-keystroke="control shift alt E"/>
+  </action>
   <action id="RunInspection">
     <keyboard-shortcut first-keystroke="control shift alt I"/>
   </action>

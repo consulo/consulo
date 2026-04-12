@@ -432,6 +432,9 @@
   <action id="GotoSymbol">
     <keyboard-shortcut first-keystroke="meta alt O"/>
   </action>
+  <action id="TextSearchAction">
+    <keyboard-shortcut first-keystroke="meta shift alt E"/>
+  </action>
   <action id="GotoFile">
     <keyboard-shortcut first-keystroke="meta shift O"/>
   </action>
