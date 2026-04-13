@@ -16,6 +16,7 @@
 
 package consulo.language.parser;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
@@ -37,21 +38,18 @@ public abstract class PsiBuilderFactory {
         return Application.get().getInstance(PsiBuilderFactory.class);
     }
 
-    
     public abstract PsiBuilder createBuilder(
         Project project,
         ASTNode chameleon,
         LanguageVersion languageVersion
     );
 
-    
     public abstract PsiBuilder createBuilder(
         Project project,
         LighterLazyParseableNode chameleon,
         LanguageVersion languageVersion
     );
 
-    
     public abstract PsiBuilder createBuilder(
         Project project,
         ASTNode chameleon,
@@ -61,7 +59,6 @@ public abstract class PsiBuilderFactory {
         CharSequence seq
     );
 
-    
     public abstract PsiBuilder createBuilder(
         Project project,
         LighterLazyParseableNode chameleon,
@@ -71,11 +68,37 @@ public abstract class PsiBuilderFactory {
         CharSequence seq
     );
 
-    
     public abstract PsiBuilder createBuilder(
         ParserDefinition parserDefinition,
         Lexer lexer,
         LanguageVersion languageVersion,
         CharSequence seq
     );
+
+    // region idea compatibility
+    /**
+     * Legacy method - but need compatibility with idea like plugins
+     */
+    @Deprecated
+    @DeprecationInfo("Prefer with select LanguageVersion")
+    public PsiBuilder createBuilder(
+        ParserDefinition parserDefinition,
+        Lexer lexer,
+        CharSequence seq
+    ) {
+        return createBuilder(parserDefinition, lexer, parserDefinition.getLanguage().getVersions()[0], seq);
+    }
+
+    @Deprecated
+    @DeprecationInfo("Prefer with select LanguageVersion")
+    public PsiBuilder createBuilder(
+        Project project,
+        ASTNode chameleon,
+        @Nullable Lexer lexer,
+        Language lang,
+        CharSequence seq
+    ) {
+        return createBuilder(project, chameleon, lexer, lang, lang.getVersions()[0], seq);
+    }
+    // endregion
 }
