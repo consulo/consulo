@@ -165,8 +165,8 @@ class JComboboxAction extends AnAction implements CustomComponentAction {
         @Override
         public Dimension getPreferredSize() {
             return new Dimension(
-                JBUI.scale(125),
-                ActionToolbar.DEFAULT_MINIMUM_BUTTON_SIZE.height() + getInsets().top + getInsets().bottom
+                JBUI.scale(120),
+                28
             );
         }
 

@@ -522,7 +522,6 @@ public class RunAnythingPopupUI extends BigPopupUI {
         myHintLabel.setText(s);
     }
 
-    
     public static Executor getExecutor() {
         Executor runExecutor = DefaultRunExecutor.getRunExecutorInstance();
         Executor debugExecutor = ExecutorRegistry.getInstance().getExecutorById(ToolWindowId.DEBUG);

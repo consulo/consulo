@@ -23,6 +23,7 @@ import consulo.dataContext.DataProvider;
 import consulo.disposer.Disposer;
 import consulo.ide.impl.find.PsiElement2UsageTargetAdapter;
 import consulo.ide.impl.idea.ide.actions.BigPopupUI;
+import consulo.ide.impl.idea.ui.WindowMoveListener;
 import consulo.ide.impl.idea.ide.actions.SearchEverywhereClassifier;
 import consulo.ide.impl.idea.ide.actions.bigPopup.ShowFilterAction;
 import consulo.ide.impl.idea.ide.util.gotoByName.SearchEverywhereConfiguration;
@@ -31,7 +32,7 @@ import consulo.ide.impl.idea.ui.IdeUICustomization;
 import consulo.ide.impl.idea.ui.popup.PopupUpdateProcessor;
 import consulo.ide.impl.idea.usages.UsageLimitUtil;
 import consulo.ide.impl.idea.usages.impl.UsageViewManagerImpl;
-import consulo.ide.impl.ui.ToolwindowPaintUtil;
+
 import consulo.ide.localize.IdeLocalize;
 import consulo.language.editor.PlatformDataKeys;
 import consulo.language.psi.PsiElement;
@@ -114,6 +115,8 @@ public class SearchEverywhereUI extends BigPopupUI implements DataProvider, Quic
     private final PersistentSearchEverywhereContributorFilter<String> myContributorsFilter;
     private ActionToolbar myToolbar;
     private @Nullable ActionToolbar myRightActionsToolbar;
+    private JTabbedPane myTabbedPane;
+    private boolean mySwitchingTab;
 
     @RequiredUIAccess
     public SearchEverywhereUI(Project project, List<? extends SearchEverywhereContributor<?>> contributors) {
@@ -238,6 +241,18 @@ public class SearchEverywhereUI extends BigPopupUI implements DataProvider, Quic
         mySelectedTab = tab;
         boolean nextTabIsAll = isAllTabSelected();
 
+        // Sync JTabbedPane selection
+        int tabIndex = myTabs.indexOf(tab);
+        if (tabIndex >= 0 && myTabbedPane.getSelectedIndex() != tabIndex) {
+            mySwitchingTab = true;
+            try {
+                myTabbedPane.setSelectedIndex(tabIndex);
+            }
+            finally {
+                mySwitchingTab = false;
+            }
+        }
+
         if (myEverywhereAutoSet && isEverywhere() && canToggleEverywhere()) {
             setEverywhereAuto(false);
         }
@@ -255,7 +270,6 @@ public class SearchEverywhereUI extends BigPopupUI implements DataProvider, Quic
             myToolbar.updateActionsAsync();
         }
         updateRightActions();
-        repaint();
         rebuildList();
     }
 
@@ -399,28 +413,29 @@ public class SearchEverywhereUI extends BigPopupUI implements DataProvider, Quic
         myToolbar.updateActionsAsync();
         JComponent toolbarComponent = myToolbar.getComponent();
         toolbarComponent.setOpaque(false);
-        toolbarComponent.setBorder(JBUI.Borders.empty(2, 18, 2, 9));
+        toolbarComponent.setBorder(JBUI.Borders.empty(2, 0, 2, 0));
         return toolbarComponent;
     }
 
-    
     public CompletableFuture<?> updateToolbarFuture() {
-        if (myToolbar == null) {
+        List<CompletableFuture<?>> futures = new ArrayList<>();
+        if (myToolbar != null) {
+            futures.add(myToolbar.updateActionsAsync());
+        }
+        if (myRightActionsToolbar != null) {
+            futures.add(myRightActionsToolbar.updateActionsAsync());
+        }
+        if (futures.isEmpty()) {
             return CompletableFuture.completedFuture(null);
         }
-        return myToolbar.updateActionsAsync();
+        return CompletableFuture.allOf(futures.toArray(CompletableFuture[]::new));
     }
 
-    
     @Override
-    protected String getInitialHint() {
-        return IdeLocalize.searcheverywhereHistoryShortcutsHint(
-            KeymapUtil.getKeystrokeText(SearchTextField.ALT_SHOW_HISTORY_KEYSTROKE),
-            KeymapUtil.getKeystrokeText(SearchTextField.SHOW_HISTORY_KEYSTROKE)
-        ).get();
+    public boolean supportsInitialHint() {
+        return false;
     }
 
-    
     @Override
     protected TextBoxWithExtensions createSearchField() {
         TextBoxWithExtensions field = super.createSearchField();
@@ -438,40 +453,109 @@ public class SearchEverywhereUI extends BigPopupUI implements DataProvider, Quic
     
     @Override
     @RequiredUIAccess
-    protected JPanel createTopLeftPanel() {
-        JPanel contributorsPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
-        contributorsPanel.setBorder(JBUI.Borders.empty(0, 12, 0, 0));
-        contributorsPanel.setOpaque(false);
+    protected JComponent createTopLeftPanel() {
+        myTabbedPane = new JTabbedPane(JTabbedPane.TOP);
+        myTabbedPane.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
+        myTabbedPane.putClientProperty("JTabbedPane.tabHeight", 30);
+        myTabbedPane.setOpaque(false);
 
+        // "All" tab
         SETab allTab = new SETab(null);
-        contributorsPanel.add(allTab);
         myTabs.add(allTab);
+        myTabbedPane.addTab(allTab.getTabName(), createEmptyTabContent());
 
+        // Contributor-specific tabs
         myShownContributors.stream()
             .filter(SearchEverywhereContributor::isShownInSeparateTab)
             .forEach(contributor -> {
                 SETab tab = new SETab(contributor);
-                contributorsPanel.add(tab);
                 myTabs.add(tab);
+                myTabbedPane.addTab(tab.getTabName(), createEmptyTabContent());
             });
 
-        return contributorsPanel;
+        // Wire tab selection to switchToTab
+        myTabbedPane.addChangeListener(e -> {
+            if (!mySwitchingTab) {
+                int index = myTabbedPane.getSelectedIndex();
+                if (index >= 0 && index < myTabs.size()) {
+                    switchToTab(myTabs.get(index));
+                }
+            }
+        });
+
+        // Remove content area and its border — we only use tabs for navigation
+        myTabbedPane.putClientProperty("JTabbedPane.hasFullBorder", false);
+        myTabbedPane.putClientProperty("JTabbedPane.showContentSeparator", false);
+        // Use FlatLaf tabsPopupPolicy to avoid popup for scroll tabs
+        myTabbedPane.putClientProperty("JTabbedPane.tabsPopupPolicy", "never");
+
+        return myTabbedPane;
     }
 
-    private class SETab extends JLabel {
+    private static JComponent createEmptyTabContent() {
+        JPanel panel = new JPanel() {
+            @Override
+            public Dimension getPreferredSize() {
+                return new Dimension(0, 0);
+            }
+
+            @Override
+            public Dimension getMinimumSize() {
+                return new Dimension(0, 0);
+            }
+
+            @Override
+            public Dimension getMaximumSize() {
+                return new Dimension(0, 0);
+            }
+        };
+        panel.setOpaque(false);
+        return panel;
+    }
+
+    @Override
+    protected JComponent createTopPanel(JComponent topLeftPanel, JComponent settingsPanel) {
+        JPanel settingsWrapper = new JPanel(new BorderLayout());
+        settingsWrapper.setOpaque(false);
+        settingsWrapper.add(settingsPanel, BorderLayout.EAST);
+
+        myTabbedPane.putClientProperty("JTabbedPane.trailingComponent", settingsWrapper);
+
+        JPanel top = new JPanel(new BorderLayout());
+        top.setOpaque(false);
+        top.add(myTabbedPane, BorderLayout.CENTER);
+        top.setBorder(JBUI.Borders.merge(
+            JBUI.Borders.customLine(JBCurrentTheme.BigPopup.searchFieldBorderColor(), 0, 0, 1, 0),
+            JBUI.Borders.empty(0, 4, 0, 0),
+            true
+        ));
+
+        // Add WindowMoveListener to the tabbed pane since it consumes mouse events
+        WindowMoveListener moveListener = new WindowMoveListener(this);
+        myTabbedPane.addMouseListener(moveListener);
+        myTabbedPane.addMouseMotionListener(moveListener);
+
+        return top;
+    }
+
+    private class SETab {
         final SearchEverywhereContributor<?> contributor;
         final List<AnAction> actions;
         final SearchEverywhereToggleAction everywhereAction;
+        final String tabName;
 
         @RequiredUIAccess
         SETab(@Nullable SearchEverywhereContributor<?> contributor) {
-            super(contributor == null ? IdeLocalize.searcheverywhereAllelementsTabName().get() : contributor.getGroupName());
             this.contributor = contributor;
+            this.tabName = contributor == null
+                ? IdeLocalize.searcheverywhereAllelementsTabName().get()
+                : contributor.getGroupName();
             @RequiredUIAccess
             Runnable onChanged = () -> {
                 myToolbar.updateActionsAsync();
                 rebuildList();
             };
+
             if (contributor == null) {
                 LocalizeValue text = IdeLocalize.checkboxIncludeNonProjectItems(IdeUICustomization.getInstance().getProjectConceptName());
                 CheckBoxSearchEverywhereToggleAction checkBox = new CheckBoxSearchEverywhereToggleAction(text) {
@@ -496,15 +580,10 @@ public class SearchEverywhereUI extends BigPopupUI implements DataProvider, Quic
                 actions = new ArrayList<>(contributor.getActions(onChanged));
             }
             everywhereAction = (SearchEverywhereToggleAction) ContainerUtil.find(actions, o -> o instanceof SearchEverywhereToggleAction);
-            Insets insets = JBCurrentTheme.BigPopup.tabInsets();
-            setBorder(JBUI.Borders.empty(insets.top, insets.left, insets.bottom, insets.right));
-            addMouseListener(new MouseAdapter() {
-                @Override
-                @RequiredUIAccess
-                public void mousePressed(MouseEvent e) {
-                    switchToTab(SETab.this);
-                }
-            });
+        }
+
+        public String getTabName() {
+            return tabName;
         }
 
         public String getID() {
@@ -515,27 +594,6 @@ public class SearchEverywhereUI extends BigPopupUI implements DataProvider, Quic
 
         public Optional<SearchEverywhereContributor<?>> getContributor() {
             return Optional.ofNullable(contributor);
-        }
-
-        @Override
-        public Dimension getPreferredSize() {
-            Dimension size = super.getPreferredSize();
-            size.height = JBUIScale.scale(29);
-            return size;
-        }
-
-        @Override
-        public boolean isOpaque() {
-            return mySelectedTab == this;
-        }
-
-        @Override
-        public void paint(Graphics g) {
-            super.paint(g);
-
-            if (mySelectedTab == this) {
-                ToolwindowPaintUtil.paintUnderlineColor((Graphics2D) g, 0, 0, getWidth(), getHeight(), true);
-            }
         }
     }
 
@@ -575,7 +633,7 @@ public class SearchEverywhereUI extends BigPopupUI implements DataProvider, Quic
             DumbService.getInstance(myProject).filterByDumbAwareness(contributorsMap.keySet());
         if (contributors.isEmpty() && DumbService.isDumb(myProject)) {
             myResultsList.setEmptyText(
-                IdeLocalize.searcheverywhereIndexingModeNotSupported(mySelectedTab.getText(), Application.get().getName()).get()
+                IdeLocalize.searcheverywhereIndexingModeNotSupported(mySelectedTab.getTabName(), Application.get().getName()).get()
             );
             myListModel.clear();
             return;
@@ -583,7 +641,7 @@ public class SearchEverywhereUI extends BigPopupUI implements DataProvider, Quic
         if (contributors.size() != contributorsMap.size()) {
             myResultsList.setEmptyText(
                 IdeLocalize.searcheverywhereIndexingIncompleteResults(
-                    mySelectedTab.getText(),
+                    mySelectedTab.getTabName(),
                     Application.get().getName()
                 ).get()
             );

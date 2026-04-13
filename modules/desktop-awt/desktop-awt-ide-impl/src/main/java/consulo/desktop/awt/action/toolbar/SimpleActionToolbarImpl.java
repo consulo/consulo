@@ -21,6 +21,7 @@ import consulo.ui.ex.awt.action.CustomComponentAction;
 import consulo.ui.ex.awt.util.ColorUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.keymap.KeymapManager;
+import consulo.ui.layout.DockLayout;
 import consulo.util.dataholder.Key;
 import org.jspecify.annotations.Nullable;
 

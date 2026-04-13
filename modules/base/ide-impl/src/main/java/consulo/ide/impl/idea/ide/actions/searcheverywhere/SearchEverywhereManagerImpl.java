@@ -120,6 +120,10 @@ public class SearchEverywhereManagerImpl implements SearchEverywhereManager {
     }
 
     private void showPopupLater(@Nullable Project project) {
+        // Ensure layout is up to date before calculating sizes
+        mySearchEverywhereUI.revalidate();
+        mySearchEverywhereUI.doLayout();
+
         Dimension size = mySearchEverywhereUI.getMinimumSize();
         JBInsets.addTo(size, myBalloon.getContent().getInsets());
         myBalloon.setMinimumSize(size);
@@ -136,6 +140,14 @@ public class SearchEverywhereManagerImpl implements SearchEverywhereManager {
         if (mySearchEverywhereUI.getViewType() == SearchEverywhereUI.ViewType.SHORT) {
             myBalloonFullSize = TargetAWT.to(ProjectWindowStateService.getInstance(myProject).getSize(LOCATION_SETTINGS_KEY));
             Dimension prefSize = mySearchEverywhereUI.getPreferredSize();
+            myBalloon.setSize(prefSize);
+        }
+        else {
+            // If already in FULL mode (e.g. from restored search text), use the preferred size directly
+            Dimension prefSize = mySearchEverywhereUI.getPreferredSize();
+            JBInsets.addTo(prefSize, myBalloon.getContent().getInsets());
+            prefSize.width = Math.max(prefSize.width, size.width);
+            prefSize.height = Math.max(prefSize.height, size.height);
             myBalloon.setSize(prefSize);
         }
         calcPositionAndShow(project, myBalloon);

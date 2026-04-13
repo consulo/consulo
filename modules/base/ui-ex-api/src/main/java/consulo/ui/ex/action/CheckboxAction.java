@@ -23,6 +23,7 @@ import consulo.ui.CheckBoxStyle;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
+import consulo.ui.layout.DockLayout;
 import org.jspecify.annotations.Nullable;
 
 /**
@@ -45,7 +46,6 @@ public abstract class CheckboxAction extends ToggleAction implements CustomUICom
     }
 
     @RequiredUIAccess
-    
     @Override
     public CheckBox createCustomComponent(Presentation presentation, String place) {
         LocalizeValue textValue = presentation.getTextValue();

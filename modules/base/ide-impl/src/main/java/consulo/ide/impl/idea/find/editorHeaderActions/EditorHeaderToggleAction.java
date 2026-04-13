@@ -53,7 +53,6 @@ public abstract class EditorHeaderToggleAction extends CheckboxAction implements
     }
 
     @RequiredUIAccess
-    
     @Override
     public CheckBox createCustomComponent(Presentation presentation, String place) {
         CheckBox customComponent = super.createCustomComponent(presentation, place);

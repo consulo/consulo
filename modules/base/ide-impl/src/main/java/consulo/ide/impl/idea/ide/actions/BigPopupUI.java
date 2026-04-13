@@ -42,35 +42,44 @@ public abstract class BigPopupUI extends BorderLayoutPanel implements Disposable
         myProject = project;
     }
 
-    
     public abstract JBList<Object> createList();
 
-    
     protected abstract ListCellRenderer<Object> createCellRenderer();
 
-    
-    protected abstract JPanel createTopLeftPanel();
+    protected abstract JComponent createTopLeftPanel();
 
-    
     protected abstract JComponent createSettingsPanel();
 
-    
-    protected abstract String getInitialHint();
+    public boolean supportsInitialHint() {
+        return true;
+    }
+
+    protected String getInitialHint() {
+        return null;
+    }
 
     protected void installScrollingActions() {
         ScrollingUtil.installActions(myResultsList, (JComponent)TargetAWT.to(getSearchField()));
     }
 
-    
     protected TextBoxWithExtensions createSearchField() {
         return TextBoxWithExtensions.create();
+    }
+
+    protected JComponent createTopPanel(JComponent topLeftPanel, JComponent settingsPanel) {
+        JPanel top = new JPanel(new BorderLayout());
+        top.setOpaque(false);
+        top.add(topLeftPanel, BorderLayout.WEST);
+        top.add(settingsPanel, BorderLayout.EAST);
+        top.setBorder(JBUI.Borders.customLine(JBCurrentTheme.BigPopup.searchFieldBorderColor(), 0, 0, 1, 0));
+        return top;
     }
 
     @RequiredUIAccess
     public void init() {
         myResultsList = createList();
 
-        JPanel topLeftPanel = createTopLeftPanel();
+        JComponent topLeftPanel = createTopLeftPanel();
         JComponent settingsPanel = createSettingsPanel();
         mySearchField = createSearchField();
         mySearchField.addBorder(BorderPosition.TOP, BorderStyle.EMPTY, null, 8);
@@ -90,11 +99,7 @@ public abstract class BigPopupUI extends BorderLayoutPanel implements Disposable
 
         installScrollingActions();
 
-        JPanel top = new JPanel(new BorderLayout());
-        top.setOpaque(false);
-        top.add(topLeftPanel, BorderLayout.WEST);
-        top.add(settingsPanel, BorderLayout.EAST);
-        top.setBorder(JBUI.Borders.customLine(JBCurrentTheme.BigPopup.searchFieldBorderColor(), 0, 0, 1, 0));
+        JComponent top = createTopPanel(topLeftPanel, settingsPanel);
 
         JPanel topPanel = new JPanel(new BorderLayout());
         topPanel.setOpaque(false);
@@ -132,7 +137,6 @@ public abstract class BigPopupUI extends BorderLayoutPanel implements Disposable
         });
     }
 
-    
     protected String getSearchPattern() {
         return Optional.ofNullable(mySearchField).map(TextBoxWithExtensions::getValue).orElse("");
     }
@@ -154,16 +158,17 @@ public abstract class BigPopupUI extends BorderLayoutPanel implements Disposable
         resultsScroll.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         UIUtil.putClientProperty(resultsScroll.getVerticalScrollBar(), JBScrollPane.IGNORE_SCROLLBAR_IN_INSETS, true);
 
-        resultsScroll.setPreferredSize(JBUI.size(670, JBCurrentTheme.BigPopup.maxListHeight()));
+        resultsScroll.setPreferredSize(JBUI.size(758, JBCurrentTheme.BigPopup.maxListHeight()));
         pnl.add(resultsScroll, BorderLayout.CENTER);
 
-        myHintLabel = createHint();
-        pnl.add(myHintLabel, BorderLayout.SOUTH);
+        if (supportsInitialHint()) {
+            myHintLabel = createHint();
+            pnl.add(myHintLabel, BorderLayout.SOUTH);
+        }
 
         return pnl;
     }
 
-    
     private JLabel createHint() {
         String hint = getInitialHint();
         JLabel hintLabel = HintUtil.createAdComponent(hint, JBCurrentTheme.BigPopup.advertiserBorder(), SwingConstants.LEFT);
@@ -176,7 +181,6 @@ public abstract class BigPopupUI extends BorderLayoutPanel implements Disposable
         return hintLabel;
     }
 
-    
     public TextBoxWithExtensions getSearchField() {
         return mySearchField;
     }
@@ -187,6 +191,7 @@ public abstract class BigPopupUI extends BorderLayoutPanel implements Disposable
         if (getViewType() == ViewType.FULL) {
             size.height += MINIMAL_SUGGESTIONS_LIST_HEIGHT;
         }
+        size.width = Math.max(size.width, JBUI.scale(758));
         return size;
     }
 
