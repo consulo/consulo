@@ -51,6 +51,7 @@ import jakarta.inject.Inject;
 
 import javax.swing.*;
 import java.io.File;
+import java.util.List;
 
 /**
  * @author VISTALL
@@ -194,7 +195,14 @@ public class NewProjectAction extends DumbAwareAction {
             return;
         }
 
-        VirtualFile baseDir = WriteAction.compute(() -> LocalFileSystem.getInstance().refreshAndFindFileByIoFile(location));
+        WriteAction.run(() -> LocalFileSystem.getInstance().refreshIoFiles(List.of(location), false, true, null));
+
+        VirtualFile baseDir = LocalFileSystem.getInstance().findFileByIoFile(location);
+        if (baseDir == null) {
+            Messages.showErrorDialog("Directory '" + location + "' is not resolved.", "Create New Project");
+            return;
+        }
+
         baseDir.refresh(false, true);
 
         if (childCount > 0) {
