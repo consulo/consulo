@@ -71,7 +71,7 @@ public class DateTimeFormatCache {
     private SyncDateFormat[] getDateTimeFormats(Application application) {
         Platform platform = Platform.current();
 
-        @ReviewAfterIssueFix(value = "github.com/uber/NullAway/issues/1504", todo = "Remove explicit casts")
+        @ReviewAfterIssueFix(value = "github.com/uber/NullAway/issues/1500", todo = "Remove explicit casts")
         DateFormat[] res = application.getExtensionPoint(DateTimeFormatProvider.class)
             .computeSafeIfAny((Function<DateTimeFormatProvider, DateFormat @Nullable []>) it -> it.getFormats(platform));
 

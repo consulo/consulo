@@ -1,13 +1,13 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.virtualFileSystem.util;
 
-import consulo.annotation.ReviewAfterIssueFix;
 import consulo.virtualFileSystem.VFileProperty;
 import consulo.virtualFileSystem.VirtualFile;
 import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayDeque;
 import java.util.Deque;
+import java.util.Objects;
 
 /**
  * @author Dmitry Avdeev
@@ -69,7 +69,7 @@ public abstract class VirtualFileVisitor<T> {
   private int myDepthLimit = -1;
 
   private int myLevel;
-  private @Nullable Deque<@Nullable T> myValueStack = null;
+  private @Nullable Deque<T> myValueStack = null;
   private @Nullable T myValue = null;
 
   protected VirtualFileVisitor(Option... options) {
@@ -168,12 +168,10 @@ public abstract class VirtualFileVisitor<T> {
     return myDepthLimit >= 0 && myLevel >= myDepthLimit;
   }
 
-  @ReviewAfterIssueFix(value = "github.com/uber/NullAway/issues/1506", todo = "Remove NullAway suppression")
-  @SuppressWarnings("NullAway")
   final void saveValue() {
     ++myLevel;
     if (myValueStack != null) {
-      myValueStack.push(myValue);
+      myValueStack.push(Objects.requireNonNull(myValue));
     }
   }
 

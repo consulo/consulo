@@ -15,6 +15,7 @@
  */
 package consulo.util.collection;
 
+import consulo.annotation.ReviewAfterIssueFix;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.function.Functions;
 import consulo.util.lang.function.MonoFunction;
@@ -218,6 +219,8 @@ public abstract class JBIterator<E> implements Iterator<E> {
     return (JBIterable<Function<Object, Object>>)(JBIterable)operationsImpl().map(op -> op.impl).filter(Function.class);
   }
 
+  @ReviewAfterIssueFix(value = "github.com/uber/NullAway/issues/1500", todo = "Remove NullAway suppression")
+  @SuppressWarnings("NullAway")
   private JBIterable<Op> operationsImpl() {
     return JBIterable.generate(myFirstOp, op -> op.nextOp);
   }

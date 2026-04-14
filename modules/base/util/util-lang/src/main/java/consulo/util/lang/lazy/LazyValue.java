@@ -20,7 +20,6 @@ import consulo.util.lang.lazy.impl.AtomicLazyValueImpl;
 import consulo.util.lang.lazy.impl.DefaultLazyValueImpl;
 import consulo.util.lang.lazy.impl.NonNullLazyValueWithModCountImpl;
 import consulo.util.lang.lazy.impl.NullableLazyValueImpl;
-import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
 import java.util.function.LongSupplier;
@@ -43,7 +42,7 @@ public interface LazyValue<T extends @Nullable Object> extends Supplier<T> {
     return new NonNullLazyValueWithModCountImpl<>(factory, modCount);
   }
 
-  @ReviewAfterIssueFix(value = "github.com/uber/NullAway/issues/1504", todo = "Remove explicit generics in new NullableLazyValueImpl call")
+  @ReviewAfterIssueFix(value = "github.com/uber/NullAway/issues/1532", todo = "Remove explicit generics in new NullableLazyValueImpl call")
   static <K> LazyValue<@Nullable K> nullable(Supplier<@Nullable K> factory) {
     return new NullableLazyValueImpl<@Nullable K>(factory);
   }

@@ -36,7 +36,7 @@ import java.util.function.Function;
  */
 @ExtensionAPI(ComponentScope.PROJECT)
 public interface NewFileModuleResolver {
-    @ReviewAfterIssueFix(value = "github.com/uber/NullAway/issues/1504", todo = "Remove explicit casts")
+    @ReviewAfterIssueFix(value = "github.com/uber/NullAway/issues/1500", todo = "Remove explicit casts")
     static @Nullable Module resolveModule(Project project, VirtualFile parent, FileType newFileType) {
         return project.getExtensionPoint(NewFileModuleResolver.class)
             .computeSafeIfAny((Function<NewFileModuleResolver, @Nullable Module>) it -> it.resolveModule(parent, newFileType));

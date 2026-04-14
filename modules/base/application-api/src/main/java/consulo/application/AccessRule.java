@@ -15,7 +15,6 @@
  */
 package consulo.application;
 
-import consulo.annotation.ReviewAfterIssueFix;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.access.RequiredWriteAction;
 import consulo.logging.Logger;
@@ -41,9 +40,8 @@ public final class AccessRule {
         return ReadAction.compute(action);
     }
 
-    @ReviewAfterIssueFix(value = "github.com/uber/NullAway/issues/1504", todo = "Remove explicit casts")
     public static CompletableFuture<@Nullable Void> writeAsync(@RequiredWriteAction ThrowableRunnable<Throwable> action) {
-        return writeAsync((ThrowableSupplier<@Nullable Void, Throwable>) () -> {
+        return writeAsync(() -> {
             action.run();
             return null;
         });

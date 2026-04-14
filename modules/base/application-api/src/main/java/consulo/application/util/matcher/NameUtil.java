@@ -309,7 +309,7 @@ public final class NameUtil {
     return pattern.equals(fallbackPattern) ? buildMatcher(pattern, options) : new MatcherWithFallback(buildMatcher(pattern, options), buildMatcher(fallbackPattern, options));
   }
 
-  @ReviewAfterIssueFix(value = "github.com/uber/NullAway/issues/1502", todo = "Remove NullAway suppression")
+  @ReviewAfterIssueFix(value = "github.com/uber/NullAway/issues/1500", todo = "Remove NullAway suppression")
   @SuppressWarnings("NullAway")
   public static String capitalizeAndUnderscore(String name) {
     // NullAway problem: StringUtil::toUpperCase is conditionally nullable: it returns null only if argument is null
