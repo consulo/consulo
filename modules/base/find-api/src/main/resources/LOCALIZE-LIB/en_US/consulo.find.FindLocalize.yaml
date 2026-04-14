@@ -369,3 +369,7 @@ tooltip.close.search.bar.escape:
     text: Close
 toolwindow.find.display.name:
     text: Find
+show.in.find.window.button.name:
+    text: Open in Find Tool Window
+show.in.find.window.button.description:
+    text: Open search results in Find tool window
