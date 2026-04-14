@@ -38,6 +38,7 @@ import consulo.find.FindManager;
 import consulo.find.FindSettings;
 import consulo.find.FindUsagesHandler;
 import consulo.find.FindUsagesOptions;
+import consulo.find.localize.FindLocalize;
 import consulo.find.ui.AbstractFindUsagesDialog;
 import consulo.find.ui.AbstractFindUsagesDialogDescriptor;
 import consulo.ide.impl.find.PsiElement2UsageTargetAdapter;
@@ -498,7 +499,6 @@ public class ShowUsagesAction extends AnAction implements PopupAction {
         Disposer.register(popup, indicator::cancel);
     }
 
-    
     private static UsageNode createStringNode(Object string) {
         return new StringNode(string);
     }
@@ -508,7 +508,6 @@ public class ShowUsagesAction extends AnAction implements PopupAction {
             super(cols(cols), data, 0);
         }
 
-        
         private static ColumnInfo[] cols(int cols) {
             ColumnInfo<UsageNode, UsageNode> o = new ColumnInfo<UsageNode, UsageNode>(LocalizeValue.empty()) {
                 @Override
@@ -595,7 +594,6 @@ public class ShowUsagesAction extends AnAction implements PopupAction {
         return panel;
     }
 
-    
     private AnAction createSettingsAction(
         final FindUsagesHandler handler,
         final RelativePoint popupPosition,
@@ -680,12 +678,10 @@ public class ShowUsagesAction extends AnAction implements PopupAction {
         });
     }
 
-    
     private static String searchScopePresentableName(FindUsagesOptions options) {
         return options.searchScope.getDisplayName();
     }
 
-    
     private Runnable prepareTable(
         MyTable table,
         Editor editor,
@@ -695,7 +691,6 @@ public class ShowUsagesAction extends AnAction implements PopupAction {
         FindUsagesOptions options,
         boolean previewMode
     ) {
-
         SpeedSearchBase<JTable> speedSearch = new MySpeedSearch(table);
         speedSearch.setComparator(new SpeedSearchComparator(false));
 
@@ -795,7 +790,6 @@ public class ShowUsagesAction extends AnAction implements PopupAction {
     }
 
     @RequiredUIAccess
-    
     private JBPopup createUsagePopup(
         List<Usage> usages,
         Set<UsageNode> visibleNodes,
@@ -818,7 +812,7 @@ public class ShowUsagesAction extends AnAction implements PopupAction {
         if (title != null) {
             String result = getFullTitle(usages, title, false, visibleNodes.size() - 1, true);
             builder.setTitle(result);
-            builder.setAdText(getSecondInvocationTitle(options, handler));
+            builder.setAdText(getSecondInvocationTitle(options, handler).getNullIfEmpty());
         }
 
         builder.setMovable(true).setResizable(true);
@@ -878,8 +872,8 @@ public class ShowUsagesAction extends AnAction implements PopupAction {
     ) {
         Image icon = ToolWindowManager.getInstance(project).getLocationIcon(ToolWindowId.FIND, PlatformIconGroup.generalPin_tab());
         DumbAwareAction pinAction = new DumbAwareAction(
-            LocalizeValue.localizeTODO("Open Find Usages Toolwindow"),
-            LocalizeValue.localizeTODO("Show all usages in a separate toolwindow"),
+            FindLocalize.showInFindWindowButtonName(),
+            FindLocalize.showInFindWindowButtonDescription(),
             icon
         ) {
             {
@@ -912,7 +906,6 @@ public class ShowUsagesAction extends AnAction implements PopupAction {
         }
     }
 
-    
     private static String getFullTitle(
         List<Usage> usages,
         String title,
@@ -931,28 +924,27 @@ public class ShowUsagesAction extends AnAction implements PopupAction {
         return "<html><nobr>" + s + "</nobr></html>";
     }
 
-    private static String suggestSecondInvocation(
-        FindUsagesOptions options,
-        FindUsagesHandler handler,
-        LocalizeValue text
-    ) {
-        String title = getSecondInvocationTitle(options, handler);
+    private static String suggestSecondInvocation(FindUsagesOptions options, FindUsagesHandler handler, LocalizeValue text) {
+        LocalizeValue title = getSecondInvocationTitle(options, handler);
 
         String text2 = text.get();
-        if (title != null) {
+        if (title.isNotEmpty()) {
             text2 += "<br><small> " + title + "</small>";
         }
         return XmlStringUtil.wrapInHtml(UIUtil.convertSpace2Nbsp(text2));
     }
 
-    private static @Nullable String getSecondInvocationTitle(FindUsagesOptions options, FindUsagesHandler handler) {
+    private static LocalizeValue getSecondInvocationTitle(FindUsagesOptions options, FindUsagesHandler handler) {
         if (getShowUsagesShortcut() != null) {
             GlobalSearchScope maximalScope = FindUsagesManager.getMaximalScope(handler);
             if (!options.searchScope.equals(maximalScope)) {
-                return "Press " + KeymapUtil.getShortcutText(getShowUsagesShortcut()) + " again to search in " + maximalScope.getDisplayName();
+                return UsageLocalize.showUsagesAdvertisement(
+                    KeymapUtil.getShortcutText(getShowUsagesShortcut()),
+                    maximalScope.getDisplayName()
+                );
             }
         }
-        return null;
+        return LocalizeValue.empty();
     }
 
     @RequiredUIAccess
@@ -1016,7 +1008,6 @@ public class ShowUsagesAction extends AnAction implements PopupAction {
         return true;
     }
 
-    
     @RequiredUIAccess
     private static MyModel setTableModel(
         JTable table,
@@ -1046,7 +1037,6 @@ public class ShowUsagesAction extends AnAction implements PopupAction {
         return data.isEmpty() || data.get(0) instanceof StringNode ? 1 : 3;
     }
 
-    
     private static List<UsageNode> collectData(
         List<Usage> usages,
         Collection<UsageNode> visibleNodes,
@@ -1166,12 +1156,7 @@ public class ShowUsagesAction extends AnAction implements PopupAction {
     }
 
     // returns new selection
-    private static int updateModel(
-        MyModel tableModel,
-        List<UsageNode> listOld,
-        List<UsageNode> listNew,
-        int oldSelection
-    ) {
+    private static int updateModel(MyModel tableModel, List<UsageNode> listOld, List<UsageNode> listNew, int oldSelection) {
         UsageNode[] oa = listOld.toArray(new UsageNode[listOld.size()]);
         UsageNode[] na = listNew.toArray(new UsageNode[listNew.size()]);
         List<ModelDiff.Cmd> cmds = ModelDiff.createDiffCmds(tableModel, oa, na);
@@ -1185,12 +1170,7 @@ public class ShowUsagesAction extends AnAction implements PopupAction {
         return selection;
     }
 
-    private void setSizeAndDimensions(
-        JTable table,
-        JBPopup popup,
-        RelativePoint popupPosition,
-        List<UsageNode> data
-    ) {
+    private void setSizeAndDimensions(JTable table, JBPopup popup, RelativePoint popupPosition, List<UsageNode> data) {
         JComponent content = popup.getContent();
         Window window = SwingUtilities.windowForComponent(content);
         Dimension d = window.getSize();
@@ -1244,7 +1224,6 @@ public class ShowUsagesAction extends AnAction implements PopupAction {
             rectangle.setSize((int) rectangle.getWidth(), Math.max(roundedHeight, table.getRowHeight()));
         }
         return rectangle;
-
     }
 
     @RequiredUIAccess
@@ -1395,7 +1374,6 @@ public class ShowUsagesAction extends AnAction implements PopupAction {
             return super.getRowHeight() + 2 * MARGIN;
         }
 
-        
         @Override
         public Component prepareRenderer(TableCellRenderer renderer, int row, int column) {
             Component component = super.prepareRenderer(renderer, row, column);
@@ -1449,7 +1427,6 @@ public class ShowUsagesAction extends AnAction implements PopupAction {
             return getTable().convertRowIndexToModel(viewIndex);
         }
 
-        
         @Override
         protected Object[] getAllElements() {
             return ((MyModel) getTable().getModel()).getItems().toArray();

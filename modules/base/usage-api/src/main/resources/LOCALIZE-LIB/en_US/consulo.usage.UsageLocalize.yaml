@@ -126,6 +126,8 @@ several.occurrences.selected:
     text: |-
         Several files selected.
         Select occurrences from one file to preview.
+show.usages.advertisement:
+    text: Press {0} again to search in ''{1}''
 show.usages.only.usage:
     text: It''s the only usage in {0}
 sort.alphabetically.action.text:
