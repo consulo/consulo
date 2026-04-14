@@ -66,7 +66,7 @@ public class ModuleIconService {
         );
     }
 
-    @ReviewAfterIssueFix(value = "github.com/uber/NullAway/issues/1504", todo = "Remove explicit casts")
+    @ReviewAfterIssueFix(value = "github.com/uber/NullAway/issues/1500", todo = "Remove explicit casts")
     private Image requestIcon(Module module) {
         Image image = myProject.getExtensionPoint(ModuleIconProvider.class)
             .computeSafeIfAny((Function<ModuleIconProvider, @Nullable Image>) it -> it.getIcon(module));

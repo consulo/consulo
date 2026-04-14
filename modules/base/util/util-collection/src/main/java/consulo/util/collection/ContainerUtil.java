@@ -15,12 +15,11 @@
  */
 package consulo.util.collection;
 
-import consulo.annotation.ReviewAfterIssueFix;
 import consulo.util.collection.impl.map.*;
 import consulo.util.lang.Pair;
 import consulo.util.lang.function.Predicates;
-import org.jspecify.annotations.Nullable;
 import org.jetbrains.annotations.Contract;
+import org.jspecify.annotations.Nullable;
 
 import java.lang.reflect.Array;
 import java.util.LinkedHashMap;
@@ -1146,8 +1145,6 @@ public class ContainerUtil {
     }
 
     @Contract(pure = true)
-    @ReviewAfterIssueFix(value = "github.com/uber/NullAway/issues/1503", todo = "Remove NullAway suppression")
-    @SuppressWarnings("NullAway")
     public static <T> T[] toArray(@Nullable Collection<T> c, IntFunction<? extends T[]> factory) {
         return c != null ? c.toArray(factory.apply(c.size())) : factory.apply(0);
     }

@@ -56,7 +56,7 @@ public class OrderRootsEnumeratorImpl implements OrderRootsEnumerator {
     private static final BiFunction<ContentEntry, Predicate<ContentFolderTypeProvider>, String[]>
         SOURCES_TO_URL_FUNC = ContentEntry::getFolderUrls;
 
-    @ReviewAfterIssueFix(value = "github.com/uber/NullAway/issues/1504", todo = "Remove explicit casts")
+    @ReviewAfterIssueFix(value = "github.com/uber/NullAway/issues/1500", todo = "Remove explicit casts")
     private static final BiFunction<ModuleRootModel, Predicate<ContentFolderTypeProvider>, VirtualFile[]> RUNTIME_TO_FILE_FUNC =
         (t, v) -> {
             RuntimeRootProvider compilerPathsManager = RuntimeRootProvider.getInstance(t.getModule());
@@ -66,7 +66,7 @@ public class OrderRootsEnumeratorImpl implements OrderRootsEnumerator {
             );
         };
 
-    @ReviewAfterIssueFix(value = "github.com/uber/NullAway/issues/1504", todo = "Remove explicit casts")
+    @ReviewAfterIssueFix(value = "github.com/uber/NullAway/issues/1500", todo = "Remove explicit casts")
     private static final BiFunction<ModuleRootModel, Predicate<ContentFolderTypeProvider>, String[]> RUNTIME_TO_URL_FUNC =
         (t, v) -> {
             RuntimeRootProvider compilerPathsManager = RuntimeRootProvider.getInstance(t.getModule());

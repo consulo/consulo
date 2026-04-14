@@ -151,8 +151,7 @@ public class CoroutineTest {
     public void testErrorHandling() {
         CoroutineContext context = TestCoroutineContext.newSilent();
 
-        @ReviewAfterIssueFix(value = "github.com/uber/NullAway/issues/1500", todo = "Remove explicit casts")
-        Coroutine<@Nullable ?, @Nullable ?> coroutine = Coroutine.first((CodeExecution<@Nullable Object, @Nullable Void>) run(() -> {
+        Coroutine<@Nullable ?, @Nullable ?> coroutine = Coroutine.first(run(() -> {
             throw new RuntimeException("TEST ERROR");
         }));
 

@@ -30,8 +30,8 @@ import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.Lists;
 import consulo.virtualFileSystem.*;
 import consulo.virtualFileSystem.event.*;
-import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
+import org.jspecify.annotations.Nullable;
 
 import java.nio.file.FileSystems;
 import java.nio.file.Path;
@@ -214,8 +214,9 @@ public class BaseVirtualFileManager extends VirtualFileManagerEx {
                     myApplication.runWriteAction(new Runnable() {
                         @Override
                         public void run() {
-                            List<VFilePropertyChangeEvent> events =
-                                Collections.singletonList(new VFilePropertyChangeEvent(this, virtualFile, property, oldValue, newValue, false));
+                            List<VFilePropertyChangeEvent> events = Collections.singletonList(
+                                new VFilePropertyChangeEvent(this, virtualFile, property, oldValue, newValue, false)
+                            );
                             BulkFileListener listener = myApplication.getMessageBus().syncPublisher(BulkFileListener.class);
                             listener.before(events);
                             listener.after(events);
