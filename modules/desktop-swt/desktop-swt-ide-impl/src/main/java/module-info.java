@@ -16,8 +16,12 @@ module consulo.desktop.swt.ide.impl {
 
   requires org.eclipse.swt;
   requires org.eclipse.swt.win32.win32.x86_64;
+    requires consulo.language.editor.api;
+    requires consulo.application.impl;
+    requires consulo.code.editor.impl;
+    requires consulo.language.editor.impl;
 
-  provides consulo.ui.internal.UIInternal with consulo.desktop.swt.ui.impl.DesktopSwtUIInternalImpl;
+    provides consulo.ui.internal.UIInternal with consulo.desktop.swt.ui.impl.DesktopSwtUIInternalImpl;
   provides consulo.platform.internal.PlatformInternal with consulo.desktop.swt.platform.DesktopSwtPlatformInternal;
   provides consulo.container.boot.ContainerStartup with consulo.desktop.swt.container.boot.DesktopSwtContainerStartup;
   provides consulo.ui.ex.awtUnsafe.internal.TargetAWTFacade with consulo.desktop.swt.ui.impl.TargetAWTFacadeStub;
