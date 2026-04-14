@@ -110,12 +110,16 @@ button.export:
     text: Export...
 button.import:
     text: Import...
+button.install.package:
+    text: '&Install Package'
 button.invalidate:
     text: Invalidate
 button.invalidate.and.restart:
     text: Invalidate and Restart
 button.just.restart:
     text: Just Restart
+button.manage.repositories:
+    text: '&Manage Repositories'
 button.move.down:
     text: Move &Down
 button.move.up:
@@ -306,6 +310,10 @@ checkbox.next.error.action.goes.to.errors.first:
     text: '''Next Error'' action goes to high priority problems only'
 checkbox.optimize.imports.on.the.fly:
     text: Optimize imports on the fly
+checkbox.package.options:
+    text: Options
+checkbox.package.specify.version:
+    text: Specify version
 checkbox.param.description.on.new.line:
     text: Parameter descriptions on new line
 checkbox.parentheses.around.method.arguments:
@@ -726,6 +734,8 @@ desktop.entry.xdg.missing:
     text: Unfortunately, xdg-utils seem to be unavailable on your system.
 dialog.message.caches.will.be.invalidated:
     text: Remove caches and indexes for all projects. New caches will be built when you reopen the projects.
+dialog.message.command.not.finished.yet:
+    text: '{0} is not finished yet.'
 dialog.message.the.following.items:
     text: 'Optional:'
 dialog.title.invalidate.caches:
@@ -798,6 +808,8 @@ editbox.maximum.number.of.contents.to.keep.in.clipboard:
     text: 'Maximum number of contents to keep  in clipboard:'
 editbox.names.count.to.use.static.import.with.star:
     text: 'Names count to use static import with ''*'':'
+editbox.package.description:
+    text: Description
 editbox.path.macro.name:
     text: 'Name:'
 editbox.path.macro.value:
@@ -844,16 +856,12 @@ error.path.variable.is.undefined:
     text: Path variable "{0}" is undefined
 error.please.select.previous.installation.home:
     text: Please select previous {0} config folder or installation home
-error.plugin.was.not.installed:
-    text: 'Plugin {0} was not installed: {1}'
 error.plugins.should.not.have.cyclic.dependencies:
     text: |-
         Plugins should not have cyclic dependencies:
         {0}
 error.readonly.scheme.cannot.be.modified:
     text: Read-only scheme cannot be modified. Please do "Save As..." first.
-error.required.plugin.disabled:
-    text: 'Plugin "{0}" was not loaded: required plugin "{1}" is disabled.'
 error.required.plugin.not.installed:
     text: 'Plugin "{0}" was not loaded: required plugin "{1}" not installed.'
 error.scheme.must.have.a.name:
@@ -1472,5 +1480,3 @@ wrapping.wrap.on.typing.no.wrap:
     text: 'No'
 wrapping.wrap.on.typing.wrap:
     text: 'Yes'
-dialog.message.command.not.finished.yet:
-    text: "{0} is not finished yet."

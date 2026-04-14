@@ -1,8 +1,12 @@
 // Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.webcore.packaging;
 
+import com.intellij.uiDesigner.core.GridConstraints;
+import com.intellij.uiDesigner.core.GridLayoutManager;
+import com.intellij.uiDesigner.core.Spacer;
 import consulo.application.Application;
 import consulo.application.impl.internal.IdeaModalityState;
+import consulo.application.localize.ApplicationLocalize;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.ide.impl.idea.util.ui.SwingHelper;
 import consulo.ide.localize.IdeLocalize;
@@ -15,6 +19,8 @@ import consulo.repository.ui.InstalledPackage;
 import consulo.repository.ui.PackageManagementService;
 import consulo.repository.ui.RepoPackage;
 import consulo.repository.ui.SearchablePackageManagementService;
+import consulo.ui.Button;
+import consulo.ui.CheckBox;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.JBColor;
@@ -24,6 +30,7 @@ import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.internal.GuiUtils;
 import consulo.ui.ex.awt.speedSearch.ListSpeedSearch;
 import consulo.ui.ex.awt.update.UiNotifyConnector;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.concurrent.AsyncResult;
 import consulo.util.lang.ObjectUtil;
@@ -54,9 +61,7 @@ import java.util.concurrent.Future;
  */
 public class ManagePackagesDialog extends DialogWrapper {
     private static final Logger LOG = Logger.getInstance(ManagePackagesDialog.class);
-    private static final RepoPackage MORE = new RepoPackage("more", "more", "more");
 
-   
     private final Project myProject;
     private final PackageManagementService myController;
 
@@ -64,13 +69,13 @@ public class ManagePackagesDialog extends DialogWrapper {
     private JPanel myMainPanel;
     private JEditorPane myDescriptionTextArea;
     private final JBList<RepoPackage> myPackages;
-    private JButton myInstallButton;
-    private JCheckBox myOptionsCheckBox;
+    private Button myInstallButton;
+    private CheckBox myOptionsCheckBox;
     private JTextField myOptionsField;
     private JCheckBox myInstallToUser;
     private JComboBox myVersionComboBox;
-    private JCheckBox myVersionCheckBox;
-    private JButton myManageButton;
+    private CheckBox myVersionCheckBox;
+    private Button myManageButton;
     private final PackagesNotificationPanel myNotificationArea;
     private JSplitPane mySplitPane;
     private JPanel myNotificationsAreaPlaceholder;
@@ -98,6 +103,7 @@ public class ManagePackagesDialog extends DialogWrapper {
         myController = packageManagementService;
 
         myPackageListener = packageListener;
+        setupUI();
         init();
         setTitle(IdeLocalize.availablePackagesDialogTitle());
         myPackages = new JBList<>();
@@ -159,10 +165,10 @@ public class ManagePackagesDialog extends DialogWrapper {
         myInstallToUser.addActionListener(event -> myController.installToUserChanged(myInstallToUser.isSelected()));
         myOptionsCheckBox.setEnabled(false);
         myVersionCheckBox.setEnabled(false);
-        myVersionCheckBox.addActionListener(event -> myVersionComboBox.setEnabled(myVersionCheckBox.isSelected()));
+        myVersionCheckBox.addClickListener(event -> myVersionComboBox.setEnabled(myVersionCheckBox.getValue()));
 
         UiNotifyConnector.doWhenFirstShown(myPackages, () -> initModel(""));
-        myOptionsCheckBox.addActionListener(event -> myOptionsField.setEnabled(myOptionsCheckBox.isSelected()));
+        myOptionsCheckBox.addClickListener(event -> myOptionsField.setEnabled(myOptionsCheckBox.getValue()));
         myInstallButton.setEnabled(false);
         myDescriptionTextArea.addHyperlinkListener(e -> {
             if (e.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
@@ -206,7 +212,7 @@ public class ManagePackagesDialog extends DialogWrapper {
     @RequiredUIAccess
     private void addManageAction() {
         if (myController.canManageRepositories()) {
-            myManageButton.addActionListener(event -> {
+            myManageButton.addClickListener(event -> {
                 ManageRepoDialog dialog = new ManageRepoDialog(myProject, myController);
                 dialog.showAsync();
             });
@@ -217,15 +223,15 @@ public class ManagePackagesDialog extends DialogWrapper {
     }
 
     private void addInstallAction() {
-        myInstallButton.addActionListener(event -> {
+        myInstallButton.addClickListener(event -> {
             RepoPackage pyPackage = myPackages.getSelectedValue();
             String extraOptions = null;
-            if (myOptionsCheckBox.isEnabled() && myOptionsCheckBox.isSelected()) {
+            if (myOptionsCheckBox.isEnabled() && myOptionsCheckBox.getValue()) {
                 extraOptions = myOptionsField.getText();
             }
 
             String version = null;
-            if (myVersionCheckBox.isEnabled() && myVersionCheckBox.isSelected()) {
+            if (myVersionCheckBox.isEnabled() && myVersionCheckBox.getValue()) {
                 version = (String) myVersionComboBox.getSelectedItem();
             }
 
@@ -390,6 +396,330 @@ public class ManagePackagesDialog extends DialogWrapper {
         myOptionsField.setText(optionsText);
     }
 
+    /**
+     * Method generated by Consulo GUI Designer
+     */
+    @RequiredUIAccess
+    private void setupUI() {
+        createUIComponents();
+        myMainPanel = new JPanel();
+        myMainPanel.setLayout(new GridLayoutManager(5, 1, JBUI.emptyInsets(), -1, -1));
+        myMainPanel.add(
+            myFilter,
+            new GridConstraints(
+                0,
+                0,
+                1,
+                1,
+                GridConstraints.ANCHOR_NORTH,
+                GridConstraints.FILL_HORIZONTAL,
+                GridConstraints.SIZEPOLICY_CAN_GROW,
+                GridConstraints.SIZEPOLICY_FIXED,
+                null,
+                new Dimension(-1, 30),
+                null,
+                0,
+                false
+            )
+        );
+        JPanel panel1 = new JPanel();
+        panel1.setLayout(new GridLayoutManager(1, 1, JBUI.emptyInsets(), -1, -1));
+        myMainPanel.add(
+            panel1,
+            new GridConstraints(
+                1,
+                0,
+                1,
+                1,
+                GridConstraints.ANCHOR_CENTER,
+                GridConstraints.FILL_BOTH,
+                GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
+                GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW,
+                null,
+                null,
+                null,
+                0,
+                false
+            )
+        );
+        mySplitPane = new JSplitPane();
+        mySplitPane.setContinuousLayout(true);
+        mySplitPane.setOneTouchExpandable(false);
+        panel1.add(
+            mySplitPane,
+            new GridConstraints(
+                0,
+                0,
+                1,
+                1,
+                GridConstraints.ANCHOR_CENTER,
+                GridConstraints.FILL_BOTH,
+                GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
+                GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
+                null,
+                null,
+                null,
+                0,
+                false
+            )
+        );
+        mySplitPane.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(), null));
+        JPanel panel2 = new JPanel();
+        panel2.setLayout(new GridLayoutManager(3, 5, JBUI.emptyInsets(), -1, -1));
+        panel2.putClientProperty("BorderFactoryClass", "consulo.ui.ex.awt.IdeBorderFactory$PlainSmallWithoutIndentWithoutInsets");
+        mySplitPane.setRightComponent(panel2);
+        panel2.setBorder(BorderFactory.createTitledBorder(ApplicationLocalize.editboxPackageDescription().get()));
+        JBScrollPane jBScrollPane1 = new JBScrollPane();
+        jBScrollPane1.setVerticalScrollBarPolicy(22);
+        panel2.add(
+            jBScrollPane1,
+            new GridConstraints(
+                0,
+                0,
+                1,
+                5,
+                GridConstraints.ANCHOR_CENTER,
+                GridConstraints.FILL_BOTH,
+                GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
+                GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
+                null,
+                new Dimension(300, -1),
+                null,
+                0,
+                false
+            )
+        );
+        myDescriptionTextArea.setContentType("text/html");
+        myDescriptionTextArea.setEditable(false);
+        myDescriptionTextArea.setMaximumSize(new Dimension(-1, -1));
+        jBScrollPane1.setViewportView(myDescriptionTextArea);
+        myVersionCheckBox = CheckBox.create(ApplicationLocalize.checkboxPackageSpecifyVersion());
+        myVersionCheckBox.setEnabled(true);
+        myVersionCheckBox.setValue(false);
+        panel2.add(
+            TargetAWT.to(myVersionCheckBox),
+            new GridConstraints(
+                1,
+                0,
+                1,
+                1,
+                GridConstraints.ANCHOR_WEST,
+                GridConstraints.FILL_NONE,
+                GridConstraints.SIZEPOLICY_FIXED,
+                GridConstraints.SIZEPOLICY_FIXED,
+                null,
+                null,
+                null,
+                0,
+                false
+            )
+        );
+        myOptionsCheckBox = CheckBox.create(ApplicationLocalize.checkboxPackageOptions());
+        myOptionsCheckBox.setEnabled(true);
+        myOptionsCheckBox.setValue(false);
+        panel2.add(
+            TargetAWT.to(myOptionsCheckBox),
+            new GridConstraints(
+                2,
+                0,
+                1,
+                1,
+                GridConstraints.ANCHOR_WEST,
+                GridConstraints.FILL_NONE,
+                GridConstraints.SIZEPOLICY_FIXED,
+                GridConstraints.SIZEPOLICY_FIXED,
+                null,
+                null,
+                null,
+                0,
+                false
+            )
+        );
+        myOptionsField = new JTextField();
+        myOptionsField.setEnabled(false);
+        panel2.add(
+            myOptionsField,
+            new GridConstraints(
+                2,
+                1,
+                1,
+                4,
+                GridConstraints.ANCHOR_WEST,
+                GridConstraints.FILL_HORIZONTAL,
+                GridConstraints.SIZEPOLICY_CAN_GROW,
+                GridConstraints.SIZEPOLICY_FIXED,
+                null,
+                new Dimension(150, -1),
+                null,
+                0,
+                false
+            )
+        );
+        myVersionComboBox = new JComboBox();
+        myVersionComboBox.setEnabled(false);
+        panel2.add(
+            myVersionComboBox,
+            new GridConstraints(
+                1,
+                1,
+                1,
+                4,
+                GridConstraints.ANCHOR_WEST,
+                GridConstraints.FILL_HORIZONTAL,
+                GridConstraints.SIZEPOLICY_FIXED,
+                GridConstraints.SIZEPOLICY_FIXED,
+                null,
+                null,
+                null,
+                0,
+                false
+            )
+        );
+        JPanel panel3 = new JPanel();
+        panel3.setLayout(new GridLayoutManager(1, 3, JBUI.emptyInsets(), -1, -1));
+        myMainPanel.add(
+            panel3,
+            new GridConstraints(
+                4,
+                0,
+                1,
+                1,
+                GridConstraints.ANCHOR_CENTER,
+                GridConstraints.FILL_BOTH,
+                GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
+                GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
+                null,
+                null,
+                null,
+                0,
+                false
+            )
+        );
+        myInstallButton = Button.create(ApplicationLocalize.buttonInstallPackage());
+        panel3.add(
+            TargetAWT.to(myInstallButton),
+            new GridConstraints(
+                0,
+                0,
+                1,
+                1,
+                GridConstraints.ANCHOR_WEST,
+                GridConstraints.FILL_NONE,
+                GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
+                GridConstraints.SIZEPOLICY_FIXED,
+                null,
+                null,
+                null,
+                0,
+                false
+            )
+        );
+        Spacer spacer1 = new Spacer();
+        panel3.add(
+            spacer1,
+            new GridConstraints(
+                0,
+                2,
+                1,
+                1,
+                GridConstraints.ANCHOR_CENTER,
+                GridConstraints.FILL_HORIZONTAL,
+                GridConstraints.SIZEPOLICY_WANT_GROW,
+                1,
+                null,
+                null,
+                null,
+                0,
+                false
+            )
+        );
+        myManageButton = Button.create(ApplicationLocalize.buttonManageRepositories());
+        panel3.add(
+            TargetAWT.to(myManageButton),
+            new GridConstraints(
+                0,
+                1,
+                1,
+                1,
+                GridConstraints.ANCHOR_WEST,
+                GridConstraints.FILL_NONE,
+                GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
+                GridConstraints.SIZEPOLICY_FIXED,
+                null,
+                null,
+                null,
+                0,
+                false
+            )
+        );
+        JPanel panel4 = new JPanel();
+        panel4.setLayout(new GridLayoutManager(1, 1, JBUI.emptyInsets(), -1, -1));
+        myMainPanel.add(
+            panel4,
+            new GridConstraints(
+                2,
+                0,
+                1,
+                1,
+                GridConstraints.ANCHOR_CENTER,
+                GridConstraints.FILL_BOTH,
+                GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
+                GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
+                null,
+                null,
+                null,
+                0,
+                false
+            )
+        );
+        myInstallToUser = new JCheckBox();
+        myInstallToUser.setEnabled(true);
+        myInstallToUser.setSelected(false);
+        myInstallToUser.setText("");
+        panel4.add(
+            myInstallToUser,
+            new GridConstraints(
+                0,
+                0,
+                1,
+                1,
+                GridConstraints.ANCHOR_WEST,
+                GridConstraints.FILL_NONE,
+                GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
+                GridConstraints.SIZEPOLICY_FIXED,
+                null,
+                null,
+                null,
+                0,
+                false
+            )
+        );
+        myNotificationsAreaPlaceholder = new JPanel();
+        myNotificationsAreaPlaceholder.setLayout(new BorderLayout(0, 0));
+        myMainPanel.add(
+            myNotificationsAreaPlaceholder,
+            new GridConstraints(
+                3,
+                0,
+                1,
+                1,
+                GridConstraints.ANCHOR_CENTER,
+                GridConstraints.FILL_BOTH,
+                GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
+                GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
+                null,
+                null,
+                null,
+                0,
+                false
+            )
+        );
+    }
+
+    public JComponent $$$getRootComponent$$$() {
+        return myMainPanel;
+    }
+
     private class MyPackageFilter extends FilterComponent {
         MyPackageFilter() {
             super("PACKAGE_FILTER", 5);
@@ -495,11 +825,12 @@ public class ManagePackagesDialog extends DialogWrapper {
 
     private class MyPackageSelectionListener implements ListSelectionListener {
         @Override
+        @RequiredUIAccess
         public void valueChanged(ListSelectionEvent event) {
             myOptionsCheckBox.setEnabled(myPackages.getSelectedIndex() >= 0);
             myVersionCheckBox.setEnabled(myPackages.getSelectedIndex() >= 0);
-            myOptionsCheckBox.setSelected(false);
-            myVersionCheckBox.setSelected(false);
+            myOptionsCheckBox.setValue(false);
+            myVersionCheckBox.setValue(false);
             myVersionComboBox.setEnabled(false);
             myOptionsField.setEnabled(false);
             myDescriptionTextArea.setText(IdeLocalize.loadingInProgress().get());
@@ -541,7 +872,6 @@ public class ManagePackagesDialog extends DialogWrapper {
         }
     }
 
-   
     @Override
     protected Action[] createActions() {
         return new Action[0];

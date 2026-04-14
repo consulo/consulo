@@ -46,6 +46,7 @@ import consulo.desktop.awt.wm.impl.DesktopWindowManagerImpl;
 import consulo.desktop.awt.wm.impl.MacTopMenuInitializer;
 import consulo.desktop.awt.wm.impl.TopMenuInitializer;
 import consulo.externalService.impl.internal.PlatformOrPluginsNotificationGroupContributor;
+import consulo.externalService.localize.ExternalServiceLocalize;
 import consulo.externalService.plugin.PluginsConfigurable;
 import consulo.externalService.statistic.UsageTrigger;
 import consulo.ide.impl.idea.ide.CommandLineProcessor;
@@ -317,7 +318,7 @@ public class DesktopApplicationStarter extends ApplicationStarter {
             for (CompositeMessage pluginError : pluginErrors) {
                 NotificationService.getInstance()
                     .newError(PlatformOrPluginsNotificationGroupContributor.ourPluginsLifecycleGroup)
-                    .title(IdeLocalize.titlePluginNotificationTitle())
+                    .title(ExternalServiceLocalize.titlePluginNotificationTitle())
                     .content(LocalizeValue.localizeTODO(pluginError.toString()))
                     .hyperlinkListener(new NotificationListener() {
                         @Override
