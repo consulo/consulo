@@ -160,8 +160,6 @@ action.directory:
     text: Directory
 action.do.not.mark:
     text: Do Not Mark
-action.download.and.install.plugin:
-    text: Download and Install
 action.edit.file.templates:
     text: Edit File Templates...
 action.edit.repository.url:
@@ -360,16 +358,12 @@ action.toolwindow.structure:
     text: '&Structure'
 action.toolwindow.todo:
     text: TODO
-action.uninstall.plugin:
-    text: Uninstall
 action.unpin.active.tab:
     text: Unp_in Active Tab
 action.unpin.tab:
     text: Unp_in Tab
 action.unpin.tab.tooltip:
     text: Unpin tab
-action.update.plugin:
-    text: Update Plugin
 action.view.class.hierarchy:
     text: Class Hierarchy
 action.view.subtypes.hierarchy:
@@ -632,18 +626,6 @@ code.folding.settings:
     text: Code Folding Settings
 column.description:
     text: Description
-column.plugins.category:
-    text: Category
-column.plugins.date:
-    text: Date
-column.plugins.downloads:
-    text: Downloads
-column.plugins.name:
-    text: Name
-column.plugins.rate:
-    text: Rating
-column.plugins.tag:
-    text: Tag
 combobox.console.default.encoding.label:
     text: 'Default Encoding:'
 combobox.icon.theme:
@@ -700,8 +682,6 @@ command.switch.active.editor:
     text: Switch Active Editor
 confirm.set.look.and.feel:
     text: Change &theme
-connection.failed.message:
-    text: 'Failed to load plugin descriptions from: "{0}"'
 conversion.dialog.text.1:
     text: The project ''{0}'' has an older format and will be converted. You may not be able to open the project with earlier versions of {1}.
 conversion.dialog.text.2:
@@ -771,8 +751,6 @@ directory.module.file:
 directory.project.file.directory:
     text: |
         The {0} file directory
-disabled.plugins.warning.message:
-    text: <li>Plugin <b>"{0}"</b> won''t be able to load because required {2, choice, 1#plugin|2#plugins} {1} {2, choice, 1#is|2#are} disabled.</li>
 display.balloon.notifications:
     text: Display balloon notifications
 display.name.firefox.settings:
@@ -817,10 +795,6 @@ editbox.license.user.name:
     text: 'User name:'
 editbox.line.number:
     text: 'Line number:'
-editbox.plugin.change.notes:
-    text: Change notes
-editbox.plugin.description:
-    text: Description
 element.method:
     text: method
 element.of.class:
@@ -910,8 +884,6 @@ error.license.collision:
         Only one active computer at a time can use the license.
         Would you like to re-activate this computer?
         Click Yes to re-activate, or No to shutdown {1}.
-error.list.of.plugins.was.not.loaded:
-    text: 'List of plugins was not loaded: {0}'
 error.loading.package.list:
     text: Error loading package list:{0}
 error.malformed.url:
@@ -956,25 +928,6 @@ error.please.specify.template.extension:
     text: Please specify template extension
 error.please.specify.template.name:
     text: Please specify template name
-error.plugin.download.failed:
-    text: Plugin download failed
-error.plugin.was.not.installed:
-    text: 'Plugin {0} was not installed: {1}'
-error.plugins.should.not.have.cyclic.dependencies:
-    text: |-
-        Plugins should not have cyclic dependencies:
-        {0}
-error.plugins.were.not.loaded:
-    text: |-
-        Error loading plugins:
-        {0}
-        Plugins were not loaded.
-        Correct the above error and restart IDEA.
-error.plugins.without.id.found:
-    text: There were plugins without id found, all such plugins were skipped.
-error.problems.found.loading.plugins:
-    text: |
-        Problems found loading plugins:
 error.project.file.does.not.exist:
     text: Cannot load {0}. The file does not exist.
 error.project.file.is.corrupted:
@@ -990,10 +943,6 @@ error.reading.settings.file.2:
         Error reading file {0}.
 
         {1}
-error.required.plugin.disabled:
-    text: 'Plugin "{0}" was not loaded: required plugin "{1}" is disabled.'
-error.required.plugin.not.installed:
-    text: 'Plugin "{0}" was not loaded: required plugin "{1}" not installed.'
 error.saving.license.data:
     text: |-
         Error saving license data.
@@ -1338,14 +1287,6 @@ label.path.to.module.file:
     text: 'Path to {0} module file (.iml):'
 label.please.enter.project.name:
     text: Please enter a name to create a new {0} {1}.
-label.plugin.home.page:
-    text: Plugin home page
-label.plugin.vendor.email:
-    text: 'E-mail:'
-label.plugin.vendor.home.page:
-    text: 'Home page:'
-label.plugin.vendor.name:
-    text: 'Name:'
 label.project.files.location:
     text: 'Project &location:'
 label.project.jdk:
@@ -1521,8 +1462,6 @@ manage.repositories.dialog.title:
     text: Manage Repositories
 maven.repository.presentable.name:
     text: Maven repository
-message.duplicate.plugin.id:
-    text: 'Duplicate plugin id:'
 message.educational.license:
     text: 1-Year Educational License. {0}
 message.evaluation.N.days:
@@ -1541,20 +1480,6 @@ message.expiration.date:
     text: 'Expiration date: {0}'
 message.files.doesn.t.exists.0.so.the.corresponding.modules.won.t.be.converted.do.you.want.to.continue:
     text: '<html><body>The following files don''''t exists: <br>{0}The corresponding modules won''''t be converted. Do you want to continue?</body></html>'
-message.idea.restart.required:
-    text: Restart {0} to activate changes in plugins?
-message.idea.shutdown.required:
-    text: Shutdown {0} to activate changes in plugins?
-message.invalid.license.data:
-    text: Invalid license data. Please, try again.
-message.license.expired:
-    text: Your license has expired
-message.license.is.corrupt:
-    text: License is corrupt
-message.license.will.expire:
-    text: Your {0} license expires in {1}.
-message.licensed.to:
-    text: Licensed to {0}
 message.macro.exists:
     text: There is already a macro called ''{0}''. Overwrite it?
 message.module:
@@ -1727,12 +1652,6 @@ predefined.scope.tests.name:
     text: Tests
 presentation.mode.fon.size:
     text: 'Font size:'
-progress.connecting:
-    text: Connecting...
-progress.connecting.to.download.file.text:
-    text: Connecting to ''{0}''...
-progress.connecting.to.plugin.manager:
-    text: Connecting to {0}
 progress.creating.directory:
     text: Creating directory {0}{1}{2}
 progress.creating.file:
@@ -1745,24 +1664,6 @@ progress.deleting:
     text: Deleting
 progress.deleting.class:
     text: Deleting class {0}
-progress.download.0.title:
-    text: Downloading {0}
-progress.download.file.text:
-    text: Downloading ''{0}'' from ''{1}''...
-progress.download.plugins:
-    text: Downloading...
-progress.downloading.0.of.1.file.text:
-    text: Downloading {0} of {1} {1, choice, 1#file|2#files}...
-progress.downloading.list.of.plugins:
-    text: Downloading List of Plugins
-progress.downloading.platform:
-    text: Downloading platform
-progress.downloading.plugin:
-    text: Downloading plugin ''{0}''
-progress.extracting.platform:
-    text: Extracting platform
-progress.installing.plugins:
-    text: Installing plugins...
 progress.locate.file.text:
     text: Locating ''{0}''...
 progress.looking.for.todos:
@@ -1781,8 +1682,6 @@ progress.text.stopping:
     text: Stopping - {0}
 progress.title.reload.files:
     text: Reload files
-progress.waiting.for.reply.from.plugin.manager:
-    text: Waiting for reply from {0}
 progress.window.empty.text:
     text: There are no active background tasks
 progress.window.title:
@@ -1866,8 +1765,6 @@ prompt.delete.type.parameter:
     text: '{0,choice,1#type parameter|2#type parameters}'
 prompt.directory.contains.read.only.files:
     text: Directory {0} contains read-only file(s). Delete it anyway?
-prompt.download.and.install.plugin:
-    text: Would you like to download and install plugin ''{0}''?
 prompt.enter.a.new.package.name:
     text: 'Enter a new package name:'
 prompt.enter.annotation.type.name:
@@ -1908,8 +1805,6 @@ prompt.input.favorites.list.new.name:
     text: 'Rename favorite list ''''{0}'''' to:'
 prompt.input.new.favorites.list.name:
     text: Input new favorites list name
-prompt.install.several.plugins:
-    text: Install or update {0} plugins ?
 prompt.new.project.file.name:
     text: Enter a file name to create a new {0} {1}
 prompt.open.project.in.new.frame:
@@ -1964,12 +1859,6 @@ prompt.specify.name.of.module.subgroup:
 
 prompt.stop.searching.for.sources:
     text: '{0} is currently searching for sources. Would you like to stop the search?'
-prompt.uninstall.plugin:
-    text: Do you really want to uninstall plugin ''{0}''?
-prompt.uninstall.several.plugins:
-    text: Do you really want to uninstall these {0} plugins ?
-prompt.update.plugin:
-    text: Would you like to update plugin ''{0}''?
 quick.lists.presentable.name:
     text: Quick lists
 radio.create.new.module:
@@ -2242,8 +2131,6 @@ settings.entry.point.widget.name:
     text: IDE and Project Settings
 setup.library.dialog.title:
     text: Setup Library
-several.plugins.depend.on.0.continue.to.remove:
-    text: Several plugins depend on {0}. Continue to remove?
 share.scope.checkbox.title:
     text: Share scope
 shared.scopes.node.text:
@@ -2364,8 +2251,6 @@ title.export.preview:
     text: Export Preview
 title.export.successful:
     text: Export Complete
-title.failed.to.download:
-    text: Failed to Download
 title.file.already.exists:
     text: File Already Exists
 title.file.not.found:
@@ -2456,14 +2341,6 @@ title.package.not.found:
     text: Package Not Found
 title.packages:
     text: Packages
-title.plugin.notification.title:
-    text: Plugin Manager
-title.plugin.uninstall:
-    text: Plugin Uninstall
-title.plugins:
-    text: Platform and Plugins
-title.plugins.changed:
-    text: Plugins Changed
 title.popup.new.element:
     text: New
 title.popup.new.element.same.place:
@@ -2578,74 +2455,6 @@ unscramble.use.unscrambler.checkbox:
     text: '&Unscramble stacktrace'
 unsupported.jvm.ea.message:
     text: Early Access Java versions may cause compatibility issues. Please use stable release.
-update.add.new.plugin.host.title:
-    text: Add Repository
-update.available:
-    text: Updates available
-update.available.group:
-    text: Update Checker
-update.downloading.patch.progress.title:
-    text: Downloading Patch file
-update.edit.plugin.host.title:
-    text: Edit Repository
-update.no.update.hosts:
-    text: No plugin repositories configured
-update.plugin.host.url.message:
-    text: 'Repository URL:'
-update.plugin.hosts.title:
-    text: Plugin Repositories
-update.plugins.update.action:
-    text: '&Update'
-update.there.are.no.updates:
-    text: There are no updates
-update.uploading.plugin.progress.title:
-    text: Updating Plugins
-update.view.updates:
-    text: View updates
-updates.available.idea.version:
-    text: 'New version:'
-updates.build.number:
-    text: '(Build number:'
-updates.check.manually.label:
-    text: <html><br>To check for new updates manually, use the <b>Help | Check for Updates</b> command.</html>
-updates.check.period.on.exit:
-    text: On every exit
-updates.configure.label:
-    text: <html><head>{0}</head><br>To configure automatic update settings, see the <b><a href="updates">Updates</a></b> dialog of your IDE settings</html>
-updates.current.idea.version:
-    text: 'Current version:'
-updates.download.and.install.patch.button:
-    text: '&Download Patch and Shutdown'
-updates.download.and.install.patch.button.restart:
-    text: Up&date and Restart
-updates.info.dialog.title:
-    text: Update Info
-updates.last.check.never:
-    text: Never
-updates.more.info.button:
-    text: '&More Info...'
-updates.new.version.available:
-    text: <html><h4>A new version of Consulo is available.</h4></html>
-updates.no.updates.message:
-    text: <html><h4>You are using the latest version of Consulo.</h4></html>
-updates.press.more.info.label:
-    text: <html><br>Press <b>More Info...</b> to open a web page where you can download Consulo manually or learn more about its new version.</HTML>
-updates.settings.build.number:
-    text: 'Build number:'
-updates.settings.caption.1:
-    text: <html>Consulo can automatically check for new and updated versions of itself, using your internet connection (when active).<html>
-updates.settings.check.now.button:
-    text: '&Check Now'
-updates.settings.checkbox:
-    text: Check for updates in channel
-updates.settings.current.version:
-    text: 'Current Consulo version:'
-updates.settings.last.check:
-    text: 'Last checked for updates:'
-updates.settings.title:
-    text: Updates
-updates.timeout.error:
-    text: Connection timed out
 upgrade.package.failed.title:
     text: Upgrade Package Failed.
 upgrade.packages.failed:

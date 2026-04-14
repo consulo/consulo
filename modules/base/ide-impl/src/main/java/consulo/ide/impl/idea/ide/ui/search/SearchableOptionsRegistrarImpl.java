@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.impl.idea.ide.ui.search;
 
 import consulo.annotation.component.ServiceImpl;
@@ -23,8 +22,8 @@ import consulo.configurable.ConfigurableHit;
 import consulo.configurable.SearchableConfigurable;
 import consulo.configurable.SearchableOptionsRegistrar;
 import consulo.container.plugin.PluginManager;
+import consulo.externalService.localize.ExternalServiceLocalize;
 import consulo.externalService.plugin.PluginsConfigurable;
-import consulo.ide.localize.IdeLocalize;
 import consulo.language.codeStyle.CodeStyle;
 import consulo.logging.Logger;
 import consulo.project.Project;
@@ -169,7 +168,7 @@ public class SearchableOptionsRegistrarImpl extends SearchableOptionsRegistrar {
                 words.addAll(getProcessedWordsWithoutStemming(description));
             }
             for (String word : words) {
-                addOption(word, null, plugin.getName(), PluginsConfigurable.CONFIGURABLE_ID, IdeLocalize.titlePlugins().get());
+                addOption(word, null, plugin.getName(), PluginsConfigurable.CONFIGURABLE_ID, ExternalServiceLocalize.titlePlugins().get());
             }
         });
 

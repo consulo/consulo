@@ -298,6 +298,8 @@ settings.update.group.repository.settings.label:
     text: Repository settings
 several.plugins.depend.on.0.continue.to.remove:
     text: Several plugins depend on {0}. Continue to remove?
+title.plugin.notification.title:
+    text: Plugin Manager
 title.plugin.uninstall:
     text: Plugin Uninstall
 title.plugins:
