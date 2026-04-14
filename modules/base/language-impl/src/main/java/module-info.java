@@ -3,8 +3,8 @@
  * @since 16-Feb-22
  */
 module consulo.language.impl {
-    requires consulo.project.api;
-    requires consulo.language.api;
+    requires transitive consulo.project.api;
+    requires transitive consulo.language.api;
     requires consulo.document.impl;
     requires consulo.undo.redo.api;
     requires consulo.util.interner;

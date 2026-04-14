@@ -81,7 +81,7 @@ public class WindowsDefenderChecker {
     }
 
     public static WindowsDefenderChecker getInstance() {
-        return ServiceManager.getService(WindowsDefenderChecker.class);
+        return Application.get().getInstance(WindowsDefenderChecker.class);
     }
 
     public boolean isVirusCheckIgnored(Project project) {

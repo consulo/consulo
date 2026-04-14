@@ -44,6 +44,19 @@ open module consulo.desktop.awt.ide.impl {
     requires consulo.ui.impl;
     requires consulo.util.jna;
     requires consulo.version.control.system.impl;
+    requires consulo.version.control.system.api;
+    requires consulo.execution.api;
+    requires consulo.find.api;
+    requires consulo.application.impl;
+    requires consulo.ide.api;
+    requires consulo.version.control.system.log.api;
+    requires consulo.external.service.api;
+    requires consulo.web.browser.api;
+    requires consulo.version.control.system.distributed.api;
+    requires consulo.language.editor.refactoring.api;
+    requires consulo.execution.debug.api;
+    requires consulo.builtin.web.server.api;
+    requires consulo.color.scheme.ui.api;
 
     // TODO remove
     requires gnu.trove;

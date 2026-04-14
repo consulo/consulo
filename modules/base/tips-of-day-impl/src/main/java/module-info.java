@@ -4,4 +4,10 @@
  */
 module consulo.tips.of.day.impl {
     requires consulo.ide.api;
+
+    requires consulo.application.api;
+
+    requires consulo.project.api;
+
+    requires consulo.ui.ex.api;
 }
