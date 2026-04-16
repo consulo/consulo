@@ -15,6 +15,8 @@
  */
 package consulo.language.ast;
 
+import org.jspecify.annotations.Nullable;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,19 +28,17 @@ public class TreeBackedLighterAST extends LighterAST {
     myRoot = root;
   }
 
-  
   @Override
   public LighterASTNode getRoot() {
     return wrap(myRoot);
   }
 
   @Override
-  public LighterASTNode getParent(LighterASTNode node) {
+  public @Nullable LighterASTNode getParent(LighterASTNode node) {
     ASTNode parent = ((NodeWrapper)node).myNode.getTreeParent();
     return parent == null ? null : wrap(parent);
   }
 
-  
   @Override
   public List<LighterASTNode> getChildren(LighterASTNode parent) {
     ASTNode[] children = ((NodeWrapper)parent).myNode.getChildren(null);
@@ -51,12 +51,10 @@ public class TreeBackedLighterAST extends LighterAST {
     return result;
   }
 
-  
   public static LighterASTNode wrap(ASTNode node) {
     return node.getFirstChildNode() == null && node.getTextLength() > 0 ? new TokenNodeWrapper(node) : new NodeWrapper(node);
   }
 
-  
   public ASTNode unwrap(LighterASTNode node) {
     return ((NodeWrapper)node).myNode;
   }
@@ -68,7 +66,6 @@ public class TreeBackedLighterAST extends LighterAST {
       myNode = node;
     }
 
-    
     @Override
     public IElementType getTokenType() {
       return myNode.getElementType();

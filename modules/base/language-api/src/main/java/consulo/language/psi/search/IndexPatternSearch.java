@@ -3,11 +3,12 @@ package consulo.language.psi.search;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
-import consulo.application.ApplicationManager;
-import consulo.document.util.TextRange;
-import consulo.language.psi.PsiFile;
+import consulo.application.Application;
 import consulo.application.util.query.Query;
 import consulo.application.util.query.QueryFactory;
+import consulo.document.util.TextRange;
+import consulo.language.psi.PsiFile;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Allows to search for occurrences of specified regular expressions in the comments of source files.
@@ -18,12 +19,12 @@ import consulo.application.util.query.QueryFactory;
  */
 @ServiceAPI(ComponentScope.APPLICATION)
 public abstract class IndexPatternSearch extends QueryFactory<IndexPatternOccurrence, IndexPatternSearch.SearchParameters> {
-  private static IndexPatternSearch ourInstance;
+  private static @Nullable IndexPatternSearch ourInstance = null;
 
   private static IndexPatternSearch getInstance() {
     IndexPatternSearch result = ourInstance;
     if (result == null) {
-      result = ApplicationManager.getApplication().getComponent(IndexPatternSearch.class);
+      result = Application.get().getComponent(IndexPatternSearch.class);
       ourInstance = result;
     }
     return result;
@@ -31,16 +32,16 @@ public abstract class IndexPatternSearch extends QueryFactory<IndexPatternOccurr
 
   public static final class SearchParameters {
     private final PsiFile myFile;
-    private final IndexPattern myPattern;
-    private final IndexPatternProvider myPatternProvider;
-    private final TextRange myRange;
+    private final @Nullable IndexPattern myPattern;
+    private final @Nullable IndexPatternProvider myPatternProvider;
+    private final @Nullable TextRange myRange;
     private final boolean myMultiLine;
 
     public SearchParameters(PsiFile file, IndexPattern pattern) {
       this(file, pattern, null);
     }
 
-    public SearchParameters(PsiFile file, IndexPattern pattern, TextRange range) {
+    public SearchParameters(PsiFile file, IndexPattern pattern, @Nullable TextRange range) {
       myFile = file;
       myRange = range;
       myPatternProvider = null;
@@ -60,7 +61,7 @@ public abstract class IndexPatternSearch extends QueryFactory<IndexPatternOccurr
       this(file, patternProvider, range, false);
     }
 
-    private SearchParameters(PsiFile file, IndexPatternProvider patternProvider, TextRange range, boolean multiLine) {
+    private SearchParameters(PsiFile file, IndexPatternProvider patternProvider, @Nullable TextRange range, boolean multiLine) {
       myFile = file;
       myPatternProvider = patternProvider;
       myRange = range;
@@ -68,20 +69,19 @@ public abstract class IndexPatternSearch extends QueryFactory<IndexPatternOccurr
       myMultiLine = multiLine;
     }
 
-    
     public PsiFile getFile() {
       return myFile;
     }
 
-    public IndexPattern getPattern() {
+    public @Nullable IndexPattern getPattern() {
       return myPattern;
     }
 
-    public IndexPatternProvider getPatternProvider() {
+    public @Nullable IndexPatternProvider getPatternProvider() {
       return myPatternProvider;
     }
 
-    public TextRange getRange() {
+    public @Nullable TextRange getRange() {
       return myRange;
     }
 

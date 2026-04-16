@@ -21,6 +21,8 @@ import consulo.virtualFileSystem.VirtualFile;
 
 import org.jspecify.annotations.Nullable;
 
+import java.util.Objects;
+
 /**
  * Represents a file or directory which can be renamed.
  *
@@ -33,6 +35,10 @@ public interface PsiFileSystemItem extends PsiCheckedRenameElement, NavigatableP
     @Nullable PsiFileSystemItem getParent();
 
     @Nullable VirtualFile getVirtualFile();
+
+    default VirtualFile getRequiredVirtualFile() {
+        return Objects.requireNonNull(getVirtualFile());
+    }
 
     @Override
     @RequiredReadAction

@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.language.psi;
 
+import consulo.annotation.access.RequiredReadAction;
 import org.jspecify.annotations.Nullable;
 import java.util.Collection;
 
@@ -52,7 +52,8 @@ public class PsiElementResolveResult implements ResolveResult {
     return myValidResult;
   }
 
-  public boolean equals(Object o) {
+  @Override
+  public boolean equals(@Nullable Object o) {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
 
@@ -69,10 +70,10 @@ public class PsiElementResolveResult implements ResolveResult {
 
   @Override
   public String toString() {
-    return "PsiElementResolveResult with " + myElement.getClass() + ": " + (myElement instanceof PsiNamedElement ? ((PsiNamedElement)myElement).getName() : myElement.getText());
+    return "PsiElementResolveResult with " + myElement.getClass() + ": " +
+        (myElement instanceof PsiNamedElement namedElem ? namedElem.getName() : myElement.getText());
   }
 
-  
   public static ResolveResult[] createResults(@Nullable Collection<? extends PsiElement> elements) {
     if (elements == null || elements.isEmpty()) return EMPTY_ARRAY;
 
@@ -84,8 +85,7 @@ public class PsiElementResolveResult implements ResolveResult {
     return results;
   }
 
-  
-  public static ResolveResult[] createResults(@Nullable PsiElement... elements) {
+  public static ResolveResult[] createResults(PsiElement @Nullable ... elements) {
     if (elements == null || elements.length == 0) return EMPTY_ARRAY;
 
     ResolveResult[] results = new ResolveResult[elements.length];

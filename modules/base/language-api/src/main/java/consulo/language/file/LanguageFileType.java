@@ -64,7 +64,7 @@ public abstract class LanguageFileType implements FileType {
         return myLanguage;
     }
 
-    public Charset extractCharsetFromFileContent(@Nullable Project project, @Nullable VirtualFile file, CharSequence content) {
+    public @Nullable Charset extractCharsetFromFileContent(@Nullable Project project, @Nullable VirtualFile file, CharSequence content) {
         return null;
     }
 
@@ -76,7 +76,6 @@ public abstract class LanguageFileType implements FileType {
         return mySecondary;
     }
 
-    
     @Override
     public LocalizeValue getDisplayName() {
         return myLanguage.getDisplayName();

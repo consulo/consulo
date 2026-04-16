@@ -119,7 +119,7 @@ public interface PsiElementProcessor<T extends PsiElement> {
   }
 
   class FindElement<T extends PsiElement> implements PsiElementProcessor<T> {
-    private volatile T myFoundElement = null;
+    private volatile @Nullable T myFoundElement = null;
 
     public boolean isFound() {
       return myFoundElement != null;

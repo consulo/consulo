@@ -13,34 +13,40 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.language.psi.filter.position;
 
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.filter.ElementFilter;
+import org.jspecify.annotations.Nullable;
+
+import java.util.Objects;
 
 /**
  * @author ik
  * @since 2003-01-30
  */
 public abstract class PositionElementFilter implements ElementFilter {
-  private ElementFilter myFilter;
+  private @Nullable ElementFilter myFilter = null;
 
-  public void setFilter(ElementFilter filter){
+  public void setFilter(ElementFilter filter) {
     myFilter = filter;
   }
 
-  public ElementFilter getFilter(){
+  public @Nullable ElementFilter getFilter() {
     return myFilter;
   }
 
+  public ElementFilter getRequiredFilter() {
+    return Objects.requireNonNull(myFilter);
+  }
+
   @Override
-  public boolean isClassAcceptable(Class hintClass){
+  public boolean isClassAcceptable(Class hintClass) {
     return true;
   }
 
-  protected static PsiElement getOwnerChild(PsiElement scope, PsiElement element){
-    while(element != null && element.getParent() != scope){
+  protected static @Nullable PsiElement getOwnerChild(PsiElement scope, PsiElement element) {
+    while (element != null && element.getParent() != scope) {
       element = element.getParent();
     }
     return element;

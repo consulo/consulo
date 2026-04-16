@@ -3,19 +3,19 @@ package consulo.language.psi.stub;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
-import consulo.application.ApplicationManager;
+import consulo.application.Application;
 import consulo.application.util.function.Processors;
 import consulo.index.io.IdIterator;
 import consulo.language.psi.PsiElement;
 import consulo.project.Project;
 import consulo.project.content.scope.ProjectAwareSearchScope;
 import consulo.project.content.scope.ProjectScopes;
-import consulo.util.lang.ObjectUtil;
 
 import org.jspecify.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Predicate;
 
 /**
@@ -24,7 +24,7 @@ import java.util.function.Predicate;
 @ServiceAPI(value = ComponentScope.APPLICATION, lazy = false)
 public abstract class StubIndex {
   private static class StubIndexHolder {
-    private static final StubIndex ourInstance = ApplicationManager.getApplication().getComponent(StubIndex.class);
+    private static final StubIndex ourInstance = Application.get().getComponent(StubIndex.class);
   }
 
   public static StubIndex getInstance() {
@@ -60,7 +60,6 @@ public abstract class StubIndex {
     return processElements(indexKey, key, project, scope, requiredClass, processor);
   }
 
-  
   public abstract <Key> Collection<Key> getAllKeys(StubIndexKey<Key, ?> indexKey, Project project);
 
   public <K> boolean processAllKeys(StubIndexKey<K, ?> indexKey, Project project, Predicate<? super K> processor) {
@@ -68,14 +67,13 @@ public abstract class StubIndex {
   }
 
   public <K> boolean processAllKeys(StubIndexKey<K, ?> indexKey, Predicate<? super K> processor, ProjectAwareSearchScope scope, @Nullable IdFilter idFilter) {
-    return processAllKeys(indexKey, ObjectUtil.assertNotNull(scope.getProject()), processor);
+    return processAllKeys(indexKey, Objects.requireNonNull(scope.getProject()), processor);
   }
 
   /**
    * @deprecated use {@link #getElements(StubIndexKey, Object, Project, ProjectAwareSearchScope, Class)}
    */
   @Deprecated
-  
   public <Key, Psi extends PsiElement> Collection<Psi> safeGet(StubIndexKey<Key, Psi> indexKey,
                                                                Key key,
                                                                Project project,
@@ -84,7 +82,6 @@ public abstract class StubIndex {
     return getElements(indexKey, key, project, scope, requiredClass);
   }
 
-  
   public static <Key, Psi extends PsiElement> Collection<Psi> getElements(StubIndexKey<Key, Psi> indexKey,
                                                                           Key key,
                                                                           Project project,
@@ -93,7 +90,6 @@ public abstract class StubIndex {
     return getElements(indexKey, key, project, scope, null, requiredClass);
   }
 
-  
   public static <Key, Psi extends PsiElement> Collection<Psi> getElements(StubIndexKey<Key, Psi> indexKey,
                                                                           Key key,
                                                                           Project project,
@@ -106,7 +102,6 @@ public abstract class StubIndex {
     return result;
   }
 
-  
   public abstract <Key> IdIterator getContainingIds(StubIndexKey<Key, ?> indexKey, Key dataKey, Project project, ProjectAwareSearchScope scope);
 
   public abstract void forceRebuild(Throwable e);

@@ -13,10 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.language.internal.custom;
 
 import consulo.language.ast.IElementType;
+
+import java.util.Objects;
 
 /**
  * @author dsl
@@ -34,7 +35,7 @@ public abstract class PrefixedTokenParser extends TokenParser {
     int start = position;
     int i;
     for (i = 0; i < myPrefix.length && position < myEndOffset; i++, position++) {
-      if (myPrefix[i] != myBuffer.charAt(position)) break;
+      if (myPrefix[i] != Objects.requireNonNull(myBuffer).charAt(position)) break;
     }
     if (i < myPrefix.length) return false;
     int end = getTokenEnd(position);

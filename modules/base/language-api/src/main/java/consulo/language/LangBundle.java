@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.language;
 
 import consulo.annotation.DeprecationInfo;
@@ -21,6 +20,7 @@ import consulo.annotation.internal.MigratedExtensionsTo;
 import consulo.component.util.localize.AbstractBundle;
 import consulo.language.localize.LanguageLocalize;
 import org.jetbrains.annotations.PropertyKey;
+import org.jspecify.annotations.Nullable;
 
 import java.util.function.Supplier;
 
@@ -37,15 +37,14 @@ public class LangBundle extends AbstractBundle{
     super("consulo.language.LangBundle");
   }
 
-  public static String message(@PropertyKey(resourceBundle = "consulo.language.LangBundle") String key) {
+  public static @Nullable String message(@PropertyKey(resourceBundle = "consulo.language.LangBundle") String key) {
     return ourInstance.getMessage(key);
   }
 
-  public static String message(@PropertyKey(resourceBundle = "consulo.language.LangBundle") String key, Object... params) {
+  public static @Nullable String message(@PropertyKey(resourceBundle = "consulo.language.LangBundle") String key, Object... params) {
     return ourInstance.getMessage(key, params);
   }
 
-  
   public static Supplier<String> messagePointer(String key) {
     return () -> message(key);
   }

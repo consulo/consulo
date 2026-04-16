@@ -3,6 +3,7 @@ package consulo.language.psi.search;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiReference;
+import org.jspecify.annotations.Nullable;
 
 import java.util.function.Function;
 
@@ -12,7 +13,7 @@ import java.util.function.Function;
 public class ReferenceDescriptor {
   public static final Function<PsiReference, ReferenceDescriptor> MAPPER = psiReference -> {
     PsiElement element = psiReference.getElement();
-    PsiFile file = element.getContainingFile();
+    PsiFile file = element.getRequiredContainingFile();
     return new ReferenceDescriptor(file, element.getTextRange().getStartOffset() + psiReference.getRangeInElement().getStartOffset());
   };
 
@@ -25,7 +26,7 @@ public class ReferenceDescriptor {
   }
 
   @Override
-  public boolean equals(Object o) {
+  public boolean equals(@Nullable Object o) {
     if (this == o) return true;
     if (!(o instanceof ReferenceDescriptor)) return false;
 

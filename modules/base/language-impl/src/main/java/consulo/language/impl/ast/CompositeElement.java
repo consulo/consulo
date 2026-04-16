@@ -31,19 +31,19 @@ import consulo.language.psi.*;
 import consulo.logging.Logger;
 import consulo.util.collection.ArrayFactory;
 import consulo.util.lang.ExceptionUtil;
-import consulo.util.lang.ObjectUtil;
 import org.jspecify.annotations.Nullable;
 
 import java.lang.invoke.MethodHandles;
 import java.lang.invoke.VarHandle;
+import java.util.Objects;
 import java.util.function.IntFunction;
 
 public class CompositeElement extends TreeElement {
     private static final Logger LOG = Logger.getInstance(CompositeElement.class);
     public static final CompositeElement[] EMPTY_ARRAY = new CompositeElement[0];
 
-    private TreeElement firstChild;
-    private TreeElement lastChild;
+    private @Nullable TreeElement firstChild = null;
+    private @Nullable TreeElement lastChild = null;
 
     private volatile int myCachedLength = -1;
     private volatile int myHC = -1;
@@ -66,7 +66,6 @@ public class CompositeElement extends TreeElement {
         super(type);
     }
 
-    
     @Override
     public CompositeElement clone() {
         CompositeElement clone = (CompositeElement) super.clone();
@@ -581,12 +580,12 @@ public class CompositeElement extends TreeElement {
     }
 
     @Override
-    public TreeElement getFirstChildNode() {
+    public @Nullable TreeElement getFirstChildNode() {
         return firstChild;
     }
 
     @Override
-    public TreeElement getLastChildNode() {
+    public @Nullable TreeElement getLastChildNode() {
         return lastChild;
     }
 
@@ -733,7 +732,7 @@ public class CompositeElement extends TreeElement {
 
     @Override
     @RequiredReadAction
-    public final PsiElement getPsi() {
+    public final @Nullable PsiElement getPsi() {
         ProgressIndicatorProvider.checkCanceled(); // We hope this method is being called often enough to cancel daemon processes smoothly
 
         PsiElement wrapper = myWrapper;
@@ -742,7 +741,7 @@ public class CompositeElement extends TreeElement {
         }
 
         wrapper = createPsiNoLock();
-        return ourPsiUpdater.compareAndSet(this, null, wrapper) ? wrapper : ObjectUtil.assertNotNull(myWrapper);
+        return ourPsiUpdater.compareAndSet(this, null, wrapper) ? wrapper : Objects.requireNonNull(myWrapper);
     }
 
     @Override

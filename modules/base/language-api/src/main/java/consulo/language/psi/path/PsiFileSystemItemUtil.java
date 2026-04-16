@@ -61,10 +61,14 @@ public class PsiFileSystemItemUtil {
     return componentsList.toArray(new PsiFileSystemItem[componentsList.size()]);
   }
 
-  
   public static String getNotNullRelativePath(PsiFileSystemItem src, PsiFileSystemItem dst) throws IncorrectOperationException {
     String s = getRelativePath(src, dst);
-    if (s == null) throw new IncorrectOperationException("Cannot find path between files; src = " + src.getVirtualFile().getPresentableUrl() + "; dst = " + dst.getVirtualFile().getPresentableUrl());
+    if (s == null) {
+      throw new IncorrectOperationException(
+        "Cannot find path between files; src = " + src.getRequiredVirtualFile().getPresentableUrl() +
+            "; dst = " + dst.getRequiredVirtualFile().getPresentableUrl()
+      );
+    }
     return s;
   }
 
@@ -106,12 +110,14 @@ public class PsiFileSystemItemUtil {
     parent = file;
 
     while (true) {
-      if (parent.equals(ancestor)) break;
+      if (parent == null || parent.equals(ancestor)) {
+        break;
+      }
       if (index < length) {
         chars[--index] = '/';
       }
       String name = parent.getName();
-      for (int i = name.length() - 1; i >= 0; i--) {
+      for (int i = name.length(); --i >= 0; ) {
         chars[--index] = name.charAt(i);
       }
       parent = parent.getParent();

@@ -16,31 +16,26 @@ import java.util.function.IntFunction;
  */
 public interface StubElement<T extends PsiElement> extends Stub {
   @Override
-  IStubElementType getStubType();
+  @Nullable IStubElementType getStubType();
 
   @Override
-  StubElement getParentStub();
+  @Nullable StubElement getParentStub();
 
   @Nullable PsiFileStub<?> getContainingFileStub();
 
   @Override
-  
   List<StubElement> getChildrenStubs();
 
   <P extends PsiElement, S extends StubElement<P>> @Nullable S findChildStubByType(IStubElementType<S, P> elementType);
 
-  T getPsi();
+  @Nullable T getPsi();
 
-  
   <E extends PsiElement> E[] getChildrenByType(IElementType elementType, E[] array);
 
-  
   <E extends PsiElement> E[] getChildrenByType(TokenSet filter, E[] array);
 
-  
   <E extends PsiElement> E[] getChildrenByType(IElementType elementType, IntFunction<E[]> f);
 
-  
   <E extends PsiElement> E[] getChildrenByType(TokenSet filter, IntFunction<E[]> f);
 
   <E extends PsiElement> @Nullable E getParentStubOfType(Class<E> parentClass);

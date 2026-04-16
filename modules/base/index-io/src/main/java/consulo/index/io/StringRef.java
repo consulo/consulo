@@ -31,7 +31,7 @@ public class StringRef {
 
   private int id;
   private String name;
-  private final AbstractStringEnumerator store;
+  private final @Nullable AbstractStringEnumerator store;
 
   private StringRef(String name) {
     this.name = name;
@@ -96,16 +96,15 @@ public class StringRef {
   }
 
   @Contract("null -> null")
-  public static String toString(@Nullable StringRef ref) {
+  public static @Nullable String toString(@Nullable StringRef ref) {
     return ref != null ? ref.getString() : null;
   }
 
   @Contract("null -> null; !null -> !null")
-  public static StringRef fromString(@Nullable String source) {
+  public static @Nullable StringRef fromString(@Nullable String source) {
     return source == null ? null : new StringRef(source);
   }
 
-  
   public static StringRef fromNullableString(@Nullable String source) {
     return new StringRef(source == null ? "" : source);
   }
@@ -121,7 +120,6 @@ public class StringRef {
     return nameId != 0 ? store.valueOf(nameId) : null;
   }
 
-  
   public static StringRef[] createArray(int count) {
     return count == 0 ? EMPTY_ARRAY : new StringRef[count];
   }

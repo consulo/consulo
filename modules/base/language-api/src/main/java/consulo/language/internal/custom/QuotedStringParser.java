@@ -13,11 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.language.internal.custom;
 
 import consulo.logging.Logger;
 import consulo.language.ast.IElementType;
+
+import java.util.Objects;
 
 /**
  * @author dsl
@@ -34,10 +35,11 @@ public class QuotedStringParser extends PrefixedTokenParser {
     myAllowEscapes = allowEscapes;
   }
 
+  @Override
   protected int getTokenEnd(int position) {
     boolean escaped = false;
-    for(; position < myEndOffset; position++) {
-      char c = myBuffer.charAt(position);
+    for (; position < myEndOffset; position++) {
+      char c = Objects.requireNonNull(myBuffer).charAt(position);
       boolean escapedStatus = escaped;
 
       if (myAllowEscapes && c == '\\') {

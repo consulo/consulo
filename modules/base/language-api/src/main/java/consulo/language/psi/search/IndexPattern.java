@@ -29,11 +29,10 @@ import java.util.regex.PatternSyntaxException;
  * @since 5.1
  */
 public class IndexPattern {
-  
   private String myPatternString;
-  private Pattern myOptimizedIndexingPattern;
+  private @Nullable Pattern myOptimizedIndexingPattern;
   private boolean myCaseSensitive;
-  private Pattern myPattern;
+  private @Nullable Pattern myPattern;
 
   /**
    * Creates an instance of an index pattern.
@@ -47,7 +46,6 @@ public class IndexPattern {
     compilePattern();
   }
 
-  
   public String getPatternString() {
     return myPatternString;
   }
@@ -92,7 +90,7 @@ public class IndexPattern {
   }
 
   @Override
-  public boolean equals(Object o) {
+  public boolean equals(@Nullable Object o) {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
 

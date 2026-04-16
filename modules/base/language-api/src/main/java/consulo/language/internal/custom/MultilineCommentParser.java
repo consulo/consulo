@@ -13,8 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.language.internal.custom;
+
+import org.jspecify.annotations.Nullable;
+
+import java.util.Objects;
 
 /**
  * @author dsl
@@ -27,21 +30,24 @@ public class MultilineCommentParser extends PrefixedTokenParser {
     myEndDelimiter = endDelimiter.toCharArray();
   }
 
+  @Override
   protected int getTokenEnd(int position) {
     for (; position < myEndOffset; position++) {
       // todo: implement KMP
       int pos = position;
       int i;
       for (i = 0; i < myEndDelimiter.length && pos < myEndOffset; i++, pos++) {
-        if (myBuffer.charAt(pos) != myEndDelimiter[i]) break;
+        if (Objects.requireNonNull(myBuffer).charAt(pos) != myEndDelimiter[i]) break;
       }
       if (i == myEndDelimiter.length) return pos;
     }
     return position;
   }
 
-  public static MultilineCommentParser create(String startDelimiter, String endDelimiter) {
-    if(startDelimiter == null || endDelimiter == null) return null;
+  public static @Nullable MultilineCommentParser create(@Nullable String startDelimiter, @Nullable String endDelimiter) {
+    if (startDelimiter == null || endDelimiter == null) {
+      return null;
+    }
     String trimmedStart = startDelimiter.trim();
     String trimmedEnd = endDelimiter.trim();
     if (trimmedStart.length() > 0 && trimmedEnd.length() > 0) {

@@ -40,7 +40,7 @@ public class LocalSearchScope extends BaseSearchScope {
   private final boolean myIgnoreInjectedPsi;
 
   public static final LocalSearchScope EMPTY = new LocalSearchScope(PsiElement.EMPTY_ARRAY);
-  private String myDisplayName;
+  private @Nullable String myDisplayName;
 
   public LocalSearchScope(PsiElement scope) {
     this(scope, null);
@@ -118,7 +118,6 @@ public class LocalSearchScope extends BaseSearchScope {
     return result;
   }
 
-  
   public LocalSearchScope intersectWith(LocalSearchScope scope2){
     if (equals(scope2)) return this;
     return intersection(this, scope2);
@@ -139,7 +138,6 @@ public class LocalSearchScope extends BaseSearchScope {
     return new LocalSearchScope(PsiUtilCore.toPsiElementArray(result), null, scope1.myIgnoreInjectedPsi || scope2.myIgnoreInjectedPsi);
   }
 
-  
   @Override
   public SearchScope intersectWith(SearchScope scope2) {
     if (scope2 instanceof LocalSearchScope) {
@@ -170,9 +168,10 @@ public class LocalSearchScope extends BaseSearchScope {
   }
 
   @Override
-  
   public SearchScope union(SearchScope scope) {
-    if (scope instanceof LocalSearchScope) return union((LocalSearchScope)scope);
+    if (scope instanceof LocalSearchScope localSearchScope) {
+      return union(localSearchScope);
+    }
     return ((GlobalSearchScope)scope).union(this);
   }
 
@@ -204,7 +203,7 @@ public class LocalSearchScope extends BaseSearchScope {
     return new LocalSearchScope(PsiUtilCore.toPsiElementArray(result));
   }
 
-  private static PsiElement scopeElementsUnion(PsiElement element1, PsiElement element2) {
+  private static @Nullable PsiElement scopeElementsUnion(PsiElement element1, PsiElement element2) {
     if (PsiTreeUtil.isAncestor(element1, element2, false)) return element1;
     if (PsiTreeUtil.isAncestor(element2, element1, false)) return element2;
     PsiElement commonParent = PsiTreeUtil.findCommonParent(element1, element2);

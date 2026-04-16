@@ -17,6 +17,7 @@ package consulo.language.psi.resolve;
 
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.KeyWithDefaultValue;
+import org.jspecify.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -36,7 +37,7 @@ public class ResolveState {
     return new OneElementResolveState(key, value);
   }
 
-  public <T> T get(Key<T> key) {
+  public <T> @Nullable T get(Key<T> key) {
     if (key instanceof KeyWithDefaultValue) {
       return ((KeyWithDefaultValue<T>)key).getDefaultValue();
     }
@@ -62,7 +63,7 @@ public class ResolveState {
     }
 
     @Override
-    public <T> T get(Key<T> key) {
+    public <T> @Nullable T get(Key<T> key) {
       Object value = myKey.equals(key) ? myValue : null;
       if (value == null && key instanceof KeyWithDefaultValue) {
         return ((KeyWithDefaultValue<T>)key).getDefaultValue();
@@ -97,7 +98,7 @@ public class ResolveState {
     }
 
     @Override
-    public <T> T get(Key<T> key) {
+    public <T> @Nullable T get(Key<T> key) {
       Object value;
       if (myKey1.equals(key)) {
         value = myValue1;
@@ -117,7 +118,6 @@ public class ResolveState {
   }
 
   private static class ManyElementResolveState extends ResolveState {
-
     private final Map<Object, Object> myValues = new HashMap<Object, Object>();
 
     ManyElementResolveState(ManyElementResolveState parent, Key key, Object value) {
@@ -137,7 +137,7 @@ public class ResolveState {
     }
 
     @Override
-    public <T> T get(Key<T> key) {
+    public <T> @Nullable T get(Key<T> key) {
       T value = (T)myValues.get(key);
       if (value == null && key instanceof KeyWithDefaultValue) {
         return ((KeyWithDefaultValue<T>) key).getDefaultValue();

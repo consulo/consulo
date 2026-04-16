@@ -21,12 +21,12 @@ public abstract class DelegatingScopeProcessor implements PsiScopeProcessor {
   }
 
   @Override
-  public @Nullable <T> T getHint(Key<T> hintKey) {
+  public <T> @Nullable T getHint(Key<T> hintKey) {
     return myDelegate.getHint(hintKey);
   }
 
   @Override
-  public void handleEvent(Event event, Object associated) {
+  public void handleEvent(Event event, @Nullable Object associated) {
     myDelegate.handleEvent(event, associated);
   }
 }

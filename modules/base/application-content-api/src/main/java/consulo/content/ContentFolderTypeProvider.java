@@ -38,12 +38,10 @@ import java.util.function.Predicate;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class ContentFolderTypeProvider {
-    
     public static Predicate<ContentFolderTypeProvider> allExceptExcluded() {
         return typeProvider -> !(typeProvider instanceof ExcludedContentFolderTypeProvider);
     }
 
-    
     public static Predicate<ContentFolderTypeProvider> onlyExcluded() {
         return typeProvider -> typeProvider instanceof ExcludedContentFolderTypeProvider;
     }
@@ -54,7 +52,6 @@ public abstract class ContentFolderTypeProvider {
         myId = id;
     }
 
-    
     public String getId() {
         return myId;
     }
@@ -84,17 +81,14 @@ public abstract class ContentFolderTypeProvider {
         return null;
     }
 
-    
     public abstract Image getIcon();
 
-    
     public abstract LocalizeValue getName();
 
-    
     public abstract ColorValue getGroupColor();
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(@Nullable Object o) {
         if (this == o) {
             return true;
         }
@@ -112,7 +106,6 @@ public abstract class ContentFolderTypeProvider {
         return myId.hashCode();
     }
 
-    
     public static List<ContentFolderTypeProvider> filter(Predicate<ContentFolderTypeProvider> predicate) {
         return Application.get().getExtensionPoint(ContentFolderTypeProvider.class).collectFiltered(predicate);
     }

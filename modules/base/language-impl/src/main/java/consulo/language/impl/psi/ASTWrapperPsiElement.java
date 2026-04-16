@@ -19,6 +19,7 @@ import consulo.annotation.access.RequiredReadAction;
 import consulo.language.ast.ASTNode;
 import consulo.language.impl.ast.SharedImplUtil;
 import consulo.language.psi.PsiElement;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author max
@@ -32,11 +33,10 @@ public class ASTWrapperPsiElement extends ASTDelegatePsiElement {
 
     @Override
     @RequiredReadAction
-    public PsiElement getParent() {
+    public @Nullable PsiElement getParent() {
         return SharedImplUtil.getParent(getNode());
     }
 
-    
     @Override
     @RequiredReadAction
     public ASTNode getNode() {

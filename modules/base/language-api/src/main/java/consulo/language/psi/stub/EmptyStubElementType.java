@@ -6,6 +6,7 @@ import consulo.language.psi.PsiElement;
 
 import org.jspecify.annotations.Nullable;
 import java.io.IOException;
+import java.util.Objects;
 
 /**
  * @author peter
@@ -15,7 +16,6 @@ public abstract class EmptyStubElementType<T extends PsiElement> extends IStubEl
     super(debugName, language);
   }
 
-  
   @RequiredReadAction
   @Override
   public final EmptyStub createStub(T psi, StubElement parentStub) {
@@ -26,7 +26,6 @@ public abstract class EmptyStubElementType<T extends PsiElement> extends IStubEl
     return new EmptyStub(parentStub, this);
   }
 
-  
   @Override
   public String getExternalId() {
     return getLanguage().getID() + toString();
@@ -36,10 +35,9 @@ public abstract class EmptyStubElementType<T extends PsiElement> extends IStubEl
   public final void serialize(EmptyStub stub, StubOutputStream dataStream) throws IOException {
   }
 
-  
   @Override
-  public final EmptyStub deserialize(StubInputStream dataStream, StubElement parentStub) throws IOException {
-    return createStub(parentStub);
+  public final EmptyStub deserialize(StubInputStream dataStream, @Nullable StubElement parentStub) throws IOException {
+    return createStub(Objects.requireNonNull(parentStub));
   }
 
   @Override

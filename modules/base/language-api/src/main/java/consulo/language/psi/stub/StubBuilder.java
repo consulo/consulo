@@ -18,13 +18,14 @@ package consulo.language.psi.stub;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.language.ast.ASTNode;
 import consulo.language.psi.PsiFile;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author max
  */
 public interface StubBuilder {
   @RequiredReadAction
-  StubElement buildStubTree(PsiFile file);
+  @Nullable StubElement buildStubTree(PsiFile file);
 
   boolean skipChildProcessingWhenBuildingStubs(ASTNode parent, ASTNode node);
 }

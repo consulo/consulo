@@ -13,36 +13,34 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.language.psi.filter.position;
 
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.filter.ElementFilter;
 import consulo.language.psi.filter.FilterPositionUtil;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author ik
  * @since 2003-02-06
  */
 public class LeftNeighbour extends PositionElementFilter {
-  public LeftNeighbour(){}
+  public LeftNeighbour() {
+  }
 
   public LeftNeighbour(ElementFilter filter){
     setFilter(filter);
   }
 
   @Override
-  public boolean isAcceptable(Object element, PsiElement context){
-    if (!(element instanceof PsiElement)) return false;
-    PsiElement previous = FilterPositionUtil.searchNonSpaceNonCommentBack((PsiElement) element);
-    if(previous != null){
-      return getFilter().isAcceptable(previous, context);
-    }
-    return false;
+  public boolean isAcceptable(Object element, @Nullable PsiElement context) {
+    if (!(element instanceof PsiElement psiElement)) return false;
+    PsiElement previous = FilterPositionUtil.searchNonSpaceNonCommentBack(psiElement);
+    return previous != null && getRequiredFilter().isAcceptable(previous, context);
   }
 
   public String toString(){
-    return "left(" +getFilter()+")";
+    return "left(" + getFilter() + ")";
   }
 }
 

@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.function.UnaryOperator;
 
 class FileLocalStringEnumerator implements AbstractStringEnumerator {
-  private final ObjectIntMap<String> myEnumerates;
+  private final @Nullable ObjectIntMap<String> myEnumerates;
   private final ArrayList<String> myStrings = new ArrayList<>();
 
   FileLocalStringEnumerator(boolean forSavingStub) {
@@ -35,7 +35,7 @@ class FileLocalStringEnumerator implements AbstractStringEnumerator {
   }
 
   @Override
-  public String valueOf(int idx) {
+  public @Nullable String valueOf(int idx) {
     if (idx == 0) return null;
     return myStrings.get(idx - 1);
   }

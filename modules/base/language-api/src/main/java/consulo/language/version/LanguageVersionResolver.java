@@ -32,19 +32,17 @@ import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
- * @since 18:05/30.05.13
+ * @since 2013-05-30
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface LanguageVersionResolver extends LanguageExtension {
   LanguageVersionResolver DEFAULT = new LanguageVersionResolver() {
-    
     @Override
     public Language getLanguage() {
       return Language.ANY;
     }
 
     @RequiredReadAction
-    
     @Override
     public LanguageVersion getLanguageVersion(Language language, @Nullable PsiElement element) {
       LanguageVersion[] versions = language.getVersions();
@@ -57,7 +55,6 @@ public interface LanguageVersionResolver extends LanguageExtension {
     }
 
     @RequiredReadAction
-    
     @Override
     public LanguageVersion getLanguageVersion(Language language, @Nullable Project project, @Nullable VirtualFile virtualFile) {
       LanguageVersion[] versions = language.getVersions();
@@ -70,20 +67,18 @@ public interface LanguageVersionResolver extends LanguageExtension {
     }
   };
 
-  
   static LanguageVersionResolver forLanguage(Language language) {
-    ByLanguageValue<LanguageVersionResolver> value = Application.get().getExtensionPoint(LanguageVersionResolver.class).getOrBuildCache(KEY);
-    return value.get(language);
+    ByLanguageValue<LanguageVersionResolver> value =
+        Application.get().getExtensionPoint(LanguageVersionResolver.class).getOrBuildCache(KEY);
+    return value.requiredGet(language);
   }
 
   ExtensionPointCacheKey<LanguageVersionResolver, ByLanguageValue<LanguageVersionResolver>> KEY =
           ExtensionPointCacheKey.create("LanguageVersionResolver", LanguageOneToOne.build(LanguageVersionResolver.DEFAULT));
 
-  
   @RequiredReadAction
   LanguageVersion getLanguageVersion(Language language, @Nullable PsiElement element);
 
-  
   @RequiredReadAction
   LanguageVersion getLanguageVersion(Language language, @Nullable Project project, @Nullable VirtualFile virtualFile);
 }

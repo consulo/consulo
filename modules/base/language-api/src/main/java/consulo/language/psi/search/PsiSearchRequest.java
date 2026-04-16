@@ -17,6 +17,7 @@ package consulo.language.psi.search;
 
 import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.content.scope.SearchScope;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author peter
@@ -27,7 +28,7 @@ public class PsiSearchRequest {
   public final short searchContext;
   public final boolean caseSensitive;
   public final RequestResultProcessor processor;
-  public final String containerName;
+  public final @Nullable String containerName;
 
   public PsiSearchRequest(SearchScope searchScope,
                           String word,
@@ -40,7 +41,7 @@ public class PsiSearchRequest {
                           String word,
                           short searchContext,
                           boolean caseSensitive,
-                          String containerName,
+                          @Nullable String containerName,
                           RequestResultProcessor processor) {
     this.containerName = containerName;
     if (word.isEmpty()) {

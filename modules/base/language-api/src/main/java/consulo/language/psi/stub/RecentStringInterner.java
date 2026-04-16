@@ -18,6 +18,8 @@ package consulo.language.psi.stub;
 import consulo.application.util.LowMemoryWatcher;
 import consulo.disposer.Disposable;
 import consulo.util.collection.SLRUCache;
+import org.jetbrains.annotations.Contract;
+import org.jspecify.annotations.Nullable;
 
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -54,7 +56,8 @@ class RecentStringInterner {
     LowMemoryWatcher.register(this::clear, parentDisposable);
   }
 
-  public String get(String s) {
+  @Contract("null -> null; !null -> !null")
+  public @Nullable String get(@Nullable String s) {
     if (s == null) return null;
     int stripe = Math.abs(s.hashCode()) & myStripeMask;
     try {

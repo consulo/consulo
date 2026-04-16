@@ -27,15 +27,15 @@ import org.jspecify.annotations.Nullable;
  * @author peter
  */
 public class ProximityLocation implements UserDataHolder {
-  private final PsiElement myPosition;
-  private final Module myPositionModule;
+  private final @Nullable PsiElement myPosition;
+  private final @Nullable Module myPositionModule;
   private final ProcessingContext myContext;
 
-  public ProximityLocation(@Nullable PsiElement position, Module positionModule) {
+  public ProximityLocation(@Nullable PsiElement position, @Nullable Module positionModule) {
     this(position, positionModule, new ProcessingContext());
   }
 
-  public ProximityLocation(PsiElement position, Module positionModule, ProcessingContext context) {
+  public ProximityLocation(@Nullable PsiElement position, @Nullable Module positionModule, ProcessingContext context) {
     myPosition = position;
     myPositionModule = positionModule;
     myContext = context;
@@ -54,7 +54,7 @@ public class ProximityLocation implements UserDataHolder {
   }
 
   @Override
-  public <T> T getUserData(Key<T> key) {
+  public <T> @Nullable T getUserData(Key<T> key) {
     return myContext.get(key);
   }
 

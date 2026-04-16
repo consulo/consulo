@@ -8,12 +8,12 @@ import consulo.language.ast.TokenSet;
 import consulo.language.psi.PsiElement;
 import consulo.project.Project;
 import consulo.util.collection.ArrayUtil;
-import consulo.util.lang.ObjectUtil;
 
 import org.jspecify.annotations.Nullable;
 import java.lang.invoke.MethodHandles;
 import java.lang.invoke.VarHandle;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.IntFunction;
 
 /**
@@ -21,7 +21,7 @@ import java.util.function.IntFunction;
  */
 public abstract class StubBase<T extends PsiElement> extends ObjectStubBase<StubElement> implements StubElement<T> {
   StubList myStubList;
-  private volatile T myPsi;
+  private volatile @Nullable T myPsi = null;
 
   private static final VarHandle ourPsiUpdater;
 
@@ -34,7 +34,7 @@ public abstract class StubBase<T extends PsiElement> extends ObjectStubBase<Stub
     }
   }
 
-  protected StubBase(StubElement parent, IStubElementType elementType) {
+  protected StubBase(@Nullable StubElement parent, @Nullable IStubElementType elementType) {
     super(parent);
     myStubList = parent == null ? new MaterialStubList(10) : ((StubBase<?>)parent).myStubList;
     myStubList.addStub(this, (StubBase<?>)parent, elementType);
@@ -45,12 +45,12 @@ public abstract class StubBase<T extends PsiElement> extends ObjectStubBase<Stub
   }
 
   @Override
-  public StubElement getParentStub() {
+  public @Nullable StubElement getParentStub() {
     return myParent;
   }
 
   @Override
-  public PsiFileStub<?> getContainingFileStub() {
+  public @Nullable PsiFileStub<?> getContainingFileStub() {
     StubBase<?> rootStub = myStubList.get(0);
     if (!(rootStub instanceof PsiFileStub)) {
       return null;
@@ -58,7 +58,6 @@ public abstract class StubBase<T extends PsiElement> extends ObjectStubBase<Stub
     return (PsiFileStub<?>)rootStub;
   }
 
-  
   @Override
   @SuppressWarnings("unchecked")
   public List<StubElement> getChildrenStubs() {
@@ -80,16 +79,17 @@ public abstract class StubBase<T extends PsiElement> extends ObjectStubBase<Stub
   }
 
   @Override
-  public T getPsi() {
+  public @Nullable T getPsi() {
     T psi = myPsi;
-    if (psi != null) return psi;
+    if (psi != null) {
+      return psi;
+    }
 
     //noinspection unchecked
-    psi = (T)getStubType().createPsi(this);
-    return ourPsiUpdater.compareAndSet(this, null, psi) ? psi : ObjectUtil.assertNotNull(myPsi);
+    psi = (T) Objects.requireNonNull(getStubType()).createPsi(this);
+    return ourPsiUpdater.compareAndSet(this, null, psi) ? psi : Objects.requireNonNull(myPsi);
   }
 
-  
   @Override
   public <E extends PsiElement> E[] getChildrenByType(IElementType elementType, E[] array) {
     List<StubElement> childrenStubs = getChildrenStubs();
@@ -102,7 +102,6 @@ public abstract class StubBase<T extends PsiElement> extends ObjectStubBase<Stub
     return array;
   }
 
-  
   @Override
   public <E extends PsiElement> E[] getChildrenByType(TokenSet filter, E[] array) {
     List<StubElement> childrenStubs = getChildrenStubs();
@@ -115,7 +114,6 @@ public abstract class StubBase<T extends PsiElement> extends ObjectStubBase<Stub
     return array;
   }
 
-  
   @Override
   public <E extends PsiElement> E[] getChildrenByType(IElementType elementType, IntFunction<E[]> f) {
     List<StubElement> childrenStubs = getChildrenStubs();
@@ -156,7 +154,7 @@ public abstract class StubBase<T extends PsiElement> extends ObjectStubBase<Stub
       StubElement<?> childStub = childrenStubs.get(i);
       if (childStub.getStubType() == type) {
         //noinspection unchecked
-        result[count++] = (E)childStub.getPsi();
+        result[count++] = (E) Objects.requireNonNull(childStub.getPsi());
       }
     }
 
@@ -170,14 +168,13 @@ public abstract class StubBase<T extends PsiElement> extends ObjectStubBase<Stub
       StubElement<?> childStub = childrenStubs.get(i);
       if (set.contains(childStub.getStubType())) {
         //noinspection unchecked
-        result[count++] = (E)childStub.getPsi();
+        result[count++] = (E) Objects.requireNonNull(childStub.getPsi());
       }
     }
 
     assert count == result.length;
   }
 
-  
   @Override
   public <E extends PsiElement> E[] getChildrenByType(TokenSet filter, IntFunction<E[]> f) {
     List<StubElement> childrenStubs = getChildrenStubs();
@@ -206,12 +203,12 @@ public abstract class StubBase<T extends PsiElement> extends ObjectStubBase<Stub
   }
 
   @Override
-  public IStubElementType getStubType() {
+  public @Nullable IStubElementType getStubType() {
     return myStubList.getStubType(id);
   }
 
   public Project getProject() {
-    return getPsi().getProject();
+    return Objects.requireNonNull(getPsi()).getProject();
   }
 
   public String printTree() {

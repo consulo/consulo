@@ -15,31 +15,34 @@
  */
 package consulo.language.pratt;
 
-import consulo.language.LangBundle;
 import consulo.language.ast.IElementType;
 import consulo.language.lexer.Lexer;
+import consulo.language.localize.LanguageLocalize;
 import consulo.language.parser.ITokenTypeRemapper;
 import consulo.language.parser.PsiBuilder;
 import consulo.util.lang.Trinity;
 
 import org.jspecify.annotations.Nullable;
+
+import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * @author peter
  */
 public class PrattBuilderImpl extends PrattBuilder {
   private final PsiBuilder myBuilder;
-  private final PrattBuilder myParentBuilder;
+  private final @Nullable PrattBuilder myParentBuilder;
   private final PrattRegistry myRegistry;
-  private final LinkedList<IElementType> myLeftSiblings = new LinkedList<IElementType>();
+  private final LinkedList<IElementType> myLeftSiblings = new LinkedList<>();
   private boolean myParsingStarted;
-  private String myExpectedMessage;
+  private @Nullable String myExpectedMessage = null;
   private int myPriority = Integer.MIN_VALUE;
-  private MutableMarker myStartMarker;
+  private @Nullable MutableMarker myStartMarker = null;
 
-  private PrattBuilderImpl(PsiBuilder builder, PrattBuilder parent, PrattRegistry registry) {
+  private PrattBuilderImpl(PsiBuilder builder, @Nullable PrattBuilder parent, PrattRegistry registry) {
     myBuilder = builder;
     myParentBuilder = parent;
     myRegistry = registry;
@@ -50,7 +53,7 @@ public class PrattBuilderImpl extends PrattBuilder {
   }
 
   @Override
-  public PrattBuilder expecting(String expectedMessage) {
+  public PrattBuilder expecting(@Nullable String expectedMessage) {
     myExpectedMessage = expectedMessage;
     return this;
   }
@@ -96,13 +99,13 @@ public class PrattBuilderImpl extends PrattBuilder {
 
   protected void doParse() {
     if (isEof()) {
-      error(myExpectedMessage != null ? myExpectedMessage : LangBundle.message("unexpected.eof"));
+      error(myExpectedMessage != null ? myExpectedMessage : LanguageLocalize.unexpectedEof().get());
       return;
     }
 
     TokenParser parser = findParser();
     if (parser == null) {
-      error(myExpectedMessage != null ? myExpectedMessage : LangBundle.message("unexpected.token"));
+      error(myExpectedMessage != null ? myExpectedMessage : LanguageLocalize.unexpectedToken().get());
       return;
     }
 
@@ -122,9 +125,12 @@ public class PrattBuilderImpl extends PrattBuilder {
 
   private @Nullable TokenParser findParser() {
     IElementType tokenType = getTokenType();
-    for (Trinity<Integer, PathPattern, TokenParser> trinity : myRegistry.getParsers(tokenType)) {
-      if (trinity.first > myPriority && trinity.second.accepts(this)) {
-        return trinity.third;
+    Collection<Trinity<Integer, PathPattern, TokenParser>> parsers = myRegistry.getParsers(tokenType);
+    if (parsers != null) {
+      for (Trinity<Integer, PathPattern, TokenParser> trinity : parsers) {
+        if (trinity.first > myPriority && trinity.second.accepts(this)) {
+          return trinity.third;
+        }
       }
     }
     return null;
@@ -155,12 +161,11 @@ public class PrattBuilderImpl extends PrattBuilder {
 
   @Override
   public void reduce(IElementType type) {
-    myStartMarker.finish(type);
+    Objects.requireNonNull(myStartMarker).finish(type);
     myStartMarker = myStartMarker.precede();
   }
 
   @Override
-  
   public List<IElementType> getResultTypes() {
     checkParsed();
     return myLeftSiblings;
@@ -174,7 +179,7 @@ public class PrattBuilderImpl extends PrattBuilder {
   }
 
   @Override
-  public PrattBuilder getParent() {
+  public @Nullable PrattBuilder getParent() {
     return myParentBuilder;
   }
 

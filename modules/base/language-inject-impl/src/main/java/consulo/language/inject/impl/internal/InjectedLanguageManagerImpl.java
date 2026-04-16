@@ -288,11 +288,10 @@ public class InjectedLanguageManagerImpl implements InjectedLanguageManagerInter
     }
 
     @Override
-    public PsiFile getTopLevelFile(PsiElement element) {
+    public @Nullable PsiFile getTopLevelFile(PsiElement element) {
         return InjectedLanguageUtil.getTopLevelFile(element);
     }
 
-    
     @Override
     public List<DocumentWindow> getCachedInjectedDocumentsInRange(PsiFile hostPsiFile, TextRange range) {
         return InjectedLanguageUtil.getCachedInjectedDocumentsInRange(hostPsiFile, range);
@@ -314,7 +313,6 @@ public class InjectedLanguageManagerImpl implements InjectedLanguageManagerInter
         InjectedLanguageUtil.enumerate(host, containingFile, probeUp, visitor);
     }
 
-    
     @Override
     public List<TextRange> getNonEditableFragments(DocumentWindow window) {
         List<TextRange> result = new ArrayList<>();
@@ -359,7 +357,6 @@ public class InjectedLanguageManagerImpl implements InjectedLanguageManagerInter
         return InjectedLanguageUtil.getShreds(viewProvider);
     }
 
-    
     @Override
     public PsiLanguageInjectionHost.Place getShreds(DocumentWindow documentWindow) {
         return ((DocumentWindowImpl) documentWindow).getShreds();
@@ -388,7 +385,6 @@ public class InjectedLanguageManagerImpl implements InjectedLanguageManagerInter
     }
 
     @Override
-    
     @RequiredReadAction
     public String getUnescapedText(PsiFile file, @Nullable PsiElement startElement, @Nullable PsiElement endElement) {
         return InjectedLanguageUtil.getUnescapedText(file, startElement, endElement);
@@ -500,7 +496,6 @@ public class InjectedLanguageManagerImpl implements InjectedLanguageManagerInter
     private static class PsiManagerRegisteredInjectorsAdapter implements MultiHostInjector {
         public static final PsiManagerRegisteredInjectorsAdapter INSTANCE = new PsiManagerRegisteredInjectorsAdapter();
 
-        
         @Override
         public Class<? extends PsiElement> getElementClass() {
             return PsiLanguageInjectionHost.class;

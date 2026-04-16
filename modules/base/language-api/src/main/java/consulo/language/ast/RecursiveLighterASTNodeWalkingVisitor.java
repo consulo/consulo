@@ -13,16 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.language.ast;
 
+import consulo.annotation.ReviewAfterIssueFix;
 import consulo.util.collection.util.WalkingState;
 import consulo.util.collection.Stack;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 
 public abstract class RecursiveLighterASTNodeWalkingVisitor extends LighterASTNodeVisitor {
-  
   private final LighterAST ast;
   private final Stack<IndexedLighterASTNode[]> childrenStack = new Stack<>();
   private final Stack<IndexedLighterASTNode> parentStack = new Stack<>();
@@ -31,36 +31,39 @@ public abstract class RecursiveLighterASTNodeWalkingVisitor extends LighterASTNo
   private static class IndexedLighterASTNode {
     private static final IndexedLighterASTNode[] EMPTY_ARRAY = new IndexedLighterASTNode[0];
     private final LighterASTNode node;
-    private final IndexedLighterASTNode prev;
-    private IndexedLighterASTNode next;
+    private final @Nullable IndexedLighterASTNode prev;
+    private @Nullable IndexedLighterASTNode next = null;
 
-    IndexedLighterASTNode(LighterASTNode node, IndexedLighterASTNode prev) {
+    IndexedLighterASTNode(LighterASTNode node, @Nullable IndexedLighterASTNode prev) {
       this.node = node;
       this.prev = prev;
     }
   }
 
+  @ReviewAfterIssueFix(value = "github.com/uber/NullAway/issues/1500", todo = "Remove NullAway suppression: strange floating problem")
+  @SuppressWarnings("NullAway")
   private class LighterASTGuide implements WalkingState.TreeGuide<IndexedLighterASTNode> {
     @Override
-    public IndexedLighterASTNode getNextSibling(IndexedLighterASTNode element) {
+    public @Nullable IndexedLighterASTNode getNextSibling(IndexedLighterASTNode element) {
       return element.next;
     }
 
     @Override
-    public IndexedLighterASTNode getPrevSibling(IndexedLighterASTNode element) {
+    public @Nullable IndexedLighterASTNode getPrevSibling(IndexedLighterASTNode element) {
       return element.prev;
     }
 
     @Override
-    public IndexedLighterASTNode getFirstChild(IndexedLighterASTNode element) {
+    public @Nullable IndexedLighterASTNode getFirstChild(IndexedLighterASTNode element) {
       List<LighterASTNode> children = ast.getChildren(element.node);
-      IndexedLighterASTNode[] indexedChildren = children.isEmpty() ? IndexedLighterASTNode.EMPTY_ARRAY : new IndexedLighterASTNode[children.size()];
+      IndexedLighterASTNode[] indexedChildren =
+        children.isEmpty() ? IndexedLighterASTNode.EMPTY_ARRAY : new IndexedLighterASTNode[children.size()];
       for (int i = 0; i < children.size(); i++) {
         LighterASTNode child = children.get(i);
         IndexedLighterASTNode indexedNode = new IndexedLighterASTNode(child, i == 0 ? null : indexedChildren[i - 1]);
         indexedChildren[i] = indexedNode;
         if (i != 0) {
-          indexedChildren[i-1].next = indexedNode;
+          indexedChildren[i - 1].next = indexedNode;
         }
       }
       childrenStack.push(indexedChildren);
@@ -82,7 +85,8 @@ public abstract class RecursiveLighterASTNodeWalkingVisitor extends LighterASTNo
       public void elementFinished(IndexedLighterASTNode element) {
         RecursiveLighterASTNodeWalkingVisitor.this.elementFinished(element.node);
 
-        if (parentStack.peek() == element) { // getFirstChild returned nothing. otherwise getFirstChild() was not called, i.e. super.visitNode() was not called i.e. just ignore
+        // getFirstChild returned nothing. otherwise getFirstChild() was not called, i.e. super.visitNode() was not called i.e. just ignore
+        if (parentStack.peek() == element) {
           childrenStack.pop();
           parentStack.pop();
         }

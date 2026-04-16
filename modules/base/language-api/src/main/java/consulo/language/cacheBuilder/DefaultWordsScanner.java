@@ -19,6 +19,7 @@ import consulo.application.util.function.Processor;
 import consulo.language.ast.IElementType;
 import consulo.language.ast.TokenSet;
 import consulo.language.lexer.Lexer;
+import org.jspecify.annotations.Nullable;
 
 /**
  * The default implementation of a words scanner based on a custom language lexer.
@@ -41,8 +42,7 @@ public class DefaultWordsScanner implements WordsScanner {
    * @param commentTokenSet    the set of token types which represent comments.
    * @param literalTokenSet    the set of token types which represent literals.
    */
-  public DefaultWordsScanner(Lexer lexer, TokenSet identifierTokenSet, TokenSet commentTokenSet,
-                             TokenSet literalTokenSet) {
+  public DefaultWordsScanner(Lexer lexer, TokenSet identifierTokenSet, TokenSet commentTokenSet, TokenSet literalTokenSet) {
     this(lexer, identifierTokenSet, commentTokenSet, literalTokenSet, TokenSet.EMPTY);
   }
 
@@ -92,13 +92,14 @@ public class DefaultWordsScanner implements WordsScanner {
     }
   }
 
-  protected static boolean stripWords(Processor<WordOccurrence> processor,
-                                      CharSequence tokenText,
-                                      int from,
-                                      int to,
-                                      WordOccurrence.Kind kind,
-                                      WordOccurrence occurence,
-                                      boolean mayHaveFileRefs
+  protected static boolean stripWords(
+      Processor<WordOccurrence> processor,
+      CharSequence tokenText,
+      int from,
+      int to,
+      WordOccurrence.Kind kind,
+      @Nullable WordOccurrence occurence,
+      boolean mayHaveFileRefs
   ) {
     // This code seems strange but it is more effective as Character.isJavaIdentifier_xxx_ is quite costly operation due to unicode
     int index = from;

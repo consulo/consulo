@@ -52,7 +52,10 @@ public class StubSerializationHelper {
       ObjectStubSerializer existing = old.getObjectStubSerializer();
       ObjectStubSerializer computed = serializer.getObjectStubSerializer();
       if (existing != computed) {
-        throw new AssertionError("ID: " + name + " is not unique, but found in both " + existing.getClass().getName() + " and " + computed.getClass().getName());
+        throw new AssertionError(
+          "ID: " + name + " is not unique, but found in both " + (existing != null ? existing.getClass().getName() : null) +
+            " and " + (computed != null ? computed.getClass().getName() : null)
+        );
       }
       return;
     }

@@ -18,6 +18,7 @@ package consulo.language.psi.stub;
 import consulo.language.psi.StubBasedPsiElement;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolderBase;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author Dmitry Avdeev
@@ -25,15 +26,15 @@ import consulo.util.dataholder.UserDataHolderBase;
 public abstract class ObjectStubBase<T extends Stub> extends UserDataHolderBase implements Stub {
   private static final Key<Boolean> DANGLING_STUB = Key.create("DIRECT_PARENT_IS_STUBBED");
 
-  protected final T myParent;
+  protected final @Nullable T myParent;
   int id;
 
-  public ObjectStubBase(T parent) {
+  public ObjectStubBase(@Nullable T parent) {
     myParent = parent;
   }
 
   @Override
-  public T getParentStub() {
+  public @Nullable T getParentStub() {
     return myParent;
   }
 

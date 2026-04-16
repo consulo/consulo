@@ -15,10 +15,10 @@
  */
 package consulo.ide.impl.idea.codeInspection.ex;
 
+import consulo.application.Application;
 import consulo.language.editor.inspection.CommonProblemDescriptor;
 import consulo.language.editor.inspection.ProblemDescriptor;
 import consulo.language.editor.inspection.QuickFix;
-import consulo.application.ApplicationManager;
 import consulo.application.progress.ProgressIndicator;
 import consulo.project.Project;
 import consulo.language.psi.PsiDocumentManager;
@@ -82,7 +82,7 @@ public abstract class PerformFixesModalTask implements SequentialTask {
       }
     }
 
-    ApplicationManager.getApplication().runWriteAction(() -> {
+    Application.get().runWriteAction(() -> {
       myDocumentManager.commitAllDocuments();
       if (!runInReadAction[0]) {
         applyFix(myProject, descriptor);

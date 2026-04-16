@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.language.impl.ast;
 
 import consulo.annotation.access.RequiredReadAction;
@@ -35,6 +34,7 @@ import consulo.language.ast.IElementType;
 import consulo.language.psi.util.PsiTreeUtil;
 import consulo.language.util.IncorrectOperationException;
 import consulo.logging.Logger;
+import org.jspecify.annotations.Nullable;
 
 public class OwnBufferLeafPsiElement extends LeafElement implements PsiElement {
   private static final Logger LOG = Logger.getInstance(OwnBufferLeafPsiElement.class);
@@ -45,7 +45,6 @@ public class OwnBufferLeafPsiElement extends LeafElement implements PsiElement {
 
   @RequiredReadAction
   @Override
-  
   public PsiElement[] getChildren() {
     return PsiElement.EMPTY_ARRAY;
   }
@@ -124,7 +123,6 @@ public class OwnBufferLeafPsiElement extends LeafElement implements PsiElement {
   }
 
   @Override
-  
   public PsiReference[] getReferences() {
     return SharedPsiElementImplUtil.getReferences(this);
   }
@@ -216,10 +214,7 @@ public class OwnBufferLeafPsiElement extends LeafElement implements PsiElement {
   }
 
   @Override
-  public boolean processDeclarations(PsiScopeProcessor processor,
-                                     ResolveState state,
-                                     PsiElement lastParent,
-                                     PsiElement place) {
+  public boolean processDeclarations(PsiScopeProcessor processor, ResolveState state, @Nullable PsiElement lastParent, PsiElement place) {
     return true;
   }
 
@@ -245,19 +240,16 @@ public class OwnBufferLeafPsiElement extends LeafElement implements PsiElement {
   }
 
   @Override
-  
   public GlobalSearchScope getResolveScope() {
     return ResolveScopeManager.getElementResolveScope(this);
   }
 
   @Override
-  
   public SearchScope getUseScope() {
     return ResolveScopeManager.getElementUseScope(this);
   }
 
   @Override
-  
   public Project getProject() {
     PsiManager manager = getManager();
     if (manager == null) throw new PsiInvalidElementAccessException(this);
@@ -267,7 +259,6 @@ public class OwnBufferLeafPsiElement extends LeafElement implements PsiElement {
 
   @RequiredReadAction
   @Override
-  
   public Language getLanguage() {
     return getElementType().getLanguage();
   }
@@ -278,7 +269,7 @@ public class OwnBufferLeafPsiElement extends LeafElement implements PsiElement {
   }
 
   @Override
-  public PsiElement getPsi() {
+  public @Nullable PsiElement getPsi() {
     return this;
   }
 
@@ -288,7 +279,6 @@ public class OwnBufferLeafPsiElement extends LeafElement implements PsiElement {
   }
 
   @RequiredReadAction
-  
   @Override
   public LanguageVersion getLanguageVersion() {
     return PsiTreeUtil.getLanguageVersion(this);

@@ -16,6 +16,7 @@
 package consulo.language.lexer;
 
 import consulo.util.dataholder.Key;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author peter
@@ -23,7 +24,7 @@ import consulo.util.dataholder.Key;
 public abstract class ImmutableUserMap {
     public static final ImmutableUserMap EMPTY = new ImmutableUserMap() {
         @Override
-        public <T> T get(Key<T> key) {
+        public <T> @Nullable T get(Key<T> key) {
             return null;
         }
     };
@@ -31,7 +32,7 @@ public abstract class ImmutableUserMap {
     private ImmutableUserMap() {
     }
 
-    public abstract <T> T get(Key<T> key);
+    public abstract <T> @Nullable T get(Key<T> key);
 
     public final <T> ImmutableUserMap put(Key<T> key, T value) {
         return new ImmutableUserMapImpl<>(key, value, this);
@@ -50,8 +51,8 @@ public abstract class ImmutableUserMap {
 
         @Override
         @SuppressWarnings("unchecked")
-        public <T> T get(Key<T> key) {
-            return key.equals(myKey) ? (T)myValue : myNext.get(key);
+        public <T> @Nullable T get(Key<T> key) {
+            return key.equals(myKey) ? (T) myValue : myNext.get(key);
         }
     }
 }

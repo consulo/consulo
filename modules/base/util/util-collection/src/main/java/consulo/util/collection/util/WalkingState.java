@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.util.collection.util;
 
 import org.jspecify.annotations.Nullable;
@@ -25,10 +24,10 @@ import java.util.function.Predicate;
  */
 public class WalkingState<T> {
   public interface TreeGuide<T> {
-    T getNextSibling(T element);
-    T getPrevSibling(T element);
-    T getFirstChild(T element);
-    T getParent(T element);
+    @Nullable T getNextSibling(T element);
+    @Nullable T getPrevSibling(T element);
+    @Nullable T getFirstChild(T element);
+    @Nullable T getParent(T element);
   }
   private boolean isDown;
   protected boolean startedWalking;

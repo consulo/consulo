@@ -16,41 +16,35 @@
 package consulo.language.psi.filter;
 
 import consulo.language.psi.PsiElement;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author ik
  * @since 2003-01-28
  */
-public class NotFilter
-        implements ElementFilter {
-  ElementFilter myFilter;
+public class NotFilter implements ElementFilter {
+  private final ElementFilter myFilter;
 
-  public NotFilter(){}
-
-  public NotFilter(ElementFilter filter){
+  public NotFilter(ElementFilter filter) {
     myFilter = filter;
   }
 
-  public void setFilter(ElementFilter filter){
-    myFilter = filter;
-  }
-
-  public ElementFilter getFilter(){
+  public ElementFilter getFilter() {
     return myFilter;
   }
 
   @Override
-  public boolean isClassAcceptable(Class hintClass){
+  public boolean isClassAcceptable(Class hintClass) {
     return myFilter.isClassAcceptable(hintClass);
   }
 
   @Override
-  public boolean isAcceptable(Object element, PsiElement context){
+  public boolean isAcceptable(Object element, @Nullable PsiElement context) {
     return !myFilter.isAcceptable(element, context);
   }
 
+  @Override
   public String toString(){
     return "!" + getFilter();
   }
-
 }

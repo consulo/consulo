@@ -13,8 +13,8 @@ class LazyObjectStubSerializerProvider implements ObjectStubSerializerProvider {
   private final Field myField;
   private final StubElementTypeHolder.FieldValueGetter myFieldValueGetter;
 
-  final String myExternalIdPrefix;
-  private volatile ObjectStubSerializer myFieldValue;
+  final @Nullable String myExternalIdPrefix;
+  private volatile @Nullable ObjectStubSerializer myFieldValue = null;
 
   LazyObjectStubSerializerProvider(@Nullable String externalIdPrefix, Field field, StubElementTypeHolder.FieldValueGetter fieldGetter) {
     myField = field;
@@ -27,7 +27,6 @@ class LazyObjectStubSerializerProvider implements ObjectStubSerializerProvider {
     return myExternalIdPrefix != null;
   }
 
-  
   @Override
   public String getExternalId() {
     // not lazy
@@ -46,16 +45,13 @@ class LazyObjectStubSerializerProvider implements ObjectStubSerializerProvider {
     ObjectStubSerializer delegate = myFieldValue;
     if (delegate == null) {
       try {
-        myFieldValue = delegate = (ObjectStubSerializer)myFieldValueGetter.get(myField, null);
+        myFieldValue = delegate = Objects.requireNonNull((ObjectStubSerializer) myFieldValueGetter.get(myField, null));
 
-        if (!Objects.equals(getExternalId(), myFieldValue.getExternalId())) {
-          LOG.error(myFieldValue.getClass().getName() +
-                    "  return wrong 'externalId'. Expected: " +
-                    getExternalId() +
-                    ", actual: " +
-                    myFieldValue.getExternalId() +
-                    ". Please check " +
-                    "StubElementTypeHolder#getExternalId() value");
+        if (!Objects.equals(getExternalId(), delegate.getExternalId())) {
+          LOG.error(
+              delegate.getClass().getName() + "  return wrong 'externalId'. Expected: " + getExternalId() +
+                  ", actual: " + delegate.getExternalId() + ". Please check StubElementTypeHolder#getExternalId() value"
+          );
         }
       }
       catch (IllegalAccessException e) {

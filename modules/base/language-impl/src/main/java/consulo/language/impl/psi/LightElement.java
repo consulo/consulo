@@ -23,6 +23,7 @@ import consulo.language.Language;
 import consulo.language.ast.ASTNode;
 import consulo.language.psi.*;
 import consulo.language.util.IncorrectOperationException;
+import org.jspecify.annotations.Nullable;
 
 public abstract class LightElement extends PsiElementBase implements LightweightPsiElement {
     protected final PsiManager myManager;
@@ -34,14 +35,12 @@ public abstract class LightElement extends PsiElementBase implements Lightweight
         myLanguage = language;
     }
 
-    
     @Override
     @RequiredReadAction
     public Language getLanguage() {
         return myLanguage;
     }
 
-    
     @Override
     @RequiredReadAction
     public PsiManager getManager() {
@@ -55,17 +54,15 @@ public abstract class LightElement extends PsiElementBase implements Lightweight
 
     @RequiredReadAction
     @Override
-    
     public PsiElement[] getChildren() {
         return PsiElement.EMPTY_ARRAY;
     }
 
     @Override
-    public PsiFile getContainingFile() {
+    public @Nullable PsiFile getContainingFile() {
         return null;
     }
 
-    
     @Override
     @RequiredReadAction
     public TextRange getTextRange() {
@@ -87,7 +84,6 @@ public abstract class LightElement extends PsiElementBase implements Lightweight
 
     @RequiredReadAction
     @Override
-    
     public char[] textToCharArray() {
         return getText().toCharArray();
     }
@@ -194,7 +190,6 @@ public abstract class LightElement extends PsiElementBase implements Lightweight
         return null;
     }
 
-    
     @Override
     public PsiElement getNavigationElement() {
         return myNavigationElement;

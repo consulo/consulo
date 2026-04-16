@@ -278,7 +278,7 @@ public class PsiDirectoryImpl extends PsiElementBase implements PsiDirectory, Qu
     }
 
     @Override
-    public PsiFile getContainingFile() {
+    public @Nullable PsiFile getContainingFile() {
         return null;
     }
 

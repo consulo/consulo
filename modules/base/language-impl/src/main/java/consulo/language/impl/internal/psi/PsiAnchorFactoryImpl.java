@@ -332,7 +332,7 @@ public class PsiAnchorFactoryImpl implements PsiAnchorFactory {
         }
 
         @Override
-        public PsiFile getFile() {
+        public @Nullable PsiFile getFile() {
             return null;
         }
 

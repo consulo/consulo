@@ -15,6 +15,7 @@
  */
 package consulo.language.psi.path;
 
+import consulo.annotation.ReviewAfterIssueFix;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.language.psi.PsiFileSystemItem;
 import consulo.language.psi.PsiManager;
@@ -25,17 +26,17 @@ import consulo.module.content.ProjectRootManager;
 import consulo.project.Project;
 import consulo.util.collection.ContainerUtil;
 import consulo.virtualFileSystem.VirtualFile;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.Collections;
 
 @ExtensionImpl(order = "last")
 public class NullFileReferenceHelper extends FileReferenceHelper {
-
   public static final NullFileReferenceHelper INSTANCE = new NullFileReferenceHelper();
 
   @Override
-  public PsiFileSystemItem findRoot(Project project, VirtualFile file) {
+  public @Nullable PsiFileSystemItem findRoot(Project project, VirtualFile file) {
     ProjectFileIndex index = ProjectRootManager.getInstance(project).getFileIndex();
     VirtualFile contentRootForFile = index.getContentRootForFile(file);
 
@@ -43,13 +44,16 @@ public class NullFileReferenceHelper extends FileReferenceHelper {
   }
 
   @Override
-  
+  @ReviewAfterIssueFix(value = "github.com/uber/NullAway/issues/1504", todo = "Remove NullAway suppression")
+  @SuppressWarnings("NullAway")
   public Collection<PsiFileSystemItem> getRoots(Module module) {
-    return ContainerUtil.mapNotNull(ModuleRootManager.getInstance(module).getContentRoots(), virtualFile -> PsiManager.getInstance(module.getProject()).findDirectory(virtualFile));
+    return ContainerUtil.mapNotNull(
+      ModuleRootManager.getInstance(module).getContentRoots(),
+        virtualFile -> PsiManager.getInstance(module.getProject()).findDirectory(virtualFile)
+    );
   }
 
   @Override
-  
   public Collection<PsiFileSystemItem> getContexts(Project project, VirtualFile file) {
     PsiFileSystemItem item = getPsiFileSystemItem(project, file);
     if (item != null) {

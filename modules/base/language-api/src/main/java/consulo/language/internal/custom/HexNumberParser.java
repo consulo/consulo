@@ -13,10 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.language.internal.custom;
 
 import consulo.util.lang.StringUtil;
+import org.jspecify.annotations.Nullable;
+
+import java.util.Objects;
 
 /**
  * @author dsl
@@ -28,13 +30,15 @@ public class HexNumberParser extends PrefixedTokenParser {
 
   protected int getTokenEnd(int position) {
     for (; position < myEndOffset; position++) {
-      if (!StringUtil.isHexDigit(myBuffer.charAt(position))) break;
+      if (!StringUtil.isHexDigit(Objects.requireNonNull(myBuffer).charAt(position))) break;
     }
     return position;
   }
 
-  public static HexNumberParser create(String prefix) {
-    if (prefix == null) return null;
+  public static @Nullable HexNumberParser create(@Nullable String prefix) {
+    if (prefix == null) {
+      return null;
+    }
     String trimmedPrefix = prefix.trim();
     if (trimmedPrefix.length() > 0) {
       return new HexNumberParser(prefix);

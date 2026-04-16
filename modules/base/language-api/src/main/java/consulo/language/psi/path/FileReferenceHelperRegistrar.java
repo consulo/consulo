@@ -19,8 +19,10 @@ import consulo.language.psi.PsiFileSystemItem;
 import consulo.project.Project;
 import consulo.util.collection.ContainerUtil;
 import consulo.virtualFileSystem.VirtualFile;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
+import java.util.Objects;
 
 /**
  * @author peter
@@ -37,21 +39,20 @@ public class FileReferenceHelperRegistrar {
      * @deprecated this method is broken, please avoid using it, use getHelpers() instead
      */
     @Deprecated
-    
     public static <T extends PsiFileSystemItem> FileReferenceHelper getNotNullHelper(T psiFileSystemItem) {
         FileReferenceHelper helper = getHelper(psiFileSystemItem);
         if (helper != null) {
             return helper;
         }
         List<FileReferenceHelper> helpers = getHelpers();
-        return ContainerUtil.getLastItem(helpers);
+        return Objects.requireNonNull(ContainerUtil.getLastItem(helpers));
     }
 
     /**
      * @deprecated this method is broken, please avoid using it, use getHelpers() instead
      */
     @Deprecated
-    public static <T extends PsiFileSystemItem> FileReferenceHelper getHelper(T psiFileSystemItem) {
+    public static <T extends PsiFileSystemItem> @Nullable FileReferenceHelper getHelper(T psiFileSystemItem) {
         VirtualFile file = psiFileSystemItem.getVirtualFile();
         if (file == null) {
             return null;
@@ -60,7 +61,7 @@ public class FileReferenceHelperRegistrar {
         return ContainerUtil.find(getHelpers(), fileReferenceHelper -> fileReferenceHelper.isMine(project, file));
     }
 
-    public static <T extends PsiFileSystemItem> List<FileReferenceHelper> getHelpers(T psiFileSystemItem) {
+    public static <T extends PsiFileSystemItem> @Nullable List<FileReferenceHelper> getHelpers(T psiFileSystemItem) {
         VirtualFile file = psiFileSystemItem.getVirtualFile();
         if (file == null) {
             return null;
@@ -70,6 +71,6 @@ public class FileReferenceHelperRegistrar {
     }
 
     public static boolean areElementsEquivalent(PsiFileSystemItem element1, PsiFileSystemItem element2) {
-        return element2.getManager().areElementsEquivalent(element1, element2);
+        return element2.getRequiredManager().areElementsEquivalent(element1, element2);
     }
 }

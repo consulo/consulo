@@ -27,18 +27,17 @@ import java.io.OutputStream;
  * @author dmitrylomov
  */
 public abstract class SerializationManagerEx extends SerializationManager {
-
   public static SerializationManagerEx getInstanceEx() {
     return (SerializationManagerEx)SerializationManager.getInstance();
   }
 
   public abstract void serialize(Stub rootStub, OutputStream stream);
 
-  
   public abstract Stub deserialize(InputStream stream) throws SerializerNotFoundException;
 
   //@ApiStatus.Experimental
-  public abstract void reSerialize(InputStream inStub, OutputStream outStub, SerializationManager newSerializationManager) throws IOException;
+  public abstract void reSerialize(InputStream inStub, OutputStream outStub, SerializationManager newSerializationManager)
+    throws IOException;
 
   public abstract boolean isNameStorageCorrupted();
 

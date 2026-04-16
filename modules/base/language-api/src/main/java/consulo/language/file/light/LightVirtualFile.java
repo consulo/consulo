@@ -20,7 +20,9 @@ import consulo.util.lang.LocalTimeCounter;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.virtualFileSystem.fileType.FileTypeRegistry;
+import consulo.virtualFileSystem.fileType.UnknownFileType;
 import consulo.virtualFileSystem.light.TextLightVirtualFileBase;
+import org.jspecify.annotations.Nullable;
 
 import java.nio.charset.Charset;
 
@@ -28,7 +30,7 @@ import java.nio.charset.Charset;
  * In-memory implementation of {@link VirtualFile}.
  */
 public class LightVirtualFile extends TextLightVirtualFileBase {
-  private Language myLanguage;
+  private @Nullable Language myLanguage = null;
 
   public LightVirtualFile() {
     this("");
@@ -39,7 +41,7 @@ public class LightVirtualFile extends TextLightVirtualFileBase {
   }
 
   public LightVirtualFile(String name, CharSequence content) {
-    this(name, null, content, LocalTimeCounter.currentTime());
+    this(name, UnknownFileType.INSTANCE, content, LocalTimeCounter.currentTime());
   }
 
   public LightVirtualFile(String name, FileType fileType, CharSequence text) {
@@ -52,26 +54,22 @@ public class LightVirtualFile extends TextLightVirtualFileBase {
   }
 
   public LightVirtualFile(String name, FileType fileType, CharSequence text, long modificationStamp) {
-    this(name, fileType, text, fileType == null ? null : fileType.extractCharsetFromFileContent(null, null, text), modificationStamp);
+    this(name, fileType, text, fileType.extractCharsetFromFileContent(null, null, text), modificationStamp);
   }
 
-  public LightVirtualFile(String name,
-                          FileType fileType,
-                          CharSequence text,
-                          Charset charset,
-                          long modificationStamp) {
+  public LightVirtualFile(String name, FileType fileType, CharSequence text, @Nullable Charset charset, long modificationStamp) {
     super(name, fileType, modificationStamp);
     setContent(text);
     setCharset(charset);
   }
 
   public LightVirtualFile(String name, Language language, CharSequence text) {
-    super(name, null, LocalTimeCounter.currentTime());
+    super(name, UnknownFileType.INSTANCE, LocalTimeCounter.currentTime());
     setContent(text);
     setLanguage(language);
   }
 
-  public Language getLanguage() {
+  public @Nullable Language getLanguage() {
     return myLanguage;
   }
 

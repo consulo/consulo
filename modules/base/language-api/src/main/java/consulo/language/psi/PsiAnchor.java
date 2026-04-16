@@ -26,18 +26,16 @@ import org.jspecify.annotations.Nullable;
 public interface PsiAnchor {
     @Nullable PsiElement retrieve();
 
-    PsiFile getFile();
+    @Nullable PsiFile getFile();
 
     int getStartOffset();
 
     int getEndOffset();
 
-    
     static PsiAnchor createHard(PsiElement element) {
         return new PsiAnchorHardReference(element);
     }
 
-    
     @RequiredReadAction
     @Deprecated
     static PsiAnchor create(PsiElement element) {

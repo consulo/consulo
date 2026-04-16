@@ -13,11 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.language.psi.filter;
 
 import consulo.language.psi.PsiElement;
 import consulo.util.lang.reflect.ReflectionUtil;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author ik
@@ -46,14 +46,13 @@ public class ClassFilter implements ElementFilter {
   }
 
   @Override
-  public boolean isAcceptable(Object element, PsiElement context){
-    if(element == null){
+  public boolean isAcceptable(Object element, @Nullable PsiElement context){
+    if (element == null) {
       return false;
     }
     return myAcceptableFlag ? filterMatches(element.getClass()) : !filterMatches(element.getClass());
   }
 
-  
   public String toString(){
     return "class(" + myFilter.getName() + ")";
   }

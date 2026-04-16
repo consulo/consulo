@@ -71,12 +71,11 @@ public class InjectedLanguageUtil {
   public static final Key<IElementType> INJECTED_FRAGMENT_TYPE = Key.create("INJECTED_FRAGMENT_TYPE");
   public static final Key<Boolean> FRANKENSTEIN_INJECTION = InjectedLanguageManager.FRANKENSTEIN_INJECTION;
 
-  
   static PsiElement loadTree(PsiElement host, PsiFile containingFile) {
     if (containingFile instanceof DummyHolder) {
       PsiElement context = containingFile.getContext();
       if (context != null) {
-        PsiFile topFile = context.getContainingFile();
+        PsiFile topFile = context.getRequiredContainingFile();
         topFile.getNode();  //load tree
         TextRange textRange = host.getTextRange().shiftRight(context.getTextRange().getStartOffset());
 
@@ -95,7 +94,7 @@ public class InjectedLanguageUtil {
     return file.getUserData(HIGHLIGHT_TOKENS);
   }
 
-    static void setHighlightTokens(PsiFile file, List<InjectedHighlightTokenInfo> tokens) {
+  static void setHighlightTokens(PsiFile file, List<InjectedHighlightTokenInfo> tokens) {
     file.putUserData(HIGHLIGHT_TOKENS, tokens);
   }
 
@@ -110,7 +109,6 @@ public class InjectedLanguageUtil {
     return getShreds(myFileViewProvider.getDocument());
   }
 
-  
   private static PlaceImpl getShreds(DocumentWindow document) {
     return ((DocumentWindowImpl)document).getShreds();
   }
@@ -129,7 +127,7 @@ public class InjectedLanguageUtil {
    */
   @Deprecated
   public static boolean enumerate(PsiElement host, PsiLanguageInjectionHost.InjectedPsiVisitor visitor) {
-    PsiFile containingFile = host.getContainingFile();
+    PsiFile containingFile = host.getRequiredContainingFile();
     PsiUtilCore.ensureValid(containingFile);
     return enumerate(host, containingFile, true, visitor);
   }
@@ -153,7 +151,7 @@ public class InjectedLanguageUtil {
     PsiElement inTree = loadTree(host, containingFile);
     if (inTree != host) {
       host = inTree;
-      containingFile = host.getContainingFile();
+      containingFile = host.getRequiredContainingFile();
     }
     PsiDocumentManager documentManager = PsiDocumentManager.getInstance(containingFile.getProject());
     Document document = documentManager.getDocument(containingFile);
@@ -251,12 +249,10 @@ public class InjectedLanguageUtil {
     return getInjectedEditorForInjectedFile(editor, injectedFile);
   }
 
-  
   public static Editor getInjectedEditorForInjectedFile(Editor hostEditor, @Nullable PsiFile injectedFile) {
     return getInjectedEditorForInjectedFile(hostEditor, hostEditor.getCaretModel().getCurrentCaret(), injectedFile);
   }
 
-  
   public static Editor getInjectedEditorForInjectedFile(Editor hostEditor, Caret hostCaret, @Nullable PsiFile injectedFile) {
     if (injectedFile == null || hostEditor instanceof EditorWindow || hostEditor.isDisposed()) return hostEditor;
     Project project = hostEditor.getProject();
@@ -489,7 +485,6 @@ public class InjectedLanguageUtil {
     return (ConcurrentList<DocumentWindow>)injected;
   }
 
-  
   static List<DocumentWindow> getCachedInjectedDocumentsInRange(PsiFile hostPsiFile, TextRange range) {
     List<DocumentWindow> injected = getCachedInjectedDocuments(hostPsiFile);
 
@@ -502,7 +497,7 @@ public class InjectedLanguageUtil {
 
   static void clearCaches(PsiFile injected, DocumentWindowImpl documentWindow) {
     VirtualFileWindowImpl virtualFile = (VirtualFileWindowImpl)injected.getVirtualFile();
-    PsiManagerEx psiManagerEx = (PsiManagerEx)injected.getManager();
+    PsiManagerEx psiManagerEx = (PsiManagerEx)injected.getRequiredManager();
     if (psiManagerEx.getProject().isDisposed()) return;
 
     DebugUtil.performPsiModification("injected clearCaches", () -> psiManagerEx.getFileManager().setViewProvider(virtualFile, null));
@@ -551,7 +546,7 @@ public class InjectedLanguageUtil {
    * @deprecated use {@link InjectedLanguageManager#getTopLevelFile(PsiElement)} instead
    */
   @Deprecated
-  public static PsiFile getTopLevelFile(PsiElement element) {
+  public static @Nullable PsiFile getTopLevelFile(PsiElement element) {
     PsiFile containingFile = element.getContainingFile();
     if (containingFile == null) return null;
     if (containingFile.getViewProvider() instanceof InjectedFileViewProvider) {

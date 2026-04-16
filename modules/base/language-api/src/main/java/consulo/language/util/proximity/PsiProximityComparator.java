@@ -13,23 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.language.util.proximity;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.language.Weigher;
 import consulo.language.WeighingComparable;
 import consulo.language.WeighingService;
 import consulo.language.psi.PsiElement;
 import consulo.language.statistician.StatisticsInfo;
 import consulo.language.statistician.StatisticsManager;
-import consulo.language.util.ModuleUtilCore;
 import consulo.language.util.ProcessingContext;
 import consulo.module.Module;
-import consulo.util.collection.FactoryMap;
 import consulo.util.dataholder.Key;
 import org.jspecify.annotations.Nullable;
 
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Supplier;
 
@@ -37,16 +36,16 @@ public class PsiProximityComparator implements Comparator<Object> {
   public static final Key<ProximityStatistician> STATISTICS_KEY = Key.create("proximity");
   public static final Key<ProximityWeigher> WEIGHER_KEY = Key.create("proximity");
   private static final Key<Module> MODULE_BY_LOCATION = Key.create("ModuleByLocation");
-  private final PsiElement myContext;
+  private final @Nullable PsiElement myContext;
 
-  private final Map<PsiElement, WeighingComparable<PsiElement, ProximityLocation>> myProximities;
+  private final Map<PsiElement, WeighingComparable<PsiElement, ProximityLocation>> myProximities = new HashMap<>();
 
-  private final Module myContextModule;
+  private final @Nullable Module myContextModule;
 
+  @RequiredReadAction
   public PsiProximityComparator(@Nullable PsiElement context) {
     myContext = context;
     myContextModule = context == null ? null : context.getModule();
-    myProximities = FactoryMap.create(key -> getProximity(key, myContext));
   }
 
   @Override
@@ -70,23 +69,30 @@ public class PsiProximityComparator implements Comparator<Object> {
       }
     }
 
-    WeighingComparable<PsiElement, ProximityLocation> proximity1 = myProximities.get(element1);
-    WeighingComparable<PsiElement, ProximityLocation> proximity2 = myProximities.get(element2);
+    WeighingComparable<PsiElement, ProximityLocation> proximity1 =
+        myProximities.computeIfAbsent(element1, key -> getProximity(key, myContext));
+    WeighingComparable<PsiElement, ProximityLocation> proximity2 =
+        myProximities.computeIfAbsent(element2, key -> getProximity(key, myContext));
     if (proximity1 == null || proximity2 == null) {
       return 0;
     }
     return -proximity1.compareTo(proximity2);
   }
 
-  public static @Nullable WeighingComparable<PsiElement, ProximityLocation> getProximity(PsiElement element, PsiElement context) {
+  @RequiredReadAction
+  public static @Nullable WeighingComparable<PsiElement, ProximityLocation> getProximity(
+    @Nullable PsiElement element,
+    @Nullable PsiElement context
+  ) {
     if (element == null) return null;
-    Module contextModule = context != null ? ModuleUtilCore.findModuleForPsiElement(context) : null;
+    Module contextModule = context != null ? context.getModule() : null;
     return WeighingService.weigh(WEIGHER_KEY, element, new ProximityLocation(context, contextModule));
   }
 
+  @RequiredReadAction
   public static @Nullable WeighingComparable<PsiElement, ProximityLocation> getProximity(
-      Supplier<? extends PsiElement> elementComputable,
-      PsiElement context,
+      Supplier<@Nullable ? extends PsiElement> elementComputable,
+      @Nullable PsiElement context,
       ProcessingContext processingContext
   ) {
     PsiElement element = elementComputable.get();

@@ -16,11 +16,12 @@
 package consulo.language.psi.search;
 
 import consulo.logging.Logger;
-import consulo.util.lang.Comparing;
 import consulo.util.xml.serializer.InvalidDataException;
 import consulo.util.xml.serializer.WriteExternalException;
 import org.jdom.Element;
+import org.jspecify.annotations.Nullable;
 
+import java.util.Objects;
 import java.util.regex.Pattern;
 
 /**
@@ -74,7 +75,7 @@ public class TodoPattern implements Cloneable {
     myIndexPattern.setCaseSensitive(caseSensitive);
   }
 
-  public Pattern getPattern() {
+  public @Nullable Pattern getPattern() {
     return myIndexPattern.getPattern();
   }
 
@@ -105,24 +106,19 @@ public class TodoPattern implements Cloneable {
     }
     catch (CloneNotSupportedException e) {
       LOG.error(e);
-      return null;
+      throw new RuntimeException(e);
     }
   }
 
-  public boolean equals(Object obj) {
-    if (!(obj instanceof TodoPattern)) {
-      return false;
-    }
-    TodoPattern pattern = (TodoPattern)obj;
-    if (!myIndexPattern.equals(pattern.myIndexPattern)) {
-      return false;
-    }
-    if (!Comparing.equal(myAttributes, pattern.myAttributes)) {
-      return false;
-    }
-    return true;
+  @Override
+  public boolean equals(@Nullable Object obj) {
+    return obj == this
+      || obj instanceof TodoPattern that
+      && myIndexPattern.equals(that.myIndexPattern)
+      && Objects.equals(myAttributes, that.myAttributes);
   }
 
+  @Override
   public int hashCode() {
     return myIndexPattern.hashCode();
   }

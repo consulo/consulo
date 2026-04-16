@@ -13,23 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.language.psi.stub;
 
+import consulo.annotation.ReviewAfterIssueFix;
 import consulo.application.util.function.Processor;
 import consulo.language.Language;
 import consulo.language.ast.TokenSet;
 import consulo.language.cacheBuilder.*;
+import consulo.language.custom.CustomSyntaxTableFileType;
 import consulo.language.file.LanguageFileType;
 import consulo.language.findUsage.FindUsagesProvider;
 import consulo.language.internal.custom.CustomFileTypeLexer;
 import consulo.language.internal.custom.CustomHighlighterTokenType;
-import consulo.language.custom.CustomSyntaxTableFileType;
 import consulo.language.psi.search.UsageSearchContext;
 import consulo.util.lang.CharArrayUtil;
 import consulo.virtualFileSystem.fileType.FileType;
-
 import org.jspecify.annotations.Nullable;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -38,7 +38,7 @@ public class IdTableBuilding {
   }
 
   public interface ScanWordProcessor {
-    void run(CharSequence chars, @Nullable char[] charsArray, int start, int end);
+    void run(CharSequence chars, char @Nullable [] charsArray, int start, int end);
   }
 
   private static final Map<FileType, IdIndexer> ourIdIndexers = new HashMap<>();
@@ -122,7 +122,7 @@ public class IdTableBuilding {
           return true;
         }
 
-        private int convertToMask(WordOccurrence.Kind kind) {
+        private int convertToMask(WordOccurrence.@Nullable Kind kind) {
           if (kind == null) return UsageSearchContext.ANY;
           if (kind == WordOccurrence.Kind.CODE) return UsageSearchContext.IN_CODE;
           if (kind == WordOccurrence.Kind.COMMENTS) return UsageSearchContext.IN_COMMENTS;
@@ -147,7 +147,7 @@ public class IdTableBuilding {
 
   public static void scanWords(ScanWordProcessor processor,
                                CharSequence chars,
-                               @Nullable char[] charArray,
+                               char @Nullable [] charArray,
                                int startOffset,
                                int endOffset,
                                boolean mayHaveEscapes) {
@@ -158,6 +158,8 @@ public class IdTableBuilding {
     while (true) {
       while (true) {
         if (index >= endOffset) break ScanWordsLoop;
+        @ReviewAfterIssueFix(value = "github.com/uber/NullAway/issues/1504", todo = "Remove NullAway suppression")
+        @SuppressWarnings("NullAway")
         char c = hasArray ? charArray[index] : chars.charAt(index);
 
         if ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || (c >= '0' && c <= '9') || (Character.isJavaIdentifierStart(c) && c != '$')) {
@@ -170,6 +172,8 @@ public class IdTableBuilding {
       while (true) {
         index++;
         if (index >= endOffset) break;
+        @ReviewAfterIssueFix(value = "github.com/uber/NullAway/issues/1504", todo = "Remove NullAway suppression")
+        @SuppressWarnings("NullAway")
         char c = hasArray ? charArray[index] : chars.charAt(index);
         if ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || (c >= '0' && c <= '9')) continue;
         if (!Character.isJavaIdentifierPart(c) || c == '$') break;

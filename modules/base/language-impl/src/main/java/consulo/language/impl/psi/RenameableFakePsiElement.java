@@ -50,7 +50,7 @@ public abstract class RenameableFakePsiElement extends FakePsiElement implements
     }
 
     @Override
-    public PsiFile getContainingFile() {
+    public @Nullable PsiFile getContainingFile() {
         return myParent.getContainingFile();
     }
 
@@ -59,19 +59,16 @@ public abstract class RenameableFakePsiElement extends FakePsiElement implements
     public abstract @Nullable String getName();
 
     @Override
-    
     @RequiredReadAction
     public Language getLanguage() {
-        return getContainingFile().getLanguage();
+        return getRequiredContainingFile().getLanguage();
     }
 
     @Override
-    
     public Project getProject() {
         return myParent.getProject();
     }
 
-    
     @Override
     public PsiManager getManager() {
         return PsiManager.getInstance(getProject());
@@ -102,7 +99,6 @@ public abstract class RenameableFakePsiElement extends FakePsiElement implements
         return ArrayUtil.EMPTY_OBJECT_ARRAY;
     }
 
-    
     @Override
     @RequiredReadAction
     public TextRange getTextRange() {

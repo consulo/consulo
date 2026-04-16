@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.language.psi.path;
 
 import consulo.component.util.Iconable;
@@ -30,22 +29,20 @@ import java.util.function.Supplier;
  * @author Dmitry Avdeev
  */
 public class PathReference {
-  public static final Function<PathReference, Image> NULL_ICON = (p) -> null;
+  public static final Function<PathReference, @Nullable Image> NULL_ICON = (p) -> null;
 
   private final String myPath;
   private final Supplier<Image> myIcon;
 
-  public PathReference(String path, Function<PathReference, Image> icon) {
+  public PathReference(String path, Function<PathReference, @Nullable Image> icon) {
     myPath = path;
     myIcon = LazyValue.nullable(() -> icon.apply(PathReference.this));
   }
 
-  
   public String getPath() {
     return myPath;
   }
 
-  
   public String getTrimmedPath() {
     return trimPath(myPath);
   }
@@ -69,16 +66,16 @@ public class PathReference {
     return url;
   }
 
-  public static class ResolveFunction implements Function<PathReference, Image> {
+  public static class ResolveFunction implements Function<PathReference, @Nullable Image> {
     public static final ResolveFunction NULL_RESOLVE_FUNCTION = new ResolveFunction(null);
-    private final Image myDefaultIcon;
+    private final @Nullable Image myDefaultIcon;
 
     public ResolveFunction(@Nullable Image defaultValue) {
       myDefaultIcon = defaultValue;
     }
 
     @Override
-    public Image apply(PathReference pathReference) {
+    public @Nullable Image apply(PathReference pathReference) {
       PsiElement element = pathReference.resolve();
       return element == null ? myDefaultIcon : IconDescriptorUpdaters.getIcon(element, Iconable.ICON_FLAG_READ_STATUS);
     }

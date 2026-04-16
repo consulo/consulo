@@ -37,7 +37,6 @@ import java.util.Collections;
 public abstract class FileReferenceHelper {
     public static final ExtensionPointName<FileReferenceHelper> EP_NAME = ExtensionPointName.create(FileReferenceHelper.class);
 
-    
     public String trimUrl(String url) {
         return url;
     }
@@ -55,7 +54,7 @@ public abstract class FileReferenceHelper {
     }
 
     @RequiredReadAction
-    public static PsiFileSystemItem getPsiFileSystemItem(PsiManager psiManager, VirtualFile file) {
+    public static @Nullable PsiFileSystemItem getPsiFileSystemItem(PsiManager psiManager, VirtualFile file) {
         return file.isDirectory() ? psiManager.findDirectory(file) : psiManager.findFile(file);
     }
 
@@ -63,12 +62,10 @@ public abstract class FileReferenceHelper {
         return null;
     }
 
-    
     public Collection<PsiFileSystemItem> getRoots(Module module) {
         return Collections.emptyList();
     }
 
-    
     public abstract Collection<PsiFileSystemItem> getContexts(Project project, VirtualFile file);
 
     public abstract boolean isMine(Project project, VirtualFile file);

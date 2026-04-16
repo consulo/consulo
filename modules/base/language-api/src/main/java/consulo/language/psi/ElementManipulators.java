@@ -17,6 +17,9 @@ package consulo.language.psi;
 
 import consulo.document.util.TextRange;
 import consulo.logging.Logger;
+import org.jspecify.annotations.Nullable;
+
+import java.util.Objects;
 
 /**
  * @author peter
@@ -27,7 +30,7 @@ public class ElementManipulators {
   /**
    * @see #getNotNullManipulator(PsiElement)
    */
-  public static <T extends PsiElement> ElementManipulator<T> getManipulator(T element) {
+  public static <T extends PsiElement> @Nullable ElementManipulator<T> getManipulator(T element) {
     return ElementManipulator.getManipulator(element);
   }
 
@@ -37,9 +40,7 @@ public class ElementManipulators {
   }
 
   public static <T extends PsiElement> ElementManipulator<T> getNotNullManipulator(T element) {
-    ElementManipulator<T> manipulator = getManipulator(element);
-    LOG.assertTrue(manipulator != null, element.getClass().getName());
-    return manipulator;
+    return Objects.requireNonNull(getManipulator(element), () -> element.getClass().getName());
   }
 
   public static TextRange getValueTextRange(PsiElement element) {
@@ -47,7 +48,6 @@ public class ElementManipulators {
     return manipulator == null ? TextRange.from(0, element.getTextLength()) : manipulator.getRangeInElement(element);
   }
 
-  
   public static String getValueText(PsiElement element) {
     TextRange valueTextRange = getValueTextRange(element);
     if (valueTextRange.isEmpty()) return "";

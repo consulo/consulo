@@ -151,7 +151,7 @@ public abstract class LightPsiFileImpl extends PsiElementBase implements PsiFile
         if (parentFile == null) {
             return null;
         }
-        return getManager().findDirectory(parentFile);
+        return getRequiredManager().findDirectory(parentFile);
     }
 
     @RequiredReadAction
@@ -179,7 +179,6 @@ public abstract class LightPsiFileImpl extends PsiElementBase implements PsiFile
     }
 
     @Override
-    
     public PsiFile getOriginalFile() {
         return myOriginalFile == null ? this : myOriginalFile;
     }
@@ -189,7 +188,6 @@ public abstract class LightPsiFileImpl extends PsiElementBase implements PsiFile
     }
 
     @Override
-    
     public PsiFile[] getPsiRoots() {
         return new PsiFile[]{this};
     }
@@ -201,29 +199,25 @@ public abstract class LightPsiFileImpl extends PsiElementBase implements PsiFile
 
     @RequiredReadAction
     @Override
-    
     public Language getLanguage() {
         return myLanguage;
     }
 
     @Override
-    
     public FileViewProvider getViewProvider() {
         return myViewProvider;
     }
 
-    
     @Override
     @RequiredReadAction
     public PsiManager getManager() {
         return myManager;
     }
 
-    
     @Override
     @RequiredReadAction
     public Project getProject() {
-        return getManager().getProject();
+        return getRequiredManager().getProject();
     }
 
     @Override
@@ -249,13 +243,11 @@ public abstract class LightPsiFileImpl extends PsiElementBase implements PsiFile
     }
 
     @Override
-    
     public synchronized PsiReference[] getReferences() {
         return SharedPsiElementImplUtil.getReferences(this);
     }
 
     @Override
-    
     public SearchScope getUseScope() {
         return ResolveScopeManager.getElementUseScope(this);
     }
@@ -300,7 +292,6 @@ public abstract class LightPsiFileImpl extends PsiElementBase implements PsiFile
 
     @RequiredReadAction
     @Override
-    
     public abstract PsiElement[] getChildren();
 
     @RequiredReadAction
@@ -317,7 +308,6 @@ public abstract class LightPsiFileImpl extends PsiElementBase implements PsiFile
         return children.length == 0 ? null : children[children.length - 1];
     }
 
-    
     @Override
     @RequiredReadAction
     public TextRange getTextRange() {

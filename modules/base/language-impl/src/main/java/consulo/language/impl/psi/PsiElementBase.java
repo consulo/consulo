@@ -179,14 +179,14 @@ public abstract class PsiElementBase extends UserDataHolderBase implements Navig
     public boolean processDeclarations(
         PsiScopeProcessor processor,
         ResolveState state,
-        PsiElement lastParent,
+        @Nullable PsiElement lastParent,
         PsiElement place
     ) {
         return true;
     }
 
     @Override
-    public PsiElement getContext() {
+    public @Nullable PsiElement getContext() {
         return getParent();
     }
 
@@ -239,8 +239,7 @@ public abstract class PsiElementBase extends UserDataHolderBase implements Navig
 
     @Override
     public Project getProject() {
-        PsiManager manager = getManager();
-        return manager.getProject();
+        return getRequiredManager().getProject();
     }
 
     //default implementations of methods from NavigationItem
@@ -312,7 +311,8 @@ public abstract class PsiElementBase extends UserDataHolderBase implements Navig
     @RequiredReadAction
     protected <T> T notNullChild(T child) {
         if (child == null) {
-            LOG.error(getText() + "\n parent=" + getParent().getText());
+            PsiElement parent = getParent();
+            LOG.error(getText() + "\n parent=" + (parent != null ? parent.getText() : null));
         }
         return child;
     }
@@ -345,7 +345,6 @@ public abstract class PsiElementBase extends UserDataHolderBase implements Navig
         return notNullChild(findChildByClass(aClass));
     }
 
-    
     @Override
     @RequiredReadAction
     public LanguageVersion getLanguageVersion() {

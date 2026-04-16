@@ -42,9 +42,8 @@ import java.util.List;
  */
 @ExtensionImpl
 public class PsiFileReferenceHelper extends FileReferenceHelper {
-
   @Override
-  public PsiFileSystemItem findRoot(Project project, VirtualFile file) {
+  public @Nullable PsiFileSystemItem findRoot(Project project, VirtualFile file) {
     ProjectFileIndex index = ProjectRootManager.getInstance(project).getFileIndex();
     VirtualFile contentRootForFile = index.getSourceRootForFile(file);
     if (contentRootForFile == null) contentRootForFile = index.getContentRootForFile(file);
@@ -56,13 +55,11 @@ public class PsiFileReferenceHelper extends FileReferenceHelper {
   }
 
   @Override
-  
   public Collection<PsiFileSystemItem> getRoots(Module module) {
     return getContextsForModule(module, "", GlobalSearchScope.moduleWithDependenciesScope(module));
   }
 
   @Override
-  
   public Collection<PsiFileSystemItem> getContexts(Project project, VirtualFile file) {
     PsiFileSystemItem item = getPsiFileSystemItem(project, file);
     if (item != null) {
@@ -98,7 +95,6 @@ public class PsiFileReferenceHelper extends FileReferenceHelper {
   }
 
   @Override
-  
   public String trimUrl(String url) {
     return url.trim();
   }

@@ -20,6 +20,7 @@ import consulo.annotation.internal.MigratedExtensionsTo;
 import consulo.component.util.localize.AbstractBundle;
 import consulo.language.localize.LanguageLocalize;
 import org.jetbrains.annotations.PropertyKey;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author max
@@ -34,16 +35,15 @@ public class PsiBundle extends AbstractBundle{
     super("consulo.language.psi.PsiBundle");
   }
 
-  public static String message(@PropertyKey(resourceBundle = "consulo.language.psi.PsiBundle") String key) {
+  public static @Nullable String message(@PropertyKey(resourceBundle = "consulo.language.psi.PsiBundle") String key) {
     return ourInstance.getMessage(key);
   }
 
-  public static String message(@PropertyKey(resourceBundle = "consulo.language.psi.PsiBundle") String key, Object... params) {
+  public static @Nullable String message(@PropertyKey(resourceBundle = "consulo.language.psi.PsiBundle") String key, Object... params) {
     return ourInstance.getMessage(key, params);
   }
 
-  
-  public static String visibilityPresentation(String modifier) {
+  public static @Nullable String visibilityPresentation(String modifier) {
     return message(modifier + ".visibility.presentation");
   }
 }

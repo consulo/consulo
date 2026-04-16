@@ -28,6 +28,8 @@ import consulo.util.collection.Stack;
 
 import org.jspecify.annotations.Nullable;
 
+import java.util.Objects;
+
 /**
  * @author max
  */
@@ -54,7 +56,6 @@ public class DefaultStubBuilder implements StubBuilder {
     return false;
   }
 
-  
   protected final StubElement buildStubTreeFor(ASTNode root, StubElement parentStub) {
     new StubBuildingWalkingVisitor(root, parentStub).buildStubTree();
     return parentStub;
@@ -109,7 +110,8 @@ public class DefaultStubBuilder implements StubBuilder {
           if (!(element instanceof StubBasedPsiElement)) {
             LOG.error("Non-StubBasedPsiElement requests stub creation. Stub type: " + type + ", PSI: " + element);
           }
-          @SuppressWarnings("unchecked") StubElement stub = type.createStub(element, parentStub);
+          @SuppressWarnings("unchecked")
+          StubElement stub = type.createStub(Objects.requireNonNull(element), parentStub);
           //noinspection ConstantConditions
           LOG.assertTrue(stub != null, element);
           return stub;

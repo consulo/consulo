@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.language.psi.stub;
 
 import consulo.language.Language;
@@ -21,6 +20,7 @@ import consulo.language.ast.IElementType;
 import consulo.language.template.TemplateLanguage;
 import consulo.util.lang.reflect.ReflectionUtil;
 import consulo.virtualFileSystem.VirtualFile;
+import org.jspecify.annotations.Nullable;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -66,7 +66,6 @@ public class IStubFileElementType<T extends PsiFileStub> extends StubFileElement
     return new DefaultStubBuilder();
   }
 
-  
   @Override
   public String getExternalId() {
     return DEFAULT_EXTERNAL_ID;
@@ -76,10 +75,10 @@ public class IStubFileElementType<T extends PsiFileStub> extends StubFileElement
   public void serialize(T stub, StubOutputStream dataStream) throws IOException {
   }
 
-  
   @Override
-  public T deserialize(StubInputStream dataStream, StubElement parentStub) throws IOException {
-    return (T)new PsiFileStubImpl(null);
+  @SuppressWarnings("unchecked")
+  public T deserialize(StubInputStream dataStream, @Nullable StubElement parentStub) throws IOException {
+    return (T) new PsiFileStubImpl(null);
   }
 
   @Override

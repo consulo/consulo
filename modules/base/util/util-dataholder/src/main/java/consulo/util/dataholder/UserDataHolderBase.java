@@ -98,7 +98,7 @@ public class UserDataHolderBase implements CopyableUserDataHolder, UserDataHolde
     }
 
     @Override
-    public <T> void putCopyableUserData(Key<T> key, T value) {
+    public <T> void putCopyableUserData(Key<T> key, @Nullable T value) {
         while (true) {
             KeyFMap map = getUserMap();
             KeyFMap copyableMap = map.get(COPYABLE_USER_MAP_KEY);

@@ -229,7 +229,7 @@ public class LeafPsiElement extends LeafElement implements consulo.language.psi.
   }
 
   @Override
-  public boolean processDeclarations(PsiScopeProcessor processor, ResolveState state, PsiElement lastParent, PsiElement place) {
+  public boolean processDeclarations(PsiScopeProcessor processor, ResolveState state, @Nullable PsiElement lastParent, PsiElement place) {
     return true;
   }
 

@@ -25,13 +25,13 @@ import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
- * @since 26-Mar-22
+ * @since 2022-03-26
  */
 @ServiceAPI(ComponentScope.PROJECT)
 public interface ResolveCache {
   @FunctionalInterface
   public interface AbstractResolver<TRef extends PsiReference, TResult> {
-    TResult resolve(TRef ref, boolean incompleteCode);
+    @Nullable TResult resolve(TRef ref, boolean incompleteCode);
   }
 
   /**
@@ -40,7 +40,6 @@ public interface ResolveCache {
   @FunctionalInterface
   public interface PolyVariantResolver<T extends PsiPolyVariantReference> extends AbstractResolver<T, ResolveResult[]> {
     @Override
-    
     ResolveResult[] resolve(T t, boolean incompleteCode);
   }
 
@@ -49,7 +48,6 @@ public interface ResolveCache {
    */
   @FunctionalInterface
   public interface PolyVariantContextResolver<T extends PsiPolyVariantReference> {
-    
     ResolveResult[] resolve(T ref, PsiFile containingFile, boolean incompleteCode);
   }
 
@@ -65,27 +63,30 @@ public interface ResolveCache {
     return project.getInstance(ResolveCache.class);
   }
 
-  
   default <T extends PsiPolyVariantReference> ResolveResult[] resolveWithCaching(T ref, PolyVariantResolver<T> resolver, boolean needToPreventRecursion, boolean incompleteCode) {
-    return resolveWithCaching(ref, resolver, needToPreventRecursion, incompleteCode, ref.getElement().getContainingFile());
+    return resolveWithCaching(ref, resolver, needToPreventRecursion, incompleteCode, ref.getElement().getRequiredContainingFile());
   }
 
-  
   public <T extends PsiPolyVariantReference> ResolveResult[] resolveWithCaching(T ref,
                                                                                 PolyVariantResolver<T> resolver,
                                                                                 boolean needToPreventRecursion,
                                                                                 boolean incompleteCode,
                                                                                 PsiFile containingFile);
 
-  
   public <T extends PsiPolyVariantReference> ResolveResult[] resolveWithCaching(T ref,
                                                                                 PolyVariantContextResolver<T> resolver,
                                                                                 boolean needToPreventRecursion,
                                                                                 boolean incompleteCode,
                                                                                 PsiFile containingFile);
 
-  <TRef extends PsiReference, TResult> TResult resolveWithCaching(TRef ref, AbstractResolver<TRef, TResult> resolver, boolean needToPreventRecursion, boolean incompleteCode);
+  <TRef extends PsiReference, TResult> @Nullable TResult resolveWithCaching(
+    TRef ref,
+    AbstractResolver<TRef, TResult> resolver,
+    boolean needToPreventRecursion,
+    boolean incompleteCode
+  );
 
-    @Nullable // null means not cached
-  <T extends PsiPolyVariantReference> ResolveResult[] getCachedResults(T ref, boolean physical, boolean incompleteCode, boolean isPoly);
+  // null means not cached
+  <T extends PsiPolyVariantReference>
+  ResolveResult @Nullable [] getCachedResults(T ref, boolean physical, boolean incompleteCode, boolean isPoly);
 }

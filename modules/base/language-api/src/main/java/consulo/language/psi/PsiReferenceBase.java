@@ -13,9 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.language.psi;
 
+import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.access.RequiredWriteAction;
 import consulo.document.util.TextRange;
 import consulo.language.util.IncorrectOperationException;
 import consulo.logging.Logger;
@@ -29,7 +30,7 @@ public abstract class PsiReferenceBase<T extends PsiElement> implements PsiRefer
   private static final Logger LOG = Logger.getInstance(PsiReferenceBase.class);
 
   protected final T myElement;
-  private TextRange myRange;
+  private @Nullable TextRange myRange;
   protected boolean mySoft;
 
   /**
@@ -37,7 +38,7 @@ public abstract class PsiReferenceBase<T extends PsiElement> implements PsiRefer
    * @param range range relatively to the element's start offset
    * @param soft soft
    */
-  public PsiReferenceBase(T element, TextRange range, boolean soft) {
+  public PsiReferenceBase(T element, @Nullable TextRange range, boolean soft) {
     myElement = element;
     myRange = range;
     mySoft = soft;
@@ -48,8 +49,7 @@ public abstract class PsiReferenceBase<T extends PsiElement> implements PsiRefer
    * @param range range relatively to the element's start offset
    */
   public PsiReferenceBase(T element, TextRange range) {
-    this(element);
-    myRange = range;
+    this(element, range, false);
   }
 
   /**
@@ -58,8 +58,7 @@ public abstract class PsiReferenceBase<T extends PsiElement> implements PsiRefer
    * @param soft soft
    */
   public PsiReferenceBase(T element, boolean soft) {
-    myElement = element;
-    mySoft = soft;
+    this(element, null, soft);
   }
 
   /**
@@ -67,15 +66,13 @@ public abstract class PsiReferenceBase<T extends PsiElement> implements PsiRefer
    * @param element PSI element
    */
   public PsiReferenceBase(T element) {
-    myElement = element;
-    mySoft = false;
+    this(element, false);
   }
 
   public void setRangeInElement(TextRange range) {
     myRange = range;
   }
 
-  
   public String getValue() {
     String text = myElement.getText();
     TextRange range = getRangeInElement();
@@ -102,18 +99,18 @@ public abstract class PsiReferenceBase<T extends PsiElement> implements PsiRefer
   }
 
   protected TextRange calculateDefaultRangeInElement() {
-    return getManipulator().getRangeInElement(myElement);
+    return getRequiredManipulator().getRangeInElement(myElement);
   }
 
   @Override
-  
   public String getCanonicalText() {
     return getValue();
   }
 
   @Override
+  @RequiredWriteAction
   public PsiElement handleElementRename(String newElementName) throws IncorrectOperationException {
-    return getManipulator().handleContentChange(myElement, getRangeInElement(), newElementName);
+    return getRequiredManipulator().handleContentChange(myElement, getRangeInElement(), newElementName);
   }
 
   @Override
@@ -122,8 +119,9 @@ public abstract class PsiReferenceBase<T extends PsiElement> implements PsiRefer
   }
 
   @Override
+  @RequiredReadAction
   public boolean isReferenceTo(PsiElement element) {
-    return getElement().getManager().areElementsEquivalent(resolve(), element);
+    return getElement().getRequiredManager().areElementsEquivalent(resolve(), element);
   }
 
   public static <T extends PsiElement> PsiReferenceBase<T> createSelfReference(T element, PsiElement resolveTo) {
@@ -134,10 +132,18 @@ public abstract class PsiReferenceBase<T extends PsiElement> implements PsiRefer
     return new Immediate<T>(element, range, resolveTo);
   }
 
-  ElementManipulator<T> getManipulator() {
+  @Nullable ElementManipulator<T> getManipulator() {
     ElementManipulator<T> manipulator = ElementManipulators.getManipulator(myElement);
     if (manipulator == null) {
       LOG.error("Cannot find manipulator for " + myElement + " in " + this + " class " + getClass());
+    }
+    return manipulator;
+  }
+
+  ElementManipulator<T> getRequiredManipulator() {
+    ElementManipulator<T> manipulator = ElementManipulators.getManipulator(myElement);
+    if (manipulator == null) {
+      throw new NullPointerException("Cannot find manipulator for " + myElement + " in " + this + " class " + getClass());
     }
     return manipulator;
   }
@@ -165,7 +171,7 @@ public abstract class PsiReferenceBase<T extends PsiElement> implements PsiRefer
     public boolean isReferenceTo(PsiElement element) {
       ResolveResult[] results = multiResolve(false);
       for (ResolveResult result : results) {
-        if (element.getManager().areElementsEquivalent(result.getElement(), element)) {
+        if (element.getRequiredManager().areElementsEquivalent(result.getElement(), element)) {
           return true;
         }
       }
@@ -214,7 +220,6 @@ public abstract class PsiReferenceBase<T extends PsiElement> implements PsiRefer
     }
 
     @Override
-    
     public Object[] getVariants() {
       return EMPTY_ARRAY;
     }

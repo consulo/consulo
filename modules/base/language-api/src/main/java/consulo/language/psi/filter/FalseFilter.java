@@ -16,6 +16,7 @@
 package consulo.language.psi.filter;
 
 import consulo.language.psi.PsiElement;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author ik
@@ -25,16 +26,17 @@ public class FalseFilter implements ElementFilter {
   public static final FalseFilter INSTANCE = new FalseFilter();
 
   @Override
-  public boolean isClassAcceptable(Class hintClass){
+  public boolean isClassAcceptable(Class hintClass) {
     return true;
   }
 
   @Override
-  public boolean isAcceptable(Object element, PsiElement context){
+  public boolean isAcceptable(Object element, @Nullable PsiElement context) {
     return false;
   }
 
-  public String toString(){
+  @Override
+  public String toString() {
     return "false";
   }
 }

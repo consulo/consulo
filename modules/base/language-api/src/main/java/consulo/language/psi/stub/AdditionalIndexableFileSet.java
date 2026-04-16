@@ -19,27 +19,25 @@ import consulo.content.ContentIterator;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
 import consulo.virtualFileSystem.util.VirtualFileVisitor;
+import org.jspecify.annotations.Nullable;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * @author peter
  */
 public class AdditionalIndexableFileSet implements IndexableFileSet {
-    private volatile Set<VirtualFile> cachedFiles;
-    private volatile Set<VirtualFile> cachedDirectories;
-    private volatile List<IndexableSetContributor> myExtensions;
+    private volatile @Nullable Set<VirtualFile> cachedFiles = null;
+    private volatile @Nullable Set<VirtualFile> cachedDirectories = null;
+    private volatile @Nullable List<IndexableSetContributor> myExtensions;
 
-    public AdditionalIndexableFileSet(IndexableSetContributor... extensions) {
-        myExtensions = extensions == null ? null : Arrays.asList(extensions);
+    public AdditionalIndexableFileSet(@Nullable IndexableSetContributor extension) {
+        myExtensions = extension == null ? null : List.of(extension);
     }
 
     private Set<VirtualFile> getDirectories() {
         Set<VirtualFile> directories = cachedDirectories;
-        if (directories == null || filesInvalidated(directories) || filesInvalidated(cachedFiles)) {
+        if (directories == null || filesInvalidated(directories) || filesInvalidated(Objects.requireNonNull(cachedFiles))) {
             directories = collectFilesAndDirectories();
         }
         return directories;
@@ -48,10 +46,11 @@ public class AdditionalIndexableFileSet implements IndexableFileSet {
     private Set<VirtualFile> collectFilesAndDirectories() {
         Set<VirtualFile> files = new HashSet<>();
         Set<VirtualFile> directories = new HashSet<>();
-        if (myExtensions == null) {
-            myExtensions = IndexableSetContributor.EP_NAME.getExtensionList();
+        List<IndexableSetContributor> extensionList = myExtensions;
+        if (extensionList == null) {
+            myExtensions = extensionList = IndexableSetContributor.EP_NAME.getExtensionList();
         }
-        for (IndexableSetContributor provider : myExtensions) {
+        for (IndexableSetContributor provider : extensionList) {
             for (VirtualFile file : provider.getAdditionalRootsToIndex()) {
                 (file.isDirectory() ? directories : files).add(file);
             }
@@ -80,7 +79,7 @@ public class AdditionalIndexableFileSet implements IndexableFileSet {
                 return true;
             }
         }
-        return cachedFiles.contains(file);
+        return Objects.requireNonNull(cachedFiles).contains(file);
     }
 
     @Override

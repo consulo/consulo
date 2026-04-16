@@ -19,6 +19,8 @@ import consulo.language.ast.IElementType;
 
 import org.jspecify.annotations.Nullable;
 
+import java.util.Objects;
+
 /**
  * Interface for breaking a file into a sequence of tokens.
  *
@@ -67,6 +69,10 @@ public abstract class Lexer {
      * @return the current token.
      */
     public abstract @Nullable IElementType getTokenType();
+
+    public IElementType getRequiredTokenType() {
+        return Objects.requireNonNull(getTokenType());
+    }
 
     /**
      * Returns the start offset of the current token.

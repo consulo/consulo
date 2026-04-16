@@ -26,6 +26,7 @@ import consulo.ui.image.ImageEffects;
 import consulo.util.lang.lazy.LazyValue;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
+import org.jspecify.annotations.Nullable;
 
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -38,7 +39,7 @@ public final class IconDescriptorUpdaters {
     private static final Supplier<Image> ourVisibilityIconPlaceholder =
         LazyValue.notNull(() -> Image.empty(AllIcons.Nodes.C_public.getWidth(), AllIcons.Nodes.C_public.getHeight()));
 
-    private static final Function<ElementIconRequest, Image> ourIconCompute = request -> {
+    private static final Function<ElementIconRequest, @Nullable Image> ourIconCompute = request -> {
         PsiElement element = request.myPointer.getElement();
         if (element == null || !element.isValid() || element.getProject().isDisposed()) {
             return null;
@@ -60,7 +61,7 @@ public final class IconDescriptorUpdaters {
         }
 
         @Override
-        public boolean equals(Object o) {
+        public boolean equals(@Nullable Object o) {
             if (this == o) {
                 return true;
             }
@@ -93,7 +94,6 @@ public final class IconDescriptorUpdaters {
         }
     }
 
-    
     @RequiredReadAction
     public static Image getIcon(PsiElement element, @Iconable.IconFlags int flags) {
         if (!element.isValid()) {
@@ -107,7 +107,6 @@ public final class IconDescriptorUpdaters {
         return IconDeferrer.getInstance().defer(baseIcon, new ElementIconRequest(element, flags), ourIconCompute);
     }
 
-    
     private static Image computeBaseIcon(PsiElement element, int flags) {
         Image icon = computeBaseIcon(element);
         if ((flags & Iconable.ICON_FLAG_VISIBILITY) > 0) {
@@ -116,7 +115,6 @@ public final class IconDescriptorUpdaters {
         return icon;
     }
 
-    
     private static Image computeBaseIcon(PsiElement element) {
         if (element instanceof PsiFileSystemItem) {
             VirtualFile file = ((PsiFileSystemItem) element).getVirtualFile();
@@ -136,7 +134,6 @@ public final class IconDescriptorUpdaters {
         return PlatformIconGroup.nodesNodeplaceholder();
     }
 
-    
     @RequiredReadAction
     public static Image getIconWithoutCache(PsiElement element, int flags) {
         IconDescriptor iconDescriptor = new IconDescriptor(null);

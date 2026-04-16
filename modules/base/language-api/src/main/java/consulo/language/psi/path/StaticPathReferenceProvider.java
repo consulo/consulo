@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.language.psi.path;
 
 import consulo.language.psi.PsiElement;
@@ -29,12 +28,11 @@ import java.util.List;
  * @author Dmitry Avdeev
  */
 public class StaticPathReferenceProvider extends PathReferenceProviderBase {
-
   private boolean myEndingSlashNotAllowed;
   private boolean myRelativePathsAllowed;
-  private final FileType[] mySuitableFileTypes;
+  private final FileType @Nullable [] mySuitableFileTypes;
 
-  public StaticPathReferenceProvider(@Nullable FileType[] suitableFileTypes) {
+  public StaticPathReferenceProvider(FileType @Nullable [] suitableFileTypes) {
     mySuitableFileTypes = suitableFileTypes;
   }
 

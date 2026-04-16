@@ -21,9 +21,12 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiErrorElement;
 import consulo.language.psi.PsiWhiteSpace;
 import consulo.util.lang.StringUtil;
+import org.jspecify.annotations.Nullable;
+
+import java.util.Objects;
 
 public class PsiTreeDebugBuilder {
-    private StringBuffer myBuffer;
+    private @Nullable StringBuffer myBuffer = null;
     private boolean myShowWhiteSpaces = true;
     private boolean myShowErrorElements = true;
 
@@ -58,6 +61,7 @@ public class PsiTreeDebugBuilder {
             return;
         }
 
+        Objects.requireNonNull(myBuffer);
         for (int i = 0; i < indent; i++) {
             myBuffer.append(' ');
         }

@@ -13,12 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.language.impl.ast;
 
 import consulo.language.ast.ASTNode;
 import consulo.language.psi.PsiRecursiveVisitor;
 import consulo.util.collection.util.WalkingState;
+import org.jspecify.annotations.Nullable;
 
 public abstract class RecursiveTreeElementWalkingVisitor extends TreeElementVisitor implements PsiRecursiveVisitor {
   private final boolean myDoTransform;
@@ -33,22 +33,22 @@ public abstract class RecursiveTreeElementWalkingVisitor extends TreeElementVisi
 
   private static class ASTTreeGuide implements WalkingState.TreeGuide<ASTNode> {
     @Override
-    public ASTNode getNextSibling(ASTNode element) {
+    public @Nullable ASTNode getNextSibling(ASTNode element) {
       return element.getTreeNext();
     }
 
     @Override
-    public ASTNode getPrevSibling(ASTNode element) {
+    public @Nullable ASTNode getPrevSibling(ASTNode element) {
       return element.getTreePrev();
     }
 
     @Override
-    public ASTNode getFirstChild(ASTNode element) {
+    public @Nullable ASTNode getFirstChild(ASTNode element) {
       return element.getFirstChildNode();
     }
 
     @Override
-    public ASTNode getParent(ASTNode element) {
+    public @Nullable ASTNode getParent(ASTNode element) {
       return element.getTreeParent();
     }
 

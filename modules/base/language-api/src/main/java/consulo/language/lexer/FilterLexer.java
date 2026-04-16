@@ -17,10 +17,11 @@ package consulo.language.lexer;
 
 import consulo.language.ast.IElementType;
 import consulo.language.ast.TokenSet;
+import org.jspecify.annotations.Nullable;
 
 public class FilterLexer extends DelegateLexer {
     private final Filter myFilter;
-    private final boolean[] myStateFilter;
+    private final boolean @Nullable [] myStateFilter;
     private int myPrevTokenEnd;
 
     public interface Filter {
@@ -40,7 +41,7 @@ public class FilterLexer extends DelegateLexer {
         }
     }
 
-    public FilterLexer(Lexer original, Filter filter, boolean[] stateFilter) {
+    public FilterLexer(Lexer original, Filter filter, boolean @Nullable [] stateFilter) {
         super(original);
         myFilter = filter;
         myStateFilter = stateFilter;
@@ -74,7 +75,7 @@ public class FilterLexer extends DelegateLexer {
 
     @Override
     public LexerPosition getCurrentPosition() {
-        return getDelegate().getCurrentPosition();    //To change body of overridden methods use File | Settings | File Templates.
+        return getDelegate().getCurrentPosition();
     }
 
     @Override

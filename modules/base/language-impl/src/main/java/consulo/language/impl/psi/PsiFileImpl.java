@@ -218,7 +218,6 @@ public abstract class PsiFileImpl extends UserDataHolderBase
         getApplication().assertReadAccessAllowed();
     }
 
-    
     @RequiredReadAction
     private FileElement loadTreeElement() {
         assertReadAccessAllowed();
@@ -261,7 +260,6 @@ public abstract class PsiFileImpl extends UserDataHolderBase
         }
     }
 
-    
     @Override
     @RequiredReadAction
     public StubbedSpine getStubbedSpine() {
@@ -287,7 +285,6 @@ public abstract class PsiFileImpl extends UserDataHolderBase
         return type instanceof IStubFileElementType stubFileElementType ? stubFileElementType : null;
     }
 
-    
     protected FileElement createFileElement(CharSequence docText) {
         FileElement treeElement;
         TreeElement contentLeaf = createContentLeafElement(docText);
@@ -344,7 +341,6 @@ public abstract class PsiFileImpl extends UserDataHolderBase
         return getViewProvider().getContents().length();
     }
 
-    
     @Override
     @RequiredReadAction
     public TextRange getTextRange() {
@@ -428,7 +424,6 @@ public abstract class PsiFileImpl extends UserDataHolderBase
         return clone;
     }
 
-    
     @Override
     @RequiredReadAction
     public String getName() {
@@ -474,11 +469,10 @@ public abstract class PsiFileImpl extends UserDataHolderBase
             LOG.error("Invalid parent: " + parentFile + " of file " + file + ", file.valid=" + file.isValid());
             return null;
         }
-        return getManager().findDirectory(parentFile);
+        return getRequiredManager().findDirectory(parentFile);
     }
 
     @Override
-    
     public PsiFile getContainingFile() {
         return this;
     }
@@ -499,7 +493,6 @@ public abstract class PsiFileImpl extends UserDataHolderBase
     }
 
     @Override
-    
     public PsiFile getOriginalFile() {
         return myOriginalFile == null ? this : myOriginalFile;
     }
@@ -513,7 +506,6 @@ public abstract class PsiFileImpl extends UserDataHolderBase
     }
 
     @Override
-    
     public PsiFile[] getPsiRoots() {
         FileViewProvider viewProvider = getViewProvider();
         Set<Language> languages = viewProvider.getLanguages();
@@ -542,7 +534,6 @@ public abstract class PsiFileImpl extends UserDataHolderBase
     }
 
     @RequiredReadAction
-    
     @Override
     public LanguageVersion getLanguageVersion() {
         VirtualFile file = getVirtualFile();
@@ -555,7 +546,6 @@ public abstract class PsiFileImpl extends UserDataHolderBase
         return PsiTreeUtil.getLanguageVersion(this);
     }
 
-    
     @Override
     @RequiredReadAction
     public Language getLanguage() {
@@ -570,7 +560,6 @@ public abstract class PsiFileImpl extends UserDataHolderBase
     }
 
     @Override
-    
     public FileViewProvider getViewProvider() {
         return myViewProvider;
     }
@@ -593,12 +582,10 @@ public abstract class PsiFileImpl extends UserDataHolderBase
 
     @RequiredReadAction
     @Override
-    
     public char[] textToCharArray() {
         return CharArrayUtil.fromSequence(getViewProvider().getContents());
     }
 
-    
     @RequiredReadAction
     @SuppressWarnings("unchecked")
     public <T> T[] findChildrenByClass(Class<T> aClass) {
@@ -754,7 +741,6 @@ public abstract class PsiFileImpl extends UserDataHolderBase
         }
     }
 
-    
     @RequiredReadAction
     private StubTree setStubTree(PsiFileStub root) {
         //noinspection unchecked
@@ -811,14 +797,12 @@ public abstract class PsiFileImpl extends UserDataHolderBase
         return getOriginalFile();
     }
 
-    
     @RequiredReadAction
     public final FileElement calcTreeElement() {
         FileElement treeElement = getTreeElement();
         return treeElement != null ? treeElement : loadTreeElement();
     }
 
-    
     @Override
     @RequiredReadAction
     public PsiElement[] getChildren() {
@@ -965,23 +949,16 @@ public abstract class PsiFileImpl extends UserDataHolderBase
     }
 
     @Override
-    
     public PsiReference[] getReferences() {
         return SharedPsiElementImplUtil.getReferences(this);
     }
 
     @Override
-    public boolean processDeclarations(
-        PsiScopeProcessor processor,
-        ResolveState state,
-        PsiElement lastParent,
-        PsiElement place
-    ) {
+    public boolean processDeclarations(PsiScopeProcessor processor, ResolveState state, @Nullable PsiElement lastParent, PsiElement place) {
         return true;
     }
 
     @Override
-    
     public GlobalSearchScope getResolveScope() {
         return ResolveScopeManager.getElementResolveScope(this);
     }
@@ -1040,9 +1017,8 @@ public abstract class PsiFileImpl extends UserDataHolderBase
     }
 
     @Override
-    
     public final Project getProject() {
-        return getManager().getProject();
+        return getRequiredManager().getProject();
     }
 
     @Override
@@ -1054,7 +1030,6 @@ public abstract class PsiFileImpl extends UserDataHolderBase
         return myModuleRef.get();
     }
 
-    
     @Override
     @RequiredReadAction
     public FileASTNode getNode() {
@@ -1075,7 +1050,6 @@ public abstract class PsiFileImpl extends UserDataHolderBase
         return result != null ? result : getStubTree();
     }
 
-    
     @Override
     @RequiredReadAction
     public StubTree calcStubTree() {

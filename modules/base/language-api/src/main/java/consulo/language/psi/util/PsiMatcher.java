@@ -16,13 +16,14 @@
 package consulo.language.psi.util;
 
 import consulo.language.psi.PsiElement;
+import org.jspecify.annotations.Nullable;
 
 public interface PsiMatcher {
-  PsiMatcher parent(PsiMatcherExpression e);
-  PsiMatcher firstChild(PsiMatcherExpression e);
-  PsiMatcher ancestor(PsiMatcherExpression e);
-  PsiMatcher descendant(PsiMatcherExpression e);
-  PsiMatcher dot(PsiMatcherExpression e);
+  PsiMatcher parent(@Nullable PsiMatcherExpression e);
+  PsiMatcher firstChild(@Nullable PsiMatcherExpression e);
+  PsiMatcher ancestor(@Nullable PsiMatcherExpression e);
+  PsiMatcher descendant(@Nullable PsiMatcherExpression e);
+  PsiMatcher dot(@Nullable PsiMatcherExpression e);
 
-  PsiElement getElement();
+  @Nullable PsiElement getElement();
 }

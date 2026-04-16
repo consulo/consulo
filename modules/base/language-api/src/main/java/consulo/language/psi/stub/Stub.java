@@ -15,6 +15,8 @@
  */
 package consulo.language.psi.stub;
 
+import org.jspecify.annotations.Nullable;
+
 import java.util.List;
 
 /**
@@ -22,9 +24,9 @@ import java.util.List;
  * @since 2012-08-02
  */
 public interface Stub {
-  Stub getParentStub();
+  @Nullable Stub getParentStub();
 
   List<? extends Stub> getChildrenStubs();
 
-  ObjectStubSerializer getStubType();
+  @Nullable ObjectStubSerializer getStubType();
 }

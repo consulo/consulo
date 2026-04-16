@@ -68,7 +68,7 @@ public class TemplateDataElementType extends IFileElementType implements ITempla
   public ASTNode parseContents(ASTNode chameleon) {
     CharTable charTable = SharedImplUtil.findCharTableByTree(chameleon);
     FileElement fileElement = TreeUtil.getFileElement((TreeElement)chameleon);
-    PsiFile psiFile = (PsiFile)fileElement.getPsi();
+    PsiFile psiFile = (PsiFile)fileElement.getRequiredPsi();
     PsiFile originalPsiFile = psiFile.getOriginalFile();
 
     TemplateLanguageFileViewProvider viewProvider = (TemplateLanguageFileViewProvider)originalPsiFile.getViewProvider();
@@ -81,7 +81,12 @@ public class TemplateDataElementType extends IFileElementType implements ITempla
     FileElement templateFileElement = ((PsiFileImpl)templatePsiFile).calcTreeElement();
 
     return DebugUtil.performPsiModification("template language parsing", () -> {
-      collector.insertOuterElementsAndRemoveRanges(templateFileElement, sourceCode, charTable, templateFileElement.getPsi().getLanguage());
+      collector.insertOuterElementsAndRemoveRanges(
+        templateFileElement,
+        sourceCode,
+        charTable,
+        templateFileElement.getRequiredPsi().getLanguage()
+      );
 
       TreeElement childNode = templateFileElement.getFirstChildNode();
 
@@ -144,7 +149,14 @@ public class TemplateDataElementType extends IFileElementType implements ITempla
   }
 
   private final Supplier<Boolean> REQUIRES_OLD_CREATE_TEMPLATE_TEXT = LazyValue.notNull(() -> {
-    Class<?> implementationClass = ReflectionUtil.getMethodDeclaringClass(getClass(), "appendCurrentTemplateToken", StringBuilder.class, CharSequence.class, Lexer.class, RangeCollector.class);
+    Class<?> implementationClass = ReflectionUtil.getMethodDeclaringClass(
+        getClass(),
+        "appendCurrentTemplateToken",
+        StringBuilder.class,
+        CharSequence.class,
+        Lexer.class,
+        RangeCollector.class
+    );
     return implementationClass != TemplateDataElementType.class;
   });
 
@@ -184,9 +196,7 @@ public class TemplateDataElementType extends IFileElementType implements ITempla
    * @param sourceCode source code with base and template languages
    * @param baseLexer  base language lexer
    */
-  protected
-  
-  TemplateDataModifications collectTemplateModifications(CharSequence sourceCode, Lexer baseLexer) {
+  protected TemplateDataModifications collectTemplateModifications(CharSequence sourceCode, Lexer baseLexer) {
     TemplateDataModifications modifications = new TemplateDataModifications();
     baseLexer.start(sourceCode);
     TextRange currentRange = TextRange.EMPTY_RANGE;
@@ -216,7 +226,6 @@ public class TemplateDataElementType extends IFileElementType implements ITempla
     return modifications;
   }
 
-  
   private static String getRangeDump(TextRange range, CharSequence sequence) {
     return "'" + StringUtil.escapeLineBreak(range.subSequence(sequence).toString()) + "' " + range;
   }
@@ -234,9 +243,7 @@ public class TemplateDataElementType extends IFileElementType implements ITempla
    *
    * @return modifications need to be applied for the current token
    */
-  protected
-  
-  TemplateDataModifications appendCurrentTemplateToken(int tokenEndOffset, CharSequence tokenText) {
+  protected TemplateDataModifications appendCurrentTemplateToken(int tokenEndOffset, CharSequence tokenText) {
     return TemplateDataModifications.EMPTY;
   }
 
@@ -251,9 +258,7 @@ public class TemplateDataElementType extends IFileElementType implements ITempla
    *
    * @see RangeCollector#addOuterRange(TextRange, boolean)
    */
-  protected
-  
-  TokenSet getTemplateDataInsertionTokens() {
+  protected TokenSet getTemplateDataInsertionTokens() {
     return TokenSet.EMPTY;
   }
 
@@ -266,7 +271,6 @@ public class TemplateDataElementType extends IFileElementType implements ITempla
 
     FileViewProvider viewProvider = new SingleRootFileViewProvider(manager, virtualFile, false) {
       @Override
-      
       public Language getBaseLanguage() {
         return language;
       }
@@ -279,7 +283,6 @@ public class TemplateDataElementType extends IFileElementType implements ITempla
     return viewProvider.getPsi(language);
   }
 
-  
   public static ASTNode parseWithOuterAndRemoveRangesApplied(ASTNode chameleon, Language language, Function<CharSequence, ASTNode> parser) {
     RangeCollectorImpl collector = chameleon.getUserData(RangeCollectorImpl.OUTER_ELEMENT_RANGES);
     return collector != null ? collector.applyRangeCollectorAndExpandChameleon(chameleon, language, parser) : parser.apply(chameleon.getChars());
@@ -294,25 +297,21 @@ public class TemplateDataElementType extends IFileElementType implements ITempla
     }
 
     @Override
-    
     public String getDefaultExtension() {
       return "";
     }
 
     @Override
-    
     public LocalizeValue getDescription() {
       return LocalizeValue.of("fake for language:" + myLanguage.getID());
     }
 
-    
     @Override
     public Image getIcon() {
       throw new UnsupportedOperationException();
     }
 
     @Override
-    
     public String getId() {
       return myLanguage.getID();
     }
@@ -367,8 +366,6 @@ public class TemplateDataElementType extends IFileElementType implements ITempla
    * should be used.
    */
   public interface TemplateAwareElementType extends ILazyParseableElementTypeBase {
-    
     TreeElement createTreeElement(CharSequence text);
   }
-
 }

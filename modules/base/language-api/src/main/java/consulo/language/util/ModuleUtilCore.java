@@ -16,7 +16,7 @@
 package consulo.language.util;
 
 import consulo.annotation.access.RequiredReadAction;
-import consulo.application.AccessRule;
+import consulo.application.ReadAction;
 import consulo.application.util.CachedValueProvider;
 import consulo.application.util.CachedValuesManager;
 import consulo.application.util.ParameterizedCachedValue;
@@ -80,9 +80,10 @@ public class ModuleUtilCore {
   }
 
   public static String getModuleNameInReadAction(Module module) {
-    return AccessRule.read(module::getName);
+    return ReadAction.compute(module::getName);
   }
 
+  @RequiredReadAction
   public static boolean isModuleDisposed(PsiElement element) {
     if (!element.isValid()) return true;
     Project project = element.getProject();
@@ -92,7 +93,7 @@ public class ModuleUtilCore {
     VirtualFile vFile = file.getVirtualFile();
     Module module = vFile == null ? null : projectFileIndex.getModuleForFile(vFile);
     // element may be in library
-    return module == null ? !projectFileIndex.isInLibraryClasses(vFile) : module.isDisposed();
+    return module == null ? (vFile == null || !projectFileIndex.isInLibraryClasses(vFile)) : module.isDisposed();
   }
 
   @RequiredReadAction
@@ -133,7 +134,6 @@ public class ModuleUtilCore {
     ModuleContentUtil.collectModulesDependsOn(module, result);
   }
 
-  
   @RequiredReadAction
   public static List<Module> getAllDependentModules(Module module) {
     ArrayList<Module> list = new ArrayList<Module>();
@@ -170,7 +170,6 @@ public class ModuleUtilCore {
   }
 
   @RequiredReadAction
-  
   public static List<ContentFolder> getContentFolders(Project project) {
     return ModuleContentUtil.getContentFolders(project);
   }
@@ -221,13 +220,11 @@ public class ModuleUtilCore {
     return getSdk(moduleForPsiElement, extensionClass);
   }
 
-  
   @RequiredReadAction
   public static NamedPointer<Module> createPointer(Module module) {
     return ModulePointerManager.getInstance(module.getProject()).create(module);
   }
 
-  
   @RequiredReadAction
   public static NamedPointer<Module> createPointer(Project project, String name) {
     return ModulePointerManager.getInstance(project).create(name);

@@ -27,8 +27,8 @@ import org.jspecify.annotations.Nullable;
  */
 public class IconDescriptor {
   private Image[] myLayerIcons = Image.EMPTY_ARRAY;
-  private Image myRightIcon;
-  private Image myMainIcon;
+  private @Nullable Image myRightIcon = null;
+  private @Nullable Image myMainIcon;
 
   public IconDescriptor(@Nullable Image mainIcon) {
     myMainIcon = mainIcon;
@@ -66,21 +66,19 @@ public class IconDescriptor {
     myRightIcon = rightIcon;
   }
 
-  
   public Image toIcon() {
     Image mainIcon;
-    if(myLayerIcons.length == 0) {
+    if (myLayerIcons.length == 0) {
       mainIcon = myMainIcon;
     }
     else {
       mainIcon = ImageEffects.layered(ArrayUtil.mergeArrays(new Image[]{myMainIcon}, myLayerIcons));
     }
 
-    if(myRightIcon == null) {
-      return mainIcon == null ? Image.empty(16) : mainIcon;
+    if (mainIcon == null) {
+      mainIcon = Image.empty(16);
     }
-    else {
-      return ImageEffects.appendRight(mainIcon, myRightIcon);
-    }
+
+    return myRightIcon == null ? mainIcon : ImageEffects.appendRight(mainIcon, myRightIcon);
   }
 }

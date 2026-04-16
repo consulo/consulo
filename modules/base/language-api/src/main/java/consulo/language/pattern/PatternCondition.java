@@ -30,13 +30,13 @@ import java.util.function.BiPredicate;
 public abstract class PatternCondition<T> {
   private static final Logger LOG = Logger.getInstance(PatternCondition.class);
   private static final String PARAMETER_FIELD_PREFIX = "val$";
-  private final String myDebugMethodName;
+  private final @Nullable String myDebugMethodName;
 
   public PatternCondition(@Nullable String debugMethodName) {
     myDebugMethodName = debugMethodName;
   }
 
-  public String getDebugMethodName() {
+  public @Nullable String getDebugMethodName() {
     return myDebugMethodName;
   }
 
@@ -89,9 +89,9 @@ public abstract class PatternCondition<T> {
 
   private void appendParams(final StringBuilder builder, final String indent) {
     processParameters(new BiPredicate<String, Object>() {
-      int count;
-      String prevName;
-      int prevOffset;
+      int count = 0;
+      @Nullable String prevName = null;
+      int prevOffset = 0;
 
       @Override
       public boolean test(String name, Object value) {
@@ -123,7 +123,7 @@ public abstract class PatternCondition<T> {
     return true;
   }
 
-  private Object getFieldValue(Field field) {
+  private @Nullable Object getFieldValue(Field field) {
     boolean accessible = field.isAccessible();
     try {
       field.setAccessible(true);
@@ -137,5 +137,4 @@ public abstract class PatternCondition<T> {
     }
     return null;
   }
-
 }

@@ -13,11 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.language.psi.resolve;
 
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.filter.ElementFilter;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,30 +29,30 @@ import java.util.List;
 public class FilterElementProcessor implements PsiElementProcessor{
   private final List<PsiElement> myResults;
   private final ElementFilter myFilter;
-  private final PsiElementProcessor myProcessor;
+  private final @Nullable PsiElementProcessor myProcessor;
 
-  public FilterElementProcessor(ElementFilter filter,  PsiElementProcessor processor, List container){
+  public FilterElementProcessor(ElementFilter filter, @Nullable PsiElementProcessor processor, List container) {
     myFilter = filter;
     myProcessor = processor;
     myResults = container;
   }
 
-  public FilterElementProcessor(ElementFilter filter, List container){
-    this(filter,  null, container);
+  public FilterElementProcessor(ElementFilter filter, List container) {
+    this(filter, null, container);
   }
 
-  public FilterElementProcessor(ElementFilter filter, PsiElementProcessor proc){
+  public FilterElementProcessor(ElementFilter filter, PsiElementProcessor proc) {
     this(filter, proc, new ArrayList());
   }
 
-  public FilterElementProcessor(ElementFilter filter){
+  public FilterElementProcessor(ElementFilter filter) {
     this(filter, null, new ArrayList());
   }
 
   @Override
-  public boolean execute(PsiElement element){
-    if(myFilter.isClassAcceptable(element.getClass()) && myFilter.isAcceptable(element, element.getParent())){
-      if(myProcessor != null){
+  public boolean execute(PsiElement element) {
+    if (myFilter.isClassAcceptable(element.getClass()) && myFilter.isAcceptable(element, element.getParent())) {
+      if (myProcessor != null) {
         return myProcessor.execute(element);
       }
       add(element);

@@ -13,17 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.language.psi.filter;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiNamedElement;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author yole
  */
 public class PlainTextFilter implements ElementFilter {
-  protected final String[] myValue;
+  protected final @Nullable String[] myValue;
   protected boolean myCaseInsensitiveFlag = false;
 
   public PlainTextFilter(String value, boolean insensitiveFlag) {
@@ -48,7 +49,7 @@ public class PlainTextFilter implements ElementFilter {
   }
 
   @Override
-  public boolean isAcceptable(Object element, PsiElement context) {
+  public boolean isAcceptable(Object element, @Nullable PsiElement context) {
     if (element != null) {
       for (String value : myValue) {
         if (value == null) {
@@ -67,6 +68,7 @@ public class PlainTextFilter implements ElementFilter {
     return false;
   }
 
+  @Override
   public String toString() {
     String ret = "(";
     for (int i = 0; i < myValue.length; i++) {
@@ -79,14 +81,14 @@ public class PlainTextFilter implements ElementFilter {
     return ret;
   }
 
-  protected String getTextByElement(Object element) {
-    String elementValue = null;
-    if (element instanceof PsiNamedElement) {
-      elementValue = ((PsiNamedElement)element).getName();
+  @RequiredReadAction
+  protected @Nullable String getTextByElement(Object element) {
+    if (element instanceof PsiNamedElement namedElem) {
+      return namedElem.getName();
     }
-    else if (element instanceof PsiElement) {
-      elementValue = ((PsiElement)element).getText();
+    else if (element instanceof PsiElement psiElem) {
+      return psiElem.getText();
     }
-    return elementValue;
+    return null;
   }
 }

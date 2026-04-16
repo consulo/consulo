@@ -13,13 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.language.internal.custom;
 
 import consulo.util.lang.StringUtil;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * @author dsl
@@ -34,16 +34,17 @@ public final class CustomFileTypeLexer extends AbstractCustomLexer {
   }
 
   private static List<TokenParser> buildTokenParsers(SyntaxTable table, boolean forHighlighting) {
-    LineCommentParser lineCommentParser = StringUtil.isEmpty(table.getLineComment()) ? null : new LineCommentParser(table.getLineComment(), table.lineCommentOnlyAtStart);
+    LineCommentParser lineCommentParser =
+      StringUtil.isEmpty(table.getLineComment()) ? null : new LineCommentParser(table.getLineComment(), table.lineCommentOnlyAtStart);
     MultilineCommentParser multilineCommentParser = MultilineCommentParser.create(table.getStartComment(), table.getEndComment());
-    NumberParser numberParser = new NumberParser(table.getNumPostfixChars(), table.isIgnoreCase());
+    NumberParser numberParser = new NumberParser(Objects.requireNonNull(table.getNumPostfixChars()), table.isIgnoreCase());
     HexNumberParser hexNumberParser = HexNumberParser.create(table.getHexPrefix());
 
     final KeywordParser parser = table.getKeywordParser();
     TokenParser keywordParser = new TokenParser() {
       @Override
       public boolean hasToken(int position) {
-        return parser.hasToken(position, myBuffer, myTokenInfo);
+        return parser.hasToken(position, Objects.requireNonNull(myBuffer), myTokenInfo);
       }
     };
 
@@ -51,8 +52,11 @@ public final class CustomFileTypeLexer extends AbstractCustomLexer {
 
     QuotedStringParser quotedStringParser = new QuotedStringParser("\"", CustomHighlighterTokenType.STRING, table.isHasStringEscapes());
 
-    QuotedStringParser quotedStringParser2 =
-            new QuotedStringParser("\'", forHighlighting ? CustomHighlighterTokenType.SINGLE_QUOTED_STRING : CustomHighlighterTokenType.STRING, table.isHasStringEscapes());
+    QuotedStringParser quotedStringParser2 = new QuotedStringParser(
+      "\'",
+      forHighlighting ? CustomHighlighterTokenType.SINGLE_QUOTED_STRING : CustomHighlighterTokenType.STRING,
+      table.isHasStringEscapes()
+    );
 
     ArrayList<TokenParser> tokenParsers = new ArrayList<TokenParser>();
     tokenParsers.add(new WhitespaceParser());
@@ -86,5 +90,4 @@ public final class CustomFileTypeLexer extends AbstractCustomLexer {
 
     return tokenParsers;
   }
-
 }

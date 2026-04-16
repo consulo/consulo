@@ -25,9 +25,11 @@ import consulo.language.psi.PsiUtilCore;
 
 import org.jspecify.annotations.Nullable;
 
+import java.util.Objects;
+
 /**
  * @author VISTALL
- * @since 11-Jul-22
+ * @since 2022-07-11
  */
 public class DefaultTokenSeparatorGenerator implements TokenSeparatorGenerator {
   @Override
@@ -39,7 +41,7 @@ public class DefaultTokenSeparatorGenerator implements TokenSeparatorGenerator {
     }
     ParserDefinition parserDefinition = ParserDefinition.forLanguage(l);
     if (parserDefinition != null) {
-      PsiManager manager = right.getTreeParent().getPsi().getManager();
+      PsiManager manager = Objects.requireNonNull(right.getTreeParent()).getRequiredPsi().getRequiredManager();
       ASTNode generatedWhitespace;
       switch (parserDefinition.spaceExistenceTypeBetweenTokens(left, right)) {
         case MUST:
@@ -56,7 +58,6 @@ public class DefaultTokenSeparatorGenerator implements TokenSeparatorGenerator {
     return null;
   }
 
-  
   @Override
   public Language getLanguage() {
     return Language.ANY;

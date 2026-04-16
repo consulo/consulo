@@ -65,7 +65,7 @@ public class StubTreeBuilder {
         psi.putUserData(IndexingDataKeys.FILE_TEXT_CONTENT_KEY, contentAsText);
 
         // if we load AST, it should be easily gc-able. See PsiFileImpl.createTreeElementPointer()
-        psi.getManager().startBatchFilesProcessingMode();
+        psi.getRequiredManager().startBatchFilesProcessingMode();
 
         try {
           IStubFileElementType stubFileElementType = ((PsiFileWithStubSupport)psi).getElementTypeForStubBuilder();
@@ -103,7 +103,7 @@ public class StubTreeBuilder {
         }
         finally {
           psi.putUserData(IndexingDataKeys.FILE_TEXT_CONTENT_KEY, null);
-          psi.getManager().finishBatchFilesProcessingMode();
+          psi.getRequiredManager().finishBatchFilesProcessingMode();
         }
       }
 
@@ -113,9 +113,9 @@ public class StubTreeBuilder {
     }
   }
 
-  private static void ensureNormalizedOrder(Stub element) {
-    if (element instanceof StubBase<?>) {
-      ((StubBase)element).myStubList.finalizeLoadingStage();
+  private static void ensureNormalizedOrder(@Nullable Stub element) {
+    if (element instanceof StubBase<?> stubBase) {
+      stubBase.myStubList.finalizeLoadingStage();
     }
   }
 

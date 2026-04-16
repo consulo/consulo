@@ -13,8 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.language.internal.custom;
+
+import java.util.Objects;
 
 /**
  * @author dsl
@@ -29,18 +30,18 @@ public class LineCommentParser extends PrefixedTokenParser {
 
   @Override
   public boolean hasToken(int position) {
-    if (myAtStartOnly && position > 0 && myBuffer.charAt(position - 1) != '\n') {
+    if (myAtStartOnly && position > 0 && Objects.requireNonNull(myBuffer).charAt(position - 1) != '\n') {
       return false;
     }
 
     return super.hasToken(position);
   }
 
+  @Override
   protected int getTokenEnd(int position) {
     for (; position < myEndOffset; position++) {
-      if (myBuffer.charAt(position) == '\n') break;
+      if (Objects.requireNonNull(myBuffer).charAt(position) == '\n') break;
     }
     return position;
   }
-
 }

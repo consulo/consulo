@@ -25,14 +25,14 @@ import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
- * @since 09-Jul-22
+ * @since 2022-07-09
  */
 public class SandClassStub extends NamedStubBase<SandClass> {
-  protected SandClassStub(StubElement parent, IStubElementType elementType, @Nullable StringRef name) {
+  protected SandClassStub(@Nullable StubElement parent, IStubElementType elementType, @Nullable StringRef name) {
     super(parent, elementType, name);
   }
 
-  protected SandClassStub(StubElement parent, IStubElementType elementType, @Nullable String name) {
+  protected SandClassStub(@Nullable StubElement parent, IStubElementType elementType, @Nullable String name) {
     super(parent, elementType, name);
   }
 }

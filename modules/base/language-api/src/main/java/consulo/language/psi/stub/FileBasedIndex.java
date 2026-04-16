@@ -3,7 +3,7 @@ package consulo.language.psi.stub;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
-import consulo.application.AccessRule;
+import consulo.application.ReadAction;
 import consulo.application.dumb.IndexNotReadyException;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.util.PerApplicationInstance;
@@ -17,6 +17,7 @@ import consulo.module.content.ProjectFileIndex;
 import consulo.project.Project;
 import consulo.project.content.scope.ProjectAwareSearchScope;
 import consulo.util.lang.SystemProperties;
+import consulo.util.lang.function.ThrowableSupplier;
 import consulo.virtualFileSystem.VFileProperty;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileWithId;
@@ -40,18 +41,13 @@ import java.util.function.Predicate;
 public abstract class FileBasedIndex {
     private static final PerApplicationInstance<FileBasedIndex> ourInstance = PerApplicationInstance.of(FileBasedIndex.class);
 
-    
     public static FileBasedIndex getInstance() {
         return ourInstance.get();
     }
 
-    public abstract void iterateIndexableFiles(ContentIterator processor, Project project, ProgressIndicator indicator);
+    public abstract void iterateIndexableFiles(ContentIterator processor, Project project, @Nullable ProgressIndicator indicator);
 
-    public void iterateIndexableFilesConcurrently(
-        ContentIterator processor,
-        Project project,
-        ProgressIndicator indicator
-    ) {
+    public void iterateIndexableFilesConcurrently(ContentIterator processor, Project project, @Nullable ProgressIndicator indicator) {
         iterateIndexableFiles(processor, project, indicator);
     }
 
@@ -85,15 +81,9 @@ public abstract class FileBasedIndex {
         requestRebuild(indexId, new Throwable());
     }
 
-    
     public abstract <K, V> List<V> getValues(ID<K, V> indexId, K dataKey, SearchScope filter);
 
-    
-    public abstract <K, V> Collection<VirtualFile> getContainingFiles(
-        ID<K, V> indexId,
-        K dataKey,
-        SearchScope filter
-    );
+    public abstract <K, V> Collection<VirtualFile> getContainingFiles(ID<K, V> indexId, K dataKey, SearchScope filter);
 
     /**
      * @return {@code false} if ValueProcessor.process() returned {@code false};
@@ -175,10 +165,8 @@ public abstract class FileBasedIndex {
         });
     }
 
-    public <T, E extends Throwable> T ignoreDumbMode(
-        DumbModeAccessType dumbModeAccessType,
-        ThrowableComputable<T, E> computable
-    ) throws E {
+    public <T extends @Nullable Object, E extends Throwable>
+    T ignoreDumbMode(DumbModeAccessType dumbModeAccessType, ThrowableSupplier<T, E> computable) throws E {
         throw new UnsupportedOperationException();
     }
 
@@ -245,7 +233,7 @@ public abstract class FileBasedIndex {
                 if (visitedRoots != null && !root.equals(file) && file.isDirectory() && !visitedRoots.add(file)) {
                     return false;
                 }
-                return projectFileIndex == null || !AccessRule.read(() -> projectFileIndex.isExcluded(file));
+                return projectFileIndex == null || !ReadAction.compute(() -> projectFileIndex.isExcluded(file));
             }
         });
     }

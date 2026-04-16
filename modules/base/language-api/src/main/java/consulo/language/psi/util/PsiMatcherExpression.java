@@ -16,7 +16,8 @@
 package consulo.language.psi.util;
 
 import consulo.language.psi.PsiElement;
+import org.jspecify.annotations.Nullable;
 
 public interface PsiMatcherExpression {
-  Boolean match(PsiElement element);
+  @Nullable Boolean match(PsiElement element);
 }

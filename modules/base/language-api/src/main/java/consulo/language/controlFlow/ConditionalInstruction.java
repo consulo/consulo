@@ -16,6 +16,7 @@
 package consulo.language.controlFlow;
 
 import consulo.language.psi.PsiElement;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author oleg
@@ -23,5 +24,5 @@ import consulo.language.psi.PsiElement;
 public interface ConditionalInstruction extends Instruction {
     boolean getResult();
 
-    PsiElement getCondition();
+    @Nullable PsiElement getCondition();
 }

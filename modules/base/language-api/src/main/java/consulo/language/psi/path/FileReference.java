@@ -13,12 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.language.psi.path;
 
+import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.access.RequiredWriteAction;
 import consulo.document.util.TextRange;
 import consulo.language.LangBundle;
 import consulo.language.inject.InjectedLanguageManager;
+import consulo.language.localize.LanguageLocalize;
 import consulo.language.psi.*;
 import consulo.language.psi.resolve.PsiFileSystemItemProcessor;
 import consulo.language.psi.resolve.ResolveCache;
@@ -40,16 +42,12 @@ import org.jspecify.annotations.Nullable;
 
 import java.net.URI;
 import java.text.Normalizer;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
 
 /**
  * @author cdr
  */
 public class FileReference implements PsiFileReference, FileReferenceOwner, PsiPolyVariantReference, EmptyResolveMessageProvider, BindablePsiReference {
-
   private static final Logger LOG = Logger.getInstance(FileReference.class);
 
   public static final FileReference[] EMPTY = new FileReference[0];
@@ -90,7 +88,6 @@ public class FileReference implements PsiFileReference, FileReferenceOwner, PsiP
     return null;
   }
 
-  
   public Collection<PsiFileSystemItem> getContexts() {
     FileReference contextRef = getContextReference();
     ArrayList<PsiFileSystemItem> result = new ArrayList<>();
@@ -119,13 +116,11 @@ public class FileReference implements PsiFileReference, FileReferenceOwner, PsiP
   }
 
   @Override
-  
   public ResolveResult[] multiResolve(boolean incompleteCode) {
-    PsiFile file = getElement().getContainingFile();
+    PsiFile file = getElement().getRequiredContainingFile();
     return ResolveCache.getInstance(file.getProject()).resolveWithCaching(this, MyResolver.INSTANCE, false, false, file);
   }
 
-  
   protected ResolveResult[] innerResolve(boolean caseSensitive, PsiFile containingFile) {
     String referenceText = getText();
     if (referenceText.isEmpty() && myIndex == 0) {
@@ -216,7 +211,6 @@ public class FileReference implements PsiFileReference, FileReferenceOwner, PsiP
     }
   }
 
-  
   public String getFileNameToCreate() {
     return decode(getCanonicalText());
   }
@@ -266,7 +260,6 @@ public class FileReference implements PsiFileReference, FileReferenceOwner, PsiP
   }
 
   @Override
-  
   public Object[] getVariants() {
     FileReferenceCompletion completion = FileReferenceCompletion.getInstance();
     if (completion != null) {
@@ -282,7 +275,7 @@ public class FileReference implements PsiFileReference, FileReferenceOwner, PsiP
    * @return the lookup item representation (PsiElement, LookupElement or String). If returns null,
    * {@code FileInfoManager.getFileLookupItem(candidate)} will be used to create the lookup item.
    */
-  public Object createLookupItem(PsiElement candidate) {
+  public @Nullable Object createLookupItem(PsiElement candidate) {
     return null;
   }
 
@@ -303,7 +296,7 @@ public class FileReference implements PsiFileReference, FileReferenceOwner, PsiP
     return fileSystemItem;
   }
 
-  public @Nullable String encode(String name, PsiElement psiElement) {
+  public String encode(String name, PsiElement psiElement) {
     try {
       return new URI(null, null, name, null).toString();
     }
@@ -326,7 +319,7 @@ public class FileReference implements PsiFileReference, FileReferenceOwner, PsiP
   }
 
   @Override
-  public PsiFileSystemItem resolve() {
+  public @Nullable PsiFileSystemItem resolve() {
     ResolveResult[] resolveResults = multiResolve(false);
     return resolveResults.length == 1 ? (PsiFileSystemItem)resolveResults[0].getElement() : null;
   }
@@ -390,9 +383,9 @@ public class FileReference implements PsiFileReference, FileReferenceOwner, PsiP
     VirtualFile dstVFile = fileSystemItem.getVirtualFile();
     if (dstVFile == null) throw new IncorrectOperationException("Cannot bind to non-physical element:" + element);
 
-    PsiFile file = getElement().getContainingFile();
+    PsiFile file = getElement().getRequiredContainingFile();
     PsiElement contextPsiFile = InjectedLanguageManager.getInstance(file.getProject()).getInjectionHost(file);
-    if (contextPsiFile != null) file = contextPsiFile.getContainingFile(); // use host file!
+    if (contextPsiFile != null) file = contextPsiFile.getRequiredContainingFile(); // use host file!
     VirtualFile curVFile = file.getVirtualFile();
     if (curVFile == null) throw new IncorrectOperationException("Cannot bind from non-physical element:" + file);
 
@@ -430,14 +423,13 @@ public class FileReference implements PsiFileReference, FileReferenceOwner, PsiP
         }
       }
 
-      String relativePath = PsiFileSystemItemUtil.getRelativePath(root, dstItem);
+      String relativePath = PsiFileSystemItemUtil.getRelativePath(root, Objects.requireNonNull(dstItem));
       if (relativePath == null) {
         return getElement();
       }
       newName = myFileReferenceSet.getNewAbsolutePath(root, relativePath);
     }
     else { // relative path
-
       FileReferenceHelper helper = FileReferenceHelperRegistrar.getNotNullHelper(file);
 
       Collection<PsiFileSystemItem> contexts = getContextsForBindToElement(curVFile, project, helper);
@@ -458,15 +450,19 @@ public class FileReference implements PsiFileReference, FileReferenceOwner, PsiP
 
       if (curItem == null) {
         throw new IncorrectOperationException(
-                "Cannot find path between files; " + "src = " + curVFile.getPresentableUrl() + "; " + "dst = " + dstVFile.getPresentableUrl() + "; " + "Contexts: " + contexts);
+          "Cannot find path between files; " +
+              "src = " + curVFile.getPresentableUrl() + "; " +
+              "dst = " + dstVFile.getPresentableUrl() + "; " +
+              "Contexts: " + contexts
+        );
       }
       if (curItem.equals(dstItem)) {
-        if (getCanonicalText().equals(dstItem.getName())) {
+        if (getCanonicalText().equals(Objects.requireNonNull(dstItem).getName())) {
           return getElement();
         }
         return fixRefText(file.getName());
       }
-      newName = PsiFileSystemItemUtil.getRelativePath(curItem, dstItem);
+      newName = PsiFileSystemItemUtil.getRelativePath(curItem, Objects.requireNonNull(dstItem));
       if (newName == null) {
         return getElement();
       }
@@ -488,7 +484,7 @@ public class FileReference implements PsiFileReference, FileReferenceOwner, PsiP
   }
 
   protected PsiElement fixRefText(String name) {
-    return ElementManipulators.getManipulator(getElement()).handleContentChange(getElement(), getRangeInElement(), name);
+    return ElementManipulators.getNotNullManipulator(getElement()).handleContentChange(getElement(), getRangeInElement(), name);
   }
 
   /* Happens when it's been moved to another folder */
@@ -509,7 +505,6 @@ public class FileReference implements PsiFileReference, FileReferenceOwner, PsiP
     }
   }
 
-  
   protected static List<FileReferenceHelper> getHelpers() {
     return FileReferenceHelperRegistrar.getHelpers();
   }
@@ -518,36 +513,35 @@ public class FileReference implements PsiFileReference, FileReferenceOwner, PsiP
     return myIndex;
   }
 
-  
   @Override
   public LocalizeValue buildUnresolvedMessage(String referenceText) {
-    return LocalizeValue.localizeTODO(new StringBuilder().append(LangBundle.message("error.cannot.resolve"))
-                                                         .append(" ")
-                                                         .append(LangBundle.message(isLast() ? "terms.file" : "terms.directory"))
-                                                         .append(" '")
-                                                         .append(StringUtil.escapePattern(decode(getCanonicalText())))
-                                                         .append("'")
-                                                         .toString());
+    return LocalizeValue.localizeTODO(
+        new StringBuilder().append(LangBundle.message("error.cannot.resolve"))
+            .append(" ")
+            .append(LangBundle.message(isLast() ? "terms.file" : "terms.directory"))
+            .append(" '")
+            .append(StringUtil.escapePattern(decode(getCanonicalText())))
+            .append("'")
+            .toString()
+    );
   }
 
   public final boolean isLast() {
     return myIndex == myFileReferenceSet.getAllReferences().length - 1;
   }
 
-  
   public FileReferenceSet getFileReferenceSet() {
     return myFileReferenceSet;
   }
 
   @Override
-  public FileReference getLastFileReference() {
+  public @Nullable FileReference getLastFileReference() {
     return myFileReferenceSet.getLastReference();
   }
 
   static class MyResolver implements ResolveCache.PolyVariantContextResolver<FileReference> {
     static final MyResolver INSTANCE = new MyResolver();
 
-    
     @Override
     public ResolveResult[] resolve(FileReference ref, PsiFile containingFile, boolean incompleteCode) {
       return ref.innerResolve(ref.getFileReferenceSet().isCaseSensitive(), containingFile);

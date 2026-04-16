@@ -28,6 +28,7 @@ import consulo.language.psi.meta.PsiMetaOwner;
 import consulo.language.psi.util.PsiTreeUtil;
 import consulo.language.util.ProcessingContext;
 import consulo.virtualFileSystem.VirtualFile;
+import org.jspecify.annotations.Nullable;
 
 import java.util.function.BiPredicate;
 
@@ -49,9 +50,9 @@ public abstract class PsiElementPattern<T extends PsiElement, Self extends PsiEl
   }
 
   @Override
-  protected PsiElement getParent(PsiElement element) {
-    if (element instanceof PsiFile && InjectedLanguageManager.getInstance(element.getProject()).isInjectedFragment((PsiFile)element)) {
-      return element.getParent();
+  protected @Nullable PsiElement getParent(PsiElement element) {
+    if (element instanceof PsiFile file && InjectedLanguageManager.getInstance(file.getProject()).isInjectedFragment(file)) {
+      return file.getParent();
     }
     return element.getContext();
   }
@@ -121,7 +122,7 @@ public abstract class PsiElementPattern<T extends PsiElement, Self extends PsiEl
     return with(new PatternCondition<T>("inVirtualFile") {
       @Override
       public boolean accepts(T t, ProcessingContext context) {
-        return filePattern.accepts(t.getContainingFile().getViewProvider().getVirtualFile(), context);
+        return filePattern.accepts(t.getRequiredContainingFile().getViewProvider().getVirtualFile(), context);
       }
     });
   }
@@ -131,9 +132,8 @@ public abstract class PsiElementPattern<T extends PsiElement, Self extends PsiEl
     return with(new PatternCondition<T>("equalTo") {
       @Override
       public boolean accepts(T t, ProcessingContext context) {
-        return t.getManager().areElementsEquivalent(t, o);
+        return t.getRequiredManager().areElementsEquivalent(t, o);
       }
-
     });
   }
 
@@ -144,7 +144,6 @@ public abstract class PsiElementPattern<T extends PsiElement, Self extends PsiEl
         ASTNode node = t.getNode();
         return node != null && pattern.accepts(node.getElementType());
       }
-
     });
   }
 
@@ -175,7 +174,10 @@ public abstract class PsiElementPattern<T extends PsiElement, Self extends PsiEl
         PsiElement element = t;
         while (true) {
           element = PsiTreeUtil.prevLeaf(element);
-          if (element != null && element.getTextLength() == 0) {
+          if (element == null) {
+            return false;
+          }
+          if (element.getTextLength() == 0) {
             continue;
           }
 
@@ -184,7 +186,6 @@ public abstract class PsiElementPattern<T extends PsiElement, Self extends PsiEl
           }
         }
       }
-
     });
   }
 
@@ -195,7 +196,10 @@ public abstract class PsiElementPattern<T extends PsiElement, Self extends PsiEl
         PsiElement element = t;
         while (true) {
           element = PsiTreeUtil.nextLeaf(element);
-          if (element != null && element.getTextLength() == 0) {
+          if (element == null) {
+            return false;
+          }
+          if (element.getTextLength() == 0) {
             continue;
           }
 
@@ -204,7 +208,6 @@ public abstract class PsiElementPattern<T extends PsiElement, Self extends PsiEl
           }
         }
       }
-
     });
   }
 
@@ -338,7 +341,6 @@ public abstract class PsiElementPattern<T extends PsiElement, Self extends PsiEl
   }
 
   public static class Capture<T extends PsiElement> extends PsiElementPattern<T, Capture<T>> {
-
     protected Capture(Class<T> aClass) {
       super(aClass);
     }
@@ -346,7 +348,5 @@ public abstract class PsiElementPattern<T extends PsiElement, Self extends PsiEl
     protected Capture(InitialPatternCondition<T> condition) {
       super(condition);
     }
-
   }
-
 }

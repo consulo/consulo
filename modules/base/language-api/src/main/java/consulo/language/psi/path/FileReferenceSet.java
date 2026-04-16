@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.language.psi.path;
 
+import consulo.annotation.ReviewAfterIssueFix;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.document.util.TextRange;
 import consulo.language.inject.InjectedLanguageManager;
@@ -44,8 +44,7 @@ public class FileReferenceSet {
     private static final FileType[] EMPTY_FILE_TYPES = {};
 
     public static final CustomizableReferenceProvider.CustomizationKey<Function<PsiFile, Collection<PsiFileSystemItem>>>
-        DEFAULT_PATH_EVALUATOR_OPTION =
-        new CustomizableReferenceProvider.CustomizationKey<>(PsiBundle.message("default.path.evaluator.option"));
+        DEFAULT_PATH_EVALUATOR_OPTION = new CustomizableReferenceProvider.CustomizationKey<>("DEFAULT_PATH_EVALUATOR");
     public static final Function<PsiFile, Collection<PsiFileSystemItem>> ABSOLUTE_TOP_LEVEL =
         FileReferenceSet::getAbsoluteTopLevelDirLocations;
 
@@ -53,26 +52,26 @@ public class FileReferenceSet {
 
     public static final Predicate<PsiFileSystemItem> DIRECTORY_FILTER = item -> item instanceof PsiDirectory;
 
-    protected FileReference[] myReferences;
+    protected FileReference @Nullable [] myReferences;
     private PsiElement myElement;
     private final int myStartInElement;
     private final boolean myCaseSensitive;
     private final String myPathStringNonTrimmed;
     private final String myPathString;
-    private Collection<PsiFileSystemItem> myDefaultContexts;
+    private @Nullable Collection<PsiFileSystemItem> myDefaultContexts = null;
     private final boolean myEndingSlashNotAllowed;
     private boolean myEmptyPathAllowed;
-    private Map<CustomizableReferenceProvider.@Nullable CustomizationKey, Object> myOptions;
-    private @Nullable FileType[] mySuitableFileTypes;
+    private @Nullable Map<CustomizableReferenceProvider.CustomizationKey, Object> myOptions = null;
+    private FileType @Nullable [] mySuitableFileTypes;
 
     public FileReferenceSet(
         String str,
         PsiElement element,
         int startInElement,
-        PsiReferenceProvider provider,
+        @Nullable PsiReferenceProvider provider,
         boolean caseSensitive,
         boolean endingSlashNotAllowed,
-        @Nullable FileType[] suitableFileTypes
+        FileType @Nullable [] suitableFileTypes
     ) {
         this(str, element, startInElement, provider, caseSensitive, endingSlashNotAllowed, suitableFileTypes, true);
     }
@@ -81,10 +80,10 @@ public class FileReferenceSet {
         String str,
         PsiElement element,
         int startInElement,
-        PsiReferenceProvider provider,
+        @Nullable PsiReferenceProvider provider,
         boolean caseSensitive,
         boolean endingSlashNotAllowed,
-        @Nullable FileType[] suitableFileTypes,
+        FileType @Nullable [] suitableFileTypes,
         boolean init
     ) {
         myElement = element;
@@ -127,12 +126,7 @@ public class FileReferenceSet {
     }
 
     @RequiredReadAction
-    public static FileReferenceSet createSet(
-        PsiElement element,
-        boolean soft,
-        boolean endingSlashNotAllowed,
-        boolean urlEncoded
-    ) {
+    public static FileReferenceSet createSet(PsiElement element, boolean soft, boolean endingSlashNotAllowed, boolean urlEncoded) {
         ElementManipulator<PsiElement> manipulator = ElementManipulators.getManipulator(element);
         assert manipulator != null;
         TextRange range = manipulator.getRangeInElement(element);
@@ -169,7 +163,7 @@ public class FileReferenceSet {
         String str,
         PsiElement element,
         int startInElement,
-        PsiReferenceProvider provider,
+        @Nullable PsiReferenceProvider provider,
         boolean isCaseSensitive,
         boolean endingSlashNotAllowed
     ) {
@@ -188,7 +182,6 @@ public class FileReferenceSet {
         reparse();
     }
 
-   
     public PsiElement getElement() {
         return myElement;
     }
@@ -281,17 +274,16 @@ public class FileReferenceSet {
         return referencesList;
     }
 
-    private static int offset(int offset, LiteralTextEscaper<? extends PsiLanguageInjectionHost> escaper, TextRange valueRange) {
+    private static int offset(int offset, @Nullable LiteralTextEscaper<? extends PsiLanguageInjectionHost> escaper, TextRange valueRange) {
         return escaper == null ? offset + valueRange.getStartOffset() : escaper.getOffsetInHost(offset, valueRange);
     }
 
     public FileReference getReference(int index) {
-        return myReferences[index];
+        return Objects.requireNonNull(myReferences)[index];
     }
 
-   
     public FileReference[] getAllReferences() {
-        return myReferences;
+        return Objects.requireNonNull(myReferences);
     }
 
     protected boolean isSoft() {
@@ -302,7 +294,6 @@ public class FileReferenceSet {
         return false;
     }
 
-   
     public Collection<PsiFileSystemItem> getDefaultContexts() {
         if (myDefaultContexts == null) {
             myDefaultContexts = computeDefaultContexts();
@@ -340,7 +331,7 @@ public class FileReferenceSet {
     }
 
     protected @Nullable PsiFile getContainingFile() {
-        PsiFile cf = myElement.getContainingFile();
+        PsiFile cf = myElement.getRequiredContainingFile();
         PsiFile file = InjectedLanguageManager.getInstance(cf.getProject()).getTopLevelFile(cf);
         if (file != null) {
             return file.getOriginalFile();
@@ -353,7 +344,7 @@ public class FileReferenceSet {
     private Collection<PsiFileSystemItem> getContextByFile(PsiFile file) {
         PsiElement context = file.getContext();
         if (context != null) {
-            file = context.getContainingFile();
+            file = context.getRequiredContainingFile();
         }
 
         if (useIncludingFileAsContext()) {
@@ -373,7 +364,6 @@ public class FileReferenceSet {
         return getContextByFileSystemItem(file.getOriginalFile());
     }
 
-   
     protected Collection<PsiFileSystemItem> getContextByFileSystemItem(PsiFileSystemItem file) {
         VirtualFile virtualFile = file.getVirtualFile();
         if (virtualFile != null) {
@@ -396,12 +386,12 @@ public class FileReferenceSet {
         return Collections.emptyList();
     }
 
-   
     protected Collection<PsiFileSystemItem> getParentDirectoryContext() {
         PsiFile file = getContainingFile();
         VirtualFile virtualFile = file == null ? null : file.getOriginalFile().getVirtualFile();
         VirtualFile parent = virtualFile == null ? null : virtualFile.getParent();
-        PsiDirectory directory = parent == null ? null : file.getManager().findDirectory(parent);
+        @ReviewAfterIssueFix(value = "github.com/uber/NullAway/issues/1504", todo = "Remove requireNonNull")
+        PsiDirectory directory = parent == null ? null : Objects.requireNonNull(file).getRequiredManager().findDirectory(parent);
         return directory != null ? Collections.singleton(directory) : Collections.emptyList();
     }
 
@@ -426,7 +416,6 @@ public class FileReferenceSet {
         return myReferences == null || myReferences.length == 0 ? null : myReferences[myReferences.length - 1];
     }
 
-   
     public static Collection<PsiFileSystemItem> getAbsoluteTopLevelDirLocations(PsiFile file) {
         VirtualFile virtualFile = file.getVirtualFile();
         if (virtualFile == null) {
@@ -458,14 +447,14 @@ public class FileReferenceSet {
         return list;
     }
 
-   
     protected Collection<PsiFileSystemItem> toFileSystemItems(VirtualFile... files) {
         return toFileSystemItems(Arrays.asList(files));
     }
 
-   
+    @ReviewAfterIssueFix(value = "github.com/uber/NullAway/issues/1504", todo = "Remove NullAway suppression")
+    @SuppressWarnings("NullAway")
     protected Collection<PsiFileSystemItem> toFileSystemItems(Collection<VirtualFile> files) {
-        PsiManager manager = getElement().getManager();
+        PsiManager manager = getElement().getRequiredManager();
         return ContainerUtil.mapNotNull(files, file -> file != null ? manager.findDirectory(file) : null);
     }
 
@@ -488,7 +477,6 @@ public class FileReferenceSet {
         return true;
     }
 
-   
     public FileType[] getSuitableFileTypes() {
         return mySuitableFileTypes == null ? EMPTY_FILE_TYPES : mySuitableFileTypes;
     }

@@ -138,7 +138,7 @@ public class StubBasedPsiElementBase<T extends StubElement> extends ASTDelegateP
     public ASTNode getNode() {
         if (mySubstrateRef instanceof SubstrateRef.StubRef) {
             getApplication().assertReadAccessAllowed();
-            PsiFileImpl file = (PsiFileImpl) getContainingFile();
+            PsiFileImpl file = (PsiFileImpl) getRequiredContainingFile();
             if (!file.isValid()) {
                 throw new PsiInvalidElementAccessException(file);
             }
@@ -184,7 +184,6 @@ public class StubBasedPsiElementBase<T extends StubElement> extends ASTDelegateP
         throw new RuntimeExceptionWithAttachments(message, attachments.toArray(Attachment.EMPTY_ARRAY));
     }
 
-    
     private String dumpCreationTraces(FileElement fileElement) {
         final StringBuilder traces = new StringBuilder("\nNow " + Thread.currentThread() + "\n");
         traces.append("My creation trace:\n").append(getUserData(CREATION_TRACE));
@@ -255,7 +254,6 @@ public class StubBasedPsiElementBase<T extends StubElement> extends ASTDelegateP
         mySubstrateRef = substrateRef;
     }
 
-    
     @Override
     @RequiredReadAction
     public Language getLanguage() {
@@ -263,7 +261,6 @@ public class StubBasedPsiElementBase<T extends StubElement> extends ASTDelegateP
     }
 
     @Override
-    
     public PsiFile getContainingFile() {
         try {
             return mySubstrateRef.getContainingFile();
@@ -280,7 +277,7 @@ public class StubBasedPsiElementBase<T extends StubElement> extends ASTDelegateP
 
     @Override
     public boolean isWritable() {
-        return getContainingFile().isWritable();
+        return getRequiredContainingFile().isWritable();
     }
 
     @Override
@@ -290,29 +287,27 @@ public class StubBasedPsiElementBase<T extends StubElement> extends ASTDelegateP
         return mySubstrateRef.isValid();
     }
 
-    
     @Override
     public PsiManager getManager() {
         Project project = SingleProjectHolder.theOnlyOpenProject();
         if (project != null) {
             return PsiManager.getInstance(project);
         }
-        return getContainingFile().getManager();
+        return getRequiredContainingFile().getManager();
     }
 
     @Override
-    
     public Project getProject() {
         Project project = SingleProjectHolder.theOnlyOpenProject();
         if (project != null) {
             return project;
         }
-        return getContainingFile().getProject();
+        return getRequiredContainingFile().getProject();
     }
 
     @Override
     public boolean isPhysical() {
-        return getContainingFile().isPhysical();
+        return getRequiredContainingFile().isPhysical();
     }
 
     @Override
@@ -365,7 +360,6 @@ public class StubBasedPsiElementBase<T extends StubElement> extends ASTDelegateP
         return SourceTreeToPsiMap.treeElementToPsi(getNode().getTreeParent());
     }
 
-    
     @Override
     @RequiredReadAction
     public IStubElementType getElementType() {
@@ -441,10 +435,8 @@ public class StubBasedPsiElementBase<T extends StubElement> extends ASTDelegateP
      * @return children of specified type, taken from stubs (if this element is currently stub-based) or AST (otherwise).
      */
     @RequiredReadAction
-    public <S extends StubElement, Psi extends PsiElement> Psi[] getStubOrPsiChildren(
-        IStubElementType<S, ? extends Psi> elementType,
-        Psi[] array
-    ) {
+    public <S extends StubElement, Psi extends PsiElement>
+    Psi[] getStubOrPsiChildren(IStubElementType<S, ? extends Psi> elementType, Psi[] array) {
         T stub = getGreenStub();
         if (stub != null) {
             //noinspection unchecked
@@ -465,10 +457,8 @@ public class StubBasedPsiElementBase<T extends StubElement> extends ASTDelegateP
      * @return children of specified type, taken from stubs (if this element is currently stub-based) or AST (otherwise).
      */
     @RequiredReadAction
-    public <S extends StubElement, Psi extends PsiElement> Psi[] getStubOrPsiChildren(
-        IStubElementType<S, ? extends Psi> elementType,
-        ArrayFactory<? extends Psi> f
-    ) {
+    public <S extends StubElement, Psi extends PsiElement>
+    Psi[] getStubOrPsiChildren(IStubElementType<S, ? extends Psi> elementType, ArrayFactory<? extends Psi> f) {
         T stub = getGreenStub();
         if (stub != null) {
             //noinspection unchecked
@@ -530,7 +520,7 @@ public class StubBasedPsiElementBase<T extends StubElement> extends ASTDelegateP
     /**
      * @return a first ancestor of specified type, in stub hierarchy (if this element is currently stub-based) or AST hierarchy (otherwise).
      */
-    protected @Nullable <E extends PsiElement> E getStubOrPsiParentOfType(Class<E> parentClass) {
+    protected <E extends PsiElement> @Nullable E getStubOrPsiParentOfType(Class<E> parentClass) {
         T stub = getStub();
         if (stub != null) {
             //noinspection unchecked

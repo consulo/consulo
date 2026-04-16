@@ -13,11 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.language.psi.filter;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.filter.position.PositionElementFilter;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author ik
@@ -29,11 +30,14 @@ public class ContentFilter extends PositionElementFilter {
   }
 
   @Override
-  public boolean isAcceptable(Object element, PsiElement scope){
-    if (!(element instanceof PsiElement)) return false;
-    PsiElement currentChild = ((PsiElement) element).getFirstChild();
-    while(currentChild != null){
-      if(getFilter().isAcceptable(currentChild, ((PsiElement) element))){
+  @RequiredReadAction
+  public boolean isAcceptable(Object element, @Nullable PsiElement scope){
+    if (!(element instanceof PsiElement psiElement)) {
+      return false;
+    }
+    PsiElement currentChild = psiElement.getFirstChild();
+    while (currentChild != null) {
+      if (getRequiredFilter().isAcceptable(currentChild, psiElement)) {
         return true;
       }
       currentChild = currentChild.getNextSibling();
@@ -41,7 +45,8 @@ public class ContentFilter extends PositionElementFilter {
     return false;
   }
 
+  @Override
   public String toString(){
-    return "content(" + getFilter().toString() + ")";
+    return "content(" + getFilter() + ")";
   }
 }

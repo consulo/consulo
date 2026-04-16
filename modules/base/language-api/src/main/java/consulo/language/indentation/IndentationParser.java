@@ -1,5 +1,6 @@
 package consulo.language.indentation;
 
+import consulo.annotation.ReviewAfterIssueFix;
 import consulo.annotation.UsedInPlugin;
 import consulo.language.ast.ASTNode;
 import consulo.language.ast.IElementType;
@@ -9,12 +10,13 @@ import consulo.language.version.LanguageVersion;
 import consulo.util.collection.Stack;
 import org.jspecify.annotations.Nullable;
 
+import java.util.Objects;
+
 /**
  * @author oleg
  */
 @UsedInPlugin
 public abstract class IndentationParser implements PsiParser {
-    
     private final IElementType myEolTokenType;
     
     private final IElementType myIndentTokenType;
@@ -33,7 +35,8 @@ public abstract class IndentationParser implements PsiParser {
     }
 
     @Override
-    
+    @ReviewAfterIssueFix(value = "github.com/uber/NullAway/issues/115", todo = "Remove NullAway suppression")
+    @SuppressWarnings("NullAway")
     public final ASTNode parse(IElementType root, PsiBuilder builder, LanguageVersion languageVersion) {
         PsiBuilder.Marker fileMarker = builder.mark();
         PsiBuilder.Marker documentMarker = myDocumentType == null ? null : builder.mark();
@@ -55,41 +58,39 @@ public abstract class IndentationParser implements PsiParser {
                 }
                 eolSeen = true;
             }
+            else if (type == myIndentTokenType) {
+                //noinspection ConstantConditions
+                currentIndent = Objects.requireNonNull(builder.getTokenText()).length();
+            }
             else {
-                if (type == myIndentTokenType) {
-                    //noinspection ConstantConditions
-                    currentIndent = builder.getTokenText().length();
+                if (!eolSeen && !stack.isEmpty() && currentIndent > 0 && currentIndent < stack.peek().getIndent()) {
+                    // sometimes we do not have EOL between indents
+                    eolSeen = true;
                 }
-                else {
-                    if (!eolSeen && !stack.isEmpty() && currentIndent > 0 && currentIndent < stack.peek().getIndent()) {
-                        // sometimes we do not have EOL between indents
-                        eolSeen = true;
+                if (eolSeen) {
+                    if (startLineMarker != null) {
+                        startLineMarker.rollbackTo();
+                        startLineMarker = null;
                     }
-                    if (eolSeen) {
-                        if (startLineMarker != null) {
-                            startLineMarker.rollbackTo();
-                            startLineMarker = null;
-                        }
-                        // Close indentation blocks
-                        while (!stack.isEmpty() && currentIndent < stack.peek().getIndent()) {
-                            BlockInfo blockInfo = stack.pop();
-                            closeBlock(builder, blockInfo.getMarker(), blockInfo.getStartTokenType());
-                        }
+                    // Close indentation blocks
+                    while (!stack.isEmpty() && currentIndent < stack.peek().getIndent()) {
+                        BlockInfo blockInfo = stack.pop();
+                        closeBlock(builder, blockInfo.getMarker(), blockInfo.getStartTokenType());
+                    }
 
-                        if (!stack.isEmpty()) {
-                            BlockInfo blockInfo = stack.peek();
-                            if (currentIndent >= blockInfo.getIndent()) {
-                                if (currentIndent == blockInfo.getIndent()) {
-                                    BlockInfo info = stack.pop();
-                                    closeBlock(builder, info.getMarker(), info.getStartTokenType());
-                                }
-                                passEOLsAndIndents(builder);
-                                stack.push(new BlockInfo(currentIndent, builder.mark(), type));
+                    if (!stack.isEmpty()) {
+                        BlockInfo blockInfo = stack.peek();
+                        if (currentIndent >= blockInfo.getIndent()) {
+                            if (currentIndent == blockInfo.getIndent()) {
+                                BlockInfo info = stack.pop();
+                                closeBlock(builder, info.getMarker(), info.getStartTokenType());
                             }
+                            passEOLsAndIndents(builder);
+                            stack.push(new BlockInfo(currentIndent, builder.mark(), type));
                         }
-                        eolSeen = false;
-                        currentIndent = 0;
                     }
+                    eolSeen = false;
+                    currentIndent = 0;
                 }
             }
             advanceLexer(builder);
@@ -105,6 +106,7 @@ public abstract class IndentationParser implements PsiParser {
         }
 
         if (documentMarker != null) {
+            // documentMarker is non-null iff myDocumentType is non-null. NullAway doesn't understand this, so disabling NullAway here
             documentMarker.done(myDocumentType);
         }
         fileMarker.done(root);
@@ -143,7 +145,6 @@ public abstract class IndentationParser implements PsiParser {
             return myIndent;
         }
 
-        
         public PsiBuilder.Marker getMarker() {
             return myMarker;
         }

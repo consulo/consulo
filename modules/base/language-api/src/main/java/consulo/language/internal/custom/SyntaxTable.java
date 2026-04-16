@@ -15,7 +15,10 @@
  */
 package consulo.language.internal.custom;
 
+import org.jspecify.annotations.Nullable;
+
 import java.util.Arrays;
+import java.util.Objects;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -29,20 +32,20 @@ public class SyntaxTable implements Cloneable {
   private Set<String> myKeywords3;
   private Set<String> myKeywords4;
 
-  private String myLineComment;
+  private @Nullable String myLineComment = null;
   public boolean lineCommentOnlyAtStart;
-  private String myStartComment;
-  private String myEndComment;
+  private @Nullable String myStartComment = null;
+  private @Nullable String myEndComment = null;
 
-  private String myHexPrefix;
-  private String myNumPostfixChars;
+  private @Nullable String myHexPrefix = null;
+  private @Nullable String myNumPostfixChars = null;
 
   private boolean myIgnoreCase;
   private boolean myHasBraces;
   private boolean myHasBrackets;
   private boolean myHasParens;
   private boolean myHasStringEscapes;
-  private volatile KeywordParser myKeywordParser;
+  private volatile @Nullable KeywordParser myKeywordParser = null;
 
   // -------------------------------------------------------------------------
   // Constructor
@@ -118,7 +121,7 @@ public class SyntaxTable implements Cloneable {
     return myKeywords4;
   }
 
-  public String getLineComment() {
+  public @Nullable String getLineComment() {
     return myLineComment;
   }
 
@@ -126,7 +129,7 @@ public class SyntaxTable implements Cloneable {
     myLineComment = lineComment;
   }
 
-  public String getStartComment() {
+  public @Nullable String getStartComment() {
     return myStartComment;
   }
 
@@ -134,7 +137,7 @@ public class SyntaxTable implements Cloneable {
     myStartComment = startComment;
   }
 
-  public String getEndComment() {
+  public @Nullable String getEndComment() {
     return myEndComment;
   }
 
@@ -142,7 +145,7 @@ public class SyntaxTable implements Cloneable {
     myEndComment = endComment;
   }
 
-  public String getHexPrefix() {
+  public @Nullable String getHexPrefix() {
     return myHexPrefix;
   }
 
@@ -150,7 +153,7 @@ public class SyntaxTable implements Cloneable {
     myHexPrefix = hexPrefix;
   }
 
-  public String getNumPostfixChars() {
+  public @Nullable String getNumPostfixChars() {
     return myNumPostfixChars;
   }
 
@@ -175,7 +178,7 @@ public class SyntaxTable implements Cloneable {
     myHasBraces = hasBraces;
   }
 
-  public boolean equals(Object o) {
+  public boolean equals(@Nullable Object o) {
     if (this == o) return true;
     if (!(o instanceof SyntaxTable)) return false;
 
@@ -201,6 +204,7 @@ public class SyntaxTable implements Cloneable {
     return true;
   }
 
+  @Override
   public int hashCode() {
     return myKeywords1.hashCode();
   }

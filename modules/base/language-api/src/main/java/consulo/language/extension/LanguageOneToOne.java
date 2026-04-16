@@ -25,15 +25,15 @@ import java.util.function.Function;
 
 /**
  * @author VISTALL
- * @since 24-Jun-22
+ * @since 2022-06-24
  */
 public final class LanguageOneToOne<E extends LanguageExtension> implements Function<ExtensionWalker<E>, ByLanguageValue<E>> {
   private static class ByLanguageValueImpl<T extends LanguageExtension> implements ByLanguageValue<T> {
     private final Map<Language, T> myExtensions = new ConcurrentHashMap<>();
 
-    private final T myDefaultImplementation;
+    private final @Nullable T myDefaultImplementation;
 
-    public ByLanguageValueImpl(ExtensionWalker<T> walker, T defaultImplementation) {
+    public ByLanguageValueImpl(ExtensionWalker<T> walker, @Nullable T defaultImplementation) {
       myDefaultImplementation = defaultImplementation;
       walker.walk(extension -> myExtensions.put(extension.getLanguage(), extension));
     }
@@ -57,19 +57,17 @@ public final class LanguageOneToOne<E extends LanguageExtension> implements Func
     }
   }
 
-  
   public static <E1 extends LanguageExtension> Function<ExtensionWalker<E1>, ByLanguageValue<E1>> build() {
     return build(null);
   }
 
-  
   public static <E1 extends LanguageExtension> Function<ExtensionWalker<E1>, ByLanguageValue<E1>> build(@Nullable E1 defaultImpl) {
     return new LanguageOneToOne<>(defaultImpl);
   }
 
-  private final E myDefaultImplementation;
+  private final @Nullable E myDefaultImplementation;
 
-  private LanguageOneToOne(E defaultImpl) {
+  private LanguageOneToOne(@Nullable E defaultImpl) {
     myDefaultImplementation = defaultImpl;
   }
 

@@ -35,7 +35,7 @@ public class PsiNavigateUtil {
     if (psiElement != null && psiElement.isValid()) {
       PsiElement navigationElement = psiElement.getNavigationElement();
       int offset = navigationElement instanceof PsiFile ? -1 : navigationElement.getTextOffset();
-      VirtualFile virtualFile = navigationElement.getContainingFile().getVirtualFile();
+      VirtualFile virtualFile = navigationElement.getRequiredContainingFile().getVirtualFile();
       if (virtualFile != null && virtualFile.isValid()) {
         OpenFileDescriptorFactory.getInstance(navigationElement.getProject()).builder(virtualFile).offset(offset).build().navigate(requestFocus);
       }

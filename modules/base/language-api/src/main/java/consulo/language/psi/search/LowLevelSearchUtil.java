@@ -40,6 +40,7 @@ import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.ConcurrentMap;
 import java.util.function.IntPredicate;
 
@@ -49,7 +50,7 @@ public class LowLevelSearchUtil {
   // TRUE/FALSE -> injected psi has been discovered and processor returned true/false;
   // null -> there were nothing injected found
   @RequiredReadAction
-  private static Boolean processInjectedFile(PsiElement element,
+  private static @Nullable Boolean processInjectedFile(@Nullable PsiElement element,
                                              TextOccurenceProcessor processor,
                                              StringSearcher searcher,
                                              ProgressIndicator progress,
@@ -70,14 +71,14 @@ public class LowLevelSearchUtil {
    * to be reused via <code>lastElement<code/> param in subsequent calls to avoid full tree rescan (n^2->n).
    */
   @RequiredReadAction
-  private static ASTNode processTreeUp(Project project,
+  private static @Nullable ASTNode processTreeUp(Project project,
                                        TextOccurenceProcessor processor,
                                        PsiElement scope,
                                        StringSearcher searcher,
                                        int offset,
                                        boolean processInjectedPsi,
                                        ProgressIndicator progress,
-                                       ASTNode lastElement) {
+                                       @Nullable ASTNode lastElement) {
     if (scope instanceof PsiCompiledElement) {
       throw new IllegalArgumentException("Scope is compiled, can't scan: " + scope);
     }
@@ -129,14 +130,16 @@ public class LowLevelSearchUtil {
       if (useTree) {
         start += prevNode == null ? 0 : prevNode.getStartOffsetInParent();
         prevNode = leafNode;
-        run = leafNode.getPsi();
+        run = Objects.requireNonNull(leafNode).getPsi();
       }
       else {
         start += prev == null ? 0 : prev.getStartOffsetInParent();
         prev = run;
         run = leafElement;
       }
-      if (!contains) contains = run.getTextLength() - start >= patternLength;  //do not compute if already contains
+      if (!contains) {
+        contains = Objects.requireNonNull(run).getTextLength() - start >= patternLength;  //do not compute if already contains
+      }
       if (contains) {
         if (processInjectedPsi) {
           Boolean result = processInjectedFile(run, processor, searcher, progress, injectedLanguageManager);
@@ -144,41 +147,39 @@ public class LowLevelSearchUtil {
             return result.booleanValue() ? lastElement : null;
           }
         }
-        if (!processor.execute(run, start)) {
+        if (!processor.execute(Objects.requireNonNull(run), start)) {
           return null;
         }
       }
       if (useTree) {
-        leafNode = leafNode.getTreeParent();
+        leafNode = Objects.requireNonNull(leafNode).getTreeParent();
         if (leafNode == null) break;
       }
       else {
-        leafElement = leafElement.getParent();
+        leafElement = Objects.requireNonNull(leafElement).getParent();
         if (leafElement == null) break;
       }
     }
-    assert run == scope : "Malbuilt PSI; scopeNode: " +
-      scope +
-      "; containingFile:" +
-      PsiTreeUtil.getParentOfType(scope, PsiFile.class, false) +
-      "; leafNode: " +
-      run +
-      "; isAncestor=" +
-      PsiTreeUtil.isAncestor(scope, run, false) +
+
+    Objects.requireNonNull(run);
+    assert run == scope : "Malbuilt PSI; scopeNode: " + scope +
+      "; containingFile:" + PsiTreeUtil.getParentOfType(scope, PsiFile.class, false) +
+      "; leafNode: " + run +
+      "; isAncestor=" + PsiTreeUtil.isAncestor(scope, run, false) +
       "; in same file: " +
       (PsiTreeUtil.getParentOfType(scope, PsiFile.class, false) == PsiTreeUtil.getParentOfType(run, PsiFile.class, false));
 
     return lastElement;
   }
 
-  private static ASTNode findNextLeafElementAt(ASTNode scopeNode, ASTNode last, int offset) {
+  private static @Nullable ASTNode findNextLeafElementAt(ASTNode scopeNode, @Nullable ASTNode last, int offset) {
     int offsetR = offset;
     if (last != null) {
       offsetR -= last.getStartOffset() - scopeNode.getStartOffset() + last.getTextLength();
       while (offsetR >= 0) {
         ASTNode next = last.getTreeNext();
         if (next == null) {
-          last = last.getTreeParent();
+          last = Objects.requireNonNull(last.getTreeParent());
           continue;
         }
         int length = next.getTextLength();
@@ -202,18 +203,14 @@ public class LowLevelSearchUtil {
   }
 
   @RequiredReadAction
-  public static int[] getTextOccurrencesInScope(PsiElement scope, StringSearcher searcher, ProgressIndicator progress) {
+  public static int[] getTextOccurrencesInScope(PsiElement scope, StringSearcher searcher, @Nullable ProgressIndicator progress) {
     if (progress != null) progress.checkCanceled();
 
-    PsiFile file = scope.getContainingFile();
+    PsiFile file = scope.getRequiredContainingFile();
     FileViewProvider viewProvider = file.getViewProvider();
     CharSequence buffer = viewProvider.getContents();
 
     TextRange range = scope.getTextRange();
-    if (range == null) {
-      LOG.error("Element " + scope + " of class " + scope.getClass() + " has null range");
-      return ArrayUtil.EMPTY_INT_ARRAY;
-    }
 
     int startOffset = range.getStartOffset();
     int endOffset = range.getEndOffset();
@@ -323,7 +320,7 @@ public class LowLevelSearchUtil {
       }
       cachedMap.put(searcher, cachedOccurrences);
     }
-    IntList offsets = IntLists.newArrayList(cachedOccurrences.length - 2);
+    IntList offsets = IntLists.newArrayList(Objects.requireNonNull(cachedOccurrences).length - 2);
     for (int i = 2; i < cachedOccurrences.length; i++) {
       int occurrence = cachedOccurrences[i];
       if (occurrence > endOffset - searcher.getPatternLength()) break;

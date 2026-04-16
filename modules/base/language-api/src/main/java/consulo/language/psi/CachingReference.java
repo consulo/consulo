@@ -25,7 +25,7 @@ import org.jspecify.annotations.Nullable;
  */
 public abstract class CachingReference implements PsiReference {
   @Override
-  public PsiElement resolve(){
+  public @Nullable PsiElement resolve() {
     return ResolveCache.getInstance(getElement().getProject()).resolveWithCaching(this, MyResolver.INSTANCE, false, false);
   }
 
@@ -33,7 +33,7 @@ public abstract class CachingReference implements PsiReference {
 
   @Override
   public boolean isReferenceTo(PsiElement element) {
-    return getElement().getManager().areElementsEquivalent(resolve(), element);
+    return getElement().getRequiredManager().areElementsEquivalent(resolve(), element);
   }
 
   @Override
@@ -41,7 +41,6 @@ public abstract class CachingReference implements PsiReference {
     return false;
   }
 
-  
   public static <T extends PsiElement> ElementManipulator<T> getManipulator(T currentElement){
     ElementManipulator<T> manipulator = ElementManipulators.getManipulator(currentElement);
     if (manipulator == null) {

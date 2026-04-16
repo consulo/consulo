@@ -87,7 +87,7 @@ public abstract class Language extends UserDataHolderBase {
         return mimeTypesMap;
     });
 
-    private final Language myBaseLanguage;
+    private final @Nullable Language myBaseLanguage;
     private final String myID;
     private final String[] myMimeTypes;
 
@@ -168,14 +168,15 @@ public abstract class Language extends UserDataHolderBase {
         return languages;
     }
 
-    
     @UsedInPlugin
     public static Collection<LanguageVersion> findVersionsByMimeType(@Nullable String mimeType) {
+        if (mimeType == null) {
+            return Collections.emptyList();
+        }
         MultiMap<String, LanguageVersion> map = ourRegisteredMimeTypesValue.get();
         return Collections.unmodifiableCollection(map.get(mimeType));
     }
 
-    
     protected LanguageVersion[] findVersions() {
         List<LanguageVersion> languageVersions = Application.get().getExtensionPoint(LanguageVersion.class).getExtensionList().stream().filter(it -> it.getLanguage() == this).toList();
         if (languageVersions.isEmpty()) {
@@ -267,7 +268,6 @@ public abstract class Language extends UserDataHolderBase {
         return myBaseLanguage;
     }
 
-    
     public final LanguageVersion[] getVersions() {
         return myVersions.get();
     }
@@ -283,7 +283,6 @@ public abstract class Language extends UserDataHolderBase {
         return null;
     }
 
-    
     public LocalizeValue getDisplayName() {
         LocalizeValue value = myDisplayNameFromId;
         if (value.isEmpty()) {

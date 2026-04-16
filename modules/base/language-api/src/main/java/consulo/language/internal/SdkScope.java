@@ -13,19 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.language.internal;
 
 import consulo.project.Project;
 import consulo.module.content.layer.orderEntry.ModuleExtensionWithSdkOrderEntry;
 import consulo.content.base.BinariesOrderRootType;
 import consulo.content.base.SourcesOrderRootType;
+import org.jspecify.annotations.Nullable;
+
+import java.util.Objects;
 
 /**
  * @author max
  */
 public class SdkScope extends LibraryScopeBase {
-  private final String mySdkName;
+  private final @Nullable String mySdkName;
 
   public SdkScope(Project project, ModuleExtensionWithSdkOrderEntry sdkOrderEntry) {
     super(project, sdkOrderEntry.getFiles(BinariesOrderRootType.getInstance()), sdkOrderEntry.getFiles(SourcesOrderRootType.getInstance()));
@@ -34,16 +36,19 @@ public class SdkScope extends LibraryScopeBase {
 
   @Override
   public int hashCode() {
-    return mySdkName.hashCode();
+    return Objects.hashCode(mySdkName);
   }
 
   @Override
-  public boolean equals(Object object) {
-    if (object == this) return true;
-    if (object == null) return false;
-    if (object.getClass() != SdkScope.class) return false;
+  public boolean equals(@Nullable Object object) {
+    if (object == this) {
+      return true;
+    }
+    if (object == null || object.getClass() != SdkScope.class) {
+      return false;
+    }
 
-    SdkScope that = (SdkScope)object;
-    return that.mySdkName.equals(mySdkName);
+    SdkScope that = (SdkScope) object;
+    return Objects.equals(mySdkName, that.mySdkName);
   }
 }

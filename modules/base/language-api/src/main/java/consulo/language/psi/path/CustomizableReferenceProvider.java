@@ -37,15 +37,15 @@ public interface CustomizableReferenceProvider {
     @Override
     public String toString() { return myOptionDescription; }
 
-    public T getValue(@Nullable Map<CustomizationKey,Object> options) {
-      return options == null ? null : (T)options.get(this);
+    public @Nullable T getValue(@Nullable Map<CustomizationKey,Object> options) {
+      return options == null ? null : (T) options.get(this);
     }
 
     public boolean getBooleanValue(@Nullable Map<CustomizationKey,Object> options) {
       if (options == null) {
         return false;
       }
-      Boolean o = (Boolean)options.get(this);
+      Boolean o = (Boolean) options.get(this);
       return o != null && o.booleanValue();
     }
 
@@ -55,8 +55,8 @@ public interface CustomizableReferenceProvider {
   }
 
   void setOptions(@Nullable Map<CustomizationKey,Object> options);
-  @Nullable Map<CustomizationKey,Object> getOptions();
 
-  
+  @Nullable Map<CustomizationKey, Object> getOptions();
+
   public abstract PsiReference[] getReferencesByElement(PsiElement element, ProcessingContext matchingContext);
 }

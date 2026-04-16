@@ -16,6 +16,7 @@
 package consulo.language.ast;
 
 import consulo.util.collection.ArrayFactory;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author max
@@ -25,7 +26,7 @@ public interface LighterASTNode {
 
   ArrayFactory<LighterASTNode> ARRAY_FACTORY = count -> count == 0 ? EMPTY_ARRAY : new LighterASTNode[count];
 
-  IElementType getTokenType();
+  @Nullable IElementType getTokenType();
 
   int getStartOffset();
 

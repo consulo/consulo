@@ -13,10 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.language.psi.search;
 
-import consulo.application.ApplicationManager;
+import consulo.application.Application;
 import consulo.application.util.query.ExtensibleQueryFactory;
 import consulo.application.util.query.Query;
 import consulo.content.scope.SearchScope;
@@ -58,7 +57,7 @@ public class DefinitionsScopedSearch extends ExtensibleQueryFactory<PsiElement, 
     private final boolean myCheckDeep;
 
     public SearchParameters(final PsiElement element) {
-      this(element, ApplicationManager.getApplication().runReadAction(new Supplier<SearchScope>() {
+      this(element, Application.get().runReadAction(new Supplier<SearchScope>() {
         @Override
         public SearchScope get() {
           return element.getUseScope();
@@ -72,7 +71,6 @@ public class DefinitionsScopedSearch extends ExtensibleQueryFactory<PsiElement, 
       myCheckDeep = checkDeep;
     }
 
-    
     public PsiElement getElement() {
       return myElement;
     }
@@ -81,10 +79,8 @@ public class DefinitionsScopedSearch extends ExtensibleQueryFactory<PsiElement, 
       return myCheckDeep;
     }
 
-    
     public SearchScope getScope() {
-      return ApplicationManager.getApplication().runReadAction((Supplier<SearchScope>)() -> myScope.intersectWith(PsiSearchScopeUtil.getUseScope(myElement)));
+      return Application.get().runReadAction((Supplier<SearchScope>)() -> myScope.intersectWith(PsiSearchScopeUtil.getUseScope(myElement)));
     }
   }
-
 }

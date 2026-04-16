@@ -9,14 +9,13 @@ import java.util.*;
  * @author yole
  */
 public class DFAMap<V> {
-
   // invariant:
   // if myAll != null, the map contains more than one value, and all of them are in myAll
   // if myAll == null && myK != null, the map contains only one value (myK, myV)
   // if myAll == null && myK == null, the map is empty
-  private String myK;
-  private V myV;
-  private Map<String, V> myAll;
+  private @Nullable String myK;
+  private @Nullable V myV;
+  private @Nullable Map<String, V> myAll;
 
   private static final DFAMap ourEmptyMap = new DFAMap() {
     @Override
@@ -41,7 +40,7 @@ public class DFAMap<V> {
   private DFAMap(DFAMap<V> initialMap) {
     myK = initialMap.myK;
     myV = initialMap.myV;
-    myAll = initialMap.myAll == null ? null : new HashMap<String,V>(initialMap.myAll);
+    myAll = initialMap.myAll == null ? null : new HashMap<>(initialMap.myAll);
   }
 
   public static <V> DFAMap<V> empty() {
@@ -127,7 +126,7 @@ public class DFAMap<V> {
     if (myAll == null) {
       if (rhs.myAll != null) return false;
       if (myK == null) return rhs.myK == null;
-      return myK.equals(rhs.myK) && myV.equals(rhs.myV);
+      return myK.equals(rhs.myK) && Objects.equals(myV, rhs.myV);
     }
     else {
       if (rhs.myAll == null) return false;
@@ -153,11 +152,11 @@ public class DFAMap<V> {
       return Collections.singleton(new Map.Entry<String, V>() {
         @Override
         public String getKey() {
-          return myK;
+          return Objects.requireNonNull(myK);
         }
 
         @Override
-        public V getValue() {
+        public @Nullable V getValue() {
           return myV;
         }
 
@@ -176,20 +175,20 @@ public class DFAMap<V> {
 
   @Override
   public String toString() {
-    if (this == ourEmptyMap){
+    if (this == ourEmptyMap) {
       return "Empty Map";
     }
-    if (myAll != null){
+    if (myAll != null) {
       return myAll.toString();
     }
-    if (myK != null){
+    if (myK != null) {
       return "{" + myK + "=" + myV + "}";
     }
     return "Empty";
   }
 
   public Set<String> keySet() {
-    if (myAll != null){
+    if (myAll != null) {
       return myAll.keySet();
     }
     return myK != null ? Collections.singleton(myK) : Collections.<String>emptySet();

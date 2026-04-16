@@ -35,7 +35,7 @@ public class ReferencesSearch extends ExtensibleQueryFactory<PsiReference, Refer
     public static class SearchParameters implements DumbAwareSearchParameters, consulo.project.util.query.SearchParameters<PsiReference> {
         private final PsiElement myElementToSearch;
         private final SearchScope myScope;
-        private volatile SearchScope myEffectiveScope;
+        private volatile @Nullable SearchScope myEffectiveScope = null;
         private final boolean myIgnoreAccessScope;
         private final SearchRequestCollector myOptimizer;
         private final Project myProject;
@@ -70,12 +70,10 @@ public class ReferencesSearch extends ExtensibleQueryFactory<PsiReference, Refer
         }
 
         @Override
-        
         public Project getProject() {
             return myProject;
         }
 
-        
         public PsiElement getElementToSearch() {
             return myElementToSearch;
         }
@@ -92,7 +90,6 @@ public class ReferencesSearch extends ExtensibleQueryFactory<PsiReference, Refer
          * @deprecated Same as {@link #getScopeDeterminedByUser()}, use {@link #getEffectiveSearchScope} instead
          */
         @Deprecated
-        
         public SearchScope getScope() {
             return myScope;
         }
@@ -101,12 +98,10 @@ public class ReferencesSearch extends ExtensibleQueryFactory<PsiReference, Refer
             return myIgnoreAccessScope;
         }
 
-        
         public SearchRequestCollector getOptimizer() {
             return myOptimizer;
         }
 
-        
         public SearchScope getEffectiveSearchScope() {
             if (myIgnoreAccessScope) {
                 return myScope;
@@ -179,7 +174,6 @@ public class ReferencesSearch extends ExtensibleQueryFactory<PsiReference, Refer
         return uniqueResults(new MergeQuery<>(result, new SearchRequestQuery(PsiUtilCore.getProjectInReadAction(element), requests)));
     }
 
-    
     private static Query<PsiReference> uniqueResults(Query<? extends PsiReference> composite) {
         return new UniqueResultsQuery<>(composite, HashingStrategy.canonical(), ReferenceDescriptor.MAPPER);
     }

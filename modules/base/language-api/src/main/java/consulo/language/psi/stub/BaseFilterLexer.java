@@ -25,6 +25,8 @@ import consulo.util.collection.primitive.ints.IntLists;
 import consulo.util.lang.CharArrayUtil;
 
 import org.jspecify.annotations.Nullable;
+
+import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -32,10 +34,10 @@ public abstract class BaseFilterLexer extends DelegateLexer implements IdTableBu
   private final OccurrenceConsumer myOccurrenceConsumer;
 
   private int myTodoScannedBound = 0;
-  private int myOccurenceMask;
-  private TodoScanningState myTodoScanningState;
-  private CharSequence myCachedBufferSequence;
-  private char[] myCachedArraySequence;
+  private int myOccurrenceMask = 0;
+  private @Nullable TodoScanningState myTodoScanningState = null;
+  private @Nullable CharSequence myCachedBufferSequence = null;
+  private char @Nullable [] myCachedArraySequence = null;
 
   protected BaseFilterLexer(Lexer originalLexer, OccurrenceConsumer occurrenceConsumer) {
     super(originalLexer);
@@ -49,7 +51,7 @@ public abstract class BaseFilterLexer extends DelegateLexer implements IdTableBu
     start = Math.max(start, myTodoScannedBound);
     if (start >= end) return; // this prevents scanning of the same comment twice
 
-    CharSequence input = myCachedBufferSequence.subSequence(start, end);
+    CharSequence input = Objects.requireNonNull(myCachedBufferSequence).subSequence(start, end);
     myTodoScanningState = advanceTodoItemsCount(input, myOccurrenceConsumer, myTodoScanningState);
 
     myTodoScannedBound = end;
@@ -67,7 +69,11 @@ public abstract class BaseFilterLexer extends DelegateLexer implements IdTableBu
     }
   }
 
-  public static TodoScanningState advanceTodoItemsCount(CharSequence input, OccurrenceConsumer consumer, TodoScanningState todoScanningState) {
+  public static TodoScanningState advanceTodoItemsCount(
+    CharSequence input,
+    OccurrenceConsumer consumer,
+    @Nullable TodoScanningState todoScanningState
+  ) {
     if (todoScanningState == null) {
       IndexPattern[] patterns = IndexPatternUtil.getIndexPatterns();
 
@@ -104,26 +110,32 @@ public abstract class BaseFilterLexer extends DelegateLexer implements IdTableBu
   }
 
   @Override
-  public final void run(CharSequence chars, @Nullable char[] charsArray, int start, int end) {
-    myOccurrenceConsumer.addOccurrence(chars, charsArray, start, end, myOccurenceMask);
+  public final void run(CharSequence chars, char @Nullable [] charsArray, int start, int end) {
+    myOccurrenceConsumer.addOccurrence(chars, charsArray, start, end, myOccurrenceMask);
   }
 
   protected final void addOccurrenceInToken(int occurrenceMask) {
-    myOccurrenceConsumer.addOccurrence(myCachedBufferSequence, myCachedArraySequence, getTokenStart(), getTokenEnd(), occurrenceMask);
+    myOccurrenceConsumer.addOccurrence(
+      Objects.requireNonNull(myCachedBufferSequence),
+      myCachedArraySequence,
+      getTokenStart(),
+      getTokenEnd(),
+      occurrenceMask
+    );
   }
 
   protected final void scanWordsInToken(int occurrenceMask, boolean mayHaveFileRefs, boolean mayHaveEscapes) {
-    myOccurenceMask = occurrenceMask;
+    myOccurrenceMask = occurrenceMask;
     int start = getTokenStart();
     int end = getTokenEnd();
-    IdTableBuilding.scanWords(this, myCachedBufferSequence, myCachedArraySequence, start, end, mayHaveEscapes);
+    IdTableBuilding.scanWords(this, Objects.requireNonNull(myCachedBufferSequence), myCachedArraySequence, start, end, mayHaveEscapes);
 
     if (mayHaveFileRefs) {
       processPossibleComplexFileName(myCachedBufferSequence, myCachedArraySequence, start, end);
     }
   }
 
-  private void processPossibleComplexFileName(CharSequence chars, char[] cachedArraySequence, int startOffset, int endOffset) {
+  private void processPossibleComplexFileName(CharSequence chars, char @Nullable [] cachedArraySequence, int startOffset, int endOffset) {
     int offset = findCharsWithinRange(chars, startOffset, endOffset, "/\\");
     offset = Math.min(offset, endOffset);
     int start = startOffset;

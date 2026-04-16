@@ -25,19 +25,19 @@ import org.jspecify.annotations.Nullable;
  * @author yole
  */
 public abstract class NamedStubBase<T extends PsiNamedElement> extends StubBase<T> implements NamedStub<T> {
-  private final String myName;
+  private final @Nullable String myName;
 
-  protected NamedStubBase(StubElement parent, IStubElementType elementType, @Nullable StringRef name) {
+  protected NamedStubBase(@Nullable StubElement parent, IStubElementType elementType, @Nullable StringRef name) {
     this(parent, elementType, StringRef.toString(name));
   }
 
-  protected NamedStubBase(StubElement parent, IStubElementType elementType, @Nullable String name) {
+  protected NamedStubBase(@Nullable StubElement parent, IStubElementType elementType, @Nullable String name) {
     super(parent, elementType);
     myName = name;
   }
 
   @Override
-  public String getName() {
+  public @Nullable String getName() {
     return myName;
   }
 }

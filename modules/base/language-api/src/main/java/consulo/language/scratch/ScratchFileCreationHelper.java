@@ -55,18 +55,17 @@ public abstract class ScratchFileCreationHelper implements LanguageExtension {
     }
 
     public static class Context {
-        
         public String text = "";
-        public Language language;
+        public @Nullable Language language = null;
         public int caretOffset;
 
-        public String filePrefix;
-        public Supplier<Integer> fileCounter;
-        public String fileExtension;
+        public @Nullable String filePrefix = null;
+        public @Nullable Supplier<Integer> fileCounter = null;
+        public @Nullable String fileExtension = null;
 
         public ScratchFileService.Option createOption = ScratchFileService.Option.create_new_always;
 
-        public DataContext dataProvider;
+        public @Nullable DataContext dataProvider = null;
     }
 
     public static @Nullable PsiFile parseHeader(Project project, Language language, String text) {
@@ -80,7 +79,6 @@ public abstract class ScratchFileCreationHelper implements LanguageExtension {
         );
     }
 
-    
     @RequiredUIAccess
     public static String reformat(Project project, Language language, String text) {
         return LanguageInternal.getInstance().reformatScratch(project, language, text);

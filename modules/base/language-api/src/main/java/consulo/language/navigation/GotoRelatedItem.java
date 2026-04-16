@@ -23,6 +23,7 @@ import org.jspecify.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * @author Dmitry Avdeev
@@ -31,7 +32,7 @@ import java.util.List;
 public class GotoRelatedItem {
   private final String myGroup;
   private final int myMnemonic;
-  private final PsiElement myElement;
+  private final @Nullable PsiElement myElement;
   public static final String DEFAULT_GROUP_NAME = "";
 
   protected GotoRelatedItem(@Nullable PsiElement element, String group, int mnemonic) {
@@ -84,15 +85,13 @@ public class GotoRelatedItem {
   }
 
   @Override
-  public boolean equals(Object o) {
+  public boolean equals(@Nullable Object o) {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
 
-    GotoRelatedItem item = (GotoRelatedItem)o;
+    GotoRelatedItem that = (GotoRelatedItem)o;
 
-    if (myElement != null ? !myElement.equals(item.myElement) : item.myElement != null) return false;
-
-    return true;
+    return Objects.equals(myElement, that.myElement);
   }
 
   public String getGroup() {

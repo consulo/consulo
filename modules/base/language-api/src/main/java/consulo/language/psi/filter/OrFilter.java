@@ -16,6 +16,7 @@
 package consulo.language.psi.filter;
 
 import consulo.language.psi.PsiElement;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -45,7 +46,7 @@ public class OrFilter implements ElementFilter {
   }
 
   @Override
-  public boolean isAcceptable(Object element, PsiElement context){
+  public boolean isAcceptable(Object element, @Nullable PsiElement context) {
     if (myFilters.isEmpty()) return true;
     for (ElementFilter elementFilter : myFilters) {
       if (elementFilter.isAcceptable(element, context)) {
@@ -56,7 +57,7 @@ public class OrFilter implements ElementFilter {
   }
 
   @Override
-  public boolean isClassAcceptable(Class elementClass){
+  public boolean isClassAcceptable(Class elementClass) {
     if (myFilters.isEmpty()) return true;
     for (ElementFilter elementFilter : myFilters) {
       if (elementFilter.isClassAcceptable(elementClass)) {
@@ -66,12 +67,12 @@ public class OrFilter implements ElementFilter {
     return false;
   }
 
-  public String toString(){
+  public String toString() {
     String ret = "(";
     Iterator iter = myFilters.iterator();
-    while(iter.hasNext()){
+    while (iter.hasNext()) {
       ret += iter.next();
-      if(iter.hasNext()){
+      if (iter.hasNext()) {
         ret += " | ";
       }
     }

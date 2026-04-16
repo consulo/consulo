@@ -18,7 +18,7 @@ package consulo.language.psi.scope;
 import consulo.content.scope.NamedScope;
 import consulo.content.scope.NamedScopesHolder;
 import consulo.content.scope.PackageSet;
-import consulo.language.psi.PsiBundle;
+import consulo.language.localize.LanguageLocalize;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiManager;
 import consulo.module.Module;
@@ -33,33 +33,26 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
 
 import org.jspecify.annotations.Nullable;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.BitSet;
-import java.util.List;
+
+import java.util.*;
 
 public class GlobalSearchScopesCore {
-  
   public static GlobalSearchScope projectProductionScope(Project project) {
     return new ProductionScopeFilter(project);
   }
 
-  
   public static GlobalSearchScope projectTestScope(Project project) {
     return new TestScopeFilter(project);
   }
 
-  
   public static GlobalSearchScope directoryScope(PsiDirectory directory, boolean withSubdirectories) {
     return new DirectoryScope(directory, withSubdirectories);
   }
 
-  
   public static GlobalSearchScope directoryScope(Project project, VirtualFile directory, boolean withSubdirectories) {
     return new DirectoryScope(project, directory, withSubdirectories);
   }
 
-  
   public static GlobalSearchScope directoriesScope(Project project, boolean withSubdirectories, VirtualFile... directories) {
     if (directories.length == 1) {
       return directoryScope(project, directories[0], withSubdirectories);
@@ -87,7 +80,7 @@ public class GlobalSearchScopesCore {
 
     @Override
     public boolean contains(VirtualFile file) {
-      Project project = getProject();
+      Project project = Objects.requireNonNull(getProject());
       NamedScopesHolder[] holders = NamedScopesHolder.getAllNamedScopeHolders(project);
       for (NamedScopesHolder holder : holders) {
         PackageSet packageSet = mySet.getValue();
@@ -103,22 +96,19 @@ public class GlobalSearchScopesCore {
       return mySet.getIcon();
     }
 
-    
     @Override
     public String getDisplayName() {
       return mySet.getName();
     }
 
-    
     @Override
-    public Project getProject() {
+    public @Nullable Project getProject() {
       return super.getProject();
     }
 
     @Override
     public int compare(VirtualFile file1, VirtualFile file2) {
       return 0;
-
     }
 
     @Override
@@ -165,15 +155,13 @@ public class GlobalSearchScopesCore {
       return false;
     }
 
-    
     @Override
     public String getDisplayName() {
-      return PsiBundle.message("psi.search.scope.production.files");
+      return LanguageLocalize.psiSearchScopeProductionFiles().get();
     }
   }
 
   private static class TestScopeFilter extends GlobalSearchScope {
-    
     private final Project myProject;
 
     private TestScopeFilter(Project project) {
@@ -206,10 +194,9 @@ public class GlobalSearchScopesCore {
       return false;
     }
 
-    
     @Override
     public String getDisplayName() {
-      return PsiBundle.message("psi.search.scope.test.files");
+      return LanguageLocalize.psiSearchScopeTestFiles().get();
     }
   }
 
@@ -262,15 +249,15 @@ public class GlobalSearchScopesCore {
 
     @Override
     public boolean equals(Object obj) {
-      return obj instanceof DirectoryScope && myDirectory.equals(((DirectoryScope)obj).myDirectory) && myWithSubdirectories == ((DirectoryScope)obj).myWithSubdirectories;
+      return obj instanceof DirectoryScope directoryScope
+          && myDirectory.equals(directoryScope.myDirectory)
+          && myWithSubdirectories == directoryScope.myWithSubdirectories;
     }
 
-    
     @Override
     public GlobalSearchScope uniteWith(GlobalSearchScope scope) {
       if (equals(scope)) return this;
-      if (scope instanceof DirectoryScope) {
-        DirectoryScope other = (DirectoryScope)scope;
+      if (scope instanceof DirectoryScope other) {
         VirtualFile otherDirectory = other.myDirectory;
         if (myWithSubdirectories && VirtualFileUtil.isAncestor(myDirectory, otherDirectory, false)) return this;
         if (other.myWithSubdirectories && VirtualFileUtil.isAncestor(otherDirectory, myDirectory, false)) return other;
@@ -282,13 +269,11 @@ public class GlobalSearchScopesCore {
       return super.uniteWith(scope);
     }
 
-    
     @Override
-    public Project getProject() {
+    public @Nullable Project getProject() {
       return super.getProject();
     }
 
-    
     @Override
     public String getDisplayName() {
       return "Directory '" + myDirectory.getName() + "'";
@@ -299,7 +284,7 @@ public class GlobalSearchScopesCore {
     private final VirtualFile[] myDirectories;
     private final BitSet myWithSubdirectories;
 
-    private DirectoriesScope(Project project, VirtualFile[] directories, BitSet withSubdirectories) {
+    private DirectoriesScope(@Nullable Project project, VirtualFile[] directories, BitSet withSubdirectories) {
       super(project);
       myWithSubdirectories = withSubdirectories;
       myDirectories = directories;
@@ -356,11 +341,12 @@ public class GlobalSearchScopesCore {
     }
 
     @Override
-    public boolean equals(Object obj) {
-      return obj instanceof DirectoriesScope && Arrays.equals(myDirectories, ((DirectoriesScope)obj).myDirectories) && myWithSubdirectories.equals(((DirectoriesScope)obj).myWithSubdirectories);
+    public boolean equals(@Nullable Object obj) {
+      return obj instanceof DirectoriesScope that
+          && Arrays.equals(myDirectories, that.myDirectories)
+          && myWithSubdirectories.equals(that.myWithSubdirectories);
     }
 
-    
     @Override
     public GlobalSearchScope uniteWith(GlobalSearchScope scope) {
       if (equals(scope)) {
@@ -393,13 +379,11 @@ public class GlobalSearchScopesCore {
       return super.uniteWith(scope);
     }
 
-    
     @Override
-    public Project getProject() {
+    public @Nullable Project getProject() {
       return super.getProject();
     }
 
-    
     @Override
     public String getDisplayName() {
       if (myDirectories.length == 1) {
@@ -408,6 +392,5 @@ public class GlobalSearchScopesCore {
       }
       return "Directories " + StringUtil.join(myDirectories, file -> "'" + file.getName() + "'", ", ");
     }
-
   }
 }

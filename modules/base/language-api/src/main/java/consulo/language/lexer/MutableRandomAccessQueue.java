@@ -2,11 +2,12 @@
 package consulo.language.lexer;
 
 import consulo.util.collection.ArrayUtil;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Arrays;
 
-class MutableRandomAccessQueue<T> {
-    private Object[] myArray;
+class MutableRandomAccessQueue<T extends @Nullable Object> {
+    private @Nullable Object[] myArray;
     private int myFirst;
     private int myLast;
     // if true, elements are located at myFirst..myArray.length and 0..myLast
@@ -42,9 +43,9 @@ class MutableRandomAccessQueue<T> {
         myArray[myLast] = null;
     }
 
-    private T getRaw(int last) {
+    private @Nullable T getRaw(int last) {
         //noinspection unchecked
-        return (T)myArray[last];
+        return (T) myArray[last];
     }
 
     boolean isEmpty() {
@@ -66,10 +67,13 @@ class MutableRandomAccessQueue<T> {
         return result;
     }
 
+    @SuppressWarnings("NullAway")
     T peekFirst() {
         if (isEmpty()) {
             throw new IndexOutOfBoundsException("queue is empty");
         }
+        // Technically nullable here, but since we checked that queue isn't empty, nullability of result is the same as T nullability.
+        // We cannot describe it to static validator, so disabling NullAway check here.
         return getRaw(myFirst);
     }
 
@@ -101,7 +105,7 @@ class MutableRandomAccessQueue<T> {
         isWrapped = false;
     }
 
-    T set(int index, T value) {
+    @Nullable T set(int index, T value) {
         int arrayIndex = myFirst + index;
         if (isWrapped && arrayIndex >= myArray.length) {
             arrayIndex -= myArray.length;
@@ -111,7 +115,7 @@ class MutableRandomAccessQueue<T> {
         return old;
     }
 
-    T get(int index) {
+    @Nullable T get(int index) {
         int arrayIndex = myFirst + index;
         if (isWrapped && arrayIndex >= myArray.length) {
             arrayIndex -= myArray.length;

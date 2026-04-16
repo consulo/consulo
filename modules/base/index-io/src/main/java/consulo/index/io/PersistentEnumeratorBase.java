@@ -103,7 +103,7 @@ public abstract class PersistentEnumeratorBase<Data> implements DataEnumeratorEx
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(@Nullable Object o) {
       if (this == o) return true;
       if (!(o instanceof CacheKey)) return false;
 
@@ -470,7 +470,6 @@ public abstract class PersistentEnumeratorBase<Data> implements DataEnumeratorEx
 
   public Data valueOf(int idx) throws IOException {
     try {
-
       lockStorage();
       try {
         int addr = indexToAddr(idx);
@@ -481,7 +480,6 @@ public abstract class PersistentEnumeratorBase<Data> implements DataEnumeratorEx
       finally {
         unlockStorage();
       }
-
     }
     catch (IOException io) {
       markCorrupted();
@@ -594,13 +592,11 @@ public abstract class PersistentEnumeratorBase<Data> implements DataEnumeratorEx
           myDirtyStatusUpdateInProgress = false;
         }
       }
-      else {
-        if (dirty) {
-          myDirtyStatusUpdateInProgress = true;
-          myStorage.putInt(0, myVersion.dirtyMagic);
-          myDirtyStatusUpdateInProgress = false;
-          myDirty = true;
-        }
+      else if (dirty) {
+        myDirtyStatusUpdateInProgress = true;
+        myStorage.putInt(0, myVersion.dirtyMagic);
+        myDirtyStatusUpdateInProgress = false;
+        myDirty = true;
       }
     }
     finally {

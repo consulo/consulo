@@ -6,6 +6,7 @@ import consulo.util.collection.primitive.ints.IntIntMap;
 import consulo.util.collection.primitive.ints.IntList;
 import consulo.util.collection.primitive.ints.IntLists;
 import consulo.util.collection.primitive.ints.IntMaps;
+import org.jspecify.annotations.Nullable;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -14,7 +15,7 @@ import java.util.PrimitiveIterator;
 import java.util.function.IntUnaryOperator;
 
 class IntEnumerator {
-  private final IntIntMap myEnumerates;
+  private final @Nullable IntIntMap myEnumerates;
   private final IntList myIds;
   private int myNext;
 
