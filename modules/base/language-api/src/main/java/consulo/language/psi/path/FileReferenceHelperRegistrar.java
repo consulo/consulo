@@ -71,6 +71,6 @@ public class FileReferenceHelperRegistrar {
     }
 
     public static boolean areElementsEquivalent(PsiFileSystemItem element1, PsiFileSystemItem element2) {
-        return element2.getRequiredManager().areElementsEquivalent(element1, element2);
+        return element2.getManager().areElementsEquivalent(element1, element2);
     }
 }

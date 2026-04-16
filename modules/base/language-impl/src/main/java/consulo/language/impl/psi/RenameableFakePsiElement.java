@@ -29,6 +29,8 @@ import consulo.ui.image.Image;
 import consulo.util.collection.ArrayUtil;
 import org.jspecify.annotations.Nullable;
 
+import java.util.Objects;
+
 /**
  * @author peter
  */
@@ -61,7 +63,7 @@ public abstract class RenameableFakePsiElement extends FakePsiElement implements
     @Override
     @RequiredReadAction
     public Language getLanguage() {
-        return getRequiredContainingFile().getLanguage();
+        return Objects.requireNonNull(this.getContainingFile()).getLanguage();
     }
 
     @Override

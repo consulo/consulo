@@ -239,7 +239,7 @@ public abstract class PsiElementBase extends UserDataHolderBase implements Navig
 
     @Override
     public Project getProject() {
-        return getRequiredManager().getProject();
+        return getManager().getProject();
     }
 
     //default implementations of methods from NavigationItem

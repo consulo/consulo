@@ -151,7 +151,7 @@ public abstract class LightPsiFileImpl extends PsiElementBase implements PsiFile
         if (parentFile == null) {
             return null;
         }
-        return getRequiredManager().findDirectory(parentFile);
+        return getManager().findDirectory(parentFile);
     }
 
     @RequiredReadAction
@@ -217,7 +217,7 @@ public abstract class LightPsiFileImpl extends PsiElementBase implements PsiFile
     @Override
     @RequiredReadAction
     public Project getProject() {
-        return getRequiredManager().getProject();
+        return getManager().getProject();
     }
 
     @Override

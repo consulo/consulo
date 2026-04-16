@@ -100,11 +100,7 @@ public interface PsiElement extends UserDataHolder {
      *
      * @return the PSI manager instance.
      */
-    @Nullable PsiManager getManager();
-
-    default PsiManager getRequiredManager() {
-        return Objects.requireNonNull(getManager());
-    }
+    PsiManager getManager();
 
     /**
      * Returns the array of children for the PSI element.
@@ -121,10 +117,6 @@ public interface PsiElement extends UserDataHolder {
      * @return the parent of the element, or null if the element has no parent.
      */
     @Nullable PsiElement getParent();
-
-    default PsiElement getRequiredParent() {
-        return Objects.requireNonNull(getParent());
-    }
 
     /**
      * Returns the first child of the PSI element.
@@ -166,10 +158,6 @@ public interface PsiElement extends UserDataHolder {
      * @throws PsiInvalidElementAccessException if this element is invalid
      */
     @Nullable PsiFile getContainingFile() throws PsiInvalidElementAccessException;
-
-    default PsiFile getRequiredContainingFile() throws PsiInvalidElementAccessException {
-        return Objects.requireNonNull(getContainingFile());
-    }
 
     /**
      * Returns the text range in the document occupied by the PSI element.

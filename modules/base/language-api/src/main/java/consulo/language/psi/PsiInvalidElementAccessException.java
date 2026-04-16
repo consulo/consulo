@@ -189,7 +189,7 @@ public class PsiInvalidElementAccessException extends RuntimeException implement
       }
     }
 
-    PsiManager manager = file.getRequiredManager();
+    PsiManager manager = file.getManager();
     if (manager.getProject().isDisposed()) return "project is disposed";
 
     Language language = file.getLanguage();

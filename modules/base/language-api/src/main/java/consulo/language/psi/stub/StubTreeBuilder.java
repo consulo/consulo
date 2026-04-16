@@ -65,7 +65,7 @@ public class StubTreeBuilder {
         psi.putUserData(IndexingDataKeys.FILE_TEXT_CONTENT_KEY, contentAsText);
 
         // if we load AST, it should be easily gc-able. See PsiFileImpl.createTreeElementPointer()
-        psi.getRequiredManager().startBatchFilesProcessingMode();
+        psi.getManager().startBatchFilesProcessingMode();
 
         try {
           IStubFileElementType stubFileElementType = ((PsiFileWithStubSupport)psi).getElementTypeForStubBuilder();
@@ -103,7 +103,7 @@ public class StubTreeBuilder {
         }
         finally {
           psi.putUserData(IndexingDataKeys.FILE_TEXT_CONTENT_KEY, null);
-          psi.getRequiredManager().finishBatchFilesProcessingMode();
+          psi.getManager().finishBatchFilesProcessingMode();
         }
       }
 

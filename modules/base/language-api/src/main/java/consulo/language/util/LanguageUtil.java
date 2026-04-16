@@ -186,7 +186,7 @@ public final class LanguageUtil {
 
     @RequiredReadAction
     public static Language getRootLanguage(PsiElement element) {
-        FileViewProvider provider = element.getRequiredContainingFile().getViewProvider();
+        FileViewProvider provider = Objects.requireNonNull(element.getContainingFile()).getViewProvider();
         Set<Language> languages = provider.getLanguages();
         if (languages.size() > 1) {
             PsiElement current = element;

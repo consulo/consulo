@@ -51,7 +51,7 @@ public abstract class PsiPolyVariantReferenceBase<T extends PsiElement> extends 
   public boolean isReferenceTo(PsiElement element) {
     ResolveResult[] results = multiResolve(false);
     for (ResolveResult result : results) {
-      if (getElement().getRequiredManager().areElementsEquivalent(result.getElement(), element)) {
+      if (getElement().getManager().areElementsEquivalent(result.getElement(), element)) {
         return true;
       }
     }

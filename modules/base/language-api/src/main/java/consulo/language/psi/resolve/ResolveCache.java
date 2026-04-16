@@ -23,6 +23,8 @@ import consulo.project.Project;
 
 import org.jspecify.annotations.Nullable;
 
+import java.util.Objects;
+
 /**
  * @author VISTALL
  * @since 2022-03-26
@@ -63,8 +65,15 @@ public interface ResolveCache {
     return project.getInstance(ResolveCache.class);
   }
 
-  default <T extends PsiPolyVariantReference> ResolveResult[] resolveWithCaching(T ref, PolyVariantResolver<T> resolver, boolean needToPreventRecursion, boolean incompleteCode) {
-    return resolveWithCaching(ref, resolver, needToPreventRecursion, incompleteCode, ref.getElement().getRequiredContainingFile());
+  default <T extends PsiPolyVariantReference>
+  ResolveResult[] resolveWithCaching(T ref, PolyVariantResolver<T> resolver, boolean needToPreventRecursion, boolean incompleteCode) {
+    return resolveWithCaching(
+      ref,
+      resolver,
+      needToPreventRecursion,
+      incompleteCode,
+      Objects.requireNonNull(ref.getElement().getContainingFile())
+    );
   }
 
   public <T extends PsiPolyVariantReference> ResolveResult[] resolveWithCaching(T ref,

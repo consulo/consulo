@@ -251,10 +251,7 @@ public class OwnBufferLeafPsiElement extends LeafElement implements PsiElement {
 
   @Override
   public Project getProject() {
-    PsiManager manager = getManager();
-    if (manager == null) throw new PsiInvalidElementAccessException(this);
-
-    return manager.getProject();
+    return getManager().getProject();
   }
 
   @RequiredReadAction

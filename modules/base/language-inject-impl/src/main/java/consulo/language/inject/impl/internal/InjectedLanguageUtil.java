@@ -75,7 +75,7 @@ public class InjectedLanguageUtil {
     if (containingFile instanceof DummyHolder) {
       PsiElement context = containingFile.getContext();
       if (context != null) {
-        PsiFile topFile = context.getRequiredContainingFile();
+        PsiFile topFile = Objects.requireNonNull(context.getContainingFile());
         topFile.getNode();  //load tree
         TextRange textRange = host.getTextRange().shiftRight(context.getTextRange().getStartOffset());
 
@@ -127,7 +127,7 @@ public class InjectedLanguageUtil {
    */
   @Deprecated
   public static boolean enumerate(PsiElement host, PsiLanguageInjectionHost.InjectedPsiVisitor visitor) {
-    PsiFile containingFile = host.getRequiredContainingFile();
+    PsiFile containingFile = Objects.requireNonNull(host.getContainingFile());
     PsiUtilCore.ensureValid(containingFile);
     return enumerate(host, containingFile, true, visitor);
   }
@@ -151,7 +151,7 @@ public class InjectedLanguageUtil {
     PsiElement inTree = loadTree(host, containingFile);
     if (inTree != host) {
       host = inTree;
-      containingFile = host.getRequiredContainingFile();
+      containingFile = Objects.requireNonNull(host.getContainingFile());
     }
     PsiDocumentManager documentManager = PsiDocumentManager.getInstance(containingFile.getProject());
     Document document = documentManager.getDocument(containingFile);
@@ -497,7 +497,7 @@ public class InjectedLanguageUtil {
 
   static void clearCaches(PsiFile injected, DocumentWindowImpl documentWindow) {
     VirtualFileWindowImpl virtualFile = (VirtualFileWindowImpl)injected.getVirtualFile();
-    PsiManagerEx psiManagerEx = (PsiManagerEx)injected.getRequiredManager();
+    PsiManagerEx psiManagerEx = (PsiManagerEx) injected.getManager();
     if (psiManagerEx.getProject().isDisposed()) return;
 
     DebugUtil.performPsiModification("injected clearCaches", () -> psiManagerEx.getFileManager().setViewProvider(virtualFile, null));

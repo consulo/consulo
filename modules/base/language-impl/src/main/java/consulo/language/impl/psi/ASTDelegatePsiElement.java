@@ -38,6 +38,7 @@ import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * @author max
@@ -46,7 +47,7 @@ public abstract class ASTDelegatePsiElement extends PsiElementBase implements Ps
     private static final Logger LOG = Logger.getInstance(ASTDelegatePsiElement.class);
 
     @Override
-    public @Nullable PsiManager getManager() {
+    public PsiManager getManager() {
         Project project = SingleProjectHolder.theOnlyOpenProject();
         if (project != null) {
             return PsiManager.getInstance(project);
@@ -402,7 +403,7 @@ public abstract class ASTDelegatePsiElement extends PsiElementBase implements Ps
     public PsiElement replace(PsiElement newElement) throws IncorrectOperationException {
         CheckUtil.checkWritable(this);
         TreeElement elementCopy = ChangeUtil.copyToElement(newElement);
-        PsiElement parent = getRequiredParent();
+        PsiElement parent = Objects.requireNonNull(getParent());
         if (parent instanceof ASTDelegatePsiElement parentElement) {
             parentElement.replaceChildInternal(this, elementCopy);
         }

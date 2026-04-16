@@ -10,6 +10,8 @@ import consulo.language.psi.PsiFile;
 
 import org.jspecify.annotations.Nullable;
 
+import java.util.Objects;
+
 /**
  * @author Dmitry Avdeev
  */
@@ -33,7 +35,7 @@ public final class TemplateLanguageUtil {
   }
 
   public static boolean isInsideTemplateFile(PsiElement element) {
-    return element.getRequiredContainingFile().getViewProvider() instanceof TemplateLanguageFileViewProvider;
+    return Objects.requireNonNull(element.getContainingFile()).getViewProvider() instanceof TemplateLanguageFileViewProvider;
   }
 
   public static boolean isTemplateDataFile(PsiFile file) {

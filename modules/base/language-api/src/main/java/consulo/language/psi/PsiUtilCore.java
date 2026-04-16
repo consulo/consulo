@@ -605,7 +605,7 @@ public class PsiUtilCore {
 
     @RequiredReadAction
     public static Language getDialect(PsiElement element) {
-        return narrowLanguage(element.getLanguage(), element.getRequiredContainingFile().getLanguage());
+        return narrowLanguage(element.getLanguage(), Objects.requireNonNull(element.getContainingFile()).getLanguage());
     }
 
     protected static Language narrowLanguage(Language language, Language candidate) {
@@ -677,7 +677,7 @@ public class PsiUtilCore {
      */
     @RequiredReadAction
     public static <T extends PsiElement> @Nullable T getOriginalElement(T psiElement, Class<? extends T> elementClass) {
-        PsiFile psiFile = psiElement.getRequiredContainingFile();
+        PsiFile psiFile = Objects.requireNonNull(psiElement.getContainingFile());
         PsiFile originalFile = psiFile.getOriginalFile();
         if (originalFile == psiFile) {
             return psiElement;

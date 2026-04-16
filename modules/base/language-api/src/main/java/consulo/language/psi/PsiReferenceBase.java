@@ -121,7 +121,7 @@ public abstract class PsiReferenceBase<T extends PsiElement> implements PsiRefer
   @Override
   @RequiredReadAction
   public boolean isReferenceTo(PsiElement element) {
-    return getElement().getRequiredManager().areElementsEquivalent(resolve(), element);
+    return getElement().getManager().areElementsEquivalent(resolve(), element);
   }
 
   public static <T extends PsiElement> PsiReferenceBase<T> createSelfReference(T element, PsiElement resolveTo) {
@@ -171,7 +171,7 @@ public abstract class PsiReferenceBase<T extends PsiElement> implements PsiRefer
     public boolean isReferenceTo(PsiElement element) {
       ResolveResult[] results = multiResolve(false);
       for (ResolveResult result : results) {
-        if (element.getRequiredManager().areElementsEquivalent(result.getElement(), element)) {
+        if (element.getManager().areElementsEquivalent(result.getElement(), element)) {
           return true;
         }
       }

@@ -13,6 +13,7 @@ import consulo.language.impl.DebugUtil;
 import consulo.language.impl.psi.PsiFileImpl;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
+import consulo.language.psi.PsiInvalidElementAccessException;
 import consulo.language.psi.PsiManager;
 import consulo.language.util.CharTable;
 import consulo.project.Project;
@@ -55,7 +56,7 @@ public abstract class TreeElement extends UserDataHolderBase implements ASTNode,
         return ChangeUtil.copyElement(this, table);
     }
 
-    public @Nullable PsiManager getManager() {
+    public PsiManager getManager() {
         Project project = SingleProjectHolder.theOnlyOpenProject();
         if (project != null) {
             return PsiManager.getInstance(project);
@@ -71,7 +72,7 @@ public abstract class TreeElement extends UserDataHolderBase implements ASTNode,
         if (parent != null) {
             return parent.getManager();
         }
-        return null;
+        throw PsiInvalidElementAccessException.createByNode(this, null);
     }
 
     @Override

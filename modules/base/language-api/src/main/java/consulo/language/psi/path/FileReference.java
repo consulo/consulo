@@ -15,12 +15,9 @@
  */
 package consulo.language.psi.path;
 
-import consulo.annotation.access.RequiredReadAction;
-import consulo.annotation.access.RequiredWriteAction;
 import consulo.document.util.TextRange;
 import consulo.language.LangBundle;
 import consulo.language.inject.InjectedLanguageManager;
-import consulo.language.localize.LanguageLocalize;
 import consulo.language.psi.*;
 import consulo.language.psi.resolve.PsiFileSystemItemProcessor;
 import consulo.language.psi.resolve.ResolveCache;
@@ -117,7 +114,7 @@ public class FileReference implements PsiFileReference, FileReferenceOwner, PsiP
 
   @Override
   public ResolveResult[] multiResolve(boolean incompleteCode) {
-    PsiFile file = getElement().getRequiredContainingFile();
+    PsiFile file = Objects.requireNonNull(getElement().getContainingFile());
     return ResolveCache.getInstance(file.getProject()).resolveWithCaching(this, MyResolver.INSTANCE, false, false, file);
   }
 
@@ -286,11 +283,9 @@ public class FileReference implements PsiFileReference, FileReferenceOwner, PsiP
     VirtualFile file = fileSystemItem.getVirtualFile();
     if (file != null && !file.isDirectory()) {
       PsiManager psiManager = fileSystemItem.getManager();
-      if (psiManager != null) {
-        PsiFile psiFile = psiManager.findFile(file);
-        if (psiFile != null) {
-          fileSystemItem = psiFile;
-        }
+      PsiFile psiFile = psiManager.findFile(file);
+      if (psiFile != null) {
+        fileSystemItem = psiFile;
       }
     }
     return fileSystemItem;
@@ -383,9 +378,9 @@ public class FileReference implements PsiFileReference, FileReferenceOwner, PsiP
     VirtualFile dstVFile = fileSystemItem.getVirtualFile();
     if (dstVFile == null) throw new IncorrectOperationException("Cannot bind to non-physical element:" + element);
 
-    PsiFile file = getElement().getRequiredContainingFile();
+    PsiFile file = Objects.requireNonNull(getElement().getContainingFile());
     PsiElement contextPsiFile = InjectedLanguageManager.getInstance(file.getProject()).getInjectionHost(file);
-    if (contextPsiFile != null) file = contextPsiFile.getRequiredContainingFile(); // use host file!
+    if (contextPsiFile != null) file = Objects.requireNonNull(contextPsiFile.getContainingFile()); // use host file!
     VirtualFile curVFile = file.getVirtualFile();
     if (curVFile == null) throw new IncorrectOperationException("Cannot bind from non-physical element:" + file);
 

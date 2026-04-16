@@ -30,6 +30,7 @@ import consulo.language.util.ProcessingContext;
 import consulo.virtualFileSystem.VirtualFile;
 import org.jspecify.annotations.Nullable;
 
+import java.util.Objects;
 import java.util.function.BiPredicate;
 
 /**
@@ -122,7 +123,7 @@ public abstract class PsiElementPattern<T extends PsiElement, Self extends PsiEl
     return with(new PatternCondition<T>("inVirtualFile") {
       @Override
       public boolean accepts(T t, ProcessingContext context) {
-        return filePattern.accepts(t.getRequiredContainingFile().getViewProvider().getVirtualFile(), context);
+        return filePattern.accepts(Objects.requireNonNull(t.getContainingFile()).getViewProvider().getVirtualFile(), context);
       }
     });
   }
@@ -132,7 +133,7 @@ public abstract class PsiElementPattern<T extends PsiElement, Self extends PsiEl
     return with(new PatternCondition<T>("equalTo") {
       @Override
       public boolean accepts(T t, ProcessingContext context) {
-        return t.getRequiredManager().areElementsEquivalent(t, o);
+        return t.getManager().areElementsEquivalent(t, o);
       }
     });
   }

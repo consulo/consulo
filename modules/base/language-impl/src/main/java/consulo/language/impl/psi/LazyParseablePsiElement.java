@@ -315,10 +315,7 @@ public class LazyParseablePsiElement extends LazyParseableElement implements Psi
     if (project != null) {
       return project;
     }
-    PsiManager manager = getManager();
-    if (manager == null) throw new PsiInvalidElementAccessException(this);
-
-    return manager.getProject();
+    return getManager().getProject();
   }
 
   @Override

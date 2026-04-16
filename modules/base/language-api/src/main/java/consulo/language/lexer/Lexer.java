@@ -70,10 +70,6 @@ public abstract class Lexer {
      */
     public abstract @Nullable IElementType getTokenType();
 
-    public IElementType getRequiredTokenType() {
-        return Objects.requireNonNull(getTokenType());
-    }
-
     /**
      * Returns the start offset of the current token.
      *

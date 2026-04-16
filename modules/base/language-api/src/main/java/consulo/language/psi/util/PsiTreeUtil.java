@@ -1236,7 +1236,8 @@ public class PsiTreeUtil {
 
     @RequiredReadAction
     public static List<PsiElement> getInjectedElements(OuterLanguageElement outerLanguageElement) {
-        PsiElement psi = outerLanguageElement.getRequiredContainingFile().getViewProvider().getPsi(outerLanguageElement.getLanguage());
+        PsiElement psi =
+            Objects.requireNonNull(outerLanguageElement.getContainingFile()).getViewProvider().getPsi(outerLanguageElement.getLanguage());
         TextRange injectionRange = outerLanguageElement.getTextRange();
         List<PsiElement> res = new ArrayList<>();
 

@@ -331,7 +331,7 @@ public class FileReferenceSet {
     }
 
     protected @Nullable PsiFile getContainingFile() {
-        PsiFile cf = myElement.getRequiredContainingFile();
+        PsiFile cf = Objects.requireNonNull(myElement.getContainingFile());
         PsiFile file = InjectedLanguageManager.getInstance(cf.getProject()).getTopLevelFile(cf);
         if (file != null) {
             return file.getOriginalFile();
@@ -344,7 +344,7 @@ public class FileReferenceSet {
     private Collection<PsiFileSystemItem> getContextByFile(PsiFile file) {
         PsiElement context = file.getContext();
         if (context != null) {
-            file = context.getRequiredContainingFile();
+            file = Objects.requireNonNull(context.getContainingFile());
         }
 
         if (useIncludingFileAsContext()) {
@@ -391,7 +391,7 @@ public class FileReferenceSet {
         VirtualFile virtualFile = file == null ? null : file.getOriginalFile().getVirtualFile();
         VirtualFile parent = virtualFile == null ? null : virtualFile.getParent();
         @ReviewAfterIssueFix(value = "github.com/uber/NullAway/issues/1504", todo = "Remove requireNonNull")
-        PsiDirectory directory = parent == null ? null : Objects.requireNonNull(file).getRequiredManager().findDirectory(parent);
+        PsiDirectory directory = parent == null ? null : Objects.requireNonNull(file).getManager().findDirectory(parent);
         return directory != null ? Collections.singleton(directory) : Collections.emptyList();
     }
 
@@ -454,7 +454,7 @@ public class FileReferenceSet {
     @ReviewAfterIssueFix(value = "github.com/uber/NullAway/issues/1504", todo = "Remove NullAway suppression")
     @SuppressWarnings("NullAway")
     protected Collection<PsiFileSystemItem> toFileSystemItems(Collection<VirtualFile> files) {
-        PsiManager manager = getElement().getRequiredManager();
+        PsiManager manager = getElement().getManager();
         return ContainerUtil.mapNotNull(files, file -> file != null ? manager.findDirectory(file) : null);
     }
 

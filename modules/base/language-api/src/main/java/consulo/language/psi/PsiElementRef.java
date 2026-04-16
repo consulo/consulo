@@ -71,7 +71,7 @@ public final class PsiElementRef<T extends PsiElement> {
     return new PsiElementRef<Child>(new PsiRefColleague.Imaginary<Child, Parent>(parent, creator));
   }
 
-  public @Nullable PsiManager getPsiManager() {
+  public PsiManager getPsiManager() {
     return myColleague.getRoot().getManager();
   }
 

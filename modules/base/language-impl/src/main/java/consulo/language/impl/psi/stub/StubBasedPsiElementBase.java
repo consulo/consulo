@@ -50,6 +50,7 @@ import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * A base class for PSI elements that support both stub and AST substrates. The purpose of stubs is to hold the most important information
@@ -138,7 +139,7 @@ public class StubBasedPsiElementBase<T extends StubElement> extends ASTDelegateP
     public ASTNode getNode() {
         if (mySubstrateRef instanceof SubstrateRef.StubRef) {
             getApplication().assertReadAccessAllowed();
-            PsiFileImpl file = (PsiFileImpl) getRequiredContainingFile();
+            PsiFileImpl file = (PsiFileImpl) Objects.requireNonNull(getContainingFile());
             if (!file.isValid()) {
                 throw new PsiInvalidElementAccessException(file);
             }
@@ -277,7 +278,7 @@ public class StubBasedPsiElementBase<T extends StubElement> extends ASTDelegateP
 
     @Override
     public boolean isWritable() {
-        return getRequiredContainingFile().isWritable();
+        return Objects.requireNonNull(getContainingFile()).isWritable();
     }
 
     @Override
@@ -293,7 +294,7 @@ public class StubBasedPsiElementBase<T extends StubElement> extends ASTDelegateP
         if (project != null) {
             return PsiManager.getInstance(project);
         }
-        return getRequiredContainingFile().getManager();
+        return Objects.requireNonNull(getContainingFile()).getManager();
     }
 
     @Override
@@ -302,12 +303,12 @@ public class StubBasedPsiElementBase<T extends StubElement> extends ASTDelegateP
         if (project != null) {
             return project;
         }
-        return getRequiredContainingFile().getProject();
+        return Objects.requireNonNull(getContainingFile()).getProject();
     }
 
     @Override
     public boolean isPhysical() {
-        return getRequiredContainingFile().isPhysical();
+        return Objects.requireNonNull(getContainingFile()).isPhysical();
     }
 
     @Override

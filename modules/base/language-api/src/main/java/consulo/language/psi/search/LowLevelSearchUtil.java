@@ -206,7 +206,7 @@ public class LowLevelSearchUtil {
   public static int[] getTextOccurrencesInScope(PsiElement scope, StringSearcher searcher, @Nullable ProgressIndicator progress) {
     if (progress != null) progress.checkCanceled();
 
-    PsiFile file = scope.getRequiredContainingFile();
+    PsiFile file = Objects.requireNonNull(scope.getContainingFile());
     FileViewProvider viewProvider = file.getViewProvider();
     CharSequence buffer = viewProvider.getContents();
 

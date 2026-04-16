@@ -23,6 +23,8 @@ import consulo.virtualFileSystem.VirtualFile;
 
 import org.jspecify.annotations.Nullable;
 
+import java.util.Objects;
+
 public class PsiNavigateUtil {
   private PsiNavigateUtil() {
   }
@@ -35,7 +37,7 @@ public class PsiNavigateUtil {
     if (psiElement != null && psiElement.isValid()) {
       PsiElement navigationElement = psiElement.getNavigationElement();
       int offset = navigationElement instanceof PsiFile ? -1 : navigationElement.getTextOffset();
-      VirtualFile virtualFile = navigationElement.getRequiredContainingFile().getVirtualFile();
+      VirtualFile virtualFile = Objects.requireNonNull(navigationElement.getContainingFile()).getVirtualFile();
       if (virtualFile != null && virtualFile.isValid()) {
         OpenFileDescriptorFactory.getInstance(navigationElement.getProject()).builder(virtualFile).offset(offset).build().navigate(requestFocus);
       }

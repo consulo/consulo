@@ -24,6 +24,7 @@ import consulo.util.collection.ContainerUtil;
 import consulo.virtualFileSystem.VirtualFile;
 
 import java.util.LinkedHashSet;
+import java.util.Objects;
 import java.util.Set;
 import java.util.function.Supplier;
 
@@ -45,7 +46,7 @@ public class GlobalSearchScopeUtil {
         PsiFile file = element.getContainingFile();
         if (file != null) {
           ContainerUtil.addIfNotNull(files, file.getVirtualFile());
-          ContainerUtil.addIfNotNull(files, file.getNavigationElement().getRequiredContainingFile().getVirtualFile());
+          ContainerUtil.addIfNotNull(files, Objects.requireNonNull(file.getNavigationElement().getContainingFile()).getVirtualFile());
         }
       }
       return files;

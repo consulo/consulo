@@ -18,6 +18,8 @@ package consulo.language.lexer;
 import consulo.language.ast.IElementType;
 import org.jspecify.annotations.Nullable;
 
+import java.util.Objects;
+
 public abstract class CompositeLexer extends LexerBase {
     private final Lexer myLexer1;
     private final Lexer myLexer2;
@@ -61,7 +63,7 @@ public abstract class CompositeLexer extends LexerBase {
         if (type1 == null) {
             return null;
         }
-        IElementType type2 = myLexer2.getRequiredTokenType();
+        IElementType type2 = Objects.requireNonNull(myLexer2.getTokenType());
         return getCompositeTokenType(type1, type2);
     }
 

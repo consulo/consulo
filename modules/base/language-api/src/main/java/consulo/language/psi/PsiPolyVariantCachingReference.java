@@ -20,6 +20,8 @@ import consulo.language.psi.resolve.ResolveCache;
 
 import org.jspecify.annotations.Nullable;
 
+import java.util.Objects;
+
 /**
  * @author peter
  */
@@ -27,7 +29,7 @@ public abstract class PsiPolyVariantCachingReference implements PsiPolyVariantRe
   @Override
   public final ResolveResult[] multiResolve(boolean incompleteCode) {
     PsiElement element = getElement();
-    PsiFile file = element.getRequiredContainingFile();
+    PsiFile file = Objects.requireNonNull(element.getContainingFile());
     return ResolveCache.getInstance(file.getProject()).resolveWithCaching(this, MyResolver.INSTANCE, true, incompleteCode, file);
   }
 
@@ -42,7 +44,7 @@ public abstract class PsiPolyVariantCachingReference implements PsiPolyVariantRe
   @Override
   @RequiredReadAction
   public boolean isReferenceTo(PsiElement element) {
-    return getElement().getRequiredManager().areElementsEquivalent(resolve(), element);
+    return getElement().getManager().areElementsEquivalent(resolve(), element);
   }
 
   @Override

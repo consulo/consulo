@@ -469,7 +469,7 @@ public abstract class PsiFileImpl extends UserDataHolderBase
             LOG.error("Invalid parent: " + parentFile + " of file " + file + ", file.valid=" + file.isValid());
             return null;
         }
-        return getRequiredManager().findDirectory(parentFile);
+        return getManager().findDirectory(parentFile);
     }
 
     @Override
@@ -1018,7 +1018,7 @@ public abstract class PsiFileImpl extends UserDataHolderBase
 
     @Override
     public final Project getProject() {
-        return getRequiredManager().getProject();
+        return getManager().getProject();
     }
 
     @Override

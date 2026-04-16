@@ -41,7 +41,7 @@ public class DefaultTokenSeparatorGenerator implements TokenSeparatorGenerator {
     }
     ParserDefinition parserDefinition = ParserDefinition.forLanguage(l);
     if (parserDefinition != null) {
-      PsiManager manager = Objects.requireNonNull(right.getTreeParent()).getRequiredPsi().getRequiredManager();
+      PsiManager manager = Objects.requireNonNull(right.getTreeParent()).getRequiredPsi().getManager();
       ASTNode generatedWhitespace;
       switch (parserDefinition.spaceExistenceTypeBetweenTokens(left, right)) {
         case MUST:
