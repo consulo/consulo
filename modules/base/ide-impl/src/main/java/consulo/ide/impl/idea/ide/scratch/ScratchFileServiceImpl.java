@@ -16,10 +16,8 @@
 package consulo.ide.impl.idea.ide.scratch;
 
 import consulo.annotation.access.RequiredReadAction;
-import consulo.annotation.access.RequiredWriteAction;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
-import consulo.application.ApplicationManager;
 import consulo.application.WriteAction;
 import consulo.component.messagebus.MessageBus;
 import consulo.component.persist.PersistentStateComponent;
@@ -34,7 +32,6 @@ import consulo.fileEditor.FileEditorManager;
 import consulo.fileEditor.event.FileEditorManagerAdapter;
 import consulo.fileEditor.event.FileEditorManagerListener;
 import consulo.fileEditor.impl.internal.FileEditorManagerImpl;
-import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
 import consulo.ide.impl.idea.util.indexing.LightDirectoryIndex;
 import consulo.language.Language;
 import consulo.language.editor.scratch.FileEditorTrackingRootType;
@@ -56,10 +53,10 @@ import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.PerFileMappings;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
-import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
+import org.jspecify.annotations.Nullable;
 
 import java.io.IOException;
 import java.util.List;
@@ -69,7 +66,6 @@ import java.util.Objects;
 @State(name = "ScratchFileService", storages = @Storage(value = "scratches.xml", roamingType = RoamingType.DISABLED))
 @ServiceImpl
 public class ScratchFileServiceImpl extends ScratchFileService implements PersistentStateComponent<Element>, Disposable {
-
   private static final RootType NULL_TYPE = new RootType("", null) {
   };
 
@@ -91,7 +87,6 @@ public class ScratchFileServiceImpl extends ScratchFileService implements Persis
     initFileOpenedListener(application.getMessageBus());
   }
 
-  
   @Override
   public String getRootPath(RootType rootId) {
     return getRootPath() + "/" + rootId.getId();
@@ -147,12 +142,10 @@ public class ScratchFileServiceImpl extends ScratchFileService implements Persis
     messageBus.connect().subscribe(ProjectManagerListener.class, projectListener);
   }
 
-  
   protected String getRootPath() {
     return FileUtil.toSystemIndependentName(ContainerPathManager.get().getScratchPath());
   }
 
-  
   @Override
   public PerFileMappings<Language> getScratchesMapping() {
     return new PerFileMappings<>() {
@@ -184,7 +177,6 @@ public class ScratchFileServiceImpl extends ScratchFileService implements Persis
 
   private static class MyLanguages extends PerFileMappingsBase<String> {
     @Override
-    
     public List<String> getAvailableValues() {
       return ContainerUtil.map(LanguageUtil.getFileLanguages(), Language::getID);
     }
@@ -217,7 +209,7 @@ public class ScratchFileServiceImpl extends ScratchFileService implements Persis
     return WriteAction.compute(() -> {
       VirtualFile dir = Objects.requireNonNull(VirtualFileUtil.createDirectories(PathUtil.getParentPath(fullPath)));
       if (option == Option.create_new_always) {
-        return VfsUtil.createChildSequent(LocalFileSystem.getInstance(), dir, fileName, StringUtil.notNullize(ext));
+        return VirtualFileUtil.createChildSequent(LocalFileSystem.getInstance(), dir, fileName, StringUtil.notNullize(ext));
       }
       else {
         return dir.createChildData(LocalFileSystem.getInstance(), fileNameExt);

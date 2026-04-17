@@ -23,7 +23,6 @@ import consulo.codeEditor.Editor;
 import consulo.dataContext.DataContext;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
-import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.ide.localize.IdeLocalize;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
@@ -37,8 +36,9 @@ import consulo.ui.ex.popup.ListPopup;
 import consulo.undoRedo.*;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.encoding.ApplicationEncodingManager;
-import org.jspecify.annotations.Nullable;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
 import jakarta.inject.Inject;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.io.IOException;
@@ -111,7 +111,7 @@ public class ChangeFileEncodingAction extends AnAction implements DumbAware {
 
         byte[] bytes;
         try {
-            bytes = virtualFile.isDirectory() ? null : VfsUtilCore.loadBytes(virtualFile);
+            bytes = virtualFile.isDirectory() ? null : VirtualFileUtil.loadBytes(virtualFile);
         }
         catch (IOException e) {
             return null;

@@ -233,7 +233,7 @@ public class VfsUtilCore {
     
     public static String loadText(VirtualFile file, int length) throws IOException {
         try (InputStreamReader reader = new InputStreamReader(file.getInputStream(), file.getCharset())) {
-            return new String(consulo.ide.impl.idea.openapi.util.io.FileUtil.loadText(reader, length));
+            return new String(FileUtil.loadText(reader, length));
         }
     }
 
