@@ -18,6 +18,7 @@ package consulo.platform;
 import consulo.util.lang.StringUtil;
 
 import org.jspecify.annotations.Nullable;
+
 import java.nio.charset.StandardCharsets;
 
 /**
@@ -29,57 +30,64 @@ import java.nio.charset.StandardCharsets;
  * @author Kirill Likhodedov
  */
 public enum LineSeparator {
-  LF("\n"),
-  CRLF("\r\n"),
-  CR("\r");
+    LF("\n"),
+    CRLF("\r\n"),
+    CR("\r");
 
-  private final String mySeparatorString;
-  private final byte[] myBytes;
+    private final String mySeparatorString;
+    private final byte[] myBytes;
 
-  LineSeparator(String separatorString) {
-    mySeparatorString = separatorString;
-    myBytes = separatorString.getBytes(StandardCharsets.UTF_8);
-  }
-
-  public static LineSeparator fromString(String string) {
-    for (LineSeparator separator : values()) {
-      if (separator.getSeparatorString().equals(string)) {
-        return separator;
-      }
+    LineSeparator(String separatorString) {
+        mySeparatorString = separatorString;
+        myBytes = separatorString.getBytes(StandardCharsets.UTF_8);
     }
-    //LOG.error("Invalid string for line separator: " + StringUtil.escapeStringCharacters(string));
-    return Platform.current().os().lineSeparator();
-  }
 
-  public String getSeparatorString() {
-    return mySeparatorString;
-  }
-
-  public byte[] getSeparatorBytes() {
-    return myBytes;
-  }
-
-  public static boolean knownAndDifferent(@Nullable LineSeparator separator1, @Nullable LineSeparator separator2) {
-    return separator1 != null && separator2 != null && !separator1.equals(separator2);
-  }
-
-  public static @Nullable LineSeparator detectSeparators(CharSequence text) {
-    int index = StringUtil.indexOfAny(text, "\n\r");
-    if (index == -1) return null;
-    if (StringUtil.startsWith(text, index, "\r\n")) return LineSeparator.CRLF;
-    if (text.charAt(index) == '\r') return LineSeparator.CR;
-    if (text.charAt(index) == '\n') return LineSeparator.LF;
-    throw new IllegalStateException();
-  }
-
-  public static @Nullable LineSeparator getLineSeparatorAt(CharSequence text, int index) {
-    if (index < 0 || index >= text.length()) {
-      return null;
+    public static LineSeparator fromString(String string) {
+        for (LineSeparator separator : values()) {
+            if (separator.getSeparatorString().equals(string)) {
+                return separator;
+            }
+        }
+        return Platform.current().os().lineSeparator();
     }
-    char ch = text.charAt(index);
-    if (ch == '\r') {
-      return index + 1 < text.length() && text.charAt(index + 1) == '\n' ? LineSeparator.CRLF : LineSeparator.CR;
+
+    public String getSeparatorString() {
+        return mySeparatorString;
     }
-    return ch == '\n' ? LineSeparator.LF : null;
-  }
+
+    public byte[] getSeparatorBytes() {
+        return myBytes;
+    }
+
+    public static boolean knownAndDifferent(@Nullable LineSeparator separator1, @Nullable LineSeparator separator2) {
+        return separator1 != null && separator2 != null && !separator1.equals(separator2);
+    }
+
+    public static @Nullable LineSeparator detectSeparators(CharSequence text) {
+        int index = StringUtil.indexOfAny(text, "\n\r");
+        if (index == -1) {
+            return null;
+        }
+        if (StringUtil.startsWith(text, index, "\r\n")) {
+            return LineSeparator.CRLF;
+        }
+        if (text.charAt(index) == '\r') {
+            return LineSeparator.CR;
+        }
+        if (text.charAt(index) == '\n') {
+            return LineSeparator.LF;
+        }
+        throw new IllegalStateException();
+    }
+
+    public static @Nullable LineSeparator getLineSeparatorAt(CharSequence text, int index) {
+        if (index < 0 || index >= text.length()) {
+            return null;
+        }
+        char ch = text.charAt(index);
+        if (ch == '\r') {
+            return index + 1 < text.length() && text.charAt(index + 1) == '\n' ? LineSeparator.CRLF : LineSeparator.CR;
+        }
+        return ch == '\n' ? LineSeparator.LF : null;
+    }
 }

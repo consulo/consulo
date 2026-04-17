@@ -17,9 +17,9 @@ package consulo.ide.impl.idea.codeStyle;
 
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
-import consulo.ide.impl.idea.util.LineSeparator;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
+import consulo.platform.LineSeparator;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
@@ -39,7 +39,6 @@ import java.io.IOException;
 public abstract class AbstractConvertLineSeparatorsAction extends ToggleAction {
     private static final Logger LOG = Logger.getInstance(AbstractConvertLineSeparatorsAction.class);
 
-    
     private final String mySeparator;
 
     protected AbstractConvertLineSeparatorsAction(LocalizeValue text, LineSeparator separator) {
@@ -64,6 +63,7 @@ public abstract class AbstractConvertLineSeparatorsAction extends ToggleAction {
     }
 
     @Override
+    @RequiredUIAccess
     public void setSelected(AnActionEvent e, boolean state) {
         if (!state) {
             return;

@@ -3,6 +3,7 @@ package consulo.ide.impl.idea.openapi.wm.impl.status;
 
 import consulo.ide.localize.IdeLocalize;
 import consulo.localize.LocalizeValue;
+import consulo.platform.LineSeparator;
 import consulo.project.ui.wm.StatusBarWidgetFactory;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.ActionManager;
@@ -16,7 +17,6 @@ import consulo.ui.ex.popup.ListPopup;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.project.ui.wm.StatusBarWidget;
-import consulo.ide.impl.idea.util.LineSeparator;
 import org.jspecify.annotations.Nullable;
 
 public final class LineSeparatorPanel extends EditorBasedStatusBarPopup {
@@ -24,7 +24,6 @@ public final class LineSeparatorPanel extends EditorBasedStatusBarPopup {
         super(project, factory, true);
     }
 
-    
     @Override
     protected WidgetState getWidgetState(@Nullable VirtualFile file) {
         if (file == null) {
