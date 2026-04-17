@@ -23,6 +23,7 @@ import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionImplUtil;
 import consulo.ide.impl.idea.openapi.actionSystem.impl.MenuItemPresentationFactory;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.event.details.InputDetails;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.UIExAWTDataKey;
@@ -61,12 +62,14 @@ public class ActionToolbarButtonEngine {
 
     private boolean myNoIconsInPopup = false;
 
-    public ActionToolbarButtonEngine(AbstractButton button,
-                                     AnAction ideAction,
-                                     Presentation presentation,
-                                     String place,
-                                     boolean alwaysDisplayText,
-                                     Supplier<DataContext> getDataContext) {
+    public ActionToolbarButtonEngine(
+        AbstractButton button,
+        AnAction ideAction,
+        Presentation presentation,
+        String place,
+        boolean alwaysDisplayText,
+        Supplier<DataContext> getDataContext
+    ) {
         myButton = button;
         myIdeAction = ideAction;
         myPresentation = presentation;
@@ -104,11 +107,11 @@ public class ActionToolbarButtonEngine {
                 customTooltipBuilder.build(ht, myPresentation);
             }
             else {
-                ht.setTitle(textValue.map(Presentation.NO_MNEMONIC).getValue());
+                ht.setTitle(textValue.map(Presentation.NO_MNEMONIC));
                 ht.setShortcut(getShortcutText());
 
                 if (descriptionValue.isNotEmpty()) {
-                    ht.setDescription(descriptionValue.map(Presentation.NO_MNEMONIC).getValue());
+                    ht.setDescription(descriptionValue.map(Presentation.NO_MNEMONIC));
                 }
             }
             ht.installOn(myButton);
@@ -185,6 +188,7 @@ public class ActionToolbarButtonEngine {
         }
     }
 
+    @RequiredUIAccess
     private void performAction(MouseEvent e) {
         InputDetails inputDetails = DesktopAWTInputDetails.convert(myButton, e);
         DataContext context = DataContext.builder()
@@ -238,18 +242,26 @@ public class ActionToolbarButtonEngine {
         performAction(new MouseEvent(myButton, MouseEvent.MOUSE_CLICKED, System.currentTimeMillis(), 0, 0, 0, 1, false));
     }
 
+    @RequiredUIAccess
     public void actionPerformed(AnActionEvent event) {
-        if (myIdeAction instanceof ActionGroup && !(myIdeAction instanceof CustomComponentAction) && ((ActionGroup) myIdeAction).isPopup() && !event.getPresentation().isPerformGroup()) {
+        if (myIdeAction instanceof ActionGroup actionGroup
+            && !(myIdeAction instanceof CustomComponentAction)
+            && actionGroup.isPopup()
+            && !event.getPresentation().isPerformGroup()) {
             ActionManagerEx am = (ActionManagerEx) ActionManager.getInstance();
-            DesktopActionPopupMenuImpl popupMenu = (DesktopActionPopupMenuImpl) am.createActionPopupMenu(event.getPlace(), (ActionGroup) myIdeAction, new MenuItemPresentationFactory() {
-                @Override
-                protected void processPresentation(Presentation presentation) {
-                    if (myNoIconsInPopup) {
-                        presentation.setIcon(null);
-                        presentation.setHoveredIcon(null);
+            DesktopActionPopupMenuImpl popupMenu = (DesktopActionPopupMenuImpl) am.createActionPopupMenu(
+                event.getPlace(),
+                (ActionGroup) myIdeAction,
+                new MenuItemPresentationFactory() {
+                    @Override
+                    protected void processPresentation(Presentation presentation) {
+                        if (myNoIconsInPopup) {
+                            presentation.setIcon(null);
+                            presentation.setHoveredIcon(null);
+                        }
                     }
                 }
-            });
+            );
             popupMenu.setDataContextProvider(myGetDataContext::get);
             if (event.isFromActionToolbar()) {
                 popupMenu.getComponent().show(myButton, 0, myButton.getHeight());
@@ -257,7 +269,6 @@ public class ActionToolbarButtonEngine {
             else {
                 popupMenu.getComponent().show(myButton, myButton.getWidth(), 0);
             }
-
         }
         else {
             ActionImplUtil.performActionDumbAware(myIdeAction, event);

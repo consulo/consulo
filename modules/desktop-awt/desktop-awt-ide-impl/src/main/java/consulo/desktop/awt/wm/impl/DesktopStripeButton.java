@@ -106,13 +106,12 @@ public final class DesktopStripeButton extends AnchoredButton implements ActionL
         HelpTooltipImpl.dispose(this);
 
         HelpTooltipImpl tooltip = new HelpTooltipImpl();
-        tooltip.setTitle(toolWindow.getDisplayName().getValue());
+        tooltip.setTitle(toolWindow.getDisplayName());
         String activateActionId = ActivateToolWindowAction.getActionIdForToolWindow(toolWindow.getId());
         tooltip.setShortcut(ActionManager.getInstance().getKeyboardShortcut(activateActionId));
         tooltip.installOn(this);
     }
 
-    
     @Override
     public consulo.ui.Component getComponent() {
         throw new UnsupportedOperationException();

@@ -4,6 +4,7 @@ package consulo.ide.impl.idea.ide;
 import consulo.application.Application;
 import consulo.application.util.registry.Registry;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
+import consulo.localize.LocalizeValue;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.JBColor;
@@ -26,11 +27,13 @@ import javax.swing.border.Border;
 import javax.swing.plaf.basic.BasicHTML;
 import javax.swing.text.View;
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.HierarchyEvent;
+import java.awt.event.HierarchyListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
@@ -65,8 +68,8 @@ import java.util.function.BooleanSupplier;
  *
  * <h2>Timeouts</h2>
  *
- * <p>Single line tooltips autoclose in 10 seconds, multiline in 30 seconds. You can optionally disable autoclosing by
- * setting {@link HelpTooltipImpl#setNeverHideOnTimeout(boolean)} to {@code true}. By default tooltips don't close after a timeout on help buttons
+ * <p>Single line tooltips auto-close in 10 seconds, multiline in 30 seconds. You can optionally disable auto-closing by setting
+ * {@link HelpTooltipImpl#setNeverHideOnTimeout(boolean)} to {@code true}. By default tooltips don't close after a timeout on help buttons
  * (those having a round icon with question mark). Before setting this option to true you should contact designers first.</p>
  *
  * <p>System wide tooltip timeouts are set through the registry:
@@ -83,12 +86,14 @@ import java.util.function.BooleanSupplier;
  * from an {@code InputEvent} and pass the source component along with the popup menu reference to
  * {@link HelpTooltipImpl#setMasterPopup(Component, JBPopup)} static method.
  *
- * <p>If you're handling {@code DumbAware.actionPerformed(AnActionEvent e)}, it has {@code InputEvent}in {@code AnActionEvent} which you can use to get the source.</p>
+ * <p>If you're handling {@code DumbAware.actionPerformed(AnActionEvent e)}, it has {@code InputEvent} in {@code AnActionEvent}
+ * which you can use to get the source.</p>
  *
  * <h2>ContextHelpLabel</h2>
  * <p>ContextHelpLabel is a convenient {@code JLabel} which contains a help icon and has a HelpTooltip installed on it.
  * You can create it using one of its static methods and pass title/description/link. This label can also be used in forms.
- * The UI designer will offer to create {@code private void createUIComponents()} method where you can create the label with a static method.</p>
+ * The UI designer will offer to create {@code private void createUIComponents()} method where you can create the label
+ * with a static method.</p>
  */
 public class HelpTooltipImpl implements HelpTooltip {
     private static final Color BACKGROUND_COLOR = JBColor.namedColor("ToolTip.background", new JBColor(0xf7f7f7, 0x474a4c));
@@ -109,23 +114,23 @@ public class HelpTooltipImpl implements HelpTooltip {
 
     private int myInitialDelay = 500;
     private int myHideDelay = 150;
-    private boolean initialShowScheduled;
+    private boolean myInitialShowScheduled;
 
-    private String title;
-    private String shortcut;
-    private String description;
-    private LinkLabel<?> link;
-    private boolean neverHide;
-    private Alignment alignment = Alignment.CURSOR;
+    private LocalizeValue myTitle;
+    private @Nullable String myShortcut;
+    private LocalizeValue myDescription;
+    private @Nullable LinkLabel<?> myLink;
+    private boolean myNeverHide;
+    private Alignment myAlignment = Alignment.CURSOR;
 
-    private BooleanSupplier masterPopupOpenCondition;
+    private BooleanSupplier myMasterPopupOpenCondition;
 
     protected ComponentPopupBuilder myPopupBuilder;
     private Dimension myPopupSize;
     private JBPopup myPopup;
     private Future<?> myScheduleFuture = CompletableFuture.completedFuture(null);
-    private boolean isOverPopup;
-    private boolean isMultiline;
+    private boolean myIsOverPopup;
+    private boolean myIsMultiline;
     private String myToolTipText;
 
     protected MouseAdapter myMouseListener;
@@ -191,8 +196,9 @@ public class HelpTooltipImpl implements HelpTooltip {
      * @param title text for title.
      * @return {@code this}
      */
-    public HelpTooltipImpl setTitle(@Nullable String title) {
-        this.title = title;
+    @Override
+    public HelpTooltipImpl setTitle(LocalizeValue title) {
+        myTitle = title;
         return this;
     }
 
@@ -202,13 +208,15 @@ public class HelpTooltipImpl implements HelpTooltip {
      * @param shortcut text for shortcut.
      * @return {@code this}
      */
+    @Override
     public HelpTooltipImpl setShortcut(@Nullable String shortcut) {
-        this.shortcut = shortcut;
+        myShortcut = shortcut;
         return this;
     }
 
+    @Override
     public HelpTooltipImpl setShortcut(@Nullable Shortcut shortcut) {
-        this.shortcut = shortcut == null ? null : KeymapUtil.getShortcutText(shortcut);
+        myShortcut = shortcut == null ? null : KeymapUtil.getShortcutText(shortcut);
         return this;
     }
 
@@ -218,8 +226,9 @@ public class HelpTooltipImpl implements HelpTooltip {
      * @param description text for description.
      * @return {@code this}
      */
-    public HelpTooltipImpl setDescription(@Nullable String description) {
-        this.description = description;
+    @Override
+    public HelpTooltipImpl setDescription(LocalizeValue description) {
+        myDescription = description;
         return this;
     }
 
@@ -230,11 +239,15 @@ public class HelpTooltipImpl implements HelpTooltip {
      * @param linkAction action to execute when link is clicked.
      * @return {@code this}
      */
+    @Override
     public HelpTooltipImpl setLink(String linkText, Runnable linkAction) {
-        link = LinkLabel.create(linkText, () -> {
-            hidePopup(true);
-            linkAction.run();
-        });
+        myLink = LinkLabel.create(
+            linkText,
+            () -> {
+                hidePopup(true);
+                linkAction.run();
+            }
+        );
         return this;
     }
 
@@ -245,7 +258,7 @@ public class HelpTooltipImpl implements HelpTooltip {
      * @return {@code this}
      */
     public HelpTooltipImpl setNeverHideOnTimeout(boolean neverHide) {
-        this.neverHide = neverHide;
+        myNeverHide = neverHide;
         return this;
     }
 
@@ -256,7 +269,7 @@ public class HelpTooltipImpl implements HelpTooltip {
      * @return {@code this}
      */
     public HelpTooltipImpl setLocation(Alignment alignment) {
-        this.alignment = alignment;
+        myAlignment = alignment;
         return this;
     }
 
@@ -266,7 +279,7 @@ public class HelpTooltipImpl implements HelpTooltip {
      * @param component is the owner component for the tooltip.
      */
     public void installOn(JComponent component) {
-        neverHide = neverHide || UIUtil.isHelpButton(component);
+        myNeverHide = myNeverHide || UIUtil.isHelpButton(component);
 
         createMouseListeners();
         initPopupBuilder();
@@ -278,22 +291,25 @@ public class HelpTooltipImpl implements HelpTooltip {
     protected final void createMouseListeners() {
         myMouseListener = new MouseAdapter() {
             @Override
+            @RequiredUIAccess
             public void mouseEntered(MouseEvent e) {
                 if (myPopup != null && !myPopup.isDisposed()) {
                     myPopup.cancel();
                 }
-                initialShowScheduled = true;
+                myInitialShowScheduled = true;
                 scheduleShow(e, myInitialDelay);
             }
 
             @Override
+            @RequiredUIAccess
             public void mouseExited(MouseEvent e) {
-                scheduleHide(link == null, myHideDelay);
+                scheduleHide(myLink == null, myHideDelay);
             }
 
             @Override
+            @RequiredUIAccess
             public void mouseMoved(MouseEvent e) {
-                if (!initialShowScheduled) {
+                if (!myInitialShowScheduled) {
                     scheduleShow(e, Registry.intValue("ide.tooltip.reshowDelay"));
                 }
             }
@@ -301,7 +317,7 @@ public class HelpTooltipImpl implements HelpTooltip {
 
         myHierarchyListener = e -> {
             if (BitUtil.isSet(e.getChangeFlags(), HierarchyEvent.PARENT_CHANGED)) {
-                scheduleHide(link == null, myHideDelay);
+                scheduleHide(myLink == null, myHideDelay);
             }
         };
     }
@@ -309,8 +325,8 @@ public class HelpTooltipImpl implements HelpTooltip {
     private void initPopupBuilder() {
         JComponent tipPanel = createTipPanel();
         myPopupSize = tipPanel.getPreferredSize();
-        myPopupBuilder = JBPopupFactory.getInstance().
-            createComponentPopupBuilder(tipPanel, null)
+        myPopupBuilder = JBPopupFactory.getInstance()
+            .createComponentPopupBuilder(tipPanel, null)
             .setShowBorder(true)
             .setBorderColor(BORDER_COLOR)
             .setShowShadow(true);
@@ -320,7 +336,7 @@ public class HelpTooltipImpl implements HelpTooltip {
         instance.initPopupBuilder();
         myPopupSize = instance.myPopupSize;
         myPopupBuilder = instance.myPopupBuilder;
-        initialShowScheduled = false;
+        myInitialShowScheduled = false;
     }
 
     private JPanel createTipPanel() {
@@ -328,13 +344,13 @@ public class HelpTooltipImpl implements HelpTooltip {
         tipPanel.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseEntered(MouseEvent e) {
-                isOverPopup = true;
+                myIsOverPopup = true;
             }
 
             @Override
             public void mouseExited(MouseEvent e) {
-                if (link == null || !link.getBounds().contains(e.getPoint())) {
-                    isOverPopup = false;
+                if (myLink == null || !myLink.getBounds().contains(e.getPoint())) {
+                    myIsOverPopup = false;
                     hidePopup(false);
                 }
             }
@@ -343,34 +359,36 @@ public class HelpTooltipImpl implements HelpTooltip {
         tipPanel.setLayout(new VerticalLayout(VGAP.get()));
         tipPanel.setBackground(BACKGROUND_COLOR);
 
-        boolean hasTitle = StringUtil.isNotEmpty(title);
-        boolean hasDescription = StringUtil.isNotEmpty(description) && !Objects.equals(title, description);
+        boolean hasTitle = myTitle.isNotEmpty();
+        boolean hasDescription = myDescription.isNotEmpty() && !myTitle.equals(myDescription);
 
         if (hasTitle) {
             tipPanel.add(new Header(hasDescription), VerticalLayout.TOP);
         }
 
         if (hasDescription) {
-            String[] pa = description.split(PARAGRAPH_SPLITTER);
-            isMultiline = pa.length > 1;
-            Arrays.stream(pa).filter(p -> !p.isEmpty()).forEach(p -> tipPanel.add(new Paragraph(p, hasTitle), VerticalLayout.TOP));
+            String[] pa = myDescription.get().split(PARAGRAPH_SPLITTER);
+            myIsMultiline = pa.length > 1;
+            Arrays.stream(pa)
+                .filter(p -> !p.isEmpty())
+                .forEach(p -> tipPanel.add(new Paragraph(p, hasTitle), VerticalLayout.TOP));
         }
 
-        if (!hasTitle && StringUtil.isNotEmpty(shortcut)) {
-            JLabel shortcutLabel = new JLabel(shortcut);
+        if (!hasTitle && StringUtil.isNotEmpty(myShortcut)) {
+            JLabel shortcutLabel = new JLabel(myShortcut);
             shortcutLabel.setFont(deriveDescriptionFont(shortcutLabel.getFont(), false));
             shortcutLabel.setForeground(SHORTCUT_COLOR);
 
             tipPanel.add(shortcutLabel, VerticalLayout.TOP);
         }
 
-        if (link != null) {
-            link.setFont(deriveDescriptionFont(link.getFont(), hasTitle));
-            tipPanel.add(link, VerticalLayout.TOP);
+        if (myLink != null) {
+            myLink.setFont(deriveDescriptionFont(myLink.getFont(), hasTitle));
+            tipPanel.add(myLink, VerticalLayout.TOP);
         }
 
-        isMultiline = isMultiline || StringUtil.isNotEmpty(description) && (StringUtil.isNotEmpty(title) || link != null);
-        tipPanel.setBorder(textBorder(isMultiline));
+        myIsMultiline = myIsMultiline || myDescription.isNotEmpty() && (myTitle.isNotEmpty() || myLink != null);
+        tipPanel.setBorder(textBorder(myIsMultiline));
 
         return tipPanel;
     }
@@ -395,15 +413,14 @@ public class HelpTooltipImpl implements HelpTooltip {
      * @param owner a possible {@code HelpTooltip} owner.
      */
     public static void dispose(Component owner) {
-        if (owner instanceof JComponent) {
-            JComponent component = (JComponent) owner;
+        if (owner instanceof JComponent component) {
             HelpTooltipImpl instance = (HelpTooltipImpl) component.getClientProperty(TOOLTIP_PROPERTY);
             if (instance != null) {
                 instance.hidePopup(true);
                 instance.uninstallMouseListeners(component);
 
                 component.putClientProperty(TOOLTIP_PROPERTY, null);
-                instance.masterPopupOpenCondition = null;
+                instance.myMasterPopupOpenCondition = null;
             }
         }
     }
@@ -416,8 +433,8 @@ public class HelpTooltipImpl implements HelpTooltip {
      * @param owner a possible {@code HelpTooltip} owner.
      */
     public static void hide(Component owner) {
-        if (owner instanceof JComponent) {
-            HelpTooltipImpl instance = (HelpTooltipImpl) ((JComponent) owner).getClientProperty(TOOLTIP_PROPERTY);
+        if (owner instanceof JComponent component) {
+            HelpTooltipImpl instance = (HelpTooltipImpl) component.getClientProperty(TOOLTIP_PROPERTY);
             if (instance != null) {
                 instance.hidePopup(true);
             }
@@ -432,10 +449,10 @@ public class HelpTooltipImpl implements HelpTooltip {
      * @param master master popup
      */
     public static void setMasterPopup(Component owner, JBPopup master) {
-        if (owner instanceof JComponent) {
-            HelpTooltipImpl instance = (HelpTooltipImpl) ((JComponent) owner).getClientProperty(TOOLTIP_PROPERTY);
+        if (owner instanceof JComponent component) {
+            HelpTooltipImpl instance = (HelpTooltipImpl) component.getClientProperty(TOOLTIP_PROPERTY);
             if (instance != null && instance.myPopup != master) {
-                instance.masterPopupOpenCondition = () -> master == null || !master.isVisible();
+                instance.myMasterPopupOpenCondition = () -> master == null || !master.isVisible();
             }
         }
     }
@@ -449,10 +466,10 @@ public class HelpTooltipImpl implements HelpTooltip {
      * @param condition a {@code BooleanSupplier} for open condition
      */
     public static void setMasterPopupOpenCondition(Component owner, @Nullable BooleanSupplier condition) {
-        if (owner instanceof JComponent) {
-            HelpTooltipImpl instance = (HelpTooltipImpl) ((JComponent) owner).getClientProperty(TOOLTIP_PROPERTY);
+        if (owner instanceof JComponent component) {
+            HelpTooltipImpl instance = (HelpTooltipImpl) component.getClientProperty(TOOLTIP_PROPERTY);
             if (instance != null) {
-                instance.masterPopupOpenCondition = condition;
+                instance.myMasterPopupOpenCondition = condition;
             }
         }
     }
@@ -465,33 +482,38 @@ public class HelpTooltipImpl implements HelpTooltip {
             return; // Disable HelpTooltip in screen reader mode.
         }
 
-        schedule(UIAccess.current(), () -> {
-            ComponentPopupBuilder popupBuilder = myPopupBuilder;
-            if (popupBuilder == null) {
-                return;
-            }
-            initialShowScheduled = false;
-            if (masterPopupOpenCondition == null || masterPopupOpenCondition.getAsBoolean()) {
-                Component owner = e.getComponent();
-                String text = owner instanceof JComponent ? ((JComponent) owner).getToolTipText(e) : null;
-                if (myPopup != null && !myPopup.isDisposed()) {
-                    if (StringUtil.isEmpty(text) && StringUtil.isEmpty(myToolTipText)) {
-                        return; // do nothing if a tooltip become empty
-                    }
-                    if (StringUtil.equals(text, myToolTipText)) {
-                        return; // do nothing if a tooltip is not changed
-                    }
-                    myPopup.cancel(); // cancel previous popup before showing a new one
+        schedule(
+            UIAccess.current(),
+            () -> {
+                ComponentPopupBuilder popupBuilder = myPopupBuilder;
+                if (popupBuilder == null) {
+                    return;
                 }
-                myToolTipText = text;
-                myPopup = myPopupBuilder.createPopup();
-                myPopup.show(new RelativePoint(owner, alignment.getPointFor(owner, myPopupSize, e.getPoint())));
-                if (!neverHide) {
-                    int dismissDelay = Registry.intValue(isMultiline ? "ide.helptooltip.full.dismissDelay" : "ide.helptooltip.regular.dismissDelay");
-                    scheduleHide(true, dismissDelay);
+                myInitialShowScheduled = false;
+                if (myMasterPopupOpenCondition == null || myMasterPopupOpenCondition.getAsBoolean()) {
+                    Component owner = e.getComponent();
+                    String text = owner instanceof JComponent component ? component.getToolTipText(e) : null;
+                    if (myPopup != null && !myPopup.isDisposed()) {
+                        if (StringUtil.isEmpty(text) && StringUtil.isEmpty(myToolTipText)) {
+                            return; // do nothing if a tooltip become empty
+                        }
+                        if (StringUtil.equals(text, myToolTipText)) {
+                            return; // do nothing if a tooltip is not changed
+                        }
+                        myPopup.cancel(); // cancel previous popup before showing a new one
+                    }
+                    myToolTipText = text;
+                    myPopup = myPopupBuilder.createPopup();
+                    myPopup.show(new RelativePoint(owner, myAlignment.getPointFor(owner, myPopupSize, e.getPoint())));
+                    if (!myNeverHide) {
+                        int dismissDelay =
+                            Registry.intValue(myIsMultiline ? "ide.helptooltip.full.dismissDelay" : "ide.helptooltip.regular.dismissDelay");
+                        scheduleHide(true, dismissDelay);
+                    }
                 }
-            }
-        }, delay);
+            },
+            delay
+        );
     }
 
     @RequiredUIAccess
@@ -507,9 +529,9 @@ public class HelpTooltipImpl implements HelpTooltip {
     }
 
     protected void hidePopup(boolean force) {
-        initialShowScheduled = false;
+        myInitialShowScheduled = false;
         myScheduleFuture.cancel(false);
-        if (myPopup != null && myPopup.isVisible() && (!isOverPopup || force)) {
+        if (myPopup != null && myPopup.isVisible() && (!myIsOverPopup || force)) {
             myPopup.cancel();
             myPopup = null;
         }
@@ -539,8 +561,8 @@ public class HelpTooltipImpl implements HelpTooltip {
         }
 
         private static void visit(View v, Collection<? super View> result) {
-            String cname = v.getClass().getCanonicalName();
-            if (cname != null && cname.contains("ParagraphView.Row")) {
+            String cName = v.getClass().getCanonicalName();
+            if (cName != null && cName.contains("ParagraphView.Row")) {
                 result.add(v);
             }
 
@@ -573,22 +595,24 @@ public class HelpTooltipImpl implements HelpTooltip {
             setForeground(UIUtil.getToolTipForeground());
 
             if (obeyWidth) {
-                View v = BasicHTML.createHTMLView(this, String.format("<html>%s%s</html>", title, getShortcutAsHTML()));
+                View v = BasicHTML.createHTMLView(this, String.format("<html>%s%s</html>", myTitle, getShortcutAsHTML()));
                 float width = v.getPreferredSpan(View.X_AXIS);
-                isMultiline = isMultiline || width > MAX_WIDTH.get();
+                myIsMultiline = myIsMultiline || width > MAX_WIDTH.get();
                 setText(width > MAX_WIDTH.get()
-                    ? String.format("<html><div width=%d>%s%s</div></html>", MAX_WIDTH.get(), title, getShortcutAsHTML())
-                    : String.format("<html>%s%s</html>", title, getShortcutAsHTML()));
+                    ? String.format("<html><div width=%d>%s%s</div></html>", MAX_WIDTH.get(), myTitle, getShortcutAsHTML())
+                    : String.format("<html>%s%s</html>", myTitle, getShortcutAsHTML()));
 
                 setSizeForWidth(width);
             }
             else {
-                setText(String.format("<html>%s%s</html>", title, getShortcutAsHTML()));
+                setText(String.format("<html>%s%s</html>", myTitle, getShortcutAsHTML()));
             }
         }
 
         private String getShortcutAsHTML() {
-            return StringUtil.isNotEmpty(shortcut) ? String.format(" <font color=\"%s\">%s</font>", ColorUtil.toHtmlColor(SHORTCUT_COLOR), shortcut) : "";
+            return StringUtil.isNotEmpty(myShortcut)
+                ? String.format(" <font color=\"%s\">%s</font>", ColorUtil.toHtmlColor(SHORTCUT_COLOR), myShortcut)
+                : "";
         }
     }
 
@@ -599,8 +623,12 @@ public class HelpTooltipImpl implements HelpTooltip {
 
             View v = BasicHTML.createHTMLView(this, String.format("<html>%s</html>", text));
             float width = v.getPreferredSpan(View.X_AXIS);
-            isMultiline = isMultiline || width > MAX_WIDTH.get();
-            setText(width > MAX_WIDTH.get() ? String.format("<html><div width=%d>%s</div></html>", MAX_WIDTH.get(), text) : String.format("<html>%s</html>", text));
+            myIsMultiline = myIsMultiline || width > MAX_WIDTH.get();
+            setText(
+                width > MAX_WIDTH.get()
+                    ? String.format("<html><div width=%d>%s</div></html>", MAX_WIDTH.get(), text)
+                    : String.format("<html>%s</html>", text)
+            );
 
             setSizeForWidth(width);
         }
