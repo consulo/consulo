@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.codeStyle;
 
 import consulo.annotation.component.ActionImpl;
 import consulo.application.localize.ApplicationLocalize;
-import consulo.ide.impl.idea.util.LineSeparator;
+import consulo.platform.LineSeparator;
 
 /**
  * @author Nikolai Matveev
