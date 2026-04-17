@@ -64,7 +64,7 @@ public class SearchEverywhereAction extends AnAction implements DumbAware {
             (tooltip, presentation) -> {
                 String shortcutText = getShortcut();
 
-                tooltip.setTitle(presentation.getTextValue())
+                tooltip.setTitle(presentation.getText())
                     .setShortcut(shortcutText)
                     .setDescription(LocalizeValue.localizeTODO(
                         "Searches for:<br/> - Classes<br/> - Files<br/> - Tool Windows<br/> - Actions<br/> - Settings"

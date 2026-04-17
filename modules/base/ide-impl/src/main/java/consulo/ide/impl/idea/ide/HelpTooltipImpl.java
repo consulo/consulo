@@ -2,6 +2,8 @@
 package consulo.ide.impl.idea.ide;
 
 import consulo.application.Application;
+import consulo.application.util.HtmlBuilder;
+import consulo.application.util.HtmlChunk;
 import consulo.application.util.registry.Registry;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
 import consulo.localize.LocalizeValue;
@@ -116,9 +118,9 @@ public class HelpTooltipImpl implements HelpTooltip {
     private int myHideDelay = 150;
     private boolean myInitialShowScheduled;
 
-    private LocalizeValue myTitle;
+    private LocalizeValue myTitle = LocalizeValue.empty();
     private @Nullable String myShortcut;
-    private LocalizeValue myDescription;
+    private LocalizeValue myDescription = LocalizeValue.empty();
     private @Nullable LinkLabel<?> myLink;
     private boolean myNeverHide;
     private Alignment myAlignment = Alignment.CURSOR;
@@ -594,18 +596,22 @@ public class HelpTooltipImpl implements HelpTooltip {
             setFont(deriveHeaderFont(getFont()));
             setForeground(UIUtil.getToolTipForeground());
 
+            HtmlChunk htmlContent = new HtmlBuilder().appendRaw(myTitle).appendRaw(getShortcutAsHTML()).toFragment();
+            HtmlChunk basicHtml = htmlContent.wrapWith(HtmlChunk.html());
             if (obeyWidth) {
-                View v = BasicHTML.createHTMLView(this, String.format("<html>%s%s</html>", myTitle, getShortcutAsHTML()));
+                View v = BasicHTML.createHTMLView(this, basicHtml.toString());
                 float width = v.getPreferredSpan(View.X_AXIS);
                 myIsMultiline = myIsMultiline || width > MAX_WIDTH.get();
-                setText(width > MAX_WIDTH.get()
-                    ? String.format("<html><div width=%d>%s%s</div></html>", MAX_WIDTH.get(), myTitle, getShortcutAsHTML())
-                    : String.format("<html>%s%s</html>", myTitle, getShortcutAsHTML()));
+                HtmlChunk adaptedHtml = basicHtml;
+                if (width > MAX_WIDTH.get()) {
+                    adaptedHtml = htmlContent.wrapWith(HtmlChunk.div().attr("width", MAX_WIDTH.get())).wrapWith(HtmlChunk.html());
+                }
+                setText(adaptedHtml.toString());
 
                 setSizeForWidth(width);
             }
             else {
-                setText(String.format("<html>%s%s</html>", myTitle, getShortcutAsHTML()));
+                setText(basicHtml.toString());
             }
         }
 
@@ -621,14 +627,16 @@ public class HelpTooltipImpl implements HelpTooltip {
             setForeground(hasTitle ? INFO_COLOR : UIUtil.getToolTipForeground());
             setFont(deriveDescriptionFont(getFont(), hasTitle));
 
-            View v = BasicHTML.createHTMLView(this, String.format("<html>%s</html>", text));
+            HtmlChunk htmlContent = new HtmlBuilder().appendRaw(text).toFragment();
+            HtmlChunk basicHtml = htmlContent.wrapWith(HtmlChunk.html());
+            View v = BasicHTML.createHTMLView(this, basicHtml.toString());
             float width = v.getPreferredSpan(View.X_AXIS);
             myIsMultiline = myIsMultiline || width > MAX_WIDTH.get();
-            setText(
-                width > MAX_WIDTH.get()
-                    ? String.format("<html><div width=%d>%s</div></html>", MAX_WIDTH.get(), text)
-                    : String.format("<html>%s</html>", text)
-            );
+            HtmlChunk adaptedHtml = basicHtml;
+            if (width > MAX_WIDTH.get()) {
+                adaptedHtml = htmlContent.wrapWith(HtmlChunk.div().attr("width", MAX_WIDTH.get())).wrapWith(HtmlChunk.html());
+            }
+            setText(adaptedHtml.toString());
 
             setSizeForWidth(width);
         }
