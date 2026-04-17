@@ -203,6 +203,9 @@
     <module>modules/base/language-editor-problem-view-api</module>
     <module>modules/base/language-editor-problem-view-impl</module>
 
+    <module>modules/base/collaboration-api</module>
+    <module>modules/base/graphql-api</module>
+
     <module>modules/base/version-control-system-api</module>
     <module>modules/base/version-control-system-impl</module>
     <module>modules/base/version-control-system-distributed-api</module>
