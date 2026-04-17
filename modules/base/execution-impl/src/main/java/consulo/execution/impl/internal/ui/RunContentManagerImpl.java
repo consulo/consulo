@@ -209,7 +209,7 @@ public class RunContentManagerImpl implements RunContentManager, Disposable {
                 public void startNotified(ProcessEvent event) {
                     myProject.getUIAccess().giveIfNeed(() -> {
                         content.setIcon(ExecutionUtil.getIconWithLiveIndicator(descriptor.getIcon()));
-                        toolWindow.setIcon(ExecutionUtil.getIconWithLiveIndicator(getToolWindowIcon(toolWindowId)));
+                        toolWindow.setIcon(getToolWindowIcon(toolWindowId, true));
                     });
                 }
 
@@ -231,8 +231,7 @@ public class RunContentManagerImpl implements RunContentManager, Disposable {
                             }
                         }
 
-                        Image base = getToolWindowIcon(toolWindowId);
-                        toolWindow.setIcon(alive ? ExecutionUtil.getIconWithLiveIndicator(base) : base);
+                        toolWindow.setIcon(getToolWindowIcon(toolWindowId, alive));
 
                         Image icon = descriptor.getIcon();
                         content.setIcon(icon == null ? executor.getDisabledIcon() : ImageEffects.transparent(icon));
@@ -270,12 +269,12 @@ public class RunContentManagerImpl implements RunContentManager, Disposable {
     }
 
     @RequiredUIAccess
-    private @Nullable Image getToolWindowIcon(String toolWindowId) {
+    private @Nullable Image getToolWindowIcon(String toolWindowId, boolean active) {
         if (Objects.equals(myRunDashboardManager.getToolWindowId(), toolWindowId)) {
-            return myRunDashboardManager.getToolWindowIcon();
+            return active ? myRunDashboardManager.getToolWindowIconActive() : myRunDashboardManager.getToolWindowIcon();
         }
 
-        return myRunToolWindowManager.getImage(toolWindowId);
+        return myRunToolWindowManager.getIcon(toolWindowId, active);
     }
 
     @RequiredUIAccess

@@ -191,7 +191,6 @@ public class ExecutionUtil {
         }
     }
 
-    
     public static Image getIconWithLiveIndicator(@Nullable Image base) {
         if (base == null) {
             return PlatformIconGroup.greenbadge();

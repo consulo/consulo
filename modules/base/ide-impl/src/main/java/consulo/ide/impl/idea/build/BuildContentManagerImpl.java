@@ -225,16 +225,14 @@ public final class BuildContentManagerImpl implements BuildContentManager {
         if (pair.first == null) {
             content.putUserData(Content.TAB_LABEL_ORIENTATION_KEY, ComponentOrientation.RIGHT_TO_LEFT);
         }
-        content.setIcon(ExecutionUtil.getIconWithLiveIndicator(
-            pair.first == null ? PlatformIconGroup.toolwindowsToolwindowbuild() : pair.first
-        ));
+
+        content.setIcon(PlatformIconGroup.toolwindowsToolwindowbuildactive());
+
         invokeLaterIfNeeded(() -> {
             JComponent component = content.getComponent();
             component.invalidate();
             if (!liveContentsMap.isEmpty()) {
-                getOrCreateToolWindow().setIcon(ExecutionUtil.getIconWithLiveIndicator(
-                    PlatformIconGroup.toolwindowsToolwindowbuild()
-                ));
+                getOrCreateToolWindow().setIcon(PlatformIconGroup.toolwindowsToolwindowbuildactive());
             }
         });
     }

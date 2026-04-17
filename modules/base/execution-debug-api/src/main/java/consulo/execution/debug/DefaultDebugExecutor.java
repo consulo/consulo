@@ -33,7 +33,6 @@ import consulo.ui.image.Image;
 public class DefaultDebugExecutor extends Executor implements RunCurrentFileExecutor {
     public static final String EXECUTOR_ID = ToolWindowId.DEBUG;
 
-    
     @Override
     public String getToolWindowId() {
         return ToolWindowId.DEBUG;
@@ -45,42 +44,40 @@ public class DefaultDebugExecutor extends Executor implements RunCurrentFileExec
     }
 
     @Override
-    
     public Image getIcon() {
         return ExecutionDebugIconGroup.actionStartdebugger();
     }
 
     @Override
-    
+    public Image getToolWindowIconIfRunning() {
+        return ExecutionDebugIconGroup.toolwindowDebugactive();
+    }
+
+    @Override
     public LocalizeValue getActionName() {
         return UILocalize.toolWindowNameDebug();
     }
 
     @Override
-    
     public String getId() {
         return EXECUTOR_ID;
     }
 
-    
     @Override
     public String getContextActionId() {
         return "DebugClass";
     }
 
-    
     @Override
     public LocalizeValue getStartActionText() {
         return XDebuggerLocalize.debuggerRunnerStartActionText();
     }
 
-    
     @Override
     public LocalizeValue getStartActiveText(String configurationName) {
         return XDebuggerLocalize.debuggerRunnerStartActionText0(configurationName);
     }
 
-    
     @Override
     public LocalizeValue getDescription() {
         return XDebuggerLocalize.stringDebuggerRunnerDescription();

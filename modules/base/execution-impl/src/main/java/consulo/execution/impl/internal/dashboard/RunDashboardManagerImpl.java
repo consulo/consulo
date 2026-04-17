@@ -262,6 +262,11 @@ public final class RunDashboardManagerImpl implements RunDashboardManager, Persi
     }
 
     @Override
+    public Image getToolWindowIconActive() {
+        return PlatformIconGroup.toolwindowsToolwindowservicesactive();
+    }
+
+    @Override
     public List<RunDashboardService> getRunConfigurations() {
         myServiceLock.readLock().lock();
         try {

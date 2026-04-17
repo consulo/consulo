@@ -31,8 +31,8 @@ import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.content.Content;
 import consulo.ui.ex.content.ContentManager;
-import consulo.ui.ex.content.event.ContentManagerAdapter;
 import consulo.ui.ex.content.event.ContentManagerEvent;
+import consulo.ui.ex.content.event.ContentManagerListener;
 import consulo.ui.ex.toolWindow.ContentManagerWatcher;
 import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.ui.ex.toolWindow.ToolWindowAnchor;
@@ -54,10 +54,13 @@ import static consulo.execution.impl.internal.ui.RunContentManagerImpl.getRunCon
  * @since 2020-11-01
  */
 public class RunToolWindowManager {
+    private record ExecutorIconInfo(Image icon, Image activeIcon) {
+    }
+
     private static final Logger LOG = Logger.getInstance(RunToolWindowManager.class);
 
     private final Map<String, ContentManager> myToolwindowIdToContentManagerMap = new ConcurrentHashMap<>();
-    private final Map<String, Image> myToolwindowIdToBaseIconMap = new HashMap<>();
+    private final Map<String, ExecutorIconInfo> myToolwindowIdToBaseIconMap = new HashMap<>();
     private final LinkedList<String> myToolwindowIdZBuffer = new LinkedList<>();
 
     private final Project myProject;
@@ -91,8 +94,12 @@ public class RunToolWindowManager {
         );
     }
 
-    public Image getImage(String toolWindowId) {
-        return myToolwindowIdToBaseIconMap.get(toolWindowId);
+    public Image getIcon(String toolWindowId, boolean active) {
+        ExecutorIconInfo info = myToolwindowIdToBaseIconMap.get(toolWindowId);
+        if (info == null) {
+            return Image.empty(Image.DEFAULT_ICON_SIZE);
+        }
+        return active ? info.activeIcon() : info.icon();
     }
 
     public List<String> getToolwindowIdZBuffer() {
@@ -124,11 +131,14 @@ public class RunToolWindowManager {
         Executor executor = myProject.getApplication().getExtensionPoint(Executor.class)
             .findFirstSafe(e -> e.getToolWindowId().equals(toolWindowId));
         assert executor != null;
-        return registerToolWindow(executor.getToolWindowId(), executor.getToolWindowIcon(), null);
+        return registerToolWindow(executor.getToolWindowId(), executor.getToolWindowIcon(), executor.getToolWindowIconIfRunning(), null);
     }
 
     @RequiredUIAccess
-    private ContentManager registerToolWindow(String toolWindowId, Image toolWindowIcon, @Nullable Executor executor) {
+    private ContentManager registerToolWindow(String toolWindowId,
+                                              Image toolWindowIcon,
+                                              Image toolWindowIconActive,
+                                              @Nullable Executor executor) {
         ToolWindowManager toolWindowManager = myToolWindowManager.get();
 
         if (toolWindowManager.getToolWindow(toolWindowId) != null) {
@@ -163,14 +173,20 @@ public class RunToolWindowManager {
         toolWindow.setDisplayName(ExecutionLocalize.toolWindowNameRun());
         toolWindow.setIcon(toolWindowIcon);
         ContentManagerWatcher.watchContentManager(toolWindow, contentManager);
-        initToolWindow(executor, toolWindowId, toolWindowIcon, contentManager);
+        initToolWindow(executor, toolWindowId, toolWindowIcon, toolWindowIconActive, contentManager);
 
         return contentManager;
     }
 
-    private void initToolWindow(@Nullable Executor executor, String toolWindowId, Image toolWindowIcon, ContentManager contentManager) {
-        myToolwindowIdToBaseIconMap.put(toolWindowId, toolWindowIcon);
-        contentManager.addContentManagerListener(new ContentManagerAdapter() {
+    private void initToolWindow(@Nullable Executor executor,
+                                String toolWindowId,
+                                Image toolWindowIcon,
+                                Image toolWindowIconActive,
+                                ContentManager contentManager) {
+        myToolwindowIdToBaseIconMap.put(toolWindowId, new ExecutorIconInfo(toolWindowIcon, toolWindowIconActive));
+
+        contentManager.addContentManagerListener(new ContentManagerListener() {
+            @RequiredUIAccess
             @Override
             public void selectionChanged(ContentManagerEvent event) {
                 if (event.getOperation() == ContentManagerEvent.ContentOperation.add) {

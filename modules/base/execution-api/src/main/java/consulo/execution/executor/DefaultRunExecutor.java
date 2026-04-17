@@ -51,6 +51,11 @@ public class DefaultRunExecutor extends Executor implements RunCurrentFileExecut
     }
 
     @Override
+    public Image getToolWindowIconIfRunning() {
+        return PlatformIconGroup.toolwindowsToolwindowrunactive();
+    }
+
+    @Override
     public Image getIcon() {
         return PlatformIconGroup.actionsExecute();
     }

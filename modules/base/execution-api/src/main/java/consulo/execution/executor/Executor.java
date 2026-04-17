@@ -18,8 +18,10 @@ package consulo.execution.executor;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.localize.LocalizeValue;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.ui.image.Image;
+import consulo.ui.image.ImageEffects;
 import org.jspecify.annotations.Nullable;
 
 /**
@@ -35,26 +37,24 @@ public abstract class Executor {
 
     public abstract Image getToolWindowIcon();
 
-    
+    public Image getToolWindowIconIfRunning() {
+        return ImageEffects.layered(getToolWindowIcon(), PlatformIconGroup.greenbadge());
+    }
+
     public abstract Image getIcon();
 
     public @Nullable Image getDisabledIcon() {
         return null;
     }
 
-    
     public abstract LocalizeValue getDescription();
 
-    
     public abstract LocalizeValue getActionName();
 
-    
     public abstract LocalizeValue getStartActionText();
 
-    
     public abstract LocalizeValue getStartActiveText(String configurationName);
 
-    
     public String getContextActionId() {
         return "Context" + getId();
     }

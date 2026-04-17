@@ -30,11 +30,11 @@ public interface RunDashboardManager {
 
   ContentManager getDashboardContentManager();
 
-  
   String getToolWindowId();
 
-  
   Image getToolWindowIcon();
+
+  Image getToolWindowIconActive();
 
   void updateDashboard(boolean withStructure);
 

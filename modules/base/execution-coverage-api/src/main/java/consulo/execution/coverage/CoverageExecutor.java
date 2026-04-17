@@ -12,19 +12,16 @@ import consulo.ui.image.Image;
 public class CoverageExecutor extends Executor {
     public static final String EXECUTOR_ID = "Coverage";
 
-    
     @Override
     public LocalizeValue getStartActionText() {
         return ExecutionCoverageLocalize.runWithCoverage();
     }
 
-    
     @Override
     public LocalizeValue getStartActiveText(String configurationName) {
         return ExecutionCoverageLocalize.runWithCoverageMnemonic(configurationName);
     }
 
-    
     @Override
     public String getToolWindowId() {
         return ToolWindowId.RUN;
@@ -36,37 +33,32 @@ public class CoverageExecutor extends Executor {
     }
 
     @Override
-    
     public Image getIcon() {
         return ExecutionCoverageIconGroup.runwithcoverage();
     }
 
-    
+    @Override
+    public Image getToolWindowIconIfRunning() {
+        return ExecutionCoverageIconGroup.toolwindowcoverageactive();
+    }
+
     @Override
     public LocalizeValue getDescription() {
         return ExecutionCoverageLocalize.runSelectedConfigurationWithCoverageEnabled();
     }
 
     @Override
-    
     public LocalizeValue getActionName() {
         return ExecutionCoverageLocalize.actionNameCover();
     }
 
     @Override
-    
     public String getId() {
         return EXECUTOR_ID;
     }
 
-    
     @Override
     public String getContextActionId() {
         return "RunCoverage";
-    }
-
-    @Override
-    public String getHelpId() {
-        return null;
     }
 }
