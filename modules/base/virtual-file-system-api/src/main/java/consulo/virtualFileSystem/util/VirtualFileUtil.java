@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2022 consulo.io
+ * Copyright 2013-2026 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,10 +34,7 @@ import consulo.virtualFileSystem.fileType.FileTypeRegistry;
 import consulo.virtualFileSystem.localize.VirtualFileSystemLocalize;
 import org.jspecify.annotations.Nullable;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -57,6 +54,17 @@ public final class VirtualFileUtil {
     public static final char VFS_SEPARATOR_CHAR = '/';
     private static final String PROTOCOL_DELIMITER = ":";
     private static final String MAILTO = "mailto";
+
+    public static String getReadableUrl(VirtualFile file) {
+        String url = null;
+        if (file.isInLocalFileSystem()) {
+            url = file.getPresentableUrl();
+        }
+        if (url == null) {
+            url = file.getUrl();
+        }
+        return url;
+    }
 
     public static @Nullable VirtualFile getUserHomeDir() {
         Path path = Platform.current().user().homePath();
@@ -120,7 +128,7 @@ public final class VirtualFileUtil {
     public static @Nullable URL convertToURL(String vfsUrl) {
         if (vfsUrl.startsWith("jar://") || vfsUrl.startsWith(StandardFileSystems.ZIP_PROTOCOL_PREFIX)) {
             try {
-                // jar:// and zip:// have the same lenght
+                // jar:// and zip:// have the same length
                 return new URL("jar:file:///" + vfsUrl.substring(StandardFileSystems.ZIP_PROTOCOL_PREFIX.length()));
             }
             catch (MalformedURLException e) {
@@ -226,6 +234,7 @@ public final class VirtualFileUtil {
         return VirtualFileManager.extractPath(url);
     }
 
+    @RequiredWriteAction
     public static void saveText(VirtualFile file, String text) throws IOException {
         Charset charset = file.getCharset();
         file.setBinaryContent(text.getBytes(charset));
@@ -329,6 +338,7 @@ public final class VirtualFileUtil {
         return WriteAction.compute(() -> createDirectoryIfMissing(directoryPath));
     }
 
+    @RequiredWriteAction
     public static VirtualFile createDirectoryIfMissing(VirtualFile parent, String relativePath) throws IOException {
         for (String each : StringUtil.split(relativePath, "/")) {
             VirtualFile child = parent.findChild(each);
@@ -363,6 +373,18 @@ public final class VirtualFileUtil {
         return file;
     }
 
+    @RequiredWriteAction
+    public static VirtualFile createChildSequent(Object requestor, VirtualFile dir, String prefix, String extension) throws IOException {
+        String dotExt = PathUtil.makeFileName("", extension);
+        String fileName = prefix + dotExt;
+        int i = 1;
+        while (dir.findChild(fileName) != null) {
+            fileName = prefix + "_" + i + dotExt;
+            i++;
+        }
+        return dir.createChildData(requestor, fileName);
+    }
+
     public static @Nullable VirtualFile findRelativeFile(@Nullable VirtualFile base, String... path) {
         VirtualFile file = base;
 
@@ -381,7 +403,6 @@ public final class VirtualFileUtil {
         return file;
     }
 
-    
     public static String fixIDEAUrl(String ideaUrl) {
         String ideaProtocolMarker = "://";
         int idx = ideaUrl.indexOf(ideaProtocolMarker);
@@ -398,17 +419,14 @@ public final class VirtualFileUtil {
         return ideaUrl;
     }
 
-    
     public static String toIdeaUrl(String url) {
         return toIdeaUrl(url, true);
     }
 
-    
     public static String toIdeaUrl(String url, boolean removeLocalhostPrefix) {
         return URLUtil.toIdeaUrl(url, removeLocalhostPrefix);
     }
 
-    
     public static String fixURLforIDEA(String url) {
         // removeLocalhostPrefix - false due to backward compatibility reasons
         return toIdeaUrl(url, false);
@@ -492,6 +510,32 @@ public final class VirtualFileUtil {
         }
         String path = getRelativePath(file, root);
         return path != null ? path : file.getPresentableUrl();
+    }
+
+    /**
+     * Returns the relative path from one virtual file to another.
+     *
+     * @param src           the file from which the relative path is built.
+     * @param dst           the file to which the path is built.
+     * @param separatorChar the separator for the path components.
+     * @return the relative path, or null if the files have no common ancestor.
+     * @since 5.0.2
+     */
+    public static @Nullable String getPath(VirtualFile src, VirtualFile dst, char separatorChar) {
+        VirtualFile commonAncestor = getCommonAncestor(src, dst);
+        if (commonAncestor != null) {
+            StringBuilder buffer = new StringBuilder();
+            if (!Comparing.equal(src, commonAncestor)) {
+                while (!Comparing.equal(src.getParent(), commonAncestor)) {
+                    buffer.append("..").append(separatorChar);
+                    src = Objects.requireNonNull(src.getParent());
+                }
+            }
+            buffer.append(getRelativePath(dst, commonAncestor, separatorChar));
+            return buffer.toString();
+        }
+
+        return null;
     }
 
     public static @Nullable String getRelativePath(VirtualFile file, VirtualFile ancestor) {
@@ -589,13 +633,13 @@ public final class VirtualFileUtil {
      * @return a copy of the file
      * @throws IOException if file failed to be copied
      */
+    @RequiredWriteAction
     public static VirtualFile copyFile(Object requestor, VirtualFile file, VirtualFile toDir, String newName) throws IOException {
         VirtualFile newChild = toDir.createChildData(requestor, newName);
         newChild.setBinaryContent(file.contentsToByteArray());
         return newChild;
     }
 
-    
     public static VirtualFile[] toVirtualFileArray(Collection<? extends VirtualFile> files) {
         int size = files.size();
         if (size == 0) {
@@ -636,7 +680,6 @@ public final class VirtualFileUtil {
     }
 
     @SuppressWarnings({"UnsafeVfsRecursion", "Duplicates"})
-    
     public static VirtualFileVisitor.Result visitChildrenRecursively(VirtualFile file, VirtualFileVisitor<?> visitor) throws VirtualFileVisitor.VisitorException {
         boolean pushed = false;
         try {
@@ -709,18 +752,15 @@ public final class VirtualFileUtil {
         }
     }
 
-    
     public static InputStream byteStreamSkippingBOM(byte[] buf, VirtualFile file) throws IOException {
         @SuppressWarnings("IOResourceOpenedButNotSafelyClosed") BufferExposingByteArrayInputStream stream = new BufferExposingByteArrayInputStream(buf);
         return inputStreamSkippingBOM(stream, file);
     }
 
-    
     public static InputStream inputStreamSkippingBOM(InputStream stream, @SuppressWarnings("UnusedParameters") VirtualFile file) throws IOException {
         return CharsetToolkit.inputStreamSkippingBOM(stream);
     }
 
-    
     public static OutputStream outputStreamAddingBOM(OutputStream stream, VirtualFile file) throws IOException {
         byte[] bom = file.getBOM();
         if (bom != null) {
@@ -910,13 +950,13 @@ public final class VirtualFileUtil {
                 filesSet = map.get(firstPart);
             }
             else {
-                filesSet = new HashSet<VirtualFile>();
+                filesSet = new HashSet<>();
                 map.put(firstPart, filesSet);
             }
             filesSet.add(directory);
         }
         // Find common ancestor for each set of files.
-        ArrayList<VirtualFile> ancestorsList = new ArrayList<VirtualFile>();
+        List<VirtualFile> ancestorsList = new ArrayList<>();
         for (Set<VirtualFile> filesSet : map.values()) {
             VirtualFile ancestor = null;
             for (VirtualFile file : filesSet) {
@@ -987,7 +1027,7 @@ public final class VirtualFileUtil {
      * @return virtual files which represents paths from root to the passed file
      */
     static VirtualFile[] getPathComponents(VirtualFile file) {
-        ArrayList<VirtualFile> componentsList = new ArrayList<>();
+        List<VirtualFile> componentsList = new ArrayList<>();
         while (file != null) {
             componentsList.add(file);
             file = file.getParent();
@@ -1057,5 +1097,23 @@ public final class VirtualFileUtil {
             parent = parent.getParent();
         }
         return null;
+    }
+
+    public static String loadText(VirtualFile file) throws IOException {
+        return loadText(file, (int) file.getLength());
+    }
+
+    public static String loadText(VirtualFile file, int length) throws IOException {
+        try (InputStreamReader reader = new InputStreamReader(file.getInputStream(), file.getCharset())) {
+            return new String(FileUtil.loadText(reader, length));
+        }
+    }
+
+    public static byte[] loadBytes(VirtualFile file) throws IOException {
+        RawFileLoader rawFileLoader = RawFileLoader.getInstance();
+
+        return rawFileLoader.isTooLarge(file.getLength())
+            ? FileUtil.loadFirstAndClose(file.getInputStream(), rawFileLoader.getLargeFilePreviewSize())
+            : file.contentsToByteArray();
     }
 }

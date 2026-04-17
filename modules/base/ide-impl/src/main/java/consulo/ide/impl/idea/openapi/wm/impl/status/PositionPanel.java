@@ -72,13 +72,11 @@ public final class PositionPanel extends EditorBasedWidget implements StatusBarW
         return Component.CENTER_ALIGNMENT;
     }
 
-    
     @Override
     public LocalizeValue getTooltipText() {
         return UILocalize.goToLineCommandName();
     }
 
-    
     @Override
     public String getShortcutText() {
         return KeymapUtil.getFirstKeyboardShortcutText("GotoLine");

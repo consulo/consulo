@@ -49,8 +49,7 @@ public class SearchEverywhereAction extends AnAction implements DumbAware {
     private final KeyMapSetting myKeyMapSetting;
 
     @Inject
-    public SearchEverywhereAction(KeyMapSetting keyMapSetting,
-                                  ModifierKeyDoubleClickHandler modifierKeyDoubleClickHandler) {
+    public SearchEverywhereAction(KeyMapSetting keyMapSetting, ModifierKeyDoubleClickHandler modifierKeyDoubleClickHandler) {
         super(ActionLocalize.actionSearcheverywhereText(), LocalizeValue.empty(), PlatformIconGroup.actionsFind());
         myKeyMapSetting = keyMapSetting;
         setEnabledInModalContext(false);
@@ -67,7 +66,9 @@ public class SearchEverywhereAction extends AnAction implements DumbAware {
 
                 tooltip.setTitle(presentation.getText())
                     .setShortcut(shortcutText)
-                    .setDescription("Searches for:<br/> - Classes<br/> - Files<br/> - Tool Windows<br/> - Actions<br/> - Settings");
+                    .setDescription(LocalizeValue.localizeTODO(
+                        "Searches for:<br/> - Classes<br/> - Files<br/> - Tool Windows<br/> - Actions<br/> - Settings"
+                    ));
             }
         );
     }

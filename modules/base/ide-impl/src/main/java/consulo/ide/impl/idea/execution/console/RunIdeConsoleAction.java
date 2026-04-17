@@ -33,7 +33,6 @@ import consulo.fileEditor.TextEditor;
 import consulo.ide.impl.idea.execution.impl.ConsoleViewImpl;
 import consulo.ide.impl.idea.ide.script.IdeScriptBindings;
 import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
-import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.ide.impl.script.IdeScriptEngine;
 import consulo.ide.impl.script.IdeScriptEngineManager;
 import consulo.language.impl.psi.LeafPsiElement;
@@ -52,6 +51,7 @@ import consulo.util.lang.ExceptionUtil;
 import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
 import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
@@ -132,12 +132,7 @@ public class RunIdeConsoleAction extends DumbAwareAction {
     }
 
     @RequiredReadAction
-    private static void executeQuery(
-        Project project,
-        VirtualFile file,
-        Editor editor,
-        IdeScriptEngine engine
-    ) {
+    private static void executeQuery(Project project, VirtualFile file, Editor editor, IdeScriptEngine engine) {
         String command = getCommandText(project, editor);
         if (StringUtil.isEmptyOrSpaces(command)) {
             return;
@@ -176,14 +171,13 @@ public class RunIdeConsoleAction extends DumbAwareAction {
         try {
             VirtualFile folder = file.getParent();
             VirtualFile profileChild = folder == null ? null : folder.findChild(".profile." + file.getExtension());
-            return profileChild == null ? null : StringUtil.nullize(VfsUtilCore.loadText(profileChild));
+            return profileChild == null ? null : StringUtil.nullize(VirtualFileUtil.loadText(profileChild));
         }
         catch (IOException ignored) {
         }
         return null;
     }
 
-    
     @RequiredReadAction
     private static String getCommandText(Project project, Editor editor) {
         TextRange selectedRange = EditorUtil.getSelectionInAnyMode(editor);

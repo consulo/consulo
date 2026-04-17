@@ -16,6 +16,7 @@
 package consulo.ide.impl.idea.openapi.vfs;
 
 import consulo.annotation.DeprecationInfo;
+import consulo.annotation.access.RequiredWriteAction;
 import consulo.ide.impl.idea.openapi.util.SystemInfoRt;
 import consulo.language.file.FileTypeManager;
 import consulo.logging.Logger;
@@ -296,12 +297,8 @@ public class VfsUtil extends VfsUtilCore {
         return VirtualFileUtil.getUrlForLibraryRoot(libraryRoot);
     }
 
-    public static VirtualFile createChildSequent(
-        Object requestor,
-        VirtualFile dir,
-        String prefix,
-        String extension
-    ) throws IOException {
+    @RequiredWriteAction
+    public static VirtualFile createChildSequent(Object requestor, VirtualFile dir, String prefix, String extension) throws IOException {
         String dotExt = PathUtil.makeFileName("", extension);
         String fileName = prefix + dotExt;
         int i = 1;

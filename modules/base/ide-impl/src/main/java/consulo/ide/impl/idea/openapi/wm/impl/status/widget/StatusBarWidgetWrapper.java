@@ -21,7 +21,7 @@ import java.awt.event.MouseEvent;
 import java.util.function.Consumer;
 
 public interface StatusBarWidgetWrapper {
-    
+    @RequiredUIAccess
     static JComponent wrap(StatusBarWidget widget, StatusBarWidget.WidgetPresentation presentation) {
         return switch (presentation) {
             case StatusBarWidget.IconPresentation iconPresentation -> new StatusBarWidgetWrapper.Icon(widget, iconPresentation);
@@ -33,7 +33,6 @@ public interface StatusBarWidgetWrapper {
         };
     }
 
-    
     StatusBarWidget.WidgetPresentation getPresentation();
 
     @RequiredUIAccess
@@ -44,7 +43,7 @@ public interface StatusBarWidgetWrapper {
 
         if (toolTipText.isNotEmpty()) {
             HelpTooltipImpl helpTooltip = new HelpTooltipImpl();
-            helpTooltip.setTitle(toolTipText.get());
+            helpTooltip.setTitle(toolTipText);
 
             if (shortcutText != null) {
                 helpTooltip.setShortcut(shortcutText);
@@ -58,6 +57,7 @@ public interface StatusBarWidgetWrapper {
         private final StatusBarWidget myWidget;
         private final StatusBarWidget.MultipleTextValuesPresentation myPresentation;
 
+        @RequiredUIAccess
         public MultipleTextValues(StatusBarWidget widget, StatusBarWidget.MultipleTextValuesPresentation presentation) {
             myWidget = widget;
             myPresentation = presentation;
@@ -85,8 +85,8 @@ public interface StatusBarWidgetWrapper {
             }.installOn(this, true);
         }
 
-        @RequiredUIAccess
         @Override
+        @RequiredUIAccess
         public void beforeUpdate() {
             myWidget.beforeUpdate();
 
@@ -97,7 +97,6 @@ public interface StatusBarWidgetWrapper {
             setWidgetTooltip(this, myPresentation.getTooltipText(), myPresentation.getShortcutText());
         }
 
-        
         @Override
         public StatusBarWidget.WidgetPresentation getPresentation() {
             return myPresentation;
@@ -120,14 +119,13 @@ public interface StatusBarWidgetWrapper {
             }
         }
 
-        
         @Override
         public StatusBarWidget.WidgetPresentation getPresentation() {
             return myPresentation;
         }
 
-        @RequiredUIAccess
         @Override
+        @RequiredUIAccess
         public void beforeUpdate() {
             myWidget.beforeUpdate();
 
@@ -155,7 +153,6 @@ public interface StatusBarWidgetWrapper {
             }
         }
 
-        
         @Override
         public StatusBarWidget.WidgetPresentation getPresentation() {
             return myPresentation;

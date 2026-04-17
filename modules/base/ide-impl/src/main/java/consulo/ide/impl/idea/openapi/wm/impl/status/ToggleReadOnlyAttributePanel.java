@@ -34,7 +34,6 @@ public final class ToggleReadOnlyAttributePanel implements StatusBarWidget.Multi
         myFactory = factory;
     }
 
-    
     @Override
     public String getId() {
         return myFactory.getId();
@@ -72,17 +71,19 @@ public final class ToggleReadOnlyAttributePanel implements StatusBarWidget.Multi
             return;
         }
 
-        project.getMessageBus().connect(this).subscribe(FileEditorManagerListener.class, new FileEditorManagerListener() {
-            @Override
-            public void selectionChanged(FileEditorManagerEvent event) {
-                if (myStatusBar != null) {
-                    myStatusBar.updateWidget(getId());
+        project.getMessageBus().connect(this).subscribe(
+            FileEditorManagerListener.class,
+            new FileEditorManagerListener() {
+                @Override
+                public void selectionChanged(FileEditorManagerEvent event) {
+                    if (myStatusBar != null) {
+                        myStatusBar.updateWidget(getId());
+                    }
                 }
             }
-        });
+        );
     }
 
-    
     @Override
     public LocalizeValue getTooltipText() {
         VirtualFile virtualFile = getCurrentFile();

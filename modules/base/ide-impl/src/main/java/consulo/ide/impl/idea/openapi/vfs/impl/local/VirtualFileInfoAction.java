@@ -15,13 +15,15 @@
  */
 package consulo.ide.impl.idea.openapi.vfs.impl.local;
 
+import consulo.application.dumb.DumbAware;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.awt.Messages;
+import consulo.ui.ex.awt.UIUtil;
 import consulo.virtualFileSystem.LocalFileSystem;
-import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.application.dumb.DumbAware;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
 
 import java.io.File;
 import java.io.IOException;
@@ -38,17 +40,19 @@ public class VirtualFileInfoAction extends AnAction implements DumbAware {
           SimpleDateFormat.getDateTimeInstance(SimpleDateFormat.LONG, SimpleDateFormat.LONG);
 
   @Override
+  @RequiredUIAccess
   public void actionPerformed(AnActionEvent e) {
-    String pathToFile = Messages.showInputDialog("Path to file: ",
-                                                 "Virtual File Info",
-                                                 Messages.getQuestionIcon());
+    String pathToFile = Messages.showInputDialog(
+      "Path to file: ",
+      "Virtual File Info",
+      UIUtil.getQuestionIcon()
+    );
     if (pathToFile == null) return;
     VirtualFile virtualFile = LocalFileSystem.getInstance().findFileByIoFile(new File(pathToFile));
     if (virtualFile == null){
       Messages.showErrorDialog("Cannot find virtual file", "Virtual File Info");
-      return;
     } else {
-      StringBuffer info = new StringBuffer();
+      StringBuilder info = new StringBuilder();
       info.append("Path: ");
       info.append(virtualFile.getPath());
       info.append("\n");
@@ -63,7 +67,7 @@ public class VirtualFileInfoAction extends AnAction implements DumbAware {
       info.append("\n");
       info.append("Content: ");
       try {
-        info.append(VfsUtil.loadText(virtualFile));
+        info.append(VirtualFileUtil.loadText(virtualFile));
       }
       catch (IOException e1) {
         info.append("<unable to load content>");
@@ -71,7 +75,7 @@ public class VirtualFileInfoAction extends AnAction implements DumbAware {
       }
       info.append("\n");
 
-      Messages.showMessageDialog(info.toString(), "Virtual File Info", Messages.getInformationIcon());
+      Messages.showMessageDialog(info.toString(), "Virtual File Info", UIUtil.getInformationIcon());
     }
   }
 }
