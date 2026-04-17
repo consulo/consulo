@@ -22,10 +22,9 @@ import consulo.util.collection.HashingStrategy;
 import consulo.util.io.internal.OSInfo;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.ThreeState;
-import consulo.util.lang.function.PairProcessor;
-import org.jspecify.annotations.Nullable;
 import org.intellij.lang.annotations.RegExp;
 import org.jetbrains.annotations.Contract;
+import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -48,22 +47,24 @@ public class FileUtil {
 
     private static final int MAX_FILE_IO_ATTEMPTS = 10;
     private static final boolean USE_FILE_CHANNELS = "true".equalsIgnoreCase(System.getProperty("consulo.fs.useChannels"));
-    public static final HashingStrategy<String> PATH_HASHING_STRATEGY = OSInfo.isFileSystemCaseSensitive ? HashingStrategy.caseInsensitive() : HashingStrategy.canonical();
+    public static final HashingStrategy<String> PATH_HASHING_STRATEGY =
+        OSInfo.isFileSystemCaseSensitive ? HashingStrategy.caseInsensitive() : HashingStrategy.canonical();
 
-    public static final HashingStrategy<File> FILE_HASHING_STRATEGY = OSInfo.isFileSystemCaseSensitive ? ContainerUtil.<File>canonicalStrategy() : new HashingStrategy<File>() {
-        @Override
-        public int hashCode(@Nullable File object) {
-            return fileHashCode(object);
-        }
+    public static final HashingStrategy<File> FILE_HASHING_STRATEGY =
+        OSInfo.isFileSystemCaseSensitive ? HashingStrategy.canonical() : new HashingStrategy<>() {
+            @Override
+            public int hashCode(@Nullable File object) {
+                return fileHashCode(object);
+            }
 
-        @Override
-        public boolean equals(@Nullable File o1, @Nullable File o2) {
-            return filesEqual(o1, o2);
-        }
-    };
+            @Override
+            public boolean equals(@Nullable File o1, @Nullable File o2) {
+                return filesEqual(o1, o2);
+            }
+        };
 
     public static final int THREAD_LOCAL_BUFFER_LENGTH = 1024 * 20;
-    protected static final ThreadLocal<byte[]> BUFFER = new ThreadLocal<byte[]>() {
+    protected static final ThreadLocal<byte[]> BUFFER = new ThreadLocal<>() {
         @Override
         protected byte[] initialValue() {
             return new byte[THREAD_LOCAL_BUFFER_LENGTH];
@@ -353,7 +354,9 @@ public class FileUtil {
 
         int len = 0;
         int lastSeparatorIndex = 0; // need this for cases like this: base="/temp/abc/base" and file="/temp/ab"
-        BiPredicate<Character, Character> strategy = caseSensitive ? (o1, o2) -> o1.equals(o2) : (o1, o2) -> StringUtil.charsEqualIgnoreCase(o1, o2);
+        BiPredicate<Character, Character> strategy = caseSensitive
+            ? (o1, o2) -> o1.equals(o2)
+            : (o1, o2) -> StringUtil.charsEqualIgnoreCase(o1, o2);
         while (len < filePath.length() && len < basePath.length() && strategy.test(filePath.charAt(len), basePath.charAt(len))) {
             if (basePath.charAt(len) == separator) {
                 lastSeparatorIndex = len;
@@ -399,7 +402,8 @@ public class FileUtil {
         StringBuilder builder = new StringBuilder();
         int asteriskCount = 0;
         boolean recursive = true;
-        int start = ignoreStartingSlash && (StringUtil.startsWithChar(antPattern, '/') || StringUtil.startsWithChar(antPattern, '\\')) ? 1 : 0;
+        int start = ignoreStartingSlash && (StringUtil.startsWithChar(antPattern, '/') || StringUtil.startsWithChar(antPattern, '\\'))
+            ? 1 : 0;
         for (int idx = start; idx < antPattern.length(); idx++) {
             char ch = antPattern.charAt(idx);
 
@@ -423,7 +427,8 @@ public class FileUtil {
                 builder.append("[^/]*?");
             }
 
-            if (ch == '(' || ch == ')' || ch == '[' || ch == ']' || ch == '^' || ch == '$' || ch == '.' || ch == '{' || ch == '}' || ch == '+' || ch == '|') {
+            if (ch == '(' || ch == ')' || ch == '[' || ch == ']' || ch == '^' || ch == '$'
+                || ch == '.' || ch == '{' || ch == '}' || ch == '+' || ch == '|') {
                 // quote regexp-specific symbols
                 builder.append('\\').append(ch);
                 continue;
@@ -497,7 +502,8 @@ public class FileUtil {
     }
 
     @SuppressWarnings("Duplicates")
-    private static void performCopy(File fromFile, File toFile, boolean syncTimestamp, FilePermissionCopier permissionCopier) throws IOException {
+    private static void performCopy(File fromFile, File toFile, boolean syncTimestamp, FilePermissionCopier permissionCopier)
+        throws IOException {
         if (filesEqual(fromFile, toFile)) {
             return;
         }
@@ -545,11 +551,14 @@ public class FileUtil {
         copyDir(fromDir, toDir, true, permissionCopier);
     }
 
-    public static void copyDir(File fromDir, File toDir, boolean copySystemFiles, FilePermissionCopier permissionCopier) throws IOException {
-        copyDir(fromDir, toDir, copySystemFiles ? null : (FileFilter) file -> !StringUtil.startsWithChar(file.getName(), '.'), permissionCopier);
+    public static void copyDir(File fromDir, File toDir, boolean copySystemFiles, FilePermissionCopier permissionCopier)
+        throws IOException {
+        FileFilter filter = copySystemFiles ? null : (FileFilter) file -> !StringUtil.startsWithChar(file.getName(), '.');
+        copyDir(fromDir, toDir, filter, permissionCopier);
     }
 
-    public static void copyDir(File fromDir, File toDir, @Nullable FileFilter filter, FilePermissionCopier permissionCopier) throws IOException {
+    public static void copyDir(File fromDir, File toDir, @Nullable FileFilter filter, FilePermissionCopier permissionCopier)
+        throws IOException {
         ensureExists(toDir);
         if (isAncestor(fromDir, toDir, true)) {
             LOG.error(fromDir.getAbsolutePath() + " is ancestor of " + toDir + ". Can't copy to itself.");
@@ -824,6 +833,26 @@ public class FileUtil {
         return fileName.subSequence(index + 1, fileName.length());
     }
 
+    public static char[] loadText(Reader reader, int length) throws IOException {
+        char[] chars = new char[length];
+        int count = 0;
+        while (count < chars.length) {
+            int n = reader.read(chars, count, chars.length - count);
+            if (n <= 0) {
+                break;
+            }
+            count += n;
+        }
+        if (count == chars.length) {
+            return chars;
+        }
+        else {
+            char[] newChars = new char[count];
+            System.arraycopy(chars, 0, newChars, 0, count);
+            return newChars;
+        }
+    }
+
     public static List<String> loadLines(File file) throws IOException {
         return loadLines(file.getPath());
     }
@@ -838,7 +867,8 @@ public class FileUtil {
 
     public static List<String> loadLines(String path, @Nullable String encoding) throws IOException {
         try (InputStream stream = new FileInputStream(path)) {
-            try (BufferedReader reader = new BufferedReader(encoding == null ? new InputStreamReader(stream) : new InputStreamReader(stream, encoding))) {
+            try (BufferedReader reader =
+                     new BufferedReader(encoding == null ? new InputStreamReader(stream) : new InputStreamReader(stream, encoding))) {
                 return loadLines(reader);
             }
         }
@@ -949,7 +979,8 @@ public class FileUtil {
             throw new IOException("Failed to delete " + path) {
                 @Override
                 public synchronized Throwable fillInStackTrace() {
-                    return this; // optimization: the stacktrace is not needed: the exception is used to terminate tree walking and to pass the result
+                    // optimization: the stacktrace is not needed: the exception is used to terminate tree walking and to pass the result
+                    return this;
                 }
             };
         }
@@ -1027,8 +1058,11 @@ public class FileUtil {
         for (int i = 0; i < length; i++) {
             char c = name.charAt(i);
             boolean appendReplacement = true;
-            if (c > 0 && c < 255) {
-                if (strict ? Character.isLetterOrDigit(c) || c == '_' : Character.isJavaIdentifierPart(c) || c == ' ' || c == '@' || c == '-') {
+            if (0 < c && c < 255) {
+                boolean isValidChar = strict
+                    ? Character.isLetterOrDigit(c) || c == '_'
+                    : Character.isJavaIdentifierPart(c) || c == ' ' || c == '@' || c == '-';
+                if (isValidChar) {
                     continue;
                 }
             }
@@ -1115,7 +1149,12 @@ public class FileUtil {
     };
 
     @Contract("null,_,_,_ -> null; !null,_,_,_ -> !null")
-    private static @Nullable String toCanonicalPath(@Nullable String path, char separatorChar, boolean removeLastSlash, boolean resolveSymlinks) {
+    private static @Nullable String toCanonicalPath(
+        @Nullable String path,
+        char separatorChar,
+        boolean removeLastSlash,
+        boolean resolveSymlinks
+    ) {
         SymlinkResolver symlinkResolver = resolveSymlinks ? SYMLINK_RESOLVER : null;
         return toCanonicalPath(path, separatorChar, removeLastSlash, symlinkResolver);
     }
@@ -1163,7 +1202,9 @@ public class FileUtil {
             if (removeLastSlash) {
                 int start = processRoot(path, NullAppendable.INSTANCE);
                 int slashIndex = path.lastIndexOf('/');
-                return slashIndex != -1 && slashIndex > start && slashIndex == path.length() - 1 ? path.substring(0, path.length() - 1) : path;
+                return slashIndex != -1 && slashIndex > start && slashIndex == path.length() - 1
+                    ? path.substring(0, path.length() - 1)
+                    : path;
             }
             return path;
         }
@@ -1554,7 +1595,11 @@ public class FileUtil {
                 if (dot < start) {
                     dot = end;
                 }
-                if (dot - start > 2 && dot - start <= 8 && end - dot - 1 <= 3 && path.charAt(dot - 2) == '~' && Character.isDigit(path.charAt(dot - 1))) {
+                if (dot - start > 2
+                    && dot - start <= 8
+                    && end - dot - 1 <= 3
+                    && path.charAt(dot - 2) == '~'
+                    && Character.isDigit(path.charAt(dot - 1))) {
                     return true;
                 }
 
@@ -1677,17 +1722,13 @@ public class FileUtil {
     /**
      * @param removeProcessor parent, child
      */
-    public static <T> Collection<T> removeAncestors(
-        Collection<T> files,
-        Function<T, String> convertor,
-        BiPredicate<T, T> removeProcessor
-    ) {
+    public static <T> Collection<T> removeAncestors(Collection<T> files, Function<T, String> converter, BiPredicate<T, T> removeProcessor) {
         if (files.isEmpty()) {
             return files;
         }
-        TreeMap<String, T> paths = new TreeMap<>();
+        Map<String, T> paths = new TreeMap<>();
         for (T file : files) {
-            String path = convertor.apply(file);
+            String path = converter.apply(file);
             assert path != null;
             String canonicalPath = toCanonicalPath(path);
             paths.put(canonicalPath, file);

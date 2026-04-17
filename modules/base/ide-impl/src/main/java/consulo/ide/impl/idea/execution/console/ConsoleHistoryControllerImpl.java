@@ -31,7 +31,6 @@ import consulo.execution.ui.console.language.LanguageConsoleView;
 import consulo.ide.impl.idea.openapi.editor.actions.ContentChooser;
 import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
-import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.language.Language;
 import consulo.language.editor.completion.lookup.LookupManager;
 import consulo.language.editor.highlight.LexerEditorHighlighter;
@@ -57,8 +56,8 @@ import consulo.util.jdom.JDOMUtil;
 import consulo.util.lang.*;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
-import org.jspecify.annotations.Nullable;
 import org.jdom.Element;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.event.KeyEvent;
@@ -481,7 +480,7 @@ public class ConsoleHistoryControllerImpl implements ConsoleHistoryController {
                     }
                     return false;
                 }
-                String[] split = VfsUtilCore.loadText(file).split(myRootType.getEntrySeparator());
+                String[] split = VirtualFileUtil.loadText(file).split(myRootType.getEntrySeparator());
                 getModel().resetEntries(Arrays.asList(split));
                 return true;
             }

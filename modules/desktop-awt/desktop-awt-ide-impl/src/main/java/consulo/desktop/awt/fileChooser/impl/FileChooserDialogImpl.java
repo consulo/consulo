@@ -32,7 +32,6 @@ import consulo.ide.impl.fileChooser.FileChooserFactoryImpl;
 import consulo.ide.impl.idea.openapi.fileChooser.ex.FileSystemTreeImpl;
 import consulo.ide.impl.idea.openapi.fileChooser.ex.PathField;
 import consulo.ide.impl.idea.openapi.fileChooser.impl.FileChooserUtil;
-import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.project.ui.wm.IdeFrame;
@@ -614,12 +613,12 @@ public class FileChooserDialogImpl extends DialogWrapper implements FileChooserD
 
         String text = "";
         if (selection.size() > 0) {
-            text = VfsUtil.getReadableUrl(selection.get(0));
+            text = VirtualFileUtil.getReadableUrl(selection.get(0));
         }
         else {
             List<VirtualFile> roots = myChooserDescriptor.getRoots();
             if (!myFileSystemTree.getTree().isRootVisible() && roots.size() == 1) {
-                text = VfsUtil.getReadableUrl(roots.get(0));
+                text = VirtualFileUtil.getReadableUrl(roots.get(0));
             }
         }
 
