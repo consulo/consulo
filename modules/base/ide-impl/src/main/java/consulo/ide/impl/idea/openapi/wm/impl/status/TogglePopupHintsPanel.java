@@ -1,5 +1,4 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
-
 package consulo.ide.impl.idea.openapi.wm.impl.status;
 
 import consulo.annotation.access.RequiredReadAction;
@@ -65,7 +64,6 @@ public class TogglePopupHintsPanel extends EditorBasedWidget implements StatusBa
         return myCurrentIcon;
     }
 
-    
     @Override
     public LocalizeValue getTooltipText() {
         return myToolTipText;

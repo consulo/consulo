@@ -61,7 +61,6 @@ class ActionMacroWidget implements CustomStatusBarWidget, Consumer<MouseEvent> {
 
     ActionMacroWidget() {
         myPresentation = new WidgetPresentation() {
-            
             @Override
             public LocalizeValue getTooltipText() {
                 return LocalizeValue.localizeTODO("Macro is being recorded now");
@@ -136,13 +135,11 @@ class ActionMacroWidget implements CustomStatusBarWidget, Consumer<MouseEvent> {
         }, Balloon.Position.above);
     }
 
-    
     @Override
     public JComponent getComponent() {
         return myIcon;
     }
 
-    
     @Override
     public String getId() {
         return "MacroRecording";

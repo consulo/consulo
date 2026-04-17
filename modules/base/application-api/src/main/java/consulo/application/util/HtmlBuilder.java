@@ -22,7 +22,6 @@ public final class HtmlBuilder {
      * @return this builder
      */
     @Contract("_ -> this")
-    
     public HtmlBuilder append(HtmlChunk chunk) {
         if (!chunk.isEmpty()) {
             myChunks.add(chunk);
@@ -31,7 +30,6 @@ public final class HtmlBuilder {
     }
 
     @Contract("_ -> this")
-    
     public HtmlBuilder append(HtmlBuilder builder) {
         if (this == builder) {
             throw new IllegalArgumentException("Cannot add builder to itself");
@@ -48,7 +46,6 @@ public final class HtmlBuilder {
      * @return this builder
      */
     @Contract("_ -> this")
-    
     public HtmlBuilder append(String text) {
         return append(HtmlChunk.text(text));
     }
@@ -61,7 +58,6 @@ public final class HtmlBuilder {
      * @return this builder
      */
     @Contract("_ -> this")
-    
     public HtmlBuilder append(LocalizeValue text) {
         return append(HtmlChunk.text(text));
     }
@@ -75,7 +71,6 @@ public final class HtmlBuilder {
      * @return this builder
      */
     @Contract("_ -> this")
-    
     public HtmlBuilder appendRaw(LocalizeValue rawHtml) {
         return append(HtmlChunk.raw(rawHtml));
     }
@@ -89,7 +84,6 @@ public final class HtmlBuilder {
      * @return this builder
      */
     @Contract("_ -> this")
-    
     public HtmlBuilder appendRaw(String rawHtml) {
         return append(HtmlChunk.raw(rawHtml));
     }
@@ -102,7 +96,6 @@ public final class HtmlBuilder {
      * @return this builder
      */
     @Contract("_, _ -> this")
-    
     public HtmlBuilder appendLink(String target, LocalizeValue text) {
         return append(HtmlChunk.link(target, text));
     }
@@ -117,7 +110,6 @@ public final class HtmlBuilder {
     @Contract("_, _ -> this")
     @Deprecated
     @DeprecationInfo("Use variant with LocalizeValue")
-    
     @SuppressWarnings("deprecation")
     public HtmlBuilder appendLink(String target, String text) {
         return append(HtmlChunk.link(target, text));
@@ -131,7 +123,6 @@ public final class HtmlBuilder {
      * @return this builder
      */
     @Contract("_, _ -> this")
-    
     public HtmlBuilder appendWithSeparators(HtmlChunk separator, Iterable<HtmlChunk> children) {
         boolean first = true;
         for (HtmlChunk child : children) {
@@ -150,7 +141,6 @@ public final class HtmlBuilder {
      * @return this builder
      */
     @Contract(" -> this")
-    
     public HtmlBuilder nbsp() {
         return append(HtmlChunk.nbsp());
     }
@@ -162,7 +152,6 @@ public final class HtmlBuilder {
      * @return this builder
      */
     @Contract("_ -> this")
-    
     public HtmlBuilder nbsp(int count) {
         return append(HtmlChunk.nbsp(count));
     }
@@ -173,7 +162,6 @@ public final class HtmlBuilder {
      * @return this builder
      */
     @Contract(" -> this")
-    
     public HtmlBuilder br() {
         return append(HtmlChunk.br());
     }
@@ -184,7 +172,6 @@ public final class HtmlBuilder {
      * @return this builder
      */
     @Contract(" -> this")
-    
     public HtmlBuilder hr() {
         return append(HtmlChunk.hr());
     }
@@ -196,7 +183,6 @@ public final class HtmlBuilder {
      * @return a new Element object that contains chunks from this builder
      */
     @Contract(pure = true)
-    
     public Element wrapWith(String tag) {
         return HtmlChunk.tag(tag).children(myChunks.toArray(new HtmlChunk[0]));
     }
@@ -208,7 +194,6 @@ public final class HtmlBuilder {
      * @return a new Element object that contains chunks from this builder
      */
     @Contract(pure = true)
-    
     public Element wrapWith(HtmlChunk.Element element) {
         return element.children(myChunks.toArray(new HtmlChunk[0]));
     }
@@ -220,7 +205,6 @@ public final class HtmlBuilder {
      * chunks from this builder
      */
     @Contract(pure = true)
-    
     public Element wrapWithHtmlBody() {
         return wrapWith("body").wrapWith("html");
     }
@@ -251,7 +235,6 @@ public final class HtmlBuilder {
      */
     @Override
     @Contract(pure = true)
-    
     public String toString() {
         StringBuilder sb = new StringBuilder();
         for (HtmlChunk chunk : myChunks) {

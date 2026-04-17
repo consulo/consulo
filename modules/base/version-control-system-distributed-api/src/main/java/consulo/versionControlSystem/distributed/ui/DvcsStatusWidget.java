@@ -30,7 +30,6 @@ public abstract class DvcsStatusWidget<T extends Repository> extends EditorBased
     implements StatusBarWidget.MultipleTextValuesPresentation, StatusBarWidget.Multiframe {
     protected static final Logger LOG = Logger.getInstance(DvcsStatusWidget.class);
 
-    
     private final String myVcsName;
 
     private @Nullable String myText;
@@ -50,7 +49,6 @@ public abstract class DvcsStatusWidget<T extends Repository> extends EditorBased
 
     protected abstract @Nullable T guessCurrentRepository(Project project);
 
-    
     protected abstract String getFullBranchName(T repository);
 
     protected @Nullable Image getIcon(T repository) {
@@ -62,7 +60,6 @@ public abstract class DvcsStatusWidget<T extends Repository> extends EditorBased
 
     protected abstract boolean isMultiRoot(Project project);
 
-    
     protected abstract ListPopup getPopup(Project project, T repository);
 
     protected abstract void rememberRecentRoot(String path);
@@ -110,7 +107,6 @@ public abstract class DvcsStatusWidget<T extends Repository> extends EditorBased
         return StringUtil.defaultIfEmpty(myText, "");
     }
 
-    
     @Override
     public LocalizeValue getTooltipText() {
         return myTooltip;
@@ -177,7 +173,6 @@ public abstract class DvcsStatusWidget<T extends Repository> extends EditorBased
         rememberRecentRoot(repository.getRoot().getPath());
     }
 
-    
     private LocalizeValue getToolTip(@Nullable T repository) {
         if (repository == null) {
             return LocalizeValue.empty();

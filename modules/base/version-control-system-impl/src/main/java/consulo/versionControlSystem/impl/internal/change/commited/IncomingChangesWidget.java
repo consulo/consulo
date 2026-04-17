@@ -82,12 +82,10 @@ class IncomingChangesWidget implements StatusBarWidget, StatusBarWidget.IconPres
     }
 
     @Override
-    
     public Image getIcon() {
         return myCurrentIcon;
     }
 
-    
     @Override
     public LocalizeValue getTooltipText() {
         return myToolTipText;
@@ -109,7 +107,6 @@ class IncomingChangesWidget implements StatusBarWidget, StatusBarWidget.IconPres
     }
 
     @Override
-    
     public String getId() {
         return myFactory.getId();
     }

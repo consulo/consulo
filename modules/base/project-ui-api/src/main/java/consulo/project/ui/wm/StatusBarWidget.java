@@ -29,13 +29,11 @@ import java.util.function.Consumer;
  * @author spLeaner
  */
 public interface StatusBarWidget extends Disposable {
-    
     @Deprecated(forRemoval = true)
     default String ID() {
         return getId();
     }
 
-    
     String getId();
 
     @Nullable WidgetPresentation getPresentation();
@@ -51,7 +49,6 @@ public interface StatusBarWidget extends Disposable {
     }
 
     interface WidgetPresentation {
-        
         LocalizeValue getTooltipText();
 
         default @Nullable String getShortcutText() {
@@ -66,7 +63,6 @@ public interface StatusBarWidget extends Disposable {
     }
 
     interface TextPresentation extends WidgetPresentation {
-        
         String getText();
 
         float getAlignment();
@@ -81,7 +77,6 @@ public interface StatusBarWidget extends Disposable {
         @RequiredUIAccess
         @Nullable String getSelectedValue();
 
-        
         @Deprecated
         default String getMaxValue() {
             return "";
