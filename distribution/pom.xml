@@ -5,9 +5,9 @@
 
     <parent>
         <groupId>consulo</groupId>
-        <artifactId>arch.ide</artifactId>
+        <artifactId>arch.managment</artifactId>
         <version>3-SNAPSHOT</version>
-        <relativePath>../arch/ide/pom.xml</relativePath>
+        <relativePath>../arch/managment/pom.xml</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
