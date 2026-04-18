@@ -32,7 +32,6 @@ import consulo.ui.ex.awt.Splitter;
 import consulo.ide.impl.idea.openapi.ui.playback.PlaybackContext;
 import consulo.ide.impl.idea.openapi.ui.playback.PlaybackRunner;
 import consulo.util.lang.StringUtil;
-import consulo.ide.impl.idea.openapi.vfs.*;
 import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.action.*;
 import consulo.util.io.CharsetToolkit;
