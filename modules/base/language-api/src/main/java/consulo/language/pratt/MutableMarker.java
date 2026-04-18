@@ -39,7 +39,7 @@ public class MutableMarker {
     myPath = path;
     myStartMarker = startMarker;
     myInitialPathLength = initialPathLength;
-    myMode = startMarker instanceof LighterASTNode && ((LighterASTNode)startMarker).getTokenType() != null? Mode.COMMITTED : Mode.READY;
+    myMode = startMarker instanceof LighterASTNode node && node.getTokenType() != null? Mode.COMMITTED : Mode.READY;
   }
 
   // for easier transition only

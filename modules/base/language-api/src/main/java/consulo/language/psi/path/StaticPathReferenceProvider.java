@@ -15,6 +15,7 @@
  */
 package consulo.language.psi.path;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiReference;
 import consulo.util.collection.SmartList;
@@ -62,6 +63,7 @@ public class StaticPathReferenceProvider extends PathReferenceProviderBase {
   }
 
   @Override
+  @RequiredReadAction
   public @Nullable PathReference getPathReference(final String path, PsiElement element) {
     List<PsiReference> list = new SmartList<PsiReference>();
     createReferences(element, list, true);

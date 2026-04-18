@@ -52,10 +52,10 @@ public class SyntaxTable implements Cloneable {
   // -------------------------------------------------------------------------
 
   public SyntaxTable() {
-    myKeywords1 = new TreeSet<String>();
-    myKeywords2 = new TreeSet<String>();
-    myKeywords3 = new TreeSet<String>();
-    myKeywords4 = new TreeSet<String>();
+    myKeywords1 = new TreeSet<>();
+    myKeywords2 = new TreeSet<>();
+    myKeywords3 = new TreeSet<>();
+    myKeywords4 = new TreeSet<>();
   }
 
   KeywordParser getKeywordParser() {
@@ -73,10 +73,10 @@ public class SyntaxTable implements Cloneable {
 
   protected Object clone() throws CloneNotSupportedException {
     SyntaxTable cl = (SyntaxTable) super.clone();
-    cl.myKeywords1 = new TreeSet<String>(myKeywords1);
-    cl.myKeywords2 = new TreeSet<String>(myKeywords2);
-    cl.myKeywords3 = new TreeSet<String>(myKeywords3);
-    cl.myKeywords4 = new TreeSet<String>(myKeywords4);
+    cl.myKeywords1 = new TreeSet<>(myKeywords1);
+    cl.myKeywords2 = new TreeSet<>(myKeywords2);
+    cl.myKeywords3 = new TreeSet<>(myKeywords3);
+    cl.myKeywords4 = new TreeSet<>(myKeywords4);
     cl.myKeywordParser = null;
     return cl;
   }
@@ -178,22 +178,21 @@ public class SyntaxTable implements Cloneable {
     myHasBraces = hasBraces;
   }
 
+  @Override
   public boolean equals(@Nullable Object o) {
     if (this == o) return true;
-    if (!(o instanceof SyntaxTable)) return false;
-
-    SyntaxTable syntaxTable = (SyntaxTable)o;
+    if (!(o instanceof SyntaxTable syntaxTable)) return false;
 
     if (myIgnoreCase != syntaxTable.myIgnoreCase) return false;
-    if (myEndComment != null ? !myEndComment.equals(syntaxTable.myEndComment) : syntaxTable.myEndComment != null) return false;
-    if (myHexPrefix != null ? !myHexPrefix.equals(syntaxTable.myHexPrefix) : syntaxTable.myHexPrefix != null) return false;
+    if (!Objects.equals(myEndComment, syntaxTable.myEndComment)) return false;
+    if (!Objects.equals(myHexPrefix, syntaxTable.myHexPrefix)) return false;
     if (!myKeywords1.equals(syntaxTable.myKeywords1)) return false;
     if (!myKeywords2.equals(syntaxTable.myKeywords2)) return false;
     if (!myKeywords3.equals(syntaxTable.myKeywords3)) return false;
     if (!myKeywords4.equals(syntaxTable.myKeywords4)) return false;
-    if (myLineComment != null ? !myLineComment.equals(syntaxTable.myLineComment) : syntaxTable.myLineComment != null) return false;
-    if (myNumPostfixChars != null ? !myNumPostfixChars.equals(syntaxTable.myNumPostfixChars) : syntaxTable.myNumPostfixChars != null) return false;
-    if (myStartComment != null ? !myStartComment.equals(syntaxTable.myStartComment) : syntaxTable.myStartComment != null) return false;
+    if (!Objects.equals(myLineComment, syntaxTable.myLineComment)) return false;
+    if (!Objects.equals(myNumPostfixChars, syntaxTable.myNumPostfixChars)) return false;
+    if (!Objects.equals(myStartComment, syntaxTable.myStartComment)) return false;
 
     if (myHasBraces != syntaxTable.myHasBraces) return false;
     if (myHasBrackets != syntaxTable.myHasBrackets) return false;

@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.language.psi.path;
 
 import org.jspecify.annotations.Nullable;
@@ -22,6 +21,5 @@ import org.jspecify.annotations.Nullable;
  * @author Dmitry Avdeev
  */
 public interface FileReferenceOwner {
-
   @Nullable PsiFileReference getLastFileReference();
 }

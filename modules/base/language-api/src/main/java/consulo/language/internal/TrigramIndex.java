@@ -30,7 +30,6 @@ public abstract class TrigramIndex extends ScalarIndexExtension<Integer> {
         return !fileType.isBinary();
     }
 
-    
     @Override
     public ID<Integer, Void> getName() {
         return INDEX_ID;

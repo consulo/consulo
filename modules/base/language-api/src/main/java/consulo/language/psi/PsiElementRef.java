@@ -107,11 +107,9 @@ public final class PsiElementRef<T extends PsiElement> {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        Real real = (Real)o;
+        Real that = (Real) o;
 
-        if (!myElement.equals(real.myElement)) return false;
-
-        return true;
+        return myElement.equals(that.myElement);
       }
 
       @Override
@@ -154,12 +152,10 @@ public final class PsiElementRef<T extends PsiElement> {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        Imaginary imaginary = (Imaginary)o;
+        Imaginary that = (Imaginary)o;
 
-        if (!myCreator.equals(imaginary.myCreator)) return false;
-        if (!myParent.equals(imaginary.myParent)) return false;
-
-        return true;
+        return myCreator.equals(that.myCreator)
+          && myParent.equals(that.myParent);
       }
 
       @Override

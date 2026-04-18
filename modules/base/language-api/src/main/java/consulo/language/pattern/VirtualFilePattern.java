@@ -15,6 +15,7 @@
  */
 package consulo.language.pattern;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.util.ProcessingContext;
@@ -68,6 +69,7 @@ public class VirtualFilePattern extends TreeElementPattern<VirtualFile, VirtualF
   public VirtualFilePattern withName(final ElementPattern<String> namePattern) {
     return with(new PatternCondition<VirtualFile>("withName") {
       @Override
+      @RequiredReadAction
       public boolean accepts(VirtualFile virtualFile, ProcessingContext context) {
         return namePattern.getCondition().accepts(virtualFile.getName(), context);
       }
@@ -77,6 +79,7 @@ public class VirtualFilePattern extends TreeElementPattern<VirtualFile, VirtualF
   public VirtualFilePattern withPath(final ElementPattern<String> pathPattern) {
     return with(new PatternCondition<VirtualFile>("withName") {
       @Override
+      @RequiredReadAction
       public boolean accepts(VirtualFile virtualFile, ProcessingContext context) {
         return pathPattern.accepts(virtualFile.getPath(), context);
       }

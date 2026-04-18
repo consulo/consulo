@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.language.pattern;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.PsiDirectory;
@@ -38,6 +38,7 @@ public class PsiFilePattern<T extends PsiFile, Self extends PsiFilePattern<T, Se
   public Self withParentDirectoryName(final StringPattern namePattern) {
     return with(new PatternCondition<T>("withParentDirectoryName") {
       @Override
+      @RequiredReadAction
       public boolean accepts(T t, ProcessingContext context) {
         PsiDirectory directory = t.getContainingDirectory();
         return directory != null && namePattern.getCondition().accepts(directory.getName(), context);
@@ -48,6 +49,7 @@ public class PsiFilePattern<T extends PsiFile, Self extends PsiFilePattern<T, Se
   public Self withOriginalFile(final ElementPattern<? extends T> filePattern) {
     return with(new PatternCondition<T>("withOriginalFile") {
       @Override
+      @RequiredReadAction
       public boolean accepts(T file, ProcessingContext context) {
         return filePattern.accepts(file.getOriginalFile());
       }

@@ -15,6 +15,7 @@
  */
 package consulo.language.pattern;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiNamedElement;
 import org.jspecify.annotations.Nullable;
@@ -32,6 +33,7 @@ public class PsiNamePatternCondition<T extends PsiElement> extends PropertyPatte
   }
 
   @Override
+  @RequiredReadAction
   public @Nullable String getPropertyValue(Object o) {
     return o instanceof PsiNamedElement namedElement ? namedElement.getName() : null;
   }

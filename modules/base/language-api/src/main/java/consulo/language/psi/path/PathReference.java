@@ -15,6 +15,7 @@
  */
 package consulo.language.psi.path;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.component.util.Iconable;
 import consulo.language.icon.IconDescriptorUpdaters;
 import consulo.language.psi.PsiElement;
@@ -75,6 +76,7 @@ public class PathReference {
     }
 
     @Override
+    @RequiredReadAction
     public @Nullable Image apply(PathReference pathReference) {
       PsiElement element = pathReference.resolve();
       return element == null ? myDefaultIcon : IconDescriptorUpdaters.getIcon(element, Iconable.ICON_FLAG_READ_STATUS);

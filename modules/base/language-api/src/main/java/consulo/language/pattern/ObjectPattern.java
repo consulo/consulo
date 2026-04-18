@@ -15,6 +15,7 @@
  */
 package consulo.language.pattern;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.language.util.ProcessingContext;
 import consulo.util.dataholder.Key;
 
@@ -44,10 +45,14 @@ public abstract class ObjectPattern<T, Self extends ObjectPattern<T, Self>> impl
     });
   }
 
+  @Override
+  @RequiredReadAction
   public final boolean accepts(@Nullable Object t) {
     return myCondition.accepts(t, new ProcessingContext());
   }
 
+  @Override
+  @RequiredReadAction
   public boolean accepts(@Nullable Object o, ProcessingContext context) {
     return myCondition.accepts(o, context);
   }
