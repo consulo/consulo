@@ -15,7 +15,7 @@
  */
 package consulo.language.cacheBuilder;
 
-import consulo.application.util.function.Processor;
+import java.util.function.Predicate;
 
 /**
  * Implemented by a custom language plugin to define how texts in the language are
@@ -34,5 +34,5 @@ public interface WordsScanner {
    * @param fileText  the text to break into words.
    * @param processor the processor which accepts the words in the text.
    */
-  void processWords(CharSequence fileText, Processor<WordOccurrence> processor);
+  void processWords(CharSequence fileText, Predicate<WordOccurrence> processor);
 }

@@ -99,6 +99,7 @@ public class WordOccurrence {
       myName = name;
     }
 
+    @Override
     public String toString() {
       return "WordOccurrence.Kind(" + myName + ")";
     }

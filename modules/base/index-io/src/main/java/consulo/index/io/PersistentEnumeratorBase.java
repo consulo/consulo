@@ -104,15 +104,10 @@ public abstract class PersistentEnumeratorBase<Data> implements DataEnumeratorEx
 
     @Override
     public boolean equals(@Nullable Object o) {
-      if (this == o) return true;
-      if (!(o instanceof CacheKey)) return false;
-
-      CacheKey cacheKey = (CacheKey)o;
-
-      if (!key.equals(cacheKey.key)) return false;
-      if (!owner.equals(cacheKey.owner)) return false;
-
-      return true;
+      return this == o
+        || o instanceof CacheKey that
+        && key.equals(that.key)
+        && owner.equals(that.owner);
     }
 
     @Override

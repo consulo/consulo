@@ -63,8 +63,8 @@ public interface InjectedLanguageManager {
 
     /**
      * Finds PSI element in injected fragment (if any) at the given offset in the host file.<p/>
-     * E.g. if you injected XML {@code "<xxx/>"} into Java string literal {@code "String s = "<xxx/>";"} and the caret is at {@code "xxx"} then
-     * this method will return XmlToken(XML_TAG_START) with the text {@code "xxx"}.<br/>
+     * E.g. if you injected XML {@code "<xxx/>"} into Java string literal {@code "String s = "<xxx/>";"} and the caret is at {@code "xxx"}
+     * then this method will return XmlToken(XML_TAG_START) with the text {@code "xxx"}.<br/>
      * Invocation of this method on uncommitted {@code hostFile} can lead to unexpected results, including throwing an exception!
      */
     @Nullable PsiElement findInjectedElementAt(PsiFile hostFile, int hostDocumentOffset);
@@ -93,7 +93,8 @@ public interface InjectedLanguageManager {
                      @RequiredReadAction PsiLanguageInjectionHost.InjectedPsiVisitor visitor);
 
     /**
-     * @return the ranges in this document window that correspond to prefix/suffix injected text fragments and thus can't be edited and are not visible in the editor.
+     * @return the ranges in this document window that correspond to prefix/suffix injected text fragments and thus can't be edited
+     *         and are not visible in the editor.
      */
     List<TextRange> getNonEditableFragments(DocumentWindow window);
 

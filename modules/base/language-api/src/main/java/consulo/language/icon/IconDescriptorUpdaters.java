@@ -16,7 +16,6 @@
 package consulo.language.icon;
 
 import consulo.annotation.access.RequiredReadAction;
-import consulo.application.AllIcons;
 import consulo.component.util.Iconable;
 import consulo.language.psi.*;
 import consulo.platform.base.icon.PlatformIconGroup;
@@ -37,9 +36,9 @@ import java.util.function.Supplier;
  */
 public final class IconDescriptorUpdaters {
     private static final Supplier<Image> ourVisibilityIconPlaceholder =
-        LazyValue.notNull(() -> Image.empty(AllIcons.Nodes.C_public.getWidth(), AllIcons.Nodes.C_public.getHeight()));
+        LazyValue.notNull(() -> Image.empty(PlatformIconGroup.nodesC_public().getWidth(), PlatformIconGroup.nodesC_public().getHeight()));
 
-    private static final Function<ElementIconRequest, @Nullable Image> ourIconCompute = request -> {
+    private static final Function<ElementIconRequest, @Nullable Image> ICON_COMPUTE = request -> {
         PsiElement element = request.myPointer.getElement();
         if (element == null || !element.isValid() || element.getProject().isDisposed()) {
             return null;
@@ -62,23 +61,10 @@ public final class IconDescriptorUpdaters {
 
         @Override
         public boolean equals(@Nullable Object o) {
-            if (this == o) {
-                return true;
-            }
-            if (!(o instanceof ElementIconRequest)) {
-                return false;
-            }
-
-            ElementIconRequest request = (ElementIconRequest) o;
-
-            if (myFlags != request.myFlags) {
-                return false;
-            }
-            if (!myPointer.equals(request.myPointer)) {
-                return false;
-            }
-
-            return true;
+            return this == o
+                || o instanceof ElementIconRequest that
+                && myFlags == that.myFlags
+                && myPointer.equals(that.myPointer);
         }
 
         @Override
@@ -104,7 +90,7 @@ public final class IconDescriptorUpdaters {
         if (baseIcon == null) {
             baseIcon = computeBaseIcon(element, flags);
         }
-        return IconDeferrer.getInstance().defer(baseIcon, new ElementIconRequest(element, flags), ourIconCompute);
+        return IconDeferrer.getInstance().defer(baseIcon, new ElementIconRequest(element, flags), ICON_COMPUTE);
     }
 
     private static Image computeBaseIcon(PsiElement element, int flags) {
@@ -116,8 +102,8 @@ public final class IconDescriptorUpdaters {
     }
 
     private static Image computeBaseIcon(PsiElement element) {
-        if (element instanceof PsiFileSystemItem) {
-            VirtualFile file = ((PsiFileSystemItem) element).getVirtualFile();
+        if (element instanceof PsiFileSystemItem fileSystemItem) {
+            VirtualFile file = fileSystemItem.getVirtualFile();
             if (file != null) {
                 return VirtualFileManager.getInstance().getBaseFileIcon(file);
             }
