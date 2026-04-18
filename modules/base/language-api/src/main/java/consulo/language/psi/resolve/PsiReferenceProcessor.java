@@ -16,6 +16,7 @@
 package consulo.language.psi.resolve;
 
 import consulo.language.psi.PsiReference;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -51,13 +52,13 @@ public interface PsiReferenceProcessor {
   }
 
   class FindElement implements PsiReferenceProcessor {
-    private volatile PsiReference myFoundElement = null;
+    private volatile @Nullable PsiReference myFoundElement = null;
 
     public boolean isFound() {
       return myFoundElement != null;
     }
 
-    public PsiReference getFoundReference() {
+    public @Nullable PsiReference getFoundReference() {
       return myFoundElement;
     }
 

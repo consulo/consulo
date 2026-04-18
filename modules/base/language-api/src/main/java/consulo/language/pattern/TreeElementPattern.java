@@ -20,6 +20,8 @@ import consulo.language.util.ProcessingContext;
 import org.jspecify.annotations.Nullable;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
+import java.util.Objects;
 import java.util.function.BiPredicate;
 
 /**
@@ -37,7 +39,11 @@ public abstract class TreeElementPattern<ParentType, T extends ParentType, Self 
 
   protected abstract @Nullable ParentType getParent(ParentType parentType);
 
-  protected abstract ParentType[] getChildren(ParentType parentType);
+  protected abstract ParentType @Nullable [] getChildren(ParentType parentType);
+
+  List<ParentType> getRequiredChildren(ParentType parentType) {
+    return List.of(Objects.requireNonNull(getChildren(parentType)));
+  }
 
   public Self withParents(final Class<? extends ParentType>... types) {
     return with(new PatternCondition<T>("withParents") {
@@ -91,9 +97,11 @@ public abstract class TreeElementPattern<ParentType, T extends ParentType, Self 
         ParentType parent = getParent(t);
         if (parent != null) {
           ParentType[] children = getChildren(parent);
-          for (ParentType child : children) {
-            if (pattern.accepts(child, context)) {
-              return child == t;
+          if (children != null) {
+            for (ParentType child : children) {
+              if (pattern.accepts(child, context)) {
+                return child == t;
+              }
             }
           }
         }
@@ -205,10 +213,10 @@ public abstract class TreeElementPattern<ParentType, T extends ParentType, Self 
       public boolean accepts(T t, ProcessingContext context) {
         ParentType parent = getParent(t);
         if (parent == null) return false;
-        ParentType[] children = getChildren(parent);
-        int i = Arrays.asList(children).indexOf(t);
+        List<ParentType> children = getRequiredChildren(parent);
+        int i = children.indexOf(t);
         if (i <= 0) return false;
-        return pattern.accepts(children[i - 1], context);
+        return pattern.accepts(children.get(i - 1), context);
       }
     });
   }
@@ -219,11 +227,12 @@ public abstract class TreeElementPattern<ParentType, T extends ParentType, Self 
       public boolean accepts(T t, ProcessingContext context) {
         ParentType parent = getParent(t);
         if (parent == null) return false;
-        ParentType[] children = getChildren(parent);
-        int i = Arrays.asList(children).indexOf(t);
+        List<ParentType> children = getRequiredChildren(parent);
+        int i = children.indexOf(t);
         while (--i >= 0) {
-          if (!skip.accepts(children[i], context)) {
-            return pattern.accepts(children[i], context);
+          ParentType child = children.get(i);
+          if (!skip.accepts(child, context)) {
+            return pattern.accepts(child, context);
           }
         }
         return false;

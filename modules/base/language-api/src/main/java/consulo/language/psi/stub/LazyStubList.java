@@ -12,7 +12,7 @@ class LazyStubList extends StubList {
   private final ObjectStubSerializer myRootSerializer;
   private int mySize;
   private final AtomicInteger myInstantiated = new AtomicInteger(1);
-  private volatile LazyStubData myData;
+  private volatile @Nullable LazyStubData myData = null;
 
   LazyStubList(int size, StubBase<?> root, ObjectStubSerializer rootSerializer) {
     super(size);
@@ -43,7 +43,7 @@ class LazyStubList extends StubList {
   }
 
   @Override
-  public StubBase<?> get(int index) {
+  public @Nullable StubBase<?> get(int index) {
     StubBase<?> stub = getCachedStub(index);
     if (stub != null) return stub;
 
@@ -64,7 +64,6 @@ class LazyStubList extends StubList {
     return myStubs.get(index);
   }
 
-  
   private StubBase<?> instantiateStub(int index) {
     LazyStubData data = myData;
     if (data == null) {
@@ -90,5 +89,4 @@ class LazyStubList extends StubList {
       myData = data;
     }
   }
-
 }

@@ -18,6 +18,7 @@ package consulo.language.template;
 import consulo.language.Language;
 import consulo.language.file.FileViewProvider;
 import consulo.language.ast.IElementType;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author peter
@@ -47,7 +48,7 @@ public interface TemplateLanguageFileViewProvider extends FileViewProvider {
    * @param language for which we want to create a file
    * @return content element type for non-base language, null otherwise
    */
-  default IElementType getContentElementType(Language language) {
+  default @Nullable IElementType getContentElementType(Language language) {
     return null;
   }
 }

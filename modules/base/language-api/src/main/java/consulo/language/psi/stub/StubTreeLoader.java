@@ -15,6 +15,7 @@
  */
 package consulo.language.psi.stub;
 
+import consulo.annotation.ReviewAfterIssueFix;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
@@ -63,9 +64,12 @@ public abstract class StubTreeLoader {
   @RequiredReadAction
   public abstract RuntimeException stubTreeAndIndexDoNotMatch(@Nullable ObjectStubTree stubTree, PsiFileWithStubSupport psiFile, @Nullable Throwable cause);
 
+  @ReviewAfterIssueFix(value = "github.com/uber/NullAway/issues/1502", todo = "Remove NullAway suppression")
+  @SuppressWarnings("NullAway")
   public static String getFileViewProviderMismatchDiagnostics(FileViewProvider provider) {
     Function<PsiFile, String> fileClassName = file -> file.getClass().getSimpleName();
-    Function<Pair<IStubFileElementType, PsiFile>, String> stubRootToString = pair -> "(" + pair.first.toString() + ", " + pair.first.getLanguage() + " -> " + fileClassName.apply(pair.second) + ")";
+    Function<Pair<IStubFileElementType, PsiFile>, String> stubRootToString =
+        pair -> "(" + pair.first.toString() + ", " + pair.first.getLanguage() + " -> " + fileClassName.apply(pair.second) + ")";
     List<Pair<IStubFileElementType, PsiFile>> roots = StubTreeBuilder.getStubbedRoots(provider);
     return "path = " +
            provider.getVirtualFile().getPath() +

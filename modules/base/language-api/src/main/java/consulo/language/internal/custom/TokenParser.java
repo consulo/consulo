@@ -13,16 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.language.internal.custom;
+
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author dsl
  */
 public abstract class TokenParser {
-  protected CharSequence myBuffer;
-  protected int myStartOffset;
-  protected int myEndOffset;
+  protected @Nullable CharSequence myBuffer = null;
+  protected int myStartOffset = 0;
+  protected int myEndOffset = 0;
   protected final TokenInfo myTokenInfo = new TokenInfo();
 
   public void setBuffer(CharSequence buffer, int startOffset, int endOffset) {

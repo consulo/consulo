@@ -13,18 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.language.internal.custom;
+
+import java.util.Objects;
 
 /**
  * @author dsl
  */
 public class WhitespaceParser extends TokenParser {
-
+  @Override
   public boolean hasToken(int position) {
-    if (!Character.isWhitespace(myBuffer.charAt(position))) return false;
+    if (!Character.isWhitespace(Objects.requireNonNull(myBuffer).charAt(position))) return false;
     int start = position;
-    for (position++; position < myEndOffset && Character.isWhitespace(myBuffer.charAt(position)); position++) ;
+    for (position++; position < myEndOffset && Character.isWhitespace(myBuffer.charAt(position)); position++) {
+    }
     myTokenInfo.updateData(start, position, CustomHighlighterTokenType.WHITESPACE);
     return true;
   }

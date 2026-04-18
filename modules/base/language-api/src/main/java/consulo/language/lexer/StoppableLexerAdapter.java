@@ -16,6 +16,9 @@
 package consulo.language.lexer;
 
 import consulo.language.ast.IElementType;
+import org.jspecify.annotations.Nullable;
+
+import java.util.Objects;
 
 /**
  * @author max
@@ -31,7 +34,7 @@ public class StoppableLexerAdapter extends DelegateLexer {
     public StoppableLexerAdapter(StoppingCondition condition, Lexer original) {
         super(original);
         myCondition = condition;
-        myStopped = myCondition.stopsAt(original.getTokenType(), original.getTokenStart(), original.getTokenEnd());
+        myStopped = myCondition.stopsAt(Objects.requireNonNull(original.getTokenType()), original.getTokenStart(), original.getTokenEnd());
     }
 
     @Override
@@ -41,7 +44,8 @@ public class StoppableLexerAdapter extends DelegateLexer {
         }
         super.advance();
 
-        if (myCondition.stopsAt(getDelegate().getTokenType(), getDelegate().getTokenStart(), getDelegate().getTokenEnd())) {
+        Lexer delegate = getDelegate();
+        if (myCondition.stopsAt(Objects.requireNonNull(delegate.getTokenType()), delegate.getTokenStart(), delegate.getTokenEnd())) {
             myStopped = true;
         }
     }
@@ -59,7 +63,7 @@ public class StoppableLexerAdapter extends DelegateLexer {
     }
 
     @Override
-    public IElementType getTokenType() {
+    public @Nullable IElementType getTokenType() {
         return myStopped ? null : super.getTokenType();
     }
 

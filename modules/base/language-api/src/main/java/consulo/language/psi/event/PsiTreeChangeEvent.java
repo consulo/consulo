@@ -37,69 +37,68 @@ public abstract class PsiTreeChangeEvent extends EventObject {
   public static final String PROP_FILE_TYPES = "propFileTypes";
   public static final String PROP_UNLOADED_PSI = "propUnloadedPsi";
 
-  protected PsiElement myParent;
-  protected PsiElement myOldParent;
-  protected PsiElement myNewParent;
-  protected PsiElement myChild;
-  protected PsiElement myOldChild;
-  protected PsiElement myNewChild;
+  protected @Nullable PsiElement myParent = null;
+  protected @Nullable PsiElement myOldParent = null;
+  protected @Nullable PsiElement myNewParent = null;
+  protected @Nullable PsiElement myChild = null;
+  protected @Nullable PsiElement myOldChild = null;
+  protected @Nullable PsiElement myNewChild = null;
 
-  protected PsiFile myFile;
+  protected @Nullable PsiFile myFile = null;
   protected int myOffset;
   protected int myOldLength;
 
-  protected PsiElement myElement;
-  protected String myPropertyName;
-  protected Object myOldValue;
-  protected Object myNewValue;
+  protected @Nullable PsiElement myElement = null;
+  protected @Nullable String myPropertyName = null;
+  protected @Nullable Object myOldValue = null;
+  protected @Nullable Object myNewValue = null;
 
   protected PsiTreeChangeEvent(PsiManager manager) {
     super(manager);
   }
 
-  public PsiElement getParent() {
+  public @Nullable PsiElement getParent() {
     return myParent;
   }
 
-  public PsiElement getOldParent() {
+  public @Nullable PsiElement getOldParent() {
     return myOldParent;
   }
 
-  public PsiElement getNewParent() {
+  public @Nullable PsiElement getNewParent() {
     return myNewParent;
   }
 
-  public PsiElement getChild() {
+  public @Nullable PsiElement getChild() {
     return myChild;
   }
 
-  public PsiElement getOldChild() {
+  public @Nullable PsiElement getOldChild() {
     return myOldChild;
   }
 
-  public PsiElement getNewChild() {
+  public @Nullable PsiElement getNewChild() {
     return myNewChild;
   }
 
-  public PsiElement getElement() {
+  public @Nullable PsiElement getElement() {
     return myElement;
   }
 
-  public String getPropertyName() {
+  public @Nullable String getPropertyName() {
     return myPropertyName;
   }
 
-  public Object getOldValue() {
+  public @Nullable Object getOldValue() {
     return myOldValue;
   }
 
-  public Object getNewValue() {
+  public @Nullable Object getNewValue() {
     return myNewValue;
   }
 
   public @Nullable PsiFile getFile() {
     return myFile;
   }
-
 }
 

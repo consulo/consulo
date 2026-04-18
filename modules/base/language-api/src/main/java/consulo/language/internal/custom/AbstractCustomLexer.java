@@ -13,14 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.language.internal.custom;
 
 import consulo.language.ast.IElementType;
 import consulo.language.lexer.LexerBase;
 import consulo.util.collection.ArrayUtil;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
+import java.util.Objects;
 
 /**
  * @author dsl
@@ -30,7 +31,7 @@ public class AbstractCustomLexer extends LexerBase {
   protected int myStartOffset = 0;
   protected int myEndOffset = 0;
   private final TokenParser[] myTokenParsers;
-  private TokenInfo myCurrentToken;
+  private @Nullable TokenInfo myCurrentToken = null;
   private int myPosition;
 
   public AbstractCustomLexer(List<TokenParser> tokenParsers) {
@@ -53,19 +54,20 @@ public class AbstractCustomLexer extends LexerBase {
     return 0;
   }
 
-  public IElementType getTokenType() {
-    return myCurrentToken.getType();
+  public @Nullable IElementType getTokenType() {
+    return Objects.requireNonNull(myCurrentToken).getType();
   }
 
   public int getTokenStart() {
-    return myCurrentToken.getStart();
+    return Objects.requireNonNull(myCurrentToken).getStart();
   }
 
   public int getTokenEnd() {
-    return myCurrentToken.getEnd();
+    return Objects.requireNonNull(myCurrentToken).getEnd();
   }
 
   public void advance() {
+    Objects.requireNonNull(myCurrentToken);
     if (myPosition >= myEndOffset) {
       myCurrentToken.updateData(myPosition, myPosition, null);
       return;
@@ -95,5 +97,4 @@ public class AbstractCustomLexer extends LexerBase {
   public int getBufferEnd() {
     return myEndOffset;
   }
-
 }

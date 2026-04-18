@@ -15,6 +15,8 @@
  */
 package consulo.language.psi.stub;
 
+import java.util.Objects;
+
 /**
  * @author dmitrylomov
  */
@@ -27,6 +29,6 @@ public abstract class StubSerializationUtil {
       return fileStub.getType();
     }
 
-    return rootStub.getStubType();
+    return Objects.requireNonNull(rootStub.getStubType());
   }
 }

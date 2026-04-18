@@ -18,6 +18,7 @@ package consulo.language.psi.stub;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
+import org.jspecify.annotations.Nullable;
 
 import java.util.function.Consumer;
 
@@ -34,7 +35,7 @@ public class DefaultFileTypeSpecificInputFilter implements FileBasedIndex.FileTy
   }
 
   @Override
-  public boolean acceptInput(Project project, VirtualFile file) {
+  public boolean acceptInput(@Nullable Project project, VirtualFile file) {
     return true;
   }
 }

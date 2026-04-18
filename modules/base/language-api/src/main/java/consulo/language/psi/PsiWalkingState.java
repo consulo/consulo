@@ -13,11 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.language.psi;
 
+import consulo.annotation.ReviewAfterIssueFix;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.logging.Logger;
 import consulo.util.collection.util.WalkingState;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author cdr
@@ -26,24 +28,30 @@ public abstract class PsiWalkingState extends WalkingState<PsiElement> {
   private static final Logger LOG = Logger.getInstance(PsiWalkingState.class);
   private final PsiElementVisitor myVisitor;
 
+  @ReviewAfterIssueFix(value = "github.com/uber/NullAway/issues/1500", todo = "Remove NullAway suppression: strange floating problem")
+  @SuppressWarnings("NullAway")
   private static class PsiTreeGuide implements TreeGuide<PsiElement> {
     @Override
-    public PsiElement getNextSibling(PsiElement element) {
+    @RequiredReadAction
+    public @Nullable PsiElement getNextSibling(PsiElement element) {
       return element.getNextSibling();
     }
 
     @Override
-    public PsiElement getPrevSibling(PsiElement element) {
+    @RequiredReadAction
+    public @Nullable PsiElement getPrevSibling(PsiElement element) {
       return element.getPrevSibling();
     }
 
     @Override
-    public PsiElement getFirstChild(PsiElement element) {
+    @RequiredReadAction
+    public @Nullable PsiElement getFirstChild(PsiElement element) {
       return element.getFirstChild();
     }
 
     @Override
-    public PsiElement getParent(PsiElement element) {
+    @RequiredReadAction
+    public @Nullable PsiElement getParent(PsiElement element) {
       return element.getParent();
     }
 

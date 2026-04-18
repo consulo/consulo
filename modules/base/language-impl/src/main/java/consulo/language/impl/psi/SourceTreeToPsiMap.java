@@ -28,7 +28,6 @@ public class SourceTreeToPsiMap {
     return element == null ? null : element.getPsi();
   }
 
-  
   public static <T extends PsiElement> T treeToPsiNotNull(ASTNode element) {
     PsiElement psi = element.getPsi();
     assert psi != null : element;
@@ -40,7 +39,6 @@ public class SourceTreeToPsiMap {
     return psiElement == null ? null : psiElement.getNode();
   }
 
-  
   public static TreeElement psiToTreeNotNull(PsiElement psiElement) {
     ASTNode node = psiElement.getNode();
     assert node instanceof TreeElement : psiElement + ", " + node;

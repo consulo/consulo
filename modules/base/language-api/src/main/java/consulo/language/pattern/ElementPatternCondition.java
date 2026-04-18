@@ -33,10 +33,15 @@ public class ElementPatternCondition<T> {
   }
 
   public boolean accepts(@Nullable Object o, ProcessingContext context) {
-    if (!myInitialCondition.accepts(o, context)) return false;
-    int listSize = myConditions.size();
-    for (int i=0; i<listSize; i++) {
-      if (!myConditions.get(i).accepts((T)o, context)) return false;
+    if (!myInitialCondition.accepts(o, context)) {
+      return false;
+    }
+    if (o != null) {
+      for (PatternCondition<? super T> myCondition : myConditions) {
+        if (!myCondition.accepts((T) o, context)) {
+          return false;
+        }
+      }
     }
     return true;
   }

@@ -3,6 +3,7 @@ package consulo.language.psi.stub;
 
 import consulo.util.collection.primitive.ints.IntIntMap;
 import consulo.util.collection.primitive.ints.IntMaps;
+import org.jspecify.annotations.Nullable;
 
 import java.util.function.IntUnaryOperator;
 
@@ -12,7 +13,7 @@ import java.util.function.IntUnaryOperator;
 class MostlyUShortIntList implements IntUnaryOperator {
   private static final int IN_MAP = Character.MAX_VALUE;
   private final UnsignedShortArrayList myList;
-  private IntIntMap myMap;
+  private @Nullable IntIntMap myMap = null;
 
   MostlyUShortIntList(int initialCapacity) {
     myList = new UnsignedShortArrayList(initialCapacity);
@@ -35,7 +36,9 @@ class MostlyUShortIntList implements IntUnaryOperator {
   }
 
   private IntIntMap initMap() {
-    if (myMap == null) myMap = IntMaps.newIntIntHashMap();
+    if (myMap == null) {
+      myMap = IntMaps.newIntIntHashMap();
+    }
     return myMap;
   }
 
@@ -46,7 +49,7 @@ class MostlyUShortIntList implements IntUnaryOperator {
 
   public int get(int index) {
     int value = myList.getQuick(index);
-    return value == IN_MAP ? myMap.getInt(index) : value;
+    return value == IN_MAP ? initMap().getInt(index) : value;
   }
 
   int size() {

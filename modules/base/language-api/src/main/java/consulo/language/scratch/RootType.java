@@ -34,15 +34,12 @@ import java.util.List;
 
 /**
  * @author gregsh
- * <p>
- * Created on 1/19/15
+ * @since 2015-01-19
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class RootType {
-
   public static final ExtensionPointName<RootType> ROOT_EP = ExtensionPointName.create(RootType.class);
 
-  
   public static List<RootType> getAllRootTypes() {
     return ROOT_EP.getExtensionList();
   }
@@ -57,14 +54,13 @@ public abstract class RootType {
   }
 
   private final String myId;
-  private final String myDisplayName;
+  private final @Nullable String myDisplayName;
 
   protected RootType(String id, @Nullable String displayName) {
     myId = id;
     myDisplayName = displayName;
   }
 
-  
   public final String getId() {
     return myId;
   }

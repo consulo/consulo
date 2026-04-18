@@ -13,10 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.language.impl.ast;
 
-import consulo.application.ApplicationManager;
+import consulo.application.Application;
 import consulo.language.ast.ASTNode;
 import consulo.language.ast.FileASTNode;
 import consulo.language.ast.IElementType;
@@ -32,19 +31,18 @@ import consulo.language.psi.PsiManager;
 import consulo.language.util.CharTable;
 import consulo.language.util.IncorrectOperationException;
 import consulo.logging.Logger;
-
 import org.jspecify.annotations.Nullable;
 
 //TODO: rename/regroup?
 
 public class SharedImplUtil {
   private static final Logger LOG = Logger.getInstance(SharedImplUtil.class);
-  private static final boolean CHECK_FOR_READ_ACTION = DebugUtil.DO_EXPENSIVE_CHECKS || ApplicationManager.getApplication().isInternal();
+  private static final boolean CHECK_FOR_READ_ACTION = DebugUtil.DO_EXPENSIVE_CHECKS || Application.get().isInternal();
 
   private SharedImplUtil() {
   }
 
-  public static PsiElement getParent(ASTNode thisElement) {
+  public static @Nullable PsiElement getParent(ASTNode thisElement) {
     return SourceTreeToPsiMap.treeElementToPsi(thisElement.getTreeParent());
   }
 
@@ -64,10 +62,12 @@ public class SharedImplUtil {
     return SourceTreeToPsiMap.treeElementToPsi(thisElement.getTreePrev());
   }
 
-  public static PsiFile getContainingFile(ASTNode thisElement) {
+  public static @Nullable PsiFile getContainingFile(ASTNode thisElement) {
     FileASTNode element = findFileElement(thisElement);
     PsiElement psiElement = element == null ? null : element.getPsi();
-    if (psiElement == null) return null;
+    if (psiElement == null) {
+      return null;
+    }
     return psiElement.getContainingFile();
   }
 
@@ -147,8 +147,10 @@ public class SharedImplUtil {
   }
 
   public static PsiManager getManagerByTree(ASTNode node) {
-    if(node instanceof FileElement) return node.getPsi().getManager();
-    return node.getTreeParent().getPsi().getManager();
+    if (node instanceof FileElement) {
+      return node.getRequiredPsi().getManager();
+    }
+    return node.getTreeParent().getRequiredPsi().getManager();
   }
 
   public static ASTNode[] getChildrenOfType(ASTNode node, IElementType elementType) {

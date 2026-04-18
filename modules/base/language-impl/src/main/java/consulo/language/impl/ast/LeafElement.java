@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.language.impl.ast;
 
 import consulo.language.ast.ASTNode;
@@ -41,7 +40,6 @@ public abstract class LeafElement extends TreeElement {
     myText = text;
   }
 
-  
   @Override
   public LeafElement clone() {
     LeafElement clone = (LeafElement)super.clone();
@@ -54,13 +52,11 @@ public abstract class LeafElement extends TreeElement {
     return myText.length();
   }
 
-  
   @Override
   public CharSequence getChars() {
     return myText;
   }
 
-  
   @Override
   public String getText() {
     CharSequence text = myText;
@@ -89,7 +85,6 @@ public abstract class LeafElement extends TreeElement {
   }
 
   @Override
-  
   public char[] textToCharArray() {
     char[] buffer = new char[myText.length()];
     CharArrayUtil.getChars(myText, buffer, 0);
@@ -139,7 +134,6 @@ public abstract class LeafElement extends TreeElement {
     return start + length;
   }
 
-  
   public LeafElement rawReplaceWithText(String newText) {
     LeafElement newLeaf = ASTFactory.leaf(getElementType(), newText);
     copyUserDataTo(newLeaf);
@@ -148,7 +142,6 @@ public abstract class LeafElement extends TreeElement {
     return newLeaf;
   }
 
-  
   public LeafElement replaceWithText(String newText) {
     LeafElement newLeaf = ChangeUtil.copyLeafWithText(this, newText);
     getTreeParent().replaceChild(this, newLeaf);
@@ -219,12 +212,12 @@ public abstract class LeafElement extends TreeElement {
   }
 
   @Override
-  public TreeElement getFirstChildNode() {
+  public @Nullable TreeElement getFirstChildNode() {
     return null;
   }
 
   @Override
-  public TreeElement getLastChildNode() {
+  public @Nullable TreeElement getLastChildNode() {
     return null;
   }
 
@@ -233,7 +226,6 @@ public abstract class LeafElement extends TreeElement {
     return myText.length();
   }
 
-  
   @Override
   public ASTNode[] getChildren(TokenSet filter) {
     return EMPTY_ARRAY;
@@ -280,7 +272,7 @@ public abstract class LeafElement extends TreeElement {
   }
 
   @Override
-  public PsiElement getPsi() {
+  public @Nullable PsiElement getPsi() {
     return null;
   }
 

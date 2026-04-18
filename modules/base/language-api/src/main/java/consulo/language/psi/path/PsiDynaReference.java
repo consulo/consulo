@@ -17,6 +17,7 @@
 package consulo.language.psi.path;
 
 import consulo.document.util.TextRange;
+import consulo.language.localize.LanguageLocalize;
 import consulo.language.psi.*;
 import consulo.language.util.IncorrectOperationException;
 import consulo.localize.LocalizeValue;
@@ -33,7 +34,7 @@ import java.util.List;
 public class PsiDynaReference<T extends PsiElement> extends PsiReferenceBase<T> implements FileReferenceOwner, PsiPolyVariantReference, EmptyResolveMessageProvider {
   private final List<PsiReference> myReferences = new ArrayList<>();
   private int myChosenOne = -1;
-  private ResolveResult[] myCachedResult;
+  private ResolveResult @Nullable [] myCachedResult = null;
 
   public PsiDynaReference(T psiElement) {
     super(psiElement, true);
@@ -85,19 +86,20 @@ public class PsiDynaReference<T extends PsiElement> extends PsiReferenceBase<T> 
     while (element != myElement) {
       rangeInElement = rangeInElement.shiftRight(element.getStartOffsetInParent());
       element = element.getParent();
-      if (element instanceof PsiFile) break;
+      if (element == null || element instanceof PsiFile) {
+        break;
+      }
     }
     return rangeInElement;
   }
 
   @Override
-  public PsiElement resolve() {
+  public @Nullable PsiElement resolve() {
     ResolveResult[] resolveResults = multiResolve(false);
     return resolveResults.length == 1 ? resolveResults[0].getElement() : null;
   }
 
   @Override
-  
   public String getCanonicalText() {
     PsiReference reference = chooseReference();
     return reference == null ? myReferences.get(0).getCanonicalText() : reference.getCanonicalText();
@@ -131,13 +133,11 @@ public class PsiDynaReference<T extends PsiElement> extends PsiReferenceBase<T> 
   }
 
   @Override
-  
   public Object[] getVariants() {
     return ArrayUtil.EMPTY_OBJECT_ARRAY;
   }
 
   @Override
-  
   public ResolveResult[] multiResolve(boolean incompleteCode) {
     if (myCachedResult == null) {
       myCachedResult = innerResolve(incompleteCode);
@@ -186,7 +186,6 @@ public class PsiDynaReference<T extends PsiElement> extends PsiReferenceBase<T> 
     return myChosenOne >= 0 ? myReferences.get(myChosenOne) : null;
   }
 
-  
   @Override
   public LocalizeValue buildUnresolvedMessage(String referenceText) {
     PsiReference reference = chooseReference();
@@ -195,7 +194,7 @@ public class PsiDynaReference<T extends PsiElement> extends PsiReferenceBase<T> 
       return emptyResolveMessageProvider.buildUnresolvedMessage(referenceText);
     }
     else {
-      return LocalizeValue.localizeTODO(PsiBundle.message("cannot.resolve.symbol", referenceText));
+      return LanguageLocalize.cannotResolveSymbol(referenceText);
     }
   }
 
@@ -205,7 +204,7 @@ public class PsiDynaReference<T extends PsiElement> extends PsiReferenceBase<T> 
   }
 
   @Override
-  public PsiFileReference getLastFileReference() {
+  public @Nullable PsiFileReference getLastFileReference() {
     for (PsiReference reference : myReferences) {
       if (reference instanceof FileReferenceOwner) {
         return ((FileReferenceOwner)reference).getLastFileReference();

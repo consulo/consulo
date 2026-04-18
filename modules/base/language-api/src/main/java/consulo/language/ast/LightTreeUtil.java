@@ -28,7 +28,6 @@ import java.util.function.BiConsumer;
 
 @SuppressWarnings("ForLoopReplaceableByForEach")
 public class LightTreeUtil {
-
   public static @Nullable LighterASTNode firstChildOfType(LighterAST tree, @Nullable LighterASTNode node, IElementType type) {
     if (node == null) return null;
 
@@ -52,21 +51,18 @@ public class LightTreeUtil {
     return null;
   }
 
-  
   public static LighterASTNode requiredChildOfType(LighterAST tree, LighterASTNode node, IElementType type) {
     LighterASTNode child = firstChildOfType(tree, node, type);
     assert child != null : "Required child " + type + " not found in " + node.getTokenType() + ": " + tree.getChildren(node);
     return child;
   }
 
-  
   public static LighterASTNode requiredChildOfType(LighterAST tree, LighterASTNode node, TokenSet types) {
     LighterASTNode child = firstChildOfType(tree, node, types);
     assert child != null : "Required child " + types + " not found in " + node.getTokenType() + ": " + tree.getChildren(node);
     return child;
   }
 
-  
   public static List<LighterASTNode> getChildrenOfType(LighterAST tree, LighterASTNode node, IElementType type) {
     List<LighterASTNode> result = null;
 
@@ -79,10 +75,9 @@ public class LightTreeUtil {
       }
     }
 
-    return result != null ? result: Collections.emptyList();
+    return result != null ? result : Collections.emptyList();
   }
 
-  
   public static List<LighterASTNode> getChildrenOfType(LighterAST tree, LighterASTNode node, TokenSet types) {
     List<LighterASTNode> children = tree.getChildren(node);
     List<LighterASTNode> result = null;
@@ -95,10 +90,9 @@ public class LightTreeUtil {
       }
     }
 
-    return result != null ? result: Collections.emptyList();
+    return result != null ? result : Collections.emptyList();
   }
 
-  
   public static String toFilteredString(LighterAST tree, LighterASTNode node, @Nullable TokenSet skipTypes) {
     int length = node.getEndOffset() - node.getStartOffset();
     if (length < 0) {
@@ -157,7 +151,7 @@ public class LightTreeUtil {
     return null;
   }
 
-  private static LighterASTNode findChildAtOffset(int offset, List<LighterASTNode> children) {
+  private static @Nullable LighterASTNode findChildAtOffset(int offset, List<LighterASTNode> children) {
     return ContainerUtil.find(children, node -> containsOffset(node, offset));
   }
 
@@ -165,7 +159,11 @@ public class LightTreeUtil {
     return node.getStartOffset() <= offset && node.getEndOffset() > offset;
   }
 
-  public static void processLeavesAtOffsets(int[] offsets, LighterAST tree, BiConsumer<? super LighterASTTokenNode, ? super Integer> consumer) {
+  public static void processLeavesAtOffsets(
+    int[] offsets,
+    LighterAST tree,
+    BiConsumer<? super LighterASTTokenNode, ? super Integer> consumer
+  ) {
     if (offsets.length == 0) return;
 
     int[] sortedOffsets = offsets.clone();

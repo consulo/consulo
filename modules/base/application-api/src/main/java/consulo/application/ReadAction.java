@@ -40,7 +40,7 @@ public final class ReadAction<T> {
         return Application.get().runReadAction(action);
     }
 
-    public static <T, E extends Throwable> T compute(@RequiredReadAction ThrowableSupplier<T, E> action) throws E {
+    public static <T extends @Nullable Object, E extends Throwable> T compute(@RequiredReadAction ThrowableSupplier<T, E> action) throws E {
         return Application.get().runReadAction(action);
     }
 

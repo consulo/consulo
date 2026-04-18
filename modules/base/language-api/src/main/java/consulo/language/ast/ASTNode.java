@@ -1,5 +1,4 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
-
 package consulo.language.ast;
 
 import consulo.document.util.TextRange;
@@ -7,6 +6,8 @@ import consulo.language.psi.PsiElement;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolder;
 import org.jspecify.annotations.Nullable;
+
+import java.util.Objects;
 
 /**
  * A node in the AST tree. The AST is an intermediate parsing tree created by {@link PsiBuilder},
@@ -93,35 +94,35 @@ public interface ASTNode extends UserDataHolder {
    *
    * @return the parent node.
    */
-  ASTNode getTreeParent();
+  @Nullable ASTNode getTreeParent();
 
   /**
    * Returns the first child of this node in the tree.
    *
    * @return the first child node.
    */
-  ASTNode getFirstChildNode();
+  @Nullable ASTNode getFirstChildNode();
 
   /**
    * Returns the last child of this node in the tree.
    *
    * @return the last child node.
    */
-  ASTNode getLastChildNode();
+  @Nullable ASTNode getLastChildNode();
 
   /**
    * Returns the next sibling of this node in the tree.
    *
    * @return the next sibling node.
    */
-  ASTNode getTreeNext();
+  @Nullable ASTNode getTreeNext();
 
   /**
    * Returns the previous sibling of this node in the tree.
    *
    * @return the previous sibling node.
    */
-  ASTNode getTreePrev();
+  @Nullable ASTNode getTreePrev();
 
   /**
    * Returns the list of children of the specified node, optionally filtered by the
@@ -279,7 +280,11 @@ public interface ASTNode extends UserDataHolder {
    *
    * @return the PSI element.
    */
-  PsiElement getPsi();
+  @Nullable PsiElement getPsi();
+
+  default PsiElement getRequiredPsi() {
+    return Objects.requireNonNull(getPsi());
+  }
 
   /**
    * Checks and returns the PSI element for this node.

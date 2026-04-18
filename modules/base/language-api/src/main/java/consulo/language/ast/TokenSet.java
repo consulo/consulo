@@ -14,17 +14,17 @@ import java.util.List;
  */
 public class TokenSet {
   public static final TokenSet EMPTY = new TokenSet(Short.MAX_VALUE, (short)0) {
-    @Override public boolean contains(IElementType t) { return false; }
+    @Override public boolean contains(@Nullable IElementType t) { return false; }
   };
   public static final TokenSet ANY = new TokenSet(Short.MAX_VALUE, (short)0) {
-    @Override public boolean contains(IElementType t) { return true; }
+    @Override public boolean contains(@Nullable IElementType t) { return true; }
   };
   public static final TokenSet WHITE_SPACE = doCreate(TokenType.WHITE_SPACE);
 
   private final short myShift;
   private final short myMax;
   private final long[] myWords;
-  private volatile IElementType[] myTypes;
+  private volatile IElementType @Nullable [] myTypes = null;
 
   private TokenSet(short shift, short max) {
     myShift = shift;
@@ -98,7 +98,6 @@ public class TokenSet {
     return doCreate(types);
   }
 
-  
   private static TokenSet doCreate(IElementType... types) {
     short min = Short.MAX_VALUE;
     short max = 0;
@@ -178,7 +177,8 @@ public class TokenSet {
     for (int i = 0; i < newSet.myWords.length; i++) {
       int ai = newSet.myShift - a.myShift + i;
       int bi = newSet.myShift - b.myShift + i;
-      newSet.myWords[i] = (0 <= ai && ai < a.myWords.length ? a.myWords[ai] : 0L) & ~(0 <= bi && bi < b.myWords.length ? b.myWords[bi] : 0L);
+      newSet.myWords[i] = (0 <= ai && ai < a.myWords.length ? a.myWords[ai] : 0L)
+          & ~(0 <= bi && bi < b.myWords.length ? b.myWords[bi] : 0L);
     }
     return newSet;
   }

@@ -16,6 +16,8 @@
 package consulo.language;
 
 import org.jspecify.annotations.Nullable;
+
+import java.util.Objects;
 import java.util.function.Supplier;
 
 /**
@@ -40,7 +42,7 @@ public class WeighingComparable<T, Loc> implements Comparable<WeighingComparable
   private final Loc myLocation;
   private final Weigher<T, Loc>[] myWeighers;
 
-  public WeighingComparable(Supplier<? extends T> element, @Nullable Loc location, Weigher<T, Loc>[] weighers) {
+  public WeighingComparable(Supplier<? extends T> element, Loc location, Weigher<T, Loc>[] weighers) {
     myElement = element;
     myLocation = location;
     myWeighers = weighers;
@@ -51,8 +53,8 @@ public class WeighingComparable<T, Loc> implements Comparable<WeighingComparable
   public void force() {
     for (int i = 0; i < myComputedWeighs.length; i++) {
       Comparable weight = getWeight(i);
-      if (weight instanceof ForceableComparable) {
-        ((ForceableComparable)weight).force();
+      if (weight instanceof ForceableComparable forceableComparable) {
+        forceableComparable.force();
       }
     }
   }

@@ -18,12 +18,12 @@ package consulo.language.ast;
 import consulo.language.util.CharTable;
 import consulo.language.util.FlyweightCapableTreeStructure;
 import consulo.util.lang.ref.SimpleReference;
+import org.jspecify.annotations.Nullable;
 
 import java.util.AbstractList;
 import java.util.List;
 
 public class FCTSBackedLighterAST extends LighterAST {
-  
   private final FlyweightCapableTreeStructure<LighterASTNode> myTreeStructure;
 
   public FCTSBackedLighterAST(CharTable charTable, FlyweightCapableTreeStructure<LighterASTNode> treeStructure) {
@@ -31,18 +31,16 @@ public class FCTSBackedLighterAST extends LighterAST {
     myTreeStructure = treeStructure;
   }
 
-  
   @Override
   public LighterASTNode getRoot() {
     return myTreeStructure.getRoot();
   }
 
   @Override
-  public LighterASTNode getParent(LighterASTNode node) {
+  public @Nullable LighterASTNode getParent(LighterASTNode node) {
     return myTreeStructure.getParent(node);
   }
 
-  
   @Override
   public List<LighterASTNode> getChildren(LighterASTNode parent) {
     SimpleReference<LighterASTNode[]> into = SimpleReference.create();

@@ -17,13 +17,14 @@ package consulo.language.inject;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
+import consulo.application.Application;
 import consulo.component.extension.ExtensionPointName;
 import consulo.document.util.TextRange;
 import consulo.language.Language;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiReference;
 import consulo.language.util.ProcessingContext;
-import consulo.util.collection.ContainerUtil;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author Dmitry Avdeev
@@ -31,11 +32,10 @@ import consulo.util.collection.ContainerUtil;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class ReferenceInjector extends Injectable {
-
   public final static ExtensionPointName<ReferenceInjector> EXTENSION_POINT_NAME = ExtensionPointName.create(ReferenceInjector.class);
 
   @Override
-  public final Language getLanguage() {
+  public final @Nullable Language getLanguage() {
     return null;
   }
 
@@ -44,7 +44,8 @@ public abstract class ReferenceInjector extends Injectable {
    */
   public abstract PsiReference[] getReferences(PsiElement element, ProcessingContext context, TextRange range);
 
-  public static ReferenceInjector findById(String id) {
-    return ContainerUtil.find(EXTENSION_POINT_NAME.getExtensionList(), injector -> id.equals(injector.getId()));
+  public static @Nullable ReferenceInjector findById(String id) {
+    return Application.get().getExtensionPoint(ReferenceInjector.class)
+        .findFirstSafe(injector -> id.equals(injector.getId()));
   }
 }

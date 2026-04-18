@@ -20,6 +20,7 @@ import consulo.codeEditor.EditorHighlighter;
 import consulo.codeEditor.HighlighterIterator;
 import consulo.language.ast.IElementType;
 import consulo.util.lang.CharSequenceSubSequence;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author Sergey Evdokimov
@@ -59,7 +60,7 @@ public class LexerEditorHighlighterLexer extends LexerBase {
   }
 
   @Override
-  public IElementType getTokenType() {
+  public @Nullable IElementType getTokenType() {
     if (iterator.atEnd()) return null;
     return (IElementType)iterator.getTokenType();
   }

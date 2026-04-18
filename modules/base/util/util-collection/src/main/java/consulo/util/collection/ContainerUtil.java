@@ -1168,7 +1168,7 @@ public class ContainerUtil {
      * @return read-only list consisting of the elements from the array converted by mapping with nulls filtered out
      */
     @Contract(pure = true)
-    public static <T, V> List<V> mapNotNull(T[] array, Function<T, V> mapping) {
+    public static <T, V> List<V> mapNotNull(T[] array, Function<T, @Nullable V> mapping) {
         return mapNotNull(Arrays.asList(array), mapping);
     }
 
@@ -1176,7 +1176,7 @@ public class ContainerUtil {
      * @return read-only list consisting of the elements from the array converted by mapping with nulls filtered out
      */
     @Contract(pure = true)
-    public static <T, V> List<V> mapNotNull(Collection<? extends T> iterable, Function<T, V> mapping) {
+    public static <T, V> List<V> mapNotNull(Collection<? extends T> iterable, Function<T, @Nullable V> mapping) {
         if (iterable.isEmpty()) {
             return List.of();
         }
@@ -1195,7 +1195,7 @@ public class ContainerUtil {
      * @return read-only list consisting of the elements from the array converted by mapping with nulls filtered out
      */
     @Contract(pure = true)
-    public static <T, V> V[] mapNotNull(T[] array, Function<T, V> mapping, V[] emptyArray) {
+    public static <T, V> V[] mapNotNull(T[] array, Function<T, @Nullable V> mapping, V[] emptyArray) {
         List<V> result = new ArrayList<>(array.length);
         for (T t : array) {
             V v = mapping.apply(t);

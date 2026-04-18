@@ -89,7 +89,6 @@ public abstract class SuppressIntentionAction implements Iconable, SyntheticInte
   public final boolean isAvailable(Project project, Editor editor, PsiFile file) {
     if (file == null) return false;
     PsiManager manager = file.getManager();
-    if (manager == null) return false;
     if (!manager.isInProject(file)) return false;
     PsiElement element = getElement(editor, file);
     return element != null && isAvailable(project, editor, element);

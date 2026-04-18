@@ -18,8 +18,10 @@ package consulo.language.pratt;
 import consulo.language.ast.LighterASTNode;
 import consulo.language.parser.PsiBuilder;
 import consulo.language.ast.IElementType;
+import org.jspecify.annotations.Nullable;
 
 import java.util.LinkedList;
+import java.util.Objects;
 
 /**
  * @author peter
@@ -28,7 +30,7 @@ public class MutableMarker {
   enum Mode { READY, DROPPED, COMMITTED, ERROR }
 
   private final PsiBuilder.Marker myStartMarker;
-  private IElementType myResultType;
+  private @Nullable IElementType myResultType = null;
   private final int myInitialPathLength;
   private final LinkedList<IElementType> myPath;
   private Mode myMode;
@@ -42,10 +44,11 @@ public class MutableMarker {
 
   // for easier transition only
   public MutableMarker(LinkedList<IElementType> path, PsiBuilder builder) {
+    PsiBuilder.Marker startMarker = Objects.requireNonNull((PsiBuilder.Marker) builder.getLatestDoneMarker());
     myPath = path;
-    myStartMarker = (PsiBuilder.Marker)builder.getLatestDoneMarker();
+    myStartMarker = startMarker;
     myInitialPathLength = path.size();
-    myResultType = myStartMarker instanceof LighterASTNode? ((LighterASTNode)myStartMarker).getTokenType() : null;
+    myResultType = startMarker instanceof LighterASTNode node ? node.getTokenType() : null;
     myMode = myResultType != null ? Mode.COMMITTED : Mode.READY;
   }
 
@@ -70,7 +73,7 @@ public class MutableMarker {
     return this;
   }
 
-  public IElementType getResultType() {
+  public @Nullable IElementType getResultType() {
     return myResultType;
   }
 

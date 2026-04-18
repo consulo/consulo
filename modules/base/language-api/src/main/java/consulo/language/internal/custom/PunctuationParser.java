@@ -13,8 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.language.internal.custom;
+
+import java.util.Objects;
 
 /**
  * @author peter
@@ -22,9 +23,9 @@ package consulo.language.internal.custom;
 public class PunctuationParser extends TokenParser {
   @Override
   public boolean hasToken(int position) {
-    char c = myBuffer.charAt(position);
+    char c = Objects.requireNonNull(myBuffer).charAt(position);
     if (".,:;".indexOf(c) >= 0) {
-      myTokenInfo.updateData(position, position+1, CustomHighlighterTokenType.PUNCTUATION);
+      myTokenInfo.updateData(position, position + 1, CustomHighlighterTokenType.PUNCTUATION);
       return true;
     }
     return false;

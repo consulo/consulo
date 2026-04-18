@@ -23,11 +23,9 @@ import consulo.util.dataholder.Key;
  * @author peter
  */
 public abstract class ProximityWeigher extends Weigher<PsiElement, ProximityLocation> {
-
   @Override
   public abstract Comparable weigh(PsiElement element, ProximityLocation location);
 
-  
   @Override
   public Key<?> getKey() {
     return PsiProximityComparator.WEIGHER_KEY;

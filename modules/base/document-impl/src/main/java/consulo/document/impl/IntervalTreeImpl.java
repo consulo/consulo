@@ -1499,7 +1499,7 @@ public abstract class IntervalTreeImpl<T> extends RedBlackTree<T> implements Int
         }
 
         @Override
-        public IntervalNode<T> getNextSibling(IntervalNode<T> element) {
+        public @Nullable IntervalNode<T> getNextSibling(IntervalNode<T> element) {
             IntervalNode<T> parent = element.getParent();
             if (parent == null) {
                 return null;
@@ -1508,7 +1508,7 @@ public abstract class IntervalTreeImpl<T> extends RedBlackTree<T> implements Int
         }
 
         @Override
-        public IntervalNode<T> getPrevSibling(IntervalNode<T> element) {
+        public @Nullable IntervalNode<T> getPrevSibling(IntervalNode<T> element) {
             IntervalNode<T> parent = element.getParent();
             if (parent == null) {
                 return null;
@@ -1517,13 +1517,13 @@ public abstract class IntervalTreeImpl<T> extends RedBlackTree<T> implements Int
         }
 
         @Override
-        public IntervalNode<T> getFirstChild(IntervalNode<T> element) {
+        public @Nullable IntervalNode<T> getFirstChild(IntervalNode<T> element) {
             IntervalNode<T> left = element.getLeft();
             return left == null ? element.getRight() : left;
         }
 
         @Override
-        public IntervalNode<T> getParent(IntervalNode<T> element) {
+        public @Nullable IntervalNode<T> getParent(IntervalNode<T> element) {
             return element.getParent();
         }
     }

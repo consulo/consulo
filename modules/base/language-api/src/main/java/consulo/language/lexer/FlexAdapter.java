@@ -5,15 +5,17 @@ import consulo.component.ProcessCanceledException;
 import consulo.language.ast.IElementType;
 import consulo.language.ast.TokenType;
 import consulo.logging.Logger;
+import org.jspecify.annotations.Nullable;
+
+import java.util.Objects;
 
 public class FlexAdapter extends LexerBase {
-
     private static final Logger LOG = Logger.getInstance(FlexAdapter.class);
 
     private final FlexLexer myFlex;
 
-    private IElementType myTokenType;
-    private CharSequence myText;
+    private @Nullable IElementType myTokenType = null;
+    private @Nullable CharSequence myText = null;
 
     private int myTokenStart;
     private int myTokenEnd;
@@ -47,7 +49,7 @@ public class FlexAdapter extends LexerBase {
     }
 
     @Override
-    public IElementType getTokenType() {
+    public @Nullable IElementType getTokenType() {
         locateToken();
         return myTokenType;
     }
@@ -71,9 +73,8 @@ public class FlexAdapter extends LexerBase {
     }
 
     @Override
-    
     public CharSequence getBufferSequence() {
-        return myText;
+        return Objects.requireNonNull(myText);
     }
 
     @Override

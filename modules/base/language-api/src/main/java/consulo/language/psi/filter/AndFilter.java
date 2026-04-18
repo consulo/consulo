@@ -13,10 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.language.psi.filter;
 
 import consulo.language.psi.PsiElement;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -44,7 +44,7 @@ public class AndFilter implements ElementFilter {
   }
 
   @Override
-  public boolean isAcceptable(Object element, PsiElement context){
+  public boolean isAcceptable(Object element, @Nullable PsiElement context){
     for (ElementFilter elementFilter : myFilters) {
       if (!elementFilter.isAcceptable(element, context)) {
         return false;

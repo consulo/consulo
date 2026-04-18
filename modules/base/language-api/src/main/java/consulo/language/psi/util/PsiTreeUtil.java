@@ -391,7 +391,7 @@ public class PsiTreeUtil {
 
     @RequiredReadAction
     @SuppressWarnings("unchecked")
-    public static <T extends PsiElement> @Nullable T[] getChildrenOfType(@Nullable PsiElement element, Class<T> aClass) {
+    public static <T extends PsiElement> T @Nullable [] getChildrenOfType(@Nullable PsiElement element, Class<T> aClass) {
         if (element == null) {
             return null;
         }
@@ -408,7 +408,6 @@ public class PsiTreeUtil {
         return result == null ? null : ArrayUtil.toObjectArray(result, aClass);
     }
 
-    
     @RequiredReadAction
     @SuppressWarnings("unchecked")
     public static <T extends PsiElement> List<T> getChildrenOfTypeAsList(@Nullable PsiElement element, Class<T> aClass) {
@@ -443,7 +442,6 @@ public class PsiTreeUtil {
         return null;
     }
 
-    
     @RequiredReadAction
     public static <T extends PsiElement> List<T> getStubChildrenOfTypeAsList(@Nullable PsiElement element, Class<T> aClass) {
         if (element == null) {
@@ -646,7 +644,7 @@ public class PsiTreeUtil {
 
     @Contract("null, _, _, _ -> null")
     @SuppressWarnings("unchecked")
-    public static <T extends PsiElement> T getParentOfType(
+    public static <T extends PsiElement> @Nullable T getParentOfType(
         @Nullable PsiElement element,
         Class<T> aClass,
         boolean strict,
@@ -787,13 +785,9 @@ public class PsiTreeUtil {
         return processor.toArray();
     }
 
-    
     @RequiredReadAction
     @SafeVarargs
-    public static <T extends PsiElement> Collection<T> collectElementsOfType(
-        @Nullable PsiElement element,
-        Class<T>... classes
-    ) {
+    public static <T extends PsiElement> Collection<T> collectElementsOfType(@Nullable PsiElement element, Class<T>... classes) {
         PsiElementProcessor.CollectFilteredElements<T> processor =
             new PsiElementProcessor.CollectFilteredElements<>((PsiElementFilter)psiElement -> {
                 for (Class<T> clazz : classes) {
@@ -845,7 +839,7 @@ public class PsiTreeUtil {
     }
 
     @RequiredReadAction
-    public static boolean processElements(PsiElementProcessor processor, @Nullable PsiElement... elements) {
+    public static boolean processElements(PsiElementProcessor processor, PsiElement @Nullable ... elements) {
         if (elements == null || elements.length == 0) {
             return true;
         }
@@ -1242,7 +1236,8 @@ public class PsiTreeUtil {
 
     @RequiredReadAction
     public static List<PsiElement> getInjectedElements(OuterLanguageElement outerLanguageElement) {
-        PsiElement psi = outerLanguageElement.getContainingFile().getViewProvider().getPsi(outerLanguageElement.getLanguage());
+        PsiElement psi =
+            Objects.requireNonNull(outerLanguageElement.getContainingFile()).getViewProvider().getPsi(outerLanguageElement.getLanguage());
         TextRange injectionRange = outerLanguageElement.getTextRange();
         List<PsiElement> res = new ArrayList<>();
 
@@ -1341,7 +1336,7 @@ public class PsiTreeUtil {
     @RequiredReadAction
     public static <T extends PsiElement> Iterator<T> childIterator(final PsiElement element, final Class<T> aClass) {
         return new Iterator<>() {
-            private T next = getChildOfType(element, aClass);
+            private @Nullable T next = getChildOfType(element, aClass);
 
             @Override
             public boolean hasNext() {
@@ -1378,7 +1373,7 @@ public class PsiTreeUtil {
     @Contract("null, _ -> null; !null, _ -> !null")
     @RequiredReadAction
     @SuppressWarnings("unchecked")
-    public static <T extends PsiElement> T findSameElementInCopy(@Nullable T element, PsiFile copy) throws IllegalStateException {
+    public static <T extends PsiElement> @Nullable T findSameElementInCopy(@Nullable T element, PsiFile copy) throws IllegalStateException {
         if (element == null) {
             return null;
         }

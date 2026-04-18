@@ -15,27 +15,29 @@
  */
 package consulo.language.psi.util;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.language.psi.PsiElement;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Objects;
 
 public class PsiMatcherImpl implements PsiMatcher {
-  private PsiElement myElement;
+  private @Nullable PsiElement myElement;
 
   public PsiMatcherImpl(PsiElement element) {
     myElement = element;
   }
 
   @Override
-  public PsiMatcher parent(PsiMatcherExpression e) {
-    myElement = myElement.getParent();
+  public PsiMatcher parent(@Nullable PsiMatcherExpression e) {
+    myElement = Objects.requireNonNull(myElement).getParent();
     if (myElement == null || (e != null && !Objects.equals(e.match(myElement), Boolean.TRUE))) return NullPsiMatcherImpl.INSTANCE;
     return this;
   }
 
   @Override
-  public PsiMatcher firstChild(PsiMatcherExpression e) {
-    PsiElement[] children = myElement.getChildren();
+  public PsiMatcher firstChild(@Nullable PsiMatcherExpression e) {
+    PsiElement[] children = Objects.requireNonNull(myElement).getChildren();
     for (PsiElement child : children) {
       myElement = child;
       if (e == null || Objects.equals(e.match(myElement), Boolean.TRUE)) {
@@ -46,10 +48,10 @@ public class PsiMatcherImpl implements PsiMatcher {
   }
 
   @Override
-  public PsiMatcher ancestor(PsiMatcherExpression e) {
+  public PsiMatcher ancestor(@Nullable PsiMatcherExpression e) {
     while (myElement != null) {
       Boolean res = e == null ? Boolean.TRUE : e.match(myElement);
-      if (Objects.equals(res, Boolean.TRUE)) break;
+      if (Boolean.TRUE.equals(res)) break;
       if (res == null) return NullPsiMatcherImpl.INSTANCE;
       myElement = myElement.getParent();
     }
@@ -58,15 +60,16 @@ public class PsiMatcherImpl implements PsiMatcher {
   }
 
   @Override
-  public PsiMatcher descendant(PsiMatcherExpression e) {
-    PsiElement[] children = myElement.getChildren();
+  @RequiredReadAction
+  public PsiMatcher descendant(@Nullable PsiMatcherExpression e) {
+    PsiElement[] children = Objects.requireNonNull(myElement).getChildren();
     for (PsiElement child : children) {
       myElement = child;
       Boolean res = e == null ? Boolean.TRUE : e.match(myElement);
-      if (Objects.equals(res, Boolean.TRUE)) {
+      if (Boolean.TRUE.equals(res)) {
         return this;
       }
-      else if (Objects.equals(res, Boolean.FALSE)) {
+      else if (Boolean.FALSE.equals(res)) {
         PsiMatcher grandChild = descendant(e);
         if (grandChild != NullPsiMatcherImpl.INSTANCE) return grandChild;
       }
@@ -75,43 +78,43 @@ public class PsiMatcherImpl implements PsiMatcher {
   }
 
   @Override
-  public PsiMatcher dot(PsiMatcherExpression e) {
-    return e == null || Objects.equals(e.match(myElement), Boolean.TRUE) ? this : NullPsiMatcherImpl.INSTANCE;
+  public PsiMatcher dot(@Nullable PsiMatcherExpression e) {
+    return e == null || Boolean.TRUE.equals(e.match(Objects.requireNonNull(myElement))) ? this : NullPsiMatcherImpl.INSTANCE;
   }
 
   @Override
-  public PsiElement getElement() {
+  public @Nullable PsiElement getElement() {
     return myElement;
   }
 
   private static class NullPsiMatcherImpl implements PsiMatcher {
     @Override
-    public PsiMatcher parent(PsiMatcherExpression e) {
+    public PsiMatcher parent(@Nullable PsiMatcherExpression e) {
       return this;
     }
 
     @Override
-    public PsiMatcher firstChild(PsiMatcherExpression e) {
+    public PsiMatcher firstChild(@Nullable PsiMatcherExpression e) {
       return this;
     }
 
     @Override
-    public PsiMatcher ancestor(PsiMatcherExpression e) {
+    public PsiMatcher ancestor(@Nullable PsiMatcherExpression e) {
       return this;
     }
 
     @Override
-    public PsiMatcher descendant(PsiMatcherExpression e) {
+    public PsiMatcher descendant(@Nullable PsiMatcherExpression e) {
       return this;
     }
 
     @Override
-    public PsiMatcher dot(PsiMatcherExpression e) {
+    public PsiMatcher dot(@Nullable PsiMatcherExpression e) {
       return this;
     }
 
     @Override
-    public PsiElement getElement() {
+    public @Nullable PsiElement getElement() {
       return null;
     }
 

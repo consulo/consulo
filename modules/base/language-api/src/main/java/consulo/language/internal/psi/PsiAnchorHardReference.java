@@ -19,6 +19,7 @@ import consulo.annotation.access.RequiredReadAction;
 import consulo.language.psi.PsiAnchor;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
+import org.jspecify.annotations.Nullable;
 
 public class PsiAnchorHardReference implements PsiAnchor {
     private final PsiElement myElement;
@@ -28,12 +29,12 @@ public class PsiAnchorHardReference implements PsiAnchor {
     }
 
     @Override
-    public PsiElement retrieve() {
+    public @Nullable PsiElement retrieve() {
         return myElement.isValid() ? myElement : null;
     }
 
     @Override
-    public PsiFile getFile() {
+    public @Nullable PsiFile getFile() {
         return myElement.getContainingFile();
     }
 

@@ -17,9 +17,12 @@ package consulo.language.lexer;
 
 import consulo.language.Language;
 import consulo.language.ast.IElementType;
+import org.jspecify.annotations.Nullable;
+
+import java.util.Objects;
 
 public class EmptyLexer extends LexerBase {
-    private CharSequence myBuffer;
+    private @Nullable CharSequence myBuffer = null;
     private int myStartOffset;
     private int myEndOffset;
 
@@ -34,7 +37,7 @@ public class EmptyLexer extends LexerBase {
 
     @Override
     public CharSequence getBufferSequence() {
-        return myBuffer;
+        return Objects.requireNonNull(myBuffer);
     }
 
     @Override
@@ -43,8 +46,8 @@ public class EmptyLexer extends LexerBase {
     }
 
     @Override
-    public IElementType getTokenType() {
-        return (myStartOffset < myEndOffset ? EMPTY_TOKEN_TYPE : null);
+    public @Nullable IElementType getTokenType() {
+        return myStartOffset < myEndOffset ? EMPTY_TOKEN_TYPE : null;
     }
 
     @Override

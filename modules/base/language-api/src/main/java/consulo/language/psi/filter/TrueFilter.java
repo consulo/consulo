@@ -16,24 +16,24 @@
 package consulo.language.psi.filter;
 
 import consulo.language.psi.PsiElement;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author ik
  * @since 2003-02-03
  */
 public class TrueFilter implements ElementFilter {
-
   @Override
-  public boolean isClassAcceptable(Class hintClass){
+  public boolean isClassAcceptable(Class hintClass) {
     return true;
   }
 
   @Override
-  public boolean isAcceptable(Object element, PsiElement context){
+  public boolean isAcceptable(Object element, @Nullable PsiElement context) {
     return true;
   }
 
-  public String toString(){
+  public String toString() {
     return "true";
   }
 

@@ -187,7 +187,6 @@ public class LazyParseablePsiElement extends LazyParseableElement implements Psi
     TreeElement elementCopy = ChangeUtil.copyToElement(element);
     TreeElement treeElement = addInternal(elementCopy, elementCopy, SourceTreeToPsiMap.psiElementToTree(anchor), Boolean.FALSE);
     return ChangeUtil.decodeInformation(treeElement).getPsi();
-
   }
 
   @Override
@@ -244,7 +243,7 @@ public class LazyParseablePsiElement extends LazyParseableElement implements Psi
   }
 
   @Override
-  public boolean processDeclarations(PsiScopeProcessor processor, ResolveState state, PsiElement lastParent, PsiElement place) {
+  public boolean processDeclarations(PsiScopeProcessor processor, ResolveState state, @Nullable PsiElement lastParent, PsiElement place) {
     return true;
   }
 
@@ -259,7 +258,6 @@ public class LazyParseablePsiElement extends LazyParseableElement implements Psi
   }
 
   @Override
-  
   public PsiElement getNavigationElement() {
     return this;
   }
@@ -276,14 +274,12 @@ public class LazyParseablePsiElement extends LazyParseableElement implements Psi
   }
 
   @Override
-  
   public GlobalSearchScope getResolveScope() {
     assert isValid();
     return ResolveScopeManager.getElementResolveScope(this);
   }
 
   @Override
-  
   public SearchScope getUseScope() {
     return ResolveScopeManager.getElementUseScope(this);
   }
@@ -314,32 +310,25 @@ public class LazyParseablePsiElement extends LazyParseableElement implements Psi
   }
 
   @Override
-  
   public Project getProject() {
     Project project = SingleProjectHolder.theOnlyOpenProject();
     if (project != null) {
       return project;
     }
-    PsiManager manager = getManager();
-    if (manager == null) throw new PsiInvalidElementAccessException(this);
-
-    return manager.getProject();
+    return getManager().getProject();
   }
 
   @Override
-  
   public Language getLanguage() {
     return getElementType().getLanguage();
   }
 
-  
   @Override
   public LanguageVersion getLanguageVersion() {
     return PsiTreeUtil.getLanguageVersion(this);
   }
 
   @Override
-  
   public ASTNode getNode() {
     return this;
   }

@@ -16,6 +16,7 @@
 package consulo.language.psi.filter;
 
 import consulo.language.psi.PsiElement;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author peter
@@ -28,11 +29,12 @@ public abstract class ElementFilterBase<T> implements ElementFilter {
   }
 
   @Override
-  public boolean isAcceptable(Object element, PsiElement context) {
-    return isClassAcceptable(element.getClass()) && isElementAcceptable((T)element, context);
+  @SuppressWarnings("unchecked")
+  public boolean isAcceptable(Object element, @Nullable PsiElement context) {
+    return isClassAcceptable(element.getClass()) && isElementAcceptable((T) element, context);
   }
 
-  protected abstract boolean isElementAcceptable(T element, PsiElement context);
+  protected abstract boolean isElementAcceptable(T element, @Nullable PsiElement context);
 
   @Override
   public boolean isClassAcceptable(Class hintClass) {

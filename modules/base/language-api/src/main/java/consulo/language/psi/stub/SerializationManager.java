@@ -3,7 +3,7 @@ package consulo.language.psi.stub;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
-import consulo.application.ApplicationManager;
+import consulo.application.Application;
 import consulo.language.ast.IElementType;
 
 import java.util.List;
@@ -13,7 +13,7 @@ public abstract class SerializationManager {
   private volatile boolean mySerializersLoaded;
 
   public static SerializationManager getInstance() {
-    return ApplicationManager.getApplication().getInstance(SerializationManager.class);
+    return Application.get().getInstance(SerializationManager.class);
   }
 
   public void registerSerializer(ObjectStubSerializer serializer) {

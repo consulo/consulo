@@ -13,19 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.language.psi.filter.position;
 
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.filter.ElementFilter;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author ik
  * @since 2003-02-03
  */
 public class ParentElementFilter extends PositionElementFilter {
-  private PsiElement myParent = null;
+  private @Nullable PsiElement myParent = null;
   private int myLevel = 1;
+
   public ParentElementFilter(ElementFilter filter){
     setFilter(filter);
   }
@@ -39,18 +40,19 @@ public class ParentElementFilter extends PositionElementFilter {
     myParent = parent;
   }
 
-  public ParentElementFilter(){}
+  public ParentElementFilter() {
+  }
 
   @Override
-  public boolean isAcceptable(Object element, PsiElement scope){
+  public boolean isAcceptable(Object element, @Nullable PsiElement scope) {
     if (!(element instanceof PsiElement)) return false;
     PsiElement context = (PsiElement)element;
-    for(int i = 0; i < myLevel && context != null; i++){
+    for (int i = 0; i < myLevel && context != null; i++) {
        context = context.getContext();
     }
-    if(context != null){
-      if(myParent == null){
-        return getFilter().isAcceptable(context, scope);
+    if (context != null) {
+      if (myParent == null) {
+        return getRequiredFilter().isAcceptable(context, scope);
       }
       return myParent == context;
     }
@@ -58,7 +60,6 @@ public class ParentElementFilter extends PositionElementFilter {
   }
 
   public String toString(){
-    return "parent(" +getFilter()+")";
+    return "parent(" + getFilter() + ")";
   }
-
 }

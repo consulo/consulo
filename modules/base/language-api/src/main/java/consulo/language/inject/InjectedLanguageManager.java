@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.language.inject;
 
 import consulo.annotation.access.RequiredReadAction;
@@ -36,7 +35,6 @@ import java.util.List;
 
 @ServiceAPI(ComponentScope.PROJECT)
 public interface InjectedLanguageManager {
-   
     static InjectedLanguageManager getInstance(Project project) {
         return InjectedLanguageManagerHolder.LAZY_INJECT.apply(project);
     }
@@ -47,7 +45,6 @@ public interface InjectedLanguageManager {
 
     @Nullable PsiLanguageInjectionHost getInjectionHost(PsiElement injectedElement);
 
-   
     TextRange injectedToHost(PsiElement injectedContext, TextRange injectedTextRange);
 
     int injectedToHost(PsiElement injectedContext, int injectedOffset);
@@ -56,10 +53,8 @@ public interface InjectedLanguageManager {
 
     @Nullable String getUnescapedLeafText(PsiElement element, boolean strict);
 
-   
     String getUnescapedText(PsiElement injectedNode);
 
-   
     List<TextRange> intersectWithAllEditableFragments(PsiFile injectedPsi, TextRange rangeToEdit);
 
     boolean isInjectedFragment(PsiFile injectedFile);
@@ -83,9 +78,8 @@ public interface InjectedLanguageManager {
 
     void dropFileCaches(PsiFile file);
 
-    PsiFile getTopLevelFile(PsiElement element);
+    @Nullable PsiFile getTopLevelFile(PsiElement element);
 
-   
     List<DocumentWindow> getCachedInjectedDocumentsInRange(PsiFile hostPsiFile, TextRange range);
 
     void enumerate(PsiElement host, PsiLanguageInjectionHost.InjectedPsiVisitor visitor);
@@ -109,16 +103,13 @@ public interface InjectedLanguageManager {
      */
     boolean mightHaveInjectedFragmentAtOffset(Document hostDocument, int hostOffset);
 
-   
     DocumentWindow freezeWindow(DocumentWindow document);
 
     PsiLanguageInjectionHost.@Nullable Place getShreds(PsiFile injectedFile);
 
     PsiLanguageInjectionHost.@Nullable Place getShreds(FileViewProvider viewProvider);
 
-   
     PsiLanguageInjectionHost.Place getShreds(DocumentWindow documentWindow);
-
     @RequiredReadAction
    
     default String getUnescapedText(PsiFile file, @Nullable PsiElement startElement, @Nullable PsiElement endElement) {

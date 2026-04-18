@@ -1,5 +1,6 @@
 package consulo.language.dataFlow;
 
+import org.jetbrains.annotations.Contract;
 import org.jspecify.annotations.Nullable;
 
 import java.util.Collections;
@@ -16,7 +17,8 @@ public class SetUtil {
   /**
    * Intersects two sets
    */
-  public static <T> Set<T> intersect(@Nullable Set<T> set1, @Nullable Set<T> set2) {
+  @Contract("!null,!null -> !null")
+  public static <T> @Nullable Set<T> intersect(@Nullable Set<T> set1, @Nullable Set<T> set2) {
     if (set1 == null && set2 == null) {
       return Collections.emptySet();
     }

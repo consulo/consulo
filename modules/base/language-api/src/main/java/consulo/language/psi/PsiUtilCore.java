@@ -221,13 +221,13 @@ public class PsiUtilCore {
 
         @Override
         @RequiredWriteAction
-        public PsiElement addBefore(PsiElement element, PsiElement anchor) {
+        public PsiElement addBefore(PsiElement element, @Nullable PsiElement anchor) {
             throw createException();
         }
 
         @Override
         @RequiredWriteAction
-        public PsiElement addAfter(PsiElement element, PsiElement anchor) {
+        public PsiElement addAfter(PsiElement element, @Nullable PsiElement anchor) {
             throw createException();
         }
 
@@ -308,7 +308,7 @@ public class PsiUtilCore {
         }
 
         @Override
-        public <T> void putCopyableUserData(Key<T> key, T value) {
+        public <T> void putCopyableUserData(Key<T> key, @Nullable T value) {
             throw createException();
         }
 
@@ -316,7 +316,7 @@ public class PsiUtilCore {
         public boolean processDeclarations(
             PsiScopeProcessor processor,
             ResolveState state,
-            PsiElement lastParent,
+            @Nullable PsiElement lastParent,
             PsiElement place
         ) {
             throw createException();
@@ -353,7 +353,7 @@ public class PsiUtilCore {
         }
 
         @Override
-        public <T> void putUserData(Key<T> key, T value) {
+        public <T> void putUserData(Key<T> key, @Nullable T value) {
             throw createException();
         }
 
@@ -484,7 +484,7 @@ public class PsiUtilCore {
         return collection.toArray(new PsiElement[collection.size()]);
     }
 
-    public static Language getNotAnyLanguage(ASTNode node) {
+    public static Language getNotAnyLanguage(@Nullable ASTNode node) {
         if (node == null) {
             return Language.ANY;
         }
@@ -605,7 +605,7 @@ public class PsiUtilCore {
 
     @RequiredReadAction
     public static Language getDialect(PsiElement element) {
-        return narrowLanguage(element.getLanguage(), element.getContainingFile().getLanguage());
+        return narrowLanguage(element.getLanguage(), Objects.requireNonNull(element.getContainingFile()).getLanguage());
     }
 
     protected static Language narrowLanguage(Language language, Language candidate) {
@@ -677,7 +677,7 @@ public class PsiUtilCore {
      */
     @RequiredReadAction
     public static <T extends PsiElement> @Nullable T getOriginalElement(T psiElement, Class<? extends T> elementClass) {
-        PsiFile psiFile = psiElement.getContainingFile();
+        PsiFile psiFile = Objects.requireNonNull(psiElement.getContainingFile());
         PsiFile originalFile = psiFile.getOriginalFile();
         if (originalFile == psiFile) {
             return psiElement;
@@ -698,13 +698,13 @@ public class PsiUtilCore {
         return Application.get().runReadAction((Supplier<Project>) element::getProject);
     }
 
-    @Contract("null -> null;!null -> !null")
-    public static IElementType getElementType(@Nullable ASTNode node) {
+    @Contract("null -> null; !null -> !null")
+    public static @Nullable IElementType getElementType(@Nullable ASTNode node) {
         return node == null ? null : node.getElementType();
     }
 
-    @Contract("null -> null;!null -> !null")
-    public static IElementType getElementType(@Nullable PsiElement element) {
+    @Contract("null -> null; !null -> !null")
+    public static @Nullable IElementType getElementType(@Nullable PsiElement element) {
         return element == null ? null : getElementType(element.getNode());
     }
 

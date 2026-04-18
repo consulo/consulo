@@ -30,6 +30,7 @@ import consulo.util.lang.CharArrayUtil;
 import consulo.util.lang.CharSequenceSubSequence;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
+import org.jspecify.annotations.Nullable;
 
 import java.util.*;
 import java.util.function.Predicate;
@@ -108,12 +109,18 @@ public class IndexPatternSearcher extends QueryExecutorBase<IndexPatternOccurren
         TokenSet.create(CustomHighlighterTokenType.LINE_COMMENT, CustomHighlighterTokenType.MULTI_LINE_COMMENT);
 
     @RequiredReadAction
-    private static List<CommentRange> findCommentTokenRanges(PsiFile file, CharSequence chars, TextRange range, boolean multiLine) {
+    private static List<CommentRange> findCommentTokenRanges(
+        PsiFile file,
+        CharSequence chars,
+        @Nullable TextRange range,
+        boolean multiLine
+    ) {
         if (file instanceof PsiPlainTextFile) {
             FileType fType = file.getFileType();
             if (fType instanceof CustomSyntaxTableFileType) {
                 Lexer lexer =
-                    SyntaxHighlighterFactory.getSyntaxHighlighter(fType, file.getProject(), file.getVirtualFile()).getHighlightingLexer();
+                    Objects.requireNonNull(SyntaxHighlighterFactory.getSyntaxHighlighter(fType, file.getProject(), file.getVirtualFile()))
+                        .getHighlightingLexer();
                 return findComments(lexer, chars, range, COMMENT_TOKENS, null, multiLine, file.getLanguageVersion());
             }
             else {
@@ -169,7 +176,7 @@ public class IndexPatternSearcher extends QueryExecutorBase<IndexPatternOccurren
     private static List<CommentRange> findComments(
         Lexer lexer,
         CharSequence chars,
-        TextRange range,
+        @Nullable TextRange range,
         TokenSet commentTokens,
         IndexPatternBuilder builderForFile,
         boolean multiLine,
@@ -241,7 +248,7 @@ public class IndexPatternSearcher extends QueryExecutorBase<IndexPatternOccurren
         List<? extends CommentRange> commentRanges,
         int commentNum,
         PsiFile file,
-        TextRange range,
+        @Nullable TextRange range,
         Predicate<? super IndexPatternOccurrence> consumer,
         IntList matches,
         boolean multiLine

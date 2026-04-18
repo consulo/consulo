@@ -19,19 +19,19 @@ import consulo.content.scope.SearchScope;
 import consulo.module.Module;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author max
  */
 public class EverythingGlobalScope extends GlobalSearchScope {
-  public EverythingGlobalScope(Project project) {
+  public EverythingGlobalScope(@Nullable Project project) {
     super(project);
   }
 
   public EverythingGlobalScope() {
   }
 
-  
   @Override
   public String getDisplayName() {
     return "All Places";
@@ -62,13 +62,11 @@ public class EverythingGlobalScope extends GlobalSearchScope {
     return true;
   }
 
-  
   @Override
   public GlobalSearchScope union(SearchScope scope) {
     return this;
   }
 
-  
   @Override
   public SearchScope intersectWith(SearchScope scope2) {
     return scope2;

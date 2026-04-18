@@ -15,6 +15,7 @@
  */
 package consulo.language.ast;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.language.Language;
 import consulo.language.parser.ParserDefinition;
 import consulo.language.parser.PsiBuilder;
@@ -27,6 +28,8 @@ import consulo.util.dataholder.Key;
 
 import org.jspecify.annotations.Nullable;
 
+import java.util.Objects;
+
 /**
  * A token type which represents a fragment of text (possibly in a different language)
  * which is not parsed during the current lexer or parser pass and can be parsed later when
@@ -35,7 +38,6 @@ import org.jspecify.annotations.Nullable;
  * @author max
  */
 public class ILazyParseableElementType extends IElementType implements ILazyParseableElementTypeBase {
-
   public static final Key<Language> LANGUAGE_KEY = Key.create("LANGUAGE_KEY");
 
   public ILazyParseableElementType(String debugName) {
@@ -57,19 +59,25 @@ public class ILazyParseableElementType extends IElementType implements ILazyPars
    * @param chameleon the node to parse.
    * @return the parsed contents of the node.
    */
-  public ASTNode parseContents(ASTNode chameleon) {
-    PsiElement parentElement = chameleon.getTreeParent().getPsi();
-    assert parentElement != null : "parent psi is null: " + chameleon;
+  @Override
+  @RequiredReadAction
+  public @Nullable ASTNode parseContents(ASTNode chameleon) {
+    PsiElement parentElement = Objects.requireNonNull(
+      Objects.requireNonNull(chameleon.getTreeParent()).getPsi(),
+      () -> "parent psi is null: " + chameleon
+    );
     return doParseContents(chameleon, parentElement);
   }
 
-  protected ASTNode doParseContents(ASTNode chameleon, PsiElement psi) {
+  @RequiredReadAction
+  protected @Nullable ASTNode doParseContents(ASTNode chameleon, PsiElement psi) {
     Project project = psi.getProject();
     Language languageForParser = getLanguageForParser(psi);
     LanguageVersion tempLanguageVersion = chameleon.getUserData(LanguageVersion.KEY);
     LanguageVersion languageVersion = tempLanguageVersion == null ? psi.getLanguageVersion() : tempLanguageVersion;
-    PsiBuilder builder = PsiBuilderFactory.getInstance().createBuilder(project, chameleon, null, languageForParser, languageVersion, chameleon.getChars());
-    PsiParser parser = ParserDefinition.forLanguage(languageForParser).createParser(languageVersion);
+    PsiBuilder builder =
+      PsiBuilderFactory.getInstance().createBuilder(project, chameleon, null, languageForParser, languageVersion, chameleon.getChars());
+    PsiParser parser = Objects.requireNonNull(ParserDefinition.forLanguage(languageForParser)).createParser(languageVersion);
     return parser.parse(this, builder, languageVersion).getFirstChildNode();
   }
 

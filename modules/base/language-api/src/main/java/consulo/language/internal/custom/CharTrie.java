@@ -1,14 +1,18 @@
 // Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.language.internal.custom;
 
+import consulo.annotation.ReviewAfterIssueFix;
 import consulo.util.collection.ArrayFactory;
 import consulo.util.collection.ArrayUtil;
+import org.jspecify.annotations.Nullable;
+
+import java.util.Objects;
 
 public final class CharTrie {
   private int myAllNodesSize;
-  private char[] myAllNodesChars;
-  private char[] myAllNodesParents; // unsigned short
-  private char[][] myAllNodesChildren; // unsigned short
+  private char @Nullable [] myAllNodesChars = null;
+  private char @Nullable [] myAllNodesParents = null; // unsigned short
+  private char @Nullable [] @Nullable [] myAllNodesChildren = null; // unsigned short
 
   public CharTrie() {
     init();
@@ -22,6 +26,8 @@ public final class CharTrie {
     addNode(-1, (char)0);
   }
 
+  @ReviewAfterIssueFix(value = "github.com/uber/NullAway/issues/1521", todo = "Remove NullAway suppression")
+  @SuppressWarnings("NullAway")
   private void addNode(int parentIndex, char ch) {
     if (myAllNodesSize == 0) {
       int initialCapacity = 10;
@@ -29,18 +35,19 @@ public final class CharTrie {
       myAllNodesParents = new char[initialCapacity];
       myAllNodesChildren = new char[initialCapacity][];
     }
-    else if (myAllNodesSize >= myAllNodesChars.length) {
+    else if (myAllNodesSize >= Objects.requireNonNull(myAllNodesChars).length) {
       int increment = Math.max(myAllNodesSize >> 2, 10);
 
       int newSize = myAllNodesSize + increment;
       myAllNodesChars = ArrayUtil.realloc(myAllNodesChars, newSize);
-      myAllNodesParents = ArrayUtil.realloc(myAllNodesParents, newSize);
-      myAllNodesChildren = ArrayUtil.realloc(myAllNodesChildren, newSize, FACTORY);
+      myAllNodesParents = ArrayUtil.realloc(Objects.requireNonNull(myAllNodesParents), newSize);
+      myAllNodesChildren = ArrayUtil.realloc(Objects.requireNonNull(myAllNodesChildren), newSize, FACTORY);
     }
 
     myAllNodesChars[myAllNodesSize] = ch;
-    myAllNodesParents[myAllNodesSize] = (char)parentIndex;
-    myAllNodesChildren[myAllNodesSize] = null;
+    Objects.requireNonNull(myAllNodesParents)[myAllNodesSize] = (char)parentIndex;
+    // NullAway erroneously thinks second dimension also became non-null after requireNonNull, suppressing NullAway until fix
+    Objects.requireNonNull(myAllNodesChildren)[myAllNodesSize] = null;
     ++myAllNodesSize;
     assert myAllNodesSize < Character.MAX_VALUE;
   }
@@ -96,21 +103,20 @@ public final class CharTrie {
     return index + (((long)resultingLength) << 32);
   }
 
-  
   public char[] getChars(int hashCode) {
     int length = 0;
     int run = hashCode;
     while (run > 0) {
       length++;
-      run = myAllNodesParents[run];
+      run = Objects.requireNonNull(myAllNodesParents)[run];
     }
 
     char[] result = new char[length];
     run = hashCode;
     for (int i = 0; i < length; i++) {
       assert run > 0;
-      result[length - i - 1] = myAllNodesChars[run];
-      run = myAllNodesParents[run];
+      result[length - i - 1] = Objects.requireNonNull(myAllNodesChars)[run];
+      run = Objects.requireNonNull(myAllNodesParents)[run];
     }
 
     return result;
@@ -128,21 +134,20 @@ public final class CharTrie {
     return index;
   }
 
-  
   public char[] getReversedChars(int hashCode) {
     int length = 0;
     int run = hashCode;
     while (run > 0) {
       length++;
-      run = myAllNodesParents[run];
+      run = Objects.requireNonNull(myAllNodesParents)[run];
     }
 
     char[] result = new char[length];
     run = hashCode;
     for (int i = 0; i < length; i++) {
       assert run > 0;
-      result[i] = myAllNodesChars[run];
-      run = myAllNodesParents[run];
+      result[i] = Objects.requireNonNull(myAllNodesChars)[run];
+      run = Objects.requireNonNull(myAllNodesParents)[run];
     }
 
     return result;
@@ -155,7 +160,7 @@ public final class CharTrie {
   private static final int LENGTH_SLOT_LENGTH = 1;
 
   private int getSubNode(int parentIndex, char c, boolean createIfNotExists) {
-    if (myAllNodesChildren[parentIndex] == null) {
+    if (Objects.requireNonNull(myAllNodesChildren)[parentIndex] == null) {
       if (!createIfNotExists) {
         return 0;
       }
@@ -163,14 +168,14 @@ public final class CharTrie {
       myAllNodesChildren[parentIndex] = chars;
     }
 
-    char[] children = myAllNodesChildren[parentIndex];
+    char[] children = Objects.requireNonNull(myAllNodesChildren[parentIndex]);
     char childrenCount = children[children.length - LENGTH_SLOT_LENGTH];
     int left = 0;
     int right = childrenCount - 1;
     while (left <= right) {
       int middle = (left + right) >> 1;
       int index = children[middle];
-      int comp = myAllNodesChars[index] - c;
+      int comp = Objects.requireNonNull(myAllNodesChars)[index] - c;
       if (comp == 0) {
         return index;
       }

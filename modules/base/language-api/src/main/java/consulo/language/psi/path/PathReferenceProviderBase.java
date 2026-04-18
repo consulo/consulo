@@ -41,7 +41,9 @@ public abstract class PathReferenceProviderBase implements PathReferenceProvider
             return createReferences(psiElement, offset, text, references, soft);
         }
         catch (StringIndexOutOfBoundsException e) {
-            LOG.error("Cannot process string: '" + psiElement.getParent().getParent().getText() + "'", e);
+            PsiElement parent = psiElement.getParent();
+            PsiElement grandparent = parent != null ? parent.getParent() : null;
+            LOG.error("Cannot process string: '" + (grandparent != null ? grandparent.getText() : null) + "'", e);
             return false;
         }
     }

@@ -13,10 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.language.internal.custom;
 
 import consulo.language.ast.IElementType;
+
+import java.util.Objects;
 
 /**
  * @author dsl
@@ -25,8 +26,9 @@ public class IdentifierParser extends TokenParser {
   public IdentifierParser() {
   }
 
+  @Override
   public boolean hasToken(int position) {
-    if (!Character.isJavaIdentifierStart(myBuffer.charAt(position))) return false;
+    if (!Character.isJavaIdentifierStart(Objects.requireNonNull(myBuffer).charAt(position))) return false;
     int start = position;
     for (position++; position < myEndOffset; position++) {
       char c = myBuffer.charAt(position);

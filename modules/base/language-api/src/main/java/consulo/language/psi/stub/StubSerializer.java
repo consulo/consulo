@@ -15,22 +15,22 @@
  */
 package consulo.language.psi.stub;
 
+import org.jspecify.annotations.Nullable;
+
 import java.io.IOException;
 
-/*
+/**
  * @author max
  */
 public interface StubSerializer<T extends StubElement> extends ObjectStubSerializer<T, StubElement> {
   @Override
-  
   String getExternalId();
 
   @Override
   void serialize(T stub, StubOutputStream dataStream) throws IOException;
 
-  
   @Override
-  T deserialize(StubInputStream dataStream, StubElement parentStub) throws IOException;
+  T deserialize(StubInputStream dataStream, @Nullable StubElement parentStub) throws IOException;
 
   @Override
   void indexStub(T stub, IndexSink sink);

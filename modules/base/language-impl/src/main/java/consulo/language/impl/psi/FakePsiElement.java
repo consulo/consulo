@@ -34,7 +34,6 @@ import org.jspecify.annotations.Nullable;
  * @author Dmitry Avdeev
  */
 public abstract class FakePsiElement extends PsiElementBase implements PsiNamedElement, ItemPresentation {
-
     @Override
     public ItemPresentation getPresentation() {
         return this;
@@ -42,14 +41,12 @@ public abstract class FakePsiElement extends PsiElementBase implements PsiNamedE
 
     @RequiredReadAction
     @Override
-    
     public Language getLanguage() {
         return Language.ANY;
     }
 
     @RequiredReadAction
     @Override
-    
     public PsiElement[] getChildren() {
         return PsiElement.EMPTY_ARRAY;
     }
@@ -78,7 +75,6 @@ public abstract class FakePsiElement extends PsiElementBase implements PsiNamedE
         return null;
     }
 
-    
     @Override
     @RequiredReadAction
     public TextRange getTextRange() {
@@ -116,7 +112,6 @@ public abstract class FakePsiElement extends PsiElementBase implements PsiNamedE
 
     @RequiredReadAction
     @Override
-    
     public char[] textToCharArray() {
         return new char[0];
     }
@@ -153,9 +148,8 @@ public abstract class FakePsiElement extends PsiElementBase implements PsiNamedE
         return null;
     }
 
-    
     @Override
-    public PsiManager getManager() {
+    public @Nullable PsiManager getManager() {
         PsiElement parent = getParent();
         if (parent != null) {
             return parent.getManager();

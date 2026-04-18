@@ -42,7 +42,7 @@ public class WrappedElementAnchor implements PsiAnchor {
   }
 
   @Override
-  public PsiFile getFile() {
+  public @Nullable PsiFile getFile() {
     PsiElement element = retrieve();
     return element == null ? null : element.getContainingFile();
   }

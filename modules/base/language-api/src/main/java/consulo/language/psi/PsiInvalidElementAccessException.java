@@ -29,6 +29,7 @@ import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolder;
 import consulo.virtualFileSystem.VirtualFile;
 
+import org.jetbrains.annotations.Contract;
 import org.jspecify.annotations.Nullable;
 import java.lang.ref.SoftReference;
 
@@ -41,7 +42,7 @@ public class PsiInvalidElementAccessException extends RuntimeException implement
 
   private final SoftReference<PsiElement> myElementReference;  // to prevent leaks, since exceptions are stored in IdeaLogger
   private final Attachment[] myDiagnostic;
-  private final String myMessage;
+  private final @Nullable String myMessage;
 
   public PsiInvalidElementAccessException(@Nullable PsiElement element) {
     this(element, null, null);
@@ -92,7 +93,6 @@ public class PsiInvalidElementAccessException extends RuntimeException implement
     return new PsiInvalidElementAccessException(node, message);
   }
 
-  
   private static Attachment[] createAttachments(@Nullable Object trace) {
     return trace == null
            ? Attachment.EMPTY_ARRAY
@@ -105,10 +105,12 @@ public class PsiInvalidElementAccessException extends RuntimeException implement
     return trace != null || element instanceof PsiFile ? trace : findInvalidationTrace(element.getNode());
   }
 
-  private static String getMessageWithReason(PsiElement element,
-                                             @Nullable String message,
-                                             boolean recursiveInvocation,
-                                             @Nullable Object trace) {
+  private static String getMessageWithReason(
+      PsiElement element,
+      @Nullable String message,
+      boolean recursiveInvocation,
+      @Nullable Object trace
+  ) {
     String reason = "Element: " + element.getClass();
     if (!recursiveInvocation) {
       String traceText = !isTrackingInvalidation() ? "disabled" :
@@ -125,17 +127,16 @@ public class PsiInvalidElementAccessException extends RuntimeException implement
   }
 
   @Override
-  public String getMessage() {
+  public @Nullable String getMessage() {
     return myMessage;
   }
 
-  
   @Override
   public Attachment[] getAttachments() {
     return myDiagnostic;
   }
 
-  public static Object findInvalidationTrace(@Nullable ASTNode element) {
+  public static @Nullable Object findInvalidationTrace(@Nullable ASTNode element) {
     while (element != null) {
       Object trace = element.getUserData(INVALIDATION_TRACE);
       if (trace != null) {
@@ -154,7 +155,7 @@ public class PsiInvalidElementAccessException extends RuntimeException implement
     return null;
   }
 
-  
+
   private static String reason(PsiElement root) {
     if (root == PsiUtilCore.NULL_PSI_ELEMENT) return "NULL_PSI_ELEMENT";
 
@@ -202,15 +203,16 @@ public class PsiInvalidElementAccessException extends RuntimeException implement
     return "psi is outdated";
   }
 
-  private static String id(FileViewProvider provider) {
-    return Integer.toHexString(System.identityHashCode(provider));
+  @Contract("null -> null; !null -> !null")
+  private static @Nullable String id(@Nullable FileViewProvider provider) {
+    return provider != null ? Integer.toHexString(System.identityHashCode(provider)) : null;
   }
 
   public static void setInvalidationTrace(UserDataHolder element, Object trace) {
     element.putUserData(INVALIDATION_TRACE, trace);
   }
 
-  public static Object getInvalidationTrace(UserDataHolder element) {
+  public static @Nullable Object getInvalidationTrace(UserDataHolder element) {
     return element.getUserData(INVALIDATION_TRACE);
   }
 

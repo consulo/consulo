@@ -32,17 +32,17 @@ import java.util.Map;
  */
 public class PsiFileStubImpl<T extends PsiFile> extends StubBase<T> implements PsiFileStub<T> {
   public static final IStubFileElementType TYPE = new IStubFileElementType(Language.ANY);
-  private volatile T myFile;
-  private volatile String myInvalidationReason;
-  private volatile PsiFileStub[] myStubRoots;
+  private volatile @Nullable T myFile;
+  private volatile @Nullable String myInvalidationReason = null;
+  private volatile PsiFileStub @Nullable [] myStubRoots = null;
 
-  public PsiFileStubImpl(T file) {
+  public PsiFileStubImpl(@Nullable T file) {
     super(null, null);
     myFile = file;
   }
 
   @Override
-  public T getPsi() {
+  public @Nullable T getPsi() {
     return myFile;
   }
 
@@ -62,11 +62,10 @@ public class PsiFileStubImpl<T extends PsiFile> extends StubBase<T> implements P
   }
 
   @Override
-  public IStubElementType getStubType() {
+  public @Nullable IStubElementType getStubType() {
     return null;
   }
 
-  
   @Override
   public IStubFileElementType getType() {
     return TYPE;
@@ -111,7 +110,7 @@ public class PsiFileStubImpl<T extends PsiFile> extends StubBase<T> implements P
     return PsiFileStub.EMPTY_ARRAY;
   }
 
-  private static StubTree getOrCalcStubTree(PsiFile stubBindingRoot) {
+  private static @Nullable StubTree getOrCalcStubTree(PsiFile stubBindingRoot) {
     StubTree result = null;
     if (stubBindingRoot instanceof PsiFileWithStubSupport) {
       result = ((PsiFileWithStubSupport)stubBindingRoot).getStubTree();

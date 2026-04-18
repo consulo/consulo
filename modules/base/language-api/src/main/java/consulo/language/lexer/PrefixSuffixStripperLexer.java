@@ -17,16 +17,19 @@ package consulo.language.lexer;
 
 import consulo.language.ast.IElementType;
 import consulo.util.lang.CharArrayUtil;
+import org.jspecify.annotations.Nullable;
+
+import java.util.Objects;
 
 /**
  * @author max
  */
 public class PrefixSuffixStripperLexer extends LexerBase {
-    private CharSequence myBuffer;
-    private char[] myBufferArray;
+    private @Nullable CharSequence myBuffer = null;
+    private char @Nullable [] myBufferArray = null;
     private int myTokenStart;
     private int myTokenEnd;
-    private IElementType myTokenType;
+    private @Nullable IElementType myTokenType = null;
     private int myState;
     private int myBufferEnd;
     private final String myPrefix;
@@ -61,7 +64,7 @@ public class PrefixSuffixStripperLexer extends LexerBase {
     }
 
     @Override
-    public IElementType getTokenType() {
+    public @Nullable IElementType getTokenType() {
         locateToken();
         return myTokenType;
     }
@@ -90,7 +93,7 @@ public class PrefixSuffixStripperLexer extends LexerBase {
 
     @Override
     public CharSequence getBufferSequence() {
-        return myBuffer;
+        return Objects.requireNonNull(myBuffer);
     }
 
     @Override
@@ -115,8 +118,7 @@ public class PrefixSuffixStripperLexer extends LexerBase {
             int suffixStart = myBufferEnd - mySuffix.length();
             myTokenType = myMiddleTokenType;
             if ((myBufferArray != null && CharArrayUtil.regionMatches(myBufferArray, suffixStart, myBufferEnd, mySuffix))
-                || (myBufferArray == null && CharArrayUtil.regionMatches(myBuffer, suffixStart, myBufferEnd, mySuffix))
-            ) {
+                || (myBufferArray == null && CharArrayUtil.regionMatches(getBufferSequence(), suffixStart, myBufferEnd, mySuffix))) {
                 myTokenEnd = suffixStart;
                 if (myTokenStart < myTokenEnd) {
                     myState = 2;

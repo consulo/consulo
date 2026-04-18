@@ -235,7 +235,6 @@ public class PsiBuilderImpl extends UnprotectedUserDataHolder implements PsiBuil
         myLexemeCount = tokens.lexemeCount;
     }
 
-    
     private TokenSequence performLexing(@Nullable Object parentCachingNode) {
         TokenSequence fromParent = null;
 
@@ -405,7 +404,6 @@ public class PsiBuilderImpl extends UnprotectedUserDataHolder implements PsiBuil
             }
         }
 
-        
         @Override
         public Marker precede() {
             return myBuilder.precede(this);
@@ -500,7 +498,6 @@ public class PsiBuilderImpl extends UnprotectedUserDataHolder implements PsiBuil
         }
     }
 
-    
     private Marker precede(StartMarker marker) {
         int idx = myProduction.lastIndexOf(marker);
         if (idx < 0) {
@@ -571,7 +568,6 @@ public class PsiBuilderImpl extends UnprotectedUserDataHolder implements PsiBuil
             return myBuilder.myText.subSequence(myTokenStart, myTokenEnd);
         }
 
-        
         @Override
         public IElementType getTokenType() {
             return myTokenType;
@@ -686,9 +682,8 @@ public class PsiBuilderImpl extends UnprotectedUserDataHolder implements PsiBuil
             throw new UnsupportedOperationException("Shall not be called on this kind of markers");
         }
 
-        
         @Override
-        public IElementType getTokenType() {
+        public @Nullable IElementType getTokenType() {
             throw new UnsupportedOperationException("Shall not be called on this kind of markers");
         }
 

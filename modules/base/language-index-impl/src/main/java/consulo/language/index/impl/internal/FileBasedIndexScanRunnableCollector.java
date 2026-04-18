@@ -21,6 +21,7 @@ import consulo.application.progress.ProgressIndicator;
 import consulo.content.ContentIterator;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 
@@ -34,5 +35,5 @@ public abstract class FileBasedIndexScanRunnableCollector {
     public abstract boolean shouldCollect(VirtualFile file);
 
     // Collect all roots for indexing
-    public abstract List<Runnable> collectScanRootRunnables(ContentIterator processor, ProgressIndicator indicator);
+    public abstract List<Runnable> collectScanRootRunnables(ContentIterator processor, @Nullable ProgressIndicator indicator);
 }

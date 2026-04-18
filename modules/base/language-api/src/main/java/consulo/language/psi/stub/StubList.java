@@ -103,14 +103,14 @@ public abstract class StubList extends AbstractList<StubBase<?>> {
       addToJoinedChildren(childrenStart + childrenCount, childId);
     }
     else if (storage == ChildrenStorage.inTempMap) {
-      tempMap().get(parentId).add(childId);
+      Objects.requireNonNull(tempMap().get(parentId)).add(childId);
     }
 
     myStubData.set(childrenCountIndex(parentId), childrenCount + 1);
   }
 
   int getParentIndex(int childIndex) {
-    return ((StubBase)get(childIndex).getParentStub()).id;
+    return Objects.requireNonNull(((StubBase) Objects.requireNonNull(get(childIndex)).getParentStub())).id;
   }
 
   private enum ChildrenStorage {
@@ -155,7 +155,7 @@ public abstract class StubList extends AbstractList<StubBase<?>> {
       case inJoinedList:
         return idSubList(myJoinedChildrenList, start, count);
       default:
-        return idSubList(tempMap().get(id), 0, count);
+        return idSubList(Objects.requireNonNull(tempMap().get(id)), 0, count);
     }
   }
 
@@ -188,7 +188,7 @@ public abstract class StubList extends AbstractList<StubBase<?>> {
       case inJoinedList:
         return findChildStubByType(elementType, myJoinedChildrenList, start, start + count);
       default:
-        return findChildStubByType(elementType, Objects.requireNonNull(tempMap()).get(id), 0, count);
+        return findChildStubByType(elementType, Objects.requireNonNull(tempMap().get(id)), 0, count);
     }
   }
 

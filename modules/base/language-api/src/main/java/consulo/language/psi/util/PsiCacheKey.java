@@ -73,7 +73,9 @@ public class PsiCacheKey<T, H extends PsiElement> extends Key<SoftReference<Pair
   private long getModificationCount(PsiElement element) {
     PsiFile file = element.getContainingFile();
     long fileStamp = file == null || file.isPhysical() ? 0 : file.getModificationStamp();
-    PsiModificationTracker tracker = file == null ? element.getManager().getModificationTracker() : file.getManager().getModificationTracker();
+    PsiModificationTracker tracker = file == null
+        ? element.getManager().getModificationTracker()
+        : file.getManager().getModificationTracker();
 
     if (myModifyCause.equals(PsiModificationTracker.MODIFICATION_COUNT)) {
       return fileStamp + tracker.getModificationCount();

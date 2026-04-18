@@ -36,6 +36,8 @@ import consulo.util.dataholder.UserDataHolder;
 import org.jspecify.annotations.Nullable;
 import org.jetbrains.annotations.Contract;
 
+import java.util.Objects;
+
 /**
  * The common base interface for all elements of the PSI tree.
  * <p/>
@@ -114,7 +116,7 @@ public interface PsiElement extends UserDataHolder {
      *
      * @return the parent of the element, or null if the element has no parent.
      */
-    PsiElement getParent();
+    @Nullable PsiElement getParent();
 
     /**
      * Returns the first child of the PSI element.
@@ -155,7 +157,7 @@ public interface PsiElement extends UserDataHolder {
      * the element represents a package or directory).
      * @throws PsiInvalidElementAccessException if this element is invalid
      */
-    PsiFile getContainingFile() throws PsiInvalidElementAccessException;
+    @Nullable PsiFile getContainingFile() throws PsiInvalidElementAccessException;
 
     /**
      * Returns the text range in the document occupied by the PSI element.
@@ -169,7 +171,6 @@ public interface PsiElement extends UserDataHolder {
      * @return text range of this element relative to its parent
      */
     @RequiredReadAction
-    
     @Contract(pure = true)
     default TextRange getTextRangeInParent() {
         return TextRange.from(getStartOffsetInParent(), getTextLength());
@@ -315,6 +316,7 @@ public interface PsiElement extends UserDataHolder {
      * @return the element which was actually added (either <code>element</code> or its copy).
      * @throws IncorrectOperationException if the modification is not supported or not possible for some reason.
      */
+    @RequiredWriteAction
     PsiElement add(PsiElement element) throws IncorrectOperationException;
 
     /**

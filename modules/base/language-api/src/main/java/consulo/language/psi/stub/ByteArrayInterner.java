@@ -5,18 +5,19 @@ import consulo.util.io.BufferExposingByteArrayOutputStream;
 import consulo.util.collection.HashingStrategy;
 import consulo.util.collection.primitive.objects.ObjectIntMap;
 import consulo.util.collection.primitive.objects.ObjectMaps;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Arrays;
 
 class ByteArrayInterner {
   private static final HashingStrategy<byte[]> BYTE_ARRAY_STRATEGY = new HashingStrategy<byte[]>() {
     @Override
-    public int hashCode(byte[] object) {
+    public int hashCode(byte @Nullable [] object) {
       return Arrays.hashCode(object);
     }
 
     @Override
-    public boolean equals(byte[] o1, byte[] o2) {
+    public boolean equals(byte @Nullable [] o1, byte @Nullable [] o2) {
       return Arrays.equals(o1, o2);
     }
   };

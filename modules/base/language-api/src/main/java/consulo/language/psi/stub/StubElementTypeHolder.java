@@ -36,10 +36,8 @@ import java.util.List;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class StubElementTypeHolder<T> {
-  private static final Logger LOG = Logger.getInstance(StubElementTypeHolder.class);
-
   protected interface FieldValueGetter {
-    Object get(Field field, Object obj) throws IllegalArgumentException, IllegalAccessException;
+    Object get(Field field, @Nullable Object obj) throws IllegalArgumentException, IllegalAccessException;
   }
 
   /**

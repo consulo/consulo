@@ -16,6 +16,8 @@
 
 package consulo.language.ast;
 
+import org.jspecify.annotations.Nullable;
+
 public class DefaultRoleFinder implements RoleFinder {
   protected IElementType[] myElementTypes;
 
@@ -24,7 +26,7 @@ public class DefaultRoleFinder implements RoleFinder {
   }
 
   @Override
-  public ASTNode findChild(ASTNode parent) {
+  public @Nullable ASTNode findChild(ASTNode parent) {
     ASTNode current = parent.getFirstChildNode();
     while (current != null) {
       for (IElementType elementType : myElementTypes) {

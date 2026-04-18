@@ -36,7 +36,6 @@ public abstract class BaseSearchScope implements SearchScope {
         return myHashCode;
     }
 
-    
     @Override
     public String getDisplayName() {
         return "<unknown scope>";
@@ -48,11 +47,9 @@ public abstract class BaseSearchScope implements SearchScope {
     }
 
     @Override
-    
     public abstract SearchScope intersectWith(SearchScope scope2);
 
     @Override
-    
     public abstract SearchScope union(SearchScope scope);
 
     @Override

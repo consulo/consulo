@@ -13,34 +13,37 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.language.psi.filter.position;
 
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.filter.ElementFilter;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author ik
  * @since 2003-02-11
  */
 public class SuperParentFilter extends PositionElementFilter {
-  public SuperParentFilter(ElementFilter filter){
+  public SuperParentFilter(ElementFilter filter) {
     setFilter(filter);
   }
 
-  public SuperParentFilter(){}
+  public SuperParentFilter() {
+  }
 
   @Override
-  public boolean isAcceptable(Object element, PsiElement scope){
+  public boolean isAcceptable(Object element, @Nullable PsiElement scope) {
     if (!(element instanceof PsiElement)) return false;
-    while((element = ((PsiElement) element).getParent()) != null){
-      if(getFilter().isAcceptable(element, scope))
+    while ((element = ((PsiElement) element).getParent()) != null) {
+      if (getRequiredFilter().isAcceptable(element, scope)) {
         return true;
+      }
     }
     return false;
   }
 
-  public String toString(){
-    return "super-parent(" +getFilter()+")";
+  @Override
+  public String toString() {
+    return "super-parent(" + getFilter() + ")";
   }
 }

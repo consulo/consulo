@@ -54,7 +54,6 @@ public class PsiSearchScopeUtil {
    * Use com.intellij.psi.search.SearchScope#union(com.intellij.psi.search.SearchScope)
    */
   @Deprecated
-  
   public static SearchScope scopesUnion(SearchScope scope1, SearchScope scope2) {
     return scope1.union(scope2);
   }
@@ -79,7 +78,7 @@ public class PsiSearchScopeUtil {
     if (context != null) file = context.getContainingFile();
     if (file == null) return false;
     VirtualFile virtualFile = file.getVirtualFile();
-    return virtualFile == null || globalScope.contains(file.getVirtualFile());
+    return virtualFile == null || globalScope.contains(virtualFile);
   }
 
   public static boolean isInScope(LocalSearchScope local, PsiElement element) {

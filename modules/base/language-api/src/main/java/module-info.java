@@ -1,7 +1,10 @@
+import org.jspecify.annotations.NullMarked;
+
 /**
  * @author VISTALL
  * @since 2022-01-22
  */
+@NullMarked
 module consulo.language.api {
     requires transitive consulo.document.api;
     requires transitive consulo.index.io;

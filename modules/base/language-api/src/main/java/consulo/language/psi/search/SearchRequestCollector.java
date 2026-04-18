@@ -1,8 +1,9 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.language.psi.search;
 
-import consulo.application.AccessRule;
+import consulo.annotation.ReviewAfterIssueFix;
 import consulo.application.Application;
+import consulo.application.ReadAction;
 import consulo.content.scope.SearchScope;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFileSystemItem;
@@ -11,6 +12,7 @@ import consulo.language.psi.PsiReference;
 import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.language.psi.scope.LocalSearchScope;
 import consulo.util.lang.StringUtil;
+import org.jspecify.annotations.Nullable;
 
 import java.util.*;
 import java.util.function.Predicate;
@@ -29,7 +31,6 @@ public class SearchRequestCollector {
         mySession = session;
     }
 
-    
     public SearchSession getSearchSession() {
         return mySession;
     }
@@ -68,8 +69,8 @@ public class SearchRequestCollector {
         SearchScope searchScope,
         short searchContext,
         boolean caseSensitive,
-        String containerName,
-        PsiElement searchTarget,
+        @Nullable String containerName,
+        @Nullable PsiElement searchTarget,
         RequestResultProcessor processor
     ) {
         if (!makesSenseToSearch(word, searchScope)) {
@@ -79,7 +80,9 @@ public class SearchRequestCollector {
         Collection<PsiSearchRequest> requests = null;
         if (searchTarget != null && searchScope instanceof GlobalSearchScope
             && ((searchContext & UsageSearchContext.IN_CODE) != 0 || searchContext == UsageSearchContext.ANY)) {
-            SearchScope restrictedCodeUsageSearchScope = AccessRule.read(() -> ScopeOptimizer.calculateOverallRestrictedUseScope(
+            @ReviewAfterIssueFix(value = "github.com/uber/NullAway/issues/1500", todo = "Remove NullAway suppression")
+            @SuppressWarnings("NullAway")
+            SearchScope restrictedCodeUsageSearchScope = ReadAction.compute(() -> ScopeOptimizer.calculateOverallRestrictedUseScope(
                 Application.get().getExtensionList(ScopeOptimizer.class),
                 searchTarget
             ));
@@ -123,24 +126,21 @@ public class SearchRequestCollector {
         searchWord(word, searchScope, searchContext, caseSensitive, getContainerName(searchTarget), searchTarget, processor);
     }
 
-    private static String getContainerName(PsiElement target) {
-        return AccessRule.read(() -> {
+    @ReviewAfterIssueFix(value = "github.com/uber/NullAway/issues/1500", todo = "Remove NullAway suppression")
+    @SuppressWarnings("NullAway")
+    private static @Nullable String getContainerName(PsiElement target) {
+        return ReadAction.compute(() -> {
             PsiElement container = getContainer(target);
             return container instanceof PsiNamedElement namedElement ? namedElement.getName() : null;
         });
     }
 
-    private static PsiElement getContainer(PsiElement refElement) {
-        for (ContainerProvider provider : ContainerProvider.EP_NAME.getExtensionList()) {
-            PsiElement container = provider.getContainer(refElement);
-            if (container != null) {
-                return container;
-            }
-        }
+    private static @Nullable PsiElement getContainer(PsiElement refElement) {
         // it's assumed that in the general case of unknown language the .getParent() will lead to reparse,
         // (all these Javascript stubbed methods under non-stubbed block statements under stubbed classes - meh)
         // so just return null instead of refElement.getParent() here to avoid making things worse.
-        return null;
+        return refElement.getApplication().getExtensionPoint(ContainerProvider.class)
+            .computeSafeIfAny(provider -> provider.getContainer(refElement));
     }
 
     /**
@@ -159,7 +159,7 @@ public class SearchRequestCollector {
 
     private static boolean makesSenseToSearch(String word, SearchScope searchScope) {
         return !(searchScope instanceof LocalSearchScope localSearchScope && localSearchScope.getScope().length == 0)
-            && searchScope != GlobalSearchScope.EMPTY_SCOPE && !StringUtil.isEmpty(word);
+            && searchScope != GlobalSearchScope.EMPTY_SCOPE && StringUtil.isNotEmpty(word);
     }
 
     public void searchQuery(QuerySearchRequest request) {
@@ -176,12 +176,10 @@ public class SearchRequestCollector {
         }
     }
 
-    
     public List<QuerySearchRequest> takeQueryRequests() {
         return takeRequests(myQueryRequests);
     }
 
-    
     private <T> List<T> takeRequests(List<? extends T> list) {
         synchronized (lock) {
             List<T> requests = new ArrayList<>(list);
@@ -190,7 +188,6 @@ public class SearchRequestCollector {
         }
     }
 
-    
     public List<PsiSearchRequest> takeSearchRequests() {
         return takeRequests(myWordRequests);
     }

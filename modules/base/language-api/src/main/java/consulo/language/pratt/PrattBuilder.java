@@ -96,7 +96,7 @@ public abstract class PrattBuilder {
 
   public abstract List<IElementType> getResultTypes();
 
-  public abstract PrattBuilder getParent();
+  public abstract @Nullable PrattBuilder getParent();
 
   public abstract int getPriority();
 

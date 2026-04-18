@@ -38,6 +38,7 @@ import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * @author max
@@ -45,7 +46,6 @@ import java.util.List;
 public abstract class ASTDelegatePsiElement extends PsiElementBase implements PsiElementWithSubtreeChangeNotifier {
     private static final Logger LOG = Logger.getInstance(ASTDelegatePsiElement.class);
 
-    
     @Override
     public PsiManager getManager() {
         Project project = SingleProjectHolder.theOnlyOpenProject();
@@ -65,7 +65,6 @@ public abstract class ASTDelegatePsiElement extends PsiElementBase implements Ps
         return parent.getManager();
     }
 
-    
     @Override
     @RequiredReadAction
     public PsiElement[] getChildren() {
@@ -108,7 +107,6 @@ public abstract class ASTDelegatePsiElement extends PsiElementBase implements Ps
         return SharedImplUtil.getPrevSibling(getNode());
     }
 
-    
     @Override
     @RequiredReadAction
     public TextRange getTextRange() {
@@ -147,7 +145,6 @@ public abstract class ASTDelegatePsiElement extends PsiElementBase implements Ps
     }
 
     @Override
-    
     @RequiredReadAction
     public char[] textToCharArray() {
         return getNode().getText().toCharArray();
@@ -159,21 +156,19 @@ public abstract class ASTDelegatePsiElement extends PsiElementBase implements Ps
         return getNode().textContains(c);
     }
 
-    @org.jspecify.annotations.Nullable
     @Override
     @RequiredReadAction
-    public <T> T getCopyableUserData(Key<T> key) {
+    public <T> @Nullable T getCopyableUserData(Key<T> key) {
         return getNode().getCopyableUserData(key);
     }
 
     @Override
     @RequiredReadAction
-    public <T> void putCopyableUserData(Key<T> key, T value) {
+    public <T> void putCopyableUserData(Key<T> key, @Nullable T value) {
         getNode().putCopyableUserData(key, value);
     }
 
     @Override
-    
     @RequiredReadAction
     public abstract ASTNode getNode();
 
@@ -182,7 +177,6 @@ public abstract class ASTDelegatePsiElement extends PsiElementBase implements Ps
     }
 
     @Override
-    
     @RequiredReadAction
     public Language getLanguage() {
         return getNode().getElementType().getLanguage();
@@ -209,7 +203,6 @@ public abstract class ASTDelegatePsiElement extends PsiElementBase implements Ps
         return null;
     }
 
-    
     @RequiredReadAction
     protected <T extends PsiElement> T findNotNullChildByType(IElementType type) {
         return notNullChild(findChildByType(type));
@@ -222,7 +215,6 @@ public abstract class ASTDelegatePsiElement extends PsiElementBase implements Ps
         return node == null ? null : (T) node.getPsi();
     }
 
-    
     @RequiredReadAction
     @SuppressWarnings("unchecked")
     protected <T extends PsiElement> T findNotNullChildByType(TokenSet type) {
@@ -236,13 +228,11 @@ public abstract class ASTDelegatePsiElement extends PsiElementBase implements Ps
         return nodes.length == 0 ? null : (T) nodes[0].getPsi();
     }
 
-    
     @RequiredReadAction
     protected <T extends PsiElement> T findNotNullChildByFilter(TokenSet tokenSet) {
         return notNullChild(findChildByFilter(tokenSet));
     }
 
-    
     @RequiredReadAction
     @SuppressWarnings("unchecked")
     protected <T extends PsiElement> T[] findChildrenByType(IElementType elementType, Class<T> arrayClass) {
@@ -250,7 +240,6 @@ public abstract class ASTDelegatePsiElement extends PsiElementBase implements Ps
     }
 
     @RequiredReadAction
-    
     @SuppressWarnings("unchecked")
     protected <T extends PsiElement> List<T> findChildrenByType(TokenSet elementType) {
         List<T> result = List.of();
@@ -268,7 +257,6 @@ public abstract class ASTDelegatePsiElement extends PsiElementBase implements Ps
         return result;
     }
 
-    
     @RequiredReadAction
     @SuppressWarnings("unchecked")
     protected <T extends PsiElement> List<T> findChildrenByType(IElementType elementType) {
@@ -286,7 +274,6 @@ public abstract class ASTDelegatePsiElement extends PsiElementBase implements Ps
         return result;
     }
 
-    
     @RequiredReadAction
     @SuppressWarnings("unchecked")
     protected <T extends PsiElement> T[] findChildrenByType(TokenSet elementType, Class<T> arrayClass) {
@@ -416,12 +403,12 @@ public abstract class ASTDelegatePsiElement extends PsiElementBase implements Ps
     public PsiElement replace(PsiElement newElement) throws IncorrectOperationException {
         CheckUtil.checkWritable(this);
         TreeElement elementCopy = ChangeUtil.copyToElement(newElement);
-        if (getParent() instanceof ASTDelegatePsiElement) {
-            ASTDelegatePsiElement parentElement = (ASTDelegatePsiElement) getParent();
+        PsiElement parent = Objects.requireNonNull(getParent());
+        if (parent instanceof ASTDelegatePsiElement parentElement) {
             parentElement.replaceChildInternal(this, elementCopy);
         }
         else {
-            CodeEditUtil.replaceChild(getParent().getNode(), getNode(), elementCopy);
+            CodeEditUtil.replaceChild(parent.getNode(), getNode(), elementCopy);
         }
         elementCopy = ChangeUtil.decodeInformation(elementCopy);
         return SourceTreeToPsiMap.treeElementToPsi(elementCopy);

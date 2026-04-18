@@ -49,12 +49,12 @@ public interface TokenList {
     /**
      * @return the type of the token with the given index, or null if the index is negative or exceeds token count
      */
-    IElementType getTokenType(int index);
+    @Nullable IElementType getTokenType(int index);
 
     /**
      * @return the text of the token with the given index, or null if the index is negative or exceeds token count
      */
-    default CharSequence getTokenText(int index) {
+    default @Nullable CharSequence getTokenText(int index) {
         if (index < 0 || index >= getTokenCount()) {
             return null;
         }

@@ -113,9 +113,9 @@ public class StubTreeBuilder {
     }
   }
 
-  private static void ensureNormalizedOrder(Stub element) {
-    if (element instanceof StubBase<?>) {
-      ((StubBase)element).myStubList.finalizeLoadingStage();
+  private static void ensureNormalizedOrder(@Nullable Stub element) {
+    if (element instanceof StubBase<?> stubBase) {
+      stubBase.myStubList.finalizeLoadingStage();
     }
   }
 

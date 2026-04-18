@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.language.util;
 
+import consulo.annotation.ReviewAfterIssueFix;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.language.InjectableLanguage;
 import consulo.language.Language;
@@ -46,7 +46,8 @@ public final class LanguageUtil {
     private LanguageUtil() {
     }
 
-    
+    @ReviewAfterIssueFix(value = "github.com/uber/NullAway/issues/1500", todo = "Remove NullAway suppression")
+    @SuppressWarnings("NullAway")
     public static JBIterable<Language> getBaseLanguages(Language language) {
         return JBIterable.generate(language, Language::getBaseLanguage);
     }
@@ -93,7 +94,6 @@ public final class LanguageUtil {
         return language == null ? null : language.getAssociatedFileType();
     }
 
-    
     @RequiredReadAction
     public static ParserDefinition.SpaceRequirements canStickTokensTogetherByLexer(ASTNode left, ASTNode right, Lexer lexer) {
         String textStr = left.getText() + right.getText();
@@ -115,7 +115,6 @@ public final class LanguageUtil {
         return ParserDefinition.SpaceRequirements.MAY;
     }
 
-    
     public static Language[] getLanguageDialects(Language base) {
         List<Language> list = ContainerUtil.findAll(
             Language.getRegisteredLanguages(),
@@ -173,7 +172,6 @@ public final class LanguageUtil {
         return StringUtil.isNotEmpty(type.getDefaultExtension());
     }
 
-    
     public static List<Language> getFileLanguages() {
         List<Language> result = new ArrayList<>();
         for (Language language : Language.getRegisteredLanguages()) {
@@ -186,10 +184,9 @@ public final class LanguageUtil {
         return result;
     }
 
-    
     @RequiredReadAction
     public static Language getRootLanguage(PsiElement element) {
-        FileViewProvider provider = element.getContainingFile().getViewProvider();
+        FileViewProvider provider = Objects.requireNonNull(element.getContainingFile()).getViewProvider();
         Set<Language> languages = provider.getLanguages();
         if (languages.size() > 1) {
             PsiElement current = element;
@@ -204,7 +201,8 @@ public final class LanguageUtil {
         return provider.getBaseLanguage();
     }
 
-    
+    @ReviewAfterIssueFix(value = "github.com/uber/NullAway/issues/1500", todo = "Remove NullAway suppression")
+    @SuppressWarnings("NullAway")
     public static JBIterable<Language> hierarchy(Language language) {
         return JBIterable.generate(language, Language::getBaseLanguage);
     }

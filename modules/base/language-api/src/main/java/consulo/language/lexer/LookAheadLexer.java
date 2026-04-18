@@ -16,6 +16,9 @@
 package consulo.language.lexer;
 
 import consulo.language.ast.IElementType;
+import org.jspecify.annotations.Nullable;
+
+import java.util.Objects;
 
 /**
  * @author peter
@@ -26,7 +29,7 @@ public abstract class LookAheadLexer extends LexerBase {
 
     private final Lexer myBaseLexer;
     private int myTokenStart;
-    private final MutableRandomAccessQueue<IElementType> myTypeCache;
+    private final MutableRandomAccessQueue<@Nullable IElementType> myTypeCache;
     private final MutableRandomAccessQueue<Integer> myEndOffsetCache;
 
     public LookAheadLexer(Lexer baseLexer, int capacity) {
@@ -39,11 +42,11 @@ public abstract class LookAheadLexer extends LexerBase {
         this(baseLexer, 64);
     }
 
-    protected void addToken(IElementType type) {
+    protected void addToken(@Nullable IElementType type) {
         addToken(myBaseLexer.getTokenEnd(), type);
     }
 
-    protected void addToken(int endOffset, IElementType type) {
+    protected void addToken(int endOffset, @Nullable IElementType type) {
         myTypeCache.addLast(type);
         myEndOffsetCache.addLast(endOffset);
     }
@@ -92,7 +95,7 @@ public abstract class LookAheadLexer extends LexerBase {
         }
     }
 
-    public IElementType replaceCachedType(int index, IElementType token) {
+    public @Nullable IElementType replaceCachedType(int index, IElementType token) {
         return myTypeCache.set(index, token);
     }
 
@@ -130,7 +133,7 @@ public abstract class LookAheadLexer extends LexerBase {
     }
 
     @Override
-    public IElementType getTokenType() {
+    public @Nullable IElementType getTokenType() {
         return myTypeCache.peekFirst();
     }
 
@@ -177,7 +180,7 @@ public abstract class LookAheadLexer extends LexerBase {
         advanceAs(lexer, lexer.getTokenType());
     }
 
-    protected final void advanceAs(Lexer lexer, IElementType type) {
+    protected final void advanceAs(Lexer lexer, @Nullable IElementType type) {
         addToken(type);
         lexer.advance();
     }

@@ -88,7 +88,6 @@ public abstract class SyntheticFileSystemItem extends PsiElementBase implements 
         // TODO
     }
 
-    
     @Override
     @RequiredReadAction
     public PsiElement[] getChildren() {
@@ -97,15 +96,13 @@ public abstract class SyntheticFileSystemItem extends PsiElementBase implements 
         return collector.toArray(new PsiFileSystemItem[0]);
     }
 
-    
     @Override
     public PsiManager getManager() {
         return myManager;
     }
 
-    @RequiredReadAction
     @Override
-    
+    @RequiredReadAction
     public Language getLanguage() {
         return Language.ANY;
     }
@@ -126,7 +123,6 @@ public abstract class SyntheticFileSystemItem extends PsiElementBase implements 
         return null;
     }
 
-    
     @Override
     @RequiredReadAction
     public TextRange getTextRange() {

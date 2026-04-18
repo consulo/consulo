@@ -30,6 +30,7 @@ import consulo.virtualFileSystem.VirtualFile;
 
 import org.jspecify.annotations.Nullable;
 import java.util.List;
+import java.util.Objects;
 
 public class InjectedLanguageManagerUtil {
   /**
@@ -63,7 +64,8 @@ public class InjectedLanguageManagerUtil {
 
   public static @Nullable PsiElement findElementInInjected(PsiLanguageInjectionHost injectionHost, int offset) {
     SimpleReference<PsiElement> ref = SimpleReference.create();
-    InjectedLanguageManager.getInstance(injectionHost.getProject()).enumerate(injectionHost, (injectedPsi, places) -> ref.set(injectedPsi.findElementAt(offset - getInjectedStart(places))));
+    InjectedLanguageManager.getInstance(injectionHost.getProject())
+      .enumerate(injectionHost, (injectedPsi, places) -> ref.set(injectedPsi.findElementAt(offset - getInjectedStart(places))));
     return ref.get();
   }
 
@@ -71,7 +73,7 @@ public class InjectedLanguageManagerUtil {
   public static @Nullable PsiLanguageInjectionHost findInjectionHost(@Nullable PsiElement psi) {
     if (psi == null) return null;
     InjectedLanguageManager injectedLanguageManager = InjectedLanguageManager.getInstance(psi.getProject());
-    PsiFile containingFile = psi.getContainingFile().getOriginalFile();
+    PsiFile containingFile = Objects.requireNonNull(psi.getContainingFile()).getOriginalFile();
     PsiElement fileContext = containingFile.getContext();
     if (fileContext instanceof PsiLanguageInjectionHost) return (PsiLanguageInjectionHost)fileContext;
     PsiLanguageInjectionHost.Place shreds = injectedLanguageManager.getShreds(containingFile.getViewProvider());

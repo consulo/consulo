@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.language.psi;
 
 import consulo.annotation.access.RequiredReadAction;
@@ -21,6 +20,7 @@ import consulo.annotation.access.RequiredWriteAction;
 import consulo.document.util.TextRange;
 import consulo.language.util.IncorrectOperationException;
 import consulo.util.collection.ContainerUtil;
+import org.jspecify.annotations.Nullable;
 
 import java.util.*;
 
@@ -83,24 +83,25 @@ public class PsiMultiReference implements PsiPolyVariantReference {
     return myElement;
   }
 
-  
   @RequiredReadAction
   @Override
   public TextRange getRangeInElement(){
     PsiReference chosenRef = chooseReference();
     TextRange rangeInElement = chosenRef.getRangeInElement();
     PsiElement element = chosenRef.getElement();
-    while(element != myElement) {
+    while (element != null && element != myElement) {
       rangeInElement = rangeInElement.shiftRight(element.getStartOffsetInParent());
       element = element.getParent();
-      if (element instanceof PsiFile) break;
+      if (element instanceof PsiFile) {
+        break;
+      }
     }
     return rangeInElement;
   }
 
   @RequiredReadAction
   @Override
-  public PsiElement resolve(){
+  public @Nullable PsiElement resolve() {
     PsiReference reference = chooseReference();
     if (cannotChoose()) {
       ResolveResult[] results = multiResolve(false);
@@ -115,7 +116,6 @@ public class PsiMultiReference implements PsiPolyVariantReference {
 
   @RequiredReadAction
   @Override
-  
   public String getCanonicalText(){
     return chooseReference().getCanonicalText();
   }
@@ -166,7 +166,6 @@ public class PsiMultiReference implements PsiPolyVariantReference {
 
   @RequiredReadAction
   @Override
-  
   public ResolveResult[] multiResolve(boolean incompleteCode) {
     PsiReference[] refs = getReferences();
     Collection<ResolveResult> result = new LinkedHashSet<ResolveResult>(refs.length);

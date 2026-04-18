@@ -4,6 +4,7 @@ import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.access.RequiredWriteAction;
 import consulo.document.util.TextRange;
 import consulo.language.util.IncorrectOperationException;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author traff
@@ -29,7 +30,7 @@ public class PsiReferenceWrapper implements PsiReference {
 
   @RequiredReadAction
   @Override
-  public PsiElement resolve() {
+  public @Nullable PsiElement resolve() {
     return myOriginalPsiReference.resolve();
   }
 

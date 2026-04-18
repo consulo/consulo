@@ -19,6 +19,8 @@ import consulo.language.ast.IElementType;
 
 import org.jspecify.annotations.Nullable;
 
+import java.util.Objects;
+
 /**
  * @author peter
  */
@@ -34,10 +36,9 @@ public abstract class AppendTokenParser extends TokenParser {
   public boolean parseToken(PrattBuilder builder) {
     MutableMarker marker = builder.mark();
     builder.advance();
-    marker.finish(parseAppend(builder));
+    marker.finish(Objects.requireNonNull(parseAppend(builder)));
     return true;
   }
 
   protected abstract @Nullable IElementType parseAppend(PrattBuilder builder);
-
 }

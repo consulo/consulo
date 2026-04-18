@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.language.psi;
 
+import consulo.annotation.access.RequiredWriteAction;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.application.Application;
@@ -53,13 +53,13 @@ public interface ElementManipulator<T extends PsiElement> {
    * @return changed element
    * @throws IncorrectOperationException if something goes wrong
    */
+  @RequiredWriteAction
   T handleContentChange(T element, TextRange range, String newContent) throws IncorrectOperationException;
 
+  @RequiredWriteAction
   T handleContentChange(T element, String newContent) throws IncorrectOperationException;
 
-  
   TextRange getRangeInElement(T element);
 
-  
   Class<T> getElementClass();
 }

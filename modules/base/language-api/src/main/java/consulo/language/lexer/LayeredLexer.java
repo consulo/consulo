@@ -15,13 +15,13 @@
  */
 package consulo.language.lexer;
 
+import consulo.annotation.EnsuresNonNullIf;
+import consulo.annotation.ReviewAfterIssueFix;
 import consulo.language.ast.IElementType;
 import consulo.logging.Logger;
+import org.jspecify.annotations.Nullable;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * @author max
@@ -36,10 +36,10 @@ public class LayeredLexer extends DelegateLexer {
     private int myState;
 
     private final Map<IElementType, Lexer> myStartTokenToLayerLexer = new HashMap<>();
-    private Lexer myCurrentLayerLexer;
+    private @Nullable Lexer myCurrentLayerLexer = null;
     // In some cases IDEA-57933 layered lexer is not able to parse all the token, that triggered this lexer,
     // for this purposes we store left part of token in the following fields
-    private IElementType myCurrentBaseTokenType;
+    private @Nullable IElementType myCurrentBaseTokenType = null;
     private int myLayerLeftPart = -1;
     private int myBaseTokenEnd = -1;
 
@@ -98,7 +98,9 @@ public class LayeredLexer extends DelegateLexer {
     }
 
     @Override
-    public IElementType getTokenType() {
+    @ReviewAfterIssueFix(value = "github.com/uber/NullAway/issues/115", todo = "Remove NullAway suppression")
+    @SuppressWarnings("NullAway")
+    public @Nullable IElementType getTokenType() {
         if (myState == IN_LAYER_LEXER_FINISHED_STATE) {
             return myCurrentBaseTokenType;
         }
@@ -106,6 +108,8 @@ public class LayeredLexer extends DelegateLexer {
     }
 
     @Override
+    @ReviewAfterIssueFix(value = "github.com/uber/NullAway/issues/115", todo = "Remove NullAway suppression")
+    @SuppressWarnings("NullAway")
     public int getTokenStart() {
         if (myState == IN_LAYER_LEXER_FINISHED_STATE) {
             return myLayerLeftPart;
@@ -114,6 +118,8 @@ public class LayeredLexer extends DelegateLexer {
     }
 
     @Override
+    @ReviewAfterIssueFix(value = "github.com/uber/NullAway/issues/115", todo = "Remove NullAway suppression")
+    @SuppressWarnings("NullAway")
     public int getTokenEnd() {
         if (myState == IN_LAYER_LEXER_FINISHED_STATE) {
             return myBaseTokenEnd;
@@ -122,6 +128,8 @@ public class LayeredLexer extends DelegateLexer {
     }
 
     @Override
+    @ReviewAfterIssueFix(value = "github.com/uber/NullAway/issues/115", todo = "Remove NullAway suppression")
+    @SuppressWarnings("NullAway")
     public void advance() {
         if (myState == IN_LAYER_LEXER_FINISHED_STATE) {
             myState = super.getState();
@@ -168,7 +176,6 @@ public class LayeredLexer extends DelegateLexer {
         myState = isLayerActive() ? IN_LAYER_STATE : super.getState();
     }
 
-    
     @Override
     public LexerPosition getCurrentPosition() {
         return new LexerPositionImpl(getTokenStart(), getState());
@@ -179,7 +186,7 @@ public class LayeredLexer extends DelegateLexer {
         start(getBufferSequence(), position.getOffset(), getBufferEnd(), position.getState());
     }
 
-    private boolean isStopToken(Lexer lexer, IElementType tokenType) {
+    private boolean isStopToken(Lexer lexer, @Nullable IElementType tokenType) {
         IElementType[] stopTokens = myStopTokens.get(lexer);
         if (stopTokens == null) {
             return false;
@@ -192,6 +199,7 @@ public class LayeredLexer extends DelegateLexer {
         return false;
     }
 
+    @EnsuresNonNullIf(expression = "myCurrentLayerLexer")
     private boolean isLayerActive() {
         return myCurrentLayerLexer != null;
     }

@@ -54,7 +54,6 @@ public abstract class CompositePsiElement extends CompositeElement implements Ps
         setPsi(this);
     }
 
-    
     @Override
     public CompositePsiElement clone() {
         CompositePsiElement clone = (CompositePsiElement) super.clone();
@@ -62,7 +61,6 @@ public abstract class CompositePsiElement extends CompositeElement implements Ps
         return clone;
     }
 
-    
     @Override
     @RequiredReadAction
     public PsiElement[] getChildren() {
@@ -159,7 +157,6 @@ public abstract class CompositePsiElement extends CompositeElement implements Ps
     }
 
     @Override
-    
     public PsiReference[] getReferences() {
         return SharedPsiElementImplUtil.getReferences(this);
     }
@@ -198,11 +195,7 @@ public abstract class CompositePsiElement extends CompositeElement implements Ps
 
     @Override
     @RequiredWriteAction
-    public final PsiElement addRangeBefore(
-        PsiElement first,
-        PsiElement last,
-        PsiElement anchor
-    ) throws IncorrectOperationException {
+    public final PsiElement addRangeBefore(PsiElement first, PsiElement last, PsiElement anchor) throws IncorrectOperationException {
         return SharedImplUtil.addRange(this, first, last, SourceTreeToPsiMap.psiElementToTree(anchor), Boolean.TRUE);
     }
 
@@ -249,12 +242,7 @@ public abstract class CompositePsiElement extends CompositeElement implements Ps
     }
 
     @Override
-    public boolean processDeclarations(
-        PsiScopeProcessor processor,
-        ResolveState state,
-        PsiElement lastParent,
-        PsiElement place
-    ) {
+    public boolean processDeclarations(PsiScopeProcessor processor, ResolveState state, @Nullable PsiElement lastParent, PsiElement place) {
         return true;
     }
 
@@ -270,7 +258,6 @@ public abstract class CompositePsiElement extends CompositeElement implements Ps
     }
 
     @Override
-    
     public PsiElement getNavigationElement() {
         return this;
     }
@@ -287,13 +274,11 @@ public abstract class CompositePsiElement extends CompositeElement implements Ps
     }
 
     @Override
-    
     public GlobalSearchScope getResolveScope() {
         return ResolveScopeManager.getElementResolveScope(this);
     }
 
     @Override
-    
     public SearchScope getUseScope() {
         return ResolveScopeManager.getElementUseScope(this);
     }
@@ -335,7 +320,6 @@ public abstract class CompositePsiElement extends CompositeElement implements Ps
         return file == null ? null : file.getModule();
     }
 
-    
     @Override
     public Project getProject() {
         Project project = SingleProjectHolder.theOnlyOpenProject();
@@ -350,14 +334,12 @@ public abstract class CompositePsiElement extends CompositeElement implements Ps
         return manager.getProject();
     }
 
-    
     @Override
     @RequiredReadAction
     public Language getLanguage() {
         return getElementType().getLanguage();
     }
 
-    
     @Override
     public ASTNode getNode() {
         return this;
@@ -379,7 +361,6 @@ public abstract class CompositePsiElement extends CompositeElement implements Ps
         return this == another;
     }
 
-    
     @Override
     @RequiredReadAction
     public LanguageVersion getLanguageVersion() {

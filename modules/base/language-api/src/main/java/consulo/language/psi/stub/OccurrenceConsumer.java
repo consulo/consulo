@@ -18,18 +18,19 @@ package consulo.language.psi.stub;
 import consulo.language.psi.search.IndexPattern;
 import consulo.util.collection.primitive.objects.ObjectIntMap;
 import consulo.util.collection.primitive.objects.ObjectMaps;
+import org.jspecify.annotations.Nullable;
 
 public final class OccurrenceConsumer {
-  private final IdDataConsumer myIndexDataConsumer;
-  private ObjectIntMap<IndexPattern> myTodoOccurrences;
+  private final @Nullable IdDataConsumer myIndexDataConsumer;
+  private @Nullable ObjectIntMap<IndexPattern> myTodoOccurrences;
   private final boolean myNeedToDo;
 
-  public OccurrenceConsumer(IdDataConsumer indexDataConsumer, boolean needToDo) {
+  public OccurrenceConsumer(@Nullable IdDataConsumer indexDataConsumer, boolean needToDo) {
     myIndexDataConsumer = indexDataConsumer;
     myNeedToDo = needToDo;
   }
 
-  public void addOccurrence(CharSequence charSequence, char[] charArray, int start, int end, int occurrenceMask) {
+  public void addOccurrence(CharSequence charSequence, char @Nullable [] charArray, int start, int end, int occurrenceMask) {
     if (myIndexDataConsumer == null) return;
     if (charArray != null) {
       myIndexDataConsumer.addOccurrence(charArray, start, end, occurrenceMask);

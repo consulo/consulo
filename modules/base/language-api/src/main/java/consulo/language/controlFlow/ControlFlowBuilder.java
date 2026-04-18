@@ -24,7 +24,7 @@ public class ControlFlowBuilder {
     public List<Instruction> instructions;
 
     // The last instruction
-    public Instruction prevInstruction;
+    public @Nullable Instruction prevInstruction = null;
 
     // Here we store all the pending instructions with their scope
     public List<Pair<PsiElement, Instruction>> pending;

@@ -145,7 +145,7 @@ public class TodoAttributes implements Cloneable {
       return attributes;
     }
     catch (CloneNotSupportedException e) {
-      return null;
+      throw new RuntimeException(e);
     }
   }
 }

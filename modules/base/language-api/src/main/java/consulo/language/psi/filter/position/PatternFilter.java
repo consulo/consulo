@@ -18,6 +18,7 @@ package consulo.language.psi.filter.position;
 import consulo.language.pattern.ElementPattern;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.filter.ElementFilter;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author peter
@@ -30,7 +31,7 @@ public class PatternFilter implements ElementFilter {
   }
 
   @Override
-  public boolean isAcceptable(Object element, PsiElement context) {
+  public boolean isAcceptable(Object element, @Nullable PsiElement context) {
     return myPattern.accepts(element);
   }
 

@@ -73,6 +73,7 @@ import consulo.util.lang.Comparing;
 import consulo.util.lang.ShutDownTracker;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.function.ThrowableFunction;
+import consulo.util.lang.function.ThrowableSupplier;
 import consulo.util.lang.ref.SimpleReference;
 import consulo.virtualFileSystem.*;
 import consulo.virtualFileSystem.event.AsyncFileListener;
@@ -2282,7 +2283,6 @@ public final class FileBasedIndexImpl extends FileBasedIndex {
             && (!myNoLimitCheckTypes.contains(file.getFileType()) || RawFileLoaderHelper.isTooLargeForContentLoading(file, contentSize));
     }
 
-    
     CollectingContentIterator createContentIterator() {
         return new UnindexedFilesFinder();
     }
@@ -2385,11 +2385,7 @@ public final class FileBasedIndexImpl extends FileBasedIndex {
     }
 
     @Override
-    public void iterateIndexableFilesConcurrently(
-        ContentIterator processor,
-        Project project,
-        ProgressIndicator indicator
-    ) {
+    public void iterateIndexableFilesConcurrently(ContentIterator processor, Project project, ProgressIndicator indicator) {
         PushedFilePropertiesUpdaterImpl.invokeConcurrentlyIfPossible(
             new Exception(),
             myApplication,
@@ -2411,19 +2407,16 @@ public final class FileBasedIndexImpl extends FileBasedIndex {
     }
 
     @Override
-    public void iterateIndexableFiles(
-        ContentIterator processor,
-        Project project,
-        ProgressIndicator indicator
-    ) {
-        for (Runnable r : collectScanRootRunnables(processor, project, indicator)) r.run();
+    public void iterateIndexableFiles(ContentIterator processor, Project project, @Nullable ProgressIndicator indicator) {
+        for (Runnable r : collectScanRootRunnables(processor, project, indicator)) {
+            r.run();
+        }
     }
 
-    
     private static List<Runnable> collectScanRootRunnables(
         ContentIterator processor,
         Project project,
-        ProgressIndicator indicator
+        @Nullable ProgressIndicator indicator
     ) {
         FileBasedIndexScanRunnableCollector collector = FileBasedIndexScanRunnableCollector.getInstance(project);
         return collector.collectScanRootRunnables(processor, indicator);
@@ -2653,16 +2646,13 @@ public final class FileBasedIndexImpl extends FileBasedIndex {
     }
 
     @Override
-    public <T, E extends Throwable> T ignoreDumbMode(
-        DumbModeAccessType dumbModeAccessType,
-        ThrowableComputable<T, E> computable
-    ) throws E {
+    public <T, E extends Throwable> T ignoreDumbMode(DumbModeAccessType dumbModeAccessType, ThrowableSupplier<T, E> computable) throws E {
         assert myApplication.isReadAccessAllowed();
         if (FileBasedIndex.isIndexAccessDuringDumbModeEnabled()) {
             Stack<DumbModeAccessType> dumbModeAccessTypeStack = ourDumbModeAccessTypeStack.get();
             dumbModeAccessTypeStack.push(dumbModeAccessType);
             try {
-                return computable.compute();
+                return computable.get();
             }
             finally {
                 DumbModeAccessType type = dumbModeAccessTypeStack.pop();
@@ -2670,7 +2660,7 @@ public final class FileBasedIndexImpl extends FileBasedIndex {
             }
         }
         else {
-            return computable.compute();
+            return computable.get();
         }
     }
 }

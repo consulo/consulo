@@ -40,11 +40,10 @@ public class PsiBuilderAdapter implements PsiBuilder {
     }
 
     @Override
-    public Project getProject() {
+    public @Nullable Project getProject() {
         return myDelegate.getProject();
     }
 
-    
     @Override
     public CharSequence getOriginalText() {
         return myDelegate.getOriginalText();
@@ -61,7 +60,7 @@ public class PsiBuilderAdapter implements PsiBuilder {
     }
 
     @Override
-    public void setTokenTypeRemapper(ITokenTypeRemapper remapper) {
+    public void setTokenTypeRemapper(@Nullable ITokenTypeRemapper remapper) {
         myDelegate.setTokenTypeRemapper(remapper);
     }
 
@@ -81,12 +80,12 @@ public class PsiBuilderAdapter implements PsiBuilder {
     }
 
     @Override
-    public IElementType lookAhead(int steps) {
+    public @Nullable IElementType lookAhead(int steps) {
         return myDelegate.lookAhead(steps);
     }
 
     @Override
-    public IElementType rawLookup(int steps) {
+    public @Nullable IElementType rawLookup(int steps) {
         return myDelegate.rawLookup(steps);
     }
 
@@ -130,13 +129,11 @@ public class PsiBuilderAdapter implements PsiBuilder {
         return myDelegate.eof();
     }
 
-    
     @Override
     public ASTNode getTreeBuilt() {
         return myDelegate.getTreeBuilt();
     }
 
-    
     @Override
     public FlyweightCapableTreeStructure<LighterASTNode> getLightTree() {
         return myDelegate.getLightTree();
@@ -157,7 +154,6 @@ public class PsiBuilderAdapter implements PsiBuilder {
         return myDelegate.getLatestDoneMarker();
     }
 
-    
     @Override
     public LocalizeValue getErrorMessage(LighterASTNode node) {
         return myDelegate.getErrorMessage(node);
@@ -183,7 +179,6 @@ public class PsiBuilderAdapter implements PsiBuilder {
         return myDelegate.getContainingFile();
     }
 
-    
     @Override
     public Lexer getLexer() {
         return myDelegate.getLexer();

@@ -16,7 +16,7 @@
 package consulo.language.index.impl.internal;
 
 import consulo.annotation.component.ServiceImpl;
-import consulo.application.AccessRule;
+import consulo.application.ReadAction;
 import consulo.application.progress.ProgressIndicator;
 import consulo.content.ContentIterator;
 import consulo.content.base.BinariesOrderRootType;
@@ -36,6 +36,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -68,10 +69,10 @@ public class FileBasedIndexScanRunnableCollectorImpl extends FileBasedIndexScanR
     }
 
     @Override
-    public List<Runnable> collectScanRootRunnables(ContentIterator processor, ProgressIndicator indicator) {
+    public List<Runnable> collectScanRootRunnables(ContentIterator processor, @Nullable ProgressIndicator indicator) {
         ProjectFileIndex projectFileIndex = myProjectFileIndexProvider.get();
 
-        return AccessRule.read(() -> {
+        return ReadAction.compute(() -> {
             if (myProject.isDisposed()) {
                 return Collections.emptyList();
             }

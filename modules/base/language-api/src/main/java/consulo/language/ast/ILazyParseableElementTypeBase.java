@@ -16,13 +16,13 @@
 package consulo.language.ast;
 
 import consulo.language.parser.PsiBuilder;
+import org.jspecify.annotations.Nullable;
 
 /**
  * An additional interface to be implemented by {@link IElementType} instances for tokens which should be parsed lazily, but
  * for some reasons extending {@link ILazyParseableElementType} is impossible.
  */
 public interface ILazyParseableElementTypeBase {
-
     /**
      * Parses the contents of the specified chameleon node and returns the AST tree
      * representing the parsed contents.
@@ -30,7 +30,7 @@ public interface ILazyParseableElementTypeBase {
      * @param chameleon the node to parse.
      * @return the parsed contents of the node.
      */
-    ASTNode parseContents(ASTNode chameleon);
+    @Nullable ASTNode parseContents(ASTNode chameleon);
 
     /**
      * @return whether it's safe during lazy parsing to reuse tokens that were previously collapsed into a single token of this

@@ -33,6 +33,7 @@ import consulo.project.ui.wm.ToolWindowId;
 import consulo.project.ui.wm.ToolWindowManager;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.content.ContentManager;
+import consulo.ui.ex.localize.UILocalize;
 import consulo.ui.ex.toolWindow.ContentManagerWatcher;
 import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.ui.ex.toolWindow.ToolWindowAnchor;
@@ -71,6 +72,7 @@ public class InspectionManagerImpl extends InspectionManagerBase {
                 ToolWindow toolWindow =
                     toolWindowManager.registerToolWindow(ToolWindowId.INSPECTION, true, ToolWindowAnchor.BOTTOM, project, true);
                 ContentManager contentManager = toolWindow.getContentManager();
+                toolWindow.setDisplayName(UILocalize.toolWindowNameInspection());
                 toolWindow.setIcon(PlatformIconGroup.toolwindowsProblems());
                 ContentManagerWatcher.watchContentManager(toolWindow, contentManager);
                 return contentManager;
@@ -115,7 +117,6 @@ public class InspectionManagerImpl extends InspectionManagerBase {
         }
     }
 
-    
     @Override
     public GlobalInspectionContextImpl createNewGlobalContext(boolean reuse) {
         GlobalInspectionContextImpl inspectionContext;
@@ -142,7 +143,6 @@ public class InspectionManagerImpl extends InspectionManagerBase {
         myRunningContexts.remove(globalInspectionContext);
     }
 
-    
     public Set<GlobalInspectionContextImpl> getRunningContexts() {
         return myRunningContexts;
     }

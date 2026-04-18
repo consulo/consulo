@@ -34,10 +34,10 @@ public class SymbolPresentationUtil {
   }
 
   @RequiredReadAction
-  public static String getSymbolPresentableText(PsiElement element) {
+  public static @Nullable String getSymbolPresentableText(PsiElement element) {
     if (element instanceof NavigationItem) {
       ItemPresentation presentation = ((NavigationItem)element).getPresentation();
-      if (presentation != null){
+      if (presentation != null) {
         return presentation.getPresentableText();
       }
     }
@@ -68,11 +68,15 @@ public class SymbolPresentationUtil {
   public static String getFilePathPresentation(PsiFile psiFile) {
     ProjectFileIndex index = ProjectRootManager.getInstance(psiFile.getProject()).getFileIndex();
     VirtualFile file = psiFile.getOriginalFile().getVirtualFile();
-    VirtualFile rootForFile = file != null ? index.getContentRootForFile(file):null;
+    VirtualFile rootForFile = file != null ? index.getContentRootForFile(file) : null;
 
     if (rootForFile != null) {
+      @SuppressWarnings("NullAway")
+      // Static validation doesn't understand that rootForFile is not null iff file is not null, so disabling NullAway here
       String relativePath = VirtualFileUtil.getRelativePath(file, rootForFile, File.separatorChar);
-      if (relativePath != null) return relativePath;
+      if (relativePath != null) {
+        return relativePath;
+      }
     }
 
     return psiFile.getName();

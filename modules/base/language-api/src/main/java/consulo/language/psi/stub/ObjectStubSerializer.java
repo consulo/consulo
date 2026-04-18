@@ -15,6 +15,8 @@
  */
 package consulo.language.psi.stub;
 
+import org.jspecify.annotations.Nullable;
+
 import java.io.IOException;
 
 /**
@@ -27,7 +29,7 @@ public interface ObjectStubSerializer<T extends Stub, P extends Stub> {
 
   void serialize(T stub, StubOutputStream dataStream) throws IOException;
   
-  T deserialize(StubInputStream dataStream, P parentStub) throws IOException;
+  T deserialize(StubInputStream dataStream, @Nullable P parentStub) throws IOException;
 
   void indexStub(T stub, IndexSink sink);
 }

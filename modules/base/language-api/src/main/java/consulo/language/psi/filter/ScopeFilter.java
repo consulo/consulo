@@ -17,24 +17,26 @@ package consulo.language.psi.filter;
 
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.filter.position.PositionElementFilter;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author ik
  * @since 2003-01-30
  */
 public class ScopeFilter extends PositionElementFilter {
-  public ScopeFilter(){}
+  public ScopeFilter() {
+  }
 
-  public ScopeFilter(ElementFilter filter){
+  public ScopeFilter(ElementFilter filter) {
     setFilter(filter);
   }
 
   @Override
-  public boolean isAcceptable(Object element, PsiElement context){
-    return context != null && getFilter().isAcceptable(context, context);
+  public boolean isAcceptable(Object element, @Nullable PsiElement context) {
+    return context != null && getRequiredFilter().isAcceptable(context, context);
   }
 
   public String toString(){
-    return "scope(" +getFilter()+")";
+    return "scope(" + getFilter() + ")";
   }
 }

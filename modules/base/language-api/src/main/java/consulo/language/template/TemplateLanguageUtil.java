@@ -1,7 +1,7 @@
 // Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
-
 package consulo.language.template;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.language.ast.ASTNode;
 import consulo.language.file.FileViewProvider;
 import consulo.language.psi.OuterLanguageElement;
@@ -9,6 +9,8 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 
 import org.jspecify.annotations.Nullable;
+
+import java.util.Objects;
 
 /**
  * @author Dmitry Avdeev
@@ -33,7 +35,7 @@ public final class TemplateLanguageUtil {
   }
 
   public static boolean isInsideTemplateFile(PsiElement element) {
-    return element.getContainingFile().getViewProvider() instanceof TemplateLanguageFileViewProvider;
+    return Objects.requireNonNull(element.getContainingFile()).getViewProvider() instanceof TemplateLanguageFileViewProvider;
   }
 
   public static boolean isTemplateDataFile(PsiFile file) {
@@ -57,17 +59,19 @@ public final class TemplateLanguageUtil {
     return current;
   }
 
-  public static PsiElement getSameLanguageTreePrev(PsiElement element) {
+  @RequiredReadAction
+  public static @Nullable PsiElement getSameLanguageTreePrev(PsiElement element) {
     PsiElement current = element.getNextSibling();
-    while (current instanceof OuterLanguageElement) {
+    while (current != null && current instanceof OuterLanguageElement) {
       current = current.getPrevSibling();
     }
     return current;
   }
 
-  public static PsiElement getSameLanguageTreeNext(PsiElement element) {
+  @RequiredReadAction
+  public static @Nullable PsiElement getSameLanguageTreeNext(PsiElement element) {
     PsiElement current = element.getNextSibling();
-    while (current instanceof OuterLanguageElement) {
+    while (current != null && current instanceof OuterLanguageElement) {
       current = current.getNextSibling();
     }
     return current;

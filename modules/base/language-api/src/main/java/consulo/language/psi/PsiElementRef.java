@@ -38,14 +38,12 @@ public final class PsiElementRef<T extends PsiElement> {
     return myColleague.getPsiElement();
   }
 
-  
   public final T ensurePsiElementExists() {
     PsiRefColleague.Real<T> realColleague = myColleague.makeReal();
     myColleague = realColleague;
     return realColleague.getPsiElement();
   }
 
-  
   public final PsiElement getRoot() {
     return myColleague.getRoot();
   }
@@ -68,7 +66,8 @@ public final class PsiElementRef<T extends PsiElement> {
     return new PsiElementRef<T>(new PsiRefColleague.Real<T>(element));
   }
 
-  public static <Child extends PsiElement, Parent extends PsiElement> PsiElementRef<Child> imaginary(PsiElementRef<? extends Parent> parent, PsiRefElementCreator<Parent, Child> creator) {
+  public static <Child extends PsiElement, Parent extends PsiElement>
+  PsiElementRef<Child> imaginary(PsiElementRef<? extends Parent> parent, PsiRefElementCreator<Parent, Child> creator) {
     return new PsiElementRef<Child>(new PsiRefColleague.Imaginary<Child, Parent>(parent, creator));
   }
 
@@ -77,15 +76,12 @@ public final class PsiElementRef<T extends PsiElement> {
   }
 
   private interface PsiRefColleague<T extends PsiElement> {
-
     boolean isValid();
 
     @Nullable T getPsiElement();
 
-    
     Real<T> makeReal();
 
-    
     PsiElement getRoot();
 
     class Real<T extends PsiElement> implements PsiRefColleague<T> {
@@ -97,7 +93,6 @@ public final class PsiElementRef<T extends PsiElement> {
       }
 
       @Override
-      
       public T getPsiElement() {
         return myElement;
       }
@@ -108,7 +103,7 @@ public final class PsiElementRef<T extends PsiElement> {
       }
 
       @Override
-      public boolean equals(Object o) {
+      public boolean equals(@Nullable Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
@@ -125,13 +120,11 @@ public final class PsiElementRef<T extends PsiElement> {
       }
 
       @Override
-      
       public Real<T> makeReal() {
         return this;
       }
 
       @Override
-      
       public PsiElement getRoot() {
         return myElement;
       }
@@ -152,12 +145,12 @@ public final class PsiElementRef<T extends PsiElement> {
       }
 
       @Override
-      public Child getPsiElement() {
+      public @Nullable Child getPsiElement() {
         return null;
       }
 
       @Override
-      public boolean equals(Object o) {
+      public boolean equals(@Nullable Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
@@ -177,18 +170,14 @@ public final class PsiElementRef<T extends PsiElement> {
       }
 
       @Override
-      
       public Real<Child> makeReal() {
         return new Real<Child>(myCreator.createChild(myParent.ensurePsiElementExists()));
       }
 
       @Override
-      
       public PsiElement getRoot() {
         return myParent.getRoot();
       }
     }
-
   }
-
 }

@@ -21,10 +21,8 @@ import consulo.util.collection.Maps;
 import consulo.util.dataholder.Key;
 
 import org.jspecify.annotations.Nullable;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+
+import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -35,7 +33,7 @@ import java.util.function.Function;
 public class ObjectStubTree<T extends Stub> {
   private static final Key<ObjectStubTree> STUB_TO_TREE_REFERENCE = Key.create("stub to tree reference");
   protected final ObjectStubBase myRoot;
-  private String myDebugInfo;
+  private @Nullable String myDebugInfo = null;
   private final List<T> myPlainList;
 
   public ObjectStubTree(ObjectStubBase root, boolean withBackReference) {
@@ -46,28 +44,23 @@ public class ObjectStubTree<T extends Stub> {
     }
   }
 
-  
   public Stub getRoot() {
     return myRoot;
   }
 
-  
   public List<T> getPlainList() {
     return myPlainList;
   }
 
-  
   List<T> getPlainListFromAllRoots() {
     return getPlainList();
   }
 
   @Deprecated
-  
   public Map<StubIndexKey, Map<Object, int[]>> indexStubTree() {
     return indexStubTree(key -> HashingStrategy.canonical());
   }
 
-  
   @SuppressWarnings("unchecked")
   public Map<StubIndexKey, Map<Object, int[]>> indexStubTree(Function<StubIndexKey<?, ?>, HashingStrategy<?>> keyHashingStrategyFunction) {
     StubIndexSink sink = new StubIndexSink(keyHashingStrategyFunction);
@@ -81,7 +74,6 @@ public class ObjectStubTree<T extends Stub> {
     return sink.getResult();
   }
 
-  
   protected List<T> enumerateStubs(Stub root) {
     List<T> result = new ArrayList<>();
     //noinspection unchecked
@@ -113,7 +105,7 @@ public class ObjectStubTree<T extends Stub> {
     return root.getUserData(STUB_TO_TREE_REFERENCE);
   }
 
-  public String getDebugInfo() {
+  public @Nullable String getDebugInfo() {
     return myDebugInfo;
   }
 
@@ -126,7 +118,7 @@ public class ObjectStubTree<T extends Stub> {
     private final Map<StubIndexKey, Map<Object, int[]>> myResult = new HashMap<>();
     private final Function<StubIndexKey<?, ?>, HashingStrategy<?>> myHashingStrategyFunction;
     private int myStubIdx;
-    private Map<Object, int[]> myProcessingMap;
+    private @Nullable Map<Object, int[]> myProcessingMap = null;
 
     private StubIndexSink(Function<StubIndexKey<?, ?>, HashingStrategy<?>> hashingStrategyFunction) {
       myHashingStrategyFunction = hashingStrategyFunction;
@@ -180,7 +172,7 @@ public class ObjectStubTree<T extends Stub> {
       int firstZero = ArrayUtil.indexOf(b, 0);
       if (firstZero != -1) {
         int[] shorterList = ArrayUtil.realloc(b, firstZero);
-        myProcessingMap.put(a, shorterList);
+        Objects.requireNonNull(myProcessingMap).put(a, shorterList);
       }
     }
   }

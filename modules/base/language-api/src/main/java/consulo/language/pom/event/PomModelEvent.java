@@ -22,13 +22,12 @@ import org.jspecify.annotations.Nullable;
 import java.util.*;
 
 public class PomModelEvent extends EventObject {
-  private Map<PomModelAspect, PomChangeSet> myChangeSets;
+  private @Nullable Map<PomModelAspect, PomChangeSet> myChangeSets = null;
 
   public PomModelEvent(PomModel source) {
     super(source);
   }
 
-  
   public Set<PomModelAspect> getChangedAspects() {
     if (myChangeSets != null) {
       return myChangeSets.keySet();
@@ -38,7 +37,7 @@ public class PomModelEvent extends EventObject {
     }
   }
 
-  public void registerChangeSet(PomModelAspect aspect, PomChangeSet set) {
+  public void registerChangeSet(PomModelAspect aspect, @Nullable PomChangeSet set) {
     if (myChangeSets == null) {
       myChangeSets = new HashMap<>();
     }

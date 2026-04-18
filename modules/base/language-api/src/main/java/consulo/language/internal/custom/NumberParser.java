@@ -13,10 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.language.internal.custom;
 
 import consulo.util.lang.StringUtil;
+
+import java.util.Objects;
 
 /**
  * @author dsl
@@ -34,10 +35,13 @@ public final class NumberParser extends TokenParser {
     }
   }
 
+  @Override
   public boolean hasToken(int position) {
     int start = position;
-    char startChar = myBuffer.charAt(start);
-    if(!isDigit(startChar)) return false;
+    char startChar = Objects.requireNonNull(myBuffer).charAt(start);
+    if (!isDigit(startChar)) {
+      return false;
+    }
     for (position++; position < myEndOffset; position++) {
       if (!isDigit(myBuffer.charAt(position))) break;
     }
@@ -61,7 +65,7 @@ public final class NumberParser extends TokenParser {
         }
       }
     }
-    while(position < myEndOffset && isNumberTail(myBuffer.charAt(position))) {
+    while (position < myEndOffset && isNumberTail(myBuffer.charAt(position))) {
       position++;
     }
 

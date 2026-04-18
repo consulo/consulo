@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.language.pattern;
 
 import consulo.virtualFileSystem.fileType.FileType;
@@ -85,7 +84,7 @@ public class VirtualFilePattern extends TreeElementPattern<VirtualFile, VirtualF
   }
 
   @Override
-  protected VirtualFile getParent(VirtualFile t) {
+  protected @Nullable VirtualFile getParent(VirtualFile t) {
     return t.getParent();
   }
 

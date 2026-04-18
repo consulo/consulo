@@ -269,7 +269,7 @@ public class CopyPasteDelegator implements CopyPasteSupport {
             // disable cross-project paste
             for (PsiElement element : elements) {
                 PsiManager manager = element.getManager();
-                if (manager == null || manager.getProject() != project) {
+                if (manager.getProject() != project) {
                     return false;
                 }
             }

@@ -240,13 +240,13 @@ public class LazyParseableElement extends CompositeElement {
     }
 
     @Override
-    public TreeElement getFirstChildNode() {
+    public @Nullable TreeElement getFirstChildNode() {
         ensureParsed();
         return super.getFirstChildNode();
     }
 
     @Override
-    public TreeElement getLastChildNode() {
+    public @Nullable TreeElement getLastChildNode() {
         ensureParsed();
         return super.getLastChildNode();
     }

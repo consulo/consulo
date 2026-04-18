@@ -23,7 +23,7 @@ import org.jspecify.annotations.Nullable;
  * @author max
  */
 public class WordOccurrence {
-  private Kind myKind;
+  private @Nullable Kind myKind;
   private CharSequence myText;
   private int myStart;
   private int myEnd;

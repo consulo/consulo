@@ -19,6 +19,8 @@ import consulo.language.ast.IElementType;
 
 import org.jspecify.annotations.Nullable;
 
+import java.util.Objects;
+
 /**
  * Interface for breaking a file into a sequence of tokens.
  *

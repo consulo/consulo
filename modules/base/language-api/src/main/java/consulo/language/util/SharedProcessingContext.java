@@ -13,7 +13,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class SharedProcessingContext {
   private final Map<Object, Object> myMap = new ConcurrentHashMap<>();
 
-  public Object get(String key) {
+  public @Nullable Object get(String key) {
     return myMap.get(key);
   }
 
@@ -25,11 +25,11 @@ public class SharedProcessingContext {
     myMap.put(key, value);
   }
 
-  public <T> T get(Key<T> key) {
+  public <T> @Nullable T get(Key<T> key) {
     return (T)myMap.get(key);
   }
 
-  public @Nullable <T> T get(Key<T> key, Object element) {
+  public <T> @Nullable T get(Key<T> key, Object element) {
     Map map = (Map)myMap.get(key);
     if (map == null) {
       return null;

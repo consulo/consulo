@@ -13,10 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.language.internal.custom;
 
 import consulo.language.ast.IElementType;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author dsl
@@ -24,7 +24,7 @@ import consulo.language.ast.IElementType;
 public class TokenInfo {
   private int myStart;
   private int myEnd;
-  private IElementType myType;
+  private @Nullable IElementType myType = null;
 
   public int getStart() {
     return myStart;
@@ -34,11 +34,11 @@ public class TokenInfo {
     return myEnd;
   }
 
-  public IElementType getType() {
+  public @Nullable IElementType getType() {
     return myType;
   }
 
-  public void updateData(int tokenStart, int tokenEnd, IElementType tokenType) {
+  public void updateData(int tokenStart, int tokenEnd, @Nullable IElementType tokenType) {
     myStart = tokenStart;
     myEnd = tokenEnd;
     myType = tokenType;

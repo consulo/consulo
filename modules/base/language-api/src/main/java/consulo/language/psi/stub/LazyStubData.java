@@ -3,6 +3,7 @@ package consulo.language.psi.stub;
 
 import consulo.index.io.AbstractStringEnumerator;
 import consulo.util.collection.ArrayUtil;
+import org.jspecify.annotations.Nullable;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -29,7 +30,7 @@ class LazyStubData {
     return myParentsAndStarts.get(index * 2 + 1);
   }
 
-  StubBase<?> deserializeStub(int index, StubBase<?> parent, IStubElementType<?, ?> type) throws IOException {
+  StubBase<?> deserializeStub(int index, @Nullable StubBase<?> parent, IStubElementType<?, ?> type) throws IOException {
     StubInputStream stream = new StubInputStream(stubBytes(index), myStorage);
     StubBase<?> stub = (StubBase<?>)type.deserialize(stream, parent);
     int available = stream.available();

@@ -22,6 +22,7 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.stub.*;
 import consulo.sandboxPlugin.lang.SandLanguage;
 import consulo.sandboxPlugin.lang.psi.SandClass;
+import org.jspecify.annotations.Nullable;
 
 import java.io.IOException;
 
@@ -45,9 +46,8 @@ public class SandClassStubElementType extends IStubElementType<SandClassStub, Sa
     dataStream.writeName(stub.getName());
   }
 
-  
   @Override
-  public SandClassStub deserialize(StubInputStream dataStream, StubElement parentStub) throws IOException {
+  public SandClassStub deserialize(StubInputStream dataStream, @Nullable StubElement parentStub) throws IOException {
     StringRef name = dataStream.readName();
     return new SandClassStub(parentStub, this, name);
   }

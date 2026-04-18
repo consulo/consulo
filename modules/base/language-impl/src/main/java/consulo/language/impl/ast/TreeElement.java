@@ -13,6 +13,7 @@ import consulo.language.impl.DebugUtil;
 import consulo.language.impl.psi.PsiFileImpl;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
+import consulo.language.psi.PsiInvalidElementAccessException;
 import consulo.language.psi.PsiManager;
 import consulo.language.util.CharTable;
 import consulo.project.Project;
@@ -22,9 +23,10 @@ import org.jspecify.annotations.Nullable;
 
 public abstract class TreeElement extends UserDataHolderBase implements ASTNode, Cloneable {
     public static final TreeElement[] EMPTY_ARRAY = new TreeElement[0];
-    private TreeElement myNextSibling;
-    private TreeElement myPrevSibling;
-    private CompositeElement myParent;
+
+    private @Nullable TreeElement myNextSibling = null;
+    private @Nullable TreeElement myPrevSibling = null;
+    private @Nullable CompositeElement myParent = null;
 
     private final IElementType myType;
     private volatile int myStartOffsetInParent = -1;
@@ -38,7 +40,6 @@ public abstract class TreeElement extends UserDataHolderBase implements ASTNode,
         return node == null ? null : (PsiFileImpl) node.getCachedPsi();
     }
 
-    
     @Override
     public Object clone() {
         TreeElement clone = (TreeElement) super.clone();
@@ -71,20 +72,19 @@ public abstract class TreeElement extends UserDataHolderBase implements ASTNode,
         if (parent != null) {
             return parent.getManager();
         }
-        return null;
+        throw PsiInvalidElementAccessException.createByNode(this, null);
     }
 
     @Override
     public abstract LeafElement findLeafElementAt(int offset);
 
-    
     public abstract char[] textToCharArray();
 
     @Override
-    public abstract TreeElement getFirstChildNode();
+    public abstract @Nullable TreeElement getFirstChildNode();
 
     @Override
-    public abstract TreeElement getLastChildNode();
+    public abstract @Nullable TreeElement getLastChildNode();
 
     public abstract int getCachedLength();
 
@@ -176,7 +176,7 @@ public abstract class TreeElement extends UserDataHolderBase implements ASTNode,
     }
 
     @Override
-    public final TreeElement getTreePrev() {
+    public final @Nullable TreeElement getTreePrev() {
         return myPrevSibling;
     }
 
@@ -202,7 +202,7 @@ public abstract class TreeElement extends UserDataHolderBase implements ASTNode,
     }
 
     @Override
-    public final TreeElement getTreeNext() {
+    public final @Nullable TreeElement getTreeNext() {
         return myNextSibling;
     }
 
@@ -416,7 +416,6 @@ public abstract class TreeElement extends UserDataHolderBase implements ASTNode,
     }
 
     @Override
-    
     public IElementType getElementType() {
         return myType;
     }

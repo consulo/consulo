@@ -1,6 +1,7 @@
 package consulo.language.util;
 
 import consulo.util.dataholder.Key;
+import org.jspecify.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -9,17 +10,17 @@ import java.util.Map;
  * @author peter
  */
 public class ProcessingContext {
-  private Map<Object, Object> myMap;
-  private SharedProcessingContext mySharedContext;
+  private @Nullable Map<Object, Object> myMap = null;
+  private @Nullable SharedProcessingContext mySharedContext;
 
   public ProcessingContext() {
+    mySharedContext = null;
   }
 
   public ProcessingContext(SharedProcessingContext sharedContext) {
     mySharedContext = sharedContext;
   }
 
-  
   public SharedProcessingContext getSharedContext() {
     if (mySharedContext == null) {
       return mySharedContext = new SharedProcessingContext();
@@ -28,27 +29,28 @@ public class ProcessingContext {
   }
 
   @SuppressWarnings({"ConstantConditions"})
-  public Object get(Object key) {
+  public @Nullable Object get(Object key) {
     return myMap == null ? null : myMap.get(key);
   }
 
   public void put(Object key, Object value) {
-    checkMapInitialized();
-    myMap.put(key, value);
+    getInitializedMap().put(key, value);
   }
 
-  public <T> void put(Key<T> key, T value) {
-    checkMapInitialized();
-    myMap.put(key, value);
+  public <T> void put(Key<T> key, @Nullable T value) {
+    getInitializedMap().put(key, value);
   }
 
   @SuppressWarnings({"ConstantConditions"})
-  public <T> T get(Key<T> key) {
-    return myMap == null ? null : (T)myMap.get(key);
+  public <T> @Nullable T get(Key<T> key) {
+    return myMap == null ? null : (T) myMap.get(key);
   }
 
-  private void checkMapInitialized() {
-    if (myMap == null) myMap = new HashMap<Object, Object>(1);
+  private Map<Object, Object> getInitializedMap() {
+    Map<Object, Object> map = myMap;
+    if (map == null) {
+      myMap = map = new HashMap<>(1);
+    }
+    return map;
   }
-
 }

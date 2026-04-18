@@ -16,11 +16,12 @@
 package consulo.language.lexer;
 
 import consulo.language.ast.IElementType;
+import org.jspecify.annotations.Nullable;
 
 public abstract class MergingLexerAdapterBase extends DelegateLexer {
-    private IElementType myTokenType;
-    private int myState;
-    private int myTokenStart;
+    private @Nullable IElementType myTokenType = null;
+    private int myState = 0;
+    private int myTokenStart = 0;
 
     public MergingLexerAdapterBase(Lexer original) {
         super(original);
@@ -43,7 +44,7 @@ public abstract class MergingLexerAdapterBase extends DelegateLexer {
     }
 
     @Override
-    public IElementType getTokenType() {
+    public @Nullable IElementType getTokenType() {
         if (myTokenType == null) {
             locateToken();
         }
@@ -100,7 +101,6 @@ public abstract class MergingLexerAdapterBase extends DelegateLexer {
         myState = pos.getOldState();
     }
 
-    
     @Override
     public LexerPosition getCurrentPosition() {
         return new MyLexerPosition(myTokenStart, myTokenType, getDelegate().getCurrentPosition(), myState);
@@ -108,11 +108,11 @@ public abstract class MergingLexerAdapterBase extends DelegateLexer {
 
     private static class MyLexerPosition implements LexerPosition {
         private final int myOffset;
-        private final IElementType myTokenType;
+        private final @Nullable IElementType myTokenType;
         private final LexerPosition myOriginalPosition;
         private final int myOldState;
 
-        public MyLexerPosition(int offset, IElementType tokenType, LexerPosition originalPosition, int oldState) {
+        public MyLexerPosition(int offset, @Nullable IElementType tokenType, LexerPosition originalPosition, int oldState) {
             myOffset = offset;
             myTokenType = tokenType;
             myOriginalPosition = originalPosition;
@@ -129,7 +129,7 @@ public abstract class MergingLexerAdapterBase extends DelegateLexer {
             return myOriginalPosition.getState();
         }
 
-        public IElementType getType() {
+        public @Nullable IElementType getType() {
             return myTokenType;
         }
 
@@ -141,5 +141,4 @@ public abstract class MergingLexerAdapterBase extends DelegateLexer {
             return myOldState;
         }
     }
-
 }
