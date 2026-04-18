@@ -30,6 +30,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.nio.channels.FileChannel;
+import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
@@ -283,6 +284,10 @@ public class FileUtil {
         }
 
         return PATH_HASHING_STRATEGY.equals(name1, name2);
+    }
+
+    public static void appendToFile(File file, String text) throws IOException {
+        writeToFile(file, text.getBytes(StandardCharsets.UTF_8), true);
     }
 
     public static void writeToFile(File file, byte[] text) throws IOException {
@@ -754,6 +759,40 @@ public class FileUtil {
         }
         else {
             return ThreeState.NO;
+        }
+    }
+
+    public static String loadFile(File file) throws IOException {
+        return loadFile(file, null, false);
+    }
+
+    public static String loadFile(File file, boolean convertLineSeparators) throws IOException {
+        return loadFile(file, null, convertLineSeparators);
+    }
+
+    public static String loadFile(File file, @Nullable String encoding) throws IOException {
+        return loadFile(file, encoding, false);
+    }
+
+    public static String loadFile(File file, @Nullable String encoding, boolean convertLineSeparators) throws IOException {
+        String s = new String(loadFileText(file, encoding));
+        return convertLineSeparators ? StringUtil.convertLineSeparators(s) : s;
+    }
+
+    public static char[] loadFileText(File file) throws IOException {
+        return loadFileText(file, (String) null);
+    }
+
+    public static char[] loadFileText(File file, @Nullable String encoding) throws IOException {
+        InputStream stream = new FileInputStream(file);
+        try (Reader reader = encoding == null ? new InputStreamReader(stream) : new InputStreamReader(stream, encoding)) {
+            return loadText(reader, (int) file.length());
+        }
+    }
+
+    public static char[] loadFileText(File file, Charset encoding) throws IOException {
+        try (Reader reader = new InputStreamReader(new FileInputStream(file), encoding)) {
+            return loadText(reader, (int) file.length());
         }
     }
 
