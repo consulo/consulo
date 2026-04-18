@@ -48,7 +48,6 @@ public abstract class Weigher<T, Location> {
     return map;
   });
 
-  
   public static  List<Weigher> forKey(Key key) {
     Map<Key, List<Weigher>> map = Application.get().getExtensionPoint(Weigher.class).getOrBuildCache(KEY);
     return map.getOrDefault(key, List.of());
@@ -76,6 +75,5 @@ public abstract class Weigher<T, Location> {
 
   public abstract @Nullable Comparable weigh(T element, Location location);
 
-  
   public abstract Key<?> getKey();
 }

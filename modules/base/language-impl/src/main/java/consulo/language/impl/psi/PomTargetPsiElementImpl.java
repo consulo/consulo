@@ -51,7 +51,6 @@ public class PomTargetPsiElementImpl extends RenameableFakePsiElement implements
     }
 
     @Override
-    
     public PomTarget getTarget() {
         return myTarget;
     }
@@ -79,7 +78,6 @@ public class PomTargetPsiElementImpl extends RenameableFakePsiElement implements
             .getName() + "; see PomDescriptionProvider");
     }
 
-    
     @Override
     public PsiElement getNavigationElement() {
         if (myTarget instanceof PsiTarget target) {
@@ -182,7 +180,6 @@ public class PomTargetPsiElementImpl extends RenameableFakePsiElement implements
         return null;
     }
 
-    
     @Override
     @RequiredReadAction
     public Language getLanguage() {
@@ -192,7 +189,6 @@ public class PomTargetPsiElementImpl extends RenameableFakePsiElement implements
         return Language.ANY;
     }
 
-    
     @Override
     public Project getProject() {
         return myProject;

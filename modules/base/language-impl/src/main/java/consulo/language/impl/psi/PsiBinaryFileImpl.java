@@ -69,7 +69,6 @@ public class PsiBinaryFileImpl extends PsiElementBase implements PsiBinaryFile, 
         return myContents;
     }
 
-    
     @Override
     @RequiredReadAction
     public String getName() {
@@ -125,18 +124,15 @@ public class PsiBinaryFileImpl extends PsiElementBase implements PsiBinaryFile, 
 
     @RequiredReadAction
     @Override
-    
     public Language getLanguage() {
         return Language.ANY;
     }
 
-    
     @Override
     public PsiManager getManager() {
         return myManager;
     }
 
-    
     @Override
     @RequiredReadAction
     public PsiElement[] getChildren() {
@@ -154,7 +150,6 @@ public class PsiBinaryFileImpl extends PsiElementBase implements PsiBinaryFile, 
         return this;
     }
 
-    
     @RequiredReadAction
     @Override
     public TextRange getTextRange() {
@@ -308,7 +303,6 @@ public class PsiBinaryFileImpl extends PsiElementBase implements PsiBinaryFile, 
     }
 
     @Override
-    
     public PsiFile getOriginalFile() {
         return this;
     }
@@ -320,19 +314,16 @@ public class PsiBinaryFileImpl extends PsiElementBase implements PsiBinaryFile, 
     }
 
     @Override
-    
     public FileType getFileType() {
         return myViewProvider.getFileType();
     }
 
     @Override
-    
     public PsiFile[] getPsiRoots() {
         return new PsiFile[]{this};
     }
 
     @Override
-    
     public FileViewProvider getViewProvider() {
         return myViewProvider;
     }

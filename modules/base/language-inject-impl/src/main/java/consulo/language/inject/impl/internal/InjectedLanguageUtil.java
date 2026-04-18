@@ -71,6 +71,7 @@ public class InjectedLanguageUtil {
   public static final Key<IElementType> INJECTED_FRAGMENT_TYPE = Key.create("INJECTED_FRAGMENT_TYPE");
   public static final Key<Boolean> FRANKENSTEIN_INJECTION = InjectedLanguageManager.FRANKENSTEIN_INJECTION;
 
+  @RequiredReadAction
   static PsiElement loadTree(PsiElement host, PsiFile containingFile) {
     if (containingFile instanceof DummyHolder) {
       PsiElement context = containingFile.getContext();
@@ -126,6 +127,7 @@ public class InjectedLanguageUtil {
    * @deprecated use {@link InjectedLanguageManager#enumerate(PsiElement, PsiLanguageInjectionHost.InjectedPsiVisitor)} instead
    */
   @Deprecated
+  @RequiredReadAction
   public static boolean enumerate(PsiElement host, PsiLanguageInjectionHost.InjectedPsiVisitor visitor) {
     PsiFile containingFile = Objects.requireNonNull(host.getContainingFile());
     PsiUtilCore.ensureValid(containingFile);
@@ -382,6 +384,7 @@ public class InjectedLanguageUtil {
    * We can only inject into injection hosts or their ancestors, so if we're sure there are no PsiLanguageInjectionHost descendants,
    * we can skip that PSI safely.
    */
+  @RequiredReadAction
   private static @Nullable PsiElement skipNonInjectablePsi(PsiElement element, boolean probeUp) {
     if (!stopLookingForInjection(element) && element.getFirstChild() == null) {
       if (!probeUp) return null;

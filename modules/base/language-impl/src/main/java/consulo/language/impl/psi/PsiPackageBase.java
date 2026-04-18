@@ -87,13 +87,11 @@ public abstract class PsiPackageBase extends PsiElementBase implements PsiPackag
         return myQualifiedName.hashCode();
     }
 
-    
     @Override
     public String getQualifiedName() {
         return myQualifiedName;
     }
 
-    
     @Override
     @RequiredReadAction
     public PsiDirectory[] getDirectories() {
@@ -101,7 +99,6 @@ public abstract class PsiPackageBase extends PsiElementBase implements PsiPackag
         return ContainerUtil.toArray(collection, PsiDirectory.ARRAY_FACTORY);
     }
 
-    
     @Override
     @RequiredReadAction
     public PsiDirectory[] getDirectories(GlobalSearchScope scope) {
@@ -176,14 +173,12 @@ public abstract class PsiPackageBase extends PsiElementBase implements PsiPackag
         }
     }
 
-    
     @Override
     @RequiredReadAction
     public PsiPackage[] getSubPackages() {
         return getSubPackages(GlobalSearchScope.allScope(getProject()));
     }
 
-    
     @Override
     @RequiredReadAction
     public PsiPackage[] getSubPackages(GlobalSearchScope scope) {
@@ -192,7 +187,6 @@ public abstract class PsiPackageBase extends PsiElementBase implements PsiPackag
 
     protected abstract IntFunction<? extends PsiPackage[]> getPackageArrayFactory();
 
-    
     @RequiredReadAction
     public PsiPackage[] getSubPackages(PsiPackage psiPackage, GlobalSearchScope scope) {
         Map<String, PsiPackage> packagesMap = new HashMap<>();
@@ -214,14 +208,12 @@ public abstract class PsiPackageBase extends PsiElementBase implements PsiPackag
         return ContainerUtil.toArray(packagesMap.values(), getPackageArrayFactory());
     }
 
-    
     @Override
     @RequiredReadAction
     public PsiManager getManager() {
         return myManager;
     }
 
-    
     @Override
     @RequiredReadAction
     public PsiElement[] getChildren() {

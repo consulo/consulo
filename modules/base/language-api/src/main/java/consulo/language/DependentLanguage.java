@@ -15,7 +15,6 @@
  */
 package consulo.language;
 
-import consulo.language.InjectableLanguage;
 import consulo.language.template.TemplateLanguage;
 
 /**

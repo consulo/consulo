@@ -39,7 +39,7 @@ public class WeighingComparable<T, Loc> implements Comparable<WeighingComparable
   
   private Comparable[] myComputedWeighs;
   private final Supplier<? extends T> myElement;
-  private final Loc myLocation;
+  private final @Nullable Loc myLocation;
   private final Weigher<T, Loc>[] myWeighers;
 
   public WeighingComparable(Supplier<? extends T> element, Loc location, Weigher<T, Loc>[] weighers) {
@@ -85,7 +85,7 @@ public class WeighingComparable<T, Loc> implements Comparable<WeighingComparable
     Comparable weight = myComputedWeighs[index];
     if (weight == null) {
       T element = myElement.get();
-      weight = element == null ? NULL : myWeighers[index].weigh(element, myLocation);
+      weight = element == null ? NULL : myWeighers[index].weigh(element, Objects.requireNonNull(myLocation));
       if (weight == null) weight = NULL;
       myComputedWeighs[index] = weight;
     }
