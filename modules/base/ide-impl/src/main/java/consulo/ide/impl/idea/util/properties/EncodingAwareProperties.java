@@ -15,19 +15,20 @@
  */
 package consulo.ide.impl.idea.util.properties;
 
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
+import consulo.util.io.FileUtil;
 import consulo.util.lang.StringUtil;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Properties;
 import java.util.StringTokenizer;
 
 /**
  * @author MYakovlev
  * @since 2002-10-29
  */
-public class EncodingAwareProperties extends java.util.Properties{
-  public void load(File file, String encoding) throws IOException{
+public class EncodingAwareProperties extends Properties {
+  public void load(File file, String encoding) throws IOException {
     String propText = FileUtil.loadFile(file, encoding);
     propText = StringUtil.convertLineSeparators(propText);
     StringTokenizer stringTokenizer = new StringTokenizer(propText, "\n");

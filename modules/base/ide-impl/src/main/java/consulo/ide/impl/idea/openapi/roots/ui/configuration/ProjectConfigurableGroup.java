@@ -168,7 +168,7 @@ public class ProjectConfigurableGroup extends ProjectStructureElementConfigurabl
       String canonicalPath = myCompilerPathController.getValue();
       if (canonicalPath != null && canonicalPath.length() > 0) {
         try {
-          canonicalPath = consulo.ide.impl.idea.openapi.util.io.FileUtil.resolveShortWindowsName(canonicalPath);
+          canonicalPath = FileUtil.resolveShortWindowsName(canonicalPath);
         }
         catch (IOException e) {
           //file doesn't exist yet

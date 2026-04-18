@@ -73,7 +73,7 @@ public final class Urls {
   }
 
   /**
-   * Url will not be normalized (see {@link VfsUtilCore#toIdeaUrl(String)}), parsed as is
+   * Url will not be normalized (see {@link VirtualFileUtil#toIdeaUrl(String)}), parsed as is
    */
   public static @Nullable Url newFromIdea(String url) {
     Url result = parseFromIdea(url);

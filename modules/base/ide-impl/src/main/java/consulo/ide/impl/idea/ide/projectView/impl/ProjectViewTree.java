@@ -69,7 +69,7 @@ public class ProjectViewTree extends DnDAwareTree {
         Object object = TreeUtil.getUserObject(value);
         //if (object instanceof ProjectViewNode && UISettings.getInstance().getShowInplaceComments()) {
         //  VirtualFile file = ((ProjectViewNode)object).getVirtualFile();
-        //  File ioFile = file == null || file.isDirectory() || !file.isInLocalFileSystem() ? null : VfsUtilCore.virtualToIoFile(file);
+        //  File ioFile = file == null || file.isDirectory() || !file.isInLocalFileSystem() ? null : VirtualFileUtil.virtualToIoFile(file);
         //  BasicFileAttributes attr = null;
         //  try {
         //    attr = ioFile == null ? null : Files.readAttributes(Paths.get(ioFile.toURI()), BasicFileAttributes.class);

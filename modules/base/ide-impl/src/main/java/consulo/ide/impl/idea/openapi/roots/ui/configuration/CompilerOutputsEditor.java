@@ -313,7 +313,7 @@ public class CompilerOutputsEditor extends ModuleElementsEditor {
                 // should set only absolute paths
                 String canonicalPath;
                 try {
-                    canonicalPath = consulo.ide.impl.idea.openapi.util.io.FileUtil.resolveShortWindowsName(path);
+                    canonicalPath = FileUtil.resolveShortWindowsName(path);
                 }
                 catch (IOException e) {
                     canonicalPath = path;
