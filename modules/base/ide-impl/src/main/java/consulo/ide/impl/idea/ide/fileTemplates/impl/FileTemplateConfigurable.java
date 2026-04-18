@@ -347,7 +347,7 @@ public class FileTemplateConfigurable implements Configurable, Configurable.NoSc
             return false;
         }
         File tempFile = new File(FileUtil.getTempDirectory() + File.separator + filename);
-        return consulo.ide.impl.idea.openapi.util.io.FileUtil.ensureCanCreateFile(tempFile);
+        return FileUtil.ensureCanCreateFile(tempFile);
     }
 
     @RequiredUIAccess

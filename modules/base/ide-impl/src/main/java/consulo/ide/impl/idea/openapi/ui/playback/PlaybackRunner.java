@@ -20,13 +20,13 @@ import consulo.application.util.registry.Registry;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.ide.impl.idea.openapi.ui.playback.commands.*;
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.ui.ex.awt.internal.IdeEventQueueProxy;
 import consulo.logging.Logger;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.wm.event.ApplicationActivationListener;
 import consulo.ui.ex.UiActivityMonitor;
 import consulo.util.concurrent.ActionCallback;
+import consulo.util.io.FileUtil;
 import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;

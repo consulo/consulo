@@ -34,6 +34,7 @@ import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.UIExAWTDataKey;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.util.collection.MultiMap;
+import consulo.util.io.FilePermissionCopier;
 import consulo.util.io.FileUtil;
 import consulo.util.io.zip.ZipUtil;
 import jakarta.inject.Inject;
@@ -132,7 +133,7 @@ public class ImportSettingsAction extends AnAction implements DumbAware {
             relativeNamesToExtract.add(ExportSettingsAction.INSTALLED_TXT);
 
             File tempFile = new File(ContainerPathManager.get().getPluginTempPath() + "/" + saveFile.getName());
-            consulo.ide.impl.idea.openapi.util.io.FileUtil.copy(saveFile, tempFile);
+            FileUtil.copy(saveFile, tempFile, FilePermissionCopier.BY_NIO2);
             File outDir = new File(ContainerPathManager.get().getConfigPath());
             ImportSettingsFilenameFilter filenameFilter = new ImportSettingsFilenameFilter(relativeNamesToExtract);
             StartupActionScriptManager.ActionCommand unzip = new StartupActionScriptManager.UnzipCommand(tempFile, outDir, filenameFilter);

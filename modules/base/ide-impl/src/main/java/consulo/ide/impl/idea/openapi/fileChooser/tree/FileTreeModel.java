@@ -28,6 +28,7 @@ import consulo.ui.ex.util.InvokerSupplier;
 import consulo.ui.image.Image;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.concurrent.CancellablePromise;
+import consulo.util.io.FileUtil;
 import consulo.util.lang.Pair;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VFileProperty;
@@ -45,7 +46,6 @@ import java.util.HashSet;
 import java.util.List;
 
 import static consulo.disposer.Disposer.register;
-import static consulo.ide.impl.idea.openapi.util.io.FileUtil.toSystemIndependentName;
 import static consulo.util.lang.StringUtil.naturalCompare;
 import static java.util.Collections.emptyList;
 import static java.util.stream.Collectors.toList;
@@ -300,7 +300,7 @@ public final class FileTreeModel extends AbstractTreeModel implements Identifiab
     }
 
     private static VirtualFile findFile(String path) {
-        return LocalFileSystem.getInstance().findFileByPath(toSystemIndependentName(path));
+        return LocalFileSystem.getInstance().findFileByPath(FileUtil.toSystemIndependentName(path));
     }
 
     private static final class State {

@@ -1001,7 +1001,7 @@ public class FileTypeManagerImpl extends FileTypeManagerEx implements Persistent
                 ", channel=" + channel +
                 ", channel.size=" + (channel == null ? null : channel.size()) +
                 ", file.exists=" + file.exists() +
-                ", file.content='" + consulo.ide.impl.idea.openapi.util.io.FileUtil.loadFile(file) + "')";
+                ", file.content='" + FileUtil.loadFile(file) + "')";
         }
         return stream;
     }

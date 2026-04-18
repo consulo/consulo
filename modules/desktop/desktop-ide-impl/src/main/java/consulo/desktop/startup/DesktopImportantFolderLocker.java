@@ -216,7 +216,7 @@ public final class DesktopImportantFolderLocker implements ImportantFolderLocker
 
                 if (result) {
                     try {
-                        String token = consulo.ide.impl.idea.openapi.util.io.FileUtil.loadFile(new File(mySystemPath, TOKEN_FILE));
+                        String token = FileUtil.loadFile(new File(mySystemPath, TOKEN_FILE));
                         @SuppressWarnings("IOResourceOpenedButNotSafelyClosed") DataOutputStream out =
                             new DataOutputStream(socket.getOutputStream());
                         out.writeUTF(ACTIVATE_COMMAND + token + "\0" + new File(".").getAbsolutePath() + "\0" + StringUtil.join(

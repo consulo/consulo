@@ -67,7 +67,7 @@ public class VMOptions {
             }
 
             try {
-                String content = consulo.ide.impl.idea.openapi.util.io.FileUtil.loadFile(file);
+                String content = FileUtil.loadFile(file);
                 arguments = Collections.singletonList(content);
             }
             catch (IOException e) {
@@ -121,7 +121,7 @@ public class VMOptions {
         }
 
         try {
-            String content = file.exists() ? consulo.ide.impl.idea.openapi.util.io.FileUtil.loadFile(file) : read();
+            String content = file.exists() ? FileUtil.loadFile(file) : read();
 
             if (!StringUtil.isEmptyOrSpaces(content)) {
                 Matcher m = pattern.matcher(content);
@@ -157,12 +157,12 @@ public class VMOptions {
         try {
             File newFile = getWriteFile();
             if (newFile != null && newFile.exists()) {
-                return consulo.ide.impl.idea.openapi.util.io.FileUtil.loadFile(newFile);
+                return FileUtil.loadFile(newFile);
             }
 
             String vmOptionsFile = System.getProperty("jb.vmOptionsFile");
             if (vmOptionsFile != null) {
-                return consulo.ide.impl.idea.openapi.util.io.FileUtil.loadFile(new File(vmOptionsFile));
+                return FileUtil.loadFile(new File(vmOptionsFile));
             }
         }
         catch (IOException e) {
