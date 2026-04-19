@@ -15,10 +15,11 @@
  */
 package consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.actions;
 
+import consulo.project.localize.ProjectLocalize;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.CommonShortcuts;
 import consulo.ui.ex.action.DumbAwareAction;
-import consulo.project.ProjectBundle;
 import consulo.compiler.artifact.ui.TreeNodePresentation;
 
 import org.jspecify.annotations.Nullable;
@@ -30,7 +31,7 @@ import javax.swing.*;
  */
 public abstract class ArtifactEditorNavigateActionBase extends DumbAwareAction {
     public ArtifactEditorNavigateActionBase(JComponent contextComponent) {
-        super(ProjectBundle.message("action.name.facet.navigate"));
+        super(ProjectLocalize.actionNameFacetNavigate());
         registerCustomShortcutSet(CommonShortcuts.getEditSource(), contextComponent);
     }
 
@@ -43,6 +44,7 @@ public abstract class ArtifactEditorNavigateActionBase extends DumbAwareAction {
     protected abstract @Nullable TreeNodePresentation getPresentation();
 
     @Override
+    @RequiredUIAccess
     public void actionPerformed(AnActionEvent e) {
         TreeNodePresentation presentation = getPresentation();
         if (presentation != null) {

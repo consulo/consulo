@@ -25,7 +25,7 @@ import consulo.module.Module;
 import consulo.module.content.layer.orderEntry.OrderEntry;
 import consulo.module.content.layer.orderEntry.OrderEntryType;
 import consulo.project.Project;
-import consulo.project.ProjectBundle;
+import consulo.project.localize.ProjectLocalize;
 import consulo.project.ui.view.internal.ProjectSettingsService;
 import consulo.ui.annotation.RequiredUIAccess;
 import org.jspecify.annotations.Nullable;
@@ -34,7 +34,7 @@ import jakarta.inject.Singleton;
 
 /**
  * @author VISTALL
- * @since 10-Aug-22
+ * @since 2022-08-10
  */
 @Singleton
 @ServiceImpl
@@ -77,19 +77,18 @@ public class ProjectSettingsServiceImpl extends ProjectSettingsService {
     @Override
     @RequiredUIAccess
     public void openModuleLibrarySettings(Module module) {
-        myShowSettingsUtil.showProjectStructureDialog(module.getProject(),
-            config -> config.select(module.getName(),
-                ProjectBundle.message("modules.classpath.title"),
-                true));
+        myShowSettingsUtil.showProjectStructureDialog(
+            module.getProject(),
+            config -> config.select(module.getName(), ProjectLocalize.modulesClasspathTitle().get(), true)
+        );
     }
 
     @Override
     @RequiredUIAccess
     public void openContentEntriesSettings(Module module) {
         myShowSettingsUtil.showProjectStructureDialog(module.getProject(),
-            config -> config.select(module.getName(),
-                ProjectBundle.message("module.paths.title"),
-                true));
+            config -> config.select(module.getName(), ProjectLocalize.modulePathsTitle().get(), true)
+        );
     }
 
     @Override

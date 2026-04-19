@@ -15,16 +15,15 @@
  */
 package consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot;
 
-import consulo.application.AllIcons;
+import consulo.application.dumb.DumbAware;
+import consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.daemon.ProjectStructureElement;
+import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.project.localize.ProjectLocalize;
+import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.IdeActions;
-import consulo.application.dumb.DumbAware;
-import consulo.project.ProjectBundle;
-import consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.daemon.ProjectStructureElement;
-import consulo.ui.ex.RelativePoint;
-
 import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
@@ -36,7 +35,7 @@ public abstract class FindUsagesInProjectStructureActionBase extends AnAction im
     private final JComponent myParentComponent;
 
     public FindUsagesInProjectStructureActionBase(JComponent parentComponent) {
-        super(ProjectBundle.message("find.usages.action.text"), ProjectBundle.message("find.usages.action.text"), AllIcons.Actions.Find);
+        super(ProjectLocalize.findUsagesActionText(), ProjectLocalize.findUsagesActionText(), PlatformIconGroup.actionsFind());
         registerCustomShortcutSet(ActionManager.getInstance().getAction(IdeActions.ACTION_FIND_USAGES).getShortcutSet(), parentComponent);
         myParentComponent = parentComponent;
     }
@@ -71,7 +70,7 @@ public abstract class FindUsagesInProjectStructureActionBase extends AnAction im
         //Arrays.sort(usagesArray, (o1, o2) -> o1.getPresentableName().compareToIgnoreCase(o2.getPresentableName()));
         //
         //BaseListPopupStep<ProjectStructureElementUsage> step =
-        //    new BaseListPopupStep<ProjectStructureElementUsage>(ProjectBundle.message("dependencies.used.in.popup.title"), usagesArray) {
+        //    new BaseListPopupStep<ProjectStructureElementUsage>(ProjectLocalize.dependenciesUsedInPopupTitle().get(), usagesArray) {
         //        @Override
         //        public PopupStep onChosen(final ProjectStructureElementUsage selected, final boolean finalChoice) {
         //                  selected.getPlace().navigate(myProject);
