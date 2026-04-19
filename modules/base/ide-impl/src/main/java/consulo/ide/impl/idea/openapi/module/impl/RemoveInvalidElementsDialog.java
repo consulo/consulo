@@ -49,7 +49,11 @@ public class RemoveInvalidElementsDialog extends DialogWrapper {
                                       List<ConfigurationErrorDescription> errors) {
     super(project, true);
     setTitle(title);
-    myDescriptionLabel.setText(ProjectBundle.message(type.canIgnore() ? "label.text.0.cannot.be.loaded.ignore" : "label.text.0.cannot.be.loaded.remove", invalidElements));
+    myDescriptionLabel.setText(
+      type.canIgnore()
+        ? ProjectLocalize.labelText0CannotBeLoadedIgnore(invalidElements).get()
+        : ProjectLocalize.labelText0CannotBeLoadedRemove(invalidElements).get()
+    );
     myContentPanel.setLayout(new VerticalFlowLayout());
     for (ConfigurationErrorDescription error : errors) {
       JCheckBox checkBox = new JCheckBox(error.getElementName() + ".");
@@ -68,8 +72,8 @@ public class RemoveInvalidElementsDialog extends DialogWrapper {
       myContentPanel.add(panel);
     }
     init();
-    setOKButtonText(ProjectBundle.message(type.canIgnore() ? "button.text.ignore.selected" : "button.text.remove.selected"));
-    setCancelButtonText(ProjectLocalize.buttonTextKeepAll().get());
+    setOKButtonText(type.canIgnore() ? ProjectLocalize.buttonTextIgnoreSelected() : ProjectLocalize.buttonTextRemoveSelected());
+    setCancelButtonText(ProjectLocalize.buttonTextKeepAll());
   }
 
   public static void showDialog(

@@ -1,4 +1,3 @@
-
 /*
  * Copyright 2000-2009 JetBrains s.r.o.
  *
@@ -35,7 +34,7 @@ public class TipDialog extends DialogWrapper {
     super(true);
     setModal(false);
     setTitle(IdeLocalize.titleTipOfTheDay());
-    setCancelButtonText(CommonLocalize.buttonClose().get());
+    setCancelButtonText(CommonLocalize.buttonClose());
     myTipPanel = new TipPanel();
     myTipPanel.nextTip();
     setDoNotAskOption(myTipPanel);

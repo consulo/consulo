@@ -13,26 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.impl.idea.codeInsight.actions;
 
-import consulo.language.editor.CodeInsightBundle;
-import consulo.ide.impl.idea.ide.util.PropertiesComponent;
 import consulo.application.HelpManager;
+import consulo.ide.impl.idea.ide.util.PropertiesComponent;
+import consulo.language.codeStyle.arrangement.Rearranger;
+import consulo.language.editor.localize.CodeInsightLocalize;
 import consulo.language.editor.refactoring.ImportOptimizer;
+import consulo.language.file.light.LightVirtualFile;
+import consulo.language.psi.PsiFile;
 import consulo.project.Project;
 import consulo.ui.ex.awt.DialogWrapper;
-import consulo.language.psi.PsiFile;
-import consulo.language.codeStyle.arrangement.Rearranger;
-import consulo.language.file.light.LightVirtualFile;
 import consulo.versionControlSystem.FormatChangedTextUtil;
 import consulo.versionControlSystem.util.VcsUtil;
-
 import org.jspecify.annotations.Nullable;
+
 import javax.swing.*;
 
 public class LayoutCodeDialog extends DialogWrapper {
-  
   private final Project myProject;
   
   private final PsiFile myFile;
@@ -70,7 +68,7 @@ public class LayoutCodeDialog extends DialogWrapper {
     myLastRunOptions = new LastRunReformatCodeOptionsProvider(PropertiesComponent.getInstance());
     myRunOptions = createOptionsBundledOnDialog();
 
-    setOKButtonText(CodeInsightBundle.message("reformat.code.accept.button.text"));
+    setOKButtonText(CodeInsightLocalize.reformatCodeAcceptButtonText());
     setTitle("Reformat File: " + file.getName());
 
     init();
@@ -156,7 +154,6 @@ public class LayoutCodeDialog extends DialogWrapper {
     }
   }
 
-  
   private LayoutCodeOptions createOptionsBundledOnDialog() {
     return new LayoutCodeOptions() {
       @Override
@@ -187,7 +184,6 @@ public class LayoutCodeDialog extends DialogWrapper {
     return myButtonsPanel;
   }
 
-  
   @Override
   protected Action[] createActions() {
     return new Action[]{getOKAction(), getCancelAction(), getHelpAction()};
@@ -207,5 +203,4 @@ public class LayoutCodeDialog extends DialogWrapper {
   public LayoutCodeOptions getRunOptions() {
     return myRunOptions;
   }
-
 }

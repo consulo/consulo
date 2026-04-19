@@ -155,7 +155,7 @@ public class RollbackChangesDialog extends DialogWrapper {
 
         myOperationName = UIUtil.removeMnemonic(myOperationName);
         setTitle(VcsLocalize.changesActionRollbackCustomTitle(myOperationName));
-        setCancelButtonText(CommonLocalize.buttonClose().get());
+        setCancelButtonText(CommonLocalize.buttonClose());
         myBrowser.setToggleActionTitle(LocalizeValue.localizeTODO("&Include in " + myOperationName.toLowerCase()));
 
         myDeleteLocallyAddedFiles = CheckBox.create(VcsLocalize.changesCheckboxDeleteLocallyAddedFiles());
@@ -168,12 +168,10 @@ public class RollbackChangesDialog extends DialogWrapper {
         listChangeListener.run();
     }
 
-    
     public static String operationNameByChanges(Project project, Collection<Change> changes) {
         return RollbackUtil.getRollbackOperationName(ChangesUtil.getAffectedVcses(changes, project));
     }
 
-    
     private static List<Change> getAllChanges(List<? extends ChangeList> changeLists) {
         List<Change> result = new ArrayList<>();
 

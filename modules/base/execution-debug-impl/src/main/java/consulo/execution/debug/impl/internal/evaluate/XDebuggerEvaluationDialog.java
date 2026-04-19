@@ -15,11 +15,14 @@
  */
 package consulo.execution.debug.impl.internal.evaluate;
 
-import consulo.application.ApplicationManager;
+import consulo.application.Application;
 import consulo.application.ui.wm.ApplicationIdeFocusManager;
 import consulo.codeEditor.Editor;
 import consulo.dataContext.DataProvider;
-import consulo.execution.debug.*;
+import consulo.execution.debug.XDebugSession;
+import consulo.execution.debug.XDebuggerActions;
+import consulo.execution.debug.XDebuggerUtil;
+import consulo.execution.debug.XSourcePosition;
 import consulo.execution.debug.breakpoint.XExpression;
 import consulo.execution.debug.evaluation.EvaluationMode;
 import consulo.execution.debug.evaluation.XDebuggerEditorsProvider;
@@ -33,6 +36,7 @@ import consulo.execution.debug.impl.internal.ui.tree.XDebuggerTree;
 import consulo.execution.debug.impl.internal.ui.tree.XDebuggerTreePanel;
 import consulo.execution.debug.impl.internal.ui.tree.node.EvaluatingExpressionRootNode;
 import consulo.execution.debug.internal.breakpoint.XExpressionImpl;
+import consulo.execution.debug.localize.XDebuggerLocalize;
 import consulo.language.editor.completion.lookup.LookupManager;
 import consulo.platform.Platform;
 import consulo.project.Project;
@@ -88,13 +92,13 @@ public class XDebuggerEvaluationDialog extends DialogWrapper {
         myEditorsProvider = editorsProvider;
         mySourcePosition = sourcePosition;
         setModal(false);
-        setOKButtonText(XDebuggerBundle.message("xdebugger.button.evaluate"));
-        setCancelButtonText(XDebuggerBundle.message("xdebugger.evaluate.dialog.close"));
+        setOKButtonText(XDebuggerLocalize.xdebuggerButtonEvaluate());
+        setCancelButtonText(XDebuggerLocalize.xdebuggerEvaluateDialogClose());
 
         mySession.addSessionListener(new XDebugSessionListener() {
             @Override
             public void sessionStopped() {
-                ApplicationManager.getApplication().invokeLater(() -> close(CANCEL_EXIT_CODE));
+                Application.get().invokeLater(() -> close(CANCEL_EXIT_CODE));
             }
 
             @Override
@@ -111,7 +115,7 @@ public class XDebuggerEvaluationDialog extends DialogWrapper {
         myTreePanel = new XDebuggerTreePanel(session.getProject(), editorsProvider, myDisposable, sourcePosition, XDebuggerActions.EVALUATE_DIALOG_TREE_POPUP_GROUP,
             ((XDebugSessionImpl) session).getValueMarkers());
         myResultPanel = JBUI.Panels.simplePanel()
-            .addToTop(new JLabel(XDebuggerBundle.message("xdebugger.evaluate.label.result")))
+            .addToTop(new JLabel(XDebuggerLocalize.xdebuggerEvaluateLabelResult().get()))
             .addToCenter(myTreePanel.getMainPanel());
         myMainPanel = new EvaluationMainPanel();
 
@@ -166,7 +170,7 @@ public class XDebuggerEvaluationDialog extends DialogWrapper {
     }
 
     private void updateSourcePosition() {
-        ApplicationManager.getApplication().invokeLater(() -> {
+        Application.get().invokeLater(() -> {
             mySourcePosition = mySession.getCurrentPosition();
             getInputEditor().setSourcePosition(mySourcePosition);
         });
@@ -237,8 +241,8 @@ public class XDebuggerEvaluationDialog extends DialogWrapper {
 
     private static String getSwitchButtonText(EvaluationMode mode) {
         return mode != EvaluationMode.EXPRESSION
-            ? XDebuggerBundle.message("button.text.expression.mode")
-            : XDebuggerBundle.message("button.text.code.fragment.mode");
+            ? XDebuggerLocalize.buttonTextExpressionMode().get()
+            : XDebuggerLocalize.buttonTextCodeFragmentMode().get();
     }
 
     private void switchToMode(EvaluationMode mode, XExpression text) {
@@ -329,7 +333,7 @@ public class XDebuggerEvaluationDialog extends DialogWrapper {
 
         XDebuggerEvaluator evaluator = mySession.getDebugProcess().getEvaluator();
         if (evaluator == null) {
-            evaluationCallback.errorOccurred(XDebuggerBundle.message("xdebugger.evaluate.stack.frame.has.not.evaluator"));
+            evaluationCallback.errorOccurred(XDebuggerLocalize.xdebuggerEvaluateStackFrameHasNotEvaluator());
         }
         else {
             evaluator.evaluate(expression, evaluationCallback, null);
