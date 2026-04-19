@@ -423,7 +423,6 @@ open module consulo.ide.impl {
     exports consulo.ide.impl.idea.openapi.ui.playback.commands;
     exports consulo.ide.impl.idea.openapi.ui.popup.util;
     exports consulo.ide.impl.idea.openapi.util;
-    exports consulo.ide.impl.idea.openapi.util.io;
     exports consulo.ide.impl.idea.openapi.vcs;
     exports consulo.ide.impl.idea.openapi.vcs.changes.issueLinks;
     exports consulo.ide.impl.idea.openapi.vcs.checkout;
