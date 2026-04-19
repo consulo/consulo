@@ -79,8 +79,14 @@ public interface PsiFile extends PsiFileSystemItem {
      */
     PsiFile getOriginalFile();
 
+    default String getFileTypeId() {
+        return getFileType().getId();
+    }
+
     /**
      * Returns the file type for the file.
+     *
+     * Prefer {@link #getFileTypeId()}
      *
      * @return the file type instance.
      */
@@ -97,7 +103,6 @@ public interface PsiFile extends PsiFileSystemItem {
      */
     PsiFile[] getPsiRoots();
 
-    
     FileViewProvider getViewProvider();
 
     /**

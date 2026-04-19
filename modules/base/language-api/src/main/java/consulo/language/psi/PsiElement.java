@@ -79,8 +79,20 @@ public interface PsiElement extends UserDataHolder {
         return LanguageModuleUtilInternal.findModuleForPsiElement(this);
     }
 
+    @RequiredReadAction
+    default String getLanguageId() {
+        return getLanguage().getID();
+    }
+
+    @RequiredReadAction
+    default String getLanguageVersionId() {
+        return getLanguageVersion().getId();
+    }
+
     /**
      * Returns the language of the PSI element.
+     *
+     * Prefer {@link #getLanguageId()}
      *
      * @return the language instance.
      */
@@ -89,6 +101,8 @@ public interface PsiElement extends UserDataHolder {
 
     /**
      * Return the language version of the PSI element.
+     *
+     * Prefer {@link #getLanguageVersionId()}
      *
      * @return language version
      */
