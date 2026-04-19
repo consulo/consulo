@@ -1,9 +1,7 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.internal;
 
-import consulo.application.Application;
 import consulo.application.dumb.DumbAware;
-import consulo.application.internal.ApplicationEx;
 import consulo.application.progress.ProgressManager;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
@@ -19,6 +17,7 @@ import consulo.virtualFileSystem.VFileProperty;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.internal.PersistentFS;
 import jakarta.inject.Inject;
+import jakarta.inject.Provider;
 
 import java.io.DataInputStream;
 import java.io.IOException;
@@ -32,16 +31,16 @@ import java.util.concurrent.atomic.AtomicLong;
 public class LoadAllVfsStoredContentsAction extends AnAction implements DumbAware {
     private static final Logger LOG = Logger.getInstance(LoadAllVfsStoredContentsAction.class);
 
-    private final Application myApplication;
-    private final ManagingFS myManagingFS;
+    private final ProgressManager myProgressManager;
+    private final Provider<ManagingFS> myManagingFS;
 
     private final AtomicInteger myCount = new AtomicInteger();
     private final AtomicLong myTotalSize = new AtomicLong();
 
     @Inject
-    public LoadAllVfsStoredContentsAction(Application application, ManagingFS managingFS) {
+    public LoadAllVfsStoredContentsAction(ProgressManager progressManager, Provider<ManagingFS> managingFS) {
         super("Load All VirtualFiles Content", "Measure virtualFile.contentsToByteArray() for all virtual files stored in the VFS", null);
-        myApplication = application;
+        myProgressManager = progressManager;
         myManagingFS = managingFS;
     }
 
@@ -55,9 +54,9 @@ public class LoadAllVfsStoredContentsAction extends AnAction implements DumbAwar
 
         myCount.set(0);
         myTotalSize.set(0);
-        ((ApplicationEx) myApplication).runProcessWithProgressSynchronously(
+        myProgressManager.runProcessWithProgressSynchronously(
             () -> {
-                VirtualFile[] roots = myManagingFS.getRoots();
+                VirtualFile[] roots = myManagingFS.get().getRoots();
                 for (VirtualFile root : roots) {
                     iterateCached(root);
                 }
