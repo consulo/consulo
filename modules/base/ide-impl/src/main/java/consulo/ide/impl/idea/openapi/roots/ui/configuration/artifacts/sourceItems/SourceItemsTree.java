@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.sourceItems;
 
-import consulo.application.ApplicationManager;
+import consulo.application.Application;
 import consulo.compiler.artifact.ui.ArtifactEditorContext;
 import consulo.compiler.artifact.ui.PackagingSourceItem;
 import consulo.disposer.Disposable;
@@ -27,7 +27,7 @@ import consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.sourceItem
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.sourceItems.actions.PackAndPutIntoDefaultLocationAction;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.sourceItems.actions.PutSourceItemIntoDefaultLocationAction;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.sourceItems.actions.SourceItemNavigateAction;
-import consulo.project.ProjectBundle;
+import consulo.project.localize.ProjectLocalize;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.PopupHandler;
 import consulo.ui.ex.awt.dnd.*;
@@ -57,7 +57,7 @@ public class SourceItemsTree extends SimpleDnDAwareTree implements AdvancedDnDSo
   }
 
   private void installDnD() {
-    if (!ApplicationManager.getApplication().isUnitTestMode()) {
+    if (!Application.get().isUnitTestMode()) {
       DnDManager.getInstance().registerSource(this);
     }
   }
@@ -91,7 +91,7 @@ public class SourceItemsTree extends SimpleDnDAwareTree implements AdvancedDnDSo
 
   @Override
   public void dispose() {
-    if (!ApplicationManager.getApplication().isUnitTestMode()) {
+    if (!Application.get().isUnitTestMode()) {
       DnDManager.getInstance().unregisterSource(this);
     }
   }
@@ -139,7 +139,7 @@ public class SourceItemsTree extends SimpleDnDAwareTree implements AdvancedDnDSo
     if (nodes.length == 1) {
       return DnDAwareTree.getDragImage(this, TreeUtil.getPathFromRoot(nodes[0]), dragOrigin);
     }
-    return DnDAwareTree.getDragImage(this, ProjectBundle.message("drag.n.drop.text.0.packaging.elements", nodes.length), dragOrigin);
+    return DnDAwareTree.getDragImage(this, ProjectLocalize.dragNDropText0PackagingElements(nodes.length).get(), dragOrigin);
   }
 
   @Override

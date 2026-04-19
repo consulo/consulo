@@ -25,7 +25,6 @@ import consulo.ide.ui.OrderRootTypeUIFactory;
 import consulo.ide.ui.SdkPathEditor;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
-import consulo.project.ProjectBundle;
 import consulo.project.localize.ProjectLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
@@ -61,10 +60,9 @@ public class DocumentationOrderRootTypeUIFactory implements OrderRootTypeUIFacto
         return PlatformIconGroup.filetypesText();
     }
 
-    
     @Override
     public String getNodeText() {
-        return ProjectBundle.message("library.javadocs.node");
+        return ProjectLocalize.libraryJavadocsNode().get();
     }
 
     static class DocumentationPathsEditor extends SdkPathEditor {
@@ -72,7 +70,7 @@ public class DocumentationOrderRootTypeUIFactory implements OrderRootTypeUIFacto
 
         public DocumentationPathsEditor(Sdk sdk) {
             super(
-                ProjectBundle.message("library.javadocs.node"),
+                ProjectLocalize.libraryJavadocsNode().get(),
                 DocumentationOrderRootType.getInstance(),
                 FileChooserDescriptorFactory.createMultipleJavaPathDescriptor(),
                 sdk

@@ -15,21 +15,22 @@
  */
 package consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.actions;
 
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.DumbAwareAction;
-import consulo.project.ProjectBundle;
+import consulo.compiler.artifact.Artifact;
+import consulo.compiler.artifact.ArtifactUtil;
+import consulo.compiler.artifact.element.ArtifactPackagingElement;
+import consulo.compiler.artifact.element.ArtifactRootElement;
+import consulo.compiler.artifact.element.CompositePackagingElement;
+import consulo.compiler.artifact.element.PackagingElement;
+import consulo.compiler.artifact.ui.ArtifactEditorContext;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.ArtifactEditorEx;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.LayoutTreeComponent;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.LayoutTreeSelection;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.nodes.CompositePackagingElementNode;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.nodes.PackagingElementNode;
-import consulo.compiler.artifact.Artifact;
-import consulo.compiler.artifact.element.ArtifactRootElement;
-import consulo.compiler.artifact.element.CompositePackagingElement;
-import consulo.compiler.artifact.element.PackagingElement;
-import consulo.compiler.artifact.ArtifactUtil;
-import consulo.compiler.artifact.element.ArtifactPackagingElement;
-import consulo.compiler.artifact.ui.ArtifactEditorContext;
+import consulo.project.localize.ProjectLocalize;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.DumbAwareAction;
 
 import java.util.Collections;
 
@@ -40,7 +41,7 @@ public class InlineArtifactAction extends DumbAwareAction {
   private final ArtifactEditorEx myEditor;
 
   public InlineArtifactAction(ArtifactEditorEx editor) {
-    super(ProjectBundle.message("action.name.inline.artifact"));
+    super(ProjectLocalize.actionNameInlineArtifact());
     myEditor = editor;
   }
 
@@ -53,6 +54,7 @@ public class InlineArtifactAction extends DumbAwareAction {
   }
 
   @Override
+  @RequiredUIAccess
   public void actionPerformed(AnActionEvent e) {
     LayoutTreeComponent treeComponent = myEditor.getLayoutTreeComponent();
     LayoutTreeSelection selection = treeComponent.getSelection();

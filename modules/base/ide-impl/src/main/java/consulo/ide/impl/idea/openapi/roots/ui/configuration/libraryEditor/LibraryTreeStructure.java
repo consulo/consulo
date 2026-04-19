@@ -20,7 +20,7 @@ import consulo.content.library.ui.LibraryEditor;
 import consulo.content.library.ui.LibraryRootsComponentDescriptor;
 import consulo.content.library.ui.OrderRootTypePresentation;
 import consulo.ide.ui.OrderRootTypeUIFactory;
-import consulo.project.ProjectBundle;
+import consulo.project.localize.ProjectLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.tree.AbstractTreeStructure;
 import consulo.ui.ex.tree.NodeDescriptor;
@@ -44,7 +44,7 @@ public class LibraryTreeStructure extends AbstractTreeStructure {
       @RequiredUIAccess
       @Override
       public boolean update() {
-        myName = ProjectBundle.message("library.root.node");
+        myName = ProjectLocalize.libraryRootNode().get();
         return false;
       }
 
@@ -55,13 +55,11 @@ public class LibraryTreeStructure extends AbstractTreeStructure {
     };
   }
 
-  
   @Override
   public Object getRootElement() {
     return myRootElementDescriptor;
   }
 
-  
   @Override
   public Object[] getChildElements(Object element) {
     LibraryEditor libraryEditor = myParentEditor.getLibraryEditor();
@@ -130,7 +128,6 @@ public class LibraryTreeStructure extends AbstractTreeStructure {
   }
 
   @Override
-  
   public NodeDescriptor createDescriptor(Object element, NodeDescriptor parentDescriptor) {
     return (NodeDescriptor)element;
   }

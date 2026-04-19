@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.module.impl.internal.layer.orderEntry;
 
 import consulo.application.content.impl.internal.library.LibraryImpl;
@@ -31,7 +30,7 @@ import consulo.module.content.layer.orderEntry.RootPolicy;
 import consulo.module.impl.internal.layer.ModuleRootLayerImpl;
 import consulo.module.impl.internal.layer.library.LibraryTableImplUtil;
 import consulo.module.impl.internal.layer.library.ModuleRootLayerLibraryOwner;
-import consulo.project.ProjectBundle;
+import consulo.project.localize.ProjectLocalize;
 import consulo.virtualFileSystem.util.VirtualFilePathUtil;
 import org.jspecify.annotations.Nullable;
 
@@ -105,7 +104,7 @@ public class ModuleLibraryOrderEntryImpl extends LibraryOrderEntryBaseImpl imple
                 return VirtualFilePathUtil.toPresentableUrl(url);
             }
             else {
-                return ProjectBundle.message("library.empty.library.item");
+                return ProjectLocalize.libraryEmptyLibraryItem().get();
             }
         }
     }
