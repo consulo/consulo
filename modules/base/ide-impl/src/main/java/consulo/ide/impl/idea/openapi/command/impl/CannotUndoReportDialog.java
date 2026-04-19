@@ -13,18 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.impl.idea.openapi.command.impl;
 
-import consulo.application.CommonBundle;
 import consulo.document.DocumentReference;
+import consulo.platform.base.localize.CommonLocalize;
 import consulo.project.Project;
 import consulo.ui.ex.awt.DialogWrapper;
-import consulo.ui.ex.awt.Messages;
-import consulo.virtualFileSystem.VirtualFile;
+import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
-
+import consulo.virtualFileSystem.VirtualFile;
 import org.jspecify.annotations.Nullable;
+
 import javax.swing.*;
 import java.util.Collection;
 
@@ -51,15 +50,14 @@ public class CannotUndoReportDialog extends DialogWrapper {
     }
 
     myProblemFilesList.setModel(model);
-    setTitle(CommonBundle.message("cannot.undo.dialog.title"));
+    setTitle(CommonLocalize.cannotUndoDialogTitle());
 
     myProblemMessageLabel.setText(problemText);
-    myProblemMessageLabel.setIcon(TargetAWT.to(Messages.getErrorIcon()));
+    myProblemMessageLabel.setIcon(TargetAWT.to(UIUtil.getErrorIcon()));
 
     init();
   }
 
-  
   protected Action[] createActions() {
     return new Action[]{getOKAction()};
   }

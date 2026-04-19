@@ -2,8 +2,6 @@
 package consulo.fileEditor.impl.internal.largeFileEditor.search;
 
 import consulo.application.Application;
-import consulo.application.ApplicationManager;
-import consulo.application.CommonBundle;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
 import consulo.application.progress.Task;
@@ -15,6 +13,7 @@ import consulo.fileEditor.internal.largeFileEditor.SearchResult;
 import consulo.fileEditor.localize.FileEditorLocalize;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
+import consulo.platform.base.localize.CommonLocalize;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.SimpleTextAttributes;
@@ -28,8 +27,8 @@ import consulo.ui.ex.content.Content;
 import consulo.util.collection.Lists;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
-import org.jspecify.annotations.Nullable;
 import org.jetbrains.annotations.TestOnly;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.ListDataListener;
@@ -44,7 +43,6 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public final class RangeSearch implements RangeSearchTask.Callback {
-
     public static final Key<RangeSearch> KEY = new Key<>("lfe.searchResultsToolWindow");
 
     private static final Logger logger = Logger.getInstance(RangeSearch.class);
@@ -85,6 +83,7 @@ public final class RangeSearch implements RangeSearchTask.Callback {
         }
     }
 
+    @RequiredUIAccess
     public void onClickSearchFurther(boolean directionForward) {
         int listSize = myShowingResultsList.getItemsCount();
         if (listSize > 0) {
@@ -95,9 +94,7 @@ public final class RangeSearch implements RangeSearchTask.Callback {
         launchSearchingFurther(directionForward);
     }
 
-    public RangeSearch(VirtualFile virtualFile,
-                       Project project,
-                       RangeSearchCallback rangeSearchCallback) {
+    public RangeSearch(VirtualFile virtualFile, Project project, RangeSearchCallback rangeSearchCallback) {
         myVirtualFile = virtualFile;
         myProject = project;
         myRangeSearchCallback = rangeSearchCallback;
@@ -150,7 +147,7 @@ public final class RangeSearch implements RangeSearchTask.Callback {
         DefaultActionGroup actionGroup = new DefaultActionGroup();
         actionGroup.add(new FindFurtherAction(false, this));
         actionGroup.add(new FindFurtherAction(true, this));
-        actionGroup.add(new AnSeparator());
+        actionGroup.add(AnSeparator.create());
         actionGroup.add(new StopRangeSearchAction(this));
         myActionToolbar = ActionManager.getInstance().createActionToolbar(
             ACTION_TOOLBAR_PLACE_ID, actionGroup, false);
@@ -298,8 +295,10 @@ public final class RangeSearch implements RangeSearchTask.Callback {
         }
         catch (IOException e) {
             logger.info(e);
-            Messages.showWarningDialog(FileEditorLocalize.largeFileEditorMessageWorkingWithFileError().get(),
-                CommonBundle.getErrorTitle());
+            Messages.showWarningDialog(
+                FileEditorLocalize.largeFileEditorMessageWorkingWithFileError().get(),
+                CommonLocalize.titleError().get()
+            );
         }
 
         updateTabName();
@@ -318,14 +317,17 @@ public final class RangeSearch implements RangeSearchTask.Callback {
         return myRightBorderPageNumber != UNDEFINED && myRightBorderPageNumber < pagesAmount - 1;
     }
 
+    @RequiredUIAccess
     private void launchSearchingFurther(boolean directionForward) {
         FileDataProviderForSearch fileDataProviderForSearch =
             myRangeSearchCallback.getFileDataProviderForSearch(true, myProject, myVirtualFile);
 
         if (fileDataProviderForSearch == null) {
             logger.warn("Can't open Large File Editor for target file.");
-            Messages.showWarningDialog(EditorBundle.message("large.file.editor.message.cant.open.large.file.editor.for.target.file"),
-                CommonBundle.getErrorTitle());
+            Messages.showWarningDialog(
+                EditorBundle.message("large.file.editor.message.cant.open.large.file.editor.for.target.file"),
+                CommonLocalize.titleError().get()
+            );
             return;
         }
 
@@ -335,25 +337,36 @@ public final class RangeSearch implements RangeSearchTask.Callback {
         }
         catch (CloneNotSupportedException e) {
             logger.warn(e);
-            Messages.showWarningDialog(EditorBundle.message("large.file.editor.cant.launch.searching.because.of.unexpected.error"),
-                CommonBundle.getErrorTitle());
+            Messages.showWarningDialog(
+                EditorBundle.message("large.file.editor.cant.launch.searching.because.of.unexpected.error"),
+                CommonLocalize.titleError().get()
+            );
             return;
         }
 
         newOptions.setCriticalAmountOfSearchResults(
-            myResultsListModel.getSize() + SearchTaskOptions.DEFAULT_CRITICAL_AMOUNT_OF_SEARCH_RESULTS);
+            myResultsListModel.getSize() + SearchTaskOptions.DEFAULT_CRITICAL_AMOUNT_OF_SEARCH_RESULTS
+        );
 
         if (directionForward) {
             newOptions
                 .setSearchDirectionForward(true)
-                .setSearchBounds(myRightBorderPageNumber + 1, SearchTaskOptions.NO_LIMIT,
-                    SearchTaskOptions.NO_LIMIT, SearchTaskOptions.NO_LIMIT);
+                .setSearchBounds(
+                    myRightBorderPageNumber + 1,
+                    SearchTaskOptions.NO_LIMIT,
+                    SearchTaskOptions.NO_LIMIT,
+                    SearchTaskOptions.NO_LIMIT
+                );
         }
         else {
             newOptions
                 .setSearchDirectionForward(false)
-                .setSearchBounds(SearchTaskOptions.NO_LIMIT, SearchTaskOptions.NO_LIMIT,
-                    myLeftBorderPageNumber - 1, SearchTaskOptions.NO_LIMIT);
+                .setSearchBounds(
+                    SearchTaskOptions.NO_LIMIT,
+                    SearchTaskOptions.NO_LIMIT,
+                    myLeftBorderPageNumber - 1,
+                    SearchTaskOptions.NO_LIMIT
+                );
         }
 
         runSearchTask(newOptions, fileDataProviderForSearch);
@@ -393,10 +406,12 @@ public final class RangeSearch implements RangeSearchTask.Callback {
         return myComponent;
     }
 
+    @RequiredUIAccess
     public void runNewSearch(SearchTaskOptions options, FileDataProviderForSearch fileDataProviderForSearch) {
         runNewSearch(options, fileDataProviderForSearch, true);
     }
 
+    @RequiredUIAccess
     public void runNewSearch(SearchTaskOptions options, FileDataProviderForSearch fileDataProviderForSearch, boolean inBackground) {
         this.inBackground = inBackground;
 
@@ -406,8 +421,10 @@ public final class RangeSearch implements RangeSearchTask.Callback {
         }
         catch (IOException e) {
             logger.warn(e);
-            Messages.showWarningDialog(EditorBundle.message("large.file.editor.message.working.with.file.error"),
-                CommonBundle.getErrorTitle());
+            Messages.showWarningDialog(
+                EditorBundle.message("large.file.editor.message.working.with.file.error"),
+                CommonLocalize.titleError().get()
+            );
             return;
         }
 
@@ -451,9 +468,7 @@ public final class RangeSearch implements RangeSearchTask.Callback {
     @Override
     public void tellSearchIsFinished(RangeSearchTask caller, long lastScannedPageNumber) {
         if (inBackground) {
-            ApplicationManager.getApplication().invokeLater(() -> {
-                onSearchIsFinished(caller, lastScannedPageNumber);
-            });
+            Application.get().invokeLater(() -> onSearchIsFinished(caller, lastScannedPageNumber));
         }
         else {
             onSearchIsFinished(caller, lastScannedPageNumber);
@@ -475,6 +490,7 @@ public final class RangeSearch implements RangeSearchTask.Callback {
         fireSearchFinished();
     }
 
+    @RequiredUIAccess
     private void fireSearchFinished() {
         for (EdtRangeSearchEventsListener listener : myEdtRangeSearchEventsListeners) {
             listener.onSearchFinished();
@@ -486,9 +502,7 @@ public final class RangeSearch implements RangeSearchTask.Callback {
                                             long curPageNumber,
                                             List<? extends SearchResult> allMatchesAtFrame) {
         if (inBackground) {
-            ApplicationManager.getApplication().invokeLater(() -> {
-                onFrameSearchResultsFound(caller, curPageNumber, allMatchesAtFrame);
-            });
+            Application.get().invokeLater(() -> onFrameSearchResultsFound(caller, curPageNumber, allMatchesAtFrame));
         }
         else {
             onFrameSearchResultsFound(caller, curPageNumber, allMatchesAtFrame);
@@ -525,9 +539,7 @@ public final class RangeSearch implements RangeSearchTask.Callback {
 
         if (!myEdtRangeSearchEventsListeners.isEmpty()) {
             if (inBackground) {
-                ApplicationManager.getApplication().invokeLater(() -> {
-                    fireSearchStopped();
-                });
+                Application.get().invokeLater(this::fireSearchStopped);
             }
             else {
                 fireSearchStopped();
@@ -535,6 +547,7 @@ public final class RangeSearch implements RangeSearchTask.Callback {
         }
     }
 
+    @RequiredUIAccess
     private void fireSearchStopped() {
         for (EdtRangeSearchEventsListener listener : myEdtRangeSearchEventsListeners) {
             listener.onSearchStopped();
@@ -544,9 +557,7 @@ public final class RangeSearch implements RangeSearchTask.Callback {
     @Override
     public void tellSearchCatchedException(RangeSearchTask caller, IOException e) {
         if (inBackground) {
-            ApplicationManager.getApplication().invokeLater(() -> {
-                onSearchCatchedException(caller, e);
-            });
+            Application.get().invokeLater(() -> onSearchCatchedException(caller, e));
         }
         else {
             onSearchCatchedException(caller, e);

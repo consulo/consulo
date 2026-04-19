@@ -18,12 +18,11 @@ package consulo.externalTool.impl.internal;
 import consulo.execution.ui.console.InvalidExpressionException;
 import consulo.execution.ui.console.RegexpFilter;
 import consulo.externalTool.impl.internal.localize.ExternalToolLocalize;
-import consulo.ui.ex.awt.DialogWrapper;
-import consulo.ui.ex.awt.JBPopupMenu;
-import consulo.ui.ex.awt.Messages;
+import consulo.localize.LocalizeValue;
+import consulo.platform.base.localize.CommonLocalize;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.awt.*;
 import consulo.application.ui.wm.IdeFocusManager;
-import consulo.ui.ex.awt.PopupHandler;
-import consulo.application.CommonBundle;
 
 import javax.swing.*;
 import javax.swing.text.BadLocationException;
@@ -81,7 +80,7 @@ class FilterDialog extends DialogWrapper {
     constr.anchor = GridBagConstraints.WEST;
     constr.weighty = 0;
     constr.gridwidth = 1;
-    constr.insets = new Insets(5, 0, 0, 0);
+    constr.insets = JBUI.insetsTop(5);
     panel.add(new JLabel(ExternalToolLocalize.toolsFiltersAddNameLabel().get()), constr);
 
     constr.gridx = 0;
@@ -134,23 +133,29 @@ class FilterDialog extends DialogWrapper {
   }
 
   @Override
+  @RequiredUIAccess
   protected void doOKAction() {
-    String errorMessage = null;
+    LocalizeValue errorMessage = LocalizeValue.empty();
     if (noText(myNameField.getText())) {
-      errorMessage = ExternalToolLocalize.toolsFiltersAddNameRequiredError().get();
+      errorMessage = ExternalToolLocalize.toolsFiltersAddNameRequiredError();
     } else if (noText(myRegexpField.getText())) {
-      errorMessage = ExternalToolLocalize.toolsFiltersAddRegexRequiredError().get();
+      errorMessage = ExternalToolLocalize.toolsFiltersAddRegexRequiredError();
     }
 
-    if (errorMessage != null) {
-      Messages.showMessageDialog(getContentPane(), errorMessage, CommonBundle.getErrorTitle(), Messages.getErrorIcon());
+    if (errorMessage.isNotEmpty()) {
+      Messages.showMessageDialog(getContentPane(), errorMessage.get(), CommonLocalize.titleError().get(), UIUtil.getErrorIcon());
       return;
     }
 
     try {
       checkRegexp(myRegexpField.getText());
     } catch (InvalidExpressionException e) {
-      Messages.showMessageDialog(getContentPane(), e.getMessage(), ExternalToolLocalize.toolsFiltersAddRegexInvalidTitle().get(), Messages.getErrorIcon());
+      Messages.showMessageDialog(
+        getContentPane(),
+        e.getMessage(),
+        ExternalToolLocalize.toolsFiltersAddRegexInvalidTitle().get(),
+        UIUtil.getErrorIcon()
+      );
       return;
     }
     super.doOKAction();
@@ -189,7 +194,7 @@ class FilterDialog extends DialogWrapper {
           myRegexpField.getDocument().insertString(position, myMacrosName, null);
           myRegexpField.setCaretPosition(position + myMacrosName.length());
         }
-      } catch (BadLocationException ex) {
+      } catch (BadLocationException ignored) {
       }
       IdeFocusManager.getGlobalInstance().doForceFocusWhenFocusSettlesDown(myRegexpField);
     }

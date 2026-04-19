@@ -15,15 +15,17 @@
  */
 package consulo.versionControlSystem.impl.internal.history;
 
-import consulo.application.ApplicationManager;
-import consulo.application.CommonBundle;
+import consulo.application.Application;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
+import consulo.localize.LocalizeValue;
+import consulo.platform.base.localize.CommonLocalize;
 import consulo.project.Project;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.Messages;
+import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.util.FilePathSplittingPolicy;
-import consulo.versionControlSystem.VcsBundle;
+import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.status.FileStatus;
 import consulo.virtualFileSystem.status.FileStatusManager;
@@ -45,7 +47,9 @@ public class ReplaceFileConfirmationDialog {
   }
 
   public boolean confirmFor(VirtualFile[] files) {
-    if (ApplicationManager.getApplication().isUnitTestMode()) return true;
+    if (Application.get().isUnitTestMode()) {
+      return true;
+    }
     if (myProgressIndicator != null) myProgressIndicator.pushState();
     try {
       Collection modifiedFiles = collectModifiedFiles(files);
@@ -60,51 +64,53 @@ public class ReplaceFileConfirmationDialog {
   public boolean requestConfirmation(Collection modifiedFiles) {
     if (modifiedFiles.isEmpty()) return true;
 
-    return Messages.showOkCancelDialog(createMessage(modifiedFiles), myActionName,
-                                    createOwerriteButtonName(modifiedFiles), getCancelButtonText(),
-                               Messages.getWarningIcon()) ==
-                DialogWrapper.OK_EXIT_CODE;
-
+    return Messages.showOkCancelDialog(
+        createMessage(modifiedFiles),
+        myActionName,
+        createOverwriteButtonName(modifiedFiles),
+        getCancelButtonText(),
+        UIUtil.getWarningIcon()
+    ) == DialogWrapper.OK_EXIT_CODE;
   }
 
   protected String getCancelButtonText() {
-    return CommonBundle.getCancelButtonText();
+    return CommonLocalize.buttonCancel().get();
   }
 
-  private String createOwerriteButtonName(Collection modifiedFiles) {
-
+  private String createOverwriteButtonName(Collection modifiedFiles) {
     return modifiedFiles.size() > 1 ? getOkButtonTextForFiles() : getOkButtonTextForOneFile();
   }
 
   protected String getOkButtonTextForOneFile() {
-    return VcsBundle.message("button.text.overwrite.modified.file");
+    return VcsLocalize.buttonTextOverwriteModifiedFile().get();
   }
 
   protected String getOkButtonTextForFiles() {
-    return VcsBundle.message("button.text.overwrite.modified.files");
+    return VcsLocalize.buttonTextOverwriteModifiedFiles().get();
   }
 
   protected String createMessage(Collection modifiedFiles) {
     if (modifiedFiles.size() == 1) {
       VirtualFile virtualFile = ((VirtualFile)modifiedFiles.iterator().next());
-      return VcsBundle.message("message.text.file.locally.modified",
-                               FilePathSplittingPolicy.SPLIT_BY_LETTER.getPresentableName(new File(virtualFile.getPath()), 40));
+      return VcsLocalize.messageTextFileLocallyModified(
+          FilePathSplittingPolicy.SPLIT_BY_LETTER.getPresentableName(new File(virtualFile.getPath()), 40)
+      ).get();
     }
     else {
-      return VcsBundle.message("message.text.several.files.locally.modified");
+      return VcsLocalize.messageTextSeveralFilesLocallyModified().get();
     }
   }
 
   public Collection<VirtualFile> collectModifiedFiles(VirtualFile @Nullable [] files) {
-    List<VirtualFile> result = new ArrayList<VirtualFile>();
+    List<VirtualFile> result = new ArrayList<>();
 
     if (files == null) return result;
 
     for (int i = 0; i < files.length; i++) {
       VirtualFile file = files[i];
       if (myProgressIndicator != null) {
-        myProgressIndicator.setText(VcsBundle.message("progress.text.searching.for.modified.files"));
-        myProgressIndicator.setText2(file.getPresentableUrl());
+        myProgressIndicator.setText(VcsLocalize.progressTextSearchingForModifiedFiles());
+        myProgressIndicator.setText2(LocalizeValue.of(file.getPresentableUrl()));
       }
       FileStatus status = myFileStatusManager.getStatus(file);
       if (status != FileStatus.NOT_CHANGED) {
