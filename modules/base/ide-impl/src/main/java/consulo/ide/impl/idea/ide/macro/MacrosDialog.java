@@ -17,12 +17,12 @@
 package consulo.ide.impl.idea.ide.macro;
 
 import consulo.application.HelpManager;
+import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
-import consulo.ide.impl.idea.openapi.actionSystem.impl.SimpleDataContext;
+import consulo.ide.localize.IdeLocalize;
 import consulo.module.Module;
 import consulo.pathMacro.Macro;
 import consulo.pathMacro.MacroManager;
-import consulo.ide.localize.IdeLocalize;
 import consulo.project.Project;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.JBList;
@@ -50,7 +50,7 @@ public final class MacrosDialog extends DialogWrapper {
 
   public MacrosDialog(Project project, @Nullable Module module) {
     super(project, true);
-    MacroManager.getInstance().cacheMacrosPreview(SimpleDataContext.builder().add(Project.KEY, project).add(Module.KEY, module).build());
+    MacroManager.getInstance().cacheMacrosPreview(DataContext.builder().add(Project.KEY, project).add(Module.KEY, module).build());
     setTitle(IdeLocalize.titleMacros());
     setOKButtonText(IdeLocalize.buttonInsert());
 

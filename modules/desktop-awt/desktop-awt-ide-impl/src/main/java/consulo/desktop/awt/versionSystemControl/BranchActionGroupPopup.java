@@ -3,7 +3,6 @@ package consulo.desktop.awt.versionSystemControl;
 
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
-import consulo.ide.impl.idea.openapi.actionSystem.impl.SimpleDataContext;
 import consulo.ide.impl.idea.openapi.vcs.ui.PopupListElementRendererWithIcon;
 import consulo.ide.impl.idea.ui.popup.WizardPopup;
 import consulo.ide.impl.idea.ui.popup.list.ListPopupImpl;
@@ -73,7 +72,7 @@ public class BranchActionGroupPopup extends FlatSpeedSearchPopup implements Bran
         super(
             title,
             createBranchSpeedSearchActionGroup(actions),
-            SimpleDataContext.builder()
+            DataContext.builder()
                 .add(Project.KEY, project)
                 .add(UIExAWTDataKey.CONTEXT_COMPONENT, ProjectIdeFocusManager.getInstance(project).getFocusOwner())
                 .build(),
