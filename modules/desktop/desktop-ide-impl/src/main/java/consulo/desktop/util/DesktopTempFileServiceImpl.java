@@ -33,7 +33,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
  * @author VISTALL
- * @since 09/11/2022
+ * @since 2022-11-09
  */
 @Singleton
 @ServiceImpl
@@ -41,7 +41,6 @@ public class DesktopTempFileServiceImpl implements TempFileService {
   private Path myCanonicalTempPathCache;
 
   @Override
-  
   public Path createTempDirectory(Path dir, String prefix, @Nullable String suffix, boolean deleteOnExit) throws IOException {
     File file = doCreateTempFile(dir.toFile(), prefix, suffix, true);
     if (deleteOnExit) {
@@ -73,7 +72,6 @@ public class DesktopTempFileServiceImpl implements TempFileService {
   }
 
   @Override
-  
   public Path createTempFile(Path dir, String prefix, @Nullable String suffix, boolean create, boolean deleteOnExit) throws IOException {
     File file = doCreateTempFile(dir.toFile(), prefix, suffix, false);
     if (deleteOnExit) {
@@ -90,7 +88,6 @@ public class DesktopTempFileServiceImpl implements TempFileService {
 
   private static final Random RANDOM = new Random();
 
-  
   private static File doCreateTempFile(File dir, String prefix, @Nullable String suffix, boolean isDirectory) throws IOException {
     //noinspection ResultOfMethodCallIgnored
     dir.mkdirs();
@@ -128,7 +125,15 @@ public class DesktopTempFileServiceImpl implements TempFileService {
         int size = children == null ? 0 : children.length;
         maxFileNumber = Math.max(10, size * 10); // if too many files are in tmp dir, we need a bigger random range than meager 10
         if (attempts > MAX_ATTEMPTS) {
-          throw exception != null ? exception : new IOException("Unable to create a temporary file " + f + "\nDirectory '" + dir + "' list (" + size + " children): " + Arrays.toString(children));
+          if (exception != null) {
+            throw exception;
+          }
+          else {
+            throw new IOException(
+                "Unable to create a temporary file " + f + "\n" +
+                    "Directory '" + dir + "' list (" + size + " children): " + Arrays.toString(children)
+            );
+          }
         }
       }
 
@@ -139,7 +144,6 @@ public class DesktopTempFileServiceImpl implements TempFileService {
     }
   }
 
-  
   private static File calcName(File dir, String prefix, String suffix, int i) throws IOException {
     prefix = i == 0 ? prefix : prefix + i;
     if (prefix.endsWith(".") && suffix.startsWith(".")) {
@@ -153,14 +157,12 @@ public class DesktopTempFileServiceImpl implements TempFileService {
     return f;
   }
 
-  
   private static File normalizeFile(File temp) throws IOException {
     File canonical = temp.getCanonicalFile();
     return Platform.current().os().isWindows() && canonical.getAbsolutePath().contains(" ") ? temp.getAbsoluteFile() : canonical;
   }
 
   @Override
-  
   public Path getTempDirectory() {
     if (myCanonicalTempPathCache == null) {
       myCanonicalTempPathCache = calcCanonicalTempPath();
@@ -168,7 +170,6 @@ public class DesktopTempFileServiceImpl implements TempFileService {
     return myCanonicalTempPathCache;
   }
 
-  
   private static Path calcCanonicalTempPath() {
     File file = new File(ContainerPathManager.get().getTempPath());
     try {

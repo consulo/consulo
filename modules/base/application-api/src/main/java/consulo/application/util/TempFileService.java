@@ -24,51 +24,41 @@ import java.nio.file.Path;
 
 /**
  * @author VISTALL
- * @since 09/11/2022
+ * @since 2022-11-09
  */
 @ServiceAPI(ComponentScope.APPLICATION)
 public interface TempFileService {
-  
   default Path createTempDirectory(String prefix, @Nullable String suffix) throws IOException {
     return createTempDirectory(prefix, suffix, true);
   }
 
-  
   default Path createTempDirectory(String prefix, @Nullable String suffix, boolean deleteOnExit) throws IOException {
     return createTempDirectory(getTempDirectory(), prefix, suffix, deleteOnExit);
   }
 
-  
   default Path createTempDirectory(Path dir, String prefix, @Nullable String suffix) throws IOException {
     return createTempDirectory(dir, prefix, suffix, true);
   }
 
-  
   Path createTempDirectory(Path dir, String prefix, @Nullable String suffix, boolean deleteOnExit) throws IOException;
 
-  
   default Path createTempFile(String prefix, @Nullable String suffix) throws IOException {
     return createTempFile(prefix, suffix, false);
   }
 
-  
   default Path createTempFile(String prefix, @Nullable String suffix, boolean deleteOnExit) throws IOException {
     return createTempFile(getTempDirectory(), prefix, suffix, true, deleteOnExit);
   }
 
-  
   default Path createTempFile(Path dir, String prefix, @Nullable String suffix) throws IOException {
     return createTempFile(dir, prefix, suffix, true, true);
   }
 
-  
   default Path createTempFile(Path dir, String prefix, @Nullable String suffix, boolean create) throws IOException {
     return createTempFile(dir, prefix, suffix, create, true);
   }
 
-  
   Path createTempFile(Path dir, String prefix, @Nullable String suffix, boolean create, boolean deleteOnExit) throws IOException;
 
-  
   Path getTempDirectory();
 }
