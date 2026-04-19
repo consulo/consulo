@@ -15,8 +15,8 @@
  */
 package consulo.ide.impl.idea.openapi.command.impl;
 
-import consulo.application.CommonBundle;
 import consulo.fileEditor.FileEditor;
+import consulo.platform.base.localize.CommonLocalize;
 
 /**
  * @author lesya
@@ -35,11 +35,11 @@ class Undo extends UndoRedo {
   }
 
   protected String getActionName() {
-    return CommonBundle.message("undo.dialog.title");
+    return CommonLocalize.undoDialogTitle().get();
   }
 
   protected String getActionName(String commandName) {
-    return CommonBundle.message("undo.command.confirmation.text", commandName);
+    return CommonLocalize.undoCommandConfirmationText(commandName).get();
   }
 
   protected void performAction() {

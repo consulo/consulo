@@ -60,7 +60,6 @@ import java.util.Collection;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
-import static consulo.application.CommonBundle.getCancelButtonText;
 import static consulo.ui.ex.awt.Messages.*;
 import static consulo.ui.ex.awt.UIUtil.getWarningIcon;
 
@@ -238,13 +237,13 @@ public class TodoCheckinHandler extends CheckinHandler {
     ) {
         LocalizeValue yesButton = VcsLocalize.todoInNewReviewButton();
         int result = showYesNoCancelDialog(
-                myProject,
-                text.get(),
-                title,
-                yesButton.get(),
-                commitButton.get(),
-                getCancelButtonText(),
-                getWarningIcon()
+            myProject,
+            text.get(),
+            title,
+            yesButton.get(),
+            commitButton.get(),
+            CommonLocalize.buttonCancel().get(),
+            getWarningIcon()
         );
         return switch (result) {
             case YES -> {

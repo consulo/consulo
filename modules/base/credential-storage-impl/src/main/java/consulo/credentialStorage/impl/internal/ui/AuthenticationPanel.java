@@ -17,9 +17,13 @@ package consulo.credentialStorage.impl.internal.ui;
 
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
-import consulo.application.CommonBundle;
+import consulo.platform.base.localize.CommonLocalize;
+import consulo.ui.CheckBox;
+import consulo.ui.Label;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.JBUI;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
@@ -37,7 +41,7 @@ public class AuthenticationPanel extends JPanel {
     private JLabel myDescriptionLabel;
     private JTextField myLoginTextField;
     private JPasswordField myPasswordTextField;
-    private JCheckBox rememberPasswordCheckBox;
+    private CheckBox rememberPasswordCheckBox;
 
     /**
      * @param description      Description text above the text fields.
@@ -47,6 +51,7 @@ public class AuthenticationPanel extends JPanel {
      *                         If true, the checkbox will be selected; if false, the checkbox won't be selected; if null, there will be no checkbox for remembering
      *                         password.
      */
+    @RequiredUIAccess
     public AuthenticationPanel(@Nullable String description, @Nullable String login, @Nullable String password, @Nullable Boolean rememberPassword) {
         $$$setupUI$$$();
 
@@ -58,7 +63,7 @@ public class AuthenticationPanel extends JPanel {
             rememberPasswordCheckBox.setVisible(false);
         }
         else {
-            rememberPasswordCheckBox.setSelected(rememberPassword);
+            rememberPasswordCheckBox.setValue(rememberPassword);
         }
     }
 
@@ -71,7 +76,7 @@ public class AuthenticationPanel extends JPanel {
     }
 
     public boolean isRememberPassword() {
-        return rememberPasswordCheckBox.isSelected();
+        return rememberPasswordCheckBox.getValue();
     }
 
     /**
@@ -82,88 +87,25 @@ public class AuthenticationPanel extends JPanel {
         return getLogin().isEmpty() ? myLoginTextField : myPasswordTextField;
     }
 
+    @RequiredUIAccess
     private void $$$setupUI$$$() {
         myMainPanel = new JPanel();
         myMainPanel.setLayout(new GridLayoutManager(4, 2, JBUI.insets(10), -1, -1));
         myDescriptionLabel = new JLabel();
         myDescriptionLabel.setText("##");
         myMainPanel.add(myDescriptionLabel, new GridConstraints(0, 0, 1, 2, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        JLabel label1 = new JLabel();
-        this.$$$loadLabelText$$$(label1, CommonBundle.message("editbox.password"));
-        myMainPanel.add(label1, new GridConstraints(2, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        Label label1 = Label.create(CommonLocalize.editboxPassword());
+        myMainPanel.add(TargetAWT.to(label1), new GridConstraints(2, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         myPasswordTextField = new JPasswordField();
         myMainPanel.add(myPasswordTextField, new GridConstraints(2, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
         myLoginTextField = new JTextField();
         myMainPanel.add(myLoginTextField, new GridConstraints(1, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
-        JLabel label2 = new JLabel();
-        this.$$$loadLabelText$$$(label2, CommonBundle.message("editbox.login"));
-        myMainPanel.add(label2, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        rememberPasswordCheckBox = new JCheckBox();
-        this.$$$loadButtonText$$$(rememberPasswordCheckBox, CommonBundle.message("checkbox.remember.password"));
-        myMainPanel.add(rememberPasswordCheckBox, new GridConstraints(3, 0, 1, 2, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        Label label2 = Label.create(CommonLocalize.editboxLogin());
+        myMainPanel.add(TargetAWT.to(label2), new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        rememberPasswordCheckBox = CheckBox.create(CommonLocalize.checkboxRememberPassword());
+        myMainPanel.add(TargetAWT.to(rememberPasswordCheckBox), new GridConstraints(3, 0, 1, 2, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
     }
 
-    /**
-     * @noinspection ALL
-     */
-    private void $$$loadLabelText$$$(JLabel component, String text) {
-        StringBuffer result = new StringBuffer();
-        boolean haveMnemonic = false;
-        char mnemonic = '\0';
-        int mnemonicIndex = -1;
-        for (int i = 0; i < text.length(); i++) {
-            if (text.charAt(i) == '&') {
-                i++;
-                if (i == text.length()) {
-                    break;
-                }
-                if (!haveMnemonic && text.charAt(i) != '&') {
-                    haveMnemonic = true;
-                    mnemonic = text.charAt(i);
-                    mnemonicIndex = result.length();
-                }
-            }
-            result.append(text.charAt(i));
-        }
-        component.setText(result.toString());
-        if (haveMnemonic) {
-            component.setDisplayedMnemonic(mnemonic);
-            component.setDisplayedMnemonicIndex(mnemonicIndex);
-        }
-    }
-
-    /**
-     * @noinspection ALL
-     */
-    private void $$$loadButtonText$$$(AbstractButton component, String text) {
-        StringBuffer result = new StringBuffer();
-        boolean haveMnemonic = false;
-        char mnemonic = '\0';
-        int mnemonicIndex = -1;
-        for (int i = 0; i < text.length(); i++) {
-            if (text.charAt(i) == '&') {
-                i++;
-                if (i == text.length()) {
-                    break;
-                }
-                if (!haveMnemonic && text.charAt(i) != '&') {
-                    haveMnemonic = true;
-                    mnemonic = text.charAt(i);
-                    mnemonicIndex = result.length();
-                }
-            }
-            result.append(text.charAt(i));
-        }
-        component.setText(result.toString());
-        if (haveMnemonic) {
-            component.setMnemonic(mnemonic);
-            component.setDisplayedMnemonicIndex(mnemonicIndex);
-        }
-    }
-
-    /**
-     * @noinspection ALL
-     */
     public JComponent $$$getRootComponent$$$() {
         return myMainPanel;
     }
