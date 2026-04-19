@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.impl.idea.ide.macro;
 
 import consulo.application.HelpManager;
@@ -65,7 +64,7 @@ public final class MacrosDialog extends DialogWrapper {
     super(parent, true);
     MacroManager.getInstance().cacheMacrosPreview(DataManager.getInstance().getDataContext(parent));
     setTitle(IdeLocalize.titleMacros());
-    setOKButtonText(IdeLocalize.buttonInsert().get());
+    setOKButtonText(IdeLocalize.buttonInsert());
 
     myMacrosModel = new DefaultListModel();
     myMacrosList = new JBList(myMacrosModel);
@@ -109,7 +108,6 @@ public final class MacrosDialog extends DialogWrapper {
   }
 
   @Override
-  
   protected Action[] createActions() {
     return new Action[]{getOKAction(), getCancelAction(), getHelpAction()};
   }

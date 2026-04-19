@@ -13,17 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.versionControlSystem.impl.internal.change.commited;
 
 import consulo.application.Application;
-import consulo.application.CommonBundle;
 import consulo.application.util.function.AsynchConsumer;
+import consulo.platform.base.localize.CommonLocalize;
 import consulo.project.Project;
 import consulo.ui.ModalityState;
 import consulo.ui.ex.awt.DialogWrapper;
-import consulo.versionControlSystem.VcsBundle;
 import consulo.versionControlSystem.impl.internal.change.ui.awt.AdjustComponentWhenShown;
+import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.versionControlSystem.versionBrowser.CommittedChangeList;
 
 import javax.swing.*;
@@ -60,37 +59,30 @@ public class ChangesBrowserDialog extends DialogWrapper {
     myProject = project;
     myChanges = changes;
     myMode = mode;
-    setTitle(VcsBundle.message("dialog.title.changes.browser"));
-    setCancelButtonText(CommonBundle.getCloseButtonText());
-      ModalityState currentState = Application.get().getCurrentModalityState();
+    setTitle(VcsLocalize.dialogTitleChangesBrowser());
+    setCancelButtonText(CommonLocalize.buttonClose());
+    ModalityState currentState = Application.get().getCurrentModalityState();
     if ((mode != Mode.Choose) && (ModalityState.nonModal().equals(currentState))) {
       setModal(false);
     }
-    myAppender = new AsynchConsumer<List<CommittedChangeList>>() {
-
+    myAppender = new AsynchConsumer<>() {
       @Override
       public void finished() {
-        SwingUtilities.invokeLater(new Runnable() {
-          @Override
-          public void run() {
-            if (ChangesBrowserDialog.this.isShowing()) {
-              myCommittedChangesBrowser.stopLoading();
-            }
+        SwingUtilities.invokeLater(() -> {
+          if (ChangesBrowserDialog.this.isShowing()) {
+            myCommittedChangesBrowser.stopLoading();
           }
         });
       }
 
       @Override
-      public void accept(final List<CommittedChangeList> committedChangeLists) {
-        SwingUtilities.invokeLater(new Runnable() {
-          @Override
-          public void run() {
-            if (ChangesBrowserDialog.this.isShowing()) {
-              boolean selectFirst = (myChanges.getRowCount() == 0) && (!committedChangeLists.isEmpty());
-              myChanges.addRows(committedChangeLists);
-              if (selectFirst) {
-                myCommittedChangesBrowser.selectFirstIfAny();
-              }
+      public void accept(List<CommittedChangeList> committedChangeLists) {
+        SwingUtilities.invokeLater(() -> {
+          if (ChangesBrowserDialog.this.isShowing()) {
+            boolean selectFirst = (myChanges.getRowCount() == 0) && (!committedChangeLists.isEmpty());
+            myChanges.addRows(committedChangeLists);
+            if (selectFirst) {
+              myCommittedChangesBrowser.selectFirstIfAny();
             }
           }
         });
@@ -139,11 +131,10 @@ public class ChangesBrowserDialog extends DialogWrapper {
   protected void createDefaultActions() {
     super.createDefaultActions();
     if (myMode == Mode.Browse) {
-      getOKAction().putValue(Action.NAME, VcsBundle.message("button.search.again"));
+      getOKAction().putValue(Action.NAME, VcsLocalize.buttonSearchAgain().get());
     }
   }
 
-  
   @Override
   protected Action[] createActions() {
     if (myMode == Mode.Simple) {

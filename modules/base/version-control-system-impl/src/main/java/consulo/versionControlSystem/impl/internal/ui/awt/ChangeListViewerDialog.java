@@ -15,21 +15,21 @@
  */
 package consulo.versionControlSystem.impl.internal.ui.awt;
 
-import consulo.application.CommonBundle;
 import consulo.dataContext.DataProvider;
+import consulo.platform.base.localize.CommonLocalize;
 import consulo.project.Project;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.awt.*;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.xml.XmlStringUtil;
-import consulo.versionControlSystem.VcsBundle;
 import consulo.versionControlSystem.VcsDataKeys;
 import consulo.versionControlSystem.action.VcsActions;
 import consulo.versionControlSystem.change.Change;
 import consulo.versionControlSystem.change.commited.CommittedChangeListImpl;
 import consulo.versionControlSystem.impl.internal.change.commited.InternalRepositoryChangesBrowser;
 import consulo.versionControlSystem.internal.CommittedChangesBrowserUseCase;
+import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.versionControlSystem.ui.awt.IssueLinkHtmlRenderer;
 import consulo.versionControlSystem.ui.awt.LegacyDialog;
 import consulo.versionControlSystem.versionBrowser.CommittedChangeList;
@@ -58,7 +58,7 @@ public class ChangeListViewerDialog extends DialogWrapper implements DataProvide
   // do not related to local data/changes etc
   private final boolean myInAir;
   private Change[] myChanges;
-  private Function<Change, Change> myConvertor;
+  private Function<Change, Change> myConverter;
   private JScrollPane commitMessageScroll;
   private VirtualFile myToSelect;
 
@@ -95,8 +95,8 @@ public class ChangeListViewerDialog extends DialogWrapper implements DataProvide
     Collection<Change> changes = myChangeList.getChanges();
     myChanges = changes.toArray(new Change[changes.size()]);
 
-    setTitle(VcsBundle.message("dialog.title.changes.browser"));
-    setCancelButtonText(CommonBundle.message("close.action.name"));
+    setTitle(VcsLocalize.dialogTitleChangesBrowser());
+    setCancelButtonText(CommonLocalize.closeActionName());
     setModal(false);
 
     init();
@@ -130,8 +130,8 @@ public class ChangeListViewerDialog extends DialogWrapper implements DataProvide
     return null;
   }
 
-  public void setConvertor(Function<Change, Change> convertor) {
-    myConvertor = convertor;
+  public void setConvertor(Function<Change, Change> converter) {
+    myConverter = converter;
   }
 
   public JComponent createCenterPanel() {
@@ -159,11 +159,11 @@ public class ChangeListViewerDialog extends DialogWrapper implements DataProvide
 
       @Override
       protected void showDiffForChanges(Change[] changesArray, int indexInSelection) {
-        if (myInAir && (myConvertor != null)) {
+        if (myInAir && (myConverter != null)) {
           Change[] convertedChanges = new Change[changesArray.length];
           for (int i = 0; i < changesArray.length; i++) {
             Change change = changesArray[i];
-            convertedChanges[i] = myConvertor.apply(change);
+            convertedChanges[i] = myConverter.apply(change);
           }
           super.showDiffForChanges(convertedChanges, indexInSelection);
         } else {
@@ -176,7 +176,7 @@ public class ChangeListViewerDialog extends DialogWrapper implements DataProvide
 
     if (myCommitMessageArea != null) {
       JPanel commitPanel = new JPanel(new BorderLayout());
-      JComponent separator = SeparatorFactory.createSeparator(VcsBundle.message("label.commit.comment"), myCommitMessageArea);
+      JComponent separator = SeparatorFactory.createSeparator(VcsLocalize.labelCommitComment().get(), myCommitMessageArea);
       commitPanel.add(separator, BorderLayout.NORTH);
       commitPanel.add(commitMessageScroll, BorderLayout.CENTER);
 
@@ -200,7 +200,6 @@ public class ChangeListViewerDialog extends DialogWrapper implements DataProvide
     super.dispose();
   }
 
-  
   @Override
   protected Action[] createActions() {
     Action cancelAction = getCancelAction();

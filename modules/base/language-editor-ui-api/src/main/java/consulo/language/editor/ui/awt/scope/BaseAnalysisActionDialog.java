@@ -32,7 +32,6 @@ import java.util.List;
 public class BaseAnalysisActionDialog extends DialogWrapper {
     private final static Logger LOG = Logger.getInstance(BaseAnalysisActionDialog.class);
 
-    
     private final AnalysisUIOptions myOptions;
     private final boolean myRememberScope;
     private final boolean myShowInspectTestSource;
@@ -74,7 +73,6 @@ public class BaseAnalysisActionDialog extends DialogWrapper {
         );
     }
 
-    
     public static List<ModelScopeItem> standardItems(
         Project project,
         AnalysisScope scope,
@@ -302,7 +300,6 @@ public class BaseAnalysisActionDialog extends DialogWrapper {
         return null;
     }
 
-    
     public String getOKButtonText() {
         return AnalysisScopeLocalize.actionAnalyzeVerb().get();
     }

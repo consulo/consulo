@@ -108,7 +108,7 @@ public class ShowFeatureUsageStatisticsDialog extends DialogWrapper {
     public ShowFeatureUsageStatisticsDialog(Project project) {
         super(project, true);
         setTitle(FeatureStatisticsBundle.message("feature.statistics.dialog.title"));
-        setCancelButtonText(CommonLocalize.buttonClose().get());
+        setCancelButtonText(CommonLocalize.buttonClose());
         setModal(false);
         init();
     }
