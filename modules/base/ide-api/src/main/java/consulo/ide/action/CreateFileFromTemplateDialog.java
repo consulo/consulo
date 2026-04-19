@@ -13,14 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.action;
 
 import consulo.disposer.Disposer;
 import consulo.ide.action.ui.CreateWithTemplatesDialogPanel;
 import consulo.ide.action.ui.NewItemPopupUtil;
 import consulo.ide.localize.IdeLocalize;
-import consulo.language.LangBundle;
+import consulo.language.localize.LanguageLocalize;
 import consulo.language.psi.PsiElement;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
@@ -115,7 +114,7 @@ public class CreateFileFromTemplateDialog  {
 
       contentPanel.addValidator(value -> {
         if (myInputValidator != null && !myInputValidator.canClose(value)) {
-          String message = InputValidatorEx.getErrorText(myInputValidator, value, LangBundle.message("incorrect.name"));
+          String message = InputValidatorEx.getErrorText(myInputValidator, value, LanguageLocalize.incorrectName().get());
           return new HasValidator.ValidationInfo(message);
         }
         return null;
