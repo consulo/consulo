@@ -18,8 +18,8 @@ package consulo.ide.impl.idea.openapi.project;
 import consulo.annotation.DeprecationInfo;
 import consulo.application.util.UserHomeFileUtil;
 import consulo.fileEditor.UniqueVFilePathBuilder;
-import consulo.ide.impl.idea.openapi.module.ModuleUtil;
 import consulo.ide.impl.idea.openapi.roots.libraries.LibraryUtil;
+import consulo.language.util.ModuleUtilCore;
 import consulo.module.Module;
 import consulo.module.content.layer.orderEntry.ModuleExtensionWithSdkOrderEntry;
 import consulo.module.content.layer.orderEntry.OrderEntry;
@@ -121,7 +121,7 @@ public class ProjectUtil {
         }
       }
 
-      Module module = ModuleUtil.findModuleForFile(file, project);
+      Module module = ModuleUtilCore.findModuleForFile(file, project);
       if (module == null) return url;
       return !keepModuleAlwaysOnTheLeft && Platform.current().os().isMac()
         ? url + " - [" + module.getName() + "]"

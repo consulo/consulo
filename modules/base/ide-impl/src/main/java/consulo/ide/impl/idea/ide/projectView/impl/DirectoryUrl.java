@@ -17,9 +17,9 @@
 package consulo.ide.impl.idea.ide.projectView.impl;
 
 import consulo.application.ReadAction;
-import consulo.ide.impl.idea.openapi.module.ModuleUtil;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiManager;
+import consulo.language.util.ModuleUtilCore;
 import consulo.module.Module;
 import consulo.module.ModuleManager;
 import consulo.project.Project;
@@ -39,7 +39,7 @@ public class DirectoryUrl extends AbstractUrl {
   public static DirectoryUrl create(PsiDirectory directory) {
     Project project = directory.getProject();
     VirtualFile virtualFile = directory.getVirtualFile();
-    Module module = ModuleUtil.findModuleForFile(virtualFile, project);
+    Module module = ModuleUtilCore.findModuleForFile(virtualFile, project);
     return new DirectoryUrl(virtualFile.getUrl(), module != null ? module.getName() : null);
   }
 

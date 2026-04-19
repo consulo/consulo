@@ -19,15 +19,15 @@ package consulo.ide.impl.idea.ide.impl.dataRules;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.dataContext.DataManager;
 import consulo.dataContext.DataProvider;
-import consulo.language.editor.LangDataKeys;
 import consulo.dataContext.GetDataRule;
+import consulo.ide.impl.dataContext.BaseDataManager;
+import consulo.language.editor.LangDataKeys;
+import consulo.language.psi.PsiElement;
+import consulo.language.util.ModuleUtilCore;
 import consulo.module.Module;
-import consulo.ide.impl.idea.openapi.module.ModuleUtil;
 import consulo.project.Project;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.language.psi.PsiElement;
-import consulo.ide.impl.dataContext.BaseDataManager;
 import org.jspecify.annotations.Nullable;
 
 /**
@@ -66,6 +66,6 @@ public class ModuleRule implements GetDataRule<Module> {
       return null;
     }
 
-    return ModuleUtil.findModuleForFile(virtualFile, project);
+    return ModuleUtilCore.findModuleForFile(virtualFile, project);
   }
 }
