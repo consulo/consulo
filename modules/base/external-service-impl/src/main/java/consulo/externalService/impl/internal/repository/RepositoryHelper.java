@@ -45,7 +45,6 @@ import java.util.List;
  * @since 2003-03-28
  */
 public class RepositoryHelper {
-    
     private static String buildUrlForList(UpdateChannel channel, String platformVersion, boolean addObsoletePlatformsV2) {
         return new StringBuilder().append(WebServiceApi.REPOSITORY_API.buildUrl("list"))
             .append("?platformVersion=")
@@ -57,7 +56,6 @@ public class RepositoryHelper {
             .toString();
     }
 
-    
     public static String buildUrlForDownload(
         UpdateChannel channel,
         String pluginId,
@@ -116,7 +114,6 @@ public class RepositoryHelper {
         return !pluginDescriptor.isExperimental() || earlyAccessProgramManager.getState(ExperimentalPluginsDescriptor.class);
     }
 
-    
     public static List<PluginDescriptor> loadPluginsFromRepository(
         @Nullable ProgressIndicator indicator,
         UpdateChannel channel
@@ -124,7 +121,6 @@ public class RepositoryHelper {
         return loadPluginsFromRepository(indicator, channel, null, false);
     }
 
-    
     public static List<PluginDescriptor> loadPluginsFromRepository(
         @Nullable ProgressIndicator indicator,
         UpdateChannel channel,
@@ -154,7 +150,7 @@ public class RepositoryHelper {
             return readPluginsStream(new UnsyncByteArrayInputStream(bytes));
         }
         catch (IOException e) {
-            throw new IOException("Failed to read data from URL: " + url + "\nView logs for details.", e);
+            throw new IOException(ExternalServiceLocalize.messageFailedToReadDataFromUrl(url).get(), e);
         }
     }
 
