@@ -20,7 +20,6 @@ import consulo.content.library.ui.LibraryEditor;
 import consulo.content.library.ui.LibraryRootsComponentDescriptor;
 import consulo.content.library.ui.OrderRootTypePresentation;
 import consulo.ide.ui.OrderRootTypeUIFactory;
-import consulo.project.ProjectBundle;
 import consulo.project.localize.ProjectLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.tree.AbstractTreeStructure;
