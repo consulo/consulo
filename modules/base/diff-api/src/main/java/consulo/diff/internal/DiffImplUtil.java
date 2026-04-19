@@ -77,7 +77,6 @@ import java.util.function.Predicate;
 public class DiffImplUtil {
     private static final Logger LOG = Logger.getInstance(DiffImplUtil.class);
 
-    
     public static final String DIFF_CONFIG = StoragePathMacros.APP_CONFIG + "/diff.xml";
     public static final JBValue TITLE_GAP = new JBValue.Float(2);
 
@@ -95,12 +94,10 @@ public class DiffImplUtil {
         editor.getColorsScheme().setAttributes(EditorColors.FOLDED_TEXT_ATTRIBUTES, null);
     }
 
-    
     public static EditorEx createEditor(Document document, @Nullable Project project, boolean isViewer) {
         return createEditor(document, project, isViewer, false);
     }
 
-    
     public static EditorEx createEditor(Document document, @Nullable Project project, boolean isViewer, boolean enableFolding) {
         EditorFactory factory = EditorFactory.getInstance();
         EditorEx editor = (EditorEx) (isViewer
@@ -166,7 +163,6 @@ public class DiffImplUtil {
         }
     }
 
-    
     public static LogicalPosition getCaretPosition(@Nullable Editor editor) {
         return editor != null ? editor.getCaretModel().getLogicalPosition() : new LogicalPosition(0, 0);
     }
@@ -175,12 +171,10 @@ public class DiffImplUtil {
     // Icons
     //
 
-    
     public static Image getArrowIcon(Side sourceSide) {
         return sourceSide.select(PlatformIconGroup.diffArrowright(), PlatformIconGroup.diffArrow());
     }
 
-    
     public static Image getArrowDownIcon(Side sourceSide) {
         return sourceSide.select(PlatformIconGroup.diffArrowright(), PlatformIconGroup.diffArrowleftdown());
     }
@@ -207,12 +201,10 @@ public class DiffImplUtil {
         }
     }
 
-    
     public static String getSettingsConfigurablePath() {
         return "Settings | Tools | Diff";
     }
 
-    
     public static String createTooltipText(String text, @Nullable String appendix) {
         StringBuilder result = new StringBuilder();
         result.append("<html><body>");
@@ -226,7 +218,6 @@ public class DiffImplUtil {
         return result.toString();
     }
 
-    
     public static String createNotificationText(String text, @Nullable String appendix) {
         StringBuilder result = new StringBuilder();
         result.append("<html><body>");
@@ -240,7 +231,6 @@ public class DiffImplUtil {
         return result.toString();
     }
 
-    
     public static List<LineFragment> compare(
         DiffRequest request,
         CharSequence text1,
@@ -349,7 +339,6 @@ public class DiffImplUtil {
         return ComparisonManager.getInstance().isEquals(chunk1, chunk2, comparisonPolicy);
     }
 
-    
     public static <T> int[] getSortedIndexes(List<T> values, Comparator<T> comparator) {
         List<Integer> indexes = new ArrayList<>(values.size());
         for (int i = 0; i < values.size(); i++) {
@@ -365,7 +354,6 @@ public class DiffImplUtil {
         return ArrayUtil.toIntArray(indexes);
     }
 
-    
     public static int[] invertIndexes(int[] indexes) {
         int[] inverted = new int[indexes.length];
         for (int i = 0; i < indexes.length; i++) {
@@ -378,7 +366,6 @@ public class DiffImplUtil {
     // Document modification
     //
 
-    
     public static BitSet getSelectedLines(Editor editor) {
         Document document = editor.getDocument();
         int totalLines = getLineCount(document);
@@ -450,12 +437,7 @@ public class DiffImplUtil {
         document.replaceString(offset1, offset2, text);
     }
 
-    public static void applyModification(
-        Document document,
-        int line1,
-        int line2,
-        List<? extends CharSequence> newLines
-    ) {
+    public static void applyModification(Document document, int line1, int line2, List<? extends CharSequence> newLines) {
         if (line1 == line2 && newLines.isEmpty()) {
             return;
         }
@@ -470,14 +452,7 @@ public class DiffImplUtil {
         }
     }
 
-    public static void applyModification(
-        Document document1,
-        int line1,
-        int line2,
-        Document document2,
-        int oLine1,
-        int oLine2
-    ) {
+    public static void applyModification(Document document1, int line1, int line2, Document document2, int oLine1, int oLine2) {
         if (line1 == line2 && oLine1 == oLine2) {
             return;
         }
@@ -492,7 +467,6 @@ public class DiffImplUtil {
         }
     }
 
-    
     public static CharSequence getLinesContent(Document document, int line1, int line2) {
         TextRange otherRange = getLinesRange(document, line1, line2);
         return document.getImmutableCharSequence().subSequence(otherRange.getStartOffset(), otherRange.getEndOffset());
@@ -508,7 +482,6 @@ public class DiffImplUtil {
         return getLinesRange(document, line1, line2, false);
     }
 
-    
     public static TextRange getLinesRange(Document document, int line1, int line2, boolean includeNewline) {
         if (line1 == line2) {
             int lineStartOffset = line1 < getLineCount(document) ? document.getLineStartOffset(line1) : document.getTextLength();
@@ -550,12 +523,10 @@ public class DiffImplUtil {
         return editor.logicalPositionToXY(editor.offsetToLogicalPosition(document.getLineStartOffset(line))).y;
     }
 
-    
     public static List<String> getLines(Document document) {
         return getLines(document, 0, getLineCount(document));
     }
 
-    
     public static List<String> getLines(Document document, int startLine, int endLine) {
         if (startLine < 0 || startLine > endLine || endLine > getLineCount(document)) {
             throw new IndexOutOfBoundsException(String.format(
@@ -579,7 +550,6 @@ public class DiffImplUtil {
     // Updating ranges on change
     //
 
-    
     public static LineRange getAffectedLineRange(DocumentEvent e) {
         int line1 = e.getDocument().getLineNumber(e.getOffset());
         int line2 = e.getDocument().getLineNumber(e.getOffset() + e.getOldLength()) + 1;
@@ -590,12 +560,10 @@ public class DiffImplUtil {
         return StringUtil.countNewLines(e.getNewFragment()) - StringUtil.countNewLines(e.getOldFragment());
     }
 
-    
     public static UpdatedLineRange updateRangeOnModification(int start, int end, int changeStart, int changeEnd, int shift) {
         return updateRangeOnModification(start, end, changeStart, changeEnd, shift, false);
     }
 
-    
     public static UpdatedLineRange updateRangeOnModification(
         int start,
         int end,
@@ -650,21 +618,18 @@ public class DiffImplUtil {
     // Types
     //
 
-    
     public static TextDiffType getLineDiffType(LineFragment fragment) {
         boolean left = fragment.getStartLine1() != fragment.getEndLine1();
         boolean right = fragment.getStartLine2() != fragment.getEndLine2();
         return getDiffType(left, right);
     }
 
-    
     public static TextDiffType getDiffType(DiffFragment fragment) {
         boolean left = fragment.getEndOffset1() != fragment.getStartOffset1();
         boolean right = fragment.getEndOffset2() != fragment.getStartOffset2();
         return getDiffType(left, right);
     }
 
-    
     public static TextDiffType getDiffType(boolean hasDeleted, boolean hasInserted) {
         if (hasDeleted && hasInserted) {
             return TextDiffType.MODIFIED;
@@ -681,11 +646,7 @@ public class DiffImplUtil {
         }
     }
 
-    
-    public static MergeConflictType getMergeType(
-        Predicate<ThreeSide> emptiness,
-        BiPredicate<ThreeSide, ThreeSide> equality
-    ) {
+    public static MergeConflictType getMergeType(Predicate<ThreeSide> emptiness, BiPredicate<ThreeSide, ThreeSide> equality) {
         boolean isLeftEmpty = emptiness.test(ThreeSide.LEFT);
         boolean isBaseEmpty = emptiness.test(ThreeSide.BASE);
         boolean isRightEmpty = emptiness.test(ThreeSide.RIGHT);
@@ -723,7 +684,6 @@ public class DiffImplUtil {
         }
     }
 
-    
     public static MergeConflictType getLineMergeType(
         MergeLineFragment fragment,
         List<? extends Document> documents,
@@ -818,12 +778,7 @@ public class DiffImplUtil {
 
     @Deprecated(forRemoval = true)
     @RequiredUIAccess
-    public static void executeWriteCommand(
-        Document document,
-        @Nullable Project project,
-        @Nullable String commandName,
-        Runnable task
-    ) {
+    public static void executeWriteCommand(Document document, @Nullable Project project, @Nullable String commandName, Runnable task) {
         CommandProcessor.getInstance().newCommand()
             .project(project)
             .document(document)
@@ -870,7 +825,8 @@ public class DiffImplUtil {
     }
 
     /**
-     * Difference with {@link VfsUtil#markDirtyAndRefresh} is that refresh from VfsUtil will be performed with ModalityState.NON_MODAL.
+     * Difference with {@link VirtualFileUtil#markDirtyAndRefresh} is that refresh from VirtualFileUtil
+     * will be performed with ModalityState.NON_MODAL.
      */
     public static void markDirtyAndRefresh(boolean async, boolean recursive, boolean reloadChildren, VirtualFile... files) {
         ModalityState modalityState = Application.get().getDefaultModalityState();
@@ -951,7 +907,6 @@ public class DiffImplUtil {
         return null;
     }
 
-    
     public static DiffSettingsHolder.DiffSettings getDiffSettings(DiffContext context) {
         DiffSettingsHolder.DiffSettings settings = context.getUserData(DiffSettingsHolder.KEY);
         if (settings == null) {
@@ -965,7 +920,6 @@ public class DiffImplUtil {
     // Tools
     //
 
-    
     public static <T extends DiffTool> List<T> filterSuppressedTools(List<T> tools) {
         if (tools.size() < 2) {
             return tools;
@@ -996,7 +950,6 @@ public class DiffImplUtil {
     //
 
     public static class DiffConfig {
-        
         public final ComparisonPolicy policy;
         public final boolean innerFragments;
         public final boolean squashFragments;
