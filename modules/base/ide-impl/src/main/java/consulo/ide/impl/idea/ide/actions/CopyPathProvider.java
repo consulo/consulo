@@ -18,7 +18,6 @@ package consulo.ide.impl.idea.ide.actions;
 import consulo.codeEditor.Editor;
 import consulo.dataContext.DataContext;
 import consulo.document.FileDocumentManager;
-import consulo.ide.impl.idea.openapi.actionSystem.impl.SimpleDataContext;
 import consulo.ide.impl.idea.ui.tabs.impl.TabLabel;
 import consulo.ide.internal.CopyPathProviderUtil;
 import consulo.language.editor.internal.CopyReferenceUtil;
@@ -74,7 +73,8 @@ public class CopyPathProvider extends DumbAwareAction {
             return dataContext;
         }
 
-        return SimpleDataContext.builder().setParent(dataContext)
+        return DataContext.builder()
+            .parent(dataContext)
             .add(VirtualFile.KEY, (VirtualFile) file)
             .add(VirtualFile.KEY_OF_ARRAY, new VirtualFile[]{(VirtualFile) file})
             .build();
