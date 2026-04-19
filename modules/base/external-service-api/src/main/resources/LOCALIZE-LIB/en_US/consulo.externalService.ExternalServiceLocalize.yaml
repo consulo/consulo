@@ -242,6 +242,12 @@ message.plugins.suggestion:
     text: Plugins Suggestion
 message.plugins.suggestion.notification:
     text: Features covered by non-installed plugins are detected.
+message.successfully.logged.in.as.0:
+    text: Successfully logged in as {0}
+message.failed.to.receive.oauth.token:
+    text: Failed to receive OAuth token
+message.failed.to.read.data.from.url:
+    text: "Failed to read data from URL: {0}\nView logs for details."
 notification.group.platform.or.plugins.update.display.name:
     text: Platform Or Plugins Update
 plugin.advestiser.notification.install.link:
@@ -298,6 +304,8 @@ settings.update.group.repository.settings.label:
     text: Repository settings
 several.plugins.depend.on.0.continue.to.remove:
     text: Several plugins depend on {0}. Continue to remove?
+task.requesting.oauth.token:
+    text: Requesting OAuth token...
 title.plugin.notification.title:
     text: Plugin Manager
 title.plugin.uninstall:
