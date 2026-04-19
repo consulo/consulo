@@ -15,18 +15,17 @@
  */
 package consulo.ide.impl.idea.usages.impl;
 
-import consulo.application.AllIcons;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.usage.RuleAction;
-import consulo.usage.UsageViewBundle;
 import consulo.usage.UsageViewSettings;
+import consulo.usage.localize.UsageLocalize;
 
 /**
 * @author cdr
 */
 class SortMembersAlphabeticallyAction extends RuleAction {
-
   SortMembersAlphabeticallyAction(UsageViewImpl usageView) {
-    super(usageView, UsageViewBundle.message("sort.alphabetically.action.text"), AllIcons.ObjectBrowser.Sorted);
+    super(usageView, UsageLocalize.sortAlphabeticallyActionText(), PlatformIconGroup.objectbrowserSorted());
   }
 
   @Override

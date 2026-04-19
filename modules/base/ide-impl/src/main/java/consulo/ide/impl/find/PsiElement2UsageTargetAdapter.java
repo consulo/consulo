@@ -44,6 +44,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.KeyboardShortcut;
 import consulo.ui.image.Image;
 import consulo.usage.*;
+import consulo.usage.localize.UsageLocalize;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
@@ -251,7 +252,7 @@ public class PsiElement2UsageTargetAdapter implements PsiElementUsageTarget, Typ
         PsiElement psiElement = getElement();
 
         return psiElement == null
-            ? UsageViewBundle.message("node.invalid")
+            ? UsageLocalize.nodeInvalid().get()
             : FindLocalize.recentFindUsagesActionPopup(
                 StringUtil.capitalize(UsageViewUtil.getType(psiElement)),
                 DescriptiveNameUtil.getDescriptiveName(psiElement),

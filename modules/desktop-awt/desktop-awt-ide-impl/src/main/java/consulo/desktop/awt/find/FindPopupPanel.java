@@ -764,7 +764,7 @@ public class FindPopupPanel extends JBPanel<FindPopupPanel> implements FindUI {
             FindInProjectUtil.setupViewPresentation(myUsageViewPresentation, myHelper.getModel().clone());
             myUsagePreviewPanel.updateLayout(selection);
             myUsagePreviewTitle.clear();
-            if (myUsagePreviewPanel.getCannotPreviewMessage(selection) == null && file != null) {
+            if (myUsagePreviewPanel.getCannotPreviewMessage(selection).isEmpty() && file != null) {
                 myUsagePreviewTitle.append(PathUtil.getFileName(file), SimpleTextAttributes.REGULAR_ATTRIBUTES);
                 VirtualFile virtualFile = VirtualFileUtil.findFileByIoFile(new File(file), true);
                 String locationPath = virtualFile == null ? null : getPresentablePath(myProject, virtualFile.getParent(), 120);

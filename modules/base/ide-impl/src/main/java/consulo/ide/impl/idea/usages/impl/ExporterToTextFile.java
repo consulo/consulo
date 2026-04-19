@@ -3,10 +3,10 @@
  */
 package consulo.ide.impl.idea.usages.impl;
 
-import consulo.usage.UsageViewBundle;
 import consulo.usage.TextChunk;
 import consulo.usage.UsageGroup;
 import consulo.usage.UsageViewSettings;
+import consulo.usage.localize.UsageLocalize;
 import consulo.util.lang.SystemProperties;
 
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -53,7 +53,7 @@ public class ExporterToTextFile implements consulo.ui.ex.action.ExporterToTextFi
 
   private void appendNodeText(StringBuilder buf, DefaultMutableTreeNode node, String lineSeparator) {
     if (node instanceof Node && ((Node)node).isExcluded()) {
-      buf.append("(").append(UsageViewBundle.message("usage.excluded")).append(") ");
+      buf.append("(").append(UsageLocalize.usageExcluded().get()).append(") ");
     }
 
     if (node instanceof UsageNode) {
@@ -61,10 +61,10 @@ public class ExporterToTextFile implements consulo.ui.ex.action.ExporterToTextFi
     }
     else if (node instanceof GroupNode) {
       UsageGroup group = ((GroupNode)node).getGroup();
-      buf.append(group != null ? group.getText(myUsageView) : UsageViewBundle.message("usages.title"));
+      buf.append(group != null ? group.getText(myUsageView) : UsageLocalize.usagesTitle().get());
       buf.append(" ");
       int count = ((GroupNode)node).getRecursiveUsageCount();
-      buf.append(" (").append(UsageViewBundle.message("usages.n", count)).append(")");
+      buf.append(" (").append(UsageLocalize.usagesN(count).get()).append(")");
     }
     else if (node instanceof UsageTargetNode) {
       buf.append(((UsageTargetNode)node).getTarget().getPresentation().getPresentableText());
