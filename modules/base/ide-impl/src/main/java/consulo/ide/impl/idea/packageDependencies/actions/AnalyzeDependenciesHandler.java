@@ -13,15 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.impl.idea.packageDependencies.actions;
 
-import consulo.language.editor.scope.AnalysisScope;
-import consulo.language.editor.scope.AnalysisScopeBundle;
-import consulo.project.Project;
 import consulo.ide.impl.idea.packageDependencies.DependenciesBuilder;
 import consulo.ide.impl.idea.packageDependencies.ForwardDependenciesBuilder;
+import consulo.language.editor.scope.AnalysisScope;
+import consulo.language.editor.scope.localize.AnalysisScopeLocalize;
 import consulo.language.psi.PsiFile;
+import consulo.project.Project;
 
 import java.util.Collections;
 import java.util.HashSet;
@@ -47,11 +46,11 @@ public class AnalyzeDependenciesHandler extends DependenciesHandlerBase {
 
   @Override
   protected String getPanelDisplayName(AnalysisScope scope) {
-    return AnalysisScopeBundle.message("package.dependencies.toolwindow.title", scope.getDisplayName());
+    return AnalysisScopeLocalize.packageDependenciesToolwindowTitle(scope.getDisplayName()).get();
   }
 
   @Override
   protected String getProgressTitle() {
-    return AnalysisScopeBundle.message("package.dependencies.progress.title");
+    return AnalysisScopeLocalize.packageDependenciesProgressTitle().get();
   }
 }

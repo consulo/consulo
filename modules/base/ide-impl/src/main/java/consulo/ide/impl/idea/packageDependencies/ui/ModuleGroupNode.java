@@ -13,16 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.impl.idea.packageDependencies.ui;
 
-import consulo.language.editor.scope.AnalysisScopeBundle;
-import consulo.application.AllIcons;
-import consulo.project.ui.view.tree.ModuleGroup;
-import consulo.project.Project;
-import consulo.util.lang.Comparing;
+import consulo.language.editor.scope.localize.AnalysisScopeLocalize;
 import consulo.language.psi.PsiFile;
+import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.project.Project;
+import consulo.project.ui.view.tree.ModuleGroup;
 import consulo.ui.image.Image;
+import consulo.util.lang.Comparing;
 
 import java.util.Set;
 
@@ -50,12 +49,12 @@ public class ModuleGroupNode extends PackageDependenciesNode {
 
   @Override
   public Image getIcon() {
-    return AllIcons.Nodes.ModuleGroup;
+    return PlatformIconGroup.nodesModulegroup();
   }
 
   @Override
   public String toString() {
-    return myModuleGroup == null ? AnalysisScopeBundle.message("unknown.node.text") : myModuleGroup.toString();
+    return myModuleGroup == null ? AnalysisScopeLocalize.unknownNodeText().get() : myModuleGroup.toString();
   }
 
   public String getModuleGroupName() {

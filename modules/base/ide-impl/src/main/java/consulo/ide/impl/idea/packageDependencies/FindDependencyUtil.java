@@ -13,19 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.impl.idea.packageDependencies;
 
-import consulo.language.editor.scope.AnalysisScopeBundle;
-import consulo.component.ProcessCanceledException;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
-import consulo.virtualFileSystem.VirtualFile;
+import consulo.component.ProcessCanceledException;
+import consulo.language.editor.scope.localize.AnalysisScopeLocalize;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.usage.UsageInfo;
-
+import consulo.virtualFileSystem.VirtualFile;
 import org.jspecify.annotations.Nullable;
+
 import java.util.*;
 
 public class FindDependencyUtil {
@@ -114,7 +113,7 @@ public class FindDependencyUtil {
       indicator.setFraction(((double)++count) / totalCount);
       VirtualFile virtualFile = psiFile.getVirtualFile();
       if (virtualFile != null) {
-        indicator.setText(AnalysisScopeBundle.message("find.dependencies.progress.text", virtualFile.getPresentableUrl()));
+        indicator.setText(AnalysisScopeLocalize.findDependenciesProgressText(virtualFile.getPresentableUrl()));
       }
     }
     return count;
