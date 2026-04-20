@@ -326,7 +326,7 @@ public abstract class HistoryDialog<T extends HistoryDialogModel> extends FrameW
     protected ContentDiffRequest createDifference(final FileDifferenceModel m) {
         final SimpleReference<ContentDiffRequest> requestRef = new SimpleReference<>();
 
-        new Task.Modal(myProject, LocalHistoryLocalize.messageProcessingRevisions().get(), false) {
+        new Task.Modal(myProject, LocalHistoryLocalize.messageProcessingRevisions(), false) {
             @Override
             public void run(ProgressIndicator i) {
                 Application.get().runReadAction(() -> {

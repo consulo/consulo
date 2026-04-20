@@ -78,13 +78,13 @@ class LocalHistoryEventDispatcher implements VirtualFileManagerListener, Command
   }
 
   private void endChangeSet(LocalizeValue name) {
-    myVcs.endChangeSet(name.get());
+    myVcs.endChangeSet(name.getNullIfEmpty());
   }
 
   private void fileCreated(VirtualFile file) {
     beginChangeSet();
     createRecursively(file);
-    endChangeSet(null);
+    endChangeSet(LocalizeValue.empty());
   }
 
   private void createRecursively(VirtualFile f) {
