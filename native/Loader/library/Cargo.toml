@@ -7,9 +7,11 @@ license.workspace = true
 publish.workspace = true
 
 [lib]
-# Produces libconsulo.so / libconsulo.dylib / consulo.dll.
-# Distribution packaging renames to consulo64.dll / consulo-aarch64.dll on Windows.
-name = "consulo"
+# Produces libconsulo_library.so / libconsulo_library.dylib / consulo_library.dll.
+# Unique Cargo-level name avoids the PDB filename collision with the `consulo`
+# binary target (cargo issue #6313). The build pipeline renames to the
+# shipped filename (libconsulo.{so,dylib}, consulo64.dll, consulo-aarch64.dll).
+name = "consulo_library"
 crate-type = ["cdylib"]
 
 [features]

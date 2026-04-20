@@ -16,74 +16,71 @@ jobs:
           - name: windows-x86_64
             os: windows-latest
             target: x86_64-pc-windows-msvc
-            tool: cargo
             loader_src: consulo.exe
             loader_name: consulo64.exe
-            library_src: consulo.dll
+            library_src: consulo_library.dll
             library_name: consulo64.dll
           - name: windows-aarch64
             os: windows-latest
             target: aarch64-pc-windows-msvc
-            tool: cargo
             loader_src: consulo.exe
             loader_name: consulo-aarch64.exe
-            library_src: consulo.dll
+            library_src: consulo_library.dll
             library_name: consulo-aarch64.dll
 
           # ===== macOS (per-arch, no universal) =====
           - name: macos-x86_64
             os: macos-latest
             target: x86_64-apple-darwin
-            tool: cargo
             loader_src: consulo
             loader_name: consulo
-            library_src: libconsulo.dylib
+            library_src: libconsulo_library.dylib
             library_name: libconsulo.dylib
           - name: macos-aarch64
             os: macos-latest
             target: aarch64-apple-darwin
-            tool: cargo
             loader_src: consulo
             loader_name: consulo
-            library_src: libconsulo.dylib
+            library_src: libconsulo_library.dylib
             library_name: libconsulo.dylib
 
           # ===== Linux =====
-          # x86_64: native build on the runner.
           - name: linux-x86_64
             os: ubuntu-24.04
             target: x86_64-unknown-linux-gnu
-            tool: cargo
             loader_src: consulo
             loader_name: consulo
-            library_src: libconsulo.so
+            library_src: libconsulo_library.so
             library_name: libconsulo.so
-          # aarch64 / loongarch64 / riscv64: cross-compile via `cross`.
-          # `cross` runs the build inside a Docker container that has the
-          # right sysroot for each target, avoiding brittle apt dependencies.
           - name: linux-aarch64
             os: ubuntu-24.04
             target: aarch64-unknown-linux-gnu
-            tool: cross
+            apt: gcc-aarch64-linux-gnu
+            linker_var: CARGO_TARGET_AARCH64_UNKNOWN_LINUX_GNU_LINKER
+            linker_bin: aarch64-linux-gnu-gcc
             loader_src: consulo
             loader_name: consulo
-            library_src: libconsulo.so
-            library_name: libconsulo.so
-          - name: linux-loongarch64
-            os: ubuntu-24.04
-            target: loongarch64-unknown-linux-gnu
-            tool: cross
-            loader_src: consulo
-            loader_name: consulo
-            library_src: libconsulo.so
+            library_src: libconsulo_library.so
             library_name: libconsulo.so
           - name: linux-riscv64
             os: ubuntu-24.04
             target: riscv64gc-unknown-linux-gnu
-            tool: cross
+            apt: gcc-riscv64-linux-gnu
+            linker_var: CARGO_TARGET_RISCV64GC_UNKNOWN_LINUX_GNU_LINKER
+            linker_bin: riscv64-linux-gnu-gcc
             loader_src: consulo
             loader_name: consulo
-            library_src: libconsulo.so
+            library_src: libconsulo_library.so
+            library_name: libconsulo.so
+          - name: linux-loongarch64
+            os: ubuntu-24.04
+            target: loongarch64-unknown-linux-gnu
+            loongson: true
+            linker_var: CARGO_TARGET_LOONGARCH64_UNKNOWN_LINUX_GNU_LINKER
+            linker_bin: loongarch64-unknown-linux-gnu-gcc
+            loader_src: consulo
+            loader_name: consulo
+            library_src: libconsulo_library.so
             library_name: libconsulo.so
 
     runs-on: ${{ matrix.os }}
@@ -96,9 +93,24 @@ jobs:
         with:
           targets: ${{ matrix.target }}
 
-      - name: Install cross
-        if: matrix.tool == 'cross'
-        run: cargo install cross --locked
+      - name: Install apt cross-linker
+        if: matrix.apt
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ${{ matrix.apt }}
+
+      - name: Install Loongson toolchain
+        if: matrix.loongson
+        run: |
+          URL="https://github.com/loongson/build-tools/releases/download/2024.08.08/x86_64-cross-tools-loongarch64-binutils_2.43-gcc_14.2.0-glibc_2.40.tar.xz"
+          wget -q "$URL" -O /tmp/loongson.tar.xz
+          sudo mkdir -p /opt/loongson
+          sudo tar -xf /tmp/loongson.tar.xz -C /opt/loongson --strip-components=1
+          echo "/opt/loongson/bin" >> $GITHUB_PATH
+
+      - name: Configure linker env
+        if: matrix.linker_var
+        run: echo "${{ matrix.linker_var }}=${{ matrix.linker_bin }}" >> $GITHUB_ENV
 
       - uses: Swatinem/rust-cache@v2
         with:
@@ -106,7 +118,7 @@ jobs:
 
       - name: Build release
         working-directory: native/Loader
-        run: ${{ matrix.tool }} build --release --target ${{ matrix.target }}
+        run: cargo build --release --target ${{ matrix.target }}
 
       - name: Run unit tests (host targets only)
         if: matrix.name == 'linux-x86_64' || matrix.name == 'macos-aarch64' || matrix.name == 'windows-x86_64'
