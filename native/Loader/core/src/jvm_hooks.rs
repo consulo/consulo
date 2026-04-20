@@ -56,6 +56,11 @@ pub extern "C" fn vfprintf_hook(
     format: *const c_char,
     args: va_list::VaList<'_>,
 ) -> c_int {
+    // MSVC's UCRT exposes `vfprintf` / `vsnprintf` as inline functions;
+    // the extern symbols only exist in `legacy_stdio_definitions.lib`.
+    // `legacy_stdio_definitions` is a tiny static lib that forwards to
+    // the UCRT inlines — safe to link unconditionally on MSVC.
+    #[cfg_attr(target_env = "msvc", link(name = "legacy_stdio_definitions"))]
     unsafe extern "C" {
         fn vfprintf(fp: *const c_void, format: *const c_char, args: va_list::VaList<'_>) -> c_int;
         fn vsnprintf(

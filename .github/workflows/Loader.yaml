@@ -46,14 +46,14 @@ jobs:
 
           # ===== Linux =====
           - name: linux-x86_64
-            os: ubuntu-latest
+            os: ubuntu-24.04
             target: x86_64-unknown-linux-gnu
             loader_src: consulo
             loader_name: consulo
             library_src: libconsulo.so
             library_name: libconsulo.so
           - name: linux-aarch64
-            os: ubuntu-latest
+            os: ubuntu-24.04
             target: aarch64-unknown-linux-gnu
             apt: gcc-aarch64-linux-gnu
             loader_src: consulo
@@ -61,7 +61,7 @@ jobs:
             library_src: libconsulo.so
             library_name: libconsulo.so
           - name: linux-loongarch64
-            os: ubuntu-latest
+            os: ubuntu-24.04
             target: loongarch64-unknown-linux-gnu
             apt: gcc-loongarch64-linux-gnu
             loader_src: consulo
@@ -69,7 +69,7 @@ jobs:
             library_src: libconsulo.so
             library_name: libconsulo.so
           - name: linux-riscv64
-            os: ubuntu-latest
+            os: ubuntu-24.04
             target: riscv64gc-unknown-linux-gnu
             apt: gcc-riscv64-linux-gnu
             loader_src: consulo

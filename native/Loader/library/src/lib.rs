@@ -215,7 +215,9 @@ mod mac {
     use super::*;
     use core_foundation::base::TCFType;
     use core_foundation::string::{CFString, CFStringRef};
+    use std::env;
     use std::ffi::{CStr, c_char, c_void};
+    use std::path::Path;
 
     /// macOS entry point. `working_directory`/`properties_file`/`vm_options_file`/
     /// `app_home` are `NSString*` — toll-free bridged to `CFStringRef` — passed

@@ -211,7 +211,7 @@ fn dispatch_to_library(lib_path: &Path, build: &Path, app_home: &Path) -> Result
 #[cfg(target_os = "macos")]
 fn dispatch_to_library(lib_path: &Path, build: &Path, app_home: &Path) -> Result<i32> {
     use core_foundation::base::TCFType;
-    use core_foundation::string::{CFString, CFStringRef};
+    use core_foundation::string::CFString;
     use libloading::Library;
     use std::ffi::{CString, c_char, c_int, c_void};
     use std::os::unix::ffi::OsStrExt;
